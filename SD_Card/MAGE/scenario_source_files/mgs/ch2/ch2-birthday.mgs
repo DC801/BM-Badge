@@ -64,16 +64,14 @@ on_load-ch2-magehouse-birthday {
 		"...Yeah, that was scary."
 		"I guess it's a sign that the Big Bad might be coming back."
 	}
-	wait 600ms
+	wait 180ms
 	turn entity "%PLAYER%" south
 	wait 400ms
 	show dialog {
 		PLAYER "First thing tomorrow, I'm supposed to meet the village elders and visit the mountain dungeon."
 		ZAPPY "They're really sending you to get the artifacts, then?"
 	}
-	wait 200ms
 	turn entity "%PLAYER%" east
-	wait 200ms
 	show dialog {
 		PLAYER
 		"I guess so. The village elders say the artifacts are the only thing that can stop the Big Bad for good."
@@ -196,9 +194,7 @@ ch2-escort-cutscene {
 		PLAYER "You don't know? What kind of wise old men are you?"
 		Jackob "We'll certainly see, won't we?"
 	}
-	wait 100ms
 	turn entity Alfonso toward entity "%PLAYER%"
-	wait 200ms
 	show dialog {
 		PLAYER "That book... what did it say? Can you give me a summary at least?"
 	}

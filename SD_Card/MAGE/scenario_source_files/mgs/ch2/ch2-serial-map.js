@@ -302,7 +302,7 @@ var makeNatlangMapRow = function (rowArray) {
 					result += `\t\tconcat serial dialog {"${splits[0]}"}\n`;
 				}
 				result += `\t\tif (variable ch2-in-room is ${targets[0]}) {\n`;
-				result += `\t\t\tconcat serial dialog {"@"}\n`;
+				result += `\t\t\tconcat serial dialog {"<c>@</>"}\n`; // NOTE: format the `@` here!
 				result += `\t\t} else {\n`;
 				result += `\t\t\tconcat serial dialog {"."}\n`;
 				result += `\t\t}\n`;
@@ -336,8 +336,7 @@ var makeNatlangMap = function () {
 		result += `\t// ROW ${index}\n`
 		result += makeNatlangMapRow(row);
 	})
-	result += '\tset serial control on\n'
-	result += '\tgoto null_script\n'
+	result += '\tgoto draw-ch2-serial-map-footer\n'
 	result += '}\n'
 	result = result.replace(/\\(?!n)/g, "\\\\");
 	return result;

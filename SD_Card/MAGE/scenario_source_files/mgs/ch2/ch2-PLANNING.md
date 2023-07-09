@@ -1,6 +1,24 @@
 # Chapter 2 planning
 
+## Story themes
+
+- Chapter 2: Connections
+	- Connecting past to future: sending ideas into the future, building long term communities, remembering lessons learned in the past
+	- Connecting rooms to each other: building larger projects with cooperation, building/fixing infrastructure
+	- Connecting people: allowing people to hear each other, build relationships; humans as social animals; networking leads to finding mentors and opportunities
+	- The cost of isolation vs the cost of exposing oneself to bad actors
+	- Connecting hardware: hardware is made up of smaller pieces, and many fixes are only a matter of connecting something to something else
+	- AT THE END: Lambda is reconnected
+- Chapter 3: Knowledge
+	- Benefits of education
+	- Learning to navigate the gray area rather than take a black and white answer at face value
+	- Learning about one's environment
+	- Leaning toolsets, how to best use everyday tools
+	- Secrets to protect the vulnerable vs secrets to manipulate the vulnerable
+
 ## Sprite wishlist
+
+- [ ] Invisible dialog skin but with white arrow instead of pink (for birthday cake cutscene)
 
 ### Inventory items
 

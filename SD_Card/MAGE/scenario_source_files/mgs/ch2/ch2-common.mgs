@@ -7,7 +7,7 @@ serial dialog spacer {
 }
 serial dialog lambda-over {
 	// check if there's a blank line just before using this dialog (there should be one)
-	"<bold>lambda-talk</> connection closed succesfully"
+	"<bold>lambda-talk</>: connection closed succesfully"
 }
 
 /* ---------- CASTLE ON_LOAD INIT ---------- */

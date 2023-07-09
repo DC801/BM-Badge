@@ -153,6 +153,24 @@
                  "width":48,
                  "x":57,
                  "y":120
+                }, 
+                {
+                 "class":"",
+                 "gid":692,
+                 "height":32,
+                 "id":35,
+                 "name":"Jean-Paul",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-jeanpaul"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":60,
+                 "y":163
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -196,7 +214,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -245,6 +263,10 @@
         {
          "firstgid":641,
          "source":"..\/entities\/entity-goose-bow.json"
+        }, 
+        {
+         "firstgid":683,
+         "source":"..\/entities\/entity-welder.json"
         }],
  "tilewidth":32,
  "type":"map",

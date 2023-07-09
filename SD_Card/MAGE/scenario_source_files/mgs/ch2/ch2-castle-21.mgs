@@ -114,3 +114,78 @@ ch2-install-abacus {
 	set flag ch2-carrying-abacus to false
 	set flag ch2-installed-abacus to true
 }
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-jeanpaul {
+	copy face-player
+	if (variable ch2-storyflag-round is < 3) {
+		show dialog {
+			SELF "TODO (generic)"
+		}
+	} else if (variable ch2-storyflag-round is 3) {
+		if (flag ch2-want-ramchips is false) {
+			show dialog {
+				PLAYER "So I'm rebuilding the castle mainframe, and I heard you guys might be able to help me get some RAM. Lambda couldn't find any to spare."
+				SELF "Lambda? Who's that?"
+				PLAYER "He's someone helping me.\n(TODO re: Lambda)"
+				"Anyway, if you don't have any RAM I can use, do you have an ideas for a substitute? It's okay if it's... abstract."
+				SELF "\"Abstract?\""
+				PLAYER "Yeah, so like what even is RAM?"
+				SELF "It's a computer's working memory. Any programs that are running, or images or text that is loaded, or anything at all...."
+				"All that data needs somewhere to sit while it's being worked on."
+				name "Other Dude" /*someone else eventually TODO */ "Or shown on a screen."
+				PLAYER "Right, so for an... abstract... computer, what could work instead? A notebook? A jelly bean jar?"
+				SELF "How abstract are we talking?"
+				PLAYER "Well, so far I've made a hard disk from a dinner plate and a phonograph needle."
+				SELF "...Yikes."
+			}
+			// They all turn toward each other
+			show dialog {
+				SELF "To be honest, the guy who can probably help best isn't here right now."
+				name "Other Dude" /*someone else eventually TODO */ "He's a bit distractable."
+				SELF "A bit?!"
+				name "Other Dude" /* ditto */ "Yeah, maybe that was an understatement! But he was away when the earthquake hit. Don't know where he is, but wherever he is, he's stuck in that room."
+				PLAYER "Well, who is he? What does he look like?"
+				SELF "His name is Sea Moss, and he's a giant stone golem. Can't miss him."
+			}
+			if (flag ch2-seamoss-backstory is true) {
+				show dialog {
+					PLAYER "Wait, I think I saw that guy. He was in the grand hall."
+					name "Other Dude" /**/ "No surprise there!"
+					SELF "Yep, that's him."
+				}
+			} else {
+				show dialog {
+					name "Other Dude" /**/ "He's almost certainly near the kitchen. East wing. That's the first place I'd look."
+				}
+			}
+			show dialog {
+				name "Other Dude" /**/ "He'll definitely be able to find you an... abstract... solution."
+				SELF "Good luck, kid."
+			}
+			set flag ch2-want-ramchips to true
+			set flag interrupt to true
+		} else {
+			if (flag interrupt is true) {
+				show dialog {
+					SELF "Sea Moss is an odd duck."
+					PLAYER "Wait, he's a duck?"
+					SELF "Erm, no, he's a stone golem, but let's just say he's a creative character."
+				}
+			} else {
+				show dialog {
+					PLAYER "So... I may have forgotten where I can find Sea Moss."
+					SELF "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
+					PLAYER "And he'll be able to find me a substitute for RAM?"
+					SELF "If anyone can, he can. He's good at being... abstract."
+				}
+			}
+		}
+	} else {
+		show dialog {
+			SELF "TODO (Good luck building computer)"
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-jeanpaul // reset
+}
