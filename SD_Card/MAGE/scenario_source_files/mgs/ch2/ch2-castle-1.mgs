@@ -110,6 +110,7 @@ on_load-ch2-castle-1 {
 	register round + "1" -> debug-round1
 	register round + "2" -> debug-round2
 	register round + "3" -> debug-round3
+	show serial dialog spacer
 	show serial dialog {
 		"\t<g>DEBUG</> shortcuts"
 		"<c>TOOT</>: skip tutorial"
@@ -143,6 +144,8 @@ on_load-ch2-castle-1 {
 }
 debug-finish-toot {
 	mutate ch2-storyflag-round = 1
+	set flag ch2-map-granted to true
+	copy register-map
 	copy register-parts
 	set flag ch2-toot-done to true
 }
@@ -356,13 +359,20 @@ ch2-wizard-ascend {
 }
 tick-ch2-wizard-ascend-and-watch-with-check {
 	if (entity Wizard animation is 0) { // WIZARD IS DOWN
+		// show serial dialog {"DEBUG: Wizard is down! Switching on_tick to to 'tick-ch2-wizard-ascend-and-watch'"}
 		goto tick-ch2-wizard-ascend-and-watch
+	} else {
+		// show serial dialog {"DEBUG: Wizard is not <bold>strictly</> down..."}
+		set entity Wizard animation to 3
 	}
 	set entity Wizard tick_script to face-player
 }
 tick-ch2-wizard-ascend-and-watch {
+	// show serial dialog {"\t'play entity Wizard animation 5 once'"}
 	play entity Wizard animation 5 once
+	// show serial dialog {"\t'set entity Wizard animation to 3'"}
 	set entity Wizard animation to 3
+	// show serial dialog {"\t'set entity Wizard tick_script to face-player'"}
 	set entity Wizard tick_script to face-player
 }
 ch2-wizard-descend {

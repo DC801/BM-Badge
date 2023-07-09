@@ -23,7 +23,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-99 is true) {
 		concat serial dialog {"|."}
 		if (variable ch2-in-room is 99) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -50,7 +50,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-14 is true) {
 		concat serial dialog {"/.."}
 		if (variable ch2-in-room is 14) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -115,7 +115,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-13 is true) {
 		concat serial dialog {"|."}
 		if (variable ch2-in-room is 13) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -127,7 +127,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-33 is true) {
 		concat serial dialog {"|."}
 		if (variable ch2-in-room is 33) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -142,7 +142,7 @@ draw-ch2-serial-map {
 	}
 	if (flag ch2-seen-room-34 is true) {
 		if (variable ch2-in-room is 34) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -157,7 +157,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-23 is true) {
 		concat serial dialog {"/.."}
 		if (variable ch2-in-room is 23) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -216,7 +216,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-32 is true) {
 		concat serial dialog {"|."}
 		if (variable ch2-in-room is 32) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -261,7 +261,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-22 is true) {
 		concat serial dialog {"|."}
 		if (variable ch2-in-room is 22) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -273,7 +273,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-12 is true) {
 		concat serial dialog {"|."}
 		if (variable ch2-in-room is 12) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -289,7 +289,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-31 is true) {
 		concat serial dialog {"..."}
 		if (variable ch2-in-room is 31) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -338,7 +338,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-21 is true) {
 		concat serial dialog {"|..."}
 		if (variable ch2-in-room is 21) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -354,7 +354,7 @@ draw-ch2-serial-map {
 	if (flag ch2-seen-room-11 is true) {
 		concat serial dialog {"."}
 		if (variable ch2-in-room is 11) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -377,7 +377,7 @@ draw-ch2-serial-map {
 	concat serial dialog {"|          |..."}
 	if (flag ch2-seen-room-1 is true) {
 		if (variable ch2-in-room is 1) {
-			concat serial dialog {"@"}
+			concat serial dialog {"<c>@</>"}
 		} else {
 			concat serial dialog {"."}
 		}
@@ -391,6 +391,5 @@ draw-ch2-serial-map {
 
 	// ROW 16
 	concat serial dialog {"-------------------------------\n"}
-	set serial control on
-	goto null_script
+	goto draw-ch2-serial-map-footer
 }

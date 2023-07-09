@@ -122,24 +122,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":692,
-                 "height":32,
-                 "id":36,
-                 "name":"Scuzzy",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-scuzzy"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":61,
-                 "y":137
-                }, 
-                {
-                 "class":"",
                  "gid":693,
                  "height":32,
                  "id":37,
@@ -155,6 +137,24 @@
                  "width":32,
                  "x":53,
                  "y":224
+                }, 
+                {
+                 "class":"",
+                 "gid":719,
+                 "height":32,
+                 "id":38,
+                 "name":"Scuzzy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-scuzzy"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":62,
+                 "y":141
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -219,7 +219,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":38,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -272,6 +272,11 @@
         {
          "firstgid":683,
          "source":"..\/entities\/entity-welder.json"
+        },
+    
+        {
+         "firstgid":707,
+         "source":"..\/entities\/entity-npc02.json"
         }],
  "tilewidth":32,
  "type":"map",
