@@ -94,6 +94,8 @@ class MageCommandControl {
 		uint32_t size();
 		void reset();
 		void sendBufferedOutput();
+
+		int32_t getCommandIndex(const std::string &combinedString, bool isFail, bool useFail);
 };
 
 #endif //GAMEENGINE_MAGE_COMMAND_CONTROL_H
