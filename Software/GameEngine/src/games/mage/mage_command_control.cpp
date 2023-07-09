@@ -87,11 +87,13 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 
 
-	std::string message = "Verb: " + verb;
-	if (!modifier.empty()) { message += " | Modifier: " + modifier; }
-	if (!subject.empty()) { message += " | Subject: " + subject; }
-	message += "\n";
-	commandResponseBuffer += message;
+	if(MageGame->isEntityDebugOn) {
+		std::string message = "Verb: " + verb;
+		if (!modifier.empty()) { message += " | Modifier: " + modifier; }
+		if (!subject.empty()) { message += " | Subject: " + subject; }
+		message += "\n";
+		commandResponseBuffer += message;
+	}
 
 
 	if(verb == "help") {
@@ -102,7 +104,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			"Supported Verbs:\n"
 			"  help  look  go"
 		);
-		if (registeredCommands.empty()) {
+		if (!registeredCommands.empty()) {
 			for (const auto& command : registeredCommands) {
 				if (
 					command.argumentStringId == 0
@@ -238,7 +240,9 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			subject
 		);
 		if (command != nullptr) {
-			commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
+			if(MageGame->isEntityDebugOn) {
+				commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
+			}
 			MageScript->initScriptState(
 				&MageScript->resumeStates.serial,
 				command->scriptId,
@@ -251,7 +255,10 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 }
 
 void MageCommandControl::processInputAsTrappedResponse(const std::string& input) {
-	commandResponseBuffer += "processInputAsTrappedResponse: " + input + "\n";
+
+	if(MageGame->isEntityDebugOn) {
+		commandResponseBuffer += "processInputAsTrappedResponse: " + input + "\n";
+	}
 	MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
 	if (responseType == RESPONSE_ENTER_NUMBER) {
 		bool errorWhileParsingInt = false;
@@ -268,15 +275,19 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 		) {
 			MageSerialDialogResponse *response = &serialDialogResponses[responseIndex];
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
-			commandResponseBuffer += (
-				"Valid response: " +
-				input + " - " +
-				responseLabel + "\n"
-			);
+			if(MageGame->isEntityDebugOn) {
+				commandResponseBuffer += (
+					"Valid response: " +
+					input + " - " +
+					responseLabel + "\n"
+				);
+			}
 			jumpScriptId = response->scriptId;
 			isInputTrapped = false;
 		} else {
-			commandResponseBuffer += "Invalid response: " + input + "\n";
+			if(MageGame->isEntityDebugOn) {
+				commandResponseBuffer += "Invalid response: " + input + "\n";
+			}
 			showSerialDialog(serialDialogId);
 		}
 	}
@@ -288,7 +299,9 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
 			badAsciiLowerCase(&responseLabel);
 			if (responseLabel == input) {
-				commandResponseBuffer += "Valid response: " + input + "\n";
+				if(MageGame->isEntityDebugOn) {
+					commandResponseBuffer += "Valid response: " + input + "\n";
+				}
 				jumpScriptId = response->scriptId;
 				isInputTrapped = false;
 				validResponseFound = true;
@@ -466,7 +479,7 @@ void MageCommandControl::unregisterArgument(
 			wasCommandFound = true;
 		}
 	}
-	if (!wasCommandFound) {
+	if (!wasCommandFound && MageGame->isEntityDebugOn) {
 		commandResponseBuffer += (
 			"Unable to unregister Argument because it was not already registered: "
 			+ MageGame->getString(commandStringId, NO_PLAYER)
@@ -540,7 +553,7 @@ void MageCommandControl::sendBufferedOutput() {
 	}
 	if(anyOutput) {
 		EngineSendSerialMessage(
-			"> "
+			"\n> "
 		);
 	}
 }
