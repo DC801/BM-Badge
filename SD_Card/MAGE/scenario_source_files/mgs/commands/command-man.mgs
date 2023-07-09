@@ -52,7 +52,7 @@ command-man {
 			" "
 			"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
 			" "
-			"<bold>lambda-talk</> exited with code 1"
+			"<bold>lambda-talk</>: exited with code 1"
 		}
 	}
 }

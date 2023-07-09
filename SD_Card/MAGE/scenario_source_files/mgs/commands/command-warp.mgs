@@ -21,7 +21,7 @@ register-warp-debug {
 	copy register-warp
 }
 register-warp {
-	register warp -> command-warp
+	// register warp -> command-warp // TODO: when game is out, detangle this; when uncommented, this line makes `warp` show up twice on command list
 	register man + warp -> man-warp
 	register warp fail -> warp-fail
 
@@ -118,9 +118,9 @@ warp-fail {
 command-warp {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>List of valid <bold>WARP</> <c>destinations:</>"
+		"List of valid <c>WARP</> destinations:"
 		" "
-		"<bold><c>-------------------- CASTLE --------------------</>"
+		"<bold>-------------------- CASTLE --------------------</>"
 		"  Castle entrance          Power plant"
 		"  Castle hallway front     Grand hall"
 		"  Castle hallway back      Castle kitchen"
@@ -129,7 +129,7 @@ command-warp {
 		"  Workshop                 Secret lab"
 		"  Server room"
 		" "
-		"<bold><c>-------------------- TOWN ----------------------</>"
+		"<bold>-------------------- TOWN ----------------------</>"
 		"  Town                     Bob's Club"
 		"  Bakery                   Bob's Club basement"
 		"  Greenhouse               Beatrice's house"

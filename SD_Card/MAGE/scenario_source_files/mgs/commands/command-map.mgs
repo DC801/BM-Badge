@@ -35,6 +35,72 @@ command-map {
 			"You don't seem to have a map for this place."
 		}
 	} else {
+		show serial dialog {
+			" "
+		}
 		goto draw-ch2-serial-map
 	}
+}
+
+draw-ch2-serial-map-footer {
+	concat serial dialog {
+		"\nCurrent location: <c>"
+	}
+	if (variable ch2-in-room is 1) {
+		concat serial dialog {
+			"CASTLE ENTRANCE"
+		}
+	} else if (variable ch2-in-room is 11) {
+		concat serial dialog {
+			"CASTLE HALLWAY FRONT"
+		}
+	} else if (variable ch2-in-room is 12) {
+		concat serial dialog {
+			"CASTLE HALLWAY BACK"
+		}
+	} else if (variable ch2-in-room is 13) {
+		concat serial dialog {
+			"THRONE ROOM"
+		}
+	} else if (variable ch2-in-room is 14) {
+		concat serial dialog {
+			"KING GIBSON'S BEDROOM"
+		}
+	} else if (variable ch2-in-room is 21) {
+		concat serial dialog {
+			"WORKSHOP"
+		}
+	} else if (variable ch2-in-room is 22) {
+		concat serial dialog {
+			"SERVER ROOM"
+		}
+	} else if (variable ch2-in-room is 23) {
+		concat serial dialog {
+			"POWER PLANT"
+		}
+	} else if (variable ch2-in-room is 31) {
+		concat serial dialog {
+			"GRAND HALL"
+		}
+	} else if (variable ch2-in-room is 32) {
+		concat serial dialog {
+			"CASTLE KITCHEN"
+		}
+	} else if (variable ch2-in-room is 33) {
+		concat serial dialog {
+			"HYDROPONICS ROOM"
+		}
+	} else if (variable ch2-in-room is 34) {
+		concat serial dialog {
+			"CASTLE PANTRY"
+		}
+	} else if (variable ch2-in-room is 99) {
+		concat serial dialog {
+			"LAMBDA'S LAB"
+		}
+	}
+	concat serial dialog {
+		"</>\n"
+	}
+	set serial control on
 }

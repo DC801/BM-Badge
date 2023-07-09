@@ -90,13 +90,13 @@ on_load-ch2-bobsclub {
 	}
 	// END DEBUG
 	
-	set serial control on
-	
 	if (warp state is warping) {
 		// this is here because the "intro" dialog must come after the warp-in thing
 		copy warping-in-fade-in
 		set flag ch2-manual-warp to true // this will skip the "init" script's warp stuff
 	}
+	set serial control off
+	set player control off
 
 	// Have NOT been in the basement
 	if (flag ch2-cutseen-bob-party is false) {
