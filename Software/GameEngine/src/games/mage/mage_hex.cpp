@@ -371,7 +371,7 @@ void MageHexEditor::renderHexEditor(uint8_t* entityDataPointer)
    {
       auto color = COLOR_WHITE;
       auto playerEntityIndex = mapControl->getPlayerEntityIndex();
-      if (NO_PLAYER != playerEntityIndex
+      if (NO_PLAYER_INDEX != playerEntityIndex
          && i + pageOffset >= sizeof(MageEntity) * playerEntityIndex
          && i + pageOffset < sizeof(MageEntity) * (playerEntityIndex + 1))
       {

@@ -4,7 +4,6 @@
 
 APP_TIMER_DEF(sysTickAppTimer);
 APP_TIMER_DEF(morseAppTimer);
-volatile static uint32_t systick{0};
 bool morse_running = false;
 
 //SOS RCVED BK MANY HOSTILES BK PLS TRNSMIT CODE 801801 WHEN RDY 4 SUPORT FN
@@ -29,22 +28,28 @@ void morseTickHandler(void* p_context)
 
 void morseInit(void)
 {
-    app_timer_create(&morseAppTimer, APP_TIMER_MODE_REPEATED, morseTickHandler);
+#ifdef DC801_EMBEDDED
+   app_timer_create(&morseAppTimer, APP_TIMER_MODE_REPEATED, morseTickHandler);
+#endif // DC801_EMBEDDED
 }
 
 void morseStart(void)
 {
-    morseIdx = 0;
+#ifdef DC801_EMBEDDED
+   morseIdx = 0;
     ls = 2;
     app_timer_start(morseAppTimer, APP_TIMER_TICKS(80), NULL);  //15WPM
     morse_running = true;
+#endif // DC801_EMBEDDED
 }
 
 void morseStop(void)
 {
-    app_timer_stop(morseAppTimer);
+#ifdef DC801_EMBEDDED
+   app_timer_stop(morseAppTimer);
     ledOff(LED_HAX);
     morse_running = false;
+#endif // DC801_EMBEDDED
 }
 
 bool morseGetRunning(void)
@@ -68,9 +73,11 @@ void sysTickHandler(void* p_context)
  */
 void sysTickStart(void)
 {
+#ifdef DC801_EMBEDDED
     // systick = 0;
     APP_ERROR_CHECK(app_timer_create(&sysTickAppTimer, APP_TIMER_MODE_REPEATED, sysTickHandler));
     APP_ERROR_CHECK(app_timer_start(sysTickAppTimer, APP_TIMER_TICKS(1), NULL));
+#endif // DC801_EMBEDDED
 }
 
 /**

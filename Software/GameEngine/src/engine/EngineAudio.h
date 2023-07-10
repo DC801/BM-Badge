@@ -75,24 +75,26 @@ class AudioPlayer
 {
 public:
 	AudioPlayer();
+	~AudioPlayer();
+
 	void play(const char* name, double gain);
 	void loop(const char *name, double gain);
 	void stop_loop();
 
 	static void forwardCallback(void* userdata, uint8_t* stream, int len)
 	{
-		static_cast<AudioPlayer*>(userdata)->callback((const nrfx_i2s_buffers_t*)stream, len);
+		static_cast<AudioPlayer*>(userdata)->callback((nrfx_i2s_buffers_t*)stream, len);
 	}
 
 private:
-	void callback(const nrfx_i2s_buffers_t* stream, uint32_t len);
-	void addAudio(std::unique_ptr<Audio> audio);
+	void callback(nrfx_i2s_buffers_t* stream, uint32_t len);
+	void addAudio(Audio* audio);
 	void playAudio(const char* filename, bool loop, double gain);
 	void fadeAudio();
 	void freeAudio(Audio* audio);
 	void lockAudio(cm_Event* e);
 
-	uint32_t soundCount = 0;			// Current number of simultaneous audio samples
+	static uint32_t soundCount;			// Current number of simultaneous audio samples
 	AudioMutex mutex{};
 
 #ifndef DC801_EMBEDDED

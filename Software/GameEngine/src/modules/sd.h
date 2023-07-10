@@ -88,7 +88,7 @@ private:
         {
             if (FR_OK != f_open(fp.get(), filename, FA_READ | FA_OPEN_EXISTING))
             {
-                error_print("Could not open %s", filename)
+               error_print("Could not open %s", filename);
             }
         }
 

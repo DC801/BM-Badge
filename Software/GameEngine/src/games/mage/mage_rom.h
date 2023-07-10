@@ -18,12 +18,6 @@ static const inline auto MAGE_NUM_MEM_BUTTONS = 4;
 static const inline auto DEFAULT_MAP = 0;
 static const inline auto MAGE_NO_WARP_STATE = ((uint16_t)-1);
 
-static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
-   DESKTOP_SAVE_FILE_PATH "save_0.dat",
-   DESKTOP_SAVE_FILE_PATH "save_1.dat",
-   DESKTOP_SAVE_FILE_PATH "save_2.dat"
-};
-
 enum struct MageEntityFieldOffset: uint8_t
 {
    x = 12,

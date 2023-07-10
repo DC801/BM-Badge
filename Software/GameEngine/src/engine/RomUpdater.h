@@ -1,6 +1,8 @@
 #ifndef ROM_UPDATER_H
 #define ROM_UPDATER_H
 
+#ifdef DC801_EMBEDDED
+
 #include "qspi.h"
 #include "sd.h"
 #include "utility.h"
@@ -76,12 +78,12 @@ public:
 
         if (FR_OK != sdFile.lseek(ENGINE_ROM_IDENTIFIER_STRING_LENGTH))
         {
-            error_print("Could not seek to beyond MAGEGAME in SD card")
+           error_print("Could not seek to beyond MAGEGAME in SD card");
         }
 
         if (!sdFile.read(&engineVersionSD, sizeof(engineVersionSD)))
         {
-            error_print("Could not read engine version of SD card")
+           error_print("Could not read engine version of SD card");
         }
 
         if (!sdFile.read(&gameDatHashSD, sizeof(gameDatHashSD)))
@@ -276,5 +278,6 @@ private:
     std::unique_ptr<SDCard> sdCard;
 };
 
+#endif //DC801_EMBEDDED
 
 #endif // ROM_UPDATER_H

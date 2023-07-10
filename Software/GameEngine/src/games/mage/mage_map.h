@@ -18,6 +18,7 @@ in a more accessible way.
 #include <span>
 #include <tuple>
 #include <vector>
+#include <optional>
 
 class MageScript;
 struct GoDirection
@@ -76,13 +77,13 @@ public:
    void DrawEntities(const Point& cameraPosition) const;
    void UpdateEntities(uint32_t deltaTime);
 
-   void TryMovePlayer(const Point& playerVelocity);
+   void TryMovePlayer(ButtonState button);
    
    int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
       if (entityIndex >= currentMap->entities.size() && entityIndex != MAGE_MAP_ENTITY)
       {
-         return NO_PLAYER;
+         return NO_PLAYER_INDEX;
       }
 
       switch (entityIndex)
@@ -117,29 +118,41 @@ public:
       return currentMap->geometries[mapLocalGeometryId % currentMap->geometries.size()];
    }
 
-   const MageEntity& getPlayerEntity() const
+   inline std::optional<const MageEntity*> getPlayerEntity() const
    {
+      if (currentMap->playerEntityIndex == NO_PLAYER_INDEX)
+      {
+         return std::nullopt;
+      }
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   inline MageEntity& getPlayerEntity()
+   inline std::optional<MageEntity*> getPlayerEntity()
    {
+      if (currentMap->playerEntityIndex == NO_PLAYER_INDEX)
+      {
+         return std::nullopt;
+      }
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   inline RenderableData& getPlayerEntityRenderableData()
+   inline std::optional<RenderableData> getPlayerEntityRenderableData()
    {
+      if (currentMap->playerEntityIndex == NO_PLAYER_INDEX)
+      {
+         return std::nullopt;
+      }
       return getEntityRenderableData(currentMap->playerEntityIndex);
    }
 
-   const MageEntity& getEntity(uint16_t id) const
+   inline std::optional<const MageEntity*> getEntity(uint16_t id) const
    {
-      return currentMap->entities[id % currentMap->entities.size()];
+      return &currentMap->entities[id % currentMap->entities.size()];
    }
 
-   inline MageEntity& getEntity(uint16_t id)
+   inline std::optional<MageEntity*> getEntity(uint16_t id)
    {
-      return currentMap->entities[id % currentMap->entities.size()];
+      return &currentMap->entities[id % currentMap->entities.size()];
    }
 
    inline RenderableData& getEntityRenderableData(uint16_t id)

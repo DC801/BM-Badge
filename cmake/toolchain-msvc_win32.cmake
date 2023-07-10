@@ -7,6 +7,7 @@ set(CMAKE_SYSTEM_PROCESSOR win32)
 set(CMAKE_C_COMPILER msvc)
 set(CMAKE_C_FLAGS )
 set(CMAKE_CXX_COMPILER msvc)
+
 set(CMAKE_CXX_FLAGS )
 
 # here is the target environment located

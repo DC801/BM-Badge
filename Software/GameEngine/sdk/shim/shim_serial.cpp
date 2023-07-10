@@ -1,3 +1,5 @@
+#ifdef DC801_EMBEDDED
+
 #include <algorithm>
 #include <string.h>
 #include "shim_err.h"
@@ -425,3 +427,4 @@ uint32_t usb_serial_write_in(const char *buffer)
     return len;
 }
 
+#endif // DC801_EMBEDDED

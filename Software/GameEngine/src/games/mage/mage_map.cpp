@@ -63,14 +63,14 @@ MapData::MapData(uint32_t& address)
       address += sizeof(uint16_t);
    }
    
-   for (auto& geometryId : geometryGlobalIds)
+   for (auto i = 0; i < geometryCount; i++)
    {
-      geometries.push_back(ROM()->GetReadPointerByIndex<MageGeometry>(geometryGlobalIds[geometryId]));
+      geometries.push_back(ROM()->GetReadPointerByIndex<MageGeometry>(geometryGlobalIds[i]));
    }
 
-   for (auto& scriptId : scriptGlobalIds)
+   for (auto i = 0; i < scriptCount; i++)
    {
-      scripts.push_back(ROM()->GetReadPointerByIndex<MageScript>(scriptGlobalIds[scriptId]));
+      scripts.push_back(ROM()->GetReadPointerByIndex<MageScript>(scriptGlobalIds[i]));
    }
 
    for (auto i = 0; i < entityCount; i++)
@@ -81,8 +81,8 @@ MapData::MapData(uint32_t& address)
 
    for (auto i = 0; i < layerCount; i++)
    {
-      layers.push_back(ROM()->GetReadPointerToAddress<MageMapTile>(address));
-      address += rows * cols * sizeof(uint8_t*);
+      auto layerAddress = address + i * rows * cols * sizeof(uint8_t*);
+      layers.push_back(ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress));
    }
 }
 
@@ -105,7 +105,7 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
 void MapControl::DrawGeometry(const Point& camera) const
 {
    bool isColliding = false;
-   if (currentMap->playerEntityIndex != NO_PLAYER)
+   if (currentMap->playerEntityIndex != NO_PLAYER_INDEX)
    {
       auto playerPosition = currentMap->entityRenderableData[currentMap->playerEntityIndex].center;
       for (uint16_t i = 0; i < GeometryCount(); i++)
@@ -127,7 +127,7 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
          auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
          auto currentTile = &layerTiles[tileIndex];
 
-         if (!currentTile->tileId) { return; }
+         if (!currentTile->tileId) { continue; }
 
          auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
 
@@ -135,7 +135,7 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
          if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
             || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight)
          {
-            return;
+            continue;
          }
 
          tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
@@ -188,107 +188,56 @@ void MapControl::UpdateEntities(uint32_t deltaTime)
    }
 }
 
-void MapControl::TryMovePlayer(const Point& playerVelocity)
+void MapControl::TryMovePlayer(ButtonState button)
 {
-   auto pushback = Point{ 0,0 };
-   auto maxPushback = float{ 0.0f };
-   // TODO FML
-#if false
-   auto setPushbackToMinCollision = [&](const Point& pointA, const Point& pointB) {
+   auto playerEntity = getPlayerEntity();
+   if (playerEntity.has_value())
+   {
+      auto player = *playerEntity;
+      auto playerVelocity = Point{ 0,0 };
 
-      auto internalPushbackCalc = [&](const MageMapTile* tile, const Point& tileCorner) {
+      // moving when there's at least one button not being counteracted
+      isMoving = (
+         (button.IsPressed(KeyPress::Ljoy_left) || button.IsPressed(KeyPress::Ljoy_right))
+         && button.IsPressed(KeyPress::Ljoy_left) != button.IsPressed(KeyPress::Ljoy_right))
+         || ((button.IsPressed(KeyPress::Ljoy_up) || button.IsPressed(KeyPress::Ljoy_down))
+            && button.IsPressed(KeyPress::Ljoy_up) != button.IsPressed(KeyPress::Ljoy_down));
 
-         auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tile->tilesetId);
-         auto geometry = tileset->GetGeometryForTile(tile->tileId - 1);
-         if (geometry)
-         {
-            auto geometryPoints = geometry->FlipByFlags(tile->flags, tileset->TileWidth, tileset->TileHeight);
-            for (auto i = 0; i < geometryPoints.size(); i++)
-            {
-               auto geometryPointA = geometryPoints[i] + tileCorner;
-               auto geometryPointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileCorner;
-
-               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA + playerVelocity, pointB + playerVelocity, geometryPointA, geometryPointB);
-               // auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA, pointA + playerVelocity, geometryPointA, geometryPointB);
-               // auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointB, pointB + playerVelocity, geometryPointA, geometryPointB);
-               if (intersection.has_value())
-               {
-                  auto cornerVector = intersection.value() - pointA;
-                  auto cornerDistance = MageGeometry::VectorLength(cornerVector.x, cornerVector.y);
-                  if (cornerDistance > maxPushback)
-                  {
-                     pushback = cornerVector;
-                     maxPushback = cornerDistance;
-                  }
-               }
-            }
-         }
-      };
-
-      for (auto layerIndex = 0; layerIndex < LayerCount(); layerIndex++)
+      if (isMoving)
       {
-         auto tileCorner = Point{ 0,0 };
-         auto getTile = [&](const Point& point)
+         if (button.IsPressed(KeyPress::Ljoy_left))
          {
-            auto layerAddress = LayerAddress(layerIndex);
-            auto layerTiles = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
-
-            auto col = point.x / TileWidth();
-            auto row = point.y / TileHeight();
-            auto tileIndex = col + (row * Cols());
-            tileCorner = Point{ col * TileWidth(), row * TileHeight() };
-            return &layerTiles[tileIndex];
-         };
-
-         const auto tileA = getTile(pointA);
-         internalPushbackCalc(tileA, tileCorner);
-
-         const auto tileAMove = getTile(pointB);
-         if (tileA != tileAMove)
+            playerVelocity.x -= mageSpeed;
+            playerEntity->direction = WEST;
+         }
+         else if (button.IsPressed(KeyPress::Ljoy_right))
          {
-            internalPushbackCalc(tileAMove, tileCorner);
+            playerVelocity.x += mageSpeed;
+            playerEntity->direction = EAST;
          }
 
-         const auto tile = getTile(pointA);
-         internalPushbackCalc(tile, tileCorner);
-
-         const auto tileAfterMove = getTile(pointB);
-         if (tile != tileAfterMove)
+         if (button.IsPressed(KeyPress::Ljoy_up))
          {
-            internalPushbackCalc(tileAfterMove, tileCorner);
+            playerVelocity.y -= mageSpeed;
+            playerEntity->direction = NORTH;
+         }
+         else if (button.IsPressed(KeyPress::Ljoy_down))
+         {
+            playerVelocity.y += mageSpeed;
+            playerEntity->direction = SOUTH;
+         }
+
+         if (playerVelocity.x && playerVelocity.y)
+         {
+            // normalize this by scaling using known information about the data structure
+            // namely, this case is normally a move of 4,4 which gives a total speed of 5.65 diagonally
+            // using 3,3 instead gives a total speed of 4.24, still faster than up and down, but by a much smaller amount
+            playerVelocity = playerVelocity * 3 / 4;
          }
       }
-   };
 
-   const auto& playerHitBox = getPlayerEntityRenderableData().hitBox;
-   const auto topLeft = Point{ playerHitBox.origin.x, playerHitBox.origin.y };
-   const auto topRight = Point{ playerHitBox.origin.x + playerHitBox.w, playerHitBox.origin.y };
-   const auto bottomLeft = Point{ playerHitBox.origin.x, playerHitBox.origin.y + playerHitBox.h };
-   const auto bottomRight = Point{ playerHitBox.origin.x + playerHitBox.w, playerHitBox.origin.y + playerHitBox.h };
-
-   if (playerVelocity.x > 0)
-   {
-      //right
-      setPushbackToMinCollision(topRight, bottomRight);
+      player->x += playerVelocity.x;
+      player->y += playerVelocity.y;
+      
    }
-   else if (playerVelocity.x < 0)
-   {
-      //left
-      setPushbackToMinCollision(topLeft, bottomLeft);
-   }
-
-   if (playerVelocity.y > 0)
-   {
-      //down
-      setPushbackToMinCollision(bottomLeft, bottomRight);
-   }
-   else if (playerVelocity.y < 0)
-   {
-      //up
-      setPushbackToMinCollision(topLeft, topRight);
-   }
-#endif //false
-
-   getPlayerEntity().x += playerVelocity.x - pushback.x;
-   getPlayerEntity().y += playerVelocity.y - pushback.y;
 }

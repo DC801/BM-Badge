@@ -49,8 +49,6 @@ public:
    void Run();
 
 private:
-   void gameLoop();
-
    void processInputs();
 
    //updates the state of all the things before rendering:
@@ -70,7 +68,7 @@ private:
    //the hex editor is open, when it is closed, when in any menus, etc.
    void applyUniversalInputs();
    void handleEntityInteract(bool hack);
-   void movePlayer(MageEntity& playerEntity, ButtonState button);
+   void movePlayer(ButtonState button);
 
    bool engineIsInitialized{ false };
 

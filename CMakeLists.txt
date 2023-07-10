@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.24)
 
-enable_language(ASM)
+if (WIN32)
+enable_language(C CXX ASM_MASM)
+else()
+enable_language(C CXX ASM)
+endif()
+
 project(bm_badge)
 
 include(CheckCXXSymbolExists)

@@ -42,6 +42,20 @@ static inline void debug_print(const char* strLike)
 {
    printf("%s\n", strLike);
 }
+
+template <typename... Ts>
+static inline void error_print(const char* format, Ts... fmt)
+{
+   printf("ERROR: ");
+   printf(format, std::forward<Ts>(fmt)...);
+   printf("\n");
+}
+
+static inline void error_print(const char* strLike)
+{
+   printf("ERROR: ");
+   printf("%s\n", strLike);
+}
 #endif
 
 namespace Util
@@ -57,13 +71,22 @@ namespace Util
 
       static time_point now() noexcept
       {
+#ifdef DC801_EMBEDDED
          // nrfx_systick_get(&systick);
          // return time_point{ duration{systick.time} };
          return time_point{ duration{getSystick()} };
+#else
+         return time_point{ duration{systick} };
+         
+#endif
       }
 
    private:
+#ifdef DC801_EMBEDDED
       static nrfx_systick_state_t systick;
+#else
+      static uint32_t systick;
+#endif
    };
 
    template <typename T, typename P>

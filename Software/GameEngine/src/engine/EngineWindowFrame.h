@@ -1,11 +1,12 @@
 #ifndef _ENGINEWINDOWFRAME_H
 #define _ENGINEWINDOWFRAME_H
 
-#include "FrameBuffer.h"
+#ifndef DC801_EMBEDDED
+
 #include "EngineInput.h"
 #include "modules/keyboard.h"
 #include "modules/led.h"
-#ifndef DC801_EMBEDDED
+
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -44,8 +45,8 @@ private:
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
    
-   const SDL_Rect gameViewportSrcRect = { 0, 0, DrawWidth, DrawHeight };
-   const SDL_Rect gameViewportDstRect = { 112, 56, DrawWidth, DrawHeight };
+   const SDL_Rect gameViewportSrcRect = { 0, 0, 320, 240 };
+   const SDL_Rect gameViewportDstRect = { 112, 56, 320, 240 };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
    const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
    const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };

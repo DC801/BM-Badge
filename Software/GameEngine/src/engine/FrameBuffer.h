@@ -111,7 +111,7 @@ public:
 
     void blt();
 
-    void regionBlt(const Point& drawPoint, int w, int h) const;
+    //void regionBlt(const Point& drawPoint, int w, int h) const;
 
 private:
 #ifndef DC801_EMBEDDED

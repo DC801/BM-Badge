@@ -2,6 +2,7 @@
 #include "shim_timer.h"
 #include "shim_err.h"
 
+#include <chrono>
 #ifdef DC801_EMBEDDED
 
 // NRF_TIMER_Type NRF_TIMER_1 = { 0 };
@@ -102,12 +103,11 @@
 // timer_manager manager{};
 
 #else
-
 extern "C"
 {
 	void signal_handler(int signal)
 	{
-		manager.kill();
+		//manager.kill();
 		exit(0);
 	}
 

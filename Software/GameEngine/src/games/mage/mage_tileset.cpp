@@ -28,19 +28,25 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
     auto yMax = target.h - 1;
     auto xMin = 0;
     auto xMax = target.w - 1;
+    auto iteratorX = 1;
     auto iteratorY = 1;
+    if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
+    {
+       xMin = target.w - 1;
+       xMax = 0;
+       iteratorX = -1;
+    }
 
-    if (flags & RENDER_FLAGS_FLIP_Y)
+    if (flags & RENDER_FLAGS_FLIP_Y || flags & RENDER_FLAGS_FLIP_DIAG)
     {
         yMin = target.h - 1;
         yMax = 0;
-        xMin = target.w - 1;
-        xMax = 0;
         iteratorY = -1;
     }
+
     for (auto y = yMin; y <= yMax; y += iteratorY)
     {
-        for (auto x = xMin; x < xMax; x++)
+        for (auto x = xMin; x <= xMax; x += iteratorX)
         {
             const auto drawX = tileDrawPoint.x + x;
             const auto drawY = tileDrawPoint.y + y;
@@ -52,7 +58,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
             {
                 continue;
             }
-            frameBuffer->setPixel(drawX, drawY, color);
+            frameBuffer->setPixel(drawX, drawY, (color >> 8) | (color << 8));
             // frameBuffer->(DrawWidth * drawY + drawX) = color;
         }
     }

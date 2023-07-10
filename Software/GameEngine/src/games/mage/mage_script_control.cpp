@@ -18,10 +18,10 @@ void MageScriptControl::initializeScriptsOnMapLoad()
    for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
    {
       //Initialize the script resumeStates to default values for this map.
-      auto& entity = mapControl->getEntity(i);
+      auto entity = *mapControl->getEntity(i);
 
-      entityTickResumeStates[i] = MageScriptState{ entity.onTickScriptId, false };
-      entityInteractResumeStates[i] = MageScriptState{ entity.onInteractScriptId, false };
+      entityTickResumeStates[i] = MageScriptState{ entity->onTickScriptId, false };
+      entityInteractResumeStates[i] = MageScriptState{ entity->onInteractScriptId, false };
    }
    jumpScriptId = MAGE_NO_SCRIPT;
 }
@@ -98,16 +98,16 @@ void MageScriptControl::processActionQueue(MageScriptState& resumeState, MageScr
             //target is an entity
             else
             {
-               auto& entity = mapControl->getEntity(currentEntityId);
+               auto entity = *mapControl->getEntity(currentEntityId);
 
                //if it's not a map script, set the appropriate entity's script value:
                if (currentScriptType == MageScriptType::ON_INTERACT)
                {
-                  entity.onInteractScriptId = jumpScriptId.value();
+                  entity->onInteractScriptId = jumpScriptId.value();
                }
                else if (currentScriptType == MageScriptType::ON_TICK)
                {
-                  entity.onTickScriptId = jumpScriptId.value();
+                  entity->onTickScriptId = jumpScriptId.value();
                }
             }
          }
@@ -186,7 +186,7 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t entityId)
    // Get a pointer to the script state 
    auto& scriptState = entityTickResumeStates[currentEntityId];
    // convert the entity's local ScriptId to the global context:
-   uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId).onTickScriptId;
+   uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId).value()->onTickScriptId;
 
    // when there isn't a script running, figure out what to do
    if (!scriptState.scriptIsRunning)
@@ -211,7 +211,7 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
    currentEntityId = filteredEntityId;
 
    auto& scriptState = entityInteractResumeStates[currentEntityId];
-   uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId).onInteractScriptId;
+   uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId).value()->onInteractScriptId;
    //if a script is not currently running, do nothing.
    if (!scriptState.scriptIsRunning)
    {

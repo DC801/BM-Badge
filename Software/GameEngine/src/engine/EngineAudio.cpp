@@ -1,3 +1,5 @@
+#ifdef DC801_EMBEDDED
+
 #include "EngineAudio.h"
 
 #include "modules/drv_nau8810.h"
@@ -22,7 +24,7 @@
 
 #define BUFFER_SIZE (AUDIO_SAMPLES / AUDIO_CHANNELS)
 uint32_t stream[2][BUFFER_SIZE];
-uint32_t soundCount = 0;
+uint32_t AudioPlayer::soundCount = 0;
 
 AudioMutex audio_mutex{};
 Audio head{};
@@ -40,7 +42,7 @@ void AudioPlayer::lockAudio(cm_Event* e)
 	}
 }
 
-void AudioPlayer::callback(const nrfx_i2s_buffers_t* p_released, uint32_t status)
+void AudioPlayer::callback(nrfx_i2s_buffers_t* p_released, uint32_t status)
 {
 	if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) == 0)
 	{
@@ -238,3 +240,5 @@ AudioPlayer::AudioPlayer()
 	cm_set_lock([](cm_Event* e) { lockFn(e); });
 	cm_set_master_gain(1.0);
 }
+
+#endif // DC801_EMBEDDED

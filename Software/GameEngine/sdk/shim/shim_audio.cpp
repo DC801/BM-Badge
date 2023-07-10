@@ -1,5 +1,5 @@
 #ifndef DC801_EMBEDDED
-#include <EngineAudio.h>
+#include "EngineAudio.h"
 #include <cstring>
 #include <iostream>
 
@@ -19,6 +19,8 @@
 
 
  */
+uint32_t AudioPlayer::soundCount = 0;
+
 // Constructor:
 //  - Initialize SDL audio
 //  - Configure the SDL device structure
@@ -48,7 +50,7 @@ AudioPlayer::AudioPlayer()
 
 	// Initialize cmixer
 	cm_init(AUDIO_FREQUENCY);
-	cm_set_mutex(&mutex);
+	//cm_set_lock(&mutex);
 	cm_set_master_gain(1.0);
 
 	SDL_PauseAudioDevice(device.id, 0);
@@ -81,7 +83,7 @@ AudioPlayer::~AudioPlayer()
 //   - Walk the tree, mixing all samples in progress
 //   - Loop audio samples, fading the volume when necessary
 //   - Free finished samples
-void AudioPlayer::callback(uint8_t* stream, int len)
+void AudioPlayer::callback(nrfx_i2s_buffers_t* stream, uint32_t len)
 {
 	// Capture the root of the list
 	auto previous = head.get();
@@ -89,7 +91,7 @@ void AudioPlayer::callback(uint8_t* stream, int len)
 		// Pull the first audio sample
 		auto audio = previous->next.get();
 
-		memset(stream, 0, len);
+		//memset(stream, 0, len);
 		// Walk the list
 		while (audio != NULL)
 		{
@@ -154,7 +156,7 @@ void AudioPlayer::fadeAudio()
 }
 
 // Add an audio sample to the end of the list
-void AudioPlayer::addAudio(std::unique_ptr<Audio> audio)
+void AudioPlayer::addAudio(Audio* audio)
 {
 	auto root = head.get();
 	// Sanity check
@@ -170,7 +172,7 @@ void AudioPlayer::addAudio(std::unique_ptr<Audio> audio)
 	}
 
 	// Link the new item to the end
-	root->next = std::move(audio);
+	root->next = std::unique_ptr<Audio>{ audio };
 }
 
 // Loads a wave file and adds it to the list of samples to be played
@@ -239,7 +241,7 @@ void AudioPlayer::playAudio(const char* filename, bool loop, double gain)
 	}
 
 	// Append the sample to the end of the list
-	addAudio(reinterpret_cast<Audio*>(device.spec.userdata), std::move(audio));
+	addAudio(reinterpret_cast<Audio*>(device.spec.userdata));
 
 	// Resume audio callback
 	SDL_UnlockAudioDevice(device.id);

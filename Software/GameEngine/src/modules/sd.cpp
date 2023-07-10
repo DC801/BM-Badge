@@ -28,6 +28,8 @@
 
 #include "sd.h"
 
+#ifdef DC801_EMBEDDED
+
 SDCard::SDCard()
 {
 	// Initialize FATFS disk I/O interface by providing the block device.
@@ -94,3 +96,4 @@ uint8_t util_sd_getnum_files(const char* path, const char* extension) {
 	}
 	return counter;
 }
+#endif //DC801_EMBEDDED

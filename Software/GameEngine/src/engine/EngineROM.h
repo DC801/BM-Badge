@@ -15,6 +15,12 @@
 #include <vector>
 
 #define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
+static const inline uint8_t ENGINE_ROM_SAVE_GAME_SLOTS = 3;
+static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
+   DESKTOP_SAVE_FILE_PATH "save_0.dat",
+   DESKTOP_SAVE_FILE_PATH "save_1.dat",
+   DESKTOP_SAVE_FILE_PATH "save_2.dat"
+};
 
 static const inline auto ENGINE_VERSION = 3;
 
@@ -82,7 +88,6 @@ static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
 //which is defined as 2^25 bytes available for writing.
 //We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data at the end of rom
-static const inline uint8_t ENGINE_ROM_SAVE_GAME_SLOTS = 3;
 static const inline uint32_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
 static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
 static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);

@@ -64,8 +64,8 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 		renderer,
 		SDL_PIXELFORMAT_RGB565,
 		SDL_TEXTUREACCESS_STREAMING,
-		DrawWidth,
-		DrawHeight
+		320,
+		240
 	);
 }
 
@@ -146,7 +146,7 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
 	void* targetPixelBuffer;
 	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, &targetPixelBuffer, &pitch))
 	{
-		memmove(targetPixelBuffer, frame, FramebufferSize * sizeof(uint16_t));
+		memmove(targetPixelBuffer, frame, 320*240 * sizeof(uint16_t));
 		SDL_UnlockTexture(components.gameViewportTexture);
 	}
 

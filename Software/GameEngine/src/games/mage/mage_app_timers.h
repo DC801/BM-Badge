@@ -6,6 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
+   volatile static uint32_t systick;
 
     void sysTickStart(void);
     void sysTickHandler(void* p_context);

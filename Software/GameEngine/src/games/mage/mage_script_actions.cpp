@@ -13,15 +13,17 @@
 #include "mage_hex.h"
 #include "utility.h"
 
+#define NO_JUMP_SCRIPT std::nullopt
+
 void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry)
 {
-   auto& entity = mapControl->getEntity(sourceEntityIndex);
+   auto entity = *mapControl->getEntity(sourceEntityIndex);
    auto& renderableData = mapControl->getEntityRenderableData(sourceEntityIndex);
-   auto entityCenterPoint = renderableData.center - Point{ entity.x, entity.y };
+   auto entityCenterPoint = renderableData.center - Point{ entity->x, entity->y };
    resumeState.pointA = geometry->GetPoint(resumeState.currentSegmentIndex) - entityCenterPoint;
    resumeState.pointB = geometry->GetPoint(resumeState.currentSegmentIndex + 1) - entityCenterPoint;
    auto relativeDirection = resumeState.pointA.getRelativeDirection(resumeState.pointB);
-   entity.direction |= relativeDirection;
+   entity->direction |= relativeDirection;
 }
 
 std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -37,7 +39,7 @@ std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* arg
       uint8_t paddingG;
    } ActionNullAction;
    //nullAction does nothing.
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -53,7 +55,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_
    auto argStruct = (ActionCheckEntityName*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto entityName = mapControl->getEntityByMapLocalId(entityId).name;
       auto romString = stringLoader->getString(argStruct->stringId, entityName);
@@ -65,7 +67,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -81,7 +83,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* 
    auto argStruct = (ActionCheckEntityX*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.x == argStruct->expectedValue);
@@ -90,7 +92,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* 
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -106,7 +108,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* 
    auto argStruct = (ActionCheckEntityY*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.y == argStruct->expectedValue);
@@ -115,7 +117,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* 
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -131,7 +133,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(c
    auto argStruct = (ActionCheckEntityInteractScript*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.onInteractScriptId == argStruct->expectedScript);
@@ -140,7 +142,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(c
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -156,7 +158,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const
    auto argStruct = (ActionCheckEntityTickScript*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.onTickScriptId == argStruct->expectedScript);
@@ -165,7 +167,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -181,7 +183,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_
    auto argStruct = (ActionCheckEntityType*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = entity.primaryId == argStruct->entityTypeId && entity.primaryIdType == ENTITY_TYPE;
@@ -191,7 +193,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -206,7 +208,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const 
    } ActionCheckEntityPrimaryId;
    auto argStruct = (ActionCheckEntityPrimaryId*)args;
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t sizeLimit{ 1 };
@@ -223,7 +225,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const 
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -239,7 +241,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
    auto argStruct = (ActionCheckEntitySecondaryId*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t sizeLimit = 1;
@@ -257,7 +259,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -273,7 +275,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(c
    auto argStruct = (ActionCheckEntityPrimaryIdType*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
@@ -283,7 +285,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(c
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -299,7 +301,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation
    auto argStruct = (ActionCheckEntityCurrentAnimation*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.currentAnimation == argStruct->expectedValue);
@@ -308,7 +310,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -324,7 +326,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(con
    auto argStruct = (ActionCheckEntityCurrentFrame*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.currentFrameIndex == argStruct->expectedValue);
@@ -333,7 +335,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(con
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -349,7 +351,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const u
    auto argStruct = (ActionCheckEntityDirection*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.direction == argStruct->expectedValue);
@@ -358,7 +360,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const u
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -375,7 +377,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const ui
    auto argStruct = (ActionCheckEntityGlitched*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       if (entity.direction & RENDER_FLAGS_IS_GLITCHED)
@@ -383,7 +385,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const ui
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -399,7 +401,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(
    auto argStruct = (ActionCheckEntityHackableStateA*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.hackableStateA == argStruct->expectedValue);
@@ -408,7 +410,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -424,7 +426,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(
    auto argStruct = (ActionCheckEntityHackableStateB*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.hackableStateB == argStruct->expectedValue);
@@ -433,7 +435,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -449,7 +451,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(
    auto argStruct = (ActionCheckEntityHackableStateC*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.hackableStateC == argStruct->expectedValue);
@@ -458,7 +460,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -474,7 +476,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(
    auto argStruct = (ActionCheckEntityHackableStateD*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity.hackableStateD == argStruct->expectedValue);
@@ -483,7 +485,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -498,7 +500,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    auto argStruct = (ActionCheckEntityHackableStateAU2*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.hackableStateA);
@@ -508,7 +510,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -523,7 +525,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_
    auto argStruct = (ActionCheckEntityHackableStateCU2*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.hackableStateC);
@@ -533,7 +535,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -547,7 +549,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    auto argStruct = (ActionCheckEntityHackableStateAU4*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint32_t u4_value = *(uint32_t*)((uint8_t*)&entity.hackableStateA);
@@ -556,7 +558,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -571,7 +573,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_
    auto argStruct = (ActionCheckEntityPath*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t pathId = *(uint16_t*)((uint8_t*)&entity.hackableStateA);
@@ -581,7 +583,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -605,7 +607,7 @@ std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t*
    {
       return argStruct->successScriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -620,7 +622,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
    } ActionCheckifEntityIsInGeometry;
    auto argStruct = (ActionCheckifEntityIsInGeometry*)args;
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
@@ -631,7 +633,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
          return argStruct->successScriptId;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -652,7 +654,7 @@ std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const u
    {
       return argStruct->successScriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -672,7 +674,7 @@ std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const u
    {
       return argStruct->successScriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -693,7 +695,7 @@ std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t
    {
       return argStruct->successScriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_run_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -734,7 +736,7 @@ std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* 
          //reset the variables and return, the delay is complete.
          resumeState.totalLoopsToNextAction = 0;
          resumeState.loopsToNextAction = 0;
-         return std::nullopt;
+         return NO_JUMP_SCRIPT;
       }
    }
    //a delay is not active, so we should start one:
@@ -751,7 +753,7 @@ std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* 
       resumeState.totalLoopsToNextAction = totalDelayLoops;
       resumeState.loopsToNextAction = totalDelayLoops;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -766,7 +768,7 @@ std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8
    auto argStruct = (ActionNonBlockingDelay*)args;
 
    manageProgressOfAction(resumeState, argStruct->duration);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -787,7 +789,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t*
    std::string romString = stringLoader->getString(argStruct->stringId, entityName);
    //Get the entity:
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       //simple loop to set the name:
@@ -805,7 +807,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t*
          }
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -822,12 +824,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* ar
    auto argStruct = (ActionSetEntityX*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.x = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -844,12 +846,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* ar
    auto argStruct = (ActionSetEntityY*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.y = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -865,11 +867,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(con
    } ActionSetEntityInteractScript;
    auto argStruct = (ActionSetEntityInteractScript*)args;
    auto sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      mapControl->getEntity(sourceEntityIndex).onInteractScriptId = argStruct->scriptId;
+      auto entity = *mapControl->getEntity(sourceEntityIndex);
+      entity->onInteractScriptId = argStruct->scriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -886,15 +889,16 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const u
    auto argStruct = (ActionSetEntityTickScript*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      mapControl->getEntity(sourceEntityIndex).onTickScriptId = argStruct->scriptId;
+      auto entity = *mapControl->getEntity(sourceEntityIndex);
+      entity->onTickScriptId = argStruct->scriptId;
    }
    else
    {
       mapControl->SetOnTick(argStruct->scriptId);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -911,13 +915,13 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t*
    auto argStruct = (ActionSetEntityType*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.primaryId = argStruct->entityTypeId;
       entity.primaryIdType = ENTITY_TYPE;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -934,12 +938,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const ui
    auto argStruct = (ActionSetEntityPrimaryId*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.primaryId = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -956,12 +960,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const 
    auto argStruct = (ActionSetEntitySecondaryId*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.secondaryId = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -979,12 +983,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(con
    auto argStruct = (ActionSetEntityPrimaryIdType*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1002,7 +1006,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(c
    auto argStruct = (ActionSetEntityCurrentAnimation*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
@@ -1010,7 +1014,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(c
       entity.currentFrameIndex = 0;
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1028,14 +1032,14 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const
    auto argStruct = (ActionSetEntityCurrentFrame*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       entity.currentFrameIndex = argStruct->newValue;
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1053,13 +1057,13 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uin
    auto argStruct = (ActionSetEntityDirection*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.direction |= (argStruct->direction & RENDER_FLAGS_DIRECTION_MASK);
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1077,14 +1081,14 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(
    auto argStruct = (ActionSetEntityDirectionRelative*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto newDirection = (entity.direction + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS;
       entity.direction |= (newDirection & RENDER_FLAGS_DIRECTION_MASK);
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1103,7 +1107,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
 
    int16_t targetEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->targetEntityId, entityId);
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER && targetEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX && targetEntityIndex != NO_PLAYER_INDEX)
    {
       auto& sourceEntity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto targetEntityCenter = mapControl->getEntityRenderableData(targetEntityIndex).center;
@@ -1111,7 +1115,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
       sourceEntity.direction |= sourceEntityCenter.getRelativeDirection(targetEntityCenter) & RENDER_FLAGS_DIRECTION_MASK;
       sourceEntity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1128,7 +1132,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    auto argStruct = (ActionSetEntityDirectionTargetGeometry*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
@@ -1136,7 +1140,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
       entity.direction |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1154,7 +1158,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint
    auto argStruct = (ActionSetEntityGlitched*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.direction = (MageEntityAnimationDirection)(
@@ -1162,7 +1166,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint
          | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED));
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1180,12 +1184,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(co
    auto argStruct = (ActionSetEntityHackableStateA*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.hackableStateA = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1203,12 +1207,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(co
    auto argStruct = (ActionSetEntityHackableStateB*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.hackableStateB = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1226,12 +1230,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(co
    auto argStruct = (ActionSetEntityHackableStateC*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.hackableStateC = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1249,12 +1253,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(co
    auto argStruct = (ActionSetEntityHackableStateD*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity.hackableStateD = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1271,12 +1275,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2
    auto argStruct = (ActionSetEntityHackableStateAU2*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint16_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1293,12 +1297,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2
    auto argStruct = (ActionSetEntityHackableStateCU2*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint16_t*)((uint8_t*)&entity.hackableStateC) = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1313,12 +1317,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4
    auto argStruct = (ActionSetEntityHackableStateAU4*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint32_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1335,12 +1339,12 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t*
    auto argStruct = (ActionSetEntityPath*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint16_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1371,7 +1375,7 @@ std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* a
    }
    currentSave.saveFlags[byteOffset] = currentByteValue;
    ROM()->SetCurrentSave(currentSave);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1388,7 +1392,7 @@ std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8
    } ActionSetPlayerControl;
    auto argStruct = (ActionSetPlayerControl*)args;
    //TODO FIXME: playerHasControl = argStruct->playerHasControl;
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1405,7 +1409,7 @@ std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint
    auto argStruct = (ActionSetMapTickScript*)args;
 
    mapControl->SetOnTick(argStruct->scriptId);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1422,7 +1426,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const 
    auto argStruct = (ActionSetHexCursorLocation*)args;
 
    hexEditor->setHexCursorLocation(argStruct->byteAddress);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1441,7 +1445,7 @@ std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* 
 
    currentSave.warpState = argStruct->stringId;
    ROM()->SetCurrentSave(currentSave);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1462,7 +1466,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uin
    {
       hexEditor->toggleHexEditor();
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1483,7 +1487,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(con
    {
       hexEditor->toggleHexDialog();
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1500,7 +1504,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const u
    } ActionSetHexEditorControl;
    auto argStruct = (ActionSetHexEditorControl*)args;
    hexEditor->SetPlayerHasClipboardControl(argStruct->playerHasHexEditorControl);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboard(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1517,7 +1521,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboa
    } ActionSetHexEditorControlClipboard;
    auto argStruct = (ActionSetHexEditorControlClipboard*)args;
    hexEditor->SetPlayerHasClipboardControl(argStruct->playerHasClipboardControl);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1533,7 +1537,7 @@ std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, 
    } ActionLoadMap;
    auto argStruct = (ActionLoadMap*)args;
    mapControl->mapLoadId = argStruct->mapId;
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1560,7 +1564,7 @@ std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* arg
       // will be 0 any time there is no response; no jump
       resumeState.totalLoopsToNextAction = 0;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1578,7 +1582,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
    auto argStruct = (ActionPlayEntityAnimation*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       if (resumeState.totalLoopsToNextAction == 0)
@@ -1608,7 +1612,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
       // the last frame that was rendered for this entity
       resumeState.currentSegmentIndex = entity.currentFrameIndex;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1625,7 +1629,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    auto argStruct = (ActionTeleportEntityToGeometry*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
@@ -1636,7 +1640,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
       entity.y = offsetPoint.y;
       entity.updateRenderableData(renderable, 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1650,7 +1654,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
    auto argStruct = (ActionWalkEntityToGeometry*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
@@ -1679,7 +1683,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
       }
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1693,7 +1697,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
    auto argStruct = (ActionWalkEntityAlongGeometry*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
@@ -1706,7 +1710,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
          entity.x = offsetPoint.x;
          entity.y = offsetPoint.y;
          entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
-         return std::nullopt;
+         return NO_JUMP_SCRIPT;
       }
       // and for everything else...
       if (resumeState.totalLoopsToNextAction == 0)
@@ -1756,7 +1760,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
       }
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
@@ -1769,7 +1773,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
    auto argStruct = (ActionLoopEntityAlongGeometry*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
@@ -1782,7 +1786,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
          entity.x = location.x;
          entity.y = location.y;
          entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
-         return std::nullopt;
+         return NO_JUMP_SCRIPT;
       }
 
       // and for everything else...
@@ -1834,7 +1838,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
       entity.y = betweenPoint.y;
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1852,7 +1856,7 @@ std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(co
    auto argStruct = (ActionSetCameraToFollowEntity*)args;
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    camera.followEntityId = sourceEntityIndex;
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1870,10 +1874,10 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(co
 
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-   camera.followEntityId = NO_PLAYER;
-   const auto midScreen = Point{ DrawWidth/2, DrawHeight/2 };
+   camera.followEntityId = NO_PLAYER_INDEX;
+   const auto midScreen = Point{ DrawWidth / 2, DrawHeight / 2 };
    camera.position = geometry->GetPoint(0) - midScreen;
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1888,21 +1892,21 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
    auto argStruct = (ActionPanCameraToEntity*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
 
       if (resumeState.totalLoopsToNextAction == 0)
       {
-         camera.followEntityId = NO_PLAYER;
+         camera.followEntityId = NO_PLAYER_INDEX;
          //this is the points we're interpolating between
          resumeState.pointA = Point{ camera.position.x, camera.position.y };
       }
       float progress = manageProgressOfAction(resumeState, argStruct->duration);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
-      resumeState.pointB = { mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidth/2, mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeight/2 };
+      resumeState.pointB = { mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidth / 2, mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeight / 2 };
       Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
       camera.position.x = betweenPoint.x;
       camera.position.y = betweenPoint.y;
@@ -1912,7 +1916,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
          camera.followEntityId = sourceEntityIndex;
       }
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1930,15 +1934,15 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
 
    if (resumeState.totalLoopsToNextAction == 0)
    {
-      camera.followEntityId = NO_PLAYER;
+      camera.followEntityId = NO_PLAYER_INDEX;
       //this is the points we're interpolating between
       resumeState.pointA = {
          camera.position.x,
          camera.position.y,
       };
       resumeState.pointB = {
-         geometry->GetPoint(0).x - DrawWidth/2,
-         geometry->GetPoint(0).y - DrawHeight/2,
+         geometry->GetPoint(0).x - DrawWidth / 2,
+         geometry->GetPoint(0).y - DrawHeight / 2,
       };
    }
    float progress = manageProgressOfAction(resumeState, argStruct->duration);
@@ -1946,7 +1950,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
    Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
    camera.position.x = betweenPoint.x;
    camera.position.y = betweenPoint.y;
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1959,7 +1963,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(cons
    } ActionPanCameraAlongGeometry;
    auto argStruct = (ActionPanCameraAlongGeometry*)args;
 
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -1972,7 +1976,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(con
    } ActionLoopCameraAlongGeometry;
    auto argStruct = (ActionLoopCameraAlongGeometry*)args;
 
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2008,7 +2012,7 @@ std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t
       camera.shakeAmplitude = 0;
       camera.shakePhase = 0;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
@@ -2023,7 +2027,7 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t*
    float progress = manageProgressOfAction(resumeState, argStruct->duration);
 
    frameBuffer->SetFade(argStruct->color, progress);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2040,7 +2044,7 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* 
       argStruct->duration);
 
    frameBuffer->SetFade(argStruct->color, 1.0f - progress);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2087,7 +2091,7 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t*
    mutate(argStruct->operation, currentSave.scriptVariables[argStruct->variableId], argStruct->value);
    ROM()->SetCurrentSave(currentSave);
 
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2106,7 +2110,7 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t
    auto currentSave = ROM()->GetCurrentSaveCopy();
    mutate(argStruct->operation, currentSave.scriptVariables[argStruct->variableId], currentSave.scriptVariables[argStruct->sourceId]);
    ROM()->SetCurrentSave(currentSave);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2126,7 +2130,7 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
    auto currentValue = &currentSave.scriptVariables[argStruct->variableId];
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER)
+   if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& variableValue = currentSave.scriptVariables[argStruct->variableId];
@@ -2171,7 +2175,7 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
       }
    }
    ROM()->SetCurrentSave(currentSave);
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2192,7 +2196,7 @@ std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* 
    {
       return argStruct->successScriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2219,7 +2223,7 @@ std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t*
    {
       return argStruct->successScriptId;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2245,27 +2249,31 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
    // the ROM chip's 10000 write cycles.
    if (resumeState.totalLoopsToNextAction == 0)
    {
-      // do rom writes
-      auto playerName = mapControl->getPlayerEntity().name;
+      auto playerEntity = mapControl->getPlayerEntity();
       auto currentSave = ROM()->GetCurrentSaveCopy();
-      for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
+      if (playerEntity.has_value())
       {
-         if (playerName[i])
+         // do rom writes
+         auto playerName = playerEntity.value()->name;
+         for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
          {
-            currentSave.name[i] = playerName[i];
-         }
-         else
-         {
-            while (i < MAGE_ENTITY_NAME_LENGTH)
+            if (playerName[i])
             {
-               currentSave.name[i++] = 0;
+               currentSave.name[i] = playerName[i];
+            }
+            else
+            {
+               while (i < MAGE_ENTITY_NAME_LENGTH)
+               {
+                  currentSave.name[i++] = 0;
+               }
             }
          }
-      }
-      //TODO FIXME: 
-      // ROM()->WriteSaveSlot(currentSaveIndex, currentSave.get());
-      // readSaveFromRomIntoRam(currentSaveIndex);
+         //TODO FIXME: 
+         // ROM()->WriteSaveSlot(currentSaveIndex, currentSave.get());
+         // readSaveFromRomIntoRam(currentSaveIndex);
 
+      }
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       auto jumpScriptId = dialogControl->StartModalDialog("Save complete.");
       resumeState.totalLoopsToNextAction = 1;
@@ -2276,7 +2284,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
    {
       resumeState.totalLoopsToNextAction = 0;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2305,7 +2313,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args,
    {
       resumeState.totalLoopsToNextAction = 0;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2336,7 +2344,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
 
       // do rom writes
       //copyNameToAndFromPlayerAndSave(true);
-      auto playerName = mapControl->getPlayerEntity().name;
+      //auto playerName = mapControl->getPlayerEntity()->name;
       //memcpy(currentSave.name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
       //ROM()->WriteSaveSlot(argStruct->slotIndex, &currentSave);
       ROM()->LoadSaveSlot(argStruct->slotIndex);
@@ -2349,7 +2357,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
    {
       resumeState.totalLoopsToNextAction = 0;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2365,7 +2373,7 @@ std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(cons
    } ActionSetConnectSerialDialog;
    ActionSetConnectSerialDialog* argStruct = (ActionSetConnectSerialDialog*)args;
    commandControl->connectSerialDialogId = argStruct->serialDialogId;
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2392,7 +2400,7 @@ std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8
    {
       resumeState.totalLoopsToNextAction = 0;
    }
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2409,7 +2417,7 @@ std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* a
    } ActionInventoryGet;
    auto argStruct = (ActionInventoryGet*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2426,7 +2434,7 @@ std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* 
    } ActionInventoryDrop;
    auto argStruct = (ActionInventoryDrop*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2442,7 +2450,7 @@ std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t*
    } ActionCheckInventory;
    auto argStruct = (ActionCheckInventory*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2458,7 +2466,7 @@ std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint
    } ActionSetMapLookScript;
    auto argStruct = (ActionSetMapLookScript*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2474,7 +2482,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const u
    } ActionSetEntityLookScript;
    auto argStruct = (ActionSetEntityLookScript*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2491,7 +2499,7 @@ std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uin
    } ActionSetTeleportEnabled;
    auto argStruct = (ActionSetTeleportEnabled*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2506,7 +2514,7 @@ std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args,
    } ActionCheckMap;
    auto argStruct = (ActionCheckMap*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2523,7 +2531,7 @@ std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* ar
    } ActionSetBleFlag;
    auto argStruct = (ActionSetBleFlag*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
@@ -2539,7 +2547,7 @@ std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* 
    } ActionCheckBleFlag;
    auto argStruct = (ActionCheckBleFlag*)args;
    // TODO: implement this
-   return std::nullopt;
+   return NO_JUMP_SCRIPT;
 }
 
 float MageScriptActions::getProgressOfAction(

@@ -23,7 +23,8 @@ all of the old code used as the foundation of this badge.
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
-#define NO_PLAYER 255
+#define NO_PLAYER std::nullopt
+#define NO_PLAYER_INDEX 255
 
 //this is a value used to indicate that an action's calling entity was
 //the map, and not actually one of the entities on the map.

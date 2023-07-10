@@ -21,7 +21,11 @@
 
 uint8_t getButton(bool waitForLongPress) { return 0; }
 
+#ifdef DC801_EMBEDDED
 nrfx_systick_state_t Util::ClockProxy::systick{ 0 };
+#else
+uint32_t Util::ClockProxy::systick{ 0 };
+#endif
 
 /**
  * Calculate the CRC on a chunk of memory

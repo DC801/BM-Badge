@@ -1,4 +1,10 @@
 {
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "build\\",
+      "build_hw"
+    ]
+  },
   "ExpandedNodes": [
     "",
     "\\Software",
@@ -10,12 +16,5 @@
     "\\Software\\GameEngine\\src\\games",
     "\\Software\\GameEngine\\src\\games\\mage"
   ],
-  "SelectedNode": "\\Software\\GameEngine\\src\\games\\mage\\mage_map.cpp",
-  "PreviewInSolutionExplorer": false,
-  "OutputFoldersPerTargetSystem": {
-    "Local Machine": [
-      "build\\",
-      "build_hw"
-    ]
-  }
+  "PreviewInSolutionExplorer": false
 }
