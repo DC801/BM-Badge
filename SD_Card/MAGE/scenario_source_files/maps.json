@@ -129,6 +129,12 @@
 			"south": "on_go-castle-34-south"
 		}
 	},
+	"ch2-castle-99": {
+		"path": "maps/map-ch2-castle-99.json",
+		"on_load": "on_load-ch2-castle-99",
+		"on_look": "look-ch2-castle-99",
+		"on_tick": "on_tick-ch2-castle-99"
+	},
 	"action_testing_01": {
 		"path": "maps/map-action_testing_01.json",
 		"on_tick": "null_script",
