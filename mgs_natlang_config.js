@@ -751,6 +751,14 @@ mgs.actionDictionary = [
 		values: { "disable_newline": false },
 	},
 	{
+		action: "CLOSE_DIALOG",
+		pattern: "close dialog",
+	},
+	{
+		action: "CLOSE_SERIAL_DIALOG",
+		pattern: "close serial dialog",
+	},
+	{
 		action: "SHOW_SERIAL_DIALOG",
 		pattern: "concat serial dialog $serial_dialog:string",
 		values: { "disable_newline": true },
@@ -868,6 +876,18 @@ mgs.actionDictionary = [
 	{
 		action: "CHECK_SAVE_FLAG",
 		pattern: "if flag $save_flag:string is $expected_bool:boolean then goto ?script $success_script:string",
+	},
+	{
+		action: "CHECK_DIALOG_OPEN",
+		pattern: "if dialog is $expected_bool:boolean then goto ?script $success_script:string",
+	},
+	{
+		action: "CHECK_SERIAL_DIALOG_OPEN",
+		pattern: "if serial dialog is $expected_bool:boolean then goto ?script $success_script:string",
+	},
+	{
+		action: "CHECK_DEBUG_MODE",
+		pattern: "if debug mode is $expected_bool:boolean then goto ?script $success_script:string",
 	},
 	// TODO: figure out how to make it match despite the parser forcing string "true" to bool "true"
 	// {
@@ -1571,7 +1591,12 @@ mgs.ansiMap = [
 		natlang: [ 'bg-w', 'bg-white' ],
 		ansi: '\u001B[47m',
 	},
-	// Linux-sempai says use only red, or red and cyan, and don't use the others; you have no idea whether they're using a dark or light theme, or what their theme is like and some colors WILL NOT show up, depending
+	// Linux-sempai says use only red, or red and cyan, and don't use the others; you have no idea whether they're using a dark or light theme, or what their theme is like and some colors WILL NOT show up, depending,
+	// non-color-related
+	{
+		natlang: [ 'bell' ],
+		ansi: '',
+	},
 ];
 
 mgs.serialWrapSpecials = {

@@ -107,6 +107,13 @@ var actionText = {
 			"This action is also available as a [combination block](#combination-blocks)."
 		]
 	},
+	"CLOSE_DIALOG": {
+		"category": "game management",
+		"info": [
+			"Ends any open dialog.",
+			"Use this action when you want to trigger a dialog that may potentially interrupt a dialog in progress. Otherwise, the two dialogs may collide, which can result in a soft lock."
+		]
+	},
 	"SET_SERIAL_DIALOG_CONTROL": {
 		"category": "serial console",
 		"info": [
@@ -120,6 +127,12 @@ var actionText = {
 			"Outputs the named [serial dialog](#serial-dialog) to a connected serial console.",
 			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_dialog_control) first, then turn it back on again when finished.)",
 			"This action is also available as a [combination block](#combination-blocks)."
+		]
+	},
+	"CLOSE_SERIAL_DIALOG": {
+		"category": "game management",
+		"info": [
+			"Ends any serial dialog that is awaiting user input, such as a free response question or a multiple choice question."
 		]
 	},
 	"SET_CONNECT_SERIAL_DIALOG": {
@@ -147,7 +160,7 @@ var actionText = {
 		"category": "serial console",
 		"info": [
 			"This action registers an argument (and a script) for an [already-registered serial command](#register_serial_dialog_command).",
-			"Arguments must be a single word."
+			"Arguments can be multiple words. In-game, if the second word is `at` or `to` it is ignored, e.g. `> warp to my house` (after running `register \"warp\" + \"my house\"`)."
 		]
 	},
 	"UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT": {
@@ -162,6 +175,12 @@ var actionText = {
 	// 		"??? (verify this is even implemented; BMG2020 does not use it anywhere)"
 	// 	]
 	// },
+	"SET_HEX_EDITOR_STATE": {
+		"category": "hex editor",
+		"info": [
+			"Setting this to true opens the hex editor. [Does the hex editor need to be enabled?]"
+		]
+	},
 	"SET_HEX_EDITOR_DIALOG_MODE": {
 		"category": "hex editor",
 		"info": [
@@ -223,6 +242,24 @@ var actionText = {
 		"category": "check variables",
 		"info": [
 			"Checks whether the warp state string is a specific value.",
+		]
+	},
+	"CHECK_DIALOG_OPEN": {
+		"category": "check variables",
+		"info": [
+			"Checks whether a dialog is currently open.",
+		]
+	},
+	"CHECK_SERIAL_DIALOG_OPEN": {
+		"category": "check variables",
+		"info": [
+			"Checks whether a serial dialog is currently awaiting user input, such as a free response question or a multiple choice question.",
+		]
+	},
+	"CHECK_DEBUG_MODE": {
+		"category": "check variables",
+		"info": [
+			"Checks whether debug mode is currently on.",
 		]
 	},
 	"SET_SAVE_FLAG": {

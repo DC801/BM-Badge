@@ -45,6 +45,7 @@ const WORDS_WITH_TYPES = {
     "false": {"type":"boolean","value":false},
     "open": {"type":"boolean","value":true},
     "close": {"type":"boolean","value":false},
+    "closed": {"type":"boolean","value":false},
     "black": {"type":"color","value":"#000000"},
     "white": {"type":"color","value":"#FFFFFF"},
     "once": {"type":"quantity","value":1},
