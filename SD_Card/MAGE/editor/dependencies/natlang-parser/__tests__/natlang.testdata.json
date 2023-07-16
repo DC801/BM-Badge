@@ -1445,10 +1445,10 @@
 				"set flag 'my flag' to no",
 				"set flag \"my flag\" no",
 				"set flag 'my flag' no",
-				"set flag \"my flag\" to close",
-				"set flag 'my flag' to close",
-				"set flag \"my flag\" close",
-				"set flag 'my flag' close"
+				"set flag \"my flag\" to closed",
+				"set flag 'my flag' to closed",
+				"set flag \"my flag\" closed",
+				"set flag 'my flag' closed"
 			]
 		},
 		{
@@ -1479,8 +1479,8 @@
 				"set player control false",
 				"set player control to no",
 				"set player control no",
-				"set player control to close",
-				"set player control close"
+				"set player control to closed",
+				"set player control closed"
 			]
 		},
 		{
@@ -1511,8 +1511,8 @@
 				"set hex dialog mode false",
 				"set hex dialog mode to no",
 				"set hex dialog mode no",
-				"set hex dialog mode to close",
-				"set hex dialog mode close"
+				"set hex dialog mode to closed",
+				"set hex dialog mode closed"
 			]
 		},
 		{
@@ -1543,8 +1543,8 @@
 				"set hex control false",
 				"set hex control to no",
 				"set hex control no",
-				"set hex control to close",
-				"set hex control close"
+				"set hex control to closed",
+				"set hex control closed"
 			]
 		},
 		{
@@ -1575,8 +1575,8 @@
 				"set hex clipboard false",
 				"set hex clipboard to no",
 				"set hex clipboard no",
-				"set hex clipboard to close",
-				"set hex clipboard close"
+				"set hex clipboard to closed",
+				"set hex clipboard closed"
 			]
 		},
 		{

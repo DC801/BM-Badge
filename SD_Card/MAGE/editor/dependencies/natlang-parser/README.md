@@ -638,6 +638,8 @@ Behaviors in common between the two:
 
 A unique feature of serial dialog messages and serial numbered options is styling. Styles, implemented with ANSI escape codes, are turned on and off with tags enclosed in `<` and `>`:
 
+(Also note that `<bell>`, though not styling, is also available. This will ring the terminal bell.)
+
 - Foreground colors (letter colors)
 	- Black: `<k>` or `<black>`
 	- Red: `<r>` or `<red>`
@@ -835,7 +837,7 @@ A CSS-style hex color.
 A binary option.
 
 - True: `true`, `yes`, `on`, `open`
-- False: `false`, `no`, `off`, `close`
+- False: `false`, `no`, `off`, `closed`, `close`
 
 Some actions will prefer specific pairs of booleans when being translated from JSON, but when translating the other way, any of the above words will work. E.g.
 
@@ -1222,9 +1224,15 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 	- `erase slot 2`
 - [SHOW_DIALOG](#show_dialog)
 	- `show dialog dialogName`
+- [CLOSE_DIALOG](#close_dialog)
+	- `close dialog`
+- [CLOSE_SERIAL_DIALOG](#close_serial_dialog)
+	- `close serial dialog`
 
 #### [Hex editor](#hex-editor-actions)
 
+- [SET_HEX_EDITOR_STATE](#set_hex_editor_state)
+	- `open hex editor`
 - [SET_HEX_EDITOR_DIALOG_MODE](#set_hex_editor_dialog_mode)
 	- `set hex dialog mode to on`
 - [SET_HEX_EDITOR_CONTROL](#set_hex_editor_control)
@@ -1444,6 +1452,12 @@ Consists of actions from the [check entity properies](#check-entity-properies-ac
 - [CHECK_WARP_STATE](#check_warp_state)
 	- `warp state is "some kind of string"`
 	- `warp state is not "some kind of string"`
+- [CHECK_DIALOG_OPEN](#check_dialog_open)
+	- `dialog is open`
+- [CHECK_SERIAL_DIALOG_OPEN](#check_serial_dialog_open)
+	- `serial dialog is open`
+- [CHECK_DEBUG_MODE](#check_debug_mode)
+	- `debug mode is true`
 
 ### Game management actions
 
@@ -1559,9 +1573,41 @@ show dialog $dialog:string
 
 Example: `show dialog dialogName`
 
+#### CLOSE_DIALOG
+
+Ends any open dialog.
+
+Use this action when you want to trigger a dialog that may potentially interrupt a dialog in progress. Otherwise, the two dialogs may collide, which can result in a soft lock.
+
+```
+close dialog
+```
+
+Example: `close dialog`
+
+#### CLOSE_SERIAL_DIALOG
+
+Ends any serial dialog that is awaiting user input, such as a free response question or a multiple choice question.
+
+```
+close serial dialog
+```
+
+Example: `close serial dialog`
+
 ### Hex editor actions
 
 Enable or disable player control of specific game features, and otherwise manage the hex editor state.
+
+#### SET_HEX_EDITOR_STATE
+
+Setting this to true opens the hex editor. [Does the hex editor need to be enabled?]
+
+```
+$bool_value:boolean hex editor
+```
+
+Example: `open hex editor`
 
 #### SET_HEX_EDITOR_DIALOG_MODE
 
@@ -1706,7 +1752,7 @@ Examples:
 
 This action registers an argument (and a script) for an [already-registered serial command](#register_serial_dialog_command).
 
-Arguments must be a single word.
+Arguments can be multiple words. In-game, if the second word is `at` or `to` it is ignored, e.g. `> warp to my house` (after running `register "warp" + "my house"`).
 
 ```
 register (command) $command:string + (arg) $argument:string -> (script) $script:string
@@ -2806,6 +2852,39 @@ Examples:
 
 - `if warp state is "some kind of string" then goto successScript`
 - `if warp state is not "some kind of string" then goto successScript`
+
+#### CHECK_DIALOG_OPEN
+
+Checks whether a dialog is currently open.
+
+```
+if dialog is $expected_bool:boolean
+	then goto (script) $success_script:string
+```
+
+Example: `if dialog is open then goto successScript`
+
+#### CHECK_SERIAL_DIALOG_OPEN
+
+Checks whether a serial dialog is currently awaiting user input, such as a free response question or a multiple choice question.
+
+```
+if serial dialog is $expected_bool:boolean
+	then goto (script) $success_script:string
+```
+
+Example: `if serial dialog is open then goto successScript`
+
+#### CHECK_DEBUG_MODE
+
+Checks whether debug mode is currently on.
+
+```
+if debug mode is $expected_bool:boolean
+	then goto (script) $success_script:string
+```
+
+Example: `if debug mode is true then goto successScript`
 
 ## Further Information
 

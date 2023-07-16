@@ -636,6 +636,8 @@ Behaviors in common between the two:
 
 A unique feature of serial dialog messages and serial numbered options is styling. Styles, implemented with ANSI escape codes, are turned on and off with tags enclosed in `<` and `>`:
 
+(Also note that `<bell>`, though not styling, is also available. This will ring the terminal bell.)
+
 - Foreground colors (letter colors)
 	- Black: `<k>` or `<black>`
 	- Red: `<r>` or `<red>`
@@ -833,7 +835,7 @@ A CSS-style hex color.
 A binary option.
 
 - True: `true`, `yes`, `on`, `open`
-- False: `false`, `no`, `off`, `close`
+- False: `false`, `no`, `off`, `closed`, `close`
 
 Some actions will prefer specific pairs of booleans when being translated from JSON, but when translating the other way, any of the above words will work. E.g.
 

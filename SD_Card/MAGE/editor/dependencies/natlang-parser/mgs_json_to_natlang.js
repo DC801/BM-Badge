@@ -12,6 +12,8 @@ var log = window.log || false;
 
 mgs.boolPrefs = {
 	SET_HEX_EDITOR_STATE: [ 'open', 'close' ], // required due to keywords
+	CHECK_DIALOG_OPEN: [ 'open', 'closed' ],
+	CHECK_SERIAL_DIALOG_OPEN: [ 'open', 'closed' ],
 	SET_PLAYER_CONTROL: [ 'on', 'off' ],
 	SET_HEX_EDITOR_DIALOG_MODE: [ 'on', 'off' ],
 	SET_HEX_EDITOR_CONTROL: [ 'on', 'off' ],
@@ -47,7 +49,13 @@ mgs.actionToNatlang = function (origJSON) {
 				if (entry.values) {
 					var params = Object.keys(entry.values);
 					params.forEach(function (param) {
-						if (entry.values[param] !== origJSON[param]) {
+						if (
+							entry.values[param] === false
+							&& origJSON[param] === undefined
+						) {
+							/* it's fine */
+						}
+						else if (entry.values[param] !== origJSON[param]) {
 							commonValues = false;
 						}
 					})
