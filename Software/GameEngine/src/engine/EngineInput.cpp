@@ -184,7 +184,6 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_L] << KEYBOARD_KEY_RJOY_RIGHT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_E] << KEYBOARD_KEY_RJOY_RIGHT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_ENTER] << KEYBOARD_KEY_RJOY_RIGHT;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_GRAVE] << KEYBOARD_KEY_RJOY_UP; // AKA Backtick
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_BACKSLASH] << KEYBOARD_KEY_RJOY_UP;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_RETURN] << KEYBOARD_KEY_RJOY_RIGHT;
 
