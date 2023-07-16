@@ -2,8 +2,15 @@ settings for serial dialog { wrap 60 }
 
 // REGISTER
 
-register-warp-debug {
+register-warp {
+	// NOTE: No need to branch any of these (WOPR excepting); you only get warping powers when the castle has been entirely explored
+
 	register warp -> command-warp
+	register warp fail -> warp-fail
+
+	register man + warp -> man-warp
+
+	// convenience numbers for debugging only -- todo: remove eventually
 	register warp + "1" -> warp-ch2-1
 	register warp + "11" -> warp-ch2-11
 	register warp + "12" -> warp-ch2-12
@@ -17,14 +24,9 @@ register-warp-debug {
 	register warp + "33" -> warp-ch2-33
 	register warp + "34" -> warp-ch2-34
 	register warp + "99" -> warp-ch2-99
-	register warp fail -> warp-fail
-	// register warp + "99" -> warp-ch2-99
-	copy register-warp
-}
-register-warp {
-	// register warp -> command-warp // TODO: when game is out, detangle this; when uncommented, this line makes `warp` show up twice on command list
-	register man + warp -> man-warp
-	register warp fail -> warp-fail
+	// end debug
+
+	// CH2 ROOMS
 
 	register warp + "castle entrance" -> warp-ch2-1
 	register warp + "castle hallway front" -> warp-ch2-11
@@ -63,8 +65,9 @@ register-warp {
 	register warp + "town" -> warp-ch2-town
 	register warp + "bakery" -> warp-ch2-bakery
 	register warp + "greenhouse" -> warp-ch2-greenhouse
+
 	register warp + "wopr room" -> warp-ch2-wopr
-	register warp + "wopr" -> warp-ch2-wopr
+	register warp + "wopr" -> warp-ch2-wopr // 
 
 	register warp + "library" -> warp-ch2-library
 	register warp + "lodge" -> warp-ch2-library
