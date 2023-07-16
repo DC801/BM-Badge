@@ -39,7 +39,11 @@ ch2-map-init {
 
 	// serial features
 	if (flag ch2-has-artifact is false) { // no artifact at all
-		set serial control off
+		if (debug mode is on) {
+			set serial control on
+		} else {
+			set serial control off
+		}
 	} else { // you have the artifact
 		if (
 			variable ch2-in-room is not 0 // if you're in the castle
@@ -74,8 +78,10 @@ ch2-map-init {
 	set player control on
 
 	// DEBUG
-	copy register-storyflag
-	copy register-warp-debug
+	if (debug mode is on) {
+		copy register-storyflag
+		copy register-warp-debug
+	}
 	// END DEBUG
 
 	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)

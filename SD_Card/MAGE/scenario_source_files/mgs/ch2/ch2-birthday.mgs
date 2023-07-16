@@ -21,19 +21,24 @@ undebug-birthday {
 // NON-DEBUG
 
 on_load-ch2-magehouse-birthday {
-	show serial dialog spacer
-	show serial dialog {
-		"<g>DEBUG</> option: type <c>DEBUG</> to forgo the cutscene and explore the room! (After which, you can type <c>UNDEBUG</> to return to the cutscene.)"
-	}
+	set player control to off
 	if (flag skip-birthday is true) {
 		set hex control to on
 		teleport entity "%PLAYER%" to geometry debug-spot
 		register undebug -> undebug-birthday
 		goto null_script
 	}
-	set player control to off
-	register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
-	register debug -> debug-birthday
+	if (debug mode is on) {
+		set serial control to on
+		show serial dialog spacer
+		show serial dialog {
+			"<g>DEBUG</> option: type <c>DEBUG</> to forgo the cutscene and explore the room! (After which, you can type <c>UNDEBUG</> to return to the cutscene.)"
+		}
+		register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
+		register debug -> debug-birthday
+	} else {
+		set serial control to off
+	}
 	close hex editor
 	set entity "%PLAYER%" animation to 0
 	fade out camera to #000000 over 0ms
@@ -150,7 +155,12 @@ gossip-left-down {
 
 // cutscene
 ch2-escort-cutscene {
-	register skip -> cutscene-ch2-escort-exit
+	if (debug mode is on) {
+		set serial control on
+		register skip -> cutscene-ch2-escort-exit
+	} else {
+		set serial control off
+	}
 	fade out camera to #000000 over 0ms
 	set player control to off
 	close hex editor
