@@ -122,24 +122,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":607,
-                 "height":32,
-                 "id":35,
-                 "name":"RAM Chips",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-touch-ramchips"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":153,
-                 "y":112
-                }, 
-                {
-                 "class":"",
                  "height":0,
                  "id":36,
                  "name":"hiding-spot",
@@ -167,6 +149,24 @@
                  "width":64,
                  "x":180,
                  "y":117
+                }, 
+                {
+                 "class":"",
+                 "gid":633,
+                 "height":32,
+                 "id":41,
+                 "name":"RAM Chips",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-ramchips"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":153,
+                 "y":112
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -231,7 +231,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":41,
+ "nextobjectid":42,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -276,6 +276,10 @@
         {
          "firstgid":617,
          "source":"..\/entities\/entity-seamoss.json"
+        }, 
+        {
+         "firstgid":633,
+         "source":"..\/entities\/entity-ram_chips.json"
         }],
  "tilewidth":32,
  "type":"map",

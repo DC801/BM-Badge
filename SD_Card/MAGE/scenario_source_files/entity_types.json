@@ -3219,6 +3219,72 @@
 					"flip_x": false
 				}
 			]
+		},
+		"scenarioIndex": 49,
+		"serialized": {}
+	},
+	"ram_chips": {
+		"type": "ram_chips",
+		"tileset": "entity-ram_chips.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
 		}
 	}
 }
