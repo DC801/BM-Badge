@@ -33,8 +33,10 @@ on_load-ch2-castle-outside {
 		set entity Jackob tick_script to yeet
 		set entity Alfonso tick_script to yeet
 		}
-	show serial dialog {
-		"<g>DEBUG</>: ch2-storyflag-round = $ch2-storyflag-round$"
+	if (debug mode is on) {
+		show serial dialog {
+			"<g>DEBUG</>: ch2-storyflag-round = $ch2-storyflag-round$"
+		}
 	}
 	// animations
 	if (warp state is walk_from-north) {

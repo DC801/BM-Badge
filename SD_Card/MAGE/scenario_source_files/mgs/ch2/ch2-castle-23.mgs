@@ -29,8 +29,10 @@ on_load-ch2-castle-23 {
 	mutate ch2-in-room = 23
 
 	// DEBUG
-	register get + thing -> debug-get-thing
-	show serial dialog { "\t<g>DEBUG option:</> 'get thing' to acquire Cactus Cooler" }
+	if (debug mode is on) {
+		register get + thing -> debug-get-thing
+		show serial dialog { "\t<g>DEBUG option:</> 'get thing' to acquire Cactus Cooler" }
+	}
 
 	// entrance text
 	show serial dialog spacer

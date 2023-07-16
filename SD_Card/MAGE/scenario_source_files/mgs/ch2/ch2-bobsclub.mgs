@@ -62,31 +62,33 @@ on_load-ch2-bobsclub {
 	mutate ch2-rattle-count = 0
 
 	// DEBUG
-	register find + cc -> find-cc
-	register unfind + cc -> unfind-cc
-	register want + cc -> want-cc
-	register unwant + cc -> unwant-cc
-	register basement -> basement
-	register unbasement -> unbasement
-	register toot -> toot
-	register untoot -> untoot
-	register carry + cc -> carry-cc
-	register uncarry + cc -> uncarry-cc
-	register reset -> reset
-	show serial dialog spacer
-	show serial dialog {
-		"\t<g>Bob's Club debug options:</>"
-		"<c>FIND CC</>: you found CC in ch1"
-		"<c>UNFIND CC</>: you didn't find CC in ch1"
-		"<c>WANT CC</>: you know you want CC"
-		"<c>UNWANT CC</>: you don't yet know you want CC"
-		"<c>CARRY CC</>: you have CC on you"
-		"<c>UNCARRY CC</>: you don't have CC on you"
-		"<c>BASEMENT</>: you've been to the Bob's Club basement already"
-		"<c>UNBASEMENT</>: you've haven't been to the Bob's Club basement yet"
-		"<c>TOOT</>: you've finished Lambda's artifact tutorial already"
-		"<c>UNTOOT</>: you haven't finished Lambda's artifact tutorial yet"
-		"<c>RESET</>: set all above flags to false, and set the 'heard a dubstep rattle' to 0"
+	if (debug mode is on) {
+		register find + cc -> find-cc
+		register unfind + cc -> unfind-cc
+		register want + cc -> want-cc
+		register unwant + cc -> unwant-cc
+		register basement -> basement
+		register unbasement -> unbasement
+		register toot -> toot
+		register untoot -> untoot
+		register carry + cc -> carry-cc
+		register uncarry + cc -> uncarry-cc
+		register reset -> reset
+		show serial dialog spacer
+		show serial dialog {
+			"\t<g>Bob's Club debug options:</>"
+			"<c>FIND CC</>: you found CC in ch1"
+			"<c>UNFIND CC</>: you didn't find CC in ch1"
+			"<c>WANT CC</>: you know you want CC"
+			"<c>UNWANT CC</>: you don't yet know you want CC"
+			"<c>CARRY CC</>: you have CC on you"
+			"<c>UNCARRY CC</>: you don't have CC on you"
+			"<c>BASEMENT</>: you've been to the Bob's Club basement already"
+			"<c>UNBASEMENT</>: you've haven't been to the Bob's Club basement yet"
+			"<c>TOOT</>: you've finished Lambda's artifact tutorial already"
+			"<c>UNTOOT</>: you haven't finished Lambda's artifact tutorial yet"
+			"<c>RESET</>: set all above flags to false, and set the 'heard a dubstep rattle' to 0"
+		}
 	}
 	// END DEBUG
 	

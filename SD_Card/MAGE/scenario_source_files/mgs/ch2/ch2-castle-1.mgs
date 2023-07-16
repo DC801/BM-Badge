@@ -89,35 +89,36 @@ on_load-ch2-castle-1 {
 	// room unique stuff
 
 	// DEBUG
-	register toot -> debug-finish-toot
-	register bert -> debug-bert
-	register get + monitor -> debug-get-monitor
-	register get + heatsink -> debug-get-heatsink
-	register get + cactuscooler -> debug-get-cactuscooler
-	register get + powersupply -> debug-get-powersupply
-	register get + keyboard -> debug-get-keyboard
-	register get + mouse -> debug-get-mouse
-	register get + harddrive -> debug-get-harddrive
-	register get + plate -> debug-get-plate
-	register get + needle -> debug-get-needle
-	register get + plate -> debug-get-plate
-	register get + needle -> debug-get-needle
-	register get + ramchips -> debug-get-ramchips
-	register get + clock -> debug-get-clock
-	register get + goldfish -> debug-get-goldfish
-	register get + abacus -> debug-get-abacus
-	register get + cpu -> debug-get-cpu
-	register round + "1" -> debug-round1
-	register round + "2" -> debug-round2
-	register round + "3" -> debug-round3
-	show serial dialog spacer
-	show serial dialog {
-		"\t<g>DEBUG</> shortcuts"
-		"<c>TOOT</>: skip tutorial"
-		"<c>BERT</>: to start 'Bert secret' cutscene"
-		"<c>GET _</>: pick up the named item"
-		"<c>ROUND _</>: collect the items for that round"
-
+	if (debug mode is on) {
+		register toot -> debug-finish-toot
+		register bert -> debug-bert
+		register get + monitor -> debug-get-monitor
+		register get + heatsink -> debug-get-heatsink
+		register get + cactuscooler -> debug-get-cactuscooler
+		register get + powersupply -> debug-get-powersupply
+		register get + keyboard -> debug-get-keyboard
+		register get + mouse -> debug-get-mouse
+		register get + harddrive -> debug-get-harddrive
+		register get + plate -> debug-get-plate
+		register get + needle -> debug-get-needle
+		register get + plate -> debug-get-plate
+		register get + needle -> debug-get-needle
+		register get + ramchips -> debug-get-ramchips
+		register get + clock -> debug-get-clock
+		register get + goldfish -> debug-get-goldfish
+		register get + abacus -> debug-get-abacus
+		register get + cpu -> debug-get-cpu
+		register round + "1" -> debug-round1
+		register round + "2" -> debug-round2
+		register round + "3" -> debug-round3
+		show serial dialog spacer
+		show serial dialog {
+			"\t<g>DEBUG</> shortcuts"
+			"<c>TOOT</>: skip tutorial"
+			"<c>BERT</>: to start 'Bert secret' cutscene"
+			"<c>GET _</>: pick up the named item"
+			"<c>ROUND _</>: collect the items for that round"
+		}
 	}
 	// END DEBUG
 

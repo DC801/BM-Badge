@@ -20,31 +20,33 @@ on_load-main_menu {
 	// }
 
 	/* DEBUG QUICK STUFFS */
-	register debug -> debug
-	register hub -> hub
-	register honk -> system_bell
-	register bob -> bob
-	register bob2 -> bob2
-	register bob3 -> bob3
-	register ch2 -> start-chapter2
-	register rtfm -> command-rtfm
-	copy register-warp-debug
-	copy register-storyflag
-	show serial dialog spacer
-	show serial dialog {
-		"\t<g>Main menu debug options:</>"
-		"<c>HUB</>: go to debug hub map"
-		"<c>CH2</>: start ch2 (birthday cutscene)"
-		"\tOnce there, type <c>SKIP</> to end cutscenes early"
-		"<c>DEBUG</>: ch2 room #1, after first half of Lambda convo"
-		"<c>BOB</>: ch2 bob's club entrance"
-		"<c>BOB2</>: ch2 bob's club basement"
-		"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
-		" "
-		"\t<g>Entire game debug options:</>"
-		"<c>RTFM</>: Early access to RTFM books"
-		"<c>STORYFLAG _</>: choose round (whole game, not just menu)"
-		"<c>WARP _</>: warp to that castle room"
+	if (debug mode is on) {
+		register debug -> debug
+		register hub -> hub
+		register honk -> system_bell
+		register bob -> bob
+		register bob2 -> bob2
+		register bob3 -> bob3
+		register ch2 -> start-chapter2
+		register rtfm -> command-rtfm
+		copy register-warp-debug
+		copy register-storyflag
+		show serial dialog spacer
+		show serial dialog {
+			"\t<g>Main menu debug options:</>"
+			"<c>HUB</>: go to debug hub map"
+			"<c>CH2</>: start ch2 (birthday cutscene)"
+			"\tOnce there, type <c>SKIP</> to end cutscenes early"
+			"<c>DEBUG</>: ch2 room #1, after first half of Lambda convo"
+			"<c>BOB</>: ch2 bob's club entrance"
+			"<c>BOB2</>: ch2 bob's club basement"
+			"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
+			" "
+			"\t<g>Entire game debug options:</>"
+			"<c>RTFM</>: Early access to RTFM books"
+			"<c>STORYFLAG _</>: choose round (whole game, not just menu)"
+			"<c>WARP _</>: warp to that castle room"
+		}
 	}
 }
 

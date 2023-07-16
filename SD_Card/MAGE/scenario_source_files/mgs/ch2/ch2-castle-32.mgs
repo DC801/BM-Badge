@@ -26,10 +26,6 @@ on_load-ch2-castle-32 {
 		set flag ch2-seen-room-32 to true
 	} else {
 		show serial dialog { "Entering <bold>CASTLE KITCHEN</>..." }
-		show serial dialog {
-			" "
-			"<g>\tDEBUG option:</> want chips"
-		}
 	}
 	if (
 		flag ch2-ramchips-dispensed is false
@@ -38,10 +34,13 @@ on_load-ch2-castle-32 {
 	}
 
 	// DEBUG
-	register want + chips -> debug-want-chips
-	show serial dialog {
-		"<g>Debug</> command available: <c>WANT CHIPS</>"
+	if (debug mode is on) {
+		register want + chips -> debug-want-chips
+		show serial dialog {
+			"<g>Debug</> command available: <c>WANT CHIPS</>"
+		}
 	}
+	// END DEBUG
 	
 	goto ch2-map-init
 }
