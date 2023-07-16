@@ -125,6 +125,14 @@ interact-ch2-seamoss {
 	set entity "%SELF%" interact_script to interact-ch2-seamoss //RESET
 }
 
+ch2-walk-to-vend {
+	wait 400ms
+	walk entity "%PLAYER%" to geometry vending-watch over 1900ms
+	wait 200ms
+	turn entity "%PLAYER%" north
+	goto null_script
+}
+
 interact-ch2-seamoss-cutscene {
 	set player control off
 	show dialog {
@@ -141,19 +149,20 @@ interact-ch2-seamoss-cutscene {
 		SELF "It'll be fine. Come here, I'll show you."
 	}
 	wait 100ms
-	turn entity "Sea Moss" west
-	wait 400ms
+	set entity "%PLAYER%" tick_script to ch2-walk-to-vend
+	walk entity "Sea Moss" to geometry vending-spot over 1800ms
+	wait 800ms
 	show dialog {
 		SELF "I know a secret code for the ultimate cache of cache. Just need some cash...."
 	}
-	wait 750ms
+	wait 850ms
 	// bag of RAM chips appears in front of the vending machine
 	set entity "RAM Chips" name to "RAM Chips"
 	teleport entity "RAM Chips" to geometry ch2-chips-slide
 	// hovers for a moment
-	wait 400ms
+	wait 500ms
 	// then slides downward gently
-	walk entity "RAM Chips" to geometry ch2-chips-land over 300ms
+	walk entity "RAM Chips" to geometry ch2-chips-land over 400ms
 	wait 1300ms
 	show dialog {
 		PLAYER "Oh my god."
