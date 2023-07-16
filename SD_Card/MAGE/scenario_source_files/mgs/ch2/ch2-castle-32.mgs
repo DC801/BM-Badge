@@ -19,9 +19,6 @@ on_load-ch2-castle-32 {
 	// ch2 room state
 	mutate ch2-in-room = 32
 
-	// DEBUG
-	register want + chips -> debug-want-chips
-
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-32 is false) {
@@ -38,6 +35,12 @@ on_load-ch2-castle-32 {
 		flag ch2-ramchips-dispensed is false
 	) {
 		copy script ch2-hide-ramchips
+	}
+
+	// DEBUG
+	register want + chips -> debug-want-chips
+	show serial dialog {
+		"<g>Debug</> command available: <c>WANT CHIPS</>"
 	}
 	
 	goto ch2-map-init
