@@ -64,8 +64,8 @@ on_go-castle-13-south {
 /* ---------- GOLDFISH (ADMIN) ---------- */
 
 ch2-hide-goldfish {
-	teleport entity "goldfish" to geometry hiding-spot
-	set entity "goldfish" name to " "
+	teleport entity "Goldfish" to geometry hiding-spot
+	set entity "Goldfish" name to " "
 }
 
 ch2-touch-goldfish {
