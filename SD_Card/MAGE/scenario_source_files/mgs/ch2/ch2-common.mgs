@@ -63,7 +63,11 @@ ch2-map-init {
 				copy register-parts
 			}
 		} else { // you're not in the castle and the toot isn't done yet
-			set serial control off
+			if (debug mode is on) {
+				set serial control on
+			} else {
+				set serial control off
+			}
 		}
 	}
 	
@@ -80,7 +84,7 @@ ch2-map-init {
 	// DEBUG
 	if (debug mode is on) {
 		copy register-storyflag
-		copy register-warp-debug
+		copy register-warp
 	}
 	// END DEBUG
 
