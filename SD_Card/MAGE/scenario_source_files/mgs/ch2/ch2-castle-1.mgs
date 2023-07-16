@@ -101,8 +101,6 @@ on_load-ch2-castle-1 {
 		register get + harddrive -> debug-get-harddrive
 		register get + plate -> debug-get-plate
 		register get + needle -> debug-get-needle
-		register get + plate -> debug-get-plate
-		register get + needle -> debug-get-needle
 		register get + ramchips -> debug-get-ramchips
 		register get + clock -> debug-get-clock
 		register get + goldfish -> debug-get-goldfish

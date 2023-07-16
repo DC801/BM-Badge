@@ -69,7 +69,7 @@ interact-ch2-jackob-rtfm {
 	copy face-player
 	show dialog {
 		SELF
-		"We're doing just fine here, %PLAYER%, but don't you dwaddle too long. Time is slipping away from us."
+		"We're doing just fine here, %PLAYER%, but don't you dawdle too long. Time is slipping away from us."
 		"There's so little we can do to help you right now, yet all I feel is this increasing urgency, like a vise tightening around my chest."
 		"Doom is coming, and only you can head it off. Please hurry."
 	}
