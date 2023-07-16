@@ -27,6 +27,12 @@ on_load-ch2-castle-99 {
 	} else {
 		show serial dialog { "Entering <bold>SECRET LAB</>..." }
 	}
+	set player control to off
+	teleport camera to geometry warp-spot
+	show dialog {
+		entity "TEST 2" "My name is %TEST 2%! I'm telling you this from the map's ON_LOAD script!"
+	}
+	set player control to on
 	
 	goto ch2-map-init
 }
@@ -97,5 +103,13 @@ ch2-castle-99-welcome {
 		PLAYER "...?"
 
 		Lambda "Well, if I remember it, I'll call you."
+	}
+}
+
+// DEBUG FUN
+
+debug-say-my-name {
+	show dialog {
+		SELF "My name is %SELF%!"
 	}
 }

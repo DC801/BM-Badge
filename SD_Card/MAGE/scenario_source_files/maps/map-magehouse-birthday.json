@@ -101,6 +101,24 @@
          "objects":[
                 {
                  "class":"",
+                 "gid":354,
+                 "height":48,
+                 "id":65,
+                 "name":"Aunt Zippy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-say-my-name"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":394,
+                 "y":155
+                }, 
+                {
+                 "class":"",
                  "gid":246,
                  "height":32,
                  "id":64,
@@ -132,31 +150,13 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"debug-say-my-name"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":48,
                  "x":446,
                  "y":201
-                }, 
-                {
-                 "class":"",
-                 "gid":354,
-                 "height":48,
-                 "id":65,
-                 "name":"Aunt Zippy",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":48,
-                 "x":394,
-                 "y":155
                 }, 
                 {
                  "class":"",
@@ -193,53 +193,6 @@
          "id":7,
          "name":"geometry",
          "objects":[
-                {
-                 "class":"",
-                 "height":0,
-                 "id":23,
-                 "name":"magehouse-hidingplace",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":-45,
-                 "y":-66.5
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":66,
-                 "name":"cake-camera-2",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":416,
-                 "y":202
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":67,
-                 "name":"cake-camera-1",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":413.31718677224,
-                 "y":623.440149045179
-                }, 
-                {
-                 "class":"",
-                 "height":30,
-                 "id":75,
-                 "name":"door-magehouse",
-                 "rotation":0,
-                 "visible":true,
-                 "width":30,
-                 "x":353.439683278994,
-                 "y":289.052165812762
-                }, 
                 {
                  "class":"",
                  "gid":425,
@@ -290,6 +243,65 @@
                  "width":32,
                  "x":512.514205868654,
                  "y":142.28598043782
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":23,
+                 "name":"magehouse-hidingplace",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-45,
+                 "y":-66.5
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":66,
+                 "name":"cake-camera-2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":416,
+                 "y":202
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":67,
+                 "name":"cake-camera-1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":413.31718677224,
+                 "y":623.440149045179
+                }, 
+                {
+                 "class":"",
+                 "height":30,
+                 "id":75,
+                 "name":"door-magehouse",
+                 "rotation":0,
+                 "visible":true,
+                 "width":30,
+                 "x":353.439683278994,
+                 "y":289.052165812762
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":78,
+                 "name":"debug-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":356,
+                 "y":132
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -333,7 +345,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":78,
+ "nextobjectid":80,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

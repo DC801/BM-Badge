@@ -16,6 +16,7 @@ register-warp-debug {
 	register warp + "32" -> warp-ch2-32
 	register warp + "33" -> warp-ch2-33
 	register warp + "34" -> warp-ch2-34
+	register warp + "99" -> warp-ch2-99
 	register warp fail -> warp-fail
 	// register warp + "99" -> warp-ch2-99
 	copy register-warp
@@ -55,7 +56,7 @@ register-warp {
 	
 	register warp + "castle pantry" -> warp-ch2-34
 
-	// register warp + "secret lab" -> warp-ch2-99
+	register warp + "secret lab" -> warp-ch2-99
 
 	// CH1 ROOMS
 	
