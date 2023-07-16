@@ -3,7 +3,6 @@ settings for serial dialog { wrap 60 }
 // REGISTER
 
 register-rtfm {
-	register man + rtfm -> man-rtfm
 	register rtfm -> command-rtfm
 }
 
