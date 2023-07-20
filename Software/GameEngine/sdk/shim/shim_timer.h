@@ -2,22 +2,18 @@
 #define SHIM_TIMER_H
 
 #include <stdint.h>
-
-#ifdef DC801_EMBEDDED
 #include <atomic>
-#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <list>
 #include <mutex>
+
+
+#ifdef DC801_EMBEDDED
 #include <app_timer.h>
 #include <nrfx_timer.h>
 #include <nrf_delay.h>
 #else
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define TIMER1_CC_NUM 4
 
@@ -116,10 +112,6 @@ extern "C" {
 
    void nrf_delay_us(uint32_t time_us);
    void nrf_delay_ms(uint32_t time_ms);
-
-#ifdef __cplusplus
-}
-#endif //__cplusplus
 
 #endif //!DC801_EMBEDDED
 #endif //SHIM_TIMER_H

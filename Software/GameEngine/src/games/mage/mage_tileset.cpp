@@ -14,53 +14,61 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
     auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
     auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-    // offset to the start address of the tile
-    auto sourceTilePtr = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId) + tileId * tileset->TileWidth * tileset->TileHeight;
-    auto target = Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight };
+    //auto target = Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight };
 
-    if (flags & RENDER_FLAGS_IS_GLITCHED)
-    {
-        target.origin.x += target.w * 0.125;
-        target.w *= 0.75;
-    }
+    //if (flags & RENDER_FLAGS_IS_GLITCHED)
+    //{
+    //    target.origin.x += target.w * 0.125;
+    //    target.w *= 0.75;
+    //}
     
     auto yMin = 0;
-    auto yMax = target.h - 1;
+    auto yMax = tileset->ImageHeight - 1;
     auto xMin = 0;
-    auto xMax = target.w - 1;
+    auto xMax = tileset->ImageWidth - 1;
     auto iteratorX = 1;
     auto iteratorY = 1;
     if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
     {
-       xMin = target.w - 1;
+       xMin = tileset->ImageWidth - 1;
        xMax = 0;
        iteratorX = -1;
     }
 
     if (flags & RENDER_FLAGS_FLIP_Y || flags & RENDER_FLAGS_FLIP_DIAG)
     {
-        yMin = target.h - 1;
+        yMin = tileset->ImageHeight - 1;
         yMax = 0;
         iteratorY = -1;
     }
 
-    for (auto y = yMin; y <= yMax; y += iteratorY)
+    // offset to the start address of the tile
+    auto tilePtr = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId) + tileId * tileset->TileWidth * tileset->TileHeight;
+    auto sourceRowPtr = &tilePtr[0];
+
+    for (auto ySource = yMin, yTarget = tileDrawPoint.y; 
+        ySource != yMax; 
+        ySource += iteratorY, yTarget++)
     {
-        for (auto x = xMin; x <= xMax; x += iteratorX)
+        if (yTarget < 0 || yTarget >= DrawHeight)
         {
-            const auto drawX = tileDrawPoint.x + x;
-            const auto drawY = tileDrawPoint.y + y;
-            // compute the source pixel offset from the sourceTilePtr pointer
-            const auto& color = colorPalette->get(sourceTilePtr[tileset->ImageWidth * y + x]);
-            if (drawX < 0 || drawX >= DrawWidth
-             || drawY < 0 || drawY >= DrawHeight
-             || TRANSPARENCY_COLOR == color)
+            continue;
+        }
+
+        for (auto xSource = xMin, xTarget = tileDrawPoint.x; 
+            xSource != xMax;
+            xSource += iteratorX, xTarget++)
+        {
+            const auto& sourceColorIndex = sourceRowPtr[xSource];
+            const auto& color = colorPalette->get(sourceColorIndex);
+            if (xTarget < 0 || xTarget >= DrawWidth || TRANSPARENCY_COLOR == color)
             {
                 continue;
             }
-            frameBuffer->setPixel(drawX, drawY, (color >> 8) | (color << 8));
-            // frameBuffer->(DrawWidth * drawY + drawX) = color;
+            frameBuffer->frame[yTarget * DrawWidth + xTarget] = (color >> 8) | (color << 8);
+            //frameBuffer->setPixel(xTarget, yTarget, color);
         }
+        sourceRowPtr += tileset->ImageWidth;
     }
 
     if (drawGeometry)

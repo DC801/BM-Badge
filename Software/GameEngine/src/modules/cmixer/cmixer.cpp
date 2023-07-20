@@ -334,13 +334,13 @@ static cm_Source* new_source_from_mem(char* data, int size, int ownsdata)
 
 cm_Source* cm_new_source_from_file(const char* filename)
 {
-  int size;
-  cm_Source* src;
-  char* data = new char[size];
 
   /* Load file into memory */
   auto file = std::fstream{ filename, std::ios_base::in | std::ios_base::binary };
-
+  //file.seekg(-1)
+  int size;
+  cm_Source* src;
+  char* data = new char[size];
   // copy the file into the buffer
   if (!file || !file.read(data, size))
   {

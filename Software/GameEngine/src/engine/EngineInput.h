@@ -33,7 +33,7 @@ public:
       return ButtonState{ activated };
    }
 
-   void HandleKeyboard();
+   void Update();
    bool IsRunning() const { return running; }
    bool ShouldReloadGameDat() const { return shouldReloadGameDat; }
    void TriggerRomReload() { shouldReloadGameDat = true; }

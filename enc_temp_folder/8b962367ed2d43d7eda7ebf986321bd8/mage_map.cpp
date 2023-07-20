@@ -178,13 +178,13 @@ void MapControl::Draw(const Point& cameraPosition) const
    // }
 }
 
-void MapControl::UpdateEntities(const DeltaState& delta)
+void MapControl::UpdateEntities(uint32_t deltaTime)
 {
    for (auto i = 0; i < currentMap->entities.size(); i++)
    {
       auto& entity = currentMap->entities[i];
       auto& renderableData = currentMap->entityRenderableData[i];
-      entity.updateRenderableData(renderableData, delta.Time.count());
+      entity.updateRenderableData(renderableData, deltaTime);
    }
 }
 

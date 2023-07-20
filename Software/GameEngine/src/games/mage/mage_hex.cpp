@@ -1,4 +1,5 @@
 #include "mage_hex.h"
+#include "mage_rom.h"
 #include "EngineInput.h"
 #include "utility.h"
 #include "mage_dialog_control.h"
@@ -133,13 +134,13 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
          || button.IsPressed(KeyPress::Rjoy_up) // triangle for increment
          || button.IsPressed(KeyPress::Rjoy_down); // x for decrement
          
-      static auto lastPageButtonPressTime = 0;//std::chrono::milliseconds(0);
+      static auto lastPageButtonPressTime = GameClock::now();//std::chrono::milliseconds(0);
       if (button.IsPressed(KeyPress::Page))
       {
          //reset last press time only when the page button switches from unpressed to pressed
          if (!previousPageButtonState)
          {
-            lastPageButtonPressTime = Util::millis();
+            lastPageButtonPressTime = GameClock::now();
          }
          //change the state to show the button has been pressed.
          previousPageButtonState = true;
@@ -171,7 +172,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
          applyMemRecallInputs();
          //check to see if the page button was pressed and released quickly
          if (previousPageButtonState
-            && (Util::millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
+            && (GameClock::now() - lastPageButtonPressTime).count() < HEXED_QUICK_PRESS_TIMEOUT)
          {
             //if the page button was pressed and then released fast enough, advance one page.
             currentMemPage = (currentMemPage + 1) % totalMemPages;
@@ -240,7 +241,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
             {
                //paste
                memcpy(currentByte, clipboard, clipboardLength);
-               mapControl->UpdateEntities(0);
+               mapControl->UpdateEntities(DeltaState{ GameClock::duration{0},0,0 });
                memcpy(currentByte, clipboard, clipboardLength);
             }
          }

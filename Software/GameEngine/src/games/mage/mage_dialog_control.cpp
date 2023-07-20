@@ -75,21 +75,20 @@ void MageDialogControl::loadNextScreen()
    cursorPhase += 250;
 }
 
-std::optional<uint16_t> MageDialogControl::update(uint32_t deltaTime)
+std::optional<uint16_t> MageDialogControl::update(const DeltaState& delta)
 {
    cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-   auto activatedButton = inputHandler->GetButtonActivatedState();
-   bool shouldAdvance = activatedButton.IsPressed(KeyPress::Rjoy_down)
-      || activatedButton.IsPressed(KeyPress::Rjoy_left)
-      || activatedButton.IsPressed(KeyPress::Rjoy_right)
+   bool shouldAdvance = delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_down)
+      || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_left)
+      || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right)
       || MAGE_NO_MAP != mapControl->mapLoadId;
 
    auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    if (shouldShowResponses())
    {
       currentResponseIndex += currentScreen.responseCount;
-      if (activatedButton.IsPressed(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
-      if (activatedButton.IsPressed(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
+      if (delta.ActivatedButtons.IsPressed(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
+      if (delta.ActivatedButtons.IsPressed(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
       currentResponseIndex %= currentScreen.responseCount;
       if (shouldAdvance)
       {

@@ -134,18 +134,17 @@ public:
       mapControl(mapControl)
    {}
 
-   void load(uint16_t dialogId, int16_t currentEntityId);
-   void loadNextScreen();
    std::optional<uint16_t> StartModalDialog(std::string messageString);
+
+   void load(uint16_t dialogId, int16_t currentEntityId);
+   void loadCurrentScreenPortrait();
+   void loadNextScreen();
 
    constexpr void close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
-   std::optional<uint16_t> update(uint32_t deltaTime);
+   std::optional<uint16_t> update(const DeltaState& delta);
    void draw();
-
-   void loadCurrentScreenPortrait();
-   uint32_t getDialogAddress(uint16_t dialogId) const;
 
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;

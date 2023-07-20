@@ -6,7 +6,7 @@
 
 bool was_command_entered = false;
 void (*on_start_function_pointer)() = nullptr;
-void (*on_command_function_pointer)(char *commandString) = nullptr;
+void (*on_command_function_pointer)(char* commandString) = nullptr;
 
 
 #ifndef DC801_EMBEDDED
@@ -55,7 +55,7 @@ void EngineInputDesktopGetCommandStringFromStandardIn()
 
 #endif
 
-void EngineSendSerialMessage (const char *message)
+void EngineSendSerialMessage(const char* message)
 {
 #ifdef DC801_EMBEDDED
     std::string message_with_crlf = std::regex_replace(
@@ -70,15 +70,16 @@ void EngineSendSerialMessage (const char *message)
 #endif
 }
 
-void EngineSerialRegisterEventHandlers (
+void EngineSerialRegisterEventHandlers(
     void (*on_start)(),
-    void (*on_command)(char *commandString)
-) {
+    void (*on_command)(char* commandString)
+)
+{
     on_start_function_pointer = on_start;
     on_command_function_pointer = on_command;
 }
 
-void EngineHandleSerialInput ()
+void EngineHandleSerialInput()
 {
 #ifdef DC801_EMBEDDED
     handle_usb_serial_input();
@@ -86,22 +87,23 @@ void EngineHandleSerialInput ()
     EngineInputDesktopGetCommandStringFromStandardIn();
 #endif
 
-    if(was_serial_started) {
-        if(on_start_function_pointer != nullptr) {
+    if (was_serial_started)
+    {
+        if (on_start_function_pointer != nullptr)
+        {
             on_start_function_pointer();
         }
         was_serial_started = false;
     }
-    if(was_command_entered) {
-        if(on_command_function_pointer != nullptr) {
+
+    if (was_command_entered)
+    {
+        if (on_command_function_pointer != nullptr)
+        {
             on_command_function_pointer(command_buffer);
         }
         EngineSendSerialMessage("> ");
-        memset(
-            command_buffer,
-            0,
-            command_buffer_length
-        );
+        memset(command_buffer, 0, command_buffer_length);
         command_buffer_length = 0;
         was_command_entered = false;
     }

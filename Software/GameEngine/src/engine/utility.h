@@ -60,55 +60,11 @@ static inline void error_print(const char* strLike)
 
 namespace Util
 {
-   class ClockProxy
-   {
-   public:
-      using period = std::milli;
-      using rep = uint32_t;
-      using duration = std::chrono::duration<rep, period>;
-      using time_point = std::chrono::time_point<ClockProxy>;
-      static constexpr bool is_steady = true;
 
-      static time_point now() noexcept
-      {
-#ifdef DC801_EMBEDDED
-         // nrfx_systick_get(&systick);
-         // return time_point{ duration{systick.time} };
-         return time_point{ duration{getSystick()} };
-#else
-         return time_point{ duration{systick} };
-         
-#endif
-      }
-
-   private:
-#ifdef DC801_EMBEDDED
-      static nrfx_systick_state_t systick;
-#else
-      static uint32_t systick;
-#endif
-   };
 
    template <typename T, typename P>
    static inline T lerp(T a, T b, P progress) { return (T)((b - a) * progress) + a; }
 
-   static ClockProxy::time_point lastTime{ClockProxy::duration{0}};
-   static uint32_t millis()
-   {
-      auto startTime = ClockProxy::now();
-
-      auto delta = (startTime - lastTime).count();
-      if (lastTime > startTime) { delta += 0xFFFFFFFF; }
-      lastTime = ClockProxy::now();
-      return delta;
-      // #ifdef DC801_EMBEDDED
-
-//       //return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-//       return systick.time / 32;// app_timer_cnt_get() / 32;
-// #else
-//       return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-// #endif
-   }
 };
 
 
@@ -141,15 +97,6 @@ typedef enum
 
 uint16_t calcCRC(uint8_t* data, uint8_t len, const uint16_t POLYNOM);
 uint16_t crc16(uint16_t crcValue, uint8_t newByte, const uint16_t POLYNOM);
-
-
-uint8_t getButton(bool waitForLongPress);
-bool isButtonDown(int button);
-void pauseUntilPress(int button);
-
-void setLevelLEDs(LEVEL level);
-void setPowerUpLEDs(POWERUP powerUp);
-
 
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis);
 

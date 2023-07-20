@@ -91,8 +91,6 @@ int main(int argc, char* argv[])
     static auto inputHandler = std::make_shared<EngineInput>();
     static auto frameBuffer = std::make_shared<FrameBuffer>();
 
-    // try
-    // {
 #ifdef DC801_EMBEDDED
     // Init the clock 
     APP_ERROR_CHECK(nrf_drv_clock_init());

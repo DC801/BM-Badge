@@ -75,7 +75,7 @@ public:
    void DrawLayer(uint8_t layer, const Point& cameraPosition) const;
    void DrawGeometry(const Point& cameraPosition) const;
    void DrawEntities(const Point& cameraPosition) const;
-   void UpdateEntities(uint32_t deltaTime);
+   void UpdateEntities(const DeltaState& delta);
 
    void TryMovePlayer(ButtonState button);
    
@@ -212,6 +212,8 @@ private:
    std::unique_ptr<MapData> currentMap;
 
    bool isEntityDebugOn{ false };
+   float playerSpeed{ 0.0f };
+   bool playerIsMoving{ false };
 
 }; //class MapControl
 

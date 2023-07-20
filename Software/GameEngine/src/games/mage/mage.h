@@ -8,6 +8,7 @@
 #include "EngineInput.h"
 #include "EngineSerial.h"
 #include "EngineWindowFrame.h"
+#include "mage_app_timers.h"
 #include "mage_camera.h"
 #include "mage_color_palette.h"
 #include "mage_command_control.h"
@@ -49,10 +50,10 @@ public:
    void Run();
 
 private:
-   void processInputs();
+   void getInputSate();
 
    //updates the state of all the things before rendering:
-   void gameUpdate(uint32_t deltaTime);
+   void gameUpdate(const DeltaState& delta);
 
    //This renders the game to the frame buffer based on the loop's updated state.
    void gameRender();
@@ -62,18 +63,14 @@ private:
 
    //this takes input information and moves the playerEntity around
    //If there is no playerEntity, it just moves the camera freely.
-   void applyGameModeInputs(uint32_t deltaTime);
+   void applyGameModeInputs(const DeltaState& delta);
 
    //this handles inputs that apply in ALL game states. That includes when
    //the hex editor is open, when it is closed, when in any menus, etc.
-   void applyUniversalInputs();
+   void applyUniversalInputs(const DeltaState& delta);
    void handleEntityInteract(bool hack);
-   void movePlayer(ButtonState button);
 
    bool engineIsInitialized{ false };
-
-   float mageSpeed{ 0.0f };
-   bool isMoving{ false };
 
    uint8_t currentSaveIndex{ 0 };
 

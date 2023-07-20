@@ -1,5 +1,6 @@
 #include "EngineInput.h"
 #include "main.h"
+#include "EngineSerial.h"
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
@@ -129,7 +130,7 @@ uint32_t EngineInput::GetDesktopInputState()
 
 #endif
 
-void EngineInput::HandleKeyboard()
+void EngineInput::Update()
 {
 #ifdef DC801_EMBEDDED
    auto newValue = get_keyboard_mask();
@@ -139,4 +140,10 @@ void EngineInput::HandleKeyboard()
 
    buttons = newValue;
    activated = ~activated & newValue;
+
+
+   //on desktop, interact with stdin
+   //on embedded, interact with USBC com port over serial
+   EngineHandleSerialInput();
 }
+

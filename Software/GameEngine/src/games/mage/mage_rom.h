@@ -1,8 +1,11 @@
 ﻿#ifndef MAGE_ROM_H_
 #define MAGE_ROM_H_
 
+#include <chrono>
+#include <stdint.h>
 #include "Header.h"
 #include "EngineROM.h"
+#include "EngineInput.h"
 
 //this is the path to the game.dat file on the SD card.
 //if an SD card is inserted with game.dat in this location
@@ -17,6 +20,34 @@ static const inline auto MAGE_ENTITY_NAME_LENGTH = 12;
 static const inline auto MAGE_NUM_MEM_BUTTONS = 4;
 static const inline auto DEFAULT_MAP = 0;
 static const inline auto MAGE_NO_WARP_STATE = ((uint16_t)-1);
+
+class GameClock
+{
+public:
+    using period = std::milli;
+    using rep = uint32_t;
+    using duration = std::chrono::duration<rep, period>;
+    using time_point = std::chrono::time_point<GameClock>;
+    static constexpr bool is_steady = true;
+
+    static time_point now() noexcept
+    {
+#ifdef DC801_EMBEDDED
+        // nrfx_systick_get(&systick);
+        // return time_point{ duration{systick.time} };
+        return time_point{ duration{getSystick()} };
+#else
+        //steady_clock
+        return time_point{ duration{42} };
+
+#endif
+    }
+
+private:
+#ifdef DC801_EMBEDDED
+#else
+#endif
+};
 
 enum struct MageEntityFieldOffset: uint8_t
 {
@@ -63,8 +94,12 @@ struct MageSaveGame
    uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT]{ 0 };
 };
 
-
-
+struct DeltaState
+{
+    GameClock::duration Time;
+    ButtonState Buttons;
+    ButtonState ActivatedButtons;
+};
 
 class MapData;
 class MageTileset;

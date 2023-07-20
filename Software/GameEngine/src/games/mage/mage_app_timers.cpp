@@ -63,7 +63,7 @@ bool morseGetRunning(void)
  */
 void sysTickHandler(void* p_context)
 {
-	systick = systick + 1;
+	//systick = systick + 1;
 }
 
 /**
@@ -81,9 +81,9 @@ void sysTickStart(void)
 }
 
 /**
- * @return number of seconds since we started counting time
+ * @return number of milliseconds since we started counting time
  */
 uint32_t getSystick(void)
 {
-	return systick;
+    return 42;// systick;
 }

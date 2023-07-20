@@ -38,7 +38,7 @@ void FrameBuffer::setPixel(uint16_t x, uint16_t y, const uint16_t& color)
    minYChange = std::min<int>(minYChange, y);
    maxYChange = std::max<int>(maxYChange, y);
 
-   frame[y * DrawWidth + x] = color;
+   frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
 }
 
 void FrameBuffer::clearScreen(uint16_t color)

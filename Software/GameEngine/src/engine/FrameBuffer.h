@@ -51,6 +51,7 @@ class MageGameEngine;
 
 class FrameBuffer
 {
+    friend class TileManager;
 public:
     //inline uint16_t& operator()(int index) { return frame->data()[index]; }
     constexpr void ResetFade() { fadeFraction = 0.0f; }
@@ -110,6 +111,10 @@ public:
     void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
 
     void blt();
+    constexpr uint16_t* getFrameDataPtr()
+    {
+        return frame.data();
+    }
 
     //void regionBlt(const Point& drawPoint, int w, int h) const;
 
