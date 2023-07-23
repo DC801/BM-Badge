@@ -249,3 +249,12 @@ For each item: (Copy existing pattern wherever these are found)
 	2. Make script `command-parts-ITEM` (copy an existing)
 	3. Add to `command-parts` (using flag `ch2-installed-ITEM` and `ch2-carrying-ITEM`)
 	4. Add to script `command-parts-q` (if multiple words, add a no-spaces option, too)
+
+## Other stuff
+
+- Do the red-bow goose a favor
+	- Should be plot-blocking (unavoidable)
+	- Should leave the goose in your debt
+	- Should feel like a throwaway moment
+- Setting up the mainframe's networking
+- Mainframe needs software bodging because the hardware is so janky

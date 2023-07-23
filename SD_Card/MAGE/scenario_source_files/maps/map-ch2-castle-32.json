@@ -33,8 +33,8 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 355, 356, 383, 384, 384, 385, 355, 356, 0, 0,
-            0, 0, 371, 372, 399, 400, 400, 401, 371, 372, 0, 0,
+            0, 0, 0, 0, 383, 384, 384, 385, 0, 0, 0, 0,
+            0, 0, 0, 0, 399, 400, 400, 401, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 383, 384, 385, 0, 0, 383, 384, 385, 0, 0,
             0, 0, 399, 400, 401, 0, 0, 399, 400, 401, 0, 0,
@@ -268,6 +268,68 @@
                  "width":0,
                  "x":115,
                  "y":382
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":44,
+                 "name":"walk_from-northeast",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":17.5
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":289,
+                 "y":110
+                }, 
+                {
+                 "class":"",
+                 "height":34,
+                 "id":45,
+                 "name":"northeast-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":272,
+                 "y":73
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":46,
+                 "name":"walk_from-northwest",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":17.5
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":97,
+                 "y":110
+                }, 
+                {
+                 "class":"",
+                 "height":34,
+                 "id":47,
+                 "name":"northwest-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":80,
+                 "y":73
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -276,7 +338,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":44,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
