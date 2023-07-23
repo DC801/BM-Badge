@@ -31,6 +31,7 @@ command-map {
 	}
 	// normal stuff
 	if (variable ch2-in-room is 0) {
+		show serial dialog spacer
 		show serial dialog {
 			"You don't seem to have a map for this place."
 		}

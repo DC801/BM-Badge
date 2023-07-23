@@ -49,33 +49,18 @@ ch2-map-init {
 			set serial control off
 		}
 	} else { // you have the artifact
-		if (
-			variable ch2-in-room is not 0 // if you're in the castle
-			|| flag ch2-toot-done is true // or if the toot is all the way done
-		) {
-			set serial control on
-			copy register-rtfm
-			copy register-inventory
-			copy register-manual
-			if (flag ch2-map-granted is true) {
-				copy register-map
-			}
-			if (flag ch2-permission-to-fuse is true) {
-				copy register-fuse
-			}
-			if (variable ch2-storyflag-round is > 0) {
-				copy register-parts
-			}
-		} else { // you're not in the castle and the toot isn't done yet
-			if (debug mode is on) {
-				set serial control on
-				set hex control to on
-				show serial dialog {
-					"<g>DEBUG MODE IS ON!</>"
-				}
-			} else {
-				set serial control off
-			}
+		set serial control on
+		copy register-rtfm
+		copy register-inventory
+		copy register-manual
+		if (flag ch2-map-granted is true) {
+			copy register-map
+		}
+		if (flag ch2-permission-to-fuse is true) {
+			copy register-fuse
+		}
+		if (variable ch2-storyflag-round is > 0) {
+			copy register-parts
 		}
 	}
 	

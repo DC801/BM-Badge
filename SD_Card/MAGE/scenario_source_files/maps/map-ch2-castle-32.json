@@ -330,6 +330,24 @@
                  "width":32,
                  "x":80,
                  "y":73
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":50,
+                 "name":"Vending",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-vendingmachine"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":80,
+                 "y":341
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -338,7 +356,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":48,
+ "nextobjectid":51,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

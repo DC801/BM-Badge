@@ -108,7 +108,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-keyboard is true) {
 			show dialog {
 				name "" "(Now installing... the keyboard!)"
-				"(It's not exactly QWERTY or DVORAK, but somehow you'll be able to type with this.)"
+				"(Good thing the enclosure has a MIDI interface, or this wouldn't have worked.)"
 			}
 			set flag temp to true
 			copy ch2-install-keyboard

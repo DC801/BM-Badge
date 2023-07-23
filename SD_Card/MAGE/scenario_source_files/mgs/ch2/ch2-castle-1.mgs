@@ -611,7 +611,7 @@ ch2-terminal-plugged-no {
 
 ch2-terminal-plugged-web {
 	show dialog {
-		Lambda "Oh, then you're all set already! Your console will be directly below the game screen, in your browser window."
+		Lambda "Oh, then you're all set already! Your console will be to the right (or directly below) the game screen, in your browser window."
 		"You may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
 	}
 	goto ch2-terminal-message-test
@@ -689,6 +689,7 @@ ch2-terminal-message-test-success {
 		show dialog {
 			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
+		// TODO: what should happen if you type "MAN" while the dialog is still up?
 		copy register-manual
 		set serial control on
 		show serial dialog spacer
