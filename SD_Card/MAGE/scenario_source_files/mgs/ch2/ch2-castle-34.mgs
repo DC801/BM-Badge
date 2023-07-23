@@ -40,7 +40,11 @@ on_load-ch2-castle-34 {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-34 {
-	goto null_script
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-northeast
+		load map ch2-castle-32
+	}
+	set map tick_script to on_tick-ch2-castle-34 // reset
 }
 
 /* ---------- EXIT STUFF ---------- */

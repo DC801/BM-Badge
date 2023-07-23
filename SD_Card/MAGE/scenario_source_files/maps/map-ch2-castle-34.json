@@ -157,6 +157,17 @@
                  "width":0,
                  "x":-154,
                  "y":462
+                }, 
+                {
+                 "class":"",
+                 "height":24.152,
+                 "id":37,
+                 "name":"south-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":30,
+                 "x":177,
+                 "y":257
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -165,7 +176,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

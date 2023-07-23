@@ -42,6 +42,15 @@ on_load-ch2-castle-32 {
 	}
 	// END DEBUG
 	
+	// New shape of scripting: no need to walk along a path, just teleport there! The mage won't go back into the door immediately (apparently)!
+	// TODO: update others? Or is it not worth the time?
+	if (warp state is walk_from-northeast) {
+		teleport entity "%PLAYER%" to geometry walk_from-northeast
+	}
+	if (warp state is walk_from-northwest) {
+		teleport entity "%PLAYER%" to geometry walk_from-northwest
+	}
+	
 	goto ch2-map-init
 }
 
@@ -52,7 +61,15 @@ debug-want-chips {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-32 {
-	goto null_script
+	if (entity "%PLAYER%" is inside geometry northwest-hitbox) {
+		set warp state to walk_from-south
+		load map ch2-castle-33
+	}
+	if (entity "%PLAYER%" is inside geometry northeast-hitbox) {
+		set warp state to walk_from-south
+		load map ch2-castle-34
+	}
+	set map tick_script to on_tick-ch2-castle-32 // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
