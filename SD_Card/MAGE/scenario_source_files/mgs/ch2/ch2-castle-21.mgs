@@ -238,6 +238,8 @@ interact-ch2-room21-split {
 }
 
 interact-ch2-room21-split-s {
+	turn entity Jean-Paul toward entity "%PLAYER%"
+	turn entity Frankie toward entity "%PLAYER%"
 	show dialog {
 		PLAYER "So... I may have forgotten where I can find Sea Moss."
 		Jean-Paul "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
