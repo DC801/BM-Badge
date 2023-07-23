@@ -51,10 +51,10 @@
 
 ### Sets and doodads
 
-- [ ] Vending machine
-- [ ] Band instruments
-- [ ] Normal walls/floor (vaguely circuit-like)
-- [ ] Throne room (resembles Admiral's Gibson renders)
+- [x] Vending machine
+- [~] Band instruments
+- [x] Normal walls/floor (vaguely circuit-like)
+- [x] Throne room ~~(resembles Admiral's Gibson renders)~~
 - [ ] Geothermal power plant
 - [ ] Old timey-bedroom
 - [ ] Blacksmith / workshop
@@ -63,7 +63,7 @@
 - [ ] Hydroponics
 - [ ] Pantry
 - [ ] Messy computer lab (tiny)
-- [ ] Collapsed rocks (blocking doorways + incidental fallen rocks)
+- [x] Collapsed rocks (blocking doorways + incidental fallen rocks)
 
 ## Serial dialogs styles
 
@@ -77,6 +77,42 @@
 - Separate multiple speakers with an empty line.
 - Additional paragraphs spoken by the same speaker should be indented with `\t`.
 - Put an empty line between the last paragraph of dialog and a user input prompt.
+
+### `on_look` scripts
+
+See below for color choices.
+
+#### Rooms
+
+```
+look-ch2-roomname {
+	show serial dialog spacer
+	show serial dialog {
+		"You looked around the <c>NAME OF ROOM</>."
+		"\t(description goes here)"
+		"\t(extra paragraphs should also be tabbed, but try to avoid a lot of short paragraphs)"
+		" "
+	}
+}
+```
+
+The extra line break at the end is only needed for places, since the exit list will follow the room's `on_look` script.
+
+#### Entities
+
+```
+look-ch2-roomname {
+	show serial dialog spacer
+	show serial dialog {
+		"You looked at <m>%EntityName%</>."
+		// "You looked at the <m>%EntityName%</>." // for objects
+		"\t(description goes here)"
+		"\t(extra paragraphs should also be tabbed, but try to avoid a lot of short paragraphs)"
+	}
+}
+```
+
+Note the relative entity name for the label.
 
 ### Colors
 
@@ -92,13 +128,15 @@
 	- Magenta:
 		- The village elders (the color of their robes)
 		- Lambda
+		- Any other person, really
 	- Red:
 		- The Big Bad
 		- Anything unambiguously evil
 	- Cyan:
 		- The player (the color of mage's robe)
 		- Inline serial commands (these should also be all caps)
-		- Any calls to action for the player
+		- Any calls to action for the player, akin to the above
 		- The castle rooms (ch2 dungeon) (?)
 			- Only the warp names are colored?
 - In the web serial console, a styled section of text loses its styles after a newline character. As a workaround, reapply the style at the beginning of the first word that lost its styles.
+- Currently, in the web build, the bell character is printed. Keep that in mind...

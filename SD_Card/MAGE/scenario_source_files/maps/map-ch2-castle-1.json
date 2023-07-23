@@ -118,7 +118,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":""
+                         "value":"look-ch2-xa"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -131,7 +131,7 @@
                  "gid":211,
                  "height":32,
                  "id":4,
-                 "name":"Save Floppy",
+                 "name":"save floppy",
                  "properties":[
                         {
                          "name":"on_interact",

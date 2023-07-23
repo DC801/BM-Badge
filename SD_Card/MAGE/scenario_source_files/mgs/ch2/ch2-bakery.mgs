@@ -3,15 +3,17 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 	parameters for label SELF { entity "%SELF%" }
 }
+settings for serial dialog { wrap 60 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-bakery {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked around the <m>bakery</>."
+		"You looked around the <m>BAKERY</>."
 		" "
 		"The smell inside is amazing! TODO"
+		" "
 	}
 }
 

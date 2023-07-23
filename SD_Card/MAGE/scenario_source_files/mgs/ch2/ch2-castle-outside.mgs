@@ -3,13 +3,16 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 	parameters for label SELF { entity "%SELF%" }
 }
+settings for serial dialog { wrap 60 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-outside {
 	show serial dialog spacer
 	show serial dialog {
-		"   TODO: castle room exterior on_look text"
+		"You looked around the <c>CASTLE EXTERIOR</>."
+		"\tThe building itself is undeniably ominous with its stark, charcoal-colored stone. You can just make out that the green orbs of light embedded in its walls are flickering very slightly. A subtle humming emanates from the nearby pillars. It is no surprise that the townsfolk avoid this place."
+		" "
 	}
 }
 
@@ -137,3 +140,15 @@ interact-ch2-jackob-outside {
 	set entity "%SELF%" interact_script to interact-ch2-jackob-outside // RESET
 }
 
+interact-ch2-pedestal {
+	show dialog {
+		PLAYER "What a strange symbol. Like a trident, but with different shapes on the tips of the tines: a square, triangle, and circle."
+		"But what does it mean?"
+	}
+}
+
+interact-ch2-pillar {
+	show dialog {
+		PLAYER "What do these things do?"
+	}
+}

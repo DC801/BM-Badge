@@ -4,6 +4,7 @@ settings for dialog {
 	parameters for label ZIPPY { entity "Aunt Zippy" }
 	parameters for label ZAPPY { entity "Uncle Zappy" }
 }
+settings for serial dialog { wrap 60 }
 
 /* --- CUTSCENE: Birthday (house) --- */
 

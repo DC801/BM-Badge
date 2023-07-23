@@ -1,50 +1,46 @@
+settings for serial dialog { wrap 60 }
+
 look-ch2-bert {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Bert</>."
-		" "
-		"TODO"
+		"You looked at <m>%Bert%</>."
+		"\tA bear of a man, yet he doesn't have an aggressive bearing. His eyes drift around his environment as if patiently regarding everything, considering each one in turn."
 	}
 }
 look-ch2-alfonso {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Alfonso</>."
-		" "
-		"TODO"
+		"You looked at <m>%Alfonso%</>."
+		"\tThe man may genuinely be having trouble standing still; he is fidgetting with his fingers, and the robe at his feet is is jerking slightly, rhythmically, as if he is aggressively tapping his toes."
 	}
 }
 look-ch2-jackob {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Jackob</>."
-		" "
-		"TODO"
+		"You looked at <m>%Jackob%</>."
+		"\tThe man is old enough that his expression is cryptic. His eyes are all but entirely hidden under his sagging lids. He nods his head as if approving your efforts. Or is he genuinely falling asleep?"
 	}
 }
 look-player {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked at <c>yourself</>."
-		" "
-		"Yikes. You need a haircut."
+		"\tYour assessment? You need a haircut!"
 	}
 }
 
-look-xa {
+look-ch2-xa {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>XA</>."
-		" "
-		"It's some kind of orange, spider-shaped robot. It looks as though it might have the power to scoot around without actually moving its legs."
+		"You looked at <m>%XA%</>."
+		"\tIt's difficult to tell whether the machine is orange on purpose or if it is simply very thoroughly rusted. Its legs look odd, somehow -- you imagine it could scoot around the floor without moving any of the joints in its legs."
 		}
 }
 
 look-save_floppy {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>the save floppy</>."
-		" "
-		"Wow, someone 3D-printed a save icon. What will they think up next?"
+		"You looked at the <m>%save floppy%</>."
+		"\tWow, someone 3D-printed a save icon. What will they think up next?"
 	}
 }

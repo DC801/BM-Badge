@@ -13,48 +13,48 @@ settings for serial dialog { wrap 60 }
 look-ch2-bobsclub-basement {
 	show serial dialog spacer
 	show serial dialog {
-		"   TODO: Bob's Club basement text"
+		"TODO: Bob's Club basement text"
 	}
 }
 
 look-ch2-bobaustin {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Bob Austin</>."
+		"You looked at <m>%Bob Austin%</>."
 		" "
-		"   TODO: Bob Austin on_look"
+		"TODO: Bob Austin on_look"
 	}
 }
 look-ch2-bobmoss {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Bob Moss</>."
+		"You looked at <m>%Bob Moss%</>."
 		" "
-		"   TODO: Bob Moss on_look"
+		"TODO: Bob Moss on_look"
 	}
 }
 look-ch2-icechest {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at the <m>ice chest</>."
+		"You looked at the <m>%ice chest%</>."
 		" "
-		"   TODO: Ice Chest on_look"
+		"TODO: Ice Chest on_look"
 	}
 }
 look-ch2-marathonbob {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at one of the <m>Marathon Bobs</>."
+		"You looked at one of the <m>%Marathon Bob%s</>."
 		" "
-		"   TODO: Marathon Bob on_look"
+		"TODO: Marathon Bob on_look"
 	}
 }
 look-ch2-guardianbob {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Guardian Bob</>."
+		"You looked at <m>%Guardian Bob%</>."
 		" "
-		"   TODO: Guardian Bob on_look"
+		"TODO: Guardian Bob on_look"
 	}
 }
 

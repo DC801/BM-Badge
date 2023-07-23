@@ -110,7 +110,7 @@
                  "gid":571,
                  "height":32,
                  "id":53,
-                 "name":"Ice Chest",
+                 "name":"ice chest",
                  "properties":[
                         {
                          "name":"on_interact",
