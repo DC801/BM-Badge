@@ -238,11 +238,21 @@ ch2-start-round-2 {
 	goto ch2-do-init-on-end
 }
 ch2-start-round-3 {
-	show serial dialog { "\t<g>DEBUG: Bert 'any messages?' cutscene goes here!</>" }
-	show serial dialog { "\t<g>DEBUG: Lambda's next round of parts list cutscene goes here! (Round 3)</>" }
-	// TODO: cutscene
-	set flag ch2-lambda-paging to true
 	set player control off
+	wait 800ms
+	turn entity "%PLAYER%" toward entity "Wizard"
+	show dialog {
+		PLAYER "So, um.... do you know if Bert has come back?"
+		Wizard "Bert? The big hairy guy?"
+		"Nope. Since he left, no one's been in and of here but you."
+		PLAYER "Well, has he phoned or anything?"
+		Wizard "Do you see a phone in here?"
+		PLAYER "...."
+		"I'm getting worried about him. What is he doing? Why is it taking so long?"
+		Wizard "Beats me."
+	}
+	set flag ch2-cutseen-bert-message to true
+	set flag ch2-lambda-paging to true
 	wait 200ms
 	show serial dialog spacer
 	show serial dialog {
@@ -257,7 +267,6 @@ ch2-start-round-3 {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
 	set player control on
-
 	mutate ch2-storyflag-round = 3
 	goto ch2-do-init-on-end
 }

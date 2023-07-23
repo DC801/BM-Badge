@@ -246,6 +246,7 @@ ch2-lambda-round-2-parts5c {
 
 ch2-lambda-round-2-parts5d {
 	set flag ch2-lambda-paging to false
+	set flag ch2-lambda-bert-postlude to true
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Anything else?"
@@ -261,10 +262,45 @@ ch2-lambda-round-2-parts5d {
 
 /* ---------- PARTS LIST: ROUND 3 ---------- */
 
-ch2-lambda-round-3-parts1 {
+
+ch2-bert-message-lambda-intro {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> So we're almost done?"
+		"<m>LAMBDA:</> Hey, there! I saw that you finished the last list, and had just worked out the last few parts we need...."
+		" "
+		# "Does that mean we're almost done?" : ch2-bert-message-lambda-intro1a
+		# "Wait! What about Bert?" : ch2-bert-message-lambda-intro1b
+	}
+}
+ch2-bert-message-lambda-intro1a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Oh yeah? Does that mean we're almost done?"
+	}
+	goto ch2-bert-message-lambda-intro3
+}
+ch2-bert-message-lambda-intro1b {
+	// todo: if you've asked around the village about Bert, you could like say "I've asked around but..."
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Wait! What about Bert? Have you heard anything?"
+		" "
+		"<m>LAMBDA:</> Heard anything from Bert? No, nothing. I'm sorry. We'll just have to keep being patient."
+		" "
+		# "Okay...." : ch2-bert-message-lambda-intro2
+	}
+}
+ch2-bert-message-lambda-intro2 {
+	set flag ch2-lambda-message-prelude to true
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Okay.... I don't like it, but I guess I don't have much choice."
+		"\tYou said you had the last few parts. Does that mean we're almost done?"
+	}
+	goto ch2-bert-message-lambda-intro3
+}
+ch2-bert-message-lambda-intro3 {
+	show serial dialog {
 		" "
 		"<m>LAMBDA:</> Yeah, we're getting pretty close to the end here. Only a few parts left, but one is a bit of a doozy."
 		" "
