@@ -61,6 +61,8 @@ command-man-normal {
 	if (flag ch2-cutseen-bert-secret is true) {
 		if (flag ch2-lambda-bert-prelude is false) {
 			goto ch2-bert-secret-lambda-intro
+		} else if (flag ch2-lambda-bert-postlude is false) {
+			goto ch2-lambda-round-2-parts1
 		}
 	}
 	if (flag ch2-cutseen-bert-message is true) {
@@ -530,6 +532,7 @@ ch2-lambda-person-lambda-name-followup-bigbad {
 		"<m>LAMBDA:</> Probably. Good insight."
 		"\tIn his case, though, I think he likes the mystique, too."
 	}
+	set flag hackbook-backstory to true // otherwise, the mage will realize he doesn't know the Big Bad's name when the "Town History" book is read, despite realizing it here with Lambda
 	goto ch2-lambda-person-lambda-name-followup
 }
 ch2-lambda-person-lambda-name-followup-nickname {
