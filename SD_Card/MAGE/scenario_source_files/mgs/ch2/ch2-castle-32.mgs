@@ -99,6 +99,49 @@ on_go-castle-32-south {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-vendingmachine {
+	if (
+		flag ch2-want-cactuscooler is false
+		|| flag ch2-carrying-cactuscooler is true
+		|| flag ch2-cactuscooler-delivered is true
+	) {
+		show dialog {
+			PLAYER "There's sure a lot of snacks in there. Too bad I'm out of pocket change."
+		}
+	} else if (flag ch2-want-bobparty is false) {
+		show dialog {
+			PLAYER "Hmm. I thought there might be Cactus Cooler in here, but it's just chips and stuff. No soda."
+		}
+		turn entity "Sea Moss" toward entity "%PLAYER%"
+		show dialog {
+			entity "Sea Moss" "Oh, you're looking for Cactus Cooler? My cousin Bob Austin loves that stuff."
+		}
+		turn entity "%PLAYER%" toward entity "Sea Moss"
+		show dialog {
+			entity "Sea Moss" "Every time he throws a party, he brings loads and loads...."
+			PLAYER "Stone Cold Bob Austin brings Cactus Cooler to his parties?"
+			PLAYER "(But there's no Bob's Club party this year. Maybe I could go back to town and ask him if he has any extra from last year?)"
+		}
+		turn entity "Sea Moss" toward entity "%PLAYER%"
+		set flag ch2-want-bobparty to true
+	} else {
+		show dialog {
+			PLAYER "Oh, right. No soda in here."
+		}
+		turn entity "%PLAYER%" toward entity "Sea Moss"
+		show dialog {
+			PLAYER "Hey, you -- you said that Bob Austin likes Cactus Cooler?"
+		}
+		turn entity "Sea Moss" toward entity "%PLAYER%"
+		show dialog {
+			entity "Sea Moss" "Oh, sure. He's always got loads."
+			PLAYER "(Well then, I should go back to the Bob's Club in town and ask him for some.)"
+		}
+		turn entity "Sea Moss" south
+	}
+	set entity "%SELF%" interact_script to interact-ch2-vendingmachine
+}
+
 interact-ch2-seamoss {
 	copy face-player
 	if (flag ch2-want-ramchips is false) {

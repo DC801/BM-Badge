@@ -188,7 +188,7 @@ interact-ch2-room21-split {
 		PLAYER "So I'm rebuilding the castle mainframe, and I heard you guys might be able to help me get some RAM. Lambda couldn't find any to spare."
 		Jean-Paul "Lambda? Who's that?"
 		PLAYER "He's someone helping me.\n(TODO re: Lambda)"
-		"Anyway, if you don't have any RAM I can use, do you have an ideas for a substitute? It's okay if it's... abstract."
+		"Anyway, if you don't have any RAM I can use, do you have any ideas for a substitute? It's okay if it's... abstract."
 		Jean-Paul "\"Abstract?\""
 		PLAYER "Yeah, so like what even is RAM?"
 		Jean-Paul "It's a computer's working memory. Any programs that are running, or images or text that is loaded, or anything at all...."
