@@ -3,6 +3,7 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 	parameters for label SELF { entity "%SELF%" }
 }
+settings for serial dialog { wrap 60 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 

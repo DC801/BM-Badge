@@ -3,6 +3,7 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 	parameters for label SELF { entity "%SELF%" }
 }
+settings for serial dialog { wrap 60 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 
@@ -16,7 +17,7 @@ look-ch2-castle-23 {
 look-ch2-rocco {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at <m>Rocco</>."
+		"You looked at <m>%Rocco%</>."
 		" "
 		"TODO: Rocco on_look"
 	}

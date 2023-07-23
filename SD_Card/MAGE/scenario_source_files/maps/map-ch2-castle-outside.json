@@ -343,6 +343,132 @@
                  "width":0,
                  "x":-71,
                  "y":-70
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":42,
+                 "name":"Pedestal",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pedestal"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":784,
+                 "y":564
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":43,
+                 "name":"Pedestal",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pedestal"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":368,
+                 "y":436
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":44,
+                 "name":"Pedestal",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pedestal"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":496,
+                 "y":436
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":45,
+                 "name":"Pillar",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pillar"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":560,
+                 "y":537
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":46,
+                 "name":"Pillar",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pillar"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":592,
+                 "y":441
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":47,
+                 "name":"Pillar",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pillar"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":304,
+                 "y":441
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":48,
+                 "name":"Pillar",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pillar"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":240,
+                 "y":537
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -389,7 +515,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":41,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
