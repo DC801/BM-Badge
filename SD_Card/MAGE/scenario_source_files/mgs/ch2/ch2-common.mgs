@@ -41,6 +41,10 @@ ch2-map-init {
 	if (flag ch2-has-artifact is false) { // no artifact at all
 		if (debug mode is on) {
 			set serial control on
+			set hex control to on
+			show serial dialog {
+				"<g>DEBUG MODE IS ON!</>"
+			}
 		} else {
 			set serial control off
 		}
@@ -65,6 +69,10 @@ ch2-map-init {
 		} else { // you're not in the castle and the toot isn't done yet
 			if (debug mode is on) {
 				set serial control on
+				set hex control to on
+				show serial dialog {
+					"<g>DEBUG MODE IS ON!</>"
+				}
 			} else {
 				set serial control off
 			}
