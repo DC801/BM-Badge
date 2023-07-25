@@ -6,19 +6,17 @@ in a more accessible way.
 #ifndef _MAGE_MAP_H
 #define _MAGE_MAP_H
 
-#include "mage_rom.h"
-#include "mage.h"
-#include "mage_camera.h"
-#include "mage_defines.h"
-#include "mage_entity_type.h"
-#include "mage_tileset.h"
-#include "EngineROM.h"
-
 #include <array>
 #include <span>
 #include <tuple>
 #include <vector>
 #include <optional>
+
+#include "mage_camera.h"
+#include "mage_entity_type.h"
+#include "mage_tileset.h"
+#include "shim_timer.h"
+#include "EngineROM.h"
 
 class MageScript;
 struct GoDirection
@@ -48,6 +46,10 @@ struct MapData
    uint16_t onTick{ 0 };
    uint16_t onLook{ 0 };
    uint8_t playerEntityIndex{ 0 };
+   uint16_t entityCount{ 0 };
+   uint16_t geometryCount{ 0 };
+   uint16_t scriptCount{ 0 };
+   uint8_t goDirectionsCount{ 0 };
    
    //this is the hackable array of entities that are on the current map
    //the data contained within is the data that can be hacked in the hex editor.
@@ -136,13 +138,9 @@ public:
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   inline std::optional<RenderableData> getPlayerEntityRenderableData()
+   inline RenderableData& getPlayerEntityRenderableData()
    {
-      if (currentMap->playerEntityIndex == NO_PLAYER_INDEX)
-      {
-         return std::nullopt;
-      }
-      return getEntityRenderableData(currentMap->playerEntityIndex);
+      return currentMap->entityRenderableData[currentMap->playerEntityIndex];
    }
 
    inline std::optional<const MageEntity*> getEntity(uint16_t id) const

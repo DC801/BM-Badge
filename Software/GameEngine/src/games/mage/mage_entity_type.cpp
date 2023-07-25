@@ -113,10 +113,10 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
    renderableData.origin.x = x;
    renderableData.origin.y = y - tileset->TileHeight;
    renderableData.hitBox.origin.x = x + halfWidth / 2;
-   renderableData.hitBox.origin.y = y - halfHeight;
+   renderableData.hitBox.origin.y = y + halfHeight / 2;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
-   renderableData.center = renderableData.hitBox.origin + (renderableData.hitBox.w / 2);
+   renderableData.center = renderableData.origin + Point{halfWidth, halfHeight};
 }
 
 

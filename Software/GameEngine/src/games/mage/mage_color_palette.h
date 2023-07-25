@@ -14,7 +14,7 @@ class MageGameEngine;
 #define COLOR_PALETTE_NAME_SIZE COLOR_PALETTE_NAME_LENGTH + 1
 
 //this is the color that will appear transparent when drawing tiles:
-#define TRANSPARENCY_COLOR	0x0020
+#define TRANSPARENCY_COLOR	0x2000
 
 
 struct Color_565

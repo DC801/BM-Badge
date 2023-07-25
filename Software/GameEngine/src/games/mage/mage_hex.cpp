@@ -241,7 +241,8 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
             {
                //paste
                memcpy(currentByte, clipboard, clipboardLength);
-               mapControl->UpdateEntities(DeltaState{ GameClock::duration{0},0,0 });
+               mapControl->UpdateEntities(DeltaState{ std::chrono::milliseconds{ 0 }, 0, 0
+            });
                memcpy(currentByte, clipboard, clipboardLength);
             }
          }

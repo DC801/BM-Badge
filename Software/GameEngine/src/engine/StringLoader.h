@@ -4,9 +4,6 @@
 #include <stdint.h>
 #include <memory>
 #include <string>
-#include <optional>
-#include "games/mage/mage_defines.h"
-#include "games/mage/mage_rom.h"
 
 class MageScriptControl;
 class MapControl;

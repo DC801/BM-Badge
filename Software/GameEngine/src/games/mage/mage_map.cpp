@@ -22,10 +22,6 @@ void MapControl::Load(uint16_t index)
 MapData::MapData(uint32_t& address)
 {
    auto layerCount = uint8_t{ 0 };
-   uint16_t entityCount{ 0 };
-   uint16_t geometryCount{ 0 };
-   uint16_t scriptCount{ 0 };
-   uint8_t goDirectionsCount{ 0 };
    ROM()->Read(name, address, MapNameLength);
    ROM()->Read(tileWidth, address);
    ROM()->Read(tileHeight, address);
@@ -89,7 +85,7 @@ MapData::MapData(uint32_t& address)
 void MapControl::DrawEntities(const Point& cameraPosition) const
 {
    //sort entity indices by the entity y values:
-   static std::vector<size_t> entityDrawOrder(currentMap->entities.size());
+   static std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
    auto sortByY = [&](size_t i1, size_t i2) { return currentMap->entities[i1].y < currentMap->entities[i2].y; };
    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
@@ -180,11 +176,11 @@ void MapControl::Draw(const Point& cameraPosition) const
 
 void MapControl::UpdateEntities(const DeltaState& delta)
 {
-   for (auto i = 0; i < currentMap->entities.size(); i++)
+   for (auto i = 0; i < currentMap->entityCount; i++)
    {
       auto& entity = currentMap->entities[i];
       auto& renderableData = currentMap->entityRenderableData[i];
-      entity.updateRenderableData(renderableData, delta.Time.count());
+      entity.updateRenderableData(renderableData, delta.TimeMs.count());
    }
 }
 

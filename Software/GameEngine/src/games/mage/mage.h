@@ -1,9 +1,10 @@
 #ifndef _MAGE_H
 #define _MAGE_H
 
-#include "Header.h"
-#include "mage_rom.h"
+#include <memory>
+#include <vector>
 
+#include "Header.h"
 #include "EngineAudio.h"
 #include "EngineInput.h"
 #include "EngineSerial.h"
@@ -14,10 +15,10 @@
 #include "mage_command_control.h"
 #include "mage_dialog_control.h"
 #include "mage_script_control.h"
+#include "mage_map.h"
 #include "mage_hex.h"
 #include "utility.h"
-#include <memory>
-#include <vector>
+#include "mage_rom.h"
 
 #ifndef DC801_EMBEDDED
 #include "shim_timer.h"

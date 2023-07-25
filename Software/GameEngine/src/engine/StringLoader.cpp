@@ -1,5 +1,8 @@
 #include "StringLoader.h"
+
+#include "games/mage/mage_defines.h"
 #include "games/mage/mage_map.h"
+#include "games/mage/mage_rom.h"
 
 std::string StringLoader::getString(uint16_t stringId, std::string triggeringEntityName) const
 {

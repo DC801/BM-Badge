@@ -71,7 +71,7 @@ all of the old code used as the foundation of this badge.
 #ifdef DC801_EMBEDDED
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
 #else
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
+static inline const auto MAGE_MIN_MILLIS_BETWEEN_FRAMES = (1000 / 24);
 #endif
 
 

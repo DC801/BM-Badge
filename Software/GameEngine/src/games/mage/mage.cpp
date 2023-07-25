@@ -1,10 +1,11 @@
 #include "mage.h"
 
-#include "utility.h"
+#include <chrono>
 
 #include "mage_defines.h"
 #include "mage_script_control.h"
 #include "shim_timer.h"
+#include "utility.h"
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
@@ -26,11 +27,6 @@ void MageGameEngine::Run()
 
     while (inputHandler->IsRunning())
     {
-        auto loopStart = GameClock::now();
-        auto deltaTime = loopStart - lastTime;
-        debug_print("Now: %dms\tLast time: %dms\tDelta: %dms", loopStart, lastTime, deltaTime);
-        lastTime = loopStart;
-
         if (!engineIsInitialized || inputHandler->ShouldReloadGameDat())
         {
             scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
@@ -49,6 +45,11 @@ void MageGameEngine::Run()
             mapControl->mapLoadId = MAGE_NO_MAP;
         }
 
+        const auto loopStart = GameClock::now();
+        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(loopStart - lastTime);
+        const auto delayMs = MAGE_MIN_MILLIS_BETWEEN_FRAMES - deltaTime.count();
+        debug_print("Now: %dms\tLast time: %dms\tDelta: %dms", loopStart, lastTime, deltaTime);
+
         const auto buttons = inputHandler->GetButtonState();
         const auto activatedButtons = inputHandler->GetButtonActivatedState();
 
@@ -61,20 +62,18 @@ void MageGameEngine::Run()
         gameUpdate(deltaState);
 
         //frame limiter code to keep game running at a specific FPS:
-        //only do this on the real hardware:
+        if (delayMs > 0)
+        {
 #ifdef DC801_EMBEDDED
-      //if (deltaTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) { continue; }
+            continue;
 #else
-      //if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES)
-      //{
-      //   SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
-      //}
+            SDL_Delay(delayMs);
 #endif
-      //This renders the game to the screen based on the loop's updated state.
+        }
+        //This renders the game to the screen based on the loop's updated state.
         gameRender();
 
-        // drawButtonStates(inputHandler->GetButtonState());
-        // drawLEDStates();
+        lastTime = loopStart;
 
         // if a blocking delay was added by any actions, pause before returning to the game loop:
         if (inputHandler->blockingDelayTime)
@@ -101,8 +100,8 @@ void MageGameEngine::handleEntityInteract(bool hack)
     auto playerEntity = mapControl->getPlayerEntity();
     if (playerEntity.has_value())
     {
-        auto playerRenderableData = mapControl->getPlayerEntityRenderableData();
-        auto interactBox = playerRenderableData->hitBox;
+        auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
+        auto interactBox = playerRenderableData.hitBox;
 
         const uint8_t interactLength = 32;
         auto direction = playerEntity.value()->direction & RENDER_FLAGS_DIRECTION_MASK;
@@ -144,7 +143,7 @@ void MageGameEngine::handleEntityInteract(bool hack)
 
                     if (colliding)
                     {
-                        playerRenderableData->isInteracting = true;
+                        playerRenderableData.isInteracting = true;
                         mapControl->getEntityRenderableData(i).isInteracting = true;
                         if (hack && playerHasHexEditorControl)
                         {
@@ -247,16 +246,16 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
 {
     //set mage speed based on if the right pad down is being pressed:
     const auto moveSpeedPerSecond = delta.Buttons.IsPressed(KeyPress::Rjoy_down) ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
-    const auto amountMovedThisFrame = float{ 1000.0f / delta.Time.count() };
+    const auto amountMovedThisFrame = float{ 1000.0f / delta.TimeMs.count() };
     mapControl->playerSpeed = float{ moveSpeedPerSecond / amountMovedThisFrame };
 
     auto playerEntity = mapControl->getPlayerEntity();
-    auto playerRenderableData = mapControl->getPlayerEntityRenderableData();
     // if there is a player on the map
-    if (playerEntity != NO_PLAYER && playerRenderableData != NO_PLAYER)
+    if (playerEntity != NO_PLAYER)
     {
-        auto player = *playerEntity;
-        player->updateRenderableData(*playerRenderableData, 0);
+        auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
+        auto player = playerEntity.value();
+        player->updateRenderableData(playerRenderableData, 0);
 
         //update renderable info before proceeding:
         uint16_t playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
@@ -324,8 +323,8 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
         //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
         bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
             && (player->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-            && (player->currentFrameIndex == (playerRenderableData->frameCount - 1))
-            && (playerRenderableData->currentFrameTicks + delta.Time.count() >= (playerRenderableData->duration));
+            && (player->currentFrameIndex == (playerRenderableData.frameCount - 1))
+            && (playerRenderableData.currentFrameTicks + delta.TimeMs.count() >= (playerRenderableData.duration));
 
         //if the above bool is true, set the player back to their idle animation:
         if (isPlayingActionButShouldReturnControlToPlayer)
@@ -338,13 +337,13 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
         if (previousPlayerAnimation != player->currentAnimation)
         {
             player->currentFrameIndex = 0;
-            playerRenderableData->currentFrameTicks = 0;
+            playerRenderableData.currentFrameTicks = 0;
         }
 
         //What scenarios call for an extra renderableData update?
-        if (mapControl->playerIsMoving || (playerRenderableData->lastTilesetId != playerRenderableData->tilesetId))
+        if (mapControl->playerIsMoving || (playerRenderableData.lastTilesetId != playerRenderableData.tilesetId))
         {
-            player->updateRenderableData(*playerRenderableData, 0);
+            player->updateRenderableData(playerRenderableData, 0);
         }
 
         if (!playerHasControl || !playerHasHexEditorControl)
@@ -408,19 +407,19 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
     //update universally used hex editor state variables:
     hexEditor->updateHexStateVariables(mapControl->FilteredEntityCount());
 
-    // turn on hax inputs if player input is allowed or be boring and normal
-    if (hexEditor->isHexEditorOn()
+    auto hax = bool{
+        hexEditor->isHexEditorOn()
         && !(dialogControl->isOpen()
             || !playerHasControl
             || !playerHasHexEditorControl
-            || hexEditor->IsMovementDisabled()))
+            || hexEditor->IsMovementDisabled())
+    };
+
+    // turn on hax inputs if player input is allowed or be boring and normal
+    if (hax)
     {
         //apply inputs to the hex editor:
         hexEditor->applyHexModeInputs(mapControl->GetEntityDataPointer());
-
-        //then handle any still-running scripts:
-        scriptControl->tickScripts();
-        commandControl->sendBufferedOutput();
     }
     else
     {
@@ -437,19 +436,19 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
             //this handles buttons and state updates based on delta.Buttons presses in game mode:
             applyGameModeInputs(delta);
         }
+        //check for loadMap:
+        if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
         //update the entities based on the current state of their (hackable) data array.
         mapControl->UpdateEntities(delta);
 
-        //handle scripts:
-        scriptControl->tickScripts();
-        commandControl->sendBufferedOutput();
-
-        //check for loadMap:
-        if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
-
-        camera.applyEffects(delta.Time.count());
     }
+
+    //handle scripts:
+    scriptControl->tickScripts();
+    commandControl->sendBufferedOutput();
+
+    camera.applyEffects(delta.TimeMs.count());
 }
 
 void MageGameEngine::gameRender()
@@ -472,6 +471,9 @@ void MageGameEngine::gameRender()
         }
     }
     //update the state of the LEDs
+
+        // drawButtonStates(inputHandler->GetButtonState());
+        // drawLEDStates();
     hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
     frameBuffer->blt();
 }

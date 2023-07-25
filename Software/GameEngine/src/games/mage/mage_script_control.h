@@ -1,14 +1,13 @@
 #ifndef _MAGE_SCRIPT_CONTROL_H
 #define _MAGE_SCRIPT_CONTROL_H
 
-#include "mage_rom.h"
-#include "mage_defines.h"
-#include "mage_script_actions.h"
-#include "mage_script_state.h"
-#include "mage_hex.h"
-#include "mage_map.h"
 #include <stdint.h>
 #include <optional>
+#include <memory>
+#include "mage_hex.h"
+#include "mage_map.h"
+#include "mage_script_actions.h"
+#include "mage_script_state.h"
 
 #define SCRIPT_NAME_LENGTH 32
 #define COMMAND_STATES_COUNT 5

@@ -71,6 +71,10 @@ struct MageEntity
    }
 
    inline bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
+   void setAnimation(uint8_t animationId) {
+       currentAnimation = animationId;
+       currentFrameIndex = 0;
+   }
    void updateRenderableData(RenderableData& renderableData, uint32_t deltaTime);
 };
 

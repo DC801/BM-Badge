@@ -1,7 +1,6 @@
 #include "mage_script_control.h"
-#include "EngineInput.h"
-#include "mage_script_actions.h"
 #include "mage_command_control.h"
+#include "EngineInput.h"
 #include "shim_err.h"
 
 //load in the global variables that the scripts will be operating on:
@@ -18,10 +17,8 @@ void MageScriptControl::initializeScriptsOnMapLoad()
    for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
    {
       //Initialize the script resumeStates to default values for this map.
-      auto entity = *mapControl->getEntity(i);
-
-      entityTickResumeStates[i] = MageScriptState{ entity->onTickScriptId, false };
-      entityInteractResumeStates[i] = MageScriptState{ entity->onInteractScriptId, false };
+      entityTickResumeStates[i] = MageScriptState{ mapControl->getEntity(i).value()->onTickScriptId, false };
+      entityInteractResumeStates[i] = MageScriptState{ mapControl->getEntity(i).value()->onInteractScriptId, false };
    }
    jumpScriptId = MAGE_NO_SCRIPT;
 }
@@ -98,16 +95,14 @@ void MageScriptControl::processActionQueue(MageScriptState& resumeState, MageScr
             //target is an entity
             else
             {
-               auto entity = *mapControl->getEntity(currentEntityId);
-
                //if it's not a map script, set the appropriate entity's script value:
                if (currentScriptType == MageScriptType::ON_INTERACT)
                {
-                  entity->onInteractScriptId = jumpScriptId.value();
+                   mapControl->getEntity(currentEntityId).value()->onInteractScriptId = jumpScriptId.value();
                }
                else if (currentScriptType == MageScriptType::ON_TICK)
                {
-                  entity->onTickScriptId = jumpScriptId.value();
+                   mapControl->getEntity(currentEntityId).value()->onTickScriptId = jumpScriptId.value();
                }
             }
          }

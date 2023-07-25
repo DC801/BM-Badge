@@ -1,13 +1,16 @@
 #ifndef GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #define GAMEENGINE_MAGE_COMMAND_CONTROL_H
 
-#include "mage_rom.h"
-#include "mage_defines.h"
+#include <stdint.h>
+#include <string>
+#include <memory>
+#include <optional>
 #include "StringLoader.h"
+#include "mage_dialog_control.h"
 
-class MageScriptControl;
 class MapControl;
 class TileManager;
+class MageScriptControl;
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
 
@@ -37,9 +40,9 @@ class MageCommandControl {
 		MageSerialCommands lastCommandUsed = COMMAND_NONE;
 		bool isInputTrapped = false;
 		void handleStart();
-		void processCommand(char *commandString);
-		void processCommandAsVerb(std::string input);
-		void processCommandAsResponseInput(std::string input);
+		void processCommand(std::string& commandString);
+		void processCommandAsVerb(std::string& input);
+		void processCommandAsResponseInput(std::string& input);
 		void showSerialDialog(uint16_t serialDialogId);
 		void reset();
 		void sendBufferedOutput();
@@ -49,14 +52,13 @@ private:
 	std::shared_ptr<MageScriptControl> scriptControl;
 	std::shared_ptr<StringLoader> stringLoader;
 
-	std::unique_ptr<MageSerialDialog> serialDialog;
+	std::optional<MageSerialDialog> openSerialDialog;
 
-	void badAsciiLowerCase(std::string* data)
+	inline void badAsciiLowerCase(std::string& data)
 	{
-		size_t length = data->size();
-		for (size_t i = 0; i < length; i++)
+		for (auto i = 0; i < data.size(); i++)
 		{
-			(*data)[i] = std::tolower((*data)[i]);
+			data[i] = std::tolower(data[i]);
 		}
 	}
 };

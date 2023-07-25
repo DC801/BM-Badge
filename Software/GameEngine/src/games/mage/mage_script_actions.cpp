@@ -1109,11 +1109,11 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX && targetEntityIndex != NO_PLAYER_INDEX)
    {
-      auto& sourceEntity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+      auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto targetEntityCenter = mapControl->getEntityRenderableData(targetEntityIndex).center;
       auto sourceEntityCenter = mapControl->getEntityRenderableData(sourceEntityIndex).center;
-      sourceEntity.direction |= sourceEntityCenter.getRelativeDirection(targetEntityCenter) & RENDER_FLAGS_DIRECTION_MASK;
-      sourceEntity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
+      entity.direction |= sourceEntityCenter.getRelativeDirection(targetEntityCenter) & RENDER_FLAGS_DIRECTION_MASK;
+      entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1589,8 +1589,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
       {
          resumeState.totalLoopsToNextAction = argStruct->playCount;
          resumeState.loopsToNextAction = argStruct->playCount;
-         entity.currentAnimation = argStruct->animationId;
-         entity.currentFrameIndex = 0;
+         entity.setAnimation(argStruct->animationId);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
          entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
       }
@@ -1602,8 +1601,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
          if (resumeState.loopsToNextAction == 0)
          {
             resumeState.totalLoopsToNextAction = 0;
-            entity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
-            entity.currentFrameIndex = 0;
+            entity.setAnimation(MAGE_IDLE_ANIMATION_INDEX);
             mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
             entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
          }
@@ -1632,13 +1630,12 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
       auto offsetPoint = geometry->GetPoint(0);
       entity.x = offsetPoint.x;
       entity.y = offsetPoint.y;
-      entity.updateRenderableData(renderable, 0);
+      entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1666,8 +1663,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
          resumeState.pointA = Point{ entity.x, entity.y };
          resumeState.pointB = geometry->GetPoint(0) - mapControl->getEntityRenderableData(sourceEntityIndex).center - resumeState.pointA;
          entity.direction |= (resumeState.pointA.getRelativeDirection(resumeState.pointB) & RENDER_FLAGS_DIRECTION_MASK);
-         entity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
-         entity.currentFrameIndex = 0;
+         entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       }
       float progress = manageProgressOfAction(resumeState, argStruct->duration);
@@ -1676,8 +1672,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
       entity.y = betweenPoint.y;
       if (progress >= 1.0f)
       {
-         entity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
-         entity.currentFrameIndex = 0;
+          entity.setAnimation(MAGE_IDLE_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
          resumeState.totalLoopsToNextAction = 0;
       }
@@ -1721,8 +1716,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
          resumeState.loopsToNextAction = totalDelayLoops;
          resumeState.length = geometry->GetPathLength();
          initializeEntityGeometryPath(resumeState, sourceEntityIndex, geometry);
-         entity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
-         entity.currentFrameIndex = 0;
+         entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       }
       resumeState.loopsToNextAction--;
@@ -1754,8 +1748,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
       if (resumeState.loopsToNextAction == 0)
       {
          resumeState.totalLoopsToNextAction = 0;
-         entity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
-         entity.currentFrameIndex = 0;
+         entity.setAnimation(MAGE_IDLE_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       }
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
@@ -1800,8 +1793,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
             ? geometry->GetPathLength() * 2
             : geometry->GetPathLength();
          initializeEntityGeometryPath(resumeState, sourceEntityIndex, geometry);
-         entity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
-         entity.currentFrameIndex = 0;
+         entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       }
 

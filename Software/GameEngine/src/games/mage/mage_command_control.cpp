@@ -1,6 +1,7 @@
 #include "mage_command_control.h"
-#include "mage_map.h"
+#include "mage_dialog_control.h"
 #include "mage_script_control.h"
+#include "mage_map.h"
 
 #include "EngineSerial.h"
 #include "StringLoader.h"
@@ -23,21 +24,20 @@ void MageCommandControl::handleStart()
    }
 }
 
-void MageCommandControl::processCommand(char* commandString)
+void MageCommandControl::processCommand(std::string& commandString)
 {
-   std::string lowercasedInput = commandString;
-   badAsciiLowerCase(&lowercasedInput);
+   badAsciiLowerCase(commandString);
    if (!isInputTrapped)
    {
-      processCommandAsVerb(lowercasedInput);
+      processCommandAsVerb(commandString);
    }
    else
    {
-      processCommandAsResponseInput(lowercasedInput);
+      processCommandAsResponseInput(commandString);
    }
 }
 
-void MageCommandControl::processCommandAsVerb(std::string input)
+void MageCommandControl::processCommandAsVerb(std::string& input)
 {
    // Used to split string around spaces.
    bool syntaxValid = true;
@@ -194,82 +194,86 @@ void MageCommandControl::processCommandAsVerb(std::string input)
    }
 }
 
-void MageCommandControl::processCommandAsResponseInput(std::string input)
+void MageCommandControl::processCommandAsResponseInput(std::string& input)
 {
-   commandResponseBuffer += "processCommandAsResponseInput: " + input + "\n";
-   MageSerialDialogResponseTypes responseType = serialDialog->serialResponseType;
-   if (responseType == RESPONSE_ENTER_NUMBER)
-   { 
-      bool errorWhileParsingInt = false;
-      try
-      {
-         auto responseIndex = std::stoi(input);
-         if (responseIndex >= 0 && responseIndex < serialDialog->responseCount)
-         {
-            auto response = serialDialog->Responses[responseIndex];
-            auto responseLabel = stringLoader->getString(response.stringIndex);
-            commandResponseBuffer += "Valid response: " + input + " - " +  responseLabel + "\n";
-            scriptControl->jumpScriptId = response.scriptIndex;
-            isInputTrapped = false;
-         }
-         else
-         {
-            commandResponseBuffer += "Invalid response: " + input + "\n";
-            showSerialDialog(serialDialogId);
-         }
-      }
-      catch (std::logic_error& err)
-      {
-         commandResponseBuffer += "Response unparsable: " + input + "\n";
-         showSerialDialog(serialDialogId);
-      }
-   }
-   else if (responseType == RESPONSE_ENTER_STRING)
-   {
-      bool validResponseFound = false;
-      for (uint8_t i = 0; i < serialDialog->responseCount; i++)
-      {
-         auto responseLabel = stringLoader->getString(serialDialog->Responses[i].stringIndex);
-         badAsciiLowerCase(&responseLabel);
-         if (responseLabel == input)
-         {
-            commandResponseBuffer += "Valid response: " + input + "\n";
-            scriptControl->jumpScriptId = serialDialog->Responses[i].scriptIndex;
-            isInputTrapped = false;
-            validResponseFound = true;
-            break;
-         }
-      }
-      if (!validResponseFound)
-      {
-         commandResponseBuffer += "Invalid response: " + input + "\n";
-         isInputTrapped = false;
-      }
-   }
+    if (openSerialDialog.has_value())
+    {
+        auto serialDialog = openSerialDialog.value();
+        commandResponseBuffer += "processCommandAsResponseInput: " + input + "\n";
+        MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
+        if (responseType == RESPONSE_ENTER_NUMBER)
+        {
+            bool errorWhileParsingInt = false;
+            try
+            {
+                auto responseIndex = std::stoi(input);
+                if (responseIndex >= 0 && responseIndex < serialDialog.Responses.size())
+                {
+                    auto response = serialDialog.Responses[responseIndex];
+                    auto responseLabel = stringLoader->getString(response.stringIndex);
+                    commandResponseBuffer += "Valid response: " + input + " - " + responseLabel + "\n";
+                    scriptControl->jumpScriptId = response.scriptIndex;
+                    isInputTrapped = false;
+                }
+                else
+                {
+                    commandResponseBuffer += "Invalid response: " + input + "\n";
+                    showSerialDialog(serialDialogId);
+                }
+            }
+            catch (std::logic_error& err)
+            {
+                commandResponseBuffer += "Response unparsable: " + input + "\n";
+                showSerialDialog(serialDialogId);
+            }
+        }
+        else if (responseType == RESPONSE_ENTER_STRING)
+        {
+            bool validResponseFound = false;
+            for (uint8_t i = 0; i < serialDialog.Responses.size(); i++)
+            {
+                auto responseLabel = stringLoader->getString(serialDialog.Responses[i].stringIndex);
+                badAsciiLowerCase(responseLabel);
+                if (responseLabel == input)
+                {
+                    commandResponseBuffer += "Valid response: " + input + "\n";
+                    scriptControl->jumpScriptId = serialDialog.Responses[i].scriptIndex;
+                    isInputTrapped = false;
+                    validResponseFound = true;
+                    break;
+                }
+            }
+            if (!validResponseFound)
+            {
+                commandResponseBuffer += "Invalid response: " + input + "\n";
+                isInputTrapped = false;
+            }
+        }
+    }
 }
 
 void MageCommandControl::showSerialDialog(uint16_t serialDialogId)
 {
    scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-   uint32_t serialDialogAddress =  0;// tileManager->imageHeader.offset(serialDialogId);
+   // uint32_t serialDialogAddress = tileManager->imageHeader.offset(serialDialogId);
    //ROM()->Read(serialDialog, serialDialogAddress);
-   serialDialog = ROM()->InitializeRAMCopy<MageSerialDialog>(serialDialogId);
-   auto dialogString = stringLoader->getString(serialDialog->stringId);
+   openSerialDialog = *ROM()->InitializeRAMCopy<MageSerialDialog>(serialDialogId);
+   auto dialogString = stringLoader->getString(openSerialDialog->stringId);
    // serialDialogBuffer += (
    // 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
    // 	"serialDialogAddress: " + std::to_string(serialDialogAddress) + "\n"
-   // 	"serialDialog->stringId: " + std::to_string(serialDialog->stringId) + "\n"
-   // 	"serialDialog->serialResponseType: " + std::to_string(serialDialog->serialResponseType) + "\n"
-   // 	"serialDialog->responseCount: " + std::to_string(serialDialog->responseCount) + "\n"
+   // 	"serialDialog.stringId: " + std::to_string(serialDialog.stringId) + "\n"
+   // 	"serialDialog.serialResponseType: " + std::to_string(serialDialog.serialResponseType) + "\n"
+   // 	"serialDialog.Responses.size(): " + std::to_string(serialDialog.Responses.size()) + "\n"
    // 	"message:\n"
    // );
    serialDialogBuffer += dialogString + "\n";
-   isInputTrapped = serialDialog->serialResponseType != RESPONSE_NONE;
-   for (uint8_t i = 0; i < serialDialog->responseCount; i++)
+   isInputTrapped = openSerialDialog->serialResponseType != RESPONSE_NONE;
+   for (uint8_t i = 0; i < openSerialDialog->Responses.size(); i++)
    {
-      if (serialDialog->serialResponseType == RESPONSE_ENTER_NUMBER)
+      if (openSerialDialog->serialResponseType == RESPONSE_ENTER_NUMBER)
       {
-         auto responseLabel = stringLoader->getString(serialDialog->Responses[i].stringIndex);
+         auto responseLabel = stringLoader->getString(openSerialDialog->Responses[i].stringIndex);
          serialDialogBuffer += "\t" + std::to_string(i) + ": " + responseLabel + "\n";
       }
    }

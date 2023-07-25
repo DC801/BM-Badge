@@ -14,6 +14,26 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
     auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
     auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
+    auto ySourceMin = int{0};
+    auto ySourceMax = int{tileset->TileHeight};
+    auto xSourceMin = int{0};
+    auto xSourceMax = int{tileset->TileWidth};
+    auto iteratorX = int{1};
+    auto iteratorY = int{ 1 };
+    if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
+    {
+       xSourceMin = tileset->TileWidth - 1;
+       xSourceMax = -1;
+       iteratorX = -1;
+    }
+
+    if (flags & RENDER_FLAGS_FLIP_Y || flags & RENDER_FLAGS_FLIP_DIAG)
+    {
+        ySourceMin = tileset->TileHeight - 1;
+        ySourceMax = -1;
+        iteratorY = -1;
+    }
+
     //auto target = Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight };
 
     //if (flags & RENDER_FLAGS_IS_GLITCHED)
@@ -21,54 +41,46 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
     //    target.origin.x += target.w * 0.125;
     //    target.w *= 0.75;
     //}
-    
-    auto yMin = 0;
-    auto yMax = tileset->ImageHeight - 1;
-    auto xMin = 0;
-    auto xMax = tileset->ImageWidth - 1;
-    auto iteratorX = 1;
-    auto iteratorY = 1;
-    if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
+    if (tileDrawPoint.y + tileset->TileHeight < 0 || tileDrawPoint.x + tileset->TileWidth < 0
+        || tileDrawPoint.y >= DrawHeight || tileDrawPoint.x >= DrawWidth)
     {
-       xMin = tileset->ImageWidth - 1;
-       xMax = 0;
-       iteratorX = -1;
-    }
-
-    if (flags & RENDER_FLAGS_FLIP_Y || flags & RENDER_FLAGS_FLIP_DIAG)
-    {
-        yMin = tileset->ImageHeight - 1;
-        yMax = 0;
-        iteratorY = -1;
+        return;
     }
 
     // offset to the start address of the tile
     auto tilePtr = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId) + tileId * tileset->TileWidth * tileset->TileHeight;
-    auto sourceRowPtr = &tilePtr[0];
 
-    for (auto ySource = yMin, yTarget = tileDrawPoint.y; 
-        ySource != yMax; 
-        ySource += iteratorY, yTarget++)
+    for (auto yTarget = tileDrawPoint.y; 
+        ySourceMin != ySourceMax;
+        ySourceMin += iteratorY, yTarget++)
     {
+        auto sourceRowPtr = &tilePtr[ySourceMin * tileset->TileWidth];
+        
         if (yTarget < 0 || yTarget >= DrawHeight)
         {
             continue;
         }
 
-        for (auto xSource = xMin, xTarget = tileDrawPoint.x; 
-            xSource != xMax;
+        for (auto xSource = xSourceMin, xTarget = tileDrawPoint.x;
+            xSource != xSourceMax;
             xSource += iteratorX, xTarget++)
         {
-            const auto& sourceColorIndex = sourceRowPtr[xSource];
-            const auto& color = colorPalette->get(sourceColorIndex);
-            if (xTarget < 0 || xTarget >= DrawWidth || TRANSPARENCY_COLOR == color)
+            if (xTarget < 0 || xTarget >= DrawWidth)
             {
                 continue;
             }
+
+            const auto& sourceColorIndex = sourceRowPtr[xSource];
+            const auto& color = colorPalette->get(sourceColorIndex);
+            
+            if (TRANSPARENCY_COLOR == color)
+            {
+                continue;
+            }
+
             frameBuffer->frame[yTarget * DrawWidth + xTarget] = (color >> 8) | (color << 8);
             //frameBuffer->setPixel(xTarget, yTarget, color);
         }
-        sourceRowPtr += tileset->ImageWidth;
     }
 
     if (drawGeometry)

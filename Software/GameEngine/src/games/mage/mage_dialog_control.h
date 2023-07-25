@@ -1,13 +1,17 @@
 #ifndef MAGE_DIALOG_CONTROL_H
 #define MAGE_DIALOG_CONTROL_H
 
-#include "mage_defines.h"
-#include "mage_entity_type.h"
-#include "fonts/Monaco9.h"
+
+#include <array>
+#include <optional>
+
 #include "engine/EngineInput.h"
 #include "engine/EnginePanic.h"
-#include <optional>
-#include <array>
+#include "fonts/Monaco9.h"
+#include "shim_timer.h"
+#include "mage_defines.h"
+#include "mage_entity_type.h"
+#include "mage_rom.h"
 
 class MapControl;
 class StringLoader;
@@ -190,24 +194,24 @@ enum MageSerialDialogResponseTypes : uint8_t
    NUM_RESPONSE_TYPES
 };
 
-struct MageSerialDialog
+class MageSerialDialog
 {
-   //MageSerialDialog() noexcept = default;
+public:
+   ~MageSerialDialog() noexcept = default;
    MageSerialDialog(uint32_t& address)
    {
       ROM()->Read(name, address, 32);
       ROM()->Read(stringId, address);
       ROM()->Read(serialResponseType, address);
-      ROM()->Read(responseCount, address);
-      Responses = std::unique_ptr<MageDialogResponse[]>{ new MageDialogResponse[responseCount] };
 
-      ROM()->Read(*Responses.get(), address, responseCount);
+      auto responseCount = uint8_t{ 0 };
+      ROM()->Read(responseCount, address);
+      ROM()->InitializeVectorFrom(Responses, address, responseCount);
    }
-   char name[32];
-   uint16_t stringId;
-   MageSerialDialogResponseTypes serialResponseType;
-   uint8_t responseCount;
-   std::unique_ptr<MageDialogResponse[]> Responses;
+   char name[32]{ 0 };
+   uint16_t stringId{ 0 };
+   MageSerialDialogResponseTypes serialResponseType{ 0 };
+   std::vector<MageDialogResponse> Responses{};
 };
 
 
