@@ -39,15 +39,7 @@ ch2-map-init {
 
 	// serial features
 	if (flag ch2-has-artifact is false) { // no artifact at all
-		if (debug mode is on) {
-			set serial control on
-			set hex control to on
-			show serial dialog {
-				"<g>DEBUG MODE IS ON!</>"
-			}
-		} else {
-			set serial control off
-		}
+		set serial control off
 	} else { // you have the artifact
 		set serial control on
 		copy register-rtfm
@@ -64,6 +56,15 @@ ch2-map-init {
 		}
 	}
 	
+	// DEBUG OVERRIDES
+	if (debug mode is on) {
+		set serial control on
+		set hex control to on
+		show serial dialog {
+			"<g>DEBUG MODE IS ON!</>"
+		}
+	}
+
 	// warp-in animation
 	if (flag ch2-manual-warp is true) { // workaround for WOPR
 		set flag ch2-manual-warp to false
