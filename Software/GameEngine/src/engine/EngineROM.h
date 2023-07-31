@@ -258,22 +258,22 @@ struct EngineROM
       return true;
    }
 
-   TSave GetCurrentSaveCopy() const
+   constexpr TSave GetCurrentSaveCopy() const
    {
       return currentSave;
    }
 
-   const TSave& GetCurrentSave() const
+   constexpr const TSave& GetCurrentSave() const
    {
       return currentSave;
    }
    
-   void SetCurrentSave(TSave save)
+   constexpr void SetCurrentSave(TSave save)
    {
       currentSave = save;
    }
    
-   const TSave& ResetCurrentSave(uint32_t scenarioDataCRC32)
+   constexpr const TSave& ResetCurrentSave(uint32_t scenarioDataCRC32)
    {
       auto newSave = TSave{};
       newSave.scenarioDataCRC32 = scenarioDataCRC32;

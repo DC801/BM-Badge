@@ -36,7 +36,7 @@ struct MageEntityType
    uint8_t portraitId{ 0 };
    uint8_t animationCount{ 0 };
 
-   const MageEntityTypeAnimation& GetAnimation(uint32_t index) const
+   constexpr const MageEntityTypeAnimation& GetAnimation(uint32_t index) const
    {
       auto animations = (const MageEntityTypeAnimation*)((uint8_t*)&animationCount + 1);
       return animations[index % animationCount];

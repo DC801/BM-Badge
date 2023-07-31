@@ -625,7 +625,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+      auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
       bool colliding = geometry->isPointInGeometry(mapControl->getEntityRenderableData(sourceEntityIndex).center);
       if (colliding == (bool)argStruct->expectedBoolValue)
@@ -1135,7 +1135,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+      auto geometry = mapControl->GetGeometry(argStruct->geometryId);
       auto relativeDirection = mapControl->getEntityRenderableData(sourceEntityIndex).center.getRelativeDirection(geometry->GetPoint(0));
       entity.direction |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
@@ -1629,12 +1629,15 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+       auto& entityRenderableData = mapControl->getEntityRenderableData(sourceEntityIndex);
+       
+      auto geometry = mapControl->GetGeometry(argStruct->geometryId);
+      auto point = geometry->GetPoint(0);
 
-      auto offsetPoint = geometry->GetPoint(0);
-      entity.x = offsetPoint.x;
-      entity.y = offsetPoint.y;
+      //auto offsetPoint = Point{ entity.x, entity.y } + point;
+       entity.x = point.x;
+      entity.y = point.y;
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
    }
    return NO_JUMP_SCRIPT;
@@ -1655,7 +1658,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+      auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
       if (resumeState.totalLoopsToNextAction == 0)
       {
@@ -1695,7 +1698,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+      auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1769,7 +1772,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+      auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1922,7 +1925,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
    auto argStruct = (ActionPanCameraToGeometry*)args;
 
    auto& entity = mapControl->getEntityByMapLocalId(entityId);
-   auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+   auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
    if (resumeState.totalLoopsToNextAction == 0)
    {
