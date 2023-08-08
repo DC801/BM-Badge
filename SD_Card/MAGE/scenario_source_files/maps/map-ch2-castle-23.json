@@ -124,6 +124,18 @@
                  "width":32,
                  "x":249,
                  "y":120
+                }, 
+                {
+                 "class":"",
+                 "gid":832,
+                 "height":32,
+                 "id":37,
+                 "name":"Tracy",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":104,
+                 "y":112
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -188,7 +200,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -237,6 +249,10 @@
         {
          "firstgid":795,
          "source":"..\/entities\/entity-welder.json"
+        }, 
+        {
+         "firstgid":819,
+         "source":"..\/entities\/entity-npc03.json"
         }],
  "tilewidth":32,
  "type":"map",

@@ -69,7 +69,7 @@ interact-ch2-scuzzy {
 	set player control off
 	copy face-player
 	show dialog {
-		SELF "Consider this castle. In a metaphorical sense, it's kind of like a computer."
+		SELF "Consider this castle. In a metaphorical sense, it's like a computer."
 		"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
 		"In isolation each room, and each of us, are capable of little. But together, we can collaborate and build amazing things."
 	}
