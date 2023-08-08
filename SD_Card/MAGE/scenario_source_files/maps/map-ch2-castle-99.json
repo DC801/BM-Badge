@@ -104,8 +104,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":192,
-                 "y":174
+                 "x":191,
+                 "y":221
                 }, 
                 {
                  "class":"",
@@ -118,6 +118,18 @@
                  "width":0,
                  "x":-56,
                  "y":-43.3333333333333
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":37,
+                 "name":"camera",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":150
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -170,7 +182,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
