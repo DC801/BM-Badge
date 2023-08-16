@@ -10,6 +10,49 @@ This guide is written assuming you will be using Ubuntu 20.04 or greater. It wil
 
 ----
 
+## NEW: Docker Build
+
+You can now build an Ubuntu image with Docker and use scuba to build the project.
+
+First, install docker on your local machine. Unfortunately, this is very distro-dependent. Here's the [instructions for Ubuntu](https://docs.docker.com/engine/install/ubuntu/) at least.
+
+There's also some helpful [postinstall steps](https://docs.docker.com/engine/install/linux-postinstall/). You should at least add yourself to the docker group. The others are normally done for you or are non-essential.
+
+To build the project using Docker, you must build the image using the dockerfile in BM-Badge. That can be done like this.
+
+```sh
+~/dev/BM-Badge $ docker build -t bm-badge .
+```
+
+After that, install scuba on your machine as well by following these [installation steps](https://scuba.readthedocs.io/en/latest/installation.html).
+
+```sh
+sudo pip install scuba
+```
+
+Then, you can execute the following commands after navigating to Software/GameEngine in the BM-Badge repo
+
+```sh
+# Do a desktop build
+~/dev/BM-Badge/Software/GameEngine $ scuba desktop
+
+# Do an embedded build
+~/dev/BM-Badge/Software/GameEngine $ scuba embedded
+
+# Clean the current project
+~/dev/BM-Badge/Software/GameEngine $ scuba clean
+~/dev/BM-Badge/Software/GameEngine $ scuba cleanall
+
+# Flash the embedded build to the hardware
+~/dev/BM-Badge/Software/GameEngine $ scuba flash
+
+# Use GDBServer to debug on hardware
+~/dev/BM-Badge/Software/GameEngine $ scuba gdbserver
+
+# Use JLink to debug on hardware
+~/dev/BM-Badge/Software/GameEgnine $ scuba jlink
+```
+
 ## Desktop Build
 Since __**THE HARDWARE ISN'T READY YET**__, you early adopters will have to try out our game on your computer that runs about a thousand times faster than our real badge hardware - so if it seems like it runs a little faster than it should, uhh... get used to it.
 
@@ -225,7 +268,7 @@ mv nRF5_SDK_*/ ../nordic-sdk15.3.0/
 
 Now you need to configure the SDK for the GCC compiler
 
-Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefike.posix`
+Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefile.posix`
 
 It should read:
 ```shell script

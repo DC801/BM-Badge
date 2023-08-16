@@ -1,0 +1,19 @@
+image: bm-badge:latest
+
+aliases:
+        desktop: cd $SCUBA_ROOT && compiledb make DESKTOP=1 -j`nproc`
+        embedded: cd $SCUBA_ROOT && compiledb make EMBEDDED=1 -j`nproc`
+        clean: cd $SCUBA_ROOT && make cleanall -j`nproc`
+        cleanall: cd $SCUBA_ROOT && make cleanall -j`nproc`
+        flash:
+                docker_args: --privileged -v /dev:/dev
+                script:
+                        - cd $SCUBA_ROOT && compiledb make flash EMBEDDED=1 -j`nproc`
+        gdbserver:
+                docker_args: --privileged -v /dev:/dev -p 2331:2331
+                script:
+                        - JLinkGDBServer -device nrf52 -if SWD -speed 4000
+        jlink:
+                docker_args: --privileged -v /dev:/dev
+                script:
+                        - JLinkExe -device nrf52 -if SWD -speed 4000 -autoconnect 1
