@@ -284,17 +284,17 @@ extern "C" {
 #define NAU8810_AUXMOUT_SFT				2
 #define NAU8810_MOUTMXMT_SFT			6
 
-void nau8810_init();
+typedef void (*audio_engine_callback)(nrfx_i2s_buffers_t const *, uint32_t);
+
+void nau8810_init(audio_engine_callback callback);
 
 struct __nau8810_state {
 	uint16_t ctr;
 };
 
-/*
 void nau8810_start(const uint32_t *data, uint16_t length);
 void nau8810_next(const uint32_t *data);
 void nau8810_stop(void);
-*/
 #endif
 
 #ifdef __cplusplus

@@ -45,6 +45,6 @@ public:
 	~AudioPlayer();
 };
 
-extern AudioPlayer audio;
+extern AudioPlayer *audio_player;
 
 #endif

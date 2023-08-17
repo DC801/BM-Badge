@@ -9,7 +9,7 @@
 // C++ threading and synchronization. More info here:
 // https://developer.arm.com/documentation/dht0008/a/arm-synchronization-primitives/practical-uses/implementing-a-mutex
 
-AudioPlayer audio;
+AudioPlayer *audio_player = nullptr;
 
 // Frequency of the file
 #define AUDIO_FREQUENCY 48000
@@ -23,7 +23,8 @@ AudioPlayer audio;
 // Max number of sounds that can be in the audio queue at anytime, stops too much mixing
 #define AUDIO_MAX_SOUNDS 25
 
-#define BUFFER_SIZE (AUDIO_SAMPLES / AUDIO_CHANNELS)
+// #define BUFFER_SIZE (AUDIO_SAMPLES / AUDIO_CHANNELS)
+#define BUFFER_SIZE 512
 uint32_t stream[2][BUFFER_SIZE];
 uint32_t soundCount = 0;
 
@@ -299,9 +300,6 @@ AudioPlayer::AudioPlayer()
 	cm_init(AUDIO_FREQUENCY);
 	cm_set_lock(lockAudio);
 	cm_set_master_gain(1.0);
-
-	// Initialize audio chip
-	nau8810_init(callback);
 
 	// Start DMA
 	nau8810_start(stream[0], BUFFER_SIZE);

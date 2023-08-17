@@ -22,7 +22,8 @@ DEVICE_FLAGS = -mabi=aapcs \
 	-mcpu=cortex-m4 \
 	-mfloat-abi=hard \
 	-mfpu=fpv4-sp-d16 \
-	-mthumb
+	-mthumb \
+	-ffreestanding
 endif
 
 # Common flags

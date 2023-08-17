@@ -14,6 +14,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/keyboard.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/qspi.cpp \
+	$(SRC_ROOT)/engine/EngineAudio.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
 	$(SRC_ROOT)/engine/EngineSerial.cpp \
 	$(SRC_ROOT)/engine/EngineROM.cpp \

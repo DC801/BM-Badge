@@ -101,6 +101,8 @@ static int curr_buffer = 0;
 static uint32_t dma_data[DMA_NUMBER_OF_BUFFERS][DMA_NUMBER_OF_WORDS];
 //static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
 
+audio_engine_callback audio_callback;
+
 #if 0
 static void i2sDataHandler(uint32_t const * p_data_received,
 						   uint32_t       * p_data_to_send,
@@ -132,31 +134,11 @@ static void i2sDataHandler(nrf_drv_i2s_buffers_t const * p_released,
 	if(p_released->p_tx_buffer)
 	{
 		// Process sent data
-
 	}
 
 	if(status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED)
 	{
-		/*
-		nau8810_state.ctr += 1;
-		float wobble = (sinf(6.28f * nau8810_state.ctr / 10000) + 1.0f) * 200.0f;
-		float freq = (6.28f / DMA_NUMBER_OF_WORDS / 2) * wobble;
-		for(int i = 0; i < DMA_NUMBER_OF_WORDS * 2; i++) {
-			((uint16_t *)dma_data)[i] = (uint16_t)(sinf(freq * i) * 0x7fff + 0x8000);
-		}
-		*/
-	    memset(dma_data[curr_buffer], 0, sizeof(dma_data[curr_buffer]));
-		uint16_t *buf = (uint16_t *)dma_data[curr_buffer];
-		int num_of_halfwords = DMA_NUMBER_OF_WORDS * 2;
-		int ctr = 0;
-		for(int i = 0; i < num_of_halfwords; i++) {
-			buf[i] = (ctr += 0xff);
-		}
-		nau8810_next(dma_data[curr_buffer]);
-		curr_buffer += 1;
-		if(curr_buffer >= DMA_NUMBER_OF_BUFFERS) {
-			curr_buffer = 0;
-		}
+		// audio_callback(p_released, status);
 	}
 }
 
@@ -262,8 +244,9 @@ void nau8810_i2s_init(nrfx_i2s_data_handler_t handler)
 }
 
 void nau8810_start(const uint32_t *data, uint16_t length);
-void nau8810_init()
+void nau8810_init(audio_engine_callback callback)
 {
+	audio_callback = callback;
 	// TWI already initialized in i2c.c at twi_master_init
     // Initialize NAU8810 I2C instance
     // nau8810_twi_init();
@@ -317,9 +300,7 @@ void nau8810_init()
     // Initialize NAU8810 I2S instance
     nau8810_i2s_init(i2sDataHandler);
 
-    // Set PLL?
-	// Play the forbidden note
-	nau8810_start(dma_data[curr_buffer], DMA_NUMBER_OF_WORDS);
+    // Set PLL? Maybe later...
 }
 
 void nau8810_start(const uint32_t *data, uint16_t length)

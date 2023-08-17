@@ -13,6 +13,7 @@
 #include "games/mage/mage.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
+#include "EngineAudio.h"
 #include "fonts/Monaco9.h"
 
 #ifdef DC801_EMBEDDED
@@ -49,16 +50,12 @@ void sig_handler(int signo)
 #pragma message ("NRFX_TIMER_ENABLED=" VAL(NRFX_TIMER_ENABLED))
 #pragma message ("NRFX_TIMER1_ENABLED=" VAL(NRFX_TIMER1_ENABLED))
 */
-
+static void nop() {}
 /**
  * Initialize the speaker
  */
 static void speaker_init(void){
-	// Setup the nau8810 later -Tim
-	//nrf_gpio_cfg_output(SPEAKER);
-	#if DC801_EMBEDDED
-    nau8810_init();
-	#endif
+	audio_player = new AudioPlayer;
 }
 
 /**
