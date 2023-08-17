@@ -50,8 +50,13 @@ Then, you can execute the following commands after navigating to Software/GameEn
 ~/dev/BM-Badge/Software/GameEngine $ scuba gdbserver
 
 # Use JLink to debug on hardware
-~/dev/BM-Badge/Software/GameEgnine $ scuba jlink
+~/dev/BM-Badge/Software/GameEngine $ scuba jlink
 ```
+
+Note that, even though you're allowed to execute scuba in a child directory
+and it will find the .scuba.yml file in the parent, you can't do that here
+because I'm a bad programmer and haven't been able to figure out how to
+do what I want to do wihout executing it in the Software/GameEngine directory.
 
 ## Desktop Build
 Since __**THE HARDWARE ISN'T READY YET**__, you early adopters will have to try out our game on your computer that runs about a thousand times faster than our real badge hardware - so if it seems like it runs a little faster than it should, uhh... get used to it.
