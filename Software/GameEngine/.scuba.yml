@@ -19,7 +19,7 @@ aliases:
         flash:
                 docker_args: --privileged -v /dev:/dev
                 script:
-                        - cd /home/dummy/dev/BM-Badge/Software/GameEngine
+                        - cd /home/dc801/dev/BM-Badge/Software/GameEngine
                         - compiledb make flash EMBEDDED=1 -j`nproc`
         gdbserver:
                 docker_args: --privileged -v /dev:/dev -p 2331:2331
