@@ -229,11 +229,14 @@ uint16_t nau8810_twi_read(uint8_t address)
 void nau8810_i2s_init(nrfx_i2s_data_handler_t handler)
 {
 	#ifdef DC801_EMBEDDED
+	// We work with 16-bit signed PCM data
+	// with a sample rate of 48 kHZ
 	ret_code_t err_code;
 	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
 	config.mck_setup = NRF_I2S_MCK_32MDIV8;
 	config.ratio     = NRF_I2S_RATIO_256X;
-	config.channels = I2S_CONFIG_CHANNELS_CHANNELS_LEFT;
+	config.channels = NRF_I2S_CHANNELS_STEREO;
+	config.sample_width = NRF_I2S_SWIDTH_16BIT;
 	err_code = nrf_drv_i2s_init(&config, handler);
 	if (err_code != NRF_SUCCESS)
 	{

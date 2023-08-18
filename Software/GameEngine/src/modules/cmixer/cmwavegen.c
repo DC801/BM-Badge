@@ -30,8 +30,9 @@ static void sawtooth_handler(cm_Event *e)
 			uint32_t sampledelta = sawtooth->sampledelta;
 			for (int i = 0; i < buflen; i += 2)
 			{
-				buffer[i] = (sample += sampledelta);
+				buffer[i] = sample;
 				buffer[i + 1] = sample;
+				sample += sampledelta;
 			}
 			sawtooth->sample = sample;
 			break;

@@ -56,6 +56,11 @@ static void nop() {}
  */
 static void speaker_init(void){
 	audio_player = new AudioPlayer;
+	cm_WaveGenSawtooth sawtooth;
+	sawtooth.common.duration = 1.0f;
+	sawtooth.common.frequency = 440;
+	sawtooth.common.samplerate = 44100;
+	audio_player->play(&sawtooth, 1.0);
 }
 
 /**

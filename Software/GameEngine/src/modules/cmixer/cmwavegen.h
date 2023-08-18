@@ -4,6 +4,11 @@
 #include "cmixer.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 // A file with implementations for cmixer
 // sources for simple waves like square,
 // sawtooth, triangle, etc.
@@ -25,5 +30,9 @@ typedef struct
 } cm_WaveGenSawtooth;
 
 cm_Source *cm_new_sawtooth(cm_WaveGenSawtooth *sawtooth);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

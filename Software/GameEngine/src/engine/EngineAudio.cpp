@@ -1,15 +1,17 @@
-#ifdef DC801_EMBEDDED
-
 #include <common.h>
 #include "EngineAudio.h"
-
+#include "EnginePanic.h"
 #include "cmixer.h"
+
+#ifdef DC801_DESKTOP
+#include <SDL.h>
+#endif
 
 // Used in place of std::mutex because of size constraints when including
 // C++ threading and synchronization. More info here:
 // https://developer.arm.com/documentation/dht0008/a/arm-synchronization-primitives/practical-uses/implementing-a-mutex
 
-AudioPlayer *audio_player = nullptr;
+AudioPlayer *audio_player = NULL;
 
 // Frequency of the file
 #define AUDIO_FREQUENCY 48000
@@ -17,17 +19,20 @@ AudioPlayer *audio_player = nullptr;
 // 1 mono, 2 stereo, 4 quad, 6 (5.1)
 #define AUDIO_CHANNELS 2
 
-// Specifies a unit of audio data to be used at a time. Must be a power of 2
-#define AUDIO_SAMPLES 512
-
 // Max number of sounds that can be in the audio queue at anytime, stops too much mixing
 #define AUDIO_MAX_SOUNDS 25
 
-// #define BUFFER_SIZE (AUDIO_SAMPLES / AUDIO_CHANNELS)
-#define BUFFER_SIZE 512
-uint32_t stream[2][BUFFER_SIZE];
-uint32_t soundCount = 0;
+// Specifies a unit of audio data to be used at a time. Must be a power of 2
+#define AUDIO_SAMPLES 512
+#define BUFFER_SIZE (AUDIO_SAMPLES * AUDIO_CHANNELS)
 
+#ifdef DC801_EMBEDDED
+uint32_t stream[2][BUFFER_SIZE * sizeof(cm_Int16) / sizeof(uint32_t)];
+#else
+SDL_AudioDeviceID sdl_audio_id = 0;
+#endif
+
+uint32_t soundCount = 0;
 AudioMutex audio_mutex;
 
 typedef struct sound
@@ -79,20 +84,32 @@ static void freeAudio(Audio *audio)
 	}
 }
 
+#ifdef DC801_EMBEDDED
 static void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
+#else
+static void callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
+#endif
 {
+	cm_Int16 *cm_stream;
+	int length;
+#ifdef DC801_EMBEDDED
 	if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) == 0)
 	{
 		return;
 	}
+	cm_stream = (cm_Int16 *)stream[1];
+	length = sizeof(stream[1]) / sizeof(cm_Int16);
+#else
+	cm_stream = (cm_Int16 *)sdl_stream;
+	length = sdl_len / sizeof(cm_Int16);
+#endif
 
 	// Capture the root of the list
 	Audio *previous = &head;
 	// Pull the first audio sample
 	Audio *audio = previous->next;
 
-	int length = sizeof(stream[1]) * sizeof(stream[1][0]) / sizeof(cm_Int16);
-	memset(reinterpret_cast<cm_Int16*>(stream[1]), 0, length);
+	memset(cm_stream, 0, length * sizeof(cm_Int16));
 
 	// Walk the list
 	while (audio != NULL)
@@ -116,10 +133,8 @@ static void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 				}
 			}
 
-			int length = sizeof(stream[1]) * sizeof(stream[1][0]) / sizeof(cm_Int16);
-
 			// Mix with cmixer
-			cm_process(reinterpret_cast<cm_Int16*>(stream[1]), length);
+			cm_process(cm_stream, length);
 
 			// Continue to the next item
 			previous = audio;
@@ -148,14 +163,21 @@ static void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 		audio = previous->next;
 	}
 
+#ifdef DC801_EMBEDDED
 	if (!p_released->p_rx_buffer)
 	{
-		nau8810_next(stream[1]);
+		nau8810_next((const uint32_t *)cm_stream);
 	}
 	else
 	{
 		nau8810_next(p_released->p_tx_buffer);
 	}
+#else
+	// Use SDL_AudioDevice
+	if (sdl_audio_id == 0)
+	{
+	}
+#endif
 }
 
 // Indicate that an audio sample should be faded out and removed
@@ -273,9 +295,19 @@ void AudioPlayer::play(const char *name, double gain)
 	playAudioFromFilename(name, false, gain);
 }
 
+void AudioPlayer::play(cm_WaveGenSawtooth *sawtooth, double gain)
+{
+	playAudioFromCMixer(cm_new_sawtooth(sawtooth), false, gain);
+}
+
 void AudioPlayer::loop(const char *name, double gain)
 {
 	playAudioFromFilename(name, true, gain);
+}
+
+void AudioPlayer::loop(cm_WaveGenSawtooth *sawtooth, double gain)
+{
+	playAudioFromCMixer(cm_new_sawtooth(sawtooth), true, gain);
 }
 
 void AudioPlayer::stop_loop()
@@ -299,8 +331,10 @@ void AudioPlayer::stop_loop()
 
 AudioPlayer::AudioPlayer()
 {
+#ifdef DC801_EMBEDDED
 	// Initialize Audio chip
 	nau8810_init(callback);
+#endif
 
 	head.fade = false;
 	head.free = false;
@@ -314,8 +348,28 @@ AudioPlayer::AudioPlayer()
 	cm_set_lock(lockAudio);
 	cm_set_master_gain(1.0);
 
+#ifdef DC801_EMBEDDED
 	// Start DMA
 	nau8810_start(stream[0], BUFFER_SIZE);
+#else
+	SDL_AudioSpec spec;
+	spec.freq = AUDIO_FREQUENCY;
+	spec.format = 16 | SDL_AUDIO_MASK_SIGNED;
+	spec.channels = 2;
+	spec.samples = BUFFER_SIZE * sizeof(uint32_t);
+	spec.callback = callback;
+	spec.userdata = NULL;
+	sdl_audio_id = SDL_OpenAudioDevice(
+			NULL,
+			false,
+			&spec,
+			NULL,
+			0);
+	if (sdl_audio_id == 0)
+	{
+		ENGINE_PANIC("SDO_OpenAudioDevice error!: %s", SDL_GetError());
+	}
+#endif
 }
 
 // Not really necessary on embedded, but...
@@ -324,5 +378,3 @@ AudioPlayer::~AudioPlayer()
 	// Delete all audio samples
 	freeAudio(head.next);
 }
-
-#endif

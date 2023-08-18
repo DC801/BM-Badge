@@ -2,6 +2,7 @@
 #define AUDIO_H
 
 #include <atomic>
+#include "cmwavegen.h"
 
 // This is the minimal standards-compliant mutex implementation which does not use
 // pure assembly. However, modern C++ std::atomic is extremely optimized under the hood.
@@ -38,8 +39,11 @@ class AudioPlayer
 {
 public:
 	void play(const char *name, double gain);
+	void play(cm_WaveGenSawtooth *sawtooth, double gain);
 	void loop(const char *name, double gain);
+	void loop(cm_WaveGenSawtooth *sawtooth, double gain);
 	void stop_loop();
+	void update();
 
 	AudioPlayer();
 	~AudioPlayer();
