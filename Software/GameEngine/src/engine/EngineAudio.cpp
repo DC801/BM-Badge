@@ -352,6 +352,10 @@ AudioPlayer::AudioPlayer()
 	// Start DMA
 	nau8810_start(stream[0], BUFFER_SIZE);
 #else
+	if (SDL_Init(SDL_INIT_AUDIO) < 0)
+	{
+		ENGINE_PANIC("SDL_Init Audio error!: %s", SDL_GetError());
+	}
 	SDL_AudioSpec spec;
 	spec.freq = AUDIO_FREQUENCY;
 	spec.format = 16 | SDL_AUDIO_MASK_SIGNED;
@@ -367,8 +371,9 @@ AudioPlayer::AudioPlayer()
 			0);
 	if (sdl_audio_id == 0)
 	{
-		ENGINE_PANIC("SDO_OpenAudioDevice error!: %s", SDL_GetError());
+		ENGINE_PANIC("SDL_OpenAudioDevice error!: %s", SDL_GetError());
 	}
+	SDL_PauseAudioDevice(sdl_audio_id, 0);
 #endif
 }
 

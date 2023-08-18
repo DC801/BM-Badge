@@ -55,12 +55,6 @@ static void nop() {}
  * Initialize the speaker
  */
 static void speaker_init(void){
-	audio_player = new AudioPlayer;
-	cm_WaveGenSawtooth sawtooth;
-	sawtooth.common.duration = 1.0f;
-	sawtooth.common.frequency = 440;
-	sawtooth.common.samplerate = 44100;
-	audio_player->play(&sawtooth, 1.0);
 }
 
 /**
@@ -150,10 +144,14 @@ int main(void){
 	debug_print("advertising user: %s", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
-
-	//this function will set up the NAU8810 chip to play sounds
-	speaker_init();
 #endif
+	audio_player = new AudioPlayer;
+	cm_WaveGenSawtooth sawtooth;
+	sawtooth.common.duration = 1.0f;
+	sawtooth.common.frequency = 440;
+	sawtooth.common.samplerate = 44100;
+	audio_player->play(&sawtooth, 1.0);
+
 
 	setUpRandomSeed();
 	// Setup LEDs
