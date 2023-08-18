@@ -43,7 +43,7 @@ typedef struct sound
 
 Audio head;
 
-void lockAudio(cm_Event *e)
+static void lockAudio(cm_Event *e)
 {
 	if (e->type == CM_EVENT_LOCK)
 	{
@@ -56,7 +56,7 @@ void lockAudio(cm_Event *e)
 	}
 }
 
-void freeAudio(Audio *audio)
+static void freeAudio(Audio *audio)
 {
 	Audio *temp;
 
@@ -79,7 +79,7 @@ void freeAudio(Audio *audio)
 	}
 }
 
-void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
+static void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 {
 	if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) == 0)
 	{
@@ -160,7 +160,7 @@ void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 
 // Indicate that an audio sample should be faded out and removed
 // The current driver only allows one looped audio sample
-void fadeAudio(Audio *audio)
+static void fadeAudio(Audio *audio)
 {
 	// Walk the tree
 	while ((audio != NULL) && (audio->source != NULL))
@@ -179,7 +179,7 @@ void fadeAudio(Audio *audio)
 }
 
 // Add an audio sample to the end of the list
-void addAudio(Audio *root, Audio *audio)
+static void addAudio(Audio *root, Audio *audio)
 {
 	// Sanity check
 	if (root == NULL)
@@ -197,11 +197,11 @@ void addAudio(Audio *root, Audio *audio)
 	root->next = audio;
 }
 
-// Loads a wave file and adds it to the list of samples to be played
-void playAudio(const char *filename, bool loop, double gain)
+// Play audio from CMixer source
+static void playAudioFromCMixer(cm_Source *src, bool loop, double gain)
 {
 	// Sanity check
-	if (filename == NULL)
+	if (src == NULL)
 	{
 		return;
 	}
@@ -222,8 +222,7 @@ void playAudio(const char *filename, bool loop, double gain)
 	audio->fade = false;			// New sample, don't fade
 	audio->free = false;			// Sample isn't loaded yet
 
-	// Ask cmixer to load our wave file
-	audio->source = cm_new_source_from_file(filename);
+	audio->source = src; 
 	cm_set_gain(audio->source, gain);
 
 	if (loop == true)
@@ -255,14 +254,28 @@ void playAudio(const char *filename, bool loop, double gain)
 	audio_mutex.unlock();
 }
 
+// Loads a wave file and adds it to the list of samples to be played
+static void playAudioFromFilename(const char *filename, bool loop, double gain)
+{
+	// Sanity check
+	if (filename == NULL)
+	{
+		return;
+	}
+	// Ask cmixer to load our wave file
+	playAudioFromCMixer(cm_new_source_from_file(filename), loop, gain);
+}
+
+
+
 void AudioPlayer::play(const char *name, double gain)
 {
-	playAudio(name, false, gain);
+	playAudioFromFilename(name, false, gain);
 }
 
 void AudioPlayer::loop(const char *name, double gain)
 {
-	playAudio(name, true, gain);
+	playAudioFromFilename(name, true, gain);
 }
 
 void AudioPlayer::stop_loop()
