@@ -1,25 +1,25 @@
 image: bm-badge:latest
 
 volumes:
-        /home/dc801/dev/BM-Badge:
-                hostpath: "$PWD/../../"
+        "$PWD/../../..":
+                hostpath: "$PWD/../../.."
                 options: rw
 
 aliases:
         desktop:
                 script:
-                        - cd /home/dc801/dev/BM-Badge/Software/GameEngine
+                        - ln -sf /home/dc801/nordic-sdk15.3.0 "$SCUBA_ROOT/../../.."
                         - compiledb make DESKTOP=1 -j`nproc`
         embedded:
                 script:
-                        - cd /home/dc801/dev/BM-Badge/Software/GameEngine
+                        - ln -sf /home/dc801/nordic-sdk15.3.0 "$SCUBA_ROOT/../../.."
                         - compiledb make EMBEDDED=1 -j`nproc`
         clean: make cleanall -j`nproc`
         cleanall: make cleanall -j`nproc`
         flash:
                 docker_args: --privileged -v /dev:/dev
                 script:
-                        - cd /home/dc801/dev/BM-Badge/Software/GameEngine
+                        - ln -sf /home/dc801/nordic-sdk15.3.0 "$SCUBA_ROOT/../../.."
                         - compiledb make flash EMBEDDED=1 -j`nproc`
         gdbserver:
                 docker_args: --privileged -v /dev:/dev -p 2331:2331
