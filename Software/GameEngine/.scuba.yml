@@ -9,8 +9,9 @@ aliases:
         desktop: compiledb make DESKTOP=1 -j`nproc`
         embedded:
                 script:
-                        - ln -sf /home/dc801/dev/nordic-sdk15.3.0 "$SCUBA_ROOT/../../.."
+                        - ln -sf /home/dc801/dev/nordic-sdk15.3.0 "$SCUBA_ROOT/../../.." 2>/dev/null || true
                         - compiledb make EMBEDDED=1 -j`nproc`
+                        - unlink "$SCUBA_ROOT/../../../nordic-sdk15.3.0" 2>/dev/null || true
         clean: make cleanall -j`nproc`
         cleanall: make cleanall -j`nproc`
         flash:
