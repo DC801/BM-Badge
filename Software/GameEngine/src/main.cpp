@@ -149,9 +149,8 @@ int main(void){
 	cm_WaveGenSawtooth sawtooth;
 	sawtooth.common.duration = 1.0f;
 	sawtooth.common.frequency = 440;
-	sawtooth.common.samplerate = 44100;
+	sawtooth.common.samplerate = 32000;
 	audio_player->play(&sawtooth, 1.0);
-
 
 	setUpRandomSeed();
 	// Setup LEDs

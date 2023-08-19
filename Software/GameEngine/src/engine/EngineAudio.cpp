@@ -13,8 +13,19 @@
 
 AudioPlayer *audio_player = NULL;
 
-// Frequency of the file
+// CMixer is smart enough to deal with different frequencies.
+//
+// On embedded, we'd like the sample rate to be lower because
+// we'd like to save flash space and the sound chip doesn't
+// have as high of resolution as desktop sound processors.
+// It should also match the sample rate initialized in the driver.
+// 
+// On Desktop, it should be the sample rate of the WAV files.
+#ifdef DC801_DESKTOP
 #define AUDIO_FREQUENCY 48000
+#else
+#define AUDIO_FREQUENCY 16000
+#endif
 
 // 1 mono, 2 stereo, 4 quad, 6 (5.1)
 #define AUDIO_CHANNELS 2
@@ -92,17 +103,34 @@ static void callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
 {
 	cm_Int16 *cm_stream;
 	int length;
+	static int swapidx = 0;
 #ifdef DC801_EMBEDDED
 	if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) == 0)
 	{
 		return;
 	}
-	cm_stream = (cm_Int16 *)stream[1];
-	length = sizeof(stream[1]) / sizeof(cm_Int16);
+	cm_stream = (cm_Int16 *)stream[swapidx];
+	length = sizeof(stream[0]) / sizeof(cm_Int16);
 #else
 	cm_stream = (cm_Int16 *)sdl_stream;
 	length = sdl_len / sizeof(cm_Int16);
 #endif
+
+	// For embedded, we want to send the previous buffer
+	// to DMA immediately and then use the spare time to
+	// do the mixing.
+#ifdef DC801_EMBEDDED
+	if (!p_released->p_rx_buffer)
+	{
+		swapidx ^= 1;
+		nau8810_next((const uint32_t *)stream[swapidx]);
+	}
+	else
+	{
+		nau8810_next(p_released->p_tx_buffer);
+	}
+#endif
+
 
 	// Capture the root of the list
 	Audio *previous = &head;
@@ -164,18 +192,11 @@ static void callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
 	}
 
 #ifdef DC801_EMBEDDED
-	if (!p_released->p_rx_buffer)
+	// NAU8810 only uses the left channel, so we must
+	// do some simple mixing and convert from stereo to mono
+	for (int i = 0; i + 1 < length; i += 2)
 	{
-		nau8810_next((const uint32_t *)cm_stream);
-	}
-	else
-	{
-		nau8810_next(p_released->p_tx_buffer);
-	}
-#else
-	// Use SDL_AudioDevice
-	if (sdl_audio_id == 0)
-	{
+		cm_stream[i >> 1] = ((int32_t)cm_stream[i] + (int32_t)cm_stream[i + 1]) >> 1;
 	}
 #endif
 }
@@ -350,7 +371,9 @@ AudioPlayer::AudioPlayer()
 
 #ifdef DC801_EMBEDDED
 	// Start DMA
-	nau8810_start(stream[0], BUFFER_SIZE);
+	// The NAU8810 driver only takes left channel data,
+	// so we must divide length by 2 and convert to mono.
+	nau8810_start(stream[0], sizeof(stream[0]) / sizeof(uint32_t) / 2);
 #else
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
 	{
@@ -360,7 +383,7 @@ AudioPlayer::AudioPlayer()
 	spec.freq = AUDIO_FREQUENCY;
 	spec.format = 16 | SDL_AUDIO_MASK_SIGNED;
 	spec.channels = 2;
-	spec.samples = BUFFER_SIZE * sizeof(uint32_t);
+	spec.samples = BUFFER_SIZE * sizeof(cm_Int16);
 	spec.callback = callback;
 	spec.userdata = NULL;
 	sdl_audio_id = SDL_OpenAudioDevice(
