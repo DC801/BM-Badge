@@ -22,9 +22,9 @@ AudioPlayer *audio_player = NULL;
 // 
 // On Desktop, it should be the sample rate of the WAV files.
 #ifdef DC801_DESKTOP
-#define AUDIO_FREQUENCY 48000
+#define AUDIO_SAMPLERATE 48000
 #else
-#define AUDIO_FREQUENCY 16000
+#define AUDIO_SAMPLERATE nau8810_lrck
 #endif
 
 // 1 mono, 2 stereo, 4 quad, 6 (5.1)
@@ -365,7 +365,7 @@ AudioPlayer::AudioPlayer()
 	head.next = NULL;
 
 	// Initialize cmixer
-	cm_init(AUDIO_FREQUENCY);
+	cm_init(AUDIO_SAMPLERATE);
 	cm_set_lock(lockAudio);
 	cm_set_master_gain(1.0);
 
@@ -380,7 +380,7 @@ AudioPlayer::AudioPlayer()
 		ENGINE_PANIC("SDL_Init Audio error!: %s", SDL_GetError());
 	}
 	SDL_AudioSpec spec;
-	spec.freq = AUDIO_FREQUENCY;
+	spec.freq = AUDIO_SAMPLERATE;
 	spec.format = 16 | SDL_AUDIO_MASK_SIGNED;
 	spec.channels = 2;
 	spec.samples = BUFFER_SIZE * sizeof(cm_Int16);

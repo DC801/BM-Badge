@@ -74,6 +74,7 @@ extern "C" {
 #define NAU8810_DCBUF_EN				(0x1 << 8)
 #define NAU8810_AUX_EN_SFT				6
 #define NAU8810_PLL_EN_SFT				5
+#define NAU8810_PLL_EN					(1 << NAU8810_PLL_EN_SFT)
 #define NAU8810_MICBIAS_EN_SFT			4
 #define NAU8810_ABIAS_EN				(0x1 << 3)
 #define NAU8810_IOBUF_EN				(0x1 << 2)
@@ -120,8 +121,17 @@ extern "C" {
 
 // NAU8810_REG_COMP (0x5)
 #define NAU8810_ADDAP_SFT				0
+#define NAU8810_ADDAP					1
 #define NAU8810_ADCCM_SFT				1
+#define NAU8810_ADCCM_DISABLED				0
+#define NAU8810_ADCCM_RESVD				(1 << NAU8810_ADCCM_SFT)
+#define NAU8810_ADCCM_ULAW				(2 << NAU8810_ADCCM_SFT)
+#define NAU8810_ADCCM_ALAW				(3 << NAU8810_ADCCM_SFT)
 #define NAU8810_DACCM_SFT				3
+#define NAU8810_DACCM_DISABLED				0
+#define NAU8810_DACCM_RESVD				(1 << NAU8810_DACCM_SFT)
+#define NAU8810_DACCM_ULAW				(2 << NAU8810_DACCM_SFT)
+#define NAU8810_DACCM_ALAW				(3 << NAU8810_DACCM_SFT)
 
 // NAU8810_REG_CLOCK (0x6)
 #define NAU8810_CLKIO_MASK				0x1
@@ -232,6 +242,7 @@ extern "C" {
 
 // NAU8810_REG_PLLN (0x24)
 #define NAU8810_PLLN_MASK				0xF
+#define NAU8810_PLLMCLK_SFT				4
 #define NAU8810_PLLMCLK_DIV2			(0x1 << 4)
 
 // NAU8810_REG_PLLK1 (0x25)
@@ -287,12 +298,9 @@ extern "C" {
 
 typedef void (*audio_engine_callback)(nrfx_i2s_buffers_t const *, uint32_t);
 
+extern const unsigned int nau8810_lrck;
+
 void nau8810_init(audio_engine_callback callback);
-
-struct __nau8810_state {
-	uint16_t ctr;
-};
-
 void nau8810_start(const uint32_t *data, uint16_t length);
 void nau8810_next(const uint32_t *data);
 void nau8810_stop(void);

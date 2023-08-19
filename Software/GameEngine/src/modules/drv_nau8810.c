@@ -1,95 +1,41 @@
 #include <common.h>
 #include "drv_nau8810.h"
+#include "drv_nau8810_i2s_params.h"
 #include "EnginePanic.h"
 
 #ifdef DC801_EMBEDDED
 #include <nrfx_i2s.h>
 #include <nrf_drv_i2s.h>
 #include <math.h>
-#endif
-
-
-/*
-
-Example PLL calculation
-
-Fdac		= 48kHz
-F256fs		= 49.152MHz
-F256fsPre	= 98.304MHz <- div2 prescaler
-Fmclk		= 12MHz
-
-R	= 49.152MHz / 12MHz = 4.096 <- R must be between 6 and 12
-Rpre = 98.304MHz / 12MHz = 8.192
-N						= 8
-K						= (2^24)(0.192)
-						 = 3221225.472
-						 = 3221225
-						 = 0x3126E9
-
-PLLK					 = 0C 93 E9
-
-							 00001100   10010011 11101001
-							000001100 010010011 011101001
-							 00110001  00100110  11101001
-
-PLLK					 = 0x3126E9
-
-PLL_N_CTRL = PLLMCLK | 8; // Enable MCLK div2, N = 8
-PLL_K_1 = 0x0C;
-PLL_K_2 = 0x93;
-PLL_K_3 = 0xE9;
-
-PLLK Calculation
-
-PLLK[ 8: 0] = K & 0x1FF;			// 9 bits
-PLLK[17: 9] = (K >> 9) & 0x1FF;		// 9 bits
-PLLK[32:18] = (K >> 18) & 0x3F;		// 6 bits
-
->>> K = 0x3126E9
->>> PLLa = K & 0x1FF
->>> PLLb = (K >> 9) & 0x1FF
->>> PLLc = (K >> 18) & 0x3F
->>> print(f'0x{K:06X}: {PLLc:02X} {PLLb:03X} {PLLa:03X}')
-0x3126E9: 0C 093 0E9
-
-
-
-Desired PLL calculation (16MHz)
-
-Fdac		= 48kHz
-F256fs		= 49.152MHz
-F256fsPre	= 98.305MHz
-Fmclk		= 16MHz
-
-R	= 49.152MHz / 16MHz = 3.072
-Rpre = 98.304MHz / 16MHz = 6.144
-N						= 6
-K						= (2^24)(0.144)
-						= 2415919.104
-						= 2415919
-						= 0x24DD2F
-
->>> K = 0x24DD2F
-0x24DD2F: 09 06E 12F
-
-*/
-
-#ifdef DC801_EMBEDDED
-
 
 #define NAU8810_ADDRESS		0x1a
 
-#define NAU8810_PLLN		6
-#define NAU8810_PLLK0		0x0009	// 9-bit values
-#define NAU8810_PLLK1		0x006E
-#define NAU8810_PLLK2		0x012F
+// Fun Fact:
+//
+// The PLL will not work for low LRCK speeds
+// because f2 would be way below optimal
+// frequencies after doing the PLL math
+//
+// Therefore, if you want to use a sample rate
+// of 15.625 kHz or less, comment out the below 
+// preprocessor macro. Otherwise, uncomment it.
+// Just remember that you might have to increase
+// the sample rate a lot to get PLL to work...
+//
+// Remember that, when not using the PLL, you need
+// to force the ratio to be 256. This can be done
+// by calling tools/i2s.py with the following arguments.
+//
+// tools/i2s.py --ratio 256 <SampleRate>
+//
+// If you fail to do this, the engine will panic
+// and tell you that this is the problem.
+//
+// #define NAU8810_USE_PLL
 
-audio_engine_callback audio_callback;
+static audio_engine_callback audio_callback;
+const unsigned int nau8810_lrck = DRV_NAU8810_LRCK;
 
-void nau8810_next(const uint32_t *data);
-struct __nau8810_state nau8810_state = {
-	.ctr = 1
-};
 static void i2sDataHandler(nrf_drv_i2s_buffers_t const * p_released,
                            uint32_t status)
 {
@@ -103,15 +49,13 @@ static void i2sDataHandler(nrf_drv_i2s_buffers_t const * p_released,
 
 void nau8810_twi_write(uint8_t address, uint16_t value)
 {
-	#ifdef DC801_EMBEDDED
 	uint8_t buffer[] =
 	{
-		(address << 1) | (uint8_t)((value >> 7) & 0x01),
+		(address << 1) | (uint8_t)((value >> 8) & 0x01),
 		(uint8_t)value
 	};
 
 	i2si2cMasterTransmit(NAU8810_ADDRESS, buffer, sizeof(buffer));
-	#endif
 }
 
 uint16_t nau8810_twi_read(uint8_t address)
@@ -140,7 +84,6 @@ uint16_t nau8810_twi_read(uint8_t address)
 	return retval;
 }
 
-void nau8810_start(const uint32_t *data, uint16_t length);
 void nau8810_init(audio_engine_callback callback)
 {
 	audio_callback = callback;
@@ -168,23 +111,42 @@ void nau8810_init(audio_engine_callback callback)
 	DACMT		= 0x00;	 // Disable DAC soft mute						(default)
 	AIFMT           = 0x02;	 // Set mode to be I2S
 	WLEN            = 0x00;	 // Set sample width to be 16 bits
+				 //
+				 // If PLL is used, use values from tools/i2s.py
+	PLLN            = ????;
+	PLLMCLK         = ????;
+	PLLK            = ????;
+	MCLKSEL         = ????;
+	PLLEN           = 0x01;
+	CLKM            = 0x01;
 	*/
 
-	// TWI already initialized in i2c.c so
-	// no need to initialize it here!
-	
-	// Reset NAU8810. Any value can be written.
-	// nau8810_twi_write(NAU8810_REG_RESET, 0);
-
 	// Enable 80k reference impedance, i/o buffers, and analog amplifier bias control
-	nau8810_twi_write(NAU8810_REG_POWER1, (
-		NAU8810_REFIMP_80K 
-		| NAU8810_IOBUF_EN 
-		| NAU8810_ABIAS_EN
-	));
+	int power = NAU8810_REFIMP_80K | NAU8810_IOBUF_EN | NAU8810_ABIAS_EN;
 	// Set internal clock source to bypass PLL for receiver mode and MCKSEL to div2
 	// Set slave mode because we'll be generating SCK and LRCK
-	nau8810_twi_write(NAU8810_REG_CLOCK, NAU8810_CLKIO_SLAVE);
+	int clk = NAU8810_CLKIO_SLAVE;
+	// If PLL is used, set the PLL params related to clock and power.
+	// Otherwise, verify that ratio is 256 because NAU8810 requires this
+	// when MCLK is used instead of PLL output.
+#ifdef NAU8810_USE_PLL
+	power |= NAU8810_PLL_EN;
+	clk |= NAU8810_CLKM_PLL | (DRV_NAU8810_MCLKSEL << NAU8810_MCLKSEL_SFT);
+#else
+	if (DRV_NAU8810_RATIO != NRF_I2S_RATIO_256X)
+	{
+		ENGINE_PANIC(
+			"PLL is not used and I2S LRCK ratio != 256!\n"
+			"DRV_NAU8810_RATIO = 0x%08x\n",
+			DRV_NAU8810_RATIO);
+	}
+#endif
+	// TWI already initialized in i2c.c so
+	// no need to initialize it here!
+	// Reset NAU8810. Any value can be written.
+	nau8810_twi_write(NAU8810_REG_RESET, 0);
+	nau8810_twi_write(NAU8810_REG_POWER1, power);
+	nau8810_twi_write(NAU8810_REG_CLOCK, clk);
 	// Enable DAC output, speaker mixer, speaker drivers, and leave mic disabled
 	nau8810_twi_write(NAU8810_REG_POWER3, (
 		NAU8810_DAC_EN 
@@ -193,19 +155,27 @@ void nau8810_init(audio_engine_callback callback)
 		| NAU8810_NSPK_EN
 	));
 	// Set desired sample rate to 32kHz
-	// and real sample rate to PLL output
+	// and IMCLK = MCLK
 	// If you change the sample rate here,
 	// you should also change it in EngineAudio.cpp
-	nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_32K | NAU8810_SMPLR_SCLKEN);
+	nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_16K);
 
 	// Set speaker gain
-	nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x3f);
+	nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x2f);
 
 	// Set mode to I2S and sample width to be 16 bits
 	nau8810_twi_write(NAU8810_REG_IFACE, NAU8810_AIFMT_I2S | NAU8810_WLEN_16);
 
+	// If PLL is used, set rest of PLL params
+#ifdef NAU8810_USE_PLL
+	nau8810_twi_write(NAU8810_REG_PLLN, DRV_NAU8810_PLLN | (DRV_NAU8810_PLLM << NAU8810_PLLMCLK_SFT));
+	nau8810_twi_write(NAU8810_REG_PLLK1, DRV_NAU8810_PLLK1);
+	nau8810_twi_write(NAU8810_REG_PLLK2, DRV_NAU8810_PLLK2);
+	nau8810_twi_write(NAU8810_REG_PLLK3, DRV_NAU8810_PLLK3);
+#endif
+
+
 	// Initialize NAU8810 I2S instance
-	#ifdef DC801_EMBEDDED
 	ret_code_t err_code;
 	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
 
@@ -214,20 +184,11 @@ void nau8810_init(audio_engine_callback callback)
 	// This IMCLK must be about 256 * LRCK or else the 
 	// ADC and DAC converters screw up.
 	//
-	// This means you should use either use
-	// a ratio of 256 or use a ratio close to that
-	// and then work out the PLL math. Note that,
-	// With PLL, no ratio below 96 can be used.
-	//
-	// LRCK = Sample Rate = MCLK / RATIO
-	// SCK = 2 * SWIDTH * LRCK (L + R Audio Data)
-	//
-	// In terms of our program:
-	//   MCLK = 32 / 8 mHz 
-	//   LRCK = MCLK / 256 = (16 kHz)
-	//   SCK = 32 * LRCK = (2 * 16 * 32 kHz)
-	config.mck_setup = NRF_I2S_MCK_32MDIV8;
-	config.ratio     = NRF_I2S_RATIO_256X;
+	// So we set a generated MCK and ratio to make NAU8810
+	// happy. We use the PLL to tweak IMCLK if we need it,
+	// or we use a ratio of 256 if we don't want PLL. 
+	config.mck_setup = DRV_NAU8810_MCK;
+	config.ratio     = DRV_NAU8810_RATIO;
 
 	// Use only the left channel.
 	// We'd like to use stereo but the NAU8810 chip
@@ -244,8 +205,6 @@ void nau8810_init(audio_engine_callback callback)
 		// Initialization failed. Take recovery action.
 		ENGINE_PANIC("I2S Init Failed");
 	}
-	#endif
-
 }
 
 void nau8810_start(const uint32_t *data, uint16_t length)
