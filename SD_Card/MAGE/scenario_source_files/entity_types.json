@@ -3295,22 +3295,22 @@
 		"animations": {
 			"idle": [
 				{
-					"tileid": 14,
+					"tileid": 17,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 12,
+					"tileid": 15,
 					"flip_x": true,
 					"flip_y": false
 				},
 				{
-					"tileid": 13,
+					"tileid": 16,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 12,
+					"tileid": 15,
 					"flip_x": false,
 					"flip_y": false
 				}
@@ -3335,6 +3335,42 @@
 			],
 			"action": [
 				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			],
+			"idle_plain_opaque": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"idle_plain_transparent": [
+				{
 					"tileid": 26,
 					"flip_x": false
 				},
@@ -3351,7 +3387,43 @@
 					"flip_x": false
 				}
 			],
-			"special": [
+			"shving_on": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"shving_off": [
+				{
+					"tileid": 23,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": true
+				},
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				}
+			],
+			"downcast_lowering": [
 				{
 					"tileid": 29,
 					"flip_x": false
@@ -3369,7 +3441,25 @@
 					"flip_x": false
 				}
 			],
-			"extra_special": [
+			"downcast": [
+				{
+					"tileid": 35,
+					"flip_x": false
+				},
+				{
+					"tileid": 33,
+					"flip_x": true
+				},
+				{
+					"tileid": 34,
+					"flip_x": false
+				},
+				{
+					"tileid": 33,
+					"flip_x": false
+				}
+			],
+			"downcast_raising": [
 				{
 					"tileid": 32,
 					"flip_x": false
@@ -3387,6 +3477,8 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"scenarioIndex": 51,
+		"serialized": {}
 	}
 }
