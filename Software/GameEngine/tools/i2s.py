@@ -69,7 +69,7 @@ HEADER_FORMAT = '''
 #endif
 '''
 
-def get_i2s_params(rate: float, ratio: Optional[int]) -> (float, float, float):
+def get_i2s_params(rate: float, ratio: Optional[int]) -> (float, int, int):
     rate_mhz = float(rate) / 1000
     best_error = float('inf')
     best_rate, best_mdiv, best_ratio = 0, 0, 0
@@ -92,7 +92,6 @@ def get_i2s_params(rate: float, ratio: Optional[int]) -> (float, float, float):
 # NAU8810 PLL params can be derived solely from the ratio
 # IMCLK / LRCK = 256, MCK / LRCK = ratio, so IMCLK = MCK * (256 / ratio)
 def get_nau8810_pll_params(ratio: float) -> (int, int, int, int):
-    import math
     f1 = 1
     f2 = (1024 / float(ratio))
     R = f2 / f1
@@ -118,7 +117,7 @@ def get_nau8810_pll_params(ratio: float) -> (int, int, int, int):
         raise ValueError('MCLK Ratio is too big to use with PLL')
 
     # Derive rest of NAU8810 params
-    pll_ratio, PLLN = math.modf(R)
+    PLLN, pll_ratio = divmod(R, 1)
     return int(PLLN), int(pll_ratio * (1 << 24)), MCLKSEL, PLLM
 
 def main():
