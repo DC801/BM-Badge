@@ -96,9 +96,9 @@ static void freeAudio(Audio *audio)
 }
 
 #ifdef DC801_EMBEDDED
-static void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
+static void nau8810_callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 #else
-static void callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
+static void sdl_audio_callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
 #endif
 {
 	cm_Int16 *cm_stream;
@@ -160,6 +160,10 @@ static void callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
 					audio->end = true;
 				}
 			}
+			else if(audio->source->loop == 0)
+			{
+				audio->end = !audio->source->active;
+			}
 
 			// Mix with cmixer
 			cm_process(cm_stream, length);
@@ -176,10 +180,10 @@ static void callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
 			// Unlink the sample
 			previous->next = audio->next;
 			// Offset our sample count for non-looped samples
-			if (audio->source->loop == 0)
-			{
+			//if (audio->source->loop == 0)
+			//{
 				soundCount -= 1;
-			}
+			//}
 
 			// Unlink the next sample
 			audio->next = NULL;
@@ -257,6 +261,7 @@ static void playAudioFromCMixer(cm_Source *src, bool loop, double gain)
 
 	// Increment sample counts
 	soundCount += 1;
+	printf("soundCount: %u\n", soundCount);
 
 	// Allocate a new audio object
 	Audio *audio = new Audio();
@@ -354,7 +359,7 @@ AudioPlayer::AudioPlayer()
 {
 #ifdef DC801_EMBEDDED
 	// Initialize Audio chip
-	nau8810_init(callback);
+	nau8810_init(nau8810_callback);
 #endif
 
 	head.fade = false;
@@ -384,7 +389,7 @@ AudioPlayer::AudioPlayer()
 	spec.format = 16 | SDL_AUDIO_MASK_SIGNED;
 	spec.channels = 2;
 	spec.samples = BUFFER_SIZE * sizeof(cm_Int16);
-	spec.callback = callback;
+	spec.callback = sdl_audio_callback;
 	spec.userdata = NULL;
 	sdl_audio_id = SDL_OpenAudioDevice(
 			NULL,

@@ -5,6 +5,7 @@
 
 #include "EngineROM.h"
 #include "EnginePanic.h"
+#include "EngineAudio.h"
 
 //uncomment to print main game loop timing debug info to terminal or over serial
 //#define TIMING_DEBUG
@@ -45,8 +46,38 @@ void handleBlockingDelay()
 	}
 }
 
+static void SoundUpdate(uint32_t deltaTime)
+{
+	const uint32_t timeReset = 500000;
+	static int timeLeft = timeReset;
+	static unsigned int index = 0;
+	static uint16_t frequencies[8] = {
+		220, 247, 277, 293,
+		330, 370, 415, 440,
+	};
+
+	timeLeft -= timeReset;
+	// printf("Delta Time: %u\n", deltaTime);
+	if (timeLeft < 0)
+	{
+		cm_WaveGenSawtooth sawtooth;
+		sawtooth.common.duration = 0.5f;
+		sawtooth.common.frequency = frequencies[index];
+		sawtooth.common.samplerate = 44100;
+		audio_player->play(&sawtooth, 0.1);
+		index++;
+		if (index >= sizeof(frequencies) / sizeof(*frequencies))
+		{
+			index = 0;
+		}
+		timeLeft = timeReset;
+	}
+}
+
 void GameUpdate(uint32_t deltaTime)
 {
+	SoundUpdate(deltaTime);
+
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
 

@@ -99,7 +99,6 @@ void nau8810_init(audio_engine_callback callback)
 	IOBUFEN		= 0x01;	 // Enable IO buffers
 	CLKIOEN		= 0x00;	 // Configure receiver mode
 	BCLKSEL		= 0x00;	 // Bit clock = Master clock
-	MCLKSEL		= 0x00;	 // No Master clock divider
 	DACEN		= 0x01;	 // Enable DAC output
 	ADCEN		= 0x00;	 // Leave ADC disabled
 	SPKMXEN		= 0x01;	 // Enable speaker mixer
@@ -107,7 +106,7 @@ void nau8810_init(audio_engine_callback callback)
 	MOUTEN		= 0x00;	 // Leave mono output disabled
 	NSPKEN		= 0x01;	 // Enable negative side speaker driver
 	PSPKEN		= 0x01;	 // Enable positive side speakre driver
-	SMPLR		= 0x01;	 // 32kHz sample rate filter
+	SMPLR		= 0x00;	 // 16kHz sample rate filter
 	DACMT		= 0x00;	 // Disable DAC soft mute						(default)
 	AIFMT           = 0x02;	 // Set mode to be I2S
 	WLEN            = 0x00;	 // Set sample width to be 16 bits
@@ -161,7 +160,7 @@ void nau8810_init(audio_engine_callback callback)
 	nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_16K);
 
 	// Set speaker gain
-	nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x2f);
+	nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x3f);
 
 	// Set mode to I2S and sample width to be 16 bits
 	nau8810_twi_write(NAU8810_REG_IFACE, NAU8810_AIFMT_I2S | NAU8810_WLEN_16);

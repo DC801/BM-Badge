@@ -145,12 +145,6 @@ int main(void){
 	advertising_setUser(ble_name);
 	ble_adv_start();
 #endif
-	audio_player = new AudioPlayer;
-	cm_WaveGenSawtooth sawtooth;
-	sawtooth.common.duration = 1.0f;
-	sawtooth.common.frequency = 440;
-	sawtooth.common.samplerate = 44100;
-	audio_player->play(&sawtooth, 1.0);
 
 	setUpRandomSeed();
 	// Setup LEDs
@@ -162,6 +156,8 @@ int main(void){
 
 	// Configure the systick
 	sysTickStart();
+
+	audio_player = new AudioPlayer;
 
 	// Boot! Boot! Boot!
 	debug_print("Booted!\n");
