@@ -624,6 +624,7 @@ ch2-terminal-plugged-yes {
 		> "Windows" : ch2-terminal-os-windows
 		> "Mac or Linux" : ch2-terminal-os-unix
 		> "Something else" : ch2-terminal-os-other
+		// TODO: Chromebook? Can do it with Crostini? Vanilla ChromeOS?
 		> "Never mind" : ch2-terminal-setup-nevermind
 	}
 	set entity "%SELF%" interact_script to interact-ch2-xa
@@ -642,15 +643,22 @@ ch2-terminal-os-windows {
 	show dialog {
 		Lambda "   TODO: do it on Windows"
 	}
-	// on Windows 10
-	// open Device Manager
-	// under Ports (COM & LPT), a serial device should show up; look at the COM port (e.g. COM4)
-	// `Serial line` should be whatever the device was
-	// Open the application called `PuTTY` (this doesn't come with Windows)
-	// Set `Connection type` to Serial
-	// `Speed` should be 115200 baud
-	// Click `OPEN`
-	// If you see a serial "welcome" type message, it worked
+/*
+on Windows 10:
+open Device Manager
+Click Ports (COM & LPT)
+If Ports isn't there, turn on "Show Hidden Devices" in the View menu
+A serial device should show up; look for a COM port with an icon that isn't paled out (e.g. COM4)
+	-> If there isn't a non-pale icon, it's not plugged in right or there's something wrong with the port on the badge
+	-> TIP: try flipping the USB-C cable around, or trying another port on your computer
+Open the application called `PuTTY` (Windows doesn't come with this; install it somehow)
+Set `Connection type` to Serial
+`Serial line` should be whatever the device was
+`Speed` should be 115200 baud
+	-> TIP: you can save these settings as a preset [how to do it?]
+Click `OPEN`
+If you see a serial "welcome" type message, it worked
+*/
 	goto ch2-terminal-message-test
 }
 

@@ -911,7 +911,7 @@ show_dialog-sportsbook {
 	if (flag demobonus is true) {
 		show dialog {
 			name "Hex Edits 2" alignment TL portrait parchment
-			"-- allows us to copy and paste bytes using something called a \"Clip Bird.\"."
+			"-- allows us to copy and paste bytes using something called a \"Clip Bird.\""
 			"Pressing the circle button will copy a single byte into the Clip Bird, but if you hold circle, left and right will change the number of bytes to be copied."
 			"Pressing square will paste the contents of the Clip Bird into the selected cell and thereafter."
 			"This has dramatically improved our productivity!"
