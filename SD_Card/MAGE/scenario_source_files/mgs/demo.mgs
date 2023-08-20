@@ -6,23 +6,26 @@ settings for dialog {
 
 show_dialog-timewarp {
 	register rtfm -> command-rtfm
-	fade out camera to #000000 over 1ms
-	wait 200ms
-	set player control to off
-	turn entity "%PLAYER%" south
-	show dialog dialog-sleep {
-		name " "
-		"...."
-		"Am I asleep?"
+	if (flag demo-cutseen-timewarp is false) {
+		fade out camera to #000000 over 1ms
+		wait 200ms
+		set player control to off
+		turn entity "%PLAYER%" south
+		show dialog dialog-sleep {
+			name " "
+			"...."
+			"Am I asleep?"
+		}
+		fade in camera from #000000 over 2000ms
+		show dialog dialog-timewarp {
+			PLAYER alignment BL
+			"Huh? Is this the village?"
+			"No, this is the village of the past. But\nI still have Ring Zero...."
+			"This has got to be a dream."
+		}
+		set player control to on
+		set flag demo-cutseen-timewarp to true
 	}
-	fade in camera from #000000 over 2000ms
-	show dialog dialog-timewarp {
-		PLAYER alignment BL
-		"Huh? Is this the village?"
-		"No, this is the village of the past. But\nI still have Ring Zero...."
-		"This has got to be a dream."
-	}
-	set player control to on
 	set hex control to on
 }
 
@@ -320,13 +323,17 @@ show_dialog-demo-end-dream-q {
 		SELF
 		portrait goldfish
 		"End this dream?"
-		> "Yes" : goto "demo-end-dream-yes"
-		> "No" : goto "demo-end-dream-no"
+		> "Yes (save and quit)" : goto "demo-end-dream-yes-save"
+		> "Yes (quit without saving)" : goto "demo-end-dream-yes"
+		> "No (continue dream)" : goto "demo-end-dream-no"
 	}
-	// doc: End dream?
 }
 
 demo-end-dream-yes {
+	load map main_menu
+}
+demo-end-dream-yes-save {
+	save slot
 	load map main_menu
 }
 
