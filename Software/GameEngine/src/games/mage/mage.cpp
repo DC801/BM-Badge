@@ -48,7 +48,7 @@ void handleBlockingDelay()
 
 static void SoundUpdate(uint32_t deltaTime)
 {
-	const uint32_t timeReset = 500000;
+	const uint32_t timeReset = 500;
 	static int timeLeft = timeReset;
 	static unsigned int index = 0;
 	static uint16_t frequencies[8] = {
@@ -56,12 +56,11 @@ static void SoundUpdate(uint32_t deltaTime)
 		330, 370, 415, 440,
 	};
 
-	timeLeft -= timeReset;
-	// printf("Delta Time: %u\n", deltaTime);
+	timeLeft -= deltaTime;
 	if (timeLeft < 0)
 	{
 		cm_WaveGenSawtooth sawtooth;
-		sawtooth.common.duration = 0.5f;
+		sawtooth.common.duration = 0.4f;
 		sawtooth.common.frequency = frequencies[index];
 		sawtooth.common.samplerate = 44100;
 		audio_player->play(&sawtooth, 0.1);
@@ -76,7 +75,6 @@ static void SoundUpdate(uint32_t deltaTime)
 
 void GameUpdate(uint32_t deltaTime)
 {
-	SoundUpdate(deltaTime);
 
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
@@ -273,6 +271,7 @@ void EngineMainGameLoop ()
 
 	//updates the state of all the things before rendering:
 	GameUpdate(deltaTime);
+	SoundUpdate(deltaTime);
 
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"GameUpdate(deltaTime)"

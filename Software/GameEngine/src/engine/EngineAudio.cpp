@@ -179,11 +179,7 @@ static void sdl_audio_callback(void *userdata, Uint8 *sdl_stream, int sdl_len)
 
 			// Unlink the sample
 			previous->next = audio->next;
-			// Offset our sample count for non-looped samples
-			//if (audio->source->loop == 0)
-			//{
-				soundCount -= 1;
-			//}
+			soundCount -= 1;
 
 			// Unlink the next sample
 			audio->next = NULL;

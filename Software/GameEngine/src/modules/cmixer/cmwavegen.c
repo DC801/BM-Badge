@@ -21,6 +21,7 @@ static void sawtooth_handler(cm_Event *e)
 	{
 		case CM_EVENT_DESTROY:
 			free(sawtooth);
+			break;
 		case CM_EVENT_SAMPLES:
 		{
 			// Put variables in locals to reduce aliasing
