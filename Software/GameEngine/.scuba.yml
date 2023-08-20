@@ -17,7 +17,9 @@ aliases:
         flash:
                 docker_args: --privileged -v /dev:/dev
                 script:
+                        - ln -sf /home/dc801/dev/nordic-sdk15.3.0 "$SCUBA_ROOT/../../.." 2>/dev/null || true
                         - compiledb make flash EMBEDDED=1 -j`nproc`
+                        - unlink "$SCUBA_ROOT/../../../nordic-sdk15.3.0" 2>/dev/null || true
         gdbserver:
                 docker_args: --privileged -v /dev:/dev -p 2331:2331
                 script:
