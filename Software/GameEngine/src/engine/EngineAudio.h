@@ -40,8 +40,10 @@ class AudioPlayer
 public:
 	void play(const char *name, double gain);
 	void play(cm_WaveGenSawtooth *sawtooth, double gain);
+	void play(cm_WaveGenSine *sine, double gain);
 	void loop(const char *name, double gain);
 	void loop(cm_WaveGenSawtooth *sawtooth, double gain);
+	void loop(cm_WaveGenSine *sine, double gain);
 	void stop_loop();
 	void update();
 

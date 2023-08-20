@@ -3,6 +3,7 @@
 
 #include "cmixer.h"
 #include <stdint.h>
+#include <limits.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -29,7 +30,13 @@ typedef struct
 	cm_WaveGenCommon common;
 } cm_WaveGenSawtooth;
 
+typedef struct 
+{
+	cm_WaveGenCommon common;
+} cm_WaveGenSine;
+
 cm_Source *cm_new_sawtooth(cm_WaveGenSawtooth *sawtooth);
+cm_Source *cm_new_sine(cm_WaveGenSine *sine);
 
 #ifdef __cplusplus
 }

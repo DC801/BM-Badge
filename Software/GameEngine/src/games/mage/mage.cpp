@@ -59,11 +59,11 @@ static void SoundUpdate(uint32_t deltaTime)
 	timeLeft -= deltaTime;
 	if (timeLeft < 0)
 	{
-		cm_WaveGenSawtooth sawtooth;
-		sawtooth.common.duration = 0.4f;
-		sawtooth.common.frequency = frequencies[index];
-		sawtooth.common.samplerate = 44100;
-		audio_player->play(&sawtooth, 0.1);
+		cm_WaveGenSine sine;
+		sine.common.duration = 0.4f;
+		sine.common.frequency = frequencies[index];
+		sine.common.samplerate = 44100;
+		audio_player->play(&sine, 1.0);
 		index++;
 		if (index >= sizeof(frequencies) / sizeof(*frequencies))
 		{

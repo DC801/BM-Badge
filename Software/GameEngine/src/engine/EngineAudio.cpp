@@ -322,6 +322,11 @@ void AudioPlayer::play(cm_WaveGenSawtooth *sawtooth, double gain)
 	playAudioFromCMixer(cm_new_sawtooth(sawtooth), false, gain);
 }
 
+void AudioPlayer::play(cm_WaveGenSine *sine, double gain)
+{
+	playAudioFromCMixer(cm_new_sine(sine), false, gain);
+}
+
 void AudioPlayer::loop(const char *name, double gain)
 {
 	playAudioFromFilename(name, true, gain);
@@ -330,6 +335,11 @@ void AudioPlayer::loop(const char *name, double gain)
 void AudioPlayer::loop(cm_WaveGenSawtooth *sawtooth, double gain)
 {
 	playAudioFromCMixer(cm_new_sawtooth(sawtooth), true, gain);
+}
+
+void AudioPlayer::loop(cm_WaveGenSine *sine, double gain)
+{
+	playAudioFromCMixer(cm_new_sine(sine), false, gain);
 }
 
 void AudioPlayer::stop_loop()
