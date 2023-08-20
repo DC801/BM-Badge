@@ -303,6 +303,12 @@ extern "C" {
 #define NAU8810_AUXMOUT_SFT				2
 #define NAU8810_MOUTMXMT_SFT			6
 
+// NAU8810_REG_POWER4 (0x3a)
+#define NAU8810_LPDAC_SFT			5
+#define NAU8810_LPDAC				(1 << NAU8810_LPDAC_SFT)
+#define NAU8810_LPSPKD_SFT			6
+#define NAU8810_LPSPKD				(1 << NAU8810_LPSPKD_SFT)
+
 typedef void (*audio_engine_callback)(nrfx_i2s_buffers_t const *, uint32_t);
 
 extern const unsigned int nau8810_lrck;

@@ -106,8 +106,11 @@ void nau8810_init(audio_engine_callback callback)
 	MOUTEN		= 0x00;	 // Leave mono output disabled
 	NSPKEN		= 0x01;	 // Enable negative side speaker driver
 	PSPKEN		= 0x01;	 // Enable positive side speakre driver
-	SMPLR		= 0x00;	 // 16kHz sample rate filter
 	DACMT		= 0x00;	 // Disable DAC soft mute						(default)
+	
+	After powerup sequence
+	 
+	SMPLR		= 0x00;	 // 16kHz sample rate filter
 	AIFMT           = 0x02;	 // Set mode to be I2S
 	WLEN            = 0x00;	 // Set sample width to be 16 bits
 				 //
@@ -115,10 +118,10 @@ void nau8810_init(audio_engine_callback callback)
 	PLLN            = ????;
 	PLLMCLK         = ????;
 	PLLK            = ????;
-	MCLKSEL         = ????;
+	MCLKSEL         = ????;  // MCLKSEL = 0 if PLL not used
 	PLLEN           = 0x01;
 	CLKM            = 0x01;
-	*/
+	 */
 
 	// Enable 80k reference impedance, i/o buffers, and analog amplifier bias control
 	int power = NAU8810_REFIMP_80K | NAU8810_IOBUF_EN | NAU8810_ABIAS_EN;
@@ -146,6 +149,7 @@ void nau8810_init(audio_engine_callback callback)
 	nau8810_twi_write(NAU8810_REG_RESET, 0);
 	nau8810_twi_write(NAU8810_REG_POWER1, power);
 	nau8810_twi_write(NAU8810_REG_CLOCK, clk);
+	// 
 	// Enable DAC output, speaker mixer, speaker drivers, and leave mic disabled
 	nau8810_twi_write(NAU8810_REG_POWER3, (
 		NAU8810_DAC_EN 
@@ -153,6 +157,7 @@ void nau8810_init(audio_engine_callback callback)
 		| NAU8810_PSPK_EN 
 		| NAU8810_NSPK_EN
 	));
+	nau8810_twi_write(NAU8810_REG_POWER4, NAU8810_LPSPKD | NAU8810_LPDAC);
 	// Set desired sample rate to 32kHz
 	// and IMCLK = MCLK
 	// If you change the sample rate here,

@@ -257,7 +257,6 @@ static void playAudioFromCMixer(cm_Source *src, bool loop, double gain)
 
 	// Increment sample counts
 	soundCount += 1;
-	printf("soundCount: %u\n", soundCount);
 
 	// Allocate a new audio object
 	Audio *audio = new Audio();
