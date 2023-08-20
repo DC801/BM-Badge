@@ -130,6 +130,18 @@
                  "width":0,
                  "x":192,
                  "y":150
+                }, 
+                {
+                 "class":"",
+                 "gid":815,
+                 "height":32,
+                 "id":38,
+                 "name":"Lambda",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":183,
+                 "y":110
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -182,7 +194,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":38,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -227,6 +239,10 @@
         {
          "firstgid":777,
          "source":"entity-harddrive.json"
+        }, 
+        {
+         "firstgid":801,
+         "source":"..\/entities\/entity-lambda.json"
         }],
  "tilewidth":32,
  "type":"map",

@@ -3285,6 +3285,108 @@
 					"flip_x": false
 				}
 			]
+		},
+		"scenarioIndex": 50,
+		"serialized": {}
+	},
+	"lambda": {
+		"type": "lambda",
+		"tileset": "entity-lambda.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 26,
+					"flip_x": false
+				},
+				{
+					"tileid": 24,
+					"flip_x": true
+				},
+				{
+					"tileid": 25,
+					"flip_x": false
+				},
+				{
+					"tileid": 24,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 29,
+					"flip_x": false
+				},
+				{
+					"tileid": 27,
+					"flip_x": true
+				},
+				{
+					"tileid": 28,
+					"flip_x": false
+				},
+				{
+					"tileid": 27,
+					"flip_x": false
+				}
+			],
+			"extra_special": [
+				{
+					"tileid": 32,
+					"flip_x": false
+				},
+				{
+					"tileid": 30,
+					"flip_x": true
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				},
+				{
+					"tileid": 30,
+					"flip_x": false
+				}
+			]
 		}
 	}
 }
