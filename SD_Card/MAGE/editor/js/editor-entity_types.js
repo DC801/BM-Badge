@@ -6,6 +6,12 @@ var possibleNameList = [
 	'extra_special',
 	'really_extra_special',
 	'why_do_you_have_this_many_animations',
+	'calm_down_animator',
+	'or_good_job_animator',
+	'whichever',
+	'i_guess_im_just_glad',
+	'youre_using_the_tools_we_made',
+	'carry_on',
 ];
 
 Vue.component(
