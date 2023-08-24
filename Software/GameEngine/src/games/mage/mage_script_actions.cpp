@@ -20,9 +20,9 @@ void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState& 
    auto entity = *mapControl->getEntity(sourceEntityIndex);
    auto& renderableData = mapControl->getEntityRenderableData(sourceEntityIndex);
    auto entityCenterPoint = renderableData.center - Point{ entity->x, entity->y };
-   resumeState.pointA = geometry->GetPoint(resumeState.currentSegmentIndex) - entityCenterPoint;
-   resumeState.pointB = geometry->GetPoint(resumeState.currentSegmentIndex + 1) - entityCenterPoint;
-   auto relativeDirection = resumeState.pointA.getRelativeDirection(resumeState.pointB);
+   resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex) - entityCenterPoint;
+   resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1) - entityCenterPoint;
+   auto relativeDirection = resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
    entity->direction |= relativeDirection;
 }
 
@@ -1593,7 +1593,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
          entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
       }
-      else if (entity.currentFrameIndex == 0 && resumeState.currentSegmentIndex == mapControl->getEntityRenderableData(sourceEntityIndex).frameCount - 1)
+      else if (entity.currentFrameIndex == 0 && resumeState.geometry.currentSegmentIndex == mapControl->getEntityRenderableData(sourceEntityIndex).frameCount - 1)
       {
          // we just reset to 0
          // the previously rendered frame was the last in the animation
@@ -1608,7 +1608,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
       }
       // this is just a quick and dirty place to hold on to
       // the last frame that was rendered for this entity
-      resumeState.currentSegmentIndex = entity.currentFrameIndex;
+      resumeState.geometry.currentSegmentIndex = entity.currentFrameIndex;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1663,14 +1663,14 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
       if (resumeState.totalLoopsToNextAction == 0)
       {
          //this is the points we're interpolating between
-         resumeState.pointA = Point{ entity.x, entity.y };
-         resumeState.pointB = geometry->GetPoint(0) - mapControl->getEntityRenderableData(sourceEntityIndex).center - resumeState.pointA;
-         entity.direction |= (resumeState.pointA.getRelativeDirection(resumeState.pointB) & RENDER_FLAGS_DIRECTION_MASK);
+         resumeState.geometry.pointA = Point{ entity.x, entity.y };
+         resumeState.geometry.pointB = geometry->GetPoint(0) - mapControl->getEntityRenderableData(sourceEntityIndex).center - resumeState.geometry.pointA;
+         entity.direction |= (resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB) & RENDER_FLAGS_DIRECTION_MASK);
          entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       }
       float progress = manageProgressOfAction(resumeState, argStruct->duration);
-      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
+      Point betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
       entity.x = betweenPoint.x;
       entity.y = betweenPoint.y;
       if (progress >= 1.0f)
@@ -1717,35 +1717,35 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
          //now set the resumeState variables:
          resumeState.totalLoopsToNextAction = totalDelayLoops;
          resumeState.loopsToNextAction = totalDelayLoops;
-         resumeState.length = geometry->GetPathLength();
+         resumeState.geometry.length = geometry->GetPathLength();
          initializeEntityGeometryPath(resumeState, sourceEntityIndex, geometry);
          entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
          mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
       }
       resumeState.loopsToNextAction--;
 
-      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
+      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
       float totalProgress = getProgressOfAction(resumeState);
-      float currentProgressLength = resumeState.length * totalProgress;
+      float currentProgressLength = resumeState.geometry.length * totalProgress;
       float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-      float lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
-      float progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
-         / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
+      float lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
+      float progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
+         / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
 
       if (progressBetweenPoints > 1)
       {
-         resumeState.lengthOfPreviousSegments += currentSegmentLength;
-         resumeState.currentSegmentIndex++;
-         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
+         resumeState.geometry.lengthOfPreviousSegments += currentSegmentLength;
+         resumeState.geometry.currentSegmentIndex++;
+         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
          currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-         lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
-         progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
-            / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
+         lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
+         progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
+            / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
 
          setResumeStatePointsAndEntityDirection(resumeState, sourceEntityIndex, geometry);
       }
 
-      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progressBetweenPoints);
+      Point betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
       entity.x = betweenPoint.x;
       entity.y = betweenPoint.y;
       if (resumeState.loopsToNextAction == 0)
@@ -1792,7 +1792,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
          //now set the resumeState variables:
          resumeState.totalLoopsToNextAction = totalDelayLoops;
          resumeState.loopsToNextAction = totalDelayLoops;
-         resumeState.length = (geometry->GetTypeId() == MageGeometryType::Polyline)
+         resumeState.geometry.length = (geometry->GetTypeId() == MageGeometryType::Polyline)
             ? geometry->GetPathLength() * 2
             : geometry->GetPathLength();
          initializeEntityGeometryPath(resumeState, sourceEntityIndex, geometry);
@@ -1806,29 +1806,29 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
          initializeEntityGeometryPath(resumeState, sourceEntityIndex, geometry);
       }
       resumeState.loopsToNextAction--;
-      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
+      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
       float totalProgress = getProgressOfAction(resumeState);
-      float currentProgressLength = resumeState.length * totalProgress;
+      float currentProgressLength = resumeState.geometry.length * totalProgress;
       float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-      float lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
-      float progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
-         / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
+      float lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
+      float progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
+         / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
 
       if (progressBetweenPoints > 1.0f)
       {
-         resumeState.lengthOfPreviousSegments += currentSegmentLength;
-         resumeState.currentSegmentIndex++;
+         resumeState.geometry.lengthOfPreviousSegments += currentSegmentLength;
+         resumeState.geometry.currentSegmentIndex++;
 
-         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
+         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
 
          currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-         lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
-         progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
-            / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
+         lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
+         progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
+            / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
 
          setResumeStatePointsAndEntityDirection(resumeState, sourceEntityIndex, geometry);
       }
-      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progressBetweenPoints);
+      Point betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
       entity.x = betweenPoint.x;
       entity.y = betweenPoint.y;
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
@@ -1896,13 +1896,13 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
       {
          camera.followEntityId = NO_PLAYER_INDEX;
          //this is the points we're interpolating between
-         resumeState.pointA = Point{ camera.position.x, camera.position.y };
+         resumeState.geometry.pointA = Point{ camera.position.x, camera.position.y };
       }
       float progress = manageProgressOfAction(resumeState, argStruct->duration);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
-      resumeState.pointB = { mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidth / 2, mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeight / 2 };
-      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
+      resumeState.geometry.pointB = { mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidth / 2, mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeight / 2 };
+      Point betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
       camera.position.x = betweenPoint.x;
       camera.position.y = betweenPoint.y;
       if (progress >= 1.0f)
@@ -1931,18 +1931,18 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
    {
       camera.followEntityId = NO_PLAYER_INDEX;
       //this is the points we're interpolating between
-      resumeState.pointA = {
+      resumeState.geometry.pointA = {
          camera.position.x,
          camera.position.y,
       };
-      resumeState.pointB = {
+      resumeState.geometry.pointB = {
          geometry->GetPoint(0).x - DrawWidth / 2,
          geometry->GetPoint(0).y - DrawHeight / 2,
       };
    }
    float progress = manageProgressOfAction(resumeState, argStruct->duration);
 
-   Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
+   Point betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
    camera.position.x = betweenPoint.x;
    camera.position.y = betweenPoint.y;
    return NO_JUMP_SCRIPT;
@@ -2566,10 +2566,9 @@ float MageScriptActions::manageProgressOfAction(
       resumeState.totalLoopsToNextAction = totalDelayLoops;
       resumeState.loopsToNextAction = totalDelayLoops;
    }
-   float result = 1.0f - (
-      (float)resumeState.loopsToNextAction
-      / (float)resumeState.totalLoopsToNextAction);
-   if (result >= 1.0f)
+   
+   auto result = resumeState.loopsToNextAction - resumeState.totalLoopsToNextAction;
+   if (result <= 0)
    {
       resumeState.totalLoopsToNextAction = 0;
       resumeState.loopsToNextAction = 0;
@@ -2579,8 +2578,8 @@ float MageScriptActions::manageProgressOfAction(
 
 void MageScriptActions::initializeEntityGeometryPath(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry)
 {
-   resumeState.lengthOfPreviousSegments = 0;
-   resumeState.currentSegmentIndex = 0;
+   resumeState.geometry.lengthOfPreviousSegments = 0;
+   resumeState.geometry.currentSegmentIndex = 0;
    setResumeStatePointsAndEntityDirection(resumeState, sourceEntityIndex, geometry);
 }
 

@@ -195,11 +195,12 @@ struct Point
 	}
 };
 
-struct Line
-{
-	Point A;
-	Point B;
-};
+using Line = std::tuple<Point, Point>;
+//struct Line
+//{
+//	Point A;
+//	Point B;
+//};
 
 struct Rect
 {

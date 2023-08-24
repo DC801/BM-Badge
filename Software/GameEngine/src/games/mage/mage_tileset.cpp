@@ -72,14 +72,8 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
 
             const auto& sourceColorIndex = sourceRowPtr[xSource];
             const auto& color = colorPalette->get(sourceColorIndex);
-            
-            if (TRANSPARENCY_COLOR == color)
-            {
-                continue;
-            }
 
-            frameBuffer->frame[yTarget * DrawWidth + xTarget] = (color >> 8) | (color << 8);
-            //frameBuffer->setPixel(xTarget, yTarget, color);
+            frameBuffer->setPixel(xTarget, yTarget, color);
         }
     }
 

@@ -4,6 +4,15 @@
 #include "mage_geometry.h"
 #include <stdint.h>
 
+struct ResumeGeometry
+{
+    Point pointA{ 0,0 };
+    Point pointB{ 0,0 };
+    float length{ 0.0f };
+    float lengthOfPreviousSegments{ 0.0f };
+    uint8_t currentSegmentIndex{ 0 };
+};
+
 //this is a structure to hold information about the currently executing scripts so they can resume
 struct MageScriptState
 {
@@ -30,13 +39,7 @@ struct MageScriptState
    //the total number of loops from the start of the action until the next action
    uint16_t totalLoopsToNextAction{ 0 };
 
-   //the below should probably be factored out into another struct at some point
-   //used to store state various geometry things
-   Point pointA{ 0,0 };
-   Point pointB{ 0,0 };
-   float length{ 0.0f };
-   float lengthOfPreviousSegments{ 0.0f };
-   uint8_t currentSegmentIndex{ 0 };
+   ResumeGeometry geometry{ 0 };
 };
 
 #endif
