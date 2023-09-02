@@ -36,7 +36,7 @@ struct Color_565
 class MageColorPalette
 {
 public:
-   const uint16_t& get(uint8_t idx) const
+   uint16_t get(uint8_t idx) const
    {
       const uint16_t* colorData{ (const uint16_t*)(&colorCount + 2) };
       return colorData[idx % colorCount];

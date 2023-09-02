@@ -77,7 +77,7 @@ MapData::MapData(uint32_t& address)
     for (auto i = 0; i < layerCount; i++)
     {
         auto layerAddress = address + i * rows * cols * sizeof(uint8_t*);
-        layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(rowCount() * colCount()) });
+        layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(rowCount()* colCount()) });
     }
 }
 
@@ -93,7 +93,9 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
     //iterate through it and draw the entities one by one:
     for (auto& entityIndex : entityDrawOrder)
     {
-        tileManager->DrawTile(currentMap->entityRenderableData[entityIndex], cameraPosition);
+        auto& renderableData = currentMap->entityRenderableData[entityIndex];
+        
+        tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin - cameraPosition, renderableData.renderFlags);
     }
 }
 
@@ -114,7 +116,7 @@ void MapControl::DrawGeometry(const Point& camera) const
 
 void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
 {
-    auto layerTiles = currentMap->layers[layer];
+    auto& layerTiles = currentMap->layers[layer];
     for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
     {
         for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
@@ -193,11 +195,11 @@ void MapControl::TryMovePlayer(ButtonState button)
         auto playerVelocity = Point{ 0,0 };
 
         // moving when there's at least one button not being counteracted
-        playerIsMoving = 
-           ((button.IsPressed(KeyPress::Ljoy_left) || button.IsPressed(KeyPress::Ljoy_right))
-            && button.IsPressed(KeyPress::Ljoy_left) != button.IsPressed(KeyPress::Ljoy_right))
-        || ((button.IsPressed(KeyPress::Ljoy_up) || button.IsPressed(KeyPress::Ljoy_down))
-            && button.IsPressed(KeyPress::Ljoy_up) != button.IsPressed(KeyPress::Ljoy_down));
+        playerIsMoving =
+            ((button.IsPressed(KeyPress::Ljoy_left) || button.IsPressed(KeyPress::Ljoy_right))
+                && button.IsPressed(KeyPress::Ljoy_left) != button.IsPressed(KeyPress::Ljoy_right))
+            || ((button.IsPressed(KeyPress::Ljoy_up) || button.IsPressed(KeyPress::Ljoy_down))
+                && button.IsPressed(KeyPress::Ljoy_up) != button.IsPressed(KeyPress::Ljoy_down));
 
         if (playerIsMoving)
         {
@@ -206,69 +208,82 @@ void MapControl::TryMovePlayer(ButtonState button)
             const auto botLeft = playerRenderableData.hitBox.origin + Point{0, playerRenderableData.hitBox.h};
             const auto botRight = playerRenderableData.hitBox.origin + Point{playerRenderableData.hitBox.w, playerRenderableData.hitBox.h};
 
-            std::vector<Line> hitboxWallsToCheck;
+            std::vector<Point> hitboxPointsToCheck{};
+
+            auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
 
             if (button.IsPressed(KeyPress::Ljoy_left) && !button.IsPressed(KeyPress::Ljoy_right))
             {
                 playerVelocity.x -= playerSpeed;
                 player->direction = WEST;
-                hitboxWallsToCheck.push_back({ topLeft, botLeft });
+                hitboxPointsToCheck.push_back(topLeft);
+                hitboxPointsToCheck.push_back(botLeft);
+                hitboxPointsToCheck.push_back(topLeft + playerVelocity);
+                hitboxPointsToCheck.push_back(botLeft + playerVelocity);
             }
-            else if (button.IsPressed(KeyPress::Ljoy_right) && button.IsPressed(KeyPress::Ljoy_left))
+            else if (button.IsPressed(KeyPress::Ljoy_right) && !button.IsPressed(KeyPress::Ljoy_left))
             {
                 playerVelocity.x += playerSpeed;
                 player->direction = EAST;
-                hitboxWallsToCheck.push_back({ topRight, botRight });
+                hitboxPointsToCheck.push_back(topRight);
+                hitboxPointsToCheck.push_back(botRight);
+                hitboxPointsToCheck.push_back(topRight + playerVelocity);
+                hitboxPointsToCheck.push_back(botRight + playerVelocity);
             }
 
             if (button.IsPressed(KeyPress::Ljoy_up) && !button.IsPressed(KeyPress::Ljoy_down))
             {
                 playerVelocity.y -= playerSpeed;
                 player->direction = NORTH;
-                hitboxWallsToCheck.push_back({ topLeft, topRight });
+                hitboxPointsToCheck.push_back(topLeft);
+                hitboxPointsToCheck.push_back(topRight);
+                hitboxPointsToCheck.push_back(topLeft + playerVelocity);
+                hitboxPointsToCheck.push_back(topRight + playerVelocity);
             }
             else if (button.IsPressed(KeyPress::Ljoy_down) && !button.IsPressed(KeyPress::Ljoy_up))
             {
                 playerVelocity.y += playerSpeed;
                 player->direction = SOUTH;
-                hitboxWallsToCheck.push_back({ botLeft, botRight });
+                hitboxPointsToCheck.push_back(botLeft);
+                hitboxPointsToCheck.push_back(botRight);
+                hitboxPointsToCheck.push_back(botLeft + playerVelocity);
+                hitboxPointsToCheck.push_back(botRight + playerVelocity);
             }
 
-
-            auto getTileId = [&](const Point& p) { return &currentMap->layers[0][p.x / currentMap->tileWidth + currentMap->cols * p.y / currentMap->tileHeight]; };
-            auto getGeometry = [&](const MageMapTile* tile) { return ROM()->GetReadPointerByIndex<MageTileset>(tile->tilesetId)->GetGeometryForTile(tile->tileId); };
-
-            auto inside = [&](Line& l, const Point& point) { return point.x >= std::get<0>(l).x && point.x <= std::get<1>(l).x
-                && point.y >= std::get<0>(l).y + playerVelocity.y && point.y <= std::get<1>(l).y; };
-            for (auto& hitboxWall : hitboxWallsToCheck)
+            // take the minkowski difference (A - B for each point where A is the hitbox and B is geometry)
+            // if it ever includes the origin, there's a collision
+            auto collides = false;
+            for (auto& hitboxPoint : hitboxPointsToCheck)
             {
-                for (auto& geometry : {
-                        getGeometry(getTileId(std::get<0>(hitboxWall))),
-                        getGeometry(getTileId(std::get<1>(hitboxWall))),
-                        getGeometry(getTileId(std::get<0>(hitboxWall) + playerVelocity)),
-                        getGeometry(getTileId(std::get<1>(hitboxWall) + playerVelocity))
-                    })
-                {
-                    for (auto& point : geometry->GetPoints())
-                    {
-                        // collision if the parallelogram defined by hitboxWall + playerVelocity encompasses the point
-                    }
-                }
-                //const auto geometryA = getGeometry(getTileId(std::get<0>(hitboxWall)));
-                //const auto geometryB = getGeometry(getTileId(std::get<1>(hitboxWall)));
-                //const std::vector<std::vector<const MageGeometry*>> geometries{geometryA, geometryB};
-                //auto points = std::ranges::views(geometryA->GetPoints()) |  geometryB->GetPoints() | std::ranges::views::join;
-                //if (!geometryA) { continue; }
-                //for (auto& point : points)
-                //{
+                const auto column = hitboxPoint.x / currentMap->tileWidth;
+                const auto row = hitboxPoint.y / currentMap->tileHeight;
+                const auto tilePoint = Point{
+                    currentMap->tileWidth * column,
+                    currentMap->tileHeight * row
+                };
 
-                //}
+                const auto tileId = column + currentMap->cols * row;
+                const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentMap->layers[0][tileId].tilesetId);
+                auto geometry = tileset->GetGeometryForTile(currentMap->layers[0][tileId].tileId);
+
+                if (geometry)
+                {
+                    for (auto& mapPoint : geometry->GetPoints())
+                    {
+                        auto point = mapPoint + tilePoint;
+                        minX = std::min(point.x - hitboxPoint.x, minX);
+                        minY = std::min(point.y - hitboxPoint.y, minY);
+                        maxX = std::max(point.x - hitboxPoint.x, maxX);
+                        maxY = std::max(point.y - hitboxPoint.y, maxY);
+                    }
+                    if (minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0)
+                    {
+                        collides = true;
+                        return;
+                    }
+                    
+                }
             }
-            // # cols is screenwidth/tilewidth
-            // # rows is screenheight/tileheight
-            // auto curCol = x / currentMap->tileWidth;
-            // auto curRow = y / currentMap->tileHeight;
-            // 
             player->x += playerVelocity.x;
             player->y += playerVelocity.y;
         }

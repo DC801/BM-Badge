@@ -24,23 +24,6 @@ static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;
 
 
-void FrameBuffer::setPixel(uint16_t x, uint16_t y, const uint16_t& color)
-{
-   if (x < 0 || x >= DrawWidth
-      || y < 0 || y >= DrawHeight
-      || color == TRANSPARENCY_COLOR)
-   {
-      return;
-   }
-   minXChange = std::min<int>(minXChange, x);
-   maxXChange = std::max<int>(maxXChange, x);
-
-   minYChange = std::min<int>(minYChange, y);
-   maxYChange = std::max<int>(maxYChange, y);
-
-   frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
-}
-
 void FrameBuffer::clearScreen(uint16_t color)
 {
    minXChange = 0;

@@ -30,17 +30,17 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * This module implements some very basic support for the LED controller
- * on the DC27 badge board. We want to use the LEDs as a progress and
- * success/failure indicator during the flash update, since we can't
- * easily use the screen. We assume that the badge firmware already
- * did most of the initialization of the controller chip and just make
- * sure here select the PWM register page so that we can write to the
- * PWM control registers. We use a single scrolling blue LED to indicate
- * flashing progress. For an error we illuminate all LEDs red, and if
- * the firmware update succeeds we set them all green.
- */
+ /*
+  * This module implements some very basic support for the LED controller
+  * on the DC27 badge board. We want to use the LEDs as a progress and
+  * success/failure indicator during the flash update, since we can't
+  * easily use the screen. We assume that the badge firmware already
+  * did most of the initialization of the controller chip and just make
+  * sure here select the PWM register page so that we can write to the
+  * PWM control registers. We use a single scrolling blue LED to indicate
+  * flashing progress. For an error we illuminate all LEDs red, and if
+  * the firmware update succeeds we set them all green.
+  */
 
 #include "led.h"
 
@@ -70,34 +70,34 @@ static const uint8_t led_address[LED_COUNT] = {
         0x44    // LED_SD
 };
 
-void ledInit (void){
-    int i;
+void ledInit(void)
+{
 
     /* Select function page */
 
-    ledPageSet (ISSI_PAGE_FUNCTION);
+    ledPageSet(ISSI_PAGE_FUNCTION);
 
     /* Reset the chip */
 
-    ledRegGet (ISSI_REG_RESET);
+    ledRegGet(ISSI_REG_RESET);
 
     /* Select function page */
 
-    ledPageSet (ISSI_PAGE_FUNCTION);
+    ledPageSet(ISSI_PAGE_FUNCTION);
 
     /* Set configuration - disable soft shutdown */
 
-    ledRegSet (ISSI_REG_CONFIG, ISSI_REG_CONFIG_SSD_OFF | ISSI_REG_CONFIG_B_EN);
+    ledRegSet(ISSI_REG_CONFIG, ISSI_REG_CONFIG_SSD_OFF | ISSI_REG_CONFIG_B_EN);
 
     /* Set global current control*/
 
-    ledRegSet (ISSI_REG_GCC, LED_INTENSITY);
+    ledRegSet(ISSI_REG_GCC, LED_INTENSITY);
 
     /* Set pullups */
-    ledRegSet (ISSI_REG_SWY_PULLUP, 0xFF);
+    ledRegSet(ISSI_REG_SWY_PULLUP, 0xFF);
 
     /* Set pulldowns */
-    ledRegSet (ISSI_REG_CSX_PULLDOWN, 0xFF);
+    ledRegSet(ISSI_REG_CSX_PULLDOWN, 0xFF);
 
     /* Set breath speeds */
     ledRegSet(ISSI_REG_ABM1_IN, 0x24); // .42s ramp, .42s hold
@@ -108,57 +108,63 @@ void ledInit (void){
 
     /* Turn on LEDs */
 
-    ledPageSet (ISSI_PAGE_LED);
+    ledPageSet(ISSI_PAGE_LED);
 
-    for (i = 0; i < 0x18; i++) {
+    for (auto i = 0; i < 0x18; i++)
+    {
         ledRegSet(i, 0xFF);
     }
 
     /* Select PWM register page */
 
-    ledPageSet (ISSI_PAGE_PWM);
+    ledPageSet(ISSI_PAGE_PWM);
 
     return;
 }
 
-void ledPageSet (uint8_t page){
+void ledPageSet(uint8_t page)
+{
     /* Unlock command register */
 
-    ledRegSet (ISSI_REG_COMMAND_UNLOCK, ISSI_CMDUNLOCK_ENABLE);
+    ledRegSet(ISSI_REG_COMMAND_UNLOCK, ISSI_CMDUNLOCK_ENABLE);
 
     /* Select register page */
 
-    ledRegSet (ISSI_REG_COMMAND, page);
+    ledRegSet(ISSI_REG_COMMAND, page);
 
     return;
 }
 
-void ledRegGet (uint8_t reg){
+void ledRegGet(uint8_t reg)
+{
+
+#ifdef DC801_EMBEDDED
     uint8_t rxbuf = 0;
     uint8_t txbuf;
 
     txbuf = reg;
 
-#ifdef DC801_EMBEDDED
-	i2cMasterTransmit(ISSI_I2C_ADDR, &txbuf, 1);
+    i2cMasterTransmit(ISSI_I2C_ADDR, &txbuf, 1);
 #endif
 }
 
-void ledRegSet (uint8_t reg, uint8_t val){
+void ledRegSet(uint8_t reg, uint8_t val)
+{
+
+#ifdef DC801_EMBEDDED
     uint8_t txbuf[2];
 
     txbuf[0] = reg;
     txbuf[1] = val;
-
-#ifdef DC801_EMBEDDED
-	i2cMasterTransmit(ISSI_I2C_ADDR, txbuf, 2);
+    i2cMasterTransmit(ISSI_I2C_ADDR, txbuf, 2);
 #endif
 
-	return;
 }
 
-void ledSet (uint8_t index, uint8_t intensity){
-    if (index >= LED_COUNT) {
+void ledSet(uint8_t index, uint8_t intensity)
+{
+    if (index >= LED_COUNT)
+    {
         return;
     }
 
@@ -166,68 +172,80 @@ void ledSet (uint8_t index, uint8_t intensity){
 
     ledPageSet(ISSI_PAGE_PWM);
 
-    ledRegSet(led_address[index] , intensity);
+    ledRegSet(led_address[index], intensity);
 
     ledPageSet(ISSI_PAGE_BREATH);
 
-    ledRegSet(led_address[index] , 0);
+    ledRegSet(led_address[index], 0);
 
     return;
 }
 
 
-void ledsOff (void){
+void ledsOff(void)
+{
     int i;
-    for (i = 0; i < LED_COUNT; i++){
+    for (i = 0; i < LED_COUNT; i++)
+    {
         ledSet(i, 0);
     }
     return;
 }
 
-void ledsOn (void){
+void ledsOn(void)
+{
     int i;
-    for (i = 0; i < LED_COUNT; i++){
+    for (i = 0; i < LED_COUNT; i++)
+    {
         ledSet(i, 0xff);
     }
     return;
 }
 
-void ledOn(LEDID id) {
+void ledOn(LEDID id)
+{
     ledSet(id, 0xff);
 }
 
-void ledOff(LEDID id) {
+void ledOff(LEDID id)
+{
     ledSet(id, 0);
 }
 
-void ledInvert(LEDID id) {
-	uint8_t value = 0xFF - led_states[id];
-	ledSet(id, value);
+void ledInvert(LEDID id)
+{
+    uint8_t value = 0xFF - led_states[id];
+    ledSet(id, value);
 }
 
 
-void ledPulse(LEDID id) {
-    if (id > LED_COUNT) {
+void ledPulse(LEDID id)
+{
+    if (id < 0 || id > LED_COUNT)
+    {
         return;
     }
 
     ledPageSet(ISSI_PAGE_BREATH);
 
-    ledRegSet(led_address[id] , 1);
+    ledRegSet(led_address[id], 1);
 }
 
-void ledPulseFast(LEDID id) {
-    if (id > LED_COUNT) {
+void ledPulseFast(LEDID id)
+{
+    if (id < 0 || id > LED_COUNT)
+    {
         return;
     }
 
     ledPageSet(ISSI_PAGE_BREATH);
 
-    ledRegSet(led_address[id] , 2);
+    ledRegSet(led_address[id], 2);
 }
 
 //0 to 255
-void ledPwm(LEDID id, uint8_t val) {
+void ledPwm(LEDID id, uint8_t val)
+{
     ledSet(id, val);
 }
 

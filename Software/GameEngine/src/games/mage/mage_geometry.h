@@ -12,6 +12,7 @@ in a more accessible way.
 #include <stdint.h>
 #include <cmath>
 #include <memory>
+#include <span>
 #include <vector>
 #include <optional>
 
@@ -196,6 +197,8 @@ struct Point
 };
 
 using Line = std::tuple<Point, Point>;
+
+
 //struct Line
 //{
 //	Point A;
@@ -232,14 +235,14 @@ public:
    //default constructor returns a point with coordinates 0,0:
    MageGeometry() noexcept = default;
 
-   //this constructor allows you to make a geometry of a known type and pointCount.
-   //you'll need to manually fill in the points, though. They all default to 0,0.
-   MageGeometry(MageGeometryType type, uint8_t numPoints)
-      : pointCount(numPoints),
-      typeId(type),
-      segmentCount(typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1)
-   {
-   }
+   ////this constructor allows you to make a geometry of a known type and pointCount.
+   ////you'll need to manually fill in the points, though. They all default to 0,0.
+   //MageGeometry(MageGeometryType type, uint8_t numPoints)
+   //   : pointCount(numPoints),
+   //   typeId(type),
+   //   segmentCount(typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1)
+   //{
+   //}
 
    std::vector<Point> FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
 
@@ -269,14 +272,9 @@ public:
       return result;
    }
 
-	std::vector<Point> GetPoints() const
+	std::span<Point> GetPoints() const
 	{
-		auto points = std::vector<Point>{ pointCount };
-		for (auto i = 0; i < pointCount; i++)
-		{
-			points[i] = GetPoint(i);
-		}
-		return points;
+		return std::span<Point>{(Point*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
 	}
 
 	Point GetPoint(uint16_t i) const

@@ -57,7 +57,7 @@ private:
    void gameUpdate(const DeltaState& delta);
 
    //This renders the game to the frame buffer based on the loop's updated state.
-   void gameRender();
+   void gameRender(const DeltaState& delta);
 
    //this will handle any blocking delays at the end of the loop
    void handleBlockingDelay();
@@ -69,7 +69,7 @@ private:
    //this handles inputs that apply in ALL game states. That includes when
    //the hex editor is open, when it is closed, when in any menus, etc.
    void applyUniversalInputs(const DeltaState& delta);
-   void handleEntityInteract(bool hack);
+   void handleEntityInteract(const ButtonState& activatedButton);
 
    bool engineIsInitialized{ false };
 

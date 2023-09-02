@@ -66,7 +66,23 @@ public:
     }
 
     void clearScreen(uint16_t color);
-    void setPixel(uint16_t x, uint16_t y, const uint16_t& color);
+    inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
+    {
+        if (x < 0 || x >= DrawWidth
+            || y < 0 || y >= DrawHeight
+            || color == TRANSPARENCY_COLOR)
+        {
+            return;
+        }
+
+        minXChange = std::min<int>(minXChange, x);
+        maxXChange = std::max<int>(maxXChange, x);
+
+        minYChange = std::min<int>(minYChange, y);
+        maxYChange = std::max<int>(maxYChange, y);
+
+        frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
+    }
     
     inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
     {

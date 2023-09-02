@@ -71,7 +71,7 @@ void MageGameEngine::Run()
 #endif
         }
         //This renders the game to the screen based on the loop's updated state.
-        gameRender();
+        gameRender(deltaState);
 
         lastTime = loopStart;
 
@@ -92,8 +92,13 @@ void MageGameEngine::Run()
 
 }
 
-void MageGameEngine::handleEntityInteract(bool hack)
+void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
 {
+    auto hack = activatedButton.IsPressed(KeyPress::Rjoy_up);
+
+    // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
+    if (!hack || !activatedButton.IsPressed(KeyPress::Rjoy_right)) { return; }
+
     //interacting is impossible if there is no player entity
     if (mapControl->getPlayerEntityIndex() == NO_PLAYER_INDEX) { return; }
 
@@ -253,21 +258,20 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
     // if there is a player on the map
     if (playerEntity != NO_PLAYER)
     {
+        //update renderable info before proceeding:
         auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
         auto player = playerEntity.value();
         player->updateRenderableData(playerRenderableData, 0);
-
-        //update renderable info before proceeding:
-        uint16_t playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
-        bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
+        auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
+        auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
         auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
-        uint8_t previousPlayerAnimation = player->currentAnimation;
-        bool playerIsActioning = player->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
+        auto previousPlayerAnimation = player->currentAnimation;
+        auto playerIsActioning = player->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
         //check to see if the mage is pressing the action delta.Buttons, or currently in the middle of an action animation.
         if (playerHasControl)
         {
-            if (playerIsActioning || delta.Buttons.IsPressed(KeyPress::Rjoy_left))
+            if (delta.Buttons.IsPressed(KeyPress::Rjoy_left))
             {
                 playerIsActioning = true;
             }
@@ -275,29 +279,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
             else
             {
                 mapControl->TryMovePlayer(delta.Buttons);
-
-                if (delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
-                {
-                    const auto hack = false;
-                    handleEntityInteract(hack);
-                }
-                if (delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_up))
-                {
-                    const auto hack = true;
-                    handleEntityInteract(hack);
-                }
-                if (delta.Buttons.IsPressed(KeyPress::Ljoy_center))
-                {
-                    //no task assigned to ljoy_center in game mode
-                }
-                if (delta.Buttons.IsPressed(KeyPress::Rjoy_center))
-                {
-                    //no task assigned to rjoy_center in game mode
-                }
-                if (delta.Buttons.IsPressed(KeyPress::Page))
-                {
-                    //no task assigned to op_page in game mode
-                }
+                handleEntityInteract(delta.ActivatedButtons);
             }
         }
 
@@ -451,7 +433,7 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
     camera.applyEffects(delta.TimeMs.count());
 }
 
-void MageGameEngine::gameRender()
+void MageGameEngine::gameRender(const DeltaState& delta)
 {
     //make hax do
     if (hexEditor->isHexEditorOn())
@@ -471,9 +453,9 @@ void MageGameEngine::gameRender()
         }
     }
     //update the state of the LEDs
-
+    //drawButtonStates(delta.Buttons);
         // drawButtonStates(inputHandler->GetButtonState());
         // drawLEDStates();
     hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
     frameBuffer->blt();
-}
+} 

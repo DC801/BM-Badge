@@ -19,7 +19,8 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
     auto xSourceMin = int{0};
     auto xSourceMax = int{tileset->TileWidth};
     auto iteratorX = int{1};
-    auto iteratorY = int{ 1 };
+    auto iteratorY = int{1};
+
     if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
     {
        xSourceMin = tileset->TileWidth - 1;
@@ -71,7 +72,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
             }
 
             const auto& sourceColorIndex = sourceRowPtr[xSource];
-            const auto& color = colorPalette->get(sourceColorIndex);
+            const auto color = colorPalette->get(sourceColorIndex);
 
             frameBuffer->setPixel(xTarget, yTarget, color);
         }
