@@ -35,6 +35,10 @@ on_load-ch2-castle-33 {
 		copy script ch2-hide-mouse
 	}
 	
+	// temporary
+	teleport entity Mouse to geometry mouse-pos0
+	set flag ch2-mousegame to false
+
 	goto ch2-map-init
 }
 
@@ -44,6 +48,10 @@ on_tick-ch2-castle-33 {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
 		set warp state to walk_from-northwest
 		load map ch2-castle-32
+	}
+
+	if (flag ch2-mousegame is true) {
+		goto ch2-mousegame-tick // this script also resets to this script
 	}
 	set map tick_script to on_tick-ch2-castle-33 // reset
 }
@@ -62,6 +70,36 @@ on_go-castle-33-south {
 	load map ch2-castle-32
 }
 
+/* ---------- ENTITIES ---------- */
+
+ch2-interact-gregory {
+	copy face-player
+	if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
+		show dialog {
+			SELF "(TODO) Wow, you sure got that mouse! Thanks!"
+		}
+	} else {
+		show dialog {
+			SELF "Play mouse game? (TODO)"
+			> "Yes" : ch2-interact-gregory-gameyes
+			> "No" : ch2-interact-gregory-gameno
+		}
+	}
+	set entity "%SELF%" interact_script to ch2-interact-gregory
+}
+
+ch2-interact-gregory-gameyes {
+	set entity Mouse tick_script to ch2-mousegame-prepare-board
+	set entity "%SELF%" interact_script to ch2-interact-gregory
+}
+
+ch2-interact-gregory-gameno {
+	show dialog {
+		SELF "Oh."
+	}
+	set entity "%SELF%" interact_script to ch2-interact-gregory
+}
+
 /* ---------- MOUSE (ADMIN) ---------- */
 
 ch2-hide-mouse {
@@ -70,6 +108,11 @@ ch2-hide-mouse {
 }
 
 ch2-touch-mouse {
+	show dialog {
+		SELF "YOU FOUND MOUSE!!"
+	}
+	set flag ch2-mousegame to false
+	// set lights control to off
 	if (flag ch2-mouse-firstlook is false) {
 		show dialog {
 			PLAYER "TODO mouse1"
@@ -112,4 +155,79 @@ look-mouse {
 	show serial dialog {
 		"on_look mouse TODO"
 	}
+}
+
+/* ---------- MOUSE GAME ---------- */
+
+const! (
+	$max = 418
+)
+
+ch2-mousegame-prepare-board {
+	copy entity Mouse x into variable mousegame-mouseX
+	copy entity Mouse y into variable mousegame-mouseY
+	mutate tempvar ? 20
+	if (variable tempvar is 0) { teleport entity Mouse to geometry mouse-pos0 }
+	else if (variable tempvar is 1) { teleport entity Mouse to geometry mouse-pos1 }
+	else if (variable tempvar is 2) { teleport entity Mouse to geometry mouse-pos2 }
+	else if (variable tempvar is 3) { teleport entity Mouse to geometry mouse-pos3 }
+	else if (variable tempvar is 4) { teleport entity Mouse to geometry mouse-pos4 }
+	else if (variable tempvar is 5) { teleport entity Mouse to geometry mouse-pos5 }
+	else if (variable tempvar is 6) { teleport entity Mouse to geometry mouse-pos6 }
+	else if (variable tempvar is 7) { teleport entity Mouse to geometry mouse-pos7 }
+	else if (variable tempvar is 8) { teleport entity Mouse to geometry mouse-pos8 }
+	else if (variable tempvar is 9) { teleport entity Mouse to geometry mouse-pos9 }
+	else if (variable tempvar is 10) { teleport entity Mouse to geometry mouse-pos10 }
+	else if (variable tempvar is 11) { teleport entity Mouse to geometry mouse-pos11 }
+	else if (variable tempvar is 12) { teleport entity Mouse to geometry mouse-pos12 }
+	else if (variable tempvar is 13) { teleport entity Mouse to geometry mouse-pos13 }
+	else if (variable tempvar is 14) { teleport entity Mouse to geometry mouse-pos14 }
+	else if (variable tempvar is 15) { teleport entity Mouse to geometry mouse-pos15 }
+	else if (variable tempvar is 16) { teleport entity Mouse to geometry mouse-pos16 }
+	else if (variable tempvar is 17) { teleport entity Mouse to geometry mouse-pos17 }
+	else if (variable tempvar is 18) { teleport entity Mouse to geometry mouse-pos18 }
+	else if (variable tempvar is 19) { teleport entity Mouse to geometry mouse-pos19 }
+	// set lights control to on
+	show dialog {
+		name "" "(SQUEAK!)"
+	}
+	copy entity Mouse x into variable mousegame-mouseX
+	copy entity Mouse y into variable mousegame-mouseY
+	set flag ch2-mousegame to true
+	goto null_script
+}
+
+ch2-mousegame-tick {
+	wait 100ms
+	copy entity "%PLAYER%" x into variable mousegame-playerX
+	copy entity "%PLAYER%" y into variable mousegame-playerY
+	// get diffX
+	if (variable mousegame-playerX is > mousegame-mouseX) {
+		mutate mousegame-diffX = mousegame-playerX
+		mutate mousegame-diffX - mousegame-mouseX
+	} else {
+		mutate mousegame-diffX = mousegame-mouseX
+		mutate mousegame-diffX - mousegame-playerX
+	}
+	// get diffY
+	if (variable mousegame-playerY is > mousegame-mouseY) {
+		mutate mousegame-diffY = mousegame-playerY
+		mutate mousegame-diffY - mousegame-mouseY
+	} else {
+		mutate mousegame-diffY = mousegame-mouseY
+		mutate mousegame-diffY - mousegame-playerY
+	}
+	mutate mousegame-manhattan = mousegame-diffX
+	mutate mousegame-manhattan + mousegame-diffY
+	mutate mousegame-diff = mousegame-manhattan
+	mutate mousegame-diff * 8
+	mutate mousegame-diff / $max
+	// `mousegame-diff` is now the INVERSE of the number of lights to show
+	mutate mousegame-lights = 8
+	mutate mousegame-lights - mousegame-diff
+	// `mousegame-lights` is the ACTUAL number of lights to show
+	show serial dialog {
+		"DEBUG: $mousegame-lights$"
+	}
+	set map tick_script to on_tick-ch2-castle-33 // reset
 }

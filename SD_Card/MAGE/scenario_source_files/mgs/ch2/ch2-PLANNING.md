@@ -39,7 +39,7 @@
 
 ### NPCs
 
-- [ ] Lambda
+- [x] Lambda
 - [ ] King Gibson
 - [ ] Cat Cook
 - [x] Castle goose (red bow)
@@ -47,7 +47,12 @@
 - [x] Trash panda ("Wizard")
 - [x] Welder ("Rocco")
 - [ ] Better Exa sprite
-- [ ] Misc other humanoid NPCs
+- [ ] Misc other humanoid NPCs (as many as possible)
+	- [x] Goggle + beard + bald guy
+	- [x] Red star + short hair lady
+	- [x] Black-shirt guy
+	- [x] Cockatiel guy
+	- [x] Labcoat lady
 
 ### Sets and doodads
 
@@ -60,10 +65,10 @@
 - [ ] Blacksmith / workshop
 - [ ] Server room
 - [ ] Kitchen
-- [ ] Hydroponics
+- [x] Hydroponics
 - [ ] Pantry
-- [ ] Messy computer lab (tiny)
-- [x] Collapsed rocks (blocking doorways + incidental fallen rocks)
+- [x] Messy computer lab (tiny)
+- [~] Collapsed rocks (blocking doorways + incidental fallen rocks)
 
 ## Serial dialogs styles
 
