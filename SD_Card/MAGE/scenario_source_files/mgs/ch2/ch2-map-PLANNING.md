@@ -36,14 +36,18 @@ Nethack-like
          ---------
 ```
 
-### ENTRANCE
+## ROOMS
+
+The room name (re: warping or other serial labelling) is what is contained within backtics.
+
+### Entrance
 
 1. `Castle entrance`
 	- XA: intercom with XB (outside) and XC in room 99
 	- Save floppy
 	- ITEM: computer enclosure + motherboard
 
-### MAIN BRANCH
+### Admin Branch
 
 11. `Castle hallway front`
 	- ITEM: Monitor
@@ -55,7 +59,7 @@ Nethack-like
 14. `King Gibson's bedroom`
 	- ITEM: grandfather clock
 
-### INDUSTRIAL AREA
+### Industrial Area
 
 21. `Workshop`
 	- ITEM: abacus (CPU item 2)
@@ -66,7 +70,7 @@ Nethack-like
 	- Deliver Cactus Cooler to them to receive ITEM
 	- ITEM: Heat sink
 
-### FOOD STUFFS
+### Food
 
 31. `Grand hall`
 	- Copy Pasta bar
@@ -80,14 +84,14 @@ Nethack-like
 34. `Castle pantry`
 	- ITEM: SSD/HD (plate)
 
-### THE END
+### The End
 
 99. `Lambda's lab` (teleport only)
 	- Lambda
-	- XC: intercom with XB (outside) and XA in room 1
+	- XC: intercom with XB (outside the castle?) and XA in room 1
 	- ITEM: mainframe OS
 
-### TOWN
+### Town
 
 - `Town`
 - `Bakery`
@@ -99,9 +103,7 @@ Nethack-like
 - `Bob's club basement`
 - `Beatrice's house`
 - `Smith's house`
-- `WOPR room`
-
-- ITEM: cactus cooler (needed for heat sink)
+- `WOPR room` (secret room)
 
 ## ZONES
 
@@ -131,9 +133,12 @@ Nethack-like
 
 Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten); see `ch2-PLANNING.md` for the sprites checklist.
 
-### PLOT
+### Plot
+
+Plot points implemented:
 
 - INTRO (`ch2-storyflag-round` = 0)
+	- [ ] Picking up the artifact from a sliding door cubby on the side of the wall: door opens, player character moves over there, turns to get it, then maybe door closes again (so we can reuse that temp entity)
 	- [x] Intro to Lambda
 		- [ ] Connecting the artifact on Windows
 		- [ ] Connecting the artifact on MacOS / Linux
@@ -145,33 +150,45 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- Starting item: enclosure/motherboard (room 1)
 
 - FIRST ROUND: normal (`ch2-storyflag-round` = 1)
-	- [x] (1.) `monitor` (room 11)
-	- [x] (2.) `heatsink` (room 23)
+	- [~] (1.) `monitor` (room 11)
+		- Some kind of better framing device?
+	- [~] (2.) `heatsink` (room 23)
+		- [ ] The power plant guys need a substitute cooling source if you are to take their heatsink
 		- [x] `cactuscooler` (Bob's club)
 	- [x] (3.) `powersupply` (room 22)
+		- Framing device can be simple
 	- [x] Bert secret cutscene happens when all of the above are done
 	- [x] Lambda gives next round of the parts list
 
 - SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
-	- [x] (4.) `keyboard` (keytar) (room 31)
-	- [ ] (5.) `mouse` (rodent) (room 33)
+	- [ ] (4.) `keyboard` (keytar) (room 31)
+		- [ ] Simon says type game: the lead keytarist won't give you the spare keytar unless you can beat him in a keytar battle ("Try to keep up!")
+			- The keytar you receive has a name
+	- [~] (5.) `mouse` (rodent) (room 33)
+		- The Cat doesn't like wireless mice (because they just get away all the time)
+		- [ ] Cat intro: something like "I'm too old to chase after mice, but here, take this mouse proximity detector" (uses wireless signal strength)
+		- [x] Hot-cold game (Manhattan distance -> X/8 lights lit)
+		- [ ] Proximity shows as "progress bar" on hex bit lights
+		- [ ] It takes three attempts: the first two times, the mouse just darts away in an ambiguous direction
+		- [ ] Cat congrats when finished (Also, "I definitely prefer a mouse with a physical connection. Don't you?")
 	- [ ] (6.) `harddrive`
-		- [x] `plate` (dinner plate) (room 34)
+		- [ ] `plate` (dinner plate) (room 34)
 		- [ ] `needle` (phonograph needle) (room 12)
-	- [~] Bert "any messages yet?" convo happens when all of the above are done
-	- [~] Lambda gives next round of the parts list
+	- [x] Bert "any messages yet?" convo happens when all of the above are done
+	- [x] Lambda gives next round of the parts list
 
 - THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
+		- [ ] Click the buttons on the vending machine (technically a stretch goal)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
-		- [x] `abacus` (room 21)
+		- [ ] `abacus` (room 21)
 	- [ ] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
 	- [~] Lambda talks to you in person
-	- [ ] (10.) `mainframeos` (room 99) (might be handled differently)
+	- [ ] (10.) `mainframeos` (room 99) (might be handled differently from other items)
 	- [ ] Cutscene: OS installation wizard
 	- [ ] "You did it" cutscene
 	- [ ] Credits
@@ -223,6 +240,8 @@ ALL DONE!
 
 ### Scripts needed for story items
 
+ALL DONE! (Probably)
+
 For each item: (Copy existing pattern wherever these are found)
 
 1. Put entity on a map (`ENTITY`) and set `on_interact` = `ch2-touch-ITEM`
@@ -249,6 +268,143 @@ For each item: (Copy existing pattern wherever these are found)
 	2. Make script `command-parts-ITEM` (copy an existing)
 	3. Add to `command-parts` (using flag `ch2-installed-ITEM` and `ch2-carrying-ITEM`)
 	4. Add to script `command-parts-q` (if multiple words, add a no-spaces option, too)
+
+## Puzzles to implement
+
+(Also see the brainstorming far below)
+
+- [ ] Clicking the buttons on the sides of the screen to interact with Sea Moss' vending machine
+	- [ ] Sea Moss gives some excuse about how his fingers are too big to press the buttons himself (he still inserts the money though)
+	- [ ] Disable serial; enable afterward (so the player doesn't try anything weird to the cutscene state)
+	- [ ] Vending machine closeup screen: just the part where it's the buttons and the segment display for whatever numbers you chose
+		- Q. What happens if you choose the wrong one?
+			- Proposal: Sea Moss quips something funny about that item, maybe some kind of tech snack pun, but then invalidates that choice and is like "Seriously, though, I'm not made of cash! Let's try the real choice please?"
+		- Q. What buttons are normally there on a vending machine? Letters? Numbers?
+		- Q. The badge's buttons are on the sides of the screen. Is there a button layout where it would be obvious what button does what?
+- [ ] Keytar battle
+	- [ ] Lights out, spotlight only: you and the lead guitarist alone on stage
+	- [ ] Animations for both, holding a keytar: (downward angle only)
+		- Up-left (XOR)
+		- Up-right (MEM0)
+		- Left (PAGE)
+		- Right (MEM3)
+		- Down-left (128)
+		- Down-right (1)
+		- Win (mage: happy, keytarist: congratulatory)
+		- Lose (mage: mad, keytarist: disappointed)
+	- [ ] Options for type of battle (to accomodate ease of pressing PAGE/MEM3/128/1 on real badges and parsing XOR/PAGE/MEM0/MEM3 on desktop): high or low
+		- [ ] Make the 4 lights flash depending on which is selected
+		- [ ] Remember choice from last time
+		- To accomplish this, make the dialog like "You want a high battle, right?" "Yeah"/"Actually let's make it a low battle" or switch to "Oho, so you want a low battle?" "Yeah"/"Actually, let's do a high battle" (so the battle mode is explicit, re: light flashing)
+	- Gameplay logic:
+		- [ ] Randomize 7x integer variables: 1-4 or 3-6, depending on mode. These are the positions to match.
+		- [ ] Keep track of round within set (start at 1; stop incrementing at 7), and only play back the positions <= to that round
+		- [ ] All looping logic uses a separate integer variable for where within the round you currently are, e.g. round 0/1, 1/1, 0/2, 1/2, 2/2, where the first is the counter and the second is the round
+		- This looping is done twice:
+		- [ ] Enemy turn: play animation for `position1`, `position2` etc.
+			- [ ] Lock all lights until it's your turn to play
+		- [ ] Your turn:
+			- [ ] Listen for all 6 buttons, but for the buttons not relevant to that mode, start over immediately
+			- [ ] Play that animation and increase mage keytar counter
+			- [ ] Use counter to ascertain which `position` to be matching
+		- [ ] Lights blink:
+			- [ ] All hex editor lights blink twice if a position failed
+			- [ ] If you get to the end: lights run out the center and up the sides in a loop if you win
+	- [ ] Repeat battles (if you've already installed the keyboard, he's got another one you can use -- named something else, of course)
+
+## Puzzle Mechanics
+
+### Serial terminal: things we can do 
+
+1. Multiple choice question
+	- Integer answer only, 0+, depending on how many options there are
+	- Invalid answers result in the original serial dialog (script?) running again
+2. Free response question
+	- Invalid answers result in a fallthrough in the original script that "called" the serial dialog
+3. Arbitrary commands
+	- Registered and deregistered as a script action
+	- The command itself is a single word; additional "arguments" are registered separately; a "failure" script can be registered, as well, where an invalid argument is attempted
+
+### Serial terminal: things we can't do
+
+- Apart from arbitrary sizes of white space (just space?), which is used to split the input string, no further string processing can be done; all matches to the above stuff must be EXACT (case insensitive)
+- Game logic largely consists of integer variables and boolean story flags, so emulating a real computer system is possible but unfeasible
+
+#### Goals / issues
+
+- "Free response" questions are underutilized
+	- [ ] Somebody SOMEWHERE should need the answer `AFTER DARK` for the question `When do the flying toasters come out?`
+		- It's a bit obscure for a main game puzzle though
+
+## Educational Angles (Brainstorming again)
+
+BRAINSTORMING: In terms of the player accidentally learning something about CS:
+
+### What we use terminals for
+
+- Run a CLI program (technically this is everything)
+	- Internal commands: `echo`, `cd`
+	- External command: staring a new program and it's using that thread now (unless told otherwise etc.)
+- Change obscure settings in a config file (which lacks a GUI)
+- Log into another computer and do stuff over there
+- Changing the status of the shell session at that moment: e.g. `cd`
+- Run a shell script for specific things you need to do a lot at arbitrary times
+
+### Installing Linux
+
+- Things to do:
+	- Boot from whatever boot media (Lambda uses CRTs and old beige computers, so should this be CD...?)
+	- Format the drive
+	- Install the OS
+		- What options are common?
+	- Pick a username
+	- Set a password
+	- Install applications/utilities that weren't included (usually gradually, as you realize you need them)
+- What can go wrong?
+	- (The GNUs can get out)
+	- Format the drive wrong
+- Goals:
+	- Installation "cutscene" shouldn't take more than like 3 minutes
+	- Should not be annoying or boring to people used to the real process, but not overwhelming for people who have never even seen this kind of thing before
+	- Should have pretend dummy "installing X" text
+		- Note that we can't do ANSI cursor maneuvering! Every new message is just spit out on a new line after the previous one.
+	- Can (probably should) have coaching from the raccoon "Wizard" on the badge screen via standard dialogs, telling you the specific things to type into the console
+	- Something can go wrong with the installation process (if so, only once) but it shouldn't derail things too hard. Make sure the player understands that small complications are normal and there are ways to recover from them.
+- Questions:
+	- What if the player tries to do a real Linux thing that wasn't in the script?
+		- Should the Wizard intercept this? Like "Whoa, hold on now. Let's just try to get that thing working first!" ? (The problem with that angle is that the player then might anticipate actually being able to do that stuff later.)
+	- If we can't emulate a Linux installation process very exactly, would it be better to do something slightly off the wall?
+		- Better to be silly or punny than to approach accuracy incompletely?
+		- Can this still be educational?
+	- We had the player acquire a monitor, so should we expect some kind of DE appear on the screen at the end?
+		- Proposal: the monitor hangs out by the enclosure, so maybe it comes on, and then the whole badge screen (cinematically) turns into the default desktop, perhaps complete with slowly-loading interface elements (like maybe the desktop icons take a second to appear), before the normal overworld is shown again.
+			- Possible issue: you don't get to actually use a mouse?
+			- Or maybe the joystick can move a "mouse" around? But then what happens if the player wants to "click" on something?
+
+### Things unique to the badge itself
+
+We should take advantage of the badge hardware itself, especially since hex editing can't be done inside the castle at first.
+
+- Listening to arbitraty button presses. This includes the "hax" capacitive button (PCB hat)
+	- Using the buttons as arbitrary multiple-choice menus (4 lights on either side of the screen, 8 total)
+		- Pro: for multiple-choice dialogs, if you want to navigate more than a few options, you need to use 1/4 of the options for "back" and another for "next" -- meaning you only see 2 options per screen! Being able to choose 8 at once instead of 4 actually means triple the options can be seen at once! (6 + "back" + "next")
+		- Con: This means the map itself must contain option text, which then must be managed; therefore, adding additional items will always be difficult (maybe do this very last, if doing it at all)
+- Hex editor lights
+	- Bling: lights flash in a pattern
+		- E.g.
+			- Circle around the screen
+			- Back and forth along the bottom
+			- Falling down (or up) the sides
+			- One (or all) blinking on and off
+		- Con: limited to game frame rate
+		- Con: needs 1 `on_tick` script slot; if the script is reused (such as a circular pattern for a generic warping script), that means each map must have an entity by the same name managing this (The player's `on_tick` is already being used! Or could the player's `on_tick` do the original stuff PLUS the lights?)
+	- [~] Progress bar: along the bottom of the screen, 8 lights max.
+- In combination:
+	- [~] Turning a light on or off depending on a button press (that is, using the button's light to indicate that the button was pressed)
+	- [~] Simon says type game
+- Complications:
+	- Light (and button) alignment with screen will be slightly different between real badges and the web
+	- Button presses aren't strictly super responsive
 
 ## Other stuff
 

@@ -142,6 +142,18 @@
                  "width":32,
                  "x":183,
                  "y":110
+                }, 
+                {
+                 "class":"",
+                 "gid":209,
+                 "height":32,
+                 "id":39,
+                 "name":"XC",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":228,
+                 "y":133
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -194,7 +206,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":39,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
