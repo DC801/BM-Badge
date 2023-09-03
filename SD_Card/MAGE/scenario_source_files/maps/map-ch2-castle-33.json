@@ -136,8 +136,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":480,
-                 "y":287
+                 "x":-41,
+                 "y":-10
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -187,8 +187,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":144,
-                 "y":83
+                 "x":-40,
+                 "y":-16
                 }, 
                 {
                  "class":"",
@@ -448,7 +448,7 @@
                  "id":60,
                  "name":"",
                  "rotation":0,
-                 "visible":true,
+                 "visible":false,
                  "width":258,
                  "x":0,
                  "y":0

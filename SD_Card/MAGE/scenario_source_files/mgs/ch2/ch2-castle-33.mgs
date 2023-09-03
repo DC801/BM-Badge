@@ -34,7 +34,14 @@ on_load-ch2-castle-33 {
 	) {
 		copy script ch2-hide-mouse
 	}
-	
+	if (debug mode is on) {
+		register mousegame -> ch2-debug-mousegame
+		show serial dialog spacer
+		show serial dialog {
+			"<c>MOUSEGAME</>: start the mouse game!"
+		}
+	}
+
 	// temporary
 	teleport entity Mouse to geometry mouse-pos0
 	set flag ch2-mousegame to false
@@ -74,15 +81,21 @@ on_go-castle-33-south {
 
 ch2-interact-gregory {
 	copy face-player
-	if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
-		show dialog {
-			SELF "(TODO) Wow, you sure got that mouse! Thanks!"
+	if (variable ch2-storyflag-round is >= 2) {
+		if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
+			show dialog {
+				SELF "(TODO) Wow, you sure got that mouse! Thanks!"
+			}
+		} else {
+			show dialog {
+				SELF "Play mouse game? (TODO)"
+				> "Yes" : ch2-interact-gregory-gameyes
+				> "No" : ch2-interact-gregory-gameno
+			}
 		}
 	} else {
 		show dialog {
-			SELF "Play mouse game? (TODO)"
-			> "Yes" : ch2-interact-gregory-gameyes
-			> "No" : ch2-interact-gregory-gameno
+			SELF "TODO"
 		}
 	}
 	set entity "%SELF%" interact_script to ch2-interact-gregory
@@ -105,45 +118,41 @@ ch2-interact-gregory-gameno {
 ch2-hide-mouse {
 	teleport entity "Mouse" to geometry hiding-spot
 	set entity "Mouse" name to " "
+	set entity Mouse interact_script to null_script
 }
 
 ch2-touch-mouse {
 	show dialog {
-		SELF "YOU FOUND MOUSE!!"
+		name "" "(You found the mouse!)"
 	}
+	mutate ch2-mousegame-catchcount + 1
 	set flag ch2-mousegame to false
 	// set lights control to off
-	if (flag ch2-mouse-firstlook is false) {
+	if (variable ch2-mousegame-catchcount is 1) {
 		show dialog {
-			PLAYER "TODO mouse1"
+			PLAYER "Oh, I found it!"
+			"!!"
+			"Shoot! It got away from me. Where'd it go?"
+			Gregory "Mice are quick; you'd better be quicker. Try again."
 		}
-		set flag ch2-mouse-firstlook to true
-	}
-	show dialog {
-		PLAYER "TODO mouse2."
-	}
-	if (variable ch2-storyflag-round is >= 2) {
+		set entity Mouse tick_script to ch2-mousegame-prepare-board
+	} else if (variable ch2-mousegame-catchcount is 2) {
 		show dialog {
-			name "" "(Pick up the mouse?)"
-			> "Yes" : ch2-touch-mouse-yes
-			> "No" : ch2-touch-mouse-no
+			PLAYER "Aha! Got it again!"
+			"And -- aw, come on! I was so close to grabbing it that time!"
+			Gregory "It'll tire eventually. Keep going."
 		}
+		set entity Mouse tick_script to ch2-mousegame-prepare-board
+	} else if (variable ch2-mousegame-catchcount is 3) {
+		show dialog {
+			PLAYER "There we go! Got it in my hands!"
+			name "" "(You pick up the mouse!)"
+			Gregory "Good job. (TODO)"
+		}
+		copy script ch2-hide-mouse
+		set flag ch2-carrying-mouse to true
+		set entity Mouse interact_script to null_script
 	}
-	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
-}
-ch2-touch-mouse-yes {
-	show dialog {
-		name "" "(You pick up the mouse!)"
-	}
-	copy script ch2-hide-mouse
-	set flag ch2-carrying-mouse to true
-	set entity "%SELF%" interact_script to null_script
-}
-ch2-touch-mouse-no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	}
-	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
 }
 
 ch2-install-mouse {
@@ -162,6 +171,12 @@ look-mouse {
 const! (
 	$max = 418
 )
+
+ch2-debug-mousegame {
+	set entity "Mouse" name to "Mouse"
+	set entity Mouse interact_script to ch2-touch-mouse
+	set entity Mouse tick_script to ch2-mousegame-prepare-board
+}
 
 ch2-mousegame-prepare-board {
 	copy entity Mouse x into variable mousegame-mouseX
@@ -191,6 +206,7 @@ ch2-mousegame-prepare-board {
 	show dialog {
 		name "" "(SQUEAK!)"
 	}
+	set entity Mouse interact_script to ch2-touch-mouse
 	copy entity Mouse x into variable mousegame-mouseX
 	copy entity Mouse y into variable mousegame-mouseY
 	set flag ch2-mousegame to true
