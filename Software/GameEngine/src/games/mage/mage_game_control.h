@@ -118,6 +118,7 @@ public:
 	bool playerHasControl;
 	bool playerHasHexEditorControl;
 	bool playerHasHexEditorControlClipboard;
+	bool isLEDControlEnabled;
 	bool isCollisionDebugOn;
 	bool isEntityDebugOn;
 	uint8_t filteredEntityCountOnThisMap;

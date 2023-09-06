@@ -120,6 +120,8 @@ typedef enum : uint8_t {
 	CHECK_DEBUG_MODE,
 	CLOSE_DIALOG,
 	CLOSE_SERIAL_DIALOG,
+	SET_LIGHTS_CONTROL,
+	SET_LIGHTS_STATE,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -337,6 +339,10 @@ void action_check_debug_mode(uint8_t * args, MageScriptState * resumeStateStruct
 void action_close_dialog(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I+C
 void action_close_serial_dialog(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_lights_control(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_lights_state(uint8_t * args, MageScriptState * resumeStateStruct);
 
 //typedef for the array of function pointers to script action functions:
 typedef void(*ActionFunctionPointer)(uint8_t * args, MageScriptState * resumeStateStruct);

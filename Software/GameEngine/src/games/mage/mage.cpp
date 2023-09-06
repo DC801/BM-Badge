@@ -190,8 +190,11 @@ void GameRender()
 			#endif
 		}
 	}
-	//update the state of the LEDs
-	MageHex->updateHexLights();
+
+	if(!MageGame->isLEDControlEnabled) {
+		// update the state of the LEDs
+		MageHex->updateHexLights();
+	}
 
 	//update the screen
 	mage_canvas->blt();

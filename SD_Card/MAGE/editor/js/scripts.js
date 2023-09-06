@@ -404,6 +404,13 @@ var actionFieldsMap = {
 	],
 	CLOSE_DIALOG: [],
 	CLOSE_SERIAL_DIALOG: [],
+	SET_LIGHTS_CONTROL: [
+		{propertyName: 'enabled', size: 1},
+	],
+	SET_LIGHTS_STATE: [
+		{propertyName: 'lights', size: 4},
+		{propertyName: 'enabled', size: 1},
+	],
 };
 
 var actionNames = [
@@ -503,6 +510,8 @@ var actionNames = [
 	'CHECK_DEBUG_MODE',
 	'CLOSE_DIALOG',
 	'CLOSE_SERIAL_DIALOG',
+	'SET_LIGHTS_CONTROL',
+	'SET_LIGHTS_STATE',
 ];
 
 var specialKeywordsEnum = {
@@ -736,6 +745,59 @@ var getNumberFromAction = function (
 	value = parseInt(value, 10);
 	if (value < 0) {
 		throw new Error(`${action.action} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
+	}
+	return value;
+};
+
+var ledNameMap = {
+	LED_XOR    : 0b0000000000000000001,
+	LED_ADD    : 0b0000000000000000010,
+	LED_SUB    : 0b0000000000000000100,
+	LED_PAGE   : 0b0000000000000001000,
+	LED_BIT128 : 0b0000000000000010000,
+	LED_BIT64  : 0b0000000000000100000,
+	LED_BIT32  : 0b0000000000001000000,
+	LED_BIT16  : 0b0000000000010000000,
+	LED_BIT8   : 0b0000000000100000000,
+	LED_BIT4   : 0b0000000001000000000,
+	LED_BIT2   : 0b0000000010000000000,
+	LED_BIT1   : 0b0000000100000000000,
+	LED_MEM3   : 0b0000001000000000000,
+	LED_MEM2   : 0b0000010000000000000,
+	LED_MEM1   : 0b0000100000000000000,
+	LED_MEM0   : 0b0001000000000000000,
+	LED_USB    : 0b0010000000000000000,
+	LED_HAX    : 0b0100000000000000000,
+	LED_SD     : 0b1000000000000000000,
+	ALL        : 0b1111111111111111111,
+};
+var getLightsFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData
+) {
+	var value = 0;
+	var rawValue = action[propertyName];
+	if (typeof rawValue === 'string') {
+		rawValue = [rawValue];
+	}
+	if (!Array.isArray(rawValue)) {
+		throw new Error(`${action.action} requires either a string or array for the value of "${propertyName}"!`);
+	}
+	if (!rawValue.length) {
+		throw new Error(`${action.action} requires a non-empty array of lights for "${propertyName}"!`);
+	}
+	rawValue.forEach(function (name) {
+		var currentLightValue = ledNameMap[name];
+		if (!currentLightValue) {
+			throw new Error(`${action.action} Invalid light name "${name}" for value "${propertyName}"!`);
+		}
+		value |= currentLightValue;
+	});
+	if (value < 1) {
+		throw new Error(`${action.action} "${propertyName}" value "${rawValue}" must be greater than or equal to zero!`);
 	}
 	return value;
 };
@@ -1088,6 +1150,7 @@ var getBleFlagIdFromAction = function () {
 var actionPropertyNameToHandlerMap = {
 	duration: getNumberFromAction,
 	expected_u4: getNumberFromAction,
+	lights: getLightsFromAction,
 	map: getMapIndexFromAction,
 	entity: getMapLocalEntityIndexFromAction,
 	target_entity: getMapLocalEntityIndexFromAction,
@@ -1119,6 +1182,7 @@ var actionPropertyNameToHandlerMap = {
 	slot: getByteFromAction,
 	direction: getDirectionFromAction,
 	relative_direction: getRelativeDirectionFromAction,
+	enabled: getBoolFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
 	disable_newline: getDefaultFalseBoolFromAction,

@@ -679,7 +679,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage28-interact"
                         }, 
                         {
                          "name":"on_tick",
