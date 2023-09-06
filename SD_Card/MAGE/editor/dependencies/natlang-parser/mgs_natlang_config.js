@@ -1001,6 +1001,14 @@ mgs.actionDictionary = [
 		pattern: "if entity $entity:string is not glitched then goto ?script $success_script:string",
 		values: { "expected_bool": false },
 	},
+	{
+		action: "SET_LIGHTS_CONTROL",
+		pattern: "set lights control ?to $bool_value:boolean",
+	},
+	{
+		action: "SET_LIGHTS_STATE",
+		pattern: "turn light $lights:string $enabled:boolean",
+	},
 ];
 
 mgs.entityPropertyMap = { // used for the procedural dictionary entries 

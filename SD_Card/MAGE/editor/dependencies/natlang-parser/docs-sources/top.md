@@ -895,7 +895,7 @@ In addition, some values are only valid depending on what other game data has be
 
 In such cases, invalid values are reported by the MGE encoder.
 
-#### Button IDS
+#### Button IDs
 
 For actions that check the button state.
 
@@ -933,6 +933,31 @@ NOTE: We found that the joystick clicks were aggressive on the hardware, and wou
 - `SQUARE`
 - `HAX` (capacitive touch button on the PCB)
 - `ANY`
+
+#### LED IDs
+
+For actions that involve the badge lights.
+
+- `LED_XOR`
+- `LED_ADD`
+- `LED_SUB`
+- `LED_PAGE`
+- `LED_BIT128`
+- `LED_BIT64`
+- `LED_BIT32`
+- `LED_BIT16`
+- `LED_BIT8`
+- `LED_BIT4`
+- `LED_BIT2`
+- `LED_BIT1`
+- `LED_MEM0`
+- `LED_MEM1`
+- `LED_MEM2`
+- `LED_MEM3`
+- `LED_HAX` (capacitive touch button on the PCB)
+- `LED_USB`
+- `LED_SD`
+- `LED_ALL`
 
 #### Operations
 
