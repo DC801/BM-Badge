@@ -42,8 +42,6 @@ on_load-ch2-castle-33 {
 		}
 	}
 
-	// temporary
-	teleport entity Mouse to geometry mouse-pos0
 	set flag ch2-mousegame to false
 
 	goto ch2-map-init
@@ -179,30 +177,114 @@ ch2-debug-mousegame {
 }
 
 ch2-mousegame-prepare-board {
-	copy entity Mouse x into variable mousegame-mouseX
-	copy entity Mouse y into variable mousegame-mouseY
-	mutate tempvar ? 20
-	if (variable tempvar is 0) { teleport entity Mouse to geometry mouse-pos0 }
-	else if (variable tempvar is 1) { teleport entity Mouse to geometry mouse-pos1 }
-	else if (variable tempvar is 2) { teleport entity Mouse to geometry mouse-pos2 }
-	else if (variable tempvar is 3) { teleport entity Mouse to geometry mouse-pos3 }
-	else if (variable tempvar is 4) { teleport entity Mouse to geometry mouse-pos4 }
-	else if (variable tempvar is 5) { teleport entity Mouse to geometry mouse-pos5 }
-	else if (variable tempvar is 6) { teleport entity Mouse to geometry mouse-pos6 }
-	else if (variable tempvar is 7) { teleport entity Mouse to geometry mouse-pos7 }
-	else if (variable tempvar is 8) { teleport entity Mouse to geometry mouse-pos8 }
-	else if (variable tempvar is 9) { teleport entity Mouse to geometry mouse-pos9 }
-	else if (variable tempvar is 10) { teleport entity Mouse to geometry mouse-pos10 }
-	else if (variable tempvar is 11) { teleport entity Mouse to geometry mouse-pos11 }
-	else if (variable tempvar is 12) { teleport entity Mouse to geometry mouse-pos12 }
-	else if (variable tempvar is 13) { teleport entity Mouse to geometry mouse-pos13 }
-	else if (variable tempvar is 14) { teleport entity Mouse to geometry mouse-pos14 }
-	else if (variable tempvar is 15) { teleport entity Mouse to geometry mouse-pos15 }
-	else if (variable tempvar is 16) { teleport entity Mouse to geometry mouse-pos16 }
-	else if (variable tempvar is 17) { teleport entity Mouse to geometry mouse-pos17 }
-	else if (variable tempvar is 18) { teleport entity Mouse to geometry mouse-pos18 }
-	else if (variable tempvar is 19) { teleport entity Mouse to geometry mouse-pos19 }
-	// set lights control to on
+	// redone so that the mouse can't respawn in the same row/column as last time; should be more interesting
+	// NOTE: `mutate _ ? X` will generate numbers between 0 and X-1, not X!
+
+	// bay column (left, right)
+	if (variable ch2-mousegame-column is 0) { // uninitialized
+		mutate ch2-mousegame-column ? 2 // random 0-1
+		mutate ch2-mousegame-column + 1 // now random 1-2
+	} else { // invert the current one
+		if (variable ch2-mousegame-column is 1) {
+			mutate ch2-mousegame-column = 2
+		} else {
+			mutate ch2-mousegame-column = 1
+		}
+	}
+
+	// bay row (top, mid, bot)
+	mutate tempvar ? 2 // random 0-1 (coin flip)
+	if (variable ch2-mousegame-row is 0) { // uninitialized
+		mutate ch2-mousegame-row ? 3 // random 0-2
+		mutate ch2-mousegame-row + 1 // now random 1-3
+	} else { // get a random one, but make sure it's not the current one
+		if (variable ch2-mousegame-row is 1) {
+			mutate tempvar + 2 // random 2-3
+			mutate ch2-mousegame-row = tempvar
+			// 1 => 2|3
+		} else if (variable ch2-mousegame-row is 2) {
+			if (variable tempvar is 0) {
+				mutate ch2-mousegame-row = 1
+			} else {
+				mutate ch2-mousegame-row = 3
+			}
+			// 2 => 1|3
+		} else if (variable ch2-mousegame-row is 3) {
+			mutate tempvar + 1 // random 1-2
+			mutate ch2-mousegame-row = tempvar
+			// 3 => 1|2
+		}
+	}
+
+	// cell within cell+column
+	if (variable ch2-mousegame-row is 1) {
+		// first row has 4 per region; others have 3
+		mutate ch2-mousegame-cell ? 4
+	} else {
+		mutate ch2-mousegame-cell ? 3
+	}
+	mutate ch2-mousegame-cell + 1 // might as well make this 1-indexed, like everything else :/
+
+	// Teleport the mouse to the cell
+	if (variable ch2-mousegame-column is 1) { // left side
+		if (variable ch2-mousegame-row is 1) { // top
+			if (variable ch2-mousegame-cell is 1) {
+				teleport entity Mouse to geometry mouse-pos0
+			} else if (variable ch2-mousegame-cell is 2) {
+				teleport entity Mouse to geometry mouse-pos1
+			} else if (variable ch2-mousegame-cell is 3) {
+				teleport entity Mouse to geometry mouse-pos2
+			} else {
+				teleport entity Mouse to geometry mouse-pos3
+			}
+		} else if (variable ch2-mousegame-row is 2) { // mid
+			if (variable ch2-mousegame-cell is 1) {
+				teleport entity Mouse to geometry mouse-pos8
+			} else if (variable ch2-mousegame-cell is 2) {
+				teleport entity Mouse to geometry mouse-pos9
+			} else {
+				teleport entity Mouse to geometry mouse-pos10
+			}
+		} else { // variable ch2-mousegame-row is 3 (bot)
+			if (variable ch2-mousegame-cell is 1) {
+				teleport entity Mouse to geometry mouse-pos14
+			} else if (variable ch2-mousegame-cell is 2) {
+				teleport entity Mouse to geometry mouse-pos15
+			} else {
+				teleport entity Mouse to geometry mouse-pos16
+			}
+		}
+	} else { // ch2-mousegame-column is 2 (right side)
+		if (variable ch2-mousegame-row is 1) { // top
+			if (variable ch2-mousegame-cell is 1) {
+				teleport entity Mouse to geometry mouse-pos4
+			} else if (variable ch2-mousegame-cell is 2) {
+				teleport entity Mouse to geometry mouse-pos5
+			} else if (variable ch2-mousegame-cell is 3) {
+				teleport entity Mouse to geometry mouse-pos6
+			} else {
+				teleport entity Mouse to geometry mouse-pos7
+			}
+		} else if (variable ch2-mousegame-row is 2) { // mid
+			if (variable ch2-mousegame-cell is 1) {
+				teleport entity Mouse to geometry mouse-pos11
+			} else if (variable ch2-mousegame-cell is 2) {
+				teleport entity Mouse to geometry mouse-pos12
+			} else {
+				teleport entity Mouse to geometry mouse-pos13
+			}
+		} else { // variable ch2-mousegame-row is 3 (bot)
+			if (variable ch2-mousegame-cell is 1) {
+				teleport entity Mouse to geometry mouse-pos17
+			} else if (variable ch2-mousegame-cell is 2) {
+				teleport entity Mouse to geometry mouse-pos18
+			} else {
+				teleport entity Mouse to geometry mouse-pos19
+			}
+		}
+	}
+
+	// set lights control to on // (TODO)
 	show dialog {
 		name "" "(SQUEAK!)"
 	}
