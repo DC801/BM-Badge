@@ -123,7 +123,7 @@ var actionText = {
 	"SET_LIGHTS_STATE": {
 		"category": "game management",
 		"info": [
-			"Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](#set_lights_control); otherwise, those lights are strictly used for hex editor features.",
+			"Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](#set_lights_control)); otherwise, those lights are strictly used for hex editor features.",
 			"If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)",
 			"See [LED IDs](#led-ids) for a list of valid `lights` values."
 		]
@@ -684,6 +684,7 @@ var docExampleValues = { // some nice default values
 	"$byte_value:number": "0",
 	"$command:string": "\"map\"",
 	"$argument:string": "\"castle\"",
+	"$lights:string": "MEM3",
 };
 
 var makeExampleFromDictionaryEntry = function (entry) {
@@ -701,6 +702,7 @@ var makeExampleFromDictionaryEntry = function (entry) {
 		} else if (
 			word.includes('$bool_value')
 			|| word.includes('$expected_bool')
+			|| word.includes('$enabled')
 		) {
 			var boolPrefs = mgs.boolPrefs[entry.action];
 			insert = boolPrefs ? boolPrefs[0] : 'true';

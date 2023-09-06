@@ -1254,7 +1254,7 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [SET_LIGHTS_CONTROL](#set_lights_control)
 	- `set lights control to true`
 - [SET_LIGHTS_STATE](#set_lights_state)
-	- `turn light $lights:string $enabled:boolean`
+	- `turn light MEM3 true`
 
 #### [Hex editor](#hex-editor-actions)
 
@@ -1619,14 +1619,14 @@ Example: `close dialog`
 Enables (or disables) manual control of the hex editing LED lights on the badge. This includes all 8 bit lights underneath the screen and the 4 lights on either side of the screen.
 
 ```
-set lights control (to) $bool_value:boolean
+set lights control (to) $enabled:boolean
 ```
 
 Example: `set lights control to true`
 
 #### SET_LIGHTS_STATE
 
-Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](#set_lights_control); otherwise, those lights are strictly used for hex editor features.
+Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](#set_lights_control)); otherwise, those lights are strictly used for hex editor features.
 
 If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)
 
@@ -1636,7 +1636,7 @@ See [LED IDs](#led-ids) for a list of valid `lights` values.
 turn light $lights:string $enabled:boolean
 ```
 
-Example: `turn light $lights:string $enabled:boolean`
+Example: `turn light MEM3 true`
 
 ### Hex editor actions
 
