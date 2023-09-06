@@ -725,5 +725,14 @@
 				}
 			]
 		}
+	],
+	"dialog-mage28-interact": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test the actions:\nSET_LIGHTS_CONTROL\nSET_LIGHTS_STATE\nWatch the lights around the screen!"
+			]
+		}
 	]
 }

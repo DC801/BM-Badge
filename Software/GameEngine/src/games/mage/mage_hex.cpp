@@ -44,8 +44,6 @@ uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 void MageHexEditor::toggleHexEditor()
 {
 	hexEditorState = !hexEditorState;
-	//set LED to the state 
-	ledSet(LED_HAX, hexEditorState ? 0xff : 0x00);
 }
 
 void MageHexEditor::toggleHexDialog()
@@ -57,18 +55,6 @@ void MageHexEditor::toggleHexDialog()
 void MageHexEditor::setHexOp (enum HEX_OPS op)
 {
 	currentOp = op;
-	uint8_t led_op_xor = 0x00;
-	uint8_t led_op_add = 0x00;
-	uint8_t led_op_sub = 0x00;
-	switch (op) {
-		case HEX_OPS_XOR: led_op_xor = 0xFF; break;
-		case HEX_OPS_ADD: led_op_add = 0xFF; break;
-		case HEX_OPS_SUB: led_op_sub = 0xFF; break;
-		default: break;
-	}
-	ledSet(LED_XOR, led_op_xor);
-	ledSet(LED_ADD, led_op_add);
-	ledSet(LED_SUB, led_op_sub);
 }
 
 void MageHexEditor::setHexCursorLocation(uint16_t address)
@@ -97,6 +83,24 @@ void MageHexEditor::updateHexLights()
 	ledSet(LED_MEM1, (entityRelativeMemOffset == memOffsets[1]) ? 0xFF : 0x00);
 	ledSet(LED_MEM2, (entityRelativeMemOffset == memOffsets[2]) ? 0xFF : 0x00);
 	ledSet(LED_MEM3, (entityRelativeMemOffset == memOffsets[3]) ? 0xFF : 0x00);
+
+	//set HAX state
+	ledSet(LED_HAX, hexEditorState ? 0xff : 0x00);
+
+	// now for the ops
+	uint8_t led_op_xor = 0x00;
+	uint8_t led_op_add = 0x00;
+	uint8_t led_op_sub = 0x00;
+	switch (currentOp) {
+		case HEX_OPS_XOR: led_op_xor = 0xFF; break;
+		case HEX_OPS_ADD: led_op_add = 0xFF; break;
+		case HEX_OPS_SUB: led_op_sub = 0xFF; break;
+		default: break;
+	}
+	ledSet(LED_XOR, led_op_xor);
+	ledSet(LED_ADD, led_op_add);
+	ledSet(LED_SUB, led_op_sub);
+	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
 }
 
 uint16_t MageHexEditor::getCurrentMemPage()

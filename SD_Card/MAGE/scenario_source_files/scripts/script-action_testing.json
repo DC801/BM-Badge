@@ -1751,5 +1751,301 @@
 			"action": "COPY_SCRIPT",
 			"script": "map-action_testing-go_sphinx"
 		}
+	],
+	"mage28-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage28-interact"
+		},
+		{
+			"action": "SET_LIGHTS_CONTROL",
+			"enabled": true
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT64"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT32"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT16"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT8"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT4"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT2"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT1"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "ALL",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "ALL",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_CONTROL",
+			"enabled": false
+		}
 	]
 }

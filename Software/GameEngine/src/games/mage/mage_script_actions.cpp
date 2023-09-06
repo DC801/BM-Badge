@@ -3,6 +3,7 @@
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 #include "mage_command_control.h"
+#include "led.h"
 
 //load in the global variables that the scripts will be operating on:
 extern MageGameControl *MageGame;
@@ -2604,6 +2605,46 @@ void action_close_serial_dialog(uint8_t * args, MageScriptState * resumeStateStr
 	MageCommand->cancelTrap();
 }
 
+void action_set_lights_control(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t isEnabled;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSerialDialogOpen;
+	auto *argStruct = (ActionCheckSerialDialogOpen*)args;
+	MageGame->isLEDControlEnabled = argStruct->isEnabled;
+}
+
+void action_set_lights_state(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint32_t lights;
+		uint8_t isEnabled;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSerialDialogOpen;
+	auto *argStruct = (ActionCheckSerialDialogOpen*)args;
+	argStruct->lights = ROM_ENDIAN_U4_VALUE(argStruct->lights);
+
+	// std::string message = "Value of lights is:" + std::to_string(argStruct->lights);
+	// MageCommand->processCommand(message.c_str());
+	for (uint8_t i = 0; i < LED_COUNT; i += 1) {
+		bool current_light = (bool)((argStruct->lights >> i) & 1);
+		if (current_light) {
+			if (argStruct->isEnabled) {
+				ledOn((LEDID) i);
+			} else {
+				ledOff((LEDID) i);
+			}
+		}
+	}
+}
+
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
@@ -2702,6 +2743,8 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_check_debug_mode,
 	&action_close_dialog,
 	&action_close_serial_dialog,
+	&action_set_lights_control,
+	&action_set_lights_state,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

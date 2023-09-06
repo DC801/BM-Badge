@@ -147,6 +147,7 @@ MageGameControl::MageGameControl()
 
 	mageSpeed = 0;
 	isMoving = false;
+	isLEDControlEnabled = false;
 	isCollisionDebugOn = false;
 	isEntityDebugOn = false;
 	playerHasControl = true;
@@ -639,7 +640,6 @@ void MageGameControl::applyUniversalInputs()
 	}
 	//make sure any button handling in this function can be processed in ANY game mode.
 	//that includes the game mode, hex editor mode, any menus, maps, etc.
-	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
 	if (EngineInput_Activated.op_xor) { MageHex->setHexOp(HEX_OPS_XOR); }
 	if (EngineInput_Activated.op_add) { MageHex->setHexOp(HEX_OPS_ADD); }
 	if (EngineInput_Activated.op_sub) { MageHex->setHexOp(HEX_OPS_SUB); }
