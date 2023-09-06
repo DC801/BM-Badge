@@ -1003,7 +1003,7 @@ mgs.actionDictionary = [
 	},
 	{
 		action: "SET_LIGHTS_CONTROL",
-		pattern: "set lights control ?to $bool_value:boolean",
+		pattern: "set lights control ?to $enabled:boolean",
 	},
 	{
 		action: "SET_LIGHTS_STATE",
