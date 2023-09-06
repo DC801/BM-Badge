@@ -125,7 +125,7 @@ ch2-touch-mouse {
 	}
 	mutate ch2-mousegame-catchcount + 1
 	set flag ch2-mousegame to false
-	// set lights control to off
+	set lights control to off
 	if (variable ch2-mousegame-catchcount is 1) {
 		show dialog {
 			PLAYER "Oh, I found it!"
@@ -284,7 +284,7 @@ ch2-mousegame-prepare-board {
 		}
 	}
 
-	// set lights control to on // (TODO)
+	set lights control to on
 	show dialog {
 		name "" "(SQUEAK!)"
 	}
@@ -324,8 +324,35 @@ ch2-mousegame-tick {
 	mutate mousegame-lights = 8
 	mutate mousegame-lights - mousegame-diff
 	// `mousegame-lights` is the ACTUAL number of lights to show
-	show serial dialog {
-		"DEBUG: $mousegame-lights$"
+
+	// reset old lights (TODO: when array support is done in natlang, redo this)
+	turn light ALL off
+	if (variable mousegame-lights is >= 1) {
+		turn light LED_BIT128 on
 	}
+	if (variable mousegame-lights is >= 2) {
+		turn light LED_BIT64 on
+	}
+	if (variable mousegame-lights is >= 3) {
+		turn light LED_BIT32 on
+	}
+	if (variable mousegame-lights is >= 4) {
+		turn light LED_BIT16 on
+	}
+	if (variable mousegame-lights is >= 5) {
+		turn light LED_BIT8 on
+	}
+	if (variable mousegame-lights is >= 6) {
+		turn light LED_BIT4 on
+	}
+	if (variable mousegame-lights is >= 7) {
+		turn light LED_BIT2 on
+	}
+	if (variable mousegame-lights is >= 8) {
+		turn light LED_BIT1 on
+	}
+	// show serial dialog {
+	// 	"DEBUG: $mousegame-lights$"
+	// }
 	set map tick_script to on_tick-ch2-castle-33 // reset
 }
