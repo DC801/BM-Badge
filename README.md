@@ -897,7 +897,7 @@ In addition, some values are only valid depending on what other game data has be
 
 In such cases, invalid values are reported by the MGE encoder.
 
-#### Button IDS
+#### Button IDs
 
 For actions that check the button state.
 
@@ -935,6 +935,31 @@ NOTE: We found that the joystick clicks were aggressive on the hardware, and wou
 - `SQUARE`
 - `HAX` (capacitive touch button on the PCB)
 - `ANY`
+
+#### LED IDs
+
+For actions that involve the badge lights.
+
+- `LED_XOR`
+- `LED_ADD`
+- `LED_SUB`
+- `LED_PAGE`
+- `LED_BIT128`
+- `LED_BIT64`
+- `LED_BIT32`
+- `LED_BIT16`
+- `LED_BIT8`
+- `LED_BIT4`
+- `LED_BIT2`
+- `LED_BIT1`
+- `LED_MEM0`
+- `LED_MEM1`
+- `LED_MEM2`
+- `LED_MEM3`
+- `LED_HAX` (capacitive touch button on the PCB)
+- `LED_USB`
+- `LED_SD`
+- `LED_ALL`
 
 #### Operations
 
@@ -1226,8 +1251,10 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 	- `show dialog dialogName`
 - [CLOSE_DIALOG](#close_dialog)
 	- `close dialog`
-- [CLOSE_SERIAL_DIALOG](#close_serial_dialog)
-	- `close serial dialog`
+- [SET_LIGHTS_CONTROL](#set_lights_control)
+	- `set lights control to true`
+- [SET_LIGHTS_STATE](#set_lights_state)
+	- `turn light $lights:string $enabled:boolean`
 
 #### [Hex editor](#hex-editor-actions)
 
@@ -1247,6 +1274,8 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [SHOW_SERIAL_DIALOG](#show_serial_dialog)
 	- `show serial dialog serialDialogName`
 	- `concat serial dialog serialDialogName`
+- [CLOSE_SERIAL_DIALOG](#close_serial_dialog)
+	- `close serial dialog`
 - [SET_CONNECT_SERIAL_DIALOG](#set_connect_serial_dialog)
 	- `set serial connect message to serialDialogName`
 - [REGISTER_SERIAL_DIALOG_COMMAND](#register_serial_dialog_command)
@@ -1585,15 +1614,29 @@ close dialog
 
 Example: `close dialog`
 
-#### CLOSE_SERIAL_DIALOG
+#### SET_LIGHTS_CONTROL
 
-Ends any serial dialog that is awaiting user input, such as a free response question or a multiple choice question.
+Enables (or disables) manual control of the hex editing LED lights on the badge. This includes all 8 bit lights underneath the screen and the 4 lights on either side of the screen.
 
 ```
-close serial dialog
+set lights control (to) $bool_value:boolean
 ```
 
-Example: `close serial dialog`
+Example: `set lights control to true`
+
+#### SET_LIGHTS_STATE
+
+Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](#set_lights_control); otherwise, those lights are strictly used for hex editor features.
+
+If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)
+
+See [LED IDs](#led-ids) for a list of valid `lights` values.
+
+```
+turn light $lights:string $enabled:boolean
+```
+
+Example: `turn light $lights:string $enabled:boolean`
 
 ### Hex editor actions
 
@@ -1679,6 +1722,16 @@ Examples:
 
 - `show serial dialog serialDialogName`
 - `concat serial dialog serialDialogName`
+
+#### CLOSE_SERIAL_DIALOG
+
+Ends any serial dialog that is awaiting user input, such as a free response question or a multiple choice question.
+
+```
+close serial dialog
+```
+
+Example: `close serial dialog`
 
 #### SET_CONNECT_SERIAL_DIALOG
 

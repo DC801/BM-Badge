@@ -114,6 +114,20 @@ var actionText = {
 			"Use this action when you want to trigger a dialog that may potentially interrupt a dialog in progress. Otherwise, the two dialogs may collide, which can result in a soft lock."
 		]
 	},
+	"SET_LIGHTS_CONTROL": {
+		"category": "game management",
+		"info": [
+			"Enables (or disables) manual control of the hex editing LED lights on the badge. This includes all 8 bit lights underneath the screen and the 4 lights on either side of the screen.",
+		]
+	},
+	"SET_LIGHTS_STATE": {
+		"category": "game management",
+		"info": [
+			"Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](#set_lights_control); otherwise, those lights are strictly used for hex editor features.",
+			"If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)",
+			"See [LED IDs](#led-ids) for a list of valid `lights` values."
+		]
+	},
 	"SET_SERIAL_DIALOG_CONTROL": {
 		"category": "serial console",
 		"info": [
@@ -130,7 +144,7 @@ var actionText = {
 		]
 	},
 	"CLOSE_SERIAL_DIALOG": {
-		"category": "game management",
+		"category": "serial console",
 		"info": [
 			"Ends any serial dialog that is awaiting user input, such as a free response question or a multiple choice question."
 		]
