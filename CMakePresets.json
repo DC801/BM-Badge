@@ -1,4 +1,4 @@
- {
+{
   "version": 4,
   "cmakeMinimumRequired": {
     "major": 3,
@@ -74,13 +74,35 @@
       }
     },
     {
+      "name": "msvc-debug",
+      "displayName": "Windows 32-bit config",
+      "description": "Build using Visual Studio generator",
+      "inherits": [
+        "debug",
+        "msvc"
+      ],
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Windows" ]
+        }
+      }
+    },
+    {
       "name": "gcc-debug",
       "displayName": "Linux 32-bit config",
       "description": "Build using Unix Makefiles generator",
       "inherits": [
         "debug",
         "gcc"
-      ]
+      ],
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ]
+        },
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
     },
     {
       "name": "hardware-debug",
@@ -89,16 +111,15 @@
       "inherits": [
         "debug",
         "hardware"
-      ]
-    },
-    {
-      "name": "msvc-debug",
-      "displayName": "Windows 32-bit config",
-      "description": "Build using Visual Studio generator",
-      "inherits": [
-        "debug",
-        "msvc"
-      ]
+      ],
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ]
+        },
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
     }
   ]
 }

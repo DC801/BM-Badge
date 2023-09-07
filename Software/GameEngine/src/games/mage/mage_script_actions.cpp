@@ -17,16 +17,16 @@
 
 void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry)
 {
-   auto entity = *mapControl->getEntity(sourceEntityIndex);
+   auto entity = mapControl->tryGetEntity(sourceEntityIndex);
    auto& renderableData = mapControl->getEntityRenderableData(sourceEntityIndex);
-   auto entityCenterPoint = renderableData.center - Point{ entity->x, entity->y };
+   auto entityCenterPoint = renderableData.center - Point{ entity.value()->x, entity.value()->y };
    resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex) - entityCenterPoint;
    resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1) - entityCenterPoint;
    auto relativeDirection = resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
-   entity->direction |= relativeDirection;
+   entity.value()->direction |= relativeDirection;
 }
 
-std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -42,7 +42,7 @@ std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* arg
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -70,7 +70,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -95,7 +95,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -120,7 +120,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -145,7 +145,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(c
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -170,7 +170,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -196,7 +196,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -228,7 +228,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -262,7 +262,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -288,7 +288,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(c
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -313,7 +313,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -338,7 +338,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(con
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -363,7 +363,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -388,7 +388,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const ui
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -413,7 +413,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -438,7 +438,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -463,7 +463,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -488,7 +488,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -513,7 +513,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -538,7 +538,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -561,7 +561,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -586,7 +586,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -610,7 +610,7 @@ std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_if_entity_is_in_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -627,7 +627,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-      bool colliding = geometry->isPointInGeometry(mapControl->getEntityRenderableData(sourceEntityIndex).center);
+      bool colliding = geometry->IsPointInside(mapControl->getEntityRenderableData(sourceEntityIndex).center);
       if (colliding == (bool)argStruct->expectedBoolValue)
       {
          return argStruct->successScriptId;
@@ -636,7 +636,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_for_button_press(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -657,7 +657,7 @@ std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_for_button_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -677,7 +677,7 @@ std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -698,7 +698,7 @@ std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_run_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::run_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -714,7 +714,7 @@ std::optional<uint16_t> MageScriptActions::action_run_script(const uint8_t* args
    return argStruct->scriptId;
 }
 
-std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -756,7 +756,7 @@ std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::non_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -771,7 +771,7 @@ std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -810,7 +810,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -832,7 +832,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* ar
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -854,7 +854,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* ar
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -869,13 +869,13 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(con
    auto sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto entity = *mapControl->getEntity(sourceEntityIndex);
-      entity->onInteractScriptId = argStruct->scriptId;
+      auto entity = mapControl->tryGetEntity(sourceEntityIndex);
+      entity.value()->onInteractScriptId = argStruct->scriptId;
    }
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -891,8 +891,8 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const u
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto entity = *mapControl->getEntity(sourceEntityIndex);
-      entity->onTickScriptId = argStruct->scriptId;
+      auto entity = mapControl->tryGetEntity(sourceEntityIndex);
+      entity.value()->onTickScriptId = argStruct->scriptId;
    }
    else
    {
@@ -901,7 +901,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -924,7 +924,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -946,7 +946,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const ui
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -968,7 +968,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -991,7 +991,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(con
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1017,7 +1017,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(c
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1042,7 +1042,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1066,7 +1066,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uin
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_direction_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1091,7 +1091,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_direction_target_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1118,7 +1118,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_direction_target_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1143,7 +1143,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1169,7 +1169,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1192,7 +1192,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1215,7 +1215,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1238,7 +1238,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1261,7 +1261,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1283,7 +1283,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1305,7 +1305,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1325,7 +1325,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1347,7 +1347,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1378,7 +1378,7 @@ std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* a
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_player_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1395,7 +1395,7 @@ std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_map_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1412,7 +1412,7 @@ std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_hex_cursor_location(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1429,7 +1429,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1448,7 +1448,7 @@ std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_hex_editor_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1469,7 +1469,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uin
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_hex_editor_dialog_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1490,7 +1490,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(con
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_hex_editor_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1507,7 +1507,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboard(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_hex_editor_control_clipboard(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1524,7 +1524,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboa
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::load_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1540,7 +1540,7 @@ std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::show_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1567,7 +1567,7 @@ std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* arg
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1613,7 +1613,7 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::teleport_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1643,7 +1643,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1684,7 +1684,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1758,7 +1758,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
    }
    return NO_JUMP_SCRIPT;
 }
-std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1836,7 +1836,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_camera_to_follow_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1854,7 +1854,7 @@ std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::teleport_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1875,7 +1875,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(co
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1914,7 +1914,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::pan_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1948,7 +1948,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::pan_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1961,7 +1961,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(cons
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::loop_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1974,7 +1974,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(con
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_screen_shake(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2009,7 +2009,7 @@ std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t
    }
    return NO_JUMP_SCRIPT;
 }
-std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::screen_fade_out(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2025,7 +2025,7 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::screen_fade_in(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2042,7 +2042,7 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::mutate_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2089,7 +2089,7 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::mutate_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2108,7 +2108,7 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::copy_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2173,7 +2173,7 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2194,7 +2194,7 @@ std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2221,7 +2221,7 @@ std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::slot_save(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2282,7 +2282,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::slot_load(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2311,7 +2311,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args,
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::slot_erase(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2355,7 +2355,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_connect_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2371,7 +2371,7 @@ std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(cons
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::show_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2398,7 +2398,7 @@ std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::inventory_get(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2415,7 +2415,7 @@ std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* a
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::inventory_drop(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2432,7 +2432,7 @@ std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_inventory(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2448,7 +2448,7 @@ std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t*
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_map_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2464,7 +2464,7 @@ std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2480,7 +2480,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const u
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_teleport_enabled(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2497,7 +2497,7 @@ std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uin
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2512,7 +2512,7 @@ std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args,
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::set_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2529,7 +2529,7 @@ std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* ar
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::check_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {

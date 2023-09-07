@@ -97,7 +97,7 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
     auto hack = activatedButton.IsPressed(KeyPress::Rjoy_up);
 
     // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
-    if (!hack || !activatedButton.IsPressed(KeyPress::Rjoy_right)) { return; }
+    if (!hack && !activatedButton.IsPressed(KeyPress::Rjoy_right)) { return; }
 
     //interacting is impossible if there is no player entity
     if (mapControl->getPlayerEntityIndex() == NO_PLAYER_INDEX) { return; }
@@ -134,7 +134,7 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
         for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
         {
             // reset all interact states first
-            auto targetEntity = mapControl->getEntity(i);
+            auto targetEntity = mapControl->tryGetEntity(i);
             if (targetEntity.has_value())
             {
                 auto target = targetEntity.value();
@@ -180,7 +180,11 @@ void MageGameEngine::LoadMap(uint16_t index)
     //get the data for the map:
     mapControl->Load(index);
 
-    mapControl->getPlayerEntity().value()->SetName(ROM()->GetCurrentSave().name);
+    auto player = mapControl->getPlayerEntity();
+    if (player.has_value())
+    {
+        player.value()->SetName(ROM()->GetCurrentSave().name);
+    }
 
     scriptControl->initializeScriptsOnMapLoad();
 

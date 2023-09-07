@@ -7,10 +7,11 @@ in a more accessible way.
 #define _MAGE_MAP_H
 
 #include <array>
+#include <functional>
+#include <optional>
 #include <span>
 #include <tuple>
 #include <vector>
-#include <optional>
 
 #include "mage_camera.h"
 #include "mage_entity_type.h"
@@ -149,7 +150,7 @@ public:
         {
             return std::nullopt;
         }
-        return getEntity(currentMap->playerEntityIndex);
+        return &getEntityByMapLocalId(currentMap->playerEntityIndex);
     }
 
     inline std::optional<MageEntity*> getPlayerEntity()
@@ -158,7 +159,7 @@ public:
         {
             return std::nullopt;
         }
-        return getEntity(currentMap->playerEntityIndex);
+        return &getEntityByMapLocalId(currentMap->playerEntityIndex);
     }
 
     inline RenderableData& getPlayerEntityRenderableData()
@@ -166,12 +167,12 @@ public:
         return currentMap->entityRenderableData[currentMap->playerEntityIndex];
     }
 
-    inline std::optional<const MageEntity*> getEntity(uint16_t id) const
+    inline std::optional<const MageEntity*> tryGetEntity(uint16_t id) const
     {
         return &currentMap->entities[id % currentMap->entities.size()];
     }
 
-    inline std::optional<MageEntity*> getEntity(uint16_t id)
+    inline std::optional<MageEntity*> tryGetEntity(uint16_t id)
     {
         return &currentMap->entities[id % currentMap->entities.size()];
     }

@@ -108,7 +108,6 @@ void MapControl::DrawGeometry(const Point& camera) const
         for (uint16_t i = 0; i < GeometryCount(); i++)
         {
             // auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
-            // isColliding = geometry->isPointInGeometry(playerPosition);
             //geometry->draw(camera.x, camera.y, isColliding ? COLOR_RED : COLOR_GREEN);
         }
     }
@@ -210,8 +209,6 @@ void MapControl::TryMovePlayer(ButtonState button)
 
             std::vector<Point> hitboxPointsToCheck{};
 
-            auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
-
             if (button.IsPressed(KeyPress::Ljoy_left) && !button.IsPressed(KeyPress::Ljoy_right))
             {
                 playerVelocity.x -= playerSpeed;
@@ -250,14 +247,12 @@ void MapControl::TryMovePlayer(ButtonState button)
                 hitboxPointsToCheck.push_back(botRight + playerVelocity);
             }
 
-            // take the minkowski difference (A - B for each point where A is the hitbox and B is geometry)
-            // if it ever includes the origin, there's a collision
             auto collides = false;
             for (auto& hitboxPoint : hitboxPointsToCheck)
             {
                 const auto column = hitboxPoint.x / currentMap->tileWidth;
                 const auto row = hitboxPoint.y / currentMap->tileHeight;
-                const auto tilePoint = Point{
+                const auto tileOffsetPoint = Point{
                     currentMap->tileWidth * column,
                     currentMap->tileHeight * row
                 };
@@ -268,20 +263,11 @@ void MapControl::TryMovePlayer(ButtonState button)
 
                 if (geometry)
                 {
-                    for (auto& mapPoint : geometry->GetPoints())
+                    collides = geometry->IsPointInside(hitboxPoint, tileOffsetPoint);
+                    if (collides)
                     {
-                        auto point = mapPoint + tilePoint;
-                        minX = std::min(point.x - hitboxPoint.x, minX);
-                        minY = std::min(point.y - hitboxPoint.y, minY);
-                        maxX = std::max(point.x - hitboxPoint.x, maxX);
-                        maxY = std::max(point.y - hitboxPoint.y, maxY);
-                    }
-                    if (minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0)
-                    {
-                        collides = true;
                         return;
                     }
-                    
                 }
             }
             player->x += playerVelocity.x;

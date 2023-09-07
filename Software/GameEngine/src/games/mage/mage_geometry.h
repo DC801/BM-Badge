@@ -10,6 +10,7 @@ in a more accessible way.
 #include "mage_defines.h"
 #include "utility.h"
 #include <stdint.h>
+#include <algorithm>
 #include <cmath>
 #include <memory>
 #include <span>
@@ -232,22 +233,7 @@ enum class MageGeometryType : uint8_t
 class MageGeometry
 {
 public:
-   //default constructor returns a point with coordinates 0,0:
-   MageGeometry() noexcept = default;
-
-   ////this constructor allows you to make a geometry of a known type and pointCount.
-   ////you'll need to manually fill in the points, though. They all default to 0,0.
-   //MageGeometry(MageGeometryType type, uint8_t numPoints)
-   //   : pointCount(numPoints),
-   //   typeId(type),
-   //   segmentCount(typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1)
-   //{
-   //}
-
    std::vector<Point> FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
-
-   //this checks to see if a given point is inside the boundaries of a given geometry:
-   bool isPointInGeometry(const Point& point) const;
 
    static std::optional<Point> getIntersectPointBetweenLineSegments(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
 
@@ -270,6 +256,22 @@ public:
          result = (segmentIndex * 2) % segmentCount;
       }
       return result;
+   }
+   
+   bool IsPointInside(const Point& pointToCheck, const Point& geometryOffset = Point{ 0 }) const
+   {
+	   auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
+
+	   for (auto& mapPoint : GetPoints())
+	   {
+		   auto point = mapPoint + geometryOffset;
+		   minX = std::min(point.x - pointToCheck.x, minX);
+		   minY = std::min(point.y - pointToCheck.y, minY);
+		   maxX = std::max(point.x - pointToCheck.x, maxX);
+		   maxY = std::max(point.y - pointToCheck.y, maxY);
+	   }
+
+	   return minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0;
    }
 
 	std::span<Point> GetPoints() const

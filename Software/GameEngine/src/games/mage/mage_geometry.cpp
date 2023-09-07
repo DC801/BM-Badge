@@ -27,37 +27,6 @@ std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint
    return points;
 }
 
-bool MageGeometry::isPointInGeometry(const Point& point) const
-{
-   if (typeId == MageGeometryType::Point)
-   {
-      return point == GetPoint(0);
-   }
-   else if (typeId == MageGeometryType::Polyline || typeId == MageGeometryType::Polygon)
-   {
-      uint8_t i, j;
-      bool c = false;
-      for (i = 0, j = GetPointCount() - 1; i < GetPointCount(); j = i++)
-      {
-         //get the points for i and j:
-         auto points_i = GetPoint(i);
-         auto points_j = GetPoint(j);
-         //do the fancy check:
-         if ((points_i.y >= point.y) != (points_j.y >= point.y)
-            && point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x)
-         {
-            c = !c;
-         }
-      }
-      return c;
-   }
-   else
-   {
-      // it's not a known geometry type, so always return false.
-      return false;
-   }
-}
-
 // Returns a value if collision has occurred
 // Ref: https://stackoverflow.com/a/385355
 // Ref: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
