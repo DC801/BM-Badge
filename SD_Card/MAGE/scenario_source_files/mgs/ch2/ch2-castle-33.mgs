@@ -5,6 +5,8 @@ settings for dialog {
 }
 settings for serial dialog { wrap 60 }
 
+// TODO: Simon says had the hex editor on... the mage turned all glitched and northward!
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-33 {
