@@ -33,18 +33,18 @@ simon-game-launcher {
 simon-game-start-q {
 	if (flag ch2-simon-high is true) {
 		show dialog {
-			Simon "So how about it? Want a high battle?"
+			Simon "How about it? Want a high battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
-			> "What was the difference again?" : simon-game-start-difference
+			> "What's the difference?" : simon-game-start-difference
 			> "Actually, never mind" : simon-game-start-nevermind
 		}
 	} else {
 		show dialog {
-			Simon "So how about it? Want a low battle?"
+			Simon "How about it? Want a low battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a high battle" : simon-game-start-q-swap
-			> "What was the difference again?" : simon-game-start-difference
+			> "What's the difference?" : simon-game-start-difference
 			> "Actually, never mind" : simon-game-start-nevermind
 		}
 	}
@@ -56,7 +56,7 @@ simon-game-start-q-swap {
 			Simon "Oho, so you'd like a low battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a high battle" : simon-game-start-q-swap
-			> "What was the difference again?" : simon-game-start-difference
+			> "What's the difference?" : simon-game-start-difference
 			> "Actually, never mind" : simon-game-start-nevermind
 
 		}
@@ -66,29 +66,53 @@ simon-game-start-q-swap {
 			Simon "I see, so you'd like a high battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
-			> "What was the difference again?" : simon-game-start-difference
+			> "What's the difference?" : simon-game-start-difference
 			> "Actually, never mind" : simon-game-start-nevermind
 		}
 	}
 }
 
 simon-game-start-difference {
+	set lights control on
+	turn light ALL off
 	show dialog {
-		Simon "A high battle is all about a full, square sound. Easier on the eyes but harder on the thumbs, if you get my meaning."
-		"A low battle is more about quick fingers. It's better for those who prefer to hold their destiny in their own two hands."
+		Simon "A HIGH battle is all about a full, square sound. Easier on the eyes but harder on the thumbs, if you get my meaning."
 	}
+	set entity Lights on_tick to screen-lights-flash-battle-high
+	show dialog {
+		Simon "I'm talkin' about these lights up here, of course!"
+	}
+	set entity Lights on_tick to null_script
+	turn light ALL off
+	show dialog {
+		Simon "A LOW battle is more about quick fingers. It's better for those who prefer to hold their destiny in their own two hands."
+	}
+	set entity Lights on_tick to screen-lights-flash-battle-low
+	show dialog {
+		Simon "That means these lights down here, naturally!"
+	}
+	set entity Lights on_tick to null_script
+	turn light ALL off
+	set lights control off
 	goto simon-game-start-q
 }
 
 simon-game-start-nevermind {
-	show dialog {
-		Simon "(TODO: well, then, feel free to ask again anytime!)"
+	if (flag ch2-simon-won-before is false) {
+		show dialog {
+			Simon "Humph. Well, then I'm not trusting you with Rosetta! Come back when you can prove you deserve to have a keytar as gorgeous as this!"
+		}
+	} else {
+		show dialog {
+			Simon "(TODO: well, then, feel free to ask again anytime!)"
+		}
 	}
 	goto simon-game-start-q-wrapup
 }
 
 simon-game-start-q-wrapup {
 	set entity Simon interact_script to interact-ch2-simon
+	goto null_script
 }
 simon-game-start {
 	set player control off
@@ -120,31 +144,37 @@ simon-game-start {
 	turn entity Simon south
 	fade in camera from black over 400ms
 	if (flag ch2-simon-high is true) {
+		set entity Lights on_tick to screen-lights-flash-battle-high
 		if (flag ch2-simon-heard-high is false) {
 			show dialog {
 				Simon "Here we go! Keep your eyes up top!"
 				"Pay attention to those four corners around the screen!"
-				"LET'S GOOOO!"
+				"Follow my lead! LET'S GOOOO!"
 			}
 			set flag ch2-simon-heard-high to true
 		} else {
 			show dialog {
-				Simon "Keep your eyes up top! LET'S GOOOO!"
+				Simon "Keep your eyes up top and copy my moves! LET'S GOOOO!"
 			}
 		}
+		set entity Lights on_tick to null_script
+		turn light ALL off
 	} else {
+		set entity Lights on_tick to screen-lights-flash-battle-low
 		if (flag ch2-simon-heard-low is false) {
 			show dialog {
 				Simon "Here we go! Keep your eyes down low!"
 				"It's the bottom of the screen that counts now! Keep your thumbs frisky!"
-				"LET'S GOOOO!"
+				"Follow my lead! LET'S GOOOO!"
 			}
 			set flag ch2-simon-heard-low to true
 		} else {
 			show dialog {
-				Simon "Keep your eyes down low! LET'S GOOOO!"
+				Simon "Keep your eyes down low and copy my moves! LET'S GOOOO!"
 			}
 		}
+		set entity Lights on_tick to null_script
+		turn light ALL off
 	}
 	goto simon-enemy-turn-start
 }
@@ -418,9 +448,14 @@ simon-game-win {
 	if (flag ch2-simon-won-before is false) {
 		copy simon-game-restore-positions
 		show dialog {
-			Simon "All right, all right! I'll keep my end of the deal. Go ahead and keep this keyboard. (TODO)"
+			Simon "HAHAH! That was a blast! (TODO)!"
+			"Don't worry, I'll keep my end of the bargain. This keyboard is yours now. (TODO)"
+		}
+		show dialog {
+			name "" "(You pick up the keyboard!)"
 		}
 		copy script ch2-hide-keyboard
+		set flag interrupt to true
 		set flag ch2-carrying-keyboard to true
 		set flag ch2-simon-won-before to true
 		goto null_script // TODO
@@ -457,7 +492,7 @@ simon-game-start-q-reprise {
 			Simon "Want another high battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
-			> "What was the difference again?" : simon-game-start-difference
+			> "What's the difference?" : simon-game-start-difference
 			> "Actually, never mind" : simon-game-start-nevermind
 
 		}
@@ -466,7 +501,7 @@ simon-game-start-q-reprise {
 			Simon "Want another low battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a high battle" : simon-game-start-q-swap
-			> "What was the difference again?" : simon-game-start-difference
+			> "What's the difference?" : simon-game-start-difference
 			> "Actually, never mind" : simon-game-start-nevermind
 		}
 	}
@@ -510,6 +545,25 @@ screen-lights-bits {
 	turn light LED_BIT32 on
 	turn light LED_BIT64 on
 	turn light LED_BIT128 on
+}
+
+screen-lights-flash-battle-low {
+	turn light LED_BIT1 on
+	turn light LED_BIT128 on
+	turn light LED_PAGE on
+	turn light LED_MEM3 on
+	wait $time
+	turn light ALL off
+	wait $time
+}
+screen-lights-flash-battle-high {
+	turn light LED_MEM0 on
+	turn light LED_MEM3 on
+	turn light LED_XOR on
+	turn light LED_PAGE on
+	wait $time
+	turn light ALL off
+	wait $time
 }
 
 screen-lights-lose {

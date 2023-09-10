@@ -106,17 +106,66 @@ on_go-castle-31-west {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-simon {
-	if (
-		flag ch2-carrying-keyboard is true
-		|| flag ch2-installed-keyboard is true
-	) {
-		show dialog { Simon "TODO (Aha! Back for more?)"}
-		goto simon-game-launcher
-	} else {
-		show dialog { Simon "TODO" }
-		goto simon-game-launcher
+	if (variable ch2-storyflag-round is < 2) {
+		show dialog {
+			Simon "There's no audience! I can't play in these conditions! COME ON! What's the holdup? Where is everybody?"
+		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-simon
+	else if (flag ch2-simon-won-before is false) {
+		if (flag ch2-simon-backstory is false) {
+			show dialog {
+				PLAYER "So, about your keyboard -- erm, \"keytar?\""
+				"I sort of need one for --"
+				Simon "WHOA WHOA WHOA hey, you can't have Rosetta!"
+				"(TODO: the keyboard's name, something something)"
+				"But hey, you know what? I'll give you the chance to prove you deserve this beauty."
+				"I'm bored to death, so how about a keytar battle? If you win, I'll let you keep Rosetta."
+			}
+			set flag ch2-simon-backstory to true
+		} else {
+			show dialog {
+				Simon "Change your mind about a keytar battle? I'll let you keep the keyboard if you win. Come on, I'm bored to tears!"
+			}
+		}
+		copy simon-game-launcher
+	}
+	else if (flag interrupt is true) {
+		show dialog {
+			Simon "Ah, man! I'm still sweatin' after that last one!"
+			"But I'm not out for the count yet! Want another go?"
+		}
+		copy simon-game-launcher
+	}
+	else {
+		if (flag ch2-simon-repeat-backstory is false) {
+			show dialog {
+				Simon "Hey hey hey, look who it is! It's the keytar wizard!"
+				"Aw, man! I haven't had that much fun in ages! I'm all pumped up, just thinking about it!"
+				"I'm dying for another keytar battle!"
+			}
+			set flag ch2-simon-repeat-backstory to true
+		} else {
+			show dialog {
+				Simon "Hey, keytar wizard! My soul is thirsting for another keytar battle!"
+			}
+		}
+		if (
+			flag ch2-carrying-keyboard is true
+			|| flag ch2-simon-repeat-brunhilda-backstory is true
+		) {
+			/* Do nothing extra... */
+		} else {
+			show dialog {
+				PLAYER "So, uh, I don't exactly have Rosetta with me right now."
+				Simon "Not a problem, not a problem! Here, you can borrow Brunhilda, just for now. But don't walk away with it, you hear?"
+				PLAYER "...How many keytars do you have with you, exactly?"
+				Simon "Only my favorite four or five."
+			}
+			set flag ch2-simon-repeat-brunhilda-backstory to true
+		}
+		copy simon-game-launcher
+	}
+	set entity Simon interact_script to interact-ch2-simon
 }
 
 /* ---------- KEYBOARD (ADMIN) ---------- */
@@ -129,33 +178,14 @@ ch2-hide-keyboard {
 ch2-touch-keyboard {
 	if (flag ch2-keyboard-firstlook is false) {
 		show dialog {
-			PLAYER "TODO keyboard1"
+			PLAYER "It's a keyboard, but in the shape of a guitar."
+			"A... \"keytar,\" perhaps?"
 		}
 		set flag ch2-keyboard-firstlook to true
 	}
 	show dialog {
-		PLAYER "TODO keyboard2."
-	}
-	if (variable ch2-storyflag-round is >= 2) {
-		show dialog {
-			name "" "(Pick up the keyboard?)"
-			> "Yes" : ch2-touch-keyboard-yes
-			> "No" : ch2-touch-keyboard-no
-		}
-	}
-	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
-}
-ch2-touch-keyboard-yes {
-	show dialog {
-		name "" "(You pick up the keyboard!)"
-	}
-	copy script ch2-hide-keyboard
-	set flag ch2-carrying-keyboard to true
-	set entity "%SELF%" interact_script to null_script
-}
-ch2-touch-keyboard-no {
-	show dialog {
-		PLAYER "Maybe later, then."
+		PLAYER "It's like the spork of band instruments."
+		Simon "Hey! Hey! Don't you insult Rosetta like that!"
 	}
 	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
 }
