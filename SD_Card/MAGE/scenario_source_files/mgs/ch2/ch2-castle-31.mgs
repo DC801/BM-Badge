@@ -35,6 +35,10 @@ on_load-ch2-castle-31 {
 		copy script ch2-hide-keyboard
 	}
 
+	set flag ch2-simon-heard-high to false
+	set flag ch2-simon-heard-low to false
+
+	//DEBUG STUFF
 	if (debug mode is true) {
 		register simon -> debug-simon
 		register simon + high -> debug-simon-high
@@ -98,6 +102,22 @@ on_go-castle-31-west {
 	load map ch2-castle-12
 }
 
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-simon {
+	if (
+		flag ch2-carrying-keyboard is true
+		|| flag ch2-installed-keyboard is true
+	) {
+		show dialog { Simon "TODO (Aha! Back for more?)"}
+		goto simon-game-launcher
+	} else {
+		show dialog { Simon "TODO" }
+		goto simon-game-launcher
+	}
+	set entity "%SELF%" interact_script to interact-ch2-simon
+}
 
 /* ---------- KEYBOARD (ADMIN) ---------- */
 
