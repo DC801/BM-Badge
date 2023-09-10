@@ -30,7 +30,7 @@ void EngineWindowFrameInit()
 		ENGINE_PANIC("Failed to load Window Frame\nIMG_Load: %s\n", IMG_GetError());
 	}
 
-	frameButtonSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame-button.png");
+	frameButtonSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame-keyboard.png");
 
 	if (!frameButtonSurface)
 	{
@@ -85,8 +85,8 @@ void EngineWindowFrameInit()
 
 const SDL_Rect gameViewportSrcRect = {0, 0, WIDTH, HEIGHT};
 const SDL_Rect gameViewportDstRect = {112, 56, WIDTH, HEIGHT};
-const SDL_Rect buttonOffSrcRect = {0, 0, 32, 32};
-const SDL_Rect buttonOnSrcRect = {0, 32, 32, 32};
+SDL_Rect buttonOffSrcRect = {0, 0, 32, 32};
+SDL_Rect buttonOnSrcRect = {0, 32, 32, 32};
 const SDL_Rect LEDOffSrcRect = {0, 0, 16, 8};
 const SDL_Rect LEDOnSrcRect = {0, 8, 16, 8};
 SDL_Rect buttonTargetRect = {.x = 0, .y = 0, .w = 32, .h = 32};
@@ -134,6 +134,8 @@ void drawButtonStates ()
 		buttonState = *buttonBoolPointerArray[i];
 		buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
 		buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
+		buttonOnSrcRect.x = i * 32;
+		buttonOffSrcRect.x = i * 32;
 		SDL_RenderCopy(
 			renderer,
 			frameButtonTexture,
