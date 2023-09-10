@@ -105,6 +105,13 @@ on_go-castle-31-west {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-drum {
+	show dialog {
+		PLAYER "Your band is called \"1023 MB\"?"
+		Simon "It's 'cause we can't get a real gig."
+	}
+}
+
 interact-ch2-simon {
 	if (variable ch2-storyflag-round is < 2) {
 		show dialog {
@@ -182,10 +189,11 @@ ch2-touch-keyboard {
 			"A... \"keytar,\" perhaps?"
 		}
 		set flag ch2-keyboard-firstlook to true
-	}
-	show dialog {
-		PLAYER "It's like the spork of band instruments."
-		Simon "Hey! Hey! Don't you insult Rosetta like that!"
+	} else {
+		show dialog {
+			PLAYER "It's like the spork of band instruments."
+			Simon "Hey! Hey! Don't you insult Rosetta like that!"
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
 }

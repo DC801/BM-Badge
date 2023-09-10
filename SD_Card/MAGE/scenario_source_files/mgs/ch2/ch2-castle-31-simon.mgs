@@ -442,17 +442,26 @@ simon-game-win {
 	set entity Lights on_tick to screen-lights-win
 	set entity "%PLAYER%" on_tick to player-win
 	show dialog { Simon "GREAT JOB! Way to go, kid!" }
+	// TODO: replay the moves with both of them in synch as a finale
 	set entity Lights on_tick to null_script
 	set lights control off
 	set player control on
 	if (flag ch2-simon-won-before is false) {
 		copy simon-game-restore-positions
 		show dialog {
-			Simon "HAHAH! That was a blast! (TODO)!"
-			"Don't worry, I'll keep my end of the bargain. This keyboard is yours now. (TODO)"
-		}
-		show dialog {
+			Simon "HAHAH! That was a blast!"
+			"THIS! This is what I was missing, the most important part about music!"
+			PLAYER "What part?"
+			Simon "It's the MUSIC!"
+			"Not the crowd, not the gigs, not the merch -- but the raw vibrations and rhythm!"
+			"It's seizing something from the depths of your soul and shoving it into your hands, your breath, your fingertips --"
+			"-- and making something LIVING, something that couldn't exist without you there to shape it!"
+			"It's jamming with another human being, and building our sounds up together into something incredible!"
+			"Fantastic!"
+			"Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
 			name "" "(You pick up the keyboard!)"
+			Simon "Keep it, and keep making awesome music!"
+			PLAYER "Music, yeah. That is definitely what I was going to use it for. Yup."
 		}
 		copy script ch2-hide-keyboard
 		set flag interrupt to true
