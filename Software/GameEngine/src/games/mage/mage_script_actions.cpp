@@ -2040,7 +2040,7 @@ void action_copy_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 			case pathId :
 			case onLookScriptId :
 				if(argStruct->inbound) {
-					*variableValue = (uint16_t)*fieldValue;
+					*variableValue = *(uint16_t*)fieldValue;
 				} else {
 					uint16_t *destination = (uint16_t*)fieldValue;
 					*destination = *variableValue;
