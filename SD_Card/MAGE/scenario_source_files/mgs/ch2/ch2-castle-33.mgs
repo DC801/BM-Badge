@@ -167,7 +167,7 @@ look-mouse {
 /* ---------- MOUSE GAME ---------- */
 
 const! (
-	$max = 418
+	$max = 680 // small room was 418
 )
 
 ch2-debug-mousegame {
@@ -318,11 +318,15 @@ ch2-mousegame-tick {
 	mutate mousegame-manhattan = mousegame-diffX
 	mutate mousegame-manhattan + mousegame-diffY
 	mutate mousegame-diff = mousegame-manhattan
-	mutate mousegame-diff * 8
+	mutate mousegame-diff * 16
 	mutate mousegame-diff / $max
 	// `mousegame-diff` is now the INVERSE of the number of lights to show
-	mutate mousegame-lights = 8
-	mutate mousegame-lights - mousegame-diff
+	if (variable mousegame-diff is > 8) {
+		mutate mousegame-lights = 0
+	} else {
+		mutate mousegame-lights = 8
+		mutate mousegame-lights - mousegame-diff
+	}
 	// `mousegame-lights` is the ACTUAL number of lights to show
 
 	// reset old lights (TODO: when array support is done in natlang, redo this)
@@ -351,8 +355,5 @@ ch2-mousegame-tick {
 	if (variable mousegame-lights is >= 8) {
 		turn light LED_BIT1 on
 	}
-	// show serial dialog {
-	// 	"DEBUG: $mousegame-lights$"
-	// }
 	set map tick_script to on_tick-ch2-castle-33 // reset
 }
