@@ -161,7 +161,7 @@ var fetchBinaryDataFromPath = function (path) {
 
 var filesToPreload = [
 	'MAGE/desktop_assets/window_frame.png',
-	'MAGE/desktop_assets/window_frame-button.png',
+	'MAGE/desktop_assets/window_frame-keyboard.png',
 	'MAGE/desktop_assets/window_frame-led.png',
 	'MAGE/game.dat',
 ];
