@@ -292,9 +292,9 @@ For each item: (Copy existing pattern wherever these are found)
 		- Down-right (1)
 		- Win (mage: happy, keytarist: congratulatory)
 		- Lose (mage: mad, keytarist: disappointed)
-	- [ ] Options for type of battle (to accomodate ease of pressing PAGE/MEM3/128/1 on real badges and parsing XOR/PAGE/MEM0/MEM3 on desktop): high or low
-	- [ ] You get the keyboard if you win
-	- [ ] Repeat battles (if you've already installed the keyboard, he's got another one you can use -- named something else, of course)
+	- [x] Options for type of battle (to accomodate ease of pressing PAGE/MEM3/128/1 on real badges and parsing XOR/PAGE/MEM0/MEM3 on desktop): high or low
+	- [x] You get the keyboard if you win
+	- [x] Repeat battles (if you've already installed the keyboard, he's got another one you can use -- named something else, of course)
 
 ## Puzzle Mechanics
 
@@ -382,10 +382,10 @@ We should take advantage of the badge hardware itself, especially since hex edit
 			- One (or all) blinking on and off
 		- Con: limited to game frame rate
 		- Con: needs 1 `on_tick` script slot; if the script is reused (such as a circular pattern for a generic warping script), that means each map must have an entity by the same name managing this (The player's `on_tick` is already being used! Or could the player's `on_tick` do the original stuff PLUS the lights?)
-	- [~] Progress bar: along the bottom of the screen, 8 lights max.
+	- [x] Progress bar: along the bottom of the screen, 8 lights max.
 - In combination:
-	- [~] Turning a light on or off depending on a button press (that is, using the button's light to indicate that the button was pressed)
-	- [~] Simon says type game
+	- [x] Turning a light on or off depending on a button press (that is, using the button's light to indicate that the button was pressed)
+	- [x] Simon says type game
 - Complications:
 	- Light (and button) alignment with screen will be slightly different between real badges and the web
 	- Button presses aren't strictly super responsive
