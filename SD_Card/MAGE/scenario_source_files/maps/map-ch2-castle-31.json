@@ -135,6 +135,30 @@
                  "width":32,
                  "x":140,
                  "y":122
+                }, 
+                {
+                 "class":"",
+                 "gid":767,
+                 "height":32,
+                 "id":34,
+                 "name":"Simon",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":327,
+                 "y":131
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":35,
+                 "name":"Lights",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-87,
+                 "y":-80
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -178,7 +202,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":34,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

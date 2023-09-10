@@ -1,0 +1,480 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+settings for serial dialog { wrap 60 }
+
+/* ---------- LOAD ---------- */
+
+const! (
+	$roundcount = 7
+
+	$light0 = LED_BIT128
+	$light1 = LED_BIT1
+	$light2 = LED_PAGE
+	$light3 = LED_MEM3
+	$light4 = LED_XOR
+	$light5 = LED_MEM0
+
+	$button0 = BIT128
+	$button1 = BIT1
+	$button2 = PAGE
+	$button3 = MEM3
+	$button4 = XOR
+	$button5 = MEM0
+)
+
+on_load-ch2-castle-31-simon {
+	set flag ch2-simon-heard-high to false
+	set flag ch2-simon-heard-low to false
+}
+
+simon-game-launcher {
+	set hex control off
+	set entity "Simon" tick_script to simon-game-start
+}
+
+simon-game-start {
+	set player control off
+	mutate simon-pos1 ? 4
+	mutate simon-pos2 ? 4
+	mutate simon-pos3 ? 4
+	mutate simon-pos4 ? 4
+	mutate simon-pos5 ? 4
+	mutate simon-pos6 ? 4
+	mutate simon-pos7 ? 4
+	if (flag ch2-simon-high is true) {
+		mutate simon-pos1 + 2
+		mutate simon-pos2 + 2
+		mutate simon-pos3 + 2
+		mutate simon-pos4 + 2
+		mutate simon-pos5 + 2
+		mutate simon-pos6 + 2
+		mutate simon-pos7 + 2
+	}
+	mutate simon-round = 1
+	set lights control on
+	turn light ALL off
+	wait 100ms
+	if (flag ch2-simon-high is true) {
+		if (flag ch2-simon-heard-high is false) {
+			show dialog {
+				Simon "Here we go! Keep your eyes up top!"
+				"Pay attention to those four corners around the screen!"
+				"LET'S GOOOO!"
+			}
+			set flag ch2-simon-heard-high to true
+		} else {
+			show dialog {
+				Simon "Keep your eyes up top! LET'S GOOOO!"
+			}
+		}
+	} else {
+		if (flag ch2-simon-heard-high is false) {
+			show dialog {
+				Simon "Here we go! Keep your eyes down low!"
+				"It's the bottom of the screen that counts now! Keep your thumbs frisky!"
+				"LET'S GOOOO!"
+			}
+			set flag ch2-simon-heard-high to true
+		} else {
+			show dialog {
+				Simon "Keep your eyes down low! LET'S GOOOO!"
+			}
+		}
+	}
+	goto simon-enemy-turn-start
+}
+
+simon-enemy-turn-start {
+	mutate i = 0
+	set flag ch2-simon-move-fail to false
+	wait 800ms
+	goto simon-enemy-turn-loop
+}
+
+simon-enemy-turn-loop {
+	if (variable i is >= simon-round) {
+		goto simon-enemy-turn-end
+	}
+	if (variable i is == 0) { mutate simon-pos-curr = simon-pos1 }
+	else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2 }
+	else if (variable i is == 2) { mutate simon-pos-curr = simon-pos3 }
+	else if (variable i is == 3) { mutate simon-pos-curr = simon-pos4 }
+	else if (variable i is == 4) { mutate simon-pos-curr = simon-pos5 }
+	else if (variable i is == 5) { mutate simon-pos-curr = simon-pos6 }
+	else if (variable i is == 6) { mutate simon-pos-curr = simon-pos7 }
+	// see $roundcount
+
+	// loopy
+	if (variable simon-pos-curr is == 0) {
+		turn light $light0 on
+		// play entity Simon animation 6 once // change these to the real animations eventually
+	}
+	else if (variable simon-pos-curr is == 1) {
+		turn light $light1 on
+		// play entity Simon animation 7 once
+	}
+	else if (variable simon-pos-curr is == 2) {
+		turn light $light2 on
+		// play entity Simon animation 8 once
+	}
+	else if (variable simon-pos-curr is == 3) {
+		turn light $light3 on
+		// play entity Simon animation 9 once
+	}
+	else if (variable simon-pos-curr is == 4) {
+		turn light $light4 on
+		// play entity Simon animation 10 once
+	}
+	else if (variable simon-pos-curr is == 5) {
+		turn light $light5 on
+		// play entity Simon animation 11 once
+	}
+	wait 500ms
+	turn light ALL off
+	wait 100ms
+	mutate i + 1
+	goto simon-enemy-turn-loop
+}
+
+simon-enemy-turn-end {
+	goto simon-player-turn-start
+}
+
+simon-player-turn-start {
+	wait 10ms
+	mutate i = 0
+	set player control on
+	goto simon-player-turn-loop-start
+}
+
+simon-player-turn-loop-start {
+	if (variable i is >= simon-round) {
+		goto simon-player-turn-end
+	}
+	if (variable i is == 0) { mutate simon-pos-curr = simon-pos1 }
+	else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2 }
+	else if (variable i is == 2) { mutate simon-pos-curr = simon-pos3 }
+	else if (variable i is == 3) { mutate simon-pos-curr = simon-pos4 }
+	else if (variable i is == 4) { mutate simon-pos-curr = simon-pos5 }
+	else if (variable i is == 5) { mutate simon-pos-curr = simon-pos6 }
+	else if (variable i is == 6) { mutate simon-pos-curr = simon-pos7 }
+	// see $roundcount
+
+	// loopy
+	goto simon-player-listen
+}
+
+simon-player-listen {
+	// CHECK FAILS FIRST
+
+	// high-only positions
+	if (flag ch2-simon-high is true) {
+		if (variable simon-pos-curr is not == 4) {
+			if (button $button4) {
+				// show serial dialog {"PRESSED BUTTON 4 (listening for $simon-pos-curr$)"}
+				mutate simon-player-move = 4
+				set flag ch2-simon-move-fail to true
+				goto simon-player-do-move
+			}
+		}
+		if (variable simon-pos-curr is not == 5) {
+			if (button $button5) {
+				// show serial dialog {"PRESSED BUTTON 5 (listening for $simon-pos-curr$)"}
+				mutate simon-player-move = 5
+				set flag ch2-simon-move-fail to true
+				goto simon-player-do-move
+			}
+		}
+	}
+	// low-only positions
+	else {
+		if (variable simon-pos-curr is not == 0) {
+			if (button $button0) {
+				// show serial dialog {"PRESSED BUTTON 0 (listening for $simon-pos-curr$)"}
+				mutate simon-player-move = 0
+				set flag ch2-simon-move-fail to true
+				goto simon-player-do-move
+			}
+		}
+		if (variable simon-pos-curr is not == 1) {
+			if (button $button1) {
+				// show serial dialog {"PRESSED BUTTON 1 (listening for $simon-pos-curr$)"}
+				mutate simon-player-move = 1
+				set flag ch2-simon-move-fail to true
+				goto simon-player-do-move
+			}
+		}
+	}
+	// positions for both low and high
+	if (variable simon-pos-curr is not == 2) {
+		if (button $button2) {
+			// show serial dialog {"PRESSED BUTTON 2 (listening for $simon-pos-curr$)"}
+			mutate simon-player-move = 2
+			set flag ch2-simon-move-fail to true
+			goto simon-player-do-move
+		}
+	}
+	if (variable simon-pos-curr is not == 3) {
+		if (button $button3) {
+			// show serial dialog {"PRESSED BUTTON 3 (listening for $simon-pos-curr$)"}
+			mutate simon-player-move = 3
+			set flag ch2-simon-move-fail to true
+			goto simon-player-do-move
+		}
+	}
+	// (We don't want buttons not involved to trigger a fail)
+
+	// CHECK SUCCESSES
+
+	// high-only positions
+	if (flag ch2-simon-high is true) {
+		if (variable simon-pos-curr is == 4) {
+			if (button $button4) {
+				// show serial dialog {"PRESSED BUTTON 4"}
+				mutate simon-player-move = 4
+				goto simon-player-do-move
+			}
+		}
+		if (variable simon-pos-curr is == 5) {
+			if (button $button5) {
+				// show serial dialog {"PRESSED BUTTON 5"}
+				mutate simon-player-move = 5
+				goto simon-player-do-move
+			}
+		}
+	}
+	// low-only positions
+	else {
+		if (variable simon-pos-curr is == 0) {
+			if (button $button0) {
+				// show serial dialog {"PRESSED BUTTON 0"}
+				mutate simon-player-move = 0
+				goto simon-player-do-move
+			}
+		}
+		if (variable simon-pos-curr is == 1) {
+			if (button $button1) {
+				// show serial dialog {"PRESSED BUTTON 1"}
+				mutate simon-player-move = 1
+				goto simon-player-do-move
+			}
+		}
+	}
+	// positions for both low and high
+	if (variable simon-pos-curr is == 2) {
+		if (button $button2) {
+			// show serial dialog {"PRESSED BUTTON 2"}
+			mutate simon-player-move = 2
+			goto simon-player-do-move
+		}
+	}
+	if (variable simon-pos-curr is == 3) {
+		if (button $button3) {
+			// show serial dialog {"PRESSED BUTTON 3"}
+			mutate simon-player-move = 3
+			goto simon-player-do-move
+		}
+	}
+	set entity Simon tick_script to simon-player-listen // reset this loop
+}
+
+simon-player-do-move {
+	// loopy
+	if (variable simon-player-move is == 0) {
+		turn light $light0 on
+		// play entity Simon animation 6 once // change these to the real animations eventually
+	}
+	else if (variable simon-player-move is == 1) {
+		turn light $light1 on
+		// play entity Simon animation 7 once
+	}
+	else if (variable simon-player-move is == 2) {
+		turn light $light2 on
+		// play entity Simon animation 8 once
+	}
+	else if (variable simon-player-move is == 3) {
+		turn light $light3 on
+		// play entity Simon animation 9 once
+	}
+	else if (variable simon-player-move is == 4) {
+		turn light $light4 on
+		// play entity Simon animation 10 once
+	}
+	else if (variable simon-player-move is == 5) {
+		turn light $light5 on
+		// play entity Simon animation 11 once
+	}
+	
+	wait 100ms
+	turn light ALL off
+	mutate i + 1
+	// show serial dialog {
+	// 	"YOUR MOVE WAS $simon-player-move$"
+	// }
+	if (flag ch2-simon-move-fail is true) {
+		goto simon-game-lose
+	}
+	goto simon-player-turn-loop-start
+}
+
+simon-player-turn-end {
+	mutate simon-round + 1
+	if (variable simon-round is > $roundcount) {
+		goto simon-game-win
+	}
+	goto simon-enemy-turn-start
+}
+
+simon-game-lose {
+	set player control off
+	set lights control on
+	wait 100ms
+	set hex control on // TODO: turn this off after debugging
+	set entity Lights on_tick to screen-lights-lose
+	set entity "%PLAYER%" on_tick to player-lose
+	show dialog { Simon "Too bad! Better luck next time!" }
+	set entity Lights on_tick to null_script
+	set lights control off
+	set player control on
+	goto null_script
+}
+
+simon-game-win {
+	set player control off
+	set lights control on
+	wait 100ms
+	set hex control on // TODO: turn this off after debugging
+	set entity Lights on_tick to screen-lights-win
+	set entity "%PLAYER%" on_tick to player-win
+	show dialog { Simon "GREAT JOB! Way to go, kid!" }
+	set entity Lights on_tick to null_script
+	set lights control off
+	set player control on
+	goto null_script
+}
+
+const! (
+	$time = 200ms
+	$time_q = 125ms
+)
+
+player-win {
+	turn entity "%PLAYER%" west
+	wait $time_q
+	turn entity "%PLAYER%" north
+	wait $time_q
+	turn entity "%PLAYER%" east
+	wait $time_q
+	turn entity "%PLAYER%" south
+	play entity "%PLAYER%" animation 2 once
+	goto null_script
+}
+player-lose {
+	turn entity "%PLAYER%" west
+	wait $time_q
+	turn entity "%PLAYER%" east
+	wait $time_q
+	turn entity "%PLAYER%" west
+	wait $time_q
+	turn entity "%PLAYER%" east
+	wait $time_q
+	turn entity "%PLAYER%" south
+	goto null_script
+}
+
+screen-lights-bits {
+	turn light LED_BIT1 on
+	turn light LED_BIT2 on
+	turn light LED_BIT4 on
+	turn light LED_BIT8 on
+	turn light LED_BIT16 on
+	turn light LED_BIT32 on
+	turn light LED_BIT64 on
+	turn light LED_BIT128 on
+}
+
+screen-lights-lose {
+	turn light ALL off
+	turn light LED_XOR on
+	turn light LED_MEM0 on
+	wait $time_q
+
+	turn light ALL off
+	turn light LED_ADD on
+	turn light LED_MEM1 on
+	wait $time_q
+
+	turn light ALL off
+	turn light LED_SUB on
+	turn light LED_MEM2 on
+	wait $time_q
+
+	turn light ALL off
+	turn light LED_PAGE on
+	turn light LED_MEM3 on
+	wait $time_q
+	
+	turn light ALL off
+	wait $time_q
+
+	copy screen-lights-bits
+	wait $time_q
+	
+	turn light ALL off
+	wait $time_q
+
+	copy screen-lights-bits
+	wait $time
+	wait $time
+
+	turn light ALL off
+
+	goto null_script
+}
+
+screen-lights-win {
+	turn light ALL off
+	turn light LED_XOR on
+	turn light LED_PAGE on
+	turn light LED_BIT64 on
+	turn light LED_BIT8 on
+	turn light LED_BIT1 on
+	turn light LED_MEM2 on
+	wait $time
+
+	turn light ALL off
+	turn light LED_ADD on
+	turn light LED_BIT32 on
+	turn light LED_BIT4 on
+	turn light LED_MEM1 on
+	wait $time
+
+	turn light ALL off
+	turn light LED_SUB on
+	turn light LED_BIT128 on
+	turn light LED_BIT16 on
+	turn light LED_BIT2 on
+	turn light LED_MEM3 on
+	turn light LED_MEM0 on
+	wait $time
+}
+
+// turn light LED_XOR on
+// turn light LED_ADD on
+// turn light LED_SUB on
+// turn light LED_PAGE on
+// turn light LED_BIT128 on
+// turn light LED_BIT64 on
+// turn light LED_BIT32 on
+// turn light LED_BIT16 on
+// turn light LED_BIT8 on
+// turn light LED_BIT4 on
+// turn light LED_BIT2 on
+// turn light LED_BIT1 on
+// turn light LED_MEM3 on
+// turn light LED_MEM2 on
+// turn light LED_MEM1 on
+// turn light LED_MEM0 on

@@ -293,23 +293,7 @@ For each item: (Copy existing pattern wherever these are found)
 		- Win (mage: happy, keytarist: congratulatory)
 		- Lose (mage: mad, keytarist: disappointed)
 	- [ ] Options for type of battle (to accomodate ease of pressing PAGE/MEM3/128/1 on real badges and parsing XOR/PAGE/MEM0/MEM3 on desktop): high or low
-		- [ ] Make the 4 lights flash depending on which is selected
-		- [ ] Remember choice from last time
-		- To accomplish this, make the dialog like "You want a high battle, right?" "Yeah"/"Actually let's make it a low battle" or switch to "Oho, so you want a low battle?" "Yeah"/"Actually, let's do a high battle" (so the battle mode is explicit, re: light flashing)
-	- Gameplay logic:
-		- [ ] Randomize 7x integer variables: 1-4 or 3-6, depending on mode. These are the positions to match.
-		- [ ] Keep track of round within set (start at 1; stop incrementing at 7), and only play back the positions <= to that round
-		- [ ] All looping logic uses a separate integer variable for where within the round you currently are, e.g. round 0/1, 1/1, 0/2, 1/2, 2/2, where the first is the counter and the second is the round
-		- This looping is done twice:
-		- [ ] Enemy turn: play animation for `position1`, `position2` etc.
-			- [ ] Lock all lights until it's your turn to play
-		- [ ] Your turn:
-			- [ ] Listen for all 6 buttons, but for the buttons not relevant to that mode, start over immediately
-			- [ ] Play that animation and increase mage keytar counter
-			- [ ] Use counter to ascertain which `position` to be matching
-		- [ ] Lights blink:
-			- [ ] All hex editor lights blink twice if a position failed
-			- [ ] If you get to the end: lights run out the center and up the sides in a loop if you win
+	- [ ] You get the keyboard if you win
 	- [ ] Repeat battles (if you've already installed the keyboard, he's got another one you can use -- named something else, of course)
 
 ## Puzzle Mechanics

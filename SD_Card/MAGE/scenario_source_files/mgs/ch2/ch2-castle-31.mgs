@@ -34,7 +34,43 @@ on_load-ch2-castle-31 {
 	) {
 		copy script ch2-hide-keyboard
 	}
+
+	if (debug mode is true) {
+		register simon -> debug-simon
+		register simon + high -> debug-simon-high
+		register simon + low -> debug-simon-low
+		register simon + win -> debug-simon-win
+		register simon + lose -> debug-simon-lose
+		show serial dialog {
+			" "
+			"<bold><g>DEBUG:</><bold> Play Simon Says!</>"
+			"<c>SIMON</>: replay last game type (default: low)"
+			"<c>SIMON HIGH</>: play high game (easier on desktop)"
+			"<c>SIMON LOW</>: play low game (easier on the real badge)"
+			"<c>SIMON WIN</>: play the win animation(s)"
+			"<c>SIMON LOSE</>: play the lose animation(s)"
+			" "
+		}
+	}
 	goto ch2-map-init
+}
+
+debug-simon {
+	goto simon-game-launcher
+}
+debug-simon-low {
+	set flag ch2-simon-high to false
+	goto simon-game-launcher
+}
+debug-simon-high {
+	set flag ch2-simon-high to true
+	goto simon-game-launcher
+}
+debug-simon-win {
+	goto simon-game-win
+}
+debug-simon-lose {
+	goto simon-game-lose
 }
 
 /* ---------- ON_TICK ---------- */
