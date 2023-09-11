@@ -125,11 +125,15 @@ interact-ch2-simon {
 				"I sort of need one for --"
 				Simon "WHOA WHOA WHOA hey, you can't have Rosetta!"
 				"(TODO: the keyboard's name, something something)"
-				"But hey, you know what? I'll give you the chance to prove you deserve this beauty."
+			}
+			set entity Simon animation to 12
+			show dialog {
+				Simon "But hey, you know what? I'll give you the chance to prove you deserve this beauty."
 				"I'm bored to death, so how about a keytar battle? If you win, I'll let you keep Rosetta."
 			}
 			set flag ch2-simon-backstory to true
 		} else {
+			set entity Simon animation to 12
 			show dialog {
 				Simon "Change your mind about a keytar battle? I'll let you keep the keyboard if you win. Come on, I'm bored to tears!"
 			}
@@ -137,6 +141,7 @@ interact-ch2-simon {
 		copy simon-game-launcher
 	}
 	else if (flag interrupt is true) {
+		set entity Simon animation to 12
 		show dialog {
 			Simon "Ah, man! I'm still sweatin' after that last one!"
 			"But I'm not out for the count yet! Want another go?"
@@ -144,6 +149,7 @@ interact-ch2-simon {
 		copy simon-game-launcher
 	}
 	else {
+		set entity Simon animation to 12
 		if (flag ch2-simon-repeat-backstory is false) {
 			show dialog {
 				Simon "Hey hey hey, look who it is! It's the keytar wizard!"
@@ -162,10 +168,17 @@ interact-ch2-simon {
 		) {
 			/* Do nothing extra... */
 		} else {
+			set entity Simon animation to 0
 			show dialog {
 				PLAYER "So, uh, I don't exactly have Rosetta with me right now."
+			}
+			set entity Simon animation to 12
+			show dialog {
 				Simon "Not a problem, not a problem! Here, you can borrow Brunhilda, just for now. But don't walk away with it, you hear?"
 				PLAYER "...How many keytars do you have with you, exactly?"
+			}
+			set entity Simon animation to 0
+			show dialog {
 				Simon "Only my favorite four or five."
 			}
 			set flag ch2-simon-repeat-brunhilda-backstory to true

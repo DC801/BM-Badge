@@ -31,6 +31,7 @@ simon-game-launcher {
 }
 
 simon-game-start-q {
+	set entity Simon animation to 12
 	if (flag ch2-simon-high is true) {
 		show dialog {
 			Simon "How about it? Want a high battle?"
@@ -75,6 +76,7 @@ simon-game-start-q-swap {
 simon-game-start-difference {
 	set lights control on
 	turn light ALL off
+	set entity Simon animation to 0
 	show dialog {
 		Simon "A HIGH battle is all about a full, square sound. Easier on the eyes but harder on the thumbs, if you get my meaning."
 	}
@@ -99,21 +101,43 @@ simon-game-start-difference {
 
 simon-game-start-nevermind {
 	if (flag ch2-simon-won-before is false) {
+		set entity Simon animation to 0
 		show dialog {
 			Simon "Humph. Well, then I'm not trusting you with Rosetta! Come back when you can prove you deserve to have a keytar as gorgeous as this!"
 		}
 	} else {
+		set entity Simon animation to 12
 		show dialog {
 			Simon "(TODO: well, then, feel free to ask again anytime!)"
 		}
 	}
+	set entity Simon animation to 0
 	goto simon-game-start-q-wrapup
 }
 
 simon-game-start-q-wrapup {
+	set entity Simon animation to 0
 	set entity Simon interact_script to interact-ch2-simon
 	goto null_script
 }
+
+/*
+Simon animations:
+0: idle
+1: rockin
+2: become_relieved
+3: shock_idle
+4: relieved_laugh
+5: headbang
+6: pose_top_right
+7: pose_right
+8: pose_bottom_right
+9: pose_top_left
+10: pose_left
+11: pose_bottom_left
+12: happy_idle
+*/
+
 simon-game-start {
 	set player control off
 	mutate simon-pos1 ? 4
@@ -140,6 +164,7 @@ simon-game-start {
 	teleport camera to geometry camera-spot
 	teleport entity "%PLAYER%" to geometry mage-spot
 	teleport entity Simon to geometry simon-spot
+	set entity Simon animation to 5
 	turn entity "%PLAYER%" south
 	turn entity Simon south
 	fade in camera from black over 400ms
@@ -202,31 +227,32 @@ simon-enemy-turn-loop {
 	// loopy
 	if (variable simon-pos-curr is == 0) {
 		turn light $light0 on
-		// play entity Simon animation 6 once // change these to the real animations eventually
+		set entity Simon animation to 11
 	}
 	else if (variable simon-pos-curr is == 1) {
 		turn light $light1 on
-		// play entity Simon animation 7 once
+		set entity Simon animation to 8
 	}
 	else if (variable simon-pos-curr is == 2) {
 		turn light $light2 on
-		// play entity Simon animation 8 once
+		set entity Simon animation to 10
 	}
 	else if (variable simon-pos-curr is == 3) {
 		turn light $light3 on
-		// play entity Simon animation 9 once
+		set entity Simon animation to 7
 	}
 	else if (variable simon-pos-curr is == 4) {
 		turn light $light4 on
-		// play entity Simon animation 10 once
+		set entity Simon animation to 9
 	}
 	else if (variable simon-pos-curr is == 5) {
 		turn light $light5 on
-		// play entity Simon animation 11 once
+		set entity Simon animation to 6
 	}
-	wait 500ms
+	wait 450ms
+	set entity Simon animation to 5
 	turn light ALL off
-	wait 100ms
+	wait 150ms
 	mutate i + 1
 	goto simon-enemy-turn-loop
 }
@@ -423,6 +449,7 @@ simon-player-turn-end {
 simon-game-lose {
 	set player control off
 	set lights control on
+	set entity Keyboard tick_script to simon-rock
 	wait 100ms
 	// set hex control on // TODO: turn this off after debugging
 	set entity Lights on_tick to screen-lights-lose
@@ -431,16 +458,23 @@ simon-game-lose {
 	set entity Lights on_tick to null_script
 	set lights control off
 	set player control on
+	set entity Keyboard tick_script to null_script
+	set entity Simon animation to 5
 	goto simon-game-go-again
 }
 
 simon-game-win {
 	set player control off
+	if (flag ch2-simon-won-before is false) {
+		set entity Simon animation to 3
+		wait 500ms
+	}
 	set lights control on
-	wait 100ms
 	// set hex control on // TODO: turn this off after debugging
 	set entity Lights on_tick to screen-lights-win
 	set entity "%PLAYER%" on_tick to player-win
+	play entity Simon animation 2 once
+	set entity Simon animation to 4
 	show dialog { Simon "GREAT JOB! Way to go, kid!" }
 	// TODO: replay the moves with both of them in synch as a finale
 	set entity Lights on_tick to null_script
@@ -448,6 +482,7 @@ simon-game-win {
 	set player control on
 	if (flag ch2-simon-won-before is false) {
 		copy simon-game-restore-positions
+		set entity Simon animation to 12
 		show dialog {
 			Simon "HAHAH! That was a blast!"
 			"THIS! This is what I was missing, the most important part about music!"
@@ -476,6 +511,7 @@ simon-game-win {
 simon-game-restore-positions {
 	fade out camera to black over 400ms
 	make camera follow entity "%PLAYER%"
+	set entity Simon animation to 0
 	teleport entity "%PLAYER%" to geometry return-spot
 	teleport entity Simon to geometry simon-return-spot
 	turn entity "%PLAYER%" north
@@ -484,6 +520,7 @@ simon-game-restore-positions {
 
 simon-game-go-again {
 	copy simon-game-restore-positions
+	set entity Simon animation to 12
 	show dialog {
 		Simon "Well? Wanna have another go?"
 		> "Sure" : simon-game-go-again-yes
@@ -543,6 +580,13 @@ player-lose {
 	wait $time_q
 	turn entity "%PLAYER%" south
 	goto null_script
+}
+
+simon-rock {
+	turn entity Simon west
+	play entity Simon animation 1 twice
+	turn entity Simon east
+	play entity Simon animation 1 twice
 }
 
 screen-lights-bits {

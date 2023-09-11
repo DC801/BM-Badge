@@ -138,24 +138,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":767,
-                 "height":32,
-                 "id":34,
-                 "name":"Simon",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-simon"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":323,
-                 "y":120
-                }, 
-                {
-                 "class":"",
                  "gid":253,
                  "height":32,
                  "id":35,
@@ -175,8 +157,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":369,
-                 "y":135
+                 "x":349,
+                 "y":141
                 }, 
                 {
                  "class":"",
@@ -278,6 +260,24 @@
                  "width":0,
                  "x":-41,
                  "y":-36
+                }, 
+                {
+                 "class":"",
+                 "gid":878,
+                 "height":32,
+                 "id":43,
+                 "name":"Simon",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-simon"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":315,
+                 "y":120
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -286,7 +286,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":42,
+ "nextobjectid":44,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -331,6 +331,10 @@
         {
          "firstgid":777,
          "source":"entity-keyboard.json"
+        }, 
+        {
+         "firstgid":877,
+         "source":"entity-simon.json"
         }],
  "tilewidth":32,
  "type":"map",
