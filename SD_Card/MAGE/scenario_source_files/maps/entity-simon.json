@@ -90,14 +90,6 @@
                 {
                  "duration":100,
                  "tileid":14
-                }, 
-                {
-                 "duration":100,
-                 "tileid":16
-                }, 
-                {
-                 "duration":400,
-                 "tileid":7
                 }],
          "class":"simon",
          "id":6
@@ -119,6 +111,15 @@
          "id":10
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":9
+                }, 
+                {
+                 "duration":200,
+                 "tileid":11
+                }],
          "class":"simon",
          "id":11
         }, 
@@ -129,11 +130,11 @@
         {
          "animation":[
                 {
-                 "duration":150,
+                 "duration":100,
                  "tileid":13
                 }, 
                 {
-                 "duration":150,
+                 "duration":100,
                  "tileid":15
                 }, 
                 {

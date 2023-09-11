@@ -3722,6 +3722,24 @@
 					"tileid": 0,
 					"flip_x": false
 				}
+			],
+			"pissed": [
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				}
 			]
 		}
 	}
