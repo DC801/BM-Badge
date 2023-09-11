@@ -136,6 +136,7 @@ Simon animations:
 10: pose_left
 11: pose_bottom_left
 12: happy_idle
+13: pissed
 */
 
 simon-game-start {
