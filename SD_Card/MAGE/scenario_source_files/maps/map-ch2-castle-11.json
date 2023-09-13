@@ -134,6 +134,18 @@
                  "width":32,
                  "x":320,
                  "y":160
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484437,
+                 "height":48,
+                 "id":35,
+                 "name":"Kuro",
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":67,
+                 "y":126
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -194,7 +206,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -239,6 +251,10 @@
         {
          "firstgid":777,
          "source":"..\/entities\/entity-monitor.json"
+        }, 
+        {
+         "firstgid":789,
+         "source":"entity-crow.json"
         }],
  "tilewidth":32,
  "type":"map",
