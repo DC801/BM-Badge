@@ -210,12 +210,15 @@ ch2-touch-keyboard {
 			"A... \"keytar,\" perhaps?"
 		}
 		set flag ch2-keyboard-firstlook to true
-	} else {
-		show dialog {
-			PLAYER "It's like the spork of band instruments."
-			Simon "Hey! Hey! Don't you insult Rosetta like that!"
-		}
 	}
+	show dialog {
+		PLAYER "It's like the spork of band instruments."
+	}
+	set entity Simon animation to 13
+	show dialog {
+		Simon "Hey! Hey! Don't you insult Rosetta like that!"
+	}
+	set entity Simon animation to 0
 	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
 }
 
