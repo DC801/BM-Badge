@@ -466,14 +466,14 @@ simon-game-lose {
 
 simon-game-win {
 	set player control off
-	if (flag ch2-simon-won-before is false) {
-		set entity Simon animation to 3
-		wait 500ms
-	}
 	set lights control on
 	// set hex control on // TODO: turn this off after debugging
 	set entity Lights on_tick to screen-lights-win
 	set entity "%PLAYER%" on_tick to player-win
+	if (flag ch2-simon-won-before is false) {
+		set entity Simon animation to 3
+		wait 500ms
+	}
 	play entity Simon animation 2 once
 	set entity Simon animation to 4
 	show dialog { Simon "GREAT JOB! Way to go, kid!" }
@@ -493,13 +493,23 @@ simon-game-win {
 			"It's seizing something from the depths of your soul and shoving it into your hands, your breath, your fingertips --"
 			"-- and making something LIVING, something that couldn't exist without you there to shape it!"
 			"It's jamming with another human being, and building our sounds up together into something incredible!"
-			"Fantastic!"
-			"Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
+			"Who cares if no one was watching? What we did was ART!"
+		}
+		set entity Simon animation to 4
+		show dialog {
+			Simon "Fantastic!"
+		}
+		set entity Simon animation to 12
+		show dialog {
+			Simon "Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
+		}
+		copy script ch2-hide-keyboard
+		show dialog {
 			name "" "(You pick up the keyboard!)"
 			Simon "Keep it, and keep making awesome music!"
 			PLAYER "Music, yeah. That is definitely what I was going to use it for. Yup."
 		}
-		copy script ch2-hide-keyboard
+		set entity Simon animation to 12
 		set flag interrupt to true
 		set flag ch2-carrying-keyboard to true
 		set flag ch2-simon-won-before to true
