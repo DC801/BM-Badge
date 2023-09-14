@@ -105,10 +105,37 @@ on_go-castle-31-west {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-theodore {
+	if (flag ch2-simon-won-before is false || flag interrupt is false) {
+		show dialog {
+			SELF "Bored bored bored BORED BORED!"
+			"Come on! How long is it gonna be before we can play?"
+		}
+	} else {
+		show dialog {
+			SELF "Sorry, I ain't impressed. Anyone can play a keyboard one note at a time."
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-theodore
+}
+interact-ch2-alvin {
+	if (flag ch2-simon-won-before is false || flag interrupt is false) {
+		show dialog {
+			SELF "We've been stuck in here, like, forever."
+			"I guess our would-be audience is stuck wherever they are, too."
+		}
+	} else {
+		show dialog {
+			SELF "Hey, you kept up with Simon. Not bad, kid."
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-alvin
+}
+
 interact-ch2-drum {
 	show dialog {
 		PLAYER "Your band is called \"1023 MB\"?"
-		Simon "It's 'cause we can't get a real gig."
+		Alvin "It's 'cause we can't get a real gig."
 	}
 }
 
