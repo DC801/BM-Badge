@@ -57,7 +57,7 @@ private:
    void gameUpdate(const DeltaState& delta);
 
    //This renders the game to the frame buffer based on the loop's updated state.
-   void gameRender(const DeltaState& delta);
+   void gameRender();
 
    //this will handle any blocking delays at the end of the loop
    void handleBlockingDelay();

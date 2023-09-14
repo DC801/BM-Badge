@@ -41,7 +41,7 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
    open = true;
 }
 
-std::optional<uint16_t> MageDialogControl::StartModalDialog(std::string messageString)
+void MageDialogControl::StartModalDialog(std::string messageString)
 {
    // Recycle all of the values set by the previous dialog to preserve look and feel
    // If there was no previous dialog... uhhhhhhh good luck with that?
@@ -51,7 +51,6 @@ std::optional<uint16_t> MageDialogControl::StartModalDialog(std::string messageS
    responses.clear();
    cursorPhase += 250;
    open = true;
-   return MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::loadNextScreen()

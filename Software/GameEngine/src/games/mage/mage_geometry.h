@@ -262,9 +262,9 @@ public:
    {
 	   auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
 
-	   for (auto& mapPoint : GetPoints())
+	   for (auto& p : GetPoints())
 	   {
-		   auto point = mapPoint + geometryOffset;
+		   auto point = p + geometryOffset;
 		   minX = std::min(point.x - pointToCheck.x, minX);
 		   minY = std::min(point.y - pointToCheck.y, minY);
 		   maxX = std::max(point.x - pointToCheck.x, maxX);

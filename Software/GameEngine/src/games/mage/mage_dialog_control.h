@@ -138,7 +138,7 @@ public:
       mapControl(mapControl)
    {}
 
-   std::optional<uint16_t> StartModalDialog(std::string messageString);
+   void StartModalDialog(std::string messageString);
 
    void load(uint16_t dialogId, int16_t currentEntityId);
    void loadCurrentScreenPortrait();

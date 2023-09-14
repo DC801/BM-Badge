@@ -27,6 +27,14 @@ void MageGameEngine::Run()
 
     while (inputHandler->IsRunning())
     {
+        const auto loopStart = GameClock::now();
+        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(loopStart - lastTime);
+        const auto delayMs = MAGE_MIN_MILLIS_BETWEEN_FRAMES - deltaTime.count();
+        debug_print("Now: %dms\tLast time: %dms\tDelta: %dms", loopStart, lastTime, deltaTime);
+
+        //handles hardware inputs and makes their state available		
+        inputHandler->Update();
+
         if (!engineIsInitialized || inputHandler->ShouldReloadGameDat())
         {
             scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
@@ -45,17 +53,6 @@ void MageGameEngine::Run()
             mapControl->mapLoadId = MAGE_NO_MAP;
         }
 
-        const auto loopStart = GameClock::now();
-        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(loopStart - lastTime);
-        const auto delayMs = MAGE_MIN_MILLIS_BETWEEN_FRAMES - deltaTime.count();
-        debug_print("Now: %dms\tLast time: %dms\tDelta: %dms", loopStart, lastTime, deltaTime);
-
-        const auto buttons = inputHandler->GetButtonState();
-        const auto activatedButtons = inputHandler->GetButtonActivatedState();
-
-        //handles hardware inputs and makes their state available		
-        inputHandler->Update();
-
         const auto deltaState = DeltaState{ deltaTime, inputHandler->GetButtonState(), inputHandler->GetButtonActivatedState() };
 
         //updates the state of all the things before rendering:
@@ -71,7 +68,7 @@ void MageGameEngine::Run()
 #endif
         }
         //This renders the game to the screen based on the loop's updated state.
-        gameRender(deltaState);
+        gameRender();
 
         lastTime = loopStart;
 
@@ -437,7 +434,7 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
     camera.applyEffects(delta.TimeMs.count());
 }
 
-void MageGameEngine::gameRender(const DeltaState& delta)
+void MageGameEngine::gameRender()
 {
     //make hax do
     if (hexEditor->isHexEditorOn())
