@@ -232,11 +232,17 @@
                  "height":32,
                  "id":44,
                  "name":"Theodore",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-theodore"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":178,
-                 "y":134
+                 "x":186,
+                 "y":132
                 }, 
                 {
                  "class":"",
@@ -244,6 +250,12 @@
                  "height":32,
                  "id":45,
                  "name":"Alvin",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-alvin"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
