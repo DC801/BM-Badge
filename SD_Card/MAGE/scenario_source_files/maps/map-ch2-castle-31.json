@@ -205,7 +205,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":340,
+                 "x":328,
                  "y":114
                 }, 
                 {
@@ -225,6 +225,30 @@
                  "width":32,
                  "x":217,
                  "y":115
+                }, 
+                {
+                 "class":"",
+                 "gid":904,
+                 "height":32,
+                 "id":44,
+                 "name":"Theodore",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":178,
+                 "y":134
+                }, 
+                {
+                 "class":"",
+                 "gid":903,
+                 "height":32,
+                 "id":45,
+                 "name":"Alvin",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":246,
+                 "y":123
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -276,7 +300,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":315,
+                 "x":303,
                  "y":120
                 }],
          "opacity":1,
@@ -286,7 +310,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":44,
+ "nextobjectid":47,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -335,6 +359,10 @@
         {
          "firstgid":877,
          "source":"entity-simon.json"
+        }, 
+        {
+         "firstgid":903,
+         "source":"..\/entities\/entity-simon-friends.json"
         }],
  "tilewidth":32,
  "type":"map",
