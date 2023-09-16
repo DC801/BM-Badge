@@ -350,6 +350,7 @@ ch2-lambda-round-3-parts5 {
 		"<m>LAMBDA:</> Then we're done."
 		"\tAfter that, you'll have to install the OS, and I'm still tweaking that. I should be done right about when you finish up there."
 		"\tRemember you can type <c>PARTS</> To see the parts list again. Good luck."
+		" "
 	}
 	show serial dialog lambda-over
 }
