@@ -576,6 +576,7 @@ ch2-terminal-setup-nevermind {
 			Lambda "Ah, okay! Um, if you change your mind, speak to the Exa again and I'll walk you through everything."
 			"To finish our conversation, type \"MAN\" into the console."
 		}
+		copy register-manual
 		set serial control on
 	} else {
 		show dialog {
@@ -694,11 +695,11 @@ ch2-terminal-message-test-fail {
 
 ch2-terminal-message-test-success {
 	if (flag ch2-toot-done is false) {
+		copy register-manual
 		show dialog {
 			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
 		// TODO: what should happen if you type "MAN" while the dialog is still up?
-		copy register-manual
 		set serial control on
 		show serial dialog spacer
 		show serial dialog {
