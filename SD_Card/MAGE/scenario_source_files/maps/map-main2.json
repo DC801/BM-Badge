@@ -509,7 +509,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-marta"
                         }, 
                         {
                          "name":"on_tick",

@@ -70,6 +70,7 @@ on_go-ch2-lodge-north {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-timmy {
+	copy face-player
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
 			SELF "I love the library! There's so many books here it would take a hundred years to read them all!"
@@ -98,6 +99,7 @@ interact-ch2-timmy {
 			"Bees and bugs -- but especially bees -- really freak me out."
 		}
 	}
+	turn entity "%SELF%" east
 	set entity "%SELF%" interact_script to interact-ch2-timmy
 }
 interact-ch2-cat-lodge {
