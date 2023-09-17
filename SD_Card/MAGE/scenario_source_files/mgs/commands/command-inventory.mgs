@@ -15,8 +15,12 @@ man-inventory {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - INVENTORY</>"
 		" "
 		"Use this command to see what items you are currently carrying."
-		" "
-		"See also: <c>FUSE</>"
+	}
+	if (flag ch2-permission-to-fuse is true) {
+		show serial dialog {
+			" "
+			"See also: <c>FUSE</>"
+		}
 	}
 }
 
