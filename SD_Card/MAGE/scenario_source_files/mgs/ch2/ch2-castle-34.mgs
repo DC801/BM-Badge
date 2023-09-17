@@ -93,7 +93,7 @@ ch2-touch-plate-yes {
 		name "" "(You pick up the plate!)"
 	}
 	copy script ch2-hide-plate
-	set flag ch2-carrying-plate to true
+	copy script ch2-pickup-plate
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-plate-no {

@@ -31,7 +31,7 @@ on_load-ch2-castle-23 {
 
 	// DEBUG
 	if (debug mode is on) {
-		register get + thing -> debug-get-thing
+		register get + thing -> ch2-pickup-cactuscooler
 		show serial dialog { "\t<g>DEBUG option:</> 'get thing' to acquire Cactus Cooler" }
 	}
 
@@ -50,9 +50,6 @@ on_load-ch2-castle-23 {
 		copy script ch2-hide-heatsink
 	}
 	goto ch2-map-init
-}
-debug-get-thing {
-	set flag ch2-carrying-cactuscooler to true
 }
 
 /* ---------- ON_TICK ---------- */
@@ -86,11 +83,12 @@ interact-ch2-rocco {
 	}
 	else if (flag ch2-rocco-backstory is false) {
 		show dialog {
-			SELF "TODO\n(Can't give power supply; bring us Cactus Cooler first.)"
+			SELF "TODO\n(Can't give heat sink; bring us Cactus Cooler first.)"
 			"(Blah blah blah)"
 		}
 		set flag ch2-rocco-backstory to true
 		set flag ch2-want-cactuscooler to true
+		copy ch2-handoff-powersupply-to-cactuscooler
 		if (flag ch2-carrying-cactuscooler is true) {
 			show dialog {
 				SELF "Hey, wait a minute! You have a can of Cactus Cooler already! I don't suppose...."
@@ -187,7 +185,7 @@ ch2-touch-heatsink-yes {
 		name "" "(You pick up the heat sink!)"
 	}
 	copy script ch2-hide-heatsink
-	set flag ch2-carrying-heatsink to true
+	copy script ch2-pickup-heatsink
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-heatsink-no {

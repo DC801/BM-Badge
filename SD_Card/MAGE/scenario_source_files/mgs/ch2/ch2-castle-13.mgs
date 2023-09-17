@@ -94,7 +94,7 @@ ch2-touch-goldfish-yes {
 		name "" "(You pick up the goldfish!)"
 	}
 	copy script ch2-hide-goldfish
-	set flag ch2-carrying-goldfish to true
+	copy script ch2-pickup-goldfish
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-goldfish-no {

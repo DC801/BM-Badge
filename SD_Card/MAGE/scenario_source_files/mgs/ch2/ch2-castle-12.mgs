@@ -101,7 +101,7 @@ ch2-touch-needle-yes {
 		name "" "(You pick up the needle!)"
 	}
 	copy script ch2-hide-needle
-	set flag ch2-carrying-needle to true
+	copy script ch2-pickup-needle
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-needle-no {

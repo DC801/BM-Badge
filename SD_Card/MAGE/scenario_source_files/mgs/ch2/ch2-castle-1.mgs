@@ -93,20 +93,20 @@ on_load-ch2-castle-1 {
 	if (debug mode is on) {
 		register toot -> debug-finish-toot
 		register bert -> debug-bert
-		register get + monitor -> debug-get-monitor
-		register get + heatsink -> debug-get-heatsink
-		register get + cactuscooler -> debug-get-cactuscooler
-		register get + powersupply -> debug-get-powersupply
-		register get + keyboard -> debug-get-keyboard
-		register get + mouse -> debug-get-mouse
-		register get + harddrive -> debug-get-harddrive
-		register get + plate -> debug-get-plate
-		register get + needle -> debug-get-needle
-		register get + ramchips -> debug-get-ramchips
-		register get + clock -> debug-get-clock
-		register get + goldfish -> debug-get-goldfish
-		register get + abacus -> debug-get-abacus
-		register get + cpu -> debug-get-cpu
+		register get + monitor -> ch2-pickup-monitor
+		register get + heatsink -> ch2-pickup-heatsink
+		register get + cactuscooler -> ch2-pickup-cactuscooler
+		register get + powersupply -> ch2-pickup-powersupply
+		register get + keyboard -> ch2-pickup-keyboard
+		register get + mouse -> ch2-pickup-mouse
+		register get + harddrive -> ch2-fuse-harddrive
+		register get + plate -> ch2-pickup-plate
+		register get + needle -> ch2-pickup-needle
+		register get + ramchips -> ch2-pickup-ramchips
+		register get + clock -> ch2-pickup-clock
+		register get + goldfish -> ch2-pickup-goldfish
+		register get + abacus -> ch2-pickup-abacus
+		register get + cpu -> ch2-fuse-cpu
 		register round + "1" -> debug-round1
 		register round + "2" -> debug-round2
 		register round + "3" -> debug-round3
@@ -153,64 +153,6 @@ debug-bert {
 	teleport entity "%PLAYER%" to geometry mainframe-look-spot
 	turn entity "%PLAYER%" north
 	goto ch2-start-round-2
-}
-debug-get-monitor {
-	set flag ch2-carrying-monitor to true
-}
-debug-get-heatsink {
-	set flag ch2-carrying-heatsink to true
-}
-debug-get-cactuscooler {
-	set flag ch2-carrying-cactuscooler to true
-}
-debug-get-powersupply {
-	set flag ch2-carrying-powersupply to true
-}
-debug-get-keyboard {
-	set flag ch2-carrying-keyboard to true
-}
-debug-get-mouse {
-	set flag ch2-carrying-mouse to true
-}
-debug-get-harddrive {
-	set flag ch2-carrying-harddrive to true
-}
-debug-get-plate {
-	set flag ch2-carrying-plate to true
-}
-debug-get-needle {
-	set flag ch2-carrying-needle to true
-}
-debug-get-ramchips {
-	set flag ch2-carrying-ramchips to true
-}
-debug-get-clock {
-	set flag ch2-carrying-clock to true
-}
-debug-get-cpu {
-	set flag ch2-carrying-cpu to true
-}
-debug-get-goldfish {
-	set flag ch2-carrying-goldfish to true
-}
-debug-get-abacus {
-	set flag ch2-carrying-abacus to true
-}
-
-debug-round1 {
-	copy debug-get-monitor
-	copy debug-get-heatsink
-	copy debug-get-powersupply
-}
-debug-round2 {
-	copy debug-get-keyboard
-	copy debug-get-mouse
-	copy debug-get-harddrive
-}
-debug-round3 {
-	copy debug-get-ramchips
-	copy debug-get-clock
-	copy debug-get-cpu
 }
 
 /* ---------- ON_TICK ---------- */

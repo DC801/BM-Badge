@@ -150,7 +150,7 @@ ch2-touch-mouse {
 			Gregory "Good job. (TODO)"
 		}
 		copy script ch2-hide-mouse
-		set flag ch2-carrying-mouse to true
+		copy script ch2-pickup-mouse
 		set entity Mouse interact_script to null_script
 	}
 }

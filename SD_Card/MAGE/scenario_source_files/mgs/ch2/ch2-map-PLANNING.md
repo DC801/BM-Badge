@@ -167,9 +167,6 @@ Plot points implemented:
 	- [~] (5.) `mouse` (rodent) (room 33)
 		- The Cat doesn't like wireless mice (because they just get away all the time)
 		- [ ] Cat intro: something like "I'm too old to chase after mice, but here, take this mouse proximity detector" (uses wireless signal strength)
-		- [x] Hot-cold game (Manhattan distance -> X/8 lights lit)
-		- [ ] Proximity shows as "progress bar" on hex bit lights
-		- [ ] It takes three attempts: the first two times, the mouse just darts away in an ambiguous direction
 		- [ ] Cat congrats when finished (Also, "I definitely prefer a mouse with a physical connection. Don't you?")
 	- [ ] (6.) `harddrive`
 		- [ ] `plate` (dinner plate) (room 34)

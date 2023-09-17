@@ -101,7 +101,7 @@ ch2-touch-abacus-yes {
 		name "" "(You pick up the abacus!)"
 	}
 	copy script ch2-hide-abacus
-	set flag ch2-carrying-abacus to true
+	copy script ch2-pickup-abacus
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-abacus-no {
@@ -224,6 +224,7 @@ interact-ch2-room21-split {
 		Jean-Paul "Good luck, kid."
 	}
 	set flag ch2-want-ramchips to true
+	copy ch2-handoff-ramchips-to-seamoss
 	set flag interrupt to true
 	if (variable CALLBACK is 1) {
 		mutate CALLBACK = 0
