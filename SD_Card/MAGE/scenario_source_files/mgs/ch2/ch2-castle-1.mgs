@@ -147,6 +147,7 @@ debug-finish-toot {
 	set flag ch2-map-granted to true
 	copy register-map
 	copy register-parts
+	copy ch2-put_on_map-round1
 	set flag ch2-toot-done to true
 }
 debug-bert {

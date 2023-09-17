@@ -10,7 +10,7 @@ var lispish =
 	],
 	[//row 2
 		"|  ",
-		["=99", "|.@..|"],
+		["=99", "|.@?.|"],
 		"     ",
 		["=14", "/.\\"],
 		"             |"
@@ -19,7 +19,7 @@ var lispish =
 		"|  ",
 		["=99", "------"],
 		"   ",
-		["=14", "/..@..\\"],
+		["=14", "/..@?.\\"],
 		"           |"
 	],
 	[//row 4
@@ -44,16 +44,16 @@ var lispish =
 		"    ",
 		["=13", "|.@.|"],
 		"   ",
-		["=33", "|.@."],
+		["=33", "|?@"],
 		["=33||34", "|"],
-		["=34", "@|"],
+		["=34", "@?|"],
 		"  |"
 	],
 	[//row 7
 		"|  ",
 		["=23", "/..@..\\"],
 		"   ",
-		["=13", "|...|"],
+		["=13", "|.?.|"],
 		"   ",
 		["=33", "-"],
 		["=33||32", "---"],
@@ -64,7 +64,7 @@ var lispish =
 	],
 	[//row 8
 		"|  ",
-		["=23", "\\...../"],
+		["=23", "\\..?../"],
 		"   ",
 		["=13", "|...|"],
 		"    ",
@@ -83,11 +83,11 @@ var lispish =
 	],
 	[//row 10
 		"|   ",
-		["=22", "|.@.|"],
+		["=22", "|.@?|"],
 		"    ",
-		["=12", "|.@."],
+		["=12", "|.@?"],
 		["=12||31", "|"],
-		["=31", "...@....|"],
+		["=31", "...@.?..|"],
 		"   |"
 	],
 	[//row 11
@@ -102,9 +102,9 @@ var lispish =
 	],
 	[//row 12
 		"|   ",
-		["=21", "|...@...."],
+		["=21", "|...@.?.."],
 		["=21||11", "|"],
-		["=11", ".@.|"],
+		["=11", ".@?|"],
 		"            |"
 	],
 	[//row 13
@@ -188,32 +188,42 @@ var paths = {
 	},
 }
 
-/*
+var flagConditions = {
+	"11": [ "ch2-map-monitor" ],
+	"12": [ "ch2-map-needle" ],
+	"13": [ "ch2-map-goldfish" ],
+	"14": [ "ch2-map-clock" ],
+	"21": [ "ch2-map-abacus", "ch2-map-ramchips" ],
+	"22": [ "ch2-map-powersupply" ],
+	"23": [ "ch2-map-heatsink" ],
+	"31": [ "ch2-map-keyboard" ],
+	"33": [ "ch2-map-mouse" ],
+	"34": [ "ch2-map-plate" ],
+	"99": [ "ch2-map-mainframeos" ],
+};
 
-- [x] 11 => ch2-map-monitor is true
-- [x] 12 => ch2-map-needle is true
-- [x] 13 => ch2-map-goldfish is true
-- [x] 14 => ch2-map-clock is true
-- [x] 21 => ch2-map-abacus is true
-- [x] 21 => ch2-map-ramchips is true
-- [x] 22 => ch2-map-powersupply is true
-- [x] 23 => ch2-map-heatsink is true
-- [x] 31 => ch2-map-keyboard is true
-- [x] 33 => ch2-map-mouse is true
-- [x] 34 => ch2-map-plate is true
-- [x] 99 => ch2-map-mainframeos is true
-- [x] M => ch2-map-cactuscooler-castle is true
-	Message: Look for Cactus Cooler somewhere they keep refreshments or drinks.
-- [x] M => ch2-map-cactuscooler-bobaustin is true
-	Map Message: Ask Stone Cold Bob Austin about Cactus Cooler; he brings loads to all his parties.
-- [x] M => ch2-map-seamoss is true
-	Message: Look for Sea Moss somewhere in the east wing of the castle.
-
-
-*/
-
+var startMessageAtRow = 13;
+var messagePadding = "   ";
 var messages = {
-
+	"ch2-map-cactuscooler-castle": [
+		"Look for <m>Cactus Cooler</>",
+		"somewhere they keep",
+		"refreshments or drinks.",
+	],
+	"ch2-map-cactuscooler-bobaustin": [
+		"Ask <m>Stone Cold Bob Austin</>",
+		"about Cactus Cooler; he brings",
+		"loads to all his parties.",
+	],
+	"ch2-map-seamoss": [
+		"Look for <m>Sea Moss</>",
+		"somewhere in the east wing",
+		"of the castle.",
+	],
+};
+var specialCharStyles = {
+	"@": "c",
+	"?": "g",
 }
 
 var printMap = function () {
@@ -311,63 +321,126 @@ printMap();
 
 /* TRANSLATING MAP TO NATLANG */
 
-var makeNatlangMapRow = function (rowArray) {
-	var result = '';
-	rowArray.forEach(function (chonk, index) {
-		if (Array.isArray(chonk)) {
-			var targets = chonk[0].replace('=','').split('||');
-			var printme = chonk[1];
-			var blankprintme = ' '.repeat(printme.length);
-			var verboseTargets = targets
-				.map(function (item) {
-					return 'flag ch2-seen-room-' + item + ' is true';
-				})
-				.join(' || ')
-			result += `\tif (${verboseTargets}) {\n`;
-			if (printme.includes('@')) {
-				var splits = printme.split('@');
-				if (splits[0].length) {
-					result += `\t\tconcat serial dialog {"${splits[0]}"}\n`;
-				}
-				result += `\t\tif (variable ch2-in-room is ${targets[0]}) {\n`;
-				result += `\t\t\tconcat serial dialog {"<c>@</>"}\n`; // NOTE: format the `@` here!
-				result += `\t\t} else {\n`;
-				result += `\t\t\tconcat serial dialog {"."}\n`;
-				result += `\t\t}\n`;
-				if (splits[1].length) {
-					result += `\t\tconcat serial dialog {"${splits[1]}"}\n`;
-				}
-			} else {
-				result += `\t\tconcat serial dialog {"${printme}"}\n`;
-			}
-			result += `\t} else {\n`;
-			result += `\t\tconcat serial dialog {"${blankprintme}"}\n`;
-			result += `\t}\n`;
-		} else {
-			if (index === rowArray.length - 1) { // making some assumptions :P
-				result += `\tconcat serial dialog {"${chonk}\\n"}\n`;
-			} else {
-				result += `\tconcat serial dialog {"${chonk}"}\n`;
-			}
-		}
-	})
-	return result;
-}
+var makeNatlangMapLogicSegment = function (template) {
+	if (!Array.isArray(template)) { // just a plain thing; draw verbatim
+		return `	concat serial dialog {"${template}"}`;
+	}
+	var roomCondition = template[0]
+		.replace("=","")
+		.split("||")
+		.map(function (room) {
+			return `flag ch2-seen-room-${room} is true`;
+		})
+		.join(" || ");
+	
+	var ret = [];
+	var insert = '';
+	var insertInsert = function () {
+		ret.push(`	if (${roomCondition}) {`
+			+ `\n		concat serial dialog {"${insert}"}`
+			+ `\n	} else {`
+			+ `\n		concat serial dialog {"${' '.repeat(insert.length)}"}`
+			+ `\n	}`
+		);
+		insert = '';
+	}
 
-var makeNatlangMap = function () {
-	var result = 'draw-ch2-serial-map {\n';
-	result += '\tset serial control off\n';
-	lispish.forEach(function (row, index) {
-		if (index !== 0) {
-			result += '\n'
+	template[1].split("").forEach(function (char) {
+		if (char !== '@' && char !== "?") { // normal segment
+			insert += char;
+		} else { // special char
+			if (insert.length) { // if there's anything to insert, clean it up
+				insertInsert();
+			}
+			var messageName = '';
+			var currentRoom = template[0].replace("=","");
+			var specialCondition = '';
+			if (char === "@") {
+				// The player will not be in multiple rooms simultaneously... (right?)
+				specialCondition = 	`variable ch2-in-room is ${currentRoom}`;
+				messageName = "player";
+			} else if (char === "?") {
+				specialCondition = flagConditions[currentRoom]
+					.map(function (flagName) {
+						return `flag ${flagName} is true`
+					})
+					.join(" || ");
+				messageName = "item";
+			}
+			ret.push(`	if (${specialCondition}) {`
+				+ `\n		concat serial dialog ${messageName}`
+				+ `\n	} else {`
+				+ `\n		if (${roomCondition}) {`
+				+ `\n			concat serial dialog dot`
+				+ `\n		} else {`
+				+ `\n			concat serial dialog space`
+				+ `\n		}`
+				+ `\n	}`
+			);
 		}
-		result += `\t// ROW ${index}\n`
-		result += makeNatlangMapRow(row);
-	})
-	result += '\tgoto draw-ch2-serial-map-footer\n'
-	result += '}\n'
-	result = result.replace(/\\(?!n)/g, "\\\\");
-	return result;
+	});
+	if (insert.length) { // if there's anything left to insert
+		insertInsert();
+	}
+	return ret.join("\n");
 };
 
-console.log("breakpoint me lol")
+// optional message
+
+var messagePrefix = `<${specialCharStyles["?"]}>?</> `;
+var getMessageText = function (flagName, messageIndex) {
+	var message = messagePadding;
+	message += messageIndex === 0 ? messagePrefix : '';
+	message += messages[flagName][messageIndex];
+	return message;
+};
+
+var makeNatlangMapRow = function (rowData, rowIndex) {
+	var ret = rowData.map(makeNatlangMapLogicSegment);
+	// label at the top
+	ret.unshift(`\n	// ROW ${rowIndex}`);
+
+	// optional extra messages
+	var messageDiff = rowIndex - startMessageAtRow;
+	if (messageDiff >= 0) {
+		var messageFlagNames = Object.keys(messages)
+			.filter(function(flagName) {
+				return messages[flagName].length > messageDiff;
+			});
+		if (messageFlagNames.length) {
+			var zigs = messageFlagNames.map(function (flagName) {
+				return `if (flag ${flagName} is true) {`
+					+ `\n		concat serial dialog {"${getMessageText(flagName, messageDiff)}"}`
+					+ `\n	}`;
+			});
+			var joinedZigs = `	` + zigs.join(' else ');
+			ret.push(joinedZigs);
+		}
+	}
+	ret.push(`	concat serial dialog newline`);
+	return ret.join("\n");
+};
+
+var makeNatlangMap = function (lispish) {
+	var ret = []
+		.concat(
+			[
+				`serial dialog newline {"\\n"}`,
+				`serial dialog space {" "}`,
+				`serial dialog dot {"."}`,
+				`serial dialog player {"<${specialCharStyles["@"]}>@</>"}`,
+				`serial dialog item {"<${specialCharStyles["?"]}>?</>"}`,
+				`draw-ch2-serial-map {`,
+				`	set serial control off`,
+			],
+			lispish.map(makeNatlangMapRow),
+			[
+				`	goto draw-ch2-serial-map-footer`,
+				`}`
+			])
+		.join('\n');
+	return ret.replace(/\\(?!n)/g, "\\\\");
+};
+
+var natlangOutput = makeNatlangMap(lispish);
+console.log("breakpoint me lol");
