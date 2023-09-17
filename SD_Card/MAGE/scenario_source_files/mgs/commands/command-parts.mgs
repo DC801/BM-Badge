@@ -23,11 +23,20 @@ man-parts {
 // COMMAND
 
 command-parts {
-	show serial dialog spacer
-	show serial dialog {
-		"<m>LAMBDA:</> For parts, we still need:"
+	if (
+		flag ch2-ring-zero-restored is true // the artifact is full power
+		|| variable ch2-in-room is not 0 // OR you're in the castle
+	) {
+		// `parts` works normally
+		show serial dialog spacer
+		show serial dialog {
+			"<m>LAMBDA:</> For parts, we still need:"
+		}
+		goto command-parts-print
+	} else {
+		// otherwise, `parts` cannot reach Lambda
+		copy ch2-wireless-error
 	}
-	goto command-parts-print
 }
 command-parts-print {
 	if (variable ch2-storyflag-round is == 0) {
@@ -166,12 +175,13 @@ command-man-stop {
 command-parts-q {
 	show serial dialog {
 		" "
-		"(Type the part name for more info, <c>LIST</> to see the parts list again, or <c>QUIT</> to stop)"
+		"(Type the part name for more info, <c>PARTS</> to see the parts list again, or <c>QUIT</> to stop)"
 
-		_ "LIST" : command-parts
+		_ "PARTS" : command-parts
 
 		_ "Q" : command-man-stop
 		_ "QUIT" : command-man-stop
+		_ "EXIT" : command-man-stop
 
 		// ROUND ONE: normal
 		

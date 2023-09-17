@@ -22,14 +22,13 @@ undebug-birthday {
 // NON-DEBUG
 
 on_load-ch2-magehouse-birthday {
+	set hex control to on
 	if (flag skip-birthday is true) {
-		set hex control to on
 		set player control to on
 		teleport entity "%PLAYER%" to geometry debug-spot
 		register undebug -> undebug-birthday
 		goto null_script
 	} else {
-		set hex control to off
 		set player control to off
 	}
 	if (debug mode is on) {

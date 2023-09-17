@@ -42,7 +42,7 @@ serial dialog ch2-describe-needle {
 
 serial dialog ch2-describe-clock {
 	"<m>LAMBDA:</> We'll need a <m>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
-	"\tIn our case... well, I know <m>King Gibson has a very nice grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
+	"\tIn our case... well, I know <m>King Gibson has a very nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
 serial dialog ch2-describe-cpu {
 	"<m>LAMBDA:</> The <m>CPU</> is the most important part of the computer -- it's like the computer's brain. There aren't any spare lying around, but we could approximate one... maybe?"
@@ -134,6 +134,7 @@ ch2-toot-step99-end {
 		"<c>YOU:</> Yeah, let's do it!"
 		" "
 		"<m>LAMBDA:</> Good luck! And don't forget you can reach me from anywhere with <c>MAN</> if you have a question, or with <c>PARTS</> if you want to see the parts list."
+		"\tOh, and don't forget to <c>LOOK</> around wherever you are. The artifact might help you see something you wouldn't notice otherwise."
 		" "
 	}
 	show serial dialog lambda-over
@@ -414,6 +415,7 @@ ch2-pickup-cactuscooler {
 	set flag ch2-carrying-cactuscooler to true
 }
 ch2-pickup-heatsink {
+	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
 	set flag ch2-map-heatsink to false
 	set flag ch2-carrying-heatsink to true
 }

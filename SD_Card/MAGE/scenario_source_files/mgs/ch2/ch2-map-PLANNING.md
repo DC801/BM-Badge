@@ -24,7 +24,7 @@ Nethack-like
  | 99 |     / \
  ------   / 14  \
           -------  -------
-  -----    |   |   | 33|*|   *=34
+  -----    |   |   |33|34|
  /     \   |13 |   -------
  \ 23  /   |   |    |32 |
   -----    --------------
@@ -153,7 +153,7 @@ Plot points implemented:
 	- [~] (1.) `monitor` (room 11)
 		- Some kind of better framing device?
 	- [~] (2.) `heatsink` (room 23)
-		- [ ] The power plant guys need a substitute cooling source if you are to take their heatsink
+		- [~] The power plant guys need a substitute cooling source if you are to take their heatsink
 		- [x] `cactuscooler` (Bob's club)
 	- [x] (3.) `powersupply` (room 22)
 		- Framing device can be simple
@@ -161,9 +161,7 @@ Plot points implemented:
 	- [x] Lambda gives next round of the parts list
 
 - SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
-	- [ ] (4.) `keyboard` (keytar) (room 31)
-		- [ ] Simon says type game: the lead keytarist won't give you the spare keytar unless you can beat him in a keytar battle ("Try to keep up!")
-			- The keytar you receive has a name
+	- [x] (4.) `keyboard` (keytar) (room 31)
 	- [~] (5.) `mouse` (rodent) (room 33)
 		- The Cat doesn't like wireless mice (because they just get away all the time)
 		- [ ] Cat intro: something like "I'm too old to chase after mice, but here, take this mouse proximity detector" (uses wireless signal strength)
@@ -224,15 +222,11 @@ ALL DONE!
 
 - INTRO (`ch2-storyflag-round` = 0)
 	- [ ] Villagers direct you to western dungeon (castle)
-- FIRST ROUND: normal (`ch2-storyflag-round` = 1)
+- FIRST ROUND: normal (`ch2-storyflag-round` <= 2)
 	- [ ] Villagers ask how things are going
-- SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
-	- (DITTO ABOVE)
-- THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
+- THIRD ROUND: desperate (`ch2-storyflag-round` <= 4)
 	- [ ] Player asks villages about Bert, they haven't seen him
-- FINAL ROUND: software (`ch2-storyflag-round` = 4)
-	- (DITTO ABOVE)
-- AFTERWARD (`ch2-storyflag-round` = 5)
+- AFTERWARD (`ch2-storyflag-round` <= 5)
 	- [ ] Speculate on next location: software!
 
 ### Scripts needed for story items
@@ -395,3 +389,33 @@ We should take advantage of the badge hardware itself, especially since hex edit
 	- Should feel like a throwaway moment
 - Setting up the mainframe's networking
 - Mainframe needs software bodging because the hardware is so janky
+
+- [ ] Redo menu save management
+	- [ ] "Manage slots" rather than "save to current" and "load arbitrary"
+	- [ ] Make it so "new game" isn't the first option -- so people mashing `A` won't erase their save by accident
+- [ ] Old dudes need better excuse for not comming along; can't the player make a backdoor for them to come in?
+- [ ] If dialog state is open, don't say "Weird, I can't get Ring Zero to work"
+- [ ] Lambda should tell you the parts will show up on the map
+- [ ] People keep trying to `look` at inventory items or arbitrary stuff. How to handle this?
+- [ ] Load correct map on game start (depending on what chapter; currently they all load to town)
+- [ ] You should be able to ask the wizard for Bert messages (currently he ignores the question, and Lambda has `any messages` behavior)
+- [ ] `Look` should list items you can pick up
+- [ ] Second thing to do in town?
+	- Motherboard?
+	- Book from library?
+	- Sound card
+	- Water for water cooler
+	- bread from the bakery (a breadboard)
+	- network card from Trekkie
+	- ethernet cable from Trekkie!
+		- you could pick either one, and that's the one that goes away?
+		- or Trekkie says you can't use the tumbleweed one, since it's all borked
+		- put it in step 4: software, because you realize you need some software drivers
+- If the player has to leave to go to town once in every story round, they're more likely to see changes in town
+- Little hacks you can do in town, not for the story, but for funsies -- misleading or satisfying?
+	- Straighten out tangled ethernettle before Trekkie will let you take one?
+- Some kind of hardware that can only talk to you with how its lights are blinking (which ones, what pattern)
+- Game feature: type thing, have something in the world react
+- Type a keypad (using the terminal) to get door(s) working?
+- Twisty turny: https://en.wikiquote.org/wiki/Colossal_Cave_Adventure (different variations)
+- Multiple choice riddles!!!!! (After dark!!!!)

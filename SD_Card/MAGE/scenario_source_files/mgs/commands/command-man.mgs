@@ -46,14 +46,18 @@ command-man {
 		goto command-man-normal
 	} else {
 		// otherwise, `man` cannot reach Lambda
-		show serial dialog spacer
-		show serial dialog {
-			"<bold><r>ERROR:</> <bold>lambda-talk</> timed out"
-			" "
-			"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
-			" "
-			"<bold>lambda-talk</>: exited with code 1"
-		}
+		copy ch2-wireless-error
+	}
+}
+
+ch2-wireless-error {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><r>ERROR:</> <bold>lambda-talk</> timed out"
+		" "
+		"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
+		" "
+		"<bold>lambda-talk</>: exited with code 1"
 	}
 }
 
@@ -108,7 +112,7 @@ ch2-lambda-ishouldgo {
 	show serial dialog {
 		"<c>YOU:</> I should go."
 		" "
-		"<m>LAMBDA:</> No problem! Just let me know if you have a question about anything."
+		"<m>LAMBDA:</> No problem! Just feel free to type <c>MAN</> if you want to ask me a question about anything, and <c>HELP</> if you want to know all the commands you can use."
 		" "
 	}
 	show serial dialog lambda-over

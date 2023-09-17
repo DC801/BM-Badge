@@ -34,7 +34,7 @@ look-ch2-mainframe {
 		show serial dialog { "\t- a heatsink" }
 	}
 	if (flag ch2-installed-powersupply is true) {
-		show serial dialog { "\t- a power supply (1kw)" }
+		show serial dialog { "\t- a power supply (2 kW)" }
 	}
 	// abstract
 	if (flag ch2-installed-harddrive is true) {
@@ -350,7 +350,7 @@ interact-ch2-wizard {
 			show dialog {
 				SELF "Hey."
 				PLAYER "Hi."
-				SELF "Heard you talking to Lambda. Building a computer?"
+				SELF "Heard you talking to whats-his-name. Building a computer?"
 				PLAYER "Yeah, we're going to fix the mainframe."
 				SELF "Cool, cool."
 				"So you should know... I'm an installation wizard. I'm pretty great with computers."
@@ -364,7 +364,7 @@ interact-ch2-wizard {
 		} else {
 			if (flag interrupt2 is true) {
 				show dialog {
-					SELF "So Lambda wants to put that thing back together, huh? I don't really get it, but okie-dokie."
+					SELF "So mysterious-voice-man wants to put that thing back together, huh? I don't really get it, but okie-dokie."
 					"Let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
 				}
 			} else {

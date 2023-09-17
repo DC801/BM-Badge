@@ -77,33 +77,56 @@ on_walk-ch2-greenhouse-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-trekkie {
-	show dialog {
-		SELF "TODO"
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Oh, %PLAYER%! Me heard you were going to the serial dungeon in the mountain!"
+			PLAYER "Yeah, I guess."
+			SELF "Me want to wish you the best of luck!"
+			PLAYER "Thanks, %SELF%."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "How are things going, %PLAYER%?"
+			PLAYER "They're going okay, %SELF%. What about you?"
+			SELF "Me thinking of replacing the ethernettles with a faster spec. Gigabit ethernettles!"
+			PLAYER "(Giga what?)"
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Say, %SELF%, have you seen Bert around here recently?"
+			SELF "Me have not seen Bert for a long time. Me sorry, %PLAYER%."
+		}
+	} else {
+		show dialog {
+			SELF "Me heard %PLAYER% got the serial artifact."
+			"Me knew you could do it! Good job!"
+		}
 	}
+	set entity "%SELF%" interact_script to interact-ch2-trekkie
 }
 
 interact-ch2-modem {
 	show dialog {
-		SELF "TODO"
+		PLAYER "Oh, good. Looks like the internet is still working."
 	}
 }
 interact-ch2-tumbleweed {
 	show dialog {
-		SELF "TODO"
+		PLAYER "I swear, this thing gets more tangled every time I see it."
 	}
 }
 interact-ch2-ethernet {
 	show dialog {
-		SELF "TODO"
+		PLAYER "Looks like this one is new out of the box. Not a kink or pretzel in the whole thing."
 	}
 }
 interact-ch2-mulch {
 	show dialog {
-		SELF "TODO"
+		PLAYER "I bet this mulch is really heavy."
 	}
 }
 interact-ch2-barrel {
 	show dialog {
-		SELF "TODO"
+		PLAYER "I wonder if this is rainwater."
 	}
 }

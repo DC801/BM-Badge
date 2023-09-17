@@ -77,7 +77,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-powersupply is true) {
 			show dialog {
 				name "" "(Now installing... the power supply!)"
-				"(1000W may be overkill, but better safe than sorry.)"
+				"(2 kW may be overkill, but better safe than sorry.)"
 			}
 			set flag temp to true
 			copy ch2-install-powersupply
