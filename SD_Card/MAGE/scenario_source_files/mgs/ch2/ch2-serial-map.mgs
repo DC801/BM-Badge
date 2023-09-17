@@ -1,7 +1,14 @@
+serial dialog newline {"\n"}
+serial dialog space {" "}
+serial dialog dot {"."}
+serial dialog player {"<c>@</>"}
+serial dialog item {"<g>?</>"}
 draw-ch2-serial-map {
 	set serial control off
+
 	// ROW 0
-	concat serial dialog {"-------------------------------\n"}
+	concat serial dialog {"-------------------------------"}
+	concat serial dialog newline
 
 	// ROW 1
 	concat serial dialog {"|  "}
@@ -16,20 +23,38 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {" "}
 	}
-	concat serial dialog {"       M A P  |\n"}
+	concat serial dialog {"       M A P  |"}
+	concat serial dialog newline
 
 	// ROW 2
 	concat serial dialog {"|  "}
 	if (flag ch2-seen-room-99 is true) {
 		concat serial dialog {"|."}
-		if (variable ch2-in-room is 99) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {"..|"}
 	} else {
-		concat serial dialog {"      "}
+		concat serial dialog {"  "}
+	}
+	if (variable ch2-in-room is 99) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-99 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-map-mainframeos is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-99 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-99 is true) {
+		concat serial dialog {".|"}
+	} else {
+		concat serial dialog {"  "}
 	}
 	concat serial dialog {"     "}
 	if (flag ch2-seen-room-14 is true) {
@@ -37,7 +62,8 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"   "}
 	}
-	concat serial dialog {"             |\n"}
+	concat serial dialog {"             |"}
+	concat serial dialog newline
 
 	// ROW 3
 	concat serial dialog {"|  "}
@@ -49,16 +75,34 @@ draw-ch2-serial-map {
 	concat serial dialog {"   "}
 	if (flag ch2-seen-room-14 is true) {
 		concat serial dialog {"/.."}
-		if (variable ch2-in-room is 14) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {"..\\"}
 	} else {
-		concat serial dialog {"       "}
+		concat serial dialog {"   "}
 	}
-	concat serial dialog {"           |\n"}
+	if (variable ch2-in-room is 14) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-14 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-map-clock is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-14 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-14 is true) {
+		concat serial dialog {".\\"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	concat serial dialog {"           |"}
+	concat serial dialog newline
 
 	// ROW 4
 	concat serial dialog {"|           "}
@@ -77,7 +121,8 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {" "}
 	}
-	concat serial dialog {"           |\n"}
+	concat serial dialog {"           |"}
+	concat serial dialog newline
 
 	// ROW 5
 	concat serial dialog {"|            "}
@@ -102,7 +147,8 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"  "}
 	}
-	concat serial dialog {"  |\n"}
+	concat serial dialog {"  |"}
+	concat serial dialog newline
 
 	// ROW 6
 	concat serial dialog {"|   "}
@@ -114,62 +160,118 @@ draw-ch2-serial-map {
 	concat serial dialog {"    "}
 	if (flag ch2-seen-room-13 is true) {
 		concat serial dialog {"|."}
-		if (variable ch2-in-room is 13) {
-			concat serial dialog {"<c>@</>"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2-in-room is 13) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-13 is true) {
+			concat serial dialog dot
 		} else {
-			concat serial dialog {"."}
+			concat serial dialog space
 		}
+	}
+	if (flag ch2-seen-room-13 is true) {
 		concat serial dialog {".|"}
 	} else {
-		concat serial dialog {"     "}
+		concat serial dialog {"  "}
 	}
 	concat serial dialog {"   "}
 	if (flag ch2-seen-room-33 is true) {
-		concat serial dialog {"|."}
-		if (variable ch2-in-room is 33) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {"."}
+		concat serial dialog {"|"}
 	} else {
-		concat serial dialog {"    "}
+		concat serial dialog {" "}
+	}
+	if (flag ch2-map-mouse is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-33 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (variable ch2-in-room is 33) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-33 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
 	}
 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-34 is true) {
 		concat serial dialog {"|"}
 	} else {
 		concat serial dialog {" "}
 	}
-	if (flag ch2-seen-room-34 is true) {
-		if (variable ch2-in-room is 34) {
-			concat serial dialog {"<c>@</>"}
+	if (variable ch2-in-room is 34) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-34 is true) {
+			concat serial dialog dot
 		} else {
-			concat serial dialog {"."}
+			concat serial dialog space
 		}
+	}
+	if (flag ch2-map-plate is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-34 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-34 is true) {
 		concat serial dialog {"|"}
 	} else {
-		concat serial dialog {"  "}
+		concat serial dialog {" "}
 	}
-	concat serial dialog {"  |\n"}
+	concat serial dialog {"  |"}
+	concat serial dialog newline
 
 	// ROW 7
 	concat serial dialog {"|  "}
 	if (flag ch2-seen-room-23 is true) {
 		concat serial dialog {"/.."}
-		if (variable ch2-in-room is 23) {
-			concat serial dialog {"<c>@</>"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (variable ch2-in-room is 23) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-23 is true) {
+			concat serial dialog dot
 		} else {
-			concat serial dialog {"."}
+			concat serial dialog space
 		}
+	}
+	if (flag ch2-seen-room-23 is true) {
 		concat serial dialog {"..\\"}
 	} else {
-		concat serial dialog {"       "}
+		concat serial dialog {"   "}
 	}
 	concat serial dialog {"   "}
 	if (flag ch2-seen-room-13 is true) {
-		concat serial dialog {"|...|"}
+		concat serial dialog {"|."}
 	} else {
-		concat serial dialog {"     "}
+		concat serial dialog {"  "}
+	}
+	if (flag ch2-map-goldfish is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-13 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-13 is true) {
+		concat serial dialog {".|"}
+	} else {
+		concat serial dialog {"  "}
 	}
 	concat serial dialog {"   "}
 	if (flag ch2-seen-room-33 is true) {
@@ -197,14 +299,29 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {" "}
 	}
-	concat serial dialog {"  |\n"}
+	concat serial dialog {"  |"}
+	concat serial dialog newline
 
 	// ROW 8
 	concat serial dialog {"|  "}
 	if (flag ch2-seen-room-23 is true) {
-		concat serial dialog {"\\...../"}
+		concat serial dialog {"\\.."}
 	} else {
-		concat serial dialog {"       "}
+		concat serial dialog {"   "}
+	}
+	if (flag ch2-map-heatsink is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-23 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-23 is true) {
+		concat serial dialog {"../"}
+	} else {
+		concat serial dialog {"   "}
 	}
 	concat serial dialog {"   "}
 	if (flag ch2-seen-room-13 is true) {
@@ -215,16 +332,25 @@ draw-ch2-serial-map {
 	concat serial dialog {"    "}
 	if (flag ch2-seen-room-32 is true) {
 		concat serial dialog {"|."}
-		if (variable ch2-in-room is 32) {
-			concat serial dialog {"<c>@</>"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2-in-room is 32) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-32 is true) {
+			concat serial dialog dot
 		} else {
-			concat serial dialog {"."}
+			concat serial dialog space
 		}
+	}
+	if (flag ch2-seen-room-32 is true) {
 		concat serial dialog {".|"}
 	} else {
-		concat serial dialog {"     "}
+		concat serial dialog {"  "}
 	}
-	concat serial dialog {"   |\n"}
+	concat serial dialog {"   |"}
+	concat serial dialog newline
 
 	// ROW 9
 	concat serial dialog {"|   "}
@@ -254,32 +380,62 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"     "}
 	}
-	concat serial dialog {"   |\n"}
+	concat serial dialog {"   |"}
+	concat serial dialog newline
 
 	// ROW 10
 	concat serial dialog {"|   "}
 	if (flag ch2-seen-room-22 is true) {
 		concat serial dialog {"|."}
-		if (variable ch2-in-room is 22) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {".|"}
 	} else {
-		concat serial dialog {"     "}
+		concat serial dialog {"  "}
+	}
+	if (variable ch2-in-room is 22) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-22 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-map-powersupply is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-22 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-22 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
 	}
 	concat serial dialog {"    "}
 	if (flag ch2-seen-room-12 is true) {
 		concat serial dialog {"|."}
-		if (variable ch2-in-room is 12) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {"."}
 	} else {
-		concat serial dialog {"    "}
+		concat serial dialog {"  "}
+	}
+	if (variable ch2-in-room is 12) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-12 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-map-needle is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-12 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
 	}
 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-31 is true) {
 		concat serial dialog {"|"}
@@ -288,16 +444,39 @@ draw-ch2-serial-map {
 	}
 	if (flag ch2-seen-room-31 is true) {
 		concat serial dialog {"..."}
-		if (variable ch2-in-room is 31) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {"....|"}
 	} else {
-		concat serial dialog {"         "}
+		concat serial dialog {"   "}
 	}
-	concat serial dialog {"   |\n"}
+	if (variable ch2-in-room is 31) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-31 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-31 is true) {
+		concat serial dialog {"."}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2-map-keyboard is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-31 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-31 is true) {
+		concat serial dialog {"..|"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	concat serial dialog {"   |"}
+	concat serial dialog newline
 
 	// ROW 11
 	concat serial dialog {"|   "}
@@ -331,20 +510,43 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"         "}
 	}
-	concat serial dialog {"   |\n"}
+	concat serial dialog {"   |"}
+	concat serial dialog newline
 
 	// ROW 12
 	concat serial dialog {"|   "}
 	if (flag ch2-seen-room-21 is true) {
 		concat serial dialog {"|..."}
-		if (variable ch2-in-room is 21) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {"...."}
 	} else {
-		concat serial dialog {"         "}
+		concat serial dialog {"    "}
+	}
+	if (variable ch2-in-room is 21) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-21 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-21 is true) {
+		concat serial dialog {"."}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2-map-abacus is true || flag ch2-map-ramchips is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-21 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-21 is true) {
+		concat serial dialog {".."}
+	} else {
+		concat serial dialog {"  "}
 	}
 	if (flag ch2-seen-room-21 is true || flag ch2-seen-room-11 is true) {
 		concat serial dialog {"|"}
@@ -353,16 +555,34 @@ draw-ch2-serial-map {
 	}
 	if (flag ch2-seen-room-11 is true) {
 		concat serial dialog {"."}
-		if (variable ch2-in-room is 11) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
-		concat serial dialog {".|"}
 	} else {
-		concat serial dialog {"    "}
+		concat serial dialog {" "}
 	}
-	concat serial dialog {"            |\n"}
+	if (variable ch2-in-room is 11) {
+		concat serial dialog player
+	} else {
+		if (flag ch2-seen-room-11 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-map-monitor is true) {
+		concat serial dialog item
+	} else {
+		if (flag ch2-seen-room-11 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
+	}
+	if (flag ch2-seen-room-11 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"            |"}
+	concat serial dialog newline
 
 	// ROW 13
 	concat serial dialog {"|   "}
@@ -371,25 +591,50 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"       "}
 	}
-	concat serial dialog {"---------          |\n"}
+	concat serial dialog {"---------          |"}
+	if (flag ch2-map-cactuscooler-castle is true) {
+		concat serial dialog {"   <g>?</> Look for <m>Cactus Cooler</>"}
+	} else if (flag ch2-map-cactuscooler-bobaustin is true) {
+		concat serial dialog {"   <g>?</> Ask <m>Stone Cold Bob Austin</>"}
+	} else if (flag ch2-map-seamoss is true) {
+		concat serial dialog {"   <g>?</> Look for <m>Sea Moss</>"}
+	}
+	concat serial dialog newline
 
 	// ROW 14
 	concat serial dialog {"|          |..."}
-	if (flag ch2-seen-room-1 is true) {
-		if (variable ch2-in-room is 1) {
-			concat serial dialog {"<c>@</>"}
-		} else {
-			concat serial dialog {"."}
-		}
+	if (variable ch2-in-room is 1) {
+		concat serial dialog player
 	} else {
-		concat serial dialog {" "}
+		if (flag ch2-seen-room-1 is true) {
+			concat serial dialog dot
+		} else {
+			concat serial dialog space
+		}
 	}
-	concat serial dialog {"...|          |\n"}
+	concat serial dialog {"...|          |"}
+	if (flag ch2-map-cactuscooler-castle is true) {
+		concat serial dialog {"   somewhere they keep"}
+	} else if (flag ch2-map-cactuscooler-bobaustin is true) {
+		concat serial dialog {"   about Cactus Cooler; he brings"}
+	} else if (flag ch2-map-seamoss is true) {
+		concat serial dialog {"   somewhere in the east wing"}
+	}
+	concat serial dialog newline
 
 	// ROW 15
-	concat serial dialog {"|          ---------          |\n"}
+	concat serial dialog {"|          ---------          |"}
+	if (flag ch2-map-cactuscooler-castle is true) {
+		concat serial dialog {"   refreshments or drinks."}
+	} else if (flag ch2-map-cactuscooler-bobaustin is true) {
+		concat serial dialog {"   loads to all his parties."}
+	} else if (flag ch2-map-seamoss is true) {
+		concat serial dialog {"   of the castle."}
+	}
+	concat serial dialog newline
 
 	// ROW 16
-	concat serial dialog {"-------------------------------\n"}
+	concat serial dialog {"-------------------------------"}
+	concat serial dialog newline
 	goto draw-ch2-serial-map-footer
 }
