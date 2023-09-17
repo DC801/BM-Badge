@@ -122,24 +122,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":853,
-                 "height":32,
-                 "id":37,
-                 "name":"C. K. Watt",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-ckwatt"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":53,
-                 "y":224
-                }, 
-                {
-                 "class":"",
                  "gid":879,
                  "height":32,
                  "id":38,
@@ -155,6 +137,24 @@
                  "width":32,
                  "x":62,
                  "y":141
+                }, 
+                {
+                 "class":"",
+                 "gid":889,
+                 "height":48,
+                 "id":39,
+                 "name":"C. K. Watt",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-ckwatt"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":48,
+                 "y":225
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -219,7 +219,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":39,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -277,6 +277,10 @@
         {
          "firstgid":867,
          "source":"..\/entities\/entity-npc02.json"
+        }, 
+        {
+         "firstgid":888,
+         "source":"..\/entities\/entity-bigears.json"
         }],
  "tilewidth":32,
  "type":"map",
