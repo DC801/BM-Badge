@@ -72,29 +72,30 @@ on_go-ch2-lodge-north {
 interact-ch2-timmy {
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "I love the library! There's so many books here... it would take a hundred years to read them all!"
+			SELF "I love the library! There's so many books here it would take a hundred years to read them all!"
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {
 		show dialog {
-			SELF "If you had a race car, what color would you want it?"
-			"I think red cars are faster than blue cars."
+			SELF "If you had a race car, what color would you want?"
+			"I think red cars are faster than blue cars, usually."
 		}
 	} else if (variable ch2-storyflag-round is <= 4) {
 		show dialog {
 			PLAYER "Hey, %SELF%, do you know if Bert came in here recently?"
-			SELF "Bert? Who is that?"
+			SELF "Bert? Who's that?"
 			PLAYER "Well, he's one of the village elders. He's the big one, the one who --"
-			SELF "Oh yeah, Bert is the one that looks like a bear. Right?"
+			SELF "Oh yeah, Bert is the one that looks like a bear, right?"
 			PLAYER "Bear?"
 			SELF "Yeah, bear-Bert!"
-			"But you see, I actually I don't know if I saw him or not."
+			"But you see, I actually don't know if I saw him or not."
 			"I was reading."
 			PLAYER "Oh, I see, you were busy reading. Yeah, I guess that makes sense. Thanks anyway."
 		}
 	} else {
 		show dialog {
 			SELF "So you see... I think... bees are kind of scary."
-			"I wasn't stung, but I don't want them to sting me!"
+			"I wasn't stung before, but I don't want them to sting me!"
+			"Bees and bugs -- but especially bees -- really freak me out."
 		}
 	}
 	set entity "%SELF%" interact_script to interact-ch2-timmy
@@ -119,7 +120,7 @@ interact-ch2-alfonso-library {
 	mutate ch2-alfonso-library-count % $bookcount
 	if (variable ch2-alfonso-library-count is 1) {
 		show dialog {
-			SELF "Oh, goodness! It's \"The Importance of Being Earnest.\" I remember this play. Twenty years ago, Jackob and I did a reading of it with..."
+			SELF "Oh, goodness! It's \"The Importance of Being Earnest.\" I remember this play. Twenty years ago, Jackob and I did a reading of it with...."
 		}
 	} else if (variable ch2-alfonso-library-count is 2) {
 		show dialog {
