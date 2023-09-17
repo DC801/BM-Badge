@@ -390,14 +390,12 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Setting up the mainframe's networking
 - Mainframe needs software bodging because the hardware is so janky
 
-- [ ] Redo menu save management
+- [~] Redo menu save management
 	- [ ] "Manage slots" rather than "save to current" and "load arbitrary"
-	- [ ] Make it so "new game" isn't the first option -- so people mashing `A` won't erase their save by accident
-- [ ] Old dudes need better excuse for not comming along; can't the player make a backdoor for them to come in?
-- [ ] If dialog state is open, don't say "Weird, I can't get Ring Zero to work"
-- [ ] Lambda should tell you the parts will show up on the map
+	- [x] Make it so "new game" isn't the first option -- so people mashing `A` won't erase their save by accident
+- [~] Load correct map on game start (depending on what chapter; currently they all load to town)
+- [ ] Old dudes need better excuse for not coming along; can't the player make a backdoor for them to come in?
 - [ ] People keep trying to `look` at inventory items or arbitrary stuff. How to handle this?
-- [ ] Load correct map on game start (depending on what chapter; currently they all load to town)
 - [ ] You should be able to ask the wizard for Bert messages (currently he ignores the question, and Lambda has `any messages` behavior)
 - [ ] `Look` should list items you can pick up
 - [ ] Second thing to do in town?
@@ -415,7 +413,7 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Little hacks you can do in town, not for the story, but for funsies -- misleading or satisfying?
 	- Straighten out tangled ethernettle before Trekkie will let you take one?
 - Some kind of hardware that can only talk to you with how its lights are blinking (which ones, what pattern)
-- Game feature: type thing, have something in the world react
+- Game feature: type a thing, have something in the world react
 - Type a keypad (using the terminal) to get door(s) working?
 - Twisty turny: https://en.wikiquote.org/wiki/Colossal_Cave_Adventure (different variations)
 - Multiple choice riddles!!!!! (After dark!!!!)

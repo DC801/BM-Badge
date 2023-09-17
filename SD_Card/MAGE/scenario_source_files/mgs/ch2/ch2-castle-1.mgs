@@ -164,35 +164,38 @@ on_tick-ch2-castle-1 {
 		set warp state to walk_from-north
 		load map ch2-castle-outside
 	}
-	// check for hax button press
-	// (Not going to do shenanigans like this for other rooms because if you've left room 1 then you've seen the tutorial already)
-	if (flag ch2-ring-zero-restored is false) {
-		if (button HAX) { // You're attempting to use Ring Zero and...
-			// ...you've been told Ring Zero won't work
-			if (flag ch2-toot-done is true) {
-				show dialog {
-					PLAYER "Oh, yeah. Ring Zero won't work in in the castle until I fix the mainframe."
+	// if there's a dialog open currently, don't do anything! But...
+	if (dialog is closed) {
+		// check for hax button press
+		// (Not going to do shenanigans like this for other rooms because if you've left room 1 then you've seen the tutorial already)
+		if (flag ch2-ring-zero-restored is false) {
+			if (button HAX) { // You're attempting to use Ring Zero and...
+				// ...you've been told Ring Zero won't work
+				if (flag ch2-toot-done is true) {
+					show dialog {
+						PLAYER "Oh, yeah. Ring Zero won't work in in the castle until I fix the mainframe."
+					}
 				}
-			}
-			// ...you've discovered Ring Zero won't work
-			else if (flag ch2-hax-attempted is true) {
-				show dialog {
-					PLAYER "Why doesn't Ring Zero work?"
+				// ...you've discovered Ring Zero won't work
+				else if (flag ch2-hax-attempted is true) {
+					show dialog {
+						PLAYER "Why doesn't Ring Zero work?"
+					}
 				}
-			}
-			// ...you've tried the door already
-			else if (flag ch2-door-attempted is true) {
-				show dialog {
-					PLAYER "Weird. I can't get Ring Zero to work, either."
+				// ...you've tried the door already
+				else if (flag ch2-door-attempted is true) {
+					show dialog {
+						PLAYER "Weird. I can't get Ring Zero to work, either."
+					}
 				}
-			}
-			// ...you did NOT try the door yet
-			else {
-				show dialog {
-					PLAYER "Weird. I can't get Ring Zero to work."
+				// ...you did NOT try the door yet
+				else {
+					show dialog {
+						PLAYER "Weird. I can't get Ring Zero to work."
+					}
 				}
+				set flag ch2-hax-attempted to true
 			}
-			set flag ch2-hax-attempted to true
 		}
 	}
 	set map tick_script to on_tick-ch2-castle-1 // reset
