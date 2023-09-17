@@ -31,8 +31,6 @@ find-cc { set flag ch1-found-cactuscooler to true }
 unfind-cc { set flag ch1-found-cactuscooler to false }
 want-cc { set flag ch2-want-cactuscooler to true }
 unwant-cc { set flag ch2-want-cactuscooler to false }
-carry-cc { set flag ch2-carrying-cactuscooler to true }
-uncarry-cc { set flag ch2-carrying-cactuscooler to false }
 basement { set flag ch2-cutseen-bob-party to true }
 unbasement { set flag ch2-cutseen-bob-party to false }
 toot {
@@ -71,8 +69,8 @@ on_load-ch2-bobsclub {
 		register unbasement -> unbasement
 		register toot -> toot
 		register untoot -> untoot
-		register carry + cc -> carry-cc
-		register uncarry + cc -> uncarry-cc
+		register carry + cc -> ch2-pickup-cactuscooler
+		register uncarry + cc -> ch2-unpickup-cactuscooler
 		register reset -> reset
 		show serial dialog spacer
 		show serial dialog {

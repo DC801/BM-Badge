@@ -141,7 +141,7 @@ ch2-touch-powersupply-yes {
 		name "" "(You pick up the powersupply!)"
 	}
 	copy script ch2-hide-powersupply
-	set flag ch2-carrying-powersupply to true
+	copy script ch2-pickup-powersupply
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-powersupply-no {

@@ -188,6 +188,34 @@ var paths = {
 	},
 }
 
+/*
+
+- [x] 11 => ch2-map-monitor is true
+- [x] 12 => ch2-map-needle is true
+- [x] 13 => ch2-map-goldfish is true
+- [x] 14 => ch2-map-clock is true
+- [x] 21 => ch2-map-abacus is true
+- [x] 21 => ch2-map-ramchips is true
+- [x] 22 => ch2-map-powersupply is true
+- [x] 23 => ch2-map-heatsink is true
+- [x] 31 => ch2-map-keyboard is true
+- [x] 33 => ch2-map-mouse is true
+- [x] 34 => ch2-map-plate is true
+- [x] 99 => ch2-map-mainframeos is true
+- [x] M => ch2-map-cactuscooler-castle is true
+	Message: Look for Cactus Cooler somewhere they keep refreshments or drinks.
+- [x] M => ch2-map-cactuscooler-bobaustin is true
+	Map Message: Ask Stone Cold Bob Austin about Cactus Cooler; he brings loads to all his parties.
+- [x] M => ch2-map-seamoss is true
+	Message: Look for Sea Moss somewhere in the east wing of the castle.
+
+
+*/
+
+var messages = {
+
+}
+
 var printMap = function () {
 	var string = '';
 	lispish.forEach(function (row, index) {

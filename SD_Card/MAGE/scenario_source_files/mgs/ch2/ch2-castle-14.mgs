@@ -94,7 +94,7 @@ ch2-touch-clock-yes {
 		name "" "(You pick up the clock!)"
 	}
 	copy script ch2-hide-clock
-	set flag ch2-carrying-clock to true
+	copy script ch2-pickup-clock
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-clock-no {

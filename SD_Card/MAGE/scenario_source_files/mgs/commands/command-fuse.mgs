@@ -62,9 +62,7 @@ command-fuse-combo1 {
 	}
 }
 command-fuse-combo1-yes {
-	copy ch2-install-plate
-	copy ch2-install-needle
-	set flag ch2-carrying-harddrive to true
+	copy ch2-fuse-harddrive
 	show serial dialog spacer
 	show serial dialog {
 		"Items fused into <m>HARD DRIVE</>!"
@@ -86,9 +84,7 @@ command-fuse-combo2 {
 	}
 }
 command-fuse-combo2-yes {
-	copy ch2-install-goldfish
-	copy ch2-install-abacus
-	set flag ch2-carrying-cpu to true
+	copy ch2-fuse-cpu
 	show serial dialog spacer
 	show serial dialog {
 		"Items fused into <m>CPU</>!"

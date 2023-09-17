@@ -94,7 +94,7 @@ ch2-touch-monitor-yes {
 		name "" "(You pick up the monitor!)"
 	}
 	copy script ch2-hide-monitor
-	set flag ch2-carrying-monitor to true
+	copy script ch2-pickup-monitor
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-monitor-no {

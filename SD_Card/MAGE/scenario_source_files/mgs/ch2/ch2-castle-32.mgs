@@ -124,6 +124,7 @@ interact-ch2-vendingmachine {
 		}
 		turn entity "Sea Moss" toward entity "%PLAYER%"
 		set flag ch2-want-bobparty to true
+		copy ch2-handoff-cactuscooler-to-bobaustin
 	} else {
 		show dialog {
 			PLAYER "Oh, right. No soda in here."
@@ -274,7 +275,7 @@ ch2-touch-ramchips-yes {
 		name "" "(You pick up the RAM chips!)"
 	}
 	copy script ch2-hide-ramchips
-	set flag ch2-carrying-ramchips to true
+	copy script ch2-pickup-ramchips
 	set flag ch2-ramchips-dispensed to false
 	set entity "%SELF%" interact_script to null_script
 }

@@ -359,7 +359,7 @@ interact-ch2-icechest {
 		show dialog {
 			name "" "(You pick up the can of Cactus Cooler!)"
 		}
-		set flag ch2-carrying-cactuscooler to true
+		copy ch2-pickup-cactuscooler
 		set flag interrupt to true // you just picked it up
 	}
 	set entity "%SELF%" interact_script to interact-ch2-icechest // reset

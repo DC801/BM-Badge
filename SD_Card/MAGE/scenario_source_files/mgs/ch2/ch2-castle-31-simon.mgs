@@ -511,7 +511,7 @@ simon-game-win {
 		}
 		set entity Simon animation to 12
 		set flag interrupt to true
-		set flag ch2-carrying-keyboard to true
+		copy script ch2-pickup-keyboard
 		set flag ch2-simon-won-before to true
 		goto null_script // TODO
 	} else {
