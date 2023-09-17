@@ -1,12 +1,4 @@
 { "columns":4,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
  "image":"entity-marta-broom.png",
  "imageheight":192,
  "imagewidth":192,
@@ -14,7 +6,7 @@
  "name":"marta-broom",
  "spacing":0,
  "tilecount":16,
- "tiledversion":"1.4.3",
+ "tiledversion":"1.9.2",
  "tileheight":48,
  "tiles":[
         {
@@ -35,8 +27,8 @@
                  "duration":200,
                  "tileid":12
                 }],
-         "id":0,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":0
         }, 
         {
          "animation":[
@@ -56,8 +48,8 @@
                  "duration":200,
                  "tileid":13
                 }],
-         "id":1,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":1
         }, 
         {
          "animation":[
@@ -77,8 +69,8 @@
                  "duration":200,
                  "tileid":14
                 }],
-         "id":2,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":2
         }, 
         {
          "animation":[
@@ -98,58 +90,58 @@
                  "duration":200,
                  "tileid":15
                 }],
-         "id":3,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":3
         }, 
         {
-         "id":4,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":4
         }, 
         {
-         "id":5,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":5
         }, 
         {
-         "id":6,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":6
         }, 
         {
-         "id":7,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":7
         }, 
         {
-         "id":8,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":8
         }, 
         {
-         "id":9,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":9
         }, 
         {
-         "id":10,
-         "type":"marta_broom"
+         "class":"marta_broom",
+         "id":10
         }, 
         {
-         "id":11,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":11
         }, 
         {
-         "id":12,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":12
         }, 
         {
-         "id":13,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":13
         }, 
         {
-         "id":14,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":14
         }, 
         {
-         "id":15,
-         "type":"marta-broom"
+         "class":"marta_broom",
+         "id":15
         }],
  "tilewidth":48,
  "type":"tileset",
- "version":1.4
+ "version":"1.9"
 }
