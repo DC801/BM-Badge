@@ -183,6 +183,18 @@
                  "width":32,
                  "x":39,
                  "y":403
+                }, 
+                {
+                 "class":"",
+                 "gid":777,
+                 "height":32,
+                 "id":42,
+                 "name":"Templeton",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":214,
+                 "y":228
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -258,7 +270,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":42,
+ "nextobjectid":43,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -299,6 +311,10 @@
         {
          "firstgid":767,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":777,
+         "source":"..\/entities\/entity-slimey.json"
         }],
  "tilewidth":32,
  "type":"map",

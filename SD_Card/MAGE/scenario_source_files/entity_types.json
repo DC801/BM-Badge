@@ -3223,6 +3223,138 @@
 		"scenarioIndex": 49,
 		"serialized": {}
 	},
+	"npc03": {
+		"type": "npc03",
+		"tileset": "entity-npc03.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 50,
+		"serialized": {}
+	},
+	"npc04": {
+		"type": "npc04",
+		"tileset": "entity-npc04.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 51,
+		"serialized": {}
+	},
 	"ram_chips": {
 		"type": "ram_chips",
 		"tileset": "entity-ram_chips.json",
@@ -3286,7 +3418,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 50,
+		"scenarioIndex": 52,
 		"serialized": {}
 	},
 	"lambda": {
@@ -3478,7 +3610,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 51,
+		"scenarioIndex": 53,
 		"serialized": {}
 	},
 	"simon": {
@@ -3509,7 +3641,7 @@
 			],
 			"rockin": [
 				{
-					"tileid": 25,
+					"tileid": 24,
 					"flip_x": false
 				},
 				{
@@ -3517,7 +3649,7 @@
 					"flip_x": false
 				},
 				{
-					"tileid": 25,
+					"tileid": 24,
 					"flip_x": false
 				},
 				{
@@ -3742,7 +3874,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 52,
+		"scenarioIndex": 54,
 		"serialized": {}
 	},
 	"crow": {
@@ -3807,6 +3939,140 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"scenarioIndex": 55,
+		"serialized": {}
+	},
+	"bigears": {
+		"type": "bigears",
+		"tileset": "entity-bigears.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 56,
+		"serialized": {}
+	},
+	"slimey": {
+		"type": "slimey",
+		"tileset": "entity-slimey.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": true
+				},
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 57,
+		"serialized": {}
 	}
 }

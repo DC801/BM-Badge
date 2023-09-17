@@ -136,6 +136,18 @@
                  "width":32,
                  "x":104,
                  "y":112
+                }, 
+                {
+                 "class":"",
+                 "gid":852,
+                 "height":32,
+                 "id":38,
+                 "name":"Helvetica",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":293,
+                 "y":172
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -200,7 +212,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":38,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -253,6 +265,11 @@
         {
          "firstgid":819,
          "source":"..\/entities\/entity-npc03.json"
+        },
+    
+        {
+         "firstgid":840,
+         "source":"..\/entities\/entity-npc04.json"
         }],
  "tilewidth":32,
  "type":"map",
