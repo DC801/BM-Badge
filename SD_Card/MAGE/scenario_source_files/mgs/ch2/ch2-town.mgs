@@ -182,10 +182,82 @@ on_go-ch2-town-bobsclub {
 
 /* ---------- ENTITIES ---------- */
 
+ch2-interact-marta {
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Oh! You're heading out west, to the dungeon in the mountain?"
+			PLAYER "Yeah, the serial dungeon."
+			SELF "That old castle always freaked me out a little bit."
+			"It's so ancient, and full of such strange humming and clicking noises. I never really want to stay over there for long."
+			"...."
+			"Oh, I mean... I'm sure it's perfectly safe. Seriously, I hear King Gibson is actually really nice, and --"
+			PLAYER "It's okay, I'll face a spooky old castle to protect the town, even if it is a little creepy."
+			SELF "You'll do great. Good luck."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "How's it going over there? Learning anything about computers?"
+			PLAYER "I guess so. I'm starting to build one, anyway."
+			"I've been getting a lot of help, though."
+			SELF "That's okay. I'm glad you found a mentor to help you learn and do these things. It's a great jump start to learning a new skill."
+			PLAYER "I suppose so."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, %SELF%, I'm looking for Bert. Have you seen him?"
+			SELF "Here and there, but not for a while. Do you need him for something?"
+			PLAYER "No. Yeah. I don't know."
+			"He just said he was going to investigate something, then come right back and tell me what he found out."
+			"But I haven't heard anything yet. I'm getting worried."
+			SELF "Well, he can't have gotten far. He'll turn up eventually, I'm sure."
+			"I'll keep an eye out, though."
+		}
+	} else {
+		show dialog {
+			SELF "You've got two artifacts under your belt now. Save some for the rest of us, eh?"
+			"In all seriousness, way to go, %PLAYER%!"
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-marta
+}
+
+interact-ch2-shepherd {
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "So, um, I don't really know what's so special about cereal."
+			"Like, is the artifact a prize from inside a cereal box?"
+			PLAYER "Apparently it's \"serial,\" not \"cereal.\""
+			SELF "???" "That's what I said, isn't it? Cereal. Like, granola?"
+			PLAYER "No, it's \"serial,\" like... well, I don't know what it's like, but it's not breakfast."
+			SELF "Huh, well, I don't really get it, but good luck in the dungeon."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "You know, it's the weirdest thing, but I could've sworn there were only four sheep before."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, have you seen Bert recently?"
+			SELF "I saw him coming in and out of the library a few times."
+			PLAYER "When was that?"
+			SELF "Let's see.... Not for kind of a while, I guess."
+			"He sure looked like he was in a hurry though. Especially that last time."
+			"He came racing out of the library like something was on fire."
+			PLAYER "(Oh my goodness. Was that when he came to see me in the castle?)"
+			"(But what happened after that?)"
+		}
+	} else {
+		show dialog {
+			SELF "Hey, I heard you built a computer or something. That's so cool! Way to go!"
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-shepherd
+}
+
 interact-ch2-delmar {
 	copy face-player
 	show dialog { SELF "...." }
-	turn entity "%SELF%" north
+	rotate entity "%SELF%" 2
 }
 interact-ch2-verthandi {
 	copy face-player
@@ -229,8 +301,8 @@ interact-ch2-jackob-end {
 			then goto null_script
 		show dialog {
 			SELF "But you know, %PLAYER%, it seems like you still haven't finished chapter 1 in this save file."
-			"I'm not angry, just disappointed."
-			"...Just kidding. If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you!"
+			"I'm not angry. Just disappointed."
+			"...Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
 			"In all seriousness, do feel free to give chapter 1 a go."
 		}
 	}
