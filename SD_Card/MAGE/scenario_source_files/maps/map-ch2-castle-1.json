@@ -136,7 +136,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show-save_game"
+                         "value":"menu-save_game"
                         }, 
                         {
                          "name":"on_look",

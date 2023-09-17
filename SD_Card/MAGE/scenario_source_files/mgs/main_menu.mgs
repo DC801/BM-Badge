@@ -22,13 +22,13 @@ on_load-main_menu {
 	/* DEBUG QUICK STUFFS */
 	if (debug mode is on) {
 		register debug -> debug
-		register hub -> hub
+		register hub -> debug-hub
 		register honk -> system_bell
-		register bob -> bob
-		register bob2 -> bob2
-		register bob3 -> bob3
-		register simon -> main_menu-simon
-		register ch2 -> start-chapter2
+		register bob -> debug-bob
+		register bob2 -> debug-bob2
+		register bob3 -> debug-bob3
+		register simon -> debug-menu-simon
+		register ch2 -> menu-chapter_select-2
 		register rtfm -> command-rtfm
 		copy register-warp
 		copy register-storyflag
@@ -52,7 +52,9 @@ on_load-main_menu {
 	}
 }
 
-main_menu-simon {
+/* DEBUGSSSS */
+
+debug-menu-simon {
 	set serial control on
 	set flag ch2-has-artifact to true
 	set hex control on
@@ -61,8 +63,7 @@ main_menu-simon {
 	mutate ch2-storyflag-round = 2
 	copy warp-ch2-31 // this has a load_map in it
 }
-
-hub {
+debug-hub {
 	load map warp_zone
 }
 system_bell {
@@ -70,18 +71,18 @@ system_bell {
 		"Honk!"
 	}
 }
-bob {
+debug-bob {
 	set flag ch2-has-artifact to true
 	set flag ch2-map-granted to true
 	load map ch2-bobsclub
 }
-bob2 {
+debug-bob2 {
 	set warp state to warping
 	set flag ch2-has-artifact to true
 	set flag ch2-map-granted to true
 	load map ch2-bobsclub-basement
 }
-bob3 {
+debug-bob3 {
 	set warp state to warping
 	set flag ch2-has-artifact to true
 	set flag ch2-map-granted to true
@@ -97,286 +98,249 @@ debug {
 	load map ch2-castle-1
 }
 
-/* ---------- on_tick scripts ---------- */
+/* ---------- INTRO SPLASH ---------- */
 
-// entity listens for a button press, and changes the map's on_tick
+// entity listens for a button press, and changes the map's on_tick to the menu itself
 on_tick-button-to-skip {
-	if button ANY then goto script handler-skip-splash
+	if button ANY then goto handler-skip-splash
 }
 handler-skip-splash {
-	set map tick_script to begin-main_menu-fade-in
-	goto script null_script
+	set map tick_script to main_menu-fade_in
+	goto null_script
 }
 
-// EVERYTHING ELSE
-
+// map script shows the splash, and can be interrupted by the handler above; otherwise it continues to the menu itself
 on_tick-main_menu {
-	goto script on_tick-splash
+	goto on_tick-splash
 }
-
 on_tick-splash {
 	set hex control to off
-	if warp state is from-game then goto script begin-main_menu-fade-in
+	if warp state is from-game then goto main_menu-fade_in
 	teleport camera to geometry dc801-center
 	fade in camera from #000000 over 800ms
 	wait 2900ms
 	fade out camera to #000000 over 800ms
 	set entity "%PLAYER%" tick_script to null_script
-	goto script begin-main_menu-fade-in
+	goto main_menu-fade_in
 }
 
-begin-main_menu-fade-in {
+main_menu-fade_in {
 	set hex control to off
 	set entity "%PLAYER%" tick_script to null_script
 	teleport camera to geometry menu-center
 	fade in camera from #000000 over 800ms
-	goto script begin-main_menu
+	goto main_menu
 }
 
-begin-main_menu {
+/* ---------- MAIN MENU ---------- */
+
+main_menu {
 	set entity "%PLAYER%" tick_script to null_script
-	show dialog dialog-main_menu {
+	show dialog {
 		name " "
 		border_tileset menu
 		"CHOOSE YOUR FATE"
-		> "Play Game" : goto "show-menu-play-game"
-		> "Play Demo" : goto "load_map-demo_map"
-		> "Bling Mode" : goto "show-menu-bling-mode"
-		> "Credits" : goto "show-menu-credits-choice"
+		> "Play Game" : menu-play_game
+		> "Play Demo" : load_map-demo_map
+		> "Bling Mode" : menu-bling-mode
+		> "Credits" : menu-credits-choice
 	}
 }
 
-show-menu-play-game {
-	show dialog dialog-show-menu-play-game {
-		name " "
-		border_tileset menu
-		"PLAY GAME"
-		> "New Game" : goto "show-new_game"
-		> "Load Game" : goto "show-load_game"
-		> "Erase Save" : goto "show-erase_save"
-		> "Back" : goto "begin-main_menu"
-	}
-}
+/* ---------- CREDITS ---------- */
 
-show-menu-bling-mode {
-	show dialog dialog-show-menu-bling-mode {
-		name " "
-		border_tileset menu
-		"SAVE YOUR SCREEN"
-		> "DC801 showcase" : goto "show-menu-bling-dc801-showcase"
-		> "Flying \"Toasters\"" : goto "start_bling-flying-toasters"
-		> "QR Codes" : goto "start_bling-qr"
-		> "Back" : goto "begin-main_menu"
-	}
-}
-
-show-menu-bling-dc801-showcase {
-	show dialog dialog-show-menu-bling-dc801-showcase {
-		name " "
-		border_tileset menu
-		"DC801 SHOWCASE"
-		> "Auto mode" : goto "start_bling-rotate-auto"
-		> "Manual mode" : goto "start_bling-rotate-manual"
-		> "Back" : goto "show-menu-bling-mode"
-	}
-}
-
-show-menu-credits-choice {
-	show dialog dialog-show-menu-credits-choice {
+menu-credits-choice {
+	show dialog {
 		name " "
 		border_tileset menu
 		"CREDITS"
-		> "Chapter 1 credits" : goto "show-menu-credits"
-		> "Chapter 2 credits" : goto "show-menu-credits2"
-		> "Back" : goto "begin-main_menu"
+		> "Chapter 1 credits" : menu-credits
+		> "Chapter 2 credits" : menu-credits2
+		> "Back" : main_menu
 	}
 }
 
-load-start-map {
-	set entity "%PLAYER%" tick_script to count-chapter1-storyflags
-	set map tick_script to main_menu-ch1-storyflag-count-wait
+menu-credits {
+	set flag credits-from-menu to true
+	load map credits
+}
+menu-credits2 {
+	set flag credits-from-menu to true
+	load map credits2
+	// todo: make credits for chapter 2
 }
 
-main_menu-ch1-storyflag-count-wait {
-	if flag chapter1-storyflags-tallied is true then goto script main_menu-ch1-storyflag-count-done
-}
+/* ---------- BLING MODE ---------- */
 
-main_menu-ch1-storyflag-count-done {
-	set flag chapter1-storyflags-tallied to false
-	show dialog dialog-load-start-map-q {
+menu-bling-mode {
+	show dialog {
 		name " "
 		border_tileset menu
-		"PLAY (slot $slot-number$: \"%PLAYER%\")"
-		> "Chapter 1 ($chapter1-storyflag-tally$/11)" : goto "start-chapter1"
-		> "Chapter 2 (X/??)" : goto "start-chapter2-check"
-		> "Back" : goto "show-menu-play-game"
+		"SAVE YOUR SCREEN"
+		> "DC801 showcase" : menu-bling-dc801-showcase
+		> "Flying \"Toasters\"" : start_bling-flying-toasters
+		> "QR Codes" : start_bling-qr
+		> "Back" : main_menu
 	}
 }
 
-show-new_game {
-	show dialog dialog-new_game {
+menu-bling-dc801-showcase {
+	show dialog {
 		name " "
 		border_tileset menu
-		"NEW GAME"
-		> "Slot 0" : goto "new_game-0"
-		> "Slot 1" : goto "new_game-1"
-		> "Slot 2" : goto "new_game-2"
-		> "Back" : goto "show-menu-play-game"
+		"DC801 SHOWCASE"
+		> "Auto mode" : start_bling-rotate-auto
+		> "Manual mode" : start_bling-rotate-manual
+		> "Back" : menu-bling-mode
 	}
 }
+  //---------------------------------//
+ /* ---------- PLAY GAME ---------- */
+//---------------------------------//
 
-show-load_game {
-	show dialog dialog-load_game {
+menu-play_game {
+	show dialog {
 		name " "
 		border_tileset menu
-		"LOAD GAME"
-		> "Slot 0" : goto "load_game-0"
-		> "Slot 1" : goto "load_game-1"
-		> "Slot 2" : goto "load_game-2"
-		> "Back" : goto "show-menu-play-game"
+		"PLAY GAME"
+		> "Load Game" : menu-load_game
+		> "New Game" : menu-new_game
+		> "Erase Save" : menu-erase_save
+		> "Back" : main_menu
 	}
 }
 
-show-erase_save {
-	show dialog dialog-erase_save {
+/* ---------- ERASE SAVE ---------- */
+
+menu-erase_save {
+	show dialog {
 		name " "
 		border_tileset menu
 		"BOOM TIME!"
-		> "Erase slot 0" : goto "erase_save-0"
-		> "Erase slot 1" : goto "erase_save-1"
-		> "Erase slot 2" : goto "erase_save-2"
-		> "Back" : goto "show-menu-play-game"
+		> "Erase slot 0" : menu-erase_save-0
+		> "Erase slot 1" : menu-erase_save-1
+		> "Erase slot 2" : menu-erase_save-2
+		> "Back" : menu-play_game
 	}
 }
 
-show-save_game {
-	show dialog dialog-save_game {
-		name "Save Game"
-		border_tileset codec
-		portrait floppy
-		"Would you like to save your progress?"
-		> "Yes" : goto "save_game-yes"
-		> "No" : goto "save_game-no"
-		> "Return to Main Menu" : goto "save_game-main_menu"
-	}
-}
-
-save_game-main_menu {
-	set warp state to from-game
-	load map main_menu
-}
-
-save_game-yes {
-	save slot
-	set entity "%SELF%" interact_script to show-save_game
-}
-
-save_game-no {
-	set entity "%SELF%" interact_script to show-save_game
-}
-
-new_game-0 {
+menu-erase_save-0 {
 	erase slot 0
-	mutate slot-number = 0
-	goto script set-player-name-q
+	goto menu-play_game
 }
-
-new_game-1 {
+menu-erase_save-1 {
 	erase slot 1
-	mutate slot-number = 1
-	goto script set-player-name-q
+	goto menu-play_game
 }
-
-new_game-2 {
+menu-erase_save-2 {
 	erase slot 2
-	mutate slot-number = 2
-	goto script set-player-name-q
+	goto menu-play_game
 }
 
-load_game-0 {
+/* ---------- LOAD GAME ---------- */
+
+menu-load_game {
+	show dialog {
+		name " "
+		border_tileset menu
+		"LOAD GAME"
+		> "Slot 0" : menu-load_game-0
+		> "Slot 1" : menu-load_game-1
+		> "Slot 2" : menu-load_game-2
+		> "Back" : menu-play_game
+	}
+}
+menu-load_game-0 {
 	load slot 0
 	mutate slot-number = 0
-	goto script load-start-map
+	goto menu-chapter_select-init
 }
-
-load_game-1 {
+menu-load_game-1 {
 	load slot 1
 	mutate slot-number = 1
-	goto script load-start-map
+	goto menu-chapter_select-init
 }
-
-load_game-2 {
+menu-load_game-2 {
 	load slot 2
 	mutate slot-number = 2
-	goto script load-start-map
+	goto menu-chapter_select-init
 }
 
-erase_save-0 {
+/* ---------- NEW GAME ---------- */
+
+menu-new_game {
+	show dialog {
+		name " "
+		border_tileset menu
+		"NEW GAME"
+		> "Slot 0" : menu-new_game-0
+		> "Slot 1" : menu-new_game-1
+		> "Slot 2" : menu-new_game-2
+		> "Back" : menu-play_game
+	}
+}
+
+menu-new_game-0 {
 	erase slot 0
-	goto script show-menu-play-game
+	mutate slot-number = 0
+	goto menu-player-name-q
 }
-
-erase_save-1 {
+menu-new_game-1 {
 	erase slot 1
-	goto script show-menu-play-game
+	mutate slot-number = 1
+	goto menu-player-name-q
 }
-
-erase_save-2 {
+menu-new_game-2 {
 	erase slot 2
-	goto script show-menu-play-game
+	mutate slot-number = 2
+	goto menu-player-name-q
 }
 
-set-player-name-q {
-	show dialog dialog-set-player-name-q {
+// Set player name
+
+const! (
+	$preset1 = "Red"
+	$preset2 = "Bubbles"
+	$preset3 = "Black Mage"
+)
+
+menu-player-name-q {
+	show dialog {
 		name " "
 		border_tileset menu
 		"NEW GAME: Pick your name."
-		> "Red" : goto "set-player-name-preset1-confirm"
-		> "Bubbles" : goto "set-player-name-preset2-confirm"
-		> "Black Mage" : goto "set-player-name-preset3-confirm"
-		> "Gimme something random" : goto "set-player-name-random-confirm"
+		> $preset1 : menu-player-name-preset1
+		> $preset2 : menu-player-name-preset2
+		> $preset3 : menu-player-name-preset3
+		> "Gimme something random" : menu-player-name-random
 	}
 }
 
-set-player-name-preset1-confirm {
-	set entity "%PLAYER%" name to Red
-	show dialog dialog-set-player-name-confirm {
+menu-player-name-preset1 {
+	set entity "%PLAYER%" name to $preset1
+	goto menu-player-name-confirm
+}
+menu-player-name-preset2 {
+	set entity "%PLAYER%" name to $preset2
+	goto menu-player-name-confirm
+}
+menu-player-name-preset3 {
+	set entity "%PLAYER%" name to $preset3
+	goto menu-player-name-confirm
+}
+menu-player-name-confirm {
+	show dialog {
 		name " "
 		border_tileset menu
 		"Your name is %PLAYER%?"
-		> "Yes" : goto "start-new-game-with-name"
-		> "No" : goto "set-player-name-q"
+		> "Yes" : start-new-game-with-name
+		> "No" : menu-player-name-reset
 	}
 }
 
-set-player-name-preset2-confirm {
-	set entity "%PLAYER%" name to Bubbles
-	show dialog dialog-set-player-name-confirm
-}
+// Random
 
-set-player-name-preset3-confirm {
-	set entity "%PLAYER%" name to "Black Mage"
-	show dialog dialog-set-player-name-confirm
-}
-
-set-player-name-confirm {
-	show dialog dialog-set-player-name-confirm
-}
-
-set-player-name-random-confirm {
-	goto script get-random-name
-}
-
-set-player-name-random-finish {
-	show dialog dialog-set-player-name-now-random-q
-}
-
-start-new-game-with-name {
-	save slot
-	goto script load-start-map
-}
-
-get-random-name {
+menu-player-name-random {
 	mutate random-name-count ? 19
 	// The RNG operation returns a value range from 0 to (value - 1). In 17, Out 0~16. In 5, Out 0~4. It's like this because there's a non-zero chance that you're using this value to index into an array, like below.
 	if (variable random-name-count is 1) {
@@ -415,59 +379,103 @@ get-random-name {
 		set entity "%PLAYER%" name to "Tom Honks"
 	} else if (variable random-name-count is 18) {
 		set entity "%PLAYER%" name to VeeVee
-	} else { // if it's 0 or any other value -- all the default:
+	} else { // if it's 0 or any other value (the default):
 		set entity "%PLAYER%" name to Bub
 	}
-	show dialog dialog-set-player-name-random-confirm {
+	show dialog {
 		name " "
 		border_tileset menu
 		"Your name is %PLAYER%?"
-		> "Reroll random name" : goto "set-player-name-random-confirm"
-		> "Yes" : goto "start-new-game-with-name"
-		> "No" : goto "set-player-name-q"
-		// the dialog "options" always results in a jump;
-		// no worries about not this on_tick script zigzagging without explicitly looping
+		> "Reroll random name" : menu-player-name-random
+		> "Yes" : start-new-game-with-name
+		> "No" : menu-player-name-reset
+	}
+}
+menu-player-name-reset {
+	set entity "%PLAYER%" name to Bub
+	goto menu-player-name-q
+}
+
+// Start new game with name
+
+start-new-game-with-name {
+	save slot
+	goto menu-chapter_select-init
+}
+
+/* ---------- CHOOSING A CHAPTER ---------- */
+
+menu-chapter_select-init {
+	set entity "%PLAYER%" tick_script to count-chapter1-storyflags
+	set map tick_script to menu-ch1-storyflag_count-wait
+}
+
+menu-ch1-storyflag_count-wait {
+	if flag chapter1-storyflags-tallied is true then goto menu-ch1-storyflag_count-done
+}
+
+menu-ch1-storyflag_count-done {
+	set flag chapter1-storyflags-tallied to false
+	goto menu-chapter_select-q
+}
+menu-chapter_select-q {
+	show dialog {
+		name " "
+		border_tileset menu
+		"PLAY (slot $slot-number$: \"%PLAYER%\")"
+		> "Chapter 1 ($chapter1-storyflag-tally$/11)" : menu-chapter_select-1
+		> "Chapter 2 (X/??)" : menu-chapter_select-2-check
+		> "Back" : menu-play_game
 	}
 }
 
-show-menu-credits {
-	set flag credits-from-menu to true
-	load map credits
-}
-
-show-menu-credits2 {
-	set flag credits-from-menu to true
-	load map credits2
-	// todo: make credits for chapter 2
-}
-
-show_dialog-load-start-map-q {
-	show dialog dialog-load-start-map-q
-}
-
-start-chapter1 {
+menu-chapter_select-1 {
 	mutate current-chapter = 1
 	load map main
 }
 
-start-chapter2-check {
+menu-chapter_select-2-check {
 	if (flag wonthedemo is false) {
-		show dialog dialog-start-chapter2-confirm {
+		show dialog {
 			name " "
 			border_tileset menu
 			"Chapter 1 is unfinished!"
-			> "Play chapter 2 anyway" : goto "start-chapter2"
-			> "Never mind" : goto "show_dialog-load-start-map-q"
+			> "Play chapter 2 anyway" : menu-chapter_select-2
+			> "Never mind" : menu-chapter_select-q
 		}	
 	}
-	goto script start-chapter2
+	goto menu-chapter_select-2
 }
 
-start-chapter2 {
+menu-chapter_select-2 {
 	mutate current-chapter = 2
 	if (flag ch2-birthday-cutscene is false) {
 		load map ch2-magehouse-birthday
-	} else {
-		load map main2
 	}
+	load map main2
+}
+
+/* ---------- SAVE THE GAME ---------- */
+
+menu-save_game {
+	show dialog {
+		name "Save Game"
+		border_tileset codec
+		portrait floppy
+		"Would you like to save your progress?"
+		> "Yes" : menu-save_game-yes
+		> "No" : menu-save_game-no
+		> "Return to Main Menu" : menu-save_game-main_menu
+	}
+}
+menu-save_game-yes {
+	save slot
+	set entity "%SELF%" interact_script to menu-save_game
+}
+menu-save_game-no {
+	set entity "%SELF%" interact_script to menu-save_game
+}
+menu-save_game-main_menu {
+	set warp state to from-game
+	load map main_menu
 }
