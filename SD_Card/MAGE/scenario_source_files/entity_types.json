@@ -3269,19 +3269,19 @@
 			],
 			"action": [
 				{
-					"tileid": 17,
+					"tileid": 20,
 					"flip_x": false
 				},
 				{
-					"tileid": 15,
+					"tileid": 18,
 					"flip_x": true
 				},
 				{
-					"tileid": 16,
+					"tileid": 19,
 					"flip_x": false
 				},
 				{
-					"tileid": 15,
+					"tileid": 18,
 					"flip_x": false
 				}
 			]
@@ -3335,19 +3335,19 @@
 			],
 			"action": [
 				{
-					"tileid": 17,
+					"tileid": 20,
 					"flip_x": false
 				},
 				{
-					"tileid": 15,
+					"tileid": 18,
 					"flip_x": true
 				},
 				{
-					"tileid": 16,
+					"tileid": 19,
 					"flip_x": false
 				},
 				{
-					"tileid": 15,
+					"tileid": 18,
 					"flip_x": false
 				}
 			]
@@ -4073,6 +4073,72 @@
 			]
 		},
 		"scenarioIndex": 57,
+		"serialized": {}
+	},
+	"lizardwizard": {
+		"type": "lizardwizard",
+		"tileset": "entity-lizardwizard.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 26,
+					"flip_x": false
+				},
+				{
+					"tileid": 27,
+					"flip_x": false
+				},
+				{
+					"tileid": 25,
+					"flip_x": false
+				},
+				{
+					"tileid": 24,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 58,
 		"serialized": {}
 	}
 }
