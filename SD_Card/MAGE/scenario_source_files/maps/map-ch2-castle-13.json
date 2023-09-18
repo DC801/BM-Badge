@@ -195,6 +195,18 @@
                  "width":32,
                  "x":214,
                  "y":228
+                }, 
+                {
+                 "class":"",
+                 "gid":793,
+                 "height":48,
+                 "id":43,
+                 "name":"Sebastian",
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":94,
+                 "y":217
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -270,7 +282,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":43,
+ "nextobjectid":44,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -315,6 +327,10 @@
         {
          "firstgid":777,
          "source":"..\/entities\/entity-slimey.json"
+        }, 
+        {
+         "firstgid":792,
+         "source":"..\/entities\/entity-lizardwizard.json"
         }],
  "tilewidth":32,
  "type":"map",
