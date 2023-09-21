@@ -18,6 +18,7 @@ in a more accessible way.
 #include "mage_tileset.h"
 #include "shim_timer.h"
 #include "EngineROM.h"
+#include "mage_script_state.h"
 
 class MageScript;
 struct GoDirection
@@ -50,14 +51,15 @@ struct MapData
     uint16_t tileHeight{ 0 };
     uint16_t cols{ 0 };
     uint16_t rows{ 0 };
-    uint16_t onLoad{ 0 };
-    uint16_t onTick{ 0 };
-    uint16_t onLook{ 0 };
     uint8_t playerEntityIndex{ 0 };
     uint16_t entityCount{ 0 };
     uint16_t geometryCount{ 0 };
     uint16_t scriptCount{ 0 };
     uint8_t goDirectionsCount{ 0 };
+
+    MageScriptState onLoad;
+    MageScriptState onLook;
+    MageScriptState onTick;
 
     constexpr uint8_t colCount() const
     {
@@ -100,9 +102,9 @@ public:
 
     inline uint8_t* GetEntityDataPointer() { return (uint8_t*)currentMap->entities.data(); }
     void Load(uint16_t index);
-    void DrawLayer(uint8_t layer, const Point& cameraPosition) const;
-    void DrawGeometry(const Point& cameraPosition) const;
-    void DrawEntities(const Point& cameraPosition) const;
+    void DrawLayer(uint8_t layer, const EntityPoint& cameraPosition) const;
+    void DrawGeometry(const EntityPoint& cameraPosition) const;
+    void DrawEntities(const EntityPoint& cameraPosition) const;
     void UpdateEntities(const DeltaState& delta);
 
     void TryMovePlayer(ButtonState button);
@@ -128,7 +130,7 @@ public:
         }
     }
 
-    void Draw(const Point& cameraPosition) const;
+    void Draw(const EntityPoint& cameraPosition) const;
 
     inline std::string Name() const { return currentMap->name; }
     inline uint16_t TileWidth() const { return currentMap->tileWidth; }
@@ -142,7 +144,10 @@ public:
 
     const MageGeometry* GetGeometry(uint16_t mapLocalGeometryId) const
     {
-        if (currentMap->geometries.empty()) { return nullptr; }
+        if (currentMap->geometries.empty()) 
+        { 
+            return nullptr; 
+        }
         return currentMap->geometries[mapLocalGeometryId % currentMap->geometries.size()];
     }
 
@@ -218,12 +223,6 @@ public:
     }
 
     inline uint8_t getPlayerEntityIndex() const { return currentMap->playerEntityIndex; }
-    inline uint16_t GetOnLoad() const { return currentMap->onLoad; }
-    inline uint16_t GetOnLook() const { return currentMap->onLook; }
-    inline uint16_t GetOnTick() const { return currentMap->onTick; }
-    inline void SetOnLoad(uint16_t loadId) { currentMap->onLoad = loadId; }
-    inline void SetOnLook(uint16_t lookId) { currentMap->onLook = lookId; }
-    inline void SetOnTick(uint16_t tickId) { currentMap->onTick = tickId; }
 
 
     //this is used by the loadMap action to indicate when a new map needs to be loaded.
@@ -231,6 +230,23 @@ public:
     //the new map will be loaded at the beginning of the next tick
     int32_t mapLoadId{ MAGE_NO_MAP };
 
+    std::span<MageEntity> GetEntities() { return currentMap->entities; }
+    void SetOnLoad(uint16_t scriptId)
+    {
+        currentMap->onLoad = MageScriptState{ scriptId, false, currentMap->onLoad.isGlobalExecutionScope };
+    }
+    void SetOnTick(uint16_t scriptId)
+    {
+        currentMap->onTick = MageScriptState{ scriptId, false, currentMap->onTick.isGlobalExecutionScope };
+    }
+
+    const MageScriptState& GetOnLook() const
+    {
+        return currentMap->onLook;
+    }
+
+    void OnLoad(MageScriptControl* scriptControl);
+    void OnTick(MageScriptControl* scriptControl);
 private:
     std::shared_ptr<TileManager> tileManager;
     std::unique_ptr<MapData> currentMap;

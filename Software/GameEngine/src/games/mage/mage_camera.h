@@ -7,7 +7,6 @@
 
 static inline const float PI = 3.141592653589793f;
 
-struct Point;
 class MapControl;
 
 class MageCamera
@@ -27,7 +26,8 @@ private:
    float   shakePhase{ 0 };
    uint8_t shakeAmplitude{ 0 };
    uint8_t followEntityId{ 0 };
-   Point   position{ 0,0 };
+   EntityPoint   position{ 0,0 };
+
 };
 
 #endif

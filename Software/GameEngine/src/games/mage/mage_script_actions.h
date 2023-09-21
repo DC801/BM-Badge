@@ -6,16 +6,14 @@
 #include "mage_rom.h"
 #include "mage_camera.h"
 #include "mage_defines.h"
+#include "mage_geometry.h"
+#include "mage_script_state.h"
 
 // structs/classes that this class depends on, forward defined:
-struct Point;
-struct Rect;
 struct RenderableData;
 class MageCommandControl;
 class MageDialogControl;
-class MageGeometry;
 class MapControl;
-class MageScriptState;
 class MageGameEngine;
 class MageHexEditor;
 class MageEntity;
@@ -378,12 +376,11 @@ private:
    //Action Logic Type: C
    std::optional<uint16_t> check_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
 
-   float getProgressOfAction(const MageScriptState& resumeState);
-   float manageProgressOfAction(MageScriptState& resumeState, uint32_t duration);
-
-   void setResumeStatePointsAndEntityDirection(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry);
-
-   void initializeEntityGeometryPath(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry);
+   constexpr float getProgressOfAction(const MageScriptState& resumeState) const
+   {
+       return 1.0f - (float)resumeState.loopsToNextAction / (float)resumeState.totalLoopsToNextAction;
+   }
+   float manageProgressOfAction(MageScriptState& resumeState, uint32_t duration) const;
 
    enum class MageMutateOperation : uint8_t
    {

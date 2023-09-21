@@ -130,13 +130,13 @@ void MageDialogControl::draw()
    }
 }
 
-void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box, bool drawArrow, bool drawPortrait) const
+void MageDialogControl::drawDialogBox(const std::string& string, const EntityRect& box, bool drawArrow, bool drawPortrait) const
 {
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
    auto tileWidth = tileset->TileWidth;
    auto tileHeight = tileset->TileHeight;
-   auto offsetX = (box.origin.x * tileWidth) + (tileWidth / 2);
-   auto offsetY = (box.origin.y * tileHeight) + (tileHeight / 2);
+   auto offsetX = (uint16_t)( (box.origin.x * tileWidth) + (tileWidth / 2) );
+   auto offsetY = (uint16_t)( (box.origin.y * tileHeight) + (tileHeight / 2) );
    for (uint8_t x = 0; x < box.w; ++x)
       for (uint8_t y = 0; y < box.h; ++y)
       {
@@ -160,8 +160,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
          else if (topEdge) { tileId = DIALOG_TILES_TOP_REPEAT; }
          else if (bottomEdge) { tileId = DIALOG_TILES_BOTTOM_REPEAT; }
 
-         auto target = Point{ offsetX + (x * tileWidth), offsetY + (y * tileHeight) };
-         tileManager->DrawTile(currentFrameTilesetIndex, tileId, target);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileId, EntityPoint{ (uint16_t)(offsetX + (x * tileWidth)), (uint16_t)(offsetY + (y * tileHeight)) });
       }
 
    frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
@@ -183,12 +182,12 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
             );
          }
-         auto targetPoint = Point{ offsetX + tileWidth, offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6  + bounce};
+         auto targetPoint = EntityPoint{ (uint16_t)(offsetX + tileWidth), (uint16_t)(offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6  + bounce)};
          tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
       }
       else
       {
-         auto targetPoint = Point{ offsetX + ((box.w - 2) * tileWidth), offsetY + ((box.h - 2) * tileHeight) + bounce };
+         auto targetPoint = EntityPoint{ (uint16_t)(offsetX + ((box.w - 2) * tileWidth)), (uint16_t)(offsetY + ((box.h - 2) * tileHeight) + bounce )};
          // bounce the arrow at the bottom
          tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
       }
@@ -196,7 +195,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
 
    if (drawPortrait)
    {
-      auto portraitDrawPoint = Point{ offsetX + tileWidth, offsetY + tileHeight };
+      auto portraitDrawPoint = EntityPoint{ (uint16_t)(offsetX + tileWidth), (uint16_t)(offsetY + tileHeight) };
       tileManager->DrawTile(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, portraitDrawPoint, currentPortraitRenderableData.renderFlags);
    }
 }

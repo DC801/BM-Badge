@@ -12,17 +12,6 @@
 #define SCRIPT_NAME_LENGTH 32
 #define COMMAND_STATES_COUNT 5
 
-//these are the types of scripts that can be on a map or entity:
-typedef enum : uint8_t
-{
-   ON_LOAD = 0,
-   ON_TICK,
-   ON_INTERACT,
-   ON_LOOK,
-   ON_COMMAND,
-   NUM_SCRIPT_TYPES
-} MageScriptType;
-
 class MageScriptControl
 {
 public:
@@ -48,8 +37,6 @@ public:
    //these functions return the specified MageScriptState struct:
    struct resumeStatesStruct
    {
-      MageScriptState mapLoad;
-      MageScriptState mapTick;
       MageScriptState commandLook;
       MageScriptState commandGo;
       MageScriptState commandUse;
@@ -169,37 +156,22 @@ public:
       &MageScriptActions::check_ble_flag,
    };
 
-   void initializeScriptsOnMapLoad();
-   constexpr void SetEntityInteractResumeState(uint16_t entityIndex, const MageScriptState&& state) { entityInteractResumeStates[entityIndex] = state; }
-
-   //these functions will call the appropriate script processing for their script type:
-   void handleMapOnLoadScript(bool isFirstRun);
-   void handleMapOnTickScript();
    void handleCommandScript(MageScriptState& resumeState);
-   void handleEntityOnTickScript(uint8_t filteredEntityId);
-   void handleEntityOnInteractScript(uint8_t filteredEntityId);
 
    void tickScripts();
-
-private:
-   std::shared_ptr<MapControl> mapControl;
-   std::shared_ptr<MageHexEditor> hexEditor;
-   //variables for tracking suspended script states:
-   MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ };
-   MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP]{ };
-   std::unique_ptr<MageScriptActions> scriptActions;
 
    //this will process a script based on the state of the resumeStateStruct passed to it.
    //it should only be called from the 
    void processScript(MageScriptState& resumeState, uint8_t mapLocalEntityId, MageScriptType scriptType);
 
-   //this will run through the actions in a script from the state stores in resumeState
-   //if a jumpScriptId is called by an action, it will return without processing any further actions.
-   void processActionQueue(MageScriptState& resumeState, MageScriptType scriptType);
+private:
+   std::shared_ptr<MapControl> mapControl;
+   std::shared_ptr<MageHexEditor> hexEditor;
+   //variables for tracking suspended script states:
+   //MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ };
+   //MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP]{ };
+   std::unique_ptr<MageScriptActions> scriptActions;
 
-   //this will get action arguments from ROM memory and call
-   //a function based on the ActionTypeId 
-   void runAction(uint32_t argumentMemoryAddress, MageScriptState& resumeState);
 
 }; //MageScriptControl
 

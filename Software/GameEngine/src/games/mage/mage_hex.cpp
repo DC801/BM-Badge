@@ -17,11 +17,11 @@ bool MageHexEditor::isHexEditorOn()
    return hexEditorOn;
 }
 
-void MageHexEditor::toggleHexEditor()
+void MageHexEditor::setHexEditorOn(bool on)
 {
-   hexEditorOn = !hexEditorOn;
+   hexEditorOn = on;
    //set LED to the state
-   ledSet(LED_HAX, hexEditorOn ? 0xff : 0x00);
+   ledSet(LED_HAX, on ? 0xff : 0x00);
 }
 
 void MageHexEditor::toggleHexDialog()
@@ -122,7 +122,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
    }
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:
-   if (activatedButton.IsPressed(KeyPress::Hax)) { toggleHexEditor(); }
+   if (activatedButton.IsPressed(KeyPress::Hax)) { setHexEditorOn(false); }
 
    //debounce timer check.
    if (!hexTickDelay)
@@ -407,5 +407,5 @@ void MageHexEditor::openToEntityByIndex(uint8_t entityIndex)
 {
    setHexCursorLocation(entityIndex * sizeof(MageEntity));
    setPageToCursorLocation();
-   toggleHexEditor();
+   setHexEditorOn(true);
 }

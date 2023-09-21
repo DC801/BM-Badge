@@ -63,7 +63,7 @@ public:
 	}
 
 	//this turns the hex editor mode on or off.
-	void toggleHexEditor();
+	void setHexEditorOn(bool on);
 
 	//this changes the hex editor layout to allow for a dialog window
 	//to be present on the bottom of the screen.

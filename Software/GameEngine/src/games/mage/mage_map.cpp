@@ -16,19 +16,44 @@
 void MapControl::Load(uint16_t index)
 {
     currentMap = ROM()->InitializeRAMCopy<MapData>(index);
+
+    auto player = getPlayerEntity();
+    if (player.has_value())
+    {
+        player.value()->SetName(ROM()->GetCurrentSave().name);
+    }
+}
+
+
+
+void MapControl::OnLoad(MageScriptControl* scriptControl)
+{
+    scriptControl->processScript(currentMap->onLoad, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
+}
+
+
+void MapControl::OnTick(MageScriptControl* scriptControl)
+{
+    //currentMap->onTick.scriptIsRunning = true;
+
+    //now that the struct is correctly configured, process the script:
+    scriptControl->processScript(currentMap->onTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
 }
 
 MapData::MapData(uint32_t& address)
 {
     auto layerCount = uint8_t{ 0 };
+    auto onLoadScriptId = uint16_t{ 0 };
+    auto onTickScriptId = uint16_t{ 0 };
+    auto onLookScriptId = uint16_t{ 0 };
     ROM()->Read(name, address, MapNameLength);
     ROM()->Read(tileWidth, address);
     ROM()->Read(tileHeight, address);
     ROM()->Read(cols, address);
     ROM()->Read(rows, address);
-    ROM()->Read(onLoad, address);
-    ROM()->Read(onTick, address);
-    ROM()->Read(onLook, address);
+    ROM()->Read(onLoadScriptId, address);
+    ROM()->Read(onTickScriptId, address);
+    ROM()->Read(onLookScriptId, address);
     ROM()->Read(layerCount, address);
     ROM()->Read(playerEntityIndex, address);
     ROM()->Read(entityCount, address);
@@ -79,14 +104,18 @@ MapData::MapData(uint32_t& address)
         auto layerAddress = address + i * rows * cols * sizeof(uint8_t*);
         layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(rowCount()* colCount()) });
     }
+
+    onLoad = MageScriptState{ onLoadScriptId, true };
+    onLook = MageScriptState{ onLookScriptId, true };
+    onTick = MageScriptState{ onTickScriptId, false };
 }
 
-void MapControl::DrawEntities(const Point& cameraPosition) const
+void MapControl::DrawEntities(const EntityPoint& cameraPosition) const
 {
     //sort entity indices by the entity y values:
     std::vector<size_t> entityDrawOrder(currentMap->entityCount);
     std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
-    auto sortByY = [&](size_t i1, size_t i2) { return currentMap->entities[i1].y < currentMap->entities[i2].y; };
+    auto sortByY = [&](size_t i1, size_t i2) { return currentMap->entities[i1].position.y < currentMap->entities[i2].position.y; };
     std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
     //now that we've got a sorted array with the lowest y values first,
@@ -94,12 +123,12 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
     for (auto& entityIndex : entityDrawOrder)
     {
         auto& renderableData = currentMap->entityRenderableData[entityIndex];
-        
+
         tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin - cameraPosition, renderableData.renderFlags);
     }
 }
 
-void MapControl::DrawGeometry(const Point& camera) const
+void MapControl::DrawGeometry(const EntityPoint& camera) const
 {
     bool isColliding = false;
     if (currentMap->playerEntityIndex != NO_PLAYER_INDEX)
@@ -113,7 +142,7 @@ void MapControl::DrawGeometry(const Point& camera) const
     }
 }
 
-void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
+void MapControl::DrawLayer(uint8_t layer, const EntityPoint& cameraPosition) const
 {
     auto& layerTiles = currentMap->layers[layer];
     for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
@@ -125,7 +154,10 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
 
             if (!currentTile->tileId) { continue; }
 
-            auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
+            auto tileDrawPoint = EntityPoint{ 
+                (uint16_t)(currentMap->tileWidth * mapTileCol - cameraPosition.x),
+                (uint16_t)(currentMap->tileHeight * mapTileRow - cameraPosition.y)
+            };
 
             // don't draw tiles that are entirely outside the screen bounds
             if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
@@ -139,7 +171,7 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
     }
 }
 
-void MapControl::Draw(const Point& cameraPosition) const
+void MapControl::Draw(const EntityPoint& cameraPosition) const
 {
     // always draw layer 0 
     DrawLayer(0, cameraPosition);
@@ -180,7 +212,8 @@ void MapControl::UpdateEntities(const DeltaState& delta)
     {
         auto& entity = currentMap->entities[i];
         auto& renderableData = currentMap->entityRenderableData[i];
-        entity.updateRenderableData(renderableData, delta.TimeMs.count());
+        renderableData.currentFrameTicks += delta.TimeMs.count();
+        entity.updateRenderableData(renderableData);
     }
 }
 
@@ -191,7 +224,7 @@ void MapControl::TryMovePlayer(ButtonState button)
     if (playerEntity.has_value())
     {
         auto player = *playerEntity;
-        auto playerVelocity = Point{ 0,0 };
+        auto playerVelocity = EntityPoint{ 0,0 };
 
         // moving when there's at least one button not being counteracted
         playerIsMoving =
@@ -203,11 +236,11 @@ void MapControl::TryMovePlayer(ButtonState button)
         if (playerIsMoving)
         {
             const auto topLeft = playerRenderableData.hitBox.origin;
-            const auto topRight = playerRenderableData.hitBox.origin + Point{playerRenderableData.hitBox.w, 0};
-            const auto botLeft = playerRenderableData.hitBox.origin + Point{0, playerRenderableData.hitBox.h};
-            const auto botRight = playerRenderableData.hitBox.origin + Point{playerRenderableData.hitBox.w, playerRenderableData.hitBox.h};
+            const auto topRight = playerRenderableData.hitBox.origin + EntityPoint{playerRenderableData.hitBox.w, 0};
+            const auto botLeft = playerRenderableData.hitBox.origin + EntityPoint{0, playerRenderableData.hitBox.h};
+            const auto botRight = playerRenderableData.hitBox.origin + EntityPoint{playerRenderableData.hitBox.w, playerRenderableData.hitBox.h};
 
-            std::vector<Point> hitboxPointsToCheck{};
+            std::vector<EntityPoint> hitboxPointsToCheck{};
 
             if (button.IsPressed(KeyPress::Ljoy_left) && !button.IsPressed(KeyPress::Ljoy_right))
             {
@@ -252,9 +285,9 @@ void MapControl::TryMovePlayer(ButtonState button)
             {
                 const auto column = hitboxPoint.x / currentMap->tileWidth;
                 const auto row = hitboxPoint.y / currentMap->tileHeight;
-                const auto tileOffsetPoint = Point{
-                    currentMap->tileWidth * column,
-                    currentMap->tileHeight * row
+                const auto tileOffsetPoint = EntityPoint{
+                    (uint16_t)(currentMap->tileWidth * column),
+                    (uint16_t)(currentMap->tileHeight * row)
                 };
 
                 const auto tileId = column + currentMap->cols * row;
@@ -270,8 +303,7 @@ void MapControl::TryMovePlayer(ButtonState button)
                     }
                 }
             }
-            player->x += playerVelocity.x;
-            player->y += playerVelocity.y;
+            player->position += playerVelocity;
         }
 
     }

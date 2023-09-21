@@ -115,7 +115,8 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
       lastCommandUsed = COMMAND_LOOK;
       commandResponseBuffer += "You try to look.\n";
       
-      scriptControl->resumeStates.commandLook = MageScriptState{mapControl->GetOnLook(), true };
+      scriptControl->resumeStates.commandLook = mapControl->GetOnLook();
+      scriptControl->resumeStates.commandLook.scriptIsRunning = true;
 
       std::string directionNames = mapControl->getDirectionNames();
       if (directionNames.length() > 0)

@@ -84,7 +84,7 @@ public:
         frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
     }
     
-    inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
+    inline void drawLine(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
     {
         drawLine(p1.x, p1.y, p2.x, p2.y, color);
     }
@@ -108,7 +108,7 @@ public:
 
     void fillRect(int x, int y, int w, int h, uint16_t color);
 
-    inline void drawRect(const Rect& r, uint16_t color)
+    inline void drawRect(const EntityRect& r, uint16_t color)
     {
         auto x = r.origin.x;
         auto y = r.origin.y;

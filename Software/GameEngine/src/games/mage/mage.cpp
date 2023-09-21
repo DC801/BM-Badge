@@ -154,7 +154,7 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
                         }
                         else if (!hack && target->onInteractScriptId)
                         {
-                            scriptControl->SetEntityInteractResumeState(i, MageScriptState{ target->onInteractScriptId, true });
+                            target->onInteract = MageScriptState{ target->onInteractScriptId, true };
                         }
                         break;
                     }
@@ -172,32 +172,14 @@ void MageGameEngine::LoadMap(uint16_t index)
 
     //close any open dialogs and return player control as well:
     dialogControl->close();
-    playerHasControl = true;
+
+    commandControl->reset();
 
     //get the data for the map:
     mapControl->Load(index);
+    playerHasControl = true;
 
-    auto player = mapControl->getPlayerEntity();
-    if (player.has_value())
-    {
-        player.value()->SetName(ROM()->GetCurrentSave().name);
-    }
-
-    scriptControl->initializeScriptsOnMapLoad();
-
-    commandControl->reset();
-    scriptControl->handleMapOnLoadScript(true);
-
-    //close hex editor if open:
-    if (hexEditor->isHexEditorOn())
-    {
-        hexEditor->toggleHexEditor();
-    }
-    if (mapControl->getPlayerEntityIndex() != NO_PLAYER_INDEX)
-    {
-        hexEditor->openToEntityByIndex(mapControl->getPlayerEntityIndex());
-        hexEditor->toggleHexEditor();
-    }
+    hexEditor->setHexEditorOn(false);
 }
 
 void MageGameEngine::applyUniversalInputs(const DeltaState& delta)
@@ -212,7 +194,7 @@ void MageGameEngine::applyUniversalInputs(const DeltaState& delta)
         }
         else if (delta.Buttons.IsPressed(KeyPress::Mem1))
         {
-            mapControl->isEntityDebugOn = !mapControl->isEntityDebugOn;
+            mapControl->isEntityDebugOn = false;
             scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
             LoadMap(ROM()->GetCurrentSave().currentMapId);
             return;
@@ -262,7 +244,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
         //update renderable info before proceeding:
         auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
         auto player = playerEntity.value();
-        player->updateRenderableData(playerRenderableData, 0);
+        player->updateRenderableData(playerRenderableData);
         auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
         auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
         auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
@@ -326,7 +308,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
         //What scenarios call for an extra renderableData update?
         if (mapControl->playerIsMoving || (playerRenderableData.lastTilesetId != playerRenderableData.tilesetId))
         {
-            player->updateRenderableData(playerRenderableData, 0);
+            player->updateRenderableData(playerRenderableData);
         }
 
         if (!playerHasControl || !playerHasHexEditorControl)
@@ -338,7 +320,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
         //this is to allow entity scripts to check the hex editor state before it opens to run scripts
         if (delta.ActivatedButtons.IsPressed(KeyPress::Hax))
         {
-            hexEditor->toggleHexEditor();
+            hexEditor->setHexEditorOn(true);
         }
         hexEditor->applyMemRecallInputs();
     }
@@ -372,7 +354,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
 
         if (delta.ActivatedButtons.IsPressed(KeyPress::Hax))
         {
-            hexEditor->toggleHexEditor();
+            hexEditor->setHexEditorOn(true);
         }
         hexEditor->applyMemRecallInputs();
     }

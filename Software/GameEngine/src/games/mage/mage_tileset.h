@@ -10,6 +10,7 @@ in a more accessible way.
 #include "FrameBuffer.h"
 #include "mage_animation.h"
 #include "mage_color_palette.h"
+#include "mage_geometry.h"
 #include <memory>
 #include <vector>
 
@@ -19,9 +20,9 @@ constexpr auto TilesetNameLength = 16;
 //at run time from the MageEntity class info.
 struct RenderableData
 {
-   Point origin{ 0 };
-   Point center{ 0 };
-   Rect hitBox{ 0 };
+   EntityPoint origin{ 0 };
+   EntityPoint center{ 0 };
+   EntityRect hitBox{ 0 };
    uint16_t currentFrameTicks{ 0 };
    uint16_t tilesetId{ 0 };
    uint16_t lastTilesetId{ 0 };
@@ -96,7 +97,7 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags = 0) const;
+   void DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoint& tileDrawPoint, uint8_t flags = 0) const;
 
    inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
 

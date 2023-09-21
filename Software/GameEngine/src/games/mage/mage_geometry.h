@@ -14,6 +14,7 @@ in a more accessible way.
 #include <cmath>
 #include <memory>
 #include <span>
+#include <type_traits>
 #include <vector>
 #include <optional>
 
@@ -38,30 +39,32 @@ enum MageEntityAnimationDirection : uint8_t
 };
 
 
-//this is a point in 2D space.
-struct Point
+//this is a point in 2D space. Due to the entity storing points as 16 bit unsigned integers 
+// and the remaining functions using 32 bit signed integers, 
+// I have templated it and aliased the appropriate types below
+template <typename T>
+struct PointT
 {
-	int32_t x{ 0 };
-	int32_t y{ 0 };
+	T x{ 0 };
+	T y{ 0 };
 
-	constexpr float DotProduct(const Point& b) const
+	constexpr float DotProduct(const PointT& b) const
 	{
 		return (float)x * (float)b.x
 			+ (float)y * (float)b.y;
 	};
 
-	Point lerp(Point b, float progress) const
+	PointT lerp(PointT b, float progress) const
 	{
-		auto point = Point{
+		return PointT{
 			Util::lerp(x, b.x, progress),
 			Util::lerp(y, b.y, progress)
 		};
-		return point;
 	}
 
-	Point flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
+	PointT flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 	{
-		Point point = Point{ x,y };
+		PointT point = PointT{ x,y };
 
 		if (flags & RENDER_FLAGS_FLIP_X)
 		{
@@ -82,97 +85,86 @@ struct Point
 		return point;
 	}
 
-	Point& operator-=(const Point& rhs)
+	template <class O>
+	PointT& operator-=(const O& rhs)
 	{
-		x -= rhs.x;
-		y -= rhs.y;
+		if constexpr (std::is_integral_v<O>)
+		{
+			x -= rhs;
+			y -= rhs;
+		}
+		else
+		{
+			x -= rhs.x;
+			y -= rhs.y;
+		}
 		return *this;
 	}
 
-	friend Point operator-(Point lhs, const Point& rhs)
+	template <class O>
+	friend PointT operator-(PointT lhs, const O& rhs)
 	{
 		lhs -= rhs;
 		return lhs;
 	}
 
-	friend Point operator*(Point lhs, const int32_t& rhs)
+	template <class O>
+	friend PointT operator*(PointT lhs, const O& rhs)
 	{
 		lhs *= rhs;
 		return lhs;
 	}
 
-	Point& operator*=(const int32_t& scale)
+	template <class O>
+	PointT& operator*=(const O& scale)
 	{
 		this->x *= scale;
 		this->y *= scale;
 		return *this;
 	}
 
-	friend Point operator/(Point lhs, const int32_t& rhs)
+	template <class O>
+	friend PointT operator/(PointT lhs, const O& rhs)
 	{
 		lhs /= rhs;
 		return lhs;
 	}
 
-	Point& operator/=(const int32_t& scale)
+	template <class O>
+	PointT& operator/=(const O& scale)
 	{
 		this->x /= scale;
 		this->y /= scale;
 		return *this;
 	}
 
-	//Point& operator-=(const uint8_t& scale)
+	//PointT operator-()
 	//{
-	//	this->x -= scale;
-	//	this->y -= scale;
-	//	return *this;
+	//	return PointT{ -x, -y };
 	//}
 
-
-	//friend Point operator-(Point lhs, const uint8_t& scale)
-	//{
-	//	lhs -= scale;
-	//	return lhs;
-	//}
-
-
-	Point operator-()
-	{
-		return Point{ -x, -y };
-	}
-
-	Point& operator+=(const Point& rhs)
+	template <class O>
+	PointT& operator+=(const O& rhs)
 	{
 		this->x += rhs.x;
 		this->y += rhs.y;
 		return *this;
 	}
 
-	friend Point operator+(Point lhs, const Point& rhs)
+	template <class O>
+	friend PointT operator+(PointT lhs, const O& rhs)
 	{
 		lhs += rhs;
 		return lhs;
 	}
 
-	Point& operator+=(const uint8_t& shift)
-	{
-		this->x += shift;
-		this->y += shift;
-		return *this;
-	}
-
-	friend Point operator+(Point lhs, const uint8_t& shift)
-	{
-		lhs += shift;
-		return lhs;
-	}
-
-	friend bool operator==(Point lhs, const Point& rhs)
+	template <class O>
+	friend bool operator==(PointT lhs, const O& rhs)
 	{
 		return lhs.x == rhs.x && lhs.y == rhs.y;
 	}
 
-	MageEntityAnimationDirection getRelativeDirection(const Point& target) const
+	MageEntityAnimationDirection getRelativeDirection(const PointT& target) const
 	{
 		float angle = atan2f(target.y - y, target.x - x);
 		float absoluteAngle = abs(angle);
@@ -197,22 +189,24 @@ struct Point
 	}
 };
 
-using Line = std::tuple<Point, Point>;
+using Point = PointT<int32_t>;
+using EntityPoint = PointT<uint16_t>;
 
 
 //struct Line
 //{
-//	Point A;
-//	Point B;
+//	PointT A;
+//	PointT B;
 //};
 
-struct Rect
+template <class T>
+struct RectT
 {
-	Point origin;
-	int32_t w{ 0 };
-	int32_t h{ 0 };
+	PointT<T> origin;
+	T w{ 0 };
+	T h{ 0 };
 
-	constexpr bool Overlaps(Rect& other) const
+	constexpr bool Overlaps(RectT<T>& other) const
 	{
 		return origin.x <= other.origin.x + other.w
 			&& origin.x + w >= other.origin.x
@@ -221,6 +215,8 @@ struct Rect
 	}
 };
 
+using Rect = RectT<int>;
+using EntityRect = RectT<uint16_t>;
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
 enum class MageGeometryType : uint8_t
@@ -233,9 +229,9 @@ enum class MageGeometryType : uint8_t
 class MageGeometry
 {
 public:
-   std::vector<Point> FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
+   std::vector<EntityPoint> FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
 
-   static std::optional<Point> getIntersectPointBetweenLineSegments(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
+   static std::optional<EntityPoint> getIntersectPointBetweenLineSegments(const EntityPoint& lineAPointA, const EntityPoint& lineAPointB, const EntityPoint& lineBPointA, const EntityPoint& lineBPointB);
 
 	static float VectorLength(const int32_t& x, const int32_t& y) { return sqrt((x * x) + (y * y)); };
 
@@ -258,7 +254,7 @@ public:
       return result;
    }
    
-   bool IsPointInside(const Point& pointToCheck, const Point& geometryOffset = Point{ 0 }) const
+   bool IsPointInside(const EntityPoint& pointToCheck, const EntityPoint& geometryOffset = EntityPoint{ 0 }) const
    {
 	   auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
 
@@ -274,15 +270,15 @@ public:
 	   return minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0;
    }
 
-	std::span<Point> GetPoints() const
+	std::span<EntityPoint> GetPoints() const
 	{
-		return std::span<Point>{(Point*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
+		return std::span<EntityPoint>{(EntityPoint*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
 	}
 
-	Point GetPoint(uint16_t i) const
+	EntityPoint GetPoint(uint16_t i) const
 	{
 		auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
-      return Point{ points[2*i], points[2*i + 1] };
+      return EntityPoint{ points[2*i], points[2*i + 1] };
    }
    uint16_t GetPointCount() const { return pointCount;  }
 

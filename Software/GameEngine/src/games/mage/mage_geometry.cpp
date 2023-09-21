@@ -8,9 +8,9 @@
 #include <nrf_error.h>
 #endif
 
-std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
+std::vector<EntityPoint> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 {
-   auto points = std::vector<Point>{ pointCount };
+   auto points = std::vector<EntityPoint>{ pointCount };
 
    for (uint8_t i = 0; i < pointCount; i++)
    {
@@ -30,51 +30,53 @@ std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint
 // Returns a value if collision has occurred
 // Ref: https://stackoverflow.com/a/385355
 // Ref: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
-   const Point& lineAPointA, const Point& lineAPointB,
-   const Point& lineBPointA, const Point& lineBPointB
+std::optional<EntityPoint> MageGeometry::getIntersectPointBetweenLineSegments(
+   const EntityPoint& lineAPointA, const EntityPoint& lineAPointB,
+   const EntityPoint& lineBPointA, const EntityPoint& lineBPointB
 )
 {
-   auto x1 = lineAPointA.x;
-   auto x2 = lineAPointB.x;
-   auto x3 = lineBPointA.x;
-   auto x4 = lineBPointB.x;
-   auto y1 = lineAPointA.y;
-   auto y2 = lineAPointB.y;
-   auto y3 = lineBPointA.y;
-   auto y4 = lineBPointB.y;
+    auto differenceA = lineAPointA - lineAPointB;
+    auto differenceB = lineBPointA - lineBPointB;
 
-   auto x12 = x1 - x2;
-   auto x34 = x3 - x4;
-   auto y12 = y1 - y2;
-   auto y34 = y3 - y4;
+    auto x12 = lineAPointA.x - lineAPointB.x;
+    auto x34 = lineBPointA.x - lineBPointB.x;
+    auto y12 = lineAPointA.y - lineAPointB.y;
+    auto y34 = lineBPointA.y - lineBPointB.y;
 
-   auto c = x12 * y34 - y12 * x34;
+   auto A = lineAPointA - lineAPointB;
+   auto B = lineBPointA - lineBPointB;
+
+   auto c = A.x * B.y - A.y * B.x;
 
    if (c > 0)
    {
       // Intersection
-      auto a = x1 * y2 - y1 * x2;
-      auto b = x3 * y4 - y3 * x4;
-      auto x = (a * x34 - b * x12) / c;
-      auto y = (a * y34 - b * y12) / c;
-      auto lineAXMin = std::min(x1, x2);
-      auto lineAXMax = std::max(x1, x2);
-      auto lineAYMin = std::min(y1, y2);
-      auto lineAYMax = std::max(y1, y2);
-      auto lineBXMin = std::min(x3, x4);
-      auto lineBXMax = std::max(x3, x4);
-      auto lineBYMin = std::min(y3, y4);
-      auto lineBYMax = std::max(y3, y4);
+      auto a = lineAPointA.x * lineAPointB.y - lineAPointA.y * lineAPointB.x;
+      auto b = lineBPointA.x * lineBPointB.y - lineBPointA.y * lineBPointB.x;
+      
+      auto lineAXMin = std::min(lineAPointA.x, lineAPointB.x);
+      auto lineAXMax = std::max(lineAPointA.x, lineAPointB.x);
+
+      auto lineAYMin = std::min(lineAPointA.y, lineAPointB.y);
+      auto lineAYMax = std::max(lineAPointA.y, lineAPointB.y);
+
+      auto lineBXMin = std::min(lineBPointA.x, lineBPointB.x);
+      auto lineBXMax = std::max(lineBPointA.x, lineBPointB.x);
+
+      auto lineBYMin = std::min(lineBPointA.y, lineBPointB.y);
+      auto lineBYMax = std::max(lineBPointA.y, lineBPointB.y);
 
       // Determine if the intersection is inside the bounds of lineA AND lineB
-      if (x >= lineAXMin && x <= lineAXMax
-         && y >= lineAYMin && y <= lineAYMax
-         && x >= lineBXMin && x <= lineBXMax
-         && y >= lineBYMin && y <= lineBYMax)
-      {
-         return Point{ x, y };
-      }
+      //if (x >= lineAXMin && x <= lineAXMax
+      //   && y >= lineAYMin && y <= lineAYMax
+      //   && x >= lineBXMin && x <= lineBXMax
+      //   && y >= lineBYMin && y <= lineBYMax)
+      //{
+      //    auto x = (a * differenceB.x - b * differenceA.x) / c;
+      //    auto y = (a * differenceB.y - b * differenceA.y) / c;
+
+      //   return EntityPoint{ x, y };
+      //}
    }
    // No intersection
    return std::nullopt;

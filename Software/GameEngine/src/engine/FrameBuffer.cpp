@@ -18,7 +18,7 @@
 //Cursor coordinates
 static inline int16_t m_cursor_x = 0;
 static inline int16_t m_cursor_y = 0;
-static inline Rect m_cursor_area = { 0, 0, DrawWidth, DrawHeight };
+static inline EntityRect m_cursor_area = { 0, 0, DrawWidth, DrawHeight };
 static inline uint16_t m_color = COLOR_WHITE;
 static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;

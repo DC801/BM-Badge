@@ -9,17 +9,17 @@
 #include "modules/drv_ili9341.h"
 #endif
 
-void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags) const
+void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoint& tileDrawPoint, uint8_t flags) const
 {
     auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
     auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-    auto ySourceMin = int{0};
-    auto ySourceMax = int{tileset->TileHeight};
-    auto xSourceMin = int{0};
-    auto xSourceMax = int{tileset->TileWidth};
-    auto iteratorX = int{1};
-    auto iteratorY = int{1};
+    auto ySourceMin = uint16_t{0};
+    auto ySourceMax = uint16_t{tileset->TileHeight};
+    auto xSourceMin = uint16_t{0};
+    auto xSourceMax = uint16_t{tileset->TileWidth};
+    auto iteratorX =  int{1};
+    auto iteratorY =  int{1};
 
     if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
     {

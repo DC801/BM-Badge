@@ -1,8 +1,19 @@
 #include "mage_entity_type.h"
+#include "mage_script_control.h"
 
-void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t deltaTime)
+void MageEntity::OnTick(MageScriptControl* scriptControl)
 {
-   renderableData.currentFrameTicks += deltaTime;
+    scriptControl->processScript(onTick, onTickScriptId, MageScriptType::ON_TICK);
+}
+
+void MageEntity::OnInteract(MageScriptControl* scriptControl)
+{
+    scriptControl->processScript(onInteract, onInteractScriptId, MageScriptType::ON_INTERACT);
+}
+
+
+void MageEntity::updateRenderableData(RenderableData& renderableData)
+{
    if (primaryIdType == MageEntityPrimaryIdType::TILESET)
    {
       renderableData.tilesetId = primaryId;
@@ -94,8 +105,8 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
    }
 
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData.tilesetId);
-   auto halfWidth = tileset->TileWidth / 2;
-   auto halfHeight = tileset->TileHeight / 2;
+   auto halfWidth = uint16_t(tileset->TileWidth / 2);
+   auto halfHeight = uint16_t(tileset->TileHeight / 2);
 
    auto oldCenter = renderableData.center;
    // accounting for possible change in tile size due to hacking;
@@ -105,18 +116,18 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
    {
       //get the difference between entity centers:
       auto adjustmentPoint = oldCenter - renderableData.center;
-      x += adjustmentPoint.x;
-      y += adjustmentPoint.y;
+      position.x += adjustmentPoint.x;
+      position.y += adjustmentPoint.y;
       renderableData.lastTilesetId = renderableData.tilesetId;
    }
 
-   renderableData.origin.x = x;
-   renderableData.origin.y = y - tileset->TileHeight;
-   renderableData.hitBox.origin.x = x + halfWidth / 2;
-   renderableData.hitBox.origin.y = y - tileset->TileHeight + halfHeight / 2;
+   renderableData.origin.x = position.x;
+   renderableData.origin.y = position.y - tileset->TileHeight;
+   renderableData.hitBox.origin.x = position.x + halfWidth / 2;
+   renderableData.hitBox.origin.y = position.y - tileset->TileHeight + halfHeight / 2;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
-   renderableData.center = renderableData.origin + Point{halfWidth, halfHeight};
+   renderableData.center = renderableData.origin + EntityPoint{halfWidth, halfHeight};
 }
 
 

@@ -64,9 +64,9 @@ struct MageDialogResponse
 
 struct MageDialogAlignmentCoords
 {
-   Rect text;
-   Rect label;
-   Rect portrait;
+   EntityRect text;
+   EntityRect label;
+   EntityRect portrait;
 };
 
 struct MageDialogScreen
@@ -158,7 +158,7 @@ private:
    std::shared_ptr<EngineInput> inputHandler;
    bool open{ false };
 
-   void drawDialogBox(const std::string& string, const Rect& box, bool drawArrow = false, bool drawPortrait = false) const;
+   void drawDialogBox(const std::string& string, const EntityRect& box, bool drawArrow = false, bool drawPortrait = false) const;
 
    bool shouldShowResponses() const
    {
