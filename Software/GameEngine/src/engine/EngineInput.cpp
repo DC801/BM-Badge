@@ -8,6 +8,26 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "EngineWindowFrame.h"
+
+uint32_t getKeyIndexFromPointerEvent(const SDL_Event &e);
+
+uint32_t getKeyIndexFromPointerEvent(const SDL_Event &e) {
+	uint32_t result = 0;
+	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i) {
+		SDL_Point buttonPoint = buttonDestPoints[i];
+		buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
+		buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
+
+		SDL_Point mousePos = { e.button.x, e.button.y };
+
+		if (SDL_EnclosePoints(&mousePos, 1, &buttonTargetRect, nullptr)) {
+			result = i;
+			break;
+		}
+	}
+	return result;
+}
+
 #endif
 
 #ifdef __cplusplus
@@ -52,7 +72,7 @@ bool *buttonBoolPointerArray[] = {
 
 #ifdef DC801_DESKTOP
 
-int32_t buttonClickedOnScreenKeyboardIndex = -1;
+uint32_t buttonClickedOnScreenKeyboardIndex = 0;
 void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 {
 	if (application_quit != 0)
@@ -65,6 +85,7 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 
 	const uint8_t *keys = SDL_GetKeyboardState(nullptr);
 	SDL_Event e;
+	buttonClickedOnScreenKeyboardIndex = 0;
 
 	while (SDL_PollEvent(&e))
 	{
@@ -106,21 +127,31 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 			}
 		}
 
-		if (e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
-			buttonClickedOnScreenKeyboardIndex = -1;
-
+		if (
+			e.type == SDL_MOUSEBUTTONDOWN
+			|| e.type == SDL_MOUSEBUTTONUP
+			|| e.type == SDL_MOUSEMOTION
+			|| e.type == SDL_MOUSEWHEEL
+			|| e.type == SDL_FINGERDOWN
+			|| e.type == SDL_FINGERUP
+			|| e.type == SDL_FINGERMOTION
+		) {
+			printf("Event Type: ");
+			switch (e.type) {
+				case SDL_MOUSEBUTTONDOWN: printf("SDL_MOUSEBUTTONDOWN"); break;
+				case SDL_MOUSEBUTTONUP: printf("SDL_MOUSEBUTTONUP"); break;
+				case SDL_MOUSEMOTION: printf("SDL_MOUSEMOTION"); break;
+				case SDL_MOUSEWHEEL: printf("SDL_MOUSEWHEEL"); break;
+				case SDL_FINGERDOWN: printf("SDL_FINGERDOWN"); break;
+				case SDL_FINGERUP: printf("SDL_FINGERUP"); break;
+				case SDL_FINGERMOTION: printf("SDL_FINGERMOTION"); break;
+				default: printf("Unknown");
+			}
+			printf(" | Pressed: %s\n", e.button.state ? "Yes" : "No");
 			if (e.button.state == SDL_PRESSED) {
-				for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i) {
-					SDL_Point buttonPoint = buttonDestPoints[i];
-					buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
-					buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
-
-					SDL_Point mousePos = { e.button.x, e.button.y };
-
-					if (SDL_EnclosePoints(&mousePos, 1, &buttonTargetRect, nullptr)) {
-						buttonClickedOnScreenKeyboardIndex = i;
-						break;
-					}
+				uint32_t keyIndex = getKeyIndexFromPointerEvent(e);
+				if (keyIndex > 0) {
+					buttonClickedOnScreenKeyboardIndex |= 1 << keyIndex;
 				}
 			}
 		}
@@ -187,9 +218,7 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_BACKSLASH] << KEYBOARD_KEY_RJOY_UP;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_RETURN] << KEYBOARD_KEY_RJOY_RIGHT;
 
-	if (buttonClickedOnScreenKeyboardIndex > -1) {
-		newValue ^= 1 << (uint32_t)buttonClickedOnScreenKeyboardIndex;
-	}
+	newValue |= buttonClickedOnScreenKeyboardIndex;
 
 	*keyboardBitmask = newValue;
 	// debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
