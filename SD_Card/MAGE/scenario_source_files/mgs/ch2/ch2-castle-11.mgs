@@ -10,7 +10,16 @@ settings for serial dialog { wrap 60 }
 look-ch2-castle-11 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: CASTLE HALLWAY FRONT on_look text\n "
+		"TODO: CASTLE HALLWAY FRONT on_look text"
+		" "
+	}
+}
+
+look-ch2-kuro {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: Kuro on_look text"
+		" "
 	}
 }
 
@@ -34,7 +43,101 @@ on_load-ch2-castle-11 {
 	) {
 		copy script ch2-hide-monitor
 	}
+	if (flag ch2-cutseen-castle11 is false) {
+		if (warp state is warping) {
+			// this is here because the cutscene dialog must come after the warp-in thing
+			copy warping-in-fade-in
+			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
+		}
+		set player control off
+		wait 500ms
+		set entity Kuro on_tick to null_script
+		show dialog {
+			PLAYER "Oh, cool, I got past the blockage."
+			"This artifact will come in handy."
+			name "???" "Intruder! Intruder!"
+		}
+		set entity "%PLAYER%" on_tick to watch-kuro
+		walk entity Kuro to geometry kuro-walk over 300ms
+		walk entity Kuro to geometry kuro-spot over 300ms
+		walk entity Kuro to geometry kuro-walk over 300ms
+		turn entity Kuro south
+		wait 150ms
+		play entity Kuro animation 1 twice
+		wait 400ms
+		// TODO
+		show dialog {
+			PLAYER "Oh, hi there, little bird."
+		}
+		set entity Kuro animation to 1
+		show dialog {
+			Kuro "Little bird? Little bird?!"
+		}
+		set entity Kuro animation to 0
+		show dialog {
+			Kuro "I'm the ruddy harbringer of death!"
+			PLAYER "Oh, of course. I'm sorry."
+		}
+		set entity Kuro animation to 1
+		show dialog {
+			Kuro "Listen! Listen!"
+		}
+		walk entity Kuro to geometry kuro-spot over 250ms
+		walk entity Kuro to geometry kuro-walk over 250ms
+		turn entity Kuro south
+		wait 140ms
+		show dialog {
+			Kuro "The ceiling came down! The walls are wrecked!"
+			"(TODO)"
+			PLAYER "So, I need a monitor, and this guy Lambda told me there was one in here I could use."
+		}
+		set entity Kuro on_tick to ch2-walk-to-monitor
+		set entity "%PLAYER%" on_tick to null_script
+		walk entity "%PLAYER%" along geometry warp-spot over 1900ms
+		show dialog {
+			PLAYER "Did he mean this one here?"
+		}
+		set entity Kuro tick_script to null_script
+		turn entity Kuro south
+		show dialog {
+			Kuro "Beats me."
+			PLAYER "Is it... supposed to be doing that?"
+		}
+		set entity Kuro on_tick to hop
+		turn entity Kuro east
+		show dialog {
+			Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle!\" slideshow."
+			"Guess the computer it was plugged into got damaged in the quake."
+			"Not that we're getting tourists -- apart from you."
+			PLAYER "So I can take it?"
+			Kuro "Dunno. I guess? I don't think anyone would miss it."
+		}
+		set entity Kuro tick_script to face-player
+		set player control on
+		set entity "%PLAYER%" on_tick to null_script
+		set flag ch2-cutseen-castle11 to true
+	}
 	goto ch2-map-init
+}
+
+ch2-walk-to-monitor {
+	wait 300ms
+	walk entity Kuro along geometry kuro-walk over 650ms
+	turn entity Kuro south
+	wait 800ms
+	walk entity Kuro to geometry kuro-walk2 over 150ms
+	turn entity Kuro east
+	wait 180ms
+	walk entity Kuro along geometry kuro-walk2 over 400ms
+	set entity Kuro tick_script to face-player
+}
+hop {
+	play entity "%SELF%" animation 1 once
+	goto null_script
+}
+
+watch-kuro {
+	turn entity "%SELF%" toward entity Kuro
 }
 
 /* ---------- ON_TICK ---------- */
@@ -75,12 +178,15 @@ ch2-hide-monitor {
 ch2-touch-monitor {
 	if (flag ch2-monitor-firstlook is false) {
 		show dialog {
-			PLAYER "TODO monitor1"
+			PLAYER "Um, how do I take it?"
+			Kuro "Just unplug all the cables from the computer case. One power cable, one data cable."
 		}
 		set flag ch2-monitor-firstlook to true
-	}
-	show dialog {
-		PLAYER "TODO monitor2."
+	} else {
+		show dialog {
+			PLAYER "Is the computer sad? It keeps making frowny faces."
+			Kuro "Computer's basically dead. And I know a dead thing when I see one. Monitor's fine, though."
+		}
 	}
 	show dialog {
 		name "" "(Pick up the monitor?)"
@@ -102,4 +208,11 @@ ch2-touch-monitor-no {
 		PLAYER "Maybe later, then."
 	}
 	set entity "%SELF%" interact_script to ch2-touch-monitor // RESET
+}
+
+interact-ch2-kuro {
+	show dialog {
+		Kuro "So, um, you can get me out of here, right?"
+		"(TODO)"
+	}
 }

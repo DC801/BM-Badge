@@ -95,18 +95,6 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":192,
-                 "y":174
-                }, 
-                {
-                 "class":"",
                  "gid":253,
                  "height":32,
                  "id":19,
@@ -141,10 +129,26 @@
                  "height":48,
                  "id":35,
                  "name":"Kuro",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-kuro"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-kuro"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":67,
+                 "x":82,
                  "y":126
                 }],
          "opacity":1,
@@ -203,6 +207,90 @@
                  "width":32,
                  "x":279,
                  "y":131
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":36,
+                 "name":"kuro-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":107,
+                 "y":118
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":38,
+                 "name":"kuro-walk",
+                 "polyline":[
+                        {
+                         "x":17,
+                         "y":0
+                        }, 
+                        {
+                         "x":49,
+                         "y":0
+                        }, 
+                        {
+                         "x":80,
+                         "y":-15
+                        }, 
+                        {
+                         "x":92,
+                         "y":-15
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":120,
+                 "y":117
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":39,
+                 "name":"warp-spot",
+                 "polyline":[
+                        {
+                         "x":-21,
+                         "y":0
+                        }, 
+                        {
+                         "x":100,
+                         "y":0
+                        }, 
+                        {
+                         "x":100,
+                         "y":-31
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":173
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":40,
+                 "name":"kuro-walk2",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":40,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":222,
+                 "y":117
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -211,7 +299,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":36,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
