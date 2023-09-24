@@ -135,6 +135,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-abacus"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-abacus"
                         }],
                  "rotation":0,
                  "visible":true,

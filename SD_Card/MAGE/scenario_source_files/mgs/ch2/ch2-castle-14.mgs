@@ -103,14 +103,3 @@ ch2-touch-clock-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-clock // RESET
 }
-
-ch2-install-clock {
-	set flag ch2-carrying-clock to false
-	set flag ch2-installed-clock to true
-}
-look-clock {
-	show serial dialog spacer
-	show serial dialog {
-		"A giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
-	}
-}

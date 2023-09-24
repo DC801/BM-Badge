@@ -129,6 +129,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-keyboard"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-keyboard"
                         }],
                  "rotation":0,
                  "visible":true,

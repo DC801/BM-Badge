@@ -155,17 +155,6 @@ ch2-touch-mouse {
 	}
 }
 
-ch2-install-mouse {
-	set flag ch2-carrying-mouse to false
-	set flag ch2-installed-mouse to true
-}
-look-mouse {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look mouse TODO"
-	}
-}
-
 /* ---------- MOUSE GAME ---------- */
 
 const! (

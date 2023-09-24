@@ -150,14 +150,3 @@ ch2-touch-powersupply-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-powersupply // RESET
 }
-
-ch2-install-powersupply {
-	set flag ch2-carrying-powersupply to false
-	set flag ch2-installed-powersupply to true
-}
-look-powersupply {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look powersupply TODO"
-	}
-}

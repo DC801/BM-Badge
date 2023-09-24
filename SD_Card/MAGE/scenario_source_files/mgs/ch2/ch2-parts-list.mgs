@@ -357,154 +357,95 @@ ch2-lambda-round-3-parts5 {
 	show serial dialog lambda-over
 }
 
-/* ---------- ITEM MAP DRAWING LOGIC ---------- */
+/* ---------- ITEM ON_LOOK ---------- */
 
-// debug: "win" that storyflag round
-
-debug-round1 {
-	copy ch2-pickup-monitor
-	copy ch2-pickup-heatsink
-	copy ch2-pickup-powersupply
+look-monitor {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look monitor TODO"
+	}
 }
-debug-round2 {
-	copy ch2-pickup-keyboard
-	copy ch2-pickup-mouse
-	copy ch2-pickup-needle
-	copy ch2-pickup-plate
-	copy ch2-fuse-harddrive
+look-heatsink {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look heatsink TODO"
+	}
 }
-debug-round3 {
-	copy ch2-pickup-ramchips
-	copy ch2-pickup-clock
-	copy ch2-pickup-goldfish
-	copy ch2-pickup-abacus
-	copy ch2-fuse-cpu
+look-cactuscooler {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look cactuscooler TODO"
+	}
 }
-
-// PART 1: Put items on the map
-
-ch2-put_on_map-round1 {
-	set flag ch2-map-monitor to true
-	set flag ch2-map-heatsink to true
-	set flag ch2-map-powersupply to true
+look-powersupply {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look powersupply TODO"
+	}
 }
-
-// PART 1: Take items off the map
-
-ch2-pickup-monitor {
-	set flag ch2-map-monitor to false
-	set flag ch2-carrying-monitor to true
+look-keyboard {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look keyboard TODO"
+	}
 }
-ch2-pickup-powersupply {
-	set flag ch2-map-powersupply to false
-	set flag ch2-carrying-powersupply to true
+look-mouse {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look mouse TODO"
+	}
 }
-ch2-handoff-powersupply-to-cactuscooler {
-	set flag ch2-map-heatsink to false
-	set flag ch2-map-cactuscooler-castle to true
+look-harddrive {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look harddrive TODO"
+	}
 }
-ch2-handoff-cactuscooler-to-bobaustin {
-	set flag ch2-map-cactuscooler-castle to false
-	set flag ch2-map-cactuscooler-bobaustin to true
+look-plate {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look plate TODO"
+	}
 }
-ch2-pickup-cactuscooler {
-	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
-	set flag ch2-map-cactuscooler-bobaustin to false
-	set flag ch2-map-heatsink to true
-	set flag ch2-carrying-cactuscooler to true
+look-needle {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look needle TODO"
+	}
 }
-ch2-pickup-heatsink {
-	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
-	set flag ch2-map-heatsink to false
-	set flag ch2-carrying-heatsink to true
+look-ramchips {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look ramchips TODO"
+	}
 }
-
-// DEBUG
-ch2-unpickup-cactuscooler {
-	// inverse of the above, lol, sorry for incorrect state
-	set flag ch2-map-cactuscooler-bobaustin to true
-	set flag ch2-map-heatsink to false
-	set flag ch2-carrying-cactuscooler to false
+look-clock {
+	show serial dialog spacer
+	show serial dialog {
+		"A giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
+	}
 }
-
-// PART 2: Put items on the map
-
-ch2-put_on_map-round2 {
-	set flag ch2-map-keyboard to true
-	set flag ch2-map-mouse to true
-	set flag ch2-map-plate to true
-	set flag ch2-map-needle to true
+look-cpu {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look cpu TODO"
+	}
 }
-
-// PART 2: Take items off the map
-
-ch2-pickup-keyboard {
-	set flag ch2-map-keyboard to false
-	set flag ch2-carrying-keyboard to true
+look-goldfish {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look goldfish TODO"
+	}
 }
-ch2-pickup-mouse {
-	set flag ch2-map-mouse to false
-	set flag ch2-carrying-mouse to true
+look-abacus {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look abacus TODO"
+	}
 }
-ch2-pickup-plate {
-	set flag ch2-map-plate to false
-	set flag ch2-carrying-plate to true
-}
-ch2-pickup-needle {
-	set flag ch2-map-needle to false
-	set flag ch2-carrying-needle to true
-}
-ch2-fuse-harddrive {
-	copy ch2-install-plate
-	copy ch2-install-needle
-	set flag ch2-carrying-harddrive to true
-}
-
-// PART 3: Put items on the map
-
-ch2-put_on_map-round3 {
-	set flag ch2-map-clock to true
-	set flag ch2-map-goldfish to true
-	set flag ch2-map-abacus to true
-	set flag ch2-map-ramchips to true
-}
-
-// PART 3: Take items off the map
-
-ch2-pickup-clock {
-	set flag ch2-map-clock to false
-	set flag ch2-carrying-clock to true
-}
-ch2-pickup-goldfish {
-	set flag ch2-map-goldfish to false
-	set flag ch2-carrying-goldfish to true
-}
-ch2-pickup-abacus {
-	set flag ch2-map-abacus to false
-	set flag ch2-carrying-abacus to true
-}
-ch2-fuse-cpu {
-	copy ch2-install-goldfish
-	copy ch2-install-abacus
-	set flag ch2-carrying-cpu to true
-}
-ch2-handoff-ramchips-to-seamoss {
-	set flag ch2-map-ramchips to false
-	set flag ch2-map-seamoss to true
-
-}
-ch2-pickup-ramchips {
-	set flag ch2-map-seamoss to false
-	set flag ch2-carrying-ramchips to true
-}
-
-// PART 4
-
-ch2-put_on_map-round4 { // TODO: use this
-	set flag ch2-map-mainframeos to true
-}
-
-ch2-pickup-mainframeos {
-	set flag ch2-map-mainframeos to false
-	set flag ch2-carrying-mainframeos to true
+look-mainframeos {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look mainframeos TODO"
+	}
 }

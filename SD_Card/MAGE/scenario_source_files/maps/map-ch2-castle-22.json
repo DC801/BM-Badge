@@ -113,6 +113,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-powersupply"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-powersupply"
                         }],
                  "rotation":0,
                  "visible":true,

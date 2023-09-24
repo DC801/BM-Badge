@@ -253,17 +253,6 @@ ch2-touch-keyboard {
 	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
 }
 
-ch2-install-keyboard {
-	set flag ch2-carrying-keyboard to false
-	set flag ch2-installed-keyboard to true
-}
-look-keyboard {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look keyboard TODO"
-	}
-}
-
 camera-angry-shake {
 	shake camera 100ms 4px for 500ms
 	goto null_script

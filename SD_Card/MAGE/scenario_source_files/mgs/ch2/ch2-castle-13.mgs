@@ -103,18 +103,3 @@ ch2-touch-goldfish-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
 }
-
-ch2-install-goldfish {
-	set flag ch2-carrying-goldfish to false
-	set flag ch2-installed-goldfish to true
-}
-ch2-install-cpu {
-	set flag ch2-carrying-cpu to false
-	set flag ch2-installed-cpu to true
-}
-look-goldfish {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look goldfish TODO"
-	}
-}

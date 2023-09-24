@@ -14,13 +14,6 @@ look-ch2-castle-21 {
 	}
 }
 
-look-abacus {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look abacus TODO"
-	}
-}
-
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-21 {
@@ -109,11 +102,6 @@ ch2-touch-abacus-no {
 		PLAYER "Maybe later, then."
 	}
 	set entity "%SELF%" interact_script to ch2-touch-abacus // RESET
-}
-
-ch2-install-abacus {
-	set flag ch2-carrying-abacus to false
-	set flag ch2-installed-abacus to true
 }
 
 /* ---------- ENTITIES ---------- */

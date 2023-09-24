@@ -95,6 +95,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-clock"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-clock"
                         }],
                  "rotation":0,
                  "visible":true,

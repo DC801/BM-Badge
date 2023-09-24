@@ -102,14 +102,3 @@ ch2-touch-plate-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-plate // RESET
 }
-
-ch2-install-plate {
-	set flag ch2-carrying-plate to false
-	set flag ch2-installed-plate to true
-}
-look-plate {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look plate TODO"
-	}
-}

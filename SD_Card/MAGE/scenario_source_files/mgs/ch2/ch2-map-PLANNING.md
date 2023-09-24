@@ -260,6 +260,10 @@ For each item: (Copy existing pattern wherever these are found)
 	3. Add to `command-parts` (using flag `ch2-installed-ITEM` and `ch2-carrying-ITEM`)
 	4. Add to script `command-parts-q` (if multiple words, add a no-spaces option, too)
 
+Other notes:
+
+- `ch2-hide-X` concerns moving the entity itself around the physical game map; `ch2-pickup-X` and `ch2-install-X` concern setting flags to make the item appear on the ASCII serial map, serial inventory list, etc.
+
 ## Puzzles to implement
 
 (Also see the brainstorming far below)

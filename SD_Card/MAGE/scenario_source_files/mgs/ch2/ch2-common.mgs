@@ -57,6 +57,53 @@ ch2-map-init {
 		}
 	}
 	
+	// Inventory `look` registration
+	if (flag ch2-carrying-monitor is true) {
+		register look + monitor -> look-monitor
+	}
+	if (flag ch2-carrying-heatsink is true) {
+		register look + heatsink -> look-heatsink
+	}
+	if (flag ch2-carrying-cactuscooler is true) {
+		register look + cactuscooler -> look-cactuscooler
+	}
+	if (flag ch2-carrying-powersupply is true) {
+		register look + powersupply -> look-powersupply
+	}
+	if (flag ch2-carrying-keyboard is true) {
+		register look + keyboard -> look-keyboard
+	}
+	if (flag ch2-carrying-mouse is true) {
+		register look + mouse -> look-mouse
+	}
+	if (flag ch2-carrying-harddrive is true) {
+		register look + harddrive -> look-harddrive
+	}
+	if (flag ch2-carrying-plate is true) {
+		register look + plate -> look-plate
+	}
+	if (flag ch2-carrying-needle is true) {
+		register look + needle -> look-needle
+	}
+	if (flag ch2-carrying-ramchips is true) {
+		register look + ramchips -> look-ramchips
+	}
+	if (flag ch2-carrying-clock is true) {
+		register look + clock -> look-clock
+	}
+	if (flag ch2-carrying-cpu is true) {
+		register look + cpu -> look-cpu
+	}
+	if (flag ch2-carrying-goldfish is true) {
+		register look + goldfish -> look-goldfish
+	}
+	if (flag ch2-carrying-abacus is true) {
+		register look + abacus -> look-abacus
+	}
+	if (flag ch2-carrying-mainframeos is true) {
+		register look + mainframeos -> look-mainframeos
+	}
+	
 	// DEBUG OVERRIDES
 	if (debug mode is on) {
 		set serial control on

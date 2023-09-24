@@ -110,19 +110,3 @@ ch2-touch-needle-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-needle // RESET
 }
-
-ch2-install-needle {
-	set flag ch2-carrying-needle to false
-	set flag ch2-installed-needle to true
-}
-look-needle {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look needle TODO"
-	}
-}
-
-ch2-install-harddrive {
-	set flag ch2-carrying-harddrive to false
-	set flag ch2-installed-harddrive to true
-}
