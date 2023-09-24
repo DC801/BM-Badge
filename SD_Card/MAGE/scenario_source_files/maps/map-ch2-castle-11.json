@@ -192,6 +192,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-monitor"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-monitor"
                         }],
                  "rotation":0,
                  "visible":true,

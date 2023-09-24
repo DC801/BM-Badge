@@ -103,14 +103,3 @@ ch2-touch-monitor-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-monitor // RESET
 }
-
-ch2-install-monitor {
-	set flag ch2-carrying-monitor to false
-	set flag ch2-installed-monitor to true
-}
-look-monitor {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look monitor TODO"
-	}
-}

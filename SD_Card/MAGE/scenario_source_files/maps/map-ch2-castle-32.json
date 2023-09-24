@@ -175,6 +175,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-ramchips"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ramchips"
                         }],
                  "rotation":0,
                  "visible":true,

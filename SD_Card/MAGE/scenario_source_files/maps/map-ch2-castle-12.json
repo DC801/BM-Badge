@@ -146,6 +146,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-needle"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-needle"
                         }],
                  "rotation":0,
                  "visible":true,

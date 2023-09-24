@@ -285,14 +285,3 @@ ch2-touch-ramchips-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-ramchips // RESET
 }
-
-ch2-install-ramchips {
-	set flag ch2-carrying-ramchips to false
-	set flag ch2-installed-ramchips to true
-}
-look-ramchips {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look ramchips TODO"
-	}
-}
