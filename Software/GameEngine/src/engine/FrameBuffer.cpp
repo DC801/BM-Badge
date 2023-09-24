@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EnginePanic.h"
 #include "utility.h"
 #include "FrameBuffer.h"
 #include "modules/sd.h"
@@ -462,6 +463,25 @@ void FrameBuffer::tileToBufferNoXNoYNoZ(
 	}
 	uint16_t num_rows = d.y - a.y;
 	uint16_t num_cols = d.x - a.x;
+	if (num_rows >= 10000) {
+		char log_bad_number[255] = "";
+		sprintf(
+			log_bad_number,
+			"Too many pixels in num_rows!\n"
+			"d.x: %d, d.y: %d, a.x: %d, a.y: %d\n"
+			"screen_x_start: %d, screen_y_start: %d\n",
+			"screen_x: %d, screen_y: %d\n",
+			d.x,
+			d.y,
+			a.x,
+			a.y,
+			screen_x_start,
+			screen_y_start,
+			screen_x,
+			screen_y
+		);
+		ENGINE_PANIC(log_bad_number);
+	}
 	for (uint16_t row = 0; row< num_rows; row++){
 		for(uint16_t col = 0; col < num_cols; col++) {
 			screen_index =(
