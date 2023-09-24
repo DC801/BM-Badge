@@ -126,7 +126,11 @@ interact-ch2-alvin {
 		}
 	} else {
 		show dialog {
-			SELF "Hey, you kept up with Simon. Not bad, kid."
+			SELF "You think you bestowed upon Simon some profound paradigm shift just now? Hate to break it to you, but he comes to this exact realization, like, twice a month."
+			"\"Music is about the music!\" and \"Make art for yourself, not an audience!\" Heard it all before."
+			"Next week, Simon'll be all about how music is a conversation between musicians and their audience, or society at large, or whatever."
+			"\"The meaning of art is in the eye of the beholder, otherwise it's a tree falling in the woods without anyone hearing!\""
+			"Still, good job keeping up with him."
 		}
 	}
 	set entity "%SELF%" interact_script to interact-ch2-alvin

@@ -141,6 +141,7 @@ Simon animations:
 
 simon-game-start {
 	set player control off
+	set hex control off
 	mutate simon-pos1 ? 4
 	mutate simon-pos2 ? 4
 	mutate simon-pos3 ? 4
@@ -451,8 +452,13 @@ simon-game-lose {
 	set player control off
 	set lights control on
 	set entity Keyboard tick_script to simon-rock
+	if (
+		flag ch2-ring-zero-restored is true
+		|| debug mode is on
+	) {
+		set hex control on
+	}
 	wait 100ms
-	// set hex control on // TODO: turn this off after debugging
 	set entity Lights on_tick to screen-lights-lose
 	set entity "%PLAYER%" on_tick to player-lose
 	show dialog { Simon "Too bad! Better luck next time!" }
@@ -467,7 +473,12 @@ simon-game-lose {
 simon-game-win {
 	set player control off
 	set lights control on
-	// set hex control on // TODO: turn this off after debugging
+	if (
+		flag ch2-ring-zero-restored is true
+		|| debug mode is on
+	) {
+		set hex control on
+	}
 	set entity Lights on_tick to screen-lights-win
 	set entity "%PLAYER%" on_tick to player-win
 	if (flag ch2-simon-won-before is false) {
