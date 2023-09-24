@@ -10,6 +10,54 @@
 			"serial_dialog":"serial_dialog-go_register"
 		}
 	],
+	"map-action_testing-go_override": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "go",
+			"argument": "west",
+			"script": "debug-go-space"
+		},
+		{
+			"is_fail": false,
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "look",
+			"script": "debug-look-override"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "look",
+			"argument": "Mage 01",
+			"script": "debug-look-mage01-override"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_override"
+		}
+	],
+	"map-action_testing-go_un-override": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "go",
+			"argument": "west",
+			"script": "debug-go-space"
+		},
+		{
+			"is_fail": false,
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "look",
+			"script": "debug-look-override"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "look",
+			"argument": "keyboard",
+			"script": "debug-look-mage01-override"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_un-override"
+		}
+	],
 	"map-action_testing-go_register_fail": [
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
@@ -2046,6 +2094,24 @@
 		{
 			"action": "SET_LIGHTS_CONTROL",
 			"enabled": false
+		}
+	],
+	"debug-go-space": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "dialog-debug-go-space"
+		}
+	],
+	"debug-look-override": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "dialog-debug-look-override"
+		}
+	],
+	"debug-look-mage01-override": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "dialog-debug-look-mage01-override"
 		}
 	]
 }

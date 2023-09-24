@@ -152,7 +152,9 @@
 			"regArg": "map-action_testing-go_register_arguments",
 			"unregArg": "map-action_testing-go_unregister_arguments",
 			"unreg": "map-action_testing-go_unregister",
-			"moon": "map-action_testing-go_moon"
+			"moon": "map-action_testing-go_moon",
+			"override": "map-action_testing-go_override",
+			"un-override": "map-action_testing-go_un-override"
 		}
 	},
 	"ch2-magehouse-birthday": {

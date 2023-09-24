@@ -58,8 +58,8 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		size_t index = input.find_first_of(' ');
 		if (index != std::string::npos) {
 			// we found a space
-			word = input.substr(0,index);
-			input = input.substr(index+1, input.length());
+			word = input.substr(0, index);
+			input = input.substr(index + 1, input.length());
 		} else {
 			// no more spaces
 			word = "" + input;
@@ -74,12 +74,12 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		if (wordCount == 1) {
 			verb = "" + word;
 		} else if (
-			wordCount == 2
-			&& ( word == "at" || word == "to" )
-		) {
+				wordCount == 2
+				&& (word == "at" || word == "to")
+				) {
 			modifier = word;
 		} else {
-			if(!subject.empty()) {
+			if (!subject.empty()) {
 				subject += " ";
 			}
 			subject += word;
@@ -87,7 +87,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 
 
-	if(MageGame->isEntityDebugOn) {
+	if (MageGame->isEntityDebugOn) {
 		std::string message = "Verb: " + verb;
 		if (!modifier.empty()) { message += " | Modifier: " + modifier; }
 		if (!subject.empty()) { message += " | Subject: " + subject; }
@@ -96,7 +96,20 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 
 
-	if(verb == "help") {
+	MageSerialDialogCommand* foundCommand = searchForCommand(
+		verb,
+		subject
+	);
+	if (foundCommand != nullptr) {
+		if(MageGame->isEntityDebugOn) {
+			commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
+		}
+		MageScript->initScriptState(
+			&MageScript->resumeStates.serial,
+			foundCommand->scriptId,
+			true
+		);
+	} else if(verb == "help") {
 		// I sure thought `lastCommandUsed` & the `MageSerialCommands` enum
 		// would be really useful earlier, but I can't remember why now.
 		lastCommandUsed = COMMAND_HELP;
@@ -235,22 +248,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 	// end SECRET_GOAT
 	else {
-		MageSerialDialogCommand* command = searchForCommand(
-			verb,
-			subject
-		);
-		if (command != nullptr) {
-			if(MageGame->isEntityDebugOn) {
-				commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
-			}
-			MageScript->initScriptState(
-				&MageScript->resumeStates.serial,
-				command->scriptId,
-				true
-			);
-		} else {
-			commandResponseBuffer += "Unrecognized Verb: " + verb + "\n";
-		}
+		commandResponseBuffer += "Unrecognized Verb: " + verb + "\n";
 	}
 }
 
