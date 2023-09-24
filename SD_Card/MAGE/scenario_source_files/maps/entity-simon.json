@@ -1,13 +1,13 @@
 { "columns":2,
  "image":"..\/entities\/entity-simon.png",
- "imageheight":416,
+ "imageheight":624,
  "imagewidth":96,
  "margin":0,
  "name":"entity-simon",
  "spacing":0,
  "tilecount":26,
  "tiledversion":"1.9.2",
- "tileheight":32,
+ "tileheight":48,
  "tiles":[
         {
          "animation":[
