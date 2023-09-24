@@ -304,5 +304,30 @@
 		"messages": [
 			"HONK!"
 		]
+	},
+	"serial_dialog-go_override": {
+		"messages": [
+			"Verb Overrides registered: 'Look', 'look mage 01', 'go west'"
+		]
+	},
+	"serial_dialog-go_un-override": {
+		"messages": [
+			"Verb Overrides UN-registered: 'Look', 'look mage 01', 'go west'"
+		]
+	},
+	"dialog-debug-go-space": {
+		"messages": [
+			"HONK! The goose has stolen the door!"
+		]
+	},
+	"dialog-debug-look-override": {
+		"messages": [
+			"HONK! The goose tells you an awesome story about the rise and fall of his enemies, and prevents you from looking about the room!"
+		]
+	},
+	"dialog-debug-look-mage01-override": {
+		"messages": [
+			"HONK! The goose attacks when you try to look at the 'Mage 01'!"
+		]
 	}
 }
