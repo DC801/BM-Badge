@@ -1531,8 +1531,9 @@ std::optional<uint16_t> MageScriptActions::show_dialog(const uint8_t* args, Mage
 
     if (resumeState.totalLoopsToNextAction == 0)
     {
+        auto& entity = mapControl->getEntityByMapLocalId(entityId);
         //debug_print("Opening dialog %d\n", argStruct->dialogId);
-        dialogControl->load(argStruct->dialogId, entityId);
+        dialogControl->load(argStruct->dialogId, entity.name);
         resumeState.totalLoopsToNextAction = 1;
     }
     else if (!dialogControl->isOpen())
@@ -1800,11 +1801,11 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
         }
         resumeState.loopsToNextAction--;
         uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
-        float totalProgress = getProgressOfAction(resumeState);
-        float currentProgressLength = resumeState.geometry.length * totalProgress;
-        float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-        float lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
-        auto progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
+        const auto totalProgress = getProgressOfAction(resumeState);
+        const auto currentProgressLength = resumeState.geometry.length * totalProgress;
+        const auto currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
+        const auto lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
+        const auto progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
             / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
 
         if (progressBetweenPoints > 1.0f)
@@ -1814,10 +1815,10 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
 
             sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
 
-            currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-            lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
-            progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
-                / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
+            //currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
+            //lengthAtEndOfCurrentSegment = resumeState.geometry.lengthOfPreviousSegments + currentSegmentLength;
+            //progressBetweenPoints = (currentProgressLength - resumeState.geometry.lengthOfPreviousSegments)
+            //    / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);
 
 
             resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex);

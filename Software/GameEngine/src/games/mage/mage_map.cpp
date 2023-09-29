@@ -16,6 +16,7 @@
 void MapControl::Load(uint16_t index)
 {
     currentMap = ROM()->InitializeRAMCopy<MapData>(index);
+    currentMap->onLoad.scriptIsRunning = true;
 
     auto player = getPlayerEntity();
     if (player.has_value())
@@ -24,20 +25,17 @@ void MapControl::Load(uint16_t index)
     }
 }
 
-
-
 void MapControl::OnLoad(MageScriptControl* scriptControl)
 {
     scriptControl->processScript(currentMap->onLoad, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
+    currentMap->onLoad.scriptIsRunning = false;
 }
-
 
 void MapControl::OnTick(MageScriptControl* scriptControl)
 {
-    //currentMap->onTick.scriptIsRunning = true;
-
-    //now that the struct is correctly configured, process the script:
+    currentMap->onTick.scriptIsRunning = true;
     scriptControl->processScript(currentMap->onTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
+    currentMap->onTick.scriptIsRunning = false;
 }
 
 MapData::MapData(uint32_t& address)

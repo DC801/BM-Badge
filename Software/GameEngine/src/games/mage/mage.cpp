@@ -42,6 +42,11 @@ void MageGameEngine::Run()
             engineIsInitialized = true;
         }
 
+        const auto deltaState = DeltaState{ deltaTime, inputHandler->GetButtonState(), inputHandler->GetButtonActivatedState() };
+
+        //updates the state of all the things before rendering:
+        gameUpdate(deltaState);
+
         // If a map is set to (re)load, do so before rendering
         if (mapControl->mapLoadId != MAGE_NO_MAP)
         {
@@ -53,10 +58,6 @@ void MageGameEngine::Run()
             mapControl->mapLoadId = MAGE_NO_MAP;
         }
 
-        const auto deltaState = DeltaState{ deltaTime, inputHandler->GetButtonState(), inputHandler->GetButtonActivatedState() };
-
-        //updates the state of all the things before rendering:
-        gameUpdate(deltaState);
 
         //frame limiter code to keep game running at a specific FPS:
         if (delayMs > 0)
@@ -406,7 +407,6 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
 
         //update the entities based on the current state of their (hackable) data array.
         mapControl->UpdateEntities(delta);
-
     }
 
     //handle scripts:

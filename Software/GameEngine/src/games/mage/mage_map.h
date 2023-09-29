@@ -245,6 +245,15 @@ public:
         return currentMap->onLook;
     }
 
+    const MageScript* GetScript(uint16_t scriptIndex) const
+    {
+        if (scriptIndex > currentMap->scriptCount)
+        {
+            return nullptr;
+        }
+        return currentMap->scripts[scriptIndex];
+    }
+
     void OnLoad(MageScriptControl* scriptControl);
     void OnTick(MageScriptControl* scriptControl);
 private:

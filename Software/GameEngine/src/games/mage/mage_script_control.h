@@ -156,20 +156,14 @@ public:
       &MageScriptActions::check_ble_flag,
    };
 
-   void handleCommandScript(MageScriptState& resumeState);
-
    void tickScripts();
 
-   //this will process a script based on the state of the resumeStateStruct passed to it.
-   //it should only be called from the 
    void processScript(MageScriptState& resumeState, uint8_t mapLocalEntityId, MageScriptType scriptType);
 
 private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<MageHexEditor> hexEditor;
-   //variables for tracking suspended script states:
-   //MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ };
-   //MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP]{ };
+
    std::unique_ptr<MageScriptActions> scriptActions;
 
 

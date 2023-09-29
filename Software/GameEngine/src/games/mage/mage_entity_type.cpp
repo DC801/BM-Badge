@@ -8,7 +8,9 @@ void MageEntity::OnTick(MageScriptControl* scriptControl)
 
 void MageEntity::OnInteract(MageScriptControl* scriptControl)
 {
+    onInteract.scriptIsRunning = true;
     scriptControl->processScript(onInteract, onInteractScriptId, MageScriptType::ON_INTERACT);
+    onInteract.scriptIsRunning = false;
 }
 
 
