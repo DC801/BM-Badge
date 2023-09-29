@@ -5,19 +5,15 @@
 #include <memory>
 #include <string>
 
-class MageScriptControl;
-class MapControl;
-
 class StringLoader
 {
 public:
-   StringLoader(std::shared_ptr<MageScriptControl> scriptControl, std::shared_ptr<MapControl> mapControl, const uint16_t* scriptVariables) noexcept
-      : mapControl(mapControl), scriptVariables(scriptVariables)
+   StringLoader(const uint16_t* scriptVariables) noexcept
+      : scriptVariables(scriptVariables)
    {}
 
    std::string getString(uint16_t stringId, std::string triggeringEntityName = "") const;
 private:
-   std::shared_ptr<MapControl> mapControl;
    const uint16_t* scriptVariables;
 };
 

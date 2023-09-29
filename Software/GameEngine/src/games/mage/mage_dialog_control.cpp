@@ -30,9 +30,9 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    }
 };
 
-void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
+void MageDialogControl::load(uint16_t dialogId, std::string name)
 {
-   triggeringEntityName = mapControl->getEntityByMapLocalId(currentEntityId).name;
+   triggeringEntityName = name;
 
    currentScreenIndex = 0;
    currentResponseIndex = 0;

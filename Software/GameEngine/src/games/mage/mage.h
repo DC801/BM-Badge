@@ -28,6 +28,8 @@ class MageGameEngine
 {
 public:
 
+    // This constructor acts like the composition root for the game
+    // It depends on the EngineInput and FrameBuffer, which isolates the game logic from where I/O and display is handled
    MageGameEngine(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
       : inputHandler(inputHandler), frameBuffer(frameBuffer)
    {
@@ -35,7 +37,7 @@ public:
       tileManager = std::make_shared<TileManager>(frameBuffer);
       mapControl = std::make_shared<MapControl>(tileManager);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
-      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave().scriptVariables);
+      stringLoader = std::make_shared<StringLoader>(ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
       camera = MageCamera{ mapControl };
 
@@ -51,16 +53,11 @@ public:
    void Run();
 
 private:
-   void getInputSate();
-
    //updates the state of all the things before rendering:
    void gameUpdate(const DeltaState& delta);
 
    //This renders the game to the frame buffer based on the loop's updated state.
    void gameRender();
-
-   //this will handle any blocking delays at the end of the loop
-   void handleBlockingDelay();
 
    //this takes input information and moves the playerEntity around
    //If there is no playerEntity, it just moves the camera freely.
@@ -69,6 +66,7 @@ private:
    //this handles inputs that apply in ALL game states. That includes when
    //the hex editor is open, when it is closed, when in any menus, etc.
    void applyUniversalInputs(const DeltaState& delta);
+
    void handleEntityInteract(const ButtonState& activatedButton);
 
    bool engineIsInitialized{ false };

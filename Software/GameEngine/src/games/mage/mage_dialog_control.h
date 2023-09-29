@@ -140,7 +140,7 @@ public:
 
    void StartModalDialog(std::string messageString);
 
-   void load(uint16_t dialogId, int16_t currentEntityId);
+   void load(uint16_t dialogId, std::string name);
    void loadCurrentScreenPortrait();
    void loadNextScreen();
 

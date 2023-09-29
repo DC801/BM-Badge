@@ -199,7 +199,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
 {
     if (openSerialDialog.has_value())
     {
-        auto serialDialog = openSerialDialog.value();
+        auto& serialDialog = openSerialDialog.value();
         commandResponseBuffer += "processCommandAsResponseInput: " + input + "\n";
         MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
         if (responseType == RESPONSE_ENTER_NUMBER)
@@ -210,7 +210,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
                 auto responseIndex = std::stoi(input);
                 if (responseIndex >= 0 && responseIndex < serialDialog.Responses.size())
                 {
-                    auto response = serialDialog.Responses[responseIndex];
+                    auto& response = serialDialog.Responses[responseIndex];
                     auto responseLabel = stringLoader->getString(response.stringIndex);
                     commandResponseBuffer += "Valid response: " + input + " - " + responseLabel + "\n";
                     scriptControl->jumpScriptId = response.scriptIndex;
