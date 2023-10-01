@@ -104,8 +104,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":285,
-                 "y":126
+                 "x":281,
+                 "y":135
                 }, 
                 {
                  "class":"",
@@ -127,8 +127,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":249,
-                 "y":120
+                 "x":238,
+                 "y":111
                 }, 
                 {
                  "class":"",
@@ -136,6 +136,12 @@
                  "height":32,
                  "id":37,
                  "name":"Tracy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-tracy"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -148,6 +154,12 @@
                  "height":32,
                  "id":38,
                  "name":"Helvetica",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-helvetica"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,

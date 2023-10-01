@@ -118,7 +118,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-mouse is true) {
 			show dialog {
 				name "" "(Now installing... the mouse!)"
-				"(It's plug and play... somehow.)"
+				"(It's plug and play... somehow.)" // TODO: It's a bluetooth mouse! No plug!!!
 			}
 			set flag temp to true
 			copy ch2-install-mouse
@@ -227,7 +227,7 @@ ch2-start-round-2 {
 	wait 900ms
 	show dialog {
 		PLAYER "...? Did I just hear some kind of digital sound effect?"
-		Wizard "That was the bell on the terminal. Lambda is paging you. Better talk to him."
+		Wizard "That was the bell on the terminal. Whats-his-face is paging you. Better talk to him."
 	}
 	show serial dialog spacer
 	show serial dialog {
@@ -244,7 +244,7 @@ ch2-start-round-3 {
 	show dialog {
 		PLAYER "So, um.... do you know if Bert has come back?"
 		Wizard "Bert? The big hairy guy?"
-		"Nope. Since he left, no one's been in and of here but you."
+		"Nope. Since he left, no one's been in and out here but you."
 		PLAYER "Well, has he phoned or anything?"
 		Wizard "Do you see a phone in here?"
 		PLAYER "...."

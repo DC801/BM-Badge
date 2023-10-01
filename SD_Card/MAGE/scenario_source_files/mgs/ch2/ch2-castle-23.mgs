@@ -74,6 +74,20 @@ on_go-castle-23-south {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-helvetica {
+	copy face-player
+	show dialog {
+		SELF "(TODO)"
+	}
+}
+
+interact-ch2-tracy {
+	copy face-player
+	show dialog {
+		SELF "(TODO)"
+	}
+}
+
 interact-ch2-rocco {
 	copy face-player
 	if (flag ch2-cactuscooler-delivered is true) {

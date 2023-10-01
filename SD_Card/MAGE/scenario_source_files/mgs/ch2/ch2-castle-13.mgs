@@ -103,3 +103,20 @@ ch2-touch-goldfish-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
 }
+
+/* ---------- ENTITIES ---------- */
+
+
+interact-ch2-sebastian {
+	copy face-player
+	show dialog {
+		SELF "(TODO)"
+	}
+}
+
+interact-ch2-templeton {
+	copy face-player
+	show dialog {
+		SELF "(TODO)"
+	}
+}

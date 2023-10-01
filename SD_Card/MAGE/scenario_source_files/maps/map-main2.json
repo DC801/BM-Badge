@@ -726,6 +726,29 @@
                  "width":0,
                  "x":1105,
                  "y":571
+                }, 
+                {
+                 "class":"",
+                 "gid":1099,
+                 "height":32,
+                 "id":334,
+                 "name":"Rake",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":951,
+                 "y":1336
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1825,7 +1848,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":334,
+ "nextobjectid":335,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
