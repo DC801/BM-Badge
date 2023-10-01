@@ -221,6 +221,11 @@
                          "name":"on_tick",
                          "type":"string",
                          "value":"ch2-gloria-worry-walk"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":55
                         }],
                  "rotation":0,
                  "visible":true,
