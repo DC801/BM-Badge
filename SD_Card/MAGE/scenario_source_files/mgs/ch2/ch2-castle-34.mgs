@@ -102,3 +102,14 @@ ch2-touch-plate-no {
 	}
 	set entity "%SELF%" interact_script to ch2-touch-plate // RESET
 }
+
+
+snake_box-interact {
+	show dialog {
+		PLAYER "Snake is that you?"
+		name "Solid Snek"
+		portrait "codec-snek"
+		border_tileset "codec"
+			"There's no snake here. Check a different box. Just not this one."
+	}
+}

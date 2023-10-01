@@ -30,7 +30,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 88, 72, 0, 0,
             0, 0, 0, 264, 268, 269, 266, 0, 266, 0, 0, 0,
             0, 0, 0, 264, 268, 334, 347, 268, 334, 0, 0, 0,
-            0, 0, 0, 264, 268, 350, 0, 0, 343, 115, 2147483935, 0,
+            0, 0, 0, 264, 268, 350, 0, 0, 343, 0, 2147483935, 0,
             0, 0, 88, 0, 0, 262, 2147483910, 0, 0, 88, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -118,6 +118,24 @@
                  "width":0,
                  "x":-56,
                  "y":-43.3333333333333
+                }, 
+                {
+                 "class":"",
+                 "gid":115,
+                 "height":32,
+                 "id":38,
+                 "name":"Snake Box",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"snake_box-interact"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -141,7 +159,7 @@
          "name":"Floating Layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":12,
          "x":0,
          "y":0
@@ -176,12 +194,12 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":38,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
