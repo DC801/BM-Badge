@@ -142,6 +142,12 @@
                  "height":32,
                  "id":38,
                  "name":"Torch",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":1
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -154,6 +160,12 @@
                  "height":32,
                  "id":39,
                  "name":"Torch",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":1
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -166,6 +178,12 @@
                  "height":32,
                  "id":40,
                  "name":"Torch",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":1
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -190,11 +208,17 @@
                  "height":32,
                  "id":42,
                  "name":"Templeton",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-templeton"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":214,
-                 "y":228
+                 "x":234,
+                 "y":234
                 }, 
                 {
                  "class":"",
@@ -202,11 +226,48 @@
                  "height":48,
                  "id":43,
                  "name":"Sebastian",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-sebastian"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":48,
                  "x":94,
                  "y":217
+                }, 
+                {
+                 "class":"",
+                 "gid":259,
+                 "height":32,
+                 "id":44,
+                 "name":"Torch",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":64
+                },
+            
+                {
+                 "class":"",
+                 "gid":259,
+                 "height":32,
+                 "id":45,
+                 "name":"Torch",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -287,7 +348,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":44,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

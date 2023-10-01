@@ -104,7 +104,7 @@ on_load-ch2-castle-11 {
 		}
 		set entity Kuro animation to 0
 		show dialog {
-			PLAYER "So I need a monitor, I heard there was one in here I could use. I think he meant..."
+			PLAYER "So I need a monitor, Lambda said was one in here I could use. I think he meant..."
 		}
 		set entity Kuro on_tick to ch2-walk-to-monitor
 		set entity "%PLAYER%" on_tick to null_script

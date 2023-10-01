@@ -162,7 +162,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":349,
+                 "x":367,
                  "y":141
                 }, 
                 {
@@ -210,7 +210,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":328,
+                 "x":346,
                  "y":114
                 }, 
                 {
@@ -246,8 +246,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":186,
-                 "y":132
+                 "x":181,
+                 "y":131
                 }, 
                 {
                  "class":"",
@@ -264,7 +264,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":246,
+                 "x":249,
                  "y":123
                 }],
          "opacity":1,
@@ -305,7 +305,7 @@
                 {
                  "class":"",
                  "gid":878,
-                 "height":32,
+                 "height":48,
                  "id":43,
                  "name":"Simon",
                  "properties":[
@@ -317,7 +317,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":303,
+                 "x":321,
                  "y":120
                 }],
          "opacity":1,
