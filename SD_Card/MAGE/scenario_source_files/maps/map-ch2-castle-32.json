@@ -175,17 +175,70 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-ramchips"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ramchips"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
                  "x":79,
                  "y":359
+                }, 
+                {
+                 "class":"",
+                 "gid":794,
+                 "height":32,
+                 "id":51,
+                 "name":"Samson",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-samson"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":247,
+                 "y":453
+                }, 
+                {
+                 "class":"",
+                 "gid":812,
+                 "height":48,
+                 "id":52,
+                 "name":"Gloria",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-gloria"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-gloria-worry-walk"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":239,
+                 "y":426
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":53,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":263,
+                 "y":415
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -353,6 +406,42 @@
                  "width":32,
                  "x":80,
                  "y":341
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":55,
+                 "name":"worry-walk1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":252,
+                 "y":417
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":56,
+                 "name":"worry-walk3",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":277,
+                 "y":417
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":57,
+                 "name":"worry-walk2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":264,
+                 "y":417
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -361,7 +450,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":51,
+ "nextobjectid":58,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -410,6 +499,15 @@
         {
          "firstgid":793,
          "source":"..\/entities\/entity-ram_chips.json"
+        }, 
+        {
+         "firstgid":794,
+         "source":"..\/entities\/entity-wormy.json"
+        },
+    
+        {
+         "firstgid":812,
+         "source":"entity-beetle.json"
         }],
  "tilewidth":32,
  "type":"map",
