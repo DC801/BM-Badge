@@ -19,7 +19,7 @@ look-ch2-castle-32 {
 on_load-ch2-castle-32 {
 	// ch2 room state
 	mutate ch2-in-room = 32
-	teleport entity Gloria to geometry worry-walk3
+	teleport entity Gloria to geometry worry-walk2
 	turn entity Gloria toward entity Samson
 
 	// entrance text
@@ -76,22 +76,35 @@ on_tick-ch2-castle-32 {
 }
 
 const! (
-	$walkspeed = 220ms
+	$walkspeed = 200ms
 )
 ch2-gloria-worry-walk {
-	wait 800ms
-	walk entity "%SELF%" to geometry worry-walk2 over $walkspeed
+	mutate tempvar ? 4
+	if (variable tempvar is 0) {
+		wait 400ms
+	} else if (variable tempvar is 1) {
+		wait 1100ms
+	} else if (variable tempvar is 2) {
+		wait 1500ms
+	} else {
+		wait 2200ms
+	}
+	walk entity "%SELF%" to geometry "%ENTITY_PATH%" over $walkspeed
 	turn entity "%SELF%" toward entity Samson
-	wait 2600ms
-	walk entity "%SELF%" to geometry worry-walk1 over $walkspeed
-	turn entity "%SELF%" toward entity Samson
-	wait 3500ms
-	walk entity "%SELF%" to geometry worry-walk2 over $walkspeed
-	turn entity "%SELF%" toward entity Samson
-	wait 2800ms
-	walk entity "%SELF%" to geometry worry-walk3 over $walkspeed
-	turn entity "%SELF%" toward entity Samson
-	wait 1500ms
+	if (
+		entity "%SELF%" path is worry-walk1
+		|| entity "%SELF%" path is worry-walk3
+	) {
+		set entity "%SELF%" path to worry-walk2
+	} else {
+		mutate tempvar ? 2
+		if (variable tempvar is 0) {
+			set entity "%SELF%" path to worry-walk1
+		} else {
+			set entity "%SELF%" path to worry-walk3
+		}
+	}
+	set entity "%SELF%" on_tick to ch2-gloria-worry-walk
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -133,13 +146,13 @@ interact-ch2-gloria {
 		}
 		set flag ch2-gloria-backstory to true
 		turn entity Gloria toward entity Samson
-		set entity "%SELF%" on_tick to ch2-gloria-worry-walk
 	} else {
 		show dialog {
 			SELF "Are you here to rescue us?"
 		}
 		set entity "%SELF%" on_tick to face-player
 	}
+	set entity "%SELF%" on_tick to ch2-gloria-worry-walk
 	play entity "%SELF%" animation 5 once
 	set entity "%SELF%" animation to 0
 	set player control on

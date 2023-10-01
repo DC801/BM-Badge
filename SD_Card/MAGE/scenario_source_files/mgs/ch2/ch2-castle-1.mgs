@@ -486,7 +486,7 @@ interact-ch2-xa {
 				}
 			}
 			show dialog {
-				Lambda "The castle walls are lined with aluminum. Acts as a faraday cage. And Ring Zero's hex editor relies on some wireless services."
+				Lambda "The castle walls are lined with aluminum. Acts as a Faraday cage. And Ring Zero's hex editor relies on some wireless services."
 				"Normally, XA bridges the town's network with...."
 				"You know what? There's a lot to explain, and it might be easier to chat with the artifact. Let's set it up."
 			}

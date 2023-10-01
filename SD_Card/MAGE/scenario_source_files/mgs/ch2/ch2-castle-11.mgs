@@ -62,8 +62,6 @@ on_load-ch2-castle-11 {
 		walk entity Kuro to geometry kuro-spot over 300ms
 		walk entity Kuro to geometry kuro-walk over 300ms
 		turn entity Kuro south
-		wait 150ms
-		play entity Kuro animation 1 twice
 		wait 400ms
 		// TODO
 		show dialog {
@@ -102,7 +100,7 @@ on_load-ch2-castle-11 {
 		}
 		set entity Kuro animation to 1
 		show dialog {
-			Kuro "OH THANK GOD"
+			Kuro "OH THANK GOD!"
 		}
 		set entity Kuro animation to 0
 		show dialog {
@@ -120,8 +118,7 @@ on_load-ch2-castle-11 {
 			Kuro "Beats me."
 			PLAYER "Is it... supposed to be showing that stuff?"
 		}
-		set entity Kuro on_tick to hop
-		turn entity Kuro east
+		set entity Kuro on_tick to kuro-hop
 		show dialog {
 			Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle\" slideshow."
 			"Guess the computer it was plugged into got damaged in the quake."
@@ -140,16 +137,18 @@ on_load-ch2-castle-11 {
 ch2-walk-to-monitor {
 	wait 300ms
 	walk entity Kuro along geometry kuro-walk over 650ms
-	turn entity Kuro south
 	wait 800ms
+	set entity Kuro relative_direction to 3
 	walk entity Kuro to geometry kuro-walk2 over 150ms
-	turn entity Kuro east
+	set entity Kuro relative_direction to 0
+	turn entity Kuro south
 	wait 180ms
 	walk entity Kuro along geometry kuro-walk2 over 400ms
 	set entity Kuro tick_script to face-player
 }
-hop {
+kuro-hop {
 	play entity "%SELF%" animation 1 once
+	turn entity Kuro east
 	goto null_script
 }
 
@@ -228,8 +227,12 @@ ch2-touch-monitor-no {
 }
 
 interact-ch2-kuro {
+	set entity Kuro animation to 1
 	show dialog {
 		Kuro "So, um, you can get me out of here, right?"
-		"(TODO)"
+	}
+	set entity Kuro animation to 0
+	show dialog {
+		Kuro "(TODO)"
 	}
 }
