@@ -197,7 +197,6 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 				"You cannot `go` nowhere. Pick a direction.\n"
 			);
 		} else {
-			subject = subject.substr (0, MAP_GO_DIRECTION_NAME_LENGTH);
 			std::string output = "You try to go `";
 			output += subject;
 			output += "`";
