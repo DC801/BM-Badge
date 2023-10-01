@@ -54,7 +54,7 @@ on_load-ch2-castle-11 {
 		set entity Kuro on_tick to null_script
 		show dialog {
 			PLAYER "Oh, cool, I got past the blockage."
-			"This artifact will come in handy."
+			"This artifact is handy."
 			name "???" "Intruder! Intruder!"
 		}
 		set entity "%PLAYER%" on_tick to watch-kuro
@@ -80,33 +80,50 @@ on_load-ch2-castle-11 {
 		}
 		set entity Kuro animation to 1
 		show dialog {
-			Kuro "Listen! Listen!"
+			Kuro "Omigod omigod omigod!"
 		}
 		walk entity Kuro to geometry kuro-spot over 250ms
 		walk entity Kuro to geometry kuro-walk over 250ms
 		turn entity Kuro south
 		wait 140ms
 		show dialog {
-			Kuro "The ceiling came down! The walls are wrecked!"
-			"(TODO)"
-			PLAYER "So, I need a monitor, and this guy Lambda told me there was one in here I could use."
+			Kuro "You gotta get me out of here! I'm going crazy, stuck in here!"
+			PLAYER "Oh, sure. I guess birds don't like to be in enclosed spaces."
+			Kuro "Enclosed spaces? Nah, I'm just bored to death!"
+		}
+		set entity Kuro animation to 1
+		show dialog {
+			Kuro "But you got in here! Does that mean you can get me out?"
+		}
+		set entity Kuro animation to 0
+		show dialog {
+			PLAYER "I don't think I can use the artifact to bring other people through the doors. Just me."
+			"But I'll try to get the doors cleared and working again."
+		}
+		set entity Kuro animation to 1
+		show dialog {
+			Kuro "OH THANK GOD"
+		}
+		set entity Kuro animation to 0
+		show dialog {
+			PLAYER "So I need a monitor, I heard there was one in here I could use. I think he meant..."
 		}
 		set entity Kuro on_tick to ch2-walk-to-monitor
 		set entity "%PLAYER%" on_tick to null_script
 		walk entity "%PLAYER%" along geometry warp-spot over 1900ms
 		show dialog {
-			PLAYER "Did he mean this one here?"
+			PLAYER "...this one, right? Is this one free for me to take?"
 		}
 		set entity Kuro tick_script to null_script
 		turn entity Kuro south
 		show dialog {
 			Kuro "Beats me."
-			PLAYER "Is it... supposed to be doing that?"
+			PLAYER "Is it... supposed to be showing that stuff?"
 		}
 		set entity Kuro on_tick to hop
 		turn entity Kuro east
 		show dialog {
-			Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle!\" slideshow."
+			Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle\" slideshow."
 			"Guess the computer it was plugged into got damaged in the quake."
 			"Not that we're getting tourists -- apart from you."
 			PLAYER "So I can take it?"

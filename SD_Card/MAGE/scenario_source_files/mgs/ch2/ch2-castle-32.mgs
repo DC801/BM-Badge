@@ -19,6 +19,8 @@ look-ch2-castle-32 {
 on_load-ch2-castle-32 {
 	// ch2 room state
 	mutate ch2-in-room = 32
+	teleport entity Gloria to geometry worry-walk3
+	turn entity Gloria toward entity Samson
 
 	// entrance text
 	show serial dialog spacer
@@ -73,6 +75,25 @@ on_tick-ch2-castle-32 {
 	set map tick_script to on_tick-ch2-castle-32 // reset
 }
 
+const! (
+	$walkspeed = 220ms
+)
+ch2-gloria-worry-walk {
+	wait 800ms
+	walk entity "%SELF%" to geometry worry-walk2 over $walkspeed
+	turn entity "%SELF%" toward entity Samson
+	wait 2600ms
+	walk entity "%SELF%" to geometry worry-walk1 over $walkspeed
+	turn entity "%SELF%" toward entity Samson
+	wait 3500ms
+	walk entity "%SELF%" to geometry worry-walk2 over $walkspeed
+	turn entity "%SELF%" toward entity Samson
+	wait 2800ms
+	walk entity "%SELF%" to geometry worry-walk3 over $walkspeed
+	turn entity "%SELF%" toward entity Samson
+	wait 1500ms
+}
+
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-32 { // sanitize ch2 room state
@@ -98,6 +119,58 @@ on_go-castle-32-south {
 }
 
 /* ---------- ENTITIES ---------- */
+
+interact-ch2-gloria {
+	set player control off
+	set entity "%SELF%" tick_script to null_script
+	copy face-player
+	play entity "%SELF%" animation 3 once
+	set entity "%SELF%" animation to 4
+	if (flag ch2-gloria-backstory is false) {
+		show dialog {
+			SELF "Oh, dear. What terrible timing. It was \"take your child to work\" day yesterday, and...."
+			"What a quake! Poor Samson was scared out of his wits. And now we're trapped in here."
+		}
+		set flag ch2-gloria-backstory to true
+		turn entity Gloria toward entity Samson
+		set entity "%SELF%" on_tick to ch2-gloria-worry-walk
+	} else {
+		show dialog {
+			SELF "Are you here to rescue us?"
+		}
+		set entity "%SELF%" on_tick to face-player
+	}
+	play entity "%SELF%" animation 5 once
+	set entity "%SELF%" animation to 0
+	set player control on
+	set entity "%SELF%" interact_script to interact-ch2-gloria
+}
+interact-ch2-samson {
+	copy face-player
+	set entity "%SELF%" animation to 2
+	if (variable ch2-samson-count is 0) {
+		show dialog {
+			SELF "Someone was kicking the castle yesterday!"
+		}
+	} else if (variable ch2-samson-count is 1) {
+		show dialog {
+			SELF "It woke up the big stone man!"
+		}
+	} else if (variable ch2-samson-count is 2) {
+		show dialog {
+			SELF "Mommy used her wings and flew around in the big room!"
+		}
+	} else if (variable ch2-samson-count is 3) {
+		show dialog {
+			SELF "Chips fell out of the box, and I got to eat them!"
+		}
+	}
+	set entity "%SELF%" animation to 0
+	mutate ch2-samson-count + 1
+	mutate ch2-samson-count % 4
+	turn entity "%SELF%" west
+	set entity "%SELF%" interact_script to interact-ch2-samson
+}
 
 interact-ch2-vendingmachine {
 	if (

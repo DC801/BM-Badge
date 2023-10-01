@@ -4140,5 +4140,189 @@
 		},
 		"scenarioIndex": 58,
 		"serialized": {}
+	},
+	"wormy": {
+		"type": "wormy",
+		"tileset": "entity-wormy.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 1,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 59,
+		"serialized": {}
+	},
+	"beetle": {
+		"type": "beetle",
+		"tileset": "entity-beetle.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			],
+			"transition_up": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			],
+			"idle_up": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			],
+			"transition_down": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }
