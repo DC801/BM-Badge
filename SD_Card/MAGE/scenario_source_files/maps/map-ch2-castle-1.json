@@ -193,34 +193,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":767,
-                 "height":32,
-                 "id":29,
-                 "name":"Mainframe",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-interact-mainframe"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-mainframe"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"null_script"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":104,
-                 "y":112
-                }, 
-                {
-                 "class":"",
                  "gid":784,
                  "height":32,
                  "id":30,
@@ -273,6 +245,34 @@
                  "width":0,
                  "x":193,
                  "y":243
+                }, 
+                {
+                 "class":"",
+                 "gid":806,
+                 "height":32,
+                 "id":40,
+                 "name":"Mainframe",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-mainframe"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-mainframe"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":108,
+                 "y":108
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -363,7 +363,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":40,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -412,6 +412,10 @@
         {
          "firstgid":794,
          "source":"..\/entities\/entity-monitor.json"
+        }, 
+        {
+         "firstgid":806,
+         "source":"entity-enclosure.json"
         }],
  "tilewidth":32,
  "type":"map",

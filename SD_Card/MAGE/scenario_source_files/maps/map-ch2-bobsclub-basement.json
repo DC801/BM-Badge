@@ -107,29 +107,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":571,
-                 "height":32,
-                 "id":53,
-                 "name":"ice chest",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-icechest"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-icechest"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":257,
-                 "y":177
-                }, 
-                {
-                 "class":"",
                  "gid":281,
                  "height":32,
                  "id":60,
@@ -194,8 +171,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":64,
-                 "x":160,
-                 "y":185
+                 "x":156,
+                 "y":194
                 }, 
                 {
                  "class":"",
@@ -364,8 +341,7 @@
                  "width":32,
                  "x":298,
                  "y":326
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":555,
@@ -388,7 +364,8 @@
                  "width":32,
                  "x":297,
                  "y":351
-                }, 
+                },
+            
                 {
                  "class":"",
                  "gid":553,
@@ -589,6 +566,29 @@
                  "width":32,
                  "x":55,
                  "y":350
+                }, 
+                {
+                 "class":"",
+                 "gid":581,
+                 "height":32,
+                 "id":61,
+                 "name":"ice chest",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-icechest"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-icechest"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":170
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -623,7 +623,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":61,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -672,6 +672,10 @@
         {
          "firstgid":571,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":581,
+         "source":"..\/entities\/entity-cooler.json"
         }],
  "tilewidth":32,
  "type":"map",
