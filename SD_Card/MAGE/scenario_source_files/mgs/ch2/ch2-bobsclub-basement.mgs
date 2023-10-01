@@ -260,8 +260,13 @@ loiter-slow {
 interact-ch2-guardianbob {
 	copy face-player
 	show dialog {
-		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up...."
-		SELF "TODO"
+		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up and everything."
+		SELF "Well, we WERE going to have the party upstairs, but someone broke in and pretended to be named Bob. After that we upped our security."
+		PLAYER "...Oh yeah...?"
+		SELF "Yeah, this guy Strong Bad. The photo on his fake ID looked nothing like him, but Bob Austin let him in anyway."
+		PLAYER "...No kidding."
+		SELF "I've been manually teleporting Bobs down here ever since just to be extra sure. My teleport program is very strict. It won't let non-Bobs through at all."
+		PLAYER "Good to know."
 	}
 }
 

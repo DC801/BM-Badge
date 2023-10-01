@@ -149,6 +149,7 @@ interact-ch2-gloria {
 	} else {
 		show dialog {
 			SELF "Are you here to rescue us?"
+			"Please, Samson is so upset."
 		}
 		set entity "%SELF%" on_tick to face-player
 	}
@@ -171,11 +172,11 @@ interact-ch2-samson {
 		}
 	} else if (variable ch2-samson-count is 2) {
 		show dialog {
-			SELF "Mommy used her wings and flew around in the big room!"
+			SELF "Mommy used her wings and flew around in the big room and then the kicking stopped!"
 		}
 	} else if (variable ch2-samson-count is 3) {
 		show dialog {
-			SELF "Chips fell out of the box, and I got to eat them!"
+			SELF "Chips fell out of the box, and I got to eat all of them!"
 		}
 	}
 	set entity "%SELF%" animation to 0
