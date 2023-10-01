@@ -111,5 +111,6 @@ snake_box-interact {
 		portrait "codec-snek"
 		border_tileset "codec"
 			"There's no snake here. Check a different box. Just not this one."
+		PLAYER "But this is the only talking box here."
 	}
 }
