@@ -10,10 +10,6 @@ typedef enum : uint8_t {
 	COMMAND_HELP = 1,
 	COMMAND_LOOK = 2,
 	COMMAND_GO = 3,
-	COMMAND_GET = 4,
-	COMMAND_DROP = 5,
-	COMMAND_INVENTORY = 6,
-	COMMAND_USE = 7,
 	NUM_SERIAL_COMMANDS
 } MageSerialCommands;
 

@@ -734,5 +734,59 @@
 				"I test the actions:\nSET_LIGHTS_CONTROL\nSET_LIGHTS_STATE\nWatch the lights around the screen!"
 			]
 		}
+	],
+	"dialog-mage29-interact": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test conditional local jumps!\nSet my name to 'Nage 29' to verify!"
+			]
+		}
+	],
+	"dialog-mage29-test": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Did it work? $mage29-skippydoodle$"
+			]
+		}
+	],
+	"mage30-interact-1": [
+		{
+			"entity": "%SELF%",
+			"alignment": "BOTTOM_LEFT",
+			"messages": [
+				"One..."
+			]
+		}
+	],
+	"mage30-interact-2": [
+		{
+			"entity": "%SELF%",
+			"alignment": "BOTTOM_LEFT",
+			"messages": [
+				"Two..."
+			]
+		}
+	],
+	"mage30-interact-3": [
+		{
+			"entity": "%SELF%",
+			"alignment": "BOTTOM_LEFT",
+			"messages": [
+				"Three..."
+			]
+		}
+	],
+	"mage30-interact-4": [
+		{
+			"entity": "%SELF%",
+			"alignment": "BOTTOM_LEFT",
+			"messages": [
+				"Four... wait, did I skip one?"
+			]
+		}
 	]
 }

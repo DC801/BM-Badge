@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 8
+#define ENGINE_VERSION 9
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
