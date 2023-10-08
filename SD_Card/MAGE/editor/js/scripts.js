@@ -1323,6 +1323,37 @@ var preProcessScript = function(
 	return result;
 };
 
+var linker = function (_actionArray) {
+	var actionArray = JSON.parse(JSON.stringify(_actionArray));
+	var arraySize = actionArray.length;
+	var labels = {};
+	for (var i = 0; i < arraySize; i++) {
+		if (actionArray[i].action == "LABEL") {
+			labels[actionArray[i].value] = i;
+			actionArray.splice(i,1)
+			arraySize -= 1;
+		}
+	}
+	actionArray.forEach(function(action) {
+		if (
+			action.action.includes("CHECK_")
+			&& action.jump_index
+			&& typeof action.jump_index === "string"
+		) {
+			if (action.jump_index === undefined) {
+				throw new Error ("I'm just cutting things off here. Invalid label someplace!!! Good luck lol don't break anything next time");
+			}
+			action.jump_index = labels[action.jump_index];
+		} else if (
+			action.action == "GOTO_ACTION_INDEX"
+			&& typeof action.action_index === "string"
+		) {
+			action.action_index = labels[action.action_index]
+		}
+	});
+	return actionArray;
+};	
+
 var serializeScript = function (
 	script,
 	scriptName,
@@ -1352,6 +1383,7 @@ var serializeScript = function (
 		fileNameMap,
 		scenarioData,
 	);
+	compositeScript = linker(compositeScript);
 	dataView.setUint32(
 		offset,
 		compositeScript.length,
