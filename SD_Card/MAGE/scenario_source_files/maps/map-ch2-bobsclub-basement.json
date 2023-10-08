@@ -232,66 +232,66 @@
                 }, 
                 {
                  "class":"",
-                 "gid":553,
+                 "gid":581,
                  "height":32,
-                 "id":39,
-                 "name":"Marathon Bob",
+                 "id":61,
+                 "name":"ice chest",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact-ch2-icechest"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"on_tick-turn-left-and-down-kinda2"
+                         "value":"look-ch2-icechest"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":195,
-                 "y":283
+                 "x":222,
+                 "y":187
                 }, 
                 {
                  "class":"",
-                 "gid":555,
+                 "gid":619,
                  "height":32,
-                 "id":40,
-                 "name":"Marathon Bob",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-marathonbob"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-marathonbob"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":70,
-                 "y":272
-                }, 
-                {
-                 "class":"",
-                 "gid":2147484201,
-                 "height":32,
-                 "id":41,
+                 "id":62,
                  "name":"Marathon Bob",
                  "properties":[
                         {
                          "name":"current_frame",
                          "type":"int",
-                         "value":0
+                         "value":4
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-marathonbob"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":82,
+                 "y":222
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484269,
+                 "height":32,
+                 "id":64,
+                 "name":"Marathon Bob",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":2
                         }, 
                         {
                          "name":"on_interact",
@@ -316,15 +316,38 @@
                 }, 
                 {
                  "class":"",
-                 "gid":554,
+                 "gid":626,
                  "height":32,
-                 "id":45,
+                 "id":65,
+                 "name":"Marathon Bob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-marathonbob"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":70,
+                 "y":272
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484269,
+                 "height":32,
+                 "id":66,
                  "name":"Marathon Bob",
                  "properties":[
                         {
                          "name":"current_frame",
                          "type":"int",
-                         "value":1
+                         "value":7
                         }, 
                         {
                          "name":"on_interact",
@@ -339,38 +362,81 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":298,
-                 "y":326
-                }, 
-                {
-                 "class":"",
-                 "gid":555,
-                 "height":32,
-                 "id":46,
-                 "name":"Marathon Bob",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-marathonbob"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-marathonbob"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":297,
-                 "y":351
+                 "x":152,
+                 "y":287
                 },
             
                 {
                  "class":"",
-                 "gid":553,
+                 "gid":618,
                  "height":32,
-                 "id":47,
+                 "id":67,
+                 "name":"Marathon Bob",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"on_tick-turn-left-and-down-kinda2"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":195,
+                 "y":283
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484266,
+                 "height":32,
+                 "id":68,
+                 "name":"Marathon Bob",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":8
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"on_tick-turn-right-and-down-kinda2"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":55,
+                 "y":350
+                }, 
+                {
+                 "class":"",
+                 "gid":618,
+                 "height":32,
+                 "id":69,
                  "name":"Marathon Bob",
                  "properties":[
                         {
@@ -401,11 +467,16 @@
                 }, 
                 {
                  "class":"",
-                 "gid":555,
+                 "gid":623,
                  "height":32,
-                 "id":48,
+                 "id":70,
                  "name":"Marathon Bob",
                  "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":3
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -424,15 +495,15 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484201,
+                 "gid":2147484269,
                  "height":32,
-                 "id":49,
+                 "id":71,
                  "name":"Marathon Bob",
                  "properties":[
                         {
                          "name":"current_frame",
                          "type":"int",
-                         "value":3
+                         "value":7
                         }, 
                         {
                          "name":"on_interact",
@@ -457,9 +528,9 @@
                 }, 
                 {
                  "class":"",
-                 "gid":554,
+                 "gid":625,
                  "height":32,
-                 "id":50,
+                 "id":72,
                  "name":"Marathon Bob",
                  "properties":[
                         {
@@ -480,15 +551,15 @@
                 }, 
                 {
                  "class":"",
-                 "gid":554,
+                 "gid":625,
                  "height":32,
-                 "id":51,
+                 "id":73,
                  "name":"Marathon Bob",
                  "properties":[
                         {
                          "name":"current_frame",
                          "type":"int",
-                         "value":4
+                         "value":5
                         }, 
                         {
                          "name":"on_interact",
@@ -503,21 +574,16 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":82,
-                 "y":221
+                 "x":298,
+                 "y":326
                 }, 
                 {
                  "class":"",
-                 "gid":2147484201,
+                 "gid":623,
                  "height":32,
-                 "id":56,
+                 "id":74,
                  "name":"Marathon Bob",
                  "properties":[
-                        {
-                         "name":"current_frame",
-                         "type":"int",
-                         "value":7
-                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -531,64 +597,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":152,
-                 "y":287
-                }, 
-                {
-                 "class":"",
-                 "gid":2147484201,
-                 "height":32,
-                 "id":57,
-                 "name":"Marathon Bob",
-                 "properties":[
-                        {
-                         "name":"current_frame",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-marathonbob"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-marathonbob"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"on_tick-turn-right-and-down-kinda2"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":55,
-                 "y":350
-                }, 
-                {
-                 "class":"",
-                 "gid":581,
-                 "height":32,
-                 "id":61,
-                 "name":"ice chest",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-icechest"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-icechest"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":222,
-                 "y":187
+                 "x":297,
+                 "y":351
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -623,7 +633,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":62,
+ "nextobjectid":75,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -676,6 +686,10 @@
         {
          "firstgid":581,
          "source":"..\/entities\/entity-cooler.json"
+        }, 
+        {
+         "firstgid":582,
+         "source":"entity-marathon-bob.json"
         }],
  "tilewidth":32,
  "type":"map",

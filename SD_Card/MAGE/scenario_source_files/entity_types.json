@@ -4323,6 +4323,204 @@
 					"flip_x": false
 				}
 			]
+		},
+		"scenarioIndex": 60,
+		"serialized": {}
+	},
+	"marathon_bob_red": {
+		"type": "marathon_bob_red",
+		"tileset": "entity-marathon-bob.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 38,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 36,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 37,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 36,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 47,
+					"flip_x": false
+				},
+				{
+					"tileid": 45,
+					"flip_x": true
+				},
+				{
+					"tileid": 46,
+					"flip_x": false
+				},
+				{
+					"tileid": 45,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 61,
+		"serialized": {}
+	},
+	"marathon_bob_blue": {
+		"type": "marathon_bob_blue",
+		"tileset": "entity-marathon-bob.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 41,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 39,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 40,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 39,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": true
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 62,
+		"serialized": {}
+	},
+	"marathon_bob_green": {
+		"type": "marathon_bob_green",
+		"tileset": "entity-marathon-bob.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 44,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 42,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 43,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 42,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": true
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				}
+			]
 		}
 	}
 }
