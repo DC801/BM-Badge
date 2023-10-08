@@ -162,6 +162,7 @@ var mgs = {
 				var final = state.finalState;
 				final.scripts = final.scripts || {};
 				final.scripts[inserts.scriptName] = inserts.actions;
+				// final.scripts[inserts.scriptName] = mgs.linkScriptJumps(inserts.actions); // this is done after COPY_SCRIPT now, whoops
 				inserts.scriptName = null;
 				inserts.actions = [];
 			}
@@ -618,8 +619,7 @@ var mgs = {
 	}
 };
 
-mgs.actionDictionary = [
-	{
+mgs.actionDictionary = [{
 		action: "BLOCKING_DELAY",
 		pattern: "block $duration:duration",
 	},
@@ -632,12 +632,25 @@ mgs.actionDictionary = [
 		pattern: "$bool_value:boolean hex editor",
 	},
 	{
+		action: "LABEL", // this must be below `SET_HEX_EDITOR_STATE`
+		pattern: "$value:bareword :",
+	},
+	{
 		action: "SLOT_ERASE",
 		pattern: "erase slot $slot:number",
 	},
 	{
 		action: "RUN_SCRIPT",
 		pattern: "goto ?script $script:string",
+		// TODO LOLOL
+	},
+	{
+		action: "GOTO_ACTION_INDEX",
+		pattern: "goto index $action_index:number",
+	},
+	{
+		action: "GOTO_ACTION_INDEX",
+		pattern: "goto index $action_index:bareword",
 	},
 	{
 		action: "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -903,6 +916,12 @@ mgs.actionDictionary = [
 	{
 		action: "CHECK_FOR_BUTTON_PRESS",
 		pattern: "if button $button_id:bareword then goto ?script $success_script:string",
+		values: { "expected_bool": true },
+	},
+	{
+		action: "CHECK_FOR_BUTTON_PRESS",
+		pattern: "if not button $button_id:bareword then goto ?script $success_script:string",
+		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
@@ -1214,6 +1233,25 @@ Object.keys(mgs.entityPropertyMap)
 		})
 	})
 	//TODO!! [lol what is this todo?]
+
+mgs.actionDictionary
+	.filter(function (entry) {
+		return entry.action.includes('CHECK_');
+	})
+	.forEach(function (entry) {
+		var numberVariant = JSON.parse(JSON.stringify(entry));
+		var stringVariant = JSON.parse(JSON.stringify(entry));
+		numberVariant.pattern = numberVariant.pattern.replace(
+			"then goto ?script $success_script:string",
+			"then goto index $jump_index:number"
+			);
+		stringVariant.pattern = stringVariant.pattern.replace(
+			"then goto ?script $success_script:string",
+			"then goto index $jump_index:bareword"
+			);
+		mgs.actionDictionary.push(numberVariant);
+		mgs.actionDictionary.push(stringVariant);
+	})
 
 // adding action dictionary items to the "flat" tree
 mgs.actionDictionary.forEach(function (item) {
