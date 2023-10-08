@@ -179,136 +179,148 @@ zigzag.parseWholeZig = function (tokens, startTokenIndex) {
 };
 
 zigzag.expandZigzag = function (zigReport, scriptNameToken) {
-	var scriptName = scriptNameToken.value;
-	var statements = zigReport.statements;
+	var scriptName = scriptNameToken.value; // TODO delete
+	var statements = zigReport.statements; // QOL
+
+
 	// info for the last curly (token) in the zigzag:
-	var lastStatement = statements[statements.length - 1];
-	var finalCurlyToken = lastStatement.bracketInfo.behaviorsEndToken; // reused a lot
-	var convergedScriptName = scriptName + "-CONVERGED" + finalCurlyToken.pos;
-	// (doing it this way so that wrapped strings and barewords will both work):
-	var convergedScriptNameToken = JSON.parse(JSON.stringify(scriptNameToken));
-	convergedScriptNameToken.pos = finalCurlyToken.pos;
-	convergedScriptNameToken.value = convergedScriptName;
-	convergedScriptNameToken.macro = "zigzag";
+	var finalCurlyToken = statements[statements.length - 1].bracketInfo.behaviorsEndToken; // reused a lot
+
+	// converged label
+	var convergedLabelName = "LABEL " + finalCurlyToken.pos;
+	var convergedLabelNameToken = JSON.parse(JSON.stringify(scriptNameToken));
+	convergedLabelNameToken.pos = finalCurlyToken.pos;
+	convergedLabelNameToken.value = convergedLabelName;
+	convergedLabelNameToken.macro = "zigzag";
+
 	// other state:
-	var result = []; // going at the top (to glue on to where we found the zigzag)
-	var tokensToAppend = []; // when done, this will get glued to `result` ^
+	var topTokens = [];
+	var tokenBatch = []; // when done, this will get glued to `ret`
+
 	statements.forEach(function (statement, index) {
 		if (
 			// explicitly "OR" in case I want to do "AND" someday separately:
 			statement.conditionsType === "OR"
 			|| statement.conditionsType === "single"
 		) {
-			// ONCE PER STATEMENT e.g. if ( _ ) { **** }
-			// procedural script info
+			// ONCE PER STATEMENT e.g. [else] if ( _ ) { **** }
+
+			// becomes: `then`
+			// becomes: `goto`
+			// becomes: `label`
 			var closeParenToken = statement.bracketInfo.conditionEndToken;
-				//^MOVE: `then`
-				// MOVE: `goto`
+				
+			// becomes: procedural label name
+			// becomes: declaration of procedural label name
 			var openCurlyToken = statement.bracketInfo.behaviorsStartToken;
-				//^MOVE: procedural BRANCH script name
-				// MOVE: declaration of procedural BRANCH script name
-				// MOVE: `{`
-				// also use this pos for the BRANCH script name itself
-			var zigScriptName = scriptName + "-BRANCH" + openCurlyToken.pos;
-			var zigScriptNameToken = JSON.parse(JSON.stringify(scriptNameToken));
-			zigScriptNameToken.pos = openCurlyToken.pos;
-			zigScriptNameToken.value = zigScriptName;
-			zigScriptNameToken.macro = "zigzag";
-			var closeCurlyToken = statement.bracketInfo.behaviorsEndToken;
-				//^VERBATIM: end of procedural branch script: `}`
+
+			var zigLabelName = "LABEL " + openCurlyToken.pos;
+			var zigLabelNameToken = JSON.parse(JSON.stringify(scriptNameToken));
+			zigLabelNameToken.pos = openCurlyToken.pos;
+			zigLabelNameToken.value = zigLabelName;
+			zigLabelNameToken.macro = "zigzag";
 
 			// ONE CONDITION AT A TIME e.g. if ( ** || ** || ** ) { _ }
-			statement.conditions.forEach(function (singleCondition) { // each condition gets one "line" in the output token array
+
+			// each condition gets one "line" in the output token array
+			statement.conditions.forEach(function (singleCondition) {
 				// `if`
-				result.push({
+				topTokens.push({
 					pos: statement.rootToken.pos,
 					type: "bareword",
 					value: "if", // hardcoded; this might be `else` in the orig token!
 					macro: "zigzag"
 				});
 				// condition(s)
-				result = result.concat(singleCondition);
+				topTokens = topTokens.concat(singleCondition);
 				// faking `then`
-				result.push({
+				topTokens.push({
 					pos: closeParenToken.pos,
 					type: "bareword",
 					value: "then",
 					macro: "zigzag"
 				});
 				// faking `goto`
-				result.push({
+				topTokens.push({
 					pos: closeParenToken.pos,
 					type: "bareword",
 					value: "goto",
 					macro: "zigzag"
 				});
-				// faking `_____` (scriptname)
-				result.push(zigScriptNameToken);
+				// faking `label`
+				topTokens.push({
+					pos: closeParenToken.pos,
+					type: "bareword",
+					value: "index",
+					macro: "zigzag"
+				});
+				// faking labelName
+				topTokens.push(zigLabelNameToken);
 			})
 
-			// Making the (shared) procedural BRANCH script
-			// (put these in `tokensToAppend` instead of `result`)
+			// Making the (shared) procedural BRANCH label
+			// (put these in `tokenBatch` instead of `topTokens`)
 
-			// BRANCH script name declaration
-			tokensToAppend.push(zigScriptNameToken);
+			// BRANCH label name declaration
+			tokenBatch.push(zigLabelNameToken);
 			// {
-			tokensToAppend.push({
+			tokenBatch.push({
 				pos: openCurlyToken.pos,
 				type: "operator",
-				value: "{",
+				value: ":",
 				macro: "zigzag"
 			});
 			// behavior body
-			tokensToAppend = tokensToAppend.concat(statement.behaviors);
+			tokenBatch = tokenBatch.concat(statement.behaviors);
 			// goto procedural CONVERGED script
 			var closeCurlyToken = statement.bracketInfo.behaviorsEndToken;
-			tokensToAppend.push({
+			tokenBatch.push({
 				pos: closeCurlyToken.pos,
 				type: "bareword",
 				value: "goto",
 				macro: "zigzag"
 			});
-			tokensToAppend.push(convergedScriptNameToken);
-			// }
-			tokensToAppend.push({
+				tokenBatch.push({
 				pos: closeCurlyToken.pos,
-				type: "operator",
-				value: "}",
+				type: "bareword",
+				value: "index",
 				macro: "zigzag"
 			});
+
+			tokenBatch.push(convergedLabelNameToken);
 		} else if (
 			statement.conditionsType === "none" // no conditions found
 			|| !statement.conditions.length // fallback: conditions array is empty
 		) { // end of the zigzag; default (fallthrough) script behavior follows
 			// default behavior body
-			result = result.concat(statement.behaviors);
+			topTokens = topTokens.concat(statement.behaviors);
 			// goto procedural CONVERGED script
-			var closeCurlyToken = statement.bracketInfo.behaviorsEndToken;
 		}
 		if (index === statements.length - 1) { // if it's the last statement
 			// close the "default" script
-			result.push({
+			var closeCurlyToken = statement.bracketInfo.behaviorsEndToken;
+			topTokens.push({
 				pos: closeCurlyToken.pos,
 				type: "bareword",
 				value: "goto",
 				macro: "zigzag"
 			});
-			result.push(convergedScriptNameToken);
-			// }
-			result.push({
+			topTokens.push({
 				pos: closeCurlyToken.pos,
-				type: "operator",
-				value: "}",
+				type: "bareword",
+				value: "index",
 				macro: "zigzag"
 			});
+			topTokens.push(convergedLabelNameToken);
+			// }
 		}
 	});
-	var combinedTokens = result.concat(tokensToAppend);//
-	combinedTokens.push(convergedScriptNameToken)
+	var combinedTokens = topTokens.concat(tokenBatch);//
+	combinedTokens.push(convergedLabelNameToken)
 	combinedTokens.push({
-		"pos": convergedScriptNameToken.pos + 1,
+		"pos": convergedLabelNameToken.pos + 1,
 		"type": "operator",
-		"value": "{",
+		"value": ":",
 		"macro": "zigzag"
 	})
 	return {
