@@ -300,7 +300,7 @@ interact-ch2-marathonbob {
 	}
 	// normal behavior
 	copy face-player
-	mutate random ? 8
+	mutate random ? 10
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
 	if (variable random is 1) {
 		show dialog { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" }
@@ -318,6 +318,8 @@ interact-ch2-marathonbob {
 		show dialog { SELF "Perimeter secured." "No non-Bobs here!" }
 	} else if (variable random is 8) {
 		show dialog { SELF "All right!" "This is the best Bob's Club party yet!" }
+	} else if (variable random is 9) {
+		show dialog { SELF "Thank god it's you!" "Another Bob!" }
 	} else {
 		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
 	}
