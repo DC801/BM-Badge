@@ -158,13 +158,14 @@ void MageScriptControl::processActionQueue(
 
 	actionCount = ROM_ENDIAN_U4_VALUE(actionCount);
 	address += sizeof(actionCount);
+	uint32_t actionStartAddress = address;
 
 	//increment the address by the resumeStateStruct->actionOffset*sizeof(uint64_t) to get to the current action:
 	address += resumeStateStruct->actionOffset * sizeof(uint64_t);
 
 	//now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
 	//note we're using the value in resumeStateStruct directly as our index so it will update automatically as we proceed:
-	for(; resumeStateStruct->actionOffset<actionCount; resumeStateStruct->actionOffset++)
+	while(resumeStateStruct->actionOffset<actionCount)
 	{
 		//char logString[128];
 		//sprintf(
@@ -236,7 +237,8 @@ void MageScriptControl::processActionQueue(
 			return;
 		}
 		//all actions are exactly 8 bytes long, so we can address increment by one uint64_t
-		address += sizeof(uint64_t);
+		resumeStateStruct->actionOffset++;
+		address = actionStartAddress + (resumeStateStruct->actionOffset * sizeof(uint64_t));
 	}
 	//if you get here, and jumpScriptId == MAGE_NO_SCRIPT, all actions in the script are done
 	if(jumpScriptId == MAGE_NO_SCRIPT)

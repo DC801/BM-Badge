@@ -1626,14 +1626,16 @@
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "ANY",
-			"success_script": "mage23-show_dialog-was_pressed"
+			"success_script": "mage23-show_dialog-was_pressed",
+			"expected_bool": true
 		}
 	],
 	"mage23-tick-press-page": [
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "PAGE",
-			"success_script": "mage23-show_dialog-was_pressed"
+			"success_script": "mage23-show_dialog-was_pressed",
+			"expected_bool": true
 		}
 	],
 	"mage23-tick-state-any": [
@@ -2094,6 +2096,57 @@
 		{
 			"action": "SET_LIGHTS_CONTROL",
 			"enabled": false
+		}
+	],
+	"mage29-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage29-interact"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "mage29-skippydoodle",
+			"operation": "SET",
+			"value": 1
+		},
+		{
+			"action": "CHECK_ENTITY_NAME",
+			"jump_index": 4,
+			"entity": "%SELF%",
+			"string": "Nage 29",
+			"expected_bool": true
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "mage29-skippydoodle",
+			"operation": "SET",
+			"value": 0
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage29-test"
+		}
+	],
+	"mage30-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-1"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-2"
+		},
+		{
+			"action": "GOTO_ACTION_INDEX",
+			"action_index": 4
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-3"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-4"
 		}
 	],
 	"debug-go-space": [

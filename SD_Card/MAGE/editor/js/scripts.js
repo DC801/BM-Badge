@@ -1,116 +1,117 @@
 var actionFieldsMap = {
 	NULL_ACTION: null,
 	CHECK_ENTITY_NAME: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'string', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_X: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_Y: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_INTERACT_SCRIPT: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_script', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_TICK_SCRIPT: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_script', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_LOOK_SCRIPT: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_script', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_TYPE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity_type', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_PRIMARY_ID: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_SECONDARY_ID: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_PRIMARY_ID_TYPE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_byte', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_CURRENT_ANIMATION: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_byte', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_CURRENT_FRAME: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_byte', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_DIRECTION: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'direction', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_GLITCHED: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_PATH: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_SAVE_FLAG: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'save_flag', size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_IF_ENTITY_IS_IN_GEOMETRY: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_FOR_BUTTON_PRESS: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'button_id', size: 1},
+		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_FOR_BUTTON_STATE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'button_id', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_WARP_STATE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'string', size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
@@ -303,14 +304,14 @@ var actionFieldsMap = {
 		{propertyName: 'inbound', size: 1},
 	],
 	CHECK_VARIABLE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'value', size: 2},
 		{propertyName: 'variable', size: 1},
 		{propertyName: 'comparison', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_VARIABLES: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'variable', size: 1},
 		{propertyName: 'source', size: 1},
 		{propertyName: 'comparison', size: 1},
@@ -330,17 +331,6 @@ var actionFieldsMap = {
 		{propertyName: 'serial_dialog', size: 2},
 		{propertyName: 'disable_newline', size: 1},
 	],
-	INVENTORY_GET: [
-		{propertyName: 'item_name', size: 1},
-	],
-	INVENTORY_DROP: [
-		{propertyName: 'item_name', size: 1},
-	],
-	CHECK_INVENTORY: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'item_name', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
 	SET_MAP_LOOK_SCRIPT: [
 		{propertyName: 'script', size: 2},
 	],
@@ -352,7 +342,7 @@ var actionFieldsMap = {
 		{propertyName: 'bool_value', size: 1},
 	],
 	CHECK_MAP: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'map', size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
@@ -361,7 +351,7 @@ var actionFieldsMap = {
 		{propertyName: 'bool_value', size: 1},
 	],
 	CHECK_BLE_FLAG: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'ble_flag', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
@@ -391,15 +381,15 @@ var actionFieldsMap = {
 		{propertyName: 'entity', size: 1},
 	],
 	CHECK_DIALOG_OPEN: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_SERIAL_DIALOG_OPEN: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_DEBUG_MODE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CLOSE_DIALOG: [],
@@ -410,6 +400,9 @@ var actionFieldsMap = {
 	SET_LIGHTS_STATE: [
 		{propertyName: 'lights', size: 4},
 		{propertyName: 'enabled', size: 1},
+	],
+	GOTO_ACTION_INDEX: [
+		{propertyName: 'action_index', size: 2},
 	],
 };
 
@@ -490,9 +483,6 @@ var actionNames = [
 	'SLOT_ERASE',
 	'SET_CONNECT_SERIAL_DIALOG',
 	'SHOW_SERIAL_DIALOG',
-	'INVENTORY_GET',
-	'INVENTORY_DROP',
-	'CHECK_INVENTORY',
 	'SET_MAP_LOOK_SCRIPT',
 	'SET_ENTITY_LOOK_SCRIPT',
 	'SET_TELEPORT_ENABLED',
@@ -512,6 +502,7 @@ var actionNames = [
 	'CLOSE_SERIAL_DIALOG',
 	'SET_LIGHTS_CONTROL',
 	'SET_LIGHTS_STATE',
+	'GOTO_ACTION_INDEX',
 ];
 
 var specialKeywordsEnum = {
@@ -860,6 +851,14 @@ var getBoolFromAction = function (
 	if (typeof value !== 'boolean') {
 		throw new Error(`${action.action} requires a (true | false) value for "${propertyName}"!`);
 	}
+	// Type crimes in JavaScript; bools can be cast to 0 or 1
+	// Set the upper bit in a byte to use the expected_bool field as a bitmask.
+	if (
+		action.success_script === undefined
+		&& action.jump_index !== undefined
+	) {
+		value += 128;
+	}
 	return value;
 };
 
@@ -1153,6 +1152,8 @@ var actionPropertyNameToHandlerMap = {
 	target_geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
 	success_script: getMapLocalScriptIdFromAction,
+	jump_index: getTwoBytesFromAction,
+	action_index: getTwoBytesFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
 	string: getStringIdFromAction,
 	command: getStringIdFromAction,
@@ -1215,12 +1216,22 @@ var handleActionWithFields = function(
 	var data = initActionData(action);
 	var offset = 1; // always start at 1 because that's the actionId
 	fields.forEach(function (field) {
-		var handler = actionPropertyNameToHandlerMap[field.propertyName];
+		var propertyName = field.propertyName;
+		if (Array.isArray(field.propertyName)) {
+			for (var i = 0; i < field.propertyName.length; i++) {
+				var searchName = field.propertyName[i];
+				if (action[searchName] !== undefined) {
+					propertyName = searchName;
+					break;
+				}
+			}
+		}
+		var handler = actionPropertyNameToHandlerMap[propertyName];
 		if (!handler) {
-			throw new Error(`No action field handler for property "${field.propertyName}"!`)
+			throw new Error(`No action field handler for property "${propertyName}"!`)
 		}
 		var value = handler(
-			field.propertyName,
+			propertyName,
 			action,
 			map,
 			fileNameMap,

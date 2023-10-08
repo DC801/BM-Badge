@@ -6,7 +6,7 @@ seq:
     contents: MAGEGAME
   - id: engine_version
     type: u4
-    valid: 8
+    valid: 9
     doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
   - id: dat_file_content_crc32
     type: u4
@@ -730,28 +730,26 @@ enums:
     73: slot_erase
     74: set_connect_serial_dialog
     75: show_serial_dialog
-    76: inventory_get
-    77: inventory_drop
-    78: check_inventory
-    79: set_map_look_script
-    80: set_entity_look_script
-    81: set_teleport_enabled
-    82: check_map
-    83: set_ble_flag
-    84: check_ble_flag
-    85: set_serial_dialog_control
-    86: register_serial_dialog_command
-    87: register_serial_dialog_command_argument
-    88: unregister_serial_dialog_command
-    89: unregister_serial_dialog_command_argument
-    90: set_entity_movement_relative
-    91: check_dialog_open
-    92: check_serial_dialog_open
-    93: check_debug_mode
-    94: close_dialog
-    95: close_serial_dialog
-    96: set_lights_control
-    97: set_lights_state
+    76: set_map_look_script
+    77: set_entity_look_script
+    78: set_teleport_enabled
+    79: check_map
+    80: set_ble_flag
+    81: check_ble_flag
+    82: set_serial_dialog_control
+    83: register_serial_dialog_command
+    84: register_serial_dialog_command_argument
+    85: unregister_serial_dialog_command
+    86: unregister_serial_dialog_command_argument
+    87: set_entity_movement_relative
+    88: check_dialog_open
+    89: check_serial_dialog_open
+    90: check_debug_mode
+    91: close_dialog
+    92: close_serial_dialog
+    93: set_lights_control
+    94: set_lights_state
+    94: goto_action_index
 
   dialog_screen_alignment_type:
     0: bottom_left

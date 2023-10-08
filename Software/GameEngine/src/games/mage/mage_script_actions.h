@@ -100,9 +100,6 @@ typedef enum : uint8_t {
 	SLOT_ERASE,
 	SET_CONNECT_SERIAL_DIALOG,
 	SHOW_SERIAL_DIALOG,
-	INVENTORY_GET,
-	INVENTORY_DROP,
-	CHECK_INVENTORY,
 	SET_MAP_LOOK_SCRIPT,
 	SET_ENTITY_LOOK_SCRIPT,
 	SET_TELEPORT_ENABLED,
@@ -122,6 +119,7 @@ typedef enum : uint8_t {
 	CLOSE_SERIAL_DIALOG,
 	SET_LIGHTS_CONTROL,
 	SET_LIGHTS_STATE,
+	GOTO_ACTION_INDEX,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -300,12 +298,6 @@ void action_set_connect_serial_dialog(uint8_t * args, MageScriptState * resumeSt
 //)
 void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
-void action_inventory_get(uint8_t * args, MageScriptState * resumeStateStruct);
-//Action Logic Type: I
-void action_inventory_drop(uint8_t * args, MageScriptState * resumeStateStruct);
-//Action Logic Type: I
-void action_check_inventory(uint8_t * args, MageScriptState * resumeStateStruct);
-//Action Logic Type: I
 void action_set_map_look_script(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_entity_look_script(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -343,6 +335,8 @@ void action_close_serial_dialog(uint8_t * args, MageScriptState * resumeStateStr
 void action_set_lights_control(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_lights_state(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_goto_action_index(uint8_t * args, MageScriptState * resumeStateStruct);
 
 //typedef for the array of function pointers to script action functions:
 typedef void(*ActionFunctionPointer)(uint8_t * args, MageScriptState * resumeStateStruct);
