@@ -16,7 +16,8 @@
 void MapControl::Load(uint16_t index)
 {
     currentMap = ROM()->InitializeRAMCopy<MapData>(index);
-    currentMap->onLoad.scriptIsRunning = true;
+    onLoad = MageScriptState{ currentMap->onLoadScriptId, true };
+    onTick = MageScriptState{ currentMap->onTickScriptId, false };
 
     auto player = getPlayerEntity();
     if (player.has_value())
@@ -27,23 +28,19 @@ void MapControl::Load(uint16_t index)
 
 void MapControl::OnLoad(MageScriptControl* scriptControl)
 {
-    scriptControl->processScript(currentMap->onLoad, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
-    currentMap->onLoad.scriptIsRunning = false;
+    scriptControl->processScript(onLoad, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
 }
 
 void MapControl::OnTick(MageScriptControl* scriptControl)
 {
-    currentMap->onTick.scriptIsRunning = true;
-    scriptControl->processScript(currentMap->onTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
-    currentMap->onTick.scriptIsRunning = false;
+    //the map's onTick script will run every tick, restarting from the beginning as it completes
+    onTick.scriptIsRunning = true;
+    scriptControl->processScript(onTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
 }
 
 MapData::MapData(uint32_t& address)
 {
     auto layerCount = uint8_t{ 0 };
-    auto onLoadScriptId = uint16_t{ 0 };
-    auto onTickScriptId = uint16_t{ 0 };
-    auto onLookScriptId = uint16_t{ 0 };
     ROM()->Read(name, address, MapNameLength);
     ROM()->Read(tileWidth, address);
     ROM()->Read(tileHeight, address);
@@ -74,7 +71,6 @@ MapData::MapData(uint32_t& address)
     ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
     ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
 
-
     //padding to align with uint32_t memory spacing:
     if ((entityCount + geometryCount + scriptCount) % 2)
     {
@@ -93,19 +89,17 @@ MapData::MapData(uint32_t& address)
 
     for (auto i = 0; i < entityCount; i++)
     {
-        auto entityAddress = ROM()->GetAddress<MageEntity>(entityGlobalIds[i]);
-        ROM()->Read(entities[i], entityAddress);
+        auto entityAddress = ROM()->GetAddress<MageEntityData>(entityGlobalIds[i]);
+        auto entity = MageEntityData{};
+        ROM()->Read(entity, entityAddress);
+        entities[i] = std::move(MageEntity{ std::move(entity) });
     }
 
     for (auto i = 0; i < layerCount; i++)
     {
         auto layerAddress = address + i * rows * cols * sizeof(uint8_t*);
-        layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(rowCount()* colCount()) });
+        layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(cols * rows) });
     }
-
-    onLoad = MageScriptState{ onLoadScriptId, true };
-    onLook = MageScriptState{ onLookScriptId, true };
-    onTick = MageScriptState{ onTickScriptId, false };
 }
 
 void MapControl::DrawEntities(const EntityPoint& cameraPosition) const
@@ -113,14 +107,14 @@ void MapControl::DrawEntities(const EntityPoint& cameraPosition) const
     //sort entity indices by the entity y values:
     std::vector<size_t> entityDrawOrder(currentMap->entityCount);
     std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
-    auto sortByY = [&](size_t i1, size_t i2) { return currentMap->entities[i1].position.y < currentMap->entities[i2].position.y; };
+    auto sortByY = [&](size_t i1, size_t i2) { return currentMap->entities[i1].data.position.y < currentMap->entities[i2].data.position.y; };
     std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
     //now that we've got a sorted array with the lowest y values first,
     //iterate through it and draw the entities one by one:
     for (auto& entityIndex : entityDrawOrder)
     {
-        auto& renderableData = currentMap->entityRenderableData[entityIndex];
+        auto& renderableData = currentMap->entities[entityIndex].renderableData;
 
         tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin - cameraPosition, renderableData.renderFlags);
     }
@@ -131,7 +125,7 @@ void MapControl::DrawGeometry(const EntityPoint& camera) const
     bool isColliding = false;
     if (currentMap->playerEntityIndex != NO_PLAYER_INDEX)
     {
-        auto playerPosition = currentMap->entityRenderableData[currentMap->playerEntityIndex].center;
+        auto playerPosition = currentMap->entities[currentMap->playerEntityIndex].renderableData.center;
         for (uint16_t i = 0; i < GeometryCount(); i++)
         {
             // auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
@@ -209,15 +203,13 @@ void MapControl::UpdateEntities(const DeltaState& delta)
     for (auto i = 0; i < currentMap->entityCount; i++)
     {
         auto& entity = currentMap->entities[i];
-        auto& renderableData = currentMap->entityRenderableData[i];
-        renderableData.currentFrameTicks += delta.TimeMs.count();
-        entity.updateRenderableData(renderableData);
+        entity.renderableData.currentFrameTicks += delta.TimeMs.count();
+        entity.UpdateRenderableData();
     }
 }
 
 void MapControl::TryMovePlayer(ButtonState button)
 {
-    auto& playerRenderableData = getPlayerEntityRenderableData();
     auto playerEntity = getPlayerEntity();
     if (playerEntity.has_value())
     {
@@ -233,17 +225,17 @@ void MapControl::TryMovePlayer(ButtonState button)
 
         if (playerIsMoving)
         {
-            const auto topLeft = playerRenderableData.hitBox.origin;
-            const auto topRight = playerRenderableData.hitBox.origin + EntityPoint{playerRenderableData.hitBox.w, 0};
-            const auto botLeft = playerRenderableData.hitBox.origin + EntityPoint{0, playerRenderableData.hitBox.h};
-            const auto botRight = playerRenderableData.hitBox.origin + EntityPoint{playerRenderableData.hitBox.w, playerRenderableData.hitBox.h};
+            const auto topLeft = player->renderableData.hitBox.origin;
+            const auto topRight = player->renderableData.hitBox.origin + EntityPoint{player->renderableData.hitBox.w, 0};
+            const auto botLeft = player->renderableData.hitBox.origin + EntityPoint{0, player->renderableData.hitBox.h};
+            const auto botRight = player->renderableData.hitBox.origin + EntityPoint{player->renderableData.hitBox.w, player->renderableData.hitBox.h};
 
             std::vector<EntityPoint> hitboxPointsToCheck{};
 
             if (button.IsPressed(KeyPress::Ljoy_left) && !button.IsPressed(KeyPress::Ljoy_right))
             {
                 playerVelocity.x -= playerSpeed;
-                player->direction = WEST;
+                player->data.direction = WEST;
                 hitboxPointsToCheck.push_back(topLeft);
                 hitboxPointsToCheck.push_back(botLeft);
                 hitboxPointsToCheck.push_back(topLeft + playerVelocity);
@@ -252,7 +244,7 @@ void MapControl::TryMovePlayer(ButtonState button)
             else if (button.IsPressed(KeyPress::Ljoy_right) && !button.IsPressed(KeyPress::Ljoy_left))
             {
                 playerVelocity.x += playerSpeed;
-                player->direction = EAST;
+                player->data.direction = EAST;
                 hitboxPointsToCheck.push_back(topRight);
                 hitboxPointsToCheck.push_back(botRight);
                 hitboxPointsToCheck.push_back(topRight + playerVelocity);
@@ -262,7 +254,7 @@ void MapControl::TryMovePlayer(ButtonState button)
             if (button.IsPressed(KeyPress::Ljoy_up) && !button.IsPressed(KeyPress::Ljoy_down))
             {
                 playerVelocity.y -= playerSpeed;
-                player->direction = NORTH;
+                player->data.direction = NORTH;
                 hitboxPointsToCheck.push_back(topLeft);
                 hitboxPointsToCheck.push_back(topRight);
                 hitboxPointsToCheck.push_back(topLeft + playerVelocity);
@@ -271,7 +263,7 @@ void MapControl::TryMovePlayer(ButtonState button)
             else if (button.IsPressed(KeyPress::Ljoy_down) && !button.IsPressed(KeyPress::Ljoy_up))
             {
                 playerVelocity.y += playerSpeed;
-                player->direction = SOUTH;
+                player->data.direction = SOUTH;
                 hitboxPointsToCheck.push_back(botLeft);
                 hitboxPointsToCheck.push_back(botRight);
                 hitboxPointsToCheck.push_back(botLeft + playerVelocity);
@@ -301,7 +293,7 @@ void MapControl::TryMovePlayer(ButtonState button)
                     }
                 }
             }
-            player->position += playerVelocity;
+            player->data.position += playerVelocity;
         }
 
     }

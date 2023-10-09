@@ -3,52 +3,52 @@
 
 void MageEntity::OnTick(MageScriptControl* scriptControl)
 {
-    scriptControl->processScript(onTick, onTickScriptId, MageScriptType::ON_TICK);
+    //Non-null scripts will run every tick, restarting from the beginning as it completes
+    onTick.scriptIsRunning = data.onTickScriptId != 0;
+    scriptControl->processScript(onTick, data.onTickScriptId, MageScriptType::ON_TICK);
 }
 
 void MageEntity::OnInteract(MageScriptControl* scriptControl)
 {
     onInteract.scriptIsRunning = true;
-    scriptControl->processScript(onInteract, onInteractScriptId, MageScriptType::ON_INTERACT);
-    onInteract.scriptIsRunning = false;
+    scriptControl->processScript(onInteract, data.onInteractScriptId, MageScriptType::ON_INTERACT);
 }
 
-
-void MageEntity::updateRenderableData(RenderableData& renderableData)
+void MageEntity::UpdateRenderableData()
 {
-   if (primaryIdType == MageEntityPrimaryIdType::TILESET)
+   if (data.primaryIdType == MageEntityPrimaryIdType::TILESET)
    {
-      renderableData.tilesetId = primaryId;
-      renderableData.tileId = secondaryId;
+      renderableData.tilesetId = data.primaryId;
+      renderableData.tileId = data.secondaryId;
       renderableData.duration = 0; //unused
       renderableData.frameCount = 0; //unused
-      renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
+      renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
    }
-   else if (primaryIdType == MageEntityPrimaryIdType::ANIMATION)
+   else if (data.primaryIdType == MageEntityPrimaryIdType::ANIMATION)
    {
       //check for frame change and adjust if needed:
       if (renderableData.currentFrameTicks >= renderableData.duration)
       {
          //increment frame and reset tick counter:
-         currentFrameIndex++;
+         data.currentFrameIndex++;
          renderableData.currentFrameTicks = 0;
       }
 
       //reset animation to first frame after max frame is reached:
-      if (currentFrameIndex >= renderableData.frameCount)
+      if (data.currentFrameIndex >= renderableData.frameCount)
       {
-         currentFrameIndex = 0;
+         data.currentFrameIndex = 0;
       }
-      auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(primaryId);
+      auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(data.primaryId);
       renderableData.tilesetId = animation->tilesetId;
-      renderableData.tileId = animation->GetFrame(currentFrameIndex).tileId;
-      renderableData.duration = animation->GetFrame(currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
+      renderableData.tileId = animation->GetFrame(data.currentFrameIndex).tileId;
+      renderableData.duration = animation->GetFrame(data.currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
       renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-      renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
+      renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
    }
-   else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+   else if (data.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(primaryId);
+      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(data.primaryId);
 
       //If the entity has no animations defined, return default:
       if (entityType->animationCount == 0)
@@ -60,10 +60,10 @@ void MageEntity::updateRenderableData(RenderableData& renderableData)
          renderableData.renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
       }
 
-      auto& animation = entityType->GetAnimation(currentAnimation);
+      auto& animation = entityType->GetAnimation(data.currentAnimation);
 
       //create a animationDirection entity based on direction:
-      auto dirValue = (MageEntityAnimationDirection)(direction & RENDER_FLAGS_DIRECTION_MASK);
+      auto dirValue = (MageEntityAnimationDirection)(data.direction & RENDER_FLAGS_DIRECTION_MASK);
       auto& animationDirection =
          dirValue == MageEntityAnimationDirection::NORTH ? animation.North
          : dirValue == MageEntityAnimationDirection::EAST ? animation.East
@@ -79,22 +79,22 @@ void MageEntity::updateRenderableData(RenderableData& renderableData)
          if (renderableData.currentFrameTicks >= renderableData.duration)
          {
             //increment frame and reset tick counter:
-            currentFrameIndex++;
+            data.currentFrameIndex++;
             renderableData.currentFrameTicks = 0;
          }
 
          //reset animation to first frame after max frame is reached:
-         if (currentFrameIndex >= renderableData.frameCount)
+         if (data.currentFrameIndex >= renderableData.frameCount)
          {
-            currentFrameIndex = 0;
+            data.currentFrameIndex = 0;
          }
          auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection.typeId);
-         auto& currentFrame = animation->GetFrame(currentFrameIndex);
+         auto& currentFrame = animation->GetFrame(data.currentFrameIndex);
          renderableData.tilesetId = animation->tilesetId;
          renderableData.tileId = currentFrame.tileId;
          renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
          renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-         renderableData.renderFlags = animationDirection.renderFlags | (direction & 0x80); //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = animationDirection.renderFlags | (data.direction & 0x80); //no need to check, it shouldn't cause a crash.
       }
       else
       {
@@ -102,7 +102,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData)
          renderableData.tileId = animationDirection.typeId;
          renderableData.duration = 0; //does not animate;
          renderableData.frameCount = 0; //does not animate
-         renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
       }
    }
 
@@ -118,15 +118,15 @@ void MageEntity::updateRenderableData(RenderableData& renderableData)
    {
       //get the difference between entity centers:
       auto adjustmentPoint = oldCenter - renderableData.center;
-      position.x += adjustmentPoint.x;
-      position.y += adjustmentPoint.y;
+      data.position.x += adjustmentPoint.x;
+      data.position.y += adjustmentPoint.y;
       renderableData.lastTilesetId = renderableData.tilesetId;
    }
 
-   renderableData.origin.x = position.x;
-   renderableData.origin.y = position.y - tileset->TileHeight;
-   renderableData.hitBox.origin.x = position.x + halfWidth / 2;
-   renderableData.hitBox.origin.y = position.y - tileset->TileHeight + halfHeight / 2;
+   renderableData.origin.x = data.position.x;
+   renderableData.origin.y = data.position.y - tileset->TileHeight;
+   renderableData.hitBox.origin.x = data.position.x + halfWidth / 2;
+   renderableData.hitBox.origin.y = data.position.y - tileset->TileHeight + halfHeight / 2;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
    renderableData.center = renderableData.origin + EntityPoint{halfWidth, halfHeight};

@@ -69,7 +69,7 @@ class MapData;
 class MageTileset;
 class MageAnimation;
 class MageEntityType;
-class MageEntity;
+class MageEntityData;
 class MageGeometry;
 class MageScript;
 class MagePortrait;
@@ -90,7 +90,7 @@ typedef EngineROM<MageSaveGame,
    MageTileset,
    MageAnimation,
    MageEntityType,
-   MageEntity,
+   MageEntityData,
    MageGeometry,
    MageScript,
    MagePortrait,

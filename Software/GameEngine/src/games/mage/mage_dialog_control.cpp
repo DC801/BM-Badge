@@ -210,16 +210,16 @@ void MageDialogControl::loadCurrentScreenPortrait()
       if (currentScreen.entityIndex != NO_PLAYER_INDEX)
       {
          auto currentEntity = mapControl->tryGetEntity(currentScreen.entityIndex);
-         uint8_t sanitizedPrimaryType = currentEntity.value()->primaryIdType % NUM_PRIMARY_ID_TYPES;
+         uint8_t sanitizedPrimaryType = currentEntity.value()->data.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            currentPortraitId = ROM()->GetReadPointerByIndex<MageEntityType>(currentEntity.value()->primaryId)->portraitId;
+            currentPortraitId = ROM()->GetReadPointerByIndex<MageEntityType>(currentEntity.value()->data.primaryId)->portraitId;
          }
 
          auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
          auto animationDirection = portrait->getEmoteById(currentScreen.emoteIndex);
-         currentEntity.value()->direction = animationDirection->renderFlags;
-         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.value()->direction & 0x80);
+         currentEntity.value()->data.direction = animationDirection->renderFlags;
+         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.value()->data.direction & 0x80);
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
          if (((uint8_t)currentScreen.alignment % 2))
          {

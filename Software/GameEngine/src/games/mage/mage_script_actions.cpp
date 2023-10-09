@@ -36,7 +36,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_name(const uint8_t* args
     int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
-        auto entityName = mapControl->getEntityByMapLocalId(entityId).name;
+        auto entityName = mapControl->getEntityByMapLocalId(entityId).data.name;
         auto romString = stringLoader->getString(argStruct->stringId, entityName);
 
         int compare = strcmp(entityName, romString.c_str());
@@ -65,7 +65,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_x(const uint8_t* args, M
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.position.x == argStruct->expectedValue);
+        bool identical = (entity.data.position.x == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -90,7 +90,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_y(const uint8_t* args, M
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.position.y == argStruct->expectedValue);
+        bool identical = (entity.data.position.y == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -115,7 +115,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_interact_script(const ui
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.onInteractScriptId == argStruct->expectedScript);
+        bool identical = (entity.data.onInteractScriptId == argStruct->expectedScript);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -140,7 +140,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_tick_script(const uint8_
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.onTickScriptId == argStruct->expectedScript);
+        bool identical = (entity.data.onTickScriptId == argStruct->expectedScript);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -165,7 +165,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_type(const uint8_t* args
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = entity.primaryId == argStruct->entityTypeId && entity.primaryIdType == ENTITY_TYPE;
+        bool identical = entity.data.primaryId == argStruct->entityTypeId && entity.data.primaryIdType == ENTITY_TYPE;
 
         if (identical == (bool)argStruct->expectedBool)
         {
@@ -191,14 +191,14 @@ std::optional<uint16_t> MageScriptActions::check_entity_primary_id(const uint8_t
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
         uint16_t sizeLimit{ 1 };
-        uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
+        uint8_t sanitizedPrimaryType = entity.data.primaryIdType % NUM_PRIMARY_ID_TYPES;
 
         if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = ROM()->GetCount<MageEntityType>(); }
         else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = ROM()->GetCount<MageAnimation>(); }
         else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = ROM()->GetCount<MageTileset>(); }
         else { throw std::runtime_error{ "Sanitized Primary Type Unknown" }; }
 
-        bool identical = ((entity.primaryId % sizeLimit) == argStruct->expectedValue);
+        bool identical = ((entity.data.primaryId % sizeLimit) == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -224,15 +224,15 @@ std::optional<uint16_t> MageScriptActions::check_entity_secondary_id(const uint8
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
         uint16_t sizeLimit = 1;
-        uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
+        uint8_t sanitizedPrimaryType = entity.data.primaryIdType % NUM_PRIMARY_ID_TYPES;
         if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = 1; }
         if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
         if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
         {
-            auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(entity.primaryId);
+            auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(entity.data.primaryId);
             sizeLimit = tileset->TileCount();
         }
-        bool identical = ((entity.secondaryId % sizeLimit) == argStruct->expectedValue);
+        bool identical = ((entity.data.secondaryId % sizeLimit) == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -257,7 +257,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_primary_id_type(const ui
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
+        uint8_t sanitizedPrimaryType = entity.data.primaryIdType % NUM_PRIMARY_ID_TYPES;
         bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
@@ -283,7 +283,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_current_animation(const 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.currentAnimation == argStruct->expectedValue);
+        bool identical = (entity.data.currentAnimation == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -308,7 +308,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_current_frame(const uint
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.currentFrameIndex == argStruct->expectedValue);
+        bool identical = (entity.data.currentFrameIndex == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -333,7 +333,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_direction(const uint8_t*
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.direction == argStruct->expectedValue);
+        bool identical = (entity.data.direction == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -359,7 +359,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_glitched(const uint8_t* 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        if (entity.direction & RENDER_FLAGS_IS_GLITCHED)
+        if (entity.data.direction & RENDER_FLAGS_IS_GLITCHED)
         {
             return argStruct->successScriptId;
         }
@@ -383,7 +383,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a(const u
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.hackableStateA == argStruct->expectedValue);
+        bool identical = (entity.data.hackableStateA == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -408,7 +408,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_b(const u
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.hackableStateB == argStruct->expectedValue);
+        bool identical = (entity.data.hackableStateB == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -433,7 +433,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_c(const u
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.hackableStateC == argStruct->expectedValue);
+        bool identical = (entity.data.hackableStateC == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -458,7 +458,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_d(const u
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        bool identical = (entity.hackableStateD == argStruct->expectedValue);
+        bool identical = (entity.data.hackableStateD == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
             return argStruct->successScriptId;
@@ -482,7 +482,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a_u2(cons
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.hackableStateA);
+        uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.data.hackableStateA);
         bool identical = (u2_value == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
@@ -507,7 +507,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_c_u2(cons
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.hackableStateC);
+        uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.data.hackableStateC);
         bool identical = (u2_value == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
@@ -531,7 +531,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a_u4(cons
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        uint32_t u4_value = *(uint32_t*)((uint8_t*)&entity.hackableStateA);
+        uint32_t u4_value = *(uint32_t*)((uint8_t*)&entity.data.hackableStateA);
         if (u4_value == argStruct->expectedValue)
         {
             return argStruct->successScriptId;
@@ -555,7 +555,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_path(const uint8_t* args
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        uint16_t pathId = *(uint16_t*)((uint8_t*)&entity.hackableStateA);
+        uint16_t pathId = *(uint16_t*)((uint8_t*)&entity.data.hackableStateA);
         bool identical = (pathId == argStruct->expectedValue);
         if (identical == (bool)argStruct->expectedBool)
         {
@@ -606,7 +606,7 @@ std::optional<uint16_t> MageScriptActions::check_if_entity_is_in_geometry(const 
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
         auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-        bool colliding = geometry->IsPointInside(mapControl->getEntityRenderableData(sourceEntityIndex).center);
+        bool colliding = geometry->IsPointInside(entity.renderableData.center);
         if (colliding == (bool)argStruct->expectedBoolValue)
         {
             return argStruct->successScriptId;
@@ -764,7 +764,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_name(const uint8_t* args, 
     auto argStruct = (ActionSetEntityName*)args;
 
     //get the string from the stringId:
-    std::string entityName = mapControl->getEntityByMapLocalId(entityId).name;
+    std::string entityName = mapControl->getEntityByMapLocalId(entityId).data.name;
     std::string romString = stringLoader->getString(argStruct->stringId, entityName);
     //Get the entity:
     int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
@@ -774,13 +774,13 @@ std::optional<uint16_t> MageScriptActions::set_entity_name(const uint8_t* args, 
         //simple loop to set the name:
         for (int i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
         {
-            entity.name[i] = romString[i];
+            entity.data.name[i] = romString[i];
             if (romString[i] == 00)
             {
                 // if we have hit one null, fill in the remainder with null too
                 for (int j = i + 1; j < MAGE_ENTITY_NAME_LENGTH; j++)
                 {
-                    entity.name[j] = 00;
+                    entity.data.name[j] = 00;
                 }
                 break;
             }
@@ -806,7 +806,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_x(const uint8_t* args, Mag
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.position.x = argStruct->newValue;
+        entity.data.position.x = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -828,7 +828,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_y(const uint8_t* args, Mag
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.position.y = argStruct->newValue;
+        entity.data.position.y = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -849,7 +849,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_interact_script(const uint
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto entity = mapControl->tryGetEntity(sourceEntityIndex);
-        entity.value()->onInteractScriptId = argStruct->scriptId;
+        entity.value()->data.onInteractScriptId = argStruct->scriptId;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -871,7 +871,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_tick_script(const uint8_t*
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto entity = mapControl->tryGetEntity(sourceEntityIndex);
-        entity.value()->onTickScriptId = argStruct->scriptId;
+        entity.value()->data.onTickScriptId = argStruct->scriptId;
     }
     else
     {
@@ -897,8 +897,8 @@ std::optional<uint16_t> MageScriptActions::set_entity_type(const uint8_t* args, 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.primaryId = argStruct->entityTypeId;
-        entity.primaryIdType = ENTITY_TYPE;
+        entity.data.primaryId = argStruct->entityTypeId;
+        entity.data.primaryIdType = ENTITY_TYPE;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -920,7 +920,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_primary_id(const uint8_t* 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.primaryId = argStruct->newValue;
+        entity.data.primaryId = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -942,7 +942,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_secondary_id(const uint8_t
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.secondaryId = argStruct->newValue;
+        entity.data.secondaryId = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -965,7 +965,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_primary_id_type(const uint
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
+        entity.data.primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
     }
     return NO_JUMP_SCRIPT;
 }
@@ -988,10 +988,10 @@ std::optional<uint16_t> MageScriptActions::set_entity_current_animation(const ui
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
-        entity.currentAnimation = argStruct->newValue;
-        entity.currentFrameIndex = 0;
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        auto& renderable = entity.renderableData.currentFrameTicks = 0;
+        entity.data.currentAnimation = argStruct->newValue;
+        entity.data.currentFrameIndex = 0;
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1014,9 +1014,9 @@ std::optional<uint16_t> MageScriptActions::set_entity_current_frame(const uint8_
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
-        entity.currentFrameIndex = argStruct->newValue;
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        auto& renderable = entity.renderableData.currentFrameTicks = 0;
+        entity.data.currentFrameIndex = argStruct->newValue;
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1039,8 +1039,8 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction(const uint8_t* a
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.direction |= (argStruct->direction & RENDER_FLAGS_DIRECTION_MASK);
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        entity.data.direction |= (argStruct->direction & RENDER_FLAGS_DIRECTION_MASK);
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1063,9 +1063,9 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_relative(const u
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto newDirection = (entity.direction + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS;
-        entity.direction |= (newDirection & RENDER_FLAGS_DIRECTION_MASK);
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        auto newDirection = (entity.data.direction + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS;
+        entity.data.direction |= (newDirection & RENDER_FLAGS_DIRECTION_MASK);
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1089,10 +1089,10 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_target_entity(co
     if (sourceEntityIndex != NO_PLAYER_INDEX && targetEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto targetEntityCenter = mapControl->getEntityRenderableData(targetEntityIndex).center;
-        auto sourceEntityCenter = mapControl->getEntityRenderableData(sourceEntityIndex).center;
-        entity.direction |= sourceEntityCenter.getRelativeDirection(targetEntityCenter) & RENDER_FLAGS_DIRECTION_MASK;
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        auto targetEntityCenter = mapControl->getEntityByMapLocalId(targetEntityIndex).renderableData.center;
+        auto sourceEntityCenter = entity.renderableData.center;
+        entity.data.direction |= sourceEntityCenter.getRelativeDirection(targetEntityCenter) & RENDER_FLAGS_DIRECTION_MASK;
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1115,9 +1115,9 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_target_geometry(
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
         auto geometry = mapControl->GetGeometry(argStruct->geometryId);
-        auto relativeDirection = mapControl->getEntityRenderableData(sourceEntityIndex).center.getRelativeDirection(geometry->GetPoint(0));
-        entity.direction |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        auto relativeDirection = entity.renderableData.center.getRelativeDirection(geometry->GetPoint(0));
+        entity.data.direction |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1140,10 +1140,10 @@ std::optional<uint16_t> MageScriptActions::set_entity_glitched(const uint8_t* ar
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.direction = (MageEntityAnimationDirection)(
-            (entity.direction & RENDER_FLAGS_IS_GLITCHED_MASK)
+        entity.data.direction = (MageEntityAnimationDirection)(
+            (entity.data.direction & RENDER_FLAGS_IS_GLITCHED_MASK)
             | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED));
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1166,7 +1166,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a(const uin
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.hackableStateA = argStruct->newValue;
+        entity.data.hackableStateA = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1189,7 +1189,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_b(const uin
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.hackableStateB = argStruct->newValue;
+        entity.data.hackableStateB = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1212,7 +1212,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_c(const uin
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.hackableStateC = argStruct->newValue;
+        entity.data.hackableStateC = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1235,7 +1235,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_d(const uin
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        entity.hackableStateD = argStruct->newValue;
+        entity.data.hackableStateD = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1257,7 +1257,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a_u2(const 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        *(uint16_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
+        *(uint16_t*)((uint8_t*)&entity.data.hackableStateA) = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1279,7 +1279,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_c_u2(const 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        *(uint16_t*)((uint8_t*)&entity.hackableStateC) = argStruct->newValue;
+        *(uint16_t*)((uint8_t*)&entity.data.hackableStateC) = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1299,7 +1299,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a_u4(const 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        *(uint32_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
+        *(uint32_t*)((uint8_t*)&entity.data.hackableStateA) = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1321,7 +1321,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_path(const uint8_t* args, 
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        *(uint16_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
+        *(uint16_t*)((uint8_t*)&entity.data.hackableStateA) = argStruct->newValue;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1533,7 +1533,7 @@ std::optional<uint16_t> MageScriptActions::show_dialog(const uint8_t* args, Mage
     {
         auto& entity = mapControl->getEntityByMapLocalId(entityId);
         //debug_print("Opening dialog %d\n", argStruct->dialogId);
-        dialogControl->load(argStruct->dialogId, entity.name);
+        dialogControl->load(argStruct->dialogId, entity.data.name);
         resumeState.totalLoopsToNextAction = 1;
     }
     else if (!dialogControl->isOpen())
@@ -1566,11 +1566,11 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
         {
             resumeState.totalLoopsToNextAction = argStruct->playCount;
             resumeState.loopsToNextAction = argStruct->playCount;
-            entity.setAnimation(argStruct->animationId);
-            mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
-            entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+            entity.SetAnimation(argStruct->animationId);
+            entity.renderableData.currentFrameTicks = 0;
+            entity.UpdateRenderableData();
         }
-        else if (entity.currentFrameIndex == 0 && resumeState.geometry.currentSegmentIndex == mapControl->getEntityRenderableData(sourceEntityIndex).frameCount - 1)
+        else if (entity.data.currentFrameIndex == 0 && resumeState.geometry.currentSegmentIndex == entity.renderableData.frameCount - 1)
         {
             // we just reset to 0
             // the previously rendered frame was the last in the animation
@@ -1578,14 +1578,14 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
             if (resumeState.loopsToNextAction == 0)
             {
                 resumeState.totalLoopsToNextAction = 0;
-                entity.setAnimation(MAGE_IDLE_ANIMATION_INDEX);
-                mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
-                entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+                entity.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+                entity.renderableData.currentFrameTicks = 0;
+                entity.UpdateRenderableData();
             }
         }
         // this is just a quick and dirty place to hold on to
         // the last frame that was rendered for this entity
-        resumeState.geometry.currentSegmentIndex = entity.currentFrameIndex;
+        resumeState.geometry.currentSegmentIndex = entity.data.currentFrameIndex;
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1607,14 +1607,13 @@ std::optional<uint16_t> MageScriptActions::teleport_entity_to_geometry(const uin
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto& entityRenderableData = mapControl->getEntityRenderableData(sourceEntityIndex);
 
         auto geometry = mapControl->GetGeometry(argStruct->geometryId);
         auto point = geometry->GetPoint(0);
 
-        //auto offsetPoint = Point{ entity.position.x, entity.position.y } + point;
-        entity.position = point;
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        //auto offsetPoint = Point{ entity.data.position.x, entity.data.position.y } + point;
+        entity.data.position = point;
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1633,27 +1632,27 @@ std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
+        auto& renderable = entity.renderableData;
         auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
         if (resumeState.totalLoopsToNextAction == 0)
         {
             //points we're interpolating between are from the entity location to the 
-            resumeState.geometry.pointA = EntityPoint{ entity.position.x, entity.position.y };
-            resumeState.geometry.pointB = geometry->GetPoint(0) - resumeState.geometry.pointA - mapControl->getEntityRenderableData(sourceEntityIndex).center;
-            entity.direction |= (resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB) & RENDER_FLAGS_DIRECTION_MASK);
-            entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
-            mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
+            resumeState.geometry.pointA = EntityPoint{ entity.data.position.x, entity.data.position.y };
+            resumeState.geometry.pointB = geometry->GetPoint(0) - resumeState.geometry.pointA - entity.renderableData.center;
+            entity.data.direction |= (resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB) & RENDER_FLAGS_DIRECTION_MASK);
+            entity.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+            entity.renderableData.currentFrameTicks = 0;
         }
         auto progress = manageProgressOfAction(resumeState, argStruct->duration);
-        entity.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
+        entity.data.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
         if (progress >= 1.0f)
         {
-            entity.setAnimation(MAGE_IDLE_ANIMATION_INDEX);
-            mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
+            entity.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+            entity.renderableData.currentFrameTicks = 0;
             resumeState.totalLoopsToNextAction = 0;
         }
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1677,13 +1676,13 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
     auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
     auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-    entity.position = geometry->GetPoint(0);
+    entity.data.position = geometry->GetPoint(0);
 
     // handle single point geometries
     if (geometry->GetPointCount() == 1)
     {
         resumeState.totalLoopsToNextAction = 1;
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        entity.UpdateRenderableData();
         return NO_JUMP_SCRIPT;
     }
 
@@ -1699,9 +1698,9 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
         resumeState.geometry.currentSegmentIndex = 0;
         resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex);
         resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
-        entity.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
-        entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
-        mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
+        entity.data.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
+        entity.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+        entity.renderableData.currentFrameTicks = 0;
         return NO_JUMP_SCRIPT;
     }
     resumeState.loopsToNextAction--;
@@ -1730,17 +1729,17 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
             / (lengthAtEndOfCurrentSegment - resumeState.geometry.lengthOfPreviousSegments);*/
         resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex);
         resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
-        entity.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
+        entity.data.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
     }
 
-    entity.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
+    entity.data.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
     if (resumeState.loopsToNextAction == 0)
     {
         resumeState.totalLoopsToNextAction = 0;
-        entity.setAnimation(MAGE_IDLE_ANIMATION_INDEX);
-        mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
+        entity.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+        entity.renderableData.currentFrameTicks = 0;
     }
-    entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+    entity.UpdateRenderableData();
 
     return NO_JUMP_SCRIPT;
 }
@@ -1765,8 +1764,8 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
         if (geometry->GetPointCount() == 1)
         {
             resumeState.totalLoopsToNextAction = 1;
-            entity.position = geometry->GetPoint(0) - mapControl->getEntityRenderableData(sourceEntityIndex).center - entity.position;
-            entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+            entity.data.position = geometry->GetPoint(0) - entity.renderableData.center - entity.data.position;
+            entity.UpdateRenderableData();
             return NO_JUMP_SCRIPT;
         }
 
@@ -1784,9 +1783,9 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
             resumeState.geometry.currentSegmentIndex = 0;
             resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex);
             resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
-            entity.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
-            entity.setAnimation(MAGE_WALK_ANIMATION_INDEX);
-            mapControl->getEntityRenderableData(sourceEntityIndex).currentFrameTicks = 0;
+            entity.data.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
+            entity.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+            entity.renderableData.currentFrameTicks = 0;
         }
 
         if (resumeState.loopsToNextAction == 0)
@@ -1797,7 +1796,7 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
             resumeState.geometry.currentSegmentIndex = 0; 
             resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex);
             resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
-            entity.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
+            entity.data.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
         }
         resumeState.loopsToNextAction--;
         uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
@@ -1823,10 +1822,10 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
 
             resumeState.geometry.pointA = geometry->GetPoint(resumeState.geometry.currentSegmentIndex);
             resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
-            entity.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
+            entity.data.direction |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
         }
-        entity.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
-        entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex));
+        entity.data.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
+        entity.UpdateRenderableData();
     }
     return NO_JUMP_SCRIPT;
 }
@@ -1885,7 +1884,7 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
     if (sourceEntityIndex != NO_PLAYER_INDEX)
     {
         auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-        auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
+        auto& renderable = entity.renderableData;
 
         if (resumeState.totalLoopsToNextAction == 0)
         {
@@ -1896,7 +1895,7 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
         auto progress = manageProgressOfAction(resumeState, argStruct->duration);
         // yes, this is intentional;
         // if the entity is moving, pan will continue to the entity
-        resumeState.geometry.pointB = { (uint16_t)(mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidth / 2), (uint16_t)(mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeight / 2) };
+        resumeState.geometry.pointB = { (uint16_t)(entity.renderableData.center.x - DrawWidth / 2), (uint16_t)(entity.renderableData.center.y - DrawHeight / 2) };
         auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
         camera.position.x = betweenPoint.x;
         camera.position.y = betweenPoint.y;
@@ -2236,7 +2235,7 @@ std::optional<uint16_t> MageScriptActions::slot_save(const uint8_t* args, MageSc
         auto currentSave = ROM()->GetCurrentSaveCopy();
         if (playerEntity.has_value())
         {
-            auto playerName = playerEntity.value()->name;
+            auto playerName = playerEntity.value()->data.name;
             for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
             {
                 // copy the player name and fill remaining space with 0

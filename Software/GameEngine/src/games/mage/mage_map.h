@@ -51,30 +51,18 @@ struct MapData
     uint16_t tileHeight{ 0 };
     uint16_t cols{ 0 };
     uint16_t rows{ 0 };
+    uint16_t onLoadScriptId{ 0 };
+    uint16_t onTickScriptId{ 0 };
+    uint16_t onLookScriptId{ 0 };
     uint8_t playerEntityIndex{ 0 };
     uint16_t entityCount{ 0 };
     uint16_t geometryCount{ 0 };
     uint16_t scriptCount{ 0 };
     uint8_t goDirectionsCount{ 0 };
 
-    MageScriptState onLoad;
-    MageScriptState onLook;
-    MageScriptState onTick;
-
-    constexpr uint8_t colCount() const
-    {
-        return cols & 0xFF;
-    }
-
-    constexpr uint8_t rowCount() const
-    {
-        return rows & 0xFF;
-    }
-
     //this is the hackable array of entities that are on the current map
     //the data contained within is the data that can be hacked in the hex editor.
     std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{};
-    std::array<RenderableData, MAX_ENTITIES_PER_MAP> entityRenderableData{};
 
     std::vector<GoDirection> goDirections{};
     std::vector<const MageGeometry*> geometries{};
@@ -169,11 +157,6 @@ public:
         return &getEntityByMapLocalId(currentMap->playerEntityIndex);
     }
 
-    inline RenderableData& getPlayerEntityRenderableData()
-    {
-        return currentMap->entityRenderableData[currentMap->playerEntityIndex];
-    }
-
     inline std::optional<const MageEntity*> tryGetEntity(uint16_t id) const
     {
         return &currentMap->entities[id % currentMap->entities.size()];
@@ -182,11 +165,6 @@ public:
     inline std::optional<MageEntity*> tryGetEntity(uint16_t id)
     {
         return &currentMap->entities[id % currentMap->entities.size()];
-    }
-
-    inline RenderableData& getEntityRenderableData(uint16_t id)
-    {
-        return currentMap->entityRenderableData[id % currentMap->entityRenderableData.size()];
     }
 
     inline const MageEntity& getEntityByMapLocalId(uint16_t mapLocalId) const
@@ -230,19 +208,23 @@ public:
     //the new map will be loaded at the beginning of the next tick
     int32_t mapLoadId{ MAGE_NO_MAP };
 
-    std::span<MageEntity> GetEntities() { return currentMap->entities; }
+    std::span<MageEntity> GetEntities() 
+    { 
+        return currentMap->entities; 
+    }
+
     void SetOnLoad(uint16_t scriptId)
     {
-        currentMap->onLoad = MageScriptState{ scriptId, false, currentMap->onLoad.isGlobalExecutionScope };
+        onLoad = MageScriptState{ scriptId, false, onLoad.isGlobalExecutionScope };
     }
     void SetOnTick(uint16_t scriptId)
     {
-        currentMap->onTick = MageScriptState{ scriptId, false, currentMap->onTick.isGlobalExecutionScope };
+        onTick = MageScriptState{ scriptId, false, onTick.isGlobalExecutionScope };
     }
 
     const MageScriptState& GetOnLook() const
     {
-        return currentMap->onLook;
+        return onLook;
     }
 
     const MageScript* GetScript(uint16_t scriptIndex) const
@@ -257,6 +239,11 @@ public:
     void OnLoad(MageScriptControl* scriptControl);
     void OnTick(MageScriptControl* scriptControl);
 private:
+
+    MageScriptState onLoad;
+    MageScriptState onLook;
+    MageScriptState onTick;
+
     std::shared_ptr<TileManager> tileManager;
     std::unique_ptr<MapData> currentMap;
 

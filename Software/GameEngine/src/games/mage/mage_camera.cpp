@@ -9,7 +9,7 @@ void MageCamera::applyEffects(uint32_t deltaTime)
 {
    if (followEntityId  != NO_PLAYER_INDEX)
    {
-      position = mapControl->getEntityRenderableData(followEntityId).center;
+      position = mapControl->getEntityByMapLocalId(followEntityId).renderableData.center;
    }
 
    if (shaking)

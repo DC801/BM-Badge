@@ -103,11 +103,11 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
     auto playerEntity = mapControl->getPlayerEntity();
     if (playerEntity.has_value())
     {
-        auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
-        auto interactBox = playerRenderableData.hitBox;
+        auto player = playerEntity.value();
+        auto interactBox = player->renderableData.hitBox;
 
         const uint8_t interactLength = 32;
-        auto direction = playerEntity.value()->direction & RENDER_FLAGS_DIRECTION_MASK;
+        auto direction = playerEntity.value()->data.direction & RENDER_FLAGS_DIRECTION_MASK;
         if (direction == NORTH)
         {
             interactBox.origin.y -= interactLength;
@@ -136,26 +136,25 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
             if (targetEntity.has_value())
             {
                 auto target = targetEntity.value();
-                auto& targetRenderableData = mapControl->getEntityRenderableData(i);
-                targetRenderableData.isInteracting = false;
+                target->renderableData.isInteracting = false;
 
                 if (i != mapControl->getPlayerEntityIndex())
                 {
-                    bool colliding = targetRenderableData.hitBox
+                    bool colliding = target->renderableData.hitBox
                         .Overlaps(interactBox);
 
                     if (colliding)
                     {
-                        playerRenderableData.isInteracting = true;
-                        mapControl->getEntityRenderableData(i).isInteracting = true;
+                        player->renderableData.isInteracting = true;
+                        target->renderableData.isInteracting = true;
                         if (hack && playerHasHexEditorControl)
                         {
                             hexEditor->disableMovementUntilRJoyUpRelease();
                             hexEditor->openToEntityByIndex(i);
                         }
-                        else if (!hack && target->onInteractScriptId)
+                        else if (!hack && target->data.onInteractScriptId)
                         {
-                            target->onInteract = MageScriptState{ target->onInteractScriptId, true };
+                            target->OnInteract(scriptControl.get());
                         }
                         break;
                     }
@@ -173,14 +172,17 @@ void MageGameEngine::LoadMap(uint16_t index)
 
     //close any open dialogs and return player control as well:
     dialogControl->close();
+    hexEditor->setHexEditorOn(false);
 
     commandControl->reset();
 
-    //get the data for the map:
+    // Load the map and trigger its OnLoad script. This is the only place that should happen
     mapControl->Load(index);
+
+    mapControl->OnLoad(scriptControl.get());
+
     playerHasControl = true;
 
-    hexEditor->setHexEditorOn(false);
 }
 
 void MageGameEngine::applyUniversalInputs(const DeltaState& delta)
@@ -243,14 +245,13 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
     if (playerEntity != NO_PLAYER)
     {
         //update renderable info before proceeding:
-        auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
         auto player = playerEntity.value();
-        player->updateRenderableData(playerRenderableData);
-        auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
+        player->UpdateRenderableData();
+        auto playerEntityTypeId = player->data.primaryIdType % NUM_PRIMARY_ID_TYPES;
         auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
         auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
-        auto previousPlayerAnimation = player->currentAnimation;
-        auto playerIsActioning = player->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
+        auto previousPlayerAnimation = player->data.currentAnimation;
+        auto playerIsActioning = player->data.currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
         //check to see if the mage is pressing the action delta.Buttons, or currently in the middle of an action animation.
         if (playerHasControl)
@@ -272,44 +273,44 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
         if (playerIsActioning && hasEntityType
             && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
         {
-            player->currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
+            player->data.currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
         }
         //Scenario 2 - show walk animation:
         else if (mapControl->playerIsMoving && hasEntityType
             && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
         {
-            player->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+            player->data.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
         }
         //Scenario 3 - show idle animation:
         else if (playerHasControl)
         {
-            player->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+            player->data.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
         }
 
         //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
         bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
-            && (player->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-            && (player->currentFrameIndex == (playerRenderableData.frameCount - 1))
-            && (playerRenderableData.currentFrameTicks + delta.TimeMs.count() >= (playerRenderableData.duration));
+            && (player->data.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
+            && (player->data.currentFrameIndex == (player->renderableData.frameCount - 1))
+            && (player->renderableData.currentFrameTicks + delta.TimeMs.count() >= (player->renderableData.duration));
 
         //if the above bool is true, set the player back to their idle animation:
         if (isPlayingActionButShouldReturnControlToPlayer)
         {
-            player->currentFrameIndex = 0;
-            player->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+            player->data.currentFrameIndex = 0;
+            player->data.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
         }
 
         //if the animation changed since the start of this function, reset to the first frame and restart the timer:
-        if (previousPlayerAnimation != player->currentAnimation)
+        if (previousPlayerAnimation != player->data.currentAnimation)
         {
-            player->currentFrameIndex = 0;
-            playerRenderableData.currentFrameTicks = 0;
+            player->data.currentFrameIndex = 0;
+            player->renderableData.currentFrameTicks = 0;
         }
 
         //What scenarios call for an extra renderableData update?
-        if (mapControl->playerIsMoving || (playerRenderableData.lastTilesetId != playerRenderableData.tilesetId))
+        if (mapControl->playerIsMoving || (player->renderableData.lastTilesetId != player->renderableData.tilesetId))
         {
-            player->updateRenderableData(playerRenderableData);
+            player->UpdateRenderableData();
         }
 
         if (!playerHasControl || !playerHasHexEditorControl)
@@ -409,8 +410,20 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
         mapControl->UpdateEntities(delta);
     }
 
-    //handle scripts:
-    scriptControl->tickScripts();
+    // don't run entity scripts when hex editor is on
+    if (!hexEditor->isHexEditorOn())
+    {
+        scriptControl->tickScripts();
+
+        mapControl->OnTick(scriptControl.get());
+        if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
+
+        for (auto& entity : mapControl->GetEntities())
+        {
+            entity.OnTick(scriptControl.get());
+            if (mapControl->mapLoadId != MAGE_NO_MAP) { break; }
+        }
+    }
     commandControl->sendBufferedOutput();
 
     camera.applyEffects(delta.TimeMs.count());
@@ -422,7 +435,7 @@ void MageGameEngine::gameRender()
     if (hexEditor->isHexEditorOn())
     {
         //run hex editor if appropriate
-        hexEditor->renderHexEditor(mapControl->GetEntityDataPointer());
+        hexEditor->Render();
     }
     //otherwise be boring and normal/run mage game:
     else
@@ -439,6 +452,6 @@ void MageGameEngine::gameRender()
     //drawButtonStates(delta.Buttons);
         // drawButtonStates(inputHandler->GetButtonState());
         // drawLEDStates();
-    hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
+    hexEditor->updateHexLights();
     frameBuffer->blt();
 } 

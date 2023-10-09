@@ -41,18 +41,18 @@ enum HEX_OPS {
 class MageHexEditor
 {
 public:
-	void disableMovementUntilRJoyUpRelease()
-	{
-		disableMovement = true;
-	}
-
 	MageHexEditor(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
 		: frameBuffer(frameBuffer),
 		inputHandler(inputHandler),
 		mapControl(mapControl),
 		memOffsets(memOffsets)
 	{};
-	
+
+	void disableMovementUntilRJoyUpRelease()
+	{
+		disableMovement = true;
+	}
+
 	//returns true if hex editor is open.
 	bool isHexEditorOn();
 
@@ -82,7 +82,7 @@ public:
 
 	//this updates the lights on the badge to match the bit state
 	//of the current byte in the hex editor.
-	void updateHexLights(const uint8_t* entityDataPointer) const;
+	void updateHexLights() const;
 
 	//this updates the variables used by the hex editor when applying inputs and rendering.
 	void updateHexStateVariables(uint8_t entityCount);
@@ -92,11 +92,8 @@ public:
 
 	void applyMemRecallInputs();
 
-	//this writes the header bit of the hex editor screen.
-	void renderHexHeader(const uint8_t* entityDataPointer);
-
 	//this writes all the hex editor data to the screen.
-	void renderHexEditor(uint8_t* entityDataPointer);
+	void Render();
 
 	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
@@ -119,6 +116,9 @@ private:
 
 	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
 	uint16_t getRenderableStringLength(const char* string, uint16_t maxLength) const;
+
+	//this writes the header bit of the hex editor screen.
+	void renderHexHeader();
 
 	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };

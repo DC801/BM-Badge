@@ -45,7 +45,7 @@ struct MageEntityType
     }
 };
 
-struct MageEntity
+struct MageEntityData
 {
     char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
     // put the sheep back in the pen, rake in the lake
@@ -62,31 +62,41 @@ struct MageEntity
     uint8_t hackableStateB{ 0 };
     uint8_t hackableStateC{ 0 };
     uint8_t hackableStateD{ 0 };
+};
 
-    MageScriptState onInteract{};
-    MageScriptState onTick{};
+class MageEntity
+{
+public:
+    MageEntity() noexcept {}
+
+    MageEntity(MageEntityData&& sourceEntity) noexcept
+    : data(std::move(sourceEntity)), onInteract(data.onInteractScriptId), onTick(data.onTickScriptId) {}
+
+    MageEntityData data;
+    RenderableData renderableData;
+    MageScriptState onInteract;
+    MageScriptState onTick;
+
+    inline void SetAnimation(uint8_t animationId)
+    {
+        data.currentAnimation = animationId;
+        data.currentFrameIndex = 0;
+    }
 
     void SetName(std::string s)
     {
         for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
         {
-            name[i] = i < s.length() ? s[i] : 0;
+            data.name[i] = i < s.length() ? s[i] : 0;
         }
     }
 
-    inline bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
-
-    void setAnimation(uint8_t animationId)
-    {
-        currentAnimation = animationId;
-        currentFrameIndex = 0;
-    }
-    void updateRenderableData(RenderableData& renderableData);
-
-    
-    void OnTick(MageScriptControl* scriptControl);
     void OnInteract(MageScriptControl* scriptControl);
+    void OnTick(MageScriptControl* scriptControl);
 
+    void UpdateRenderableData();
+
+    //inline bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
 };
 
 

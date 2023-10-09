@@ -10,7 +10,6 @@
 #include "mage_script_state.h"
 
 #define SCRIPT_NAME_LENGTH 32
-#define COMMAND_STATES_COUNT 5
 
 class MageScriptControl
 {
@@ -33,24 +32,6 @@ public:
    //If the action was called by the map, the value will be MAGE_MAP_ENTITY.
    //most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
    uint8_t currentEntityId{ MAGE_MAP_ENTITY };
-
-   //these functions return the specified MageScriptState struct:
-   struct resumeStatesStruct
-   {
-      MageScriptState commandLook;
-      MageScriptState commandGo;
-      MageScriptState commandUse;
-      MageScriptState commandGet;
-      MageScriptState commandDrop;
-   } resumeStates{ };
-
-   MageScriptState* commandStates[COMMAND_STATES_COUNT] = {
-      &resumeStates.commandLook,
-      &resumeStates.commandGo,
-      &resumeStates.commandGet,
-      &resumeStates.commandDrop,
-      &resumeStates.commandUse,
-   };
 
    //typedef for the array of function pointers to script action functions:
    typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
@@ -163,7 +144,6 @@ public:
 private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<MageHexEditor> hexEditor;
-
    std::unique_ptr<MageScriptActions> scriptActions;
 
 
