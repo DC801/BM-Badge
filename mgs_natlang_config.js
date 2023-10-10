@@ -650,7 +650,7 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "goto index $action_index:bareword",
+		pattern: "goto label $action_index:bareword",
 	},
 	{
 		action: "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -1028,6 +1028,26 @@ mgs.actionDictionary = [{
 		action: "SET_LIGHTS_STATE",
 		pattern: "turn light $lights:string $enabled:boolean",
 	},
+	{
+		action: "SET_SCRIPT_PAUSE",
+		pattern: "pause entity $entity:string $script_slot:bareword",
+		values: { "expected_bool": true },
+	},
+	{
+		action: "SET_SCRIPT_PAUSE",
+		pattern: "unpause entity $entity:string $script_slot:bareword",
+		values: { "expected_bool": false },
+	},
+	{
+		action: "SET_SCRIPT_PAUSE",
+		pattern: "pause map $script_slot:bareword",
+		values: { "expected_bool": true, "entity": "%MAP%" },
+	},
+	{
+		action: "SET_SCRIPT_PAUSE",
+		pattern: "unpause map $script_slot:bareword",
+		values: { "expected_bool": false, "entity": "%MAP%" },
+	},
 ];
 
 mgs.entityPropertyMap = { // used for the procedural dictionary entries 
@@ -1247,7 +1267,7 @@ mgs.actionDictionary
 			);
 		stringVariant.pattern = stringVariant.pattern.replace(
 			"then goto ?script $success_script:string",
-			"then goto index $jump_index:bareword"
+			"then goto label $jump_index:bareword"
 			);
 		mgs.actionDictionary.push(numberVariant);
 		mgs.actionDictionary.push(stringVariant);

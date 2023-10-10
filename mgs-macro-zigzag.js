@@ -251,7 +251,7 @@ zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 				topTokens.push({
 					pos: closeParenToken.pos,
 					type: "bareword",
-					value: "index",
+					value: "label",
 					macro: "zigzag"
 				});
 				// faking labelName
@@ -283,7 +283,7 @@ zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 				tokenBatch.push({
 				pos: closeCurlyToken.pos,
 				type: "bareword",
-				value: "index",
+				value: "label",
 				macro: "zigzag"
 			});
 
@@ -308,7 +308,7 @@ zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 			topTokens.push({
 				pos: closeCurlyToken.pos,
 				type: "bareword",
-				value: "index",
+				value: "label",
 				macro: "zigzag"
 			});
 			topTokens.push(convergedLabelNameToken);
