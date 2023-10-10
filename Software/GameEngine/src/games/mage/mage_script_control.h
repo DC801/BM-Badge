@@ -31,11 +31,6 @@ struct resumeStatesStruct {
 class MageScriptControl
 {
 	private:
-		//variables for tracking suspended script states:
-		MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
-		MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
-		MageScriptState entityLookResumeStates[MAX_ENTITIES_PER_MAP];
-
 		//this will process a script based on the state of the resumeStateStruct passed to it.
 		//it should only be called from the 
 		void processScript(MageScriptState * resumeStateStruct, uint8_t mapLocalEntityId, MageScriptType scriptType);
@@ -52,6 +47,11 @@ class MageScriptControl
 		void runAction(uint32_t argumentMemoryAddress, MageScriptState * resumeStateStruct);
 
 	public:
+		//variables for tracking suspended script states:
+		MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
+		MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
+		MageScriptState entityLookResumeStates[MAX_ENTITIES_PER_MAP];
+
 		//this allows an I+C action to set the calling map or entity script to match the new script.
 		void setEntityScript(
 			uint16_t mapLocalScriptId,

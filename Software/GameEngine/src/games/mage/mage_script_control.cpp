@@ -93,6 +93,8 @@ void MageScriptControl::processScript(
 	MageScriptType scriptType
 )
 {
+	// script has been paused by another script, to be resumed by the same mechanism.
+	if(resumeStateStruct->scriptIsPaused) { return; }
 	//set the current entity to the passed value.
 	currentEntityId = mapLocalEntityId;
 	//set the current script type to the passed value.

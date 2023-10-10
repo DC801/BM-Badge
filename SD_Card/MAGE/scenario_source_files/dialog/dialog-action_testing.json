@@ -788,5 +788,14 @@
 				"Four... wait, did I skip one?"
 			]
 		}
+	],
+	"mage31-interact": [
+		{
+			"entity": "%SELF%",
+			"alignment": "BOTTOM_LEFT",
+			"messages": [
+				"Oh dang, you distracted me!\nI hope I don't lose my place\nin this circle..."
+			]
+		}
 	]
 }

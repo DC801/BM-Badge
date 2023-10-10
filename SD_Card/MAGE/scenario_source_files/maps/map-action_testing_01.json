@@ -748,12 +748,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage31-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage31-tick"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":83
                         }],
                  "rotation":0,
                  "visible":true,
@@ -881,6 +886,18 @@
                  "width":0,
                  "x":736,
                  "y":64
+                }, 
+                {
+                 "class":"",
+                 "ellipse":true,
+                 "height":50,
+                 "id":83,
+                 "name":"31",
+                 "rotation":0,
+                 "visible":true,
+                 "width":50,
+                 "x":662,
+                 "y":343
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -918,7 +935,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":81,
+ "nextobjectid":84,
  "orientation":"orthogonal",
  "properties":[
         {
