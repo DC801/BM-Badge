@@ -41,6 +41,7 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 	2. [Variable types and examples](#variable-types-and-examples)
 	3. [General types, limited values](#general-types-limited-values)
 5. [Macros](#macros)
+	1. [Labels](#labels)
 	1. [Zigzag (`if` / `else`)](#zigzag-if--else)
 	2. [`const!`](#const)
 6. [Action dictionary](#action-dictionary)
@@ -58,18 +59,16 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 ## Overview
 
-MGS Natlang is a "natural" language meant to be easy to read and write.
+MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the MGE encoder, plus QOL syntax like `if`/`else` and define-in-place dialogs.
 
-It consists of phrases that correlate to the shape of JSON required by the MGE encoder. It is not a genuine recursive language, but it is much more flexible and compact than writing the equivalent JSON.
-
-All .mgs files are turned into MGE JSON by the MGE encoder. And unlike script files and dialog files, you don't need to declare .mgs files in the game's `scenario.json`; all .mgs files inside `scenario_source_files` will be imported.
+All .mgs files are turned into MGE JSON by the MGE encoder. Unlike script files and dialog files, you don't need to declare .mgs files in the game's `scenario.json`; all .mgs files inside `scenario_source_files` will be imported.
 
 ### Syntax Features
 
 1. White space agnostic.
 	- The syntax coloring might break if you are very creative with line breaks, but it should still parse correctly.
 2. Many strings can be unquoted or quoted freely.
-	- Double or single quotes are both fine.
+	- Double (`"`) or single (`'`) quotes are both fine.
 	- Anything with a space or any unusual character *must* be wrapped in quotes.
 3. Many words are optional, and can be included either to increase logical clarity or omitted to decrease word density. E.g. the following two patterns are equivalent phrases:
 	- `goto script scriptName`
@@ -86,9 +85,7 @@ A syntax coloring grammar (tmLanguage) is in development: https://github.com/ala
 
 When you open an .mgs file, VSCode will offer marketplace extensions for it. Alternatively, search for "MageGameScript Colors" in the Visual Studio Code extensions marketplace.
 
-After installing the extension, all .mgs files you open will have syntax coloring.
-
-VSCode will update the extension automatically whenever a new version comes out.
+After installing the extension, all .mgs files you open will have syntax coloring. VSCode will update the extension automatically whenever a new version comes out.
 
 #### Sublime Text
 
@@ -184,7 +181,7 @@ settings for dialog {
 }
 ```
 
-With MGS Natlang, you can create presets for common dialog settings. As a result, the dialogs themselves can be very lightweight, making it effortless to read and write large swaths of them:
+With MGS Natlang, you can create presets for common dialog settings (see above), after which, the dialogs themselves become very lightweight:
 
 ```
 dialog exampleDialogName {
@@ -196,7 +193,7 @@ dialog exampleDialogName {
 }
 ```
 
-And since MGS Natlang is white space agnostic, it can become as compact as you want:
+Since MGS Natlang is white space agnostic, it can be as compact as you want:
 
 ```
 dialog exampleDialog2 {
@@ -223,14 +220,14 @@ settings for dialog {
 }
 show_dialog-wopr-backdoor {
   set player control to off
-  walk entity "%PLAYER%" along geometry walk_from-north over 600ms
+  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
   wait 400ms
   set player control to on
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
   }
-  set flag wopr-backdoor-found to true
+  set flag backdoor-found to true
 }
 ```
 
@@ -241,12 +238,12 @@ Now the dialog's content is no longer separated from its context. The dialog no 
 The contents (body) of each block is enclosed in a pair of matching curly braces:
 
 ```
-<BLOCK DECLARATION> { <BLOCK BODY> }
+DECLARATION { BODY }
 
 // or
 
-<BLOCK DECLARATION> {
-  <BLOCK BODY>
+DECLARATION {
+  BODY
 }
 
 // etc
@@ -284,6 +281,7 @@ Unless otherwise marked, assume all entries in the following lists are allowed i
 
 - **[script block](#script-block)**
 	- **[action](#actions)**
+	- **[label](#labels)**
 	- **[combination blocks](#combination-blocks)**
 
 ### Syntax definitions
@@ -322,7 +320,7 @@ Dialog settings are applied to dialogs in order as the parser encounters them; a
 Several choices for `TARGET`:
 
 - `(global) default(s)`
-	- Describes the default behavior for all dialogs in the same MGS Natlang file.
+	- Describes the default behavior for all dialogs in the same file.
 - `entity $string`
 	- Describes the default dialog settings for a specific entity.
 - `label $bareword`
@@ -346,14 +344,14 @@ parameters for label PLAYER {
 This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](#dialog-identifier) for [dialogs](#dialog).
 
 ```
+// with label
 dialog test {
-  PLAYER "Test dialog message" // with label
+  PLAYER "Dialog message"
 }
 
-// vs
-
+// without label
 dialog test {
-  entity "%PLAYER%" "Test dialog message" // without label
+  entity "%PLAYER%" "Dialog message"
 }
 ```
 
@@ -413,13 +411,13 @@ If the word `script` is absent, any [string](#string) (other than `dialog`, `set
 
 These blocks must occur on the root level.
 
-**Block contents**: any number of [actions](#actions) or [combination blocks](#combination-blocks) in the order they are to be executed in-game. (See the [action dictionary](#action-dictionary) far below for detailed information on each action.)
+**Block contents**: any number of [actions](#actions), [labels](#labels), or [combination blocks](#combination-blocks) in the order they are to be executed in-game. (See the [action dictionary](#action-dictionary) far below for detailed information on each action.)
 
 ### Combination blocks
 
 Inside a [script block](#script-block), some actions can be **combined** with their associated definition block. In other words, you can "call" a [dialog](#dialog) or [serial dialog](#serial-dialog) and define it in place.
 
-For combination blocks of all types, a dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be invisible. Omitting dialog names is recommended to keep things clean.
+For combination blocks of all types, a dialog name ([string](#string)) is optional. Omitting dialog names is recommended to keep things clean.
 
 #### Show dialog block
 
@@ -470,11 +468,11 @@ The three options:
 	- The bareword identifier refers to a dialog label within a [dialog settings target block](#dialog-settings-target-block).
 		- If no dialog label is found, the bareword value is assumed to be an entity name instead. This usage also provides the entity name as an `entity` [parameter](#dialog-parameter) for the dialog.
 		- Entity names with spaces or other special characters are not eligible for this usage.
-	- NOTE: A [quoted string](#quoted-string) is NOT allowed here! This string *must* be a [bareword](#bareword)!
+	- REMINDER: A [quoted string](#quoted-string) is NOT allowed here! This string *must* be a [bareword](#bareword)!
 2. `entity $string`
 	- [string](#string): an entity's given name (i.e. the entity's name within the Tiled map).
 	- This usage also provides the entity name as an `entity` [parameter](#dialog-parameter) for the dialog.
-	- `%PLAYER%` and `%SELF%` must use this pattern (and not the [bareword](#bareword) pattern) because they contain special characters. As this can be cumbersome, it's probably best to set up a dialog settings label for them so you can use a bareword as an identifier instead.
+	- The entities `%PLAYER%` and `%SELF%` must use this pattern (and not the [bareword](#bareword) pattern) because they contain special characters. As this can be cumbersome, it's probably best to set up a dialog settings label for them so you can use a bareword as an identifier instead.
 3. `name $string`
 	- [string](#string): the dialog's display name.
 	- This usage also provides a `name` [parameter](#dialog-parameter) for the dialog.
@@ -488,14 +486,14 @@ Syntax for each parameter:
 
 - `entity $string`
 	- [String](#string): the "given name" of the entity (i.e. the entity's name on the Tiled map). (Wrapping this name in `%`s is unnecessary and will in fact confuse the MGE encoder.)
-		- Can be `%PLAYER%` or `%SELF%`, however.
-	- A dialog can inherit a `name` and a `portrait` if given an `entity` parameter. (The entity must be a "character entity" for a portrait to be inherited.)
+		- Can be `%PLAYER%` or `%SELF%`.
+	- A dialog can inherit a `name` and a `portrait` if given an `entity` parameter.
 	- The inherited `name` is a relative reference; the dialog display name will be whatever that entity's name is at that moment.
 - `name $string`
 	- [String](#string): a fixed string of no more than 12 ASCII characters. For a relative name instead, wrap a specific entity's name in `%`s.
 		- Can be `%PLAYER%` or `%SELF%`.
 	- Overrides names inherited via the `entity` parameter.
-	- If this string is empty (`name ""`), the dialog label will be absent entirely.
+	- If this string is empty (`name ""`), the dialog label will be absent entirely. (Sometimes you want this!)
 - `portrait $string`
 	- [String](#string): the name of a MGE portrait.
 	- Overrides portraits inherited via the `entity` parameter.
@@ -526,7 +524,7 @@ Any [quoted string](#quoted-string).
 	- Words wrapped in `%`s will count as 12 chars when the dialog message is auto-wrapped.
 - Insert the current value of a MGE variable by wrapping its name in `$`s.
 	- Words wrapped in `$`s will count as 5 chars when the dialog message is auto-wrapped.
-- Some characters must be escaped in the message body, such as double quote: `\"`
+- Some characters must be escaped in the message body, such as double quote (`\"`) (for messages wrapped in double quotes).
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 	- `%` and `$` are printable characters unless used in pairs within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
@@ -539,11 +537,11 @@ Any [quoted string](#quoted-string).
 ```
 
 - You may have up to 4 dialog options per dialog.
-- As each of these "branches" results in a script `goto`, no dialog messages afterward will be seen. Therefore, any dialog options must come last within the dialog.
+- As each of these "branches" results in a script jump, no dialog messages afterward will be seen. Therefore, dialog options must come last within the dialog.
 - The **label** is what will be shown to the player. As the cursor (approximated with `>`) takes up some room, assume you will only have 39 characters instead of the usual 42.
 	- The label behaves like dialog messages in terms of inserting variables (with `$` or `%`), escaped characters, etc.
 	- **Must** be wrapped in [quotes](#quoted-string).
-- In the MGE, dialog options are displayed underneath the final dialog message. Therefore, the last dialog message before any options should consist of a single line of no more than 42 characters.
+- In the MGE, dialog options are displayed underneath the final dialog message. Therefore, final dialog message (before any options) should consist of a single line of no more than 42 characters.
 - The words `goto` and `script` are optional. Any [string](#string) given after the `:` (other than `goto` and `script`) is assumed to be the script name.
 
 #### Example dialogs
@@ -578,7 +576,7 @@ Note: white space doesn't matter, so the first option above could very well have
 
 ### Serial dialog
 
-Serial dialogs contain text meant to be shown via the serial console. They are called serial "dialogs" because they are similar to [dialogs](#dialog) in many respects, but they are made up of plaintext alone, and needn't be used for dialog specifically.
+Serial dialogs contain text meant to be shown via the serial console. They are called serial "dialogs" because they are similar to [dialogs](#dialog) in many respects, but they are made up of plaintext alone and needn't be used for dialog specifically.
 
 Found within a [serial dialog block](#serial-dialog-block).
 
@@ -588,7 +586,7 @@ Found within a [serial dialog block](#serial-dialog-block).
 2. [Serial dialog message](#serial-dialog-message): 1+
 3. [Serial dialog option](#serial-dialog-option): 0+
 
-NOTE: unlike with conventional [dialogs](#dialog), serial dialog blocks cannot contain more than one serial dialog. In other words, inside a serial dialog block, no serial parameters can be given after a serial message, and nothing can come after a serial option (except more options).
+NOTE: unlike with conventional [dialogs](#dialog), serial dialog blocks cannot contain more than one serial dialog. In other words, inside a serial dialog block, no parameters can be given after a serial message, and nothing can come after a serial option (except more options).
 
 #### Serial dialog parameter
 
@@ -600,9 +598,9 @@ NOTE: unlike with conventional [dialogs](#dialog), serial dialog blocks cannot c
 
 Any [quoted string](#quoted-string).
 
-- Each message is printed on its own line.
 - To maximize compatibility, best to limit these to ASCII characters.
-- Some characters must be escaped in the message body, such as double quote: `\"`
+- Each message is printed on its own line.
+- Some characters must be escaped in the message body, such as double quote (`\"`) (depending on the quotes you're using to wrap these).
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 - Word processor "smart" characters such as ellipses (…), emdashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
@@ -620,8 +618,8 @@ Two choices:
 2. Free response:
 	- `_ $label:quotedString : (goto) (script) $script:string`
 	- The **label** indicates what the player must type for the game to jump to the indicated script.
-	- There is no explicit prompt for these options, but upon reaching the free response portion of the serial dialog block, the player can type whatever they want into the serial console.
-	- An invalid response will fall through, i.e. the script will continue executing actions further below the serial dialog containing the free response option option(s). Therefore, only a valid response will result in a script jump.
+	- There is no explicit prompt for these options, but upon reaching the free response portion of the serial dialog, the player can type whatever they want into the serial console.
+	- An invalid response will fall through, i.e. the script will continue executing actions further below. Therefore, only a *valid* response will result in a script jump.
 	- The user's response is case insensitive. (The label `"CAT"` will match the user input of `cat`.)
 
 Behaviors in common between the two:
@@ -814,7 +812,7 @@ Number + `x`
 
 - e.g. `1x` or `10x`
 - The [bareword](#bareword) `once`, `twice`, and `thrice` also count as `quantity`.
-- Note that the `x` comes after the number, not before.
+- Note that the `x` comes after the number, not before!
 
 #### Number
 
@@ -957,7 +955,7 @@ For actions that involve the badge lights.
 - `LED_HAX` (capacitive touch button on the PCB)
 - `LED_USB`
 - `LED_SD`
-- `LED_ALL`
+- `LED_ALL` (will turn on/off *all* the lights)
 
 #### Operations
 
@@ -970,6 +968,7 @@ Used with "mutate variable" actions.
 - `/` or `DIV` — integer division
 - `%` or `MOD` — modulo (remainder)
 - `?` or `RNG` — sets a variable to a random value between 0 and the value given minus one
+	- Seriously, don't forget to subtract one! If you want a random number between `0` and `9`, you want to put `RNG 10`!
 
 #### Entity animations
 
@@ -980,95 +979,42 @@ The int value for entity animations:
 - `2` = action animation
 - `3`+ = any subsequent animations the entity might have
 
-## Macros
+Note that the modulo of this value is used within the engine. E.g. if your script calls for animation `3`, but the entity only has three actions (`0`-`2`), the game will play animation `0`.
 
-Macros are run after the lexer breaks the original file into tokens but before the tokens are parsed and converted into JSON.
+## Advanced syntax
 
-Macros are syntax-agnostic, find-and-replace type processes, but they nonetheless offer a great deal of utility.
+### Labels
+
+A label is a destination for conditional jumps inside the script that is currently running. A label linker converts these into absolute index jumps after `COPY_SCRIPT` is expanded but before the JSON becomes encoded into binary data.
+
+The syntax is a bareword followed by a colon (`:`).
+
+```
+exampleScript {
+  show serial dialog { "One..." }
+  show serial dialog { "Two..." }
+  goto label four
+  show serial dialog { "Three..." }
+  four:
+  show serial dialog { "Four... wait, did I skip one?" }
+}
+```
+
+The above will print:
+
+```
+One...
+Two...
+Four... wait, did I skip one?
+```
 
 ### Zigzag (`if` / `else`)
 
-The pattern `if`...`then goto` is used for quite a lot of script actions, but this is verbose and clumsy because every single optional or branching script behavior has to be contained in an *entirely separate script*, as does any shared behavior that follows.
+The basic actions that involve conditional checks will trigger either a jump to an entirely new script or a jump to an arbitrary position within the same script. (Note: this doesn't include things like multiple choice options within dialogs; those result in script jumps only.)
 
-For a simple case, wherein we check a condition to determine whether to do some brief, optional behavior, we need three scripts:
+MGS Natlang's "zigzag" macro expands standard `if`/`else` language syntax into these `if`...`then goto` branching actions using "goto [label](#labels)" actions and a label linker. This `if`/`else` syntax is more compact and is easier to read.
 
-```
-load_map-castle-1 {
-  if flag saw-castle is false then goto script load_map-castle-1a
-  goto script load_map-castle-2
-}
-
-load_map-castle-1a {
-  show dialog {
-    PLAYER "Whoa! Look at the size of it!"
-  }
-  set flag saw-castle to true
-  goto script load_map-castle-2
-}
-
-load_map-castle-2 {
-  show dialog {
-    Guard "State your name!"
-  }
-}
-```
-
-This gets tiresome when a map's `on_load` script may need a dozen or more of these optional behaviors back-to-back, or when an entity's `on_interact` script branches three or more layers deep.
-
-Instead, we can use an abstracted `if` / `else` syntax, which this macro will expand into isolated scripts automatically.
-
-Thanks to the zigzag macro, the above scripts could look like this instead:
-
-```
-load_map-castle {
-  if (flag saw-castle is false) {
-    show dialog {
-        PLAYER "Whoa! Look at the size of it!"
-      }
-    set flag saw-castle to true
-  }
-  show dialog {
-    Guard "State your name!"
-  }
-}
-```
-
-The zigzag macro will take this much-shorter script and expand it to resemble the three scripts in the first example, giving each expanded script a name derived from the original.
-
-*Any* action with `if`...`then goto` syntax can use this zigzag syntax instead.
-
-Note that the actions `RUN_SCRIPT` (`goto script $string`) and `LOAD_MAP` (`load map $string`) will cause the current script slot to jump to a different script. In such cases, any in-progress zigzags will be aborted.
-
-#### Consequences and drawbacks
-
-This macro does not understand MGS Natlang syntax at all, and moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
-
-Importantly, this abstracted syntax obscures the fact that script jumps are happening, so scripts using zigzags might need special handling:
-
-- Any piece of script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference, and zigzagging script names (after the first) are procedurally generated.
-- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will be copied.
-- For `on_interact` scripts that must always start from the top on each attempt and for `on_tick` scripts that must loop indefinitely, you will need to **reset** the script as the very last action if there is **any** zigzagging involved.
-	- IMPORTANT: Do not do this with a `goto` (`RUN_SCRIPT`) or it will result in an infinite loop. Instead, manually set the `on_interact` or `on_tick` to the name of original script. This allows the script to finish its "turn" and hand control to other game logic, while still allowing it to start from the correct script when its turn comes again.
-
-Script reset example:
-
-```
-example {
-  if (flag bob-met is true) {
-    show dialog { SELF "I remember you." }
-  } else {
-    show dialog { SELF "Nice to meet you!" }
-    set flag bob-met to true
-  }
-
-  show dialog { SELF "How's it going?" }
-
-  // reset here:
-  set entity Bob interact_script to example
-}
-```
-
-If you don't reset in this manner, upon interacting with Bob a second time, he will only say "How's it going?" until the map is reloaded.
+*Any* action with `if`...`then goto` syntax can use this "zigzag" syntax instead.
 
 #### Syntax
 
@@ -1087,7 +1033,7 @@ scriptName {
 ```
 
 - The `if` **condition** is wrapped with parentheses, and the `if` **body** is wrapped with curly braces.
-- The `if` body may contain additional zigzags.
+- The `if` body may contain additional `if`s.
 - Normal actions can occur before and after the `if`.
 - Actions that occur after the zigzag will happen regardless of whether the `if` condition is met.
 
@@ -1210,7 +1156,7 @@ In addition, this macro only captures single tokens; you cannot use a const to r
 
 These dictionary entries use the default JSON action parameter names, e.g. `entity` for an entity's name (syntax: `entity $entity:string`).
 
-Some of these patterns may also have some hidden parameters built in to the phrasing, such as "is" and "is not" incorporating the JSON action parameter `expected_bool`. These will be noted when they occur.
+Some of these patterns may also have some hidden parameters baked in to the phrasing, such as "is" and "is not" incorporating the JSON action parameter `expected_bool`. These will be noted when they occur.
 
 As a reminder, words in parentheses are optional. For example, the dictionary pattern:
 
@@ -1224,3 +1170,7 @@ will be satisfied by either of the following:
 set entity "Entity Name" tick_script to scriptName
 set entity "Entity Name" tick_script scriptName
 ```
+
+Misc tips:
+
+- Entity names can be changed in-game, but when scripting, each entity must always be referred to by the name they were given within Tiled.
