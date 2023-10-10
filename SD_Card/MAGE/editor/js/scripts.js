@@ -1288,6 +1288,7 @@ var preProcessScript = function(
 ) {
 	var result = script;
 	var read = script;
+	var copyScriptCount = 0; // For linker
 	while (detectCopyScript(read)) {
 		result = [];
 		read.forEach(function (action) {
@@ -1313,6 +1314,73 @@ var preProcessScript = function(
 					});
 				}
 				var copiedScript = JSON.parse(copiedScriptSource);
+
+				// Linker things!
+
+				// This number will be unique each time COPY_SCRIPT is evaluated, preventing label collisions
+				copyScriptCount += 1;
+				var safetyPrefix = `COPY${copyScriptCount} `; // should become "COPY4 LABEL 72" or whatever
+
+				// Make the hardcoded index jumps into string labels
+				var destinationMap = {}; // The action indices and what their label will be
+				var destinationCount = 0; // To make unique labels
+				var getOrMakeLabel = function (index) {
+					if (destinationMap[index] === undefined) {
+						destinationCount += 1;
+						destinationMap[index] = `AUTOLABEL ${destinationCount}`;
+					}
+					return destinationMap[index];
+				}
+				copiedScript.forEach(function (entry) {
+					if (
+						entry.action.includes("CHECK_")
+						&& entry.jump_index !== undefined
+						&& typeof entry.jump_index === "number"
+					) {
+						entry.jump_index = getOrMakeLabel(entry.jump_index);
+					} else if (
+						entry.action === "GOTO_ACTION_INDEX"
+						&& entry.action_index !== undefined
+						&& typeof entry.action_index === "number"
+					) {
+						entry.action_index = getOrMakeLabel(entry.action_index);
+					}
+				});
+				var destinationIndicies = Object.keys(destinationMap)
+					.map(function (n) { return n * 1; })
+					.sort(function (a, b) { return b - a; }); // descending order
+				destinationIndicies.forEach(function (insertionIndex) {
+					copiedScript.splice(
+						insertionIndex,
+						0,
+						{
+							action: "LABEL",
+							value: destinationMap[insertionIndex],
+						}
+					)
+				});
+				// Prefix the (now-all-string) labels
+				copiedScript = copiedScript.map(function (entry) {
+					var property;
+					if (
+						entry.action.includes("CHECK_")
+						&& entry.jump_index !== undefined
+					) {
+						property = "jump_index";
+					} else if (entry.action == "GOTO_ACTION_INDEX") {
+						property = "action_index";
+					} else if (entry.action == "LABEL") {
+						property = "value";
+					}
+					if ( property
+						&& typeof entry[property] === "string"
+					) {
+						entry[property] = safetyPrefix + entry[property];
+					}
+					return entry;
+				});
+				// Linker helper done!
+
 				result = result.concat(copiedScript);
 			} else {
 				result.push(action);
