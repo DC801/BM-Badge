@@ -404,6 +404,11 @@ var actionFieldsMap = {
 	GOTO_ACTION_INDEX: [
 		{propertyName: 'action_index', size: 2},
 	],
+	SET_SCRIPT_PAUSE: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'script_slot', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
 };
 
 var actionNames = [
@@ -503,6 +508,7 @@ var actionNames = [
 	'SET_LIGHTS_CONTROL',
 	'SET_LIGHTS_STATE',
 	'GOTO_ACTION_INDEX',
+	'SET_SCRIPT_PAUSE',
 ];
 
 var specialKeywordsEnum = {
@@ -1139,6 +1145,32 @@ var getBleFlagIdFromAction = function () {
 	throw new Error('getBleFlagIdFromAction is not implemented yet!');
 };
 
+var scriptSlotMap = {
+	ON_LOAD: 0,
+	ON_TICK: 1,
+	ON_INTERACT: 2,
+	ON_LOOK: 3,
+	ON_COMMAND: 4,
+};
+var getScriptSlotFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var key = action[propertyName];
+	if (key === undefined) {
+		throw new Error(`${action.action} was given value "${key}", but requires a value for "${propertyName}"`);
+	}
+	var value = scriptSlotMap[key.toLocaleUpperCase()];
+	if (value === undefined) {
+		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(scriptSlotMap)
+		}`);
+	}
+	return value;
+};
 
 var actionPropertyNameToHandlerMap = {
 	duration: getNumberFromAction,
@@ -1192,6 +1224,7 @@ var actionPropertyNameToHandlerMap = {
 	serial_dialog: getSerialDialogIdFromAction,
 	item_name: getItemIdFromAction,
 	ble_flag: getBleFlagIdFromAction,
+	script_slot: getScriptSlotFromAction,
 };
 
 var sizeHandlerMap = [

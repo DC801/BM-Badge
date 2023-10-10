@@ -2149,6 +2149,37 @@
 			"dialog": "mage30-interact-4"
 		}
 	],
+	"mage31-tick": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "Mage 31",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 2400
+		}
+	],
+	"mage31-interact": [
+		{
+			"action": "SET_SCRIPT_PAUSE",
+			"entity": "%SELF%",
+			"script_slot": "on_tick",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage31-interact"
+		},
+		{
+			"action": "SET_SCRIPT_PAUSE",
+			"entity": "%SELF%",
+			"script_slot": "on_tick",
+			"bool_value": false
+		}
+	],
 	"debug-go-space": [
 		{
 			"action": "SHOW_SERIAL_DIALOG",

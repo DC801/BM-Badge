@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 9
+#define ENGINE_VERSION 10
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
@@ -161,6 +161,7 @@ typedef enum : uint8_t{
 typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
 	bool scriptIsRunning;
+	bool scriptIsPaused;
 	bool isGlobalExecutionScope;
 	//the script Id to resume, scope determined by isGlobalExecutionScope
 	// - if false, should be treated as mapLocalScriptId

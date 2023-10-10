@@ -11,7 +11,6 @@ extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
 extern MageCommandControl *MageCommand;
-extern MageScriptControl *MageScript;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
 
@@ -2590,6 +2589,76 @@ void action_goto_action_index(uint8_t * args, MageScriptState * resumeStateStruc
 	resumeStateStruct->actionOffset = argStruct->action_index - 1;
 }
 
+void action_set_script_pause(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t entityId;
+		MageScriptType script_slot;
+		uint8_t bool_value;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSerialDialogOpen;
+	auto *argStruct = (ActionCheckSerialDialogOpen*)args;
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		MageScript->currentEntityId
+	);
+	MageScriptState* resumeState = NULL;
+	switch (argStruct->script_slot) {
+		case MageScriptType::ON_LOAD: {
+			resumeState = &MageScript->resumeStates.mapLoad;
+			break;
+		}
+		case MageScriptType::ON_TICK: {
+			if (entityIndex == NO_PLAYER) {
+				resumeState = &MageScript->resumeStates.mapTick;
+			} else {
+				resumeState = &MageScript->entityTickResumeStates[entityIndex];
+			}
+			break;
+		}
+		case MageScriptType::ON_INTERACT: {
+			if (entityIndex != NO_PLAYER) {
+				resumeState = &MageScript->entityInteractResumeStates[entityIndex];
+			}
+			break;
+		}
+		case MageScriptType::ON_LOOK: {
+			if (entityIndex != NO_PLAYER) {
+				resumeState = &MageScript->entityLookResumeStates[entityIndex];
+			}
+			break;
+		}
+		case MageScriptType::ON_COMMAND: {
+			resumeState = &MageScript->resumeStates.serial;
+			break;
+		}
+		default: {
+			std::string errorString = (
+				"Invalid script_slot used in:\n"
+				"action_set_script_pause\n"
+			);
+			errorString += "Invalid value was:\n";
+			errorString += (uint8_t)argStruct->script_slot;
+			ENGINE_PANIC(errorString.c_str());
+		}
+	}
+	if (resumeState == NULL) {
+		std::string errorString = (
+			"Invalid script_slot + entity_id in:\n"
+			"action_set_script_pause\n"
+		);
+		errorString += "script_slot was:\n";
+		errorString += (uint8_t)argStruct->script_slot;
+		errorString += "entity_id was:\n";
+		errorString += argStruct->entityId;
+		ENGINE_PANIC(errorString.c_str());
+	}
+	resumeState->scriptIsPaused = !!argStruct->bool_value;
+}
+
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
@@ -2688,6 +2757,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_set_lights_control,
 	&action_set_lights_state,
 	&action_goto_action_index,
+	&action_set_script_pause,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

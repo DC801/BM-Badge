@@ -120,6 +120,7 @@ typedef enum : uint8_t {
 	SET_LIGHTS_CONTROL,
 	SET_LIGHTS_STATE,
 	GOTO_ACTION_INDEX,
+	SET_SCRIPT_PAUSE,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -337,6 +338,8 @@ void action_set_lights_control(uint8_t * args, MageScriptState * resumeStateStru
 void action_set_lights_state(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_goto_action_index(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_script_pause(uint8_t * args, MageScriptState * resumeStateStruct);
 
 //typedef for the array of function pointers to script action functions:
 typedef void(*ActionFunctionPointer)(uint8_t * args, MageScriptState * resumeStateStruct);
