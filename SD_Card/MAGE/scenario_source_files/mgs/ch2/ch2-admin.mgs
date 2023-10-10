@@ -13,7 +13,6 @@ const! (
 )
 
 ch2-count-flags {
-	set flag ch2-storyflags-tallied to false
 	mutate ch2-storyflags-tally = 0
 	// normal
 	if (flag ch2-installed-heatsink is true) {
@@ -49,8 +48,6 @@ ch2-count-flags {
 	if (flag ch2-installed-mainframeos is true) {
 		mutate ch2-storyflags-tally + 1
 	}
-	set flag ch2-storyflags-tallied to true
-	set entity "%SELF%" tick_script to null_script
 }
 
 ch2-interact-mainframe {
@@ -185,14 +182,10 @@ ch2-interact-mainframe {
 		show dialog {
 			PLAYER "That's all for now."
 		}
-		set entity "%PLAYER%" tick_script to ch2-count-flags
-		set entity "%SELF%" tick_script to ch2-count-flags-wait
+		copy ch2-count-flags
+		set entity "%SELF%" tick_script to ch2-count-flags-done
 	}
 	set entity "%SELF%" interact_script to ch2-interact-mainframe
-}
-ch2-count-flags-wait {
-	if flag ch2-storyflags-tallied is true
-		then goto ch2-count-flags-done
 }
 
 ch2-count-flags-done {
