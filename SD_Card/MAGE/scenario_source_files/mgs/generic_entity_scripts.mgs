@@ -159,3 +159,39 @@ yeet {
 	set entity "%SELF%" name to " "
 	goto null_script
 }
+
+capture_self_direction {
+	if (entity "%SELF%" direction is north) {
+		mutate tempvar = 0
+	} else if (entity "%SELF%" direction is east) {
+		mutate tempvar = 1
+	} else if (entity "%SELF%" direction is south) {
+		mutate tempvar = 2
+	} else if (entity "%SELF%" direction is west) {
+		mutate tempvar = 3
+	}
+}
+restore_self_direction {
+	if (variable tempvar is 0) {
+		turn entity "%SELF%" north
+	} else if (variable tempvar is 1) {
+		turn entity "%SELF%" east
+	} else if (variable tempvar is 2) {
+		turn entity "%SELF%" south
+	} else if (variable tempvar is 3) {
+		turn entity "%SELF%" west
+	}
+}
+
+pause-walk-and-face-player {
+	copy entity "%SELF%" current_animation into variable tempvar2
+	set entity "%SELF%" current_animation to 0
+	pause entity "%SELF%" on_tick
+	copy capture_self_direction
+	copy face-player
+}
+unface-player-and-resume-walk {
+	copy entity "%SELF%" current_animation from variable tempvar2
+	unpause entity "%SELF%" on_tick
+	copy restore_self_direction
+}

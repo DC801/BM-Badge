@@ -260,7 +260,7 @@ on_tick-credits-shared-end {
 on_tick-credits {
 	copy on_tick-credits-shared-begin
 	wait 1200ms
-	set entity Goat animation to 1
+	set entity Goat current_animation to 1
 	walk entity cameraman along geometry credits_camera over 60000ms
 	wait 600ms
 	play entity Cat animation 2 once
@@ -272,7 +272,7 @@ on_tick-credits {
 
 on_tick-credits2 { // chapter 2 goes here
 	copy on_tick-credits-shared-begin
-	set entity Goat animation to 1
+	set entity Goat current_animation to 1
 	wait 1200ms
 	walk entity cameraman along geometry credits_camera over 60000ms
 	wait 600ms

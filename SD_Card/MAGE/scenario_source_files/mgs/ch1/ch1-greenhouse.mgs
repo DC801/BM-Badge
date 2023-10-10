@@ -52,7 +52,7 @@ ch1-ethernettle-restore {
 	set entity EtherNettle6 secondary_id to 6
 	set entity EtherNettle7 secondary_id to 5
 	set entity EtherNettle8 secondary_id to 4
-	set entity Modem animation to 4 // modem working animation
+	set entity Modem current_animation to 4 // modem working animation
 }
 
 show_dialog-ethernet {
@@ -183,7 +183,7 @@ ch1-greenhouse-modem-turning-on-cutscene {
 	wait 1500ms
 	turn entity "%SELF%" toward entity Modem
 	wait 1200ms
-	set entity Modem animation to 1
+	set entity Modem current_animation to 1
 	wait 1400ms
 	show dialog {
 		SELF alignment TOP_LEFT "Oh! The lights!"
@@ -195,11 +195,11 @@ ch1-greenhouse-modem-turning-on-cutscene {
 	turn entity "%PLAYER%" toward entity Modem
 	turn entity "%SELF%" toward entity Modem
 	wait 1500ms
-	set entity Modem animation to 2
+	set entity Modem current_animation to 2
 	wait 1400ms
-	set entity Modem animation to 3
+	set entity Modem current_animation to 3
 	wait 1700ms
-	set entity Modem animation to 4
+	set entity Modem current_animation to 4
 	wait 900ms
 	pan camera to entity "%PLAYER%" over 1400ms
 	wait 400ms
@@ -254,7 +254,7 @@ ch1-debug-ethernettle-no {
 }
 ch1-debug-ethernettle {
 	copy script ch1-ethernettle-restore
-	set entity Modem animation to 0 // the modem still won't until you speak to Trekkie
+	set entity Modem current_animation to 0 // the modem still won't until you speak to Trekkie
 	copy script face-player
 	show dialog { SELF "Ether Nettle restored." }
 	set entity "%SELF%" interact_script to debug-ethernet-puzzle-q

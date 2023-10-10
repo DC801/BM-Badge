@@ -184,7 +184,7 @@ watch-baker {
 // Bob's club
 begin-flail {
 	play entity "Strong Bad" animation 3 once
-	set entity "Strong Bad" animation to 5
+	set entity "Strong Bad" current_animation to 5
 }
 end-flail {
 	play entity "Strong Bad" animation 4 once

@@ -1031,22 +1031,22 @@ mgs.actionDictionary = [{
 	{
 		action: "SET_SCRIPT_PAUSE",
 		pattern: "pause entity $entity:string $script_slot:bareword",
-		values: { "expected_bool": true },
+		values: { "bool_value": true },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
 		pattern: "unpause entity $entity:string $script_slot:bareword",
-		values: { "expected_bool": false },
+		values: { "bool_value": false },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
 		pattern: "pause map $script_slot:bareword",
-		values: { "expected_bool": true, "entity": "%MAP%" },
+		values: { "bool_value": true, "entity": "%MAP%" },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
 		pattern: "unpause map $script_slot:bareword",
-		values: { "expected_bool": false, "entity": "%MAP%" },
+		values: { "bool_value": false, "entity": "%MAP%" },
 	},
 ];
 
@@ -1112,7 +1112,7 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	CHECK_ENTITY_CURRENT_ANIMATION: {
 		actionProperty: "expected_byte",
-		natLangProperties: "animation",
+		natLangProperties: "current_animation",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_CURRENT_FRAME: {
@@ -1191,7 +1191,7 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	SET_ENTITY_CURRENT_ANIMATION: {
 		actionProperty: "byte_value",
-		natLangProperties: "animation",
+		natLangProperties: "current_animation",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_CURRENT_FRAME: {

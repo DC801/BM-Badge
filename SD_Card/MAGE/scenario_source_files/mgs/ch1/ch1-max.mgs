@@ -63,7 +63,7 @@ on_tick-max-catwatch {
 	set entity Maru tick_script to face-player
 	set entity "B. Murray" tick_script to face-player
 	set entity Deuteronomy tick_script to face-player
-	if entity "%PLAYER%" animation is 2 then goto on_tick-max-thumbwatch
+	if entity "%PLAYER%" current_animation is 2 then goto on_tick-max-thumbwatch
 }
 on_tick-max-thumbwatch {
 	if entity "%PLAYER%" is inside geometry catwatch-zone then goto send-cats-to-work
@@ -81,7 +81,7 @@ send-cats-to-work {
 	if entity "B. Murray" is not inside geometry bmurray-spot then goto show_dialog-max-crewmissing
 	turn entity "Max Swagger" toward entity "%PLAYER%"
 	play entity "Max Swagger" animation 3 once
-	set entity "Max Swagger" animation to 4
+	set entity "Max Swagger" current_animation to 4
 	wait 500ms
 	show dialog {
 		entity "Max Swagger"
@@ -105,7 +105,7 @@ send-cats-to-work {
 	set player control to on
 	set flag storyflag-catwork to true
 	play entity "Max Swagger" animation 5 once
-	set entity "Max Swagger" animation to 0
+	set entity "Max Swagger" current_animation to 0
 	copy calculate-hint-tracking-series
 	if (variable hint-tracking-check is 6) {
 		copy set-hint-none

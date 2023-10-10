@@ -1682,7 +1682,7 @@
 				"byte_value": 0
 			},
 			"natlang": [
-				"set entity \"Entity Name\" animation to 0",
+				"set entity \"Entity Name\" current_animation to 0",
 				"set entity \"Entity Name\" animation 0"
 			]
 		},

@@ -32,7 +32,7 @@ on_load-oldcouplehouse {
 }
 make-delmar-man {
 	set entity Delmar type to old_man
-	set entity Delmar animation to 3
+	set entity Delmar current_animation to 3
 	set entity Delmar tick_script to on_tick-delmar-blab-nonman-watch
 }
 
@@ -258,14 +258,14 @@ show_dialog-bea-part2 {
 /* --------------- blab and unblab --------------- */
 
 delmar-blab {
-	set entity Delmar animation to 3
+	set entity Delmar current_animation to 3
 	set entity Delmar tick_script to on_tick-delmar-blab-nonman-watch
 }
 on_tick-delmar-blab-nonman-watch {
 	if entity Delmar type is not old_man then goto delmar-unblab
 }
 delmar-unblab {
-	set entity Delmar animation to 0
+	set entity Delmar current_animation to 0
 	set entity Delmar tick_script to on_tick-delmar-blab-man-watch
 }
 on_tick-delmar-blab-man-watch {

@@ -222,14 +222,14 @@ settings for dialog {
 }
 show_dialog-wopr-backdoor {
   set player control to off
-  walk entity "%PLAYER%" along geometry walk_from-north over 600ms
+  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
   wait 400ms
   set player control to on
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
   }
-  set flag wopr-backdoor-found to true
+  set flag backdoor-found to true
 }
 ```
 
@@ -1306,7 +1306,7 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [PLAY_ENTITY_ANIMATION](#play_entity_animation)
 	- `play entity "Entity Name" animation 3 twice`
 - [SET_ENTITY_CURRENT_ANIMATION](#set_entity_current_animation)
-	- `set entity "Entity Name" animation to 0`
+	- `set entity "Entity Name" current_animation to 0`
 - [SET_ENTITY_CURRENT_FRAME](#set_entity_current_frame)
 	- `set entity "Entity Name" animation_frame to 0`
 - [SET_ENTITY_DIRECTION](#set_entity_direction)
@@ -1408,8 +1408,8 @@ The example syntax in the following entries is to be inserted into the "conditio
 	- `entity "Entity Name" primary_id_type is 2`
 	- `entity "Entity Name" primary_id_type is not 2`
 - [CHECK_ENTITY_CURRENT_ANIMATION](#check_entity_current_animation)
-	- `entity "Entity Name" animation is 2`
-	- `entity "Entity Name" animation is not 2`
+	- `entity "Entity Name" current_animation is 2`
+	- `entity "Entity Name" current_animation is not 2`
 - [CHECK_ENTITY_CURRENT_FRAME](#check_entity_current_frame)
 	- `entity "Entity Name" animation_frame is 2`
 	- `entity "Entity Name" animation_frame is not 2`
@@ -2014,23 +2014,23 @@ Map variant: Script slots for these are `on_load`, `on_tick`, and `on_command`.
 
 ```
 pause entity $entity:string $script_slot:bareword
-	// expected_bool: true
+	// bool_value: true
 ```
 
 ```
 unpause entity $entity:string $script_slot:bareword
-	// expected_bool: false
+	// bool_value: false
 ```
 
 ```
 pause map $script_slot:bareword
-	// expected_bool: true
+	// bool_value: true
 	// entity: %MAP%
 ```
 
 ```
 unpause map $script_slot:bareword
-	// expected_bool: false
+	// bool_value: false
 	// entity: %MAP%
 ```
 
@@ -2132,10 +2132,10 @@ If an entity is compelled to move around on the map, it will abort this animatio
 See [entity animations](#entity-animations) for what numbers correspond to which animations.
 
 ```
-set entity $entity:string animation (to) $byte_value:number
+set entity $entity:string current_animation (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" animation to 0`
+Example: `set entity "Entity Name" current_animation to 0`
 
 #### SET_ENTITY_CURRENT_FRAME
 
@@ -3018,49 +3018,49 @@ Examples:
 Checks the id of the entity's current `animation`. (See [entity animations](#entity-animations) for what numbers correspond to which animations.)
 
 ```
-if entity $entity:string animation is $expected_byte:number
+if entity $entity:string current_animation is $expected_byte:number
 	then goto (script) $success_script:string
 	// expected_bool: true
 ```
 
 ```
-if entity $entity:string animation is not $expected_byte:number
+if entity $entity:string current_animation is not $expected_byte:number
 	then goto (script) $success_script:string
 	// expected_bool: false
 ```
 
 ```
-if entity $entity:string animation is $expected_byte:number
+if entity $entity:string current_animation is $expected_byte:number
 	then goto index $jump_index:number
 	// expected_bool: true
 ```
 
 ```
-if entity $entity:string animation is $expected_byte:number
+if entity $entity:string current_animation is $expected_byte:number
 	then goto label $jump_index:bareword
 	// expected_bool: true
 ```
 
 ```
-if entity $entity:string animation is not $expected_byte:number
+if entity $entity:string current_animation is not $expected_byte:number
 	then goto index $jump_index:number
 	// expected_bool: false
 ```
 
 ```
-if entity $entity:string animation is not $expected_byte:number
+if entity $entity:string current_animation is not $expected_byte:number
 	then goto label $jump_index:bareword
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" animation is 2 then goto successScript`
-- `if entity "Entity Name" animation is not 2 then goto successScript`
-- `if entity "Entity Name" animation is 2 then goto index 8`
-- `if entity "Entity Name" animation is 2 then goto label midpoint`
-- `if entity "Entity Name" animation is not 2 then goto index 8`
-- `if entity "Entity Name" animation is not 2 then goto label midpoint`
+- `if entity "Entity Name" current_animation is 2 then goto successScript`
+- `if entity "Entity Name" current_animation is not 2 then goto successScript`
+- `if entity "Entity Name" current_animation is 2 then goto index 8`
+- `if entity "Entity Name" current_animation is 2 then goto label midpoint`
+- `if entity "Entity Name" current_animation is not 2 then goto index 8`
+- `if entity "Entity Name" current_animation is not 2 then goto label midpoint`
 
 #### CHECK_ENTITY_CURRENT_FRAME
 

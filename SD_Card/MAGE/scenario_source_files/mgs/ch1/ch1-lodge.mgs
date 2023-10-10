@@ -20,12 +20,12 @@ on_load-lodge {
 	}
 	// otherwise, set up the room
 	if (flag hide-lodge-crowd-mini is true) {
-		set entity Bookcase animation to 3 // down animation
+		set entity Bookcase current_animation to 3 // down animation
 		copy empty-lodge-mini
 	}
 	if (flag hide-lodge-crowd is true) {
 		// because there's a tiny window where you might reload map after elders leave but before crowd does
-		set entity Bookcase animation to 3 // down animation
+		set entity Bookcase current_animation to 3 // down animation
 		copy empty-lodge
 	}
 	if (flag lodge_cat-unglitched is true) {
@@ -242,11 +242,11 @@ gossip-down-player {
 player-struggles-a-bit {
 	wait 100ms
 	turn entity "%PLAYER%" west
-	set entity "%PLAYER%" animation to 1
-	wait 50ms    set entity "%PLAYER%" animation to 0
+	set entity "%PLAYER%" current_animation to 1
+	wait 50ms    set entity "%PLAYER%" current_animation to 0
 	wait 200ms  turn entity "%PLAYER%" east
-	             set entity "%PLAYER%" animation to 1
-	wait 50ms    set entity "%PLAYER%" animation to 0
+	             set entity "%PLAYER%" current_animation to 1
+	wait 50ms    set entity "%PLAYER%" current_animation to 0
 	wait 200ms
 }
 elders-whisper {
@@ -808,8 +808,8 @@ cutscene-artifacts-eval-good { // TUESDAY PART 2
 	turn entity Alfonso north
 	wait 500ms
 	// The bookcase shakes
-	set entity Bookcase animation to 1 // shaking anim
-	wait 900ms /**/ set entity Bookcase animation to 0 // tall anim
+	set entity Bookcase current_animation to 1 // shaking anim
+	wait 900ms /**/ set entity Bookcase current_animation to 0 // tall anim
 	wait 400ms /**/ play entity Bookcase animation 2 once
 	set flag ring-acquired to true
 	teleport entity Bookcase to geometry lodge-hidingplace
@@ -850,7 +850,7 @@ show_dialog-lodge_cat {
 		set player control off
 		// thumbs up:
 		play entity Cat animation 3 once
-		set entity Cat animation to 4
+		set entity Cat current_animation to 4
 		// change player:
 		wait 700ms
 		set entity "%PLAYER%" type to pipscat
