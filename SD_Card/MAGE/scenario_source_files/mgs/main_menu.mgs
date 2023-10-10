@@ -253,17 +253,17 @@ menu-load_game {
 menu-load_game-0 {
 	load slot 0
 	mutate slot-number = 0
-	goto menu-chapter_select-init
+	goto menu-chapter_select-q
 }
 menu-load_game-1 {
 	load slot 1
 	mutate slot-number = 1
-	goto menu-chapter_select-init
+	goto menu-chapter_select-q
 }
 menu-load_game-2 {
 	load slot 2
 	mutate slot-number = 2
-	goto menu-chapter_select-init
+	goto menu-chapter_select-q
 }
 
 /* ---------- NEW GAME ---------- */
@@ -400,31 +400,20 @@ menu-player-name-reset {
 
 start-new-game-with-name {
 	save slot
-	goto menu-chapter_select-init
+	goto menu-chapter_select-q
 }
 
 /* ---------- CHOOSING A CHAPTER ---------- */
 
-menu-chapter_select-init {
-	set entity "%PLAYER%" tick_script to count-chapter1-storyflags
-	set map tick_script to menu-ch1-storyflag_count-wait
-}
-
-menu-ch1-storyflag_count-wait {
-	if flag chapter1-storyflags-tallied is true then goto menu-ch1-storyflag_count-done
-}
-
-menu-ch1-storyflag_count-done {
-	set flag chapter1-storyflags-tallied to false
-	goto menu-chapter_select-q
-}
 menu-chapter_select-q {
+	copy count-chapter1-storyflags
+	copy ch2-count-flags
 	show dialog {
 		name " "
 		border_tileset menu
 		"PLAY (slot $slot-number$: \"%PLAYER%\")"
 		> "Chapter 1 ($chapter1-storyflag-tally$/11)" : menu-chapter_select-1
-		> "Chapter 2 (X/??)" : menu-chapter_select-2-check
+		> "Chapter 2 ($ch2-storyflags-tally$/??)" : menu-chapter_select-2-check
 		> "Back" : menu-play_game
 	}
 }

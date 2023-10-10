@@ -1,5 +1,4 @@
 count-chapter1-storyflags {
-	set flag chapter1-storyflags-tallied to false
 	mutate chapter1-storyflag-tally = 0
 	if (flag storyflag-catwork is true) {
 		mutate chapter1-storyflag-tally + 1
@@ -34,6 +33,4 @@ count-chapter1-storyflags {
 	if (flag storyflag-rake is true) {
 		mutate chapter1-storyflag-tally + 1
 	}
-	set flag chapter1-storyflags-tallied to true
-	set entity "%SELF%" tick_script to null_script
 }

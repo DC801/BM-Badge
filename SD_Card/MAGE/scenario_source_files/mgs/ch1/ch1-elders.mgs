@@ -76,7 +76,7 @@ show_dialog-bert-start {
 			copy set-hint-shepherd-from-bert
 		}
 	} else if (flag storyflag-baker is false) {
-		show dialog dialog-bert-baker {
+		show dialog {
 			SELF "Baker."
 			"Baker is busy. He has trouble with customer."
 		}
@@ -160,7 +160,6 @@ show_dialog-bert-start {
 	} else {
 		show dialog { SELF "Perhaps the world." }
 	}
-	set entity Bert interact_script to show_dialog-bert-start
 }
 
 calculate-hint-tracking-series {
@@ -277,7 +276,7 @@ show_dialog-jackob-start {
 			show dialog {
 				PLAYER "I guess the shepherd wants me to put the sheep back inside their pen."
 			}
-			show dialog dialog-jackob-hint-shepherd2
+			show dialog dialog-jackob-hint-shepherd2 // defined above
 		} else if (variable hint-tracking is 20) {
 			show dialog {
 				PLAYER "The baker's having trouble with a customer, apparently. But I don't know what I'm supposed to do about that."
@@ -363,7 +362,7 @@ show_dialog-jackob-start {
 				"All those flowers should have almost identical values, I imagine. Try to change a value they don't have in common."
 			}
 		} else if (variable hint-tracking is 80) {
-			show dialog dialog-jackob-hint-sportskid-from-bert {
+			show dialog {
 				PLAYER "According to Bert, a small child needs help."
 				SELF "Not many kids around here -- apart from the kids, of course, by which I mean the goats."
 				"But Bert probably means the smith's son. Or... was Smith the man's name? Oh, dear. Was it his name AND his occupation?"
@@ -393,24 +392,24 @@ show_dialog-jackob-start {
 				SELF "These are questions for philosophers and gamers. All we mortals can do is fulfill a child's wish to become sports equipment."
 			}
 		} else if (variable hint-tracking is 90) {
-			show dialog dialog-jackob-hint-bea2-from-bert {
+			show dialog {
 				PLAYER "Bert says I have to help Beatrice. But I already solved her problem!"
 				SELF "Did you? Or did you only give her the opportunity to rememeber something she had forgotten about her husband?"
 			}
 		} else if (variable hint-tracking is 91) {
-			show dialog dialog-jackob-hint-bea2 {
+			show dialog {
 				PLAYER "Now Beatrice wants her husband to turn back into a sheep."
 				SELF "She must have gotten sick of his yammering again."
 				"Ah, well. You know what to do by now."
 			}
 		} else if (variable hint-tracking is 100) {
-			show dialog dialog-jackob-hint-rake-from-bert {
+			show dialog {
 				PLAYER "Apparently the goose is mad."
 				SELF "Is this news?"
 				"In all seriousness, you might want to check whether the goose is mad at something specific or the world at large."
 			}
 		} else if (variable hint-tracking is 101) {
-			show dialog dialog-jackob-hint-rake {
+			show dialog {
 				PLAYER "I think the goose wants me to move the rake."
 				"Perhaps... into the lake?"
 				SELF "Likely. You'll need to change the rake's Y coordinates."
@@ -425,7 +424,7 @@ show_dialog-jackob-start {
 				"Though they might not look like goats at the moment."
 			}
 		} else if (variable hint-tracking is 111) {
-			show dialog dialog-jackob-hint-verthandi {
+			show dialog {
 				PLAYER "How do I unscramble someone's pixels?"
 				SELF "I think there was something in the Entity books about that, but I didn't quite understand."
 				"Something about changing a bit instead of a byte, I think...."
@@ -479,7 +478,7 @@ show_dialog-jackob-hint-hackbook {
 			"I can't remember anything about what the book said."
 		}
 		if (flag wonthedemo is true) {
-			show dialog dialog-jackob-hint-hackbook4-alt {
+			show dialog {
 				SELF "I doubt there was much in there that would've helped you in a confrontation with him, though."
 			}
 		} else {
@@ -507,62 +506,24 @@ show_dialog-jackob-hint-hackbook {
 show_dialog-alfonso-start {
 	if (entity "%SELF%" is glitched) {
 		show dialog { SELF "Cdl iwpi'h fjxit jcctrthhpgn!" }
+	} else if (flag wonthedemo is true) {
+		show dialog { SELF "Congratulations! You fixed the town!" }
 	} else {
-		if (flag wonthedemo is true) {
-			goto show_dialog-alfonso-wonthedemo // JUMP
+		copy count-chapter1-storyflags
+		show dialog { SELF "You've completed $chapter1-storyflag-tally$ out of 11 tasks." }
+		if (variable chapter1-storyflag-tally is 0) {
+			show dialog { SELF "Uh...." "Nowhere to go now but up!" }
+		} else if (variable chapter1-storyflag-tally is 1) {
+			show dialog { SELF "That's the spirit! What a great start!" }
+		} else if (variable chapter1-storyflag-tally is <= 4) {
+			show dialog { SELF "You're getting the hang of this!" }
+		} else if (variable chapter1-storyflag-tally is <= 8) {
+			show dialog { SELF "Oh, my! You're getting a lot of work done! Marvelous!" }
+		} else if ( variable chapter1-storyflag-tally is <= 10) {
+			show dialog { SELF "Wow! You're nearly done!" }
+		} else if (variable chapter1-storyflag-tally is 11) {
+			show dialog { SELF "Incredible! You've done everything on my list!" }
+			goto demoend-cutscene // JUMP
 		}
-		set player control to off
-		set entity Bert tick_script to count-chapter1-storyflags
-		set entity "%SELF%" tick_script to alfonso-ch1-storyflag-count-wait
 	}
-	set entity "%SELF%" interact_script to show_dialog-alfonso-start
-}
-
-alfonso-ch1-storyflag-count-wait {
-	// don't zig this (it's an on_tick script)
-	if flag chapter1-storyflags-tallied is true then goto alfonso-ch1-storyflag-count-done
-}
-
-alfonso-ch1-storyflag-count-done {
-	show dialog dialog-alfonso-eval {
-		SELF "You've completed $chapter1-storyflag-tally$ out of 11 tasks."
-	}
-	set flag chapter1-storyflags-tallied to false
-	if (variable chapter1-storyflag-tally is 0) {
-		show dialog {
-			SELF "Uh...." "Nowhere to go now but up!"
-		}	
-	} else if (variable chapter1-storyflag-tally is 1) {
-		show dialog {
-			SELF "That's the spirit! What a great start!"
-		}
-	} else if (variable chapter1-storyflag-tally is <= 4) {
-		show dialog {
-			SELF "You're getting the hang of this!"
-		}
-	} else if (variable chapter1-storyflag-tally is <= 8) {
-		show dialog {
-			SELF "Oh, my! You're getting a lot of work done! Marvelous!"
-		}
-	} else if ( variable chapter1-storyflag-tally is <= 10) {
-		show dialog {
-			SELF "Wow! You're nearly done!"
-		}
-	} else if (variable chapter1-storyflag-tally is 11) {
-		show dialog {
-			SELF "Incredible! You've done everything on my list!"
-		}
-		goto demoend-cutscene // JUMP
-	}
-	set player control to on
-	set entity "%SELF%" tick_script to null_script
-	// RESET
-	set entity Alfonso interact_script to show_dialog-alfonso-start
-}
-
-show_dialog-alfonso-wonthedemo {
-	show dialog dialog-alfonso-wonthedemo {
-		SELF "Congratulations! You fixed the town!"
-	}
-	set entity Alfonso interact_script to show_dialog-alfonso-start
 }
