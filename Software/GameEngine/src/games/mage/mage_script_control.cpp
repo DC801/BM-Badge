@@ -76,6 +76,7 @@ void MageScriptControl::initScriptState(
 {
 	//set the values passed to the function first:
 	resumeStateStruct->scriptIsRunning = scriptIsRunning;
+	resumeStateStruct->scriptIsPaused = false;
 	resumeStateStruct->isGlobalExecutionScope = isGlobalExecutionScope;
 	resumeStateStruct->currentScriptId = scriptId;
 	//then set default initializer values for the others:
