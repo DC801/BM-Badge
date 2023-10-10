@@ -59,7 +59,7 @@ ch2-interact-mainframe {
 	}
 	set flag temp to false
 	// wizard comes up if down
-	if (entity Wizard animation is 0) { // WIZARD IS DOWN
+	if (entity Wizard current_animation is 0) { // WIZARD IS DOWN
 		set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch
 	}
 	// normal
@@ -215,7 +215,7 @@ ch2-count-flags-done {
 }
 
 ch2-start-round-2 {
-	set entity "%PLAYER%" animation to 0
+	set entity "%PLAYER%" current_animation to 0
 	copy ch2-cutscene-bert-secret
 	set flag ch2-lambda-paging to true
 	set player control off

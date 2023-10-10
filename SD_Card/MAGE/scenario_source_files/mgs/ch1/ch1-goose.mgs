@@ -11,7 +11,7 @@ on_tick-goose-mission {
 	// on_tick is 'mission' -- if rake not in lake, jump
 	if entity Rake is not inside geometry lake then goto on_tick-goose-mission-rake-out-of-lake
 	turn entity Goose south
-	set entity Goose animation to 0
+	set entity Goose current_animation to 0
 	set flag storyflag-rake to true
 	copy calculate-hint-tracking-series
 	if (variable hint-tracking-check is 10) {
@@ -53,9 +53,9 @@ honk {
 }
 honk-to-make-rake-float {
 	turn entity Goose toward entity Rake
-	wait 200ms /**/ set entity Goose animation to 2
+	wait 200ms /**/ set entity Goose current_animation to 2
 	wait 600ms /**/ set entity Goose tick_script to make-rake-float
-	wait 3000ms /**/ set entity Goose animation to 0
+	wait 3000ms /**/ set entity Goose current_animation to 0
 }
 
 // drifting rake

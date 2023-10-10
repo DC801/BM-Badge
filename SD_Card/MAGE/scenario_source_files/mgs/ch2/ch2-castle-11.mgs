@@ -67,16 +67,16 @@ on_load-ch2-castle-11 {
 		show dialog {
 			PLAYER "Oh, hi there, little bird."
 		}
-		set entity Kuro animation to 1
+		set entity Kuro current_animation to 1
 		show dialog {
 			Kuro "Little bird? Little bird?!"
 		}
-		set entity Kuro animation to 0
+		set entity Kuro current_animation to 0
 		show dialog {
 			Kuro "I'm the ruddy harbringer of death!"
 			PLAYER "Oh, of course. I'm sorry."
 		}
-		set entity Kuro animation to 1
+		set entity Kuro current_animation to 1
 		show dialog {
 			Kuro "Omigod omigod omigod!"
 		}
@@ -89,20 +89,20 @@ on_load-ch2-castle-11 {
 			PLAYER "Oh, sure. I guess birds don't like to be in enclosed spaces."
 			Kuro "Enclosed spaces? Nah, I'm just bored to death!"
 		}
-		set entity Kuro animation to 1
+		set entity Kuro current_animation to 1
 		show dialog {
 			Kuro "But you got in here! Does that mean you can get me out?"
 		}
-		set entity Kuro animation to 0
+		set entity Kuro current_animation to 0
 		show dialog {
 			PLAYER "I don't think I can use the artifact to bring other people through the doors. Just me."
 			"But I'll try to get the doors cleared and working again."
 		}
-		set entity Kuro animation to 1
+		set entity Kuro current_animation to 1
 		show dialog {
 			Kuro "OH THANK GOD!"
 		}
-		set entity Kuro animation to 0
+		set entity Kuro current_animation to 0
 		show dialog {
 			PLAYER "So I need a monitor. Lambda said was one in here I could use. I think he meant..."
 		}
@@ -227,11 +227,11 @@ ch2-touch-monitor-no {
 }
 
 interact-ch2-kuro {
-	set entity Kuro animation to 1
+	set entity Kuro current_animation to 1
 	show dialog {
 		Kuro "So, um, you can get me out of here, right?"
 	}
-	set entity Kuro animation to 0
+	set entity Kuro current_animation to 0
 	show dialog {
 		PLAYER "Working on it."
 	}

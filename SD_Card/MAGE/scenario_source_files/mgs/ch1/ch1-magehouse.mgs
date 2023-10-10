@@ -73,7 +73,7 @@ freak-out {
 
 goodmorning-cutscene {
 	set player control to off
-	set entity "%PLAYER%" animation to 0
+	set entity "%PLAYER%" current_animation to 0
 	turn entity "%PLAYER%" west
 	show dialog {
 		entity "Aunt Zippy" "Is that %PLAYER% I hear?"

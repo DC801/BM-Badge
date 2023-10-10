@@ -123,7 +123,7 @@ on_load-ch2-castle-1 {
 
 	if (flag ch2-ring-zero-restored is true) {
 		set entity "Wizard" interact_script to interact-ch2-wizard-mainframedone
-		set entity "Wizard" animation to 3 // head poking up
+		set entity "Wizard" current_animation to 3 // head poking up
 	}
 
 	// if cutscene was interrupted, intercept here:
@@ -300,36 +300,36 @@ ch2-attempt-door-check {
 ch2-wizard-ascend {
 	set player control off
 	play entity Wizard animation 5 once
-	set entity Wizard animation to 3
+	set entity Wizard current_animation to 3
 	set player control on
 }
 tick-ch2-wizard-ascend-and-watch-with-check {
-	if (entity Wizard animation is 0) { // WIZARD IS DOWN
+	if (entity Wizard current_animation is 0) { // WIZARD IS DOWN
 		// show serial dialog {"DEBUG: Wizard is down! Switching on_tick to to 'tick-ch2-wizard-ascend-and-watch'"}
 		goto tick-ch2-wizard-ascend-and-watch
 	} else {
 		// show serial dialog {"DEBUG: Wizard is not <bold>strictly</> down..."}
-		set entity Wizard animation to 3
+		set entity Wizard current_animation to 3
 	}
 	set entity Wizard tick_script to face-player
 }
 tick-ch2-wizard-ascend-and-watch {
 	// show serial dialog {"\t'play entity Wizard animation 5 once'"}
 	play entity Wizard animation 5 once
-	// show serial dialog {"\t'set entity Wizard animation to 3'"}
-	set entity Wizard animation to 3
+	// show serial dialog {"\t'set entity Wizard current_animation to 3'"}
+	set entity Wizard current_animation to 3
 	// show serial dialog {"\t'set entity Wizard tick_script to face-player'"}
 	set entity Wizard tick_script to face-player
 }
 ch2-wizard-descend {
 	set player control off
 	play entity Wizard animation 4 once
-	set entity Wizard animation to 0
+	set entity Wizard current_animation to 0
 	set player control on
 }
 
 interact-ch2-wizard {
-	if (entity "%SELF%" animation is 0) { // WIZARD IS DOWN
+	if (entity "%SELF%" current_animation is 0) { // WIZARD IS DOWN
 		// go up
 		copy script ch2-wizard-ascend
 		// wizard is up now

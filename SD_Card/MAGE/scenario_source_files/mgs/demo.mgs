@@ -158,6 +158,7 @@ show_dialog-max-demo_map {
 }
 
 show_dialog-timmy-demo_map {
+	copy pause-walk-and-face-player
 	show dialog dialog-timmy-demo_map {
 		SELF "I'm practicing for my triathlon!"
 		"Running is my weakest event, so I'm\nworking hard to improve my time!"
@@ -165,12 +166,15 @@ show_dialog-timmy-demo_map {
 		SELF "...?"
 		"No?"
 	}
+	copy unface-player-and-resume-walk
 }
 
 show_dialog-kid-demo_map {
+	copy pause-walk-and-face-player
 	show dialog dialog-kid-demo_map {
 		SELF "I'm gonna be a Blitzball when I grow up!"
 	}
+	copy unface-player-and-resume-walk
 }
 
 show_dialog-goose-demo_map {

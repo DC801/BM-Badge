@@ -149,7 +149,7 @@ on_load-crowd-mini-check {
 }
 
 on_load-empty-lodge-mini {
-	set entity "Bookcase" animation to 3
+	set entity "Bookcase" current_animation to 3
 		/* doc: down animation */
 	copy "empty-lodge-mini"
 	goto "on_load-crowd-check"
@@ -163,7 +163,7 @@ on_load-crowd-check {
 }
 
 on_load-empty-lodge {
-	set entity "Bookcase" animation to 3
+	set entity "Bookcase" current_animation to 3
 		/* doc: down animation */
 	copy "empty-lodge"
 	goto "on_load-lodge-glitch_cat-check"
@@ -250,9 +250,9 @@ show_dialog-lodge-cantleaveyet {
 }
 
 secret-door-open {
-	set entity "Bookcase" animation to 1 /* bookcase shake */
+	set entity "Bookcase" current_animation to 1 /* bookcase shake */
 	wait 900ms
-	set entity "Bookcase" animation to 0 /* bookcase holding still */
+	set entity "Bookcase" current_animation to 0 /* bookcase holding still */
 	wait 400ms
 	play entity "Bookcase" animation 2 once /* bookcase drop */
 	set flag "ring-acquired" to true
@@ -801,14 +801,14 @@ elders-whisper {
 player-struggles-a-bit {
 	wait 100ms
 	turn entity "%PLAYER%" west
-	set entity "%PLAYER%" animation to 1
+	set entity "%PLAYER%" current_animation to 1
 	wait 50ms
-	set entity "%PLAYER%" animation to 0
+	set entity "%PLAYER%" current_animation to 0
 	wait 200ms
 	turn entity "%PLAYER%" east
-	set entity "%PLAYER%" animation to 1
+	set entity "%PLAYER%" current_animation to 1
 	wait 50ms
-	set entity "%PLAYER%" animation to 0
+	set entity "%PLAYER%" current_animation to 0
 	wait 200ms
 }
 
@@ -1196,7 +1196,7 @@ debug-cat-prep {
 
 begin-thumbsup {
 	play entity "Cat" animation 3 once
-	set entity "Cat" animation to 4
+	set entity "Cat" current_animation to 4
 }
 
 end-thumbsup {

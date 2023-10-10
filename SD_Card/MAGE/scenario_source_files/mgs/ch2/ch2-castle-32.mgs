@@ -138,7 +138,7 @@ interact-ch2-gloria {
 	set entity "%SELF%" tick_script to null_script
 	copy face-player
 	play entity "%SELF%" animation 3 once
-	set entity "%SELF%" animation to 4
+	set entity "%SELF%" current_animation to 4
 	if (flag ch2-gloria-backstory is false) {
 		show dialog {
 			SELF "Oh, dear. What terrible timing. It was \"take your child to work\" day yesterday, and...."
@@ -155,13 +155,13 @@ interact-ch2-gloria {
 	}
 	set entity "%SELF%" on_tick to ch2-gloria-worry-walk
 	play entity "%SELF%" animation 5 once
-	set entity "%SELF%" animation to 0
+	set entity "%SELF%" current_animation to 0
 	set player control on
 	set entity "%SELF%" interact_script to interact-ch2-gloria
 }
 interact-ch2-samson {
 	copy face-player
-	set entity "%SELF%" animation to 2
+	set entity "%SELF%" current_animation to 2
 	if (variable ch2-samson-count is 0) {
 		show dialog {
 			SELF "Someone was kicking the castle yesterday!"
@@ -179,7 +179,7 @@ interact-ch2-samson {
 			SELF "Chips fell out of the box, and I got to eat all of them!"
 		}
 	}
-	set entity "%SELF%" animation to 0
+	set entity "%SELF%" current_animation to 0
 	mutate ch2-samson-count + 1
 	mutate ch2-samson-count % 4
 	turn entity "%SELF%" west

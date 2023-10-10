@@ -289,17 +289,8 @@ interact-ch2-bobmoss {
 
 interact-ch2-marathonbob {
 	// capture original facing direction
-	if (entity "%SELF%" direction is north) {
-		mutate tempvar = 0
-	} else if (entity "%SELF%" direction is east) {
-		mutate tempvar = 1
-	} else if (entity "%SELF%" direction is south) {
-		mutate tempvar = 2
-	} else if (entity "%SELF%" direction is west) {
-		mutate tempvar = 3
-	}
+	copy pause-walk-and-face-player
 	// normal behavior
-	copy face-player
 	mutate random ? 10
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
 	if (variable random is 1) {
@@ -324,15 +315,7 @@ interact-ch2-marathonbob {
 		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
 	}
 	// turn back to the original facing direction
-	if (variable tempvar is 0) {
-		turn entity "%SELF%" north
-	} else if (variable tempvar is 1) {
-		turn entity "%SELF%" east
-	} else if (variable tempvar is 2) {
-		turn entity "%SELF%" south
-	} else if (variable tempvar is 3) {
-		turn entity "%SELF%" west
-	}
+	copy unface-player-and-resume-walk
 	mutate tempvar = 0 // courtesy reset
 	set entity "%SELF%" interact_script to interact-ch2-marathonbob // reset
 }
