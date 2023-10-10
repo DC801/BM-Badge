@@ -21,7 +21,7 @@ var actionCategoryText = {
 		"NOTE: These actions can behave erratically if any of the vertices in the geometry object are subject to coordinate underflow."
 	],
 	"entity appearance": [
-		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](#non_blocking_delay)."
+		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](#non_blocking_delay)."
 	],
 	"set entity properties": [
 		"Set a specific property on a specific entity."
@@ -118,6 +118,7 @@ var actionText = {
 		"category": "game management",
 		"info": [
 			"Enables (or disables) manual control of the hex editing LED lights on the badge. This includes all 8 bit lights underneath the screen and the 4 lights on either side of the screen.",
+			"Note that gaining control of the lights does not clear the light state by default; the lights currently on will remain on until set with [SET_LIGHTS_STATE](#set_lights_control).",
 		]
 	},
 	"SET_LIGHTS_STATE": {
@@ -375,7 +376,7 @@ var actionText = {
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
 		"category": "check entity properties",
 		"info": [
-			"Checks the id of the entity's current `animation`. (See [entity animations](#entity-animations) for what ids correspond to which animations.)"
+			"Checks the id of the entity's current `animation`. (See [entity animations](#entity-animations) for what numbers correspond to which animations.)"
 		]
 	},
 	"CHECK_ENTITY_CURRENT_FRAME": {
@@ -494,15 +495,15 @@ var actionText = {
 			"The entity will play the given animation the given number of times, and then will return to its default animation.",
 			"A script that runs this action will not execute any further actions until the play count has been satisfied.",
 			"If an entity is compelled to move around on the map, it will abort this animation playback.",
-			"See [entity animations](#entity-animations) for what ids correspond to which animations"
+			"See [entity animations](#entity-animations) for what numbers correspond to which animations."
 		]
 	},
 	"SET_ENTITY_CURRENT_ANIMATION": {
 		"category": "entity appearance",
 		"info": [
 			"The entity will switch to the given animation, which will loop indefinitely.",
-			"If an entity is compelled to move around on the map, it will abort this animation playback. When the entity stops moving again, it will revert to its default animation and not the one given by this action.",
-			"See [entity animations](#entity-animations) for what ids correspond to which animations"
+			"If an entity is compelled to move around on the map, it will abort this animation playback. (I.e. when the entity stops moving again, it will revert to its default animation, not the one given by this action.)",
+			"See [entity animations](#entity-animations) for what numbers correspond to which animations."
 		]
 	},
 	"SET_ENTITY_CURRENT_FRAME": {
@@ -522,7 +523,7 @@ var actionText = {
 		"category": "entity appearance",
 		"info": [
 			"Turns the entity in 90° increments. Positive numbers are clockwise turns, and negative numbers are counterclockwise turns. (E.g. turn them '2' to flip them around 180°)",
-			"This action can be chained with another similar one for complex behaviors. For example, to turn an entity away from the player, you can first set the entity's direction [toward the player](#set_entity_direction_target_entity), then immediately rotate it 2 turns with this action."
+			"This action can be chained with another similar one for complex behaviors. For example, to turn an entity away from the player, you can first set the entity's direction [toward the player](#set_entity_direction_target_entity), then immediately rotate it 2 turns."
 		]
 	},
 	"SET_ENTITY_DIRECTION_TARGET_ENTITY": {
@@ -565,7 +566,7 @@ var actionText = {
 	"PAN_CAMERA_TO_ENTITY": {
 		"category": "camera control",
 		"info": [
-			"Pans the camera to an entity.",
+			"Pans the camera to an entity. Afterward, the camera will follow that entity.",
 			"NOTE: if the entity is moving while the camera is coming closer, the camera will speed up or slow down to reach the entity at the correct time."
 		]
 	},
@@ -611,13 +612,22 @@ var actionText = {
 		"category": "script control",
 		"info": [
 			"Abandons the current script and jumps to the named script. In other words, actions provided after a `RUN_SCRIPT` action will not execute. (The MGS Natlang keyword `goto` was chosen to emphasize this.)",
-			"The new script runs in the same script slot that called this action."
+			"The new script runs in the same script slot that called this action, and will begin to execute immediately.",
+			"If you want to replace the script in the current slot *without* executing the new script until the next game loop, you should instead use one of the `SET_` ... `_SCRIPT` actions."
+		]
+	},
+	"GOTO_ACTION_INDEX": {
+		"category": "script control",
+		"info": [
+			"Jumps to the action at the given [label](#labels) (bareword) or action index (number). All jumps are made within the current script.",
+			"The index variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine."
 		]
 	},
 	"COPY_SCRIPT": {
 		"category": "script control",
 		"info": [
-			"The MGE encoder literally copies all the actions from the copied `script` and inserts them where `COPY_SCRIPT` is being used. This happens recursively."
+			"The MGE encoder literally copies all the actions from the copied `script` and inserts them where `COPY_SCRIPT` is being used. This happens recursively.",
+			"`COPY_SCRIPT` converts and adapts [label](#labels) references when copied, including jumps involving absolute action indices. Feel free to use `COPY_SCRIPT` for literally any script you want!"
 		]
 	},
 	"SET_MAP_TICK_SCRIPT": {
@@ -631,7 +641,7 @@ var actionText = {
 		"info": [
 			"Sets an entity's `on_interact` script.",
 			"If you use this action to change the script slot that is currently running the action, any actions given afterward may not execute depending on what they are.",
-			"Because entity properties are reset when a map is loaded, and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree."
+			"Because entity properties are reset when a map is loaded, and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
 		]
 	},
 	"SET_ENTITY_TICK_SCRIPT": {
@@ -644,6 +654,14 @@ var actionText = {
 		"category": "script control",
 		"info": [
 			"Sets an entity's `on_look` script."
+		]
+	},
+	"SET_SCRIPT_PAUSE": {
+		"category": "script control",
+		"info": [
+			"Pauses or unpauses a script. In practice, this is most useful for temporarily pausing an entity's `on_tick` script during its `on_interact` event.",
+			"Entity variant: Any entity name can be used in all the normal ways (`%PLAYER%` etc.). Scripts slots for these are `on_tick`, `on_interact`, and `on_look`.",
+			"Map variant: Script slots for these are `on_load`, `on_tick`, and `on_command`."
 		]
 	}
 };
@@ -685,6 +703,9 @@ var docExampleValues = { // some nice default values
 	"$command:string": "\"map\"",
 	"$argument:string": "\"castle\"",
 	"$lights:string": "MEM3",
+	"$script_slot:bareword": "on_tick",
+	"$jump_index:number": "8",
+	"$jump_index:bareword": "midpoint",
 };
 
 var makeExampleFromDictionaryEntry = function (entry) {
@@ -757,11 +778,11 @@ var mid = Object.keys(actionCategoryText).map(function (actionCategoryName) {
 		// get dictionary entries
 		var dictionaryEntries = mgs.actionDictionary.filter(function (entry) {
 			return entry.action === actionName;
-		})
+		});
 		// example syntax
 		var printPatterns = dictionaryEntries.map(function (entry) {
 			return '```\n' + makePrintableDictionaryEntry(entry) + '\n```';
-		})
+		});
 		itemChonks = itemChonks.concat(printPatterns);
 		// examples (technically optional)
 		if (!actionText[actionName].omitExample) {
@@ -790,7 +811,7 @@ var makeQuickRefEntryForAction = function (actionName) {
 	var linky = `[${actionName}](#${actionName.toLocaleLowerCase()})`;
 	var dictionaryEntries = mgs.actionDictionary.filter(function (entry) {
 		return entry.action === actionName;
-	})
+	});
 	var examples = dictionaryEntries.map(function (entry) {
 		var example = makeExampleFromDictionaryEntry(entry);
 		if (example.includes(' then ')) {
@@ -798,7 +819,10 @@ var makeQuickRefEntryForAction = function (actionName) {
 			example = splits[0].replace('if ', '');
 		}
 		return `\t- \`${example}\``;
-	})
+	});
+	examples = examples.filter(function (entry, index) {
+		return examples.indexOf(entry) === index;
+	});
 	var totals = [ `- ${linky}` ].concat(examples);
 	return totals.join('\n');
 }
@@ -827,12 +851,18 @@ Object.keys(actionCategoryText)
 
 quickRef.push(`#### Conditional gotos
 
-Consists of actions from the [check entity properies](#check-entity-properies-actions) and [check variables](#check-variables-actions) categories. All "conditions" can be inserted in either of the following patterns:
+Consists of actions from the [check entity properies](#check-entity-properies-actions) and [check variables](#check-variables-actions) categories. All "conditions" can be inserted into either of the following patterns:
 
-- Plain action: \`if\` ... \`then goto (script) $success_script:string\`
-- [Zigzag](#zigzag-if--else) macro: \`if (\` ... \`) { }\`
+1. [Zigzag](#zigzag-if--else) macro: \`if (\` ... \`) { }\`
+	- NOTE: This expands to the label jump pattern automatically.
+2. Script jump version: \`if\` ... \`then goto (script) $success_script:string\`
+3. Label jump version: \`if\` ... \`then goto label $success_script:string\`
+	- This pattern is to be used with bareword [labels](#labels).
+4. Index jump version: \`if\` ... \`then goto index $success_script:number\`
+	- Refers to the target action by the absolute index within the script.
+	- This is not recommended for scripts written by hand, as \`COPY_SCRIPT\` and automatic syntax expansion may result in an unexpected number of actions in your scripts.
 
-(The example syntax below is the condition part of the pattern alone.)`);
+The example syntax in the following entries is to be inserted into the "condition" part of the patterns above.`);
 
 var gotoActions = [];
 
