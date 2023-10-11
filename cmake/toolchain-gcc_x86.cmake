@@ -5,10 +5,10 @@ set(CMAKE_SYSTEM_PROCESSOR x86)
 
 # which compilers to use for C and C++
 set(CMAKE_C_COMPILER gcc)
-set(CMAKE_C_FLAGS -m32)
+set(CMAKE_C_FLAGS2)
 set(CMAKE_CXX_COMPILER g++)
-set(CMAKE_CXX_FLAGS -m32)
-set(LINK_OPTIONS -m32)
+set(CMAKE_CXX_FLAGS)
+set(LINK_OPTIONS)
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search

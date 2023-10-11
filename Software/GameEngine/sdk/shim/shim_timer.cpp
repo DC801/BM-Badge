@@ -3,6 +3,7 @@
 #include "shim_err.h"
 
 #include <chrono>
+#include <thread>
 #ifdef DC801_EMBEDDED
 
 // NRF_TIMER_Type NRF_TIMER_1 = { 0 };
