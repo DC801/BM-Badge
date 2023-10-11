@@ -284,7 +284,6 @@ ch2-attempt-door-check {
 		}
 		mutate ch2-pretoot-door-attempts + 1
 	}
-	// reset
 }
 
 /* ---------- ENTITIES ---------- */
@@ -336,7 +335,7 @@ interact-ch2-wizard {
 		if (flag ch2-toot-done is false) {
 			show dialog { SELF "Bye." }
 			copy script ch2-wizard-descend
-			goto label fake_return // "return" early
+			return
 		}
 	}
 	// wizard is up now and can talk normally
@@ -392,7 +391,6 @@ interact-ch2-wizard {
 			}
 		}
 	}
-	fake_return:
 }
 
 interact-ch2-wizard-mainframedone {

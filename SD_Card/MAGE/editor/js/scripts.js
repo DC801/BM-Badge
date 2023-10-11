@@ -1424,40 +1424,48 @@ var preProcessScript = function(
 	return result;
 };
 
-var linker = function (_actionArray) {
-	var actionArray = JSON.parse(JSON.stringify(_actionArray));
-	var arraySize = actionArray.length;
-	var labels = {};
-	var labelIndex = actionArray.findIndex(function (item) {
-		return item.action === "LABEL";
+var getNextLabelIndex = function (actionArray) {
+	return actionArray.findIndex(function (entry) {
+		return entry.action === "LABEL";
 	});
-	while (labelIndex !== -1) {
-		labels[actionArray[labelIndex].value] = labelIndex;
-		actionArray.splice(labelIndex,1)
-		arraySize -= 1;
-		labelIndex = actionArray.findIndex(function (item) {
-			return item.action === "LABEL";
-		});
+};
+
+var linker = function (_actions) {
+	var actions = JSON.parse(JSON.stringify(_actions));
+	actions.push({ // this is so any `return` statements have a place to go (lololol)
+		action: "LABEL",
+		value: "auto return" // fyi labels with a space can only be auto generated
+	});
+	var labelMap = {}; // label name -> action index
+	var index = getNextLabelIndex(actions);
+	while (index !== -1) {
+		labelMap[actions[index].value] = index;
+		actions.splice(index,1)
+		index = getNextLabelIndex(actions);
 	}
-	actionArray.forEach(function(action) {
+	// hardcoding action indicies
+	actions.forEach(function(action) {
 		if (
 			action.action.includes("CHECK_")
 			&& action.jump_index
 			&& typeof action.jump_index === "string"
 		) {
-			if (action.jump_index === undefined) {
-				throw new Error ("I'm just cutting things off here. Invalid label someplace!!! Good luck lol don't break anything next time");
+			if (labelMap[action.jump_index] === undefined) {
+				throw new Error (`Could not find a label named '${action.jump_index}'!`);
 			}
-			action.jump_index = labels[action.jump_index];
+			action.jump_index = labelMap[action.jump_index];
 		} else if (
 			action.action == "GOTO_ACTION_INDEX"
 			&& typeof action.action_index === "string"
 		) {
-			action.action_index = labels[action.action_index]
+			if (labelMap[action.action_index] === undefined) {
+				throw new Error (`Could not find a label named '${action.action_index}'!`);
+			}
+			action.action_index = labelMap[action.action_index]
 		}
 	});
-	return actionArray;
-};	
+	return actions;
+};
 
 var serializeScript = function (
 	script,
