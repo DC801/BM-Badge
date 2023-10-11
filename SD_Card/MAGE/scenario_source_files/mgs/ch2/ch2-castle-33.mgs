@@ -5,8 +5,6 @@ settings for dialog {
 }
 settings for serial dialog { wrap 60 }
 
-// TODO: Simon says had the hex editor on... the mage turned all glitched and northward!
-
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-33 {
@@ -60,7 +58,6 @@ on_tick-ch2-castle-33 {
 	if (flag ch2-mousegame is true) {
 		goto ch2-mousegame-tick // this script also resets to this script
 	}
-	set map tick_script to on_tick-ch2-castle-33 // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -98,7 +95,6 @@ ch2-interact-gregory {
 			SELF "TODO"
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-interact-gregory
 }
 
 ch2-interact-gregory-gameyes {

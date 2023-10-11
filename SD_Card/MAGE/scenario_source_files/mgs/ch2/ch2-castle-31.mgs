@@ -116,7 +116,6 @@ interact-ch2-theodore {
 			SELF "Sorry, I ain't impressed. Anyone can play a keyboard one note at a time."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-theodore
 }
 interact-ch2-alvin {
 	if (flag ch2-simon-won-before is false || flag interrupt is false) {
@@ -133,7 +132,6 @@ interact-ch2-alvin {
 			"Still, good job keeping up with him."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-alvin
 }
 
 interact-ch2-drum {
@@ -224,7 +222,6 @@ interact-ch2-simon {
 		}
 		copy simon-game-launcher
 	}
-	set entity Simon interact_script to interact-ch2-simon
 }
 
 /* ---------- KEYBOARD (ADMIN) ---------- */

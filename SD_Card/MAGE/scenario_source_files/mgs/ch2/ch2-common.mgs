@@ -21,24 +21,28 @@ ch2-do-init-on-end {
 	goto null_script
 }
 
-ch2-map-init {
+// REVAMP:
+
+ch2-map-init-registers {
 	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
 	set flag interrupt2 to false // for when you need a second one
 	set flag interrupt3 to false // OwO
 	mutate tempvar = 0
-
-	// misc game state
+	mutate tempvar2 = 0
+}
+ch2-map-init-hex {
 	if (
 		flag ch2-ring-zero-restored is true // you've fixed Ring Zero
 		|| variable ch2-in-room is 0 // OR you're not in the castle at all
+		|| debug mode is on // OR debug mode is on
 	) {
 		set hex control on
 	} else {
 		set hex control to off
 		set hex clipboard to off
 	}
-
-	// serial features
+}
+ch2-map-init-serial {
 	if (flag ch2-has-artifact is false) { // no artifact at all
 		set serial control off
 	} else { // you have the artifact
@@ -56,8 +60,8 @@ ch2-map-init {
 			copy register-parts
 		}
 	}
-	
-	// Inventory `look` registration
+}
+ch2-map-init-inventory-look {
 	if (flag ch2-carrying-monitor is true) {
 		register look + monitor -> look-monitor
 	}
@@ -103,32 +107,48 @@ ch2-map-init {
 	if (flag ch2-carrying-mainframeos is true) {
 		register look + mainframeos -> look-mainframeos
 	}
-	
-	// DEBUG OVERRIDES
+}
+ch2-map-init-serial-debug {
 	if (debug mode is on) {
+		if (flag debug-curr-state is false) {
+			show serial dialog {
+				"<g>-----------------------</>"
+				"<g>|  DEBUG MODE IS ON!  |</>"
+				"<g>-----------------------</>"
+			}
+		}
+		set flag debug-curr-state to true
 		set serial control on
-		set hex control to on
-		show serial dialog {
-			"<g>DEBUG MODE IS ON!</>"
-		}
-	}
-
-	// warp-in animation
-	if (flag ch2-manual-warp is true) { // workaround for WOPR
-		set flag ch2-manual-warp to false
-	} else {
-		if (warp state is warping) {
-			copy warping-in-fade-in
-		}
-	}
-	set player control on
-
-	// DEBUG
-	if (debug mode is on) {
 		copy register-storyflag
 		copy register-warp
+	} else {
+		if (flag debug-curr-state is true) {
+			show serial dialog {
+				"<g>------------------------</>"
+				"<g>|  DEBUG MODE IS OFF!  |</>"
+				"<g>------------------------</>"
+			}
+		}
+		set flag debug-curr-state to false
 	}
-	// END DEBUG
+}
+
+ch2-map-init-warp-in {
+	if (flag ch2-manual-warp is true) { // workaround for WOPR
+		set flag ch2-manual-warp to false
+	} else if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+	set player control on
+}
+
+ch2-map-init {
+	copy ch2-map-init-registers
+	copy ch2-map-init-hex
+	copy ch2-map-init-serial
+	copy ch2-map-init-inventory-look
+	copy ch2-map-init-serial-debug
+	copy ch2-map-init-warp-in
 
 	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)
 	// IF SO, be sure to turn off serial control and player control before doing any of that, and let it come back on again with this script.

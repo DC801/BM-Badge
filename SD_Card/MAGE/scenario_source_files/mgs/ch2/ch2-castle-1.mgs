@@ -285,7 +285,6 @@ ch2-attempt-door-check {
 		mutate ch2-pretoot-door-attempts + 1
 	}
 	// reset
-	set entity "%SELF%" interact_script to ch2-attempt-door-check
 }
 
 /* ---------- ENTITIES ---------- */
@@ -337,7 +336,7 @@ interact-ch2-wizard {
 		if (flag ch2-toot-done is false) {
 			show dialog { SELF "Bye." }
 			copy script ch2-wizard-descend
-			goto interact-ch2-wizard-wrapup // "return" early
+			goto label fake_return // "return" early
 		}
 	}
 	// wizard is up now and can talk normally
@@ -393,10 +392,7 @@ interact-ch2-wizard {
 			}
 		}
 	}
-	goto interact-ch2-wizard-wrapup // RESET
-}
-interact-ch2-wizard-wrapup { // must be a separate script so the branching above can "return" early
-	set entity "%SELF%" interact_script to interact-ch2-wizard
+	fake_return:
 }
 
 interact-ch2-wizard-mainframedone {

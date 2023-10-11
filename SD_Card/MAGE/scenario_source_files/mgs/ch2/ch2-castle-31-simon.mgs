@@ -108,7 +108,7 @@ simon-game-start-nevermind {
 	} else {
 		set entity Simon current_animation to 12
 		show dialog {
-			Simon "(TODO: well, then, feel free to ask again anytime!)"
+			Simon "Well then, feel free to ask again anytime."
 		}
 	}
 	set entity Simon current_animation to 0

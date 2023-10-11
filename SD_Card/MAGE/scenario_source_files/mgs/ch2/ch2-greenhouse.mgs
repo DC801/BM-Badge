@@ -25,42 +25,32 @@ on_load-ch2-greenhouse {
 
 on_tick-ch2-greenhouse {
 	// ethernettle interference checks
-	if entity EtherNettle1 is not inside geometry EtherNettle1Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle2 is not inside geometry EtherNettle2Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle3 is not inside geometry EtherNettle3Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle4 is not inside geometry EtherNettle4Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle5 is not inside geometry EtherNettle5Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle6 is not inside geometry EtherNettle6Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle7 is not inside geometry EtherNettle7Origin
-		then goto on_tick-fix-ethernettle
-	if entity EtherNettle8 is not inside geometry EtherNettle8Origin
-		then goto on_tick-fix-ethernettle
-	// normal door stuff
+	if (
+		entity EtherNettle1 is not inside geometry EtherNettle1Origin
+		|| entity EtherNettle2 is not inside geometry EtherNettle2Origin
+		|| entity EtherNettle3 is not inside geometry EtherNettle3Origin
+		|| entity EtherNettle4 is not inside geometry EtherNettle4Origin
+		|| entity EtherNettle5 is not inside geometry EtherNettle5Origin
+		|| entity EtherNettle6 is not inside geometry EtherNettle6Origin
+		|| entity EtherNettle7 is not inside geometry EtherNettle7Origin
+		|| entity EtherNettle8 is not inside geometry EtherNettle8Origin
+	) {
+		show dialog {
+			Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
+		}
+		teleport entity EtherNettle1 to geometry EtherNettle1Origin
+		teleport entity EtherNettle2 to geometry EtherNettle2Origin
+		teleport entity EtherNettle3 to geometry EtherNettle3Origin
+		teleport entity EtherNettle4 to geometry EtherNettle4Origin
+		teleport entity EtherNettle5 to geometry EtherNettle5Origin
+		teleport entity EtherNettle6 to geometry EtherNettle6Origin
+		teleport entity EtherNettle7 to geometry EtherNettle7Origin
+		teleport entity EtherNettle8 to geometry EtherNettle8Origin
+	}
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
 		set warp state to walk_from-greenhouse
 		load map main2
 	}
-	set map tick_script to on_tick-ch2-greenhouse // reset
-}
-on_tick-fix-ethernettle {
-	show dialog {
-		Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
-	}
-	teleport entity EtherNettle1 to geometry EtherNettle1Origin
-	teleport entity EtherNettle2 to geometry EtherNettle2Origin
-	teleport entity EtherNettle3 to geometry EtherNettle3Origin
-	teleport entity EtherNettle4 to geometry EtherNettle4Origin
-	teleport entity EtherNettle5 to geometry EtherNettle5Origin
-	teleport entity EtherNettle6 to geometry EtherNettle6Origin
-	teleport entity EtherNettle7 to geometry EtherNettle7Origin
-	teleport entity EtherNettle8 to geometry EtherNettle8Origin
-	goto on_tick-ch2-greenhouse
 }
 
 
@@ -104,7 +94,6 @@ interact-ch2-trekkie {
 		}
 	}
 	turn entity "%SELF%" east
-	set entity "%SELF%" interact_script to interact-ch2-trekkie
 }
 
 interact-ch2-modem {

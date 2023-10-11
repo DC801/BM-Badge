@@ -100,7 +100,6 @@ interact-ch2-timmy {
 		}
 	}
 	turn entity "%SELF%" east
-	set entity "%SELF%" interact_script to interact-ch2-timmy
 }
 interact-ch2-cat-lodge {
 	show dialog {
@@ -142,5 +141,4 @@ interact-ch2-alfonso-library {
 		SELF "Yes, yes, I'm getting work done! What does it look like I'm doing?"
 	}
 	turn entity "%SELF%" north
-	set entity "%SELF%" interact_script to interact-ch2-alfonso-library // RESET
 }
