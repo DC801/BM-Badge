@@ -152,26 +152,6 @@ ch2-interact-mainframe {
 			copy ch2-install-cpu
 		}
 	}
-	// if (flag ch2-installed-goldfish is false) {
-	// 	if (flag ch2-carrying-goldfish is true) {
-	// 		show dialog {
-	// 			name "" "(Now installing... the goldfish!)"
-	// 			"(Now the CPU can make decisions! A fish in the shell?)"
-	// 		}
-	// 		set flag temp to true
-	// 		copy ch2-install-goldfish
-	// 	}
-	// }
-	// if (flag ch2-installed-abacus is false) {
-	// 	if (flag ch2-carrying-abacus is true) {
-	// 		show dialog {
-	// 			name "" "(Now installing... the abacus!)"
-	// 			"(Now the CPU can remember what it's doing. 10 registers total!)"
-	// 		}
-	// 		set flag temp to true
-	// 		copy ch2-install-abacus
-	// 	}
-	// }
 	// final
 	if (flag temp is false) { // no components were installed
 		show dialog {

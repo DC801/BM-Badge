@@ -72,7 +72,6 @@ on_tick-ch2-castle-32 {
 		set warp state to walk_from-south
 		load map ch2-castle-34
 	}
-	set map tick_script to on_tick-ch2-castle-32 // reset
 }
 
 const! (
@@ -104,7 +103,6 @@ ch2-gloria-worry-walk {
 			set entity "%SELF%" path to worry-walk3
 		}
 	}
-	set entity "%SELF%" on_tick to ch2-gloria-worry-walk
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -157,7 +155,6 @@ interact-ch2-gloria {
 	play entity "%SELF%" animation 5 once
 	set entity "%SELF%" current_animation to 0
 	set player control on
-	set entity "%SELF%" interact_script to interact-ch2-gloria
 }
 interact-ch2-samson {
 	copy face-player
@@ -183,7 +180,6 @@ interact-ch2-samson {
 	mutate ch2-samson-count + 1
 	mutate ch2-samson-count % 4
 	turn entity "%SELF%" west
-	set entity "%SELF%" interact_script to interact-ch2-samson
 }
 
 interact-ch2-vendingmachine {
@@ -227,7 +223,6 @@ interact-ch2-vendingmachine {
 		}
 		turn entity "Sea Moss" south
 	}
-	set entity "%SELF%" interact_script to interact-ch2-vendingmachine
 }
 
 interact-ch2-seamoss {
@@ -260,8 +255,6 @@ interact-ch2-seamoss {
 					PLAYER "Hey, Sea Moss. I heard you knew something about computer memory."
 				}
 			}
-			// The above can't be part of the copy script below, since script jumps are involved
-			// (spun off into its own script for length reasons)
 			copy interact-ch2-seamoss-cutscene
 		} else {
 			show dialog {
@@ -271,7 +264,6 @@ interact-ch2-seamoss {
 		}
 	}
 	turn entity "%SELF%" south
-	set entity "%SELF%" interact_script to interact-ch2-seamoss //RESET
 }
 
 ch2-walk-to-vend {
@@ -355,7 +347,6 @@ ch2-touch-ramchips {
 		> "Yes" : ch2-touch-ramchips-yes
 		> "No" : ch2-touch-ramchips-no
 	}
-	set entity "%SELF%" interact_script to ch2-touch-ramchips // RESET
 }
 ch2-touch-ramchips-yes {
 	show dialog {

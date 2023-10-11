@@ -28,7 +28,6 @@ on_tick-ch2-smithfamily {
 		set warp state to walk_from-smithfamily
 		load map main2
 	}
-	set map tick_script to on_tick-ch2-smithfamily
 }
 
 /* ---------- EXIT STUFF ---------- */

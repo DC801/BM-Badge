@@ -1428,12 +1428,16 @@ var linker = function (_actionArray) {
 	var actionArray = JSON.parse(JSON.stringify(_actionArray));
 	var arraySize = actionArray.length;
 	var labels = {};
-	for (var i = 0; i < arraySize; i++) {
-		if (actionArray[i].action == "LABEL") {
-			labels[actionArray[i].value] = i;
-			actionArray.splice(i,1)
-			arraySize -= 1;
-		}
+	var labelIndex = actionArray.findIndex(function (item) {
+		return item.action === "LABEL";
+	});
+	while (labelIndex !== -1) {
+		labels[actionArray[labelIndex].value] = labelIndex;
+		actionArray.splice(labelIndex,1)
+		arraySize -= 1;
+		labelIndex = actionArray.findIndex(function (item) {
+			return item.action === "LABEL";
+		});
 	}
 	actionArray.forEach(function(action) {
 		if (

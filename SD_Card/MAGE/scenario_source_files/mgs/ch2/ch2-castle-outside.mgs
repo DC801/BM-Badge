@@ -26,7 +26,7 @@ on_load-ch2-castle-outside {
 	// Village elders hiding
 	if (variable ch2-storyflag-round is not 0) {
 		set entity Bert tick_script to yeet
-		}
+	}
 	if (
 		variable ch2-storyflag-round is 1
 		|| variable ch2-storyflag-round is 2
@@ -35,11 +35,6 @@ on_load-ch2-castle-outside {
 	) {
 		set entity Jackob tick_script to yeet
 		set entity Alfonso tick_script to yeet
-		}
-	if (debug mode is on) {
-		show serial dialog {
-			"<g>DEBUG</>: ch2-storyflag-round = $ch2-storyflag-round$"
-		}
 	}
 	// animations
 	if (warp state is walk_from-north) {
@@ -71,7 +66,6 @@ on_tick-ch2-castle-outside {
 		fade out camera to #000000 over 500ms
 		load map main2
 	}
-	set map tick_script to on_tick-ch2-castle-outside // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -112,7 +106,6 @@ interact-ch2-alfonso-outside {
 			SELF "Go on in! You'll do fine!"
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-alfonso-outside // RESET
 }
 
 interact-ch2-bert-outside {
@@ -137,13 +130,12 @@ interact-ch2-jackob-outside {
 			SELF "XA will be able to help you on the inside. Good luck."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-jackob-outside // RESET
 }
 
 interact-ch2-pedestal {
 	show dialog {
 		PLAYER "What a strange symbol. Like a trident, but with different shapes on the tips of the tines: a square, triangle, and circle."
-		"But what does it mean?"
+		"But what does it mean?" // Frontier psychiatry
 	}
 }
 
