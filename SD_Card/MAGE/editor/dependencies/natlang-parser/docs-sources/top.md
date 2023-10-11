@@ -40,10 +40,11 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 	1. [Variable decay](#variable-decay)
 	2. [Variable types and examples](#variable-types-and-examples)
 	3. [General types, limited values](#general-types-limited-values)
-5. [Macros](#macros)
+5. [Advanced syntax](#advanced-syntax)
 	1. [Labels](#labels)
-	1. [Zigzag (`if` / `else`)](#zigzag-if--else)
-	2. [`const!`](#const)
+	2. [`return`](#return)
+	3. [Zigzag (`if` / `else`)](#zigzag-if--else)
+	4. [`const!`](#const)
 6. [Action dictionary](#action-dictionary)
 	1. [Actions quick reference](#actions-quick-reference)
 	2. [Game management actions](#game-management-actions)
@@ -1007,6 +1008,10 @@ One...
 Two...
 Four... wait, did I skip one?
 ```
+
+### Return
+
+`return` is a keyword that will end the current script early. (This will not "return" a value to the script's "caller;" it simply sets the action index past the end of the script, causing it to immediately end.)
 
 ### Zigzag (`if` / `else`)
 

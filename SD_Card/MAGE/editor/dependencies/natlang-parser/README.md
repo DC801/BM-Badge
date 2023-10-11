@@ -42,10 +42,11 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 	1. [Variable decay](#variable-decay)
 	2. [Variable types and examples](#variable-types-and-examples)
 	3. [General types, limited values](#general-types-limited-values)
-5. [Macros](#macros)
+5. [Advanced syntax](#advanced-syntax)
 	1. [Labels](#labels)
-	1. [Zigzag (`if` / `else`)](#zigzag-if--else)
-	2. [`const!`](#const)
+	2. [`return`](#return)
+	3. [Zigzag (`if` / `else`)](#zigzag-if--else)
+	4. [`const!`](#const)
 6. [Action dictionary](#action-dictionary)
 	1. [Actions quick reference](#actions-quick-reference)
 	2. [Game management actions](#game-management-actions)
@@ -1010,6 +1011,10 @@ Two...
 Four... wait, did I skip one?
 ```
 
+### Return
+
+`return` is a keyword that will end the current script early. (This will not "return" a value to the script's "caller;" it simply sets the action index past the end of the script, causing it to immediately end.)
+
 ### Zigzag (`if` / `else`)
 
 The basic actions that involve conditional checks will trigger either a jump to an entirely new script or a jump to an arbitrary position within the same script. (Note: this doesn't include things like multiple choice options within dialogs; those result in script jumps only.)
@@ -1269,6 +1274,7 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [GOTO_ACTION_INDEX](#goto_action_index)
 	- `goto index $action_index:number`
 	- `goto label $action_index:bareword`
+	- `return`
 - [COPY_SCRIPT](#copy_script)
 	- `copy scriptName`
 - [SET_MAP_TICK_SCRIPT](#set_map_tick_script)
@@ -1914,6 +1920,8 @@ Jumps to the action at the given [label](#labels) (bareword) or action index (nu
 
 The index variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.
 
+The keyword `return` uses this action to jump to the end of the current script (i.e. "return early").
+
 ```
 goto index $action_index:number
 ```
@@ -1922,10 +1930,16 @@ goto index $action_index:number
 goto label $action_index:bareword
 ```
 
+```
+return
+	// action_index: auto return
+```
+
 Examples:
 
 - `goto index $action_index:number`
 - `goto label $action_index:bareword`
+- `return`
 
 #### COPY_SCRIPT
 

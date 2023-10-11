@@ -632,7 +632,7 @@ mgs.actionDictionary = [{
 		pattern: "$bool_value:boolean hex editor",
 	},
 	{
-		action: "LABEL", // this must be below `SET_HEX_EDITOR_STATE`
+		action: "LABEL", // this must be below `SET_HEX_EDITOR_STATE`!!
 		pattern: "$value:bareword :",
 	},
 	{
@@ -642,7 +642,6 @@ mgs.actionDictionary = [{
 	{
 		action: "RUN_SCRIPT",
 		pattern: "goto ?script $script:string",
-		// TODO LOLOL
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
@@ -651,6 +650,11 @@ mgs.actionDictionary = [{
 	{
 		action: "GOTO_ACTION_INDEX",
 		pattern: "goto label $action_index:bareword",
+	},
+	{
+		action: "GOTO_ACTION_INDEX",
+		pattern: "return",
+		values: { "action_index": "auto return" },
 	},
 	{
 		action: "LOOP_ENTITY_ALONG_GEOMETRY",
