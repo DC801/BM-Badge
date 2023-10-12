@@ -3363,6 +3363,48 @@ var zigzagTestStrings = [
 }`,
 ]
 
+// WHYLE TESTS
+
+var whyleTestStrings = [
+`testScript {
+	while (CONDITION) {
+		BEHAVIOR
+	}
+}`,
+`testScript {
+	for (INIT; COND; ITER) {
+		BEHAVIOR
+	}
+}`,
+`testScript {
+	for (INIT; COND; ITER) {
+		BEHAVIOR
+		BEHAVIOR
+		break
+		BEHAVIOR
+		BEHAVIOR
+	}
+}`,
+`testScript {
+	for (INIT; COND; ITER) {
+		BEHAVIOR
+		BEHAVIOR
+		continue
+		BEHAVIOR
+		BEHAVIOR
+	}
+}`,
+`testScript {
+	for (INIT; COND;) {
+		BEHAVIOR
+		BEHAVIOR
+		continue
+		BEHAVIOR
+		BEHAVIOR
+	}
+}`,
+]
+
 var constantsTestStrings = [
 `testScript {
 	const! ($five = 5)

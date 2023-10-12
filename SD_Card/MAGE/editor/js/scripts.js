@@ -1439,6 +1439,9 @@ var linker = function (_actions) {
 	var labelMap = {}; // label name -> action index
 	var index = getNextLabelIndex(actions);
 	while (index !== -1) {
+		if (labelMap[actions[index].value] !== undefined) {
+			console.warn("Label already present for " + labelMap[actions[index].value]);
+		}
 		labelMap[actions[index].value] = index;
 		actions.splice(index,1)
 		index = getNextLabelIndex(actions);

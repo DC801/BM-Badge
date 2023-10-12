@@ -1011,9 +1011,85 @@ Four... wait, did I skip one?
 
 ### Return
 
-`return` is a keyword that will end the current script early. (This will not "return" a value to the script's "caller;" it simply sets the action index past the end of the script, causing it to immediately end.)
+`return` is a keyword that will end the current script early.
 
 This will not stop `on_tick` scripts from looping on the next game tick, however; if you want to stop an `on_tick` script for good, you must `goto null_script`.
+
+#### Returning a value
+
+This keyword will not "return" a value to the script's "caller;" it simply sets the action index past the end of the script, causing it to immediately end.
+
+If you want to emulate value-returning behavior, you might try assigning a value to a common variable as a script's last action, then have another script `COPY_SCRIPT` it and use the common variable like normal.
+
+### While and For
+
+`while` and `for` are looping syntax constructions that expand via "goto [label](#labels)" actions and a label linker.
+
+Special keywords:
+
+- `continue`: This will stop the loop (without finishing the contents of the current loop) and start it again from the top (*after* incrementing, in the case of `for`).
+- `break`: This will abandon all looping behavior, and continue the script below the `while` or `for` body.
+
+Note that if multiple loops are nested, `break` and `continue` will only apply to their own associated loop, and not arbitrary named `while` or `for` loops. (You might try `goto label ___` instead.)
+
+#### While
+
+`while` lets you repeat a segment of code while the condition remains true.
+
+```
+scriptName {
+  while (variable sodas < 5) {
+    show serial dialog "Wow! I've had $sodas$ sodas today!"
+    mutate sodas + 1
+  }
+}
+```
+
+#### For
+
+For `for`, the parenthesis encloses three sets of words separated by semicolons (`;`):
+
+1. Initial: setting the value of your loop counting variable
+2. Condition: the condition under which the body of the `for` is to be executed
+3. Increment: changing the value of your loop counting variable
+
+```
+script {
+  show serial dialog "Let's count to 4!"
+  for (mutate i = 1; variable i <= 3; mutate i + 1) {
+    show serial dialog "$i$..."
+  }
+    show serial dialog "$i$!"
+}
+```
+
+will produce:
+
+```
+Lets count to 4!
+1...
+2...
+3...
+4!
+```
+
+Fun fact: `for` is kind of like `while`, but with extra steps:
+
+```
+for (INIT; COND; ITER) {
+  BODY
+}
+```
+
+is equivalent to
+
+```
+INIT
+while (COND) {
+  BODY
+  ITER
+}
+```
 
 ### Zigzag (`if` / `else`)
 
@@ -1027,7 +1103,7 @@ MGS Natlang's "zigzag" macro expands standard `if`/`else` language syntax into t
 
 Zigzags always consist of an `if` statement, at bare minimum:
 
-- `if ( <CONDITION> ) { <BEHAVIOR> }`
+- `if ( [CONDITION] ) { [BEHAVIOR] }`
 
 ```
 scriptName {
@@ -1046,8 +1122,8 @@ scriptName {
 
 `if` statements can be followed by `else if` and `else` in the standard manner, wherein the script logic will take one of many mutually-exclusive paths.
 
-- `else if ( <CONDITION> ) { <BEHAVIOR> }`
-- `else { <BEHAVIOR> }`
+- `else if ( [CONDITION] ) { [BEHAVIOR] }`
+- `else { [BEHAVIOR] }`
 
 ```
 scriptName {
@@ -1121,7 +1197,7 @@ const! ()
 Inside the above parentheses can be any number of constant assignments:
 
 ```
-<CONST_NAME> = <VALUE>
+[CONST_NAME] = [VALUE]
 ```
 
 - `CONST_NAME`: `$` + [bareword](#bareword) (e.g. `$varName`)
