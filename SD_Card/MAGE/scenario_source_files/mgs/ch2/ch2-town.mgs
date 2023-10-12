@@ -119,7 +119,6 @@ on_tick-ch2-town {
 		fade out camera to #000000 over 500ms
 		load map ch2-castle-outside
 	}
-	set map tick_script to on_tick-ch2-town // reset
 }
 
 on_tick-ch2-town-walkfadeout {
@@ -308,7 +307,6 @@ interact-ch2-jackob-end {
 			"In all seriousness, do feel free to give chapter 1 a go."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-jackob-end // RESET
 }
 
 interact-ch2-alfonso-end {

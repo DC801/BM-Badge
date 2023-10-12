@@ -317,7 +317,6 @@ interact-ch2-marathonbob {
 	// turn back to the original facing direction
 	copy unface-player-and-resume-walk
 	mutate tempvar = 0 // courtesy reset
-	set entity "%SELF%" interact_script to interact-ch2-marathonbob // reset
 }
 
 interact-ch2-icechest {
@@ -352,5 +351,4 @@ interact-ch2-icechest {
 		copy ch2-pickup-cactuscooler
 		set flag interrupt to true // you just picked it up
 	}
-	set entity "%SELF%" interact_script to interact-ch2-icechest // reset
 }

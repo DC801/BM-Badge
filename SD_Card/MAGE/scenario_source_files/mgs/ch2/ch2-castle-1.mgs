@@ -198,7 +198,6 @@ on_tick-ch2-castle-1 {
 			}
 		}
 	}
-	set map tick_script to on_tick-ch2-castle-1 // reset
 }
 
 /* ---------- EXIT STUFF ---------- */

@@ -93,7 +93,6 @@ ch2-touch-needle {
 			> "No" : ch2-touch-needle-no
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-touch-needle // RESET
 }
 
 ch2-touch-needle-yes {
@@ -108,5 +107,5 @@ ch2-touch-needle-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-needle // RESET
+	set entity "%SELF%" interact_script to ch2-touch-needle  // reset after script jump
 }

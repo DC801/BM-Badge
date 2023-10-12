@@ -81,7 +81,6 @@ ch2-touch-abacus {
 			> "No" : ch2-touch-abacus-no
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-touch-abacus // RESET
 }
 
 ch2-hide-abacus {
@@ -101,7 +100,7 @@ ch2-touch-abacus-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-abacus // RESET
+	set entity "%SELF%" interact_script to ch2-touch-abacus  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */

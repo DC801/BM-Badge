@@ -398,7 +398,7 @@ simon-player-listen {
 			goto simon-player-do-move
 		}
 	}
-	set entity Simon tick_script to simon-player-listen // reset this loop
+	set entity Simon tick_script to simon-player-listen // reset this loop (on next game tick?)
 }
 
 simon-player-do-move {

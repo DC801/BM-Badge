@@ -87,7 +87,6 @@ ch2-touch-clock {
 			}
 		// }
 	}
-	set entity "%SELF%" interact_script to ch2-touch-clock // RESET
 }
 ch2-touch-clock-yes {
 	show dialog {
@@ -101,5 +100,5 @@ ch2-touch-clock-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-clock // RESET
+	set entity "%SELF%" interact_script to ch2-touch-clock  // reset after script jump
 }

@@ -192,7 +192,6 @@ ch2-touch-heatsink {
 			> "No" : ch2-touch-heatsink-no
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-touch-heatsink // RESET
 }
 ch2-touch-heatsink-yes {
 	show dialog {
@@ -206,5 +205,5 @@ ch2-touch-heatsink-no {
 	show dialog {
 		PLAYER "Another time, perhaps."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-heatsink // RESET
+	set entity "%SELF%" interact_script to ch2-touch-heatsink  // reset after script jump
 }
