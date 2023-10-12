@@ -214,10 +214,10 @@ whyle.expandWhyle = function (report, reportType) {
 	.concat([
 		// continuepoint :
 		continuepoint,
+		buildToken(continuepoint, ":", "operator"),
 	])
 	.concat(increment) // INCREMENT (`for` only)
 	.concat([
-		buildToken(continuepoint, ":", "operator"),
 		// loopcheck :
 		loopcheck,
 		buildToken(loopcheck, ":", "operator"),

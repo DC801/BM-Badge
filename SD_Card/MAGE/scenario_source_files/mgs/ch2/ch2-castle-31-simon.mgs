@@ -209,9 +209,8 @@ simon-game-start {
 simon-enemy-turn-start {
 	set flag ch2-simon-move-fail to false
 	wait 800ms
-	mutate i = 0
 	show serial dialog {"SETTING ITER $i$"}
-	while (variable i is < simon-round) {
+	for (mutate i = 0; variable i is < simon-round; mutate i + 1) {
 		show serial dialog {"Loop is now $i$"}
 		if (variable i is == 0) { mutate simon-pos-curr = simon-pos1 }
 		else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2 }
@@ -251,7 +250,7 @@ simon-enemy-turn-start {
 		set entity Simon current_animation to 5
 		turn light ALL off
 		wait 150ms
-		mutate i + 1
+		
 	}
 	show serial dialog {"SIMON TURN OVER!"}
 	goto simon-player-turn-start
