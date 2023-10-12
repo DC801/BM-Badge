@@ -80,8 +80,8 @@ goodmorning-cutscene {
 		entity "Uncle Zappy" "Oh good! They're awake!"
 	}
 	// doc: Is that PLAYER I hear?
-	set entity "Uncle Zappy" tick_script to zappy-arriving
-	set entity "Aunt Zippy" tick_script to zippy-arriving
+	set entity "Uncle Zappy" on_tick to zappy-arriving
+	set entity "Aunt Zippy" on_tick to zippy-arriving
 	wait 400ms /**/ pan camera to geometry morning-camera over 1000ms
 	wait 600ms /**/ show dialog {
 		PLAYER "Oh! Uncle Zappy! Aunt Zippy!"
@@ -93,15 +93,15 @@ goodmorning-cutscene {
 	wait 200ms /**/ show dialog {
 		PLAYER "(OH GOD IT'S TUESDAY!)"
 	}
-	wait 200ms /**/ set entity "%PLAYER%" tick_script to freak-out
+	wait 200ms /**/ set entity "%PLAYER%" on_tick to freak-out
 	wait 200ms /**/ show dialog {
 		entity "Aunt Zippy" "Don't worry! We weren't about to let you miss it!"
 	}
-	wait 200ms /**/ set entity "%PLAYER%" tick_script to spin_self_clockwise
+	wait 200ms /**/ set entity "%PLAYER%" on_tick to spin_self_clockwise
 	wait 200ms /**/ show dialog {
 		PLAYER "(AAAAH!)"
 	}
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	turn entity "%PLAYER%" west
 	show dialog {
 		entity "Uncle Zappy" "Your 16th birthday is a big day. But no matter what happens, we're proud of you and the mage you've become."
@@ -119,8 +119,8 @@ goodmorning-cutscene {
 	}
 	pan camera to entity "%PLAYER%" over 399ms
 	wait 1ms
-	set entity "Uncle Zappy" tick_script to zappy-leaving
-	set entity "Aunt Zippy" tick_script to zippy-leaving
+	set entity "Uncle Zappy" on_tick to zappy-leaving
+	set entity "Aunt Zippy" on_tick to zippy-leaving
 	set flag goodmorning to true
 	set player control to on
 	// RESET (jump to top)
@@ -131,7 +131,7 @@ zippy-leaving {
 	walk entity "Aunt Zippy" to geometry zippy-leave over 300ms
 	walk entity "Aunt Zippy" along geometry zippy-leave over 1800ms
 	teleport entity "Aunt Zippy" to geometry magehouse-hidingplace
-	set entity Cake interact_script to show_dialog-cake-nozappy
+	set entity Cake on_interact to show_dialog-cake-nozappy
 	goto null_script
 }
 zappy-leaving {
@@ -162,7 +162,7 @@ walk-to-lodge {
 	set player control to off
 	teleport entity Verthandi to geometry catwalk-hide
 	teleport entity Marta to geometry catwalk-hide
-	set entity Cleo tick_script to null_script
+	set entity Cleo on_tick to null_script
 	teleport entity Cleo to geometry catwalk-hide
 	teleport entity Shepherd to geometry catwalk-hide
 	teleport entity "Max Swagger" to geometry catwalk-hide
@@ -176,9 +176,9 @@ walk-to-lodge {
 	turn entity Helga north
 	turn entity Ram north
 	walk entity "%PLAYER%" along geometry enter_from-magehouse over 300ms
-	wait 400ms /**/ set entity Helga tick_script to zappy-to-lodge
-	wait 200ms /**/ set entity Ram tick_script to zippy-to-lodge
-	wait 400ms /**/ set entity "%PLAYER%" tick_script to mage-to-lodge
+	wait 400ms /**/ set entity Helga on_tick to zappy-to-lodge
+	wait 200ms /**/ set entity Ram on_tick to zippy-to-lodge
+	wait 400ms /**/ set entity "%PLAYER%" on_tick to mage-to-lodge
 	set flag walked-to-lodge to true
 }
 
@@ -191,7 +191,7 @@ show_dialog-zappy-start {
 		show dialog { SELF "Did you remember to feed Mr. Tickles today?" }
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-zappy-start
+	set entity "%SELF%" on_interact to show_dialog-zappy-start
 }
 
 show_dialog-zippy-start {
@@ -202,7 +202,7 @@ show_dialog-zippy-start {
 		show dialog { SELF "How's your day going, %PLAYER%?" }
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-zippy-start
+	set entity "%SELF%" on_interact to show_dialog-zippy-start
 }
 
 show_dialog-goldfish {
@@ -226,7 +226,7 @@ show_dialog-goldfish {
 		}
 	}
 	// RESET
-	set entity "Mr. Tickles" interact_script to show_dialog-goldfish
+	set entity "Mr. Tickles" on_interact to show_dialog-goldfish
 }
 
 show_dialog-magejournal {
@@ -294,7 +294,7 @@ debug-walk-to-lodge {
 }
 
 debug-walk-to-lodge-no {
-	set entity "%SELF%" interact_script to debug-walk-to-lodge-q
+	set entity "%SELF%" on_interact to debug-walk-to-lodge-q
 }
 
 debug-goodmorning-q {
@@ -313,7 +313,7 @@ debug-goodmorning {
 	}
 	set hex control to off
 	copy set-goodmorning-flags-false
-	set map tick_script to on_tick-magehouse
+	set map on_tick to on_tick-magehouse
 }
 
 debug-goodmorning-plus {
@@ -325,11 +325,11 @@ debug-goodmorning-plus {
 	set flag hide-lodge-crowd-mini to false
 	set flag tuesdayd to false
 	set flag hintman-explanation to false
-	set map tick_script to on_tick-magehouse
+	set map on_tick to on_tick-magehouse
 }
 
 debug-goodmorning-no {
-	set entity "%SELF%" interact_script to debug-goodmorning-q
+	set entity "%SELF%" on_interact to debug-goodmorning-q
 }
 
 debug-everything-q {
@@ -347,17 +347,17 @@ debug-everything-on {
 	copy set-goodmorning-flags-true
 	set flag tuesday-walkedup to true
 	set flag hintman-explanation to true
-	set map tick_script to on_tick-magehouse
+	set map on_tick to on_tick-magehouse
 	teleport entity "Debug Exa" to geometry debug-exa-spot
 	show dialog {
 		SELF "Debug mode on."
 	}
-	set entity "%SELF%" interact_script to debug-everything-q
+	set entity "%SELF%" on_interact to debug-everything-q
 }
 
 debug-everything-off {
 	show dialog { SELF "Never mind."}
-	set entity "%SELF%" interact_script to debug-everything-q
+	set entity "%SELF%" on_interact to debug-everything-q
 }
 
 dialog dialog-goodmorning-wake { // lol what is this?

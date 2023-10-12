@@ -140,11 +140,11 @@ ch2-touch-powersupply-yes {
 	}
 	copy script ch2-hide-powersupply
 	copy script ch2-pickup-powersupply
-	set entity "%SELF%" interact_script to null_script
+	set entity "%SELF%" on_interact to null_script
 }
 ch2-touch-powersupply-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-powersupply  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-powersupply  // reset after script jump
 }

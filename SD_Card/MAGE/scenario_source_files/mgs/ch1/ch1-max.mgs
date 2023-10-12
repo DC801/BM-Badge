@@ -52,17 +52,17 @@ cat-walking-to-work {
 on_tick-max-neutral {
 	if flag storyflag-catwork is true then goto null_script
 	if entity "%PLAYER%" type is pipscat then goto on_tick-max-catwatch
-	set entity Felix tick_script to felix-loiter
-	set entity Maru tick_script to maru-loiter
-	set entity "B. Murray" tick_script to bmurray-loiter
-	set entity Deuteronomy tick_script to deut-loiter
+	set entity Felix on_tick to felix-loiter
+	set entity Maru on_tick to maru-loiter
+	set entity "B. Murray" on_tick to bmurray-loiter
+	set entity Deuteronomy on_tick to deut-loiter
 }
 on_tick-max-catwatch {
 	if entity "%PLAYER%" type is not pipscat then goto on_tick-max-neutral
-	set entity Felix tick_script to face-player
-	set entity Maru tick_script to face-player
-	set entity "B. Murray" tick_script to face-player
-	set entity Deuteronomy tick_script to face-player
+	set entity Felix on_tick to face-player
+	set entity Maru on_tick to face-player
+	set entity "B. Murray" on_tick to face-player
+	set entity Deuteronomy on_tick to face-player
 	if entity "%PLAYER%" current_animation is 2 then goto on_tick-max-thumbwatch
 }
 on_tick-max-thumbwatch {
@@ -90,13 +90,13 @@ send-cats-to-work {
 		"Let's get started!"
 	}
 	wait 300ms
-	set entity Felix tick_script to cat-walking-to-work
+	set entity Felix on_tick to cat-walking-to-work
 	wait 400ms
-	set entity Deuteronomy tick_script to cat-walking-to-work
+	set entity Deuteronomy on_tick to cat-walking-to-work
 	wait 400ms
-	set entity Maru tick_script to cat-walking-to-work
+	set entity Maru on_tick to cat-walking-to-work
 	wait 400ms
-	set entity "B. Murray" tick_script to cat-walking-to-work
+	set entity "B. Murray" on_tick to cat-walking-to-work
 	wait 400ms
 	show dialog {
 		entity "Max Swagger"
@@ -119,7 +119,7 @@ show_dialog-max-crewmissing {
 		"But is the crew all here to see it...?"
 	}
 	set player control to on
-	set entity "Max Swagger" tick_script to on_tick-max-neutral
+	set entity "Max Swagger" on_tick to on_tick-max-neutral
 }
 
 /* -------- REGULAR STUFF -------- */
@@ -138,7 +138,7 @@ show_dialog-felix {
 		}
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-felix
+	set entity "%SELF%" on_interact to show_dialog-felix
 }
 show_dialog-deut {
 	if (entity "%SELF%" is glitched) {
@@ -152,7 +152,7 @@ show_dialog-deut {
 		}
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-deut
+	set entity "%SELF%" on_interact to show_dialog-deut
 }
 show_dialog-maru {
 	if (entity "%SELF%" is glitched) {
@@ -164,7 +164,7 @@ show_dialog-maru {
 		show dialog { SELF "Meow." }
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-maru
+	set entity "%SELF%" on_interact to show_dialog-maru
 }
 show_dialog-bmurray {
 	if (entity "%SELF%" is glitched) {
@@ -178,7 +178,7 @@ show_dialog-bmurray {
 		}
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-bmurray
+	set entity "%SELF%" on_interact to show_dialog-bmurray
 }
 
 show_dialog-max-start {
@@ -254,5 +254,5 @@ show_dialog-max-start {
 		set player control on
 	}
 	// RESET
-	set entity "Max Swagger" interact_script to show_dialog-max-start
+	set entity "Max Swagger" on_interact to show_dialog-max-start
 }

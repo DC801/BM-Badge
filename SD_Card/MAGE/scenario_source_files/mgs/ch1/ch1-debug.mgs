@@ -17,7 +17,7 @@ debug-hub-go {
 }
 
 debug-hub-no {
-	set entity "%SELF%" interact_script to debug-hub-q
+	set entity "%SELF%" on_interact to debug-hub-q
 }
 
 debug-demobonus-q {
@@ -36,13 +36,13 @@ debug-demobonus-pre-flags-true {
 	copy script set-story-flags-true
 	set flag wonthedemo to true
 	set warp state to exit_from-credits
-	set entity "%SELF%" interact_script to debug-demobonus-q
+	set entity "%SELF%" on_interact to debug-demobonus-q
 }
 
 debug-demobonus-pre-flags-false {
 	copy script set-story-flags-false
 	set flag wonthedemo to false
-	set entity "%SELF%" interact_script to debug-demobonus-q
+	set entity "%SELF%" on_interact to debug-demobonus-q
 }
 
 debug-demobonus-event-flags-false {
@@ -50,11 +50,11 @@ debug-demobonus-event-flags-false {
 	set flag demobonus-jackob-informed to false
 	set flag demobonus-timmy-yell to false
 	set flag demobonus-sportsbook-read to false
-	set entity "%SELF%" interact_script to debug-demobonus-q
+	set entity "%SELF%" on_interact to debug-demobonus-q
 }
 
 debug-demobonus-no {
-	set entity "%SELF%" interact_script to debug-demobonus-q
+	set entity "%SELF%" on_interact to debug-demobonus-q
 }
 
 debug-set-flags-false-q {
@@ -87,7 +87,7 @@ debug-set-story-and-misc-flags-false {
 	show dialog {
 		SELF "All story and misc flags set to FALSE."
 	}
-	set entity "%SELF%" interact_script to debug-set-flags-false-q
+	set entity "%SELF%" on_interact to debug-set-flags-false-q
 }
 
 debug-set-backstory-false {
@@ -95,7 +95,7 @@ debug-set-backstory-false {
 	show dialog {
 		SELF "All entities have forgotten their first\nconversations with you."
 	}
-	set entity "%SELF%" interact_script to debug-set-flags-false-q
+	set entity "%SELF%" on_interact to debug-set-flags-false-q
 }
 
 debug-set-backstory-true {
@@ -103,7 +103,7 @@ debug-set-backstory-true {
 	show dialog {
 		SELF "All entities are inexplicably under the\nimpression that you've spoken to them\nbefore."
 	}
-	set entity "%SELF%" interact_script to debug-set-flags-true-q
+	set entity "%SELF%" on_interact to debug-set-flags-true-q
 }
 
 debug-set-glitch-flags-true {
@@ -112,7 +112,7 @@ debug-set-glitch-flags-true {
 	make entity Kid unglitched
 	make entity Fountain unglitched
 	make entity Hamster unglitched
-	set entity "%SELF%" interact_script to debug-set-flags-true-q
+	set entity "%SELF%" on_interact to debug-set-flags-true-q
 }
 
 debug-set-glitch-flags-false {
@@ -121,7 +121,7 @@ debug-set-glitch-flags-false {
 	make entity Kid glitched
 	make entity Fountain glitched
 	make entity Hamster glitched
-	set entity "%SELF%" interact_script to debug-set-flags-false-q
+	set entity "%SELF%" on_interact to debug-set-flags-false-q
 }
 
 debug-set-all-true {
@@ -135,21 +135,21 @@ debug-set-all-true {
 	show dialog {
 		SELF "All flags set to TRUE. You may have to reload the map to see some changes."
 	}
-	set entity "%SELF%" interact_script to debug-set-flags-true-q
+	set entity "%SELF%" on_interact to debug-set-flags-true-q
 }
 
 debug-set-flags-false-no {
 	show dialog {
 		SELF "Nothing changed."
 	}
-	set entity "%SELF%" interact_script to debug-set-flags-false-q
+	set entity "%SELF%" on_interact to debug-set-flags-false-q
 }
 
 debug-set-flags-true-no {
 	show dialog {
 		SELF "Nothing changed."
 	}
-	set entity "%SELF%" interact_script to debug-set-flags-true-q
+	set entity "%SELF%" on_interact to debug-set-flags-true-q
 }
 
 load_map-warp_zone {

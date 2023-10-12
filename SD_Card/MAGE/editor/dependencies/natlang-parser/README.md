@@ -1246,14 +1246,14 @@ Some of these patterns may also have some hidden parameters baked in to the phra
 As a reminder, words in parentheses are optional. For example, the dictionary pattern:
 
 ```
-set entity $entity:string tick_script (to) $string:string 
+set entity $entity:string on_tick (to) $string:string 
 ```
 
 will be satisfied by either of the following:
 
 ```
-set entity "Entity Name" tick_script to scriptName
-set entity "Entity Name" tick_script scriptName
+set entity "Entity Name" on_tick to scriptName
+set entity "Entity Name" on_tick scriptName
 ```
 
 Misc tips:
@@ -1356,16 +1356,13 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [COPY_SCRIPT](#copy_script)
 	- `copy scriptName`
 - [SET_MAP_TICK_SCRIPT](#set_map_tick_script)
-	- `set map tick_script to scriptName`
+	- `set map on_tick to scriptName`
 - [SET_ENTITY_INTERACT_SCRIPT](#set_entity_interact_script)
 	- `set entity "Entity Name" on_interact to scriptName`
-	- `set entity "Entity Name" interact_script to scriptName`
 - [SET_ENTITY_TICK_SCRIPT](#set_entity_tick_script)
 	- `set entity "Entity Name" on_tick to scriptName`
-	- `set entity "Entity Name" tick_script to scriptName`
 - [SET_ENTITY_LOOK_SCRIPT](#set_entity_look_script)
 	- `set entity "Entity Name" on_look to scriptName`
-	- `set entity "Entity Name" look_script to scriptName`
 - [SET_SCRIPT_PAUSE](#set_script_pause)
 	- `pause entity "Entity Name" on_tick`
 	- `unpause entity "Entity Name" on_tick`
@@ -1465,18 +1462,12 @@ The example syntax in the following entries is to be inserted into the "conditio
 	- `entity "Entity Name" y is 32`
 	- `entity "Entity Name" y is not 32`
 - [CHECK_ENTITY_INTERACT_SCRIPT](#check_entity_interact_script)
-	- `entity "Entity Name" interact_script is scriptName`
-	- `entity "Entity Name" interact_script is not scriptName`
 	- `entity "Entity Name" on_interact is scriptName`
 	- `entity "Entity Name" on_interact is not scriptName`
 - [CHECK_ENTITY_TICK_SCRIPT](#check_entity_tick_script)
-	- `entity "Entity Name" tick_script is scriptName`
-	- `entity "Entity Name" tick_script is not scriptName`
 	- `entity "Entity Name" on_tick is scriptName`
 	- `entity "Entity Name" on_tick is not scriptName`
 - [CHECK_ENTITY_LOOK_SCRIPT](#check_entity_look_script)
-	- `entity "Entity Name" look_script is scriptName`
-	- `entity "Entity Name" look_script is not scriptName`
 	- `entity "Entity Name" on_look is scriptName`
 	- `entity "Entity Name" on_look is not scriptName`
 - [CHECK_ENTITY_TYPE](#check_entity_type)
@@ -2036,10 +2027,10 @@ Example: `copy scriptName`
 Sets the map's `on_tick` script.
 
 ```
-set map tick_script (to) $script:string
+set map on_tick (to) $script:string
 ```
 
-Example: `set map tick_script to scriptName`
+Example: `set map on_tick to scriptName`
 
 #### SET_ENTITY_INTERACT_SCRIPT
 
@@ -2053,14 +2044,7 @@ Because entity properties are reset when a map is loaded, and because entities r
 set entity $entity:string on_interact (to) $script:string
 ```
 
-```
-set entity $entity:string interact_script (to) $script:string
-```
-
-Examples:
-
-- `set entity "Entity Name" on_interact to scriptName`
-- `set entity "Entity Name" interact_script to scriptName`
+Example: `set entity "Entity Name" on_interact to scriptName`
 
 #### SET_ENTITY_TICK_SCRIPT
 
@@ -2070,14 +2054,7 @@ Sets an entity's `on_tick` script.
 set entity $entity:string on_tick (to) $script:string
 ```
 
-```
-set entity $entity:string tick_script (to) $script:string
-```
-
-Examples:
-
-- `set entity "Entity Name" on_tick to scriptName`
-- `set entity "Entity Name" tick_script to scriptName`
+Example: `set entity "Entity Name" on_tick to scriptName`
 
 #### SET_ENTITY_LOOK_SCRIPT
 
@@ -2087,14 +2064,7 @@ Sets an entity's `on_look` script.
 set entity $entity:string on_look (to) $script:string
 ```
 
-```
-set entity $entity:string look_script (to) $script:string
-```
-
-Examples:
-
-- `set entity "Entity Name" on_look to scriptName`
-- `set entity "Entity Name" look_script to scriptName`
+Example: `set entity "Entity Name" on_look to scriptName`
 
 #### SET_SCRIPT_PAUSE
 
@@ -2633,18 +2603,6 @@ Examples:
 Checks an entity's `on_interact` script (by the script's name).
 
 ```
-if entity $entity:string interact_script is $expected_script:string
-	then goto (script) $success_script:string
-	// expected_bool: true
-```
-
-```
-if entity $entity:string interact_script is not $expected_script:string
-	then goto (script) $success_script:string
-	// expected_bool: false
-```
-
-```
 if entity $entity:string on_interact is $expected_script:string
 	then goto (script) $success_script:string
 	// expected_bool: true
@@ -2653,30 +2611,6 @@ if entity $entity:string on_interact is $expected_script:string
 ```
 if entity $entity:string on_interact is not $expected_script:string
 	then goto (script) $success_script:string
-	// expected_bool: false
-```
-
-```
-if entity $entity:string interact_script is $expected_script:string
-	then goto index $jump_index:number
-	// expected_bool: true
-```
-
-```
-if entity $entity:string interact_script is $expected_script:string
-	then goto label $jump_index:bareword
-	// expected_bool: true
-```
-
-```
-if entity $entity:string interact_script is not $expected_script:string
-	then goto index $jump_index:number
-	// expected_bool: false
-```
-
-```
-if entity $entity:string interact_script is not $expected_script:string
-	then goto label $jump_index:bareword
 	// expected_bool: false
 ```
 
@@ -2706,14 +2640,8 @@ if entity $entity:string on_interact is not $expected_script:string
 
 Examples:
 
-- `if entity "Entity Name" interact_script is scriptName then goto successScript`
-- `if entity "Entity Name" interact_script is not scriptName then goto successScript`
 - `if entity "Entity Name" on_interact is scriptName then goto successScript`
 - `if entity "Entity Name" on_interact is not scriptName then goto successScript`
-- `if entity "Entity Name" interact_script is scriptName then goto index 8`
-- `if entity "Entity Name" interact_script is scriptName then goto label midpoint`
-- `if entity "Entity Name" interact_script is not scriptName then goto index 8`
-- `if entity "Entity Name" interact_script is not scriptName then goto label midpoint`
 - `if entity "Entity Name" on_interact is scriptName then goto index 8`
 - `if entity "Entity Name" on_interact is scriptName then goto label midpoint`
 - `if entity "Entity Name" on_interact is not scriptName then goto index 8`
@@ -2724,18 +2652,6 @@ Examples:
 Checks an entity's `on_tick` script (by the script's name).
 
 ```
-if entity $entity:string tick_script is $expected_script:string
-	then goto (script) $success_script:string
-	// expected_bool: true
-```
-
-```
-if entity $entity:string tick_script is not $expected_script:string
-	then goto (script) $success_script:string
-	// expected_bool: false
-```
-
-```
 if entity $entity:string on_tick is $expected_script:string
 	then goto (script) $success_script:string
 	// expected_bool: true
@@ -2744,30 +2660,6 @@ if entity $entity:string on_tick is $expected_script:string
 ```
 if entity $entity:string on_tick is not $expected_script:string
 	then goto (script) $success_script:string
-	// expected_bool: false
-```
-
-```
-if entity $entity:string tick_script is $expected_script:string
-	then goto index $jump_index:number
-	// expected_bool: true
-```
-
-```
-if entity $entity:string tick_script is $expected_script:string
-	then goto label $jump_index:bareword
-	// expected_bool: true
-```
-
-```
-if entity $entity:string tick_script is not $expected_script:string
-	then goto index $jump_index:number
-	// expected_bool: false
-```
-
-```
-if entity $entity:string tick_script is not $expected_script:string
-	then goto label $jump_index:bareword
 	// expected_bool: false
 ```
 
@@ -2797,14 +2689,8 @@ if entity $entity:string on_tick is not $expected_script:string
 
 Examples:
 
-- `if entity "Entity Name" tick_script is scriptName then goto successScript`
-- `if entity "Entity Name" tick_script is not scriptName then goto successScript`
 - `if entity "Entity Name" on_tick is scriptName then goto successScript`
 - `if entity "Entity Name" on_tick is not scriptName then goto successScript`
-- `if entity "Entity Name" tick_script is scriptName then goto index 8`
-- `if entity "Entity Name" tick_script is scriptName then goto label midpoint`
-- `if entity "Entity Name" tick_script is not scriptName then goto index 8`
-- `if entity "Entity Name" tick_script is not scriptName then goto label midpoint`
 - `if entity "Entity Name" on_tick is scriptName then goto index 8`
 - `if entity "Entity Name" on_tick is scriptName then goto label midpoint`
 - `if entity "Entity Name" on_tick is not scriptName then goto index 8`
@@ -2815,18 +2701,6 @@ Examples:
 Checks an entity's `on_look` script (by the script's name).
 
 ```
-if entity $entity:string look_script is $expected_script:string
-	then goto (script) $success_script:string
-	// expected_bool: true
-```
-
-```
-if entity $entity:string look_script is not $expected_script:string
-	then goto (script) $success_script:string
-	// expected_bool: false
-```
-
-```
 if entity $entity:string on_look is $expected_script:string
 	then goto (script) $success_script:string
 	// expected_bool: true
@@ -2835,30 +2709,6 @@ if entity $entity:string on_look is $expected_script:string
 ```
 if entity $entity:string on_look is not $expected_script:string
 	then goto (script) $success_script:string
-	// expected_bool: false
-```
-
-```
-if entity $entity:string look_script is $expected_script:string
-	then goto index $jump_index:number
-	// expected_bool: true
-```
-
-```
-if entity $entity:string look_script is $expected_script:string
-	then goto label $jump_index:bareword
-	// expected_bool: true
-```
-
-```
-if entity $entity:string look_script is not $expected_script:string
-	then goto index $jump_index:number
-	// expected_bool: false
-```
-
-```
-if entity $entity:string look_script is not $expected_script:string
-	then goto label $jump_index:bareword
 	// expected_bool: false
 ```
 
@@ -2888,14 +2738,8 @@ if entity $entity:string on_look is not $expected_script:string
 
 Examples:
 
-- `if entity "Entity Name" look_script is scriptName then goto successScript`
-- `if entity "Entity Name" look_script is not scriptName then goto successScript`
 - `if entity "Entity Name" on_look is scriptName then goto successScript`
 - `if entity "Entity Name" on_look is not scriptName then goto successScript`
-- `if entity "Entity Name" look_script is scriptName then goto index 8`
-- `if entity "Entity Name" look_script is scriptName then goto label midpoint`
-- `if entity "Entity Name" look_script is not scriptName then goto index 8`
-- `if entity "Entity Name" look_script is not scriptName then goto label midpoint`
 - `if entity "Entity Name" on_look is scriptName then goto index 8`
 - `if entity "Entity Name" on_look is scriptName then goto label midpoint`
 - `if entity "Entity Name" on_look is not scriptName then goto index 8`

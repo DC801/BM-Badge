@@ -27,7 +27,7 @@ const! (
 
 simon-game-launcher {
 	// set hex control off
-	set entity Simon tick_script to simon-game-start-q
+	set entity Simon on_tick to simon-game-start-q
 }
 
 simon-game-start-q {
@@ -117,7 +117,7 @@ simon-game-start-nevermind {
 
 simon-game-start-q-wrapup {
 	set entity Simon current_animation to 0
-	set entity Simon interact_script to interact-ch2-simon
+	set entity Simon on_interact to interact-ch2-simon
 	goto null_script
 }
 
@@ -391,7 +391,7 @@ simon-player-listen {
 			goto simon-player-do-move
 		}
 	}
-	set entity Simon tick_script to simon-player-listen // reset this loop (on next game tick?)
+	set entity Simon on_tick to simon-player-listen // reset this loop (on next game tick?)
 }
 
 simon-player-do-move {
@@ -444,7 +444,7 @@ simon-player-turn-end {
 simon-game-lose {
 	set player control off
 	set lights control on
-	set entity Keyboard tick_script to simon-rock
+	set entity Keyboard on_tick to simon-rock
 	if (
 		flag ch2-ring-zero-restored is true
 		|| debug mode is on
@@ -458,7 +458,7 @@ simon-game-lose {
 	set entity Lights on_tick to null_script
 	set lights control off
 	set player control on
-	set entity Keyboard tick_script to null_script
+	set entity Keyboard on_tick to null_script
 	set entity Simon current_animation to 5
 	goto simon-game-go-again
 }

@@ -21,11 +21,11 @@ on_load-ch2-lodge-rtfm {
 	
 	// Village elders hiding
 	if (variable ch2-storyflag-round is not 1) {
-		set entity Bert tick_script to yeet
+		set entity Bert on_tick to yeet
 	}
 	if (variable ch2-storyflag-round is not 3) {
-		set entity Jackob tick_script to yeet
-		set entity Alfonso tick_script to yeet
+		set entity Jackob on_tick to yeet
+		set entity Alfonso on_tick to yeet
 	}
 	// unique stuff done
 	goto ch2-map-init

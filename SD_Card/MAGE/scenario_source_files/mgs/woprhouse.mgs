@@ -72,7 +72,7 @@ show_dialog-wopr-start {
 	}
 }
 restart-wopr {
-	set entity "%SELF%" interact_script to show_dialog-wopr-start
+	set entity "%SELF%" on_interact to show_dialog-wopr-start
 }
 
 show_dialog-woprbooks {

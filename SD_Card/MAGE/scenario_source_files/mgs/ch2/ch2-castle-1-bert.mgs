@@ -20,11 +20,11 @@ ch2-cutscene-bert-secret {
 		Bert "%PLAYER%, wait."
 	}
 	wait 100ms
-	set entity "%PLAYER%" tick_script to watch-bert
+	set entity "%PLAYER%" on_tick to watch-bert
 	wait 400ms
 	// the below is unnecessary if this cutscene is triggered via normal means; cannot use a zigzag here, though, since this script is run with COPY_SCRIPT
 	// you can't trigger the "stuck on animation 5" with this, though, since you can't feasibly get to this part of the script before the Wiz is all the way ascended anyway. (Hitting `tick-ch2-wizard-ascend-and-watch-with-check` when it's in progress breaks things!)
-	set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch-with-check
+	set entity Wizard on_tick to tick-ch2-wizard-ascend-and-watch-with-check
 	walk entity Bert along geometry bert-spot over 1200ms
 	wait 100ms
 	turn entity Bert toward entity "%PLAYER%"
@@ -33,12 +33,12 @@ ch2-cutscene-bert-secret {
 		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold."
 		Bert "I remembered back door. But...."
 	}
-	set entity Bert tick_script to spin_self_clockwise
+	set entity Bert on_tick to spin_self_clockwise
 	wait 400ms
 	show dialog {
 		Bert "No. I can go no further. I could, once. Perhaps."
 	}
-	set entity Bert tick_script to null_script
+	set entity Bert on_tick to null_script
 	turn entity Bert toward entity "%PLAYER%"
 	show dialog {
 		Bert "%PLAYER%, I must not stay long. But I must tell you this."
@@ -70,7 +70,7 @@ ch2-cutscene-bert-secret {
 	walk entity Bert to geometry entrance1-path over 800ms
 	wait 80ms
 	teleport entity Bert to geometry hiding-spot
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	set player control to on
 	set flag interrupt to true
 }

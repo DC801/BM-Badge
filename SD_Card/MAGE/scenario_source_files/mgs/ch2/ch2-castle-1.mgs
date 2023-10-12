@@ -71,7 +71,6 @@ look-ch2-mainframe {
 		"\t- a bunch of tiny penguin stickers"
 		"\t- and one yak sticker?"
 	}
-	set entity "%SELF%" look_script to look-ch2-mainframe
 }
 
 /* ---------- ON_LOAD ---------- */
@@ -122,7 +121,7 @@ on_load-ch2-castle-1 {
 	// END DEBUG
 
 	if (flag ch2-ring-zero-restored is true) {
-		set entity "Wizard" interact_script to interact-ch2-wizard-mainframedone
+		set entity "Wizard" on_interact to interact-ch2-wizard-mainframedone
 		set entity "Wizard" current_animation to 3 // head poking up
 	}
 
@@ -308,15 +307,15 @@ tick-ch2-wizard-ascend-and-watch-with-check {
 		// show serial dialog {"DEBUG: Wizard is not <bold>strictly</> down..."}
 		set entity Wizard current_animation to 3
 	}
-	set entity Wizard tick_script to face-player
+	set entity Wizard on_tick to face-player
 }
 tick-ch2-wizard-ascend-and-watch {
 	// show serial dialog {"\t'play entity Wizard animation 5 once'"}
 	play entity Wizard animation 5 once
 	// show serial dialog {"\t'set entity Wizard current_animation to 3'"}
 	set entity Wizard current_animation to 3
-	// show serial dialog {"\t'set entity Wizard tick_script to face-player'"}
-	set entity Wizard tick_script to face-player
+	// show serial dialog {"\t'set entity Wizard on_tick to face-player'"}
+	set entity Wizard on_tick to face-player
 }
 ch2-wizard-descend {
 	set player control off
@@ -522,7 +521,7 @@ ch2-terminal-setup-nevermind {
 			Lambda "Ah, okay. Carry on!\n\nAlso, remember you can speak to me in the console with the command \"MAN\"."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-xa
+	set entity "%SELF%" on_interact to interact-ch2-xa
 }
 
 ch2-terminal-setup-start {
@@ -555,7 +554,7 @@ ch2-terminal-plugged-web {
 		"You may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
 	}
 	goto ch2-terminal-message-test
-	set entity "%SELF%" interact_script to interact-ch2-xa
+	set entity "%SELF%" on_interact to interact-ch2-xa
 }
 
 ch2-terminal-plugged-yes {
@@ -567,7 +566,7 @@ ch2-terminal-plugged-yes {
 		// TODO: Chromebook? Can do it with Crostini? Vanilla ChromeOS?
 		> "Never mind" : ch2-terminal-setup-nevermind
 	}
-	set entity "%SELF%" interact_script to interact-ch2-xa
+	set entity "%SELF%" on_interact to interact-ch2-xa
 }
 
 ch2-terminal-os-other {
@@ -649,5 +648,5 @@ ch2-terminal-message-test-success {
 			Lambda "Excellent! You're all set!"
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-xa
+	set entity "%SELF%" on_interact to interact-ch2-xa
 }

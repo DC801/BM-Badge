@@ -94,13 +94,13 @@ ch2-touch-abacus-yes {
 	}
 	copy script ch2-hide-abacus
 	copy script ch2-pickup-abacus
-	set entity "%SELF%" interact_script to null_script
+	set entity "%SELF%" on_interact to null_script
 }
 ch2-touch-abacus-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-abacus  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-abacus  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */
@@ -134,7 +134,7 @@ interact-ch2-jeanpaul {
 	goto interact-ch2-jeanpaul-wrapup
 }
 interact-ch2-jeanpaul-wrapup {
-	set entity "%SELF%" interact_script to interact-ch2-jeanpaul
+	set entity "%SELF%" on_interact to interact-ch2-jeanpaul
 }
 
 interact-ch2-frankie {
@@ -165,7 +165,7 @@ interact-ch2-frankie {
 	goto interact-ch2-frankie-wrapup
 }
 interact-ch2-frankie-wrapup {
-	set entity "%SELF%" interact_script to interact-ch2-frankie
+	set entity "%SELF%" on_interact to interact-ch2-frankie
 }
 
 interact-ch2-room21-split {

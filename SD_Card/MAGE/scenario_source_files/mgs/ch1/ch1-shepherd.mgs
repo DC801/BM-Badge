@@ -62,7 +62,7 @@ show_dialog-shepherd-start {
 		}
 	}
 	// RESET
-	set entity Shepherd interact_script to show_dialog-shepherd-start
+	set entity Shepherd on_interact to show_dialog-shepherd-start
 }
 
 show_dialog-shepherd-backstory {
@@ -110,7 +110,7 @@ show_dialog-shepherd-ending {
 		// if the hint series is the same, reset hint
 		copy set-hint-none
 	}
-	set entity Shepherd interact_script to show_dialog-shepherd-start
+	set entity Shepherd on_interact to show_dialog-shepherd-start
 }
 
 loiter-sheep4 {
@@ -159,16 +159,16 @@ debug-sheep-q {
 debug-sheep-all {
 	copy sheep-in-pen
 	show dialog { SELF "All sheep returned." }
-	set entity "%SELF%" interact_script to debug-sheep-q
+	set entity "%SELF%" on_interact to debug-sheep-q
 }
 debug-sheep-most {
 	teleport entity Baa to geometry baa_point
 	teleport entity Ram to geometry ram_point
 	teleport entity Ewe to geometry ewe_point
 	show dialog { SELF "Helga remains." }
-	set entity "%SELF%" interact_script to debug-sheep-q
+	set entity "%SELF%" on_interact to debug-sheep-q
 }
 debug-sheep-no {
 	show dialog { SELF "Nothing changed." }
-	set entity "%SELF%" interact_script to debug-sheep-q
+	set entity "%SELF%" on_interact to debug-sheep-q
 }

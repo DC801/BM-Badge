@@ -37,31 +37,31 @@ hintman-cutscene {
 		Alfonso "Right! Go get 'em!"
 		Bert "Good luck."
 	}
-	set entity Jackob tick_script to return-to-watchspot-jackob
-	wait 200ms /**/ set entity Alfonso tick_script to return-to-watchspot-alfonso
-	wait 150ms /**/ set entity Bert tick_script to return-to-watchspot-bert
+	set entity Jackob on_tick to return-to-watchspot-jackob
+	wait 200ms /**/ set entity Alfonso on_tick to return-to-watchspot-alfonso
+	wait 150ms /**/ set entity Bert on_tick to return-to-watchspot-bert
 }
 
 return-to-watchspot-alfonso {
 	walk entity "%SELF%" to geometry alfonso-waitspot over 500ms
 	turn entity "%SELF%" south
-	set entity "%SELF%" tick_script to null_script
+	set entity "%SELF%" on_tick to null_script
 }
 return-to-watchspot-jackob {
 	walk entity "%SELF%" along geometry hintman-walkback over 800ms
 	turn entity "%SELF%" south
-	set entity "%SELF%" tick_script to null_script
+	set entity "%SELF%" on_tick to null_script
 }
 return-to-watchspot-bert {
 	walk entity "%SELF%" to geometry bert-waitspot over 500ms
 	turn entity "%SELF%" west
-	set entity "%SELF%" tick_script to null_script
+	set entity "%SELF%" on_tick to null_script
 }
 
 show_dialog-bert-start {
 	if (entity "%SELF%" is glitched) {
 		show dialog { SELF "...." "Bczv um jiks." }
-		set entity "%SELF%" interact_script to show_dialog-bert-start
+		set entity "%SELF%" on_interact to show_dialog-bert-start
 	}
 	copy face-player
 	show dialog { SELF "Who needs help?" }
@@ -442,7 +442,7 @@ show_dialog-jackob-start {
 		}
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-jackob-start	
+	set entity "%SELF%" on_interact to show_dialog-jackob-start	
 }
 show_dialog-jackob-hint-hackbook {
 	if (flag hackbook-endstory is true) {
@@ -500,7 +500,7 @@ show_dialog-jackob-hint-hackbook {
 		set flag hackbook-endstory to true
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-jackob-start
+	set entity "%SELF%" on_interact to show_dialog-jackob-start
 }
 
 show_dialog-alfonso-start {
