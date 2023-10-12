@@ -98,15 +98,15 @@ ch2-interact-gregory {
 }
 
 ch2-interact-gregory-gameyes {
-	set entity Mouse tick_script to ch2-mousegame-prepare-board
-	set entity "%SELF%" interact_script to ch2-interact-gregory
+	set entity Mouse on_tick to ch2-mousegame-prepare-board
+	set entity "%SELF%" on_interact to ch2-interact-gregory
 }
 
 ch2-interact-gregory-gameno {
 	show dialog {
 		SELF "Oh."
 	}
-	set entity "%SELF%" interact_script to ch2-interact-gregory
+	set entity "%SELF%" on_interact to ch2-interact-gregory
 }
 
 /* ---------- MOUSE (ADMIN) ---------- */
@@ -114,7 +114,7 @@ ch2-interact-gregory-gameno {
 ch2-hide-mouse {
 	teleport entity "Mouse" to geometry hiding-spot
 	set entity "Mouse" name to " "
-	set entity Mouse interact_script to null_script
+	set entity Mouse on_interact to null_script
 }
 
 ch2-touch-mouse {
@@ -131,14 +131,14 @@ ch2-touch-mouse {
 			"Shoot! It got away from me. Where'd it go?"
 			Gregory "Mice are quick; you'd better be quicker. Try again."
 		}
-		set entity Mouse tick_script to ch2-mousegame-prepare-board
+		set entity Mouse on_tick to ch2-mousegame-prepare-board
 	} else if (variable ch2-mousegame-catchcount is 2) {
 		show dialog {
 			PLAYER "Aha! Got it again!"
 			"And -- aw, come on! I was so close to grabbing it that time!"
 			Gregory "It'll tire eventually. Keep going."
 		}
-		set entity Mouse tick_script to ch2-mousegame-prepare-board
+		set entity Mouse on_tick to ch2-mousegame-prepare-board
 	} else if (variable ch2-mousegame-catchcount is 3) {
 		show dialog {
 			PLAYER "There we go! Got it in my hands!"
@@ -147,7 +147,7 @@ ch2-touch-mouse {
 		}
 		copy script ch2-hide-mouse
 		copy script ch2-pickup-mouse
-		set entity Mouse interact_script to null_script
+		set entity Mouse on_interact to null_script
 	}
 }
 
@@ -159,8 +159,8 @@ const! (
 
 ch2-debug-mousegame {
 	set entity "Mouse" name to "Mouse"
-	set entity Mouse interact_script to ch2-touch-mouse
-	set entity Mouse tick_script to ch2-mousegame-prepare-board
+	set entity Mouse on_interact to ch2-touch-mouse
+	set entity Mouse on_tick to ch2-mousegame-prepare-board
 }
 
 ch2-mousegame-prepare-board {
@@ -275,7 +275,7 @@ ch2-mousegame-prepare-board {
 	show dialog {
 		name "" "(SQUEAK!)"
 	}
-	set entity Mouse interact_script to ch2-touch-mouse
+	set entity Mouse on_interact to ch2-touch-mouse
 	copy entity Mouse x into variable mousegame-mouseX
 	copy entity Mouse y into variable mousegame-mouseY
 	set flag ch2-mousegame to true
@@ -342,5 +342,5 @@ ch2-mousegame-tick {
 	if (variable mousegame-lights is >= 8) {
 		turn light LED_BIT1 on
 	}
-	set map tick_script to on_tick-ch2-castle-33 // reset
+	set map on_tick to on_tick-ch2-castle-33 // reset
 }

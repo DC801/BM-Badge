@@ -54,17 +54,17 @@ honk {
 honk-to-make-rake-float {
 	turn entity Goose toward entity Rake
 	wait 200ms /**/ set entity Goose current_animation to 2
-	wait 600ms /**/ set entity Goose tick_script to make-rake-float
+	wait 600ms /**/ set entity Goose on_tick to make-rake-float
 	wait 3000ms /**/ set entity Goose current_animation to 0
 }
 
 // drifting rake
 
 make-rake-float { // on_tick
-	set entity Rake tick_script to rake-drift-south
-	wait 600ms /**/ set entity Rake tick_script to rake-drift-west
-	wait 600ms /**/ set entity Rake tick_script to rake-drift-south
-	wait 600ms /**/ set entity Rake tick_script to rake-drift-east
+	set entity Rake on_tick to rake-drift-south
+	wait 600ms /**/ set entity Rake on_tick to rake-drift-west
+	wait 600ms /**/ set entity Rake on_tick to rake-drift-south
+	wait 600ms /**/ set entity Rake on_tick to rake-drift-east
 	wait 600ms
 }
 rake-drift-south {
@@ -83,11 +83,11 @@ goose-bounds-watch {
 	if entity Goose is not inside geometry bounds then goto rescue-goose
 }
 rescue-goose {
-	set entity Goose tick_script to null_script
+	set entity Goose on_tick to null_script
 	teleport entity Goose to geometry goose-rescue
 	walk entity Goose to geometry goose_lakepoint over 2000ms
-	set entity Goose tick_script to on_tick-goose-mission
-	set entity "%SELF%" tick_script to goose-bounds-watch
+	set entity Goose on_tick to on_tick-goose-mission
+	set entity "%SELF%" on_tick to goose-bounds-watch
 }
 
 /* --------------- dialog --------------- */
@@ -103,7 +103,7 @@ show_dialog-goose-mad {
 		copy set-hint-goose
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-goose-mad
+	set entity "%SELF%" on_interact to show_dialog-goose-mad
 }
 
 /* --------------- debug --------------- */
@@ -118,8 +118,8 @@ debug-win-rake-q {
 }
 debug-win-rake-yes {
 	teleport entity Rake to geometry rake-lake-point
-	set entity "%SELF%" interact_script to debug-win-rake-q
+	set entity "%SELF%" on_interact to debug-win-rake-q
 }
 debug-win-rake-no {
-	set entity "%SELF%" interact_script to debug-win-rake-q
+	set entity "%SELF%" on_interact to debug-win-rake-q
 }

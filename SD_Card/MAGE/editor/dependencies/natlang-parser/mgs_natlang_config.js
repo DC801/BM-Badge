@@ -820,7 +820,7 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "SET_MAP_TICK_SCRIPT",
-		pattern: "set map tick_script ?to $script:string",
+		pattern: "set map on_tick ?to $script:string",
 	},
 	{
 		action: "SET_WARP_STATE",
@@ -1074,26 +1074,17 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	CHECK_ENTITY_INTERACT_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperties: [
-			"interact_script",
-			"on_interact"
-		],
+		natLangProperties: "on_interact",
 		dictionaryRef: ":string",
 	},
 	CHECK_ENTITY_TICK_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperties: [
-			"tick_script",
-			"on_tick"
-		],
+		natLangProperties: "on_tick",
 		dictionaryRef: ":string",
 	},
 	CHECK_ENTITY_LOOK_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperties: [
-			"look_script",
-			"on_look"
-		],
+		natLangProperties: "on_look",
 		dictionaryRef: ":string",
 	},
 	CHECK_ENTITY_TYPE: {
@@ -1153,26 +1144,17 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	SET_ENTITY_INTERACT_SCRIPT: {
 		actionProperty: "script",
-		natLangProperties: [
-			"on_interact",
-			"interact_script"
-		],
+		natLangProperties: "on_interact",
 		dictionaryRef: ":string",
 	},
 	SET_ENTITY_TICK_SCRIPT: {
 		actionProperty: "script",
-		natLangProperties: [
-			"on_tick",
-			"tick_script"
-		],
+		natLangProperties: "on_tick",
 		dictionaryRef: ":string",
 	},
 	SET_ENTITY_LOOK_SCRIPT: {
 		actionProperty: "script",
-		natLangProperties: [
-			"on_look",
-			"look_script"
-		],
+		natLangProperties: "on_look",
 		dictionaryRef: ":string",
 	},
 	SET_ENTITY_TYPE: {

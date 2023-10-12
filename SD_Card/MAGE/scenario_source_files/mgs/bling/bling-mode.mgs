@@ -28,7 +28,7 @@ bling-goto-branches {
 on_load-bling-mode-map {
 	set hex control to off
 	set player control to off
-	set map tick_script to bling-detect-mode
+	set map on_tick to bling-detect-mode
 }
 
 bling-detect-mode {
@@ -40,7 +40,7 @@ bling-detect-mode {
 		goto script loop-bling-listen-manualrotate
 	} else if (warp state is bling-rotate-auto) {
 		// start the timer
-		set entity Timer tick_script to loop-bling_timer
+		set entity Timer on_tick to loop-bling_timer
 		goto script loop-bling-listen-any
 	}
 	// not a rotating mode
@@ -74,7 +74,7 @@ bling-rotate-state-increment {
 		mutate bling-rotate-state = 0
 	}
 	set flag bling-rotate-state-calc-done to true
-	set entity "%SELF%" tick_script to null_script
+	set entity "%SELF%" on_tick to null_script
 }
 
 bling-rotate-state-decrement {
@@ -83,14 +83,14 @@ bling-rotate-state-decrement {
 		mutate bling-rotate-state = $maxBling
 	}
 	set flag bling-rotate-state-calc-done to true
-	set entity "%SELF%" tick_script to null_script
+	set entity "%SELF%" on_tick to null_script
 }
 
 /* --- for the "Timer" entity --- */
 
 loop-bling_timer {
 	wait 13000ms
-	set entity Math tick_script to bling-rotate-state-increment
+	set entity Math on_tick to bling-rotate-state-increment
 	goto script loop-bling_timer-wait
 }
 
@@ -109,12 +109,12 @@ loop-bling-listen-manualrotate {
 }
 
 bling-manual-rotate-left {
-	set entity Math tick_script to bling-rotate-state-decrement
+	set entity Math on_tick to bling-rotate-state-decrement
 	goto script loop-bling_timer-wait
 }
 
 bling-manual-rotate-right {
-	set entity Math tick_script to bling-rotate-state-increment
+	set entity Math on_tick to bling-rotate-state-increment
 	goto script loop-bling_timer-wait
 }
 

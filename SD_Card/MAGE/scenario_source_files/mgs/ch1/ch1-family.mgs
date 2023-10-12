@@ -36,7 +36,7 @@ on_load-family {
 }
 
 show_dialog-kid {
-	set entity "%PLAYER%" tick_script to watch-kid
+	set entity "%PLAYER%" on_tick to watch-kid
 	if (entity "%SELF%" is glitched) {
 		show dialog {
 			SELF "Stb N'r ns fstymjw inrjsxnts!"
@@ -52,8 +52,8 @@ show_dialog-kid {
 		copy set-hint-sportskid
 	}
 	// RESET
-	set entity "%PLAYER%" tick_script to null_script
-	set entity "%SELF%" interact_script to show_dialog-kid
+	set entity "%PLAYER%" on_tick to null_script
+	set entity "%SELF%" on_interact to show_dialog-kid
 }
 
 show_dialog-smith {
@@ -75,7 +75,7 @@ show_dialog-smith {
 		turn entity Smith east
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-smith
+	set entity "%SELF%" on_interact to show_dialog-smith
 }
 
 show_dialog-smith-dinner {

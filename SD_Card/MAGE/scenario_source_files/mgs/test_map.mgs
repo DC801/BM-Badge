@@ -127,7 +127,7 @@ show_dialog-thanks_for_setting_bob_on_fire {
 		SELF
 		"Thank for warming %Bob% up?\nI mean, there were other ways to do it,\nbut that works I guess..."
 	}
-	set entity "%SELF%" interact_script to check_save_flag-bobs_not_on_fire
+	set entity "%SELF%" on_interact to check_save_flag-bobs_not_on_fire
 }
 
 set_save_flag-bobs_not_on_fire {
@@ -151,17 +151,17 @@ set_save_flag-bobs_on_fire {
 		Bob
 		"Aww man, I was just getting toasty!"
 	}
-	set entity "%SELF%" interact_script to set_save_flag-bobs_not_on_fire
+	set entity "%SELF%" on_interact to set_save_flag-bobs_not_on_fire
 }
 
 test_camera_follow_bert {
 	make camera follow entity Bert
-	set entity Bert interact_script to test_camera_follow_player
+	set entity Bert on_interact to test_camera_follow_player
 }
 
 test_camera_follow_player {
 	make camera follow entity "%PLAYER%"
-	set entity Bert interact_script to test_camera_follow_bert
+	set entity Bert on_interact to test_camera_follow_bert
 }
 
 show_dialog-lots_of_text {

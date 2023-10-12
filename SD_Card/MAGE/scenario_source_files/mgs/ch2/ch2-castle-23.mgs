@@ -161,7 +161,7 @@ interact-ch2-rocco-nogive {
 }
 
 interact-ch2-rocco-wrapup {
-	set entity "%SELF%" interact_script to interact-ch2-rocco
+	set entity "%SELF%" on_interact to interact-ch2-rocco
 }
 
 /* ---------- HEAT SINK (ADMIN) ---------- */
@@ -199,11 +199,11 @@ ch2-touch-heatsink-yes {
 	}
 	copy script ch2-hide-heatsink
 	copy script ch2-pickup-heatsink
-	set entity "%SELF%" interact_script to null_script
+	set entity "%SELF%" on_interact to null_script
 }
 ch2-touch-heatsink-no {
 	show dialog {
 		PLAYER "Another time, perhaps."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-heatsink  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-heatsink  // reset after script jump
 }

@@ -184,7 +184,6 @@ zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 	var scriptName = scriptNameToken.value; // TODO delete
 	var statements = zigReport.statements; // QOL
 
-
 	// info for the last curly (token) in the zigzag:
 	var finalCurlyToken = statements[statements.length - 1].bracketInfo.behaviorsEndToken; // reused a lot
 

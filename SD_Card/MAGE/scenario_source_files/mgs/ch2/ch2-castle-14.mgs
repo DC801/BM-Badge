@@ -94,11 +94,11 @@ ch2-touch-clock-yes {
 	}
 	copy script ch2-hide-clock
 	copy script ch2-pickup-clock
-	set entity "%SELF%" interact_script to null_script
+	set entity "%SELF%" on_interact to null_script
 }
 ch2-touch-clock-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-clock  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-clock  // reset after script jump
 }

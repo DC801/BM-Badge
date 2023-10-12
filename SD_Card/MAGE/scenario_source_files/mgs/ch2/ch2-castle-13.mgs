@@ -94,13 +94,13 @@ ch2-touch-goldfish-yes {
 	}
 	copy script ch2-hide-goldfish
 	copy script ch2-pickup-goldfish
-	set entity "%SELF%" interact_script to null_script
+	set entity "%SELF%" on_interact to null_script
 }
 ch2-touch-goldfish-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-goldfish  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-goldfish  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */

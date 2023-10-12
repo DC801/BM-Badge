@@ -66,7 +66,7 @@ on_load-ch2-bobsclub-basement {
 		goto ch2-cutscene-bob-party
 	} else {
 		teleport entity "Guardian Bob" to geometry bob-walk2
-		set entity "Guardian Bob" tick_script to loiter-slow
+		set entity "Guardian Bob" on_tick to loiter-slow
 	}
 	goto ch2-map-init
 }
@@ -135,12 +135,12 @@ ch2-cutscene-bob-party {
 	// set serial control off
 	set player control off
 	wait 1500ms
-	set entity "%PLAYER%" tick_script to look-left-and-right-fast
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast
 	wait 700ms
 	show dialog {
 		PLAYER "Huh. Well, I found the source of the noise...."
 	}
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	turn entity "%PLAYER%" toward entity "Guardian Bob"
 	show dialog {
 		GBob "Hey! You're not allowed in here!"
@@ -163,12 +163,12 @@ ch2-cutscene-bob-party {
 	show dialog {
 		GBob "Oh, well. Too late, regardless."
 	}
-	set entity "Guardian Bob" tick_script to spin_self_clockwise
+	set entity "Guardian Bob" on_tick to spin_self_clockwise
 	show dialog {
 		GBob "Welcome to the annual Bob's Club party."
 		PLAYER "I thought the party was canceled this year."
 	}
-	set entity "Guardian Bob" tick_script to null_script
+	set entity "Guardian Bob" on_tick to null_script
 	turn entity "Guardian Bob" toward entity "%PLAYER%"
 	show dialog {
 		GBob "It was, but... we seem to be experiencing a time anomaly."
@@ -208,13 +208,13 @@ ch2-cutscene-bob-party {
 		GBob "Probably."
 	}
 	wait 100ms
-	set entity "%PLAYER%" tick_script to spin_self_clockwise
+	set entity "%PLAYER%" on_tick to spin_self_clockwise
 	wait 240ms
 	show dialog {
 		PLAYER "This is freaking me out. How do we stop it?"
 	}
 	turn entity "Guardian Bob" south
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	turn entity "%PLAYER%" toward entity "Guardian Bob"
 	show dialog {
 		GBob "Depends on the exact cause. I've been keeping my eye on it with my keytool, Glitch. Trying to investigate from several angles."
@@ -244,7 +244,7 @@ ch2-cutscene-bob-party {
 	set flag ch2-cutseen-bob-party to true
 	wait 150ms
 	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms
-	set entity "Guardian Bob" tick_script to loiter-slow
+	set entity "Guardian Bob" on_tick to loiter-slow
 	make camera follow entity "%PLAYER%"
 	goto ch2-map-init
 }

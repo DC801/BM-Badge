@@ -188,12 +188,12 @@ ch2-escort-cutscene {
 		PLAYER "Yeah. I mean, no. I mean...."
 	}
 	wait 150ms
-	set entity "%PLAYER%" tick_script to look-left-and-right-fast
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast
 	wait 300ms
 	show dialog {
 		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal dungeon?"
 	}
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	turn entity "%PLAYER%" south
 	show dialog {
 		Jackob
@@ -211,12 +211,12 @@ ch2-escort-cutscene {
 		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the dungeon on your own."
 	}
 	wait 100ms
-	set entity "%PLAYER%" tick_script to look-left-and-right-fast
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast
 	wait 200ms
 	show dialog {
 		PLAYER "On my own? You aren't coming inside with me?"
 	}
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	turn entity "%PLAYER%" south
 	show dialog {
 		Jackob "We are not hackers and cannot pass the gate."
@@ -235,9 +235,9 @@ ch2-escort-cutscene {
 	show dialog {
 		PLAYER "That book... what did it say? Can you give me a summary at least?"
 	}
-	set entity Jackob tick_script to gossip-right-down
-	set entity Alfonso tick_script to gossip-left-and-right-down
-	set entity Bert tick_script to gossip-left-down
+	set entity Jackob on_tick to gossip-right-down
+	set entity Alfonso on_tick to gossip-left-and-right-down
+	set entity Bert on_tick to gossip-left-down
 	wait 200ms
 	show dialog {
 		Jackob "I must have read it once...."
@@ -245,9 +245,9 @@ ch2-escort-cutscene {
 		Bert "I don't know."
 	}
 	wait 500ms
-	set entity Alfonso tick_script to null_script
-	set entity Jackob tick_script to null_script
-	set entity Bert tick_script to null_script
+	set entity Alfonso on_tick to null_script
+	set entity Jackob on_tick to null_script
+	set entity Bert on_tick to null_script
 	wait 100ms
 	turn entity Alfonso north
 	wait 50ms
@@ -279,12 +279,12 @@ ch2-escort-cutscene {
 	}
 	set flag ch2-escort-cutscene to true
 	wait 160ms
-	set entity Jackob tick_script to birthday-march-on-own-path
+	set entity Jackob on_tick to birthday-march-on-own-path
 	wait 180ms
-	set entity Alfonso tick_script to birthday-march-on-own-path
+	set entity Alfonso on_tick to birthday-march-on-own-path
 	wait 90ms
-	set entity Bert tick_script to birthday-march-on-own-path
-	set entity "%PLAYER%" tick_script to birthday-march-on-own-path-player
+	set entity Bert on_tick to birthday-march-on-own-path
+	set entity "%PLAYER%" on_tick to birthday-march-on-own-path-player
 }
 birthday-march-on-own-path {
 	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 2400ms
@@ -303,9 +303,9 @@ birthday-march-on-own-path-player {
 		PLAYER "All right. Take a deep breath.\nYou can do it, %PLAYER%."
 	}
 	set warp state to none
-	set entity Jackob tick_script to yeet
-	set entity Alfonso tick_script to yeet
-	set entity Bert tick_script to yeet
+	set entity Jackob on_tick to yeet
+	set entity Alfonso on_tick to yeet
+	set entity Bert on_tick to yeet
 	set player control to on
 	goto null_script
 }

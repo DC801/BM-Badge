@@ -141,22 +141,22 @@ show_dialog-bender-start {
 		}
 	}
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-bender-start
+	set entity "%SELF%" on_interact to show_dialog-bender-start
 }
 
 /* ---- Bender on_tick handlers --- */
 
 set-bender-handler-off {
-	set entity "Bob Austin" tick_script to null_script
-	set entity Bender tick_script to null_script
+	set entity "Bob Austin" on_tick to null_script
+	set entity Bender on_tick to null_script
 }
 set-bender-handler-on {
-	set entity Bender tick_script to face-player
-	set entity "Bob Austin" tick_script to handler-bender-timer
+	set entity Bender on_tick to face-player
+	set entity "Bob Austin" on_tick to handler-bender-timer
 }
 set-bender-handler-none {
-	set entity "Bob Austin" tick_script to null_script
-	set entity Bender tick_script to on_tick-bender-loiter
+	set entity "Bob Austin" on_tick to null_script
+	set entity Bender on_tick to on_tick-bender-loiter
 }
 
 handler-bender-timer {

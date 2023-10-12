@@ -166,15 +166,15 @@ warping-out-fade-out {
 	set player control to off
 	set serial control off
 	set warp state to warping
-	set entity "%PLAYER%" tick_script to spin-quickly
+	set entity "%PLAYER%" on_tick to spin-quickly
 	fade out camera to #000000 over 500ms
 }
 
 warping-in-fade-in {
 	teleport entity "%PLAYER%" to geometry warp-spot
-	set entity "%PLAYER%" tick_script to spin-quickly
+	set entity "%PLAYER%" on_tick to spin-quickly
 	fade in camera from #000000 over 300ms
-	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" on_tick to null_script
 	turn entity "%PLAYER%" south
 	set warp state to warped // it needs to be set to SOMETHING...
 	set player control to on // TODO: remove after shared behavior is fully merged

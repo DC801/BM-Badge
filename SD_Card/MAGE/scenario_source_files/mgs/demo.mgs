@@ -57,7 +57,7 @@ show_dialog-bob-first-demo_map {
 		"Why?\nWhy is it Bobs only?"
 		"Why, it wouldn't be the Bobs-Only Club\nif I just let anyone in!"
 	}
-	set entity Bob interact_script to show_dialog-bob-bounce-demo_map
+	set entity Bob on_interact to show_dialog-bob-bounce-demo_map
 }
 
 show_dialog-bob-bounce-demo_map {
@@ -100,7 +100,7 @@ show_dialog-bob-yesbob-demo_map {
 		SELF "Not my job. My only job is to\nkeep everyone out who's\nnot named Bob."
 	}
 	turn entity Bob south
-	set entity Bob interact_script to show_dialog-bob-job-demo_map
+	set entity Bob on_interact to show_dialog-bob-job-demo_map
 }
 
 show_dialog-bob-job-demo_map {
@@ -232,7 +232,7 @@ show_dialog-cleo1-demo_map {
 		Cat "Meow!"
 		Cleo "He didn't!"
 	}
-	set entity "%SELF%" interact_script to show_dialog-cleo2
+	set entity "%SELF%" on_interact to show_dialog-cleo2
 }
 
 show_dialog-cleo2-demo_map {
@@ -242,7 +242,7 @@ show_dialog-cleo2-demo_map {
 		Cat "Meowwrrrr!"
 		Cleo "Oh, I know!"
 	}
-	set entity "%SELF%" interact_script to show_dialog-cleo1-demo_map
+	set entity "%SELF%" on_interact to show_dialog-cleo1-demo_map
 }
 
 show_dialog-cat-demo_map {
@@ -271,15 +271,15 @@ check_if_player_is_goat_low-demo_map {
 }
 
 move_goats_to_low-demo_map {
-	set entity goat1 tick_script to move_goat1_to_low-demo_map
-	set entity goat2 tick_script to move_goat2_to_low-demo_map
-	set entity "%PLAYER%" tick_script to check_if_player_is_goat_low-demo_map
+	set entity goat1 on_tick to move_goat1_to_low-demo_map
+	set entity goat2 on_tick to move_goat2_to_low-demo_map
+	set entity "%PLAYER%" on_tick to check_if_player_is_goat_low-demo_map
 }
 
 move_goats_to_high-demo_map {
-	set entity goat1 tick_script to move_goat1_to_high-demo_map
-	set entity goat2 tick_script to move_goat2_to_high-demo_map
-	set entity "%PLAYER%" tick_script to check_if_player_is_goat_high-demo_map
+	set entity goat1 on_tick to move_goat1_to_high-demo_map
+	set entity goat2 on_tick to move_goat2_to_high-demo_map
+	set entity "%PLAYER%" on_tick to check_if_player_is_goat_high-demo_map
 }
 
 move_goat1_to_low-demo_map {
@@ -342,7 +342,7 @@ demo-end-dream-yes-save {
 }
 
 demo-end-dream-no {
-	set entity "%SELF%" interact_script to show_dialog-demo-end-dream-q
+	set entity "%SELF%" on_interact to show_dialog-demo-end-dream-q
 }
 
 dialog dialog-max3-demo_map {

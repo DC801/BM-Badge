@@ -29,14 +29,14 @@ check_if_player_is_goat_low {
 	if entity "%PLAYER%" is inside geometry low then goto move_goats_to_high
 }
 move_goats_to_low {
-	set entity Billy tick_script to move_billy_to_low
-	set entity Kid tick_script to move_kid_to_low
-	set entity Verthandi tick_script to check_if_player_is_goat_low
+	set entity Billy on_tick to move_billy_to_low
+	set entity Kid on_tick to move_kid_to_low
+	set entity Verthandi on_tick to check_if_player_is_goat_low
 }
 move_goats_to_high {
-	set entity Billy tick_script to move_billy_to_high
-	set entity Kid tick_script to move_kid_to_high
-	set entity Verthandi tick_script to check_if_player_is_goat_high
+	set entity Billy on_tick to move_billy_to_high
+	set entity Kid on_tick to move_kid_to_high
+	set entity Verthandi on_tick to check_if_player_is_goat_high
 }
 move_billy_to_low {
 	walk entity Billy to geometry low1 over 900ms
@@ -182,7 +182,7 @@ show_dialog-verthandi-start {
 show_dialog-verthandi-wrapup {
 	turn entity Verthandi toward entity Kid
 	// RESET
-	set entity "%SELF%" interact_script to show_dialog-verthandi-start
+	set entity "%SELF%" on_interact to show_dialog-verthandi-start
 }
 
 show_dialog-goat {
@@ -194,5 +194,5 @@ show_dialog-goat {
 	if (flag goats-both-unglitched is false) {
 		copy set-hint-glitch
 	}
-	set entity "%SELF%" interact_script to show_dialog-goat
+	set entity "%SELF%" on_interact to show_dialog-goat
 }

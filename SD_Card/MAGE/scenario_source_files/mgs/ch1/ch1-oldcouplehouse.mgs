@@ -33,7 +33,7 @@ on_load-oldcouplehouse {
 make-delmar-man {
 	set entity Delmar type to old_man
 	set entity Delmar current_animation to 3
-	set entity Delmar tick_script to on_tick-delmar-blab-nonman-watch
+	set entity Delmar on_tick to on_tick-delmar-blab-nonman-watch
 }
 
 /* --------------- Delmar --------------- */
@@ -62,7 +62,7 @@ show_dialog-delmar {
 			SELF "Wha... huh?"
 		}
 	}
-	set entity Delmar interact_script to show_dialog-delmar
+	set entity Delmar on_interact to show_dialog-delmar
 }
 
 
@@ -80,7 +80,7 @@ show_dialog-bea-start {
 			goto show_dialog-bea-part2
 		}
 	}
-	set entity Beatrice interact_script to show_dialog-bea-start
+	set entity Beatrice on_interact to show_dialog-bea-start
 }
 
 /* --------------- Beatrice --------------- */
@@ -179,7 +179,7 @@ show_dialog-bea-part1 {
 			}
 		}
 	}
-	set entity Beatrice interact_script to show_dialog-bea-start
+	set entity Beatrice on_interact to show_dialog-bea-start
 }
 
 // part 2
@@ -252,21 +252,21 @@ show_dialog-bea-part2 {
 			}
 		}
 	}
-	set entity Beatrice interact_script to show_dialog-bea-start
+	set entity Beatrice on_interact to show_dialog-bea-start
 }
 
 /* --------------- blab and unblab --------------- */
 
 delmar-blab {
 	set entity Delmar current_animation to 3
-	set entity Delmar tick_script to on_tick-delmar-blab-nonman-watch
+	set entity Delmar on_tick to on_tick-delmar-blab-nonman-watch
 }
 on_tick-delmar-blab-nonman-watch {
 	if entity Delmar type is not old_man then goto delmar-unblab
 }
 delmar-unblab {
 	set entity Delmar current_animation to 0
-	set entity Delmar tick_script to on_tick-delmar-blab-man-watch
+	set entity Delmar on_tick to on_tick-delmar-blab-man-watch
 }
 on_tick-delmar-blab-man-watch {
 	if entity Delmar type is old_man then goto delmar-blab
@@ -291,7 +291,7 @@ debug-bea-sequel-man {
 	copy script set-hint-none
 	copy script delmar-blab
 	show dialog { SELF "Sequel branch activated, and Delmar is a man." }
-	set entity "%SELF%" interact_script to debug-bea-sequel-q
+	set entity "%SELF%" on_interact to debug-bea-sequel-q
 }
 debug-bea-sequel-noman {
 	set flag bea-sequel-branch to true
@@ -299,11 +299,11 @@ debug-bea-sequel-noman {
 	set flag bea1-backstory to true
 	copy script set-hint-none
 	show dialog { SELF "Sequel branch activated, and Delmar left alone." }
-	set entity "%SELF%" interact_script to debug-bea-sequel-q
+	set entity "%SELF%" on_interact to debug-bea-sequel-q
 }
 debug-bea-sequel-no {
 	show dialog { SELF "Nothing changed." }
-	set entity "%SELF%" interact_script to debug-bea-sequel-q
+	set entity "%SELF%" on_interact to debug-bea-sequel-q
 }
 
 dialog dialog-bea-mandud-s { //where was this supposed to go? lol

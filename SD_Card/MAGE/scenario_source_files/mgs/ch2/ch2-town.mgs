@@ -20,8 +20,8 @@ ch2-setup-alfonso-verthandi {
 	teleport entity Alfonso to geometry alfonso-verthandi-spot
 	turn entity Alfonso west
 	turn entity Verthandi east
-	set entity Alfonso interact_script to interact-ch2-alfonso-verthandi
-	set entity Verthandi interact_script to interact-ch2-alfonso-verthandi
+	set entity Alfonso on_interact to interact-ch2-alfonso-verthandi
+	set entity Verthandi on_interact to interact-ch2-alfonso-verthandi
 }
 
 on_load-ch2-town {
@@ -31,13 +31,13 @@ on_load-ch2-town {
 	}
 
 	// elders:
-	set entity Bert tick_script to yeet // always hiding
+	set entity Bert on_tick to yeet // always hiding
 	if (variable ch2-storyflag-round is < 5) {
-		set entity Jackob tick_script to yeet // always hiding before end
+		set entity Jackob on_tick to yeet // always hiding before end
 		if (variable ch2-storyflag-round is 2) {
 			copy ch2-setup-alfonso-verthandi
 		} else {
-			set entity Alfonso tick_script to yeet
+			set entity Alfonso on_tick to yeet
 		}
 	}
 
@@ -48,11 +48,11 @@ on_load-ch2-town {
 		fade in camera from #000000 over 800ms
 	} else if (warp state is walk_from-east) {
 		set entity "%PLAYER%" path to walk_from-east
-		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadein
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein
 		fade in camera from #000000 over 400ms
 	} else if (warp state is walk_from-west) {
 		set entity "%PLAYER%" path to walk_from-west
-		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadein
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein
 		fade in camera from #000000 over 400ms
 	} else if (warp state is walk_from-bobsclub) {
 		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms
@@ -108,14 +108,14 @@ on_tick-ch2-town {
 	if (entity "%PLAYER%" is inside geometry east-hitbox) {
 		set entity "%PLAYER%" path to east-point
 		set warp state to walk_from-west
-		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout
 		fade out camera to #000000 over 500ms
 		load map main2
 	}
 	if (entity "%PLAYER%" is inside geometry west-hitbox) {
 		set entity "%PLAYER%" path to west-point
 		set warp state to walk_from-east
-		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout
 		fade out camera to #000000 over 500ms
 		load map ch2-castle-outside
 	}
@@ -218,7 +218,7 @@ interact-ch2-marta {
 			"In all seriousness, way to go, %PLAYER%!"
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-marta
+	set entity "%SELF%" on_interact to interact-ch2-marta
 }
 
 interact-ch2-shepherd {
@@ -252,7 +252,7 @@ interact-ch2-shepherd {
 			SELF "Hey, I heard you built a computer or something. That's so cool! Way to go!"
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-shepherd
+	set entity "%SELF%" on_interact to interact-ch2-shepherd
 }
 
 interact-ch2-delmar {

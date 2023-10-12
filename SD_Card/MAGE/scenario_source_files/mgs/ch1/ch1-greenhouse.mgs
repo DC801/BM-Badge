@@ -100,7 +100,7 @@ show_dialog-trekkie-start {
 			// ^^ if the hint series is the same, reset hint
 		}
 	}
-	set entity "%SELF%" interact_script to show_dialog-trekkie-start
+	set entity "%SELF%" on_interact to show_dialog-trekkie-start
 }
 
 ch1-greenhouse-trekkie-backstory-cutscene {
@@ -250,14 +250,14 @@ debug-ethernet-puzzle-q {
 }
 ch1-debug-ethernettle-no {
 	show dialog { SELF "Wanna do it the hard way, huh? Suit yourself." }
-	set entity "%SELF%" interact_script to debug-ethernet-puzzle-q
+	set entity "%SELF%" on_interact to debug-ethernet-puzzle-q
 }
 ch1-debug-ethernettle {
 	copy script ch1-ethernettle-restore
 	set entity Modem current_animation to 0 // the modem still won't until you speak to Trekkie
 	copy script face-player
 	show dialog { SELF "Ether Nettle restored." }
-	set entity "%SELF%" interact_script to debug-ethernet-puzzle-q
+	set entity "%SELF%" on_interact to debug-ethernet-puzzle-q
 }
 
 show_dialog-ethernettle-start {
@@ -278,5 +278,5 @@ show_dialog-ethernettle-start {
 	} else if (entity "%SELF%" secondary_id is 4) {
 		show dialog { PLAYER "Brown." }
 	}
-	set entity "%SELF%" interact_script to show_dialog-ethernettle-start
+	set entity "%SELF%" on_interact to show_dialog-ethernettle-start
 }

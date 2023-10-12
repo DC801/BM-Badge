@@ -57,7 +57,7 @@ ch2-interact-mainframe {
 	set flag temp to false
 	// wizard comes up if down
 	if (entity Wizard current_animation is 0) { // WIZARD IS DOWN
-		set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch
+		set entity Wizard on_tick to tick-ch2-wizard-ascend-and-watch
 	}
 	// normal
 	if (flag ch2-installed-heatsink is false) {
@@ -163,9 +163,9 @@ ch2-interact-mainframe {
 			PLAYER "That's all for now."
 		}
 		copy ch2-count-flags
-		set entity "%SELF%" tick_script to ch2-count-flags-done
+		set entity "%SELF%" on_tick to ch2-count-flags-done
 	}
-	set entity "%SELF%" interact_script to ch2-interact-mainframe
+	set entity "%SELF%" on_interact to ch2-interact-mainframe
 }
 
 ch2-count-flags-done {
@@ -255,7 +255,7 @@ ch2-interact-mainframe-madamada {
 	show dialog {
 		PLAYER "What is this hunk of junk?"
 	}
-	set entity "%SELF%" interact_script to ch2-interact-mainframe
+	set entity "%SELF%" on_interact to ch2-interact-mainframe
 }
 
 // DEBUG
