@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <array>
 #include <memory>
+#include <cstddef>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -29,36 +30,36 @@ class Header
 {
 public:
    Header() noexcept = default;
-   Header(uint32_t count, uint32_t& address) noexcept
+   Header(std::size_t count, std::size_t& address) noexcept
       : count(count), baseAddress(address)
    {
-      address += 2 * sizeof(uint32_t) * count;
+      address += 2 * sizeof(std::size_t) * count;
    }
 
-   uint32_t Count() const { return count; }
-   uint32_t address(uint32_t romDataAddress, uint16_t i) const
+   std::size_t Count() const { return count; }
+   std::size_t address(const char* romDataAddress, uint16_t i) const
    {
-      auto offsets = (const uint32_t*)(romDataAddress + baseAddress);
+      auto offsets = (const std::size_t*)(romDataAddress + baseAddress);
       return offsets[i % count];
    }
-   uint32_t Length(uint32_t romDataAddress, uint16_t i) const
+   std::size_t Length(const char* romDataAddress, uint16_t i) const
    {
-      auto lengths = (const uint32_t*)(romDataAddress + baseAddress + sizeof(uint32_t) * count);
+      auto lengths = (const std::size_t*)(romDataAddress + baseAddress + sizeof(std::size_t) * count);
       return lengths[i % count];
    }
    
 private:
-   uint32_t count;
-   uint32_t baseAddress;
+   std::size_t count;
+   std::size_t baseAddress;
 
 }; //class Header
 
 //size of chunk to be read/written when writing game.dat to ROM per loop
-static const inline uint32_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
+static const inline std::size_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
 
 //This is the smallest page that can be erased on the FL256SSVF01 chip which uses uniform 256kB page sizes
 //262144 bytes = 256KB
-static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
+static const inline std::size_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 
 //size of largest single Write data that can be sent at one time:
 //make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
@@ -88,14 +89,14 @@ static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
 //which is defined as 2^25 bytes available for writing.
 //We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data at the end of rom
-static const inline uint32_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
-static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
-static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
-static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
+static const inline std::size_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
+static const inline std::size_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
+static const inline std::size_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
+static const inline std::size_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the Verify function returns
-//the failure address which is a uint32_t and can include 0
+//the failure address which is a std::size_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +141,7 @@ struct EngineROM
    {
       const auto magicString = std::string{"MAGEGAME"};
 
-      for (uint32_t i = 0; i < magicString.size(); i++)
+      for (std::size_t i = 0; i < magicString.size(); i++)
       {
          if (magicString[i] != romData[i])
          {
@@ -171,7 +172,7 @@ struct EngineROM
    uint16_t GetCount() { return getHeader<TData>().Count(); }
 
    template <typename T>
-   void Read(T& t, uint32_t& address, size_t count = 1) const
+   void Read(T& t, std::size_t& address, size_t count = 1) const
    {
       static_assert(std::is_scalar_v<T> || std::is_standard_layout_v<T>, "T must be a scalar or standard-layout type");
       auto elementSize = sizeof(std::remove_all_extents_t<T>);
@@ -189,24 +190,22 @@ struct EngineROM
    }
 
    template <typename T>
-   uint32_t GetAddress(uint16_t index) const
+   std::size_t GetAddress(uint16_t index) const
    {
       auto&& header = getHeader<T>();
-      auto address = header.address((uint32_t)romData, index % header.Count());
+      auto address = header.address(romData, index % header.Count());
       return address;
    }
 
    template <typename T>
    const T* GetReadPointerByIndex(uint16_t index) const
    {
-      static_assert(sizeof(romData) == 4, "Expected 32-bit pointers");
-      
-      auto address = getHeader<T>().address((uint32_t)romData, index);
-      return reinterpret_cast<const T*>((uint32_t)romData + address);
+      auto address = getHeader<T>().address(romData, index);
+      return reinterpret_cast<const T*>(romData + address);
    }
 
    template <typename T>
-   const T* GetReadPointerToAddress(uint32_t& address) const
+   const T* GetReadPointerToAddress(std::size_t& address) const
    {
       auto readPointer = reinterpret_cast<const T*>(romData + address);
       address += sizeof(T);
@@ -216,16 +215,16 @@ struct EngineROM
    template <typename T>
    std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
-      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
+      static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
       
-      auto address = getHeader<T>().address((uint32_t)romData, index);
+      auto address = getHeader<T>().address(romData, index);
       return std::make_unique<T>(address);
    }
    
    template <typename T>
-   void InitializeVectorFrom(std::vector<T>& v, uint32_t& address, size_t count) const
+   void InitializeVectorFrom(std::vector<T>& v, std::size_t& address, size_t count) const
    {
-      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
+      static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
       
       for (auto i = 0; i < count; i++)
       {
@@ -241,14 +240,14 @@ struct EngineROM
       }
    }
 
-   bool VerifyEqualsAtOffset(uint32_t address, std::string value) const
+   bool VerifyEqualsAtOffset(std::size_t address, std::string value) const
    {
       if (value.empty())
       {
          ENGINE_PANIC("EngineROM<THeaders...>::VerifyEqualsAtOffset: Empty string");
       }
 
-      for (uint32_t i = 0; i < value.size(); i++)
+      for (std::size_t i = 0; i < value.size(); i++)
       {
          if (i >= ENGINE_ROM_MAX_DAT_FILE_SIZE || value[i] != romData[i])
          {
@@ -273,7 +272,7 @@ struct EngineROM
       currentSave = save;
    }
    
-   constexpr const TSave& ResetCurrentSave(uint32_t scenarioDataCRC32)
+   constexpr const TSave& ResetCurrentSave(std::size_t scenarioDataCRC32)
    {
       auto newSave = TSave{};
       newSave.scenarioDataCRC32 = scenarioDataCRC32;
@@ -284,7 +283,7 @@ struct EngineROM
    void LoadSaveSlot(uint8_t slotIndex)
    {
 #ifdef DC801_EMBEDDED
-      auto saveAddress = uint32_t{ ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE) };
+      auto saveAddress = std::size_t{ ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE) };
       Read(currentSave, saveAddress);
 #else
 
@@ -302,7 +301,7 @@ struct EngineROM
       if (fileDirEntry.exists())
       {
          auto fileSize = fileDirEntry.file_size();
-         debug_print("Save file size: %zu\n", (uint32_t)fileDirEntry.file_size());
+         debug_print("Save file size: %zu\n", (std::size_t)fileDirEntry.file_size());
 
          auto saveFile = std::fstream{ saveFileName, std::ios::in | std::ios::binary };
          if (!saveFile.good())
@@ -339,15 +338,15 @@ private:
    }
 
    template <typename T>
-   auto headerFor(uint32_t& address) const
+   auto headerFor(std::size_t& address) const
    {
-      auto countPointer = (const uint32_t*)(romData + address);
+      auto countPointer = (const std::size_t*)(romData + address);
       address += sizeof(*countPointer);
       return Header<T>{*countPointer, address};
    }
 
    template <typename... TRest>
-   auto headersFor(uint32_t address) const
+   auto headersFor(std::size_t address) const
    {
       return std::tuple<Header<TRest>...>{headerFor<TRest>(address)...};
    }

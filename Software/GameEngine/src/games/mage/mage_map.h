@@ -44,7 +44,7 @@ struct MageMapTile
 
 struct MapData
 {
-    MapData(uint32_t& address);
+    MapData(std::size_t& address);
     static const inline int MapNameLength = 16;
     char name[MapNameLength]{ 0 };
     uint16_t tileWidth{ 0 };

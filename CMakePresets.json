@@ -53,9 +53,7 @@
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
         "CMAKE_C_COMPILER": "gcc",
-        "CMAKE_CXX_COMPILER": "g++",
-        "CMAKE_C_FLAGS": "-m32 -g",
-        "CMAKE_CXX_FLAGS": "-m32 -g"
+        "CMAKE_CXX_COMPILER": "g++"
       }
     },
     {

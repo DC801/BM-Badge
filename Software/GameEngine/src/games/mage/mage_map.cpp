@@ -38,7 +38,7 @@ void MapControl::OnTick(MageScriptControl* scriptControl)
     scriptControl->processScript(onTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
 }
 
-MapData::MapData(uint32_t& address)
+MapData::MapData(std::size_t& address)
 {
     auto layerCount = uint8_t{ 0 };
     ROM()->Read(name, address, MapNameLength);

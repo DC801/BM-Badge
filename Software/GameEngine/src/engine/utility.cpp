@@ -92,11 +92,11 @@ uint32_t hex2dec(uint32_t v) {
 //it uses debug_print for output.
 void check_ram_usage(void)
 {
-	uint8_t stack = 0;
+	std::size_t stack = 0;
 	void * heap = malloc(1);
-	debug_print("Stack Memory Address: 0x%x",(uint32_t)&stack);
-	debug_print("Heap Memory Address:  0x%x", (uint32_t)heap);
-	debug_print("Free Memory: %u", (uint32_t)(&stack - (uint8_t*)heap));
+	debug_print("Stack Memory Address: 0x%x", (std::size_t)&stack);
+	debug_print("Heap Memory Address:  0x%x", (std::size_t)heap);
+	debug_print("Free Memory: %u", (std::size_t)(&stack - (std::size_t*)heap));
 	//to prevent memory leaks:
 	free(heap);
 }

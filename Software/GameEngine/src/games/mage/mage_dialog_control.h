@@ -198,7 +198,7 @@ class MageSerialDialog
 {
 public:
    ~MageSerialDialog() noexcept = default;
-   MageSerialDialog(uint32_t& address)
+   MageSerialDialog(std::size_t& address)
    {
       ROM()->Read(name, address, 32);
       ROM()->Read(stringId, address);
