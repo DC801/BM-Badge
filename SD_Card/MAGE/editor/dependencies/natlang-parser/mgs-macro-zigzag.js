@@ -178,6 +178,8 @@ zigzag.parseWholeZig = function (tokens, startTokenIndex) {
 	};
 };
 
+
+var bodge = 0;
 zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 	var scriptName = scriptNameToken.value; // TODO delete
 	var statements = zigReport.statements; // QOL
@@ -187,7 +189,8 @@ zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 	var finalCurlyToken = statements[statements.length - 1].bracketInfo.behaviorsEndToken; // reused a lot
 
 	// converged label
-	var convergedLabelName = "LABEL " + finalCurlyToken.pos;
+	bodge += 1;
+	var convergedLabelName = "LABEL f" + finalCurlyToken.pos;
 	var convergedLabelNameToken = JSON.parse(JSON.stringify(scriptNameToken));
 	convergedLabelNameToken.pos = finalCurlyToken.pos;
 	convergedLabelNameToken.value = convergedLabelName;
@@ -214,7 +217,7 @@ zigzag.expandZigzag = function (zigReport, scriptNameToken) {
 			// becomes: declaration of procedural label name
 			var openCurlyToken = statement.bracketInfo.behaviorsStartToken;
 
-			var zigLabelName = "LABEL " + openCurlyToken.pos;
+			var zigLabelName = "LABEL o" + openCurlyToken.pos;
 			var zigLabelNameToken = JSON.parse(JSON.stringify(scriptNameToken));
 			zigLabelNameToken.pos = openCurlyToken.pos;
 			zigLabelNameToken.value = zigLabelName;

@@ -7,6 +7,7 @@ var natlang = natlang || window.natlang;
 var zigzag = window.zigzag;
 if (typeof module === 'object') {
 	natlang = require('./natlang-parse.js');
+	whyle = require('./mgs-macro-whyle.js');
 	zigzag = require('./mgs-macro-zigzag.js');
 	constants = require('./mgs-macro-constants.js');
 }
@@ -14,6 +15,7 @@ if (typeof module === 'object') {
 var mgs = {
 	macros: {
 		constants: constants,
+		whyle: whyle,
 		zigzag: zigzag
 	},
 	blocks: {

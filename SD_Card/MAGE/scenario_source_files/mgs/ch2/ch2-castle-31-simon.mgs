@@ -207,59 +207,53 @@ simon-game-start {
 }
 
 simon-enemy-turn-start {
-	mutate i = 0
 	set flag ch2-simon-move-fail to false
 	wait 800ms
-	goto simon-enemy-turn-loop
-}
+	mutate i = 0
+	show serial dialog {"SETTING ITER $i$"}
+	while (variable i is < simon-round) {
+		show serial dialog {"Loop is now $i$"}
+		if (variable i is == 0) { mutate simon-pos-curr = simon-pos1 }
+		else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2 }
+		else if (variable i is == 2) { mutate simon-pos-curr = simon-pos3 }
+		else if (variable i is == 3) { mutate simon-pos-curr = simon-pos4 }
+		else if (variable i is == 4) { mutate simon-pos-curr = simon-pos5 }
+		else if (variable i is == 5) { mutate simon-pos-curr = simon-pos6 }
+		else if (variable i is == 6) { mutate simon-pos-curr = simon-pos7 }
+		// see $roundcount
 
-simon-enemy-turn-loop {
-	if (variable i is >= simon-round) {
-		goto simon-enemy-turn-end
+		// loopy
+		if (variable simon-pos-curr is == 0) {
+			turn light $light0 on
+			set entity Simon current_animation to 11
+		}
+		else if (variable simon-pos-curr is == 1) {
+			turn light $light1 on
+			set entity Simon current_animation to 8
+		}
+		else if (variable simon-pos-curr is == 2) {
+			turn light $light2 on
+			set entity Simon current_animation to 10
+		}
+		else if (variable simon-pos-curr is == 3) {
+			turn light $light3 on
+			set entity Simon current_animation to 7
+		}
+		else if (variable simon-pos-curr is == 4) {
+			turn light $light4 on
+			set entity Simon current_animation to 9
+		}
+		else if (variable simon-pos-curr is == 5) {
+			turn light $light5 on
+			set entity Simon current_animation to 6
+		}
+		wait 450ms
+		set entity Simon current_animation to 5
+		turn light ALL off
+		wait 150ms
+		mutate i + 1
 	}
-	if (variable i is == 0) { mutate simon-pos-curr = simon-pos1 }
-	else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2 }
-	else if (variable i is == 2) { mutate simon-pos-curr = simon-pos3 }
-	else if (variable i is == 3) { mutate simon-pos-curr = simon-pos4 }
-	else if (variable i is == 4) { mutate simon-pos-curr = simon-pos5 }
-	else if (variable i is == 5) { mutate simon-pos-curr = simon-pos6 }
-	else if (variable i is == 6) { mutate simon-pos-curr = simon-pos7 }
-	// see $roundcount
-
-	// loopy
-	if (variable simon-pos-curr is == 0) {
-		turn light $light0 on
-		set entity Simon current_animation to 11
-	}
-	else if (variable simon-pos-curr is == 1) {
-		turn light $light1 on
-		set entity Simon current_animation to 8
-	}
-	else if (variable simon-pos-curr is == 2) {
-		turn light $light2 on
-		set entity Simon current_animation to 10
-	}
-	else if (variable simon-pos-curr is == 3) {
-		turn light $light3 on
-		set entity Simon current_animation to 7
-	}
-	else if (variable simon-pos-curr is == 4) {
-		turn light $light4 on
-		set entity Simon current_animation to 9
-	}
-	else if (variable simon-pos-curr is == 5) {
-		turn light $light5 on
-		set entity Simon current_animation to 6
-	}
-	wait 450ms
-	set entity Simon current_animation to 5
-	turn light ALL off
-	wait 150ms
-	mutate i + 1
-	goto simon-enemy-turn-loop
-}
-
-simon-enemy-turn-end {
+	show serial dialog {"SIMON TURN OVER!"}
 	goto simon-player-turn-start
 }
 

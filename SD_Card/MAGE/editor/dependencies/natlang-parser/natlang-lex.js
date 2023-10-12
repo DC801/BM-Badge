@@ -30,6 +30,7 @@ const OPERATORS_SINGLE = {
 	"/":true,
 	"*":true,
     "-":true,
+    ";":true,
 };
 const is_single_char_operator = function(char) {
     return OPERATORS_SINGLE[char];

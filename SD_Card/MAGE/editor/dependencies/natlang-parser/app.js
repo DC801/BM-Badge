@@ -1,9 +1,12 @@
 var app = new Vue({
 	el:' #app',
 	data: {
-		which: 'split',
+		which: 'whyle',
 		origInput: testText,
 		lexOutput: {},
+		whyleTestStrings: whyleTestStrings, // for the v-for
+		whyleOrigInput: whyleTestStrings[0],
+		whyleOutput: '',
 		zigzagTestStrings: zigzagTestStrings, // for the v-for
 		zigzagOrigInput: zigzagTestStrings[0],
 		zigzagOutput: '',
@@ -60,11 +63,43 @@ var app = new Vue({
 		lexInput: function () {
 			this.lexOutput = natlang.lex(this.origInput);
 		},
+		populateWhyleTest: function (index) {
+			this.whyleOrigInput = whyleTestStrings[index];
+		},
 		populateZigzagTest: function (index) {
 			this.zigzagOrigInput = zigzagTestStrings[index];
 		},
 		populateConstantsTest: function (index) {
 			this.constantsOrigInput = constantsTestStrings[index];
+		},
+		whyleInput: function () {
+			var result;
+			var tokenReport = natlang.lex(this.whyleOrigInput);
+			var tokens = tokenReport.tokens;
+			if (!tokens) {
+				var pos = tokenReport.errors[0].pos
+				var text = tokenReport.errors[0].text
+				var fancyMessage = natlang.getPosContext(this.whyleOrigInput, pos, text);
+				this.whyleOutput = "LEX ERROR\n" + fancyMessage;
+				throw new Error(fancyMessage);
+			}
+			var expandedTokens;
+			try {
+				expandedTokens = whyle.process(tokens);
+			} catch (error) {
+				var errorMessage;
+				if (error.pos) {
+					errorMessage = error.name + '\n' + natlang.getPosContext(this.whyleOrigInput, error.pos, error.message);
+				} else {
+					errorMessage = error.name + '\n' + error.message + '\n' + error.stack;
+				}
+				this.whyleOutput = errorMessage;
+				throw new Error(errorMessage);
+			}
+			if (expandedTokens.length) {
+				result = whyle.log(expandedTokens);
+			}
+			this.whyleOutput = result.logBody;
 		},
 		zigzagInput: function () {
 			var result;
@@ -158,6 +193,9 @@ var app = new Vue({
 		<button
 			@click="changeWhich('split')"
 		>Natlang to JSON trio</button>
+		<button
+			@click="changeWhich('whyle')"
+		>Whyle tester</button>
 		<button
 			@click="changeWhich('zigzag')"
 		>Zigzag tester</button>
@@ -302,6 +340,27 @@ var app = new Vue({
 			>GO!</button>
 		</h1>
 		<pre>{{lexOutput}}</pre>
+	</div>
+	<div
+		v-if="which === 'whyle'"
+	>
+		<textarea
+			rows="20" cols="80"
+			v-model="whyleOrigInput"
+		></textarea>
+		<p>
+			<button
+				v-for="testString, index in whyleTestStrings"
+				@click="populateWhyleTest(index)"
+			>TestData {{index}}</button>
+		</p>
+		<h1>
+			<span>Whyle!</span>
+			<button
+				@click="whyleInput"
+			>GO!</button>
+		</h1>
+		<pre>{{whyleOutput}}</pre>
 	</div>
 	<div
 		v-if="which === 'zigzag'"
