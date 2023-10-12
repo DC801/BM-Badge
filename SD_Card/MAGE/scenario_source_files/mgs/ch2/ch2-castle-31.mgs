@@ -247,7 +247,6 @@ ch2-touch-keyboard {
 		Simon "Hey! Hey! Don't you insult Rosetta like that!"
 	}
 	set entity Simon current_animation to 0
-	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
 }
 
 camera-angry-shake {

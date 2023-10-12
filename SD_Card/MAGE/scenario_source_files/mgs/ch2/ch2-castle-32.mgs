@@ -361,5 +361,5 @@ ch2-touch-ramchips-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-ramchips // RESET
+	set entity "%SELF%" interact_script to ch2-touch-ramchips  // reset after script jump
 }

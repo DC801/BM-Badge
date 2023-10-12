@@ -200,7 +200,6 @@ interact-ch2-bobbox {
 			PLAYER "I guess they didn't need this box of balloons downstairs."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-bobbox
 }
 interact-ch2-bobbarstool {
 	if (flag ch2-cutseen-bob-party is false) {
@@ -213,7 +212,6 @@ interact-ch2-bobbarstool {
 			PLAYER "They just left this stool by itself, huh? Guess there wasn't room downstairs."
 		}
 	}
-	set entity "%SELF%" interact_script to interact-ch2-bobbarstool
 }
 interact-ch2-bobbarrel {
 	show dialog {
@@ -226,7 +224,6 @@ interact-ch2-bobcountertop {
 			PLAYER "I KNOW there used to be bottles by the sink! Where did everything go?"
 		}
 	} // (no need to say anything once the basement is discovered)
-	set entity "%SELF%" interact_script to interact-ch2-bobcountertop
 }
 
 // CALLBACK (ish) STUFF
@@ -243,15 +240,13 @@ interact-ch2-bobcupboard {
 			PLAYER "Yup, still glasses and tumblers in there."
 		}
 	}
-	mutate CALLBACK = $cupboard
-	goto ch2-bobrattling
+	copy ch2-bobrattling
 }
 interact-ch2-bobglasses {
 	show dialog {
 		PLAYER "These glasses look super fancy."
 	}
-	mutate CALLBACK = $glasses
-	goto ch2-bobrattling
+	copy ch2-bobrattling
 }
 interact-ch2-bobfridge {
 	if ( // You've already collected the CC
@@ -272,8 +267,7 @@ interact-ch2-bobfridge {
 			}
 		}
 	}
-	mutate CALLBACK = $fridge
-	goto ch2-bobrattling
+	copy ch2-bobrattling
 }
 
 player-look-down {
@@ -344,38 +338,4 @@ ch2-bobrattling { // Hint that there's more inside the building
 			mutate ch2-rattle-count % 3
 		}
 	}
-	goto ch2-bobrattling-wrapup
-}
-
-ch2-bobrattling-wrapup {
-	if (variable CALLBACK is $cupboard) {
-		goto interact-ch2-bobcupboard-RESUME
-	}
-	else if (variable CALLBACK is $glasses) {
-		goto interact-ch2-bobglasses-RESUME
-	}
-	else if (variable CALLBACK is $fridge) {
-		goto interact-ch2-bobfridge-RESUME
-	}
-	else {
-		show serial dialog spacer
-		show serial dialog {
-			"<r>ERROR</>"
-			" "
-			"Callback value is set to: $CALLBACK$"
-			"\tSource: script 'ch2-bobrattling-wrapup'"
-		}
-	}
-}
-interact-ch2-bobcupboard-RESUME {
-	mutate CALLBACK = $reset
-	set entity "%SELF%" interact_script to interact-ch2-bobcupboard
-}
-interact-ch2-bobglasses-RESUME {
-	mutate CALLBACK = $reset
-	set entity "%SELF%" interact_script to interact-ch2-bobglasses
-}
-interact-ch2-bobfridge-RESUME {
-	mutate CALLBACK = $reset
-	set entity "%SELF%" interact_script to interact-ch2-bobfridge
 }

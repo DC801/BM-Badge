@@ -102,7 +102,6 @@ interact-ch2-ckwatt {
 		}
 	}
 	turn entity "%SELF%" south
-	set entity "%SELF%" interact_script to interact-ch2-ckwatt // RESET
 }
 
 /* ---------- POWER SUPPLY (ADMIN) ---------- */
@@ -133,7 +132,6 @@ ch2-touch-powersupply {
 			> "No" : ch2-touch-powersupply-no
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-touch-powersupply // RESET
 }
 
 ch2-touch-powersupply-yes {
@@ -148,5 +146,5 @@ ch2-touch-powersupply-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-powersupply // RESET
+	set entity "%SELF%" interact_script to ch2-touch-powersupply  // reset after script jump
 }

@@ -45,7 +45,6 @@ on_tick-ch2-castle-34 {
 		set warp state to walk_from-northeast
 		load map ch2-castle-32
 	}
-	set map tick_script to on_tick-ch2-castle-34 // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -86,7 +85,6 @@ ch2-touch-plate {
 			> "No" : ch2-touch-plate-no
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-touch-plate // RESET
 }
 ch2-touch-plate-yes {
 	show dialog {
@@ -100,7 +98,7 @@ ch2-touch-plate-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-plate // RESET
+	set entity "%SELF%" interact_script to ch2-touch-plate  // reset after script jump
 }
 
 

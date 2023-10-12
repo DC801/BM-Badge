@@ -1015,6 +1015,8 @@ Four... wait, did I skip one?
 
 `return` is a keyword that will end the current script early. (This will not "return" a value to the script's "caller;" it simply sets the action index past the end of the script, causing it to immediately end.)
 
+This will not stop `on_tick` scripts from looping on the next game tick, however; if you want to stop an `on_tick` script for good, you must `goto null_script`.
+
 ### Zigzag (`if` / `else`)
 
 The basic actions that involve conditional checks will trigger either a jump to an entirely new script or a jump to an arbitrary position within the same script. (Note: this doesn't include things like multiple choice options within dialogs; those result in script jumps only.)

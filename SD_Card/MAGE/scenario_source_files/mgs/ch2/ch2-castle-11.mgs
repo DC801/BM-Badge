@@ -209,7 +209,6 @@ ch2-touch-monitor {
 		> "Yes" : ch2-touch-monitor-yes
 		> "No" : ch2-touch-monitor-no
 	}
-	set entity "%SELF%" interact_script to ch2-touch-monitor // RESET
 }
 ch2-touch-monitor-yes {
 	show dialog {
@@ -223,7 +222,7 @@ ch2-touch-monitor-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-monitor // RESET
+	set entity "%SELF%" interact_script to ch2-touch-monitor // reset after script jump
 }
 
 interact-ch2-kuro {

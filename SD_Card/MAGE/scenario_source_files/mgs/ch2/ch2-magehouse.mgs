@@ -28,7 +28,6 @@ on_tick-ch2-magehouse {
 		set warp state to walk_from-magehouse
 		load map main2
 	}
-	set map tick_script to on_tick-ch2-magehouse // reset
 }
 
 /* ---------- EXIT STUFF ---------- */

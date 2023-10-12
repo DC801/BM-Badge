@@ -86,7 +86,6 @@ ch2-touch-goldfish {
 			> "No" : ch2-touch-goldfish-no
 		}
 	}
-	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
 }
 
 ch2-touch-goldfish-yes {
@@ -101,7 +100,7 @@ ch2-touch-goldfish-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
+	set entity "%SELF%" interact_script to ch2-touch-goldfish  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */
