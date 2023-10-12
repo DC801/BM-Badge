@@ -129,7 +129,7 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
             interactBox.w = interactLength;
         }
 
-        for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
+        for (uint8_t i = 0; i < mapControl->GetEntities().size(); i++)
         {
             // reset all interact states first
             auto targetEntity = mapControl->tryGetEntity(i);
@@ -372,7 +372,7 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
     if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
     //update universally used hex editor state variables:
-    hexEditor->updateHexStateVariables(mapControl->FilteredEntityCount());
+    hexEditor->updateHexStateVariables();
 
     auto hax = bool{
         hexEditor->isHexEditorOn()

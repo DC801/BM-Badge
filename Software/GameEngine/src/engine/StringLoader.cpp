@@ -6,7 +6,7 @@
 
 std::string StringLoader::getString(uint16_t stringId, std::string triggeringEntityName) const
 {
-   auto address = ROM()->GetAddress<MageStringValue>(stringId);
+   auto address = ROM()->GetAddressByIndex<MageStringValue>(stringId);
    auto inputCharPtr = ROM()->GetReadPointerToAddress<char>(address);
    auto inputString = std::string{ inputCharPtr };
    std::string outputString = inputString;

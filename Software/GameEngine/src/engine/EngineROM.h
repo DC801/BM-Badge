@@ -33,18 +33,18 @@ public:
    Header(std::size_t count, std::size_t& address) noexcept
       : count(count), baseAddress(address)
    {
-      address += 2 * sizeof(std::size_t) * count;
+      address += 2 * sizeof(uint16_t) * count;
    }
 
    std::size_t Count() const { return count; }
    std::size_t address(const char* romDataAddress, uint16_t i) const
    {
-      auto offsets = (const std::size_t*)(romDataAddress + baseAddress);
+      auto offsets = (const uint16_t*)(romDataAddress + baseAddress);
       return offsets[i % count];
    }
    std::size_t Length(const char* romDataAddress, uint16_t i) const
    {
-      auto lengths = (const std::size_t*)(romDataAddress + baseAddress + sizeof(std::size_t) * count);
+      auto lengths = (const uint16_t*)(romDataAddress + baseAddress + sizeof(count) * count);
       return lengths[i % count];
    }
    
@@ -89,10 +89,10 @@ static const inline std::size_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
 //which is defined as 2^25 bytes available for writing.
 //We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data at the end of rom
-static const inline std::size_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
-static const inline std::size_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
-static const inline std::size_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
-static const inline std::size_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
+static const inline uint32_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
+static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
+static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
+static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the Verify function returns
@@ -178,11 +178,6 @@ struct EngineROM
       auto elementSize = sizeof(std::remove_all_extents_t<T>);
       auto dataLength = count * elementSize;
 
-      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
-      {
-         throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
-      }
-
       auto dataPointer = romData + address;
       memcpy(&t, dataPointer, dataLength);
       address += dataLength;
@@ -190,11 +185,9 @@ struct EngineROM
    }
 
    template <typename T>
-   std::size_t GetAddress(uint16_t index) const
+   std::size_t GetAddressByIndex(uint16_t index) const
    {
-      auto&& header = getHeader<T>();
-      auto address = header.address(romData, index % header.Count());
-      return address;
+      return getHeader<T>().address(romData, index);
    }
 
    template <typename T>
@@ -215,14 +208,14 @@ struct EngineROM
    template <typename T>
    std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
-      static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
-      
+      static_assert(std::is_constructible_v<T, std::size_t&>, "Must be constructible from an address");
+
       auto address = getHeader<T>().address(romData, index);
       return std::make_unique<T>(address);
    }
    
    template <typename T>
-   void InitializeVectorFrom(std::vector<T>& v, std::size_t& address, size_t count) const
+   void InitializeVectorFrom(std::vector<T>& v, std::size_t& address, uint16_t count) const
    {
       static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
       
@@ -333,14 +326,14 @@ private:
    template <typename TData>
    constexpr const Header<TData>& getHeader() const
    {
-      constexpr std::size_t index = type_index_v<Header<TData>, std::tuple<Header<THeaders>...>>;
+      constexpr auto index = type_index_v<Header<TData>, std::tuple<Header<THeaders>...>>;
       return std::get<index>(headers);
    }
 
    template <typename T>
    auto headerFor(std::size_t& address) const
    {
-      auto countPointer = (const std::size_t*)(romData + address);
+      auto countPointer = (const uint16_t*)(romData + address);
       address += sizeof(*countPointer);
       return Header<T>{*countPointer, address};
    }

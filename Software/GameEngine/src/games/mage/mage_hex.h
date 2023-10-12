@@ -85,7 +85,7 @@ public:
 	void updateHexLights() const;
 
 	//this updates the variables used by the hex editor when applying inputs and rendering.
-	void updateHexStateVariables(uint8_t entityCount);
+	void updateHexStateVariables();
 
 	//this applies inputs to the hex editor state.
 	void applyHexModeInputs(uint8_t* currentByte);

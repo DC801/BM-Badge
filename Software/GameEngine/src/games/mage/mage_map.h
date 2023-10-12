@@ -67,13 +67,6 @@ struct MapData
     std::vector<GoDirection> goDirections{};
     std::vector<const MageGeometry*> geometries{};
 
-    struct MapLayer
-    {
-        MapLayer(const MageMapTile* layerStart, uint16_t cols, uint16_t rows)
-            : tiles(std::span<const MageMapTile>(layerStart, cols* rows))
-        {}
-        std::span<const MageMapTile> tiles;
-    };
     std::vector<std::span<const MageMapTile>> layers{};
     std::vector<const MageScript*> scripts{};
 };

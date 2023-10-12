@@ -114,7 +114,7 @@ bool QSPI::chipErase() const noexcept
     return NRFX_SUCCESS == errResult;
 }
 
-bool QSPI::read(char* data, size_t len, uint32_t& startAddress) const noexcept
+bool QSPI::read(char* data, size_t len, std::size_t& startAddress) const noexcept
 {
 #ifdef DC801_EMBEDDED
     if (NRFX_SUCCESS == nrfx_qspi_read(data, len, startAddress))

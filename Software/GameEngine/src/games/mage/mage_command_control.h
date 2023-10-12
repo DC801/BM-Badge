@@ -52,7 +52,7 @@ private:
 	std::shared_ptr<MageScriptControl> scriptControl;
 	std::shared_ptr<StringLoader> stringLoader;
 
-	std::optional<MageSerialDialog> openSerialDialog;
+	std::unique_ptr<MageSerialDialog> openSerialDialog{nullptr};
 
 	inline void badAsciiLowerCase(std::string& data)
 	{

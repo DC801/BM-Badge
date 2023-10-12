@@ -100,12 +100,12 @@ uint16_t MageHexEditor::getCurrentMemPage()
 
 }
 
-void MageHexEditor::updateHexStateVariables(uint8_t entityCount)
+void MageHexEditor::updateHexStateVariables()
 {
     bytesPerPage = dialogState ? 64 : 192;
-    hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
-    memTotal = entityCount * sizeof(MageEntityData);
-    totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
+    hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
+    memTotal = mapControl->GetEntities().size() * sizeof(MageEntityData);
+    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
 void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
@@ -303,8 +303,8 @@ void MageHexEditor::renderHexHeader()
     const uint8_t* currentByteAddress = entityDataPointer + hexCursorLocation;
     uint8_t u1Value = *currentByteAddress;
     uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
-    sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05u  Mem: 0x%04X",
-        currentMemPage, hexCursorLocation, totalMemPages, mapControl->FilteredEntityCount(), memTotal);
+    sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
+        currentMemPage, hexCursorLocation, totalMemPages, mapControl->GetEntities().size(), memTotal);
 
     frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, 0);
     auto stringPreview = std::string{ entityDataPointer + hexCursorLocation,
