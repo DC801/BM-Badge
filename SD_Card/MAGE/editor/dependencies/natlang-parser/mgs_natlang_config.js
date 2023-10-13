@@ -22,16 +22,16 @@ var mgs = {
 		"root": {
 			branchesLoop: true,
 			branches: [
-				{ branch: "dialogSettingsNode", multipleOkay: true, zeroOkay: true },
-				{ branch: "serialDialogSettingsNode", multipleOkay: true, zeroOkay: true },
-				{ branch: "dialogNode", multipleOkay: true, zeroOkay: true },
-				{ branch: "serialDialogNode", multipleOkay: true, zeroOkay: true },
-				{ branch: "scriptNode", multipleOkay: true, zeroOkay: true },
+				{ branch: "dialogSettingsNode", count: "*" },
+				{ branch: "serialDialogSettingsNode", count: "*" },
+				{ branch: "dialogNode", count: "*" },
+				{ branch: "serialDialogNode", count: "*" },
+				{ branch: "scriptNode", count: "*" },
 			]
 		},
 		"dialogSettings": {
 			branches: [
-				{ branch: "dialogSettingsTarget", multipleOkay: true, zeroOkay: true },
+				{ branch: "dialogSettingsTarget", count: "*" },
 			],
 			closeChar: "}",
 			onOpen: function (state) {
@@ -41,7 +41,7 @@ var mgs = {
 		},
 		"dialogSettingsTarget": {
 			branches: [
-				{ branch: "dialogParameter", multipleOkay: true, zeroOkay: true },
+				{ branch: "dialogParameter", count: "*" },
 			],
 			closeChar: "}",
 			onClose: function (state) {
@@ -57,7 +57,7 @@ var mgs = {
 		},
 		"serialDialogSettings": {
 			branches: [
-				{ branch: "serialDialogParameter", multipleOkay: true, zeroOkay: true },
+				{ branch: "serialDialogParameter", count: "*" },
 			],
 			closeChar: "}",
 			onOpen: function (state) {
@@ -80,18 +80,14 @@ var mgs = {
 			branches: [
 				{
 					branch: "dialogIdentifier",
-					multipleOkay: false,
-					zeroOkay: false,
 					failMessage: "A dialog identifier is required before any dialog messages!"
 				},
-				{ branch: "dialogParameter", multipleOkay: true, zeroOkay: true },
+				{ branch: "dialogParameter", count: "*" },
 				{
-					branch: "dialogMessage",
-					multipleOkay: true,
-					zeroOkay: false,
+					branch: "dialogMessage", count: "+",
 					failMessage: "You need at least one dialog message!" 
 				},
-				{ branch: "dialogOption", multipleOkay: true, zeroOkay: true },
+				{ branch: "dialogOption", count: "*" },
 			],
 			closeChar: "}",
 			// consolidate the below somehow?
@@ -123,16 +119,14 @@ var mgs = {
 		},
 		"serialDialog": {
 			branches: [
-				{ branch: "serialDialogParameter", multipleOkay: true, zeroOkay: true },
+				{ branch: "serialDialogParameter", count: "*" },
 				{
-					branch: "serialDialogMessage",
-					multipleOkay: true,
-					zeroOkay: false,
+					branch: "serialDialogMessage", count: "+",
 					failMessage: "You need at least one serial dialog message!" 
 				},
-				{ branch: "serialDialogOptionFree", multipleOkay: true, zeroOkay: true },
+				{ branch: "serialDialogOptionFree", count: "*" },
 				// strictly, only either type of option is allowed (not one then the other) but there is no easy means of implementing this (the parser will run with the first type it sees and not take the syntax literally for each option individually)
-				{ branch: "serialDialogOptionFixed", multipleOkay: true, zeroOkay: true },
+				{ branch: "serialDialogOptionFixed", count: "*" },
 			],
 			closeChar: "}",
 			onOpen: function (state) {
@@ -156,7 +150,7 @@ var mgs = {
 		},
 		"script": {
 			branches: [
-				{ branch: "action", multipleOkay: true, zeroOkay: true }
+				{ branch: "action", count: "*" }
 			],
 			closeChar: "}",
 			onClose: function (state) {
