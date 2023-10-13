@@ -334,6 +334,13 @@ natlang.tryBranch = function (tokens, tokenPos, branch) {
 	return report;
 };
 
+var regexish = {
+	"*": { multipleOkay: true, zeroOkay: true},
+	"+": { multipleOkay: true, zeroOkay: false},
+	"?": { multipleOkay: false, zeroOkay: true},
+	"literal": { multipleOkay: false, zeroOkay: false},
+}
+
 natlang.parse = function (rawConfig, inputString, fileName) {
 	// SETUP
 	var config = natlang.prepareConfig(rawConfig);
@@ -447,6 +454,34 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 		}
 		config.capture[captureType](state, args);
 	};
+	// UNTESTED:
+	state.getOrInitFinalState = function (finalName, initValue) {
+		// does nothing if the destination already exists
+		state.finalState[finalName] =
+			state.finalState[finalName] || initValue;
+		return state.finalState[finalName];
+	};
+	state.getOrInitInsert = function (insertName, initValue) {
+		// does nothing if the destination already exists
+		state.inserts[insertName] =
+			state.inserts[insertName] || initValue;
+		return state.inserts[insertName];
+	};
+	state.clearInserts = function (arg) { // string or array ok
+		// will zero the contents of the insert while preserving the value type (=> {}, not undefined)
+		var names = typeof arg === "string"
+			? [ arg ]
+			: arg
+		names.forEach(function (name) {
+			if (typeof state.inserts[name] === "string") {
+				state.inserts[name] = null;
+			} else if (Array.isArray(state.inserts[name])) {
+				state.inserts[name] = [];
+			} else if (typeof state.inserts[name] === "object") {
+				state.inserts[name] = {};
+			} // undefined should do nothing
+		})
+	}
 	// THE THING
 	bigloop: while (state.curTokenIndex < state.tokens.length) {
 		var blockName = state.blockStack[0];
@@ -504,6 +539,10 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			state.curTokenIndex,
 			config.parseTrees[curBranchName]
 		);
+		// Figuring out how many times it must occur, and if it's okay to skip
+		var count = curBlockBranch.count ? curBlockBranch.count : "literal";
+		var multipleOkay = regexish[count].multipleOkay;
+		var zeroOkay = regexish[count].zeroOkay;
 		if (tryBranch && tryBranch.success) { // branch matched
 			if (log) {
 				var contextMessage = natlang.getPosContext(
@@ -529,7 +568,7 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			state.lastMatch.blockPos = state.blockPos;
 			// state.matchCheckpoint = null;
 			state.curTokenIndex += tryBranch.tokenCount;
-			if (!curBlockBranch.multipleOkay) {
+			if (!multipleOkay) {
 				state.blockPos += 1;
 				if (log) { console.log(`This branch (${curBranchName}) can't repeat. Moving on to the next branch index in the block....`); }
 				continue bigloop
@@ -542,13 +581,12 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 				state.bestTry = tryBranch;
 				state.bestTryLength = tryBranch.tokenCount;
 			}
-			if (curBlockBranch.zeroOkay) {
+			if (zeroOkay) {
 				if (log) { console.log(`This branch (${curBranchName}) didn't match, but it's okay to skip it. Moving from ${state.blockPos} -> ${state.blockPos +1}`); }
 				state.blockPos += 1;
 				continue bigloop;
 			} else if (
-				!curBlockBranch.zeroOkay
-				&& state.lastMatch.blockName === blockName
+				state.lastMatch.blockName === blockName
 				&& state.lastMatch.blockPos === state.blockPos
 			) {
 				if (log) { console.log(`This branch (${curBranchName}) isn't okay to skip outright, but we did match it already so we can move on. Moving from ${state.blockPos} -> ${state.blockPos + 1}`); }
