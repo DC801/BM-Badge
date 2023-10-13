@@ -1,7 +1,4 @@
-settings for dialog {
-	parameters for global defaults { alignment BL }
-}
-settings for serial dialog { wrap 60 }
+include!("header.mgs")
 
 on_load-main_menu {
 	mutate current-chapter = 0

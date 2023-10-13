@@ -1,0 +1,10 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+
+	parameters for label GBob { entity "Guardian Bob" }
+	parameters for label ZIPPY { entity "Aunt Zippy" }
+	parameters for label ZAPPY { entity "Uncle Zappy" }
+}
+settings for serial dialog { wrap 60 }

@@ -1,4 +1,4 @@
-settings for serial dialog { wrap 60 }
+include!("header.mgs")
 
 serial dialog spacer {
 	" "

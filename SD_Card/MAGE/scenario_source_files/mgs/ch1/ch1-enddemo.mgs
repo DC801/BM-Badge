@@ -1,8 +1,4 @@
-settings for dialog {
-	parameters for global defaults { alignment BL }
-	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
-	parameters for label SELF { entity "%SELF%" }
-}
+include!("header.mgs")
 
 earthquake {
 	fade out camera to #FF0000 over 300ms

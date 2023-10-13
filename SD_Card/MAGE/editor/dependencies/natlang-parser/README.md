@@ -1237,6 +1237,18 @@ The above is what the MGS Natlang syntax parser will actually parse. Syntax erro
 
 In addition, this macro only captures single tokens; you cannot use a const to represent multiple tokens, e.g. `const!($parade = 76 trombones)` will result in a syntax error.
 
+### `include!`
+
+This will copy and past the plaintext contents of the named mgs file (the path of the file doesn't matter) into place. Line breaks are changed into spaces to make the line numbers consistent with the original file.
+
+This is recursive, so be careful.
+
+This is best used for common settings, such as the player dialog label.
+
+```
+include!("header.mgs")
+```
+
 ## Action dictionary
 
 These dictionary entries use the default JSON action parameter names, e.g. `entity` for an entity's name (syntax: `entity $entity:string`).

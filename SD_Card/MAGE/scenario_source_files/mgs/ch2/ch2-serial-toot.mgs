@@ -1,4 +1,4 @@
-settings for serial dialog { wrap 60 }
+include!("header.mgs")
 
 ch2-toot-check {
 	if (variable ch2-toot-level is 0) {
