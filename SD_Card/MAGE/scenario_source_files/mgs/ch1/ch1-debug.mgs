@@ -1,7 +1,4 @@
-settings for dialog {
-	parameters for global defaults { alignment BL }
-	parameters for label SELF { entity "%SELF%" alignment BR}
-}
+include!("header.mgs")
 
 debug-hub-q {
 	show dialog {

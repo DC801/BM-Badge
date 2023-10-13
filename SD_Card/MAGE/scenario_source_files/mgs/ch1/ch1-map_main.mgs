@@ -1,7 +1,5 @@
+include!("header.mgs")
 settings for dialog {
-	parameters for global defaults { alignment BL }
-	parameters for label SELF { entity "%SELF%" }
-	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 	parameters for entity Cat { alignment TL }
 	parameters for entity Cleo { alignment TL }
 }
