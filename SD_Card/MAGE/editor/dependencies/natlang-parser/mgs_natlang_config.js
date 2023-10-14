@@ -35,9 +35,10 @@ var mgs = {
 			],
 			closeChar: "}",
 			onOpen: function (state) {
-				state.finalState.dialogSettings = state.finalState.dialogSettings || [];
+				state.initIfAbsent("finalState", "dialogSettings", []);
 			},
-			onClose: function () {} // just to silence the "no onClose?!?!" warning
+			onClose: function () {}
+			// just to silence the "no onClose?!?!" warning
 		},
 		"dialogSettingsTarget": {
 			branches: [
@@ -45,14 +46,15 @@ var mgs = {
 			],
 			closeChar: "}",
 			onClose: function (state) {
-				var inserts = state.inserts;
-				var finalState = state.finalState;
-				var result = inserts.dialogSettingsTarget;
-				result.parameters = inserts.dialogParameters;
-				inserts.dialogParameters = {};
-				inserts.dialogSettingsTarget = {};
-				finalState.dialogSettings = finalState.dialogSettings || [];
-				finalState.dialogSettings.push(result);
+				state.pushNew(
+					"finalState",
+					"dialogSettings",
+					Object.assign(
+						state.inserts.dialogSettingsTarget,
+						{ parameters: state.inserts.dialogParameters}
+					)
+				);
+				state.clearInserts([ "dialogParameters", "dialogSettingsTarget"]);
 			},
 		},
 		"serialDialogSettings": {
@@ -61,18 +63,18 @@ var mgs = {
 			],
 			closeChar: "}",
 			onOpen: function (state) {
-				state.finalState.serialDialogParameters =
-					state.finalState.serialDialogParameters || {};
-				state.inserts.serialDialogParameters =
-					state.inserts.serialDialogParameters || {};
+				state.initIfAbsent("finalState", "serialDialogParameters", {});
+				state.initIfAbsent("inserts", "serialDialogParameters", {});
 			},
 			onClose: function (state) {
-				var oldParams = state.finalState.serialDialogParameters;
-				var newParams = state.inserts.serialDialogParameters;
-				Object.entries(newParams).forEach(function (item) {
-					oldParams[item[0]] = item[1];
-				});
-				state.inserts.serialDialogParameters = {};
+				state.replaceValue(
+					"finalState",
+					"serialDialogParameters",
+					Object.assign(
+						state.finalState.serialDialogParameters,
+						state.inserts.serialDialogParameters
+					)
+				);
 			}
 		},
 		"dialog": {
@@ -90,31 +92,50 @@ var mgs = {
 				{ branch: "dialogOption", count: "*" },
 			],
 			closeChar: "}",
-			// consolidate the below somehow?
+			onOpen: function (state) {
+				state.initIfAbsent("inserts", "dialogIdentifier", {});
+				state.initIfAbsent("inserts", "dialogParameters", {});
+				state.initIfAbsent("inserts", "dialogMessages", []);
+				state.initIfAbsent("inserts", "dialogOptions", []);
+			},
+			// TODO consolidate the below somehow?
 			onLoop: function (state) {
-				var inserts = state.inserts;
-				var insert = mgs.buildDialogFromState(state);
-				inserts.dialogs = inserts.dialogs || [];
-				inserts.dialogs.push(insert);
-				inserts.dialogIdentifier = {};
-				inserts.dialogParameters = {};
-				inserts.dialogMessages = [];
-				inserts.dialogOptions = [];
+				state.pushNew(
+					"inserts",
+					"dialogs",
+					mgs.buildDialogFromState(state)
+				);
+				state.clearInserts([
+					"dialogIdentifier",
+					"dialogParameters",
+					"dialogMessages",
+					"dialogOptions",
+				]);
 			},
 			onClose: function (state) {
-				var inserts = state.inserts;
-				var final = state.finalState;
-				var insert = mgs.buildDialogFromState(state);
-				inserts.dialogs = inserts.dialogs || [];
-				inserts.dialogs.push(insert);
-				inserts.dialogIdentifier = {};
-				inserts.dialogParameters = {};
-				inserts.dialogMessages = [];
-				inserts.dialogOptions = [];
-				final.dialogs = final.dialogs || {};
-				final.dialogs[inserts.dialogName] = inserts.dialogs;
-				inserts.dialogName = null;
-				inserts.dialogs = [];
+				state.pushNew(
+					"inserts",
+					"dialogs",
+					mgs.buildDialogFromState(state)
+				);
+				state.clearInserts([
+					"dialogIdentifier",
+					"dialogParameters",
+					"dialogMessages",
+					"dialogOptions",
+				]);
+				// on close only
+				state.initIfAbsent("finalState", "dialogs", {});
+				state.replaceValueDeep(
+					"finalState",
+					"dialogs",
+					state.inserts.dialogName,
+					state.inserts.dialogs
+				)
+				state.clearInserts([
+					"dialogName",
+				 	"dialogs"
+				]);
 			},
 		},
 		"serialDialog": {
@@ -130,22 +151,24 @@ var mgs = {
 			],
 			closeChar: "}",
 			onOpen: function (state) {
-				state.inserts.serialDialogParameters =
-					state.inserts.serialDialogParameters || {};
+				state.initIfAbsent("inserts", "serialDialogParameters", {});
 			},
 			onClose: function (state) {
-				var inserts = state.inserts;
-				var final = state.finalState;
-				var dialogName = inserts.serialDialogName;
-				var builtDialog = mgs.buildSerialDialogFromState(state);
-				final.serialDialogs = final.serialDialogs || {};
-				final.serialDialogs[dialogName] = builtDialog;
+				state.initIfAbsent("finalState", "serialDialogs", {});
+				state.replaceValueDeep(
+					"finalState",
+					"serialDialogs",
+					state.inserts.serialDialogName,
+					mgs.buildSerialDialogFromState(state)
+				);
 				// reset
-				inserts.serialDialogParameters = {};
-				inserts.serialDialogMessages = [];
-				inserts.serialDialogOptions = [];
-				inserts.serialOptionType = null;
-				inserts.serialDialogName = null;
+				state.clearInserts([
+					"serialDialogParameters",
+					"serialDialogMessages",
+					"serialDialogOptions",
+				])
+				state.inserts.serialOptionType = null;
+				state.inserts.serialDialogName = null;
 			},
 		},
 		"script": {
@@ -154,13 +177,17 @@ var mgs = {
 			],
 			closeChar: "}",
 			onClose: function (state) {
-				var inserts = state.inserts;
-				var final = state.finalState;
-				final.scripts = final.scripts || {};
-				final.scripts[inserts.scriptName] = inserts.actions;
-				// final.scripts[inserts.scriptName] = mgs.linkScriptJumps(inserts.actions); // this is done after COPY_SCRIPT now, whoops
-				inserts.scriptName = null;
-				inserts.actions = [];
+				state.initIfAbsent("finalState", "scripts", {});
+				state.replaceValueDeep(
+					"finalState",
+					"scripts",
+					state.inserts.scriptName,
+					state.inserts.actions
+				);
+				state.clearInserts([
+					"scriptName",
+					"actions",
+				])
 			}
 		}
 	},
@@ -175,13 +202,11 @@ var mgs = {
 		dialogSettingsNode: [
 			["settings ?for dialog {",
 				function (state) {
-					// console.log("    Found 'settings ?for dialog {'")
 					state.startBlock("dialogSettings");
 				}],
 		],
 		serialDialogSettingsNode: [
 			["settings ?for serial ?dialog {",
-				// console.log("    Found 'settings ?for serial ?dialog {'")
 				function (state) {
 					state.startBlock("serialDialogSettings");
 				}],
@@ -189,7 +214,6 @@ var mgs = {
 		dialogNode: [
 			["dialog $dialog:string {",
 				function (state) {
-					// console.log("    Found 'dialog $dialog:string {'")
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.clearCaptures();
@@ -198,7 +222,6 @@ var mgs = {
 		serialDialogNode: [
 			["serial dialog $serial_dialog:string {",
 				function (state) {
-					// console.log("    Found 'serial dialog $dialog:string {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.clearCaptures();
@@ -207,7 +230,6 @@ var mgs = {
 		scriptNode: [
 			["?script $scriptName:string {",
 				function (state) {
-					// console.log("    Found '?script $scriptName:string {'")
 					state.startBlock("script");
 					state.processCaptures("scriptName");
 					state.clearCaptures();
@@ -216,7 +238,6 @@ var mgs = {
 		dialogSettingsTarget: [
 			["?parameters ?for label $target:string {",
 				function (state) {
-					// console.log("    Found '?parameters ?for label $target:string {'")
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -226,7 +247,6 @@ var mgs = {
 				}],
 			["?parameters ?for entity $target:string {",
 				function (state) {
-					// console.log("    Found '?parameters ?for entity $target:string {'")
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -236,7 +256,6 @@ var mgs = {
 				}],
 			["?parameters ?for ?global default {",
 				function (state) {
-					// console.log("    Found '?parameters ?for ?global default {'")
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -246,7 +265,6 @@ var mgs = {
 				}],
 			["?parameters ?for ?global defaults {",
 				function (state) {
-					// console.log("    Found '?parameters ?for ?global defaults {'")
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -258,7 +276,6 @@ var mgs = {
 		dialogParameter: [
 			["entity $value:string",
 				function (state) {
-					// console.log("    Found 'entity $value:string'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "entity" }
@@ -267,7 +284,6 @@ var mgs = {
 				}],
 			["name $value:string",
 				function (state) {
-					// console.log("    Found 'name $value:string'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "name" }
@@ -276,7 +292,6 @@ var mgs = {
 				}],
 			["portrait $value:string",
 				function (state) {
-					// console.log("    Found 'portrait $value:string'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "portrait" }
@@ -285,7 +300,6 @@ var mgs = {
 				}],
 			["alignment $value:string",
 				function (state) {
-					// console.log("    Found 'alignment $value:string'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "alignment" }
@@ -294,7 +308,6 @@ var mgs = {
 				}],
 			["border_tileset $value:string",
 				function (state) {
-					// console.log("    Found 'border_tileset $value:string'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "border_tileset" }
@@ -303,7 +316,6 @@ var mgs = {
 				}],
 			["emote $value:number",
 				function (state) {
-					// console.log("    Found 'emote $value:number'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "emote" }
@@ -317,7 +329,6 @@ var mgs = {
 			// (I'd rather make the parameter value a closed list, I think; results in better "why it broke" communication for invalid words)
 			["wrap messages ?to $value:number",
 				function (state) {
-					// console.log("    Found 'wrap messages ?to $value:number'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "messageWrap" }
@@ -327,7 +338,6 @@ var mgs = {
 				}],
 				["wrap options ?to $value:number",
 				function (state) {
-					// console.log("    Found 'wrap options ?to $value:number'")
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "optionWrap" }
@@ -338,7 +348,6 @@ var mgs = {
 		dialogIdentifier: [
 			["$value:bareword",
 				function (state) {
-					// console.log("    Found '$value:bareword'")
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "label" }
@@ -347,7 +356,6 @@ var mgs = {
 				}],
 			["entity $value:string",
 				function (state) {
-					// console.log("    Found 'entity $value:string'")
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "entity" }
@@ -356,7 +364,6 @@ var mgs = {
 				}],
 			["name $value:string",
 				function (state) {
-					// console.log("    Found 'entity $value:string'")
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "name" }
@@ -367,7 +374,6 @@ var mgs = {
 		dialogMessage: [
 			["$message:quotedString",
 				function (state) {
-					// console.log("    Found '$message:quotedString'")
 					state.processCaptures("dialogMessage");
 					state.clearCaptures();
 				}]
@@ -376,7 +382,6 @@ var mgs = {
 			["> $label:quotedString : ?goto ?script $script:string",
 			// TODO: forbid "goto" and "script" in script/dialog names.... (probably more words, too)
 				function (state) {
-					// console.log("    Found '$message:quotedString'")
 					state.processCaptures("dialogOption");
 					state.clearCaptures();
 				}]
@@ -384,7 +389,6 @@ var mgs = {
 		serialDialogParameter: [
 			["wrap ?messages ?to $value:number",
 				function (state) {
-					// console.log("    Found 'wrap ?messages ?to $value:number'")
 					state.processCaptures(
 						"serialDialogParameter",
 						{ parameterName: "messageWrap" }
@@ -395,7 +399,6 @@ var mgs = {
 		serialDialogMessage: [
 			["$message:quotedString",
 				function (state) {
-					// console.log("    Found '$message:quotedString'")
 					state.processCaptures("serialDialogMessage");
 					state.clearCaptures();
 				}]
@@ -403,7 +406,6 @@ var mgs = {
 		serialDialogOptionFree: [
 			["_ $label:quotedString : ?goto ?script $script:string",
 				function (state) {
-					// console.log("    Found '$message:quotedString'")
 					state.processCaptures("serialDialogOptionFree");
 					state.clearCaptures();
 				}]
@@ -411,7 +413,6 @@ var mgs = {
 		serialDialogOptionFixed: [
 			["# $label:quotedString : ?goto ?script $script:string",
 				function (state) {
-					// console.log("    Found '$message:quotedString'")
 					state.processCaptures("serialDialogOptionFixed");
 					state.clearCaptures();
 				}]
@@ -419,22 +420,18 @@ var mgs = {
 		action: [
 			["show dialog $dialog:string {",
 				function (state) {
-					// console.log("    Found 'show dialog $dialog:string {'")
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{ action: "SHOW_DIALOG" }
 					);
 					state.clearCaptures();
 				}],
 			["show dialog {",
 				function (state) {
-					// console.log("    Found 'show dialog {'")
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures( "action",
 						{
 							action: "SHOW_DIALOG",
 							dialog: state.inserts.dialogName
@@ -444,22 +441,18 @@ var mgs = {
 				}],
 			["show serial dialog $serial_dialog:string {",
 				function (state) {
-					// console.log("    Found 'show serial dialog $serial_dialog:string {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{ action: "SHOW_SERIAL_DIALOG", disable_newline: false }
 					);
 					state.clearCaptures();
 				}],
 			["show serial dialog {",
 				function (state) {
-					// console.log("    Found 'show serial dialog {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{
 							action: "SHOW_SERIAL_DIALOG",
 							disable_newline: false,
@@ -470,22 +463,18 @@ var mgs = {
 				}],
 			["concat serial dialog $serial_dialog:string {",
 				function (state) {
-					// console.log("    Found 'show serial dialog $serial_dialog:string {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{ action: "SHOW_SERIAL_DIALOG", disable_newline: true }
 					);
 					state.clearCaptures();
 				}],
 			["concat serial dialog {",
 				function (state) {
-					// console.log("    Found 'show serial dialog {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{
 							action: "SHOW_SERIAL_DIALOG",
 							disable_newline: true,
@@ -496,11 +485,9 @@ var mgs = {
 				}],
 			["set serial connect ?message ?to {",
 				function (state) {
-					// console.log("    Found 'set serial connect message to {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{
 							action: "SET_CONNECT_SERIAL_DIALOG",
 							serial_dialog: state.inserts.serialDialogName
@@ -510,11 +497,9 @@ var mgs = {
 				}],
 			["set serial connect ?message ?to $serial_dialog:string {",
 				function (state) {
-					// console.log("    Found 'set serial connect message to $serial_dialog:string {'")
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
-					state.processCaptures(
-						"action",
+					state.processCaptures("action",
 						{ action: "SET_CONNECT_SERIAL_DIALOG" }
 					);
 					state.clearCaptures();
@@ -524,74 +509,90 @@ var mgs = {
 	},
 	capture: {
 		dialogName: function (state) {
-			if (state.captures.dialog) {
-				state.inserts.dialogName = state.captures.dialog;
-			} else {
-				state.inserts.dialogName = state.makeAutoIdentifierName();
-			}
+			state.replaceValue(
+				"inserts",
+				"dialogName",
+				state.captures.dialog
+					? state.captures.dialog
+					: state.makeAutoIdentifierName()
+			);
 		},
 		serialDialogName: function (state) {
-			if (state.captures.serial_dialog) {
-				state.inserts.serialDialogName = state.captures.serial_dialog;
-			} else {
-				state.inserts.serialDialogName = state.makeAutoIdentifierName();
-			}
+			state.replaceValue(
+				"inserts",
+				"serialDialogName",
+				state.captures.serial_dialog
+					? state.captures.serial_dialog
+					: state.makeAutoIdentifierName()
+			);
 		},
 		scriptName: function (state) {
-			state.inserts.scriptName = state.captures.scriptName;
+			state.replaceValue(
+				"inserts",
+				"scriptName",
+				state.captures.scriptName
+			);
 		},
 		dialogSettingsTarget: function (state, args) {
-			state.inserts.dialogSettingsTarget = {
+			state.replaceValue(
+				"inserts",
+				"dialogSettingsTarget",
+				{
 					type: args.type,
 					value: state.captures.target
 						? state.captures.target
 						: null
 				}
+			);
 		},
 		dialogParameter: function (state, args) {
-			state.inserts.dialogParameters = state.inserts.dialogParameters || {};
+			state.initIfAbsent("inserts", "dialogParameters", {});
 			state.inserts.dialogParameters[args.parameterName] = state.captures.value;
 		},
 		dialogIdentifier: function (state, args) {
-			state.inserts.dialogIdentifier = {
+			state.replaceValue("inserts", "dialogIdentifier", {
 				type: args.type,
 				value: state.captures.value
-			}
+			});
 		},
 		dialogMessage: function (state) {
-			state.inserts.dialogMessages = state.inserts.dialogMessages || [];
-			state.inserts.dialogMessages.push(state.captures.message);
+			state.pushNew(
+				"inserts",
+				"dialogMessages",
+				state.captures.message
+			);
 		},
 		dialogOption: function (state) {
-			state.inserts.dialogOptions = state.inserts.dialogOptions || [];
-			state.inserts.dialogOptions.push({
+			state.pushNew("inserts", "dialogOptions", {
 				label: state.captures.label,
 				script: state.captures.script
 			});
 		},
 		serialDialogParameter: function (state, args) {
-			state.inserts.serialDialogParameters[args.parameterName] = state.captures.value;
+			state.replaceValueDeep(
+				"inserts",
+				"serialDialogParameters",
+				args.parameterName,
+				state.captures.value
+			);
 		},
 		serialDialogMessage: function (state) {
-			state.inserts.serialDialogMessages = state.inserts.serialDialogMessages || [];
-			state.inserts.serialDialogMessages.push(state.captures.message);
+			state.pushNew(
+				"inserts",
+				"serialDialogMessages",
+				state.captures.message
+			);
 		},
 		serialDialogOptionFree: function (state) {
-			if (!state.inserts.serialOptionType) {
-				state.inserts.serialOptionType = 'text_options';
-			}
-			state.inserts.serialDialogOptions = state.inserts.serialDialogOptions || [];
-			state.inserts.serialDialogOptions.push({
+			state.initIfAbsent("inserts", "serialOptionType", "text_options");
+			state.pushNew("inserts", "serialDialogOptions", {
 				label: state.captures.label,
 				script: state.captures.script
 			});
 		},
 		serialDialogOptionFixed: function (state) {
-			if (!state.inserts.serialOptionType) {
-				state.inserts.serialOptionType = 'options';
-			}
-			state.inserts.serialDialogOptions = state.inserts.serialDialogOptions || [];
-			state.inserts.serialDialogOptions.push({
+			state.initIfAbsent("inserts", "serialOptionType", "options");
+			state.pushNew("inserts", "serialDialogOptions", {
 				label: state.captures.label,
 				script: state.captures.script
 			});
@@ -609,8 +610,7 @@ var mgs = {
 					newAction[paramName] = natlang.opLookup[newAction[paramName]];
 				}
 			})
-			state.inserts.actions = state.inserts.actions || [];
-			state.inserts.actions.push(newAction);
+			state.pushNew("inserts", "actions", newAction);
 		}
 	}
 };
