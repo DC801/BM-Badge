@@ -123,9 +123,11 @@ var parseForInner = function (inner) {
 		condition: [],
 		increment: [],
 	}
+	var semicolons = [];
 	var chunk = 0;
 	inner.forEach(function (token) {
 		if (token.value === ";") {
+			semicolons.push(token);
 			chunk += 1;
 		} else {
 			if (!result[order[chunk]]) {
@@ -140,6 +142,8 @@ var parseForInner = function (inner) {
 	if (result.condition.length === 0) {
 		throw new Error("Put a condition in your 'for' please!");
 	}
+	result.initial.push(semicolons.shift());
+	result.increment.push(semicolons.shift());
 	return result;
 };
 
@@ -185,10 +189,12 @@ whyle.expandWhyle = function (report, reportType) {
 			parsedBehaviors.push(buildToken(token, "goto", "bareword", "break"));
 			parsedBehaviors.push(buildToken(token, "label", "bareword", "break"));
 			parsedBehaviors.push(buildToken(token, loopover.value, "bareword", "break"));
+			parsedBehaviors.push(buildToken(token, ";", "operator", "break"));
 		} else if (token.value === "continue") {
 			parsedBehaviors.push(buildToken(token,"goto", "bareword", "continue"));
 			parsedBehaviors.push(buildToken(token,"label", "bareword", "continue"));
 			parsedBehaviors.push(buildToken(token, continuepoint.value, "bareword", "continue"));
+			parsedBehaviors.push(buildToken(token, ";", "operator", "continue"));
 		} else {
 			parsedBehaviors.push(token);
 		}
@@ -206,6 +212,7 @@ whyle.expandWhyle = function (report, reportType) {
 		buildToken(rootToken, "goto", "bareword", reportType),
 		buildToken(rootToken, "label", "bareword", reportType),
 		buildToken(rootToken, loopcheck.value, "bareword", reportType),
+		buildToken(rootToken, ";", "operator", reportType),
 		// loopbody :
 		loopbody,
 		buildToken(loopbody, ":", "operator"),
@@ -234,6 +241,7 @@ whyle.expandWhyle = function (report, reportType) {
 		buildToken(parenClose, "goto", "bareword", "goto label loopbody"),
 		buildToken(parenClose, "label", "bareword", "goto label loopbody"),
 		buildToken(parenClose, loopbody.value, "bareword", "goto label loopbody"),
+		buildToken(parenClose, ";", "operator", "goto label loopbody"),
 		buildToken(parenClose, "}", "operator", "goto label loopbody"),
 		// loopover :
 		loopover,

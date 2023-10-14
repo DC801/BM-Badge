@@ -550,6 +550,9 @@ mgs.natlangFormatter = function (string, config) {
 		string = string.replace(/TOP_LEFT/g,"TL");
 		string = string.replace(/BOTTOM_LEFT/g,"BL");
 	}
+	if (config.snugSemicolons) {
+		string = string.replace(/\s;/g,";");
+	}
 	return string;
 }
 
