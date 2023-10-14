@@ -1354,6 +1354,12 @@ mgs.actionDictionary.forEach(function (item) {
 	);
 })
 
+// We have semicolons now (actions only)
+mgs.trees.action.forEach(function (branch) {
+	if (!branch.pattern.endsWith("{"))
+	branch.pattern += " ?;";
+});
+
 /* ------ building MGS dialogs ------ */
 
 mgs.cleanString = function (inputString) {
