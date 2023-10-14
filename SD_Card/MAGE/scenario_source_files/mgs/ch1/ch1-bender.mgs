@@ -1,10 +1,10 @@
-include!("header.mgs")
+include!("header.mgs");
 
 bender-success-backstory {
 	show dialog {
 		SELF "Hey, you did it! My ass is back!"
 	}
-	copy bite-my-shiny-metal-ass
+	copy bite-my-shiny-metal-ass;
 	show dialog {
 		SELF emote 1 "Hee hee hee!"
 		"Hey, everyone! %Bender%'s ass is back!"
@@ -25,7 +25,7 @@ bender-success-no-backstory {
 	show dialog {
 		SELF "Hey, my ass! It's back!"
 	}
-	copy bite-my-shiny-metal-ass
+	copy bite-my-shiny-metal-ass;
 	show dialog {
 		SELF emote 1
 		"Hee hee hee!"
@@ -46,12 +46,12 @@ show_dialog-bender-start {
 		}
 	} else { // unglitched Bender
 		// normal dialog; turn off bender's handler and make him face the player
-		copy set-bender-handler-off
-		copy face-player
+		copy set-bender-handler-off;
+		copy face-player;
 		/* ----- puzzle was solved(?) ----- */
 		if (flag storyflag-bender is true) { // SOLVED
 			if (entity Bender type is bender) { // and he's still bender
-				copy bite-my-shiny-metal-ass
+				copy bite-my-shiny-metal-ass;
 				show dialog {
 					SELF emote 1 "Ooh, yeah!"
 					PLAYER "It's shiny. I'll give you that."
@@ -60,26 +60,26 @@ show_dialog-bender-start {
 				show dialog { SELF "Yeah, yeah, you're a real comedian, kid. Now turn me back!" }
 			}
 			// bender handler set (loiter)
-			copy set-bender-handler-none
+			copy set-bender-handler-none;
 		} else { // NOT SOLVED
 			if (entity Bender type is bender) { // but he's bender now
 				if (flag bender-backstory is false) {
-					copy bender-success-no-backstory
+					copy bender-success-no-backstory;
 				} else {
-					copy bender-success-backstory
+					copy bender-success-backstory;
 				}
 				// You solved the puzzle though! Setting puzzle state:
-				set flag bender-backstory to true
-				set flag storyflag-bender to true
-				copy calculate-hint-tracking-series
+				set flag bender-backstory to true;
+				set flag storyflag-bender to true;
+				copy calculate-hint-tracking-series;
 				if (variable hint-tracking-check is 5) { // if the hint series is the same, reset hint
-					copy set-hint-none
+					copy set-hint-none;
 				}
-				copy set-bender-handler-none
+				copy set-bender-handler-none;
 			} else { // but he's not bender now
 				if (flag bender-backstory is true) { // you've heard the backstory
 					if (entity Bender type is "bender_sadbutt") { // he is sadbutt
-						copy bite-my-shiny-metal-ass-sad
+						copy bite-my-shiny-metal-ass-sad;
 						show dialog {
 							SELF "...Oh, right. My ass. Someone bit it off."
 							"So what's the holdup? I know you can fix it!"
@@ -96,7 +96,7 @@ show_dialog-bender-start {
 							PLAYER "Oh! You look friendly!"
 							SELF "Well, I'm not!"
 						}
-						copy bite-my-shiny-metal-ass-sad
+						copy bite-my-shiny-metal-ass-sad;
 						show dialog {
 							SELF "Aww, man... I forgot! Someone bit my shiny metal ass!"
 							"Why would someone do such a horrible thing to an innocent robot?!"
@@ -128,55 +128,53 @@ show_dialog-bender-start {
 					}
 				}
 				// You've now heard his backstory; set hinteger to Bender
-				set flag bender-backstory to true
-				copy set-hint-bender
+				set flag bender-backstory to true;
+				copy set-hint-bender;
 				// Turn on bender's look handler again
-				copy set-bender-handler-on
+				copy set-bender-handler-on;
 				// Reset interact_script
 			}
 		}
 	}
-	// RESET
-	set entity "%SELF%" on_interact to show_dialog-bender-start
 }
 
 /* ---- Bender on_tick handlers --- */
 
 set-bender-handler-off {
-	set entity "Bob Austin" on_tick to null_script
-	set entity Bender on_tick to null_script
+	set entity "Bob Austin" on_tick to null_script;
+	set entity Bender on_tick to null_script;
 }
 set-bender-handler-on {
-	set entity Bender on_tick to face-player
-	set entity "Bob Austin" on_tick to handler-bender-timer
+	set entity Bender on_tick to face-player;
+	set entity "Bob Austin" on_tick to handler-bender-timer;
 }
 set-bender-handler-none {
-	set entity "Bob Austin" on_tick to null_script
-	set entity Bender on_tick to on_tick-bender-loiter
+	set entity "Bob Austin" on_tick to null_script;
+	set entity Bender on_tick to on_tick-bender-loiter;
 }
 
 handler-bender-timer {
-	wait 2800ms /**/ play entity Bender animation 2 once
-	wait 3900ms /**/ play entity Bender animation 2 once
+	wait 2800ms; /**/ play entity Bender animation 2 once;
+	wait 3900ms; /**/ play entity Bender animation 2 once;
 }
 
 /* ---- Bender choreography --- */
 
 bite-my-shiny-metal-ass {
-	set player control to off
-	wait 300ms /**/ play entity "%SELF%" animation 3 once
-	set player control to on
+	set player control to off;
+	wait 300ms; /**/ play entity "%SELF%" animation 3 once;
+	set player control to on;
 }
 
 bite-my-shiny-metal-ass-sad {
-	set player control to off
-	wait 300ms /**/ play entity "%SELF%" animation 3 once
-	set player control to on
+	set player control to off;
+	wait 300ms; /**/ play entity "%SELF%" animation 3 once;
+	set player control to on;
 }
 
 on_tick-bender-loiter {
-	turn entity "%SELF%" south
-	wait 1200ms /**/ turn entity "%SELF%" east
-	wait 1400ms /**/ turn entity "%SELF%" north
-	wait 2000ms
+	turn entity "%SELF%" south;
+	wait 1200ms; /**/ turn entity "%SELF%" east;
+	wait 1400ms; /**/ turn entity "%SELF%" north;
+	wait 2000ms;
 }

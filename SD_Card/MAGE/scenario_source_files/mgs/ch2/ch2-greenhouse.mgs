@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-greenhouse {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"   TODO: Greenhouse text"
 	}
@@ -13,7 +13,7 @@ look-ch2-greenhouse {
 
 on_load-ch2-greenhouse {
 	// do unique stuff first (but turn serial / player control off first, if you do)
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -33,18 +33,18 @@ on_tick-ch2-greenhouse {
 		show dialog {
 			Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
 		}
-		teleport entity EtherNettle1 to geometry EtherNettle1Origin
-		teleport entity EtherNettle2 to geometry EtherNettle2Origin
-		teleport entity EtherNettle3 to geometry EtherNettle3Origin
-		teleport entity EtherNettle4 to geometry EtherNettle4Origin
-		teleport entity EtherNettle5 to geometry EtherNettle5Origin
-		teleport entity EtherNettle6 to geometry EtherNettle6Origin
-		teleport entity EtherNettle7 to geometry EtherNettle7Origin
-		teleport entity EtherNettle8 to geometry EtherNettle8Origin
+		teleport entity EtherNettle1 to geometry EtherNettle1Origin;
+		teleport entity EtherNettle2 to geometry EtherNettle2Origin;
+		teleport entity EtherNettle3 to geometry EtherNettle3Origin;
+		teleport entity EtherNettle4 to geometry EtherNettle4Origin;
+		teleport entity EtherNettle5 to geometry EtherNettle5Origin;
+		teleport entity EtherNettle6 to geometry EtherNettle6Origin;
+		teleport entity EtherNettle7 to geometry EtherNettle7Origin;
+		teleport entity EtherNettle8 to geometry EtherNettle8Origin;
 	}
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		set warp state to walk_from-greenhouse
-		load map main2
+		set warp state to walk_from-greenhouse;
+		load map main2;
 	}
 }
 
@@ -52,8 +52,8 @@ on_tick-ch2-greenhouse {
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-greenhouse-south {
-	copy warping-out-fade-out
-	load map main2
+	copy warping-out-fade-out;
+	load map main2;
 }
 on_walk-ch2-greenhouse-south {
 	// triggered by map's on_tick
@@ -62,7 +62,7 @@ on_walk-ch2-greenhouse-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-trekkie {
-	copy face-player
+	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
 			SELF "Oh, %PLAYER%! Me heard you were going to the serial dungeon in the mountain!"
@@ -88,7 +88,7 @@ interact-ch2-trekkie {
 			"Me knew you could do it! Good job!"
 		}
 	}
-	turn entity "%SELF%" east
+	turn entity "%SELF%" east;
 }
 
 interact-ch2-modem {

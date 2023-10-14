@@ -1,11 +1,11 @@
-include!("header.mgs")
+include!("header.mgs");
 
 hintman-cutscene {
-	wait 300ms
-	walk entity Alfonso to geometry alfonso-talkspot over 600ms
-	turn entity Alfonso toward entity "%PLAYER%"
-	wait 400ms
-	turn entity "%PLAYER%" toward entity Alfonso
+	wait 300ms;
+	walk entity Alfonso to geometry alfonso-talkspot over 600ms;
+	turn entity Alfonso toward entity "%PLAYER%";
+	wait 400ms;
+	turn entity "%PLAYER%" toward entity Alfonso;
 	show dialog {
 		Alfonso "There's a number of issues around town that your ring should be able to fix."
 		"There are... now, let's just see...."
@@ -17,15 +17,15 @@ hintman-cutscene {
 		Alfonso "My dear child, when you grow up, you'll understand:"
 		"There is paperwork for EVERYTHING!"
 	}
-	wait 100ms /**/ walk entity Jackob along geometry hintman-walktalk over 900ms
-	wait 200ms /**/ turn entity "%PLAYER%" toward entity Jackob
+	wait 100ms; /**/ walk entity Jackob along geometry hintman-walktalk over 900ms;
+	wait 200ms; /**/ turn entity "%PLAYER%" toward entity Jackob;
 	show dialog {
 		Jackob "And if you have a question about what you're doing, do feel free to ask me for advice."
 		"Or consult Bert over there, who has good intuition for who could still use assistance."
 	}
-	wait 100ms
-	walk entity Bert to geometry bert-talkspot over 600ms
-	turn entity "%PLAYER%" toward entity Bert
+	wait 100ms;
+	walk entity Bert to geometry bert-talkspot over 600ms;
+	turn entity "%PLAYER%" toward entity Bert;
 	show dialog {
 		Bert "Yes. I know who still needs help."
 	}
@@ -33,35 +33,35 @@ hintman-cutscene {
 		Alfonso "Right! Go get 'em!"
 		Bert "Good luck."
 	}
-	set entity Jackob on_tick to return-to-watchspot-jackob
-	wait 200ms /**/ set entity Alfonso on_tick to return-to-watchspot-alfonso
-	wait 150ms /**/ set entity Bert on_tick to return-to-watchspot-bert
+	set entity Jackob on_tick to return-to-watchspot-jackob;
+	wait 200ms; /**/ set entity Alfonso on_tick to return-to-watchspot-alfonso;
+	wait 150ms; /**/ set entity Bert on_tick to return-to-watchspot-bert;
 }
 
 return-to-watchspot-alfonso {
-	walk entity "%SELF%" to geometry alfonso-waitspot over 500ms
-	turn entity "%SELF%" south
-	set entity "%SELF%" on_tick to null_script
+	walk entity "%SELF%" to geometry alfonso-waitspot over 500ms;
+	turn entity "%SELF%" south;
+	set entity "%SELF%" on_tick to null_script;
 }
 return-to-watchspot-jackob {
-	walk entity "%SELF%" along geometry hintman-walkback over 800ms
-	turn entity "%SELF%" south
-	set entity "%SELF%" on_tick to null_script
+	walk entity "%SELF%" along geometry hintman-walkback over 800ms;
+	turn entity "%SELF%" south;
+	set entity "%SELF%" on_tick to null_script;
 }
 return-to-watchspot-bert {
-	walk entity "%SELF%" to geometry bert-waitspot over 500ms
-	turn entity "%SELF%" west
-	set entity "%SELF%" on_tick to null_script
+	walk entity "%SELF%" to geometry bert-waitspot over 500ms;
+	turn entity "%SELF%" west;
+	set entity "%SELF%" on_tick to null_script;
 }
 
 show_dialog-bert-start {
 	if (entity "%SELF%" is glitched) {
 		show dialog { SELF "...." "Bczv um jiks." }
-		set entity "%SELF%" on_interact to show_dialog-bert-start
+		set entity "%SELF%" on_interact to show_dialog-bert-start;
 	}
-	copy face-player
+	copy face-player;
 	show dialog { SELF "Who needs help?" }
-	copy calculate-hint-tracking-series // sets `hint-tracking-check`
+	copy calculate-hint-tracking-series; // sets `hint-tracking-check`
 	if (flag storyflag-shepherd is false) {
 		show dialog {
 			SELF "The shepherd."
@@ -69,7 +69,7 @@ show_dialog-bert-start {
 		}
 		if (variable hint-tracking-check is not 1) {
 			// (NOTE: these are inverted from orig)
-			copy set-hint-shepherd-from-bert
+			copy set-hint-shepherd-from-bert;
 		}
 	} else if (flag storyflag-baker is false) {
 		show dialog {
@@ -77,14 +77,14 @@ show_dialog-bert-start {
 			"Baker is busy. He has trouble with customer."
 		}
 		if (variable hint-tracking-check is not 2) {
-			copy set-hint-baker-from-bert
+			copy set-hint-baker-from-bert;
 		}
 	} else if (flag storyflag-bobmoss is false) {
 		show dialog {
 			SELF "Cousin of Stone Cold Bob Austin."
 			"He is lost. Or is he hiding?"
 		}
-		copy set-hint-bobmoss-from-bert
+		copy set-hint-bobmoss-from-bert;
 		// no need to check for hint series, because this is the advanced hint, not the basic one; always set this
 	} else if (flag storyflag-bea1 is false) {
 		show dialog {
@@ -92,7 +92,7 @@ show_dialog-bert-start {
 			"She has been sad a long time."
 		}
 		if (variable hint-tracking-check is not 4) {
-			copy set-hint-bea1-from-bert
+			copy set-hint-bea1-from-bert;
 		}
 	} else if (flag storyflag-bender is false) {
 		show dialog {
@@ -102,7 +102,7 @@ show_dialog-bert-start {
 			"...I think he took my watch."
 		}
 		if (variable hint-tracking-check is not 5) {
-			copy set-hint-bender-from-bert
+			copy set-hint-bender-from-bert;
 		}
 	} else if (flag storyflag-catwork is false) {
 		show dialog {
@@ -110,7 +110,7 @@ show_dialog-bert-start {
 			"Max wants his house to be built."
 		}
 		if (variable hint-tracking-check is not 6) {
-			copy set-hint-max-from-bert
+			copy set-hint-max-from-bert;
 		}
 	} else if (flag storyflag-trekkie is false) {
 		show dialog {
@@ -118,7 +118,7 @@ show_dialog-bert-start {
 			"Trekkie works on plants in the glass house."
 		}
 		if (variable hint-tracking-check is not 7) {
-			copy set-hint-trekkie-from-bert
+			copy set-hint-trekkie-from-bert;
 		}
 	} else if (flag storyflag-sportskid is false) {
 		show dialog {
@@ -126,7 +126,7 @@ show_dialog-bert-start {
 			"Child lives with father."
 		}
 		if (variable hint-tracking-check is not 8) {
-			copy set-hint-sportskid-from-bert
+			copy set-hint-sportskid-from-bert;
 		}
 	} else if (flag storyflag-bea2 is false) {
 		show dialog {
@@ -134,7 +134,7 @@ show_dialog-bert-start {
 			"Does she know what she wants?"
 		}
 		if (variable hint-tracking-check is not 9) {
-			copy set-hint-bea2-from-bert
+			copy set-hint-bea2-from-bert;
 		}
 	} else if (flag storyflag-rake is false) {
 		show dialog {
@@ -143,7 +143,7 @@ show_dialog-bert-start {
 			"What angers the goose this time?"
 		}
 		if (variable hint-tracking-check is not 10) {
-			copy set-hint-goose-from-bert
+			copy set-hint-goose-from-bert;
 		}
 	} else if (flag storyflag-verthandi is false) {
 		show dialog {
@@ -151,7 +151,7 @@ show_dialog-bert-start {
 			"She watches the goats."
 		}
 		if (variable hint-tracking-check is not 11) {
-			copy set-hint-glitch-from-bert
+			copy set-hint-glitch-from-bert;
 		}
 	} else {
 		show dialog { SELF "Perhaps the world." }
@@ -160,87 +160,87 @@ show_dialog-bert-start {
 
 calculate-hint-tracking-series {
 	// checks which hint series it is by dividing by 10
-	mutate hint-tracking-check = hint-tracking
-	mutate hint-tracking-check / 10
+	mutate hint-tracking-check = hint-tracking;
+	mutate hint-tracking-check / 10;
 }
 
 set-hint-shepherd-from-bert {
-	mutate hint-tracking = 10
+	mutate hint-tracking = 10;
 }
 set-hint-shepherd {
-	mutate hint-tracking = 11
+	mutate hint-tracking = 11;
 }
 set-hint-shepherd-partial {
-	mutate hint-tracking = 12
+	mutate hint-tracking = 12;
 }
 set-hint-baker-from-bert {
-	mutate hint-tracking = 20
+	mutate hint-tracking = 20;
 }
 set-hint-baker {
-	mutate hint-tracking = 21
+	mutate hint-tracking = 21;
 }
 set-hint-bobmoss-from-bert {
-	mutate hint-tracking = 30
+	mutate hint-tracking = 30;
 }
 set-hint-bobmoss-from-guardian {
-	mutate hint-tracking = 32
+	mutate hint-tracking = 32;
 }
 set-hint-bea1-from-bert {
-	mutate hint-tracking = 40
+	mutate hint-tracking = 40;
 }
 set-hint-bea1 {
-	mutate hint-tracking = 41
+	mutate hint-tracking = 41;
 }
 set-hint-bender-from-bert {
-	mutate hint-tracking = 50
+	mutate hint-tracking = 50;
 }
 set-hint-bender {
-	mutate hint-tracking = 51
+	mutate hint-tracking = 51;
 }
 set-hint-max-from-bert {
-	mutate hint-tracking = 60
+	mutate hint-tracking = 60;
 }
 set-hint-max {
-	mutate hint-tracking = 61
+	mutate hint-tracking = 61;
 }
 set-hint-max-from-cleo {
-	mutate hint-tracking = 62
+	mutate hint-tracking = 62;
 }
 set-hint-trekkie-from-bert {
-	mutate hint-tracking = 70
+	mutate hint-tracking = 70;
 }
 set-hint-trekkie {
-	mutate hint-tracking = 71
+	mutate hint-tracking = 71;
 }
 set-hint-sportskid-from-bert {
-	mutate hint-tracking = 80
+	mutate hint-tracking = 80;
 }
 set-hint-sportskid {
-	mutate hint-tracking = 81
+	mutate hint-tracking = 81;
 }
 set-hint-bea2-from-bert {
-	mutate hint-tracking = 90
+	mutate hint-tracking = 90;
 }
 set-hint-bea2 {
-	mutate hint-tracking = 91
+	mutate hint-tracking = 91;
 }
 set-hint-goose-from-bert {
-	mutate hint-tracking = 100
+	mutate hint-tracking = 100;
 }
 set-hint-goose {
-	mutate hint-tracking = 101
+	mutate hint-tracking = 101;
 }
 set-hint-glitch-from-bert {
-	mutate hint-tracking = 110
+	mutate hint-tracking = 110;
 }
 set-hint-glitch {
-	mutate hint-tracking = 111
+	mutate hint-tracking = 111;
 }
 set-hint-hackbook {
-	mutate hint-tracking = 201
+	mutate hint-tracking = 201;
 }
 set-hint-none {
-	mutate hint-tracking = 0
+	mutate hint-tracking = 0;
 }
 
 show_dialog-jackob-start {
@@ -249,7 +249,7 @@ show_dialog-jackob-start {
 			SELF "Vg'f tbbq gung lbh'er cenpgvpvat, ohg creuncf lbh fubhyq sbphf ba erfgbevat gur gbja?"
 		}
 	} else {
-		copy face-player
+		copy face-player;
 		show dialog {
 			SELF "Did you have a question about something?"
 		}
@@ -437,8 +437,6 @@ show_dialog-jackob-start {
 			}
 		}
 	}
-	// RESET
-	set entity "%SELF%" on_interact to show_dialog-jackob-start	
 }
 show_dialog-jackob-hint-hackbook {
 	if (flag hackbook-endstory is true) {
@@ -447,7 +445,7 @@ show_dialog-jackob-hint-hackbook {
 			SELF "I'm sorry. I don't think there's anything you can do to fix it."
 		}
 		if (variable hint-tracking is 201) {
-			copy set-hint-none
+			copy set-hint-none;
 		}
 	} else {
 		show dialog {
@@ -462,13 +460,13 @@ show_dialog-jackob-hint-hackbook {
 			PLAYER "Do you know what the book used to say, at least?"
 			SELF "That book... I must have read it before, but...."
 		}
-		set player control to off
-		wait 600ms /**/ rotate entity "%SELF%" 1
-		wait 1200ms /**/ rotate entity "%SELF%" -2
-		wait 600ms
+		set player control to off;
+		wait 600ms; /**/ rotate entity "%SELF%" 1;
+		wait 1200ms; /**/ rotate entity "%SELF%" -2;
+		wait 600ms;
 		show dialog { SELF "...." }
-		wait 400ms /**/ turn entity "%SELF%" toward entity "%PLAYER%"
-		wait 400ms /**/ set player control to on
+		wait 400ms; /**/ turn entity "%SELF%" toward entity "%PLAYER%";
+		wait 400ms; /**/ set player control to on;
 		show dialog {
 			SELF "Oh, %PLAYER%, I'm sorry."
 			"I can't remember anything about what the book said."
@@ -493,10 +491,10 @@ show_dialog-jackob-hint-hackbook {
 			"I can't remember."
 			"I'm sorry, %PLAYER%."
 		}
-		set flag hackbook-endstory to true
+		set flag hackbook-endstory to true;
 	}
 	// RESET
-	set entity "%SELF%" on_interact to show_dialog-jackob-start
+	set entity "%SELF%" on_interact to show_dialog-jackob-start;
 }
 
 show_dialog-alfonso-start {
@@ -505,7 +503,7 @@ show_dialog-alfonso-start {
 	} else if (flag wonthedemo is true) {
 		show dialog { SELF "Congratulations! You fixed the town!" }
 	} else {
-		copy count-chapter1-storyflags
+		copy count-chapter1-storyflags;
 		show dialog { SELF "You've completed $chapter1-storyflag-tally$ out of 11 tasks." }
 		if (variable chapter1-storyflag-tally is 0) {
 			show dialog { SELF "Uh...." "Nowhere to go now but up!" }
@@ -519,7 +517,7 @@ show_dialog-alfonso-start {
 			show dialog { SELF "Wow! You're nearly done!" }
 		} else if (variable chapter1-storyflag-tally is 11) {
 			show dialog { SELF "Incredible! You've done everything on my list!" }
-			goto demoend-cutscene // JUMP
+			goto demoend-cutscene; // JUMP
 		}
 	}
 }

@@ -1,21 +1,21 @@
-include!("header.mgs")
+include!("header.mgs");
 
 ch2-toot-check {
 	if (variable ch2-toot-level is 0) {
-		goto ch2-toot-intro
+		goto ch2-toot-intro;
 	} else if (variable ch2-toot-level is 3) {
-		goto ch2-toot-step3-check
+		goto ch2-toot-step3-check;
 	}
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Let's pick up where we left off, shall we?"
 	}
 	if (variable ch2-toot-level is 1) {
-		goto ch2-toot-step1-start
+		goto ch2-toot-step1-start;
 	} else if (variable ch2-toot-level is 2) {
-		goto ch2-toot-step2-start
+		goto ch2-toot-step2-start;
 	} else if (variable ch2-toot-level is 4) {
-		goto ch2-toot-step4-start
+		goto ch2-toot-step4-start;
 	} else {
 		show serial dialog {
 			"<r><bold>DEBUG</>: Welp, you've done something strange!"
@@ -29,13 +29,13 @@ ch2-toot-check {
 // Normal intro
 
 ch2-toot-intro {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Ahh, this is much more comfortable, isn't it?"
 		"\tSo, yeah. You can type things into the console, and interesting things will happen. First, let's try something basic."
 	}
-	mutate ch2-toot-level = 1
-	goto ch2-toot-step1-start
+	mutate ch2-toot-level = 1;
+	goto ch2-toot-step1-start;
 }
 
 // Part 1
@@ -45,7 +45,7 @@ ch2-toot-step1-start {
 		"\tTry to choose one of the following options with the keyboard."
 		" "
 	}
-	goto ch2-toot-step1-q
+	goto ch2-toot-step1-q;
 }
 
 ch2-toot-step1-q {
@@ -57,27 +57,27 @@ ch2-toot-step1-q {
 }
 
 ch2-toot-step1-okay {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Good job!"
 	}
-	goto ch2-toot-step1-end
+	goto ch2-toot-step1-end;
 }
 
 ch2-toot-step1-notokay {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: ...Haha, well, that was a little aggressive, but well done."
 	}
-	goto ch2-toot-step1-end
+	goto ch2-toot-step1-end;
 }
 
 ch2-toot-step1-end {
 	show serial dialog {
 		"\tNote that dialog options begin with \"0\" instead of \"1\". That's for \"<bold>computer reasons</>.\""
 	}
-	mutate ch2-toot-level = 2
-	goto ch2-toot-step2-start
+	mutate ch2-toot-level = 2;
+	goto ch2-toot-step2-start;
 }
 
 // Part 2
@@ -88,7 +88,7 @@ ch2-toot-step2-start {
 		"\tDoes that make sense?"
 		" "
 	}
-	goto ch2-toot-step2-q
+	goto ch2-toot-step2-q;
 }
 
 ch2-toot-step2-q {
@@ -103,52 +103,52 @@ ch2-toot-step2-q {
 		_ "NO" : ch2-toot-step2-no
 		_ "N" : ch2-toot-step2-no-extra
 	}
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Sorry, that wasn't one of the choices! Want to try again?"
 		" "
 	}
-	goto ch2-toot-step2-q
+	goto ch2-toot-step2-q;
 }
 
 ch2-toot-step2-yes {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Excellent! You've got it!"
 	}
-	goto ch2-toot-step2-end
+	goto ch2-toot-step2-end;
 }
 
 ch2-toot-step2-yes-extra {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Excellent! You've also discovered that sometimes you can type something a little different and still achieve your goal, like typing <c>Y</> instead of <c>YES</>."
 	}
-	goto ch2-toot-step2-end
+	goto ch2-toot-step2-end;
 }
 
 ch2-toot-step2-no {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Haha, you say that, but you clearly understand! Good job!"
 	}
-	goto ch2-toot-step2-end
+	goto ch2-toot-step2-end;
 }
 
 ch2-toot-step2-no-extra {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Well, you seem to understand, anyway! You've also discovered that sometimes you can type something a little different and still achieve your goal, like typing <c>N</> instead of <c>NO</>."
 	}
-	goto ch2-toot-step2-end
+	goto ch2-toot-step2-end;
 }
 
 ch2-toot-step2-end {
 	show serial dialog {
 		"\tSome free response options are left entirely undisclosed, so feel free to experiment when given a free response prompt."
 	}
-	mutate ch2-toot-level = 3
-	goto ch2-toot-step3-start
+	mutate ch2-toot-level = 3;
+	goto ch2-toot-step3-start;
 }
 
 // Part 3
@@ -164,23 +164,23 @@ ch2-toot-step3-start {
 }
 
 ch2-toot-step3-magic {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> \"Magic words?\" Neat!"
 		" "
 		"<m>LAMBDA:</> Yeah! Computers are nothing more than melted sand, rocks, and tiny bits of lightning, yet we can make them perform math and send words and images to someone else far away! It really <bold>is</> like magic, isn't it?"
 	}
-	goto ch2-toot-step3-halftime
+	goto ch2-toot-step3-halftime;
 }
 
 ch2-toot-step3-nomagic {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> \"Magic words?\" That's a bit ridiculous."
 		" "
 		"<m>LAMBDA:</> ...Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
 	}
-	goto ch2-toot-step3-halftime
+	goto ch2-toot-step3-halftime;
 }
 
 ch2-toot-step3-halftime {
@@ -190,25 +190,25 @@ ch2-toot-step3-halftime {
 		" "
 	}
 	show serial dialog lambda-over
-	set flag ch2-map-granted to true
-	mutate ch2-map-test = 1
-	copy register-map
+	set flag ch2-map-granted to true;
+	mutate ch2-map-test = 1;
+	copy register-map;
 }
 
 ch2-toot-step3-check {
 	if (variable ch2-map-test is 0) {
 		// you haven't seen the map toot intro
-		show serial dialog spacer
+		show serial dialog spacer;
 		show serial dialog {
 			"<m>LAMBDA</>: Let's pick up where we left off, shall we?"
 		}
-		goto ch2-toot-step3-start
+		goto ch2-toot-step3-start;
 	} else if (variable ch2-map-test is 1) {
 		// you've seen the intro but haven't seen the map yet
-		goto ch2-toot-step3-summary
+		goto ch2-toot-step3-summary;
 	} else if (variable ch2-map-test is 2) {
 		// you've seen the intro and seen the map; toot ends
-		goto ch2-toot-step3-end
+		goto ch2-toot-step3-end;
 	} else {
 		show serial dialog {
 			"<r><bold>DEBUG</>: Welp, you've done something strange!"
@@ -219,7 +219,7 @@ ch2-toot-step3-check {
 }
 
 ch2-toot-step3-summary {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Try running the <c>MAP</> command using the artifact."
 		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
@@ -229,7 +229,7 @@ ch2-toot-step3-summary {
 }
 
 ch2-toot-step3-end {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Way to go! I hope you'll enjoy the <c>MAP</>. It's one of my favorite personal projects."
 		"\tRemember, to use any of the magic words, you can't be in a conversation already."
@@ -240,15 +240,15 @@ ch2-toot-step3-end {
 }
 
 ch2-toot-step3-end2 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> Wait, I thought <c>MAN</> was how I talk to <bold>you</>."
 		" "
 		"<m>LAMBDA:</> Yeah, I set it up that way because I thought it would be easy to remember. \"Man\" is short for \"manual,\" so think of <c>MAN</> as being for times you need long form help."
 	}
-	mutate ch2-map-test = 0
-	mutate ch2-toot-level = 4
-	goto ch2-toot-step4-start
+	mutate ch2-map-test = 0;
+	mutate ch2-toot-level = 4;
+	goto ch2-toot-step4-start;
 }
 
 ch2-toot-step4-start {
@@ -259,7 +259,7 @@ ch2-toot-step4-start {
 	}
 }
 ch2-toot-step4a {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> How do we fix the mainframe?"
 		" "
@@ -271,7 +271,7 @@ ch2-toot-step4a {
 }
 
 ch2-toot-step4b-noob {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> But I don't know how to build a computer!"
 		" "
@@ -282,7 +282,7 @@ ch2-toot-step4b-noob {
 }
 
 ch2-toot-step4b-pro {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> This'll be a sinch!"
 		" "

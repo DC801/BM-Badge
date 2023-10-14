@@ -74,8 +74,8 @@ All .mgs files are turned into MGE JSON by the MGE encoder. Unlike script files 
 	- Double (`"`) or single (`'`) quotes are both fine.
 	- Anything with a space or any unusual character *must* be wrapped in quotes.
 3. Many words are optional, and can be included either to increase logical clarity or omitted to decrease word density. E.g. the following two patterns are equivalent phrases:
-	- `goto script scriptName`
-	- `goto scriptName`
+	- `goto script scriptName;`
+	- `goto scriptName;`
 4. Certain [MGE variables](#variable-types-and-examples) can be formatted in multiple, human-friendly ways, e.g.
 	- Duration: `1000ms` or `1s` or `1000`
 	- Quantity: `once` or `1x` or `1`
@@ -135,8 +135,8 @@ While relatively human readable, the above is difficult to write in practice.
 ```
 on_tick-greenhouse {
   if entity "%PLAYER%" is inside geometry door-greenhouse
-    then goto leave-greenhouse
-  copy script ethernettle-uproot-check
+    then goto leave-greenhouse;
+  copy script ethernettle-uproot-check;
   // some kind of comment
 }
 ```
@@ -222,15 +222,15 @@ settings for dialog {
   }
 }
 show_dialog-wopr-backdoor {
-  set player control to off
-  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
-  wait 400ms
-  set player control to on
+  set player control to off;
+  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms;
+  wait 400ms;
+  set player control to on;
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
   }
-  set flag backdoor-found to true
+  set flag backdoor-found to true;
 }
 ```
 
@@ -773,9 +773,9 @@ Example #1: an action that wants a duration (syntax `wait $duration`)
 
 ```
 testScript1 {
-  wait 150ms // "duration" = ok
-  wait 150   // "number" is fine, too
-             //   (decays to "duration")
+  wait 150ms; // "duration" = ok
+  wait 150;   // "number" is fine, too
+              //   (decays to "duration")
 }
 ```
 
@@ -783,8 +783,8 @@ Example #2: an action that wants a number (syntax: `load slot $number`)
 
 ```
 testScript2 {
-  load slot 1    // "number" = ok
-  load slot 1ms  // "duration" won't work!
+  load slot 1;    // "number" = ok
+  load slot 1ms;  // "duration" won't work!
 }
 ```
 
@@ -840,9 +840,9 @@ A binary option.
 
 Some actions will prefer specific pairs of booleans when being translated from JSON, but when translating the other way, any of the above words will work. E.g.
 
-- `set player control open`
-- `set player control on`
-- `set player control true`
+- `set player control open;`
+- `set player control on;`
+- `set player control true;`
 
 #### Operator
 
@@ -1041,8 +1041,8 @@ Note that if multiple loops are nested, `break` and `continue` will only apply t
 ```
 scriptName {
   while (variable sodas < 5) {
-    show serial dialog "Wow! I've had $sodas$ sodas today!"
-    mutate sodas + 1
+    show serial dialog { "Wow! I've had $sodas$ sodas today!" }
+    mutate sodas + 1;
   }
 }
 ```
@@ -1059,9 +1059,9 @@ For `for`, the parenthesis encloses three sets of words separated by semicolons 
 script {
   show serial dialog "Let's count to 4!"
   for (mutate i = 1; variable i <= 3; mutate i + 1) {
-    show serial dialog "$i$..."
+    show serial dialog { "$i$..." }
   }
-    show serial dialog "$i$!"
+    show serial dialog { "$i$!" }
 }
 ```
 
@@ -1217,7 +1217,7 @@ const! (
 )
 
 testScript {
-  set entity $hamburgers $field to $bigNumber
+  set entity $hamburgers $field to $bigNumber;
 }
 ```
 
@@ -1225,7 +1225,7 @@ After the macro does its work, the script `testScript` instead will read:
 
 ```
 testScript {
-  set entity "Steamed Toast" x to 9001
+  set entity "Steamed Toast" x to 9001;
 }
 ```
 
@@ -1246,7 +1246,7 @@ This is recursive, so be careful.
 This is best used for common settings, such as the player dialog label.
 
 ```
-include!("header.mgs")
+include!("header.mgs");
 ```
 
 ## Action dictionary
@@ -1258,15 +1258,17 @@ Some of these patterns may also have some hidden parameters baked in to the phra
 As a reminder, words in parentheses are optional. For example, the dictionary pattern:
 
 ```
-set entity $entity:string on_tick (to) $string:string 
+set entity $entity:string on_tick (to) $string:string (;)
 ```
 
 will be satisfied by either of the following:
 
 ```
-set entity "Entity Name" on_tick to scriptName
-set entity "Entity Name" on_tick scriptName
+set entity "Entity Name" on_tick to scriptName;
+set entity "Entity Name" on_tick scriptName;
 ```
+
+Semicolons are currently optional at the end of actions, but eventually they will be required.
 
 Misc tips:
 
@@ -1279,175 +1281,175 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 #### [Game management](#game-management-actions)
 
 - [BLOCKING_DELAY](#blocking_delay)
-	- `block 1000ms`
+	- `block 1000ms;`
 - [NON_BLOCKING_DELAY](#non_blocking_delay)
-	- `wait 400ms`
+	- `wait 400ms;`
 - [SET_PLAYER_CONTROL](#set_player_control)
-	- `set player control to on`
+	- `set player control to on;`
 - [LOAD_MAP](#load_map)
-	- `load map mapName`
+	- `load map mapName;`
 - [SLOT_SAVE](#slot_save)
-	- `save slot`
+	- `save slot;`
 - [SLOT_LOAD](#slot_load)
-	- `load slot 2`
+	- `load slot 2;`
 - [SLOT_ERASE](#slot_erase)
-	- `erase slot 2`
+	- `erase slot 2;`
 - [SHOW_DIALOG](#show_dialog)
-	- `show dialog dialogName`
+	- `show dialog dialogName;`
 - [CLOSE_DIALOG](#close_dialog)
-	- `close dialog`
+	- `close dialog;`
 - [SET_LIGHTS_CONTROL](#set_lights_control)
-	- `set lights control to true`
+	- `set lights control to true;`
 - [SET_LIGHTS_STATE](#set_lights_state)
-	- `turn light MEM3 true`
+	- `turn light MEM3 true;`
 
 #### [Hex editor](#hex-editor-actions)
 
 - [SET_HEX_EDITOR_STATE](#set_hex_editor_state)
-	- `open hex editor`
+	- `open hex editor;`
 - [SET_HEX_EDITOR_DIALOG_MODE](#set_hex_editor_dialog_mode)
-	- `set hex dialog mode to on`
+	- `set hex dialog mode to on;`
 - [SET_HEX_EDITOR_CONTROL](#set_hex_editor_control)
-	- `set hex control to on`
+	- `set hex control to on;`
 - [SET_HEX_EDITOR_CONTROL_CLIPBOARD](#set_hex_editor_control_clipboard)
-	- `set hex clipboard to on`
+	- `set hex clipboard to on;`
 
 #### [Serial console](#serial-console-actions)
 
 - [SET_SERIAL_DIALOG_CONTROL](#set_serial_dialog_control)
-	- `set serial control to on`
+	- `set serial control to on;`
 - [SHOW_SERIAL_DIALOG](#show_serial_dialog)
-	- `show serial dialog serialDialogName`
-	- `concat serial dialog serialDialogName`
+	- `show serial dialog serialDialogName;`
+	- `concat serial dialog serialDialogName;`
 - [CLOSE_SERIAL_DIALOG](#close_serial_dialog)
-	- `close serial dialog`
+	- `close serial dialog;`
 - [SET_CONNECT_SERIAL_DIALOG](#set_connect_serial_dialog)
-	- `set serial connect message to serialDialogName`
+	- `set serial connect message to serialDialogName;`
 - [REGISTER_SERIAL_DIALOG_COMMAND](#register_serial_dialog_command)
-	- `register command "map" -> scriptName`
-	- `register command "map" fail -> scriptName`
-	- `register command "map" failure -> scriptName`
+	- `register command "map" -> scriptName;`
+	- `register command "map" fail -> scriptName;`
+	- `register command "map" failure -> scriptName;`
 - [UNREGISTER_SERIAL_DIALOG_COMMAND](#unregister_serial_dialog_command)
-	- `unregister command "map"`
-	- `unregister command "map" fail`
-	- `unregister command "map" failure`
+	- `unregister command "map";`
+	- `unregister command "map" fail;`
+	- `unregister command "map" failure;`
 - [REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT](#register_serial_dialog_command_argument)
-	- `register command "map" + arg "castle" -> scriptName`
+	- `register command "map" + arg "castle" -> scriptName;`
 - [UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT](#unregister_serial_dialog_command_argument)
-	- `unregister command "map" + arg "castle"`
+	- `unregister command "map" + arg "castle";`
 
 #### [Camera control](#camera-control-actions)
 
 - [SET_CAMERA_TO_FOLLOW_ENTITY](#set_camera_to_follow_entity)
-	- `make camera follow entity "Entity Name"`
+	- `make camera follow entity "Entity Name";`
 - [TELEPORT_CAMERA_TO_GEOMETRY](#teleport_camera_to_geometry)
-	- `teleport camera to geometry "vector object name"`
+	- `teleport camera to geometry "vector object name";`
 - [PAN_CAMERA_TO_ENTITY](#pan_camera_to_entity)
-	- `pan camera to entity "Entity Name" over 1000ms`
+	- `pan camera to entity "Entity Name" over 1000ms;`
 - [PAN_CAMERA_TO_GEOMETRY](#pan_camera_to_geometry)
-	- `pan camera to geometry "vector object name" over 1000ms`
+	- `pan camera to geometry "vector object name" over 1000ms;`
 - [PAN_CAMERA_ALONG_GEOMETRY](#pan_camera_along_geometry)
-	- `pan camera along geometry "vector object name" over 1000ms`
+	- `pan camera along geometry "vector object name" over 1000ms;`
 - [LOOP_CAMERA_ALONG_GEOMETRY](#loop_camera_along_geometry)
-	- `loop camera along geometry "vector object name" over 1000ms`
+	- `loop camera along geometry "vector object name" over 1000ms;`
 - [SET_SCREEN_SHAKE](#set_screen_shake)
-	- `shake camera 200ms 32px for 3s`
+	- `shake camera 200ms 32px for 3s;`
 - [SCREEN_FADE_OUT](#screen_fade_out)
-	- `fade out camera to #000 over 1000ms`
+	- `fade out camera to #000 over 1000ms;`
 - [SCREEN_FADE_IN](#screen_fade_in)
-	- `fade in camera from #000 over 1000ms`
+	- `fade in camera from #000 over 1000ms;`
 
 #### [Script control](#script-control-actions)
 
 - [RUN_SCRIPT](#run_script)
-	- `goto scriptName`
+	- `goto scriptName;`
 - [GOTO_ACTION_INDEX](#goto_action_index)
-	- `goto index $action_index:number`
-	- `goto label $action_index:bareword`
-	- `return`
+	- `goto index $action_index:number;`
+	- `goto label $action_index:bareword;`
+	- `return;`
 - [COPY_SCRIPT](#copy_script)
-	- `copy scriptName`
+	- `copy scriptName;`
 - [SET_MAP_TICK_SCRIPT](#set_map_tick_script)
-	- `set map on_tick to scriptName`
+	- `set map on_tick to scriptName;`
 - [SET_ENTITY_INTERACT_SCRIPT](#set_entity_interact_script)
-	- `set entity "Entity Name" on_interact to scriptName`
+	- `set entity "Entity Name" on_interact to scriptName;`
 - [SET_ENTITY_TICK_SCRIPT](#set_entity_tick_script)
-	- `set entity "Entity Name" on_tick to scriptName`
+	- `set entity "Entity Name" on_tick to scriptName;`
 - [SET_ENTITY_LOOK_SCRIPT](#set_entity_look_script)
-	- `set entity "Entity Name" on_look to scriptName`
+	- `set entity "Entity Name" on_look to scriptName;`
 - [SET_SCRIPT_PAUSE](#set_script_pause)
-	- `pause entity "Entity Name" on_tick`
-	- `unpause entity "Entity Name" on_tick`
-	- `pause map on_tick`
-	- `unpause map on_tick`
+	- `pause entity "Entity Name" on_tick;`
+	- `unpause entity "Entity Name" on_tick;`
+	- `pause map on_tick;`
+	- `unpause map on_tick;`
 
 #### [Entity choreography](#entity-choreography-actions)
 
 - [SET_ENTITY_PATH](#set_entity_path)
-	- `set entity "Entity Name" path to "vector object name"`
+	- `set entity "Entity Name" path to "vector object name";`
 - [TELEPORT_ENTITY_TO_GEOMETRY](#teleport_entity_to_geometry)
-	- `teleport entity "Entity Name" to geometry "vector object name"`
+	- `teleport entity "Entity Name" to geometry "vector object name";`
 - [WALK_ENTITY_TO_GEOMETRY](#walk_entity_to_geometry)
-	- `walk entity "Entity Name" to geometry "vector object name" over 1000ms`
+	- `walk entity "Entity Name" to geometry "vector object name" over 1000ms;`
 - [WALK_ENTITY_ALONG_GEOMETRY](#walk_entity_along_geometry)
-	- `walk entity "Entity Name" along geometry "vector object name" over 1000ms`
+	- `walk entity "Entity Name" along geometry "vector object name" over 1000ms;`
 - [LOOP_ENTITY_ALONG_GEOMETRY](#loop_entity_along_geometry)
-	- `loop entity "Entity Name" along geometry "vector object name" over 1000ms`
+	- `loop entity "Entity Name" along geometry "vector object name" over 1000ms;`
 
 #### [Entity appearance](#entity-appearance-actions)
 
 - [PLAY_ENTITY_ANIMATION](#play_entity_animation)
-	- `play entity "Entity Name" animation 3 twice`
+	- `play entity "Entity Name" animation 3 twice;`
 - [SET_ENTITY_CURRENT_ANIMATION](#set_entity_current_animation)
-	- `set entity "Entity Name" current_animation to 0`
+	- `set entity "Entity Name" current_animation to 0;`
 - [SET_ENTITY_CURRENT_FRAME](#set_entity_current_frame)
-	- `set entity "Entity Name" animation_frame to 0`
+	- `set entity "Entity Name" animation_frame to 0;`
 - [SET_ENTITY_DIRECTION](#set_entity_direction)
-	- `turn entity "Entity Name" north`
+	- `turn entity "Entity Name" north;`
 - [SET_ENTITY_DIRECTION_RELATIVE](#set_entity_direction_relative)
-	- `rotate entity "Entity Name" 3`
+	- `rotate entity "Entity Name" 3;`
 - [SET_ENTITY_DIRECTION_TARGET_ENTITY](#set_entity_direction_target_entity)
-	- `turn entity "Entity Name" toward entity "Target Entity"`
+	- `turn entity "Entity Name" toward entity "Target Entity";`
 - [SET_ENTITY_DIRECTION_TARGET_GEOMETRY](#set_entity_direction_target_geometry)
-	- `turn entity "Entity Name" toward geometry "vector object name"`
+	- `turn entity "Entity Name" toward geometry "vector object name";`
 - [SET_ENTITY_MOVEMENT_RELATIVE](#set_entity_movement_relative)
-	- `set entity "Entity Name" relative_direction to 3`
+	- `set entity "Entity Name" relative_direction to 3;`
 - [SET_ENTITY_GLITCHED](#set_entity_glitched)
-	- `make entity "Entity Name" glitched`
-	- `make entity "Entity Name" unglitched`
+	- `make entity "Entity Name" glitched;`
+	- `make entity "Entity Name" unglitched;`
 
 #### [Set entity properties](#set-entity-properties-actions)
 
 - [SET_ENTITY_NAME](#set_entity_name)
-	- `set entity "Entity Name" name to "some kind of string"`
+	- `set entity "Entity Name" name to "some kind of string";`
 - [SET_ENTITY_X](#set_entity_x)
-	- `set entity "Entity Name" x to 2`
+	- `set entity "Entity Name" x to 2;`
 - [SET_ENTITY_Y](#set_entity_y)
-	- `set entity "Entity Name" y to 2`
+	- `set entity "Entity Name" y to 2;`
 - [SET_ENTITY_TYPE](#set_entity_type)
-	- `set entity "Entity Name" type to old_man`
+	- `set entity "Entity Name" type to old_man;`
 - [SET_ENTITY_PRIMARY_ID](#set_entity_primary_id)
-	- `set entity "Entity Name" primary_id to 2`
+	- `set entity "Entity Name" primary_id to 2;`
 - [SET_ENTITY_SECONDARY_ID](#set_entity_secondary_id)
-	- `set entity "Entity Name" secondary_id to 2`
+	- `set entity "Entity Name" secondary_id to 2;`
 - [SET_ENTITY_PRIMARY_ID_TYPE](#set_entity_primary_id_type)
-	- `set entity "Entity Name" primary_id_type to 0`
+	- `set entity "Entity Name" primary_id_type to 0;`
 
 #### [Set variables](#set-variables-actions)
 
 - [SET_SAVE_FLAG](#set_save_flag)
-	- `set flag saveFlagName to true`
+	- `set flag saveFlagName to true;`
 - [SET_WARP_STATE](#set_warp_state)
-	- `set warp state to "some kind of string"`
+	- `set warp state to "some kind of string";`
 - [MUTATE_VARIABLE](#mutate_variable)
-	- `mutate varName + 1`
+	- `mutate varName + 1;`
 - [MUTATE_VARIABLES](#mutate_variables)
-	- `mutate varName + otherVar`
+	- `mutate varName + otherVar;`
 - [COPY_VARIABLE](#copy_variable)
-	- `copy entity "Entity Name" x into variable varName`
-	- `copy variable varName from entity "Entity Name" x`
-	- `copy variable varName into entity "Entity Name" x`
-	- `copy entity "Entity Name" x from variable varName`
+	- `copy entity "Entity Name" x into variable varName;`
+	- `copy variable varName from entity "Entity Name" x;`
+	- `copy variable varName into entity "Entity Name" x;`
+	- `copy entity "Entity Name" x from variable varName;`
 
 #### Conditional gotos
 
@@ -1551,10 +1553,10 @@ This pauses the entire game, including all other scripts and animations, for the
 As this might make the game appear broken, you should probably use a [non-blocking delay](#non_blocking_delay) instead.
 
 ```
-block $duration:duration
+block $duration:duration (;)
 ```
 
-Example: `block 1000ms`
+Example: `block 1000ms;`
 
 #### NON_BLOCKING_DELAY
 
@@ -1565,10 +1567,10 @@ Use this if you want to pad the actions an entity is performing so they don't al
 For cinematic cutscenes, you will almost certainly need to disable [player control](#set_player_control) before using this action, otherwise the player will be able to walk away in the middle. (Don't forget to turn it on again when finished!)
 
 ```
-wait $duration:duration
+wait $duration:duration (;)
 ```
 
-Example: `wait 400ms`
+Example: `wait 400ms;`
 
 #### SET_PLAYER_CONTROL
 
@@ -1577,10 +1579,10 @@ When player control is `on`, the player entity can move around as normal. When `
 This is set to `on` (`true`) by default.
 
 ```
-set player control (to) $bool_value:boolean
+set player control (to) $bool_value:boolean (;)
 ```
 
-Example: `set player control to on`
+Example: `set player control to on;`
 
 #### LOAD_MAP
 
@@ -1591,10 +1593,10 @@ If this action is told to load the current map, the current map will be reset. T
 For most normal door behavior, you will probably want to [set the warp state](#set_war_state) before using the this action.
 
 ```
-load map $map:string
+load map $map:string (;)
 ```
 
-Example: `load map mapName`
+Example: `load map mapName;`
 
 #### SLOT_SAVE
 
@@ -1613,7 +1615,7 @@ Things that are saved:
 - script variables (integers)
 
 ```
-save slot
+save slot (;)
 ```
 
 #### SLOT_LOAD
@@ -1623,20 +1625,20 @@ This brings the save data associated with that slot into RAM.
 The slot is set to 0 by default.
 
 ```
-load slot $slot:number
+load slot $slot:number (;)
 ```
 
-Example: `load slot 2`
+Example: `load slot 2;`
 
 #### SLOT_ERASE
 
 This action clears all the save data in the given slot.
 
 ```
-erase slot $slot:number
+erase slot $slot:number (;)
 ```
 
-Example: `erase slot 2`
+Example: `erase slot 2;`
 
 #### SHOW_DIALOG
 
@@ -1649,10 +1651,10 @@ While a dialog screen is showing, the player can only advance to the next dialog
 This action is also available as a [combination block](#combination-blocks).
 
 ```
-show dialog $dialog:string
+show dialog $dialog:string (;)
 ```
 
-Example: `show dialog dialogName`
+Example: `show dialog dialogName;`
 
 #### CLOSE_DIALOG
 
@@ -1661,10 +1663,10 @@ Ends any open dialog.
 Use this action when you want to trigger a dialog that may potentially interrupt a dialog in progress. Otherwise, the two dialogs may collide, which can result in a soft lock.
 
 ```
-close dialog
+close dialog (;)
 ```
 
-Example: `close dialog`
+Example: `close dialog;`
 
 #### SET_LIGHTS_CONTROL
 
@@ -1673,10 +1675,10 @@ Enables (or disables) manual control of the hex editing LED lights on the badge.
 Note that gaining control of the lights does not clear the light state by default; the lights currently on will remain on until set with [SET_LIGHTS_STATE](#set_lights_control).
 
 ```
-set lights control (to) $enabled:boolean
+set lights control (to) $enabled:boolean (;)
 ```
 
-Example: `set lights control to true`
+Example: `set lights control to true;`
 
 #### SET_LIGHTS_STATE
 
@@ -1687,10 +1689,10 @@ If working with JSON, you can set the `lights` property to an array of strings i
 See [LED IDs](#led-ids) for a list of valid `lights` values.
 
 ```
-turn light $lights:string $enabled:boolean
+turn light $lights:string $enabled:boolean (;)
 ```
 
-Example: `turn light MEM3 true`
+Example: `turn light MEM3 true;`
 
 ### Hex editor actions
 
@@ -1701,10 +1703,10 @@ Enable or disable player control of specific game features, and otherwise manage
 Setting this to true opens the hex editor. [Does the hex editor need to be enabled?]
 
 ```
-$bool_value:boolean hex editor
+$bool_value:boolean hex editor (;)
 ```
 
-Example: `open hex editor`
+Example: `open hex editor;`
 
 #### SET_HEX_EDITOR_DIALOG_MODE
 
@@ -1713,30 +1715,30 @@ When on, this reduces the number of rows in the hex editor, which makes room for
 NOTE: This action has been disabled in the MGE to prevent accidental soft locks.
 
 ```
-set hex dialog mode (to) $bool_value:boolean
+set hex dialog mode (to) $bool_value:boolean (;)
 ```
 
-Example: `set hex dialog mode to on`
+Example: `set hex dialog mode to on;`
 
 #### SET_HEX_EDITOR_CONTROL
 
 This action enables or disables player access to to the hex editor. This is on by default.
 
 ```
-set hex control (to) $bool_value:boolean
+set hex control (to) $bool_value:boolean (;)
 ```
 
-Example: `set hex control to on`
+Example: `set hex control to on;`
 
 #### SET_HEX_EDITOR_CONTROL_CLIPBOARD
 
 This action enables or disables the clipboard and copy functionality within the hex editor. This is on by default. (? verify)
 
 ```
-set hex clipboard (to) $bool_value:boolean
+set hex clipboard (to) $bool_value:boolean (;)
 ```
 
-Example: `set hex clipboard to on`
+Example: `set hex clipboard to on;`
 
 ### Serial console actions
 
@@ -1749,10 +1751,10 @@ When `off`, the serial terminal will ignore player input.
 This is set to `on` (`true`) by default.
 
 ```
-set serial control (to) $bool_value:boolean
+set serial control (to) $bool_value:boolean (;)
 ```
 
-Example: `set serial control to on`
+Example: `set serial control to on;`
 
 #### SHOW_SERIAL_DIALOG
 
@@ -1763,29 +1765,29 @@ The `concat` variant omits the newline at the end of each message, which can ena
 This action is also available as a [combination block](#combination-blocks).
 
 ```
-show serial dialog $serial_dialog:string
+show serial dialog $serial_dialog:string (;)
 	// disable_newline: false
 ```
 
 ```
-concat serial dialog $serial_dialog:string
+concat serial dialog $serial_dialog:string (;)
 	// disable_newline: true
 ```
 
 Examples:
 
-- `show serial dialog serialDialogName`
-- `concat serial dialog serialDialogName`
+- `concat serial dialog serialDialogName;`
+- `show serial dialog serialDialogName;`
 
 #### CLOSE_SERIAL_DIALOG
 
 Ends any serial dialog that is awaiting user input, such as a free response question or a multiple choice question.
 
 ```
-close serial dialog
+close serial dialog (;)
 ```
 
-Example: `close serial dialog`
+Example: `close serial dialog;`
 
 #### SET_CONNECT_SERIAL_DIALOG
 
@@ -1794,10 +1796,10 @@ Sets the serial connection message to the named [serial dialog](#serial-dialog).
 This action is also available as a [combination block](#combination-blocks).
 
 ```
-set serial connect (message) (to) $serial_dialog:string
+set serial connect (message) (to) $serial_dialog:string (;)
 ```
 
-Example: `set serial connect message to serialDialogName`
+Example: `set serial connect message to serialDialogName;`
 
 #### REGISTER_SERIAL_DIALOG_COMMAND
 
@@ -1809,25 +1811,25 @@ Once a command is registered, the player can enter the command into the serial c
 Commands must be a single word.
 
 ```
-register (command) $command:string -> (script) $script:string
+register (command) $command:string -> (script) $script:string (;)
 	// is_fail: false
 ```
 
 ```
-register (command) $command:string fail -> (script) $script:string
+register (command) $command:string fail -> (script) $script:string (;)
 	// is_fail: true
 ```
 
 ```
-register (command) $command:string failure -> (script) $script:string
+register (command) $command:string failure -> (script) $script:string (;)
 	// is_fail: true
 ```
 
 Examples:
 
-- `register command "map" -> scriptName`
-- `register command "map" fail -> scriptName`
-- `register command "map" failure -> scriptName`
+- `register command "map" -> scriptName;`
+- `register command "map" fail -> scriptName;`
+- `register command "map" failure -> scriptName;`
 
 #### UNREGISTER_SERIAL_DIALOG_COMMAND
 
@@ -1835,25 +1837,25 @@ Examples:
 - **Failure variant**: only unregisters the `failure` script; other registered arguments (and the plain command itself) will remain intact.
 
 ```
-unregister (command) $command:string
+unregister (command) $command:string (;)
 	// is_fail: false
 ```
 
 ```
-unregister (command) $command:string fail
+unregister (command) $command:string fail (;)
 	// is_fail: true
 ```
 
 ```
-unregister (command) $command:string failure
+unregister (command) $command:string failure (;)
 	// is_fail: true
 ```
 
 Examples:
 
-- `unregister command "map"`
-- `unregister command "map" fail`
-- `unregister command "map" failure`
+- `unregister command "map" fail;`
+- `unregister command "map" failure;`
+- `unregister command "map";`
 
 #### REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 
@@ -1862,20 +1864,20 @@ This action registers an argument (and a script) for an [already-registered seri
 Arguments can be multiple words. In-game, if the second word is `at` or `to` it is ignored, e.g. `> warp to my house` (after running `register "warp" + "my house"`).
 
 ```
-register (command) $command:string + (arg) $argument:string -> (script) $script:string
+register (command) $command:string + (arg) $argument:string -> (script) $script:string (;)
 ```
 
-Example: `register command "map" + arg "castle" -> scriptName`
+Example: `register command "map" + arg "castle" -> scriptName;`
 
 #### UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 
 This action unregisters the specified argument from an [already-registered serial command](#register_serial_dialog_command).
 
 ```
-unregister (command) $command:string + (arg) $argument:string
+unregister (command) $command:string + (arg) $argument:string (;)
 ```
 
-Example: `unregister command "map" + arg "castle"`
+Example: `unregister command "map" + arg "castle";`
 
 ### Camera control actions
 
@@ -1886,20 +1888,20 @@ Manipulate the camera's position or perform tricks like shaking the camera or fa
 Sets what the camera is following. (`%PLAYER%` is the default.)
 
 ```
-make camera follow entity $entity:string
+make camera follow entity $entity:string (;)
 ```
 
-Example: `make camera follow entity "Entity Name"`
+Example: `make camera follow entity "Entity Name";`
 
 #### TELEPORT_CAMERA_TO_GEOMETRY
 
 Moves the camera to the first vertex of the specified geometry object.
 
 ```
-teleport camera to geometry $geometry:string
+teleport camera to geometry $geometry:string (;)
 ```
 
-Example: `teleport camera to geometry "vector object name"`
+Example: `teleport camera to geometry "vector object name";`
 
 #### PAN_CAMERA_TO_ENTITY
 
@@ -1908,50 +1910,50 @@ Pans the camera to an entity. Afterward, the camera will follow that entity.
 NOTE: if the entity is moving while the camera is coming closer, the camera will speed up or slow down to reach the entity at the correct time.
 
 ```
-pan camera to entity $entity:string over $duration:duration
+pan camera to entity $entity:string over $duration:duration (;)
 ```
 
-Example: `pan camera to entity "Entity Name" over 1000ms`
+Example: `pan camera to entity "Entity Name" over 1000ms;`
 
 #### PAN_CAMERA_TO_GEOMETRY
 
 Pans the camera to the first vertex of a geometry object.
 
 ```
-pan camera to geometry $geometry:string over $duration:duration
+pan camera to geometry $geometry:string over $duration:duration (;)
 ```
 
-Example: `pan camera to geometry "vector object name" over 1000ms`
+Example: `pan camera to geometry "vector object name" over 1000ms;`
 
 #### PAN_CAMERA_ALONG_GEOMETRY
 
 (might not work yet — instead, make a null entity and lock the camera to it)
 
 ```
-pan camera along geometry $geometry:string over $duration:duration
+pan camera along geometry $geometry:string over $duration:duration (;)
 ```
 
-Example: `pan camera along geometry "vector object name" over 1000ms`
+Example: `pan camera along geometry "vector object name" over 1000ms;`
 
 #### LOOP_CAMERA_ALONG_GEOMETRY
 
 (might not work yet — instead, make a null entity and lock the camera to it)
 
 ```
-loop camera along geometry $geometry:string over $duration:duration
+loop camera along geometry $geometry:string over $duration:duration (;)
 ```
 
-Example: `loop camera along geometry "vector object name" over 1000ms`
+Example: `loop camera along geometry "vector object name" over 1000ms;`
 
 #### SET_SCREEN_SHAKE
 
 Shakes the camera a certain distance (`amplitude`) at a certain speed (`frequency`) and for a certain length of time (`duration`).
 
 ```
-shake camera $frequency:duration $amplitude:distance for $duration:duration
+shake camera $frequency:duration $amplitude:distance for $duration:duration (;)
 ```
 
-Example: `shake camera 200ms 32px for 3s`
+Example: `shake camera 200ms 32px for 3s;`
 
 #### SCREEN_FADE_OUT
 
@@ -1960,10 +1962,10 @@ Fades the screen out to the given color.
 Fades are slow on the hardware, so use these sparingly.
 
 ```
-fade out camera to $color:color over $duration:duration
+fade out camera to $color:color over $duration:duration (;)
 ```
 
-Example: `fade out camera to #000 over 1000ms`
+Example: `fade out camera to #000 over 1000ms;`
 
 #### SCREEN_FADE_IN
 
@@ -1972,10 +1974,10 @@ Fades the screen in from the given color.
 Fades are slow on the hardware, so use these sparingly.
 
 ```
-fade in camera from $color:color over $duration:duration
+fade in camera from $color:color over $duration:duration (;)
 ```
 
-Example: `fade in camera from #000 over 1000ms`
+Example: `fade in camera from #000 over 1000ms;`
 
 ### Script control actions
 
@@ -1990,10 +1992,10 @@ The new script runs in the same script slot that called this action, and will be
 If you want to replace the script in the current slot *without* executing the new script until the next game loop, you should instead use one of the `SET_` ... `_SCRIPT` actions.
 
 ```
-goto (script) $script:string
+goto (script) $script:string (;)
 ```
 
-Example: `goto scriptName`
+Example: `goto scriptName;`
 
 #### GOTO_ACTION_INDEX
 
@@ -2004,23 +2006,23 @@ The index variant is not recommended for manual use, as `COPY_SCRIPT` and proced
 The keyword `return` uses this action to jump to the end of the current script (i.e. "return early").
 
 ```
-goto index $action_index:number
+goto index $action_index:number (;)
 ```
 
 ```
-goto label $action_index:bareword
+goto label $action_index:bareword (;)
 ```
 
 ```
-return
+return (;)
 	// action_index: auto return
 ```
 
 Examples:
 
-- `goto index $action_index:number`
-- `goto label $action_index:bareword`
-- `return`
+- `goto index $action_index:number;`
+- `goto label $action_index:bareword;`
+- `return;`
 
 #### COPY_SCRIPT
 
@@ -2029,20 +2031,20 @@ The MGE encoder literally copies all the actions from the copied `script` and in
 `COPY_SCRIPT` converts and adapts [label](#labels) references when copied, including jumps involving absolute action indices. Feel free to use `COPY_SCRIPT` for literally any script you want!
 
 ```
-copy (script) $script:string
+copy (script) $script:string (;)
 ```
 
-Example: `copy scriptName`
+Example: `copy scriptName;`
 
 #### SET_MAP_TICK_SCRIPT
 
 Sets the map's `on_tick` script.
 
 ```
-set map on_tick (to) $script:string
+set map on_tick (to) $script:string (;)
 ```
 
-Example: `set map on_tick to scriptName`
+Example: `set map on_tick to scriptName;`
 
 #### SET_ENTITY_INTERACT_SCRIPT
 
@@ -2053,30 +2055,30 @@ If you use this action to change the script slot that is currently running the a
 Because entity properties are reset when a map is loaded, and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved.
 
 ```
-set entity $entity:string on_interact (to) $script:string
+set entity $entity:string on_interact (to) $script:string (;)
 ```
 
-Example: `set entity "Entity Name" on_interact to scriptName`
+Example: `set entity "Entity Name" on_interact to scriptName;`
 
 #### SET_ENTITY_TICK_SCRIPT
 
 Sets an entity's `on_tick` script.
 
 ```
-set entity $entity:string on_tick (to) $script:string
+set entity $entity:string on_tick (to) $script:string (;)
 ```
 
-Example: `set entity "Entity Name" on_tick to scriptName`
+Example: `set entity "Entity Name" on_tick to scriptName;`
 
 #### SET_ENTITY_LOOK_SCRIPT
 
 Sets an entity's `on_look` script.
 
 ```
-set entity $entity:string on_look (to) $script:string
+set entity $entity:string on_look (to) $script:string (;)
 ```
 
-Example: `set entity "Entity Name" on_look to scriptName`
+Example: `set entity "Entity Name" on_look to scriptName;`
 
 #### SET_SCRIPT_PAUSE
 
@@ -2087,33 +2089,33 @@ Entity variant: Any entity name can be used in all the normal ways (`%PLAYER%` e
 Map variant: Script slots for these are `on_load`, `on_tick`, and `on_command`.
 
 ```
-pause entity $entity:string $script_slot:bareword
+pause entity $entity:string $script_slot:bareword (;)
 	// bool_value: true
 ```
 
 ```
-unpause entity $entity:string $script_slot:bareword
+unpause entity $entity:string $script_slot:bareword (;)
 	// bool_value: false
 ```
 
 ```
-pause map $script_slot:bareword
+pause map $script_slot:bareword (;)
 	// bool_value: true
 	// entity: %MAP%
 ```
 
 ```
-unpause map $script_slot:bareword
+unpause map $script_slot:bareword (;)
 	// bool_value: false
 	// entity: %MAP%
 ```
 
 Examples:
 
-- `pause entity "Entity Name" on_tick`
-- `unpause entity "Entity Name" on_tick`
-- `pause map on_tick`
-- `unpause map on_tick`
+- `pause entity "Entity Name" on_tick;`
+- `pause map on_tick;`
+- `unpause entity "Entity Name" on_tick;`
+- `unpause map on_tick;`
 
 ### Entity choreography actions
 
@@ -2126,30 +2128,30 @@ NOTE: These actions can behave erratically if any of the vertices in the geometr
 This assigns a vector object to an entity. Afterward, the entity can use `%ENTITY_PATH%` to refer to that path. (This assignment can also be done within Tiled.)
 
 ```
-set entity $entity:string path (to) $geometry:string
+set entity $entity:string path (to) $geometry:string (;)
 ```
 
-Example: `set entity "Entity Name" path to "vector object name"`
+Example: `set entity "Entity Name" path to "vector object name";`
 
 #### TELEPORT_ENTITY_TO_GEOMETRY
 
 Moves the entity instantly to the first vertex of the specified geometry object (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`).
 
 ```
-teleport entity $entity:string to geometry $geometry:string
+teleport entity $entity:string to geometry $geometry:string (;)
 ```
 
-Example: `teleport entity "Entity Name" to geometry "vector object name"`
+Example: `teleport entity "Entity Name" to geometry "vector object name";`
 
 #### WALK_ENTITY_TO_GEOMETRY
 
 Moves the entity in a straight line from its current position to the first vertex of the geometry object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
 
 ```
-walk entity $entity:string to geometry $geometry:string over $duration:duration
+walk entity $entity:string to geometry $geometry:string over $duration:duration (;)
 ```
 
-Example: `walk entity "Entity Name" to geometry "vector object name" over 1000ms`
+Example: `walk entity "Entity Name" to geometry "vector object name" over 1000ms;`
 
 #### WALK_ENTITY_ALONG_GEOMETRY
 
@@ -2158,10 +2160,10 @@ Moves the entity along the geometry object named (or the entity's assigned path 
 NOTE: Unless you want the entity to teleport to the geometry's origin point, you should probably use [WALK_ENTITY_TO_GEOMETRY](#walk_entity_to_geometry) first.
 
 ```
-walk entity $entity:string along geometry $geometry:string over $duration:duration
+walk entity $entity:string along geometry $geometry:string over $duration:duration (;)
 ```
 
-Example: `walk entity "Entity Name" along geometry "vector object name" over 1000ms`
+Example: `walk entity "Entity Name" along geometry "vector object name" over 1000ms;`
 
 #### LOOP_ENTITY_ALONG_GEOMETRY
 
@@ -2172,10 +2174,10 @@ This action will loop forever, and cannot terminate on its own; no other action 
 NOTE: Unless you want the entity to teleport to the geometry's origin point, you should probably use [WALK_ENTITY_TO_GEOMETRY](#walk_entity_to_geometry) first.
 
 ```
-loop entity $entity:string along geometry $geometry:string over $duration:duration
+loop entity $entity:string along geometry $geometry:string over $duration:duration (;)
 ```
 
-Example: `loop entity "Entity Name" along geometry "vector object name" over 1000ms`
+Example: `loop entity "Entity Name" along geometry "vector object name" over 1000ms;`
 
 ### Entity appearance actions
 
@@ -2192,10 +2194,10 @@ If an entity is compelled to move around on the map, it will abort this animatio
 See [entity animations](#entity-animations) for what numbers correspond to which animations.
 
 ```
-play entity $entity:string animation $animation:number $play_count:quantity
+play entity $entity:string animation $animation:number $play_count:quantity (;)
 ```
 
-Example: `play entity "Entity Name" animation 3 twice`
+Example: `play entity "Entity Name" animation 3 twice;`
 
 #### SET_ENTITY_CURRENT_ANIMATION
 
@@ -2206,10 +2208,10 @@ If an entity is compelled to move around on the map, it will abort this animatio
 See [entity animations](#entity-animations) for what numbers correspond to which animations.
 
 ```
-set entity $entity:string current_animation (to) $byte_value:number
+set entity $entity:string current_animation (to) $byte_value:number (;)
 ```
 
-Example: `set entity "Entity Name" current_animation to 0`
+Example: `set entity "Entity Name" current_animation to 0;`
 
 #### SET_ENTITY_CURRENT_FRAME
 
@@ -2218,20 +2220,20 @@ Set the frame of the current animation.
 This is useful for staggering the animations of entities that have identical animation timings.
 
 ```
-set entity $entity:string animation_frame (to) $byte_value:number
+set entity $entity:string animation_frame (to) $byte_value:number (;)
 ```
 
-Example: `set entity "Entity Name" animation_frame to 0`
+Example: `set entity "Entity Name" animation_frame to 0;`
 
 #### SET_ENTITY_DIRECTION
 
 Turns an entity toward the `north`, `south`, `east`, or `west`.
 
 ```
-turn entity $entity:string $direction:bareword
+turn entity $entity:string $direction:bareword (;)
 ```
 
-Example: `turn entity "Entity Name" north`
+Example: `turn entity "Entity Name" north;`
 
 #### SET_ENTITY_DIRECTION_RELATIVE
 
@@ -2240,30 +2242,30 @@ Turns the entity in 90° increments. Positive numbers are clockwise turns, and n
 This action can be chained with another similar one for complex behaviors. For example, to turn an entity away from the player, you can first set the entity's direction [toward the player](#set_entity_direction_target_entity), then immediately rotate it 2 turns.
 
 ```
-rotate entity $entity:string $relative_direction:number
+rotate entity $entity:string $relative_direction:number (;)
 ```
 
-Example: `rotate entity "Entity Name" 3`
+Example: `rotate entity "Entity Name" 3;`
 
 #### SET_ENTITY_DIRECTION_TARGET_ENTITY
 
 Make an entity turn toward another.
 
 ```
-turn entity $entity:string toward entity $target_entity:string
+turn entity $entity:string toward entity $target_entity:string (;)
 ```
 
-Example: `turn entity "Entity Name" toward entity "Target Entity"`
+Example: `turn entity "Entity Name" toward entity "Target Entity";`
 
 #### SET_ENTITY_DIRECTION_TARGET_GEOMETRY
 
 Make an entity turn toward a vector geometry on the map.
 
 ```
-turn entity $entity:string toward geometry $target_geometry:string
+turn entity $entity:string toward geometry $target_geometry:string (;)
 ```
 
-Example: `turn entity "Entity Name" toward geometry "vector object name"`
+Example: `turn entity "Entity Name" toward geometry "vector object name";`
 
 #### SET_ENTITY_MOVEMENT_RELATIVE
 
@@ -2272,29 +2274,29 @@ This adds a rotation to an entity's animations. This is different from turning a
 This number cannot be negative.
 
 ```
-set entity $entity:string relative_direction (to) $relative_direction:number
+set entity $entity:string relative_direction (to) $relative_direction:number (;)
 ```
 
-Example: `set entity "Entity Name" relative_direction to 3`
+Example: `set entity "Entity Name" relative_direction to 3;`
 
 #### SET_ENTITY_GLITCHED
 
 Set the glitched render flag on an entity.
 
 ```
-make entity $entity:string glitched
+make entity $entity:string glitched (;)
 	// bool_value: true
 ```
 
 ```
-make entity $entity:string unglitched
+make entity $entity:string unglitched (;)
 	// bool_value: false
 ```
 
 Examples:
 
-- `make entity "Entity Name" glitched`
-- `make entity "Entity Name" unglitched`
+- `make entity "Entity Name" glitched;`
+- `make entity "Entity Name" unglitched;`
 
 ### Set entity properties actions
 
@@ -2305,10 +2307,10 @@ Set a specific property on a specific entity.
 Sets an entity's `name`.
 
 ```
-set entity $entity:string name (to) $string:string
+set entity $entity:string name (to) $string:string (;)
 ```
 
-Example: `set entity "Entity Name" name to "some kind of string"`
+Example: `set entity "Entity Name" name to "some kind of string";`
 
 #### SET_ENTITY_X
 
@@ -2317,10 +2319,10 @@ Sets an entity's `x` coordinate.
 In practice, you will likely want to use geometry vectors and teleport actions instead.
 
 ```
-set entity $entity:string x (to) $u2_value:number
+set entity $entity:string x (to) $u2_value:number (;)
 ```
 
-Example: `set entity "Entity Name" x to 2`
+Example: `set entity "Entity Name" x to 2;`
 
 #### SET_ENTITY_Y
 
@@ -2329,20 +2331,20 @@ Sets an entity's `y` coordinate.
 In practice, you will likely want to use geometry vectors and teleport actions instead.
 
 ```
-set entity $entity:string y (to) $u2_value:number
+set entity $entity:string y (to) $u2_value:number (;)
 ```
 
-Example: `set entity "Entity Name" y to 2`
+Example: `set entity "Entity Name" y to 2;`
 
 #### SET_ENTITY_TYPE
 
 Sets an entity's `entity_type`.
 
 ```
-set entity $entity:string type (to) $entity_type:string
+set entity $entity:string type (to) $entity_type:string (;)
 ```
 
-Example: `set entity "Entity Name" type to old_man`
+Example: `set entity "Entity Name" type to old_man;`
 
 #### SET_ENTITY_PRIMARY_ID
 
@@ -2351,10 +2353,10 @@ Sets an entity's `primary_id`.
 You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](#set_entity_type).
 
 ```
-set entity $entity:string primary_id (to) $u2_value:number
+set entity $entity:string primary_id (to) $u2_value:number (;)
 ```
 
-Example: `set entity "Entity Name" primary_id to 2`
+Example: `set entity "Entity Name" primary_id to 2;`
 
 #### SET_ENTITY_SECONDARY_ID
 
@@ -2363,20 +2365,20 @@ Sets an entity's `secondary_id`.
 This action will not be useful unless the entity is a tile entity (`primary_id_type`: 1).
 
 ```
-set entity $entity:string secondary_id (to) $u2_value:number
+set entity $entity:string secondary_id (to) $u2_value:number (;)
 ```
 
-Example: `set entity "Entity Name" secondary_id to 2`
+Example: `set entity "Entity Name" secondary_id to 2;`
 
 #### SET_ENTITY_PRIMARY_ID_TYPE
 
 Sets an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) character (sometimes called `entity_type`)
 
 ```
-set entity $entity:string primary_id_type (to) $byte_value:number
+set entity $entity:string primary_id_type (to) $byte_value:number (;)
 ```
 
-Example: `set entity "Entity Name" primary_id_type to 0`
+Example: `set entity "Entity Name" primary_id_type to 0;`
 
 ### Set variables actions
 
@@ -2387,20 +2389,20 @@ Manipulate MGE variables or set them to an arbitrary value.
 Set a save flag to `true` or `false`.
 
 ```
-set flag $save_flag:string (to) $bool_value:boolean
+set flag $save_flag:string (to) $bool_value:boolean (;)
 ```
 
-Example: `set flag saveFlagName to true`
+Example: `set flag saveFlagName to true;`
 
 #### SET_WARP_STATE
 
 Set the warp state string to a specific value.
 
 ```
-set warp state (to) $string:string
+set warp state (to) $string:string (;)
 ```
 
-Example: `set warp state to "some kind of string"`
+Example: `set warp state to "some kind of string";`
 
 #### MUTATE_VARIABLE
 
@@ -2409,10 +2411,10 @@ Manipulate the value of a specific variable or set it to a new value.
 See [operations](#operations).
 
 ```
-mutate $variable:string $operation:operator $value:number
+mutate $variable:string $operation:operator $value:number (;)
 ```
 
-Example: `mutate varName + 1`
+Example: `mutate varName + 1;`
 
 #### MUTATE_VARIABLES
 
@@ -2421,41 +2423,41 @@ Manipulate the value of a specific variable by using the value of another variab
 See [operations](#operations).
 
 ```
-mutate $variable:string $operation:operator $source:string
+mutate $variable:string $operation:operator $source:string (;)
 ```
 
-Example: `mutate varName + otherVar`
+Example: `mutate varName + otherVar;`
 
 #### COPY_VARIABLE
 
 Copies the value of an entity property into a variable or vice versa.
 
 ```
-copy entity $entity:string $field:bareword into variable $variable:string
+copy entity $entity:string $field:bareword into variable $variable:string (;)
 	// inbound: true
 ```
 
 ```
-copy variable $variable:string from entity $entity:string $field:bareword
+copy variable $variable:string from entity $entity:string $field:bareword (;)
 	// inbound: true
 ```
 
 ```
-copy variable $variable:string into entity $entity:string $field:bareword
+copy variable $variable:string into entity $entity:string $field:bareword (;)
 	// inbound: false
 ```
 
 ```
-copy entity $entity:string $field:bareword from variable $variable:string
+copy entity $entity:string $field:bareword from variable $variable:string (;)
 	// inbound: false
 ```
 
 Examples:
 
-- `copy entity "Entity Name" x into variable varName`
-- `copy variable varName from entity "Entity Name" x`
-- `copy variable varName into entity "Entity Name" x`
-- `copy entity "Entity Name" x from variable varName`
+- `copy entity "Entity Name" x from variable varName;`
+- `copy entity "Entity Name" x into variable varName;`
+- `copy variable varName from entity "Entity Name" x;`
+- `copy variable varName into entity "Entity Name" x;`
 
 ### Check entity properties actions
 
@@ -2469,48 +2471,48 @@ Checks an entity's current `name`.
 
 ```
 if entity $entity:string name is $string:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string name is not $string:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string name is $string:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string name is $string:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string name is not $string:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string name is not $string:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" name is "some kind of string" then goto successScript`
-- `if entity "Entity Name" name is not "some kind of string" then goto successScript`
-- `if entity "Entity Name" name is "some kind of string" then goto index 8`
-- `if entity "Entity Name" name is "some kind of string" then goto label midpoint`
-- `if entity "Entity Name" name is not "some kind of string" then goto index 8`
-- `if entity "Entity Name" name is not "some kind of string" then goto label midpoint`
+- `if entity "Entity Name" name is "some kind of string" then goto index 8;`
+- `if entity "Entity Name" name is "some kind of string" then goto label midpoint;`
+- `if entity "Entity Name" name is "some kind of string" then goto successScript;`
+- `if entity "Entity Name" name is not "some kind of string" then goto index 8;`
+- `if entity "Entity Name" name is not "some kind of string" then goto label midpoint;`
+- `if entity "Entity Name" name is not "some kind of string" then goto successScript;`
 
 #### CHECK_ENTITY_X
 
@@ -2518,48 +2520,48 @@ Checks an entity's `x` coordinate.
 
 ```
 if entity $entity:string x is $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string x is not $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string x is $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string x is $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string x is not $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string x is not $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" x is 32 then goto successScript`
-- `if entity "Entity Name" x is not 32 then goto successScript`
-- `if entity "Entity Name" x is 32 then goto index 8`
-- `if entity "Entity Name" x is 32 then goto label midpoint`
-- `if entity "Entity Name" x is not 32 then goto index 8`
-- `if entity "Entity Name" x is not 32 then goto label midpoint`
+- `if entity "Entity Name" x is 32 then goto index 8;`
+- `if entity "Entity Name" x is 32 then goto label midpoint;`
+- `if entity "Entity Name" x is 32 then goto successScript;`
+- `if entity "Entity Name" x is not 32 then goto index 8;`
+- `if entity "Entity Name" x is not 32 then goto label midpoint;`
+- `if entity "Entity Name" x is not 32 then goto successScript;`
 
 #### CHECK_ENTITY_Y
 
@@ -2567,48 +2569,48 @@ Checks an entity's `y` coordinate.
 
 ```
 if entity $entity:string y is $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string y is not $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string y is $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string y is $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string y is not $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string y is not $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" y is 32 then goto successScript`
-- `if entity "Entity Name" y is not 32 then goto successScript`
-- `if entity "Entity Name" y is 32 then goto index 8`
-- `if entity "Entity Name" y is 32 then goto label midpoint`
-- `if entity "Entity Name" y is not 32 then goto index 8`
-- `if entity "Entity Name" y is not 32 then goto label midpoint`
+- `if entity "Entity Name" y is 32 then goto index 8;`
+- `if entity "Entity Name" y is 32 then goto label midpoint;`
+- `if entity "Entity Name" y is 32 then goto successScript;`
+- `if entity "Entity Name" y is not 32 then goto index 8;`
+- `if entity "Entity Name" y is not 32 then goto label midpoint;`
+- `if entity "Entity Name" y is not 32 then goto successScript;`
 
 #### CHECK_ENTITY_INTERACT_SCRIPT
 
@@ -2616,48 +2618,48 @@ Checks an entity's `on_interact` script (by the script's name).
 
 ```
 if entity $entity:string on_interact is $expected_script:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_interact is not $expected_script:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string on_interact is $expected_script:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_interact is $expected_script:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_interact is not $expected_script:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string on_interact is not $expected_script:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" on_interact is scriptName then goto successScript`
-- `if entity "Entity Name" on_interact is not scriptName then goto successScript`
-- `if entity "Entity Name" on_interact is scriptName then goto index 8`
-- `if entity "Entity Name" on_interact is scriptName then goto label midpoint`
-- `if entity "Entity Name" on_interact is not scriptName then goto index 8`
-- `if entity "Entity Name" on_interact is not scriptName then goto label midpoint`
+- `if entity "Entity Name" on_interact is not scriptName then goto index 8;`
+- `if entity "Entity Name" on_interact is not scriptName then goto label midpoint;`
+- `if entity "Entity Name" on_interact is not scriptName then goto successScript;`
+- `if entity "Entity Name" on_interact is scriptName then goto index 8;`
+- `if entity "Entity Name" on_interact is scriptName then goto label midpoint;`
+- `if entity "Entity Name" on_interact is scriptName then goto successScript;`
 
 #### CHECK_ENTITY_TICK_SCRIPT
 
@@ -2665,48 +2667,48 @@ Checks an entity's `on_tick` script (by the script's name).
 
 ```
 if entity $entity:string on_tick is $expected_script:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_tick is not $expected_script:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string on_tick is $expected_script:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_tick is $expected_script:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_tick is not $expected_script:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string on_tick is not $expected_script:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" on_tick is scriptName then goto successScript`
-- `if entity "Entity Name" on_tick is not scriptName then goto successScript`
-- `if entity "Entity Name" on_tick is scriptName then goto index 8`
-- `if entity "Entity Name" on_tick is scriptName then goto label midpoint`
-- `if entity "Entity Name" on_tick is not scriptName then goto index 8`
-- `if entity "Entity Name" on_tick is not scriptName then goto label midpoint`
+- `if entity "Entity Name" on_tick is not scriptName then goto index 8;`
+- `if entity "Entity Name" on_tick is not scriptName then goto label midpoint;`
+- `if entity "Entity Name" on_tick is not scriptName then goto successScript;`
+- `if entity "Entity Name" on_tick is scriptName then goto index 8;`
+- `if entity "Entity Name" on_tick is scriptName then goto label midpoint;`
+- `if entity "Entity Name" on_tick is scriptName then goto successScript;`
 
 #### CHECK_ENTITY_LOOK_SCRIPT
 
@@ -2714,48 +2716,48 @@ Checks an entity's `on_look` script (by the script's name).
 
 ```
 if entity $entity:string on_look is $expected_script:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_look is not $expected_script:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string on_look is $expected_script:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_look is $expected_script:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string on_look is not $expected_script:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string on_look is not $expected_script:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" on_look is scriptName then goto successScript`
-- `if entity "Entity Name" on_look is not scriptName then goto successScript`
-- `if entity "Entity Name" on_look is scriptName then goto index 8`
-- `if entity "Entity Name" on_look is scriptName then goto label midpoint`
-- `if entity "Entity Name" on_look is not scriptName then goto index 8`
-- `if entity "Entity Name" on_look is not scriptName then goto label midpoint`
+- `if entity "Entity Name" on_look is not scriptName then goto index 8;`
+- `if entity "Entity Name" on_look is not scriptName then goto label midpoint;`
+- `if entity "Entity Name" on_look is not scriptName then goto successScript;`
+- `if entity "Entity Name" on_look is scriptName then goto index 8;`
+- `if entity "Entity Name" on_look is scriptName then goto label midpoint;`
+- `if entity "Entity Name" on_look is scriptName then goto successScript;`
 
 #### CHECK_ENTITY_TYPE
 
@@ -2765,48 +2767,48 @@ This action is useful because you can check entity types by name, which is easy 
 
 ```
 if entity $entity:string type is $entity_type:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string type is not $entity_type:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string type is $entity_type:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string type is $entity_type:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string type is not $entity_type:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string type is not $entity_type:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" type is old_man then goto successScript`
-- `if entity "Entity Name" type is not old_man then goto successScript`
-- `if entity "Entity Name" type is old_man then goto index 8`
-- `if entity "Entity Name" type is old_man then goto label midpoint`
-- `if entity "Entity Name" type is not old_man then goto index 8`
-- `if entity "Entity Name" type is not old_man then goto label midpoint`
+- `if entity "Entity Name" type is not old_man then goto index 8;`
+- `if entity "Entity Name" type is not old_man then goto label midpoint;`
+- `if entity "Entity Name" type is not old_man then goto successScript;`
+- `if entity "Entity Name" type is old_man then goto index 8;`
+- `if entity "Entity Name" type is old_man then goto label midpoint;`
+- `if entity "Entity Name" type is old_man then goto successScript;`
 
 #### CHECK_ENTITY_PRIMARY_ID
 
@@ -2816,48 +2818,48 @@ Checks whether an entity has the given `primary_id`.
 
 ```
 if entity $entity:string primary_id is $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id is not $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string primary_id is $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id is $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id is not $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string primary_id is not $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" primary_id is 32 then goto successScript`
-- `if entity "Entity Name" primary_id is not 32 then goto successScript`
-- `if entity "Entity Name" primary_id is 32 then goto index 8`
-- `if entity "Entity Name" primary_id is 32 then goto label midpoint`
-- `if entity "Entity Name" primary_id is not 32 then goto index 8`
-- `if entity "Entity Name" primary_id is not 32 then goto label midpoint`
+- `if entity "Entity Name" primary_id is 32 then goto index 8;`
+- `if entity "Entity Name" primary_id is 32 then goto label midpoint;`
+- `if entity "Entity Name" primary_id is 32 then goto successScript;`
+- `if entity "Entity Name" primary_id is not 32 then goto index 8;`
+- `if entity "Entity Name" primary_id is not 32 then goto label midpoint;`
+- `if entity "Entity Name" primary_id is not 32 then goto successScript;`
 
 #### CHECK_ENTITY_SECONDARY_ID
 
@@ -2869,48 +2871,48 @@ Tiles are referenced by their index, starting at the top and going toward the ri
 
 ```
 if entity $entity:string secondary_id is $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string secondary_id is not $expected_u2:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string secondary_id is $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string secondary_id is $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string secondary_id is not $expected_u2:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string secondary_id is not $expected_u2:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" secondary_id is 32 then goto successScript`
-- `if entity "Entity Name" secondary_id is not 32 then goto successScript`
-- `if entity "Entity Name" secondary_id is 32 then goto index 8`
-- `if entity "Entity Name" secondary_id is 32 then goto label midpoint`
-- `if entity "Entity Name" secondary_id is not 32 then goto index 8`
-- `if entity "Entity Name" secondary_id is not 32 then goto label midpoint`
+- `if entity "Entity Name" secondary_id is 32 then goto index 8;`
+- `if entity "Entity Name" secondary_id is 32 then goto label midpoint;`
+- `if entity "Entity Name" secondary_id is 32 then goto successScript;`
+- `if entity "Entity Name" secondary_id is not 32 then goto index 8;`
+- `if entity "Entity Name" secondary_id is not 32 then goto label midpoint;`
+- `if entity "Entity Name" secondary_id is not 32 then goto successScript;`
 
 #### CHECK_ENTITY_PRIMARY_ID_TYPE
 
@@ -2918,48 +2920,48 @@ Checks an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) cha
 
 ```
 if entity $entity:string primary_id_type is $expected_byte:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id_type is not $expected_byte:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string primary_id_type is $expected_byte:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id_type is $expected_byte:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id_type is not $expected_byte:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string primary_id_type is not $expected_byte:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" primary_id_type is 2 then goto successScript`
-- `if entity "Entity Name" primary_id_type is not 2 then goto successScript`
-- `if entity "Entity Name" primary_id_type is 2 then goto index 8`
-- `if entity "Entity Name" primary_id_type is 2 then goto label midpoint`
-- `if entity "Entity Name" primary_id_type is not 2 then goto index 8`
-- `if entity "Entity Name" primary_id_type is not 2 then goto label midpoint`
+- `if entity "Entity Name" primary_id_type is 2 then goto index 8;`
+- `if entity "Entity Name" primary_id_type is 2 then goto label midpoint;`
+- `if entity "Entity Name" primary_id_type is 2 then goto successScript;`
+- `if entity "Entity Name" primary_id_type is not 2 then goto index 8;`
+- `if entity "Entity Name" primary_id_type is not 2 then goto label midpoint;`
+- `if entity "Entity Name" primary_id_type is not 2 then goto successScript;`
 
 #### CHECK_ENTITY_CURRENT_ANIMATION
 
@@ -2967,48 +2969,48 @@ Checks the id of the entity's current `animation`. (See [entity animations](#ent
 
 ```
 if entity $entity:string current_animation is $expected_byte:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string current_animation is not $expected_byte:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string current_animation is $expected_byte:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string current_animation is $expected_byte:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string current_animation is not $expected_byte:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string current_animation is not $expected_byte:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" current_animation is 2 then goto successScript`
-- `if entity "Entity Name" current_animation is not 2 then goto successScript`
-- `if entity "Entity Name" current_animation is 2 then goto index 8`
-- `if entity "Entity Name" current_animation is 2 then goto label midpoint`
-- `if entity "Entity Name" current_animation is not 2 then goto index 8`
-- `if entity "Entity Name" current_animation is not 2 then goto label midpoint`
+- `if entity "Entity Name" current_animation is 2 then goto index 8;`
+- `if entity "Entity Name" current_animation is 2 then goto label midpoint;`
+- `if entity "Entity Name" current_animation is 2 then goto successScript;`
+- `if entity "Entity Name" current_animation is not 2 then goto index 8;`
+- `if entity "Entity Name" current_animation is not 2 then goto label midpoint;`
+- `if entity "Entity Name" current_animation is not 2 then goto successScript;`
 
 #### CHECK_ENTITY_CURRENT_FRAME
 
@@ -3016,48 +3018,48 @@ Checks the frame (number) of the entity's current animation.
 
 ```
 if entity $entity:string animation_frame is $expected_byte:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string animation_frame is not $expected_byte:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string animation_frame is $expected_byte:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string animation_frame is $expected_byte:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string animation_frame is not $expected_byte:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string animation_frame is not $expected_byte:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" animation_frame is 2 then goto successScript`
-- `if entity "Entity Name" animation_frame is not 2 then goto successScript`
-- `if entity "Entity Name" animation_frame is 2 then goto index 8`
-- `if entity "Entity Name" animation_frame is 2 then goto label midpoint`
-- `if entity "Entity Name" animation_frame is not 2 then goto index 8`
-- `if entity "Entity Name" animation_frame is not 2 then goto label midpoint`
+- `if entity "Entity Name" animation_frame is 2 then goto index 8;`
+- `if entity "Entity Name" animation_frame is 2 then goto label midpoint;`
+- `if entity "Entity Name" animation_frame is 2 then goto successScript;`
+- `if entity "Entity Name" animation_frame is not 2 then goto index 8;`
+- `if entity "Entity Name" animation_frame is not 2 then goto label midpoint;`
+- `if entity "Entity Name" animation_frame is not 2 then goto successScript;`
 
 #### CHECK_ENTITY_DIRECTION
 
@@ -3065,48 +3067,48 @@ Checks whether an entity is facing one of the four cardinal directions: `north`,
 
 ```
 if entity $entity:string direction is $direction:bareword
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string direction is not $direction:bareword
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string direction is $direction:bareword
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string direction is $direction:bareword
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string direction is not $direction:bareword
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string direction is not $direction:bareword
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" direction is north then goto successScript`
-- `if entity "Entity Name" direction is not north then goto successScript`
-- `if entity "Entity Name" direction is north then goto index 8`
-- `if entity "Entity Name" direction is north then goto label midpoint`
-- `if entity "Entity Name" direction is not north then goto index 8`
-- `if entity "Entity Name" direction is not north then goto label midpoint`
+- `if entity "Entity Name" direction is north then goto index 8;`
+- `if entity "Entity Name" direction is north then goto label midpoint;`
+- `if entity "Entity Name" direction is north then goto successScript;`
+- `if entity "Entity Name" direction is not north then goto index 8;`
+- `if entity "Entity Name" direction is not north then goto label midpoint;`
+- `if entity "Entity Name" direction is not north then goto successScript;`
 
 #### CHECK_ENTITY_GLITCHED
 
@@ -3114,48 +3116,48 @@ Checks whether an entity currently has it's "glitched" render flag set.
 
 ```
 if entity $entity:string is glitched
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is not glitched
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string is glitched
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is glitched
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is not glitched
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string is not glitched
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" is glitched then goto successScript`
-- `if entity "Entity Name" is not glitched then goto successScript`
-- `if entity "Entity Name" is glitched then goto index 8`
-- `if entity "Entity Name" is glitched then goto label midpoint`
-- `if entity "Entity Name" is not glitched then goto index 8`
-- `if entity "Entity Name" is not glitched then goto label midpoint`
+- `if entity "Entity Name" is glitched then goto index 8;`
+- `if entity "Entity Name" is glitched then goto label midpoint;`
+- `if entity "Entity Name" is glitched then goto successScript;`
+- `if entity "Entity Name" is not glitched then goto index 8;`
+- `if entity "Entity Name" is not glitched then goto label midpoint;`
+- `if entity "Entity Name" is not glitched then goto successScript;`
 
 #### CHECK_ENTITY_PATH
 
@@ -3163,48 +3165,48 @@ Checks the `path` name (geometry) of an entity.
 
 ```
 if entity $entity:string path is $geometry:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string path is not $geometry:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string path is $geometry:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string path is $geometry:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string path is not $geometry:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string path is not $geometry:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" path is "vector object name" then goto successScript`
-- `if entity "Entity Name" path is not "vector object name" then goto successScript`
-- `if entity "Entity Name" path is "vector object name" then goto index 8`
-- `if entity "Entity Name" path is "vector object name" then goto label midpoint`
-- `if entity "Entity Name" path is not "vector object name" then goto index 8`
-- `if entity "Entity Name" path is not "vector object name" then goto label midpoint`
+- `if entity "Entity Name" path is "vector object name" then goto index 8;`
+- `if entity "Entity Name" path is "vector object name" then goto label midpoint;`
+- `if entity "Entity Name" path is "vector object name" then goto successScript;`
+- `if entity "Entity Name" path is not "vector object name" then goto index 8;`
+- `if entity "Entity Name" path is not "vector object name" then goto label midpoint;`
+- `if entity "Entity Name" path is not "vector object name" then goto successScript;`
 
 #### CHECK_IF_ENTITY_IS_IN_GEOMETRY
 
@@ -3214,48 +3216,48 @@ This action can behave erratically if any of the vertices in the geometry object
 
 ```
 if entity $entity:string is inside geometry $geometry:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is not inside geometry $geometry:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string is inside geometry $geometry:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is inside geometry $geometry:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is not inside geometry $geometry:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if entity $entity:string is not inside geometry $geometry:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if entity "Entity Name" is inside geometry "vector object name" then goto successScript`
-- `if entity "Entity Name" is not inside geometry "vector object name" then goto successScript`
-- `if entity "Entity Name" is inside geometry "vector object name" then goto index 8`
-- `if entity "Entity Name" is inside geometry "vector object name" then goto label midpoint`
-- `if entity "Entity Name" is not inside geometry "vector object name" then goto index 8`
-- `if entity "Entity Name" is not inside geometry "vector object name" then goto label midpoint`
+- `if entity "Entity Name" is inside geometry "vector object name" then goto index 8;`
+- `if entity "Entity Name" is inside geometry "vector object name" then goto label midpoint;`
+- `if entity "Entity Name" is inside geometry "vector object name" then goto successScript;`
+- `if entity "Entity Name" is not inside geometry "vector object name" then goto index 8;`
+- `if entity "Entity Name" is not inside geometry "vector object name" then goto label midpoint;`
+- `if entity "Entity Name" is not inside geometry "vector object name" then goto successScript;`
 
 ### Check variables actions
 
@@ -3269,96 +3271,96 @@ Compares the value of a variable against the given value.
 
 ```
 if variable $variable:string is $value:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $comparison:operator $value:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is not $value:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $value:number
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if variable $variable:string is $value:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $value:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $comparison:operator $value:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is $comparison:operator $value:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is not $value:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $value:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $value:number
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $value:number
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if variable varName is 1 then goto successScript`
-- `if variable varName is < 1 then goto successScript`
-- `if variable varName is not 1 then goto successScript`
-- `if variable varName is not < 1 then goto successScript`
-- `if variable varName is 1 then goto index 8`
-- `if variable varName is 1 then goto label midpoint`
-- `if variable varName is < 1 then goto index 8`
-- `if variable varName is < 1 then goto label midpoint`
-- `if variable varName is not 1 then goto index 8`
-- `if variable varName is not 1 then goto label midpoint`
-- `if variable varName is not < 1 then goto index 8`
-- `if variable varName is not < 1 then goto label midpoint`
+- `if variable varName is 1 then goto index 8;`
+- `if variable varName is 1 then goto label midpoint;`
+- `if variable varName is 1 then goto successScript;`
+- `if variable varName is < 1 then goto index 8;`
+- `if variable varName is < 1 then goto label midpoint;`
+- `if variable varName is < 1 then goto successScript;`
+- `if variable varName is not 1 then goto index 8;`
+- `if variable varName is not 1 then goto label midpoint;`
+- `if variable varName is not 1 then goto successScript;`
+- `if variable varName is not < 1 then goto index 8;`
+- `if variable varName is not < 1 then goto label midpoint;`
+- `if variable varName is not < 1 then goto successScript;`
 
 #### CHECK_VARIABLES
 
@@ -3368,96 +3370,96 @@ Compares the value of a variable against another.
 
 ```
 if variable $variable:string is $source:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $comparison:operator $source:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is not $source:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $source:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if variable $variable:string is $source:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $source:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $comparison:operator $source:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is $comparison:operator $source:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is not $source:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $source:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $source:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $source:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if variable varName is otherVar then goto successScript`
-- `if variable varName is < otherVar then goto successScript`
-- `if variable varName is not otherVar then goto successScript`
-- `if variable varName is not < otherVar then goto successScript`
-- `if variable varName is otherVar then goto index 8`
-- `if variable varName is otherVar then goto label midpoint`
-- `if variable varName is < otherVar then goto index 8`
-- `if variable varName is < otherVar then goto label midpoint`
-- `if variable varName is not otherVar then goto index 8`
-- `if variable varName is not otherVar then goto label midpoint`
-- `if variable varName is not < otherVar then goto index 8`
-- `if variable varName is not < otherVar then goto label midpoint`
+- `if variable varName is < otherVar then goto index 8;`
+- `if variable varName is < otherVar then goto label midpoint;`
+- `if variable varName is < otherVar then goto successScript;`
+- `if variable varName is not < otherVar then goto index 8;`
+- `if variable varName is not < otherVar then goto label midpoint;`
+- `if variable varName is not < otherVar then goto successScript;`
+- `if variable varName is not otherVar then goto index 8;`
+- `if variable varName is not otherVar then goto label midpoint;`
+- `if variable varName is not otherVar then goto successScript;`
+- `if variable varName is otherVar then goto index 8;`
+- `if variable varName is otherVar then goto label midpoint;`
+- `if variable varName is otherVar then goto successScript;`
 
 #### CHECK_SAVE_FLAG
 
@@ -3465,24 +3467,24 @@ Checks one of the MGE save flags (booleans).
 
 ```
 if flag $save_flag:string is $expected_bool:boolean
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 ```
 
 ```
 if flag $save_flag:string is $expected_bool:boolean
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 ```
 
 ```
 if flag $save_flag:string is $expected_bool:boolean
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 ```
 
 Examples:
 
-- `if flag saveFlagName is true then goto successScript`
-- `if flag saveFlagName is true then goto index 8`
-- `if flag saveFlagName is true then goto label midpoint`
+- `if flag saveFlagName is true then goto index 8;`
+- `if flag saveFlagName is true then goto label midpoint;`
+- `if flag saveFlagName is true then goto successScript;`
 
 #### CHECK_FOR_BUTTON_PRESS
 
@@ -3498,48 +3500,48 @@ See [button IDs](#button-ids) for a list of valid button values.
 
 ```
 if button $button_id:bareword
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if not button $button_id:bareword
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if button $button_id:bareword
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if button $button_id:bareword
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if not button $button_id:bareword
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if not button $button_id:bareword
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if button SQUARE then goto successScript`
-- `if not button SQUARE then goto successScript`
-- `if button SQUARE then goto index 8`
-- `if button SQUARE then goto label midpoint`
-- `if not button SQUARE then goto index 8`
-- `if not button SQUARE then goto label midpoint`
+- `if button SQUARE then goto index 8;`
+- `if button SQUARE then goto label midpoint;`
+- `if button SQUARE then goto successScript;`
+- `if not button SQUARE then goto index 8;`
+- `if not button SQUARE then goto label midpoint;`
+- `if not button SQUARE then goto successScript;`
 
 #### CHECK_FOR_BUTTON_STATE
 
@@ -3549,48 +3551,48 @@ If checking for whether a button is newly pressed, see [CHECK_FOR_BUTTON_PRESS](
 
 ```
 if button $button_id:bareword is currently pressed
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if button $button_id:bareword is not currently pressed
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if button $button_id:bareword is currently pressed
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if button $button_id:bareword is currently pressed
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if button $button_id:bareword is not currently pressed
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if button $button_id:bareword is not currently pressed
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if button SQUARE is currently pressed then goto successScript`
-- `if button SQUARE is not currently pressed then goto successScript`
-- `if button SQUARE is currently pressed then goto index 8`
-- `if button SQUARE is currently pressed then goto label midpoint`
-- `if button SQUARE is not currently pressed then goto index 8`
-- `if button SQUARE is not currently pressed then goto label midpoint`
+- `if button SQUARE is currently pressed then goto index 8;`
+- `if button SQUARE is currently pressed then goto label midpoint;`
+- `if button SQUARE is currently pressed then goto successScript;`
+- `if button SQUARE is not currently pressed then goto index 8;`
+- `if button SQUARE is not currently pressed then goto label midpoint;`
+- `if button SQUARE is not currently pressed then goto successScript;`
 
 #### CHECK_WARP_STATE
 
@@ -3598,48 +3600,48 @@ Checks whether the warp state string is a specific value.
 
 ```
 if warp state is $string:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: true
 ```
 
 ```
 if warp state is not $string:string
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 	// expected_bool: false
 ```
 
 ```
 if warp state is $string:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: true
 ```
 
 ```
 if warp state is $string:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: true
 ```
 
 ```
 if warp state is not $string:string
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 	// expected_bool: false
 ```
 
 ```
 if warp state is not $string:string
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 	// expected_bool: false
 ```
 
 Examples:
 
-- `if warp state is "some kind of string" then goto successScript`
-- `if warp state is not "some kind of string" then goto successScript`
-- `if warp state is "some kind of string" then goto index 8`
-- `if warp state is "some kind of string" then goto label midpoint`
-- `if warp state is not "some kind of string" then goto index 8`
-- `if warp state is not "some kind of string" then goto label midpoint`
+- `if warp state is "some kind of string" then goto index 8;`
+- `if warp state is "some kind of string" then goto label midpoint;`
+- `if warp state is "some kind of string" then goto successScript;`
+- `if warp state is not "some kind of string" then goto index 8;`
+- `if warp state is not "some kind of string" then goto label midpoint;`
+- `if warp state is not "some kind of string" then goto successScript;`
 
 #### CHECK_DIALOG_OPEN
 
@@ -3647,24 +3649,24 @@ Checks whether a dialog is currently open.
 
 ```
 if dialog is $expected_bool:boolean
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 ```
 
 ```
 if dialog is $expected_bool:boolean
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 ```
 
 ```
 if dialog is $expected_bool:boolean
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 ```
 
 Examples:
 
-- `if dialog is open then goto successScript`
-- `if dialog is open then goto index 8`
-- `if dialog is open then goto label midpoint`
+- `if dialog is open then goto index 8;`
+- `if dialog is open then goto label midpoint;`
+- `if dialog is open then goto successScript;`
 
 #### CHECK_SERIAL_DIALOG_OPEN
 
@@ -3672,24 +3674,24 @@ Checks whether a serial dialog is currently awaiting user input, such as a free 
 
 ```
 if serial dialog is $expected_bool:boolean
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 ```
 
 ```
 if serial dialog is $expected_bool:boolean
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 ```
 
 ```
 if serial dialog is $expected_bool:boolean
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 ```
 
 Examples:
 
-- `if serial dialog is open then goto successScript`
-- `if serial dialog is open then goto index 8`
-- `if serial dialog is open then goto label midpoint`
+- `if serial dialog is open then goto index 8;`
+- `if serial dialog is open then goto label midpoint;`
+- `if serial dialog is open then goto successScript;`
 
 #### CHECK_DEBUG_MODE
 
@@ -3697,24 +3699,24 @@ Checks whether debug mode is currently on.
 
 ```
 if debug mode is $expected_bool:boolean
-	then goto (script) $success_script:string
+	then goto (script) $success_script:string (;)
 ```
 
 ```
 if debug mode is $expected_bool:boolean
-	then goto index $jump_index:number
+	then goto index $jump_index:number (;)
 ```
 
 ```
 if debug mode is $expected_bool:boolean
-	then goto label $jump_index:bareword
+	then goto label $jump_index:bareword (;)
 ```
 
 Examples:
 
-- `if debug mode is true then goto successScript`
-- `if debug mode is true then goto index 8`
-- `if debug mode is true then goto label midpoint`
+- `if debug mode is true then goto index 8;`
+- `if debug mode is true then goto label midpoint;`
+- `if debug mode is true then goto successScript;`
 
 ## Further Information
 

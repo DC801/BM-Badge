@@ -1,4 +1,4 @@
-include!("header.mgs")
+include!("header.mgs");
 
 serial dialog spacer {
 	" "
@@ -15,20 +15,20 @@ serial dialog lambda-over {
 ch2-do-init-on-end {
 	// This is so you can run the init stuff at an arbitrary time, usually at the end of a big involved thing. The flag here should be false most of the time.
 	if (flag ch2-do-init-on-end is true) {
-		set flag ch2-do-init-on-end to false
-		goto ch2-map-init
+		set flag ch2-do-init-on-end to false;
+		goto ch2-map-init;
 	}
-	goto null_script
+	goto null_script;
 }
 
 // REVAMP:
 
 ch2-map-init-registers {
-	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
-	set flag interrupt2 to false // for when you need a second one
-	set flag interrupt3 to false // OwO
-	mutate tempvar = 0
-	mutate tempvar2 = 0
+	set flag interrupt to false; // flag set when something happens in the room and you haven't left the room yet
+	set flag interrupt2 to false; // for when you need a second one
+	set flag interrupt3 to false; // OwO
+	mutate tempvar = 0;
+	mutate tempvar2 = 0;
 }
 ch2-map-init-hex {
 	if (
@@ -36,76 +36,76 @@ ch2-map-init-hex {
 		|| variable ch2-in-room is 0 // OR you're not in the castle at all
 		|| debug mode is on // OR debug mode is on
 	) {
-		set hex control on
+		set hex control on;
 	} else {
-		set hex control to off
+		set hex control to off;
 		set hex clipboard to off
 	}
 }
 ch2-map-init-serial {
 	if (flag ch2-has-artifact is false) { // no artifact at all
-		set serial control off
+		set serial control off;
 	} else { // you have the artifact
-		set serial control on
-		copy register-rtfm
-		copy register-inventory
-		copy register-manual
+		set serial control on;
+		copy register-rtfm;
+		copy register-inventory;
+		copy register-manual;
 		if (flag ch2-map-granted is true) {
-			copy register-map
+			copy register-map;
 		}
 		if (flag ch2-permission-to-fuse is true) {
-			copy register-fuse
+			copy register-fuse;
 		}
 		if (variable ch2-storyflag-round is > 0) {
-			copy register-parts
+			copy register-parts;
 		}
 	}
 }
 ch2-map-init-inventory-look {
 	if (flag ch2-carrying-monitor is true) {
-		register look + monitor -> look-monitor
+		register look + monitor -> look-monitor;
 	}
 	if (flag ch2-carrying-heatsink is true) {
-		register look + heatsink -> look-heatsink
+		register look + heatsink -> look-heatsink;
 	}
 	if (flag ch2-carrying-cactuscooler is true) {
-		register look + cactuscooler -> look-cactuscooler
+		register look + cactuscooler -> look-cactuscooler;
 	}
 	if (flag ch2-carrying-powersupply is true) {
-		register look + powersupply -> look-powersupply
+		register look + powersupply -> look-powersupply;
 	}
 	if (flag ch2-carrying-keyboard is true) {
-		register look + keyboard -> look-keyboard
+		register look + keyboard -> look-keyboard;
 	}
 	if (flag ch2-carrying-mouse is true) {
-		register look + mouse -> look-mouse
+		register look + mouse -> look-mouse;
 	}
 	if (flag ch2-carrying-harddrive is true) {
-		register look + harddrive -> look-harddrive
+		register look + harddrive -> look-harddrive;
 	}
 	if (flag ch2-carrying-plate is true) {
-		register look + plate -> look-plate
+		register look + plate -> look-plate;
 	}
 	if (flag ch2-carrying-needle is true) {
-		register look + needle -> look-needle
+		register look + needle -> look-needle;
 	}
 	if (flag ch2-carrying-ramchips is true) {
-		register look + ramchips -> look-ramchips
+		register look + ramchips -> look-ramchips;
 	}
 	if (flag ch2-carrying-clock is true) {
-		register look + clock -> look-clock
+		register look + clock -> look-clock;
 	}
 	if (flag ch2-carrying-cpu is true) {
-		register look + cpu -> look-cpu
+		register look + cpu -> look-cpu;
 	}
 	if (flag ch2-carrying-goldfish is true) {
-		register look + goldfish -> look-goldfish
+		register look + goldfish -> look-goldfish;
 	}
 	if (flag ch2-carrying-abacus is true) {
-		register look + abacus -> look-abacus
+		register look + abacus -> look-abacus;
 	}
 	if (flag ch2-carrying-mainframeos is true) {
-		register look + mainframeos -> look-mainframeos
+		register look + mainframeos -> look-mainframeos;
 	}
 }
 ch2-map-init-serial-debug {
@@ -117,10 +117,10 @@ ch2-map-init-serial-debug {
 				"<g>-----------------------</>"
 			}
 		}
-		set flag debug-curr-state to true
-		set serial control on
-		copy register-storyflag
-		copy register-warp
+		set flag debug-curr-state to true;
+		set serial control on;
+		copy register-storyflag;
+		copy register-warp;
 	} else {
 		if (flag debug-curr-state is true) {
 			show serial dialog {
@@ -129,26 +129,26 @@ ch2-map-init-serial-debug {
 				"<g>------------------------</>"
 			}
 		}
-		set flag debug-curr-state to false
+		set flag debug-curr-state to false;
 	}
 }
 
 ch2-map-init-warp-in {
 	if (flag ch2-manual-warp is true) { // workaround for WOPR
-		set flag ch2-manual-warp to false
+		set flag ch2-manual-warp to false;
 	} else if (warp state is warping) {
-		copy warping-in-fade-in
+		copy warping-in-fade-in;
 	}
-	set player control on
+	set player control on;
 }
 
 ch2-map-init {
-	copy ch2-map-init-registers
-	copy ch2-map-init-hex
-	copy ch2-map-init-serial
-	copy ch2-map-init-inventory-look
-	copy ch2-map-init-serial-debug
-	copy ch2-map-init-warp-in
+	copy ch2-map-init-registers;
+	copy ch2-map-init-hex;
+	copy ch2-map-init-serial;
+	copy ch2-map-init-inventory-look;
+	copy ch2-map-init-serial-debug;
+	copy ch2-map-init-warp-in;
 
 	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)
 	// IF SO, be sure to turn off serial control and player control before doing any of that, and let it come back on again with this script.
@@ -158,25 +158,25 @@ ch2-map-init {
 /* ---------- ON_WARP & ON_GO ANIMATION ---------- */
 
 spin-quickly {
-	rotate entity "%SELF%" -1
-	wait 150ms
+	rotate entity "%SELF%" -1;
+	wait 150ms;
 }
 
 warping-out-fade-out {
-	set player control to off
-	set serial control off
-	set warp state to warping
-	set entity "%PLAYER%" on_tick to spin-quickly
-	fade out camera to #000000 over 500ms
+	set player control to off;
+	set serial control off;
+	set warp state to warping;
+	set entity "%PLAYER%" on_tick to spin-quickly;
+	fade out camera to #000000 over 500ms;
 }
 
 warping-in-fade-in {
-	teleport entity "%PLAYER%" to geometry warp-spot
-	set entity "%PLAYER%" on_tick to spin-quickly
-	fade in camera from #000000 over 300ms
-	set entity "%PLAYER%" on_tick to null_script
-	turn entity "%PLAYER%" south
-	set warp state to warped // it needs to be set to SOMETHING...
-	set player control to on // TODO: remove after shared behavior is fully merged
-	set serial control on // TODO: remove after shared behavior is fully merged
+	teleport entity "%PLAYER%" to geometry warp-spot;
+	set entity "%PLAYER%" on_tick to spin-quickly;
+	fade in camera from #000000 over 300ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" south;
+	set warp state to warped; // it needs to be set to SOMETHING...
+	set player control to on; // TODO: remove after shared behavior is fully merged
+	set serial control on; // TODO: remove after shared behavior is fully merged
 }

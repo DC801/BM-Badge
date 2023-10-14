@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-outside {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE EXTERIOR</>."
 		"\tThe building itself is undeniably ominous with its stark, charcoal-colored stone. You can just make out that the green orbs of light embedded in its walls are flickering very slightly. A subtle humming emanates from the nearby pillars. It is no surprise that the townsfolk avoid this place."
@@ -14,13 +14,13 @@ look-ch2-castle-outside {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-outside {
-	set player control to off
+	set player control to off;
 	if (flag ch2-full-escort-cutseen is false) {
 		// TODO: cutscene: leading you inside
 	}
 	// Village elders hiding
 	if (variable ch2-storyflag-round is not 0) {
-		set entity Bert on_tick to yeet
+		set entity Bert on_tick to yeet;
 	}
 	if (
 		variable ch2-storyflag-round is 1
@@ -28,15 +28,15 @@ on_load-ch2-castle-outside {
 		|| variable ch2-storyflag-round is 3
 		|| variable ch2-storyflag-round is >= 5
 	) {
-		set entity Jackob on_tick to yeet
-		set entity Alfonso on_tick to yeet
+		set entity Jackob on_tick to yeet;
+		set entity Alfonso on_tick to yeet;
 	}
 	// animations
 	if (warp state is walk_from-north) {
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 	} else if (warp state is walk_from-east) {
 		set entity "%PLAYER%" path to walk_from-east
-		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein;
 			// borrowing this from town scripts
 		fade in camera from #000000 over 400ms
 	}
@@ -48,18 +48,18 @@ on_load-ch2-castle-outside {
 
 on_tick-ch2-castle-outside {
 	if (entity "%PLAYER%" is inside geometry north-hitbox) {
-		copy on_exit-ch2-castle-outside
-		set warp state to walk_from-south
-		load map ch2-castle-1
+		copy on_exit-ch2-castle-outside;
+		set warp state to walk_from-south;
+		load map ch2-castle-1;
 	}
 	if (entity "%PLAYER%" is inside geometry east-hitbox) {
-		copy on_exit-ch2-castle-outside
-		set warp state to walk_from-west
-		set entity "%PLAYER%" path to east-point
-		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout
+		copy on_exit-ch2-castle-outside;
+		set warp state to walk_from-west;
+		set entity "%PLAYER%" path to east-point;
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout;
 			// borrowing this from town scripts
-		fade out camera to #000000 over 500ms
-		load map main2
+		fade out camera to #000000 over 500ms;
+		load map main2;
 	}
 }
 
@@ -72,14 +72,14 @@ on_exit-ch2-castle-outside {
 // SERIAL: go
 
 on_go-castle-outside-north {
-	copy on_exit-ch2-castle-outside
-	copy warping-out-fade-out
-	load map ch2-castle-1
+	copy on_exit-ch2-castle-outside;
+	copy warping-out-fade-out;
+	load map ch2-castle-1;
 }
 on_go-castle-outside-east {
-	copy on_exit-ch2-castle-outside
-	copy warping-out-fade-out
-	load map main2
+	copy on_exit-ch2-castle-outside;
+	copy warping-out-fade-out;
+	load map main2;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -90,7 +90,7 @@ interact-ch2-alfonso-outside {
 			show dialog {
 				SELF "Word on the street is that you're almost done repairing the artifact." "Very well done so far, but keep going!"
 			}
-			set flag ch2-alfonso-almostdone to true
+			set flag ch2-alfonso-almostdone to true;
 		} else {
 			show dialog {
 				SELF "Keep going! We need that artifact working!"
@@ -115,7 +115,7 @@ interact-ch2-jackob-outside {
 			show dialog {
 				SELF "There's a buzz around town that you're nearly finished. Very impressive."
 			}
-			set flag ch2-jackob-almostdone to true
+			set flag ch2-jackob-almostdone to true;
 		}
 		show dialog {
 			SELF "Don't stop now. Get that software installed quick!"

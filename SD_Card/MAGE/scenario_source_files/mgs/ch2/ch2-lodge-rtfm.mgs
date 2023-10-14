@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-lodge-rtfm {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"   TODO: RTFM room text"
 	}
@@ -16,30 +16,30 @@ on_load-ch2-lodge-rtfm {
 	
 	// Village elders hiding
 	if (variable ch2-storyflag-round is not 1) {
-		set entity Bert on_tick to yeet
+		set entity Bert on_tick to yeet;
 	}
 	if (variable ch2-storyflag-round is not 3) {
-		set entity Jackob on_tick to yeet
-		set entity Alfonso on_tick to yeet
+		set entity Jackob on_tick to yeet;
+		set entity Alfonso on_tick to yeet;
 	}
 	// unique stuff done
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-lodge-rtfm {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		set warp state to walk_from-north
-		load map ch2-lodge
+		set warp state to walk_from-north;
+		load map ch2-lodge;
 	}
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-lodge-rtfm-south {
-	copy warping-out-fade-out
-	load map ch2-lodge
+	copy warping-out-fade-out;
+	load map ch2-lodge;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -47,38 +47,38 @@ on_go-ch2-lodge-rtfm-south {
 interact-ch2-alfonso-rtfm {
 	// divert people trying to hack their way to see this convo early
 	if variable ch2-storyflag-round is not 3
-		then goto null_script
-	copy face-player
+		then goto null_script;
+	copy face-player;
 	show dialog {
 		SELF
 		"Bert said he was going to check something, but whatever he's doing, he's sure is taking his time."
 		"I confess I'm getting worried, %PLAYER%. Something isn't right about all of this."
 	}
-	turn entity "%SELF%" west
+	turn entity "%SELF%" west;
 }
 interact-ch2-jackob-rtfm {
 	// divert people trying to hack their way to see this convo early
 	if variable ch2-storyflag-round is not 3
-		then goto null_script
-	copy face-player
+		then goto null_script;
+	copy face-player;
 	show dialog {
 		SELF
 		"We're doing just fine here, %PLAYER%, but don't you dawdle too long. Time is slipping away from us."
 		"There's so little we can do to help you right now, yet all I feel is this increasing urgency, like a vise tightening around my chest."
 		"Doom is coming, and only you can head it off. Please hurry."
 	}
-	turn entity "%SELF%" south
+	turn entity "%SELF%" south;
 }
 interact-ch2-bert-rtfm {
 	// divert people trying to hack their way to see this convo early
 	if variable ch2-storyflag-round is not 1
-		then goto null_script
-	copy face-player
+		then goto null_script;
+	copy face-player;
 	show dialog {
 		SELF
 		"This morning we could not find the book you need, but I want to find it still."
 		"Still I am looking. I will bring it if I find it."
 	}
-	turn entity "%SELF%" north
+	turn entity "%SELF%" north;
 }
 

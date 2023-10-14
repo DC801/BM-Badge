@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-34 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: CASTLE PANTRY on_look text\n "
 	}
@@ -13,13 +13,13 @@ look-ch2-castle-34 {
 
 on_load-ch2-castle-34 {
 	// ch2 room state
-	mutate ch2-in-room = 34
+	mutate ch2-in-room = 34;
 
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-34 is false) {
 		show serial dialog { "Discovered the <bold><c>CASTLE PANTRY</>! Room added to map!" }
-		set flag ch2-seen-room-34 to true
+		set flag ch2-seen-room-34 to true;
 	} else {
 		show serial dialog { "Entering the <bold>CASTLE PANTRY</>..." }
 	}
@@ -27,40 +27,40 @@ on_load-ch2-castle-34 {
 		flag ch2-installed-plate is true
 		|| flag ch2-carrying-plate is true
 	) {
-		copy script ch2-hide-plate
+		copy script ch2-hide-plate;
 	}
 	
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-34 {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		set warp state to walk_from-northeast
-		load map ch2-castle-32
+		set warp state to walk_from-northeast;
+		load map ch2-castle-32;
 	}
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-34 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-34-south {
-	copy on_exit-ch2-castle-34
-	copy warping-out-fade-out
-	load map ch2-castle-32
+	copy on_exit-ch2-castle-34;
+	copy warping-out-fade-out;
+	load map ch2-castle-32;
 }
 
 /* ---------- HARDDRIVE (ADMIN) ---------- */
 
 ch2-hide-plate {
-	teleport entity "Plate" to geometry hiding-spot
-	set entity "Plate" name to " "
+	teleport entity "Plate" to geometry hiding-spot;
+	set entity "Plate" name to " ";
 }
 
 ch2-touch-plate {
@@ -68,7 +68,7 @@ ch2-touch-plate {
 		show dialog {
 			PLAYER "TODO plate1"
 		}
-		set flag ch2-plate-firstlook to true
+		set flag ch2-plate-firstlook to true;
 	}
 	show dialog {
 		PLAYER "TODO plate2."
@@ -85,15 +85,15 @@ ch2-touch-plate-yes {
 	show dialog {
 		name "" "(You pick up the plate!)"
 	}
-	copy script ch2-hide-plate
-	copy script ch2-pickup-plate
-	set entity "%SELF%" on_interact to null_script
+	copy script ch2-hide-plate;
+	copy script ch2-pickup-plate;
+	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-plate-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-plate  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-plate;  // reset after script jump
 }
 
 

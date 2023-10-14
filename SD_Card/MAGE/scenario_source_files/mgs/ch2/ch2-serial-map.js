@@ -368,12 +368,12 @@ var makeNatlangMapLogicSegment = function (template) {
 				messageName = "item";
 			}
 			ret.push(`	if (${specialCondition}) {`
-				+ `\n		concat serial dialog ${messageName}`
+				+ `\n		concat serial dialog ${messageName};`
 				+ `\n	} else {`
 				+ `\n		if (${roomCondition}) {`
-				+ `\n			concat serial dialog dot`
+				+ `\n			concat serial dialog dot;`
 				+ `\n		} else {`
-				+ `\n			concat serial dialog space`
+				+ `\n			concat serial dialog space;`
 				+ `\n		}`
 				+ `\n	}`
 			);

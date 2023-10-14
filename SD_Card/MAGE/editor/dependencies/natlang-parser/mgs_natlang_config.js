@@ -1338,6 +1338,10 @@ mgs.actionDictionary
 
 // adding action dictionary items to the "flat" tree
 mgs.actionDictionary.forEach(function (item) {
+	// We have semicolons now (actions only)
+	if (!item.pattern.endsWith("{")) {
+		item.pattern = item.pattern + " ?;";
+	}
 	item = JSON.parse(JSON.stringify(item));
 	var values = item.values || {};
 	values.action = item.action;
@@ -1354,11 +1358,12 @@ mgs.actionDictionary.forEach(function (item) {
 	);
 })
 
-// We have semicolons now (actions only)
-mgs.trees.action.forEach(function (branch) {
-	if (!branch.pattern.endsWith("{"))
-	branch.pattern += " ?;";
-});
+// // We have semicolons now (actions only)
+// mgs.trees.action.forEach(function (branch) {
+// 	if (!branch.pattern.endsWith("{")) {
+// 		branch.pattern = branch.pattern + " ?;";
+// 	}
+// });
 
 /* ------ building MGS dialogs ------ */
 

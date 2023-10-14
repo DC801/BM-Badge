@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-31 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: GRAND HALL on_look text\n "
 	}
@@ -13,13 +13,13 @@ look-ch2-castle-31 {
 
 on_load-ch2-castle-31 {
 	// ch2 room state
-	mutate ch2-in-room = 31
+	mutate ch2-in-room = 31;
 
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-31 is false) {
 		show serial dialog { "Discovered <bold><c>GRAND HALL</>! Room added to map!" }
-		set flag ch2-seen-room-31 to true
+		set flag ch2-seen-room-31 to true;
 	} else {
 		show serial dialog { "Entering <bold>GRAND HALL</>..." }
 	}
@@ -27,19 +27,19 @@ on_load-ch2-castle-31 {
 		flag ch2-installed-keyboard is true
 		|| flag ch2-carrying-keyboard is true
 	) {
-		copy script ch2-hide-keyboard
+		copy script ch2-hide-keyboard;
 	}
 
-	set flag ch2-simon-heard-high to false
-	set flag ch2-simon-heard-low to false
+	set flag ch2-simon-heard-high to false;
+	set flag ch2-simon-heard-low to false;
 
 	//DEBUG STUFF
 	if (debug mode is true) {
-		register simon -> debug-simon
-		register simon + high -> debug-simon-high
-		register simon + low -> debug-simon-low
-		register simon + win -> debug-simon-win
-		register simon + lose -> debug-simon-lose
+		register simon -> debug-simon;
+		register simon + high -> debug-simon-high;
+		register simon + low -> debug-simon-low;
+		register simon + win -> debug-simon-win;
+		register simon + lose -> debug-simon-lose;
 		show serial dialog {
 			" "
 			"<bold><g>DEBUG:</><bold> Play Simon Says!</>"
@@ -51,50 +51,50 @@ on_load-ch2-castle-31 {
 			" "
 		}
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 debug-simon {
-	goto simon-game-launcher
+	goto simon-game-launcher;
 }
 debug-simon-low {
-	set flag ch2-simon-high to false
-	goto simon-game-launcher
+	set flag ch2-simon-high to false;
+	goto simon-game-launcher;
 }
 debug-simon-high {
-	set flag ch2-simon-high to true
-	goto simon-game-launcher
+	set flag ch2-simon-high to true;
+	goto simon-game-launcher;
 }
 debug-simon-win {
-	goto simon-game-win
+	goto simon-game-win;
 }
 debug-simon-lose {
-	goto simon-game-lose
+	goto simon-game-lose;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-31 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-31 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-31-north {
-	copy on_exit-ch2-castle-31
-	copy warping-out-fade-out
-	load map ch2-castle-32
+	copy on_exit-ch2-castle-31;
+	copy warping-out-fade-out;
+	load map ch2-castle-32;
 }
 on_go-castle-31-west {
-	copy on_exit-ch2-castle-31
-	copy warping-out-fade-out
-	load map ch2-castle-12
+	copy on_exit-ch2-castle-31;
+	copy warping-out-fade-out;
+	load map ch2-castle-12;
 }
 
 
@@ -148,47 +148,47 @@ interact-ch2-simon {
 				PLAYER "So, about your keyboard -- erm, \"keytar?\""
 				"I sort of need one for --"
 			}
-			set entity Simon current_animation to 13
-			set entity Lights on_tick to camera-angry-shake
+			set entity Simon current_animation to 13;
+			set entity Lights on_tick to camera-angry-shake;
 			show dialog {
 				Simon "WHOA WHOA WHOA hey, you can't have Rosetta!"
 				"(TODO: the keyboard's name, something something)"
 			}
-			set entity Lights on_tick to null_script
-			set entity Simon current_animation to 0
+			set entity Lights on_tick to null_script;
+			set entity Simon current_animation to 0;
 			show dialog {
 				Simon "But hey, you know what? I'll give you the chance to prove you deserve this beauty."
 			}
-			set entity Simon current_animation to 12
+			set entity Simon current_animation to 12;
 			show dialog {
 				Simon "I'm bored to death, so how about a keytar battle? If you win, I'll let you keep Rosetta."
 			}
-			set flag ch2-simon-backstory to true
+			set flag ch2-simon-backstory to true;
 		} else {
-			set entity Simon current_animation to 12
+			set entity Simon current_animation to 12;
 			show dialog {
 				Simon "Change your mind about a keytar battle? I'll let you keep the keyboard if you win. Come on, I'm bored to tears!"
 			}
 		}
-		copy simon-game-launcher
+		copy simon-game-launcher;
 	}
 	else if (flag interrupt is true) {
-		set entity Simon current_animation to 12
+		set entity Simon current_animation to 12;
 		show dialog {
 			Simon "Ah, man! I'm still sweatin' after that last one!"
 			"But I'm not out for the count yet! Want another go?"
 		}
-		copy simon-game-launcher
+		copy simon-game-launcher;
 	}
 	else {
-		set entity Simon current_animation to 12
+		set entity Simon current_animation to 12;
 		if (flag ch2-simon-repeat-backstory is false) {
 			show dialog {
 				Simon "Hey hey hey, look who it is! It's the keytar wizard!"
 				"Aw, man! I haven't had that much fun in ages! I'm all pumped up, just thinking about it!"
 				"I'm dying for another keytar battle!"
 			}
-			set flag ch2-simon-repeat-backstory to true
+			set flag ch2-simon-repeat-backstory to true;
 		} else {
 			show dialog {
 				Simon "Hey, keytar wizard! My soul is thirsting for another keytar battle!"
@@ -200,30 +200,30 @@ interact-ch2-simon {
 		) {
 			/* Do nothing extra... */
 		} else {
-			set entity Simon current_animation to 0
+			set entity Simon current_animation to 0;
 			show dialog {
 				PLAYER "So, uh, I don't exactly have Rosetta with me right now."
 			}
-			set entity Simon current_animation to 12
+			set entity Simon current_animation to 12;
 			show dialog {
 				Simon "Not a problem, not a problem! Here, you can borrow Brunhilda, just for now. But don't walk away with it, you hear?"
 				PLAYER "...How many keytars do you have with you, exactly?"
 			}
-			set entity Simon current_animation to 0
+			set entity Simon current_animation to 0;
 			show dialog {
 				Simon "Only my favorite four or five."
 			}
-			set flag ch2-simon-repeat-brunhilda-backstory to true
+			set flag ch2-simon-repeat-brunhilda-backstory to true;
 		}
-		copy simon-game-launcher
+		copy simon-game-launcher;
 	}
 }
 
 /* ---------- KEYBOARD (ADMIN) ---------- */
 
 ch2-hide-keyboard {
-	teleport entity "Keyboard" to geometry hiding-spot
-	set entity "Keyboard" name to " "
+	teleport entity "Keyboard" to geometry hiding-spot;
+	set entity "Keyboard" name to " ";
 }
 
 ch2-touch-keyboard {
@@ -232,19 +232,19 @@ ch2-touch-keyboard {
 			PLAYER "It's a keyboard, but in the shape of a guitar."
 			"A... \"keytar,\" perhaps?"
 		}
-		set flag ch2-keyboard-firstlook to true
+		set flag ch2-keyboard-firstlook to true;
 	}
 	show dialog {
 		PLAYER "It's like the spork of band instruments."
 	}
-	set entity Simon current_animation to 13
+	set entity Simon current_animation to 13;
 	show dialog {
 		Simon "Hey! Hey! Don't you insult Rosetta like that!"
 	}
-	set entity Simon current_animation to 0
+	set entity Simon current_animation to 0;
 }
 
 camera-angry-shake {
-	shake camera 100ms 4px for 500ms
-	goto null_script
+	shake camera 100ms 4px for 500ms;
+	goto null_script;
 }

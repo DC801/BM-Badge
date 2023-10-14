@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-bakery {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <m>BAKERY</>."
 		" "
@@ -13,7 +13,7 @@ look-ch2-bakery {
 }
 
 look-ch2-baker {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO on_look baker"
 	}
@@ -24,26 +24,26 @@ look-ch2-baker {
 on_load-ch2-bakery {
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	if (variable ch2-storyflag-round is not 2) {
-		set entity Jackob on_tick to yeet
+		set entity Jackob on_tick to yeet;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-bakery {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		set warp state to walk_from-bakery
-		load map main2
+		set warp state to walk_from-bakery;
+		load map main2;
 	}
-	set map on_tick to on_tick-ch2-bakery
+	set map on_tick to on_tick-ch2-bakery;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-bakery-south {
-	copy warping-out-fade-out
-	load map main2
+	copy warping-out-fade-out;
+	load map main2;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -56,10 +56,10 @@ interact-ch2-baker {
 }
 
 interact-ch2-jackob-bakery {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "I'm just taking a little shopping break. Sometimes you just really want some fresh bread, you know?"
 		"Mmmm, fresh bread!"
 	}
-	turn entity "%SELF%" south
+	turn entity "%SELF%" south;
 }

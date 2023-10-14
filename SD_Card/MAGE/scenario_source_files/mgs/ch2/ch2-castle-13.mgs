@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-13 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: CASTLE THRONE ROOM on_look text\n "
 	}
@@ -13,13 +13,13 @@ look-ch2-castle-13 {
 
 on_load-ch2-castle-13 {
 	// ch2 room state
-	mutate ch2-in-room = 13
+	mutate ch2-in-room = 13;
 
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-13 is false) {
 		show serial dialog { "Discovered <bold><c>CASTLE THRONE ROOM</>! Room added to map!" }
-		set flag ch2-seen-room-13 to true
+		set flag ch2-seen-room-13 to true;
 	} else {
 		show serial dialog { "Entering <bold>CASTLE THRONE ROOM</>..." }
 	}
@@ -27,41 +27,41 @@ on_load-ch2-castle-13 {
 		flag ch2-installed-goldfish is true
 		|| flag ch2-carrying-goldfish is true
 	) {
-		copy script ch2-hide-goldfish
+		copy script ch2-hide-goldfish;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-13 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-13 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-13-north {
-	copy on_exit-ch2-castle-13
-	copy warping-out-fade-out
-	load map ch2-castle-14
+	copy on_exit-ch2-castle-13;
+	copy warping-out-fade-out;
+	load map ch2-castle-14;
 }
 on_go-castle-13-south {
-	copy on_exit-ch2-castle-13
-	copy warping-out-fade-out
-	load map ch2-castle-12
+	copy on_exit-ch2-castle-13;
+	copy warping-out-fade-out;
+	load map ch2-castle-12;
 }
 
 /* ---------- GOLDFISH (ADMIN) ---------- */
 
 ch2-hide-goldfish {
-	teleport entity "Goldfish" to geometry hiding-spot
-	set entity "Goldfish" name to " "
+	teleport entity "Goldfish" to geometry hiding-spot;
+	set entity "Goldfish" name to " ";
 }
 
 ch2-touch-goldfish {
@@ -69,7 +69,7 @@ ch2-touch-goldfish {
 		show dialog {
 			PLAYER "TODO goldfish1"
 		}
-		set flag ch2-goldfish-firstlook to true
+		set flag ch2-goldfish-firstlook to true;
 	}
 	show dialog {
 		PLAYER "TODO goldfish2."
@@ -87,29 +87,29 @@ ch2-touch-goldfish-yes {
 	show dialog {
 		name "" "(You pick up the goldfish!)"
 	}
-	copy script ch2-hide-goldfish
-	copy script ch2-pickup-goldfish
-	set entity "%SELF%" on_interact to null_script
+	copy script ch2-hide-goldfish;
+	copy script ch2-pickup-goldfish;
+	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-goldfish-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-goldfish  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-goldfish;  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */
 
 
 interact-ch2-sebastian {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "(TODO)"
 	}
 }
 
 interact-ch2-templeton {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "(TODO)"
 	}

@@ -1,18 +1,18 @@
-include!("header.mgs")
+include!("header.mgs");
 
 // REGISTER
 
 register-colors {
-	register colors -> command-colors
-	register colors + bg -> command-colors-bg
-	register colors + bold -> command-colors-bold
-	register colors + dim -> command-colors-dim
+	register colors -> command-colors;
+	register colors + bg -> command-colors-bg;
+	register colors + bold -> command-colors-bold;
+	register colors + dim -> command-colors-dim;
 }
 
 // COMMAND
 
 command-colors {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"This is a test of the MGE ANSI color system!"
 		"Also see options: bg, bold, dim"
@@ -21,7 +21,7 @@ command-colors {
 	}
 }
 command-colors-bg {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"MGE ANSI color test: \"bg\""
 		"<bg-w><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-white"
@@ -35,7 +35,7 @@ command-colors-bg {
 	}
 }
 command-colors-bold {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"MGE ANSI color test: \"bold\""
 		"<bold><bg-w><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-white"
@@ -49,7 +49,7 @@ command-colors-bold {
 	}
 }
 command-colors-dim {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"MGE ANSI color test: \"dim\""
 		"<dim><bg-w><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-white"

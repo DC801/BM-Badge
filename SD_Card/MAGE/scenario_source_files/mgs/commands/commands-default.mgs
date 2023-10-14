@@ -1,7 +1,7 @@
-include!("header.mgs")
+include!("header.mgs");
 
 man-look {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - LOOK</>"
 		" "
@@ -12,7 +12,7 @@ man-look {
 }
 
 man-go {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - GO</>"
 		" "
@@ -23,7 +23,7 @@ man-go {
 }
 
 man-help {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - HELP</>"
 		" "
