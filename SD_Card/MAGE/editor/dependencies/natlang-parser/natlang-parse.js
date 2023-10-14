@@ -298,14 +298,14 @@ natlang.tryBranch = function (tokens, tokenPos, branch) {
 					if (item.capture) {
 						return `$${item.capture.label}:${item.capture.type}`;
 					}
-					throw new Error("Your AST probably has a null word in it! (HINT: patterns are split by spaces when added to the tree, so make sure there are no double spaces in there!!");
+					throw new Error("Your AST probably has a null word in it! (HINT: patterns are split by spaces (lazily) when added to the tree, so make sure there are no double spaces in there!!");
 				}).map(function (item) {
 					return `"${item}"`;
 				})
 			report.currentTwig = ref;
 			report.currentToken = token;
 			report.found = token.value;
-			var cutOff = 5
+			var cutOff = 10
 			if (expected.length > cutOff) {
 				expected = expected.slice(0,cutOff).concat(["…"]);
 			}
@@ -339,21 +339,28 @@ var regexish = {
 	"+": { multipleOkay: true, zeroOkay: false},
 	"?": { multipleOkay: false, zeroOkay: true},
 	"literal": { multipleOkay: false, zeroOkay: false},
-}
+};
 
 natlang.parse = function (rawConfig, inputString, fileName) {
-	// SETUP
+	// obj for branch patterns and their behavior when matched with input
 	var config = natlang.prepareConfig(rawConfig);
+
+	/* ----------------- STATE OBJECT ----------------- */
+
 	var state = {
+		// input
 		fileName: fileName || 'untitledFile',
 		inputString: inputString,
-		// token info
+
+		// token
 		tokens: [],
 		curTokenIndex: 0,
+
 		// block state
 		blockStack: [ "root" ],
 		blockPos: 0,
 		blockLooping: false,
+
 		// other
 		bestTry: null,
 		bestTryLength: 0,
@@ -361,45 +368,79 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			blockName: '',
 			blockPos: 0,
 		},
-		// parsed data
-		finalState: {},
+
+		// parsed / working data
+		final: {},
 		inserts: {},
 		captures: {},
 	};
-	// GETTING OUR TOKENS
-	var lex = natlang.lex(inputString);
-	if (lex.success) {
-		state.tokens = lex.tokens;
-	} else {
-		natlang.printParseMessage(
-			inputString,
-			lex.errors[0].pos,
-			lex.errors[0].text,
-			"error"
-		)
-		return lex;
-	}
-	// MACROS
-	// use the function called "process"
-	config.macros.forEach(function (macro) {
-		try {
-			var processedTokens = macro.process(state.tokens);
-		} catch (error) {
-			error.macro = macro.name;
-			throw error;
+
+	/* ----------------- STATE OBJECT MANAGEMENT ----------------- */
+
+	state.makeAutoIdentifierName = function () {
+		// for anonymous dialogs and serial dialogs
+		var pos = state.tokens[state.curTokenIndex].pos;
+		var coords = natlang.findLineAndCharNumbers(state.inputString, pos);
+		return state.fileName+':'+coords.row +':'+coords.col;
+	};
+
+	// captures
+	state.clearCaptures = function () {
+		state.captures = {};
+	};
+	state.processCaptures = function (captureType, args) {
+		if (!config.capture[captureType]) {
+			var message = natlang.getPosContext(
+				state.inputString,
+				state.tokens[state.curTokenIndex].pos,
+				"Parser: No 'capture' function found for " + captureType
+			)
+			throw new Error(message);
 		}
-		var log = macro.log(processedTokens);
-		state.tokens = processedTokens;
-		state.finalState.passes = state.finalState.passes || {};
-		state.finalState.passes[macro.name] = log;
-	})
-	// THE REST OF THE OWL
-	// block functions
+		config.capture[captureType](state, args);
+	};
+
+	// inserts + final
+	state.initIfAbsent = function (type, prop, value) {
+		state[type][prop] = state[type][prop] || value;
+		return state[type][prop];
+	};
+	state.replaceValue = function (type, prop, value) {
+		state[type][prop] = value;
+		return state[type][prop];
+	};
+	state.replaceValueDeep = function (type, prop, subprop, value) {
+		state[type][prop][subprop] = value;
+		return state[type][prop][subprop];
+	};
+	state.pushNew = function (type, prop, value) {
+		var array = state.initIfAbsent(type, prop, []);
+		array.push(value);
+		return array;
+	};
+	state.clearInserts = function (prop) { // string or array ok
+		// will zero the contents of the insert while preserving the value type (=> {}, not undefined)
+		var names = typeof prop === "string"
+			? [ prop ]
+			: prop
+		names.forEach(function (name) {
+			if (typeof state.inserts[name] === "string") {
+				state.inserts[name] = null;
+			} else if (Array.isArray(state.inserts[name])) {
+				state.inserts[name] = [];
+			} else if (typeof state.inserts[name] === "object") {
+				state.inserts[name] = {};
+			} else {
+				// undefined should do nothing
+			}
+		})
+	}
+
+	// block management
 	state.startBlock = function (blockName) {
 		if (log) { console.log("state.startBlock: Starting the block named " + blockName); }
-		var blockInfo = config.blocks[blockName];
-		if (blockInfo.onOpen) {
-			blockInfo.onOpen(state);
+		if (config.blocks[blockName].onOpen) {
+			config.blocks[blockName].onOpen(state);
 		}
 		state.blockStack.unshift(blockName);
 		state.blockPos = 0;
@@ -434,62 +475,43 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			throw new Error(message);
 		}
 	};
-	// parsed data functions
-	state.clearCaptures = function () {
-		state.captures = {};
-	};
-	state.makeAutoIdentifierName = function () {
-		var pos = state.tokens[state.curTokenIndex].pos;
-		var coords = natlang.findLineAndCharNumbers(state.inputString, pos);
-		return state.fileName+':'+coords.row +':'+coords.col;
-	};
-	state.processCaptures = function (captureType, args) {
-		if (!config.capture[captureType]) {
-			var message = natlang.getPosContext(
-				state.inputString,
-				state.tokens[state.curTokenIndex].pos,
-				"Parser: No 'capture' function found for " + captureType
-			)
-			throw new Error(message);
-		}
-		config.capture[captureType](state, args);
-	};
-	// UNTESTED:
-	state.initIfAbsent = function (type, prop, value) {
-		state[type][prop] =
-		state[type][prop] || value;
-		return state[type][prop];
-	};
-	state.replaceValue = function (type, prop, value) {
-		state[type][prop] = value;
-		return state[type][prop];
-	};
-	state.replaceValueDeep = function (type, prop, subprop, value) {
-		state[type][prop][subprop] = value;
-		return state[type][prop][subprop];
-	};
-	state.pushNew = function (type, prop, value) {
-		var array = state.initIfAbsent(type, prop, []);
-		array.push(value);
-		return array;
-	};
-	state.clearInserts = function (arg) { // string or array ok
-		// will zero the contents of the insert while preserving the value type (=> {}, not undefined)
-		var names = typeof arg === "string"
-			? [ arg ]
-			: arg
-		names.forEach(function (name) {
-			if (typeof state.inserts[name] === "string") {
-				state.inserts[name] = null;
-			} else if (Array.isArray(state.inserts[name])) {
-				state.inserts[name] = [];
-			} else if (typeof state.inserts[name] === "object") {
-				state.inserts[name] = {};
-			} else {
-				// undefined should do nothing
-			}
-		})
+
+	/* ----------------- TOKEN PREP ----------------- */
+
+	// Acquire tokens
+	var lex = natlang.lex(inputString);
+	if (lex.success) {
+		state.tokens = lex.tokens;
+	} else {
+		natlang.printParseMessage(
+			inputString,
+			lex.errors[0].pos,
+			lex.errors[0].text,
+			"error"
+		)
+		return lex;
 	}
+
+	// Macro passes
+	config.macros.forEach(function (macro) {
+		try {
+			var processedTokens = macro.process(state.tokens);
+		} catch (error) {
+			error.macro = macro.name;
+			throw error;
+		}
+		state.tokens = processedTokens;
+		state.initIfAbsent("final", "passes", {});
+		state.replaceValueDeep(
+			"final",
+			"passes",
+			macro.name,
+			macro.log(processedTokens)
+		)
+	});
+
+	/* ----------------- THE REST OF THE OWL ----------------- */
+
 	// THE THING
 	bigloop: while (state.curTokenIndex < state.tokens.length) {
 		var blockName = state.blockStack[0];
@@ -565,7 +587,7 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			tryBranch.thenDo(state);
 			if (log) { console.log("(Did the state change? I hope it did:)"); }
 			if (log) { console.log({
-				finalState: state.finalState,
+				final: state.final,
 				inserts: state.inserts,
 				captures: state.captures
 			}); }
@@ -605,40 +627,50 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			}
 		}
 	}
-	// bigloop over
+
+	/* ----------------- BIGLOOP OVER! ----------------- */
+
+	// success
 	if (state.curTokenIndex === state.tokens.length) { // success!
 		if (log) { console.log("FINAL STATE:"); }
-		return state.finalState;
-	} else { // failure!
-		if (state.bestTry) {
-			var found = state.bestTry.found;
-			var expected = state.bestTry.expected;
-			var blockInfo = config.blocks[state.blockStack[0]];
-			var branchInfo = blockInfo.branches[state.blockPos];
-			var message
-				= branchInfo && branchInfo.failMessage
-				? branchInfo.failMessage
-				: `Parser: Unexpected token "${found}" (expected ${expected})`;
-			var errorToken = state.tokens[state.curTokenIndex + state.bestTry.tokenCount];
-			var contextMessage = natlang.getPosContext(
-				state.inputString,
-				errorToken.pos,
-				message
-			)
-			var errorObject = new Error(contextMessage);
-			errorObject.pos = errorToken.pos;
-			errorObject.branch = curBranchName;
-			errorObject.fancyMessage = contextMessage;
-			throw errorObject;
-		} else {
-			var message = `Parser: Unable to identify branch! (Block: '${state.blockStack[0]}')`;
-			var contextMessage = natlang.getPosContext(
-				state.inputString,
-				state.tokens[state.curTokenIndex].pos,
-				message
-			)
-			throw new Error(contextMessage);
-		}
+		return state.final;
+	}
+	
+	// failure
+	if (state.bestTry) {
+		var blockInfo = config.blocks[state.blockStack[0]];
+		var branchInfo = blockInfo.branches[state.blockPos];
+		var message
+			= branchInfo && branchInfo.failMessage
+			? branchInfo.failMessage
+			: "Parser: Unexpected token "
+				+ state.bestTry.found
+				+ " (expected "
+				+ state.bestTry.expected
+				+ ")";
+
+		var errorToken = state.tokens[state.curTokenIndex + state.bestTry.tokenCount];
+		var contextMessage = natlang.getPosContext(
+			state.inputString,
+			errorToken.pos,
+			message
+		)
+		throw Object.assign(
+			new Error(contextMessage),
+			{
+				pos: errorToken.pos,
+				branch: curBranchName,
+				fancyMessage: contextMessage,
+			}
+		);
+	} else {
+		var message = `Parser: Unable to identify branch! (Block: '${state.blockStack[0]}')`;
+		var contextMessage = natlang.getPosContext(
+			state.inputString,
+			state.tokens[state.curTokenIndex].pos,
+			message
+		)
+		throw new Error(contextMessage);
 	}
 };
 

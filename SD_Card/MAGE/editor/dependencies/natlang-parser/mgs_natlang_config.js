@@ -35,7 +35,7 @@ var mgs = {
 			],
 			closeChar: "}",
 			onOpen: function (state) {
-				state.initIfAbsent("finalState", "dialogSettings", []);
+				state.initIfAbsent("final", "dialogSettings", []);
 			},
 			onClose: function () {}
 			// just to silence the "no onClose?!?!" warning
@@ -47,7 +47,7 @@ var mgs = {
 			closeChar: "}",
 			onClose: function (state) {
 				state.pushNew(
-					"finalState",
+					"final",
 					"dialogSettings",
 					Object.assign(
 						state.inserts.dialogSettingsTarget,
@@ -63,15 +63,15 @@ var mgs = {
 			],
 			closeChar: "}",
 			onOpen: function (state) {
-				state.initIfAbsent("finalState", "serialDialogParameters", {});
+				state.initIfAbsent("final", "serialDialogParameters", {});
 				state.initIfAbsent("inserts", "serialDialogParameters", {});
 			},
 			onClose: function (state) {
 				state.replaceValue(
-					"finalState",
+					"final",
 					"serialDialogParameters",
 					Object.assign(
-						state.finalState.serialDialogParameters,
+						state.final.serialDialogParameters,
 						state.inserts.serialDialogParameters
 					)
 				);
@@ -125,9 +125,9 @@ var mgs = {
 					"dialogOptions",
 				]);
 				// on close only
-				state.initIfAbsent("finalState", "dialogs", {});
+				state.initIfAbsent("final", "dialogs", {});
 				state.replaceValueDeep(
-					"finalState",
+					"final",
 					"dialogs",
 					state.inserts.dialogName,
 					state.inserts.dialogs
@@ -154,9 +154,9 @@ var mgs = {
 				state.initIfAbsent("inserts", "serialDialogParameters", {});
 			},
 			onClose: function (state) {
-				state.initIfAbsent("finalState", "serialDialogs", {});
+				state.initIfAbsent("final", "serialDialogs", {});
 				state.replaceValueDeep(
-					"finalState",
+					"final",
 					"serialDialogs",
 					state.inserts.serialDialogName,
 					mgs.buildSerialDialogFromState(state)
@@ -177,9 +177,9 @@ var mgs = {
 			],
 			closeChar: "}",
 			onClose: function (state) {
-				state.initIfAbsent("finalState", "scripts", {});
+				state.initIfAbsent("final", "scripts", {});
 				state.replaceValueDeep(
-					"finalState",
+					"final",
 					"scripts",
 					state.inserts.scriptName,
 					state.inserts.actions
@@ -547,13 +547,22 @@ var mgs = {
 		},
 		dialogParameter: function (state, args) {
 			state.initIfAbsent("inserts", "dialogParameters", {});
-			state.inserts.dialogParameters[args.parameterName] = state.captures.value;
+			state.replaceValueDeep(
+				"inserts",
+				"dialogParameters",
+				args.parameterName,
+				state.captures.value
+			);
 		},
 		dialogIdentifier: function (state, args) {
-			state.replaceValue("inserts", "dialogIdentifier", {
-				type: args.type,
-				value: state.captures.value
-			});
+			state.replaceValue(
+				"inserts",
+				"dialogIdentifier",
+				{
+					type: args.type,
+					value: state.captures.value
+				}
+			);
 		},
 		dialogMessage: function (state) {
 			state.pushNew(
@@ -563,10 +572,14 @@ var mgs = {
 			);
 		},
 		dialogOption: function (state) {
-			state.pushNew("inserts", "dialogOptions", {
-				label: state.captures.label,
-				script: state.captures.script
-			});
+			state.pushNew(
+				"inserts",
+				"dialogOptions",
+				{
+					label: state.captures.label,
+					script: state.captures.script
+				}
+			);
 		},
 		serialDialogParameter: function (state, args) {
 			state.replaceValueDeep(
@@ -585,17 +598,24 @@ var mgs = {
 		},
 		serialDialogOptionFree: function (state) {
 			state.initIfAbsent("inserts", "serialOptionType", "text_options");
-			state.pushNew("inserts", "serialDialogOptions", {
-				label: state.captures.label,
-				script: state.captures.script
-			});
+			state.pushNew(
+				"inserts",
+				"serialDialogOptions", {
+					label: state.captures.label,
+					script: state.captures.script
+				}
+			);
 		},
 		serialDialogOptionFixed: function (state) {
 			state.initIfAbsent("inserts", "serialOptionType", "options");
-			state.pushNew("inserts", "serialDialogOptions", {
-				label: state.captures.label,
-				script: state.captures.script
-			});
+			state.pushNew(
+				"inserts",
+				"serialDialogOptions",
+				{
+					label: state.captures.label,
+					script: state.captures.script
+				}
+			);
 		},
 		action: function (state, args) {
 			var newAction = args
@@ -1421,7 +1441,7 @@ mgs.wrapText = function (inputString, wrapTo, wrapSpecials) {
 };
 
 mgs.buildDialogFromState = function (state) {
-	var dialogSettings = state.finalState.dialogSettings || [];
+	var dialogSettings = state.final.dialogSettings || [];
 	var identifier = state.inserts.dialogIdentifier;
 	var parameters = state.inserts.dialogParameters;
 	var messages = state.inserts.dialogMessages || [];
@@ -1527,7 +1547,7 @@ mgs.buildSerialDialogFromState = function (state) {
 	var optionType = state.inserts.serialOptionType || null;
 	var result = {};
 	// wrap amount
-	var globalParams = state.finalState.serialDialogParameters || {};
+	var globalParams = state.final.serialDialogParameters || {};
 	var localParams = state.inserts.serialDialogParameters || {};
 	var wrapTo = 80;
 	if (localParams.messageWrap) {
