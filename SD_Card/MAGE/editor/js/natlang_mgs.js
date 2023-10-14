@@ -41,7 +41,7 @@ var convertMgsFilesIntoScenarioDataConfig = function (
 					if (!mgsFileMap[match[1]]) {
 						throw new Error (`Could not include '${match[1]}' in file '${mgsFileName}' -- no such file!`);
 					}
-					console.log(`include!() --> Now copying plaintext contents of file '${match[1]}' into file '${mgsFileName}'`)
+					// console.log(`include!() --> Now copying plaintext contents of file '${match[1]}' into file '${mgsFileName}'`)
 					var textBodySlim = mgsFileMap[match[1]].replace(/\n/g, " "); // so line numbers will be the same as the original file (for error messages); for better handling, intercept after lexer but before parser (lol)
 					text = text.replace(match[0], textBodySlim);
 					match = text.match(reg);
