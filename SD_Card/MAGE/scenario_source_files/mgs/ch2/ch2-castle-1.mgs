@@ -330,7 +330,7 @@ interact-ch2-wizard {
 		if (flag ch2-toot-done is false) {
 			show dialog { SELF "Bye." }
 			copy script ch2-wizard-descend;
-			return
+			return;
 		}
 	}
 	// wizard is up now and can talk normally

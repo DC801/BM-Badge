@@ -56,7 +56,7 @@ show_dialog-bob-first-demo_map {
 				PLAYER "Um.... it's not Bob."
 				SELF "Sorry, can't unlock the door for ya. Bobs only."
 			}
-			return // return early
+			return; // return early
 		}
 		show dialog {
 			PLAYER "Why, what luck!\nMy name happens to be Bob!"
