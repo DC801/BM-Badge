@@ -455,17 +455,23 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 		config.capture[captureType](state, args);
 	};
 	// UNTESTED:
-	state.getOrInitFinalState = function (finalName, initValue) {
-		// does nothing if the destination already exists
-		state.finalState[finalName] =
-			state.finalState[finalName] || initValue;
-		return state.finalState[finalName];
+	state.initIfAbsent = function (type, prop, value) {
+		state[type][prop] =
+		state[type][prop] || value;
+		return state[type][prop];
 	};
-	state.getOrInitInsert = function (insertName, initValue) {
-		// does nothing if the destination already exists
-		state.inserts[insertName] =
-			state.inserts[insertName] || initValue;
-		return state.inserts[insertName];
+	state.replaceValue = function (type, prop, value) {
+		state[type][prop] = value;
+		return state[type][prop];
+	};
+	state.replaceValueDeep = function (type, prop, subprop, value) {
+		state[type][prop][subprop] = value;
+		return state[type][prop][subprop];
+	};
+	state.pushNew = function (type, prop, value) {
+		var array = state.initIfAbsent(type, prop, []);
+		array.push(value);
+		return array;
 	};
 	state.clearInserts = function (arg) { // string or array ok
 		// will zero the contents of the insert while preserving the value type (=> {}, not undefined)
@@ -479,7 +485,9 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 				state.inserts[name] = [];
 			} else if (typeof state.inserts[name] === "object") {
 				state.inserts[name] = {};
-			} // undefined should do nothing
+			} else {
+				// undefined should do nothing
+			}
 		})
 	}
 	// THE THING
