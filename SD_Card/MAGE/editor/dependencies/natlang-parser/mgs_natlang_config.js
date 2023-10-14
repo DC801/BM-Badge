@@ -699,15 +699,15 @@ var mgs = {
 
 mgs.actionDictionary = [{
 		action: "BLOCKING_DELAY",
-		pattern: "block $duration:duration",
+		pattern: "block $duration:duration ?;",
 	},
 	{
 		action: "SET_CAMERA_TO_FOLLOW_ENTITY",
-		pattern: "make camera follow entity $entity:string",
+		pattern: "make camera follow entity $entity:string ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_STATE",
-		pattern: "$bool_value:boolean hex editor",
+		pattern: "$bool_value:boolean hex editor ?;",
 	},
 	{
 		action: "LABEL", // this must be below `SET_HEX_EDITOR_STATE`!!
@@ -715,40 +715,40 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "SLOT_ERASE",
-		pattern: "erase slot $slot:number",
+		pattern: "erase slot $slot:number ?;",
 	},
 	{
 		action: "RUN_SCRIPT",
-		pattern: "goto ?script $script:string",
+		pattern: "goto ?script $script:string ?;",
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "goto index $action_index:number",
+		pattern: "goto index $action_index:number ?;",
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "goto label $action_index:bareword",
+		pattern: "goto label $action_index:bareword ?;",
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "return",
+		pattern: "return ;",
 		values: { "action_index": "auto return" },
 	},
 	{
 		action: "LOOP_ENTITY_ALONG_GEOMETRY",
-		pattern: "loop entity $entity:string along geometry $geometry:string over $duration:duration",
+		pattern: "loop entity $entity:string along geometry $geometry:string over $duration:duration ?;",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION_RELATIVE",
-		pattern: "rotate entity $entity:string $relative_direction:number",
+		pattern: "rotate entity $entity:string $relative_direction:number ?;",
 	},
 	{
 		action: "SLOT_SAVE",
-		pattern: "save slot",
+		pattern: "save slot ?;",
 	},
 	{
 		action: "SET_SCREEN_SHAKE",
-		pattern: "shake camera $frequency:duration $amplitude:distance for $duration:duration",
+		pattern: "shake camera $frequency:duration $amplitude:distance for $duration:duration ?;",
 		exampleValues: {
 			"$frequency:duration": "200ms",
 			"$amplitude:distance": "32px",
@@ -757,277 +757,277 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "NON_BLOCKING_DELAY",
-		pattern: "wait $duration:duration",
+		pattern: "wait $duration:duration ?;",
 		exampleValues: { "$duration:duration": "400ms", }
 
 	},
 	{
 		action: "WALK_ENTITY_TO_GEOMETRY",
-		pattern: "walk entity $entity:string to geometry $geometry:string over $duration:duration",
+		pattern: "walk entity $entity:string to geometry $geometry:string over $duration:duration ?;",
 	},
 	{
 		action: "WALK_ENTITY_ALONG_GEOMETRY",
-		pattern: "walk entity $entity:string along geometry $geometry:string over $duration:duration",
+		pattern: "walk entity $entity:string along geometry $geometry:string over $duration:duration ?;",
 	},
 	{
 		action: "SET_ENTITY_GLITCHED",
-		pattern: "make entity $entity:string glitched",
+		pattern: "make entity $entity:string glitched ?;",
 		values: { "bool_value": true },
 	},
 	{
 		action: "SET_ENTITY_GLITCHED",
-		pattern: "make entity $entity:string unglitched",
+		pattern: "make entity $entity:string unglitched ?;",
 		values: { "bool_value": false },
 	},
 	{
 		action: "TELEPORT_ENTITY_TO_GEOMETRY",
-		pattern: "teleport entity $entity:string to geometry $geometry:string",
+		pattern: "teleport entity $entity:string to geometry $geometry:string ?;",
 	},
 	{
 		action: "TELEPORT_CAMERA_TO_GEOMETRY",
-		pattern: "teleport camera to geometry $geometry:string",
+		pattern: "teleport camera to geometry $geometry:string ?;",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION",
-		pattern: "turn entity $entity:string $direction:bareword",
+		pattern: "turn entity $entity:string $direction:bareword ?;",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-		pattern: "turn entity $entity:string toward entity $target_entity:string",
+		pattern: "turn entity $entity:string toward entity $target_entity:string ?;",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
-		pattern: "turn entity $entity:string toward geometry $target_geometry:string",
+		pattern: "turn entity $entity:string toward geometry $target_geometry:string ?;",
 	},
 	{
 		action: "PAN_CAMERA_TO_ENTITY",
-		pattern: "pan camera to entity $entity:string over $duration:duration",
+		pattern: "pan camera to entity $entity:string over $duration:duration ?;",
 	},
 	{
 		action: "PAN_CAMERA_ALONG_GEOMETRY",
-		pattern: "pan camera along geometry $geometry:string over $duration:duration",
+		pattern: "pan camera along geometry $geometry:string over $duration:duration ?;",
 	},
 	{
 		action: "LOOP_CAMERA_ALONG_GEOMETRY",
-		pattern: "loop camera along geometry $geometry:string over $duration:duration",
+		pattern: "loop camera along geometry $geometry:string over $duration:duration ?;",
 	},
 	{
 		action: "PAN_CAMERA_TO_GEOMETRY",
-		pattern: "pan camera to geometry $geometry:string over $duration:duration",
+		pattern: "pan camera to geometry $geometry:string over $duration:duration ?;",
 	},
 	{
 		action: "PLAY_ENTITY_ANIMATION",
-		pattern: "play entity $entity:string animation $animation:number $play_count:quantity",
+		pattern: "play entity $entity:string animation $animation:number $play_count:quantity ?;",
 		exampleValues: { "$animation:number": "3", }
 	},
 	{
 		action: "SCREEN_FADE_OUT",
-		pattern: "fade out camera to $color:color over $duration:duration",
+		pattern: "fade out camera to $color:color over $duration:duration ?;",
 	},
 	{
 		action: "SCREEN_FADE_IN",
-		pattern: "fade in camera from $color:color over $duration:duration",
+		pattern: "fade in camera from $color:color over $duration:duration ?;",
 	},
 	{
 		action: "LOAD_MAP",
-		pattern: "load map $map:string",
+		pattern: "load map $map:string ?;",
 	},
 	{
 		action: "SLOT_LOAD",
-		pattern: "load slot $slot:number",
+		pattern: "load slot $slot:number ?;",
 	},
 	{
 		action: "SHOW_DIALOG",
-		pattern: "show dialog $dialog:string",
+		pattern: "show dialog $dialog:string ?;",
 	},
 	{
 		action: "SHOW_SERIAL_DIALOG",
-		pattern: "show serial dialog $serial_dialog:string",
+		pattern: "show serial dialog $serial_dialog:string ?;",
 		values: { "disable_newline": false },
 	},
 	{
 		action: "CLOSE_DIALOG",
-		pattern: "close dialog",
+		pattern: "close dialog ?;",
 	},
 	{
 		action: "CLOSE_SERIAL_DIALOG",
-		pattern: "close serial dialog",
+		pattern: "close serial dialog ?;",
 	},
 	{
 		action: "SHOW_SERIAL_DIALOG",
-		pattern: "concat serial dialog $serial_dialog:string",
+		pattern: "concat serial dialog $serial_dialog:string ?;",
 		values: { "disable_newline": true },
 	},
 	{
 		action: "SET_CONNECT_SERIAL_DIALOG",
-		pattern: "set serial connect ?message ?to $serial_dialog:string",
+		pattern: "set serial connect ?message ?to $serial_dialog:string ?;",
 	},
 	{
 		action: "COPY_SCRIPT",
-		pattern: "copy ?script $script:string",
+		pattern: "copy ?script $script:string ?;",
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy entity $entity:string $field:bareword into variable $variable:string",
+		pattern: "copy entity $entity:string $field:bareword into variable $variable:string ?;",
 		values: { "inbound": true },
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy variable $variable:string from entity $entity:string $field:bareword",
+		pattern: "copy variable $variable:string from entity $entity:string $field:bareword ?;",
 		values: { "inbound": true },
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy variable $variable:string into entity $entity:string $field:bareword",
+		pattern: "copy variable $variable:string into entity $entity:string $field:bareword ?;",
 		values: { "inbound": false },
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy entity $entity:string $field:bareword from variable $variable:string",
+		pattern: "copy entity $entity:string $field:bareword from variable $variable:string ?;",
 		values: { "inbound": false },
 	},
 	{
 		action: "MUTATE_VARIABLE",
-		pattern: "mutate $variable:string $operation:operator $value:number",
+		pattern: "mutate $variable:string $operation:operator $value:number ?;",
 	},
 	{
 		action: "MUTATE_VARIABLES",
-		pattern: "mutate $variable:string $operation:operator $source:string",
+		pattern: "mutate $variable:string $operation:operator $source:string ?;",
 	},
 	{
 		action: "SET_MAP_TICK_SCRIPT",
-		pattern: "set map on_tick ?to $script:string",
+		pattern: "set map on_tick ?to $script:string ?;",
 	},
 	{
 		action: "SET_WARP_STATE",
-		pattern: "set warp state ?to $string:string",
+		pattern: "set warp state ?to $string:string ?;",
 	},
 	{
 		action: "SET_SAVE_FLAG",
-		pattern: "set flag $save_flag:string ?to $bool_value:boolean",
+		pattern: "set flag $save_flag:string ?to $bool_value:boolean ?;",
 	},
 	{
 		action: "SET_PLAYER_CONTROL",
-		pattern: "set player control ?to $bool_value:boolean",
+		pattern: "set player control ?to $bool_value:boolean ?;",
 	},
 	{
 		action: "SET_SERIAL_DIALOG_CONTROL",
-		pattern: "set serial control ?to $bool_value:boolean",
+		pattern: "set serial control ?to $bool_value:boolean ?;",
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register ?command $command:string -> ?script $script:string",
+		pattern: "register ?command $command:string -> ?script $script:string ?;",
 		values: { "is_fail": false },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register ?command $command:string fail -> ?script $script:string",
+		pattern: "register ?command $command:string fail -> ?script $script:string ?;",
 		values: { "is_fail": true },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register ?command $command:string failure -> ?script $script:string",
+		pattern: "register ?command $command:string failure -> ?script $script:string ?;",
 		values: { "is_fail": true },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
-		pattern: "register ?command $command:string + ?arg $argument:string -> ?script $script:string",
+		pattern: "register ?command $command:string + ?arg $argument:string -> ?script $script:string ?;",
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister ?command $command:string",
+		pattern: "unregister ?command $command:string ?;",
 		values: { "is_fail": false },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister ?command $command:string fail",
+		pattern: "unregister ?command $command:string fail ?;",
 		values: { "is_fail": true },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister ?command $command:string failure",
+		pattern: "unregister ?command $command:string failure ?;",
 		values: { "is_fail": true },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
-		pattern: "unregister ?command $command:string + ?arg $argument:string",
+		pattern: "unregister ?command $command:string + ?arg $argument:string ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_DIALOG_MODE",
-		pattern: "set hex dialog mode ?to $bool_value:boolean",
+		pattern: "set hex dialog mode ?to $bool_value:boolean ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL",
-		pattern: "set hex control ?to $bool_value:boolean",
+		pattern: "set hex control ?to $bool_value:boolean ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
-		pattern: "set hex clipboard ?to $bool_value:boolean",
+		pattern: "set hex clipboard ?to $bool_value:boolean ?;",
 	},
 	// {
 	// 	action: "SET_ENTITY_NAME",
-	// 	pattern: "set entity $entity:string name ?to $string:string",
+	// 	pattern: "set entity $entity:string name ?to $string:string ?;",
 	// } // ONES LIKE THIS ARE PROCEDURALLY ADDED
 	{
 		action: "CHECK_SAVE_FLAG",
-		pattern: "if flag $save_flag:string is $expected_bool:boolean then goto ?script $success_script:string",
+		pattern: "if flag $save_flag:string is $expected_bool:boolean then goto ?script $success_script:string ?;",
 	},
 	{
 		action: "CHECK_DIALOG_OPEN",
-		pattern: "if dialog is $expected_bool:boolean then goto ?script $success_script:string",
+		pattern: "if dialog is $expected_bool:boolean then goto ?script $success_script:string ?;",
 	},
 	{
 		action: "CHECK_SERIAL_DIALOG_OPEN",
-		pattern: "if serial dialog is $expected_bool:boolean then goto ?script $success_script:string",
+		pattern: "if serial dialog is $expected_bool:boolean then goto ?script $success_script:string ?;",
 	},
 	{
 		action: "CHECK_DEBUG_MODE",
-		pattern: "if debug mode is $expected_bool:boolean then goto ?script $success_script:string",
+		pattern: "if debug mode is $expected_bool:boolean then goto ?script $success_script:string ?;",
 	},
 	// TODO: figure out how to make it match despite the parser forcing string "true" to bool "true"
 	// {
 	// 	action: "CHECK_SAVE_FLAG",
-	// 	pattern: "if flag $save_flag:string is not false then goto ?script $success_script:string",
+	// 	pattern: "if flag $save_flag:string is not false then goto ?script $success_script:string ?;",
 	// 	values: { "expected_bool": true },
 	// },
 	// {
 	// 	action: "CHECK_SAVE_FLAG",
-	// 	pattern: "if flag $save_flag:string is not true then goto ?script $success_script:string",
+	// 	pattern: "if flag $save_flag:string is not true then goto ?script $success_script:string ?;",
 	// 	values: { "expected_bool": false },
 	// },
 	{
 		action: "CHECK_FOR_BUTTON_PRESS",
-		pattern: "if button $button_id:bareword then goto ?script $success_script:string",
+		pattern: "if button $button_id:bareword then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_PRESS",
-		pattern: "if not button $button_id:bareword then goto ?script $success_script:string",
+		pattern: "if not button $button_id:bareword then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
-		pattern: "if button $button_id:bareword is currently pressed then goto ?script $success_script:string",
+		pattern: "if button $button_id:bareword is currently pressed then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
-		pattern: "if button $button_id:bareword is not currently pressed then goto ?script $success_script:string",
+		pattern: "if button $button_id:bareword is not currently pressed then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_WARP_STATE",
-		pattern: "if warp state is $string:string then goto ?script $success_script:string",
+		pattern: "if warp state is $string:string then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_WARP_STATE",
-		pattern: "if warp state is not $string:string then goto ?script $success_script:string",
+		pattern: "if warp state is not $string:string then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is $value:number then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is $value:number then goto ?script $success_script:string ?;",
 		values: {
 			"expected_bool": true,
 			"comparison": "==",
@@ -1035,12 +1035,12 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is $comparison:operator $value:number then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is $comparison:operator $value:number then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is not $value:number then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is not $value:number then goto ?script $success_script:string ?;",
 		values: {
 			"expected_bool": false,
 			"comparison": "==",
@@ -1048,7 +1048,7 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is not $comparison:operator $value:number then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is not $comparison:operator $value:number then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	{
@@ -1061,12 +1061,12 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is $comparison:operator $source:string then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is $comparison:operator $source:string then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is not $source:string then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is not $source:string then goto ?script $success_script:string ?;",
 		values: {
 			"expected_bool": false,
 			"comparison": "==",
@@ -1074,60 +1074,60 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is not $comparison:operator $source:string then goto ?script $success_script:string",
+		pattern: "if variable $variable:string is not $comparison:operator $source:string then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	// {
 	// 	action: "CHECK_ENTITY_NAME",
-	// 	pattern: "if entity $entity:string name is $string:string then goto ?script $success_script:string",
+	// 	pattern: "if entity $entity:string name is $string:string then goto ?script $success_script:string ?;",
 	// 	values: { "expected_bool": true }
 	// } // PROCEDURALLY DONE
 	{
 		action: "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-		pattern: "if entity $entity:string is inside geometry $geometry:string then goto ?script $success_script:string",
+		pattern: "if entity $entity:string is inside geometry $geometry:string then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-		pattern: "if entity $entity:string is not inside geometry $geometry:string then goto ?script $success_script:string",
+		pattern: "if entity $entity:string is not inside geometry $geometry:string then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_ENTITY_GLITCHED",
-		pattern: "if entity $entity:string is glitched then goto ?script $success_script:string",
+		pattern: "if entity $entity:string is glitched then goto ?script $success_script:string ?;",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_ENTITY_GLITCHED",
-		pattern: "if entity $entity:string is not glitched then goto ?script $success_script:string",
+		pattern: "if entity $entity:string is not glitched then goto ?script $success_script:string ?;",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "SET_LIGHTS_CONTROL",
-		pattern: "set lights control ?to $enabled:boolean",
+		pattern: "set lights control ?to $enabled:boolean ?;",
 	},
 	{
 		action: "SET_LIGHTS_STATE",
-		pattern: "turn light $lights:string $enabled:boolean",
+		pattern: "turn light $lights:string $enabled:boolean ?;",
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "pause entity $entity:string $script_slot:bareword",
+		pattern: "pause entity $entity:string $script_slot:bareword ?;",
 		values: { "bool_value": true },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "unpause entity $entity:string $script_slot:bareword",
+		pattern: "unpause entity $entity:string $script_slot:bareword ?;",
 		values: { "bool_value": false },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "pause map $script_slot:bareword",
+		pattern: "pause map $script_slot:bareword ?;",
 		values: { "bool_value": true, "entity": "%MAP%" },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "unpause map $script_slot:bareword",
+		pattern: "unpause map $script_slot:bareword ?;",
 		values: { "bool_value": false, "entity": "%MAP%" },
 	},
 ];
@@ -1289,7 +1289,7 @@ Object.keys(mgs.entityPropertyMap)
 		natLangProperties.forEach(function(natLangProperty) {
 			mgs.actionDictionary.push({
 				action: actionName,
-				pattern: `set entity $entity:string ${natLangProperty} ?to $${entry.actionProperty}${entry.dictionaryRef}`,
+				pattern: `set entity $entity:string ${natLangProperty} ?to $${entry.actionProperty}${entry.dictionaryRef} ?;`,
 			});
 		})
 	});
@@ -1306,12 +1306,12 @@ Object.keys(mgs.entityPropertyMap)
 		natLangProperties.forEach(function(natLangProperty) {
 			mgs.actionDictionary.push({
 				action: actionName,
-				pattern: `if entity $entity:string ${natLangProperty} is $${entry.actionProperty}${entry.dictionaryRef} then goto ?script $success_script:string`,
+				pattern: `if entity $entity:string ${natLangProperty} is $${entry.actionProperty}${entry.dictionaryRef} then goto ?script $success_script:string ?;`,
 				values: { "expected_bool" : true }
 			});
 			mgs.actionDictionary.push({
 				action: actionName,
-				pattern: `if entity $entity:string ${natLangProperty} is not $${entry.actionProperty}${entry.dictionaryRef} then goto ?script $success_script:string`,
+				pattern: `if entity $entity:string ${natLangProperty} is not $${entry.actionProperty}${entry.dictionaryRef} then goto ?script $success_script:string ?;`,
 				values: { "expected_bool" : false }
 			});
 		})
@@ -1338,10 +1338,10 @@ mgs.actionDictionary
 
 // adding action dictionary items to the "flat" tree
 mgs.actionDictionary.forEach(function (item) {
-	// We have semicolons now (actions only)
-	if (!item.pattern.endsWith("{")) {
-		item.pattern = item.pattern + " ?;";
-	}
+	// // We have semicolons now (actions only)
+	// if (!item.pattern.endsWith("{")) {
+	// 	item.pattern = item.pattern + " ?;";
+	// }
 	item = JSON.parse(JSON.stringify(item));
 	var values = item.values || {};
 	values.action = item.action;
@@ -1357,13 +1357,6 @@ mgs.actionDictionary.forEach(function (item) {
 		}
 	);
 })
-
-// // We have semicolons now (actions only)
-// mgs.trees.action.forEach(function (branch) {
-// 	if (!branch.pattern.endsWith("{")) {
-// 		branch.pattern = branch.pattern + " ?;";
-// 	}
-// });
 
 /* ------ building MGS dialogs ------ */
 
