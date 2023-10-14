@@ -200,235 +200,284 @@ var mgs = {
 
 	trees: {
 		dialogSettingsNode: [
-			["settings ?for dialog {",
-				function (state) {
+			{
+				pattern: "settings ?for dialog {",
+				onMatch: function (state) {
 					state.startBlock("dialogSettings");
-				}],
+				}
+			}
 		],
 		serialDialogSettingsNode: [
-			["settings ?for serial ?dialog {",
-				function (state) {
+			{
+				pattern: "settings ?for serial ?dialog {",
+				onMatch: function (state) {
 					state.startBlock("serialDialogSettings");
-				}],
+				}
+			}
 		],
 		dialogNode: [
-			["dialog $dialog:string {",
-				function (state) {
+			{
+				pattern: "dialog $dialog:string {",
+				onMatch: function (state) {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.clearCaptures();
-				}],
+				}
+			}
 		],
 		serialDialogNode: [
-			["serial dialog $serial_dialog:string {",
-				function (state) {
+			{
+				pattern: "serial dialog $serial_dialog:string {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.clearCaptures();
-				}],
+				}
+			}
 		],
 		scriptNode: [
-			["?script $scriptName:string {",
-				function (state) {
+			{
+				pattern: "?script $scriptName:string {",
+				onMatch: function (state) {
 					state.startBlock("script");
 					state.processCaptures("scriptName");
 					state.clearCaptures();
-				}],
+				}
+			}
 		],
 		dialogSettingsTarget: [
-			["?parameters ?for label $target:string {",
-				function (state) {
+			{
+				pattern: "?parameters ?for label $target:string {",
+				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
 						{ type: "label" }
 					);
 					state.clearCaptures();
-				}],
-			["?parameters ?for entity $target:string {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "?parameters ?for entity $target:string {",
+				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
 						{ type: "entity" }
 					);
 					state.clearCaptures();
-				}],
-			["?parameters ?for ?global default {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "?parameters ?for ?global default {",
+				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
 						{ type: "global" }
 					);
 					state.clearCaptures();
-				}],
-			["?parameters ?for ?global defaults {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "?parameters ?for ?global defaults {",
+				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
 						{ type: "global" }
 					);
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		dialogParameter: [
-			["entity $value:string",
-				function (state) {
+			{
+				pattern: "entity $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "entity" }
 					);
 					state.clearCaptures();
-				}],
-			["name $value:string",
-				function (state) {
+				}
+			},
+			{
+				pattern: "name $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "name" }
 					);
 					state.clearCaptures();
-				}],
-			["portrait $value:string",
-				function (state) {
+				}
+			},
+			{
+				pattern: "portrait $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "portrait" }
 					);
 					state.clearCaptures();
-				}],
-			["alignment $value:string",
-				function (state) {
+				}
+			},
+			{
+				pattern: "alignment $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "alignment" }
 					);
 					state.clearCaptures();
-				}],
-			["border_tileset $value:string",
-				function (state) {
+				}
+			},
+			{
+				pattern: "border_tileset $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "border_tileset" }
 					);
 					state.clearCaptures();
-				}],
-			["emote $value:number",
-				function (state) {
+				}
+			},
+			{
+				pattern: "emote $value:number",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "emote" }
 					);
 					state.clearCaptures();
-				}],
-			// ["$parameterName:string $value:string",
-			// 	function (state, captures) {
-			// 		state.capture.dialogParameter(state, captures.parameterName, captures.value);
-			// 	}],
-			// (I'd rather make the parameter value a closed list, I think; results in better "why it broke" communication for invalid words)
-			["wrap messages ?to $value:number",
-				function (state) {
+				}
+			},
+			{
+				pattern: "wrap messages ?to $value:number",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "messageWrap" }
 						// TODO: make wrap an object rather than glue words together like this for each one; easier removal, too
 					);
 					state.clearCaptures();
-				}],
-				["wrap options ?to $value:number",
-				function (state) {
+				}
+			},
+			{
+				pattern: "wrap options ?to $value:number",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "optionWrap" }
 					);
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		dialogIdentifier: [
-			["$value:bareword",
-				function (state) {
+			{
+				pattern: "$value:bareword",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "label" }
 					);
 					state.clearCaptures();
-				}],
-			["entity $value:string",
-				function (state) {
+				}
+			},
+			{
+				pattern: "entity $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "entity" }
 					);
 					state.clearCaptures();
-				}],
-			["name $value:string",
-				function (state) {
+				}
+			},
+			{
+				pattern: "name $value:string",
+				onMatch: function (state) {
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "name" }
 					);
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		dialogMessage: [
-			["$message:quotedString",
-				function (state) {
+			{
+				pattern: "$message:quotedString",
+				onMatch: function (state) {
 					state.processCaptures("dialogMessage");
 					state.clearCaptures();
-				}]
-			],
+				}
+			},
+		],
 		dialogOption: [
-			["> $label:quotedString : ?goto ?script $script:string",
-			// TODO: forbid "goto" and "script" in script/dialog names.... (probably more words, too)
-				function (state) {
+			{
+				pattern: "> $label:quotedString : ?goto ?script $script:string",
+				onMatch: function (state) {
 					state.processCaptures("dialogOption");
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		serialDialogParameter: [
-			["wrap ?messages ?to $value:number",
-				function (state) {
+			{
+				pattern: "wrap ?messages ?to $value:number",
+				onMatch: function (state) {
 					state.processCaptures(
 						"serialDialogParameter",
 						{ parameterName: "messageWrap" }
 					);
 					state.clearCaptures();
-				}],
+				}
+			},
 		],
 		serialDialogMessage: [
-			["$message:quotedString",
-				function (state) {
+			{
+				pattern: "$message:quotedString",
+				onMatch: function (state) {
 					state.processCaptures("serialDialogMessage");
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		serialDialogOptionFree: [
-			["_ $label:quotedString : ?goto ?script $script:string",
-				function (state) {
+			{
+				pattern: "_ $label:quotedString : ?goto ?script $script:string",
+				onMatch: function (state) {
 					state.processCaptures("serialDialogOptionFree");
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		serialDialogOptionFixed: [
-			["# $label:quotedString : ?goto ?script $script:string",
-				function (state) {
+			{
+				pattern: "# $label:quotedString : ?goto ?script $script:string",
+				onMatch: function (state) {
 					state.processCaptures("serialDialogOptionFixed");
 					state.clearCaptures();
-				}]
+				}
+			},
 		],
 		action: [
-			["show dialog $dialog:string {",
-				function (state) {
+			{
+				pattern: "show dialog $dialog:string {",
+				onMatch: function (state) {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.processCaptures("action",
 						{ action: "SHOW_DIALOG" }
 					);
 					state.clearCaptures();
-				}],
-			["show dialog {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "show dialog {",
+				onMatch: function (state) {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.processCaptures( "action",
@@ -438,18 +487,22 @@ var mgs = {
 						}
 					);
 					state.clearCaptures();
-				}],
-			["show serial dialog $serial_dialog:string {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "show serial dialog $serial_dialog:string {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
 						{ action: "SHOW_SERIAL_DIALOG", disable_newline: false }
 					);
 					state.clearCaptures();
-				}],
-			["show serial dialog {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "show serial dialog {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -460,18 +513,22 @@ var mgs = {
 						}
 					);
 					state.clearCaptures();
-				}],
-			["concat serial dialog $serial_dialog:string {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "concat serial dialog $serial_dialog:string {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
 						{ action: "SHOW_SERIAL_DIALOG", disable_newline: true }
 					);
 					state.clearCaptures();
-				}],
-			["concat serial dialog {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "concat serial dialog {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -482,9 +539,11 @@ var mgs = {
 						}
 					);
 					state.clearCaptures();
-				}],
-			["set serial connect ?message ?to {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "set serial connect ?message ?to {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -494,16 +553,19 @@ var mgs = {
 						}
 					);
 					state.clearCaptures();
-				}],
-			["set serial connect ?message ?to $serial_dialog:string {",
-				function (state) {
+				}
+			},
+			{
+				pattern: "set serial connect ?message ?to $serial_dialog:string {",
+				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
 						{ action: "SET_CONNECT_SERIAL_DIALOG" }
 					);
 					state.clearCaptures();
-				}],
+				}
+			},
 			// more are procedurally added
 		],
 	},
@@ -1254,7 +1316,6 @@ Object.keys(mgs.entityPropertyMap)
 			});
 		})
 	})
-	//TODO!! [lol what is this todo?]
 
 mgs.actionDictionary
 	.filter(function (entry) {
@@ -1286,10 +1347,10 @@ mgs.actionDictionary.forEach(function (item) {
 		}
 	}
 	mgs.trees.action.push(
-		[
-			item.pattern,
-			autoActionFunction(values)
-		]
+		{
+			pattern: item.pattern,
+			onMatch: autoActionFunction(values)
+		}
 	);
 })
 

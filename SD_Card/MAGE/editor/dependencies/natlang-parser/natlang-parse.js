@@ -56,8 +56,8 @@ natlang.makeParseTrees = function (flatTrees) {
 			};
 			var refs = [ result[treeName] ];
 			var newRefs = [];
-			var patternWords = branch[0].split(' ');
-			var whatDo = branch[1];
+			var patternWords = branch.pattern.split(' ');
+			var whatDo = branch.onMatch;
 			// DO IT
 			patternWords.forEach(function (word) {
 				var captureType;
