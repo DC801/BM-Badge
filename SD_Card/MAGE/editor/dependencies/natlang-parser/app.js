@@ -26,6 +26,7 @@ var app = new Vue({
 				altIndentChar: '',
 				nestledAlign: false,
 				shortAlign: false,
+				snugSemicolons: false,
 			}
 		},
 		split: {
@@ -281,6 +282,12 @@ var app = new Vue({
 					type="checkbox"
 					v-model="combo.format.shortAlign"
 				><span>short alignment</span></label>
+			</div>
+			<div>
+				<label><input
+					type="checkbox"
+					v-model="combo.format.snugSemicolons"
+				><span>snug semicolons</span></label>
 			</div>
 		</p>
 		<textarea
