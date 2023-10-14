@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-21 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: WORKSHOP on_look text\n "
 	}
@@ -13,13 +13,13 @@ look-ch2-castle-21 {
 
 on_load-ch2-castle-21 {
 	// ch2 room state
-	mutate ch2-in-room = 21
+	mutate ch2-in-room = 21;
 
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-21 is false) {
 		show serial dialog { "Discovered <bold><c>WORKSHOP</>! Room added to map!" }
-		set flag ch2-seen-room-21 to true
+		set flag ch2-seen-room-21 to true;
 	} else {
 		show serial dialog { "Entering <bold>WORKSHOP</>..." }
 	}
@@ -27,34 +27,34 @@ on_load-ch2-castle-21 {
 		flag ch2-installed-abacus is true
 		|| flag ch2-carrying-abacus is true
 	) {
-		copy script ch2-hide-abacus
+		copy script ch2-hide-abacus;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-21 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-21 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-21-north {
-	copy on_exit-ch2-castle-21
-	copy warping-out-fade-out
-	load map ch2-castle-22
+	copy on_exit-ch2-castle-21;
+	copy warping-out-fade-out;
+	load map ch2-castle-22;
 }
 on_go-castle-21-east {
-	copy on_exit-ch2-castle-21
-	copy warping-out-fade-out
-	load map ch2-castle-11
+	copy on_exit-ch2-castle-21;
+	copy warping-out-fade-out;
+	load map ch2-castle-11;
 }
 
 /* ---------- ABACUS (ADMIN) ---------- */
@@ -64,7 +64,7 @@ ch2-touch-abacus {
 		show dialog {
 			PLAYER "TODO abacus1"
 		}
-		set flag ch2-abacus-firstlook to true
+		set flag ch2-abacus-firstlook to true;
 	}
 	show dialog {
 		PLAYER "TODO abacus2."
@@ -79,37 +79,37 @@ ch2-touch-abacus {
 }
 
 ch2-hide-abacus {
-	teleport entity "abacus" to geometry hiding-spot
-	set entity "abacus" name to " "
+	teleport entity "abacus" to geometry hiding-spot;
+	set entity "abacus" name to " ";
 }
 
 ch2-touch-abacus-yes {
 	show dialog {
 		name "" "(You pick up the abacus!)"
 	}
-	copy script ch2-hide-abacus
-	copy script ch2-pickup-abacus
-	set entity "%SELF%" on_interact to null_script
+	copy script ch2-hide-abacus;
+	copy script ch2-pickup-abacus;
+	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-abacus-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-abacus  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-abacus;  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-jeanpaul {
-	copy face-player
+	copy face-player;
 	if (variable ch2-storyflag-round is < 3) {
 		show dialog {
 			SELF "TODO (generic)"
 		}
 	} else if (variable ch2-storyflag-round is 3) {
 		if (flag ch2-want-ramchips is false) {
-			mutate CALLBACK = 1
-			goto interact-ch2-room21-split
+			mutate CALLBACK = 1;
+			goto interact-ch2-room21-split;
 		} else {
 			if (flag interrupt is true) {
 				show dialog {
@@ -118,7 +118,7 @@ interact-ch2-jeanpaul {
 					SELF "Erm, no, he's a stone golem, but let's just say he's a creative character."
 				}
 			} else {
-				copy interact-ch2-room21-split-s
+				copy interact-ch2-room21-split-s;
 			}
 		}
 	} else {
@@ -126,22 +126,22 @@ interact-ch2-jeanpaul {
 			SELF "TODO (Good luck building computer)"
 		}
 	}
-	goto interact-ch2-jeanpaul-wrapup
+	goto interact-ch2-jeanpaul-wrapup;
 }
 interact-ch2-jeanpaul-wrapup {
-	set entity "%SELF%" on_interact to interact-ch2-jeanpaul
+	set entity "%SELF%" on_interact to interact-ch2-jeanpaul;
 }
 
 interact-ch2-frankie {
-	copy face-player
+	copy face-player;
 	if (variable ch2-storyflag-round is < 3) {
 		show dialog {
 			SELF "TODO (generic)"
 		}
 	} else if (variable ch2-storyflag-round is 3) {
 		if (flag ch2-want-ramchips is false) {
-			mutate CALLBACK = 2
-			goto interact-ch2-room21-split
+			mutate CALLBACK = 2;
+			goto interact-ch2-room21-split;
 		} else {
 			if (flag interrupt is true) {
 				show dialog {
@@ -149,7 +149,7 @@ interact-ch2-frankie {
 					"Because... you know."
 				}
 			} else {
-				copy interact-ch2-room21-split-s
+				copy interact-ch2-room21-split-s;
 			}
 		}
 	} else {
@@ -157,15 +157,15 @@ interact-ch2-frankie {
 			SELF "TODO (Good luck building computer)"
 		}
 	}
-	goto interact-ch2-frankie-wrapup
+	goto interact-ch2-frankie-wrapup;
 }
 interact-ch2-frankie-wrapup {
-	set entity "%SELF%" on_interact to interact-ch2-frankie
+	set entity "%SELF%" on_interact to interact-ch2-frankie;
 }
 
 interact-ch2-room21-split {
-	turn entity Frankie toward entity "%PLAYER%"
-	turn entity Jean-Paul toward entity "%PLAYER%"
+	turn entity Frankie toward entity "%PLAYER%";
+	turn entity Jean-Paul toward entity "%PLAYER%";
 	show dialog {
 		PLAYER "So I'm rebuilding the castle mainframe, and I heard you guys might be able to help me get some RAM. Lambda couldn't find any to spare."
 		Jean-Paul "Lambda? Who's that?"
@@ -205,15 +205,15 @@ interact-ch2-room21-split {
 		Frankie "He'll definitely be able to find you an... abstract... solution."
 		Jean-Paul "Good luck, kid."
 	}
-	set flag ch2-want-ramchips to true
-	copy ch2-handoff-ramchips-to-seamoss
-	set flag interrupt to true
+	set flag ch2-want-ramchips to true;
+	copy ch2-handoff-ramchips-to-seamoss;
+	set flag interrupt to true;
 	if (variable CALLBACK is 1) {
-		mutate CALLBACK = 0
-		goto interact-ch2-jeanpaul-wrapup
+		mutate CALLBACK = 0;
+		goto interact-ch2-jeanpaul-wrapup;
 	} else if (variable CALLBACK is 2) {
-		mutate CALLBACK = 0
-		goto interact-ch2-frankie-wrapup
+		mutate CALLBACK = 0;
+		goto interact-ch2-frankie-wrapup;
 	} else {
 		show serial dialog {
 			"<r>DEBUG</>: Something went wrong splitting into entity wrapup scripts after shared behavior in 'interact-ch2-room21-split'! 'CALLBACK' value: $CALLBACK$"
@@ -222,8 +222,8 @@ interact-ch2-room21-split {
 }
 
 interact-ch2-room21-split-s {
-	turn entity Jean-Paul toward entity "%PLAYER%"
-	turn entity Frankie toward entity "%PLAYER%"
+	turn entity Jean-Paul toward entity "%PLAYER%";
+	turn entity Frankie toward entity "%PLAYER%";
 	show dialog {
 		PLAYER "So... I may have forgotten where I can find Sea Moss."
 		Jean-Paul "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."

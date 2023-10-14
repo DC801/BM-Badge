@@ -1,18 +1,18 @@
-include!("header.mgs")
+include!("header.mgs");
 
 // (NOT LIVE YET)
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-bobsclub-basement {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: Bob's Club basement text"
 	}
 }
 
 look-ch2-bobaustin {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Bob Austin%</>."
 		" "
@@ -20,7 +20,7 @@ look-ch2-bobaustin {
 	}
 }
 look-ch2-bobmoss {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Bob Moss%</>."
 		" "
@@ -28,7 +28,7 @@ look-ch2-bobmoss {
 	}
 }
 look-ch2-icechest {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%ice chest%</>."
 		" "
@@ -36,7 +36,7 @@ look-ch2-icechest {
 	}
 }
 look-ch2-marathonbob {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at one of the <m>%Marathon Bob%s</>."
 		" "
@@ -44,7 +44,7 @@ look-ch2-marathonbob {
 	}
 }
 look-ch2-guardianbob {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Guardian Bob%</>."
 		" "
@@ -57,90 +57,90 @@ look-ch2-guardianbob {
 on_load-ch2-bobsclub-basement {
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	if (flag ch2-cutseen-bob-party is false) {
-		goto ch2-cutscene-bob-party
+		goto ch2-cutscene-bob-party;
 	} else {
-		teleport entity "Guardian Bob" to geometry bob-walk2
-		set entity "Guardian Bob" on_tick to loiter-slow
+		teleport entity "Guardian Bob" to geometry bob-walk2;
+		set entity "Guardian Bob" on_tick to loiter-slow;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-bobsclub-basement {
-	goto null_script
+	goto null_script;
 }
 
 on_tick-turn-right-and-down-kinda {
-	wait 4500ms
-	turn entity "%SELF%" south
-	wait 2400ms
-	turn entity "%SELF%" east
-	wait 800ms
+	wait 4500ms;
+	turn entity "%SELF%" south;
+	wait 2400ms;
+	turn entity "%SELF%" east;
+	wait 800ms;
 }
 on_tick-turn-right-and-down-kinda2 {
-	wait 3300ms
-	turn entity "%SELF%" south
-	wait 3820ms
-	turn entity "%SELF%" east
-	wait 3800ms
+	wait 3300ms;
+	turn entity "%SELF%" south;
+	wait 3820ms;
+	turn entity "%SELF%" east;
+	wait 3800ms;
 }
 on_tick-turn-left-and-down-kinda {
-	wait 2200ms
-	turn entity "%SELF%" south
-	wait 3200ms
-	turn entity "%SELF%" west
-	wait 2800ms
+	wait 2200ms;
+	turn entity "%SELF%" south;
+	wait 3200ms;
+	turn entity "%SELF%" west;
+	wait 2800ms;
 }
 on_tick-turn-left-and-down-kinda2 {
-	wait 1310ms
-	turn entity "%SELF%" south
-	wait 2700ms
-	turn entity "%SELF%" west
-	wait 4900ms
+	wait 1310ms;
+	turn entity "%SELF%" south;
+	wait 2700ms;
+	turn entity "%SELF%" west;
+	wait 4900ms;
 }
 on_tick-turn-right-and-up-kinda {
-	wait 400ms
-	turn entity "%SELF%" east
-	wait 3100ms
-	turn entity "%SELF%" north
-	wait 5840ms
+	wait 400ms;
+	turn entity "%SELF%" east;
+	wait 3100ms;
+	turn entity "%SELF%" north;
+	wait 5840ms;
 }
 
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-bobsclub-basement-stairs {
-	copy warping-out-fade-out
-	load map ch2-bobsclub
+	copy warping-out-fade-out;
+	load map ch2-bobsclub;
 }
 
 /* ---------- CUTSCENE ---------- */
 
 ch2-cutscene-bob-party {
 	// Fade in.
-	teleport camera to geometry gasp-spot
+	teleport camera to geometry gasp-spot;
 	if (warp state is warping) {
 		// this is here because the cutscene must come after the warp-in thing
-		copy warping-in-fade-in
+		copy warping-in-fade-in;
 		set flag ch2-manual-warp to true // this will skip the "init" script's warp stuff
 	}
-	set hex control off
+	set hex control off;
 	// set serial control off
-	set player control off
-	wait 1500ms
-	set entity "%PLAYER%" on_tick to look-left-and-right-fast
-	wait 700ms
+	set player control off;
+	wait 1500ms;
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	wait 700ms;
 	show dialog {
 		PLAYER "Huh. Well, I found the source of the noise...."
 	}
-	set entity "%PLAYER%" on_tick to null_script
-	turn entity "%PLAYER%" toward entity "Guardian Bob"
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
 	show dialog {
 		GBob "Hey! You're not allowed in here!"
 	}
 	walk entity "Guardian Bob" along geometry bob-walk over 1200ms
-	wait 800ms
+	wait 800ms;
 	show dialog {
 		GBob "Oh, wait. I remember you. Your name was Bob, wasn't it?"
 	}
@@ -157,12 +157,12 @@ ch2-cutscene-bob-party {
 	show dialog {
 		GBob "Oh, well. Too late, regardless."
 	}
-	set entity "Guardian Bob" on_tick to spin_self_clockwise
+	set entity "Guardian Bob" on_tick to spin_self_clockwise;
 	show dialog {
 		GBob "Welcome to the annual Bob's Club party."
 		PLAYER "I thought the party was canceled this year."
 	}
-	set entity "Guardian Bob" on_tick to null_script
+	set entity "Guardian Bob" on_tick to null_script;
 	turn entity "Guardian Bob" toward entity "%PLAYER%"
 	show dialog {
 		GBob "It was, but... we seem to be experiencing a time anomaly."
@@ -173,55 +173,55 @@ ch2-cutscene-bob-party {
 		PLAYER "Yesterday."
 		GBob "Was it yesterday? Or was it actually a few years ago?"
 	}
-	wait 100ms
+	wait 100ms;
 	// (turn animations backward)
-	set entity "%PLAYER%" relative_direction to 2
-	walk entity "%PLAYER%" to geometry gasp-spot over 200ms
+	set entity "%PLAYER%" relative_direction to 2;
+	walk entity "%PLAYER%" to geometry gasp-spot over 200ms;
 	// (turn animations forward)
-	set entity "%PLAYER%" relative_direction to 0
-	turn entity "%PLAYER%" toward entity "Guardian Bob"
+	set entity "%PLAYER%" relative_direction to 0;
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
 	show dialog {
 		PLAYER "Wait. What?"
 	}
-	turn entity "Guardian Bob" south
+	turn entity "Guardian Bob" south;
 	show dialog {
 		GBob "That's what makes this an anomaly. It wasn't yesterday, and it wasn't a few years ago. It was BOTH."
 	}
-	turn entity "%PLAYER%" south
+	turn entity "%PLAYER%" south;
 	show dialog {
 		PLAYER "That's... impossible."
 		"What does that even mean?"
 		GBob "It means someone is messing with reality."
 	}
-	turn entity "%PLAYER%" toward entity "Guardian Bob"
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
 	show dialog {
 		PLAYER "The Big Bad?"
 	}
-	turn entity "Guardian Bob" toward entity "%PLAYER%"
+	turn entity "Guardian Bob" toward entity "%PLAYER%";
 	show dialog {
 		GBob "Probably."
 	}
-	wait 100ms
-	set entity "%PLAYER%" on_tick to spin_self_clockwise
-	wait 240ms
+	wait 100ms;
+	set entity "%PLAYER%" on_tick to spin_self_clockwise;
+	wait 240ms;
 	show dialog {
 		PLAYER "This is freaking me out. How do we stop it?"
 	}
-	turn entity "Guardian Bob" south
-	set entity "%PLAYER%" on_tick to null_script
-	turn entity "%PLAYER%" toward entity "Guardian Bob"
+	turn entity "Guardian Bob" south;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
 	show dialog {
 		GBob "Depends on the exact cause. I've been keeping my eye on it with my keytool, Glitch. Trying to investigate from several angles."
 		"But I don't have a lot of power in here."
 	}
-	turn entity "Guardian Bob" toward entity "%PLAYER%"
+	turn entity "Guardian Bob" toward entity "%PLAYER%";
 	show dialog {
 		GBob  "Honestly, Bob, the sooner you can stop the Big Bad, the better."
 		"No pressure!"
 	}
-	wait 80ms
-	turn entity "Guardian Bob" north
-	wait 400ms
+	wait 80ms;
+	turn entity "Guardian Bob" north;
+	wait 400ms;
 	show dialog {
 		GBob "Anyway, I'll keep watch here."
 		"Help yourself to the food. There's plenty."
@@ -235,24 +235,24 @@ ch2-cutscene-bob-party {
 			GBob "Sure. We've got a lifetime supply in the ice chest back there. Help yourself."
 		}
 	}
-	set flag ch2-cutseen-bob-party to true
-	wait 150ms
-	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms
-	set entity "Guardian Bob" on_tick to loiter-slow
+	set flag ch2-cutseen-bob-party to true;
+	wait 150ms;
+	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms;
+	set entity "Guardian Bob" on_tick to loiter-slow;
 	make camera follow entity "%PLAYER%"
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 loiter-slow {
-	turn entity "%SELF%" south /**/ wait 3200ms
-	turn entity "%SELF%" east /**/ wait 2000ms
-	turn entity "%SELF%" west /**/ wait 4400ms
+	turn entity "%SELF%" south; /**/ wait 3200ms;
+	turn entity "%SELF%" east; /**/ wait 2000ms;
+	turn entity "%SELF%" west; /**/ wait 4400ms;
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-guardianbob {
-	copy face-player
+	copy face-player;
 	show dialog {
 		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up and everything."
 		SELF "Well, we WERE going to have the party upstairs, but someone broke in and pretended to be named Bob. After that we upped our security."
@@ -265,27 +265,27 @@ interact-ch2-guardianbob {
 }
 
 interact-ch2-bobaustin {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "I'm the MC for Bob Jeopardy."
 		"TODO"
 	}
-	turn entity "%SELF%" south
+	turn entity "%SELF%" south;
 }
 
 interact-ch2-bobmoss {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "TODO"
 	}
-	turn entity "%SELF%" south
+	turn entity "%SELF%" south;
 }
 
 interact-ch2-marathonbob {
 	// capture original facing direction
-	copy pause-walk-and-face-player
+	copy pause-walk-and-face-player;
 	// normal behavior
-	mutate random ? 10
+	mutate random ? 10;
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
 	if (variable random is 1) {
 		show dialog { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" }
@@ -309,8 +309,8 @@ interact-ch2-marathonbob {
 		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
 	}
 	// turn back to the original facing direction
-	copy unface-player-and-resume-walk
-	mutate tempvar = 0 // courtesy reset
+	copy unface-player-and-resume-walk;
+	mutate tempvar = 0; // courtesy reset
 }
 
 interact-ch2-icechest {
@@ -342,7 +342,7 @@ interact-ch2-icechest {
 		show dialog {
 			name "" "(You pick up the can of Cactus Cooler!)"
 		}
-		copy ch2-pickup-cactuscooler
-		set flag interrupt to true // you just picked it up
+		copy ch2-pickup-cactuscooler;
+		set flag interrupt to true; // you just picked it up
 	}
 }

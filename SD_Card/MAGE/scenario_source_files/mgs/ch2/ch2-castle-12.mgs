@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-12 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: CASTLE HALLWAY BACK on_look text\n "
 	}
@@ -13,13 +13,13 @@ look-ch2-castle-12 {
 
 on_load-ch2-castle-12 {
 	// ch2 room state
-	mutate ch2-in-room = 12
+	mutate ch2-in-room = 12;
 	
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-12 is false) {
 		show serial dialog { "Discovered <bold><c>CASTLE HALLWAY BACK</>! Room added to map!" }
-		set flag ch2-seen-room-12 to true
+		set flag ch2-seen-room-12 to true;
 	} else {
 		show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
 	}
@@ -28,47 +28,47 @@ on_load-ch2-castle-12 {
 		flag ch2-installed-needle is true
 		|| flag ch2-carrying-needle is true
 	) {
-		copy script ch2-hide-needle
+		copy script ch2-hide-needle;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-12 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-12 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-12-north {
-	copy on_exit-ch2-castle-12
-	copy warping-out-fade-out
-	load map ch2-castle-13
+	copy on_exit-ch2-castle-12;
+	copy warping-out-fade-out;
+	load map ch2-castle-13;
 }
 on_go-castle-12-east {
-	copy on_exit-ch2-castle-12
-	copy warping-out-fade-out
-	load map ch2-castle-31
+	copy on_exit-ch2-castle-12;
+	copy warping-out-fade-out;
+	load map ch2-castle-31;
 }
 on_go-castle-12-south {
-	copy on_exit-ch2-castle-12
-	copy warping-out-fade-out
-	load map ch2-castle-11
+	copy on_exit-ch2-castle-12;
+	copy warping-out-fade-out;
+	load map ch2-castle-11;
 }
 
 
 /* ---------- NEEDLE (ADMIN) ---------- */
 
 ch2-hide-needle {
-	teleport entity "Needle" to geometry hiding-spot
-	set entity "Needle" name to " "
+	teleport entity "Needle" to geometry hiding-spot;
+	set entity "Needle" name to " ";
 }
 
 ch2-touch-needle {
@@ -76,7 +76,7 @@ ch2-touch-needle {
 		show dialog {
 			PLAYER "TODO needle1"
 		}
-		set flag ch2-needle-firstlook to true
+		set flag ch2-needle-firstlook to true;
 	}
 	show dialog {
 		PLAYER "TODO needle2."
@@ -94,13 +94,13 @@ ch2-touch-needle-yes {
 	show dialog {
 		name "" "(You pick up the needle!)"
 	}
-	copy script ch2-hide-needle
-	copy script ch2-pickup-needle
-	set entity "%SELF%" on_interact to null_script
+	copy script ch2-hide-needle;
+	copy script ch2-pickup-needle;
+	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-needle-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-needle  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-needle;  // reset after script jump
 }

@@ -72,8 +72,8 @@ All .mgs files are turned into MGE JSON by the MGE encoder. Unlike script files 
 	- Double (`"`) or single (`'`) quotes are both fine.
 	- Anything with a space or any unusual character *must* be wrapped in quotes.
 3. Many words are optional, and can be included either to increase logical clarity or omitted to decrease word density. E.g. the following two patterns are equivalent phrases:
-	- `goto script scriptName`
-	- `goto scriptName`
+	- `goto script scriptName;`
+	- `goto scriptName;`
 4. Certain [MGE variables](#variable-types-and-examples) can be formatted in multiple, human-friendly ways, e.g.
 	- Duration: `1000ms` or `1s` or `1000`
 	- Quantity: `once` or `1x` or `1`
@@ -133,8 +133,8 @@ While relatively human readable, the above is difficult to write in practice.
 ```
 on_tick-greenhouse {
   if entity "%PLAYER%" is inside geometry door-greenhouse
-    then goto leave-greenhouse
-  copy script ethernettle-uproot-check
+    then goto leave-greenhouse;
+  copy script ethernettle-uproot-check;
   // some kind of comment
 }
 ```
@@ -220,15 +220,15 @@ settings for dialog {
   }
 }
 show_dialog-wopr-backdoor {
-  set player control to off
-  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
-  wait 400ms
-  set player control to on
+  set player control to off;
+  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms;
+  wait 400ms;
+  set player control to on;
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
   }
-  set flag backdoor-found to true
+  set flag backdoor-found to true;
 }
 ```
 
@@ -771,9 +771,9 @@ Example #1: an action that wants a duration (syntax `wait $duration`)
 
 ```
 testScript1 {
-  wait 150ms // "duration" = ok
-  wait 150   // "number" is fine, too
-             //   (decays to "duration")
+  wait 150ms; // "duration" = ok
+  wait 150;   // "number" is fine, too
+              //   (decays to "duration")
 }
 ```
 
@@ -781,8 +781,8 @@ Example #2: an action that wants a number (syntax: `load slot $number`)
 
 ```
 testScript2 {
-  load slot 1    // "number" = ok
-  load slot 1ms  // "duration" won't work!
+  load slot 1;    // "number" = ok
+  load slot 1ms;  // "duration" won't work!
 }
 ```
 
@@ -838,9 +838,9 @@ A binary option.
 
 Some actions will prefer specific pairs of booleans when being translated from JSON, but when translating the other way, any of the above words will work. E.g.
 
-- `set player control open`
-- `set player control on`
-- `set player control true`
+- `set player control open;`
+- `set player control on;`
+- `set player control true;`
 
 #### Operator
 
@@ -1039,8 +1039,8 @@ Note that if multiple loops are nested, `break` and `continue` will only apply t
 ```
 scriptName {
   while (variable sodas < 5) {
-    show serial dialog "Wow! I've had $sodas$ sodas today!"
-    mutate sodas + 1
+    show serial dialog { "Wow! I've had $sodas$ sodas today!" }
+    mutate sodas + 1;
   }
 }
 ```
@@ -1057,9 +1057,9 @@ For `for`, the parenthesis encloses three sets of words separated by semicolons 
 script {
   show serial dialog "Let's count to 4!"
   for (mutate i = 1; variable i <= 3; mutate i + 1) {
-    show serial dialog "$i$..."
+    show serial dialog { "$i$..." }
   }
-    show serial dialog "$i$!"
+    show serial dialog { "$i$!" }
 }
 ```
 
@@ -1215,7 +1215,7 @@ const! (
 )
 
 testScript {
-  set entity $hamburgers $field to $bigNumber
+  set entity $hamburgers $field to $bigNumber;
 }
 ```
 
@@ -1223,7 +1223,7 @@ After the macro does its work, the script `testScript` instead will read:
 
 ```
 testScript {
-  set entity "Steamed Toast" x to 9001
+  set entity "Steamed Toast" x to 9001;
 }
 ```
 
@@ -1244,7 +1244,7 @@ This is recursive, so be careful.
 This is best used for common settings, such as the player dialog label.
 
 ```
-include!("header.mgs")
+include!("header.mgs");
 ```
 
 ## Action dictionary
@@ -1256,15 +1256,17 @@ Some of these patterns may also have some hidden parameters baked in to the phra
 As a reminder, words in parentheses are optional. For example, the dictionary pattern:
 
 ```
-set entity $entity:string on_tick (to) $string:string 
+set entity $entity:string on_tick (to) $string:string (;)
 ```
 
 will be satisfied by either of the following:
 
 ```
-set entity "Entity Name" on_tick to scriptName
-set entity "Entity Name" on_tick scriptName
+set entity "Entity Name" on_tick to scriptName;
+set entity "Entity Name" on_tick scriptName;
 ```
+
+Semicolons are currently optional at the end of actions, but eventually they will be required.
 
 Misc tips:
 

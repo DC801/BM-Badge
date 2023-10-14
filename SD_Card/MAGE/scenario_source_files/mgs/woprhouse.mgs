@@ -1,26 +1,26 @@
-include!("header.mgs")
+include!("header.mgs");
 
 on_load-woprhouse {
 	if (flag tuesdayd is true) {
-		register rtfm -> command-rtfm
+		register rtfm -> command-rtfm;
 	}
 	if (warp state is warping) {
 		// this is here because the "backdoor" dialog must come after the warp-in thing
-		copy warping-in-fade-in
-		set flag ch2-manual-warp to true // this will skip the "init" script's warp stuff
+		copy warping-in-fade-in;
+		set flag ch2-manual-warp to true; // this will skip the "init" script's warp stuff
 	}
 	if (flag wopr-backdoor-found is false) {
-		set player control to off
+		set player control to off;
 		if (warp state is not warped) {
-			walk entity "%PLAYER%" along geometry walk_from-north over 600ms
+			walk entity "%PLAYER%" along geometry walk_from-north over 600ms;
 		}
-		wait 400ms
+		wait 400ms;
 		show dialog {
 			PLAYER "Whoa! It looks like I found some kind of back door."
 		}
-		set flag wopr-backdoor-found to true
+		set flag wopr-backdoor-found to true;
 	}
-	set player control on
+	set player control on;
 	if (variable current-chapter is 2) {
 		goto ch2-map-init // JUMP TO SHARED BEHAVIOR
 	}
@@ -30,7 +30,7 @@ on_load-woprhouse {
 
 on_tick-woprhouse {
 	if entity "%PLAYER%" is inside geometry north-hitbox
-		then goto on_walk-woprhouse-north
+		then goto on_walk-woprhouse-north;
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -38,19 +38,19 @@ on_tick-woprhouse {
 on_walk-woprhouse-north {
 	// triggered by map's on_tick
 	if (variable current-chapter is 1) {
-		set warp state to exit_from-woprhouse
-		load map main
+		set warp state to exit_from-woprhouse;
+		load map main;
 	} else if (variable current-chapter is 2) {
-		set warp state to walk_from-woprhouse
-		load map main2
+		set warp state to walk_from-woprhouse;
+		load map main2;
 	} else {
 		show serial dialog { "You're in chapter '$current-chapter$'??" }
 	}
 }
 
 on_go-woprhouse-north {
-	copy warping-out-fade-out
-	load map main2
+	copy warping-out-fade-out;
+	load map main2;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -68,7 +68,7 @@ show_dialog-wopr-start {
 	}
 }
 restart-wopr {
-	set entity "%SELF%" on_interact to show_dialog-wopr-start
+	set entity "%SELF%" on_interact to show_dialog-wopr-start;
 }
 
 show_dialog-woprbooks {

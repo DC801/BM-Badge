@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-14 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: KING GIBSON'S BEDROOM on_look text\n "
 	}
@@ -13,13 +13,13 @@ look-ch2-castle-14 {
 
 on_load-ch2-castle-14 {
 	// ch2 room state
-	mutate ch2-in-room = 14
+	mutate ch2-in-room = 14;
 
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-14 is false) {
 		show serial dialog { "Discovered <bold><c>KING GIBSON'S BEDROOM</>! Room added to map!" }
-		set flag ch2-seen-room-14 to true
+		set flag ch2-seen-room-14 to true;
 	} else {
 		show serial dialog { "Entering <bold>KING GIBSON'S BEDROOM</>..." }
 	}
@@ -27,36 +27,36 @@ on_load-ch2-castle-14 {
 		flag ch2-installed-clock is true
 		|| flag ch2-carrying-clock is true
 	) {
-		copy script ch2-hide-clock
+		copy script ch2-hide-clock;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-14 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-14 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-14-south {
-	copy on_exit-ch2-castle-14
-	copy warping-out-fade-out
-	load map ch2-castle-13
+	copy on_exit-ch2-castle-14;
+	copy warping-out-fade-out;
+	load map ch2-castle-13;
 }
 
 /* ---------- CLOCK (ADMIN) ---------- */
 
 ch2-hide-clock {
-	teleport entity Clock to geometry hiding-spot
-	set entity Clock name to " "
+	teleport entity Clock to geometry hiding-spot;
+	set entity Clock name to " ";
 }
 
 ch2-touch-clock {
@@ -64,7 +64,7 @@ ch2-touch-clock {
 		show dialog {
 			PLAYER "Wow, this thing looks like it's a million years old."
 		}
-		set flag ch2-clock-firstlook to true
+		set flag ch2-clock-firstlook to true;
 	}
 	show dialog {
 		PLAYER "What a robust ticking ambience."
@@ -87,13 +87,13 @@ ch2-touch-clock-yes {
 	show dialog {
 		name "" "(You pick up the clock!)"
 	}
-	copy script ch2-hide-clock
-	copy script ch2-pickup-clock
-	set entity "%SELF%" on_interact to null_script
+	copy script ch2-hide-clock;
+	copy script ch2-pickup-clock;
+	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-clock-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-clock  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-clock;  // reset after script jump
 }

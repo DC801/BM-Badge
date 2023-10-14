@@ -1,35 +1,35 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* --------------- on_tick --------------- */
 
 on_tick-oldcouplehouse {
 	if entity "%PLAYER%" is inside geometry door-oldcouplehouse
-		then goto leave-oldcouplehouse
+		then goto leave-oldcouplehouse;
 }
 leave-oldcouplehouse {
-	set warp state to exit_from-oldcouplehouse
+	set warp state to exit_from-oldcouplehouse;
 	if (flag storyflag-bea1 is true) {
-		set flag bea-sequel-branch to true
+		set flag bea-sequel-branch to true;
 	}
-	load map main
+	load map main;
 }
 
 /* --------------- on_load --------------- */
 
 on_load-oldcouplehouse {
 	if (flag tuesdayd is true) {
-		register rtfm -> command-rtfm
+		register rtfm -> command-rtfm;
 	}
 	if (flag bea-sequel-branch is true) {
 		if (flag storyflag-bea2 is false) {
-			copy make-delmar-man
+			copy make-delmar-man;
 		}
 	}
 }
 make-delmar-man {
-	set entity Delmar type to old_man
-	set entity Delmar current_animation to 3
-	set entity Delmar on_tick to on_tick-delmar-blab-nonman-watch
+	set entity Delmar type to old_man;
+	set entity Delmar current_animation to 3;
+	set entity Delmar on_tick to on_tick-delmar-blab-nonman-watch;
 }
 
 /* --------------- Delmar --------------- */
@@ -40,7 +40,7 @@ show_dialog-delmar {
 			SELF "Bu, qrne. V zhfg'ir fgbbq hc gbb snfg. Srry n ovg jbbml."
 		}
 	} else if (entity Delmar type is not old_man) {
-		show dialog dialog-dsheep
+		show dialog dialog-dsheep;
 	} else if (flag bea-sequel-branch is true) {
 		show dialog {
 			SELF "...I tied an onion to my belt, which was the style at the time."
@@ -58,7 +58,7 @@ show_dialog-delmar {
 			SELF "Wha... huh?"
 		}
 	}
-	set entity Delmar on_interact to show_dialog-delmar
+	set entity Delmar on_interact to show_dialog-delmar;
 }
 
 
@@ -68,32 +68,32 @@ show_dialog-bea-start {
 	if (entity "%SELF%" is glitched) {
 		show dialog { SELF "Ydy D ymjk ht bgvnnzn? Ocz rjmgy'n bjiz v wdo apuut." }
 	} else {
-		copy script clear-own-tick
-		copy script face-player
+		copy script clear-own-tick;
+		copy script face-player;
 		if (flag bea-sequel-branch is false) {
-			goto show_dialog-bea-part1
+			goto show_dialog-bea-part1;
 		} else {
-			goto show_dialog-bea-part2
+			goto show_dialog-bea-part2;
 		}
 	}
-	set entity Beatrice on_interact to show_dialog-bea-start
+	set entity Beatrice on_interact to show_dialog-bea-start;
 }
 
 /* --------------- Beatrice --------------- */
 
 slow-stare-at-delmar {
-	set player control to off
-	wait 100ms
-	turn entity "%SELF%" toward entity Delmar
-	wait 500ms
-	set player control to on
+	set player control to off;
+	wait 100ms;
+	turn entity "%SELF%" toward entity Delmar;
+	wait 500ms;
+	set player control to on;
 }
 slow-stare-at-player {
-	set player control to off
-	wait 100ms
-	turn entity "%SELF%" toward entity "%PLAYER%"
-	wait 500ms
-	set player control to on
+	set player control to off;
+	wait 100ms;
+	turn entity "%SELF%" toward entity "%PLAYER%";
+	wait 500ms;
+	set player control to on;
 }
 
 // part 1
@@ -102,22 +102,22 @@ show_dialog-bea-part1 {
 	if (flag storyflag-bea1 is false) { // you did NOT beat part1
 		if (entity Delmar type is old_man) { // win condition met
 			// currently no backstory/!backstory difference
-			set player control to off
-			copy script clear-own-tick
-			copy script slow-stare-at-delmar
-			set player control to on
+			set player control to off;
+			copy script clear-own-tick;
+			copy script slow-stare-at-delmar;
+			set player control to on;
 			show dialog {
 				SELF "Oh, %Delmar%, it's you! You're a man again! At last!"
 				Delmar "Whazzat, %Beatrice%? Something seems different."
 				SELF "Oh, it's my %Delmar%! Thank you, %PLAYER%!"
 			}
-			turn entity "%SELF%" toward entity Delmar
-			copy script calculate-hint-tracking-series
+			turn entity "%SELF%" toward entity Delmar;
+			copy script calculate-hint-tracking-series;
 			if (variable hint-tracking-check is 4) {
-				copy script set-hint-none
+				copy script set-hint-none;
 			}
-			set flag bea1-backstory to true
-			set flag storyflag-bea1 to true
+			set flag bea1-backstory to true;
+			set flag storyflag-bea1 to true;
 		} else { // win condition NOT met
 			if (flag bea1-backstory is false) { // you did NOT hear the backstory
 				if (entity Delmar type is sheep || entity Delmar type is helga) { // is sheep
@@ -125,16 +125,16 @@ show_dialog-bea-part1 {
 						SELF "Forty years ago, things were sure different."
 						"I was a lot younger then, and my husband, %Delmar%...."
 					}
-					copy script clear-own-tick
-					copy script slow-stare-at-delmar
+					copy script clear-own-tick;
+					copy script slow-stare-at-delmar;
 					show dialog { SELF "My husband was a real man! Not a farm animal!" }
-					copy script slow-stare-at-player
-					set player control to on
+					copy script slow-stare-at-player;
+					set player control to on;
 				} else { // is rando
-					copy script clear-own-tick
-					copy script slow-stare-at-delmar
+					copy script clear-own-tick;
+					copy script slow-stare-at-delmar;
 					show dialog { SELF "Oh, %Delmar%! You're... oh...." }
-					copy script face-player
+					copy script face-player;
 					show dialog {
 						SELF "Oh, goodness. Well, this isn't my %Delmar%, but I suppose it's nice he's not a sheep anymore, at least."
 						"He's been a sheep for so long... well, I suppose it's been forty years."
@@ -153,12 +153,12 @@ show_dialog-bea-part1 {
 					PLAYER "Make things right? Well, I can change what he looks like, anyway."
 					SELF "That works for me!"
 				}
-				set flag bea1-backstory to true
+				set flag bea1-backstory to true;
 			} else { // you DID hear the backstory (sheep or rando)
 				show dialog { SELF "Oh, %Delmar%... we'll fix you up real soon!" }
 			}
-			copy script set_tick-watch-player
-			copy script set-hint-bea1
+			copy script set_tick-watch-player;
+			copy script set-hint-bea1;
 		}
 	} else { // you DID beat part1
 		if (entity Delmar type is old_man) {
@@ -175,7 +175,7 @@ show_dialog-bea-part1 {
 			}
 		}
 	}
-	set entity Beatrice on_interact to show_dialog-bea-start
+	set entity Beatrice on_interact to show_dialog-bea-start;
 }
 
 // part 2
@@ -195,21 +195,21 @@ show_dialog-bea-part2 {
 					"...And, erm, we need not mention this to anyone! You understand?"
 				}
 			}
-			turn entity "%SELF%" toward entity Delmar
-			copy script calculate-hint-tracking-series
+			turn entity "%SELF%" toward entity Delmar;
+			copy script calculate-hint-tracking-series;
 			if (variable hint-tracking-check is 9) {
-				copy script set-hint-none
+				copy script set-hint-none;
 			}
-			set flag bea2-backstory to true
-			set flag storyflag-bea2 to true
+			set flag bea2-backstory to true;
+			set flag storyflag-bea2 to true;
 		} else { // not a sheep
 			if (entity Delmar type is old_man) {
 				if (flag bea2-backstory is false) {
 					show dialog { SELF "...." "You know, I appreciate what you did, %PLAYER%. I really do." }
-					copy script clear-own-tick
-					copy script slow-stare-at-delmar
+					copy script clear-own-tick;
+					copy script slow-stare-at-delmar;
 					show dialog { SELF "...." }
-					copy script slow-stare-at-player
+					copy script slow-stare-at-player;
 					show dialog {
 						SELF "But now I find myself longing for quiet."
 						"It was so peaceful, before. %Delmar% and I used to get along so well."
@@ -229,9 +229,9 @@ show_dialog-bea-part2 {
 					"Actually, I was hoping he could become a sheep again."
 				}
 			}
-			copy script set_tick-watch-player
-			set flag bea2-backstory to true
-			copy script set-hint-bea2
+			copy script set_tick-watch-player;
+			set flag bea2-backstory to true;
+			copy script set-hint-bea2;
 		}
 	} else { // part2won
 		if (entity Delmar type is sheep || entity Delmar type is helga) {
@@ -248,21 +248,21 @@ show_dialog-bea-part2 {
 			}
 		}
 	}
-	set entity Beatrice on_interact to show_dialog-bea-start
+	set entity Beatrice on_interact to show_dialog-bea-start;
 }
 
 /* --------------- blab and unblab --------------- */
 
 delmar-blab {
-	set entity Delmar current_animation to 3
-	set entity Delmar on_tick to on_tick-delmar-blab-nonman-watch
+	set entity Delmar current_animation to 3;
+	set entity Delmar on_tick to on_tick-delmar-blab-nonman-watch;
 }
 on_tick-delmar-blab-nonman-watch {
 	if entity Delmar type is not old_man then goto delmar-unblab
 }
 delmar-unblab {
-	set entity Delmar current_animation to 0
-	set entity Delmar on_tick to on_tick-delmar-blab-man-watch
+	set entity Delmar current_animation to 0;
+	set entity Delmar on_tick to on_tick-delmar-blab-man-watch;
 }
 on_tick-delmar-blab-man-watch {
 	if entity Delmar type is old_man then goto delmar-blab
@@ -271,7 +271,7 @@ on_tick-delmar-blab-man-watch {
 /* --------------- debug --------------- */
 
 debug-bea-sequel-q {
-	copy script face-player
+	copy script face-player;
 	show dialog {
 		SELF "Set sequel branch?"
 		> "Yes (plus man)" : debug-bea-sequel-man
@@ -280,26 +280,26 @@ debug-bea-sequel-q {
 	}
 }
 debug-bea-sequel-man {
-	set flag bea-sequel-branch to true
-	set flag storyflag-bea1 to true
-	set flag bea1-backstory to true
-	set entity Delmar type to old_man
-	copy script set-hint-none
-	copy script delmar-blab
+	set flag bea-sequel-branch to true;
+	set flag storyflag-bea1 to true;
+	set flag bea1-backstory to true;
+	set entity Delmar type to old_man;
+	copy script set-hint-none;
+	copy script delmar-blab;
 	show dialog { SELF "Sequel branch activated, and Delmar is a man." }
-	set entity "%SELF%" on_interact to debug-bea-sequel-q
+	set entity "%SELF%" on_interact to debug-bea-sequel-q;
 }
 debug-bea-sequel-noman {
-	set flag bea-sequel-branch to true
-	set flag storyflag-bea1 to true
-	set flag bea1-backstory to true
-	copy script set-hint-none
+	set flag bea-sequel-branch to true;
+	set flag storyflag-bea1 to true;
+	set flag bea1-backstory to true;
+	copy script set-hint-none;
 	show dialog { SELF "Sequel branch activated, and Delmar left alone." }
-	set entity "%SELF%" on_interact to debug-bea-sequel-q
+	set entity "%SELF%" on_interact to debug-bea-sequel-q;
 }
 debug-bea-sequel-no {
 	show dialog { SELF "Nothing changed." }
-	set entity "%SELF%" on_interact to debug-bea-sequel-q
+	set entity "%SELF%" on_interact to debug-bea-sequel-q;
 }
 
 dialog dialog-bea-mandud-s { //where was this supposed to go? lol

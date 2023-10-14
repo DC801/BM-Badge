@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-lodge {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"   TODO: Lodge text"
 	}
@@ -14,57 +14,57 @@ look-ch2-lodge {
 on_load-ch2-lodge {
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	if (variable ch2-storyflag-round is not 1) {
-		set entity Alfonso on_tick to yeet
-		set entity Jackob on_tick to yeet
+		set entity Alfonso on_tick to yeet;
+		set entity Jackob on_tick to yeet;
 	}
 
 	if (warp state is walk_from-north) {
-		set player control to off
-		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
+		set player control to off;
+		walk entity "%PLAYER%" along geometry walk_from-north over 200ms;
 	}
 	// player control comes on after this next script is over:
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-lodge {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		set warp state to walk_from-lodge
-		load map main2
+		set warp state to walk_from-lodge;
+		load map main2;
 	}
 	if (entity "%PLAYER%" is inside geometry north-hitbox) {
-		set warp state to walk_from-south
-		load map ch2-lodge-rtfm
+		set warp state to walk_from-south;
+		load map ch2-lodge-rtfm;
 	}
 }
 
 look-left-sometimes {
-	turn entity "%SELF%" west
-	wait 800ms
-	turn entity "%SELF%" north
-	wait 3800ms
-	turn entity "%SELF%" west
-	wait 500ms
-	turn entity "%SELF%" north
-	wait 2500ms
+	turn entity "%SELF%" west;
+	wait 800ms;
+	turn entity "%SELF%" north;
+	wait 3800ms;
+	turn entity "%SELF%" west;
+	wait 500ms;
+	turn entity "%SELF%" north;
+	wait 2500ms;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-lodge-south {
-	copy warping-out-fade-out
-	load map main2
+	copy warping-out-fade-out;
+	load map main2;
 }
 on_go-ch2-lodge-north {
-	copy warping-out-fade-out
-	load map ch2-lodge-rtfm
+	copy warping-out-fade-out;
+	load map ch2-lodge-rtfm;
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-timmy {
-	copy face-player
+	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
 			SELF "I love the library! There's so many books here it would take a hundred years to read them all!"
@@ -93,7 +93,7 @@ interact-ch2-timmy {
 			"Bees and bugs -- but especially bees -- really freak me out."
 		}
 	}
-	turn entity "%SELF%" east
+	turn entity "%SELF%" east;
 }
 interact-ch2-cat-lodge {
 	show dialog {
@@ -111,8 +111,8 @@ interact-ch2-jackob-library {
 const!( $bookcount = 4)
 
 interact-ch2-alfonso-library {
-	mutate ch2-alfonso-library-count + 1
-	mutate ch2-alfonso-library-count % $bookcount
+	mutate ch2-alfonso-library-count + 1;
+	mutate ch2-alfonso-library-count % $bookcount;
 	if (variable ch2-alfonso-library-count is 1) {
 		show dialog {
 			SELF "Oh, goodness! It's \"The Importance of Being Earnest.\" I remember this play. Twenty years ago, Jackob and I did a reading of it with...."
@@ -130,9 +130,9 @@ interact-ch2-alfonso-library {
 			SELF "Oh, look at that. \"Rendezvous with Rama,\" but what a stunning cover! I don't recognize this edition. Who publizhed this one? Gollancz...?"
 		}
 	}
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "Yes, yes, I'm getting work done! What does it look like I'm doing?"
 	}
-	turn entity "%SELF%" north
+	turn entity "%SELF%" north;
 }

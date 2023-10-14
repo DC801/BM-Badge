@@ -1,16 +1,16 @@
-include!("header.mgs")
+include!("header.mgs");
 
 // REGISTER
 
 register-fuse {
-	register man + fuse -> man-fuse
-	register fuse -> command-fuse
+	register man + fuse -> man-fuse;
+	register fuse -> command-fuse;
 }
 
 // MAN PAGE
 
 man-fuse {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - FUSE</>"
 		" "
@@ -25,22 +25,22 @@ man-fuse {
 // COMMAND
 
 command-fuse {
-	mutate tempvar = 0
+	mutate tempvar = 0;
 	if (flag ch2-carrying-plate is true) {
 		if (flag ch2-carrying-needle is true) {
-			mutate tempvar = 1
+			mutate tempvar = 1;
 		}
 	} else if (flag ch2-carrying-goldfish is true) {
 		if (flag ch2-carrying-abacus is true) {
-			mutate tempvar = 2
+			mutate tempvar = 2;
 		}
 	}
 	if (variable tempvar is 1) {
-		goto command-fuse-combo1
+		goto command-fuse-combo1;
 	} else if (variable tempvar is 2) {
-		goto command-fuse-combo2
+		goto command-fuse-combo2;
 	} else {
-		show serial dialog spacer
+		show serial dialog spacer;
 		show serial dialog {
 			"You have no compatible items to fuse."
 		}
@@ -48,7 +48,7 @@ command-fuse {
 }
 
 command-fuse-combo1 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"Fuse <m>dinner plate</> and <m>phonograph needle</>?"
 		" "
@@ -62,15 +62,15 @@ command-fuse-combo1 {
 	}
 }
 command-fuse-combo1-yes {
-	copy ch2-fuse-harddrive
-	show serial dialog spacer
+	copy ch2-fuse-harddrive;
+	show serial dialog spacer;
 	show serial dialog {
 		"Items fused into <m>HARD DRIVE</>!"
 	}
 }
 
 command-fuse-combo2 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"Fuse <m>goldish</> and <m>abacus</>?"
 		" "
@@ -84,8 +84,8 @@ command-fuse-combo2 {
 	}
 }
 command-fuse-combo2-yes {
-	copy ch2-fuse-cpu
-	show serial dialog spacer
+	copy ch2-fuse-cpu;
+	show serial dialog spacer;
 	show serial dialog {
 		"Items fused into <m>CPU</>!"
 	}

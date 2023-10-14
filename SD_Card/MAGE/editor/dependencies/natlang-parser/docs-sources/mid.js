@@ -732,9 +732,13 @@ var makeExampleFromDictionaryEntry = function (entry) {
 		if (word[0] === "?") {
 			insert = word === "?script" ? "" : word.substring(1);
 		}
+		// if (word[0] === "?") {
+		// 	insert = word === "?;" ? "" : word.substring(1);
+		// }
 		return insert;
 	})
 	return result.join(' ')
+		.replace(/ ;$/, ';')
 		.replace(/  /g,' ');
 };
 
@@ -791,7 +795,7 @@ var mid = Object.keys(actionCategoryText).map(function (actionCategoryName) {
 				itemChonks.push("Examples:");
 				var examples = dictionaryEntries.map(function (entry) {
 					return `- \`${makeExampleFromDictionaryEntry(entry)}\``;
-				})
+				}).sort();
 				itemChonks = itemChonks.concat(examples.join('\n'));
 			} else if (dictionaryEntries.length === 1) {
 				var example = makeExampleFromDictionaryEntry(dictionaryEntries[0]);

@@ -1,16 +1,16 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-23 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: POWER PLANT on_look text\n "
 	}
 }
 
 look-ch2-rocco {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Rocco%</>."
 		" "
@@ -22,19 +22,19 @@ look-ch2-rocco {
 
 on_load-ch2-castle-23 {
 	// ch2 room state
-	mutate ch2-in-room = 23
+	mutate ch2-in-room = 23;
 
 	// DEBUG
 	if (debug mode is on) {
-		register get + thing -> ch2-pickup-cactuscooler
+		register get + thing -> ch2-pickup-cactuscooler;
 		show serial dialog { "\t<g>DEBUG option:</> 'get thing' to acquire Cactus Cooler" }
 	}
 
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-23 is false) {
 		show serial dialog { "Discovered <bold><c>POWER PLANT</>! Room added to map!" }
-		set flag ch2-seen-room-23 to true
+		set flag ch2-seen-room-23 to true;
 	} else {
 		show serial dialog { "Entering <bold>POWER PLANT</>..." }
 	}
@@ -42,49 +42,49 @@ on_load-ch2-castle-23 {
 		flag ch2-installed-heatsink is true
 		|| flag ch2-carrying-heatsink is true
 	) {
-		copy script ch2-hide-heatsink
+		copy script ch2-hide-heatsink;
 	}
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-23 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-23 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 // SERIAL: go
 
 on_go-castle-23-south {
-	copy on_exit-ch2-castle-23
-	copy warping-out-fade-out
-	load map ch2-castle-22
+	copy on_exit-ch2-castle-23;
+	copy warping-out-fade-out;
+	load map ch2-castle-22;
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-helvetica {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "(TODO)"
 	}
 }
 
 interact-ch2-tracy {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "(TODO)"
 	}
 }
 
 interact-ch2-rocco {
-	copy face-player
+	copy face-player;
 	if (flag ch2-cactuscooler-delivered is true) {
 		show dialog {
 			SELF "TODO\n(Love Cactus Cooler! To cool the machines, I mean.)"
@@ -95,15 +95,15 @@ interact-ch2-rocco {
 			SELF "TODO\n(Can't give heat sink; bring us Cactus Cooler first.)"
 			"(Blah blah blah)"
 		}
-		set flag ch2-rocco-backstory to true
-		set flag ch2-want-cactuscooler to true
-		copy ch2-handoff-powersupply-to-cactuscooler
+		set flag ch2-rocco-backstory to true;
+		set flag ch2-want-cactuscooler to true;
+		copy ch2-handoff-powersupply-to-cactuscooler;
 		if (flag ch2-carrying-cactuscooler is true) {
 			show dialog {
 				SELF "Hey, wait a minute! You have a can of Cactus Cooler already! I don't suppose...."
 			}
-			set flag interrupt to true
-			goto interact-ch2-rocco-give-q // jump
+			set flag interrupt to true;
+			goto interact-ch2-rocco-give-q; // jump
 		}
 	}
 	else if (flag ch2-carrying-cactuscooler is true) {
@@ -111,21 +111,21 @@ interact-ch2-rocco {
 			show dialog {
 				SELF "Oh, it looks like you found a can of Cactus Cooler somewhere! Willing to give it to us?"
 			}
-			set flag interrupt to true
+			set flag interrupt to true;
 		}
 		else {
 			show dialog {
 				SELF "Change your mind? Willing to give up your can of Cactus Cooler?"
 			}
 		}
-		goto interact-ch2-rocco-give-q // jump
+		goto interact-ch2-rocco-give-q; // jump
 	}
 	else {
 		show dialog {
 			SELF "Remember, we'll give up this heat sink if you bring us a substitute. A can of Cactus Cooler will do."
 		}
 	}
-	goto interact-ch2-rocco-wrapup
+	goto interact-ch2-rocco-wrapup;
 }
 
 interact-ch2-rocco-give-q {
@@ -142,28 +142,28 @@ interact-ch2-rocco-give {
 		name "" "(Gave %Rocco% the can of Cactus Cooler!)"
 		SELF "Hey, that's swell! Go ahead and take that heat sink now. We'll be all right with this stuff instead."
 	}
-	set flag ch2-cactuscooler-delivered to true
-	set flag ch2-heatsink-permission to true
-	copy ch2-turn_in-cactuscooler
-	goto interact-ch2-rocco-wrapup
+	set flag ch2-cactuscooler-delivered to true;
+	set flag ch2-heatsink-permission to true;
+	copy ch2-turn_in-cactuscooler;
+	goto interact-ch2-rocco-wrapup;
 }
 
 interact-ch2-rocco-nogive {
 	show dialog {
 		SELF "Aww, come on, now! No Cactus Cooler, no heat sink! That was the deal!"
 	}
-	goto interact-ch2-rocco-wrapup
+	goto interact-ch2-rocco-wrapup;
 }
 
 interact-ch2-rocco-wrapup {
-	set entity "%SELF%" on_interact to interact-ch2-rocco
+	set entity "%SELF%" on_interact to interact-ch2-rocco;
 }
 
 /* ---------- HEAT SINK (ADMIN) ---------- */
 
 ch2-hide-heatsink {
-	teleport entity "Heat Sink" to geometry hiding-spot
-	set entity "Heat Sink" name to " "
+	teleport entity "Heat Sink" to geometry hiding-spot;
+	set entity "Heat Sink" name to " ";
 }
 
 ch2-touch-heatsink {
@@ -171,7 +171,7 @@ ch2-touch-heatsink {
 		show dialog {
 			PLAYER "TODO heatsink1"
 		}
-		set flag ch2-heatsink-firstlook to true
+		set flag ch2-heatsink-firstlook to true;
 	}
 	show dialog {
 		PLAYER "TODO heatsink2."
@@ -192,13 +192,13 @@ ch2-touch-heatsink-yes {
 	show dialog {
 		name "" "(You pick up the heat sink!)"
 	}
-	copy script ch2-hide-heatsink
-	copy script ch2-pickup-heatsink
-	set entity "%SELF%" on_interact to null_script
+	copy script ch2-hide-heatsink;
+	copy script ch2-pickup-heatsink;
+	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-heatsink-no {
 	show dialog {
 		PLAYER "Another time, perhaps."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-heatsink  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-heatsink;  // reset after script jump
 }

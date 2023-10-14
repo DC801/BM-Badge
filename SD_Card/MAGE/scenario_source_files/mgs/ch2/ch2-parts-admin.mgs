@@ -3,46 +3,46 @@
 // debug: "win" that storyflag round
 
 debug-round1 {
-	copy ch2-pickup-monitor
-	copy ch2-pickup-heatsink
-	copy ch2-pickup-powersupply
+	copy ch2-pickup-monitor;
+	copy ch2-pickup-heatsink;
+	copy ch2-pickup-powersupply;
 }
 debug-round2 {
-	copy ch2-pickup-keyboard
-	copy ch2-pickup-mouse
-	copy ch2-pickup-needle
-	copy ch2-pickup-plate
-	copy ch2-fuse-harddrive
+	copy ch2-pickup-keyboard;
+	copy ch2-pickup-mouse;
+	copy ch2-pickup-needle;
+	copy ch2-pickup-plate;
+	copy ch2-fuse-harddrive;
 }
 debug-round3 {
-	copy ch2-pickup-ramchips
-	copy ch2-pickup-clock
-	copy ch2-pickup-goldfish
-	copy ch2-pickup-abacus
-	copy ch2-fuse-cpu
+	copy ch2-pickup-ramchips;
+	copy ch2-pickup-clock;
+	copy ch2-pickup-goldfish;
+	copy ch2-pickup-abacus;
+	copy ch2-fuse-cpu;
 }
 
 /* ---------- PUT QUEST MARKERS ON MAP ---------- */
 
 ch2-put_on_map-round1 {
-	set flag ch2-map-monitor to true
-	set flag ch2-map-heatsink to true
-	set flag ch2-map-powersupply to true
+	set flag ch2-map-monitor to true;
+	set flag ch2-map-heatsink to true;
+	set flag ch2-map-powersupply to true;
 }
 ch2-put_on_map-round2 {
-	set flag ch2-map-keyboard to true
-	set flag ch2-map-mouse to true
-	set flag ch2-map-plate to true
-	set flag ch2-map-needle to true
+	set flag ch2-map-keyboard to true;
+	set flag ch2-map-mouse to true;
+	set flag ch2-map-plate to true;
+	set flag ch2-map-needle to true;
 }
 ch2-put_on_map-round3 {
-	set flag ch2-map-clock to true
-	set flag ch2-map-goldfish to true
-	set flag ch2-map-abacus to true
-	set flag ch2-map-ramchips to true
+	set flag ch2-map-clock to true;
+	set flag ch2-map-goldfish to true;
+	set flag ch2-map-abacus to true;
+	set flag ch2-map-ramchips to true;
 }
 ch2-put_on_map-round4 { // TODO: use this!
-	set flag ch2-map-mainframeos to true
+	set flag ch2-map-mainframeos to true;
 }
 
 /* ---------- ACQUIRE ITEM ---------- */
@@ -52,188 +52,188 @@ ch2-put_on_map-round4 { // TODO: use this!
 //ROUND 1
 
 ch2-pickup-monitor {
-	set flag ch2-map-monitor to false
-	set flag ch2-carrying-monitor to true
-	register look + monitor -> look-monitor
+	set flag ch2-map-monitor to false;
+	set flag ch2-carrying-monitor to true;
+	register look + monitor -> look-monitor;
 }
 ch2-pickup-powersupply {
-	set flag ch2-map-powersupply to false
-	set flag ch2-carrying-powersupply to true
-	register look + powersupply -> look-powersupply
+	set flag ch2-map-powersupply to false;
+	set flag ch2-carrying-powersupply to true;
+	register look + powersupply -> look-powersupply;
 }
 ch2-handoff-powersupply-to-cactuscooler {
-	set flag ch2-map-heatsink to false
-	set flag ch2-map-cactuscooler-castle to true
+	set flag ch2-map-heatsink to false;
+	set flag ch2-map-cactuscooler-castle to true;
 }
 ch2-handoff-cactuscooler-to-bobaustin {
-	set flag ch2-map-cactuscooler-castle to false
-	set flag ch2-map-cactuscooler-bobaustin to true
+	set flag ch2-map-cactuscooler-castle to false;
+	set flag ch2-map-cactuscooler-bobaustin to true;
 }
 ch2-pickup-cactuscooler {
 	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
-	set flag ch2-map-cactuscooler-bobaustin to false
-	set flag ch2-map-heatsink to true
-	set flag ch2-carrying-cactuscooler to true
-	register look + cactuscooler -> look-cactuscooler
+	set flag ch2-map-cactuscooler-bobaustin to false;
+	set flag ch2-map-heatsink to true;
+	set flag ch2-carrying-cactuscooler to true;
+	register look + cactuscooler -> look-cactuscooler;
 }
 ch2-pickup-heatsink {
 	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
-	set flag ch2-map-heatsink to false
-	set flag ch2-carrying-heatsink to true
-	register look + heatsink -> look-heatsink
+	set flag ch2-map-heatsink to false;
+	set flag ch2-carrying-heatsink to true;
+	register look + heatsink -> look-heatsink;
 }
 ch2-unpickup-cactuscooler { // DEBUG
 	// inverse of the above, lol, sorry for incorrect state
-	set flag ch2-map-cactuscooler-bobaustin to true
-	set flag ch2-map-heatsink to false
-	set flag ch2-carrying-cactuscooler to false
+	set flag ch2-map-cactuscooler-bobaustin to true;
+	set flag ch2-map-heatsink to false;
+	set flag ch2-carrying-cactuscooler to false;
 	unregister look + cactuscooler
 }
 
 // ROUND 2
 
 ch2-pickup-keyboard {
-	set flag ch2-map-keyboard to false
-	set flag ch2-carrying-keyboard to true
-	register look + keyboard -> look-keyboard
+	set flag ch2-map-keyboard to false;
+	set flag ch2-carrying-keyboard to true;
+	register look + keyboard -> look-keyboard;
 }
 ch2-pickup-mouse {
-	set flag ch2-map-mouse to false
-	set flag ch2-carrying-mouse to true
-	register look + mouse -> look-mouse
+	set flag ch2-map-mouse to false;
+	set flag ch2-carrying-mouse to true;
+	register look + mouse -> look-mouse;
 }
 ch2-pickup-plate {
-	set flag ch2-map-plate to false
-	set flag ch2-carrying-plate to true
-	register look + plate -> look-plate
+	set flag ch2-map-plate to false;
+	set flag ch2-carrying-plate to true;
+	register look + plate -> look-plate;
 }
 ch2-pickup-needle {
-	set flag ch2-map-needle to false
-	set flag ch2-carrying-needle to true
-	register look + needle -> look-needle
+	set flag ch2-map-needle to false;
+	set flag ch2-carrying-needle to true;
+	register look + needle -> look-needle;
 }
 ch2-fuse-harddrive {
-	copy ch2-install-plate
-	copy ch2-install-needle
-	set flag ch2-carrying-harddrive to true
-	register look + harddrive -> look-harddrive
+	copy ch2-install-plate;
+	copy ch2-install-needle;
+	set flag ch2-carrying-harddrive to true;
+	register look + harddrive -> look-harddrive;
 }
 
 // ROUND 3
 
 ch2-pickup-clock {
-	set flag ch2-map-clock to false
-	set flag ch2-carrying-clock to true
-	register look + clock -> look-clock
+	set flag ch2-map-clock to false;
+	set flag ch2-carrying-clock to true;
+	register look + clock -> look-clock;
 }
 ch2-pickup-goldfish {
-	set flag ch2-map-goldfish to false
-	set flag ch2-carrying-goldfish to true
-	register look + goldfish -> look-goldfish
+	set flag ch2-map-goldfish to false;
+	set flag ch2-carrying-goldfish to true;
+	register look + goldfish -> look-goldfish;
 }
 ch2-pickup-abacus {
-	set flag ch2-map-abacus to false
-	set flag ch2-carrying-abacus to true
-	register look + abacus -> look-abacus
+	set flag ch2-map-abacus to false;
+	set flag ch2-carrying-abacus to true;
+	register look + abacus -> look-abacus;
 }
 ch2-fuse-cpu {
-	copy ch2-install-goldfish
-	copy ch2-install-abacus
-	set flag ch2-carrying-cpu to true
-	register look + cpu -> look-cpu
+	copy ch2-install-goldfish;
+	copy ch2-install-abacus;
+	set flag ch2-carrying-cpu to true;
+	register look + cpu -> look-cpu;
 }
 ch2-handoff-ramchips-to-seamoss {
-	set flag ch2-map-ramchips to false
-	set flag ch2-map-seamoss to true
+	set flag ch2-map-ramchips to false;
+	set flag ch2-map-seamoss to true;
 }
 ch2-pickup-ramchips {
-	set flag ch2-map-seamoss to false
-	set flag ch2-carrying-ramchips to true
-	register look + ramchips -> look-ramchips
+	set flag ch2-map-seamoss to false;
+	set flag ch2-carrying-ramchips to true;
+	register look + ramchips -> look-ramchips;
 }
 
 // ROUND 4
 
 ch2-pickup-mainframeos {
-	set flag ch2-map-mainframeos to false
-	set flag ch2-carrying-mainframeos to true
-	register look + mainframeos -> look-mainframeos
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	register look + mainframeos -> look-mainframeos;
 }
 
 /* ---------- ITEM "INSTALL" ---------- */
 
 ch2-install-monitor {
-	set flag ch2-carrying-monitor to false
-	set flag ch2-installed-monitor to true
+	set flag ch2-carrying-monitor to false;
+	set flag ch2-installed-monitor to true;
 	unregister look + monitor
 }
 ch2-turn_in-cactuscooler {
-	set flag ch2-carrying-cactuscooler to false
-	unregister look + cactuscooler
+	set flag ch2-carrying-cactuscooler to false;
+	unregister look + cactuscooler;
 	// picking up heatsink is currently a separate step
 }
 ch2-install-heatsink {
-	set flag ch2-carrying-heatsink to false
-	set flag ch2-installed-heatsink to true
-	unregister look + heatsink
+	set flag ch2-carrying-heatsink to false;
+	set flag ch2-installed-heatsink to true;
+	unregister look + heatsink;
 }
 ch2-install-powersupply {
-	set flag ch2-carrying-powersupply to false
-	set flag ch2-installed-powersupply to true
-	unregister look + powersupply
+	set flag ch2-carrying-powersupply to false;
+	set flag ch2-installed-powersupply to true;
+	unregister look + powersupply;
 }
 ch2-install-keyboard {
-	set flag ch2-carrying-keyboard to false
-	set flag ch2-installed-keyboard to true
-	unregister look + keyboard
+	set flag ch2-carrying-keyboard to false;
+	set flag ch2-installed-keyboard to true;
+	unregister look + keyboard;
 }
 ch2-install-mouse {
-	set flag ch2-carrying-mouse to false
-	set flag ch2-installed-mouse to true
-	unregister look + mouse
+	set flag ch2-carrying-mouse to false;
+	set flag ch2-installed-mouse to true;
+	unregister look + mouse;
 }
 ch2-install-harddrive {
-	set flag ch2-carrying-harddrive to false
-	set flag ch2-installed-harddrive to true
-	unregister look + harddrive
+	set flag ch2-carrying-harddrive to false;
+	set flag ch2-installed-harddrive to true;
+	unregister look + harddrive;
 }
 ch2-install-plate {
-	set flag ch2-carrying-plate to false
-	set flag ch2-installed-plate to true
-	unregister look + plate
+	set flag ch2-carrying-plate to false;
+	set flag ch2-installed-plate to true;
+	unregister look + plate;
 }
 ch2-install-needle {
-	set flag ch2-carrying-needle to false
-	set flag ch2-installed-needle to true
-	unregister look + needle
+	set flag ch2-carrying-needle to false;
+	set flag ch2-installed-needle to true;
+	unregister look + needle;
 }
 ch2-install-ramchips {
-	set flag ch2-carrying-ramchips to false
-	set flag ch2-installed-ramchips to true
-	unregister look + ramchips
+	set flag ch2-carrying-ramchips to false;
+	set flag ch2-installed-ramchips to true;
+	unregister look + ramchips;
 }
 ch2-install-clock {
-	set flag ch2-carrying-clock to false
-	set flag ch2-installed-clock to true
-	unregister look + clock
+	set flag ch2-carrying-clock to false;
+	set flag ch2-installed-clock to true;
+	unregister look + clock;
 }
 ch2-install-cpu {
-	set flag ch2-carrying-cpu to false
-	set flag ch2-installed-cpu to true
-	unregister look + cpu
+	set flag ch2-carrying-cpu to false;
+	set flag ch2-installed-cpu to true;
+	unregister look + cpu;
 }
 ch2-install-goldfish {
-	set flag ch2-carrying-goldfish to false
-	set flag ch2-installed-goldfish to true
-	unregister look + goldfish
+	set flag ch2-carrying-goldfish to false;
+	set flag ch2-installed-goldfish to true;
+	unregister look + goldfish;
 }
 ch2-install-abacus {
-	set flag ch2-carrying-abacus to false
-	set flag ch2-installed-abacus to true
-	unregister look + abacus
+	set flag ch2-carrying-abacus to false;
+	set flag ch2-installed-abacus to true;
+	unregister look + abacus;
 }
 ch2-install-mainframeos { // TODO: use this!
-	set flag ch2-carrying-mainframeos to false
-	set flag ch2-installed-mainframeos to true
-	unregister look + mainframeos
+	set flag ch2-carrying-mainframeos to false;
+	set flag ch2-installed-mainframeos to true;
+	unregister look + mainframeos;
 }

@@ -1,9 +1,9 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-99 {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"TODO: SECRET LAB on_look text\n "
 	}
@@ -13,36 +13,36 @@ look-ch2-castle-99 {
 
 on_load-ch2-castle-99 {
 	// ch2 room state
-	mutate ch2-in-room = 99
+	mutate ch2-in-room = 99;
 	
 	// entrance text
-	show serial dialog spacer
+	show serial dialog spacer;
 	if (flag ch2-seen-room-99 is false) {
 		show serial dialog { "Discovered <bold><c>SECRET LAB</>! Room added to map!" }
-		set flag ch2-seen-room-99 to true
+		set flag ch2-seen-room-99 to true;
 	} else {
 		show serial dialog { "Entering <bold>SECRET LAB</>..." }
 	}
-	set player control to off
-	teleport camera to geometry camera
+	set player control to off;
+	teleport camera to geometry camera;
 	show dialog {
 		entity "TEST 2" "My name is %TEST 2%! I'm telling you this from the map's ON_LOAD script!"
 	}
-	set player control to on
+	set player control to on;
 	
-	goto ch2-map-init
+	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-99 {
-	goto null_script
+	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-99 { // sanitize ch2 room state
-	mutate ch2-in-room = 0
+	mutate ch2-in-room = 0;
 }
 
 /* ---------- ENTITY THINGS ---------- */

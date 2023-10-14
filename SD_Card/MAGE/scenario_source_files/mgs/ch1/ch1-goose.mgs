@@ -1,4 +1,4 @@
-include!("header.mgs")
+include!("header.mgs");
 
 /* --------------- on_tick --------------- */
 
@@ -6,107 +6,107 @@ include!("header.mgs")
 
 on_tick-goose-mission {
 	// on_tick is 'mission' -- if rake not in lake, jump
-	if entity Rake is not inside geometry lake then goto on_tick-goose-mission-rake-out-of-lake
-	turn entity Goose south
-	set entity Goose current_animation to 0
-	set flag storyflag-rake to true
-	copy calculate-hint-tracking-series
+	if entity Rake is not inside geometry lake then goto on_tick-goose-mission-rake-out-of-lake;
+	turn entity Goose south;
+	set entity Goose current_animation to 0;
+	set flag storyflag-rake to true;
+	copy calculate-hint-tracking-series;
 	if (variable hint-tracking-check is 10) {
 		// if the hint series is the currently goose, reset hint
-		copy set-hint-none
+		copy set-hint-none;
 	}
 	// you win!
-	goto null_script
+	goto null_script;
 }
 on_tick-goose-mission-rake-out-of-lake {
 	// if rake is approx at start point, jump
-	if entity Rake is inside geometry rake-point then goto goose-misison-rake-on-rake-point
-	turn entity Goose south
-	copy honk
-	walk entity Goose to geometry goose_midpoint over 600ms
-	walk entity Goose to geometry goose_lakepoint over 600ms
-	turn entity Goose south
-	goto on_tick-goose-mission
+	if entity Rake is inside geometry rake-point then goto goose-misison-rake-on-rake-point;
+	turn entity Goose south;
+	copy honk;
+	walk entity Goose to geometry goose_midpoint over 600ms;
+	walk entity Goose to geometry goose_lakepoint over 600ms;
+	turn entity Goose south;
+	goto on_tick-goose-mission;
 }
 goose-misison-rake-on-rake-point {
 	// if rake has left its start point, jump
-	if entity Rake is not inside geometry rake-point then goto on_tick-goose-mission-rake-out-of-lake
-	turn entity Goose south
-	copy honk
-	walk entity Goose to geometry goose_rakepoint over 1200ms
-	turn entity Goose toward entity Rake
+	if entity Rake is not inside geometry rake-point then goto on_tick-goose-mission-rake-out-of-lake;
+	turn entity Goose south;
+	copy honk;
+	walk entity Goose to geometry goose_rakepoint over 1200ms;
+	turn entity Goose toward entity Rake;
 	// if rake has left its start point, jump
-	if entity Rake is not inside geometry rake-point then goto on_tick-goose-mission-rake-out-of-lake
-	copy honk
-	walk entity Goose to geometry goose_lakepoint over 1200ms
-	turn entity Goose south
+	if entity Rake is not inside geometry rake-point then goto on_tick-goose-mission-rake-out-of-lake;
+	copy honk;
+	walk entity Goose to geometry goose_lakepoint over 1200ms;
+	turn entity Goose south;
 	// if rake has left its start point, jump
-	if entity Rake is not inside geometry rake-point then goto on_tick-goose-mission-rake-out-of-lake
-	goto on_tick-goose-mission
+	if entity Rake is not inside geometry rake-point then goto on_tick-goose-mission-rake-out-of-lake;
+	goto on_tick-goose-mission;
 }
 
 honk {
 	play entity Goose animation 2 thrice
 }
 honk-to-make-rake-float {
-	turn entity Goose toward entity Rake
-	wait 200ms /**/ set entity Goose current_animation to 2
-	wait 600ms /**/ set entity Goose on_tick to make-rake-float
-	wait 3000ms /**/ set entity Goose current_animation to 0
+	turn entity Goose toward entity Rake;
+	wait 200ms /**/ set entity Goose current_animation to 2;
+	wait 600ms /**/ set entity Goose on_tick to make-rake-float;
+	wait 3000ms /**/ set entity Goose current_animation to 0;
 }
 
 // drifting rake
 
 make-rake-float { // on_tick
-	set entity Rake on_tick to rake-drift-south
-	wait 600ms /**/ set entity Rake on_tick to rake-drift-west
-	wait 600ms /**/ set entity Rake on_tick to rake-drift-south
-	wait 600ms /**/ set entity Rake on_tick to rake-drift-east
-	wait 600ms
+	set entity Rake on_tick to rake-drift-south;
+	wait 600ms; /**/ set entity Rake on_tick to rake-drift-west;
+	wait 600ms; /**/ set entity Rake on_tick to rake-drift-south;
+	wait 600ms; /**/ set entity Rake on_tick to rake-drift-east;
+	wait 600ms;
 }
 rake-drift-south {
-	walk entity Rake to geometry drift-south over 60000ms
+	walk entity Rake to geometry drift-south over 60000ms;
 }
 rake-drift-east {
-	walk entity Rake to geometry drift-east over 60000ms
+	walk entity Rake to geometry drift-east over 60000ms;
 }
 rake-drift-west {
-	walk entity Rake to geometry drift-west over 60000ms
+	walk entity Rake to geometry drift-west over 60000ms;
 }
 
 // goose rescue protocol
 
 goose-bounds-watch {
-	if entity Goose is not inside geometry bounds then goto rescue-goose
+	if entity Goose is not inside geometry bounds then goto rescue-goose;
 }
 rescue-goose {
-	set entity Goose on_tick to null_script
-	teleport entity Goose to geometry goose-rescue
-	walk entity Goose to geometry goose_lakepoint over 2000ms
-	set entity Goose on_tick to on_tick-goose-mission
-	set entity "%SELF%" on_tick to goose-bounds-watch
+	set entity Goose on_tick to null_script;
+	teleport entity Goose to geometry goose-rescue;
+	walk entity Goose to geometry goose_lakepoint over 2000ms;
+	set entity Goose on_tick to on_tick-goose-mission;
+	set entity "%SELF%" on_tick to goose-bounds-watch;
 }
 
 /* --------------- dialog --------------- */
 
 show_dialog-goose-generic {
-	copy face-player
+	copy face-player;
 	show dialog { SELF "Honk!" }
 }
 
 show_dialog-goose-mad {
 	show dialog { SELF "Honk!" }
 	if (flag storyflag-rake is false) {
-		copy set-hint-goose
+		copy set-hint-goose;
 	}
 	// RESET
-	set entity "%SELF%" on_interact to show_dialog-goose-mad
+	set entity "%SELF%" on_interact to show_dialog-goose-mad;
 }
 
 /* --------------- debug --------------- */
 
 debug-win-rake-q {
-	copy face-player
+	copy face-player;
 	show dialog {
 		SELF "Position rake in lake?"
 		> "Yes" : debug-win-rake-yes
@@ -114,9 +114,9 @@ debug-win-rake-q {
 	}
 }
 debug-win-rake-yes {
-	teleport entity Rake to geometry rake-lake-point
-	set entity "%SELF%" on_interact to debug-win-rake-q
+	teleport entity Rake to geometry rake-lake-point;
+	set entity "%SELF%" on_interact to debug-win-rake-q;
 }
 debug-win-rake-no {
-	set entity "%SELF%" on_interact to debug-win-rake-q
+	set entity "%SELF%" on_interact to debug-win-rake-q;
 }

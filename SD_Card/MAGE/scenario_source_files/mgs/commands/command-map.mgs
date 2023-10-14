@@ -1,16 +1,16 @@
-include!("header.mgs")
+include!("header.mgs");
 
 // REGISTER
 
 register-map {
-	register man + map -> man-map
-	register map -> command-map
+	register man + map -> man-map;
+	register map -> command-map;
 }
 
 // MAN PAGE
 
 man-map {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAP</>"
 		" "
@@ -27,11 +27,11 @@ man-map {
 command-map {
 	// for ch2-toot:
 	if (variable ch2-map-test is 1) {
-		mutate ch2-map-test = 2
+		mutate ch2-map-test = 2;
 	}
 	// normal stuff
 	if (variable ch2-in-room is 0) {
-		show serial dialog spacer
+		show serial dialog spacer;
 		show serial dialog {
 			"You don't seem to have a map for this place."
 		}
@@ -39,7 +39,7 @@ command-map {
 		show serial dialog {
 			" "
 		}
-		goto draw-ch2-serial-map
+		goto draw-ch2-serial-map;
 	}
 }
 
@@ -103,5 +103,5 @@ draw-ch2-serial-map-footer {
 	concat serial dialog {
 		"</>\n"
 	}
-	set serial control on
+	set serial control on;
 }
