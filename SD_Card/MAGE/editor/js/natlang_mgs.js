@@ -35,7 +35,7 @@ var convertMgsFilesIntoScenarioDataConfig = function (
 		.then(function () {
 			mgsFileNames.forEach(function (mgsFileName) {
 				var text = mgsFileMap[mgsFileName];
-				var reg = /\binclude\s*!\s*\(\s*\"([-_a-zA-Z0-9 \.]+\.mgs)\"\s*\)\s*;/;
+				var reg = /\binclude!\s*\(\s*\"([-_a-zA-Z0-9 \.]+\.mgs)\"\s*\)\s*;/;
 				match = text.match(reg);
 				while (match) {
 					if (!mgsFileMap[match[1]]) {

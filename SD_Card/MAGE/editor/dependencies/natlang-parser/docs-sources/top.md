@@ -43,8 +43,11 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 5. [Advanced syntax](#advanced-syntax)
 	1. [Labels](#labels)
 	2. [`return`](#return)
-	3. [Zigzag (`if` / `else`)](#zigzag-if--else)
-	4. [`const!`](#const)
+	3. [`while` and `for](#while-and-for)
+	4. [Zigzag (`if` / `else`)](#zigzag-if--else)
+	5. [`debug!()`](#debug)
+	6. [`const!()`](#const)
+	7. [`include!()`](#include)
 6. [Action dictionary](#action-dictionary)
 	1. [Actions quick reference](#actions-quick-reference)
 	2. [Game management actions](#game-management-actions)
@@ -1027,7 +1030,7 @@ If you want to emulate value-returning behavior, you might try assigning a value
 
 Special keywords:
 
-- `continue`: This will stop the loop (without finishing the contents of the current loop) and start it again from the top (*after* incrementing, in the case of `for`).
+- `continue`: This will stop the loop (without finishing the contents of the current loop) and start it again from the top. (`for` loops will still do their increment step after a `continue`, even if the rest of the loop is skipped.)
 - `break`: This will abandon all looping behavior, and continue the script below the `while` or `for` body.
 
 Note that if multiple loops are nested, `break` and `continue` will only apply to their own associated loop, and not arbitrary named `while` or `for` loops. (You might try `goto label ___` instead.)
@@ -1180,7 +1183,18 @@ if ( you don't have money || the game is not for sale ) {
 }
 ```
 
-### `const!`
+### `debug!()`
+
+For quick logging, you can use `debug!` to generate a list of serial dialog messages that only print in debug mode.
+
+```
+debug!(
+	"The messages must still be in quotes!"
+	"<g>Styles are okay!</>"
+)
+```
+
+### `const!()`
 
 This macro emulates compile-time constants. Its main purpose is to help you avoid "magic numbers" in your scripts by allowing you to define a [number](#number) or [string](#string) (or whatever) in a single place, even if you need to use it multiple times.
 
@@ -1191,7 +1205,7 @@ These consts are *not* meant to be used as variables for in-game logic, as the g
 To start declaring constants:
 
 ```
-const! ()
+const!()
 ```
 
 Inside the above parentheses can be any number of constant assignments:
@@ -1208,7 +1222,7 @@ Keep in mind that `$` is used for [MGS Natlang variables](#mgs-natlang-variables
 #### Example
 
 ```
-const! (
+const!(
   $field = x
   $bigNumber = 9001
   $hamburgers = "Steamed Toast"
@@ -1233,9 +1247,9 @@ The above is what the MGS Natlang syntax parser will actually parse. Syntax erro
 
 `const!` registers and replaces tokens; it does not find-and-replace arbitrary strings. For this reason, you will not be able to use consts inside a [quoted string](#quoted-string), since a quoted string *in its entirety* counts as a single token.
 
-In addition, this macro only captures single tokens; you cannot use a const to represent multiple tokens, e.g. `const!($parade = 76 trombones)` will result in a syntax error.
+In addition, this macro only captures single tokens; you cannot use a const to represent multiple tokens, e.g. `const!($parade = 76 trombones);` will result in a syntax error.
 
-### `include!`
+### `include!()`
 
 This will copy and past the plaintext contents of the named mgs file (the path of the file doesn't matter) into place. Line breaks are changed into spaces to make the line numbers consistent with the original file.
 
