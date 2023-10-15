@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 /* -------- ON_TICK SCRIPTS -------- */
 // no zigzagging!

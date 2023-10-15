@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 look-ch2-bert {
 	show serial dialog spacer;
