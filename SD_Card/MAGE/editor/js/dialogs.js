@@ -120,7 +120,7 @@ var serializeDialogScreen = function (
 	var name = (
 		dialogScreen.name
 		|| (
-			entityIndex
+			entityIndex !== undefined
 				? dialogScreen.entity
 				: ""
 		)
