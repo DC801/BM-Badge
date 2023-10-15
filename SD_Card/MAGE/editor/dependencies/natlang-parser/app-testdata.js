@@ -3326,9 +3326,9 @@ var zigzagTestStrings = [
 `testScript {
 	action1;
 	if ( conditionA || conditionB ) { behaviorAB; }
-	else if ( conditionC; ) { behaviorC; }
-	else if ( conditionD; ) { behaviorE; }
-	else if ( conditionF; ) { behaviorG; }
+	else if ( conditionC ) { behaviorC; }
+	else if ( conditionD ) { behaviorE; }
+	else if ( conditionF ) { behaviorG; }
 	else { behaviorX1; behaviorX2; }
 	action2;
 }`,

@@ -205,13 +205,13 @@ simon-enemy-turn-start {
 	set flag ch2-simon-move-fail to false;
 	wait 800ms;
 	for (mutate i = 0; variable i is < simon-round; mutate i + 1) {
-		if (variable i is == 0) { mutate simon-pos-curr = simon-pos1 }
-		else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2 }
-		else if (variable i is == 2) { mutate simon-pos-curr = simon-pos3 }
-		else if (variable i is == 3) { mutate simon-pos-curr = simon-pos4 }
-		else if (variable i is == 4) { mutate simon-pos-curr = simon-pos5 }
-		else if (variable i is == 5) { mutate simon-pos-curr = simon-pos6 }
-		else if (variable i is == 6) { mutate simon-pos-curr = simon-pos7 }
+		if (variable i is == 0) { mutate simon-pos-curr = simon-pos1; }
+		else if (variable i is == 1) { mutate simon-pos-curr = simon-pos2; }
+		else if (variable i is == 2) { mutate simon-pos-curr = simon-pos3; }
+		else if (variable i is == 3) { mutate simon-pos-curr = simon-pos4; }
+		else if (variable i is == 4) { mutate simon-pos-curr = simon-pos5; }
+		else if (variable i is == 5) { mutate simon-pos-curr = simon-pos6; }
+		else if (variable i is == 6) { mutate simon-pos-curr = simon-pos7; }
 		// see $roundcount
 
 		// loopy

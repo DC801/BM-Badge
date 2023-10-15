@@ -10,23 +10,6 @@ if (typeof module === 'object') {
 	utils = require('./natlang-utils.js');
 }
 
-var bracketMap = [
-	{ start: "{", end: "}" },
-	{ start: "(", end: ")" },
-];
-var findOpenChar = function (endChar) {
-	var charEntry = bracketMap.find(function (object) {
-		return object.end === endChar;
-	})
-	return charEntry ? charEntry.start : false;
-};
-var findCloseChar = function (openChar) {
-	var charEntry = bracketMap.find(function (object) {
-		return object.start === openChar;
-	})
-	return charEntry ? charEntry.end : false;
-};
-
 var zigzag = {
 	identifyIf: function (tokens, tokenPos) {
 		return tokens[tokenPos]
@@ -111,14 +94,15 @@ zigzag.parseSingleZig = function (tokens, startPos) {
 		conditionsType: conditionsType,
 		behaviors: behaviorsInfo.collection,
 		nextTokenIndex: behaviorsInfo.nextTokenIndex,
-		bracketInfo: {},
+		brackets: {
+			curlyOpenToken: behaviorsInfo.startToken,
+			curlyCloseToken: behaviorsInfo.endToken,
+		},
 	};
 	if (conditionsInfo && conditionsInfo.success) {
-		report.bracketInfo.conditionStartToken = conditionsInfo.startToken;
-		report.bracketInfo.conditionEndToken = conditionsInfo.endToken;
+		report.brackets.parenOpenToken = conditionsInfo.startToken;
+		report.brackets.parenCloseToken = conditionsInfo.endToken;
 	}
-	report.bracketInfo.behaviorsStartToken = behaviorsInfo.startToken;
-	report.bracketInfo.behaviorsEndToken = behaviorsInfo.endToken;
 	return report;
 };
 
@@ -133,17 +117,17 @@ zigzag.parseWholeZig = function (tokens, startTokenIndex) {
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
-	var ifRootToken = tokens[pos];
+	var rootToken = tokens[pos];
 	// get past the "if"
 	pos += 1;
-	// get info out of `if ( * ) { * }`
-	var ifStatement = zigzag.parseSingleZig(tokens,pos);
-	ifStatement.rootToken = ifRootToken;
+	// get info out of `if ( _ ) { _ }`
+	var statement = zigzag.parseSingleZig(tokens,pos);
+	statement.rootToken = rootToken;
 	// make it the first of (possibly) several /(if|else if|else)/ statements:
 	var statements = [
-		ifStatement
+		statement
 	];
-	var pos = ifStatement.nextTokenIndex;
+	var pos = statement.nextTokenIndex;
 	while (pos < tokens.length) { // until we exhaust the tokens
 		// check for an `else if` statement
 		var elseIfCheck = zigzag.identifyElseIf(tokens, pos);
@@ -178,156 +162,126 @@ zigzag.parseWholeZig = function (tokens, startTokenIndex) {
 	};
 };
 
+var buildToken = function (_token, value, type, extra) {
+	var token = JSON.parse(JSON.stringify(_token));
+	token.value = value || "ZIGZAG " + token.pos; // change to provided or auto made
+	token.type = type || token.type; // change to provided or use orig
+	token.macro = "zigzag";
+	if (extra !== undefined) {
+		token.meta = extra;
+	}
+	return token;
+};
 
 var bodge = 0;
-zigzag.expandZigzag = function (zigReport, scriptNameToken) {
-	var scriptName = scriptNameToken.value; // TODO delete
-	var statements = zigReport.statements; // QOL
+zigzag.expandZigzag = function (report, scriptNameToken) {
+	var srcs = report.statements; // QOL
 
-	// info for the last curly (token) in the zigzag:
-	var finalCurlyToken = statements[statements.length - 1].bracketInfo.behaviorsEndToken; // reused a lot
-
-	// converged label
 	bodge += 1;
-	var convergedLabelName = "LABEL f" + finalCurlyToken.pos;
-	var convergedLabelNameToken = JSON.parse(JSON.stringify(scriptNameToken));
-	convergedLabelNameToken.pos = finalCurlyToken.pos;
-	convergedLabelNameToken.value = convergedLabelName;
-	convergedLabelNameToken.macro = "zigzag";
+	
+	// CONVERGE TOKEN
+	// info for the last curly (token) in the zigzag:
+	var finalCurly = srcs[srcs.length - 1].brackets.curlyCloseToken;
+	var forover = buildToken(
+		finalCurly,
+		"LABEL f" + finalCurly.pos,
+		"bareword",
+		"forover"
+	);
 
 	// other state:
 	var topTokens = [];
 	var tokenBatch = []; // when done, this will get glued to `ret`
 
-	statements.forEach(function (statement, index) {
+	srcs.forEach(function (src, index) {
+
+		// BASE TOKENS for this `if` / `else if` / `else` statement
+		var curlyOpen = src.brackets.curlyOpenToken;
+		var curlyClose = src.brackets.curlyCloseToken;
+
+		// tokens for `if` and `{` and `}`
+		var rootToken = src.rootToken; // `if` (all become `if` in final, even elsess)
+		var bodyStart = buildToken(curlyOpen, null, "bareword", "bodyStart"); // {
+		var bodyEnd = buildToken(curlyClose, null, "bareword", "bodyEnd"); // }
+		bodyStart.value = "bodyStart " + bodyStart.value;
+		bodyEnd.value = "bodyEnd " + bodyEnd.value;
+
 		if (
 			// explicitly "OR" in case I want to do "AND" someday separately:
-			statement.conditionsType === "OR"
-			|| statement.conditionsType === "single"
+			src.conditionsType === "OR"
+			|| src.conditionsType === "single"
 		) {
-			// ONCE PER STATEMENT e.g. [else] if ( _ ) { **** }
+			// token info for `(` and `)`
+			var parenOpen = src.brackets.parenOpenToken || null;
+			var parenClose = src.brackets.parenCloseToken || null;
+			var conditionStart = buildToken(parenOpen, null, "bareword", "conditionStart"); // (
+			var conditionEnd = buildToken(parenClose, null, "bareword", "conditionEnd"); // )
+			conditionStart.value = "conditionStart " + conditionStart.value;
+			conditionEnd.value = "conditionEnd " + conditionEnd.value;
 
-			// becomes: `then`
-			// becomes: `goto`
-			// becomes: `label`
-			var closeParenToken = statement.bracketInfo.conditionEndToken;
-				
-			// becomes: procedural label name
-			// becomes: declaration of procedural label name
-			var openCurlyToken = statement.bracketInfo.behaviorsStartToken;
-
-			var zigLabelName = "LABEL o" + openCurlyToken.pos;
-			var zigLabelNameToken = JSON.parse(JSON.stringify(scriptNameToken));
-			zigLabelNameToken.pos = openCurlyToken.pos;
-			zigLabelNameToken.value = zigLabelName;
-			zigLabelNameToken.macro = "zigzag";
-
-			// ONE CONDITION AT A TIME e.g. if ( ** || ** || ** ) { _ }
-
-			// each condition gets one "line" in the output token array
-			statement.conditions.forEach(function (singleCondition) {
+			src.conditions.forEach(function (condition) {
 				// `if`
-				topTokens.push({
-					pos: statement.rootToken.pos,
-					type: "bareword",
-					value: "if", // hardcoded; this might be `else` in the orig token!
-					macro: "zigzag"
-				});
-				// condition(s)
-				topTokens = topTokens.concat(singleCondition);
-				// faking `then`
-				topTokens.push({
-					pos: closeParenToken.pos,
-					type: "bareword",
-					value: "then",
-					macro: "zigzag"
-				});
-				// faking `goto`
-				topTokens.push({
-					pos: closeParenToken.pos,
-					type: "bareword",
-					value: "goto",
-					macro: "zigzag"
-				});
-				// faking `label`
-				topTokens.push({
-					pos: closeParenToken.pos,
-					type: "bareword",
-					value: "label",
-					macro: "zigzag"
-				});
-				// faking labelName
-				topTokens.push(zigLabelNameToken);
+				topTokens.push(
+					buildToken(rootToken, "if", "bareword", "zigzag"),
+				);
+				topTokens = topTokens.concat(
+					// condition
+					condition
+				).concat([
+					// `then goto label`
+					buildToken(conditionEnd, "then", "bareword", "zigzag"),
+					buildToken(bodyStart, "goto", "bareword", "zigzag"),
+					buildToken(bodyStart, "label", "bareword", "zigzag"),
+					// bodyStart `;`
+					bodyStart,
+					buildToken(bodyStart, ";", "operator", "zigzag"),
+				]);
 			})
-
-			// Making the (shared) procedural BRANCH label
-			// (put these in `tokenBatch` instead of `topTokens`)
-
-			// BRANCH label name declaration
-			tokenBatch.push(zigLabelNameToken);
-			// {
-			tokenBatch.push({
-				pos: openCurlyToken.pos,
-				type: "operator",
-				value: ":",
-				macro: "zigzag"
-			});
-			// behavior body
-			tokenBatch = tokenBatch.concat(statement.behaviors);
-			// goto procedural CONVERGED script
-			var closeCurlyToken = statement.bracketInfo.behaviorsEndToken;
-			tokenBatch.push({
-				pos: closeCurlyToken.pos,
-				type: "bareword",
-				value: "goto",
-				macro: "zigzag"
-			});
-				tokenBatch.push({
-				pos: closeCurlyToken.pos,
-				type: "bareword",
-				value: "label",
-				macro: "zigzag"
-			});
-
-			tokenBatch.push(convergedLabelNameToken);
+			// (IN LOWER HALF OF EXPANDED TOKENS)
+			tokenBatch = tokenBatch.concat([
+				// bodyStart `:`
+				bodyStart,
+				buildToken(bodyStart, ":", "operator", "zigzag"),
+			]).concat(
+				// behavior
+				src.behaviors,
+			).concat([
+				// `goto label` forover `;`
+				buildToken(forover, "goto", "bareword", "zigzag"),
+				buildToken(forover, "label", "bareword", "zigzag"),
+				forover,
+				buildToken(forover, ";", "operator", "zigzag"),
+			]);
 		} else if (
-			statement.conditionsType === "none" // no conditions found
-			|| !statement.conditions.length // fallback: conditions array is empty
+			src.conditionsType === "none" // no conditions found
+			|| !src.conditions.length // fallback: conditions array is empty
 		) { // end of the zigzag; default (fallthrough) script behavior follows
+			// BACK IN THE UPPER HALF
 			// default behavior body
-			topTokens = topTokens.concat(statement.behaviors);
-			// goto procedural CONVERGED script
+			topTokens = topTokens.concat(
+				src.behaviors
+			)
 		}
-		if (index === statements.length - 1) { // if it's the last statement
+		if (index === srcs.length - 1) { // if it's the last statement
 			// close the "default" script
-			var closeCurlyToken = statement.bracketInfo.behaviorsEndToken;
-			topTokens.push({
-				pos: closeCurlyToken.pos,
-				type: "bareword",
-				value: "goto",
-				macro: "zigzag"
-			});
-			topTokens.push({
-				pos: closeCurlyToken.pos,
-				type: "bareword",
-				value: "label",
-				macro: "zigzag"
-			});
-			topTokens.push(convergedLabelNameToken);
-			// }
+			topTokens = topTokens.concat([
+				// `goto label` forover `;`
+				buildToken(forover, "goto", "bareword", "zigzag"),
+				buildToken(forover, "label", "bareword", "zigzag"),
+				forover,
+				buildToken(forover, ";", "operator", "zigzag"),
+			]);
 		}
 	});
-	var combinedTokens = topTokens.concat(tokenBatch);//
-	combinedTokens.push(convergedLabelNameToken)
-	combinedTokens.push({
-		"pos": convergedLabelNameToken.pos + 1,
-		"type": "operator",
-		"value": ":",
-		"macro": "zigzag"
-	})
+	var combinedTokens = topTokens.concat(tokenBatch);
+	// forover `:`
+	combinedTokens = combinedTokens.concat([
+		forover,
+		buildToken(forover, ":", "operator", "zigzag"),
+	]);
 	return {
 		tokens: combinedTokens,
-		nextTokenIndex: zigReport.nextTokenIndex,
+		nextTokenIndex: report.nextTokenIndex,
 	}
 };
 

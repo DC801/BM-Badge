@@ -1,7 +1,7 @@
 var app = new Vue({
 	el:' #app',
 	data: {
-		which: 'whyle',
+		which: 'zigzag',
 		origInput: testText,
 		lexOutput: {},
 		whyleTestStrings: whyleTestStrings, // for the v-for
