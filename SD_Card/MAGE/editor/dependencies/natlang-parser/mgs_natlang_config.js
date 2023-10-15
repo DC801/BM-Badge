@@ -34,9 +34,6 @@ var mgs = {
 				{ branch: "dialogSettingsTarget", count: "*" },
 			],
 			closeChar: "}",
-			onOpen: function (state) {
-				state.initIfAbsent("final", "dialogSettings", []);
-			},
 			onClose: function () {}
 			// just to silence the "no onClose?!?!" warning
 		},
@@ -62,18 +59,11 @@ var mgs = {
 				{ branch: "serialDialogParameter", count: "*" },
 			],
 			closeChar: "}",
-			onOpen: function (state) {
-				state.initIfAbsent("final", "serialDialogParameters", {});
-				state.initIfAbsent("inserts", "serialDialogParameters", {});
-			},
 			onClose: function (state) {
-				state.replaceValue(
+				state.applyProperties(
 					"final",
 					"serialDialogParameters",
-					Object.assign(
-						state.final.serialDialogParameters,
-						state.inserts.serialDialogParameters
-					)
+					state.inserts.serialDialogParameters
 				);
 			}
 		},
@@ -92,12 +82,6 @@ var mgs = {
 				{ branch: "dialogOption", count: "*" },
 			],
 			closeChar: "}",
-			onOpen: function (state) {
-				state.initIfAbsent("inserts", "dialogIdentifier", {});
-				state.initIfAbsent("inserts", "dialogParameters", {});
-				state.initIfAbsent("inserts", "dialogMessages", []);
-				state.initIfAbsent("inserts", "dialogOptions", []);
-			},
 			// TODO consolidate the below somehow?
 			onLoop: function (state) {
 				state.pushNew(
@@ -125,7 +109,6 @@ var mgs = {
 					"dialogOptions",
 				]);
 				// on close only
-				state.initIfAbsent("final", "dialogs", {});
 				state.replaceValueDeep(
 					"final",
 					"dialogs",
@@ -150,11 +133,7 @@ var mgs = {
 				{ branch: "serialDialogOptionFixed", count: "*" },
 			],
 			closeChar: "}",
-			onOpen: function (state) {
-				state.initIfAbsent("inserts", "serialDialogParameters", {});
-			},
 			onClose: function (state) {
-				state.initIfAbsent("final", "serialDialogs", {});
 				state.replaceValueDeep(
 					"final",
 					"serialDialogs",
@@ -177,7 +156,6 @@ var mgs = {
 			],
 			closeChar: "}",
 			onClose: function (state) {
-				state.initIfAbsent("final", "scripts", {});
 				state.replaceValueDeep(
 					"final",
 					"scripts",
@@ -191,13 +169,6 @@ var mgs = {
 			}
 		}
 	},
-	// The below is slim but a little tricky syntactically. Is problem or no?
-	// A "normal" object isn't that much less slim! Consider:
-	// dialogSettingsNode: {
-	// 	pattern: "settings ?for dialog {",
-	//	onMatch: function (state) { state.startBlock("dialogSettings"); }
-	// }
-
 	trees: {
 		dialogSettingsNode: [
 			{
@@ -240,7 +211,11 @@ var mgs = {
 				pattern: "?script $scriptName:string {",
 				onMatch: function (state) {
 					state.startBlock("script");
-					state.processCaptures("scriptName");
+					state.replaceValue(
+						"inserts",
+						"scriptName",
+						state.captures.scriptName
+					);
 					state.clearCaptures();
 				}
 			}
@@ -410,7 +385,11 @@ var mgs = {
 			{
 				pattern: "$message:quotedString",
 				onMatch: function (state) {
-					state.processCaptures("dialogMessage");
+					state.pushNew(
+						"inserts",
+						"dialogMessages",
+						state.captures.message
+					);
 					state.clearCaptures();
 				}
 			},
@@ -419,7 +398,14 @@ var mgs = {
 			{
 				pattern: "> $label:quotedString : ?goto ?script $script:string",
 				onMatch: function (state) {
-					state.processCaptures("dialogOption");
+					state.pushNew(
+						"inserts",
+						"dialogOptions",
+						{
+							label: state.captures.label,
+							script: state.captures.script
+						}
+					);
 					state.clearCaptures();
 				}
 			},
@@ -428,9 +414,11 @@ var mgs = {
 			{
 				pattern: "wrap ?messages ?to $value:number",
 				onMatch: function (state) {
-					state.processCaptures(
-						"serialDialogParameter",
-						{ parameterName: "messageWrap" }
+					state.replaceValueDeep(
+						"inserts",
+						"serialDialogParameters",
+						"messageWrap",
+						state.captures.value
 					);
 					state.clearCaptures();
 				}
@@ -449,7 +437,14 @@ var mgs = {
 			{
 				pattern: "_ $label:quotedString : ?goto ?script $script:string",
 				onMatch: function (state) {
-					state.processCaptures("serialDialogOptionFree");
+					state.replaceValue("inserts", "serialOptionType", "text_options");
+					state.pushNew(
+						"inserts",
+						"serialDialogOptions", {
+							label: state.captures.label,
+							script: state.captures.script
+						}
+					);
 					state.clearCaptures();
 				}
 			},
@@ -458,7 +453,15 @@ var mgs = {
 			{
 				pattern: "# $label:quotedString : ?goto ?script $script:string",
 				onMatch: function (state) {
-					state.processCaptures("serialDialogOptionFixed");
+					state.replaceValue("inserts", "serialOptionType", "options");
+					state.pushNew(
+						"inserts",
+						"serialDialogOptions",
+						{
+							label: state.captures.label,
+							script: state.captures.script
+						}
+					);
 					state.clearCaptures();
 				}
 			},
@@ -588,13 +591,6 @@ var mgs = {
 					: state.makeAutoIdentifierName()
 			);
 		},
-		scriptName: function (state) {
-			state.replaceValue(
-				"inserts",
-				"scriptName",
-				state.captures.scriptName
-			);
-		},
 		dialogSettingsTarget: function (state, args) {
 			state.replaceValue(
 				"inserts",
@@ -608,7 +604,6 @@ var mgs = {
 			);
 		},
 		dialogParameter: function (state, args) {
-			state.initIfAbsent("inserts", "dialogParameters", {});
 			state.replaceValueDeep(
 				"inserts",
 				"dialogParameters",
@@ -626,57 +621,11 @@ var mgs = {
 				}
 			);
 		},
-		dialogMessage: function (state) {
-			state.pushNew(
-				"inserts",
-				"dialogMessages",
-				state.captures.message
-			);
-		},
-		dialogOption: function (state) {
-			state.pushNew(
-				"inserts",
-				"dialogOptions",
-				{
-					label: state.captures.label,
-					script: state.captures.script
-				}
-			);
-		},
-		serialDialogParameter: function (state, args) {
-			state.replaceValueDeep(
-				"inserts",
-				"serialDialogParameters",
-				args.parameterName,
-				state.captures.value
-			);
-		},
 		serialDialogMessage: function (state) {
 			state.pushNew(
 				"inserts",
 				"serialDialogMessages",
 				state.captures.message
-			);
-		},
-		serialDialogOptionFree: function (state) {
-			state.initIfAbsent("inserts", "serialOptionType", "text_options");
-			state.pushNew(
-				"inserts",
-				"serialDialogOptions", {
-					label: state.captures.label,
-					script: state.captures.script
-				}
-			);
-		},
-		serialDialogOptionFixed: function (state) {
-			state.initIfAbsent("inserts", "serialOptionType", "options");
-			state.pushNew(
-				"inserts",
-				"serialDialogOptions",
-				{
-					label: state.captures.label,
-					script: state.captures.script
-				}
 			);
 		},
 		action: function (state, args) {
