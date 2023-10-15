@@ -183,14 +183,14 @@ restore_self_direction {
 	}
 }
 
-pause-walk-and-face-player {
+pause-and-face-player {
 	copy entity "%SELF%" current_animation into variable tempvar2;
 	set entity "%SELF%" current_animation to 0;
 	pause entity "%SELF%" on_tick;
 	copy capture_self_direction;
 	copy face-player;
 }
-unface-player-and-resume-walk {
+resume-walk {
 	copy entity "%SELF%" current_animation from variable tempvar2;
 	unpause entity "%SELF%" on_tick;
 	copy restore_self_direction;

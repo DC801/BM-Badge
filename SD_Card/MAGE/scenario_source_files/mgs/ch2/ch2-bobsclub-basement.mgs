@@ -252,7 +252,7 @@ loiter-slow {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-guardianbob {
-	copy face-player;
+	copy pause-and-face-player;
 	show dialog {
 		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up and everything."
 		SELF "Well, we WERE going to have the party upstairs, but someone broke in and pretended to be named Bob. After that we upped our security."
@@ -262,6 +262,7 @@ interact-ch2-guardianbob {
 		SELF "I've been manually teleporting Bobs down here ever since just to be extra sure. My teleport program is very strict. It won't let non-Bobs through at all."
 		PLAYER "Good to know."
 	}
+	copy resume-walk;
 }
 
 interact-ch2-bobaustin {
@@ -283,7 +284,7 @@ interact-ch2-bobmoss {
 
 interact-ch2-marathonbob {
 	// capture original facing direction
-	copy pause-walk-and-face-player;
+	copy pause-and-face-player;
 	// normal behavior
 	mutate random ? 10;
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
@@ -309,7 +310,7 @@ interact-ch2-marathonbob {
 		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
 	}
 	// turn back to the original facing direction
-	copy unface-player-and-resume-walk;
+	copy resume-walk;
 	mutate tempvar = 0; // courtesy reset
 }
 
