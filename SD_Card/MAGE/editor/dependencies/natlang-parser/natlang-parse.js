@@ -401,22 +401,28 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 	};
 
 	// inserts + final
-	state.initIfAbsent = function (type, prop, value) {
-		state[type][prop] = state[type][prop] || value;
-		return state[type][prop];
-	};
 	state.replaceValue = function (type, prop, value) {
+		state[type][prop] = state[type][prop] || value;
 		state[type][prop] = value;
 		return state[type][prop];
 	};
 	state.replaceValueDeep = function (type, prop, subprop, value) {
+		state[type][prop] = state[type][prop] || {};
 		state[type][prop][subprop] = value;
 		return state[type][prop][subprop];
 	};
+	state.applyProperties = function (type, prop, args) {
+		state[type][prop] = state[type][prop] || {};
+		Object.assign(
+			state[type][prop],
+			args
+		);
+		return state[type][prop];
+	},
 	state.pushNew = function (type, prop, value) {
-		var array = state.initIfAbsent(type, prop, []);
-		array.push(value);
-		return array;
+		state[type][prop] = state[type][prop] || [];
+		state[type][prop].push(value);
+		return state[type][prop];
 	};
 	state.clearInserts = function (prop) { // string or array ok
 		// will zero the contents of the insert while preserving the value type (=> {}, not undefined)
@@ -501,7 +507,6 @@ natlang.parse = function (rawConfig, inputString, fileName) {
 			throw error;
 		}
 		state.tokens = processedTokens;
-		state.initIfAbsent("final", "passes", {});
 		state.replaceValueDeep(
 			"final",
 			"passes",
