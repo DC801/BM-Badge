@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 show_dialog-shepherd-start {
 	copy face-player;

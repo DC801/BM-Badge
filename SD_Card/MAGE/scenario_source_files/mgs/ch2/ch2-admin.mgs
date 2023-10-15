@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 const! (
 	$goto-round-2 = 3 // count of story flags through round 1

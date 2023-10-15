@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 serial dialog spacer {
 	" "

@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 on_tick-family {
 	if entity "%PLAYER%" is inside geometry door-family then goto leave-family;

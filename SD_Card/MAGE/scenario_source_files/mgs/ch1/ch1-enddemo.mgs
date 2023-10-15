@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 
 earthquake {
 	fade out camera to #FF0000 over 300ms;

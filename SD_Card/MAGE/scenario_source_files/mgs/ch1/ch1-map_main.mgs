@@ -1,4 +1,4 @@
-include!("header.mgs");
+include!("header.mgs")
 settings for dialog {
 	parameters for entity Cat { alignment TL }
 	parameters for entity Cleo { alignment TL }

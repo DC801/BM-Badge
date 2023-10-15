@@ -1260,7 +1260,7 @@ This is recursive, so be careful.
 This is best used for common settings, such as the player dialog label.
 
 ```
-include!("header.mgs");
+include!("header.mgs")
 ```
 
 ## Action dictionary
