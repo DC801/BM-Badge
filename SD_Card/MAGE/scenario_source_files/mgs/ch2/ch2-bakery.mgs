@@ -49,10 +49,12 @@ on_go-ch2-bakery-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-baker {
+	copy pause-and-face-player;
 	show dialog {
 		SELF "Sorry, can't talk now."
 		"But good luck conquering the serial dungeon."
 	}
+	copy resume-walk;
 }
 
 interact-ch2-jackob-bakery {

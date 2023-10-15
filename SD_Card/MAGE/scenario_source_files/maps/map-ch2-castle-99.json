@@ -51,29 +51,6 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":209,
-                 "height":32,
-                 "id":35,
-                 "name":"TEST 2",
-                 "properties":[
-                        {
-                         "name":"is_debug",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-say-my-name"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":120,
-                 "y":224
-                }, 
-                {
-                 "class":"",
                  "gid":167,
                  "height":32,
                  "id":32,

@@ -245,7 +245,7 @@ simon-enemy-turn-start {
 		wait 150ms;
 		
 	}
-	show serial dialog {"SIMON TURN OVER!"}
+	debug!("SIMON TURN OVER!")
 	goto simon-player-turn-start;
 }
 
@@ -339,14 +339,12 @@ simon-player-listen {
 	if (flag ch2-simon-high is true) {
 		if (variable simon-pos-curr is == 4) {
 			if (button $button4) {
-				// show serial dialog {"PRESSED BUTTON 4"}
 				mutate simon-player-move = 4;
 				goto simon-player-do-move;
 			}
 		}
 		if (variable simon-pos-curr is == 5) {
 			if (button $button5) {
-				// show serial dialog {"PRESSED BUTTON 5"}
 				mutate simon-player-move = 5;
 				goto simon-player-do-move;
 			}
@@ -356,14 +354,12 @@ simon-player-listen {
 	else {
 		if (variable simon-pos-curr is == 0) {
 			if (button $button0) {
-				// show serial dialog {"PRESSED BUTTON 0"}
 				mutate simon-player-move = 0;
 				goto simon-player-do-move;
 			}
 		}
 		if (variable simon-pos-curr is == 1) {
 			if (button $button1) {
-				// show serial dialog {"PRESSED BUTTON 1"}
 				mutate simon-player-move = 1;
 				goto simon-player-do-move;
 			}
@@ -372,14 +368,12 @@ simon-player-listen {
 	// positions for both low and high
 	if (variable simon-pos-curr is == 2) {
 		if (button $button2) {
-			// show serial dialog {"PRESSED BUTTON 2"}
 			mutate simon-player-move = 2;
 			goto simon-player-do-move;
 		}
 	}
 	if (variable simon-pos-curr is == 3) {
 		if (button $button3) {
-			// show serial dialog {"PRESSED BUTTON 3"}
 			mutate simon-player-move = 3;
 			goto simon-player-do-move;
 		}
