@@ -166,9 +166,7 @@ ch2-interact-mainframe {
 ch2-count-flags-done {
 	// REMINDER: This bit is running in the `on_tick` slot on the mainframe entity
 	set flag ch2-storyflags-tallied to false;
-	if (debug mode is on) {
-		show serial dialog { "\t<g>DEBUG: $ch2-storyflags-tally$ total parts installed!</>" }
-	}
+	debug!("\t<g>DEBUG: $ch2-storyflags-tally$ total parts installed!</>")
 	// the below are separate scripts so that multiple things can trigger them
 	if (variable ch2-storyflags-tally is == $goto-round-2) {
 		goto ch2-start-round-2;

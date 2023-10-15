@@ -129,10 +129,10 @@ var parseForInner = function (inner) {
 		if (token.value === ";") {
 			semicolons.push(token);
 			chunk += 1;
-		} else {
-			if (!result[order[chunk]]) {
+			if (chunk > 2) {
 				throw new Error("How many semicolons you got in this 'for', dude??");
 			}
+		} else {
 			result[order[chunk]].push(token);
 		}
 	})

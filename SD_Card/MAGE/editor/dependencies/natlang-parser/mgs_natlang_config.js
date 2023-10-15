@@ -10,10 +10,12 @@ if (typeof module === 'object') {
 	whyle = require('./mgs-macro-whyle.js');
 	zigzag = require('./mgs-macro-zigzag.js');
 	constants = require('./mgs-macro-constants.js');
+	debugprint = require('./mgs-macro-debugprint.js');
 }
 
 var mgs = {
 	macros: {
+		debugprint: debugprint,
 		constants: constants,
 		whyle: whyle,
 		zigzag: zigzag

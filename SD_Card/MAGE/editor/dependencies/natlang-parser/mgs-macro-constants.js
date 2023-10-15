@@ -54,7 +54,7 @@ constants.isDeclaration = function (tokens, tokenPos) {
 constants.process = function (origTokens) {
 	// first check whether the whole lex object was passed by accident:
 	var tokens = origTokens.success ? origTokens.tokens : origTokens;
-	// (okay we're good now)	
+	// (okay we're good now)
 	var declaredConstants = {};
 	var tokenPos = 0;
 	var outputTokens = [];
@@ -69,6 +69,12 @@ constants.process = function (origTokens) {
 				throw errorObject;
 			}
 			tokenPos = collection.nextTokenIndex;
+			// // eating semicolon
+			// if (tokens[tokenPos].value !== ";") {
+			// 	throw new Error (`Expected semicolon after const!() macro! (Found '${tokens[tokenPos].value}')`);
+			// }
+			// tokenPos += 1;
+			// replacing :
 			// consuming what we collected:
 			var declarationPos = 0;
 			var declarationTokens = collection.collection;
