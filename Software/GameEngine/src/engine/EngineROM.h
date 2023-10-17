@@ -12,6 +12,7 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <span>
 #include <tuple>
 #include <vector>
 
@@ -25,33 +26,31 @@ static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
 
 static const inline auto ENGINE_VERSION = 3;
 
-template <typename TData>
+template <typename TDataTag>
 class Header
 {
 public:
    Header() noexcept = default;
-   Header(std::size_t count, std::size_t& address) noexcept
-      : count(count), baseAddress(address)
-   {
-      address += 2 * sizeof(uint16_t) * count;
-   }
+   Header(std::uint32_t count, const uint32_t* address) noexcept
+      : count(count),
+      offsets(address, count),
+      lengths(address + sizeof(uint32_t) * count, count)
+   {}
 
-   std::size_t Count() const { return count; }
-   std::size_t address(const char* romDataAddress, uint16_t i) const
+   std::uint16_t Count() const { return count; }
+   std::uint32_t GetOffset(uint16_t i) const
    {
-      auto offsets = (const uint16_t*)(romDataAddress + baseAddress);
       return offsets[i % count];
    }
-   std::size_t Length(const char* romDataAddress, uint16_t i) const
+   std::uint32_t Length(uint16_t i) const
    {
-      auto lengths = (const uint16_t*)(romDataAddress + baseAddress + sizeof(count) * count);
       return lengths[i % count];
    }
-   
-private:
-   std::size_t count;
-   std::size_t baseAddress;
 
+private:
+   std::uint16_t count;
+   std::span<const uint32_t> offsets;
+   std::span<const uint32_t> lengths;
 }; //class Header
 
 //size of chunk to be read/written when writing game.dat to ROM per loop
@@ -126,12 +125,24 @@ struct EngineROM
    // noexcept because we want to fail fast/call std::terminate if this fails
    EngineROM(char* romData) noexcept
       : romData(romData),
-        headers(headersFor<THeaders...>(ENGINE_ROM_MAGIC_HASH_LENGTH))
+      headers(headersFor<THeaders...>(ENGINE_ROM_MAGIC_HASH_LENGTH))
    {
       // Verify magic string is on ROM:
       if (!Magic())
       {
-         ErrorUnplayable();
+         //let out the magic s̶m̶o̶k̶e̶ goat
+         ENGINE_PANIC(
+            "ROM header invalid. Game cannot start.\n"
+            "Goat is sad.   ##### ####     \n"
+            "             ##   #  ##       \n"
+            "            #   (-)    #      \n"
+            "            #+       ######   \n"
+            "            #^             ## \n"
+            "             ###           #  \n"
+            "               #  #      # #  \n"
+            "               ##  ##  ##  #  \n"
+            "               ######  #####  \n"
+         );
       }
    }
 
@@ -139,7 +150,7 @@ struct EngineROM
 
    bool Magic() const
    {
-      const auto magicString = std::string{"MAGEGAME"};
+      const auto magicString = std::string{ "MAGEGAME" };
 
       for (std::size_t i = 0; i < magicString.size(); i++)
       {
@@ -151,25 +162,8 @@ struct EngineROM
       return true;
    }
 
-   void ErrorUnplayable()
-   {
-      //let out the magic s̶m̶o̶k̶e̶ goat
-      ENGINE_PANIC(
-         "ROM header invalid. Game cannot start.\n"
-         "Goat is sad.   ##### ####     \n"
-         "             ##   #  ##       \n"
-         "            #   (-)    #      \n"
-         "            #+       ######   \n"
-         "            #^             ## \n"
-         "             ###           #  \n"
-         "               #  #      # #  \n"
-         "               ##  ##  ##  #  \n"
-         "               ######  #####  \n"
-      );
-   }
-
    template <typename TData>
-   uint16_t GetCount() { return getHeader<TData>().Count(); }
+   constexpr uint16_t GetCount() { return getHeader<TData>().Count(); }
 
    template <typename T>
    void Read(T& t, std::size_t& address, size_t count = 1) const
@@ -181,24 +175,23 @@ struct EngineROM
       auto dataPointer = romData + address;
       memcpy(&t, dataPointer, dataLength);
       address += dataLength;
-      
    }
 
    template <typename T>
-   std::size_t GetAddressByIndex(uint16_t index) const
+   constexpr std::size_t GetAddressByIndex(uint16_t index) const
    {
-      return getHeader<T>().address(romData, index);
+      return getHeader<T>().GetOffset(index);
    }
 
    template <typename T>
-   const T* GetReadPointerByIndex(uint16_t index) const
+   constexpr const T* GetReadPointerByIndex(uint16_t index) const
    {
-      auto address = getHeader<T>().address(romData, index);
-      return reinterpret_cast<const T*>(romData + address);
+      auto offset = getHeader<T>().GetOffset(index);
+      return reinterpret_cast<const T*>(romData + offset);
    }
 
    template <typename T>
-   const T* GetReadPointerToAddress(std::size_t& address) const
+   constexpr const T* GetReadPointerToAddress(std::size_t& address) const
    {
       auto readPointer = reinterpret_cast<const T*>(romData + address);
       address += sizeof(T);
@@ -206,19 +199,20 @@ struct EngineROM
    }
 
    template <typename T>
-   std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
+   inline std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
       static_assert(std::is_constructible_v<T, std::size_t&>, "Must be constructible from an address");
 
-      auto address = getHeader<T>().address(romData, index);
+      auto address = getHeader<T>().GetOffset(index);
       return std::make_unique<T>(address);
    }
-   
+
    template <typename T>
    void InitializeVectorFrom(std::vector<T>& v, std::size_t& address, uint16_t count) const
    {
-      static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
-      
+      static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>,
+         "Must be constructible from an address or a standard layout type");
+
       for (auto i = 0; i < count; i++)
       {
          if constexpr (std::is_standard_layout_v<T>)
@@ -259,12 +253,12 @@ struct EngineROM
    {
       return currentSave;
    }
-   
+
    constexpr void SetCurrentSave(TSave save)
    {
       currentSave = save;
    }
-   
+
    constexpr const TSave& ResetCurrentSave(std::size_t scenarioDataCRC32)
    {
       auto newSave = TSave{};
@@ -287,7 +281,7 @@ struct EngineROM
          {
             throw "Couldn't create save directory";
          }
-      }   
+      }
       const char* saveFileName = saveFileSlotNames[slotIndex];
 
       auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
@@ -333,9 +327,11 @@ private:
    template <typename T>
    auto headerFor(std::size_t& address) const
    {
-      auto countPointer = (const uint16_t*)(romData + address);
-      address += sizeof(*countPointer);
-      return Header<T>{*countPointer, address};
+      const auto count = *(const uint32_t*)(romData + address);
+      address += sizeof(uint32_t);
+      const auto header = Header<T>(count, (const uint32_t*)(romData + address));
+      address += sizeof(uint32_t) * count * 2;
+      return header;
    }
 
    template <typename... TRest>

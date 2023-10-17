@@ -71,12 +71,6 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 
 EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
 {
-	SDL_DestroyTexture(gameViewportTexture);
-	gameViewportTexture = nullptr;
-	SDL_DestroyTexture(frameTexture);
-	frameTexture = nullptr;
-	SDL_DestroyTexture(frameButtonTexture);
-	frameButtonTexture = nullptr;
 	SDL_FreeSurface(frameButtonSurface);
 	frameButtonSurface = nullptr;
 	SDL_DestroyTexture(frameLEDTexture);
