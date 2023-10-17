@@ -198,15 +198,15 @@ class MageSerialDialog
 {
 public:
    ~MageSerialDialog() noexcept = default;
-   MageSerialDialog(std::size_t& address)
+   MageSerialDialog(uint32_t& offset)
    {
-      ROM()->Read(name, address, 32);
-      ROM()->Read(stringId, address);
-      ROM()->Read(serialResponseType, address);
+      ROM()->Read(name, offset, 32);
+      ROM()->Read(stringId, offset);
+      ROM()->Read(serialResponseType, offset);
 
       auto responseCount = uint8_t{ 0 };
-      ROM()->Read(responseCount, address);
-      ROM()->InitializeVectorFrom(Responses, address, responseCount);
+      ROM()->Read(responseCount, offset);
+      ROM()->InitializeVectorFrom(Responses, offset, responseCount);
    }
    char name[32]{ 0 };
    uint16_t stringId{ 0 };

@@ -38,43 +38,43 @@ void MapControl::OnTick(MageScriptControl* scriptControl)
     scriptControl->processScript(onTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
 }
 
-MapData::MapData(std::size_t& address)
+MapData::MapData(uint32_t& offset)
 {
     auto layerCount = uint8_t{ 0 };
-    ROM()->Read(name, address, MapNameLength);
-    ROM()->Read(tileWidth, address);
-    ROM()->Read(tileHeight, address);
-    ROM()->Read(cols, address);
-    ROM()->Read(rows, address);
-    ROM()->Read(onLoadScriptId, address);
-    ROM()->Read(onTickScriptId, address);
-    ROM()->Read(onLookScriptId, address);
-    ROM()->Read(layerCount, address);
-    ROM()->Read(playerEntityIndex, address);
-    ROM()->Read(entityCount, address);
-    ROM()->Read(geometryCount, address);
-    ROM()->Read(scriptCount, address);
-    ROM()->Read(goDirectionsCount, address);
+    ROM()->Read(name, offset, MapNameLength);
+    ROM()->Read(tileWidth, offset);
+    ROM()->Read(tileHeight, offset);
+    ROM()->Read(cols, offset);
+    ROM()->Read(rows, offset);
+    ROM()->Read(onLoadScriptId, offset);
+    ROM()->Read(onTickScriptId, offset);
+    ROM()->Read(onLookScriptId, offset);
+    ROM()->Read(layerCount, offset);
+    ROM()->Read(playerEntityIndex, offset);
+    ROM()->Read(entityCount, offset);
+    ROM()->Read(geometryCount, offset);
+    ROM()->Read(scriptCount, offset);
+    ROM()->Read(goDirectionsCount, offset);
 
     if (entityCount > MAX_ENTITIES_PER_MAP)
     {
         ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map", MAX_ENTITIES_PER_MAP);
     }
 
-    address += sizeof(uint8_t); // padding for 4-byte alignment
+    offset += sizeof(uint8_t); // padding for 4-byte alignment
 
     std::vector<uint16_t> entityGlobalIds{};
     std::vector<uint16_t> geometryGlobalIds{};
     std::vector<uint16_t> scriptGlobalIds{};
-    ROM()->InitializeVectorFrom(entityGlobalIds, address, entityCount);
-    ROM()->InitializeVectorFrom(geometryGlobalIds, address, geometryCount);
-    ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
-    ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
+    ROM()->InitializeVectorFrom(entityGlobalIds, offset, entityCount);
+    ROM()->InitializeVectorFrom(geometryGlobalIds, offset, geometryCount);
+    ROM()->InitializeVectorFrom(scriptGlobalIds, offset, scriptCount);
+    ROM()->InitializeVectorFrom(goDirections, offset, goDirectionsCount);
 
     //padding to align with uint32_t memory spacing:
     if ((entityCount + geometryCount + scriptCount) % 2)
     {
-        address += sizeof(uint16_t);
+        offset += sizeof(uint16_t);
     }
 
     for (auto i = 0; i < geometryCount; i++)
@@ -97,7 +97,7 @@ MapData::MapData(std::size_t& address)
 
     for (auto i = 0; i < layerCount; i++)
     {
-        auto layerAddress = address + i * rows * cols * sizeof(uint8_t*);
+        auto layerAddress = offset + i * rows * cols * sizeof(uint8_t*);
         layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(cols * rows) });
     }
 }

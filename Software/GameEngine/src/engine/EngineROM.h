@@ -31,10 +31,10 @@ class Header
 {
 public:
    Header() noexcept = default;
-   Header(std::uint32_t count, const uint32_t* address) noexcept
+   Header(std::uint32_t count, const uint32_t* offset) noexcept
       : count(count),
-      offsets(address, count),
-      lengths(address + sizeof(uint32_t) * count, count)
+      offsets(offset, count),
+      lengths(offset + sizeof(uint32_t) * count, count)
    {}
 
    std::uint16_t Count() const { return count; }
@@ -77,7 +77,7 @@ static const inline std::size_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 //the SD card.
 #define ENGINE_ROM_CRC32_LENGTH 4
 
-//this is the length of the scenario data from the 0 address to the end
+//this is the length of the scenario data from the 0 offset to the end
 #define ENGINE_ROM_GAME_LENGTH 4
 
 #define ENGINE_ROM_START_OF_CRC_OFFSET (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH)
@@ -95,7 +95,7 @@ static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_S
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the Verify function returns
-//the failure address which is a std::size_t and can include 0
+//the failure offset which is a std::size_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -166,15 +166,15 @@ struct EngineROM
    constexpr uint16_t GetCount() { return getHeader<TData>().Count(); }
 
    template <typename T>
-   void Read(T& t, std::size_t& address, size_t count = 1) const
+   void Read(T& t, uint32_t& offset, size_t count = 1) const
    {
       static_assert(std::is_scalar_v<T> || std::is_standard_layout_v<T>, "T must be a scalar or standard-layout type");
       auto elementSize = sizeof(std::remove_all_extents_t<T>);
       auto dataLength = count * elementSize;
 
-      auto dataPointer = romData + address;
+      auto dataPointer = romData + offset;
       memcpy(&t, dataPointer, dataLength);
-      address += dataLength;
+      offset += dataLength;
    }
 
    template <typename T>
@@ -191,43 +191,43 @@ struct EngineROM
    }
 
    template <typename T>
-   constexpr const T* GetReadPointerToAddress(std::size_t& address) const
+   constexpr const T* GetReadPointerToAddress(uint32_t& offset) const
    {
-      auto readPointer = reinterpret_cast<const T*>(romData + address);
-      address += sizeof(T);
+      auto readPointer = reinterpret_cast<const T*>(romData + offset);
+      offset += sizeof(T);
       return readPointer;
    }
 
    template <typename T>
    inline std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
-      static_assert(std::is_constructible_v<T, std::size_t&>, "Must be constructible from an address");
+      static_assert(std::is_constructible_v<T, uint32_t&>, "Must be constructible from an offset");
 
-      auto address = getHeader<T>().GetOffset(index);
-      return std::make_unique<T>(address);
+      auto offset = getHeader<T>().GetOffset(index);
+      return std::make_unique<T>(offset);
    }
 
    template <typename T>
-   void InitializeVectorFrom(std::vector<T>& v, std::size_t& address, uint16_t count) const
+   void InitializeVectorFrom(std::vector<T>& v, uint32_t& offset, uint16_t count) const
    {
       static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>,
-         "Must be constructible from an address or a standard layout type");
+         "Must be constructible from an offset or a standard layout type");
 
       for (auto i = 0; i < count; i++)
       {
          if constexpr (std::is_standard_layout_v<T>)
          {
-            v.push_back(*(const T*)(romData + address));
-            address += sizeof(T);
+            v.push_back(*(const T*)(romData + offset));
+            offset += sizeof(T);
          }
          else
          {
-            v.push_back(T{ address });
+            v.push_back(T{ offset });
          }
       }
    }
 
-   bool VerifyEqualsAtOffset(std::size_t address, std::string value) const
+   bool VerifyEqualsAtOffset(std::size_t offset, std::string value) const
    {
       if (value.empty())
       {
@@ -325,19 +325,19 @@ private:
    }
 
    template <typename T>
-   auto headerFor(std::size_t& address) const
+   auto headerFor(uint32_t& offset) const
    {
-      const auto count = *(const uint32_t*)(romData + address);
-      address += sizeof(uint32_t);
-      const auto header = Header<T>(count, (const uint32_t*)(romData + address));
-      address += sizeof(uint32_t) * count * 2;
+      const auto count = *(const uint32_t*)(romData + offset);
+      offset += sizeof(uint32_t);
+      const auto header = Header<T>(count, (const uint32_t*)(romData + offset));
+      offset += sizeof(uint32_t) * count * 2;
       return header;
    }
 
    template <typename... TRest>
-   auto headersFor(std::size_t address) const
+   auto headersFor(std::size_t offset) const
    {
-      return std::tuple<Header<TRest>...>{headerFor<TRest>(address)...};
+      return std::tuple<Header<TRest>...>{headerFor<TRest>(offset)...};
    }
 };
 
