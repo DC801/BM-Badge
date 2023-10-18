@@ -56,3 +56,4 @@ SD_Card/AUDIO/
 SD_Card/MAGE/game.dat
 CMakeFiles/
 CMakeCache.txt
+.vs/
