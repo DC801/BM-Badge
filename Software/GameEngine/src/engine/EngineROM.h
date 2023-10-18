@@ -54,11 +54,11 @@ private:
 }; //class Header
 
 //size of chunk to be read/written when writing game.dat to ROM per loop
-static const inline std::size_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
+static const inline uint32_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
 
 //This is the smallest page that can be erased on the FL256SSVF01 chip which uses uniform 256kB page sizes
 //262144 bytes = 256KB
-static const inline std::size_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
+static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 
 //size of largest single Write data that can be sent at one time:
 //make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
@@ -100,15 +100,15 @@ static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_S
 
 /////////////////////////////////////////////////////////////////////////////////
 // https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
-template <class T, std::size_t I, class Tuple>
+template <class T, uint32_t I, class Tuple>
 constexpr bool match_v = std::is_same_v<T, std::tuple_element_t<I, Tuple>>;
 
 template <class T, class Tuple, class Idxs = std::make_index_sequence<std::tuple_size_v<Tuple>>>
 struct type_index;
 
-template <class T, template <class...> class Tuple, class... Args, std::size_t... Is>
+template <class T, template <class...> class Tuple, class... Args, uint32_t... Is>
 struct type_index<T, Tuple<Args...>, std::index_sequence<Is...>>
-   : std::integral_constant<std::size_t, ((Is* match_v<T, Is, Tuple<Args...>>) + ... + 0)>
+   : std::integral_constant<uint32_t, ((Is* match_v<T, Is, Tuple<Args...>>) + ... + 0)>
 {
    static_assert(1 == (match_v<T, Is, Tuple<Args...>> +... + 0), "T doesn't appear once in Tuple");
 };
