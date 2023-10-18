@@ -335,7 +335,7 @@ private:
    }
 
    template <typename... TRest>
-   auto headersFor(std::size_t offset) const
+   auto headersFor(uint32_t offset) const
    {
       return std::tuple<Header<TRest>...>{headerFor<TRest>(offset)...};
    }
