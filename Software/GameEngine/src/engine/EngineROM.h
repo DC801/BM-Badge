@@ -31,24 +31,24 @@ class Header
 {
 public:
    Header() noexcept = default;
-   Header(std::uint32_t count, const uint32_t* offset) noexcept
+   Header(uint32_t count, const uint32_t* offset) noexcept
       : count(count),
       offsets(offset, count),
       lengths(offset + sizeof(uint32_t) * count, count)
    {}
 
-   std::uint16_t Count() const { return count; }
-   std::uint32_t GetOffset(uint16_t i) const
+   uint16_t Count() const { return count; }
+   uint32_t GetOffset(uint16_t i) const
    {
       return offsets[i % count];
    }
-   std::uint32_t Length(uint16_t i) const
+   uint32_t Length(uint16_t i) const
    {
       return lengths[i % count];
    }
 
 private:
-   std::uint16_t count;
+   uint16_t count;
    std::span<const uint32_t> offsets;
    std::span<const uint32_t> lengths;
 }; //class Header
@@ -93,21 +93,16 @@ static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_
 static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
 static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
 
-//This is a return code indicating that the verification was successful
-//it needs to be a negative number, as the Verify function returns
-//the failure offset which is a std::size_t and can include 0
-#define ENGINE_ROM_VERIFY_SUCCESS -1
-
 /////////////////////////////////////////////////////////////////////////////////
 // https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
 template <class T, uint32_t I, class Tuple>
 constexpr bool match_v = std::is_same_v<T, std::tuple_element_t<I, Tuple>>;
 
-template <class T, class Tuple, class Idxs = std::make_index_sequence<std::tuple_size_v<Tuple>>>
+template <class T, class Tuple, class Idxs = std::make_integer_sequence<uint32_t, std::tuple_size_v<Tuple>>>
 struct type_index;
 
 template <class T, template <class...> class Tuple, class... Args, uint32_t... Is>
-struct type_index<T, Tuple<Args...>, std::index_sequence<Is...>>
+struct type_index<T, Tuple<Args...>, std::integer_sequence<uint32_t, Is...>>
    : std::integral_constant<uint32_t, ((Is* match_v<T, Is, Tuple<Args...>>) + ... + 0)>
 {
    static_assert(1 == (match_v<T, Is, Tuple<Args...>> +... + 0), "T doesn't appear once in Tuple");
@@ -191,7 +186,7 @@ struct EngineROM
    }
 
    template <typename T>
-   constexpr const T* GetReadPointerToAddress(uint32_t& offset) const
+   const T* GetReadPointerToAddress(uint32_t& offset) const
    {
       auto readPointer = reinterpret_cast<const T*>(romData + offset);
       offset += sizeof(T);
@@ -210,7 +205,7 @@ struct EngineROM
    template <typename T>
    void InitializeVectorFrom(std::vector<T>& v, uint32_t& offset, uint16_t count) const
    {
-      static_assert(std::is_constructible_v<T, std::size_t&> || std::is_standard_layout_v<T>,
+      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>,
          "Must be constructible from an offset or a standard layout type");
 
       for (auto i = 0; i < count; i++)
@@ -227,7 +222,7 @@ struct EngineROM
       }
    }
 
-   bool VerifyEqualsAtOffset(std::size_t offset, std::string value) const
+   bool VerifyEqualsAtOffset(uint32_t offset, std::string value) const
    {
       if (value.empty())
       {
@@ -259,7 +254,7 @@ struct EngineROM
       currentSave = save;
    }
 
-   constexpr const TSave& ResetCurrentSave(std::size_t scenarioDataCRC32)
+   constexpr const TSave& ResetCurrentSave(uint32_t scenarioDataCRC32)
    {
       auto newSave = TSave{};
       newSave.scenarioDataCRC32 = scenarioDataCRC32;
@@ -270,7 +265,7 @@ struct EngineROM
    void LoadSaveSlot(uint8_t slotIndex)
    {
 #ifdef DC801_EMBEDDED
-      auto saveAddress = std::size_t{ ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE) };
+      auto saveAddress = uint32_t{ ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE) };
       Read(currentSave, saveAddress);
 #else
 

@@ -97,8 +97,9 @@ MapData::MapData(uint32_t& offset)
 
     for (auto i = 0; i < layerCount; i++)
     {
-        auto layerAddress = offset + i * rows * cols * sizeof(uint8_t*);
-        layers.push_back(std::span{ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress), (uint16_t)(cols * rows) });
+        auto layerAddress = (uint32_t)(offset + i * rows * cols * sizeof(uint8_t*));
+        const auto layerPointer = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
+        layers.push_back(std::span{layerPointer, (uint16_t)(cols * rows) });
     }
 }
 
