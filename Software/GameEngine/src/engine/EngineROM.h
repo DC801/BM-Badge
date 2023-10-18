@@ -114,7 +114,7 @@ struct type_index<T, Tuple<Args...>, std::index_sequence<Is...>>
 };
 
 template <class T, class Tuple>
-constexpr std::size_t type_index_v = type_index<T, Tuple>::value;
+constexpr uint32_t type_index_v = type_index<T, Tuple>::value;
 // https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
 /////////////////////////////////////////////////////////////////////////////////
 
