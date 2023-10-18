@@ -183,11 +183,11 @@ struct EngineROM
       return getHeader<T>().GetOffset(index);
    }
 
-   template <typename T>
-   constexpr const T* GetReadPointerByIndex(uint16_t index) const
+   template <typename TLookup, typename TCast = TLookup>
+   constexpr const TCast* GetReadPointerByIndex(uint16_t index) const
    {
-      auto offset = getHeader<T>().GetOffset(index);
-      return reinterpret_cast<const T*>(romData + offset);
+      auto offset = getHeader<TLookup>().GetOffset(index);
+      return reinterpret_cast<const TCast*>(romData + offset);
    }
 
    template <typename T>
