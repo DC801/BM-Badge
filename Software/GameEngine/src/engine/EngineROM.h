@@ -178,7 +178,7 @@ struct EngineROM
    }
 
    template <typename T>
-   constexpr std::size_t GetAddressByIndex(uint16_t index) const
+   constexpr uint32_t GetOffsetByIndex(uint16_t index) const
    {
       return getHeader<T>().GetOffset(index);
    }

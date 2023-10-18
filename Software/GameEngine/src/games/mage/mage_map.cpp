@@ -89,7 +89,7 @@ MapData::MapData(uint32_t& offset)
 
     for (auto i = 0; i < entityCount; i++)
     {
-        auto entityAddress = ROM()->GetAddressByIndex<MageEntityData>(entityGlobalIds[i]);
+        auto entityAddress = ROM()->GetOffsetByIndex<MageEntityData>(entityGlobalIds[i]);
         auto entity = MageEntityData{};
         ROM()->Read(entity, entityAddress);
         entities[i] = std::move(MageEntity{ std::move(entity) });
