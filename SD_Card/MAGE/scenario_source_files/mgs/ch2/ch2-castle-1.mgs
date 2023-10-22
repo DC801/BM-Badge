@@ -122,6 +122,9 @@ on_load-ch2-castle-1 {
 		set entity "Wizard" on_interact to interact-ch2-wizard-mainframedone;
 		set entity "Wizard" current_animation to 3; // head poking up
 	}
+	if (flag ch2-has-artifact is true) {
+		set entity Artifact on_tick to yeet;
+	}
 
 	// if cutscene was interrupted, intercept here:
 	if (flag ch2-cutseen-bert-secret is false) {
@@ -154,12 +157,22 @@ debug-bert {
 }
 
 debug-walk {
+	teleport entity Artifact to geometry artifact-look;
+	set entity Artifact type to artifact;
+	set entity Artifact current_animation to 0;
 	set entity "XA" on_interact to ch2-artifact-walk;
+}
+tick-artifact-open {
+	play entity Artifact animation 2 once;
+	set entity Artifact current_animation to 3;
+	goto null_script
 }
 ch2-artifact-walk {
 	set player control off; // temp (take out of final)
-	wait 300ms;
+	wait 100ms;
 	// a dumbwaiter-esque thing opens
+	set entity Artifact on_tick to tick-artifact-open;
+	wait 500ms;
 	if (entity "%PLAYER%" is inside geometry artifact-watchbox) {
 		// walk entity "%PLAYER%" to geometry artifact-watchpoint over 100ms;
 	} else if (entity "%PLAYER%" is inside geometry artifact-watchdonut) {
@@ -168,24 +181,30 @@ ch2-artifact-walk {
 		walk entity "%PLAYER%" to geometry artifact-watchpoint over 700ms;
 	}
 	turn entity "%PLAYER%" toward geometry artifact-look;
-	wait 1500ms;
-	walk entity "%PLAYER%" to geometry artifact-approach over 900ms;
+	wait 1900ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 700ms;
 	turn entity "%PLAYER%" north;
-	wait 400ms;
+	wait 140ms;
 	show dialog ch2-what-right-here {
 		PLAYER "What, over there?"
 	}
+	wait 700ms;
+	// bling
+	play entity Artifact animation 1 once;
+	set entity Artifact current_animation to 3;
+	wait 550ms;
 	walk entity "%PLAYER%" along geometry artifact-approach over 400ms;
-	wait 300ms;
+	wait 200ms;
 	turn entity "%PLAYER%" east;
 	wait 800ms;
 	turn entity "%PLAYER%" north;
 	wait 100ms;
 	// walks up to it
 	walk entity "%PLAYER%" to geometry artifact-get over 220ms;
-	wait 600ms;
+	wait 700ms;
+	set entity Artifact on_tick to yeet
 	// remove artifact
-	wait 1500ms;
+	wait 700ms;
 	walk entity "%PLAYER%" to geometry artifact-approach over 800ms;
 }
 

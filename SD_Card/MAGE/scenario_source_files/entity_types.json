@@ -4521,6 +4521,90 @@
 					"flip_x": false
 				}
 			]
+		},
+		"scenarioIndex": 63,
+		"serialized": {}
+	},
+	"artifact": {
+		"type": "artifact",
+		"tileset": "entity-artifact.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				}
+			]
 		}
 	}
 }
