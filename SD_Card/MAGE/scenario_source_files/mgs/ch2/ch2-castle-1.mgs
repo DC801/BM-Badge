@@ -172,40 +172,40 @@ ch2-artifact-walk {
 	wait 100ms;
 	// a dumbwaiter-esque thing opens
 	set entity Artifact on_tick to tick-artifact-open;
-	wait 500ms;
+	wait 700ms;
+	turn entity "%PLAYER%" toward geometry artifact-look;
+	wait 1700ms;
 	if (entity "%PLAYER%" is inside geometry artifact-watchbox) {
-		// walk entity "%PLAYER%" to geometry artifact-watchpoint over 100ms;
 	} else if (entity "%PLAYER%" is inside geometry artifact-watchdonut) {
 		walk entity "%PLAYER%" to geometry artifact-watchpoint over 400ms;
 	} else {
-		walk entity "%PLAYER%" to geometry artifact-watchpoint over 700ms;
+		walk entity "%PLAYER%" to geometry artifact-watchpoint over 600ms;
 	}
 	turn entity "%PLAYER%" toward geometry artifact-look;
-	wait 1900ms;
-	walk entity "%PLAYER%" to geometry artifact-approach over 700ms;
-	turn entity "%PLAYER%" north;
-	wait 140ms;
-	show dialog ch2-what-right-here {
+	wait 750ms;
+	show dialog {
 		PLAYER "What, over there?"
 	}
-	wait 700ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 600ms;
+	turn entity "%PLAYER%" north;
+	wait 1000ms;
 	// bling
 	play entity Artifact animation 1 once;
 	set entity Artifact current_animation to 3;
 	wait 550ms;
-	walk entity "%PLAYER%" along geometry artifact-approach over 400ms;
-	wait 200ms;
+	walk entity "%PLAYER%" along geometry artifact-approach over 350ms;
+	wait 270ms;
 	turn entity "%PLAYER%" east;
-	wait 800ms;
-	turn entity "%PLAYER%" north;
-	wait 100ms;
-	// walks up to it
-	walk entity "%PLAYER%" to geometry artifact-get over 220ms;
 	wait 700ms;
+	turn entity "%PLAYER%" north;
+	wait 80ms;
+	// walks up to it
+	walk entity "%PLAYER%" to geometry artifact-get over 200ms;
+	wait 800ms;
 	set entity Artifact on_tick to yeet
 	// remove artifact
-	wait 700ms;
-	walk entity "%PLAYER%" to geometry artifact-approach over 800ms;
+	wait 400ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 700ms;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -479,7 +479,7 @@ interact-ch2-xa {
 
 				Lambda "The Big Bad, coming back? Yes, I see... he might still have the power to trigger an earthquake, even after...."
 				"I, um, don't know why the village elders would have changed their minds about this, but...."
-				"Well, you're welcome to the artifact. It's over there, to your right."
+				"Well, you're welcome to the artifact. It's over there, just to your left, inside the pillar."
 			}
 			copy ch2-artifact-walk
 			wait 500ms;
