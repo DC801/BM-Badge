@@ -89,6 +89,7 @@ on_load-ch2-castle-1 {
 	if (debug mode is on) {
 		register toot -> debug-finish-toot;
 		register bert -> debug-bert;
+		register walk -> debug-walk;
 		register get + monitor -> ch2-pickup-monitor;
 		register get + heatsink -> ch2-pickup-heatsink;
 		register get + cactuscooler -> ch2-pickup-cactuscooler;
@@ -150,6 +151,42 @@ debug-bert {
 	teleport entity "%PLAYER%" to geometry mainframe-look-spot;
 	turn entity "%PLAYER%" north;
 	goto ch2-start-round-2;
+}
+
+debug-walk {
+	set entity "XA" on_interact to ch2-artifact-walk;
+}
+ch2-artifact-walk {
+	set player control off; // temp (take out of final)
+	wait 300ms;
+	// a dumbwaiter-esque thing opens
+	if (entity "%PLAYER%" is inside geometry artifact-watchbox) {
+		// walk entity "%PLAYER%" to geometry artifact-watchpoint over 100ms;
+	} else if (entity "%PLAYER%" is inside geometry artifact-watchdonut) {
+		walk entity "%PLAYER%" to geometry artifact-watchpoint over 400ms;
+	} else {
+		walk entity "%PLAYER%" to geometry artifact-watchpoint over 700ms;
+	}
+	turn entity "%PLAYER%" toward geometry artifact-look;
+	wait 1500ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 900ms;
+	turn entity "%PLAYER%" north;
+	wait 400ms;
+	show dialog ch2-what-right-here {
+		PLAYER "What, over there?"
+	}
+	walk entity "%PLAYER%" along geometry artifact-approach over 400ms;
+	wait 300ms;
+	turn entity "%PLAYER%" east;
+	wait 800ms;
+	turn entity "%PLAYER%" north;
+	wait 100ms;
+	// walks up to it
+	walk entity "%PLAYER%" to geometry artifact-get over 220ms;
+	wait 600ms;
+	// remove artifact
+	wait 1500ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 800ms;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -425,22 +462,19 @@ interact-ch2-xa {
 				"I, um, don't know why the village elders would have changed their minds about this, but...."
 				"Well, you're welcome to the artifact. It's over there, to your right."
 			}
-			// a dumbwaiter-esque thing opens
-			// player turns to the right
-			show dialog {
-				PLAYER "What, right here?"
-			}
-			// walks up to it
-			
+			copy ch2-artifact-walk
+			wait 500ms;
+			turn entity "%PLAYER%" west;
 			show dialog {
 				PLAYER "Huh. Almost looks like one of those old, fancy calculators."
 			}
-			// picks it up
+			turn entity "%PLAYER%" south;
+			wait 300ms;
 			show dialog {
 				PLAYER "That was easy. I thought there would be a quest or something. Puzzles, at least."
 				Lambda "Well, it doesn't exactly work right now, so...."
 			}
-			// player turns toward XA
+			turn entity "%PLAYER%" east;
 			show dialog {
 				PLAYER "...Wait, what?"
 				Lambda "That little thing can't do much on its own. The real powerful stuff was handled by the castle mainframe. They were linked wirelessly."
