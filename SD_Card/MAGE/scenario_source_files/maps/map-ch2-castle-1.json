@@ -5,7 +5,7 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 255, 256, 256, 260, 256, 256, 260, 256, 256, 2147483903, 0,
-            0, 271, 272, 272, 276, 261, 2147483909, 276, 272, 272, 2147483919, 0,
+            0, 271, 272, 272, 276, 261, 2147483909, 270, 272, 272, 2147483919, 0,
             0, 287, 288, 289, 288, 288, 288, 288, 288, 288, 2147483935, 0,
             0, 287, 288, 288, 288, 288, 288, 288, 288, 288, 2147483935, 0,
             0, 308, 288, 288, 288, 288, 288, 288, 288, 288, 2147483956, 0,
@@ -228,26 +228,6 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":38,
-                 "name":"bert-spot",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":-1,
-                         "y":-116
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":193,
-                 "y":243
-                }, 
-                {
-                 "class":"",
                  "gid":806,
                  "height":32,
                  "id":40,
@@ -276,82 +256,15 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":46,
-                 "name":"artifact-get",
-                 "point":true,
+                 "gid":807,
+                 "height":32,
+                 "id":56,
+                 "name":"Artifact",
                  "rotation":0,
                  "visible":true,
-                 "width":0,
-                 "x":240,
-                 "y":101
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":48,
-                 "name":"artifact-look",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":240,
-                 "y":82
-                },
-            
-                {
-                 "class":"",
-                 "height":0,
-                 "id":52,
-                 "name":"artifact-watchpoint",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":304,
-                 "y":126
-                }, 
-                {
-                 "class":"",
-                 "height":22,
-                 "id":53,
-                 "name":"artifact-watchbox",
-                 "rotation":0,
-                 "visible":true,
-                 "width":23,
-                 "x":292,
-                 "y":114
-                }, 
-                {
-                 "class":"",
-                 "height":53,
-                 "id":54,
-                 "name":"artifact-watchdonut",
-                 "rotation":0,
-                 "visible":true,
-                 "width":54,
-                 "x":277,
-                 "y":99
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":55,
-                 "name":"artifact-approach",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":-2
-                        }, 
-                        {
-                         "x":0,
-                         "y":-19
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":240,
-                 "y":127
+                 "width":32,
+                 "x":224,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -422,6 +335,104 @@
                  "width":0,
                  "x":120,
                  "y":125
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":38,
+                 "name":"bert-spot",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-1,
+                         "y":-116
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":193,
+                 "y":243
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":46,
+                 "name":"artifact-get",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":102
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"artifact-look",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":88
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":52,
+                 "name":"artifact-watchpoint",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":281,
+                 "y":126
+                }, 
+                {
+                 "class":"",
+                 "height":22,
+                 "id":53,
+                 "name":"artifact-watchbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":23,
+                 "x":269,
+                 "y":114
+                }, 
+                {
+                 "class":"",
+                 "height":53,
+                 "id":54,
+                 "name":"artifact-watchdonut",
+                 "rotation":0,
+                 "visible":true,
+                 "width":54,
+                 "x":254,
+                 "y":99
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":55,
+                 "name":"artifact-approach",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":-2
+                        }, 
+                        {
+                         "x":0,
+                         "y":-19
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":127
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -430,7 +441,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":56,
+ "nextobjectid":57,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -483,6 +494,11 @@
         {
          "firstgid":806,
          "source":"entity-enclosure.json"
+        },
+    
+        {
+         "firstgid":807,
+         "source":"..\/entities\/entity-artifact.json"
         }],
  "tilewidth":32,
  "type":"map",
