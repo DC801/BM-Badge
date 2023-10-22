@@ -36,8 +36,10 @@ void handle_jump (
 	uint16_t destination,
 	MageScriptState * resumeStateStruct
 ) {
-	if(value == (flags & EXPECTED_BOOL)) {
-		if(IS_JUMP_INDEX == (flags & IS_JUMP_INDEX)) {
+	bool doIt = value == (flags & EXPECTED_BOOL);
+	bool useActionGoto = IS_JUMP_INDEX == (flags & IS_JUMP_INDEX);
+	if(doIt) {
+		if(useActionGoto) {
 			/*
 			printf(
 				"BRANCH HIT!\n"
