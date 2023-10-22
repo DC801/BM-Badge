@@ -57,7 +57,7 @@
         {
          "draworder":"topdown",
          "id":4,
-         "name":"Object Layer 1",
+         "name":"entities",
          "objects":[
                 {
                  "class":"",
@@ -176,62 +176,6 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":34,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":233,
-                 "y":382
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":59,
-                 "name":"gasp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":224,
-                 "y":382
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":37,
-                 "name":"bob-walk",
-                 "polyline":[
-                        {
-                         "x":216.58847980651,
-                         "y":1
-                        }, 
-                        {
-                         "x":98.2724980713499,
-                         "y":1
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":167.72750192865,
-                 "y":379
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":38,
-                 "name":"bob-walk2",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":258.31598173516,
-                 "y":314
-                }, 
-                {
-                 "class":"",
                  "gid":581,
                  "height":32,
                  "id":61,
@@ -306,13 +250,13 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-right-and-down-kinda"
+                         "value":"tick-linger-1"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":53,
-                 "y":223
+                 "x":37,
+                 "y":226
                 }, 
                 {
                  "class":"",
@@ -362,10 +306,9 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":152,
+                 "x":141,
                  "y":287
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":618,
@@ -424,13 +367,13 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-right-and-down-kinda2"
+                         "value":"tick-linger-2"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":55,
-                 "y":350
+                 "x":135,
+                 "y":337
                 }, 
                 {
                  "class":"",
@@ -462,8 +405,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":156,
-                 "y":418
+                 "x":161,
+                 "y":421
                 }, 
                 {
                  "class":"",
@@ -490,9 +433,10 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":139,
-                 "y":446
-                }, 
+                 "x":136,
+                 "y":445
+                },
+            
                 {
                  "class":"",
                  "gid":2147484269,
@@ -518,13 +462,13 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-right-and-up-kinda"
+                         "value":"tick-linger-3"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":113,
-                 "y":431
+                 "x":112,
+                 "y":428
                 }, 
                 {
                  "class":"",
@@ -546,7 +490,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":135,
+                 "x":143,
                  "y":399
                 }, 
                 {
@@ -599,6 +543,214 @@
                  "width":32,
                  "x":297,
                  "y":351
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484266,
+                 "height":32,
+                 "id":83,
+                 "name":"Marathon Bob",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":8
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-marathonbob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"tick-linger-4"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":341,
+                 "y":437
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":34,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":233,
+                 "y":382
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":59,
+                 "name":"gasp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":382
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":37,
+                 "name":"bob-walk",
+                 "polyline":[
+                        {
+                         "x":216.58847980651,
+                         "y":1
+                        }, 
+                        {
+                         "x":98.2724980713499,
+                         "y":1
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":167.72750192865,
+                 "y":379
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":38,
+                 "name":"bob-walk2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":249,
+                 "y":314
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":76,
+                 "name":"linger-spot-1a",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":53,
+                 "y":219
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":77,
+                 "name":"linger-spot-1b",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":53,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":78,
+                 "name":"linger-spot-2a",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":152,
+                 "y":330
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":79,
+                 "name":"linger-spot-2b",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":123,
+                 "y":329
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":80,
+                 "name":"linger-spot-3a",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":128,
+                 "y":421
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":81,
+                 "name":"linger-spot-3b",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":128,
+                 "y":401
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":82,
+                 "name":"bob-walk3",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":263,
+                 "y":314
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":84,
+                 "name":"linger-spot-4a",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":358,
+                 "y":430
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":85,
+                 "name":"linger-spot-4b",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":329,
+                 "y":429
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -632,8 +784,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":75,
+ "nextlayerid":6,
+ "nextobjectid":86,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
