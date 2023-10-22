@@ -447,6 +447,18 @@
                  "width":0,
                  "x":264,
                  "y":417
+                },
+            
+                {
+                 "class":"",
+                 "height":39,
+                 "id":58,
+                 "name":"vending-watchbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":38,
+                 "x":96,
+                 "y":361
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -455,7 +467,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":58,
+ "nextobjectid":59,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

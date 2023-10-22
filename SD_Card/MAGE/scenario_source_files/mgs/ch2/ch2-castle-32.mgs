@@ -178,7 +178,39 @@ interact-ch2-samson {
 }
 
 interact-ch2-vendingmachine {
-	if (
+	if (variable ch2-storyflag-round is >= 3) {
+		if (flag ch2-cutseen-ramchips is false) {
+			set player control to false;
+			show dialog {
+				PLAYER "Oh! There's actually chips in here! Are those RAM chips?"
+			}
+			turn entity "%PLAYER%" toward entity "Sea Moss";
+			show dialog {
+				entity "Sea Moss" "Oh, for sure."
+			}
+			turn entity "%PLAYER%" toward entity Vending;
+			show dialog {
+				PLAYER "But... why are they being stocked in a vending machine? Do people like to eat RAM?"
+			}
+			turn entity "%PLAYER%" toward entity "Sea Moss";
+			show dialog {
+				entity "Sea Moss" "Silicon folks love silicon snacks."
+				PLAYER "I... what? Really?"
+				entity "Sea Moss" "(TODO THE REST OF THE CONVO)"
+			}
+			if (entity "%PLAYER%" is not inside geometry vending-watchbox) {
+				set entity "%PLAYER%" on_tick to ch2-walk-to-vend-short;
+			} else {
+				set entity "%PLAYER%" on_tick to ch2-watch-seamoss;
+			}
+			copy ch2-seamoss-summon-chips;
+		} else {
+			show dialog {
+				PLAYER "I wonder if they make \"cool ranch\" RAM chips."
+				entity "Sea Moss" "You betcha."
+			}
+		}
+	} else if (
 		flag ch2-want-cactuscooler is false
 		|| flag ch2-carrying-cactuscooler is true
 		|| flag ch2-cactuscooler-delivered is true
@@ -269,6 +301,14 @@ ch2-walk-to-vend {
 	goto null_script;
 }
 
+ch2-walk-to-vend-short {
+	wait 700ms;
+	walk entity "%PLAYER%" to geometry vending-watch over 500ms;
+	wait 200ms;
+	turn entity "%PLAYER%" north;
+	goto null_script;
+}
+
 interact-ch2-seamoss-cutscene {
 	set player control off;
 	show dialog {
@@ -286,14 +326,23 @@ interact-ch2-seamoss-cutscene {
 	}
 	wait 100ms;
 	set entity "%PLAYER%" on_tick to ch2-walk-to-vend;
+	copy ch2-seamoss-summon-chips;
+}
+
+ch2-watch-seamoss {
+	turn entity "%SELF%" toward entity "Sea Moss";
+}
+ch2-seamoss-summon-chips {
 	walk entity "Sea Moss" to geometry vending-spot over 1800ms;
 	wait 800ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" north;
 	show dialog {
 		SELF "I know a secret code for the ultimate cache of cache. Just need some cash...."
 	}
 	wait 850ms;
 	// bag of RAM chips appears in front of the vending machine
-	set entity "RAM Chips" name to "RAM Chips"
+	set entity "RAM Chips" name to "RAM Chips";
 	teleport entity "RAM Chips" to geometry ch2-chips-slide;
 	// hovers for a moment
 	wait 500ms;
@@ -303,17 +352,16 @@ interact-ch2-seamoss-cutscene {
 	show dialog {
 		PLAYER "Oh my god."
 	}
-	copy script face-player;
+	turn entity "Sea Moss" south;
 	show dialog {
 		SELF "There you are, friend! Some spicy nacho DDR5 RAM chips, on the house."
 		PLAYER "...Thanks...?"
 		SELF "Any time."
 	}
 	set player control on;
-	// Sea Moss returns to his table
-	turn entity "Sea Moss" south
 	set flag ch2-cutseen-ramchips to true;
 	set flag ch2-ramchips-dispensed to true;
+	set entity "%PLAYER%" on_tick to null_script;
 }
 
 /* ---------- RAMCHIPS (ADMIN) ---------- */
