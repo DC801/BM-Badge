@@ -56,6 +56,7 @@ look-ch2-guardianbob {
 
 on_load-ch2-bobsclub-basement {
 	// do unique stuff first (but turn serial / player control off first, if you do)
+	// TODO: bug, index jumps don't happen if they're the first action
 	if (flag ch2-cutseen-bob-party is false) {
 		goto ch2-cutscene-bob-party;
 	} else {
@@ -71,12 +72,79 @@ on_tick-ch2-bobsclub-basement {
 	goto null_script;
 }
 
+tick-linger-1 {
+	copy tick-rand-mini;
+	walk entity "%SELF%" to geometry linger-spot-1b over 500ms;
+	turn entity "%SELF%" east;
+	wait 15s;
+	walk entity "%SELF%" to geometry linger-spot-1a over 500ms;
+	turn entity "%SELF%" east;
+	wait 4s;
+}
+
 on_tick-turn-right-and-down-kinda {
 	wait 4500ms;
 	turn entity "%SELF%" south;
 	wait 2400ms;
 	turn entity "%SELF%" east;
 	wait 800ms;
+}
+
+tick-rand-mini {
+	mutate rand ? 3;
+	if (variable rand is 2) {
+		wait 2s;
+	} else if (variable rand is 1) {
+		wait 3s;
+	} else {
+		wait 4s;
+	}
+}
+tick-rand-broad {
+	mutate rand ? 3;
+	if (variable rand is 2) {
+		wait 3s;
+	} else if (variable rand is 1) {
+		wait 9s;
+	} else {
+		wait 14s;
+	}
+}
+
+tick-linger-2 {
+	copy tick-rand-broad
+	wait 3s;
+	walk entity "%SELF%" to geometry linger-spot-2b over 1s;
+	turn entity "%SELF%" south;
+	wait 12s;
+	turn entity "%SELF%" east;
+	wait 10s;
+	turn entity "%SELF%" south;
+	wait 4s;
+	walk entity "%SELF%" to geometry linger-spot-2a over 1s;
+	turn entity "%SELF%" south;
+	wait 20s;
+}
+tick-linger-3 {
+	copy tick-rand-mini
+	wait 5s;
+	walk entity "%SELF%" to geometry linger-spot-3b over 750ms;
+	turn entity "%SELF%" east;
+	wait 32s;
+	walk entity "%SELF%" to geometry linger-spot-3a over 750ms;
+	turn entity "%SELF%" east;
+	wait 4s;
+}
+tick-linger-4 {
+	copy tick-rand-broad
+	walk entity "%SELF%" to geometry linger-spot-4b over 1s;
+	turn entity "%SELF%" north;
+	wait 15s;
+	turn entity "%SELF%" west;
+	wait 12s;
+	walk entity "%SELF%" to geometry linger-spot-4a over 1s;
+	turn entity "%SELF%" north;
+	wait 12s;
 }
 on_tick-turn-right-and-down-kinda2 {
 	wait 3300ms;
@@ -244,9 +312,20 @@ ch2-cutscene-bob-party {
 }
 
 loiter-slow {
-	turn entity "%SELF%" south; /**/ wait 3200ms;
-	turn entity "%SELF%" east; /**/ wait 2000ms;
-	turn entity "%SELF%" west; /**/ wait 4400ms;
+	turn entity "%SELF%" south;
+	wait 3s;
+	turn entity "%SELF%" east;
+	wait 2s;
+	turn entity "%SELF%" west;
+	wait 4s;
+	walk entity "%SELF%" to geometry bob-walk3 over 400ms;
+	turn entity "%SELF%" south;
+	wait 4s;
+	turn entity "%SELF%" west;
+	wait 3s;
+	turn entity "%SELF%" north;
+	wait 2s;
+	walk entity "%SELF%" to geometry bob-walk2 over 400ms;
 }
 
 /* ---------- ENTITIES ---------- */
