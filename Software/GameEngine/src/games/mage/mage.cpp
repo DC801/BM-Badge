@@ -252,10 +252,13 @@ void EngineMainGameLoop ()
 
 	//If the loadMap() action has set a new map, we will load it before we render this frame.
 	if(MageScript->mapLoadId != MAGE_NO_MAP) {
-		//load the new map data into MageGame
-		MageGame->LoadMap(MageScript->mapLoadId);
+		//capture the mapLoadId before clearing
+		uint16_t tempMapId = MageScript->mapLoadId;
 		//clear the mapLoadId to prevent infinite reloads
+		//this NEEDS to be empty before calling loadMap!
 		MageScript->mapLoadId = MAGE_NO_MAP;
+		//load the new map data into MageGame
+		MageGame->LoadMap(tempMapId);
 		//Update the game for the new map
 		GameUpdate(deltaTime);
 
