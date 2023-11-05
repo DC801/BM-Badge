@@ -647,6 +647,12 @@ Set `Connection type` to Serial
 	-> TIP: you can save these settings as a preset [how to do it?]
 Click `OPEN`
 If you see a serial "welcome" type message, it worked
+
+on some kind of Linux
+go to /dev/ and find something called ttyACM0
+use picocom (you might have to install it)
+add yourself to the serial so you're not running picocom as sudo `sudo adduser ~ dialout`
+
 */
 	goto ch2-terminal-message-test;
 }

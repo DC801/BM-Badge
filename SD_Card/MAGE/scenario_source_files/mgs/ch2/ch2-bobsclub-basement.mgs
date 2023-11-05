@@ -56,7 +56,6 @@ look-ch2-guardianbob {
 
 on_load-ch2-bobsclub-basement {
 	// do unique stuff first (but turn serial / player control off first, if you do)
-	// TODO: bug, index jumps don't happen if they're the first action
 	if (flag ch2-cutseen-bob-party is false) {
 		goto ch2-cutscene-bob-party;
 	} else {
