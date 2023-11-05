@@ -4605,6 +4605,90 @@
 					"flip_x": false
 				}
 			]
+		},
+		"scenarioIndex": 64,
+		"serialized": {}
+	},
+	"gibson": {
+		"type": "gibson",
+		"tileset": "entity-gibson.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 23,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": true
+				},
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				}
+			]
 		}
 	}
 }

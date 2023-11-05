@@ -106,6 +106,18 @@
                  "width":40,
                  "x":249,
                  "y":106
+                }, 
+                {
+                 "class":"",
+                 "gid":795,
+                 "height":40,
+                 "id":36,
+                 "name":"King Gibson",
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":169,
+                 "y":122
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -170,7 +182,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":36,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -215,6 +227,10 @@
         {
          "firstgid":777,
          "source":"..\/entities\/entity-clock.json"
+        }, 
+        {
+         "firstgid":782,
+         "source":"..\/entities\/entity-gibson.json"
         }],
  "tilewidth":32,
  "type":"map",
