@@ -9,7 +9,8 @@
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json",
 		"codec": "tilesets/tileset-dialog_codec.json",
-		"menu": "tilesets/tileset-dialog_transparent_menu.json"
+		"menu": "tilesets/tileset-dialog_transparent_menu.json",
+		"transparent": "tilesets/tileset-dialog_transparent_menu-white.json"
 	},
 	"serialDialogPaths": [
 		"serial_dialog/serial_dialog-action_testing.json"
