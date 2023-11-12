@@ -113,6 +113,12 @@
                  "height":40,
                  "id":36,
                  "name":"King Gibson",
+                 "properties":[
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-gibson"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":40,

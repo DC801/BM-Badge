@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-castle-12 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE HALLWAY BACK on_look text\n "
+		"You looked around the <c>CASTLE HALLWAY BACK</>."
+		"\tThe rubble from the ceiling has split this room into two, but the air is a little stuffier here than it had been in the other half. Perhaps more was destroyed on this side, more dust scattered and more moisture entrapped, or perhaps it's a sign that you're come deeper into the mountain."
+		" "
 	}
 }
 

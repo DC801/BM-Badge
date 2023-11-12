@@ -242,6 +242,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-theodore"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-theodore"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -260,6 +265,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-alvin"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-alvin"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -313,6 +323,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-simon"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-simon"
                         }],
                  "rotation":0,
                  "visible":true,

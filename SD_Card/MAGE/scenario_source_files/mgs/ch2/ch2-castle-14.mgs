@@ -5,7 +5,17 @@ include!("header.mgs")
 look-ch2-castle-14 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: KING GIBSON'S BEDROOM on_look text\n "
+		"You looked around the <c>KING GIBSON'S BEDROOM</>."
+		"\tOpulent and pretentious -- perhaps the archetypal royal bedroom. You're not sure whether the heirloom four poster bed completes the look or is just over-the-top. But you concede that the red and gold looks fabulous together."
+		" "
+	}
+}
+
+look-ch2-gibson {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%King Gibson%</>."
+		"\tHis bearing is not as imposing as his physique, but perhaps he was simply shaken by the earthquake and his subsequent isolation. His horns are shiny, like he keeps them oiled or waxed."
 	}
 }
 

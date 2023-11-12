@@ -5,7 +5,30 @@ include!("header.mgs")
 look-ch2-castle-31 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: GRAND HALL on_look text\n "
+		"You looked around the <c>GRAND HALL</>."
+		"\tThis place seems to be a hybrid entertainment ampitheater and mess hall. But, empty of people and other distractions, the stage -- and its performers -- steal all your attention."
+		" "
+	}
+}
+look-ch2-simon {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%Simon%</>."
+		"\tLanky and brooding, his glare moves back and forth between you and the ceiling. At your guess, he's the band lead singer."
+	}
+}
+look-ch2-theodore {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%Theodore%</>."
+		"\tTheodore is the bulkiest of the three, and looks to be half falling asleep."
+	}
+}
+look-ch2-alvin {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%Alvin%</>."
+		"\tTODO"
 	}
 }
 
