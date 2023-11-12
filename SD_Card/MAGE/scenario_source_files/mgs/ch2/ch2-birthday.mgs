@@ -47,7 +47,7 @@ on_load-ch2-magehouse-birthday {
 	wait 500ms;
 	show dialog {
 		name " " // blank dialog label
-		border_tileset menu // TODO: change to one without a pink "next" arrow
+		border_tileset transparent
 		"Happy birthday to you!\nHappy birthday to you!"
 		"Happy birthday, dear %PLAYER%!\nHappy birthday to you!"
 	}
