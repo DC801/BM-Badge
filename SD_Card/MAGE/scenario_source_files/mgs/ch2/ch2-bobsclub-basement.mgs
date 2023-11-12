@@ -1,13 +1,13 @@
 include!("header.mgs")
 
-// (NOT LIVE YET)
-
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-bobsclub-basement {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Bob's Club basement text"
+		"You looked around the <c>BOB'S CLUB BASEMENT</>."
+		"\tThe downstairs strongly resembles the upstairs in terms of furnishings, though of course, it's much more heavily populated. As for the Bobs themselves, what they lack in variety they make up in volume -- both in terms of their quantity and their noise. Everyone is in the middle of a conversation, and they have to speak loudly to be heard over the raucous dubstep."
+		" "
 	}
 }
 
@@ -15,40 +15,42 @@ look-ch2-bobaustin {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Bob Austin%</>."
-		" "
-		"TODO: Bob Austin on_look"
+		"\tStoic and inscrutable, the giant stone golem could as easily be a hundred years old as a thousand. With his eyes glowing as they are, you can't be sure where he's looking, but you wouldn't be surprised if his gaze was following you as you move about the room."
 	}
 }
 look-ch2-bobmoss {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Bob Moss%</>."
-		" "
-		"TODO: Bob Moss on_look"
+		"\t%Bob Moss% may share the same sharp edges and chiseled brow as his cousin, %Bob Austin%, but somehow %Bob Moss%'s demeanor is more cheerful and friendly. It may be his mossy afro -- or it may be the way he lifts his hands more freely, as if they didn't weigh anything."
 	}
 }
 look-ch2-icechest {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%ice chest%</>."
-		" "
-		"TODO: Ice Chest on_look"
+		"\tA half dozen cans of assorted sodas peak through the mountain of ice within the chest, but the vast majority of cans are a bold orange, yellow, and green. The ice isn't very melted yet, so all the cans must be frosty."
 	}
 }
 look-ch2-marathonbob {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at one of the <m>%Marathon Bob%s</>."
-		" "
-		"TODO: Marathon Bob on_look"
+		"\tEach Bob has a military look to them: a holstered firearm, combat boots, and a headset -- though the nature of their eyepieces escapes you. Each of these Bobs act alike, and apart from their colored uniforms, might as well be entirely interchangable with one another."
 	}
 }
 look-ch2-guardianbob {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Guardian Bob%</>."
-		" "
-		"TODO: Guardian Bob on_look"
+		"\tStrangely, this Bob has a different cast to his skin, as if he were made of metal and plastic -- as if the shadows didn't land quite right around his body. But perhaps that's just how people from the internet usually look."
+	}
+}
+look-ch2-bob {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>Bob</>."
+		"\t...Or you would, but there's a lot of Bobs around, and \"Bob\" is a bit vague, isn't it?"
 	}
 }
 
@@ -62,6 +64,7 @@ on_load-ch2-bobsclub-basement {
 		teleport entity "Guardian Bob" to geometry bob-walk2;
 		set entity "Guardian Bob" on_tick to loiter-slow;
 	}
+	register look + bob -> look-ch2-bob
 	goto ch2-map-init;
 }
 
@@ -206,7 +209,7 @@ ch2-cutscene-bob-party {
 	show dialog {
 		GBob "Hey! You're not allowed in here!"
 	}
-	walk entity "Guardian Bob" along geometry bob-walk over 1200ms
+	walk entity "Guardian Bob" along geometry bob-walk over 1200ms;
 	wait 800ms;
 	show dialog {
 		GBob "Oh, wait. I remember you. Your name was Bob, wasn't it?"
@@ -230,7 +233,7 @@ ch2-cutscene-bob-party {
 		PLAYER "I thought the party was canceled this year."
 	}
 	set entity "Guardian Bob" on_tick to null_script;
-	turn entity "Guardian Bob" toward entity "%PLAYER%"
+	turn entity "Guardian Bob" toward entity "%PLAYER%";
 	show dialog {
 		GBob "It was, but... we seem to be experiencing a time anomaly."
 		PLAYER "What? A time anomaly?"
@@ -293,11 +296,11 @@ ch2-cutscene-bob-party {
 		GBob "Anyway, I'll keep watch here."
 		"Help yourself to the food. There's plenty."
 	}
-	if (flag ch2-want-cactuscooler is true) { // TODO set this flag when you hear request from heat sink guys
+	if (flag ch2-want-cactuscooler is true) {
 		show dialog {
 			PLAYER "Oh, do you have any Cactus Cooler?"
 		}
-		turn entity "Guardian Bob" toward entity "%PLAYER%"
+		turn entity "Guardian Bob" toward entity "%PLAYER%";
 		show dialog {
 			GBob "Sure. We've got a lifetime supply in the ice chest back there. Help yourself."
 		}
@@ -306,7 +309,7 @@ ch2-cutscene-bob-party {
 	wait 150ms;
 	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms;
 	set entity "Guardian Bob" on_tick to loiter-slow;
-	make camera follow entity "%PLAYER%"
+	make camera follow entity "%PLAYER%";
 	goto ch2-map-init;
 }
 
@@ -346,8 +349,12 @@ interact-ch2-guardianbob {
 interact-ch2-bobaustin {
 	copy face-player;
 	show dialog {
-		SELF "I'm the MC for Bob Jeopardy."
-		"TODO"
+		SELF "I'm the MC for Bob Jeopardy this year."
+		"Of course, I'm the MC for Bob Jeopardy every year."
+		PLAYER "What's Bob Jeopardy like?"
+		SELF "Like Jeopardy."
+		"But with Bobs."
+		PLAYER "(...I don't know what I expected.)"
 	}
 	turn entity "%SELF%" south;
 }
@@ -355,7 +362,8 @@ interact-ch2-bobaustin {
 interact-ch2-bobmoss {
 	copy face-player;
 	show dialog {
-		SELF "TODO"
+		SELF "Hey there, friend. Have a drink, on the house."
+		"Plenty of Cactus Cooler to go around."
 	}
 	turn entity "%SELF%" south;
 }
