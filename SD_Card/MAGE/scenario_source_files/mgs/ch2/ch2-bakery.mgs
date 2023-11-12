@@ -5,7 +5,7 @@ include!("header.mgs")
 look-ch2-bakery {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked around the <m>BAKERY</>."
+		"You looked around the <c>BAKERY</>."
 		" "
 		"The smell inside is amazing! TODO"
 		" "
