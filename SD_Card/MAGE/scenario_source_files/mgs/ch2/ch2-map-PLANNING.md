@@ -421,3 +421,4 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Type a keypad (using the terminal) to get door(s) working?
 - Twisty turny: https://en.wikiquote.org/wiki/Colossal_Cave_Adventure (different variations)
 - Multiple choice riddles!!!!! (After dark!!!!)
+- Reference IP over avian carriers

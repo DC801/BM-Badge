@@ -12,7 +12,7 @@ look-ch2-castle-1 {
 		"\tThis castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
 		" "
 	}
-	// (Exits list goes here)
+	// (Exits list goes here) (P.S. That's why there's an empty line above!)
 }
 look-ch2-mainframe {
 	show serial dialog spacer;

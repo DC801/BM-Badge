@@ -5,7 +5,8 @@ include!("header.mgs")
 look-ch2-castle-11 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE HALLWAY FRONT on_look text"
+		"You looked around the <c>CASTLE HALLWAY FRONT</>."
+		"\tThe ceiling has collapsed, probably from the recent earthquake, cleaving the hallway into two. What's left standing appears stable, fortunately -- at least, structurally stable."
 		" "
 	}
 }
@@ -13,8 +14,8 @@ look-ch2-castle-11 {
 look-ch2-kuro {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Kuro on_look text"
-		" "
+		"You looked at <m>%Kuro%</>."
+		"\tA large crow or raven, one whose eyes seem to pierce you to your soul -- and one who's had too much coffee, by all appearances."
 	}
 }
 
