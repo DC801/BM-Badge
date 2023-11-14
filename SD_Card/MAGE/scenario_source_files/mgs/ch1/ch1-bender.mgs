@@ -161,15 +161,15 @@ handler-bender-timer {
 /* ---- Bender choreography --- */
 
 bite-my-shiny-metal-ass {
-	set player control to off;
+	turn player control off;
 	wait 300ms; /**/ play entity "%SELF%" animation 3 once;
-	set player control to on;
+	turn player control on;
 }
 
 bite-my-shiny-metal-ass-sad {
-	set player control to off;
+	turn player control off;
 	wait 300ms; /**/ play entity "%SELF%" animation 3 once;
-	set player control to on;
+	turn player control on;
 }
 
 on_tick-bender-loiter {

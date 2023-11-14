@@ -1,6 +1,6 @@
 include!("header.mgs")
 settings for dialog {
-	parameters for label Lambda { name Lambda }
+	label Lambda { name Lambda }
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -168,7 +168,7 @@ tick-artifact-open {
 	goto null_script
 }
 ch2-artifact-walk {
-	set player control off; // temp (take out of final)
+	turn player control off; // temp (take out of final)
 	wait 100ms;
 	// a dumbwaiter-esque thing opens
 	set entity Artifact on_tick to tick-artifact-open;
@@ -347,10 +347,10 @@ ch2-attempt-door-check {
 // 5: ascend
 
 ch2-wizard-ascend {
-	set player control off;
+	turn player control off;
 	play entity Wizard animation 5 once;
 	set entity Wizard current_animation to 3;
-	set player control on;
+	turn player control on;
 }
 tick-ch2-wizard-ascend-and-watch-with-check {
 	if (entity Wizard current_animation is 0) { // WIZARD IS DOWN
@@ -371,10 +371,10 @@ tick-ch2-wizard-ascend-and-watch {
 	set entity Wizard on_tick to face-player;
 }
 ch2-wizard-descend {
-	set player control off;
+	turn player control off;
 	play entity Wizard animation 4 once;
 	set entity Wizard current_animation to 0;
-	set player control on;
+	turn player control on;
 }
 
 interact-ch2-wizard {
@@ -454,7 +454,7 @@ interact-ch2-wizard-mainframedone {
 interact-ch2-xa {
 	if (flag ch2-toot-done is false) {
 		if (flag ch2-has-artifact is false) {
-			set player control off;
+			turn player control off;
 			show dialog {
 				name "???" "..."
 				"...huh?"
@@ -532,7 +532,7 @@ interact-ch2-xa {
 				"Normally, XA bridges the town's network with...."
 				"You know what? There's a lot to explain, and it might be easier to chat with the artifact. Let's set it up."
 			}
-			set player control on;
+			turn player control on;
 			set flag ch2-has-artifact to true;
 		} else {
 			show dialog {
@@ -565,7 +565,7 @@ ch2-terminal-setup-nevermind {
 			"To finish our conversation, type \"MAN\" into the console."
 		}
 		copy register-manual;
-		set serial control on;
+		turn serial control on;
 	} else {
 		show dialog {
 			Lambda "Ah, okay. Carry on!\n\nAlso, remember you can speak to me in the console with the command \"MAN\"."
@@ -694,7 +694,7 @@ ch2-terminal-message-test-success {
 			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
 		// TODO: what should happen if you type "MAN" while the dialog is still up?
-		set serial control on;
+		turn serial control on;
 		show serial dialog spacer;
 		show serial dialog {
 			"(Type <c>MAN</> to resume your conversation with Lambda.)"

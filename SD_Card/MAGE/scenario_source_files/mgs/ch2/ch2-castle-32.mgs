@@ -127,7 +127,7 @@ on_go-castle-32-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-gloria {
-	set player control off;
+	turn player control off;
 	set entity "%SELF%" on_tick to null_script;
 	copy face-player;
 	play entity "%SELF%" animation 3 once;
@@ -149,7 +149,7 @@ interact-ch2-gloria {
 	set entity "%SELF%" on_tick to ch2-gloria-worry-walk;
 	play entity "%SELF%" animation 5 once;
 	set entity "%SELF%" current_animation to 0;
-	set player control on;
+	turn player control on;
 }
 interact-ch2-samson {
 	copy face-player;
@@ -180,7 +180,7 @@ interact-ch2-samson {
 interact-ch2-vendingmachine {
 	if (variable ch2-storyflag-round is >= 3) {
 		if (flag ch2-cutseen-ramchips is false) {
-			set player control to false;
+			turn player control false;
 			show dialog {
 				PLAYER "Oh! There's actually chips in here! Are those RAM chips?"
 			}
@@ -310,7 +310,7 @@ ch2-walk-to-vend-short {
 }
 
 interact-ch2-seamoss-cutscene {
-	set player control off;
+	turn player control off;
 	show dialog {
 		SELF "Oh, sure. I remember all sorts of stuff about that."
 		PLAYER "Well, I need some RAM to build a computer, but Lambda can't think of anything around here that would work."
@@ -358,7 +358,7 @@ ch2-seamoss-summon-chips {
 		PLAYER "...Thanks...?"
 		SELF "Any time."
 	}
-	set player control on;
+	turn player control on;
 	set flag ch2-cutseen-ramchips to true;
 	set flag ch2-ramchips-dispensed to true;
 	set entity "%PLAYER%" on_tick to null_script;

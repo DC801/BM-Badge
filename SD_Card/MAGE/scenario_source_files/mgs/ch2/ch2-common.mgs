@@ -36,17 +36,17 @@ ch2-map-init-hex {
 		|| variable ch2-in-room is 0 // OR you're not in the castle at all
 		|| debug mode is on // OR debug mode is on
 	) {
-		set hex control on;
+		turn hex control on;
 	} else {
-		set hex control to off;
-		set hex clipboard to off
+		turn hex control off;
+		turn hex clipboard off;
 	}
 }
 ch2-map-init-serial {
 	if (flag ch2-has-artifact is false) { // no artifact at all
-		set serial control off;
+		turn serial control off;
 	} else { // you have the artifact
-		set serial control on;
+		turn serial control on;
 		copy register-rtfm;
 		copy register-inventory;
 		copy register-manual;
@@ -119,7 +119,7 @@ ch2-map-init-serial-debug {
 			}
 		}
 		set flag debug-curr-state to true;
-		set serial control on;
+		turn serial control on;
 		copy register-storyflag;
 		copy register-warp;
 	} else {
@@ -140,7 +140,7 @@ ch2-map-init-warp-in {
 	} else if (warp state is warping) {
 		copy warping-in-fade-in;
 	}
-	set player control on;
+	turn player control on;
 }
 
 ch2-map-init {
@@ -164,8 +164,8 @@ spin-quickly {
 }
 
 warping-out-fade-out {
-	set player control to off;
-	set serial control off;
+	turn player control off;
+	turn serial control off;
 	set warp state to warping;
 	set entity "%PLAYER%" on_tick to spin-quickly;
 	fade out camera to #000000 over 500ms;
@@ -178,6 +178,6 @@ warping-in-fade-in {
 	set entity "%PLAYER%" on_tick to null_script;
 	turn entity "%PLAYER%" south;
 	set warp state to warped; // it needs to be set to SOMETHING...
-	set player control to on; // TODO: remove after shared behavior is fully merged
-	set serial control on; // TODO: remove after shared behavior is fully merged
+	turn player control on; // TODO: remove after shared behavior is fully merged
+	turn serial control on; // TODO: remove after shared behavior is fully merged
 }

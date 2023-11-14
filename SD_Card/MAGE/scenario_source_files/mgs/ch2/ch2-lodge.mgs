@@ -19,7 +19,7 @@ on_load-ch2-lodge {
 	}
 
 	if (warp state is walk_from-north) {
-		set player control to off;
+		turn player control off;
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms;
 	}
 	// player control comes on after this next script is over:

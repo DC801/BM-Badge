@@ -82,18 +82,18 @@ show_dialog-bea-start {
 /* --------------- Beatrice --------------- */
 
 slow-stare-at-delmar {
-	set player control to off;
+	turn player control off;
 	wait 100ms;
 	turn entity "%SELF%" toward entity Delmar;
 	wait 500ms;
-	set player control to on;
+	turn player control on;
 }
 slow-stare-at-player {
-	set player control to off;
+	turn player control off;
 	wait 100ms;
 	turn entity "%SELF%" toward entity "%PLAYER%";
 	wait 500ms;
-	set player control to on;
+	turn player control on;
 }
 
 // part 1
@@ -102,10 +102,10 @@ show_dialog-bea-part1 {
 	if (flag storyflag-bea1 is false) { // you did NOT beat part1
 		if (entity Delmar type is old_man) { // win condition met
 			// currently no backstory/!backstory difference
-			set player control to off;
+			turn player control off;
 			copy script clear-own-tick;
 			copy script slow-stare-at-delmar;
-			set player control to on;
+			turn player control on;
 			show dialog {
 				SELF "Oh, %Delmar%, it's you! You're a man again! At last!"
 				Delmar "Whazzat, %Beatrice%? Something seems different."
@@ -129,7 +129,7 @@ show_dialog-bea-part1 {
 					copy script slow-stare-at-delmar;
 					show dialog { SELF "My husband was a real man! Not a farm animal!" }
 					copy script slow-stare-at-player;
-					set player control to on;
+					turn player control on;
 				} else { // is rando
 					copy script clear-own-tick;
 					copy script slow-stare-at-delmar;

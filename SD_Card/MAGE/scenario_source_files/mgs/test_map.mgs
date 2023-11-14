@@ -1,7 +1,7 @@
 settings for dialog {
-	parameters for global defaults { alignment TR }
-	parameters for label PLAYER { entity "%PLAYER%" alignment BL }
-	parameters for label SELF { entity "%SELF%" alignment BR }
+	default { alignment TR }
+	label PLAYER { entity "%PLAYER%" alignment BL }
+	label SELF { entity "%SELF%" alignment BR }
 }
 
 show_dialog-wisdom {

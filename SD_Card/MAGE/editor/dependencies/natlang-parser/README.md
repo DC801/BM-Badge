@@ -177,10 +177,10 @@ Dialog JSON is more uniform than script JSON is, but its information density is 
 
 ```
 settings for dialog {
-  defaults {
+  default {
     alignment BL
   }
-  parameters for label PLAYER {
+  label PLAYER {
     entity "%PLAYER%"
     alignment BR
   }
@@ -219,16 +219,16 @@ However, where MGS Natlang really shines is in combining both script data and di
 
 ```
 settings for dialog {
-  parameters for label PLAYER {
+  label PLAYER {
     entity "%PLAYER%"
     alignment BR
   }
 }
 show_dialog-wopr-backdoor {
-  set player control to off;
+  turn player control off;
   walk entity "%PLAYER%" along geometry wopr-walkin over 600ms;
   wait 400ms;
-  set player control to on;
+  turn player control on;
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
@@ -320,12 +320,12 @@ Dialog settings are applied to dialogs in order as the parser encounters them; a
 ### Dialog settings target block
 
 ```
-(parameters) (for) <TARGET> {}
+<TARGET> {}
 ```
 
 Several choices for `TARGET`:
 
-- `(global) default(s)`
+- `default`
 	- Describes the default behavior for all dialogs in the same file.
 - `entity $string`
 	- Describes the default dialog settings for a specific entity.
@@ -341,7 +341,7 @@ These blocks occur within [dialog settings blocks](#dialog-settings-block).
 #### Example
 
 ```
-parameters for label PLAYER {
+label PLAYER {
   entity "%PLAYER%"
   alignment BR
 }
@@ -843,9 +843,9 @@ A binary option.
 
 Some actions will prefer specific pairs of booleans when being translated from JSON, but when translating the other way, any of the above words will work. E.g.
 
-- `set player control open;`
-- `set player control on;`
-- `set player control true;`
+- `turn player control open;`
+- `turn player control on;`
+- `turn player control true;`
 
 #### Operator
 
@@ -1299,7 +1299,8 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [NON_BLOCKING_DELAY](#non_blocking_delay)
 	- `wait 400ms;`
 - [SET_PLAYER_CONTROL](#set_player_control)
-	- `set player control to on;`
+	- `turn player control on;`
+	- `turn on player control;`
 - [LOAD_MAP](#load_map)
 	- `load map mapName;`
 - [SLOT_SAVE](#slot_save)
@@ -1313,25 +1314,31 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [CLOSE_DIALOG](#close_dialog)
 	- `close dialog;`
 - [SET_LIGHTS_CONTROL](#set_lights_control)
-	- `set lights control to true;`
+	- `turn lights control on;`
+	- `turn on lights control;`
 - [SET_LIGHTS_STATE](#set_lights_state)
-	- `turn light MEM3 true;`
+	- `turn light MEM3 on;`
+	- `turn on light MEM3;`
 
 #### [Hex editor](#hex-editor-actions)
 
 - [SET_HEX_EDITOR_STATE](#set_hex_editor_state)
 	- `open hex editor;`
 - [SET_HEX_EDITOR_DIALOG_MODE](#set_hex_editor_dialog_mode)
-	- `set hex dialog mode to on;`
+	- `turn hex dialog mode on;`
+	- `turn on hex dialog mode;`
 - [SET_HEX_EDITOR_CONTROL](#set_hex_editor_control)
-	- `set hex control to on;`
+	- `turn hex control on;`
+	- `turn on hex control;`
 - [SET_HEX_EDITOR_CONTROL_CLIPBOARD](#set_hex_editor_control_clipboard)
-	- `set hex clipboard to on;`
+	- `turn hex clipboard on;`
+	- `turn on hex clipboard;`
 
 #### [Serial console](#serial-console-actions)
 
 - [SET_SERIAL_DIALOG_CONTROL](#set_serial_dialog_control)
-	- `set serial control to on;`
+	- `turn serial control on;`
+	- `turn on serial control;`
 - [SHOW_SERIAL_DIALOG](#show_serial_dialog)
 	- `show serial dialog serialDialogName;`
 	- `concat serial dialog serialDialogName;`
@@ -1340,17 +1347,15 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [SET_CONNECT_SERIAL_DIALOG](#set_connect_serial_dialog)
 	- `set serial connect message to serialDialogName;`
 - [REGISTER_SERIAL_DIALOG_COMMAND](#register_serial_dialog_command)
-	- `register command "map" -> scriptName;`
-	- `register command "map" fail -> scriptName;`
-	- `register command "map" failure -> scriptName;`
+	- `register "map" -> scriptName;`
+	- `register "map" fail -> scriptName;`
 - [UNREGISTER_SERIAL_DIALOG_COMMAND](#unregister_serial_dialog_command)
-	- `unregister command "map";`
-	- `unregister command "map" fail;`
-	- `unregister command "map" failure;`
+	- `unregister "map";`
+	- `unregister "map" fail;`
 - [REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT](#register_serial_dialog_command_argument)
-	- `register command "map" + arg "castle" -> scriptName;`
+	- `register "map" + "castle" -> scriptName;`
 - [UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT](#unregister_serial_dialog_command_argument)
-	- `unregister command "map" + arg "castle";`
+	- `unregister "map" + "castle";`
 
 #### [Camera control](#camera-control-actions)
 
@@ -1593,10 +1598,17 @@ When player control is `on`, the player entity can move around as normal. When `
 This is set to `on` (`true`) by default.
 
 ```
-set player control (to) $bool_value:boolean (;)
+turn player control $bool_value:boolean (;)
 ```
 
-Example: `set player control to on;`
+```
+turn $bool_value:boolean player control (;)
+```
+
+Examples:
+
+- `turn on player control;`
+- `turn player control on;`
 
 #### LOAD_MAP
 
@@ -1689,10 +1701,17 @@ Enables (or disables) manual control of the hex editing LED lights on the badge.
 Note that gaining control of the lights does not clear the light state by default; the lights currently on will remain on until set with [SET_LIGHTS_STATE](#set_lights_control).
 
 ```
-set lights control (to) $enabled:boolean (;)
+turn lights control $enabled:boolean (;)
 ```
 
-Example: `set lights control to true;`
+```
+turn $enabled:boolean lights control (;)
+```
+
+Examples:
+
+- `turn lights control on;`
+- `turn on lights control;`
 
 #### SET_LIGHTS_STATE
 
@@ -1706,7 +1725,14 @@ See [LED IDs](#led-ids) for a list of valid `lights` values.
 turn light $lights:string $enabled:boolean (;)
 ```
 
-Example: `turn light MEM3 true;`
+```
+turn $enabled:boolean light $lights:string (;)
+```
+
+Examples:
+
+- `turn light MEM3 on;`
+- `turn on light MEM3;`
 
 ### Hex editor actions
 
@@ -1729,30 +1755,51 @@ When on, this reduces the number of rows in the hex editor, which makes room for
 NOTE: This action has been disabled in the MGE to prevent accidental soft locks.
 
 ```
-set hex dialog mode (to) $bool_value:boolean (;)
+turn hex dialog mode $bool_value:boolean (;)
 ```
 
-Example: `set hex dialog mode to on;`
+```
+turn $bool_value:boolean hex dialog mode (;)
+```
+
+Examples:
+
+- `turn hex dialog mode on;`
+- `turn on hex dialog mode;`
 
 #### SET_HEX_EDITOR_CONTROL
 
 This action enables or disables player access to to the hex editor. This is on by default.
 
 ```
-set hex control (to) $bool_value:boolean (;)
+turn hex control $bool_value:boolean (;)
 ```
 
-Example: `set hex control to on;`
+```
+turn $bool_value:boolean hex control (;)
+```
+
+Examples:
+
+- `turn hex control on;`
+- `turn on hex control;`
 
 #### SET_HEX_EDITOR_CONTROL_CLIPBOARD
 
 This action enables or disables the clipboard and copy functionality within the hex editor. This is on by default. (? verify)
 
 ```
-set hex clipboard (to) $bool_value:boolean (;)
+turn hex clipboard $bool_value:boolean (;)
 ```
 
-Example: `set hex clipboard to on;`
+```
+turn $bool_value:boolean hex clipboard (;)
+```
+
+Examples:
+
+- `turn hex clipboard on;`
+- `turn on hex clipboard;`
 
 ### Serial console actions
 
@@ -1765,10 +1812,17 @@ When `off`, the serial terminal will ignore player input.
 This is set to `on` (`true`) by default.
 
 ```
-set serial control (to) $bool_value:boolean (;)
+turn serial control $bool_value:boolean (;)
 ```
 
-Example: `set serial control to on;`
+```
+turn $bool_value:boolean serial control (;)
+```
+
+Examples:
+
+- `turn on serial control;`
+- `turn serial control on;`
 
 #### SHOW_SERIAL_DIALOG
 
@@ -1819,57 +1873,45 @@ Example: `set serial connect message to serialDialogName;`
 
 Once a command is registered, the player can enter the command into the serial console and the corresponding script will run in a unique serial script slot.
 
-- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`/`failure`).
-- **Failure variant**: identifies a script for custom "unknown argument" behavior (in the event the player attempts to use an unregistered argument for this command).
+- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`).
+- **Fail variant**: identifies a script for custom "unknown argument" behavior (in the event the player attempts to use an unregistered argument for this command).
 
 Commands must be a single word.
 
 ```
-register (command) $command:string -> (script) $script:string (;)
+register $command:string -> (script) $script:string (;)
 	// is_fail: false
 ```
 
 ```
-register (command) $command:string fail -> (script) $script:string (;)
-	// is_fail: true
-```
-
-```
-register (command) $command:string failure -> (script) $script:string (;)
+register $command:string fail -> (script) $script:string (;)
 	// is_fail: true
 ```
 
 Examples:
 
-- `register command "map" -> scriptName;`
-- `register command "map" fail -> scriptName;`
-- `register command "map" failure -> scriptName;`
+- `register "map" -> scriptName;`
+- `register "map" fail -> scriptName;`
 
 #### UNREGISTER_SERIAL_DIALOG_COMMAND
 
 - **Plain variant**: unregisters the given command *and* all registered arguments for that command (if any).
-- **Failure variant**: only unregisters the `failure` script; other registered arguments (and the plain command itself) will remain intact.
+- **Fail variant**: only unregisters the `fail` script; other registered arguments (and the plain command itself) will remain intact.
 
 ```
-unregister (command) $command:string (;)
+unregister $command:string (;)
 	// is_fail: false
 ```
 
 ```
-unregister (command) $command:string fail (;)
-	// is_fail: true
-```
-
-```
-unregister (command) $command:string failure (;)
+unregister $command:string fail (;)
 	// is_fail: true
 ```
 
 Examples:
 
-- `unregister command "map" fail;`
-- `unregister command "map" failure;`
-- `unregister command "map";`
+- `unregister "map" fail;`
+- `unregister "map";`
 
 #### REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 
@@ -1878,20 +1920,20 @@ This action registers an argument (and a script) for an [already-registered seri
 Arguments can be multiple words. In-game, if the second word is `at` or `to` it is ignored, e.g. `> warp to my house` (after running `register "warp" + "my house"`).
 
 ```
-register (command) $command:string + (arg) $argument:string -> (script) $script:string (;)
+register $command:string + $argument:string -> (script) $script:string (;)
 ```
 
-Example: `register command "map" + arg "castle" -> scriptName;`
+Example: `register "map" + "castle" -> scriptName;`
 
 #### UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 
 This action unregisters the specified argument from an [already-registered serial command](#register_serial_dialog_command).
 
 ```
-unregister (command) $command:string + (arg) $argument:string (;)
+unregister $command:string + $argument:string (;)
 ```
 
-Example: `unregister command "map" + arg "castle";`
+Example: `unregister "map" + "castle";`
 
 ### Camera control actions
 

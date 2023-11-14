@@ -17,7 +17,7 @@ on_load-bobsclub1 {
 	}
 }
 show_dialog-bobsclub {
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" to geometry bob_path over 500ms;
 	wait 800ms;
 	show dialog {
@@ -85,7 +85,7 @@ show_dialog-bobsclub {
 		"Bob-alina!\nBob-cine!\nBob-quelyn!\nCome baaaack!"
 	}
 	copy end-flail;
-	set player control to on;
+	turn player control on;
 	set flag bobsclub-entered to true;
 	if (flag baker-backstory is false) {
 		goto null_script // end it here
@@ -271,14 +271,14 @@ show_dialog-bobrock-start {
 		show dialog { SELF "Sqd'j meha byau jxyi." }
 	} else if (entity "Bob Austin" is not inside geometry bobzone) { // !glitched && !bobzone
 		// teleport him back into bounds
-		set player control to off;
+		turn player control off;
 		copy face-player;
 		show dialog { SELF "Goin' back to work."}
 		fade out camera to #000000 over 500ms;
 		teleport entity "Bob Austin" to geometry bob_point;
 		turn entity "Bob Austin" south
 		fade in camera from #000000 over 500ms;
-		set player control to on;
+		turn player control on;
 	} else if (flag bobrock-backstory is false) { // !glitched && bobzone && !backstory
 		show dialog {
 			SELF "Name's Bob."
@@ -341,7 +341,7 @@ show_dialog-bobrock-start {
 				}
 			}
 			// Bob Austin unlocks the door:
-			set player control off;
+			turn player control off;
 			walk entity "Bob Austin" to geometry "%ENTITY_PATH%" over 400ms;
 			turn entity "Bob Austin" toward geometry door-bobsclub-entrance
 			wait 1000ms;
@@ -351,7 +351,7 @@ show_dialog-bobrock-start {
 			}
 			walk entity "%PLAYER%" to geometry predoor-bobsclub over 500ms;
 			walk entity "%PLAYER%" to geometry door-bobsclub-entrance over 500ms;
-			set player control on;
+			turn player control on;
 			load map bobsclub; // JUMP
 		}
 	}
@@ -369,9 +369,9 @@ show_dialog-bobsclub-bob {
 			"*sigh*\nOh, well."
 		}
 		if (flag storyflag-bobmoss is false) {
-			set player control off;
+			turn player control off;
 			wait 120ms;
-			set player control on;
+			turn player control on;
 			set entity "Guardian Bob" on_tick to look-left-and-right-fast;
 			show dialog {
 				SELF "Wait. Weren't there two Bob golems last year?"
@@ -435,7 +435,7 @@ show_dialog-bobmoss-start {
 		"I didn't realize how late it was getting. I think I might be late for work."
 		"I'd better head out. Hope to see you again."
 	}
-	set player control to off;
+	turn player control off;
 	fade out camera to #000000 over 500ms;
 	teleport entity "Bob Moss" to geometry catwalk-hide;
 	set flag storyflag-bobmoss to true;
@@ -445,7 +445,7 @@ show_dialog-bobmoss-start {
 		copy set-hint-none;
 	}
 	fade in camera from #000000 over 500ms;
-	set player control to on;
+	turn player control on;
 }
 show_dialog-bobmoss-start-s {
 	// can't zigzag this without editing the Tiled map... TODO later
@@ -464,11 +464,11 @@ show_dialog-bobmoss-deglitch {
 	show dialog {
 		SELF "Well that's no good. I should really try to relax. Loosen up a bit...."
 	}
-	set player control to off;
+	turn player control off;
 	fade out camera to #000000 over 500ms;
 	make entity "%SELF%" unglitched
 	fade in camera from #000000 over 500ms;
-	set player control to on;
+	turn player control on;
 	show dialog {
 		SELF "Ahh, that feels nice."
 	}

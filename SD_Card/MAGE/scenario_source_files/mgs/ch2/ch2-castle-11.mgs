@@ -45,7 +45,7 @@ on_load-ch2-castle-11 {
 			copy warping-in-fade-in;
 			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
 		}
-		set player control off;
+		turn player control off;
 		wait 500ms;
 		set entity Kuro on_tick to null_script;
 		show dialog {
@@ -123,7 +123,7 @@ on_load-ch2-castle-11 {
 			Kuro "Dunno. I guess? I don't think anyone would miss it."
 		}
 		set entity Kuro on_tick to face-player;
-		set player control on;
+		turn player control on;
 		set entity "%PLAYER%" on_tick to null_script;
 		set flag ch2-cutseen-castle11 to true;
 	}

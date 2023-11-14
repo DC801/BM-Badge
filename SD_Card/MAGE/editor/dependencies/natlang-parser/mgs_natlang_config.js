@@ -224,7 +224,7 @@ var mgs = {
 		],
 		dialogSettingsTarget: [
 			{
-				pattern: "?parameters ?for label $target:string {",
+				pattern: "label $target:string {",
 				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
@@ -235,7 +235,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "?parameters ?for entity $target:string {",
+				pattern: "entity $target:string {",
 				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
@@ -246,18 +246,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "?parameters ?for ?global default {",
-				onMatch: function (state) {
-					state.startBlock("dialogSettingsTarget");
-					state.processCaptures(
-						"dialogSettingsTarget",
-						{ type: "global" }
-					);
-					state.clearCaptures();
-				}
-			},
-			{
-				pattern: "?parameters ?for ?global defaults {",
+				pattern: "default {",
 				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
@@ -859,61 +848,71 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "SET_PLAYER_CONTROL",
-		pattern: "set player control ?to $bool_value:boolean ?;",
+		pattern: "turn player control $bool_value:boolean ?;",
+	},
+	{
+		action: "SET_PLAYER_CONTROL",
+		pattern: "turn $bool_value:boolean player control ?;",
 	},
 	{
 		action: "SET_SERIAL_DIALOG_CONTROL",
-		pattern: "set serial control ?to $bool_value:boolean ?;",
+		pattern: "turn serial control $bool_value:boolean ?;",
+	},
+	{
+		action: "SET_SERIAL_DIALOG_CONTROL",
+		pattern: "turn $bool_value:boolean serial control ?;",
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register ?command $command:string -> ?script $script:string ?;",
+		pattern: "register $command:string -> ?script $script:string ?;",
 		values: { "is_fail": false },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register ?command $command:string fail -> ?script $script:string ?;",
-		values: { "is_fail": true },
-	},
-	{
-		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register ?command $command:string failure -> ?script $script:string ?;",
+		pattern: "register $command:string fail -> ?script $script:string ?;",
 		values: { "is_fail": true },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
-		pattern: "register ?command $command:string + ?arg $argument:string -> ?script $script:string ?;",
+		pattern: "register $command:string + $argument:string -> ?script $script:string ?;",
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister ?command $command:string ?;",
+		pattern: "unregister $command:string ?;",
 		values: { "is_fail": false },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister ?command $command:string fail ?;",
-		values: { "is_fail": true },
-	},
-	{
-		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister ?command $command:string failure ?;",
+		pattern: "unregister $command:string fail ?;",
 		values: { "is_fail": true },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
-		pattern: "unregister ?command $command:string + ?arg $argument:string ?;",
+		pattern: "unregister $command:string + $argument:string ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_DIALOG_MODE",
-		pattern: "set hex dialog mode ?to $bool_value:boolean ?;",
+		pattern: "turn hex dialog mode $bool_value:boolean ?;",
+	},
+	{
+		action: "SET_HEX_EDITOR_DIALOG_MODE",
+		pattern: "turn $bool_value:boolean hex dialog mode ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL",
-		pattern: "set hex control ?to $bool_value:boolean ?;",
+		pattern: "turn hex control $bool_value:boolean ?;",
+	},
+	{
+		action: "SET_HEX_EDITOR_CONTROL",
+		pattern: "turn $bool_value:boolean hex control ?;",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
-		pattern: "set hex clipboard ?to $bool_value:boolean ?;",
+		pattern: "turn hex clipboard $bool_value:boolean ?;",
+	},
+	{
+		action: "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+		pattern: "turn $bool_value:boolean hex clipboard ?;",
 	},
 	// {
 	// 	action: "SET_ENTITY_NAME",
@@ -1055,11 +1054,19 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "SET_LIGHTS_CONTROL",
-		pattern: "set lights control ?to $enabled:boolean ?;",
+		pattern: "turn lights control $enabled:boolean ?;",
+	},
+	{
+		action: "SET_LIGHTS_CONTROL",
+		pattern: "turn $enabled:boolean lights control ?;",
 	},
 	{
 		action: "SET_LIGHTS_STATE",
 		pattern: "turn light $lights:string $enabled:boolean ?;",
+	},
+	{
+		action: "SET_LIGHTS_STATE",
+		pattern: "turn $enabled:boolean light $lights:string ?;",
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",

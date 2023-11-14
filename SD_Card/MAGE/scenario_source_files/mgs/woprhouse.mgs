@@ -10,7 +10,7 @@ on_load-woprhouse {
 		set flag ch2-manual-warp to true; // this will skip the "init" script's warp stuff
 	}
 	if (flag wopr-backdoor-found is false) {
-		set player control to off;
+		turn player control off;
 		if (warp state is not warped) {
 			walk entity "%PLAYER%" along geometry walk_from-north over 600ms;
 		}
@@ -20,7 +20,7 @@ on_load-woprhouse {
 		}
 		set flag wopr-backdoor-found to true;
 	}
-	set player control on;
+	turn player control on;
 	if (variable current-chapter is 2) {
 		goto ch2-map-init // JUMP TO SHARED BEHAVIOR
 	}

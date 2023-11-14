@@ -14,7 +14,7 @@ look-ch2-castle-outside {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-outside {
-	set player control to off;
+	turn player control off;
 	if (flag ch2-full-escort-cutseen is false) {
 		// TODO: cutscene: leading you inside
 	}

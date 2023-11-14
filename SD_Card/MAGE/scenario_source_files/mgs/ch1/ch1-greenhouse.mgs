@@ -104,7 +104,7 @@ ch1-greenhouse-trekkie-backstory-cutscene {
 		SELF "Me want to wish you a happy birthday, %PLAYER%."
 		PLAYER "Aww, gee, thanks, Farmer %Trekkie%!"
 	}
-	set player control to off;
+	turn player control off;
 	wait 200ms;
 	turn entity "%SELF%" toward entity Modem;
 	wait 900ms;
@@ -139,7 +139,7 @@ ch1-greenhouse-trekkie-backstory-cutscene {
 	copy script set-hint-trekkie;
 	set flag trekkie-backstory to true;
 	copy script set_tick-watch-player;
-	set player control to on;
+	turn player control on;
 }
 
 ch1-greenhouse-trekkie-backstory-reminder {
@@ -155,7 +155,7 @@ ch1-greenhouse-trekkie-backstory-reminder {
 ch1-greenhouse-modem-turning-on-cutscene {
 	turn entity "%SELF%" toward entity Modem;
 	turn entity "%PLAYER%" toward entity Modem;
-	set player control to off;
+	turn player control off;
 	wait 200ms;
 	pan camera to entity Modem over 1400ms;
 	wait 200ms;
@@ -201,7 +201,7 @@ ch1-greenhouse-modem-turning-on-cutscene {
 	turn entity "%SELF%" toward geometry Computer
 	set flag storyflag-trekkie to true;
 	copy script calculate-hint-tracking-series;
-	set player control to on;
+	turn player control on;
 }
 
 ch1-greenhouse-trekkie-aftermath {

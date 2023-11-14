@@ -431,7 +431,7 @@ var makeNatlangMap = function (lispish) {
 				`serial dialog player {"<${specialCharStyles["@"]}>@</>"}`,
 				`serial dialog item {"<${specialCharStyles["?"]}>?</>"}`,
 				`draw-ch2-serial-map {`,
-				`	set serial control off`,
+				`	turn serial control off`,
 			],
 			lispish.map(makeNatlangMapRow),
 			[

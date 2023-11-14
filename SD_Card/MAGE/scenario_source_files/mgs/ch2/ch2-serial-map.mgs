@@ -4,7 +4,7 @@ serial dialog dot {"."}
 serial dialog player {"<c>@</>"}
 serial dialog item {"<g>?</>"}
 draw-ch2-serial-map {
-	set serial control off;
+	turn serial control off;
 
 	// ROW 0
 	concat serial dialog {"-------------------------------"}

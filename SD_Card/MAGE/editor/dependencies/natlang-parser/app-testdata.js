@@ -112,9 +112,9 @@ enter-secretroom {
 }
 
 enter_from-secretroom {
-	set player control off
+	turn player control off
 	walk entity "%PLAYER%" along geometry "enter_from-secretroom" over 200ms
-	set player control on
+	turn player control on
 	goto "on_load-lodge-end"
 }
 
@@ -206,9 +206,9 @@ on_load-lodge-demobonus-eval {
 		goto "on_load-lodge-demobonus-end"
 	if flag "demobonus" is false then
 		goto "on_load-lodge-demobonus-end"
-	set player control off
+	turn player control off
 	wait 200ms
-	set player control on
+	turn player control on
 	show dialog "dialog-timmy-demobonus1"
 		/* doc: Hey! Hey! My book! */
 	set flag "demobonus-timmy-yell" to true
@@ -243,9 +243,9 @@ show_dialog-lodge-cantleaveyet {
 	show dialog "dialog-lodge-cantleaveyet" {
 		Player "Wait, I can't leave yet!"
 	}
-	set player control off
+	turn player control off
 	walk entity "%PLAYER%" along geometry "enter-lodge" over 200ms
-	set player control on
+	turn player control on
 	goto "on_tick-lodge"
 }
 
@@ -282,8 +282,8 @@ lodge-watch-player-gradually {
 }
 
 cutscene-tuesday {
-	set player control off
-	set hex control off
+	turn player control off
+	turn hex control off
 	walk entity "%PLAYER%" to geometry "lodge-path1" over 600ms
 	wait 600ms
 	show dialog "dialog-tuesday-intro1" {
@@ -367,8 +367,8 @@ cutscene-tuesday2 {
 	show dialog "dialog-candothis" {
 		Player "Okay. I can do this."
 	}
-	set hex control off
-	set player control on
+	turn hex control off
+	turn player control on
 	set flag "tuesday-walkedup" to true
 }
 
@@ -399,7 +399,7 @@ artifacts-eval {
 		Player "Wait. Was that the last one?"
 	}
 	set entity "%PLAYER%" on_tick to "look-left-and-right-fast"
-	set player control off
+	turn player control off
 	wait 900ms
 	set entity "%PLAYER%" on_tick to "null_script"
 	copy "lodge-murmur"
@@ -754,7 +754,7 @@ cutscene-artifacts-eval-good {
 	copy "elders-to-secretdoor"
 	copy "deaden-artifacts"
 	set flag "hide-lodge-crowd-mini" to true
-	set player control on
+	turn player control on
 }
 
 deaden-artifacts {
@@ -822,7 +822,7 @@ examine-bracelet {
 		"Is my lunch!"
 	}
 		/* doc: That? That is my lunch! */
-	set player control off
+	turn player control off
 	walk entity "Bert" to geometry "bert-lunch-take-spot" over 400ms
 	turn entity "Bert" south
 	wait 400ms
@@ -830,7 +830,7 @@ examine-bracelet {
 	wait 300ms
 	walk entity "Bert" to geometry "bert-lunch-watch-spot" over 400ms
 	turn entity "Bert" south
-	set player control on
+	turn player control on
 	set flag "artifact-bracelet-touched" to true
 	goto "artifacts-eval"
 }
@@ -861,7 +861,7 @@ examine-book {
 }
 
 examine-broom {
-	set player control off
+	turn player control off
 	set entity "Marta" on_tick to "null_script"
 	walk entity "Marta" to geometry "marta-broom-step-spot" over 500ms
 	set entity "%PLAYER%" on_tick to "watch-marta"
@@ -879,7 +879,7 @@ examine-broom {
 	wait 300ms
 	set flag "artifact-broom-touched" to true
 	set entity "%PLAYER%" on_tick to "null_script"
-	set player control on
+	turn player control on
 	goto "artifacts-eval"
 }
 
@@ -888,7 +888,7 @@ examine-wand {
 	show dialog "dialog-tuesday-wand1" {
 		Player "Moon Prism Power...."
 	}
-	set player control off
+	turn player control off
 	wait 900ms
 	set entity "%PLAYER%" on_tick to "null_script"
 	turn entity "%PLAYER%" south
@@ -896,7 +896,7 @@ examine-wand {
 		Player "Make Up!"
 	}
 	wait 400ms
-	set player control on
+	turn player control on
 	turn entity "%PLAYER%" toward entity "Wand"
 	show dialog "dialog-tuesday-wand3" {
 		Player
@@ -1204,13 +1204,13 @@ end-thumbsup {
 }
 
 show_dialog-lodge_cat-magic {
-	set player control off
+	turn player control off
 	copy "begin-thumbsup"
 	wait 700ms
 	set entity "%PLAYER%" type to "pipscat"
 	wait 400ms
 	copy "end-thumbsup"
-	set player control on
+	turn player control on
 	goto "lodge_cat-wrapup"
 }
 
@@ -1291,7 +1291,7 @@ show_dialog-sportsbook {
 	}
 		/* doc: Copy paste tutorial */
 	set flag "demobonus-sportsbook-read" to true
-	set hex clipboard on
+	turn hex clipboard on
 	goto "dialog-sportsbook-end"
 }
 
@@ -1326,7 +1326,7 @@ bypass-tuesday {
 	copy "set-goodmorning-flags-true"
 	copy "set-artifact-flags-true"
 	copy "set-tuesday-flags-true"
-	set hex control on
+	turn hex control on
 	copy "deaden-artifacts"
 	copy "empty-lodge"
 	teleport entity "Marta" to geometry "lodge-hidingplace"
@@ -1349,7 +1349,7 @@ debug-disable-tuesday-walkup {
 	copy "set-tuesday-flags-true"
 	set flag "hide-lodge-crowd" to false
 		/* doc: was set true above; set to false now so the lodge crowd isn't hidden upon load, so you can voluntarily start the cutscene and it'll look okay */
-	set hex control on
+	turn hex control on
 	show dialog "dialog-debug-disable-tuesday-walkup"
 	set entity "%SELF%" on_interact to "debug-disable-tuesday-q"
 }
@@ -1358,7 +1358,7 @@ debug-disable-tuesday-complete {
 	copy "set-goodmorning-flags-true"
 	copy "set-artifact-flags-true"
 	copy "set-tuesday-flags-true"
-	set hex control on
+	turn hex control on
 	show dialog "dialog-debug-disable-tuesday-complete"
 	set entity "%SELF%" on_interact to "debug-disable-tuesday-q"
 }
@@ -1368,7 +1368,7 @@ debug-undisable-tuesday {
 		/* doc: so you don't accidentally trigger walk-to-lodge if you set all to false before engaging the lodge */
 	copy "set-artifact-flags-false"
 	copy "set-tuesday-flags-false"
-	set hex control off
+	turn hex control off
 	show dialog "dialog-debug-undisable-tuesday"
 	set entity "%SELF%" on_interact to "debug-disable-tuesday-q"
 }
@@ -2968,7 +2968,7 @@ show_dialog-bea1-backstory {
 		"My husband was a real man! Not a farm animal!"
 	}
 	copy script slow-stare-at-player
-	set player control to on
+	turn player control on
 	show dialog dialog-bea-start3 {
 		SELF
 		"That ghastly hacker ruffian hacked him into a sheep on a whim!"
@@ -3015,10 +3015,10 @@ show_dialog-bea1-backstory-s {
 }
 
 show_dialog-bea1-success {
-	set player control to off
+	turn player control off
 	copy script clear-own-tick
 	copy script slow-stare-at-delmar
-	set player control to on
+	turn player control on
 	show dialog dialog-bea-happy {
 		Beatrice "Oh, %Delmar%, it's you! You're a man again! At last!"
 		Delmar "Whazzat, %Beatrice%? Something seems different."
@@ -3197,19 +3197,19 @@ bea1-incomplete-wrapup {
 }
 
 slow-stare-at-delmar {
-	set player control to off
+	turn player control off
 	wait 100ms
 	turn entity "%SELF%" toward entity Delmar
 	wait 500ms
-	set player control to on
+	turn player control on
 }
 
 slow-stare-at-player {
-	set player control to off
+	turn player control off
 	wait 100ms
 	turn entity "%SELF%" toward entity "%PLAYER%"
 	wait 500ms
-	set player control to on
+	turn player control on
 }
 
 bea2-complete-wrapup {

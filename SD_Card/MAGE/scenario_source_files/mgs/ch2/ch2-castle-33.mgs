@@ -118,7 +118,7 @@ ch2-touch-mouse {
 	}
 	mutate ch2-mousegame-catchcount + 1;
 	set flag ch2-mousegame to false;
-	set lights control to off;
+	turn lights control off;
 	if (variable ch2-mousegame-catchcount is 1) {
 		show dialog {
 			PLAYER "Oh, I found it!"
@@ -266,7 +266,7 @@ ch2-mousegame-prepare-board {
 		}
 	}
 
-	set lights control to on
+	turn lights control on
 	show dialog {
 		name "" "(SQUEAK!)"
 	}

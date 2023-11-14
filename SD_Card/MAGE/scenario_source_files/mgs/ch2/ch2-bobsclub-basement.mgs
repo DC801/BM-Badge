@@ -209,9 +209,9 @@ ch2-cutscene-bob-party {
 		copy warping-in-fade-in;
 		set flag ch2-manual-warp to true // this will skip the "init" script's warp stuff
 	}
-	set hex control off;
-	// set serial control off
-	set player control off;
+	turn hex control off;
+	// turn serial control off
+	turn player control off;
 	wait 1500ms;
 	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
 	wait 700ms;

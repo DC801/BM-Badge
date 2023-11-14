@@ -161,14 +161,14 @@ var actionText = {
 		"category": "serial console",
 		"info": [
 			"Once a command is registered, the player can enter the command into the serial console and the corresponding script will run in a unique serial script slot.",
-			"- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`/`failure`).\n- **Failure variant**: identifies a script for custom \"unknown argument\" behavior (in the event the player attempts to use an unregistered argument for this command).",
+			"- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`).\n- **Fail variant**: identifies a script for custom \"unknown argument\" behavior (in the event the player attempts to use an unregistered argument for this command).",
 			"Commands must be a single word.",
 		]
 	},
 	"UNREGISTER_SERIAL_DIALOG_COMMAND": {
 		"category": "serial console",
 		"info": [
-			"- **Plain variant**: unregisters the given command *and* all registered arguments for that command (if any).\n- **Failure variant**: only unregisters the `failure` script; other registered arguments (and the plain command itself) will remain intact.",
+			"- **Plain variant**: unregisters the given command *and* all registered arguments for that command (if any).\n- **Fail variant**: only unregisters the `fail` script; other registered arguments (and the plain command itself) will remain intact.",
 		]
 	},
 	"REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT": {

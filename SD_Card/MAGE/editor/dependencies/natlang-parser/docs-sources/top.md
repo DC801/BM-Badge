@@ -175,10 +175,10 @@ Dialog JSON is more uniform than script JSON is, but its information density is 
 
 ```
 settings for dialog {
-  defaults {
+  default {
     alignment BL
   }
-  parameters for label PLAYER {
+  label PLAYER {
     entity "%PLAYER%"
     alignment BR
   }
@@ -217,16 +217,16 @@ However, where MGS Natlang really shines is in combining both script data and di
 
 ```
 settings for dialog {
-  parameters for label PLAYER {
+  label PLAYER {
     entity "%PLAYER%"
     alignment BR
   }
 }
 show_dialog-wopr-backdoor {
-  set player control to off;
+  turn player control off;
   walk entity "%PLAYER%" along geometry wopr-walkin over 600ms;
   wait 400ms;
-  set player control to on;
+  turn player control on;
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
@@ -318,12 +318,12 @@ Dialog settings are applied to dialogs in order as the parser encounters them; a
 ### Dialog settings target block
 
 ```
-(parameters) (for) <TARGET> {}
+<TARGET> {}
 ```
 
 Several choices for `TARGET`:
 
-- `(global) default(s)`
+- `default`
 	- Describes the default behavior for all dialogs in the same file.
 - `entity $string`
 	- Describes the default dialog settings for a specific entity.
@@ -339,7 +339,7 @@ These blocks occur within [dialog settings blocks](#dialog-settings-block).
 #### Example
 
 ```
-parameters for label PLAYER {
+label PLAYER {
   entity "%PLAYER%"
   alignment BR
 }
@@ -841,9 +841,9 @@ A binary option.
 
 Some actions will prefer specific pairs of booleans when being translated from JSON, but when translating the other way, any of the above words will work. E.g.
 
-- `set player control open;`
-- `set player control on;`
-- `set player control true;`
+- `turn player control open;`
+- `turn player control on;`
+- `turn player control true;`
 
 #### Operator
 
