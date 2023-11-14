@@ -183,7 +183,7 @@ restore_self_direction {
 	}
 }
 
-pause-and-face-player {
+interrupt-walk {
 	copy entity "%SELF%" current_animation into variable tempvar2;
 	set entity "%SELF%" current_animation to 0;
 	pause entity "%SELF%" on_tick;

@@ -25,9 +25,7 @@ on_load-ch2-castle-32 {
 	} else {
 		show serial dialog { "Entering <bold>CASTLE KITCHEN</>..." }
 	}
-	if (
-		flag ch2-ramchips-dispensed is false
-	) {
+	if (flag ch2-ramchips-dispensed is false) {
 		copy script ch2-hide-ramchips;
 	}
 
@@ -85,10 +83,7 @@ ch2-gloria-worry-walk {
 	}
 	walk entity "%SELF%" to geometry "%ENTITY_PATH%" over $walkspeed
 	turn entity "%SELF%" toward entity Samson;
-	if (
-		entity "%SELF%" path is worry-walk1
-		|| entity "%SELF%" path is worry-walk3
-	) {
+	if (entity "%SELF%" path is not worry-walk2) {
 		set entity "%SELF%" path to worry-walk2;
 	} else {
 		mutate tempvar ? 2;
