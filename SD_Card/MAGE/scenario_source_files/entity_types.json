@@ -4333,22 +4333,22 @@
 		"animations": {
 			"idle": [
 				{
-					"tileid": 38,
+					"tileid": 50,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 36,
-					"flip_x": true,
-					"flip_y": false
-				},
-				{
-					"tileid": 37,
+					"tileid": 51,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 36,
+					"tileid": 49,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 48,
 					"flip_x": false,
 					"flip_y": false
 				}
@@ -4359,8 +4359,8 @@
 					"flip_x": false
 				},
 				{
-					"tileid": 0,
-					"flip_x": true
+					"tileid": 3,
+					"flip_x": false
 				},
 				{
 					"tileid": 1,
@@ -4373,19 +4373,19 @@
 			],
 			"action": [
 				{
-					"tileid": 47,
+					"tileid": 62,
 					"flip_x": false
 				},
 				{
-					"tileid": 45,
-					"flip_x": true
-				},
-				{
-					"tileid": 46,
+					"tileid": 63,
 					"flip_x": false
 				},
 				{
-					"tileid": 45,
+					"tileid": 61,
+					"flip_x": false
+				},
+				{
+					"tileid": 60,
 					"flip_x": false
 				}
 			]
@@ -4399,59 +4399,59 @@
 		"animations": {
 			"idle": [
 				{
-					"tileid": 41,
+					"tileid": 54,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 39,
-					"flip_x": true,
-					"flip_y": false
-				},
-				{
-					"tileid": 40,
+					"tileid": 55,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 39,
+					"tileid": 53,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 52,
 					"flip_x": false,
 					"flip_y": false
 				}
 			],
 			"walk": [
 				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
 					"tileid": 5,
 					"flip_x": false
 				},
 				{
-					"tileid": 3,
-					"flip_x": true
-				},
-				{
 					"tileid": 4,
-					"flip_x": false
-				},
-				{
-					"tileid": 3,
 					"flip_x": false
 				}
 			],
 			"action": [
 				{
-					"tileid": 50,
+					"tileid": 66,
 					"flip_x": false
 				},
 				{
-					"tileid": 48,
-					"flip_x": true
-				},
-				{
-					"tileid": 49,
+					"tileid": 67,
 					"flip_x": false
 				},
 				{
-					"tileid": 48,
+					"tileid": 65,
+					"flip_x": false
+				},
+				{
+					"tileid": 64,
 					"flip_x": false
 				}
 			]
@@ -4465,59 +4465,59 @@
 		"animations": {
 			"idle": [
 				{
-					"tileid": 44,
+					"tileid": 58,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 42,
-					"flip_x": true,
-					"flip_y": false
-				},
-				{
-					"tileid": 43,
+					"tileid": 59,
 					"flip_x": false,
 					"flip_y": false
 				},
 				{
-					"tileid": 42,
+					"tileid": 57,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 56,
 					"flip_x": false,
 					"flip_y": false
 				}
 			],
 			"walk": [
 				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				},
+				{
 					"tileid": 8,
-					"flip_x": false
-				},
-				{
-					"tileid": 6,
-					"flip_x": true
-				},
-				{
-					"tileid": 7,
-					"flip_x": false
-				},
-				{
-					"tileid": 6,
 					"flip_x": false
 				}
 			],
 			"action": [
 				{
-					"tileid": 53,
+					"tileid": 70,
 					"flip_x": false
 				},
 				{
-					"tileid": 51,
-					"flip_x": true
-				},
-				{
-					"tileid": 52,
+					"tileid": 71,
 					"flip_x": false
 				},
 				{
-					"tileid": 51,
+					"tileid": 69,
+					"flip_x": false
+				},
+				{
+					"tileid": 68,
 					"flip_x": false
 				}
 			]
@@ -4689,6 +4689,8 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"scenarioIndex": 65,
+		"serialized": {}
 	}
 }
