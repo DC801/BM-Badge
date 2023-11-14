@@ -53,6 +53,20 @@ look-ch2-bob {
 		"\t...Or you would, but there's a lot of Bobs around, and \"Bob\" is a bit vague, isn't it?"
 	}
 }
+look-ch2-party-cups {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the red <m>party cups</>."
+		"\tClassic party fare! It wouldn't be a party without plastic <bold>American Name Brand Party Cups (c)</>!"
+	}
+}
+look-ch2-pizza {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>pizza</>."
+		"\tPlentiful boxes from a local pizza establishment, but there's only cheese and pepperoni -- this party seems to be about quantity instead of quality. From the shine of the cheese, the pizzas are a little greasier than was strictly necessary. Still, the smell is enticing!"
+	}
+}
 
 /* ---------- ON_LOAD ---------- */
 
@@ -225,7 +239,7 @@ ch2-cutscene-bob-party {
 		}
 	}
 	show dialog {
-		GBob "Oh, well. Too late, regardless."
+		GBob "Oh, well. Too late regardless."
 	}
 	set entity "Guardian Bob" on_tick to spin_self_clockwise;
 	show dialog {
@@ -235,7 +249,7 @@ ch2-cutscene-bob-party {
 	set entity "Guardian Bob" on_tick to null_script;
 	turn entity "Guardian Bob" toward entity "%PLAYER%";
 	show dialog {
-		GBob "It was, but... we seem to be experiencing a time anomaly."
+		GBob "It was, but we seem to be experiencing a time anomaly."
 		PLAYER "What? A time anomaly?"
 		GBob "Yeah. The flow of time is being simultaneously compressed and expanded."
 		"The Bob's Club party was canceled this year, but simultaneously, this is a year where it WASN'T canceled."
@@ -340,7 +354,7 @@ interact-ch2-guardianbob {
 		PLAYER "...Oh yeah...?"
 		SELF "Yeah, this guy Strong Bad. The photo on his fake ID looked nothing like him, but Bob Austin let him in anyway."
 		PLAYER "...No kidding."
-		SELF "I've been manually teleporting Bobs down here ever since just to be extra sure. My teleport program is very strict. It won't let non-Bobs through at all."
+		SELF "I've been manually teleporting Bobs down here ever since, just to be sure. My teleport program is very strict. It won't let non-Bobs through at all."
 		PLAYER "Good to know."
 	}
 	copy resume-walk;
@@ -354,7 +368,6 @@ interact-ch2-bobaustin {
 		PLAYER "What's Bob Jeopardy like?"
 		SELF "Like Jeopardy."
 		"But with Bobs."
-		PLAYER "(...I don't know what I expected.)"
 	}
 	turn entity "%SELF%" south;
 }
@@ -364,6 +377,21 @@ interact-ch2-bobmoss {
 	show dialog {
 		SELF "Hey there, friend. Have a drink, on the house."
 		"Plenty of Cactus Cooler to go around."
+	}
+	turn entity "%SELF%" south;
+}
+interact-ch2-party-cups {
+	copy face-player;
+	show dialog {
+		PLAYER "...It's always red plastic cups, isn't it?"
+	}
+	turn entity "%SELF%" south;
+}
+interact-ch2-pizza {
+	copy face-player;
+	show dialog {
+		PLAYER "Mmmm, fresh pizza!"
+
 	}
 	turn entity "%SELF%" south;
 }

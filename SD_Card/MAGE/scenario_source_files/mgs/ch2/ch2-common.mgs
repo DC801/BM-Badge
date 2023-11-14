@@ -66,13 +66,13 @@ ch2-map-init-inventory-look {
 		register look + monitor -> look-monitor;
 	}
 	if (flag ch2-carrying-heatsink is true) {
-		register look + heatsink -> look-heatsink;
+		register look + "heat sink" -> look-heatsink;
 	}
 	if (flag ch2-carrying-cactuscooler is true) {
-		register look + cactuscooler -> look-cactuscooler;
+		register look + "cactus cooler" -> look-cactuscooler;
 	}
 	if (flag ch2-carrying-powersupply is true) {
-		register look + powersupply -> look-powersupply;
+		register look + "power supply" -> look-powersupply;
 	}
 	if (flag ch2-carrying-keyboard is true) {
 		register look + keyboard -> look-keyboard;
@@ -81,7 +81,7 @@ ch2-map-init-inventory-look {
 		register look + mouse -> look-mouse;
 	}
 	if (flag ch2-carrying-harddrive is true) {
-		register look + harddrive -> look-harddrive;
+		register look + "hard drive" -> look-harddrive;
 	}
 	if (flag ch2-carrying-plate is true) {
 		register look + plate -> look-plate;
@@ -90,7 +90,8 @@ ch2-map-init-inventory-look {
 		register look + needle -> look-needle;
 	}
 	if (flag ch2-carrying-ramchips is true) {
-		register look + ramchips -> look-ramchips;
+		register look + "ram chip" -> look-ramchips;
+		register look + ram -> look-ramchips;
 	}
 	if (flag ch2-carrying-clock is true) {
 		register look + clock -> look-clock;
