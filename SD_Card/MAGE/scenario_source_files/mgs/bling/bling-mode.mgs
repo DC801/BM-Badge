@@ -26,8 +26,8 @@ bling-goto-branches {
 /* --- Common to all bling maps --- */
 
 on_load-bling-mode-map {
-	set hex control to off;
-	set player control to off;
+	turn hex control off;
+	turn player control off;
 	set map on_tick to bling-detect-mode;
 }
 

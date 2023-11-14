@@ -1,7 +1,7 @@
 include!("header.mgs")
 settings for dialog {
-	parameters for entity Cat { alignment TL }
-	parameters for entity Cleo { alignment TL }
+	entity Cat { alignment TL }
+	entity Cleo { alignment TL }
 }
 
 /* ---------- on_load scripts ---------- */
@@ -26,12 +26,12 @@ on_load-map-main {
 	// if you haven't started ch1 yet
 	if (flag begunthegame is false) {
 		set flag begunthegame to true;
-		set hex control to off;
+		turn hex control off;
 		fade in camera from #000000 over 1ms; 
 		load map magehouse;
 	}
 	// assuming you have ring zero
-	set hex control to on;
+	turn hex control on;
 	if (flag storyflag-bobmoss is true) {
 		teleport entity "Bob Moss" to geometry catwalk-hide;
 	} 
@@ -60,7 +60,7 @@ on_load-map-main {
 	if (flag walked-to-lodge is false) {
 		goto walk-to-lodge;
 	}
-	set player control to off;
+	turn player control off;
 	if (flag hintman-explanation is false) {
 		walk entity "%PLAYER%" along geometry enter_from-lodge over 400ms; 
 		copy hintman-cutscene // see script-elders.json for this
@@ -109,7 +109,7 @@ on_load-map-main {
 		}
 		set flag demobonus-jackob-informed to true;
 	}
-	set player control to on;
+	turn player control on;
 }
 
 /* ---------- on_tick scripts ---------- */
@@ -184,13 +184,13 @@ wrap_from-west {
 	goto on_tick-main;
 }
 on_tick-wrap_into-west {
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" to geometry exit_to-west over 3500ms; 
 	goto null_script;
 }
 on_tick-wrap_from-west {
 	walk entity "%PLAYER%" along geometry enter_from-east over 600ms; 
-	set player control to on;
+	turn player control on;
 	goto null_script;
 }
 wrap_from-east {
@@ -201,13 +201,13 @@ wrap_from-east {
 	goto on_tick-main;
 }
 on_tick-wrap_into-east {
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" to geometry exit_to-east over 3500ms; 
 	goto null_script;
 }
 on_tick-wrap_from-east {
 	walk entity "%PLAYER%" along geometry enter_from-west over 600ms; 
-	set player control to on;
+	turn player control on;
 	goto null_script;
 }
 
@@ -261,12 +261,12 @@ fountain-interact {
 /* ---------- cat and cleo ---------- */
 
 turn-padding-start {
-	set player control to off;
+	turn player control off;
 	wait 200ms;
 }
 turn-padding-end {
 	wait 0ms;
-	set player control to on;
+	turn player control on;
 }
 
 cat-and-cleo-convo-turn {

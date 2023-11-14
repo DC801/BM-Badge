@@ -32,16 +32,16 @@ on_load-lodge {
 		make entity Timmy unglitched;
 	}
 	if (warp state is exit_from-secretroom) {
-		set player control to off;
+		turn player control off;
 		walk entity "%PLAYER%" along geometry enter_from-secretroom over 200ms;
-		set player control to on;
+		turn player control on;
 	}
 	if (flag demobonus-timmy-yell is true || flag demobonus is false) {
 		goto null_script;
 	}
-	set player control off;
+	turn player control off;
 	wait 200ms;
-	set player control on;
+	turn player control on;
 	show dialog {
 		Timmy "Hey! Hey! My book!"
 	}
@@ -99,9 +99,9 @@ show_dialog-lodge-cantleaveyet {
 	show dialog {
 		PLAYER "Wait, I can't leave yet!"
 	}
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" along geometry enter-lodge over 200ms;
-	set player control to on;
+	turn player control on;
 	goto on_tick-lodge;
 }
 
@@ -283,8 +283,8 @@ deaden-artifacts {
 
 cutscene-tuesday {
 	// Player walks up to the table
-	set player control off;
-	set hex control off;
+	turn player control off;
+	turn hex control off;
 	walk entity "%PLAYER%" to geometry lodge-path1 over 600ms;
 	wait 600ms;
 	show dialog {
@@ -360,8 +360,8 @@ cutscene-tuesday {
 	show dialog {
 		PLAYER "Okay. I can do this."
 	}
-	set hex control to off;
-	set player control to on;
+	turn hex control off;
+	turn player control on;
 	set flag tuesday-walkedup to true;
 } // the player is now free to touch the artifacts
 
@@ -489,7 +489,7 @@ examine-bracelet {
 		Bert "That is a croissant!"
 		"Is my lunch!"
 	}
-	set player control to off;
+	turn player control off;
 	walk entity Bert to geometry bert-lunch-take-spot over 400ms;
 	turn entity Bert south;
 	wait 400ms;
@@ -497,7 +497,7 @@ examine-bracelet {
 	wait 300ms;
 	walk entity Bert to geometry bert-lunch-watch-spot over 400ms;
 	turn entity Bert south;
-	set player control to on;
+	turn player control on;
 	set flag artifact-bracelet-touched to true;
 	goto artifacts-eval;
 }
@@ -523,7 +523,7 @@ examine-book {
 	goto artifacts-eval;
 }
 examine-broom {
-	set player control to off;
+	turn player control off;
 	set entity Marta on_tick to null_script;
 	walk entity Marta to geometry marta-broom-step-spot over 500ms;
 	set entity "%PLAYER%" on_tick to watch-marta;
@@ -541,7 +541,7 @@ examine-broom {
 	wait 300ms;
 	set flag artifact-broom-touched to true;
 	set entity "%PLAYER%" on_tick to null_script;
-	set player control to on;
+	turn player control on;
 	goto artifacts-eval;
 }
 examine-wand {
@@ -549,7 +549,7 @@ examine-wand {
 	show dialog {
 		PLAYER "Moon Prism Power...."
 	}
-	set player control to off;
+	turn player control off;
 	wait 900ms;
 	set entity "%PLAYER%" on_tick to null_script;
 	turn entity "%PLAYER%" south;
@@ -557,7 +557,7 @@ examine-wand {
 		PLAYER "Make Up!"
 	}
 	wait 400ms;
-	set player control to on;
+	turn player control on;
 	turn entity "%PLAYER%" toward entity Wand;
 	show dialog {
 		PLAYER "Erm, maybe I had that a bit wrong."
@@ -585,7 +585,7 @@ artifacts-eval {
 			"Wait. Was that the last one?"
 		}
 		set entity "%PLAYER%" on_tick to look-left-and-right-fast;
-		set player control to off;
+		turn player control off;
 		wait 900ms;
 		set entity "%PLAYER%" on_tick to null_script;
 		copy lodge-murmur;
@@ -811,7 +811,7 @@ cutscene-artifacts-eval-good { // TUESDAY PART 2
 	copy elders-to-secretdoor;
 	copy deaden-artifacts;
 	set flag hide-lodge-crowd-mini to true;
-	set player control to on;
+	turn player control on;
 	// CUTSCENE IS OVER -- PLAYER IS FREE
 }
 
@@ -832,7 +832,7 @@ show_dialog-lodge_cat {
 	) {
 		show dialog { SELF "...." }
 	} else { // if storyflag-catwork is TRUE && flag white-cat is TRUE
-		set player control off;
+		turn player control off;
 		// thumbs up:
 		play entity Cat animation 3 once;
 		set entity Cat current_animation to 4;
@@ -842,7 +842,7 @@ show_dialog-lodge_cat {
 		wait 400ms;
 		// thumbs back down:
 		play entity Cat animation 5 once;
-		set player control on;
+		turn player control on;
 	}
 }
 
@@ -898,7 +898,7 @@ show_dialog-sportsbook {
 			"This has dramatically improved our productivity!"
 		}
 		set flag demobonus-sportsbook-read to true;
-		set hex clipboard to on;
+		turn hex clipboard on;
 	}
 }
 
@@ -914,7 +914,7 @@ bypass-tuesday {
 	copy set-goodmorning-flags-true;
 	copy set-artifact-flags-true;
 	copy set-tuesday-flags-true;
-	set hex control to on;
+	turn hex control on;
 	copy deaden-artifacts;
 	copy empty-lodge;
 	teleport entity Marta to geometry lodge-hidingplace;
@@ -942,7 +942,7 @@ debug-disable-tuesday-walkup {
 	// was set true above;
 	// set to false now so the lodge crowd isn't hidden upon load,
 	// so you can voluntarily start the cutscene and it'll look okay
-	set hex control to on;
+	turn hex control on;
 	show dialog { SELF "TUESDAY partially disabled." }
 	set entity "%SELF%" on_interact to debug-disable-tuesday-q;
 }
@@ -950,7 +950,7 @@ debug-disable-tuesday-complete {
 	copy set-goodmorning-flags-true;
 	copy set-artifact-flags-true;
 	copy set-tuesday-flags-true;
-	set hex control to on;
+	turn hex control on;
 	show dialog { SELF "TUESDAY completely disabled." }
 	set entity "%SELF%" on_interact to debug-disable-tuesday-q;
 }
@@ -960,7 +960,7 @@ debug-undisable-tuesday {
 	// if you set all flags to false before engaging the lodge
 	copy set-artifact-flags-false;
 	copy set-tuesday-flags-false;
-	set hex control to off;
+	turn hex control off;
 	show dialog {
 		SELF "TUESDAY re-enabled."
 	}

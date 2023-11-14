@@ -71,7 +71,7 @@ const NUMBER_SUFFIXES = {
     "x": function(num) { return {"type":"quantity","value":num} },
 };
 
-const LONG_OPERATORS = [ "==", ">=", "<=", "||", "->" ];
+const LONG_OPERATORS = [ "!=", "==", ">=", "<=", "||", "->" ];
 
 natlang.lex = function (inputString) {
 	let pos = 0;

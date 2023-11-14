@@ -84,7 +84,7 @@ demoend-everyone-look-at-jackob {
 }
 
 demoend-cutscene {
-	set player control to off;
+	turn player control off;
 	copy earthquake;
 	show dialog {
 		Alfonso "Good heavens! What was that?"
@@ -239,8 +239,8 @@ loiter5 {
 }
 
 on_tick-credits-shared-begin {
-	set hex control to off;
-	set player control to on;
+	turn hex control off;
+	turn player control on;
 	turn entity "%PLAYER%" south;
 	make camera follow entity cameraman;
 	teleport entity cameraman to geometry credits_camera;
@@ -249,7 +249,7 @@ on_tick-credits-shared-begin {
 
 on_tick-credits-shared-end {
 	set warp state to exit_from-credits;
-	set hex control to on;
+	turn hex control on;
 	if flag credits-from-menu is true then goto load-main_menu;
 }
 

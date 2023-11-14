@@ -460,13 +460,13 @@ show_dialog-jackob-hint-hackbook {
 			PLAYER "Do you know what the book used to say, at least?"
 			SELF "That book... I must have read it before, but...."
 		}
-		set player control to off;
+		turn player control off;
 		wait 600ms; /**/ rotate entity "%SELF%" 1;
 		wait 1200ms; /**/ rotate entity "%SELF%" -2;
 		wait 600ms;
 		show dialog { SELF "...." }
 		wait 400ms; /**/ turn entity "%SELF%" toward entity "%PLAYER%";
-		wait 400ms; /**/ set player control to on;
+		wait 400ms; /**/ turn player control on;
 		show dialog {
 			SELF "Oh, %PLAYER%, I'm sorry."
 			"I can't remember anything about what the book said."

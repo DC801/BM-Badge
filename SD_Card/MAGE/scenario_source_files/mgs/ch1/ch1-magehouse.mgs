@@ -15,8 +15,8 @@ on_load-magehouse {
 	if (flag goodmorning is false) {
 		teleport entity "%PLAYER%" to geometry wakeup_spot;
 		turn entity "%PLAYER%" south;
-		set hex control to off;
-		set hex clipboard to off;
+		turn hex control off;
+		turn hex clipboard off;
 		fade in camera from #000000 over 500ms;
 	}
 }
@@ -68,7 +68,7 @@ freak-out {
 }
 
 goodmorning-cutscene {
-	set player control to off;
+	turn player control off;
 	set entity "%PLAYER%" current_animation to 0;
 	turn entity "%PLAYER%" west;
 	show dialog {
@@ -118,7 +118,7 @@ goodmorning-cutscene {
 	set entity "Uncle Zappy" on_tick to zappy-leaving;
 	set entity "Aunt Zippy" on_tick to zippy-leaving;
 	set flag goodmorning to true;
-	set player control to on;
+	turn player control on;
 	// RESET (jump to top)
 	goto on_tick-magehouse;
 }
@@ -139,10 +139,10 @@ zappy-leaving {
 }
 
 mage-to-lodge {
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" along geometry morning-walk-mage over 10300ms;
 	load map lodge;
-	set player control to on;
+	turn player control on;
 }
 zippy-to-lodge {
 	walk entity Ram along geometry morning-walk-zippy over 10200ms;
@@ -155,7 +155,7 @@ zappy-to-lodge {
 	goto null_script;
 }
 walk-to-lodge {
-	set player control to off;
+	turn player control off;
 	teleport entity Verthandi to geometry catwalk-hide;
 	teleport entity Marta to geometry catwalk-hide;
 	set entity Cleo on_tick to null_script;
@@ -301,14 +301,14 @@ debug-goodmorning {
 	show dialog dialog-debug-goodmorning { // reused below
 		SELF "Walk through the doorway to begin cutscene."
 	}
-	set hex control to off;
+	turn hex control off;
 	copy set-goodmorning-flags-false;
 	set map on_tick to on_tick-magehouse;
 }
 
 debug-goodmorning-plus {
 	show dialog dialog-debug-goodmorning
-	set hex control to off;
+	turn hex control off;
 	copy set-goodmorning-flags-false;
 	set flag ring-acquired to false;
 	set flag hide-lodge-crowd to false;
@@ -333,7 +333,7 @@ debug-everything-q {
 
 debug-everything-on {
 	set flag debug-mode to true;
-	set hex control to on;
+	turn hex control on;
 	copy set-goodmorning-flags-true;
 	set flag tuesday-walkedup to true;
 	set flag hintman-explanation to true;

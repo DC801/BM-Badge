@@ -5,7 +5,7 @@ show_dialog-timewarp {
 	if (flag demo-cutseen-timewarp is false) {
 		fade out camera to #000000 over 1ms;
 		wait 200ms;
-		set player control to off;
+		turn player control off;
 		turn entity "%PLAYER%" south;
 		show dialog {
 			name "" "...."
@@ -18,10 +18,10 @@ show_dialog-timewarp {
 			"No, this is the village of the past. But\nI still have Ring Zero...."
 			"This has got to be a dream."
 		}
-		set player control to on;
+		turn player control on;
 		set flag demo-cutseen-timewarp to true;
 	}
-	set hex control to on;
+	turn hex control on;
 }
 
 show_dialog-bob-first-demo_map {
@@ -109,12 +109,12 @@ show_dialog-max-demo_map {
 		"The only thing actually here is the Bobs-Only Club!"
 		PLAYER "Well, the town isn't fully implemented yet, so... you might have to wait a few more weeks for the rest of the buildings to return."
 	}
-	set player control to off;
+	turn player control off;
 	rotate entity "%SELF%" -2;
 	wait 800ms;
 	rotate entity "%SELF%" 1;
 	wait 800ms;
-	set player control to on;
+	turn player control on;
 	copy face-player;
 	show dialog {
 		SELF "Not fully implemented?"
@@ -158,7 +158,7 @@ show_dialog-goose-demo_map {
 }
 
 show_dialog-beatrice-demo_map {
-	set player control to off;
+	turn player control off;
 	copy face-player;
 	show dialog {
 		SELF "Back when he was a young man, my husband Delmar hand-carved all the statues on the fountains around town."
@@ -172,7 +172,7 @@ show_dialog-beatrice-demo_map {
 	show dialog {
 		SELF "Between you and me.... I think the goose has something to do with it."
 	}
-	set player control to on;
+	turn player control on;
 	turn entity "%SELF%" south;
 }
 

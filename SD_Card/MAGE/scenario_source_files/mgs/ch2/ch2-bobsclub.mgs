@@ -90,13 +90,13 @@ on_load-ch2-bobsclub {
 		copy warping-in-fade-in;
 		set flag ch2-manual-warp to true; // this will skip the "init" script's warp stuff
 	}
-	set serial control off;
-	set player control off;
+	turn serial control off;
+	turn player control off;
 
 	// Have NOT been in the basement
 	if (flag ch2-cutseen-bob-party is false) {
-		set player control off;
-		set hex control off;
+		turn player control off;
+		turn hex control off;
 		if (warp state is not warped) {
 			walk entity "%PLAYER%" to geometry "walk-spot" over 400ms;
 		}

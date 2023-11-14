@@ -1457,14 +1457,10 @@
 				"bool_value": true
 			},
 			"natlang": [
-				"set player control to on",
-				"set player control on",
-				"set player control to true",
-				"set player control true",
-				"set player control to yes",
-				"set player control yes",
-				"set player control to open",
-				"set player control open"
+				"turn player control on",
+				"turn player control true",
+				"turn player control yes",
+				"turn player control open"
 			]
 		},
 		{
@@ -1473,14 +1469,10 @@
 				"bool_value": false
 			},
 			"natlang": [
-				"set player control to off",
-				"set player control off",
-				"set player control to false",
-				"set player control false",
-				"set player control to no",
-				"set player control no",
-				"set player control to closed",
-				"set player control closed"
+				"turn player control off",
+				"turn player control false",
+				"turn player control no",
+				"turn player control closed"
 			]
 		},
 		{
@@ -1489,14 +1481,14 @@
 				"bool_value": true
 			},
 			"natlang": [
-				"set hex dialog mode to on",
-				"set hex dialog mode on",
-				"set hex dialog mode to true",
-				"set hex dialog mode true",
-				"set hex dialog mode to yes",
-				"set hex dialog mode yes",
-				"set hex dialog mode to open",
-				"set hex dialog mode open"
+				"turn hex dialog mode on",
+				"turn hex dialog mode on",
+				"turn hex dialog mode true",
+				"turn hex dialog mode true",
+				"turn hex dialog mode yes",
+				"turn hex dialog mode yes",
+				"turn hex dialog mode open",
+				"turn hex dialog mode open"
 			]
 		},
 		{
@@ -1505,14 +1497,10 @@
 				"bool_value": false
 			},
 			"natlang": [
-				"set hex dialog mode to off",
-				"set hex dialog mode off",
-				"set hex dialog mode to false",
-				"set hex dialog mode false",
-				"set hex dialog mode to no",
-				"set hex dialog mode no",
-				"set hex dialog mode to closed",
-				"set hex dialog mode closed"
+				"turn hex dialog mode off",
+				"turn hex dialog mode false",
+				"turn hex dialog mode no",
+				"turn hex dialog mode closed"
 			]
 		},
 		{
@@ -1521,14 +1509,10 @@
 				"bool_value": true
 			},
 			"natlang": [
-				"set hex control to on",
-				"set hex control on",
-				"set hex control to true",
-				"set hex control true",
-				"set hex control to yes",
-				"set hex control yes",
-				"set hex control to open",
-				"set hex control open"
+				"turn hex control on",
+				"turn hex control true",
+				"turn hex control yes",
+				"turn hex control open"
 			]
 		},
 		{
@@ -1537,14 +1521,10 @@
 				"bool_value": false
 			},
 			"natlang": [
-				"set hex control to off",
-				"set hex control off",
-				"set hex control to false",
-				"set hex control false",
-				"set hex control to no",
-				"set hex control no",
-				"set hex control to closed",
-				"set hex control closed"
+				"turn hex control off",
+				"turn hex control false",
+				"turn hex control no",
+				"turn hex control closed"
 			]
 		},
 		{
@@ -1553,14 +1533,10 @@
 				"bool_value": true
 			},
 			"natlang": [
-				"set hex clipboard to on",
-				"set hex clipboard on",
-				"set hex clipboard to true",
-				"set hex clipboard true",
-				"set hex clipboard to yes",
-				"set hex clipboard yes",
-				"set hex clipboard to open",
-				"set hex clipboard open"
+				"turn hex clipboard on",
+				"turn hex clipboard true",
+				"turn hex clipboard yes",
+				"turn hex clipboard open"
 			]
 		},
 		{
@@ -1569,14 +1545,10 @@
 				"bool_value": false
 			},
 			"natlang": [
-				"set hex clipboard to off",
-				"set hex clipboard off",
-				"set hex clipboard to false",
-				"set hex clipboard false",
-				"set hex clipboard to no",
-				"set hex clipboard no",
-				"set hex clipboard to closed",
-				"set hex clipboard closed"
+				"turn hex clipboard off",
+				"turn hex clipboard false",
+				"turn hex clipboard no",
+				"turn hex clipboard closed"
 			]
 		},
 		{

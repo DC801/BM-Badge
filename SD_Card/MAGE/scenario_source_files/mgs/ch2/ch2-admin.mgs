@@ -184,7 +184,7 @@ ch2-start-round-2 {
 	set entity "%PLAYER%" current_animation to 0;
 	copy ch2-cutscene-bert-secret;
 	set flag ch2-lambda-paging to true;
-	set player control off;
+	turn player control off;
 	wait 200ms;
 	show serial dialog spacer;
 	show serial dialog {
@@ -199,12 +199,12 @@ ch2-start-round-2 {
 	show serial dialog {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
-	set player control on;
+	turn player control on;
 	mutate ch2-storyflag-round = 2;
 	goto ch2-do-init-on-end;
 }
 ch2-start-round-3 {
-	set player control off;
+	turn player control off;
 	wait 800ms;
 	turn entity "%PLAYER%" toward entity "Wizard";
 	show dialog {
@@ -232,7 +232,7 @@ ch2-start-round-3 {
 	show serial dialog {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
-	set player control on;
+	turn player control on;
 	mutate ch2-storyflag-round = 3;
 	goto ch2-do-init-on-end;
 }

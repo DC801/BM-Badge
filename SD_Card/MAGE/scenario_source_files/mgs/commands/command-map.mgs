@@ -103,5 +103,5 @@ draw-ch2-serial-map-footer {
 	concat serial dialog {
 		"</>\n"
 	}
-	set serial control on;
+	turn serial control on;
 }

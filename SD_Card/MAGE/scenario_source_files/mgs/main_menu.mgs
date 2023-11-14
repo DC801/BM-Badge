@@ -52,9 +52,9 @@ on_load-main_menu {
 /* DEBUGSSSS */
 
 debug-menu-simon {
-	set serial control on;
+	turn serial control on;
 	set flag ch2-has-artifact to true;
-	set hex control on;
+	turn hex control on;
 	mutate current-chapter = 2;
 	copy debug-finish-toot;
 	mutate ch2-storyflag-round = 2;
@@ -88,9 +88,9 @@ debug-bob3 {
 }
 
 debug {
-	set serial control on;
+	turn serial control on;
 	set flag ch2-has-artifact to true;
-	set hex control on;
+	turn hex control on;
 	mutate current-chapter = 2;
 	load map ch2-castle-1;
 }
@@ -111,7 +111,7 @@ on_tick-main_menu {
 	goto on_tick-splash;
 }
 on_tick-splash {
-	set hex control to off;
+	turn hex control off;
 	if warp state is from-game then goto main_menu-fade_in;
 	teleport camera to geometry dc801-center;
 	fade in camera from #000000 over 800ms;
@@ -122,7 +122,7 @@ on_tick-splash {
 }
 
 main_menu-fade_in {
-	set hex control to off;
+	turn hex control off;
 	set entity "%PLAYER%" on_tick to null_script;
 	teleport camera to geometry menu-center;
 	fade in camera from #000000 over 800ms;

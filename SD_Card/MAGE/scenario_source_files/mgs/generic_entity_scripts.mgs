@@ -97,15 +97,15 @@ on_load-east_west {
 }
 
 enter_from-east {
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" along geometry enter_from-east over 1000ms;
-	set player control to on;
+	turn player control on;
 }
 
 enter_from-west {
-	set player control to off;
+	turn player control off;
 	walk entity "%PLAYER%" along geometry enter_from-west over 1000ms;
-	set player control to on;
+	turn player control on;
 }
 
 load_map-action_testing_01 {
@@ -146,9 +146,9 @@ test_tick_script {
 }
 
 button_success_script {
-	set hex dialog mode to on;
+	turn hex dialog mode on;
 	wait 5000ms;
-	set hex dialog mode to off;
+	turn hex dialog mode off;
 	goto test_tick_script;
 }
 

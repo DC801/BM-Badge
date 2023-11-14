@@ -12,6 +12,13 @@ var log = window.log || false;
 
 mgs.boolPrefs = {
 	SET_HEX_EDITOR_STATE: [ 'open', 'close' ], // required due to keywords
+	SET_HEX_EDITOR_DIALOG_MODE: [ 'on', 'off' ],
+	SET_HEX_EDITOR_CONTROL_CLIPBOARD: [ 'on', 'off' ],
+	SET_SERIAL_DIALOG_CONTROL: [ 'on', 'off' ],
+	SET_HEX_EDITOR_CONTROL: [ 'on', 'off' ],
+	SET_PLAYER_CONTROL: [ 'on', 'off' ],
+	SET_LIGHTS_CONTROL: [ 'on', 'off' ],
+	SET_LIGHTS_STATE: [ 'on', 'off' ],
 	CHECK_DIALOG_OPEN: [ 'open', 'closed' ],
 	CHECK_SERIAL_DIALOG_OPEN: [ 'open', 'closed' ],
 	SET_PLAYER_CONTROL: [ 'on', 'off' ],

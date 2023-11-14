@@ -16,17 +16,17 @@ undebug-birthday {
 // NON-DEBUG
 
 on_load-ch2-magehouse-birthday {
-	set hex control to on;
+	turn hex control on;
 	if (flag skip-birthday is true) {
-		set player control to on;
+		turn player control on;
 		teleport entity "%PLAYER%" to geometry debug-spot;
 		register undebug -> undebug-birthday;
 		goto null_script;
 	} else {
-		set player control to off;
+		turn player control off;
 	}
 	if (debug mode is on) {
-		set serial control to on;
+		turn serial control on;
 		show serial dialog spacer;
 		show serial dialog {
 			"<g>DEBUG</> option: type <c>DEBUG</> to forgo the cutscene and explore the room! (After which, you can type <c>UNDEBUG</> to return to the cutscene.)"
@@ -34,7 +34,7 @@ on_load-ch2-magehouse-birthday {
 		register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
 		register debug -> debug-birthday;
 	} else {
-		set serial control to off;
+		turn serial control off;
 	}
 	close hex editor;
 	set entity "%PLAYER%" current_animation to 0;
@@ -153,13 +153,13 @@ gossip-left-down {
 // cutscene
 ch2-escort-cutscene {
 	if (debug mode is on) {
-		set serial control on;
+		turn serial control on;
 		register skip -> cutscene-ch2-escort-exit;
 	} else {
-		set serial control off;
+		turn serial control off;
 	}
 	fade out camera to #000000 over 0ms
-	set player control to off;
+	turn player control off;
 	close hex editor;
 	teleport entity Alfonso to geometry birthday-alfonso;
 	teleport entity Bert to geometry birthday-bert;
@@ -300,7 +300,7 @@ birthday-march-on-own-path-player {
 	set entity Jackob on_tick to yeet;
 	set entity Alfonso on_tick to yeet;
 	set entity Bert on_tick to yeet;
-	set player control to on;
+	turn player control on;
 	goto null_script;
 }
 cutscene-ch2-escort-exit {

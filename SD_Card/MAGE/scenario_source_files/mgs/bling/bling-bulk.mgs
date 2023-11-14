@@ -16,5 +16,5 @@ on_load-bling-dc801 {
 on_load-bling-qr {
 	teleport camera to geometry camera-spot;
 	copy script on_load-bling-mode-map;
-	set player control to on;
+	turn player control on;
 }
