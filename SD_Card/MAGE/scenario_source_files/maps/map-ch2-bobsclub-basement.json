@@ -576,6 +576,75 @@
                  "width":32,
                  "x":112,
                  "y":428
+                }, 
+                {
+                 "class":"",
+                 "gid":297,
+                 "height":32,
+                 "id":94,
+                 "name":"Party Cups",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-party-cups"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-party-cups"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":257,
+                 "y":173
+                }, 
+                {
+                 "class":"null",
+                 "gid":297,
+                 "height":32,
+                 "id":95,
+                 "name":"Pizza",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pizza"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-pizza"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":252,
+                 "y":259
+                }, 
+                {
+                 "class":"null",
+                 "gid":297,
+                 "height":32,
+                 "id":96,
+                 "name":"Pizza",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pizza"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-pizza"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":273,
+                 "y":259
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -785,7 +854,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":94,
+ "nextobjectid":97,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

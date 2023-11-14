@@ -361,32 +361,38 @@ ch2-lambda-round-3-parts5 {
 
 look-monitor {
 	show serial dialog spacer;
-	show serial dialog {
-		"on_look monitor TODO"
+	if (flag ch2-carrying-monitor is false) {
+		show serial dialog {
+			"You look at the <m>monitor</>: a modestly large flat screen monitor or television. The colors are crispy enough, though there's a dead pixel in the lower-right corner."
+		}
+	} else {
+		show serial dialog {
+			"You look at the <m>monitor</>: a modestly large flat screen monitor or television. The casing feels flimsy in your hands, but since the screen is unpowered, you can't judge its image quality at the moment."
+		}
 	}
 }
 look-heatsink {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look heatsink TODO"
+		"You look at the <m>heat sink</>: a bizarre bank of metal prongs, like a tuning fork crossed with a head of broccoli.."
 	}
 }
 look-cactuscooler {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look cactuscooler TODO"
+		"You look at the can of <m>Cactus Cooler</>: a mundane aluminum can of soda -- apparently some kind of pineapple-orange concoction, vaguely desert themed. It's still cold."
 	}
 }
 look-powersupply {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look powersupply TODO"
+		"You look at the <m>power supply</>: an enigmatic box with a grill and a fan right underneath. A beefy cable sticks out of the side."
 	}
 }
 look-keyboard {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look keyboard TODO"
+		"You look at the <m>keyboard</> -- that is, the <m>keytar</>: there's the normal piano-type keys, but there's assorted buttons scattered around the frame, too -- but these are not entirely labeled."
 	}
 }
 look-mouse {
@@ -404,7 +410,7 @@ look-harddrive {
 look-plate {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look plate TODO"
+		"You look at the <m>plate</>: a normal dinner plate, with inlaid gold around the rim."
 	}
 }
 look-needle {
@@ -416,13 +422,13 @@ look-needle {
 look-ramchips {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look ramchips TODO"
+		"You look at the <m>RAM chips</>: a super beefy, super spicy, super poofy bag of silicon chips. You wonder if they make Cool Ranch RAM...."
 	}
 }
 look-clock {
 	show serial dialog spacer;
 	show serial dialog {
-		"A giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
+		"You look at the <m>clock</>: a giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
 	}
 }
 look-cpu {

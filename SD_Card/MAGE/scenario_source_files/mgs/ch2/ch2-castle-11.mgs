@@ -15,7 +15,7 @@ look-ch2-kuro {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Kuro%</>."
-		"\tA large crow or raven, one whose eyes seem to pierce you to your soul -- and one who's had too much coffee, by all appearances."
+		"\tA large crow or raven, one whose eyes seem to pierce you to your soul -- and one who's had too much coffee, by the way he's moving."
 	}
 }
 

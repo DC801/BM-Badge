@@ -59,7 +59,7 @@ ch2-pickup-monitor {
 ch2-pickup-powersupply {
 	set flag ch2-map-powersupply to false;
 	set flag ch2-carrying-powersupply to true;
-	register look + powersupply -> look-powersupply;
+	register look + "power supply" -> look-powersupply;
 }
 ch2-handoff-powersupply-to-cactuscooler {
 	set flag ch2-map-heatsink to false;
@@ -74,20 +74,20 @@ ch2-pickup-cactuscooler {
 	set flag ch2-map-cactuscooler-bobaustin to false;
 	set flag ch2-map-heatsink to true;
 	set flag ch2-carrying-cactuscooler to true;
-	register look + cactuscooler -> look-cactuscooler;
+	register look + "cactus cooler" -> look-cactuscooler;
 }
 ch2-pickup-heatsink {
 	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
 	set flag ch2-map-heatsink to false;
 	set flag ch2-carrying-heatsink to true;
-	register look + heatsink -> look-heatsink;
+	register look + "heat sink" -> look-heatsink;
 }
 ch2-unpickup-cactuscooler { // DEBUG
 	// inverse of the above, lol, sorry for incorrect state
 	set flag ch2-map-cactuscooler-bobaustin to true;
 	set flag ch2-map-heatsink to false;
 	set flag ch2-carrying-cactuscooler to false;
-	unregister look + cactuscooler
+	unregister look + "cactus cooler"
 }
 
 // ROUND 2
@@ -116,7 +116,7 @@ ch2-fuse-harddrive {
 	copy ch2-install-plate;
 	copy ch2-install-needle;
 	set flag ch2-carrying-harddrive to true;
-	register look + harddrive -> look-harddrive;
+	register look + "hard drive" -> look-harddrive;
 }
 
 // ROUND 3
@@ -149,7 +149,8 @@ ch2-handoff-ramchips-to-seamoss {
 ch2-pickup-ramchips {
 	set flag ch2-map-seamoss to false;
 	set flag ch2-carrying-ramchips to true;
-	register look + ramchips -> look-ramchips;
+	register look + "ram chips" -> look-ramchips;
+	register look + ram -> look-ramchips;
 }
 
 // ROUND 4
@@ -169,18 +170,18 @@ ch2-install-monitor {
 }
 ch2-turn_in-cactuscooler {
 	set flag ch2-carrying-cactuscooler to false;
-	unregister look + cactuscooler;
+	unregister look + "cactus cooler";
 	// picking up heatsink is currently a separate step
 }
 ch2-install-heatsink {
 	set flag ch2-carrying-heatsink to false;
 	set flag ch2-installed-heatsink to true;
-	unregister look + heatsink;
+	unregister look + "heat sink";
 }
 ch2-install-powersupply {
 	set flag ch2-carrying-powersupply to false;
 	set flag ch2-installed-powersupply to true;
-	unregister look + powersupply;
+	unregister look + "power supply";
 }
 ch2-install-keyboard {
 	set flag ch2-carrying-keyboard to false;
@@ -195,7 +196,7 @@ ch2-install-mouse {
 ch2-install-harddrive {
 	set flag ch2-carrying-harddrive to false;
 	set flag ch2-installed-harddrive to true;
-	unregister look + harddrive;
+	unregister look + "hard drive";
 }
 ch2-install-plate {
 	set flag ch2-carrying-plate to false;
@@ -210,7 +211,8 @@ ch2-install-needle {
 ch2-install-ramchips {
 	set flag ch2-carrying-ramchips to false;
 	set flag ch2-installed-ramchips to true;
-	unregister look + ramchips;
+	unregister look + "ram chips";
+	unregister look + ram;
 }
 ch2-install-clock {
 	set flag ch2-carrying-clock to false;
