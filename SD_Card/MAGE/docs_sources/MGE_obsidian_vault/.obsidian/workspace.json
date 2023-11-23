@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Actions/Conditional Gotos.md",
+                "file": "Actions/SHOW_DIALOG.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "current",
+                "query": "tag:#expandme",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -69,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 291.5
+    "width": 238.50260543823242
   },
   "right": {
     "id": "50feecfeb39b5969",
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Actions/Conditional Gotos.md",
+                "file": "Actions/SHOW_DIALOG.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Actions/Conditional Gotos.md",
+                "file": "Actions/SHOW_DIALOG.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Actions/Conditional Gotos.md"
+                "file": "Actions/SHOW_DIALOG.md"
               }
             }
           }
@@ -140,40 +140,40 @@
     "hiddenItems": {
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
-      "canvas:Create new canvas": true,
-      "daily-notes:Open today's daily note": true,
-      "templates:Insert template": true,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
       "command-palette:Open command palette": false
     }
   },
   "active": "11e71142fb85b327",
   "lastOpenFiles": [
-    "Actions/CHECK_ENTITY_INTERACT_SCRIPT.md",
-    "Actions/CHECK_ENTITY_SECONDARY_ID.md",
-    "Actions/CHECK_ENTITY_Y.md",
-    "Actions/CHECK_ENTITY_X.md",
-    "Actions/CHECK_ENTITY_PATH.md",
+    "Actions/SET_SCREEN_SHAKE.md",
+    "Actions/SET_CAMERA_TO_FOLLOW_ENTITY.md",
+    "Actions/CHECK_ENTITY_PRIMARY_ID_TYPE.md",
     "Actions/CHECK_ENTITY_LOOK_SCRIPT.md",
-    "Actions/BLOCKING_DELAY.md",
-    "Actions/Conditional Gotos.md",
-    "Hardware/Terminal.md",
-    "Structure/maps.json.md",
-    "Actions/Actions.md",
-    "index.md",
-    "Getting Started/General Process.md",
-    "Entities/Character Entity.md",
-    "Entities/Entity Types.md",
-    "Entities/Entity Properties.md",
-    "Entities/%PLAYER%.md",
     "Entities/Entities.md",
+    "MGS Natlang/Dialog Block.md",
+    "Techniques/Map Initialization Scripts.md",
+    "Debug/Inspecting with the Web Encoder.md",
+    "Debug/Debug Tools.md",
+    "Debug/Debug Mode.md",
+    "Debug/Kaitai.md",
+    "Encoder/Entity Management System.md",
+    "Entities/Entity Types.md",
     "Entities/Tile Entity.md",
-    "Entities/Relative Entity References.md",
     "Entities/Null Entity.md",
-    "Entities/Hex Editor.md",
-    "Entities/Animation Entity.md",
-    "Entities/%SELF%.md",
-    "Encoder/Web Encoder.md",
-    "Encoder/MGE Encoder.md",
+    "Techniques/Hiding an Entity.md",
+    "Techniques/Doors.md",
+    "Maps/Vector Objects.md",
+    "Debug/Vector View.md",
+    "index.md",
+    "MGS Natlang/Combination Block.md",
+    "MGS Natlang/Show Dialog Block.md",
+    "MGS Natlang/MGS Natlang.md",
+    "Scripts/Scripts.md",
+    "Actions/Actions.md",
+    "Dialogs/Dialogs.md",
     "MGS Advanced Syntax",
     "MGS Variables",
     "Tilesets",
