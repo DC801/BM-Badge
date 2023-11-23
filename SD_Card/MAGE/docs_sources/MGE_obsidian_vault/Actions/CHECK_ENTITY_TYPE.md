@@ -1,6 +1,6 @@
 # CHECK_ENTITY_TYPE
 
-Checks whether a [[character entity]] is currently the given `entity_type`.
+Checks whether a [[character entity]] is currently the given [[entity properties|entity_type]].
 
 This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity "Delmar" is the type `old_man`). Otherwise you'd have to use a mix of [[CHECK_ENTITY_PRIMARY_ID]] and [[CHECK_ENTITY_PRIMARY_ID_TYPE]] and also know in advance which ints you're checking for.
 

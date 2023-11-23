@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PRIMARY_ID_TYPE
 
-Checks an [[entities|entity]]'s `primary_id_type`: either (`0`) [[Tile Entity|tile]], (`1`) [[Animation Entity|animation]], or (`2`) [[Character Entity|character]] (sometimes called `entity_type`).
+Checks an [[entities|entity]]'s [[entity types|primary_id_type]]: either (`0`) [[Tile Entity|tile]], (`1`) [[Animation Entity|animation]], or (`2`) [[Character Entity|character]] (sometimes called `entity_type`).
 
 ## Example JSON
 

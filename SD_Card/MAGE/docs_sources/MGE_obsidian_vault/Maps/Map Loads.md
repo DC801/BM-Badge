@@ -1,12 +1,12 @@
 # Map Loads
 
-The first map listed in [[maps.json]] is the map the game will load when first turned on. If you want the game to start on a different map (perhaps skipping an intro [[cutscenes|cutscene]] the player has seen before), you should handle this logic checking on the [[Maps]]' [[on_load]] [[scripts|script]], and [[LOAD_MAP|load a different map]] as appropriate.
+The first map listed in [[maps.json]] is the map the game will load when first turned on. If you want the game to start on a different map (perhaps skipping an intro [[cutscenes|cutscene]] the player has seen before), you should handle this logic checking on the [[maps]]' [[on_load]] [[scripts|script]], and [[LOAD_MAP|load a different map]] as appropriate.
 
 Maps can be assigned an `on_load` script, which will run once when a map is loaded.
 
 ## To Reload the Current Map
 
-- Toggle [[Debug Mode]]: `XOR` + `MEM1` (or `F1` + `F6` on desktop)
+- Toggle [[debug mode]]: `XOR` + `MEM1` (or `F1` + `F6` on desktop)
 - Soft reset current map: `XOR` + `MEM3` (or `F1` + `F8` on desktop)
 - Target the current map with [[LOAD_MAP]]
 

@@ -1,6 +1,6 @@
 # Doors
 
-(NOTE: This section might refer to jumping to a separate script after a logic check. This is a fossil from the days when all logic jumps resulted in script jumps; nowadays you should probably use [[If and Else]] instead.)
+(NOTE: This section might refer to jumping to a separate script after a logic check. This is a fossil from the days when all logic jumps resulted in script jumps; nowadays you should probably use [[if and else]] instead.)
 
 ## Doors (NPCs)
 
@@ -20,7 +20,7 @@ The vector shape should be large enough that the player can't skip over it when 
 
 To allow the player access to the doorway, the tile(s) the door is on should not have any [[Tile Collisions|collision data]]. (If you use a door with alpha on top of a wall tile, for instance, the wall collision might keep the player from physically entering the doorway.)
 
-Use [[Vector View]] to debug misbehaving door triggers.
+Use [[vector view]] to debug misbehaving door triggers.
 
 ### Doorway Watcher
 

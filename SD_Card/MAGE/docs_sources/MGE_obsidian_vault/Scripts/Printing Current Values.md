@@ -12,6 +12,6 @@ For text wrapping, it's recommended that these names be counted as taking up 5 c
 
 Wrap an entity's **given name** (the name assigned to it in Tiled) in percent signs (`%`) to insert the entity's name as it currently exists in RAM: `"Hi, there! My name is %Bob%!"`
 
-Unlike with [[Relative Entity References]] (like [[%SELF%]] and [[%PLAYER%]]), this usage will not work when trying to target an entity with an action. Instead, use the entity's given name.
+Unlike with [[relative entity references]] (like [[%SELF%]] and [[%PLAYER%]]), this usage will not work when trying to target an entity with an action. Instead, use the entity's given name.
 
 For text wrapping, it's recommended that these names be counted as taking up 12 characters. (Note: [[MGS Natlang]] will wrap text automatically.)

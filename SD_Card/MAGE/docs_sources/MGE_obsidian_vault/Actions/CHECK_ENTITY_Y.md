@@ -1,6 +1,6 @@
 # CHECK_ENTITY_Y
 
-Checks an [[entities|entity]]'s `y` coordinate.
+Checks an [[entities|entity]]'s [[entity properties|y]] coordinate.
 
 ## Example JSON
 

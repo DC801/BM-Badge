@@ -2,7 +2,7 @@
 
 NOTE: This syntax is used for [[MGS Natlang]] [[Serial Dialogs (MGS)|serial dialogs]], not [[Serial Dialogs (JSON)|JSON serial dialogs]].
 
-A serial dialog message is any [[Quoted String]].
+A serial dialog message is any [[quoted string]].
 
 - To maximize compatibility, best to limit these to ASCII characters.
 - Each message is printed on its own line.

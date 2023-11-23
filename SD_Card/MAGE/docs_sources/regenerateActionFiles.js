@@ -79,7 +79,7 @@ var actionsIntro = [
 
 var actionCategoryText = {
 	"Game Management": [
-		"Handle the general state of the game, such as loading maps, timing game actions, enabling and disabling player input, and managing save states."
+		"Handle the general state of the game, such as [[map loads|loading maps]], timing game actions, enabling and disabling player input, and managing save states."
 	],
 	"Hex Editor": [
 		"Enable or disable player control of specific game features, and otherwise manage the hex editor state."
@@ -101,13 +101,13 @@ var actionCategoryText = {
 		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [[NON_BLOCKING_DELAY|non-blocking delay]]."
 	],
 	"Set Entity Properties": [
-		"Set a specific property on a specific entity."
+		"Set a specific property on a specific [[entities|entity]]."
 	],
 	"Set Variables": [
 		"Manipulate MGE variables or set them to an arbitrary value."
 	],
 	"Check Entity Properties": [
-		"These actions check whether one of an entity's properties matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
+		"These actions check whether one of an [[entities|entity]]'s [[entity properties|properties]] matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
 		"You can use [[%SELF%]] to target the entity running the script and [[%PLAYER%]] to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
 		"You can use the condition portion of these following actions with [[if and else]].",
 	],
@@ -136,7 +136,7 @@ var actionText = {
 	"SET_PLAYER_CONTROL": {
 		"category": "Game Management",
 		"info": [
-			"When player control is `on`, the player entity can move around as normal. When `off`, the player cannot move, hack, or [[on_interact|interact]] with anything.",
+			"When player control is `on`, the player [[entities|entity]] can move around as normal. When `off`, the player cannot move, hack, or [[on_interact|interact]] with anything.",
 			"This is set to `on` (`true`) by default."
 		]
 	},
@@ -182,7 +182,7 @@ var actionText = {
 		"info": [
 			"Plays the named [[dialogs|dialog]].",
 			"A script cannot execute any other actions until the dialog is entirely finished. To give a [[cutscenes|cutscene]] sophisticated choreography, you will need to either split the dialog into multiple pieces or prepare additional scripts to manage concurrent behavior.",
-			"While a dialog screen is showing, the player can only advance to the next dialog message or choose a multiple choice option within that dialog (if any); the player cannot hack, interact with another entity, move, etc.",
+			"While a dialog screen is showing, the player can only advance to the next dialog message or choose a multiple choice option within that dialog (if any); the player cannot hack, interact with another [[entities|entity]], move, etc.",
 			"This action is also available as a [[combination block]]: [[show dialog block]].",
 			"A script can close an open dialog with [[CLOSE_DIALOG]]."
 		]
@@ -321,7 +321,7 @@ var actionText = {
 			"Checks whether a button was actively pressed down that game tick.",
 			"That is, the game keeps track of button state changes each game tick, and this action detects whether the target button had a change of state from *not pressed* to *pressed* that game tick. If the target button was *already pressed* when this action runs, this action will not result in a script branch.",
 			"To instead check the button's state (regardless of whether that state has changed) see [[CHECK_FOR_BUTTON_STATE]].",
-			"NOTE: The button states are reset when a new map is loaded. If listening for a button press in the new map, this action may very will trigger immediately, even if the button was held down through the map load.",
+			"NOTE: The button states are reset when a [[map loads|new map is loaded]]. If listening for a button press in the new map, this action may very will trigger immediately, even if the button was held down through the map load.",
 			"See [[button IDs]] for a list of valid button values."
 		]
 	},
@@ -392,57 +392,57 @@ var actionText = {
 	"CHECK_ENTITY_NAME": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s current `name`.",
+			"Checks an [[entities|entity]]'s [[Printing Current Values|current name]].",
 		]
 	},
 	"CHECK_ENTITY_X": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s `x` coordinate.",
+			"Checks an [[entities|entity]]'s [[entity properties|x]] coordinate.",
 		]
 	},
 	"CHECK_ENTITY_Y": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s `y` coordinate.",
+			"Checks an [[entities|entity]]'s [[entity properties|y]] coordinate.",
 		]
 	},
 	"CHECK_ENTITY_INTERACT_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s [[on_interact]] [[scripts|script]] (by the script's name).",
+			"Checks an [[entities|entity]]'s [[on_interact]] [[script slot|script]] (by the [[scripts|script]]'s name).",
 		]
 	},
 	"CHECK_ENTITY_TICK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s [[on_tick]] [[scripts|script]] (by the script's name).",
+			"Checks an [[entities|entity]]'s [[on_tick]] [[script slot|script]] (by the [[scripts|script]]'s name).",
 		]
 	},
 	"CHECK_ENTITY_LOOK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s [[on_look]] [[scripts|script]] (by the script's name).",
+			"Checks an [[entities|entity]]'s [[on_look]] [[script slot|script]] (by the [[scripts|script]]'s name).",
 		]
 	},
 	"CHECK_ENTITY_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether a [[character entity]] is currently the given `entity_type`.",
+			"Checks whether a [[character entity]] is currently the given [[entity properties|entity_type]].",
 			"This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity \"Delmar\" is the type `old_man`). Otherwise you'd have to use a mix of [[CHECK_ENTITY_PRIMARY_ID]] and [[CHECK_ENTITY_PRIMARY_ID_TYPE]] and also know in advance which ints you're checking for."
 		]
 	},
 	"CHECK_ENTITY_PRIMARY_ID": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [[entities|entity]] has the given `primary_id`.",
+			"Checks whether an [[entities|entity]] has the given [[entity types|primary_id]].",
 			"[[CHECK_ENTITY_TYPE]] is recommended instead."
 		]
 	},
 	"CHECK_ENTITY_SECONDARY_ID": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [[entities|entity]] has the given `secondary_id`.",
+			"Checks whether an [[entities|entity]] has the given [[entity types|secondary_id]].",
 			"This entity property is only useful on [[tile entity|tile entities]], where the `secondary_id` determines which tile in the tileset is displayed.",
 			"Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID."
 		]
@@ -450,13 +450,13 @@ var actionText = {
 	"CHECK_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s `primary_id_type`: either (`0`) [[Tile Entity|tile]], (`1`) [[Animation Entity|animation]], or (`2`) [[Character Entity|character]] (sometimes called `entity_type`)."
+			"Checks an [[entities|entity]]'s [[entity types|primary_id_type]]: either (`0`) [[Tile Entity|tile]], (`1`) [[Animation Entity|animation]], or (`2`) [[Character Entity|character]] (sometimes called `entity_type`)."
 		]
 	},
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks the id of the [[entities|entity]]'s current `animation`. (See [[animations|entity animations]] for what numbers correspond to which animations.)"
+			"Checks the id of the [[entities|entity]]'s [[entity properties|current animation]]. (See [[animations|entity animations]] for what numbers correspond to which animations.)"
 		]
 	},
 	"CHECK_ENTITY_CURRENT_FRAME": {
@@ -493,47 +493,47 @@ var actionText = {
 	"SET_ENTITY_NAME": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `name`."
+			"Sets an [[entities|entity]]'s [[entity properties|name]]."
 		]
 	},
 	"SET_ENTITY_X": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `x` coordinate.",
+			"Sets an [[entities|entity]]'s [[entity properties|x]] coordinate.",
 			"In practice, you will likely want to use [[Vector Objects|geometry vectors]] and teleport actions instead."
 		]
 	},
 	"SET_ENTITY_Y": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `y` coordinate.",
+			"Sets an [[entities|entity]]'s [[entity properties|y]] coordinate.",
 			"In practice, you will likely want to use [[Vector Objects|geometry vectors]] and teleport actions instead."
 		]
 	},
 	"SET_ENTITY_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `entity_type`."
+			"Sets an [[entities|entity]]'s [[character entity|entity_type]]. (See: [[Entity Type]], [[Entity Properties]])"
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `primary_id`.",
+			"Sets an [[entities|entity]]'s [[entity properties|primary_id]].",
 			"You will overwhelmingly want to set the `entity_type` by name instead with [[SET_ENTITY_TYPE]]."
 		]
 	},
 	"SET_ENTITY_SECONDARY_ID": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `secondary_id`.",
+			"Sets an [[entities|entity]]'s [[entity properties|secondary_id]].",
 			"This action will not be useful unless the entity is a [[tile entity]] (`primary_id_type`: `1`)."
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s `primary_id_type`: either (`0`) [[tile entity|tile]], (`1`) [[animation entity|animation]], or (`2`) [[character entity|character]] (sometimes called `entity_type`)."
+			"Sets an [[entities|entity]]'s [[entity properties|primary_id_type]]: either (`0`) [[tile entity|tile]], (`1`) [[animation entity|animation]], or (`2`) [[character entity|character]] (sometimes called `entity_type`)."
 		]
 	},
 	"SET_ENTITY_PATH": {
@@ -659,13 +659,13 @@ var actionText = {
 	"PAN_CAMERA_ALONG_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"(might not work yet — instead, make a null entity and lock the camera to it)"
+			"(might not work yet — instead, make a [[null entity]] and lock the camera to it)"
 		]
 	},
 	"LOOP_CAMERA_ALONG_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"(might not work yet — instead, make a null entity and lock the camera to it)"
+			"(might not work yet — instead, make a [[null entity]] and lock the camera to it)"
 		]
 	},
 	"SET_SCREEN_SHAKE": {
@@ -691,17 +691,15 @@ var actionText = {
 	"RUN_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"The 'script' variant abandons the current [[scripts|script]] and jumps to the named script. In other words, actions provided after a `RUN_SCRIPT` action will not execute. (The MGS Natlang keyword `goto` was chosen to emphasize this.) The new script runs in the same script slot that called this action, and will begin to execute immediately.",
-			// "The [[labels|label]] variant instead jumps to a bareword label somewhere else in the same script.",
-			// "When writing Natlang, it's recommended to not use index variant, as absolute indices are both (1) very difficult to gauge ahead of time and (2) prone to changing easily. (This variant is left in place in order to facilitate JSON -> Natlang output.)",
+			"This action abandons the current [[scripts|script]] and jumps to the named script. In other words, actions provided after a `RUN_SCRIPT` action will not execute. (The MGS Natlang keyword `goto` was chosen to emphasize this.) The new script runs in the same script slot that called this action, and will begin to execute immediately.",
 			"If you want to replace the script in the current slot *without* executing the new script until the next game loop, you should instead use one of the `SET_` ... `_SCRIPT` actions."
 		]
 	},
 	"GOTO_ACTION_INDEX": {
 		"category": "Script Control",
 		"info": [
-			"Jumps to the action at the given [[labels|label]] (bareword) or action index (number). All jumps are made within the current script.",
-			"The index variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.",
+			"Jumps to the action at the given [[labels|label]] ([[bareword]]) or action index ([[number]]). All jumps are made within the current [[scripts|script]].",
+			"The index (number) variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.",
 			"The keyword `return` uses this action to jump to the end of the current script (i.e. \"return early\")."
 		]
 	},
@@ -709,7 +707,8 @@ var actionText = {
 		"category": "Script Control",
 		"info": [
 			"The [[MGE encoder]] literally copies all the actions from the copied [[scripts|script]] and inserts them where `COPY_SCRIPT` is being used. This happens recursively.",
-			"`COPY_SCRIPT` converts and adapts [[labels|label]] references, jumps that eventually become action indices, when copied. Feel free to use `COPY_SCRIPT` for literally any script you want!"
+			"`COPY_SCRIPT` converts and adapts [[labels|label]] references, jumps that eventually become action indices, when copied. Feel free to use `COPY_SCRIPT` for literally any script you want!",
+			"See: [[COPY_SCRIPT_uses]]"
 		]
 	},
 	"SET_MAP_TICK_SCRIPT": {
@@ -723,7 +722,7 @@ var actionText = {
 		"info": [
 			"Sets an [[entities|entity]]'s [[on_interact]] script.",
 			"If you use this action to change the [[script slots|script slot]] that is currently running the action, any actions given afterward may not execute depending on what they are.",
-			"Because entity properties are reset when a map is loaded, and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
+			"Because [[entity properties]] are reset when a [[map loads|map is loaded]], and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
 		]
 	},
 	"SET_ENTITY_TICK_SCRIPT": {
@@ -741,7 +740,7 @@ var actionText = {
 	"SET_SCRIPT_PAUSE": {
 		"category": "Script Control",
 		"info": [
-			"Pauses or unpauses a [[scripts|script]]. In practice, this is most useful for temporarily pausing an entity's [[on_tick]] script during its [[on_interact]] event.",
+			"Pauses or unpauses a [[scripts|script]]. In practice, this is most useful for temporarily pausing an [[entities|entity]]'s [[on_tick]] script during its [[on_interact]] event.",
 			"Entity variant: Any entity name can be used in all the normal ways ([[%PLAYER%]] etc.). Scripts slots for these are `on_tick`, `on_interact`, and [[on_look]].",
 			"Map variant: Script slots for these are [[on_load]], [[on_tick]], and [[commands|on_command]]."
 		]
@@ -1045,7 +1044,8 @@ Object.keys(actionCategoryText).forEach(function(cat){
 actionPage = actionParagraphs.join('\n\n') + '\n';
 
 
-var filePrefix = 'exports/'
+var filePrefix = 'MGE_obsidian_vault/Actions/'
+
 fs.writeFileSync(
 	filePrefix + 'Actions.md',
 	actionPage
@@ -1058,3 +1058,6 @@ actionNames.forEach(function (actionName) {
 		page
 	);
 });
+
+// NOTE: run this with node, not VSCode, for accurate file paths!!!
+// TODO: split this file into "the thing that builds the file" and "the thing that writes the file" so you can debug without borking things

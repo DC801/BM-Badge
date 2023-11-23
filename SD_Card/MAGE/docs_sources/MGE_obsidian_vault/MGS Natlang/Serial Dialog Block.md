@@ -8,9 +8,9 @@ serial dialog $string {}
 
 Similar to [[dialog block|dialog blocks]], serial dialog blocks allow you to name and populate a serial dialog. Serial dialogs are shown in the serial console instead of the badge's physical screen.
 
-These blocks aren't being defined inside a  [[Script Block|script body]], so a serial dialog name is required. (The name is whatever is given for [[String]].)
+These blocks aren't being defined inside a  [[Script Block|script body]], so a serial dialog name is required. (The name is whatever is given for [[string]].)
 
-Inside the curly braces may be any number of [[Serial Dialogs (MGS)]].
+Inside the curly braces may be any number of [[Serial Dialogs (MGS)|serial dialogs]].
 
 The pair to the above usage is the action [[SHOW_SERIAL_DIALOG]]:
 
@@ -33,6 +33,6 @@ However, to [[Combination Block|combine]] these two usages into one, you'll want
 exampleScript {
   show serial dialog {
     "Bootup sequence completed!"
-  };
+  }
 }
 ```

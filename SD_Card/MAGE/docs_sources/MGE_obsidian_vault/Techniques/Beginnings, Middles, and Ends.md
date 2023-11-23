@@ -91,3 +91,44 @@ For this use, `COPY_SCRIPT` will appear to do the same thing `RUN_SCRIPT` does, 
 Therefore, if the last action of an entity's start script or branch script is `COPY_SCRIPT`, there's a good chance it should actually be `RUN_SCRIPT`.
 
 (`COPY_SCRIPT` may be the final action in other types of script, of course.)
+
+## MGS version
+
+To really hammer home how much easier [[MGS Natlang]] makes everything:
+
+```mgs
+show_dialog-bob-start {
+  copy face_player;
+  if (flag storyflag-bob is true) {
+    show dialog {
+      Bob
+      "Ack, I might be getting a cavity...."
+    }
+  } else if (flag soda-acquired is true) {
+    show dialog {
+      Bob
+      "Oh, hey! Is that for me?"
+      "Gee, thanks!"
+      name "" // no label
+      "(You gave Bob the soda!)"
+    }
+    set flag storyflag-bob to true;
+  } else if (flag bob-backstory is true) {
+    show dialog {
+      Bob
+      "Ah, yes, all I want in life is an A&W Cream Soda...."
+    }
+  } else {
+    show dialog {
+      Bob
+      "Hey, did you know I'm a soda connoisseur?"
+      "And A&W Cream Soda is without a doubt the best soda ever invented!"
+      "Gosh, I could go for some right now...."
+    }
+    set flag bob-backstory to true;
+  }
+  turn entity Bob south;
+}
+```
+
+No wrapup script necessary, because every "branch" will automatically converge after the [[if and else]] chain is finished.

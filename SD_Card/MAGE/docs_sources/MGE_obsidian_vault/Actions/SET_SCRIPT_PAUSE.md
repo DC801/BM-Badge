@@ -1,6 +1,6 @@
 # SET_SCRIPT_PAUSE
 
-Pauses or unpauses a [[scripts|script]]. In practice, this is most useful for temporarily pausing an entity's [[on_tick]] script during its [[on_interact]] event.
+Pauses or unpauses a [[scripts|script]]. In practice, this is most useful for temporarily pausing an [[entities|entity]]'s [[on_tick]] script during its [[on_interact]] event.
 
 Entity variant: Any entity name can be used in all the normal ways ([[%PLAYER%]] etc.). Scripts slots for these are `on_tick`, `on_interact`, and [[on_look]].
 

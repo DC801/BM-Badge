@@ -1,6 +1,6 @@
 # Grand Finale (Beatrice)
 
-NOTICE: Scripts like this were a major reason we created [[MGS Natlang]]. Needless to say, this page is deprecated! Just use `if`/`else` like a normal programming language! (To that point: converting this mess to natlang revealed a few redundant logic paths, even after multiple revisions of this flowchart!)
+NOTICE: Large scripts like this were a major reason we created [[MGS Natlang]]. Needless to say, this page is deprecated! Just use [[if and else]] like a normal programming language! (To that point: converting this mess to natlang revealed a few redundant logic paths, even after multiple revisions of this flowchart!)
 
 ![flowchart of Beatrice's behavior](media/script-beatrice.png)
 

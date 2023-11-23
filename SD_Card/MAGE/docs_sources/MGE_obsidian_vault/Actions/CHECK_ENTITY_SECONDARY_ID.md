@@ -1,6 +1,6 @@
 # CHECK_ENTITY_SECONDARY_ID
 
-Checks whether an [[entities|entity]] has the given `secondary_id`.
+Checks whether an [[entities|entity]] has the given [[entity types|secondary_id]].
 
 This entity property is only useful on [[tile entity|tile entities]], where the `secondary_id` determines which tile in the tileset is displayed.
 

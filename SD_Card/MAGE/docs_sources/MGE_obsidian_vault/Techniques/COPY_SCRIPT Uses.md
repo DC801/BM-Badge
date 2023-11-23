@@ -2,9 +2,9 @@
 
 #updateme
 
-[[COPY_SCRIPT]] is one of the most powerful actions in the engine.
+[[COPY_SCRIPT]] is one of the most powerful [[actions]] in the Mage Game Engine (MGE).
 
-This is an action provided for pure convenience and is actually not used by the engine at all — the [[MGE Encoder]] literally copies the actions contained in the script being copied and inserts them into the script containing the `COPY_SCRIPT` action. And it does this recursively, meaning a script copied with `COPY_SCRIPT` can contain the action `COPY_SCRIPT` on and on.
+This is an action provided for pure convenience and is actually not used by the MGE at all — the [[MGE Encoder]] literally copies the actions contained in the [[scripts|script]] being copied and inserts them into the script containing the `COPY_SCRIPT` action. And it does this recursively, meaning a script copied with `COPY_SCRIPT` can contain the action `COPY_SCRIPT` on and on.
 
 NOTE: `COPY_SCRIPT` can trigger an infinite loop in the encoder if it tries to copy a script that copies the script trying to copy it. Try to keep this from happening.
 

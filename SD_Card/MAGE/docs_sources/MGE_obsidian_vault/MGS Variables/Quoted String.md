@@ -6,4 +6,4 @@ These can be just about anything as long as it's wrapped in a matching pair of d
 
 Quotes and certain other characters must be escaped (`\"`) inside a quoted string.
 
-Quoted strings satisfy the requirement for anything that calls for a [[String]].
+Quoted strings satisfy the requirement for anything that calls for a [[string]].

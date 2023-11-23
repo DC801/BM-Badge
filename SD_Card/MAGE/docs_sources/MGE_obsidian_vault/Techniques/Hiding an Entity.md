@@ -4,13 +4,14 @@ There are several ways to hide an [[entities|entity]]:
 
 1. Teleport it off the visible [[Maps|map]].
 	- In Tiled, place a [[Vector Objects|vector object]] off the top-left corner of the map, in the void beyond the map tiles. Teleport entities here to hide them.
-	- The vector object could be anywhere, really, but due to [[Coordinate Underflow|coordinate wrapping]], the coordinates beyond the top-left corner are actually very, very large numbers, which might make it easier to keep them hidden. (It will at least make things more interesting for a player who is poking around.)
+	- The vector object could be anywhere, really, but due to [[Coordinate Overflow|coordinate wrapping]], the coordinates beyond the top-left corner are actually very, very large numbers, which might make it easier to keep them hidden. (It will at least make things more interesting for a player who is poking around.)
 2. Teleport them behind something opaque.
 3. Change them into an [[null entity|invisible tile]].
 
 After hiding them, you might optionally change their name to something else and change all their [[script slots]] scripts to [[null_script]], particularly if there's a danger for the player to interact with them on accident.
 
 No matter what, the player will be able to manipulate hidden entities, as they are never properly "unloaded." This is somewhat authentic in terms of how a real game might handle a similar problem, but if you really, truly want to deny the player access to them, you only have two choices:
+
 1. Make a parallel map without them.
 2. [[actors|Repurpose]] the entity into another. 
 

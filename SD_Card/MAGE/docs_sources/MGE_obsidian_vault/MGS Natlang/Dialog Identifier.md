@@ -7,10 +7,10 @@ The **dialog identifier** identifies the "speaker" of the [[Dialog Messages (MGS
 The three options:
 
 1. `$bareword`
-	- The [[Bareword]] identifier refers to a dialog label within a [[dialog settings block]].
+	- The [[bareword]] identifier refers to a dialog label within a [[dialog settings block]].
 		- If no dialog label is found, this is assumed to be an entity name instead. This usage also provides the entity name as an `entity` [[Dialog Parameters (MGS)|parameter]] for the dialog.
 		- Entity names with spaces or other special characters are not eligible for this usage.
-	- REMINDER: A [[Quoted String]] is NOT allowed here! This string *must* be a [[Bareword]]!
+	- REMINDER: A [[quoted string]] is NOT allowed here! This string *must* be a [[bareword]]!
 2. `entity $string`
 	- [[String]]: an entity's given name (i.e. the entity's name within the Tiled map).
 	- This usage also provides the entity name as an `entity` [[Dialog Parameters (MGS)|parameter]] for the dialog.

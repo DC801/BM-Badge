@@ -1,8 +1,8 @@
 # GOTO_ACTION_INDEX
 
-Jumps to the action at the given [[labels|label]] (bareword) or action index (number). All jumps are made within the current script.
+Jumps to the action at the given [[labels|label]] ([[bareword]]) or action index ([[number]]). All jumps are made within the current [[scripts|script]].
 
-The index variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.
+The index (number) variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.
 
 The keyword `return` uses this action to jump to the end of the current script (i.e. "return early").
 

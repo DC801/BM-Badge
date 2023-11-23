@@ -1,6 +1,6 @@
 # SET_ENTITY_SECONDARY_ID
 
-Sets an [[entities|entity]]'s `secondary_id`.
+Sets an [[entities|entity]]'s [[entity properties|secondary_id]].
 
 This action will not be useful unless the entity is a [[tile entity]] (`primary_id_type`: `1`).
 

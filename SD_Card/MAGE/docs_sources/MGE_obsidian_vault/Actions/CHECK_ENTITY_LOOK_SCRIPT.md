@@ -1,6 +1,6 @@
 # CHECK_ENTITY_LOOK_SCRIPT
 
-Checks an [[entities|entity]]'s [[on_look]] [[scripts|script]] (by the script's name).
+Checks an [[entities|entity]]'s [[on_look]] [[script slot|script]] (by the [[scripts|script]]'s name).
 
 ## Example JSON
 

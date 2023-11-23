@@ -1,6 +1,6 @@
 # CHECK_ENTITY_INTERACT_SCRIPT
 
-Checks an [[entities|entity]]'s [[on_interact]] [[scripts|script]] (by the script's name).
+Checks an [[entities|entity]]'s [[on_interact]] [[script slot|script]] (by the [[scripts|script]]'s name).
 
 ## Example JSON
 

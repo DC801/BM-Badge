@@ -1,12 +1,12 @@
 # Variable Types
 
-There are only a few variables available for [[scripts]] to use.
+There are only a few Mage Game Engine (MGE) variables available for [[scripts]] to use.
 
-Variables don't have to be declared before they can be used; simply using an action that sets or checks one will cause the encoder to include it in the `game.dat`.
+Variables don't have to be declared before they can be used; simply using an [[actions|action]] that sets or checks one will cause the encoder to include it in the `game.dat`.
 
 NOTE: This means typos can be hard to spot — if you set the variable `birthdayparty` in a script but check the int `birthday_party` in another, the encoder won't notice anything is wrong, and will simply create and store both variables as if they were separate things. If you find a variable isn't triggering logic checks in the ways you expect, you might want to verify that it's spelled the same wherever it's set/used.
 
-All variables are persistent between [[Map Loads]], and are all included in the [[save data]].
+All variables are persistent between [[map loads]], and are all included in the [[save data]].
 
 ## Variable Types
 

@@ -1,6 +1,6 @@
 ## Comments (MGS)
 
-[[MGS Natlang]] supports two kinds of [[comments]]. Both can appear anywhere in an MGS file or inside any [[Block|block]].
+[[MGS Natlang]] supports two kinds of comments. Both can appear anywhere in an MGS file or inside any [[Block|block]].
 
 ### Inline comment
 
@@ -11,9 +11,9 @@ testScript {
 }
 ```
 
-This is the only time that line breaks are syntactic in MGS natlang. Inline comments start with `//` and end either with a line break or the end of the document.
+This is the only time that line breaks are syntactic in Natlang. Inline comments start with `//` and end either with a line break or the end of the document.
 
-Fun fact: the MGS Natlang translator (JSON -> Natlang) will take extraneous properties from actions and the like and turn them into inline comments automatically.
+Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [[Comments (JSON)|extraneous properties from actions]] and the like and turn them into inline comments automatically.
 
 ### Block comment
 

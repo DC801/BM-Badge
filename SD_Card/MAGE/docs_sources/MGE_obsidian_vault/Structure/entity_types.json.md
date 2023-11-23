@@ -33,7 +33,7 @@ As an example (keeping in mind that the animation arrays have been closed so the
 
 ### Animations
 
-This part is much easier to do using the [[Web Encoder]], but if you want to make changes to an entity's animations by hand, the structure is as follows:
+This part is much easier to do using the [[web encoder]], but if you want to make changes to an [[entities|entity]]'s [[animations]] by hand, the structure is as follows:
 
 ```json
 "idle": [

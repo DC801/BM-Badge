@@ -6,7 +6,7 @@ That is, the game keeps track of button state changes each game tick, and this a
 
 To instead check the button's state (regardless of whether that state has changed) see [[CHECK_FOR_BUTTON_STATE]].
 
-NOTE: The button states are reset when a new map is loaded. If listening for a button press in the new map, this action may very will trigger immediately, even if the button was held down through the map load.
+NOTE: The button states are reset when a [[map loads|new map is loaded]]. If listening for a button press in the new map, this action may very will trigger immediately, even if the button was held down through the map load.
 
 See [[button IDs]] for a list of valid button values.
 

@@ -8,7 +8,7 @@ You will then see a second window for assigning frames to your animation. Set th
 
 ## MGE Animation Considerations
 
-For [[character entity|character entities]], you need not prepare an animation for all cardinal directions — e.g. there is only a fright/shock animation in Chrono Trigger for the south direction.
+For [[character entity|character entities]], you need not prepare an animation for all cardinal directions — e.g. there is only a fright/shock animation in *Chrono Trigger* for the south direction.
 
 The [[MGE Encoder]] accommodates animation flipping, so you don't need sprite tiles for both left-facing and right-facing sprites if you're comfortable with mirroring your left-facing and right-facing sprites.
 
@@ -16,7 +16,7 @@ The MGE animation system requires that each animation have at least two frames, 
 
 ## Animation Types
 
-Three types of animations are built into the MGE for [[character entity|character entities]], and they are triggered in straightforward and predictable ways. [[entity_types.json]] defines which animations are of which type, and they can be defined and adjusted within the [[MGE Encoder]] or manually with a text editor.
+Three types of animations are built into the MGE for [[character entity|character entities]], and they are triggered in straightforward and predictable ways. [[entity_types.json]] defines which animations are of which type, and they can be defined and adjusted within the [[MGE encoder]] or manually with a text editor.
 
 ### Idle
 
@@ -79,4 +79,4 @@ In addition, we recommend making sure each animation of the same type uses the s
 
 ## Assigning Animations to Character Entities
 
-For [[character entity|character entities]], animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [[Entity Management System]] in the [[Web Encoder]] can help you assign animations to character entities if you don't want to do it by hand.
+For [[character entity|character entities]], animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [[entity management system]] in the [[web encoder]] can help you assign animations to character entities if you don't want to do it by hand.

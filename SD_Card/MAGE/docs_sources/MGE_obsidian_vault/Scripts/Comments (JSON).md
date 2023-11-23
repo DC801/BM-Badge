@@ -1,6 +1,6 @@
 # Comments (JSON)
 
-If a property isn't used by an [[actions|action]], it will be entirely ignored by the [[MGE Encoder]]. This is the only way documentation or notes can be written in JSON script files, since JSON doesn't support comments.
+If a JSON property isn't used by an [[actions|action]], it will be entirely ignored by the [[MGE Encoder]]. This is the only way documentation or notes can be written in JSON script files, since JSON doesn't support comments.
 
 Below is an example, where `"summary"` and `"to do"` are being used for the script writer's notes:
 

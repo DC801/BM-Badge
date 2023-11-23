@@ -27,7 +27,7 @@ Commonly, Natlang syntax involves declarations followed by matching pairs of bra
 
 - [[Block|Blocks]]: `BLOCK {}`
 - [[Macros]]: `MACRO!()`
-	- These are often quality-of-life expansion or substitution procedures, such as the one that turns `debug!("Hi")` into `if (debug mode is on) {show serial dialog "Hi"}}`
+	- These are often quality-of-life expansion or substitution procedures.
 
 Free form phrases often have a known size, such as actions within a script block (with limited numbers of possible arrangements) or dialog parameters (which always appear in pairs). In such cases, terminating characters or brackets are not used.
 
@@ -39,9 +39,9 @@ However, due to an increasing desire for complex syntax parsing, terminating or 
 
 See: [[Variables (MGS)]]
 
-MGS Natlang variables are more strict (and nuanced) than the JSON/JavaScript equivalents. For example, in some cases, a [[Bareword]] string may be required when the JSON version might have accepted any type of JS string.
+MGS Natlang variables are more strict (and nuanced) than the JSON/JavaScript equivalents. For example, in some cases, a [[bareword]] string may be required when the JSON version might have accepted any type of JS string.
 
-In all syntax definitions in this document, words in parentheses are optional, and words starting with dollar signs are [[Variables (MGS)|MGS Natlang variables]].
+In all "dictionary" syntax definitions in this document, words in parentheses are optional, and words starting with dollar signs are [[Variables (MGS)|MGS Natlang variables]].
 
 ## Comments
 

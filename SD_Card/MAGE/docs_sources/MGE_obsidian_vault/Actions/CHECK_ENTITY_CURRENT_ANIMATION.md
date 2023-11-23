@@ -1,6 +1,6 @@
 # CHECK_ENTITY_CURRENT_ANIMATION
 
-Checks the id of the [[entities|entity]]'s current `animation`. (See [[animations|entity animations]] for what numbers correspond to which animations.)
+Checks the id of the [[entities|entity]]'s [[entity properties|current animation]]. (See [[animations|entity animations]] for what numbers correspond to which animations.)
 
 ## Example JSON
 

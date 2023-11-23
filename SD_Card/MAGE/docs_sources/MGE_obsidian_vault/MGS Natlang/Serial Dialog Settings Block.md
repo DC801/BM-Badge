@@ -6,7 +6,7 @@ One of the root level [[Block|blocks]] in [[MGS Natlang]].
 settings (for) serial dialog {}
 ```
 
-Use these blocks to set global settings for [[Serial Dialogs (MGS)]].
+Use these blocks to set global settings for [[Serial Dialogs (MGS)|serial dialogs]].
 
 **Block contents**: any number of [[Serial Dialog Parameters (MGS)|serial dialog parameters]] ([[serial dialog properties|serial dialog property]] and value pairs) in any order.
 

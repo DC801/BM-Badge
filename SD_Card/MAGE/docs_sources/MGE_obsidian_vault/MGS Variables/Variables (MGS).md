@@ -16,9 +16,9 @@ A variable's **value** is what populates the meat of the JSON output, but its **
 This documentation uses two formats to indicate a variable, each with a `$` at the front:
 
 - `$type`
-	- e.g. `$string` (which means any valid [[String]])
+	- e.g. `$string` (which means any valid [[string]])
 - `$label:type`
-	- e.g. `$scriptName:string` (which means any valid [[String]], and also it will be used as a script name)
+	- e.g. `$scriptName:string` (which means any valid [[string]], and also it will be used as a script name)
 
 The variable's label for most purposes doesn't matter much except as a hint as to the variable's purpose, especially if there are multiple variables in the natlang phrase. (It does matter when trying to analyze the JSON output, however.)
 
@@ -45,9 +45,9 @@ testScript2 {
 }
 ```
 
-In most cases, human intuition is enough to predict whether a variable can decay into another type. (And most things can decay into a [[Bareword]], e.g. `true` and `1000ms`.)
+In most cases, human intuition is enough to predict whether a variable can decay into another type. (And most things can decay into a [[bareword]], e.g. `true` and `1000ms`.)
 
-Most important to keep in mind is that a variable wanting to be a [[String]] will be satisfied by either a [[Bareword]] string or a [[Quoted String]], but barewords and quoted strings cannot be substituted for each other.
+Most important to keep in mind is that a variable wanting to be a [[string]] will be satisfied by either a [[bareword]] string or a [[quoted string]], but barewords and quoted strings cannot be substituted for each other.
 
 ## Types and Examples
 
@@ -66,6 +66,6 @@ Note that all numbers must be whole numbers and, unless indicated otherwise, mus
 
 ## Enums
 
-Some action variables will be of a generic [[MGS Natlang]] type (such as [[String]]) but the action itself will only be satisfied by a value from a limited set of words. In such cases, invalid values are reported by the MGE encoder.
+Some action variables will be of a generic [[MGS Natlang]] type (such as [[string]]) but the action itself will only be satisfied by a value from a limited set of words. In such cases, invalid values are reported by the MGE encoder.
 
 See: [[Enums]]

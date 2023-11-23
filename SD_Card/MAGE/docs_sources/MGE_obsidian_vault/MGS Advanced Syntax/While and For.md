@@ -2,7 +2,7 @@
 
 [[Advanced MGS Natlang Syntax]] for [[Scripts (JSON)|MGS Natlang scripts]].
 
-`while` and `for` are looping syntax constructions that expand to "goto [[Labels|label]]" actions.
+`while` and `for` are looping syntax constructions that expand to "[[GOTO_ACTION_INDEX|goto]] [[Labels|label]]" actions.
 
 Special keywords:
 
@@ -11,7 +11,7 @@ Special keywords:
 
 Note that if multiple loops are nested, `break` and `continue` will only apply to their own associated loop, and not arbitrary named `while` or `for` loops. (You might try `goto label ___` instead.)
 
-`break` and `continue` must be followed by a semicolon.
+`break` and `continue` must be followed by a semicolon (`;`).
 
 #### While
 
@@ -56,7 +56,7 @@ Lets count to 4!
 4!
 ```
 
-Fun fact: `for` is kind of like `while`, but with extra steps:
+Fun fact: `for` is kind of like `while`, but with extra steps.
 
 ```
 for (INIT; COND; ITER) {
@@ -64,7 +64,7 @@ for (INIT; COND; ITER) {
 }
 ```
 
-is equivalent to
+The above is equivalent to:
 
 ```
 INIT

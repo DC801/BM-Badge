@@ -18,13 +18,13 @@ Indented entries can only be used within the parent's block body. Unindented ent
 
 - [[Dialog Settings Block]]: `settings (for) dialog {}`
 	- [[Dialog Settings Target Block]]: `<TARGET> {}`
-		- *([[Dialog Parameters (MGS)]])*
+		- *([[Dialog Parameters (MGS)|Dialog Parameters]])*
 - [[Serial Dialog Settings Block]]: `settings (for) serial dialog {}`
-	- *([[Serial Dialog Parameters (MGS)]])*
+	- *([[Serial Dialog Parameters (MGS)|Serial Dialog Parameters]])*
 - [[Dialog Block]]: `dialog $string {}`
-	- *([[Dialogs (MGS)]])*
+	- *([[Dialogs (MGS)|Dialogs]])*
 - [[Serial Dialog Block]]: `serial dialog $string {}`
-	- *([[Serial Dialogs (MGS)]])*
+	- *([[Serial Dialogs (MGS)|Serial Dialogs]])*
 - [[Script Block]]: `$string {}`
 	- [[Combination Block]]
 	- *([[Actions]])*

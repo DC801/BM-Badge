@@ -22,7 +22,7 @@ Behaviors in common between the two:
 	- The parser will interpret all options within the block using the type of the first option.
 - Unlike [[Dialog Options (MGS)|dialog options]], the option count for serial dialogs is unlimited.
 - The **label** *must* be wrapped in [[Quoted String|quotes]].
-- The words `goto` and `script` are optional. Any [[String]] given after the `:` (other than `goto` and `script`) is assumed to be the script name.
+- The words `goto` and `script` are optional. Any [[string]] given after the `:` (other than `goto` and `script`) is assumed to be the script name.
 
 ## Example
 

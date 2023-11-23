@@ -7,7 +7,7 @@ An exhaustive list:
 - equal sign: `=`
 - plus: `+`
 - hyphen: `-`
-	- If a `-` is directly before a [[Number]], the number will become negative. Be sure to put a space between a `-` and a number if you want the `-` to be interpreted as an operator.
+	- If a `-` is directly before a [[number]], the number will become negative. Be sure to put a space between a `-` and a number if you want the `-` to be interpreted as an operator.
 - asterisk: `*`
 - forward slash: `/`
 - percent sign: `%`

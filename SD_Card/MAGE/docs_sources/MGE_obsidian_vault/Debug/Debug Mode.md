@@ -4,9 +4,9 @@ Debug mode is triggered in-game by pressing `XOR` and `MEM1` (the top button on 
 
 ## Debug Entities
 
-Normally, the MGE omits [[entities]] with the `is_debug` value of `true` when loading [[Maps]]. Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [[hex editor]], will not appear anywhere on the map, cannot be the target of [[scripts]], etc.  #verifyme When debug mode is activated, however, the [[Map Loads|current map is reloaded]] and `is_debug` entities are included.
+Normally, the Mage Game Engine (MGE) omits [[entities]] with the `is_debug` value of `true` when loading [[maps]]. Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [[hex editor]], will not appear anywhere on the map, cannot be the target of [[scripts]], etc.  #verifyme When debug mode is activated, however, the [[Map Loads|current map is reloaded]] and `is_debug` entities are included.
 
-The chapter 1 version of the engine *must* use debug entities to trigger all debug scripts, as the serial [[terminal]] was not implemented yet, and there was not yet an action to check whether debug mode is on.
+The chapter 1 version of the engine *must* use debug entities to trigger debug scripts, as the serial [[terminal]] was not implemented yet, and there was not yet an action to check whether debug mode is on.
 
 ### Best Practice
 
@@ -22,9 +22,9 @@ Example:
 
 ```mgs
 script {
-	if (debug mode is true) {
-		show seriral dialog { "DEBUG INFO!" }
-	}
+  if (debug mode is true) {
+    show serial dialog { "DEBUG INFO!" }
+  }
 }
 ```
 
@@ -32,7 +32,7 @@ For your convenience, the `debug!()` was introduced to provide the same behavior
 
 ```mgs
 script {
-	debug!("DEBUG INFO")
+  debug!("DEBUG INFO")
 }
 ```
 
@@ -44,12 +44,24 @@ We've found it useful to include debug logging when such a command is registered
 
 ## Debug Techniques
 
-**Cutscene skippers** — When debugging later segments of the game, it's helpful to be able to trigger a script that bypasses otherwise-mandatory [[cutscenes]]. Such debug scripts should carefully mirror their real counterparts in terms of [[save flags]] set and the like, or you might find yourself having to debug the debuggers.
+### Cutscene Skippers
 
-**Cutscene restorers** — Likewise, it sometimes helps to be able to play a cutscene over again. Or, if most or all [[cutscenes]] have been bypassed, it helps to turn on a specific one separately.
+When debugging later segments of the game, it's helpful to be able to trigger a script that bypasses otherwise-mandatory [[cutscenes]]. Such debug scripts should carefully mirror their real counterparts in terms of [[save flags]] set and the like, or you might find yourself having to debug the debuggers.
 
-**Clean wipe** — When using scripts to emulate a fresh game state, be sure you have a good list of the [[save flags]] and [[integer variables]] (etc.) you have been using.
+### Cutscene Restorers
 
-**Puzzle solvers** — While some puzzles can be simplified to accelerate play testing (such as naming the main character "Bub" when they will later need to be named "Bob"), it's much faster to make scripts to solve puzzles for you. (By the end of game development in BMG2020, there was a Debug Exa capable of solving or partially solving the majority of puzzles.)
+Likewise, it sometimes helps to be able to play a cutscene over again. Or, if most or all [[cutscenes]] have been bypassed, it helps to turn on a specific one separately.
 
-**Choreography controller** — Whenever you have a small segment of choreography you want to polish, it helps to split the sequence into a separate script that you can trigger at will.
+### Clean Wipe
+
+When using scripts to emulate a fresh game state, be sure you have a good list of the [[save flags]] and [[integer variables]] (etc.) you have been using.
+
+### Puzzle Solvers
+
+While some puzzles can be simplified to accelerate play testing (such as naming the main character "Bub" when they will later need to be named "Bob"), it's much faster to make scripts to solve puzzles for you.
+
+By the end of game development in BMG2020, there was a "Debug Exa" capable of solving or partially solving the majority of puzzles.
+
+### Choreography Controller
+
+Whenever you have a small segment of choreography you want to polish, it helps to split the sequence into a separate script that you can trigger at will.

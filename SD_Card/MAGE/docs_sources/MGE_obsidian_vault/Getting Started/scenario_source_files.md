@@ -13,16 +13,16 @@ Make sure all Tiled files are in the correct place before working on them or the
 | folder | file types | purpose |
 |---------------|------------|---------|
 | `dialog/` | MGE [[dialogs|dialog]] files (JSON) | RPG-style dialog messages for the main game screen |
-| `entities/` | Tiled [[Tilesets]] (JSON), [[tilesets|spritesheets]] (PNG/GIF) | [[entities|entity]] assets |
-| `map/` | Tiled [[Maps]] (JSON) | map data (not including tilesets) |
+| `entities/` | Tiled [[tilesets]] (JSON), [[tilesets|spritesheets]] (PNG/GIF) | [[entities|entity]] assets |
+| `map/` | Tiled [[maps]] (JSON) | map data (not including tilesets) |
 | `mgs/` | [[MGS Natlang]] files | these files need not be anywhere specific, but they're best kept together |
 | `serial_dialog/` | MGE [[serial dialogs|serial dialog]] files (JSON) | words to be printed on the serial terminal |
 | `scripts/` | MGE [[scripts]] | determines the bulk of the behavior of the game |
-| `tilesets/` | Tiled [[Tilesets]] (JSON), [[tilesets|spritesheets]] (PNG/GIF) | non-entity assets, such as graphics for maps, dialog borders, etc. |
+| `tilesets/` | Tiled [[tilesets]] (JSON), [[tilesets|spritesheets]] (PNG/GIF) | non-entity assets, such as graphics for maps, dialog borders, etc. |
 
 ## Important files
 
-[[entity_types.json]] — Identifies [[character entity|character entities]] and assigns them various properties. This is where character animations are assigned to their MGE purposes (idle, walk, action, etc. — and north, south, west, east), and while this assignment can be done within the [[MGE Encoder]] using the [[Entity Management System]], the web browser cannot write to this file directly, and you will therefore need to copy the updated data into `entity_types.json` yourself.
+[[entity_types.json]] — Identifies [[character entity|character entities]] and assigns them various properties. This is where character animations are assigned to their MGE purposes (idle, walk, action, etc. — and north, south, west, east), and while this assignment can be done within the [[MGE encoder]] using the [[entity management system]], the web browser cannot write to this file directly, and you will therefore need to copy the updated data into `entity_types.json` yourself.
 
 [[maps.json]] — This file is new for the chapter 2+ version of the MGE. Map properties defined in a map's Tiled JSON file (in the old way) are still honored, but it's recommended to move such properties to this file for easier access. The first map given is the map run when the game is opened.
 

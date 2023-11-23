@@ -2,7 +2,7 @@
 
 #updateme
 
-This is most likely required for a map's [[on_load]] script, but there are other times you might want a chain of small optional behaviors at the beginning of a script. For an example, here are some of the things the BMG2020 main map must check when loaded:
+This is most likely required for a [[maps|map]]'s [[on_load]] script, but there are other times you might want a chain of small optional behaviors at the beginning of a script. For an example, here are some of the things the BMG2020 main map must check when loaded:
 
 - Is it a brand new game? If so, branch: put the player in their bedroom in the mage house. (Script diverts to a dead end.)
 - Has Bob Moss's quest been completed? If so, teleport him off screen to [[Hiding an Entity|hide]] him. (Resume remainder of script either way.)

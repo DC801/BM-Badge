@@ -1,6 +1,6 @@
 # SET_ENTITY_NAME
 
-Sets an [[entities|entity]]'s `name`.
+Sets an [[entities|entity]]'s [[entity properties|name]].
 
 ## Example JSON
 

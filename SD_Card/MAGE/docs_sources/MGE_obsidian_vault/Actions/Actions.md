@@ -8,7 +8,7 @@ Each action requires specific JSON properties, but through [[MGS Natlang]], they
 
 ## Game Management
 
-Handle the general state of the game, such as loading maps, timing game actions, enabling and disabling player input, and managing save states.
+Handle the general state of the game, such as [[map loads|loading maps]], timing game actions, enabling and disabling player input, and managing save states.
 
 - [[BLOCKING_DELAY]]
 - [[NON_BLOCKING_DELAY]]
@@ -99,7 +99,7 @@ Many of these actions (the ones that don't have an explicit duration) will happe
 
 ## Set Entity Properties
 
-Set a specific property on a specific entity.
+Set a specific property on a specific [[entities|entity]].
 
 - [[SET_ENTITY_NAME]]
 - [[SET_ENTITY_X]]
@@ -121,7 +121,7 @@ Manipulate MGE variables or set them to an arbitrary value.
 
 ## Check Entity Properties
 
-These actions check whether one of an entity's properties matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.
+These actions check whether one of an [[entities|entity]]'s [[entity properties|properties]] matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.
 
 You can use [[%SELF%]] to target the entity running the script and [[%PLAYER%]] to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).
 
