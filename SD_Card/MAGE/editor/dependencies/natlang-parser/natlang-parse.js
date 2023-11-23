@@ -63,6 +63,9 @@ natlang.makeParseTrees = function (flatTrees) {
 				var captureType;
 				var captureLabel;
 				var value;
+				var matches = word.match(/(.+?)(<([a-z]+)>)?$/);
+				var word = matches[1];
+				// var colorType = matches[3];
 				if (word[0] === "$" && word.includes(":")) {
 					var wordSplits = word.split(':')
 					captureType = wordSplits[1];

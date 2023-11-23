@@ -1,0 +1,100 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:Scripts",
+      "color": {
+        "a": 1,
+        "rgb": 8450573
+      }
+    },
+    {
+      "query": "path:Natlang",
+      "color": {
+        "a": 1,
+        "rgb": 16711680
+      }
+    },
+    {
+      "query": "path:Entities",
+      "color": {
+        "a": 1,
+        "rgb": 16622861
+      }
+    },
+    {
+      "query": "path:Dialogs",
+      "color": {
+        "a": 1,
+        "rgb": 15754973
+      }
+    },
+    {
+      "query": "path:Techniques",
+      "color": {
+        "a": 1,
+        "rgb": 0
+      }
+    },
+    {
+      "query": "path:\"Getting Started\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 3949020
+      }
+    },
+    {
+      "query": "path:Finishing  ",
+      "color": {
+        "a": 1,
+        "rgb": 10001132
+      }
+    },
+    {
+      "query": "path:Maps  ",
+      "color": {
+        "a": 1,
+        "rgb": 1236962
+      }
+    },
+    {
+      "query": "path:Structure  ",
+      "color": {
+        "a": 1,
+        "rgb": 12251901
+      }
+    },
+    {
+      "query": "path:Tilesets  ",
+      "color": {
+        "a": 1,
+        "rgb": 16709152
+      }
+    },
+    {
+      "query": "path:Actions  ",
+      "color": {
+        "a": 1,
+        "rgb": 3378194
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 1.2356320919177681,
+  "close": true
+}

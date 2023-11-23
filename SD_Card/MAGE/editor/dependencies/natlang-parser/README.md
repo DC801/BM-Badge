@@ -582,7 +582,7 @@ Note: white space doesn't matter, so the first option above could very well have
 
 ### Serial dialog
 
-Serial dialogs contain text meant to be shown via the serial console. They are called serial "dialogs" because they are similar to [dialogs](#dialog) in many respects, but they are made up of plaintext alone and needn't be used for dialog specifically.
+Serial dialogs contain text meant to be shown via the serial console ([[terminal]]). They are called serial "dialogs" because they are similar to [dialogs](#dialog) in many respects, but they are made up of plaintext alone and needn't be used for dialog specifically.
 
 Found within a [serial dialog block](#serial-dialog-block).
 

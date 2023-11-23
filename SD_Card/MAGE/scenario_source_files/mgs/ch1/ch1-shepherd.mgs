@@ -89,9 +89,9 @@ show_dialog-sheep {
 turn-right-and-left {
 	copy face-player;
 	turn player control off;
-	wait 200ms; /**/ rotate entity "%SELF%" 1
-	wait 500ms; /**/ rotate entity "%SELF%" -2
-	wait 500ms; /**/ rotate entity "%SELF%" 1
+	wait 200ms; /**/ rotate entity "%SELF%" 1;
+	wait 500ms; /**/ rotate entity "%SELF%" -2;
+	wait 500ms; /**/ rotate entity "%SELF%" 1;
 	wait 200ms; /**/ copy face-player;
 	turn player control on;
 }
