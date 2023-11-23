@@ -11,7 +11,7 @@ For cinematic [[cutscenes]], you will almost certainly need to disable [[SET_PLA
 ```json
 {
   "action": "NON_BLOCKING_DELAY",
-  "duration": "400ms"
+  "duration": 400
 }
 ```
 

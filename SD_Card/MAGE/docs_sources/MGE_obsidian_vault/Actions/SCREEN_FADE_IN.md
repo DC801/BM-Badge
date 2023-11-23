@@ -10,7 +10,7 @@ Fades are slow on the hardware, so use these sparingly.
 {
   "action": "SCREEN_FADE_IN",
   "color": "#000",
-  "duration": "1000ms"
+  "duration": 1000
 }
 ```
 

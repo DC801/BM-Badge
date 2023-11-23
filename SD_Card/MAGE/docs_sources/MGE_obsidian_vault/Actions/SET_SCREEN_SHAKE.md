@@ -7,9 +7,9 @@ Shakes the camera a certain distance (`amplitude`) at a certain speed (`frequenc
 ```json
 {
   "action": "SET_SCREEN_SHAKE",
-  "amplitude": "32px",
-  "duration": "3s",
-  "frequency": "200ms"
+  "amplitude": 32,
+  "duration": 3000,
+  "frequency": 200
 }
 ```
 

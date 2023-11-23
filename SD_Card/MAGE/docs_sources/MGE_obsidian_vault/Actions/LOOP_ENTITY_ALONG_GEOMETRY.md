@@ -11,7 +11,7 @@ NOTE: Unless you want the entity to teleport to the geometry's origin point, you
 ```json
 {
   "action": "LOOP_ENTITY_ALONG_GEOMETRY",
-  "duration": "1000ms",
+  "duration": 1000,
   "entity": "Entity Name",
   "geometry": "vector object name"
 }

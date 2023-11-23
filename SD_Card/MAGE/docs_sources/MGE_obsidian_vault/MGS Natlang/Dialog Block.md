@@ -6,7 +6,7 @@ To define an [[MGS Natlang]] [[dialogs|dialog]], start a new [[Block|block]] at 
 dialog $string {}
 ```
 
-As these dialog blocks aren't being defined inside a [[Script Block|script body]], a dialog name is required. (The name is whatever is given for [[String]].)
+As these dialog blocks aren't being defined inside a [[Script Block|script body]], a dialog name is required. (The name is whatever is given for [[string]].)
 
 Inside the curly braces may be any number of [[Dialogs (MGS)|dialogs]].
 

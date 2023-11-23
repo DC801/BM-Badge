@@ -15,7 +15,7 @@ See [[animations|entity animations]] for what numbers correspond to which animat
   "action": "PLAY_ENTITY_ANIMATION",
   "animation": 3,
   "entity": "Entity Name",
-  "play_count": "twice"
+  "play_count": 2
 }
 ```
 

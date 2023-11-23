@@ -9,7 +9,7 @@ NOTE: if the entity is moving while the camera is coming closer, the camera will
 ```json
 {
   "action": "PAN_CAMERA_TO_ENTITY",
-  "duration": "1000ms",
+  "duration": 1000,
   "entity": "Entity Name"
 }
 ```

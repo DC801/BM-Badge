@@ -920,18 +920,32 @@ var makeObsidianEntry = function (actionName) {
 	var jsonEntries = makeJSONSamples(actionName);
 	var printJSONentries = jsonEntries.map(function (json) {
 		var ret = JSON.parse(JSON.stringify(json));
-		// compelling booleans to be really boolean
-		[ 'bool_value', 'expected_bool', 'enabled', ]
-			.forEach(function(boolProp){
-				if (ret[boolProp]) {
-					ret[boolProp] = true;
-				}
-			});
 		Object.keys(ret).forEach(function (prop) {
 			if (prop === "operation") {
 				ret[prop] = "ADD"; // this is fine probably
 			}
-		})
+			if (typeof ret[prop] === "string") {
+				var numVal = ret[prop]
+					.replace(/^(\d+)s$/,'$1'+'000')
+					.replace(/^(\d+)(ms|px|pix|x)$/,'$1')
+					.replace(/^once$/,'1')
+					.replace(/^twice$/,'2')
+					.replace(/^thrice$/,'3');
+				if (numVal !== ret[prop]) {
+					ret[prop] = Number(numVal);
+				}
+			}
+		});
+		// compelling booleans to be really boolean
+		[
+			'bool_value',
+			'expected_bool',
+			'enabled',
+		].forEach(function(boolProp){
+				if (ret[boolProp]) {
+					ret[boolProp] = true;
+				}
+			});
 		return JSON.stringify(ret, null, '  ');
 	}).join(',\n');
 
@@ -1048,7 +1062,7 @@ actionPage = actionParagraphs.join('\n\n') + '\n';
 
 var filePrefix = 'MGE_obsidian_vault/Actions/'
 
-// makeObsidianEntry('CHECK_WARP_STATE')
+// makeObsidianEntry('SET_SCREEN_SHAKE')
 
 fs.writeFileSync(
 	filePrefix + 'Actions.md',
