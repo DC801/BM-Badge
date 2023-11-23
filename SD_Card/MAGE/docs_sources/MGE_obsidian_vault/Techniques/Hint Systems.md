@@ -67,25 +67,25 @@ An example pair of scripts to manage Bender's hints:
 ```JSON
 "set-hint-bender-from-bert": [
 	{
-		"action": "MUTATE_VARIABLE",
-		"variable": "hint-tracking",
-		"value": 50,
-		"operation": "SET"
-	}
+    "action": "MUTATE_VARIABLE",
+    "variable": "hint-tracking",
+    "value": 50,
+    "operation": "SET"
+  }
 ],
 "set-hint-bender": [
-	{
-		"action": "MUTATE_VARIABLE",
-		"variable": "hint-tracking",
-		"value": 51,
-		"operation": "SET"
-	}
+  {
+    "action": "MUTATE_VARIABLE",
+    "variable": "hint-tracking",
+    "value": 51,
+    "operation": "SET"
+  }
 ]
 ```
 Then, everywhere you need Bender to change the hint to his own quest line, all you will need is a single [`COPY_SCRIPT`](#copy_script) action, e.g.:
 ```JSON
 {
-	"action": "COPY_SCRIPT",
-	"script": "set-hint-bender"
+  "action": "COPY_SCRIPT",
+  "script": "set-hint-bender"
 }
 ```

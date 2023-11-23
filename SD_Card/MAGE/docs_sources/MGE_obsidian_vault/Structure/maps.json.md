@@ -4,16 +4,16 @@ This data used to reside (in part) in [[scenario.json]], but was moved to this f
 
 ```json
 {
-	"sample": {
-		"path": "maps/map-sample.json",
-		"on_load": "on_load-sample",
-		"on_look": "on_look-sample",
-		"on_tick": "on_tick-sample",
-		"directions": {
-			"north": "on_go-sample-map",
-			"south": "on_go-sample-map"
-		}
-	}
+  "sample": {
+    "path": "maps/map-sample.json",
+    "on_load": "on_load-sample",
+    "on_look": "on_look-sample",
+    "on_tick": "on_tick-sample",
+    "directions": {
+      "north": "on_go-sample-map",
+      "south": "on_go-sample-map"
+    }
+  }
 }
 ```
 
@@ -27,4 +27,4 @@ Map properties will still work if assigned to a [[Maps|map]] file within Tiled, 
 	- note: you can override this script if you [[command|register]] a `look` command manually
 - [[on_tick]] — the script that plays every game tick; best used for door triggers
 - `directions` — the scripts that run when the command `go` is run with the named argument, e.g. `go north`
-	- these directions will be listed after a maps `on_look` script is triggered (e.g. `exits are...`) 
+	- these directions will be listed after a maps `on_look` script is triggered (e.g. `exits are...`)

@@ -1,6 +1,6 @@
 # Dialog Properties
 
-See: [[Dialogs (JSON)]], [[Dialogs (MGS)]]
+Also see: [[Dialogs (JSON)]], [[Dialogs (MGS)]]
 
 [[Dialogs]] must, at bare minimum, have `messages`. If no `name` or `entity` is provided (or is set to an empty string `""`), the dialog box label will not appear.
 
@@ -64,7 +64,7 @@ Optional. Allows you to select a specific emote within the entity's entry in [[p
 
 ## `messages`
 
-Each dialog message is limited to five rows of 42 ASCII characters. [[MGS Natlang]] will wrap this text automatically, though you can of course hard wrap it wherever you want with `\n`.
+Each dialog message is limited to five rows of 42 ASCII characters. [[MGS Natlang]] will wrap this text automatically, though you can hard wrap it wherever you want with `\n`.
 
 ### Manual Text Wrapping (JSON)
 

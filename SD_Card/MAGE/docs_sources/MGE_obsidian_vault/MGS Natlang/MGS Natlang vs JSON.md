@@ -98,7 +98,7 @@ dialog exampleDialogName {
 
 Since MGS Natlang is white space agnostic, it can be as compact as you want:
 
-```
+```mgs
 dialog exampleDialog2 {
   PLAYER "Neat."
 }
@@ -106,7 +106,7 @@ dialog exampleDialog2 {
 
 or even
 
-```
+```mgs
 dialog exampleDialog2 { PLAYER "Neat." }
 ```
 

@@ -2,7 +2,7 @@
 
 One of the root level [[Block|blocks]] in [[MGS Natlang]].
 
-```mgs
+```
 settings (for) serial dialog {}
 ```
 

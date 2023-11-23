@@ -16,8 +16,8 @@ Both patterns are valid anywhere [[actions]] are allowed (i.e. inside [[script b
 
 ```mgs
 exampleScript {
-	show dialog {
-		Bob "Hi there! I'm speaking to you!"
-	}
+  show dialog {
+    Bob "Hi there! I'm speaking to you!"
+  }
 }
 ```

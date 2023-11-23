@@ -24,6 +24,6 @@ dialog exampleDialog {
 
 Note: white space doesn't matter, so the first option above could very well have been written this way:
 
-```
+```mgs
 > "Fine. What club?" : goto bobContinueScript
 ```

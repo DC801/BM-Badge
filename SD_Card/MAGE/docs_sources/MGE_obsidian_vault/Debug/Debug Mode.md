@@ -4,9 +4,9 @@ Debug mode is triggered in-game by pressing `XOR` and `MEM1` (the top button on 
 
 ## Debug Entities
 
-Normally, the MGE omits [[entities]] with the `is_debug` value of `true` when loading [[Maps]]. Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the hex editor, will not appear anywhere on the map, cannot be the target of scripts, etc.  #verifyme When debug mode is activated, however, **the [[Map Loads|current map is reloaded]]** and `is_debug` entities are included.
+Normally, the MGE omits [[entities]] with the `is_debug` value of `true` when loading [[Maps]]. Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [[hex editor]], will not appear anywhere on the map, cannot be the target of [[scripts]], etc.  #verifyme When debug mode is activated, however, the [[Map Loads|current map is reloaded]] and `is_debug` entities are included.
 
-The chapter 1 version of the engine must use debug entities to trigger all debug scripts, as the serial terminal was not implemented yet, and there was not yet an action to check whether debug mode is on.
+The chapter 1 version of the engine *must* use debug entities to trigger all debug scripts, as the serial [[terminal]] was not implemented yet, and there was not yet an action to check whether debug mode is on.
 
 ### Best Practice
 

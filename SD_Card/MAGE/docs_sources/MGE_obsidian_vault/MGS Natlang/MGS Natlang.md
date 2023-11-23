@@ -4,9 +4,9 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 ## Overview
 
-MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the MGE encoder, plus QOL syntax like `if`/`else` and define-in-place dialogs.
+MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the MGE encoder, plus QOL syntax like `if`/`else` and [[show dialog block|define-in-place dialogs]].
 
-All MGS files are turned into JSON by the [[MGE Encoder]]. Unlike [[Scripts (JSON)|script files]] and [[Dialogs (JSON)|dialog files]], you don't need to declare MGS files in the game's [[scenario.json]]; all MGS files inside [[scenario_source_files]] will be imported.
+All MGS files are turned into JSON by the [[MGE encoder]]. Unlike [[Scripts (JSON)|JSON script files]] and [[Dialogs (JSON)|JSON dialog files]], you don't need to declare MGS files in the game's [[scenario.json]]; all MGS files inside [[scenario_source_files]] will be imported.
 
 See: [[MGS Natlang vs JSON]]
 
@@ -14,7 +14,7 @@ See: [[MGS Natlang vs JSON]]
 
 The Natlang source code is kept within the DC801 black mage game repo, under `SD_Card/MAGE/editor/dependencies/natlang-parser/`
 
-Natlang is under active development, and the grammar may be updated, sometimes dramatically, in tandem with the badge game source code. The Natlang parser will inform you when it has encountered a syntax error, but always be prepared to consult the documentation (which is generated procedurally based on the current syntax definitions) when writing something!
+Natlang is under active development, and the grammar may be updated — sometimes dramatically — in tandem with the badge game source code. The Natlang parser will inform you when it has encountered a syntax error, but always be prepared to consult the documentation (which is generated procedurally based on the current syntax definitions) when writing something!
 
 ### Syntax Features
 
@@ -32,12 +32,11 @@ Natlang is under active development, and the grammar may be updated, sometimes d
 
 ### IDE Support
 
-We have provided syntax colors for a variety of text editors an IDEs, but specifically for VSCode. See: [[Syntax Colors]]
+We have provided syntax colors for a variety of text editors an IDEs, but particularly for Visual Studio Code. See: [[Syntax Colors]]
 
-A language server for VSCode is on the horizon, but will not be available soon.
+A language server for Visual Studio Code is on the horizon, but will not be available soon.
 
 ## In-Depth Info
-
 
 - [[MGS Natlang Structure]]
 - [[Block]]

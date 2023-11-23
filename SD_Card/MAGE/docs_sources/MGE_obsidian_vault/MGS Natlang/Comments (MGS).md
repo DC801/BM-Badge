@@ -4,7 +4,7 @@
 
 ### Inline comment
 
-```
+```mgs
 testScript {
   wait 1000ms;
   wait 1000ms; // inline comment
@@ -17,7 +17,7 @@ Fun fact: the MGS Natlang translator (JSON -> Natlang) will take extraneous prop
 
 ### Block comment
 
-```
+```mgs
 /*
 Block comment:
 Everything inside is a comment!

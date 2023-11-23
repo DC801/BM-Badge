@@ -14,7 +14,7 @@ In all things programming, don't write something identical several times. Instea
 
 In the MGE2020, the shepherd nervously looks back and forth twice when giving his backstory. A simplified depiction, using [[MGS Natlang]]:
 
-```
+```mgs
 show_dialog-shepherd-backstory {
 	// ...
 	show dialog {}
@@ -47,7 +47,7 @@ show_dialog-shepherd-backstory {
 
 With copy script, this instead becomes:
 
-```
+```mgs
 show_dialog-shepherd-backstory {
 	// ...
 	show dialog {}
