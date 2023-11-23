@@ -19,8 +19,8 @@ NOTE: This action has been disabled in the MGE to prevent accidental soft locks.
 
 <pre class="HyperMD-codeblock mgs">
 
-  <span class="verb">turn</span> <span class="target">hex</span> <span class="target">dialog</span> <span class="target">mode</span> <span class="language-constant">on</span><span class="terminator">;</span>
   <span class="verb">turn</span> <span class="language-constant">on</span> <span class="target">hex</span> <span class="target">dialog</span> <span class="target">mode</span><span class="terminator">;</span>
+  <span class="verb">turn</span> <span class="target">hex</span> <span class="target">dialog</span> <span class="target">mode</span> <span class="language-constant">on</span><span class="terminator">;</span>
 
 </pre>
 

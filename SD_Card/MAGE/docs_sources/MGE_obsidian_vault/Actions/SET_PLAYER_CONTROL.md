@@ -19,8 +19,8 @@ This is set to `on` (`true`) by default.
 
 <pre class="HyperMD-codeblock mgs">
 
-  <span class="verb">turn</span> <span class="target">player</span> <span class="target">control</span> <span class="language-constant">on</span><span class="terminator">;</span>
   <span class="verb">turn</span> <span class="language-constant">on</span> <span class="target">player</span> <span class="target">control</span><span class="terminator">;</span>
+  <span class="verb">turn</span> <span class="target">player</span> <span class="target">control</span> <span class="language-constant">on</span><span class="terminator">;</span>
 
 </pre>
 

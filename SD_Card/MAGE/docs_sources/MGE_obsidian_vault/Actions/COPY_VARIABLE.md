@@ -20,10 +20,10 @@ Copies the value of an [[entities|entity]] [[Entity Properties|property]] into a
 
 <pre class="HyperMD-codeblock mgs">
 
+  <span class="verb">copy</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span> <span class="">from</span> <span class="sigil">variable</span> <span class="string">varName</span><span class="terminator">;</span>
   <span class="verb">copy</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span> <span class="">into</span> <span class="sigil">variable</span> <span class="string">varName</span><span class="terminator">;</span>
   <span class="verb">copy</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="">from</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span><span class="terminator">;</span>
   <span class="verb">copy</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="">into</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span><span class="terminator">;</span>
-  <span class="verb">copy</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span> <span class="">from</span> <span class="sigil">variable</span> <span class="string">varName</span><span class="terminator">;</span>
 
 </pre>
 

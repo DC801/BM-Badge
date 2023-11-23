@@ -956,9 +956,12 @@ var makeObsidianEntry = function (actionName) {
 	var dict = actionDictionary
 		.filter(function(item){
 			return item.action === actionName;
+		})
+		.sort(function(a,b) {
+			return a.pattern.localeCompare(b.pattern);
 		});
 	var printDict = dict.map(makePrintableEntry);
-	var printDictionary = [ '```', printDict.sort().join('\n\n'), '```']
+	var printDictionary = [ '```', printDict.join('\n\n'), '```']
 		.join('\n');
 
 	var colorReports = dict.map(makeColorReport);
@@ -1043,8 +1046,9 @@ Object.keys(actionCategoryText).forEach(function(cat){
 });
 actionPage = actionParagraphs.join('\n\n') + '\n';
 
-
 var filePrefix = 'MGE_obsidian_vault/Actions/'
+
+// makeObsidianEntry('CHECK_WARP_STATE')
 
 fs.writeFileSync(
 	filePrefix + 'Actions.md',

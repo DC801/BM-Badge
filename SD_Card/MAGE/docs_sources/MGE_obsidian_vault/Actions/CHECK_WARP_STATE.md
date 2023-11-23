@@ -35,12 +35,12 @@ The [[Conditional Gotos|condition]] portion of this action can be used inside an
 
   <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="string">"some kind of string"</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="operator">not</span> <span class="string">"some kind of string"</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="string">"some kind of string"</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="string">"some kind of string"</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
+  <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="operator">not</span> <span class="string">"some kind of string"</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="operator">not</span> <span class="string">"some kind of string"</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">is</span> <span class="operator">not</span> <span class="string">"some kind of string"</span>

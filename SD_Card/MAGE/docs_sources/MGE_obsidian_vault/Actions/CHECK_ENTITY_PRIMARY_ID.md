@@ -39,12 +39,12 @@ The [[Conditional Gotos|condition]] portion of this action can be used inside an
 
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="number">32</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="number">32</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="number">32</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>

@@ -24,8 +24,8 @@ Map variant: Script slots for these are [[on_load]], [[on_tick]], and [[commands
 <pre class="HyperMD-codeblock mgs">
 
   <span class="verb">pause</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="string">on_tick</span><span class="terminator">;</span>
-  <span class="verb">unpause</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="string">on_tick</span><span class="terminator">;</span>
   <span class="verb">pause</span> <span class="sigil">map</span> <span class="target">on_tick</span><span class="terminator">;</span>
+  <span class="verb">unpause</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="string">on_tick</span><span class="terminator">;</span>
   <span class="verb">unpause</span> <span class="sigil">map</span> <span class="target">on_tick</span><span class="terminator">;</span>
 
 </pre>
