@@ -11,18 +11,18 @@ In the [[serial dialogs (JSON)|entry for a serial dialog]], you can include a se
   "serialDialog": {
     "messages": [ "What's your name?" ],
     "options": [
-	    {
-	      "label": "I'm not telling you!",
-	      "script": "refusalScript"
-	    },
-	    {
-	      "label": "Wait. Tell me yours first.",
-	      "script": "rebuttalScript"
-	    },
-	    {
-	      "label": "Oh sure. My name is %PLAYER%.",
-	      "script": "acceptanceScript"
-	    }
+      {
+        "label": "I'm not telling you!",
+        "script": "refusalScript"
+      },
+      {
+        "label": "Wait. Tell me yours first.",
+        "script": "rebuttalScript"
+      },
+      {
+        "label": "Oh sure. My name is %PLAYER%.",
+        "script": "acceptanceScript"
+      }
     ]
   }
 }
@@ -50,13 +50,14 @@ You can instead use the property `text_options` to create free response answers.
 {
   "serialSphinx": {
     "messages": [
-	  "When you arrive at the Sphinx,",
-	  "it speaks in a slow, monotone voice:",
-	  "WHEN DO THE FLYING TOASTERS COME OUT?"
-	],
-	"text_options": {
-	  "after dark": "sphinxSuccess",
-	  "before dark": "sphinxWTF"
-	}
+      "When you arrive at the Sphinx,",
+      "it speaks in a slow, monotone voice:",
+      "WHEN DO THE FLYING TOASTERS COME OUT?"
+    ],
+    "text_options": {
+      "after dark": "sphinxSuccess",
+      "before dark": "sphinxWTF"
+    }
+  }
 }
 ```

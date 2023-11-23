@@ -16,10 +16,10 @@ The pair to the above usage is the action [[SHOW_SERIAL_DIALOG]]:
 
 ```mgs
 serial dialog bootTalk {
-	"Bootup sequence completed!"
+  "Bootup sequence completed!"
 }
 exampleScript {
-	show serial dialog bootTalk;
+  show serial dialog bootTalk;
 }
 ```
 
@@ -31,8 +31,8 @@ However, to [[Combination Block|combine]] these two usages into one, you'll want
 
 ```mgs
 exampleScript {
-	show serial dialog {
-	  "Bootup sequence completed!"
+  show serial dialog {
+    "Bootup sequence completed!"
   };
 }
 ```

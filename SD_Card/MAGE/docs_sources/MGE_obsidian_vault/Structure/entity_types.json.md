@@ -10,24 +10,24 @@ As an example (keeping in mind that the animation arrays have been closed so the
 
 ```json
 {
-	"mage": {
-		"tileset": "entity-mage.json",
-		"animations": {
-			"idle": [],
-			"walk": [],
-			"action": []
-		}
-	},
-	"bender_sadbutt": {
-		"tileset": "entity-bender_sadbutt.json",
-		"portrait": "bender",
-		"animations": {
-			"idle": [],
-			"walk": [],
-			"action": [],
-			"bite": []
-		}
-	}
+  "mage": {
+    "tileset": "entity-mage.json",
+    "animations": {
+      "idle": [],
+      "walk": [],
+      "action": []
+    }
+  },
+  "bender_sadbutt": {
+    "tileset": "entity-bender_sadbutt.json",
+    "portrait": "bender",
+    "animations": {
+      "idle": [],
+      "walk": [],
+      "action": [],
+      "bite": []
+    }
+  }
 }
 ```
 
@@ -37,22 +37,22 @@ This part is much easier to do using the [[Web Encoder]], but if you want to mak
 
 ```json
 "idle": [
-	{
-		"tileid": 18,
-		"flip_x": false
-	},
-	{
-		"tileid": 16,
-		"flip_x": true
-	},
-	{
-		"tileid": 17,
-		"flip_x": false
-	},
-	{
-		"tileid": 16,
-		"flip_x": false
-	}
+  {
+    "tileid": 18,
+    "flip_x": false
+  },
+  {
+    "tileid": 16,
+    "flip_x": true
+  },
+  {
+    "tileid": 17,
+    "flip_x": false
+  },
+  {
+    "tileid": 16,
+    "flip_x": false
+  }
 ]
 ```
 

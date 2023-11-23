@@ -14,4 +14,3 @@ Common use cases for save flags include tracking whether the player has:
 You will likely need to employ [[chains of small checks]] at the beginning of your [[Maps|map]]'s [[on_load]] [[scripts|script]] to initialize the map based on the states of save flags like those above.
 
 Save flags persist through map loads because they are part of the save game data.
-

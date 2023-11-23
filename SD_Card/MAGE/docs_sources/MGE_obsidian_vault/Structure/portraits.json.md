@@ -4,28 +4,28 @@ This JSON file looks like this:
 
 ```json
 {
-	"baker": {
-		"tileset": "portraits-people.json",
-		"emotes": {
-			"default": {
-				"tileid": 15,
-				"flip_x": true
-			}
-		}
-	},
-	"bender": {
-		"tileset": "portraits-people.json",
-		"emotes": {
-			"default": {
-				"tileid": 21,
-				"flip_x": true
-			},
-			"laugh": {
-				"tileid": 22,
-				"flip_x": true
-			}
-		}
-	}
+  "baker": {
+    "tileset": "portraits-people.json",
+    "emotes": {
+      "default": {
+        "tileid": 15,
+        "flip_x": true
+      }
+    }
+  },
+  "bender": {
+    "tileset": "portraits-people.json",
+    "emotes": {
+      "default": {
+        "tileid": 21,
+        "flip_x": true
+      },
+      "laugh": {
+        "tileid": 22,
+        "flip_x": true
+      }
+    }
+  }
 }
 ```
 

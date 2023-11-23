@@ -2,7 +2,7 @@
 
 Inside an [[MGS Natlang]] [[script block]], some [[actions]] can be **combined** with their associated definition [[Block|block]]. In other words, you can "call" a [[dialogs|dialog]] or [[serial dialogs|serial dialog]] and define it in place.
 
-For combination blocks of all types, a dialog name ([[String]] is optional. Omitting dialog names is recommended to keep things clean.
+For combination blocks of all types, a dialog name ([[string]]) is optional. Omitting dialog names is recommended to keep things clean.
 
 Blocks that can be combined:
 

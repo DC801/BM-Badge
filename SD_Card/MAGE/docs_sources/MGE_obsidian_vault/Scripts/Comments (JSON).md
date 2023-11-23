@@ -6,17 +6,17 @@ Below is an example, where `"summary"` and `"to do"` are being used for the scri
 
 ```json
 "show_dialog-example": [
-	{
-		"name": "SHOW_DIALOG",
-		"dialog": "dialog-example-start",
-		"summary": "Oh, hi player! This is an example dialog summary!"
-	},
-	{
-		"name": "SET_ENTITY_INTERACT_SCRIPT",
-		"entity": "%SELF%",
-		"script": "show_dialog-example-end",
-		"to do": "redo with save flags so the branching persists"
-	}
+  {
+    "name": "SHOW_DIALOG",
+    "dialog": "dialog-example-start",
+    "summary": "Oh, hi player! This is an example dialog summary!"
+  },
+  {
+    "name": "SET_ENTITY_INTERACT_SCRIPT",
+    "entity": "%SELF%",
+    "script": "show_dialog-example-end",
+    "to do": "redo with save flags so the branching persists"
+  }
 ]
 ```
 

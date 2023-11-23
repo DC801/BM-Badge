@@ -14,10 +14,10 @@ The pair to the above usage is the action [[SHOW_DIALOG]]:
 
 ```mgs
 dialog bobTalk {
-	Bob "Hi there! I'm speaking to you!"
+  Bob "Hi there! I'm speaking to you!"
 }
 exampleScript {
-	show dialog bobTalk;
+  show dialog bobTalk;
 }
 ```
 
@@ -29,8 +29,8 @@ However, to [[Combination Block|combine]] these two usages into one, you'll want
 
 ```mgs
 exampleScript {
-	show dialog {
-	  Bob "Hi there! I'm speaking to you!"
+  show dialog {
+    Bob "Hi there! I'm speaking to you!"
   };
 }
 ```

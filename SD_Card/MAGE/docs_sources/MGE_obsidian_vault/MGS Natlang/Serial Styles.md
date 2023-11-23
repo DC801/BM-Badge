@@ -35,7 +35,7 @@ A unique feature of [[Serial Dialogs (MGS)|serial dialog]] [[Serial Dialog Messa
 
 ```mgs
 serial dialog grandpaRambling {
-	"That doll is <r>evil</>, I tells ya! <r><bold>EVIL</>!!"
+  "That doll is <r>evil</>, I tells ya! <r><bold>EVIL</>!!"
 }
 ```
 
@@ -45,7 +45,7 @@ You can also add styles one at a time, and they will accumulate:
 
 ```mgs
 serial dialog accumulation {
-	"plain text <r>red text <bold>add bold <bg-b>add blue background</> clear all"
+  "plain text <r>red text <bold>add bold <bg-b>add blue background</> clear all"
 }
 ```
 

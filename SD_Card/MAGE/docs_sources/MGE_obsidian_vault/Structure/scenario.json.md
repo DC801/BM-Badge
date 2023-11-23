@@ -4,23 +4,23 @@ This file tells the [[MGE Encoder]] which JSON files it should be encoding. It w
 
 ```json
 {
-	"scriptPaths": [
-		"scripts/script-example-1.json",
-		"scripts/script-example-2.json"
-	],
-	"dialogPaths": [
-		"dialog/dialog-example.json",
-		"dialog/dialog-definitely-an-example.json",
-		"dialog/dialog-examples-for-days.json"
-	],
-	"serialDialogPaths": [
-		"serial_dialog/serial_dialog-example.json"
-	],
-	"dialogSkins": {
-		"default": "tilesets/tileset-dialog_moon.json",
-		"codec": "tilesets/tileset-dialog_codec.json",
-		"menu": "tilesets/tileset-dialog_transparent_menu.json"
-	}
+  "scriptPaths": [
+    "scripts/script-example-1.json",
+    "scripts/script-example-2.json"
+  ],
+  "dialogPaths": [
+    "dialog/dialog-example.json",
+    "dialog/dialog-definitely-an-example.json",
+    "dialog/dialog-examples-for-days.json"
+  ],
+  "serialDialogPaths": [
+    "serial_dialog/serial_dialog-example.json"
+  ],
+  "dialogSkins": {
+    "default": "tilesets/tileset-dialog_moon.json",
+    "codec": "tilesets/tileset-dialog_codec.json",
+    "menu": "tilesets/tileset-dialog_transparent_menu.json"
+  }
 }
 ```
 

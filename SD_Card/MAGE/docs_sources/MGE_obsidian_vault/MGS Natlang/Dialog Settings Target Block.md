@@ -17,7 +17,7 @@ Several choices:
 
 ## Example
 
-```
+```mgs
 label PLAYER {
   entity "%PLAYER%"
   alignment BR

@@ -8,6 +8,6 @@ This is recursive, so be careful.
 
 This is best used for common settings, such as the [[dialog settings target block|player dialog label]].
 
-```
+```mgs
 include!("header.mgs")
 ```

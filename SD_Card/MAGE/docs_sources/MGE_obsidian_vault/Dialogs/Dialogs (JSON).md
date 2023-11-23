@@ -14,9 +14,9 @@ A simplified explanation:
 
 ```json
 {
-	"dialog-sample1" : [],
-	"dialog-sample2" : [],
-	"dialog-another-one" : []
+  "dialog-sample1" : [],
+  "dialog-sample2" : [],
+  "dialog-another-one" : []
 }
 ```
 
@@ -28,16 +28,16 @@ Within the square brackets above can be any number of object literals (marked wi
 
 ```json
 "dialog-sample1": [
-	{
-		"alignment": "BOTTOM_RIGHT",
-		"entity": "%PLAYER%",
-		"messages": []
-	},
-	{
-		"alignment": "BOTTOM_LEFT",
-		"entity": "Sample Entity",
-		"messages": []
-	}
+  {
+    "alignment": "BOTTOM_RIGHT",
+    "entity": "%PLAYER%",
+    "messages": []
+  },
+  {
+    "alignment": "BOTTOM_LEFT",
+    "entity": "Sample Entity",
+    "messages": []
+  }
 ]
 ```
 
