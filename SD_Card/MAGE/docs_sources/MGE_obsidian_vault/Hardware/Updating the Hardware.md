@@ -4,7 +4,7 @@
 
 To run the game on the hardware, prepare a microSD card (FAT32) with a folder called `MAGE` in the root directory. Copy the `game.dat` into `MAGE/`, then insert the card into the slot on the hardware.
 
-If the hardware determines its `game.dat` is different from the one on the microSD card (or if you hold MEM3 when turning on the badge), you will see:
+If the hardware determines its `game.dat` is different from the one on the microSD card (or if you hold `MEM3` when turning on the badge), you will see:
 
 ```
 The file `game.dat` on your SD card does not match

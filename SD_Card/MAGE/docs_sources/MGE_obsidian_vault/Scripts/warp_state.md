@@ -1,6 +1,6 @@
 # `warp_state`
 
-(Also see: [[Variable Types]])
+See: [[Variable Types]]
 
 This is a global string that is designated for controlling player spawn behavior on a map's [[on_load]] script. When you [[doors|leave a room]] (or otherwise trigger a new [[Maps|map]] to load), the `warp_state` string should be set to something that indicates the exit/entrance point so the next map can teleport the player entity to the appropriate [[Spawn Points|spawn point]].
 

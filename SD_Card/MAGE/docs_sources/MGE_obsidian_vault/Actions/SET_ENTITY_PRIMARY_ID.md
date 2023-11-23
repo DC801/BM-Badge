@@ -1,6 +1,6 @@
 # SET_ENTITY_PRIMARY_ID
 
-Sets an [[entities|entity]]'s `primary_id`.
+Sets an [[entities|entity]]'s [[entity properties|primary_id]].
 
 You will overwhelmingly want to set the `entity_type` by name instead with [[SET_ENTITY_TYPE]].
 

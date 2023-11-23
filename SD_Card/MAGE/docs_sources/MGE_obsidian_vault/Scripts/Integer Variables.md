@@ -1,6 +1,6 @@
 # Integer Variables
 
-(Also see: [[Variable Types]])
+Also see: [[Variable Types]]
 
 Integer variables are technically `uint16_t`, meaning they can be any whole number between `0` and `65535`. (NOTE: no negative numbers.)
 

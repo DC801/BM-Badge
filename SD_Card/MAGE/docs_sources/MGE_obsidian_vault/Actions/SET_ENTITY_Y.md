@@ -1,6 +1,6 @@
 # SET_ENTITY_Y
 
-Sets an [[entities|entity]]'s `y` coordinate.
+Sets an [[entities|entity]]'s [[entity properties|y]] coordinate.
 
 In practice, you will likely want to use [[Vector Objects|geometry vectors]] and teleport actions instead.
 

@@ -2,8 +2,10 @@
 
 Advanced [[MGS Natlang]] syntax (specifically for [[Scripts (MGS)|MGS Natlang scripts]]).
 
-- [[const!()]]
+- [[const!()]] 
 - [[debug!()]]
 - [[include!()]]
-- [[If and Else]] (expanded by a macro)
-- [[While and For]] (expanded by a macro)
+- [[If and Else]]
+- [[While and For]]
+
+These macros are applied through to an MGS file one at a time.

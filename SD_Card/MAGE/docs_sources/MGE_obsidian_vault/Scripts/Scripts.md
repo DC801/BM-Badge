@@ -2,7 +2,7 @@
 
 A **script** is an array of [[actions]] which will execute one after the other, top to bottom, when the script is run.
 
-It doesn't strictly matter which file contains which script data, as long as the file is of the right type (either JSON or [[MGS Natlang]]). Scripts therefore must have completely unique names, even if they are inside different script files.
+It doesn't strictly matter which file contains which script data, as long as the file is of the right type (either JSON or [[MGS Natlang]]). Scripts therefore must have completely unique names, even if they are inside different script files, or are in different types of script files.
 
 ## Relative References
 

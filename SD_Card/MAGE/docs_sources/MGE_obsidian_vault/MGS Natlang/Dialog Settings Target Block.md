@@ -10,10 +10,10 @@ Several choices:
 	- Describes the default dialog settings for a specific [[entities|entity]].
 - `label $bareword {}`
 	- Defines a dialog identifier shortcut or alias to a specific set of settings.
-	- The label name *must* be a [[Bareword]], not a [[Quoted String]].
+	- The label name *must* be a [[bareword]], not a [[quoted string]].
 	- Dialog labels only exist in [[MGS Natlang]] (not the MGE itself), so they do not apply to other entity references (such as the target of an action).
 
-**Block contents**: any number of [[Dialog Parameters (MGS)]] ([[dialog properties|dialog property]] and value pairs) — in any order. No commas or semicolons needed... for now!
+**Block contents**: any number of [[Dialog Parameters (MGS)|dialog parameters]] ([[dialog properties|dialog property]] and [[Variables (MGS)|value]] pairs) — in any order. No commas or semicolons needed. (For now!)
 
 ## Example
 

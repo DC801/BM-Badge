@@ -1,6 +1,6 @@
 # CHECK_ENTITY_NAME
 
-Checks an [[entities|entity]]'s current `name`.
+Checks an [[entities|entity]]'s [[Printing Current Values|current name]].
 
 ## Example JSON
 

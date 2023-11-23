@@ -22,5 +22,4 @@ See: [[Web Encoder]], [[CLI Encoder]]
 
 ## Using the `game.dat`
 
-Once the encoder is finished producing a `game.dat` file, you can drag it into the [[web build]] open in a web browser, or put it into the [[MAGE Folder]] so the [[desktop build]] can see it.
-
+Once the encoder is finished producing a `game.dat` file, you can drag it into the [[web build]] open in a web browser, or put it into the [[MAGE folder]] so the [[desktop build]] can see it.

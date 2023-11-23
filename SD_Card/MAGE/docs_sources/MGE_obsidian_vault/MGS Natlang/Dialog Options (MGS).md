@@ -12,7 +12,7 @@ NOTE: This syntax is used for [[MGS Natlang]] [[Dialogs (MGS)|dialogs]], not [[D
 	- The label behaves like [[Dialog Messages (MGS)|dialog messages]] in terms of inserting variables (with `$` or `%`), escaped characters, etc.
 	- **Must** be wrapped in [[Quoted String|quotes]].
 - In the MGE, dialog options are displayed underneath the final dialog message. Therefore, final dialog message (before any options) should consist of a single line of no more than 42 characters.
-- The words `goto` and `script` are optional. Any [[String]] given after the `:` (other than `goto` and `script`) is assumed to be the script name.
+- The words `goto` and `script` are optional. Any [[string]] given after the `:` (other than `goto` and `script`) is assumed to be the script name.
 
 ## Example
 

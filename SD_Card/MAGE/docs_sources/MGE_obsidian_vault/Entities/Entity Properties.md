@@ -10,7 +10,7 @@ These are default properties provided by Tiled. They're found in the top half of
 
 **Name** — In the MGE, names are limited to 12 ASCII characters.
 
-**Type** — For character entities, this is the `entity_type`, or the name of the character entity as defined by [[entity_types.json]]. This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
+**Class** (formerly **Type**) — For character entities, this is the `entity_type`, or the name of the character entity as defined by [[entity_types.json]]. This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
 
 **X** and **Y** position — You don't need to change these directly if you don't want to, since you can simply place or move entities on the map within Tiled itself.
 
@@ -28,7 +28,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 **[[on_interact]] (string)** — This identifies the script that is run when the player interacts with the entity. Overwhelmingly, this will be the start of the entity's dialog tree.
 
-**`PrimaryIdType`**, **`PrimaryId`**, and **`SecondaryId`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map.
+**`primary_id_type`**, **`primary_id`**, and **`secondary_id`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map. (See: [[entity types]])
 
 **`current_animation` (int)** — This lets you set the specific animation for character entities. (`0` is the idle, and will play by default.)
 

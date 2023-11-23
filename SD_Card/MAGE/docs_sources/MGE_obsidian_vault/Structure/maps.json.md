@@ -1,6 +1,6 @@
 # `maps.json`
 
-This data used to reside (in part) in [[scenario.json]], but was moved to this file for the ch2+ engine, partially because of the new `directions` property.
+This data used to reside (in part) in [[scenario.json]], but was moved to this file for the ch2+ Mage Game Engine (MGE), partially because of the new `directions` property.
 
 ```json
 {
@@ -17,7 +17,7 @@ This data used to reside (in part) in [[scenario.json]], but was moved to this f
 }
 ```
 
-Map properties will still work if assigned to a [[Maps|map]] file within Tiled, as before, but we've found this format easier to work with.
+[[Map properties]] will still work if assigned to a [[Maps|map]] file within Tiled, as before, but we've found this format easier to work with.
 
 ## Map Properties
 

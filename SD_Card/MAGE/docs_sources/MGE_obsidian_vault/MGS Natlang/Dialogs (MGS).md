@@ -1,6 +1,6 @@
 # Dialogs (MGS)
 
-The [[Dialogs|dialog]] structure for [[MGS Natlang]], found within [[dialog block|dialog blocks]] (and related [[combination block|combination blocks]]). (For the JSON equivalent, see [[Dialogs (JSON)]])
+The [[Dialogs|dialog]] structure for [[MGS Natlang]], found within [[dialog block|dialog blocks]] (and related [[combination block|combination blocks]]). (For the JSON equivalent, see: [[Dialogs (JSON)]])
 
 ## Structure
 

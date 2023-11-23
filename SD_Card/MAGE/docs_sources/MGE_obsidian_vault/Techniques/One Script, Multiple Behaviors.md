@@ -1,6 +1,6 @@
 # One Script, Multiple Behaviors
 
-(Also see: [[Handlers]])
+See: [[Handlers]]
 
 Because a single [[Script Slots|script slot]] cannot run multiple threads, you must borrow another [[entities|entity]]'s (or the [[Maps|map]]'s) [[on_tick]] if you want a single [[scripts|script]] to trigger multiple simultaneous behaviors.
 
@@ -18,7 +18,7 @@ Three entities are involved in this behavior (apart from the player themselves):
 
 - Billy (a baby goat)
 - Kid (a baby goat)
-- Verthandi
+- Verthandi (the goat [[handlers|handler]])
 
 Each goat has an [[on_tick]] script that moves it around in a small jaggedy circle: the [[Vector Objects|vector shape]] `high1` for Billy and `high2` for Kid.
 

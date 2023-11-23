@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PRIMARY_ID
 
-Checks whether an [[entities|entity]] has the given `primary_id`.
+Checks whether an [[entities|entity]] has the given [[entity types|primary_id]].
 
 [[CHECK_ENTITY_TYPE]] is recommended instead.
 

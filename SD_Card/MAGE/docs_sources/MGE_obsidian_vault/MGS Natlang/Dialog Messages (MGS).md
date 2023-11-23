@@ -2,7 +2,7 @@
 
 NOTE: This syntax is used for [[MGS Natlang]] [[Dialogs (MGS)|dialogs]], not [[Dialogs (JSON)|JSON dialogs]].
 
-A dialog message is any [[Quoted String]].
+A dialog message is any [[quoted string]].
 
 - Each message is a new "text screen" in the game.
 - Only ASCII characters will be printed.
@@ -14,7 +14,7 @@ A dialog message is any [[Quoted String]].
 - Some characters must be escaped in the message body, such as double quote (`\"`) (for messages wrapped in double quotes).
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
-	- `%` and `$` are printable characters unless used in pairs within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
+	- `%` and `$` are printable characters unless [[Printing Current Values|used in pairs]] within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
 - Word processor "smart" characters such as ellipses (…), em dashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
 
 ## Example

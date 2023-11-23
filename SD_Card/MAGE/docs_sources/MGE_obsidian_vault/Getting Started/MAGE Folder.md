@@ -2,9 +2,9 @@
 
 There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new content are:
 
-`editor/index.html` — The [[Web Encoder]]. To generate a `game.dat`, you can open this file in a web browser and follow the instructions.
+`editor/index.html` — The [[web encoder]]. To generate a `game.dat`, you can open this file in a web browser and follow the instructions.
 
-`game.dat` — This is the encoded data for your game. If you generated a `game.dat` using [[Web Encoder]], you must move the resulting `game.dat` here for the [[Desktop Build]] to see it; the [[CLI Encoder]], however, will update the `game.dat` in place.
+`game.dat` — This is the encoded data for your game. If you generated a `game.dat` using [[web encoder]], you must move the resulting `game.dat` here for the [[desktop build]] to see it; the [[CLI encoder]], however, will update the `game.dat` in place.
 
 `replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory.
 

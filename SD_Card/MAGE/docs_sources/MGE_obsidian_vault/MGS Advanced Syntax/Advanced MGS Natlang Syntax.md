@@ -2,7 +2,7 @@
 
 These features are QOL expansions and substitutions that allow [[MGS Natlang]] to more closely resemble real programming languages.
 
-None of these features exist in the "real" underlying MGE structure (JSON); if using the JSON to Natlang converter, none of these will be present.
+None of these features exist in the "real" underlying MGE structure, JSON; if using the JSON to Natlang exporter, none of these features will be present.
 
 - [[Labels]]
 - [[Return]]

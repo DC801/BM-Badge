@@ -6,15 +6,15 @@ You might do this so that an entity can have a surprise cameo, or to reduce your
 
 > For the BMG2020, we used actors several times on the main map because we had already hit the entity budget (32 at the time; 64 now).
 >
-> Walking to the lodge cutscene: Helga played the part of Uncle Zappy, and Ram played the part of Aunt Zippy.
+> **Walking to the lodge cutscene**: Helga played the part of Uncle Zappy, and Ram played the part of Aunt Zippy.
 >
-> Earthquake cutscene: Helga played the part of Trekkie, and Ram played the part of Beatrice.
+> **Earthquake cutscene**: Helga played the part of Trekkie, and Ram played the part of Beatrice.
 
 This works best if done between [[Maps|map]] loads or camera teleports — but it should definitely only be done when you can guarantee the player won't see the actor's "costume change" or notice the original entity has gone missing.
 
 A [[Map Loads|map load]] will restore the actor to its original state, and is a fast way of cleaning up a cutscene with a lot of actors. Otherwise, you'll have to set up another costume change to restore the actor to its original state.
 
-On the other hand, if you want an entity's costume change to be permanent (e.g. a wanderer leaves town in an early cutscene, but new vendor moves into a shop later in the game), you'll need a [[save flags|save flat]] and the map's [[on_load]] to [[Chains of Small Checks|manage this]]. Best might be to make the actor's default state the one that is needed for the most map loads.
+On the other hand, if you want an entity's costume change to be permanent (e.g. a wanderer leaves town in an early cutscene, but new vendor moves into a shop later in the game), you'll need a [[save flags|save flag]] and the map's [[on_load]] to [[Chains of Small Checks|manage this]]. Best might be to make the actor's default state the one that is needed for the most map loads.
 
 ## Using an Actor
 

@@ -10,7 +10,7 @@ The syntax is a [[Bareword]] followed by a colon (`:`).
 exampleScript {
   show serial dialog { "One..." }
   show serial dialog { "Two..." }
-  goto label four
+  goto label four;
   show serial dialog { "Three..." }
   four:
   show serial dialog { "Four... wait, did I skip one?" }

@@ -8,7 +8,7 @@ script $string {}
 $string {}
 ```
 
-If the word `script` is absent, any [[String]] (other than `dialog`, `settings` etc.) will be interpreted as the script name.
+If the word `script` is absent, any [[string]] (other than `dialog`, `settings` etc.) will be interpreted as the script name.
 
 These blocks must occur on the root level.
 

@@ -1,6 +1,6 @@
 # Vector View
 
-Vector view, one of the [[Debug Tools]] in the game, is triggered in-game by pressing `XOR` and `MEM0` (the top two buttons on each side of the screen) at the same time. On desktop, press `F1` and `F5` instead.
+Vector view, one of the [[debug tools]] in the game, is triggered in-game by pressing `XOR` and `MEM0` (the top two buttons on each side of the screen) at the same time. On desktop, press `F1` and `F5` instead.
 
 NOTE: Currently, vector view cannot be toggled when [[hex editor]] [[SET_HEX_EDITOR_STATE|control]] is off.
 
@@ -16,7 +16,7 @@ These lines are green ordinarily, but will turn red if the player entity is "ins
 
 ### Entity Vectors
 
-Entity hit boxes are half the length and half the height of the [[entities|entity]]'s tile size, and are positioned at the bottom-center of the sprite. This box is green by default, but the entity that was most recently interacted with (either with the interact button or hack button) will have a red hitbox instead.
+Entity hit boxes are half the length and half the height of the [[entities|entity]]'s tile size, and are positioned at the bottom-center of the sprite. This box is green by default, but the entity that was most recently [[on_interact|interacted]] with (either with the interact button or hack button) will have a red hitbox instead.
 
 The entity's position is considered to be the center of its hitbox as defined above, and is marked by a blue X.
 

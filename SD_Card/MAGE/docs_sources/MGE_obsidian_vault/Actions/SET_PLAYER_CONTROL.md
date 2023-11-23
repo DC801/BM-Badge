@@ -1,6 +1,6 @@
 # SET_PLAYER_CONTROL
 
-When player control is `on`, the player entity can move around as normal. When `off`, the player cannot move, hack, or [[on_interact|interact]] with anything.
+When player control is `on`, the player [[entities|entity]] can move around as normal. When `off`, the player cannot move, hack, or [[on_interact|interact]] with anything.
 
 This is set to `on` (`true`) by default.
 

@@ -21,7 +21,7 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 	- [[Map Loads]]
 	- [[Map Properties]]
 	- [[Vector Objects]]
-	- [[Coordinate Underflow]]
+	- [[Coordinate Overflow]]
 - [[Entities]]
 	- [[Entity Types]]
 		- [[Tile Entity]]

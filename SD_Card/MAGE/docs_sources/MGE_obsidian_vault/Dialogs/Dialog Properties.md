@@ -31,7 +31,7 @@ This property can be any of the following:
 
 The MGE will use the referenced entity's [[Printing Current Values|current name]] for the dialog label automatically.
 
-For the `entity` property, you must not use percent signs to refer to entities, or the [[MGE Encoder]] will give you a message in the vein of "No entity named `%Helga%` found on map `default`!" If you don't want to use an entity's [[Printing Current Values|current name]] in the dialog label, you must use the `name` property, which can print a string literally.
+For the `entity` property, you must not use percent signs to refer to entities, or the [[MGE Encoder]] will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [[Printing Current Values|current name]] in the dialog label, you must use the `name` property, which can print a string literally.
 
 If the referenced entity is a [[character entity]], the [[MGE Encoder]] will use [[entity_types.json]] to automatically determine the portrait image.
 

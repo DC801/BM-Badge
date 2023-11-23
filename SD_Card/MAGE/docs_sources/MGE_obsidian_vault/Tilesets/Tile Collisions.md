@@ -1,6 +1,6 @@
 # Tile Collisions
 
-[[Maps|Map]] [[Tilesets]] should have collision polygons set for each relevant tile. This is done by selecting a tile and clicking the collision editor within Tiled:
+[[Maps|Map]] [[tilesets]] should have collision polygons set for each relevant tile. This is done by selecting a tile and clicking the collision editor within Tiled:
 
 ![the second icon is a pair of polygons](media/tiled-collision-editor.png)
 

@@ -1,6 +1,6 @@
 # Multiple Choice Dialogs (JSON)
 
-(For the [[MGS Natlang]] equivalent, see [[Dialog Options (MGS)]].)
+For the [[MGS Natlang]] equivalent, see [[Dialog Options (MGS)]].
 
 For a multiple choice prompt in a [[dialogs (JSON)|dialog]], there are additional dialog properties. An example:
 

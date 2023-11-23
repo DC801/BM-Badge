@@ -4,6 +4,8 @@ The [[MGE encoder]] literally copies all the actions from the copied [[scripts|s
 
 `COPY_SCRIPT` converts and adapts [[labels|label]] references, jumps that eventually become action indices, when copied. Feel free to use `COPY_SCRIPT` for literally any script you want!
 
+See: [[COPY_SCRIPT_uses]]
+
 ## Example JSON
 
 ```json

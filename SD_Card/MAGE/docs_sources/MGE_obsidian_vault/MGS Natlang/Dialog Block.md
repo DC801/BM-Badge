@@ -31,6 +31,6 @@ However, to [[Combination Block|combine]] these two usages into one, you'll want
 exampleScript {
   show dialog {
     Bob "Hi there! I'm speaking to you!"
-  };
+  }
 }
 ```

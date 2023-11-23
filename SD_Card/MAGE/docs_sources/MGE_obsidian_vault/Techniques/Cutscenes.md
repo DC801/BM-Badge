@@ -3,8 +3,8 @@
 ### General Tips
 
 - Separate the [[scripts|script]] for the cutscene itself (unless you want to hide it behind mandatory logic checks somehow).
-- Set a "saw the cutscene" save flag to `true` at the end of the cutscene so that an accidental (or deliberate) map reload doesn't cut off the end.
-- Multi-segment cutscenes: since you can reset the map at any point, long cutscenes punctuated by periods of player control may need to use a different save flag for each piece, and then the map's [[on_load]] (or whatever) may need to check for each piece and make the correct changes (according to which parts of the cutscene have happened).
+- Set a "saw the cutscene" [[save flags|save flag]] to `true` at the end of the cutscene so that an accidental (or deliberate) map reload doesn't cut off the end.
+- Multi-segment cutscenes: since you can [[map loads|reset the map]] at any point, long cutscenes punctuated by periods of player control may need to use a different save flag for each piece, and then the map's [[on_load]] (or whatever) may need to check for each piece and make the correct changes (according to which parts of the cutscene have happened).
 	- We actually did this for the TUESDAY cutscene in BMG2020. Otherwise, the player would have had to start the (long) cutscene over from scratch if they reset the map partway through — and since the "deja vu" book was in that room, there was a good chance of that.
 ### Credits Sequence
 
