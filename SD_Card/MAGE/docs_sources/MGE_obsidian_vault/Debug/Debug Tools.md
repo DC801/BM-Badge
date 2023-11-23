@@ -9,5 +9,5 @@ There are several debug modes available to a game while it's running:
 A few tools for the web:
 
 - [[MGE encoder console]] — output printed by the [[web encoder]] or the [[CLI encoder]]
-- [[Inspecting with the Web Encoder]] — inspect via JavaScript console the WIP data the [[web encoder]] is collecting and processing
+- [[Inspecting with the web encoder]] — inspect via JavaScript console the WIP data the [[web encoder]] is collecting and processing
 - [[Kaitai]] — a binary data analysis tool (free)

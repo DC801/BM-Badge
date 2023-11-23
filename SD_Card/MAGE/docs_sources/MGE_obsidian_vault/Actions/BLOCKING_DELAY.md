@@ -9,7 +9,7 @@ As this might make the game appear broken, you should probably use a [[NON_BLOCK
 ```json
 {
   "action": "BLOCKING_DELAY",
-  "duration": "1000ms"
+  "duration": 1000
 }
 ```
 

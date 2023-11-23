@@ -7,7 +7,7 @@
 ```json
 {
   "action": "PAN_CAMERA_ALONG_GEOMETRY",
-  "duration": "1000ms",
+  "duration": 1000,
   "geometry": "vector object name"
 }
 ```

@@ -7,7 +7,7 @@ Moves the [[entities|entity]] in a straight line from its current position to th
 ```json
 {
   "action": "WALK_ENTITY_TO_GEOMETRY",
-  "duration": "1000ms",
+  "duration": 1000,
   "entity": "Entity Name",
   "geometry": "vector object name"
 }

@@ -7,7 +7,7 @@ Pans the camera to the first vertex of a [[vector objects|geometry object]].
 ```json
 {
   "action": "PAN_CAMERA_TO_GEOMETRY",
-  "duration": "1000ms",
+  "duration": 1000,
   "geometry": "vector object name"
 }
 ```
