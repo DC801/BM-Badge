@@ -4,12 +4,14 @@
 
 ### Inline comment
 
-```mgs
-testScript {
-  wait 1000ms;
-  wait 1000ms; // inline comment
-}
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="script">testScript</span> <span class="bracket">{</span>
+    <span class="verb">wait</span> <span class="number">1000ms</span><span class="terminator">;</span>
+    <span class="verb">wait</span> <span class="number">1000ms</span><span class="terminator">;</span> <span class="comment">// inline comment</span>
+  <span class="bracket">}</span>
+
+</pre>
 
 This is the only time that line breaks are syntactic in Natlang. Inline comments start with `//` and end either with a line break or the end of the document.
 
@@ -17,12 +19,14 @@ Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [[Comments (JSO
 
 ### Block comment
 
-```mgs
-/*
-Block comment:
-Everything inside is a comment!
-The lexer ignores it all! WHEEE
-*/
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="comment">/*
+  Block comment:
+  Everything inside is a comment!
+  The lexer ignores it all! WHEEE
+  */</span>
+
+</pre>
 
 Anything between a `/*` and a `*/` is part of the block comment, allowing you to put line breaks and/or extensive text inside a comment.

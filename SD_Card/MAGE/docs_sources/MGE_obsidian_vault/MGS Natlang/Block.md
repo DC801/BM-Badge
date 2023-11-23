@@ -31,4 +31,3 @@ Indented entries can only be used within the parent's block body. Unindented ent
 	- *([[Labels]])*
 
 ([[Macros]] are not included in the list above.)
-
