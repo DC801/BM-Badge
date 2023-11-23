@@ -338,7 +338,7 @@ Within Tiled:
 
 ### Entity JSON Files
 
-For [character entities](#character-entity-entity_type), all tiles within an entity tileset must have the "Type" property set to its `entity_type` name. You can find the "Type" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
+For [character entities](#character-entity-entity_type), all tiles within an entity tileset must have the "Class" (previously this was called "Type") property set to its `entity_type` name. You can find the "Class" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
 
 > You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` name at all. See the [Three Entity Types](#three-entity-types) section for more information.
 
@@ -470,6 +470,7 @@ Within Tiled:
 	- Set the correct destination folder — in this case, `maps/`. (Remember that Tiled will default to the file path of the last file currently open. You don't want to move this file later!)
 
 ## Map Layers
+
 You will be using the Tileset view a lot for this part, which you can make visible (if invisible) via "View > View and Toolbars > Tileset."
 
 For MGE maps, you'll be using tile layers and object layers alone:

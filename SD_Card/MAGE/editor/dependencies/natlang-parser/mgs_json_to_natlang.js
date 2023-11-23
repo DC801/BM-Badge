@@ -81,7 +81,9 @@ mgs.actionToNatlang = function (origJSON) {
 		if (log) {console.log("This action has several dictionary entries and filtering failed to sufficiently distinguish them. Assuming synonyms...."); }
 	}
 	// Only 1 action dictionary entry remains. (Or, if not, they are hopefully synonyms, and we can just use the first one, which is presumably the "default")
-	var wordArray = patternChoices[0].pattern.split(' ');
+	var wordArray = patternChoices[0].pattern
+		.replace(/<[^<>]+>($|\s)/g,'$1')
+		.split(' ');
 	var finalWords = [];
 	wordArray.forEach(function (word) {
 		if (word[0] === "?") {
