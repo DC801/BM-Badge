@@ -41,8 +41,12 @@ The [[Conditional Gotos|condition]] portion of this action can be used inside an
     <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span> <span class="operator">is</span> <span class="language-constant">currently</span> <span class="language-constant">pressed</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
+  <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span> <span class="operator">is</span> <span class="language-constant">currently</span> <span class="language-constant">pressed</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span> <span class="operator">is</span> <span class="operator">not</span> <span class="language-constant">currently</span> <span class="language-constant">pressed</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
+  <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span> <span class="operator">is</span> <span class="operator">not</span> <span class="language-constant">currently</span> <span class="language-constant">pressed</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
 
 </pre>
 
@@ -53,16 +57,24 @@ if button $button_id:bareword is currently pressed
     then goto (script) $success_script:string (;)
 	// built-in value: expected_bool = true
 
-if button $button_id:bareword is not currently pressed
-    then goto (script) $success_script:string (;)
-	// built-in value: expected_bool = false
-
 if button $button_id:bareword is currently pressed
     then goto index $jump_index:number (;)
 	// built-in value: expected_bool = true
 
+if button $button_id:bareword is currently pressed
+    then goto label $jump_index:bareword (;)
+	// built-in value: expected_bool = true
+
+if button $button_id:bareword is not currently pressed
+    then goto (script) $success_script:string (;)
+	// built-in value: expected_bool = false
+
 if button $button_id:bareword is not currently pressed
     then goto index $jump_index:number (;)
+	// built-in value: expected_bool = false
+
+if button $button_id:bareword is not currently pressed
+    then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
 

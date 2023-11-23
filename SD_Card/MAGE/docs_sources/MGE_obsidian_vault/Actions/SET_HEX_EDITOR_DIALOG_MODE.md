@@ -27,9 +27,9 @@ NOTE: This action has been disabled in the MGE to prevent accidental soft locks.
 ### Dictionary entries:
 
 ```
-turn hex dialog mode $bool_value:boolean (;)
-
 turn $bool_value:boolean hex dialog mode (;)
+
+turn hex dialog mode $bool_value:boolean (;)
 ```
 
 ---

@@ -25,9 +25,9 @@ This action enables or disables player access to to the [[hex editor]]. This is 
 ### Dictionary entries:
 
 ```
-turn hex control $bool_value:boolean (;)
-
 turn $bool_value:boolean hex control (;)
+
+turn hex control $bool_value:boolean (;)
 ```
 
 ---

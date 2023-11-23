@@ -49,53 +49,79 @@ The [[Conditional Gotos|condition]] portion of this action can be used inside an
     <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="string">otherVar</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span>
+  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="string">otherVar</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span>
   <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator"><</span> <span class="string">otherVar</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
+  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator"><</span> <span class="string">otherVar</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="string">otherVar</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
+  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="string">otherVar</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
   <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="operator"><</span> <span class="string">otherVar</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
+  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="operator"><</span> <span class="string">otherVar</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
 
 </pre>
 
 ### Dictionary entries:
 
 ```
-if variable $variable:string is $source:string
-    then goto (script) $success_script:string
-	// built-in value: expected_bool = true
-	// built-in value: comparison = ==
-
 if variable $variable:string is $comparison:operator $source:string
     then goto (script) $success_script:string (;)
 	// built-in value: expected_bool = true
 
-if variable $variable:string is not $source:string
-    then goto (script) $success_script:string (;)
-	// built-in value: expected_bool = false
-	// built-in value: comparison = ==
+if variable $variable:string is $comparison:operator $source:string
+    then goto index $jump_index:number (;)
+	// built-in value: expected_bool = true
 
-if variable $variable:string is not $comparison:operator $source:string
-    then goto (script) $success_script:string (;)
-	// built-in value: expected_bool = false
+if variable $variable:string is $comparison:operator $source:string
+    then goto label $jump_index:bareword (;)
+	// built-in value: expected_bool = true
+
+if variable $variable:string is $source:string
+    then goto (script) $success_script:string
+	// built-in value: expected_bool = true
+	// built-in value: comparison = ==
 
 if variable $variable:string is $source:string
     then goto index $jump_index:number
 	// built-in value: expected_bool = true
 	// built-in value: comparison = ==
 
-if variable $variable:string is $comparison:operator $source:string
-    then goto index $jump_index:number (;)
+if variable $variable:string is $source:string
+    then goto label $jump_index:bareword
 	// built-in value: expected_bool = true
+	// built-in value: comparison = ==
+
+if variable $variable:string is not $comparison:operator $source:string
+    then goto (script) $success_script:string (;)
+	// built-in value: expected_bool = false
+
+if variable $variable:string is not $comparison:operator $source:string
+    then goto index $jump_index:number (;)
+	// built-in value: expected_bool = false
+
+if variable $variable:string is not $comparison:operator $source:string
+    then goto label $jump_index:bareword (;)
+	// built-in value: expected_bool = false
+
+if variable $variable:string is not $source:string
+    then goto (script) $success_script:string (;)
+	// built-in value: expected_bool = false
+	// built-in value: comparison = ==
 
 if variable $variable:string is not $source:string
     then goto index $jump_index:number (;)
 	// built-in value: expected_bool = false
 	// built-in value: comparison = ==
 
-if variable $variable:string is not $comparison:operator $source:string
-    then goto index $jump_index:number (;)
+if variable $variable:string is not $source:string
+    then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
+	// built-in value: comparison = ==
 ```
 
 ---

@@ -23,8 +23,8 @@ This data used to reside (in part) in [[scenario.json]], but was moved to this f
 
 - `path` — where the map JSON file is located and what it's called
 - [[on_load]] — the script that plays when the map is first loaded; best used for checking [[save flags]] and restoring state that is meant to be permanently changed
-- [[on_look]] — the script that plays when you run the `look` [[command]] in the [[terminal]] without any arguments
-	- note: you can override this script if you [[command|register]] a `look` command manually
+- [[on_look]] — the script that plays when you run the `look` [[commands|command]] in the [[terminal]] without any arguments
+	- note: you can override this script if you [[REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT|register]] a `look` command manually
 - [[on_tick]] — the script that plays every game tick; best used for door triggers
 - `directions` — the scripts that run when the command `go` is run with the named argument, e.g. `go north`
 	- these directions will be listed after a maps `on_look` script is triggered (e.g. `exits are...`)

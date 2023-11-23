@@ -27,9 +27,9 @@ This is set to `on` (`true`) by default.
 ### Dictionary entries:
 
 ```
-turn player control $bool_value:boolean (;)
-
 turn $bool_value:boolean player control (;)
+
+turn player control $bool_value:boolean (;)
 ```
 
 ---

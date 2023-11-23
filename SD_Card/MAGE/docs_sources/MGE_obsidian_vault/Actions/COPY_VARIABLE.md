@@ -30,6 +30,9 @@ Copies the value of an [[entities|entity]] [[Entity Properties|property]] into a
 ### Dictionary entries:
 
 ```
+copy entity $entity:string $field:bareword from variable $variable:string (;)
+	// built-in value: inbound = false
+
 copy entity $entity:string $field:bareword into variable $variable:string (;)
 	// built-in value: inbound = true
 
@@ -37,9 +40,6 @@ copy variable $variable:string from entity $entity:string $field:bareword (;)
 	// built-in value: inbound = true
 
 copy variable $variable:string into entity $entity:string $field:bareword (;)
-	// built-in value: inbound = false
-
-copy entity $entity:string $field:bareword from variable $variable:string (;)
 	// built-in value: inbound = false
 ```
 

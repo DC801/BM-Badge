@@ -27,9 +27,9 @@ This is set to `on` (`true`) by default.
 ### Dictionary entries:
 
 ```
-turn serial control $bool_value:boolean (;)
-
 turn $bool_value:boolean serial control (;)
+
+turn serial control $bool_value:boolean (;)
 ```
 
 ---

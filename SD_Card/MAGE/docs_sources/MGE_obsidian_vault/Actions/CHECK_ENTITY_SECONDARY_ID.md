@@ -45,8 +45,12 @@ The [[Conditional Gotos|condition]] portion of this action can be used inside an
     <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">secondary_id</span> <span class="operator">is</span> <span class="number">32</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">secondary_id</span> <span class="operator">is</span> <span class="number">32</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
   <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">secondary_id</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
     <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">secondary_id</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
 
 </pre>
 
@@ -57,16 +61,24 @@ if entity $entity:string secondary_id is $expected_u2:number
     then goto (script) $success_script:string (;)
 	// built-in value: expected_bool = true
 
-if entity $entity:string secondary_id is not $expected_u2:number
-    then goto (script) $success_script:string (;)
-	// built-in value: expected_bool = false
-
 if entity $entity:string secondary_id is $expected_u2:number
     then goto index $jump_index:number (;)
 	// built-in value: expected_bool = true
 
+if entity $entity:string secondary_id is $expected_u2:number
+    then goto label $jump_index:bareword (;)
+	// built-in value: expected_bool = true
+
+if entity $entity:string secondary_id is not $expected_u2:number
+    then goto (script) $success_script:string (;)
+	// built-in value: expected_bool = false
+
 if entity $entity:string secondary_id is not $expected_u2:number
     then goto index $jump_index:number (;)
+	// built-in value: expected_bool = false
+
+if entity $entity:string secondary_id is not $expected_u2:number
+    then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
 

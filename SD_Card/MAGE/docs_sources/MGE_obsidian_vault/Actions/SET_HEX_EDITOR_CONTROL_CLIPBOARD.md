@@ -25,9 +25,9 @@ This action enables or disables the clipboard and copy functionality within the 
 ### Dictionary entries:
 
 ```
-turn hex clipboard $bool_value:boolean (;)
-
 turn $bool_value:boolean hex clipboard (;)
+
+turn hex clipboard $bool_value:boolean (;)
 ```
 
 ---
