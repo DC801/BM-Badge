@@ -22,8 +22,8 @@ See [[LED IDs|LED IDs]] for a list of valid `lights` values.
 
 <pre class="HyperMD-codeblock mgs">
 
-  <span class="verb">turn</span> <span class="sigil">light</span> <span class="language-constant">MEM3</span> <span class="language-constant">on</span><span class="terminator">;</span>
   <span class="verb">turn</span> <span class="language-constant">on</span> <span class="sigil">light</span> <span class="language-constant">MEM3</span><span class="terminator">;</span>
+  <span class="verb">turn</span> <span class="sigil">light</span> <span class="language-constant">MEM3</span> <span class="language-constant">on</span><span class="terminator">;</span>
 
 </pre>
 

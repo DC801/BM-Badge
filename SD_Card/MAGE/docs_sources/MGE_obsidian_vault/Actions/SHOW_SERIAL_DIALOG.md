@@ -22,8 +22,8 @@ This action is also available as a [[combination block]]: [[show serial dialog b
 
 <pre class="HyperMD-codeblock mgs">
 
-  <span class="verb">show</span> <span class="sigil">serial</span> <span class="sigil">dialog</span> <span class="string">serialDialogName</span><span class="terminator">;</span>
   <span class="verb">concat</span> <span class="target">serial</span> <span class="target">dialog</span> <span class="string">serialDialogName</span><span class="terminator">;</span>
+  <span class="verb">show</span> <span class="sigil">serial</span> <span class="sigil">dialog</span> <span class="string">serialDialogName</span><span class="terminator">;</span>
 
 </pre>
 
