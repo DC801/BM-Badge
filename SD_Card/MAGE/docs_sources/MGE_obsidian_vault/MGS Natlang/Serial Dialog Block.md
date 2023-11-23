@@ -2,9 +2,11 @@
 
 To define an [[MGS Natlang]] [[serial dialogs|serial dialog]], start a new [[Block|block]] at the root level:
 
-```mgs
-serial dialog $string {}
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="verb">show</span> <span class="identifier">serial dialog</span> <span class="variable-constant">$string</span> <span class="bracket">{</span><span class="bracket">}</span>
+
+</pre>
 
 Similar to [[dialog block|dialog blocks]], serial dialog blocks allow you to name and populate a serial dialog. Serial dialogs are shown in the serial console instead of the badge's physical screen.
 
@@ -14,14 +16,16 @@ Inside the curly braces may be any number of [[Serial Dialogs (MGS)|serial dialo
 
 The pair to the above usage is the action [[SHOW_SERIAL_DIALOG]]:
 
-```mgs
-serial dialog bootTalk {
-  "Bootup sequence completed!"
-}
-exampleScript {
-  show serial dialog bootTalk;
-}
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="identifier">serial dialog</span> <span class="string">bootTalk</span> <span class="bracket">{</span>
+    <span class="string">"Bootup sequence completed!"</span>
+  <span class="bracket">}</span>
+    <span class="script">exampleScript</span> <span class="bracket">{</span>
+    <span class="verb">show</span> <span class="identifier">serial dialog</span> <span class="string">bootTalk</span><span class="terminator">;</span>
+  <span class="bracket">}</span>
+
+</pre>
 
 This usage is comparable to what is done with raw JSON.
 
@@ -29,10 +33,12 @@ This usage is comparable to what is done with raw JSON.
 
 However, to [[Combination Block|combine]] these two usages into one, you'll want to use a [[show serial dialog block]]:
 
-```mgs
-exampleScript {
-  show serial dialog {
-    "Bootup sequence completed!"
-  }
-}
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="script">exampleScript</span> <span class="bracket">{</span>
+    <span class="verb">show</span> <span class="identifier">serial dialog</span> <span class="bracket">{</span>
+      <span class="string">"Bootup sequence completed!"</span>
+    <span class="bracket">}</span>
+  <span class="bracket">}</span>
+
+</pre>

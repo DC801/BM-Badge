@@ -2,11 +2,13 @@
 
 A [[Combination Block|combination]] of the action [[SHOW_SERIAL_DIALOG]] and a [[serial dialog block]]:
 
-```
-show serial dialog $string {}
-// or
-show serial dialog {}
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="verb">show</span> <span class="identifier">serial dialog</span> <span class="variable-constant">$string</span> <span class="bracket">{</span><span class="bracket">}</span>
+  <span class="comment">// or</span>
+  <span class="verb">show</span> <span class="identifier">serial dialog</span> <span class="bracket">{</span><span class="bracket">}</span>
+
+</pre>
 
 Inside the curly braces may be any number of [[Serial Dialogs (MGS)|serial dialog]].
 
@@ -14,10 +16,12 @@ This block can be defined with or without a serial dialog name (whatever is give
 
 Both patterns are valid anywhere [[actions]] are allowed (i.e. inside [[script block|script blocks]]).
 
-```mgs
-exampleScript {
- show serial dialog {
-  "Bootup sequence completed!"
- }
-}
-```
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="script">exampleScript</span> <span class="bracket">{</span>
+    <span class="verb">show</span> <span class="identifier">serial dialog</span> <span class="bracket">{</span>
+      <span class="string">"Bootup sequence completed!"</span>
+    <span class="bracket">}</span>
+  <span class="bracket">}</span>
+
+</pre>
