@@ -36,12 +36,12 @@ Map variant: Script slots for these are [[on_load]], [[on_tick]], and [[commands
 pause entity $entity:string $script_slot:bareword (;)
 	// built-in value: bool_value = true
 
-unpause entity $entity:string $script_slot:bareword (;)
-	// built-in value: bool_value = false
-
 pause map $script_slot:bareword (;)
 	// built-in value: bool_value = true
 	// built-in value: entity = %MAP%
+
+unpause entity $entity:string $script_slot:bareword (;)
+	// built-in value: bool_value = false
 
 unpause map $script_slot:bareword (;)
 	// built-in value: bool_value = false

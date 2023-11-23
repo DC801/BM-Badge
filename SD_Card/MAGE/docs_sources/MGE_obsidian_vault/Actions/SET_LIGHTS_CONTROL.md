@@ -27,9 +27,9 @@ Note that gaining control of the lights does not clear the light state by defaul
 ### Dictionary entries:
 
 ```
-turn lights control $enabled:boolean (;)
-
 turn $enabled:boolean lights control (;)
+
+turn lights control $enabled:boolean (;)
 ```
 
 ---

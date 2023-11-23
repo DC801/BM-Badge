@@ -30,9 +30,9 @@ See [[LED IDs|LED IDs]] for a list of valid `lights` values.
 ### Dictionary entries:
 
 ```
-turn light $lights:string $enabled:boolean (;)
-
 turn $enabled:boolean light $lights:string (;)
+
+turn light $lights:string $enabled:boolean (;)
 ```
 
 ---

@@ -8,80 +8,80 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "path:Scripts",
+      "query": "path:Actions  ",
       "color": {
         "a": 1,
-        "rgb": 8450573
+        "rgb": 15609883
       }
     },
     {
-      "query": "path:Natlang",
+      "query": "path:MGS",
       "color": {
         "a": 1,
-        "rgb": 16711680
+        "rgb": 16751892
       }
     },
     {
-      "query": "path:Entities",
+      "query": "path:Dialogs  ",
       "color": {
         "a": 1,
-        "rgb": 16622861
+        "rgb": 5495817
       }
     },
     {
-      "query": "path:Dialogs",
+      "query": "path:Scripts  ",
       "color": {
         "a": 1,
-        "rgb": 15754973
+        "rgb": 15938038
       }
     },
     {
-      "query": "path:Techniques",
+      "query": "path:Maps",
       "color": {
         "a": 1,
-        "rgb": 0
-      }
-    },
-    {
-      "query": "path:\"Getting Started\"  ",
-      "color": {
-        "a": 1,
-        "rgb": 3949020
-      }
-    },
-    {
-      "query": "path:Finishing  ",
-      "color": {
-        "a": 1,
-        "rgb": 10001132
-      }
-    },
-    {
-      "query": "path:Maps  ",
-      "color": {
-        "a": 1,
-        "rgb": 1236962
+        "rgb": 1334271
       }
     },
     {
       "query": "path:Structure  ",
       "color": {
         "a": 1,
-        "rgb": 12251901
+        "rgb": 11798514
       }
     },
     {
-      "query": "path:Tilesets  ",
+      "query": "path:\"Getting Started\"  ",
       "color": {
         "a": 1,
-        "rgb": 16709152
+        "rgb": 16487396
       }
     },
     {
-      "query": "path:Actions  ",
+      "query": "path:Techniques  ",
       "color": {
         "a": 1,
-        "rgb": 3378194
+        "rgb": 16695318
+      }
+    },
+    {
+      "query": "path:Entities  ",
+      "color": {
+        "a": 1,
+        "rgb": 3785726
+      }
+    },
+    {
+      "query": "path:Debug  ",
+      "color": {
+        "a": 1,
+        "rgb": 8882055
+      }
+    },
+    {
+      "query": "path:Encoder",
+      "color": {
+        "a": 1,
+        "rgb": 8882055
       }
     }
   ],
@@ -95,6 +95,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 1.2356320919177681,
+  "scale": 0.7079534063511598,
   "close": true
 }

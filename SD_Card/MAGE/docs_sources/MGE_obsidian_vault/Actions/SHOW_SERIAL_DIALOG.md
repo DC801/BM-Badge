@@ -30,11 +30,11 @@ This action is also available as a [[combination block]]: [[show serial dialog b
 ### Dictionary entries:
 
 ```
-show serial dialog $serial_dialog:string (;)
-	// built-in value: disable_newline = false
-
 concat serial dialog $serial_dialog:string (;)
 	// built-in value: disable_newline = true
+
+show serial dialog $serial_dialog:string (;)
+	// built-in value: disable_newline = false
 ```
 
 ---

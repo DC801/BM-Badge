@@ -410,19 +410,19 @@ var actionText = {
 	"CHECK_ENTITY_INTERACT_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s [[on_interact]] [[script slot|script]] (by the [[scripts|script]]'s name).",
+			"Checks an [[entities|entity]]'s [[on_interact]] [[script slots|script]] (by the [[scripts|script]]'s name).",
 		]
 	},
 	"CHECK_ENTITY_TICK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s [[on_tick]] [[script slot|script]] (by the [[scripts|script]]'s name).",
+			"Checks an [[entities|entity]]'s [[on_tick]] [[script slots|script]] (by the [[scripts|script]]'s name).",
 		]
 	},
 	"CHECK_ENTITY_LOOK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [[entities|entity]]'s [[on_look]] [[script slot|script]] (by the [[scripts|script]]'s name).",
+			"Checks an [[entities|entity]]'s [[on_look]] [[script slots|script]] (by the [[scripts|script]]'s name).",
 		]
 	},
 	"CHECK_ENTITY_TYPE": {
@@ -513,7 +513,7 @@ var actionText = {
 	"SET_ENTITY_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [[entities|entity]]'s [[character entity|entity_type]]. (See: [[Entity Type]], [[Entity Properties]])"
+			"Sets an [[entities|entity]]'s [[character entity|entity_type]]. (See: [[Entity Properties]])"
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID": {
@@ -958,7 +958,7 @@ var makeObsidianEntry = function (actionName) {
 			return item.action === actionName;
 		});
 	var printDict = dict.map(makePrintableEntry);
-	var printDictionary = [ '```', printDict.join('\n\n'), '```']
+	var printDictionary = [ '```', printDict.sort().join('\n\n'), '```']
 		.join('\n');
 
 	var colorReports = dict.map(makeColorReport);

@@ -1293,7 +1293,7 @@ mgs.actionDictionary
 			"then<control> goto<control> ?script<s> $success_script:string<f>",
 			"then<control> goto<control> label<s> $jump_index:bareword<str>"
 		);
-		stringVariant.omitFromDocs = true,
+		stringVariant.omitFromJSON = true,
 		mgs.actionDictionary.push(numberVariant);
 		mgs.actionDictionary.push(stringVariant);
 	})
