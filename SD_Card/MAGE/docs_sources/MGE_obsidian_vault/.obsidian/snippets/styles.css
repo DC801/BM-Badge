@@ -22,10 +22,12 @@
 .theme-dark .dialog-identifier { color: #4EC9B0; }
 .theme-dark .sigil { color: #9CDCFE; }
 .theme-dark .cm-property { color: #9CDCFE; }
+.theme-dark .property { color: #9CDCFE; }
 .theme-dark .target { color: #9CDCFE; }
 .theme-dark .identifier { color: #9CDCFE; }
 .theme-dark .variable-constant { color: #4FC1FF; }
 .theme-dark .language-constant { color: #569CD6; }
+.theme-dark .boolean { color: #569CD6; }
 .theme-dark .cm-atom { color: #569CD6;  }
 .theme-dark .verb { color: #569CD6;  }
 .theme-dark .keyword { color: #569CD6;  }
@@ -55,10 +57,12 @@
 .theme-light .dialog-identifier { color: #800000; }
 .theme-light .sigil { color: #001080; }
 .theme-light .cm-property { color: #001080; }
+.theme-light .property { color: #001080; }
 .theme-light .target { color: #001080; }
 .theme-light .identifier { color: #001080; }
 .theme-light .variable-constant { color: #0070C1; }
 .theme-light .language-constant { color: #0000ff;  }
+.theme-light .boolean { color: #0000ff;  }
 .theme-light .cm-atom { color: #0000ff;  }
 .theme-light .verb { color: #0000ff;  }
 .theme-light .keyword { color: #0000ff;  }

@@ -1,6 +1,6 @@
 # Actions
 
-Actions are a basic element of the DC801 Mage Game Engine (MGE) along with [[entities]].
+**Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [[entities]].
 
 They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [[scripts|script]]. They each have predefined arguments, and are indicated with "SCREAMING_SNAKE_CASE." In the encoded game, they are 8 bytes a piece.
 
