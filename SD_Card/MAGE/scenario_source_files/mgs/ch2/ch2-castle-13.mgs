@@ -104,7 +104,7 @@ ch2-touch-goldfish-no {
 interact-ch2-sebastian {
 	copy face-player;
 	show dialog {
-		SELF "(TODO)"
+		SELF "TODO FIX THIS\nUnder the sea...\nI mean uhh...\nProgram in C..."
 	}
 }
 
