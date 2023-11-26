@@ -1,6 +1,6 @@
 # SET_PLAYER_CONTROL
 
-When player control is `on`, the player [entity](entities) can move around as normal. When `off`, the player cannot move, hack, or [interact](scripts/on_interact) with anything.
+When player control is `on`, the player [entity](../entities) can move around as normal. When `off`, the player cannot move, hack, or [interact](../scripts/on_interact) with anything.
 
 This is set to `on` (`true`) by default.
 
@@ -34,4 +34,4 @@ turn player control $bool_value:boolean (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

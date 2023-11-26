@@ -1,8 +1,8 @@
 # MUTATE_VARIABLES
 
-Manipulate the value of a specific [variable](scripts/integer_variables) by using the value of another variable.
+Manipulate the value of a specific [variable](../scripts/integer_variables) by using the value of another variable.
 
-See [operations](structure/operations).
+See [operations](../structure/operations).
 
 ## Example JSON
 
@@ -33,4 +33,4 @@ mutate $variable:string $operation:operator $source:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

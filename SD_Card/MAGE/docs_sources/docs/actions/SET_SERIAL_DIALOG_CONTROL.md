@@ -34,4 +34,4 @@ turn serial control $bool_value:boolean (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

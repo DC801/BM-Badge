@@ -1,6 +1,6 @@
 # CHECK_ENTITY_DIRECTION
 
-Checks whether an [entity](entities) is facing one of the four cardinal directions: `north`, `south`, `east`, or `west`.
+Checks whether an [entity](../entities) is facing one of the four cardinal directions: `north`, `south`, `east`, or `west`.
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks whether an [entity](entities) is facing one of the four cardinal directio
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string direction is not $direction:bareword
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

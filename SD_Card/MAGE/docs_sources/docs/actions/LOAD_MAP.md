@@ -1,10 +1,10 @@
 # LOAD_MAP
 
-Except for the player's name, all [entity properties](entities/entity_properties) are reset to their original values when a new [map is loaded](maps/map_loads).
+Except for the player's name, all [entity properties](../entities/entity_properties) are reset to their original values when a new [map is loaded](../maps/map_loads).
 
 If this action is told to load the current map, the current map will be reset. This behavior is equivalent to pressing `XOR` + `MEM3`.
 
-For most normal [door](techniques/doors) behavior, you will probably want to [set the warp state](SET_WARP_STATE) before using the this action.
+For most normal [door](../techniques/doors) behavior, you will probably want to [set the warp state](../SET_WARP_STATE) before using the this action.
 
 ## Example JSON
 
@@ -33,4 +33,4 @@ load map $map:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

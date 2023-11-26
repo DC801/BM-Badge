@@ -1,6 +1,6 @@
 # Button IDs
 
-For [actions](actions) that check the button state.
+For [actions](../actions) that check the button state.
 
 NOTE: We found that the joystick clicks were aggressive on the hardware, and would trigger at what felt like arbitrary times. While the engine is capable of detecting these clicks, we recommend not using them.
 

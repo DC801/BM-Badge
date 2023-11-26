@@ -1,10 +1,10 @@
 # LOOP_ENTITY_ALONG_GEOMETRY
 
-Moves the [entity](entities) along the [geometry object](maps/vector_objects) object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
+Moves the [entity](../entities) along the [geometry object](../maps/vector_objects) object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
 
 This action will loop forever, and cannot terminate on its own; no other action given below this one inside a script will execute after this action begins.
 
-NOTE: Unless you want the entity to teleport to the geometry's origin point, you should probably use [WALK_ENTITY_TO_GEOMETRY](actions/WALK_ENTITY_TO_GEOMETRY) first.
+NOTE: Unless you want the entity to teleport to the geometry's origin point, you should probably use [WALK_ENTITY_TO_GEOMETRY](../actions/WALK_ENTITY_TO_GEOMETRY) first.
 
 ## Example JSON
 
@@ -35,4 +35,4 @@ loop entity $entity:string along geometry $geometry:string over $duration:durati
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

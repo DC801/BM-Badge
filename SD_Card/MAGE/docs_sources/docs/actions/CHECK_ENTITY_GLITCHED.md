@@ -1,6 +1,6 @@
 # CHECK_ENTITY_GLITCHED
 
-Checks whether an [entity](entities) currently has it's "glitched" render flag set.
+Checks whether an [entity](../entities) currently has it's "glitched" render flag set.
 
 ## Example JSON
 
@@ -21,7 +21,7 @@ Checks whether an [entity](entities) currently has it's "glitched" render flag s
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -78,4 +78,4 @@ if entity $entity:string is not glitched
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

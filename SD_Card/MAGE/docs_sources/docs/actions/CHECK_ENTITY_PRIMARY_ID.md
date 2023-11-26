@@ -1,8 +1,8 @@
 # CHECK_ENTITY_PRIMARY_ID
 
-Checks whether an [entity](entities) has the given [primary_id](entity types).
+Checks whether an [entity](../entities) has the given [primary_id](../entity types).
 
-[CHECK_ENTITY_TYPE](actions/CHECK_ENTITY_TYPE) is recommended instead.
+[CHECK_ENTITY_TYPE](../actions/CHECK_ENTITY_TYPE) is recommended instead.
 
 ## Example JSON
 
@@ -25,7 +25,7 @@ Checks whether an [entity](entities) has the given [primary_id](entity types).
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -82,4 +82,4 @@ if entity $entity:string primary_id is not $expected_u2:number
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

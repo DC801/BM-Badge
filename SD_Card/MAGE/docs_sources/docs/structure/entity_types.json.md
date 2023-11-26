@@ -1,10 +1,10 @@
 # `entity_types.json`
 
-This JSON file defines each `entity_type` name for each [character entity](entities/character_entity), plus:
+This JSON file defines each `entity_type` name for each [character entity](../entities/character_entity), plus:
 
 - `tileset`: their tileset JSON file path
 - `portrait`: the name of their portrait image, if not the same as their `entity_type` name (optional)
-- `animations`: their [animation assignments](entity_management_system)
+- `animations`: their [animation assignments](../entity_management_system)
 
 As an example (keeping in mind that the animation arrays have been closed so the overall structure is more clear):
 
@@ -33,7 +33,7 @@ As an example (keeping in mind that the animation arrays have been closed so the
 
 ### Animations
 
-This part is much easier to do using the [web encoder](encoder/web_encoder), but if you want to make changes to an [entity](entities)'s [animations](tilesets/animations) by hand, the structure is as follows:
+This part is much easier to do using the [web encoder](../encoder/web_encoder), but if you want to make changes to an [entity](../entities)'s [animations](../tilesets/animations) by hand, the structure is as follows:
 
 ```json
 "idle": [
@@ -69,4 +69,4 @@ The order of the object literals in the animation is fixed:
 - South
 - West
 
-Each character entity should at least have an idle, walk, and action animation. (See: [Animations](tilesets/animations))
+Each character entity should at least have an idle, walk, and action animation. (See: [Animations](../tilesets/animations))

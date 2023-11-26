@@ -1,6 +1,6 @@
 # SET_ENTITY_GLITCHED
 
-Set the glitched render flag on an [entity](entities).
+Set the glitched render flag on an [entity](../entities).
 
 ## Example JSON
 
@@ -35,4 +35,4 @@ make entity $entity:string unglitched (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

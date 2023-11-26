@@ -1,8 +1,8 @@
 # SET_ENTITY_PRIMARY_ID
 
-Sets an [entity](entities)'s [primary_id](entities/entity_properties).
+Sets an [entity](../entities)'s [primary_id](../entities/entity_properties).
 
-You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](actions/SET_ENTITY_TYPE).
+You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](../actions/SET_ENTITY_TYPE).
 
 ## Example JSON
 
@@ -32,4 +32,4 @@ set entity $entity:string primary_id (to) $u2_value:number (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

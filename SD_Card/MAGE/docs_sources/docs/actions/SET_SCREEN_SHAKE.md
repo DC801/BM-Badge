@@ -31,4 +31,4 @@ shake camera $frequency:duration $amplitude:distance for $duration:duration (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

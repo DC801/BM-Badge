@@ -1,10 +1,10 @@
 # Serial Dialog Options (JSON)
 
-For the [MGS Natlang](mgs/mgs_natlang) equivalent, see [Serial Dialog Options (MGS)](mgs/serial_dialog_options_mgs).
+For the [MGS Natlang](../mgs/mgs_natlang) equivalent, see [Serial Dialog Options (MGS)](../mgs/serial_dialog_options_mgs).
 
 ## Multiple Choice
 
-In the [entry for a serial dialog](dialogs/serial_dialogs_json), you can include a second property named `options`.
+In the [entry for a serial dialog](../dialogs/serial_dialogs_json), you can include a second property named `options`.
 
 ```json
 {
@@ -28,7 +28,7 @@ In the [entry for a serial dialog](dialogs/serial_dialogs_json), you can include
 }
 ```
 
-These will appear in the [terminal](hardware/terminal) as numbered options.
+These will appear in the [terminal](../hardware/terminal) as numbered options.
 
 ```
 What's your name?
@@ -44,7 +44,7 @@ If the player fails to choose one of the provided options, the dialog will repea
 
 ## Free Response
 
-You can instead use the property `text_options` to create free response answers. At the prompt, the player can type any of the responses given to jump to the indicated script. If the player fails to type one of the choices, the next action below the [SHOW_SERIAL_DIALOG](actions/SHOW_SERIAL_DIALOG) script will execute instead, falling through.
+You can instead use the property `text_options` to create free response answers. At the prompt, the player can type any of the responses given to jump to the indicated script. If the player fails to type one of the choices, the next action below the [SHOW_SERIAL_DIALOG](../actions/SHOW_SERIAL_DIALOG) script will execute instead, falling through.
 
 ```json
 {

@@ -4,11 +4,11 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 ## Overview
 
-MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the MGE encoder, plus QOL syntax like `if`/`else` and [define-in-place dialogs](mgs/show_dialog_block).
+MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the MGE encoder, plus QOL syntax like `if`/`else` and [define-in-place dialogs](../mgs/show_dialog_block).
 
-All MGS files are turned into JSON by the [MGE encoder](encoder/mge_encoder). Unlike [JSON script files](scripts/scripts_json) and [JSON dialog files](dialogs/dialogs_json), you don't need to declare MGS files in the game's [scenario.json](structure/scenario.json); all MGS files inside [scenario_source_files](scenario_source_files) will be imported.
+All MGS files are turned into JSON by the [MGE encoder](../encoder/mge_encoder). Unlike [JSON script files](../scripts/scripts_json) and [JSON dialog files](../dialogs/dialogs_json), you don't need to declare MGS files in the game's [scenario.json](../structure/scenario.json); all MGS files inside [scenario_source_files](../scenario_source_files) will be imported.
 
-See: [MGS Natlang vs JSON](mgs/mgs_natlang_vs_json)
+See: [MGS Natlang vs JSON](../mgs/mgs_natlang_vs_json)
 
 ### Always in Progress
 
@@ -26,19 +26,19 @@ Natlang is under active development, and the grammar may be updated — sometime
 3. Some words are optional, and can be included either to increase logical clarity or omitted to decrease word density. E.g. the following two patterns are equivalent phrases:
 	- `goto script scriptName;`
 	- `goto scriptName;`
-4. Certain [MGS Natlang variables](mgs/variables_mgs) can be formatted in multiple, human-friendly ways, e.g.
+4. Certain [MGS Natlang variables](../mgs/variables_mgs) can be formatted in multiple, human-friendly ways, e.g.
 	- Duration: `1000ms` or `1s` or `1000`
 	- Quantity: `once` or `1x` or `1`
 
 ### IDE Support
 
-We have provided syntax colors for a variety of text editors an IDEs, but particularly for Visual Studio Code. See: [Syntax Colors](mgs/syntax_colors)
+We have provided syntax colors for a variety of text editors an IDEs, but particularly for Visual Studio Code. See: [Syntax Colors](../mgs/syntax_colors)
 
 A language server for Visual Studio Code is on the horizon, but will not be available soon.
 
 ## In-Depth Info
 
-- [MGS Natlang Structure](mgs/mgs_natlang_structure)
-- [Block](mgs/block)
-- [Combination Block](mgs/combination_block)
-- [Advanced MGS Natlang Syntax](mgs/advanced_mgs_natlang_syntax)
+- [MGS Natlang Structure](../mgs/mgs_natlang_structure)
+- [Block](../mgs/block)
+- [Combination Block](../mgs/combination_block)
+- [Advanced MGS Natlang Syntax](../mgs/advanced_mgs_natlang_syntax)

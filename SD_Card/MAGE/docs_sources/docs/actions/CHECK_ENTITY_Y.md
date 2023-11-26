@@ -1,6 +1,6 @@
 # CHECK_ENTITY_Y
 
-Checks an [entity](entities)'s [y](entities/entity_properties) coordinate.
+Checks an [entity](../entities)'s [y](../entities/entity_properties) coordinate.
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks an [entity](entities)'s [y](entities/entity_properties) coordinate.
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string y is not $expected_u2:number
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

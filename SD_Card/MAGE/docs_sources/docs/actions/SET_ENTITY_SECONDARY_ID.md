@@ -1,8 +1,8 @@
 # SET_ENTITY_SECONDARY_ID
 
-Sets an [entity](entities)'s [secondary_id](entities/entity_properties).
+Sets an [entity](../entities)'s [secondary_id](../entities/entity_properties).
 
-This action will not be useful unless the entity is a [tile entity](entities/tile_entity) (`primary_id_type`: `1`).
+This action will not be useful unless the entity is a [tile entity](../entities/tile_entity) (`primary_id_type`: `1`).
 
 ## Example JSON
 
@@ -32,4 +32,4 @@ set entity $entity:string secondary_id (to) $u2_value:number (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

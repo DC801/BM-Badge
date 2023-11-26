@@ -1,6 +1,6 @@
 # SET_WARP_STATE
 
-Set the [warp state string](scripts/warp_state) to a specific value.
+Set the [warp state string](../scripts/warp_state) to a specific value.
 
 ## Example JSON
 
@@ -29,4 +29,4 @@ set warp state (to) $string:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

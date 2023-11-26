@@ -1,8 +1,8 @@
 # Serial Styles
 
-Styling for [MGS Natlang](mgs/mgs_natlang) [serial dialog](mgs/serial_dialogs_mgs) [messages](mgs/serial_dialog_messages_mgs).
+Styling for [MGS Natlang](../mgs/mgs_natlang) [serial dialog](../mgs/serial_dialogs_mgs) [messages](../mgs/serial_dialog_messages_mgs).
 
-A unique feature of [serial dialog](mgs/serial_dialogs_mgs) [messages](mgs/serial_dialog_messages_mgs) and [serial options](mgs/serial_dialog_options_mgs) is styling. Styles, implemented with ANSI escape codes, are turned on and off with tags enclosed in `<` and `>`.
+A unique feature of [serial dialog](../mgs/serial_dialogs_mgs) [messages](../mgs/serial_dialog_messages_mgs) and [serial options](../mgs/serial_dialog_options_mgs) is styling. Styles, implemented with ANSI escape codes, are turned on and off with tags enclosed in `<` and `>`.
 
 (Also note that `<bell>`, though not styling, is also available. This will ring the terminal bell.)
 

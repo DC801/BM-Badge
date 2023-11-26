@@ -1,10 +1,10 @@
 # SET_SCRIPT_PAUSE
 
-Pauses or unpauses a [script](scripts). In practice, this is most useful for temporarily pausing an [entity](entities)'s [on_tick](scripts/on_tick) script during its [on_interact](scripts/on_interact) event.
+Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [on_tick](../scripts/on_tick) script during its [on_interact](../scripts/on_interact) event.
 
-Entity variant: Any entity name can be used in all the normal ways ([%PLAYER%](entities/_PLAYER_) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [on_look](scripts/on_look).
+Entity variant: Any entity name can be used in all the normal ways ([%PLAYER%](../entities/PLAYER) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [on_look](../scripts/on_look).
 
-Map variant: Script slots for these are [on_load](scripts/on_load), [on_tick](scripts/on_tick), and [on_command](hardware/commands).
+Map variant: Script slots for these are [on_load](../scripts/on_load), [on_tick](../scripts/on_tick), and [on_command](../hardware/commands).
 
 ## Example JSON
 
@@ -50,4 +50,4 @@ unpause map $script_slot:bareword (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

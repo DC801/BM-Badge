@@ -1,6 +1,6 @@
 # SET_ENTITY_PRIMARY_ID_TYPE
 
-Sets an [entity](entities)'s [primary_id_type](entities/entity_properties): either (`0`) [tile](entities/tile_entity), (`1`) [animation](entities/animation_entity), or (`2`) [character](entities/character_entity) (sometimes called `entity_type`).
+Sets an [entity](../entities)'s [primary_id_type](../entities/entity_properties): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`).
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ set entity $entity:string primary_id_type (to) $byte_value:number (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

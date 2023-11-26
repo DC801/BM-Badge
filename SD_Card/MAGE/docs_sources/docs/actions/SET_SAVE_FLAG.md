@@ -1,6 +1,6 @@
 # SET_SAVE_FLAG
 
-Set a [save flag](scripts/save_flags) to `true` or `false`.
+Set a [save flag](../scripts/save_flags) to `true` or `false`.
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ set flag $save_flag:string (to) $bool_value:boolean (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

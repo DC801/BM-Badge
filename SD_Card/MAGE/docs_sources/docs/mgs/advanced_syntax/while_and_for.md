@@ -1,8 +1,8 @@
 # While and For
 
-[Advanced MGS Natlang Syntax](mgs/advanced_mgs_natlang_syntax) for [MGS Natlang scripts](scripts/scripts_json).
+[Advanced MGS Natlang Syntax](../../mgs/advanced_mgs_natlang_syntax) for [MGS Natlang scripts](../../scripts/scripts_json).
 
-`while` and `for` are looping syntax constructions that expand to "[goto](GOTO_ACTION_INDEX) [label](mgs/advanced_syntax/labels)" actions.
+`while` and `for` are looping syntax constructions that expand to "[goto](../../GOTO_ACTION_INDEX) [label](../../mgs/advanced_syntax/labels)" actions.
 
 Special keywords:
 

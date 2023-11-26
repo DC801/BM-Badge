@@ -1,6 +1,6 @@
 # `scenario.json`
 
-This file tells the [MGE encoder](encoder/mge_encoder) which JSON files it should be encoding. It will look something like this:
+This file tells the [MGE encoder](../encoder/mge_encoder) which JSON files it should be encoding. It will look something like this:
 
 ```json
 {
@@ -34,4 +34,4 @@ Note that the entirety of the contents of `scenario.json` is enclosed in curly b
 
 ## MGS Files
 
-[MGS files](mgs/mgs_natlang) need not be declared like this. Simply put them somewhere within the `scenario_source_files` folder.
+[MGS files](../mgs/mgs_natlang) need not be declared like this. Simply put them somewhere within the `scenario_source_files` folder.

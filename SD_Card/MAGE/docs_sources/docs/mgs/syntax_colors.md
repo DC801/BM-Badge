@@ -1,6 +1,6 @@
 # Syntax Colors
 
-A syntax coloring grammar (tmLanguage) for [MGS Natlang](mgs/mgs_natlang) is in development: https://github.com/alamedyang/magegamescript-syntax-highlighting
+A syntax coloring grammar (tmLanguage) for [MGS Natlang](../mgs/mgs_natlang) is in development: https://github.com/alamedyang/magegamescript-syntax-highlighting
 
 ## Visual Studio Code
 

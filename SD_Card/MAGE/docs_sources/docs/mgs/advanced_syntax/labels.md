@@ -1,10 +1,10 @@
 # Labels
 
-Advanced [MGS Natlang](mgs/mgs_natlang) syntax (specifically for [MGS Natlang scripts](mgs/scripts_mgs)).
+Advanced [MGS Natlang](../../mgs/mgs_natlang) syntax (specifically for [MGS Natlang scripts](../../mgs/scripts_mgs)).
 
-A label is a destination for conditional (or non-conditional) jumps inside the [script](scripts) that is currently running. A label linker converts these into absolute index jumps after [COPY_SCRIPT](actions/COPY_SCRIPT) is expanded but before the JSON becomes [encoded](encoder/mge_encoder) into binary data.
+A label is a destination for conditional (or non-conditional) jumps inside the [script](../../scripts) that is currently running. A label linker converts these into absolute index jumps after [COPY_SCRIPT](../../actions/COPY_SCRIPT) is expanded but before the JSON becomes [encoded](../../encoder/mge_encoder) into binary data.
 
-The syntax is a [Bareword](mgs/variables/bareword) followed by a colon (`:`).
+The syntax is a [Bareword](../../mgs/variables/bareword) followed by a colon (`:`).
 
 ```mgs
 exampleScript {

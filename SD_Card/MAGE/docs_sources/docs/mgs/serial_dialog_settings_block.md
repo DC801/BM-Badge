@@ -1,14 +1,14 @@
 # Serial Dialog Settings Block
 
-One of the root level [blocks](mgs/block) in [MGS Natlang](mgs/mgs_natlang).
+One of the root level [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang).
 
 ```
 settings (for) serial dialog {}
 ```
 
-Use these blocks to set global settings for [serial dialogs](mgs/serial_dialogs_mgs).
+Use these blocks to set global settings for [serial dialogs](../mgs/serial_dialogs_mgs).
 
-**Block contents**: any number of [serial dialog parameters](mgs/serial_dialog_parameters_mgs) ([serial dialog property](dialogs/serial_dialog_properties) and value pairs) in any order.
+**Block contents**: any number of [serial dialog parameters](../mgs/serial_dialog_parameters_mgs) ([serial dialog property](../dialogs/serial_dialog_properties) and value pairs) in any order.
 
 ## Behavior
 

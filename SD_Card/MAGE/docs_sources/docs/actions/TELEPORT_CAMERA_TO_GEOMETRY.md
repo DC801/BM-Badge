@@ -1,6 +1,6 @@
 # TELEPORT_CAMERA_TO_GEOMETRY
 
-Moves the camera to the first vertex of the specified [geometry object](maps/vector_objects).
+Moves the camera to the first vertex of the specified [geometry object](../maps/vector_objects).
 
 ## Example JSON
 
@@ -29,4 +29,4 @@ teleport camera to geometry $geometry:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

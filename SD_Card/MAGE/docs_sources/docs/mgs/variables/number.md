@@ -1,6 +1,6 @@
 # Number
 
-One of the [MGS Natlang variable](mgs/variables_mgs) types.
+One of the [MGS Natlang variable](../../mgs/variables_mgs) types.
 
 Number (positive or negative)
 

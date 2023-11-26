@@ -1,6 +1,6 @@
 # COPY_VARIABLE
 
-Copies the value of an [entity](entities) [property](entities/entity_properties) into a [variable](scripts/integer_variables) or vice versa.
+Copies the value of an [entity](../entities) [property](../entities/entity_properties) into a [variable](../scripts/integer_variables) or vice versa.
 
 ## Example JSON
 
@@ -45,4 +45,4 @@ copy variable $variable:string into entity $entity:string $field:bareword (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

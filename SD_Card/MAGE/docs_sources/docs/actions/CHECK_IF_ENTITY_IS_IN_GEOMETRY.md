@@ -1,8 +1,8 @@
 # CHECK_IF_ENTITY_IS_IN_GEOMETRY
 
-Checks whether an [entity](entities) is inside the named [geometry](maps/vector_objects).
+Checks whether an [entity](../entities) is inside the named [geometry](../maps/vector_objects).
 
-This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate underflow](coordinate underflow).
+This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate underflow](../coordinate underflow).
 
 ## Example JSON
 
@@ -25,7 +25,7 @@ This action can behave erratically if any of the vertices in the geometry object
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -82,4 +82,4 @@ if entity $entity:string is not inside geometry $geometry:string
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

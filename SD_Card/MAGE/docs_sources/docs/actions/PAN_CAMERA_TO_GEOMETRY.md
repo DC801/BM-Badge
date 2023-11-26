@@ -1,6 +1,6 @@
 # PAN_CAMERA_TO_GEOMETRY
 
-Pans the camera to the first vertex of a [geometry object](maps/vector_objects).
+Pans the camera to the first vertex of a [geometry object](../maps/vector_objects).
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ pan camera to geometry $geometry:string over $duration:duration (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

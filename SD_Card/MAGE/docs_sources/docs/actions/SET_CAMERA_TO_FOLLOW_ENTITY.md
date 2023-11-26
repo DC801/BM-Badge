@@ -1,6 +1,6 @@
 # SET_CAMERA_TO_FOLLOW_ENTITY
 
-Sets what the camera is following. ([%PLAYER%](entities/_PLAYER_) is the default.)
+Sets what the camera is following. ([%PLAYER%](../entities/PLAYER) is the default.)
 
 ## Example JSON
 
@@ -29,4 +29,4 @@ make camera follow entity $entity:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

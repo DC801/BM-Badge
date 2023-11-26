@@ -1,6 +1,6 @@
 # SET_ENTITY_DIRECTION_TARGET_ENTITY
 
-Make an [entity](entities) turn toward another.
+Make an [entity](../entities) turn toward another.
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ turn entity $entity:string toward entity $target_entity:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

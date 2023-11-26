@@ -1,8 +1,8 @@
 # SET_ENTITY_CURRENT_FRAME
 
-Set the frame of the current [animation](tilesets/animations).
+Set the frame of the current [animation](../tilesets/animations).
 
-This is useful for staggering the animations of [entities](entities) that have identical animation timings.
+This is useful for staggering the animations of [entities](../entities) that have identical animation timings.
 
 ## Example JSON
 
@@ -32,4 +32,4 @@ set entity $entity:string animation_frame (to) $byte_value:number (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

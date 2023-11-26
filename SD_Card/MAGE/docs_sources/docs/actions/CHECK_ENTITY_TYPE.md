@@ -1,8 +1,8 @@
 # CHECK_ENTITY_TYPE
 
-Checks whether a [character entity](entities/character_entity) is currently the given [entity_type](entities/entity_properties).
+Checks whether a [character entity](../entities/character_entity) is currently the given [entity_type](../entities/entity_properties).
 
-This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity "Delmar" is the type `old_man`). Otherwise you'd have to use a mix of [CHECK_ENTITY_PRIMARY_ID](actions/CHECK_ENTITY_PRIMARY_ID) and [CHECK_ENTITY_PRIMARY_ID_TYPE](actions/CHECK_ENTITY_PRIMARY_ID_TYPE) and also know in advance which ints you're checking for.
+This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity "Delmar" is the type `old_man`). Otherwise you'd have to use a mix of [CHECK_ENTITY_PRIMARY_ID](../actions/CHECK_ENTITY_PRIMARY_ID) and [CHECK_ENTITY_PRIMARY_ID_TYPE](../actions/CHECK_ENTITY_PRIMARY_ID_TYPE) and also know in advance which ints you're checking for.
 
 ## Example JSON
 
@@ -25,7 +25,7 @@ This action is useful because you can check entity types by name, which is easy 
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -82,4 +82,4 @@ if entity $entity:string type is not $entity_type:string
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)
