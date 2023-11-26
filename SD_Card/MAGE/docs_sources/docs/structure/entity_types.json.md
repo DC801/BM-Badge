@@ -4,7 +4,7 @@ This JSON file defines each `entity_type` name for each [character entity](../en
 
 - `tileset`: their tileset JSON file path
 - `portrait`: the name of their portrait image, if not the same as their `entity_type` name (optional)
-- `animations`: their [animation assignments](../entity_management_system)
+- `animations`: their [animation assignments](../encoder/entity_management_system)
 
 As an example (keeping in mind that the animation arrays have been closed so the overall structure is more clear):
 

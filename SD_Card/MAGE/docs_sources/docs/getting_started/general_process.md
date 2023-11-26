@@ -10,7 +10,7 @@ An example production pipeline. The exact order can vary a bit, and previous ste
 		3. Set frames and timings for your [animations](../tilesets/animations), if any.
 			1. For [character entities](../entities/character_entity), prepare [animations](../tilesets/animations) for at least idle, walking, and action.
 	3. For each [character entity](../entities/character_entity):
-		1. Use the [web encoder](../encoder/web_encoder) to [assign animations and NSEW directions](../entity_management_system).
+		1. Use the [web encoder](../encoder/web_encoder) to [assign animations and NSEW directions](../encoder/entity_management_system).
 		2. Paste updated entity data into [entity_types.json](../structure/entity_types.json).
 	4. Prepare dialog portraits.
 		1. In Tiled, [make a tileset JSON file](../tilesets/creating_a_tileset_json_file) for the talk portrait images.

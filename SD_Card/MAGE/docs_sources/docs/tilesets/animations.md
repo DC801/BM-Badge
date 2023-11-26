@@ -79,4 +79,4 @@ In addition, we recommend making sure each animation of the same type uses the s
 
 ## Assigning Animations to Character Entities
 
-For [character entities](../entities/character_entity), animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [entity management system](../entity_management_system) in the [web encoder](../encoder/web_encoder) can help you assign animations to character entities if you don't want to do it by hand.
+For [character entities](../entities/character_entity), animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [entity management system](../encoder/entity_management_system) in the [web encoder](../encoder/web_encoder) can help you assign animations to character entities if you don't want to do it by hand.

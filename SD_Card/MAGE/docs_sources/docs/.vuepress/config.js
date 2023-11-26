@@ -37,6 +37,7 @@ export default defineUserConfig({
   ],
   theme: defaultTheme({
     contributors: false,
+    lastUpdated: false,
     sidebarDepth: 2,
     sidebar: [
       {
