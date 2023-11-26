@@ -91,7 +91,7 @@ var actionCategoryText = {
 		"Manipulate the camera's position or perform tricks like shaking the camera or fading the screen in and out to an arbitrary color."
 	],
 	"Script Control": [
-		"Set a specific [on_tick](../scripts/on_tick) or [on_interact](../scripts/on_interact) script, run another script, or recursively copy the actions inside another script."
+		"Set a specific [`on_tick`](../scripts/on_tick) or [`on_interact`](../scripts/on_interact) script, run another script, or recursively copy the actions inside another script."
 	],
 	"Entity Choreography": [
 		"Move entities around the map using [vector objects](../maps/vector_objects) placed with Tiled.",
@@ -108,7 +108,7 @@ var actionCategoryText = {
 	],
 	"Check Entity Properties": [
 		"These actions check whether one of an [entity](../entities)'s [properties](../entities/entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
-		"You can use [%SELF%](../entities/SELF) to target the entity running the script and [%PLAYER%](../entities/PLAYER) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
+		"You can use [`%SELF%`](../entities/SELF) to target the entity running the script and [`%PLAYER%`](../entities/PLAYER) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
 		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax/if_and_else).",
 	],
 	"Check Variables": [
@@ -410,19 +410,19 @@ var actionText = {
 	"CHECK_ENTITY_INTERACT_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [on_interact](../scripts/on_interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_interact`](../scripts/on_interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_TICK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [on_tick](../scripts/on_tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_tick`](../scripts/on_tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_LOOK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [on_look](../scripts/on_look) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_look`](../scripts/on_look) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_TYPE": {
@@ -634,7 +634,7 @@ var actionText = {
 	"SET_CAMERA_TO_FOLLOW_ENTITY": {
 		"category": "Camera Control",
 		"info": [
-			"Sets what the camera is following. ([%PLAYER%](../entities/PLAYER) is the default.)"
+			"Sets what the camera is following. ([`%PLAYER%`](../entities/PLAYER) is the default.)"
 		]
 	},
 	"TELEPORT_CAMERA_TO_GEOMETRY": {
@@ -714,13 +714,13 @@ var actionText = {
 	"SET_MAP_TICK_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets the map's [on_tick](../scripts/on_tick) script."
+			"Sets the map's [`on_tick`](../scripts/on_tick) script."
 		]
 	},
 	"SET_ENTITY_INTERACT_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets an [entity](../entities)'s [on_interact](../scripts/on_interact) script.",
+			"Sets an [entity](../entities)'s [`on_interact`](../scripts/on_interact) script.",
 			"If you use this action to change the [script slot](../scripts/script_slots) that is currently running the action, any actions given afterward may not execute depending on what they are.",
 			"Because [entity properties](../entities/entity_properties) are reset when a [map is loaded](../maps/map_loads), and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
 		]
@@ -728,21 +728,21 @@ var actionText = {
 	"SET_ENTITY_TICK_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets an [entity](../entities)'s [on_tick](../scripts/on_tick) script."
+			"Sets an [entity](../entities)'s [`on_tick`](../scripts/on_tick) script."
 		]
 	},
 	"SET_ENTITY_LOOK_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets an [entity](../entities)'s [on_look](../scripts/on_look) script."
+			"Sets an [entity](../entities)'s [`on_look`](../scripts/on_look) script."
 		]
 	},
 	"SET_SCRIPT_PAUSE": {
 		"category": "Script Control",
 		"info": [
-			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [on_tick](../scripts/on_tick) script during its [on_interact](../scripts/on_interact) event.",
-			"Entity variant: Any entity name can be used in all the normal ways ([%PLAYER%](../entities/PLAYER) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [on_look](../scripts/on_look).",
-			"Map variant: Script slots for these are [on_load](../scripts/on_load), [on_tick](../scripts/on_tick), and [on_command](../hardware/commands)."
+			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../scripts/on_tick) script during its [`on_interact`](../scripts/on_interact) event.",
+			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/PLAYER) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../scripts/on_look).",
+			"Map variant: Script slots for these are [`on_load`](../scripts/on_load), [`on_tick`](../scripts/on_tick), and [on_command](../hardware/commands)."
 		]
 	}
 };

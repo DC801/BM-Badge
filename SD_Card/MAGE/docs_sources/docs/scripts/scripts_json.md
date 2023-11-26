@@ -1,16 +1,12 @@
 # Scripts (JSON)
 
-::: tip NOTE
-With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not write [script](../scripts) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. (See: [Script Block](../mgs/script_block))
-:::
-
-## Example Script File
-
-::: warning DEPRECATED
-`goto index` and other features of [MGS Natlang](../mgs/mgs_natlang) make this kind of script management unnecessary; this page belongs in a museum!
-:::
-
 #updateme
+
+::: warning THIS PAGE IS DEPRECATED
+`goto index` and other features of [MGS Natlang](../mgs/mgs_natlang) make this kind of script management unnecessary; this page belongs in a museum!
+
+Still, in case you need to work on a JSON script file:
+:::
 
 Remember that strings, including property names, must always be enclosed in double quotes. Numbers and booleans (`true`/`false`) must not have quotes. Multiple items in a single object literal or array must be separated by commas.
 

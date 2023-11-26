@@ -14,7 +14,7 @@ The three options:
 2. `entity $string`
 	- [String](../mgs/variables/string): an entity's given name (i.e. the entity's name within the Tiled map).
 	- This usage also provides the entity name as an `entity` [parameter](../mgs/dialog_parameters_mgs) for the dialog.
-	- The entities [%PLAYER%](../entities/PLAYER) and [%SELF%](../entities/SELF) must use this pattern (and not the bareword pattern) because they contain special characters. As this can be cumbersome, it's probably best to set up a [dialog settings](../mgs/dialog_settings_target_block) label for them so you can use a bareword as an identifier instead.
+	- The entities [`%PLAYER%`](../entities/PLAYER) and [`%SELF%`](../entities/SELF) must use this pattern (and not the bareword pattern) because they contain special characters. As this can be cumbersome, it's probably best to set up a [dialog settings](../mgs/dialog_settings_target_block) label for them so you can use a bareword as an identifier instead.
 3. `name $string`
 	- [String](../mgs/variables/string): the dialog's display name.
 	- This usage also provides a `name` [parameter](../mgs/dialog_parameters_mgs) for the dialog.

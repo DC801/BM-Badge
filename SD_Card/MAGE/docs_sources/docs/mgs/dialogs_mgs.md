@@ -11,7 +11,7 @@ The [dialog](../dialogs) structure for [MGS Natlang](../mgs/mgs_natlang), found 
 
 Multiple dialogs can occur back-to-back inside their parent block.
 
-## Dialog Example (MGS)
+## Example
 
 An example [MGS Natlang](../mgs/mgs_natlang) [dialog block](../mgs/dialog_block), consisting of three [dialogs](../mgs/dialogs_mgs):
 

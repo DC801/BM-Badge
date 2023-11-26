@@ -7,7 +7,7 @@ A dialog message is any [quoted string](../mgs/variables/quoted_string).
 - Each message is a new "text screen" in the game.
 - Only ASCII characters will be printed.
 - Insert an entity's [current name](../scripts/printing_current_values) by wrapping their given name in `%`s.
-	- [%PLAYER%](../entities/PLAYER) and [%SELF%](../entities/SELF) are also allowed, which target the player entity or the entity that is running the script, respectively.
+	- [`%PLAYER%`](../entities/PLAYER) and [`%SELF%`](../entities/SELF) are also allowed, which target the player entity or the entity that is running the script, respectively.
 	- Words wrapped in `%`s will count as 12 chars when the dialog message is auto-wrapped.
 - Insert the current value of a MGE variable by wrapping its name in `$`s.
 	- Words wrapped in `$`s will count as 5 chars when the dialog message is auto-wrapped.

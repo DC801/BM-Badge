@@ -25,8 +25,8 @@ Optional. `entity` refers to a specific entity by its **given name** (the name i
 
 This property can be any of the following:
 
-1. [%PLAYER%](../entities/PLAYER), which refers to the player entity
-2. [%SELF%](../entities/SELF), which refers to the entity running the script
+1. [`%PLAYER%`](../entities/PLAYER), which refers to the player entity
+2. [`%SELF%`](../entities/SELF), which refers to the entity running the script
 3. the **given name** of an entity (no percent signs)
 
 The MGE will use the referenced entity's [current name](../scripts/printing_current_values) for the dialog label automatically.
@@ -41,8 +41,8 @@ Optional. `name` provides a string for dialog box label, and if included, it wil
 
 This property can be any of the following:
 
-1. [%PLAYER%](../entities/PLAYER), which refers to the player entity
-2. [%SELF%](../entities/SELF), which refers to the entity running the script
+1. [`%PLAYER%`](../entities/PLAYER), which refers to the player entity
+2. [`%SELF%`](../entities/SELF), which refers to the entity running the script
 3. an arbitrary ASCII string up to 12 characters long
 4. the **given name** of an entity, but enclosed in percent signs: `%Entity Name%`
 

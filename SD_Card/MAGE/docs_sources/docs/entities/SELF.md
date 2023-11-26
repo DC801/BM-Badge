@@ -1,4 +1,4 @@
-# %SELF%
+# `%SELF%`
 
 One of the [relative entity references](../entities/relative_entity_references).
 
