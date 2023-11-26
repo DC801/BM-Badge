@@ -1,6 +1,6 @@
 # SET_ENTITY_INTERACT_SCRIPT
 
-Sets an [entity](../entities)'s [on_interact](../scripts/on_interact) script.
+Sets an [entity](../entities)'s [`on_interact`](../scripts/on_interact) script.
 
 If you use this action to change the [script slot](../scripts/script_slots) that is currently running the action, any actions given afterward may not execute depending on what they are.
 

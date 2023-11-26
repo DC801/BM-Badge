@@ -1,6 +1,8 @@
 # Serial Dialogs (JSON)
 
-NOTE: With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not write [serial dialogs](../dialogs/serial_dialogs) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. See: [Serial Dialogs (MGS)](../mgs/serial_dialogs_mgs)
+::: tip NOTE
+With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not write [serial dialogs](../dialogs/serial_dialogs) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. See: [Serial Dialogs (MGS)](../mgs/serial_dialogs_mgs)
+:::
 
 ## Behavior
 

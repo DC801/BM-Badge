@@ -8,9 +8,9 @@ Normally, the Mage Game Engine (MGE) omits [entities](../entities) with the `is_
 
 The chapter 1 version of the engine *must* use debug entities to trigger debug scripts, as the serial [terminal](../hardware/terminal) was not implemented yet, and there was not yet an action to check whether debug mode is on.
 
-### Best Practice
-
+::: tip Best Practice
 When making debug entities, it helps a lot to give them dialog describing what they are doing to change the game state. Better still is putting the debug behavior behind a [multiple choice dialog](../dialogs/multiple_choice_dialogs_json) so that the debug entity can be disengaged without making any changes in case it is ever engaged by accident.
+:::
 
 ## Debug Scripting
 
@@ -38,7 +38,7 @@ script {
 
 ### Debug Commands
 
-You can register debug [commands](../hardware/commands) in a map's [on_load](../scripts/on_load), and if you put these registrations behind a check for debug mode, they won't get in the way of a play tester's experience.
+You can register debug [commands](../hardware/commands) in a map's [`on_load`](../scripts/on_load), and if you put these registrations behind a check for debug mode, they won't get in the way of a play tester's experience.
 
 We've found it useful to include debug logging when such a command is registered — both the name and a brief description of what the command does — so you won't have trouble remember which commands you've prepared for a given map.
 

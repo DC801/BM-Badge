@@ -45,5 +45,5 @@ The above is what the MGS Natlang syntax parser will actually parse. Syntax erro
 
 #### Limitations
 
-- `const!()` registers and replaces tokens; it does not find-and-replace arbitrary strings. For this reason, you will not be able to use constants inside a [quoted string](../../#quoted-string), since a quoted string *in its entirety* counts as a single token.
+- `const!()` registers and replaces tokens; it does not find-and-replace arbitrary strings. For this reason, you will not be able to use constants inside a [quoted_string](../variables/quoted_string.md), since a quoted string *in its entirety* counts as a single token.
 - In addition, this macro only captures single tokens; you cannot use a constant to represent multiple tokens, e.g. `const!($parade = 76 trombones);` will result in a syntax error.

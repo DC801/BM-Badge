@@ -6,7 +6,7 @@ The values of [integer variables](../scripts/integer_variables) and the **curren
 
 Enclose the name of the variable in dollar signs: `"I have $appleCount$ apples for sale today!"`
 
-For text wrapping, it's recommended that these names be counted as taking up 5 characters. (Note: [MGS Natlang](../mgs/mgs_natlang) will wrap text automatically.)
+For text wrapping, it's recommended that these names be counted as taking up 5 characters. ([MGS Natlang](../mgs/mgs_natlang) will wrap text automatically.)
 
 ## Current Entity Name
 
@@ -14,4 +14,4 @@ Wrap an entity's **given name** (the name assigned to it in Tiled) in percent si
 
 Unlike with [relative entity references](../entities/relative_entity_references) (like [%SELF%](../entities/SELF) and [%PLAYER%](../entities/PLAYER)), this usage will not work when trying to target an entity with an action. Instead, use the entity's given name.
 
-For text wrapping, it's recommended that these names be counted as taking up 12 characters. (Note: [MGS Natlang](../mgs/mgs_natlang) will wrap text automatically.)
+For text wrapping, it's recommended that these names be counted as taking up 12 characters. ([MGS Natlang](../mgs/mgs_natlang) will wrap text automatically.)

@@ -18,7 +18,9 @@ All **tileset tiles need to be perfect squares** because tiles can be rotated or
 
 Spritesheets are handled like tilesets within Tiled and the [MGE encoder](encoder/mge_encoder). They are not required to be square, but non-square spritesheets are currently (as of Nov 2023) bugged, and may crash the game once the tile goes offscreen, so best to keep everything square for now.
 
+::: details Black Mage Game tile arrangment
 Due to the way Tiled defines animations, the order of the sprites in the spritesheet doesn't matter, but for DC801 black mage game we tend to have one sprite tile for the side view, front view, and back view on one row, going down the image in a series of rows.
+:::
 
 ## Other Kinds of Tilesets
 
@@ -26,7 +28,7 @@ You'll need to make tilesets in Tiled for dialog box skin(s) and entity talk por
 
 Beyond making sure the tiles are the right size, you do not need to do anything special to these files.
 
-Put dialogSkin files in `scenario_source_files/tilesets/` and entity portraits in `scenario_source_files/entities/`. (See: [scenario_source_files](getting_started/scenario_source_files))
+Put dialogSkin files in `scenario_source_files/tilesets/` and entity portraits in `scenario_source_files/entities/`. (See: [`scenario_source_files`](getting_started/scenario_source_files))
 
 ## MGE Considerations
 
@@ -46,7 +48,9 @@ To encode alpha, the MGE repurposes the least-significant green bit in the RGB56
 
 The [MGE encoder](encoder/mge_encoder) indexes the pallets of each image, and there is therefore a **maximum of 256 colors per tileset image**. If you need extra colors, consider splitting the tileset into multiple files — maps will quite happily use tiles from multiple tilesets with no trouble, provided the tiles are the correct size. The MGE encoder will let you know if one of your tilesets is over the color limit.
 
-**Best Practice:** On embedded, pixel data is streamed from the ROM chip, but the tileset pallets must be held in RAM. Because RAM is very, very precious, **please combine tilesets if there isn't a compelling reason to keep them in separate files**. Entity sprite sheets are typically kept separate, for instance, but you might combine spritesheets for similar entities, or combine all character entity portraits. (And naturally, tilesets with differing tile sizes must be separate!)
+::: tip Best Practice
+On embedded, pixel data is streamed from the ROM chip, but the tileset pallets must be held in RAM. Because RAM is very, very precious, **please combine tilesets if there isn't a compelling reason to keep them in separate files**. Entity sprite sheets are typically kept separate, for instance, but you might combine spritesheets for similar entities, or combine all character entity portraits. (And naturally, tilesets with differing tile sizes must be separate!)
+:::
 
 ### Updating Tileset Images on the Fly
 

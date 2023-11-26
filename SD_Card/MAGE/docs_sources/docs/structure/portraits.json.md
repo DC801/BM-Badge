@@ -1,5 +1,7 @@
 # `portraits.json`
 
+Found in [`scenario_source_files`](../getting_started/scenario_source_files).
+
 This JSON file looks like this:
 
 ```json

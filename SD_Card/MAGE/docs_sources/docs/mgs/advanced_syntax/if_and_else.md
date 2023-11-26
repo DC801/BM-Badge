@@ -9,7 +9,7 @@ if ( CONDITION ) { BEHAVIOR/BODY }
 - The `if` **condition** is wrapped with parentheses, and the `if` **body** is wrapped with curly braces.
 - The `if` body may contain additional `if`s.
 - Normal actions can occur before and after the `if`.
-- Actions that occur after the zigzag will happen regardless of whether the `if` condition is met.
+- Actions that occur after the `if`/`else` chain will happen regardless of whether the `if` condition is met.
 
 `if` statements can be followed by `else if` and `else` in the standard manner, wherein the script logic will take one of many mutually-exclusive paths.
 

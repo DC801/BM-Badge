@@ -1,5 +1,7 @@
 # `entity_types.json`
 
+Found in [`scenario_source_files`](../getting_started/scenario_source_files).
+
 This JSON file defines each `entity_type` name for each [character entity](../entities/character_entity), plus:
 
 - `tileset`: their tileset JSON file path

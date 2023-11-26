@@ -1,5 +1,7 @@
 # `scenario.json`
 
+Found in [`scenario_source_files`](../getting_started/scenario_source_files).
+
 This file tells the [MGE encoder](../encoder/mge_encoder) which JSON files it should be encoding. It will look something like this:
 
 ```json

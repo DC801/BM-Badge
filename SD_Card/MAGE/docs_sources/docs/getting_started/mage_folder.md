@@ -8,8 +8,16 @@ There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new
 
 `replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory.
 
-`regenerate_dat_file.sh` — This shell script requires `node.js` to run (see: [What You'll Need](../getting_started/what_youll_need)). (There are two versions of this file depending on which repo you started with, and note that the shell script from the [MGE VM](../getting_started/mge_vm) is slightly different.)
+`regenerate_dat_file.sh` — This shell script requires `node.js` to run (see: [What You'll Need](../getting_started/what_youll_need)). There are two versions of this file depending on which repo you started with, and note that the shell script from the [MGE VM](../getting_started/mge_vm) is slightly different.
 
-[scenario_source_files](../getting_started/scenario_source_files) — This is where your raw game data lives.
+[`scenario_source_files`](../getting_started/scenario_source_files) — This is where your raw game data lives.
 
 `mage_dat.ksy` — Intended to be used with [Kaitai](../Kaitai). This will help you identify unexpected game state you might be encountering.
+
+## See Also
+
+- [`scenario_source_files`](../getting_started/scenario_source_files)
+	- [`scenario.json`](../structure/scenario.json)
+	- [`portraits.json`](../structure/portraits.json)
+	- [`entity_types.json`](../structure/entity_types.json)
+	- [`maps.json`](../structure/maps.json)

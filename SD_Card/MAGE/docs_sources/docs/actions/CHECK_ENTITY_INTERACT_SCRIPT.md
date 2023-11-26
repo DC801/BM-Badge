@@ -1,6 +1,6 @@
 # CHECK_ENTITY_INTERACT_SCRIPT
 
-Checks an [entity](../entities)'s [on_interact](../scripts/on_interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).
+Checks an [entity](../entities)'s [`on_interact`](../scripts/on_interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).
 
 ## Example JSON
 

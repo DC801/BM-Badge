@@ -10,7 +10,7 @@ These are default properties provided by Tiled. They're found in the top half of
 
 **Name** — In the MGE, names are limited to 12 ASCII characters.
 
-**Class** (formerly **Type**) — For character entities, this is the `entity_type`, or the name of the character entity as defined by [entity_types.json](../structure/entity_types.json). This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
+**Class** (formerly **Type**) — For character entities, this is the `entity_type`, or the name of the character entity as defined by [`entity_types.json`](../structure/entity_types.json). This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
 
 **X** and **Y** position — You don't need to change these directly if you don't want to, since you can simply place or move entities on the map within Tiled itself.
 
@@ -22,11 +22,13 @@ Note that horizontally flipping a front or back-facing character entity will mak
 
 These properties must be manually added. To add one, first click the plus at the bottom of the Properties view, and set the property type (bool, float, object, string, etc.). Once added, you can assign a value to them just like any of the standard ones.
 
-**[on_tick](../scripts/on_tick) (string)** — This identifies the script that is run for that entity every game tick. Note that `on_tick` scripts loop when finished, so don't assign a script you wouldn't want to run forever.
+**[`on_tick`](../scripts/on_tick) (string)** — This identifies the script that is run for that entity every game tick. Note that `on_tick` scripts loop when finished, so don't assign a script you wouldn't want to run forever.
 
-> **Best Practice**: If you don't want an entity to have an `on_tick` script, you can leave this property blank, or avoid adding it altogether. However, we've found it useful to set an entity's `on_tick` script to [null_script](../scripts/null_script) if the entity will be given a specific `on_tick` by another script later in the game. This way, it's clear that the entity's `on_tick` slot is "reserved," and you won't accidentally give it an `on_tick` script that will be overwritten later.
+::: tip Best Practice
+If you don't want an entity to have an `on_tick` script, you can leave this property blank, or avoid adding it altogether. It's useful to set an entity's `on_tick` script to [null_script](../scripts/null_script) if the entity will be given a specific `on_tick` by another script later in the game. This way, it's clear that the entity's `on_tick` slot is "reserved," and you won't accidentally give it an `on_tick` script that will be overwritten later.
+:::
 
-**[on_interact](../scripts/on_interact) (string)** — This identifies the script that is run when the player interacts with the entity. Overwhelmingly, this will be the start of the entity's dialog tree.
+**[`on_interact`](../scripts/on_interact) (string)** — This identifies the script that is run when the player interacts with the entity. Overwhelmingly, this will be the start of the entity's dialog tree.
 
 **`primary_id_type`**, **`primary_id`**, and **`secondary_id`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map. (See: [entity types](../entities/entity_types))
 
@@ -40,7 +42,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 **`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.)
 
-**[on_look](../scripts/on_look) (string)** — This identifies the script that is run when the player interacts with the entity using the [terminal](../hardware/terminal) via `look at %ENTITY_NAME%`.
+**[`on_look`](../scripts/on_look) (string)** — This identifies the script that is run when the player interacts with the entity using the [terminal](../hardware/terminal) via `look at %ENTITY_NAME%`.
 
 ## Additional Entity Properties
 

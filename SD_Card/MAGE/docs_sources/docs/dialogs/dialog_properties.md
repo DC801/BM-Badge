@@ -33,7 +33,7 @@ The MGE will use the referenced entity's [current name](../scripts/printing_curr
 
 For the `entity` property, you must not use percent signs to refer to entities, or the [MGE encoder](../encoder/mge_encoder) will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [current name](../scripts/printing_current_values) in the dialog label, you must use the `name` property, which can print a string literally.
 
-If the referenced entity is a [character entity](../entities/character_entity), the [MGE Encoder](../encoder/mge_encoder) will use [entity_types.json](../structure/entity_types.json) to automatically determine the portrait image.
+If the referenced entity is a [character entity](../entities/character_entity), the [MGE Encoder](../encoder/mge_encoder) will use [`entity_types.json`](../structure/entity_types.json) to automatically determine the portrait image.
 
 ## `name`
 
@@ -42,7 +42,7 @@ Optional. `name` provides a string for dialog box label, and if included, it wil
 This property can be any of the following:
 
 1. [%PLAYER%](../entities/PLAYER), which refers to the player entity
-2. [%SELF%](../entities/_SELF_), which refers to the entity running the script
+2. [%SELF%](../entities/SELF), which refers to the entity running the script
 3. an arbitrary ASCII string up to 12 characters long
 4. the **given name** of an entity, but enclosed in percent signs: `%Entity Name%`
 
@@ -50,17 +50,17 @@ If you use the entity's given name without percent signs, it will behave as a st
 
 ## `portrait`
 
-Optional.  This is the name of the portrait defined in [portraits.json](../structure/portraits.json) you want to use for the dialog. This will override any portraits inherited from `entity` above.
+Optional.  This is the name of the portrait defined in [`portraits.json`](../structure/portraits.json) you want to use for the dialog. This will override any portraits inherited from `entity` above.
 
 If the dialog cannot find a portrait to use (either via `portrait` or `entity`), then the dialog will display no portrait box.
 
 ## `border_tileset`
 
-Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [scenario.json](../structure/scenario.json).)
+Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [`scenario.json`](../structure/scenario.json).)
 
 ## `emote`
 
-Optional. Allows you to select a specific emote within the entity's entry in [portraits.json](../structure/portraits.json). The default emote (`0`) will display if not specified. (While emotes can have assigned names, you must use intigers to control them here.)
+Optional. Allows you to select a specific emote within the entity's entry in [`portraits.json`](../structure/portraits.json). The default emote (`0`) will display if not specified. (While emotes can have assigned names, you must use intigers to control them here.)
 
 ## `messages`
 

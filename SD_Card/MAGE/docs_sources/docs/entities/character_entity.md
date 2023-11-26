@@ -2,13 +2,13 @@
 
 One of the three [entity types](../entities/entity_types).
 
-If you place a tile from a [tileset](../tilesets) onto an object layer in a Tiled [map](../maps), and the `Class` (formerly `Type`) property of the tile has been defined in [entity_types.json](../structure/entity_types.json), it will become an **character entity**.
+If you place a tile from a [tileset](../tilesets) onto an object layer in a Tiled [map](../maps), and the `Class` (formerly `Type`) property of the tile has been defined in [`entity_types.json`](../structure/entity_types.json), it will become an **character entity**.
 
 - **`PrimaryIdType`**: `2` (`entity_type`)
-- **`PrimaryId`**: the `id` of the entity within [entity_types.json](../structure/entity_types.json)
+- **`PrimaryId`**: the `id` of the entity within [`entity_types.json`](../structure/entity_types.json)
 - **`SecondaryId`**: does nothing
 
-In scripts, you need not manipulate `PrimaryId` to alter the appearance of a character entity, though there are certainly [script](../scripts) that are capable of doing this. Instead, you can use [actions](../actions) with the argument `entity_type`, which is the name (string) of the character entity as defined within [entity_types.json](../structure/entity_types.json). (In the entity's [tileset](../tilesets), this is what the property "Type" is set to.)
+In scripts, you need not manipulate `PrimaryId` to alter the appearance of a character entity, though there are certainly [script](../scripts) that are capable of doing this. Instead, you can use [actions](../actions) with the argument `entity_type`, which is the name (string) of the character entity as defined within [`entity_types.json`](../structure/entity_types.json). (In the entity's [tileset](../tilesets), this is what the property "Type" is set to.)
 
 What's special about character entities is that they can have a number of [animations](../tilesets/animations) [assigned](../encoder/entity_management_system) to them and they will switch animations automatically depending on context (walking or not, facing north/south/east/west, etc.), as well as having other attributes, like a permanently assigned portrait image. **NPCs will therefore likely be this type.**
 

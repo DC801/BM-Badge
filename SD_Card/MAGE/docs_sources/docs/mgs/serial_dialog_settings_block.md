@@ -2,8 +2,16 @@
 
 One of the root level [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang).
 
-```mgs
+```
 settings (for) serial dialog {}
+```
+
+The `for` is optional:
+
+```mgs
+settings for serial dialog {}
+//or
+settings serial dialog {}
 ```
 
 Use these blocks to set global settings for [serial dialogs](../mgs/serial_dialogs_mgs).

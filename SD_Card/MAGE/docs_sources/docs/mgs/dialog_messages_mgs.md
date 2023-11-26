@@ -16,7 +16,3 @@ A dialog message is any [quoted string](../mgs/variables/quoted_string).
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 	- `%` and `$` are printable characters unless [used in pairs](../scripts/printing_current_values) within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
 - Word processor "smart" characters such as ellipses (…), em dashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
-
-## Example
-
-See: [Dialog Example (MGS)](../mgs/dialog_example_mgs)

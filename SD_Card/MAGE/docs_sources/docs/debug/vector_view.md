@@ -2,7 +2,7 @@
 
 Vector view, one of the [debug tools](../debug/debug_tools) in the game, is triggered in-game by pressing `XOR` and `MEM0` (the top two buttons on each side of the screen) at the same time. On desktop, press `F1` and `F5` instead.
 
-NOTE: Currently, vector view cannot be toggled when [hex editor](../hardware/hex_editor) [control](../SET_HEX_EDITOR_STATE) is off.
+NOTE: Currently, vector view cannot be toggled when [hex editor](../hardware/hex_editor) [control](../actions/SET_HEX_EDITOR_STATE) is off.
 
 ## Visible in Vector View
 

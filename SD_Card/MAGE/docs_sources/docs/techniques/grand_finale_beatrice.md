@@ -1,6 +1,10 @@
 # Grand Finale (Beatrice)
 
-NOTICE: Large scripts like this were a major reason we created [MGS Natlang](../mgs/mgs_natlang). Needless to say, this page is deprecated! Just use [if and else](../mgs/advanced_syntax/if_and_else) like a normal programming language! (To that point: converting this mess to natlang revealed a few redundant logic paths, even after multiple revisions of this flowchart!)
+::: warning DEPRECATED
+This page is deprecated and likely very out of date!
+
+Large scripts like this were a major reason we created [MGS Natlang](../mgs/mgs_natlang). Now we can use [if and else](../mgs/advanced_syntax/if_and_else) like a normal programming language. (To that point: converting this mess to natlang revealed a few redundant logic paths, even after multiple revisions of this flowchart!)
+:::
 
 ![flowchart of Beatrice's behavior](../media/script-beatrice.png)
 
@@ -24,13 +28,13 @@ And if *that* wasn't enough branching, most of the branches will then *also* bra
 
 ### `bea-wrapup-mini`
 
-Sets Beatrice's [on_interact](../scripts/on_interact) script back to her start script. This is the most basic shared wrapup behavior, and it was split mostly to future proof the branching against further complications. All of Beatrice's branches run this script, or run a script that runs it. (The chart above does not reflect this wrapup split, and still reflects the original `on_interact` reset placement.)
+Sets Beatrice's [`on_interact`](../scripts/on_interact) script back to her start script. This is the most basic shared wrapup behavior, and it was split mostly to future proof the branching against further complications. All of Beatrice's branches run this script, or run a script that runs it. (The chart above does not reflect this wrapup split, and still reflects the original `on_interact` reset placement.)
 
 ### `bea1-complete-wrapup`
 
 This is the wrapup script for solving Beatrice's first quest line.
 
-- sets her [on_tick](../scripts/on_tick) to [null_script](../scripts/null_script) and turns her toward her husband
+- sets her [`on_tick`](../scripts/on_tick) to [null_script](../scripts/null_script) and turns her toward her husband
 - sets the `bea1` backstory and `bea1` [story flag](../scripts/save_flags) to `true`
 - zeroes the target hint
 - runs `bea-wrapup-mini` to finish

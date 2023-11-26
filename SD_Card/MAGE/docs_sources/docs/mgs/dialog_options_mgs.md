@@ -13,7 +13,3 @@ NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs
 	- **Must** be wrapped in [quotes](../mgs/variables/quoted_string).
 - In the MGE, dialog options are displayed underneath the final dialog message. Therefore, final dialog message (before any options) should consist of a single line of no more than 42 characters.
 - The words `goto` and `script` are optional. Any [string](../mgs/variables/string) given after the `:` (other than `goto` and `script`) is assumed to be the script name.
-
-## Example
-
-See: [Dialog Example (MGS)](../mgs/dialog_example_mgs)

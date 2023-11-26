@@ -46,8 +46,7 @@ Vector polygons and points are placed on object layers, but tiles can be placed 
 
 Vector objects are susceptible to [coordinate overflow](maps/coordinate_overflow), so try to keep objects and all their vertices inside the map coordinate space (unless you actually want to yeet an entity to outer space).
 
-### Best Practices
-
+::: tip Best Practice
 Particularly on maps with a lot going on, it's best to place objects on separate layers so you can easily hide or reveal specific objects, e.g.:
 
 - the entities themselves
@@ -55,6 +54,7 @@ Particularly on maps with a lot going on, it's best to place objects on separate
 - cutscene paths and camera points
 
 It doesn't matter how many layers there are in terms of accommodating the MGE encoder, but it's best to place the layer for entities just below the topmost tile layer, at least, for the most accurate visual preview.
+:::
 
 ### Placing Entities
 

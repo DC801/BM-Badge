@@ -32,7 +32,4 @@ Dialog parameters are a [dialog property](../dialogs/dialog_properties) and valu
 - `wrap messages (to) $number`
 	- [Number](../mgs/variables/number): the number of chars to auto wrap the contents of dialog messages.
 	- 42 is default.
-
-## Example
-
-See: [Dialog Example (MGS)](../mgs/dialog_example_mgs)
+ 
