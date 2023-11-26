@@ -27,7 +27,3 @@ script {
 ```
 set flag $save_flag:string (to) $bool_value:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

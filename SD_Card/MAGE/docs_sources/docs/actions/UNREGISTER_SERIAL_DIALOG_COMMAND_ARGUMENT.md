@@ -27,7 +27,3 @@ script {
 ```
 unregister $command:string + $argument:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

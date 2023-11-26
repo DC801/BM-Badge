@@ -31,7 +31,3 @@ script {
 ```
 set entity $entity:string current_animation (to) $byte_value:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

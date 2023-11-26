@@ -27,7 +27,3 @@ script {
 ```
 set entity $entity:string path (to) $geometry:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

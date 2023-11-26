@@ -33,7 +33,3 @@ goto index $action_index:number (;)
 
 goto label $action_index:bareword (;)
 ```
-
----
-
-Back to [Actions](../actions)

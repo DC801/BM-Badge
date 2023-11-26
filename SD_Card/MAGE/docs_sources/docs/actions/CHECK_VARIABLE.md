@@ -111,7 +111,3 @@ if variable $variable:string is not $value:number
 	// built-in value: expected_bool = false
 	// built-in value: comparison = ==
 ```
-
----
-
-Back to [Actions](../actions)

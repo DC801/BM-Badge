@@ -26,7 +26,3 @@ script {
 ```
 set map on_tick (to) $script:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

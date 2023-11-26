@@ -34,7 +34,3 @@ turn $enabled:boolean light $lights:string (;)
 
 turn light $lights:string $enabled:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

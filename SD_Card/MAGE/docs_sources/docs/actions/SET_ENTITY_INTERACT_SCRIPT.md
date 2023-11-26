@@ -31,7 +31,3 @@ script {
 ```
 set entity $entity:string on_interact (to) $script:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

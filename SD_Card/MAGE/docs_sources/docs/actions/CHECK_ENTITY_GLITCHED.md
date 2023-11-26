@@ -69,7 +69,3 @@ if entity $entity:string is not glitched
     then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
-
----
-
-Back to [Actions](../actions)

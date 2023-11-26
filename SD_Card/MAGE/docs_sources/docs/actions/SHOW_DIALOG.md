@@ -34,7 +34,3 @@ script {
 ```
 show dialog $dialog:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

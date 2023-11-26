@@ -1,12 +1,12 @@
-# Mage Game Engine (MGE) Content Creation Guide
+# Mage Game Engine (MGE) Documentation and Content Creation Guide
 
 Content creation guide for the "Mage Game Engine" (MGE), and other information for working with the "Black Mage" game for DC801's party badge (BMG2020).
 
-## Getting Started
+## Curated Table of Contents
 
 - [What You'll Need](getting_started/what_youll_need)
 - [MAGE Folder](getting_started/mage_folder)
-	- [scenario_source_files](scenario_source_files)
+	- [scenario_source_files](getting_started/scenario_source_files)
 	- [scenario.json](structure/scenario.json)
 	- [portraits.json](structure/portraits.json)
 	- [entity_types.json](structure/entity_types.json)
@@ -46,6 +46,8 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 
 ## [Scripts](scripts)
 
+- [Scripts (JSON)](scripts/scripts_json)
+- [Comments (JSON)](scripts/comments_json)
 - [Script Slots](scripts/script_slots)
 	- [on_interact](scripts/on_interact)
 	- [on_tick](scripts/on_tick)
@@ -57,8 +59,7 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 	- [Integer Variables](scripts/integer_variables)
 	- [Save Flags](scripts/save_flags)
 	- [Printing Current Values](scripts/printing_current_values)
-- [Comments (JSON)](scripts/comments_json)
-- [Scripts (JSON)](scripts/scripts_json)
+	- [Enums](scripts/enums)
 - [Scripting Techniques](techniques/scripting_techniques)
 	- [Actors](techniques/actors)
 	- [Coordinate Considerations](techniques/coordinate_considerations)
@@ -95,17 +96,15 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 		- [include!()](mgs/advanced_syntax/include_)
 	- [Combination Block](mgs/combination_block)
 
-## Finishing
+## Technical
 
 - [MGE Encoder](encoder/mge_encoder)
 	- [Web Encoder](encoder/web_encoder)
 	- [CLI Encoder](encoder/cli_encoder)
 - [Updating the Hardware](hardware/updating_the_hardware)
-
-## [Debug Tools](debug/debug_tools)
-
-- [Vector View](debug/vector_view)
-- [Debug Mode](debug/debug_mode)
-- [MGE Encoder Console](debug/mge_encoder_console)
-- [Inspecting with the Web Encoder](debug/inspecting_with_the_web_encoder)
- 
+- [Debug Tools](debug/debug_tools)
+	- [Vector View](debug/vector_view)
+	- [Debug Mode](debug/debug_mode)
+	- [MGE Encoder Console](debug/mge_encoder_console)
+	- [Inspecting with the Web Encoder](debug/inspecting_with_the_web_encoder)
+	

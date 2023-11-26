@@ -29,7 +29,3 @@ turn $bool_value:boolean hex clipboard (;)
 
 turn hex clipboard $bool_value:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

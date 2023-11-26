@@ -26,7 +26,3 @@ script {
 ```
 teleport camera to geometry $geometry:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

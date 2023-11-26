@@ -71,7 +71,3 @@ if entity $entity:string direction is not $direction:bareword
     then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
-
----
-
-Back to [Actions](../actions)

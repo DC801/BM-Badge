@@ -27,7 +27,3 @@ script {
 ```
 teleport entity $entity:string to geometry $geometry:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

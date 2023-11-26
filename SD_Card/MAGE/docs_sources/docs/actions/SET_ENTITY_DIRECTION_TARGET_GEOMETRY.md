@@ -27,7 +27,3 @@ script {
 ```
 turn entity $entity:string toward geometry $target_geometry:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

@@ -30,7 +30,3 @@ script {
 ```
 mutate $variable:string $operation:operator $source:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

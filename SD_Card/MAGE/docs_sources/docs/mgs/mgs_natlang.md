@@ -6,7 +6,7 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the MGE encoder, plus QOL syntax like `if`/`else` and [define-in-place dialogs](../mgs/show_dialog_block).
 
-All MGS files are turned into JSON by the [MGE encoder](../encoder/mge_encoder). Unlike [JSON script files](../scripts/scripts_json) and [JSON dialog files](../dialogs/dialogs_json), you don't need to declare MGS files in the game's [scenario.json](../structure/scenario.json); all MGS files inside [scenario_source_files](../scenario_source_files) will be imported.
+All MGS files are turned into JSON by the [MGE encoder](../encoder/mge_encoder). Unlike [JSON script files](../scripts/scripts_json) and [JSON dialog files](../dialogs/dialogs_json), you don't need to declare MGS files in the game's [scenario.json](../structure/scenario.json); all MGS files inside [scenario_source_files](../getting_started/scenario_source_files) will be imported.
 
 See: [MGS Natlang vs JSON](../mgs/mgs_natlang_vs_json)
 

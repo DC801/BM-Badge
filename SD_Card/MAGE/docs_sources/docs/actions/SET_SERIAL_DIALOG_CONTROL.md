@@ -31,7 +31,3 @@ turn $bool_value:boolean serial control (;)
 
 turn serial control $bool_value:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

@@ -37,7 +37,3 @@ script {
 ```
 save slot (;)
 ```
-
----
-
-Back to [Actions](../actions)

@@ -10,6 +10,6 @@ There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new
 
 `regenerate_dat_file.sh` — This shell script requires `node.js` to run (see: [What You'll Need](../getting_started/what_youll_need)). (There are two versions of this file depending on which repo you started with, and note that the shell script from the [MGE VM](../getting_started/mge_vm) is slightly different.)
 
-[scenario_source_files](../scenario_source_files) — This is where your raw game data lives.
+[scenario_source_files](../getting_started/scenario_source_files) — This is where your raw game data lives.
 
 `mage_dat.ksy` — Intended to be used with [Kaitai](../Kaitai). This will help you identify unexpected game state you might be encountering.

@@ -30,7 +30,3 @@ script {
 ```
 load map $map:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

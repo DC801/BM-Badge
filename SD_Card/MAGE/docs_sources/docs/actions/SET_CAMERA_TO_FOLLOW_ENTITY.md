@@ -26,7 +26,3 @@ script {
 ```
 make camera follow entity $entity:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

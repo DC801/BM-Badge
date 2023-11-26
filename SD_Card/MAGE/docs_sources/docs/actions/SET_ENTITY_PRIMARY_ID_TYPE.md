@@ -27,7 +27,3 @@ script {
 ```
 set entity $entity:string primary_id_type (to) $byte_value:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

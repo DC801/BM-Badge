@@ -29,7 +29,3 @@ script {
 ```
 fade in camera from $color:color over $duration:duration (;)
 ```
-
----
-
-Back to [Actions](../actions)

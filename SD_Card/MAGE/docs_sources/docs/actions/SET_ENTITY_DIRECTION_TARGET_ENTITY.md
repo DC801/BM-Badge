@@ -27,7 +27,3 @@ script {
 ```
 turn entity $entity:string toward entity $target_entity:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

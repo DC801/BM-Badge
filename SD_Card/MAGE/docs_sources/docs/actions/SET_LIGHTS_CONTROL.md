@@ -31,7 +31,3 @@ turn $enabled:boolean lights control (;)
 
 turn lights control $enabled:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

@@ -30,7 +30,3 @@ script {
 ```
 wait $duration:duration (;)
 ```
-
----
-
-Back to [Actions](../actions)

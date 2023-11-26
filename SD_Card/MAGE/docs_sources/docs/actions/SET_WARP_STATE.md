@@ -26,7 +26,3 @@ script {
 ```
 set warp state (to) $string:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

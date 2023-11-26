@@ -28,7 +28,3 @@ script {
 ```
 set serial connect (message) (to) $serial_dialog:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

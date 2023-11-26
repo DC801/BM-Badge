@@ -1,6 +1,6 @@
 # Entity Management System
 
-The [web encoder](../encoder/web_encoder) has a few entity management tools. To use them, you must first upload your [scenario_source_files](../scenario_source_files)  folder to the web encoder.
+The [web encoder](../encoder/web_encoder) has a few entity management tools. To use them, you must first upload your [scenario_source_files](../getting_started/scenario_source_files)  folder to the web encoder.
 
 NOTE: Changes you make using these tools are not automatically perpetuated to the `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
 

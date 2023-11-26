@@ -30,7 +30,3 @@ script {
 ```
 register $command:string + $argument:string -> (script) $script:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

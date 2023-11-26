@@ -1016,8 +1016,6 @@ var makeObsidianEntry = function (actionName) {
 		printColors,
 		printDict.length === 1 ? '### Dictionary entry' : '### Dictionary entries',
 		printDictionary,
-		'---',
-		'Back to [Actions](../actions)'
 	]);
 	return ret.join('\n\n') + '\n';
 };

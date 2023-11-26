@@ -32,7 +32,3 @@ make entity $entity:string glitched (;)
 make entity $entity:string unglitched (;)
 	// built-in value: bool_value = false
 ```
-
----
-
-Back to [Actions](../actions)

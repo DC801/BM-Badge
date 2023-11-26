@@ -27,7 +27,3 @@ script {
 ```
 close dialog (;)
 ```
-
----
-
-Back to [Actions](../actions)

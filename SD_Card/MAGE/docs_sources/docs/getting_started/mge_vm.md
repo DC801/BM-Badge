@@ -38,6 +38,6 @@ You could do all your game development in your host OS, but you might have to be
 
 ## Raw Game Data Folders
 
-The VM already contains the raw game data for BMG2020 (found in the folder [MAGE/scenario_source_files](../scenario_source_files), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](../https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
+The VM already contains the raw game data for BMG2020 (found in the folder [MAGE/scenario_source_files](../getting_started/scenario_source_files), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](../https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
 
 The [MGE encoder](../encoder/mge_encoder) is capable of generating a `game.dat` file from an arbitrary `scenario_source_files/` folder, so having multiple project folders is not a problem.
