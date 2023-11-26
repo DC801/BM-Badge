@@ -424,7 +424,6 @@ export default defineUserConfig({
               '/mgs/serial_dialog_parameters_mgs.md',
               '/mgs/serial_dialog_messages_mgs.md',
               '/mgs/serial_dialog_options_mgs.md',
-              '/mgs/serial_dialog_example_mgs.md',
               '/mgs/serial_styles.md',
             ]
           },

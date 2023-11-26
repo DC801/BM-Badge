@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mgs/syntax_colors.md",
+                "file": "index.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "mgs/syntax_colors.md",
+                "file": "index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "mgs/syntax_colors.md",
+                "file": "index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "mgs/syntax_colors.md"
+                "file": "index.md"
               }
             }
           }
@@ -147,6 +147,17 @@
   },
   "active": "ca90d2489c55df59",
   "lastOpenFiles": [
+    "mgs/dialogs_mgs.md",
+    "mgs/serial_dialogs_mgs.md",
+    "mgs/serial_dialog_block.md",
+    "mgs/dialog_block.md",
+    "mgs/serial_dialog_example_mgs.md",
+    "mgs/serial_dialog_parameters_mgs.md",
+    "mgs/serial_dialog_options_mgs.md",
+    "mgs/serial_dialog_messages_mgs.md",
+    "mgs/advanced_syntax/const_.md",
+    "mgs/advanced_syntax/include_.md",
+    "mgs/syntax_colors.md",
     "mgs/serial_styles.md",
     "mgs/mgs_natlang_structure.md",
     "scripts/on_interact.md",
@@ -162,17 +173,6 @@
     "tilesets/creating_a_tileset_json_file.md",
     "mgs/comments_mgs.md",
     "techniques/chains_of_small_checks.md",
-    "mgs/block.md",
-    "techniques/actors.md",
-    "techniques/beginnings_middles_and_ends.md",
-    "entities/entity_properties.md",
-    "entities/relative_entity_references.md",
-    "mgs/serial_dialog_example_mgs.md",
-    "dialogs/serial_dialog_options_json.md",
-    "mgs/syntax_colors.md",
-    "tilesets/tile_collisions.md",
-    "entities/tile_entity.md",
-    "hardware/updating_the_hardware.md",
     "forest_goats",
     "MGS Advanced Syntax",
     "MGS Variables",

@@ -17,7 +17,7 @@ Note that if multiple loops are nested, `break` and `continue` will only apply t
 
 `while` lets you repeat a segment of code while the condition remains true.
 
-```mgs
+```mgs{2-7}
 scriptName {
   while (variable sodas < 5) {
     show serial dialog {
@@ -36,7 +36,7 @@ For `for`, the parentheses encloses three sets of words separated by semicolons 
 2. Condition: the condition under which the body of the `for` is to be executed
 3. Increment: changing the value of your loop counting variable
 
-```mgs
+```mgs{3-5}
 script {
   show serial dialog { "Let's count to 4!" }
   for (mutate i = 1; variable i <= 3; mutate i + 1) {
@@ -49,7 +49,7 @@ script {
 will produce:
 
 ```
-Lets count to 4!
+Let's count to 4!
 1...
 2...
 3...

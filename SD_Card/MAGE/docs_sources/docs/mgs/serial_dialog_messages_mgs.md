@@ -11,7 +11,3 @@ A serial dialog message is any [quoted string](../mgs/variables/quoted_string).
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 - Word processor "smart" characters such as ellipses (…), emdashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
 - These messages may be given ANSI [styles](../mgs/serial_styles). Use the built-in styling syntax for best results.
-
-## Example
-
-See: [Serial Dialog Example (MGS)](../mgs/serial_dialog_example_mgs)

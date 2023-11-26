@@ -8,8 +8,10 @@ Serial dialog parameters are a [serial dialog property](../dialogs/serial_dialog
 	- [Number](../mgs/variables/number): the number of chars to auto wrap the contents of serial dialog messages.
 	- 80 is default.
 
+```mgs{2}
+serial dialog settings {
+  wrap messages to 60
+}
+```
+
 (Yeah, there's only one for the moment!)
-
-## Example
-
-See: [Serial Dialog Example (MGS)](../mgs/serial_dialog_example_mgs)

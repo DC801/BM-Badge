@@ -6,12 +6,12 @@ Dialog parameters are a [dialog property](../dialogs/dialog_properties) and valu
 
 - `entity $string`
 	- [String](../mgs/variables/string): the "given name" of the entity (i.e. the entity's name on the Tiled map). (Wrapping this name in `%`s is unnecessary and will in fact confuse the MGE encoder.)
-		- Can be [%PLAYER%](../entities/PLAYER) or [%SELF%](../entities/SELF).
+		- Can be [`%PLAYER%`](../entities/PLAYER) or [`%SELF%`](../entities/SELF).
 	- A dialog can inherit a `name` and a `portrait` if given an `entity` parameter.
 	- The inherited `name` is a relative reference; the dialog display name will be whatever that entity's name is at that moment.
 - `name $string`
 	- [String](../mgs/variables/string): a fixed string of no more than 12 ASCII characters. For an [entity's current name](../scripts/printing_current_values) instead, wrap a specific entity's given name in `%`s.
-		- Can be [%PLAYER%](../entities/PLAYER) or [%SELF%](../entities/SELF).
+		- Can be [`%PLAYER%`](../entities/PLAYER) or [`%SELF%`](../entities/SELF).
 	- Overrides names inherited via the `entity` parameter.
 	- If this string is empty (`name ""`), the dialog box label will be absent entirely. (Sometimes you want this!)
 - `portrait $string`

@@ -6,7 +6,7 @@ For quick logging, you can use `debug!()` to generate [terminal](../../hardware/
 
 Thus:
 
-```mgs
+```mgs{2}
 scriptName {
   debug!("Debug mode GO!")
 }
@@ -14,7 +14,7 @@ scriptName {
 
 becomes
 
-```mgs
+```mgs{2-4}
 scriptName {
   if (debug mode is on) {
     show serial dialog {"Debug mode GO!"}

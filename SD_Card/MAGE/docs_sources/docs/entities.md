@@ -17,5 +17,5 @@ Entities are a basic element of the DC801 Mage Game Engine (MGE) along with [act
 	- [Animation Entity](entities/animation_entity)
 	- [Character Entity](entities/character_entity)
 - [Relative Entity References](entities/relative_entity_references)
-	- [%PLAYER%](entities/PLAYER)
-	- [%SELF%](entities/SELF)
+	- [`%PLAYER%`](entities/PLAYER)
+	- [`%SELF%`](entities/SELF)

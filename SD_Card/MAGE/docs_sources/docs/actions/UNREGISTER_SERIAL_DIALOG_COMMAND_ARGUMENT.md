@@ -1,6 +1,6 @@
 # UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 
-This action unregisters the specified argument from an [already-registered serial command](../actions/REGISTER_SERIAL_DIALOG_COMMAND).
+This action unregisters the specified argument from an [already-registered serial command](../REGISTER_SERIAL_DIALOG_COMMAND).
 
 ## Example JSON
 

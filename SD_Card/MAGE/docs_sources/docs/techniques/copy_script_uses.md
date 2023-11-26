@@ -1,8 +1,6 @@
 # COPY_SCRIPT Uses
 
-#updateme
-
-[COPY_SCRIPT](../actions/COPY_SCRIPT) is one of the most powerful [actions](../actions) in the Mage Game Engine (MGE).
+[`COPY_SCRIPT`](../actions/COPY_SCRIPT) is one of the most powerful [actions](../actions) in the Mage Game Engine (MGE).
 
 This is an action provided for pure convenience and is actually not used by the MGE at all — the [MGE encoder](../encoder/mge_encoder) literally copies the actions contained in the [script](../scripts) being copied and inserts them into the script containing the `COPY_SCRIPT` action. And it does this recursively, meaning a script copied with `COPY_SCRIPT` can contain the action `COPY_SCRIPT` on and on.
 
@@ -14,7 +12,7 @@ In all things programming, don't write something identical several times. Instea
 
 In the MGE2020, the shepherd nervously looks back and forth twice when giving his backstory. A simplified depiction, using [MGS Natlang](../mgs/mgs_natlang):
 
-```mgs
+```mgs{5-13,17-25}
 show_dialog-shepherd-backstory {
 	// ...
 	show dialog {}
@@ -47,7 +45,7 @@ show_dialog-shepherd-backstory {
 
 With copy script, this instead becomes:
 
-```mgs
+```mgs{4,6,9}
 show_dialog-shepherd-backstory {
 	// ...
 	show dialog {}
@@ -79,10 +77,10 @@ Even when a small sequence of actions is only used once, abstracting it into a s
 
 The sequence need not be long for this technique to be effective.
 
-In the BMG2020, we have a script called `face-player`, which turns the entity ([%SELF%](../entities/SELF)) toward the player entity ([%PLAYER%](../entities/PLAYER)). This behavior only requires one action, so in this case using `COPY_SCRIPT` won't reduce the number of actions within the script, but it does change it into a form that's easier for a human being to parse.
+In the BMG2020, we have a script called `face-player`, which turns the entity ([`%SELF%`](../entities/SELF)) toward the player entity ([`%PLAYER%`](../entities/PLAYER)). This behavior only requires one action, so in this case using `COPY_SCRIPT` won't reduce the number of actions within the script, but it does change it into a form that's easier for a human being to parse.
 
 ### Daisy Chaining Long Sequences
 
 For long sequences, it can help to build each segment of dialog and/or choreography one at a time and then daisy chain them when you know each segment is working as intended.
 
-While you might add a [RUN_SCRIPT](../actions/RUN_SCRIPT) to the end of each segment to link them to the next, you might also have a separate script that uses `COPY_SCRIPT` for each segment in sequence. This allows the segments to remain independent in case you need to trigger a single segment on its own. (Plus it allows you to use a single segment multiple times.)
+While you might add a [`RUN_SCRIPT`](../actions/RUN_SCRIPT) to the end of each segment to link them to the next, you might also have a separate script that uses `COPY_SCRIPT` for each segment in sequence. This allows the segments to remain independent in case you need to trigger a single segment on its own. (Plus it allows you to use a single segment multiple times.)

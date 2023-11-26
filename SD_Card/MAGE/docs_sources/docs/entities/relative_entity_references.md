@@ -1,7 +1,7 @@
 # Relative Entity References
 
-- [%SELF%](../entities/SELF) — the entity running the script
-- [%PLAYER%](../entities/PLAYER) — the player entity
+- [`%SELF%`](../entities/SELF) — the entity running the script
+- [`%PLAYER%`](../entities/PLAYER) — the player entity
 
 Unlike relative entity names, you can use these two **relative entity references** everywhere, including the arguments of actions.
 

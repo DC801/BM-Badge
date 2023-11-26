@@ -4,7 +4,7 @@ Advanced [MGS Natlang](../../mgs/mgs_natlang) syntax (specifically for [MGS Natl
 
 `return` is a keyword that will end the current [script](../../scripts) early. (It simply sets the action index past the end of the script, causing it to immediately end.)
 
-This will not prevent [on_tick](../../scripts/on_tick) scripts from looping on the next game tick, however; if you want to stop an `on_tick` script for good, you must explicitly [goto](../../RUN_SCRIPT) `null_script`.
+This will not prevent [`on_tick`](../../scripts/on_tick) scripts from looping on the next game tick, however; if you want to stop an `on_tick` script for good, you must explicitly [goto](../../RUN_SCRIPT) `null_script`.
 
 ## Returning a value
 

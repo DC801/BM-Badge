@@ -19,7 +19,9 @@ Inside the above parentheses can be any number of constant assignments:
 
 Keep in mind that `$` is also used in this documentation's [MGS Natlang](../../mgs/mgs_natlang) "dictionary" syntax (e.g. `wait $duration`), but that is a different usage, as those variables are to be replaced by values of that variable type (e.g. `wait 100ms`), whereas these constants will appear in the final MGS file literally in the form `$_`.
 
-#### Example
+To assign such a constant once while using it multiple times throughout your project, combine this with [include!()](include_).
+
+## Example
 
 ```mgs
 const!(
@@ -43,7 +45,7 @@ testScript {
 
 The above is what the MGS Natlang syntax parser will actually parse. Syntax errors (if any) will be caught at that point and not before; the macro literally doesn't care what the underlying syntax is.
 
-#### Limitations
+## Limitations
 
 - `const!()` registers and replaces tokens; it does not find-and-replace arbitrary strings. For this reason, you will not be able to use constants inside a [quoted_string](../variables/quoted_string.md), since a quoted string *in its entirety* counts as a single token.
 - In addition, this macro only captures single tokens; you cannot use a constant to represent multiple tokens, e.g. `const!($parade = 76 trombones);` will result in a syntax error.

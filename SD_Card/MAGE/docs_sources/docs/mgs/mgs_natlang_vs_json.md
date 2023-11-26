@@ -41,9 +41,7 @@ on_tick-greenhouse {
 }
 ```
 
-Apart from the fact that the MGS Natlang won't receive any syntax coloring by default, this is more approachable.
-
-It's more compact, and the nested relationship of the script and its actions is far easier to see at a glance. Human-friendly grammar constructions (e.g. `is inside` vs `is not inside`) makes it much easier to follow script branching logic.
+This is far more approachable — more compact, and the nested relationship of the script and its actions is far easier to see at a glance. Human-friendly grammar constructions (e.g. `is inside` vs `is not inside`) makes it much easier to follow script branching logic.
 
 ### Original dialog JSON
 
@@ -74,13 +72,8 @@ Dialog JSON is more uniform than script JSON is, but its information density is 
 
 ```mgs
 settings for dialog {
-  default {
-    alignment BL
-  }
-  label PLAYER {
-    entity "%PLAYER%"
-    alignment BR
-  }
+  default { alignment BL }
+  label PLAYER { entity "%PLAYER%" alignment BR }
 }
 ```
 
@@ -88,25 +81,19 @@ With MGS Natlang, you can create presets for common dialog settings (see above),
 
 ```mgs
 dialog exampleDialogName {
-  Trekkie
-  "Me want to wish you a happy birthday, %PLAYER%."
-
-  PLAYER
-  "Aww, gee, thanks, Farmer %Trekkie%!"
+  Trekkie "Me want to wish you a happy birthday, %PLAYER%."
+  PLAYER "Aww, gee, thanks, Farmer %Trekkie%!"
 }
 ```
-
-Since MGS Natlang is white space agnostic, it can be as compact as you want:
 
 ```mgs
 dialog exampleDialog2 {
-  PLAYER "Neat."
+  PLAYER
+  "Neat."
 }
-```
 
-or even
+// is equivalent to
 
-```mgs
 dialog exampleDialog2 { PLAYER "Neat." }
 ```
 
@@ -116,21 +103,17 @@ However, where MGS Natlang really shines is in combining both script data and di
 
 ```mgs
 settings for dialog {
-  label PLAYER {
-    entity "%PLAYER%"
-    alignment BR
-  }
+  label PLAYER { entity "%PLAYER%" alignment BR }
 }
-show_dialog-wopr-backdoor {
+cutscene {
   turn player control off;
-  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms;
-  wait 400ms;
-  turn player control on;
+  walk entity "%PLAYER%" along geometry approach-desk over 600ms;
+  wait 800ms;
+  turn entity Trekkie toward entity "%PLAYER%";
+  wait 200ms;
   show dialog {
-    PLAYER
-    "Whoa! It looks like I found some kind of back door."
+    Trekkie "Oh, welcome, %PLAYER%!"
   }
-  set flag backdoor-found to true;
 }
 ```
 
