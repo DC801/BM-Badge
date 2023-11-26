@@ -1,0 +1,83 @@
+# CHECK_ENTITY_LOOK_SCRIPT
+
+Checks an [entity](entities)'s [on_look](scripts/on_look) [script](scripts/script_slots) (by the [script](scripts)'s name).
+
+## Example JSON
+
+```json
+{
+  "action": "CHECK_ENTITY_LOOK_SCRIPT",
+  "entity": "Entity Name",
+  "expected_bool": true,
+  "expected_script": "scriptName",
+  "success_script": "successScript"
+},
+{
+  "action": "CHECK_ENTITY_LOOK_SCRIPT",
+  "entity": "Entity Name",
+  "expected_bool": true,
+  "expected_script": "scriptName",
+  "jump_index": 12
+}
+```
+
+## MGS Natlang
+
+The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="control">if</span> <span class="bracket">(</span><span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="script">scriptName</span><span class="bracket">)</span> <span class="bracket">{</span><span class="bracket">}</span>
+
+</pre>
+
+### Examples:
+
+<pre class="HyperMD-codeblock mgs">
+
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="script">scriptName</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="script">scriptName</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="script">scriptName</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="operator">not</span> <span class="script">scriptName</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="operator">not</span> <span class="script">scriptName</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
+  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">is</span> <span class="operator">not</span> <span class="script">scriptName</span>
+    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
+
+</pre>
+
+### Dictionary entries:
+
+```
+if entity $entity:string on_look is $expected_script:string
+    then goto (script) $success_script:string (;)
+	// built-in value: expected_bool = true
+
+if entity $entity:string on_look is $expected_script:string
+    then goto index $jump_index:number (;)
+	// built-in value: expected_bool = true
+
+if entity $entity:string on_look is $expected_script:string
+    then goto label $jump_index:bareword (;)
+	// built-in value: expected_bool = true
+
+if entity $entity:string on_look is not $expected_script:string
+    then goto (script) $success_script:string (;)
+	// built-in value: expected_bool = false
+
+if entity $entity:string on_look is not $expected_script:string
+    then goto index $jump_index:number (;)
+	// built-in value: expected_bool = false
+
+if entity $entity:string on_look is not $expected_script:string
+    then goto label $jump_index:bareword (;)
+	// built-in value: expected_bool = false
+```
+
+---
+
+Back to [Actions](actions)
