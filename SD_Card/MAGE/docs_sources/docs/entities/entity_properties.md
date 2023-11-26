@@ -28,7 +28,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 **[on_interact](../scripts/on_interact) (string)** — This identifies the script that is run when the player interacts with the entity. Overwhelmingly, this will be the start of the entity's dialog tree.
 
-**`primary_id_type`**, **`primary_id`**, and **`secondary_id`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map. (See: [entity types](../entity types))
+**`primary_id_type`**, **`primary_id`**, and **`secondary_id`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map. (See: [entity types](../entities/entity_types))
 
 **`current_animation` (int)** — This lets you set the specific animation for character entities. (`0` is the idle, and will play by default.)
 

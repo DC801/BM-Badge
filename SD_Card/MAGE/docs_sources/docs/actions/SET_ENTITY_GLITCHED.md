@@ -14,16 +14,16 @@ Set the glitched render flag on an [entity](../entities).
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  make entity "Entity Name" glitched;
+  make entity "Entity Name" unglitched;
+}
+```
 
-  <span class="verb">make</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="language-constant">glitched</span><span class="terminator">;</span>
-  <span class="verb">make</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="language-constant">unglitched</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 make entity $entity:string glitched (;)

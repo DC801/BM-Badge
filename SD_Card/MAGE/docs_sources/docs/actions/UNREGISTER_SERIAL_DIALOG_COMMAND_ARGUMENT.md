@@ -14,15 +14,15 @@ This action unregisters the specified argument from an [already-registered seria
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  unregister map + castle;
+}
+```
 
-  <span class="verb">unregister</span> <span class="string">map</span> <span class="operator">+</span> <span class="string">castle</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 unregister $command:string + $argument:string (;)

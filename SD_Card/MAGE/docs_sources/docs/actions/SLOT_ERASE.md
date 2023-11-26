@@ -13,15 +13,15 @@ This action clears all the [save data](../scripts/save_data) in the given slot.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  erase slot 2;
+}
+```
 
-  <span class="verb">erase</span> <span class="sigil">slot</span> <span class="number">2</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 erase slot $slot:number (;)

@@ -16,15 +16,15 @@ This is useful for staggering the animations of [entities](../entities) that hav
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" animation_frame to 1;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">animation_frame</span> <span class="operator">to</span> <span class="number">1</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string animation_frame (to) $byte_value:number (;)

@@ -13,15 +13,15 @@ Sets the map's [on_tick](../scripts/on_tick) script.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set map on_tick to scriptName;
+}
+```
 
-  <span class="verb">set</span> <span class="target">map</span> <span class="target">on_tick</span> <span class="operator">to</span> <span class="script">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set map on_tick (to) $script:string (;)

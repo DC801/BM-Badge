@@ -22,14 +22,14 @@ And the script:
 
 ```json
 "dialog-introduction": [
-	{
-		"alignment": "BOTTOM_LEFT",
-		"entity": "%SELF%",
-		"messages": [
-			"So you're %PLAYER%, huh?\nWell, My name is %SELF%!",
-			"Got it memorized?"
-		]
-	}
+  {
+    "alignment": "BOTTOM_LEFT",
+    "entity": "%SELF%",
+    "messages": [
+      "So you're %PLAYER%, huh?\nWell, My name is %SELF%!",
+      "Got it memorized?"
+    ]
+  }
 ]
 ```
 If the entity Bender ran the script above, you would see the following dialog boxes:
@@ -60,14 +60,14 @@ If we change `entity` to `Bender` instead of `%SELF%`, but leave the `%SELF%` re
 
 ```json
 "dialog-introduction": [
-	{
-		"alignment": "BOTTOM_LEFT",
-		"entity": "Bender",
-		"messages": [
-			"So you're %PLAYER%, huh?\nWell, My name is %SELF%!",
-			"Got it memorized?"
-		]
-	}
+  {
+    "alignment": "BOTTOM_LEFT",
+    "entity": "Bender",
+    "messages": [
+      "So you're %PLAYER%, huh?\nWell, My name is %SELF%!",
+      "Got it memorized?"
+    ]
+  }
 ]
 ```
 
@@ -93,14 +93,14 @@ However, if you were using `name` instead of `entity`, then you would begin to h
 
 ```json
 "dialog-introduction": [
-	{
-		"alignment": "BOTTOM_LEFT",
-		"name": "Bender",
-		"messages": [
-			"So you're %PLAYER%, huh?\nWell, My name is %Bender%!",
-			"Got it memorized?"
-		]
-	}
+  {
+    "alignment": "BOTTOM_LEFT",
+    "name": "Bender",
+    "messages": [
+      "So you're %PLAYER%, huh?\nWell, My name is %Bender%!",
+      "Got it memorized?"
+    ]
+  }
 ]
 ```
 

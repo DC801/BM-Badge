@@ -15,15 +15,15 @@ This action is also available as a [combination block](../mgs/combination_block)
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set serial connect message to serialDialogName;
+}
+```
 
-  <span class="verb">set</span> <span class="target">serial</span> <span class="target">connect</span> <span class="target">message</span> <span class="operator">to</span> <span class="string">serialDialogName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set serial connect (message) (to) $serial_dialog:string (;)

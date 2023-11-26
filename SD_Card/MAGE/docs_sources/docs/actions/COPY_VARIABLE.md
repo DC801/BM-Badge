@@ -16,18 +16,18 @@ Copies the value of an [entity](../entities) [property](../entities/entity_prope
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  copy entity "Entity Name" x from variable varName;
+  copy entity "Entity Name" x into variable varName;
+  copy variable varName from entity "Entity Name" x;
+  copy variable varName into entity "Entity Name" x;
+}
+```
 
-  <span class="verb">copy</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span> <span class="">from</span> <span class="sigil">variable</span> <span class="string">varName</span><span class="terminator">;</span>
-  <span class="verb">copy</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span> <span class="">into</span> <span class="sigil">variable</span> <span class="string">varName</span><span class="terminator">;</span>
-  <span class="verb">copy</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="">from</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span><span class="terminator">;</span>
-  <span class="verb">copy</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="">into</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 copy entity $entity:string $field:bareword from variable $variable:string (;)

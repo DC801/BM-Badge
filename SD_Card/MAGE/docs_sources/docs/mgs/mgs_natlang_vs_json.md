@@ -86,7 +86,7 @@ settings for dialog {
 
 With MGS Natlang, you can create presets for common dialog settings (see above), after which, the dialogs themselves become very lightweight:
 
-```ngs
+```mgs
 dialog exampleDialogName {
   Trekkie
   "Me want to wish you a happy birthday, %PLAYER%."

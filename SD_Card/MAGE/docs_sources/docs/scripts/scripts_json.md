@@ -10,36 +10,38 @@ NOTE: With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not w
 
 Remember that strings, including property names, must always be enclosed in double quotes. Numbers and booleans (`true`/`false`) must not have quotes. Multiple items in a single object literal or array must be separated by commas.
 
-	01	{
-	02	  "show_dialog-alice-start": [
-	03	    {
-	04	      "action": "CHECK_SAVE_FLAG",
-	05	      "save_flag": "alice-backstory",
-	06	      "expected_bool": true,
-	07	      "success_script": "show_dialog-alice-summary"
-	08	    },
-	09	    {
-	10	      "name": "SHOW_DIALOG",
-	11	      "dialog": "dialog-alice-start"
-	12	    },
-	13	    {
-	14	      "name": "SET_SAVE_FLAG",
-	15	      "save_flag": "alice-backstory",
-	16	      "bool_value": true
-	17	    }
-	18	  ],
-	19	  "show_dialog-alice-summary": [
-	20	    {
-	21	      "name": "SHOW_DIALOG",
-	22	      "dialog": "dialog-alice-summary"
-	23	    },
-	24	    {
-	25	      "name": "SET_ENTITY_INTERACT_SCRIPT",
-	26	      "entity": "%SELF%",
-	27	      "script": "show_dialog-alice-start"
-	28	    }
-	29	  ]
-	30	}
+```json:line-numbers
+{
+  "show_dialog-alice-start": [
+    {
+      "action": "CHECK_SAVE_FLAG",
+      "save_flag": "alice-backstory",
+      "expected_bool": true,
+      "success_script": "show_dialog-alice-summary"
+    },
+    {
+      "name": "SHOW_DIALOG",
+      "dialog": "dialog-alice-start"
+    },
+    {
+      "name": "SET_SAVE_FLAG",
+      "save_flag": "alice-backstory",
+      "bool_value": true
+    }
+  ],
+  "show_dialog-alice-summary": [
+    {
+      "name": "SHOW_DIALOG",
+      "dialog": "dialog-alice-summary"
+    },
+    {
+      "name": "SET_ENTITY_INTERACT_SCRIPT",
+      "entity": "%SELF%",
+      "script": "show_dialog-alice-start"
+    }
+  ]
+}
+```
 
 This demonstrates the simple branching that scripts use to produce different entity behaviors.
 

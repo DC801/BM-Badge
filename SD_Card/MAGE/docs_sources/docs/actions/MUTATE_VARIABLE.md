@@ -17,15 +17,15 @@ See [operations](../structure/operations).
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  mutate varName + 1;
+}
+```
 
-  <span class="verb">mutate</span> <span class="string">varName</span> <span class="operator">+</span> <span class="number">1</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 mutate $variable:string $operation:operator $value:number (;)

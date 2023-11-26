@@ -26,9 +26,9 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 - [Vector Objects](maps/vector_objects)
 - [Coordinate Overflow](maps/coordinate_overflow)
 
-## [Entities](Entities)
+## [Entities](entities)
 
-- [Entity Types](Entity Types)
+- [Entity Types](entities/entity_types)
 	- [Tile Entity](entities/tile_entity)
 		- [Null Entity](entities/null_entity)
 	- [Animation Entity](entities/animation_entity)
@@ -44,7 +44,7 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 - [Multiple Choice Dialogs (JSON)](dialogs/multiple_choice_dialogs_json)
 - [Dialogs (JSON)](dialogs/dialogs_json)
 
-## [Scripts](Scripts)
+## [Scripts](scripts)
 
 - [Script Slots](scripts/script_slots)
 	- [on_interact](scripts/on_interact)
@@ -73,7 +73,27 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 
 ## Actions
 
-- [Action Dictionary](Actions)
+- [Action Dictionary](actions)
+
+## [MGS Natlang](mgs/mgs_natlang)
+
+- [MGS Natlang vs JSON](mgs/mgs_natlang_vs_json)
+- [Syntax Colors](mgs/syntax_colors)
+- [MGS Natlang Structure](mgs/mgs_natlang_structure)
+	- [Block](mgs/block)
+	- [Variables (MGS)](mgs/variables_mgs)
+	- [Comments (MGS)](mgs/comments_mgs)
+	- [Serial Styles](mgs/serial_styles)
+- [Advanced MGS Natlang Syntax](mgs/advanced_mgs_natlang_syntax)
+	- [Labels](mgs/advanced_syntax/labels)
+	- [Return](mgs/advanced_syntax/return)
+	- [While and For](mgs/advanced_syntax/while_and_for) (includes `break` and `continue`)
+	- [If and Else](mgs/advanced_syntax/if_and_else)
+	- [Macros](mgs/macros)
+		- [const!()](mgs/advanced_syntax/const_)
+		- [debug!()](mgs/advanced_syntax/debug_)
+		- [include!()](mgs/advanced_syntax/include_)
+	- [Combination Block](mgs/combination_block)
 
 ## Finishing
 

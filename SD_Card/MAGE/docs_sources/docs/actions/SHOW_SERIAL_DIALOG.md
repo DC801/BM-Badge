@@ -18,16 +18,16 @@ This action is also available as a [combination block](../mgs/combination_block)
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  concat serial dialog serialDialogName;
+  show serial dialog serialDialogName;
+}
+```
 
-  <span class="verb">concat</span> <span class="target">serial</span> <span class="target">dialog</span> <span class="string">serialDialogName</span><span class="terminator">;</span>
-  <span class="verb">show</span> <span class="sigil">serial</span> <span class="sigil">dialog</span> <span class="string">serialDialogName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 concat serial dialog $serial_dialog:string (;)

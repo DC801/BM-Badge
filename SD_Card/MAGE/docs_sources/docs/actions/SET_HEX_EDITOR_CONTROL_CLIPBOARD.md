@@ -13,16 +13,16 @@ This action enables or disables the clipboard and copy functionality within the 
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  turn on hex clipboard;
+  turn hex clipboard on;
+}
+```
 
-  <span class="verb">turn</span> <span class="language-constant">on</span> <span class="target">hex</span> <span class="target">clipboard</span><span class="terminator">;</span>
-  <span class="verb">turn</span> <span class="target">hex</span> <span class="target">clipboard</span> <span class="language-constant">on</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 turn $bool_value:boolean hex clipboard (;)

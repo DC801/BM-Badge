@@ -16,15 +16,15 @@ This action can be chained with another similar one for complex behaviors. For e
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  rotate entity "Entity Name" 3;
+}
+```
 
-  <span class="verb">rotate</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="number">3</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 rotate entity $entity:string $relative_direction:number (;)

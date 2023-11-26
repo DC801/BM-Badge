@@ -16,15 +16,15 @@ In practice, you will likely want to use [geometry vectors](../maps/vector_objec
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" x to 2;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">x</span> <span class="operator">to</span> <span class="number">2</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string x (to) $u2_value:number (;)

@@ -15,15 +15,15 @@ Shakes the camera a certain distance (`amplitude`) at a certain speed (`frequenc
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  shake camera 200ms 32px for 3s;
+}
+```
 
-  <span class="verb">shake</span> <span class="target">camera</span> <span class="number">200ms</span> <span class="number">32px</span> <span class="">for</span> <span class="number">3s</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 shake camera $frequency:duration $amplitude:distance for $duration:duration (;)

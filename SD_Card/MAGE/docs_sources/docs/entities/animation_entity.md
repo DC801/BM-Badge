@@ -1,6 +1,6 @@
 # Animation Entity
 
-One of the three [entity types](../entity types).
+One of the three [entity types](../entities/entity_types).
 
 If you place a animated tile from a [tileset](../Tilesets) onto an object layer in a Tiled [map](../maps), it will become an **animation entity**.
 

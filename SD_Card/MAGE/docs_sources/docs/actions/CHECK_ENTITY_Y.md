@@ -25,32 +25,26 @@ Checks an [entity](../entities)'s [y](../entities/entity_properties) coordinate.
 
 The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  if (entity "Entity Name" y is 32) {}
+}
+```
 
-  <span class="control">if</span> <span class="bracket">(</span><span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="number">32</span><span class="bracket">)</span> <span class="bracket">{</span><span class="bracket">}</span>
+### Examples
 
-</pre>
+```mgs
+script {
+  if entity "Entity Name" y is 32 then goto successScript;
+  if entity "Entity Name" y is 32 then goto index 12;
+  if entity "Entity Name" y is 32 then goto label labelName;
+  if entity "Entity Name" y is not 32 then goto successScript;
+  if entity "Entity Name" y is not 32 then goto index 12;
+  if entity "Entity Name" y is not 32 then goto label labelName;
+}
+```
 
-### Examples:
-
-<pre class="HyperMD-codeblock mgs">
-
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">y</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">32</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 if entity $entity:string y is $expected_u2:number

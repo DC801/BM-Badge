@@ -14,15 +14,15 @@ This assigns a [geometry object](../maps/vector_objects) to an [entity](../entit
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" path to "vector object name";
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">path</span> <span class="operator">to</span> <span class="string">"vector object name"</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string path (to) $geometry:string (;)

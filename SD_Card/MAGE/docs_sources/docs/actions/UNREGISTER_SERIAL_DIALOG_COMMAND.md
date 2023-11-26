@@ -15,16 +15,16 @@
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  unregister map;
+  unregister map fail;
+}
+```
 
-  <span class="verb">unregister</span> <span class="string">map</span><span class="terminator">;</span>
-  <span class="verb">unregister</span> <span class="string">map</span> <span class="target">fail</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 unregister $command:string (;)

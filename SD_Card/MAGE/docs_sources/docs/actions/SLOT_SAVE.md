@@ -24,15 +24,15 @@ Things that are saved:
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  save slot;
+}
+```
 
-  <span class="verb">save</span> <span class="target">slot</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 save slot (;)

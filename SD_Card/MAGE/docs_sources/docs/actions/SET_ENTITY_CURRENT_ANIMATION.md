@@ -18,15 +18,15 @@ See [entity animations](../tilesets/animations) for what numbers correspond to w
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" current_animation to 1;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">current_animation</span> <span class="operator">to</span> <span class="number">1</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string current_animation (to) $byte_value:number (;)

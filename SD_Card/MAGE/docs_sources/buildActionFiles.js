@@ -908,12 +908,9 @@ var makePrintableEntry = function (entry) {
 };
 
 var makeObsidianMGSBlock = function (string) {
+	var indented = string.split('\n').map(function (item) { return '  '+item; }).join('\n');
 	// double line breaks are more like what obsidian does for its code blocks btw
-	var string =
-`<pre class="HyperMD-codeblock mgs">\n
-  ${string}\n
-</pre>`
-	return string;
+	return '```mgs\nscript {\n' + indented + '\n}\n```';
 }
 var makeObsidianEntry = function (actionName) {
 	// JSON 
@@ -979,9 +976,15 @@ var makeObsidianEntry = function (actionName) {
 		.join('\n');
 
 	var colorReports = dict.map(makeColorReport);
-	var colors = colorReports.map(makeColorExampleFromReport)
-		.join('\n  ');
-	var printColors = makeObsidianMGSBlock(colors);
+	var exampleNatlang = colorReports
+		.map(function (item) {
+			return item.map(function (arr) {
+				return arr.value;
+			}).join(' ').replace(' ;', ';');
+		}).join('\n');
+	// var colors = colorReports.map(makeColorExampleFromReport)
+	// 	.join('\n');
+	var printColors = makeObsidianMGSBlock(exampleNatlang);
 	
 	// and we're done?
 	var ret = [
@@ -998,24 +1001,20 @@ var makeObsidianEntry = function (actionName) {
 			return item.value === "then";
 		})
 		var abbrev = firstColorReport.slice(1, thenIndex);
+		var conditionSample = abbrev.map(function (item) { return item.value }).join(' ');
 		ret.push(`The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.`);
-		var abbrev = [
-			{ style: "control", value: "if" },
-			{ style: "bracket", value: "(" },
-		]
-			.concat(abbrev)
-			.concat([
-				{ style: "bracket", value: ")" },
-				{ style: "bracket", value: "{" },
-				{ style: "bracket", value: "}" },
-			]);
-		var printAbbrev = makeColorExampleFromReport(abbrev);
-		ret.push(makeObsidianMGSBlock(printAbbrev));
+		ret.push([
+			'```mgs',
+			'script {',
+			`  if (${conditionSample}) {}`,
+			'}',
+			'```'
+		].join('\n'));
 	}
 	ret = ret.concat([
-		printDict.length === 1 ? '### Example:' : '### Examples:',
+		printDict.length === 1 ? '### Example' : '### Examples',
 		printColors,
-		printDict.length === 1 ? '### Dictionary entry:' : '### Dictionary entries:',
+		printDict.length === 1 ? '### Dictionary entry' : '### Dictionary entries',
 		printDictionary,
 		'---',
 		'Back to [Actions](../actions)'

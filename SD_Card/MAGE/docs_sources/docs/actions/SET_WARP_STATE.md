@@ -13,15 +13,15 @@ Set the [warp state string](../scripts/warp_state) to a specific value.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set warp state to "some kind of string";
+}
+```
 
-  <span class="verb">set</span> <span class="target">warp</span> <span class="target">state</span> <span class="operator">to</span> <span class="string">"some kind of string"</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set warp state (to) $string:string (;)

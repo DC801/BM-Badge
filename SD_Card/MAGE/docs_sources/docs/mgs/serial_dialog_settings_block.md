@@ -2,7 +2,7 @@
 
 One of the root level [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang).
 
-```
+```mgs
 settings (for) serial dialog {}
 ```
 

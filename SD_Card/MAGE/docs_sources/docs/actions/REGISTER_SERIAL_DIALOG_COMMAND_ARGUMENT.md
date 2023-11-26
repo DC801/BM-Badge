@@ -17,15 +17,15 @@ Arguments can be multiple words. In-game, if the second word is `at` or `to` it 
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  register map + castle -> scriptName;
+}
+```
 
-  <span class="verb">register</span> <span class="string">map</span> <span class="operator">+</span> <span class="string">castle</span> <span class="control">-></span> <span class="script">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 register $command:string + $argument:string -> (script) $script:string (;)

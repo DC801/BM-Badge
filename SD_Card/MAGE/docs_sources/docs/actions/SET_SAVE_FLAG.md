@@ -14,15 +14,15 @@ Set a [save flag](../scripts/save_flags) to `true` or `false`.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set flag saveFlagName to true;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">flag</span> <span class="string">saveFlagName</span> <span class="operator">to</span> <span class="language-constant">true</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set flag $save_flag:string (to) $bool_value:boolean (;)

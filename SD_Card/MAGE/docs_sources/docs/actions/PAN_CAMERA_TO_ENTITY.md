@@ -16,15 +16,15 @@ NOTE: if the entity is moving while the camera is coming closer, the camera will
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  pan camera to entity "Entity Name" over 1000ms;
+}
+```
 
-  <span class="verb">pan</span> <span class="target">camera</span> <span class="">to</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="">over</span> <span class="number">1000ms</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 pan camera to entity $entity:string over $duration:duration (;)
