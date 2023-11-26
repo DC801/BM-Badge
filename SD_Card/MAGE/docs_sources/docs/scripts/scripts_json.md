@@ -55,6 +55,6 @@ After showing the alternate dialog, the script sets Alice's `on_interact` script
 
 ![flowchart of Alice's behavior](../media/script-alice.png)
 
-For scripts with very complex branching, it can be beneficial to plot them out (and color code them!). This chart was done with [diagrams.net](../https://app.diagrams.net/), but other graphics software (or a pen and paper) might be used instead.
+For scripts with very complex branching, it can be beneficial to plot them out (and color code them!). This chart was done with [diagrams.net](https://app.diagrams.net/), but other graphics software (or a pen and paper) might be used instead.
 
 For subsequent examples, I'll be using this flow-chart-esque format to demonstrate script behaviors. For these charts, each column represents a different script (named at the top of each column by a rectangle), and the script under the stick figure indicates the entity's default `on_interact` script.

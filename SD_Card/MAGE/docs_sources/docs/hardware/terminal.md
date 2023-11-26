@@ -4,4 +4,4 @@ The terminal interface, new in the chapter 2 version of the Mage Game Engine (MG
 
 Some serial [commands](../hardware/commands) are build in to the MGE by default, but others must be [registered](../REGISTER_SERIAL_DIALOG_COMMAND).
 
-[Scripts](../Scripts) can print serial messages with [serial dialogs](../dialogs/serial_dialogs). These can listen for specific serial input, too, with [serial dialog options](../serial dialog options).
+[Scripts](../Scripts) can print serial messages with [serial dialogs](../dialogs/serial_dialogs). These can listen for specific serial input, too, with [serial dialog options](../serial_dialog_options).

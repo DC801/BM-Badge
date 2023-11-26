@@ -6,16 +6,18 @@
 
 ## Download the VM image
 
-The [VM image](../https://drive.google.com/file/d/1S3qmwfSq9DD3EdxqE4Bh8B2QsWe1d85-/view?usp=sharing), available to download from Google Drive, is approximately 6GB.
+The [VM image](https://drive.google.com/file/d/1S3qmwfSq9DD3EdxqE4Bh8B2QsWe1d85-/view?usp=sharing), available to download from Google Drive, is approximately 6GB.
 
 In case you need to `sudo` anything:
 
-	username: dc801
-	password: helga
+```
+username: dc801
+password: helga
+```
 
 ## VirtualBox
 
-1. Install [VirtualBox](../https://www.virtualbox.org/).
+1. Install [VirtualBox](https://www.virtualbox.org/).
 2. Go to File > Import Appliance, then find the .ova file you downloaded previously.
 	- The expanded VM image will be about 12GB, but can become as large as 32GB (depending on what you do inside it), so keep that in mind when choosing where to put it.
 
@@ -38,6 +40,6 @@ You could do all your game development in your host OS, but you might have to be
 
 ## Raw Game Data Folders
 
-The VM already contains the raw game data for BMG2020 (found in the folder [MAGE/scenario_source_files](../getting_started/scenario_source_files), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](../https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
+The VM already contains the raw game data for BMG2020 (found in the folder [MAGE/scenario_source_files](../getting_started/scenario_source_files), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
 
 The [MGE encoder](../encoder/mge_encoder) is capable of generating a `game.dat` file from an arbitrary `scenario_source_files/` folder, so having multiple project folders is not a problem.

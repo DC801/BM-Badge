@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PRIMARY_ID_TYPE
 
-Checks an [entity](../entities)'s [primary_id_type](../entity types): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`).
+Checks an [entity](../entities)'s [primary_id_type](../entities/entity_types): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`).
 
 ## Example JSON
 

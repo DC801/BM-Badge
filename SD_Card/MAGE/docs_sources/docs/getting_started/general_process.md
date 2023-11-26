@@ -24,7 +24,7 @@ An example production pipeline. The exact order can vary a bit, and previous ste
 		2. Set [tile collisions](../tilesets/tile_collisions) for each tile.
 	3. In Tiled, [create a map](../maps) using the tileset(s) from above.
 	4. Place entities on the map.
-		1. Set [entity properties](../entity_properties), e.g.
+		1. Set [entity properties](../entities/entity_properties), e.g.
 			1. `Name`
 			2. `is_player`
 			3. [on_tick](../scripts/on_tick) script

@@ -1,6 +1,6 @@
 # Character Entity
 
-One of the three [entity types](../entities/entity types).
+One of the three [entity types](../entities/entity_types).
 
 If you place a tile from a [tileset](../tilesets) onto an object layer in a Tiled [map](../maps), and the `Class` (formerly `Type`) property of the tile has been defined in [entity_types.json](../structure/entity_types.json), it will become an **character entity**.
 

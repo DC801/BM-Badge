@@ -435,14 +435,14 @@ var actionText = {
 	"CHECK_ENTITY_PRIMARY_ID": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [entity](../entities) has the given [primary_id](../entity types).",
+			"Checks whether an [entity](../entities) has the given [primary_id](../entities/entity_types).",
 			"[CHECK_ENTITY_TYPE](../actions/CHECK_ENTITY_TYPE) is recommended instead."
 		]
 	},
 	"CHECK_ENTITY_SECONDARY_ID": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [entity](../entities) has the given [secondary_id](../entity types).",
+			"Checks whether an [entity](../entities) has the given [secondary_id](../entities/entity_types).",
 			"This entity property is only useful on [tile entities](../entities/tile_entity), where the `secondary_id` determines which tile in the tileset is displayed.",
 			"Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID."
 		]
@@ -450,7 +450,7 @@ var actionText = {
 	"CHECK_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [primary_id_type](../entity types): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`)."
+			"Checks an [entity](../entities)'s [primary_id_type](../entities/entity_types): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`)."
 		]
 	},
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
@@ -487,7 +487,7 @@ var actionText = {
 		"category": "Check Entity Properties",
 		"info": [
 			"Checks whether an [entity](../entities) is inside the named [geometry](../maps/vector_objects).",
-			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate underflow](../coordinate underflow)."
+			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/coordinate_overflow)."
 		]
 	},
 	"SET_ENTITY_NAME": {

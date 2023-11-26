@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PRIMARY_ID
 
-Checks whether an [entity](../entities) has the given [primary_id](../entity types).
+Checks whether an [entity](../entities) has the given [primary_id](../entities/entity_types).
 
 [CHECK_ENTITY_TYPE](../actions/CHECK_ENTITY_TYPE) is recommended instead.
 

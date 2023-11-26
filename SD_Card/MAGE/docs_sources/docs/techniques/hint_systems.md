@@ -48,7 +48,7 @@ Incorporating hint variations will likely require more frequent hint logic check
 
 ### Hintiger Abstraction
 
-Hintigers might count as [magic numbers](../https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Unnamed_numerical_constants), which are to be avoided when possible. Solutions include:
+Hintigers might count as [magic numbers](https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Unnamed_numerical_constants), which are to be avoided when possible. Solutions include:
 
 #### MGS Natlang Constants
 
