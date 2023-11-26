@@ -56,7 +56,7 @@ Any animation set this way will be overridden by the walk animation if the chara
 
 ## Animation Transitions and Vamping
 
-An action animation cannot be started and held (or [vamped](../https://en.wikipedia.org/wiki/Ostinato#Musical_theater)) for an indeterminate length of time. If you want an action animation to behave this way, you'll need to split the animation into three pieces: the start transition, the "vamp," and the end transition. Trigger each with a script:
+An action animation cannot be started and held (or [vamped](https://en.wikipedia.org/wiki/Ostinato#Musical_theater)) for an indeterminate length of time. If you want an action animation to behave this way, you'll need to split the animation into three pieces: the start transition, the "vamp," and the end transition. Trigger each with a script:
 
 - [PLAY_ENTITY_ANIMATION](../actions/PLAY_ENTITY_ANIMATION) with a `play_count` of `1` for the start transition
 - [SET_ENTITY_CURRENT_ANIMATION](../actions/SET_ENTITY_CURRENT_ANIMATION) for the "vamp," or the portion you want to repeat for an indeterminate amount of time

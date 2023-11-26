@@ -36,6 +36,7 @@ export default defineUserConfig({
     }),
   ],
   theme: defaultTheme({
+    contributors: false,
     sidebarDepth: 2,
     sidebar: [
       {
@@ -44,6 +45,7 @@ export default defineUserConfig({
         children: [
           "/getting_started/what_youll_need.md",
           "/getting_started/mge_vm.md",
+          "/getting_started/general_process.md",
           {
             text: "Filesystem",
             collapsible: true,
@@ -56,7 +58,6 @@ export default defineUserConfig({
               '/structure/maps.json.md',
             ]
           },
-          "/getting_started/general_process.md",
         ]
       },
       {
@@ -85,6 +86,7 @@ export default defineUserConfig({
         collapsible : true,
         children: [
           '/entities.md',
+          '/entities/entity_properties.md',
           {
             text: "Entity Types",
             collapsible : true,
@@ -96,7 +98,6 @@ export default defineUserConfig({
               '/entities/character_entity.md',
             ]
           },
-          '/entities/entity_properties.md',
           {
             text: "Relative Entity References",
             collapsible : true,
@@ -141,6 +142,7 @@ export default defineUserConfig({
           '/scripts.md',
           '/scripts/scripts_json.md',
           '/scripts/comments_json.md',
+          '/scripts/null_script.md',
           {
             text: "Script Slots",
             collapsible : true,
@@ -152,7 +154,6 @@ export default defineUserConfig({
               '/scripts/on_look.md',
             ]
           },
-          '/scripts/null_script.md',
           {
             text: "Variable Types",
             collapsible : true,

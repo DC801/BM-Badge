@@ -2,7 +2,7 @@
 
 Checks whether an [entity](../entities) is inside the named [geometry](../maps/vector_objects).
 
-This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate underflow](../coordinate underflow).
+This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/coordinate_overflow).
 
 ## Example JSON
 

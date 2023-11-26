@@ -58,7 +58,7 @@ It doesn't matter how many layers there are in terms of accommodating the MGE en
 
 ### Placing Entities
 
-Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**). The [type of entity](entity types) placed and a few of its [entity properties](entities/entity_properties) are determined by which tile you use, but other entity properties must be explicitly set.
+Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**). The [type of entity](entities/entity_types) placed and a few of its [entity properties](entities/entity_properties) are determined by which tile you use, but other entity properties must be explicitly set.
 
 Entities are Y-indexed in the MGE, meaning they are rendered in front of or behind other entities according to their Y position. For entities being used as environment props, this can result in odd behavior (e.g. the player appearing underneath a bundle of cable if they walk too far behind it).
 

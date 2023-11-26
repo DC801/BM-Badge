@@ -14,7 +14,7 @@ What gets processed and encoded:
 5. Maps found in [maps.json](../structure/maps.json)
 6. All MGS files within `scenario_source_files` (see [MGS Natlang](../mgs/mgs_natlang))
 
-While every [script](../scripts) (and [dialog](../dialogs), [tileset](../tilesets), etc.) is available to the encoder, whether it gets encoded depends on whether it's being used by the game in some way; a script that isn't used by any maps, entities, or referenced any included script will be ignored. In other words, [entities](../Entity types) must be placed on at least one [map](../maps) to be encoded.
+While every [script](../scripts) (and [dialog](../dialogs), [tileset](../tilesets), etc.) is available to the encoder, whether it gets encoded depends on whether it's being used by the game in some way; a script that isn't used by any maps, entities, or referenced any included script will be ignored. In other words, [entities](../entities/entity_types) must be placed on at least one [map](../maps) to be encoded.
 
 ## Web VS CLI Encoder
 

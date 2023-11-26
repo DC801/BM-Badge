@@ -1,6 +1,6 @@
 # Kaitai
 
-Kaitai ([ide.kaitai.io](../https://ide.kaitai.io)) is a tool that can parse and analyze binary data formats.
+Kaitai ([ide.kaitai.io](https://ide.kaitai.io)) is a tool that can parse and analyze binary data formats.
 
 Available inside your [MAGE folder](../getting_started/mage_folder) is a file called `mage_dat.ksy`. You can drag this in a Kaitai window, along with your `game.dat`, to analyze in great detail the encoded structure of your game.
 

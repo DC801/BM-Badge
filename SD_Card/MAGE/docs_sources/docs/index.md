@@ -5,13 +5,13 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 ## Curated Table of Contents
 
 - [What You'll Need](getting_started/what_youll_need)
+- [General Process](getting_started/general_process)
 - [MAGE Folder](getting_started/mage_folder)
 	- [scenario_source_files](getting_started/scenario_source_files)
 	- [scenario.json](structure/scenario.json)
 	- [portraits.json](structure/portraits.json)
 	- [entity_types.json](structure/entity_types.json)
 	- [maps.json](structure/maps.json)
-- [General Process](getting_started/general_process)
 
 ## [Tilesets](tilesets)
 
@@ -28,12 +28,12 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 
 ## [Entities](entities)
 
+- [Entity Properties](entities/entity_properties)
 - [Entity Types](entities/entity_types)
 	- [Tile Entity](entities/tile_entity)
 		- [Null Entity](entities/null_entity)
 	- [Animation Entity](entities/animation_entity)
 	- [Character Entity](entities/character_entity)
-- [Entity Properties](entities/entity_properties)
 - [Relative Entity References](entities/relative_entity_references)
 	- [%PLAYER%](entities/PLAYER)
 	- [%SELF%](entities/SELF)
