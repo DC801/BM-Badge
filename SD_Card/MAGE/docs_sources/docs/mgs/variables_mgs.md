@@ -28,7 +28,7 @@ A special property of variable types is "decay" — this means a variable of a s
 
 Example #1: an action that wants a duration (syntax `wait $duration`)
 
-```
+```mgs
 testScript1 {
   wait 150ms; // "duration" = ok
   wait 150;   // "number" is fine, too
@@ -38,7 +38,7 @@ testScript1 {
 
 Example #2: an action that wants a number (syntax: `load slot $number`)
 
-```
+```mgs
 testScript2 {
   load slot 1;    // "number" = ok
   load slot 1ms;  // "duration" won't work!

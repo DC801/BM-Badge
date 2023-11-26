@@ -2,10 +2,12 @@
 
 A [combination](../mgs/combination_block) of the action [SHOW_DIALOG](../actions/SHOW_DIALOG) and a [dialog block](../mgs/dialog_block):
 
-```
-show dialog $string {}
-// or
-show dialog {}
+```mgs
+script {
+  show dialog $string {}
+  // or
+  show dialog {}
+}
 ```
 
 Inside the curly braces may be any number of [dialogs](../mgs/dialogs_mgs).

@@ -23,32 +23,26 @@ Checks whether an [entity](../entities) currently has it's "glitched" render fla
 
 The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  if (entity "Entity Name" is glitched) {}
+}
+```
 
-  <span class="control">if</span> <span class="bracket">(</span><span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="language-constant">glitched</span><span class="bracket">)</span> <span class="bracket">{</span><span class="bracket">}</span>
+### Examples
 
-</pre>
+```mgs
+script {
+  if entity "Entity Name" is glitched then goto successScript;
+  if entity "Entity Name" is glitched then goto index 12;
+  if entity "Entity Name" is glitched then goto label labelName;
+  if entity "Entity Name" is not glitched then goto successScript;
+  if entity "Entity Name" is not glitched then goto index 12;
+  if entity "Entity Name" is not glitched then goto label labelName;
+}
+```
 
-### Examples:
-
-<pre class="HyperMD-codeblock mgs">
-
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="language-constant">glitched</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="language-constant">glitched</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="language-constant">glitched</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="operator">not</span> <span class="language-constant">glitched</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="operator">not</span> <span class="language-constant">glitched</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="operator">is</span> <span class="operator">not</span> <span class="language-constant">glitched</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 if entity $entity:string is glitched

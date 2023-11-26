@@ -18,15 +18,15 @@ Because [entity properties](../entities/entity_properties) are reset when a [map
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" on_interact to scriptName;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_interact</span> <span class="operator">to</span> <span class="string">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string on_interact (to) $script:string (;)

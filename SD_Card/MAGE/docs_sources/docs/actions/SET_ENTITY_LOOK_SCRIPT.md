@@ -14,15 +14,15 @@ Sets an [entity](../entities)'s [on_look](../scripts/on_look) script.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" on_look to scriptName;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">on_look</span> <span class="operator">to</span> <span class="string">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string on_look (to) $script:string (;)

@@ -13,15 +13,15 @@ Setting this to true opens the [hex editor](../hardware/hex_editor). (Does the h
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  open hex editor;
+}
+```
 
-  <span class="language-constant">open</span> <span class="target">hex</span> <span class="target">editor</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 $bool_value:boolean hex editor (;)

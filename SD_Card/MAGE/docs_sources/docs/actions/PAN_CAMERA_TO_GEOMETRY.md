@@ -14,15 +14,15 @@ Pans the camera to the first vertex of a [geometry object](../maps/vector_object
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  pan camera to geometry "vector object name" over 1000ms;
+}
+```
 
-  <span class="verb">pan</span> <span class="target">camera</span> <span class="">to</span> <span class="sigil">geometry</span> <span class="string">"vector object name"</span> <span class="">over</span> <span class="number">1000ms</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 pan camera to geometry $geometry:string over $duration:duration (;)

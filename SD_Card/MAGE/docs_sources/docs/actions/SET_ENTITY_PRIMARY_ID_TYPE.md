@@ -14,15 +14,15 @@ Sets an [entity](../entities)'s [primary_id_type](../entities/entity_properties)
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" primary_id_type to 1;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id_type</span> <span class="operator">to</span> <span class="number">1</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string primary_id_type (to) $byte_value:number (;)

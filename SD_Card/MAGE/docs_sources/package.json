@@ -10,6 +10,7 @@
   "author": "Goat and Bird",
   "license": "ISC",
   "devDependencies": {
+    "@vuepress/plugin-shiki": "^2.0.0-rc.0",
     "vuepress": "^2.0.0-rc.0"
   }
 }

@@ -14,15 +14,15 @@
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  pan camera along geometry "vector object name" over 1000ms;
+}
+```
 
-  <span class="verb">pan</span> <span class="target">camera</span> <span class="">along</span> <span class="sigil">geometry</span> <span class="string">"vector object name"</span> <span class="">over</span> <span class="number">1000ms</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 pan camera along geometry $geometry:string over $duration:duration (;)

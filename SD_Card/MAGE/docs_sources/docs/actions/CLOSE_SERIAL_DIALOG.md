@@ -12,15 +12,15 @@ Ends any [serial dialog](../dialogs/serial_dialogs) that is awaiting user input,
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  close serial dialog;
+}
+```
 
-  <span class="verb">close</span> <span class="target">serial</span> <span class="target">dialog</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 close serial dialog (;)

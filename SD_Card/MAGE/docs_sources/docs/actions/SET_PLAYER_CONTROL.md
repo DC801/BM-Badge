@@ -15,16 +15,16 @@ This is set to `on` (`true`) by default.
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  turn on player control;
+  turn player control on;
+}
+```
 
-  <span class="verb">turn</span> <span class="language-constant">on</span> <span class="target">player</span> <span class="target">control</span><span class="terminator">;</span>
-  <span class="verb">turn</span> <span class="target">player</span> <span class="target">control</span> <span class="language-constant">on</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 turn $bool_value:boolean player control (;)

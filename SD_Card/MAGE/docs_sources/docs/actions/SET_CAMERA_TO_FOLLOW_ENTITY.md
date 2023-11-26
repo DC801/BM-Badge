@@ -13,15 +13,15 @@ Sets what the camera is following. ([%PLAYER%](../entities/PLAYER) is the defaul
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  make camera follow entity "Entity Name";
+}
+```
 
-  <span class="verb">make</span> <span class="target">camera</span> <span class="">follow</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 make camera follow entity $entity:string (;)

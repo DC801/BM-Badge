@@ -14,15 +14,15 @@ Use this [action](../actions) when you want to trigger a dialog that may potenti
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  close dialog;
+}
+```
 
-  <span class="verb">close</span> <span class="target">dialog</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 close dialog (;)

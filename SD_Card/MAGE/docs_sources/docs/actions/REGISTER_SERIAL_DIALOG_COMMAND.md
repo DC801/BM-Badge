@@ -20,16 +20,16 @@ Commands must be a single word.
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  register map -> scriptName;
+  register map fail -> scriptName;
+}
+```
 
-  <span class="verb">register</span> <span class="string">map</span> <span class="control">-></span> <span class="script">scriptName</span><span class="terminator">;</span>
-  <span class="verb">register</span> <span class="string">map</span> <span class="target">fail</span> <span class="control">-></span> <span class="script">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 register $command:string -> (script) $script:string (;)

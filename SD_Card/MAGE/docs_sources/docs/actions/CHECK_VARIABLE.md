@@ -29,44 +29,32 @@ Compares the value of a [variable](../scripts/integer_variables) against the giv
 
 The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  if (variable varName is < 1) {}
+}
+```
 
-  <span class="control">if</span> <span class="bracket">(</span><span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator"><</span> <span class="number">1</span><span class="bracket">)</span> <span class="bracket">{</span><span class="bracket">}</span>
+### Examples
 
-</pre>
+```mgs
+script {
+  if variable varName is < 1 then goto successScript;
+  if variable varName is < 1 then goto index 12;
+  if variable varName is < 1 then goto label labelName;
+  if variable varName is 1 then goto successScript;
+  if variable varName is 1 then goto index 12;
+  if variable varName is 1 then goto label labelName;
+  if variable varName is not < 1 then goto successScript;
+  if variable varName is not < 1 then goto index 12;
+  if variable varName is not < 1 then goto label labelName;
+  if variable varName is not 1 then goto successScript;
+  if variable varName is not 1 then goto index 12;
+  if variable varName is not 1 then goto label labelName;
+}
+```
 
-### Examples:
-
-<pre class="HyperMD-codeblock mgs">
-
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator"><</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator"><</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator"><</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="operator"><</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="operator"><</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="operator"><</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">variable</span> <span class="string">varName</span> <span class="operator">is</span> <span class="operator">not</span> <span class="number">1</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 if variable $variable:string is $comparison:operator $value:number

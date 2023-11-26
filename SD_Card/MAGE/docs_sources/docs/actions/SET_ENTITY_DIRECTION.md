@@ -14,15 +14,15 @@ Turns an [entity](../entities) toward the `north`, `south`, `east`, or `west`.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  turn entity "Entity Name" north;
+}
+```
 
-  <span class="verb">turn</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="language-constant">north</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 turn entity $entity:string $direction:bareword (;)

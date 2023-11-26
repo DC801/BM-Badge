@@ -31,32 +31,26 @@ See [button IDs](../structure/button_ids) for a list of valid button values.
 
 The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  if (button SQUARE) {}
+}
+```
 
-  <span class="control">if</span> <span class="bracket">(</span><span class="sigil">button</span> <span class="language-constant">SQUARE</span><span class="bracket">)</span> <span class="bracket">{</span><span class="bracket">}</span>
+### Examples
 
-</pre>
+```mgs
+script {
+  if button SQUARE then goto successScript;
+  if button SQUARE then goto index 12;
+  if button SQUARE then goto label labelName;
+  if not button SQUARE then goto successScript;
+  if not button SQUARE then goto index 12;
+  if not button SQUARE then goto label labelName;
+}
+```
 
-### Examples:
-
-<pre class="HyperMD-codeblock mgs">
-
-  <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="operator">not</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="script">successScript</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="operator">not</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">index</span> <span class="number">12</span><span class="terminator">;</span>
-  <span class="control">if</span> <span class="operator">not</span> <span class="sigil">button</span> <span class="language-constant">SQUARE</span>
-    <span class="control">then</span> <span class="control">goto</span> <span class="sigil">label</span> <span class="string">labelName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 if button $button_id:bareword

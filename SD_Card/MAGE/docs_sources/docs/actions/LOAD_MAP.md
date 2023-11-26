@@ -17,15 +17,15 @@ For most normal [door](../techniques/doors) behavior, you will probably want to 
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  load map mapName;
+}
+```
 
-  <span class="verb">load</span> <span class="sigil">map</span> <span class="string">mapName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 load map $map:string (;)

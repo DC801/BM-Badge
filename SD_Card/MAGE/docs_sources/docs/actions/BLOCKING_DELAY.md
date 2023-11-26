@@ -15,15 +15,15 @@ As this might make the game appear broken, you should probably use a [NON_BLOCKI
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  block 1000ms;
+}
+```
 
-  <span class="verb">block</span> <span class="number">1000ms</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 block $duration:duration (;)

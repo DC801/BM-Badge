@@ -16,15 +16,15 @@ Fades are slow on the hardware, so use these sparingly.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  fade in camera from #000 over 1000ms;
+}
+```
 
-  <span class="verb">fade</span> <span class="">in</span> <span class="target">camera</span> <span class="">from</span> <span class="number">#000</span> <span class="">over</span> <span class="number">1000ms</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 fade in camera from $color:color over $duration:duration (;)

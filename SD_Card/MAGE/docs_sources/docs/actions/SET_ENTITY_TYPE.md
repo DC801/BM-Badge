@@ -14,15 +14,15 @@ Sets an [entity](../entities)'s [entity_type](../entities/character_entity). (Se
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" type to old_man;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">type</span> <span class="operator">to</span> <span class="string">old_man</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string type (to) $entity_type:string (;)

@@ -14,15 +14,15 @@ Make an [entity](../entities) turn toward another.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  turn entity "Entity Name" toward entity "Target Entity";
+}
+```
 
-  <span class="verb">turn</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="">toward</span> <span class="sigil">entity</span> <span class="string">"Target Entity"</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 turn entity $entity:string toward entity $target_entity:string (;)

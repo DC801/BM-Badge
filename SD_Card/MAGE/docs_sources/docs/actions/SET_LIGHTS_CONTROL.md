@@ -15,16 +15,16 @@ Note that gaining control of the lights does not clear the light state by defaul
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  turn on lights control;
+  turn lights control on;
+}
+```
 
-  <span class="verb">turn</span> <span class="language-constant">on</span> <span class="target">lights</span> <span class="target">control</span><span class="terminator">;</span>
-  <span class="verb">turn</span> <span class="target">lights</span> <span class="target">control</span> <span class="language-constant">on</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 turn $enabled:boolean lights control (;)

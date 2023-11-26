@@ -17,15 +17,15 @@ See: [COPY_SCRIPT_uses](../techniques/COPY_SCRIPT_uses)
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  copy scriptName;
+}
+```
 
-  <span class="verb">copy</span> <span class="script">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 copy (script) $script:string (;)

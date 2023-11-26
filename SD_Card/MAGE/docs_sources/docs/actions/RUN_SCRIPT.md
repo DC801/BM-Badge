@@ -15,15 +15,15 @@ If you want to replace the script in the current slot *without* executing the ne
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  goto scriptName;
+}
+```
 
-  <span class="control">goto</span> <span class="script">scriptName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 goto (script) $script:string (;)

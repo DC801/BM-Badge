@@ -19,18 +19,18 @@ Map variant: Script slots for these are [on_load](../scripts/on_load), [on_tick]
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  pause entity "Entity Name" on_tick;
+  pause map on_tick;
+  unpause entity "Entity Name" on_tick;
+  unpause map on_tick;
+}
+```
 
-  <span class="verb">pause</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="string">on_tick</span><span class="terminator">;</span>
-  <span class="verb">pause</span> <span class="sigil">map</span> <span class="target">on_tick</span><span class="terminator">;</span>
-  <span class="verb">unpause</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="string">on_tick</span><span class="terminator">;</span>
-  <span class="verb">unpause</span> <span class="sigil">map</span> <span class="target">on_tick</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 pause entity $entity:string $script_slot:bareword (;)

@@ -17,15 +17,15 @@ For cinematic [cutscenes](../techniques/cutscenes), you will almost certainly ne
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  wait 400ms;
+}
+```
 
-  <span class="verb">wait</span> <span class="number">400ms</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 wait $duration:duration (;)

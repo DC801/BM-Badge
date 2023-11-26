@@ -21,15 +21,15 @@ A script can close an open dialog with [CLOSE_DIALOG](../actions/CLOSE_DIALOG).
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  show dialog dialogName;
+}
+```
 
-  <span class="verb">show</span> <span class="sigil">dialog</span> <span class="string">dialogName</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 show dialog $dialog:string (;)

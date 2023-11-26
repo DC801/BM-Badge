@@ -15,15 +15,15 @@ The slot is set to `0` by default.
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  load slot 2;
+}
+```
 
-  <span class="verb">load</span> <span class="sigil">slot</span> <span class="number">2</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 load slot $slot:number (;)

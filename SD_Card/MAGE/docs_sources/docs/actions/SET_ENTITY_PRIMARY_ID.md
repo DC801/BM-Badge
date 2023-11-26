@@ -16,15 +16,15 @@ You will overwhelmingly want to set the `entity_type` by name instead with [SET_
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  set entity "Entity Name" primary_id to 2;
+}
+```
 
-  <span class="verb">set</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="target">primary_id</span> <span class="operator">to</span> <span class="number">2</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 set entity $entity:string primary_id (to) $u2_value:number (;)

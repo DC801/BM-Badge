@@ -18,16 +18,16 @@ See [LED IDs](../structure/led_ids) for a list of valid `lights` values.
 
 ## MGS Natlang
 
-### Examples:
+### Examples
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  turn on light MEM3;
+  turn light MEM3 on;
+}
+```
 
-  <span class="verb">turn</span> <span class="language-constant">on</span> <span class="sigil">light</span> <span class="language-constant">MEM3</span><span class="terminator">;</span>
-  <span class="verb">turn</span> <span class="sigil">light</span> <span class="language-constant">MEM3</span> <span class="language-constant">on</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entries:
+### Dictionary entries
 
 ```
 turn $enabled:boolean light $lights:string (;)

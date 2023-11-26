@@ -14,15 +14,15 @@ Moves the [entity](../entities) instantly to the first vertex of the specified [
 
 ## MGS Natlang
 
-### Example:
+### Example
 
-<pre class="HyperMD-codeblock mgs">
+```mgs
+script {
+  teleport entity "Entity Name" to geometry "vector object name";
+}
+```
 
-  <span class="verb">teleport</span> <span class="sigil">entity</span> <span class="string">"Entity Name"</span> <span class="">to</span> <span class="sigil">geometry</span> <span class="string">"vector object name"</span><span class="terminator">;</span>
-
-</pre>
-
-### Dictionary entry:
+### Dictionary entry
 
 ```
 teleport entity $entity:string to geometry $geometry:string (;)
