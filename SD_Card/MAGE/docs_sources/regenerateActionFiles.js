@@ -2,11 +2,12 @@ var fs = require('fs');
 var pages = require('./buildActionFiles.js');
 
 var filePrefix = 'docs/actions/'
+var actionFilePrefix = 'docs/'
 
 var actionFileName = 'actions';
 var actionFileContents = pages.actions;
 fs.writeFileSync(
-	filePrefix + actionFileName + '.md',
+	actionFilePrefix + actionFileName + '.md',
 	actionFileContents
 );
 
