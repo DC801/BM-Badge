@@ -1,8 +1,8 @@
 # `debug!()`
 
-[Advanced MGS Natlang Syntax](mgs/advanced_mgs_natlang_syntax) for [MGS Natlang scripts](mgs/scripts_mgs).
+[Advanced MGS Natlang Syntax](../../mgs/advanced_mgs_natlang_syntax) for [MGS Natlang scripts](../../mgs/scripts_mgs).
 
-For quick logging, you can use `debug!()` to generate [terminal](hardware/terminal) output that will only print when [Debug Mode](debug/debug_mode) is on.
+For quick logging, you can use `debug!()` to generate [terminal](../../hardware/terminal) output that will only print when [Debug Mode](../../debug/debug_mode) is on.
 
 Thus:
 
@@ -22,4 +22,4 @@ scriptName {
 }
 ```
 
-The allowed contents of `debug!()` are the same as the allowed contents of a [serial dialog block](mgs/serial_dialog_block).
+The allowed contents of `debug!()` are the same as the allowed contents of a [serial dialog block](../../mgs/serial_dialog_block).

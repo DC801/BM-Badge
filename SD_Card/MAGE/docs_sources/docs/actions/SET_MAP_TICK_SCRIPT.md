@@ -1,6 +1,6 @@
 # SET_MAP_TICK_SCRIPT
 
-Sets the map's [on_tick](scripts/on_tick) script.
+Sets the map's [on_tick](../scripts/on_tick) script.
 
 ## Example JSON
 
@@ -29,4 +29,4 @@ set map on_tick (to) $script:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

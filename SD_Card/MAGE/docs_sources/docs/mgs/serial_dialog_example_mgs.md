@@ -1,6 +1,6 @@
 # Serial Dialog Example (MGS)
 
-An example [MGS Natlang](mgs/mgs_natlang) [serial dialog block](mgs/serial_dialog_block):
+An example [MGS Natlang](../mgs/mgs_natlang) [serial dialog block](../mgs/serial_dialog_block):
 
 ```mgs
 serial dialog sample {

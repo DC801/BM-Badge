@@ -1,16 +1,16 @@
 # Hint Systems
 
-For the BMG2020, we implemented a hints system: whenever a player engaged with an [entity](entities) involving a quest, a hint was triggered so the entity designated to be the "hint man" could provide a hint for the player.
+For the BMG2020, we implemented a hints system: whenever a player engaged with an [entity](../entities) involving a quest, a hint was triggered so the entity designated to be the "hint man" could provide a hint for the player.
 
 There were two methods we used to do this, and both are viable. Depending on how many hints (or equivalent behavior) you'll need to manage, you might use either method.
 
 ## Save Flag Hints
 
-With this method, there is a separate [save flag](scripts/save_flags) for each hint.
+With this method, there is a separate [save flag](../scripts/save_flags) for each hint.
 
 **Triggering a hint**: If the player talks to a quest entity and triggers "backstory" dialog or otherwise engages the entity in a way that indicates they are involved in a quest, set all other hint flags to `false` and set the hint flag for the quest line to `true`.
 
-You should have a separate script for setting all hint flags in the game to `false`. Use [COPY_SCRIPT](actions/COPY_SCRIPT) to "invoke" that script right before setting the target hint to `true`.
+You should have a separate script for setting all hint flags in the game to `false`. Use [COPY_SCRIPT](../actions/COPY_SCRIPT) to "invoke" that script right before setting the target hint to `true`.
 
 **Clearing a hint**: Once the player has completed a quest line, set the hint flag for the quest line to `false`.
 
@@ -20,11 +20,11 @@ This technique will likely require maintaining a list of hint flags and being ve
 
 For games with a large number of hints this method can be difficult to debug. Another disadvantage of this technique is its susceptibility to typos, as every hint flag is a string.
 
-For BMG2020 we moved away from this technique because we were setting hint flags *a lot* — every time a hint flag was set, every other hint flag was *also* set. (The reset script set them all to `false`, even if they were already `false`.) We were going to log the [save flags](scripts/save_flags) triggered by play testers to do story timing analytics, but found that hint flags overwhelmed everything.
+For BMG2020 we moved away from this technique because we were setting hint flags *a lot* — every time a hint flag was set, every other hint flag was *also* set. (The reset script set them all to `false`, even if they were already `false`.) We were going to log the [save flags](../scripts/save_flags) triggered by play testers to do story timing analytics, but found that hint flags overwhelmed everything.
 
 ## Integer Hints
 
-With this method, there is a single [integer variable](scripts/integer_variables) for all hints. Let's call this the "hintiger."
+With this method, there is a single [integer variable](../scripts/integer_variables) for all hints. Let's call this the "hintiger."
 
 **Triggering a hint**: If the player talks to a quest entity and triggers "backstory" dialog or otherwise engages the entity in a way that indicates they are involved in a quest, set the hintiger to the value associated with that quest line.
 
@@ -44,23 +44,23 @@ You might need multiple hints per quest line. For BMG2020, we had several values
 
 If we continued with this pattern, we might have used `22` for if the player got partway through the quest and needed a hint about the second half, etc.
 
-Incorporating hint variations will likely require more frequent hint logic checks. For instance, if the current hint is `21` (continuing from the above example) we wouldn't want speaking to Bert to set it to `20`, which is a more basic hint. To prevent this, we might check the relevant backstory [flag](scripts/save_flags) or the current hintiger to decide whether to set it to `20`. This is fairly easy to do in the case of BMG2020 because the tens (and hundreds) digit determine the hint quest line, so we can divide the current hintiger by 10 (after copying it into another [variable](scripts/integer_variables)) to procedurally detect which quest line the hint was for.
+Incorporating hint variations will likely require more frequent hint logic checks. For instance, if the current hint is `21` (continuing from the above example) we wouldn't want speaking to Bert to set it to `20`, which is a more basic hint. To prevent this, we might check the relevant backstory [flag](../scripts/save_flags) or the current hintiger to decide whether to set it to `20`. This is fairly easy to do in the case of BMG2020 because the tens (and hundreds) digit determine the hint quest line, so we can divide the current hintiger by 10 (after copying it into another [variable](../scripts/integer_variables)) to procedurally detect which quest line the hint was for.
 
 ### Hintiger Abstraction
 
-Hintigers might count as [magic numbers](https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Unnamed_numerical_constants), which are to be avoided when possible. Solutions include:
+Hintigers might count as [magic numbers](../https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Unnamed_numerical_constants), which are to be avoided when possible. Solutions include:
 
 #### MGS Natlang Constants
 
-In [MGS Natlang](mgs/mgs_natlang), the `const!()` macro allows you to define compile-time constants, and was implemented to prevent magic numbers.
+In [MGS Natlang](../mgs/mgs_natlang), the `const!()` macro allows you to define compile-time constants, and was implemented to prevent magic numbers.
 
 You could create a whole list of these constants for all your hints, perhaps in their own MGS file, then use the `include!()` macro to pull that file in to each of your other MGS files.
 
 #### `COPY_SCRIPT`
 
-There is another way to abstract the value of an integer, though: [COPY_SCRIPT](actions/COPY_SCRIPT). This method does not require [MGS Natlang](mgs/mgs_natlang); it can be done with JSON alone.
+There is another way to abstract the value of an integer, though: [COPY_SCRIPT](../actions/COPY_SCRIPT). This method does not require [MGS Natlang](../mgs/mgs_natlang); it can be done with JSON alone.
 
-If you make a series of [MUTATE_VARIABLE](actions/MUTATE_VARIABLE) scripts that set your hintiger to each of the values you need, you can then use [COPY_SCRIPT](actions/COPY_SCRIPT) alone to control the current value of your hintiger. This way, your integer-hint assignments happen only once (instead of every time the hint needs to be set) and only in one place (instead of spread out between each of the entity's ques tline scripts).
+If you make a series of [MUTATE_VARIABLE](../actions/MUTATE_VARIABLE) scripts that set your hintiger to each of the values you need, you can then use [COPY_SCRIPT](../actions/COPY_SCRIPT) alone to control the current value of your hintiger. This way, your integer-hint assignments happen only once (instead of every time the hint needs to be set) and only in one place (instead of spread out between each of the entity's ques tline scripts).
 
 An example pair of scripts to manage Bender's hints:
 
@@ -83,7 +83,7 @@ An example pair of scripts to manage Bender's hints:
 ]
 ```
 
-Then, everywhere you need Bender to change the hint to his own quest line, all you will need is a single [`COPY_SCRIPT`](#copy_script) action, e.g.:
+Then, everywhere you need Bender to change the hint to his own quest line, all you will need is a single [`COPY_SCRIPT`](../#copy_script) action, e.g.:
 
 ```JSON
 {

@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PATH
 
-Checks the `path` name ([geometry](maps/vector_objects)) of an [entity](entities).
+Checks the `path` name ([geometry](../maps/vector_objects)) of an [entity](../entities).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks the `path` name ([geometry](maps/vector_objects)) of an [entity](entities
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string path is not $geometry:string
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

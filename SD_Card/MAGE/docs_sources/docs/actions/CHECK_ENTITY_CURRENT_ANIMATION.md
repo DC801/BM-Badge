@@ -1,6 +1,6 @@
 # CHECK_ENTITY_CURRENT_ANIMATION
 
-Checks the id of the [entity](entities)'s [current animation](entities/entity_properties). (See [entity animations](tilesets/animations) for what numbers correspond to which animations.)
+Checks the id of the [entity](../entities)'s [current animation](../entities/entity_properties). (See [entity animations](../tilesets/animations) for what numbers correspond to which animations.)
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks the id of the [entity](entities)'s [current animation](entities/entity_pr
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string current_animation is not $expected_byte:number
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

@@ -2,7 +2,7 @@
 
 Checks the specific status (pressed or not pressed) of a specific button at that moment.
 
-If checking for whether a button is newly pressed, see [CHECK_FOR_BUTTON_PRESS](actions/CHECK_FOR_BUTTON_PRESS).
+If checking for whether a button is newly pressed, see [CHECK_FOR_BUTTON_PRESS](../actions/CHECK_FOR_BUTTON_PRESS).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ If checking for whether a button is newly pressed, see [CHECK_FOR_BUTTON_PRESS](
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if button $button_id:bareword is not currently pressed
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

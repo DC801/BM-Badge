@@ -1,7 +1,7 @@
 # Relative Entity References
 
-- [%SELF%](entities/_SELF_) — the entity running the script
-- [%PLAYER%](entities/_PLAYER_) — the player entity
+- [%SELF%](../entities/SELF) — the entity running the script
+- [%PLAYER%](../entities/PLAYER) — the player entity
 
 Unlike relative entity names, you can use these two **relative entity references** everywhere, including the arguments of actions.
 
@@ -54,7 +54,7 @@ If the same script were run by Strong Bad instead, the `%SELF%` reference would 
 
 #### Best Practice: Consistent References
 
-All [entity references](#relative-entity-names-and-references) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
+All [entity references](../#relative-entity-names-and-references) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
 
 If we change `entity` to `Bender` instead of `%SELF%`, but leave the `%SELF%` reference in the dialog `messages` alone, the conversation would appear correct if run by Bender, but no one else.
 

@@ -1,6 +1,6 @@
 # CHECK_ENTITY_NAME
 
-Checks an [entity](entities)'s [current name](scripts/printing_current_values).
+Checks an [entity](../entities)'s [current name](../scripts/printing_current_values).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks an [entity](entities)'s [current name](scripts/printing_current_values).
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string name is not $string:string
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

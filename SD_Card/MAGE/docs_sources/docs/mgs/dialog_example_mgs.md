@@ -1,6 +1,6 @@
 # Dialog Example (MGS)
 
-An example [MGS Natlang](mgs/mgs_natlang) [dialog block](mgs/dialog_block), consisting of three [dialogs](mgs/dialogs_mgs):
+An example [MGS Natlang](../mgs/mgs_natlang) [dialog block](../mgs/dialog_block), consisting of three [dialogs](../mgs/dialogs_mgs):
 
 ```mgs
 dialog exampleDialog {

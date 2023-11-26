@@ -1,6 +1,6 @@
 # SET_ENTITY_TYPE
 
-Sets an [entity](entities)'s [entity_type](entities/character_entity). (See: [Entity Properties](entities/entity_properties))
+Sets an [entity](../entities)'s [entity_type](../entities/character_entity). (See: [Entity Properties](../entities/entity_properties))
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ set entity $entity:string type (to) $entity_type:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

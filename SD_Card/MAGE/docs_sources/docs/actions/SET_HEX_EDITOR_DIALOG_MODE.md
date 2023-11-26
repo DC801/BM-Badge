@@ -1,6 +1,6 @@
 # SET_HEX_EDITOR_DIALOG_MODE
 
-When on, this reduces the number of rows in the [hex editor](hardware/hex_editor), which makes room for [dialog](dialogs) boxes. (The portrait image can still cover up hex cells, though.)
+When on, this reduces the number of rows in the [hex editor](../hardware/hex_editor), which makes room for [dialog](../dialogs) boxes. (The portrait image can still cover up hex cells, though.)
 
 NOTE: This action has been disabled in the MGE to prevent accidental soft locks.
 
@@ -34,4 +34,4 @@ turn hex dialog mode $bool_value:boolean (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

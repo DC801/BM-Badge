@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PRIMARY_ID_TYPE
 
-Checks an [entity](entities)'s [primary_id_type](entity types): either (`0`) [tile](entities/tile_entity), (`1`) [animation](entities/animation_entity), or (`2`) [character](entities/character_entity) (sometimes called `entity_type`).
+Checks an [entity](../entities)'s [primary_id_type](../entity types): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks an [entity](entities)'s [primary_id_type](entity types): either (`0`) [ti
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string primary_id_type is not $expected_byte:number
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

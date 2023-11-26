@@ -1,6 +1,6 @@
 # PAN_CAMERA_ALONG_GEOMETRY
 
-(might not work yet — instead, make a [null entity](entities/null_entity) and lock the camera to it)
+(might not work yet — instead, make a [null entity](../entities/null_entity) and lock the camera to it)
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ pan camera along geometry $geometry:string over $duration:duration (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

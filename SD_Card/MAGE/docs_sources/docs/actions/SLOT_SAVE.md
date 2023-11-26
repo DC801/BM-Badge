@@ -1,6 +1,6 @@
 # SLOT_SAVE
 
-This action saves the [game state](scripts/save_data) into the current slot (the last slot loaded).
+This action saves the [game state](../scripts/save_data) into the current slot (the last slot loaded).
 
 It is not possible to write save data into an arbitrary slots, nor is it possible to copy data from one save slot into another.
 
@@ -40,4 +40,4 @@ save slot (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

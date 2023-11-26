@@ -1,6 +1,6 @@
 # If and Else
 
-[Advanced MGS Natlang Syntax](mgs/advanced_mgs_natlang_syntax) for [MGS Natlang scripts](mgs/scripts_mgs).
+[Advanced MGS Natlang Syntax](../../mgs/advanced_mgs_natlang_syntax) for [MGS Natlang scripts](../../mgs/scripts_mgs).
 
 ```
 if ( CONDITION ) { BEHAVIOR/BODY }

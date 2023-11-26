@@ -1,6 +1,6 @@
 # SET_ENTITY_DIRECTION
 
-Turns an [entity](entities) toward the `north`, `south`, `east`, or `west`.
+Turns an [entity](../entities) toward the `north`, `south`, `east`, or `west`.
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ turn entity $entity:string $direction:bareword (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

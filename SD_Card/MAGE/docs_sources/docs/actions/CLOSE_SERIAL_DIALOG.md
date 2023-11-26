@@ -1,6 +1,6 @@
 # CLOSE_SERIAL_DIALOG
 
-Ends any [serial dialog](dialogs/serial_dialogs) that is awaiting user input, such as a [free response question or a multiple choice question](serial dialog options).
+Ends any [serial dialog](../dialogs/serial_dialogs) that is awaiting user input, such as a [free response question or a multiple choice question](../serial dialog options).
 
 ## Example JSON
 
@@ -28,4 +28,4 @@ close serial dialog (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

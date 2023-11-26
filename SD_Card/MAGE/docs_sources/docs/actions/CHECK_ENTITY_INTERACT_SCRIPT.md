@@ -1,6 +1,6 @@
 # CHECK_ENTITY_INTERACT_SCRIPT
 
-Checks an [entity](entities)'s [on_interact](scripts/on_interact) [script](scripts/script_slots) (by the [script](scripts)'s name).
+Checks an [entity](../entities)'s [on_interact](../scripts/on_interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks an [entity](entities)'s [on_interact](scripts/on_interact) [script](scrip
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string on_interact is not $expected_script:string
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

@@ -1,6 +1,6 @@
 # CHECK_DEBUG_MODE
 
-Checks whether [debug mode](debug/debug_mode) is currently on.
+Checks whether [debug mode](../debug/debug_mode) is currently on.
 
 ## Example JSON
 
@@ -19,7 +19,7 @@ Checks whether [debug mode](debug/debug_mode) is currently on.
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -55,4 +55,4 @@ if debug mode is $expected_bool:boolean
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

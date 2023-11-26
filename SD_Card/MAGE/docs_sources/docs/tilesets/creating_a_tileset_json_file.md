@@ -1,6 +1,6 @@
 # Creating a Tileset JSON File
 
-The [MGE encoder](encoder/mge_encoder) cannot use image files outright — there must be an associated JSON file (made with Tiled) that explicitly defines the image file path and various other properties.
+The [MGE encoder](../encoder/mge_encoder) cannot use image files outright — there must be an associated JSON file (made with Tiled) that explicitly defines the image file path and various other properties.
 
 Within Tiled:
 
@@ -16,6 +16,6 @@ Within Tiled:
 
 ## For Character Entities
 
-All tiles within a [character entity](entities/character_entity) tileset must have the "Class" (previously this was called "Type") property set to its `entity_type` name. You can find the "Class" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
+All tiles within a [character entity](../entities/character_entity) tileset must have the "Class" (previously this was called "Type") property set to its `entity_type` name. You can find the "Class" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
 
-> You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` name at all. See: [Entity Types](Entity Types)
+> You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` name at all. See: [Entity Types](../Entity Types)

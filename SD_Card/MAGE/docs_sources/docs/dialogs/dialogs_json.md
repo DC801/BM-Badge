@@ -1,10 +1,10 @@
 # Dialogs (JSON)
 
-NOTE: With the introduction of [MGS Natlang](mgs/mgs_natlang), you need not write [dialogs](dialogs) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. See: [Dialogs (MGS)](mgs/dialogs_mgs)
+NOTE: With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not write [dialogs](../dialogs) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. See: [Dialogs (MGS)](../mgs/dialogs_mgs)
 
 ## Behavior
 
-Dialogs do nothing on their own. To show them, you must use the [SHOW_DIALOG](actions/SHOW_DIALOG) action within a [script](scripts).
+Dialogs do nothing on their own. To show them, you must use the [SHOW_DIALOG](../actions/SHOW_DIALOG) action within a [script](../scripts).
 
 ## Format
 
@@ -41,7 +41,7 @@ Within the square brackets above can be any number of object literals (marked wi
 ]
 ```
 
-In the example above, there are three dialog properties: `alignment`, `entity`, and `messages`. There are additional or alternate properties you might use, but these three are a reasonable minimum. (See: [Dialog Properties](dialogs/dialog_properties))
+In the example above, there are three dialog properties: `alignment`, `entity`, and `messages`. There are additional or alternate properties you might use, but these three are a reasonable minimum. (See: [Dialog Properties](../dialogs/dialog_properties))
 
 The property `messages` is an array containing the strings for the messages themselves (up to 255 total). Multiple messages within the array will be shown on subsequent dialog boxes, so you don't need a whole new object literal unless something else about the properties must change, such as a different character beginning to speak.
 

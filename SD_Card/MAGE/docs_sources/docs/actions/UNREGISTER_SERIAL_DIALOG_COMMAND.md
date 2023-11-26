@@ -36,4 +36,4 @@ unregister $command:string fail (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

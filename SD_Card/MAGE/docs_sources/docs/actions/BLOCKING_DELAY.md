@@ -1,8 +1,8 @@
 # BLOCKING_DELAY
 
-This pauses the entire game, including all other [script](scripts) and [animations](tilesets/animations), for the given duration.
+This pauses the entire game, including all other [script](../scripts) and [animations](../tilesets/animations), for the given duration.
 
-As this might make the game appear broken, you should probably use a [NON_BLOCKING_DELAY](actions/NON_BLOCKING_DELAY) instead.
+As this might make the game appear broken, you should probably use a [NON_BLOCKING_DELAY](../actions/NON_BLOCKING_DELAY) instead.
 
 ## Example JSON
 
@@ -31,4 +31,4 @@ block $duration:duration (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

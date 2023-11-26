@@ -1,6 +1,6 @@
 # SET_ENTITY_NAME
 
-Sets an [entity](entities)'s [name](entities/entity_properties).
+Sets an [entity](../entities)'s [name](../entities/entity_properties).
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ set entity $entity:string name (to) $string:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

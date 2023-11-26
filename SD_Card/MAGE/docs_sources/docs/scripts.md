@@ -8,7 +8,7 @@ It doesn't strictly matter which file contains which script data, as long as the
 
 See: [Relative Entity References](entities/relative_entity_references)
 
-For all actions, [%SELF%](entities/_SELF_) refers to the entity running the script and [%PLAYER%](entities/_PLAYER_) refers to the player entity.
+For all actions, [%SELF%](entities/SELF) refers to the entity running the script and [%PLAYER%](entities/PLAYER) refers to the player entity.
 
 **Best Practice**: Whether to use `%SELF%` or whether to specify the exact target entity for an action depends on the purpose of the script. General-purpose scripts should use `%SELF%`, naturally, but for [cutscenes](techniques/cutscenes) involving multiple characters you might want to specify the entity specifically in case the entity running the script has to change at some point, which would change all `%SELF%` references.
 

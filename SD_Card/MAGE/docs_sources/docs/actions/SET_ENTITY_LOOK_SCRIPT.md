@@ -1,6 +1,6 @@
 # SET_ENTITY_LOOK_SCRIPT
 
-Sets an [entity](entities)'s [on_look](scripts/on_look) script.
+Sets an [entity](../entities)'s [on_look](../scripts/on_look) script.
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ set entity $entity:string on_look (to) $script:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

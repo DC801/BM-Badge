@@ -1,6 +1,6 @@
 # SLOT_ERASE
 
-This action clears all the [save data](scripts/save_data) in the given slot.
+This action clears all the [save data](../scripts/save_data) in the given slot.
 
 ## Example JSON
 
@@ -29,4 +29,4 @@ erase slot $slot:number (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

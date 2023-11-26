@@ -1,6 +1,6 @@
 # CHECK_SERIAL_DIALOG_OPEN
 
-Checks whether a [serial dialog](dialogs/serial_dialogs) is currently awaiting user input, such as a [free response question or a multiple choice question](serial dialog options).
+Checks whether a [serial dialog](../dialogs/serial_dialogs) is currently awaiting user input, such as a [free response question or a multiple choice question](../serial dialog options).
 
 ## Example JSON
 
@@ -19,7 +19,7 @@ Checks whether a [serial dialog](dialogs/serial_dialogs) is currently awaiting u
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -55,4 +55,4 @@ if serial dialog is $expected_bool:boolean
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

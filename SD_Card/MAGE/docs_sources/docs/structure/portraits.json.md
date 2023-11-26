@@ -29,9 +29,9 @@ This JSON file looks like this:
 }
 ```
 
-The top-level string is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](entities/character_entity).
+The top-level string is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](../entities/character_entity).
 
-`tileset` is the file path for the [JSON file](tilesets) [associated](structure/portraits.json) with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
+`tileset` is the file path for the [JSON file](../tilesets) [associated](../structure/portraits.json) with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
 
 `tileid` is how you define which tile in the tileset you want to use. You can simply count the tiles in the tileset left-to-right and top-to-down, beginning from `0`, but it might be easier to simply select the appropriate tile within Tiled and see what it says the "ID" is.
 

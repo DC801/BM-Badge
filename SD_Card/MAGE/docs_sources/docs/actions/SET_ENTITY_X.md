@@ -1,8 +1,8 @@
 # SET_ENTITY_X
 
-Sets an [entity](entities)'s [x](entities/entity_properties) coordinate.
+Sets an [entity](../entities)'s [x](../entities/entity_properties) coordinate.
 
-In practice, you will likely want to use [geometry vectors](maps/vector_objects) and teleport actions instead.
+In practice, you will likely want to use [geometry vectors](../maps/vector_objects) and teleport actions instead.
 
 ## Example JSON
 
@@ -32,4 +32,4 @@ set entity $entity:string x (to) $u2_value:number (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

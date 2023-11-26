@@ -1,6 +1,6 @@
 # Operations
 
-Used with the [MUTATE_VARIABLE](actions/MUTATE_VARIABLE) and [MUTATE_VARIABLES](actions/MUTATE_VARIABLES) [actions](actions).
+Used with the [MUTATE_VARIABLE](../actions/MUTATE_VARIABLE) and [MUTATE_VARIABLES](../actions/MUTATE_VARIABLES) [actions](../actions).
 
 - `=` or `SET` — sets a variable to the value given
 - `+` or `ADD` — addition

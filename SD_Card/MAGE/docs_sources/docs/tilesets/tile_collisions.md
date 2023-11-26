@@ -1,8 +1,8 @@
 # Tile Collisions
 
-[Map](maps) [tilesets](tilesets) should have collision polygons set for each relevant tile. This is done by selecting a tile and clicking the collision editor within Tiled:
+[Map](../maps) [tilesets](../tilesets) should have collision polygons set for each relevant tile. This is done by selecting a tile and clicking the collision editor within Tiled:
 
-![the second icon is a pair of polygons](media/tiled-collision-editor.png)
+![the second icon is a pair of polygons](../media/tiled-collision-editor.png)
 
 For the MGE, each tile can have only one vector shape, and each vertex must fall within the bounds of the tile itself. (Vertices falling outside the tile will cause erratic collision behavior.)
 

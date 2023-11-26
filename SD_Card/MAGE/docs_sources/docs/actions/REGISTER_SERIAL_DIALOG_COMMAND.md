@@ -41,4 +41,4 @@ register $command:string fail -> (script) $script:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

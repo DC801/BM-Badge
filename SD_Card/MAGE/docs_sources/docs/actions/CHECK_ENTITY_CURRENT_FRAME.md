@@ -1,6 +1,6 @@
 # CHECK_ENTITY_CURRENT_FRAME
 
-Checks the frame (number) of the [entity](entities)'s current [entity animations](tilesets/animations).
+Checks the frame (number) of the [entity](../entities)'s current [entity animations](../tilesets/animations).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks the frame (number) of the [entity](entities)'s current [entity animations
 
 ## MGS Natlang
 
-The [condition](actions/conditional_gotos) portion of this action can be used inside an [if](mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
 
 <pre class="HyperMD-codeblock mgs">
 
@@ -80,4 +80,4 @@ if entity $entity:string animation_frame is not $expected_byte:number
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

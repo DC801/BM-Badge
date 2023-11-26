@@ -1,6 +1,6 @@
 # SET_ENTITY_TICK_SCRIPT
 
-Sets an [entity](entities)'s [on_tick](scripts/on_tick) script.
+Sets an [entity](../entities)'s [on_tick](../scripts/on_tick) script.
 
 ## Example JSON
 
@@ -30,4 +30,4 @@ set entity $entity:string on_tick (to) $script:string (;)
 
 ---
 
-Back to [Actions](actions)
+Back to [Actions](../actions)

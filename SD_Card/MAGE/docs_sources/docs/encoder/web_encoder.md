@@ -1,6 +1,6 @@
 # Web Encoder
 
-The web interface for the [MGE encoder](encoder/mge_encoder).
+The web interface for the [MGE encoder](../encoder/mge_encoder).
 
 Open `SD_Card/MAGE/editor/index.html` with a web browser.
 
@@ -15,4 +15,4 @@ The `game.dat` will be sent to your default download location, so to play it on 
 
 ## Entity Manager
 
-A special feature of the web version of the [MGE encoder](encoder/mge_encoder) is the [entity management system](entity_management_system), which you can use to assign animations to [character entities](entities/character_entity).
+A special feature of the web version of the [MGE encoder](../encoder/mge_encoder) is the [entity management system](../entity_management_system), which you can use to assign animations to [character entities](../entities/character_entity).
