@@ -1,0 +1,15 @@
+{
+  "name": "dc801_black_mage_game_engine_content_guide",
+  "version": "1.0.0",
+  "description": "Game engine and content creation guide for the DC801 Black Mage Game Engine, including docs for MageGameScript.",
+  "main": "buildActionFiles.js",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "author": "Goat and Bird",
+  "license": "ISC",
+  "devDependencies": {
+    "vuepress": "^2.0.0-rc.0"
+  }
+}
