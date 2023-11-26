@@ -1,0 +1,100 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:Actions  ",
+      "color": {
+        "a": 1,
+        "rgb": 15609883
+      }
+    },
+    {
+      "query": "path:MGS",
+      "color": {
+        "a": 1,
+        "rgb": 16751892
+      }
+    },
+    {
+      "query": "path:Dialogs  ",
+      "color": {
+        "a": 1,
+        "rgb": 5495817
+      }
+    },
+    {
+      "query": "path:Scripts  ",
+      "color": {
+        "a": 1,
+        "rgb": 15938038
+      }
+    },
+    {
+      "query": "path:Maps",
+      "color": {
+        "a": 1,
+        "rgb": 1334271
+      }
+    },
+    {
+      "query": "path:Structure  ",
+      "color": {
+        "a": 1,
+        "rgb": 11798514
+      }
+    },
+    {
+      "query": "path:\"Getting Started\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 16487396
+      }
+    },
+    {
+      "query": "path:Techniques  ",
+      "color": {
+        "a": 1,
+        "rgb": 16695318
+      }
+    },
+    {
+      "query": "path:Entities  ",
+      "color": {
+        "a": 1,
+        "rgb": 3785726
+      }
+    },
+    {
+      "query": "path:Debug  ",
+      "color": {
+        "a": 1,
+        "rgb": 8882055
+      }
+    },
+    {
+      "query": "path:Encoder",
+      "color": {
+        "a": 1,
+        "rgb": 8882055
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 0.3496890387548312,
+  "close": true
+}

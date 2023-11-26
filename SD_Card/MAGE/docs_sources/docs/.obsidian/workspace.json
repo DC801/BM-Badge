@@ -1,0 +1,216 @@
+{
+  "main": {
+    "id": "b5c178a9d04d1531",
+    "type": "split",
+    "children": [
+      {
+        "id": "f39f3719698bab2a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "11e71142fb85b327",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "624cf341eb149db9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ca90d2489c55df59",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "mgs/mgs_natlang_vs_json.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6b5d38b03c1e1298",
+    "type": "split",
+    "children": [
+      {
+        "id": "adc309e29adebff2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0ad65769069b80d4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8b7e15c91d8613ad",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "\"web build\"",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "82690f19c379ea33",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 371.5
+  },
+  "right": {
+    "id": "50feecfeb39b5969",
+    "type": "split",
+    "children": [
+      {
+        "id": "9265a9e81e569221",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9046ac59eac09f8d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "index.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "f720e5130ece961a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "index.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "e062acd5ac44082d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "c2e77809272ee74f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "index.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300.5,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "11e71142fb85b327",
+  "lastOpenFiles": [
+    "mgs/mgs_natlang_vs_json.md",
+    "index.md",
+    "mgs/mgs_natlang_structure.md",
+    "mgs/advanced_mgs_natlang_syntax.md",
+    "mgs/mgs_natlang.md",
+    "mgs/combination_block.md",
+    "maps/vector_objects.md",
+    "entities/SELF.md",
+    "entities/PLAYER.md",
+    "maps/map_loads.md",
+    "maps/coordinate_overflow.md",
+    "maps.md",
+    "actions/BLOCKING_DELAY.md",
+    "actions.md",
+    "scripts.md",
+    "techniques/cutscenes.md",
+    "scripts/on_load.md",
+    "maps/map_properties.md",
+    "scripts/save_data.md",
+    "actions/MUTATE_VARIABLE.md",
+    "actions/SET_ENTITY_TYPE.md",
+    "actions/actions.md",
+    "hardware/commands.md",
+    "actions/REGISTER_SERIAL_DIALOG_COMMAND.md",
+    "scripts/comments.md",
+    "mgs/comments_mgs.md",
+    "forest_goats",
+    "MGS Advanced Syntax",
+    "MGS Variables",
+    "Tilesets",
+    "Maps",
+    "Debug",
+    "Encoder",
+    "MGS Natlang/Untitled",
+    "Hardware",
+    "Tilesets",
+    "media/tileset-example.png",
+    "media/tiled-entities.png",
+    "media/tiled-collision-editor.png",
+    "media/tiled-animation-editor.png",
+    "media/spritesheet-example.png",
+    "media/sheep-stable.gif",
+    "media/sheep-rotating.gif",
+    "media/sheep-pen.png",
+    "media/script-chain.png",
+    "media/script-bob-compare.png"
+  ]
+}
