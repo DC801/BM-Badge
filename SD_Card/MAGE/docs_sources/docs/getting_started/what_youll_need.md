@@ -10,9 +10,9 @@ While any text editor might do the trick, we strongly recommend an IDE with proj
 
 `.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](../mgs/syntax_colors) for up-to-date details and instructions.) The following can manage decent support as of late 2023:
 
-- [Sublime Text](../sublimetext.com)
+- [Sublime Text](https://sublimetext.com)
 - [JetBrains' IDEs](https://www.jetbrains.com/) (excellent IDE but not inexpensive)
-- [TextMate](../macromates.com) (Mac only)
+- [TextMate](https://macromates.com) (Mac only)
 
 ## Graphics Editor
 
@@ -22,7 +22,7 @@ If you don't want to make art from scratch, a good source of premade tilesets is
 
 ## Tiled
 
-Tiled, which can be found at [mapeditor.org](../www.mapeditor.org), is a free, cross-platform map and [tileset](../tilesets) editor that can export and edit JSON files. This how the bulk of [maps](../maps), [tilesets](../tilesets), [entity](../entities) [animations](../tilesets/animations), [tile collisions](../tilesets/tile_collisions), and [geometry](../maps/vector_objects) for [choreography](../techniques/cutscenes) are defined.
+Tiled, which can be found at [mapeditor.org](https://www.mapeditor.org), is a free, cross-platform map and [tileset](../tilesets) editor that can export and edit JSON files. This how the bulk of [maps](../maps), [tilesets](../tilesets), [entity](../entities) [animations](../tilesets/animations), [tile collisions](../tilesets/tile_collisions), and [geometry](../maps/vector_objects) for [choreography](../techniques/cutscenes) are defined.
 
 ## Git
 
@@ -30,7 +30,7 @@ Tiled, which can be found at [mapeditor.org](../www.mapeditor.org), is a free, c
 
 ## Web Browser
 
-The [web encoder](../encoder/web_encoder) can be run with Node.js (see below) or in a web browser. They will both take the game files from your [scenario_source_files](../getting_started/scenario_source_files) folder and export a `game.dat` for the Mage Game Engine to use.
+The [web encoder](../encoder/web_encoder) can be run with Node.js (see below) or in a web browser. They will both take the game files from your [`scenario_source_files`](../getting_started/scenario_source_files) folder and export a `game.dat` for the Mage Game Engine to use.
 
 The web version of the encoder, however, also has an [entity management system](../encoder/entity_management_system) for managing animation assignments, so while you might use the Node encoder most of the time, chances are you'll still want to use the web version regularly.
 
@@ -38,7 +38,7 @@ You will likely also want to use the [web build](../hardware/web_build) of the M
 
 ## Node.js (optional)
 
-If you find yourself constantly making small changes to your content and regenerating your `game.dat` very frequently, it may be worthwhile to install [Node.js](../nodejs.org) so you can use the [CLI version of the encoder](../encoder/cli_encoder) instead.
+If you find yourself constantly making small changes to your content and regenerating your `game.dat` very frequently, it may be worthwhile to install [Node.js](https://nodejs.org) so you can use the [CLI version of the encoder](../encoder/cli_encoder) instead.
 
 We recommend using Node's long-term support (i.e. even numbered) versions.
 
@@ -54,4 +54,4 @@ A virtual machine will be sufficient for this. For your convenience, we have pre
 
 ## `MAGE/` Folder
 
-Content creation will involve creating, modifying, and using files within the `MAGE` folder (inside the `SD_Card` folder, inside the project repo). See: [MAGE Folder](../getting_started/mage_folder)
+Content creation will involve creating, modifying, and using files within the `MAGE` folder (inside the `SD_Card` folder, inside the project repo). See: [`MAGE` Folder](../getting_started/mage_folder)

@@ -4,7 +4,7 @@ Except for the player's name, all [entity properties](../entities/entity_propert
 
 If this action is told to load the current map, the current map will be reset. This behavior is equivalent to pressing `XOR` + `MEM3`.
 
-For most normal [door](../techniques/doors) behavior, you will probably want to [set the warp state](../SET_WARP_STATE) before using the this action.
+For most normal [door](../techniques/doors) behavior, you will probably want to [set the warp state](../actions/SET_WARP_STATE) before using the this action.
 
 ## Example JSON
 

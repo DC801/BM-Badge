@@ -11,6 +11,6 @@ Common use cases for save flags include tracking whether the player has:
 - completed specific puzzles
 - found specific secrets
 
-You will likely need to employ [chains of small checks](../techniques/chains_of_small_checks) at the beginning of your [map](../maps)'s [on_load](../scripts/on_load) [script](../scripts) to initialize the map based on the states of save flags like those above.
+You will likely need to employ [chains of small checks](../techniques/chains_of_small_checks) at the beginning of your [map](../maps)'s [`on_load`](../scripts/on_load) [script](../scripts) to initialize the map based on the states of save flags like those above.
 
 Save flags persist through map loads because they are part of the save game data.

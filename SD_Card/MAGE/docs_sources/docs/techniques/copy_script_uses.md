@@ -75,7 +75,7 @@ Another advantage is that timing or choreography can be tuned in one place inste
 
 ### Human Readability
 
-Even when a small sequence of actions is only used once, abstracting it into a separate script that does what it says it does (e.g. `walk-elders-to-door`) can still make choreography much easier to manage, particularly in long [cutscenes](../#cutscenes).
+Even when a small sequence of actions is only used once, abstracting it into a separate script that does what it says it does (e.g. `walk-elders-to-door`) can still make choreography much easier to manage, particularly in long [cutscenes](cutscenes).
 
 The sequence need not be long for this technique to be effective.
 

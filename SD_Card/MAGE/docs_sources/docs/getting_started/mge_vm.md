@@ -1,8 +1,10 @@
 # MGE VM
 
-> **WARNING**: This VM image was prepared for the Black Mage Game 2020 (chapter 1) version of the engine, back before there was a web build to use instead, so this information will have very limited utility now.
->
-> Seriously, just use the web build now! It's so much easier! (See: [Web Build](../hardware/web_build))
+::: warning
+This VM image was prepared for the Black Mage Game 2020 (chapter 1) version of the engine, back before there was a web build to use instead, so this information will have very limited utility now.
+
+Seriously, just use the [web build](../hardware/web_build) now! It's so much easier!
+:::
 
 ## Download the VM image
 

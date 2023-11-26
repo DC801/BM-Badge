@@ -4,7 +4,7 @@
 
 They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](../scripts). They each have predefined arguments, and are indicated with "SCREAMING_SNAKE_CASE." In the encoded game, they are 8 bytes a piece.
 
-Each action requires specific JSON properties, but through [MGS Natlang](../mgs/mgs_natlang), they can instead be written as one or more "natural language" patterns which can then be converted into JSON.
+Each action requires specific JSON properties, but through [MGS Natlang](../mgs/mgs_natlang), they can instead be written as one or more "natural language" patterns which will then be converted into JSON.
 
 ## Game Management
 
@@ -60,7 +60,7 @@ Manipulate the camera's position or perform tricks like shaking the camera or fa
 
 ## Script Control
 
-Set a specific [on_tick](../scripts/on_tick) or [on_interact](../scripts/on_interact) script, run another script, or recursively copy the actions inside another script.
+Set a specific [`on_tick`](../scripts/on_tick) or [`on_interact`](../scripts/on_interact) script, run another script, or recursively copy the actions inside another script.
 
 - [RUN_SCRIPT](../actions/RUN_SCRIPT)
 - [GOTO_ACTION_INDEX](../actions/GOTO_ACTION_INDEX)
@@ -85,7 +85,7 @@ NOTE: These actions can behave erratically if any of the vertices in the geometr
 
 ## Entity Appearance
 
-Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](../NON_BLOCKING_DELAY).
+Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](../actions/NON_BLOCKING_DELAY).
 
 - [PLAY_ENTITY_ANIMATION](../actions/PLAY_ENTITY_ANIMATION)
 - [SET_ENTITY_CURRENT_ANIMATION](../actions/SET_ENTITY_CURRENT_ANIMATION)

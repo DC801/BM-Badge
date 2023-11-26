@@ -1,10 +1,14 @@
 # Scripts (JSON)
 
-NOTE: With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not write [script](../scripts) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. (See: [Script Block](../mgs/script_block))
+::: tip NOTE
+With the introduction of [MGS Natlang](../mgs/mgs_natlang), you need not write [script](../scripts) with JSON, but it still may be useful to understand the JSON structure for debugging purposes. (See: [Script Block](../mgs/script_block))
+:::
 
 ## Example Script File
 
-(DEPRECATED: `goto index` and other features of [MGS Natlang](../mgs/mgs_natlang) make this kind of script management unnecessary; this page belongs in a museum!)
+::: warning DEPRECATED
+`goto index` and other features of [MGS Natlang](../mgs/mgs_natlang) make this kind of script management unnecessary; this page belongs in a museum!
+:::
 
 #updateme
 
@@ -47,7 +51,7 @@ This demonstrates the simple branching that scripts use to produce different ent
 
 In this case, we want Alice to give her backstory the first time you speak to her, and a summary of her backstory thereafter.
 
-When we interact with Alice, her [on_interact](../scripts/on_interact) script is run: `show_dialog-alice-start`, which is found on line 2. During the course of this script, we set a save flag (`alice-backstory`) to `true` (line 14). After the last action is run, the script ends.
+When we interact with Alice, her [`on_interact`](../scripts/on_interact) script is run: `show_dialog-alice-start`, which is found on line 2. During the course of this script, we set a save flag (`alice-backstory`) to `true` (line 14). After the last action is run, the script ends.
 
 The next interaction will run the last `on_interact` script used, which happens to be her start script again. But this time, since `alice-backstory` is `true`, the script immediately branches, and instead the game runs the script called `show_dialog-alice-summary`, found on line 19.
 

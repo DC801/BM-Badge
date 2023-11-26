@@ -19,7 +19,4 @@ The three options:
 	- [String](../mgs/variables/string): the dialog's display name.
 	- This usage also provides a `name` [parameter](../mgs/dialog_parameters_mgs) for the dialog.
 	- If you don't want a name displayed, use an empty quoted string (`name ""`).
-
-## Example
-
-See: [Dialog Example (MGS)](../mgs/dialog_example_mgs)
+ 

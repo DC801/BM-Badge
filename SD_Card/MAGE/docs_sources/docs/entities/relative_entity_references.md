@@ -52,11 +52,11 @@ If the same script were run by Strong Bad instead, the `%SELF%` reference would 
 > **Strong Bad**:<br>
 > Got it memorized?
 
-#### Best Practice: Consistent References
-
-All [entity references](../#relative-entity-names-and-references) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
+::: tip Best Practice: Consistency
+All [entity references](../scripts/printing_current_values) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
 
 If we change `entity` to `Bender` instead of `%SELF%`, but leave the `%SELF%` reference in the dialog `messages` alone, the conversation would appear correct if run by Bender, but no one else.
+:::
 
 ```json
 "dialog-introduction": [

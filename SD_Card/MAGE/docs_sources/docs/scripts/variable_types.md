@@ -4,9 +4,13 @@ There are only a few Mage Game Engine (MGE) variables available for [script](../
 
 Variables don't have to be declared before they can be used; simply using an [action](../actions) that sets or checks one will cause the encoder to include it in the `game.dat`.
 
-NOTE: This means typos can be hard to spot — if you set the variable `birthdayparty` in a script but check the int `birthday_party` in another, the encoder won't notice anything is wrong, and will simply create and store both variables as if they were separate things. If you find a variable isn't triggering logic checks in the ways you expect, you might want to verify that it's spelled the same wherever it's set/used.
+::: warning
+Typos can be hard to spot. If you set `birthdayparty` but check `birthday_party`, the encoder will create and store both variables as if they were separate things.
 
-All variables are persistent between [map loads](../maps/map_loads), and are all included in the [save data](../scripts/save_data).
+If you find a variable isn't triggering logic checks in the ways you expect, you might want to verify that it's spelled the same wherever it's set/used.
+:::
+
+All variables are persistent between [map loads](../maps/map_loads) because all are all included in the [save data](../scripts/save_data).
 
 ## Variable Types
 

@@ -6,7 +6,7 @@ Open `SD_Card/MAGE/editor/index.html` with a web browser.
 
 Once the page is open, you can either:
 
-1. Drag your `scenario_source_files` folder into the window.
+1. Drag your [`scenario_source_files`](../getting_started/scenario_source_files) folder into the window.
 2. Click the "browse" button and choose the `scenario_source_files` using your operating system's file browser.
 
 Confirm that you want to upload the contents of the folder to your browser, and the encoder will do its magic. If successful, click the "Download game.dat" button, and you're done!

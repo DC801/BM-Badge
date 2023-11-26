@@ -4,7 +4,7 @@
 
 #updateme
 
-Because an entity's [on_interact](../scripts/on_interact) script is set to the same thing each time their map is loaded, it is beneficial to describe an entity's behavior assuming that branching logic will always have to be done from scratch in this script. (While you could also set the map's [on_load](../scripts/on_load) to change the entity's `on_interact` script based on certain conditions, this is much more frustrating to manage.)
+Because an entity's [`on_interact`](../scripts/on_interact) script is set to the same thing each time their map is loaded, it is beneficial to describe an entity's behavior assuming that branching logic will always have to be done from scratch in this script. (While you could also set the map's [`on_load`](../scripts/on_load) to change the entity's `on_interact` script based on certain conditions, this is much more frustrating to manage.)
 
 In addition, because the `on_interact` script slot is set to the last script that was run (rather than reverting to its original value when an interaction is finished), you should explicitly set an entity's `on_interact` to its start script at the end of each of its branches.
 
@@ -16,15 +16,21 @@ On the map, set this as the entity's `on_interact` property. (E.g. Blacksmith's 
 
 If all branches contain the same starting behavior (such as stopping idle actions and/or facing the player before saying various things), those actions should be done at the very top of the start script.
 
->Actions done in most of the branches (but not all of them) might be included between the start branches' logic checks, but depending on the branching structure, you might instead want to split this shared behavior into its own script and use [COPY_SCRIPT](../actions/COPY_SCRIPT) at the beginning of the relevant branches.
+::: tip
+Actions done in most of the branches (but not all of them) might be included between the start branches' logic checks, but depending on the branching structure, you might instead want to split this shared behavior into its own script and use [COPY_SCRIPT](../actions/COPY_SCRIPT) at the beginning of the relevant branches.
+:::
 
 If possible, all the root-level branching logic should be done in this script, e.g. checking whether you've heard a character's backstory.
 
 After all the branching logic comes the "default" branch, which is the entity's behavior when none of the branch conditions are met.
 
-> **Best Practice**: If there are other complex actions you want the entity to perform such as saying something or moving around (as with any of the other branches), use the [RUN_SCRIPT](../actions/RUN_SCRIPT) action to jump to another script meant for those specific actions rather than including them in the start script. This separates logic from behavior, and makes both much easier to polish and debug. (If the entity behavior is simple it might not be super necessary, but consider doing this if you're having trouble keeping an entity's branches straight.)
+::: tip Best Practice
+If there are other complex actions you want the entity to perform such as saying something or moving around (as with any of the other branches), use the [RUN_SCRIPT](../actions/RUN_SCRIPT) action to jump to another script meant for those specific actions rather than including them in the start script. This separates logic from behavior, and makes both much easier to polish and debug. (If the entity behavior is simple it might not be super necessary, but consider doing this if you're having trouble keeping an entity's branches straight.)
+:::
 
-> **Advanced Tip**: You might not want the "default" branch to have a separate script for if there's something you don't want the player to arbitrarily induce via hacking (by setting an entity's `on_interact` or `on_tick` script). For example, to make speedrunning your scenario more challenging, you might want to put the end cutscene behind a number of logic checks that detect whether the player has actually played the game, rather than splitting the end cutscene into its own script (which leaves it vulnerable to being arbitrarily triggered).
+::: tip Advanced Tip
+You might not want the "default" branch to have a separate script for if there's something you don't want the player to arbitrarily induce via hacking (by setting an entity's `on_interact` or `on_tick` script). For example, to make speedrunning your scenario more challenging, you might want to put the end cutscene behind a number of logic checks that detect whether the player has actually played the game, rather than splitting the end cutscene into its own script (which leaves it vulnerable to being arbitrarily triggered).
+:::
 
 ## Branch Scripts
 

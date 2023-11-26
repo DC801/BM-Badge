@@ -1,5 +1,9 @@
 # Hint Systems
 
+::: warning OUT OF DATE
+Be aware that this entry predates [MGS Natlang](../mgs/mgs_natlang.md).
+:::
+
 For the BMG2020, we implemented a hints system: whenever a player engaged with an [entity](../entities) involving a quest, a hint was triggered so the entity designated to be the "hint man" could provide a hint for the player.
 
 There were two methods we used to do this, and both are viable. Depending on how many hints (or equivalent behavior) you'll need to manage, you might use either method.
@@ -83,7 +87,7 @@ An example pair of scripts to manage Bender's hints:
 ]
 ```
 
-Then, everywhere you need Bender to change the hint to his own quest line, all you will need is a single [`COPY_SCRIPT`](../#copy_script) action, e.g.:
+Then, everywhere you need Bender to change the hint to his own quest line, all you will need is a single `COPY_SCRIPT` action, e.g.:
 
 ```JSON
 {

@@ -4,7 +4,9 @@ One of the three [entity types](../entities/entity_types).
 
 If you place a static (unanimated) tile from a [tileset](../Tilesets) onto an object layer in a Tiled [map](../maps), it will become a **tile entity**.
 
->NOTE: If the tile's "Type" property is something defined within [entity_types.json](../structure/entity_types.json), it will instead become a [character entity](../entities/character_entity).
+::: tip NOTE
+If the tile's `Class` (formerly `Type`) property is something defined within [`entity_types.json`](../structure/entity_types.json), it will instead become a [character entity](../entities/character_entity).
+:::
 
 - **`PrimaryIdType`**: `0` (`tileset`)
 - **`PrimaryId`**: the `id` of the tileset the entity is using

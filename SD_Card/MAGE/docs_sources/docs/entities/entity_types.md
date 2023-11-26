@@ -17,4 +17,4 @@ One key difference between the three entity types: for the first two types (tile
 | rake (tile) | rake (character) |
 | ![rotating rake](../media/rake-rotating.gif) | ![stable rake](../media/rake-stable.gif) |
 
-In addition, there is currently no way to [control animations](../SET_ENTITY_CURRENT_ANIMATION) with scripts unless the entity is a character entity. (See the the modem and bookcase in BMG2020.)
+In addition, there is currently no way to [control animations](../actions/SET_ENTITY_CURRENT_ANIMATION) with scripts unless the entity is a character entity. (See the the modem and bookcase in BMG2020.)

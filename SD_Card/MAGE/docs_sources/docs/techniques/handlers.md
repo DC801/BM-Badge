@@ -2,7 +2,7 @@
 
 (Also see: [One Script, Multiple Behaviors](../techniques/one_script_multiple_behaviors))
 
-To manage an entity's complex idle behavior, or to modify an entity's idle behavior over time, you can use another entity's [on_tick](../scripts/on_tick) [slot](../scripts/script_slots). We call this second entity a **handler**, because another entity is handling part of that entity's behavior.
+To manage an entity's complex idle behavior, or to modify an entity's idle behavior over time, you can use another entity's [`on_tick`](../scripts/on_tick) [slot](../scripts/script_slots). We call this second entity a **handler**, because another entity is handling part of that entity's behavior.
 
 It doesn't matter who the handler is, as long as their `on_tick` slot is free, but if you change who is acting as handler be sure to change it everywhere or you'll end up with multiple handlers working against each other!
 

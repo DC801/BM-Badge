@@ -8,30 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "11e71142fb85b327",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "index.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "624cf341eb149db9",
-        "type": "tabs",
-        "children": [
-          {
             "id": "ca90d2489c55df59",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mgs/mgs_natlang_vs_json.md",
+                "file": "mgs/syntax_colors.md",
                 "mode": "source",
                 "source": false
               }
@@ -66,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "\"web build\"",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -103,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "index.md",
+                "file": "mgs/syntax_colors.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "index.md",
+                "file": "mgs/syntax_colors.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -143,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "index.md"
+                "file": "mgs/syntax_colors.md"
               }
             }
           }
@@ -151,8 +133,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300.5,
-    "collapsed": true
+    "width": 300.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -164,34 +145,34 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "11e71142fb85b327",
+  "active": "ca90d2489c55df59",
   "lastOpenFiles": [
-    "mgs/mgs_natlang_vs_json.md",
-    "index.md",
+    "mgs/serial_styles.md",
     "mgs/mgs_natlang_structure.md",
-    "mgs/advanced_mgs_natlang_syntax.md",
-    "mgs/mgs_natlang.md",
-    "mgs/combination_block.md",
-    "maps/vector_objects.md",
-    "entities/SELF.md",
-    "entities/PLAYER.md",
-    "maps/map_loads.md",
-    "maps/coordinate_overflow.md",
-    "maps.md",
-    "actions/BLOCKING_DELAY.md",
-    "actions.md",
-    "scripts.md",
-    "techniques/cutscenes.md",
+    "scripts/on_interact.md",
     "scripts/on_load.md",
-    "maps/map_properties.md",
-    "scripts/save_data.md",
-    "actions/MUTATE_VARIABLE.md",
-    "actions/SET_ENTITY_TYPE.md",
-    "actions/actions.md",
-    "hardware/commands.md",
-    "actions/REGISTER_SERIAL_DIALOG_COMMAND.md",
-    "scripts/comments.md",
+    "mgs/advanced_syntax/if_and_else.md",
+    "scripts/script_slots.md",
+    "mgs/dialog_messages_mgs.md",
+    "mgs/dialog_example_mgs.md",
+    "mgs/dialog_parameters_mgs.md",
+    "mgs/dialog_options_mgs.md",
+    "mgs/dialog_identifier.md",
+    "dialogs/dialog_properties.md",
+    "tilesets/creating_a_tileset_json_file.md",
     "mgs/comments_mgs.md",
+    "techniques/chains_of_small_checks.md",
+    "mgs/block.md",
+    "techniques/actors.md",
+    "techniques/beginnings_middles_and_ends.md",
+    "entities/entity_properties.md",
+    "entities/relative_entity_references.md",
+    "mgs/serial_dialog_example_mgs.md",
+    "dialogs/serial_dialog_options_json.md",
+    "mgs/syntax_colors.md",
+    "tilesets/tile_collisions.md",
+    "entities/tile_entity.md",
+    "hardware/updating_the_hardware.md",
     "forest_goats",
     "MGS Advanced Syntax",
     "MGS Variables",

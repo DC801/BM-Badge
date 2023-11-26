@@ -1,6 +1,6 @@
 # CHECK_ENTITY_TICK_SCRIPT
 
-Checks an [entity](../entities)'s [on_tick](../scripts/on_tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).
+Checks an [entity](../entities)'s [`on_tick`](../scripts/on_tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).
 
 ## Example JSON
 

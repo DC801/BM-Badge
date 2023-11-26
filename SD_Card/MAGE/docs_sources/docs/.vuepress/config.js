@@ -6,19 +6,10 @@ import { readFileSync } from "fs"
 console.log('shikiPlugin', shikiPlugin)
 
 const myGrammar = JSON.parse(readFileSync("mgs.tmLanguage.json"))
-const myLanguage = {
-  id: "MageGameScript",
-  scopeName: 'source.mgs',
-  grammar: myGrammar,
-  aliases: ['mgs'],
-}
+// these have to be manually loaded I guess, since loading a custom one causes all the others to not load at all (?)
 const jsonGrammar = JSON.parse(readFileSync("node_modules/shiki/languages/json.tmLanguage.json"))
-const jsonLanguage = {
-  id: "JSON",
-  scopeName: 'source.json',
-  grammar: jsonGrammar,
-  aliases: ['json'],
-}
+const javascriptGrammar = JSON.parse(readFileSync("node_modules/shiki/languages/javascript.tmLanguage.json"))
+const rustGrammar = JSON.parse(readFileSync("node_modules/shiki/languages/rust.tmLanguage.json"))
 
 export default defineUserConfig({
   lang: 'en-US',
@@ -31,7 +22,24 @@ export default defineUserConfig({
   },
   plugins: [
     shikiPlugin({
-      langs: [ myLanguage, jsonLanguage ],
+      langs: [
+        {
+          id: "MageGameScript", scopeName: 'source.mgs',
+          grammar: myGrammar, aliases: ['mgs'],
+        },
+        {
+          id: "JSON", scopeName: 'source.json',
+          grammar: jsonGrammar, aliases: ['json'],
+        },
+        // {
+        //   id: "JavaScript", scopeName: 'source.js',
+        //   grammar: javascriptGrammar, aliases: ['javascript','js'],
+        // },
+        // {
+        //   id: "Rust", scopeName: 'source.rust',
+        //   grammar: rustGrammar, aliases: ['rust'],
+        // },
+      ],
       theme: 'dark-plus',
     }),
   ],
@@ -406,7 +414,6 @@ export default defineUserConfig({
               '/mgs/dialog_parameters_mgs.md',
               '/mgs/dialog_messages_mgs.md',
               '/mgs/dialog_options_mgs.md',
-              '/mgs/dialog_example_mgs.md',
             ]
           },
           {

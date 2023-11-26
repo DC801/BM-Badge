@@ -12,6 +12,6 @@ Serial dialogs contain text meant to be shown via the serial console ([terminal]
 2. [Serial dialog message](../mgs/serial_dialog_messages_mgs): 1+
 3. [Serial dialog option](../mgs/serial_dialog_options_mgs): 0+
 
-NOTE: unlike with conventional [dialogs](../#dialog), serial dialog blocks cannot contain more than one serial dialog. In other words, inside a serial dialog block, no parameters can be given after a serial message, and nothing can come after a serial option (except more options).
+NOTE: unlike with conventional [dialogs](../dialogs), serial dialog blocks cannot contain more than one serial dialog. In other words, inside a serial dialog block, no parameters can be given after a serial message, and nothing can come after a serial option (except more options).
 
 See: [Serial Dialog Block](../mgs/serial_dialog_block)
