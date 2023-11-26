@@ -40,7 +40,7 @@
 ### NPCs
 
 - [x] Lambda
-- [ ] King Gibson
+- [x] King Gibson
 - [ ] Cat Cook
 - [x] Castle goose (red bow)
 - [x] Sea Moss

@@ -1,0 +1,32 @@
+# SET_HEX_EDITOR_STATE
+
+Setting this to true opens the [hex editor](../hardware/hex_editor). (Does the hex editor need to be enabled?) #verifyme 
+
+## Example JSON
+
+```json
+{
+  "action": "SET_HEX_EDITOR_STATE",
+  "bool_value": true
+}
+```
+
+## MGS Natlang
+
+### Example
+
+```mgs
+script {
+  open hex editor;
+}
+```
+
+### Dictionary entry
+
+```
+$bool_value:boolean hex editor (;)
+```
+
+---
+
+Back to [Actions](../actions)

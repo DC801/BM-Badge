@@ -174,7 +174,7 @@ var mgs = {
 	trees: {
 		dialogSettingsNode: [
 			{
-				pattern: "settings ?for dialog {",
+				pattern: "settings<kw> ?for<h> dialog<i> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialogSettings");
 				}
@@ -182,7 +182,7 @@ var mgs = {
 		],
 		serialDialogSettingsNode: [
 			{
-				pattern: "settings ?for serial ?dialog {",
+				pattern: "settings<kw> ?for<h> serial<i> ?dialog<i> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialogSettings");
 				}
@@ -190,7 +190,7 @@ var mgs = {
 		],
 		dialogNode: [
 			{
-				pattern: "dialog $dialog:string {",
+				pattern: "dialog<s> $dialog:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
@@ -200,7 +200,7 @@ var mgs = {
 		],
 		serialDialogNode: [
 			{
-				pattern: "serial dialog $serial_dialog:string {",
+				pattern: "serial<s> dialog<s> $serial_dialog:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -210,7 +210,7 @@ var mgs = {
 		],
 		scriptNode: [
 			{
-				pattern: "?script $scriptName:string {",
+				pattern: "?script<s> $scriptName:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("script");
 					state.replaceValue(
@@ -224,7 +224,7 @@ var mgs = {
 		],
 		dialogSettingsTarget: [
 			{
-				pattern: "label $target:string {",
+				pattern: "label<s> $target:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
@@ -235,7 +235,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "entity $target:string {",
+				pattern: "entity<s> $target:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
@@ -246,7 +246,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "default {",
+				pattern: "default<enum> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
@@ -259,7 +259,7 @@ var mgs = {
 		],
 		dialogParameter: [
 			{
-				pattern: "entity $value:string",
+				pattern: "entity<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -269,7 +269,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "name $value:string",
+				pattern: "name<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -279,7 +279,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "portrait $value:string",
+				pattern: "portrait<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -289,7 +289,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "alignment $value:string",
+				pattern: "alignment<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -299,7 +299,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "border_tileset $value:string",
+				pattern: "border_tileset<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -309,7 +309,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "emote $value:number",
+				pattern: "emote<s> $value:number<n>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -319,7 +319,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "wrap messages ?to $value:number",
+				pattern: "wrap<v> messages<i> ?to<op> $value:number<n>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -330,7 +330,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "wrap options ?to $value:number",
+				pattern: "wrap<v> options<i> ?to<op> $value:number<n>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogParameter",
@@ -342,7 +342,7 @@ var mgs = {
 		],
 		dialogIdentifier: [
 			{
-				pattern: "$value:bareword",
+				pattern: "$value:bareword<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogIdentifier",
@@ -352,7 +352,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "entity $value:string",
+				pattern: "entity<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogIdentifier",
@@ -362,7 +362,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "name $value:string",
+				pattern: "name<s> $value:string<str>",
 				onMatch: function (state) {
 					state.processCaptures(
 						"dialogIdentifier",
@@ -374,7 +374,7 @@ var mgs = {
 		],
 		dialogMessage: [
 			{
-				pattern: "$message:quotedString",
+				pattern: "$message:quotedString<str>",
 				onMatch: function (state) {
 					state.pushNew(
 						"inserts",
@@ -387,7 +387,7 @@ var mgs = {
 		],
 		dialogOption: [
 			{
-				pattern: "> $label:quotedString : ?goto ?script $script:string",
+				pattern: "><control> $label:quotedString<str> :<control> ?goto<control> ?script<s> $script:string<f>",
 				onMatch: function (state) {
 					state.pushNew(
 						"inserts",
@@ -403,7 +403,7 @@ var mgs = {
 		],
 		serialDialogParameter: [
 			{
-				pattern: "wrap ?messages ?to $value:number",
+				pattern: "wrap<v> ?messages<i> ?to<op> $value:number<n>",
 				onMatch: function (state) {
 					state.replaceValueDeep(
 						"inserts",
@@ -417,7 +417,7 @@ var mgs = {
 		],
 		serialDialogMessage: [
 			{
-				pattern: "$message:quotedString",
+				pattern: "$message:quotedString<str>",
 				onMatch: function (state) {
 					state.processCaptures("serialDialogMessage");
 					state.clearCaptures();
@@ -426,7 +426,7 @@ var mgs = {
 		],
 		serialDialogOptionFree: [
 			{
-				pattern: "_ $label:quotedString : ?goto ?script $script:string",
+				pattern: "_<control> $label:quotedString<str> :<control> ?goto<control> ?script<s> $script:string<f>",
 				onMatch: function (state) {
 					state.replaceValue("inserts", "serialOptionType", "text_options");
 					state.pushNew(
@@ -442,7 +442,7 @@ var mgs = {
 		],
 		serialDialogOptionFixed: [
 			{
-				pattern: "# $label:quotedString : ?goto ?script $script:string",
+				pattern: "#<control> $label:quotedString<str> :<control> ?goto<control> ?script<s> $script:string<f>",
 				onMatch: function (state) {
 					state.replaceValue("inserts", "serialOptionType", "options");
 					state.pushNew(
@@ -459,7 +459,7 @@ var mgs = {
 		],
 		action: [
 			{
-				pattern: "show dialog $dialog:string {",
+				pattern: "show<v> dialog<s> $dialog:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
@@ -470,7 +470,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "show dialog {",
+				pattern: "show<v> dialog<i> {<b>",
 				onMatch: function (state) {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
@@ -484,7 +484,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "show serial dialog $serial_dialog:string {",
+				pattern: "show<v> serial<s> dialog<s> $serial_dialog:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -495,7 +495,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "show serial dialog {",
+				pattern: "show<v> serial<i> dialog<i> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -510,7 +510,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "concat serial dialog $serial_dialog:string {",
+				pattern: "concat<v> serial<s> dialog<s> $serial_dialog:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -521,7 +521,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "concat serial dialog {",
+				pattern: "concat<v> serial<i> dialog<i> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -536,7 +536,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "set serial connect ?message ?to {",
+				pattern: "set<v> serial<i> connect<i> ?message<i> ?to<op> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -550,7 +550,7 @@ var mgs = {
 				}
 			},
 			{
-				pattern: "set serial connect ?message ?to $serial_dialog:string {",
+				pattern: "set<v> serial<i> connect<i> ?message<u> ?to<op> $serial_dialog:string<str> {<b>",
 				onMatch: function (state) {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
@@ -639,56 +639,59 @@ var mgs = {
 
 mgs.actionDictionary = [{
 		action: "BLOCKING_DELAY",
-		pattern: "block $duration:duration ?;",
+		pattern: "block<v> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "SET_CAMERA_TO_FOLLOW_ENTITY",
-		pattern: "make camera follow entity $entity:string ?;",
+		pattern: "make<v> camera<i> follow<h> entity<s> $entity:string<str> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_STATE",
-		pattern: "$bool_value:boolean hex editor ?;",
+		pattern: "$bool_value:boolean<enum> hex<i> editor<i> ?;<terminator>",
 	},
 	{
 		action: "LABEL", // this must be below `SET_HEX_EDITOR_STATE`!!
-		pattern: "$value:bareword :",
+		pattern: "$value:bareword<label> :",
+		omitFromDocs: true,
 	},
 	{
 		action: "SLOT_ERASE",
-		pattern: "erase slot $slot:number ?;",
+		pattern: "erase<v> slot<s> $slot:number<n> ?;<terminator>",
 	},
 	{
 		action: "RUN_SCRIPT",
-		pattern: "goto ?script $script:string ?;",
+		pattern: "goto<control> ?script<s> $script:string<f> ?;<terminator>",
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "goto index $action_index:number ?;",
+		pattern: "goto<control> index<s> $action_index:number<n> ?;<terminator>",
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "goto label $action_index:bareword ?;",
+		pattern: "goto<control> label<s> $action_index:bareword<str> ?;<terminator>",
+		omitFromJSON: true,
 	},
 	{
 		action: "GOTO_ACTION_INDEX",
-		pattern: "return ;",
+		pattern: "return<control> ;<terminator>",
 		values: { "action_index": "auto return" },
+		omitFromDocs: true,
 	},
 	{
 		action: "LOOP_ENTITY_ALONG_GEOMETRY",
-		pattern: "loop entity $entity:string along geometry $geometry:string over $duration:duration ?;",
+		pattern: "loop<v> entity<s> $entity:string<str> along<h> geometry<s> $geometry:string<str> over $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION_RELATIVE",
-		pattern: "rotate entity $entity:string $relative_direction:number ?;",
+		pattern: "rotate<v> entity<s> $entity:string<str> $relative_direction:number<n> ?;<terminator>",
 	},
 	{
 		action: "SLOT_SAVE",
-		pattern: "save slot ?;",
+		pattern: "save<v> slot<i> ?;<terminator>",
 	},
 	{
 		action: "SET_SCREEN_SHAKE",
-		pattern: "shake camera $frequency:duration $amplitude:distance for $duration:duration ?;",
+		pattern: "shake<v> camera<i> $frequency:duration<n> $amplitude:distance<n> for<h> $duration:duration<n> ?;<terminator>",
 		exampleValues: {
 			"$frequency:duration": "200ms",
 			"$amplitude:distance": "32px",
@@ -697,287 +700,287 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "NON_BLOCKING_DELAY",
-		pattern: "wait $duration:duration ?;",
+		pattern: "wait<v> $duration:duration<n> ?;<terminator>",
 		exampleValues: { "$duration:duration": "400ms", }
 
 	},
 	{
 		action: "WALK_ENTITY_TO_GEOMETRY",
-		pattern: "walk entity $entity:string to geometry $geometry:string over $duration:duration ?;",
+		pattern: "walk<v> entity<s> $entity:string<str> to<h> geometry<s> $geometry:string<str> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "WALK_ENTITY_ALONG_GEOMETRY",
-		pattern: "walk entity $entity:string along geometry $geometry:string over $duration:duration ?;",
+		pattern: "walk<v> entity<s> $entity:string<str> along<h> geometry<s> $geometry:string<str> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "SET_ENTITY_GLITCHED",
-		pattern: "make entity $entity:string glitched ?;",
+		pattern: "make<v> entity<s> $entity:string<str> glitched<enum> ?;<terminator>",
 		values: { "bool_value": true },
 	},
 	{
 		action: "SET_ENTITY_GLITCHED",
-		pattern: "make entity $entity:string unglitched ?;",
+		pattern: "make<v> entity<s> $entity:string<str> unglitched<enum> ?;<terminator>",
 		values: { "bool_value": false },
 	},
 	{
 		action: "TELEPORT_ENTITY_TO_GEOMETRY",
-		pattern: "teleport entity $entity:string to geometry $geometry:string ?;",
+		pattern: "teleport<v> entity<s> $entity:string<str> to<h> geometry<s> $geometry:string<str> ?;<terminator>",
 	},
 	{
 		action: "TELEPORT_CAMERA_TO_GEOMETRY",
-		pattern: "teleport camera to geometry $geometry:string ?;",
+		pattern: "teleport<v> camera<i> to<h> geometry<s> $geometry:string<str> ?;<terminator>",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION",
-		pattern: "turn entity $entity:string $direction:bareword ?;",
+		pattern: "turn<v> entity<s> $entity:string<str> $direction:bareword<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-		pattern: "turn entity $entity:string toward entity $target_entity:string ?;",
+		pattern: "turn<v> entity<s> $entity:string<str> toward<h> entity<s> $target_entity:string<str> ?;<terminator>",
 	},
 	{
 		action: "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
-		pattern: "turn entity $entity:string toward geometry $target_geometry:string ?;",
+		pattern: "turn<v> entity<s> $entity:string<str> toward<h> geometry<s> $target_geometry:string<str> ?;<terminator>",
 	},
 	{
 		action: "PAN_CAMERA_TO_ENTITY",
-		pattern: "pan camera to entity $entity:string over $duration:duration ?;",
+		pattern: "pan<v> camera<i> to<h> entity<s> $entity:string<str> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "PAN_CAMERA_ALONG_GEOMETRY",
-		pattern: "pan camera along geometry $geometry:string over $duration:duration ?;",
+		pattern: "pan<v> camera<i> along<h> geometry<s> $geometry:string<str> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "LOOP_CAMERA_ALONG_GEOMETRY",
-		pattern: "loop camera along geometry $geometry:string over $duration:duration ?;",
+		pattern: "loop<v> camera<i> along<h> geometry<s> $geometry:string<str> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "PAN_CAMERA_TO_GEOMETRY",
-		pattern: "pan camera to geometry $geometry:string over $duration:duration ?;",
+		pattern: "pan<v> camera<i> to<h> geometry<s> $geometry:string<str> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "PLAY_ENTITY_ANIMATION",
-		pattern: "play entity $entity:string animation $animation:number $play_count:quantity ?;",
-		exampleValues: { "$animation:number": "3", }
+		pattern: "play<v> entity<s> $entity:string<str> animation<s> $animation:number<n> $play_count:quantity<n> ?;<terminator>",
+		exampleValues: { "$animation:number<n>": "3", }
 	},
 	{
 		action: "SCREEN_FADE_OUT",
-		pattern: "fade out camera to $color:color over $duration:duration ?;",
+		pattern: "fade<v> out<h> camera<i> to<h> $color:color<n> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "SCREEN_FADE_IN",
-		pattern: "fade in camera from $color:color over $duration:duration ?;",
+		pattern: "fade<v> in<h> camera<i> from<h> $color:color<n> over<h> $duration:duration<n> ?;<terminator>",
 	},
 	{
 		action: "LOAD_MAP",
-		pattern: "load map $map:string ?;",
+		pattern: "load<v> map<s> $map:string<str> ?;<terminator>",
 	},
 	{
 		action: "SLOT_LOAD",
-		pattern: "load slot $slot:number ?;",
+		pattern: "load<v> slot<s> $slot:number<n> ?;<terminator>",
 	},
 	{
 		action: "SHOW_DIALOG",
-		pattern: "show dialog $dialog:string ?;",
+		pattern: "show<v> dialog<s> $dialog:string<str> ?;<terminator>",
 	},
 	{
 		action: "SHOW_SERIAL_DIALOG",
-		pattern: "show serial dialog $serial_dialog:string ?;",
+		pattern: "show<v> serial<s> dialog<s> $serial_dialog:string<str> ?;<terminator>",
 		values: { "disable_newline": false },
 	},
 	{
 		action: "CLOSE_DIALOG",
-		pattern: "close dialog ?;",
+		pattern: "close<v> dialog<i> ?;<terminator>",
 	},
 	{
 		action: "CLOSE_SERIAL_DIALOG",
-		pattern: "close serial dialog ?;",
+		pattern: "close<v> serial<i> dialog<i> ?;<terminator>",
 	},
 	{
 		action: "SHOW_SERIAL_DIALOG",
-		pattern: "concat serial dialog $serial_dialog:string ?;",
+		pattern: "concat<v> serial<i> dialog<i> $serial_dialog:string<str> ?;<terminator>",
 		values: { "disable_newline": true },
 	},
 	{
 		action: "SET_CONNECT_SERIAL_DIALOG",
-		pattern: "set serial connect ?message ?to $serial_dialog:string ?;",
+		pattern: "set<v> serial<i> connect<i> ?message<i> ?to<op> $serial_dialog:string<str> ?;<terminator>",
 	},
 	{
 		action: "COPY_SCRIPT",
-		pattern: "copy ?script $script:string ?;",
+		pattern: "copy<v> ?script<s> $script:string<f> ?;<terminator>",
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy entity $entity:string $field:bareword into variable $variable:string ?;",
+		pattern: "copy<v> entity<s> $entity:string<str> $field:bareword<i> into<h> variable<s> $variable:string<str> ?;<terminator>",
 		values: { "inbound": true },
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy variable $variable:string from entity $entity:string $field:bareword ?;",
+		pattern: "copy<v> variable<s> $variable:string<str> from<h> entity<s> $entity:string<str> $field:bareword<i> ?;<terminator>",
 		values: { "inbound": true },
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy variable $variable:string into entity $entity:string $field:bareword ?;",
+		pattern: "copy<v> variable<s> $variable:string<str> into<h> entity<s> $entity:string<str> $field:bareword<i> ?;<terminator>",
 		values: { "inbound": false },
 	},
 	{
 		action: "COPY_VARIABLE",
-		pattern: "copy entity $entity:string $field:bareword from variable $variable:string ?;",
+		pattern: "copy<v> entity<s> $entity:string<str> $field:bareword<i> from<h> variable<s> $variable:string<str> ?;<terminator>",
 		values: { "inbound": false },
 	},
 	{
 		action: "MUTATE_VARIABLE",
-		pattern: "mutate $variable:string $operation:operator $value:number ?;",
+		pattern: "mutate<v> $variable:string<str> $operation:operator<op> $value:number<n> ?;<terminator>",
 	},
 	{
 		action: "MUTATE_VARIABLES",
-		pattern: "mutate $variable:string $operation:operator $source:string ?;",
+		pattern: "mutate<v> $variable:string<str> $operation:operator<op> $source:string<str> ?;<terminator>",
 	},
 	{
 		action: "SET_MAP_TICK_SCRIPT",
-		pattern: "set map on_tick ?to $script:string ?;",
+		pattern: "set<v> map<i> on_tick<i> ?to<op> $script:string<f> ?;<terminator>",
 	},
 	{
 		action: "SET_WARP_STATE",
-		pattern: "set warp state ?to $string:string ?;",
+		pattern: "set<v> warp<i> state<i> ?to<op> $string:string<str> ?;<terminator>",
 	},
 	{
 		action: "SET_SAVE_FLAG",
-		pattern: "set flag $save_flag:string ?to $bool_value:boolean ?;",
+		pattern: "set<v> flag<s> $save_flag:string<str> ?to<op> $bool_value:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_PLAYER_CONTROL",
-		pattern: "turn player control $bool_value:boolean ?;",
+		pattern: "turn<v> player<i> control<i> $bool_value:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_PLAYER_CONTROL",
-		pattern: "turn $bool_value:boolean player control ?;",
+		pattern: "turn<v> $bool_value:boolean<enum> player<i> control<i> ?;<terminator>",
 	},
 	{
 		action: "SET_SERIAL_DIALOG_CONTROL",
-		pattern: "turn serial control $bool_value:boolean ?;",
+		pattern: "turn<v> serial<i> control<i> $bool_value:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_SERIAL_DIALOG_CONTROL",
-		pattern: "turn $bool_value:boolean serial control ?;",
+		pattern: "turn<v> $bool_value:boolean<enum> serial<i> control<i> ?;<terminator>",
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register $command:string -> ?script $script:string ?;",
+		pattern: "register<v> $command:string<str> -><control> ?script<s> $script:string<f> ?;<terminator>",
 		values: { "is_fail": false },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "register $command:string fail -> ?script $script:string ?;",
+		pattern: "register<v> $command:string<str> fail<i> -><control> ?script<s> $script:string<f> ?;<terminator>",
 		values: { "is_fail": true },
 	},
 	{
 		action: "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
-		pattern: "register $command:string + $argument:string -> ?script $script:string ?;",
+		pattern: "register<v> $command:string<str> +<op> $argument:string<str> -><control> ?script<s> $script:string<f> ?;<terminator>",
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister $command:string ?;",
+		pattern: "unregister<v> $command:string<str> ?;<terminator>",
 		values: { "is_fail": false },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
-		pattern: "unregister $command:string fail ?;",
+		pattern: "unregister<v> $command:string<str> fail<i> ?;<terminator>",
 		values: { "is_fail": true },
 	},
 	{
 		action: "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
-		pattern: "unregister $command:string + $argument:string ?;",
+		pattern: "unregister<v> $command:string<str> +<op> $argument:string<str> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_DIALOG_MODE",
-		pattern: "turn hex dialog mode $bool_value:boolean ?;",
+		pattern: "turn<v> hex<i> dialog<i> mode<i> $bool_value:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_DIALOG_MODE",
-		pattern: "turn $bool_value:boolean hex dialog mode ?;",
+		pattern: "turn<v> $bool_value:boolean<enum> hex<i> dialog<i> mode<i> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL",
-		pattern: "turn hex control $bool_value:boolean ?;",
+		pattern: "turn<v> hex<i> control<i> $bool_value:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL",
-		pattern: "turn $bool_value:boolean hex control ?;",
+		pattern: "turn<v> $bool_value:boolean<enum> hex<i> control<i> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
-		pattern: "turn hex clipboard $bool_value:boolean ?;",
+		pattern: "turn<v> hex<i> clipboard<i> $bool_value:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
-		pattern: "turn $bool_value:boolean hex clipboard ?;",
+		pattern: "turn<v> $bool_value:boolean<enum> hex<i> clipboard<i> ?;<terminator>",
 	},
 	// {
 	// 	action: "SET_ENTITY_NAME",
-	// 	pattern: "set entity $entity:string name ?to $string:string ?;",
+	// 	pattern: "set<v> entity<s> $entity:string<str> name<i> ?to<op> $string:string<str> ?;<terminator>",
 	// } // ONES LIKE THIS ARE PROCEDURALLY ADDED
 	{
 		action: "CHECK_SAVE_FLAG",
-		pattern: "if flag $save_flag:string is $expected_bool:boolean then goto ?script $success_script:string ?;",
+		pattern: "if<control> flag<s> $save_flag:string<str> is<op> $expected_bool:boolean<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	},
 	{
 		action: "CHECK_DIALOG_OPEN",
-		pattern: "if dialog is $expected_bool:boolean then goto ?script $success_script:string ?;",
+		pattern: "if<control> dialog<i> is<op> $expected_bool:boolean<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	},
 	{
 		action: "CHECK_SERIAL_DIALOG_OPEN",
-		pattern: "if serial dialog is $expected_bool:boolean then goto ?script $success_script:string ?;",
+		pattern: "if<control> serial<i> dialog<i> is<op> $expected_bool:boolean<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	},
 	{
 		action: "CHECK_DEBUG_MODE",
-		pattern: "if debug mode is $expected_bool:boolean then goto ?script $success_script:string ?;",
+		pattern: "if<control> debug<i> mode<i> is<op> $expected_bool:boolean<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	},
 	// TODO: figure out how to make it match despite the parser forcing string "true" to bool "true"
 	// {
 	// 	action: "CHECK_SAVE_FLAG",
-	// 	pattern: "if flag $save_flag:string is not false then goto ?script $success_script:string ?;",
+	// 	pattern: "if<control> flag<s> $save_flag:string<str> is<op> not<op> false<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	// 	values: { "expected_bool": true },
 	// },
 	// {
 	// 	action: "CHECK_SAVE_FLAG",
-	// 	pattern: "if flag $save_flag:string is not true then goto ?script $success_script:string ?;",
+	// 	pattern: "if<control> flag<s> $save_flag:string<str> is<op> not<op> true<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	// 	values: { "expected_bool": false },
 	// },
 	{
 		action: "CHECK_FOR_BUTTON_PRESS",
-		pattern: "if button $button_id:bareword then goto ?script $success_script:string ?;",
+		pattern: "if<control> button<s> $button_id:bareword<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_PRESS",
-		pattern: "if not button $button_id:bareword then goto ?script $success_script:string ?;",
+		pattern: "if<control> not<op> button<s> $button_id:bareword<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
-		pattern: "if button $button_id:bareword is currently pressed then goto ?script $success_script:string ?;",
+		pattern: "if<control> button<s> $button_id:bareword<enum> is<op> currently<enum> pressed<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
-		pattern: "if button $button_id:bareword is not currently pressed then goto ?script $success_script:string ?;",
+		pattern: "if<control> button<s> $button_id:bareword<enum> is<op> not<op> currently<enum> pressed<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_WARP_STATE",
-		pattern: "if warp state is $string:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> warp<i> state<i> is<op> $string:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_WARP_STATE",
-		pattern: "if warp state is not $string:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> warp<i> state<i> is<op> not<op> $string:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is $value:number then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> $value:number<n> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: {
 			"expected_bool": true,
 			"comparison": "==",
@@ -985,12 +988,12 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is $comparison:operator $value:number then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> $comparison:operator<op> $value:number<n> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is not $value:number then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> not<op> $value:number<n> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: {
 			"expected_bool": false,
 			"comparison": "==",
@@ -998,12 +1001,12 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLE",
-		pattern: "if variable $variable:string is not $comparison:operator $value:number then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> not<op> $comparison:operator<op> $value:number<n> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is $source:string then goto ?script $success_script:string",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> $source:string<str> then<control> goto<control> ?script<s> $success_script:string<f>",
 		values: {
 			"expected_bool": true,
 			"comparison": "==",
@@ -1011,12 +1014,12 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is $comparison:operator $source:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> $comparison:operator<op> $source:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is not $source:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> not<op> $source:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: {
 			"expected_bool": false,
 			"comparison": "==",
@@ -1024,68 +1027,68 @@ mgs.actionDictionary = [{
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $variable:string is not $comparison:operator $source:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> variable<s> $variable:string<str> is<op> not<op> $comparison:operator<op> $source:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	// {
 	// 	action: "CHECK_ENTITY_NAME",
-	// 	pattern: "if entity $entity:string name is $string:string then goto ?script $success_script:string ?;",
+	// 	pattern: "if<control> entity<s> $entity:string<str> name<i> is<op> $string:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 	// 	values: { "expected_bool": true }
 	// } // PROCEDURALLY DONE
 	{
 		action: "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-		pattern: "if entity $entity:string is inside geometry $geometry:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> entity<s> $entity:string<str> is<op> inside<h> geometry<s> $geometry:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-		pattern: "if entity $entity:string is not inside geometry $geometry:string then goto ?script $success_script:string ?;",
+		pattern: "if<control> entity<s> $entity:string<str> is<op> not<op> inside<h> geometry<s> $geometry:string<str> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "CHECK_ENTITY_GLITCHED",
-		pattern: "if entity $entity:string is glitched then goto ?script $success_script:string ?;",
+		pattern: "if<control> entity<s> $entity:string<str> is<op> glitched<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": true },
 	},
 	{
 		action: "CHECK_ENTITY_GLITCHED",
-		pattern: "if entity $entity:string is not glitched then goto ?script $success_script:string ?;",
+		pattern: "if<control> entity<s> $entity:string<str> is<op> not<op> glitched<enum> then<control> goto<control> ?script<s> $success_script:string<f> ?;<terminator>",
 		values: { "expected_bool": false },
 	},
 	{
 		action: "SET_LIGHTS_CONTROL",
-		pattern: "turn lights control $enabled:boolean ?;",
+		pattern: "turn<v> lights<i> control<i> $enabled:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_LIGHTS_CONTROL",
-		pattern: "turn $enabled:boolean lights control ?;",
+		pattern: "turn<v> $enabled:boolean<enum> lights<i> control<i> ?;<terminator>",
 	},
 	{
 		action: "SET_LIGHTS_STATE",
-		pattern: "turn light $lights:string $enabled:boolean ?;",
+		pattern: "turn<v> light<s> $lights:string<enum> $enabled:boolean<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_LIGHTS_STATE",
-		pattern: "turn $enabled:boolean light $lights:string ?;",
+		pattern: "turn<v> $enabled:boolean<enum> light<s> $lights:string<enum> ?;<terminator>",
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "pause entity $entity:string $script_slot:bareword ?;",
+		pattern: "pause<v> entity<s> $entity:string<str> $script_slot:bareword<str> ?;<terminator>",
 		values: { "bool_value": true },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "unpause entity $entity:string $script_slot:bareword ?;",
+		pattern: "unpause<v> entity<s> $entity:string<str> $script_slot:bareword<str> ?;<terminator>",
 		values: { "bool_value": false },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "pause map $script_slot:bareword ?;",
+		pattern: "pause<v> map<s> $script_slot:bareword<i> ?;<terminator>",
 		values: { "bool_value": true, "entity": "%MAP%" },
 	},
 	{
 		action: "SET_SCRIPT_PAUSE",
-		pattern: "unpause map $script_slot:bareword ?;",
+		pattern: "unpause<v> map<s> $script_slot:bareword<i> ?;<terminator>",
 		values: { "bool_value": false, "entity": "%MAP%" },
 	},
 ];
@@ -1093,143 +1096,143 @@ mgs.actionDictionary = [{
 mgs.entityPropertyMap = { // used for the procedural dictionary entries 
 	CHECK_ENTITY_NAME: {
 		actionProperty: "string",
-		natLangProperties: "name",
-		dictionaryRef: ":string",
+		natLangProperties: "name<i>",
+		dictionaryRef: ":string<str>",
 	},
 	CHECK_ENTITY_X: {
 		actionProperty: "expected_u2",
-		natLangProperties: "x",
-		dictionaryRef: ":number",
+		natLangProperties: "x<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_Y: {
 		actionProperty: "expected_u2",
-		natLangProperties: "y",
-		dictionaryRef: ":number",
+		natLangProperties: "y<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_INTERACT_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperties: "on_interact",
-		dictionaryRef: ":string",
+		natLangProperties: "on_interact<i>",
+		dictionaryRef: ":string<f>",
 	},
 	CHECK_ENTITY_TICK_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperties: "on_tick",
-		dictionaryRef: ":string",
+		natLangProperties: "on_tick<i>",
+		dictionaryRef: ":string<f>",
 	},
 	CHECK_ENTITY_LOOK_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperties: "on_look",
-		dictionaryRef: ":string",
+		natLangProperties: "on_look<i>",
+		dictionaryRef: ":string<f>",
 	},
 	CHECK_ENTITY_TYPE: {
 		actionProperty: "entity_type",
-		natLangProperties: "type",
-		dictionaryRef: ":string",
+		natLangProperties: "type<i>",
+		dictionaryRef: ":string<str>",
 	},
 	CHECK_ENTITY_PRIMARY_ID: {
 		actionProperty: "expected_u2",
-		natLangProperties: "primary_id",
-		dictionaryRef: ":number",
+		natLangProperties: "primary_id<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_SECONDARY_ID: {
 		actionProperty: "expected_u2",
-		natLangProperties: "secondary_id",
-		dictionaryRef: ":number",
+		natLangProperties: "secondary_id<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_PRIMARY_ID_TYPE: {
 		actionProperty: "expected_byte",
-		natLangProperties: "primary_id_type",
-		dictionaryRef: ":number",
+		natLangProperties: "primary_id_type<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_CURRENT_ANIMATION: {
 		actionProperty: "expected_byte",
-		natLangProperties: "current_animation",
-		dictionaryRef: ":number",
+		natLangProperties: "current_animation<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_CURRENT_FRAME: {
 		actionProperty: "expected_byte",
-		natLangProperties: "animation_frame",
-		dictionaryRef: ":number",
+		natLangProperties: "animation_frame<i>",
+		dictionaryRef: ":number<n>",
 	},
 	CHECK_ENTITY_DIRECTION: {
 		actionProperty: "direction",
-		natLangProperties: "direction",
-		dictionaryRef: ":bareword",
+		natLangProperties: "direction<i>",
+		dictionaryRef: ":bareword<enum>",
 	},
 	CHECK_ENTITY_PATH: {
 		actionProperty: "geometry",
-		natLangProperties: "path",
-		dictionaryRef: ":string",
+		natLangProperties: "path<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_NAME: {
 		actionProperty: "string",
-		natLangProperties: "name",
-		dictionaryRef: ":string",
+		natLangProperties: "name<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_X: {
 		actionProperty: "u2_value",
-		natLangProperties: "x",
-		dictionaryRef: ":number",
+		natLangProperties: "x<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_Y: {
 		actionProperty: "u2_value",
-		natLangProperties: "y",
-		dictionaryRef: ":number",
+		natLangProperties: "y<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_INTERACT_SCRIPT: {
 		actionProperty: "script",
-		natLangProperties: "on_interact",
-		dictionaryRef: ":string",
+		natLangProperties: "on_interact<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_TICK_SCRIPT: {
 		actionProperty: "script",
-		natLangProperties: "on_tick",
-		dictionaryRef: ":string",
+		natLangProperties: "on_tick<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_LOOK_SCRIPT: {
 		actionProperty: "script",
-		natLangProperties: "on_look",
-		dictionaryRef: ":string",
+		natLangProperties: "on_look<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_TYPE: {
 		actionProperty: "entity_type",
-		natLangProperties: "type",
-		dictionaryRef: ":string",
+		natLangProperties: "type<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_PRIMARY_ID: {
 		actionProperty: "u2_value",
-		natLangProperties: "primary_id",
-		dictionaryRef: ":number",
+		natLangProperties: "primary_id<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_SECONDARY_ID: {
 		actionProperty: "u2_value",
-		natLangProperties: "secondary_id",
-		dictionaryRef: ":number",
+		natLangProperties: "secondary_id<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_PRIMARY_ID_TYPE: {
 		actionProperty: "byte_value",
-		natLangProperties: "primary_id_type",
-		dictionaryRef: ":number",
+		natLangProperties: "primary_id_type<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_CURRENT_ANIMATION: {
 		actionProperty: "byte_value",
-		natLangProperties: "current_animation",
-		dictionaryRef: ":number",
+		natLangProperties: "current_animation<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_CURRENT_FRAME: {
 		actionProperty: "byte_value",
-		natLangProperties: "animation_frame",
-		dictionaryRef: ":number",
+		natLangProperties: "animation_frame<i>",
+		dictionaryRef: ":number<n>",
 	},
 	SET_ENTITY_PATH: {
 		actionProperty: "geometry",
-		natLangProperties: "path",
-		dictionaryRef: ":string",
+		natLangProperties: "path<i>",
+		dictionaryRef: ":string<str>",
 	},
 	SET_ENTITY_MOVEMENT_RELATIVE: {
 		actionProperty: "relative_direction",
-		natLangProperties: "relative_direction",
-		dictionaryRef: ":number",
+		natLangProperties: "relative_direction<i>",
+		dictionaryRef: ":number<n>",
 	}
 }
 
@@ -1247,7 +1250,7 @@ Object.keys(mgs.entityPropertyMap)
 		natLangProperties.forEach(function(natLangProperty) {
 			mgs.actionDictionary.push({
 				action: actionName,
-				pattern: `set entity $entity:string ${natLangProperty} ?to $${entry.actionProperty}${entry.dictionaryRef} ?;`,
+				pattern: `set<v> entity<s> $entity:string<str> ${natLangProperty} ?to<op> $${entry.actionProperty}${entry.dictionaryRef} ?;<terminator>`,
 			});
 		})
 	});
@@ -1264,12 +1267,12 @@ Object.keys(mgs.entityPropertyMap)
 		natLangProperties.forEach(function(natLangProperty) {
 			mgs.actionDictionary.push({
 				action: actionName,
-				pattern: `if entity $entity:string ${natLangProperty} is $${entry.actionProperty}${entry.dictionaryRef} then goto ?script $success_script:string ?;`,
+				pattern: `if<control> entity<s> $entity:string<str> ${natLangProperty} is<op> $${entry.actionProperty}${entry.dictionaryRef} then<control> goto<control> ?script<s> $success_script:string<f> ?;`,
 				values: { "expected_bool" : true }
 			});
 			mgs.actionDictionary.push({
 				action: actionName,
-				pattern: `if entity $entity:string ${natLangProperty} is not $${entry.actionProperty}${entry.dictionaryRef} then goto ?script $success_script:string ?;`,
+				pattern: `if<control> entity<s> $entity:string<str> ${natLangProperty} is<op> not<op> $${entry.actionProperty}${entry.dictionaryRef} then<control> goto<control> ?script<s> $success_script:string<f> ?;`,
 				values: { "expected_bool" : false }
 			});
 		})
@@ -1283,13 +1286,14 @@ mgs.actionDictionary
 		var numberVariant = JSON.parse(JSON.stringify(entry));
 		var stringVariant = JSON.parse(JSON.stringify(entry));
 		numberVariant.pattern = numberVariant.pattern.replace(
-			"then goto ?script $success_script:string",
-			"then goto index $jump_index:number"
-			);
+			"then<control> goto<control> ?script<s> $success_script:string<f>",
+			"then<control> goto<control> index<s> $jump_index:number<n>"
+		);
 		stringVariant.pattern = stringVariant.pattern.replace(
-			"then goto ?script $success_script:string",
-			"then goto label $jump_index:bareword"
-			);
+			"then<control> goto<control> ?script<s> $success_script:string<f>",
+			"then<control> goto<control> label<s> $jump_index:bareword<str>"
+		);
+		stringVariant.omitFromJSON = true,
 		mgs.actionDictionary.push(numberVariant);
 		mgs.actionDictionary.push(stringVariant);
 	})
@@ -1298,7 +1302,7 @@ mgs.actionDictionary
 mgs.actionDictionary.forEach(function (item) {
 	// // We have semicolons now (actions only)
 	// if (!item.pattern.endsWith("{")) {
-	// 	item.pattern = item.pattern + " ?;";
+	// 	item.pattern = item.pattern + " ?;<terminator>";
 	// }
 	item = JSON.parse(JSON.stringify(item));
 	var values = item.values || {};

@@ -1,11 +1,11 @@
 
 var testInput = `settings for dialog {
-	parameters for label Player {
+	label Player {
 		entity "%PLAYER%"
 		alignment BR
 		/* Saying it the long way (BOTTOM_RIGHT) would be okay, too */
 	}
-	parameters for global default {
+	default {
 		wrap messages 40 // 42 is default
 		alignment BL
 	}
@@ -13,12 +13,12 @@ var testInput = `settings for dialog {
 
 var testText = `/* These would just be so you don't have to specify ALL the dialog parameters over and over every time anyone says something */
 settings for dialog {
-	parameters for label Player {
+	label Player {
 		entity "%PLAYER%"
 		alignment BR
 		/* Saying it the long way (BOTTOM_RIGHT) would be okay, too */
 	}
-	parameters for global default {
+	default {
 		wrap messages 40 // 42 is default
 		alignment BL
 	}
@@ -1881,7 +1881,7 @@ var oldCoupleHouseScript = {
 			"byte_value": 3
 		},
 		{
-			"action": "SET_ENTITY_on_tick",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Delmar",
 			"script": "on_tick-delmar-blab-nonman-watch"
 		},
@@ -1902,7 +1902,7 @@ var oldCoupleHouseScript = {
 			"byte_value": 0
 		},
 		{
-			"action": "SET_ENTITY_on_tick",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Delmar",
 			"script": "on_tick-delmar-blab-man-watch"
 		},
@@ -1950,7 +1950,7 @@ var oldCoupleHouseScript = {
 			"dialog": "dialog-bea-glitched"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-bea-start"
 		}
@@ -1961,7 +1961,7 @@ var oldCoupleHouseScript = {
 			"dialog": "dialog-delmar-glitched"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-delmar"
 		}
@@ -2005,7 +2005,7 @@ var oldCoupleHouseScript = {
 			"doc": "Which was the style at the time."
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Delmar",
 			"script": "show_dialog-delmar"
 		}
@@ -2017,7 +2017,7 @@ var oldCoupleHouseScript = {
 			"doc": "Huh? What's goin' on? What'd I miss?"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Delmar",
 			"script": "show_dialog-delmar"
 		}
@@ -2028,7 +2028,7 @@ var oldCoupleHouseScript = {
 			"dialog": "dialog-dsheep"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Delmar",
 			"script": "show_dialog-delmar"
 		}
@@ -2482,7 +2482,7 @@ var oldCoupleHouseScript = {
 	],
 	"bea-wrapup-mini": [
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
 		}
@@ -2667,7 +2667,7 @@ var oldCoupleHouseScript = {
 			"script": "set-hint-bea2"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
 		}
@@ -2689,7 +2689,7 @@ var oldCoupleHouseScript = {
 			"byte_value": 3
 		},
 		{
-			"action": "SET_ENTITY_on_tick",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Delmar",
 			"script": "on_tick-delmar-blab-nonman-watch"
 		}
@@ -2710,7 +2710,7 @@ var oldCoupleHouseScript = {
 			"byte_value": 0
 		},
 		{
-			"action": "SET_ENTITY_on_tick",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Delmar",
 			"script": "on_tick-delmar-blab-man-watch"
 		}
@@ -2758,7 +2758,7 @@ var oldCoupleHouseScript = {
 			"dialog": "dialog-debug-bea-sequel-man"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-bea-sequel-q"
 		}
@@ -2788,7 +2788,7 @@ var oldCoupleHouseScript = {
 			"dialog": "dialog-debug-bea-sequel-noman"
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-bea-sequel-q"
 		}
@@ -2800,7 +2800,7 @@ var oldCoupleHouseScript = {
 			"doc": "Nothing changed."
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-bea-sequel-q"
 		}
@@ -2812,7 +2812,7 @@ var oldCoupleHouseScript = {
 			"doc": "Nothing changed."
 		},
 		{
-			"action": "SET_ENTITY_on_interact",
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-bea-sequel-q"
 		}
@@ -2820,14 +2820,14 @@ var oldCoupleHouseScript = {
 };
 
 var oldCoupleHouseNatlang = `settings for dialog {
-	parameters for global defaults {
+	default {
 		alignment BOTTOM_LEFT
 	}
-	parameters for label PLAYER {
+	label PLAYER {
 		entity "%PLAYER%"
 		alignment BOTTOM_RIGHT
 	}
-	parameters for label SELF {
+	label SELF {
 		entity "%SELF%"
 	}
 }
