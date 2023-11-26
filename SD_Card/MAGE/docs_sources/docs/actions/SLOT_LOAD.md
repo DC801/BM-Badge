@@ -28,7 +28,3 @@ script {
 ```
 load slot $slot:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

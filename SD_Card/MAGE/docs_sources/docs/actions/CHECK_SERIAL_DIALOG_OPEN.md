@@ -49,7 +49,3 @@ if serial dialog is $expected_bool:boolean
 if serial dialog is $expected_bool:boolean
     then goto label $jump_index:bareword (;)
 ```
-
----
-
-Back to [Actions](../actions)

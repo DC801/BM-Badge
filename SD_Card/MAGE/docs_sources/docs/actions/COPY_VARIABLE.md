@@ -42,7 +42,3 @@ copy variable $variable:string from entity $entity:string $field:bareword (;)
 copy variable $variable:string into entity $entity:string $field:bareword (;)
 	// built-in value: inbound = false
 ```
-
----
-
-Back to [Actions](../actions)

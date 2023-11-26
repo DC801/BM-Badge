@@ -77,7 +77,3 @@ if not button $button_id:bareword
     then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
-
----
-
-Back to [Actions](../actions)

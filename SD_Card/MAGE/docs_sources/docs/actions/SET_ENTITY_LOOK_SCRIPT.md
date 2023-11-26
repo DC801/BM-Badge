@@ -27,7 +27,3 @@ script {
 ```
 set entity $entity:string on_look (to) $script:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

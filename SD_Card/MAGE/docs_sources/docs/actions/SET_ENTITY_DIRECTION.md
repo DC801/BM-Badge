@@ -27,7 +27,3 @@ script {
 ```
 turn entity $entity:string $direction:bareword (;)
 ```
-
----
-
-Back to [Actions](../actions)

@@ -29,7 +29,3 @@ turn $bool_value:boolean hex control (;)
 
 turn hex control $bool_value:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

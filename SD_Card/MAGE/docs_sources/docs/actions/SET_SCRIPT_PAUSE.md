@@ -47,7 +47,3 @@ unpause map $script_slot:bareword (;)
 	// built-in value: bool_value = false
 	// built-in value: entity = %MAP%
 ```
-
----
-
-Back to [Actions](../actions)

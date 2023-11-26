@@ -36,7 +36,3 @@ concat serial dialog $serial_dialog:string (;)
 show serial dialog $serial_dialog:string (;)
 	// built-in value: disable_newline = false
 ```
-
----
-
-Back to [Actions](../actions)

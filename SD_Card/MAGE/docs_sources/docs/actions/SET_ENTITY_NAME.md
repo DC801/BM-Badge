@@ -27,7 +27,3 @@ script {
 ```
 set entity $entity:string name (to) $string:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

@@ -71,7 +71,3 @@ if entity $entity:string path is not $geometry:string
     then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
-
----
-
-Back to [Actions](../actions)

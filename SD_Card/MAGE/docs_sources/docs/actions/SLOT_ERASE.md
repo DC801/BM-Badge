@@ -26,7 +26,3 @@ script {
 ```
 erase slot $slot:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

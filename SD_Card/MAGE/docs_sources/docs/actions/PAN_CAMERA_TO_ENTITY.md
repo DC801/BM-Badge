@@ -29,7 +29,3 @@ script {
 ```
 pan camera to entity $entity:string over $duration:duration (;)
 ```
-
----
-
-Back to [Actions](../actions)

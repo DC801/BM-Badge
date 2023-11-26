@@ -29,7 +29,3 @@ script {
 ```
 set entity $entity:string y (to) $u2_value:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

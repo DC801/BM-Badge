@@ -29,7 +29,3 @@ script {
 ```
 set entity $entity:string relative_direction (to) $relative_direction:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

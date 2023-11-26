@@ -28,7 +28,3 @@ script {
 ```
 block $duration:duration (;)
 ```
-
----
-
-Back to [Actions](../actions)

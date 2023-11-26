@@ -33,7 +33,3 @@ unregister $command:string (;)
 unregister $command:string fail (;)
 	// built-in value: is_fail = true
 ```
-
----
-
-Back to [Actions](../actions)

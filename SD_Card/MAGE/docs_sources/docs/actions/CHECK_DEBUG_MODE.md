@@ -49,7 +49,3 @@ if debug mode is $expected_bool:boolean
 if debug mode is $expected_bool:boolean
     then goto label $jump_index:bareword (;)
 ```
-
----
-
-Back to [Actions](../actions)

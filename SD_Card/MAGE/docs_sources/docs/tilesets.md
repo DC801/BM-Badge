@@ -26,7 +26,7 @@ You'll need to make tilesets in Tiled for dialog box skin(s) and entity talk por
 
 Beyond making sure the tiles are the right size, you do not need to do anything special to these files.
 
-Put dialogSkin files in `scenario_source_files/tilesets/` and entity portraits in `scenario_source_files/entities/`. (See: [scenario_source_files](scenario_source_files))
+Put dialogSkin files in `scenario_source_files/tilesets/` and entity portraits in `scenario_source_files/entities/`. (See: [scenario_source_files](getting_started/scenario_source_files))
 
 ## MGE Considerations
 

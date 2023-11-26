@@ -28,7 +28,3 @@ script {
 ```
 walk entity $entity:string to geometry $geometry:string over $duration:duration (;)
 ```
-
----
-
-Back to [Actions](../actions)

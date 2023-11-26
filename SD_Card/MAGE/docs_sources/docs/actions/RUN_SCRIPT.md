@@ -28,7 +28,3 @@ script {
 ```
 goto (script) $script:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

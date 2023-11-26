@@ -31,7 +31,3 @@ turn $bool_value:boolean hex dialog mode (;)
 
 turn hex dialog mode $bool_value:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

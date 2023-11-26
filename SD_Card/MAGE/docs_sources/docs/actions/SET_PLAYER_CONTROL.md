@@ -31,7 +31,3 @@ turn $bool_value:boolean player control (;)
 
 turn player control $bool_value:boolean (;)
 ```
-
----
-
-Back to [Actions](../actions)

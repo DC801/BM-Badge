@@ -29,7 +29,3 @@ script {
 ```
 rotate entity $entity:string $relative_direction:number (;)
 ```
-
----
-
-Back to [Actions](../actions)

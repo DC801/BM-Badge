@@ -71,7 +71,3 @@ if entity $entity:string primary_id_type is not $expected_byte:number
     then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
-
----
-
-Back to [Actions](../actions)

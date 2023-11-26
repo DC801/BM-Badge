@@ -25,7 +25,3 @@ script {
 ```
 close serial dialog (;)
 ```
-
----
-
-Back to [Actions](../actions)

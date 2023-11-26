@@ -26,7 +26,3 @@ script {
 ```
 $bool_value:boolean hex editor (;)
 ```
-
----
-
-Back to [Actions](../actions)

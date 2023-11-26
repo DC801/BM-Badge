@@ -51,7 +51,3 @@ if flag $save_flag:string is $expected_bool:boolean
 if flag $save_flag:string is $expected_bool:boolean
     then goto label $jump_index:bareword (;)
 ```
-
----
-
-Back to [Actions](../actions)

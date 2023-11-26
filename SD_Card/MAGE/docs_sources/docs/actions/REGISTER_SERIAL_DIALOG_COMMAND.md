@@ -38,7 +38,3 @@ register $command:string -> (script) $script:string (;)
 register $command:string fail -> (script) $script:string (;)
 	// built-in value: is_fail = true
 ```
-
----
-
-Back to [Actions](../actions)

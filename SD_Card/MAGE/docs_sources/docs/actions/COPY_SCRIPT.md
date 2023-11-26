@@ -30,7 +30,3 @@ script {
 ```
 copy (script) $script:string (;)
 ```
-
----
-
-Back to [Actions](../actions)

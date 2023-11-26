@@ -75,7 +75,3 @@ if entity $entity:string secondary_id is not $expected_u2:number
     then goto label $jump_index:bareword (;)
 	// built-in value: expected_bool = false
 ```
-
----
-
-Back to [Actions](../actions)

@@ -34,7 +34,3 @@ script {
 ```
 play entity $entity:string animation $animation:number $play_count:quantity (;)
 ```
-
----
-
-Back to [Actions](../actions)

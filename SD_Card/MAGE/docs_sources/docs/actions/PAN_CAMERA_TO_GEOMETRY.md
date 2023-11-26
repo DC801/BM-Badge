@@ -27,7 +27,3 @@ script {
 ```
 pan camera to geometry $geometry:string over $duration:duration (;)
 ```
-
----
-
-Back to [Actions](../actions)

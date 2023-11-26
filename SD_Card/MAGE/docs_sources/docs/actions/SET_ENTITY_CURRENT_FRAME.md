@@ -29,7 +29,3 @@ script {
 ```
 set entity $entity:string animation_frame (to) $byte_value:number (;)
 ```
-
----
-
-Back to [Actions](../actions)
