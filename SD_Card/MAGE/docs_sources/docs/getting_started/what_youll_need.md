@@ -32,7 +32,7 @@ Tiled, which can be found at [mapeditor.org](../www.mapeditor.org), is a free, c
 
 The [web encoder](../encoder/web_encoder) can be run with Node.js (see below) or in a web browser. They will both take the game files from your [scenario_source_files](../getting_started/scenario_source_files) folder and export a `game.dat` for the Mage Game Engine to use.
 
-The web version of the encoder, however, also has an [entity management system](../entity_management_system) for managing animation assignments, so while you might use the Node encoder most of the time, chances are you'll still want to use the web version regularly.
+The web version of the encoder, however, also has an [entity management system](../encoder/entity_management_system) for managing animation assignments, so while you might use the Node encoder most of the time, chances are you'll still want to use the web version regularly.
 
 You will likely also want to use the [web build](../hardware/web_build) of the MGE to test your game data, as this is much simpler than setting up a Linux environment to run the game natively and much faster than using a microSD card to test the `game.dat` on the real badge after every revision.
 

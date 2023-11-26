@@ -14,7 +14,7 @@ Within Tiled:
 4. For Tile size, use the tile size for the tileset you intend to use for this map. (For BMG2020, all relevant tilesets are 32 x 32.)
 5. Save the map file:
 	- Set the format to JSON.
-	- Set the correct destination folder — in this case, `maps/`. (Remember that Tiled will default to the file path of the last file currently open. You don't want to move this file later!)
+	- Set the correct destination folder — in this case, `scenario_source_files/maps/`. (Remember that Tiled will default to the file path of the last file currently open. You don't want to move this file later!)
 
 You will be using the Tileset view a lot when working on a map, which you can make visible (if invisible) via "View > View and Toolbars > Tileset."
 

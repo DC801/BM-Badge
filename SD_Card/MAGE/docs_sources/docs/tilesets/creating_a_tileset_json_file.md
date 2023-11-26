@@ -10,7 +10,7 @@ Within Tiled:
 4. Set the tile width and height to the tile size of your image.
 5. Save the tileset file:
 	- Set the format to JSON.
-	- Set the correct destination folder: `entities/` for entities and their portraits, and `tilesets/` for everything else. (Keep in mind that Tiled will default to the file path of the last file currently open!)
+	- Set the correct destination folder: `scenario_source_files/entities/` for entities and their portraits, and `scenario_source_files/tilesets/` for everything else. (Keep in mind that Tiled will default to the file path of the last file currently open!)
 
 **Alternative method (advanced)**: if you are making pallet variations of the same sprite, and every other aspect (apart from the name and the image) are the same, you might copy the original tileset JSON file and manually change whatever is different between them.
 

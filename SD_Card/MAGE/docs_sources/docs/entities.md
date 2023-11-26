@@ -10,12 +10,12 @@ Entities are a basic element of the DC801 Mage Game Engine (MGE) along with [act
 - All entity state (apart from the player's name) is reset when a [map load](maps/map_loads) occurs.
 ## See Also
 
+- [Entity Properties](entities/entity_properties)
 - [Entity Types](entities/entity_types)
 	- [Tile Entity](entities/tile_entity)
 		- [Null Entity](entities/null_entity)
 	- [Animation Entity](entities/animation_entity)
 	- [Character Entity](entities/character_entity)
-- [Entity Properties](entities/entity_properties)
 - [Relative Entity References](entities/relative_entity_references)
 	- [%PLAYER%](entities/PLAYER)
 	- [%SELF%](entities/SELF)

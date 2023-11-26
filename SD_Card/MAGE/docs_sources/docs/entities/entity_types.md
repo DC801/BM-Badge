@@ -8,7 +8,7 @@ In the MGE, there are three types of [entities](../entities). Each have a `Prima
 
 The an entity's `PrimaryIdType` is determined by the properties of the tile being placed in a Tiled [map](../maps).
 
-One key difference between the three entity types: for the first two types (tile and animation), the tile will rotate when the entity changes which direction it is "facing," whereas the last type (character) will instead choose the correct [animation](../tilesets/animations) among those it was [assigned](../entity_management_system) (north, south, east, or west). Therefore entities that are meant to have standard character animations (like the sheep below) or that need to retain their appearance when moving around the map (like the rake below) *must* be the third type.
+One key difference between the three entity types: for the first two types (tile and animation), the tile will rotate when the entity changes which direction it is "facing," whereas the last type (character) will instead choose the correct [animation](../tilesets/animations) among those it was [assigned](../encoder/entity_management_system) (north, south, east, or west). Therefore entities that are meant to have standard character animations (like the sheep below) or that need to retain their appearance when moving around the map (like the rake below) *must* be the third type.
 
 | rotating tiles | assigned animations|
 | --- | --- |
