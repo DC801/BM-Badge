@@ -17,18 +17,15 @@ Several choices:
 
 ## Example
 
-```mgs{2,3,4,5}
+```mgs{2}
 settings for dialog {
-  label PLAYER {
-    entity "%PLAYER%"
-    alignment BR
-  }
+  label PLAYER {}
 }
 ```
 
 This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](../mgs/dialog_identifier) for [dialogs](../mgs/dialogs_mgs).
 
-```mgs{3,8}
+```mgs
 // with label
 dialog test {
   PLAYER "Dialog message"

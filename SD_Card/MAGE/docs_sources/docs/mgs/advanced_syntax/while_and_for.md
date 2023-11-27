@@ -19,11 +19,11 @@ Note that if multiple loops are nested, `break` and `continue` will only apply t
 
 ```mgs{2-7}
 scriptName {
-  while (variable sodas < 5) {
+  while (variable count < 5) {
     show serial dialog {
-      "Wow! I've had $sodas$ sodas today!"
+      "Wow! I've had $count$ sodas today!"
     }
-    mutate sodas + 1;
+    mutate count + 1;
   }
 }
 ```

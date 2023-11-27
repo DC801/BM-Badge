@@ -2,7 +2,20 @@
 
 NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
 
-The **dialog identifier** identifies the "speaker" of the [Dialog Messages (MGS)](../mgs/dialog_messages_mgs) that immediately follow. For most cases, this will be a specific entity (with option #1 or #2), though you could also build up a dialog from its component pieces instead (with option #3).
+```mgs{2}
+dialog sampleDialog {
+  SELF
+  alignment BOTTOM_RIGHT
+  emote 3
+  "Messages..."
+  "So many messages!"
+  "Don't you think?"
+  > "Not really." : goto script sampleScript1
+  > "Definitely." : goto script sampleScript2
+}
+```
+
+The **dialog identifier** identifies the "speaker" of the [Dialog Messages (MGS)](../mgs/dialog_messages_mgs) that immediately follow. For most cases, this will be a specific entity (with option #1 or #2 below), though you could also build up a dialog from its component pieces instead (with option #3).
 
 The three options:
 
@@ -19,4 +32,3 @@ The three options:
 	- [String](../mgs/variables/string): the dialog's display name.
 	- This usage also provides a `name` [parameter](../mgs/dialog_parameters_mgs) for the dialog.
 	- If you don't want a name displayed, use an empty quoted string (`name ""`).
- 

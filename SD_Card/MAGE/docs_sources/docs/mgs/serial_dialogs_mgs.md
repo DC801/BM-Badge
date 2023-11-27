@@ -20,6 +20,7 @@ An example [MGS Natlang](../mgs/mgs_natlang) [serial dialog block](../mgs/serial
 
 ```mgs
 serial dialog sample {
+  wrap messages to 60
   "Hey, can anyone hear me? Hello?"
   # "Yes, I can hear you." : goto script sampleYes
   # "What did you say?" : goto script sampleNo

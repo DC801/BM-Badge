@@ -7,11 +7,11 @@ Because [MGS Natlang](../mgs/mgs_natlang) is fairly white space agnostic, format
 
 scriptName{show dialog{Bob "Hello World!"}}
 
-scriptName2 {
+scriptName {
   show dialog { Bob "Hello World!" }
 }
 
-scriptName3 {
+scriptName {
   show dialog {
     Bob
     "Hello World!"

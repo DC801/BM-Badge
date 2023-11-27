@@ -15,9 +15,9 @@ A variable's **value** is what populates the meat of the JSON output, but its **
 
 This documentation uses two formats to indicate a variable, each with a `$` at the front:
 
-- `$type`
+- `$TYPE`
 	- e.g. `$string` (which means any valid [string](../mgs/variables/string))
-- `$label:type`
+- `$LABEL:TYPE`
 	- e.g. `$scriptName:string` (which means any valid [string](../mgs/variables/string), and also it will be used as a script name)
 
 The variable's label for most purposes doesn't matter much except as a hint as to the variable's purpose, especially if there are multiple variables in the natlang phrase. (It does matter when trying to analyze the JSON output, however.)

@@ -76,7 +76,7 @@ Because fades require two simultaneous behaviors, you will need two script slots
 
 #### Leaving a Doorway Script (with Fades)
 
-> Be sure to verify that the new map's [`on_load`](../scripts/on_load) will check the [warp_state](../scripts/warp_state) and branch to the the correct "leaving a doorway" script.
+Be sure to verify that the new map's [`on_load`](../scripts/on_load) will check the [warp_state](../scripts/warp_state) and branch to the the correct "leaving a doorway" script.
 
 1. Set the player entity's [`on_tick`](../scripts/on_tick) to a script that walks them briefly in a line away from the doorway.
 	- For the last action in this `on_tick` script, run [null_script](../scripts/null_script) (or set the `on_tick` to something else) to prevent it from looping.

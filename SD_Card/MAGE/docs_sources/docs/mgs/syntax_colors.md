@@ -2,15 +2,15 @@
 
 A syntax coloring grammar (tmLanguage) for [MGS Natlang](../mgs/mgs_natlang) is in development here: [github.com/alamedyang/magegamescript-syntax-highlighting](https://github.com/alamedyang/magegamescript-syntax-highlighting)
 
-(Syntax colors in this documentation were made possible by [shiki](https://v2.vuepress.vuejs.org/reference/plugin/shiki.html), a TextMate grammar plugin for VuePress.)
+Syntax colors in this documentation were made possible by [shiki](https://v2.vuepress.vuejs.org/reference/plugin/shiki.html), a TextMate grammar plugin for VuePress.
 
 ## Supported IDEs
 
 ### Visual Studio Code
 
-When you open an MGS file, VSCode will offer marketplace extensions for it. Alternatively, search for "MageGameScript Colors" in the Visual Studio Code extensions marketplace.
+When you open an MGS file, VSCode will offer a [marketplace extension](https://marketplace.visualstudio.com/items?itemName=goat-and-bird.magegamescript-colors) for it.( Alternatively, search for "MageGameScript Colors" in the Visual Studio Code extensions marketplace.)
 
-After installing the extension, all MGS files you open will have syntax coloring. VSCode will update the extension automatically whenever a new version comes out.
+After installing the extension, all MGS files will have syntax coloring. VSCode will update the extension automatically whenever a new version comes out.
 
 ### Sublime Text
 

@@ -2,12 +2,6 @@
 
 One of the root level [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang).
 
-```
-settings (for) dialog {}
-```
-
-The `for` is optional:
-
 ```mgs
 settings for dialog {}
 //or
@@ -16,7 +10,15 @@ settings dialog {}
 
 These are a means of defining [dialog properties](../dialogs/dialog_properties) ahead of time so the dialogs themselves can be very lean.
 
-Inside the block body are [dialog settings target blocks](../mgs/dialog_settings_target_block) in any order.
+Inside the block body are [dialog settings target blocks](../mgs/dialog_settings_target_block) in any order. For example:
+
+```mgs
+settings for dialog {
+  default {}
+  entity Bob {}
+  label PLAYER {}
+}
+```
 
 #### Behavior
 

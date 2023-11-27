@@ -2,6 +2,15 @@
 
 NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [serial dialogs](../mgs/serial_dialogs_mgs), not [JSON serial dialogs](../dialogs/serial_dialogs_json).
 
+```mgs{3}
+serial dialog sample {
+  wrap messages to 60
+  "Hey, can anyone hear me? Hello?"
+  # "Yes, I can hear you." : goto script sampleYes
+  # "What did you say?" : goto script sampleNo
+}
+```
+
 A serial dialog message is any [quoted string](../mgs/variables/quoted_string).
 
 - To maximize compatibility, best to limit these to ASCII characters.

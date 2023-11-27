@@ -4,6 +4,19 @@ NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs
 
 A dialog message is any [quoted string](../mgs/variables/quoted_string).
 
+```mgs{5-7}
+dialog sampleDialog {
+  SELF
+  alignment BOTTOM_RIGHT
+  emote 3
+  "Messages..."
+  "So many messages!"
+  "Don't you think?"
+  > "Not really." : goto script sampleScript1
+  > "Definitely." : goto script sampleScript2
+}
+```
+
 - Each message is a new "text screen" in the game.
 - Only ASCII characters will be printed.
 - Insert an entity's [current name](../scripts/printing_current_values) by wrapping their given name in `%`s.
