@@ -13,8 +13,8 @@ This is most likely required for a [map](../maps)'s [`on_load`](../scripts/on_lo
 - Has Bender's ass been restored? If so, restore it again now. (Resume remainder of script either way.)
 - Has the "walk to lodge" cutscene been seen before? If not, play it now. (Script diverts to a dead end.)
 - (more cutscene checks)
-- Is the [warp_state](../scripts/warp_state) `enter_from-greenhouse`? If so, branch: run the `enter_from-greenhouse` script, which teleports the player to the greenhouse door and walks the player down a few pixels. (Script diverts to a dead end.)
-- (more [warp_state](../scripts/warp_state) checks)
+- Is the [warp_state](../scripts/variables#warp-state) `enter_from-greenhouse`? If so, branch: run the `enter_from-greenhouse` script, which teleports the player to the greenhouse door and walks the player down a few pixels. (Script diverts to a dead end.)
+- (more [warp_state](../scripts/variables#warp-state) checks)
 
 Unfortunately, the only way to do this is with a lot of tiny scripts. (This is one reason you might want to put `on_load` in the script name for all scripts like this — so you know what kind of a chain you're looking at.)
 

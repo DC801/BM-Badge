@@ -30,3 +30,5 @@ Dialog settings are applied to [dialogs](../dialogs) in order as the parser enco
 	- E.g. if you assign alignment `BOTTOM_LEFT` to the global defaults, and `BOTTOM_RIGHT` to the player entity, dialogs involving the player entity will use `BOTTOM_RIGHT`.
 - Dialog label settings will override entity settings.
 - Properties given in a dialog's body will override any other settings, however.
+
+Settings only apply to multiple files with the use of [`include!()`](advanced_syntax#include).

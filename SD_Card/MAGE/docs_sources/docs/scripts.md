@@ -6,9 +6,9 @@ It doesn't strictly matter which file contains which script data, as long as the
 
 ## Relative References
 
-See: [Relative Entity References](entities/relative_entity_references)
+See: [Relative Entity References](entities/relative_references.md)
 
-For all actions, [`%SELF%`](entities/SELF) refers to the entity running the script and [`%PLAYER%`](entities/PLAYER) refers to the player entity.
+For all actions, [`%SELF%`](entities/relative_references.md#self) refers to the entity running the script and [`%PLAYER%`](entities/relative_references.md#player) refers to the player entity.
 
 ::: tip Best Practice: `%SELF%` or the entity's given name?
 Scripts involving only one entity (or one entity and the player) will do best to use `%SELF%`. For [cutscenes](techniques/cutscenes) involving multiple characters, however, you might want to specify the entity specifically (by its given name) in case you have to change which entity is running the script.
@@ -22,12 +22,12 @@ Scripts involving only one entity (or one entity and the player) will do best to
 	- [`on_load`](scripts/on_load)
 	- [`on_look`](scripts/on_look)
 - [null_script](scripts/null_script)
-- [Variable Types](scripts/variable_types)
-	- [warp_state](scripts/warp_state)
-	- [Integer Variables](scripts/integer_variables)
-	- [Save Flags](scripts/save_flags)
+- [Variable Types](scripts/variables.md)
+	- [warp_state](scripts/variables#warp-state)
+	- [Integer Variables](scripts/variables.md#integer-variables)
+	- [Save Flags](scripts/variables.md#save-flags)
 	- [Printing Current Values](scripts/printing_current_values)
-- [Comments (JSON)](scripts/comments_json)
+- [Comments](comments.md)
 - [Scripts (JSON)](scripts/scripts_json)
 - [Script Block](mgs/script_block) ([MGS Natlang](mgs/mgs_natlang))
 - [Actions](Actions)

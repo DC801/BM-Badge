@@ -1,8 +1,8 @@
 # Serial Dialogs
 
-**Serial dialogs** are a means to print messages on the serial [terminal](../hardware/terminal) (new as of the chapter 2+ version of the MGE).
+**Serial dialogs** are a means to print messages on the serial [terminal](../terminal.md) (new as of the chapter 2+ version of the MGE).
 
-They need not function as [character](../entities) [dialog](../dialogs), strictly speaking; they can be anything, including debug messages, ASCII maps, room or character descriptions, etc.
+They need not function as [character](../entities) [dialog](../dialogs), strictly speaking; they can be anything, including [debug messages](../debug_tools#debug-scripting), ASCII maps, room or character descriptions, etc.
 
 ## Structure
 

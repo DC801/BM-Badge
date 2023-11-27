@@ -28,6 +28,6 @@ Indented entries can only be used within the parent's block body. Unindented ent
 - [Script Block](../mgs/script_block): `$string {}`
 	- [Combination Block](../mgs/combination_block)
 	- *([Actions](../Actions))*
-	- *([Labels](../mgs/advanced_syntax/labels))*
+	- *([Labels](../mgs/advanced_syntax#labels))*
 
-([Macros](../mgs/advanced_syntax/macros) are not included in the list above.)
+([Macros](../mgs/advanced_syntax#macros) are not included in the list above.)

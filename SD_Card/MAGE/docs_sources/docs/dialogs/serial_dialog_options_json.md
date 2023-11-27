@@ -28,7 +28,7 @@ In the [entry for a serial dialog](../dialogs/serial_dialogs_json), you can incl
 }
 ```
 
-These will appear in the [terminal](../hardware/terminal) as numbered options.
+These will appear in the [terminal](../terminal.md) as numbered options.
 
 ```
 What's your name?

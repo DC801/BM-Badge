@@ -77,7 +77,7 @@ export default defineUserConfig({
           '/tilesets.md',
           "/tilesets/creating_a_tileset_json_file.md",
           "/tilesets/animations.md",
-          "/tilesets/tile_collisions.md",
+		  '/tilesets/entity_management_system.md',
         ]
       },
       {
@@ -88,7 +88,6 @@ export default defineUserConfig({
           '/maps/map_loads.md',
           '/maps/map_properties.md',
           '/maps/vector_objects.md',
-          '/maps/coordinate_overflow.md',
         ]
       },
       {
@@ -96,27 +95,9 @@ export default defineUserConfig({
         collapsible : true,
         children: [
           '/entities.md',
+		  '/entities/entity_types.md',
           '/entities/entity_properties.md',
-          {
-            text: "Entity Types",
-            collapsible : true,
-            children: [
-              '/entities/entity_types.md',
-              '/entities/tile_entity.md',
-              '/entities/null_entity.md',
-              '/entities/animation_entity.md',
-              '/entities/character_entity.md',
-            ]
-          },
-          {
-            text: "Relative Entity References",
-            collapsible : true,
-            children: [
-              '/entities/relative_entity_references.md',
-              '/entities/PLAYER.md',
-              '/entities/SELF.md',
-            ]
-          },
+		  '/entities/relative_references.md',
         ]
       },
       {
@@ -151,7 +132,7 @@ export default defineUserConfig({
         children: [
           '/scripts.md',
           '/scripts/scripts_json.md',
-          '/scripts/comments_json.md',
+          '/comments.md',
           '/scripts/null_script.md',
           {
             text: "Script Slots",
@@ -165,13 +146,10 @@ export default defineUserConfig({
             ]
           },
           {
-            text: "Variable Types",
+            text: "Variables",
             collapsible : true,
             children: [
-              '/scripts/variable_types.md',
-              '/scripts/warp_state.md',
-              '/scripts/integer_variables.md',
-              '/scripts/save_flags.md',
+              '/scripts/variables.md',
               '/scripts/printing_current_values.md',
               '/scripts/save_data.md',
             ]
@@ -183,6 +161,7 @@ export default defineUserConfig({
               '/structure/enums.md',
               '/structure/button_ids.md',
               '/structure/led_ids.md',
+              '/structure/comparators.md',
               '/structure/operations.md',
             ]
           },
@@ -375,7 +354,7 @@ export default defineUserConfig({
         ]
       },
       {
-        text: "MGS",
+        text: "MGS Natlang",
         collapsible : true,
         children: [
           '/mgs/mgs_natlang.md',
@@ -386,6 +365,7 @@ export default defineUserConfig({
             collapsible : true,
             children: [
               '/mgs/mgs_natlang_structure.md',
+              '/mgs/variables_mgs.md',
               '/mgs/block.md',
               '/mgs/dialog_settings_block.md',
               '/mgs/dialog_settings_target_block.md',
@@ -393,6 +373,7 @@ export default defineUserConfig({
               '/mgs/script_block.md',
               '/mgs/dialog_block.md',
               '/mgs/serial_dialog_block.md',
+              '/mgs/advanced_syntax.md',
             ]
           },
           {
@@ -401,7 +382,6 @@ export default defineUserConfig({
             children: [
               '/mgs/scripts_mgs.md',
               '/mgs/combination_block.md',
-              '/mgs/comments_mgs.md',
               '/mgs/show_dialog_block.md',
               '/mgs/show_serial_dialog_block.md',
             ]
@@ -428,78 +408,26 @@ export default defineUserConfig({
               '/mgs/serial_styles.md',
             ]
           },
-          {
-            text: "Variables",
-            collapsible : true,
-            children: [
-              '/mgs/variables_mgs.md',
-              '/mgs/variables/bareword.md',
-              '/mgs/variables/boolean.md',
-              '/mgs/variables/color.md',
-              '/mgs/variables/distance.md',
-              '/mgs/variables/duration.md',
-              '/mgs/variables/number.md',
-              '/mgs/variables/operator.md',
-              '/mgs/variables/quantity.md',
-              '/mgs/variables/quoted_string.md',
-              '/mgs/variables/string.md',
-            ]
-          },
-          {
-            text: "Advanced",
-            collapsible : true,
-            children: [
-              '/mgs/advanced_mgs_natlang_syntax.md',
-              '/mgs/advanced_syntax/labels.md',
-              '/mgs/advanced_syntax/return.md',
-              '/mgs/advanced_syntax/while_and_for.md',
-              '/mgs/advanced_syntax/if_and_else.md',
-              '/mgs/advanced_syntax/macros.md',
-              '/mgs/advanced_syntax/const_.md',
-              '/mgs/advanced_syntax/debug_.md',
-              '/mgs/advanced_syntax/include_.md',
-            ]
-          },
         ]
       },
       {
         text: "Technical",
         collapsible : true,
         children: [
-          {
-            text: "Encoder",
-            collapsible : true,
-            children: [
-              '/encoder/mge_encoder.md',
-              '/encoder/cli_encoder.md',
-              '/encoder/web_encoder.md',
-              '/encoder/entity_management_system.md',
-            ]
-          },
+			'/debug_tools.md',
+			'/encoder.md',
           {
             text: "Hardware",
             collapsible : true,
             children: [
-              '/hardware/hex_editor.md',
-              '/hardware/terminal.md',
-              '/hardware/commands.md',
+              '/hex_editor.md',
+              '/terminal.md',
+              '/commands.md',
               '/hardware/web_build.md',
               '/hardware/desktop_build.md',
               '/hardware/updating_the_hardware.md',
             ]
           },
-          {
-            text: "Debug",
-            collapsible : true,
-            children: [
-              '/debug/debug_tools.md',
-              '/debug/vector_view.md',
-              '/debug/debug_mode.md',
-              '/debug/mge_encoder_console.md',
-              '/debug/inspecting_with_the_web_encoder.md',
-              '/debug/kaitai.md',
-            ]
-          }
         ]
       },
     ]

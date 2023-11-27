@@ -23,7 +23,7 @@ Checks an [entity](../entities)'s [y](../entities/entity_properties) coordinate.
 
 ## MGS Natlang
 
-The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
 
 ```mgs
 script {

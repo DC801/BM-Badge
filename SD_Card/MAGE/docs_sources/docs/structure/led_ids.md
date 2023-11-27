@@ -1,6 +1,6 @@
 # LED IDs
 
-For [actions](../actions) that involve the badge lights.
+[Enum](enums.md) for [actions](../actions) that involve the badge lights.
 
 - `LED_XOR`
 - `LED_ADD`
