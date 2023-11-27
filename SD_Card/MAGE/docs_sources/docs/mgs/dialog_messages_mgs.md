@@ -2,7 +2,7 @@
 
 NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
 
-A dialog message is any [quoted string](../mgs/variables/quoted_string).
+A dialog message is any [quoted string](../mgs/variables_mgs#quoted-string).
 
 ```mgs{5-7}
 dialog sampleDialog {
@@ -20,7 +20,7 @@ dialog sampleDialog {
 - Each message is a new "text screen" in the game.
 - Only ASCII characters will be printed.
 - Insert an entity's [current name](../scripts/printing_current_values) by wrapping their given name in `%`s.
-	- [`%PLAYER%`](../entities/PLAYER) and [`%SELF%`](../entities/SELF) are also allowed, which target the player entity or the entity that is running the script, respectively.
+	- [`%PLAYER%`](../entities/relative_references.md#player) and [`%SELF%`](../entities/relative_references.md#self) are also allowed, which target the player entity or the entity that is running the script, respectively.
 	- Words wrapped in `%`s will count as 12 chars when the dialog message is auto-wrapped.
 - Insert the current value of a MGE variable by wrapping its name in `$`s.
 	- Words wrapped in `$`s will count as 5 chars when the dialog message is auto-wrapped.

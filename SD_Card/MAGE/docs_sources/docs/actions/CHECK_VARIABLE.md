@@ -1,8 +1,8 @@
 # CHECK_VARIABLE
 
-Compares the value of a [variable](../scripts/integer_variables) against the given value.
+Compares the value of a [variable](../scripts/variables#integer-variables) against the given value.
 
-`==` is assumed if no [operator](../mgs/variables/operator) is given.
+`==` is assumed if no [operator](../mgs/variables_mgs#operator) is given.
 
 ## Example JSON
 
@@ -27,7 +27,7 @@ Compares the value of a [variable](../scripts/integer_variables) against the giv
 
 ## MGS Natlang
 
-The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
 
 ```mgs
 script {

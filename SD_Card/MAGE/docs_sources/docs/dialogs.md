@@ -10,7 +10,7 @@ Arbitrary [actions](actions) cannot be performed by the [script](scripts) runnin
 
 All dialogs have a name, which is how [scripts](scripts) can target them with [actions](actions). This name must be **completely unique** throughout the entire game project files, both between JSON and MGS files.
 
-In [MGS Natlang](mgs/mgs_natlang), dialogs can be defined and "called" in place, so name definitions can be omitted; however, as Natlang *becomes* JSON before it's handed off to the [MGE encoder](encoder/mge_encoder), these dialogs still need a name — and Natlang calculates one based on the file name and line number. This makes debugging dialogs a little more difficult, but dramatically easier to write. (You can still assign them names, or refer to dialogs without defining them, too, if you want to.)
+In [MGS Natlang](mgs/mgs_natlang), dialogs can be defined and "called" in place, so name definitions can be omitted; however, as Natlang *becomes* JSON before it's handed off to the [encoder](encoder.md), these dialogs still need a name — and Natlang calculates one based on the file name and line number. This makes debugging dialogs a little more difficult, but dramatically easier to write. (You can still assign them names, or refer to dialogs without defining them, too, if you want to.)
 
 ## Format
 

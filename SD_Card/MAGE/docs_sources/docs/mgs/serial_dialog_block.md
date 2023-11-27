@@ -8,7 +8,7 @@ serial dialog $string {}
 
 Similar to [dialog blocks](../mgs/dialog_block), serial dialog blocks allow you to name and populate a serial dialog. Serial dialogs are shown in the serial console instead of the badge's physical screen.
 
-These blocks aren't being defined inside a  [script body](../mgs/script_block), so a serial dialog name is required. (The name is whatever is given for [string](../mgs/variables/string).)
+These blocks aren't being defined inside a  [script body](../mgs/script_block), so a serial dialog name is required. (The name is whatever is given for [string](../mgs/variables_mgs#string).)
 
 Inside the curly braces may be any number of [serial dialogs](../mgs/serial_dialogs_mgs). For example:
 

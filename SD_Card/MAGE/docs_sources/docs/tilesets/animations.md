@@ -8,15 +8,15 @@ You will then see a second window for assigning frames to your animation. Set th
 
 ## MGE Animation Considerations
 
-For [character entities](../entities/character_entity), you need not prepare an animation for all cardinal directions — e.g. there is only a fright/shock animation in *Chrono Trigger* for the south direction.
+For [character entities](../entities/entity_types#character-entity), you need not prepare an animation for all cardinal directions — e.g. there is only a fright/shock animation in *Chrono Trigger* for the south direction.
 
-The [MGE encoder](../encoder/mge_encoder) accommodates animation flipping with its [entity management system](../encoder/entity_management_system), so you don't need sprite tiles for both left-facing and right-facing sprites if you're comfortable with mirroring your left-facing and right-facing sprites.
+The [encoder](../encoder.md) accommodates animation flipping with its [entity management system](entity_management_system.md), so you don't need sprite tiles for both left-facing and right-facing sprites if you're comfortable with mirroring your left-facing and right-facing sprites.
 
 The Mage Game Engine (MGE) animation system requires that each animation have at least two frames, though, so for animations that aren't actually "animated," you might set two of the same frame back-to-back. #verifythis
 
 ## Animation Types
 
-Three types of animations are built into the MGE for [character entities](../entities/character_entity), and they are triggered in straightforward and predictable ways. [`entity_types.json`](../structure/entity_types.json) defines which animations are of which type, and they can be defined and adjusted within the [MGE encoder](../encoder/mge_encoder) or manually with a text editor.
+Three types of animations are built into the MGE for [character entities](../entities/entity_types#character-entity), and they are triggered in straightforward and predictable ways. [`entity_types.json`](../structure/entity_types.json) defines which animations are of which type, and they can be defined and adjusted within the [encoder](../encoder.md) or manually with a text editor.
 
 ### Idle
 
@@ -85,4 +85,4 @@ In addition, we recommend making sure each animation of the same type uses the s
 
 ## Assigning Animations to Character Entities
 
-For [character entities](../entities/character_entity), animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [entity management system](../encoder/entity_management_system) in the [web encoder](../encoder/web_encoder) can help you assign animations to character entities if you don't want to do it by hand.
+For [character entities](../entities/entity_types#character-entity), animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [entity management system](entity_management_system.md) in the [web encoder](../encoder.md#web-encoder) can help you assign animations to character entities if you don't want to do it by hand.

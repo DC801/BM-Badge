@@ -70,5 +70,5 @@ exampleScript {
 - A single serial dialog can only use *one* of these two types.
 	- The parser will interpret all options within the block using the type of the first option.
 - Unlike [dialog options](../mgs/dialog_options_mgs), the option count for serial dialogs is unlimited.
-- The **label** *must* be wrapped in [quotes](../mgs/variables/quoted_string).
-- The words `goto` and `script` are optional. Any [string](../mgs/variables/string) given after the `:` (other than `goto` and `script`) is assumed to be the script name.
+- The **label** *must* be wrapped in [quotes](../mgs/variables_mgs#quoted-string).
+- The words `goto` and `script` are optional. Any [string](../mgs/variables_mgs#string) given after the `:` (other than `goto` and `script`) is assumed to be the script name.

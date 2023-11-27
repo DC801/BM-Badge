@@ -1,6 +1,6 @@
 # SET_HEX_EDITOR_CONTROL
 
-This action enables or disables player access to to the [hex editor](../hardware/hex_editor). This is on by default.
+This action enables or disables player access to to the [hex editor](../hex_editor). This is on by default.
 
 ## Example JSON
 

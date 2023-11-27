@@ -1,8 +1,8 @@
 # Button IDs
 
-For [actions](../actions) that check the button state.
+[Enum](enums.md) for [actions](../actions) that check the button state.
 
-::: tip INFO
+::: warning INFO
 We found that the joystick clicks were aggressive on the hardware, and would trigger at what felt like arbitrary times. While the engine is capable of detecting these clicks, we recommend not using them.
 :::
 

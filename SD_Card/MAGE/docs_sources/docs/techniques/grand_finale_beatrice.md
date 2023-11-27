@@ -3,12 +3,12 @@
 ::: warning DEPRECATED
 This page is deprecated and likely very out of date!
 
-Large scripts like this were a major reason we created [MGS Natlang](../mgs/mgs_natlang). Now we can use [if and else](../mgs/advanced_syntax/if_and_else) like a normal programming language. (To that point: converting this mess to natlang revealed a few redundant logic paths, even after multiple revisions of this flowchart!)
+Large scripts like this were a major reason we created [MGS Natlang](../mgs/mgs_natlang). Now we can use [if and else](../mgs/advanced_syntax#if-and-else) like a normal programming language. (To that point: converting this mess to natlang revealed a few redundant logic paths, even after multiple revisions of this flowchart!)
 :::
 
 ![flowchart of Beatrice's behavior](../media/script-beatrice.png)
 
-In the BMG2020, Beatrice's branching was complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. E.g. hints are now managed with a single [integer](../scripts/integer_variables) instead of a bajillion [save flags](../scripts/save_flags).)
+In the BMG2020, Beatrice's branching was complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. E.g. hints are now managed with a single [integer](../scripts/variables.md#integer-variables) instead of a bajillion [save flags](../scripts/variables.md#save-flags).)
 
 ## Beatrice's Branching
 
@@ -35,7 +35,7 @@ Sets Beatrice's [`on_interact`](../scripts/on_interact) script back to her start
 This is the wrapup script for solving Beatrice's first quest line.
 
 - sets her [`on_tick`](../scripts/on_tick) to [null_script](../scripts/null_script) and turns her toward her husband
-- sets the `bea1` backstory and `bea1` [story flag](../scripts/save_flags) to `true`
+- sets the `bea1` backstory and `bea1` [story flag](../scripts/variables.md#save-flags) to `true`
 - zeroes the target hint
 - runs `bea-wrapup-mini` to finish
 

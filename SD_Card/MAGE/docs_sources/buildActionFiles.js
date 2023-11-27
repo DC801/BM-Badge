@@ -108,12 +108,12 @@ var actionCategoryText = {
 	],
 	"Check Entity Properties": [
 		"These actions check whether one of an [entity](../entities)'s [properties](../entities/entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
-		"You can use [`%SELF%`](../entities/SELF) to target the entity running the script and [`%PLAYER%`](../entities/PLAYER) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
-		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax/if_and_else).",
+		"You can use [`%SELF%`](../entities/relative_entity_references#self) to target the entity running the script and [`%PLAYER%`](../entities/relative_entity_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
+		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).",
 	],
 	"Check Variables": [
 		"Check whether one of the MGE variables matches a specific value. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
-		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax/if_and_else).",
+		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).",
 	]
 };
 
@@ -273,46 +273,46 @@ var actionText = {
 	"SET_HEX_EDITOR_STATE": {
 		"category": "Hex Editor",
 		"info": [
-			"Setting this to true opens the [hex editor](../hardware/hex_editor). (Does the hex editor need to be enabled?) #verifyme "
+			"Setting this to true opens the [hex editor](../hex_editor). (Does the hex editor need to be enabled?) #verifyme "
 		]
 	},
 	"SET_HEX_EDITOR_DIALOG_MODE": {
 		"category": "Hex Editor",
 		"info": [
-			"When on, this reduces the number of rows in the [hex editor](../hardware/hex_editor), which makes room for [dialog](../dialogs) boxes. (The portrait image can still cover up hex cells, though.)",
+			"When on, this reduces the number of rows in the [hex editor](../hex_editor), which makes room for [dialog](../dialogs) boxes. (The portrait image can still cover up hex cells, though.)",
 			"NOTE: This action has been disabled in the MGE to prevent accidental soft locks."
 		]
 	},
 	"SET_HEX_EDITOR_CONTROL": {
 		"category": "Hex Editor",
 		"info": [
-			"This action enables or disables player access to to the [hex editor](../hardware/hex_editor). This is on by default."
+			"This action enables or disables player access to to the [hex editor](../hex_editor). This is on by default."
 		]
 	},
 	"SET_HEX_EDITOR_CONTROL_CLIPBOARD": {
 		"category": "Hex Editor",
 		"info": [
-			"This action enables or disables the clipboard and copy functionality within the [hex editor](../hardware/hex_editor). This is on by default. (? #verifyme)"
+			"This action enables or disables the clipboard and copy functionality within the [hex editor](../hex_editor). This is on by default. (? #verifyme)"
 		]
 	},
 	"CHECK_VARIABLE": {
 		"category": "Check Variables",
 		"info": [
-			"Compares the value of a [variable](../scripts/integer_variables) against the given value.",
-			"`==` is assumed if no [operator](../mgs/variables/operator) is given."
+			"Compares the value of a [variable](../scripts/variables#integer-variables) against the given value.",
+			"`==` is assumed if no [operator](../mgs/variables_mgs#operator) is given."
 		]
 	},
 	"CHECK_VARIABLES": {
 		"category": "Check Variables",
 		"info": [
-			"Compares the value of a [variable](../scripts/integer_variables) against another.",
-			"`==` is assumed if no [operator](../mgs/variables/operator) is given."
+			"Compares the value of a [variable](../scripts/variables#integer-variables) against another.",
+			"`==` is assumed if no [operator](../mgs/variables_mgs#operator) is given."
 		]
 	},
 	"CHECK_SAVE_FLAG": {
 		"category": "Check Variables",
 		"info": [
-			"Checks one of the [save flags](../scripts/save_flags) (booleans)."
+			"Checks one of the [save flags](../scripts/variables#save-flags) (booleans)."
 		]
 	},
 	"CHECK_FOR_BUTTON_PRESS": {
@@ -336,7 +336,7 @@ var actionText = {
 	"CHECK_WARP_STATE": {
 		"category": "Check Variables",
 		"info": [
-			"Checks whether the [warp state string](../scripts/warp_state) is a specific value.",
+			"Checks whether the [warp state string](../scripts/variables#warp_state) is a specific value.",
 		]
 	},
 	"CHECK_DIALOG_OPEN": {
@@ -354,39 +354,39 @@ var actionText = {
 	"CHECK_DEBUG_MODE": {
 		"category": "Check Variables",
 		"info": [
-			"Checks whether [debug mode](../debug/debug_mode) is currently on.",
+			"Checks whether [debug mode](../debug_tools#debug-mode) is currently on.",
 		]
 	},
 	"SET_SAVE_FLAG": {
 		"category": "Set Variables",
 		"info": [
-			"Set a [save flag](../scripts/save_flags) to `true` or `false`.",
+			"Set a [save flag](../scripts/variables#save-flags) to `true` or `false`.",
 		]
 	},
 	"SET_WARP_STATE": {
 		"category": "Set Variables",
 		"info": [
-			"Set the [warp state string](../scripts/warp_state) to a specific value.",
+			"Set the [warp state string](../scripts/variables#warp_state) to a specific value.",
 		]
 	},
 	"MUTATE_VARIABLE": {
 		"category": "Set Variables",
 		"info": [
-			"Manipulate the value of a specific [variable](../scripts/integer_variables) or set it to a new value.",
+			"Manipulate the value of a specific [variable](../scripts/variables#integer-variables) or set it to a new value.",
 			"See [operations](../structure/operations)."
 		]
 	},
 	"MUTATE_VARIABLES": {
 		"category": "Set Variables",
 		"info": [
-			"Manipulate the value of a specific [variable](../scripts/integer_variables) by using the value of another variable.",
+			"Manipulate the value of a specific [variable](../scripts/variables#integer-variables) by using the value of another variable.",
 			"See [operations](../structure/operations)."
 		]
 	},
 	"COPY_VARIABLE": {
 		"category": "Set Variables",
 		"info": [
-			"Copies the value of an [entity](../entities) [property](../entities/entity_properties) into a [variable](../scripts/integer_variables) or vice versa.",
+			"Copies the value of an [entity](../entities) [property](../entities/entity_properties) into a [variable](../scripts/variables#integer-variables) or vice versa.",
 		]
 	},
 	"CHECK_ENTITY_NAME": {
@@ -428,7 +428,7 @@ var actionText = {
 	"CHECK_ENTITY_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether a [character entity](../entities/character_entity) is currently the given [entity_type](../entities/entity_properties).",
+			"Checks whether a [character entity](../entities/entity_types#character-entity) is currently the given [entity_type](../entities/entity_properties).",
 			"This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity \"Delmar\" is the type `old_man`). Otherwise you'd have to use a mix of [CHECK_ENTITY_PRIMARY_ID](../actions/CHECK_ENTITY_PRIMARY_ID) and [CHECK_ENTITY_PRIMARY_ID_TYPE](../actions/CHECK_ENTITY_PRIMARY_ID_TYPE) and also know in advance which ints you're checking for."
 		]
 	},
@@ -443,14 +443,14 @@ var actionText = {
 		"category": "Check Entity Properties",
 		"info": [
 			"Checks whether an [entity](../entities) has the given [secondary_id](../entities/entity_types).",
-			"This entity property is only useful on [tile entities](../entities/tile_entity), where the `secondary_id` determines which tile in the tileset is displayed.",
+			"This entity property is only useful on [tile entities](../entities/entity_types#tile-entity), where the `secondary_id` determines which tile in the tileset is displayed.",
 			"Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID."
 		]
 	},
 	"CHECK_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [primary_id_type](../entities/entity_types): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`)."
+			"Checks an [entity](../entities)'s [primary_id_type](../entities/entity_types): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
 		]
 	},
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
@@ -487,7 +487,7 @@ var actionText = {
 		"category": "Check Entity Properties",
 		"info": [
 			"Checks whether an [entity](../entities) is inside the named [geometry](../maps/vector_objects).",
-			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/coordinate_overflow)."
+			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/vector_objects#coordinate-overflow)."
 		]
 	},
 	"SET_ENTITY_NAME": {
@@ -513,7 +513,7 @@ var actionText = {
 	"SET_ENTITY_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [entity_type](../entities/character_entity). (See: [Entity Properties](../entities/entity_properties))"
+			"Sets an [entity](../entities)'s [entity_type](../entities/entity_types#character-entity). (See: [Entity Properties](../entities/entity_properties))"
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID": {
@@ -527,13 +527,13 @@ var actionText = {
 		"category": "Set Entity Properties",
 		"info": [
 			"Sets an [entity](../entities)'s [secondary_id](../entities/entity_properties).",
-			"This action will not be useful unless the entity is a [tile entity](../entities/tile_entity) (`primary_id_type`: `1`)."
+			"This action will not be useful unless the entity is a [tile entity](../entities/entity_types#tile-entity) (`primary_id_type`: `1`)."
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [primary_id_type](../entities/entity_properties): either (`0`) [tile](../entities/tile_entity), (`1`) [animation](../entities/animation_entity), or (`2`) [character](../entities/character_entity) (sometimes called `entity_type`)."
+			"Sets an [entity](../entities)'s [primary_id_type](../entities/entity_properties): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
 		]
 	},
 	"SET_ENTITY_PATH": {
@@ -634,7 +634,7 @@ var actionText = {
 	"SET_CAMERA_TO_FOLLOW_ENTITY": {
 		"category": "Camera Control",
 		"info": [
-			"Sets what the camera is following. ([`%PLAYER%`](../entities/PLAYER) is the default.)"
+			"Sets what the camera is following. ([`%PLAYER%`](../entities/relative_entity_references#player) is the default.)"
 		]
 	},
 	"TELEPORT_CAMERA_TO_GEOMETRY": {
@@ -659,13 +659,13 @@ var actionText = {
 	"PAN_CAMERA_ALONG_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"(might not work yet — instead, make a [null entity](../entities/null_entity) and lock the camera to it)"
+			"(might not work yet — instead, make a [null entity](../entities/entity_types#null-entity) and lock the camera to it)"
 		]
 	},
 	"LOOP_CAMERA_ALONG_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"(might not work yet — instead, make a [null entity](../entities/null_entity) and lock the camera to it)"
+			"(might not work yet — instead, make a [null entity](../entities/entity_types#null-entity) and lock the camera to it)"
 		]
 	},
 	"SET_SCREEN_SHAKE": {
@@ -698,7 +698,7 @@ var actionText = {
 	"GOTO_ACTION_INDEX": {
 		"category": "Script Control",
 		"info": [
-			"Jumps to the action at the given [label](../mgs/advanced_syntax/labels) ([bareword](../mgs/variables/bareword)) or action index ([number](../mgs/variables/number)). All jumps are made within the current [script](../scripts).",
+			"Jumps to the action at the given [label](../mgs/advanced_syntax#labels) ([bareword](../mgs/variables_mgs#bareword)) or action index ([number](../mgs/variables_mgs#number)). All jumps are made within the current [script](../scripts).",
 			"The index (number) variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.",
 			"The keyword `return` uses this action to jump to the end of the current script (i.e. \"return early\")."
 		]
@@ -706,8 +706,8 @@ var actionText = {
 	"COPY_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"The [MGE encoder](../encoder/mge_encoder) literally copies all the actions from the copied [script](../scripts) and inserts them where `COPY_SCRIPT` is being used. This happens recursively.",
-			"`COPY_SCRIPT` converts and adapts [label](../mgs/advanced_syntax/labels) references, jumps that eventually become action indices, when copied. Feel free to use `COPY_SCRIPT` for literally any script you want!",
+			"The [encoder](../encoder) literally copies all the actions from the copied [script](../scripts) and inserts them where `COPY_SCRIPT` is being used. This happens recursively.",
+			"`COPY_SCRIPT` converts and adapts [label](../mgs/advanced_syntax#labels) references, jumps that eventually become action indices, when copied. Feel free to use `COPY_SCRIPT` for literally any script you want!",
 			"See: [COPY_SCRIPT_uses](../techniques/COPY_SCRIPT_uses)"
 		]
 	},
@@ -741,8 +741,8 @@ var actionText = {
 		"category": "Script Control",
 		"info": [
 			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../scripts/on_tick) script during its [`on_interact`](../scripts/on_interact) event.",
-			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/PLAYER) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../scripts/on_look).",
-			"Map variant: Script slots for these are [`on_load`](../scripts/on_load), [`on_tick`](../scripts/on_tick), and [on_command](../hardware/commands)."
+			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/relative_entity_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../scripts/on_look).",
+			"Map variant: Script slots for these are [`on_load`](../scripts/on_load), [`on_tick`](../scripts/on_tick), and [on_command](../commands)."
 		]
 	}
 };
@@ -1002,7 +1002,7 @@ var makeObsidianEntry = function (actionName) {
 		})
 		var abbrev = firstColorReport.slice(1, thenIndex);
 		var conditionSample = abbrev.map(function (item) { return item.value }).join(' ');
-		ret.push(`The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.`);
+		ret.push(`The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.`);
 		ret.push([
 			'```mgs',
 			'script {',

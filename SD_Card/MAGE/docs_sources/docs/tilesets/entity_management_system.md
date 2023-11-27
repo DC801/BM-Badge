@@ -1,6 +1,6 @@
 # Entity Management System
 
-The [web encoder](../encoder/web_encoder) has a few entity management tools. To use them, you must first upload your [`scenario_source_files`](../getting_started/scenario_source_files) folder to the web encoder.
+To manage entity [animations](../tilesets/animations), you must first upload your [`scenario_source_files`](../getting_started/scenario_source_files) folder to the [encoder](../encoder.md#web-encoder).
 
 NOTE: Changes you make using these tools are not automatically perpetuated to the `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
 
@@ -10,7 +10,7 @@ NOTE: Changes you make using these tools are not automatically perpetuated to th
 
 ## New `entity_type`
 
-In the "Entity Type Editor," type the name of the new `entity_type` ([character entity](../entities/character_entity)) you wish to create, then click "Create."
+In the "Entity Type Editor," type the name of the new `entity_type` ([character entity](../entities/entity_types#character-entity)) you wish to create, then click "Create."
 
 You will then be given a drop-down list of tilesets that the encoder found. Select the one you want your new entity to use.
 
@@ -20,7 +20,7 @@ The animation pane and tileset pane will now appear.
 
 ## Edit Existing `entity_type`
 
-To instead edit an existing `entity_type` ([character entity](../entities/character_entity)), use the drop-down list to choose one, and then the animation and tileset panes will appear.
+To instead edit an existing `entity_type` ([character entity](../entities/entity_types#character-entity)), use the drop-down list to choose one, and then the animation and tileset panes will appear.
 
 ## Animation Pane
 

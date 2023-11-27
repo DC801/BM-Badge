@@ -11,7 +11,7 @@ serial dialog sample {
 }
 ```
 
-A serial dialog message is any [quoted string](../mgs/variables/quoted_string).
+A serial dialog message is any [quoted string](../mgs/variables_mgs#quoted-string).
 
 - To maximize compatibility, best to limit these to ASCII characters.
 - Each message is printed on its own line.

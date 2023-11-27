@@ -1,6 +1,6 @@
 # Creating a Tileset JSON File
 
-The [MGE encoder](../encoder/mge_encoder) cannot use image files outright — there must be an associated JSON file (made with Tiled) that explicitly defines the image file path and various other properties.
+The [encoder](../encoder.md) cannot use image files outright — there must be an associated JSON file (made with Tiled) that explicitly defines the image file path and various other properties.
 
 Within Tiled:
 
@@ -16,10 +16,26 @@ Within Tiled:
 
 ## For Character Entities
 
-All tiles within a [character entity](../entities/character_entity) tileset must have the "Class" (formerly "Type") property set to its `entity_type` name. You can find the "Class" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
+All tiles within a [character entity](../entities/entity_types#character-entity) tileset must have the "Class" (formerly "Type") property set to its `entity_type` name. You can find the "Class" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
 
 ::: tip
 You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` name at all.
 
 See: [Entity Types](../entities/entity_types)
+:::
+
+## Tile Collisions
+
+[Map](../maps) [tilesets](../tilesets) should have collision polygons set for each relevant tile. This is done by selecting a tile and clicking the collision editor within Tiled:
+
+![the second icon is a pair of polygons](../media/tiled-collision-editor.png)
+
+For the MGE, each tile can have only one vector shape, and each vertex must fall within the bounds of the tile itself. (Vertices falling outside the tile will cause erratic collision behavior.)
+
+It's helpful to turn on pixel snapping before drawing collision polygons ("View > Snapping > Snap to Pixels").
+
+::: tip Best Practices
+Very precise collision shapes are possible, but best practice is to avoid very concave shapes and to avoid diagonals for tiles that are expected to be placed adjacent to other tiles with collision.
+
+When defining your collision polygons and designing your maps, it's good to test the tiles in their map contexts and determine whether the player character is able to push themselves inside one of these shapes.
 :::

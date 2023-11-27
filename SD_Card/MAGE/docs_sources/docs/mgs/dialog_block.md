@@ -6,7 +6,7 @@ To define an [MGS Natlang](../mgs/mgs_natlang) [dialog](../dialogs), start a new
 dialog $dialogName:string {}
 ```
 
-As these dialog blocks aren't being defined inside a [script body](../mgs/script_block), a dialog name is required. (The name is whatever is given for [string](../mgs/variables/string).)
+As these dialog blocks aren't being defined inside a [script body](../mgs/script_block), a dialog name is required. (The name is whatever is given for [string](../mgs/variables_mgs#string).)
 
 Inside the curly braces may be any number of [dialogs](../mgs/dialogs_mgs). For example:
 

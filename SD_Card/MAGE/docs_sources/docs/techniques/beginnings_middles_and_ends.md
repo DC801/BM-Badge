@@ -137,4 +137,4 @@ show_dialog-bob-start {
 }
 ```
 
-No wrapup script necessary, because every "branch" will automatically converge after the [if and else](../mgs/advanced_syntax/if_and_else) chain is finished.
+No wrapup script necessary, because every "branch" will automatically converge after the [if and else](../mgs/advanced_syntax#if-and-else) chain is finished.

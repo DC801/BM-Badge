@@ -23,3 +23,5 @@ settings for serial dialog {
 Serial dialog settings are applied to serial dialogs in order as the parser encounters them; a serial dialog settings block partway down the file will affect only the serial dialogs afterward, and none before.
 
 Parameters given in a serial dialog's body will override any other settings, however.
+
+Settings only apply to multiple files with the use of [`include!()`](advanced_syntax#include).

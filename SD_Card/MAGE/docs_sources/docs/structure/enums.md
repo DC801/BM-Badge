@@ -4,4 +4,5 @@ Some [actions](../actions) will only be satisfied by a value from a limited set 
 
 - [Button IDs](../structure/button_ids)
 - [LED IDs](../structure/led_ids)
+- [Comparators](comparators.md)
 - [Operations](../structure/operations)

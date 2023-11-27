@@ -1,6 +1,6 @@
 # MUTATE_VARIABLES
 
-Manipulate the value of a specific [variable](../scripts/integer_variables) by using the value of another variable.
+Manipulate the value of a specific [variable](../scripts/variables#integer-variables) by using the value of another variable.
 
 See [operations](../structure/operations).
 

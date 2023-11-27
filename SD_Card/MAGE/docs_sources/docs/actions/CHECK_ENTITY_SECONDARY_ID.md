@@ -2,7 +2,7 @@
 
 Checks whether an [entity](../entities) has the given [secondary_id](../entities/entity_types).
 
-This entity property is only useful on [tile entities](../entities/tile_entity), where the `secondary_id` determines which tile in the tileset is displayed.
+This entity property is only useful on [tile entities](../entities/entity_types#tile-entity), where the `secondary_id` determines which tile in the tileset is displayed.
 
 Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID.
 
@@ -27,7 +27,7 @@ Tiles are referenced by their index, starting at the top and going toward the ri
 
 ## MGS Natlang
 
-The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
 
 ```mgs
 script {

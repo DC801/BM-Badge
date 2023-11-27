@@ -31,7 +31,7 @@ This JSON file looks like this:
 }
 ```
 
-The top-level string is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](../entities/character_entity).
+The top-level string is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](../entities/entity_types#character-entity).
 
 `tileset` is the file path for the [JSON file](../tilesets) [associated](../structure/portraits.json) with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
 

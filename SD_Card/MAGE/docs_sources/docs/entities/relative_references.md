@@ -1,11 +1,28 @@
-# Relative Entity References
+# Relative References
 
-- [`%SELF%`](../entities/SELF) — the entity running the script
-- [`%PLAYER%`](../entities/PLAYER) — the player entity
+#expandme
+
+## Entities
+
+- `%SELF%` — the entity running the script
+- `%PLAYER%` — the player entity
 
 Unlike relative entity names, you can use these two **relative entity references** everywhere, including the arguments of actions.
 
-## Example
+### `%PLAYER%`
+
+When used as the target of an [action](../actions), `%PLAYER%` refers to the player entity (the entity marked `is_player` on the [map](../maps) in Tiled).
+
+When used in the body of a message (e.g. `"Hello, %PLAYER%!"`) it will use the [current name](../scripts/printing_current_values) of the player entity.
+
+### `%SELF%`
+
+When used as the target of an [action](../actions), `%SELF%` refers to the [entity](../entities) running the script.
+
+When used in the body of a message (e.g. `"Hey, there! My name is %SELF%!"`) it will use the [current name](../scripts/printing_current_values) of the entity running the script.
+
+
+### Example
 
 #updateme
 

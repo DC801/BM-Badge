@@ -44,7 +44,7 @@ In addition, because each tile increases the draw time, it's best to remove tile
 
 Vector polygons and points are placed on object layers, but tiles can be placed this way, too, if you use the "Insert Tile" button on the vector section of the toolbar (shortcut **T**) — and this is how entities are added to a map.
 
-Vector objects are susceptible to [coordinate overflow](maps/coordinate_overflow), so try to keep objects and all their vertices inside the map coordinate space (unless you actually want to yeet an entity to outer space).
+Vector objects are susceptible to [coordinate overflow](maps/vector_objects#coordinate-overflow), so try to keep objects and all their vertices inside the map coordinate space (unless you actually want to yeet an entity to outer space).
 
 ::: tip Best Practice
 Particularly on maps with a lot going on, it's best to place objects on separate layers so you can easily hide or reveal specific objects, e.g.:
@@ -69,7 +69,7 @@ Each map can have a maximum of 64 entities.
 - [Map Loads](maps/map_loads)
 - [Map Properties](maps/map_properties)
 - [Vector Objects](maps/vector_objects)
-- [Coordinate Overflow](maps/coordinate_overflow)
+- [Coordinate Overflow](maps/vector_objects#coordinate-overflow)
 - Map making techniques:
 	- [Spawn Points](techniques/spawn_points)
 	- [Coordinate Considerations](techniques/coordinate_considerations)

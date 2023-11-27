@@ -25,15 +25,15 @@ Optional. `entity` refers to a specific entity by its **given name** (the name i
 
 This property can be any of the following:
 
-1. [`%PLAYER%`](../entities/PLAYER), which refers to the player entity
-2. [`%SELF%`](../entities/SELF), which refers to the entity running the script
+1. [`%PLAYER%`](../entities/relative_references.md#player), which refers to the player entity
+2. [`%SELF%`](../entities/relative_references.md#self), which refers to the entity running the script
 3. the **given name** of an entity (no percent signs)
 
 The MGE will use the referenced entity's [current name](../scripts/printing_current_values) for the dialog label automatically.
 
-For the `entity` property, you must not use percent signs to refer to entities, or the [MGE encoder](../encoder/mge_encoder) will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [current name](../scripts/printing_current_values) in the dialog label, you must use the `name` property, which can print a string literally.
+For the `entity` property, you must not use percent signs to refer to entities, or the [MGE encoder](../encoder.md#web-encoder) will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [current name](../scripts/printing_current_values) in the dialog label, you must use the `name` property, which can print a string literally.
 
-If the referenced entity is a [character entity](../entities/character_entity), the [MGE Encoder](../encoder/mge_encoder) will use [`entity_types.json`](../structure/entity_types.json) to automatically determine the portrait image.
+If the referenced entity is a [character entity](../entities/entity_types#character-entity), the [MGE Encoder](../encoder.md#web-encoder) will use [`entity_types.json`](../structure/entity_types.json) to automatically determine the portrait image.
 
 ## `name`
 
@@ -41,8 +41,8 @@ Optional. `name` provides a string for dialog box label, and if included, it wil
 
 This property can be any of the following:
 
-1. [`%PLAYER%`](../entities/PLAYER), which refers to the player entity
-2. [`%SELF%`](../entities/SELF), which refers to the entity running the script
+1. [`%PLAYER%`](../entities/relative_references.md#player), which refers to the player entity
+2. [`%SELF%`](../entities/relative_references.md#self), which refers to the entity running the script
 3. an arbitrary ASCII string up to 12 characters long
 4. the **given name** of an entity, but enclosed in percent signs: `%Entity Name%`
 

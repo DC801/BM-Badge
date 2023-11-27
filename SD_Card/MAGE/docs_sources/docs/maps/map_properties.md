@@ -9,7 +9,7 @@ Where the map JSON file is located and what it's called.
 
 ## `on_load`
 
-The **[`on_load`](../scripts/on_load)** script plays when the map is first loaded. This is best used for checking [save flags](../scripts/save_flags) and restoring state that is meant to be permanently changed.
+The **[`on_load`](../scripts/on_load)** script plays when the map is first loaded. This is best used for checking [save flags](../scripts/variables.md#save-flags) and restoring state that is meant to be permanently changed.
 
 `on_load` scripts stop when finished.
 
@@ -25,7 +25,7 @@ Because the player cannot directly alter which script is run in a map's `on_tick
 
 ## `on_look`
 
-The [`on_look`](../scripts/on_look) script plays when you run the `look` [command](../hardware/commands) in the [terminal](../hardware/terminal) without any arguments.
+The [`on_look`](../scripts/on_look) script plays when you run the `look` [command](../commands.md) in the [terminal](../terminal.md) without any arguments.
 
 NOTE: You can override this script if you [register](../actions/REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT) a `look` command manually.
 

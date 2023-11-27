@@ -4,7 +4,7 @@
 
 This is the standard "hackable" data for entities in the DC801 black mage game. You can set all these properties with Tiled or with scripts from within the MGE.
 
-## Standard Entity Properties
+## Standard
 
 These are default properties provided by Tiled. They're found in the top half of the Properties view.
 
@@ -18,7 +18,7 @@ These are default properties provided by Tiled. They're found in the top half of
 
 Note that horizontally flipping a front or back-facing character entity will make it appear horizontally flipped within Tiled, but in the MGE this will turn the entity around 180º.
 
-## Custom Entity Properties
+## Custom
 
 These properties must be manually added. To add one, first click the plus at the bottom of the Properties view, and set the property type (bool, float, object, string, etc.). Once added, you can assign a value to them just like any of the standard ones.
 
@@ -38,15 +38,15 @@ If you don't want an entity to have an `on_tick` script, you can leave this prop
 
 **`is_glitched` (bool)** — This gets written into a render flag on the "direction" byte. If checked, the entity will appear to be scrambled and glitchy within the MGE.
 
-**`is_debug` (bool)** — This indicates whether the entity is hidden when [debug mode](../debug/debug_mode) is off. (While this can be toggled in the hex editor within BMG2020, in practice it will not actually affect anything in-game, as the map is reloaded afresh when debug mode is toggled.)
+**`is_debug` (bool)** — This indicates whether the entity is hidden when [debug mode](../debug_tools.md#debug-mode) is off. (While this can be toggled in the hex editor within BMG2020, in practice it will not actually affect anything in-game, as the map is reloaded afresh when debug mode is toggled.)
 
 **`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.)
 
-**[`on_look`](../scripts/on_look) (string)** — This identifies the script that is run when the player interacts with the entity using the [terminal](../hardware/terminal) via `look at %ENTITY_NAME%`.
+**[`on_look`](../scripts/on_look) (string)** — This identifies the script that is run when the player interacts with the entity using the [terminal](../terminal.md) via `look at %ENTITY_NAME%`.
 
-## Additional Entity Properties
+## Player
 
-These are not "hackable" entity bytes in BMG2020, but they are still properties that can be assigned within Tiled.
+The player entity only has one unique property:
 
 **`is_player` (bool)** — This is the entity the player will control within the map. There should be only one such entity per map. (If there is more than one, the encoder will throw an error.)
 

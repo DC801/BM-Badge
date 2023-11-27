@@ -23,7 +23,7 @@ Checks the `path` name ([geometry](../maps/vector_objects)) of an [entity](../en
 
 ## MGS Natlang
 
-The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
 
 ```mgs
 script {

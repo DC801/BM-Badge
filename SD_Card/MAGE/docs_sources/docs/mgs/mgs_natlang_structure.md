@@ -24,7 +24,7 @@ scriptName {
 Commonly, Natlang syntax involves declarations followed by matching pairs of brackets:
 
 - [Blocks](../mgs/block): `BLOCK {}`
-- [Macros](../mgs/advanced_syntax/macros): `MACRO!()`
+- [Macros](../mgs/advanced_syntax#macros): `MACRO!()`
 
 Free form phrases often have a known size, such as actions within a script block (with limited numbers of possible arrangements) or dialog parameters (which always appear in pairs). In such cases, terminating characters or brackets are not used.
 
@@ -36,10 +36,35 @@ However, due to an increasing desire for complex syntax parsing, terminating or 
 
 See: [Variables (MGS)](../mgs/variables_mgs)
 
-MGS Natlang variables are more strict (and nuanced) than the JSON/JavaScript equivalents. For example, in some cases, a [bareword](../mgs/variables/bareword) string may be required when the JSON version might have accepted any type of JS string.
+MGS Natlang variables are more strict (and nuanced) than the JSON/JavaScript equivalents. For example, in some cases, a [bareword](../mgs/variables_mgs#bareword) string may be required when the JSON version might have accepted any type of JS string.
 
 In all "dictionary" syntax definitions in this documentation, words in parentheses are optional, and words starting with dollar signs are [MGS Natlang variables](../mgs/variables_mgs).
 
 ## Comments
 
-See: [Comments (MGS)](../mgs/comments_mgs)
+MGS Natlang supports two kinds of comments. Both can appear anywhere in an MGS file and inside any [block](../mgs/block).
+
+### Inline comment
+
+```mgs
+testScript {
+  wait 1000ms;
+  wait 1000ms; // inline comment
+}
+```
+
+This is the only time that line breaks are syntactic in Natlang. Inline comments start with `//` and end either with a line break or the end of the document.
+
+Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [extraneous properties from actions](../comments.md) and the like and turn them into inline comments automatically.
+
+### Block comment
+
+```mgs
+/*
+Block comment:
+Everything inside is a comment!
+The lexer ignores it all! WHEEE
+*/
+```
+
+Anything between a `/*` and a `*/` is part of the block comment, allowing you to put line breaks and/or extensive text inside a comment.

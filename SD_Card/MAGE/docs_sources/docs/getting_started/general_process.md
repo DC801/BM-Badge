@@ -9,17 +9,17 @@ Prepare entities. For each entity:
 1. Acquire or produce [spritesheets](../tilesets).
 2. In Tiled, [make a tileset JSON file](../tilesets/creating_a_tileset_json_file).
 	1. Put it in `scenario_source_files/entities/`.
-	2. For [character entities](../entities/character_entity), set the `Class` property for all tiles to what you want the entity's `entity_type` name to be.
+	2. For [character entities](../entities/entity_types#character-entity), set the `Class` property for all tiles to what you want the entity's `entity_type` name to be.
 	3. Set frames and timings for your [animations](../tilesets/animations), if any.
-		1. For [character entities](../entities/character_entity), prepare [animations](../tilesets/animations) for at least idle, walking, and action.
-3. For each [character entity](../entities/character_entity):
-	1. Use the [web encoder](../encoder/web_encoder) to [assign animations and NSEW directions](../encoder/entity_management_system).
+		1. For [character entities](../entities/entity_types#character-entity), prepare [animations](../tilesets/animations) for at least idle, walking, and action.
+3. For each [character entity](../entities/entity_types#character-entity):
+	1. Use the [web encoder](../encoder.md#web-encoder) to [assign animations and NSEW directions](../tilesets/entity_management_system.md).
 	2. Paste updated entity data into [`entity_types.json`](../structure/entity_types.json).
 4. Prepare dialog portraits.
 	1. In Tiled, [make a tileset JSON file](../tilesets/creating_a_tileset_json_file) for the talk portrait images.
 		1. Put it in `scenario_source_files/entities/`.
 	2. Prepare [`portraits.json`](../structure/portraits.json).
-	3. Assign portraits to their entities in [`entity_types.json`](../structure/entity_types.json) if the portrait name does not match an [entity_type](../entities/character_entity) name.
+	3. Assign portraits to their entities in [`entity_types.json`](../structure/entity_types.json) if the portrait name does not match an [entity_type](../entities/entity_types#character-entity) name.
 
 ## Maps
 
@@ -28,7 +28,7 @@ Prepare map(s). For each map:
 1. Acquire or produce [tilesets](../tilesets).
 2. In Tiled, [make a tileset JSON file](../tilesets/creating_a_tileset_json_file).
 	1. Put it in `scenario_source_files/tilesets/`.
-	2. Set [tile collisions](../tilesets/tile_collisions) for each tile.
+	2. Set [tile collisions](../tilesets/creating_a_tileset_json_file#tile-collisions) for each tile.
 3. In Tiled, [create a map](../maps) using the tileset(s) from above.
 4. Place entities on the map.
 	1. Set [entity properties](../entities/entity_properties), e.g.
@@ -71,7 +71,7 @@ Prepare game behavior. You can either use MGS or JSON for this, or even a mix.
 
 ## Encode Game
 
-Encode the `game.dat` using the [web encoder](../encoder/web_encoder) or the [CLI encoder](../encoder/cli_encoder).
+Encode the `game.dat` using the [encoder](../encoder.md) (either the [web](../encoder.md#web-encoder) version or the [CLI](../encoder.md#cli-encoder) version).
 
 ## Play Test
 

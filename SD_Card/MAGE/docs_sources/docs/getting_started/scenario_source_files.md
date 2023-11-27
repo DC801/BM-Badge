@@ -24,10 +24,10 @@ Make sure all Tiled files are in the correct place before working on them or the
 
 ## Important files
 
-[`entity_types.json`](../structure/entity_types.json) — Identifies [character entities](../entities/character_entity) and assigns them various properties. This is where character animations are assigned to their MGE purposes (idle, walk, action, etc. — and north, south, west, east), and while this assignment can be done within the [MGE encoder](../encoder/mge_encoder) using the [entity management system](../encoder/entity_management_system), the web browser cannot write to this file directly, and you will therefore need to copy the updated data into `entity_types.json` yourself.
+[`entity_types.json`](../structure/entity_types.json) — Identifies [character entities](../entities/entity_types#character-entity) and assigns them various properties. This is where character animations are assigned to their MGE purposes (idle, walk, action, etc. — and north, south, west, east), and while this assignment can be done within the [encoder](../encoder.md) using the [entity management system](../tilesets/entity_management_system.md), the web browser cannot write to this file directly, and you will therefore need to copy the updated data into `entity_types.json` yourself.
 
 [`maps.json`](../structure/maps.json) — This file is new for the chapter 2+ version of the MGE. Map properties defined in a map's Tiled JSON file (in the old way) are still honored, but it's recommended to move such properties to this file for easier access. The first map given is the map run when the game is opened.
 
-[`portraits.json`](../structure/portraits.json) — Data for portraits, and which reference tileset JSON files from the `entities/` folder. Portrait names should match associated [entity_type](../entities/character_entity) names, if any.
+[`portraits.json`](../structure/portraits.json) — Data for portraits, and which reference tileset JSON files from the `entities/` folder. Portrait names should match associated [entity_type](../entities/entity_types#character-entity) names, if any.
 
-[`scenario.json`](../structure/scenario.json) — This file tells the [MGE encoder](../encoder/mge_encoder) which JSON files to include for its scripts, dialogs, maps, and dialogSkins processing. (MGS files are converted to JSON and bundled with this data automatically, and need not be individually declared.)
+[`scenario.json`](../structure/scenario.json) — This file tells the [encoder](../encoder.md) which JSON files to include for its scripts, dialogs, maps, and dialogSkins processing. (MGS files are converted to JSON and bundled with this data automatically, and need not be individually declared.)

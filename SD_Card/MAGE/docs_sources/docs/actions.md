@@ -123,9 +123,9 @@ Manipulate MGE variables or set them to an arbitrary value.
 
 These actions check whether one of an [entity](../entities)'s [properties](../entities/entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.
 
-You can use [`%SELF%`](../entities/SELF) to target the entity running the script and [`%PLAYER%`](../entities/PLAYER) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).
+You can use [`%SELF%`](../entities/relative_entity_references#self) to target the entity running the script and [`%PLAYER%`](../entities/relative_entity_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).
 
-You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax/if_and_else).
+You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).
 
 - [CHECK_ENTITY_NAME](../actions/CHECK_ENTITY_NAME)
 - [CHECK_ENTITY_X](../actions/CHECK_ENTITY_X)
@@ -148,7 +148,7 @@ You can use the condition portion of these following actions with [if and else](
 
 Check whether one of the MGE variables matches a specific value. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.
 
-You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax/if_and_else).
+You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).
 
 - [CHECK_VARIABLE](../actions/CHECK_VARIABLE)
 - [CHECK_VARIABLES](../actions/CHECK_VARIABLES)

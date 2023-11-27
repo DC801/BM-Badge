@@ -1,6 +1,6 @@
 # CHECK_WARP_STATE
 
-Checks whether the [warp state string](../scripts/warp_state) is a specific value.
+Checks whether the [warp state string](../scripts/variables#warp_state) is a specific value.
 
 ## Example JSON
 
@@ -21,7 +21,7 @@ Checks whether the [warp state string](../scripts/warp_state) is a specific valu
 
 ## MGS Natlang
 
-The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax/if_and_else) condition statement, e.g.
+The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
 
 ```mgs
 script {

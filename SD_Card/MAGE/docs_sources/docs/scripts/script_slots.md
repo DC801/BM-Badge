@@ -10,7 +10,7 @@ Multiple [script](../scripts) can run at the same time (strictly speaking, they 
 	- one [`on_load`](../scripts/on_load) slot
 	- one [`on_tick`](../scripts/on_tick) slot
 	- one [`on_look`](../scripts/on_look) slot
-- There is also [command](../hardware/commands) slot for the serial [terminal](../hardware/terminal).
+- There is also [command](../commands.md) slot for the serial [terminal](../terminal.md).
 
 #verifyme — do the `on_look` slots use the `command` slot? They have their own space on the entity struct, so....
 
@@ -20,4 +20,4 @@ Importantly, a script slot can only run one script — if a script jumps to anot
 
 There is no nested callback structure, no child function returning something to its parent function, nor anything like that.
 
-Nor is it possible to do more than one logic check simultaneously. If you want to check multiple conditions at once, you must branch to a different script for each aspect of the fail condition and let the remainder of the original script contain the actions for the success condition. [MGS Natlang](../mgs/mgs_natlang) simplifies this a little bit by allowing multiple conditions to be written per behavior block, but these conditions can only be linked with OR (`||`) not AND (`&&`) for this reason; the [if and else](../mgs/advanced_syntax/if_and_else) macro expands each OR condition into an individual logic check and jump, jumping to a common [label](../mgs/advanced_syntax/labels) index for all shared `{}` behavior.
+Nor is it possible to do more than one logic check simultaneously. If you want to check multiple conditions at once, you must branch to a different script for each aspect of the fail condition and let the remainder of the original script contain the actions for the success condition. [MGS Natlang](../mgs/mgs_natlang) simplifies this a little bit by allowing multiple conditions to be written per behavior block, but these conditions can only be linked with OR (`||`) not AND (`&&`) for this reason; the [if and else](../mgs/advanced_syntax#if-and-else) macro expands each OR condition into an individual logic check and jump, jumping to a common [label](../mgs/advanced_syntax#labels) index for all shared `{}` behavior.

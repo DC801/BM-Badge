@@ -1,6 +1,6 @@
 # GOTO_ACTION_INDEX
 
-Jumps to the action at the given [label](../mgs/advanced_syntax/labels) ([bareword](../mgs/variables/bareword)) or action index ([number](../mgs/variables/number)). All jumps are made within the current [script](../scripts).
+Jumps to the action at the given [label](../mgs/advanced_syntax#labels) ([bareword](../mgs/variables_mgs#bareword)) or action index ([number](../mgs/variables_mgs#number)). All jumps are made within the current [script](../scripts).
 
 The index (number) variant is not recommended for manual use, as `COPY_SCRIPT` and procedural syntax expansion can make action indices impossible to predetermine.
 

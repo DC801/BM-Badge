@@ -1,6 +1,8 @@
-# Comments (JSON)
+# Comments
 
-If a JSON property isn't used by an [action](../actions), it will be entirely ignored by the [MGE encoder](../encoder/mge_encoder). This is the only way documentation or notes can be written in JSON script files, since JSON doesn't support comments.
+## JSON
+
+If a JSON property isn't used by an [action](../actions), it will be entirely ignored by the [encoder](../encoder.md). This is the only way documentation or notes can be written in JSON script files, since JSON doesn't support comments.
 
 Below is an example, where `"summary"` and `"to do"` are being used for the script writer's notes:
 
@@ -21,3 +23,7 @@ Below is an example, where `"summary"` and `"to do"` are being used for the scri
 ```
 
 Putting a small segment of dialog (enough to identify it) with each [SHOW_DIALOG](../actions/SHOW_DIALOG) segment makes it *dramatically* easier to manage them.
+
+## MGS Natlang
+
+See: [MGS Natlang Comments](../mgs/mgs_natlang_structure#comments)

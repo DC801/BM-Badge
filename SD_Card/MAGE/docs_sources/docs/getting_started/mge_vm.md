@@ -38,10 +38,10 @@ To run the game without compiling it again, double click `start_game.sh`.
 You could do all your game development in your host OS, but you might have to be a bit clever to get the encoded `game.dat` inside the VM environment. Instead, consider doing your game development 100% inside the VM:
 
 - Double click `open_ide.sh` to launch Visual Studio Code, which has been set up for you.
-- Launch Chromium by clicking the "whisker menu" in the top-left corner of the screen, then click "Web Browser." (You'll need Chromium to use the [web encoder](../encoder/web_encoder).)
+- Launch Chromium by clicking the "whisker menu" in the top-left corner of the screen, then click "Web Browser." (You'll need Chromium to use the [web encoder](../encoder.md#web-encoder).)
 
 ## Raw Game Data Folders
 
-The VM already contains the raw game data for BMG2020 (found in the folder [MAGE/scenario_source_files](../getting_started/scenario_source_files), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
+The VM already contains the raw game data for BMG2020 (found in the folder [MAGE/scenario_source_files](../getting_started/scenario_source_files)), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
 
-The [MGE encoder](../encoder/mge_encoder) is capable of generating a `game.dat` file from an arbitrary `scenario_source_files/` folder, so having multiple project folders is not a problem.
+The [encoder](../encoder.md) is capable of generating a `game.dat` file from an arbitrary `scenario_source_files/` folder, so having multiple project folders is not a problem.
