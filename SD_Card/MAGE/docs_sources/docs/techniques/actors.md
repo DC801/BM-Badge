@@ -4,7 +4,7 @@ You might want an [entity](../entities) to appear as another for a time. Let's c
 
 You might do this so that an entity can have a surprise cameo, or to reduce your entity count on the [map](../maps) in general.
 
-::: details Black Mage Game Chapter 1 Examples
+::: details Examples
 For the BMG2020, we used actors several times on the main map because we had already hit the entity budget (32 at the time; 64 now).
 
 **Walking to the lodge cutscene**: Helga played the part of Uncle Zappy, and Ram played the part of Aunt Zippy.

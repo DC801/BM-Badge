@@ -2,12 +2,6 @@
 
 One of the root level [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang).
 
-```
-settings (for) serial dialog {}
-```
-
-The `for` is optional:
-
 ```mgs
 settings for serial dialog {}
 //or
@@ -16,7 +10,13 @@ settings serial dialog {}
 
 Use these blocks to set global settings for [serial dialogs](../mgs/serial_dialogs_mgs).
 
-**Block contents**: any number of [serial dialog parameters](../mgs/serial_dialog_parameters_mgs) ([serial dialog property](../dialogs/serial_dialog_properties) and value pairs) in any order.
+**Block contents**: any number of [serial dialog parameters](../mgs/serial_dialog_parameters_mgs) ([serial dialog property](../dialogs/serial_dialog_properties) and value pairs) in any order. For example:
+
+```mgs
+settings for serial dialog {
+  wrap messages to 80
+}
+```
 
 ## Behavior
 

@@ -2,6 +2,21 @@
 
 NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
 
+```mgs{8-9}
+dialog sampleDialog {
+  SELF
+  alignment BOTTOM_RIGHT
+  emote 3
+  "Messages..."
+  "So many messages!"
+  "Don't you think?"
+  > "Not really." : goto script sampleScript1
+  > "Definitely." : goto script sampleScript2
+}
+```
+
+Syntax:
+
 ```
 > $label:quotedString : (goto) (script) $script:string
 ```

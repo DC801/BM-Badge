@@ -2,6 +2,19 @@
 
 NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
 
+```mgs{3-4}
+dialog sampleDialog {
+  SELF
+  alignment BOTTOM_RIGHT
+  emote 3
+  "Messages..."
+  "So many messages!"
+  "Don't you think?"
+  > "Not really." : goto script sampleScript1
+  > "Definitely." : goto script sampleScript2
+}
+```
+
 Dialog parameters are a [dialog property](../dialogs/dialog_properties) and value pair. Multiple dialog parameters can occur back-to-back in a single [dialog](../mgs/dialogs_mgs) or a [dialog settings target block](../mgs/dialog_settings_target_block).
 
 - `entity $string`

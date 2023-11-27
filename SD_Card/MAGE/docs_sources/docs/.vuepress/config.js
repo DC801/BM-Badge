@@ -12,6 +12,7 @@ const javascriptGrammar = JSON.parse(readFileSync("node_modules/shiki/languages/
 const rustGrammar = JSON.parse(readFileSync("node_modules/shiki/languages/rust.tmLanguage.json"))
 
 export default defineUserConfig({
+  base: '/magedocs/',
   lang: 'en-US',
   title: 'Mage Game Engine Documentation',
   description: 'Documentation for the DC801 Black Mage Game Engine',

@@ -48,7 +48,7 @@ Natlang is under active development, and the grammar may be updated — sometime
 
 We have provided syntax colors for a variety of text editors an IDEs, but particularly for Visual Studio Code. See: [Syntax Colors](../mgs/syntax_colors)
 
-A language server for Visual Studio Code is on the horizon, but will not be available soon.
+A language server for Visual Studio Code is on the horizon.
 
 ## In-Depth Info
 
