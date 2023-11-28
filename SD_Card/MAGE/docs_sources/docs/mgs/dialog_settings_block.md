@@ -1,6 +1,6 @@
 # Dialog Settings Block
 
-One of the root level [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang).
+One of the root level [blocks](../mgs/blocks) in [MGS Natlang](../mgs/mgs_natlang).
 
 ```mgs
 settings for dialog {}

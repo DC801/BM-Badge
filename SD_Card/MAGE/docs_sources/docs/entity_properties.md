@@ -10,7 +10,7 @@ These are default properties provided by Tiled. They're found in the top half of
 
 **Name** — In the MGE, names are limited to 12 ASCII characters.
 
-**Class** (formerly **Type**) — For character entities, this is the `entity_type`, or the name of the character entity as defined by [`entity_types.json`](getting_started/mage_folder#entity_types-json). This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
+**Class** (formerly **Type**) — For character entities, this is the `entity_type`, or the name of the character entity as defined by [`entity_types.json`](mage_folder#entity_types-json). This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
 
 **X** and **Y** position — You don't need to change these directly if you don't want to, since you can simply place or move entities on the map within Tiled itself.
 

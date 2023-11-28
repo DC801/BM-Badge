@@ -53,10 +53,10 @@ export default defineUserConfig({
         text: "Getting Started",
         collapsible: true,
         children: [
-          "/getting_started/what_youll_need.md",
-          "/getting_started/mge_vm.md",
-          "/getting_started/general_process.md",
-		  "/getting_started/mage_folder.md",
+          "/what_youll_need.md",
+          "/mge_vm.md",
+          "/general_process.md",
+		  "/mage_folder.md",
         ]
       },
 	  {
@@ -88,7 +88,7 @@ export default defineUserConfig({
 		  '/relative_references.md',
 		]
 	  },{
-		text: "Structure",
+		text: "Logic and Structure",
 		collapsible : true,
 		children: [
 			'/variables.md',
@@ -99,33 +99,12 @@ export default defineUserConfig({
 			'/script_slots.md',
 		]
 	  },
-		{
-			text: "Scripting Techniques",
-			collapsible : true,
-			children: [
-			  '/techniques/scripting_techniques.md',
-			  '/techniques/actors.md',
-			  '/techniques/coordinate_considerations.md',
-			  '/techniques/copy_script_uses.md',
-			  '/techniques/cutscenes.md',
-			  '/techniques/doors.md',
-			  '/techniques/handlers.md',
-			  '/techniques/hiding_an_entity.md',
-			  '/techniques/hint_systems.md',
-			  '/techniques/map_initialization_scripts.md',
-			  '/techniques/one_script_multiple_behaviors.md',
-			  '/techniques/spawn_points.md',
-			  '/techniques/beginnings_middles_and_ends.md',
-			  '/techniques/chains_of_small_checks.md',
-			  '/techniques/grand_finale_beatrice.md'
-			]
-		  },
 	  {
 		text: "Actions",
 		collapsible : true,
 		children: [
 		  '/actions.md',
-		  '/actions/conditional_gotos.md',
+		  '/conditional_gotos.md',
 		  {
 			text: "Game Management",
 			collapsible : true,
@@ -285,61 +264,50 @@ export default defineUserConfig({
 		  },
 		]
 	  },
+	  {
+		  text: "Scripting Techniques",
+		  collapsible : true,
+		  children: [
+			'/techniques/scripting_techniques.md',
+			'/techniques/actors.md',
+			'/techniques/coordinate_considerations.md',
+			'/techniques/copy_script_uses.md',
+			'/techniques/cutscenes.md',
+			'/techniques/doors.md',
+			'/techniques/handlers.md',
+			'/techniques/hiding_an_entity.md',
+			'/techniques/hint_systems.md',
+			'/techniques/map_initialization_scripts.md',
+			'/techniques/one_script_multiple_behaviors.md',
+			'/techniques/spawn_points.md',
+			'/techniques/beginnings_middles_and_ends.md',
+			'/techniques/chains_of_small_checks.md',
+			'/techniques/grand_finale_beatrice.md'
+		  ]
+		},
       {
         text: "MGS Natlang",
         collapsible : true,
         children: [
           '/mgs/mgs_natlang.md',
-          '/mgs/mgs_natlang_vs_json.md',
-          '/mgs/syntax_colors.md',
+		  '/mgs/mgs_natlang_structure.md',
           {
-            text: "Structure",
-            collapsible : true,
-            children: [
-              '/mgs/mgs_natlang_structure.md',
-              '/mgs/variables_mgs.md',
-              '/mgs/block.md',
+			  text: "Blocks",
+			  collapsible : true,
+			  children: [
+              '/mgs/blocks.md',
+              '/mgs/script_block.md',
               '/mgs/dialog_settings_block.md',
               '/mgs/dialog_settings_target_block.md',
               '/mgs/serial_dialog_settings_block.md',
-              '/mgs/script_block.md',
               '/mgs/dialog_block.md',
               '/mgs/serial_dialog_block.md',
-              '/mgs/advanced_syntax.md',
             ]
           },
-          {
-            text: "Scripts",
-            collapsible : true,
-            children: [
-              '/mgs/scripts_mgs.md',
-              '/mgs/combination_block.md',
-              '/mgs/show_dialog_block.md',
-              '/mgs/show_serial_dialog_block.md',
-            ]
-          },
-          {
-            text: "Dialogs",
-            collapsible : true,
-            children: [
-              '/mgs/dialogs_mgs.md',
-              '/mgs/dialog_identifier.md',
-              '/mgs/dialog_parameters_mgs.md',
-              '/mgs/dialog_messages_mgs.md',
-              '/mgs/dialog_options_mgs.md',
-            ]
-          },
-          {
-            text: "Serial Dialogs",
-            collapsible : true,
-            children: [
-              '/mgs/serial_dialogs_mgs.md',
-              '/mgs/serial_dialog_parameters_mgs.md',
-              '/mgs/serial_dialog_messages_mgs.md',
-              '/mgs/serial_dialog_options_mgs.md',
-              '/mgs/serial_styles.md',
-            ]
-          },
+		  '/mgs/variables_mgs.md',
+		  '/mgs/dialogs_mgs.md',
+		  '/mgs/serial_dialogs_mgs.md',
+		  '/mgs/advanced_syntax.md',
         ]
       },
       {

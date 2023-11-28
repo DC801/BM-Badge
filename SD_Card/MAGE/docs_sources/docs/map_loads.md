@@ -1,6 +1,6 @@
 # Map Loads
 
-The first map listed in [`maps.json`](getting_started/mage_folder#maps-json) is the map the game will load when first turned on. If you want the game to start on a different map (perhaps skipping an intro [cutscene](techniques/cutscenes) the player has seen before), you should handle this logic checking on the [maps](maps)' [`on_load`](script_slots#on-load) [script](scripts), and [load a different map](actions/LOAD_MAP) as appropriate.
+The first map listed in [`maps.json`](mage_folder#maps-json) is the map the game will load when first turned on. If you want the game to start on a different map (perhaps skipping an intro [cutscene](techniques/cutscenes) the player has seen before), you should handle this logic checking on the [maps](maps)' [`on_load`](script_slots#on-load) [script](scripts), and [load a different map](actions/LOAD_MAP) as appropriate.
 
 Maps can be assigned an `on_load` script, which will run once when a map is loaded.
 

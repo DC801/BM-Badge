@@ -1,6 +1,6 @@
 # CHECK_ENTITY_NAME
 
-Checks an [entity](../entities)'s [current name](../variables#printing-current-values)).
+Checks an [entity](../entities)'s [current name](../variables#printing-current-values).
 
 ## Example JSON
 
@@ -23,7 +23,7 @@ Checks an [entity](../entities)'s [current name](../variables#printing-current-v
 
 ## MGS Natlang
 
-The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
+The [condition](../conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.
 
 ```mgs
 script {

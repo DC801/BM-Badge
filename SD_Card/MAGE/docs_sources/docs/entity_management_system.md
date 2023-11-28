@@ -1,11 +1,11 @@
 # Entity Management System
 
-To manage entity [animations](animations), you must first upload your [`scenario_source_files`](getting_started/mage_folder#scenario_source_files) folder to the [encoder](encoder#web-encoder).
+To manage entity [animations](animations), you must first upload your [`scenario_source_files`](mage_folder#scenario_source_files) folder to the [encoder](encoder#web-encoder).
 
 NOTE: Changes you make using these tools are not automatically perpetuated to the `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
 
-1. Click the "Copy" button in the red box to put the new [`entity_types.json`](getting_started/mage_folder#entity_types-json) content into your clipboard.
-2. Manually paste into your [`entity_types.json`](getting_started/mage_folder#entity_types-json) file, replacing all previous content.
+1. Click the "Copy" button in the red box to put the new [`entity_types.json`](mage_folder#entity_types-json) content into your clipboard.
+2. Manually paste into your [`entity_types.json`](mage_folder#entity_types-json) file, replacing all previous content.
 3. Run the encoder again to perpetuate the changes to a new `game.dat`.
 
 ## New `entity_type`
@@ -34,7 +34,7 @@ To add an additional animation, press the "Add Animation" button. To remove one,
 
 Entities should have idle, walk, and action animations at the very least, but you can add more (to a point).
 
-You cannot change animation names with this tool — you must make such changes to [`entity_types.json`](getting_started/mage_folder#entity_types-json) by hand after you're done with everything else.
+You cannot change animation names with this tool — you must make such changes to [`entity_types.json`](mage_folder#entity_types-json) by hand after you're done with everything else.
 
 ## Tileset Pane
 

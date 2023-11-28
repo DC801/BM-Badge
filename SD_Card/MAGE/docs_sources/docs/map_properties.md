@@ -1,6 +1,6 @@
 # Map Properties
 
-Map properties reside either inside [`maps.json`](getting_started/mage_folder#maps-json) (preferred) or inside a JSON map file (legacy). To see the map's properties within Tiled, go to "Map > Map Properties…."
+Map properties reside either inside [`maps.json`](mage_folder#maps-json) (preferred) or inside a JSON map file (legacy). To see the map's properties within Tiled, go to "Map > Map Properties…."
 
 ## `path`
 

@@ -72,9 +72,9 @@ var colorCatMap = {
 	b: "bracket"
 };
 var actionsIntro = [
-	"**Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [entities](../entities).",
-	"They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](../scripts). They each have predefined arguments, and are indicated with \"SCREAMING_SNAKE_CASE.\" In the encoded game, they are 8 bytes a piece.",
-	"Each action requires specific JSON properties, but through [MGS Natlang](../mgs/mgs_natlang), they can instead be written as one or more \"natural language\" patterns which can then be converted into JSON.",
+	"**Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [entities](entities).",
+	"They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and are indicated with \"SCREAMING_SNAKE_CASE.\" In the encoded game, they are 8 bytes apiece.",
+	"Each action requires specific JSON properties, but through [MGS Natlang](mgs/mgs_natlang), they can instead be written as one or more \"natural language\" patterns which can then be converted into JSON.",
 ];
 
 var actionCategoryText = {
@@ -108,7 +108,7 @@ var actionCategoryText = {
 	],
 	"Check Entity Properties": [
 		"These actions check whether one of an [entity](../entities)'s [properties](../entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
-		"You can use [`%SELF%`](../entities/relative_entity_references#self) to target the entity running the script and [`%PLAYER%`](../entities/relative_entity_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
+		"You can use [`%SELF%`](../relative_references#self) to target the entity running the script and [`%PLAYER%`](../relative_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
 		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).",
 	],
 	"Check Variables": [
@@ -197,7 +197,7 @@ var actionText = {
 	"SET_LIGHTS_CONTROL": {
 		"category": "Game Management",
 		"info": [
-			"Enables (or disables) manual control of the [hex editing](../hardware/hex_editor) LED lights on the badge. This includes all 8 bit lights underneath the screen and the 4 lights on either side of the screen.",
+			"Enables (or disables) manual control of the [hex editing](../hex_editor) LED lights on the badge. This includes all 8 bit lights underneath the screen and the 4 lights on either side of the screen.",
 			"Note that gaining control of the lights does not clear the light state by default; the lights currently on will remain on until set with [SET_LIGHTS_STATE](../actions/SET_LIGHTS_STATE).",
 		]
 	},
@@ -221,7 +221,7 @@ var actionText = {
 		"info": [
 			"Outputs the named [serial dialog](../serial_dialogs) to a connected serial console.",
 			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](../actions/SET_SERIAL_DIALOG_CONTROL) first, then turn it back on again when finished.)",
-			"This action is also available as a [combination block](../mgs/combination_block): [show serial dialog block](../mgs/show_serial_dialog_block)."
+			"This action is also available as a [combination block](../mgs/combination_block): [show serial dialog block](../mgs/serial_dialog_block#show-serial-dialog-block)."
 		]
 	},
 	"CLOSE_SERIAL_DIALOG": {
@@ -410,25 +410,25 @@ var actionText = {
 	"CHECK_ENTITY_INTERACT_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [`on_interact`](../script_slots#on-interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_interact`](../script_slots#on-interact) [script](../script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_TICK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) [script](../script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_LOOK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [`on_look`](../script_slots#on-look) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_look`](../script_slots#on-look) [script](../script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether a [character entity](../entities/entity_types#character-entity) is currently the given [entity_type](../entity_properties).",
+			"Checks whether a [character entity](../entity_types#character-entity) is currently the given [entity_type](../entity_properties).",
 			"This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity \"Delmar\" is the type `old_man`). Otherwise you'd have to use a mix of [CHECK_ENTITY_PRIMARY_ID](../actions/CHECK_ENTITY_PRIMARY_ID) and [CHECK_ENTITY_PRIMARY_ID_TYPE](../actions/CHECK_ENTITY_PRIMARY_ID_TYPE) and also know in advance which ints you're checking for."
 		]
 	},
@@ -443,14 +443,14 @@ var actionText = {
 		"category": "Check Entity Properties",
 		"info": [
 			"Checks whether an [entity](../entities) has the given [secondary_id](../entity_types).",
-			"This entity property is only useful on [tile entities](../entities/entity_types#tile-entity), where the `secondary_id` determines which tile in the tileset is displayed.",
+			"This entity property is only useful on [tile entities](../entity_types#tile-entity), where the `secondary_id` determines which tile in the tileset is displayed.",
 			"Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID."
 		]
 	},
 	"CHECK_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [primary_id_type](../entity_types): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
+			"Checks an [entity](../entities)'s [primary_id_type](../entity_types): either (`0`) [tile](../entity_types#tile-entity), (`1`) [animation](../entity_types#animation-entity), or (`2`) [character](../entity_types#character-entity) (sometimes called `entity_type`)."
 		]
 	},
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
@@ -487,7 +487,7 @@ var actionText = {
 		"category": "Check Entity Properties",
 		"info": [
 			"Checks whether an [entity](../entities) is inside the named [geometry](../vector_objects).",
-			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/vector_objects#coordinate-overflow)."
+			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../vector_objects#coordinate-overflow)."
 		]
 	},
 	"SET_ENTITY_NAME": {
@@ -513,7 +513,7 @@ var actionText = {
 	"SET_ENTITY_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [entity_type](../entities/entity_types#character-entity). (See: [Entity Properties](../entity_properties))"
+			"Sets an [entity](../entities)'s [entity_type](../entity_types#character-entity). (See: [Entity Properties](../entity_properties))"
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID": {
@@ -527,13 +527,13 @@ var actionText = {
 		"category": "Set Entity Properties",
 		"info": [
 			"Sets an [entity](../entities)'s [secondary_id](../entity_properties).",
-			"This action will not be useful unless the entity is a [tile entity](../entities/entity_types#tile-entity) (`primary_id_type`: `1`)."
+			"This action will not be useful unless the entity is a [tile entity](../entity_types#tile-entity) (`primary_id_type`: `1`)."
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [primary_id_type](../entity_properties): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
+			"Sets an [entity](../entities)'s [primary_id_type](../entity_properties): either (`0`) [tile](../entity_types#tile-entity), (`1`) [animation](../entity_types#animation-entity), or (`2`) [character](../entity_types#character-entity) (sometimes called `entity_type`)."
 		]
 	},
 	"SET_ENTITY_PATH": {
@@ -634,7 +634,7 @@ var actionText = {
 	"SET_CAMERA_TO_FOLLOW_ENTITY": {
 		"category": "Camera Control",
 		"info": [
-			"Sets what the camera is following. ([`%PLAYER%`](../entities/relative_entity_references#player) is the default.)"
+			"Sets what the camera is following. ([`%PLAYER%`](../relative_references#player) is the default.)"
 		]
 	},
 	"TELEPORT_CAMERA_TO_GEOMETRY": {
@@ -659,13 +659,13 @@ var actionText = {
 	"PAN_CAMERA_ALONG_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"(might not work yet — instead, make a [null entity](../entities/entity_types#null-entity) and lock the camera to it)"
+			"(might not work yet — instead, make a [null entity](../entity_types#null-entity) and lock the camera to it)"
 		]
 	},
 	"LOOP_CAMERA_ALONG_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"(might not work yet — instead, make a [null entity](../entities/entity_types#null-entity) and lock the camera to it)"
+			"(might not work yet — instead, make a [null entity](../entity_types#null-entity) and lock the camera to it)"
 		]
 	},
 	"SET_SCREEN_SHAKE": {
@@ -721,7 +721,7 @@ var actionText = {
 		"category": "Script Control",
 		"info": [
 			"Sets an [entity](../entities)'s [`on_interact`](../script_slots#on-interact) script.",
-			"If you use this action to change the [script slot](../scripts/script_slots) that is currently running the action, any actions given afterward may not execute depending on what they are.",
+			"If you use this action to change the [script slot](../script_slots) that is currently running the action, any actions given afterward may not execute depending on what they are.",
 			"Because [entity properties](../entity_properties) are reset when a [map is loaded](../map_loads), and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
 		]
 	},
@@ -741,7 +741,7 @@ var actionText = {
 		"category": "Script Control",
 		"info": [
 			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script during its [`on_interact`](../script_slots#on-interact) event.",
-			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/relative_entity_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../script_slots#on-look).",
+			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../relative_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../script_slots#on-look).",
 			"Map variant: Script slots for these are [`on_load`](../script_slots#on-load), [`on_tick`](../script_slots#on-tick), and [on_command](../commands)."
 		]
 	}
@@ -1002,7 +1002,7 @@ var makeObsidianEntry = function (actionName) {
 		})
 		var abbrev = firstColorReport.slice(1, thenIndex);
 		var conditionSample = abbrev.map(function (item) { return item.value }).join(' ');
-		ret.push(`The [condition](../actions/conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.`);
+		ret.push(`The [condition](../conditional_gotos) portion of this action can be used inside an [if](../mgs/advanced_syntax#if-and-else) condition statement, e.g.`);
 		ret.push([
 			'```mgs',
 			'script {',

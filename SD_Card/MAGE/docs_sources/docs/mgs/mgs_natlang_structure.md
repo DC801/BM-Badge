@@ -19,11 +19,9 @@ scriptName {
 }
 ```
 
-## Basic Structure
-
 Commonly, Natlang syntax involves declarations followed by matching pairs of brackets:
 
-- [Blocks](../mgs/block): `BLOCK {}`
+- [Blocks](../mgs/blocks): `BLOCK {}`
 - [Macros](../mgs/advanced_syntax#macros): `MACRO!()`
 
 Free form phrases often have a known size, such as actions within a script block (with limited numbers of possible arrangements) or dialog parameters (which always appear in pairs). In such cases, terminating characters or brackets are not used.
@@ -42,7 +40,7 @@ In all "dictionary" syntax definitions in this documentation, words in parenthes
 
 ## Comments
 
-MGS Natlang supports two kinds of comments. Both can appear anywhere in an MGS file and inside any [block](../mgs/block).
+MGS Natlang supports two kinds of comments. Both can appear anywhere in an MGS file and inside any [block](../mgs/blocks).
 
 ### Inline comment
 

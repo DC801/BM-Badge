@@ -2,7 +2,7 @@
 
 Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script during its [`on_interact`](../script_slots#on-interact) event.
 
-Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/relative_entity_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../script_slots#on-look).
+Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../relative_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../script_slots#on-look).
 
 Map variant: Script slots for these are [`on_load`](../script_slots#on-load), [`on_tick`](../script_slots#on-tick), and [on_command](../commands).
 
