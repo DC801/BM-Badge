@@ -1,6 +1,6 @@
 # LOOP_ENTITY_ALONG_GEOMETRY
 
-Moves the [entity](../entities) along the [geometry object](../maps/vector_objects) object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
+Moves the [entity](../entities) along the [geometry object](../vector_objects) object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
 
 This action will loop forever, and cannot terminate on its own; no other action given below this one inside a script will execute after this action begins.
 

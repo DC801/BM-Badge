@@ -2,13 +2,13 @@
 
 **Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [entities](entities).
 
-They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and are indicated with "SCREAMING_SNAKE_CASE." In the encoded game, they are 8 bytes a piece.
+They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and are indicated with "SCREAMING_SNAKE_CASE." In the encoded game, they are 8 bytes apiece.
 
-Each action requires specific JSON properties, but through [MGS Natlang](mgs/mgs_natlang), they can instead be written as one or more "natural language" patterns which can then be converted into JSON.
+Each action requires specific JSON properties, but through [MGS Natlang](mgs/mgs_natlang), they can instead be written as one or more "natural language" patterns which are then be converted into JSON.
 
 ## Game Management
 
-Handle the general state of the game, such as [loading maps](maps/map_loads), timing game actions, enabling and disabling player input, and managing save states.
+Handle the general state of the game, such as [loading maps](map_loads), timing game actions, enabling and disabling player input, and managing save states.
 
 - [BLOCKING_DELAY](actions/BLOCKING_DELAY)
 - [NON_BLOCKING_DELAY](actions/NON_BLOCKING_DELAY)
@@ -60,7 +60,7 @@ Manipulate the camera's position or perform tricks like shaking the camera or fa
 
 ## Script Control
 
-Set a specific [`on_tick`](scripts/on_tick) or [`on_interact`](scripts/on_interact) script, run another script, or recursively copy the actions inside another script.
+Set a specific [`on_tick`](script_slots#on-tick) or [`on_interact`](script_slots#on-interact) script, run another script, or recursively copy the actions inside another script.
 
 - [RUN_SCRIPT](actions/RUN_SCRIPT)
 - [GOTO_ACTION_INDEX](actions/GOTO_ACTION_INDEX)
@@ -73,7 +73,7 @@ Set a specific [`on_tick`](scripts/on_tick) or [`on_interact`](scripts/on_intera
 
 ## Entity Choreography
 
-Move entities around the map using [vector objects](maps/vector_objects) placed with Tiled.
+Move entities around the map using [vector objects](vector_objects) placed with Tiled.
 
 NOTE: These actions can behave erratically if any of the vertices in the geometry object are subject to coordinate underflow.
 
@@ -121,7 +121,7 @@ Manipulate MGE variables or set them to an arbitrary value.
 
 ## Check Entity Properties
 
-These actions check whether one of an [entity](entities)'s [properties](entities/entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.
+These actions check whether one of an [entity](entities)'s [properties](entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.
 
 You can use [`%SELF%`](entities/relative_entity_references#self) to target the entity running the script and [`%PLAYER%`](entities/relative_entity_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).
 

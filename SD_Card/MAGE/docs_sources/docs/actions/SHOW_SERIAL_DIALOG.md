@@ -1,6 +1,6 @@
 # SHOW_SERIAL_DIALOG
 
-Outputs the named [serial dialog](../dialogs/serial_dialogs) to a connected serial console.
+Outputs the named [serial dialog](../serial_dialogs) to a connected serial console.
 
 The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](../SET_SERIAL_DIALOG_CONTROL) first, then turn it back on again when finished.)
 

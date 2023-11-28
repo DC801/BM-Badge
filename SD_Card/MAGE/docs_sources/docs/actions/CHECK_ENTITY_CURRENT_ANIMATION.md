@@ -1,6 +1,6 @@
 # CHECK_ENTITY_CURRENT_ANIMATION
 
-Checks the id of the [entity](../entities)'s [current animation](../entities/entity_properties). (See [entity animations](../tilesets/animations) for what numbers correspond to which animations.)
+Checks the id of the [entity](../entities)'s [current animation](../entity_properties). (See [entity animations](../animations) for what numbers correspond to which animations.)
 
 ## Example JSON
 

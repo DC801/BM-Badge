@@ -1,6 +1,6 @@
 # LOAD_MAP
 
-Except for the player's name, all [entity properties](../entities/entity_properties) are reset to their original values when a new [map is loaded](../maps/map_loads).
+Except for the player's name, all [entity properties](../entity_properties) are reset to their original values when a new [map is loaded](../map_loads).
 
 If this action is told to load the current map, the current map will be reset. This behavior is equivalent to pressing `XOR` + `MEM3`.
 

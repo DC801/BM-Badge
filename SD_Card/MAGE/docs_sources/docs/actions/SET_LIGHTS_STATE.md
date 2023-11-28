@@ -4,7 +4,7 @@ Turns on (or off) a specific LED light on the badge. The lights immediately arou
 
 If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)
 
-See [LED IDs](../structure/led_ids) for a list of valid `lights` values.
+See [LED IDs](../enums#led-ids) for a list of valid `lights` values.
 
 ## Example JSON
 

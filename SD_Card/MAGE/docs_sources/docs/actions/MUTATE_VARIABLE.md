@@ -1,8 +1,8 @@
 # MUTATE_VARIABLE
 
-Manipulate the value of a specific [variable](../scripts/variables#integer-variables) or set it to a new value.
+Manipulate the value of a specific [variable](../variables#integer-variables) or set it to a new value.
 
-See [operations](../structure/operations).
+See [operations](../enums#operations).
 
 ## Example JSON
 

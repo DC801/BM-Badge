@@ -1,6 +1,6 @@
 # SET_ENTITY_CURRENT_FRAME
 
-Set the frame of the current [animation](../tilesets/animations).
+Set the frame of the current [animation](../animations).
 
 This is useful for staggering the animations of [entities](../entities) that have identical animation timings.
 

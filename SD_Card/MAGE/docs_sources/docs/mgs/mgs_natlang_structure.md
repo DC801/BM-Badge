@@ -30,7 +30,7 @@ Free form phrases often have a known size, such as actions within a script block
 
 However, due to an increasing desire for complex syntax parsing, terminating or separating characters being gradually introduced. As of late 2023, this is limited to semicolons (`;`) being used to mark the end of an action:
 
-- [Actions](../actions.md): `ACTION;`
+- [Actions](../actions): `ACTION;`
 
 ## Variables
 
@@ -55,7 +55,7 @@ testScript {
 
 This is the only time that line breaks are syntactic in Natlang. Inline comments start with `//` and end either with a line break or the end of the document.
 
-Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [extraneous properties from actions](../comments.md) and the like and turn them into inline comments automatically.
+Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [extraneous properties from actions](../comments) and the like and turn them into inline comments automatically.
 
 ### Block comment
 

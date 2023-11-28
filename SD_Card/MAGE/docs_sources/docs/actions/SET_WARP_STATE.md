@@ -1,6 +1,6 @@
 # SET_WARP_STATE
 
-Set the [warp state string](../scripts/variables#warp_state) to a specific value.
+Set the [warp state string](../variables#warp_state) to a specific value.
 
 ## Example JSON
 

@@ -1,6 +1,6 @@
 # PAN_CAMERA_ALONG_GEOMETRY
 
-(might not work yet — instead, make a [null entity](../entities/entity_types#null-entity) and lock the camera to it)
+(might not work yet — instead, make a [null entity](../entity_types#null-entity) and lock the camera to it)
 
 ## Example JSON
 

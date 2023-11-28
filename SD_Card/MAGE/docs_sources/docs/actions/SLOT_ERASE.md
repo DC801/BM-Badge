@@ -1,6 +1,6 @@
 # SLOT_ERASE
 
-This action clears all the [save data](../scripts/save_data) in the given slot.
+This action clears all the [save data](../variables#save_data) in the given slot.
 
 ## Example JSON
 

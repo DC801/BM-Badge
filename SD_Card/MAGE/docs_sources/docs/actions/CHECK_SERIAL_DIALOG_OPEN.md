@@ -1,6 +1,6 @@
 # CHECK_SERIAL_DIALOG_OPEN
 
-Checks whether a [serial dialog](../dialogs/serial_dialogs) is currently awaiting user input, such as a [free response question or a multiple choice question](../serial dialog options).
+Checks whether a [serial dialog](../serial_dialogs) is currently awaiting user input, such as a [free response question or a multiple choice question](../serial_dialogs#multiple-choice).
 
 ## Example JSON
 

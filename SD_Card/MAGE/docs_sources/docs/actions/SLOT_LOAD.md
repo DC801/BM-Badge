@@ -1,6 +1,6 @@
 # SLOT_LOAD
 
-This brings the [save data](../scripts/save_data) associated with that slot into RAM.
+This brings the [save data](../variables#save_data) associated with that slot into RAM.
 
 The slot is set to `0` by default.
 

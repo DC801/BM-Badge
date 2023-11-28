@@ -1,6 +1,6 @@
 # SET_ENTITY_NAME
 
-Sets an [entity](../entities)'s [name](../entities/entity_properties).
+Sets an [entity](../entities)'s [name](../entity_properties).
 
 ## Example JSON
 

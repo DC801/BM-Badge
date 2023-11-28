@@ -1,6 +1,6 @@
 # CHECK_ENTITY_NAME
 
-Checks an [entity](../entities)'s [current name](../scripts/printing_current_values).
+Checks an [entity](../entities)'s [current name](../variables#printing-current-values)).
 
 ## Example JSON
 

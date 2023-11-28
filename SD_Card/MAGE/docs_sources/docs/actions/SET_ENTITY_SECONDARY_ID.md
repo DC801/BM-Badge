@@ -1,8 +1,8 @@
 # SET_ENTITY_SECONDARY_ID
 
-Sets an [entity](../entities)'s [secondary_id](../entities/entity_properties).
+Sets an [entity](../entities)'s [secondary_id](../entity_properties).
 
-This action will not be useful unless the entity is a [tile entity](../entities/entity_types#tile-entity) (`primary_id_type`: `1`).
+This action will not be useful unless the entity is a [tile entity](../entity_types#tile-entity) (`primary_id_type`: `1`).
 
 ## Example JSON
 

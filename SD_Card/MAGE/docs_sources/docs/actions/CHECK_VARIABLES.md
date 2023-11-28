@@ -1,6 +1,6 @@
 # CHECK_VARIABLES
 
-Compares the value of a [variable](../scripts/variables#integer-variables) against another.
+Compares the value of a [variable](../variables#integer-variables) against another.
 
 `==` is assumed if no [operator](../mgs/variables_mgs#operator) is given.
 

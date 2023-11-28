@@ -10,7 +10,7 @@ settings serial dialog {}
 
 Use these blocks to set global settings for [serial dialogs](../mgs/serial_dialogs_mgs).
 
-**Block contents**: any number of [serial dialog parameters](../mgs/serial_dialog_parameters_mgs) ([serial dialog property](../dialogs/serial_dialog_properties) and value pairs) in any order. For example:
+**Block contents**: any number of [serial dialog parameters](../mgs/serial_dialog_parameters_mgs) ([serial dialog property](../serial_dialogs#properties) and value pairs) in any order. For example:
 
 ```mgs
 settings for serial dialog {

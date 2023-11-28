@@ -79,7 +79,7 @@ var actionsIntro = [
 
 var actionCategoryText = {
 	"Game Management": [
-		"Handle the general state of the game, such as [loading maps](../maps/map_loads), timing game actions, enabling and disabling player input, and managing save states."
+		"Handle the general state of the game, such as [loading maps](../map_loads), timing game actions, enabling and disabling player input, and managing save states."
 	],
 	"Hex Editor": [
 		"Enable or disable player control of specific game features, and otherwise manage the hex editor state."
@@ -91,14 +91,14 @@ var actionCategoryText = {
 		"Manipulate the camera's position or perform tricks like shaking the camera or fading the screen in and out to an arbitrary color."
 	],
 	"Script Control": [
-		"Set a specific [`on_tick`](../scripts/on_tick) or [`on_interact`](../scripts/on_interact) script, run another script, or recursively copy the actions inside another script."
+		"Set a specific [`on_tick`](../script_slots#on-tick) or [`on_interact`](../script_slots#on-interact) script, run another script, or recursively copy the actions inside another script."
 	],
 	"Entity Choreography": [
-		"Move entities around the map using [vector objects](../maps/vector_objects) placed with Tiled.",
+		"Move entities around the map using [vector objects](../vector_objects) placed with Tiled.",
 		"NOTE: These actions can behave erratically if any of the vertices in the geometry object are subject to coordinate underflow."
 	],
 	"Entity Appearance": [
-		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](../NON_BLOCKING_DELAY)."
+		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](../actions/NON_BLOCKING_DELAY)."
 	],
 	"Set Entity Properties": [
 		"Set a specific property on a specific [entity](../entities)."
@@ -107,7 +107,7 @@ var actionCategoryText = {
 		"Manipulate MGE variables or set them to an arbitrary value."
 	],
 	"Check Entity Properties": [
-		"These actions check whether one of an [entity](../entities)'s [properties](../entities/entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
+		"These actions check whether one of an [entity](../entities)'s [properties](../entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
 		"You can use [`%SELF%`](../entities/relative_entity_references#self) to target the entity running the script and [`%PLAYER%`](../entities/relative_entity_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
 		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).",
 	],
@@ -121,7 +121,7 @@ var actionText = {
 	"BLOCKING_DELAY": {
 		"category": "Game Management",
 		"info": [
-			"This pauses the entire game, including all other [script](../scripts) and [animations](../tilesets/animations), for the given duration.",
+			"This pauses the entire game, including all other [script](../scripts) and [animations](../animations), for the given duration.",
 			"As this might make the game appear broken, you should probably use a [NON_BLOCKING_DELAY](../actions/NON_BLOCKING_DELAY) instead."
 		]
 	},
@@ -136,23 +136,23 @@ var actionText = {
 	"SET_PLAYER_CONTROL": {
 		"category": "Game Management",
 		"info": [
-			"When player control is `on`, the player [entity](../entities) can move around as normal. When `off`, the player cannot move, hack, or [interact](../scripts/on_interact) with anything.",
+			"When player control is `on`, the player [entity](../entities) can move around as normal. When `off`, the player cannot move, hack, or [interact](../script_slots#on-interact) with anything.",
 			"This is set to `on` (`true`) by default."
 		]
 	},
 	"LOAD_MAP": {
 		"category": "Game Management",
 		"info": [
-			"Except for the player's name, all [entity properties](../entities/entity_properties) are reset to their original values when a new [map is loaded](../maps/map_loads).",
+			"Except for the player's name, all [entity properties](../entity_properties) are reset to their original values when a new [map is loaded](../map_loads).",
 			"If this action is told to load the current map, the current map will be reset. This behavior is equivalent to pressing `XOR` + `MEM3`.",
-			"For most normal [door](../techniques/doors) behavior, you will probably want to [set the warp state](../SET_WARP_STATE) before using the this action."
+			"For most normal [door](../techniques/doors) behavior, you will probably want to [set the warp state](../actions/SET_WARP_STATE) before using the this action."
 		]
 	},
 	"SLOT_SAVE": {
 		"category": "Game Management",
 		"omitExample": true,
 		"info": [
-			"This action saves the [game state](../scripts/save_data) into the current slot (the last slot loaded).",
+			"This action saves the [game state](../variables#save_data) into the current slot (the last slot loaded).",
 			"It is not possible to write save data into an arbitrary slots, nor is it possible to copy data from one save slot into another.",
 			"Things that are saved:",
 `- player name (string)
@@ -167,14 +167,14 @@ var actionText = {
 	"SLOT_LOAD": {
 		"category": "Game Management",
 		"info": [
-			"This brings the [save data](../scripts/save_data) associated with that slot into RAM.",
+			"This brings the [save data](../variables#save_data) associated with that slot into RAM.",
 			"The slot is set to `0` by default."
 		]
 	},
 	"SLOT_ERASE": {
 		"category": "Game Management",
 		"info": [
-			"This action clears all the [save data](../scripts/save_data) in the given slot."
+			"This action clears all the [save data](../variables#save_data) in the given slot."
 		]
 	},
 	"SHOW_DIALOG": {
@@ -206,7 +206,7 @@ var actionText = {
 		"info": [
 			"Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](../actions/SET_LIGHTS_CONTROL)); otherwise, those lights are strictly used for hex editor features.",
 			"If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)",
-			"See [LED IDs](../structure/led_ids) for a list of valid `lights` values."
+			"See [LED IDs](../enums#led-ids) for a list of valid `lights` values."
 		]
 	},
 	"SET_SERIAL_DIALOG_CONTROL": {
@@ -219,21 +219,21 @@ var actionText = {
 	"SHOW_SERIAL_DIALOG": {
 		"category": "Serial Console",
 		"info": [
-			"Outputs the named [serial dialog](../dialogs/serial_dialogs) to a connected serial console.",
-			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](../SET_SERIAL_DIALOG_CONTROL) first, then turn it back on again when finished.)",
+			"Outputs the named [serial dialog](../serial_dialogs) to a connected serial console.",
+			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](../actions/SET_SERIAL_DIALOG_CONTROL) first, then turn it back on again when finished.)",
 			"This action is also available as a [combination block](../mgs/combination_block): [show serial dialog block](../mgs/show_serial_dialog_block)."
 		]
 	},
 	"CLOSE_SERIAL_DIALOG": {
 		"category": "Serial Console",
 		"info": [
-			"Ends any [serial dialog](../dialogs/serial_dialogs) that is awaiting user input, such as a [free response question or a multiple choice question](../serial dialog options)."
+			"Ends any [serial dialog](../serial_dialogs) that is awaiting user input, such as a [free response question or a multiple choice question](../serial-dialog#options)."
 		]
 	},
 	"SET_CONNECT_SERIAL_DIALOG": {
 		"category": "Serial Console",
 		"info": [
-			"Sets the serial connection message to the named [serial dialog](../dialogs/serial_dialogs). (The connection message is sent whenever a serial console is newly connected to the badge hardware.)",
+			"Sets the serial connection message to the named [serial dialog](../serial_dialogs). (The connection message is sent whenever a serial console is newly connected to the badge hardware.)",
 			"This action is also available as a [combination block](../mgs/combination_block)."
 		]
 	},
@@ -254,14 +254,14 @@ var actionText = {
 	"REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT": {
 		"category": "Serial Console",
 		"info": [
-			"This action registers an argument (and a script) for an [already-registered serial command](../REGISTER_SERIAL_DIALOG_COMMAND).",
+			"This action registers an argument (and a script) for an [already-registered serial command](../actions/REGISTER_SERIAL_DIALOG_COMMAND).",
 			"Arguments can be multiple words. In-game, if the second word is `at` or `to` it is ignored, e.g. `> warp to my house` (after running `register \"warp\" + \"my house\"`)."
 		]
 	},
 	"UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT": {
 		"category": "Serial Console",
 		"info": [
-			"This action unregisters the specified argument from an [already-registered serial command](../REGISTER_SERIAL_DIALOG_COMMAND)."
+			"This action unregisters the specified argument from an [already-registered serial command](../actions/REGISTER_SERIAL_DIALOG_COMMAND)."
 		]
 	},
 	// "SET_HEX_CURSOR_LOCATION": {
@@ -298,21 +298,21 @@ var actionText = {
 	"CHECK_VARIABLE": {
 		"category": "Check Variables",
 		"info": [
-			"Compares the value of a [variable](../scripts/variables#integer-variables) against the given value.",
+			"Compares the value of a [variable](../variables#integer-variables) against the given value.",
 			"`==` is assumed if no [operator](../mgs/variables_mgs#operator) is given."
 		]
 	},
 	"CHECK_VARIABLES": {
 		"category": "Check Variables",
 		"info": [
-			"Compares the value of a [variable](../scripts/variables#integer-variables) against another.",
+			"Compares the value of a [variable](../variables#integer-variables) against another.",
 			"`==` is assumed if no [operator](../mgs/variables_mgs#operator) is given."
 		]
 	},
 	"CHECK_SAVE_FLAG": {
 		"category": "Check Variables",
 		"info": [
-			"Checks one of the [save flags](../scripts/variables#save-flags) (booleans)."
+			"Checks one of the [save flags](../variables#save-flags) (booleans)."
 		]
 	},
 	"CHECK_FOR_BUTTON_PRESS": {
@@ -321,8 +321,8 @@ var actionText = {
 			"Checks whether a button was actively pressed down that game tick.",
 			"That is, the game keeps track of button state changes each game tick, and this action detects whether the target button had a change of state from *not pressed* to *pressed* that game tick. If the target button was *already pressed* when this action runs, this action will not result in a script branch.",
 			"To instead check the button's state (regardless of whether that state has changed) see [CHECK_FOR_BUTTON_STATE](../actions/CHECK_FOR_BUTTON_STATE).",
-			"NOTE: The button states are reset when a [new map is loaded](../maps/map_loads). If listening for a button press in the new map, this action may very will trigger immediately, even if the button was held down through the map load.",
-			"See [button IDs](../structure/button_ids) for a list of valid button values."
+			"NOTE: The button states are reset when a [new map is loaded](../map_loads). If listening for a button press in the new map, this action may very will trigger immediately, even if the button was held down through the map load.",
+			"See [button IDs](../enums#button-ids) for a list of valid button values."
 		]
 	},
 	"CHECK_FOR_BUTTON_STATE": {
@@ -336,7 +336,7 @@ var actionText = {
 	"CHECK_WARP_STATE": {
 		"category": "Check Variables",
 		"info": [
-			"Checks whether the [warp state string](../scripts/variables#warp_state) is a specific value.",
+			"Checks whether the [warp state string](../variables#warp_state) is a specific value.",
 		]
 	},
 	"CHECK_DIALOG_OPEN": {
@@ -348,7 +348,7 @@ var actionText = {
 	"CHECK_SERIAL_DIALOG_OPEN": {
 		"category": "Check Variables",
 		"info": [
-			"Checks whether a [serial dialog](../dialogs/serial_dialogs) is currently awaiting user input, such as a [free response question or a multiple choice question](../serial dialog options).",
+			"Checks whether a [serial dialog](../serial_dialogs) is currently awaiting user input, such as a [free response question or a multiple choice question](../serial-dialog#options).",
 		]
 	},
 	"CHECK_DEBUG_MODE": {
@@ -360,89 +360,89 @@ var actionText = {
 	"SET_SAVE_FLAG": {
 		"category": "Set Variables",
 		"info": [
-			"Set a [save flag](../scripts/variables#save-flags) to `true` or `false`.",
+			"Set a [save flag](../variables#save-flags) to `true` or `false`.",
 		]
 	},
 	"SET_WARP_STATE": {
 		"category": "Set Variables",
 		"info": [
-			"Set the [warp state string](../scripts/variables#warp_state) to a specific value.",
+			"Set the [warp state string](../variables#warp_state) to a specific value.",
 		]
 	},
 	"MUTATE_VARIABLE": {
 		"category": "Set Variables",
 		"info": [
-			"Manipulate the value of a specific [variable](../scripts/variables#integer-variables) or set it to a new value.",
-			"See [operations](../structure/operations)."
+			"Manipulate the value of a specific [variable](../variables#integer-variables) or set it to a new value.",
+			"See [operations](../enums#operations)."
 		]
 	},
 	"MUTATE_VARIABLES": {
 		"category": "Set Variables",
 		"info": [
-			"Manipulate the value of a specific [variable](../scripts/variables#integer-variables) by using the value of another variable.",
-			"See [operations](../structure/operations)."
+			"Manipulate the value of a specific [variable](../variables#integer-variables) by using the value of another variable.",
+			"See [operations](../enums#operations)."
 		]
 	},
 	"COPY_VARIABLE": {
 		"category": "Set Variables",
 		"info": [
-			"Copies the value of an [entity](../entities) [property](../entities/entity_properties) into a [variable](../scripts/variables#integer-variables) or vice versa.",
+			"Copies the value of an [entity](../entities) [property](../entity_properties) into a [variable](../variables#integer-variables) or vice versa.",
 		]
 	},
 	"CHECK_ENTITY_NAME": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [current name](../scripts/printing_current_values).",
+			"Checks an [entity](../entities)'s [current name](../variables#printing-current-values).",
 		]
 	},
 	"CHECK_ENTITY_X": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [x](../entities/entity_properties) coordinate.",
+			"Checks an [entity](../entities)'s [x](../entity_properties) coordinate.",
 		]
 	},
 	"CHECK_ENTITY_Y": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [y](../entities/entity_properties) coordinate.",
+			"Checks an [entity](../entities)'s [y](../entity_properties) coordinate.",
 		]
 	},
 	"CHECK_ENTITY_INTERACT_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [`on_interact`](../scripts/on_interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_interact`](../script_slots#on-interact) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_TICK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [`on_tick`](../scripts/on_tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_LOOK_SCRIPT": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [`on_look`](../scripts/on_look) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
+			"Checks an [entity](../entities)'s [`on_look`](../script_slots#on-look) [script](../scripts/script_slots) (by the [script](../scripts)'s name).",
 		]
 	},
 	"CHECK_ENTITY_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether a [character entity](../entities/entity_types#character-entity) is currently the given [entity_type](../entities/entity_properties).",
+			"Checks whether a [character entity](../entities/entity_types#character-entity) is currently the given [entity_type](../entity_properties).",
 			"This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity \"Delmar\" is the type `old_man`). Otherwise you'd have to use a mix of [CHECK_ENTITY_PRIMARY_ID](../actions/CHECK_ENTITY_PRIMARY_ID) and [CHECK_ENTITY_PRIMARY_ID_TYPE](../actions/CHECK_ENTITY_PRIMARY_ID_TYPE) and also know in advance which ints you're checking for."
 		]
 	},
 	"CHECK_ENTITY_PRIMARY_ID": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [entity](../entities) has the given [primary_id](../entities/entity_types).",
+			"Checks whether an [entity](../entities) has the given [primary_id](../entity_types).",
 			"[CHECK_ENTITY_TYPE](../actions/CHECK_ENTITY_TYPE) is recommended instead."
 		]
 	},
 	"CHECK_ENTITY_SECONDARY_ID": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [entity](../entities) has the given [secondary_id](../entities/entity_types).",
+			"Checks whether an [entity](../entities) has the given [secondary_id](../entity_types).",
 			"This entity property is only useful on [tile entities](../entities/entity_types#tile-entity), where the `secondary_id` determines which tile in the tileset is displayed.",
 			"Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID."
 		]
@@ -450,19 +450,19 @@ var actionText = {
 	"CHECK_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks an [entity](../entities)'s [primary_id_type](../entities/entity_types): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
+			"Checks an [entity](../entities)'s [primary_id_type](../entity_types): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
 		]
 	},
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks the id of the [entity](../entities)'s [current animation](../entities/entity_properties). (See [entity animations](../tilesets/animations) for what numbers correspond to which animations.)"
+			"Checks the id of the [entity](../entities)'s [current animation](../entity_properties). (See [entity animations](../animations) for what numbers correspond to which animations.)"
 		]
 	},
 	"CHECK_ENTITY_CURRENT_FRAME": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks the frame (number) of the [entity](../entities)'s current [entity animations](../tilesets/animations)."
+			"Checks the frame (number) of the [entity](../entities)'s current [entity animations](../animations)."
 		]
 	},
 	"CHECK_ENTITY_DIRECTION": {
@@ -480,91 +480,91 @@ var actionText = {
 	"CHECK_ENTITY_PATH": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks the `path` name ([geometry](../maps/vector_objects)) of an [entity](../entities)."
+			"Checks the `path` name ([geometry](../vector_objects)) of an [entity](../entities)."
 		]
 	},
 	"CHECK_IF_ENTITY_IS_IN_GEOMETRY": {
 		"category": "Check Entity Properties",
 		"info": [
-			"Checks whether an [entity](../entities) is inside the named [geometry](../maps/vector_objects).",
+			"Checks whether an [entity](../entities) is inside the named [geometry](../vector_objects).",
 			"This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/vector_objects#coordinate-overflow)."
 		]
 	},
 	"SET_ENTITY_NAME": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [name](../entities/entity_properties)."
+			"Sets an [entity](../entities)'s [name](../entity_properties)."
 		]
 	},
 	"SET_ENTITY_X": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [x](../entities/entity_properties) coordinate.",
-			"In practice, you will likely want to use [geometry vectors](../maps/vector_objects) and teleport actions instead."
+			"Sets an [entity](../entities)'s [x](../entity_properties) coordinate.",
+			"In practice, you will likely want to use [geometry vectors](../vector_objects) and teleport actions instead."
 		]
 	},
 	"SET_ENTITY_Y": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [y](../entities/entity_properties) coordinate.",
-			"In practice, you will likely want to use [geometry vectors](../maps/vector_objects) and teleport actions instead."
+			"Sets an [entity](../entities)'s [y](../entity_properties) coordinate.",
+			"In practice, you will likely want to use [geometry vectors](../vector_objects) and teleport actions instead."
 		]
 	},
 	"SET_ENTITY_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [entity_type](../entities/entity_types#character-entity). (See: [Entity Properties](../entities/entity_properties))"
+			"Sets an [entity](../entities)'s [entity_type](../entities/entity_types#character-entity). (See: [Entity Properties](../entity_properties))"
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [primary_id](../entities/entity_properties).",
+			"Sets an [entity](../entities)'s [primary_id](../entity_properties).",
 			"You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](../actions/SET_ENTITY_TYPE)."
 		]
 	},
 	"SET_ENTITY_SECONDARY_ID": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [secondary_id](../entities/entity_properties).",
+			"Sets an [entity](../entities)'s [secondary_id](../entity_properties).",
 			"This action will not be useful unless the entity is a [tile entity](../entities/entity_types#tile-entity) (`primary_id_type`: `1`)."
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID_TYPE": {
 		"category": "Set Entity Properties",
 		"info": [
-			"Sets an [entity](../entities)'s [primary_id_type](../entities/entity_properties): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
+			"Sets an [entity](../entities)'s [primary_id_type](../entity_properties): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`)."
 		]
 	},
 	"SET_ENTITY_PATH": {
 		"category": "Entity Choreography",
 		"info": [
-			"This assigns a [geometry object](../maps/vector_objects) to an [entity](../entities). Afterward, the entity can use `%ENTITY_PATH%` to refer to that path. (This assignment can also be done within Tiled.)"
+			"This assigns a [geometry object](../vector_objects) to an [entity](../entities). Afterward, the entity can use `%ENTITY_PATH%` to refer to that path. (This assignment can also be done within Tiled.)"
 		]
 	},
 	"TELEPORT_ENTITY_TO_GEOMETRY": {
 		"category": "Entity Choreography",
 		"info": [
-			"Moves the [entity](../entities) instantly to the first vertex of the specified [geometry object](../maps/vector_objects) (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`)."
+			"Moves the [entity](../entities) instantly to the first vertex of the specified [geometry object](../vector_objects) (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`)."
 		]
 	},
 	"WALK_ENTITY_TO_GEOMETRY": {
 		"category": "Entity Choreography",
 		"info": [
-			"Moves the [entity](../entities) in a straight line from its current position to the first vertex of the [geometry object](../maps/vector_objects) named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time."
+			"Moves the [entity](../entities) in a straight line from its current position to the first vertex of the [geometry object](../vector_objects) named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time."
 		]
 	},
 	"WALK_ENTITY_ALONG_GEOMETRY": {
 		"category": "Entity Choreography",
 		"info": [
-			"Moves the [entity](../entities) along the [geometry object](../maps/vector_objects) named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.",
+			"Moves the [entity](../entities) along the [geometry object](../vector_objects) named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.",
 			"NOTE: Unless you want the entity to teleport to the geometry's origin point, you should probably use [WALK_ENTITY_TO_GEOMETRY](../actions/WALK_ENTITY_TO_GEOMETRY) first."
 		]
 	},
 	"LOOP_ENTITY_ALONG_GEOMETRY": {
 		"category": "Entity Choreography",
 		"info": [
-			"Moves the [entity](../entities) along the [geometry object](../maps/vector_objects) object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.",
+			"Moves the [entity](../entities) along the [geometry object](../vector_objects) object named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.",
 			"This action will loop forever, and cannot terminate on its own; no other action given below this one inside a script will execute after this action begins.",
 			"NOTE: Unless you want the entity to teleport to the geometry's origin point, you should probably use [WALK_ENTITY_TO_GEOMETRY](../actions/WALK_ENTITY_TO_GEOMETRY) first."
 		]
@@ -572,24 +572,24 @@ var actionText = {
 	"PLAY_ENTITY_ANIMATION": {
 		"category": "Entity Appearance",
 		"info": [
-			"The [entity](../entities) will play the given [animation](../tilesets/animations) the given number of times, and then will return to its default animation.",
+			"The [entity](../entities) will play the given [animation](../animations) the given number of times, and then will return to its default animation.",
 			"A [script](../scripts) that runs this action will not execute any further actions until the play count has been satisfied.",
 			"If an entity is compelled to move around on the map, it will abort this animation playback.",
-			"See [entity animations](../tilesets/animations) for what numbers correspond to which animations."
+			"See [entity animations](../animations) for what numbers correspond to which animations."
 		]
 	},
 	"SET_ENTITY_CURRENT_ANIMATION": {
 		"category": "Entity Appearance",
 		"info": [
-			"The [entity](../entities) will switch to the given [animation](../tilesets/animations), which will loop indefinitely.",
+			"The [entity](../entities) will switch to the given [animation](../animations), which will loop indefinitely.",
 			"If an entity is compelled to move around on the map, it will abort this animation playback. (I.e. when the entity stops moving again, it will revert to its default animation, not the one given by this action.)",
-			"See [entity animations](../tilesets/animations) for what numbers correspond to which animations."
+			"See [entity animations](../animations) for what numbers correspond to which animations."
 		]
 	},
 	"SET_ENTITY_CURRENT_FRAME": {
 		"category": "Entity Appearance",
 		"info": [
-			"Set the frame of the current [animation](../tilesets/animations).",
+			"Set the frame of the current [animation](../animations).",
 			"This is useful for staggering the animations of [entities](../entities) that have identical animation timings."
 		]
 	},
@@ -603,7 +603,7 @@ var actionText = {
 		"category": "Entity Appearance",
 		"info": [
 			"Turns the [entity](../entities) in 90° increments. Positive numbers are clockwise turns, and negative numbers are counterclockwise turns. (E.g. turn them '2' to flip them around 180°)",
-			"This action can be chained with another similar one for complex behaviors. For example, to turn an entity away from the player, you can first set the entity's direction [toward the player](../SET_ENTITY_DIRECTION_TARGET_ENTITY), then immediately rotate it 2 turns."
+			"This action can be chained with another similar one for complex behaviors. For example, to turn an entity away from the player, you can first set the entity's direction [toward the player](../actions/SET_ENTITY_DIRECTION_TARGET_ENTITY), then immediately rotate it 2 turns."
 		]
 	},
 	"SET_ENTITY_DIRECTION_TARGET_ENTITY": {
@@ -621,7 +621,7 @@ var actionText = {
 	"SET_ENTITY_MOVEMENT_RELATIVE": {
 		"category": "Entity Appearance",
 		"info": [
-			"This adds a rotation to an [entity](../entities)'s [animations](../tilesets/animations). This is different from turning an entity toward something or someone (see [SET_ENTITY_DIRECTION](../actions/SET_ENTITY_DIRECTION) and related actions); this action applies a rotation to *all* an entity's animations, including while the entity is in motion. In short, use this action to make an entity walk backwards or strafe (walk sideways).",
+			"This adds a rotation to an [entity](../entities)'s [animations](../animations). This is different from turning an entity toward something or someone (see [SET_ENTITY_DIRECTION](../actions/SET_ENTITY_DIRECTION) and related actions); this action applies a rotation to *all* an entity's animations, including while the entity is in motion. In short, use this action to make an entity walk backwards or strafe (walk sideways).",
 			"This number cannot be negative."
 		]
 	},
@@ -640,7 +640,7 @@ var actionText = {
 	"TELEPORT_CAMERA_TO_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"Moves the camera to the first vertex of the specified [geometry object](../maps/vector_objects)."
+			"Moves the camera to the first vertex of the specified [geometry object](../vector_objects)."
 		]
 	},
 	"PAN_CAMERA_TO_ENTITY": {
@@ -653,7 +653,7 @@ var actionText = {
 	"PAN_CAMERA_TO_GEOMETRY": {
 		"category": "Camera Control",
 		"info": [
-			"Pans the camera to the first vertex of a [geometry object](../maps/vector_objects)."
+			"Pans the camera to the first vertex of a [geometry object](../vector_objects)."
 		]
 	},
 	"PAN_CAMERA_ALONG_GEOMETRY": {
@@ -714,35 +714,35 @@ var actionText = {
 	"SET_MAP_TICK_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets the map's [`on_tick`](../scripts/on_tick) script."
+			"Sets the map's [`on_tick`](../script_slots#on-tick) script."
 		]
 	},
 	"SET_ENTITY_INTERACT_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets an [entity](../entities)'s [`on_interact`](../scripts/on_interact) script.",
+			"Sets an [entity](../entities)'s [`on_interact`](../script_slots#on-interact) script.",
 			"If you use this action to change the [script slot](../scripts/script_slots) that is currently running the action, any actions given afterward may not execute depending on what they are.",
-			"Because [entity properties](../entities/entity_properties) are reset when a [map is loaded](../maps/map_loads), and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
+			"Because [entity properties](../entity_properties) are reset when a [map is loaded](../map_loads), and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree if there are any script jumps involved."
 		]
 	},
 	"SET_ENTITY_TICK_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets an [entity](../entities)'s [`on_tick`](../scripts/on_tick) script."
+			"Sets an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script."
 		]
 	},
 	"SET_ENTITY_LOOK_SCRIPT": {
 		"category": "Script Control",
 		"info": [
-			"Sets an [entity](../entities)'s [`on_look`](../scripts/on_look) script."
+			"Sets an [entity](../entities)'s [`on_look`](../script_slots#on-look) script."
 		]
 	},
 	"SET_SCRIPT_PAUSE": {
 		"category": "Script Control",
 		"info": [
-			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../scripts/on_tick) script during its [`on_interact`](../scripts/on_interact) event.",
-			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/relative_entity_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../scripts/on_look).",
-			"Map variant: Script slots for these are [`on_load`](../scripts/on_load), [`on_tick`](../scripts/on_tick), and [on_command](../commands)."
+			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script during its [`on_interact`](../script_slots#on-interact) event.",
+			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../entities/relative_entity_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../script_slots#on-look).",
+			"Map variant: Script slots for these are [`on_load`](../script_slots#on-load), [`on_tick`](../script_slots#on-tick), and [on_command](../commands)."
 		]
 	}
 };

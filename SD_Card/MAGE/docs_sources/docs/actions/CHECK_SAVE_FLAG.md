@@ -1,6 +1,6 @@
 # CHECK_SAVE_FLAG
 
-Checks one of the [save flags](../scripts/variables#save-flags) (booleans).
+Checks one of the [save flags](../variables#save-flags) (booleans).
 
 ## Example JSON
 

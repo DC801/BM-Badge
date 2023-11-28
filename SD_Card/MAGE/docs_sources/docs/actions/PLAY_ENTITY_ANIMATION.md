@@ -1,12 +1,12 @@
 # PLAY_ENTITY_ANIMATION
 
-The [entity](../entities) will play the given [animation](../tilesets/animations) the given number of times, and then will return to its default animation.
+The [entity](../entities) will play the given [animation](../animations) the given number of times, and then will return to its default animation.
 
 A [script](../scripts) that runs this action will not execute any further actions until the play count has been satisfied.
 
 If an entity is compelled to move around on the map, it will abort this animation playback.
 
-See [entity animations](../tilesets/animations) for what numbers correspond to which animations.
+See [entity animations](../animations) for what numbers correspond to which animations.
 
 ## Example JSON
 

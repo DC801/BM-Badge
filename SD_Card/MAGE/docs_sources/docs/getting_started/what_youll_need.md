@@ -16,13 +16,13 @@ While any text editor might do the trick, we strongly recommend an IDE with proj
 
 ## Graphics Editor
 
-Any graphics program capable of pixel art can be used to make sprite sheets or [tilesets](../tilesets). But if you need custom [animation](../tilesets/animations), we highly recommend investing in [Aseprite](https://www.aseprite.org/), which is about $20. It specializes in sprite animations, and it makes previewing animations and exporting sprite sheets quite painless.
+Any graphics program capable of pixel art can be used to make sprite sheets or [tilesets](../tilesets). But if you need custom [animation](../animations), we highly recommend investing in [Aseprite](https://www.aseprite.org/), which is about $20. It specializes in sprite animations, and it makes previewing animations and exporting sprite sheets quite painless.
 
 If you don't want to make art from scratch, a good source of premade tilesets is [OpenGameArt.org](https://OpenGameArt.org).
 
 ## Tiled
 
-Tiled, which can be found at [mapeditor.org](https://www.mapeditor.org), is a free, cross-platform map and [tileset](../tilesets) editor that can export and edit JSON files. This how the bulk of [maps](../maps), [tilesets](../tilesets), [entity](../entities) [animations](../tilesets/animations), [tile collisions](../tilesets/creating_a_tileset_json_file#tile-collisions), and [geometry](../maps/vector_objects) for [choreography](../techniques/cutscenes) are defined.
+Tiled, which can be found at [mapeditor.org](https://www.mapeditor.org), is a free, cross-platform map and [tileset](../tilesets) editor that can export and edit JSON files. This how the bulk of [maps](../maps), [tilesets](../tilesets), [entity](../entities) [animations](../animations), [tile collisions](../tilesets#tile-collisions), and [geometry](../vector_objects) for [choreography](../techniques/cutscenes) are defined.
 
 ## Git
 
@@ -30,21 +30,21 @@ Tiled, which can be found at [mapeditor.org](https://www.mapeditor.org), is a fr
 
 ## Web Browser
 
-The [web encoder](../encoder.md#web-encoder) can be run with Node.js (see below) or in a web browser. They will both take the game files from your [`scenario_source_files`](../getting_started/scenario_source_files) folder and export a `game.dat` for the Mage Game Engine to use.
+The [web encoder](../encoder#web-encoder) can be run with Node.js (see below) or in a web browser. They will both take the game files from your [`scenario_source_files`](../getting_started/mage_folder#scenario_source_files) folder and export a `game.dat` for the Mage Game Engine to use.
 
-The web version of the encoder, however, also has an [entity management system](../tilesets/entity_management_system.md) for managing animation assignments, so while you might use the Node encoder most of the time, chances are you'll still want to use the web version regularly.
+The web version of the encoder, however, also has an [entity management system](../entity_management_system) for managing animation assignments, so while you might use the Node encoder most of the time, chances are you'll still want to use the web version regularly.
 
-You will likely also want to use the [web build](../hardware/web_build) of the MGE to test your game data, as this is much simpler than setting up a Linux environment to run the game natively and much faster than using a microSD card to test the `game.dat` on the real badge after every revision.
+You will likely also want to use the [web build](../web_build) of the MGE to test your game data, as this is much simpler than setting up a Linux environment to run the game natively and much faster than using a microSD card to test the `game.dat` on the real badge after every revision.
 
 ## Node.js (optional)
 
-If you find yourself constantly making small changes to your content and regenerating your `game.dat` very frequently, it may be worthwhile to install [Node.js](https://nodejs.org) so you can use the [CLI version of the encoder](../encoder.md#cli-encoder) instead.
+If you find yourself constantly making small changes to your content and regenerating your `game.dat` very frequently, it may be worthwhile to install [Node.js](https://nodejs.org) so you can use the [CLI version of the encoder](../encoder#cli-encoder) instead.
 
 We recommend using Node's long-term support (i.e. even numbered) versions.
 
 ## MicroSD Card (optional)
 
-To put a new `game.dat` onto the badge, you'll need a microSD card formatted to FAT32. (This is only necessary if you're using the real badge hardware; the [web build](../hardware/web_build) is sufficient for most cases.)
+To put a new `game.dat` onto the badge, you'll need a microSD card formatted to FAT32. (This is only necessary if you're using the real badge hardware; the [web build](../web_build) is sufficient for most cases.)
 
 ## Linux (optional)
 

@@ -3,9 +3,9 @@
 In this documentation's example syntax for [MGS Natlang](../mgs/mgs_natlang), variables are marked with `$`. This documentation uses two formats to indicate a variable, each with a `$` at the front:
 
 - `$TYPE`
-	- e.g. `$number` (which means any valid [number](../mgs/variables_mgs#number))
+	- e.g. `$number` (which means any valid [number](#number))
 - `$LABEL:TYPE`
-	- e.g. `$jump_index:number` (which means any valid [number](../mgs/variables_mgs#number), and also the JSON property name for that value is `jump_index`)
+	- e.g. `$jump_index:number` (which means any valid [number](#number), and also the JSON property name for that value is `jump_index`)
 
 You can ignore the label when writing [MGS Natlang](mgs_natlang) most of the time, as the "natural language" context of the rest of the phrase will provide more information about the variable's purpose than the label itself might.
 
@@ -46,10 +46,10 @@ testScript2 {
 }
 ```
 
-In most cases, human intuition is enough to predict whether a variable can decay into another type. (And most things can decay into a [bareword](../mgs/variables_mgs#bareword), e.g. `true` and `1000ms`.)
+In most cases, human intuition is enough to predict whether a variable can decay into another type. (And most things can decay into a [bareword](#bareword), e.g. `true` and `1000ms`.)
 
 ::: tip Most importantly:
-A variable wanting to be a [string](../mgs/variables_mgs#string) will be satisfied by either a [bareword](../mgs/variables_mgs#bareword) string or a [quoted string](#quoted-string), but a variable wanting to be a bareword specifically cannot be satisfied by a quoted string — and vice versa.
+A variable wanting to be a [string](#string) will be satisfied by either a [bareword](#bareword) string or a [quoted string](#quoted-string), but a variable wanting to be a bareword specifically cannot be satisfied by a quoted string — and vice versa.
 :::
 
 ## Types and Examples
@@ -111,11 +111,11 @@ Some actions will prefer specific pairs of booleans when being translated from J
 
 ### Operator
 
-NOTE: Tokens are given this type by the lexer if they are straight-up punctuation, but when an action calls for one, it usually wants you to use something from one of the following [enums](../structure/enums.md):
+NOTE: Tokens are given this type by the lexer if they are straight-up punctuation, but when an action calls for one, it usually wants you to use something from one of the following [enums](../enums):
 
 #### Comparator
 
-See: [Comparators](../structure/comparators.md)
+See: [Enums#Comparators](../enums#comparators)
 
 symbol | meaning
 ---|---
@@ -129,7 +129,7 @@ Not equals (`!=`) is coming but not available yet. Instead, invert the `is` to `
 
 #### Operation
 
-See: [Operations](../structure/operations)
+See: [Enums#Operations](../enums#operations)
 
 symbol | op | meaning
 ---|---|---
@@ -181,9 +181,6 @@ Any [quoted string](#quoted-string) or [bareword](#bareword).
 
 ## Enums
 
-Some action variables will be of a generic [MGS Natlang](../mgs/mgs_natlang) type (such as [string](#string)) but the action itself will only be satisfied by a value from a limited set of words. In such cases, invalid values are reported by the MGE encoder.
+Some action variables will be of a generic [MGS Natlang](../mgs/mgs_natlang) type (such as [string](#string)) but the action itself will only be satisfied by a value from a limited set of words. In such cases, invalid values are reported by the [encoder](../encoder).
 
-- [Button IDs](../structure/button_ids)
-- [LED IDs](../structure/led_ids)
-- [Comparators](../structure/comparators)
-- [Operations](../structure/operations)
+See: [Enums](../enums)

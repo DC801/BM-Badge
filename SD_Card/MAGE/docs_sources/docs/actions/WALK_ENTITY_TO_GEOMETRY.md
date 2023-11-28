@@ -1,6 +1,6 @@
 # WALK_ENTITY_TO_GEOMETRY
 
-Moves the [entity](../entities) in a straight line from its current position to the first vertex of the [geometry object](../maps/vector_objects) named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
+Moves the [entity](../entities) in a straight line from its current position to the first vertex of the [geometry object](../vector_objects) named (or the entity's assigned path if `geometry` is `%ENTITY_PATH%`) over a period of time.
 
 ## Example JSON
 

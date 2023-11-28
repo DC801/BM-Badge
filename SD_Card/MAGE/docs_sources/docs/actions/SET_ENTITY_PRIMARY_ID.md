@@ -1,6 +1,6 @@
 # SET_ENTITY_PRIMARY_ID
 
-Sets an [entity](../entities)'s [primary_id](../entities/entity_properties).
+Sets an [entity](../entities)'s [primary_id](../entity_properties).
 
 You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](../actions/SET_ENTITY_TYPE).
 

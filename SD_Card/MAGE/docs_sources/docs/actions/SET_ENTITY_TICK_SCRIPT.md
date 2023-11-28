@@ -1,6 +1,6 @@
 # SET_ENTITY_TICK_SCRIPT
 
-Sets an [entity](../entities)'s [`on_tick`](../scripts/on_tick) script.
+Sets an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script.
 
 ## Example JSON
 

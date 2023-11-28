@@ -13,7 +13,7 @@ Several choices:
 	- The label name *must* be a [bareword](../mgs/variables_mgs#bareword), not a [quoted string](../mgs/variables_mgs#quoted-string).
 	- Dialog labels only exist in [MGS Natlang](../mgs/mgs_natlang) (not the MGE itself), so they do not apply to other entity references (such as the target of an action).
 
-**Block contents**: any number of [dialog parameters](../mgs/dialog_parameters_mgs) ([dialog property](../dialogs/dialog_properties) and [value](../mgs/variables_mgs) pairs) — in any order. No commas or semicolons needed. (For now!)
+**Block contents**: any number of [dialog parameters](../mgs/dialog_parameters_mgs) ([dialog property](../dialogs#properties) and [value](../mgs/variables_mgs) pairs) — in any order. No commas or semicolons needed. (For now!)
 
 ## Example
 

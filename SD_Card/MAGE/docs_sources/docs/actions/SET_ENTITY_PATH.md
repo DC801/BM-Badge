@@ -1,6 +1,6 @@
 # SET_ENTITY_PATH
 
-This assigns a [geometry object](../maps/vector_objects) to an [entity](../entities). Afterward, the entity can use `%ENTITY_PATH%` to refer to that path. (This assignment can also be done within Tiled.)
+This assigns a [geometry object](../vector_objects) to an [entity](../entities). Afterward, the entity can use `%ENTITY_PATH%` to refer to that path. (This assignment can also be done within Tiled.)
 
 ## Example JSON
 

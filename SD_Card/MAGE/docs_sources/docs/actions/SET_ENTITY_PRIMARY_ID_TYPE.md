@@ -1,6 +1,6 @@
 # SET_ENTITY_PRIMARY_ID_TYPE
 
-Sets an [entity](../entities)'s [primary_id_type](../entities/entity_properties): either (`0`) [tile](../entities/entity_types#tile-entity), (`1`) [animation](../entities/entity_types#animation-entity), or (`2`) [character](../entities/entity_types#character-entity) (sometimes called `entity_type`).
+Sets an [entity](../entities)'s [primary_id_type](../entity_properties): either (`0`) [tile](../entity_types#tile-entity), (`1`) [animation](../entity_types#animation-entity), or (`2`) [character](../entity_types#character-entity) (sometimes called `entity_type`).
 
 ## Example JSON
 

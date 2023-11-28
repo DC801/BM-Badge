@@ -11,6 +11,6 @@ Here are some of this year's badge features:
 
 ## Useful links
 
-To get started programming the badge , check out [EnvironmentSetup](../EnvironmentSetup.md)
+To get started programming the badge , check out [EnvironmentSetup](../EnvironmentSetup)
 
 To learn about the bluetooth protocol, see [Bluetooth](Bluetooth.md)

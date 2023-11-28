@@ -4,7 +4,7 @@
 
 #updateme
 
-Because an entity's [`on_interact`](../scripts/on_interact) script is set to the same thing each time their map is loaded, it is beneficial to describe an entity's behavior assuming that branching logic will always have to be done from scratch in this script. (While you could also set the map's [`on_load`](../scripts/on_load) to change the entity's `on_interact` script based on certain conditions, this is much more frustrating to manage.)
+Because an entity's [`on_interact`](../script_slots#on-interact) script is set to the same thing each time their map is loaded, it is beneficial to describe an entity's behavior assuming that branching logic will always have to be done from scratch in this script. (While you could also set the map's [`on_load`](../script_slots#on-load) to change the entity's `on_interact` script based on certain conditions, this is much more frustrating to manage.)
 
 In addition, because the `on_interact` script slot is set to the last script that was run (rather than reverting to its original value when an interaction is finished), you should explicitly set an entity's `on_interact` to its start script at the end of each of its branches.
 

@@ -1,10 +1,5 @@
 # MGS Natlang vs JSON
 
-Also see:
-
-- [Scripts](../scripts.md), [Scripts (JSON)](../scripts/scripts_json.md), [Scripts (MGS)](scripts_mgs.md)
-- [Dialogs](../dialogs.md), [Dialogs (JSON)](../dialogs/dialogs_json.md), [Dialogs (MGS)](dialogs_mgs.md)
-
 ## JSON Script
 
 ```json

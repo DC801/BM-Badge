@@ -1,6 +1,6 @@
 # Map Initialization Scripts
 
-A lot of the game's logic will need to be redone in every [map](../maps)'s [`on_load`](../scripts/on_load) script since [entity state](../entities/entity_properties) and other game state is **reset** when a [map is loaded or reloaded](../maps/map_loads).
+A lot of the game's logic will need to be redone in every [map](../maps)'s [`on_load`](../script_slots#on-load) script since [entity state](../entity_properties) and other game state is **reset** when a [map is loaded or reloaded](../map_loads).
 
 [COPY_SCRIPT](../actions/COPY_SCRIPT) provides an easy means of reusing [scripting](../scripts) behavior, comparable to functions.
 

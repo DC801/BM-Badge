@@ -1,6 +1,6 @@
 # CHECK_ENTITY_PATH
 
-Checks the `path` name ([geometry](../maps/vector_objects)) of an [entity](../entities).
+Checks the `path` name ([geometry](../vector_objects)) of an [entity](../entities).
 
 ## Example JSON
 

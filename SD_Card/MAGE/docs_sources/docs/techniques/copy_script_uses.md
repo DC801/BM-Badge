@@ -2,7 +2,7 @@
 
 [`COPY_SCRIPT`](../actions/COPY_SCRIPT) is one of the most powerful [actions](../actions) in the Mage Game Engine (MGE).
 
-This is an action provided for pure convenience and is actually not used by the MGE at all — the [encoder](../encoder.md) literally copies the actions contained in the [script](../scripts) being copied and inserts them into the script containing the `COPY_SCRIPT` action. And it does this recursively, meaning a script copied with `COPY_SCRIPT` can contain the action `COPY_SCRIPT` on and on.
+This is an action provided for pure convenience and is actually not used by the MGE at all — the [encoder](../encoder) literally copies the actions contained in the [script](../scripts) being copied and inserts them into the script containing the `COPY_SCRIPT` action. And it does this recursively, meaning a script copied with `COPY_SCRIPT` can contain the action `COPY_SCRIPT` on and on.
 
 NOTE: `COPY_SCRIPT` can trigger an infinite loop in the encoder if it tries to copy a script that copies the script trying to copy it. Try to keep this from happening.
 
@@ -77,7 +77,7 @@ Even when a small sequence of actions is only used once, abstracting it into a s
 
 The sequence need not be long for this technique to be effective.
 
-In the BMG2020, we have a script called `face-player`, which turns the entity ([`%SELF%`](../entities/relative_references.md#self)) toward the player entity ([`%PLAYER%`](../entities/relative_references.md#player)). This behavior only requires one action, so in this case using `COPY_SCRIPT` won't reduce the number of actions within the script, but it does change it into a form that's easier for a human being to parse.
+In the BMG2020, we have a script called `face-player`, which turns the entity ([`%SELF%`](../relative_references#self)) toward the player entity ([`%PLAYER%`](../relative_references#player)). This behavior only requires one action, so in this case using `COPY_SCRIPT` won't reduce the number of actions within the script, but it does change it into a form that's easier for a human being to parse.
 
 ### Daisy Chaining Long Sequences
 

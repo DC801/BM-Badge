@@ -1,6 +1,6 @@
 # Serial Dialog Block
 
-To define an [MGS Natlang](../mgs/mgs_natlang) [serial dialog](../dialogs/serial_dialogs), start a new [block](../mgs/block) at the root level:
+To define an [MGS Natlang](../mgs/mgs_natlang) [serial dialog](../serial_dialogs), start a new [block](../mgs/block) at the root level:
 
 ```
 serial dialog $string {}

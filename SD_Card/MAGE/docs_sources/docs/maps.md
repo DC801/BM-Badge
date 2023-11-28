@@ -44,7 +44,7 @@ In addition, because each tile increases the draw time, it's best to remove tile
 
 Vector polygons and points are placed on object layers, but tiles can be placed this way, too, if you use the "Insert Tile" button on the vector section of the toolbar (shortcut **T**) — and this is how entities are added to a map.
 
-Vector objects are susceptible to [coordinate overflow](maps/vector_objects#coordinate-overflow), so try to keep objects and all their vertices inside the map coordinate space (unless you actually want to yeet an entity to outer space).
+Vector objects are susceptible to [coordinate overflow](vector_objects#coordinate-overflow), so try to keep objects and all their vertices inside the map coordinate space (unless you actually want to yeet an entity to outer space).
 
 ::: tip Best Practice
 Particularly on maps with a lot going on, it's best to place objects on separate layers so you can easily hide or reveal specific objects, e.g.:
@@ -53,23 +53,13 @@ Particularly on maps with a lot going on, it's best to place objects on separate
 - door and exit paths
 - cutscene paths and camera points
 
-It doesn't matter how many layers there are in terms of accommodating the MGE encoder, but it's best to place the layer for entities just below the topmost tile layer, at least, for the most accurate visual preview.
+It doesn't matter how many layers there are in terms of accommodating the [encoder](encoder), but it's best to place the layer for entities just below the topmost tile layer, at least, for the most accurate visual preview.
 :::
 
 ### Placing Entities
 
-Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**). The [type of entity](entities/entity_types) placed and a few of its [entity properties](entities/entity_properties) are determined by which tile you use, but other entity properties must be explicitly set.
+Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**). The [type of entity](entity_types) placed and a few of its [entity properties](entity_properties) are determined by which tile you use, but other entity properties must be explicitly set.
 
 Entities are Y-indexed in the MGE, meaning they are rendered in front of or behind other entities according to their Y position. For entities being used as environment props, this can result in odd behavior (e.g. the player appearing underneath a bundle of cable if they walk too far behind it).
 
 Each map can have a maximum of 64 entities.
-
-## See Also
-
-- [Map Loads](maps/map_loads)
-- [Map Properties](maps/map_properties)
-- [Vector Objects](maps/vector_objects)
-- [Coordinate Overflow](maps/vector_objects#coordinate-overflow)
-- Map making techniques:
-	- [Spawn Points](techniques/spawn_points)
-	- [Coordinate Considerations](techniques/coordinate_considerations)
