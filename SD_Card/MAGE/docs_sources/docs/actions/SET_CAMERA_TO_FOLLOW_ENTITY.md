@@ -1,6 +1,6 @@
 # SET_CAMERA_TO_FOLLOW_ENTITY
 
-Sets what the camera is following. ([`%PLAYER%`](../entities/relative_entity_references#player) is the default.)
+Sets what the camera is following. ([`%PLAYER%`](../relative_references#player) is the default.)
 
 ## Example JSON
 

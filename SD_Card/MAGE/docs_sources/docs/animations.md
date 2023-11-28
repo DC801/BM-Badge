@@ -16,7 +16,7 @@ The Mage Game Engine (MGE) animation system requires that each animation have at
 
 ## Animation Types
 
-Three types of animations are built into the MGE for [character entities](entity_types#character-entity), and they are triggered in straightforward and predictable ways. [`entity_types.json`](getting_started/mage_folder#entity_types-json) defines which animations are of which type, and they can be defined and adjusted within the [encoder](encoder) or manually with a text editor.
+Three types of animations are built into the MGE for [character entities](entity_types#character-entity), and they are triggered in straightforward and predictable ways. [`entity_types.json`](mage_folder#entity_types-json) defines which animations are of which type, and they can be defined and adjusted within the [encoder](encoder) or manually with a text editor.
 
 ### Idle
 

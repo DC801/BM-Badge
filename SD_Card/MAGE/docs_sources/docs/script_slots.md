@@ -54,7 +54,7 @@ If multiple entities in a map have the same **given name** (the name assigned to
 
 ## One Slot, One Script
 
-Importantly, a script slot can only run one script — if a script jumps to another script (either with [RUN_SCRIPT](actions/RUN_SCRIPT) or by [script jumping via some kind of logic check](actions/conditional_gotos)) the current script is *completely abandoned* and the new script is run instead. It is therefore important to check the order in which actions are given, as any action listed after a script change will be ignored.
+Importantly, a script slot can only run one script — if a script jumps to another script (either with [RUN_SCRIPT](actions/RUN_SCRIPT) or by [script jumping via some kind of logic check](conditional_gotos)) the current script is *completely abandoned* and the new script is run instead. It is therefore important to check the order in which actions are given, as any action listed after a script change will be ignored.
 
 There is no nested callback structure, no child function returning something to its parent function, nor anything like that.
 

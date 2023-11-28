@@ -39,7 +39,7 @@ This will not prevent [`on_tick`](../script_slots#on-tick) scripts from looping 
 
 ...Sorry, but you can't "return" a value to the script's "caller." (We don't have a call stack!)
 
-If you want to emulate value-returning behavior, you might try assigning a value to a common variable as a script's last action, then have another script [COPY_SCRIPT](../actions/COPY_SCRIPT) it and use the common variable like normal.
+If you want to emulate value-returning behavior, you might try assigning a value to a variable as a script's last action, then have another script [COPY_SCRIPT](../actions/COPY_SCRIPT) it and use the variable like normal.
 
 ## While and For
 
@@ -117,7 +117,7 @@ while (COND) {
 
 ## If and Else
 
-An easier way of writing and daisy chaining [conditional gotos](../actions/conditional_gotos):
+An easier way of writing and daisy chaining [conditional gotos](../conditional_gotos):
 
 ```
 if ( CONDITION ) { BEHAVIOR/BODY }
@@ -187,7 +187,7 @@ if ( you don't have money || the game is not for sale ) {
 
 ### `include!()`
 
-This macro will copy and paste the plaintext contents of the named [MGS](../mgs/mgs_natlang) file into place. (The path of the file doesn't matter; it just has to be in [`scenario_source_files`](../getting_started/mage_folder#scenario_source_files) somewhere.) Line breaks are changed into spaces to make the line numbers consistent with the original file.
+This macro will copy and paste the plaintext contents of the named [MGS](../mgs/mgs_natlang) file into place. (The path of the file doesn't matter; it just has to be in [`scenario_source_files`](../mage_folder#scenario_source_files) somewhere.) Line breaks are changed into spaces to make the line numbers consistent with the original file.
 
 This is recursive, so be careful.
 

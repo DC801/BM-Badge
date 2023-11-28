@@ -2,9 +2,9 @@
 
 Outputs the named [serial dialog](../serial_dialogs) to a connected serial console.
 
-The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](../SET_SERIAL_DIALOG_CONTROL) first, then turn it back on again when finished.)
+The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](../actions/SET_SERIAL_DIALOG_CONTROL) first, then turn it back on again when finished.)
 
-This action is also available as a [combination block](../mgs/combination_block): [show serial dialog block](../mgs/show_serial_dialog_block).
+This action is also available as a [combination block](../mgs/combination_block): [show serial dialog block](../mgs/serial_dialog_block#show-serial-dialog-block).
 
 ## Example JSON
 

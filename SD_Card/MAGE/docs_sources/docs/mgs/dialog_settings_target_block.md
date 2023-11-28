@@ -1,6 +1,6 @@
 # Dialog Settings Target Block
 
-One of the [blocks](../mgs/block) in [MGS Natlang](../mgs/mgs_natlang), occurring exclusively inside [dialog settings blocks](../mgs/dialog_settings_block).
+One of the [blocks](../mgs/blocks) in [MGS Natlang](../mgs/mgs_natlang), occurring exclusively inside [dialog settings blocks](../mgs/dialog_settings_block).
 
 Several choices:
 
@@ -13,7 +13,7 @@ Several choices:
 	- The label name *must* be a [bareword](../mgs/variables_mgs#bareword), not a [quoted string](../mgs/variables_mgs#quoted-string).
 	- Dialog labels only exist in [MGS Natlang](../mgs/mgs_natlang) (not the MGE itself), so they do not apply to other entity references (such as the target of an action).
 
-**Block contents**: any number of [dialog parameters](../mgs/dialog_parameters_mgs) ([dialog property](../dialogs#properties) and [value](../mgs/variables_mgs) pairs) — in any order. No commas or semicolons needed. (For now!)
+**Block contents**: any number of [dialog parameters](../mgs/dialogs_mgs#dialog-parameters) ([dialog property](../dialogs#properties) and [value](../mgs/variables_mgs) pairs) — in any order. No commas or semicolons needed. (For now!)
 
 ## Example
 
@@ -23,7 +23,7 @@ settings for dialog {
 }
 ```
 
-This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](../mgs/dialog_identifier) for [dialogs](../mgs/dialogs_mgs).
+This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](dialogs_mgs#dialog-identifier) for [dialogs](../mgs/dialogs_mgs).
 
 ```mgs
 // with label

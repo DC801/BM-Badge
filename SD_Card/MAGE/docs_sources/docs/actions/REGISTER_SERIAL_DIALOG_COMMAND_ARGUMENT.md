@@ -1,6 +1,6 @@
 # REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 
-This action registers an argument (and a script) for an [already-registered serial command](../REGISTER_SERIAL_DIALOG_COMMAND).
+This action registers an argument (and a script) for an [already-registered serial command](../actions/REGISTER_SERIAL_DIALOG_COMMAND).
 
 Arguments can be multiple words. In-game, if the second word is `at` or `to` it is ignored, e.g. `> warp to my house` (after running `register "warp" + "my house"`).
 

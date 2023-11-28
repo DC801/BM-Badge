@@ -4,9 +4,9 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 
 ## Table of Contents
 
-- [What You'll Need](getting_started/what_youll_need)
-- [General Process](getting_started/general_process)
-- [`MAGE` Folder](getting_started/mage_folder)
+- [What You'll Need](what_youll_need)
+- [General Process](general_process)
+- [`MAGE` Folder](mage_folder)
 
 ### Assets
 
@@ -49,12 +49,9 @@ Content creation guide for the "Mage Game Engine" (MGE), and other information f
 ### MGS Natlang
 
 - [MGS Natlang](mgs/mgs_natlang)
-	- [MGS Natlang vs JSON](mgs/mgs_natlang_vs_json)
-	- [Syntax Colors](mgs/syntax_colors)
 	- [MGS Natlang Structure](mgs/mgs_natlang_structure)
-		- [Blocks](mgs/block)
+		- [Blocks](mgs/blocks)
 		- [Variables (MGS)](mgs/variables_mgs)
-		- [Serial Styles](mgs/serial_styles)
 	- [Advanced Syntax](mgs/advanced_syntax)
 
 ### Technical

@@ -70,7 +70,7 @@ We found that the joystick clicks were aggressive on the hardware, and would tri
 
 ## Comparators
 
-[Enums](enums) used with certain `CHECK_` [actions](actions). (See: [Conditional Gotos](actions/conditional_gotos)
+[Enums](enums) used with certain `CHECK_` [actions](actions). (See: [Conditional Gotos](conditional_gotos)
 
 symbol | meaning
 ---|---

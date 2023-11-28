@@ -8,7 +8,7 @@ There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new
 
 `replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory.
 
-`regenerate_dat_file.sh` — This shell script requires `node.js` to run (see: [What You'll Need](../getting_started/what_youll_need)). There are two versions of this file depending on which repo you started with, and note that the shell script from the [MGE VM](../getting_started/mge_vm) is slightly different.
+`regenerate_dat_file.sh` — This shell script requires `node.js` to run (see: [What You'll Need](what_youll_need)). There are two versions of this file depending on which repo you started with, and note that the shell script from the [MGE VM](mge_vm) is slightly different.
 
 `mage_dat.ksy` — Intended to be used with [Kaitai](../encoder#kaitai). This will help you identify unexpected game state you might be encountering.
 
@@ -199,7 +199,7 @@ Data for portraits, which reference tileset JSON files from the `entities/` fold
 
 The top-level string is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](../entity_types#character-entity).
 
-`tileset` is the file path for the [JSON file](../tilesets) [`portraits.json`](../getting_started/mage_folder#portraits-json) with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
+`tileset` is the file path for the [JSON file](../tilesets) [`portraits.json`](mage_folder#portraits-json) with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
 
 `tileid` is how you define which tile in the tileset you want to use. You can simply count the tiles in the tileset left-to-right and top-to-down, beginning from `0`, but it might be easier to simply select the appropriate tile within Tiled and see what it says the "ID" is.
 

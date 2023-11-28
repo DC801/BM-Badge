@@ -43,7 +43,7 @@ The MGE will use the referenced entity's [current name](variables#printing-curre
 
 For the `entity` property, you must not use percent signs to refer to entities, or the [encoder](encoder) will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [current name](variables#printing-current-values)) in the dialog label, you must use the `name` property, which can print a string literally.
 
-If the referenced entity is a [character entity](entity_types#character-entity), the [encoder](encoder) will use [`entity_types.json`](getting_started/mage_folder#entity_types-json) to automatically determine the portrait image.
+If the referenced entity is a [character entity](entity_types#character-entity), the [encoder](encoder) will use [`entity_types.json`](mage_folder#entity_types-json) to automatically determine the portrait image.
 
 ### `name`
 
@@ -60,17 +60,17 @@ If you use the entity's given name without percent signs, it will behave as a st
 
 ### `portrait`
 
-Optional.  This is the name of the portrait defined in [`portraits.json`](getting_started/mage_folder#portraits-json) you want to use for the dialog. This will override any portraits inherited from `entity` above.
+Optional.  This is the name of the portrait defined in [`portraits.json`](mage_folder#portraits-json) you want to use for the dialog. This will override any portraits inherited from `entity` above.
 
 If the dialog cannot find a portrait to use (either via `portrait` or `entity`), then the dialog will display no portrait box.
 
 ### `border_tileset`
 
-Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [`scenario.json`](getting_started/mage_folder#scenario-json).)
+Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [`scenario.json`](mage_folder#scenario-json).)
 
 ### `emote`
 
-Optional. Allows you to select a specific emote within the entity's entry in [`portraits.json`](getting_started/mage_folder#portraits-json). The default emote (`0`) will display if not specified. (While emotes can have assigned names, you must use integers to control them here.)
+Optional. Allows you to select a specific emote within the entity's entry in [`portraits.json`](mage_folder#portraits-json). The default emote (`0`) will display if not specified. (While emotes can have assigned names, you must use integers to control them here.)
 
 ### `messages`
 
