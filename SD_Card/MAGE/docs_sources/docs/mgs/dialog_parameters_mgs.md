@@ -1,7 +1,5 @@
 # Dialog Parameters (MGS)
 
-NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
-
 ```mgs{3-4}
 dialog sampleDialog {
   SELF
@@ -15,16 +13,16 @@ dialog sampleDialog {
 }
 ```
 
-Dialog parameters are a [dialog property](../dialogs/dialog_properties) and value pair. Multiple dialog parameters can occur back-to-back in a single [dialog](../mgs/dialogs_mgs) or a [dialog settings target block](../mgs/dialog_settings_target_block).
+Dialog parameters are a [dialog property](../dialogs#properties) and value pair. Multiple dialog parameters can occur back-to-back in a single [dialog](../mgs/dialogs_mgs) or a [dialog settings target block](../mgs/dialog_settings_target_block).
 
 - `entity $string`
-	- [String](../mgs/variables_mgs#string): the "given name" of the entity (i.e. the entity's name on the Tiled map). (Wrapping this name in `%`s is unnecessary and will in fact confuse the MGE encoder.)
-		- Can be [`%PLAYER%`](../entities/relative_references.md#player) or [`%SELF%`](../entities/relative_references.md#self).
+	- [String](../mgs/variables_mgs#string): the "given name" of the entity (i.e. the entity's name on the Tiled map). (Wrapping this name in `%`s is unnecessary and will in fact confuse the [encoder](../encoder).)
+		- Can be [`%PLAYER%`](../relative_references#player) or [`%SELF%`](../relative_references#self).
 	- A dialog can inherit a `name` and a `portrait` if given an `entity` parameter.
 	- The inherited `name` is a relative reference; the dialog display name will be whatever that entity's name is at that moment.
 - `name $string`
-	- [String](../mgs/variables_mgs#string): a fixed string of no more than 12 ASCII characters. For an [entity's current name](../scripts/printing_current_values) instead, wrap a specific entity's given name in `%`s.
-		- Can be [`%PLAYER%`](../entities/relative_references.md#player) or [`%SELF%`](../entities/relative_references.md#self).
+	- [String](../mgs/variables_mgs#string): a fixed string of no more than 12 ASCII characters. For an [entity's current name](../variables#printing-current-values)) instead, wrap a specific entity's given name in `%`s.
+		- Can be [`%PLAYER%`](../relative_references#player) or [`%SELF%`](../relative_references#self).
 	- Overrides names inherited via the `entity` parameter.
 	- If this string is empty (`name ""`), the dialog box label will be absent entirely. (Sometimes you want this!)
 - `portrait $string`

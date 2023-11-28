@@ -2,13 +2,13 @@
 
 See: [Handlers](../techniques/handlers)
 
-Because a single [script slot](../scripts/script_slots) cannot run multiple threads, you must borrow another [entity](../entities)'s (or the [map](../maps)'s) [`on_tick`](../scripts/on_tick) if you want a single [script](../scripts) to trigger multiple simultaneous behaviors.
+Because a single [script slot](../script_slots) cannot run multiple threads, you must borrow another [entity](../entities)'s (or the [map](../maps)'s) [`on_tick`](../script_slots#on-tick) if you want a single [script](../scripts) to trigger multiple simultaneous behaviors.
 
 If you try to put all simultaneous behaviors into a single script, the actions will execute one after the other, but only after each action has completely finished. Three entities having a race would instead run the entire course one at a time, each waiting patiently for the runner before them to complete their route. And indeed, if one of the simultaneous behaviors has no stopping point, the actions listed afterwards will never execute at all.
 
-The simultaneous behaviors must be managed by `on_tick` slots because [`on_interact`](../scripts/on_interact) and [`on_load`](../scripts/on_load) script slots cannot execute actions at arbitrary times.
+The simultaneous behaviors must be managed by `on_tick` slots because [`on_interact`](../script_slots#on-interact) and [`on_load`](../script_slots#on-load) script slots cannot execute actions at arbitrary times.
 
-When the simultaneous behaviors are finished, however, the `on_tick` slots must be then set to something else or the new behavior will loop indefinitely (unless that's what you want). Halt an `on_tick` script by [running](../actions/RUN_SCRIPT) [null_script](../scripts/null_script) as its final action or by setting the target slot to a different `on_tick` script.
+When the simultaneous behaviors are finished, however, the `on_tick` slots must be then set to something else or the new behavior will loop indefinitely (unless that's what you want). Halt an `on_tick` script by [running](../actions/RUN_SCRIPT) [null_script](../scripts#null_script) as its final action or by setting the target slot to a different `on_tick` script.
 
 ### Example: Timid Goats
 
@@ -20,7 +20,7 @@ Three entities are involved in this behavior (apart from the player themselves):
 - Kid (a baby goat)
 - Verthandi (the goat [handler](../techniques/handlers))
 
-Each goat has an [`on_tick`](../scripts/on_tick) script that moves it around in a small jaggedy circle: the [vector shape](../maps/vector_objects) `high1` for Billy and `high2` for Kid.
+Each goat has an [`on_tick`](../script_slots#on-tick) script that moves it around in a small jaggedy circle: the [vector shape](../vector_objects) `high1` for Billy and `high2` for Kid.
 
 What's important here is the **watcher**, Verthandi. Her `on_tick` script, `check_if_player_is_goat_high`, watches for if the player has entered the goat trigger area called `high`, at which point her `on_tick` script jumps to one called `move_goats_to_low`.
 

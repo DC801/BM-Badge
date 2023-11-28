@@ -1,6 +1,6 @@
 # SET_ENTITY_TYPE
 
-Sets an [entity](../entities)'s [entity_type](../entities/entity_types#character-entity). (See: [Entity Properties](../entities/entity_properties))
+Sets an [entity](../entities)'s [entity_type](../entity_types#character-entity). (See: [Entity Properties](../entity_properties))
 
 ## Example JSON
 

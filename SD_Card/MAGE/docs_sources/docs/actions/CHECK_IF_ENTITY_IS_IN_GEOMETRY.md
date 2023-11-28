@@ -1,8 +1,8 @@
 # CHECK_IF_ENTITY_IS_IN_GEOMETRY
 
-Checks whether an [entity](../entities) is inside the named [geometry](../maps/vector_objects).
+Checks whether an [entity](../entities) is inside the named [geometry](../vector_objects).
 
-This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../maps/vector_objects#coordinate-overflow).
+This action can behave erratically if any of the vertices in the geometry object are subject to [coordinate overflow](../vector_objects#coordinate-overflow).
 
 ## Example JSON
 

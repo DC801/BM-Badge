@@ -1,6 +1,6 @@
 # SET_MAP_TICK_SCRIPT
 
-Sets the map's [`on_tick`](../scripts/on_tick) script.
+Sets the map's [`on_tick`](../script_slots#on-tick) script.
 
 ## Example JSON
 

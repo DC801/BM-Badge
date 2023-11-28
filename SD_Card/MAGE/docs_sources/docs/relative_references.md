@@ -11,15 +11,15 @@ Unlike relative entity names, you can use these two **relative entity references
 
 ### `%PLAYER%`
 
-When used as the target of an [action](../actions), `%PLAYER%` refers to the player entity (the entity marked `is_player` on the [map](../maps) in Tiled).
+When used as the target of an [action](actions), `%PLAYER%` refers to the player entity (the entity marked `is_player` on the [map](maps) in Tiled).
 
-When used in the body of a message (e.g. `"Hello, %PLAYER%!"`) it will use the [current name](../scripts/printing_current_values) of the player entity.
+When used in the body of a message (e.g. `"Hello, %PLAYER%!"`) it will use the [current name](variables#printing-current-values)) of the player entity.
 
 ### `%SELF%`
 
-When used as the target of an [action](../actions), `%SELF%` refers to the [entity](../entities) running the script.
+When used as the target of an [action](actions), `%SELF%` refers to the [entity](entities) running the script.
 
-When used in the body of a message (e.g. `"Hey, there! My name is %SELF%!"`) it will use the [current name](../scripts/printing_current_values) of the entity running the script.
+When used in the body of a message (e.g. `"Hey, there! My name is %SELF%!"`) it will use the [current name](variables#printing-current-values)) of the entity running the script.
 
 
 ### Example
@@ -70,7 +70,7 @@ If the same script were run by Strong Bad instead, the `%SELF%` reference would 
 > Got it memorized?
 
 ::: tip Best Practice: Consistency
-All [entity references](../scripts/printing_current_values) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
+All [entity references](variables#printing-current-values)) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
 
 If we change `entity` to `Bender` instead of `%SELF%`, but leave the `%SELF%` reference in the dialog `messages` alone, the conversation would appear correct if run by Bender, but no one else.
 :::

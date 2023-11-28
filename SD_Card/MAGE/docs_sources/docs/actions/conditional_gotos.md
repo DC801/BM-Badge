@@ -1,6 +1,6 @@
 # Conditional Gotos
 
-Consists of actions from the check [entity properties](../entities/entity_properties) and check [variables](../scripts/variables.md) categories. The "conditions" portion of each [action](../actions) can be inserted into any of the following patterns:
+Consists of actions from the check [entity properties](../entity_properties) and check [variables](../variables) categories. The "conditions" portion of each [action](../actions) can be inserted into any of the following patterns:
 
 1. [If and else](../mgs/advanced_syntax#if-and-else): `if (` ... `) { }`
 	- NOTE: This expands to the [label](../mgs/advanced_syntax#labels) jump pattern automatically.

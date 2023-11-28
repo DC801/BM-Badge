@@ -1,6 +1,6 @@
 # SET_ENTITY_LOOK_SCRIPT
 
-Sets an [entity](../entities)'s [`on_look`](../scripts/on_look) script.
+Sets an [entity](../entities)'s [`on_look`](../script_slots#on-look) script.
 
 ## Example JSON
 

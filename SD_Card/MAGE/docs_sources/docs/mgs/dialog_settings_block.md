@@ -8,7 +8,7 @@ settings for dialog {}
 settings dialog {}
 ```
 
-These are a means of defining [dialog properties](../dialogs/dialog_properties) ahead of time so the dialogs themselves can be very lean.
+These are a means of defining dialog parameters ahead of time so the dialogs themselves can be very lean.
 
 Inside the block body are [dialog settings target blocks](../mgs/dialog_settings_target_block) in any order. For example:
 

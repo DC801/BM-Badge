@@ -1,7 +1,5 @@
 # Dialog Options (MGS)
 
-NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
-
 ```mgs{8-9}
 dialog sampleDialog {
   SELF

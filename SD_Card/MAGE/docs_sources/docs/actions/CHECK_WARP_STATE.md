@@ -1,6 +1,6 @@
 # CHECK_WARP_STATE
 
-Checks whether the [warp state string](../scripts/variables#warp_state) is a specific value.
+Checks whether the [warp state string](../variables#warp_state) is a specific value.
 
 ## Example JSON
 

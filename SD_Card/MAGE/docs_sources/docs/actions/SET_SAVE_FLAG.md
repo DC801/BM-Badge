@@ -1,6 +1,6 @@
 # SET_SAVE_FLAG
 
-Set a [save flag](../scripts/variables#save-flags) to `true` or `false`.
+Set a [save flag](../variables#save-flags) to `true` or `false`.
 
 ## Example JSON
 

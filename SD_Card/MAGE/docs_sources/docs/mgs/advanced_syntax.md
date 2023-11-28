@@ -6,7 +6,7 @@ None of these features exist in the "real" underlying MGE structure, JSON; if us
 
 ## Labels
 
-A **label** is a destination for conditional (or non-conditional) jumps inside the [script](../scripts) that is currently running. A label linker converts these into absolute index jumps after [COPY_SCRIPT](../actions/COPY_SCRIPT) is expanded but before the JSON becomes [encoded](../encoder.md) into binary data.
+A **label** is a destination for conditional (or non-conditional) jumps inside the [script](../scripts) that is currently running. A label linker converts these into absolute index jumps after [COPY_SCRIPT](../actions/COPY_SCRIPT) is expanded but before the JSON becomes [encoded](../encoder) into binary data.
 
 The syntax is a [bareword](variables_mgs#bareword) followed by a colon (`:`).
 
@@ -33,7 +33,7 @@ Four... wait, did I skip one?
 
 `return` is a keyword that will end the current [script](../scripts) early. (It simply sets the action index past the end of the script, causing it to immediately end.)
 
-This will not prevent [`on_tick`](../scripts/on_tick) scripts from looping on the next game tick, however; if you want to stop an `on_tick` script for good, you must explicitly [goto](../RUN_SCRIPT) `null_script`.
+This will not prevent [`on_tick`](../script_slots#on-tick) scripts from looping on the next game tick, however; if you want to stop an `on_tick` script for good, you must explicitly [goto](../RUN_SCRIPT) `null_script`.
 
 ### Returning a Value
 
@@ -117,7 +117,7 @@ while (COND) {
 
 ## If and Else
 
-An easier way of writing and daisy chaining [conditional gotos](../actions/conditional_gotos.md):
+An easier way of writing and daisy chaining [conditional gotos](../actions/conditional_gotos):
 
 ```
 if ( CONDITION ) { BEHAVIOR/BODY }
@@ -187,7 +187,7 @@ if ( you don't have money || the game is not for sale ) {
 
 ### `include!()`
 
-This macro will copy and paste the plaintext contents of the named [MGS](../mgs/mgs_natlang) file into place. (The path of the file doesn't matter; it just has to be in [scenario_source_files](../getting_started/scenario_source_files) somewhere.) Line breaks are changed into spaces to make the line numbers consistent with the original file.
+This macro will copy and paste the plaintext contents of the named [MGS](../mgs/mgs_natlang) file into place. (The path of the file doesn't matter; it just has to be in [`scenario_source_files`](../getting_started/mage_folder#scenario_source_files) somewhere.) Line breaks are changed into spaces to make the line numbers consistent with the original file.
 
 This is recursive, so be careful.
 
@@ -203,7 +203,7 @@ This macro emulates compile-time constants. Its main purpose is to help you avoi
 
 The macro literally replaces each constant with the token collected during its original value assignment.
 
-These constants are *not* meant to be used as variables for in-game logic, as the game will never see the constant as a variable at all, but will only see the token captured by the macro. To emphasize this point, you cannot change the value of a constant once you've defined it. If you find yourself wanting to do this, you probably want to be using a [variable](../scripts/variables.md#integer-variables) instead.
+These constants are *not* meant to be used as variables for in-game logic, as the game will never see the constant as a variable at all, but will only see the token captured by the macro. To emphasize this point, you cannot change the value of a constant once you've defined it. If you find yourself wanting to do this, you probably want to be using a [variable](../variables#integer-variables) instead.
 
 Inside the above parentheses can be any number of constant assignments:
 
@@ -249,7 +249,7 @@ The above is what the MGS Natlang syntax parser will actually parse. Syntax erro
 
 ### `debug!()`
 
-For quick logging, you can use `debug!()` to generate [terminal](../terminal.md) output that will only print when [debug mode](../debug_tools.md#debug-mode) is on. Thus:
+For quick logging, you can use `debug!()` to generate [terminal](../terminal) output that will only print when [debug mode](../debug_tools#debug-mode) is on. Thus:
 
 ```mgs{2}
 scriptName {

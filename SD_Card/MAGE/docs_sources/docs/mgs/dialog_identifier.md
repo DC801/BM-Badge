@@ -1,7 +1,5 @@
 # Dialog Identifier
 
-NOTE: This syntax is used for [MGS Natlang](../mgs/mgs_natlang) [dialogs](../mgs/dialogs_mgs), not [JSON dialogs](../dialogs/dialogs_json).
-
 ```mgs{2}
 dialog sampleDialog {
   SELF
@@ -27,7 +25,7 @@ The three options:
 2. `entity $string`
 	- [String](../mgs/variables_mgs#string): an entity's given name (i.e. the entity's name within the Tiled map).
 	- This usage also provides the entity name as an `entity` [parameter](../mgs/dialog_parameters_mgs) for the dialog.
-	- The entities [`%PLAYER%`](../entities/relative_references.md#player) and [`%SELF%`](../entities/relative_references.md#self) must use this pattern (and not the bareword pattern) because they contain special characters. As this can be cumbersome, it's probably best to set up a [dialog settings](../mgs/dialog_settings_target_block) label for them so you can use a bareword as an identifier instead.
+	- The entities [`%PLAYER%`](../relative_references#player) and [`%SELF%`](../relative_references#self) must use this pattern (and not the bareword pattern) because they contain special characters. As this can be cumbersome, it's probably best to set up a [dialog settings](../mgs/dialog_settings_target_block) label for them so you can use a bareword as an identifier instead.
 3. `name $string`
 	- [String](../mgs/variables_mgs#string): the dialog's display name.
 	- This usage also provides a `name` [parameter](../mgs/dialog_parameters_mgs) for the dialog.

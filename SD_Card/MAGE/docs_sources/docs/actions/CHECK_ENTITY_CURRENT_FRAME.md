@@ -1,6 +1,6 @@
 # CHECK_ENTITY_CURRENT_FRAME
 
-Checks the frame (number) of the [entity](../entities)'s current [entity animations](../tilesets/animations).
+Checks the frame (number) of the [entity](../entities)'s current [entity animations](../animations).
 
 ## Example JSON
 

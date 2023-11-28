@@ -1,8 +1,8 @@
 # SET_ENTITY_Y
 
-Sets an [entity](../entities)'s [y](../entities/entity_properties) coordinate.
+Sets an [entity](../entities)'s [y](../entity_properties) coordinate.
 
-In practice, you will likely want to use [geometry vectors](../maps/vector_objects) and teleport actions instead.
+In practice, you will likely want to use [geometry vectors](../vector_objects) and teleport actions instead.
 
 ## Example JSON
 

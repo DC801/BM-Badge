@@ -8,7 +8,7 @@ Large scripts like this were a major reason we created [MGS Natlang](../mgs/mgs_
 
 ![flowchart of Beatrice's behavior](../media/script-beatrice.png)
 
-In the BMG2020, Beatrice's branching was complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. E.g. hints are now managed with a single [integer](../scripts/variables.md#integer-variables) instead of a bajillion [save flags](../scripts/variables.md#save-flags).)
+In the BMG2020, Beatrice's branching was complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. E.g. hints are now managed with a single [integer](../variables#integer-variables) instead of a bajillion [save flags](../variables#save-flags).)
 
 ## Beatrice's Branching
 
@@ -28,14 +28,14 @@ And if *that* wasn't enough branching, most of the branches will then *also* bra
 
 ### `bea-wrapup-mini`
 
-Sets Beatrice's [`on_interact`](../scripts/on_interact) script back to her start script. This is the most basic shared wrapup behavior, and it was split mostly to future proof the branching against further complications. All of Beatrice's branches run this script, or run a script that runs it. (The chart above does not reflect this wrapup split, and still reflects the original `on_interact` reset placement.)
+Sets Beatrice's [`on_interact`](../script_slots#on-interact) script back to her start script. This is the most basic shared wrapup behavior, and it was split mostly to future proof the branching against further complications. All of Beatrice's branches run this script, or run a script that runs it. (The chart above does not reflect this wrapup split, and still reflects the original `on_interact` reset placement.)
 
 ### `bea1-complete-wrapup`
 
 This is the wrapup script for solving Beatrice's first quest line.
 
-- sets her [`on_tick`](../scripts/on_tick) to [null_script](../scripts/null_script) and turns her toward her husband
-- sets the `bea1` backstory and `bea1` [story flag](../scripts/variables.md#save-flags) to `true`
+- sets her [`on_tick`](../script_slots#on-tick) to [null_script](../scripts#null_script) and turns her toward her husband
+- sets the `bea1` backstory and `bea1` [story flag](../variables#save-flags) to `true`
 - zeroes the target hint
 - runs `bea-wrapup-mini` to finish
 

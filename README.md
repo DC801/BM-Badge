@@ -43,7 +43,7 @@ Check out the [Template](/HW/ART/Template) that you can create a new project in 
  - Need a J-Link Segger JTAG programmer to program the chip directly.
  - Custom game engine purpose-built for the badge that can automatically load custom games from the SD Card.
  - Included in the [SD_Card/MAGE](/SD_Card/MAGE) directory is a binary encoder that allows you to generate your own games with our engine using open source tools such as the Tiled Map Editor and our custom json scripting language.
- - Instructions to set up your own dev environment and desktop testing build of our game engine in [EnvironmentSetup.md](/EnvironmentSetup.md).
+ - Instructions to set up your own dev environment and desktop testing build of our game engine in [EnvironmentSetup.md](/EnvironmentSetup).
  - [Comprehensive engine documentation and content creation guide](SD_Card/MAGE/README.md)
 
 ### SD Card

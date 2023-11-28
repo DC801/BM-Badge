@@ -1,6 +1,6 @@
 # Dialogs (MGS)
 
-The [dialog](../dialogs) structure for [MGS Natlang](../mgs/mgs_natlang), found within [dialog blocks](../mgs/dialog_block) (and related [combination blocks](../mgs/combination_block)). (For the JSON equivalent, see: [Dialogs (JSON)](../dialogs/dialogs_json))
+The [dialog](../dialogs) structure for [MGS Natlang](../mgs/mgs_natlang), found within [dialog blocks](../mgs/dialog_block) (and related [combination blocks](../mgs/combination_block)).
 
 ## Structure
 
