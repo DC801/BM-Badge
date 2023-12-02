@@ -16,7 +16,7 @@ on_load-wopr {
 }
 ```
 
-MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the [encoder](../encoder), plus QOL syntax like `if`/`else` and [define-in-place dialogs](../mgs/dialog_block#show-dialog-block).
+MGS Natlang is a "natural" language meant to be easy to read and write. It consists of phrases that correlate to the shape of JSON required by the [encoder](../encoder), plus QOL syntax like [`if`/`else`](advanced_syntax#if-and-else) and [define-in-place dialogs](../mgs/dialog_block#show-dialog-block).
 
 All MGS files are turned into JSON by the [encoder](../encoder). Unlike JSON [script files](../scripts) and [dialog files](../dialogs), you don't need to declare MGS files in the game's [`scenario.json`](../mage_folder#scenario-json); all MGS files inside [`scenario_source_files`](../mage_folder#scenario_source_files) will be imported.
 
@@ -190,6 +190,6 @@ Many other IDEs will accept TextMate grammars, but you will have to find and fol
 
 ## Revisions
 
-The Natlang source code is kept within the DC801 black mage game repo, under `SD_Card/MAGE/editor/dependencies/natlang-parser/`
+The Natlang source code is kept within the DC801 black mage game repo, at the path `SD_Card/MAGE/editor/dependencies/natlang-parser/`
 
 Natlang is under active development, and the grammar may be updated — sometimes dramatically — in tandem with the badge game source code. The Natlang parser will inform you when it has encountered a syntax error, but always be prepared to consult the documentation (which is generated procedurally based on the current syntax definitions) when writing something!

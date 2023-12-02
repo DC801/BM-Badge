@@ -6,7 +6,7 @@
       {
         "id": "72238c38f21badb4",
         "type": "tabs",
-        "dimension": 47.6832350463353,
+        "dimension": 99.99999999999999,
         "children": [
           {
             "id": "f11eac89bb898501",
@@ -14,44 +14,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mgs/serial_dialog_settings_block.md",
+                "file": "what_youll_need.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "ba725e27e6ae56dd",
+            "id": "86ef37e2b0bb6282",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mgs/script_block.md",
+                "file": "map_properties.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
-      },
-      {
-        "id": "f30150b2a0d6c638",
-        "type": "tabs",
-        "dimension": 52.316764953664695,
-        "children": [
-          {
-            "id": "031924887ed13944",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "mgs/advanced_syntax.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -80,7 +62,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "button_press",
+                "query": "police",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -117,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "mgs/serial_dialog_settings_block.md",
+                "file": "map_properties.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -134,7 +116,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "mgs/serial_dialog_settings_block.md",
+                "file": "map_properties.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -157,7 +139,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "mgs/serial_dialog_settings_block.md"
+                "file": "map_properties.md"
               }
             }
           }
@@ -177,34 +159,34 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f11eac89bb898501",
+  "active": "86ef37e2b0bb6282",
   "lastOpenFiles": [
-    "mgs/serial_dialog_block.md",
-    "mgs/blocks.md",
-    "mgs/script_block.md",
-    "mgs/mgs_natlang_structure.md",
-    "mgs/dialogs_mgs.md",
-    "mgs/advanced_syntax.md",
-    "actions.md",
-    "mgs/combination_block.md",
-    "mgs/dialog_block.md",
-    "actions/SET_CONNECT_SERIAL_DIALOG.md",
-    "actions/SHOW_DIALOG.md",
-    "mgs/serial_dialogs_mgs.md",
-    "actions/SHOW_SERIAL_DIALOG.md",
     "index.md",
-    "mgs/show_dialog_block.md",
+    "mage_folder.md",
+    "hex_editor.md",
+    "general_process.md",
+    "enums.md",
     "mgs/mgs_natlang.md",
-    "mgs/show_serial_dialog_block.md",
-    "mgs/scripts_mgs.md",
-    "mgs/mgs_natlang_vs_json.md",
-    "mgs/syntax_colors.md",
     "what_youll_need.md",
-    "mgs/serial_styles.md",
-    "mgs/serial_dialog_settings_block.md",
-    "mgs/serial_dialog_messages_mgs.md",
-    "mgs/serial_dialog_options_mgs.md",
-    "mgs/serial_dialog_parameters_mgs.md",
+    "mgs/advanced_syntax.md",
+    "dialogs.md",
+    "debug_tools.md",
+    "desktop_build.md",
+    "encoder.md",
+    "conditional_gotos.md",
+    "commands.md",
+    "animations.md",
+    "actions.md",
+    "web_build.md",
+    "vector_objects.md",
+    "variables.md",
+    "updating_the_hardware.md",
+    "terminal.md",
+    "serial_dialogs.md",
+    "scripts.md",
+    "mge_vm.md",
+    "script_slots.md",
+    "map_properties.md",
     "forest_goats",
     "MGS Advanced Syntax",
     "MGS Variables",

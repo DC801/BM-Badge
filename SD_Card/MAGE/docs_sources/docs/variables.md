@@ -1,13 +1,13 @@
 # Variables
 
-There are only a few Mage Game Engine (MGE) variables available for [script](scripts) to use.
+There are only a few Mage Game Engine (MGE) variables available for [scripts](scripts) to use.
 
-Variables don't have to be declared before they can be used; simply using an [action](actions) that sets or checks one will cause the encoder to include it in the `game.dat`.
+Variables don't have to be declared before they can be used; simply using an [action](actions) that sets or checks one will cause the encoder to include it in the `game.dat`. All these variables are globals — equally accessible to all scripts at all times.
 
 ::: warning
 This means typos can be hard to spot. If you set `birthdayparty` but check `birthday_party`, the encoder will create and store both variables as if they were separate things.
 
-If you find a variable isn't triggering logic checks in the ways you expect, you might want to verify that it's spelled the same wherever it's set/used.
+If you find a variable isn't triggering logic checks in the ways you expect, check your spelling of everything.
 :::
 
 All variables are persistent between [map loads](map_loads) because all are all included in the [save data](variables#save_data).
@@ -26,7 +26,7 @@ NOTICE: You only get 1 such string!
 
 ## Integer Variables
 
-**Integer** variables are technically `uint16_t`, meaning they can be any whole number between `0` and `65535`. (NOTE: no negative numbers.)
+**Integer** variables are `uint16_t`, meaning they can be any whole number between `0` and `65535`. (NOTE: no negative numbers, no `NaN`.)
 
 The default value for these is `0`.
 
@@ -53,7 +53,7 @@ The values of [integer variables](variables#integer-variables) and the **current
 
 ### Current Variable Value
 
-Enclose the name of the variable in dollar signs: `"I have $appleCount$ apples for sale today!"`
+Enclose the name of the variable in dollar signs, like this: `$appleCount$`
 
 ```mgs
 exampleScript {
@@ -62,14 +62,13 @@ exampleScript {
 }
 ```
 
-becomes
+The above script will produce:
 
 ```
 I have 10 apples for sale today!
 
 >_
 ```
-
 
 For text wrapping, it's recommended that these names be counted as taking up 5 characters. ([MGS Natlang](mgs/mgs_natlang) will wrap text automatically.)
 

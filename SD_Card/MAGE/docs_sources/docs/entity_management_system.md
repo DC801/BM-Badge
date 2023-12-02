@@ -1,6 +1,6 @@
 # Entity Management System
 
-To manage entity [animations](animations), you must first upload your [`scenario_source_files`](mage_folder#scenario_source_files) folder to the [encoder](encoder#web-encoder).
+To manage entity [animations](animations), you must first upload your [`scenario_source_files`](mage_folder#scenario_source_files) folder to the [web encoder](encoder#web-encoder).
 
 NOTE: Changes you make using these tools are not automatically perpetuated to the `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
 
