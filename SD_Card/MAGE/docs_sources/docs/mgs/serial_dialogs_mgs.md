@@ -4,13 +4,19 @@ In [MGS Natlang](../mgs/mgs_natlang), **serial dialogs** are found within [seria
 
 Serial dialogs contain text meant to be shown via the serial console [terminal](../terminal). They are called serial "dialogs" because they are similar to [dialogs](../dialogs) in many respects, but they are made up of text alone (as opposed to being accompanied by images and labels) and needn't be used for dialog specifically.
 
-```mgs
-serial dialog serialDialogName { "Serial dialogs go here!" }
+```mgs{2,7,11,15}
+serial dialog serialDialogName {
+  "Serial dialogs go here!"
+}
 //or
 script {
-  show serial dialog serialDialogName { "Serial dialogs go here!" }
+  show serial dialog serialDialogName {
+    "Serial dialogs go here!"
+  }
   //or
-  show serial dialog { "Serial dialogs go here!" }
+  show serial dialog {
+    "Serial dialogs go here!"
+  }
 
   //secret serial dialog!
   debug!("I am also a serial dialog!")

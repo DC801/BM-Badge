@@ -1,6 +1,6 @@
 # Map Properties
 
-Map properties reside either inside [`maps.json`](mage_folder#maps-json) (preferred) or inside a JSON map file (legacy). To see the map's properties within Tiled, go to "Map > Map Properties…."
+Map properties reside either inside [`maps.json`](mage_folder#maps-json) (preferred) or inside a JSON map file (legacy). (To see the map's properties within Tiled, go to "Map > Map Properties….")
 
 ## `path`
 
@@ -8,7 +8,7 @@ Where the map JSON file is located and what it's called.
 
 ## `on_load`
 
-The **[`on_load`](script_slots#on-load)** script plays when the map is first loaded. This is best used for checking [save flags](variables#save-flags) and restoring state that is meant to be permanently changed.
+The [`on_load`](script_slots#on-load) script plays when the map is first loaded. This is best used for checking [save flags](variables#save-flags) and restoring state that is meant to be permanently changed.
 
 `on_load` scripts stop when finished.
 

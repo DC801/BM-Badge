@@ -2,13 +2,19 @@
 
 In [MGS Natlang](../mgs/mgs_natlang), **dialogs** are found within [dialog blocks](../mgs/dialog_block) and related [combination blocks](../mgs/blocks#combination-blocks).
 
-```mgs
-dialog dialogName { SELF "Dialogs go here!" }
+```mgs{2,7,11}
+dialog dialogName {
+  SELF "Dialogs go here!"
+}
 //or
 script {
-  show dialog dialogName { SELF "Dialogs go here!" }
+  show dialog dialogName {
+    SELF "Dialogs go here!"
+  }
   // or
-  show dialog { SELF "Dialogs go here!" }
+  show dialog {
+    SELF "Dialogs go here!"
+  }
 }
 ```
 
@@ -54,7 +60,7 @@ The three options:
 	- This usage also provides a `name` [parameter](#dialog-parameters) for the dialog.
 	- If you don't want a name displayed, use an empty quoted string (`name ""`).
 
-## # Dialog Parameters
+## Dialog Parameters
 
 ```mgs{3-4}
 dialog sampleDialog {

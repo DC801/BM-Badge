@@ -79,7 +79,7 @@ var actionsIntro = [
 
 var actionCategoryText = {
 	"Game Management": [
-		"Handle the general state of the game, such as [loading maps](../map_loads), timing game actions, enabling and disabling player input, and managing save states."
+		"Handle the general state of the game, such as [loading maps](map_loads), timing game actions, enabling and disabling player input, and managing save states."
 	],
 	"Hex Editor": [
 		"Enable or disable player control of specific game features, and otherwise manage the hex editor state."
@@ -91,29 +91,29 @@ var actionCategoryText = {
 		"Manipulate the camera's position or perform tricks like shaking the camera or fading the screen in and out to an arbitrary color."
 	],
 	"Script Control": [
-		"Set a specific [`on_tick`](../script_slots#on-tick) or [`on_interact`](../script_slots#on-interact) script, run another script, or recursively copy the actions inside another script."
+		"Set a specific [`on_tick`](script_slots#on-tick) or [`on_interact`](script_slots#on-interact) script, run another script, or recursively copy the actions inside another script."
 	],
 	"Entity Choreography": [
-		"Move entities around the map using [vector objects](../vector_objects) placed with Tiled.",
+		"Move entities around the map using [vector objects](vector_objects) placed with Tiled.",
 		"NOTE: These actions can behave erratically if any of the vertices in the geometry object are subject to coordinate underflow."
 	],
 	"Entity Appearance": [
-		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](../actions/NON_BLOCKING_DELAY)."
+		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore, if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](actions/NON_BLOCKING_DELAY)."
 	],
 	"Set Entity Properties": [
-		"Set a specific property on a specific [entity](../entities)."
+		"Set a specific property on a specific [entity](entities)."
 	],
 	"Set Variables": [
 		"Manipulate MGE variables or set them to an arbitrary value."
 	],
 	"Check Entity Properties": [
-		"These actions check whether one of an [entity](../entities)'s [properties](../entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
-		"You can use [`%SELF%`](../relative_references#self) to target the entity running the script and [`%PLAYER%`](../relative_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
-		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).",
+		"These actions check whether one of an [entity](entities)'s [properties](entity_properties) matches a specific state. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
+		"You can use [`%SELF%`](relative_references#self) to target the entity running the script and [`%PLAYER%`](relative_references#player) to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
+		"You can use the condition portion of these following actions with [if and else](mgs/advanced_syntax#if-and-else).",
 	],
 	"Check Variables": [
 		"Check whether one of the MGE variables matches a specific value. If the condition is met (or not met), then the script will jump: either to a specific point in the same script or the top of an entirely different script.",
-		"You can use the condition portion of these following actions with [if and else](../mgs/advanced_syntax#if-and-else).",
+		"You can use the condition portion of these following actions with [if and else](mgs/advanced_syntax#if-and-else).",
 	]
 };
 
@@ -183,7 +183,7 @@ var actionText = {
 			"Plays the named [dialog](../dialogs).",
 			"A script cannot execute any other actions until the dialog is entirely finished. To give a [cutscene](../techniques/cutscenes) sophisticated choreography, you will need to either split the dialog into multiple pieces or prepare additional scripts to manage concurrent behavior.",
 			"While a dialog screen is showing, the player can only advance to the next dialog message or choose a multiple choice option within that dialog (if any); the player cannot hack, interact with another [entity](../entities), move, etc.",
-			"This action is also available as a [combination block](../mgs/combination_block): [show dialog block](../mgs/show_dialog_block).",
+			"This action is also available as a [combination block](../mgs/combination_block): [show dialog block](../mgs/dialog_block#show-dialog-block).",
 			"A script can close an open dialog with [CLOSE_DIALOG](../actions/CLOSE_DIALOG)."
 		]
 	},
@@ -1035,7 +1035,7 @@ Object.keys(actionCategoryText).forEach(function(cat){
 			return pair[1].category === cat;
 		})
 		.map(function (pair) {
-			return `- [${pair[0]}](../actions/${pair[0]})`;
+			return `- [${pair[0]}](actions/${pair[0]})`;
 		})
 		.join('\n');
 	actionParagraphs.push(list);

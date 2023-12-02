@@ -2,11 +2,13 @@
 
 ## Debug Mode
 
-Debug mode is triggered in-game by pressing `XOR` and `MEM1` (the top button on the left of the screen and the second button on the right) at the same time. On desktop: press `F1` and `F6` instead.
+Debug mode is triggered in-game by pressing `XOR` and `MEM1` (the top button on the left of the screen and the second button on the right) at the same time. On desktop: press `F1` and `F6` instead. This counts as a [map reload](map_loads).
+
+Turn debug mode off the same way.
 
 ### Debug Entities
 
-Normally, the Mage Game Engine (MGE) omits [entities](entities) with the `is_debug` value of `true` when loading [maps](maps). Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [hex editor](hex_editor), will not appear anywhere on the map, cannot be the target of [script](scripts), etc.  #verifyme When debug mode is activated, however, the [current map is reloaded](map_loads) and `is_debug` entities are included.
+Normally, the Mage Game Engine (MGE) omits [entities](entities) with the `is_debug` value of `true` when loading [maps](maps). Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [hex editor](hex_editor), will not appear anywhere on the map, cannot be the target of [script](scripts), etc.  #verifyme When debug mode is activated, however, the [current map is reloaded](map_loads) with `is_debug` entities included.
 
 The chapter 1 version of the engine *must* use debug entities to trigger debug scripts, as the serial [terminal](terminal) was not implemented yet, and there was not yet an action to check whether debug mode is on.
 
@@ -16,7 +18,7 @@ When making debug entities, it helps a lot to give them dialog describing what t
 
 ### Debug Scripting
 
-New in the chapter 2+ version of the engine is a [means of checking whether debug mode is on](actions/CHECK_DEBUG_MODE). With this action, you can add additional behavior to your game that is quick to enable when play testing, but hidden from players by default.
+With [CHECK_DEBUG_MODE](actions/CHECK_DEBUG_MODE), you can add additional behavior to your game that is easy to enable when play testing but hidden from players by default.
 
 #### Debug Logging
 
@@ -30,7 +32,7 @@ script {
 }
 ```
 
-For your convenience, the `debug!()` was introduced to provide the same behavior but in a much briefer form:
+For your convenience, the [`debug!()` macro](mgs/advanced_syntax#debug) was introduced to provide the same behavior but in a much briefer form:
 
 ```mgs
 script {

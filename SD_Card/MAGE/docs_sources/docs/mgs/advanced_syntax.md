@@ -10,7 +10,7 @@ A **label** is a destination for conditional (or non-conditional) jumps inside t
 
 The syntax is a [bareword](variables_mgs#bareword) followed by a colon (`:`).
 
-```mgs
+```mgs{6}
 exampleScript {
   show serial dialog { "One..." }
   show serial dialog { "Two..." }

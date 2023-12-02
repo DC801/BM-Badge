@@ -8,7 +8,7 @@ You will need a text editor. (NOTE: a word processor like Apple's Pages or Micro
 
 While any text editor might do the trick, we strongly recommend an IDE with project management features like syntax parsing and Git integration. Our strong recommendation, especially for beginners, is [Visual Studio Code](https://code.visualstudio.com/) (Mac, Linux, or Windows), which is free and open source. Importantly, we have prepared a VSCode Marketplace plugin for [MGS Natlang](mgs/mgs_natlang) [syntax highlighting](mgs/mgs_natlang#syntax-colors), which will make it much easier to work with MGS game script files.
 
-`.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](#mgs_natlang#syntax-colors) for up-to-date details and instructions.) The following can manage decent support as of late 2023:
+`.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](mgs/mgs_natlang#syntax-colors) for up-to-date details and instructions.) The following can manage decent support as of late 2023:
 
 - [Sublime Text](https://sublimetext.com)
 - [JetBrains' IDEs](https://www.jetbrains.com/) (excellent IDE but not inexpensive)
