@@ -1,3 +1,7 @@
+---
+next: ../debug_tools.md
+---
+
 # Advanced Syntax
 
 These features are QOL expansions and substitutions that allow [MGS Natlang](../mgs/mgs_natlang) to more closely resemble real programming languages.

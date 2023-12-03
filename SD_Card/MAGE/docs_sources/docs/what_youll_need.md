@@ -1,3 +1,7 @@
+---
+tags: [ 'VSCode', 'VS Code', 'Visual Studio Code', 'word processor', 'mac', 'windows', 'aseprite', 'opengameart.org', 'json', 'sublime merge', 'jetbrains' ]
+---
+
 # What You'll Need
 
 The MGE is data driven, meaning you won't need special hardware or a compiler to generate game content for your DC801 black mage badge. All you'll need are:

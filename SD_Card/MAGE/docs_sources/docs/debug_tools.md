@@ -1,3 +1,7 @@
+---
+prev: mgs/advanced_syntax.md
+---
+
 # Debug Tools
 
 ## Debug Mode

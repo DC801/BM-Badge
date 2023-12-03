@@ -1,3 +1,8 @@
+---
+tags: [ 'tiled', 'json', 'animations', 'doors', 'doorways', 'coordinate overflow', 'entity properties' ]
+prev: 'entity_management_system.md'
+---
+
 # Maps
 
 ## Creating a Map JSON File

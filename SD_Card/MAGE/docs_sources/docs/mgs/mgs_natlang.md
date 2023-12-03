@@ -1,3 +1,7 @@
+---
+prev: ../conditional_gotos.md
+---
+
 # MGS Natlang
 
 Introducing "MageGameScript Natlang" — a simplified approach to writing game content for the DC801 Black Mage Game Engine (MGE).

@@ -1,3 +1,8 @@
+---
+tags: [ 'action', 'script', 'map loads', 'save data', 'strings', 'booleans', 'integers', 'negative numbers', 'doors', 'spawn points', 'cutscenes', 'on_load', 'given name' ]
+prev: relative_references.md
+---
+
 # Variables
 
 There are only a few Mage Game Engine (MGE) variables available for [scripts](scripts) to use.
@@ -10,7 +15,7 @@ This means typos can be hard to spot. If you set `birthdayparty` but check `birt
 If you find a variable isn't triggering logic checks in the ways you expect, check your spelling of everything.
 :::
 
-All variables are persistent between [map loads](map_loads) because all are all included in the [save data](variables#save_data).
+All variables are persistent between [map loads](map_loads) because all are all included in the [save data](variables#save-data).
 
 ::: details For some dubious alternatives...
 Every [property](entity_properties) on every [entity](entities) is available for scripts to read and/or change, and might be used like normal variables. However, in practice, these might have limited utility because the player can [change these values directly](hex_editor) and these values are reset upon [map load](map_loads).

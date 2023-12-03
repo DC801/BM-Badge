@@ -1,3 +1,7 @@
+---
+tags: [ 'maps.json', 'cutscene', 'on_load', 'debug mde', 'save data', 'entity', 'entities', 'script slots', 'terminal', 'serial', 'COPY_SCRIPT' ]
+---
+
 # Map Loads
 
 The first map listed in [`maps.json`](mage_folder#maps-json) is the map the game will load when first turned on. If you want the game to start on a different map (perhaps skipping an intro [cutscene](techniques/cutscenes) the player has seen before), you should handle this logic checking on the [maps](maps)' [`on_load`](script_slots#on-load) [script](scripts), and [load a different map](actions/LOAD_MAP) as appropriate.

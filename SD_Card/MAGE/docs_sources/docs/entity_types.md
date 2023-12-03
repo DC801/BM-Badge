@@ -1,3 +1,7 @@
+---
+tags: [ 'entity_type', 'entities', 'PrimaryIdType', 'animations', 'PrimaryId', 'SecondaryId', 'encoder', 'tiled', 'maps', 'entity_types.json', 'entity management system' ]
+---
+
 # Entity Types
 
 In the MGE, there are three types of [entities](entities). Each have a `PrimaryIdType`:

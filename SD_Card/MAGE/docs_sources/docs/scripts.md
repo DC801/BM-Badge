@@ -1,3 +1,7 @@
+---
+tags: [ 'actions', 'self', 'player', 'cutscenes', 'mgs natlang', 'script slots', 'RUN_SCRIPT' ]
+---
+
 # Scripts
 
 A **script** is an array of [actions](actions) which will execute one after the other, top to bottom, when the script is run.

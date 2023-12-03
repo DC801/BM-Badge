@@ -1,3 +1,7 @@
+---
+tags: [ 'maps.json', 'tiled', 'save flags', 'doors', 'game tick', 'entities', 'entity', 'doorways', 'terminal', 'command', 'look', 'register', 'go', 'exits', 'registration' ]
+---
+
 # Map Properties
 
 Map properties reside either inside [`maps.json`](mage_folder#maps-json) (preferred) or inside a JSON map file (legacy). (To see the map's properties within Tiled, go to "Map > Map Properties….")

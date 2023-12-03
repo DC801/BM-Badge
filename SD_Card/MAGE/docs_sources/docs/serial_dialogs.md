@@ -1,3 +1,7 @@
+---
+tags: [ 'mgs natlang', 'dialog names', 'actions', 'SHOW_SERIAL_DIALOG', 'given name', 'current name', 'text wrap', ]
+---
+
 # Serial Dialogs
 
 **Serial dialogs** are a means to print messages on the serial [terminal](terminal) (new as of the chapter 2+ version of the MGE).

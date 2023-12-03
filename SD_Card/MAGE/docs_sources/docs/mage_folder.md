@@ -1,3 +1,8 @@
+---
+tags: [ 'web encoder', 'game.dat', 'shell script', 'mage_dat.ksy', 'mgs natlang', 'tiled', 'json', 'tiles', 'tilesets', 'map properties' ]
+next: 'tilesets.md'
+---
+
 # `MAGE` Folder
 
 There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new content are:

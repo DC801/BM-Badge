@@ -1,3 +1,7 @@
+---
+next: blocks.md
+---
+
 # MGS Natlang Structure
 
 Because [MGS Natlang](../mgs/mgs_natlang) is fairly white space agnostic, formatting is flexible.

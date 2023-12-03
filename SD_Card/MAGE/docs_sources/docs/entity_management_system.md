@@ -1,3 +1,8 @@
+---
+tags: [ 'entity_types.json', 'game.dat', 'character entity', 'entities', 'web encoder', 'idle', 'walk', 'action' ]
+next: 'maps.md'
+---
+
 # Entity Management System
 
 To manage entity [animations](animations), you must first upload your [`scenario_source_files`](mage_folder#scenario_source_files) folder to the [web encoder](encoder#web-encoder).

@@ -1,3 +1,7 @@
+---
+next: variables_mgs.md
+---
+
 # Serial Dialog Block
 
 To define an [MGS Natlang](../mgs/mgs_natlang) [serial dialog](../serial_dialogs), start a new [block](../mgs/blocks) at the root level:

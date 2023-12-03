@@ -1,3 +1,7 @@
+---
+tags: [ 'spritesheets', 'json', 'entities', 'entity', 'animations', 'character', 'tile', 'tileset', 'tiled', 'portraits', 'entity_type', 'collisions', 'vector objects', 'scripts', 'dialogs', 'serial dialogs', 'doors', 'doorways', 'cutscenes', 'encoder' ]
+---
+
 # General Process
 
 An example production pipeline. The exact order can vary a bit, and previous steps might be revisited at any point.
