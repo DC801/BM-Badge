@@ -1,3 +1,7 @@
+---
+tags: [ 'mgs natlang', 'dialog names', 'actions', 'SHOW_DIALOG', 'BOTTOM_LEFT', 'BOTTOM_RIGHT', 'TOP_LEFT', 'TOP_RIGHT', 'player', 'self', 'given name', 'current name', 'character entity', 'encoder', 'portrait.json', 'text wrap', ]
+---
+
 # Dialogs
 
 Dialogs are a visual novel or RPG style dialog system for the screen. These include portrait images, dialog box labels, and dialog messages.

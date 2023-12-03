@@ -1,3 +1,8 @@
+---
+tags: [ 'entity types', 'entity properties', 'hex editor', encoder', 'maps' ]
+prev: vector_objects.md
+---
+
 # Entities
 
 Entities are a basic element of the DC801 Mage Game Engine (MGE) along with [actions](actions).

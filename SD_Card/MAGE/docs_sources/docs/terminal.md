@@ -1,3 +1,7 @@
+---
+tags: [ 'commands', 'serial dialogs' ]
+---
+
 # Terminal
 
 The terminal interface, new in the chapter 2 version of the Mage Game Engine (MGE), allows a computer to connect to the badge over USB and use it as a serial host.

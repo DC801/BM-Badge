@@ -1,3 +1,7 @@
+---
+tags: [ 'google drive', 'visual studio code', 'chromium', 'repo' ]
+---
+
 # MGE VM
 
 ::: warning

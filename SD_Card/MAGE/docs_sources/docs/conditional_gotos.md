@@ -1,3 +1,7 @@
+---
+next: mgs/mgs_natlang.md
+---
+
 # Conditional Gotos
 
 Consists of actions from the check [entity properties](entity_properties) and check [variables](variables) categories. The "conditions" portion of each [action](actions) can be inserted into any of the following patterns:

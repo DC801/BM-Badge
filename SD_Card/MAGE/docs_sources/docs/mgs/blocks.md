@@ -1,3 +1,7 @@
+---
+prev: mgs_natlang_structure.md
+---
+
 # Blocks
 
 A basic unit of [MGS Natlang structure](../mgs/mgs_natlang_structure).

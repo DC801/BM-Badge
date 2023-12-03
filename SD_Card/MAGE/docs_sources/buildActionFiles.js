@@ -1021,6 +1021,7 @@ var makeObsidianEntry = function (actionName) {
 };
 
 var actionParagraphs = [
+	`---\nprev: script_slots.md\n---`,
 	'# Actions',
 	...actionsIntro,
 ]

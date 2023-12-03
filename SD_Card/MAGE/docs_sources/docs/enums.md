@@ -1,3 +1,7 @@
+---
+tags: [ 'joystick', 'actions', 'badge', 'hardware', 'lights', 'operators', 'mutate', 'multiply', 'add', 'subtract', 'divide', 'modulo', 'rng' ]
+---
+
 # Enums
 
 Some [actions](actions) will only be satisfied by a value from a limited set of words. In such cases, invalid values are reported by the [encoder](encoder).
@@ -70,7 +74,7 @@ We found that the joystick clicks were aggressive on the hardware, and would tri
 
 ## Comparators
 
-[Enums](enums) used with certain `CHECK_` [actions](actions). (See: [Conditional Gotos](conditional_gotos)
+[Enums](enums) used with certain `CHECK_` [actions](actions). (See: [Conditional Gotos](conditional_gotos))
 
 symbol | meaning
 ---|---

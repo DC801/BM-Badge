@@ -1,3 +1,8 @@
+---
+tags: [ 'dialog skins', 'dialogskins', 'transparent', 'colors', 'tiled', 'encoder', 'entity', 'entity_type', 'vertex', 'vertices', 'vector objects', 'pixels' ]
+prev: 'mage_folder.md'
+---
+
 # Tilesets
 
 A tileset is a series of images on a grid of uniform size used to modularly create larger images.

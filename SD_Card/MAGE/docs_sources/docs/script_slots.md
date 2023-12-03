@@ -1,3 +1,8 @@
+---
+tags: [ 'entity', 'entities', 'game tick', 'scripts', 'command', 'null_script', 'terminal', 'RUN_SCRIPT' ]
+next: actions.md
+---
+
 # Script Slots
 
 Multiple [scripts](scripts) can run at the same time (strictly speaking, they all take turns one after the other during any single game tick), but you cannot arbitrarily run an indefinite number of scripts. Instead, entities and maps have "script slots" that are each able to run one script.

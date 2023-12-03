@@ -1,3 +1,8 @@
+---
+tags: [ 'self', 'player', 'entity', 'entities', 'tiled', 'bender', 'strong bad' ]
+next: variables.md
+---
+
 # Relative References
 
 #expandme
@@ -13,7 +18,7 @@ Unlike relative entity names, you can use these two **relative entity references
 
 When used as the target of an [action](actions), `%PLAYER%` refers to the player entity (the entity marked `is_player` on the [map](maps) in Tiled).
 
-When used in the body of a message (e.g. `"Hello, %PLAYER%!"`) it will use the [current name](variables#printing-current-values)) of the player entity.
+When used in the body of a message (e.g. `"Hello, %PLAYER%!"`) it will use the [current name](variables#printing-current-values) of the player entity.
 
 ### `%SELF%`
 

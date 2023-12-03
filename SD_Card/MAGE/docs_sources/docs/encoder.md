@@ -1,3 +1,6 @@
+---
+next: hex_editor.md
+---
 
 # Encoder
 

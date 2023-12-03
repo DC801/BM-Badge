@@ -1,3 +1,7 @@
+---
+prev: script_slots.md
+---
+
 # Actions
 
 **Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [entities](entities).

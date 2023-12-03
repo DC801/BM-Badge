@@ -1,3 +1,7 @@
+---
+tags: [ 'spritesheets', 'tilesets', 'tiled', 'entity', 'entity management system', 'entity_types.json', 'handlers', 'frames' ]
+---
+
 # Animations
 
 In Tiled, animations are assigned to tiles within the [spritesheet](tilesets). To an assign an animation to a tile, select a tile — preferably something indicative of what the animation will be, such as a first step for a walking animation — and press the button for the animation editor, which looks like a movie camera:

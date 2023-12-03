@@ -2,6 +2,7 @@ import { defineUserConfig } from 'vuepress'
 import { defaultTheme } from '@vuepress/theme-default'
 import { shikiPlugin } from '@vuepress/plugin-shiki'
 import { readFileSync } from "fs"
+import { searchPlugin } from '@vuepress/plugin-search'
 
 console.log('shikiPlugin', shikiPlugin)
 
@@ -22,6 +23,10 @@ export default defineUserConfig({
     }
   },
   plugins: [
+	searchPlugin({
+		getExtraFields: (page) => page.frontmatter.tags ?? [],
+		maxSuggestions: 10,
+	  }),
     shikiPlugin({
       langs: [
         {

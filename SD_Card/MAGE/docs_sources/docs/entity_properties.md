@@ -1,3 +1,7 @@
+---
+tags: [ 'name', 'class', 'direction', 'entities', 'on_tick', 'on_interact', 'on_look', 'current_animation', 'current_frame', 'is_glitched', 'is_debug', 'path', 'is_player', 'player', 'vector view', 'hex editor', 'camera', 'joystick', 'map loads', 'dialogs', 'actions' ]
+---
+
 # Entity Properties
 
 #updateme

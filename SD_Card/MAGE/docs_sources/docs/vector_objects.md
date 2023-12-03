@@ -1,3 +1,8 @@
+---
+tags: [ 'tiled', 'map', 'entities', 'polygons', 'doors', 'doorways', 'origin', 'vertex', 'vertices', 'maps' ]
+next: entities.md
+---
+
 # Vector Objects
 
 These can be used as paths or destinations for [entities](entities) or the camera. Place these on a [map](maps) with Tiled.

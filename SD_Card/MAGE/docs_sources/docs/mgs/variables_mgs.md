@@ -1,3 +1,7 @@
+---
+prev: serial_dialog_block.md
+---
+
 # Variables (MGS)
 
 In this documentation's example syntax for [MGS Natlang](../mgs/mgs_natlang), variables are marked with `$`. This documentation uses two formats to indicate a variable, each with a `$` at the front:
