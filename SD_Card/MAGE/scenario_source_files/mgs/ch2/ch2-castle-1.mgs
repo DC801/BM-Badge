@@ -114,6 +114,7 @@ on_load-ch2-castle-1 {
 			"<c>BERT</>: to start 'Bert secret' cutscene"
 			"<c>GET _</>: pick up the named item"
 			"<c>ROUND _</>: collect the items for that round"
+			"<c>WALK</>: set XA on_interact to do the walk part"
 		}
 	}
 	// END DEBUG
@@ -167,12 +168,18 @@ tick-artifact-open {
 	set entity Artifact current_animation to 3;
 	goto null_script
 }
+ch2-camera-to-artifact {
+	pan camera to geometry artifact-get over 1200ms;
+	goto null_script
+}
 ch2-artifact-walk {
 	turn player control off; // temp (take out of final)
-	wait 100ms;
+	wait 70ms;
+	set entity XA on_tick to ch2-camera-to-artifact;
+	wait 500ms;
 	// a dumbwaiter-esque thing opens
 	set entity Artifact on_tick to tick-artifact-open;
-	wait 700ms;
+	wait 400ms;
 	turn entity "%PLAYER%" toward geometry artifact-look;
 	wait 1700ms;
 	if (entity "%PLAYER%" is inside geometry artifact-watchbox) {
@@ -182,11 +189,11 @@ ch2-artifact-walk {
 		walk entity "%PLAYER%" to geometry artifact-watchpoint over 600ms;
 	}
 	turn entity "%PLAYER%" toward geometry artifact-look;
-	wait 750ms;
+	wait 444ms;
 	show dialog {
 		PLAYER "What, over there?"
 	}
-	walk entity "%PLAYER%" to geometry artifact-approach over 600ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 400ms;
 	turn entity "%PLAYER%" north;
 	wait 1000ms;
 	// bling
@@ -194,18 +201,24 @@ ch2-artifact-walk {
 	set entity Artifact current_animation to 3;
 	wait 550ms;
 	walk entity "%PLAYER%" along geometry artifact-approach over 350ms;
-	wait 270ms;
+	wait 170ms;
 	turn entity "%PLAYER%" east;
 	wait 700ms;
 	turn entity "%PLAYER%" north;
 	wait 80ms;
 	// walks up to it
 	walk entity "%PLAYER%" to geometry artifact-get over 200ms;
-	wait 800ms;
+	wait 600ms;
 	set entity Artifact on_tick to yeet
 	// remove artifact
-	wait 400ms;
-	walk entity "%PLAYER%" to geometry artifact-approach over 700ms;
+	wait 100ms;
+	set entity XA on_tick to ch2-camera-from-artifact;
+	wait 200ms;
+	walk entity "%PLAYER%" to geometry artifact-approach over 600ms;
+}
+ch2-camera-from-artifact {
+	pan camera to entity "%PLAYER%" over 300ms;
+	goto null_script
 }
 
 /* ---------- ON_TICK ---------- */
@@ -306,11 +319,11 @@ ch2-attempt-door-check {
 		// you've already discovered the doors don't work
 		if (flag ch2-hax-attempted is true) {
 			show dialog {
-				PLAYER "The doors don't work, either? This is going to be a short quest."
+				PLAYER "And the doors are blocked? This is going to be a short quest."
 			}
 		} else {
 			show dialog {
-				PLAYER "The doors don't work? This is going to be a short quest."
+				PLAYER "The doors are blocked? This is going to be a short quest."
 			}
 		}
 		set flag ch2-door-attempted to true;
@@ -318,7 +331,7 @@ ch2-attempt-door-check {
 		// being obnoxious now :3
 		if (variable ch2-pretoot-door-attempts is 0) {
 			show dialog {
-				PLAYER "How am I supposed to get around if the doors don't work?"
+				PLAYER "How am I supposed to get around if the doors are all caved in?"
 			}
 		} else if (variable ch2-pretoot-door-attempts is 1) {
 			show dialog {
@@ -482,7 +495,7 @@ interact-ch2-xa {
 				"Well, you're welcome to the artifact. It's over there, just to your left, inside the pillar."
 			}
 			copy ch2-artifact-walk
-			wait 500ms;
+			wait 300ms;
 			turn entity "%PLAYER%" west;
 			show dialog {
 				PLAYER "Huh. Almost looks like one of those old, fancy calculators."
