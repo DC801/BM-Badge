@@ -97,6 +97,81 @@
             }
         }, 
         {
+         "id":15,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "class":"",
+                     "height":0,
+                     "id":2,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":27
+                            }, 
+                            {
+                             "x":3,
+                             "y":27
+                            }, 
+                            {
+                             "x":5,
+                             "y":29
+                            }, 
+                            {
+                             "x":5,
+                             "y":30
+                            }, 
+                            {
+                             "x":7,
+                             "y":32
+                            }, 
+                            {
+                             "x":25,
+                             "y":32
+                            }, 
+                            {
+                             "x":27,
+                             "y":30
+                            }, 
+                            {
+                             "x":27,
+                             "y":29
+                            }, 
+                            {
+                             "x":29,
+                             "y":27
+                            }, 
+                            {
+                             "x":32,
+                             "y":27
+                            }, 
+                            {
+                             "x":32,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
          "id":16,
          "objectgroup":
             {
@@ -1521,7 +1596,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1547,7 +1621,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1573,7 +1646,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1599,7 +1671,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1921,7 +1992,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1947,7 +2017,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1973,7 +2042,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -2320,7 +2388,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -2346,7 +2413,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -2372,7 +2438,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
