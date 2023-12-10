@@ -138,7 +138,7 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 Plot points implemented:
 
 - INTRO (`ch2-storyflag-round` = 0)
-	- [ ] Picking up the artifact from a sliding door cubby on the side of the wall: door opens, player character moves over there, turns to get it, then maybe door closes again (so we can reuse that temp entity)
+	- [~] Picking up the artifact from a sliding door cubby on the side of the wall: door opens, player character moves over there, turns to get it, then maybe door closes again (so we can reuse that temp entity)
 	- [x] Intro to Lambda
 		- [ ] Connecting the artifact on Windows
 		- [ ] Connecting the artifact on MacOS / Linux
@@ -422,3 +422,4 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Twisty turny: https://en.wikiquote.org/wiki/Colossal_Cave_Adventure (different variations)
 - Multiple choice riddles!!!!! (After dark!!!!)
 - Reference IP over avian carriers
+- Log Forge (Log4J according to the Hacker Jeopardy guy)

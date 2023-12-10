@@ -7,41 +7,44 @@ next: 'tilesets.md'
 
 There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new content are:
 
-`editor/index.html` — The [web encoder](encoder#web-encoder). To generate a `game.dat`, you can open this file in a web browser and follow the instructions.
-
-`game.dat` — This is the encoded data for your game. If you generated a `game.dat` using [web encoder](encoder#web-encoder), you must move the resulting `game.dat` here for the [desktop build](desktop_build) to see it; the [CLI encoder](encoder#cli_encoder), however, will update the `game.dat` in place.
-
-`replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory.
-
-`regenerate_dat_file.sh` — This shell script requires `node.js` to run (see: [What You'll Need](what_youll_need)). There are two versions of this file depending on which repo you started with, and note that the shell script from the [MGE VM](mge_vm) is slightly different.
-
-`mage_dat.ksy` — Intended to be used with [Kaitai](encoder#kaitai). This will help you identify unexpected game state you might be encountering.
-
-`scenario_source_files/` — This is where your raw game data lives.
+| file | purpose |
+|---|---|
+| `editor/index.html` | The [web encoder](encoder#web-encoder).
+| `game.dat` | Encoded game data. Your `game.dat` must be here for the [desktop build](desktop_build) to see it. (The [CLI encoder](encoder#cli_encoder) will update the `game.dat` in place.)
+| `replace_dat_file_with_downloaded.sh` | Grabs the latest `game.dat` from your Downloads folder and moves it to your current directory.
+| `regenerate_dat_file.sh` | The [CLI encoder](encoder#cli-encoder). There are two versions depending on which repo you started with; the version from the [MGE VM](mge_vm) is slightly different. Requires `node.js`.
+| `mage_dat.ksy` | For debugging your `game.dat` with [Kaitai](encoder#kaitai).
+| `scenario_source_files/` | Raw game assets, scripts, etc. (See below!)
 
 ## `scenario_source_files`
 
-::: tip
+::: tip JSON at its core
 [MGS Natlang](mgs/mgs_natlang) has dramatically simplified game scripting, but JSON remains the true underlying structure of game scenario data.
 :::
 
-The folders described below provide the only means for the encoder to tell JSON files apart. (On the other hand, MGS files represent multiple types of data, so all MGS files anywhere in the `scenario_source_files` folder are treated the same way.)
+The folders described below provide the only means for the encoder to tell JSON files apart. (In contrast, MGS files contain multiple types of data, so all MGS files anywhere in the `scenario_source_files` folder are treated the same way.)
 
-JSON file names should be prefixed with the type of MGE data they contain, even when they're placed inside the corresponding folder, as this will make them easier to debug during and after they're encoded.
+JSON file names should be prefixed with the type of MGE data they contain, even when they're placed inside the corresponding folder. This will make them easier to debug during and after they're encoded.
 
 Make sure all Tiled files are in the correct place before working on them or they'll break when you move them.
 
-### Asset Folders
+## Folders
+
+Folders inside `scenario_source_files`:
 
 | folder | file types | purpose |
 |---------------|------------|---------|
 | `dialog/` | MGE [dialog](dialogs) files (JSON) | RPG-style dialog messages for the main game screen |
 | `entities/` | Tiled [tilesets](tilesets) (JSON), [spritesheets](tilesets) (PNG/GIF) | [entity](entities) assets |
 | `maps/` | Tiled [maps](maps) (JSON) | map data (not including tilesets) |
-| `mgs/` | [MGS Natlang](mgs/mgs_natlang) files | these files need not be anywhere specific, but they're best kept together if nothing else |
+| `mgs/` | [MGS Natlang](mgs/mgs_natlang) files (MGS) | these files need not be anywhere specific, but they're best kept together if nothing else |
 | `serial_dialog/` | MGE [serial dialog](serial_dialogs) files (JSON) | words to be printed on the serial terminal |
 | `scripts/` | MGE [script](scripts) files (JSON) | determines the bulk of the behavior of the game |
 | `tilesets/` | Tiled [tilesets](tilesets) (JSON), [spritesheets](tilesets) (PNG/GIF) | non-entity assets, such as graphics for maps, dialog borders, etc. |
+
+## Files
+
+JSON files inside `scenario_source_files`:
 
 ### `scenario.json`
 
@@ -76,6 +79,8 @@ It will look something like this:
 `maps` and `dialogSkins` contain object literals (curly braces), which contain name-value pairs. For those object literals, the "name" is the name of the map/dialogSkin for an action to use, and the "value" is the file path for the appropriate JSON file.
 
 A `dialogSkin` called `default` is mandatory.
+
+NOTE: As of the ch2 version of the engine, map data is kept in its own JSON file, and is no longer included in `scenario.json`. (See below.)
 
 ### `entity_types.json`
 
@@ -114,22 +119,10 @@ Animations are much easier to do using the [web encoder](encoder#web-encoder)'s 
 
 ```json
 "idle": [
-  {
-    "tileid": 18,
-    "flip_x": false
-  },
-  {
-    "tileid": 16,
-    "flip_x": true
-  },
-  {
-    "tileid": 17,
-    "flip_x": false
-  },
-  {
-    "tileid": 16,
-    "flip_x": false
-  }
+  { "tileid": 18, "flip_x": false },
+  { "tileid": 16, "flip_x": true },
+  { "tileid": 17, "flip_x": false },
+  { "tileid": 16, "flip_x": false }
 ]
 ```
 
@@ -150,7 +143,7 @@ Each character entity should at least have an idle, walk, and action animation. 
 
 ### `maps.json`
 
-This file is new for the chapter 2+ version of the MGE. (The [maps](maps)' names and paths used to be defined in `scenario.json`, but now they have their own file.)
+This file is new for the chapter 2+ version of the MGE.
 
 [Map properties](map_properties) defined in a map's Tiled JSON file (in the old way) are still honored, but it's recommended to move such properties to this file for easier access.
 

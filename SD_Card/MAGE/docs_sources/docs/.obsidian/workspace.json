@@ -6,7 +6,6 @@
       {
         "id": "72238c38f21badb4",
         "type": "tabs",
-        "dimension": 99.99999999999999,
         "children": [
           {
             "id": "f11eac89bb898501",
@@ -26,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "map_properties.md",
+                "file": "scripts.md",
                 "mode": "source",
                 "source": false
               }
@@ -62,7 +61,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "police",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -99,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "map_properties.md",
+                "file": "scripts.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "map_properties.md",
+                "file": "scripts.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "map_properties.md"
+                "file": "scripts.md"
               }
             }
           }
@@ -161,6 +160,8 @@
   },
   "active": "86ef37e2b0bb6282",
   "lastOpenFiles": [
+    "conditional_gotos.md",
+    "map_properties.md",
     "index.md",
     "mage_folder.md",
     "hex_editor.md",
@@ -173,7 +174,6 @@
     "debug_tools.md",
     "desktop_build.md",
     "encoder.md",
-    "conditional_gotos.md",
     "commands.md",
     "animations.md",
     "actions.md",
@@ -186,7 +186,6 @@
     "scripts.md",
     "mge_vm.md",
     "script_slots.md",
-    "map_properties.md",
     "forest_goats",
     "MGS Advanced Syntax",
     "MGS Variables",
