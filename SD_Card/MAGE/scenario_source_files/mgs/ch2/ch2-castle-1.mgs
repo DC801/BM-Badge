@@ -565,7 +565,7 @@ interact-ch2-xa {
 
 ch2-terminal-setup-check {
 	show dialog {
-		Lambda "Need help getting the console working?"
+		Lambda "Need help getting the artifact terminal working?"
 		> "Yes" : ch2-terminal-setup-start
 		> "No" : ch2-terminal-setup-nevermind
 	}

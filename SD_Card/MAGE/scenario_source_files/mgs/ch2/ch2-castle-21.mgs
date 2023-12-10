@@ -29,6 +29,51 @@ on_load-ch2-castle-21 {
 	) {
 		copy script ch2-hide-abacus;
 	}
+	if (flag ch2-cutseen-castle21 is false) {
+		if (warp state is warping) {
+			// this is here because the cutscene dialog must come after the warp-in thing
+			copy warping-in-fade-in;
+			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
+		}
+		turn player control off;
+		wait 500ms;
+		turn entity Frankie toward entity "%PLAYER%";
+		wait 250ms;
+		turn entity Jean-Paul toward entity "%PLAYER%";
+		wait 140ms;
+		set entity Jean-Paul relative_direction to 2;
+		walk entity Jean-Paul to geometry birdstep over 150ms;
+		set entity Jean-Paul relative_direction to 0;
+		turn entity Jean-Paul east;
+		show dialog {
+			// TR because their portrait will block them otherwise
+			// Player is okay to still use BR (their default)
+			Frankie alignment TR "Whoa! WHOA! Someone's here!"
+		}
+		wait 200ms;
+		walk entity Jean-Paul to geometry birdstep2 over 240ms;
+		wait 80ms;
+		show dialog {
+			Jean-Paul alignment TR "You... you can move between rooms?"
+			"How are you doing that?"
+			PLAYER "I have this handheld artifact thingy, which lets me type --"
+			Frankie alignment TR "You have a portable terminal with you?"
+			"(TODO: more words)"
+		}
+		wait 100ms;
+		turn entity Jean-Paul north;
+		wait 500ms;
+		turn entity Jean-Paul east;
+		// show dialog {
+		// 	Jean-Paul alignment TL "The north door... it's not physically blocked, but the control panel must have been damaged in the earthquake."
+		// 	"(TODO: bring us the pieces, and we can fix them)" // or something
+		// // re solder something? replace a wire? replace a ribbon cable? none of these?
+		// }
+		set entity Jean-Paul on_tick to face-player;
+		set entity Frankie on_tick to face-player;
+		turn player control on;
+		set flag ch2-cutseen-castle21 to true;
+	}
 	goto ch2-map-init;
 }
 
