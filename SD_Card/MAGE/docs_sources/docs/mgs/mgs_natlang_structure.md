@@ -46,18 +46,18 @@ In all "dictionary" syntax definitions in this documentation, words in parenthes
 
 MGS Natlang supports two kinds of comments. Both can appear anywhere in an MGS file and inside any [block](../mgs/blocks).
 
-### Inline comment
+### Line comment
 
 ```mgs
 testScript {
   wait 1000ms;
-  wait 1000ms; // inline comment
+  wait 1000ms; // line comment
 }
 ```
 
-This is the only time that line breaks are syntactic in Natlang. Inline comments start with `//` and end either with a line break or the end of the document.
+This is the only time that line breaks are syntactic in Natlang. Line comments start with `//` and end either with a line break or the end of the document.
 
-Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [extraneous properties from actions](../comments) and the like and turn them into inline comments automatically.
+Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [extraneous properties from actions](../comments) and the like and turn them into line comments automatically.
 
 ### Block comment
 

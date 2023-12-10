@@ -1,5 +1,26 @@
 # Chapter 2 planning
 
+## Non-assets and scripting things we need
+
+- [ ] Stories about building computers! I.e.
+	- What you like: what you get out of it personally, which bits are easy to do, which bits are the most fun
+	- What you dislike: what kinds of things goes wrong, specific horror stories, which bits are a pain to do
+- [ ] Your soldering setup
+	- What equipment do you have?
+	- Is it always set up and left out, or do only get it out when you have a project?
+	- Do you have a "quick job" vs "pull out all the stops" range of stuff you use?
+	- How are things physically positioned on the desk? (Extra credit for an actual photo of everything laid out)
+	- Any piece of equipment you might see on someone else's desk that makes you go "Oh, that person does some serious soldering"?
+- [ ] How to set up a serial connection (COMPREHENSIVE PLZ)
+	- [ ] Windows
+		- Are there several ways of doing it?
+		- If so, is there a clear leader for best way, or easiest for beginners?
+		- Does the process vary based on which specific version you're on?
+	- [ ] Linux
+		- Is the hardware interface always the same, no matter the distro?
+		- Any traps or workarounds for weird setups?
+	- [ ] Mac (I think we've got it?)
+
 ## Story themes
 
 - Chapter 2: Connections
@@ -17,8 +38,6 @@
 	- Secrets to protect the vulnerable vs secrets to manipulate the vulnerable
 
 ## Sprite wishlist
-
-- [ ] Invisible dialog skin but with white arrow instead of pink (for birthday cake cutscene)
 
 ### Inventory items
 
@@ -48,11 +67,6 @@
 - [x] Welder ("Rocco")
 - [ ] Better Exa sprite
 - [ ] Misc other humanoid NPCs (as many as possible)
-	- [x] Goggle + beard + bald guy
-	- [x] Red star + short hair lady
-	- [x] Black-shirt guy
-	- [x] Cockatiel guy
-	- [x] Labcoat lady
 
 ### Sets and doodads
 
@@ -89,7 +103,7 @@ See below for color choices.
 
 #### Rooms
 
-```
+```mgs
 look-ch2-roomname {
 	show serial dialog spacer
 	show serial dialog {
@@ -105,7 +119,7 @@ The extra line break at the end is only needed for places, since the exit list w
 
 #### Entities
 
-```
+```mgs
 look-ch2-roomname {
 	show serial dialog spacer
 	show serial dialog {
@@ -117,9 +131,9 @@ look-ch2-roomname {
 }
 ```
 
-Note the relative entity name for the label.
+Note the relative entity name for the label (i.e. wrapped in `%`s).
 
-### Colors
+### Ansi Colors
 
 - We can't know whether the user has a dark theme or a light theme, nor can we guarantee that all colors will be equally visible in their particular theme. Therefore, when needing arbitrary colors, prioritize them in this order:
 	- Cyan/magenta (best)
@@ -144,4 +158,4 @@ Note the relative entity name for the label.
 		- The castle rooms (ch2 dungeon) (?)
 			- Only the warp names are colored?
 - In the web serial console, a styled section of text loses its styles after a newline character. As a workaround, reapply the style at the beginning of the first word that lost its styles.
-- Currently, in the web build, the bell character is printed. Keep that in mind...
+- Currently, in the web build, the bell character is printed! (Like, as a boxy character, inline with other text.) Keep that in mind...
