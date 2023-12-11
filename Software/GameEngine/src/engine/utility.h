@@ -60,11 +60,8 @@ static inline void error_print(const char* strLike)
 
 namespace Util
 {
-
-
    template <typename T, typename P>
    static inline T lerp(T a, T b, P progress) { return (T)((b - a) * progress) + a; }
-
 };
 
 

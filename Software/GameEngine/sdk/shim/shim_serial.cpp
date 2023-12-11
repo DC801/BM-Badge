@@ -24,7 +24,7 @@ bool usb_connected = false;
 
 static void cdc_acm_user_ev_handler(
     app_usbd_class_inst_t const* p_inst,
-    app_usbd_cdc_acm_user_event_t event
+    app_usbd_cdc_acm_user_event_t eventType
 );
 
 #define CDC_ACM_COMM_INTERFACE  0
@@ -34,7 +34,7 @@ static void cdc_acm_user_ev_handler(
 #define CDC_ACM_DATA_EPIN       NRF_DRV_USBD_EPIN1
 #define CDC_ACM_DATA_EPOUT      NRF_DRV_USBD_EPOUT1
 
-static bool was_command_entered = false;
+//static bool was_command_entered = false;
 
 // do not change READ_SIZE, this is the size the NRF SDK
 // example uses, and it works better than ours used to
@@ -110,7 +110,7 @@ static void handle_serial_character(char value)
 
 
 void send_serial_message_with_length(
-    const char* message,
+    const std::string& message,
     size_t message_length
 )
 {
@@ -156,7 +156,7 @@ void send_serial_message_with_length(
 }
 
 void send_serial_message(
-    const char* message
+    const std::string& message
 )
 {
     size_t message_length = strlen(message);
@@ -176,31 +176,24 @@ void handle_usb_serial_input()
         // detecting length with strlen() don't work out so good.
         // We already know the buffer length from handling chars.
         // Just use that explicitly.
-        send_serial_message_with_length(
-            echo_buffer,
-            echo_buffer_length
-        );
-        memset(
-            echo_buffer,
-            0,
-            ECHO_BUFFER_SIZE
-        );
+        send_serial_message_with_length(echo_buffer, echo_buffer_length);
+        memset(echo_buffer, 0, ECHO_BUFFER_SIZE);
         echo_buffer_length = 0;
         is_echo_buffer_populated = false;
     }
 }
 
 /**
- * @brief User event handler @ref app_usbd_cdc_acm_user_ev_handler_t (headphones)
+ * @brief User eventType handler @ref app_usbd_cdc_acm_user_ev_handler_t (headphones)
  * */
 static void cdc_acm_user_ev_handler(
     app_usbd_class_inst_t const* p_inst,
-    app_usbd_cdc_acm_user_event_t event
+    app_usbd_cdc_acm_user_event_t eventType
 )
 {
     app_usbd_cdc_acm_t const* p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
 
-    switch (event)
+    switch (eventType)
     {
     case APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN:
     {
@@ -264,9 +257,9 @@ static void cdc_acm_user_ev_handler(
     }
 }
 
-static void usbd_user_ev_handler(app_usbd_event_type_t event)
+static void usbd_user_ev_handler(app_usbd_event_type_t eventType)
 {
-    switch (event)
+    switch (eventType)
     {
     case APP_USBD_EVT_DRV_SUSPEND:
         //bsp_board_led_off(LED_USB_RESUME);
@@ -358,7 +351,7 @@ bool usb_serial_is_connected() {
     return usb_connected;
 }
 
-bool usb_serial_write(const char* data, uint32_t len) {
+bool usb_serial_write(const std::string& data, uint32_t len) {
     UNUSED_PARAMETER(data);
     UNUSED_PARAMETER(len);
 

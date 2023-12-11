@@ -8,6 +8,15 @@
 #include "utility.h"
 #include "fonts/Monaco9.h"
 
+
+//size of chunk to be read/written when writing game.dat to ROM per loop
+static const inline uint32_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
+
+//size of largest single Write data that can be sent at one time:
+//make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
+//or you'll lose data.
+static const inline uint32_t ENGINE_ROM_WRITE_PAGE_SIZE = 512;
+
 class RomUpdater
 {
 public:

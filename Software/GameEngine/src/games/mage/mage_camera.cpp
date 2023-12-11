@@ -1,15 +1,16 @@
 #include "mage_camera.h"
 #include "mage_defines.h"
-#include "mage_map.h"
+#include "mage_entity.h"
 #include "FrameBuffer.h"
 
 static constexpr const EntityPoint midScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
 
-void MageCamera::applyEffects(uint32_t deltaTime)
+void MageCamera::applyEffects()
 {
-   if (followEntityId  != NO_PLAYER_INDEX)
+   if (followEntity.has_value())
    {
-      position = mapControl->getEntityByMapLocalId(followEntityId).renderableData.center;
+      auto& renderableData = followEntity.value()->renderableData;
+      position = EntityPoint{ uint16_t(renderableData.origin.x + renderableData.hitBox.w / 2),uint16_t(renderableData.origin.y + renderableData.hitBox.h / 2) };
    }
 
    if (shaking)

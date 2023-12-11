@@ -88,8 +88,9 @@ int main(int argc, char* argv[])
 
     // Setup the system
     log_init();
-    static auto inputHandler = std::make_shared<EngineInput>();
-    static auto frameBuffer = std::make_shared<FrameBuffer>();
+    auto windowFrame = std::make_unique<EngineWindowFrame>();
+    auto inputHandler = std::make_shared<EngineInput>();
+    auto frameBuffer = std::make_shared<FrameBuffer>(std::move(windowFrame));
 
 #ifdef DC801_EMBEDDED
     // Init the clock 

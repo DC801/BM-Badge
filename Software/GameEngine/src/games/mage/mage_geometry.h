@@ -32,10 +32,10 @@ in a more accessible way.
 //this is the numerical translation for entity direction.
 enum MageEntityAnimationDirection : uint8_t
 {
-	NORTH = 0,
-	EAST = 1,
-	SOUTH = 2,
-	WEST = 3,
+   NORTH = 0,
+   EAST = 1,
+   SOUTH = 2,
+   WEST = 3,
 };
 
 
@@ -43,176 +43,181 @@ enum MageEntityAnimationDirection : uint8_t
 // and the remaining functions using 32 bit signed integers, 
 // I have templated it and aliased the appropriate types below
 template <typename T>
-struct PointT
+struct Vector2T
 {
-	T x{ 0 };
-	T y{ 0 };
+   T x{ 0 };
+   T y{ 0 };
 
-	constexpr float DotProduct(const PointT& b) const
-	{
-		return (float)x * (float)b.x
-			+ (float)y * (float)b.y;
-	};
+   constexpr float DotProduct(const Vector2T& b) const
+   {
+      return (float)x * (float)b.x
+         + (float)y * (float)b.y;
+   };
 
-	PointT lerp(PointT b, float progress) const
-	{
-		return PointT{
-			Util::lerp(x, b.x, progress),
-			Util::lerp(y, b.y, progress)
-		};
-	}
+   constexpr bool zero() const
+   {
+      return x == T{ 0 } && y == T{ 0 };
+   }
 
-	PointT flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
-	{
-		PointT point = PointT{ x,y };
+   Vector2T lerp(Vector2T b, float progress) const
+   {
+      return Vector2T{
+         Util::lerp(x, b.x, progress),
+         Util::lerp(y, b.y, progress)
+      };
+   }
 
-		if (flags & RENDER_FLAGS_FLIP_X)
-		{
-			point.x = width - point.x;
-		}
-		if (flags & RENDER_FLAGS_FLIP_Y)
-		{
-			point.y = height - point.y;
-		}
+   Vector2T flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
+   {
+      Vector2T point = Vector2T{ x,y };
 
-		if (flags & RENDER_FLAGS_FLIP_DIAG)
-		{
-			auto xTemp = point.x;
-			point.x = point.y;
-			point.y = xTemp;
-		}
+      if (flags & RENDER_FLAGS_FLIP_X)
+      {
+         point.x = width - point.x;
+      }
+      if (flags & RENDER_FLAGS_FLIP_Y)
+      {
+         point.y = height - point.y;
+      }
 
-		return point;
-	}
+      if (flags & RENDER_FLAGS_FLIP_DIAG)
+      {
+         auto xTemp = point.x;
+         point.x = point.y;
+         point.y = xTemp;
+      }
 
-	template <class O>
-	PointT& operator-=(const O& rhs)
-	{
-		if constexpr (std::is_integral_v<O>)
-		{
-			x -= rhs;
-			y -= rhs;
-		}
-		else
-		{
-			x -= rhs.x;
-			y -= rhs.y;
-		}
-		return *this;
-	}
+      return point;
+   }
 
-	template <class O>
-	friend PointT operator-(PointT lhs, const O& rhs)
-	{
-		lhs -= rhs;
-		return lhs;
-	}
+   template <class O>
+   Vector2T& operator-=(const O& rhs)
+   {
+      if constexpr (std::is_integral_v<O>)
+      {
+         x -= rhs;
+         y -= rhs;
+      }
+      else
+      {
+         x -= rhs.x;
+         y -= rhs.y;
+      }
+      return *this;
+   }
 
-	template <class O>
-	friend PointT operator*(PointT lhs, const O& rhs)
-	{
-		lhs *= rhs;
-		return lhs;
-	}
+   template <class O>
+   friend Vector2T operator-(Vector2T lhs, const O& rhs)
+   {
+      lhs -= rhs;
+      return lhs;
+   }
 
-	template <class O>
-	PointT& operator*=(const O& scale)
-	{
-		this->x *= scale;
-		this->y *= scale;
-		return *this;
-	}
+   template <class O>
+   friend Vector2T operator*(Vector2T lhs, const O& rhs)
+   {
+      lhs *= rhs;
+      return lhs;
+   }
 
-	template <class O>
-	friend PointT operator/(PointT lhs, const O& rhs)
-	{
-		lhs /= rhs;
-		return lhs;
-	}
+   template <class O>
+   Vector2T& operator*=(const O& scale)
+   {
+      this->x *= scale;
+      this->y *= scale;
+      return *this;
+   }
 
-	template <class O>
-	PointT& operator/=(const O& scale)
-	{
-		this->x /= scale;
-		this->y /= scale;
-		return *this;
-	}
+   template <class O>
+   friend Vector2T operator/(Vector2T lhs, const O& rhs)
+   {
+      lhs /= rhs;
+      return lhs;
+   }
 
-	//PointT operator-()
-	//{
-	//	return PointT{ -x, -y };
-	//}
+   template <class O>
+   Vector2T& operator/=(const O& scale)
+   {
+      this->x /= scale;
+      this->y /= scale;
+      return *this;
+   }
 
-	template <class O>
-	PointT& operator+=(const O& rhs)
-	{
-		this->x += rhs.x;
-		this->y += rhs.y;
-		return *this;
-	}
+   Vector2T operator-()
+   {
+   	return Vector2T{ -x, -y };
+   }
 
-	template <class O>
-	friend PointT operator+(PointT lhs, const O& rhs)
-	{
-		lhs += rhs;
-		return lhs;
-	}
+   template <class O>
+   Vector2T& operator+=(const O& rhs)
+   {
+      this->x += rhs.x;
+      this->y += rhs.y;
+      return *this;
+   }
 
-	template <class O>
-	friend bool operator==(PointT lhs, const O& rhs)
-	{
-		return lhs.x == rhs.x && lhs.y == rhs.y;
-	}
+   template <class O>
+   friend Vector2T operator+(Vector2T lhs, const O& rhs)
+   {
+      lhs += rhs;
+      return lhs;
+   }
 
-	MageEntityAnimationDirection getRelativeDirection(const PointT& target) const
-	{
-		float angle = atan2f(target.y - y, target.x - x);
-		float absoluteAngle = abs(angle);
-		MageEntityAnimationDirection direction = SOUTH;
-		if (absoluteAngle > 2.356194f)
-		{
-			direction = WEST;
-		}
-		else if (absoluteAngle < 0.785398f)
-		{
-			direction = EAST;
-		}
-		else if (angle < 0)
-		{
-			direction = NORTH;
-		}
-		else if (angle > 0)
-		{
-			direction = SOUTH;
-		}
-		return direction;
-	}
+   template <class O>
+   friend bool operator==(Vector2T lhs, const O& rhs)
+   {
+      return lhs.x == rhs.x && lhs.y == rhs.y;
+   }
+
+   MageEntityAnimationDirection getRelativeDirection(const Vector2T& target) const
+   {
+      float angle = atan2f(target.y - y, target.x - x);
+      float absoluteAngle = abs(angle);
+      MageEntityAnimationDirection direction = SOUTH;
+      if (absoluteAngle > 2.356194f)
+      {
+         direction = WEST;
+      }
+      else if (absoluteAngle < 0.785398f)
+      {
+         direction = EAST;
+      }
+      else if (angle < 0)
+      {
+         direction = NORTH;
+      }
+      else if (angle > 0)
+      {
+         direction = SOUTH;
+      }
+      return direction;
+   }
 };
 
-using Point = PointT<int32_t>;
-using EntityPoint = PointT<uint16_t>;
+using Point = Vector2T<int32_t>;
+using EntityPoint = Vector2T<uint16_t>;
 
 
 //struct Line
 //{
-//	PointT A;
-//	PointT B;
+//	Vector2T A;
+//	Vector2T B;
 //};
 
 template <class T>
 struct RectT
 {
-	PointT<T> origin;
-	T w{ 0 };
-	T h{ 0 };
+   Vector2T<T> origin;
+   T w{ 0 };
+   T h{ 0 };
 
-	constexpr bool Overlaps(RectT<T>& other) const
-	{
-		return origin.x <= other.origin.x + other.w
-			&& origin.x + w >= other.origin.x
-			&& origin.y <= other.origin.y + other.h
-			&& origin.y + h >= other.origin.y;
-	}
+   constexpr bool Overlaps(RectT<T>& other) const
+   {
+      return origin.x <= other.origin.x + other.w
+         && origin.x + w >= other.origin.x
+         && origin.y <= other.origin.y + other.h
+         && origin.y + h >= other.origin.y;
+   }
 };
 
 using Rect = RectT<int>;
@@ -233,7 +238,7 @@ public:
 
    static std::optional<EntityPoint> getIntersectPointBetweenLineSegments(const EntityPoint& lineAPointA, const EntityPoint& lineAPointB, const EntityPoint& lineBPointA, const EntityPoint& lineBPointB);
 
-	static float VectorLength(const int32_t& x, const int32_t& y) { return sqrt((x * x) + (y * y)); };
+   static float VectorLength(const int32_t& x, const int32_t& y) { return sqrt((x * x) + (y * y)); };
 
    uint16_t getLoopableGeometryPointIndex(uint8_t pointIndex) const;
    uint16_t GetLoopableGeometrySegmentIndex(uint8_t segmentIndex) const
@@ -253,40 +258,41 @@ public:
       }
       return result;
    }
-   
+
    bool IsPointInside(const EntityPoint& pointToCheck, const EntityPoint& geometryOffset = EntityPoint{ 0 }) const
    {
-	   auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
+      auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
 
-	   for (auto& p : GetPoints())
-	   {
-		   auto point = p + geometryOffset;
-		   minX = std::min(point.x - pointToCheck.x, minX);
-		   minY = std::min(point.y - pointToCheck.y, minY);
-		   maxX = std::max(point.x - pointToCheck.x, maxX);
-		   maxY = std::max(point.y - pointToCheck.y, maxY);
-	   }
+      for (auto& p : GetPoints())
+      {
+         auto point = p + geometryOffset;
+         minX = std::min(point.x - pointToCheck.x, minX);
+         minY = std::min(point.y - pointToCheck.y, minY);
+         maxX = std::max(point.x - pointToCheck.x, maxX);
+         maxY = std::max(point.y - pointToCheck.y, maxY);
+      }
 
-	   return minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0;
+      return minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0;
    }
 
-	std::span<EntityPoint> GetPoints() const
-	{
-		return std::span<EntityPoint>{(EntityPoint*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
-	}
-
-	EntityPoint GetPoint(uint16_t i) const
-	{
-		auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
-      return EntityPoint{ points[2*i], points[2*i + 1] };
+   std::span<EntityPoint> GetPoints() const
+   {
+      return std::span<EntityPoint>{(EntityPoint*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
    }
-   uint16_t GetPointCount() const { return pointCount;  }
+
+   EntityPoint GetPoint(uint16_t i) const
+   {
+      auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
+      return EntityPoint{ points[2 * i], points[2 * i + 1] };
+   }
+   uint16_t GetPointCount() const { return pointCount; }
 
    MageGeometryType GetTypeId() const { return typeId; }
    float GetPathLength() const { return pathLength; }
-   float GetSegmentLength(uint16_t index) const { 
+   float GetSegmentLength(uint16_t index) const
+   {
       auto segmentLengths = (float*)((uint8_t*)&pathLength + sizeof(float) + pointCount * sizeof(Point));
-      return !segmentCount ? 0.0f : segmentLengths[index % segmentCount]; 
+      return !segmentCount ? 0.0f : segmentLengths[index % segmentCount];
    }
 
 private:

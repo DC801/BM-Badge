@@ -14,12 +14,12 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
     auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
     auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-    auto ySourceMin = uint16_t{0};
-    auto ySourceMax = uint16_t{tileset->TileHeight};
-    auto xSourceMin = uint16_t{0};
-    auto xSourceMax = uint16_t{tileset->TileWidth};
-    auto iteratorX =  int{1};
-    auto iteratorY =  int{1};
+    auto ySourceMin = int32_t{0};
+    auto ySourceMax = int32_t{tileset->TileHeight};
+    auto xSourceMin = int32_t{0};
+    auto xSourceMax = int32_t{tileset->TileWidth};
+    auto iteratorX = int32_t{1};
+    auto iteratorY = int32_t{1};
 
     if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
     {
@@ -42,6 +42,8 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
     //    target.origin.x += target.w * 0.125;
     //    target.w *= 0.75;
     //}
+
+
     if (tileDrawPoint.y + tileset->TileHeight < 0 || tileDrawPoint.x + tileset->TileWidth < 0
         || tileDrawPoint.y >= DrawHeight || tileDrawPoint.x >= DrawWidth)
     {
@@ -51,6 +53,21 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
     // offset to the start address of the tile
     auto tilePtr = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId) + tileId * tileset->TileWidth * tileset->TileHeight;
 
+
+   // we can fit up to 254 bytes in a single transfer window, each color is 2 bytes, so we can do a max of 127 pixels/transfer
+   // if (tileset->ImageWidth * target.h * sizeof(uint16_t) <= 254)
+   // {
+   //    std::array<uint16_t, 254 / sizeof(uint16_t)> tileBuffer{0};
+   //    for (auto i = 0; i < tileBuffer.size(); i++)
+   //    {
+   //       auto& color = colorPalette->get(sourceTilePtr[i]);
+   //       if (color != TRANSPARENCY_COLOR)
+   //       {
+   //          tileBuffer[i] = color;
+   //       }
+   //    }
+
+   // }
     for (auto yTarget = tileDrawPoint.y; 
         ySourceMin != ySourceMax;
         ySourceMin += iteratorY, yTarget++)
@@ -62,7 +79,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
             continue;
         }
 
-        for (auto xSource = xSourceMin, xTarget = tileDrawPoint.x;
+        for (auto xSource = xSourceMin, xTarget = int32_t{ tileDrawPoint.x };
             xSource != xSourceMax;
             xSource += iteratorX, xTarget++)
         {

@@ -418,20 +418,20 @@ private:
 
 };
 
+struct ScriptAction
+{
+   uint8_t TypeId{ 0 };
+   uint8_t Args[MAGE_NUM_ACTION_ARGS]{ 0 };
+};
+
 class MageScript
 {
 public:
    const uint32_t& GetActionCount() const { return actionCount; }
-
-   struct Action {
-      uint8_t TypeId{ 0 };
-      uint8_t Args[MAGE_NUM_ACTION_ARGS]{ 0 };
-   };
-
-   const Action* GetAction(uint16_t actionOffset) const 
+   const ScriptAction* GetAction(uint16_t actionOffset) const
    {
       auto actionPointer = (const char*)&actionCount + sizeof(uint32_t);
-      return (const Action*)(actionPointer + actionOffset * sizeof(Action));
+      return (const ScriptAction*)(actionPointer + actionOffset * sizeof(ScriptAction));
    }
 
 private:

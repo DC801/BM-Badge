@@ -13,6 +13,9 @@ all of the old code used as the foundation of this badge.
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 
+#include <chrono>
+#include "shim_timer.h"
+
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
@@ -42,8 +45,8 @@ all of the old code used as the foundation of this badge.
 
 //these are used for setting player speed
 //speed is in x/y units per update
-#define MAGE_RUNNING_SPEED float{ 200 }
-#define MAGE_WALKING_SPEED float{ 100 }
+static const inline float MAGE_RUNNING_SPEED = 200.0f;
+static const inline float MAGE_WALKING_SPEED = 100.0f;
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
@@ -54,7 +57,7 @@ all of the old code used as the foundation of this badge.
 
 //this is how many bytes of arguments each script action has.
 //all actions will have this many bytes, even if some are not used by a particular action
-#define MAGE_NUM_ACTION_ARGS 7
+static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
@@ -63,15 +66,18 @@ all of the old code used as the foundation of this badge.
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 
-//this is how many ms must have passed before the main game loop will run again:
-//typical values:
-//60fps: ~16ms
-//30fps: ~33ms
-//24fps: ~41ms
+// this is how many ms must have passed before the main game loop will run again:
+// typical values:
+// 60fps: ~16ms
+// 30fps: ~33ms
+// 24fps: ~41ms
+// RTC for NRF52840 ticks ~30us
 #ifdef DC801_EMBEDDED
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
 #else
-static inline const auto MAGE_MIN_MILLIS_BETWEEN_FRAMES = (1000 / 24);
+static inline const auto TargetFPS = 24;
+static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
+static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000)/TargetFPS;
 #endif
 
 

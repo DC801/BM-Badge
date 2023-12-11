@@ -101,8 +101,8 @@ set(SOURCEFILES
     Software/GameEngine/src/games/mage/mage_defines.h
     Software/GameEngine/src/games/mage/mage_dialog_control.cpp
     Software/GameEngine/src/games/mage/mage_dialog_control.h
-    Software/GameEngine/src/games/mage/mage_entity_type.cpp
-    Software/GameEngine/src/games/mage/mage_entity_type.h
+    Software/GameEngine/src/games/mage/mage_entity.cpp
+    Software/GameEngine/src/games/mage/mage_entity.h
     Software/GameEngine/src/games/mage/mage_geometry.cpp
     Software/GameEngine/src/games/mage/mage_geometry.h
     Software/GameEngine/src/games/mage/mage_hex.cpp

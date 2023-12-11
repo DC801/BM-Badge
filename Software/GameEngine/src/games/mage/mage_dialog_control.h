@@ -10,7 +10,7 @@
 #include "fonts/Monaco9.h"
 #include "shim_timer.h"
 #include "mage_defines.h"
-#include "mage_entity_type.h"
+#include "mage_entity.h"
 #include "mage_rom.h"
 
 class MapControl;

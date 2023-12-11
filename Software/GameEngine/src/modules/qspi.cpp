@@ -157,7 +157,7 @@ void QSPI::WriteSaveSlot(uint8_t slotIndex, const MageSaveGame* saveData) const 
 #ifdef DC801_EMBEDDED
 
     EraseSaveSlot(slotIndex);
-    auto slotAddress = getSaveSlotAddressByIndex(slotIndex);
+    const auto slotAddress = getSaveSlotAddressByIndex(slotIndex);
     if (!write((const char*)saveData, sizeof(MageSaveGame), slotAddress))
     {
         ENGINE_PANIC("WriteSaveSlot Failed");

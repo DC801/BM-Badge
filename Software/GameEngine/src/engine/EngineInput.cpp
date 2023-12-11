@@ -5,11 +5,11 @@
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
 #include <SDL_image.h>
-#include <cstdio>
+#include <iostream>
 #include <string>
 #include <regex>
 
-uint32_t EngineInput::GetDesktopInputState()
+ButtonState EngineInput::GetDesktopInputState()
 {
    if (application_quit != 0)
    {
@@ -45,7 +45,7 @@ uint32_t EngineInput::GetDesktopInputState()
          // reload the `game.dat` from the filesystem
          else if (KMOD_CTRL == (e.key.keysym.mod & KMOD_CTRL) && e.key.keysym.sym == SDLK_r)
          {
-            TriggerRomReload();
+            reset = true;
             return 0;
          }
          // + or - keys increase or decrease screen size:
@@ -130,8 +130,20 @@ uint32_t EngineInput::GetDesktopInputState()
 
 #endif
 
-void EngineInput::Update()
+
+#ifndef DC801_EMBEDDED
+std::string EngineInput::GetCommandStringFromStandardIn()
 {
+   std::string commandBuffer;
+   auto& charsRead = std::getline(std::cin, commandBuffer, '\n');
+   //was_command_entered = bool(charsRead);
+   return commandBuffer;
+}
+#endif
+
+bool EngineInput::KeepRunning()
+{
+
 #ifdef DC801_EMBEDDED
    auto newValue = get_keyboard_mask();
 #else
@@ -141,9 +153,29 @@ void EngineInput::Update()
    buttons = newValue;
    activated = ~activated & newValue;
 
+   //make map reload options global regardless of the player's other control state
+   if (buttons.IsPressed(KeyPress::Xor))
+   {
+      if (buttons.IsPressed(KeyPress::Mem3))
+      {
+         reset = true;
+      }
+      else if (buttons.IsPressed(KeyPress::Mem1))
+      {
+         isEntityDebugOn = false;
+         reset = true;
+      }
+   }
+
 
    //on desktop, interact with stdin
    //on embedded, interact with USBC com port over serial
-   EngineHandleSerialInput();
-}
 
+#ifdef DC801_EMBEDDED
+   serial->HandleInput();
+#else
+   GetCommandStringFromStandardIn();
+#endif
+
+   return running;
+}

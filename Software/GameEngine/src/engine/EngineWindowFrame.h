@@ -23,7 +23,7 @@ extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 class EngineWindowFrame
 {
 public:
-   void GameBlt(const uint16_t* frame) const;
+   void GameBlt(const uint16_t frame[]) const;
    void DrawButtonStates(ButtonState button) const;
    void DrawLEDStates() const;
    void Resize(int change);

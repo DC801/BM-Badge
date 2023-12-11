@@ -1,17 +1,17 @@
-#include "mage_entity_type.h"
+#include "mage_entity.h"
 #include "mage_script_control.h"
 
 void MageEntity::OnTick(MageScriptControl* scriptControl)
 {
-    //Non-null scripts will run every tick, restarting from the beginning as it completes
-    onTick.scriptIsRunning = data.onTickScriptId != 0;
-    scriptControl->processScript(onTick, data.onTickScriptId, MageScriptType::ON_TICK);
+   //Non-null scripts will run every tick, restarting from the beginning as it completes
+   onTick.scriptIsRunning = data.onTickScriptId != 0;
+   scriptControl->processScript(onTick, data.onTickScriptId);
 }
 
 void MageEntity::OnInteract(MageScriptControl* scriptControl)
 {
-    onInteract.scriptIsRunning = true;
-    scriptControl->processScript(onInteract, data.onInteractScriptId, MageScriptType::ON_INTERACT);
+   onInteract.scriptIsRunning = true;
+   scriptControl->processScript(onInteract, data.onInteractScriptId);
 }
 
 void MageEntity::UpdateRenderableData()
@@ -30,19 +30,19 @@ void MageEntity::UpdateRenderableData()
       if (renderableData.currentFrameTicks >= renderableData.duration)
       {
          //increment frame and reset tick counter:
-         data.currentFrameIndex++;
+         renderableData.currentFrameIndex++;
          renderableData.currentFrameTicks = 0;
       }
 
       //reset animation to first frame after max frame is reached:
-      if (data.currentFrameIndex >= renderableData.frameCount)
+      if (renderableData.currentFrameIndex >= renderableData.frameCount)
       {
-         data.currentFrameIndex = 0;
+         renderableData.currentFrameIndex = 0;
       }
       auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(data.primaryId);
       renderableData.tilesetId = animation->tilesetId;
-      renderableData.tileId = animation->GetFrame(data.currentFrameIndex).tileId;
-      renderableData.duration = animation->GetFrame(data.currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
+      renderableData.tileId = animation->GetFrame(renderableData.currentFrameIndex).tileId;
+      renderableData.duration = animation->GetFrame(renderableData.currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
       renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
       renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
    }
@@ -60,7 +60,7 @@ void MageEntity::UpdateRenderableData()
          renderableData.renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
       }
 
-      auto& animation = entityType->GetAnimation(data.currentAnimation);
+      auto& animation = entityType->GetAnimation(renderableData.currentAnimation);
 
       //create a animationDirection entity based on direction:
       auto dirValue = (MageEntityAnimationDirection)(data.direction & RENDER_FLAGS_DIRECTION_MASK);
@@ -79,17 +79,17 @@ void MageEntity::UpdateRenderableData()
          if (renderableData.currentFrameTicks >= renderableData.duration)
          {
             //increment frame and reset tick counter:
-            data.currentFrameIndex++;
+            renderableData.currentFrameIndex++;
             renderableData.currentFrameTicks = 0;
          }
 
          //reset animation to first frame after max frame is reached:
-         if (data.currentFrameIndex >= renderableData.frameCount)
+         if (renderableData.currentFrameIndex >= renderableData.frameCount)
          {
-            data.currentFrameIndex = 0;
+            renderableData.currentFrameIndex = 0;
          }
          auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection.typeId);
-         auto& currentFrame = animation->GetFrame(data.currentFrameIndex);
+         auto& currentFrame = animation->GetFrame(renderableData.currentFrameIndex);
          renderableData.tilesetId = animation->tilesetId;
          renderableData.tileId = currentFrame.tileId;
          renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
@@ -106,22 +106,21 @@ void MageEntity::UpdateRenderableData()
       }
    }
 
-   auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData.tilesetId);
-   auto halfWidth = uint16_t(tileset->TileWidth / 2);
-   auto halfHeight = uint16_t(tileset->TileHeight / 2);
+   auto oldCenter = renderableData.center();
 
-   auto oldCenter = renderableData.center;
-   // accounting for possible change in tile size due to hacking;
-   // adjust entity position so that the center will not change
-   // from the previous tileset to the new tileset.
+   // hacking can change the resulting tile size, update tile size accordingly
    if (renderableData.lastTilesetId != renderableData.tilesetId)
    {
       //get the difference between entity centers:
-      auto adjustmentPoint = oldCenter - renderableData.center;
+      const auto adjustmentPoint = oldCenter - renderableData.center();
       data.position.x += adjustmentPoint.x;
       data.position.y += adjustmentPoint.y;
       renderableData.lastTilesetId = renderableData.tilesetId;
    }
+
+   auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData.tilesetId);
+   auto halfWidth = uint16_t(tileset->TileWidth / 2);
+   auto halfHeight = uint16_t(tileset->TileHeight / 2);
 
    renderableData.origin.x = data.position.x;
    renderableData.origin.y = data.position.y - tileset->TileHeight;
@@ -129,7 +128,20 @@ void MageEntity::UpdateRenderableData()
    renderableData.hitBox.origin.y = data.position.y - tileset->TileHeight + halfHeight / 2;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
-   renderableData.center = renderableData.origin + EntityPoint{halfWidth, halfHeight};
 }
 
+void MageEntity::Draw(const std::shared_ptr<TileManager>& tileManager) const
+{
+   tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin, renderableData.renderFlags);
+}
 
+void MageEntity::DrawGeometry(const EntityPoint& camera) const
+{
+   bool isColliding = false;
+   auto playerPosition = renderableData.center();
+   //for (uint16_t i = 0; i < GeometryCount(); i++)
+   //{
+   //   // auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
+   //   //geometry->draw(camera.x, camera.y, isColliding ? COLOR_RED : COLOR_GREEN);
+   //}
+}

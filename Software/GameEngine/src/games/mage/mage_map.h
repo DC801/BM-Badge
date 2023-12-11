@@ -14,7 +14,7 @@ in a more accessible way.
 #include <vector>
 
 #include "mage_camera.h"
-#include "mage_entity_type.h"
+#include "mage_entity.h"
 #include "mage_tileset.h"
 #include "shim_timer.h"
 #include "EngineROM.h"
@@ -28,12 +28,12 @@ struct GoDirection
     uint16_t padding{ 0 };
 };
 
-struct Tile
-{
-    uint16_t width{ 0 };
-    std::span<uint8_t> indexedColors{};
-    const MageColorPalette* colorPalette{ nullptr };
-};
+//struct Tile
+//{
+//    uint16_t width{ 0 };
+//    std::span<uint8_t> indexedColors{};
+//    const MageColorPalette* colorPalette{ nullptr };
+//};
 
 struct MageMapTile
 {
@@ -77,18 +77,18 @@ class MapControl
     friend class MageScriptControl;
     friend class MageHexEditor;
 public:
-    MapControl(std::shared_ptr<TileManager> tileManager) noexcept
-        : tileManager(tileManager)
+    MapControl(std::shared_ptr<TileManager> tileManager, int32_t initialMapId) noexcept
+        : tileManager(tileManager), mapLoadId(initialMapId)
     {}
 
     inline uint8_t* GetEntityDataPointer() { return (uint8_t*)currentMap->entities.data(); }
-    void Load(uint16_t index);
+    void Load();
     void DrawLayer(uint8_t layer, const EntityPoint& cameraPosition) const;
     void DrawGeometry(const EntityPoint& cameraPosition) const;
     void DrawEntities(const EntityPoint& cameraPosition) const;
     void UpdateEntities(const DeltaState& delta);
 
-    void TryMovePlayer(ButtonState button);
+    void TryMovePlayer(const DeltaState& delta);
 
     int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
     {
@@ -113,6 +113,8 @@ public:
 
     void Draw(const EntityPoint& cameraPosition) const;
 
+    [[nodiscard("This should always be part of a check")]]
+    inline bool ShouldReload() const { return mapLoadId != MAGE_NO_MAP; }
     inline std::string Name() const { return currentMap->name; }
     inline uint16_t TileWidth() const { return currentMap->tileWidth; }
     inline uint16_t TileHeight() const { return currentMap->tileHeight; }
@@ -143,7 +145,7 @@ public:
 
     inline std::optional<MageEntity*> getPlayerEntity()
     {
-        if (currentMap->playerEntityIndex == NO_PLAYER_INDEX)
+        if (!currentMap || currentMap->playerEntityIndex == NO_PLAYER_INDEX)
         {
             return std::nullopt;
         }
@@ -240,8 +242,6 @@ private:
     std::shared_ptr<TileManager> tileManager;
     std::unique_ptr<MapData> currentMap;
 
-    bool isEntityDebugOn{ false };
-    float playerSpeed{ 0.0f };
     bool playerIsMoving{ false };
 
 }; //class MapControl

@@ -53,46 +53,6 @@ private:
    std::span<const uint32_t> lengths;
 }; //class Header
 
-//size of chunk to be read/written when writing game.dat to ROM per loop
-static const inline uint32_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
-
-//This is the smallest page that can be erased on the FL256SSVF01 chip which uses uniform 256kB page sizes
-//262144 bytes = 256KB
-static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
-
-//size of largest single Write data that can be sent at one time:
-//make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
-//or you'll lose data.
-#define ENGINE_ROM_WRITE_PAGE_SIZE 512
-
-//this is the length of the 'identifier' at the start of the game.dat file:
-#define ENGINE_ROM_IDENTIFIER_STRING_LENGTH 8
-
-//this is the length of the 'engine rom version number' at the start of the game.dat file:
-//it is to determine if the game rom is compatible with the engine version
-#define ENGINE_ROM_VERSION_NUMBER_LENGTH 4
-
-//this is the length of the crc32 that follows the magic string in game.dat
-//it is used to let us check if we need to re-flash the ROM chip with the file on
-//the SD card.
-#define ENGINE_ROM_CRC32_LENGTH 4
-
-//this is the length of the scenario data from the 0 offset to the end
-#define ENGINE_ROM_GAME_LENGTH 4
-
-#define ENGINE_ROM_START_OF_CRC_OFFSET (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH)
-
-#define ENGINE_ROM_MAGIC_HASH_LENGTH (ENGINE_ROM_START_OF_CRC_OFFSET + ENGINE_ROM_CRC32_LENGTH + ENGINE_ROM_GAME_LENGTH)
-
-//this is all the bytes on our ROM chip. We aren't able to write more than this
-//to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
-//which is defined as 2^25 bytes available for writing.
-//We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data at the end of rom
-static const inline uint32_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
-static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
-static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
-static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
-
 /////////////////////////////////////////////////////////////////////////////////
 // https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
 template <class T, uint32_t I, class Tuple>
@@ -113,13 +73,41 @@ constexpr uint32_t type_index_v = type_index<T, Tuple>::value;
 // https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
 /////////////////////////////////////////////////////////////////////////////////
 
+//This is the smallest page that can be erased on the FL256SSVF01 chip which uses uniform 256kB page sizes
+//262144 bits = 256kB = 32kiB
+static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
+
+//this is all the bytes on our ROM chip. We aren't able to write more than this
+//to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB = 2^25 bits = 4194304 bytes = 4MiB
+//We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data at the end of rom
+static const inline uint32_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
+static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
+static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
+static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
+
+//this is the length of the 'identifier' at the start of the game.dat file:
+static const inline uint32_t ENGINE_ROM_IDENTIFIER_STRING_LENGTH = 8;
+
+//this is the length of the 'engine rom version number' at the start of the game.dat file:
+//it is to determine if the game rom is compatible with the engine version
+static const inline uint32_t ENGINE_ROM_VERSION_NUMBER_LENGTH = 4;
+
+//this is the length of the crc32 that follows the magic string in game.dat
+//it is used to let us check if we need to re-flash the ROM chip with the file on
+//the SD card.
+static const inline uint32_t ENGINE_ROM_CRC32_LENGTH = 4;
+
+//this is the length of the scenario data from the 0 offset to the end
+static const inline uint32_t ENGINE_ROM_GAME_LENGTH = 4;
+static const inline uint32_t ENGINE_ROM_START_OF_CRC_OFFSET = ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH;
+static const inline uint32_t ENGINE_ROM_MAGIC_HASH_LENGTH = ENGINE_ROM_START_OF_CRC_OFFSET + ENGINE_ROM_CRC32_LENGTH + ENGINE_ROM_GAME_LENGTH;
 
 template<typename TSave, typename... THeaders>
 struct EngineROM
 {
    // noexcept because we want to fail fast/call std::terminate if this fails
-   EngineROM(char* romData) noexcept
-      : romData(romData),
+   EngineROM(const char* romData, uint32_t length) noexcept
+      : romData(romData, length),
       headers(headersFor<THeaders...>(ENGINE_ROM_MAGIC_HASH_LENGTH))
    {
       // Verify magic string is on ROM:
@@ -164,10 +152,10 @@ struct EngineROM
    void Read(T& t, uint32_t& offset, size_t count = 1) const
    {
       static_assert(std::is_scalar_v<T> || std::is_standard_layout_v<T>, "T must be a scalar or standard-layout type");
-      auto elementSize = sizeof(std::remove_all_extents_t<T>);
-      auto dataLength = count * elementSize;
+      const auto elementSize = sizeof(std::remove_all_extents_t<T>);
+      const auto dataLength = count * elementSize;
 
-      auto dataPointer = romData + offset;
+      const auto dataPointer = &romData[offset];
       memcpy(&t, dataPointer, dataLength);
       offset += dataLength;
    }
@@ -182,13 +170,13 @@ struct EngineROM
    constexpr const TCast* GetReadPointerByIndex(uint16_t index) const
    {
       auto offset = getHeader<TLookup>().GetOffset(index);
-      return reinterpret_cast<const TCast*>(romData + offset);
+      return reinterpret_cast<const TCast*>(&romData[offset]);
    }
 
    template <typename T>
    const T* GetReadPointerToAddress(uint32_t& offset) const
    {
-      auto readPointer = reinterpret_cast<const T*>(romData + offset);
+      auto readPointer = reinterpret_cast<const T*>(&romData[offset]);
       offset += sizeof(T);
       return readPointer;
    }
@@ -212,7 +200,7 @@ struct EngineROM
       {
          if constexpr (std::is_standard_layout_v<T>)
          {
-            v.push_back(*(const T*)(romData + offset));
+            v.push_back(*(const T*)(&romData[offset]));
             offset += sizeof(T);
          }
          else
@@ -231,7 +219,7 @@ struct EngineROM
 
       for (std::size_t i = 0; i < value.size(); i++)
       {
-         if (i >= ENGINE_ROM_MAX_DAT_FILE_SIZE || value[i] != romData[i])
+         if (i >= romData.size() || value[i] != romData[i])
          {
             return false;
          }
@@ -308,7 +296,7 @@ struct EngineROM
    }
 
 private:
-   char* romData{0x0};
+   std::span<const char> romData;
    std::tuple<Header<THeaders>...> headers;
    TSave currentSave{};
 
@@ -322,9 +310,9 @@ private:
    template <typename T>
    auto headerFor(uint32_t& offset) const
    {
-      const auto count = *(const uint32_t*)(romData + offset);
+      const auto count = *(const uint32_t*)(&romData[offset]);
       offset += sizeof(uint32_t);
-      const auto header = Header<T>(count, (const uint32_t*)(romData + offset));
+      const auto header = Header<T>(count, (const uint32_t*)(&romData[offset]));
       offset += sizeof(uint32_t) * count * 2;
       return header;
    }

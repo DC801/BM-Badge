@@ -72,22 +72,25 @@ public:
 	//sets the current operation to be applied when pressing the bit buttons.
 	void setHexOp(enum HEX_OPS op);
 
-	//sets the hex cursor location to offset:
-	void setHexCursorLocation(uint16_t offset);
+	auto getCursorLocation() const
+	{
+		return hexCursorLocation;
+	}
+
+	void setCursorLocation(uint16_t offset)
+	{
+		hexCursorLocation = offset;
+	}
 
 	void setPageToCursorLocation();
 
 	//this calculates which memory page the hexCursorLocation appears on.
 	uint16_t getCurrentMemPage();
 
-	//this updates the lights on the badge to match the bit state
-	//of the current byte in the hex editor.
-	void updateHexLights() const;
-
 	//this updates the variables used by the hex editor when applying inputs and rendering.
 	void updateHexStateVariables();
 
-	//this applies inputs to the hex editor state.
+	//this applies inputs to the hex editor state.u
 	void applyHexModeInputs(uint8_t* currentByte);
 
 	void applyMemRecallInputs();
@@ -103,11 +106,12 @@ public:
 
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }
 
+	std::array<uint8_t, 4> memOffsets;
+
 private:
 	std::shared_ptr<FrameBuffer> frameBuffer;
 	std::shared_ptr<MapControl>  mapControl;
 	std::shared_ptr<EngineInput> inputHandler;
-	std::array<uint8_t, 4> memOffsets;
 
 	uint8_t clipboard[HEXED_CLIPBOARD_MAX_LENGTH]{ 0 };
 	uint8_t clipboardLength{ 0 };

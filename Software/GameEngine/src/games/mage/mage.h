@@ -35,7 +35,7 @@ public:
    {
       audioPlayer = std::make_unique<AudioPlayer>();
       tileManager = std::make_shared<TileManager>(frameBuffer);
-      mapControl = std::make_shared<MapControl>(tileManager);
+      mapControl = std::make_shared<MapControl>(tileManager, ROM()->GetCurrentSave().currentMapId);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
@@ -46,7 +46,7 @@ public:
       commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl, stringLoader);
    }
    //this will load a map to be the current map.
-   void LoadMap(uint16_t index);
+   void LoadMap();
 
    //this runs the actual game, performing initial setup and then
    //running the game loop indefinitely until the game is exited.
@@ -68,8 +68,7 @@ private:
    void applyUniversalInputs(const DeltaState& delta);
 
    void handleEntityInteract(const ButtonState& activatedButton);
-
-   bool engineIsInitialized{ false };
+   void updateHexLights() const;
 
    uint8_t currentSaveIndex{ 0 };
 

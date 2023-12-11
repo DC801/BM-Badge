@@ -21,7 +21,6 @@ constexpr auto TilesetNameLength = 16;
 struct RenderableData
 {
    EntityPoint origin{ 0 };
-   EntityPoint center{ 0 };
    EntityRect hitBox{ 0 };
    uint16_t currentFrameTicks{ 0 };
    uint16_t tilesetId{ 0 };
@@ -29,8 +28,15 @@ struct RenderableData
    uint16_t tileId{ 0 };
    uint32_t duration{ 0 };
    uint16_t frameCount{ 0 };
+   uint8_t currentAnimation{ 0 };
+   uint8_t currentFrameIndex{ 0 };
    uint8_t renderFlags{ 0 };
    bool isInteracting{ 0 };
+
+   constexpr EntityPoint center() const
+   {
+      return EntityPoint{ uint16_t(origin.x + hitBox.w / 2), uint16_t(origin.y + hitBox.h / 2) };
+   }
 };
 
 class MageTileset

@@ -76,7 +76,7 @@ void MageDialogControl::loadNextScreen()
 
 std::optional<uint16_t> MageDialogControl::update(const DeltaState& delta)
 {
-   cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+   cursorPhase += MinTimeBetweenRenders.count();
    bool shouldAdvance = delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_down)
       || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_left)
       || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right)

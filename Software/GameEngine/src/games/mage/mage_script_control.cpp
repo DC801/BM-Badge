@@ -3,11 +3,8 @@
 #include "EngineInput.h"
 #include "shim_err.h"
 
-void MageScriptControl::processScript(MageScriptState& resumeState, uint8_t mapLocalEntityId, MageScriptType scriptType)
+void MageScriptControl::processScript(MageScriptState& resumeState, uint8_t currentEntityId) const
 {
-    //set the current entity to the passed value.
-    currentEntityId = mapLocalEntityId;
-
     //now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
     //note we're using the value in resumeState directly as our index so it will update automatically as we proceed:
     for (auto& script = resumeState.script; script && resumeState.scriptIsRunning && resumeState.actionOffset < script->GetActionCount(); resumeState.actionOffset++)

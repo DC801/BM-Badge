@@ -255,6 +255,7 @@ void FrameBuffer::blt()
    const auto bytecount = 2 * FramebufferSize;// (maxXChange - minXChange + 1 + maxYChange - minYChange + 1);
    ili9341_push_colors((uint8_t*)frame.data(), bytecount);
 #else
+   windowFrame->DrawLEDStates();
    windowFrame->GameBlt(frame.data());
 #endif
 }

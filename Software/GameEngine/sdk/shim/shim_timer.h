@@ -8,19 +8,6 @@
 #include <iostream>
 #include <list>
 #include <mutex>
-#include "engine/EngineInput.h"
-
-typedef std::conditional<
-    std::chrono::high_resolution_clock::is_steady,
-    std::chrono::high_resolution_clock,
-    std::chrono::steady_clock >::type GameClock;
-
-struct DeltaState
-{
-    std::chrono::milliseconds TimeMs;
-    ButtonState Buttons;
-    ButtonState ActivatedButtons;
-};
 
 #ifdef DC801_EMBEDDED
 #include <app_timer.h>

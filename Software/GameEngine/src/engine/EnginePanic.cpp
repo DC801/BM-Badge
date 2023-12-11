@@ -92,7 +92,7 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	//	EngineHandleSerialInput();
 
 	//	// If we manually exit
-	//	if (inputHandler->EngineIsRunning() == false)
+	//	if (inputHandler->IsRunning() == false)
 	//	{
 	//		break;
 	//	}

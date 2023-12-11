@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <optional>
+#include "EngineSerial.h"
 #include "StringLoader.h"
 #include "mage_dialog_control.h"
 
@@ -47,6 +48,7 @@ class MageCommandControl {
 		void reset();
 		void sendBufferedOutput();
 private:
+	std::shared_ptr<EngineSerial> serial;
 	std::shared_ptr<MapControl> mapControl;
 	std::shared_ptr<TileManager> tileManager;
 	std::shared_ptr<MageScriptControl> scriptControl;

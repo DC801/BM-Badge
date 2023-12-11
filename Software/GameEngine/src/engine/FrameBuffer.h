@@ -51,110 +51,114 @@ class MageGameEngine;
 
 class FrameBuffer
 {
-    friend class TileManager;
+   friend class TileManager;
 public:
-    //inline uint16_t& operator()(int index) { return frame->data()[index]; }
-    constexpr void ResetFade() { fadeFraction = 0.0f; }
-    constexpr void SetFade(uint16_t color, float progress)
-    {
-        fadeColor = color;
-        fadeFraction = progress;
-        if (progress < 1.0f)
-        {
-            isFading = true;
-        }
-    }
+   FrameBuffer(std::unique_ptr<EngineWindowFrame> windowFrame) noexcept
+      : windowFrame(std::move(windowFrame))
+   {}
 
-    void clearScreen(uint16_t color);
-    inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
-    {
-        if (x < 0 || x >= DrawWidth
-            || y < 0 || y >= DrawHeight
-            || color == TRANSPARENCY_COLOR)
-        {
-            return;
-        }
+   //inline uint16_t& operator()(int index) { return frame->data()[index]; }
+   constexpr void ResetFade() { fadeFraction = 0.0f; }
+   constexpr void SetFade(uint16_t color, float progress)
+   {
+      fadeColor = color;
+      fadeFraction = progress;
+      if (progress < 1.0f)
+      {
+         isFading = true;
+      }
+   }
 
-        minXChange = std::min<int>(minXChange, x);
-        maxXChange = std::max<int>(maxXChange, x);
+   void clearScreen(uint16_t color);
+   inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
+   {
+      if (x < 0 || x >= DrawWidth
+         || y < 0 || y >= DrawHeight
+         || color == TRANSPARENCY_COLOR)
+      {
+         return;
+      }
 
-        minYChange = std::min<int>(minYChange, y);
-        maxYChange = std::max<int>(maxYChange, y);
+      minXChange = std::min<int>(minXChange, x);
+      maxXChange = std::max<int>(maxXChange, x);
 
-        frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
-    }
-    
-    inline void drawLine(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
-    {
-        drawLine(p1.x, p1.y, p2.x, p2.y, color);
-    }
+      minYChange = std::min<int>(minYChange, y);
+      maxYChange = std::max<int>(maxYChange, y);
 
-    void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
+      frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
+   }
 
-    /*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
-    {
-        const auto topLeft = p - size;
-        const auto bottomRight = p + size;
-        const auto bottomLeft = Point{ p.x - size, p.y + size };
-      const auto topRight = Point{ p.x + size, p.y - size };
-        drawLine(topLeft, bottomRight, color);
-        drawLine(bottomLeft, topRight, color);
-    }*/
+   inline void drawLine(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
+   {
+      drawLine(p1.x, p1.y, p2.x, p2.y, color);
+   }
 
-    inline void fillRect(const Point& p, int w, int h, uint16_t color)
-    {
-        fillRect(p.x, p.y, w, h, color);
-    }
+   void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 
-    void fillRect(int x, int y, int w, int h, uint16_t color);
+   /*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
+   {
+       const auto topLeft = p - size;
+       const auto bottomRight = p + size;
+       const auto bottomLeft = Point{ p.x - size, p.y + size };
+     const auto topRight = Point{ p.x + size, p.y - size };
+       drawLine(topLeft, bottomRight, color);
+       drawLine(bottomLeft, topRight, color);
+   }*/
 
-    inline void drawRect(const EntityRect& r, uint16_t color)
-    {
-        auto x = r.origin.x;
-        auto y = r.origin.y;
-        // top
-        drawLine(x, y, x + r.w, y, color);
-        // left
-        drawLine(x, y, x, y + r.h, color);
-        // right
-        drawLine(x + r.w, y, x + r.w, y + r.h, color);
-        // bottom
-        drawLine(x, y + r.h, x + r.w, y + r.h, color);
-    }
+   inline void fillRect(const Point& p, int w, int h, uint16_t color)
+   {
+      fillRect(p.x, p.y, w, h, color);
+   }
+
+   void fillRect(int x, int y, int w, int h, uint16_t color);
+
+   inline void drawRect(const EntityRect& r, uint16_t color)
+   {
+      auto x = r.origin.x;
+      auto y = r.origin.y;
+      // top
+      drawLine(x, y, x + r.w, y, color);
+      // left
+      drawLine(x, y, x, y + r.h, color);
+      // right
+      drawLine(x + r.w, y, x + r.w, y + r.h, color);
+      // bottom
+      drawLine(x, y + r.h, x + r.w, y + r.h, color);
+   }
 
 
-    void write_char(uint8_t c, GFXfont font);
-    void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
+   void write_char(uint8_t c, GFXfont font);
+   void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
 
-    void blt();
-    constexpr uint16_t* getFrameDataPtr()
-    {
-        return frame.data();
-    }
+   void blt();
+   constexpr uint16_t* getFrameDataPtr()
+   {
+      return frame.data();
+   }
 
-    //void regionBlt(const Point& drawPoint, int w, int h) const;
+   //void regionBlt(const Point& drawPoint, int w, int h) const;
 
 private:
 #ifndef DC801_EMBEDDED
-    std::unique_ptr<EngineWindowFrame> windowFrame{ std::make_unique<EngineWindowFrame>() };
+   std::unique_ptr<EngineWindowFrame> windowFrame;
 #endif
-    std::array<uint16_t, FramebufferSize> frame{};
+   std::array<uint16_t, FramebufferSize> frame{};
 
-    int minXChange{ DrawWidth }, maxXChange{ -1 }, minYChange{ DrawHeight }, maxYChange{ -1 };
+   int minXChange{ DrawWidth }, maxXChange{ -1 }, minYChange{ DrawHeight }, maxYChange{ -1 };
 
-    //variables used for screen fading
-    float fadeFraction{ 0.0f };
-    bool isFading{ false };
-    uint16_t fadeColor{ 0 };
+   //variables used for screen fading
+   float fadeFraction{ 0.0f };
+   bool isFading{ false };
+   uint16_t fadeColor{ 0 };
 
-    void __draw_char(
-        int16_t x,
-        int16_t y,
-        unsigned char c,
-        uint16_t color,
-        uint16_t bg,
-        GFXfont font
-    );
+   void __draw_char(
+      int16_t x,
+      int16_t y,
+      unsigned char c,
+      uint16_t color,
+      uint16_t bg,
+      GFXfont font
+   );
 };
 
 

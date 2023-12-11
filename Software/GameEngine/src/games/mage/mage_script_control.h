@@ -28,11 +28,6 @@ public:
    //it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
    std::optional<uint16_t> jumpScriptId{ MAGE_NO_SCRIPT };
 
-   //this is a variable that tracks which entity called an action.
-   //If the action was called by the map, the value will be MAGE_MAP_ENTITY.
-   //most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
-   uint8_t currentEntityId{ MAGE_MAP_ENTITY };
-
    //typedef for the array of function pointers to script action functions:
    typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
 
@@ -139,7 +134,7 @@ public:
 
    void tickScripts();
 
-   void processScript(MageScriptState& resumeState, uint8_t mapLocalEntityId, MageScriptType scriptType);
+   void processScript(MageScriptState& resumeState, uint8_t currentEntityId) const;
 
 private:
    std::shared_ptr<MapControl> mapControl;

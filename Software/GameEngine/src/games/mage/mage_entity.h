@@ -9,7 +9,6 @@
 #include <vector>
 #include <memory>
 
-class MageGameControl;
 class MageScriptControl;
 
 //this contains the possible options for an entity PrimaryIdType value.
@@ -20,7 +19,6 @@ typedef enum : uint8_t
     ENTITY_TYPE = 2
 } MageEntityPrimaryIdType;
 #define NUM_PRIMARY_ID_TYPES 3
-
 
 struct MageEntityTypeAnimation
 {
@@ -55,8 +53,6 @@ struct MageEntityData
     uint16_t primaryId{ 0 };
     uint16_t secondaryId{ 0 };
     uint8_t primaryIdType{ 0 };
-    uint8_t currentAnimation{ 0 };
-    uint8_t currentFrameIndex{ 0 };
     uint8_t direction{ 0 };
     uint8_t hackableStateA{ 0 };
     uint8_t hackableStateB{ 0 };
@@ -67,10 +63,10 @@ struct MageEntityData
 class MageEntity
 {
 public:
-    MageEntity() noexcept {}
+    //MageEntity() noexcept {}
 
-    MageEntity(MageEntityData&& sourceEntity) noexcept
-    : data(std::move(sourceEntity)), onInteract(data.onInteractScriptId), onTick(data.onTickScriptId) {}
+    //MageEntity(MageEntityData&& sourceEntity) noexcept
+    //: data(std::move(sourceEntity)), onInteract(data.onInteractScriptId), onTick(data.onTickScriptId) {}
 
     MageEntityData data;
     RenderableData renderableData;
@@ -79,8 +75,8 @@ public:
 
     inline void SetAnimation(uint8_t animationId)
     {
-        data.currentAnimation = animationId;
-        data.currentFrameIndex = 0;
+        renderableData.currentAnimation = animationId;
+        renderableData.currentFrameIndex = 0;
     }
 
     void SetName(std::string s)
@@ -95,8 +91,10 @@ public:
     void OnTick(MageScriptControl* scriptControl);
 
     void UpdateRenderableData();
+    void Draw(const std::shared_ptr<TileManager>& tileManager) const;
+    void DrawGeometry(const EntityPoint& camera) const;
 
-    //inline bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
+    inline bool isDebug() const { return data.direction & RENDER_FLAGS_IS_DEBUG; }
 };
 
 

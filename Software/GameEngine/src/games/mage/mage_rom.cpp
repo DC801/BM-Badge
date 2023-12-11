@@ -44,18 +44,13 @@ std::unique_ptr<MageROM>& ROM()
    {
 #ifdef DC801_EMBEDDED 
    // point to 0x12000000 - the beginning of the QSPI ROM using XIP mapping
-   romPtr = std::make_unique<MageROM>((char*)ROM_START_ADDRESS);
+   romPtr = std::make_unique<MageROM>((const char*)ROM_START_ADDRESS, ENGINE_ROM_MAX_DAT_FILE_SIZE);
 #else
    auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
-   static auto romData = new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 } ;
       if (std::filesystem::exists(filePath))
       {
-         auto romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
-
-         if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
-         {
-            ENGINE_PANIC("Invalid ROM file size: larger than the hardware's ROM chip capacity!");
-         }
+         auto romFileSize = (uint32_t)std::filesystem::file_size(MAGE_GAME_DAT_PATH);
+         static auto romData = new char[romFileSize] { 0 };
          auto romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
 
          // copy the file into the buffer
@@ -64,12 +59,12 @@ std::unique_ptr<MageROM>& ROM()
             ENGINE_PANIC("Desktop build: ROM->RAM read failed");
          }
          romFile.close();
+         romPtr = std::make_unique<MageROM>(romData, romFileSize);
       }
       else
       {
          ENGINE_PANIC("Unable to read ROM file size at %s", MAGE_GAME_DAT_PATH);
       }
-   romPtr = std::make_unique<MageROM>(romData);
 #endif
    }
    return romPtr;

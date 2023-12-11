@@ -296,12 +296,12 @@ void MageCommandControl::sendBufferedOutput()
    {
       if (!currentString.empty())
       {
-         EngineSendSerialMessage(currentString.c_str());
+         serial->SendMessage(currentString.c_str());
          anyOutput = true;
       }
    }
    if (anyOutput)
    {
-      EngineSendSerialMessage("> ");
+      serial->SendMessage("> ");
    }
 }
