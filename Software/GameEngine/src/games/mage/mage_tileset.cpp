@@ -14,12 +14,12 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
     auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
     auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-    auto ySourceMin = int32_t{0};
-    auto ySourceMax = int32_t{tileset->TileHeight};
-    auto xSourceMin = int32_t{0};
-    auto xSourceMax = int32_t{tileset->TileWidth};
-    auto iteratorX = int32_t{1};
-    auto iteratorY = int32_t{1};
+    auto ySourceMin = uint16_t{0};
+    auto ySourceMax = uint16_t{tileset->TileHeight};
+    auto xSourceMin = uint16_t{0};
+    auto xSourceMax = uint16_t{tileset->TileWidth};
+    auto iteratorX =  int16_t{1};
+    auto iteratorY =  int16_t{1};
 
     if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
     {
@@ -79,7 +79,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
             continue;
         }
 
-        for (auto xSource = xSourceMin, xTarget = int32_t{ tileDrawPoint.x };
+        for (auto xSource = xSourceMin, xTarget = tileDrawPoint.x;
             xSource != xSourceMax;
             xSource += iteratorX, xTarget++)
         {

@@ -1604,7 +1604,7 @@ std::optional<uint16_t> MageScriptActions::teleport_entity_to_geometry(const uin
       auto geometry = mapControl->GetGeometry(argStruct->geometryId);
       auto point = geometry->GetPoint(0);
 
-      //auto offsetPoint = Point{ entity.data.position.x, entity.data.position.y } + point;
+      //auto offsetPoint = EntityPoint{ entity.data.position.x, entity.data.position.y } + point;
       entity.data.position = point;
    }
    return NO_JUMP_SCRIPT;
@@ -1855,7 +1855,7 @@ std::optional<uint16_t> MageScriptActions::teleport_camera_to_geometry(const uin
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
    camera.setFollowEntity(NO_PLAYER);
-   const auto midScreen = Point{ DrawWidth / 2, DrawHeight / 2 };
+   const auto midScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
    camera.position = geometry->GetPoint(0) - midScreen;
    return NO_JUMP_SCRIPT;
 }

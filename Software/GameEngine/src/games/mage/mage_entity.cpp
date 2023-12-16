@@ -130,9 +130,9 @@ void MageEntity::UpdateRenderableData()
    renderableData.hitBox.h = halfHeight;
 }
 
-void MageEntity::Draw(const std::shared_ptr<TileManager>& tileManager) const
+void MageEntity::Draw(const std::shared_ptr<TileManager>& tileManager, const EntityPoint& cameraPosition) const
 {
-   tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin, renderableData.renderFlags);
+   tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin - cameraPosition, renderableData.renderFlags);
 }
 
 void MageEntity::DrawGeometry(const EntityPoint& camera) const

@@ -95,17 +95,7 @@ public:
 
    void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 
-   /*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
-   {
-       const auto topLeft = p - size;
-       const auto bottomRight = p + size;
-       const auto bottomLeft = Point{ p.x - size, p.y + size };
-     const auto topRight = Point{ p.x + size, p.y - size };
-       drawLine(topLeft, bottomRight, color);
-       drawLine(bottomLeft, topRight, color);
-   }*/
-
-   inline void fillRect(const Point& p, int w, int h, uint16_t color)
+   inline void fillRect(const EntityPoint& p, int w, int h, uint16_t color)
    {
       fillRect(p.x, p.y, w, h, color);
    }
@@ -135,8 +125,6 @@ public:
    {
       return frame.data();
    }
-
-   //void regionBlt(const Point& drawPoint, int w, int h) const;
 
 private:
 #ifndef DC801_EMBEDDED

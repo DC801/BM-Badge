@@ -37,12 +37,17 @@ class EngineInput
 {
 public:
 
-   const ButtonState& GetButtonState() const
+   const DeltaState GetDeltaState() const
+   {
+      return DeltaState{ buttons, activated };
+   }
+
+   const ButtonState GetButtonState() const
    {
       return buttons;
    }
 
-   const ButtonState& GetButtonActivatedState() const
+   const ButtonState GetButtonActivatedState() const
    {
       return activated;
    }

@@ -194,7 +194,6 @@ struct Vector2T
    }
 };
 
-using Point = Vector2T<int32_t>;
 using EntityPoint = Vector2T<uint16_t>;
 
 
@@ -291,7 +290,7 @@ public:
    float GetPathLength() const { return pathLength; }
    float GetSegmentLength(uint16_t index) const
    {
-      auto segmentLengths = (float*)((uint8_t*)&pathLength + sizeof(float) + pointCount * sizeof(Point));
+      auto segmentLengths = (float*)((uint8_t*)&pathLength + sizeof(float) + pointCount * sizeof(EntityPoint));
       return !segmentCount ? 0.0f : segmentLengths[index % segmentCount];
    }
 

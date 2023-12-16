@@ -116,7 +116,7 @@ void MapControl::DrawEntities(const EntityPoint& cameraPosition) const
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex : entityDrawOrder)
    {
-      currentMap->entities[entityIndex].Draw(tileManager);
+      currentMap->entities[entityIndex].Draw(tileManager, cameraPosition);
    }
 }
 
@@ -181,22 +181,19 @@ void MapControl::UpdateEntities(const DeltaState& delta)
 
 void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
 {
-   auto optionalPlayer = mapControl->getPlayerEntity();
+   auto hack = activatedButton.IsPressed(KeyPress::Rjoy_up);
 
+   // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
+   if (!hack && !activatedButton.IsPressed(KeyPress::Rjoy_right)) { return; }
+
+   // require a player on the map to interact
+   auto optionalPlayer = mapControl->getPlayerEntity();
    if (!optionalPlayer.has_value())
    {
       return;
    }
 
    auto player = optionalPlayer.value();
-   auto hack = activatedButton.IsPressed(KeyPress::Rjoy_up);
-
-   // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
-   if (!hack && !activatedButton.IsPressed(KeyPress::Rjoy_right)) { return; }
-
-   //interacting is impossible if there is no player entity
-   if (mapControl->getPlayerEntityIndex() == NO_PLAYER_INDEX) { return; }
-
    auto interactBox = player->renderableData.hitBox;
 
    const uint8_t interactLength = 32;

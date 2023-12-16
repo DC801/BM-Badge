@@ -225,12 +225,6 @@ void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, i
    }
    m_cursor_area.origin.x = 0;
 }
-//
-//void FrameBuffer::regionBlt(const Point& drawPoint, int w, int h) const
-//{
-//   ili9341_set_addr(drawPoint.x, drawPoint.y, drawPoint.x + w, drawPoint.y + h);
-//   ili9341_push_colors((uint8_t*)&frame[DrawWidth * drawPoint.y + drawPoint.x], w * h);
-//}
 
 void FrameBuffer::blt()
 {

@@ -91,7 +91,7 @@ public:
     void OnTick(MageScriptControl* scriptControl);
 
     void UpdateRenderableData();
-    void Draw(const std::shared_ptr<TileManager>& tileManager) const;
+    void Draw(const std::shared_ptr<TileManager>& tileManager, const EntityPoint& cameraPosition) const;
     void DrawGeometry(const EntityPoint& camera) const;
 
     inline bool isDebug() const { return data.direction & RENDER_FLAGS_IS_DEBUG; }

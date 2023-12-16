@@ -30,6 +30,7 @@ void MageGameEngine::Run()
    auto lastTime = GameClock::now();
    auto totalTime = GameClock::duration{ 0 };
    auto accumulator = GameClock::duration{ 0 };
+   auto fps = 0;
 
    while (inputHandler->KeepRunning())
    {
@@ -38,48 +39,13 @@ void MageGameEngine::Run()
          mapControl->mapLoadId = ROM()->GetCurrentSave().currentMapId;
       }
 
-      // If a map is set to (re)load, load it and restart the loop on the new map
       if (mapControl->mapLoadId != MAGE_NO_MAP)
       {
          LoadMap();
-         continue;
       }
 
-      auto playerEntity = mapControl->getPlayerEntity();
+      const auto deltaState = inputHandler->GetDeltaState();
 
-      // try to update the player or camera's position
-      auto& pointToUpdate = playerEntity != NO_PLAYER
-         ? playerEntity.value()->data.position
-         : camera.position;
-      const auto buttons = inputHandler->GetButtonState();
-
-      //set mage speed based on if the right pad down is being pressed:
-      const auto moveSpeedPerSecond = buttons.IsPressed(KeyPress::Rjoy_down) ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
-      const auto moveAmount = 1;// float{ moveSpeedPerSecond / IntegrationStepSize.count() };
-
-      auto velocity = EntityPoint{ 0,0 };
-
-      if (buttons.IsPressed(KeyPress::Ljoy_left) && !buttons.IsPressed(KeyPress::Ljoy_right))
-      {
-         pointToUpdate.x = pointToUpdate.x - moveAmount > pointToUpdate.x ? 0 : pointToUpdate.x - moveAmount;
-      }
-      else if (buttons.IsPressed(KeyPress::Ljoy_right) && !buttons.IsPressed(KeyPress::Ljoy_left))
-      {
-         pointToUpdate.x = pointToUpdate.x + moveAmount < pointToUpdate.x ? 0 : pointToUpdate.x + moveAmount;
-      }
-
-      if (buttons.IsPressed(KeyPress::Ljoy_up) && !buttons.IsPressed(KeyPress::Ljoy_down))
-      {
-         pointToUpdate.y = pointToUpdate.y - moveAmount > pointToUpdate.y ? 0 : pointToUpdate.y - moveAmount;
-      }
-      else if (buttons.IsPressed(KeyPress::Ljoy_down) && !buttons.IsPressed(KeyPress::Ljoy_up))
-      {
-         pointToUpdate.y = pointToUpdate.y + moveAmount < pointToUpdate.y ? 0 : pointToUpdate.y + moveAmount;
-      }
-
-      const auto deltaState = DeltaState{ buttons, inputHandler->GetButtonActivatedState() };
-
-      //apply inputs that work all the time
       applyUniversalInputs(deltaState);
        
       const auto loopStart = GameClock::now();
@@ -92,16 +58,15 @@ void MageGameEngine::Run()
       while (accumulator >= MinTimeBetweenRenders)
       {
          gameUpdate(deltaState);
-
-         // don't run scripts when hex editor is on
-         if (!hexEditor->isHexEditorOn())
-         {
-            scriptControl->tickScripts();
-         }
-
          camera.applyEffects();
          accumulator -= IntegrationStepSize;
          totalTime += IntegrationStepSize;
+      }
+
+      // don't run scripts when hex editor is on
+      if (!hexEditor->isHexEditorOn())
+      {
+         scriptControl->tickScripts();
       }
 
       // commands are only allowed to be sent once per frame, so they are outside the update loop
@@ -178,6 +143,34 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
 {
    auto playerEntity = mapControl->getPlayerEntity();
 
+   // try to update the player or camera's position
+   auto& pointToUpdate = playerEntity != NO_PLAYER
+      ? playerEntity.value()->data.position
+      : camera.position;
+   const auto buttons = delta.Buttons;
+
+   //set mage speed based on if the right pad down is being pressed:
+   const auto moveAmount = buttons.IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
+
+   if (buttons.IsPressed(KeyPress::Ljoy_left) && !buttons.IsPressed(KeyPress::Ljoy_right))
+   {
+      pointToUpdate.x = pointToUpdate.x - moveAmount > pointToUpdate.x ? 0 : pointToUpdate.x - moveAmount;
+   }
+   else if (buttons.IsPressed(KeyPress::Ljoy_right) && !buttons.IsPressed(KeyPress::Ljoy_left))
+   {
+      pointToUpdate.x = pointToUpdate.x + moveAmount < pointToUpdate.x ? 0 : pointToUpdate.x + moveAmount;
+   }
+
+   if (buttons.IsPressed(KeyPress::Ljoy_up) && !buttons.IsPressed(KeyPress::Ljoy_down))
+   {
+      pointToUpdate.y = pointToUpdate.y - moveAmount > pointToUpdate.y ? 0 : pointToUpdate.y - moveAmount;
+   }
+   else if (buttons.IsPressed(KeyPress::Ljoy_down) && !buttons.IsPressed(KeyPress::Ljoy_up))
+   {
+      pointToUpdate.y = pointToUpdate.y + moveAmount < pointToUpdate.y ? 0 : pointToUpdate.y + moveAmount;
+   }
+
+
    // if there is a player on the map
    if (playerEntity != NO_PLAYER)
    {
@@ -188,7 +181,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       auto previousPlayerAnimation = player->renderableData.currentAnimation;
       auto playerIsActioning = player->renderableData.currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
-      //check to see if the mage is pressing the action delta.Buttons, or currently in the middle of an action animation.
+      //check to see if the mage is pressing the action buttons, or currently in the middle of an action animation.
       if (playerHasControl)
       {
          if (delta.Buttons.IsPressed(KeyPress::Rjoy_left))
@@ -199,7 +192,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
          else
          {
             mapControl->TryMovePlayer(delta);
-            //handleEntityInteract(delta.ActivatedButtons);
+            handleEntityInteract(delta.ActivatedButtons);
          }
       }
 
@@ -217,7 +210,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
          player->renderableData.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
       }
       //Scenario 3 - show idle animation:
-      else if (playerHasControl)
+      else //if (playerHasControl)
       {
          player->renderableData.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }

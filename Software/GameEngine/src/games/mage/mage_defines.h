@@ -43,11 +43,6 @@ all of the old code used as the foundation of this badge.
 #define MAGE_FRAME_COUNT_FAILOVER_VALUE 0
 #define MAGE_RENDER_FLAGS_FAILOVER_VALUE 0
 
-//these are used for setting player speed
-//speed is in x/y units per update
-static const inline float MAGE_RUNNING_SPEED = 200.0f;
-static const inline float MAGE_WALKING_SPEED = 100.0f;
-
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
 //not work as intended.
@@ -66,19 +61,29 @@ static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 
+// 100px/sec, 1000ms/sec, 30frames/sec, 3px/frame or 6px/frame
 // this is how many ms must have passed before the main game loop will run again:
 // typical values:
 // 60fps: ~16ms
 // 30fps: ~33ms
 // 24fps: ~41ms
-// RTC for NRF52840 ticks ~30us
+// 
+// RTC for NRF52840:
+// PRESCALER = round(32768 Hz / [target FPS (Hz)]) - 1 = 992
 #ifdef DC801_EMBEDDED
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
+static inline const auto RtcPrescaler = 992; // round(32768 Hz / 30 [target FPS (Hz)]) - 1
 #else
-static inline const auto TargetFPS = 24;
-static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
+static inline const auto TargetFPS = 30;
 static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000)/TargetFPS;
+static inline const auto IntegrationStepSize = std::chrono::milliseconds(11);
 #endif
+
+
+//these are used for setting player speed
+//speed is in x/y pixels per update tick
+static inline const auto RunSpeed = 6;
+static inline const auto WalkSpeed = 3;
+
 
 
 #endif //_MAGE_DEFINES_H
