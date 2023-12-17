@@ -1596,12 +1596,13 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
                      "class":"",
-                     "height":23,
-                     "id":2,
+                     "height":19,
+                     "id":4,
                      "name":"",
                      "rotation":0,
                      "visible":true,
@@ -1621,12 +1622,13 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
                      "class":"",
-                     "height":23,
-                     "id":2,
+                     "height":19,
+                     "id":3,
                      "name":"",
                      "rotation":0,
                      "visible":true,
@@ -1646,12 +1648,13 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
                      "class":"",
-                     "height":23,
-                     "id":2,
+                     "height":19,
+                     "id":4,
                      "name":"",
                      "rotation":0,
                      "visible":true,
@@ -1671,12 +1674,13 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
                      "class":"",
-                     "height":23,
-                     "id":2,
+                     "height":19,
+                     "id":3,
                      "name":"",
                      "rotation":0,
                      "visible":true,
