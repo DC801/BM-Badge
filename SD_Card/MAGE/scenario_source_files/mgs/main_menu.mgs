@@ -27,11 +27,13 @@ on_load-main_menu {
 		register simon -> debug-menu-simon;
 		register ch2 -> menu-chapter_select-2;
 		register rtfm -> command-rtfm;
+		register buffer + test -> debug-buffertest;
 		copy register-warp;
 		copy register-storyflag;
 		show serial dialog spacer;
 		show serial dialog {
 			"\t<g>Main menu debug options:</>"
+			"<c>BUFFER TEST</>: test various serial messages in various shapes"
 			"<c>HUB</>: go to debug hub map"
 			"<c>CH2</>: start ch2 (birthday cutscene)"
 			"\tOnce there, type <c>SKIP</> to end cutscenes early"

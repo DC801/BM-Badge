@@ -253,11 +253,19 @@ ch2-toot-step3-end2 {
 
 ch2-toot-step4-start {
 	show serial dialog {
-		"\tSo, um, now that you know the basics of using the artifact... I think maybe we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
+		"\tSo, um, now that you know the basics of using the artifact... I think we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
 		" "
 		# "How do we fix the mainframe?" : ch2-toot-step4a
-	} // BROKEN SERIAL MESSAGE: '...help clean up some of the'
+	}
 }
+/*
+NOTE: The message was originally:
+
+"\tSo, um, now that you know the basics of using the artifact... I think maybe we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
+
+This text message was broken in Putty: no text would print after `...help clean up some of the` (including the multiple choice option). Changing the contents of this message in any way (making it longer/shorter) made this bug go away, and I could not reproduce this bug in any other place, so just keep an eye out for similar bugs I guess? (Longer messages were printing fine! WTF?)
+*/
+
 ch2-toot-step4a {
 	show serial dialog spacer;
 	show serial dialog {
