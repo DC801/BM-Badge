@@ -36,9 +36,25 @@ on_load-ch2-castle-33 {
 			"<c>MOUSEGAME</>: start the mouse game!"
 		}
 	}
-
 	set flag ch2-mousegame to false;
-
+	if (flag ch2-cutseen-castle33 is false) {
+		if (warp state is warping) {
+			// this is here because the cutscene dialog must come after the warp-in thing
+			copy warping-in-fade-in;
+			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
+		}
+		turn player control off;
+		wait 500ms;
+		show dialog {
+			Gregory "Oh!"
+		}
+		turn entity "%PLAYER%" toward entity Gregory;
+		show dialog {
+			Gregory "Well, that's a new face, isn't it?"
+		}
+		turn player control on;
+		set flag ch2-cutseen-castle33 to true;
+	}
 	goto ch2-map-init;
 }
 
@@ -46,10 +62,19 @@ on_load-ch2-castle-33 {
 
 on_tick-ch2-castle-33 {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		set warp state to walk_from-northwest;
-		load map ch2-castle-32;
+		if (flag ch2-mousegame is true) {
+			turn player control off;
+			set entity "%PLAYER%" current_animation to 0;
+			show dialog {
+				PLAYER "Wait, I shouldn't leave before giving back this mouse detector."
+			}
+			walk entity "%PLAYER%" to geometry south-hitbox-bounce over 300ms;
+			turn player control on;
+		} else {
+			set warp state to walk_from-northwest;
+			load map ch2-castle-32;
+		}
 	}
-
 	if (flag ch2-mousegame is true) {
 		goto ch2-mousegame-tick // this script also resets to this script
 	}
@@ -71,23 +96,173 @@ on_go-castle-33-south {
 
 /* ---------- ENTITIES ---------- */
 
+const! (
+	$time = 200ms
+)
+
+screen-lights-flash-bits {
+	turn light LED_BIT1 on;
+	turn light LED_BIT2 on;
+	turn light LED_BIT4 on;
+	turn light LED_BIT8 on;
+	turn light LED_BIT16 on;
+	turn light LED_BIT32 on;
+	turn light LED_BIT64 on;
+	turn light LED_BIT128 on;
+	wait $time;
+	turn light ALL off;
+	wait $time;
+}
+
+ch2-interact-gregory-breakyes {
+	turn player control off;
+	show dialog {
+		SELF "I'll take the mouse proximity detector back then, then."
+	}
+	set flag ch2-mousegame to false;
+	turn lights control off;
+	show dialog {
+		SELF "Let me know when you want to have another go."
+	}
+	turn player control on;
+	set entity "%SELF%" on_interact to ch2-interact-gregory;
+}
+ch2-interact-gregory-breakno {
+	show dialog {
+		SELF "Good luck."
+	}
+	set entity "%SELF%" on_interact to ch2-interact-gregory;
+}
+
 ch2-interact-gregory {
 	copy face-player;
-	if (variable ch2-storyflag-round is >= 2) {
+	if (flag ch2-mousegame is true) {
+		if (flag interrupt is false) {
+			show dialog {
+				SELF "That bluetooth proximity detector will tell you how close you are to the mouse. The closer you are to it, the more lights will light up."
+				"Or did you want to take a break?"
+				> "Yes, I want to take a break" : ch2-interact-gregory-breakyes
+				> "No, I want to keep trying" : ch2-interact-gregory-breakno
+			}
+			set flag interrupt to true;
+		} else {
+			show dialog {
+				SELF "Did you want to take a break?"
+				> "Yes, I want to take a break" : ch2-interact-gregory-breakyes
+				> "No, I want to keep trying" : ch2-interact-gregory-breakno
+			}
+		}
+	}
+	if (variable ch2-storyflag-round is < 2) {
+		if (flag ch2-gregory-backstory is false) {
+			show dialog {
+				SELF "Not sure how you got in, but..."
+				"Oh! Unless the blockage is gone at last?"
+				PLAYER "No, the door by the vending machine is still blocked."
+			}
+			turn entity "%PLAYER%" south;
+			show dialog {
+				PLAYER "But why isn't the door to this room crushed, damaged, or blocked like the rest?"
+			}
+			turn entity "%PLAYER%" toward entity Gregory;
+			set entity Gregory on_tick to spin_self_clockwise;
+			show dialog {
+				SELF "This wing was recently redone to install a bunch of fancy tech."
+				"These hydroponics trays, the induction stovetops in the next room... that kind of thing."
+			}
+			set entity Gregory on_tick to null_script;
+			copy face-player;
+			show dialog {
+				SELF "They did some structural reinforcement, too, but don't remember specifics."
+				"At the time, the only thing I cared about was my new stovestop!"
+			}
+			set flag ch2-gregory-backstory to true;
+		} else {
+			show dialog {
+				SELF "I'm slowing down in my old age, but even so, I don't want my habits ingrained to the point that I'm sabotaging myself. I try to keep my mind spry."
+				"So when new tech comes out, I make an effort to give it a fair shot, and I learn how to use it properly, even if there's a tradeoff."
+				"I can't use my favorite wok on my new stovetop, but all my other pans heat more quickly and evenly with induction. For me, that's a good trade."
+				"As for my new bluetooth mouse...."
+				"...bad trade. For me, it'll be wired mice forever!"
+				"But hey, at least I know I don't hate bluetooth mice because I'm old and stubborn."
+			}
+			set flag ch2-bluetooth-mouse-rant to true;
+		}
+	} else {
 		if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
 			show dialog {
 				SELF "(TODO) Wow, you sure got that mouse! Thanks!"
 			}
-		} else {
+		} else if (flag ch2-mousegame-backstory is false) {
 			show dialog {
-				SELF "Play mouse game? (TODO)"
+				PLAYER "This is kind of random, but I need a mouse for something, and was wondering --"
+				SELF "A mouse? A rodent, or a computer mouse?"
+				PLAYER "A computer mouse."
+				SELF "A bit cliche to ask a cat about this, don't you think?"
+				PLAYER "...It wasn't my idea."
+			}
+			if (flag ch2-bluetooth-mouse-rant is false) {
+				show dialog { SELF "Well, you're in luck. I have a spare bluetooth mouse I'm not using anymore. You're welcome to it if you can catch it." }
+			} else {
+				show dialog { SELF "Well, you can have my old bluetooth mouse if you can catch it." }
+			}
+			show dialog {
+				PLAYER "Catch it?"
+			}
+			set entity Gregory on_tick to spin_self_clockwise;
+			show dialog {
+				SELF "It's loose in this room somewhere, but I'm not as fast as I used to be, and can't quite get ahold of it."
+			}
+			set entity Gregory on_tick to null_script;
+			copy face-player;
+			show dialog {
+				SELF "It's hiding in one of the hydroponics bins, I should think."
+				PLAYER "I'm sorry... your bluetooth mouse is hiding in the vegetables?"
+			}
+			if (flag ch2-bluetooth-mouse-rant is false) {
+				show dialog { SELF "Well, it's not fond of cats. And I'm not fond of it, to be honest." }
+			} else {
+				show dialog { SELF "Well, it's not fond of cats." }
+			}
+			show dialog {
+				PLAYER "We ARE talking about a computer mouse, right?"
+				SELF "We are indeed."
+			}
+			turn player control off;
+			rotate entity Gregory 1;
+			wait 800ms;
+			copy script face-player;
+			show dialog {
+				SELF "Here, this is a bluetooth proximity detector. It's got eight lights that will turn on depending on how close you are to the mouse."
+				PLAYER "Eight lights?"
+			}
+			turn lights control on;
+			turn light ALL off;
+			set entity Gregory on_tick to screen-lights-flash-bits;
+			show dialog {
+				SELF "Yes, these eight lights in a line, here along the bottom. You see?"
+				PLAYER "Um..."
+				SELF "The more lights come on, the closer you are to finding it. Walk around a bit and see for yourself."
+			}
+			turn lights control off;
+			set entity Gregory on_tick to face-player;
+			show dialog {
+				SELF "Well, let me know when you want to have a go, anyway."
+			}
+			turn player control on;
+			set flag interrupt to true;
+			set flag ch2-mousegame-backstory to true;
+		} else {
+			if (flag interrupt is false) {
+				show dialog {
+					SELF "You still need that bluetooth mouse? I've still got that bluetooth proximity detector right here."
+				}
+			}
+			show dialog {
+				SELF "Want to try to catch the mouse?"
 				> "Yes" : ch2-interact-gregory-gameyes
 				> "No" : ch2-interact-gregory-gameno
 			}
-		}
-	} else {
-		show dialog {
-			SELF "TODO"
 		}
 	}
 }
@@ -99,7 +274,7 @@ ch2-interact-gregory-gameyes {
 
 ch2-interact-gregory-gameno {
 	show dialog {
-		SELF "Oh."
+		SELF "Oh. Well, let me know when you want to give it a shot."
 	}
 	set entity "%SELF%" on_interact to ch2-interact-gregory;
 }
@@ -118,11 +293,13 @@ ch2-touch-mouse {
 	}
 	mutate ch2-mousegame-catchcount + 1;
 	set flag ch2-mousegame to false;
-	turn lights control off;
 	if (variable ch2-mousegame-catchcount is 1) {
 		show dialog {
 			PLAYER "Oh, I found it!"
-			"!!"
+		}
+		turn light ALL off;
+		show dialog {
+			PLAYER "!!"
 			"Shoot! It got away from me. Where'd it go?"
 			Gregory "Mice are quick; you'd better be quicker. Try again."
 		}
@@ -130,7 +307,10 @@ ch2-touch-mouse {
 	} else if (variable ch2-mousegame-catchcount is 2) {
 		show dialog {
 			PLAYER "Aha! Got it again!"
-			"And -- aw, come on! I was so close to grabbing it that time!"
+		}
+		turn light ALL off;
+		show dialog {
+			PLAYER "And -- aw, come on! I was so close to grabbing it that time!"
 			Gregory "It'll tire eventually. Keep going."
 		}
 		set entity Mouse on_tick to ch2-mousegame-prepare-board;
@@ -138,8 +318,9 @@ ch2-touch-mouse {
 		show dialog {
 			PLAYER "There we go! Got it in my hands!"
 			name "" "(You pick up the mouse!)"
-			Gregory "Good job. (TODO)"
+			Gregory "Good job. Hope that mouse'll do the trick for you."
 		}
+		turn lights control off;
 		copy script ch2-hide-mouse;
 		copy script ch2-pickup-mouse;
 		set entity Mouse on_interact to null_script;
@@ -266,7 +447,8 @@ ch2-mousegame-prepare-board {
 		}
 	}
 
-	turn lights control on
+	turn lights control on;
+	turn light ALL off;
 	show dialog {
 		name "" "(SQUEAK!)"
 	}
@@ -337,5 +519,5 @@ ch2-mousegame-tick {
 	if (variable mousegame-lights is >= 8) {
 		turn light LED_BIT1 on;
 	}
-	set map on_tick to on_tick-ch2-castle-33; // reset
+	set map on_tick to on_tick-ch2-castle-33; // reset (NOTE: not an infinite loop, because it's not a `goto` here)
 }

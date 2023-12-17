@@ -256,7 +256,7 @@ ch2-toot-step4-start {
 		"\tSo, um, now that you know the basics of using the artifact... I think maybe we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
 		" "
 		# "How do we fix the mainframe?" : ch2-toot-step4a
-	}
+	} // BROKEN SERIAL MESSAGE: '...help clean up some of the'
 }
 ch2-toot-step4a {
 	show serial dialog spacer;
