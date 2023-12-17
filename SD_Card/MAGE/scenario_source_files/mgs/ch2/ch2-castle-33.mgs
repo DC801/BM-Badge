@@ -494,29 +494,82 @@ ch2-mousegame-tick {
 	// `mousegame-lights` is the ACTUAL number of lights to show
 
 	// reset old lights (TODO: when array support is done in natlang, redo this)
-	turn light ALL off;
-	if (variable mousegame-lights is >= 1) {
+	
+	// NOTE: if you turn off all the lights and then turn them on as needed, it blinks on the hardware :/
+	// This makes the following a little bloated :X
+	if (variable mousegame-lights is == 0) {
+		turn light ALL off;
+	} else if (variable mousegame-lights is == 1) {
 		turn light LED_BIT128 on;
-	}
-	if (variable mousegame-lights is >= 2) {
+		turn light LED_BIT64 off;
+		turn light LED_BIT32 off;
+		turn light LED_BIT16 off;
+		turn light LED_BIT8 off;
+		turn light LED_BIT4 off;
+		turn light LED_BIT2 off;
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 2) {
+		turn light LED_BIT128 on;
 		turn light LED_BIT64 on;
-	}
-	if (variable mousegame-lights is >= 3) {
+		turn light LED_BIT32 off;
+		turn light LED_BIT16 off;
+		turn light LED_BIT8 off;
+		turn light LED_BIT4 off;
+		turn light LED_BIT2 off;
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 3) {
+		turn light LED_BIT128 on;
+		turn light LED_BIT64 on;
 		turn light LED_BIT32 on;
-	}
-	if (variable mousegame-lights is >= 4) {
+		turn light LED_BIT16 off;
+		turn light LED_BIT8 off;
+		turn light LED_BIT4 off;
+		turn light LED_BIT2 off;
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 4) {
+		turn light LED_BIT128 on;
+		turn light LED_BIT64 on;
+		turn light LED_BIT32 on;
 		turn light LED_BIT16 on;
-	}
-	if (variable mousegame-lights is >= 5) {
+		turn light LED_BIT8 off;
+		turn light LED_BIT4 off;
+		turn light LED_BIT2 off;
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 5) {
+		turn light LED_BIT128 on;
+		turn light LED_BIT64 on;
+		turn light LED_BIT32 on;
+		turn light LED_BIT16 on;
 		turn light LED_BIT8 on;
-	}
-	if (variable mousegame-lights is >= 6) {
+		turn light LED_BIT4 off;
+		turn light LED_BIT2 off;
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 6) {
+		turn light LED_BIT128 on;
+		turn light LED_BIT64 on;
+		turn light LED_BIT32 on;
+		turn light LED_BIT16 on;
+		turn light LED_BIT8 on;
 		turn light LED_BIT4 on;
-	}
-	if (variable mousegame-lights is >= 7) {
+		turn light LED_BIT2 off;
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 7) {
+		turn light LED_BIT128 on;
+		turn light LED_BIT64 on;
+		turn light LED_BIT32 on;
+		turn light LED_BIT16 on;
+		turn light LED_BIT8 on;
+		turn light LED_BIT4 on;
 		turn light LED_BIT2 on;
-	}
-	if (variable mousegame-lights is >= 8) {
+		turn light LED_BIT1 off;
+	} else if (variable mousegame-lights is == 8) {
+		turn light LED_BIT128 on;
+		turn light LED_BIT64 on;
+		turn light LED_BIT32 on;
+		turn light LED_BIT16 on;
+		turn light LED_BIT8 on;
+		turn light LED_BIT4 on;
+		turn light LED_BIT2 on;
 		turn light LED_BIT1 on;
 	}
 	set map on_tick to on_tick-ch2-castle-33; // reset (NOTE: not an infinite loop, because it's not a `goto` here)
