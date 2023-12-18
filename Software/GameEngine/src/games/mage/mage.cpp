@@ -178,7 +178,6 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       auto playerEntityTypeId = player->data.primaryIdType % NUM_PRIMARY_ID_TYPES;
       auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
       auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
-      auto previousPlayerAnimation = player->renderableData.currentAnimation;
       auto playerIsActioning = player->renderableData.currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
       //check to see if the mage is pressing the action buttons, or currently in the middle of an action animation.
@@ -210,7 +209,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
          player->renderableData.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
       }
       //Scenario 3 - show idle animation:
-      else //if (playerHasControl)
+      else if (playerHasControl)
       {
          player->renderableData.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }
@@ -226,13 +225,6 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       {
          player->renderableData.currentFrameIndex = 0;
          player->renderableData.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
-      }
-
-      //if the animation changed since the start of this function, reset to the first frame and restart the timer:
-      if (previousPlayerAnimation != player->renderableData.currentAnimation)
-      {
-         player->renderableData.currentFrameIndex = 0;
-         player->renderableData.currentFrameTicks = 0;
       }
    }
 

@@ -37,6 +37,13 @@ struct RenderableData
    {
       return EntityPoint{ uint16_t(origin.x + hitBox.w / 2), uint16_t(origin.y + hitBox.h / 2) };
    }
+
+   void SetAnimation(uint8_t animation)
+   {
+      currentFrameTicks = 0;
+      currentFrameIndex = 0;
+      currentAnimation = animation;
+   }
 };
 
 class MageTileset

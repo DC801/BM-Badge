@@ -73,12 +73,6 @@ public:
     MageScriptState onInteract;
     MageScriptState onTick;
 
-    inline void SetAnimation(uint8_t animationId)
-    {
-        renderableData.currentAnimation = animationId;
-        renderableData.currentFrameIndex = 0;
-    }
-
     void SetName(std::string s)
     {
         for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
