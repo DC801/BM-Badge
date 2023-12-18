@@ -23,8 +23,13 @@ struct ButtonState
 
 struct DeltaState
 {
-   ButtonState Buttons;
-   ButtonState ActivatedButtons;
+   const ButtonState Buttons;
+   const ButtonState ActivatedButtons;
+
+   inline bool PlayerIsActioning() const 
+   { 
+      return Buttons.IsPressed(KeyPress::Rjoy_left);
+   }
 };
 
 typedef std::conditional<

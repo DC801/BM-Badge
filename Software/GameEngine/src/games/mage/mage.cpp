@@ -178,26 +178,18 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       auto playerEntityTypeId = player->data.primaryIdType % NUM_PRIMARY_ID_TYPES;
       auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
       auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
-      auto playerIsActioning = player->renderableData.currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
       //check to see if the mage is pressing the action buttons, or currently in the middle of an action animation.
-      if (playerHasControl)
+      if (playerHasControl && !delta.PlayerIsActioning())
       {
-         if (delta.Buttons.IsPressed(KeyPress::Rjoy_left))
-         {
-            playerIsActioning = true;
-         }
          //if not actioning or resetting, handle all remaining inputs:
-         else
-         {
-            mapControl->TryMovePlayer(delta);
-            handleEntityInteract(delta.ActivatedButtons);
-         }
+         mapControl->TryMovePlayer(delta);
+         handleEntityInteract(delta.ActivatedButtons);
       }
 
       //handle animation assignment for the player:
       //Scenario 1 - perform action:
-      if (playerIsActioning && hasEntityType
+      if (delta.PlayerIsActioning() && hasEntityType
          && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
          player->renderableData.currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
