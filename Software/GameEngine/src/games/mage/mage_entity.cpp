@@ -22,7 +22,7 @@ void MageEntity::UpdateRenderableData()
       renderableData.tileId = data.secondaryId;
       renderableData.duration = 0; //unused
       renderableData.frameCount = 0; //unused
-      renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
+      renderableData.renderFlags = data.flags; //no need to check, it shouldn't cause a crash.
    }
    else if (data.primaryIdType == MageEntityPrimaryIdType::ANIMATION)
    {
@@ -44,7 +44,7 @@ void MageEntity::UpdateRenderableData()
       renderableData.tileId = animation->GetFrame(renderableData.currentFrameIndex).tileId;
       renderableData.duration = animation->GetFrame(renderableData.currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
       renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-      renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
+      renderableData.renderFlags = data.flags; //no need to check, it shouldn't cause a crash.
    }
    else if (data.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
@@ -63,7 +63,7 @@ void MageEntity::UpdateRenderableData()
       auto& animation = entityType->GetAnimation(renderableData.currentAnimation);
 
       //create a animationDirection entity based on direction:
-      auto dirValue = (MageEntityAnimationDirection)(data.direction & RENDER_FLAGS_DIRECTION_MASK);
+      auto dirValue = (MageEntityAnimationDirection)(data.flags & RENDER_FLAGS_DIRECTION_MASK);
       auto& animationDirection =
          dirValue == MageEntityAnimationDirection::NORTH ? animation.North
          : dirValue == MageEntityAnimationDirection::EAST ? animation.East
@@ -94,7 +94,7 @@ void MageEntity::UpdateRenderableData()
          renderableData.tileId = currentFrame.tileId;
          renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
          renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-         renderableData.renderFlags = animationDirection.renderFlags | (data.direction & 0x80); //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = animationDirection.renderFlags | (data.flags & 0x80); //no need to check, it shouldn't cause a crash.
       }
       else
       {
@@ -102,7 +102,7 @@ void MageEntity::UpdateRenderableData()
          renderableData.tileId = animationDirection.typeId;
          renderableData.duration = 0; //does not animate;
          renderableData.frameCount = 0; //does not animate
-         renderableData.renderFlags = data.direction; //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = data.flags; //no need to check, it shouldn't cause a crash.
       }
    }
 

@@ -192,18 +192,18 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       if (delta.PlayerIsActioning() && hasEntityType
          && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
-         player->renderableData.currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
+         player->renderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
       }
       //Scenario 2 - show walk animation:
       else if (mapControl->playerIsMoving && hasEntityType
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
-         player->renderableData.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+         player->renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
       //Scenario 3 - show idle animation:
       else if (playerHasControl)
       {
-         player->renderableData.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+         player->renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
 
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
@@ -215,8 +215,7 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       //if the above bool is true, set the player back to their idle animation:
       if (isPlayingActionButShouldReturnControlToPlayer)
       {
-         player->renderableData.currentFrameIndex = 0;
-         player->renderableData.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+         player->renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
    }
 

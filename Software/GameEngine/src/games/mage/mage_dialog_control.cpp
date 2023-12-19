@@ -218,8 +218,8 @@ void MageDialogControl::loadCurrentScreenPortrait()
 
          auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
          auto animationDirection = portrait->getEmoteById(currentScreen.emoteIndex);
-         currentEntity.value()->data.direction = animationDirection->renderFlags;
-         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.value()->data.direction & 0x80);
+         currentEntity.value()->data.flags = animationDirection->renderFlags;
+         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.value()->data.flags & 0x80);
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
          if (((uint8_t)currentScreen.alignment % 2))
          {

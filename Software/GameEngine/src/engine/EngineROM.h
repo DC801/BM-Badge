@@ -42,7 +42,7 @@ public:
    {
       return offsets[i % count];
    }
-   uint32_t Length(uint16_t i) const
+   uint32_t GetLength(uint16_t i) const
    {
       return lengths[i % count];
    }
@@ -65,7 +65,7 @@ template <class T, template <class...> class Tuple, class... Args, uint32_t... I
 struct type_index<T, Tuple<Args...>, std::integer_sequence<uint32_t, Is...>>
    : std::integral_constant<uint32_t, ((Is* match_v<T, Is, Tuple<Args...>>) + ... + 0)>
 {
-   static_assert(1 == (match_v<T, Is, Tuple<Args...>> +... + 0), "T doesn't appear once in Tuple");
+   static_assert(1 == (match_v<T, Is, Tuple<Args...>> +... + 0), "T doesn't appear only once in type Tuple");
 };
 
 template <class T, class Tuple>
@@ -173,6 +173,14 @@ struct EngineROM
       return reinterpret_cast<const TCast*>(&romData[offset]);
    }
 
+   template <typename TLookup, typename TCast = TLookup>
+   constexpr std::span<const TCast> GetSpanByIndex(uint16_t index) const
+   {
+      const auto offset = getHeader<TLookup>().GetOffset(index);
+      const auto length = getHeader<TLookup>().GetLength(index);
+      return std::span<const TCast>(&romData[offset], length);// reinterpret_cast<const TCast*>(&romData[offset]);
+   }
+
    template <typename T>
    const T* GetReadPointerToAddress(uint32_t& offset) const
    {
@@ -256,7 +264,6 @@ struct EngineROM
       auto saveAddress = uint32_t{ ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE) };
       Read(currentSave, saveAddress);
 #else
-
       auto saveFilePath = std::filesystem::directory_entry{ std::filesystem::absolute(DESKTOP_SAVE_FILE_PATH) };
       if (!saveFilePath.exists())
       {

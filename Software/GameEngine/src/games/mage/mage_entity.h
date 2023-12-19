@@ -53,7 +53,10 @@ struct MageEntityData
     uint16_t primaryId{ 0 };
     uint16_t secondaryId{ 0 };
     uint8_t primaryIdType{ 0 };
-    uint8_t direction{ 0 };
+
+    uint8_t  current_animation;
+    uint8_t  current_frame;
+    uint8_t  flags;
     uint8_t hackableStateA{ 0 };
     uint8_t hackableStateB{ 0 };
     uint8_t hackableStateC{ 0 };
@@ -88,7 +91,7 @@ public:
     void Draw(const std::shared_ptr<TileManager>& tileManager, const EntityPoint& cameraPosition) const;
     void DrawGeometry(const EntityPoint& camera) const;
 
-    inline bool isDebug() const { return data.direction & RENDER_FLAGS_IS_DEBUG; }
+    inline bool isDebug() const { return data.flags & RENDER_FLAGS_IS_DEBUG; }
 };
 
 

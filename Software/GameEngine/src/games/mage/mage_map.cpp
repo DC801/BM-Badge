@@ -91,14 +91,13 @@ MapData::MapData(uint32_t& offset)
    for (auto i = 0; i < entityCount; i++)
    {
       auto entityAddress = ROM()->GetOffsetByIndex<MageEntityData>(entityGlobalIds[i]);
-      auto entity = MageEntityData{};
-      ROM()->Read(entity, entityAddress);
-      entities[i] = std::move(MageEntity{ std::move(entity) });
+      ROM()->Read(entities[i], entityAddress);
    }
 
    for (auto i = 0; i < layerCount; i++)
    {
       auto layerAddress = uint32_t(offset + i * rows * cols * 4);
+      //const auto layerPointer = ROM()->GetSpanByIndex<MageMapTile>(layerAddress);
       const auto layerPointer = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
       layers.push_back(std::span{ layerPointer, (uint16_t)(cols * rows) });
    }
@@ -197,7 +196,7 @@ void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
    auto interactBox = player->renderableData.hitBox;
 
    const uint8_t interactLength = 32;
-   auto direction = optionalPlayer.value()->data.direction & RENDER_FLAGS_DIRECTION_MASK;
+   auto direction = optionalPlayer.value()->data.flags & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
       interactBox.origin.y -= interactLength;
@@ -271,26 +270,26 @@ void MapControl::TryMovePlayer(const DeltaState& delta)
 
    if (player->data.position.x < player->renderableData.origin.x)
    {
-      player->data.direction = WEST;
+      player->data.flags = WEST;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
    else if (player->data.position.x > player->renderableData.origin.x)
    {
-      player->data.direction = EAST;
+      player->data.flags = EAST;
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
 
    if (player->data.position.y < player->renderableData.origin.y)
    {
-      player->data.direction = NORTH;
+      player->data.flags = NORTH;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
    else if (player->data.position.y > player->renderableData.origin.y)
    {
-      player->data.direction = SOUTH;
+      player->data.flags = SOUTH;
       hitboxPointsToCheck.push_back(botLeft);
       hitboxPointsToCheck.push_back(botRight);
    }
