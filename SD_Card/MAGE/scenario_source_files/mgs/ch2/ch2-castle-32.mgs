@@ -121,6 +121,18 @@ on_go-castle-32-south {
 
 /* ---------- ENTITIES ---------- */
 
+ch2-interact-onions {
+	show dialog {
+		PLAYER "Onions, nice! Guess there's a delicious meal in someone's future."
+	}
+}
+
+ch2-interact-stove {
+	show dialog {
+		PLAYER "This glasstop stove looks brand new. Or someone keeps it very clean, anyway."
+	}
+}
+
 interact-ch2-gloria {
 	turn player control off;
 	set entity "%SELF%" on_tick to null_script;
