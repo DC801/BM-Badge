@@ -1,5 +1,17 @@
 # Chapter 2 planning
 
+## Generic work needing done
+
+- [ ] Rename scripts so they're consistent
+	- e.g. `ch2-interact-asdfasdf` should all be `interact-ch2-asdfasdf` -- or vice versa (pick one!)
+- [ ] Move Tiled files to the folders they should actually be (some entity JSON files are in the maps folder, etc.)
+	- [ ] And update all file paths in files that link to them, please!
+- [ ] Map init scripts should be run *before* cutscenes, not after anymore (because COPY_SCRIPT handles gotos now, you don't need to do them after!)
+	- [ ] Remove all the bodges involving warping in
+- [ ] Turn off serial control during cutscenes
+	- [ ] Determine which
+	- [ ] Determine whether this should include all conversations
+
 ## Non-assets and scripting things we need
 
 - [ ] Stories about building computers! I.e.
@@ -15,7 +27,7 @@
 	- [ ] Windows
 		- Are there several ways of doing it?
 		- If so, is there a clear leader for best way, or easiest for beginners?
-		- Does the process vary based on which specific version you're on?
+		- Does the process vary based on which specific version of Windows you're on?
 	- [ ] Linux
 		- Is the hardware interface always the same, no matter the distro?
 		- Any traps or workarounds for weird setups?
@@ -36,53 +48,6 @@
 	- Learning about one's environment
 	- Leaning toolsets, how to best use everyday tools
 	- Secrets to protect the vulnerable vs secrets to manipulate the vulnerable
-
-## Sprite wishlist
-
-### Inventory items
-
-- [x] `monitor`
-- [ ] `heatsink`
-	- [x] `cactuscooler`
-- [x] `powersupply`
-- [x] `keyboard` (keytar)
-- [ ] `mouse` (rodent)
-- [ ] `harddrive`
-	- [x] `plate` (dinner plate)
-	- [ ] `needle` (phonograph needle)
-- [x] `ramchips` (bag of Doritos)
-- [x] `clock` (grandfather clock)
-- [ ] `cpu`
-	- [x] `goldfish` (same sprite as bedroom?)
-	- [x] `abacus`
-
-### NPCs
-
-- [x] Lambda
-- [x] King Gibson
-- [ ] Cat Cook
-- [x] Castle goose (red bow)
-- [x] Sea Moss
-- [x] Trash panda ("Wizard")
-- [x] Welder ("Rocco")
-- [ ] Better Exa sprite
-- [ ] Misc other humanoid NPCs (as many as possible)
-
-### Sets and doodads
-
-- [x] Vending machine
-- [~] Band instruments
-- [x] Normal walls/floor (vaguely circuit-like)
-- [x] Throne room ~~(resembles Admiral's Gibson renders)~~
-- [ ] Geothermal power plant
-- [ ] Old timey-bedroom
-- [ ] Blacksmith / workshop
-- [ ] Server room
-- [ ] Kitchen
-- [x] Hydroponics
-- [ ] Pantry
-- [x] Messy computer lab (tiny)
-- [~] Collapsed rocks (blocking doorways + incidental fallen rocks)
 
 ## Serial dialogs styles
 

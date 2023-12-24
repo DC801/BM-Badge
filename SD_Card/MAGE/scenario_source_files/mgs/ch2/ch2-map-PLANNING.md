@@ -40,56 +40,129 @@ Nethack-like
 
 The room name (re: warping or other serial labelling) is what is contained within backtics.
 
+The following lists concern physical appearance (including the actual spritesheets), physical placement, and basic tile and vector plumbing.
+
 ### Entrance
 
 1. `Castle entrance`
-	- XA: intercom with XB (outside) and XC in room 99
-	- Save floppy
-	- ITEM: computer enclosure + motherboard
+	- [~] Entity: XA - intercom with XB (outside) and XC in room 99
+		- [ ] Redo This sprite? Perhaps Super Mario RPG type thing, where it's like actually modeled in 3D
+	- [~] Entity: Wizard - installs OS onto mainframe when it's finished
+		- [ ] Needs side sprites
+	- [x] Mainframe enclosure
+	- [x] Save floppy
+	- [ ] SET: the inside equiv. of a front porch; spartan; this room precedes even a coat rack or the like
 
 ### Admin Branch
 
 11. `Castle hallway front`
-	- ITEM: Monitor
+	- [x] Inventory item: monitor
+	- [x] Entity: Kuro (a crow)
+	- [~] SET: more a proper foyer; grandiose, welcoming, but nothing specific happening in terms of personnel stations or equipment
+		- [ ] Wall of rubble at N separating this room from 12
 12. `Castle hallway back`
-	- ITEM: phonograph
+	- [~] Inventory item: needle (from phonograph)
+		- [ ] Needs sprite
+	- [ ] Entity: ???? (a concierge?) -- should be dressed in a super nice suit, but like it's some kind of a scraggly werewolf
+	- [ ] SET: the "human" half of the foyer, logistically speaking
+		- [ ] Concierge desk with guestbook
+		- [ ] Coatrack
+		- [ ] Wall of rubble at S separating this room from 11
 13. `Throne room`
-	- the royal advisor (a goldfish, ruling in King Gibson's absence)
-	- ITEM: goldfish (CPU item 1)
+	- [x] Inventory item: goldfish (cpu part 1) (see below)
+	- [x] Entity: Goldfish (the regent in the king's absence)
+	- [x] Entity: Sebastian (a red lizard wizard; a "Jafar" type)
+	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
+	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
 14. `King Gibson's bedroom`
-	- ITEM: grandfather clock
+	- [x] Inventory item: clock
+	- [x] Entity: King Gibson
+	- [ ] SET: old-timey king's bedroom
+		- [ ] Four poster bed
+		- [x] Grandfather clock
+		- [ ] Wardrobes or whatever idk
 
 ### Industrial Area
 
 21. `Workshop`
-	- ITEM: abacus (CPU item 2)
-	- (will combine goldfish with abacus)
+	- [x] Inventory item: abacus (CPU part 2)
+	- [ ] Entity: Goose (with ribbon)
+		- [ ] Should be involved with one of the puzzle items
+	- [ ] Entity: Jean-Paul - human-sized cockatiel; buds with Frankie
+	- [ ] Entity: Frankie - androgynous, Homestar Runner shirt-wearing tinkerer; buds with Jean-Paul
+	- [ ] Entity: Rocco
+		[ ] Move Rocco in here from other place; switch with Frankie?
+	- [ ] SET: work room for fixing and making hardware (both old timey castle type hardware *and* computer type hardware); disheveled, but not hopelessly so (everything is sort of in the right place, it's just all out at the moment)
+		- [ ] Soldering stations
+		- [ ] Anvil
+		- [ ] Magnifying glasses on luxo lamp arms
+		- [ ] Cupboards and storage bays
+		- [ ] Miscellaneous semi-useful detritus
 22. `Server room`
-	- ITEM: power supply
-23. `Power plant` (geothermal)
-	- Deliver Cactus Cooler to them to receive ITEM
-	- ITEM: Heat sink
+	- [x] Inventory item: powersupply
+	- [x] Entity: Scuzzy - generic conversation about the similarities between rooms in a building and components inside a computer
+	- [x] Entity: C.K. Watt - gives you the power supply because it's extra
+	- [ ] SET: More cleanroom looking than the workshop
+		- [ ] Racks of machines
+		- [ ] Trails of wires
+		- [ ] Cooling mechanisms
+		- [ ] Some computer buildery stuff (more computer, less electronics?)
+23. `Power plant`
+	- [~] Inventory item: heatsink
+		- [ ] Needs sprite
+	- Entities should all be in lab coats;
+	- [ ] Entity: Tracy - generic engineer
+	- [~] Entity: Rocco - to trade you the heat sink for a can of Cactus Cooler
+		- [ ] Change this sprite out for a lab-coaty one; move this char to the workroom?
+	- [ ] Entity: Helvetica - succubus, but you wouldn't know it from how she was acting; consummate professional engineer
+	- [ ] SET: Aiming for geothermal; whatever would sell that re: appearance
 
 ### Food
 
 31. `Grand hall`
-	- Copy Pasta bar
-	- Vending machine
-	- Rock band
-		- ITEM: keyboard (or possibly keytar)
+	- [x] Inventory item: keyboard (keytar from the band)
+	- [x] Entity: Simon - a band member from 1023 MB; challenges player to Simon says, and gives the keytar in the event of a loss
+		- [ ] Still needs keytar position sprites for the mage
+	- [x] Entity: Theodore - a band member from 1023 MB
+	- [x] Entity: Alvin - a band member from 1023 MB
+	- [ ] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd
+		- [ ] Cocktail tables and stools
+		- [~] Stage with band instruments (band: 1023 MB)
+		- [ ] Copy Pasta bar (some booze, some small entrees)
 32. `Castle kitchen`
-	- ITEM: RAM chips (from vending machine)
+	- [x] Inventory item: ramchips (giant Doritos-esque bag of chips)
+	- [x] Entity: Samson - a medium-sized golden bug; child of Gloria
+	- [x] Entity: Gloria - a large golden beetle; fusses over child Samson
+	- [x] Entity: Sea Moss - a huge stone golem covered in barnacles etc.; helps direct you to Cactus Cooler; helps you acquire RAM chips
+	- [~] SET: Some dining space, but more of an employee snack room kind of vibe
+		- [x] Moderate-sized kitchen
+		- [x] Vending machine
+		- [ ] Snack room ish tables/chairs
 33. `Hydroponics room`
-	- ITEM: mouse (an actual rodent)
+	- [x] Inventory item: mouse (no graphics necessary)
+	- [~] Entity: Gregory - a cat chef
+		- [ ] Needs cat chef spritesheet (currently a stand-in entity)
+	- [x] SET: Hydroponics area, with vegetables growing in individual plastic(?) bins, stacked to the ceiling
 34. `Castle pantry`
-	- ITEM: SSD/HD (plate)
+	- [x] Inventory item: plate (harddrive part 2)
+	- [ ] Entity: ??? - someone who can help you measure and calibrate the spin of a "plate" (for a HD)
+	- [ ] SET: Larder-ish, wine-cellar-ish, pantry-ish.
+		- [ ] Wine rack
+		- [ ] Dishes in shelves/cupboards
+		- [ ] Barrels aplenty
+		- [ ] Cupboards
+		- [ ] Sacks of potatoes, onions, etc.
+		- [ ] Shelf-stable veg
+		- [ ] Industrial freezer/fridge
 
 ### The End
 
 99. `Lambda's lab` (teleport only)
-	- Lambda
-	- XC: intercom with XB (outside the castle?) and XA in room 1
-	- ITEM: mainframe OS
+	- [x] Inventory item: Mainframe OS
+	- [x] Entity: Lambda
+	- [x] Entity: XC: intercom with XB (outside the castle?) and XA in room 1
+	- [x] SET: Very lived in, untidy; housing a shut-in
+		- [ ] Could use more grime or spills, crumpled up papers etc.
 
 ### Town
 
@@ -133,12 +206,14 @@ The room name (re: warping or other serial labelling) is what is contained withi
 
 Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten); see `ch2-PLANNING.md` for the sprites checklist.
 
+In debug mode, you can use the command `storyflag` to set this arbitrarily for testing purposes.
+
 ### Plot
 
 Plot points implemented:
 
 - INTRO (`ch2-storyflag-round` = 0)
-	- [~] Picking up the artifact from a sliding door cubby on the side of the wall: door opens, player character moves over there, turns to get it, then maybe door closes again (so we can reuse that temp entity)
+	- [x] Picking up the artifact from a sliding door cubby on the side of the wall: door opens, player character moves over there, turns to get it, then maybe door closes again (so we can reuse that temp entity)
 	- [x] Intro to Lambda
 		- [ ] Connecting the artifact on Windows
 		- [ ] Connecting the artifact on MacOS / Linux
@@ -150,25 +225,23 @@ Plot points implemented:
 	- Starting item: enclosure/motherboard (room 1)
 
 - FIRST ROUND: normal (`ch2-storyflag-round` = 1)
-	- [~] (1.) `monitor` (room 11)
-		- Some kind of better framing device?
+	- [x] (1.) `monitor` (room 11)
 	- [~] (2.) `heatsink` (room 23)
-		- [~] The power plant guys need a substitute cooling source if you are to take their heatsink
+		- [ ] The power plant guys need a substitute cooling source if you are to take their heatsink
 		- [x] `cactuscooler` (Bob's club)
 	- [x] (3.) `powersupply` (room 22)
-		- Framing device can be simple
 	- [x] Bert secret cutscene happens when all of the above are done
 	- [x] Lambda gives next round of the parts list
 
 - SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
 	- [x] (4.) `keyboard` (keytar) (room 31)
-	- [~] (5.) `mouse` (rodent) (room 33)
-		- The Cat doesn't like wireless mice (because they just get away all the time)
-		- [ ] Cat intro: something like "I'm too old to chase after mice, but here, take this mouse proximity detector" (uses wireless signal strength)
-		- [ ] Cat congrats when finished (Also, "I definitely prefer a mouse with a physical connection. Don't you?")
+	- [x] (5.) `mouse` (rodent) (room 33)
 	- [ ] (6.) `harddrive`
 		- [ ] `plate` (dinner plate) (room 34)
+			- [ ] Run several plates through some kind of serial minigame, detecting their spin or stability or something
 		- [ ] `needle` (phonograph needle) (room 12)
+			- [ ] Fix the existing speakers so they can use the digital media system, rather than the phonograph
+			- [ ] This should involve the terminal somehow
 	- [x] Bert "any messages yet?" convo happens when all of the above are done
 	- [x] Lambda gives next round of the parts list
 
@@ -176,9 +249,15 @@ Plot points implemented:
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 		- [ ] Click the buttons on the vending machine (technically a stretch goal)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
+		- [ ] Talk to Gibson; get him and his staff to reconcile
+			- [ ] They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken.
+			- [ ] Use the terminal to repair the intercom and get them talking again
+			- [ ] Repair the door somehow, too? The King should return to the throne room
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
+			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
 		- [ ] `abacus` (room 21)
+			- [ ] Framing device = ???
 	- [ ] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
@@ -220,6 +299,8 @@ ALL DONE!
 
 ### Villager dialog
 
+They should move around a bit between all these story flags, though chunking them to the following four is fine
+
 - INTRO (`ch2-storyflag-round` = 0)
 	- [ ] Villagers direct you to western dungeon (castle)
 - FIRST ROUND: normal (`ch2-storyflag-round` <= 2)
@@ -228,6 +309,43 @@ ALL DONE!
 	- [ ] Player asks villages about Bert, they haven't seen him
 - AFTERWARD (`ch2-storyflag-round` <= 5)
 	- [ ] Speculate on next location: software!
+
+Villagers:
+
+- [x] Baker (bakery) (only says something generic)
+- [x] Guardian Bob (not required; dialog is quest related)
+- [x] Trekkie (greenhouse)
+- [x] Timmy (library)
+- [ ] Uncle Zappy (mage home)
+- [ ] Aunt Zippy (mage home)
+- [ ] Beatrice (Beatrice's house)
+	- [ ] Should be focued on reconciling with Delmar (reforging their connections) (this should happen after storyflag 4, so the shepherd's dialog still makes sense)
+- [ ] Delmar (sheep's pen, sulking)
+- [ ] Smith (Smith's house)
+- [ ] Kid (Smith's house)
+- [x] Marta (overworld)
+- [~] Verthandi (overworld)
+	- [ ] Currently only something generic, plus something for storyflag 2 (talking with Alfonso); should add others, too
+- [ ] Hamster (overworld)
+	- Pick another spot for him
+- [ ] Cleo (with white cat) (overworld)
+
+Entities not being used right now: (maybe use them?)
+
+- [ ] Ssen
+	- [ ] I haven't played Earthbound; find something clever to do wtih him
+- [ ] Bender
+	- [ ] Think of somewhere else he should be hanging out
+- [ ] Yabbo Mongo
+	- [ ] Should be somewhere in the exterior, or perhaps perplexed that his "infinity" doesn't work anymore?
+	- [ ] Should speak with Cockney rhyming slang (on request by artist)
+- [ ] Town goose
+	- [ ] Should still be around
+	- [ ] Does the rake easter egg still work? (Should it?)
+- [ ] Max Swagger
+	- [ ] Should be able to go inside
+	- [ ] Should be very bare; furnishings are still being worked on
+	- [ ] Should maybe have instructions or tips for the blinky art board
 
 ### Scripts needed for story items
 
@@ -276,20 +394,8 @@ Other notes:
 			- Proposal: Sea Moss quips something funny about that item, maybe some kind of tech snack pun, but then invalidates that choice and is like "Seriously, though, I'm not made of cash! Let's try the real choice please?"
 		- Q. What buttons are normally there on a vending machine? Letters? Numbers?
 		- Q. The badge's buttons are on the sides of the screen. Is there a button layout where it would be obvious what button does what?
-- [ ] Keytar battle
-	- [ ] Lights out, spotlight only: you and the lead guitarist alone on stage
-	- [ ] Animations for both, holding a keytar: (downward angle only)
-		- Up-left (XOR)
-		- Up-right (MEM0)
-		- Left (PAGE)
-		- Right (MEM3)
-		- Down-left (128)
-		- Down-right (1)
-		- Win (mage: happy, keytarist: congratulatory)
-		- Lose (mage: mad, keytarist: disappointed)
-	- [x] Options for type of battle (to accomodate ease of pressing PAGE/MEM3/128/1 on real badges and parsing XOR/PAGE/MEM0/MEM3 on desktop): high or low
-	- [x] You get the keyboard if you win
-	- [x] Repeat battles (if you've already installed the keyboard, he's got another one you can use -- named something else, of course)
+- [x] Finished: Simon says
+- [x] Finished: hot-cold game (mousegame)
 
 ## Puzzle Mechanics
 
@@ -306,7 +412,7 @@ Other notes:
 
 ### Serial terminal: things we can't do
 
-- Apart from arbitrary sizes of white space (just space?), which is used to split the input string, no further string processing can be done; all matches to the above stuff must be EXACT (case insensitive)
+- Apart from arbitrary sizes of white space (just space?), which is used to split the input string, no further string processing can be done; all matches must be EXACT (case insensitive)
 - Game logic largely consists of integer variables and boolean story flags, so emulating a real computer system is possible but unfeasible
 
 #### Goals / issues
@@ -319,7 +425,7 @@ Other notes:
 
 BRAINSTORMING: In terms of the player accidentally learning something about CS:
 
-### What we use terminals for
+### What we use terminals for IRL
 
 - Run a CLI program (technically this is everything)
 	- Internal commands: `echo`, `cd`
@@ -343,7 +449,7 @@ BRAINSTORMING: In terms of the player accidentally learning something about CS:
 	- (The GNUs can get out)
 	- Format the drive wrong
 - Goals:
-	- Installation "cutscene" shouldn't take more than like 3 minutes
+	- Installation "cutscene" shouldn't take more than like 2 minutes
 	- Should not be annoying or boring to people used to the real process, but not overwhelming for people who have never even seen this kind of thing before
 	- Should have pretend dummy "installing X" text
 		- Note that we can't do ANSI cursor maneuvering! Every new message is just spit out on a new line after the previous one.
@@ -356,7 +462,7 @@ BRAINSTORMING: In terms of the player accidentally learning something about CS:
 		- Better to be silly or punny than to approach accuracy incompletely?
 		- Can this still be educational?
 	- We had the player acquire a monitor, so should we expect some kind of DE appear on the screen at the end?
-		- Proposal: the monitor hangs out by the enclosure, so maybe it comes on, and then the whole badge screen (cinematically) turns into the default desktop, perhaps complete with slowly-loading interface elements (like maybe the desktop icons take a second to appear), before the normal overworld is shown again.
+		- Proposal: the monitor hangs out by the enclosure, so maybe it comes on, and then the whole badge screen (cinematically) turns into a default desktop, perhaps complete with slowly-loading interface elements (like maybe the desktop icons take a second to appear), before the normal overworld is shown again.
 			- Possible issue: you don't get to actually use a mouse?
 			- Or maybe the joystick can move a "mouse" around? But then what happens if the player wants to "click" on something?
 
@@ -413,7 +519,7 @@ We should take advantage of the badge hardware itself, especially since hex edit
 		- you could pick either one, and that's the one that goes away?
 		- or Trekkie says you can't use the tumbleweed one, since it's all borked
 		- put it in step 4: software, because you realize you need some software drivers
-- If the player has to leave to go to town once in every story round, they're more likely to see changes in town
+- If the player has to leave to go to town once in every story round, they're more likely to see changes in town!
 - Little hacks you can do in town, not for the story, but for funsies -- misleading or satisfying?
 	- Straighten out tangled ethernettle before Trekkie will let you take one?
 - Some kind of hardware that can only talk to you with how its lights are blinking (which ones, what pattern)

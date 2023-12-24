@@ -284,9 +284,9 @@ interact-ch2-alfonso-verthandi {
 }
 
 interact-ch2-jackob-end {
-	// can't use a zigzag for this kind of safety check!
-	if variable ch2-storyflag-round is not >= 5
-		then goto null_script;
+	if (variable ch2-storyflag-round is < 5) {
+		goto null_script;
+	}
 	copy face-player;
 	show dialog {
 		SELF "Ah, %PLAYER%, well done!"
@@ -302,9 +302,9 @@ interact-ch2-jackob-end {
 }
 
 interact-ch2-alfonso-end {
-	// can't use a zigzag for this kind of safety check!
-	if variable ch2-storyflag-round is not >= 5
-		then goto null_script;
+	if (variable ch2-storyflag-round is < 5) {
+		goto null_script;
+	}
 	copy face-player;
 	show dialog {
 		SELF "Good job, %PLAYER%!"
