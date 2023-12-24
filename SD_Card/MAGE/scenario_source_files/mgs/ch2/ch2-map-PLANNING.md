@@ -45,6 +45,7 @@ The following lists concern physical appearance (including the actual spriteshee
 ### Entrance
 
 1. `Castle entrance`
+	- [x] Cutscene: Enter the room for the first time (not needed)
 	- [~] Entity: XA - intercom with XB (outside) and XC in room 99
 		- [ ] Redo This sprite? Perhaps Super Mario RPG type thing, where it's like actually modeled in 3D
 	- [~] Entity: Wizard - installs OS onto mainframe when it's finished
@@ -56,11 +57,13 @@ The following lists concern physical appearance (including the actual spriteshee
 ### Admin Branch
 
 11. `Castle hallway front`
+	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: monitor
 	- [x] Entity: Kuro (a crow)
 	- [~] SET: more a proper foyer; grandiose, welcoming, but nothing specific happening in terms of personnel stations or equipment
 		- [ ] Wall of rubble at N separating this room from 12
 12. `Castle hallway back`
+	- [ ] Cutscene: Enter the room for the first time
 	- [~] Inventory item: needle (from phonograph)
 		- [ ] Needs sprite
 	- [ ] Entity: ???? (a concierge?) -- should be dressed in a super nice suit, but like it's some kind of a scraggly werewolf
@@ -69,12 +72,14 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Coatrack
 		- [ ] Wall of rubble at S separating this room from 11
 13. `Throne room`
+	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: goldfish (cpu part 1) (see below)
 	- [x] Entity: Goldfish (the regent in the king's absence)
 	- [x] Entity: Sebastian (a red lizard wizard; a "Jafar" type)
 	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
 	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
 14. `King Gibson's bedroom`
+	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: clock
 	- [x] Entity: King Gibson
 	- [ ] SET: old-timey king's bedroom
@@ -85,12 +90,13 @@ The following lists concern physical appearance (including the actual spriteshee
 ### Industrial Area
 
 21. `Workshop`
+	- [~] Cutscene: Enter the room for the first time
 	- [x] Inventory item: abacus (CPU part 2)
-	- [ ] Entity: Goose (with ribbon)
+	- [x] Entity: Goose (with ribbon)
 		- [ ] Should be involved with one of the puzzle items
-	- [ ] Entity: Jean-Paul - human-sized cockatiel; buds with Frankie
-	- [ ] Entity: Frankie - androgynous, Homestar Runner shirt-wearing tinkerer; buds with Jean-Paul
-	- [ ] Entity: Rocco
+	- [x] Entity: Jean-Paul - human-sized cockatiel; buds with Frankie
+	- [x] Entity: Frankie - androgynous, Homestar Runner shirt-wearing tinkerer; buds with Jean-Paul
+	- [~] Entity: Rocco
 		[ ] Move Rocco in here from other place; switch with Frankie?
 	- [ ] SET: work room for fixing and making hardware (both old timey castle type hardware *and* computer type hardware); disheveled, but not hopelessly so (everything is sort of in the right place, it's just all out at the moment)
 		- [ ] Soldering stations
@@ -99,6 +105,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Cupboards and storage bays
 		- [ ] Miscellaneous semi-useful detritus
 22. `Server room`
+	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: powersupply
 	- [x] Entity: Scuzzy - generic conversation about the similarities between rooms in a building and components inside a computer
 	- [x] Entity: C.K. Watt - gives you the power supply because it's extra
@@ -108,6 +115,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Cooling mechanisms
 		- [ ] Some computer buildery stuff (more computer, less electronics?)
 23. `Power plant`
+	- [ ] Cutscene: Enter the room for the first time
 	- [~] Inventory item: heatsink
 		- [ ] Needs sprite
 	- Entities should all be in lab coats;
@@ -120,6 +128,7 @@ The following lists concern physical appearance (including the actual spriteshee
 ### Food
 
 31. `Grand hall`
+	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: keyboard (keytar from the band)
 	- [x] Entity: Simon - a band member from 1023 MB; challenges player to Simon says, and gives the keytar in the event of a loss
 		- [ ] Still needs keytar position sprites for the mage
@@ -130,6 +139,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [~] Stage with band instruments (band: 1023 MB)
 		- [ ] Copy Pasta bar (some booze, some small entrees)
 32. `Castle kitchen`
+	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: ramchips (giant Doritos-esque bag of chips)
 	- [x] Entity: Samson - a medium-sized golden bug; child of Gloria
 	- [x] Entity: Gloria - a large golden beetle; fusses over child Samson
@@ -139,11 +149,13 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [x] Vending machine
 		- [ ] Snack room ish tables/chairs
 33. `Hydroponics room`
+	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: mouse (no graphics necessary)
 	- [~] Entity: Gregory - a cat chef
 		- [ ] Needs cat chef spritesheet (currently a stand-in entity)
 	- [x] SET: Hydroponics area, with vegetables growing in individual plastic(?) bins, stacked to the ceiling
 34. `Castle pantry`
+	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: plate (harddrive part 2)
 	- [ ] Entity: ??? - someone who can help you measure and calibrate the spin of a "plate" (for a HD)
 	- [ ] SET: Larder-ish, wine-cellar-ish, pantry-ish.
@@ -158,6 +170,7 @@ The following lists concern physical appearance (including the actual spriteshee
 ### The End
 
 99. `Lambda's lab` (teleport only)
+	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: Mainframe OS
 	- [x] Entity: Lambda
 	- [x] Entity: XC: intercom with XB (outside the castle?) and XA in room 1
@@ -258,6 +271,7 @@ Plot points implemented:
 			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
 		- [ ] `abacus` (room 21)
 			- [ ] Framing device = ???
+			- [ ] Should need to go into town for something: a library book?
 	- [ ] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
@@ -266,6 +280,7 @@ Plot points implemented:
 	- [ ] Cutscene: OS installation wizard
 	- [ ] "You did it" cutscene
 	- [ ] Credits
+	- [ ] Should need to go into town for an ethernet cable -- ("Oh, crud! I need to pull some dependencies... This is your last errand, I promise! Go get a spare cable from Trekkie, would you?")
 
 - AFTERWARD (`ch2-storyflag-round` = 5)
 	- [ ] Post-credits sequence: Alfonso mentions one of the Big Bad's powers that most people don't know about
@@ -299,14 +314,14 @@ ALL DONE!
 
 ### Villager dialog
 
-They should move around a bit between all these story flags, though chunking them to the following four is fine
+They should move around a bit between all these story flags, though chunking them to the following four categories is fine (rather than the six above)
 
 - INTRO (`ch2-storyflag-round` = 0)
 	- [ ] Villagers direct you to western dungeon (castle)
 - FIRST ROUND: normal (`ch2-storyflag-round` <= 2)
 	- [ ] Villagers ask how things are going
 - THIRD ROUND: desperate (`ch2-storyflag-round` <= 4)
-	- [ ] Player asks villages about Bert, they haven't seen him
+	- [ ] Player asks villages about Bert; they haven't seen him
 - AFTERWARD (`ch2-storyflag-round` <= 5)
 	- [ ] Speculate on next location: software!
 
@@ -316,8 +331,8 @@ Villagers:
 - [x] Guardian Bob (not required; dialog is quest related)
 - [x] Trekkie (greenhouse)
 - [x] Timmy (library)
-- [ ] Uncle Zappy (mage home)
-- [ ] Aunt Zippy (mage home)
+- [ ] Uncle Zappy (home)
+- [ ] Aunt Zippy (home)
 - [ ] Beatrice (Beatrice's house)
 	- [ ] Should be focued on reconciling with Delmar (reforging their connections) (this should happen after storyflag 4, so the shepherd's dialog still makes sense)
 - [ ] Delmar (sheep's pen, sulking)
@@ -341,10 +356,12 @@ Entities not being used right now: (maybe use them?)
 	- [ ] Should speak with Cockney rhyming slang (on request by artist)
 - [ ] Town goose
 	- [ ] Should still be around
-	- [ ] Does the rake easter egg still work? (Should it?)
+	- [x] Does the rake easter egg still work? (No)
+	- [ ] (Should it?)
 - [ ] Max Swagger
-	- [ ] Should be able to go inside
-	- [ ] Should be very bare; furnishings are still being worked on
+	- [ ] Should be able to go inside the building
+	- [ ] Interior should be very bare; furnishings are still being worked on
+	- [ ] Max Swagger should explain his sky-high ambitions for the interior, confidently deflecting concerns that not much seems to have been done yet
 	- [ ] Should maybe have instructions or tips for the blinky art board
 
 ### Scripts needed for story items
