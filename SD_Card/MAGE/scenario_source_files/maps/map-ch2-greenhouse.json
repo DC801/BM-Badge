@@ -49,7 +49,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":260,
+                 "gid":276,
                  "height":32,
                  "id":11,
                  "name":"Bub",
@@ -269,7 +269,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":336,
+                 "gid":352,
                  "height":32,
                  "id":25,
                  "name":"Barrel",
@@ -341,7 +341,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":336,
+                 "gid":352,
                  "height":32,
                  "id":39,
                  "name":"Barrel ",
@@ -432,7 +432,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":309,
+                 "gid":325,
                  "height":24,
                  "id":44,
                  "name":"Modem",
@@ -639,23 +639,23 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":254,
+         "firstgid":270,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":302,
+         "firstgid":318,
          "source":"..\/entities\/entity-modem.json"
         }, 
         {
-         "firstgid":310,
+         "firstgid":326,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":334,
+         "firstgid":350,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":336,
+         "firstgid":352,
          "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,
