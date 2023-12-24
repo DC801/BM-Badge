@@ -11,6 +11,7 @@
 - [ ] Turn off serial control during cutscenes
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations
+- [ ] Check that every entity has an on_look script
 
 ## Non-assets and scripting things we need
 

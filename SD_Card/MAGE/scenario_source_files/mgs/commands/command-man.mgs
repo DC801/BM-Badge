@@ -99,6 +99,7 @@ ch2-lambda-topic-q {
 	show serial dialog {
 		"(Ask about:)"
 		# "Parts list" : command-parts
+		# "Installing parts" : ch2-lambda-topic-installation
 		# "Using the artifact" : ch2-lambda-topic-artifact
 		# "The mainframe" : ch2-lambda-topic-mainframe
 		# "The castle" : ch2-lambda-topic-castle
@@ -119,6 +120,17 @@ ch2-lambda-ishouldgo {
 }
 
 /* ---------- ARTIFACT ---------- */
+
+ch2-lambda-topic-installation {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU:</> How do I install the parts once I've got them?"
+		" "
+		"<m>LAMBDA:</> Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be fairly straightforward to install."
+		" "
+	}
+	goto ch2-lambda-topic-q;
+}
 
 ch2-lambda-topic-artifact {
 	show serial dialog spacer;
