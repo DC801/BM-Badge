@@ -11,6 +11,14 @@ look-ch2-castle-12 {
 	}
 }
 
+look-ch2-concierge {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%Concierge%</>."
+		"\t(TODO)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-12 {
@@ -65,12 +73,21 @@ on_go-castle-12-south {
 	load map ch2-castle-11;
 }
 
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-concierge {
+	show dialog {
+		SELF "(TODO)"
+	}
+}
 
 /* ---------- NEEDLE (ADMIN) ---------- */
 
 ch2-hide-needle {
-	teleport entity "Needle" to geometry hiding-spot;
-	set entity "Needle" name to " ";
+	set entity Phonograph secondary_id to 0;
+	set entity Phonograph on_interact to null_script;
+	// teleport entity "Needle" to geometry hiding-spot;
+	// set entity "Needle" name to " ";
 }
 
 ch2-touch-needle {

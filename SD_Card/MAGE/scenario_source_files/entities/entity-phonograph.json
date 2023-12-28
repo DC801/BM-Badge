@@ -1,0 +1,23 @@
+{ "columns":2,
+ "image":"entity-phonograph.png",
+ "imageheight":40,
+ "imagewidth":80,
+ "margin":0,
+ "name":"entity-phonograph",
+ "spacing":0,
+ "tilecount":2,
+ "tiledversion":"1.9.2",
+ "tileheight":40,
+ "tiles":[
+        {
+         "class":"phonograph",
+         "id":0
+        }, 
+        {
+         "class":"phonograph",
+         "id":1
+        }],
+ "tilewidth":40,
+ "type":"tileset",
+ "version":"1.9"
+}
