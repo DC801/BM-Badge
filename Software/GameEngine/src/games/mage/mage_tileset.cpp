@@ -43,11 +43,6 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
    //    target.w *= 0.75;
    //}
 
-   if (tileDrawPoint.x >= DrawWidth || tileDrawPoint.y >= DrawHeight)
-   {
-      return;
-   }
-
    // offset to the start address of the tile
    const auto tiles = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId);
    const auto tilePtr = &tiles[tileId * tileset->TileWidth * tileset->TileHeight];

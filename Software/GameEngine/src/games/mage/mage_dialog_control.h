@@ -206,12 +206,12 @@ public:
 
       auto responseCount = uint8_t{ 0 };
       ROM()->Read(responseCount, offset);
-      ROM()->InitializeVectorFrom(Responses, offset, responseCount);
+      Responses = ROM()->GetViewOf<MageDialogResponse>(offset, responseCount);
    }
    char name[32]{ 0 };
    uint16_t stringId{ 0 };
    MageSerialDialogResponseTypes serialResponseType{ 0 };
-   std::vector<MageDialogResponse> Responses{};
+   std::span<const MageDialogResponse> Responses;
 };
 
 

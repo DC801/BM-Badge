@@ -146,7 +146,7 @@ struct EngineROM
    }
 
    template <typename TData>
-   constexpr uint16_t GetCount() { return getHeader<TData>().Count(); }
+   constexpr uint16_t GetCount() const { return getHeader<TData>().Count(); }
 
    template <typename T>
    void Read(T& t, uint32_t& offset, size_t count = 1) const
@@ -169,24 +169,13 @@ struct EngineROM
    template <typename TLookup, typename TCast = TLookup>
    constexpr const TCast* GetReadPointerByIndex(uint16_t index) const
    {
-      auto offset = getHeader<TLookup>().GetOffset(index);
-      return reinterpret_cast<const TCast*>(&romData[offset]);
-   }
-
-   template <typename TLookup, typename TCast = TLookup>
-   constexpr std::span<const TCast> GetSpanByIndex(uint16_t index) const
-   {
-      const auto offset = getHeader<TLookup>().GetOffset(index);
-      const auto length = getHeader<TLookup>().GetLength(index);
-      return std::span<const TCast>(&romData[offset], length);// reinterpret_cast<const TCast*>(&romData[offset]);
+      return reinterpret_cast<const TCast*>(&romData[getHeader<TLookup>().GetOffset(index)]);
    }
 
    template <typename T>
-   const T* GetReadPointerToAddress(uint32_t& offset) const
+   constexpr const T* GetReadPointerToOffset(uint32_t offset) const
    {
-      auto readPointer = reinterpret_cast<const T*>(&romData[offset]);
-      offset += sizeof(T);
-      return readPointer;
+      return reinterpret_cast<const T*>(&romData[offset]);
    }
 
    template <typename T>
@@ -196,6 +185,14 @@ struct EngineROM
 
       auto offset = getHeader<T>().GetOffset(index);
       return std::make_unique<T>(offset);
+   }
+
+   template <typename T, std::size_t Extent = std::dynamic_extent>
+   constexpr auto GetViewOf(uint32_t& offset, uint16_t count) const -> std::span<const T, Extent>
+   {
+      const auto data = (const T*)&romData[offset];
+      offset += count * sizeof(T);
+      return std::span<const T, Extent>(data, count);
    }
 
    template <typename T>
@@ -315,7 +312,7 @@ private:
    }
 
    template <typename T>
-   auto headerFor(uint32_t& offset) const
+   constexpr auto headerFor(uint32_t& offset) const
    {
       const auto count = *(const uint32_t*)(&romData[offset]);
       offset += sizeof(uint32_t);
@@ -325,7 +322,7 @@ private:
    }
 
    template <typename... TRest>
-   auto headersFor(uint32_t offset) const
+   constexpr auto headersFor(uint32_t offset) const
    {
       return std::tuple<Header<TRest>...>{headerFor<TRest>(offset)...};
    }

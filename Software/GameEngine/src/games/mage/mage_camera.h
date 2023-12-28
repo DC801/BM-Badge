@@ -9,7 +9,8 @@
 static inline const float PI = 3.141592653589793f;
 
 class MapControl;
-class MageEntity;
+struct RenderableData;
+
 class MageCamera
 {
    friend class MageGameEngine;
@@ -20,7 +21,7 @@ public:
       : mapControl(mapControl)
    {}
    void applyEffects();
-   void setFollowEntity(std::optional<const MageEntity*> toFollow)
+   void setFollowEntity(const RenderableData* toFollow)
    {
       followEntity = toFollow;
    }
@@ -30,7 +31,7 @@ private:
    bool    shaking{ false };
    float   shakePhase{ 0 };
    uint8_t shakeAmplitude{ 0 };
-   std::optional<const MageEntity*> followEntity{ };
+   const RenderableData* followEntity{ };
    EntityPoint   position{ 0,0 };
 
 };

@@ -5,6 +5,7 @@
 #include "mage_dialog_control.h"
 #include <fonts/Monaco9.h>
 #include <algorithm>
+#include <tuple>
 
 #ifndef DC801_EMBEDDED
 #include "shim_err.h"
@@ -12,10 +13,6 @@
 #include <nrf_error.h>
 #endif
 
-bool MageHexEditor::isHexEditorOn()
-{
-   return hexEditorOn;
-}
 
 void MageHexEditor::setHexEditorOn(bool on)
 {
@@ -48,45 +45,17 @@ void MageHexEditor::setHexOp(enum HEX_OPS op)
    ledSet(LED_SUB, led_op_sub);
 }
 
-void MageHexEditor::setPageToCursorLocation()
-{
-   currentMemPage = getCurrentMemPage();
-}
-
-uint16_t MageHexEditor::getCurrentMemPage()
-{
-   //assume we're on the first page until we find out otherwise.
-   uint16_t memPage = 0;
-
-   //start at the current location.
-   int32_t adjustedMem = hexCursorLocation;
-
-   while (adjustedMem >= 0)
-   {
-      //subtract a page worth of memory from the memory location
-      adjustedMem -= bytesPerPage;
-      //if the offset doesn't get to 0, it must be on a higher page.
-      if (adjustedMem >= 0)
-      {
-         memPage++;
-      }
-   }
-   //once it's <0, that should be the correct mem page:
-   return memPage;
-
-}
-
 void MageHexEditor::updateHexStateVariables()
 {
    bytesPerPage = dialogState ? 64 : 192;
    hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
-   memTotal = mapControl->GetEntities().size() * sizeof(MageEntityData);
+   memTotal = std::tuple_size<MapControl::EntityData>{};
    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
 void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
 {
-   currentByte += hexCursorLocation;
+   currentByte += hexCursorOffset;
    const auto activatedButton = inputHandler->GetButtonActivatedState();
    const auto button = inputHandler->GetButtonState();
    if (!button.IsPressed(KeyPress::Rjoy_up))
@@ -141,7 +110,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
          if (activatedButton.IsPressed(KeyPress::Mem3)) { memIndex = 3; }
          if (memIndex != -1)
          {
-            memOffsets[memIndex] = hexCursorLocation % sizeof(MageEntityData);
+            memOffsets[memIndex] = hexCursorOffset % sizeof(MageEntityData);
          }
       }
       else
@@ -163,22 +132,22 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
             // not if in multi-byte selection mode
             if (button.IsPressed(KeyPress::Ljoy_left))
             {
-               hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
+               hexCursorOffset = (hexCursorOffset + memTotal - 1) % memTotal;
                setPageToCursorLocation();
             }
             if (button.IsPressed(KeyPress::Ljoy_right))
             {
-               hexCursorLocation = (hexCursorLocation + 1) % memTotal;
+               hexCursorOffset = (hexCursorOffset + 1) % memTotal;
                setPageToCursorLocation();
             }
             if (button.IsPressed(KeyPress::Ljoy_up))
             {
-               hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
+               hexCursorOffset = (hexCursorOffset + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
                setPageToCursorLocation();
             }
             if (button.IsPressed(KeyPress::Ljoy_down))
             {
-               hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
+               hexCursorOffset = (hexCursorOffset + HEXED_BYTES_PER_ROW) % memTotal;
                setPageToCursorLocation();
             }
             if (button.IsPressed(KeyPress::Rjoy_up))
@@ -237,7 +206,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
 
 void MageHexEditor::applyMemRecallInputs()
 {
-   uint8_t currentEntityIndex = hexCursorLocation / sizeof(MageEntityData);
+   uint8_t currentEntityIndex = hexCursorOffset / sizeof(MageEntityData);
    uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntityData);
    //check for memory button presses and set the hex cursor to the memory location
    int8_t memIndex = -1;
@@ -249,7 +218,7 @@ void MageHexEditor::applyMemRecallInputs()
    if (memIndex != -1)
    {
       auto memoryAddress = memOffsets[memIndex % MAGE_NUM_MEM_BUTTONS];
-      setCursorLocation(currentEntityStart + memoryAddress);
+      SetCursorOffset(currentEntityStart + memoryAddress);
    }
 }
 
@@ -275,15 +244,15 @@ void MageHexEditor::renderHexHeader()
    char headerString[128]{ " " };
    char clipboardPreview[24]{ " " };
    auto entityDataPointer = mapControl->GetEntityDataPointer();
-   const uint8_t* currentByteAddress = entityDataPointer + hexCursorLocation;
+   const uint8_t* currentByteAddress = entityDataPointer + hexCursorOffset;
    uint8_t u1Value = *currentByteAddress;
-   uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
+   uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorOffset % 2)));
    sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
-      currentMemPage, hexCursorLocation, totalMemPages, mapControl->GetEntities().size(), memTotal);
+      currentMemPage, hexCursorOffset, totalMemPages, mapControl->currentMap.value().entityCount, memTotal);
 
    frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, 0);
-   auto stringPreview = std::string{ entityDataPointer + hexCursorLocation,
-                                     entityDataPointer + hexCursorLocation + MAGE_ENTITY_NAME_LENGTH };
+   auto stringPreview = std::string{ entityDataPointer + hexCursorOffset,
+                                     entityDataPointer + hexCursorOffset + MAGE_ENTITY_NAME_LENGTH };
 
    sprintf(
       headerString,
@@ -315,17 +284,17 @@ void MageHexEditor::renderHexHeader()
 
 void MageHexEditor::Render()
 {
-   if ((hexCursorLocation / bytesPerPage) == currentMemPage)
+   if ((hexCursorOffset / bytesPerPage) == currentMemPage)
    {
       frameBuffer->fillRect(
-         (hexCursorLocation % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
-         (hexCursorLocation % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
+         (hexCursorOffset % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
+         (hexCursorOffset % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
          HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x38FF);
       if (isCopying)
       {
          for (uint8_t i = 1; i < clipboardLength; i++)
          {
-            uint16_t copyCursorOffset = (hexCursorLocation + i) % bytesPerPage;
+            uint16_t copyCursorOffset = (hexCursorOffset + i) % bytesPerPage;
             frameBuffer->fillRect(
                (copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
                (copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
@@ -368,7 +337,7 @@ void MageHexEditor::Render()
 
 void MageHexEditor::runHex(uint8_t value)
 {
-   uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorLocation;
+   uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
    uint8_t changedValue = *currentByte;
    switch (currentOp)
    {
@@ -382,7 +351,18 @@ void MageHexEditor::runHex(uint8_t value)
 
 void MageHexEditor::openToEntityByIndex(uint8_t entityIndex)
 {
-   setCursorLocation(entityIndex * sizeof(MageEntityData));
+   SetCursorOffset(entityIndex * sizeof(MageEntityData));
    setPageToCursorLocation();
    setHexEditorOn(true);
 }
+
+void MageHexEditor::openToEntity(MageEntityData* entity)
+{
+   // TODO: Map entity pointer to offset within the map data structure
+   //SetCursorOffset(entityIndex * sizeof(MageEntityData));
+   setPageToCursorLocation();
+   setHexEditorOn(true);
+}
+
+
+

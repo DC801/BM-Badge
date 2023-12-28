@@ -102,8 +102,8 @@ typedef EngineROM<MageSaveGame,
    MageVariableValue,
    MagePixels> MageROM;
 
-
-std::unique_ptr<MageROM>& ROM();
+//std::unique_ptr<MageROM>& ROM();
+const MageROM* ROM();
 
 #endif
    

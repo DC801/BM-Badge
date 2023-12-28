@@ -108,7 +108,8 @@ void MageGameEngine::LoadMap()
    // Load the map and trigger its OnLoad script
    // This is the only place OnLoad should be called
    mapControl->Load();
-   mapControl->OnLoad(scriptControl.get());
+   auto onLoad = MageScriptState{ mapControl->currentMap->onLoadScriptId, true };
+   scriptControl->processScript(onLoad, MAGE_MAP_ENTITY);
 
    // ensure the player has control
    playerHasControl = true;
@@ -141,11 +142,11 @@ void MageGameEngine::applyUniversalInputs(const DeltaState& delta)
 
 void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
 {
-   auto playerEntity = mapControl->getPlayerEntity();
+   auto playerEntity = mapControl->getPlayerEntityData();
 
    // try to update the player or camera's position
-   auto& pointToUpdate = playerEntity != NO_PLAYER
-      ? playerEntity.value()->data.position
+   auto& pointToUpdate = playerEntity != NoPlayer
+      ? playerEntity.value()->position
       : camera.position;
    const auto buttons = delta.Buttons;
 
@@ -172,10 +173,10 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
 
 
    // if there is a player on the map
-   if (playerEntity != NO_PLAYER)
+   if (playerEntity != NoPlayer)
    {
       auto player = playerEntity.value();
-      auto playerEntityTypeId = player->data.primaryIdType % NUM_PRIMARY_ID_TYPES;
+      auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
       auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
       auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
 
@@ -183,43 +184,60 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       if (playerHasControl && !delta.PlayerIsActioning())
       {
          //if not actioning or resetting, handle all remaining inputs:
-         mapControl->TryMovePlayer(delta);
-         handleEntityInteract(delta.ActivatedButtons);
+         auto interactionTarget = mapControl->TryMovePlayer(delta);
+
+         if (interactionTarget.has_value())
+         {
+            auto target = interactionTarget.value();
+            auto hack = delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_up);
+
+            if (hack && hexEditor->playerHasHexEditorControl)
+            {
+               hexEditor->disableMovementUntilRJoyUpRelease();
+               hexEditor->openToEntity(target);
+            }
+            else if (!hack && target->onInteractScriptId)
+            {
+               //target->OnInteract(scriptControl.get());
+            }
+            //handleEntityInteract(delta.ActivatedButtons);
+         }
       }
 
+      auto& playerRenderableData = *mapControl->getPlayerRenderableData().value();
       //handle animation assignment for the player:
       //Scenario 1 - perform action:
       if (delta.PlayerIsActioning() && hasEntityType
          && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
-         player->renderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
+         playerRenderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
       }
       //Scenario 2 - show walk animation:
       else if (mapControl->playerIsMoving && hasEntityType
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
-         player->renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+         playerRenderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
       //Scenario 3 - show idle animation:
       else if (playerHasControl)
       {
-         player->renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+         playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
 
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
       bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
-         && (player->renderableData.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-         && (player->renderableData.currentFrameIndex == player->renderableData.frameCount - 1)
-         && (player->renderableData.currentFrameTicks >= player->renderableData.duration);
+         && (playerRenderableData.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
+         && (playerRenderableData.currentFrameIndex == playerRenderableData.frameCount - 1)
+         && (playerRenderableData.currentFrameTicks >= playerRenderableData.duration);
 
       //if the above bool is true, set the player back to their idle animation:
       if (isPlayingActionButShouldReturnControlToPlayer)
       {
-         player->renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+         playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
    }
 
-   if (!playerHasHexEditorControl || !playerHasControl)
+   if (!hexEditor->playerHasHexEditorControl || !playerHasControl)
    {
       return;
    }
@@ -240,7 +258,7 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
    if (hexEditor->isHexEditorOn()
       && !(dialogControl->isOpen()
          || !playerHasControl
-         || !playerHasHexEditorControl
+         || !hexEditor->playerHasHexEditorControl
          || hexEditor->IsMovementDisabled()))
    {
       hexEditor->updateHexStateVariables();
@@ -290,8 +308,8 @@ void MageGameEngine::gameRender()
 void MageGameEngine::updateHexLights() const
 {
    const auto entityDataPointer = mapControl->GetEntityDataPointer();
-   const auto hexCursorLocation = hexEditor->getCursorLocation();
-   const auto currentByte = *(entityDataPointer + hexCursorLocation);
+   const auto hexCursorOffset = hexEditor->GetCursorOffset();
+   const auto currentByte = *(entityDataPointer + hexCursorOffset);
    ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
@@ -301,7 +319,7 @@ void MageGameEngine::updateHexLights() const
    ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
 
-   const auto entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntityData);
+   const auto entityRelativeMemOffset = hexCursorOffset % sizeof(MageEntityData);
    ledSet(LED_MEM0, (entityRelativeMemOffset == hexEditor->memOffsets[0]) ? 0xFF : 0x00);
    ledSet(LED_MEM1, (entityRelativeMemOffset == hexEditor->memOffsets[1]) ? 0xFF : 0x00);
    ledSet(LED_MEM2, (entityRelativeMemOffset == hexEditor->memOffsets[2]) ? 0xFF : 0x00);

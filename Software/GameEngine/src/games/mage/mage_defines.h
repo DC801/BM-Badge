@@ -16,7 +16,7 @@ all of the old code used as the foundation of this badge.
 #include <chrono>
 #include "shim_timer.h"
 
-#define MAP_GO_DIRECTION_NAME_LENGTH 12
+static inline const auto MapGoDirectionNameLength = 12;
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
@@ -26,7 +26,7 @@ all of the old code used as the foundation of this badge.
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
-#define NO_PLAYER std::nullopt
+static inline const auto NoPlayer = nullptr;
 #define NO_PLAYER_INDEX 255
 
 //this is a value used to indicate that an action's calling entity was

@@ -7,10 +7,9 @@ static constexpr const EntityPoint midScreen = EntityPoint{ DrawWidth / 2, DrawH
 
 void MageCamera::applyEffects()
 {
-   if (followEntity.has_value())
+   if (followEntity)
    {
-      auto& renderableData = followEntity.value()->renderableData;
-      position = EntityPoint{ uint16_t(renderableData.origin.x + renderableData.hitBox.w / 2),uint16_t(renderableData.origin.y + renderableData.hitBox.h / 2) };
+      position = followEntity->center();// EntityPoint{ uint16_t(renderableData.origin.x + renderableData.hitBox.w / 2),uint16_t(renderableData.origin.y + renderableData.hitBox.h / 2) };
    }
 
    if (shaking)

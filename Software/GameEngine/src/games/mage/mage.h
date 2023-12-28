@@ -74,7 +74,6 @@ private:
 
    //this lets us make it so that inputs stop working for the player
    bool playerHasControl{ false };
-   bool playerHasHexEditorControl{ false };
    
    std::unique_ptr<AudioPlayer> audioPlayer;
    std::shared_ptr<EngineInput> inputHandler;

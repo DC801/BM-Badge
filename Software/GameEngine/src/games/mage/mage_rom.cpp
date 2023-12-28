@@ -37,16 +37,19 @@
 //       return true;
 //    }
 
-std::unique_ptr<MageROM>& ROM()
+//std::unique_ptr<MageROM>& ROM()
+const MageROM* ROM()
 {
-   static std::unique_ptr<MageROM> romPtr;
+   //static std::unique_ptr<MageROM> romPtr;
+   static const MageROM* romPtr;
+
    if (!romPtr)
    {
 #ifdef DC801_EMBEDDED 
-   // point to 0x12000000 - the beginning of the QSPI ROM using XIP mapping
-   romPtr = std::make_unique<MageROM>((const char*)ROM_START_ADDRESS, ENGINE_ROM_MAX_DAT_FILE_SIZE);
+      // point to 0x12000000 - the beginning of the QSPI ROM using XIP mapping
+      romPtr = std::make_unique<MageROM>((const char*)ROM_START_ADDRESS, ENGINE_ROM_MAX_DAT_FILE_SIZE);
 #else
-   auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
+      auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
       if (std::filesystem::exists(filePath))
       {
          auto romFileSize = (uint32_t)std::filesystem::file_size(MAGE_GAME_DAT_PATH);
@@ -59,7 +62,7 @@ std::unique_ptr<MageROM>& ROM()
             ENGINE_PANIC("Desktop build: ROM->RAM read failed");
          }
          romFile.close();
-         romPtr = std::make_unique<MageROM>(romData, romFileSize);
+         romPtr = new MageROM(romData, romFileSize);
       }
       else
       {

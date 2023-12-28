@@ -41,7 +41,6 @@ struct MageScriptState
        isGlobalExecutionScope(isGlobalExecutionScope)
    {}
 
-
    bool isGlobalExecutionScope{ false };
 
    //the script Id to resume, scope determined by isGlobalExecutionScope

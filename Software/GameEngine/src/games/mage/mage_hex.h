@@ -54,7 +54,10 @@ public:
 	}
 
 	//returns true if hex editor is open.
-	bool isHexEditorOn();
+	bool isHexEditorOn() const
+	{
+		return hexEditorOn;
+	}
 
 	//returns true if hex editor is open.
 	bool getHexDialogState() const
@@ -72,19 +75,22 @@ public:
 	//sets the current operation to be applied when pressing the bit buttons.
 	void setHexOp(enum HEX_OPS op);
 
-	auto getCursorLocation() const
+	auto GetCursorOffset() const
 	{
-		return hexCursorLocation;
+		return hexCursorOffset;
 	}
 
-	void setCursorLocation(uint16_t offset)
+	void SetCursorOffset(uint16_t offset)
 	{
-		hexCursorLocation = offset;
+		hexCursorOffset = offset;
 	}
 
-	void setPageToCursorLocation();
+	//this calculates which memory page the hexCursorOffset appears on.
+	void setPageToCursorLocation()
+	{
+		currentMemPage = hexCursorOffset / bytesPerPage;
+	}
 
-	//this calculates which memory page the hexCursorLocation appears on.
 	uint16_t getCurrentMemPage();
 
 	//this updates the variables used by the hex editor when applying inputs and rendering.
@@ -102,11 +108,13 @@ public:
 	void runHex(uint8_t value);
 
 	void openToEntityByIndex(uint8_t entityIndex);
+	void openToEntity(MageEntityData* entity);
 	bool IsMovementDisabled() const { return disableMovement; }
 
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }
 
 	std::array<uint8_t, 4> memOffsets;
+	bool playerHasHexEditorControl{ false };
 
 private:
 	std::shared_ptr<FrameBuffer> frameBuffer;
@@ -157,7 +165,7 @@ private:
 	uint16_t totalMemPages{ 0 };
 
 	//this is a variable that stores the byte that is currently selected for hacking.
-	uint16_t hexCursorLocation{ 0 };
+	uint16_t hexCursorOffset{ 0 };
 
 	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
 	bool previousPageButtonState{ false }; //tracks previous button state
