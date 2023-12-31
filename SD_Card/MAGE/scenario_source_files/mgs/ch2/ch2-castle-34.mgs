@@ -30,7 +30,7 @@ on_load-ch2-castle-34 {
 		copy script ch2-hide-plate;
 	}
 	
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */

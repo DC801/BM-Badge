@@ -2,37 +2,14 @@ include!("header.mgs")
 
 /* --- CUTSCENE: Birthday (house) --- */
 
-// DEBUG
-
-debug-birthday {
-	set flag skip-birthday to true;
-	load map ch2-magehouse-birthday;
-}
-undebug-birthday {
-	set flag skip-birthday to false;
-	load map ch2-magehouse-birthday;
-}
-
 // NON-DEBUG
 
 on_load-ch2-magehouse-birthday {
 	turn hex control on;
-	if (flag skip-birthday is true) {
-		turn player control on;
-		teleport entity "%PLAYER%" to geometry debug-spot;
-		register undebug -> undebug-birthday;
-		goto null_script;
-	} else {
-		turn player control off;
-	}
+	turn player control off;
 	if (debug mode is on) {
 		turn serial control on;
-		show serial dialog spacer;
-		show serial dialog {
-			"<g>DEBUG</> option: type <c>DEBUG</> to forgo the cutscene and explore the room! (After which, you can type <c>UNDEBUG</> to return to the cutscene.)"
-		}
 		register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
-		register debug -> debug-birthday;
 	} else {
 		turn serial control off;
 	}

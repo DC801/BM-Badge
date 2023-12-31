@@ -24,7 +24,7 @@ on_load-ch2-castle-99 {
 		show serial dialog { "Entering <bold>SECRET LAB</>..." }
 	}
 	teleport camera to geometry camera;
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */

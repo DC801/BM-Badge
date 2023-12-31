@@ -13,7 +13,7 @@ look-ch2-greenhouse {
 
 on_load-ch2-greenhouse {
 	// do unique stuff first (but turn serial / player control off first, if you do)
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
