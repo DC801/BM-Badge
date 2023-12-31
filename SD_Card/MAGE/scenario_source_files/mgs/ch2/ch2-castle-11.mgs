@@ -33,101 +33,105 @@ on_load-ch2-castle-11 {
 	} else {
 		show serial dialog { "Entering <bold>CASTLE HALLWAY FRONT</>..." }
 	}
+
+	// yeet hidden things
 	if (
 		flag ch2-installed-monitor is true
 		|| flag ch2-carrying-monitor is true
 	) {
 		copy script ch2-hide-monitor;
 	}
+
+	// initialize everything
+	copy ch2-map-init;
+
+	// check if you do the cutscene or not
 	if (flag ch2-cutseen-castle11 is false) {
-		if (warp state is warping) {
-			// this is here because the cutscene dialog must come after the warp-in thing
-			copy warping-in-fade-in;
-			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
-		}
-		turn player control off;
-		wait 500ms;
-		set entity Kuro on_tick to null_script;
-		show dialog {
-			PLAYER "Oh, cool, I got past the blockage."
-			"This artifact is handy."
-			name "???" "Intruder! Intruder!"
-		}
-		set entity "%PLAYER%" on_tick to watch-kuro;
-		walk entity Kuro to geometry kuro-walk over 300ms;
-		walk entity Kuro to geometry kuro-spot over 300ms;
-		walk entity Kuro to geometry kuro-walk over 300ms;
-		turn entity Kuro south;
-		wait 400ms;
-		// TODO
-		show dialog {
-			PLAYER "Oh, hi there, little bird."
-		}
-		set entity Kuro current_animation to 1;
-		show dialog {
-			Kuro "Little bird? Little bird?!"
-		}
-		set entity Kuro current_animation to 0;
-		show dialog {
-			Kuro "I'm the ruddy harbringer of death!"
-			PLAYER "Oh, of course. I'm sorry."
-		}
-		set entity Kuro current_animation to 1;
-		show dialog {
-			Kuro "Omigod omigod omigod!"
-		}
-		walk entity Kuro to geometry kuro-spot over 250ms;
-		walk entity Kuro to geometry kuro-walk over 250ms;
-		turn entity Kuro south;
-		wait 140ms;
-		show dialog {
-			Kuro "You gotta get me out of here! I'm going crazy, stuck in here!"
-			PLAYER "Oh, sure. I guess birds don't like to be in enclosed spaces."
-			Kuro "Enclosed spaces? Nah, I'm just bored to death!"
-		}
-		set entity Kuro current_animation to 1;
-		show dialog {
-			Kuro "But you got in here! Does that mean you can get me out?"
-		}
-		set entity Kuro current_animation to 0;
-		show dialog {
-			PLAYER "I don't think I can use the artifact to bring other people through the doors. Just me."
-			"But I'll try to get the doors cleared and working again."
-		}
-		set entity Kuro current_animation to 1;
-		show dialog {
-			Kuro "OH THANK GOD!"
-		}
-		set entity Kuro current_animation to 0;
-		show dialog {
-			PLAYER "So I need a monitor. Lambda said was one in here I could use. I think he meant..."
-		}
-		set entity Kuro on_tick to ch2-walk-to-monitor;
-		set entity "%PLAYER%" on_tick to null_script;
-		walk entity "%PLAYER%" along geometry warp-spot over 1900ms;
-		show dialog {
-			PLAYER "...this one, right? Is this one free for me to take?"
-		}
-		set entity Kuro on_tick to null_script;
-		turn entity Kuro south;
-		show dialog {
-			Kuro "Beats me."
-			PLAYER "Is it... supposed to be showing that stuff?"
-		}
-		set entity Kuro on_tick to kuro-hop;
-		show dialog {
-			Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle\" slideshow."
-			"Guess the computer it was plugged into got damaged in the quake."
-			"Not that we're getting tourists -- apart from you."
-			PLAYER "So I can take it?"
-			Kuro "Dunno. I guess? I don't think anyone would miss it."
-		}
-		set entity Kuro on_tick to face-player;
-		turn player control on;
-		set entity "%PLAYER%" on_tick to null_script;
-		set flag ch2-cutseen-castle11 to true;
+		copy ch2-cutscene-castle11;
 	}
-	goto ch2-map-init;
+}
+
+ch2-cutscene-castle11 {
+	turn player control off;
+	wait 500ms;
+	set entity Kuro on_tick to null_script;
+	show dialog {
+		PLAYER "Oh, cool, I got past the blockage."
+		"This artifact is handy."
+		name "???" "Intruder! Intruder!"
+	}
+	set entity "%PLAYER%" on_tick to watch-kuro;
+	walk entity Kuro to geometry kuro-walk over 300ms;
+	walk entity Kuro to geometry kuro-spot over 300ms;
+	walk entity Kuro to geometry kuro-walk over 300ms;
+	turn entity Kuro south;
+	wait 400ms;
+	show dialog {
+		PLAYER "Oh, hi there, little bird."
+	}
+	set entity Kuro current_animation to 1;
+	show dialog {
+		Kuro "Little bird? Little bird?!"
+	}
+	set entity Kuro current_animation to 0;
+	show dialog {
+		Kuro "I'm the ruddy harbringer of death!"
+		PLAYER "Oh, of course. I'm sorry."
+	}
+	set entity Kuro current_animation to 1;
+	show dialog {
+		Kuro "Omigod omigod omigod!"
+	}
+	walk entity Kuro to geometry kuro-spot over 250ms;
+	walk entity Kuro to geometry kuro-walk over 250ms;
+	turn entity Kuro south;
+	wait 140ms;
+	show dialog {
+		Kuro "You gotta get me out of here! I'm going crazy, stuck in here!"
+		PLAYER "Oh, sure. I guess birds don't like to be in enclosed spaces."
+		Kuro "Enclosed spaces? Nah, I'm just bored to death!"
+	}
+	set entity Kuro current_animation to 1;
+	show dialog {
+		Kuro "But you got in here! Does that mean you can get me out?"
+	}
+	set entity Kuro current_animation to 0;
+	show dialog {
+		PLAYER "I don't think I can use the artifact to bring other people through the doors. Just me."
+		"But I'll try to get the doors cleared and working again."
+	}
+	set entity Kuro current_animation to 1;
+	show dialog {
+		Kuro "OH THANK GOD!"
+	}
+	set entity Kuro current_animation to 0;
+	show dialog {
+		PLAYER "So I need a monitor. Lambda said was one in here I could use. I think he meant..."
+	}
+	set entity Kuro on_tick to ch2-walk-to-monitor;
+	set entity "%PLAYER%" on_tick to null_script;
+	walk entity "%PLAYER%" along geometry warp-spot over 1900ms;
+	show dialog {
+		PLAYER "...this one, right? Is this one free for me to take?"
+	}
+	set entity Kuro on_tick to null_script;
+	turn entity Kuro south;
+	show dialog {
+		Kuro "Beats me."
+		PLAYER "Is it... supposed to be showing that stuff?"
+	}
+	set entity Kuro on_tick to kuro-hop;
+	show dialog {
+		Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle\" slideshow."
+		"Guess the computer it was plugged into got damaged in the quake."
+		"Not that we're getting tourists -- apart from you."
+		PLAYER "So I can take it?"
+		Kuro "Dunno. I guess? I don't think anyone would miss it."
+	}
+	set entity Kuro on_tick to face-player;
+	turn player control on;
+	set entity "%PLAYER%" on_tick to null_script;
+	set flag ch2-cutseen-castle11 to true;
 }
 
 ch2-walk-to-monitor {

@@ -29,12 +29,8 @@ on_load-ch2-castle-21 {
 	) {
 		copy script ch2-hide-abacus;
 	}
+	copy ch2-map-init;
 	if (flag ch2-cutseen-castle21 is false) {
-		if (warp state is warping) {
-			// this is here because the cutscene dialog must come after the warp-in thing
-			copy warping-in-fade-in;
-			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
-		}
 		turn player control off;
 		wait 500ms;
 		turn entity Frankie toward entity "%PLAYER%";
@@ -74,7 +70,6 @@ on_load-ch2-castle-21 {
 		turn player control on;
 		set flag ch2-cutseen-castle21 to true;
 	}
-	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */

@@ -12,17 +12,6 @@ serial dialog lambda-over {
 
 /* ---------- CASTLE ON_LOAD INIT ---------- */
 
-ch2-do-init-on-end {
-	// This is so you can run the init stuff at an arbitrary time, usually at the end of a big involved thing. The flag here should be false most of the time.
-	if (flag ch2-do-init-on-end is true) {
-		set flag ch2-do-init-on-end to false;
-		goto ch2-map-init;
-	}
-	goto null_script;
-}
-
-// REVAMP:
-
 ch2-map-init-registers {
 	set flag interrupt to false; // flag set when something happens in the room and you haven't left the room yet
 	set flag interrupt2 to false; // for when you need a second one
@@ -32,9 +21,12 @@ ch2-map-init-registers {
 }
 ch2-map-init-hex {
 	if (
-		flag ch2-ring-zero-restored is true // you've fixed Ring Zero
-		|| variable ch2-in-room is 0 // OR you're not in the castle at all
-		|| debug mode is on // OR debug mode is on
+		// if you've fixed the mainframe to the point you can use Ring Zero normally inside the castle
+		flag ch2-ring-zero-enabled-in-castle is true
+		// OR you're not in the castle at all
+		|| variable ch2-in-room is 0
+		// OR debug mode is on
+		|| debug mode is on
 	) {
 		turn hex control on;
 	} else {
@@ -135,9 +127,7 @@ ch2-map-init-serial-debug {
 }
 
 ch2-map-init-warp-in {
-	if (flag ch2-manual-warp is true) { // workaround for WOPR
-		set flag ch2-manual-warp to false;
-	} else if (warp state is warping) {
+	if (warp state is warping) {
 		copy warping-in-fade-in;
 	}
 	turn player control on;
@@ -150,9 +140,6 @@ ch2-map-init {
 	copy ch2-map-init-inventory-look;
 	copy ch2-map-init-serial-debug;
 	copy ch2-map-init-warp-in;
-
-	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)
-	// IF SO, be sure to turn off serial control and player control before doing any of that, and let it come back on again with this script.
 }
 
 

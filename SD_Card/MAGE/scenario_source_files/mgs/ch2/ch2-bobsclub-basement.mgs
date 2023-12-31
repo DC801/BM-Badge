@@ -71,15 +71,17 @@ look-ch2-pizza {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-bobsclub-basement {
-	// do unique stuff first (but turn serial / player control off first, if you do)
 	if (flag ch2-cutseen-bob-party is false) {
-		goto ch2-cutscene-bob-party;
+		teleport camera to geometry gasp-spot;
+	}
+	copy ch2-map-init;
+	register look + bob -> look-ch2-bob;
+	if (flag ch2-cutseen-bob-party is false) {
+		copy ch2-cutscene-bob-party;
 	} else {
 		teleport entity "Guardian Bob" to geometry bob-walk2;
 		set entity "Guardian Bob" on_tick to loiter-slow;
 	}
-	register look + bob -> look-ch2-bob
-	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -203,12 +205,6 @@ on_go-ch2-bobsclub-basement-stairs {
 
 ch2-cutscene-bob-party {
 	// Fade in.
-	teleport camera to geometry gasp-spot;
-	if (warp state is warping) {
-		// this is here because the cutscene must come after the warp-in thing
-		copy warping-in-fade-in;
-		set flag ch2-manual-warp to true; // this will skip the "init" script's warp stuff
-	}
 	turn hex control off;
 	// turn serial control off;
 	turn player control off;
@@ -324,7 +320,7 @@ ch2-cutscene-bob-party {
 	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms;
 	set entity "Guardian Bob" on_tick to loiter-slow;
 	make camera follow entity "%PLAYER%";
-	goto ch2-map-init;
+	turn player control on;
 }
 
 loiter-slow {

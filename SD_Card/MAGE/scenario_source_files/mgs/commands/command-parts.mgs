@@ -24,7 +24,7 @@ man-parts {
 
 command-parts {
 	if (
-		flag ch2-ring-zero-restored is true // the artifact is full power
+		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
 		|| variable ch2-in-room is not 0 // OR you're in the castle
 	) {
 		// `parts` works normally
@@ -174,6 +174,7 @@ command-man-stop {
 
 command-parts-q {
 	show serial dialog {
+		// TODO: add the single ones like "plate" -- you can see them all when the parts list is enumerated, but can't ask about the indented options!
 		" "
 		"(Type the part name for more info, <c>PARTS</> to see the parts list again, or <c>QUIT</> to stop)"
 

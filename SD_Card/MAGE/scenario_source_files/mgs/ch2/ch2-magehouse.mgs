@@ -51,7 +51,10 @@ interact-ch2-cake {
 }
 interact-ch2-magejournal {
 	show dialog {
-		SELF "TODO"
+		entity "Mage Journal" portrait journal
+		"Dear Diary,"
+		"I just turned 16, and apparently, Ring Zero chose me! It was a little scary, but everyone is being very supportive."
+		"It looks like computers are super complicated."
 	}
 }
 interact-ch2-magebox {

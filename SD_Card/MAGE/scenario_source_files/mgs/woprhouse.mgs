@@ -4,10 +4,8 @@ on_load-woprhouse {
 	if (flag tuesdayd is true) {
 		register rtfm -> command-rtfm;
 	}
-	if (warp state is warping) {
-		// this is here because the "backdoor" dialog must come after the warp-in thing
-		copy warping-in-fade-in;
-		set flag ch2-manual-warp to true; // this will skip the "init" script's warp stuff
+	if (variable current-chapter is 2) {
+		copy ch2-map-init;
 	}
 	if (flag wopr-backdoor-found is false) {
 		turn player control off;
@@ -19,10 +17,7 @@ on_load-woprhouse {
 			PLAYER "Whoa! It looks like I found some kind of back door."
 		}
 		set flag wopr-backdoor-found to true;
-	}
-	turn player control on;
-	if (variable current-chapter is 2) {
-		goto ch2-map-init // JUMP TO SHARED BEHAVIOR
+		turn player control on;
 	}
 }
 

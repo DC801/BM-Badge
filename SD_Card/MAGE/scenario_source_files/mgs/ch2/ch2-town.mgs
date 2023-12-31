@@ -77,27 +77,35 @@ on_load-ch2-town {
 
 on_tick-ch2-town {
 	if (entity "%PLAYER%" is inside geometry door-bakery) {
+		set warp state to ch2-town;
 		load map ch2-bakery;
 	}
 	if (entity "%PLAYER%" is inside geometry door-smithfamily) {
+		set warp state to ch2-town;
 		load map ch2-smithfamily;
 	}
 	if (entity "%PLAYER%" is inside geometry door-greenhouse) {
+		set warp state to ch2-town;
 		load map ch2-greenhouse;
 	}
 	if (entity "%PLAYER%" is inside geometry door-magehouse) {
+		set warp state to ch2-town;
 		load map ch2-magehouse;
 	}
 	if (entity "%PLAYER%" is inside geometry door-lodge) {
+		set warp state to ch2-town;
 		load map ch2-lodge;
 	}
 	if (entity "%PLAYER%" is inside geometry door-oldcouplehouse) {
+		set warp state to ch2-town;
 		load map ch2-oldcouplehouse;
 	}
 	if (entity "%PLAYER%" is inside geometry door-bobsclub) {
+		set warp state to ch2-town;
 		load map ch2-bobsclub;
 	}
 	if (entity "%PLAYER%" is inside geometry door-woprhouse) {
+		set warp state to ch2-town;
 		load map woprhouse; // both chapters use the same map
 	}
 	if (entity "%PLAYER%" is inside geometry east-hitbox) {
