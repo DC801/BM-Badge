@@ -448,6 +448,18 @@
                  "width":258,
                  "x":-128,
                  "y":-192
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":64,
+                 "name":"dongle-handoff",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":205,
+                 "y":209
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -456,7 +468,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":64,
+ "nextobjectid":65,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

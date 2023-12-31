@@ -65,6 +65,9 @@
 
 ### `on_look` scripts
 
+- `look` must tell you things you can't ascertain from an entity's pixel art, scripting behavior, or dialog.
+- Pay special attention to describing senses other than sight -- like smells, sounds -- but also broader information like the emotional atmosphere of a room and how people are acting around each other
+
 See below for color choices.
 
 #### Rooms

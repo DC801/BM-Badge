@@ -115,7 +115,6 @@ screen-lights-flash-bits {
 }
 
 ch2-interact-gregory-breakyes {
-	turn player control off;
 	show dialog {
 		SELF "I'll take the mouse proximity detector back then, then."
 	}
@@ -124,7 +123,6 @@ ch2-interact-gregory-breakyes {
 	show dialog {
 		SELF "Let me know when you want to have another go."
 	}
-	turn player control on;
 	set entity "%SELF%" on_interact to ch2-interact-gregory;
 }
 ch2-interact-gregory-breakno {
@@ -191,7 +189,8 @@ ch2-interact-gregory {
 	} else {
 		if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
 			show dialog {
-				SELF "(TODO) Wow, you sure got that mouse! Thanks!"
+				SELF "I like my mouse to be physically connected to my computer."
+				"...Hmm, is that too on the nose?"
 			}
 		} else if (flag ch2-mousegame-backstory is false) {
 			show dialog {
@@ -319,6 +318,24 @@ ch2-touch-mouse {
 			PLAYER "There we go! Got it in my hands!"
 			name "" "(You pick up the mouse!)"
 			Gregory "Good job. Hope that mouse'll do the trick for you."
+		}
+		turn off player control;
+		fade out camera to black over 400ms;
+		teleport entity "%PLAYER%" to geometry dongle-handoff;
+		turn entity "%PLAYER%" toward entity Gregory;
+		fade in camera from black over 400ms;
+		turn on player control;
+		show dialog {
+			Gregory "Don't forget this -- the USB dongle. Now you can use that mouse with computers that don't have bluetooth hardware built in."
+			PLAYER "This thingy plugs into a USB port? What if the mainframe doesn't have one of those?"
+			Gregory "Then...."
+			"...."
+			"Well, we'll cross that bridge when we get to it. You should be fine, unless the enclosure is more than 15 years old or so."
+			PLAYER "I don't know how old it is."
+			Gregory "Well, what does it look like?"
+			PLAYER "I guess it's sort of beige...."
+			Gregory "...Oh dear."
+			"Well, you might be fine anyway. Good luck with everything."
 		}
 		turn lights control off;
 		copy script ch2-hide-mouse;
