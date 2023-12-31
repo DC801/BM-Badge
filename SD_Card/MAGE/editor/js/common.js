@@ -10,9 +10,7 @@ var DIALOG_SCREEN_NO_ENTITY = 255;
 
 var getFileJson = function (file) {
 	return file.text()
-		.then(function (text) {
-			return JSON.parse(text);
-		});
+		.then(JSON.parse);
 };
 
 var combineArrayBuffers = function (bufferA, bufferB) {
