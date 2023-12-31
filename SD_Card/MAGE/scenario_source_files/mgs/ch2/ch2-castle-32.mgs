@@ -47,7 +47,7 @@ on_load-ch2-castle-32 {
 		teleport entity "%PLAYER%" to geometry walk_from-northwest;
 	}
 	
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 debug-want-chips {

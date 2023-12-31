@@ -23,7 +23,7 @@ on_load-ch2-lodge-rtfm {
 		set entity Alfonso on_tick to yeet;
 	}
 	// unique stuff done
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */

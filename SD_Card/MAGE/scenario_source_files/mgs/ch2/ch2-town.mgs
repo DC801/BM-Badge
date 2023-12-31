@@ -68,7 +68,7 @@ on_load-ch2-town {
 	} else if (warp state is walk_from-bobsclub) {
 		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms;
 	}
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */

@@ -40,7 +40,7 @@ on_load-ch2-castle-12 {
 	) {
 		copy script ch2-hide-needle;
 	}
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */
