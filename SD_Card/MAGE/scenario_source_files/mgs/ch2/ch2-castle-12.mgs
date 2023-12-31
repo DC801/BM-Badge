@@ -58,7 +58,7 @@ on_load-ch2-castle-12 {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-12 {
-	goto null_script;
+	// nothing yet
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -92,7 +92,7 @@ ch2-interact-guestbook {
 		if (flag interrupt3 is false) {
 			show dialog {
 				PLAYER "Huh? It's just a book with a bunch of people's names."
-				SELF "Oh, yes! Do sign our guest book before you go!"
+				Concierge "Oh, yes! Do sign our guest book before you go!"
 			}
 			set flag interrupt3 to true;
 		}
@@ -104,7 +104,7 @@ ch2-interact-guestbook {
 	} else {
 		show dialog {
 			PLAYER "Ah, there's my name, logged for the ages."
-			SELF "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
+			Concierge "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
 		}
 	}
 }
@@ -112,7 +112,7 @@ ch2-interact-guestbook-signyes {
 	show dialog {
 		PLAYER "All right, here I go...."
 		name "" "(scribble scribble scribble)"
-		SELF "Thank you for signing!"
+		Concierge "Thank you for signing!"
 	}
 	set flag ch2-guestbook-signed to true;
 	set entity "%SELF%" on_interact to ch2-interact-guestbook;
@@ -167,7 +167,6 @@ interact-ch2-concierge {
 
 ch2-hide-needle {
 	set entity Phonograph secondary_id to 0;
-	set entity Phonograph on_interact to null_script;
 }
 
 ch2-touch-needle {

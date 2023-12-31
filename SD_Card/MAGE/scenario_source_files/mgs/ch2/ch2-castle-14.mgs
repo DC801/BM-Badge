@@ -1,5 +1,9 @@
 include!("header.mgs")
 
+settings for dialog {
+	label KING { entity "King Gibson" }
+}
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-14 {
@@ -64,39 +68,41 @@ on_load-ch2-castle-14 {
 		wait 400ms;
 		set entity "King Gibson" current_animation to 2;
 		show dialog {
-			entity "King Gibson" "?"
+			KING "?"
 		}
 		set entity "King Gibson" on_tick to ch2-gibson-scramble;
 		set entity "King Gibson" current_animation to 3;
 		show dialog {
-			entity "King Gibson" "!!!"
+			KING "!!!"
 			"Intruder! Someone's in my bedroom!"
 		}
 		turn entity "%PLAYER%" toward entity "King Gibson";
 		show dialog {
-			entity "King Gibson" "Help! Guards!"
+			KING "Help! Guards!"
 		}
 		set entity "King Gibson" on_tick to null_script;
 		set entity "King Gibson" current_animation to 2;
 		wait 400ms;
 		show dialog {
-			entity "King Gibson" "...But no, of course. I'm alone."
+			KING "...But no, of course. I'm alone."
 		}
 		set entity "King Gibson" current_animation to 0;
 		wait 1100ms;
 		turn entity "King Gibson" west;
 		wait 350ms;
 		show dialog {
-			entity "King Gibson" "They locked me in here to rot. Why would they come bother with me now?"
+			KING "They locked me in here to rot. Why would they come bother with me now?"
 		}
 		turn entity "King Gibson" north;
 		show dialog {
-			entity "King Gibson" "Well, assassin, do your worst. Get it over with."
+			KING "Well, assassin, do your worst. Get it over with."
 			PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, your majesty! I'm not an assassin!"
 		}
 		turn entity "King Gibson" south;
 		show dialog {
-			entity "King Gibson" "(TODO: the rest)"
+			KING "Then you've come to mock me."
+			PLAYER "No, of course not. I'm here to fix things."
+			KING "(TODO: the rest)"
 		}
 
 		set flag ch2-cutseen-castle14 to true;
@@ -144,7 +150,7 @@ ch2-touch-clock {
 	if (variable ch2-storyflag-round is >= 3) {
 		// if (flag ch2-clock-permission is false) { // TODO make this a thing
 		// 	show dialog {
-		// 		PLAYER "Can I just take this, though? Maybe I should ask the king first...."
+		// 		PLAYER "Can I just take this, though? Maybe I should ask the king first."
 		// 	}
 		// } else {
 			show dialog {

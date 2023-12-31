@@ -133,6 +133,9 @@ debug-finish-toot {
 	copy register-map;
 	copy register-parts;
 	copy ch2-put_on_map-round1;
+	copy ch2-take_off_map-round2;
+	copy ch2-take_off_map-round3;
+	copy ch2-take_off_map-round4;
 	set flag ch2-toot-done to true;
 }
 
