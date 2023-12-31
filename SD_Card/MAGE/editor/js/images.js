@@ -124,10 +124,10 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 		};
 		scenarioData.parsed.imageColorPalettes.push(colorPalette);
 		result = file.arrayBuffer()
-			.then(function (arrayBuffer) {
+			.then(function readImageArrayBuffer (arrayBuffer) {
 				return imageHandler(new Uint8Array(arrayBuffer));
 			})
-			.then(function (result) {
+			.then(function encodeImage (result) {
 				var getPaletteIndexForColor = function (color) {
 					var colorIndex = colorPalette.colorArray.indexOf(color);
 					if (colorIndex === -1) {
