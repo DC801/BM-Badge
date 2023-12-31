@@ -38,12 +38,12 @@ var handleScenarioData = function (fileNameMap) {
 		scenarioData.dialogSkinsTilesetMap = {}
 		var preloadSkinsPromise = preloadAllDialogSkins(fileNameMap, scenarioData);
 		var portraitsFile = fileNameMap['portraits.json'];
-		var portraitsPromise = preloadSkinsPromise.then(function () {
+		var portraitsPromise = preloadSkinsPromise.then(function preloadSkinHandler () {
 			return getFileJson(portraitsFile)
 				.then(handlePortraitsData(fileNameMap, scenarioData))
 		});
 		var entityTypesFile = fileNameMap['entity_types.json'];
-		var entityTypesPromise = portraitsPromise.then(function () {
+		var entityTypesPromise = portraitsPromise.then(function portraitPromiseHandler () {
 			return getFileJson(entityTypesFile)
 				.then(handleEntityTypesData(fileNameMap, scenarioData))
 		});
@@ -130,14 +130,14 @@ var handleScenarioData = function (fileNameMap) {
 			natlangMgsPromise,
 			mergeMapDataIntoScenario(fileNameMap, scenarioData),
 		])
-			.then(function () {
+			.then(function mergeScriptDialogAndSerialDialog () {
 				return Promise.all([
 					mergeScriptDataIntoScenario(fileNameMap, scenarioData),
 					mergeDialogDataIntoScenario(fileNameMap, scenarioData),
 					mergeSerialDialogDataIntoScenario(fileNameMap, scenarioData),
 				])
 			})
-			.then(function () {
+			.then(function processMaps () {
 				serializeNullScript(
 					fileNameMap,
 					scenarioData,

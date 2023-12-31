@@ -74,7 +74,7 @@ var handleObjectTypesData = function (
 				fileNameMap,
 				scenarioData,
 			)
-				.then(function () {
+				.then(function handleLoadedObjectTileset () {
 					entityType.serialized = serializeEntityType(
 						entityTypePlusProperties,
 						fileNameMap,
