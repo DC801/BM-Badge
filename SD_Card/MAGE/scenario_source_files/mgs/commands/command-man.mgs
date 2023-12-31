@@ -39,7 +39,7 @@ man-fail {
 
 command-man {
 	if (
-		flag ch2-ring-zero-restored is true // the artifact is full power
+		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
 		|| variable ch2-in-room is not 0 // OR you're in the castle
 	) {
 		// `man` works normally

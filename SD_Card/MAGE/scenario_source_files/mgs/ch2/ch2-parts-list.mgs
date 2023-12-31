@@ -292,7 +292,6 @@ ch2-bert-message-lambda-intro1b {
 	}
 }
 ch2-bert-message-lambda-intro2 {
-	set flag ch2-lambda-message-prelude to true;
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU:</> Okay.... I don't like it, but I guess I don't have much choice."
@@ -301,6 +300,7 @@ ch2-bert-message-lambda-intro2 {
 	goto ch2-bert-message-lambda-intro3;
 }
 ch2-bert-message-lambda-intro3 {
+	set flag ch2-lambda-message-prelude to true;
 	show serial dialog {
 		" "
 		"<m>LAMBDA:</> Yeah, we're getting pretty close to the end here. Only a few parts left, but one is a bit of a doozy."

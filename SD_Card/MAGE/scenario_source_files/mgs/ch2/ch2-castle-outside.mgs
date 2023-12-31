@@ -35,13 +35,13 @@ on_load-ch2-castle-outside {
 	if (warp state is walk_from-north) {
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 	} else if (warp state is walk_from-east) {
-		set entity "%PLAYER%" path to walk_from-east
+		set entity "%PLAYER%" path to walk_from-east;
 		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein;
 			// borrowing this from town scripts
-		fade in camera from #000000 over 400ms
+		fade in camera from #000000 over 400ms;
 	}
 	// unique stuff done
-	goto ch2-map-init // (player control comes back here)
+	goto ch2-map-init; // (player control comes back here)
 }
 
 /* ---------- ON_TICK ---------- */

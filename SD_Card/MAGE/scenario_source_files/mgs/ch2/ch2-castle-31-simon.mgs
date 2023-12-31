@@ -433,7 +433,7 @@ simon-game-lose {
 	turn lights control on;
 	set entity Keyboard on_tick to simon-rock;
 	if (
-		flag ch2-ring-zero-restored is true
+		flag ch2-ring-zero-enabled-in-castle is true
 		|| debug mode is on
 	) {
 		turn hex control on;
@@ -454,7 +454,7 @@ simon-game-win {
 	turn player control off;
 	turn lights control on;
 	if (
-		flag ch2-ring-zero-restored is true
+		flag ch2-ring-zero-enabled-in-castle is true
 		|| debug mode is on
 	) {
 		turn hex control on;

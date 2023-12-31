@@ -37,12 +37,9 @@ on_load-ch2-castle-33 {
 		}
 	}
 	set flag ch2-mousegame to false;
+
+	copy ch2-map-init;
 	if (flag ch2-cutseen-castle33 is false) {
-		if (warp state is warping) {
-			// this is here because the cutscene dialog must come after the warp-in thing
-			copy warping-in-fade-in;
-			set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
-		}
 		turn player control off;
 		wait 500ms;
 		show dialog {
@@ -55,7 +52,6 @@ on_load-ch2-castle-33 {
 		turn player control on;
 		set flag ch2-cutseen-castle33 to true;
 	}
-	goto ch2-map-init;
 }
 
 /* ---------- ON_TICK ---------- */

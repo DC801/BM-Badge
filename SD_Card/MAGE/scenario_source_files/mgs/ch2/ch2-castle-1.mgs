@@ -88,7 +88,6 @@ on_load-ch2-castle-1 {
 	// DEBUG
 	if (debug mode is on) {
 		register toot -> debug-finish-toot;
-		register bert -> debug-bert;
 		register walk -> debug-walk;
 		register get + monitor -> ch2-pickup-monitor;
 		register get + heatsink -> ch2-pickup-heatsink;
@@ -111,7 +110,6 @@ on_load-ch2-castle-1 {
 		show serial dialog {
 			"\t<g>DEBUG</> shortcuts"
 			"<c>TOOT</>: skip tutorial"
-			"<c>BERT</>: to start 'Bert secret' cutscene"
 			"<c>GET _</>: pick up the named item"
 			"<c>ROUND _</>: collect the items for that round"
 			"<c>WALK</>: set XA on_interact to do the walk part"
@@ -119,7 +117,7 @@ on_load-ch2-castle-1 {
 	}
 	// END DEBUG
 
-	if (flag ch2-ring-zero-restored is true) {
+	if (flag ch2-ring-zero-enabled-in-castle is true) {
 		set entity "Wizard" on_interact to interact-ch2-wizard-mainframedone;
 		set entity "Wizard" current_animation to 3; // head poking up
 	}
@@ -127,21 +125,7 @@ on_load-ch2-castle-1 {
 		set entity Artifact on_tick to yeet;
 	}
 
-	// if cutscene was interrupted, intercept here:
-	if (flag ch2-cutseen-bert-secret is false) {
-		if (variable ch2-storyflag-round is 2) {
-			if (warp state is warping) {
-				// this is here because the cutscene dialog must come after the warp-in thing
-				copy warping-in-fade-in;
-				set flag ch2-manual-warp to true; // this will skip the on_load "init" script's warp stuff
-			}		
-			teleport entity "%PLAYER%" to geometry mainframe-look-spot;
-			turn entity "%PLAYER%" north;
-			set flag ch2-do-init-on-end to true;
-			goto ch2-start-round-2;
-		}
-	}
-	goto ch2-map-init;
+	copy ch2-map-init;
 }
 debug-finish-toot {
 	mutate ch2-storyflag-round = 1;
@@ -150,11 +134,6 @@ debug-finish-toot {
 	copy register-parts;
 	copy ch2-put_on_map-round1;
 	set flag ch2-toot-done to true;
-}
-debug-bert {
-	teleport entity "%PLAYER%" to geometry mainframe-look-spot;
-	turn entity "%PLAYER%" north;
-	goto ch2-start-round-2;
 }
 
 debug-walk {
@@ -233,7 +212,7 @@ on_tick-ch2-castle-1 {
 	if (dialog is closed) {
 		// check for hax button press
 		// (Not going to do shenanigans like this for other rooms because if you've left room 1 then you've seen the tutorial already)
-		if (flag ch2-ring-zero-restored is false) {
+		if (flag ch2-ring-zero-enabled-in-castle is false) {
 			if (button HAX) { // You're attempting to use Ring Zero and...
 				// ...you've been told Ring Zero won't work
 				if (flag ch2-toot-done is true) {
@@ -565,7 +544,7 @@ interact-ch2-xa {
 
 ch2-terminal-setup-check {
 	show dialog {
-		Lambda "Need help getting the artifact terminal working?"
+		Lambda "Need help getting the terminal working?"
 		> "Yes" : ch2-terminal-setup-start
 		> "No" : ch2-terminal-setup-nevermind
 	}
