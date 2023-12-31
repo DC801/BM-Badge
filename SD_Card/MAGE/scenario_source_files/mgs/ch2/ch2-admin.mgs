@@ -257,26 +257,50 @@ ch2-debug-storyflag {
 }
 
 ch2-debug-storyflag-0 {
+	copy ch2-take_off_map-round1;
+	copy ch2-take_off_map-round2;
+	copy ch2-take_off_map-round3;
+	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 0;
 	goto ch2-debug-storyflag-wrapup;
 }
 ch2-debug-storyflag-1 {
+	copy ch2-put_on_map-round1;
+	copy ch2-take_off_map-round2;
+	copy ch2-take_off_map-round3;
+	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 1;
 	goto ch2-debug-storyflag-wrapup;
 }
 ch2-debug-storyflag-2 {
+	copy ch2-take_off_map-round1;
+	copy ch2-put_on_map-round2;
+	copy ch2-take_off_map-round3;
+	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 2;
 	goto ch2-debug-storyflag-wrapup;
 }
 ch2-debug-storyflag-3 {
+	copy ch2-take_off_map-round1;
+	copy ch2-take_off_map-round2;
+	copy ch2-put_on_map-round3;
+	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 3;
 	goto ch2-debug-storyflag-wrapup;
 }
 ch2-debug-storyflag-4 {
+	copy ch2-take_off_map-round1;
+	copy ch2-take_off_map-round2;
+	copy ch2-take_off_map-round3;
+	copy ch2-put_on_map-round4;
 	mutate ch2-storyflag-round = 4;
 	goto ch2-debug-storyflag-wrapup;
 }
 ch2-debug-storyflag-5 {
+	copy ch2-take_off_map-round1;
+	copy ch2-take_off_map-round2;
+	copy ch2-take_off_map-round3;
+	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 5;
 	goto ch2-debug-storyflag-wrapup;
 }

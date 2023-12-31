@@ -33,14 +33,26 @@ on_load-ch2-castle-12 {
 	} else {
 		show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
 	}
-	
+
+	// yeet hidden things
 	if (
 		flag ch2-installed-needle is true
 		|| flag ch2-carrying-needle is true
 	) {
 		copy script ch2-hide-needle;
 	}
+	
+	// initialize everything
 	copy ch2-map-init;
+
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle12 is false) {
+		show dialog {
+			Concierge "Welcome!"
+		}
+		set flag interrupt to true;
+		set flag ch2-cutseen-castle12 to true;
+	}
 }
 
 /* ---------- ON_TICK ---------- */
@@ -75,9 +87,79 @@ on_go-castle-12-south {
 
 /* ---------- ENTITIES ---------- */
 
-interact-ch2-concierge {
+ch2-interact-guestbook {
+	if (flag ch2-guestbook-signed is false) {
+		if (flag interrupt3 is false) {
+			show dialog {
+				PLAYER "Huh? It's just a book with a bunch of people's names."
+				SELF "Oh, yes! Do sign our guest book before you go!"
+			}
+			set flag interrupt3 to true;
+		}
+		show dialog {
+			name "" "(Sign the guest book?)"
+			> "Yes" : ch2-interact-guestbook-signyes
+			> "No" : ch2-interact-guestbook-signno
+		}
+	} else {
+		show dialog {
+			PLAYER "Ah, there's my name, logged for the ages."
+			SELF "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
+		}
+	}
+}
+ch2-interact-guestbook-signyes {
 	show dialog {
-		SELF "(TODO)"
+		PLAYER "All right, here I go...."
+		name "" "(scribble scribble scribble)"
+		SELF "Thank you for signing!"
+	}
+	set flag ch2-guestbook-signed to true;
+	set entity "%SELF%" on_interact to ch2-interact-guestbook;
+}
+ch2-interact-guestbook-signno {
+	show dialog {
+		PLAYER "Maybe later."
+	}
+	set entity "%SELF%" on_interact to ch2-interact-guestbook;
+}
+
+interact-ch2-concierge {
+	if (flag ch2-concierge-backstory is false) {
+		if (flag interrupt is true) {
+			show dialog {
+				PLAYER "Welcome?"
+				SELF "Yes, welcome to King Gibson's castle. I do hope you enjoy your visit!"
+			}
+		} else {
+			show dialog {
+				PLAYER "Welcome to King Gibson's castle. I do hope you enjoy your visit!"
+			}
+		}
+		show dialog {
+			PLAYER "Um, thanks. Listen, I know things are messed up right now...."
+			SELF "Fear not! I am confident everyone is working to clear the doors and restore the intercom system."
+			"You, at least, seem to have overcome the door problem on your own, and should be applauded for your resourcefulness."
+			"You have my full support -- though alas, the best I can do to help is keep this phonograph turning."
+			"You'll have moral support music, if nothing else!"
+		}
+		set flag ch2-concierge-backstory to true;
+	} else if (
+		variable ch2-storyflag-round is < 2
+		|| flag ch2-needle-permission is true
+	) {
+		show dialog {
+			SELF "In trying times, we may find ourselves with limited resources or a constrictive environment."
+			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
+			"I'll be cheering you on from here. Good luck!"
+		}
+	} else {
+		show dialog {
+			PLAYER "(TODO: I want needle)"
+			SELF "(TODO: well, you've convinced me)"
+		}
+		set flag interrupt2 to true;
+		set flag ch2-needle-permission to true;
 	}
 }
 
@@ -86,25 +168,42 @@ interact-ch2-concierge {
 ch2-hide-needle {
 	set entity Phonograph secondary_id to 0;
 	set entity Phonograph on_interact to null_script;
-	// teleport entity "Needle" to geometry hiding-spot;
-	// set entity "Needle" name to " ";
 }
 
 ch2-touch-needle {
-	if (flag ch2-needle-firstlook is false) {
+	if (flag ch2-carrying-needle is true || flag ch2-installed-needle is true) {
 		show dialog {
-			PLAYER "TODO needle1"
+			PLAYER "Definitely an old-timey look, isn't it?"
+			Concierge "If you like this, you should see King Gibson's bedroom."
 		}
-		set flag ch2-needle-firstlook to true;
+		return;
 	}
-	show dialog {
-		PLAYER "TODO needle2."
+	if (flag interrupt2 is false) {
+		if (flag ch2-needle-firstlook is false) {
+			show dialog {
+				PLAYER "That's a funny looking trumpet."
+				Concierge "It mechanically amplifies the vibrations captured by the needle upon the vinyl record."
+				"I got this old thing out after the earthquake damaged the intercom system. I couldn't bear how quiet it was in here."
+			}
+			set flag ch2-needle-firstlook to true;
+		} else {
+			show dialog {
+				PLAYER "Definitely an old-timey look, isn't it?"
+				Concierge "If you like this, you should see King Gibson's bedroom."
+			}
+		}
 	}
 	if (variable ch2-storyflag-round is >= 2) {
-		show dialog {
-			name "" "(Pick up the phonograph needle?)"
-			> "Yes" : ch2-touch-needle-yes
-			> "No" : ch2-touch-needle-no
+		if (flag ch2-needle-permission is true) {
+			show dialog {
+				name "" "(Pick up the phonograph needle?)"
+				> "Yes" : ch2-touch-needle-yes
+				> "No" : ch2-touch-needle-no
+			}
+		} else {
+			show dialog {
+				PLAYER "(Will the concierge get mad at me if I take the needle from this record player? I guess I should ask.)"
+			}
 		}
 	}
 }
@@ -115,7 +214,8 @@ ch2-touch-needle-yes {
 	}
 	copy script ch2-hide-needle;
 	copy script ch2-pickup-needle;
-	set entity "%SELF%" on_interact to null_script;
+	set flag interrupt2 to false;
+	set entity "%SELF%" on_interact to ch2-touch-needle;
 }
 ch2-touch-needle-no {
 	show dialog {
