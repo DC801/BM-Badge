@@ -44,6 +44,26 @@ ch2-put_on_map-round3 {
 ch2-put_on_map-round4 { // TODO: use this!
 	set flag ch2-map-mainframeos to true;
 }
+ch2-take_off_map-round1 {
+	set flag ch2-map-monitor to false;
+	set flag ch2-map-heatsink to false;
+	set flag ch2-map-powersupply to false;
+}
+ch2-take_off_map-round2 {
+	set flag ch2-map-keyboard to false;
+	set flag ch2-map-mouse to false;
+	set flag ch2-map-plate to false;
+	set flag ch2-map-needle to false;
+}
+ch2-take_off_map-round3 {
+	set flag ch2-map-clock to false;
+	set flag ch2-map-goldfish to false;
+	set flag ch2-map-abacus to false;
+	set flag ch2-map-ramchips to false;
+}
+ch2-take_off_map-round4 { // TODO: use this!
+	set flag ch2-map-mainframeos to false;
+}
 
 /* ---------- ACQUIRE ITEM ---------- */
 
