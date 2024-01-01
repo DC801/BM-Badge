@@ -114,7 +114,7 @@ std::optional<uint16_t> MageDialogControl::update(const DeltaState& delta)
 
 void MageDialogControl::Draw()
 {
-   if (currentScreenIndex >= currentDialog->ScreenCount)
+   if (!open || currentScreenIndex >= currentDialog->ScreenCount)
    {
       open = false;
       return;

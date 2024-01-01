@@ -53,9 +53,10 @@ void MageHexEditor::updateHexStateVariables()
    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
-void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
+void MageHexEditor::applyHexModeInputs()
 {
-   currentByte += hexCursorOffset;
+   uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
+
    const auto activatedButton = inputHandler->GetButtonActivatedState();
    const auto button = inputHandler->GetButtonState();
    if (!button.IsPressed(KeyPress::Rjoy_up))
@@ -187,7 +188,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
             {
                //paste
                memcpy(currentByte, clipboard, clipboardLength);
-               mapControl->UpdateEntities(DeltaState{ 0, 0 });
+               mapControl->UpdateEntities();
                memcpy(currentByte, clipboard, clipboardLength);
             }
          }
@@ -196,6 +197,9 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
       {
          hexTickDelay = HEXED_TICK_DELAY;
       }
+
+      // only update variables when we might have changed something
+      updateHexStateVariables();
    }
    //decrement debounce timer
    else
@@ -282,7 +286,7 @@ void MageHexEditor::renderHexHeader()
    frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2)));
 }
 
-void MageHexEditor::Render()
+void MageHexEditor::Draw()
 {
    if ((hexCursorOffset / bytesPerPage) == currentMemPage)
    {

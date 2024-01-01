@@ -13,6 +13,7 @@ This class contains all the code related to the hex editor hacking interface.
 #include "fonts/Scientifica.h"
 #include "FrameBuffer.h"
 #include "EngineInput.h"
+#include <chrono>
 
 class MageDialogControl;
 
@@ -48,19 +49,19 @@ public:
 		memOffsets(memOffsets)
 	{};
 
-	void disableMovementUntilRJoyUpRelease()
+	constexpr void disableMovementUntilRJoyUpRelease()
 	{
 		disableMovement = true;
 	}
 
 	//returns true if hex editor is open.
-	bool isHexEditorOn() const
+	constexpr bool isHexEditorOn() const
 	{
 		return hexEditorOn;
 	}
 
 	//returns true if hex editor is open.
-	bool getHexDialogState() const
+	constexpr bool getHexDialogState() const
 	{
 		return dialogState;
 	}
@@ -97,18 +98,16 @@ public:
 	void updateHexStateVariables();
 
 	//this applies inputs to the hex editor state.u
-	void applyHexModeInputs(uint8_t* currentByte);
+	void applyHexModeInputs();
 	void applyMemRecallInputs();
 
 	//this writes all the hex editor data to the screen.
-	void Render();
+	void Draw();
 
 	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
-
 	void openToEntity(uint8_t entityIndex);
 	bool IsMovementDisabled() const { return disableMovement; }
-
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }
 
 	std::array<uint8_t, 4> memOffsets;
@@ -171,8 +170,6 @@ private:
 	//clipboard GUI state
 	bool isCopying{ false };
 	bool playerHasClipboardControl{ false };
-
-
 };
 
 #endif //_MAGE_HEX_H

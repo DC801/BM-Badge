@@ -107,7 +107,7 @@ public:
    void Load();
    void DrawLayer(uint8_t layer) const;
    void DrawEntities() const;
-   void UpdateEntities(const DeltaState& delta);
+   void UpdateEntities();
 
    // Return what entity is being interacted with or std::nullopt if there's no interaction
    std::optional<uint16_t> TryMovePlayer(const DeltaState& delta);

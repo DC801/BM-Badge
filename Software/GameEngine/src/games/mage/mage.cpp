@@ -50,6 +50,12 @@ void MageGameEngine::Run()
 
       applyUniversalInputs(deltaState);
 
+      gameUpdate(deltaState);
+
+      // if the map is about to change, don't bother updating entities since they're about to be reloaded
+      if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
+
+
       const auto loopStart = GameClock::now();
       const auto deltaTime = loopStart - lastTime;
       lastTime = loopStart;
@@ -59,7 +65,8 @@ void MageGameEngine::Run()
       // update the game state  
       while (accumulator >= MinTimeBetweenRenders)
       {
-         gameUpdate(deltaState);
+         // update the entities based on the current state of their (hackable) data array.
+         mapControl->UpdateEntities();
          camera.applyEffects();
          accumulator -= IntegrationStepSize;
          totalTime += IntegrationStepSize;
@@ -194,6 +201,10 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
             scriptState.scriptIsRunning = true;
             scriptControl->processScript(scriptState, *entityInteractId);
          }
+         else
+         {
+
+         }
       }
    }
 
@@ -254,8 +265,7 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
          || !hexEditor->playerHasHexEditorControl
          || hexEditor->IsMovementDisabled()))
    {
-      hexEditor->updateHexStateVariables();
-      hexEditor->applyHexModeInputs(mapControl->GetEntityDataPointer());
+      hexEditor->applyHexModeInputs();
    }
    // dialog mode
    else if (dialogControl->isOpen())
@@ -267,33 +277,28 @@ void MageGameEngine::gameUpdate(const DeltaState& delta)
    {
       applyGameModeInputs(delta);
    }
-   // if the map is about to change, don't bother updating entities since they're about to be reloaded
-   if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
-
-   // update the entities based on the current state of their (hackable) data array.
-   mapControl->UpdateEntities(delta);
 }
 
 void MageGameEngine::gameRender()
 {
    if (hexEditor->isHexEditorOn())
    {
-      hexEditor->Render();
+      hexEditor->Draw();
    }
    else
    {
       mapControl->Draw();
 
       // dialogs are drawn after/on top of the map
-      if (dialogControl->isOpen())
-      {
-         dialogControl->Draw();
-      }
+      dialogControl->Draw();
    }
+
    //update the state of the LEDs
-       // drawButtonStates(inputHandler->GetButtonState());
-       // drawLEDStates();
+   // drawButtonStates(inputHandler->GetButtonState());
+   // drawLEDStates();
    updateHexLights();
+
+   // write changes to the framebuffer to the output screen
    frameBuffer->blt();
 }
 

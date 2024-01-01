@@ -181,7 +181,7 @@ void MapControl::Draw() const
    }
 }
 
-void MapControl::UpdateEntities(const DeltaState& delta)
+void MapControl::UpdateEntities()
 {
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
@@ -191,9 +191,6 @@ void MapControl::UpdateEntities(const DeltaState& delta)
       renderableData.UpdateFrom(entity);
    }
 }
-
-void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
-{}
 
 std::optional<uint16_t> MapControl::TryMovePlayer(const DeltaState& delta)
 {
