@@ -77,13 +77,12 @@ class MageDialog;
 class MageSerialDialog;
 class MageColorPalette;
 
-template<typename Tag>
-struct TaggedType
-{};
+template<typename T, typename Tag>
+struct TaggedType : T {};
 
-using MageStringValue = TaggedType<struct stringTag>;
-using MageVariableValue = TaggedType<struct variableTag>;
-using MagePixels = uint8_t;
+using MageStringValue = TaggedType<char, struct stringTag>;
+using MageVariableValue = TaggedType<char, struct variableTag>;
+using MagePixel = uint8_t;
 
 typedef EngineROM<MageSaveGame,
    MapData,
@@ -100,7 +99,7 @@ typedef EngineROM<MageSaveGame,
    MageStringValue,
    MageSaveGame,
    MageVariableValue,
-   MagePixels> MageROM;
+   MagePixel> MageROM;
 
 //std::unique_ptr<MageROM>& ROM();
 const MageROM* ROM();

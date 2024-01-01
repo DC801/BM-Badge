@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <chrono>
+#include <limits>
+#include <typeinfo>
 
 #include "mage_defines.h"
 #include "mage_script_control.h"
@@ -47,11 +49,11 @@ void MageGameEngine::Run()
       const auto deltaState = inputHandler->GetDeltaState();
 
       applyUniversalInputs(deltaState);
-       
+
       const auto loopStart = GameClock::now();
       const auto deltaTime = loopStart - lastTime;
       lastTime = loopStart;
-      accumulator += deltaTime; 
+      accumulator += deltaTime;
 
       // using a fixed frame rate targeting the compile-time FPS
       // update the game state  
@@ -144,98 +146,89 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
 {
    auto playerEntity = mapControl->getPlayerEntityData();
 
-   // try to update the player or camera's position
-   auto& pointToUpdate = playerEntity != NoPlayer
-      ? playerEntity.value()->position
-      : camera.position;
    const auto buttons = delta.Buttons;
 
    //set mage speed based on if the right pad down is being pressed:
    const auto moveAmount = buttons.IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
+   // clip player to [0,uint16_t max]
    if (buttons.IsPressed(KeyPress::Ljoy_left) && !buttons.IsPressed(KeyPress::Ljoy_right))
    {
-      pointToUpdate.x = pointToUpdate.x - moveAmount > pointToUpdate.x ? 0 : pointToUpdate.x - moveAmount;
+      playerEntity->position.x = int(playerEntity->position.x) - moveAmount < 0 ? 0 : playerEntity->position.x - moveAmount;
    }
    else if (buttons.IsPressed(KeyPress::Ljoy_right) && !buttons.IsPressed(KeyPress::Ljoy_left))
    {
-      pointToUpdate.x = pointToUpdate.x + moveAmount < pointToUpdate.x ? 0 : pointToUpdate.x + moveAmount;
+      playerEntity->position.x = int(playerEntity->position.x) + moveAmount > std::numeric_limits<uint16_t>::max() ? std::numeric_limits<uint16_t>::max() : playerEntity->position.x + moveAmount;
    }
 
    if (buttons.IsPressed(KeyPress::Ljoy_up) && !buttons.IsPressed(KeyPress::Ljoy_down))
    {
-      pointToUpdate.y = pointToUpdate.y - moveAmount > pointToUpdate.y ? 0 : pointToUpdate.y - moveAmount;
+      playerEntity->position.y = int(playerEntity->position.y) - moveAmount < 0 ? 0 : playerEntity->position.y - moveAmount;
    }
    else if (buttons.IsPressed(KeyPress::Ljoy_down) && !buttons.IsPressed(KeyPress::Ljoy_up))
    {
-      pointToUpdate.y = pointToUpdate.y + moveAmount < pointToUpdate.y ? 0 : pointToUpdate.y + moveAmount;
+      playerEntity->position.y = int(playerEntity->position.y) + moveAmount > std::numeric_limits<uint16_t>::max() ? std::numeric_limits<uint16_t>::max() : playerEntity->position.y + moveAmount;
    }
 
+   auto playerEntityTypeId = playerEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+   auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
+   auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
 
-   // if there is a player on the map
-   if (playerEntity != NoPlayer)
+   //check to see if the mage is pressing the action buttons, or currently in the middle of an action animation.
+   if (playerHasControl && !delta.PlayerIsActioning())
    {
-      auto player = playerEntity.value();
-      auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
-      auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
-      auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
-
-      //check to see if the mage is pressing the action buttons, or currently in the middle of an action animation.
-      if (playerHasControl && !delta.PlayerIsActioning())
+      //if not actioning or resetting, handle all remaining inputs:
+      auto entityInteractId = mapControl->TryMovePlayer(delta);
+      if (entityInteractId)
       {
-         //if not actioning or resetting, handle all remaining inputs:
-         auto interactionTarget = mapControl->TryMovePlayer(delta);
-
-         if (interactionTarget.has_value())
+         if (delta.HackPressed() && hexEditor->playerHasHexEditorControl)
          {
-            auto target = interactionTarget.value();
-            auto hack = delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_up);
-
-            if (hack && hexEditor->playerHasHexEditorControl)
-            {
-               hexEditor->disableMovementUntilRJoyUpRelease();
-               hexEditor->openToEntity(target);
-            }
-            else if (!hack && target->onInteractScriptId)
-            {
-               //target->OnInteract(scriptControl.get());
-            }
-            //handleEntityInteract(delta.ActivatedButtons);
+            hexEditor->disableMovementUntilRJoyUpRelease();
+            hexEditor->openToEntity(*entityInteractId);
+         }
+         else if (!delta.HackPressed())
+         {
+            const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
+            auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
+            scriptState.script = mapControl->scripts[scriptId];
+            scriptState.scriptIsRunning = true;
+            scriptControl->processScript(scriptState, *entityInteractId);
          }
       }
-
-      auto& playerRenderableData = *mapControl->getPlayerRenderableData().value();
-      //handle animation assignment for the player:
-      //Scenario 1 - perform action:
-      if (delta.PlayerIsActioning() && hasEntityType
-         && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
-      {
-         playerRenderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
-      }
-      //Scenario 2 - show walk animation:
-      else if (mapControl->playerIsMoving && hasEntityType
-         && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
-      {
-         playerRenderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
-      }
-      //Scenario 3 - show idle animation:
-      else if (playerHasControl)
-      {
-         playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-      }
-
-      //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
-      bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
-         && (playerRenderableData.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-         && (playerRenderableData.currentFrameIndex == playerRenderableData.frameCount - 1)
-         && (playerRenderableData.currentFrameTicks >= playerRenderableData.duration);
-
-      //if the above bool is true, set the player back to their idle animation:
-      if (isPlayingActionButShouldReturnControlToPlayer)
-      {
-         playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-      }
    }
+
+   auto playerRenderableData = mapControl->getPlayerRenderableData();
+   //handle animation assignment for the player:
+   //Scenario 1 - perform action:
+   if (delta.PlayerIsActioning() && hasEntityType
+      && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
+   {
+      playerRenderableData->SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
+   }
+   //Scenario 2 - show walk animation:
+   else if (mapControl->playerIsMoving && hasEntityType
+      && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
+   {
+      playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+   }
+   //Scenario 3 - show idle animation:
+   else if (playerHasControl)
+   {
+      playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+   }
+
+   //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
+   bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
+      && (playerRenderableData->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
+      && (playerRenderableData->currentFrameIndex == playerRenderableData->frameCount - 1)
+      && (std::chrono::milliseconds{ playerRenderableData->currentFrameMs } >= playerRenderableData->duration);
+
+   //if the above bool is true, set the player back to their idle animation:
+   if (isPlayingActionButShouldReturnControlToPlayer)
+   {
+      playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+   }
+
 
    if (!hexEditor->playerHasHexEditorControl || !playerHasControl)
    {
@@ -289,12 +282,12 @@ void MageGameEngine::gameRender()
    }
    else
    {
-      mapControl->Draw(camera.position);
+      mapControl->Draw();
 
       // dialogs are drawn after/on top of the map
       if (dialogControl->isOpen())
       {
-         dialogControl->draw();
+         dialogControl->Draw();
       }
    }
    //update the state of the LEDs

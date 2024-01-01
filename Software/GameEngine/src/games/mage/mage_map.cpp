@@ -9,11 +9,9 @@
 #include "mage.h"
 #include "shim_err.h"
 
-
 #ifdef DC801_EMBEDDED
 #include "modules/drv_ili9341.h"
 #endif
-
 
 void MapControl::Load()
 {
@@ -27,19 +25,25 @@ void MapControl::Load()
 
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
+      // populate the MapControl's copy of the Entity Data
+      auto& entityData = Get<MageEntityData>(currentMap->entityGlobalIDs[i]);
       auto entityAddress = ROM()->GetOffsetByIndex<MageEntityData>(currentMap->entityGlobalIDs[i]);
-      ROM()->Read<MageEntityData>(Get<MageEntityData>(i), entityAddress);
+      ROM()->Read<MageEntityData>(entityData, entityAddress);
 
       // convert entity coordinates into map coordinates (0 at bottom -> 0 at top)
       Get<MageEntityData>(i).position.y -= ROM()->GetReadPointerByIndex<MageTileset>(Get<MageEntityData>(i).primaryId)->TileHeight;
+
+      // fill renderable data from the entity
+      auto& renderableData = Get<RenderableData>(currentMap->entityGlobalIDs[i]);
+      renderableData.UpdateFrom(entityData);
    }
 
    onTick = MageScriptState{ currentMap->onTickScriptId, false };
 
    auto player = getPlayerEntityData();
-   if (player.has_value())
+   if (player)
    {
-      player.value()->SetName(ROM()->GetCurrentSave().name);
+      player->SetName(ROM()->GetCurrentSave().name);
    }
    mapLoadId = MAGE_NO_MAP;
 }
@@ -76,7 +80,7 @@ MapData::MapData(uint32_t& offset)
 
    offset += sizeof(uint8_t); // padding for 4-byte alignment
 
-   entityGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, entityCount); //std::span<uint16_t>();
+   entityGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, entityCount);
    geometryGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, geometryCount);
    scriptGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, scriptCount);
    goDirections = ROM()->GetViewOf<GoDirection>(offset, goDirectionsCount);
@@ -87,90 +91,93 @@ MapData::MapData(uint32_t& offset)
       offset += sizeof(uint16_t);
    }
 
-   layers = MapLayers(offset, ROM()->GetViewOf<MapTile>(offset, (uint16_t)(layerCount * rows * cols)), (uint16_t)(rows*cols));
+   layers = MapLayers(offset, ROM()->GetViewOf<MapTile>(offset, (uint16_t)(layerCount * rows * cols)), (uint16_t)(rows * cols));
 }
 
-void MapControl::DrawEntities(const EntityPoint& cameraPosition) const
+void MapControl::DrawEntities() const
 {
    //sort entity indices by the entity y values:
    std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
-   auto sortByY = [&](size_t i1, size_t i2) { return Get<MageEntityData>(i1).position.y < Get<MageEntityData>(i2).position.y; };
+   const auto sortByY = [&](size_t i1, size_t i2) {
+      const auto i1LessThani2 = Get<MageEntityData>(i1).position.y
+         < Get<MageEntityData>(i2).position.y;
+      return i1LessThani2;
+      };
    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
    //now that we've got a sorted array with the lowest y values first,
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex : entityDrawOrder)
    {
-      Get<RenderableData>(entityIndex).Draw(tileManager, cameraPosition);
+      Get<RenderableData>(entityIndex).Draw(tileManager);
    }
 }
 
-void MapControl::DrawLayer(uint8_t layer, const EntityPoint& cameraPosition) const
+void MapControl::DrawLayer(uint8_t layer) const
 {
-   //auto i = 0;
-   //for (auto& tile : currentMap->layers[layer])
-   //{
-   //   auto mapTileCol = i % currentMap->layers.layerSize;
-   //   auto mapTileRow = i / currentMap->layers.layerSize;
-   //   i++;
-   //   if (!tile.tileId) { continue; }
-   //   
-   //   auto tileDrawPoint = EntityPoint{
-   //       (uint16_t)(currentMap->tileWidth * mapTileCol - cameraPosition.x),
-   //       (uint16_t)(currentMap->tileHeight * mapTileRow - cameraPosition.y)
-   //   };
+   //               map height - screen height
+   // *********************************************************** 
+   // *|             ____________________________              |*
+   // *|                                                       |*
+   // *|                                                       |*
+   // *|             ____________________________screen width  |* 
+   // *|             |##########################|              |*
+   // *|             |##########################|              |*
+   // *|             |##########################|              |* screen width + map width
+   // *|             |##########################|              |* 
+   // *|             |##########################|              |*
+   // *|             |##########################|              |*
+   // *|             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯              |*
+   // *|             screen height                             |*
+   // *|                                                       |*
+   // *|                                                       |*
+   // *|             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯              |*
+   // ***********************************************************
+   //                screen height + map height
+ 
 
-   //   // don't draw tiles that are entirely outside the screen bounds
-   //   if (tileDrawPoint.x >= DrawWidth || tileDrawPoint.y >= DrawHeight)
-   //   {
-   //      continue;
-   //   }
+   // identify start and stop tiles to draw
+   auto startTileX = std::max(0, (tileManager->camera->positionX - DrawWidth) / currentMap->tileWidth);
+   auto startTileY = std::max(0, (tileManager->camera->positionY - DrawHeight) / currentMap->tileHeight);
 
-   //   tileManager->DrawTile(tile.tilesetId, tile.tileId - 1, tileDrawPoint, tile.flags);
-   //}
-   for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
+   auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
+   auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
+   
+   for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
    {
-      for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
+      for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
       {
          auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
          auto currentTile = &currentMap->layers[layer][tileIndex];
 
          if (!currentTile->tileId) { continue; }
 
-         auto tileDrawPoint = EntityPoint{
-             (uint16_t)(currentMap->tileWidth * mapTileCol - cameraPosition.x),
-             (uint16_t)(currentMap->tileHeight * mapTileRow - cameraPosition.y)
-         };
+         auto tileDrawX = currentMap->tileWidth * mapTileCol;
+         auto tileDrawY = currentMap->tileHeight * mapTileRow;
 
-         // don't draw tiles that are entirely outside the screen bounds
-         if (tileDrawPoint.x >= DrawWidth || tileDrawPoint.y >= DrawHeight)
-         {
-            continue;
-         }
-
-         tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
+         tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
       }
    }
 }
 
-void MapControl::Draw(const EntityPoint& cameraPosition) const
+void MapControl::Draw() const
 {
    // always draw layer 0 
-   DrawLayer(0, cameraPosition);
+   DrawLayer(0);
 
    //draw remaining map layers except the last one before drawing entities.
    for (uint8_t layerIndex = 1; layerIndex < LayerCount() - 1; layerIndex++)
    {
-      DrawLayer(layerIndex, cameraPosition);
+      DrawLayer(layerIndex);
    }
 
-   DrawEntities(cameraPosition);
+   DrawEntities();
 
    //draw the final layer above the entities only when there is more than one layer
    if (LayerCount() > 1)
    {
-      DrawLayer(LayerCount() - 1, cameraPosition);
+      DrawLayer(LayerCount() - 1);
    }
 }
 
@@ -180,36 +187,22 @@ void MapControl::UpdateEntities(const DeltaState& delta)
    {
       auto& entity = Get<MageEntityData>(i);
       auto& renderableData = Get<RenderableData>(i);
-      renderableData.currentFrameTicks += IntegrationStepSize.count();
-
-      if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
-      {
-         renderableData.updateAsTileset(entity);
-      }
-      else if (entity.primaryIdType == MageEntityPrimaryIdType::ANIMATION)
-      {
-         renderableData.updateAsAnimation(entity);
-      }
-      else if (entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
-      {
-         renderableData.updateAsEntity(entity);
-      }
-      //entity.UpdateRenderableData();
+      renderableData.currentFrameMs += IntegrationStepSize.count();
+      renderableData.UpdateFrom(entity);
    }
 }
 
 void MageGameEngine::handleEntityInteract(const ButtonState& activatedButton)
 {}
 
-std::optional<MageEntityData*> MapControl::TryMovePlayer(const DeltaState& delta)
+std::optional<uint16_t> MapControl::TryMovePlayer(const DeltaState& delta)
 {
    // require a player on the map to move/interact
-   auto optionalPlayer = getPlayerEntityData();
-   if (!optionalPlayer.has_value()) { return std::nullopt; }
+   auto playerData = getPlayerEntityData();
+   if (!playerData) { return std::nullopt; }
 
-   auto playerRenderableData = getPlayerRenderableData().value();
+   auto playerRenderableData = getPlayerRenderableData();
 
-   auto playerData = optionalPlayer.value();
    auto interactBox = playerRenderableData->hitBox;
    auto& oldPosition = playerRenderableData->origin;
    auto& newPosition = playerData->position;
@@ -261,25 +254,21 @@ std::optional<MageEntityData*> MapControl::TryMovePlayer(const DeltaState& delta
       auto geometry = tileset->GetGeometryForTile(currentMap->layers[0][tileId].tileId);
 
       // TODO: interaction should be handled here
-      if (geometry)
+      if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
-         collides = geometry->IsPointInside(hitboxPoint, tileOffsetPoint);
-         if (collides)
-         {
-            newPosition = oldPosition;
-            //return;
-         }
+         newPosition = oldPosition;
+         break;
       }
    }
 
-
-   auto hack = delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_up);
-
    // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
-   if (!hack && !delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right)) { return std::nullopt; }
+   if (!delta.HackPressed() && !delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
+   { 
+      return std::nullopt; 
+   }
 
    const uint8_t interactLength = 32;
-   auto direction = optionalPlayer.value()->flags & RENDER_FLAGS_DIRECTION_MASK;
+   auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
       interactBox.origin.y -= interactLength;
@@ -314,28 +303,9 @@ std::optional<MageEntityData*> MapControl::TryMovePlayer(const DeltaState& delta
          {
             playerRenderableData->isInteracting = true;
             renderableData.isInteracting = true;
-            return &Get<MageEntityData>(i);
+            return i;
          }
       }
-   }
-   for (auto& renderableData : GetAll<RenderableData>())
-   {
-      // reset all interact states first
-      renderableData.isInteracting = false;
-
-      if (&renderableData != getPlayerRenderableData().value())
-      {
-         bool colliding = renderableData.hitBox
-            .Overlaps(interactBox);
-
-         if (colliding)
-         {
-            playerRenderableData->isInteracting = true;
-            renderableData.isInteracting = true;
-            //return target;
-         }
-      }
-
    }
    return std::nullopt;
 }

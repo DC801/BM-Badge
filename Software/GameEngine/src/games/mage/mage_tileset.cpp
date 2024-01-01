@@ -9,33 +9,31 @@
 #include "modules/drv_ili9341.h"
 #endif
 
-void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoint& tileDrawPoint, uint8_t flags) const
+void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags) const
 {
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
    auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-   auto ySourceMin = uint16_t{ 0 };
-   auto ySourceMax = uint16_t{ tileset->TileHeight };
-   auto xSourceMin = uint16_t{ 0 };
-   auto xSourceMax = uint16_t{ tileset->TileWidth };
+   auto ySourceMin = int32_t{ 0 };
+   auto ySourceMax = int32_t{ tileset->TileHeight };
+   auto xSourceMin = int32_t{ 0 };
+   auto xSourceMax = int32_t{ tileset->TileWidth };
    auto iteratorX = int16_t{ 1 };
    auto iteratorY = int16_t{ 1 };
 
    if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
    {
       xSourceMin = tileset->TileWidth - 1;
-      xSourceMax = uint16_t{ 0xFFFF };
-      iteratorX = int16_t{ -1 };
+      xSourceMax = -1;
+      iteratorX = -1;
    }
 
    if (flags & RENDER_FLAGS_FLIP_Y || flags & RENDER_FLAGS_FLIP_DIAG)
    {
       ySourceMin = tileset->TileHeight - 1;
-      ySourceMax = uint16_t{ 0xFFFF };
-      iteratorY = int16_t{ -1 };
+      ySourceMax = -1;
+      iteratorY =  -1;
    }
-
-   //auto target = Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight };
 
    //if (flags & RENDER_FLAGS_IS_GLITCHED)
    //{
@@ -44,25 +42,25 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
    //}
 
    // offset to the start address of the tile
-   const auto tiles = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId);
-   const auto tilePtr = &tiles[tileId * tileset->TileWidth * tileset->TileHeight];
+   const auto tiles = ROM()->GetReadPointerByIndex<MagePixel>(tilesetId);
+   const auto tilePixels = std::span<const MagePixel>(&tiles[tileId * tileset->TileWidth * tileset->TileHeight], tileset->TileWidth * tileset->TileHeight);
 
-   for (auto yTarget = tileDrawPoint.y;
+   for (auto yTarget = tileDrawY - camera->positionY;
       ySourceMin != ySourceMax;
       ySourceMin += iteratorY, yTarget++)
    {
-      auto sourceRowPtr = &tilePtr[ySourceMin * tileset->TileWidth];
+      auto sourceRowPtr = &tilePixels[ySourceMin * tileset->TileWidth];
 
-      if (yTarget >= DrawHeight)
+      if (yTarget < 0 || yTarget >= DrawHeight)
       {
          continue;
       }
 
-      for (auto xSource = xSourceMin, xTarget = tileDrawPoint.x;
+      for (auto xSource = xSourceMin, xTarget = tileDrawX - camera->positionX;
          xSource != xSourceMax;
          xSource += iteratorX, xTarget++)
       {
-         if (xTarget >= DrawWidth)
+         if (xTarget < 0 || xTarget >= DrawWidth)
          {
             continue;
          }
@@ -97,10 +95,10 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoin
          auto geometryPoints = geometry->FlipByFlags(flags, tileset->TileWidth, tileset->TileHeight);
          for (auto i = 0; i < geometryPoints.size(); i++)
          {
-            auto tileLinePointA = geometryPoints[i] + tileDrawPoint;
-            auto tileLinePointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileDrawPoint;
+            //auto tileLinePointA = geometryPoints[i] + tileDrawPoint;
+            //auto tileLinePointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileDrawPoint;
 
-            frameBuffer->drawLine(tileLinePointA, tileLinePointB, COLOR_GREEN);
+            //frameBuffer->drawLine(tileLinePointA, tileLinePointB, COLOR_GREEN);
          }
       }
    }

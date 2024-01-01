@@ -349,20 +349,11 @@ void MageHexEditor::runHex(uint8_t value)
    *currentByte = changedValue;
 }
 
-void MageHexEditor::openToEntityByIndex(uint8_t entityIndex)
+void MageHexEditor::openToEntity(uint8_t entityIndex)
 {
    SetCursorOffset(entityIndex * sizeof(MageEntityData));
    setPageToCursorLocation();
    setHexEditorOn(true);
 }
-
-void MageHexEditor::openToEntity(MageEntityData* entity)
-{
-   // TODO: Map entity pointer to offset within the map data structure
-   //SetCursorOffset(entityIndex * sizeof(MageEntityData));
-   setPageToCursorLocation();
-   setHexEditorOn(true);
-}
-
 
 

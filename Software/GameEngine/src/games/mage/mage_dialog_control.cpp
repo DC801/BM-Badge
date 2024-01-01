@@ -112,7 +112,7 @@ std::optional<uint16_t> MageDialogControl::update(const DeltaState& delta)
    return std::nullopt;
 }
 
-void MageDialogControl::draw()
+void MageDialogControl::Draw()
 {
    if (currentScreenIndex >= currentDialog->ScreenCount)
    {
@@ -160,7 +160,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, const EntityRec
          else if (topEdge) { tileId = DIALOG_TILES_TOP_REPEAT; }
          else if (bottomEdge) { tileId = DIALOG_TILES_BOTTOM_REPEAT; }
 
-         tileManager->DrawTile(currentFrameTilesetIndex, tileId, EntityPoint{ (uint16_t)(offsetX + (x * tileWidth)), (uint16_t)(offsetY + (y * tileHeight)) });
+         tileManager->DrawTile(currentFrameTilesetIndex, tileId, offsetX + (x * tileWidth), offsetY + (y * tileHeight));
       }
 
    frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
@@ -182,21 +182,18 @@ void MageDialogControl::drawDialogBox(const std::string& string, const EntityRec
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
             );
          }
-         auto targetPoint = EntityPoint{ (uint16_t)(offsetX + tileWidth), (uint16_t)(offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6  + bounce)};
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, offsetX + tileWidth, offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6 + bounce);
       }
       else
       {
-         auto targetPoint = EntityPoint{ (uint16_t)(offsetX + ((box.w - 2) * tileWidth)), (uint16_t)(offsetY + ((box.h - 2) * tileHeight) + bounce )};
          // bounce the arrow at the bottom
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, offsetX + (box.w - 2) * tileWidth, offsetY + (box.h - 2) * tileHeight + bounce);
       }
    }
 
    if (drawPortrait)
    {
-      auto portraitDrawPoint = EntityPoint{ (uint16_t)(offsetX + tileWidth), (uint16_t)(offsetY + tileHeight) };
-      tileManager->DrawTile(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, portraitDrawPoint, currentPortraitRenderableData.renderFlags);
+      tileManager->DrawTile(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, offsetX + tileWidth, offsetY + tileHeight, currentPortraitRenderableData.renderFlags);
    }
 }
 

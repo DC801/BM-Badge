@@ -763,24 +763,22 @@ std::optional<uint16_t> MageScriptActions::set_entity_name(const uint8_t* args, 
    } ActionSetEntityName;
    auto argStruct = (ActionSetEntityName*)args;
 
-   //get the string from the stringId:
    std::string entityName = mapControl->Get<MageEntityData>(entityId).name;
    std::string romString = stringLoader->getString(argStruct->stringId, entityName);
-   //Get the entity:
+
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      //simple loop to set the name:
       for (int i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
       {
          entity.name[i] = romString[i];
-         if (romString[i] == 00)
+         if (romString[i] == 0)
          {
-            // if we have hit one null, fill in the remainder with null too
+            // fill in the remainder with null to keep the name data clean
             for (int j = i + 1; j < MAGE_ENTITY_NAME_LENGTH; j++)
             {
-               entity.name[j] = 00;
+               entity.name[j] = 0;
             }
             break;
          }
@@ -1558,7 +1556,7 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
          resumeState.totalLoopsToNextAction = argStruct->playCount;
          resumeState.loopsToNextAction = argStruct->playCount;
          renderableData.SetAnimation(argStruct->animationId);
-         renderableData.Update(entity);
+         renderableData.UpdateFrom(entity);
       }
       else if (renderableData.currentFrameIndex == 0 && resumeState.geometry.currentSegmentIndex == renderableData.frameCount - 1)
       {
@@ -1569,7 +1567,7 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
          {
             resumeState.totalLoopsToNextAction = 0;   
             renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-            renderableData.Update(entity);
+            renderableData.UpdateFrom(entity);
          }
       }
       // this is just a quick and dirty place to hold on to
@@ -1626,7 +1624,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t
       if (resumeState.totalLoopsToNextAction == 0)
       {
          //points we're interpolating between are from the entity location to the 
-         resumeState.geometry.pointA = EntityPoint{ entity.position.x, entity.position.y };
+         resumeState.geometry.pointA = { entity.position.x, entity.position.y };
          resumeState.geometry.pointB = geometry->GetPoint(0) - resumeState.geometry.pointA - renderableData.center();
          entity.flags |= (resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB) & RENDER_FLAGS_DIRECTION_MASK);
          renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
@@ -1668,7 +1666,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
    if (geometry->GetPointCount() == 1)
    {
       resumeState.totalLoopsToNextAction = 1;
-      renderableData.Update(entity);
+      renderableData.UpdateFrom(entity);
       return NO_JUMP_SCRIPT;
    }
 
@@ -1723,7 +1721,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
       resumeState.totalLoopsToNextAction = 0;
       renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
    }
-   renderableData.Update(entity);
+   renderableData.UpdateFrom(entity);
 
    return NO_JUMP_SCRIPT;
 }
@@ -1750,7 +1748,7 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
       {
          resumeState.totalLoopsToNextAction = 1;
          entity.position = geometry->GetPoint(0) - renderableData.center() - entity.position;
-         renderableData.Update(entity);
+         renderableData.UpdateFrom(entity);
          return NO_JUMP_SCRIPT;
       }
 
@@ -1849,7 +1847,8 @@ std::optional<uint16_t> MageScriptActions::teleport_camera_to_geometry(const uin
 
    camera.setFollowEntity(NoPlayer);
    const auto midScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
-   camera.position = geometry->GetPoint(0) - midScreen;
+   camera.positionX = geometry->GetPoint(0).x - midScreen.x;
+   camera.positionY = geometry->GetPoint(0).y - midScreen.y;
    return NO_JUMP_SCRIPT;
 }
 
@@ -1874,15 +1873,16 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
       {
          camera.setFollowEntity(NoPlayer);
          //this is the points we're interpolating between
-         resumeState.geometry.pointA = camera.position;
+         // TODO: subtract the tile corner's offset so that geometry is c
+         //resumeState.geometry.pointA = camera.position;
       }
       auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
       resumeState.geometry.pointB = { (uint16_t)(renderableData.center().x - DrawWidth / 2), (uint16_t)(renderableData.center().y - DrawHeight / 2) };
       auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-      camera.position.x = betweenPoint.x;
-      camera.position.y = betweenPoint.y;
+      camera.positionX = betweenPoint.x;
+      camera.positionY = betweenPoint.y;
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
@@ -1910,16 +1910,16 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_geometry(const uint8_t*
       camera.setFollowEntity(NoPlayer);
       //this is the points we're interpolating between
       resumeState.geometry.pointA = {
-         camera.position.x,
-         camera.position.y,
+         camera.positionX,
+         camera.positionY,
       };
       resumeState.geometry.pointB = geometry->GetPoint(0) - (uint16_t)(DrawWidth / 2);
    }
    auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
 
    auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-   camera.position.x = betweenPoint.x;
-   camera.position.y = betweenPoint.y;
+   camera.positionX = betweenPoint.x;
+   camera.positionY = betweenPoint.y;
    return NO_JUMP_SCRIPT;
 }
 
@@ -2213,9 +2213,9 @@ std::optional<uint16_t> MageScriptActions::slot_save(const uint8_t* args, MageSc
    {
       auto playerEntity = mapControl->getPlayerEntityData();
       auto currentSave = ROM()->GetCurrentSaveCopy();
-      if (playerEntity.has_value())
+      if (playerEntity)
       {
-         auto playerName = playerEntity.value()->name;
+         auto playerName = playerEntity->name;
          for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
          {
             // copy the player name and fill remaining space with 0

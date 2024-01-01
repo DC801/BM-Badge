@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <array>
 #include <memory>
+#include <typeinfo>
 #include <cstddef>
 #include <cstring>
 #include <filesystem>
@@ -54,7 +55,9 @@ private:
 }; //class Header
 
 /////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
+/////////////////////////////////////////////////////////////////////////////////
 template <class T, uint32_t I, class Tuple>
 constexpr bool match_v = std::is_same_v<T, std::tuple_element_t<I, Tuple>>;
 
@@ -70,7 +73,7 @@ struct type_index<T, Tuple<Args...>, std::integer_sequence<uint32_t, Is...>>
 
 template <class T, class Tuple>
 constexpr uint32_t type_index_v = type_index<T, Tuple>::value;
-// https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
+/////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
 //This is the smallest page that can be erased on the FL256SSVF01 chip which uses uniform 256kB page sizes

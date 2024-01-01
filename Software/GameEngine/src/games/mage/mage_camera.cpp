@@ -9,12 +9,13 @@ void MageCamera::applyEffects()
 {
    if (followEntity)
    {
-      position = followEntity->center();// EntityPoint{ uint16_t(renderableData.origin.x + renderableData.hitBox.w / 2),uint16_t(renderableData.origin.y + renderableData.hitBox.h / 2) };
+      positionX = followEntity->center().x;
+      positionY = followEntity->center().y;
    }
 
    if (shaking)
    {
-      position.x += cosf(PI * 2 * shakePhase) * (float)shakeAmplitude;
-      position.y += sinf(PI * 2 * (shakePhase * 2)) * (float)shakeAmplitude;
+      positionX += cosf(PI * 2 * shakePhase) * (float)shakeAmplitude;
+      positionY += sinf(PI * 2 * (shakePhase * 2)) * (float)shakeAmplitude;
    }
 }

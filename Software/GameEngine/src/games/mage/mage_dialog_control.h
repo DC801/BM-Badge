@@ -148,7 +148,7 @@ public:
    constexpr bool isOpen() const { return open; }
 
    std::optional<uint16_t> update(const DeltaState& delta);
-   void draw();
+   void Draw();
 
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;

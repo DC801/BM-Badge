@@ -2,6 +2,7 @@
 #define _MAGE_ENTITY_TYPE_H
 
 #include "mage_rom.h"
+#include "mage_camera.h"
 #include "mage_script_state.h"
 #include "mage_geometry.h"
 #include "mage_tileset.h"
@@ -74,7 +75,6 @@ struct MageEntityData
    uint8_t hackableStateC{ 0 };
    uint8_t hackableStateD{ 0 };
 
-
    void SetName(std::string s)
    {
       for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
@@ -86,20 +86,15 @@ struct MageEntityData
    inline bool IsDebug() const { return flags & RENDER_FLAGS_IS_DEBUG; }
 };
 
-
-//this is info needed to render entities that can be determined
-//at run time from the MageEntity class info.
 struct RenderableData
 {
-   friend class MapControl;
-
    EntityPoint origin{ 0 };
    EntityRect hitBox{ 0 };
-   uint16_t currentFrameTicks{ 0 };
+   uint16_t currentFrameMs{ 0 };
    uint16_t tilesetId{ 0 };
    uint16_t lastTilesetId{ 0 };
    uint16_t tileId{ 0 };
-   uint32_t duration{ 0 };
+   GameClock::duration duration{ 0 };
    uint16_t frameCount{ 0 };
    uint8_t currentAnimation{ 0 };
    uint8_t currentFrameIndex{ 0 };
@@ -111,16 +106,20 @@ struct RenderableData
       return EntityPoint{ uint16_t(origin.x + hitBox.w / 2), uint16_t(origin.y + hitBox.h / 2) };
    }
 
-   void SetAnimation(uint8_t animation)
+   inline void SetAnimation(uint8_t animation)
    {
-      currentFrameTicks = 0;
-      currentFrameIndex = 0;
-      currentAnimation = animation;
+      //if the animation changed since the start of this function, reset to the first frame and restart the timer:
+      if (animation != currentAnimation)
+      {
+         currentFrameMs = 0;
+         currentFrameIndex = 0;
+         currentAnimation = animation;
+      }
    }
 
-   void Update(const MageEntityData& entity);
+   void UpdateFrom(const MageEntityData& entity);
 
-   void Draw(const std::shared_ptr<TileManager>& tileManager, const EntityPoint& cameraPosition) const;
+   void Draw(const std::shared_ptr<TileManager>& tileManager) const;
 
 private:
    void updateAsAnimation(const MageEntityData& entity);

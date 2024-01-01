@@ -75,18 +75,18 @@ public:
 	//sets the current operation to be applied when pressing the bit buttons.
 	void setHexOp(enum HEX_OPS op);
 
-	auto GetCursorOffset() const
+	constexpr auto GetCursorOffset() const
 	{
 		return hexCursorOffset;
 	}
 
-	void SetCursorOffset(uint16_t offset)
+	inline void SetCursorOffset(uint16_t offset)
 	{
 		hexCursorOffset = offset;
 	}
 
 	//this calculates which memory page the hexCursorOffset appears on.
-	void setPageToCursorLocation()
+	inline void setPageToCursorLocation()
 	{
 		currentMemPage = hexCursorOffset / bytesPerPage;
 	}
@@ -98,7 +98,6 @@ public:
 
 	//this applies inputs to the hex editor state.u
 	void applyHexModeInputs(uint8_t* currentByte);
-
 	void applyMemRecallInputs();
 
 	//this writes all the hex editor data to the screen.
@@ -107,8 +106,7 @@ public:
 	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
 
-	void openToEntityByIndex(uint8_t entityIndex);
-	void openToEntity(MageEntityData* entity);
+	void openToEntity(uint8_t entityIndex);
 	bool IsMovementDisabled() const { return disableMovement; }
 
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }

@@ -5,6 +5,7 @@
 #include "EngineSerial.h"
 #include <signal.h>
 #include <stdint.h>
+#include <chrono  >
 #include <utility>
 #include "shim_timer.h"
 
@@ -26,17 +27,36 @@ struct DeltaState
    const ButtonState Buttons;
    const ButtonState ActivatedButtons;
 
-   inline bool PlayerIsActioning() const 
-   { 
+   inline bool PlayerIsActioning() const
+   {
       return Buttons.IsPressed(KeyPress::Rjoy_left);
+   }
+
+   inline bool HackPressed() const
+   {
+      return Buttons.IsPressed(KeyPress::Rjoy_up);
    }
 };
 
-typedef std::conditional<
-   std::chrono::high_resolution_clock::is_steady,
-   std::chrono::high_resolution_clock,
-   std::chrono::steady_clock >::type GameClock;
+//typedef std::conditional<
+//   std::chrono::high_resolution_clock::is_steady,
+//   std::chrono::high_resolution_clock,
+//   std::chrono::steady_clock >::type GameClock;
 
+struct GameClock
+{
+   using rep = uint32_t;
+   using period = std::milli;
+   using duration = std::chrono::duration<rep, period>;
+   using time_point = std::chrono::time_point<GameClock>;
+
+   static time_point now() noexcept
+   {
+      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+      auto epochTime = now_ms.time_since_epoch().count();
+      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
+   }
+};
 
 class EngineInput
 {
@@ -60,7 +80,7 @@ public:
    [[nodiscard("Value of KeepRunning should be used to handle the main input loop")]]
    bool KeepRunning();
 
-   [[nodiscard("Value of Reset should be used to trigger map/engine reload")]] 
+   [[nodiscard("Value of Reset should be used to trigger map/engine reload when true")]] 
    bool Reset() 
    { 
       auto curReset = reset;  

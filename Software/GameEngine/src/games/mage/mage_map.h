@@ -14,7 +14,6 @@ in a more accessible way.
 #include <utility>
 #include <vector>
 
-#include "mage_camera.h"
 #include "mage_entity.h"
 #include "mage_tileset.h"
 #include "shim_timer.h"
@@ -24,16 +23,16 @@ in a more accessible way.
 class MageScript;
 struct GoDirection
 {
-   std::array<const char, MapGoDirectionNameLength> name{ 0 };
-   uint16_t mapLocalScriptId{ 0 };
-   uint16_t padding{ 0 };
+   const char name[MapGoDirectionNameLength]{ 0 };
+   const uint16_t mapLocalScriptId{ 0 };
+   const uint16_t padding{ 0 };
 };
 
 struct MapTile
 {
-   uint16_t tileId{ 0 };
-   uint8_t tilesetId{ 0 };
-   uint8_t flags{ 0 };
+   const uint16_t tileId{ 0 };
+   const uint8_t tilesetId{ 0 };
+   const uint8_t flags{ 0 };
 };
 
 struct MapLayers
@@ -62,7 +61,7 @@ struct MapLayers
 
    auto end() const
    {
-      return (*this)[size()-1];
+      return (*this)[size() - 1];
    }
 };
 
@@ -97,8 +96,8 @@ class MapControl
    friend class MageScriptControl;
    friend class MageHexEditor;
 public:
-   using OnTickScript = TaggedType<struct OnTick>;
-   using OnInteractScript = TaggedType<struct OnInteract>;
+   using OnTickScript = TaggedType<MageScriptState, struct OnTick>;
+   using OnInteractScript = TaggedType<MageScriptState, struct OnInteract>;
 
    MapControl(std::shared_ptr<TileManager> tileManager, int32_t initialMapId) noexcept
       : tileManager(tileManager), mapLoadId(initialMapId)
@@ -106,14 +105,14 @@ public:
 
    inline uint8_t* GetEntityDataPointer() { return reinterpret_cast<uint8_t*>(entityData.data()); }
    void Load();
-   void DrawLayer(uint8_t layer, const EntityPoint& cameraPosition) const;
-   void DrawEntities(const EntityPoint& cameraPosition) const;
+   void DrawLayer(uint8_t layer) const;
+   void DrawEntities() const;
    void UpdateEntities(const DeltaState& delta);
 
    // Return what entity is being interacted with or std::nullopt if there's no interaction
-   std::optional<MageEntityData*> TryMovePlayer(const DeltaState& delta);
+   std::optional<uint16_t> TryMovePlayer(const DeltaState& delta);
 
-   int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
+   constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
       if (entityIndex >= currentMap->entityCount && entityIndex != MAGE_MAP_ENTITY)
       {
@@ -134,7 +133,7 @@ public:
       }
    }
 
-   void Draw(const EntityPoint& cameraPosition) const;
+   void Draw() const;
 
    [[nodiscard("This should always be part of a check")]]
    inline bool ShouldReload() const { return mapLoadId != MAGE_NO_MAP; }
@@ -154,28 +153,27 @@ public:
       {
          return nullptr;
       }
-      return ROM()->GetReadPointerByIndex<MageGeometry>(mapLocalGeometryId % currentMap->geometryCount);
-      //return currentMap->geometries[mapLocalGeometryId % currentMap->geometryCount];
+      return ROM()->GetReadPointerByIndex<MageGeometry>(currentMap->geometryGlobalIDs[mapLocalGeometryId % currentMap->geometryCount]);
    }
 
-   inline std::optional<MageEntityData*> getPlayerEntityData()
+   inline MageEntityData* getPlayerEntityData()
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX
          || currentMap->playerEntityIndex >= currentMap->entityCount)
       {
-         return std::nullopt;
+         return nullptr;
       }
       return &Get<MageEntityData>(currentMap->playerEntityIndex);
    }
 
-   inline std::optional<RenderableData*> getPlayerRenderableData()
+   inline RenderableData* getPlayerRenderableData()
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX
          || currentMap->playerEntityIndex >= currentMap->entityCount)
       {
-         return std::nullopt;
+         return nullptr;
       }
       return &Get<RenderableData>(currentMap->playerEntityIndex);
    }
@@ -196,7 +194,7 @@ public:
       for (auto& dir : currentMap->goDirections)
       {
          result += "\t";
-         result += dir.name.data();
+         result += dir.name;
       }
       return result;
    }
@@ -205,7 +203,7 @@ public:
    {
       for (auto& dir : currentMap->goDirections)
       {
-         if (directionName == dir.name.data())
+         if (directionName == dir.name)
          {
             return dir.mapLocalScriptId;
          }
@@ -221,10 +219,16 @@ public:
    int32_t mapLoadId{ MAGE_NO_MAP };
 
    template <typename T>
-   T& Get(auto i) { return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; }
+   T& Get(auto i) 
+   { 
+      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; 
+   }
 
    template <typename T>
-   const T& Get(auto i) const { return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; }
+   const T& Get(auto i) const 
+   { 
+      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; 
+   }
 
    template <typename T>
    std::span<T> GetAll()

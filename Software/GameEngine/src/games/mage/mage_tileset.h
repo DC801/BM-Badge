@@ -9,6 +9,7 @@ in a more accessible way.
 #include "mage_rom.h"
 #include "FrameBuffer.h"
 #include "mage_animation.h"
+#include "mage_camera.h"
 #include "mage_color_palette.h"
 #include "mage_geometry.h"
 #include <memory>
@@ -76,13 +77,14 @@ class TileManager
 {
    friend class MageCommandControl;
 public:
-   TileManager(std::shared_ptr<FrameBuffer> frameBuffer) noexcept
-      : frameBuffer(frameBuffer)
+   TileManager(std::shared_ptr<FrameBuffer> frameBuffer, const MageCamera* camera) noexcept
+      : frameBuffer(frameBuffer), camera(camera)
    {}
 
-   void DrawTile(uint16_t tilesetId, uint16_t tileId, const EntityPoint& tileDrawPoint, uint8_t flags = 0) const;
+   void DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0) const;
 
    inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
+   const MageCamera* camera;
 
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;

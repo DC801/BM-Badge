@@ -17,8 +17,8 @@ typedef enum : uint8_t
 
 struct ResumeGeometry
 {
-    EntityPoint pointA{ 0,0 };
-    EntityPoint pointB{ 0,0 };
+    Vector2T<int32_t> pointA{ 0,0 };
+    Vector2T<int32_t> pointB{ 0,0 };
     float length{ 0.0f };
     float lengthOfPreviousSegments{ 0.0f };
     uint8_t currentSegmentIndex{ 0 };

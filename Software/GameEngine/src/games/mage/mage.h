@@ -34,12 +34,11 @@ public:
       : inputHandler(inputHandler), frameBuffer(frameBuffer)
    {
       audioPlayer = std::make_unique<AudioPlayer>();
-      tileManager = std::make_shared<TileManager>(frameBuffer);
+      tileManager = std::make_shared<TileManager>(frameBuffer, &camera);
       mapControl = std::make_shared<MapControl>(tileManager, ROM()->GetCurrentSave().currentMapId);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
-      camera = MageCamera{ mapControl };
 
       auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
       scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::move(scriptActions));
@@ -86,7 +85,7 @@ private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<StringLoader> stringLoader;
 
-   MageCamera camera;
+   MageCamera camera{};
 };
 
 #endif //_MAGE_H

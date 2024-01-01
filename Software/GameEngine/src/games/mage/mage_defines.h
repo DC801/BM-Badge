@@ -75,14 +75,14 @@ static inline const auto RtcPrescaler = 992; // round(32768 Hz / 30 [target FPS 
 #else
 static inline const auto TargetFPS = 30;
 static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000)/TargetFPS;
-static inline const auto IntegrationStepSize = std::chrono::milliseconds(11);
+static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
 #endif
 
 
 //these are used for setting player speed
 //speed is in x/y pixels per update tick
-static inline const auto RunSpeed = 6;
-static inline const auto WalkSpeed = 3;
+static inline const auto RunSpeed = 2;
+static inline const auto WalkSpeed = 1;
 
 
 

@@ -12,6 +12,7 @@ in a more accessible way.
 #include <stdint.h>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <memory>
 #include <span>
 #include <type_traits>
@@ -47,6 +48,12 @@ struct Vector2T
 {
    T x{ 0 };
    T y{ 0 };
+
+   template <typename R>
+   operator Vector2T<R>() 
+   {
+      return Vector2T<R>{(R)x, (R)y};
+   }
 
    constexpr float DotProduct(const Vector2T& b) const
    {
@@ -274,15 +281,15 @@ public:
       return minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0;
    }
 
-   std::span<EntityPoint> GetPoints() const
+   std::span<Vector2T<int32_t>> GetPoints() const
    {
-      return std::span<EntityPoint>{(EntityPoint*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
+      return std::span<Vector2T<int32_t>>{(Vector2T<int32_t>*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
    }
 
-   EntityPoint GetPoint(uint16_t i) const
+   Vector2T<int32_t> GetPoint(uint16_t i) const
    {
       auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
-      return EntityPoint{ points[2 * i], points[2 * i + 1] };
+      return Vector2T<int32_t>{ points[2 * i], points[2 * i + 1] };
    }
    uint16_t GetPointCount() const { return pointCount; }
 

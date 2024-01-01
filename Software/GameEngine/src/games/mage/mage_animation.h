@@ -19,7 +19,7 @@ struct MageAnimation
 	struct Frame
 	{
 		uint16_t tileId;
-		uint16_t duration;
+		uint16_t durationMs;
 	};
 
 	const MageAnimation::Frame& GetFrame(uint32_t index) const noexcept
