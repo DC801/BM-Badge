@@ -98,7 +98,7 @@ public:
 	void updateHexStateVariables();
 
 	//this applies inputs to the hex editor state.u
-	void applyHexModeInputs();
+	void applyHexModeInputs(const DeltaState& delta);
 	void applyMemRecallInputs();
 
 	//this writes all the hex editor data to the screen.

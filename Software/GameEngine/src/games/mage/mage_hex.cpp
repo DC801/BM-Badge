@@ -53,13 +53,11 @@ void MageHexEditor::updateHexStateVariables()
    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
-void MageHexEditor::applyHexModeInputs()
+void MageHexEditor::applyHexModeInputs(const DeltaState& delta)
 {
    uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
 
-   const auto activatedButton = inputHandler->GetButtonActivatedState();
-   const auto button = inputHandler->GetButtonState();
-   if (!button.IsPressed(KeyPress::Rjoy_up))
+   if (!delta.Hack())
    {
       disableMovement = false;
    }
@@ -67,13 +65,15 @@ void MageHexEditor::applyHexModeInputs()
    {
       return;
    }
+
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:
-   if (activatedButton.IsPressed(KeyPress::Hax)) { setHexEditorOn(false); }
+   if (delta.Hack())// activatedButton.IsPressed(KeyPress::Hax)) { setHexEditorOn(false); }
 
    //debounce timer check.
    if (!hexTickDelay)
    {
+      const auto& button = delta.Buttons;
       anyHexMovement = button.IsPressed(KeyPress::Ljoy_left)
          || button.IsPressed(KeyPress::Ljoy_right)
          || button.IsPressed(KeyPress::Ljoy_up)
@@ -105,6 +105,7 @@ void MageHexEditor::applyHexModeInputs()
          }
          //check for memory button presses:
          int8_t memIndex = -1;
+         auto& activatedButton = delta.ActivatedButtons;
          if (activatedButton.IsPressed(KeyPress::Mem0)) { memIndex = 0; }
          if (activatedButton.IsPressed(KeyPress::Mem1)) { memIndex = 1; }
          if (activatedButton.IsPressed(KeyPress::Mem2)) { memIndex = 2; }
@@ -162,7 +163,7 @@ void MageHexEditor::applyHexModeInputs()
          }
          if (playerHasClipboardControl)
          {
-            if (activatedButton.IsPressed(KeyPress::Rjoy_right))
+            if (delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
             {
                //start copying
                clipboardLength = 1;

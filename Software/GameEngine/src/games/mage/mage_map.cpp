@@ -259,7 +259,7 @@ std::optional<uint16_t> MapControl::TryMovePlayer(const DeltaState& delta)
    }
 
    // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
-   if (!delta.HackPressed() && !delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
+   if (!delta.Hack() && !delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
    { 
       return std::nullopt; 
    }

@@ -24,6 +24,9 @@ struct ButtonState
 
 struct DeltaState
 {
+   //DeltaState(ButtonState buttons, ButtonState activatedButtons) noexcept
+   //   : Buttons(buttons), ActivatedButtons(activatedButtons), lastState(button) {}
+
    const ButtonState Buttons;
    const ButtonState ActivatedButtons;
 
@@ -32,9 +35,26 @@ struct DeltaState
       return Buttons.IsPressed(KeyPress::Rjoy_left);
    }
 
-   inline bool HackPressed() const
+   inline bool Hack() const
    {
       return Buttons.IsPressed(KeyPress::Rjoy_up);
+   }
+
+   inline bool Left() const
+   {
+      return Buttons.IsPressed(KeyPress::Ljoy_left) && !Buttons.IsPressed(KeyPress::Ljoy_right);
+   }
+   inline bool Right() const
+   {
+      return Buttons.IsPressed(KeyPress::Ljoy_right) && !Buttons.IsPressed(KeyPress::Ljoy_left);
+   }
+   inline bool Up() const
+   {
+      return Buttons.IsPressed(KeyPress::Ljoy_up) && !Buttons.IsPressed(KeyPress::Ljoy_down);
+   }
+   inline bool Down() const
+   {
+      return Buttons.IsPressed(KeyPress::Ljoy_down) && !Buttons.IsPressed(KeyPress::Ljoy_up);
    }
 };
 
@@ -61,7 +81,6 @@ struct GameClock
 class EngineInput
 {
 public:
-
    const DeltaState GetDeltaState() const
    {
       return DeltaState{ buttons, activated };
@@ -80,10 +99,10 @@ public:
    [[nodiscard("Value of KeepRunning should be used to handle the main input loop")]]
    bool KeepRunning();
 
-   [[nodiscard("Value of Reset should be used to trigger map/engine reload when true")]] 
-   bool Reset() 
-   { 
-      auto curReset = reset;  
+   [[nodiscard("Value of Reset should be used to trigger map/engine reload when true")]]
+   bool Reset()
+   {
+      auto curReset = reset;
       reset = false;
       return curReset;
    }

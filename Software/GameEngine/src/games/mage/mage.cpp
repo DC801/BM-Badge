@@ -46,25 +46,41 @@ void MageGameEngine::Run()
          LoadMap();
       }
 
-      const auto deltaState = inputHandler->GetDeltaState();
-
-      applyUniversalInputs(deltaState);
-
-      gameUpdate(deltaState);
 
       // if the map is about to change, don't bother updating entities since they're about to be reloaded
       if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
-
 
       const auto loopStart = GameClock::now();
       const auto deltaTime = loopStart - lastTime;
       lastTime = loopStart;
       accumulator += deltaTime;
 
+      const auto deltaState = inputHandler->GetDeltaState();
+      applyUniversalInputs(deltaState);
+
       // using a fixed frame rate targeting the compile-time FPS
       // update the game state  
       while (accumulator >= MinTimeBetweenRenders)
       {
+         // hack mode
+         if (hexEditor->isHexEditorOn()
+            && !(dialogControl->isOpen()
+               || !playerHasControl
+               || !hexEditor->playerHasHexEditorControl
+               || hexEditor->IsMovementDisabled()))
+         {
+            hexEditor->applyHexModeInputs(deltaState);
+         }
+         // dialog mode
+         else if (dialogControl->isOpen())
+         {
+            scriptControl->jumpScriptId = dialogControl->update(deltaState);
+         }
+         // gameplay mode
+         else
+         {
+            applyGameModeInputs(deltaState);
+         }
          // update the entities based on the current state of their (hackable) data array.
          mapControl->UpdateEntities();
          camera.applyEffects();
@@ -159,20 +175,20 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
    const auto moveAmount = buttons.IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
    // clip player to [0,uint16_t max]
-   if (buttons.IsPressed(KeyPress::Ljoy_left) && !buttons.IsPressed(KeyPress::Ljoy_right))
+   if (delta.Left())
    {
       playerEntity->position.x = int(playerEntity->position.x) - moveAmount < 0 ? 0 : playerEntity->position.x - moveAmount;
    }
-   else if (buttons.IsPressed(KeyPress::Ljoy_right) && !buttons.IsPressed(KeyPress::Ljoy_left))
+   else if (delta.Right())
    {
       playerEntity->position.x = int(playerEntity->position.x) + moveAmount > std::numeric_limits<uint16_t>::max() ? std::numeric_limits<uint16_t>::max() : playerEntity->position.x + moveAmount;
    }
 
-   if (buttons.IsPressed(KeyPress::Ljoy_up) && !buttons.IsPressed(KeyPress::Ljoy_down))
+   if (delta.Up())
    {
       playerEntity->position.y = int(playerEntity->position.y) - moveAmount < 0 ? 0 : playerEntity->position.y - moveAmount;
    }
-   else if (buttons.IsPressed(KeyPress::Ljoy_down) && !buttons.IsPressed(KeyPress::Ljoy_up))
+   else if (delta.Down())
    {
       playerEntity->position.y = int(playerEntity->position.y) + moveAmount > std::numeric_limits<uint16_t>::max() ? std::numeric_limits<uint16_t>::max() : playerEntity->position.y + moveAmount;
    }
@@ -188,12 +204,12 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       auto entityInteractId = mapControl->TryMovePlayer(delta);
       if (entityInteractId)
       {
-         if (delta.HackPressed() && hexEditor->playerHasHexEditorControl)
+         if (delta.Hack() && hexEditor->playerHasHexEditorControl)
          {
             hexEditor->disableMovementUntilRJoyUpRelease();
             hexEditor->openToEntity(*entityInteractId);
          }
-         else if (!delta.HackPressed())
+         else if (!delta.Hack())
          {
             const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
             auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
@@ -253,30 +269,6 @@ void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
       hexEditor->setHexEditorOn(true);
    }
    hexEditor->applyMemRecallInputs();
-}
-
-
-void MageGameEngine::gameUpdate(const DeltaState& delta)
-{
-   // hack mode
-   if (hexEditor->isHexEditorOn()
-      && !(dialogControl->isOpen()
-         || !playerHasControl
-         || !hexEditor->playerHasHexEditorControl
-         || hexEditor->IsMovementDisabled()))
-   {
-      hexEditor->applyHexModeInputs();
-   }
-   // dialog mode
-   else if (dialogControl->isOpen())
-   {
-      scriptControl->jumpScriptId = dialogControl->update(delta);
-   }
-   // gameplay mode
-   else
-   {
-      applyGameModeInputs(delta);
-   }
 }
 
 void MageGameEngine::gameRender()

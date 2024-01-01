@@ -74,7 +74,8 @@ static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 static inline const auto RtcPrescaler = 992; // round(32768 Hz / 30 [target FPS (Hz)]) - 1
 #else
 static inline const auto TargetFPS = 30;
-static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000)/TargetFPS;
+static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000) / TargetFPS;
+static inline const auto MinTimeBetweenDialogUpdates = std::chrono::milliseconds(250);
 static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
 #endif
 

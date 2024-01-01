@@ -49,6 +49,7 @@ struct MageSaveGame
    uint32_t scenarioDataCRC32{ 0 };
    uint32_t saveDataLength{ sizeof(MageSaveGame) };
    char name[MAGE_ENTITY_NAME_LENGTH]{ "Bub" };
+
    //this stores the byte offsets for the hex memory buttons:
    std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets{
       (uint8_t)MageEntityFieldOffset::x,
