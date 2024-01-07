@@ -45,6 +45,9 @@ ch2-map-init-serial {
 		if (flag ch2-map-granted is true) {
 			copy register-map;
 		}
+		if (flag ch2-warp-granted is true) {
+			copy register-warp;
+		}
 		if (flag ch2-permission-to-fuse is true) {
 			copy register-fuse;
 		}

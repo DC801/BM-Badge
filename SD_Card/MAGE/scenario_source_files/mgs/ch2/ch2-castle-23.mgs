@@ -27,7 +27,7 @@ on_load-ch2-castle-23 {
 	// DEBUG
 	if (debug mode is on) {
 		register get + thing -> ch2-pickup-cactuscooler;
-		show serial dialog { "\t<g>DEBUG option:</> 'get thing' to acquire Cactus Cooler" }
+		show serial dialog { "\t<g>DEBUG option</>: 'get thing' to acquire Cactus Cooler" }
 	}
 
 	// entrance text

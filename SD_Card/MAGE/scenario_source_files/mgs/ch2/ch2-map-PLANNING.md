@@ -172,7 +172,7 @@ The following lists concern physical appearance (including the actual spriteshee
 ### The End
 
 99. `Lambda's lab` (teleport only)
-	- [ ] Cutscene: Enter the room for the first time
+	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: Mainframe OS
 	- [x] Entity: Lambda
 	- [x] Entity: XC: intercom with XB (outside the castle?) and XA in room 1
@@ -273,7 +273,7 @@ Plot points implemented:
 		- [ ] `abacus` (room 21)
 			- [ ] Framing device = ???
 			- [ ] Should need to go into town for something: a library book?
-	- [ ] Lambda shows you how to `warp` and invites you to room #99 
+	- [x] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
 	- [x] Lambda talks to you in person
