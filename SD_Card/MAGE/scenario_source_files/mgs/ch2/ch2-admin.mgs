@@ -302,6 +302,7 @@ ch2-debug-storyflag-5 {
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 5;
+	set flag ch2-cutseen-castle99 to true;
 	goto ch2-debug-storyflag-wrapup;
 }
 ch2-debug-storyflag-wrapup {
