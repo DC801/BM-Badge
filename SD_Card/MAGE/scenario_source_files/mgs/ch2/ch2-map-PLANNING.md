@@ -63,13 +63,11 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [~] SET: more a proper foyer; grandiose, welcoming, but nothing specific happening in terms of personnel stations or equipment
 		- [ ] Wall of rubble at N separating this room from 12
 12. `Castle hallway back`
-	- [ ] Cutscene: Enter the room for the first time
-	- [~] Inventory item: needle (from phonograph)
-		- [ ] Needs sprite
-	- [ ] Entity: ???? (a concierge?) -- should be dressed in a super nice suit, but like it's some kind of a scraggly werewolf
-	- [ ] SET: the "human" half of the foyer, logistically speaking
-		- [ ] Concierge desk with guestbook
-		- [ ] Coatrack
+	- [x] Cutscene: Enter the room for the first time
+	- [x] Inventory item: needle (from phonograph)
+	- [x] Entity: Concierge (super nice suit, but like it's some kind of a scraggly werewolf)
+	- [~] SET: the "human" half of the foyer, logistically speaking
+		- [x] Concierge desk with guestbook
 		- [ ] Wall of rubble at S separating this room from 11
 13. `Throne room`
 	- [ ] Cutscene: Enter the room for the first time
@@ -79,7 +77,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
 	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
 14. `King Gibson's bedroom`
-	- [ ] Cutscene: Enter the room for the first time
+	- [~] Cutscene: Enter the room for the first time
 	- [x] Inventory item: clock
 	- [x] Entity: King Gibson
 	- [ ] SET: old-timey king's bedroom
@@ -134,20 +132,22 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Still needs keytar position sprites for the mage
 	- [x] Entity: Theodore - a band member from 1023 MB
 	- [x] Entity: Alvin - a band member from 1023 MB
-	- [ ] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd
-		- [ ] Cocktail tables and stools
+	- [~] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd
+		- [x] Cocktail tables and stools
 		- [~] Stage with band instruments (band: 1023 MB)
-		- [ ] Copy Pasta bar (some booze, some small entrees)
+		- [x] ~~Copy Pasta bar (some booze, some small entrees)~~ Actually now just a table with bottles and cups (presumably stationed by an employee during events, not actually self serve)
 32. `Castle kitchen`
 	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: ramchips (giant Doritos-esque bag of chips)
 	- [x] Entity: Samson - a medium-sized golden bug; child of Gloria
 	- [x] Entity: Gloria - a large golden beetle; fusses over child Samson
 	- [x] Entity: Sea Moss - a huge stone golem covered in barnacles etc.; helps direct you to Cactus Cooler; helps you acquire RAM chips
-	- [~] SET: Some dining space, but more of an employee snack room kind of vibe
+	- [ ] Tom Servo, sw corner of bottom room
+		- [ ] Needs sprite
+	- [x] SET: Some dining space, but more of an employee snack room kind of vibe
 		- [x] Moderate-sized kitchen
 		- [x] Vending machine
-		- [ ] Snack room ish tables/chairs
+		- [x] Snack room ish tables/chairs
 33. `Hydroponics room`
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: mouse (no graphics necessary)
@@ -260,7 +260,6 @@ Plot points implemented:
 
 - THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
-		- [ ] Click the buttons on the vending machine (technically a stretch goal)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 		- [ ] Talk to Gibson; get him and his staff to reconcile
 			- [ ] They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken.
@@ -344,6 +343,8 @@ Villagers:
 - [ ] Hamster (overworld)
 	- Pick another spot for him
 - [ ] Cleo (with white cat) (overworld)
+- [ ] Clomper
+	- [ ] Needs sprite
 
 Entities not being used right now: (maybe use them?)
 

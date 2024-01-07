@@ -206,6 +206,12 @@ command-parts-q {
 		_ "HARDDISK" : command-parts-harddrive
 		_ "HDD" : command-parts-harddrive
 
+		_ "PLATE" : command-parts-plate
+		_ "DINNER PLATE" : command-parts-plate
+		
+		_ "NEEDLE" : command-parts-needle
+		_ "PHONOGRAPH NEEDLE" : command-parts-needle
+	
 		// ROUND THREE: desperate
 
 		_ "RAM CHIPS" : command-parts-ramchips
@@ -340,7 +346,7 @@ command-parts-harddrive {
 	goto command-parts-q;
 }
 command-parts-plate {
-	if (variable ch2-storyflag-round is < 3) {
+	if (variable ch2-storyflag-round is < 2) {
 		goto command-parts-ahead-confused;
 	}
 	show serial dialog spacer;
@@ -348,9 +354,9 @@ command-parts-plate {
 		show serial dialog { "<m>LAMBDA:</> You've already... um, \"used\" the plate to make a CPU. You're good." }
 	} else if (flag ch2-carrying-plate is true) {
 		if (flag ch2-carrying-needle is false) {
-			show serial dialog { "<m>LAMBDA:</> You've got a good spinnable plate already. So now what you need is a phonograph needle to act as a read head." }
+			show serial dialog { "<m>LAMBDA:</> You've got a good spinnable <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
 		} else {
-			show serial dialog { "<m>LAMBDA:</> Now that you have both the plate and needle, you can use the <c>FUSE</> command to combine them." "\tAh, so it seems the plate has enough iron content in the ceramic for this to actually work, huh?" }
+			show serial dialog { "<m>LAMBDA:</> Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them." "\tHuh, so it seems the plate has enough iron content in the ceramic for this to actually work. Neat." }
 		}
 	} else {
 		copy ch2-describe-plate;
@@ -358,17 +364,17 @@ command-parts-plate {
 	goto command-parts-q;
 }
 command-parts-needle {
-	if (variable ch2-storyflag-round is < 3) {
+	if (variable ch2-storyflag-round is < 2) {
 		goto command-parts-ahead-confused;
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-needle is true) {
-		show serial dialog { "<m>LAMBDA:</> You've already... um, \"used\" the needle to make a CPU. You're good." }
+		show serial dialog { "<m>LAMBDA:</> You've already... um, \"used\" the <m>needle</> to make a <m>hard drive</>. You're good." }
 	} else if (flag ch2-carrying-needle is true) {
 		if (flag ch2-carrying-plate is false) {
-			show serial dialog { "<m>LAMBDA:</> You've got a read head -- of sorts -- already. So now what you need is a dinner plate to act as a hard drive platter." }
+			show serial dialog { "<m>LAMBDA:</> You've got a <m>needle</> for a read head already. So now what you need is a dinner <m>plate</> to act as a hard drive platter." }
 		} else {
-			show serial dialog { "<m>LAMBDA:</> Now that you have both the needle and plate, you can use the <c>FUSE</> command to combine them." "\tOh, wow, it looks like that phonograph needle is electric. Weird... but also serendipitous." }
+			show serial dialog { "<m>LAMBDA:</> Now that you have both the <m>needle</> and <m>plate</>, you can use the <c>FUSE</> command to combine them." "\tOh, wow, it looks like that phonograph needle is electric. Weird... but also serendipitous." }
 		}
 	} else {
 		copy ch2-describe-needle;

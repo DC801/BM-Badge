@@ -7,13 +7,13 @@ include!("header.mgs")
 // ROUND ONE: normal
 
 serial dialog ch2-describe-monitor {
-	"<m>LAMBDA:</> You'll need a computer monitor if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor near the front of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
+	"<m>LAMBDA:</> You'll need a computer <m>MONITOR</> if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor near the front of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
 }
 serial dialog ch2-describe-heatsink {
-	"<m>LAMBDA:</> The mainframe generates so much heat we'll definitely need a <m>HEAT SINK</>. According to the castle's inventory sheets, the <m>server room</> has a bunch extra. I'm sure they'd let you take one."
+	"<m>LAMBDA:</> The mainframe generates so much heat we'll need a <m>HEAT SINK</> -- or any means of drawing heat away from the CPU. The <m>power plant guys</> can probably help you out on that front."
 }
 serial dialog ch2-describe-powersupply {
-	"<m>LAMBDA:</> TODO: powersupply description"
+	"<m>LAMBDA:</> The mainframe will need a <m>POWER SUPPLY</> to turn AC power from the wall into DC power. We'll need the kind that goes on the inside of a computer enclosure. According to the castle's inventory sheets, the <m>server room</> has a bunch extra. I'm sure they'd let you take one."
 }
 
 // ROUND TWO: abstract
@@ -26,16 +26,16 @@ serial dialog ch2-describe-mouse {
 	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat to fetch one</> for you."
 }
 serial dialog ch2-describe-harddrive {
-	"<m>LAMBDA:</> As I said before, to make a hard drive we'll need two things:"
+	"<m>LAMBDA:</> As I said before, to make a <m>HARD DRIVE</> we'll need two things:"
 	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
 	"\tNext, a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
 	// see aftermath of each usage for an additional line
 }
-serial dialog ch2-describe-plate {
-	"<m>LAMBDA:</> TODO plate description"
+serial dialog ch2-describe-plate { // some duplicate text; see above
+	"<m>LAMBDA:</> To build a <m>hard drive</>, we'll need a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
 }
-serial dialog ch2-describe-needle {
-	"<m>LAMBDA:</> TODO needle description"
+serial dialog ch2-describe-needle { // some duplicate text; see above
+	"<m>LAMBDA:</> To build a <m>hard drive</>, we'll need a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
 }
 
 // ROUND THREE: desperate
@@ -236,7 +236,7 @@ ch2-lambda-round-2-parts5c {
 	}
 	show serial dialog ch2-describe-harddrive;
 	show serial dialog {
-		"\tI'll grant you access to the <c>FUSE</> command, which will let you construct a <m>HARD DISK</> once you have both items."
+		"\tI'll grant you access to the <c>FUSE</> command, which will let you construct a <m>HARD DRIVE</> once you have both items."
 	}
 	show serial dialog {
 		" "

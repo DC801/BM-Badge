@@ -38,13 +38,31 @@ on_load-ch2-castle-23 {
 	} else {
 		show serial dialog { "Entering <bold>POWER PLANT</>..." }
 	}
+
+	// yeet hidden things
 	if (
 		flag ch2-installed-heatsink is true
 		|| flag ch2-carrying-heatsink is true
 	) {
 		copy script ch2-hide-heatsink;
 	}
+
+	// initialize everything
 	copy ch2-map-init;
+
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle23 is false) {
+		copy ch2-cutscene-castle23;
+	}
+}
+
+ch2-cutscene-castle23 {
+	turn player control off;
+
+
+
+	turn player control on;
+	set flag ch2-cutseen-castle23 to true;
 }
 
 /* ---------- ON_TICK ---------- */
