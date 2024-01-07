@@ -245,7 +245,6 @@ simon-enemy-turn-start {
 		wait 150ms;
 		
 	}
-	debug!("SIMON TURN OVER!")
 	goto simon-player-turn-start;
 }
 

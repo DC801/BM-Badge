@@ -61,7 +61,6 @@ ch2-cutscene-bert-secret {
 		"If I find answer, I will leave message with trash panda Wizard."
 		"Good luck."
 	}
-	set flag ch2-cutseen-bert-secret to true;
 	walk entity Bert to geometry entrance1-path over 800ms;
 	wait 80ms;
 	teleport entity Bert to geometry hiding-spot;
@@ -74,27 +73,27 @@ ch2-bert-secret-lambda-intro {
 	show serial dialog spacer;
 	if (flag interrupt is true) {
 		show serial dialog {
-			"<m>LAMBDA:</> Bert? BERT! Oh my God, Bert! I remember that guy!"
+			"<m>LAMBDA</>: Bert? BERT! Oh my God, Bert! I remember that guy!"
 			" "
-			"<c>YOU:</> What? You know him?"
+			"<c>YOU</>: What? You know him?"
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA:</> Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
+			"<m>LAMBDA</>: Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
 			" "
-			"<c>YOU:</> What? You know Bert?"
+			"<c>YOU</>: What? You know Bert?"
 		}
 	}
 	show serial dialog {
 		" "
-		"<m>LAMBDA:</> His name was a complete blank until you said it, but I recognized his face!"
+		"<m>LAMBDA</>: His name was a complete blank until you said it, but I recognized his face!"
 	}
 	if (flag ch2-cameras-explanation is false) {
 		show serial dialog {
 			" "
-			"<c>YOU:</> Wait, how did you see his face?"
+			"<c>YOU</>: Wait, how did you see his face?"
 			" "
-			"<m>LAMBDA:</> The cameras! They're all around in -- look, it doesn't matter. The point is...."
+			"<m>LAMBDA</>: The cameras! They're all around in -- look, it doesn't matter. The point is...."
 		}
 		set flag ch2-cameras-explanation to true;
 	}
@@ -107,14 +106,14 @@ ch2-bert-secret-lambda-intro {
 ch2-bert-secret-lambda-intro2 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Should I go back and fetch him? Let you talk to him?"
+		"<c>YOU</>: Should I go back and fetch him? Let you talk to him?"
 		" "
-		"<m>LAMBDA:</> No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
+		"<m>LAMBDA</>: No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
 		"\t...Damn. It's been a while, though."
 		" "
-		"<c>YOU:</> Wow, you know Bert, huh?"
+		"<c>YOU</>: Wow, you know Bert, huh?"
 	}
-	set flag ch2-lambda-bert-prelude to true;
+	set flag ch2-lambda-bert-backstory to true;
 	mutate CALLBACK = 1;
 	goto ch2-lambda-bert-q
 }

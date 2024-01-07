@@ -5,12 +5,12 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 837, 838, 839, 840, 841, 842, 843, 844, 0, 0,
-            0, 0, 845, 846, 847, 848, 849, 850, 851, 852, 0, 0,
             0, 0, 853, 854, 855, 856, 857, 858, 859, 860, 0, 0,
             0, 0, 861, 862, 863, 864, 865, 866, 867, 868, 0, 0,
             0, 0, 869, 870, 871, 872, 873, 874, 875, 876, 0, 0,
             0, 0, 877, 878, 879, 880, 881, 882, 883, 884, 0, 0,
+            0, 0, 885, 886, 887, 888, 889, 890, 891, 892, 0, 0,
+            0, 0, 893, 894, 895, 896, 897, 898, 899, 900, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
@@ -29,7 +29,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 402, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 418, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -51,7 +51,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":167,
+                 "gid":183,
                  "height":32,
                  "id":32,
                  "name":"Bub",
@@ -69,51 +69,21 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":175.814771143745,
-                 "y":252.376031729017
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":191,
+                 "x":170,
                  "y":198
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":34,
-                 "name":"hiding-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":-56,
-                 "y":-43.3333333333333
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":37,
-                 "name":"camera",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":192,
-                 "y":150
-                }, 
-                {
-                 "class":"",
-                 "gid":815,
+                 "gid":831,
                  "height":32,
                  "id":38,
                  "name":"Lambda",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-lab"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -122,10 +92,16 @@
                 }, 
                 {
                  "class":"",
-                 "gid":209,
+                 "gid":225,
                  "height":32,
                  "id":39,
                  "name":"XC",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-xc"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -134,7 +110,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":885,
+                 "gid":901,
                  "height":32,
                  "id":42,
                  "name":"CRT",
@@ -143,6 +119,114 @@
                  "width":28,
                  "x":194,
                  "y":123
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":55,
+                 "name":"Books",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-books"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":124,
+                 "y":132
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":57,
+                 "name":"Ration",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-ration"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":231,
+                 "y":150
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":59,
+                 "name":"Poster",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-poster"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":259,
+                 "y":119
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":60,
+                 "name":"Drawer",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-drawer"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":87,
+                 "y":142
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":61,
+                 "name":"Computer",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-computer"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":178,
+                 "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":62,
+                 "name":"Box",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-box"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":92,
+                 "y":219
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -155,7 +239,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 387, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 403, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -179,34 +263,122 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":15,
-                 "name":"",
+                 "id":6,
+                 "name":"warp-spot",
                  "point":true,
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":-154,
-                 "y":462
+                 "x":186,
+                 "y":187
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":41,
-                 "name":"lambda-walk-line",
-                 "polyline":[
-                        {
-                         "x":-37,
-                         "y":-28
-                        }, 
-                        {
-                         "x":-37,
-                         "y":-12
-                        }],
+                 "id":34,
+                 "name":"hiding-spot",
+                 "point":true,
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":219,
-                 "y":174
+                 "x":-56,
+                 "y":-43.3333333333333
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":37,
+                 "name":"camera",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":165
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":47,
+                 "name":"pickup-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":186,
+                 "y":181
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"computer-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":208,
+                 "y":143
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":50,
+                 "name":"mid-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":185,
+                 "y":155
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":51,
+                 "name":"lambda-walk-line1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":185,
+                 "y":150
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":52,
+                 "name":"lambda-walk-line3",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":185,
+                 "y":168
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":53,
+                 "name":"lambda-walk-line",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":185,
+                 "y":143
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":54,
+                 "name":"lambda-walk-line2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":185,
+                 "y":161
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -215,7 +387,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":43,
+ "nextobjectid":63,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -226,52 +398,52 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":209,
+         "firstgid":225,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":211,
+         "firstgid":227,
          "source":"..\/entities\/entity-save_floppy.json"
         }, 
         {
-         "firstgid":235,
+         "firstgid":251,
          "source":"..\/entities\/entity-bert.json"
         }, 
         {
-         "firstgid":253,
+         "firstgid":269,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":255,
+         "firstgid":271,
          "source":"tileset-castle-interior.json"
         }, 
         {
-         "firstgid":511,
+         "firstgid":527,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":767,
+         "firstgid":783,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":777,
+         "firstgid":793,
          "source":"entity-harddrive.json"
         }, 
         {
-         "firstgid":801,
+         "firstgid":817,
          "source":"..\/entities\/entity-lambda.json"
         }, 
         {
-         "firstgid":837,
+         "firstgid":853,
          "source":"..\/tilesets\/tileset-secretroom.json"
         },
     
         {
-         "firstgid":885,
+         "firstgid":901,
          "source":"..\/entities\/entity-lambda-monitor.json"
         }],
  "tilewidth":32,

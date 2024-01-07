@@ -213,11 +213,11 @@ serial-bookorigins {
 		" "
 		"<bold>Meeting minutes</>: Smarch 32nd, year 1337"
 		"<bold>Subject</>: who wrote the 'Entity' and 'Hex Edits' books?"
-		"\t<m>Alfonso:</> Whoever wrote those books must have had access to the real Ring Zero."
-		"\t<m>Bert:</> The <r>Big Bad</>?"
-		"\t<m>Jackob:</> But the <r>Big Bad</> had no accomplices, and there were clearly multiple people doing this research."
-		"\t<m>Alfonso:</> Then perhaps the <r>Big Bad</> was not the first mage to have Ring Zero. Perhaps he will not be the last."
-		"\t<m>Bert:</> Or is there more than one ring?"
+		"\t<m>Alfonso</>: Whoever wrote those books must have had access to the real Ring Zero."
+		"\t<m>Bert</>: The <r>Big Bad</>?"
+		"\t<m>Jackob</>: But the <r>Big Bad</> had no accomplices, and there were clearly multiple people doing this research."
+		"\t<m>Alfonso</>: Then perhaps the <r>Big Bad</> was not the first mage to have Ring Zero. Perhaps he will not be the last."
+		"\t<m>Bert</>: Or is there more than one ring?"
 	}
 	goto command-rtfm-another;
 }
@@ -229,10 +229,10 @@ serial-redletters {
 		" "
 		"<bold>Meeting minutes</>: Smarch 16th, year 1337"
 		"<bold>Subject</>: a rubbing taken from a dilapidated granite plaque found deep in the Fortran Forest: <r>\"RED LETTERS MARK THE <r>HACKER.\"</>"
-		"\t<m>Alfonso:</> Obviously this is a reference to a calendar. Perhaps the power to hack is granted to mages on specific days -- 'red-letter' days!"
-		"\t<m>Jackob:</> You mean mages can only become hackers on national holidays? Certainly not!"
-		"\t<m>Alfonso:</> What else might it mean by 'red letters,' then? Perhaps... when a mage becomes a hacker, it IS a red-letter day!"
-		"\t<m>Jackob:</> Or perhaps the phrase 'red letters' is a red herring!"
+		"\t<m>Alfonso</>: Obviously this is a reference to a calendar. Perhaps the power to hack is granted to mages on specific days -- 'red-letter' days!"
+		"\t<m>Jackob</>: You mean mages can only become hackers on national holidays? Certainly not!"
+		"\t<m>Alfonso</>: What else might it mean by 'red letters,' then? Perhaps... when a mage becomes a hacker, it IS a red-letter day!"
+		"\t<m>Jackob</>: Or perhaps the phrase 'red letters' is a red herring!"
 	}
 	goto command-rtfm-another;
 }

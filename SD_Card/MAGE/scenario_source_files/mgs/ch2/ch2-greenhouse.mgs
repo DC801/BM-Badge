@@ -21,6 +21,7 @@ on_load-ch2-greenhouse {
 on_tick-ch2-greenhouse {
 	// ethernettle interference checks
 	if (
+		// TODO: also check whether they're the right secondary_id
 		entity EtherNettle1 is not inside geometry EtherNettle1Origin
 		|| entity EtherNettle2 is not inside geometry EtherNettle2Origin
 		|| entity EtherNettle3 is not inside geometry EtherNettle3Origin
@@ -74,7 +75,7 @@ interact-ch2-trekkie {
 		show dialog {
 			SELF "How are things going, %PLAYER%?"
 			PLAYER "They're going okay, %SELF%. What about you?"
-			SELF "Me thinking of replacing the ethernettles with a faster spec. Gigabit ethernettles!"
+			SELF "Me thinking of replacing the Ether Nettles with a faster spec. Gigabit Ether Nettles!"
 			PLAYER "(Giga what?)"
 		}
 	} else if (variable ch2-storyflag-round is <= 4) {
