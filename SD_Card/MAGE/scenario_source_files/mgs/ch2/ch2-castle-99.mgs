@@ -1,5 +1,15 @@
 include!("header.mgs")
 
+const! (
+	$opaque = 3 // idle_plain_opaque (glasses are opaque)
+	$transparent = 4 // idle_plain_transparent (can see eyes through glasses)
+	$toTransparent  = 5 // shving_on (opaque -> transparent)
+	$toOpaque  = 6 // shving_off (transparent -> opaque)
+	$lowering = 7 // downcast_lowering (raised -> lowered)
+	$lowered = 8 // downcast
+	$raising = 9 // downcast_raising (lowered -> raised)
+)
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-99 {
@@ -24,7 +34,236 @@ on_load-ch2-castle-99 {
 		show serial dialog { "Entering <bold>SECRET LAB</>..." }
 	}
 	teleport camera to geometry camera;
+
+	// cutscene pre-fade :/
+	if (flag ch2-cutseen-castle99 is false) {
+		set entity Lambda current_animation to $lowered
+	}
+
+	// initialize everything
 	copy ch2-map-init;
+
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle99 is false) {
+		goto ch2-cutscene-castle99; // NOTE: branching means `goto`! Deadend things here!
+	}
+}
+
+ch2-lambda-shving_on {
+	play entity Lambda animation $toTransparent once;
+	set entity Lambda current_animation to $transparent;
+	goto null_script;
+}
+ch2-lambda-shving_off {
+	play entity Lambda animation $toOpaque once;
+	set entity Lambda current_animation to $opaque;
+	goto null_script;
+}
+ch2-lambda-lower {
+	play entity Lambda animation $lowering once;
+	set entity Lambda current_animation to $lowered;
+	goto null_script;
+}
+ch2-lambda-raise {
+	play entity Lambda animation $raising once;
+	set entity Lambda current_animation to $opaque;
+	goto null_script;
+}
+ch2-lambda-walkup {
+	wait 200ms;
+	walk entity Lambda to geometry lambda-walk-line1 over 200ms;
+	set entity Lambda current_animation to $opaque;
+	goto null_script;
+}
+ch2-cutscene-castle99 {
+	turn player control off;
+	wait 1500ms;
+	turn entity "%PLAYER%" east;
+	wait 1200ms;
+	turn entity "%PLAYER%" south;
+	wait 800ms;
+	turn entity "%PLAYER%" west;
+	wait 200ms;
+	turn entity "%PLAYER%" north;
+	wait 700ms;
+	set entity Lambda current_animation to $opaque;
+	play entity Lambda animation $raising once;
+	wait 1100ms;
+	walk entity Lambda to geometry lambda-walk-line over 800ms;
+	set entity Lambda current_animation to $opaque;
+	wait 1200ms;
+	walk entity Lambda to geometry lambda-walk-line1 over 500ms;
+	set entity Lambda current_animation to $opaque;
+	wait 1900ms;
+	show dialog {
+		Lambda "So... welcome, %PLAYER%. I'm Lambda."
+	}
+	wait 400ms;
+	play entity Lambda animation $lowering once;
+	set entity Lambda current_animation to $lowered;
+	wait 100ms;
+	show dialog {
+		Lambda "Oh, I guess you already knew that."
+		"Sorry, I...."
+	}
+	wait 600ms;
+	play entity Lambda animation $raising once;
+	set entity Lambda current_animation to $opaque;
+	show dialog {
+		Lambda "Anyway, what you probably didn't know is that I'm...."
+	}
+	set entity Lambda on_tick to ch2-lambda-shving_on;
+	show dialog {
+		Lambda "...I'm one of the village elders."
+		PLAYER "!!"
+		"What? How? Since when?"
+		Lambda "Since always."
+		PLAYER "But I know Jackob, Alfonso, and Bert. I don't know you."
+		Lambda "That was by design."
+	}
+	turn entity Lambda west;
+	show dialog {
+		Lambda "I made everyone else forget me so I could stay here, behind the scenes, and protect this artifact from the Big Bad."
+		"But...."
+	}
+	wait 400ms;
+	play entity Lambda animation $toOpaque once;
+	wait 250ms;
+	show dialog {
+		Lambda "Being disconnected from everything, like this... it's hard. I'm surprised how little time it took for things to become hard, to be honest, being here alone."
+	}
+	turn entity Lambda north;
+	show dialog {
+		Lambda "I did what I thought I had to do, though I don't know if it actually helped anything in the end, but...."
+		"Watching you, meeting everyone, doing things with everyone... BUILDING things with everyone...."
+	}
+	walk entity Lambda to geometry mid-spot over 300ms;
+	set entity Lambda current_animation to $opaque;
+	show dialog {
+		Lambda "I wiped their memories of me, but I didn't think I would lose my own memories of them, too!"
+	}
+	turn entity Lambda west;
+	set entity Lambda on_tick to ch2-lambda-lower;
+	show dialog {
+		Lambda "How could I forget what how fun it was to try to build wacky projects with my friends? Learning, teaching... getting to know someone better...."
+	}
+	show dialog {
+		Lambda "Even the individual people! I'd forgotten how funny -- and so insightful -- Sea Moss is. I forgot how (TODO more people here pls)"
+	}
+	turn entity Lambda south;
+	set entity Lambda on_tick to ch2-lambda-raise;
+	show dialog {
+		Lambda "All these problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
+		"Most of those problems wouldn't have happened. Hell, maybe none of them would have happened."
+	}
+	set entity Lambda on_tick to ch2-lambda-walkup;
+	show dialog {
+		Lambda "I've been suffering, but I've been selfish, too, thinking that by closing doors and letting my friends live their lives without me, I was protecting them."
+		"I was holding onto my pain like it was concrete proof I was doing the right thing."
+	}
+	show dialog {
+		Lambda "But I was wrong, wasn't I?"
+	}
+	walk entity Lambda to geometry lambda-walk-line2 over 500ms;
+	set entity Lambda on_tick to ch2-lambda-shving_on;
+	show dialog {
+		Lambda "It's better to be connected to people. I can see that now. However dangerous things might become, it's better to face those dangers together."
+		"Don't you think?"
+		> "Yeah, better to face danger together." : ch2-cutscene-castle99-dangeryes
+		> "I don't know...." : ch2-cutscene-castle99-dangeridk
+	}
+}
+
+ch2-cutscene-castle99-dangeryes {
+	show dialog {
+		PLAYER "Yeah, better to face danger together."
+		Lambda "Yeah!"
+	}
+	set entity Lambda on_tick to ch2-lambda-shving_off;
+	show dialog {
+		Lambda "So, um, to that end...."
+	}
+	goto ch2-cutscene-castle99-continue;
+}
+ch2-cutscene-castle99-dangeridk {
+	show dialog {
+		PLAYER "I don't know."
+	}
+	set entity Lambda on_tick to ch2-lambda-shving_off;
+	show dialog {
+		Lambda "Yeah, I guess in real life, things are pretty complicated, aren't they?"
+		"So, um, anyway...."
+	}
+	goto ch2-cutscene-castle99-continue;
+}
+
+ch2-cutscene-castle99-os-pickup {
+	wait 350ms;
+	set entity "%PLAYER%" current_animation to 1;
+	walk entity "%PLAYER%" to geometry pickup-spot over 300ms;
+	set entity "%PLAYER%" current_animation to 0;
+	goto null_script;
+}
+ch2-cutscene-castle99-os-pickup-return {
+	wait 150ms;
+	set entity "%PLAYER%" relative_direction to 2;
+	set entity "%PLAYER%" current_animation to 1;
+	walk entity "%PLAYER%" to geometry warp-spot over 300ms;
+	set entity "%PLAYER%" current_animation to 0;
+	set entity "%PLAYER%" relative_direction to 0;
+	turn entity "%PLAYER%" north;
+	goto null_script;
+}
+ch2-cutscene-castle99-continue {
+	set entity "%PLAYER%" on_tick to ch2-cutscene-castle99-os-pickup;
+	walk entity Lambda to geometry lambda-walk-line3 over 400ms;
+	set entity Lambda current_animation to $opaque;
+	wait 700ms;
+	show dialog {
+		name "" "(You received the mainframe OS!)"
+	}
+	wait 200ms;
+	set entity "%PLAYER%" on_tick to ch2-cutscene-castle99-os-pickup-return;
+	set entity Lambda relative_direction to 2;
+	walk entity Lambda to geometry lambda-walk-line2 over 400ms;
+	set entity Lambda current_animation to $opaque;
+	turn entity Lambda south;
+	set entity Lambda relative_direction to 0;
+	wait 100ms;
+	show dialog {
+		Lambda "Here, put that in the mainframe's optical drive, and we can get the new OS installed."
+		"Head on back to the XA room, and I'll walk you through it from here."
+		PLAYER "You're not going to come with me?"
+	}
+	wait 150ms;
+	walk entity Lambda to geometry lambda-walk-line over 700ms;
+	set entity Lambda current_animation to $lowered;
+	wait 100ms;
+	show dialog {
+		Lambda "No, I... I'll stay here for now."
+	}
+	show dialog {
+		Lambda "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
+	}
+	show dialog {
+		Lambda "I'll just need some time first. I'm sorry."
+	}
+	walk entity Lambda to geometry computer-spot over 700ms;
+	set entity Lambda current_animation to $opaque;
+	turn entity Lambda north;
+	wait 800ms;
+	walk entity "%PLAYER%" to geometry pickup-spot over 200ms;
+	wait 250ms;
+	walk entity "%PLAYER%" to geometry lambda-walk-line3 over 400ms;
+	wait 300ms;
+	turn entity Lambda west;
+	show dialog {
+		Lambda "You go ahead, and I'll help like before."
+	}
+	turn entity Lambda north;
+	set entity Lambda current_animation to $opaque;
+	turn player control on;
+	set flag ch2-cutseen-castle99 to true;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -41,57 +280,65 @@ on_exit-ch2-castle-99 { // sanitize ch2 room state
 
 /* ---------- ENTITY THINGS ---------- */
 
-ch2-castle-99-welcome {
-	// player teleports in, and Lambda is there. They turn to each other.
+interact-ch2-xc {
 	show dialog {
-		Lambda "Ahh. Um, welcome to...."
-	}
-	// Lambda turns all around
-	show dialog {
-		Lambda "...well, my lab. Welcome to my lab, I guess."
-		"Everyone else will have forgotten this, but I am one of the village elders."
-		"Sorry. It's just a little strange seeing someone else in here. In the flesh, I mean."
-		"It's been so long. I think. Not sure how long it's been, to be perfectly honest."
-	}
-	// Lambda fidgets
-	show dialog {
-		Lambda "Gosh, I'm so nervous. Um."
-		"Well, um, if you're sure -- if you're really sure -- this will help defeat the Big Bad...."
-	}
-	// He offers something
-	show dialog {
-		Lambda "...then here. Take it. The mainframe's operating system, all ready to go."
-	}
-	// Player takes it.
-	show dialog {
-		Lambda "There you go. All set."
-		"Just plug in that stick and switch the machine on. You'll see some installation instructions. Just do what it says."
-	}
-
-	// (something something)
-
-	show dialog {
-		PLAYER "Oh, you're not coming with me?"
-
-		Lambda "No, I think I'll, um, stay here for now."
-	}
-	// He fidgets
-	show dialog {
-		Lambda "I probably will leave this place, eventually. Soon, even. Just... baby steps, you know?"
-		"I was protecting that software for so long... I'm not sure what to do with myself now. I just need to think for a while."
-		"Yeah. So, um, I can still help you and everything from here, don't worry."
-	}
-	// The player steps away
-	show dialog {
-		Lambda "Listen."
-		"I feel like there's something else, something important that I... well...."
-
-		PLAYER "About the software? The OS?"
-
-		Lambda "Maybe. It must have been terribly important, but I can't seem to...."
-
-		PLAYER "...?"
-
-		Lambda "Well, if I remember it, I'll call you."
+		PLAYER "(Wow, it looks just like the robot in the first room of the castle.)"
 	}
 }
+interact-ch2-lambda-drawer {
+	show dialog {
+		PLAYER "(It's full of cables. But how many years of tangle is this?)"
+	}
+}
+interact-ch2-lambda-computer {
+	show dialog {
+		PLAYER "(That looks a lot like the mainframe in the XA room.)"
+	}
+}
+interact-ch2-lambda-ration {
+	show dialog {
+		PLAYER "(TODO: consult local MGS expert for flavor text.)"
+	}
+}
+interact-ch2-lambda-poster {
+	show dialog {
+		PLAYER "(Policenauts? Must be an anime.)"
+	}
+}
+interact-ch2-lambda-books {
+	show dialog {
+		PLAYER "(Why do these books all have weird black-and-white pictures of animals on their covers? They're all about programmming.)"
+		"(Oh, this one has a cool dragon on the cover, but... no, I guess this one is about programming, too.)"
+	}
+}
+
+interact-ch2-lambda-lab {
+	copy face-player;
+	set entity Lambda current_animation to $opaque;
+	if (variable ch2-storyflag-round is < 5) {
+		show dialog {
+			Lambda "You go ahead, and I'll help from here."
+			"Though I think the Wizard will be able to offer most of the help you're likely to need."
+		}
+	} else {
+		show dialog {
+			Lambda "Hey, good to see you %PLAYER%."
+			"Don't worry about me -- I'm leaving my cave now and then."
+			"But there's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
+		}
+	}
+	turn entity "%SELF%" toward entity CRT;
+}
+
+// ch2-castle-99-welcome {
+//	// (...other bad stuff that got cut)
+//	// maybe still use this? (OK if not)
+// 	show dialog {
+// 		Lambda "Listen."
+// 		"I feel like there's something else, something important that I... well...."
+// 		PLAYER "About the software? The OS?"
+// 		Lambda "Maybe. It must have been terribly important, but I can't seem to...."
+// 		PLAYER "...?"
+// 		Lambda "Well, if I remember it, I'll call you."
+// 	}
+// }

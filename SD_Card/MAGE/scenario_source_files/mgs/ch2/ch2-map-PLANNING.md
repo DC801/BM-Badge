@@ -76,6 +76,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: Sebastian (a red lizard wizard; a "Jafar" type)
 	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
 	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
+		- [ ] Closed version of USB door (north version)
 14. `King Gibson's bedroom`
 	- [~] Cutscene: Enter the room for the first time
 	- [x] Inventory item: clock
@@ -84,6 +85,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Four poster bed
 		- [x] Grandfather clock
 		- [ ] Wardrobes or whatever idk
+		- [ ] Closed version of USB door (south version)
 
 ### Industrial Area
 
@@ -274,12 +276,13 @@ Plot points implemented:
 	- [ ] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
-	- [~] Lambda talks to you in person
+	- [x] Lambda talks to you in person
+		- [ ] Set map checkpoint: outer edge should tell you to go back to the mainframe to put in the OS
 	- [ ] (10.) `mainframeos` (room 99) (might be handled differently from other items)
 	- [ ] Cutscene: OS installation wizard
+		- [ ] Should need to go into town for an ethernet cable -- ("Oh, crud! I need to pull some dependencies... This is your last errand, I promise! Go get a spare cable from Trekkie, would you?")
 	- [ ] "You did it" cutscene
 	- [ ] Credits
-	- [ ] Should need to go into town for an ethernet cable -- ("Oh, crud! I need to pull some dependencies... This is your last errand, I promise! Go get a spare cable from Trekkie, would you?")
 
 - AFTERWARD (`ch2-storyflag-round` = 5)
 	- [ ] Post-credits sequence: Alfonso mentions one of the Big Bad's powers that most people don't know about
@@ -364,6 +367,11 @@ Entities not being used right now: (maybe use them?)
 	- [ ] Interior should be very bare; furnishings are still being worked on
 	- [ ] Max Swagger should explain his sky-high ambitions for the interior, confidently deflecting concerns that not much seems to have been done yet
 	- [ ] Should maybe have instructions or tips for the blinky art board
+
+### Lambda conversations
+
+- [ ] Ask about people
+	- [ ] Everyone in the castle should be possible, but make two versions: one before you've been in that room, and one after (Do this very last, after other cutscenes are done)
 
 ### Scripts needed for story items
 
