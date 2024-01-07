@@ -5,6 +5,7 @@ const window = {
 	omggif: require(`${__dirname}/../dependencies/omggif`),
 	natlang: require(`${__dirname}/../dependencies/natlang-parser/natlang-parse`),
 	mgs: require(`${__dirname}/../dependencies/natlang-parser/mgs_natlang_config`),
+	imageCache: {},
 };
 
 var DEFAULT_OUTPUT_PATH = `${__dirname}/../../game.dat`;
@@ -14,6 +15,16 @@ var inputPathFromArgs = process.argv[2];
 var outputPathFromArgs = process.argv[3];
 var inputPath = path.resolve(inputPathFromArgs || DEFAULT_SOURCE_PATH);
 var outputPath = path.resolve(outputPathFromArgs || DEFAULT_OUTPUT_PATH);
+
+const parsedOutputPath = path.parse(outputPath || '');
+const imageCachePath = path.resolve(path.join(parsedOutputPath.dir, 'image_cache.json'));
+
+try {
+	console.log('attempting to use imageCache at:', imageCachePath);
+	window.imageCache = require(imageCachePath);
+} catch (error) {
+	console.error('imageCache load failed. Anyway...');
+}
 
 const modules = [
 	"natlang_mgs",
@@ -88,6 +99,11 @@ if (!scenarioFile) {
 		.then(handleScenarioData(fileNameMap))
 		.then(generateIndexAndComposite)
 		.then(function (compositeArray) {
-			fs.writeFileSync(outputPath, compositeArray)
+			console.log('Starting game.dat write to:', outputPath);
+			fs.writeFileSync(outputPath, compositeArray);
+			console.log('done');
+			console.log('Starting imageCache write to:', imageCachePath);
+			fs.writeFileSync(imageCachePath, JSON.stringify(window.imageCache));
+			console.log('done');
 		})
 }
