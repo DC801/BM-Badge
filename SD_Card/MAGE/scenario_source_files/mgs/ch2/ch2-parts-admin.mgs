@@ -41,7 +41,7 @@ ch2-put_on_map-round3 {
 	set flag ch2-map-abacus to true;
 	set flag ch2-map-ramchips to true;
 }
-ch2-put_on_map-round4 { // TODO: use this!
+ch2-put_on_map-round4 {
 	set flag ch2-map-mainframeos to true;
 }
 ch2-take_off_map-round1 {
@@ -167,6 +167,7 @@ ch2-handoff-ramchips-to-seamoss {
 	set flag ch2-map-seamoss to true;
 }
 ch2-pickup-ramchips {
+	set flag ch2-map-ramchips to false;
 	set flag ch2-map-seamoss to false;
 	set flag ch2-carrying-ramchips to true;
 	register look + "ram chips" -> look-ramchips;

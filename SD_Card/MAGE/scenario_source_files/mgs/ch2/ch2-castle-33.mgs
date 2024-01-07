@@ -321,6 +321,9 @@ ch2-touch-mouse {
 		turn entity "%PLAYER%" toward entity Gregory;
 		fade in camera from black over 400ms;
 		turn on player control;
+		turn lights control off;
+		copy script ch2-hide-mouse;
+		copy script ch2-pickup-mouse;
 		show dialog {
 			Gregory "Don't forget this -- the USB dongle. Now you can use that mouse with computers that don't have bluetooth hardware built in."
 			PLAYER "This thingy plugs into a USB port? What if the mainframe doesn't have one of those?"
@@ -333,9 +336,6 @@ ch2-touch-mouse {
 			Gregory "...Oh dear."
 			"Well, you might be fine anyway. Good luck with everything."
 		}
-		turn lights control off;
-		copy script ch2-hide-mouse;
-		copy script ch2-pickup-mouse;
 		set entity Mouse on_interact to null_script;
 	}
 }

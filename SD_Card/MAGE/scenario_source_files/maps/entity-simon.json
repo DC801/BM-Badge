@@ -104,8 +104,20 @@
                  "tileid":7
                 }, 
                 {
-                 "duration":700,
+                 "duration":200,
                  "tileid":5
+                }, 
+                {
+                 "duration":200,
+                 "tileid":7
+                }, 
+                {
+                 "duration":200,
+                 "tileid":5
+                }, 
+                {
+                 "duration":200,
+                 "tileid":7
                 }],
          "class":"simon",
          "id":6

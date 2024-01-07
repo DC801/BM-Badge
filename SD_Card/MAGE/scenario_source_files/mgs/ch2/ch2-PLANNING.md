@@ -6,8 +6,6 @@
 	- e.g. `ch2-interact-asdfasdf` should all be `interact-ch2-asdfasdf` -- or vice versa (pick one!)
 - [ ] Move Tiled files to the folders they should actually be (some entity JSON files are in the maps folder, etc.)
 	- [ ] And update all file paths in files that link to them, please!
-- [ ] Map init scripts should be run *before* cutscenes, not after anymore (because COPY_SCRIPT handles gotos now, you don't need to do them after!)
-	- [ ] Remove all the bodges involving warping in
 - [ ] Turn off serial control during cutscenes
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations

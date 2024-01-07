@@ -166,9 +166,9 @@ ch2-toot-step3-start {
 ch2-toot-step3-magic {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> \"Magic words?\" Neat!"
+		"<c>YOU</>: \"Magic words?\" Neat!"
 		" "
-		"<m>LAMBDA:</> Yeah! Computers are nothing more than melted sand, rocks, and tiny bits of lightning, yet we can make them perform math and send words and images to someone else far away! It really <bold>is</> like magic, isn't it?"
+		"<m>LAMBDA</>: Yeah! Computers are nothing more than melted sand, rocks, and tiny bits of lightning, yet we can make them perform math and send words and images to someone else far away! It really <bold>is</> like magic, isn't it?"
 	}
 	goto ch2-toot-step3-halftime;
 }
@@ -176,9 +176,9 @@ ch2-toot-step3-magic {
 ch2-toot-step3-nomagic {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> \"Magic words?\" That's a bit ridiculous."
+		"<c>YOU</>: \"Magic words?\" That's a bit ridiculous."
 		" "
-		"<m>LAMBDA:</> ...Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
+		"<m>LAMBDA</>: ...Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
 	}
 	goto ch2-toot-step3-halftime;
 }
@@ -242,9 +242,9 @@ ch2-toot-step3-end {
 ch2-toot-step3-end2 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Wait, I thought <c>MAN</> was how I talk to <bold>you</>."
+		"<c>YOU</>: Wait, I thought <c>MAN</> was how I talk to <bold>you</>."
 		" "
-		"<m>LAMBDA:</> Yeah, I set it up that way because I thought it would be easy to remember. \"Man\" is short for \"manual,\" so think of <c>MAN</> as being for times you need long form help."
+		"<m>LAMBDA</>: Yeah, I set it up that way because I thought it would be easy to remember. \"Man\" is short for \"manual,\" so think of <c>MAN</> as being for times you need long form help."
 	}
 	mutate ch2-map-test = 0;
 	mutate ch2-toot-level = 4;
@@ -269,9 +269,9 @@ This text message was broken in Putty: no text would print after `...help clean 
 ch2-toot-step4a {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> How do we fix the mainframe?"
+		"<c>YOU</>: How do we fix the mainframe?"
 		" "
-		"<m>LAMBDA:</> We'll have to <c>build a new computer from scratch</>. There's items around the castle we could... um, McGuyver... to build something functional. Most of the parts are less than ideal, but we have little choice right now. I can put together a parts list."
+		"<m>LAMBDA</>: We'll have to <c>build a new computer from scratch</>. There's items around the castle we could... um, McGuyver... to build something functional. Most of the parts are less than ideal, but we have little choice right now. I can put together a parts list."
 		" "
 		# "But I don't know how to build a computer!" : ch2-toot-step4b-noob
 		# "This'll be a sinch!" : ch2-toot-step4b-pro
@@ -281,9 +281,9 @@ ch2-toot-step4a {
 ch2-toot-step4b-noob {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> But I don't know how to build a computer!"
+		"<c>YOU</>: But I don't know how to build a computer!"
 		" "
-		"<m>LAMBDA:</> Don't worry, I've done it a hundred times. I walk you through the whole thing one part at a time. It's not as hard as it sounds."
+		"<m>LAMBDA</>: Don't worry, I've done it a hundred times. I walk you through the whole thing one part at a time. It's not as hard as it sounds."
 		" "
 		# "Really?" : ch2-toot-step5a
 	}
@@ -292,9 +292,9 @@ ch2-toot-step4b-noob {
 ch2-toot-step4b-pro {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> This'll be a sinch!"
+		"<c>YOU</>: This'll be a sinch!"
 		" "
-		"<m>LAMBDA:</> Yeah! Building a new computer is never as hard as it sounds. And it looks like... yeah, I think we can scavenge just enough parts to make this really work."
+		"<m>LAMBDA</>: Yeah! Building a new computer is never as hard as it sounds. And it looks like... yeah, I think we can scavenge just enough parts to make this really work."
 		" "
 		# "Really?" : ch2-toot-step5a
 	}

@@ -73,14 +73,14 @@ look-ch2-pizza {
 on_load-ch2-bobsclub-basement {
 	if (flag ch2-cutseen-bob-party is false) {
 		teleport camera to geometry gasp-spot;
+	} else {
+		teleport entity "Guardian Bob" to geometry bob-walk2;
+		set entity "Guardian Bob" on_tick to loiter-slow;
 	}
 	copy ch2-map-init;
 	register look + bob -> look-ch2-bob;
 	if (flag ch2-cutseen-bob-party is false) {
 		copy ch2-cutscene-bob-party;
-	} else {
-		teleport entity "Guardian Bob" to geometry bob-walk2;
-		set entity "Guardian Bob" on_tick to loiter-slow;
 	}
 }
 
@@ -396,32 +396,32 @@ interact-ch2-marathonbob {
 	// capture original facing direction
 	copy interrupt-walk;
 	// normal behavior
-	mutate tempvar ? 10;
+	mutate bobtalkrand ? 10;
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
-	if (variable tempvar is 1) {
+	if (variable bobtalkrand is 1) {
 		show dialog { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" }
-	} else if (variable tempvar is 2) {
+	} else if (variable bobtalkrand is 2) {
 		show dialog { SELF "Ah! Watch it!" "You stepped on my foot!" }
-	} else if (variable tempvar is 3) {
+	} else if (variable bobtalkrand is 3) {
 		show dialog { SELF "Follow me!" "Let's start a conga line!" }
-	} else if (variable tempvar is 4) {
+	} else if (variable bobtalkrand is 4) {
 		show dialog { SELF "AAHHHH!" "I bit my tongue!" }
-	} else if (variable tempvar is 5) {
+	} else if (variable bobtalkrand is 5) {
 		show dialog { SELF "Get me outta here." "This dubstep is too much." }
-	} else if (variable tempvar is 6) {
+	} else if (variable bobtalkrand is 6) {
 		show dialog { SELF "Hey! He's shooting at us!" "That DSLR looks nice. Wonder where he got it." }
-	} else if (variable tempvar is 7) {
+	} else if (variable bobtalkrand is 7) {
 		show dialog { SELF "Perimeter secured." "No non-Bobs here!" }
-	} else if (variable tempvar is 8) {
+	} else if (variable bobtalkrand is 8) {
 		show dialog { SELF "All right!" "This is the best Bob's Club party yet!" }
-	} else if (variable tempvar is 9) {
+	} else if (variable bobtalkrand is 9) {
 		show dialog { SELF "Thank god it's you!" "Another Bob!" }
 	} else {
 		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
 	}
 	// turn back to the original facing direction
 	copy resume-walk;
-	mutate tempvar = 0; // courtesy reset
+	mutate bobtalkrand = 0; // courtesy reset
 }
 
 interact-ch2-icechest {
