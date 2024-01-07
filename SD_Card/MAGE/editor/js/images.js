@@ -123,11 +123,8 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 			scenarioIndex: scenarioData.parsed.imageColorPalettes.length,
 		};
 		scenarioData.parsed.imageColorPalettes.push(colorPalette);
-		result = file.arrayBuffer()
-			.then(function readImageArrayBuffer (arrayBuffer) {
-				return imageHandler(new Uint8Array(arrayBuffer));
-			})
-			.then(function encodeImage (result) {
+		var readImageArrayBuffer = function (uint8Array, crc) {
+			return (function encodeImage(result) {
 				var getPaletteIndexForColor = function (color) {
 					var colorIndex = colorPalette.colorArray.indexOf(color);
 					if (colorIndex === -1) {
@@ -197,7 +194,49 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 				console.log(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
 				file.serialized = data;
 				colorPalette.serialized = serializeColorPalette(colorPalette);
+				createCacheForFile(crc, file, colorPalette);
 				return file;
+			})(imageHandler(uint8Array));
+		};
+		var createCacheForFile = function (crc, file, colorPalette) {
+			window.imageCache[crc + file.name] = {
+				imageData: Array.from(new Uint8Array(file.serialized)),
+				colorPalette: {
+					name: colorPalette.name,
+					colorArray: colorPalette.colorArray,
+					serialized: Array.from(new Uint8Array(colorPalette.serialized)),
+				}
+			}
+		};
+		var getCacheForFile = function (crc, file) {
+			if (!window.imageCache) {
+				window.imageCache = {};
+			}
+			var result = window.imageCache[crc + file.name];
+			if (result) {
+				result = {
+					imageData: Uint8Array.from(result.imageData),
+					colorPalette: {
+						name: colorPalette.name,
+						colorArray: colorPalette.colorArray,
+						serialized: Uint8Array.from(result.colorPalette.serialized),
+					}
+				}
+			}
+			return result;
+		};
+		result = file.arrayBuffer()
+			.then(function ingeDataCacheInterceptor (arrayBuffer) {
+				var uint8Array = new Uint8Array(arrayBuffer);
+				var crc = crc32(uint8Array);
+				console.log(`What is the crc32 for ${file.name}? ${crc}`);
+				var cachedResult = getCacheForFile(crc, file);
+				if (cachedResult) {
+					Object.assign(colorPalette, cachedResult.colorPalette);
+					file.serialized = cachedResult.imageData;
+					return file;
+				}
+				return readImageArrayBuffer(uint8Array, crc);
 			});
 	}
 	return result;
