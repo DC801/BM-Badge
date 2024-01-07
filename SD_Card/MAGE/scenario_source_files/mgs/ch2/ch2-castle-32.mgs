@@ -184,6 +184,12 @@ interact-ch2-samson {
 	turn entity "%SELF%" west;
 }
 
+interact-ch2-coffee {
+	show dialog {
+		PLAYER "Mmmm, fresh coffee!"
+	}
+}
+
 interact-ch2-vendingmachine {
 	if (variable ch2-storyflag-round is >= 3) {
 		if (flag ch2-cutseen-ramchips is false) {
