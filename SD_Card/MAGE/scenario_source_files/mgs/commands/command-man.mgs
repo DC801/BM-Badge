@@ -53,7 +53,7 @@ command-man {
 ch2-wireless-error {
 	show serial dialog spacer;
 	show serial dialog {
-		"<bold><r>ERROR:</> <bold>lambda-talk</> timed out"
+		"<bold><r>ERROR</>: <bold>lambda-talk</> timed out"
 		" "
 		"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
 		" "
@@ -63,15 +63,20 @@ ch2-wireless-error {
 
 command-man-normal {
 	if (flag ch2-cutseen-bert-secret is true) {
-		if (flag ch2-lambda-bert-prelude is false) {
+		if (flag ch2-lambda-bert-backstory is false) {
 			goto ch2-bert-secret-lambda-intro;
-		} else if (flag ch2-lambda-bert-postlude is false) {
+		} else if (flag ch2-parts-round-2-backstory is false) {
 			goto ch2-lambda-round-2-parts1;
 		}
 	}
 	if (flag ch2-cutseen-bert-message is true) {
-		if (flag ch2-lambda-message-prelude is false) {
+		if (flag ch2-parts-round-3-backstory is false) {
 			goto ch2-bert-message-lambda-intro;
+		}
+	}
+	if (flag ch2-cutseen-last-parts-done is true) {
+		if (flag ch2-parts-round-4-backstory is false) {
+			goto ch2-lambda-round-4;
 		}
 	}
 	
@@ -89,7 +94,7 @@ command-man-normal {
 command-man-normal-convo {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> What do you want to know?"
+		"<m>LAMBDA</>: What do you want to know?"
 		" "
 	}
 	goto ch2-lambda-topic-q;
@@ -111,9 +116,9 @@ ch2-lambda-topic-q {
 ch2-lambda-ishouldgo {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> I should go."
+		"<c>YOU</>: I should go."
 		" "
-		"<m>LAMBDA:</> No problem! Just feel free to type <c>MAN</> if you want to ask me a question about anything, and <c>HELP</> if you want to know all the commands you can use."
+		"<m>LAMBDA</>: No problem! Just feel free to type <c>MAN</> if you want to ask me a question about anything, and <c>HELP</> if you want to know all the commands you can use."
 		" "
 	}
 	show serial dialog lambda-over;
@@ -124,9 +129,9 @@ ch2-lambda-ishouldgo {
 ch2-lambda-topic-installation {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> How do I install the parts once I've got them?"
+		"<c>YOU</>: How do I install the parts once I've got them?"
 		" "
-		"<m>LAMBDA:</> Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be fairly straightforward to install."
+		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be fairly straightforward to install."
 		" "
 	}
 	goto ch2-lambda-topic-q;
@@ -135,7 +140,7 @@ ch2-lambda-topic-installation {
 ch2-lambda-topic-artifact {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> You had a question about the artifact?"
+		"<m>LAMBDA</>: You had a question about the artifact?"
 		" "
 	}
 	goto ch2-lambda-topic-artifact-q;
@@ -152,9 +157,9 @@ ch2-lambda-topic-artifact-q {
 ch2-lambda-topic-artifact-words {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What can you tell me about \"magic words?\" You said they were commands?"
+		"<c>YOU</>: What can you tell me about \"magic words?\" You said they were commands?"
 		" "
-		"<m>LAMBDA:</> Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
+		"<m>LAMBDA</>: Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
 		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
 		" "
 	}
@@ -166,7 +171,7 @@ ch2-lambda-topic-artifact-words {
 ch2-lambda-topic-mainframe {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> You had a question about the mainframe?"
+		"<m>LAMBDA</>: You had a question about the mainframe?"
 		" "
 	}
 	goto ch2-lambda-topic-mainframe-q;
@@ -185,9 +190,9 @@ ch2-lambda-topic-mainframe-q {
 ch2-lambda-mainframe-broken {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Why did you break it?"
+		"<c>YOU</>: Why did you break it?"
 		" "
-		"<m>LAMBDA:</> Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
+		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
 		"\tTODO: more convo"
 		" "
 	}
@@ -197,9 +202,9 @@ ch2-lambda-mainframe-broken {
 ch2-lambda-mainframe-broken-1 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What exactly about it is broken?"
+		"<c>YOU</>: What exactly about it is broken?"
 		" "
-		"<m>LAMBDA:</> Well, sort of... everything. It's in a million pieces, to be precise."
+		"<m>LAMBDA</>: Well, sort of... everything. It's in a million pieces, to be precise."
 		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-1a
 		# "Was that necessary?" : ch2-lambda-mainframe-broken-1a
 	}
@@ -207,7 +212,7 @@ ch2-lambda-mainframe-broken-1 {
 ch2-lambda-mainframe-broken-1a {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"<m>LAMBDA</>: Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
 		"\tI don't know. I just wanted to be <bold>sure</>. I sort of regret it now."
 		" "
 	}
@@ -217,9 +222,9 @@ ch2-lambda-mainframe-broken-1a {
 ch2-lambda-mainframe-fix-1 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> How do we fix it? What do we need?"
+		"<c>YOU</>: How do we fix it? What do we need?"
 		" "
-		"<m>LAMBDA:</> We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+		"<m>LAMBDA</>: We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
 		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. I have my parts list right here. The software though... I'll, um, get back to you about that."
 		" "
 	}
@@ -231,7 +236,7 @@ ch2-lambda-mainframe-fix-1 {
 ch2-lambda-topic-castle {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> You had a question about the castle?"
+		"<m>LAMBDA</>: You had a question about the castle?"
 		" "
 	}
 	goto ch2-lambda-topic-castle-q;
@@ -249,9 +254,9 @@ ch2-lambda-topic-castle-q {
 ch2-lambda-castle-who {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Whose castle is this?"
+		"<c>YOU</>: Whose castle is this?"
 		" "
-		"<m>LAMBDA:</> I'm kind of surprised you didn't know, but it's King Gibson's castle. "
+		"<m>LAMBDA</>: I'm kind of surprised you didn't know, but it's King Gibson's castle. "
 		"\tTODO: more convo"
 		" "
 	}
@@ -260,9 +265,9 @@ ch2-lambda-castle-who {
 ch2-lambda-castle-damage {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> The earthquake caused some damage?"
+		"<c>YOU</>: The earthquake caused some damage?"
 		" "
-		"<m>LAMBDA:</> A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
+		"<m>LAMBDA</>: A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
 		"\tIf the mainframe were still working, we would've been able to... well, it would have enabled people to get around, anyway."
 		" "
 	}
@@ -274,7 +279,7 @@ ch2-lambda-castle-damage {
 ch2-lambda-topic-person-start {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> Who did you want to ask about?"
+		"<m>LAMBDA</>: Who did you want to ask about?"
 		" "
 	}
 	goto ch2-lambda-topic-person-q;
@@ -317,7 +322,7 @@ ch2-lambda-topic-person-q {
 	}
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA:</> Sorry, not sure who you mean."
+		"<m>LAMBDA</>: Sorry, not sure who you mean."
 		" "
 	}
 	goto ch2-lambda-topic-person-q;
@@ -328,9 +333,9 @@ ch2-lambda-topic-person-q {
 ch2-lambda-person-player {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Tell me about me!"
+		"<c>YOU</>: Tell me about me!"
 		" "
-		"<m>LAMBDA:</> Oh, um, I don't actually know anything about you."
+		"<m>LAMBDA</>: Oh, um, I don't actually know anything about you."
 		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose...."
 		" "
 		# "How did you know I'm wearing a hat?" : ch2-lambda-person-player-2
@@ -340,9 +345,9 @@ ch2-lambda-person-player-2 {
 	set flag ch2-cameras-explanation to true;
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> How did you know I'm wearing a hat?"
+		"<c>YOU</>: How did you know I'm wearing a hat?"
 		" "
-		"<m>LAMBDA:</> That's, um... that would be because of the... well, the cameras."
+		"<m>LAMBDA</>: That's, um... that would be because of the... well, the cameras."
 		" "
 		# "Cameras? That's creepy!" : ch2-lambda-person-player-2a
 		# "Cameras? That's sensible." : ch2-lambda-person-player-2b
@@ -351,18 +356,18 @@ ch2-lambda-person-player-2 {
 ch2-lambda-person-player-2a {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Cameras? That's creepy."
+		"<c>YOU</>: Cameras? That's creepy."
 		" "
-		"<m>LAMBDA:</> Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense back when there was a lot more traffic in and out, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to."
+		"<m>LAMBDA</>: Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense back when there was a lot more traffic in and out, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to."
 	}
 	goto ch2-lambda-topic-person-s;
 }
 ch2-lambda-person-player-2b {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Cameras? That's a sensible measure to take."
+		"<c>YOU</>: Cameras? That's a sensible measure to take."
 		" "
-		"<m>LAMBDA:</> You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
+		"<m>LAMBDA</>: You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
 		" "
 		# "It's not that invasive." : ch2-lambda-person-player-3b
 		# "Okay, maybe it's a little invasive." : ch2-lambda-person-player-3a
@@ -371,18 +376,18 @@ ch2-lambda-person-player-2b {
 ch2-lambda-person-player-3a {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Okay, maybe it's a little invasive."
+		"<c>YOU</>: Okay, maybe it's a little invasive."
 		" "
-		"<m>LAMBDA:</> Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
+		"<m>LAMBDA</>: Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
 	}
 	goto ch2-lambda-topic-person-s;
 }
 ch2-lambda-person-player-3b {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> It's not that invasive."
+		"<c>YOU</>: It's not that invasive."
 		" "
-		"<m>LAMBDA:</> It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
+		"<m>LAMBDA</>: It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -392,9 +397,9 @@ ch2-lambda-person-player-3b {
 ch2-lambda-person-lambda {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Tell me about you!"
+		"<c>YOU</>: Tell me about you!"
 		" "
-		"<m>LAMBDA:</> Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
+		"<m>LAMBDA</>: Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
 	}
 	goto ch2-lambda-person-lambda-q;
 }
@@ -413,22 +418,22 @@ ch2-lambda-person-lambda-where {
 	show serial dialog spacer;
 	if (flag ch2-seen-room-99 is false) {
 		show serial dialog {
-			"<c>YOU:</> Where are you?"
+			"<c>YOU</>: Where are you?"
 			"TODO: convo"
 		}
 	} else {
 		if (variable ch2-in-room is 99) {
 			show serial dialog {
-				"<c>YOU:</> Where are you? I mean, where are WE? There aren't any doors here."
+				"<c>YOU</>: Where are you? I mean, where are WE? There aren't any doors here."
 			}
 		} else {
 			show serial dialog {
-				"<c>YOU:</> Where are you? I mean, spatially, where is that lab of yours? There weren't any doors inside."
+				"<c>YOU</>: Where are you? I mean, spatially, where is that lab of yours? There weren't any doors inside."
 			}
 		}
 		show serial dialog {
 			" "
-			"<m>LAMBDA:</> I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
+			"<m>LAMBDA</>: I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
 		}
 	}
 	goto ch2-lambda-person-lambda-q;
@@ -436,9 +441,9 @@ ch2-lambda-person-lambda-where {
 ch2-lambda-person-lambda-time {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> How long have you been here?"
+		"<c>YOU</>: How long have you been here?"
 		" "
-		"<m>LAMBDA:</> Where I am now, or at the castle in general?"
+		"<m>LAMBDA</>: Where I am now, or at the castle in general?"
 		" "
 		# "Where you are now." : ch2-lambda-person-lambda-time-2a
 		# "The castle in general." : ch2-lambda-person-lambda-time-2b
@@ -449,7 +454,7 @@ ch2-lambda-person-lambda-time {
 ch2-lambda-person-lambda-time-2a {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Where you are now."
+		"<c>YOU</>: Where you are now."
 		"TODO: rest of the convo"
 	}
 	goto ch2-lambda-person-lambda-q;
@@ -457,7 +462,7 @@ ch2-lambda-person-lambda-time-2a {
 ch2-lambda-person-lambda-time-2b {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> The castle in general."
+		"<c>YOU</>: The castle in general."
 		"TODO: rest of the convo"
 	}
 	goto ch2-lambda-person-lambda-q;
@@ -465,7 +470,7 @@ ch2-lambda-person-lambda-time-2b {
 ch2-lambda-person-lambda-time-2c {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Both."
+		"<c>YOU</>: Both."
 		"TODO: rest of the convo"
 	}
 	goto ch2-lambda-person-lambda-q;
@@ -473,9 +478,9 @@ ch2-lambda-person-lambda-time-2c {
 ch2-lambda-person-lambda-name {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What's your real name? It's not really \"Lambda,\" is it?"
+		"<c>YOU</>: What's your real name? It's not really \"Lambda,\" is it?"
 		" "
-		"<m>LAMBDA:</> Well, no. But you see... this is a little embarrassing, but...."
+		"<m>LAMBDA</>: Well, no. But you see... this is a little embarrassing, but...."
 		"\tI... sort of... don't remember my real name."
 		" "
 		# "You're kidding, right?" : ch2-lambda-person-lambda-name-2a
@@ -485,9 +490,9 @@ ch2-lambda-person-lambda-name {
 ch2-lambda-person-lambda-name-2a {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> You're kidding, right?"
+		"<c>YOU</>: You're kidding, right?"
 		" "
-		"<m>LAMBDA:</> You have to understand... this place, our memories... it's all ones and zeroes."
+		"<m>LAMBDA</>: You have to understand... this place, our memories... it's all ones and zeroes."
 		"\tWhen everything is digital, it is <bold>absolutely</> possible for information to disappear permanently. In my case...."
 	}
 	goto ch2-lambda-person-lambda-name-2c;
@@ -495,9 +500,9 @@ ch2-lambda-person-lambda-name-2a {
 ch2-lambda-person-lambda-name-2b {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> How could you forget your own name? What happened?"
+		"<c>YOU</>: How could you forget your own name? What happened?"
 		" "
-		"<m>LAMBDA:</> Our world is entirely digital. All ones and zeroes. Even you and me. So what happened was...."
+		"<m>LAMBDA</>: Our world is entirely digital. All ones and zeroes. Even you and me. So what happened was...."
 	}
 	goto ch2-lambda-person-lambda-name-2c;
 }
@@ -511,9 +516,9 @@ ch2-lambda-person-lambda-name-2c {
 ch2-lambda-person-lambda-name-3 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What? But why?"
+		"<c>YOU</>: What? But why?"
 		" "
-		"<m>LAMBDA:</> I did it to protect myself from the <r>Big Bad</>. He couldn't target me with hacks without knowing my name, so I made it impossible to learn my name, or even know my name."
+		"<m>LAMBDA</>: I did it to protect myself from the <r>Big Bad</>. He couldn't target me with hacks without knowing my name, so I made it impossible to learn my name, or even know my name."
 		"\tI severed more than I intended, but...."
 	}
 	goto ch2-lambda-person-lambda-name-followup;
@@ -533,9 +538,9 @@ ch2-lambda-person-lambda-name-followup {
 ch2-lambda-person-lambda-name-followup-severed {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What else was severed?"
+		"<c>YOU</>: What else was severed?"
 		" "
-		"<m>LAMBDA:</> There are gaps in my mind. I... I think they might have appeared when I deleted my name. Hard to tell."
+		"<m>LAMBDA</>: There are gaps in my mind. I... I think they might have appeared when I deleted my name. Hard to tell."
 		"\tIt's a lot harder to remember people, for a start. My skills seem to be intact, but I feel... disconnected. It's like everything I <bold>can</> remember is stripped of context."
 	}
 	goto ch2-lambda-person-lambda-name-followup;
@@ -543,9 +548,9 @@ ch2-lambda-person-lambda-name-followup-severed {
 ch2-lambda-person-lambda-name-followup-bigbad {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Is that why the <r>Big Bad</> doesn't have a name? Did he destroy his name, too, so that other hackers can't target him for hacks?"
+		"<c>YOU</>: Is that why the <r>Big Bad</> doesn't have a name? Did he destroy his name, too, so that other hackers can't target him for hacks?"
 		" "
-		"<m>LAMBDA:</> Probably. Good insight."
+		"<m>LAMBDA</>: Probably. Good insight."
 		"\tIn his case, though, I think he likes the mystique, too."
 	}
 	set flag hackbook-backstory to true // otherwise, the mage will realize he doesn't know the Big Bad's name when the "Town History" book is read, despite realizing it here with Lambda
@@ -554,9 +559,9 @@ ch2-lambda-person-lambda-name-followup-bigbad {
 ch2-lambda-person-lambda-name-followup-nickname {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Does a nickname not count as a name? I've been calling you \"Lambda,\" after all. Isn't that a name?"
+		"<c>YOU</>: Does a nickname not count as a name? I've been calling you \"Lambda,\" after all. Isn't that a name?"
 		" "
-		"<m>LAMBDA:</> No, by \"name\" I don't mean the label on my messages, or what someone calls me."
+		"<m>LAMBDA</>: No, by \"name\" I don't mean the label on my messages, or what someone calls me."
 		"\tI destroyed my <m>name</>, which is to say I damaged the world's mechanism of referring to me at all. If someone else's memories link to me, that link has been severed, because my name is now a broken reference. I am an unreachable entity."
 		"\tI've since learned that many links go in two directions...."
 	}
@@ -566,9 +571,9 @@ ch2-lambda-person-lambda-name-followup-nickname {
 ch2-lambda-person-lambda-name-followup-lambda {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Why \"Lambda\" though?"
+		"<c>YOU</>: Why \"Lambda\" though?"
 		" "
-		"<m>LAMBDA:</> I thought of it on the spot. It's because I'm a <bold>functionary with no name</>, you see! You see?"
+		"<m>LAMBDA</>: I thought of it on the spot. It's because I'm a <bold>functionary with no name</>, you see! You see?"
 		"\tNo? Oh, um... yeah, never mind."
 	}
 	goto ch2-lambda-person-lambda-name-followup;
@@ -579,9 +584,9 @@ ch2-lambda-person-lambda-name-followup-lambda {
 ch2-lambda-person-big-bad {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Tell me about the <r>Big Bad</>."
+		"<c>YOU</>: Tell me about the <r>Big Bad</>."
 		" "
-		"<m>LAMBDA:</> Oh, um, that's complicated."
+		"<m>LAMBDA</>: Oh, um, that's complicated."
 		"TODO: rest of the convo"
 	}
 	goto ch2-lambda-topic-person-s;
@@ -592,9 +597,9 @@ ch2-lambda-person-big-bad {
 ch2-lambda-person-bob {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Tell me about Bob."
+		"<c>YOU</>: Tell me about Bob."
 		" "
-		"<m>LAMBDA:</> Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
 		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
 	}
 	goto ch2-lambda-topic-person-s;
@@ -605,18 +610,18 @@ ch2-lambda-person-bob {
 ch2-lambda-person-wizard {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What's with this \"Wizard\" guy?"
+		"<c>YOU</>: What's with this \"Wizard\" guy?"
 		" "
-		"<m>LAMBDA:</> Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
+		"<m>LAMBDA</>: Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
 	}
 	goto ch2-lambda-person-wizard-continued;
 }
 ch2-lambda-person-raccoon {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What's with the raccoon?"
+		"<c>YOU</>: What's with the raccoon?"
 		" "
-		"<m>LAMBDA:</> The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
+		"<m>LAMBDA</>: The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
 	}
 	goto ch2-lambda-person-wizard-continued;
 }
@@ -631,14 +636,14 @@ ch2-lambda-person-wizard-continued {
 ch2-lambda-person-bert {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> About Bert...."
+		"<c>YOU</>: About Bert...."
 	}
 	if (flag ch2-cutseen-bert-secret is true) {
 		goto ch2-lambda-bert-q;
 	} else {
 		show serial dialog {
 			" "
-			"<m>LAMBDA:</> Bert? I don't know any Berts."
+			"<m>LAMBDA</>: Bert? I don't know any Berts."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -659,27 +664,27 @@ ch2-lambda-bert-q {
 ch2-lambda-bert-like {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What is Bert like?"
+		"<c>YOU</>: What is Bert like?"
 		" "
-		"<m>LAMBDA:</> Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
+		"<m>LAMBDA</>: Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
 		"\tBack when... hmmm."
 		" "
-		"<c>YOU:</> What is it?"
+		"<c>YOU</>: What is it?"
 		" "
-		"<m>LAMBDA:</> It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
+		"<m>LAMBDA</>: It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
 	}
 	goto ch2-lambda-bert-q;
 }
 ch2-lambda-bert-mentioned {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Bert's never mentioned you."
+		"<c>YOU</>: Bert's never mentioned you."
 		" "
-		"<m>LAMBDA:</> Well... he might not know I'm here. In the castle."
+		"<m>LAMBDA</>: Well... he might not know I'm here. In the castle."
 		" "
-		"<c>YOU:</> But the village elders knew XA was here. In the castle."
+		"<c>YOU</>: But the village elders knew XA was here. In the castle."
 		" "
-		"<m>LAMBDA:</> Yes, well, that's because...."
+		"<m>LAMBDA</>: Yes, well, that's because...."
 		"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
 	}
 	goto ch2-lambda-bert-q;
@@ -687,13 +692,13 @@ ch2-lambda-bert-mentioned {
 ch2-lambda-bert-door {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> What did Bert mean by 'back door?'"
+		"<c>YOU</>: What did Bert mean by 'back door?'"
 		" "
-		"<m>LAMBDA:</> A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
+		"<m>LAMBDA</>: A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
 		" "
-		"<c>YOU:</> But Bert's not a hacker. Or can <bold>anyone</> use a backdoor?"
+		"<c>YOU</>: But Bert's not a hacker. Or can <bold>anyone</> use a backdoor?"
 		" "
-		"<m>LAMBDA:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required."
+		"<m>LAMBDA</>: I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required."
 	}
 	goto ch2-lambda-bert-q;
 }
@@ -701,16 +706,16 @@ ch2-lambda-bert-door {
 ch2-lambda-bert-message {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU:</> Do you know if Bert left a message yet?"
+		"<c>YOU</>: Do you know if Bert left a message yet?"
 		" "
 	}
 	if (flag interrupt is true) {
 		show serial dialog {
-			"<m>LAMBDA:</> Haha! He's only been gone a moment! Be patient."
+			"<m>LAMBDA</>: Haha! He's only been gone a moment! Be patient."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA:</> You might want to double check with the Wiz, but I haven't heard anything so far, sorry."
+			"<m>LAMBDA</>: You might want to double check with the Wiz, but I haven't heard anything so far, sorry."
 		}
 	}
 	goto ch2-lambda-bert-q;

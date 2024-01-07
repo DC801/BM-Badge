@@ -130,12 +130,13 @@ ch2-cutscene-castle99 {
 	play entity Lambda animation $toOpaque once;
 	wait 250ms;
 	show dialog {
-		Lambda "Being disconnected from everything, like this... it's hard. I'm surprised how little time it took for things to become hard, to be honest, being here alone."
+		Lambda "Being disconnected from everything, like this... it's hard. I'm surprised how little time it took for things to become hard."
 	}
 	turn entity Lambda north;
 	show dialog {
-		Lambda "I did what I thought I had to do, though I don't know if it actually helped anything in the end, but...."
-		"Watching you, meeting everyone, doing things with everyone... BUILDING things with everyone...."
+		Lambda "I did what I thought had to be done, but...."
+		"Watching you meeting everyone, doing things with everyone...."
+		"BUILDING things with everyone...."
 	}
 	walk entity Lambda to geometry mid-spot over 300ms;
 	set entity Lambda current_animation to $opaque;
@@ -145,7 +146,7 @@ ch2-cutscene-castle99 {
 	turn entity Lambda west;
 	set entity Lambda on_tick to ch2-lambda-lower;
 	show dialog {
-		Lambda "How could I forget what how fun it was to try to build wacky projects with my friends? Learning, teaching... getting to know someone better...."
+		Lambda "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
 	}
 	show dialog {
 		Lambda "Even the individual people! I'd forgotten how funny -- and so insightful -- Sea Moss is. I forgot how (TODO more people here pls)"
@@ -154,7 +155,7 @@ ch2-cutscene-castle99 {
 	set entity Lambda on_tick to ch2-lambda-raise;
 	show dialog {
 		Lambda "All these problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
-		"Most of those problems wouldn't have happened. Hell, maybe none of them would have happened."
+		"Most of those problems wouldn't have happened. Hell, maybe NONE of them would have happened."
 	}
 	set entity Lambda on_tick to ch2-lambda-walkup;
 	show dialog {
@@ -167,7 +168,7 @@ ch2-cutscene-castle99 {
 	walk entity Lambda to geometry lambda-walk-line2 over 500ms;
 	set entity Lambda on_tick to ch2-lambda-shving_on;
 	show dialog {
-		Lambda "It's better to be connected to people. I can see that now. However dangerous things might become, it's better to face those dangers together."
+		Lambda "It's better to be connected to people. However dangerous things might become, it's better to face those dangers together."
 		"Don't you think?"
 		> "Yeah, better to face danger together." : ch2-cutscene-castle99-dangeryes
 		> "I don't know...." : ch2-cutscene-castle99-dangeridk
@@ -181,7 +182,7 @@ ch2-cutscene-castle99-dangeryes {
 	}
 	set entity Lambda on_tick to ch2-lambda-shving_off;
 	show dialog {
-		Lambda "So, um, to that end...."
+		Lambda "So, um, to that end -- here, take this."
 	}
 	goto ch2-cutscene-castle99-continue;
 }
@@ -191,8 +192,8 @@ ch2-cutscene-castle99-dangeridk {
 	}
 	set entity Lambda on_tick to ch2-lambda-shving_off;
 	show dialog {
-		Lambda "Yeah, I guess in real life, things are pretty complicated, aren't they?"
-		"So, um, anyway...."
+		Lambda "Yeah, I guess things are pretty complicated, aren't they?"
+		"So, um, anyway -- here, take this."
 	}
 	goto ch2-cutscene-castle99-continue;
 }
@@ -231,8 +232,8 @@ ch2-cutscene-castle99-continue {
 	set entity Lambda relative_direction to 0;
 	wait 100ms;
 	show dialog {
-		Lambda "Here, put that in the mainframe's optical drive, and we can get the new OS installed."
-		"Head on back to the XA room, and I'll walk you through it from here."
+		Lambda "Put that in the mainframe's optical drive, and we can get the new OS installed."
+		"Head on back to the XA room. I'll walk you through it from here."
 		PLAYER "You're not going to come with me?"
 	}
 	wait 150ms;
@@ -240,13 +241,13 @@ ch2-cutscene-castle99-continue {
 	set entity Lambda current_animation to $lowered;
 	wait 100ms;
 	show dialog {
-		Lambda "No, I... I'll stay here for now."
+		Lambda "No, I'm staying here."
 	}
 	show dialog {
 		Lambda "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
 	}
 	show dialog {
-		Lambda "I'll just need some time first. I'm sorry."
+		Lambda "I'll just need a little time first. Sorry."
 	}
 	walk entity Lambda to geometry computer-spot over 700ms;
 	set entity Lambda current_animation to $opaque;
@@ -258,7 +259,7 @@ ch2-cutscene-castle99-continue {
 	wait 300ms;
 	turn entity Lambda west;
 	show dialog {
-		Lambda "You go ahead, and I'll help like before."
+		Lambda "Go ahead, and I'll help like before."
 	}
 	turn entity Lambda north;
 	set entity Lambda current_animation to $opaque;
@@ -282,7 +283,7 @@ on_exit-ch2-castle-99 { // sanitize ch2 room state
 
 interact-ch2-xc {
 	show dialog {
-		PLAYER "(Wow, it looks just like the robot in the first room of the castle.)"
+		PLAYER "(Wow, it looks just like the spider robot in the first room of the castle.)"
 	}
 }
 interact-ch2-lambda-drawer {
@@ -297,7 +298,12 @@ interact-ch2-lambda-computer {
 }
 interact-ch2-lambda-ration {
 	show dialog {
-		PLAYER "(TODO: consult local MGS expert for flavor text.)"
+		PLAYER "(It's a meal, ready to eat.)"
+	}
+}
+interact-ch2-lambda-box {
+	show dialog {
+		PLAYER "(It's just a box....)"
 	}
 }
 interact-ch2-lambda-poster {
@@ -307,7 +313,7 @@ interact-ch2-lambda-poster {
 }
 interact-ch2-lambda-books {
 	show dialog {
-		PLAYER "(Why do these books all have weird black-and-white pictures of animals on their covers? They're all about programmming.)"
+		PLAYER "(Why do these books all have weird black-and-white pictures of animals on their covers when they're about programmming?)"
 		"(Oh, this one has a cool dragon on the cover, but... no, I guess this one is about programming, too.)"
 	}
 }
@@ -317,14 +323,14 @@ interact-ch2-lambda-lab {
 	set entity Lambda current_animation to $opaque;
 	if (variable ch2-storyflag-round is < 5) {
 		show dialog {
-			Lambda "You go ahead, and I'll help from here."
+			Lambda "Go ahead, and I'll help from here."
 			"Though I think the Wizard will be able to offer most of the help you're likely to need."
 		}
 	} else {
 		show dialog {
 			Lambda "Hey, good to see you %PLAYER%."
 			"Don't worry about me -- I'm leaving my cave now and then."
-			"But there's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
+			"There's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
 		}
 	}
 	turn entity "%SELF%" toward entity CRT;
