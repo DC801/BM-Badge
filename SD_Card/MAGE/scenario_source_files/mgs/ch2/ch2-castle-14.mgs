@@ -113,7 +113,7 @@ on_load-ch2-castle-14 {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-14 {
-	goto null_script;
+	// nothing yet
 }
 
 /* ---------- EXIT STUFF ---------- */
