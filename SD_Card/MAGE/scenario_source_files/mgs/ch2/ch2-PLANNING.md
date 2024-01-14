@@ -1,5 +1,9 @@
 # Chapter 2 planning
 
+## Docs todos
+
+- [ ] Turns out what makes a tile rotate weird when turning NSEW is whether the tile (whether it's a "character entity" or not) has an animation on it; not whether the tile has a Class/Type field value or whether it's listed in entity_types
+
 ## Generic work needing done
 
 - [ ] Rename scripts so they're consistent

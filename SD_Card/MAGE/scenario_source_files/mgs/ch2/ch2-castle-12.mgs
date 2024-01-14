@@ -1,4 +1,10 @@
 include!("header.mgs")
+settings for dialog {
+	label Concierge {
+		entity Concierge
+		portrait concierge
+	}
+}
 
 /* ---------- LOOK SCRIPTS ---------- */
 
@@ -129,7 +135,7 @@ interact-ch2-concierge {
 		if (flag interrupt is true) {
 			show dialog {
 				PLAYER "Welcome?"
-				SELF "Yes, welcome to King Gibson's castle. I do hope you enjoy your visit!"
+				Concierge "Yes, welcome to King Gibson's castle. I do hope you enjoy your visit!"
 			}
 		} else {
 			show dialog {
@@ -138,7 +144,7 @@ interact-ch2-concierge {
 		}
 		show dialog {
 			PLAYER "Um, thanks. Listen, I know things are messed up right now...."
-			SELF "Fear not! I am confident everyone is working to clear the doors and restore the intercom system."
+			Concierge "Fear not! I am confident everyone is working to clear the doors and restore the intercom system."
 			"You, at least, seem to have overcome the door problem on your own, and should be applauded for your resourcefulness."
 			"You have my full support -- though alas, the best I can do to help is keep this phonograph turning."
 			"You'll have moral support music, if nothing else!"
@@ -149,14 +155,14 @@ interact-ch2-concierge {
 		|| flag ch2-needle-permission is true
 	) {
 		show dialog {
-			SELF "In trying times, we may find ourselves with limited resources or a constrictive environment."
+			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment."
 			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
 			"I'll be cheering you on from here. Good luck!"
 		}
 	} else {
 		show dialog {
 			PLAYER "(TODO: I want needle)"
-			SELF "(TODO: well, you've convinced me)"
+			Concierge "(TODO: well, you've convinced me)"
 		}
 		set flag interrupt2 to true;
 		set flag ch2-needle-permission to true;

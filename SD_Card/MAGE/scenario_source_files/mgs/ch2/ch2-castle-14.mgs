@@ -68,34 +68,34 @@ on_load-ch2-castle-14 {
 		wait 400ms;
 		set entity "King Gibson" current_animation to 2;
 		show dialog {
-			KING "?"
+			KING emote 1 "?"
 		}
 		set entity "King Gibson" on_tick to ch2-gibson-scramble;
 		set entity "King Gibson" current_animation to 3;
 		show dialog {
-			KING "!!!"
+			KING emote 2 "!!!"
 			"Intruder! Someone's in my bedroom!"
 		}
 		turn entity "%PLAYER%" toward entity "King Gibson";
 		show dialog {
-			KING "Help! Guards!"
+			KING emote 2 "Help! Guards!"
 		}
 		set entity "King Gibson" on_tick to null_script;
 		set entity "King Gibson" current_animation to 2;
 		wait 400ms;
 		show dialog {
-			KING "...But no, of course. I'm alone."
+			KING emote 1 "...But no, of course. I'm alone."
 		}
 		set entity "King Gibson" current_animation to 0;
 		wait 1100ms;
 		turn entity "King Gibson" west;
 		wait 350ms;
 		show dialog {
-			KING "They locked me in here to rot. Why would they come bother with me now?"
+			KING emote 3 "They locked me in here to rot. Why would they come bother with me now?"
 		}
 		turn entity "King Gibson" north;
 		show dialog {
-			KING "Well, assassin, do your worst. Get it over with."
+			KING emote 3 "Well, assassin, do your worst. Get it over with."
 			PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, your majesty! I'm not an assassin!"
 		}
 		turn entity "King Gibson" south;
