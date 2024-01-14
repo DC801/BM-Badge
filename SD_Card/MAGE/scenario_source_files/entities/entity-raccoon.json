@@ -1,11 +1,11 @@
 { "columns":1,
  "image":"entity-raccoon.png",
- "imageheight":544,
+ "imageheight":608,
  "imagewidth":32,
  "margin":0,
  "name":"entity-raccoon",
  "spacing":0,
- "tilecount":17,
+ "tilecount":19,
  "tiledversion":"1.9.2",
  "tileheight":32,
  "tiles":[
@@ -242,6 +242,32 @@
         {
          "class":"raccoon",
          "id":16
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":17
+                }, 
+                {
+                 "duration":150,
+                 "tileid":17
+                }],
+         "class":"raccoon",
+         "id":17
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":18
+                }, 
+                {
+                 "duration":150,
+                 "tileid":18
+                }],
+         "class":"raccoon",
+         "id":18
         }],
  "tilewidth":32,
  "type":"tileset",

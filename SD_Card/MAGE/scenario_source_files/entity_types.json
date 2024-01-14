@@ -2969,19 +2969,19 @@
 			],
 			"special": [
 				{
-					"tileid": 0,
+					"tileid": 18,
 					"flip_x": false
+				},
+				{
+					"tileid": 17,
+					"flip_x": true
 				},
 				{
 					"tileid": 0,
 					"flip_x": false
 				},
 				{
-					"tileid": 0,
-					"flip_x": false
-				},
-				{
-					"tileid": 0,
+					"tileid": 17,
 					"flip_x": false
 				}
 			],

@@ -443,5 +443,35 @@
 				"flip_x": false
 			}
 		}
+	},
+	"concierge": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 15,
+				"flip_x": false
+			}
+		}
+	},
+	"gibson": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"idle": {
+				"tileid": 24,
+				"flip_x": true
+			},
+			"surprised": {
+				"tileid": 25,
+				"flip_x": true
+			},
+			"big_surprised": {
+				"tileid": 26,
+				"flip_x": true
+			},
+			"embarrassed": {
+				"tileid": 27,
+				"flip_x": true
+			}
+		}
 	}
 }
