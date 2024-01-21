@@ -210,18 +210,6 @@
                  "width":32,
                  "x":127,
                  "y":273
-                }, 
-                {
-                 "class":"",
-                 "gid":937,
-                 "height":32,
-                 "id":40,
-                 "name":"Clara",
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":235,
-                 "y":165
                 }],
          "opacity":1,
          "type":"objectgroup",

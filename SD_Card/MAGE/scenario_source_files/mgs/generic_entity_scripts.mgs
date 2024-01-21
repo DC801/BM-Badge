@@ -184,14 +184,44 @@ restore_self_direction {
 }
 
 interrupt-walk {
-	copy entity "%SELF%" current_animation into variable tempvar2;
+	copy entity "%SELF%" current_animation into variable captured_animation;
 	set entity "%SELF%" current_animation to 0;
 	pause entity "%SELF%" on_tick;
 	copy capture_self_direction;
 	copy face-player;
 }
 resume-walk {
-	copy entity "%SELF%" current_animation from variable tempvar2;
+	copy entity "%SELF%" current_animation from variable captured_animation;
 	unpause entity "%SELF%" on_tick;
 	copy restore_self_direction;
+}
+
+capture_player_state {
+	// TODO: when we have functions, genericize this!
+	copy entity "%PLAYER%" x into variable player-save-x;
+	copy entity "%PLAYER%" y into variable player-save-y;
+	mutate player-save-room = ch2-in-room;
+	if (entity "%PLAYER%" direction is north) {
+		mutate player-save-dir = 0;
+	} else if (entity "%PLAYER%" direction is east) {
+		mutate player-save-dir = 1;
+	} else if (entity "%PLAYER%" direction is south) {
+		mutate player-save-dir = 2;
+	} else if (entity "%PLAYER%" direction is west) {
+		mutate player-save-dir = 3;
+	}
+}
+
+restore_player_state {
+	copy variable player-save-x into entity "%PLAYER%" x;
+	copy variable player-save-y into entity "%PLAYER%" y;
+	if (variable player-save-dir is 0) {
+		turn entity "%PLAYER%" north;
+	} else if (variable player-save-dir is 1) {
+		turn entity "%PLAYER%" east;
+	} else if (variable player-save-dir is 2) {
+		turn entity "%PLAYER%" south;
+	} else if (variable player-save-dir is 3) {
+		turn entity "%PLAYER%" west;
+	}
 }

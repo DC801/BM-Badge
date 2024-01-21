@@ -94,6 +94,7 @@ debug {
 	set flag ch2-has-artifact to true;
 	turn hex control on;
 	mutate current-chapter = 2;
+	set flag ch2-birthday-cutscene to true;
 	load map ch2-castle-1;
 }
 
@@ -423,16 +424,18 @@ menu-chapter_select-1 {
 }
 
 menu-chapter_select-2-check {
-	if (flag wonthedemo is false) {
+	if (flag wonthedemo is true || flag warned-incomplete-ch1 is true) {
+		goto menu-chapter_select-2;
+	} else {
+		set flag warned-incomplete-ch1 to true;
 		show dialog {
 			name " "
 			border_tileset menu
 			"Chapter 1 is unfinished!"
 			> "Play chapter 2 anyway" : menu-chapter_select-2
 			> "Never mind" : menu-chapter_select-q
-		}	
+		}
 	}
-	goto menu-chapter_select-2;
 }
 
 menu-chapter_select-2 {
@@ -440,7 +443,12 @@ menu-chapter_select-2 {
 	if (flag ch2-birthday-cutscene is false) {
 		load map ch2-magehouse-birthday;
 	}
-	load map main2;
+	set warp state to raw_game_load-ch2;
+	if (variable player-save-room is 1) {
+		load map ch2-castle-1;
+	} else {
+		load map main2;
+	}
 }
 
 /* ---------- SAVE THE GAME ---------- */
@@ -457,6 +465,7 @@ menu-save_game {
 	}
 }
 menu-save_game-yes {
+	copy capture_player_state;
 	save slot;
 	set entity "%SELF%" on_interact to menu-save_game;
 }

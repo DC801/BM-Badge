@@ -28,6 +28,10 @@ If you don't want to make art from scratch, a good source of premade tilesets is
 
 Tiled, which can be found at [mapeditor.org](https://www.mapeditor.org), is a free, cross-platform map and [tileset](tilesets) editor that can export and edit JSON files. This how the bulk of [maps](maps), [tilesets](tilesets), [entity](entities) [animations](animations), [tile collisions](tilesets#tile-collisions), and [geometry](vector_objects) for [choreography](techniques/cutscenes) are defined.
 
+::: warning Use Tiled 1.9.2!
+Newer versions of Tiled use a slightly different file structure that is not compatible with the current [encoder](encoder)! Please make sure to download version 1.9.2 specifically. Get it from their [Github releases](https://github.com/mapeditor/tiled/releases/tag/v1.9.2).
+:::
+
 ## Git
 
 ~~While strictly optional, it's always nice to version control your projects,~~ If you are not using Git to version control your projects, you bring dishonor and suffering on your house, especially if working with multiple people. We recommend [Sublime Merge](https://www.sublimemerge.com/) if you're just getting started with Git, particularly if you're using VSCode, as VSCode's version control interface is fairly bare bones. If you're already using one of [JetBrains' IDEs](https://www.jetbrains.com/), you can use their excellent built-in Git tools.
