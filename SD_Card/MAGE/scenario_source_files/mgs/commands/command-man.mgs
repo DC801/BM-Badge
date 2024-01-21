@@ -274,7 +274,7 @@ ch2-lambda-castle-damage {
 	goto ch2-lambda-topic-castle-q;
 }
 
-/* ---------- PEOPLE ---------- */
+/* ---------- PEOPLE (CONVO START) ---------- */
 
 ch2-lambda-topic-person-start {
 	show serial dialog spacer;
@@ -295,8 +295,49 @@ ch2-lambda-topic-person-s {
 ch2-lambda-topic-person-q {
 	show serial dialog {
 		"(Type a name, or type <c>CANCEL</> to go back)"
-		
-		_ "BIG BAD" : ch2-lambda-person-big-bad
+
+		// people (brief)
+
+		// central wing
+		_ "WIZARD" : ch2-lambda-person-wizard
+		_ "RACCOON" : ch2-lambda-person-raccoon
+		_ "KURO" : ch2-lambda-person-kuro
+		_ "CONCIERGE" : ch2-lambda-person-concierge
+		_ "THE CONCIERGE" : ch2-lambda-person-concierge
+		_ "TEMPLETON" : ch2-lambda-person-templeton
+		_ "SEBSTIAN" : ch2-lambda-person-sebastian
+		_ "THE GOLDFISH" : ch2-lambda-person-goldfish
+		_ "GOLDFISH" : ch2-lambda-person-goldfish
+		_ "KING" : ch2-lambda-person-kinggibson
+		_ "THE KING" : ch2-lambda-person-kinggibson
+		_ "GIBSON" : ch2-lambda-person-kinggibson
+		_ "KING GIBSON" : ch2-lambda-person-kinggibson
+		// west wing
+		_ "ALVIN" : ch2-lambda-person-alvin
+		_ "SIMON" : ch2-lambda-person-simon
+		_ "THEODORE" : ch2-lambda-person-theodore
+		_ "BOB MOSS" : ch2-lambda-person-bobmoss
+		_ "GLORIA" : ch2-lambda-person-gloria
+		_ "SAMSON" : ch2-lambda-person-samson
+		_ "GREGORY" : ch2-lambda-person-gregory
+		_ "CLARA" : ch2-lambda-person-clara
+		// east wing
+		_ "JEANPAUL" : ch2-lambda-person-jeanpaul
+		_ "JEAN PAUL" : ch2-lambda-person-jeanpaul
+		_ "JEAN-PAUL" : ch2-lambda-person-jeanpaul
+		_ "FRANKIE" : ch2-lambda-person-frankie
+		_ "SCUZZY" : ch2-lambda-person-scuzzy
+		_ "C K WATT" : ch2-lambda-person-ckwatt
+		_ "CKWATT" : ch2-lambda-person-ckwatt
+		_ "ROCCO" : ch2-lambda-person-rocco
+		_ "TRACY" : ch2-lambda-person-tracy
+		_ "HELVETICA" : ch2-lambda-person-helvetica
+		// general
+		_ "BOB" : ch2-lambda-person-bob
+		_ "MARATHON BOB" : ch2-lambda-person-marathonbob
+		_ "GUARDIAN BOB" : ch2-lambda-person-guardianbob
+
+		// people (complicated)
 
 		_ "ME" : ch2-lambda-person-player
 		_ "BLACK MAGE" : ch2-lambda-person-player
@@ -305,28 +346,442 @@ ch2-lambda-topic-person-q {
 		_ "YOU" : ch2-lambda-person-lambda
 		_ "LAMBDA" : ch2-lambda-person-lambda
 
-		_ "WIZARD" : ch2-lambda-person-wizard
-		_ "RACCOON" : ch2-lambda-person-raccoon
-		_ "RACOON" : ch2-lambda-person-raccoon
+		_ "BIG BAD" : ch2-lambda-person-big-bad
 
 		_ "BERT" : ch2-lambda-person-bert
 		
-		_ "BOB" : ch2-lambda-person-bob
+		// admin
 
 		_ "CANCEL" : command-man-normal-convo
 		_ "Q" : command-man-normal-convo
 		_ "QUIT" : command-man-normal-convo
 		_ "STOP" : command-man-normal-convo
-		_ "NEVER MIND" : command-man-normal-convo
-		_ "(Go back)" : command-man-normal-convo
 	}
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA</>: Sorry, not sure who you mean."
+		"<m>LAMBDA</>: Sorry, not sure who you mean. You might have to be more specific."
+		// "\t...Or perhaps even less specific." // Use this in case we find there's a limit for the quantity of free response options!
 		" "
 	}
 	goto ch2-lambda-topic-person-q;
 }
+
+/* ---------- PEOPLE (BRIEF) ---------- */
+
+// CENTRAL WING
+
+// Wizard
+ch2-lambda-person-wizard {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What's with this \"Wizard\" guy?"
+		" "
+		"<m>LAMBDA</>: Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued;
+}
+ch2-lambda-person-raccoon {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What's with the raccoon?"
+		" "
+		"<m>LAMBDA</>: The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued;
+}
+ch2-lambda-person-wizard-continued {
+	show serial dialog {
+		"\tYou should have seen him at King Gibson's last Halloween party! He'd found this little blue wizard's hat and cape...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Kuro
+ch2-lambda-person-kuro {
+	show serial dialog spacer;
+	if (flag ch2-seen-room-11 is false) {
+		show serial dialog {
+			"<c>YOU</>: Tell me about Kuro."
+			" "
+			"<m>LAMBDA</>: Sorry, I don't know anyone named Kuro."
+		}
+	} else {
+		show serial dialog {
+			"<c>YOU</>: Tell me about Kuro -- I mean, the little black bird in the front hallway."
+			" "
+			"<m>LAMBDA</>: Sorry, I don't know any little black birds. Kuro must be a visitor. If he's in the front hallway, then he didn't get very far into the castle and must be trapped, separated from whoever he must have wanted to visit. Poor thing."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Concierge
+ch2-lambda-person-concierge {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the castle concierge."
+		" "
+	}
+	if (flag ch2-seen-room-12 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: The concierge? Have you been so deep into the castle hallway yet? But oh, you've probably guessed there's a concierge, right? It's true that this is <bold>that</> kind of castle. Overly formal, I mean."
+			"\tI don't remember too much about that guy, but... oh, I guess I don't remember him at all. We must never have crossed paths much."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Oh yeah, that guy! He looks fierce but he's actually really friendly. It's a side effect of his condition -- permanent werewolfism."
+			"\tHe's a music lover, if I'm remembering right. He's a little compulsive about it, always wanting something playing...."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Templeton
+ch2-lambda-person-templeton {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Templeton."
+		" "
+	}
+	if (flag ch2-seen-room-13 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Sebastian
+ch2-lambda-person-sebastian {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Sebastian."
+		" "
+	}
+	if (flag ch2-seen-room-13 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Goldfish
+ch2-lambda-person-goldfish {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the goldfish." // TODO more specific variants
+		" "
+	}
+	if (flag ch2-seen-room-13 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// King Gibson
+ch2-lambda-person-kinggibson {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about King Gibson."
+		" "
+		"<m>LAMBDA</>: (TODO)"
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// WEST WING
+
+// Alvin, Theodore, Simon
+ch2-lambda-person-alvin {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Alvin."
+		" "
+		"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		"\tBut Alvin -- by reputation, she's the quiet, mysterious one of the group -- that's all I know."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-theodore {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Theodore."
+		" "
+		"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		"\tBut Theodore -- I've never met them personally. I've heard they're the straightforward, stoic type, though."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-simon {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Simon."
+		" "
+		"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		"\tBut Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really want to meet him, you know?"
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Bob Moss
+ch2-lambda-person-bobmoss {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Bob Moss."
+		" "
+	}
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Bob Moss? Bob Moss... I-I think I...."
+			"\tI think I used to be good friends with him, but... what did we do together? Why can't I...."
+			"\tI seem to remember we... no, it's gone. I'm sorry."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Yes! Bob Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry, like (TODO: more facts about CMOS microprocessors on a tight technical level)."
+			"\tAnd he makes the best crepes, too, believe it or not!"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Gloria
+ch2-lambda-person-gloria {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Gloria."
+		" "
+	}
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Gloria? I think I recognize the name, but I can't picture a face. Maybe if I could just see who it was...."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Oh, Gloria, the golden beetle. She's, um, a little prone to panic, but honestly she's very good at her job. She manages the castle payroll... that is, when she's not trapped in the employee break room with her toddler after an earthquake."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Samson
+ch2-lambda-person-samson {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Samson."
+		" "
+	}
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Samson? That name doesn't ring a bell."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: I think Samson was the name of Gloria's kid, wasn't it? Was he two or three? Or five or six? I don't know. I was never that good with children."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Gregory
+ch2-lambda-person-gregory {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Gregory."
+		" "
+	}
+	if (flag ch2-seen-room-33 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: I think Gregory was the castle chef... maybe? I feel like he's been there forever, but I can't remember what he looks like."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Ah, Gregory! He runs the castle kitchens. He's a bit gray around the whiskers, but is still as quick as ever. Excellent taste, and great at improvising recipes."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Clara
+ch2-lambda-person-clara {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Clara."
+		" "
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: Clara? Clara... I think I remember seeing her name on the new hires list recently, but I haven't met her. She's kitchen staff, though. Logistics, I think it was. Inventory management or something."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// EAST WING
+
+//Jean-Paul
+ch2-lambda-person-jeanpaul {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Jean-Paul."
+		" "
+	}
+	if (flag ch2-seen-room-21 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Frankie
+ch2-lambda-person-frankie {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Frankie."
+		" "
+	}
+	if (flag ch2-seen-room-21 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Scuzzy
+ch2-lambda-person-scuzzy {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Scuzzy."
+		" "
+	}
+	if (flag ch2-seen-room-22 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// C.K.Watt
+ch2-lambda-person-ckwatt {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about C. K. Watt."
+		" "
+	}
+	if (flag ch2-seen-room-22 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Tracy
+ch2-lambda-person-tracy {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Tracy."
+		" "
+	}
+	if (flag ch2-seen-room-23 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Rocco
+ch2-lambda-person-rocco {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Rocco."
+		" "
+	}
+	if (flag ch2-seen-room-23 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Helvetica
+ch2-lambda-person-helvetica {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Helvetica."
+		" "
+	}
+	if (flag ch2-seen-room-23 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
+			"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font...."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// GENERAL
+
+// Bob
+ch2-lambda-person-bob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Bob."
+		" "
+		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-guardianbob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Guardian Bob."
+		" "
+		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong type of guy. He's some kind of internet vigilante, I think. He's got a few hacking tricks, but he seems white hat to me. I trust him."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-marathonbob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the Marathon Bobs."
+		" "
+		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac)"
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+/* ---------- PEOPLE (COMPLICATED) ---------- */
 
 // The player
 
@@ -336,7 +791,7 @@ ch2-lambda-person-player {
 		"<c>YOU</>: Tell me about me!"
 		" "
 		"<m>LAMBDA</>: Oh, um, I don't actually know anything about you."
-		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose...."
+		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose."
 		" "
 		# "How did you know I'm wearing a hat?" : ch2-lambda-person-player-2
 	}
@@ -594,46 +1049,6 @@ ch2-lambda-person-big-bad {
 	goto ch2-lambda-topic-person-s;
 }
 
-// Bob
-
-ch2-lambda-person-bob {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: Tell me about Bob."
-		" "
-		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
-		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
-	}
-	goto ch2-lambda-topic-person-s;
-}
-
-// Wizard
-
-ch2-lambda-person-wizard {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: What's with this \"Wizard\" guy?"
-		" "
-		"<m>LAMBDA</>: Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
-	}
-	goto ch2-lambda-person-wizard-continued;
-}
-ch2-lambda-person-raccoon {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: What's with the raccoon?"
-		" "
-		"<m>LAMBDA</>: The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
-	}
-	goto ch2-lambda-person-wizard-continued;
-}
-ch2-lambda-person-wizard-continued {
-	show serial dialog {
-		"\tYou should have seen him at King Gibson's last Halloween party! He'd found this little blue wizard's hat and cape...."
-	}
-	goto ch2-lambda-topic-person-s;
-}
-
 // Bert
 
 ch2-lambda-person-bert {
@@ -698,7 +1113,7 @@ ch2-lambda-bert-mentioned {
 			"<c>YOU</>: Bert's never mentioned you."
 			" "
 			"<m>LAMBDA</>: Well... he wouldn't have. He doesn't remember me at all."
-			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action. It's tragic, but this <bold>is</> what he wanted."
+			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action -- to sever my <bold>name</> and make everyone forget me. It's tragic, but this <bold>is</> what he wanted."
 		}
 		goto ch2-lambda-bert-q;
 	}
