@@ -398,7 +398,7 @@
         }, 
         {
          "firstgid":271,
-         "source":"tileset-castle-interior.json"
+         "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
          "firstgid":527,
@@ -410,11 +410,11 @@
         }, 
         {
          "firstgid":793,
-         "source":"entity-keyboard.json"
+         "source":"..\/entities\/entity-keyboard.json"
         }, 
         {
          "firstgid":893,
-         "source":"entity-simon.json"
+         "source":"..\/entities\/entity-simon.json"
         }, 
         {
          "firstgid":919,

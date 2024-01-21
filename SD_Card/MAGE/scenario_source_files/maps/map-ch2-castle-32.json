@@ -578,7 +578,7 @@
         }, 
         {
          "firstgid":271,
-         "source":"tileset-castle-interior.json"
+         "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
          "firstgid":527,
@@ -603,7 +603,7 @@
     
         {
          "firstgid":828,
-         "source":"entity-beetle.json"
+         "source":"..\/entities\/entity-beetle.json"
         }],
  "tilewidth":32,
  "type":"map",
