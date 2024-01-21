@@ -17,7 +17,7 @@
 
 ## Specific work needing done
 
-- [ ] Teleport the player loading from save into the correct spot (overworld -> castle room #1)
+- [x] Teleport the player loading from save into the correct spot (overworld -> castle room #1)
 
 ## Non-assets and scripting things we need
 

@@ -6,11 +6,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 271, 272, 272, 272, 272, 272, 272, 272, 272, 2147483919, 0,
             0, 287, 288, 288, 288, 288, 288, 288, 288, 288, 2147483935, 0,
-            0, 303, 304, 304, 304, 304, 304, 304, 304, 304, 2147483951, 0,
-            0, 303, 304, 304, 304, 304, 304, 304, 304, 304, 2147483951, 0,
-            0, 303, 304, 304, 304, 304, 304, 304, 304, 304, 2147483951, 0,
-            0, 303, 304, 304, 304, 304, 304, 304, 304, 304, 2147483988, 0,
-            0, 319, 304, 304, 304, 304, 304, 304, 304, 304, 2147483967, 0,
+            0, 303, 320, 304, 280, 284, 284, 284, 284, 285, 2147483951, 0,
+            0, 303, 304, 280, 284, 302, 304, 304, 304, 359, 2147483951, 0,
+            0, 303, 280, 285, 279, 363, 284, 284, 284, 302, 2147483951, 0,
+            0, 303, 1610613041, 360, 297, 284, 284, 284, 281, 359, 2147483988, 0,
+            0, 319, 280, 284, 366, 304, 3221225792, 304, 304, 304, 2147483967, 0,
             0, 335, 336, 336, 336, 341, 2147483989, 337, 337, 336, 2147483983, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
@@ -28,9 +28,9 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 484, 75, 483, 483, 484, 515, 0, 0,
             0, 0, 0, 143, 500, 83, 499, 499, 500, 516, 0, 0,
-            0, 0, 0, 280, 284, 285, 282, 0, 282, 0, 0, 0,
-            0, 0, 88, 280, 284, 350, 363, 284, 350, 0, 0, 0,
-            0, 0, 143, 280, 284, 366, 0, 0, 359, 0, 2147483951, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 2147483951, 0,
             0, 0, 513, 514, 2147483720, 278, 2147483926, 88, 513, 514, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -136,6 +136,162 @@
                  "width":32,
                  "x":288,
                  "y":224
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":39,
+                 "name":"Wine Rack",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-winerack"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":40,
+                 "name":"Pantry Shelf",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-pantryshelf"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":42,
+                 "name":"Pantry Shelf",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-pantryshelf"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":43,
+                 "name":"Pantry Shelf",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-pantryshelf"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":44,
+                 "name":"Pantry Shelf",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-pantryshelf"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":128,
+                 "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":269,
+                 "height":32,
+                 "id":45,
+                 "name":"Fridge",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-pantryfridge"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":160,
+                 "y":128
+                }, 
+                {
+                 "class":"",
+                 "gid":829,
+                 "height":32,
+                 "id":47,
+                 "name":"Clara",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-clara"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"tick-ch2-clara"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":235,
+                 "y":177
+                },
+            
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"walk2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":251,
+                 "y":169
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":49,
+                 "name":"walk1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":250,
+                 "y":186
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -199,7 +355,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":39,
+ "nextobjectid":50,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -244,6 +400,10 @@
         {
          "firstgid":793,
          "source":"..\/entities\/entity-harddrive.json"
+        }, 
+        {
+         "firstgid":817,
+         "source":"..\/entities\/entity-npc05.json"
         }],
  "tilewidth":32,
  "type":"map",

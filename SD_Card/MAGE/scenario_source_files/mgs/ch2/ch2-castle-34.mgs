@@ -42,6 +42,19 @@ on_tick-ch2-castle-34 {
 	}
 }
 
+tick-ch2-clara {
+	wait 13s;
+	walk entity "%SELF%" to geometry walk1 over 600ms;
+	wait 5s;
+	turn entity "%SELF%" west;
+	wait 9s;
+	turn entity "%SELF%" south;
+	wait 5s;
+	walk entity "%SELF%" to geometry walk2 over 600ms;
+	wait 4s;
+	turn entity "%SELF%" west;
+}
+
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-34 { // sanitize ch2 room state
@@ -54,6 +67,39 @@ on_go-castle-34-south {
 	copy on_exit-ch2-castle-34;
 	copy warping-out-fade-out;
 	load map ch2-castle-32;
+}
+
+/* ---------- ENTITIES ---------- */
+
+snake_box-interact {
+	show dialog {
+		PLAYER "Snake, is that you?"
+		name "Solid Snek" portrait "codec-snek" border_tileset "codec"
+		"There's no snake here. Check a different box. Just not this one."
+		PLAYER "But this is the only talking box here."
+	}
+}
+
+ch2-interact-pantryfridge {
+	show dialog {
+		PLAYER "Meats and fruits and vegetables... oh my."
+	}
+}
+ch2-interact-pantryshelf {
+	show dialog {
+		PLAYER "Looks like a lot of dry and canned goods."
+	}
+}
+ch2-interact-winerack {
+	show dialog {
+		PLAYER "Is this just bottles of wine? It all looks very fancy."
+	}
+}
+
+interact-ch2-clara {
+	copy interrupt-walk;
+	show dialog { SELF "(TODO)"}
+	copy resume-walk;
 }
 
 /* ---------- HARDDRIVE (ADMIN) ---------- */
@@ -94,16 +140,4 @@ ch2-touch-plate-no {
 		PLAYER "Maybe later, then."
 	}
 	set entity "%SELF%" on_interact to ch2-touch-plate;  // reset after script jump
-}
-
-
-snake_box-interact {
-	show dialog {
-		PLAYER "Snake is that you?"
-		name "Solid Snek"
-		portrait "codec-snek"
-		border_tileset "codec"
-			"There's no snake here. Check a different box. Just not this one."
-		PLAYER "But this is the only talking box here."
-	}
 }

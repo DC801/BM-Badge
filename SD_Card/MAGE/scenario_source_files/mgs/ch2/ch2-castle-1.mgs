@@ -124,12 +124,17 @@ on_load-ch2-castle-1 {
 	if (flag ch2-has-artifact is true) {
 		set entity Artifact on_tick to yeet;
 	}
-
-	copy ch2-map-init;
-
+	if (warp state is raw_game_load-ch2) {
+		copy restore_player_state;
+	}
 	if (flag ch2-carrying-mainframeos is true) {
 		set entity Wizard current_animation to 3;
 	}
+	copy ch2-map-init;
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (TODO Maybe this counts as a bug; maybe really fix it?)
+	turn player control off;
+	wait 50ms;
+	turn player control on;
 }
 debug-finish-toot {
 	mutate ch2-storyflag-round = 1;

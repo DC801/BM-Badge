@@ -400,9 +400,14 @@
                          "value":"interact-ch2-shepherd"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"make-sheep-loiter"
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -593,7 +598,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"make-sheep-loiter"
                         }],
                  "rotation":0,
                  "visible":true,

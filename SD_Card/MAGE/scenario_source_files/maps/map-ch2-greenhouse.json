@@ -98,7 +98,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle1"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -121,7 +121,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -144,7 +144,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle3"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,7 +167,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle4"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -190,7 +190,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle5"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -213,7 +213,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle6"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -236,7 +236,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle7"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -259,7 +259,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"ch2-capture-ethernettle8"
                         }],
                  "rotation":0,
                  "visible":true,

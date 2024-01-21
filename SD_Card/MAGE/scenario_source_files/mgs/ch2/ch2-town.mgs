@@ -38,7 +38,9 @@ on_load-ch2-town {
 
 	// walking out of doorways:
 	turn player control off;
-	if (warp state is exit_from-credits) {
+	if (warp state is raw_game_load-ch2) {
+		copy restore_player_state;
+	} else if (warp state is exit_from-credits) {
 		teleport entity "%PLAYER%" to geometry from-credits-spot;
 		fade in camera from #000000 over 800ms;
 	} else if (warp state is walk_from-east) {
@@ -69,6 +71,10 @@ on_load-ch2-town {
 		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms;
 	}
 	copy ch2-map-init;
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (TODO Maybe this counts as a bug; maybe really fix it?)
+	turn player control off;
+	wait 50ms;
+	turn player control on;
 }
 
 /* ---------- ON_TICK ---------- */
