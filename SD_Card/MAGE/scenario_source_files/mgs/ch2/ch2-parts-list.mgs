@@ -354,6 +354,7 @@ ch2-lambda-round-3-parts5 {
 		" "
 	}
 	copy ch2-put_on_map-round3;
+	set flag ch2-lambda-paging to false;
 	show serial dialog lambda-over;
 }
 

@@ -28,11 +28,19 @@ command-parts {
 		|| variable ch2-in-room is not 0 // OR you're in the castle
 	) {
 		// `parts` works normally
-		show serial dialog spacer;
-		show serial dialog {
-			"<m>LAMBDA</>: For parts, we still need:"
+		if (variable ch2-storyflag-round is < 4) {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: For parts, we still need:"
+			}
+			goto command-parts-print;
+		} else {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: You've found all the parts. Well done!"
+			}
+			goto command-parts-print;
 		}
-		goto command-parts-print;
 	} else {
 		// otherwise, `parts` cannot reach Lambda
 		copy ch2-wireless-error;
@@ -174,7 +182,6 @@ command-man-stop {
 
 command-parts-q {
 	show serial dialog {
-		// TODO: add the single ones like "plate" -- you can see them all when the parts list is enumerated, but can't ask about the indented options!
 		" "
 		"(Type the part name for more info, <c>PARTS</> to see the parts list again, or <c>QUIT</> to stop)"
 
@@ -280,7 +287,7 @@ command-parts-heatsink {
 	if (flag ch2-installed-heatsink is true) {
 		show serial dialog { "<m>LAMBDA</>: You've got the heat sink in there already. Oh, I guess this means I can turn off the furnace in there now." }
 	} else if (flag ch2-carrying-heatsink is true) {
-		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already!" "\tTODO: You can't put the heatsink on until the CPU is in place, dummy! O.o" }
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already!" "\t(TODO: You can't put the heatsink on until the CPU is in place, dummy! O.o)" }
 	} else {
 		copy ch2-describe-heatsink;
 	}

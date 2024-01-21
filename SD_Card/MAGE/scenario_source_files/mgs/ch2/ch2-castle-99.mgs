@@ -264,6 +264,8 @@ ch2-cutscene-castle99-continue {
 	turn entity Lambda north;
 	set entity Lambda current_animation to $opaque;
 	turn player control on;
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
 	set flag ch2-cutseen-castle99 to true;
 }
 
