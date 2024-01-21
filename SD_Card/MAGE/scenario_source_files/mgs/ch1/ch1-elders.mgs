@@ -471,7 +471,7 @@ show_dialog-jackob-hint-hackbook {
 			SELF "Oh, %PLAYER%, I'm sorry."
 			"I can't remember anything about what the book said."
 		}
-		if (flag wonthedemo is true) {
+		if (flag ch1_finished is true) {
 			show dialog {
 				SELF "I doubt there was much in there that would've helped you in a confrontation with him, though."
 			}
@@ -500,22 +500,22 @@ show_dialog-jackob-hint-hackbook {
 show_dialog-alfonso-start {
 	if (entity "%SELF%" is glitched) {
 		show dialog { SELF "Cdl iwpi'h fjxit jcctrthhpgn!" }
-	} else if (flag wonthedemo is true) {
+	} else if (flag ch1_finished is true) {
 		show dialog { SELF "Congratulations! You fixed the town!" }
 	} else {
-		copy count-chapter1-storyflags;
-		show dialog { SELF "You've completed $chapter1-storyflag-tally$ out of 11 tasks." }
-		if (variable chapter1-storyflag-tally is 0) {
+		copy ch1-count-flags;
+		show dialog { SELF "You've completed $ch1-storyflags-tally$ out of 11 tasks." }
+		if (variable ch1-storyflags-tally is 0) {
 			show dialog { SELF "Uh...." "Nowhere to go now but up!" }
-		} else if (variable chapter1-storyflag-tally is 1) {
+		} else if (variable ch1-storyflags-tally is 1) {
 			show dialog { SELF "That's the spirit! What a great start!" }
-		} else if (variable chapter1-storyflag-tally is <= 4) {
+		} else if (variable ch1-storyflags-tally is <= 4) {
 			show dialog { SELF "You're getting the hang of this!" }
-		} else if (variable chapter1-storyflag-tally is <= 8) {
+		} else if (variable ch1-storyflags-tally is <= 8) {
 			show dialog { SELF "Oh, my! You're getting a lot of work done! Marvelous!" }
-		} else if ( variable chapter1-storyflag-tally is <= 10) {
+		} else if ( variable ch1-storyflags-tally is <= 10) {
 			show dialog { SELF "Wow! You're nearly done!" }
-		} else if (variable chapter1-storyflag-tally is 11) {
+		} else if (variable ch1-storyflags-tally is 11) {
 			show dialog { SELF "Incredible! You've done everything on my list!" }
 			goto demoend-cutscene; // JUMP
 		}

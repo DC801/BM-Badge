@@ -37,7 +37,7 @@ on_walk-woprhouse-north {
 		load map main;
 	} else if (variable current-chapter is 2) {
 		set warp state to walk_from-woprhouse;
-		load map main2;
+		load map ch2-town;
 	} else {
 		show serial dialog { "You're in chapter '$current-chapter$'??" }
 	}
@@ -45,19 +45,17 @@ on_walk-woprhouse-north {
 
 on_go-woprhouse-north {
 	copy warping-out-fade-out;
-	load map main2;
+	load map ch2-town;
 }
 
 /* ---------- ENTITIES ---------- */
 
 show_dialog-wopr-start {
 	show dialog {
-		SELF
-		portrait wopr
+		SELF portrait wopr
 		"SHALL WE PLAY A GAME?"
 
-		SELF
-		portrait wopr
+		SELF portrait wopr
 		"PLAY?"
 		> "DO NOT PLAY" : goto "restart-wopr"
 	}

@@ -126,7 +126,7 @@ on_tick-ch2-greenhouse {
 	}
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
 		set warp state to walk_from-greenhouse;
-		load map main2;
+		load map ch2-town;
 	}
 }
 
@@ -135,7 +135,7 @@ on_tick-ch2-greenhouse {
 
 on_go-ch2-greenhouse-south {
 	copy warping-out-fade-out;
-	load map main2;
+	load map ch2-town;
 }
 on_walk-ch2-greenhouse-south {
 	// triggered by map's on_tick
