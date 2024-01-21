@@ -162,13 +162,26 @@ command-parts-print {
 	}
 	// FINAL ROUND: software
 	else if (variable ch2-storyflag-round is == 4) {
-		goto command-parts-finished;
-		set flag temp to true;
+		if (flag ch2-cutseen-castle99 is false) {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: You'll all done with the mainframe hardware, so come get the OS from me in my <c>SECRET LAB</>. Use <c>WARP</> to reach me."
+			}
+		} else {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: You've got the mainframe OS now, so head on back to first room of the castle -- the room with the the mainframe enclosure -- so the Wizard can install it for you. Good luck."
+			}
+		}
+		return;
 	}
-	// TODO: Lambda shouldn't offer a parts list at 5+ -- do something about it!
+	// GAME FINISHED
 	else {
 		show serial dialog spacer;
-		show serial dialog { "<r>DEBUG</>: Your 'ch2-storyflag-round' value is borked! (Current value: '$ch2-storyflag-round$')" }
+		show serial dialog {
+			"<m>LAMBDA</>: You're all done; no more parts to collect. Enjoy the power of the finished mainframe!"
+		}
+		return;
 	}
 
 	// FINISH
@@ -285,7 +298,7 @@ command-parts-monitor {
 command-parts-heatsink {
 	show serial dialog spacer;
 	if (flag ch2-installed-heatsink is true) {
-		show serial dialog { "<m>LAMBDA</>: You've got the heat sink in there already. Oh, I guess this means I can turn off the furnace in there now." }
+		show serial dialog { "<m>LAMBDA</>: You've got the heat sink in there already. I guess this means I can turn off the furnace in there!\n\tOh, maybe not until the whole machine is up and running, I guess...." }
 	} else if (flag ch2-carrying-heatsink is true) {
 		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already!" "\t(TODO: You can't put the heatsink on until the CPU is in place, dummy! O.o)" }
 	} else {
@@ -313,9 +326,9 @@ command-parts-keyboard {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-keyboard is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO keyboard is already installed." }
+		show serial dialog { "<m>LAMBDA</>: You've got a keyboard plugged in already... though I realize it's not going to be the easiest to use. But hey, did you know that very early keyboards used a lot of \"chords\" as part of their normal input paradigm?\n\t...Yeah, they kind of sucked. QWERTY is much nicer." }
 	} else if (flag ch2-carrying-keyboard is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO: how to install keyboard" }
+		show serial dialog { "<m>LAMBDA</>: I've checked up on that specific model of keytar, and fortunately it can connect to a computer over USB. Just plug it into the outside of the case and you're good to go.\n\tA MIDI interface would have been trickier, but I'm sure we could have found an adaptor around somewhere." }
 	} else {
 		copy ch2-describe-keyboard;
 	}
@@ -327,9 +340,9 @@ command-parts-mouse {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-mouse is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO mouse is already installed." }
+		show serial dialog { "<m>LAMBDA</>: You've got your mouse dongle plugged in, so the mouse will work fine now once we get the rest of the machine up and running. Oh, that's assuming its batteries are charged, I guess." }
 	} else if (flag ch2-carrying-mouse is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO: how to install mouse" }
+		show serial dialog { "<m>LAMBDA</>: Installing the mouse is easy. All you have to do is plug the end into a USB port. If it's an optical mouse, you can tell it's plugged in correctly when the red laser comes on.\n\tOh, but that trick only works when the machine is powered on...." }
 	} else {
 		copy ch2-describe-mouse;
 	}
@@ -341,7 +354,7 @@ command-parts-harddrive {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-harddrive is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO hard drive is already installed." }
+		show serial dialog { "<m>LAMBDA</>: The hard drive is already in place, so we'll have all the on-board storage we'll need. Not sure how much space we'll have, but... I'm sure it'll be fine." }
 	} else if (flag ch2-carrying-harddrive is true) {
 		show serial dialog { "<m>LAMBDA</>: The hard drive will need to be plugged into two cables: first, a power cable from the power supply, and second, a SATA cable off the motherboard." "\tSince that hard drive is... uh, unconventional... just try your best to attach those cables somehow. You'll know if it fits." }
 	} else {
@@ -363,7 +376,7 @@ command-parts-plate {
 		if (flag ch2-carrying-needle is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got a good spinnable <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them." "\tHuh, so it seems the plate has enough iron content in the ceramic for this to actually work. Neat." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them." "\tHuh, so it seems the plate has enough iron content in the ceramic for this to actually work. Not that I was worried...." }
 		}
 	} else {
 		copy ch2-describe-plate;
@@ -396,7 +409,7 @@ command-parts-ramchips {
 	if (flag ch2-installed-ramchips is true) {
 		show serial dialog { "<m>LAMBDA</>: TODO ramchips is already installed." }
 	} else if (flag ch2-carrying-ramchips is true) {
-		show serial dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then...." "\tWell, it's going to be really freaky, but you need to like <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." }
+		show serial dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then...." "\tWell, it's going to be really freaky, but you need to <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." }
 	} else {
 		copy ch2-describe-ramchips;
 	}
@@ -468,13 +481,4 @@ command-parts-abacus {
 		copy ch2-describe-abacus;
 	}
 	goto command-parts-q;
-}
-
-// FINISH
-
-command-parts-finished {
-	show serial dialog spacer;
-	show serial dialog {
-		"\tOh, wait, is that everything? Huzzah! (TODO)"
-	}
 }

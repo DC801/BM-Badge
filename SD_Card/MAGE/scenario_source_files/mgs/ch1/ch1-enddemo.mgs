@@ -201,7 +201,7 @@ demoend-cutscene {
 		PLAYER "(Zuh)"
 	}
 	fade out camera to #000000 over 1200ms;
-	set flag wonthedemo to true;
+	set flag ch1_finished to true;
 	goto roll-credits;
 }
 

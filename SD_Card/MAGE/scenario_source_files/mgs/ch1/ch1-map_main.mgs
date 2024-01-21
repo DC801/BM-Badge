@@ -88,7 +88,7 @@ on_load-map-main {
 	} else if (warp state is exit_from-credits) {
 		teleport entity "%PLAYER%" to geometry from-credits-spot;
 		fade in camera from #000000 over 800ms; 
-		if flag wonthedemo is false then goto null_script;
+		if flag ch1_finished is false then goto null_script;
 		if flag storyflag-catwork is false then goto null_script;
 		if flag storyflag-shepherd is false then goto null_script;
 		if flag storyflag-bender is false then goto null_script;

@@ -42,7 +42,7 @@ ch2-map-init-serial {
 		copy register-rtfm;
 		copy register-inventory;
 		copy register-manual;
-		if (flag ch2-map-granted is true) {
+		if (flag ch2-has-map is true) {
 			copy register-map;
 		}
 		if (flag ch2-warp-granted is true) {

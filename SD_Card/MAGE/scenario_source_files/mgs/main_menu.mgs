@@ -72,19 +72,19 @@ system_bell {
 }
 debug-bob {
 	set flag ch2-has-artifact to true;
-	set flag ch2-map-granted to true;
+	set flag ch2-has-map to true;
 	load map ch2-bobsclub;
 }
 debug-bob2 {
 	set warp state to warping;
 	set flag ch2-has-artifact to true;
-	set flag ch2-map-granted to true;
+	set flag ch2-has-map to true;
 	load map ch2-bobsclub-basement;
 }
 debug-bob3 {
 	set warp state to warping;
 	set flag ch2-has-artifact to true;
-	set flag ch2-map-granted to true;
+	set flag ch2-has-map to true;
 	set flag ch2-cutseen-bob-party to true;
 	load map ch2-bobsclub-basement;
 }
@@ -94,7 +94,7 @@ debug {
 	set flag ch2-has-artifact to true;
 	turn hex control on;
 	mutate current-chapter = 2;
-	set flag ch2-birthday-cutscene to true;
+	set flag ch2-cutseen-birthday to true;
 	load map ch2-castle-1;
 }
 
@@ -406,14 +406,14 @@ start-new-game-with-name {
 /* ---------- CHOOSING A CHAPTER ---------- */
 
 menu-chapter_select-q {
-	copy count-chapter1-storyflags;
+	copy ch1-count-flags;
 	copy ch2-count-flags;
 	show dialog {
 		name " "
 		border_tileset menu
 		"PLAY (slot $slot-number$: \"%PLAYER%\")"
-		> "Chapter 1 ($chapter1-storyflag-tally$/11)" : menu-chapter_select-1
-		> "Chapter 2 ($ch2-storyflags-tally$/??)" : menu-chapter_select-2-check
+		> "Chapter 1 ($ch1-storyflags-tally$/11)" : menu-chapter_select-1
+		> "Chapter 2 ($ch2-storyflags-tally$/10)" : menu-chapter_select-2-check
 		> "Back" : menu-play_game
 	}
 }
@@ -424,10 +424,11 @@ menu-chapter_select-1 {
 }
 
 menu-chapter_select-2-check {
-	if (flag wonthedemo is true || flag warned-incomplete-ch1 is true) {
+	if (flag ch1_finished is true || flag warned_ch1_incomplete is true) {
+		// passthrough
 		goto menu-chapter_select-2;
 	} else {
-		set flag warned-incomplete-ch1 to true;
+		set flag warned_ch1_incomplete to true;
 		show dialog {
 			name " "
 			border_tileset menu
@@ -440,14 +441,14 @@ menu-chapter_select-2-check {
 
 menu-chapter_select-2 {
 	mutate current-chapter = 2;
-	if (flag ch2-birthday-cutscene is false) {
+	if (flag ch2-cutseen-birthday is false) {
 		load map ch2-magehouse-birthday;
 	}
 	set warp state to raw_game_load-ch2;
-	if (variable player-save-room is 1) {
+	if (variable playersave-room is 1) {
 		load map ch2-castle-1;
 	} else {
-		load map main2;
+		load map ch2-town;
 	}
 }
 

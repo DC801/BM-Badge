@@ -163,13 +163,9 @@ interact-ch2-jeanpaul {
 		}
 	} else {
 		show dialog {
-			SELF "TODO (Good luck building computer)"
+			SELF "Good luck building your computer."
 		}
 	}
-	goto interact-ch2-jeanpaul-wrapup;
-}
-interact-ch2-jeanpaul-wrapup {
-	set entity "%SELF%" on_interact to interact-ch2-jeanpaul;
 }
 
 interact-ch2-frankie {
@@ -194,13 +190,9 @@ interact-ch2-frankie {
 		}
 	} else {
 		show dialog {
-			SELF "TODO (Good luck building computer)"
+			SELF "Hey, if you ever need something soldered, just let us know. We'd be happy to walk you though it."
 		}
 	}
-	goto interact-ch2-frankie-wrapup;
-}
-interact-ch2-frankie-wrapup {
-	set entity "%SELF%" on_interact to interact-ch2-frankie;
 }
 
 interact-ch2-room21-split {
@@ -209,14 +201,25 @@ interact-ch2-room21-split {
 	show dialog {
 		PLAYER "So I'm rebuilding the castle mainframe, and I heard you guys might be able to help me get some RAM. Lambda couldn't find any to spare."
 		Jean-Paul "Lambda? Who's that?"
-		PLAYER "He's someone helping me.\n(TODO re: Lambda)"
-		"Anyway, if you don't have any RAM I can use, do you have any ideas for a substitute? It's okay if it's... abstract."
+		PLAYER "He's someone helping me."
+	}
+	if (flag ch2-lambda-deletion-backstory is false) {
+		show dialog {
+			PLAYER "Though... I thought you might know him. He seems like a pretty important person around here."
+			Jean-Paul "What does he look like?"
+			PLAYER "I don't know. I've heard his voice before, but mostly we talk over text chat."
+			Frankie "Sounds fishy to me."
+			PLAYER "...."
+		}
+	}
+	show dialog {
+		PLAYER "Anyway, if you don't have any RAM I can use, do you have any ideas for a substitute? It's okay if it's abstract."
 		Jean-Paul "\"Abstract?\""
 		PLAYER "Yeah, so like what even is RAM?"
 		Jean-Paul "It's a computer's working memory. Any programs that are running, or images or text that is loaded, or anything at all...."
 		"All that data needs somewhere to sit while it's being worked on."
 		Frankie "Or shown on a screen."
-		PLAYER "Right, so for an... abstract... computer, what could work instead? A notebook? A jelly bean jar?"
+		PLAYER "Right, so for an \"abstract\" computer, what could work instead? A notebook? A jelly bean jar?"
 		Jean-Paul "How abstract are we talking?"
 		PLAYER "Well, so far I've made a hard drive from a dinner plate and a phonograph needle."
 		Jean-Paul "...Yikes."
@@ -226,7 +229,7 @@ interact-ch2-room21-split {
 		Jean-Paul "To be honest, the guy who can probably help best isn't here right now."
 		Frankie "He's a bit distractable."
 		Jean-Paul "A bit?!"
-		Frankie "Yeah, maybe that was an understatement! But he was away when the earthquake hit. Don't know where he is, but wherever he is, he's stuck in that room."
+		Frankie "Yeah, maybe that was an understatement. But he was away when the earthquake hit. Don't know where he is, but wherever he is, he's stuck in that room."
 		PLAYER "Well, who is he? What does he look like?"
 		Jean-Paul "His name is Sea Moss, and he's a giant stone golem. Can't miss him."
 	}
@@ -242,7 +245,7 @@ interact-ch2-room21-split {
 		}
 	}
 	show dialog {
-		Frankie "He'll definitely be able to find you an... abstract... solution."
+		Frankie "He'll definitely be able to find you an \"abstract\" solution."
 		Jean-Paul "Good luck, kid."
 	}
 	set flag ch2-want-ramchips to true;
@@ -250,10 +253,12 @@ interact-ch2-room21-split {
 	set flag interrupt to true;
 	if (variable CALLBACK is 1) {
 		mutate CALLBACK = 0;
-		goto interact-ch2-jeanpaul-wrapup;
+		set entity "%SELF%" on_interact to interact-ch2-jeanpaul;
+		return;
 	} else if (variable CALLBACK is 2) {
 		mutate CALLBACK = 0;
-		goto interact-ch2-frankie-wrapup;
+		set entity "%SELF%" on_interact to interact-ch2-frankie;
+		return;
 	} else {
 		show serial dialog {
 			"<r>DEBUG</>: Something went wrong splitting into entity wrapup scripts after shared behavior in 'interact-ch2-room21-split'! 'CALLBACK' value: $CALLBACK$"
@@ -268,6 +273,6 @@ interact-ch2-room21-split-s {
 		PLAYER "So... I may have forgotten where I can find Sea Moss."
 		Jean-Paul "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
 		PLAYER "And he'll be able to find me a substitute for RAM?"
-		Frankie "If anyone can, he can. He's good at being... abstract."
+		Frankie "If anyone can, he can. He's good at being \"abstract.\""
 	}
 }

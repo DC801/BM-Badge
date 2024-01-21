@@ -177,7 +177,7 @@ ch2-hide-needle {
 
 ch2-touch-needle {
 	if (flag ch2-carrying-needle is true || flag ch2-installed-needle is true) {
-		show dialog {
+		show dialog ch2-concierge-old-timey { // there's a second reference to this dialog below!
 			PLAYER "Definitely an old-timey look, isn't it?"
 			Concierge "If you like this, you should see King Gibson's bedroom."
 		}
@@ -192,10 +192,7 @@ ch2-touch-needle {
 			}
 			set flag ch2-needle-firstlook to true;
 		} else {
-			show dialog {
-				PLAYER "Definitely an old-timey look, isn't it?"
-				Concierge "If you like this, you should see King Gibson's bedroom."
-			}
+			show dialog ch2-concierge-old-timey; // dialog defined above
 		}
 	}
 	if (variable ch2-storyflag-round is >= 2) {

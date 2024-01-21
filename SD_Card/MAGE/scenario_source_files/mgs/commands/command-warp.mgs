@@ -10,7 +10,7 @@ register-warp {
 
 	register man + warp -> man-warp;
 
-	// convenience numbers for debugging only -- todo: remove eventually
+	// convenience numbers -- not documented in game, but useful for debugging if nothing else
 	register warp + "1" -> warp-ch2-1;
 	register warp + "11" -> warp-ch2-11;
 	register warp + "12" -> warp-ch2-12;
@@ -213,7 +213,7 @@ warp-ch2-99 {
 
 warp-ch2-town {
 	copy warp-common;
-	load map main2;
+	load map ch2-town;
 }
 warp-ch2-bakery {
 	copy warp-common;

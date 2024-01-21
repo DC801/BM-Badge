@@ -59,7 +59,7 @@ on_tick-ch2-castle-outside {
 		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout;
 			// borrowing this from town scripts
 		fade out camera to #000000 over 500ms;
-		load map main2;
+		load map ch2-town;
 	}
 }
 
@@ -79,7 +79,7 @@ on_go-castle-outside-north {
 on_go-castle-outside-east {
 	copy on_exit-ch2-castle-outside;
 	copy warping-out-fade-out;
-	load map main2;
+	load map ch2-town;
 }
 
 /* ---------- ENTITIES ---------- */

@@ -190,7 +190,7 @@ ch2-toot-step3-halftime {
 		" "
 	}
 	show serial dialog lambda-over
-	set flag ch2-map-granted to true;
+	set flag ch2-has-map to true;
 	mutate ch2-map-test = 1;
 	copy register-map;
 }

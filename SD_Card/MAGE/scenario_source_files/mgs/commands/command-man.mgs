@@ -419,7 +419,8 @@ ch2-lambda-person-lambda-where {
 	if (flag ch2-seen-room-99 is false) {
 		show serial dialog {
 			"<c>YOU</>: Where are you?"
-			"TODO: convo"
+			" "
+			"<m>LAMBDA</>: You know... um... it's kind of complicated. In a manner of speaking, I'm inside the castle. Let's just say I'm nearby but not close."
 		}
 	} else {
 		if (variable ch2-in-room is 99) {
@@ -428,7 +429,7 @@ ch2-lambda-person-lambda-where {
 			}
 		} else {
 			show serial dialog {
-				"<c>YOU</>: Where are you? I mean, spatially, where is that lab of yours? There weren't any doors inside."
+				"<c>YOU</>: Where are you? I mean -- spatially, where is that lab of yours? There weren't any doors inside."
 			}
 		}
 		show serial dialog {
@@ -543,6 +544,7 @@ ch2-lambda-person-lambda-name-followup-severed {
 		"<m>LAMBDA</>: There are gaps in my mind. I... I think they might have appeared when I deleted my name. Hard to tell."
 		"\tIt's a lot harder to remember people, for a start. My skills seem to be intact, but I feel... disconnected. It's like everything I <bold>can</> remember is stripped of context."
 	}
+	set flag ch2-lambda-deletion-backstory to true;
 	goto ch2-lambda-person-lambda-name-followup;
 }
 ch2-lambda-person-lambda-name-followup-bigbad {
@@ -553,7 +555,7 @@ ch2-lambda-person-lambda-name-followup-bigbad {
 		"<m>LAMBDA</>: Probably. Good insight."
 		"\tIn his case, though, I think he likes the mystique, too."
 	}
-	set flag hackbook-backstory to true // otherwise, the mage will realize he doesn't know the Big Bad's name when the "Town History" book is read, despite realizing it here with Lambda
+	set flag hackbook-backstory to true; // otherwise, the mage will realize he doesn't know the Big Bad's name when the "Town History" book is read, despite realizing it here with Lambda
 	goto ch2-lambda-person-lambda-name-followup;
 }
 ch2-lambda-person-lambda-name-followup-nickname {
@@ -574,7 +576,7 @@ ch2-lambda-person-lambda-name-followup-lambda {
 		"<c>YOU</>: Why \"Lambda\" though?"
 		" "
 		"<m>LAMBDA</>: I thought of it on the spot. It's because I'm a <bold>functionary with no name</>, you see! You see?"
-		"\tNo? Oh, um... yeah, never mind."
+		"\tNo? Oh, um... never mind."
 	}
 	goto ch2-lambda-person-lambda-name-followup;
 }
@@ -629,6 +631,7 @@ ch2-lambda-person-wizard-continued {
 	show serial dialog {
 		"\tYou should have seen him at King Gibson's last Halloween party! He'd found this little blue wizard's hat and cape...."
 	}
+	goto ch2-lambda-topic-person-s;
 }
 
 // Bert
@@ -676,18 +679,29 @@ ch2-lambda-bert-like {
 	goto ch2-lambda-bert-q;
 }
 ch2-lambda-bert-mentioned {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: Bert's never mentioned you."
-		" "
-		"<m>LAMBDA</>: Well... he might not know I'm here. In the castle."
-		" "
-		"<c>YOU</>: But the village elders knew XA was here. In the castle."
-		" "
-		"<m>LAMBDA</>: Yes, well, that's because...."
-		"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
+	if (flag ch2-cutseen-castle99 is false) {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>YOU</>: Bert's never mentioned you."
+			" "
+			"<m>LAMBDA</>: Well... he might not know I'm here. In the castle."
+			" "
+			"<c>YOU</>: But the village elders knew XA was here. In the castle."
+			" "
+			"<m>LAMBDA</>: Yes, well, that's because...."
+			"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
+		}
+		goto ch2-lambda-bert-q;
+	} else {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>YOU</>: Bert's never mentioned you."
+			" "
+			"<m>LAMBDA</>: Well... he wouldn't have. He doesn't remember me at all."
+			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action. It's tragic, but this <bold>is</> what he wanted."
+		}
+		goto ch2-lambda-bert-q;
 	}
-	goto ch2-lambda-bert-q;
 }
 ch2-lambda-bert-door {
 	show serial dialog spacer;

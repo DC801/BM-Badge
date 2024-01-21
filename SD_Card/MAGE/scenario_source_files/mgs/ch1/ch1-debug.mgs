@@ -22,8 +22,8 @@ debug-demobonus-q {
 	show dialog {
 		SELF portrait goldfish
 		"Demo bonus debugging"
-		> "Set story flags true + wonthedemo true" : debug-demobonus-pre-flags-true
-		> "Set story flags true + wonthedemo false" : debug-demobonus-pre-flags-false
+		> "Set story flags true + ch1_finished true" : debug-demobonus-pre-flags-true
+		> "Set story flags true + ch1_finished false" : debug-demobonus-pre-flags-false
 		> "Set demo bonus event flags false" : debug-demobonus-event-flags-false
 		> "Never mind" : debug-demobonus-no
 	}
@@ -31,14 +31,14 @@ debug-demobonus-q {
 
 debug-demobonus-pre-flags-true {
 	copy script set-story-flags-true;
-	set flag wonthedemo to true;
+	set flag ch1_finished to true;
 	set warp state to exit_from-credits;
 	set entity "%SELF%" on_interact to debug-demobonus-q;
 }
 
 debug-demobonus-pre-flags-false {
 	copy script set-story-flags-false;
-	set flag wonthedemo to false;
+	set flag ch1_finished to false;
 	set entity "%SELF%" on_interact to debug-demobonus-q;
 }
 
@@ -80,7 +80,7 @@ debug-set-story-and-misc-flags-false {
 	mutate hint-tracking = 0;
 	copy script set-story-flags-false;
 	copy script set-misc-flags-false;
-	copy script set-wonthedemo-flags-false;
+	copy script set-ch1_finished-flags-false;
 	show dialog {
 		SELF "All story and misc flags set to FALSE."
 	}
@@ -251,12 +251,12 @@ set-begunthegame-flags-false {
 	set flag begunthegame to false;
 }
 
-set-wonthedemo-flags-true {
-	set flag wonthedemo to true;
+set-ch1_finished-flags-true {
+	set flag ch1_finished to true;
 }
 
-set-wonthedemo-flags-false {
-	set flag wonthedemo to false;
+set-ch1_finished-flags-false {
+	set flag ch1_finished to false;
 }
 
 set-glitch-flags-true {

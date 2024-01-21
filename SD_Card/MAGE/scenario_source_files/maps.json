@@ -170,7 +170,7 @@
 			"south": "on_go-ch2-magehouse-south"
 		}
 	},
-	"main2": {
+	"ch2-town": {
 		"path": "maps/map-main2.json",
 		"on_load": "on_load-ch2-town",
 		"on_tick": "on_tick-ch2-town",
