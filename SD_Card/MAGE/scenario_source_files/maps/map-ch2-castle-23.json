@@ -261,7 +261,7 @@
         }, 
         {
          "firstgid":255,
-         "source":"tileset-castle-interior.json"
+         "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
          "firstgid":511,

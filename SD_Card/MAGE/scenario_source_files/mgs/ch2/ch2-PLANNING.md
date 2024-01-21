@@ -8,8 +8,8 @@
 
 - [ ] Rename scripts so they're consistent
 	- e.g. `ch2-interact-asdfasdf` should all be `interact-ch2-asdfasdf` -- or vice versa (pick one!)
-- [ ] Move Tiled files to the folders they should actually be (some entity JSON files are in the maps folder, etc.)
-	- [ ] And update all file paths in files that link to them, please!
+- [x] Move Tiled files to the folders they should actually be (some entity JSON files are in the maps folder, etc.)
+	- [x] And update all file paths in files that link to them, please!
 - [ ] Turn off serial control during cutscenes
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations

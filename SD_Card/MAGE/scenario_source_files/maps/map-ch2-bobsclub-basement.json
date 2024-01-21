@@ -910,7 +910,7 @@
         }, 
         {
          "firstgid":598,
-         "source":"entity-marathon-bob.json"
+         "source":"..\/entities\/entity-marathon-bob.json"
         }],
  "tilewidth":32,
  "type":"map",
