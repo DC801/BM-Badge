@@ -1,11 +1,11 @@
 { "columns":16,
  "image":"..\/tilesets\/tileset_dungeonInterior.png",
- "imageheight":512,
+ "imageheight":704,
  "imagewidth":512,
  "margin":0,
  "name":"tileset-castle-interior",
  "spacing":0,
- "tilecount":256,
+ "tilecount":352,
  "tiledversion":"1.9.2",
  "tileheight":32,
  "tiles":[
