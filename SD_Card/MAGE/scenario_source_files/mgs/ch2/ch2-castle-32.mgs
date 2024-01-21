@@ -351,7 +351,7 @@ ch2-seamoss-summon-chips {
 	set entity "%PLAYER%" on_tick to null_script;
 	turn entity "%PLAYER%" north;
 	show dialog {
-		SELF "I know a secret code for the ultimate cache of cache. Just need some cash...."
+		entity "Sea Moss" "I know a secret code for the ultimate cache of cache. Just need some cash...."
 	}
 	wait 850ms;
 	// bag of RAM chips appears in front of the vending machine
@@ -367,9 +367,9 @@ ch2-seamoss-summon-chips {
 	}
 	turn entity "Sea Moss" south;
 	show dialog {
-		SELF "There you are, friend! Some spicy nacho DDR5 RAM chips, on the house."
+		entity "Sea Moss" "There you are, friend! Some spicy nacho DDR5 RAM chips, on the house."
 		PLAYER "...Thanks...?"
-		SELF "Any time."
+		entity "Sea Moss" "Any time."
 	}
 	turn player control on;
 	set flag ch2-cutseen-ramchips to true;

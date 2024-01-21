@@ -162,8 +162,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":279,
-                 "y":172
+                 "x":283,
+                 "y":262
                 }, 
                 {
                  "class":"",
@@ -210,6 +210,18 @@
                  "width":32,
                  "x":127,
                  "y":273
+                }, 
+                {
+                 "class":"",
+                 "gid":937,
+                 "height":32,
+                 "id":40,
+                 "name":"Clara",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":235,
+                 "y":165
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -265,7 +277,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":40,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -327,6 +339,10 @@
         {
          "firstgid":904,
          "source":"..\/entities\/entity-npc01.json"
+        }, 
+        {
+         "firstgid":925,
+         "source":"..\/entities\/entity-npc05.json"
         }],
  "tilewidth":32,
  "type":"map",

@@ -390,6 +390,7 @@ ch2-lambda-round-4c {
 	}
 }
 ch2-lambda-round-4d {
+	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: But can't you warp out here? Why do I need to come to you?"
 		" "

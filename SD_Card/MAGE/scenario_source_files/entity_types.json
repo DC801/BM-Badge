@@ -3355,6 +3355,72 @@
 		"scenarioIndex": 51,
 		"serialized": {}
 	},
+	"npc05": {
+		"type": "npc05",
+		"tileset": "entity-npc05.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 51,
+		"serialized": {}
+	},
 	"ram_chips": {
 		"type": "ram_chips",
 		"tileset": "entity-ram_chips.json",

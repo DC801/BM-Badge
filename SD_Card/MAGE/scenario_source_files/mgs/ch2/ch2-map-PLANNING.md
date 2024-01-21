@@ -534,6 +534,8 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - [ ] People keep trying to `look` at inventory items or arbitrary stuff. How to handle this?
 - [ ] You should be able to ask the wizard for Bert messages (currently he ignores the question, and Lambda has `any messages` behavior)
 - [ ] `Look` should list items you can pick up
+- [ ] `plover` should trigger an Easter egg
+- [ ] `xyzzy` (ditto the above)
 - [ ] Second thing to do in town?
 	- Motherboard?
 	- Book from library?
@@ -555,3 +557,4 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Multiple choice riddles!!!!! (After dark!!!!)
 - Reference IP over avian carriers
 - Log Forge (Log4J according to the Hacker Jeopardy guy)
+

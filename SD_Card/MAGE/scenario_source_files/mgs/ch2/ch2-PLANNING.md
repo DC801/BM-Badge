@@ -15,6 +15,10 @@
 	- [ ] Determine whether this should include all conversations
 - [ ] Check that every entity has an on_look script
 
+## Specific work needing done
+
+- [ ] Teleport the player loading from save into the correct spot (overworld -> castle room #1)
+
 ## Non-assets and scripting things we need
 
 - [ ] Stories about building computers! I.e.
