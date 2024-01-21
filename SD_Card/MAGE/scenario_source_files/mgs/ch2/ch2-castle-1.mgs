@@ -126,6 +126,10 @@ on_load-ch2-castle-1 {
 	}
 
 	copy ch2-map-init;
+
+	if (flag ch2-carrying-mainframeos is true) {
+		set entity Wizard current_animation to 3;
+	}
 }
 debug-finish-toot {
 	mutate ch2-storyflag-round = 1;
@@ -393,6 +397,9 @@ interact-ch2-wizard {
 			SELF "Looks like Lambda is paging you. Better answer him on the terminal."
 		}
 	}
+	else if (flag ch2-carrying-mainframeos is true) {
+		goto ch2-install-wizard;
+	}
 	else {
 		if (flag ch2-wizard-backstory is false) {
 			show dialog {
@@ -437,6 +444,16 @@ interact-ch2-wizard {
 				copy script ch2-wizard-descend;
 			}
 		}
+	}
+}
+
+ch2-install-wizard {
+	show dialog {
+		Wizard "Oh! Oh! You have software for the new computer?"
+		"Can I help install it? Please?"
+		PLAYER "I wouldn't have it any other way."
+		Wizard "Awesome!"
+		"(TODO: cutscene goes here)"
 	}
 }
 
