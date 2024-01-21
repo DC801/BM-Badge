@@ -9,6 +9,7 @@ on_load-woprhouse {
 	}
 	if (flag wopr-backdoor-found is false) {
 		turn player control off;
+		set flag wopr-backdoor-found to true;
 		if (warp state is not warped) {
 			walk entity "%PLAYER%" along geometry walk_from-north over 600ms;
 		}
@@ -16,7 +17,6 @@ on_load-woprhouse {
 		show dialog {
 			PLAYER "Whoa! It looks like I found some kind of back door."
 		}
-		set flag wopr-backdoor-found to true;
 		turn player control on;
 	}
 }
