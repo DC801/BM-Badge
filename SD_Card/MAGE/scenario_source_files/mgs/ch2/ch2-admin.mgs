@@ -46,6 +46,9 @@ ch2-count-flags {
 }
 
 ch2-interact-mainframe {
+	if (flag ch2-carrying-mainframeos is true) {
+		goto ch2-install-wizard;
+	}
 	if (flag ch2-toot-done is false) {
 		show dialog { PLAYER "What is this hunk of junk?" }
 		return;

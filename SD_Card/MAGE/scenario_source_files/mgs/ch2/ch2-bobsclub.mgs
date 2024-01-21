@@ -90,7 +90,6 @@ on_load-ch2-bobsclub {
 	// Have NOT been in the basement
 	if (flag ch2-cutseen-bob-party is false) {
 		turn player control off;
-		turn hex control off;
 		if (warp state is not warped) {
 			walk entity "%PLAYER%" to geometry "walk-spot" over 400ms;
 		}
