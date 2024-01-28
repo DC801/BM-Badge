@@ -30,17 +30,10 @@ command-map {
 		mutate ch2-map-test = 2;
 	}
 	// normal stuff
-	if (variable ch2-in-room is 0) {
-		show serial dialog spacer;
-		show serial dialog {
-			"You don't seem to have a map for this place."
-		}
-	} else {
-		show serial dialog {
-			" "
-		}
-		goto draw-ch2-serial-map;
+	show serial dialog {
+		" "
 	}
+	goto draw-ch2-serial-map;
 }
 
 draw-ch2-serial-map-footer {
@@ -98,6 +91,10 @@ draw-ch2-serial-map-footer {
 	} else if (variable ch2-in-room is 99) {
 		concat serial dialog {
 			"LAMBDA'S LAB"
+		}
+	} else {
+		concat serial dialog {
+			"</><bold>(outside the castle)"
 		}
 	}
 	concat serial dialog {

@@ -9,12 +9,18 @@ look-ch2-castle-23 {
 	}
 }
 
+look-ch2-tracy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%Tracy%</>."
+		"\tTODO: Tracy on_look"
+	}
+}
 look-ch2-rocco {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Rocco%</>."
-		" "
-		"TODO: Rocco on_look"
+		"\tTODO: Rocco on_look"
 	}
 }
 

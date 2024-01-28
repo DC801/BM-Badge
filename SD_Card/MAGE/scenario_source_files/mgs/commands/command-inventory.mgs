@@ -87,6 +87,10 @@ command-inventory {
 		show serial dialog { "\tgoldfish" }
 		set flag temp to true;
 	}
+	if (flag ch2-carrying-manual is true) {
+		show serial dialog { "\tcalculator manual" }
+		set flag temp to true;
+	}
 	if (flag ch2-carrying-abacus is true) {
 		show serial dialog { "\tabacus" }
 		set flag temp to true;

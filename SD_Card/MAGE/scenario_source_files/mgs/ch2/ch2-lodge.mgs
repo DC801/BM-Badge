@@ -19,6 +19,12 @@ on_load-ch2-lodge {
 		set entity Alfonso on_tick to yeet;
 		set entity Jackob on_tick to yeet;
 	}
+	if (
+		flag ch2-installed-manual is true
+		|| flag ch2-carrying-manual is true
+	) {
+		copy script ch2-hide-manual;
+	}
 
 	if (warp state is walk_from-north) {
 		turn player control off;
@@ -64,6 +70,26 @@ on_go-ch2-lodge-north {
 }
 
 /* ---------- ENTITIES ---------- */
+
+ch2-interact-manual {
+	if (flag ch2-want-manual is false) {
+		show dialog {
+			PLAYER "Looks like a book about a calculator."
+		}
+	} else {
+		show dialog {
+			PLAYER "Oh, this must be the calculator manual Frankie wanted."
+			name "" "(You pick up the calculator manual!)"
+		}
+		set flag ch2-carrying-manual to true;
+		copy ch2-hide-manual;
+		copy ch2-handoff-manual-to-abacuspermission;
+	}
+}
+ch2-hide-manual {
+	teleport entity "HP35c Man" to geometry hiding-spot;
+	set entity "HP35c Man" name to " ";
+}
 
 interact-ch2-timmy {
 	copy face-player;
