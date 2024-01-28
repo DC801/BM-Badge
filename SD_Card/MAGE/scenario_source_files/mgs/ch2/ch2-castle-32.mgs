@@ -9,6 +9,28 @@ look-ch2-castle-32 {
 	}
 }
 
+look-ch2-seamoss {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Sea Moss on_look text\n "
+	}
+}
+
+look-ch2-samson {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Samson on_look text\n "
+	}
+}
+
+look-ch2-gloria {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Gloria on_look text\n "
+	}
+}
+
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-32 {
