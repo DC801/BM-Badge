@@ -47,7 +47,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":245,
+                 "gid":261,
                  "height":32,
                  "id":4,
                  "name":"Bub",
@@ -56,6 +56,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
                         }],
                  "rotation":0,
                  "visible":true,
@@ -65,7 +70,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":162,
+                 "gid":178,
                  "height":32,
                  "id":1,
                  "name":"Beatrice",
@@ -74,12 +79,17 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-beatrice"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":353.315986595702,
-                 "y":107.847033313621
+                 "x":352,
+                 "y":163
                 }, 
                 {
                  "class":"",
@@ -94,7 +104,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":313,
+                 "gid":329,
                  "height":32,
                  "id":9,
                  "name":"Sink",
@@ -103,6 +113,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-sink"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-check-if-sheep"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -181,6 +196,82 @@
                  "width":0,
                  "x":49.4539720086734,
                  "y":111.019120835797
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":16,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-59,
+                 "y":-53
+                }, 
+                {
+                 "class":"",
+                 "gid":193,
+                 "height":32,
+                 "id":17,
+                 "name":"Delmar",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-delmar"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-delmar"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":379,
+                 "y":163
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":18,
+                 "name":"cutscene",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":384,
+                 "y":183
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":19,
+                 "name":"delmar-point",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":395,
+                 "y":155
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":20,
+                 "name":"beatrice-point",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":368,
+                 "y":155
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -208,7 +299,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":16,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -219,27 +310,27 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-old_lady.json"
         }, 
         {
-         "firstgid":176,
+         "firstgid":192,
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":239,
+         "firstgid":255,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":287,
+         "firstgid":303,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":311,
+         "firstgid":327,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":313,
+         "firstgid":329,
          "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,

@@ -36,6 +36,11 @@ on_load-ch2-town {
 		}
 	}
 
+	// others
+	if (flag ch2-delmar-in-house is true) {
+		set entity Delmar on_tick to yeet;
+	}
+
 	// walking out of doorways:
 	turn player control off;
 	if (warp state is raw_game_load-ch2) {
@@ -190,6 +195,10 @@ on_go-ch2-town-bobsclub {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-rake {
+	set entity Marta on_tick to make-rake-float;
+}
+
 interact-ch2-marta {
 	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
@@ -264,10 +273,10 @@ interact-ch2-shepherd {
 	set entity "%SELF%" on_interact to interact-ch2-shepherd;
 }
 
-interact-ch2-delmar {
+interact-ch2-delmar-town {
 	copy face-player;
-	show dialog { SELF "...." }
-	rotate entity "%SELF%" 2
+	show dialog { SELF alignment TL "...." }
+	rotate entity "%SELF%" 2;
 }
 interact-ch2-verthandi {
 	copy face-player;

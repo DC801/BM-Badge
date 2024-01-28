@@ -77,6 +77,17 @@ on_tick-ch2-castle-23 {
 	goto null_script;
 }
 
+ch2-powerplant-supervise {
+	turn entity "%SELF%" north;
+	copy tick-rand-mini; // from bob's club basement
+	walk entity "%SELF%" to geometry walk2 over 600ms;
+	turn entity "%SELF%" north;
+	copy tick-rand-broad; // from bob's club basement
+	walk entity "%SELF%" to geometry walk1 over 600ms;
+	turn entity "%SELF%" north;
+	copy tick-rand-broad; // from bob's club basement
+}
+
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-23 { // sanitize ch2 room state
@@ -94,10 +105,11 @@ on_go-castle-23-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-helvetica {
-	copy face-player;
+	copy interrupt-walk;
 	show dialog {
-		SELF "(TODO)"
+		SELF "This isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
 	}
+	copy resume-walk;
 }
 
 interact-ch2-tracy {

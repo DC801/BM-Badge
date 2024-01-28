@@ -519,7 +519,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -700,13 +700,13 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-delmar"
+                         "value":"interact-ch2-delmar-town"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":1668,
-                 "y":376
+                 "x":1675,
+                 "y":377
                 }, 
                 {
                  "class":"",
@@ -742,12 +742,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-rake"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "visible":true,
