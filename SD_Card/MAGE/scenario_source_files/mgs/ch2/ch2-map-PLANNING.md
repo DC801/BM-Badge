@@ -277,6 +277,7 @@ Plot points implemented:
 			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
 		- [x] `abacus` (room 21)
 			- [x] Should need to go into town for something: the manual for Frankie's scientific calculator (HP35s)
+			- [ ] Manual needs sprite
 	- [x] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
@@ -341,7 +342,7 @@ Villagers:
 - [ ] Aunt Zippy (home)
 - [ ] Beatrice (Beatrice's house)
 	- [ ] Should be focued on reconciling with Delmar (reforging their connections) 
-	- (this should happen after storyflag 4, so the shepherd's dialog still makes sense)
+	- (this should be possible after storyflag 3, so the shepherd's dialog still makes sense)
 - [ ] Delmar (sheep's pen, sulking)
 - [ ] Smith (Smith's house)
 - [ ] Kid (Smith's house)

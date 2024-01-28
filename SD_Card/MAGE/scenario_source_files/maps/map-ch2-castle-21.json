@@ -78,18 +78,6 @@
          "objects":[
                 {
                  "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":196,
-                 "y":216
-                }, 
-                {
-                 "class":"",
                  "gid":269,
                  "height":32,
                  "id":19,
@@ -126,7 +114,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":793,
+                 "gid":889,
                  "height":32,
                  "id":32,
                  "name":"abacus",
@@ -149,7 +137,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":817,
+                 "gid":913,
                  "height":48,
                  "id":34,
                  "name":"Goose",
@@ -167,7 +155,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484543,
+                 "gid":2147484639,
                  "height":32,
                  "id":36,
                  "name":"Jean-Paul",
@@ -190,7 +178,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":917,
+                 "gid":1013,
                  "height":32,
                  "id":37,
                  "name":"Frankie",
@@ -257,6 +245,18 @@
                  "width":0,
                  "x":91,
                  "y":265
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":196,
+                 "y":216
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -300,36 +300,36 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":527,
+         "firstgid":623,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":783,
+         "firstgid":879,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":889,
          "source":"..\/entities\/entity-abacus.json"
         }, 
         {
-         "firstgid":817,
+         "firstgid":913,
          "source":"..\/entities\/entity-goose-bow.json"
         }, 
         {
-         "firstgid":859,
+         "firstgid":955,
          "source":"..\/entities\/entity-welder.json"
         },
     
         {
-         "firstgid":883,
+         "firstgid":979,
          "source":"..\/entities\/entity-cockatiel.json"
         }, 
         {
-         "firstgid":904,
+         "firstgid":1000,
          "source":"..\/entities\/entity-npc01.json"
         }, 
         {
-         "firstgid":925,
+         "firstgid":1021,
          "source":"..\/entities\/entity-npc05.json"
         }],
  "tilewidth":32,
