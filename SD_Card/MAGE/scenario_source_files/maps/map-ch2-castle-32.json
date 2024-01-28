@@ -148,7 +148,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":794,
+                 "gid":890,
                  "height":64,
                  "id":38,
                  "name":"Sea Moss",
@@ -157,6 +157,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-seamoss"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-seamoss"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -166,7 +171,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":809,
+                 "gid":905,
                  "height":32,
                  "id":41,
                  "name":"RAM Chips",
@@ -184,7 +189,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":810,
+                 "gid":906,
                  "height":32,
                  "id":51,
                  "name":"Samson",
@@ -193,6 +198,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-samson"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-samson"
                         }, 
                         {
                          "name":"on_tick",
@@ -207,7 +217,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":828,
+                 "gid":924,
                  "height":48,
                  "id":52,
                  "name":"Gloria",
@@ -216,6 +226,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-gloria"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-gloria"
                         }, 
                         {
                          "name":"on_tick",
@@ -581,28 +596,28 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":527,
+         "firstgid":623,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":783,
+         "firstgid":879,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":889,
          "source":"..\/entities\/entity-seamoss.json"
         }, 
         {
-         "firstgid":809,
+         "firstgid":905,
          "source":"..\/entities\/entity-ram_chips.json"
         }, 
         {
-         "firstgid":810,
+         "firstgid":906,
          "source":"..\/entities\/entity-wormy.json"
         },
     
         {
-         "firstgid":828,
+         "firstgid":924,
          "source":"..\/entities\/entity-beetle.json"
         }],
  "tilewidth":32,
