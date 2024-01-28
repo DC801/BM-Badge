@@ -86,7 +86,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":793,
+                 "gid":889,
                  "height":32,
                  "id":33,
                  "name":"Plate",
@@ -247,7 +247,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":829,
+                 "gid":925,
                  "height":32,
                  "id":47,
                  "name":"Clara",
@@ -390,19 +390,19 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":527,
+         "firstgid":623,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":783,
+         "firstgid":879,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":889,
          "source":"..\/entities\/entity-harddrive.json"
         }, 
         {
-         "firstgid":817,
+         "firstgid":913,
          "source":"..\/entities\/entity-npc05.json"
         }],
  "tilewidth":32,

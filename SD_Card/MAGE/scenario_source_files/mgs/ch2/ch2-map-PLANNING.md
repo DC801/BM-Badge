@@ -49,7 +49,8 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [~] Entity: XA - intercom with XB (outside) and XC in room 99
 		- [ ] Redo This sprite? Perhaps Super Mario RPG type thing, where it's like actually modeled in 3D
 	- [~] Entity: Wizard - installs OS onto mainframe when it's finished
-		- [ ] Needs side sprites
+		- [x] Needs side sprites
+		- [ ] Wizard hat and cape sprite version
 	- [x] Mainframe enclosure
 	- [x] Save floppy
 	- [ ] SET: the inside equiv. of a front porch; spartan; this room precedes even a coat rack or the like
@@ -69,6 +70,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [~] SET: the "human" half of the foyer, logistically speaking
 		- [x] Concierge desk with guestbook
 		- [ ] Wall of rubble at S separating this room from 11
+	- [ ] PUZZLE NEEDED: use the serial terminal to fix the damaged digital entertainment system (which plays muzak in the foyer)
 13. `Throne room`
 	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: goldfish (cpu part 1) (see below)
@@ -77,15 +79,18 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
 	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
 		- [ ] Closed version of USB door (north version)
+		- [ ] Keypad for door
 14. `King Gibson's bedroom`
 	- [~] Cutscene: Enter the room for the first time
 	- [x] Inventory item: clock
 	- [x] Entity: King Gibson
-	- [ ] SET: old-timey king's bedroom
-		- [ ] Four poster bed
+	- [~] SET: old-timey king's bedroom
+		- [x] Four poster bed
 		- [x] Grandfather clock
-		- [ ] Wardrobes or whatever idk
+		- [x] Wardrobes or whatever idk
 		- [ ] Closed version of USB door (south version)
+		- [ ] Keypad (from below?)
+	- [ ] PUZZLE NEEDED: use the serial terminal to fix the keypad door locky-doo, possibly using a password or part of a passphrase the King and/or his staff knows
 
 ### Industrial Area
 
@@ -97,7 +102,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: Jean-Paul - human-sized cockatiel; buds with Frankie
 	- [x] Entity: Frankie - androgynous, Homestar Runner shirt-wearing tinkerer; buds with Jean-Paul
 	- [~] Entity: Rocco
-		[ ] Move Rocco in here from other place; switch with Frankie?
+		- [ ] Move Rocco in here from other place; switch with Frankie?
 	- [ ] SET: work room for fixing and making hardware (both old timey castle type hardware *and* computer type hardware); disheveled, but not hopelessly so (everything is sort of in the right place, it's just all out at the moment)
 		- [ ] Soldering stations
 		- [ ] Anvil
@@ -168,6 +173,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Sacks of potatoes, onions, etc.
 		- [ ] Shelf-stable veg
 		- [ ] Industrial freezer/fridge
+	- [ ] PUZZLE NEEDED: use the serial terminal to control a "spinning plate balance checker" machine, which totally lives in the pantry for unrelated reasons
 
 ### The End
 
@@ -177,7 +183,6 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: Lambda
 	- [x] Entity: XC: intercom with XB (outside the castle?) and XA in room 1
 	- [x] SET: Very lived in, untidy; housing a shut-in
-		- [ ] Could use more grime or spills, crumpled up papers etc.
 
 ### Town
 
@@ -264,15 +269,14 @@ Plot points implemented:
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 		- [ ] Talk to Gibson; get him and his staff to reconcile
-			- [ ] They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken.
+			- [ ] They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken. (Sometimes lack of connection is due to misunderstandings, not due to malice or lack of capability)
 			- [ ] Use the terminal to repair the intercom and get them talking again
-			- [ ] Repair the door somehow, too? The King should return to the throne room
+			- [ ] The King should return to the throne room
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
 			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
-		- [ ] `abacus` (room 21)
-			- [ ] Framing device = ???
-			- [ ] Should need to go into town for something: a library book?
+		- [x] `abacus` (room 21)
+			- [x] Should need to go into town for something: the manual for Frankie's scientific calculator (HP35s)
 	- [x] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
@@ -336,7 +340,8 @@ Villagers:
 - [ ] Uncle Zappy (home)
 - [ ] Aunt Zippy (home)
 - [ ] Beatrice (Beatrice's house)
-	- [ ] Should be focued on reconciling with Delmar (reforging their connections) (this should happen after storyflag 4, so the shepherd's dialog still makes sense)
+	- [ ] Should be focued on reconciling with Delmar (reforging their connections) 
+	- (this should happen after storyflag 4, so the shepherd's dialog still makes sense)
 - [ ] Delmar (sheep's pen, sulking)
 - [ ] Smith (Smith's house)
 - [ ] Kid (Smith's house)
@@ -344,7 +349,7 @@ Villagers:
 - [~] Verthandi (overworld)
 	- [ ] Currently only something generic, plus something for storyflag 2 (talking with Alfonso); should add others, too
 - [ ] Hamster (overworld)
-	- Pick another spot for him
+	- [ ] Pick another spot for him
 - [ ] Cleo (with white cat) (overworld)
 - [ ] Clomper
 	- [ ] Needs sprite

@@ -59,7 +59,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":7,
                  "name":"Bub",
@@ -77,7 +77,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484139,
+                 "gid":2147484155,
                  "height":48,
                  "id":25,
                  "name":"Goose",
@@ -95,7 +95,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":690,
+                 "gid":706,
                  "height":32,
                  "id":28,
                  "name":"Cat",
@@ -135,7 +135,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484497,
+                 "gid":2147484513,
                  "height":48,
                  "id":106,
                  "name":"Timmy",
@@ -163,7 +163,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":874,
+                 "gid":890,
                  "height":16,
                  "id":110,
                  "name":"Sports",
@@ -181,7 +181,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":875,
+                 "gid":891,
                  "height":16,
                  "id":112,
                  "name":"Mage Facts",
@@ -199,7 +199,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":873,
+                 "gid":889,
                  "height":16,
                  "id":113,
                  "name":"Weird Facts",
@@ -217,7 +217,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":209,
+                 "gid":225,
                  "height":32,
                  "id":125,
                  "name":"Jackob",
@@ -245,7 +245,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":163,
+                 "gid":179,
                  "height":40,
                  "id":126,
                  "name":"Alfonso",
@@ -265,6 +265,24 @@
                  "width":40,
                  "x":469,
                  "y":250
+                }, 
+                {
+                 "class":"",
+                 "gid":889,
+                 "height":16,
+                 "id":128,
+                 "name":"HP35c Man",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-manual"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":585,
+                 "y":330
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -407,7 +425,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":128,
+ "nextobjectid":129,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -429,116 +447,116 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-alfonso.json"
         }, 
         {
-         "firstgid":179,
+         "firstgid":195,
          "source":"..\/entities\/entity-bert.json"
         }, 
         {
-         "firstgid":197,
+         "firstgid":213,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":221,
+         "firstgid":237,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":269,
+         "firstgid":285,
          "source":"..\/entities\/entity-lightning_boy.json"
         }, 
         {
-         "firstgid":305,
+         "firstgid":321,
          "source":"..\/entities\/entity-lightning_boy2.json"
         }, 
         {
-         "firstgid":341,
+         "firstgid":357,
          "source":"..\/entities\/entity-cleo.json"
         }, 
         {
-         "firstgid":365,
+         "firstgid":381,
          "source":"..\/entities\/entity-old_lady.json"
         }, 
         {
-         "firstgid":380,
+         "firstgid":396,
          "source":"..\/entities\/entity-verthandi.json"
         }, 
         {
-         "firstgid":404,
+         "firstgid":420,
          "source":"..\/entities\/entity-trekkie.json"
         }, 
         {
-         "firstgid":425,
+         "firstgid":441,
          "source":"..\/entities\/entity-tailor.json"
         }, 
         {
-         "firstgid":455,
+         "firstgid":471,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":473,
+         "firstgid":489,
          "source":"..\/entities\/entity-baker.json"
         }, 
         {
-         "firstgid":491,
+         "firstgid":507,
          "source":"..\/entities\/entity-goose.json"
         }, 
         {
-         "firstgid":533,
+         "firstgid":549,
          "source":"..\/entities\/entity-marta.json"
         }, 
         {
-         "firstgid":557,
+         "firstgid":573,
          "source":"..\/entities\/entity-dragon_skull.json"
         }, 
         {
-         "firstgid":593,
+         "firstgid":609,
          "source":"..\/entities\/entity-ssen.json"
         }, 
         {
-         "firstgid":611,
+         "firstgid":627,
          "source":"..\/entities\/entity-pipscat.json"
         }, 
         {
-         "firstgid":710,
+         "firstgid":726,
          "source":"..\/entities\/entity-bookcase.json"
         }, 
         {
-         "firstgid":718,
+         "firstgid":734,
          "source":"..\/entities\/entity-rake.json"
         },
     
         {
-         "firstgid":719,
+         "firstgid":735,
          "source":"..\/entities\/entity-broom.json"
         }, 
         {
-         "firstgid":720,
+         "firstgid":736,
          "source":"..\/entities\/entity-bracelet.json"
         }, 
         {
-         "firstgid":721,
+         "firstgid":737,
          "source":"..\/entities\/entity-book.json"
         }, 
         {
-         "firstgid":726,
+         "firstgid":742,
          "source":"..\/entities\/entity-wand.json"
         }, 
         {
-         "firstgid":727,
+         "firstgid":743,
          "source":"..\/tilesets\/tileset-ring_zero.json"
         }, 
         {
-         "firstgid":847,
+         "firstgid":863,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":849,
+         "firstgid":865,
          "source":"..\/entities\/entity-eye_faerie.json"
         }, 
         {
-         "firstgid":873,
+         "firstgid":889,
          "source":"..\/entities\/entity-journal.json"
         }],
  "tilewidth":32,

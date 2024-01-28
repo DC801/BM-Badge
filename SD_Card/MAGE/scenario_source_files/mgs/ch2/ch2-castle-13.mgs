@@ -30,6 +30,15 @@ on_load-ch2-castle-13 {
 		copy script ch2-hide-goldfish;
 	}
 	copy ch2-map-init;
+
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle12 is false) {
+		copy ch2-cutscene-castle12;
+	}
+}
+
+ch2-cutscene-castle12 {
+	
 }
 
 /* ---------- ON_TICK ---------- */

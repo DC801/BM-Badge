@@ -220,6 +220,11 @@ var messages = {
 		"somewhere in the east wing",
 		"of the castle.",
 	],
+	"ch2-map-manual": [
+		"Look for <m>Frankie's</>",
+		"<m>calculator manual</>",
+		"in the library in town.",
+	],
 };
 var specialCharStyles = {
 	"@": "c",
@@ -269,7 +274,7 @@ var printMap = function () {
 		var exits = getExitsForRoom(location);
 		string += `Exits: ${exits.join(', ')}`
 	}
-	console.log(string);
+	// console.log(string);
 	return string;
 };
 
@@ -417,7 +422,7 @@ var makeNatlangMapRow = function (rowData, rowIndex) {
 			ret.push(joinedZigs);
 		}
 	}
-	ret.push(`	concat serial dialog newline`);
+	ret.push(`	concat serial dialog newline;`);
 	return ret.join("\n");
 };
 
@@ -431,11 +436,11 @@ var makeNatlangMap = function (lispish) {
 				`serial dialog player {"<${specialCharStyles["@"]}>@</>"}`,
 				`serial dialog item {"<${specialCharStyles["?"]}>?</>"}`,
 				`draw-ch2-serial-map {`,
-				`	turn serial control off`,
+				`	turn serial control off;`,
 			],
 			lispish.map(makeNatlangMapRow),
 			[
-				`	goto draw-ch2-serial-map-footer`,
+				`	goto draw-ch2-serial-map-footer;`,
 				`}`
 			])
 		.join('\n');
@@ -443,4 +448,21 @@ var makeNatlangMap = function (lispish) {
 };
 
 var natlangOutput = makeNatlangMap(lispish);
-console.log("breakpoint me lol");
+
+// I'm so sorry future me!! Bodge for the double messages:
+var bodgeRows = [10,11,12]; // the row *after* the insertion (for find/replace)
+bodgeRows.forEach(function(item, i) {
+	var find = `concat serial dialog newline;\n\n\t// ROW ${item}`;
+	var insert = messages["ch2-map-manual"][i];
+	if (i === 0) {
+		insert = "<g>?</> " + insert;
+	}
+	var replace = `if (flag ch2-map-manual is true) {
+		if (flag ch2-map-seamoss is true) {
+			concat serial dialog {"   ${insert}"}
+		}
+	}\n\t` + find;
+	natlangOutput = natlangOutput.replace(find,replace);
+});
+
+console.log(natlangOutput);
