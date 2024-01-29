@@ -151,13 +151,15 @@ ch2-pickup-goldfish {
 	set flag ch2-carrying-goldfish to true;
 	register look + goldfish -> look-goldfish;
 }
+ch2-pickup-manual {
+	set flag ch2-map-manual to false;
+	set flag ch2-map-abacus to true;
+	set flag ch2-carrying-manual to true;
+	register look + abacus -> look-abacus;
+}
 ch2-handoff-abacus-to-manual {
 	set flag ch2-map-abacus to false;
 	set flag ch2-map-manual to true;
-}
-ch2-handoff-manual-to-abacuspermission {
-	set flag ch2-map-manual to false;
-	set flag ch2-map-abacus to true;
 }
 ch2-pickup-abacus {
 	set flag ch2-map-abacus to false;

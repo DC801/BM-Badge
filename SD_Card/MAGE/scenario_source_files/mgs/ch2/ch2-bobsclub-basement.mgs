@@ -43,7 +43,7 @@ look-ch2-guardianbob {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Guardian Bob%</>."
-		"\tStrangely, this Bob has a different cast to his skin, as if he were made of metal and plastic -- as if the shadows didn't land quite right around his body. But perhaps that's just how people from the internet usually look."
+		"\tStrangely, this Bob has a different cast to his skin, as if he were made of metal and plastic -- as if the shadows didn't land quite right around his body. But perhaps that's just how people from the 'net usually look."
 	}
 }
 look-ch2-bob {
@@ -347,9 +347,9 @@ interact-ch2-guardianbob {
 	show dialog {
 		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up and everything."
 		SELF "Well, we WERE going to have the party upstairs, but someone broke in and pretended to be named Bob. After that we upped our security."
-		PLAYER "...Oh yeah...?"
+		PLAYER "...Oh yeah?"
 		SELF "Yeah, this guy Strong Bad. The photo on his fake ID looked nothing like him, but Bob Austin let him in anyway."
-		PLAYER "...No kidding."
+		PLAYER "No kidding."
 		SELF "I've been manually teleporting Bobs down here ever since, just to be sure. My teleport program is very strict. It won't let non-Bobs through at all."
 		PLAYER "Good to know."
 	}
@@ -379,7 +379,7 @@ interact-ch2-bobmoss {
 interact-ch2-party-cups {
 	copy face-player;
 	show dialog {
-		PLAYER "...It's always red plastic cups, isn't it?"
+		PLAYER "It's always red plastic cups, isn't it?"
 	}
 	turn entity "%SELF%" south;
 }

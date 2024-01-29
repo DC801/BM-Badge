@@ -325,8 +325,7 @@ interact-ch2-lambda-lab {
 	set entity Lambda current_animation to $opaque;
 	if (variable ch2-storyflag-round is < 5) {
 		show dialog {
-			Lambda "Go ahead, and I'll help from here."
-			"Though I think the Wizard will be able to offer most of the help you're likely to need."
+			Lambda "Go ahead, and I'll help from here. Though I think the Wizard will be able to offer most of the help you're likely to need."
 		}
 	} else {
 		show dialog {

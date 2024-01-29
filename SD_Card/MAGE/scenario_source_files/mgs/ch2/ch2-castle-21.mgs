@@ -177,25 +177,24 @@ interact-ch2-jeanpaul {
 		show dialog {
 			SELF "TODO (generic)"
 		}
-	} else if (variable ch2-storyflag-round is 3) {
-		if (flag ch2-want-ramchips is false) {
-			mutate CALLBACK = 1;
-			goto interact-ch2-room21-split;
-		} else {
-			if (flag interrupt is true) {
-				show dialog {
-					SELF "Sea Moss is an odd duck."
-					PLAYER "Wait, he's a duck?"
-					SELF "Erm, no, he's a stone golem, but let's just say he's a creative character."
-				}
-			} else {
-				copy interact-ch2-room21-split-s;
-			}
-		}
-	} else {
+	} else if (
+		flag ch2-carrying-ramchips is true
+		|| flag ch2-installed-ramchips is true
+	) {
 		show dialog {
 			SELF "Good luck building your computer."
 		}
+	} else if (flag ch2-want-ramchips is false) {
+		mutate CALLBACK = 1;
+		goto interact-ch2-room21-split;
+	} else if (flag interrupt is true) {
+		show dialog {
+			SELF "Sea Moss is an odd duck."
+			PLAYER "Wait, he's a duck?"
+			SELF "Erm, no, he's a stone golem, but let's just say he's a creative character."
+		}
+	} else {
+		copy interact-ch2-room21-split-s;
 	}
 }
 

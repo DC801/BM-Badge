@@ -1,6 +1,11 @@
 include!("header.mgs")
 settings for dialog {
-	label Lambda { name Lambda }
+	label Lambda {
+		name Lambda
+		portrait lambda
+		emote 1
+		border_tileset codec
+	}
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -474,14 +479,16 @@ interact-ch2-xa {
 		if (flag ch2-has-artifact is false) {
 			turn player control off;
 			show dialog {
-				name "???" "..."
+				name "???" border_tileset codec
+				"..."
 				"...huh?"
 				"Oh! Ohhh, is the light on? Hello?"
 				"Oh my goodness. Is there actually someone there? Hello? Can you hear me?"
 
 				PLAYER "I can hear you."
 
-				name "???" "Oh! It's a person! Yes, hello! My name is...."
+				name "???" border_tileset codec
+				"Oh! It's a person! Yes, hello! My name is...."
 
 				Lambda "Lambda! Yeah, call me Lambda!"
 				"I'm speaking to you through the Exa! It's this old intercom I set up ages ago. Looks like you're in the castle entrance. I'm surprised the Exa was still..."
