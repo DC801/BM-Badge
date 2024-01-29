@@ -473,5 +473,18 @@
 				"flip_x": true
 			}
 		}
+	},
+	"lambda": {
+		"tileset": "entity-codec-portrait.json",
+		"emotes": {
+			"normal": {
+				"tileid": 5,
+				"flip_x": true
+			},
+			"mysterious": {
+				"tileid": 4,
+				"flip_x": true
+			}
+		}
 	}
 }

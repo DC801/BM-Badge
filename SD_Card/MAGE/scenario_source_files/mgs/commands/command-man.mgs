@@ -427,7 +427,7 @@ ch2-lambda-person-concierge {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Oh yeah, that guy! He looks fierce but he's actually really friendly. It's a side effect of his condition -- permanent werewolfism."
+			"<m>LAMBDA</>: Oh yeah, that guy! He looks fierce but he's actually really friendly. His growling is a side effect of his condition, chronic lycanthropy."
 			"\tHe's a music lover, if I'm remembering right. He's a little compulsive about it, always wanting something playing...."
 		}
 	}
@@ -1113,7 +1113,7 @@ ch2-lambda-bert-mentioned {
 			"<c>YOU</>: Bert's never mentioned you."
 			" "
 			"<m>LAMBDA</>: Well... he wouldn't have. He doesn't remember me at all."
-			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action -- to sever my <bold>name</> and make everyone forget me. It's tragic, but this <bold>is</> what he wanted."
+			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action -- to sever the connection between <bold>me</> and my <bold>name</> and make everyone forget me. It's tragic, but this <bold>is</> what he wanted."
 		}
 		goto ch2-lambda-bert-q;
 	}

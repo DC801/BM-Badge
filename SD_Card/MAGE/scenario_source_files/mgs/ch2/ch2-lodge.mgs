@@ -81,9 +81,8 @@ ch2-interact-manual {
 			PLAYER "Oh, this must be the calculator manual Frankie wanted."
 			name "" "(You pick up the calculator manual!)"
 		}
-		set flag ch2-carrying-manual to true;
+		copy ch2-pickup-manual;
 		copy ch2-hide-manual;
-		copy ch2-handoff-manual-to-abacuspermission;
 	}
 }
 ch2-hide-manual {

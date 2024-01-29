@@ -501,6 +501,12 @@ look-goldfish {
 		"on_look goldfish TODO"
 	}
 }
+look-manual {
+	show serial dialog spacer;
+	show serial dialog {
+		"on_look manual TODO"
+	}
+}
 look-abacus {
 	show serial dialog spacer;
 	show serial dialog {

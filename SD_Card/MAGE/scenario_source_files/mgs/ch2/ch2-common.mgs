@@ -97,6 +97,9 @@ ch2-map-init-inventory-look {
 	if (flag ch2-carrying-goldfish is true) {
 		register look + goldfish -> look-goldfish;
 	}
+	if (flag ch2-carrying-manual is true) {
+		register look + manual -> look-manual;
+	}
 	if (flag ch2-carrying-abacus is true) {
 		register look + abacus -> look-abacus;
 	}

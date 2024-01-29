@@ -90,6 +90,11 @@ ch2-interact-pantryshelf {
 		PLAYER "Looks like a lot of dry and canned goods."
 	}
 }
+ch2-interact-dishshelf {
+	show dialog {
+		PLAYER "Plates, cups, and tablecloths. How many place settings is this?"
+	}
+}
 ch2-interact-winerack {
 	show dialog {
 		PLAYER "Is this just bottles of wine? It all looks very fancy."
@@ -98,7 +103,17 @@ ch2-interact-winerack {
 
 interact-ch2-clara {
 	copy interrupt-walk;
-	show dialog { SELF "(TODO)"}
+	if (flag ch2-clara-backstory is true) {
+		show dialog {
+			SELF "Holy crap -- a new person!"
+			PLAYER "Yup, that's me."
+		}
+		set flag ch2-clara-backstory to true;
+	} else {
+		show dialog {
+			SELF "(TODO)"
+		}
+	}
 	copy resume-walk;
 }
 

@@ -14,11 +14,9 @@ man-map {
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAP</>"
 		" "
-		"Displays an ASCII map of the castle, though only while you're inside the castle."
+		"Displays an ASCII map of King Gibson's castle. Rooms are added to the map as you visit them."
 		" "
-		"Rooms are added to the map as you visit them."
-		" "
-		"The <c><bold>@</> symbol indicates which room you're in."
+		"The <c><bold>@</> symbol indicates which room you're in, and items from the parts list are marked with <g>?</>."
 	}
 }
 
