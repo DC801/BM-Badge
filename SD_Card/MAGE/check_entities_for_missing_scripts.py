@@ -61,7 +61,7 @@ def find_script_definition(script_name):
 
     # setup to run once
     if not mgs_files:
-        for root, _, files in os.walk(os.path.join(os.getcwd(), 'scenario_source_files/mgs')):
+        for root, _, files in os.walk(os.path.join(this_script_dir, 'scenario_source_files/mgs')):
             for file in files:
                 if file.endswith('.mgs'):
                     mgs_files.append(os.path.join(root, file))
@@ -133,7 +133,8 @@ def check_entity(entity):
 # get all map files
 blacklisted_files = ['map-16px_dungeon.json', 'map-action_testing_01.json', 'map-action_testing_02.json', 'map-bakery.json', 'map-bling-dc801.json', 'map-bling-digi-mage.json', 'map-bling-qr.json', 'map-bling-zero.json', 'map-bobsclub.json', 'map-credits.json', 'map-credits2.json', 'map-demo.json', 'map-dialog_codec.json', 'map-dialog_moon.json', 'map-family.json', 'map-flying-toasters.json', 'map-greenhouse.json', 'map-lodge.json', 'map-magehouse-birthday.json', 'map-magehouse.json', 'map-main.json', 'map-main2.json', 'map-main_menu.json', 'map-mini_dungeon.json', 'map-oldcouplehouse.json', 'map-secretroom.json', 'map-test.json', 'map-testbig.json', 'map-town.json', 'map-warp_zone.json', 'map-woprhouse.json']
 
-map_dir = os.path.join(os.getcwd(), 'scenario_source_files/maps')
+this_script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+map_dir = os.path.join(this_script_dir, 'scenario_source_files/maps')
 map_dir_contents = [os.path.join(map_dir, f) for f in sorted(os.listdir(map_dir)) if f not in blacklisted_files]
 map_file_paths = [f for f in map_dir_contents if os.path.isfile(f)]
 
