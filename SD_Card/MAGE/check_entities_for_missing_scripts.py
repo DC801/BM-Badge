@@ -79,6 +79,10 @@ def check_entity(entity):
     '''return hierarchically indented string which is a human-readable report of
     the issues with the given entity when running the checks specified at the top of the script'''
 
+    # return early and do nothing if the entity is some type other than a tile (has no 'gid' field)
+    if 'gid' not in entity:
+        return ''
+
     # generate informative messages on what's missing
     failed_check_messages = []
 
@@ -86,13 +90,12 @@ def check_entity(entity):
         script_name = ''
         found_script_definition = False
         
-        if 'properties' in entity:
-            for property in entity['properties']:
-                if property['name'] == check['property_name']:
-                    script_name = property['value']
-                    if find_script_definition(script_name):
-                        found_script_definition = True
-                    break # no need to check further properties for this particular check
+        for property in entity.get('properties', {}):
+            if property['name'] == check['property_name']:
+                script_name = property['value']
+                if find_script_definition(script_name):
+                    found_script_definition = True
+                break # no need to check further properties for this particular check
         
         if found_script_definition:
             continue # no output needed for this check. found_script_definition being true implies script_name is also set
