@@ -100,7 +100,7 @@ def check_entity(entity):
         if found_script_definition:
             continue # no output needed for this check. found_script_definition being true implies script_name is also set
         
-        fail_message = f'{check["check_name"]}' # the check's name serves as the beginning of the fail message
+        fail_message = check['check_name'] # the check's name serves as the beginning of the fail message
         if script_name: # a script name is present in map data but never defined in mgs folder
             global num_undefined_scripts
             num_undefined_scripts += 1
