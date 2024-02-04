@@ -9,6 +9,30 @@ look-ch2-magehouse {
 	}
 }
 
+look-ch2-tickles {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Mr. Tickles on_look text\n "
+		" "
+	}
+}
+
+look-ch2-zappy {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Uncle Zappy on_look text\n "
+		" "
+	}
+}
+
+look-ch2-zippy {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Aunt Zippy on_look text\n "
+		" "
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-magehouse {
