@@ -231,7 +231,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			"               ######  ##### \n"
 		);
 	}
-	else if(input == "feed goat") {
+	else if(verb == "feed" && subject == "goat") {
 		commandResponseBuffer += (
 			"You have fed the secret goat!\n"
 			"               ##### ####    \n"
