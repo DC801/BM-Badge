@@ -213,6 +213,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-templeton"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-templeton"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -231,6 +236,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-sebastian"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-sebastian"
                         }],
                  "rotation":0,
                  "visible":true,
