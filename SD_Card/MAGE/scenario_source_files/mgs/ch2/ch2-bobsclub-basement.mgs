@@ -205,7 +205,6 @@ on_go-ch2-bobsclub-basement-stairs {
 
 ch2-cutscene-bob-party {
 	// Fade in.
-	turn hex control off;
 	// turn serial control off;
 	turn player control off;
 	wait 1500ms;
