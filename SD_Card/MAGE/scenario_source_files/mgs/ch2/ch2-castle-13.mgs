@@ -9,6 +9,22 @@ look-ch2-castle-13 {
 	}
 }
 
+look-ch2-sebastian {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%Sebastian%</>."
+		"\t(TODO)"
+	}
+}
+
+look-ch2-templeton {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%Templeton%</>."
+		"\t(TODO)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-13 {
