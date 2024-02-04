@@ -101,8 +101,6 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Should be involved with one of the puzzle items
 	- [x] Entity: Jean-Paul - human-sized cockatiel; buds with Frankie
 	- [x] Entity: Frankie - androgynous, Homestar Runner shirt-wearing tinkerer; buds with Jean-Paul
-	- [~] Entity: Rocco
-		- [ ] Move Rocco in here from other place; switch with Frankie?
 	- [ ] SET: work room for fixing and making hardware (both old timey castle type hardware *and* computer type hardware); disheveled, but not hopelessly so (everything is sort of in the right place, it's just all out at the moment)
 		- [ ] Soldering stations
 		- [ ] Anvil
@@ -120,15 +118,14 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Cooling mechanisms
 		- [ ] Some computer buildery stuff (more computer, less electronics?)
 23. `Power plant`
-	- [ ] Cutscene: Enter the room for the first time
+	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [~] Inventory item: heatsink
 		- [ ] Needs sprite
 	- Entities should all be in lab coats;
-	- [ ] Entity: Tracy - generic engineer
+	- [x] Entity: Tracy - generic engineer
 	- [~] Entity: Rocco - to trade you the heat sink for a can of Cactus Cooler
-		- [ ] Change this sprite out for a lab-coaty one; move this char to the workroom?
 	- [ ] Entity: Helvetica - succubus, but you wouldn't know it from how she was acting; consummate professional engineer
-	- [ ] SET: Aiming for geothermal; whatever would sell that re: appearance
+	- [x] SET: Aiming for geothermal; whatever would sell that re: appearance
 
 ### Food
 
@@ -159,20 +156,13 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: mouse (no graphics necessary)
 	- [~] Entity: Gregory - a cat chef
-		- [ ] Needs cat chef spritesheet (currently a stand-in entity)
+		- [~] Needs cat chef spritesheet (currently a stand-in entity)
 	- [x] SET: Hydroponics area, with vegetables growing in individual plastic(?) bins, stacked to the ceiling
 34. `Castle pantry`
-	- [ ] Cutscene: Enter the room for the first time
+	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: plate (harddrive part 2)
-	- [ ] Entity: ??? - someone who can help you measure and calibrate the spin of a "plate" (for a HD)
-	- [ ] SET: Larder-ish, wine-cellar-ish, pantry-ish.
-		- [ ] Wine rack
-		- [ ] Dishes in shelves/cupboards
-		- [ ] Barrels aplenty
-		- [ ] Cupboards
-		- [ ] Sacks of potatoes, onions, etc.
-		- [ ] Shelf-stable veg
-		- [ ] Industrial freezer/fridge
+	- [ ] Entity: Clara - someone who can help you measure and calibrate the spin of a "plate" (for a HD)
+	- [x] SET: Larder-ish, wine-cellar-ish, pantry-ish.
 	- [ ] PUZZLE NEEDED: use the serial terminal to control a "spinning plate balance checker" machine, which totally lives in the pantry for unrelated reasons
 
 ### The End

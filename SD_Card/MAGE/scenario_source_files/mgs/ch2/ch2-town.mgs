@@ -25,7 +25,8 @@ on_load-ch2-town {
 		goto ch2-escort-cutscene;
 	}
 
-	// elders:
+	// sending entities to their places
+	// elders
 	set entity Bert on_tick to yeet; // always hiding
 	if (variable ch2-storyflag-round is < 5) {
 		set entity Jackob on_tick to yeet; // always hiding before end
@@ -35,8 +36,46 @@ on_load-ch2-town {
 			set entity Alfonso on_tick to yeet;
 		}
 	}
-
-	// others
+	// shepherd
+	if (
+		variable ch2-storyflag-round is 1
+		|| variable ch2-storyflag-round is 2
+	) {
+		teleport entity Shepherd to geometry shepherd2;
+		turn entity Shepherd east;
+		set entity Shepherd on_tick to null_script;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Shepherd to geometry shepherd1;
+	}
+	// verthandi
+	if (variable ch2-storyflag-round is 0) {
+		teleport entity Verthandi to geometry verthandi1;
+		turn entity Verthandi west;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Verthandi to geometry verthandi2;
+		turn entity Verthandi north;
+	}
+	// marta
+	if (
+		variable ch2-storyflag-round is 1
+		|| variable ch2-storyflag-round is 2
+	) {
+		teleport entity Marta to geometry marta1;
+		turn entity Marta west;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Marta to geometry marta2;
+		turn entity Marta south;
+	}
+	// delmar
 	if (flag ch2-delmar-in-house is true) {
 		set entity Delmar on_tick to yeet;
 	}
@@ -198,6 +237,13 @@ on_go-ch2-town-bobsclub {
 interact-ch2-rake {
 	set entity Marta on_tick to make-rake-float;
 }
+interact-ch2-yabbomongo {
+	copy face-player;
+	show dialog {
+		SELF "Oi, I'm bummed out! The circle of infinity is broken!"
+		"Used to be you could go west and come back out east, and vice versa. But now the west road goes somewhere new. Bizzare."
+	}
+}
 
 interact-ch2-marta {
 	copy face-player;
@@ -254,6 +300,7 @@ interact-ch2-shepherd {
 		show dialog {
 			SELF "You know, it's the weirdest thing, but I could've sworn there were only four sheep before."
 		}
+		turn entity "%SELF%" east;
 	} else if (variable ch2-storyflag-round is <= 4) {
 		show dialog {
 			PLAYER "Hey, have you seen Bert recently?"

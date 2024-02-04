@@ -20,8 +20,8 @@ look-ch2-castle-12 {
 look-ch2-concierge {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at the <m>%Concierge%</>."
-		"\t(TODO)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe man is professionalism itself, from his well-fitten suit and his professional body language -- apart from the expression on his face, which is incongruously aggressive. You think you can make out the sound of growling."
 	}
 }
 

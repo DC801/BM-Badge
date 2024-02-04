@@ -55,7 +55,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":245,
+                 "gid":261,
                  "height":32,
                  "id":4,
                  "name":"Bub",
@@ -73,7 +73,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484001,
+                 "gid":2147484017,
                  "height":48,
                  "id":11,
                  "name":"Aunt Zippy",
@@ -91,7 +91,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484037,
+                 "gid":2147484053,
                  "height":48,
                  "id":12,
                  "name":"Uncle Zappy",
@@ -114,7 +114,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":425,
+                 "gid":441,
                  "height":32,
                  "id":25,
                  "name":"Mr. Tickles",
@@ -142,7 +142,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":436,
+                 "gid":452,
                  "height":16,
                  "id":27,
                  "name":"Mage Journal",
@@ -160,7 +160,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":439,
+                 "gid":455,
                  "height":32,
                  "id":32,
                  "name":"Mage Box",
@@ -178,7 +178,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":439,
+                 "gid":455,
                  "height":32,
                  "id":39,
                  "name":"Sink",
@@ -196,7 +196,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":439,
+                 "gid":455,
                  "height":32,
                  "id":41,
                  "name":"Microwave",
@@ -214,7 +214,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":439,
+                 "gid":455,
                  "height":32,
                  "id":47,
                  "name":"Mage Facts",
@@ -232,7 +232,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":425,
+                 "gid":441,
                  "height":32,
                  "id":61,
                  "name":"Chaos Fish",
@@ -255,7 +255,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":459,
+                 "gid":475,
                  "height":32,
                  "id":66,
                  "name":"Cake",
@@ -304,66 +304,6 @@
                  "width":0,
                  "x":437,
                  "y":267
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":63,
-                 "name":"walk_from-north",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":17
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":473,
-                 "y":93
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":64,
-                 "name":"walk_from-east",
-                 "polyline":[
-                        {
-                         "x":-104.325,
-                         "y":-3.90331
-                        }, 
-                        {
-                         "x":-123.325,
-                         "y":-3.90331
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":683,
-                 "y":168
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":65,
-                 "name":"walk_from-west",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":18.2314,
-                         "y":-0.171299
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":245,
-                 "y":164.662
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -439,59 +379,59 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-old_lady.json"
         }, 
         {
-         "firstgid":176,
+         "firstgid":192,
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":239,
+         "firstgid":255,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":287,
+         "firstgid":303,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":311,
+         "firstgid":327,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":335,
+         "firstgid":351,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":353,
+         "firstgid":369,
          "source":"..\/entities\/entity-lightning_boy.json"
         }, 
         {
-         "firstgid":389,
+         "firstgid":405,
          "source":"..\/entities\/entity-lightning_boy2.json"
         }, 
         {
-         "firstgid":425,
+         "firstgid":441,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":435,
+         "firstgid":451,
          "source":"..\/entities\/entity-journal.json"
         }, 
         {
-         "firstgid":439,
+         "firstgid":455,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":441,
+         "firstgid":457,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":443,
+         "firstgid":459,
          "source":"..\/entities\/entity-cake.json"
         }, 
         {
-         "firstgid":445,
+         "firstgid":461,
          "source":"..\/entities\/entity-cake2.json"
         }],
  "tilewidth":32,

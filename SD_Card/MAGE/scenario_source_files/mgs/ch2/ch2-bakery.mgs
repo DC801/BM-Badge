@@ -6,8 +6,7 @@ look-ch2-bakery {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>BAKERY</>."
-		" "
-		"The smell inside is amazing! TODO"
+		"\tThe smell inside is amazing! TODO"
 		" "
 	}
 }

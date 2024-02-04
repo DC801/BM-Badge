@@ -22,11 +22,11 @@ look-ch2-castle-1 {
 look-ch2-mainframe {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at the <m>%Mainframe%</>."
+		"You looked at the <m>%SELF%</>."
 		" "
 	}
 	set flag temp to false;
-	show serial dialog { "This hardy red-and-black box contains:"}
+	show serial dialog { "This hardy beige box contains:"}
 	show serial dialog {
 		"\t- wires"
 		"\t- what looks like a huge circuit board"

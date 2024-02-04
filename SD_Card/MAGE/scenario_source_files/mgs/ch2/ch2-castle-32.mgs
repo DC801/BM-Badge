@@ -5,28 +5,48 @@ include!("header.mgs")
 look-ch2-castle-32 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE KITCHEN on_look text\n "
+		"You looked around the <c>CASTLE KITCHEN</>."
+		"\tThis room seems to be a combination employee break room and industrial-strength kitchen. The smell of the place is a stange combination of corporate disinfectant and maybe-fresh coffee."
+		" "
+	}
+}
+
+ch2-look-onions {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tFresh and fragrant. You appreciate the care to flavor that this cook is putting into whatever it is they're intending to cook. You also appreciate that fact that you don't have to cut them."
+	}
+}
+ch2-look-stove {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe glassy surface is very clean, perfectly black and very shiny."
 	}
 }
 
 look-ch2-seamoss {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Sea Moss on_look text\n "
+		"You looked at <m>%SELF%</>."
+		"\tThis old, moist stone golem hums softly to himself while he munches on his Skittles. When you look directly at him, he casts a smile your way."
 	}
 }
 
 look-ch2-samson {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Samson on_look text\n "
+		"You looked at <m>%SELF%</>."
+		"\tThe young larvae seems entirely oblivious to his mother's panic. He stares at you with wonder, as if you're the most interesting thing he's seen all day."
 	}
 }
 
 look-ch2-gloria {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Gloria on_look text\n "
+		"You looked at <m>%SELF%</>."
+		"\tShe's checking %Samson% over again and again, as if the her child's condition might have changed in the last few seconds. Her antenna swivels toward you when you come close."
 	}
 }
 
@@ -60,8 +80,6 @@ on_load-ch2-castle-32 {
 	}
 	// END DEBUG
 	
-	// New shape of scripting: no need to walk along a path, just teleport there! The mage won't go back into the door immediately (apparently)!
-	// TODO: update others? Or is it not worth the time?
 	if (warp state is walk_from-northeast) {
 		teleport entity "%PLAYER%" to geometry walk_from-northeast;
 	}
@@ -229,9 +247,14 @@ interact-ch2-vendingmachine {
 			}
 			turn entity "%PLAYER%" toward entity "Sea Moss";
 			show dialog {
-				entity "Sea Moss" "Silicon folks love silicon snacks."
-				PLAYER "I... what? Really?"
-				entity "Sea Moss" "(TODO THE REST OF THE CONVO)"
+				entity "Sea Moss" "Silicon folk love silicon snacks."
+				PLAYER "I... what? Really? Silicon folk meaning...."
+				entity "Sea Moss" "Silicon folk like me!"
+			}
+			turn entity "%PLAYER%" north;
+			show dialog {
+				PLAYER "I don't see a code for it on the panel though."
+				entity "Sea Moss" "Oh, I'll help you out. Come here."
 			}
 			if (entity "%PLAYER%" is not inside geometry vending-watchbox) {
 				set entity "%PLAYER%" on_tick to ch2-walk-to-vend-short;
@@ -390,7 +413,7 @@ ch2-seamoss-summon-chips {
 	turn entity "Sea Moss" south;
 	show dialog {
 		entity "Sea Moss" "There you are, friend! Some spicy nacho DDR5 RAM chips, on the house."
-		PLAYER "...Thanks...?"
+		PLAYER "Thanks...."
 		entity "Sea Moss" "Any time."
 	}
 	turn player control on;
