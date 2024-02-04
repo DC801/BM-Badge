@@ -405,6 +405,7 @@
 	},
 	"goose-bow": {
 		"tileset": "entity-goose-bow.json",
+		"portrait": "goose",
 		"animations": {
 			"idle": [
 				{

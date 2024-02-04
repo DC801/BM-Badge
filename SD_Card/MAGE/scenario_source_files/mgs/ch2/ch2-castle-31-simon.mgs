@@ -29,7 +29,7 @@ simon-game-start-q {
 	set entity Simon current_animation to 12;
 	if (flag ch2-simon-high is true) {
 		show dialog {
-			Simon "How about it? Want a high battle?"
+			Simon emote 1 "How about it? Want a high battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
@@ -37,7 +37,7 @@ simon-game-start-q {
 		}
 	} else {
 		show dialog {
-			Simon "How about it? Want a low battle?"
+			Simon emote 1 "How about it? Want a low battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a high battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
@@ -49,7 +49,7 @@ simon-game-start-q-swap {
 	if (flag ch2-simon-high is true) {
 		set flag ch2-simon-high to false;
 		show dialog {
-			Simon "Oho, so you'd like a low battle?"
+			Simon emote 1 "Oho, so you'd like a low battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a high battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
@@ -59,7 +59,7 @@ simon-game-start-q-swap {
 	} else {
 		set flag ch2-simon-high to true;
 		show dialog {
-			Simon "I see, so you'd like a high battle?"
+			Simon emote 1 "I see, so you'd like a high battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
@@ -103,7 +103,7 @@ simon-game-start-nevermind {
 	} else {
 		set entity Simon current_animation to 12;
 		show dialog {
-			Simon "Well then, feel free to ask again anytime."
+			Simon emote 1 "Well then, feel free to ask again anytime."
 		}
 	}
 	set entity Simon current_animation to 0;
@@ -169,14 +169,14 @@ simon-game-start {
 		set entity Lights on_tick to screen-lights-flash-battle-high;
 		if (flag ch2-simon-heard-high is false) {
 			show dialog {
-				Simon "Here we go! Keep your eyes up top!"
+				Simon emote 1 "Here we go! Keep your eyes up top!"
 				"Pay attention to those four corners around the screen!"
 				"Follow my lead! LET'S GOOOO!"
 			}
 			set flag ch2-simon-heard-high to true;
 		} else {
 			show dialog {
-				Simon "Keep your eyes up top and copy my moves! LET'S GOOOO!"
+				Simon emote 1 "Keep your eyes up top and copy my moves! LET'S GOOOO!"
 			}
 		}
 		set entity Lights on_tick to null_script;
@@ -185,14 +185,14 @@ simon-game-start {
 		set entity Lights on_tick to screen-lights-flash-battle-low;
 		if (flag ch2-simon-heard-low is false) {
 			show dialog {
-				Simon "Here we go! Keep your eyes down low!"
+				Simon emote 1 "Here we go! Keep your eyes down low!"
 				"It's the bottom of the screen that counts now! Keep your thumbs frisky!"
 				"Follow my lead! LET'S GOOOO!"
 			}
 			set flag ch2-simon-heard-low to true;
 		} else {
 			show dialog {
-				Simon "Keep your eyes down low and copy my moves! LET'S GOOOO!"
+				Simon emote 1 "Keep your eyes down low and copy my moves! LET'S GOOOO!"
 			}
 		}
 		set entity Lights on_tick to null_script;
@@ -440,7 +440,7 @@ simon-game-lose {
 	wait 100ms;
 	set entity Lights on_tick to screen-lights-lose;
 	set entity "%PLAYER%" on_tick to player-lose;
-	show dialog { Simon "Too bad! Better luck next time!" }
+	show dialog { Simon emote 3 "Too bad! Better luck next time!" }
 	set entity Lights on_tick to null_script;
 	turn lights control off;
 	turn player control on;
@@ -466,7 +466,7 @@ simon-game-win {
 	}
 	play entity Simon animation 2 once
 	set entity Simon current_animation to 4;
-	show dialog { Simon "GREAT JOB! Way to go, kid!" }
+	show dialog { Simon emote 3 "GREAT JOB! Way to go, kid!" }
 	// TODO: replay the moves with both of them in synch as a finale (but just the first time you win)
 	set entity Lights on_tick to null_script;
 	turn lights control off;
@@ -475,10 +475,10 @@ simon-game-win {
 		copy simon-game-restore-positions;
 		set entity Simon current_animation to 12;
 		show dialog {
-			Simon "HAHAH! That was a blast!"
+			Simon emote 1 "HAHAH! That was a blast!"
 			"THIS! This is what I was missing, the most important part about music!"
 			PLAYER "What part?"
-			Simon "It's the MUSIC!"
+			Simon emote 1 "It's the MUSIC!"
 			"Not the crowd, not the gigs, not the merch -- but the raw vibrations and rhythm!"
 			"It's seizing something from the depths of your soul and shoving it into your hands, your breath, your fingertips --"
 			"-- and making something LIVING, something that couldn't exist without you there to shape it!"
@@ -487,16 +487,16 @@ simon-game-win {
 		}
 		set entity Simon current_animation to 4;
 		show dialog {
-			Simon "Fantastic!"
+			Simon emote 3 "Fantastic!"
 		}
 		set entity Simon current_animation to 12;
 		show dialog {
-			Simon "Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
+			Simon emote 1 "Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
 		}
 		copy script ch2-hide-keyboard;
 		show dialog {
 			name "" "(You pick up the keyboard!)"
-			Simon "Keep it, and keep making awesome music!"
+			Simon emote 1 "Keep it, and keep making awesome music!"
 			PLAYER "Music, yeah. That is definitely what I was going to use it for. Yup."
 		}
 		set entity Simon current_animation to 12;
@@ -523,7 +523,7 @@ simon-game-go-again {
 	copy simon-game-restore-positions;
 	set entity Simon current_animation to 12;
 	show dialog {
-		Simon "Well? Wanna have another go?"
+		Simon emote 1 "Well? Wanna have another go?"
 		> "Sure" : simon-game-go-again-yes
 		> "No thanks" : simon-game-start-q-wrapup
 	}
@@ -536,7 +536,7 @@ simon-game-go-again-yes {
 simon-game-start-q-reprise {
 	if (flag ch2-simon-high is true) {
 		show dialog {
-			Simon "Want another high battle?"
+			Simon emote 1 "Want another high battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
@@ -545,7 +545,7 @@ simon-game-start-q-reprise {
 		}
 	} else {
 		show dialog {
-			Simon "Want another low battle?"
+			Simon emote 1 "Want another low battle?"
 			> "Sure" : simon-game-start
 			> "No, let's do a high battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
