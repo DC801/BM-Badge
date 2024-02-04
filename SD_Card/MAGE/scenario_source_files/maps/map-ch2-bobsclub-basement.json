@@ -110,7 +110,7 @@
                  "gid":297,
                  "height":32,
                  "id":60,
-                 "name":"Sink",
+                 "name":"sink",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -582,7 +582,7 @@
                  "gid":297,
                  "height":32,
                  "id":94,
-                 "name":"Party Cups",
+                 "name":"party cups",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -605,7 +605,7 @@
                  "gid":297,
                  "height":32,
                  "id":95,
-                 "name":"Pizza",
+                 "name":"pizza",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -628,7 +628,7 @@
                  "gid":297,
                  "height":32,
                  "id":96,
-                 "name":"Pizza",
+                 "name":"pizza",
                  "properties":[
                         {
                          "name":"on_interact",

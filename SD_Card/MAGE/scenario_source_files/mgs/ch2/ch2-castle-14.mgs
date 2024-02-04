@@ -18,7 +18,7 @@ look-ch2-castle-14 {
 look-ch2-gibson {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%King Gibson%</>."
+		"You looked at <m>%SELF%</>."
 		"\tHis bearing is not as imposing as his physique, but perhaps he was simply shaken by the earthquake and his subsequent isolation. His horns are shiny, like he keeps them oiled or waxed."
 	}
 }

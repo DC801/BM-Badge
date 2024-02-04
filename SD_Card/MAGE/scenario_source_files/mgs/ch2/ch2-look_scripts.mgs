@@ -3,21 +3,21 @@ include!("header.mgs")
 look-ch2-bert {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Bert%</>."
+		"You looked at <m>%SELF%</>."
 		"\tA bear of a man, yet he doesn't have an aggressive bearing. His eyes drift around his environment as if patiently regarding everything, considering each one in turn."
 	}
 }
 look-ch2-alfonso {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Alfonso%</>."
+		"You looked at <m>%SELF%</>."
 		"\tThe man may genuinely be having trouble standing still; he is fidgetting with his fingers, and the robe at his feet is is jerking slightly, rhythmically, as if he is aggressively tapping his toes."
 	}
 }
 look-ch2-jackob {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Jackob%</>."
+		"You looked at <m>%SELF%</>."
 		"\tThe man is old enough that his expression is cryptic. His eyes are all but entirely hidden under his sagging lids. He nods his head as if approving your efforts. Or is he genuinely falling asleep?"
 	}
 }
@@ -32,7 +32,7 @@ look-player {
 look-ch2-xa {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%XA%</>."
+		"You looked at <m>%SELF%</>."
 		"\tIt's difficult to tell whether the machine is orange on purpose or if it is simply very thoroughly rusted. Its legs look odd, somehow -- you imagine it could scoot around the floor without moving any of the joints in its legs."
 	}
 }

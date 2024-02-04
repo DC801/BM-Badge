@@ -13,8 +13,7 @@ look-ch2-bobsclub {
 	show serial dialog spacer;
 	show serial dialog {
 		"You look around at the <m><bold>Bob's Club</>."
-		" "
-		"You can hear muffled, rhythmic thumping through the floor, though there's no clear source."
+		"\tYou can hear muffled, rhythmic thumping through the floor, though there's no clear source."
 		" "
 	}
 }

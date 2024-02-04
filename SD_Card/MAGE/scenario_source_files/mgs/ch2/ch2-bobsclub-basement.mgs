@@ -14,35 +14,35 @@ look-ch2-bobsclub-basement {
 look-ch2-bobaustin {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Bob Austin%</>."
+		"You looked at <m>%SELF%</>."
 		"\tStoic and inscrutable, the giant stone golem could as easily be a hundred years old as a thousand. With his eyes glowing as they are, you can't be sure where he's looking, but you wouldn't be surprised if his gaze was following you as you move about the room."
 	}
 }
 look-ch2-bobmoss {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Bob Moss%</>."
-		"\t%Bob Moss% may share the same sharp edges and chiseled brow as his cousin, %Bob Austin%, but somehow %Bob Moss%'s demeanor is more cheerful and friendly. It may be his mossy afro -- or it may be the way he lifts his hands more freely, as if they didn't weigh anything."
+		"You looked at <m>%SELF%</>."
+		"\t%SELF% may share the same sharp edges and chiseled brow as his cousin, %Bob Austin%, but somehow %SELF%'s demeanor is more cheerful and friendly. It may be his mossy afro -- or it may be the way he lifts his hands more freely, as if they didn't weigh anything."
 	}
 }
 look-ch2-icechest {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at the <m>%ice chest%</>."
+		"You looked at the <m>%SELF%</>."
 		"\tA half dozen cans of assorted sodas peak through the mountain of ice within the chest, but the vast majority of cans are a bold orange, yellow, and green. The ice isn't very melted yet, so all the cans must be frosty."
 	}
 }
 look-ch2-marathonbob {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at one of the <m>%Marathon Bob%s</>."
+		"You looked at one of the <m>%SELF%s</>."
 		"\tEach Bob has a military look to them: a holstered firearm, combat boots, and a headset -- though the nature of their eyepieces escapes you. Each of these Bobs act alike, and apart from their colored uniforms, might as well be entirely interchangable with one another."
 	}
 }
 look-ch2-guardianbob {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Guardian Bob%</>."
+		"You looked at <m>%SELF%</>."
 		"\tStrangely, this Bob has a different cast to his skin, as if he were made of metal and plastic -- as if the shadows didn't land quite right around his body. But perhaps that's just how people from the 'net usually look."
 	}
 }
@@ -56,7 +56,7 @@ look-ch2-bob {
 look-ch2-party-cups {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at the red <m>party cups</>."
+		"You looked at the red <m>%SELF%</>."
 		"\tClassic party fare! It wouldn't be a party without plastic <bold>American Name Brand Party Cups (c)</>!"
 	}
 }

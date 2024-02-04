@@ -5,14 +5,15 @@ include!("header.mgs")
 look-ch2-magehouse {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: mage house text"
+		"You looked around at<c>YOUR HOUSE</>."
+		"\tThere's a certain smell to home that you'll always remember and that will always be nostalgic for you -- maybe it's the smell of ozone that seems to follow Aunt Zippy and Uncle Zappy around the room."
+		" "
 	}
 }
 
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-magehouse {
-	// do unique stuff first (but turn serial / player control off first, if you do)
 	copy ch2-map-init;
 }
 
@@ -46,7 +47,7 @@ interact-ch2-zippy {
 }
 interact-ch2-cake {
 	show dialog {
-		SELF "TODO"
+		PLAYER "There's a little frosting left. I wonder if Aunt Zappy would let me lick the plate clean?"
 	}
 }
 interact-ch2-magejournal {

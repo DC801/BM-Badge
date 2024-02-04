@@ -198,7 +198,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":800,
+                 "gid":896,
                  "height":32,
                  "id":30,
                  "name":"Wizard",
@@ -233,10 +233,10 @@
                 }, 
                 {
                  "class":"",
-                 "gid":824,
+                 "gid":920,
                  "height":32,
                  "id":40,
-                 "name":"Mainframe",
+                 "name":"mainframe",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -261,7 +261,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":825,
+                 "gid":921,
                  "height":32,
                  "id":56,
                  "name":"Artifact",
@@ -481,28 +481,28 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":527,
+         "firstgid":623,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":783,
+         "firstgid":879,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":889,
          "source":"..\/entities\/entity-raccoon.json"
         }, 
         {
-         "firstgid":812,
+         "firstgid":908,
          "source":"..\/entities\/entity-monitor.json"
         }, 
         {
-         "firstgid":824,
+         "firstgid":920,
          "source":"..\/entities\/entity-enclosure.json"
         },
     
         {
-         "firstgid":825,
+         "firstgid":921,
          "source":"..\/entities\/entity-artifact.json"
         }],
  "tilewidth":32,

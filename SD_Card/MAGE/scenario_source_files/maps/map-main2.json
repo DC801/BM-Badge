@@ -178,34 +178,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":437,
-                 "height":32,
-                 "id":10,
-                 "name":"Cat",
-                 "properties":[
-                        {
-                         "name":"is_glitched",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":1312.5,
-                 "y":811
-                }, 
-                {
-                 "class":"",
                  "gid":476,
                  "height":32,
                  "id":12,
@@ -305,34 +277,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484259,
-                 "height":32,
-                 "id":18,
-                 "name":"Cleo",
-                 "properties":[
-                        {
-                         "name":"is_glitched",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":1286,
-                 "y":821
-                }, 
-                {
-                 "class":"",
                  "gid":536,
                  "height":32,
                  "id":19,
@@ -412,8 +356,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":1334,
-                 "y":630
+                 "x":1295,
+                 "y":610
                 }, 
                 {
                  "class":"",
@@ -524,8 +468,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":1084,
-                 "y":860
+                 "x":1083,
+                 "y":867
                 }, 
                 {
                  "class":"",
@@ -580,8 +524,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":16,
-                 "x":1257,
-                 "y":931
+                 "x":1547,
+                 "y":938
                 }, 
                 {
                  "class":"",
@@ -754,6 +698,104 @@
                  "width":32,
                  "x":951,
                  "y":1336
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484085,
+                 "height":32,
+                 "id":337,
+                 "name":"Cat",
+                 "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":342,
+                 "y":1030
+                }, 
+                {
+                 "class":"",
+                 "gid":611,
+                 "height":32,
+                 "id":338,
+                 "name":"Cleo",
+                 "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":368,
+                 "y":1035
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":339,
+                 "name":"shepherd1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1386,
+                 "y":639
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":340,
+                 "name":"shepherd2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1316,
+                 "y":472
+                }, 
+                {
+                 "class":"",
+                 "gid":1385,
+                 "height":64,
+                 "id":341,
+                 "name":"Yabbo Mongo",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-yabbomongo"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":343,
+                 "y":1230
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1357,6 +1399,54 @@
                  "width":0,
                  "x":1177,
                  "y":1013
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":342,
+                 "name":"marta1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1284,
+                 "y":810
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":343,
+                 "name":"marta2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1276,
+                 "y":697
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":344,
+                 "name":"verthandi2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1136,
+                 "y":1150
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":345,
+                 "name":"verthandi1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1199,
+                 "y":1097
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1853,7 +1943,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":335,
+ "nextobjectid":346,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

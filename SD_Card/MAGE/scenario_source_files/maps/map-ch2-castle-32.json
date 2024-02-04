@@ -253,7 +253,7 @@
                  "gid":269,
                  "height":32,
                  "id":61,
-                 "name":"Sink",
+                 "name":"sink",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -271,12 +271,17 @@
                  "gid":269,
                  "height":32,
                  "id":62,
-                 "name":"Onions",
+                 "name":"onions",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-onions"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"ch2-look-onions"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -289,12 +294,17 @@
                  "gid":269,
                  "height":32,
                  "id":64,
-                 "name":"Stove",
+                 "name":"stove",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-stove"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"ch2-look-stove"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -308,12 +318,17 @@
                  "gid":269,
                  "height":32,
                  "id":65,
-                 "name":"Stove",
+                 "name":"stove",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-stove"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"ch2-look-stove"
                         }],
                  "rotation":0,
                  "visible":true,
