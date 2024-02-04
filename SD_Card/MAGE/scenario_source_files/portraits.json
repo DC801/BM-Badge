@@ -486,5 +486,98 @@
 				"flip_x": true
 			}
 		}
+	},
+	"cockatiel": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 6,
+				"flip_x": true
+			}
+		}
+	},
+	"raccoon": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 16,
+				"flip_x": true
+			}
+		}
+	},
+	"marathon_bob_red": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 28,
+				"flip_x": true
+			}
+		}
+	},
+	"marathon_bob_blue": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 29,
+				"flip_x": true
+			}
+		}
+	},
+	"marathon_bob_green": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 30,
+				"flip_x": true
+			}
+		}
+	},
+	"npc03": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 31,
+				"flip_x": true
+			}
+		}
+	},
+	"alvin": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 25,
+				"flip_x": false
+			}
+		}
+	},
+	"theodore": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 26,
+				"flip_x": true
+			}
+		}
+	},
+	"simon": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"pout": {
+				"tileid": 21,
+				"flip_x": true
+			},
+			"pleased": {
+				"tileid": 22,
+				"flip_x": true
+			},
+			"angry": {
+				"tileid": 23,
+				"flip_x": true
+			},
+			"laughing": {
+				"tileid": 24,
+				"flip_x": true
+			}
+		}
 	}
 }
