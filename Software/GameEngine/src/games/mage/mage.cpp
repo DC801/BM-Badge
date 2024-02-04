@@ -30,6 +30,8 @@ bool engineIsInitialized;
 
 uint32_t lastTime;
 uint32_t now;
+uint32_t lastFrameTime;
+uint32_t frameTimes[5];
 uint32_t deltaTime;
 uint32_t lastLoopTime;
 
@@ -83,6 +85,98 @@ void GameUpdate(uint32_t deltaTime)
 
 		MageGame->applyCameraEffects(deltaTime);
 	}
+}
+
+void renderTextOutlined(char *text, int y, int x) {
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y - 1,
+		x - 1
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y + 1,
+		x - 1
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y - 1,
+		x + 1
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y + 1,
+		x + 1
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y - 1,
+		x
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y + 1,
+		x
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y,
+		x - 1
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0x0000,
+		y,
+		x + 1
+	);
+	mage_canvas->printMessage(
+		text,
+		Monaco9,
+		0xffff,
+		y,
+		x
+	);
+}
+
+void recordAndRenderFPS() {
+	now = millis();
+	uint32_t fullLoopTime = now - lastFrameTime;
+	lastFrameTime = now;
+	char fpsText [24] = "";
+	uint32_t total = fullLoopTime;
+	for (int i = 1; i < 5; ++i) {
+		total += frameTimes[i];
+		frameTimes[i - 1] = frameTimes[i];
+	}
+	frameTimes[4] = fullLoopTime;
+	float fps = 1000.0f / ((float)total / 5.0f);
+
+	// Normally, you could just use %.02f, but in embedded, you cannot.
+	// %.02f with a float produces an empty string. Thus this rigamarole.
+	const char *sign = (fps < 0) ? "-" : "+";
+	float tmpVal = (fps < 0) ? -fps : fps;
+	int tmpInt1 = (int)tmpVal;                  // Get the integer
+	float tmpFrac = tmpVal - (float)tmpInt1;    // Get fraction
+	int tmpInt2 = (int)trunc(tmpFrac * 10000);  // Turn into integer
+	sprintf(fpsText, "FPS: %s%d.%-4d | MS: %d", sign, tmpInt1, tmpInt2, fullLoopTime);
+	int y = 96;
+	int x = 8;
+	renderTextOutlined(fpsText, y, x);
 }
 
 void GameRender()
@@ -194,6 +288,10 @@ void GameRender()
 	if(!MageGame->isLEDControlEnabled) {
 		// update the state of the LEDs
 		MageHex->updateHexLights();
+	}
+
+	if(MageGame->isEntityDebugOn){
+		recordAndRenderFPS();
 	}
 
 	//update the screen
