@@ -212,14 +212,14 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
    }
 }
 
-void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, int x, int y)
+void FrameBuffer::printMessage(const std::string_view& text, GFXfont font, uint16_t color, int x, int y)
 {
    m_color = color;
    m_cursor_area.origin.x = x;
    m_cursor_x = m_cursor_area.origin.x;
    m_cursor_y = y + (font.yAdvance / 2);
 
-   for (uint16_t i = 0; text[i] && i < text.length(); i++)
+   for (uint16_t i = 0; i < text.length() && text[i]; i++)
    {
       write_char(text[i], font);
    }

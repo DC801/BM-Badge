@@ -10,7 +10,7 @@
 #include "mage_dialog_control.h"
 
 class MapControl;
-class TileManager;
+class ScreenManager;
 class MageScriptControl;
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
@@ -29,8 +29,8 @@ enum MageSerialCommands : uint8_t {
 
 class MageCommandControl {
 	public:
-		MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<TileManager> tileManager, std::shared_ptr<MageScriptControl> scriptControl, std::shared_ptr<StringLoader> stringLoader) noexcept
-			: mapControl(mapControl), tileManager(tileManager), scriptControl(scriptControl), stringLoader(stringLoader)
+		MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<MageScriptControl> scriptControl, std::shared_ptr<StringLoader> stringLoader) noexcept
+			: mapControl(mapControl), screenManager(screenManager), scriptControl(scriptControl), stringLoader(stringLoader)
 		{}
 
 		std::string commandResponseBuffer;
@@ -50,7 +50,7 @@ class MageCommandControl {
 private:
 	std::shared_ptr<EngineSerial> serial;
 	std::shared_ptr<MapControl> mapControl;
-	std::shared_ptr<TileManager> tileManager;
+	std::shared_ptr<ScreenManager> screenManager;
 	std::shared_ptr<MageScriptControl> scriptControl;
 	std::shared_ptr<StringLoader> stringLoader;
 

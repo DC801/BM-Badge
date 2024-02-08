@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "Header.h"
 #include "EngineAudio.h"
 #include "EngineInput.h"
 #include "EngineSerial.h"
@@ -34,15 +33,16 @@ public:
       : inputHandler(inputHandler), frameBuffer(frameBuffer)
    {
       audioPlayer = std::make_unique<AudioPlayer>();
-      tileManager = std::make_shared<TileManager>(frameBuffer, &camera);
-      mapControl = std::make_shared<MapControl>(tileManager, ROM()->GetCurrentSave().currentMapId);
-      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
+      screenManager = std::make_shared<ScreenManager>(frameBuffer, &camera);
+
+      mapControl = std::make_shared<MapControl>(screenManager, ROM()->GetCurrentSave().currentMapId);
+      hexEditor = std::make_shared<MageHexEditor>(screenManager, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(ROM()->GetCurrentSave().scriptVariables);
-      dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
+      dialogControl = std::make_unique<MageDialogControl>(screenManager, stringLoader, mapControl);
 
       auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
       scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::move(scriptActions));
-      commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl, stringLoader);
+      commandControl = std::make_shared<MageCommandControl>(mapControl, screenManager, scriptControl, stringLoader);
    }
    //this will load a map to be the current map.
    void LoadMap();
@@ -52,12 +52,7 @@ public:
    void Run();
 
 private:
-   //updates the state of all the things before rendering:
-   void gameUpdate(const DeltaState& delta);
-
-   //This renders the game to the frame buffer based on the loop's updated state.
-   void gameRender();
-
+   
    //this takes input information and moves the playerEntity around
    //If there is no playerEntity, it just moves the camera freely.
    void applyGameModeInputs(const DeltaState& delta);
@@ -66,8 +61,9 @@ private:
    //the hex editor is open, when it is closed, when in any menus, etc.
    void applyUniversalInputs(const DeltaState& delta);
 
-   void handleEntityInteract(const ButtonState& activatedButton);
    void updateHexLights() const;
+
+   void gameLoopIteration();
 
    uint8_t currentSaveIndex{ 0 };
 
@@ -80,7 +76,7 @@ private:
    std::shared_ptr<MageHexEditor> hexEditor;
    std::shared_ptr<MageScriptControl> scriptControl;
    std::shared_ptr<MageCommandControl> commandControl;
-   std::shared_ptr<TileManager> tileManager;
+   std::shared_ptr<ScreenManager> screenManager;
    std::shared_ptr<MageDialogControl> dialogControl;
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<StringLoader> stringLoader;

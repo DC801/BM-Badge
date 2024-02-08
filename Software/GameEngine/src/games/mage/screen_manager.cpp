@@ -1,4 +1,4 @@
-#include "mage_tileset.h"
+#include "screen_manager.h"
 #include "mage_portrait.h"
 #include "EnginePanic.h"
 #include <algorithm>
@@ -8,8 +8,9 @@
 #ifdef DC801_EMBEDDED
 #include "modules/drv_ili9341.h"
 #endif
+#include <fonts/Monaco9.h>
 
-void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags) const
+void ScreenManager::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags) const
 {
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
    auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
@@ -32,7 +33,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    {
       ySourceMin = tileset->TileHeight - 1;
       ySourceMax = -1;
-      iteratorY =  -1;
+      iteratorY = -1;
    }
 
    //if (flags & RENDER_FLAGS_IS_GLITCHED)
@@ -45,7 +46,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    const auto tiles = ROM()->GetReadPointerByIndex<MagePixel>(tilesetId);
    const auto tilePixels = std::span<const MagePixel>(&tiles[tileId * tileset->TileWidth * tileset->TileHeight], tileset->TileWidth * tileset->TileHeight);
 
-   for (auto yTarget = tileDrawY - camera->positionY;
+   for (auto yTarget = tileDrawY;
       ySourceMin != ySourceMax;
       ySourceMin += iteratorY, yTarget++)
    {
@@ -56,7 +57,7 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
          continue;
       }
 
-      for (auto xSource = xSourceMin, xTarget = tileDrawX - camera->positionX;
+      for (auto xSource = xSourceMin, xTarget = tileDrawX;
          xSource != xSourceMax;
          xSource += iteratorX, xTarget++)
       {
@@ -102,5 +103,10 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
          }
       }
    }
+}
 
+
+void ScreenManager::DrawText(const std::string_view& text, uint16_t color, int x, int y) const
+{
+   frameBuffer->printMessage(text, Monaco9, color, x, y);
 }

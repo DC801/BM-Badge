@@ -73,20 +73,37 @@ struct MagePortrait
 };
 
 
-class TileManager
+class ScreenManager
 {
    friend class MageCommandControl;
 public:
-   TileManager(std::shared_ptr<FrameBuffer> frameBuffer, const MageCamera* camera) noexcept
+   ScreenManager(std::shared_ptr<FrameBuffer> frameBuffer, const MageCamera* camera) noexcept
       : frameBuffer(frameBuffer), camera(camera)
    {}
 
-   void DrawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0) const;
+   inline void DrawFilledRect(int x, int y, int w, int h, uint16_t color) const
+   {
+      frameBuffer->fillRect(x, y, w, h, color);
+   }
+
+   inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0) const
+   {
+      drawTile(tilesetId, tileId, tileDrawX - camera->positionX, tileDrawY - camera->positionY, flags);
+   }
+
+   inline void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0) const
+   {
+      drawTile(tilesetId, tileId, tileDrawX, tileDrawY, flags);
+   }
+
+   void DrawText(const std::string_view& text, uint16_t color, int x, int y) const;
 
    inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
    const MageCamera* camera;
 
 private:
+   void drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags) const;
+
    std::shared_ptr<FrameBuffer> frameBuffer;
    bool drawGeometry{ false };
 };

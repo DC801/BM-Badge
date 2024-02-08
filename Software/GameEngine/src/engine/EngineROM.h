@@ -1,7 +1,6 @@
 ﻿#ifndef ENGINE_ROM_H_
 #define ENGINE_ROM_H_
 
-#include "Header.h"
 #include "EnginePanic.h"
 #include "utility.h"
 #include <stdint.h>
@@ -38,12 +37,12 @@ public:
       lengths(offset + sizeof(uint32_t) * count, count)
    {}
 
-   uint16_t Count() const { return count; }
-   uint32_t GetOffset(uint16_t i) const
+   constexpr const uint16_t Count() const { return count; }
+   constexpr const uint32_t GetOffset(uint16_t i) const
    {
       return offsets[i % count];
    }
-   uint32_t GetLength(uint16_t i) const
+   constexpr const uint32_t GetLength(uint16_t i) const
    {
       return lengths[i % count];
    }

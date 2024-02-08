@@ -110,7 +110,7 @@ void MapControl::DrawEntities() const
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex : entityDrawOrder)
    {
-      Get<RenderableData>(entityIndex).Draw(tileManager);
+      Get<RenderableData>(entityIndex).Draw(screenManager);
    }
 }
 
@@ -138,8 +138,8 @@ void MapControl::DrawLayer(uint8_t layer) const
  
 
    // identify start and stop tiles to draw
-   auto startTileX = std::max(0, (tileManager->camera->positionX - DrawWidth) / currentMap->tileWidth);
-   auto startTileY = std::max(0, (tileManager->camera->positionY - DrawHeight) / currentMap->tileHeight);
+   auto startTileX = std::max(0, (screenManager->camera->positionX - DrawWidth) / currentMap->tileWidth);
+   auto startTileY = std::max(0, (screenManager->camera->positionY - DrawHeight) / currentMap->tileHeight);
 
    auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
    auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
@@ -156,7 +156,7 @@ void MapControl::DrawLayer(uint8_t layer) const
          auto tileDrawX = currentMap->tileWidth * mapTileCol;
          auto tileDrawY = currentMap->tileHeight * mapTileRow;
 
-         tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
+         screenManager->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
       }
    }
 }
@@ -192,7 +192,7 @@ void MapControl::UpdateEntities()
    }
 }
 
-std::optional<uint16_t> MapControl::TryMovePlayer(const DeltaState& delta)
+std::optional<uint16_t> MapControl::UpdatePlayer(const DeltaState& delta)
 {
    // require a player on the map to move/interact
    auto playerData = getPlayerEntityData();

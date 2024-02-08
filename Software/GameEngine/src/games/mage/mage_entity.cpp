@@ -37,9 +37,9 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
    hitBox.h = halfHeight;
 }
 
-void RenderableData::Draw(const std::shared_ptr<TileManager>& tileManager) const
+void RenderableData::Draw(const std::shared_ptr<ScreenManager>& screenManager) const
 {
-   tileManager->DrawTile(tilesetId, tileId, origin.x, origin.y, renderFlags);
+   screenManager->DrawTileWorldCoords(tilesetId, tileId, origin.x, origin.y, renderFlags);
 }
 
 void RenderableData::updateAsTileset(const MageEntityData& entity)

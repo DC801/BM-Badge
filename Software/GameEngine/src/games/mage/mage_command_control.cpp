@@ -254,7 +254,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
 void MageCommandControl::showSerialDialog(uint16_t serialDialogId)
 {
    scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-   // uint32_t serialDialogAddress = tileManager->imageHeader.offset(serialDialogId);
+   // uint32_t serialDialogAddress = screenManager->imageHeader.offset(serialDialogId);
    //ROM()->Read(serialDialog, serialDialogAddress);
    openSerialDialog = ROM()->InitializeRAMCopy<MageSerialDialog>(serialDialogId);
    auto dialogString = stringLoader->getString(openSerialDialog->stringId);

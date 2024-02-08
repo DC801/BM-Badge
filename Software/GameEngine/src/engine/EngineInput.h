@@ -56,12 +56,26 @@ struct DeltaState
    {
       return Buttons.IsPressed(KeyPress::Ljoy_down) && !Buttons.IsPressed(KeyPress::Ljoy_up);
    }
-};
+   inline bool AdvanceDialog() const
+   {
+      return ActivatedButtons.IsPressed(KeyPress::Rjoy_down)
+         || ActivatedButtons.IsPressed(KeyPress::Rjoy_left)
+         || ActivatedButtons.IsPressed(KeyPress::Rjoy_right);
+   }
+   inline bool Increment() const
+   {
+      return Buttons.IsPressed(KeyPress::Rjoy_up) && !Buttons.IsPressed(KeyPress::Rjoy_down);
+   }
+   inline bool Decrement() const
+   {
+      return Buttons.IsPressed(KeyPress::Rjoy_down) && !Buttons.IsPressed(KeyPress::Rjoy_up);
+   }
 
-//typedef std::conditional<
-//   std::chrono::high_resolution_clock::is_steady,
-//   std::chrono::high_resolution_clock,
-//   std::chrono::steady_clock >::type GameClock;
+   inline bool Running() const
+   {
+      return Buttons.IsPressed(KeyPress::Rjoy_right);
+   }
+};
 
 struct GameClock
 {

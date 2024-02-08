@@ -42,17 +42,12 @@ enum HEX_OPS {
 class MageHexEditor
 {
 public:
-	MageHexEditor(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
-		: frameBuffer(frameBuffer),
+	MageHexEditor(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
+		: screenManager(screenManager),
 		inputHandler(inputHandler),
 		mapControl(mapControl),
 		memOffsets(memOffsets)
 	{};
-
-	constexpr void disableMovementUntilRJoyUpRelease()
-	{
-		disableMovement = true;
-	}
 
 	//returns true if hex editor is open.
 	constexpr bool isHexEditorOn() const
@@ -97,9 +92,9 @@ public:
 	//this updates the variables used by the hex editor when applying inputs and rendering.
 	void updateHexStateVariables();
 
-	//this applies inputs to the hex editor state.u
-	void applyHexModeInputs(const DeltaState& delta);
-	void applyMemRecallInputs();
+	//this applies inputs to the hex editor state.
+	void applyInput(const DeltaState& delta);
+	void applyMemRecallInputs(const DeltaState& delta);
 
 	//this writes all the hex editor data to the screen.
 	void Draw();
@@ -107,14 +102,13 @@ public:
 	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
 	void openToEntity(uint8_t entityIndex);
-	bool IsMovementDisabled() const { return disableMovement; }
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }
 
 	std::array<uint8_t, 4> memOffsets;
 	bool playerHasHexEditorControl{ false };
 
 private:
-	std::shared_ptr<FrameBuffer> frameBuffer;
+	std::shared_ptr<ScreenManager> screenManager;
 	std::shared_ptr<MapControl>  mapControl;
 	std::shared_ptr<EngineInput> inputHandler;
 
@@ -122,9 +116,6 @@ private:
 	uint8_t clipboardLength{ 0 };
 
 	bool disableMovement{ false };
-
-	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
-	uint16_t getRenderableStringLength(const char* string, uint16_t maxLength) const;
 
 	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();

@@ -1,5 +1,5 @@
 #include "mage_geometry.h"
-#include "mage_tileset.h"
+#include "screen_manager.h"
 #include <algorithm>
 
 #ifndef DC801_EMBEDDED

@@ -1,32 +1,30 @@
 #include "mage_dialog_control.h"
 
-#include "EngineInput.h"
-#include "StringLoader.h"
 #include "mage_map.h"
 #include "mage_portrait.h"
-#include "mage_tileset.h"
+#include "screen_manager.h"
 #include <utility>
 
-MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
+const MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    { // BOTTOM_LEFT
-      { 0, 8, 19, 6 },
-      { 0, 6, 7, 3 },
-      { 0, 1, 6, 6 }
+      .text =     { 0, 8, 19, 6 },
+      .label =    { 0, 6, 7, 3 },
+      .portrait = { 0, 1, 6, 6 }
    },
    { // BOTTOM_RIGHT
-      { 0, 8, 19, 6 },
-      { 12, 6, 7, 3 },
-      { 13, 1, 6, 6 }
+      .text = { 0, 8, 19, 6 },
+      .label = { 12, 6, 7, 3 },
+      .portrait = { 13, 1, 6, 6 }
    },
    { // TOP_LEFT
-      { 0, 0, 19, 6 },
-      { 0, 5, 7, 3 },
-      { 0, 7, 6, 6 }
+      .text = { 0, 0, 19, 6 },
+      .label = { 0, 5, 7, 3 },
+      .portrait = { 0, 7, 6, 6 }
    },
    { // TOP_RIGHT
-      { 0, 0, 19, 6 },
-      { 12, 5, 7, 3 },
-      { 13, 7, 6, 6 }
+      .text = { 0, 0, 19, 6 },
+      .label = { 12, 5, 7, 3 },
+      .portrait = { 13, 7, 6, 6 }
    }
 };
 
@@ -36,170 +34,198 @@ void MageDialogControl::load(uint16_t dialogId, std::string name)
 
    currentScreenIndex = 0;
    currentResponseIndex = 0;
-   currentDialogId = dialogId;
+   currentDialog = ROM()->GetReadPointerByIndex<MageDialog>(dialogId);
    loadNextScreen();
    open = true;
 }
 
 void MageDialogControl::StartModalDialog(std::string messageString)
 {
-   // Recycle all of the values set by the previous dialog to preserve look and feel
-   // If there was no previous dialog... uhhhhhhh good luck with that?
-   currentResponseIndex = 0;
-   currentMessageIndex = 0;
-   currentMessage = messageString;
-   responses.clear();
-   cursorPhase += 250;
-   open = true;
+   if (currentDialog)
+   {
+      // Recycle all of the values set by the previous dialog to preserve look and feel
+      // If there was no previous dialog... uhhhhhhh good luck with that?
+      currentResponseIndex = 0;
+      currentMessageIndex = 0;
+      currentMessage = messageString;
+      responses.clear();
+      open = true;
+   }
 }
 
 void MageDialogControl::loadNextScreen()
 {
-   currentDialog = ROM()->GetReadPointerByIndex<MageDialog>(currentDialogId);
-   currentMessageIndex = 0;
    if (currentScreenIndex >= currentDialog->ScreenCount)
    {
       open = false;
       return;
    }
+   currentMessageIndex = 0;
 
-   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
-   currentEntityName = stringLoader->getString(currentScreen.nameStringIndex, triggeringEntityName);
+   const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    loadCurrentScreenPortrait();
 
-   auto messageId = currentScreen.GetMessage(currentMessageIndex);
-   currentMessage = stringLoader->getString(messageId, triggeringEntityName);
+   currentMessage = currentScreen.GetMessage(stringLoader, currentMessageIndex, triggeringEntityName);
    currentFrameTilesetIndex = currentScreen.borderTilesetIndex;
+
    currentScreenIndex++;
-   cursorPhase += 250;
 }
 
-std::optional<uint16_t> MageDialogControl::update(const DeltaState& delta)
+std::optional<uint16_t> MageDialogControl::applyInput(const DeltaState& delta)
 {
-   cursorPhase += MinTimeBetweenRenders.count();
-   if (cursorPhase < MinTimeBetweenDialogUpdates.count())
+   if (!isOpen())
    {
       return std::nullopt;
    }
-   cursorPhase -= MinTimeBetweenDialogUpdates.count();
 
-   bool shouldAdvance = delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_down)
-      || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_left)
-      || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right)
-      || MAGE_NO_MAP != mapControl->mapLoadId;
-
-   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
-   if (shouldShowResponses())
+   const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
+   if (shouldShowResponses(currentScreen))
    {
       currentResponseIndex += currentScreen.responseCount;
-      if (delta.ActivatedButtons.IsPressed(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
-      if (delta.ActivatedButtons.IsPressed(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
+      if (delta.Up()) { currentResponseIndex -= 1; }
+      if (delta.Down()) { currentResponseIndex += 1; }
       currentResponseIndex %= currentScreen.responseCount;
-      if (shouldAdvance)
+      if (delta.Right())
       {
          open = false;
          return responses[currentResponseIndex].scriptIndex;
       }
    }
-   else if (shouldAdvance)
+
+   const auto shouldAdvance = delta.AdvanceDialog()
+      || MAGE_NO_MAP != mapControl->mapLoadId;
+
+   if (shouldAdvance)
    {
       currentMessageIndex++;
-      cursorPhase = 0;
       if (currentMessageIndex >= currentScreen.messageCount)
       {
          loadNextScreen();
       }
       else
       {
-         auto currentMessageId = currentScreen.GetMessage(currentMessageIndex);
-         currentMessage = stringLoader->getString(currentMessageId, triggeringEntityName);
+         currentMessage = currentScreen.GetMessage(stringLoader, currentMessageIndex, triggeringEntityName);
+         //currentMessage = stringLoader->getString(currentMessageId, triggeringEntityName);
       }
    }
    return std::nullopt;
 }
 
-void MageDialogControl::Draw()
+void MageDialogControl::update()
 {
-   if (!open || currentScreenIndex >= currentDialog->ScreenCount)
+   if (!open)
    {
-      open = false;
       return;
    }
 
-   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
-   MageDialogAlignmentCoords coords = alignments[(uint8_t)currentScreen.alignment % ALIGNMENT_COUNT];
-   drawDialogBox(currentMessage, coords.text, true);
-   drawDialogBox(currentEntityName, coords.label);
+   cursorPhase += IntegrationStepSize.count();
+}
+
+void MageDialogControl::Draw() const
+{
+   if (!open)
+   {
+      return;
+   }
+
+   const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
+   const auto coords = alignments[(uint8_t)currentScreen.alignment % ALIGNMENT_COUNT];
+   const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
+
+   const auto labelX = (uint16_t)((coords.label.origin.x * tileset->TileWidth) + (tileset->TileWidth / 2));
+   const auto labelY = (uint16_t)((coords.label.origin.y * tileset->TileHeight) + (tileset->TileHeight / 2));
+   const auto messageX = (uint16_t)((coords.text.origin.x * tileset->TileWidth) + (tileset->TileWidth / 2));
+   const auto messageY = (uint16_t)((coords.text.origin.y * tileset->TileHeight) + (tileset->TileHeight / 2));
+
+   drawBackground({ labelX, labelY, coords.label.w, coords.label.h });
+   screenManager->DrawText(currentEntityName, COLOR_WHITE, labelX + tileset->TileWidth + 8, labelY + tileset->TileHeight - 2);
+   drawBackground({ messageX, messageY, coords.text.w, coords.text.h });
+   screenManager->DrawText(currentMessage, COLOR_WHITE, messageX + tileset->TileWidth + 8, messageY + tileset->TileHeight - 2);
+
+   if (shouldShowResponses(currentScreen))
+   {
+      // render all of the response labels
+      for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex)
+      {
+         screenManager->DrawText(stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityName), COLOR_WHITE, messageX + tileset->TileWidth + 6, messageY);
+      }
+      screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId, messageX, messageY);
+   }
+   else
+   {
+      // bounce the arrow at the bottom when we don't have responses
+      static const auto TAU = 6.283185307179586f;
+      const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
+      const auto bounce = cos(((float)cursorPhase / 1000.0f) * TAU) * 3;
+      screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId,
+         messageX + (coords.text.w - 2) * tileset->TileWidth,
+         messageY + (coords.text.h - 2) * tileset->TileHeight + bounce);
+   }
+
    if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
    {
-      drawDialogBox("", coords.portrait, false, true);
+      screenManager->DrawTileScreenCoords(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, messageX + tileset->TileWidth, messageY + tileset->TileHeight, currentPortraitRenderableData.renderFlags);
    }
 }
 
-void MageDialogControl::drawDialogBox(const std::string& string, const EntityRect& box, bool drawArrow, bool drawPortrait) const
+void MageDialogControl::drawBackground(const EntityRect& box) const
 {
-   auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
-   auto tileWidth = tileset->TileWidth;
-   auto tileHeight = tileset->TileHeight;
-   auto offsetX = (uint16_t)( (box.origin.x * tileWidth) + (tileWidth / 2) );
-   auto offsetY = (uint16_t)( (box.origin.y * tileHeight) + (tileHeight / 2) );
-   for (uint8_t x = 0; x < box.w; ++x)
-      for (uint8_t y = 0; y < box.h; ++y)
+   const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
+   for (auto x = box.w - 1; x >= 0; x--)
+   {
+      for (auto y = box.h - 1; y >= 0; y--)
       {
-         uint8_t tileId = DIALOG_TILES_CENTER_REPEAT;
-         auto leftEdge = bool{ x == 0 };
-         auto rightEdge = bool{ x == (box.w - 1) };
-         auto topEdge = bool{ y == 0 };
-         auto bottomEdge = bool{ y == (box.h - 1) };
+         const auto leftEdge = x == 0;
+         const auto rightEdge = x == (box.w - 1);
+         const auto topEdge = y == 0;
+         const auto bottomEdge = y == (box.h - 1);
+
+         const auto drawX = x * tileset->TileWidth + box.origin.x;
+         const auto drawY = y * tileset->TileHeight + box.origin.y;
+
          if (leftEdge)
          {
-            tileId = DIALOG_TILES_LEFT_REPEAT;
-            if (topEdge) { tileId = DIALOG_TILES_TOP_LEFT; }
-            else if (bottomEdge) { tileId = DIALOG_TILES_BOTTOM_LEFT; }
+            if (topEdge)
+            {
+               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_LEFT, drawX, drawY);
+            }
+            else if (bottomEdge)
+            {
+               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_LEFT, drawX, drawY);
+            }
+            else
+            {
+               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_LEFT_REPEAT, drawX, drawY);
+            }
          }
          else if (rightEdge)
          {
-            tileId = DIALOG_TILES_RIGHT_REPEAT;
-            if (topEdge) { tileId = DIALOG_TILES_TOP_RIGHT; }
-            else if (bottomEdge) { tileId = DIALOG_TILES_BOTTOM_RIGHT; }
+            if (topEdge)
+            {
+               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_RIGHT, drawX, drawY);
+            }
+            else if (bottomEdge)
+            {
+               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_RIGHT, drawX, drawY);
+            }
+            else
+            {
+               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_RIGHT_REPEAT, drawX, drawY);
+            }
          }
-         else if (topEdge) { tileId = DIALOG_TILES_TOP_REPEAT; }
-         else if (bottomEdge) { tileId = DIALOG_TILES_BOTTOM_REPEAT; }
-
-         tileManager->DrawTile(currentFrameTilesetIndex, tileId, offsetX + (x * tileWidth), offsetY + (y * tileHeight));
-      }
-
-   frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
-
-   if (drawArrow)
-   {
-      static const auto TAU = 6.283185307179586f;
-      int8_t bounce = cos(((float)cursorPhase / 1000.0f) * TAU) * 3;
-      if (shouldShowResponses())
-      {
-         auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
-         // render all of the response labels
-         for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex)
+         else if (topEdge)
          {
-            frameBuffer->printMessage(
-               stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityName),
-               Monaco9, 0xffff,
-               offsetX + (2 * tileWidth) + 8,
-               offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
-            );
+            screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_REPEAT, drawX, drawY);
          }
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, offsetX + tileWidth, offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6 + bounce);
+         else if (bottomEdge)
+         {
+            screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_REPEAT, drawX, drawY);
+         }
+         else //background
+         {
+            screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_CENTER_REPEAT, drawX, drawY);
+         }
       }
-      else
-      {
-         // bounce the arrow at the bottom
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, offsetX + (box.w - 2) * tileWidth, offsetY + (box.h - 2) * tileHeight + bounce);
-      }
-   }
-
-   if (drawPortrait)
-   {
-      tileManager->DrawTile(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, offsetX + tileWidth, offsetY + tileHeight, currentPortraitRenderableData.renderFlags);
    }
 }
 
@@ -212,7 +238,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
    {
       if (currentScreen.entityIndex != NO_PLAYER_INDEX)
       {
-         auto currentEntity = mapControl->Get<MageEntityData>(currentScreen.entityIndex);
+         auto& currentEntity = mapControl->Get<MageEntityData>(currentScreen.entityIndex);
          uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {

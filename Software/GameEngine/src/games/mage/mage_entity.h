@@ -5,7 +5,7 @@
 #include "mage_camera.h"
 #include "mage_script_state.h"
 #include "mage_geometry.h"
-#include "mage_tileset.h"
+#include "screen_manager.h"
 #include <stdint.h>
 #include <vector>
 #include <memory>
@@ -119,7 +119,7 @@ struct RenderableData
 
    void UpdateFrom(const MageEntityData& entity);
 
-   void Draw(const std::shared_ptr<TileManager>& tileManager) const;
+   void Draw(const std::shared_ptr<ScreenManager>& screenManager) const;
 
 private:
    void updateAsAnimation(const MageEntityData& entity);

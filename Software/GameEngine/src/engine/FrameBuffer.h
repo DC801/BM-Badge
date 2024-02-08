@@ -51,13 +51,12 @@ class MageGameEngine;
 
 class FrameBuffer
 {
-   friend class TileManager;
+   friend class ScreenManager;
 public:
    FrameBuffer(std::unique_ptr<EngineWindowFrame> windowFrame) noexcept
       : windowFrame(std::move(windowFrame))
    {}
 
-   //inline uint16_t& operator()(int index) { return frame->data()[index]; }
    constexpr void ResetFade() { fadeFraction = 0.0f; }
    constexpr void SetFade(uint16_t color, float progress)
    {
@@ -118,7 +117,7 @@ public:
 
 
    void write_char(uint8_t c, GFXfont font);
-   void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
+   void printMessage(const std::string_view& text, GFXfont font, uint16_t color, int x, int y);
 
    void blt();
    constexpr uint16_t* getFrameDataPtr()
@@ -139,14 +138,7 @@ private:
    bool isFading{ false };
    uint16_t fadeColor{ 0 };
 
-   void __draw_char(
-      int16_t x,
-      int16_t y,
-      unsigned char c,
-      uint16_t color,
-      uint16_t bg,
-      GFXfont font
-   );
+   void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, GFXfont font);
 };
 
 

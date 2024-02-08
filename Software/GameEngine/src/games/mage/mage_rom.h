@@ -2,7 +2,6 @@
 #define MAGE_ROM_H_
 
 #include <stdint.h>
-#include "Header.h"
 #include "EngineROM.h"
 #include "EngineInput.h"
 
