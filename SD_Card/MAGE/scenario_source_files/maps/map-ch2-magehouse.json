@@ -82,6 +82,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-zippy"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-zippy"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -105,6 +110,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-zappy"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-zappy"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -128,6 +138,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-goldfish"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-tickles"
                         }, 
                         {
                          "name":"on_tick",

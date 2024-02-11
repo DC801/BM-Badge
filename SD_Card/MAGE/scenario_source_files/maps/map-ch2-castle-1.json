@@ -209,6 +209,11 @@
                          "value":"interact-ch2-wizard"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-wizard"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"face-player"

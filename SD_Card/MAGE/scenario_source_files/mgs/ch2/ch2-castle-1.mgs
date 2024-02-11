@@ -75,6 +75,15 @@ look-ch2-mainframe {
 	}
 }
 
+look-ch2-wizard {
+	show serial dialog spacer;
+	show serial dialog {
+		"TODO: Wizard on_look text\n "
+		" "
+	}
+}
+
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-1 {
