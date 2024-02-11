@@ -65,8 +65,8 @@ while (sorted.length) {
 	coupled.push(sorted.shift() + ' ' + sorted.pop());
 }
 var padded = coupled.map(s=>{
-	while (s.length < 15) {
-		s = s.replace(' ', '  ')
+	while (s.length < 16) {
+		s = s.replace(' ', '  ');
 	}
 	return s;
 });
@@ -86,10 +86,11 @@ var closeWords = [
 	'phones',
 	'phone',
 	'mic',
+	'musician',
 	'radios',
 	'recordings',
-	'records',
 	'record',
+	'sequence',
 	'sequencers',
 	'sing',
 	'singing',
@@ -106,23 +107,25 @@ var closeWords = [
 	'subwoofers',
 	'tapes',
 	'tune',
+	'tunes',
 	'vinyls',
 	'vocoders',
 ];
 
 var pickedWords = [];
 var pick = function (word) {
+	console.log('\n');
 	if (closeWords.includes(word.toLowerCase())) {
 		console.log(`   ${word.toUpperCase()} is close!`);
 	} else if (pickedWords.includes(word.toLowerCase())) {
-		console.log(`   You found ${word.toUpperCase()} already!`);
+		console.log(`   You found ${highlighted}${word.toUpperCase()}${reset} already!`);
 	} else if (wordList.includes(word)) {
 		pickedWords.push(word);
-		console.log(`\n`)
+		console.log(`\n`);
 		printBox(pickedWords);
-		console.log(`   Found ${word.toUpperCase()}!`);
+		console.log(`   Found ${highlighted}${word.toUpperCase()}${reset}!`);
 	} else {
-		console.log(`   ${word.toUpperCase()} is not valid`);
+		console.log(`   ${word.toUpperCase()} is not a target word`);
 	}
 }
 var printBox = function (word) {
@@ -135,7 +138,7 @@ var printBox = function (word) {
 	}
 	words = words.map(function(item){ return item.toLowerCase(); });
 	lispish.forEach(function(row){
-		var insert = '';
+		var insert = '>';
 		row.forEach(function(entry){
 			if (typeof entry === 'string') {
 				insert += entry.toLowerCase();
@@ -169,8 +172,8 @@ var printBox = function (word) {
 		// 	.replace(/([A-Z])([a-z])/g,'$1>$2')
 		// temp = temp.split('').join(' ').toUpperCase() + ' ';
 		return temp
-			.replace(/</g,green)
-			.replace(/>/g,reset)
+			.replace(/</g,highlighted)
+			.replace(/>/g,notHighlighted);
 	});
 	padded.forEach(function (line, i) {
 		var words = line.replace(/\s+/g,' ').split(' ');
@@ -179,17 +182,16 @@ var printBox = function (word) {
 				line = line.replace(word, word.replace(/[a-z]/g, '-'));
 			}
 		})
-		ret[i] += '  ' + line;
+		ret[i] += reset + '    ' + line;
 	});
 	console.log(ret.join('\n'));
 }
-var green = '\u001B[33m';
+var highlightColor = '33';
+var highlighted = '\u001B[' + highlightColor + 'm';
+var notHighlightColor = '31';
+var notHighlighted = '\u001B[' + notHighlightColor + 'm';
 var reset = '\u001B[0m';
 
 printBox();
 
-// wordList.forEach(function(word){
-// 	printBox(word);
-// });
-
-console.log("GAME OVER")
+console.log("GAME OVER");
