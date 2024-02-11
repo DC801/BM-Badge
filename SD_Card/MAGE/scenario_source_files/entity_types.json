@@ -3419,7 +3419,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 51,
+		"scenarioIndex": 52,
 		"serialized": {}
 	},
 	"ram_chips": {
@@ -3485,7 +3485,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 52,
+		"scenarioIndex": 53,
 		"serialized": {}
 	},
 	"lambda": {
@@ -3677,7 +3677,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 53,
+		"scenarioIndex": 54,
 		"serialized": {}
 	},
 	"simon": {
@@ -3941,7 +3941,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 54,
+		"scenarioIndex": 55,
 		"serialized": {}
 	},
 	"crow": {
@@ -4007,7 +4007,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 55,
+		"scenarioIndex": 56,
 		"serialized": {}
 	},
 	"bigears": {
@@ -4073,7 +4073,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 56,
+		"scenarioIndex": 57,
 		"serialized": {}
 	},
 	"slimey": {
@@ -4139,7 +4139,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 57,
+		"scenarioIndex": 58,
 		"serialized": {}
 	},
 	"lizardwizard": {
@@ -4205,7 +4205,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 58,
+		"scenarioIndex": 59,
 		"serialized": {}
 	},
 	"wormy": {
@@ -4271,7 +4271,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 59,
+		"scenarioIndex": 60,
 		"serialized": {}
 	},
 	"beetle": {
@@ -4391,7 +4391,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 60,
+		"scenarioIndex": 61,
 		"serialized": {}
 	},
 	"marathon_bob_red": {
@@ -4457,7 +4457,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 61,
+		"scenarioIndex": 62,
 		"serialized": {}
 	},
 	"marathon_bob_blue": {
@@ -4523,7 +4523,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 62,
+		"scenarioIndex": 63,
 		"serialized": {}
 	},
 	"marathon_bob_green": {
@@ -4589,7 +4589,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 63,
+		"scenarioIndex": 64,
 		"serialized": {}
 	},
 	"artifact": {
@@ -4673,7 +4673,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 64,
+		"scenarioIndex": 65,
 		"serialized": {}
 	},
 	"gibson": {
@@ -4757,7 +4757,53 @@
 				}
 			]
 		},
-		"scenarioIndex": 65,
+		"scenarioIndex": 66,
 		"serialized": {}
+	},
+	"catchef": {
+		"type": "catchef",
+		"tileset": "entity-catchef.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }

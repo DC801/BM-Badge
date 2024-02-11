@@ -164,7 +164,7 @@ ch2-interact-gregory {
 				SELF "This wing was recently redone to install a bunch of fancy tech."
 				"These hydroponics trays, the induction stovetops in the next room... that kind of thing."
 			}
-			set entity Gregory on_tick to null_script;
+			set entity Gregory on_tick to face-player;
 			copy face-player;
 			show dialog {
 				SELF "They did some structural reinforcement, too, but don't remember specifics."
@@ -208,7 +208,7 @@ ch2-interact-gregory {
 			show dialog {
 				SELF "It's loose in this room somewhere, but I'm not as fast as I used to be, and can't quite get ahold of it."
 			}
-			set entity Gregory on_tick to null_script;
+			set entity Gregory on_tick to face-player;
 			copy face-player;
 			show dialog {
 				SELF "It's hiding in one of the hydroponics bins, I should think."

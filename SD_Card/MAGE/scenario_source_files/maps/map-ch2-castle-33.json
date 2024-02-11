@@ -86,29 +86,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484450,
-                 "height":32,
-                 "id":39,
-                 "name":"Gregory",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-interact-gregory"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"face-player"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":155,
-                 "y":216
-                }, 
-                {
-                 "class":"",
                  "gid":269,
                  "height":32,
                  "id":62,
@@ -141,6 +118,29 @@
                  "width":0,
                  "x":288,
                  "y":274
+                }, 
+                {
+                 "class":"",
+                 "gid":916,
+                 "height":48,
+                 "id":66,
+                 "name":"Gregory",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-gregory"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":148,
+                 "y":220
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -444,7 +444,7 @@
                  "id":60,
                  "name":"",
                  "rotation":0,
-                 "visible":false,
+                 "visible":true,
                  "width":258,
                  "x":-128,
                  "y":-192
@@ -468,7 +468,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":65,
+ "nextobjectid":67,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -503,16 +503,20 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":527,
+         "firstgid":623,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":783,
+         "firstgid":879,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":889,
          "source":"..\/entities\/entity-welder.json"
+        }, 
+        {
+         "firstgid":913,
+         "source":"entity-catchef.json"
         }],
  "tilewidth":32,
  "type":"map",
