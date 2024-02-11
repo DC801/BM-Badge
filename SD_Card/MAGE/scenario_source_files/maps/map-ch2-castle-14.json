@@ -135,7 +135,7 @@
                  "gid":2147483955,
                  "height":32,
                  "id":42,
-                 "name":"Torch",
+                 "name":"torch",
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -147,7 +147,7 @@
                  "gid":2147483955,
                  "height":32,
                  "id":45,
-                 "name":"Torch",
+                 "name":"torch",
                  "properties":[
                         {
                          "name":"current_frame",
@@ -165,7 +165,7 @@
                  "gid":307,
                  "height":32,
                  "id":46,
-                 "name":"Torch",
+                 "name":"torch",
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -177,7 +177,7 @@
                  "gid":307,
                  "height":32,
                  "id":47,
-                 "name":"Torch",
+                 "name":"torch",
                  "properties":[
                         {
                          "name":"current_frame",

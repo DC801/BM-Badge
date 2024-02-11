@@ -32,6 +32,14 @@ look-ch2-alvin {
 	}
 }
 
+look-ch2-speaker {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\t(TODO)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-31 {

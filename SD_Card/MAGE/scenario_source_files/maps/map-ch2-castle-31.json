@@ -327,7 +327,13 @@
                  "gid":434,
                  "height":32,
                  "id":49,
-                 "name":"Speaker",
+                 "name":"speaker",
+                 "properties":[
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-speaker"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -339,7 +345,13 @@
                  "gid":434,
                  "height":32,
                  "id":50,
-                 "name":"Speaker",
+                 "name":"speaker",
+                 "properties":[
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-speaker"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
