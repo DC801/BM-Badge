@@ -579,5 +579,77 @@
 				"flip_x": true
 			}
 		}
+	},
+	"seamoss": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 27,
+				"flip_x": true
+			}
+		}
+	},
+	"crow": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 28,
+				"flip_x": true
+			}
+		}
+	},
+	"catchef": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 29,
+				"flip_x": true
+			}
+		}
+	},
+	"bigears": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 30,
+				"flip_x": true
+			}
+		}
+	},
+	"lizardwizard": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 31,
+				"flip_x": true
+			}
+		}
+	},
+	"slimey": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 32,
+				"flip_x": true
+			}
+		}
+	},
+	"wormy": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 33,
+				"flip_x": true
+			}
+		}
+	},
+	"beetle": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 34,
+				"flip_x": true
+			}
+		}
 	}
 }
