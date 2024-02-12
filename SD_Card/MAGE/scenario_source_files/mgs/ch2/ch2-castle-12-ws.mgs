@@ -138,7 +138,7 @@ ch2-ws-doturn {
 		wrap 90
 		"                          <bold>WORD SEARCH!</>"
 		"Find words meaningful to the stereo system to break through its amnesia!"
-		"         Type a word! (or type Q to quit)            Pts to win: <y>$ch2-ws-flags-tally$/15</>"
+		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2-ws-flags-tally$/15</>"
 	}
 	copy ch2-ws-draw-map;
 	copy ch2-ws-turn-message;
@@ -1913,23 +1913,24 @@ ch2-ws-guess-volume {
 }
 
 ch2-ws-guess-quit {
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = 0;
 	show serial dialog spacer;
 	show serial dialog {
-		"<y>STEREO</>: Oh, all done for now? Thanks for giving it a shot."
+		"<m>STEREO</>: Oh, all done for now? Thanks for giving it a shot."
 	}
 }
 
 // MESSAGES
 
 ch2-ws-turn-message {
-	concat serial dialog { "     " }
 	if (variable ch2-ws-turn-status is $miss) {
 		concat serial dialog {
 			"Huh? I don't think I know that word."
 		}
 	} else if (variable ch2-ws-turn-value is $albums) {
 		concat serial dialog {
-			"ALBUMS? No, but I think that's close."
+			"ALBUMS? Love your enthusiasm, but I'm a single-slot kind of guy."
 		}
 	} else if (variable ch2-ws-turn-value is $base) {
 		concat serial dialog {
@@ -1937,7 +1938,7 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $beats) {
 		concat serial dialog {
-			"BEATS? No, but I think that's close."
+			"BEATS? Almost, but not quite what I'm looking for."
 		}
 	} else if (variable ch2-ws-turn-value is $broadcasts) {
 		concat serial dialog {
@@ -1945,79 +1946,79 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $cassettes) {
 		concat serial dialog {
-			"CASSETTES? No, but I think that's close."
+			"CASSETTES? As in multiple? What decade is this?"
 		}
 	} else if (variable ch2-ws-turn-value is $chiptunes) {
 		concat serial dialog {
-			"CHIPTUNES? No, but I think that's close."
+			"CHIPTUNES? I think you're a smidge off, but keep trying."
 		}
 	} else if (variable ch2-ws-turn-value is $codecs) {
 		concat serial dialog {
-			"CODECS? No, but I think that's close."
+			"CODECS? I think you're nearly there, but not quite."
 		}
 	} else if (variable ch2-ws-turn-value is $frequencies) {
 		concat serial dialog {
-			"FREQUENCIES? No, but I think that's close."
+			"FREQUENCIES? Almost, but not what I'm thinking of."
 		}
 	} else if (variable ch2-ws-turn-value is $gramophone) {
 		concat serial dialog {
-			"GRAMOPHONE? No, but I think that's close."
+			"GRAMOPHONE? Are you just making things up now?"
 		}
 	} else if (variable ch2-ws-turn-value is $headphone) {
 		concat serial dialog {
-			"HEADPHONE? No, but I think that's close."
+			"HEADPHONE? Is that like a 'scissor'? Or a 'pant'?"
 		}
 	} else if (variable ch2-ws-turn-value is $lasers) {
 		concat serial dialog {
-			"LASERS? No, but I think that's close."
+			"LASERS? Almost, but not quite. Sounds fun though!"
 		}
 	} else if (variable ch2-ws-turn-value is $microphones) {
 		concat serial dialog {
-			"MICROPHONES? No, but I think that's close."
+			"MICROPHONES? Do I look like I need more than one?"
 		}
 	} else if (variable ch2-ws-turn-value is $phones) {
 		concat serial dialog {
-			"PHONES? No, but I think that's close."
+			"PHONES? Close, but way off."
 		}
 	} else if (variable ch2-ws-turn-value is $phone) {
 		concat serial dialog {
-			"PHONE? No, but I think that's close."
+			"PHONE? Getting close to something, I can feel it."
 		}
 	} else if (variable ch2-ws-turn-value is $mic) {
 		concat serial dialog {
-			"MIC? No, but I think that's close."
+			"MIC? No, but I think that's almost something."
 		}
 	} else if (variable ch2-ws-turn-value is $musician) {
 		concat serial dialog {
-			"MUSICIAN? No, but I think that's close."
+			"MUSICIAN? A bit overboard, but you're on to something."
 		}
 	} else if (variable ch2-ws-turn-value is $radios) {
 		concat serial dialog {
-			"RADIOS? No, but I think that's close."
+			"RADIOS? Sorry, there's only one of me here."
 		}
 	} else if (variable ch2-ws-turn-value is $recordings) {
 		concat serial dialog {
-			"RECORDINGS? No, but I think that's close."
+			"RECORDINGS? Close, but I think you're going a bit overboard."
 		}
 	} else if (variable ch2-ws-turn-value is $record) {
 		concat serial dialog {
-			"RECORD? No, but I think that's close."
+			"RECORD? Aha, yes! Oh, no, wait. Not this time. Close though."
 		}
 	} else if (variable ch2-ws-turn-value is $sequence) {
 		concat serial dialog {
-			"SEQUENCE? No, but I think that's close."
+			"SEQUENCE? You're getting somewhere, but no dice this time."
 		}
 	} else if (variable ch2-ws-turn-value is $sequencers) {
 		concat serial dialog {
-			"SEQUENCERS? No, but I think that's close."
+			"SEQUENCERS? Were that I was that cool! Maybe scale that back."
 		}
 	} else if (variable ch2-ws-turn-value is $sing) {
 		concat serial dialog {
-			"SING? No, but I think that's close."
+			"SING? I feel like that's close, but I don't know."
 		}
 	} else if (variable ch2-ws-turn-value is $singing) {
 		concat serial dialog {
-			"SINGING? I mean sure, but... no, it wasn't that."
+			"SINGING? I mean sure, but... no, that's not what I'm missing."
 		}
 	} else if (variable ch2-ws-turn-value is $songs) {
 		concat serial dialog {
@@ -2025,7 +2026,7 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $sound) {
 		concat serial dialog {
-			"SOUND? Close but way off!"
+			"SOUND? I mean sure, but... no, not what I'm looking for."
 		}
 	} else if (variable ch2-ws-turn-value is $soundtracks) {
 		concat serial dialog {
@@ -2037,11 +2038,11 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $synthesizers) {
 		concat serial dialog {
-			"SYNTHESIZERS? Just about! Maybe it was a little different."
+			"SYNTHESIZERS? Almost there, but maybe a little different."
 		}
 	} else if (variable ch2-ws-turn-value is $track) {
 		concat serial dialog {
-			"TRACK? It's on the tip of my silicon! Was it more than that?"
+			"TRACK? Was it more than that? It's on the tip of my silicon."
 		}
 	} else if (variable ch2-ws-turn-value is $tracks) {
 		concat serial dialog {
@@ -2049,23 +2050,23 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $speaker) {
 		concat serial dialog {
-			"SPEAKER? No, but I think that's close."
+			"SPEAKER? Hey, I'm more sophisticated than that! Go bigger!"
 		}
 	} else if (variable ch2-ws-turn-value is $stereos) {
 		concat serial dialog {
-			"STEREOS? Can you use that word like that? Maybe it was a little different."
+			"STEREOS? Can you use the word like that? Was it something similar?"
 		}
 	} else if (variable ch2-ws-turn-value is $streams) {
 		concat serial dialog {
-			"STREAMS? I'm loving the river vibe, but not quite right."
+			"STREAMS? I'm loving the river vibe, but not exactly right."
 		}
 	} else if (variable ch2-ws-turn-value is $subwoofers) {
 		concat serial dialog {
-			"SUBWOOFERS? No, but I think that's close."
+			"SUBWOOFERS? I hardly know her!"
 		}
 	} else if (variable ch2-ws-turn-value is $tapes) {
 		concat serial dialog {
-			"TAPES? No, but I think that's close."
+			"TAPES? So close, but a little too much."
 		}
 	} else if (variable ch2-ws-turn-value is $tune) {
 		concat serial dialog {
@@ -2081,7 +2082,7 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $vocoders) {
 		concat serial dialog {
-			"VOCODERS? No, but I think that's close."
+			"VOCODERS? Not sure about that, but getting warm."
 		}
 	} else if (variable ch2-ws-turn-value is $album) {
 		if (variable ch2-ws-turn-status is $repeat) {
@@ -2090,7 +2091,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>ALBUM</>! Yes, genuis! That's it! I remember now."
+				"<y>ALBUM</>! Oh, of course! This is my bread and butter!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $analog) {
@@ -2100,7 +2101,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>ANALOG</>! Yes, genuis! That's it! I remember now."
+				"<y>ANALOG</>! Yeah! Who could forget that warm, velvety sound?"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $audio) {
@@ -2110,7 +2111,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>AUDIO</>! Yes, genuis! That's it! I remember now."
+				"<y>AUDIO</>! YES! My raison d'etre! My joie de vivre!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $aux) {
@@ -2120,7 +2121,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>AUX</>! Yes, genuis! That's it! I remember now."
+				"<y>AUX</>! How could I forget? Who would ever want to lose this?"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $bass) {
@@ -2130,7 +2131,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>BASS</>! Yes, genuis! That's it! I remember now."
+				"<y>BASS</>! Oh, yeah! I'm all about that low frequency! It's the butter zone!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $beat) {
@@ -2140,7 +2141,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>BEAT</>! Yes, genuis! That's it! I remember now."
+				"<y>BEAT</>! It's all coming back! Makes my LEDs all tingly."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $bpm) {
@@ -2150,7 +2151,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>BPM</>! Yes, genuis! That's it! I remember now."
+				"<y>BPM</>! Oh, yeah! Reminds me of my buddy, Metronome!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $broadcast) {
@@ -2160,7 +2161,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>BROADCAST</>! Yes, genuis! That's it! I remember now."
+				"<y>BROADCAST</>! Yes! Reminds me of those aluminum flags I used to wear."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $cassette) {
@@ -2170,7 +2171,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>CASSETTE</>! Yes, genuis! That's it! I remember now."
+				"<y>CASSETTE</>! Oh, I remember those! They're so cute and spindly!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $chiptune) {
@@ -2180,7 +2181,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>CHIPTUNE</>! Yes, genuis! That's it! I remember now."
+				"<y>CHIPTUNE</>! Oh, right! So sine wavey and squarey...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $codec) {
@@ -2190,7 +2191,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>CODEC</>! Yes, genuis! That's it! I remember now."
+				"<y>CODEC</>! Oh, that's right, I think I know a few of these."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $compact) {
@@ -2200,7 +2201,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>COMPACT</>! Yes, genuis! That's it! I remember now."
+				"<y>COMPACT</>! Ha! Compact discs? More like--yeah, no, I got nothing."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $frequency) {
@@ -2210,7 +2211,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>FREQUENCY</>! Yes, genuis! That's it! I remember now."
+				"<y>FREQUENCY</>! Oh yeah, that's the best game! Dial it in, find the sweet spot...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $headphones) {
@@ -2220,7 +2221,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>HEADPHONES</>! Yes, genuis! That's it! I remember now."
+				"<y>HEADPHONES</>! Yeah, I remember these! Get's get tinitus together!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $hifi) {
@@ -2230,7 +2231,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>HIFI</>! Yes, genuis! That's it! I remember now."
+				"<y>HIFI</>! Who could forget? My audio standards are through the ROOF!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $laser) {
@@ -2240,7 +2241,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>LASER</>! Yes, genuis! That's it! I remember now."
+				"<y>LASER</>! Ahaha, that's right! It's all about the 1s and 0s, isn't it?"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $lofi) {
@@ -2250,7 +2251,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>LOFI</>! Yes, genuis! That's it! I remember now."
+				"<y>LOFI</>! Oh, so nostalgic! Oh... I'm tearing up."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $media) {
@@ -2260,7 +2261,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>MEDIA</>! Yes, genuis! That's it! I remember now."
+				"<y>MEDIA</>! Oh, of course! Anything you can throw at me, I can take!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $microphone) {
@@ -2270,7 +2271,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>MICROPHONE</>! Yes, genuis! That's it! I remember now."
+				"<y>MICROPHONE</>! Oh yeah! I used to host karaoke parties all the time!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $midi) {
@@ -2280,7 +2281,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>MIDI</>! Yes, genuis! That's it! I remember now."
+				"<y>MIDI</>! WOW, that's right! Who has a classy sound font? This guy!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $mixing) {
@@ -2290,7 +2291,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>MIXING</>! Yes, genuis! That's it! I remember now."
+				"<y>MIXING</>! Aha, so that's what my second tape deck was for!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $music) {
@@ -2300,7 +2301,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>MUSIC</>! Yes, genuis! That's it! I remember now."
+				"<y>MUSIC</>! Oh, yes! I remember! This is the best part about all of this!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $phonograph) {
@@ -2310,7 +2311,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>PHONOGRAPH</>! Yes, genuis! That's it! I remember now."
+				"<y>PHONOGRAPH</>! Oh, wow! It's my great-grandpa! That takes me back."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $radio) {
@@ -2320,7 +2321,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>RADIO</>! Yes, genuis! That's it! I remember now."
+				"<y>RADIO</>! Yeah, let's take a caller! Let's go to a commercial!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $recording) {
@@ -2330,7 +2331,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>RECORDING</>! Yes, genuis! That's it! I remember now."
+				"<y>RECORDING</>! Yes! This is the best part! It's like having a time machine!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $rhythm) {
@@ -2340,7 +2341,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>RHYTHM</>! Yes, genuis! That's it! I remember now."
+				"<y>RHYTHM</>! Excellent! You've hit the nail on the head! That's why we're here!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $sequencer) {
@@ -2350,7 +2351,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SEQUENCER</>! Yes, genuis! That's it! I remember now."
+				"<y>SEQUENCER</>! That's right! I always wanted to be one of these when I grew up."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $song) {
@@ -2360,7 +2361,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SONG</>! Yes, genuis! That's it! I remember now."
+				"<y>SONG</>! Oh, yes! These are like stories, or like memories! I remember...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $soundtrack) {
@@ -2370,7 +2371,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SOUNDTRACK</>! Yes, genuis! That's it! I remember now."
+				"<y>SOUNDTRACK</>! Aha! Wonderful. I'm remembering more...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $speakers) {
@@ -2380,7 +2381,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SPEAKERS</>! Yes, genuis! That's it! I remember now."
+				"<y>SPEAKERS</>! Yes! Without these, music would be DEAD."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $stereo) {
@@ -2390,7 +2391,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>STEREO</>! Yes, genuis! That's it! I remember now."
+				"<y>STEREO</>! Ooh ooh! Yeah, I control the horizontal... of a sort."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $stream) {
@@ -2400,7 +2401,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>STREAM</>! Yes, genuis! That's it! I remember now."
+				"<y>STREAM</>! All right! Buffer 'til the cows come home!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $subwoofer) {
@@ -2410,7 +2411,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SUBWOOFER</>! Yes, genuis! That's it! I remember now."
+				"<y>SUBWOOFER</>! Aw, yeah! Let's rattle some windows!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $surround) {
@@ -2420,7 +2421,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SURROUND</>! Yes, genuis! That's it! I remember now."
+				"<y>SURROUND</>! Yes! Fill the world with sound from all around!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $synthesizer) {
@@ -2430,7 +2431,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SYNTHESIZER</>! Yes, genuis! That's it! I remember now."
+				"<y>SYNTHESIZER</>! Oh! I had a stint in college where I worked as one of these."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $tape) {
@@ -2440,7 +2441,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>TAPE</>! Yes, genuis! That's it! I remember now."
+				"<y>TAPE</>! Aha, I remember... those things give me indigestion! Yuck!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $treble) {
@@ -2450,7 +2451,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>TREBLE</>! Yes, genuis! That's it! I remember now."
+				"<y>TREBLE</>! Yes! Sends shivers down my copper wiring!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $vinyl) {
@@ -2460,7 +2461,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>VINYL</>! Yes, genuis! That's it! I remember now."
+				"<y>VINYL</>! Oh! That takes me back! Reminds me of old grandpappy...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $vocoder) {
@@ -2470,7 +2471,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>VOCODER</>! Yes, genuis! That's it! I remember now."
+				"<y>VOCODER</>! Yes! We'll do Dalek voices until sunset!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $volume) {
@@ -2480,7 +2481,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>VOLUME</>! Yes, genuis! That's it! I remember now."
+				"<y>VOLUME</>! Aha, you got it! And why stop at 11?"
 			}
 		}
 	}
