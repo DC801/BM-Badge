@@ -40,26 +40,25 @@ var lispish = [
 	['QXC',['PHONO','phonograph'],['G','recording|phonograph'],['RAPH','phonograph'],'OY',['S','subwoofer|bass'],['UBWOOFER','subwoofer'],'C'],
 ];
 
+// word list stuff
 var wordMap = {};
 lispish.forEach(function(row) {
 	row.forEach(function(item){
 		if (Array.isArray(item)) {
 			if (item.length === 1) {
-				wordMap[item[0].toLowerCase()] = true;
+				wordMap[item[0].toLowerCase()] = false;
 			} else {
 				item[1].split('|').forEach(function(thing) {
-					wordMap[thing] = true;
+					wordMap[thing] = false;
 				})
 			}
 		}
 	});
 });
 var wordList = Object.keys(wordMap).sort();
-
 var sorted = wordList.slice().sort(function(a,b) {
 	return a.length - b.length;
 });
-
 var coupled = [];
 while (sorted.length) {
 	coupled.push(sorted.shift() + ' ' + sorted.pop());
@@ -112,22 +111,43 @@ var closeWords = [
 	'vocoders',
 ];
 
-var pickedWords = [];
-var pick = function (word) {
-	console.log('\n');
-	if (closeWords.includes(word.toLowerCase())) {
-		console.log(`   ${word.toUpperCase()} is close!`);
-	} else if (pickedWords.includes(word.toLowerCase())) {
-		console.log(`   You found ${highlighted}${word.toUpperCase()}${reset} already!`);
-	} else if (wordList.includes(word)) {
-		pickedWords.push(word);
-		console.log(`\n`);
-		printBox(pickedWords);
-		console.log(`   Found ${highlighted}${word.toUpperCase()}${reset}!`);
+// state
+var pickedWordMap = JSON.parse(JSON.stringify(wordMap));
+var lastWord = '';
+var lastWordStatus = '';
+
+// draw things
+var countPicks = function () {
+	return Object.values(pickedWordMap)
+		.filter(function(item) { return item; })
+		.length;
+};
+var printHeader = function () {
+	return [
+		``,
+		// `----------------------------------|----------------------------------`,
+		`                            WORD SEARCH!                             `,
+		`Find words meaningful to the stereo system to break through its amnesia!`,
+		``,
+		`         Type a word! (or type Q to quit)             Pts to win: ${countPicks()}/15`,
+		// `T M T V I N Y L U J Z D U H E A A U Z M Q Z G S M    ---  -----------`
+	].join('\n');
+};
+var printFooter = function () {
+	var prefix = '\n       ';
+	if (lastWordStatus === 'close') {
+		return prefix + `Hmm, almost! I think ${lastWord.toUpperCase()} is close!`;
+	} else if (lastWordStatus === 'repeat') {
+		return prefix + `No, you found ${highlighted}${lastWord.toUpperCase()}${reset} already!`;
+	} else if (lastWordStatus === 'hit') {
+		return prefix + `Oh, yes! Of course! I know ${highlighted}${lastWord.toUpperCase()}${reset}!`;
+	} else if (lastWordStatus === 'miss') {
+		return prefix + `Nah, ${lastWord.toUpperCase()} doesn't ring a bell.`;
 	} else {
-		console.log(`   ${word.toUpperCase()} is not a target word`);
+		return `\n`;
 	}
-}
+};
+
 var printBox = function (word) {
 	var ret = [];
 	var words = [];
@@ -165,12 +185,6 @@ var printBox = function (word) {
 		var temp = row.split('').join(' ')
 			.replace(/([A-Z])/g, '<$1>')
 			.toUpperCase();
-		// var temp = row
-		// 	.replace(/([a-z])([A-Z])/g,'$1<$2')
-		// 	.replace(/^([A-Z])/g,'<$1')
-		// 	.replace(/([A-Z])$/g,'$1>')
-		// 	.replace(/([A-Z])([a-z])/g,'$1>$2')
-		// temp = temp.split('').join(' ').toUpperCase() + ' ';
 		return temp
 			.replace(/</g,highlighted)
 			.replace(/>/g,notHighlighted);
@@ -178,20 +192,49 @@ var printBox = function (word) {
 	padded.forEach(function (line, i) {
 		var words = line.replace(/\s+/g,' ').split(' ');
 		words.forEach(function (word) {
-			if (!pickedWords.includes(word)) {
+			if (!pickedWordMap[word]) {
 				line = line.replace(word, word.replace(/[a-z]/g, '-'));
 			}
 		})
 		ret[i] += reset + '    ' + line;
 	});
-	console.log(ret.join('\n'));
-}
-var highlightColor = '33';
-var highlighted = '\u001B[' + highlightColor + 'm';
-var notHighlightColor = '31';
-var notHighlighted = '\u001B[' + notHighlightColor + 'm';
-var reset = '\u001B[0m';
+	return ret.join('\n');
+};
 
-printBox();
+var printGame = function () {
+	var printWords = wordList.filter(function (item) {
+		return pickedWordMap[item] === true;
+	});
+	console.log(printHeader());
+	console.log(printBox(printWords));
+	console.log(printFooter());
+	console.log('\n');
+};
+
+// gameplay loop
+var pick = function (word) {
+	lastWord = word;
+	if (closeWords.includes(lastWord.toLowerCase())) {
+		lastWordStatus = 'close';
+	} else if (pickedWordMap[lastWord.toLowerCase()] === true) {
+		lastWordStatus = 'repeat';
+	} else if (pickedWordMap[lastWord.toLowerCase()] === false) {
+		lastWordStatus = 'hit';
+		pickedWordMap[lastWord.toLowerCase()] = true;
+	} else {
+		lastWordStatus = 'miss';
+	}
+	printGame();
+}
+
+// colors stuff
+var bold = '\u001B[1m';
+var reset = '\u001B[0m';
+var highlightColor = '33';
+var highlighted = `\u001B[${highlightColor}m` + bold;
+var notHighlightColor = '31';
+var notHighlighted = reset + `\u001B[${notHighlightColor}m`;
+
+printGame(); // first turn
 
 console.log("GAME OVER");
