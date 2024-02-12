@@ -237,4 +237,166 @@ var notHighlighted = reset + `\u001B[${notHighlightColor}m`;
 
 printGame(); // first turn
 
+
+  // ---------------------------------------------- \\
+ //                MGS NATLANG TIMES!                \\
+//----------------------------------------------------\\
+
+var prefix = `ch2-ws-`;
+var varName = `${prefix}flags-tally`;
+var pts = "15"; // points to win
+
+var makeCountFlagScript = function () {
+	var ret = [
+		prefix + `count-flags {`,
+		`\tmutate ${varName} = 0;`
+	];
+	wordList.forEach(function(word) {
+		ret.push(`\tif (flag ${prefix}${word} is true) {`);
+		ret.push(`\t\tmutate ${varName} + 1;`);
+		ret.push(`\t}`);
+	});
+	ret.push(`}`)
+	return ret.join('\n');
+};
+
+var makeHeadingSerialDialog = function () {
+	var ret = `
+serial dialog ${prefix}header {
+	"                            WORD SEARCH!"
+	"Find words meaningful to the stereo system to break through its amnesia!"
+	" "
+	"         Type a word! (or type Q to quit)             Pts to win: $${varName}$/${pts}"
+}
+`;
+	return ret.trim();
+};
+
+var makeGridLineScriptChunk = function (line, doop) {
+	var ret = [
+	 	`concat serial dialog ${prefix}rowstart;`,
+	];
+	// line
+	line.forEach(function (entry) {
+		if (typeof entry === 'string') {
+			var spacey = entry.split('').join(' ') + ' ';
+			ret.push(`concat serial dialog { "${spacey}" }`);
+		} else {
+			var spacey = entry[0].split('').join(' ') + ' ';
+			var flags = entry.length === 1
+				? [ entry[0].toLowerCase() ]
+				: entry[1].split('|');
+			var cond = flags.map(function (flag) {
+				return `flag ${prefix}${flag} is true`;
+			}).join(' || ');
+			ret.push(`if (${cond}) {`
+				+ `\n\t\tconcat serial dialog { "<y><bold>${spacey}</><r>" }`
+				+ `\n\t} else {`
+				+ `\n\t\tconcat serial dialog { "${spacey}" }`
+				+ `\n\t}`);
+		}
+	});
+	// doop
+	var matches = doop.match(/([a-z]+)(\s+)([a-z]+)/);
+	var words = [ matches[1], matches[3] ];
+	var whiteSpace = matches[2];
+	ret.push(`concat serial dialog ${prefix}col;`);
+	ret.push(
+		words.map(function (word) {
+			return `if (flag ch2-ws-${word} is true) {`
+				+ `\n\t\tconcat serial dialog { "${word}" }`
+				+ `\n\t} else {`
+				+ `\n\t\tconcat serial dialog { "${'-'.repeat(word.length)}" }`
+				+ `\n\t}`;
+		}).join(`\n\tconcat serial dialog { "${whiteSpace}" }\n\t`)
+	);
+	ret.push(`concat serial dialog newline;`);
+	return ret.map(function (row) {
+		return '\t' + row;
+	}).join('\n');
+};
+
+var makeBoxPrintScript = function () {
+	var ret = [
+		`${prefix}draw-map {`,
+	];
+	lispish.forEach(function (row, i) {
+		ret.push('', `\t// ROW ${i}`);
+		ret.push(makeGridLineScriptChunk(row, padded[i]))
+	});
+	return ret.join('\n') + '\n}';
+};
+
+var makeInputDialog = function () {
+	var ret = [
+		`${prefix}serial dialog {`,
+		`\t" "`,
+		`\t_ "Q" : ${prefix}quit`,
+		`\t_ "QUIT" : ${prefix}quit`
+	];
+	ret.push('	// target words');
+	wordList.forEach(function (word) {
+		var scriptName = `${prefix}guess-${word}`;
+		ret.push(`\t\t_ "${word.toUpperCase()}" : ${scriptName}`);
+	});
+	ret.push('	// "close" words');
+	closeWords.forEach(function (word) {
+		var scriptName = `${prefix}guess-${word}`;
+		ret.push(`\t\t_ "${word.toUpperCase()}" : ${scriptName}`);
+	});
+	ret.push('}')
+	return ret.join('\n');
+};
+
+var makeCloseGuessScript = function (word) {
+return `ch2-ws-guess-${word.toLowerCase()} {
+	mutate ch2-ws-turn-value = $${word.toLowerCase()};
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}`
+};
+var closeGuessScripts = closeWords.map(makeCloseGuessScript)
+	.join('\n');
+
+var makeHitGuessScript = function (word) {
+return `ch2-ws-guess-${word} {
+	mutate ch2-ws-turn-value = $${word};
+	if (flag ch2-ws-${word} is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-${word} to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}`
+};
+var hitGuessScripts = wordList.map(makeHitGuessScript)
+	.join('\n');
+
+var makeCloseGuessMessage = function (word) {
+return `if (variable ch2-ws-turn-value is $${word.toLowerCase()}) {
+		concat serial dialog {
+			"${word.toUpperCase()}? No, but I think that's close."
+		}
+}`
+};
+var closeGuessMessages = '\t' + closeWords.map(makeCloseGuessMessage)
+	.join(' else ');
+
+var makeHitMessage = function (word) {
+return `if (variable ch2-ws-turn-value is $${word.toLowerCase()}) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"${word.toUpperCase()}? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>${word.toUpperCase()}</>! Yes, genuis! That's it! I remember now."
+			}
+		}
+	}`
+}
+var hitMessages = '\t' + wordList.map(makeHitMessage)
+	.join(' else ');
+
 console.log("GAME OVER");
