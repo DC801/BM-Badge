@@ -138,7 +138,7 @@ ch2-ws-doturn {
 	show serial dialog {
 		wrap 100
 		"                          <bold>WORD SEARCH!</>"
-		"Find words meaningful to the stereo system to break through its amnesia!"
+		"Find words meaningful to the stereo system to cut through its amnesia."
 		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2-ws-flags-tally$/20</>"
 	}
 	copy ch2-ws-draw-map;
@@ -2476,6 +2476,20 @@ ch2-ws-turn-message {
 				"<y>VOLUME</>! Aha, I remember this! And why stop at 11?"
 			}
 		}
+	} else {
+		if (variable ch2-ws-flags-tally is 40) {
+			show serial dialog {
+				"You know? I think you've done it! Everything is clear to me now!"
+			}
+		} else if (flag ch2-ws-won is true) {
+			show serial dialog {
+				"Oh boy! What else is there inside my head?"
+			}
+		} else {
+			show serial dialog {
+				"My head is all jumbled up. I can almost remember...."
+			}
+		}
 	}
 }
 
@@ -2497,9 +2511,15 @@ ch2-ws-guess-quit {
 	} else if (variable ch2-ws-flags-tally is < $toWin) {
 		mutate diff = $toWin;
 		mutate diff - ch2-ws-flags-tally;
-		show serial dialog {
-			"<y>STEREO</>: Done for now? Okay, thanks for trying."
-			"\tOh, you know what? I bet if you found <y>$diff$</> more words, I'd be as right as rain. Try again later, if you would?"
+		if (variable diff is 1) {
+			show serial dialog {
+				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, you hear?"
+			}
+		} else {
+			show serial dialog {
+				"<y>STEREO</>: Done for now? Okay, thanks for trying."
+				"\tOh, you know what? I bet if you found <y>$diff$</> more words, I'd be as right as rain. Try again later, if you would?"
+			}
 		}
 	} else if (flag ch2-ws-won is true) {
 		show serial dialog {
