@@ -1,4 +1,5 @@
 const!(
+	$toWin = 20
 	$close = 1 $repeat = 2 $hit = 3 $miss = 4
 	// target words
 	$album = 1 $analog = 2 $audio = 3 $aux = 4 $bass = 5 $beat = 6 $bpm = 7 $broadcast = 8 $cassette = 9 $chiptune = 10 $codec = 11 $compact = 12 $frequency = 13 $headphones = 14 $hifi = 15 $laser = 16 $lofi = 17 $media = 18 $microphone = 19 $midi = 20 $mixing = 21 $music = 22 $phonograph = 23 $radio = 24 $recording = 25 $rhythm = 26 $sequencer = 27 $song = 28 $soundtrack = 29 $speakers = 30 $stereo = 31 $stream = 32 $subwoofer = 33 $surround = 34 $synthesizer = 35 $tape = 36 $treble = 37 $vinyl = 38 $vocoder = 39 $volume = 40
@@ -135,10 +136,10 @@ ch2-ws-doturn {
 	show serial dialog spacer;
 	copy ch2-ws-count-flags;
 	show serial dialog {
-		wrap 90
+		wrap 100
 		"                          <bold>WORD SEARCH!</>"
 		"Find words meaningful to the stereo system to break through its amnesia!"
-		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2-ws-flags-tally$/15</>"
+		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2-ws-flags-tally$/20</>"
 	}
 	copy ch2-ws-draw-map;
 	copy ch2-ws-turn-message;
@@ -1912,15 +1913,6 @@ ch2-ws-guess-volume {
 	goto ch2-ws-doturn;
 }
 
-ch2-ws-guess-quit {
-	mutate ch2-ws-turn-value = 0;
-	mutate ch2-ws-turn-status = 0;
-	show serial dialog spacer;
-	show serial dialog {
-		"<m>STEREO</>: Oh, all done for now? Thanks for giving it a shot."
-	}
-}
-
 // MESSAGES
 
 ch2-ws-turn-message {
@@ -2082,7 +2074,7 @@ ch2-ws-turn-message {
 		}
 	} else if (variable ch2-ws-turn-value is $vocoders) {
 		concat serial dialog {
-			"VOCODERS? Not sure about that, but getting warm."
+			"VOCODERS? Technically, yes, but not what I'm looking for this time."
 		}
 	} else if (variable ch2-ws-turn-value is $album) {
 		if (variable ch2-ws-turn-status is $repeat) {
@@ -2111,7 +2103,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>AUDIO</>! YES! My raison d'etre! My joie de vivre!"
+				"<y>AUDIO</>! That's right! My raison d'etre! My joie de vivre!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $aux) {
@@ -2161,7 +2153,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>BROADCAST</>! Yes! Reminds me of those aluminum flags I used to wear."
+				"<y>BROADCAST</>! Oh, yeah! Reminds me of those aluminum flags I used to wear."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $cassette) {
@@ -2261,7 +2253,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>MEDIA</>! Oh, of course! Anything you can throw at me, I can take!"
+				"<y>MEDIA</>! Oh, that's right! Anything you can throw at me, I can take!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $microphone) {
@@ -2311,7 +2303,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>PHONOGRAPH</>! Oh, wow! It's my great-grandpa! That takes me back."
+				"<y>PHONOGRAPH</>! Oh, that's right, my great-grandpa! That takes me back."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $radio) {
@@ -2371,7 +2363,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SOUNDTRACK</>! Aha! Wonderful. I'm remembering more...."
+				"<y>SOUNDTRACK</>! Aha! Wonderful. I'm remembering...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $speakers) {
@@ -2381,7 +2373,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SPEAKERS</>! Yes! Without these, music would be DEAD."
+				"<y>SPEAKERS</>! Oh, yeah! Without these, music would be DEAD."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $stereo) {
@@ -2401,7 +2393,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>STREAM</>! All right! Buffer 'til the cows come home!"
+				"<y>STREAM</>! Oh, yeah! Buffer 'til the cows come home!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $subwoofer) {
@@ -2411,7 +2403,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SUBWOOFER</>! Aw, yeah! Let's rattle some windows!"
+				"<y>SUBWOOFER</>! Oh, that's right! Let's rattle some windows!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $surround) {
@@ -2421,7 +2413,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SURROUND</>! Yes! Fill the world with sound from all around!"
+				"<y>SURROUND</>! I remember filling the world with sound from all around!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $synthesizer) {
@@ -2451,7 +2443,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>TREBLE</>! Yes! Sends shivers down my copper wiring!"
+				"<y>TREBLE</>! Of course! Sends shivers down my copper wiring!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $vinyl) {
@@ -2471,7 +2463,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>VOCODER</>! Yes! We'll do Dalek voices until sunset!"
+				"<y>VOCODER</>! Oh, yeah! I remembered how to do a Dalek voice!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $volume) {
@@ -2481,8 +2473,123 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>VOLUME</>! Aha, you got it! And why stop at 11?"
+				"<y>VOLUME</>! Aha, I remember this! And why stop at 11?"
 			}
 		}
+	}
+}
+
+//----------------------- NORMAL STUFF -------------------------
+
+include!("header.mgs")
+
+// QUIT
+
+ch2-ws-guess-quit {
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = 0;
+	copy ch2-ws-count-flags;
+	show serial dialog spacer;
+	if (variable ch2-ws-flags-tally is 0) {
+		show serial dialog {
+			"<y>STEREO</>: All done for now? Well, thanks for taking a look."
+		}
+	} else if (variable ch2-ws-flags-tally is < $toWin) {
+		mutate diff = $toWin;
+		mutate diff - ch2-ws-flags-tally;
+		show serial dialog {
+			"<y>STEREO</>: Done for now? Okay, thanks for trying."
+			"\tOh, you know what? I bet if you found <y>$diff$</> more words, I'd be as right as rain. Try again later, if you would?"
+		}
+	} else if (flag ch2-ws-won is true) {
+		show serial dialog {
+			"<y>STEREO</>: Hey! Thanks for helping me remember who I am! Good luck out there!"
+		}
+	} else {
+		set flag ch2-ws-won to true;
+		show serial dialog {
+			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
+			" "
+			# "Good for you!" : ch2-ws-cutscene
+		}
+	}
+}
+
+ch2-ws-cutscene {
+
+}
+
+ch2-stereo-interact {
+	if (flag ch2-stereo-backstory is true) {
+		goto ch2-ws-doturn;
+	}
+	goto ch2-stereo-intro1;
+}
+
+ch2-stereo-intro1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<y>STEREO</>: Huh? Is there someone there? I-I think I hear a voice!"
+		" "
+		# "Hello." : ch2-stereo-intro2a
+		# "Howdy." : ch2-stereo-intro2b
+		# "Ahoy." : ch2-stereo-intro2c
+	}
+}
+
+ch2-stereo-intro2a {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Hello. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+ch2-stereo-intro2b {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Howdy. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+ch2-stereo-intro2c {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Ahoy. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+
+ch2-stereo-intro2 {
+	show serial dialog {
+		" "
+		"<y>STEREO</>: Sure! Um, maybe? I can't remember. I think I might be hurt. Last thing I remember was some shaking, then a thud. But I can't remember who I am or what I'm doing here. Other than that, I'm doing great."
+		" "
+		# "You have amnesia?" : ch2-stereo-intro3
+	}
+}
+ch2-stereo-intro3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You have amnesia?"
+		" "
+		"<y>STEREO</>: I don't know. Would I remember if I had amnesia?"
+		" "
+		# "You're a stereo system. You're supposed to be playing music." : ch2-stereo-intro4
+	}
+}
+ch2-stereo-intro4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You're a stereo system. You're supposed to be playing music."
+		" "
+		"<y>STEREO</>: I don't know what that stuff is. My mind is all jumbled up. Let's see... can you get any closer? I'm on the cusp of understanding what you're talking about, but I need a little help."
+		" "
+		# "Help like what?" : ch2-stereo-intro5
+	}
+}
+ch2-stereo-intro5 {
+	set flag ch2-stereo-backstory to true;
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Help like what?"
+		" "
+		"<y>STEREO</>: Can you dig through my mind and help me find the right words? The words I need to remember? They're all mixed up, top to down, left to right... and maybe diagonal."
+		"\tHere. I'll just show you:"
+		" "
+		# "(Get closer)" : ch2-ws-doturn
 	}
 }
