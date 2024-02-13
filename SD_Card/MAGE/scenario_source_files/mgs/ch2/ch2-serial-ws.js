@@ -1,3 +1,4 @@
+// source data
 var lispish = [
 	[['T', 'tape'],['M','microphone'],'T',['VINYL'],'UJZDUHEAAUZ',['M', 'media'],'QZGSM'],
 
@@ -39,8 +40,92 @@ var lispish = [
 
 	['QXC',['PHONO','phonograph'],['G','recording|phonograph'],['RAPH','phonograph'],'OY',['S','subwoofer|bass'],['UBWOOFER','subwoofer'],'C'],
 ];
+var hitWordsDescriptions = {
+	album: "Oh, of course! This is my bread and butter!",
+	analog: "Yeah! Who could forget that warm, velvety sound?",
+	audio: "That's right! My raison d'etre! My joie de vivre!",
+	aux: "How could I forget? Who would ever want to lose this?",
+	bass: "Oh, yeah! I'm all about that low frequency! It's the butter zone!",
+	beat: "It's all coming back! Makes my LEDs all tingly.",
+	bpm: "Oh, yeah! Reminds me of my buddy, Metronome!",
+	broadcast: "Oh, yeah! Reminds me of those aluminum flags I used to wear.",
+	cassette: "Oh, I remember those! They're so cute and spindly!",
+	chiptune: "Oh, right! So sine wavey and squarey....",
+	codec: "Oh, that's right, I think I know a few of these.",
+	compact: "Ha! Compact discs? More like--yeah, no, I got nothing.",
+	frequency: "Oh yeah, that's the best game! Dial it in, find the sweet spot....",
+	headphones: "Yeah, I remember these! Get's get tinitus together!",
+	hifi: "Who could forget? My audio standards are through the ROOF!",
+	laser: "Ahaha, that's right! It's all about the 1s and 0s, isn't it?",
+	lofi: "Oh, so nostalgic! Oh... I'm tearing up.",
+	media: "Oh, that's right! Anything you can throw at me, I can take!",
+	microphone: "Oh yeah! I used to host karaoke parties all the time!",
+	midi: "WOW, that's right! Who has a classy sound font? This guy!",
+	mixing: "Aha, so that's what my second tape deck was for!",
+	music: "Oh, yes! I remember! This is the best part about all of this!",
+	phonograph: "Oh, that's right, my great-grandpa! That takes me back.",
+	radio: "Yeah, let's take a caller! Let's go to a commercial!",
+	recording: "Yes! This is the best part! It's like having a time machine!",
+	rhythm: "Excellent! You've hit the nail on the head! That's why we're here!",
+	sequencer: "That's right! I always wanted to be one of these when I grew up.",
+	song: "Oh, yes! These are like stories, or like memories! I remember....",
+	soundtrack: "Aha! Wonderful. I'm remembering....",
+	speakers: "Oh, yeah! Without these, music would be DEAD.",
+	stereo: "Ooh ooh! Yeah, I control the horizontal... of a sort.",
+	stream: "Oh, yeah! Buffer 'til the cows come home!",
+	subwoofer: "Oh, that's right! Let's rattle some windows!",
+	surround: "I remember filling the world with sound from all around!",
+	synthesizer: "Oh! I had a stint in college where I worked as one of these.",
+	tape: "Aha, I remember... those things give me indigestion! Yuck!",
+	treble: "Of course! Sends shivers down my copper wiring!",
+	vinyl: "Oh! What a nostalgic thought! Reminds me of old grandpappy....",
+	vocoder: "Oh, yeah! I remembered how to do a Dalek voice!",
+	volume: "Aha, I remember this! And why stop at 11?",
+};
+var closeWordsDescriptions = {
+	albums: "Love your enthusiasm, but I'm a single-slot kind of guy.",
+	base: "Hmmm. Is that how you spell that?",
+	beats: "Almost, but not quite what I'm looking for.",
+	broadcasts: "Optimistic, but I don't know about that.",
+	cassettes: "As in multiple? What decade is this?",
+	chiptunes: "I think you're a smidge off, but keep trying.",
+	codecs: "I think you're nearly there, but not quite.",
+	frequencies: "Almost, but not what I'm thinking of.",
+	gramophone: "Are you just making things up now?",
+	headphone: "Is that like a 'scissor'? Or a 'pant'?",
+	lasers: "Almost, but not quite. Sounds fun though!",
+	microphones: "Do I look like I need more than one?",
+	phones: "Close, but way off.",
+	phone: "Getting close to something, I can feel it.",
+	mic: "No, but I think that's almost something.",
+	musician: "A bit overboard, but you're on to something.",
+	radios: "Sorry, there's only one of me here.",
+	recordings: "Close, but I think you're going a bit overboard.",
+	record: "Aha, yes! Oh, no, wait. Not this time. Close though.",
+	sequence: "You're getting somewhere, but no dice this time.",
+	sequencers: "Were that I was that cool! Maybe scale that back.",
+	sing: "I feel like that's close, but I don't know.",
+	singing: "I mean sure, but... no, that's not what I'm missing.",
+	songs: "Almost! Not exactly though.",
+	sound: "I mean sure, but... no, not what I'm looking for.",
+	soundtracks: "Enthusiastic, aren't you! Not quite, though.",
+	synth: "Getting there, but I think you can go bigger!",
+	synthesizers: "Almost there, but maybe a little different.",
+	track: "Was it more than that? It's on the tip of my silicon.",
+	tracks: "No, but I think that's close.",
+	speaker: "Hey, I'm more sophisticated than that! Go bigger!",
+	stereos: "Can you use the word like that? Was it something similar?",
+	streams: "I'm loving the river vibe, but not exactly right.",
+	subwoofers: "I hardly know her!",
+	tapes: "So close, but a little too much.",
+	tune: "Hmmm... almost, but not quite. Maybe it's something more.",
+	tunes: "Hmmm, maybe something else, something similar.",
+	vinyls: "No, I don't know if that's quite how that goes.",
+	vocoders : "Technically, yes, but not what I'm looking for this time.",
+};
+var closeWords = Object.keys(closeWordsDescriptions);
 
-// word list stuff
+// word list middle stage stuff
 var wordMap = {};
 lispish.forEach(function(row) {
 	row.forEach(function(item){
@@ -69,54 +154,13 @@ var padded = coupled.map(s=>{
 	}
 	return s;
 });
-var closeWords = [
-	'albums',
-	'base',
-	'beats',
-	'broadcasts',
-	'cassettes',
-	'chiptunes',
-	'codecs',
-	'frequencies',
-	'gramophone',
-	'headphone',
-	'lasers',
-	'microphones',
-	'phones',
-	'phone',
-	'mic',
-	'musician',
-	'radios',
-	'recordings',
-	'record',
-	'sequence',
-	'sequencers',
-	'sing',
-	'singing',
-	'songs',
-	'sound',
-	'soundtracks',
-	'synth',
-	'synthesizers',
-	'track',
-	'tracks',
-	'speaker',
-	'stereos',
-	'streams',
-	'subwoofers',
-	'tapes',
-	'tune',
-	'tunes',
-	'vinyls',
-	'vocoders',
-];
 
-// state
+// JS game state
 var pickedWordMap = JSON.parse(JSON.stringify(wordMap));
 var lastWord = '';
 var lastWordStatus = '';
 
-// draw things
+// JS draw things
 var countPicks = function () {
 	return Object.values(pickedWordMap)
 		.filter(function(item) { return item; })
@@ -211,7 +255,7 @@ var printGame = function () {
 	console.log('\n');
 };
 
-// gameplay loop
+// JS gameplay loop
 var pick = function (word) {
 	lastWord = word;
 	if (closeWords.includes(lastWord.toLowerCase())) {
@@ -235,7 +279,7 @@ var highlighted = `\u001B[${highlightColor}m` + bold;
 var notHighlightColor = '31';
 var notHighlighted = reset + `\u001B[${notHighlightColor}m`;
 
-printGame(); // first turn
+// printGame(); // first turn (UNCOMMENT THIS TO PLAY)
 
 
   // ---------------------------------------------- \\
@@ -244,7 +288,7 @@ printGame(); // first turn
 
 var prefix = `ch2-ws-`;
 var varName = `${prefix}flags-tally`;
-var pts = "15"; // points to win
+var pts = "20"; // points to win
 
 var makeCountFlagScript = function () {
 	var ret = [
@@ -258,18 +302,6 @@ var makeCountFlagScript = function () {
 	});
 	ret.push(`}`)
 	return ret.join('\n');
-};
-
-var makeHeadingSerialDialog = function () {
-	var ret = `
-serial dialog ${prefix}header {
-	"                            WORD SEARCH!"
-	"Find words meaningful to the stereo system to break through its amnesia!"
-	" "
-	"         Type a word! (or type Q to quit)             Pts to win: $${varName}$/${pts}"
-}
-`;
-	return ret.trim();
 };
 
 var makeGridLineScriptChunk = function (line, doop) {
@@ -329,20 +361,21 @@ var makeBoxPrintScript = function () {
 
 var makeInputDialog = function () {
 	var ret = [
-		`${prefix}serial dialog {`,
+		`serial dialog ${prefix}input {`,
 		`\t" "`,
-		`\t_ "Q" : ${prefix}quit`,
-		`\t_ "QUIT" : ${prefix}quit`
+		`\t_ "Q" : ${prefix}guess-quit`,
+		`\t_ "QUIT" : ${prefix}guess-quit`,
+		`\t_ "EXIT" : ${prefix}guess-quit`
 	];
-	ret.push('	// target words');
+	ret.push('\t// target words');
 	wordList.forEach(function (word) {
 		var scriptName = `${prefix}guess-${word}`;
-		ret.push(`\t\t_ "${word.toUpperCase()}" : ${scriptName}`);
+		ret.push(`\t_ "${word.toUpperCase()}" : ${scriptName}`);
 	});
-	ret.push('	// "close" words');
+	ret.push('\t// "close" words');
 	closeWords.forEach(function (word) {
 		var scriptName = `${prefix}guess-${word}`;
-		ret.push(`\t\t_ "${word.toUpperCase()}" : ${scriptName}`);
+		ret.push(`\t_ "${word.toUpperCase()}" : ${scriptName}`);
 	});
 	ret.push('}')
 	return ret.join('\n');
@@ -355,8 +388,8 @@ return `ch2-ws-guess-${word.toLowerCase()} {
 	goto ch2-ws-doturn;
 }`
 };
-var closeGuessScripts = closeWords.map(makeCloseGuessScript)
-	.join('\n');
+var closeGuessScripts = `// Guesses: "close" words:\n`
+	+ closeWords.map(makeCloseGuessScript).join('\n');
 
 var makeHitGuessScript = function (word) {
 return `ch2-ws-guess-${word} {
@@ -370,28 +403,32 @@ return `ch2-ws-guess-${word} {
 	goto ch2-ws-doturn;
 }`
 };
-var hitGuessScripts = wordList.map(makeHitGuessScript)
-	.join('\n');
+var hitGuessScripts = `// Guesses: hits\n`
+	+ wordList.map(makeHitGuessScript).join('\n');
 
 var makeCloseGuessMessage = function (word) {
-return `if (variable ch2-ws-turn-value is $${word.toLowerCase()}) {
+	var message = closeWordsDescriptions[word.toLowerCase()];
+	message = message !== undefined ? message : "No, but I think that's close."
+return `if (variable ${prefix}turn-value is $${word.toLowerCase()}) {
 		concat serial dialog {
-			"${word.toUpperCase()}? No, but I think that's close."
+			"${word.toUpperCase()}? ${message}"
 		}
-}`
+	}`
 };
 var closeGuessMessages = '\t' + closeWords.map(makeCloseGuessMessage)
 	.join(' else ');
 
 var makeHitMessage = function (word) {
-return `if (variable ch2-ws-turn-value is $${word.toLowerCase()}) {
-		if (variable ch2-ws-turn-status is $repeat) {
+	var message = hitWordsDescriptions[word.toLowerCase()];
+	message = message !== undefined ? message : "Yes, genuis! That's it! I remember now."
+return `if (variable ${prefix}turn-value is $${word.toLowerCase()}) {
+		if (variable ${prefix}turn-status is $repeat) {
 			concat serial dialog {
 				"${word.toUpperCase()}? Oh, but you've found that one already."
 			}
 		} else {
 			concat serial dialog {
-				"<y>${word.toUpperCase()}</>! Yes, genuis! That's it! I remember now."
+				"<y>${word.toUpperCase()}</>! ${message}"
 			}
 		}
 	}`
@@ -399,4 +436,62 @@ return `if (variable ch2-ws-turn-value is $${word.toLowerCase()}) {
 var hitMessages = '\t' + wordList.map(makeHitMessage)
 	.join(' else ');
 
-console.log("GAME OVER");
+var makeTurnMessageScript = function () {
+	return `${prefix}turn-message {
+	if (variable ${prefix}turn-status is $miss) {
+		concat serial dialog {
+			"Huh? I don't think I know that word."
+		}
+	} else `
+		+ closeGuessMessages
+		+ ` else `
+		+ hitMessages
+		+ ` else {
+		if (variable ${prefix}flags-tally is ${wordList.length}) {
+			concat serial dialog {
+				"You know? I think you've done it! Everything is clear to me now!"
+			}
+		} else if (flag ${prefix}won is true) {
+			concat serial dialog {
+				"Oh boy! What else is there inside my head?"
+			}
+		} else {
+			concat serial dialog {
+				"My head is all jumbled up. I can almost remember...."
+			}
+		}
+	}
+}`.replace(`else 	if`, `else if`);
+};
+
+var makeConst = function () {
+	return [
+		`const!(`,
+		`\t$close = 1 $repeat = 2 $hit = 3 $miss = 4`,
+		`\t// target words`,
+		'\t' + wordList.map(function (s, i) {
+			return `$${s.toLowerCase()} = ${i+1}`;
+		}).join(' '),
+		'\t// "close" words',
+		'\t'+closeWords.map(function (s, i) {
+			return `$${s.toLowerCase()} = ${i+1+wordList.length}`;
+		}).join(' '),
+		')'
+	].join('\n');
+}
+
+var natlangFile = [
+	makeConst(),
+	makeCountFlagScript(),
+	makeBoxPrintScript(),
+	makeInputDialog(),
+	closeGuessScripts,
+	hitGuessScripts,
+	`// MESSAGES`,
+	makeTurnMessageScript(),
+].join('\n\n');
+
+// `cd` in here, then run `node.exe ch2-serial-ws.js > ch2-serial-wg.js`
+// (No `.exe` needed except on Windows)
+console.log(natlangFile);
+// console.log("GAME OVER");
