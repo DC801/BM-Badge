@@ -491,7 +491,7 @@ var natlangFile = [
 	makeTurnMessageScript(),
 ].join('\n\n');
 
-// `cd` in here, then run `node.exe ch2-serial-ws.js > ch2-serial-wg.js`
+// `cd` in here, then run `node.exe ch2-castle-12-ws.js > ch2-castle-12-ws.mgs`
 // (No `.exe` needed except on Windows)
 console.log(natlangFile);
 // console.log("GAME OVER");

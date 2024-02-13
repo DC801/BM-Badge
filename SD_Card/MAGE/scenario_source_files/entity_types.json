@@ -4788,7 +4788,7 @@
 			],
 			"walk": [
 				{
-					"tileid": 4,
+					"tileid": 6,
 					"flip_x": false
 				},
 				{
@@ -4804,6 +4804,8 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"scenarioIndex": 67,
+		"serialized": {}
 	}
 }
