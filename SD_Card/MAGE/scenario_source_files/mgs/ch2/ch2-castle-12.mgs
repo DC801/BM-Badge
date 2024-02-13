@@ -297,6 +297,7 @@ ch2-ws-guess-quit {
 			# "Good for you!" : ch2-ws-cutscene
 		}
 	}
+	set entity Stereo on_interact to ch2-stereo-interact;
 }
 
 ch2-ws-cutscene {
