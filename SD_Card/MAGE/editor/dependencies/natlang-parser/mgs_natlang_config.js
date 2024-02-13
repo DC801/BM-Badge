@@ -646,6 +646,14 @@ mgs.actionDictionary = [{
 		pattern: "make<v> camera<i> follow<h> entity<s> $entity:string<str> ?;<terminator>",
 	},
 	{
+		action: "CLOSE_DIALOG",
+		pattern: "end<v> dialog<i> ?;<terminator>",
+	},
+	{
+		action: "CLOSE_SERIAL_DIALOG",
+		pattern: "end<v> serial<i> dialog<i> ?;<terminator>",
+	},
+	{
 		action: "SET_HEX_EDITOR_STATE",
 		pattern: "$bool_value:boolean<enum> hex<i> editor<i> ?;<terminator>",
 	},
@@ -787,14 +795,6 @@ mgs.actionDictionary = [{
 		action: "SHOW_SERIAL_DIALOG",
 		pattern: "show<v> serial<s> dialog<s> $serial_dialog:string<str> ?;<terminator>",
 		values: { "disable_newline": false },
-	},
-	{
-		action: "CLOSE_DIALOG",
-		pattern: "close<v> dialog<i> ?;<terminator>",
-	},
-	{
-		action: "CLOSE_SERIAL_DIALOG",
-		pattern: "close<v> serial<i> dialog<i> ?;<terminator>",
 	},
 	{
 		action: "SHOW_SERIAL_DIALOG",

@@ -155,17 +155,23 @@ interact-ch2-concierge {
 		|| flag ch2-needle-permission is true
 	) {
 		show dialog {
-			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment."
-			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
+			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment. How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
 			"I'll be cheering you on from here. Good luck!"
 		}
 	} else {
-		show dialog {
-			PLAYER "(TODO: I want needle)"
-			Concierge "(TODO: well, you've convinced me)"
+		if (flag ch2-ws-won is true) {
+			copy ch2-ws-cutscene;
+		} else if (flag ch2-ws-backstory is false) {
+			show dialog {
+				PLAYER "(TODO: I want needle)"
+				Concierge "(TODO: well, fix the stereo first)"
+			}
+			set flag ch2-ws-backstory to true;
+		} else {
+			show dialog {
+				Concierge "Go on, now. I'll let you have the needle off this phonograph is you get the stereo working again. It's the black thing behind me."
+			}
 		}
-		set flag interrupt2 to true;
-		set flag ch2-needle-permission to true;
 	}
 }
 
@@ -294,14 +300,28 @@ ch2-ws-guess-quit {
 }
 
 ch2-ws-cutscene {
-
+	show dialog {
+		Concierge "Oh! Oh! I can hear it! The old, reliable stereo is back in business!"
+		"Go ahead and take the needle off that phonograph. Many thanks!"
+	}
+	set flag interrupt2 to true;
+	set flag ch2-needle-permission to true;
+	set entity Stereo on_interact to ch2-stereo-interact;
 }
 
 ch2-stereo-interact {
-	if (flag ch2-stereo-backstory is true) {
+	if (flag ch2-ws-backstory is false) {
+		show dialog { PLAYER "A CD player or something? Looks half damaged." }
+	} else if (flag ch2-stereo-backstory is false) {
+		show dialog {
+			PLAYER "?"
+			"Oh, there's a place where the artifact can plug into it."
+			"I wonder if I can investigate it via the terminal."
+		}
+		goto ch2-stereo-intro1;
+	} else {
 		goto ch2-ws-doturn;
 	}
-	goto ch2-stereo-intro1;
 }
 
 ch2-stereo-intro1 {
