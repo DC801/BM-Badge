@@ -223,5 +223,152 @@ ch2-touch-needle-no {
 	show dialog {
 		PLAYER "Maybe later, then."
 	}
-	set entity "%SELF%" on_interact to ch2-touch-needle;  // reset after script jump
+	set entity "%SELF%" on_interact to ch2-touch-needle;
 }
+
+/* ---------- WORD SEARCH (non-auto generated stuff) ---------- */
+
+const!( // make sure these are the same as in the auto one
+	$toWin = 20
+	$miss = 4
+)
+
+serial dialog ch2-ws-rowstart { "<r>" }
+serial dialog ch2-ws-col { "</>   " }
+
+ch2-ws-doturn {
+	show serial dialog spacer;
+	copy ch2-ws-count-flags;
+	show serial dialog {
+		wrap 100
+		"                          <bold>WORD SEARCH!</>"
+		"Find words meaningful to the stereo system to cut through its amnesia."
+		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2-ws-flags-tally$/20</>"
+	}
+	copy ch2-ws-draw-map;
+	copy ch2-ws-turn-message;
+	show serial dialog ch2-ws-input;
+	// if you didn't trigger one of the defined inputs, it counts as a miss:
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = $miss;
+	goto ch2-ws-doturn;
+}
+include!("header.mgs")
+
+// QUIT
+
+ch2-ws-guess-quit {
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = 0;
+	copy ch2-ws-count-flags;
+	show serial dialog spacer;
+	if (variable ch2-ws-flags-tally is 0) {
+		show serial dialog {
+			"<y>STEREO</>: All done for now? Well, thanks for taking a look."
+		}
+	} else if (variable ch2-ws-flags-tally is < $toWin) {
+		mutate diff = $toWin;
+		mutate diff - ch2-ws-flags-tally;
+		if (variable diff is 1) {
+			show serial dialog {
+				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, you hear?"
+			}
+		} else {
+			show serial dialog {
+				"<y>STEREO</>: Done for now? Okay, thanks for trying."
+				"\tOh, you know what? I bet if you found <y>$diff$</> more words, I'd be as right as rain. Try again later, if you would?"
+			}
+		}
+	} else if (flag ch2-ws-won is true) {
+		show serial dialog {
+			"<y>STEREO</>: Hey! Thanks for helping me remember who I am! Good luck out there!"
+		}
+	} else {
+		set flag ch2-ws-won to true;
+		show serial dialog {
+			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
+			" "
+			# "Good for you!" : ch2-ws-cutscene
+		}
+	}
+}
+
+ch2-ws-cutscene {
+
+}
+
+ch2-stereo-interact {
+	if (flag ch2-stereo-backstory is true) {
+		goto ch2-ws-doturn;
+	}
+	goto ch2-stereo-intro1;
+}
+
+ch2-stereo-intro1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<y>STEREO</>: Huh? Is there someone there? I-I think I hear a voice!"
+		" "
+		# "Hello." : ch2-stereo-intro2a
+		# "Howdy." : ch2-stereo-intro2b
+		# "Ahoy." : ch2-stereo-intro2c
+	}
+}
+
+ch2-stereo-intro2a {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Hello. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+ch2-stereo-intro2b {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Howdy. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+ch2-stereo-intro2c {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Ahoy. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+
+ch2-stereo-intro2 {
+	show serial dialog {
+		" "
+		"<y>STEREO</>: Sure! Um, maybe? I can't remember. I think I might be hurt. Last thing I remember was some shaking, then a thud. But I can't remember who I am or what I'm doing here. Other than that, I'm doing great."
+		" "
+		# "You have amnesia?" : ch2-stereo-intro3
+	}
+}
+ch2-stereo-intro3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You have amnesia?"
+		" "
+		"<y>STEREO</>: I don't know. Would I remember if I had amnesia?"
+		" "
+		# "You're a stereo system. You're supposed to be playing music." : ch2-stereo-intro4
+	}
+}
+ch2-stereo-intro4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You're a stereo system. You're supposed to be playing music."
+		" "
+		"<y>STEREO</>: I don't know what that stuff is. My mind is all jumbled up. Let's see... can you get any closer? I'm on the cusp of understanding what you're talking about, but I need a little help."
+		" "
+		# "Help like what?" : ch2-stereo-intro5
+	}
+}
+ch2-stereo-intro5 {
+	set flag ch2-stereo-backstory to true;
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Help like what?"
+		" "
+		"<y>STEREO</>: Can you dig through my mind and help me find the right words? The words I need to remember? They're all mixed up, top to down, left to right... and maybe diagonal."
+		"\tHere. I'll just show you:"
+		" "
+		# "(Get closer)" : ch2-ws-doturn
+	}
+}
+

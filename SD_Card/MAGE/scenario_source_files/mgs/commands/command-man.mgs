@@ -527,7 +527,7 @@ ch2-lambda-person-simon {
 		"<c>YOU</>: Tell me about Simon."
 		" "
 		"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really want to meet him, you know?"
+		"\tBut Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really <bold>want</> to meet him, you know?"
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -541,7 +541,7 @@ ch2-lambda-person-bobmoss {
 	if (flag ch2-seen-room-32 is false) {
 		show serial dialog {
 			"<m>LAMBDA</>: Bob Moss? Bob Moss... I-I think I...."
-			"\tI think I used to be good friends with him, but... what did we do together? Why can't I...."
+			"\tI think I used to be good friends with him, but... what did we do together?"
 			"\tI seem to remember we... no, it's gone. I'm sorry."
 		}
 	} else {
@@ -776,7 +776,7 @@ ch2-lambda-person-marathonbob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about the Marathon Bobs."
 		" "
-		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac)"
+		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever)"
 	}
 	goto ch2-lambda-topic-person-s;
 }

@@ -418,7 +418,7 @@ Other notes:
 		- Q. The badge's buttons are on the sides of the screen. Is there a button layout where it would be obvious what button does what?
 - [x] Finished: Simon says
 - [x] Finished: hot-cold game (mousegame)
-- [ ] Potential: word search (justifies serial terminal; framing device is strange. Passwords?)
+- [x] Finished: word search (uses terminal for display/input)
 - [ ] Potential: pipe puzzle a la System's Twilight
 - [ ] Potential: Lost Woods puzzle!
 	- Each castle room as a note somewhere, like 4-L. These are the instructions for the lost woods thing
@@ -426,7 +426,6 @@ Other notes:
 
 Other things:
 
-- [ ] Regular full computer desktop: (Atari ST? System 6?)
 - [ ] Regular full computer desktop: (Atari ST? System 6?)
 
 ### Lost woods
