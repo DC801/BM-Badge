@@ -18,8 +18,6 @@ on_load-main_menu {
 
 	/* DEBUG QUICK STUFFS */
 	if (debug mode is on) {
-		register ws -> debug-ws;
-		register stereo -> debug-stereo;
 		register debug -> debug;
 		register hub -> debug-hub;
 		register honk -> system_bell;
@@ -35,8 +33,6 @@ on_load-main_menu {
 		show serial dialog spacer;
 		show serial dialog {
 			"\t<g>Main menu debug options:</>"
-			"<c>WS</>: word search"
-			"<c>STEREO</>: word search w/ intro"
 			"<c>BUFFER TEST</>: test various serial messages in various shapes"
 			"<c>HUB</>: go to debug hub map"
 			"<c>CH2</>: start ch2 (birthday cutscene)"
@@ -56,13 +52,6 @@ on_load-main_menu {
 }
 
 /* DEBUGSSSS */
-debug-ws {
-	goto ch2-ws-doturn;
-}
-debug-stereo {
-	goto ch2-stereo-interact;
-}
-
 debug-menu-simon {
 	turn serial control on;
 	set flag ch2-has-artifact to true;

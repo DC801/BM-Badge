@@ -26,9 +26,9 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 373, 374, 0, 0, 382, 0, 0,
-            0, 0, 0, 0, 0, 389, 390, 429, 430, 398, 0, 0,
-            0, 0, 0, 280, 285, 0, 280, 284, 285, 0, 0, 0,
+            0, 0, 0, 0, 0, 373, 374, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 389, 390, 0, 0, 382, 0, 0,
+            0, 0, 0, 280, 285, 0, 280, 429, 430, 398, 0, 0,
             0, 0, 0, 0, 327, 0, 283, 284, 366, 373, 0, 0,
             0, 0, 0, 280, 298, 281, 363, 284, 281, 389, 0, 0,
             0, 0, 0, 0, 0, 278, 2147483926, 0, 0, 0, 0, 0,
@@ -116,7 +116,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":795,
+                 "gid":891,
                  "height":32,
                  "id":33,
                  "name":"Concierge",
@@ -135,11 +135,11 @@
                  "visible":true,
                  "width":32,
                  "x":251,
-                 "y":103
+                 "y":135
                 }, 
                 {
                  "class":"",
-                 "gid":800,
+                 "gid":896,
                  "height":40,
                  "id":35,
                  "name":"Phonograph",
@@ -158,7 +158,7 @@
                  "visible":true,
                  "width":40,
                  "x":283,
-                 "y":106
+                 "y":138
                 }, 
                 {
                  "class":"",
@@ -176,7 +176,25 @@
                  "visible":true,
                  "width":32,
                  "x":223,
-                 "y":112
+                 "y":144
+                }, 
+                {
+                 "class":"",
+                 "gid":879,
+                 "height":32,
+                 "id":37,
+                 "name":"Stereo",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-stereo-interact"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":223,
+                 "y":108
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -188,8 +206,8 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 414, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 414, 0, 0, 0,
             0, 303, 0, 0, 0, 0, 0, 0, 0, 0, 374, 0,
             0, 303, 0, 0, 0, 0, 0, 0, 0, 0, 390, 0,
             0, 0, 0, 0, 0, 325, 2147483973, 0, 0, 0, 0, 0,
@@ -252,7 +270,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -287,19 +305,19 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":527,
+         "firstgid":623,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":783,
+         "firstgid":879,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":889,
          "source":"..\/entities\/entity-concierge.json"
         }, 
         {
-         "firstgid":799,
+         "firstgid":895,
          "source":"..\/entities\/entity-phonograph.json"
         }],
  "tilewidth":32,
