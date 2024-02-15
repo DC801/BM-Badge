@@ -9,7 +9,9 @@ TODO
 
 prioritize web build? lets us export a txt for full report and as many as we want for fixes while keeping to a short summary for CLI build (ask...)
 
-distinctive strings for each type of issue in full report that are good for grep (e.g. UNDEFINED)
+how will look work for multiple entities of the same or similar names (eg bread, torch)
+
+check for script definitions in JSON files as well as MGS files (there are a couple)
 
 gameengine prettier mage_command_control.cpp:185
 - commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
@@ -21,19 +23,15 @@ ask Mary for a pattern for "TODO" script definitions
 move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
 - (also naming of script look-ch2-castle-34 but it's really for the pantry?)
 
+find out where the code for look command is. does it string match the actual entity name or is there somewhere else the mapping is specified?
+
+use a predicate function for blacklisted_files? e.g. positive string match 'ch2'
+
 generating script names
 ---
 nice indenting to be able to paste into maps
 what to do with a no-name entity?
 check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
-
-find out where the code for look command is. does it string match the actual entity name or is there somewhere else the mapping is specified?
-find out if it's ok for entities to have no name in map files
-find out if nativlang stipulates mgs files are ASCII encoded? most all scenario files here seems to be ASCII. maybe just from the VSCode most everyone uses
-
-use a predicate function for blacklisted_files? e.g. positive string match 'ch2'
-allow checks to be functions for more advanced checking framework? overall CI/CD conversation
-check for script definitions in JSON files as well as MGS files (there are a couple)
 '''
 
 # NOTE: checks to run can be added here
@@ -41,7 +39,6 @@ check for script definitions in JSON files as well as MGS files (there are a cou
 
 def check_interact_script(entity):
     property_name = 'on_interact'
-    result = property_name
 
     script_name = ''
     found_script_definition = False
@@ -55,6 +52,8 @@ def check_interact_script(entity):
     
     if found_script_definition:
         return None # no problem found for this check. note found_script_definition being true implies script_name is also set
+
+    result = f'a {property_name} script'
 
     if script_name: # a script name is present in map data but never defined in mgs folder
         global num_undefined_scripts
@@ -67,7 +66,6 @@ def check_interact_script(entity):
 
 def check_look_script(entity):
     property_name = 'on_look'
-    result = property_name
 
     script_name = ''
     found_script_definition = False
@@ -82,11 +80,13 @@ def check_look_script(entity):
     if found_script_definition:
         return None # no problem found for this check. note found_script_definition being true implies script_name is also set
 
+    result = f'a {property_name} script'
+
     if script_name: # a script name is present in map data but never defined in mgs folder
         global num_undefined_scripts
         num_undefined_scripts += 1
 
-        result += f' (UNDEFINED: script \'{script_name}\' expected from the map file is never defined)'
+        result += f' (UNDEFINED: name \'{script_name}\' given in map is never defined)'
     
     return result
 
@@ -191,53 +191,53 @@ def check_entity(entity):
     return result
 
 
-def generate_script_names(entity):
-    'return properties field that can be placed into a map file to fix missing script names'
+# def generate_script_names(entity):
+#     'return properties field that can be placed into a map file to fix missing script names'
     
-    entity_name = entity.get('name', 'NO-NAME')
-    script_specifications = []
+#     entity_name = entity.get('name', 'NO-NAME')
+#     script_specifications = []
 
-    prefix = '' # TODO let checks handle generation themselves, or some function at least
+#     prefix = '' # TODO let checks handle generation themselves, or some function at least
 
-    for check in checks:
-        script_specifications.append(f'''{{
-            "name":"{check['property_name']}",
-            "type":"string",
-            "value":"{prefix}-{entity_name.lower()}"
-        }}''')
+#     for check in checks:
+#         script_specifications.append(f'''{{
+#             "name":"{check['property_name']}",
+#             "type":"string",
+#             "value":"{prefix}-{entity_name.lower()}"
+#         }}''')
 
-    newline = '\n' # format strings don't like newlines inside of expressions
-    return f'''"properties":[
-        {newline.join(script_specifications)}
-    ],'''
+#     newline = '\n' # format strings don't like newlines inside of expressions
+#     return f'''"properties":[
+#         {newline.join(script_specifications)}
+#     ],'''
 
 
-def generate_script_definitions(entity):
-    'return natlang placeholder script that can be placed into an mgs file to fix missing script definitions'
+# def generate_script_definitions(entity):
+#     'return natlang placeholder script that can be placed into an mgs file to fix missing script definitions'
 
-    entity_name = entity.get('name', 'NO-NAME')
-    script_definitions = []
+#     entity_name = entity.get('name', 'NO-NAME')
+#     script_definitions = []
 
-    prefix = '' # TODO let checks handle generation themselves, or some function at least
+#     prefix = '' # TODO let checks handle generation themselves, or some function at least
 
-    for check in checks:
-        # script_definitions.append(
-        #     f'''{prefix}-{entity_name.lower()} {{
-	    #         show dialog {{
-        # 		    PLAYER "TODO"
-	    #         }}
-        #     }}''')
+#     for check in checks:
+#         # script_definitions.append(
+#         #     f'''{prefix}-{entity_name.lower()} {{
+# 	    #         show dialog {{
+#         # 		    PLAYER "TODO"
+# 	    #         }}
+#         #     }}''')
 
-        script_definitions.append(
-            f'''{prefix}-{entity_name.lower()} {{
-                show serial dialog spacer;
-                show serial dialog {{
-                    "You looked at <m>%TODO%</>."
-                    "TODO: {entity_name.upper()} on_look text\\n "
-		        }}
-            }}''')
+#         script_definitions.append(
+#             f'''{prefix}-{entity_name.lower()} {{
+#                 show serial dialog spacer;
+#                 show serial dialog {{
+#                     "You looked at <m>%TODO%</>."
+#                     "TODO: {entity_name.upper()} on_look text\\n "
+# 		        }}
+#             }}''')
 
-    return '\n\n'.join(script_definitions)
+#     return '\n\n'.join(script_definitions)
     
 
 def find_problems():
@@ -277,7 +277,7 @@ for map_file_path in sorted(problems.keys()):
     print(os.path.basename(map_file_path))
 
     for entity in map_problems:
-        print(f'    {entity["name"] or "NO-NAME ENTITY"} (id {entity["id"]}) needs:')
+        print(f'    {entity["name"] or "NO NAME"} (id {entity["id"]}) needs:')
         print('\n'.join([f'        {problem}' for problem in entity['problems']]))
     print()
 
