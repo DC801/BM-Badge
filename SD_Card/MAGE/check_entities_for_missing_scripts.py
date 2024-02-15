@@ -37,12 +37,10 @@ use nativlang parser JSON output to check for script definition rather than stri
 # NOTE: checks to run can be added here
 checks = [
     {
-        'check_name': 'interact script',
         'property_name': 'on_interact',
         'script_prefix': 'interact-ch2'
     },
     {
-        'check_name': 'look script',
         'property_name': 'on_look',
         'script_prefix': 'look-ch2'
     }
@@ -121,7 +119,7 @@ def check_entity(entity):
         if found_script_definition:
             continue # no output needed for this check. found_script_definition being true implies script_name is also set
         
-        fail_message = check['check_name'] # the check's name serves as the beginning of the fail message
+        fail_message = check['property_name'] # the check's name serves as the beginning of the fail message
         if script_name: # a script name is present in map data but never defined in mgs folder
             global num_undefined_scripts
             num_undefined_scripts += 1
