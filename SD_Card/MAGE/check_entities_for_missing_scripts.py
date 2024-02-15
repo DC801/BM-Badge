@@ -54,6 +54,9 @@ def debug_to_stderr(*args, **kwargs):
     DEBUG = True
     # DEBUG = False
 
+    if not DEBUG:
+        return
+
     print(*args, **kwargs, file=sys.stderr)
 
 
