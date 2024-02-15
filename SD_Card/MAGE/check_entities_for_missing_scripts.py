@@ -7,7 +7,9 @@ import json
 '''
 TODO
 
-make no-name its own check?
+prioritize web build? lets us export a txt for full report and as many as we want for fixes while keeping to a short summary for CLI build (ask...)
+
+distinctive strings for each type of issue in full report that are good for grep (e.g. UNDEFINED)
 
 gameengine prettier mage_command_control.cpp:185
 - commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
@@ -35,20 +37,75 @@ check for script definitions in JSON files as well as MGS files (there are a cou
 '''
 
 # NOTE: checks to run can be added here
-checks = [
-    {
-        'property_name': 'on_interact',
-        'script_prefix': 'interact-ch2'
-    },
-    {
-        'property_name': 'on_look',
-        'script_prefix': 'look-ch2'
-    }
-]
+# write a function consuming an entity as from the map files and returning None if good or a string message if bad (X in "Bob needs X")
+
+def check_interact_script(entity):
+    property_name = 'on_interact'
+    result = property_name
+
+    script_name = ''
+    found_script_definition = False
+    
+    for property in entity.get('properties', {}):
+        if property['name'] == property_name:
+            script_name = property['value']
+            if find_script_definition(script_name):
+                found_script_definition = True
+            break # no need to search for the right property object more after finding it once
+    
+    if found_script_definition:
+        return None # no problem found for this check. note found_script_definition being true implies script_name is also set
+
+    if script_name: # a script name is present in map data but never defined in mgs folder
+        global num_undefined_scripts
+        num_undefined_scripts += 1
+
+        result += f' (UNDEFINED: script \'{script_name}\' expected from the map file is never defined)'
+    
+    return result
+
+
+def check_look_script(entity):
+    property_name = 'on_look'
+    result = property_name
+
+    script_name = ''
+    found_script_definition = False
+    
+    for property in entity.get('properties', {}):
+        if property['name'] == property_name:
+            script_name = property['value']
+            if find_script_definition(script_name):
+                found_script_definition = True
+            break # no need to search for the right property object more after finding it once
+    
+    if found_script_definition:
+        return None # no problem found for this check. note found_script_definition being true implies script_name is also set
+
+    if script_name: # a script name is present in map data but never defined in mgs folder
+        global num_undefined_scripts
+        num_undefined_scripts += 1
+
+        result += f' (UNDEFINED: script \'{script_name}\' expected from the map file is never defined)'
+    
+    return result
+
+
+def check_name_present(entity):
+    entity_name = ''.join(filter(lambda x: not x.isspace(), entity['name'])) # remove whitespace to see if there's anything left
+    if entity_name:
+        return None
+    else:
+        return 'a name in the map file'
+
+
+# end area for adding checks
+
+checks = [check_interact_script, check_look_script, check_name_present]
+check_failure_count = {check.__name__ : 0 for check in checks}
+
 
 this_script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-
-num_no_name_entities = 0
 num_undefined_scripts = 0
 
 
@@ -112,48 +169,23 @@ def check_entity(entity):
             'problems': []
         }
 
-    entity_name = entity['name']
-    if not entity_name:
-        entity_name = 'NO-NAME ENTITY'
-        global num_no_name_entities
-        num_no_name_entities += 1
-
     result = {
-        'name': entity_name,
+        'name': entity['name'],
         'id': entity['id'],
         'problems': []
     }
 
     for check in checks:
-        script_name = ''
-        found_script_definition = False
-        
-        for property in entity.get('properties', {}):
-            if property['name'] == check['property_name']:
-                script_name = property['value']
-                if find_script_definition(script_name):
-                    found_script_definition = True
-                break # no need to check further properties for this particular check
-        
-        if found_script_definition:
-            continue # no action needed for this check. found_script_definition being true implies script_name is also set
+        problem = check(entity)
 
-        problem = {
-            'failed_check': check['property_name']
-        }
-        
-        if script_name: # a script name is present in map data but never defined in mgs folder
-            global num_undefined_scripts
-            num_undefined_scripts += 1
-            
-            problem['missing_definition'] = True
+        if problem is not None:
+            result['problems'].append(problem)
+            check_failure_count[check.__name__] += 1
 
-        result['problems'].append(problem)
-    
     if result['problems']:
         # TODO generate fixes
-        # debug_to_stderr(generate_script_names(entity))
-        # debug_to_stderr(generate_script_definitions(entity))
+        # generate_script_names(entity)
+        # generate_script_definitions(entity)
         pass
 
     return result
@@ -165,11 +197,13 @@ def generate_script_names(entity):
     entity_name = entity.get('name', 'NO-NAME')
     script_specifications = []
 
+    prefix = '' # TODO let checks handle generation themselves, or some function at least
+
     for check in checks:
         script_specifications.append(f'''{{
             "name":"{check['property_name']}",
             "type":"string",
-            "value":"{check['script_prefix']}-{entity_name.lower()}"
+            "value":"{prefix}-{entity_name.lower()}"
         }}''')
 
     newline = '\n' # format strings don't like newlines inside of expressions
@@ -184,16 +218,18 @@ def generate_script_definitions(entity):
     entity_name = entity.get('name', 'NO-NAME')
     script_definitions = []
 
+    prefix = '' # TODO let checks handle generation themselves, or some function at least
+
     for check in checks:
         # script_definitions.append(
-        #     f'''{check['script_prefix']}-{entity_name.lower()} {{
+        #     f'''{prefix}-{entity_name.lower()} {{
 	    #         show dialog {{
         # 		    PLAYER "TODO"
 	    #         }}
         #     }}''')
 
         script_definitions.append(
-            f'''{check['script_prefix']}-{entity_name.lower()} {{
+            f'''{prefix}-{entity_name.lower()} {{
                 show serial dialog spacer;
                 show serial dialog {{
                     "You looked at <m>%TODO%</>."
@@ -207,7 +243,7 @@ def generate_script_definitions(entity):
 def find_problems():
     '''return a representation of all entity problems found in the codebase, as dict from string for map file's path to (array of dicts returned by check_entity)'''
 
-    problems = {}
+    result = {}
 
     # get all map files
     blacklisted_files = ['map-16px_dungeon.json', 'map-action_testing_01.json', 'map-action_testing_02.json', 'map-bakery.json', 'map-bling-dc801.json', 'map-bling-digi-mage.json', 'map-bling-qr.json', 'map-bling-zero.json', 'map-bobsclub.json', 'map-credits.json', 'map-credits2.json', 'map-demo.json', 'map-dialog_codec.json', 'map-dialog_moon.json', 'map-family.json', 'map-flying-toasters.json', 'map-greenhouse.json', 'map-lodge.json', 'map-magehouse-birthday.json', 'map-magehouse.json', 'map-main.json', 'map-main2.json', 'map-main_menu.json', 'map-mini_dungeon.json', 'map-oldcouplehouse.json', 'map-secretroom.json', 'map-test.json', 'map-testbig.json', 'map-town.json', 'map-warp_zone.json', 'map-woprhouse.json']
@@ -229,24 +265,23 @@ def find_problems():
                 map_problems.append(entity_problems)
 
         if map_problems:
-            problems[map_file_path] = map_problems
+            result[map_file_path] = map_problems
     
-    return problems
+    return result
 
 
-
-### main work
-
+# print out final report
 problems = find_problems()
 for map_file_path in sorted(problems.keys()):
     map_problems = problems[map_file_path]
     print(os.path.basename(map_file_path))
 
     for entity in map_problems:
-        print(f'    {entity["name"]} (#{entity["id"]}) needs:')
-        print('\n'.join([f'        {problem["failed_check"]}' for problem in entity['problems']]))
+        print(f'    {entity["name"] or "NO-NAME ENTITY"} (id {entity["id"]}) needs:')
+        print('\n'.join([f'        {problem}' for problem in entity['problems']]))
     print()
 
+for check in check_failure_count:
+    print(f'Found {check_failure_count[check]} entities that failed check \'{check}\'')    
+print(f'Found {num_undefined_scripts} total scripts never defined after being specified in map files')
 print(f'Found issues with {sum(len(map_file) for map_file in problems.values())} total entities in {len(problems)} total maps')
-print(f'Found {num_undefined_scripts} total scripts that never got defined')
-print(f'Found {num_no_name_entities} total entities with no name')
