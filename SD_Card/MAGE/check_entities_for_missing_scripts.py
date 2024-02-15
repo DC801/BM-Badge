@@ -134,7 +134,7 @@ def extract_entities(map_file):
     for entities_layer in entities_layers:
         entities.extend(entities_layer['objects'])
 
-    return sorted(entities, key=lambda entity: entity['name']) # TODO sorted too much performance hit?
+    return sorted(entities, key=lambda entity: entity['name'])
 
 
 mgs_files = []
@@ -241,7 +241,7 @@ def check_entity(entity):
     
 
 def find_problems():
-    '''return a representation of all entity problems found in the codebase, as dict from string for map file's path to (array of dicts returned by check_entity)'''
+    '''return a representation of all entity problems found in the codebase, as dict from string for map file's path to (array of (dict returned by check_entity))'''
 
     result = {}
 
@@ -253,8 +253,6 @@ def find_problems():
 
     # populate global variable problems with the issues found
     for map_file_path in map_file_paths:
-        map_file_basename = os.path.basename(map_file_path)
-
         with open(map_file_path) as map_file:
             map_file_entities = extract_entities(map_file)
 
