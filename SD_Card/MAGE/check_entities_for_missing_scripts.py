@@ -7,6 +7,22 @@ import json
 '''
 TODO
 
+gameengine prettier mage_command_control.cpp:185
+- commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
+
+ask Mary for a pattern for "TODO" script definitions
+- <m> true names
+- newline then space at end?
+
+move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
+- (also naming of script look-ch2-castle-34 but it's really for the pantry?)
+
+generating script names
+---
+nice indenting to be able to paste into maps
+what to do with a no-name entity?
+check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
+
 find out where the code for look command is. does it string match the actual entity name or is there somewhere else the mapping is specified?
 find out if it's ok for entities to have no name in map files
 find out if nativlang stipulates mgs files are ASCII encoded? most all scenario files here seems to be ASCII. maybe just from the VSCode most everyone uses
@@ -22,11 +38,13 @@ use nativlang parser JSON output to check for script definition rather than stri
 checks = [
     {
         'check_name': 'interact script',
-        'property_name': 'on_interact'
+        'property_name': 'on_interact',
+        'script_prefix': 'interact-ch2'
     },
     {
         'check_name': 'look script',
-        'property_name': 'on_look'
+        'property_name': 'on_look',
+        'script_prefix': 'look-ch2'
     }
 ]
 
@@ -125,7 +143,56 @@ def check_entity(entity):
     for failed_check_message in failed_check_messages:
         result += f'        {failed_check_message}\n'
 
+    debug_to_stderr(generate_script_names(entity))
+    debug_to_stderr(generate_script_definitions(entity))
+
     return result
+
+
+def generate_script_names(entity):
+    'return properties field that can be placed into a map file to fix missing script names'
+    
+    entity_name = entity.get('name', 'NO-NAME')
+    script_specifications = []
+
+    for check in checks:
+        script_specifications.append(f'''{{
+            "name":"{check['property_name']}",
+            "type":"string",
+            "value":"{check['script_prefix']}-{entity_name.lower()}"
+        }}''')
+
+    newline = '\n' # format strings don't like newlines inside of expressions
+    return f'''"properties":[
+        {newline.join(script_specifications)}
+    ],'''
+
+
+def generate_script_definitions(entity):
+    'return no-op mgs (natlang) placeholder script that can be placed into an mgs file to fix missing script definitions'
+
+    entity_name = entity.get('name', 'NO-NAME')
+    script_definitions = []
+
+    for check in checks:
+        # script_definitions.append(
+        #     f'''{check['script_prefix']}-{entity_name.lower()} {{
+	    #         show dialog {{
+        # 		    PLAYER "TODO"
+	    #         }}
+        #     }}''')
+
+        script_definitions.append(
+            f'''{check['script_prefix']}-{entity_name.lower()} {{
+                show serial dialog spacer;
+                show serial dialog {{
+                    "You looked at <m>%TODO%</>."
+                    "TODO: {entity_name.upper()} on_look text\\n "
+		        }}
+            }}''')
+
+    return '\n\n'.join(script_definitions)
+    
 
 
 
