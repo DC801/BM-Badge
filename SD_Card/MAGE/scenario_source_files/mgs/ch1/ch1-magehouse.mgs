@@ -181,10 +181,14 @@ walk-to-lodge {
 /* ---------- DIALOG ---------- */
 show_dialog-zappy-start {
 	if (entity "%SELF%" is glitched) {
-		show dialog { SELF "Abj V srry rkgen mnccl!" }
+		show dialog {
+			SELF "Abj V srry rkgen mnccl!"
+		}
 	} else {
 		copy face-player;
-		show dialog { SELF "Did you remember to feed Mr. Tickles today?" }
+		show dialog {
+			SELF "Did you remember to feed %Mr. Tickles% today?"
+		}
 	}
 }
 
@@ -203,12 +207,12 @@ show_dialog-goldfish {
 	}
 	if (entity "Mr. Tickles" is not glitched) {
 		show dialog {
-			entity "Mr. Tickles" portrait goldfish "(Glub, glub.)"
+			SELF portrait goldfish "(Glub, glub.)"
 			PLAYER "Looking good!"
 		}
 	} else {
 		show dialog {
-			entity "Mr. Tickles" portrait goldfish "(srrq zr guerr unzf)"
+			SELF portrait goldfish "(srrq zr guerr unzf)"
 			PLAYER "Good ol' glitched-out fish."
 		}
 		if (flag goldfish-unglitched is false) {
