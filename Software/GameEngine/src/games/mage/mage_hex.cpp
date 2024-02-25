@@ -53,7 +53,7 @@ void MageHexEditor::updateHexStateVariables()
    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
-void MageHexEditor::applyInput(const DeltaState& delta)
+void MageHexEditor::applyInput(const InputState& delta)
 {
    if (!hexEditorOn || !playerHasHexEditorControl || disableMovement)
    {
@@ -202,7 +202,7 @@ void MageHexEditor::applyInput(const DeltaState& delta)
    updateHexStateVariables();
 }
 
-void MageHexEditor::applyMemRecallInputs(const DeltaState& delta)
+void MageHexEditor::applyMemRecallInputs(const InputState& delta)
 {
    uint8_t currentEntityIndex = hexCursorOffset / sizeof(MageEntityData);
    uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntityData);

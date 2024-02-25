@@ -326,13 +326,13 @@ typedef struct {
 typedef struct {
     action_type type;
     uchar padding[7];
-} action <read=(type)>;
+} action;
 
 typedef struct {
     char name[32];
     uint32 action_count;
     if (action_count) {
-        action actions[action_count]<read=(type)>;
+        action actions[action_count] <read=Str("%s(%d, %d, %d)", EnumToString(type), padding[0], padding[1], padding[2])>;
     }
 } script <read=(name)>;
 
@@ -392,7 +392,7 @@ BigEndian();
     uint16 a: 1;
     uint16 b: 5;
 LittleEndian();
-}image_color <read=Str("%2d,%2d,%2d %d", r, g, b, a)>;;
+}image_color <read=Str("%2d,%2d,%2d %d", r, g, b, a)>;
   
   typedef struct {
     char name[32];

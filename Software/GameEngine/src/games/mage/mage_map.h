@@ -110,7 +110,7 @@ public:
    void UpdateEntities();
 
    // Return what entity is being interacted with or std::nullopt if there's no interaction
-   std::optional<uint16_t> UpdatePlayer(const DeltaState& delta);
+   std::optional<uint16_t> UpdatePlayer(const InputState& delta);
 
    constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
@@ -135,7 +135,7 @@ public:
 
    void Draw() const;
 
-   [[nodiscard("This should always be part of a check")]]
+   [[nodiscard("This should always be part of a check that leads to map reload")]]
    inline bool ShouldReload() const { return mapLoadId != MAGE_NO_MAP; }
    inline std::string Name() const { return currentMap->name; }
    inline uint16_t TileWidth() const { return currentMap->tileWidth; }
@@ -225,9 +225,9 @@ public:
    }
 
    template <typename T>
-   const T& Get(auto i) const 
-   { 
-      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; 
+   const T& Get(auto i) const
+   {
+      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount];
    }
 
    template <typename T>

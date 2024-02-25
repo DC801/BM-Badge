@@ -134,7 +134,7 @@ public:
    constexpr void close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
-   std::optional<uint16_t> applyInput(const DeltaState& delta);
+   std::optional<uint16_t> applyInput(const InputState& delta);
    void update();
    void Draw() const;
 

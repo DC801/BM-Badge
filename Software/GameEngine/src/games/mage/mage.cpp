@@ -131,7 +131,7 @@ void MageGameEngine::LoadMap()
    playerHasControl = true;
 }
 
-void MageGameEngine::applyUniversalInputs(const DeltaState& delta)
+void MageGameEngine::applyUniversalInputs(const InputState& delta)
 {
    //make sure any delta.Buttons handling in this function can be processed in ANY game mode.
    //that includes the game mode, hex editor mode, any menus, maps, etc.
@@ -157,7 +157,7 @@ void MageGameEngine::applyUniversalInputs(const DeltaState& delta)
    }
 }
 
-void MageGameEngine::applyGameModeInputs(const DeltaState& delta)
+void MageGameEngine::applyGameModeInputs(const InputState& delta)
 {
    auto player = mapControl->getPlayerEntityData();
    const auto moveAmount = delta.Running() ? RunSpeed : WalkSpeed;

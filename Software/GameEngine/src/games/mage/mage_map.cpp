@@ -192,7 +192,7 @@ void MapControl::UpdateEntities()
    }
 }
 
-std::optional<uint16_t> MapControl::UpdatePlayer(const DeltaState& delta)
+std::optional<uint16_t> MapControl::UpdatePlayer(const InputState& delta)
 {
    // require a player on the map to move/interact
    auto playerData = getPlayerEntityData();
@@ -245,64 +245,73 @@ std::optional<uint16_t> MapControl::UpdatePlayer(const DeltaState& delta)
       const auto tileOffsetPoint = EntityPoint{ (uint16_t)(currentMap->tileWidth * column), (uint16_t)(currentMap->tileHeight * row) };
       const auto tileId = column + currentMap->cols * row;
 
+      // ignore checks that are outside the bounds of the map
       if (tileId >= currentMap->layers[0].size()) { continue; }
 
       const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentMap->layers[0][tileId].tilesetId);
-      auto geometry = tileset->GetGeometryForTile(currentMap->layers[0][tileId].tileId);
 
-      // TODO: interaction should be handled here
+      // check for world collision:
+      const auto tileGeometryId = currentMap->layers[0][tileId].tileId;
+      auto geometry = tileset->GetGeometryForTile(tileGeometryId);
       if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
          newPosition = oldPosition;
          break;
       }
-   }
+      // check for map change collision:
+      
+      // TODO: check for interactions (hack/use)
 
    // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
-   if (!delta.Hack() && !delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
-   { 
-      return std::nullopt; 
-   }
-
-   const uint8_t interactLength = 32;
-   auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
-   if (direction == NORTH)
-   {
-      interactBox.origin.y -= interactLength;
-      interactBox.h = interactLength;
-   }
-   if (direction == EAST)
-   {
-      interactBox.origin.x += interactBox.w;
-      interactBox.w = interactLength;
-   }
-   if (direction == SOUTH)
-   {
-      interactBox.origin.y += interactBox.h;
-      interactBox.h = interactLength;
-   }
-   if (direction == WEST)
-   {
-      interactBox.origin.x -= interactLength;
-      interactBox.w = interactLength;
-   }
-   for (auto i = 0; i < currentMap->entityCount; i++)
-   {
-      auto& renderableData = Get<RenderableData>(i);
-      renderableData.isInteracting = false;
-
-      if (i != currentMap->playerEntityIndex)
+      if (delta.Hack() || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
       {
-         bool colliding = renderableData.hitBox
-            .Overlaps(interactBox);
 
-         if (colliding)
+         const uint8_t interactLength = 32;
+         auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
+         if (direction == NORTH)
          {
-            playerRenderableData->isInteracting = true;
-            renderableData.isInteracting = true;
-            return i;
+            interactBox.origin.y -= interactLength;
+            interactBox.h = interactLength;
+         }
+         if (direction == EAST)
+         {
+            interactBox.origin.x += interactBox.w;
+            interactBox.w = interactLength;
+         }
+         if (direction == SOUTH)
+         {
+            interactBox.origin.y += interactBox.h;
+            interactBox.h = interactLength;
+         }
+         if (direction == WEST)
+         {
+            interactBox.origin.x -= interactLength;
+            interactBox.w = interactLength;
+         }
+
+         //GetEntitiesNear(interactBox.origin);
+         //
+         for (auto i = 0; i < currentMap->entityCount; i++)
+         {
+            auto& renderableData = Get<RenderableData>(i);
+            renderableData.isInteracting = false;
+
+            if (i != currentMap->playerEntityIndex)
+            {
+               bool colliding = renderableData.hitBox
+                  .Overlaps(interactBox);
+
+               if (colliding)
+               {
+                  playerRenderableData->isInteracting = true;
+                  renderableData.isInteracting = true;
+                  return i;
+               }
+            }
          }
       }
+
    }
+
    return std::nullopt;
 }

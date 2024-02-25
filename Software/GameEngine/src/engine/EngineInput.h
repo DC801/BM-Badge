@@ -22,9 +22,15 @@ struct ButtonState
    uint32_t buttons;
 };
 
-struct DeltaState
+struct InputState
 {
-   //DeltaState(ButtonState buttons, ButtonState activatedButtons) noexcept
+   //
+   // Stream of consciousness thoughts:
+   // Establish game behaviors and input mapping
+   // queue updates 
+
+
+   //InputState(ButtonState buttons, ButtonState activatedButtons) noexcept
    //   : Buttons(buttons), ActivatedButtons(activatedButtons), lastState(button) {}
 
    const ButtonState Buttons;
@@ -95,9 +101,9 @@ struct GameClock
 class EngineInput
 {
 public:
-   const DeltaState GetDeltaState() const
+   const InputState GetDeltaState() const
    {
-      return DeltaState{ buttons, activated };
+      return InputState{ buttons, activated };
    }
 
    const ButtonState GetButtonState() const

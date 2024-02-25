@@ -55,12 +55,12 @@ void MageDialogControl::StartModalDialog(std::string messageString)
 
 void MageDialogControl::loadNextScreen()
 {
+   currentMessageIndex = 0;
    if (currentScreenIndex >= currentDialog->ScreenCount)
    {
       open = false;
       return;
    }
-   currentMessageIndex = 0;
 
    const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    loadCurrentScreenPortrait();
@@ -71,7 +71,7 @@ void MageDialogControl::loadNextScreen()
    currentScreenIndex++;
 }
 
-std::optional<uint16_t> MageDialogControl::applyInput(const DeltaState& delta)
+std::optional<uint16_t> MageDialogControl::applyInput(const InputState& delta)
 {
    if (!isOpen())
    {
@@ -81,9 +81,9 @@ std::optional<uint16_t> MageDialogControl::applyInput(const DeltaState& delta)
    const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    if (shouldShowResponses(currentScreen))
    {
-      currentResponseIndex += currentScreen.responseCount;
-      if (delta.Up()) { currentResponseIndex -= 1; }
-      if (delta.Down()) { currentResponseIndex += 1; }
+      //currentResponseIndex += currentScreen.responseCount;
+      if (delta.Up()) { currentResponseIndex--; }
+      if (delta.Down()) { currentResponseIndex++; }
       currentResponseIndex %= currentScreen.responseCount;
       if (delta.Right())
       {
