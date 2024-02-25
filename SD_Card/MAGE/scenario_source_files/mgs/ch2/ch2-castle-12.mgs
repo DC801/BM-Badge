@@ -155,7 +155,8 @@ interact-ch2-concierge {
 		|| flag ch2-needle-permission is true
 	) {
 		show dialog {
-			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment. How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
+			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment."
+			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
 			"I'll be cheering you on from here. Good luck!"
 		}
 	} else {
@@ -392,4 +393,3 @@ ch2-stereo-intro5 {
 		# "(Get closer)" : ch2-ws-doturn
 	}
 }
-

@@ -91,7 +91,7 @@ on_load-ch2-castle-14 {
 		turn entity "King Gibson" west;
 		wait 350ms;
 		show dialog {
-			KING emote 3 "They locked me in here to rot. Why would they come bother with me now?"
+			KING emote 3 "They locked me in here to rot. Why would they bother with me now?"
 		}
 		turn entity "King Gibson" north;
 		show dialog {

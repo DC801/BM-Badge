@@ -292,15 +292,15 @@ show_dialog-jackob-start {
 			}
 		} else if (variable hint-tracking is 30) {
 			show dialog {
-				PLAYER "I heard that Bob Austin's cousin hasgotten lost."
-				SELF "Oh, you mean Bob Moss. Yes, he disappearsonce in a while."
-				"He's never far. But if you can't find himin town, you might have to look in placesone cannot ordinarily walk."
+				PLAYER "I heard that Bob Austin's cousin has gotten lost."
+				SELF "Oh, you mean Bob Moss. Yes, he disappears once in a while."
+				"He's never far. But if you can't find him in town, you might have to look in places one cannot ordinarily walk."
 			}
 		} else if (variable hint-tracking is 32) {
 			show dialog {
 				PLAYER "I heard there might be a second rockgolem. Do you know anything about that?"
-				SELF "If you're referring to Bob Moss, then I'mnot surprised he's absent. He disappearsonce in a while."
-				"He's never far. But if you can't find himin town, you might have to look in placesone cannot ordinarily walk."
+				SELF "If you're referring to Bob Moss, then I'm not surprised he's absent. He disappears once in a while."
+				"He's never far. But if you can't find him in town, you might have to look in places one cannot ordinarily walk."
 			}
 		} else if (variable hint-tracking is 40) {
 			show dialog {

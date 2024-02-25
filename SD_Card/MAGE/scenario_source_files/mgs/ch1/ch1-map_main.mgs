@@ -424,5 +424,5 @@ dialog dialog-timmy {
 	"No?"
 }
 dialog dialog-dsheep {
-	Delmar "...?"
+	SELF "...?"
 }

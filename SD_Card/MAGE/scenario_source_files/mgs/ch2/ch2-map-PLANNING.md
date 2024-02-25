@@ -156,7 +156,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: mouse (no graphics necessary)
 	- [~] Entity: Gregory - a cat chef
-		- [~] Needs cat chef spritesheet (currently a stand-in entity)
+		- [x] Needs cat chef spritesheet (currently a stand-in entity)
 	- [x] SET: Hydroponics area, with vegetables growing in individual plastic(?) bins, stacked to the ceiling
 34. `Castle pantry`
 	- [x] Cutscene: Enter the room for the first time (not necessary)
