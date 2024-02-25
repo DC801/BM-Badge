@@ -222,12 +222,12 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":234,
-                 "y":234
+                 "x":187,
+                 "y":219
                 }, 
                 {
                  "class":"",
-                 "gid":905,
+                 "gid":2147484553,
                  "height":48,
                  "id":43,
                  "name":"Sebastian",
@@ -245,8 +245,31 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":94,
+                 "x":249,
                  "y":217
+                }, 
+                {
+                 "class":"",
+                 "gid":879,
+                 "height":32,
+                 "id":35,
+                 "name":"Aurelius",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-goldfish"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-goldfish"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":177
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -299,26 +322,139 @@
                 }, 
                 {
                  "class":"",
-                 "gid":879,
-                 "height":32,
-                 "id":35,
-                 "name":"Goldfish",
-                 "properties":[
+                 "height":0,
+                 "id":51,
+                 "name":"templeton2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":203,
+                 "y":211
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":52,
+                 "name":"templeton1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":193,
+                 "y":211
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":53,
+                 "name":"lizard2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":273,
+                 "y":206
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":50,
+                 "name":"camera-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":218
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":54,
+                 "name":"lizard1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":273,
+                 "y":187
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":59,
+                 "name":"mage-walk",
+                 "polyline":[
                         {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-touch-goldfish"
+                         "x":0,
+                         "y":86
                         }, 
                         {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-goldfish"
+                         "x":0,
+                         "y":-52
                         }],
                  "rotation":0,
                  "visible":true,
-                 "width":32,
-                 "x":224,
-                 "y":177
+                 "width":0,
+                 "x":227,
+                 "y":284
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":60,
+                 "name":"lizard2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":302,
+                 "y":215
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":61,
+                 "name":"lizard-walk",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-11,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":274,
+                 "y":231
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":62,
+                 "name":"lizard-lurch",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":249,
+                 "y":231
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":63,
+                 "name":"mage-backup",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":218,
+                 "y":231
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -327,7 +463,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":50,
+ "nextobjectid":64,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

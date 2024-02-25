@@ -322,6 +322,7 @@ ch2-stereo-interact {
 		}
 		goto ch2-stereo-intro1;
 	} else {
+		show dialog { PLAYER "All right, plugging in the artifact again...." }
 		goto ch2-ws-doturn;
 	}
 }
