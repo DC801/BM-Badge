@@ -101,10 +101,46 @@ on_load-ch2-castle-14 {
 		turn entity "King Gibson" south;
 		show dialog {
 			KING "Then you've come to mock me."
-			PLAYER "No, of course not. I'm here to fix things."
-			KING "(TODO: the rest)"
+			PLAYER "No, of course not. I'm here to check up on you. Your -- um, advisors? -- are very worried about you."
+			KING "I doubt that. They've disabled the lock on the door, and they won't answer the intercom. I've tried to reach them dozens of times."
+			PLAYER "Intercom?"
+			KING "Yes. That panel by the door, next to the keypad."
 		}
-
+		turn entity "King Gibson" north;
+		show dialog {
+			KING emote 3 "Hmph. I'm sure Sebastian is halfway through a coup d'etat by now."
+			PLAYER "But they said they've tried calling you."
+			"Could it be... perhaps the intercom is broken?"
+		}
+		turn entity "King Gibson" south;
+		show dialog {
+			KING "Broken?"
+			PLAYER "Well, there was an earthquake. Maybe the lock is busted, too."
+			"They said they've tried to call you, but haven't heard anything back. In fact, they think YOU'RE ignoring THEM."
+			KING "Ignoring them? No, I would never...."
+			PLAYER "They said you had an argument last night."
+			KING "Yes but --"
+		}
+		turn entity "King Gibson" west;
+		show dialog {
+			KING emote 3 "*sigh*"
+			"I thought... I thought maybe I had gone too far this time. That they had finally written me off."
+		}
+		turn entity "King Gibson" south;
+		show dialog {
+			KING "They really tried to call me?"
+			"This whole time, it was only a broken line of communication? They don't hate me?"
+			PLAYER "The big, blue one is worried you might be hurt from the earthquake."
+			"It was the goldfish who asked me to check up on you."
+			KING "I am relieved to hear that. I knew I was more fond of them than they were of me, but I feared...."
+		}
+		walk entity "King Gibson" to geometry walk-spot over 800ms;
+		show dialog {
+			KING "If you were able to enter this room, you must have the serial artifact working. Is that correct?"
+			PLAYER "Yeah."
+			KING "If the intercom -- and the door locks -- were broken in the earthquake, then you should be able to plug the artifact into the keypad and do some diagnostics."
+			"If you would?"
+		}
 		set flag ch2-cutseen-castle14 to true;
 		turn player control on;
 	}

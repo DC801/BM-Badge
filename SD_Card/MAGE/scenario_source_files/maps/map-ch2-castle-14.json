@@ -51,18 +51,6 @@
          "objects":[
                 {
                  "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":162,
-                 "y":196
-                }, 
-                {
-                 "class":"",
                  "gid":183,
                  "height":32,
                  "id":32,
@@ -189,6 +177,18 @@
                  "width":32,
                  "x":42,
                  "y":113
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"walk-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":174,
+                 "y":156
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -233,6 +233,18 @@
                  "width":0,
                  "x":-20,
                  "y":-21
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":162,
+                 "y":196
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -241,7 +253,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":48,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
