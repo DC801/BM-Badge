@@ -157,7 +157,7 @@ void recordAndRenderFPS() {
 	now = millis();
 	uint32_t fullLoopTime = now - lastFrameTime;
 	lastFrameTime = now;
-	char fpsText [24] = "";
+	char fpsText [48] = "";
 	uint32_t total = fullLoopTime;
 	for (int i = 1; i < 5; ++i) {
 		total += frameTimes[i];
