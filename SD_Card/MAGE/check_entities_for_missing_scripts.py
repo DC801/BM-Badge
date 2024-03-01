@@ -23,8 +23,6 @@ ask Mary for a pattern for "TODO" script definitions
 move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
 - (also naming of script look-ch2-castle-34 but it's really for the pantry?)
 
-find out where the code for look command is. does it string match the actual entity name or is there somewhere else the mapping is specified?
-
 use a predicate function for blacklisted_files? e.g. positive string match 'ch2'
 
 generating script names
@@ -158,22 +156,17 @@ def find_script_definition(script_name):
 
 
 def check_entity(entity):
-    '''return report of the issues with the given entity considering all checks specified at the top of the script
-    
-    caller should be careful not to use any returned information if there are no items in the 'problems' array member of the result,
-    as non-tile entities can cause members 'name' and 'id' of result to be empty strings'''
-
-    # return early and do nothing if the entity is some type other than a tile
-    if 'gid' not in entity:
-        return {
-            'problems': []
-        }
+    '''return report of the issues with the given entity considering all checks specified at the top of the script'''
 
     result = {
         'name': entity['name'],
         'id': entity['id'],
         'problems': []
     }
+
+    # return early and do nothing if the entity is some type other than a tile
+    if 'gid' not in entity:
+        return result
 
     for check in checks:
         problem = check(entity)
@@ -245,14 +238,12 @@ def find_problems():
 
     result = {}
 
-    # get all map files
     blacklisted_files = ['map-16px_dungeon.json', 'map-action_testing_01.json', 'map-action_testing_02.json', 'map-bakery.json', 'map-bling-dc801.json', 'map-bling-digi-mage.json', 'map-bling-qr.json', 'map-bling-zero.json', 'map-bobsclub.json', 'map-credits.json', 'map-credits2.json', 'map-demo.json', 'map-dialog_codec.json', 'map-dialog_moon.json', 'map-family.json', 'map-flying-toasters.json', 'map-greenhouse.json', 'map-lodge.json', 'map-magehouse-birthday.json', 'map-magehouse.json', 'map-main.json', 'map-main2.json', 'map-main_menu.json', 'map-mini_dungeon.json', 'map-oldcouplehouse.json', 'map-secretroom.json', 'map-test.json', 'map-testbig.json', 'map-town.json', 'map-warp_zone.json', 'map-woprhouse.json']
     map_dir = os.path.join(this_script_dir, 'scenario_source_files/maps')
     map_dir_contents = [os.path.join(map_dir, f) for f in sorted(os.listdir(map_dir)) if f not in blacklisted_files]
     map_file_paths = [f for f in map_dir_contents if os.path.isfile(f)]
 
-    # populate global variable problems with the issues found
-    for map_file_path in map_file_paths:
+    for map_file_path in map_file_paths:    
         with open(map_file_path) as map_file:
             map_file_entities = extract_entities(map_file)
 
