@@ -2661,6 +2661,60 @@ void action_set_script_pause(uint8_t * args, MageScriptState * resumeStateStruct
 	resumeState->scriptIsPaused = !!argStruct->bool_value;
 }
 
+void action_register_serial_dialog_command_alias(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint16_t aliasStringId;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionRegisterSerialDialogCommandAlias;
+	auto *argStruct = (ActionRegisterSerialDialogCommandAlias*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->aliasStringId, 1);
+	MageCommand->registerCommandAlias(
+		argStruct->commandStringId,
+		argStruct->aliasStringId
+	);
+}
+
+void action_unregister_serial_dialog_command_alias(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint16_t aliasStringId;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionUnregisterSerialDialogCommandAlias;
+	auto *argStruct = (ActionUnregisterSerialDialogCommandAlias*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->aliasStringId, 1);
+	MageCommand->unregisterCommandAlias(
+		argStruct->commandStringId,
+		argStruct->aliasStringId
+	);
+}
+
+void action_set_serial_dialog_command_visibility(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint8_t isVisible;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetSerialDialogCommandVisibility;
+	auto *argStruct = (ActionSetSerialDialogCommandVisibility*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	MageCommand->setCommandVisibility(
+		argStruct->commandStringId,
+		argStruct->isVisible
+	);
+}
+
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
@@ -2760,6 +2814,9 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_set_lights_state,
 	&action_goto_action_index,
 	&action_set_script_pause,
+	&action_register_serial_dialog_command_alias,
+	&action_unregister_serial_dialog_command_alias,
+	&action_set_serial_dialog_command_visibility,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

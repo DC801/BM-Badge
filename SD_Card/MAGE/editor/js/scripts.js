@@ -409,6 +409,18 @@ var actionFieldsMap = {
 		{propertyName: 'script_slot', size: 1},
 		{propertyName: 'bool_value', size: 1},
 	],
+	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'alias', size: 2},
+	],
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'alias', size: 2},
+	],
+	SET_SERIAL_DIALOG_COMMAND_VISIBILITY: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'is_visible', size: 1},
+	],
 };
 
 var actionNames = [
@@ -509,6 +521,9 @@ var actionNames = [
 	'SET_LIGHTS_STATE',
 	'GOTO_ACTION_INDEX',
 	'SET_SCRIPT_PAUSE',
+	'REGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
+	'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
+	'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 ];
 
 var specialKeywordsEnum = {
@@ -1187,6 +1202,7 @@ var actionPropertyNameToHandlerMap = {
 	jump_index: getTwoBytesFromAction,
 	action_index: getTwoBytesFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
+	alias: getStringIdFromAction,
 	string: getStringIdFromAction,
 	command: getStringIdFromAction,
 	argument: getStringIdFromAction,
@@ -1211,6 +1227,7 @@ var actionPropertyNameToHandlerMap = {
 	relative_direction: getRelativeDirectionFromAction,
 	enabled: getBoolFromAction,
 	bool_value: getBoolFromAction,
+	is_visible: getBoolFromAction,
 	expected_bool: getBoolFromAction,
 	disable_newline: getDefaultFalseBoolFromAction,
 	is_fail: getDefaultFalseBoolFromAction,

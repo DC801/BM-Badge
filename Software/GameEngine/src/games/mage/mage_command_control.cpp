@@ -3,6 +3,7 @@
 #include "mage_script_control.h"
 #include "EngineSerial.h"
 #include <vector>
+#include <unordered_map>
 
 extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
@@ -86,6 +87,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		}
 	}
 
+	verb = aliasLookup(verb);
 
 	if (MageGame->isEntityDebugOn) {
 		std::string message = "Verb: " + verb;
@@ -122,6 +124,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 				if (
 					command.argumentStringId == 0
 					&& !command.isFail
+					&& command.isVisible
 				) {
 					commandResponseBuffer += "  " + command.combinedString;
 				}
@@ -251,6 +254,23 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 }
 
+std::string MageCommandControl::aliasLookup(std::string& input) {
+	auto result = input;
+	auto found = commandAliases.find(input);
+	if (found == commandAliases.end()) {
+		if(MageGame->isEntityDebugOn) {
+			commandResponseBuffer += "Alias NOT found: " + input + "\n";
+		}
+	}
+	else {
+		if(MageGame->isEntityDebugOn) {
+			commandResponseBuffer += "Alias found: " + found->first + " is " + found->second + "\n";
+		}
+		result = found->second;
+	}
+	return result;
+};
+
 void MageCommandControl::processInputAsTrappedResponse(const std::string& input) {
 
 	if(MageGame->isEntityDebugOn) {
@@ -375,6 +395,8 @@ uint32_t MageCommandControl::size() {
 		+ sizeof(commandResponseBuffer)
 		+ sizeof(serialDialogBuffer)
 		+ sizeof(postDialogBuffer)
+		+ sizeof(registeredCommands)
+		+ sizeof(commandAliases)
 		+ sizeof(serialDialog)
 		+ sizeof(serialDialogResponses)
 		+ sizeof(jumpScriptId)
@@ -398,6 +420,7 @@ void MageCommandControl::registerCommand(
 	command.commandStringId = commandStringId;
 	command.scriptId = scriptId;
 	command.isFail = isFail;
+	command.isVisible = true;
 	int32_t existingCommandIndex = getCommandIndex(command.combinedString, command.isFail, true);
 	if (existingCommandIndex != -1) {
 		// replace the existing one
@@ -427,6 +450,7 @@ void MageCommandControl::registerArgument(
 		.argumentStringId = argumentStringId,
 		.scriptId = scriptId,
 		.isFail = false,
+		.isVisible = true,
 	};
 	int32_t existingCommandIndex = getCommandIndex(command.combinedString, command.isFail, false);
 	if (existingCommandIndex != -1) {
@@ -491,6 +515,16 @@ void MageCommandControl::unregisterCommand(
 			}
 		}
 	} else {
+		// un-register command aliases
+		auto command = MageGame->getString(commandStringId, NO_PLAYER);
+		for (auto alias = commandAliases.begin(); alias != commandAliases.end(); ) {
+			if (alias->second == command) {
+				commandAliases.erase(alias++);
+			} else {
+				++alias;
+			}
+		}
+		debugAliases();
 		// We're unregistering all the arguments, the fail state, and the root command
 		for (auto & registeredCommand : registeredCommands) {
 			if (registeredCommand.commandStringId != commandStringId) {
@@ -535,6 +569,77 @@ void MageCommandControl::unregisterArgument(
 	registeredCommands = newCommands;
 }
 
+void MageCommandControl::registerCommandAlias(
+	uint16_t commandStringId,
+	uint16_t aliasStringId
+) {
+	auto command = MageGame->getString(commandStringId, NO_PLAYER);
+	auto alias = MageGame->getString(aliasStringId, NO_PLAYER);
+
+	if(MageGame->isEntityDebugOn) {
+		commandResponseBuffer += (
+				"registerCommandAlias: "
+				" commandString: " + command
+				+ "; aliasStringId: " + alias
+				+ "\n"
+		);
+	}
+	commandAliases[alias] = command;
+	debugAliases();
+}
+
+void MageCommandControl::debugAliases() {
+	if(MageGame->isEntityDebugOn) {
+		commandResponseBuffer += "Aliases:\n";
+		for (const auto &item: commandAliases) {
+			commandResponseBuffer += "	Key:[" + item.first + "] Value:[" + item.second + "]\n";
+		}
+	}
+}
+
+void MageCommandControl::unregisterCommandAlias(
+	uint16_t commandStringId,
+	uint16_t aliasStringId
+) {
+	auto command = MageGame->getString(commandStringId, NO_PLAYER);
+	auto alias = MageGame->getString(aliasStringId, NO_PLAYER);
+	if(MageGame->isEntityDebugOn) {
+		commandResponseBuffer += (
+				"unregisterCommandAlias:"
+				" commandString: " + command
+				+ "; aliasStringId: " + alias
+				+ "\n"
+		);
+	}
+	commandAliases.erase(alias);
+	debugAliases();
+}
+
+void MageCommandControl::setCommandVisibility(
+	uint16_t commandStringId,
+	bool isVisible
+) {
+	auto commandString = MageGame->getString(commandStringId, NO_PLAYER);
+	if(MageGame->isEntityDebugOn) {
+		commandResponseBuffer += (
+			"setCommandVisibility:"
+			" commandString: " + commandString
+			+ "; isVisible: " + (isVisible ? "yes" : "no")
+			+ "\n"
+		);
+	}
+	int32_t existingCommandIndex = getCommandIndex(commandString, false, true);
+	if (existingCommandIndex != -1) {
+		// set the visibility
+		registeredCommands[existingCommandIndex].isVisible = isVisible;
+	} else {
+		// could not find it, show warning in debug mode
+		if(MageGame->isEntityDebugOn) {
+			commandResponseBuffer += "Warning: Could not set visibility on command: " + commandString + "\n";
+		}
+	}
+}
+
 MageSerialDialogCommand* MageCommandControl::searchForCommand(
 	const std::string& verb,
 	const std::string& subject
@@ -569,6 +674,10 @@ MageSerialDialogCommand* MageCommandControl::searchForCommand(
 void MageCommandControl::reset() {
 	jumpScriptId = MAGE_NO_SCRIPT;
 	isInputTrapped = false;
+
+	// empties out the commandAliases and frees the memory?
+	commandAliases.clear();
+	commandAliases.rehash(0);
 
 	// empties out the registeredCommands and frees the memory?
 	registeredCommands.clear();

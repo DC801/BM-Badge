@@ -31,9 +31,9 @@
 - [ ] Install Wizard (Raccoon in cape)
 - [ ] Castle IT people
 - [ ] Soldering iron
-- [ ] Doritos Ram chips
+- [x] Doritos Ram chips
 - [ ] Computer mouse (rodent)
 - [ ] Ram ram?
-- [ ] Rock band to steal keyboard from
+- [x] Rock band to steal keyboard from
 - [ ] Other bad puns
-- [ ] Some kind of physical clock
+- [x] Some kind of physical clock

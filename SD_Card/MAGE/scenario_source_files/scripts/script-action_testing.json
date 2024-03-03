@@ -114,6 +114,103 @@
 			"serial_dialog":"serial_dialog-go_unregister"
 		}
 	],
+	"map-action_testing-go_alias": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "help",
+			"alias": "h"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "secret",
+			"alias": "shh"
+		}
+	],
+	"map-action_testing-go_unalias": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "help",
+			"alias": "h"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "secret",
+			"alias": "shh"
+		}
+	],
+	"map-action_testing-go_register_secret": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret",
+			"script": "command-secret"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret",
+			"script": "command-secret-fail",
+			"is_fail": true
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "secret",
+			"argument": "goat",
+			"script": "command-secret-goat"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_register_secret"
+		}
+	],
+	"map-action_testing-go_hide_secret": [
+		{
+			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+			"command": "secret",
+			"is_visible": false
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_hide_secret"
+		}
+	],
+	"map-action_testing-go_unhide_secret": [
+		{
+			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+			"command": "secret",
+			"is_visible": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_unhide_secret"
+		}
+	],
+	"map-action_testing-go_unregister_secret": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_unregister_secret"
+		}
+	],
+	"command-secret": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-command-secret"
+		}
+	],
+	"command-secret-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-command-secret-fail"
+		}
+	],
+	"command-secret-goat": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-command-secret-goat"
+		}
+	],
 	"command-map-test": [
 		{
 			"action": "SHOW_SERIAL_DIALOG",
