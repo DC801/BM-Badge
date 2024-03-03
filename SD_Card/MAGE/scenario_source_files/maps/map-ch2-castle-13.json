@@ -73,47 +73,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":269,
-                 "height":32,
-                 "id":19,
-                 "name":"door",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-attempt-door-check"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":176,
-                 "y":95
-                }, 
-                {
-                 "class":"",
-                 "gid":183,
-                 "height":32,
-                 "id":32,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-player"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":175,
-                 "y":440
-                }, 
-                {
-                 "class":"",
                  "gid":2147483955,
                  "height":32,
                  "id":36,
@@ -222,12 +181,12 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":234,
-                 "y":234
+                 "x":182,
+                 "y":219
                 }, 
                 {
                  "class":"",
-                 "gid":905,
+                 "gid":2147484553,
                  "height":48,
                  "id":43,
                  "name":"Sebastian",
@@ -245,8 +204,54 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":94,
+                 "x":249,
                  "y":217
+                }, 
+                {
+                 "class":"",
+                 "gid":879,
+                 "height":32,
+                 "id":35,
+                 "name":"Aurelius",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-goldfish"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-goldfish"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":177
+                }, 
+                {
+                 "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":70,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":113
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -299,26 +304,191 @@
                 }, 
                 {
                  "class":"",
-                 "gid":879,
-                 "height":32,
-                 "id":35,
-                 "name":"Goldfish",
+                 "height":0,
+                 "id":51,
+                 "name":"templeton2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":198,
+                 "y":211
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":52,
+                 "name":"templeton1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":188,
+                 "y":211
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":53,
+                 "name":"lizard2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":273,
+                 "y":206
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":50,
+                 "name":"camera-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":218
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":54,
+                 "name":"lizard1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":273,
+                 "y":187
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":59,
+                 "name":"mage-walk",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":86
+                        }, 
+                        {
+                         "x":0,
+                         "y":-52
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":229,
+                 "y":284
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":60,
+                 "name":"lizard2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":302,
+                 "y":215
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":61,
+                 "name":"lizard-walk",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-11,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":274,
+                 "y":231
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":62,
+                 "name":"lizard-lurch",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":249,
+                 "y":231
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":63,
+                 "name":"mage-backup",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":220,
+                 "y":231
+                }, 
+                {
+                 "class":"",
+                 "gid":957,
+                 "height":40,
+                 "id":64,
+                 "name":"King Gibson",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-goldfish"
+                         "value":"interact-ch2-gibson-throneroom"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-goldfish"
+                         "value":"look-ch2-gibson"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
                         }],
                  "rotation":0,
                  "visible":true,
+                 "width":40,
+                 "x":172,
+                 "y":207
+                },
+            
+                {
+                 "class":"",
+                 "height":0,
+                 "id":65,
+                 "name":"templeton-sit",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":144,
+                 "y":203
+                }, 
+                {
+                 "class":"",
+                 "height":34,
+                 "id":69,
+                 "name":"north-hitbox",
+                 "rotation":0,
+                 "visible":true,
                  "width":32,
-                 "x":224,
-                 "y":177
+                 "x":176,
+                 "y":63
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -327,7 +497,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":50,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -376,6 +546,10 @@
         {
          "firstgid":904,
          "source":"..\/entities\/entity-lizardwizard.json"
+        }, 
+        {
+         "firstgid":944,
+         "source":"..\/entities\/entity-gibson.json"
         }],
  "tilewidth":32,
  "type":"map",

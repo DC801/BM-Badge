@@ -1,11 +1,20 @@
 include!("header.mgs")
 
+settings for dialog {
+	label Aurelius {
+		entity Aurelius // if this doesn't work, change this to `name` instead of `entity`
+		portrait goldfish
+	}
+}
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-13 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE THRONE ROOM on_look text\n "
+		"You looked around the <c>CASTLE THRONE ROOM</>."
+		"\tTODO"
+		" "
 	}
 }
 
@@ -21,7 +30,7 @@ look-ch2-templeton {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Templeton%</>."
-		"\t(TODO)"
+		"\tYou're not sure what aspect of his gelatinous body might be his face -- if he even has one. His jiggling seems more born from nervousness than aggression, at least."
 	}
 }
 
@@ -45,22 +54,209 @@ on_load-ch2-castle-13 {
 	) {
 		copy script ch2-hide-goldfish;
 	}
-	copy ch2-map-init;
+	
+	if (
+		flag ch2-king-rescued is true
+		|| warp state is "Ch2 King Returns"
+	) {
+		teleport entity Templeton to geometry templeton-sit;
+	} else {
+		set entity "King Gibson" on_tick to yeet;
+	}
 
+	if (warp state is "Ch2 King Returns") {
+		teleport entity "%PLAYER%" to geometry camera-spot;
+	}
+
+	copy ch2-map-init;
+	
 	// check if you do the cutscene or not
 	if (flag ch2-cutseen-castle12 is false) {
 		copy ch2-cutscene-castle12;
+	} else if (warp state is "Ch2 King Returns") {
+		copy ch2-cutscene-kingreturns;
 	}
 }
 
+ch2-templeton-pace {
+	walk entity "%SELF%" to geometry templeton1 over 400ms;
+	walk entity "%SELF%" to geometry templeton2 over 400ms;
+	if (flag ch2-templeton-pace is false) {
+		goto null_script;
+	}
+}
+ch2-sebastian-paceonce {
+	walk entity "%SELF%" to geometry lizard1 over 600ms;
+	walk entity "%SELF%" to geometry lizard2 over 600ms;
+	goto null_script;
+}
+ch2-sebastian-stomp {
+	play entity Sebastian animation 2 once; // magical slam on the ground
+	goto null_script;
+}
+ch2-lizard-lurch {
+	walk entity "%SELF%" to geometry lizard-lurch over 300ms;
+	goto null_script;
+}
+ch2-sebastian-approach {
+	wait 800;
+	walk entity Sebastian to geometry lizard-walk over 800ms;
+	walk entity Sebastian along geometry lizard-walk over 600ms;
+	goto null_script;
+}
+ch2-mage-approach {
+	walk entity "%PLAYER%" along geometry mage-walk over 2500ms;
+	goto null_script;
+}
+ch2-lizard-withdraw {
+	walk entity Sebastian to geometry lizard-walk over 800ms;
+	goto null_script;
+}
+const!($fadeTime = 600ms)
 ch2-cutscene-castle12 {
-	
+	turn player control off;
+	wait 300ms;
+	// some kind of arguing
+	show dialog {
+		Sebastian "...and I say we forget him!"
+	}
+	turn entity "%PLAYER%" north;
+	show dialog {
+		PLAYER "...?"
+	}
+	fade out camera to black over $fadeTime;
+	teleport camera to geometry camera-spot;
+	teleport entity "%PLAYER%" to geometry mage-walk;
+	fade in camera from black over $fadeTime;
+	set entity Templeton on_tick to spin_self_clockwise;
+	show dialog {
+		Templeton "Oh... oh dear."
+	}
+	set entity Sebastian on_tick to ch2-sebastian-paceonce;
+	show dialog {
+		Sebastian "How many hours has it been? It's clear to me he's not coming back."
+		"As usual, he's left us to clean up his messes for him."
+		Templeton "But what if he's injured? He could be stuck in there, bleeding out. Maybe he can't reach the intercom. Maybe he's waiting for us to --"
+		Sebastian "He won't be \"bleeding out\" after a tiny shake like that."
+	}
+	set flag ch2-templeton-pace to true;
+	set entity Templeton on_tick to ch2-templeton-pace;
+	show dialog {
+		Templeton "But what if a piece of debris hit him on the head, and --"
+		Sebastian "He has the constitution of an ox!"
+	}
+	set flag ch2-templeton-pace to false;
+	turn entity Templeton east;
+	show dialog {
+		Templeton "...Actually, he's a gnu."
+	}
+	set entity Sebastian on_tick to ch2-sebastian-stomp;
+	wait 200ms;
+	show dialog {
+		Sebastian "Enough!"
+		"Clearly he's abandoned us. Thus, we must take action now, before anything else happens."
+	}
+	walk entity Sebastian to geometry lizard1 over 400ms;
+	show dialog {
+		Sebastian "We must take administrative control of the castle. We must --"
+		Aurelius "Sebastian, wait. Someone is here."
+	}
+	turn entity Templeton south;
+	show dialog {
+		Templeton "!!"
+	}
+	fade out camera to black over $fadeTime;
+	make camera follow entity "%PLAYER%";
+	set entity "%PLAYER%" on_tick to ch2-mage-approach;
+	fade in camera from black over $fadeTime;
+	set entity Sebastian on_tick to ch2-sebastian-approach;
+	wait 2600ms;
+	show dialog {
+		PLAYER "Sorry. I didn't mean to interrupt anything."
+		Sebastian "And who do you think you are?"
+		Templeton "Oh! How did you get in? Does this mean the door's been unblocked?"
+		PLAYER "No, the doors are still broken. But I have this portable terminal, and --"
+	}
+	set entity Sebastian on_tick to ch2-lizard-lurch;
+	wait 150ms;
+	set entity "%PLAYER%" relative_direction to 2;
+	walk entity "%PLAYER%" to geometry mage-backup over 200ms;
+	set entity "%PLAYER%" relative_direction to 0;
+	turn entity "%PLAYER%" east;
+	show dialog {
+		Sebastian "You have the artifact?"
+		"Give that to me. That belongs to --"
+		Aurelius "Stop, %Sebastian%. It does not belong to you. Nor to any of us."
+	}
+	turn entity "%PLAYER%" north;
+	show dialog {
+		Templeton "It belongs to the king!"
+	}
+	set entity Sebastian on_tick to ch2-lizard-withdraw;
+	turn entity "%PLAYER%" east;
+	show dialog {
+		Sebastian "But the king isn't here, is he? It's up to US --"
+	}
+	turn entity "%PLAYER%" north;
+	show dialog {
+		Aurelius "It is up to me, if it is up to anyone. I am regent."
+		"You, stranger. What is your name?"
+		PLAYER "It's %PLAYER%."
+		Aurelius "How is the rest of the castle?"
+	}
+	if (
+		flag ch2-seen-room-21 is false
+		|| flag ch2-seen-room-22 is false
+		|| flag ch2-seen-room-23 is false
+		|| flag ch2-seen-room-31 is false
+		|| flag ch2-seen-room-32 is false
+		|| flag ch2-seen-room-33 is false
+		|| flag ch2-seen-room-34 is false
+		|| flag ch2-seen-room-11 is false
+		|| flag ch2-seen-room-12 is false
+	) {
+		show dialog {
+			PLAYER "Um, the rooms are in bad shape, but everyone seems okay. The people I've met so far, anyway."
+		}
+	} else {
+		show dialog {
+			PLAYER "Um, the rooms are in bad shape, but I can report that everyone is okay."
+		}
+	}
+	show dialog {
+		Aurelius "Very good."
+		"If I might ask something of you, %PLAYER%...."
+		"We have not seen or heard from King Gibson since last night. You see, prior to that, there was --"
+		Templeton "We all had an argument."
+		Sebastian "Bladerdash! He was overreacting, and I only --"
+		Aurelius "Nevertheless, I fear he is trapped in his bedroom, just to the north of us. He's not answering the intercom."
+		Templeton "He could be hurt!"
+		Sebastian "Bah! He's just ignoring us. He could've answered us if he wanted to talk to us! Or he'd've unlocked the door and come out!"
+		Aurelius "If you would be so kind as to check up on him, please?"
+		PLAYER "Sure."
+	}
+	set flag ch2-cutseen-castle12 to true;
+	turn player control on;
+}
+
+ch2-cutscene-kingreturns {
+	fade in camera from black over 600ms;
+	show dialog {
+		entity "King Gibson" "(TODO: cutscene goes here)"
+	}
+	set flag ch2-king-rescued to true;
+	turn player control on;
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-13 {
-	goto null_script;
+	if (flag ch2-king-rescued is true) {
+		if (entity "%PLAYER%" is inside geometry north-hitbox) {
+			set warp state to walk_from-south;
+			load map ch2-castle-14;
+		}
+	}
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -85,25 +281,34 @@ on_go-castle-13-south {
 /* ---------- GOLDFISH (ADMIN) ---------- */
 
 ch2-hide-goldfish {
-	teleport entity "Goldfish" to geometry hiding-spot;
-	set entity "Goldfish" name to " ";
+	teleport entity "Aurelius" to geometry hiding-spot;
+	set entity "Aurelius" name to " ";
 }
 
 ch2-touch-goldfish {
-	if (flag ch2-goldfish-firstlook is false) {
-		show dialog {
-			PLAYER "TODO goldfish1"
+	// todo add "king rescued" prerequisite to picking up goldfish etc
+	if (flag ch2-cutseen-castle14 is false) {
+		show dialog { // don't use "self"; "Aurelius" is a label!
+			Aurelius "Do please check on King Gibson, would you? He's in his bedroom, just to the north of us."
 		}
-		set flag ch2-goldfish-firstlook to true;
-	}
-	show dialog {
-		PLAYER "TODO goldfish2."
-	}
-	if (variable ch2-storyflag-round is >= 3) {
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				Aurelius "Godspeed."
+			}
+		}
+		set flag ch2-king-report to true;
+	} else {
 		show dialog {
-			name "" "(Pick up the goldfish?)"
-			> "Yes" : ch2-touch-goldfish-yes
-			> "No" : ch2-touch-goldfish-no
+			Aurelius "TODO."
+		}
+		if (variable ch2-storyflag-round is >= 3) {
+			show dialog {
+				name "" "(Pick up the goldfish?)"
+				> "Yes" : ch2-touch-goldfish-yes
+				> "No" : ch2-touch-goldfish-no
+			}
 		}
 	}
 }
@@ -125,17 +330,92 @@ ch2-touch-goldfish-no {
 
 /* ---------- ENTITIES ---------- */
 
+ch2-king-unharmed {
+	if (flag ch2-king-report is false) {
+		show dialog {
+			PLAYER "The king is okay, but he's trapped in there. Both the intercom and the keypad lock to his door seem to be broken."
+		}
+		turn entity "%PLAYER%" toward entity Templeton;
+		show dialog {
+			Templeton "Oh, thank goodness! He's all right!"
+		}
+		turn entity "%PLAYER%" toward entity Aurelius;
+		show dialog {
+			Aurelius "I see. Thank you."
+			Sebastian "...."
+		}
+	}
+	show dialog {
+		PLAYER "I'll get the king out of there. Don't worry."
+	}
+}
 
 interact-ch2-sebastian {
 	copy face-player;
-	show dialog {
-		SELF "TODO FIX THIS\nUnder the sea...\nI mean uhh...\nProgram in C..."
+	if (flag ch2-cutseen-castle14 is false) {
+		show dialog {
+			SELF "Mark my words: he's ignoring us. He's all but abdicated."
+		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				SELF "Take your time, kid."
+			}
+		}
+		set flag ch2-king-report to true;
+	} else {
+		show dialog {
+			SELF "TODO FIX THIS\nUnder the sea...\nI mean uhh...\nProgram in C..."
+		}
 	}
 }
 
 interact-ch2-templeton {
 	copy face-player;
-	show dialog {
-		SELF "(TODO)"
+	if (flag ch2-cutseen-castle14 is false) {
+		show dialog {
+			SELF "I know King Gibson doesn't always get along with us -- that is, with Sebastian -- but this silence is very unlike him. I'm worried."
+		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				SELF "Oh, goodness! Thank you, thank you!"
+			}
+		}
+		set flag ch2-king-report to true;
+	} else {
+		show dialog {
+			SELF "(TODO)"
+		}
 	}
+}
+
+interact-ch2-gibson-throneroom {
+	copy face-player;
+	if (variable ch2-storyflag-round is < 3) {
+		show dialog {
+			entity "King Gibson" "My staff and I are reconciled, thanks to you."
+			"I am in your debt."
+		}
+	} else if (flag ch2-clock-permission is false) {
+		show dialog {
+			PLAYER "So, your majesty, about the clock in your bedroom...."
+			entity "King Gibson" "What? What's this about my heirloom grandfather clock?"
+			PLAYER "I sort of need it to --"
+			entity "King Gibson" "Fine then. Have it, if you want it."
+			PLAYER "Really? Just like that?"
+			entity "King Gibson" "It's just an object -- a thing. Replaceable."
+			"You reunited me with my advisors -- my friends. That's worth far more to me than a piece of furniture."
+			"Take it, if you can make good use of it."
+			PLAYER "Thank you very much!"
+		}
+		set flag ch2-clock-permission to true;
+	} else {
+		show dialog {
+			entity "King Gibson" "My staff and I are reconciled. You have my thanks."
+		}
+	}
+	turn entity "%SELF%" south;
 }

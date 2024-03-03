@@ -67,6 +67,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: needle (from phonograph)
 	- [x] Entity: Concierge (super nice suit, but like it's some kind of a scraggly werewolf)
+	- [ ] Entity: mid-90s tall black stereo system (one of those big CD changer / cassette deck thingies)
 	- [~] SET: the "human" half of the foyer, logistically speaking
 		- [x] Concierge desk with guestbook
 		- [ ] Wall of rubble at S separating this room from 11
@@ -259,9 +260,19 @@ Plot points implemented:
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 		- [ ] Talk to Gibson; get him and his staff to reconcile
-			- [ ] They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken. (Sometimes lack of connection is due to misunderstandings, not due to malice or lack of capability)
+			- They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken. (Sometimes lack of connection is due to misunderstandings, not due to malice or lack of capability)
+			- What happened was:
+				- They had a fight about something
+				- King stormed off into bedroom
+				- Earthquake
+				- King was waiting for them to be all like "OH NO, YOUR MAJESTY, ARE YOU ALIVE?" and they said nothing, so he thinks they're having a coup
+				- Staff thinks:
+					- Sebastian (lizard wizard) thinks they should have a coup; that Gibson is being irresponsible and childish and has abandoned them (focus on ignoring the king)
+					- Templeton (slime) thinks the king might be injured and they should rescue him (focus on King)
+					- The Aurelius (goldfish; current regent) thinking about the civilians
 			- [ ] Use the terminal to repair the intercom and get them talking again
 			- [ ] The King should return to the throne room
+				- After which the goldfish agrees to go with you
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
 			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
@@ -322,14 +333,36 @@ They should move around a bit between all these story flags, though chunking the
 - AFTERWARD (`ch2-storyflag-round` <= 5)
 	- [ ] Speculate on next location: software!
 
+Use this template:
+
+```
+if (variable ch2-storyflag-round is 0) {
+	show dialog {
+	// hint at western dungeon
+	}
+} else if (variable ch2-storyflag-round is <= 2) {
+	show dialog {
+	// asks how things are going
+	}
+} else if (variable ch2-storyflag-round is <= 4) {
+	show dialog {
+	// player asks after Bert; entity hasn't seen him
+	}
+} else {
+	show dialog {
+	// congratulate player for winning; speculate on next dungeon
+	}
+}
+```
+
 Villagers:
 
 - [x] Baker (bakery) (only says something generic)
 - [x] Guardian Bob (not required; dialog is quest related)
 - [x] Trekkie (greenhouse)
 - [x] Timmy (library)
-- [ ] Uncle Zappy (home)
-- [ ] Aunt Zippy (home)
+- [x] Uncle Zappy (home)
+- [x] Aunt Zippy (home)
 - [ ] Beatrice (Beatrice's house)
 	- [ ] Should be focued on reconciling with Delmar (reforging their connections) 
 	- (this should be possible after storyflag 3, so the shepherd's dialog still makes sense)

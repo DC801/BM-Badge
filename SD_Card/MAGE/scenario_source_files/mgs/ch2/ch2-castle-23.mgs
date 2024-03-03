@@ -102,7 +102,9 @@ on_go-castle-23-south {
 interact-ch2-helvetica {
 	copy interrupt-walk;
 	show dialog {
-		SELF "(TODO)"
+		SELF
+		"At this power plant, we capture heat from deep below the earth and use it to turn water into steam, which we send through turbines to generate electricity."
+		"But this isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
 	}
 	copy resume-walk;
 }
@@ -110,7 +112,7 @@ interact-ch2-helvetica {
 interact-ch2-tracy {
 	copy face-player;
 	show dialog {
-		SELF "This isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
+		SELF "Our entire work revolves around moving heat from one place to another. It's often more efficient to move heat than it is to create it."
 	}
 }
 

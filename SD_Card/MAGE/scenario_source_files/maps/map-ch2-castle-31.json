@@ -263,7 +263,7 @@
                  "gid":269,
                  "height":32,
                  "id":41,
-                 "name":"",
+                 "name":"drum",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -328,12 +328,6 @@
                  "height":32,
                  "id":49,
                  "name":"speaker",
-                 "properties":[
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-speaker"
-                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -346,12 +340,6 @@
                  "height":32,
                  "id":50,
                  "name":"speaker",
-                 "properties":[
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-speaker"
-                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
