@@ -87,6 +87,11 @@
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-zippy"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -115,6 +120,11 @@
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-zappy"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "visible":true,
