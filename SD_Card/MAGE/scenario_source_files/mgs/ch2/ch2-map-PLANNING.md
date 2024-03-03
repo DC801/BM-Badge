@@ -333,14 +333,36 @@ They should move around a bit between all these story flags, though chunking the
 - AFTERWARD (`ch2-storyflag-round` <= 5)
 	- [ ] Speculate on next location: software!
 
+Use this template:
+
+```
+if (variable ch2-storyflag-round is 0) {
+	show dialog {
+	// hint at western dungeon
+	}
+} else if (variable ch2-storyflag-round is <= 2) {
+	show dialog {
+	// asks how things are going
+	}
+} else if (variable ch2-storyflag-round is <= 4) {
+	show dialog {
+	// player asks after Bert; entity hasn't seen him
+	}
+} else {
+	show dialog {
+	// congratulate player for winning; speculate on next dungeon
+	}
+}
+```
+
 Villagers:
 
 - [x] Baker (bakery) (only says something generic)
 - [x] Guardian Bob (not required; dialog is quest related)
 - [x] Trekkie (greenhouse)
 - [x] Timmy (library)
-- [ ] Uncle Zappy (home)
-- [ ] Aunt Zippy (home)
+- [x] Uncle Zappy (home)
+- [x] Aunt Zippy (home)
 - [ ] Beatrice (Beatrice's house)
 	- [ ] Should be focued on reconciling with Delmar (reforging their connections) 
 	- (this should be possible after storyflag 3, so the shepherd's dialog still makes sense)

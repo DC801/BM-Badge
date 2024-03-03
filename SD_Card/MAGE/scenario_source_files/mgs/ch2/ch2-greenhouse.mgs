@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-greenhouse {
 	show serial dialog spacer;
 	show serial dialog {
-		"   TODO: Greenhouse text"
+		"You looked around the<c>GREENHOUSE</>."
+		"\tThe interior is bright and warm, and the air is lightly muggy. Fragrance from the ether nettle blossoms tempers the scent of greenery and soil. The raised planters smells earthy but not musty."
+		" "
 	}
 }
 

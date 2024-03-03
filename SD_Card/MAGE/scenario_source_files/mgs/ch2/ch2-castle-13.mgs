@@ -12,7 +12,9 @@ settings for dialog {
 look-ch2-castle-13 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE THRONE ROOM on_look text\n "
+		"You looked around the <c>CASTLE THRONE ROOM</>."
+		"\tTODO"
+		" "
 	}
 }
 
@@ -28,7 +30,7 @@ look-ch2-templeton {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%Templeton%</>."
-		"\t(TODO)"
+		"\tYou're not sure what aspect of his gelatinous body might be his face -- if he even has one. His jiggling seems more born from nervousness than aggression, at least."
 	}
 }
 

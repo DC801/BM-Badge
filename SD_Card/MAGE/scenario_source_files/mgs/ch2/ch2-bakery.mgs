@@ -6,7 +6,7 @@ look-ch2-bakery {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>BAKERY</>."
-		"\tThe smell inside is amazing! TODO"
+		"\tThe smell inside is amazing! Warm, yeasty -- the very essence of nostalgia. The %Baker% keeps this place clean, tidy, and overflowing with baked goods."
 		" "
 	}
 }
@@ -14,7 +14,8 @@ look-ch2-bakery {
 look-ch2-baker {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO on_look baker"
+		"You looked at the <m>%SELF%</>."
+		"\tHe rarely spares a glance for you as he rushes about, but his expression is warm when he does. He is smooth with his motions around the kitchen; it's clear he's had a lifetime of practice."
 	}
 }
 
