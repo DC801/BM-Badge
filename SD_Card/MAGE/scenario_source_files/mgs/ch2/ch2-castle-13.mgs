@@ -54,11 +54,27 @@ on_load-ch2-castle-13 {
 	) {
 		copy script ch2-hide-goldfish;
 	}
-	copy ch2-map-init;
+	
+	if (
+		flag ch2-king-rescued is true
+		|| warp state is "Ch2 King Returns"
+	) {
+		teleport entity Templeton to geometry templeton-sit;
+	} else {
+		set entity "King Gibson" on_tick to yeet;
+	}
 
+	if (warp state is "Ch2 King Returns") {
+		teleport entity "%PLAYER%" to geometry camera-spot;
+	}
+
+	copy ch2-map-init;
+	
 	// check if you do the cutscene or not
 	if (flag ch2-cutseen-castle12 is false) {
 		copy ch2-cutscene-castle12;
+	} else if (warp state is "Ch2 King Returns") {
+		copy ch2-cutscene-kingreturns;
 	}
 }
 
@@ -223,10 +239,24 @@ ch2-cutscene-castle12 {
 	turn player control on;
 }
 
+ch2-cutscene-kingreturns {
+	fade in camera from black over 600ms;
+	show dialog {
+		entity "King Gibson" "(TODO: cutscene goes here)"
+	}
+	set flag ch2-king-rescued to true;
+	turn player control on;
+}
+
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-13 {
-	goto null_script;
+	if (flag ch2-king-rescued is true) {
+		if (entity "%PLAYER%" is inside geometry north-hitbox) {
+			set warp state to walk_from-south;
+			load map ch2-castle-14;
+		}
+	}
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -256,10 +286,19 @@ ch2-hide-goldfish {
 }
 
 ch2-touch-goldfish {
+	// todo add "king rescued" prerequisite to picking up goldfish etc
 	if (flag ch2-cutseen-castle14 is false) {
 		show dialog { // don't use "self"; "Aurelius" is a label!
 			Aurelius "Do please check on King Gibson, would you? He's in his bedroom, just to the north of us."
 		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				Aurelius "Godspeed."
+			}
+		}
+		set flag ch2-king-report to true;
 	} else {
 		show dialog {
 			Aurelius "TODO."
@@ -291,6 +330,25 @@ ch2-touch-goldfish-no {
 
 /* ---------- ENTITIES ---------- */
 
+ch2-king-unharmed {
+	if (flag ch2-king-report is false) {
+		show dialog {
+			PLAYER "The king is okay, but he's trapped in there. Both the intercom and the keypad lock to his door seem to be broken."
+		}
+		turn entity "%PLAYER%" toward entity Templeton;
+		show dialog {
+			Templeton "Oh, thank goodness! He's all right!"
+		}
+		turn entity "%PLAYER%" toward entity Aurelius;
+		show dialog {
+			Aurelius "I see. Thank you."
+			Sebastian "...."
+		}
+	}
+	show dialog {
+		PLAYER "I'll get the king out of there. Don't worry."
+	}
+}
 
 interact-ch2-sebastian {
 	copy face-player;
@@ -298,6 +356,14 @@ interact-ch2-sebastian {
 		show dialog {
 			SELF "Mark my words: he's ignoring us. He's all but abdicated."
 		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				SELF "Take your time, kid."
+			}
+		}
+		set flag ch2-king-report to true;
 	} else {
 		show dialog {
 			SELF "TODO FIX THIS\nUnder the sea...\nI mean uhh...\nProgram in C..."
@@ -311,9 +377,45 @@ interact-ch2-templeton {
 		show dialog {
 			SELF "I know King Gibson doesn't always get along with us -- that is, with Sebastian -- but this silence is very unlike him. I'm worried."
 		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				SELF "Oh, goodness! Thank you, thank you!"
+			}
+		}
+		set flag ch2-king-report to true;
 	} else {
 		show dialog {
 			SELF "(TODO)"
 		}
 	}
+}
+
+interact-ch2-gibson-throneroom {
+	copy face-player;
+	if (variable ch2-storyflag-round is < 3) {
+		show dialog {
+			entity "King Gibson" "My staff and I are reconciled, thanks to you."
+			"I am in your debt."
+		}
+	} else if (flag ch2-clock-permission is false) {
+		show dialog {
+			PLAYER "So, your majesty, about the clock in your bedroom...."
+			entity "King Gibson" "What? What's this about my heirloom grandfather clock?"
+			PLAYER "I sort of need it to --"
+			entity "King Gibson" "Fine then. Have it, if you want it."
+			PLAYER "Really? Just like that?"
+			entity "King Gibson" "It's just an object -- a thing. Replaceable."
+			"You reunited me with my advisors -- my friends. That's worth far more to me than a piece of furniture."
+			"Take it, if you can make good use of it."
+			PLAYER "Thank you very much!"
+		}
+		set flag ch2-clock-permission to true;
+	} else {
+		show dialog {
+			entity "King Gibson" "My staff and I are reconciled. You have my thanks."
+		}
+	}
+	turn entity "%SELF%" south;
 }
