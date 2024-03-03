@@ -51,18 +51,6 @@
          "objects":[
                 {
                  "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":162,
-                 "y":196
-                }, 
-                {
-                 "class":"",
                  "gid":183,
                  "height":32,
                  "id":32,
@@ -114,6 +102,11 @@
                  "id":36,
                  "name":"King Gibson",
                  "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-gibson-bedroom"
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -189,6 +182,59 @@
                  "width":32,
                  "x":42,
                  "y":113
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"walk-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":174,
+                 "y":156
+                }, 
+                {
+                 "class":"",
+                 "gid":28,
+                 "height":32,
+                 "id":49,
+                 "name":"keypad",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-keypad"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":118,
+                 "y":263
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":50,
+                 "name":"walking-out",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":174,
+                 "y":227
+                }, 
+                {
+                 "class":"",
+                 "height":24.152,
+                 "id":51,
+                 "name":"south-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":30,
+                 "x":145,
+                 "y":253
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -233,6 +279,18 @@
                  "width":0,
                  "x":-20,
                  "y":-21
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":162,
+                 "y":196
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -241,7 +299,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":48,
+ "nextobjectid":52,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

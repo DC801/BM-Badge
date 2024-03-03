@@ -5,7 +5,7 @@ include!("header.mgs")
 look-ch2-magehouse {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked around at<c>YOUR HOUSE</>."
+		"You looked around <c>YOUR HOUSE</>."
 		"\tThere's a certain smell to home that you'll always remember and that will always be nostalgic for you -- maybe it's the smell of ozone that seems to follow Aunt Zippy and Uncle Zappy around the room."
 		" "
 	}
@@ -14,30 +14,45 @@ look-ch2-magehouse {
 look-ch2-tickles {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Mr. Tickles on_look text\n "
-		" "
+		"You looked at <m>%SELF%</>."
+		"\tIt's your childhood goldfish. An adage comes to your mind at the sight of him: \"You shouldn't feed Mr. Tickles three hams!\""
 	}
 }
 
 look-ch2-zappy {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Uncle Zappy on_look text\n "
-		" "
+		"You looked at <m>%SELF%</>."
+		"\t%SELF%'s color brightens as you approach, and the edges of his body fuzzes ever so slightly. You've come to understand this change in his aspect as a smile -- you smile back."
 	}
 }
 
 look-ch2-zippy {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: Aunt Zippy on_look text\n "
-		" "
+		"You looked at <m>%SELF%</>."
+		"\tShe nods encouragingly at you as you pass her. Love is apparent in her glowing, golden-yellow eyes."
 	}
 }
 
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-magehouse {
+	if (
+		variable ch2-storyflag-round is 0
+	) {
+		teleport entity "Aunt Zippy" to geometry alt-spot1;
+		teleport entity "Uncle Zappy" to geometry alt-spot3;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		set entity "Aunt Zippy" on_tick to yeet;
+		set entity "Uncle Zappy" on_tick to yeet;
+	} else if (variable ch2-storyflag-round is 5) {
+		teleport entity "Aunt Zippy" to geometry alt-spot2;
+		teleport entity "Uncle Zappy" to geometry alt-spot1;
+	}
 	copy ch2-map-init;
 }
 
@@ -60,13 +75,61 @@ on_go-ch2-magehouse-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-zappy {
-	show dialog {
-		SELF "TODO"
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Good morning, %PLAYER%! Off to the western dungeon this morning?"
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "I heard from Alfonso that you'll need to grapple with some insects in the dungeon. I had no idea."
+			PLAYER "Insects?"
+			SELF "I think he mentioned bees? Bees that were sheep? Or was it the other way around? Sheep that were bees?"
+			PLAYER "(Bees? Sheep?)"
+			SELF "Qu'avait-il dit? \"Ewe est bee\"?"
+			PLAYER "...." "Are you kidding me?"
+			SELF "...Ha! Yes, sorry! I was trying to think of a \"dad joke\" about this all morning, but that was the best I could do."
+			PLAYER "Thanks, %SELF%. I appreciate the effort."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, %SELF%, I'm looking for Bert. I don't suppose you've seen him today?"
+			SELF "Sorry, I haven't been paying much attention to library patrons. I've been glued to these Spanish textbooks."
+			PLAYER "Spanish?"
+			SELF "Well, if I couldn't work out a \"dad joke\" for USB in French, I thought I might try Spanish."
+			"I could use \"es\" for the \"S\", you see? But I'm stuck on the nuance between \"ser\" and \"estar\", so...."
+			PLAYER "Is it a dad joke if you need to know a second language to get it?"
+			SELF "Sure. Anything works as long as it makes you roll your eyes in exasperation."
+		}
+		turn entity "%SELF%" north;
+	} else {
+		show dialog {
+			SELF "Hey, %PLAYER%! I heard the good news! Great job getting the artifact working!"
+		}
 	}
 }
 interact-ch2-zippy {
-	show dialog {
-		SELF "TODO"
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "If you need a break from the dungeon out west, don't forget to come back home for a visit."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "I'm so proud of you, %PLAYER%, for all the things you've learned. You've grown a lot this year, and I want you to know that."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			SELF "Why, hello, %PLAYER%. I was just doing this week's shopping. How does French toast sound for breakfast tomorrow?"
+			PLAYER "That would be awesome. But, um, I was wondering...."
+			"Have you seen Bert around today? I can't seem to find him."
+			SELF "Sorry, %PLAYER%. Haven't seen him today."
+		}
+		turn entity "%SELF%" north;
+	} else {
+		show dialog {
+			SELF "Good job, %PLAYER%! Congratulations on conquering that dungeon!"
+		}
 	}
 }
 interact-ch2-cake {

@@ -17,8 +17,23 @@ on_load-ch2-lodge {
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	if (variable ch2-storyflag-round is not 1) {
 		set entity Alfonso on_tick to yeet;
+	}
+	// The part of Uncle Zappy is being played by Jackob
+	if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Jackob to geometry zappy-spot;
+		set entity Jackob name to "Uncle Zappy";
+		set entity Jackob on_look to look-ch2-zappy;
+		set entity Jackob on_tick to null_script;
+		set entity Jackob on_interact to interact-ch2-zappy;
+		set entity Jackob type to lightning_boy2;
+		turn entity Jackob north;
+	} else if (variable ch2-storyflag-round is not 1) {
 		set entity Jackob on_tick to yeet;
 	}
+	// hide stuff
 	if (
 		flag ch2-installed-manual is true
 		|| flag ch2-carrying-manual is true
