@@ -283,6 +283,18 @@
                  "width":16,
                  "x":585,
                  "y":330
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":129,
+                 "name":"zappy-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":593,
+                 "y":254
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -425,7 +437,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":129,
+ "nextobjectid":130,
  "orientation":"orthogonal",
  "properties":[
         {

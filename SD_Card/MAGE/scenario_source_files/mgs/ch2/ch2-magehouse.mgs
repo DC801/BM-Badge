@@ -38,6 +38,21 @@ look-ch2-zippy {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-magehouse {
+	if (
+		variable ch2-storyflag-round is 0
+	) {
+		teleport entity "Aunt Zippy" to geometry alt-spot1;
+		teleport entity "Uncle Zappy" to geometry alt-spot3;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		set entity "Aunt Zippy" on_tick to yeet;
+		set entity "Uncle Zappy" on_tick to yeet;
+	} else if (variable ch2-storyflag-round is 5) {
+		teleport entity "Aunt Zippy" to geometry alt-spot2;
+		teleport entity "Uncle Zappy" to geometry alt-spot1;
+	}
 	copy ch2-map-init;
 }
 
@@ -60,6 +75,7 @@ on_go-ch2-magehouse-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-zappy {
+	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
 			SELF "Good morning, %PLAYER%! Off to the western dungeon this morning?"
@@ -76,15 +92,16 @@ interact-ch2-zappy {
 			PLAYER "Thanks, %SELF%. I appreciate the effort."
 		}
 	} else if (variable ch2-storyflag-round is <= 4) {
-		// TODO: Take zappy out of home for this bit, and add him to library
 		show dialog {
 			PLAYER "Hey, %SELF%, I'm looking for Bert. I don't suppose you've seen him today?"
 			SELF "Sorry, I haven't been paying much attention to library patrons. I've been glued to these Spanish textbooks."
 			PLAYER "Spanish?"
-			SELF "Well, if I couldn't work out a USB \"dad joke\" in French, I thought I might try Spanish. I could use \"es\" for the \"S\", you see? But I'm stuck on the nuance between \"ser\" and \"estar\", so...."
+			SELF "Well, if I couldn't work out a \"dad joke\" for USB in French, I thought I might try Spanish."
+			"I could use \"es\" for the \"S\", you see? But I'm stuck on the nuance between \"ser\" and \"estar\", so...."
 			PLAYER "Is it a dad joke if you need to know a second language to get it?"
 			SELF "Sure. Anything works as long as it makes you roll your eyes in exasperation."
 		}
+		turn entity "%SELF%" north;
 	} else {
 		show dialog {
 			SELF "Hey, %PLAYER%! I heard the good news! Great job getting the artifact working!"
@@ -92,6 +109,7 @@ interact-ch2-zappy {
 	}
 }
 interact-ch2-zippy {
+	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
 			SELF "If you need a break from the dungeon out west, don't forget to come back home for a visit."
@@ -101,13 +119,13 @@ interact-ch2-zippy {
 			SELF "I'm so proud of you, %PLAYER%, for all the things you've learned. You've grown a lot this year, and I want you to know that."
 		}
 	} else if (variable ch2-storyflag-round is <= 4) {
-		// Add her to the bakery for this stretch, and remove from home
 		show dialog {
-			PLAYER "Why, hello, %PLAYER%. I was just doing this week's shopping. How does French toast sound for breakfast tomorrw?"
-			SELF "That would be awesome. But, um, I was wondering...."
+			SELF "Why, hello, %PLAYER%. I was just doing this week's shopping. How does French toast sound for breakfast tomorrow?"
+			PLAYER "That would be awesome. But, um, I was wondering...."
 			"Have you seen Bert around today? I can't seem to find him."
 			SELF "Sorry, %PLAYER%. Haven't seen him today."
 		}
+		turn entity "%SELF%" north;
 	} else {
 		show dialog {
 			SELF "Good job, %PLAYER%! Congratulations on conquering that dungeon!"
