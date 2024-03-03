@@ -154,7 +154,13 @@
 			"unreg": "map-action_testing-go_unregister",
 			"moon": "map-action_testing-go_moon",
 			"override": "map-action_testing-go_override",
-			"un-override": "map-action_testing-go_un-override"
+			"un-override": "map-action_testing-go_un-override",
+			"alias": "map-action_testing-go_alias",
+			"unalias": "map-action_testing-go_unalias",
+			"regSecret": "map-action_testing-go_register_secret",
+			"hideSecret": "map-action_testing-go_hide_secret",
+			"showSecret": "map-action_testing-go_unhide_secret",
+			"unregSecret": "map-action_testing-go_unregister_secret"
 		}
 	},
 	"ch2-magehouse-birthday": {

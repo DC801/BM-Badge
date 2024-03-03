@@ -2,6 +2,7 @@
 #define GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #include "mage_defines.h"
 #include <vector>
+#include <unordered_map>
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
 
@@ -38,6 +39,7 @@ typedef struct {
 	uint16_t argumentStringId;
 	uint16_t scriptId;
 	bool isFail;
+	bool isVisible;
 } MageSerialDialogCommand;
 
 class MageCommandControl {
@@ -48,6 +50,7 @@ class MageCommandControl {
 		MageSerialDialog serialDialog = {};
 		std::unique_ptr<MageSerialDialogResponse[]> serialDialogResponses = {};
 		std::vector<MageSerialDialogCommand> registeredCommands = {};
+		std::unordered_map<std::string, std::string> commandAliases = {};
 		int32_t jumpScriptId = MAGE_NO_SCRIPT;
 		uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
@@ -58,6 +61,7 @@ class MageCommandControl {
 		void handleStart();
 		void processCommand(const char *commandString);
 		void processInputAsCommand(std::string input);
+		std::string aliasLookup(std::string& input);
 		void processInputAsTrappedResponse(const std::string& input);
 		void cancelTrap();
 		void showSerialDialog(
@@ -82,6 +86,19 @@ class MageCommandControl {
 		void unregisterArgument(
 			uint16_t commandStringId,
 			uint16_t argumentStringId
+		);
+		void registerCommandAlias(
+			uint16_t commandStringId,
+			uint16_t aliasStringId
+		);
+		void debugAliases();
+		void unregisterCommandAlias(
+			uint16_t commandStringId,
+			uint16_t aliasStringId
+		);
+		void setCommandVisibility(
+			uint16_t commandStringId,
+			bool isVisible
 		);
 		MageSerialDialogCommand* searchForCommand(
 			const std::string& verb,

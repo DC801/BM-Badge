@@ -154,6 +154,47 @@
 			"Unregistered Command: 'map'!"
 		]
 	},
+	"serial_dialog-go_register_secret": {
+		"messages": [
+			"Registered Command: 'secret'!"
+		]
+	},
+	"serial_dialog-go_hide_secret": {
+		"messages": [
+			"Command has been hidden from `help`: 'secret'!"
+		]
+	},
+	"serial_dialog-go_unhide_secret": {
+		"messages": [
+			"Command has been UNhidden from `help`: 'secret'!"
+		]
+	},
+	"serial_dialog-go_unregister_secret": {
+		"messages": [
+			"Unregistered Command: 'secret'!"
+		]
+	},
+	"serial_dialog-command-secret": {
+		"messages": [
+			"Yes, there's a secret, but what animal is secret?"
+		]
+	},
+	"serial_dialog-command-secret-fail": {
+		"messages": [
+			"No! Wrong Secret!"
+		]
+	},
+	"serial_dialog-command-secret-goat": {
+		"messages": [
+			"You found the secret goat!",
+			"               _))",
+			"              > *\\     _~",
+			"         yey- `;'\\__-' \\_",
+			"                 | )  _ \\ \\",
+			"                / / ``   w w",
+			"               w w"
+		]
+	},
 	"serial_dialog-go_register_arguments": {
 		"messages": [
 			"Registered Arguments: 'map' > ['town', 'dungeon']!"
