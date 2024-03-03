@@ -22,10 +22,26 @@ look-ch2-baker {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-bakery {
-	// do unique stuff first (but turn serial / player control off first, if you do)
-	if (variable ch2-storyflag-round is not 2) {
+	// The part of Aunt Zippy is being played by Jackob
+	if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		if (variable ch2-storyflag-round is 3) {
+			teleport entity Jackob to geometry zippy-spot1;
+		} else if (variable ch2-storyflag-round is 4) {
+			teleport entity Jackob to geometry zippy-spot2;
+		}
+		set entity Jackob name to "Aunt Zippy";
+		set entity Jackob on_look to look-ch2-zippy;
+		set entity Jackob on_tick to null_script;
+		set entity Jackob on_interact to interact-ch2-zippy;
+		set entity Jackob type to lightning_boy;
+		turn entity Jackob north;
+	} else if (variable ch2-storyflag-round is not 2) {
 		set entity Jackob on_tick to yeet;
 	}
+	// All the rest
 	copy ch2-map-init;
 }
 

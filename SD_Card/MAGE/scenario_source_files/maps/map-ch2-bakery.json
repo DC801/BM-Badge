@@ -314,6 +314,30 @@
                  "width":0,
                  "x":-61,
                  "y":-65
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":50,
+                 "name":"zippy-spot1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":112,
+                 "y":264
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":51,
+                 "name":"zippy-spot2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":272,
+                 "y":268
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -328,7 +352,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":185,
+                 "gid":201,
                  "height":32,
                  "id":15,
                  "name":"Bub",
@@ -346,7 +370,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147483812,
+                 "gid":2147483828,
                  "height":32,
                  "id":14,
                  "name":"Baker",
@@ -374,7 +398,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":20,
                  "name":"Sink",
@@ -392,7 +416,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":21,
                  "name":"Bread",
@@ -410,7 +434,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":22,
                  "name":"Bread",
@@ -428,7 +452,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":23,
                  "name":"Bread",
@@ -446,7 +470,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":24,
                  "name":"Bread",
@@ -464,7 +488,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":25,
                  "name":"Bread",
@@ -482,7 +506,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":26,
                  "name":"Bread",
@@ -500,7 +524,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":27,
                  "name":"Bread",
@@ -518,7 +542,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":28,
                  "name":"Bread",
@@ -536,7 +560,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":29,
                  "name":"Bread",
@@ -554,7 +578,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":30,
                  "name":"Bread",
@@ -572,7 +596,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":31,
                  "name":"Bread",
@@ -590,7 +614,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":32,
                  "name":"Bread",
@@ -608,7 +632,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":33,
                  "name":"Bread",
@@ -626,7 +650,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":34,
                  "name":"Bread",
@@ -644,7 +668,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":35,
                  "name":"Bread",
@@ -662,7 +686,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":36,
                  "name":"Bread",
@@ -681,7 +705,7 @@
             
                 {
                  "class":"",
-                 "gid":242,
+                 "gid":258,
                  "height":32,
                  "id":48,
                  "name":"Jackob",
@@ -736,7 +760,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":49,
+ "nextobjectid":52,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -753,19 +777,19 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-baker.json"
         }, 
         {
-         "firstgid":179,
+         "firstgid":195,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":227,
+         "firstgid":243,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":229,
+         "firstgid":245,
          "source":"..\/entities\/entity-village_elder.json"
         }],
  "tilewidth":32,
