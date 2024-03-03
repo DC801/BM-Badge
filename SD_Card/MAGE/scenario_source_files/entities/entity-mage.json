@@ -8,12 +8,12 @@
         }
     },
  "image":"entity-mage.png",
- "imageheight":384,
+ "imageheight":448,
  "imagewidth":128,
  "margin":0,
  "name":"mage",
  "spacing":0,
- "tilecount":48,
+ "tilecount":56,
  "tiledversion":"1.4.2",
  "tileheight":32,
  "tiles":[
