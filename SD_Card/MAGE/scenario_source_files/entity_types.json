@@ -58,15 +58,15 @@
 			],
 			"guitar_idle": [
 				{
-					"tileid": 56,
+					"tileid": 58,
 					"flip_x": false
 				},
 				{
-					"tileid": 56,
+					"tileid": 59,
 					"flip_x": false
 				},
 				{
-					"tileid": 56,
+					"tileid": 57,
 					"flip_x": false
 				},
 				{
@@ -89,6 +89,24 @@
 				},
 				{
 					"tileid": 51,
+					"flip_x": false
+				}
+			],
+			"pose_pre_left": [
+				{
+					"tileid": 55,
+					"flip_x": false
+				},
+				{
+					"tileid": 55,
+					"flip_x": false
+				},
+				{
+					"tileid": 55,
+					"flip_x": false
+				},
+				{
+					"tileid": 55,
 					"flip_x": false
 				}
 			],
@@ -184,19 +202,19 @@
 			],
 			"pose_bottom_left": [
 				{
-					"tileid": 49,
+					"tileid": 58,
 					"flip_x": false
 				},
 				{
-					"tileid": 49,
+					"tileid": 59,
 					"flip_x": false
 				},
 				{
-					"tileid": 49,
+					"tileid": 57,
 					"flip_x": false
 				},
 				{
-					"tileid": 49,
+					"tileid": 56,
 					"flip_x": false
 				}
 			]
