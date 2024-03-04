@@ -58,7 +58,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":245,
+                 "gid":261,
                  "height":32,
                  "id":4,
                  "name":"Bub",
@@ -76,60 +76,7 @@
                 }, 
                 {
                  "class":"",
-                 "ellipse":true,
-                 "height":49.0196078431373,
-                 "id":8,
-                 "name":"sports_path",
-                 "rotation":0,
-                 "visible":true,
-                 "width":96.5686274509804,
-                 "x":98.0392156862745,
-                 "y":157.843137254902
-                }, 
-                {
-                 "class":"",
-                 "gid":2147483986,
-                 "height":32,
-                 "id":10,
-                 "name":"Smith",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-smith"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":353,
-                 "y":108
-                }, 
-                {
-                 "class":"",
-                 "gid":353,
-                 "height":32,
-                 "id":11,
-                 "name":"Dinner",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-smith-dinner"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":391,
-                 "y":78
-                }, 
-                {
-                 "class":"",
-                 "gid":355,
+                 "gid":371,
                  "height":32,
                  "id":12,
                  "name":"Sink",
@@ -159,67 +106,7 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":15,
-                 "name":"walk_from-north",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":17
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":430.911787725772,
-                 "y":93.7071979025053
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":16,
-                 "name":"walk_from-east",
-                 "polyline":[
-                        {
-                         "x":-104.325,
-                         "y":-3.90331
-                        }, 
-                        {
-                         "x":-123.325,
-                         "y":-3.90331
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":562.585200815692,
-                 "y":211.603302388813
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":17,
-                 "name":"walk_from-west",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":18.2314,
-                         "y":-0.171299
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":246.603223926976,
-                 "y":162.081957661682
-                }, 
-                {
-                 "class":"",
-                 "gid":357,
+                 "gid":373,
                  "height":20,
                  "id":18,
                  "name":"Kid",
@@ -228,22 +115,35 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-sportskid"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"loop_on_path_3s"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":8
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":20,
-                 "x":186.387648087007,
-                 "y":179.042532530588
+                 "x":306,
+                 "y":140
+                }, 
+                {
+                 "class":"",
+                 "gid":355,
+                 "height":32,
+                 "id":19,
+                 "name":"Smith",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-smith"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":331,
+                 "y":142
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -271,7 +171,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":19,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -293,39 +193,39 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-old_lady.json"
         }, 
         {
-         "firstgid":176,
+         "firstgid":192,
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":239,
+         "firstgid":255,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":287,
+         "firstgid":303,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":311,
+         "firstgid":327,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":335,
+         "firstgid":351,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":353,
+         "firstgid":369,
          "source":"..\/entities\/entity-pot.json"
         }, 
         {
-         "firstgid":355,
+         "firstgid":371,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":357,
+         "firstgid":373,
          "source":"..\/entities\/entity-blitzball.json"
         }],
  "tilewidth":32,

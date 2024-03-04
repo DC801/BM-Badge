@@ -142,7 +142,7 @@
                  "gid":269,
                  "height":32,
                  "id":39,
-                 "name":"Wine Rack",
+                 "name":"wine rack",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -160,7 +160,7 @@
                  "gid":269,
                  "height":32,
                  "id":40,
-                 "name":"Pantry Shelf",
+                 "name":"panty shelf",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -178,7 +178,7 @@
                  "gid":269,
                  "height":32,
                  "id":42,
-                 "name":"Pantry Shelf",
+                 "name":"panty shelf",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -196,7 +196,7 @@
                  "gid":269,
                  "height":32,
                  "id":43,
-                 "name":"Pantry Shelf",
+                 "name":"pantry shelf",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -214,7 +214,7 @@
                  "gid":269,
                  "height":32,
                  "id":44,
-                 "name":"Dishes Shelf",
+                 "name":"dishes shelf",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -232,7 +232,7 @@
                  "gid":269,
                  "height":32,
                  "id":45,
-                 "name":"Fridge",
+                 "name":"fridge",
                  "properties":[
                         {
                          "name":"on_interact",

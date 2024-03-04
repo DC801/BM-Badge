@@ -326,12 +326,42 @@ interact-ch2-delmar-town {
 	rotate entity "%SELF%" 2;
 }
 interact-ch2-verthandi {
-	copy face-player;
-	show dialog {
-		SELF "Oh! You're doing the western dungeon today, aren't you?"
-		"I believe in you, %PLAYER%!"
+	copy interrupt-walk;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Oh! You're doing the western dungeon today, aren't you?"
+			"I believe in you, %PLAYER%!"
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "Hello, %PLAYER%. I hope you're making friends and learning all sorts of wonderful things."
+			PLAYER "Thank you. I'm doing my best."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Excuse me, Miss %Verthandi%, but have you seen Bert recently?"
+			SELF "No, I haven't, I'm afraid. Though... oh."
+			PLAYER "What is it?"
+		}
+		turn player control off;
+		rotate entity "%SELF%" 1;
+		wait 500ms;
+		rotate entity "%SELF%" -1;
+		show dialog {
+			SELF "How odd. I thought for a moment I sensed him far, far away."
+			PLAYER "You can sense where he is?"
+			SELF "Not with any precision, nor any certainty. I do apologize, %PLAYER%."
+			"I'll let him know you're looking for him if I see him today."
+			PLAYER "Thank you."
+		}
+		turn player control on;
+
+	} else {
+		show dialog {
+			SELF "Oh, how wonderful, %PLAYER%! I knew you could do it! Well done!"
+		}
 	}
-	turn entity "%SELF%" south;
+	copy resume-walk;
 }
 
 interact-ch2-alfonso-verthandi {

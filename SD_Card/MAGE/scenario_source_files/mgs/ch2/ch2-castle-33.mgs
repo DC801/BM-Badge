@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-castle-33 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: HYDROPONICS ROOM on_look text\n "
+		"You looked around the <c>HYDROPONICS ROOM</>."
+		"\tThis room is sweetly humid and surprisingly cold. The faint buzz of the lights compete with a dripping noise coming from the pipes tucked into the rims of each box. You catch a whiff of leafy green onion."
+		" "
 	}
 }
 

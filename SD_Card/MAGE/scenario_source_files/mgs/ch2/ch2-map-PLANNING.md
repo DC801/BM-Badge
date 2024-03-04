@@ -134,7 +134,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: keyboard (keytar from the band)
 	- [x] Entity: Simon - a band member from 1023 MB; challenges player to Simon says, and gives the keytar in the event of a loss
-		- [ ] Still needs keytar position sprites for the mage
+		- [~] Still needs keytar position sprites for the mage
 	- [x] Entity: Theodore - a band member from 1023 MB
 	- [x] Entity: Alvin - a band member from 1023 MB
 	- [~] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd
@@ -258,8 +258,8 @@ Plot points implemented:
 
 - THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
-	- [ ] (8.) `clock` (grandfather clock) (room 14)
-		- [ ] Talk to Gibson; get him and his staff to reconcile
+	- [x] (8.) `clock` (grandfather clock) (room 14)
+		- [~] Talk to Gibson; get him and his staff to reconcile
 			- They each think the others are ignoring them, but in fact the door intercom no longer works and the door is broken. (Sometimes lack of connection is due to misunderstandings, not due to malice or lack of capability)
 			- What happened was:
 				- They had a fight about something
@@ -270,8 +270,8 @@ Plot points implemented:
 					- Sebastian (lizard wizard) thinks they should have a coup; that Gibson is being irresponsible and childish and has abandoned them (focus on ignoring the king)
 					- Templeton (slime) thinks the king might be injured and they should rescue him (focus on King)
 					- The Aurelius (goldfish; current regent) thinking about the civilians
-			- [ ] Use the terminal to repair the intercom and get them talking again
-			- [ ] The King should return to the throne room
+			- [~] Use the terminal to repair the intercom and get them talking again
+			- [x] The King should return to the throne room
 				- After which the goldfish agrees to go with you
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
@@ -367,16 +367,16 @@ Villagers:
 	- [ ] Should be focued on reconciling with Delmar (reforging their connections) 
 	- (this should be possible after storyflag 3, so the shepherd's dialog still makes sense)
 - [ ] Delmar (sheep's pen, sulking)
-- [ ] Smith (Smith's house)
-- [ ] Kid (Smith's house)
+- [x] Smith (Smith's house)
+- [x] Kid (Smith's house)
 - [x] Marta (overworld)
-- [~] Verthandi (overworld)
-	- [ ] Currently only something generic, plus something for storyflag 2 (talking with Alfonso); should add others, too
+- [x] Verthandi (overworld)
 - [ ] Hamster (overworld)
 	- [ ] Pick another spot for him
 - [ ] Cleo (with white cat) (overworld)
 - [ ] Clomper
 	- [ ] Needs sprite
+- [x] Yabbo Mongo (overworld; says something generic)
 
 Entities not being used right now: (maybe use them?)
 
@@ -384,13 +384,10 @@ Entities not being used right now: (maybe use them?)
 	- [ ] I haven't played Earthbound; find something clever to do wtih him
 - [ ] Bender
 	- [ ] Think of somewhere else he should be hanging out
-- [ ] Yabbo Mongo
-	- [ ] Should be somewhere in the exterior, or perhaps perplexed that his "infinity" doesn't work anymore?
-	- [ ] Should speak with Cockney rhyming slang (on request by artist)
 - [ ] Town goose
 	- [ ] Should still be around
 	- [x] Does the rake easter egg still work? (No)
-	- [ ] (Should it?)
+	- [x] (Should it?) (YES)
 - [ ] Max Swagger
 	- [ ] Should be able to go inside the building
 	- [ ] Interior should be very bare; furnishings are still being worked on

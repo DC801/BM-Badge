@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-smithfamily {
 	show serial dialog spacer;
 	show serial dialog {
-		"   TODO: Smith family house text"
+		"You looked around the<c>SMITH'S HOUSE</>."
+		"\tThere are faint rubber skid marks on the floor and -- impressively -- the ceiling. One of the beds, likely the child's, is more disheveled. Still, Mr. %Smith% does well to keep the rest of the house tidy."
+		" "
 	}
 }
 
@@ -35,13 +37,35 @@ on_go-ch2-smithfamily-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-smith {
-	show dialog {
-		SELF "TODO"
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Hey, neighbor. Good luck in the dungeon out west."
+			"Knock 'em dead! Or... break their legs! Or... whatever it is you need to do. Go get 'em!"
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "So I just looked it up, and apparently USB stands for universal serial bus."
+			"I guess it's like... you plug something in, and it's like there's a bus that drives along the cable, back and forth. Right?"
+			PLAYER "Sure."
+			SELF "So what is it that makes it universal?"
+			PLAYER "I guess you can plug it in and it sort of just works, universally."
+			SELF "Mmm, mmm. So if the plug fits, you're good to go. Right? So the data gets on the bus, and is driven to the other side?"
+			PLAYER "I... sure. Yeah, why not?"
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, do you know if Bert went anywhere?"
+			SELF "Sorry. Don't know anything about the myserious comings and goings of the mysterious village elders."
+		}
+	} else {
+		show dialog {
+			SELF "Hey, I heard you did the thing! Way to go!"
+		}
 	}
 }
 
 interact-ch2-sportskid {
 	show dialog {
-		SELF "TODO"
+		SELF "WHEEEEEE!"
 	}
 }
