@@ -18,6 +18,18 @@ const! (
 	$button3 = MEM3
 	$button4 = XOR
 	$button5 = MEM0
+
+	$animation_padding1 = 50ms
+	$animation_padding2 = 200ms
+	$guitar_idle = 3
+	$pose_pre_right = 4
+	$pose_pre_left = 5
+	$pose_top_right = 6
+	$pose_right = 7
+	$pose_bottom_right = 8
+	$pose_top_left = 9
+	$pose_left = 10
+	$pose_bottom_left = 11
 )
 
 simon-game-launcher {
@@ -161,6 +173,7 @@ simon-game-start {
 	teleport camera to geometry camera-spot;
 	teleport entity "%PLAYER%" to geometry mage-spot;
 	teleport entity Simon to geometry simon-spot;
+	set entity "%PLAYER%" current_animation to $guitar_idle;
 	set entity Simon current_animation to 5;
 	turn entity "%PLAYER%" south;
 	turn entity Simon south;
@@ -179,8 +192,6 @@ simon-game-start {
 				Simon emote 1 "Keep your eyes up top and copy my moves! LET'S GOOOO!"
 			}
 		}
-		set entity Lights on_tick to null_script;
-		turn light ALL off;
 	} else {
 		set entity Lights on_tick to screen-lights-flash-battle-low;
 		if (flag ch2-simon-heard-low is false) {
@@ -195,9 +206,9 @@ simon-game-start {
 				Simon emote 1 "Keep your eyes down low and copy my moves! LET'S GOOOO!"
 			}
 		}
-		set entity Lights on_tick to null_script;
-		turn light ALL off;
 	}
+	set entity Lights on_tick to null_script;
+	turn light ALL off;
 	goto simon-enemy-turn-start;
 }
 
@@ -251,7 +262,7 @@ simon-enemy-turn-start {
 simon-player-turn-start {
 	wait 10ms;
 	mutate i = 0;
-	turn player control on;
+	// turn player control on;
 	goto simon-player-turn-loop-start;
 }
 
@@ -273,6 +284,7 @@ simon-player-turn-loop-start {
 }
 
 simon-player-listen {
+	turn entity "%PLAYER%" south;
 	// CHECK FAILS FIRST
 
 	// high-only positions
@@ -380,34 +392,73 @@ simon-player-listen {
 	set entity Simon on_tick to simon-player-listen // reset this loop (on next game tick?)
 }
 
+simon-player-animation-pose_bottom_left {
+	set entity "%PLAYER%" current_animation to $pose_pre_left;
+	wait $animation_padding1;
+	set entity "%PLAYER%" current_animation to $pose_bottom_left;
+	goto null_script;
+}
+simon-player-animation-pose_bottom_right {
+	set entity "%PLAYER%" current_animation to $pose_pre_right;
+	wait $animation_padding1;
+	set entity "%PLAYER%" current_animation to $pose_bottom_right;
+	goto null_script;
+}
+simon-player-animation-pose_left {
+	set entity "%PLAYER%" current_animation to $pose_pre_left;
+	wait $animation_padding1;
+	set entity "%PLAYER%" current_animation to $pose_left;
+	goto null_script;
+}
+simon-player-animation-pose_right {
+	set entity "%PLAYER%" current_animation to $pose_pre_right;
+	wait $animation_padding1;
+	set entity "%PLAYER%" current_animation to $pose_right;
+	goto null_script;
+}
+simon-player-animation-pose_top_left {
+	set entity "%PLAYER%" current_animation to $pose_pre_left;
+	wait $animation_padding1;
+	set entity "%PLAYER%" current_animation to $pose_top_left;
+	goto null_script;
+}
+simon-player-animation-pose_top_right {
+	set entity "%PLAYER%" current_animation to $pose_pre_right;
+	wait $animation_padding1;
+	set entity "%PLAYER%" current_animation to $pose_top_right;
+	goto null_script;
+}
+
 simon-player-do-move {
 	// loopy
 	if (variable simon-player-move is == 0) {
 		turn light $light0 on;
-		// play entity Simon animation 6 once // change these to the real animations eventually
+		set entity "%PLAYER%" on_tick to simon-player-animation-pose_bottom_left;
 	}
 	else if (variable simon-player-move is == 1) {
 		turn light $light1 on;
-		// play entity Simon animation 7 once
+		set entity "%PLAYER%" on_tick to simon-player-animation-pose_bottom_right;
 	}
 	else if (variable simon-player-move is == 2) {
 		turn light $light2 on;
-		// play entity Simon animation 8 once
+		set entity "%PLAYER%" on_tick to simon-player-animation-pose_left;
 	}
 	else if (variable simon-player-move is == 3) {
 		turn light $light3 on;
-		// play entity Simon animation 9 once
+		set entity "%PLAYER%" on_tick to simon-player-animation-pose_right;
 	}
 	else if (variable simon-player-move is == 4) {
 		turn light $light4 on;
-		// play entity Simon animation 10 once
+		set entity "%PLAYER%" on_tick to simon-player-animation-pose_top_left;
 	}
 	else if (variable simon-player-move is == 5) {
 		turn light $light5 on;
-		// play entity Simon animation 11 once
+		set entity "%PLAYER%" on_tick to simon-player-animation-pose_top_right;
 	}
 	
-	wait 100ms;
+	wait $animation_padding1;
+	wait $animation_padding2;
+	set entity "%PLAYER%" current_animation to $guitar_idle;
 	turn light ALL off;
 	mutate i + 1;
 	// show serial dialog {
@@ -513,6 +564,7 @@ simon-game-restore-positions {
 	fade out camera to black over 400ms;
 	make camera follow entity "%PLAYER%";
 	set entity Simon current_animation to 0;
+	set entity "%PLAYER%" current_animation to 0;
 	teleport entity "%PLAYER%" to geometry return-spot;
 	teleport entity Simon to geometry simon-return-spot;
 	turn entity "%PLAYER%" north;
@@ -560,6 +612,7 @@ const! (
 )
 
 player-win {
+	set entity "%PLAYER%" current_animation to $guitar_idle;
 	turn entity "%PLAYER%" east;
 	wait $time_q;
 	turn entity "%PLAYER%" north;
@@ -567,10 +620,11 @@ player-win {
 	turn entity "%PLAYER%" west;
 	wait $time_q;
 	turn entity "%PLAYER%" south;
-	play entity "%PLAYER%" animation 2 once
+	play entity "%PLAYER%" animation 2 once;
 	goto null_script;
 }
 player-lose {
+	set entity "%PLAYER%" current_animation to $guitar_idle;
 	turn entity "%PLAYER%" west;
 	wait $time_q;
 	turn entity "%PLAYER%" east;
