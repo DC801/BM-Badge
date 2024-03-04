@@ -111,7 +111,7 @@ interact-ch2-clara {
 		set flag ch2-clara-backstory to true;
 	} else {
 		show dialog {
-			SELF "(TODO)"
+			SELF "I'm new around here. I gotta say, this has been an interesting first week of work."
 		}
 	}
 	copy resume-walk;

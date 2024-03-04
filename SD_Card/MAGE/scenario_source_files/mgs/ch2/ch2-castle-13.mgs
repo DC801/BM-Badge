@@ -21,15 +21,16 @@ look-ch2-castle-13 {
 look-ch2-sebastian {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Sebastian%</>."
-		"\t(TODO)"
+		"You looked at <m>%SELF%</>."
+		"\tYou're not sure whether his glowing green eyes are evidence of powerful magic or whether this is typical for his species. You keep your distance, determined not to learn firsthand."
+		"\tThe lizard wizard is frowning at you -- you think."
 	}
 }
 
 look-ch2-templeton {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%Templeton%</>."
+		"You looked at <m>%SELF%</>."
 		"\tYou're not sure what aspect of his gelatinous body might be his face -- if he even has one. His jiggling seems more born from nervousness than aggression, at least."
 	}
 }
@@ -387,7 +388,7 @@ interact-ch2-templeton {
 		set flag ch2-king-report to true;
 	} else {
 		show dialog {
-			SELF "(TODO)"
+			SELF "Thank you for rescuing the king. We were all very worried about him."
 		}
 	}
 }
@@ -408,7 +409,7 @@ interact-ch2-gibson-throneroom {
 			PLAYER "Really? Just like that?"
 			entity "King Gibson" "It's just an object -- a thing. Replaceable."
 			"You reunited me with my advisors -- my friends. That's worth far more to me than a piece of furniture."
-			"Take it, if you can make good use of it."
+			"Take it, if you feel you can make good use of it."
 			PLAYER "Thank you very much!"
 		}
 		set flag ch2-clock-permission to true;

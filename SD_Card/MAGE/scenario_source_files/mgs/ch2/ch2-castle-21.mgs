@@ -103,12 +103,14 @@ ch2-touch-abacus {
 	if (variable ch2-storyflag-round is < 3) {
 		if (flag ch2-abacus-firstlook is false) {
 			show dialog {
-				PLAYER "TODO abacus1"
+				PLAYER "What's this? One of those kids toys from a dentist office?"
+				Frankie "It's an old counting device called an abacus."
 			}
 			set flag ch2-abacus-firstlook to true;
 		}
 		show dialog {
-			PLAYER "TODO abacus2."
+			PLAYER "It looks fun to clack those beads up and down."
+			Frankie "It is! It makes a great sound."
 		}
 		return;
 	}

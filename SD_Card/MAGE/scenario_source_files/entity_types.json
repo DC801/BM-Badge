@@ -55,6 +55,150 @@
 					"tileid": 28,
 					"flip_x": false
 				}
+			],
+			"guitar_idle": [
+				{
+					"tileid": 56,
+					"flip_x": false
+				},
+				{
+					"tileid": 56,
+					"flip_x": false
+				},
+				{
+					"tileid": 56,
+					"flip_x": false
+				},
+				{
+					"tileid": 56,
+					"flip_x": false
+				}
+			],
+			"pose_pre_right": [
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				}
+			],
+			"pose_top_right": [
+				{
+					"tileid": 54,
+					"flip_x": false
+				},
+				{
+					"tileid": 54,
+					"flip_x": false
+				},
+				{
+					"tileid": 54,
+					"flip_x": false
+				},
+				{
+					"tileid": 54,
+					"flip_x": false
+				}
+			],
+			"pose_right": [
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				}
+			],
+			"pose_bottom_right": [
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 53,
+					"flip_x": false
+				}
+			],
+			"pose_top_left": [
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 50,
+					"flip_x": false
+				}
+			],
+			"pose_left": [
+				{
+					"tileid": 48,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				}
+			],
+			"pose_bottom_left": [
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				}
 			]
 		},
 		"type": "mage",

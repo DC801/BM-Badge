@@ -163,7 +163,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-verthandi"
                         }, 
                         {
                          "name":"on_tick",
@@ -956,7 +956,7 @@
                          "y":640.798403479996
                         }],
                  "rotation":0,
-                 "visible":true,
+                 "visible":false,
                  "width":0,
                  "x":2049.41509433962,
                  "y":1299.599800435

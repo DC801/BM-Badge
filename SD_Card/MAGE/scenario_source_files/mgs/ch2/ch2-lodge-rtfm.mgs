@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-lodge-rtfm {
 	show serial dialog spacer;
 	show serial dialog {
-		"   TODO: RTFM room text"
+		"You looked around at the <c>RTFM ROOM</>."
+		"\tThe books in this room seem older than those in the rest of the library. More leather bindings, more handwritten pages. The air is mustier, but it's not unpleasant."
+		" "
 	}
 }
 
