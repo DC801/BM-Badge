@@ -474,7 +474,7 @@
 			}
 		}
 	},
-	"lambda": {
+	"lambda-codec": {
 		"tileset": "entity-codec-portrait.json",
 		"emotes": {
 			"normal": {
@@ -483,6 +483,35 @@
 			},
 			"mysterious": {
 				"tileid": 4,
+				"flip_x": true
+			}
+		}
+	},
+	"lambda": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"opaque_serious": {
+				"tileid": 33,
+				"flip_x": true
+			},
+			"opaque_grin": {
+				"tileid": 35,
+				"flip_x": true
+			},
+			"transparent_serious": {
+				"tileid": 32,
+				"flip_x": true
+			},
+			"transparent_grin": {
+				"tileid": 34,
+				"flip_x": true
+			},
+			"lowered": {
+				"tileid": 36,
+				"flip_x": true
+			},
+			"lowered_almost": {
+				"tileid": 37,
 				"flip_x": true
 			}
 		}

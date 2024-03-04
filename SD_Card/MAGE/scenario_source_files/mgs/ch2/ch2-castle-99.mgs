@@ -8,6 +8,13 @@ const! (
 	$lowering = 7 // downcast_lowering (raised -> lowered)
 	$lowered = 8 // downcast
 	$raising = 9 // downcast_raising (lowered -> raised)
+
+	$opaque_serious = 0
+	$opaque_grin = 1
+	$transparent_serious = 2
+	$transparent_grin = 3
+	$opaque_lowered = 4
+	$opaque_lowered_almost = 5
 )
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -103,7 +110,7 @@ ch2-cutscene-castle99 {
 	set entity Lambda current_animation to $lowered;
 	wait 100ms;
 	show dialog {
-		Lambda "Oh, I guess you already knew that."
+		Lambda emote $opaque_lowered "Oh, I guess you already knew that."
 		"Sorry, I...."
 	}
 	wait 600ms;
@@ -114,52 +121,50 @@ ch2-cutscene-castle99 {
 	}
 	set entity Lambda on_tick to ch2-lambda-shving_on;
 	show dialog {
-		Lambda "...I'm one of the village elders."
+		Lambda emote $transparent_serious "...I'm one of the village elders."
 		PLAYER "!!"
 		"What? How? Since when?"
-		Lambda "Since always."
+		Lambda emote $transparent_serious "Since always."
 		PLAYER "But I know Jackob, Alfonso, and Bert. I don't know you."
-		Lambda "That was by design."
+		Lambda emote $transparent_serious "That was by design."
 	}
 	turn entity Lambda west;
 	show dialog {
-		Lambda "I made everyone else forget me so I could stay here, behind the scenes, and protect this artifact from the Big Bad."
+		Lambda emote $transparent_serious "I made everyone else forget me so I could stay here, behind the scenes, and protect this artifact from the Big Bad."
 		"But...."
 	}
 	wait 400ms;
 	play entity Lambda animation $toOpaque once;
+	set entity Lambda current_animation to $opaque;
 	wait 250ms;
 	show dialog {
 		Lambda "Being disconnected from everything, like this... it's hard. I'm surprised how little time it took for things to become hard."
 	}
 	turn entity Lambda north;
 	show dialog {
-		Lambda "I did what I thought had to be done, but...."
+		Lambda emote $opaque_lowered_almost "I did what I thought had to be done, but...."
 		"Watching you meeting everyone, doing things with everyone...."
 		"BUILDING things with everyone...."
 	}
 	walk entity Lambda to geometry mid-spot over 300ms;
-	set entity Lambda current_animation to $opaque;
 	show dialog {
-		Lambda "I wiped their memories of me, but I didn't think I would lose my own memories of them, too!"
+		Lambda emote $opaque_lowered_almost  "I wiped their memories of me, but I didn't think I would lose my own memories of them, too!"
 	}
 	turn entity Lambda west;
 	set entity Lambda on_tick to ch2-lambda-lower;
 	show dialog {
-		Lambda "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
-	}
-	show dialog {
-		Lambda "Even the individual people! I'd forgotten how funny -- and so insightful -- Sea Moss is. I forgot how (TODO more people here pls)"
+		Lambda emote $opaque_lowered "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
+		"Even the individual people! I'd forgotten how funny -- and so insightful -- Sea Moss is. I forgot how (TODO more people here pls)"
 	}
 	turn entity Lambda south;
 	set entity Lambda on_tick to ch2-lambda-raise;
 	show dialog {
-		Lambda "All these problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
+		Lambda emote $opaque_lowered_almost "All these problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
 		"Most of those problems wouldn't have happened. Hell, maybe NONE of them would have happened."
 	}
 	set entity Lambda on_tick to ch2-lambda-walkup;
 	show dialog {
-		Lambda "I've been suffering, but I've been selfish, too, thinking that by closing doors and letting my friends live their lives without me, I was protecting them."
+		Lambda emote $opaque_lowered_almost  "I've been suffering, but I've been selfish, too, thinking that by closing doors and letting my friends live their lives without me, I was protecting them."
 		"I was holding onto my pain like it was concrete proof I was doing the right thing."
 	}
 	show dialog {
@@ -168,7 +173,7 @@ ch2-cutscene-castle99 {
 	walk entity Lambda to geometry lambda-walk-line2 over 500ms;
 	set entity Lambda on_tick to ch2-lambda-shving_on;
 	show dialog {
-		Lambda "It's better to be connected to people. However dangerous things might become, it's better to face those dangers together."
+		Lambda emote $transparent_serious "It's better to be connected to people. However dangerous things might become, it's better to face those dangers together."
 		"Don't you think?"
 		> "Yeah, better to face danger together." : ch2-cutscene-castle99-dangeryes
 		> "I don't know...." : ch2-cutscene-castle99-dangeridk
@@ -178,11 +183,11 @@ ch2-cutscene-castle99 {
 ch2-cutscene-castle99-dangeryes {
 	show dialog {
 		PLAYER "Yeah, better to face danger together."
-		Lambda "Yeah!"
+		Lambda emote $transparent_grin "Yeah!"
 	}
 	set entity Lambda on_tick to ch2-lambda-shving_off;
 	show dialog {
-		Lambda "So, um, to that end -- here, take this."
+		Lambda emote $opaque_lowered_almost "So, um, to that end -- here, take this."
 	}
 	goto ch2-cutscene-castle99-continue;
 }
@@ -193,7 +198,7 @@ ch2-cutscene-castle99-dangeridk {
 	set entity Lambda on_tick to ch2-lambda-shving_off;
 	show dialog {
 		Lambda "Yeah, I guess things are pretty complicated, aren't they?"
-		"So, um, anyway -- here, take this."
+		Lambda "So, um, anyway -- here, take this."
 	}
 	goto ch2-cutscene-castle99-continue;
 }
@@ -241,13 +246,9 @@ ch2-cutscene-castle99-continue {
 	set entity Lambda current_animation to $lowered;
 	wait 100ms;
 	show dialog {
-		Lambda "No, I'm staying here."
-	}
-	show dialog {
-		Lambda "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
-	}
-	show dialog {
-		Lambda "I'll just need a little time first. Sorry."
+		Lambda emote $opaque_lowered "No, I'm staying here."
+		Lambda emote $opaque_lowered_almost "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
+		Lambda emote $opaque_lowered "I'll just need a little time first. Sorry."
 	}
 	walk entity Lambda to geometry computer-spot over 700ms;
 	set entity Lambda current_animation to $opaque;
@@ -330,22 +331,9 @@ interact-ch2-lambda-lab {
 	} else {
 		show dialog {
 			Lambda "Hey, good to see you %PLAYER%."
-			"Don't worry about me -- I'm leaving my cave now and then."
-			"There's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
+			Lambda emote $opaque_grin "Don't worry about me -- I'm leaving my cave now and then."
+			Lambda "There's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
 		}
 	}
 	turn entity "%SELF%" toward entity CRT;
 }
-
-// ch2-castle-99-welcome {
-//	// (...other bad stuff that got cut)
-//	// maybe still use this? (OK if not)
-// 	show dialog {
-// 		Lambda "Listen."
-// 		"I feel like there's something else, something important that I... well...."
-// 		PLAYER "About the software? The OS?"
-// 		Lambda "Maybe. It must have been terribly important, but I can't seem to...."
-// 		PLAYER "...?"
-// 		Lambda "Well, if I remember it, I'll call you."
-// 	}
-// }

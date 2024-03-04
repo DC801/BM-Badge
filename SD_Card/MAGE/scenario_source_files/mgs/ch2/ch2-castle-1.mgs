@@ -2,7 +2,7 @@ include!("header.mgs")
 settings for dialog {
 	label Lambda {
 		name Lambda
-		portrait lambda
+		portrait lambda-codec
 		emote 1
 		border_tileset codec
 	}
