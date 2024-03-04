@@ -12,12 +12,12 @@ const! (
 	$light4 = LED_XOR
 	$light5 = LED_MEM0
 
-	$button0 = BIT128
-	$button1 = BIT1
-	$button2 = PAGE
-	$button3 = MEM3
-	$button4 = XOR
-	$button5 = MEM0
+	$button0 = BIT128 // bottom_left
+	$button1 = BIT1 // bottom_right
+	$button2 = PAGE // left
+	$button3 = MEM3 // right
+	$button4 = XOR // top left
+	$button5 = MEM0 // top right
 
 	$animation_padding1 = 50ms
 	$animation_padding2 = 200ms
@@ -393,40 +393,77 @@ simon-player-listen {
 }
 
 simon-player-animation-pose_bottom_left {
-	set entity "%PLAYER%" current_animation to $pose_pre_left;
-	wait $animation_padding1;
+	// set entity "%PLAYER%" current_animation to $pose_pre_left;
+	// wait $animation_padding1;
 	set entity "%PLAYER%" current_animation to $pose_bottom_left;
-	goto null_script;
+	goto simon-player-animation-pose_bottom_left-wait;
 }
 simon-player-animation-pose_bottom_right {
-	set entity "%PLAYER%" current_animation to $pose_pre_right;
-	wait $animation_padding1;
+	// set entity "%PLAYER%" current_animation to $pose_pre_right;
+	// wait $animation_padding1;
 	set entity "%PLAYER%" current_animation to $pose_bottom_right;
-	goto null_script;
+	goto simon-player-animation-pose_bottom_right-wait;
 }
 simon-player-animation-pose_left {
-	set entity "%PLAYER%" current_animation to $pose_pre_left;
-	wait $animation_padding1;
+	// set entity "%PLAYER%" current_animation to $pose_pre_left;
+	// wait $animation_padding1;
 	set entity "%PLAYER%" current_animation to $pose_left;
-	goto null_script;
+	goto simon-player-animation-pose_left-wait;
 }
 simon-player-animation-pose_right {
-	set entity "%PLAYER%" current_animation to $pose_pre_right;
-	wait $animation_padding1;
+	// set entity "%PLAYER%" current_animation to $pose_pre_right;
+	// wait $animation_padding1;
 	set entity "%PLAYER%" current_animation to $pose_right;
-	goto null_script;
+	goto simon-player-animation-pose_right-wait;
 }
 simon-player-animation-pose_top_left {
-	set entity "%PLAYER%" current_animation to $pose_pre_left;
-	wait $animation_padding1;
+	// set entity "%PLAYER%" current_animation to $pose_pre_left;
+	// wait $animation_padding1;
 	set entity "%PLAYER%" current_animation to $pose_top_left;
-	goto null_script;
+	goto simon-player-animation-pose_top_left-wait;
 }
 simon-player-animation-pose_top_right {
-	set entity "%PLAYER%" current_animation to $pose_pre_right;
-	wait $animation_padding1;
+	// set entity "%PLAYER%" current_animation to $pose_pre_right;
+	// wait $animation_padding1;
 	set entity "%PLAYER%" current_animation to $pose_top_right;
-	goto null_script;
+	goto simon-player-animation-pose_top_right-wait;
+}
+
+simon-player-animation-pose_bottom_left-wait {
+	if (button $button0 is not currently pressed) {
+		set flag simon-player-wait-finished to true;
+		goto null_script;
+	}
+}
+simon-player-animation-pose_bottom_right-wait {
+	if (button $button1 is not currently pressed) {
+		set flag simon-player-wait-finished to true;
+		goto null_script;
+	}
+}
+simon-player-animation-pose_left-wait {
+	if (button $button2 is not currently pressed) {
+		set flag simon-player-wait-finished to true;
+		goto null_script;
+	}
+}
+simon-player-animation-pose_right-wait {
+	if (button $button3 is not currently pressed) {
+		set flag simon-player-wait-finished to true;
+		goto null_script;
+	}
+}
+simon-player-animation-pose_top_left-wait {
+	if (button $button4 is not currently pressed) {
+		set flag simon-player-wait-finished to true;
+		goto null_script;
+	}
+}
+simon-player-animation-pose_top_right-wait {
+	if (button $button5 is not currently pressed) {
+		set flag simon-player-wait-finished to true;
+		goto null_script;
+	}
 }
 
 simon-player-do-move {
@@ -455,9 +492,17 @@ simon-player-do-move {
 		turn light $light5 on;
 		set entity "%PLAYER%" on_tick to simon-player-animation-pose_top_right;
 	}
+	goto simon-player-wait;
+}
 	
-	wait $animation_padding1;
-	wait $animation_padding2;
+simon-player-wait {
+	if (flag simon-player-wait-finished is true) {
+		goto simon-player-wait-finished;
+	}
+}
+
+simon-player-wait-finished {
+	set flag simon-player-wait-finished to false;
 	set entity "%PLAYER%" current_animation to $guitar_idle;
 	turn light ALL off;
 	mutate i + 1;
