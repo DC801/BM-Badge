@@ -15,6 +15,11 @@ window.vueApp = new window.Vue({
 			'currentData',
 		]),
 	],
+	computed: { // TODO remove, see below
+		problems() {
+			return window.sanityChecks.problems // TODO change to component?
+		}
+	},
 	data: {
 		uniqueEncodeAttempt: Math.random(),
 		isLoading: false,
