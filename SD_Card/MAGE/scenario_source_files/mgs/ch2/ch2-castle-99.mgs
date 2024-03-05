@@ -142,8 +142,8 @@ ch2-cutscene-castle99 {
 	}
 	turn entity Lambda north;
 	show dialog {
-		Lambda emote $opaque_lowered_almost "I did what I thought had to be done, but...."
-		"Watching you meeting everyone, doing things with everyone...."
+		Lambda "I did what I thought had to be done, but...."
+		Lambda emote $opaque_lowered_almost "Watching you meeting everyone, doing things with everyone...."
 		"BUILDING things with everyone...."
 	}
 	walk entity Lambda to geometry mid-spot over 300ms;
@@ -246,9 +246,9 @@ ch2-cutscene-castle99-continue {
 	set entity Lambda current_animation to $lowered;
 	wait 100ms;
 	show dialog {
-		Lambda emote $opaque_lowered "No, I'm staying here."
-		Lambda emote $opaque_lowered_almost "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
-		Lambda emote $opaque_lowered "I'll just need a little time first. Sorry."
+		Lambda emote $opaque_lowered_almost "No, I'm staying here."
+		Lambda emote $opaque_lowered "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
+		Lambda emote $opaque_lowered_almost "I'll just need a little time first. Sorry."
 	}
 	walk entity Lambda to geometry computer-spot over 700ms;
 	set entity Lambda current_animation to $opaque;
@@ -260,7 +260,7 @@ ch2-cutscene-castle99-continue {
 	wait 300ms;
 	turn entity Lambda west;
 	show dialog {
-		Lambda "Go ahead, and I'll help like before."
+		Lambda "Go ahead, and I'll help out like before."
 	}
 	turn entity Lambda north;
 	set entity Lambda current_animation to $opaque;
@@ -330,7 +330,7 @@ interact-ch2-lambda-lab {
 		}
 	} else {
 		show dialog {
-			Lambda "Hey, good to see you %PLAYER%."
+			Lambda emote $opaque_grin "Hey, good to see you %PLAYER%."
 			Lambda emote $opaque_grin "Don't worry about me -- I'm leaving my cave now and then."
 			Lambda "There's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
 		}

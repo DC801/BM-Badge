@@ -192,7 +192,7 @@ interact-ch2-simon {
 			}
 			set entity Simon current_animation to 12;
 			show dialog {
-				Simon emote 1 "I'm bored to death, so how about a keytar battle? If you win, I'll let you keep Rosetta."
+				Simon emote 1 "I'm bored to death, so how about a keytar battle? If you win, I'll let you keep Rosetta, and I'll use my backup keytar for the show instead."
 			}
 			set flag ch2-simon-backstory to true;
 		} else {

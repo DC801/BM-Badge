@@ -2187,7 +2187,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>FREQUENCY</>! Oh yeah, that's the best game! Dial it in, find the sweet spot...."
+				"<y>FREQUENCY</>! Oh yeah, that's the best! Dial it in, find the sweet spot...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $headphones) {
@@ -2317,7 +2317,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>RHYTHM</>! Excellent! You've hit the nail on the head! That's why we're here!"
+				"<y>RHYTHM</>! Yeah! You've hit the nail on the head! That's why we're here!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $sequencer) {
@@ -2327,7 +2327,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SEQUENCER</>! That's right! I always wanted to be one of these when I grew up."
+				"<y>SEQUENCER</>! Oh yeah! I always wanted to be one of these when I grew up."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $song) {
@@ -2407,7 +2407,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>SYNTHESIZER</>! Oh! I had a stint in college where I worked as one of these."
+				"<y>SYNTHESIZER</>! Oh! I had a job in college where I worked as one of these."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $tape) {

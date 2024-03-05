@@ -202,19 +202,19 @@
 			],
 			"pose_bottom_left": [
 				{
-					"tileid": 58,
+					"tileid": 49,
 					"flip_x": false
 				},
 				{
-					"tileid": 59,
+					"tileid": 49,
 					"flip_x": false
 				},
 				{
-					"tileid": 57,
+					"tileid": 49,
 					"flip_x": false
 				},
 				{
-					"tileid": 56,
+					"tileid": 49,
 					"flip_x": false
 				}
 			]
