@@ -37,7 +37,7 @@ var handleScenarioData = function (fileNameMap) {
 		});
 		scenarioData.dialogSkinsTilesetMap = {}
 		scenarioData.sanityChecks = {
-			problems: [],
+			problems: {},
 			checks: {
 				checkInteractScript: function(compositeEntity) {
 					var propertyToCheck = 'on_interact';
@@ -65,7 +65,42 @@ var handleScenarioData = function (fileNameMap) {
 						return null; // no problem found for this check
 					} // note foundScriptDefinition being true implies scriptName is also set
 		
-					var result = `a ${propertyToCheck} script`;
+					var result = `${propertyToCheck} script`;
+		
+					if (scriptName) { // a script name is present in map data but never defined in mgs folder
+						// num_undefined_scripts += 1; // TODO
+						result += ` (UNDEFINED: script \'${scriptName}\' expected from the map file is never defined)`;
+					}
+		
+					return result;
+				},
+				checkLookScript: function(compositeEntity) {
+					var propertyToCheck = 'on_look';
+		
+					var scriptName = '';
+					var foundScriptDefinition = false; // TODO
+		
+					if (! ('properties' in compositeEntity)) {
+						return null;
+					}
+		
+					for (propertyName in compositeEntity.properties) {
+						if (Object.hasOwnProperty.call(compositeEntity.properties, propertyName)) {
+							if (propertyName == propertyToCheck) {
+								scriptName = compositeEntity.properties[propertyName];
+								// if (findScriptDefinition(scriptName)) {
+								// 	foundScriptDefinition = true;
+								// } // TODO
+								break; // no need to search for the right property object more after finding it
+							}
+						}
+					}
+		
+					if (foundScriptDefinition) {
+						return null; // no problem found for this check
+					} // note foundScriptDefinition being true implies scriptName is also set
+		
+					var result = `${propertyToCheck} script`;
 		
 					if (scriptName) { // a script name is present in map data but never defined in mgs folder
 						// num_undefined_scripts += 1; // TODO
@@ -81,7 +116,6 @@ var handleScenarioData = function (fileNameMap) {
 						return null;
 					}
 				},
-				// checkLookScript: function(compositeEntity) {} // TODO
 			}
 		};
 		var preloadSkinsPromise = preloadAllDialogSkins(fileNameMap, scenarioData);
