@@ -3,55 +3,6 @@ var FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 var FLIPPED_VERTICALLY_FLAG   = 0x40000000;
 var FLIPPED_DIAGONALLY_FLAG   = 0x20000000;
 
-window.sanityChecks = {
-	problems: [],
-	checks: {
-		checkInteractScript: function(compositeEntity) {
-			var propertyToCheck = 'on_interact';
-
-			var scriptName = '';
-			var foundScriptDefinition = false; // TODO
-
-			if (! ('properties' in compositeEntity)) {
-				return null;
-			}
-
-			for (propertyName in compositeEntity.properties) {
-				if (Object.hasOwnProperty.call(compositeEntity.properties, propertyName)) {
-					if (propertyName == propertyToCheck) {
-						scriptName = compositeEntity.properties[propertyName];
-						// if (findScriptDefinition(scriptName)) {
-						// 	foundScriptDefinition = true;
-						// } // TODO
-						break; // no need to search for the right property object more after finding it
-					}
-				}
-			}
-
-			if (foundScriptDefinition) {
-				return null; // no problem found for this check
-			} // note foundScriptDefinition being true implies scriptName is also set
-
-			var result = `a ${propertyToCheck} script`;
-
-			if (scriptName) { // a script name is present in map data but never defined in mgs folder
-				// num_undefined_scripts += 1; // TODO
-				result += ` (UNDEFINED: script \'${scriptName}\' expected from the map file is never defined)`;
-			}
-
-			return result;
-		},
-		checkNamePresent: function(compositeEntity) {
-			if (compositeEntity.name == undefined || compositeEntity.name == null || ! (compositeEntity.name.replace(/\s/g, '').length)) {
-				return 'a name in the map file';
-			} else {
-				return null;
-			}
-		},
-		// checkLookScript: function(compositeEntity) {} // TODO
-	}
-};
-
 var getMapTileAndOrientationByGID = function (tileGID, map) {
 	var targetTileset = {};
 	var tileId = tileGID;
@@ -274,20 +225,18 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 		);
 		// run sanity checks on entity
 		var entityProblems = [];
-		for (checkName in window.sanityChecks.checks) {
-			if (Object.hasOwnProperty.call(window.sanityChecks.checks, checkName)) {
-				var checkFunction = window.sanityChecks.checks[checkName];
-				var problem = checkFunction(tiledObject.compositeEntity);
-				if (problem != null) {
-					entityProblems.push(problem);
-				}
+		Object.keys(scenarioData.sanityChecks.checks).forEach(function(checkName) {
+			var checkFunction = scenarioData.sanityChecks.checks[checkName];
+			var problem = checkFunction(tiledObject.compositeEntity);
+			if (problem != null) {
+				entityProblems.push(problem);
 			}
-		}
+		});
 		if(entityProblems.length) {
-			if (! (map in window.sanityChecks.problems)) {
-				window.sanityChecks.problems[map.name] = [];
+			if (! (map.name in scenarioData.sanityChecks.problems)) {
+				scenarioData.sanityChecks.problems[map.name] = [];
 			}
-			window.sanityChecks.problems[map.name].push({
+			scenarioData.sanityChecks.problems[map.name].push({
 				name: tiledObject.compositeEntity.name || 'NO NAME',
 				id: tiledObject.compositeEntity.id,
 				problems: entityProblems
