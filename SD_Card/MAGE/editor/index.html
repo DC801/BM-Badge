@@ -138,13 +138,13 @@
 									>Download <code>{{downloadData.download}}</code></a>
 								</div>
 							</div>
+							<editor-sanity-checks
+								v-if="scenarioData"
+								:problems="scenarioData.sanityChecks.problems"></editor-sanity-checks>
 						</div>
 					</div>
 				</div>
 			</div>
-			<editor-sanity-checks
-				v-if="scenarioData"
-				:problems="scenarioData.sanityChecks.problems"></editor-sanity-checks>
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"
