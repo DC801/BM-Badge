@@ -142,11 +142,9 @@
 					</div>
 				</div>
 			</div>
-			<!-- <editor-sanity-checks
-				v-if="scenarioData"
-				:sanity-checks="scenarioData.sanityChecks"></editor-sanity-checks> -->
 			<editor-sanity-checks
-				></editor-sanity-checks> <!-- TODO remove -->
+				v-if="scenarioData"
+				:problems="scenarioData.sanityChecks.problems"></editor-sanity-checks>
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"

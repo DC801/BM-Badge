@@ -6,30 +6,6 @@ import json
 
 '''
 TODO
-
-prioritize web build? lets us export a txt for full report and as many as we want for fixes while keeping to a short summary for CLI build (ask...)
-
-how will look work for multiple entities of the same or similar names (eg bread, torch)
-
-check for script definitions in JSON files as well as MGS files (there are a couple)
-
-gameengine prettier mage_command_control.cpp:185
-- commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
-
-ask Mary for a pattern for "TODO" script definitions
-- <m> true names
-- newline then space at end?
-
-move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
-- (also naming of script look-ch2-castle-34 but it's really for the pantry?)
-
-use a predicate function for blacklisted_files? e.g. positive string match 'ch2'
-
-generating script names
----
-nice indenting to be able to paste into maps
-what to do with a no-name entity?
-check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
 '''
 
 # NOTE: checks to run can be added here

@@ -224,24 +224,24 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			scenarioData,
 		);
 		// run sanity checks on entity
-		var entityProblems = [];
 		Object.keys(scenarioData.sanityChecks.checks).forEach(function(checkName) {
 			var checkFunction = scenarioData.sanityChecks.checks[checkName];
-			var problem = checkFunction(tiledObject.compositeEntity);
-			if (problem != null) {
-				entityProblems.push(problem);
+			var problemMessage = checkFunction(tiledObject.compositeEntity);
+			if (problemMessage == null) {
+				return;
 			}
-		});
-		if(entityProblems.length) {
-			if (! (map.name in scenarioData.sanityChecks.problems)) {
-				scenarioData.sanityChecks.problems[map.name] = [];
+			if (! (checkName in scenarioData.sanityChecks.problems)) {
+				scenarioData.sanityChecks.problems[checkName] = {};
 			}
-			scenarioData.sanityChecks.problems[map.name].push({
+			if (! (map.name in scenarioData.sanityChecks.problems[checkName])) {
+				scenarioData.sanityChecks.problems[checkName][map.name] = [];
+			}
+			scenarioData.sanityChecks.problems[checkName][map.name].push({
 				name: tiledObject.compositeEntity.name || 'NO NAME',
 				id: tiledObject.compositeEntity.id,
-				problems: entityProblems
+				problemMessage: problemMessage
 			});
-		}
+		});
 	});
 	return map;
 };
