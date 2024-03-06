@@ -142,12 +142,11 @@
 					</div>
 				</div>
 			</div>
-			<editor-sanity-checks
+			<!-- <editor-sanity-checks
 				v-if="scenarioData"
-				v-for="map in problems"
-				:key="map"
-				:check-name="map"
-				:check-contents="JSON.stringify(map)"></editor-sanity-checks>
+				:sanity-checks="scenarioData.sanityChecks"></editor-sanity-checks> -->
+			<editor-sanity-checks
+				></editor-sanity-checks> <!-- TODO remove -->
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"
@@ -444,7 +443,7 @@
 	<script src="js/editor-dialog-phase-preview.js"></script>
 	<script src="js/editor-dialog-box.js"></script>
 	<script src="js/editor-action.js"></script>
-	<script src="js/editor-sanity-check.js"></script>
+	<script src="js/editor-sanity-checks.js"></script>
 	<script src="js/component-icon.js"></script>
 	<script src="js/store.js"></script>
 	<script src="js/index.js"></script>
