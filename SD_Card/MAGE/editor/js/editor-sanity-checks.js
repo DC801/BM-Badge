@@ -8,6 +8,7 @@ check for script definitions in JSON files as well as MGS files (there are a cou
 
 misc
 ---
+ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 ask about populating sanityChecks onto scenarioData
 presentation design
 - original design: a report like the python output that would be useful to download
