@@ -24,6 +24,25 @@ struct ResumeGeometry
     uint8_t currentSegmentIndex{ 0 };
 };
 
+struct ScriptAction
+{
+   const uint8_t TypeId{ 0 };
+   const uint8_t Args[MAGE_NUM_ACTION_ARGS]{ 0 };
+};
+
+class MageScript
+{
+public:
+   const char name[32];
+   const uint32_t actionCount;
+
+   const ScriptAction* GetAction(uint16_t actionOffset) const
+   {
+      auto actionPointer = (const char*)&actionCount + sizeof(uint32_t);
+      return (const ScriptAction*)(actionPointer + actionOffset * sizeof(ScriptAction));
+   }
+};
+
 //this is a structure to hold information about the currently executing scripts so they can resume
 struct MageScriptState
 {

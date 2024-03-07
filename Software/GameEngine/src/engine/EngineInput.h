@@ -9,6 +9,22 @@
 #include <utility>
 #include "shim_timer.h"
 
+
+struct GameClock
+{
+   using rep = uint32_t;
+   using period = std::milli;
+   using duration = std::chrono::duration<rep, period>;
+   using time_point = std::chrono::time_point<GameClock>;
+
+   static time_point now() noexcept
+   {
+      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+      auto epochTime = now_ms.time_since_epoch().count();
+      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
+   }
+};
+
 struct ButtonState
 {
    ButtonState(const uint32_t& state) : buttons(state) {}
@@ -35,6 +51,7 @@ struct InputState
 
    const ButtonState Buttons;
    const ButtonState ActivatedButtons;
+   const GameClock::duration deltaTime;
 
    inline bool PlayerIsActioning() const
    {
@@ -44,6 +61,11 @@ struct InputState
    inline bool Hack() const
    {
       return Buttons.IsPressed(KeyPress::Rjoy_up);
+   }
+
+   inline bool Use() const
+   {
+      return ActivatedButtons.IsPressed(KeyPress::Rjoy_right);
    }
 
    inline bool Left() const
@@ -83,27 +105,12 @@ struct InputState
    }
 };
 
-struct GameClock
-{
-   using rep = uint32_t;
-   using period = std::milli;
-   using duration = std::chrono::duration<rep, period>;
-   using time_point = std::chrono::time_point<GameClock>;
-
-   static time_point now() noexcept
-   {
-      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
-      auto epochTime = now_ms.time_since_epoch().count();
-      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
-   }
-};
-
 class EngineInput
 {
 public:
-   const InputState GetDeltaState() const
+   const InputState GetDeltaState(const GameClock::duration deltaTime) const
    {
-      return InputState{ buttons, activated };
+      return InputState{ buttons, activated, deltaTime };
    }
 
    const ButtonState GetButtonState() const

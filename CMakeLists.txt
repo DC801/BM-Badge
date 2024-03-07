@@ -82,7 +82,6 @@ set(SOURCEFILES
     Software/GameEngine/src/engine/EngineSerial.h
     Software/GameEngine/src/engine/FrameBuffer.cpp
     Software/GameEngine/src/engine/FrameBuffer.h
-    Software/GameEngine/src/engine/Header.h
     Software/GameEngine/src/engine/StringLoader.cpp
     Software/GameEngine/src/engine/StringLoader.h
     Software/GameEngine/src/engine/utility.cpp

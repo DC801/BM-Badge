@@ -79,12 +79,9 @@ static inline const auto MinTimeBetweenUIInput = std::chrono::milliseconds(1000)
 static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
 #endif
 
-
 //these are used for setting player speed
 //speed is in x/y pixels per update tick
-static inline const auto RunSpeed = 2;
-static inline const auto WalkSpeed = 1;
-
-
+static inline const auto RunSpeed = uint16_t{ 2 };
+static inline const auto WalkSpeed = uint16_t{ 1 };
 
 #endif //_MAGE_DEFINES_H

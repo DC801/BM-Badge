@@ -93,13 +93,12 @@ public:
 	void updateHexStateVariables();
 
 	//this applies inputs to the hex editor state.
-	void applyInput(const DeltaState& delta);
-	void applyMemRecallInputs(const DeltaState& delta);
+	void applyInput(const InputState& delta);
+	void applyMemRecallInputs(const InputState& delta);
 
-	//this writes all the hex editor data to the screen.
 	void Draw();
 
-	//this applies input to the current byte value based on the state of currentOp.
+	//apply input to the current byte value based on the state of currentOp
 	void runHex(uint8_t value);
 	void openToEntity(uint8_t entityIndex);
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }

@@ -135,7 +135,7 @@ void MapControl::DrawLayer(uint8_t layer) const
    // *|             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯              |*
    // ***********************************************************
    //                screen height + map height
- 
+
 
    // identify start and stop tiles to draw
    auto startTileX = std::max(0, (screenManager->camera->positionX - DrawWidth) / currentMap->tileWidth);
@@ -143,7 +143,7 @@ void MapControl::DrawLayer(uint8_t layer) const
 
    auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
    auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
-   
+
    for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
    {
       for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
@@ -181,8 +181,9 @@ void MapControl::Draw() const
    }
 }
 
-void MapControl::UpdateEntities()
+void MapControl::UpdateEntities(const InputState& delta)
 {
+   auto playerData = getPlayerEntityData();
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
       auto& entity = Get<MageEntityData>(i);
@@ -198,10 +199,10 @@ std::optional<uint16_t> MapControl::UpdatePlayer(const InputState& delta)
    auto playerData = getPlayerEntityData();
    if (!playerData) { return std::nullopt; }
 
+   auto interactingEntity = std::optional<uint16_t>{ std::nullopt };
    auto playerRenderableData = getPlayerRenderableData();
 
-   auto interactBox = playerRenderableData->hitBox;
-   auto& oldPosition = playerRenderableData->origin;
+   const auto& oldPosition = playerRenderableData->origin;
    auto& newPosition = playerData->position;
    // moving when there's at least one button not being counteracted
    const auto& topLeft = oldPosition;
@@ -255,63 +256,51 @@ std::optional<uint16_t> MapControl::UpdatePlayer(const InputState& delta)
       auto geometry = tileset->GetGeometryForTile(tileGeometryId);
       if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
+         // TODO: bring back the intersection-offset algorithm
          newPosition = oldPosition;
          break;
       }
-      // check for map change collision:
-      
-      // TODO: check for interactions (hack/use)
-
-   // only interact on Rjoy_up (hacking) or Rjoy_right (interacting)
-      if (delta.Hack() || delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
-      {
-
-         const uint8_t interactLength = 32;
-         auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
-         if (direction == NORTH)
-         {
-            interactBox.origin.y -= interactLength;
-            interactBox.h = interactLength;
-         }
-         if (direction == EAST)
-         {
-            interactBox.origin.x += interactBox.w;
-            interactBox.w = interactLength;
-         }
-         if (direction == SOUTH)
-         {
-            interactBox.origin.y += interactBox.h;
-            interactBox.h = interactLength;
-         }
-         if (direction == WEST)
-         {
-            interactBox.origin.x -= interactLength;
-            interactBox.w = interactLength;
-         }
-
-         //GetEntitiesNear(interactBox.origin);
-         //
-         for (auto i = 0; i < currentMap->entityCount; i++)
-         {
-            auto& renderableData = Get<RenderableData>(i);
-            renderableData.isInteracting = false;
-
-            if (i != currentMap->playerEntityIndex)
-            {
-               bool colliding = renderableData.hitBox
-                  .Overlaps(interactBox);
-
-               if (colliding)
-               {
-                  playerRenderableData->isInteracting = true;
-                  renderableData.isInteracting = true;
-                  return i;
-               }
-            }
-         }
-      }
-
    }
 
-   return std::nullopt;
+   if (delta.Hack() || delta.Use())
+   {
+      const uint8_t interactLength = 32;
+      auto interactBox = playerRenderableData->hitBox;
+      auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
+      if (direction == NORTH)
+      {
+         interactBox.origin.y -= interactLength;
+         interactBox.h = interactLength;
+      }
+      if (direction == EAST)
+      {
+         interactBox.origin.x += interactBox.w;
+         interactBox.w = interactLength;
+      }
+      if (direction == SOUTH)
+      {
+         interactBox.origin.y += interactBox.h;
+         interactBox.h = interactLength;
+      }
+      if (direction == WEST)
+      {
+         interactBox.origin.x -= interactLength;
+         interactBox.w = interactLength;
+      }
+
+      for (auto i = 0; i < currentMap->entityCount; i++)
+      {
+         if (i == currentMap->playerEntityIndex)
+         {
+            continue;
+         }
+
+         auto entityPosition = Get<MageEntityData>(i).position;
+
+         if (interactBox.Contains(entityPosition))
+         {
+            return i;
+         }
+      }
+   }
 }

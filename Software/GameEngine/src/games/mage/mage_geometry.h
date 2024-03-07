@@ -217,12 +217,18 @@ struct RectT
    T w{ 0 };
    T h{ 0 };
 
-   constexpr bool Overlaps(RectT<T>& other) const
+   constexpr bool Overlaps(const RectT<T>& other) const
    {
       return origin.x <= other.origin.x + other.w
          && origin.x + w >= other.origin.x
          && origin.y <= other.origin.y + other.h
          && origin.y + h >= other.origin.y;
+   }
+
+   constexpr bool Contains(const Vector2T<T>& point) const
+   {
+      return origin.x <= point.x && origin.x + w >= point.x
+         && origin.y <= point.y && origin.y + h >= point.y;
    }
 };
 

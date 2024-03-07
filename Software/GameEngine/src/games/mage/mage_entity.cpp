@@ -3,6 +3,8 @@
 
 void RenderableData::UpdateFrom(const MageEntityData& entity)
 {
+   currentFrameMs += IntegrationStepSize.count();
+
    if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
    {
       updateAsTileset(entity);

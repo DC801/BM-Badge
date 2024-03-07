@@ -103,11 +103,11 @@ public:
       : screenManager(screenManager), mapLoadId(initialMapId)
    {}
 
-   inline uint8_t* GetEntityDataPointer() { return reinterpret_cast<uint8_t*>(entityData.data()); }
+   inline uint8_t* GetEntityDataPointer() { return reinterpret_cast<uint8_t*>(entityDataArray.data()); }
    void Load();
    void DrawLayer(uint8_t layer) const;
    void DrawEntities() const;
-   void UpdateEntities();
+   void UpdateEntities(const InputState& delta);
 
    // Return what entity is being interacted with or std::nullopt if there's no interaction
    std::optional<uint16_t> UpdatePlayer(const InputState& delta);
@@ -246,7 +246,7 @@ public:
 
    std::span<MageEntityData> GetEntities()
    {
-      return entityData;
+      return entityDataArray;
    }
 
    void SetOnTick(uint16_t scriptId)
@@ -276,13 +276,13 @@ private:
 
    std::shared_ptr<ScreenManager> screenManager;
 
-   std::optional<MapData> currentMap;
-   EntityDataArray entityData{};
-   RenderableDataArray renderableData{};
-   OnTickArray onTickScripts;
-   OnInteractArray onInteractScripts{};
+   std::optional<const MapData> currentMap;
+   EntityDataArray entityDataArray{};
+   RenderableDataArray renderableDataArray{};
+   OnTickArray onTickScriptsArray;
+   OnInteractArray onInteractScriptsArray{};
 
-   EntityData entities{ entityData, renderableData, onTickScripts, onInteractScripts };
+   EntityData entities{ entityDataArray, renderableDataArray, onTickScriptsArray, onInteractScriptsArray };
 
    std::vector<const MageScript*> scripts{};
    bool playerIsMoving{ false };

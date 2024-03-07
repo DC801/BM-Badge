@@ -404,7 +404,12 @@ private:
 
    void mutate(MageMutateOperation operation, uint16_t& destination, uint16_t value);
    bool compare(MageCheckComparison comparison, uint16_t a, uint16_t b);
-   
+
+   //typedef for the array of function pointers to script action functions:
+   typedef std::optional<uint16_t>(MageScriptActions::* ActionFunctionPointer)(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+
+   static const std::array<const ActionFunctionPointer, NUM_SCRIPT_ACTIONS> actionFunctions;
+
 private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<MageDialogControl> dialogControl;
@@ -414,29 +419,7 @@ private:
    std::shared_ptr<MageHexEditor> hexEditor;
    std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<StringLoader> stringLoader;
-   //the actual array of action functions:
 
-};
-
-struct ScriptAction
-{
-   uint8_t TypeId{ 0 };
-   uint8_t Args[MAGE_NUM_ACTION_ARGS]{ 0 };
-};
-
-class MageScript
-{
-public:
-   const uint32_t& GetActionCount() const { return actionCount; }
-   const ScriptAction* GetAction(uint16_t actionOffset) const
-   {
-      auto actionPointer = (const char*)&actionCount + sizeof(uint32_t);
-      return (const ScriptAction*)(actionPointer + actionOffset * sizeof(ScriptAction));
-   }
-
-private:
-   char name[32];
-   uint32_t actionCount;
 };
 
 #endif //_MAGE_SCRIPT_ACTIONS_H

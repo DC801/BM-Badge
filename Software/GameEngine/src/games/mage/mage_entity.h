@@ -99,7 +99,6 @@ struct RenderableData
    uint8_t currentAnimation{ 0 };
    uint8_t currentFrameIndex{ 0 };
    uint8_t renderFlags{ 0 };
-   bool isInteracting{ 0 };
 
    constexpr EntityPoint center() const
    {

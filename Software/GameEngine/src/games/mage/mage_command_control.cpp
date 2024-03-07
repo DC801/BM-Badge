@@ -236,6 +236,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
                 if (responseLabel == input)
                 {
                     commandResponseBuffer += "Valid response: " + input + "\n";
+                    
                     scriptControl->jumpScriptId = openSerialDialog->Responses[i].scriptIndex;
                     isInputTrapped = false;
                     validResponseFound = true;

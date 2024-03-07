@@ -49,7 +49,7 @@ void MageHexEditor::updateHexStateVariables()
 {
    bytesPerPage = dialogState ? 64 : 192;
    hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
-   memTotal = std::tuple_size<MapControl::EntityData>{};
+   memTotal = std::tuple_size<MapControl::EntityDataArray>{};
    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
@@ -188,8 +188,6 @@ void MageHexEditor::applyInput(const InputState& delta)
          {
             //paste
             memcpy(currentByte, clipboard, clipboardLength);
-            mapControl->UpdateEntities();
-            memcpy(currentByte, clipboard, clipboardLength);
          }
       }
    }
@@ -197,8 +195,6 @@ void MageHexEditor::applyInput(const InputState& delta)
    {
       hexTickDelay = HEXED_TICK_DELAY;
    }
-
-   // only update variables when we might have changed something
    updateHexStateVariables();
 }
 

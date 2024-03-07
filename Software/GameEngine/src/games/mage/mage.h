@@ -41,7 +41,7 @@ public:
       dialogControl = std::make_unique<MageDialogControl>(screenManager, stringLoader, mapControl);
 
       auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
-      scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::move(scriptActions));
+      scriptControl = std::make_shared<MageScriptControl>(mapControl, std::move(scriptActions));
       commandControl = std::make_shared<MageCommandControl>(mapControl, screenManager, scriptControl, stringLoader);
    }
    //this will load a map to be the current map.
@@ -63,7 +63,7 @@ private:
 
    void updateHexLights() const;
 
-   void gameLoopIteration();
+   void gameLoopIteration(const InputState& input);
 
    uint8_t currentSaveIndex{ 0 };
 
