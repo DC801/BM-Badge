@@ -30,6 +30,7 @@ const! (
 	$pose_top_left = 9
 	$pose_left = 10
 	$pose_bottom_left = 11
+	$rocking = 12
 )
 
 simon-game-launcher {
@@ -563,7 +564,6 @@ simon-game-win {
 	play entity Simon animation 2 once
 	set entity Simon current_animation to 4;
 	show dialog { Simon emote 3 "GREAT JOB! Way to go, kid!" }
-	// TODO: replay the moves with both of them in synch as a finale (but just the first time you win)
 	set entity Lights on_tick to null_script;
 	turn lights control off;
 	turn player control on;
@@ -665,7 +665,8 @@ player-win {
 	turn entity "%PLAYER%" west;
 	wait $time_q;
 	turn entity "%PLAYER%" south;
-	play entity "%PLAYER%" animation 2 once;
+	wait $time_q;
+	set entity "%PLAYER%" current_animation to $rocking;
 	goto null_script;
 }
 player-lose {
