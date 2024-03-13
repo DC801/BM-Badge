@@ -431,12 +431,68 @@
         {
          "animation":[
                 {
-                 "duration":25,
+                 "duration":100,
                  "tileid":51
                 }, 
                 {
-                 "duration":25,
+                 "duration":200,
+                 "tileid":52
+                }, 
+                {
+                 "duration":100,
+                 "tileid":55
+                }, 
+                {
+                 "duration":200,
+                 "tileid":48
+                }, 
+                {
+                 "duration":100,
                  "tileid":51
+                }, 
+                {
+                 "duration":200,
+                 "tileid":54
+                }, 
+                {
+                 "duration":100,
+                 "tileid":55
+                }, 
+                {
+                 "duration":200,
+                 "tileid":50
+                }, 
+                {
+                 "duration":100,
+                 "tileid":51
+                }, 
+                {
+                 "duration":200,
+                 "tileid":52
+                }, 
+                {
+                 "duration":100,
+                 "tileid":55
+                }, 
+                {
+                 "duration":200,
+                 "tileid":48
+                }, 
+                {
+                 "duration":100,
+                 "tileid":51
+                }, 
+                {
+                 "duration":200,
+                 "tileid":53
+                }, 
+                {
+                 "duration":100,
+                 "tileid":55
+                }, 
+                {
+                 "duration":200,
+                 "tileid":49
                 }],
          "id":51
         }, 
@@ -475,18 +531,6 @@
                  "tileid":54
                 }],
          "id":54
-        }, 
-        {
-         "animation":[
-                {
-                 "duration":25,
-                 "tileid":55
-                }, 
-                {
-                 "duration":25,
-                 "tileid":55
-                }],
-         "id":55
         }, 
         {
          "animation":[

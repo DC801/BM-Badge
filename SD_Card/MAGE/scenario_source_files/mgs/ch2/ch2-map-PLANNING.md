@@ -71,7 +71,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [~] SET: the "human" half of the foyer, logistically speaking
 		- [x] Concierge desk with guestbook
 		- [ ] Wall of rubble at S separating this room from 11
-	- [ ] PUZZLE NEEDED: use the serial terminal to fix the damaged digital entertainment system (which plays muzak in the foyer)
+	- [x] PUZZLE NEEDED: use the serial terminal to fix the damaged digital entertainment system (which plays muzak in the foyer)
 13. `Throne room`
 	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: goldfish (cpu part 1) (see below)
@@ -134,7 +134,7 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: keyboard (keytar from the band)
 	- [x] Entity: Simon - a band member from 1023 MB; challenges player to Simon says, and gives the keytar in the event of a loss
-		- [~] Still needs keytar position sprites for the mage
+		- [x] Still needs keytar position sprites for the mage
 	- [x] Entity: Theodore - a band member from 1023 MB
 	- [x] Entity: Alvin - a band member from 1023 MB
 	- [~] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd

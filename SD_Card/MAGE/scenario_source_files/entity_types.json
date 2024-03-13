@@ -217,6 +217,24 @@
 					"tileid": 49,
 					"flip_x": false
 				}
+			],
+			"rocking": [
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				}
 			]
 		},
 		"type": "mage",
