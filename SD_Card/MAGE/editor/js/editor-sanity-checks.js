@@ -30,7 +30,9 @@ misc
 ---
 documentation for API (e.g., return null or a string error message)
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
-ask about populating sanityChecks onto scenarioData
+ask about populating sanityChecks onto scenarioData even possibly causing any issues
+- game not running (says engine v11, dat v10, could just be not syncing my fork)
+- drag and drop not working on my linux setup (minor)
 presentation design
 - original design: a report like the python output that would be useful to download
 	- fixes separate from problems
