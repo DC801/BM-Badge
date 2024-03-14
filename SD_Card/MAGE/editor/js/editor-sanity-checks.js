@@ -1,6 +1,26 @@
 /*
 TODO
 
+refactors
+---
+get things out of encoding.js
+get checks out of sanityChecks
+
+Vue cleanup
+---
+congrats message if there are no problems at all
+one accordion component
+slots / pass children for innermost's content
+- change other uses of accordion to my accordion?
+
+blacklisting
+---
+maps.json strategy? would be map-level only
+
+CLI print-out
+---
+--verbose arg?
+
 definitions checking
 ---
 implement for JS
@@ -8,6 +28,7 @@ check for script definitions in JSON files as well as MGS files (there are a cou
 
 misc
 ---
+documentation for API (e.g., return null or a string error message)
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 ask about populating sanityChecks onto scenarioData
 presentation design
@@ -17,9 +38,7 @@ presentation design
 	- fixes presented next to problems
 problem counts for GUI and CLI
 - final print-out info in GUI?
-CLI print-out
 txt download next to copy button? (ask)
-separate js files for components instead of one?
 how will look work for multiple entities of the same or similar names (eg bread, torch)
 gameengine prettier mage_command_control.cpp:185
 - commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
@@ -52,6 +71,11 @@ Vue.component('editor-sanity-check-problem', {
 		problem: {
 			type: Object,
 			required: true
+		},
+		fix: {
+			type: String,
+			required: false,
+			default: '{\n    json: {\n        morejson: {\n            \'TODO generated fixes\'\n        }\n    }\n}'
 		}
 	},
 	data: function () {
@@ -64,20 +88,17 @@ Vue.component('editor-sanity-check-problem', {
 			this.collapsed = !this.collapsed;
 		},
 		copyFixes: function () {
-			this.$refs.copyFixesText.select();
+			this.$refs.copyFixesTextArea.select();
 			document.execCommand('copy');
-		},
-		downloadFixes: function() {
-			// TODO
 		}
 	},
 	template: /*html*/`
 <div class="card mb-1 text-white">
 	<div class="card-header bg-primary">
-		{{problem.name || "NO NAME"}} (id {{problem.id}})
+		{{ problem.name || "NO NAME" }} (id {{ problem.id }})
 		<span
 			class="position-absolute"
-			style="top:6px; right:6px;"
+			style="top: 6px; right: 6px;"
 		>
 			<button
 				type="button"
@@ -87,22 +108,46 @@ Vue.component('editor-sanity-check-problem', {
 		</span>
 	</div>
 	<div
-		class="card-body p-1"
+		class="card-body p-3"
 		v-if="!collapsed"
 	>
-		<p>{{problem.name || "NO NAME"}} (id {{problem.id}}) needs {{problem.problemMessage}}</p>
-		<p>You can click the button to the right to copy these suggested fixes.</p>
-		<textarea ref="copyFixesText">
-			TODO generated fixes
-		</textarea>
-		<button
-			type="button"
-			class="close"
-			title="Copy"
-			@click="copyFixes"
+		<p>{{ problem.problemMessage }}</p>
+		
+	
+	
+
+
+		<div
+			class="alert alert-info"
+			role="alert"
 		>
-			<span aria-hidden="true">📋</span>
-		</button>
+			<span>You can click the "Copy" button to the right to put the current TODO dynamic your clipboard, then paste it into your "<strong>TODO dynamic</strong>" file to save.</span>
+		</div>
+
+		<p>You can click the button to the right to copy these suggested fixes.</p>
+		<div class="row align-items-start flex-nowrap">
+			<pre class="border border-primary rounded p-2 w-100">{{ fix }}</pre>
+			<button
+				type="button"
+				class="ml-1"
+				style="width: 2rem;"
+				title="Copy"
+				@click="copyFixes"
+			>
+				<span aria-hidden="true">📋</span>
+			</button>
+		</div>
+
+		<textarea
+			cols="80"
+			rows="16"
+			class="position-absolute"
+			style="
+				font-size: 0;
+				opacity: 0;
+			"
+			ref="copyFixesTextArea"
+		>{{ fix }}</textarea>
 	</div>
 </div>
 `});
@@ -143,10 +188,10 @@ Vue.component('editor-sanity-check-map', {
 	template: /*html*/`
 <div class="card mb-1 text-white">
 	<div class="card-header bg-primary">
-		Problems in map '{{mapName}}' ({{problems.length}} entities)
+		Problems in map '{{ mapName }}' ({{ problems.length }} entities)
 		<span
 			class="position-absolute"
-			style="top:6px; right:6px;"
+			style="top: 6px; right: 6px;"
 		>
 			<button
 				type="button"
@@ -156,7 +201,7 @@ Vue.component('editor-sanity-check-map', {
 		</span>
 	</div>
 	<div
-		class="card-body"
+		class="card-body p-3"
 		v-if="!collapsed"
 	>
 		<editor-sanity-check-problem
@@ -200,10 +245,10 @@ Vue.component('editor-sanity-check', {
 	template: /*html*/`
 <div class="card mb-1 text-white">
 	<div class="card-header bg-primary">
-		Problems with '{{checkName}}' ({{Object.keys(maps).length}} maps)
+		Problems with '{{ checkName }}' ({{ Object.keys(maps).length }} maps)
 		<span
 			class="position-absolute"
-			style="top:6px; right:6px;"
+			style="top: 6px; right: 6px;"
 		>
 			<button
 				type="button"
@@ -213,7 +258,7 @@ Vue.component('editor-sanity-check', {
 		</span>
 	</div>
 	<div
-		class="card-body p-1"
+		class="card-body p-3"
 		v-if="!collapsed"
 	>
 		<editor-sanity-check-map
@@ -252,29 +297,35 @@ Vue.component('editor-sanity-checks', {
 		}
 	},
 	template: /*html*/`
-<div class="card mb-1 text-white">
+<div class="card mb-3 text-white">
 	<div class="card-header">
 		Additional reports about the build
 		<span
 			class="position-absolute"
-			style="top:6px; right:6px;"
+			style="top: 6px; right: 6px;"
 		>
 			<button
 				type="button"
-				class="btn btn-outline-info"
+				class="btn btn-outline-light"
 				@click="collapse"
 			>_</button>
 		</span>
 	</div>
 	<div
-		class="card-body"
+		class="card-body p-3"
 		v-if="!collapsed"
 	>
-		<editor-sanity-check
-			v-for="(maps, checkName) in problems"
-			:key="checkName"
-			:check-name="checkName"
-			:maps="maps"
-		></editor-sanity-check>
+		<template v-if="Object.keys(problems).length">
+			<editor-sanity-check
+				v-for="(maps, checkName) in problems"
+				:key="checkName"
+				:check-name="checkName"
+				:maps="maps"
+			></editor-sanity-check>
+		</template>
+		<div v-else>
+			<img src="./dependencies/MageDance.gif"/>
+			<span class="mx-1 align-bottom">None. How fastidious of you.</span>
+		</div>
 	</div>
 </div>`});

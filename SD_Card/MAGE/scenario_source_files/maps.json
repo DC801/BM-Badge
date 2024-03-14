@@ -1,5 +1,8 @@
 {
-	"main_menu": "maps/map-main_menu.json",
+	"main_menu": {
+		"path": "maps/map-main_menu.json",
+		"disable_warn-on_look": true
+	},
 	"ch2-castle-outside": {
 		"path": "maps/map-ch2-castle-outside.json",
 		"on_load": "on_load-ch2-castle-outside",
