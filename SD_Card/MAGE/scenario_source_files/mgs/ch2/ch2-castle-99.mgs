@@ -52,8 +52,19 @@ on_load-ch2-castle-99 {
 
 	// check if you do the cutscene or not
 	if (flag ch2-cutseen-castle99 is false) {
+		if (debug mode is on) {
+			register skip -> ch2-skip-99
+			debug!("<c>SKIP</>: skip this cutscene")
+		}
 		goto ch2-cutscene-castle99; // NOTE: branching means `goto`! Deadend things here!
 	}
+}
+
+ch2-skip-99 {
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	set flag ch2-cutseen-castle99 to true;
+	load map ch2-castle-1;
 }
 
 ch2-lambda-shving_on {

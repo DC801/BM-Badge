@@ -466,14 +466,118 @@ interact-ch2-wizard {
 	}
 }
 
+ch2-spin-wizard {
+	turn player control off;
+	rotate entity Wizard 1;
+	wait 150ms;
+	rotate entity Wizard 1;
+	wait 150ms;
+	rotate entity Wizard 1;
+	wait 150ms;
+	rotate entity Wizard 1;
+	wait 150ms;
+	turn player control on;
+}
+
 ch2-install-wizard {
 	show dialog {
 		Wizard "Oh! Oh! You have software for the new computer?"
 		"Can I help install it? Please?"
 		PLAYER "I wouldn't have it any other way."
-		Wizard "Awesome!"
-		"(TODO: cutscene goes here)"
 	}
+	set entity Wizard on_tick to null_script;
+	copy ch2-spin-wizard;
+	show dialog {
+		Wizard "Awesome!"
+		"First off, what's it on? A thumb drive? Floppy?"
+		PLAYER "Well, it's like a flat disk thing, all rainbowy on one side...."
+		Wizard "A CD or DVD or something? Cool, cool."
+	}
+	turn entity Wizard toward entity mainframe;
+	show dialog {
+		Wizard "Press the button on that slot there and the disc tray will open. Then set the disc on the tray, rainbow side down, and press the button again to close it."
+	}
+	if (entity "%PLAYER%" is inside geometry mainframe-watchbox) {
+		// :3
+	} else if (entity "%PLAYER%" is inside geometry mainframe-watchdonut) {
+		walk entity "%PLAYER%" to geometry mainframe-look-spot over 300ms;
+	} else {
+		walk entity "%PLAYER%" to geometry mainframe-look-spot over 500ms;
+	}
+	turn player control off;
+	turn entity "%PLAYER%" north;
+	wait 900ms;
+	turn entity "%PLAYER%" toward entity Wizard;
+	turn player control on;
+	show dialog {
+		PLAYER "Okay, now what?"
+		Wizard "Hit the power button. If everything is plugged in right (TODO!!! Some kind of BIOS something)"
+		Wizard "(TODO: cool installation config cutscene goes here)"
+	}
+	copy ch2-spin-wizard;
+	show dialog {
+		Wizard "And... hit boot up!"
+	}
+	turn entity "%PLAYER%" toward entity mainframe;
+	turn player control off;
+	show dialog {
+		PLAYER "All right. Here we go...."
+	}
+	copy ch2-bootup;
+	wait 200ms;
+	show dialog {
+		Wizard "Hey hey! There you go!"
+	}
+	set entity Wizard on_tick to face-player;
+	set flag ch2-ring-zero-enabled-in-castle to true;
+	turn player control on;
+	// TODO: more source code
+}
+
+const!(
+	$dot = 300ms
+)
+ch2-bootup {
+	show serial dialog spacer;
+	show serial dialog { "Starting" }
+	wait 1050ms;
+	show serial dialog { "GibsonOS version 3.7.1-TLS" }
+	wait 700ms;
+	show serial dialog { "Starting intercom manager" }
+	wait 100ms;
+	show serial dialog { "   Status: <g>OK</>" }
+	show serial dialog { "Starting door manager" }
+	wait 210ms;
+	show serial dialog { "   Status: <g>OK</>" }
+	show serial dialog { "Fetching latest from underground data center" }
+	wait 3000ms;
+	show serial dialog { "   Status: <r>ERROR</>" }
+	show serial dialog { "   Connection refused" }
+	show serial dialog { "Launching power plant controller" }
+	wait 100ms;
+	show serial dialog { "   Status: <g>OK</>" }
+	show serial dialog { "Launching HVAC controller" }
+	wait 70ms;
+	show serial dialog { "   Status: <g>OK</>" }
+	show serial dialog { "Establishing Ring Zero bridge" }
+	wait 700ms;
+	show serial dialog { "   Status: <g>OK</>" }
+	show serial dialog { "Installing additional support packages..." }
+	for (mutate i = 1; variable i is <= 9; mutate i + 1) {
+		wait $dot;
+		show serial dialog { "." }
+	}
+	show serial dialog { "45 Packages installed with 2 warnings" }
+	show serial dialog { "   2 packages are deprecated" }
+	show serial dialog { "   15 packages are looking for funding" }
+	show serial dialog { "No GPU devices found" }
+	show serial dialog { "Reticulating splines..." }
+	for (mutate i = 1; variable i is <= 6; mutate i + 1) {
+		wait $dot;
+		show serial dialog { "." }
+	}
+	show serial dialog { "<g>Boot OK</>" }
+	show serial dialog { "Launching desktop environment..." }
 }
 
 interact-ch2-wizard-mainframedone {
