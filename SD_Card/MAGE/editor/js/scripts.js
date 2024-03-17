@@ -414,7 +414,6 @@ var actionFieldsMap = {
 		{propertyName: 'alias', size: 2},
 	],
 	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: [
-		{propertyName: 'command', size: 2},
 		{propertyName: 'alias', size: 2},
 	],
 	SET_SERIAL_DIALOG_COMMAND_VISIBILITY: [

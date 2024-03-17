@@ -2682,17 +2682,16 @@ void action_register_serial_dialog_command_alias(uint8_t * args, MageScriptState
 void action_unregister_serial_dialog_command_alias(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
-		uint16_t commandStringId;
 		uint16_t aliasStringId;
+		uint8_t paddingC;
+		uint8_t paddingD;
 		uint8_t paddingE;
 		uint8_t paddingF;
 		uint8_t paddingG;
 	} ActionUnregisterSerialDialogCommandAlias;
 	auto *argStruct = (ActionUnregisterSerialDialogCommandAlias*)args;
-	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
 	ROM_ENDIAN_U2_BUFFER(&argStruct->aliasStringId, 1);
 	MageCommand->unregisterCommandAlias(
-		argStruct->commandStringId,
 		argStruct->aliasStringId
 	);
 }
