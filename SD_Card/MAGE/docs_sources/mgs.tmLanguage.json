@@ -54,14 +54,14 @@
 			"begin": "(settings)(\\s+for)?\\s+(serial)(\\s+dialog)?\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"3": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"4": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"5": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"3": { "name": "variable.parameter.mgs" },
+				"4": { "name": "variable.parameter.mgs" },
+				"5": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -73,13 +73,13 @@
 			"begin": "(settings)(\\s+for)?\\s+(dialog)\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"3": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"4": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"3": { "name": "variable.parameter.mgs" },
+				"4": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -93,13 +93,13 @@
 		"dialog_settings_label_parameters_node": {
 			"begin": "\\b(label)\\s+([-A-Za-z0-9_.#$]+)\\s*({)",
 			"beginCaptures": {
-				"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+				"1": { "name": "variable.parameter.mgs" },
 				"2": { "name": "support.type.mgs" },
-				"3": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"3": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -109,13 +109,13 @@
 		"dialog_settings_entity_parameters_node": {
 			"begin": "\\b(entity)\\s+(([-A-Za-z0-9_.#$]+)|(['\"])[^`]*?\\4)\\s*({)",
 			"beginCaptures": {
-				"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+				"1": { "name": "variable.parameter.mgs" },
 				"2": { "name": "support.type.mgs" },
-				"5": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"5": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -125,14 +125,14 @@
 		"dialog_settings_entity_parameters_node_special": {
 			"begin": "\\b(entity)\\s+(([-A-Za-z0-9_.#$]+)|(['\"])(%(PLAYER|SELF)%)\\4)\\s*({)",
 			"beginCaptures": {
-				"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+				"1": { "name": "variable.parameter.mgs" },
 				"2": { "name": "support.type.mgs" },
 				"5": { "name": "variable.language.mgs" },
-				"7": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"7": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -143,11 +143,11 @@
 			"begin": "\\b(default)\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"2": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -172,7 +172,7 @@
 		},
 		"generic_string_naive": {
 			"match": "[-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\1",
-			"name": "string.variable.mgs"
+			"name": "string.quoted"
 		},
 		"generic_bool": {
 			"match": "\\b(true|false|on|off|glitched|unglitched)\\b",
@@ -182,14 +182,14 @@
 			"begin": "\\b(include!)\\s*(\\()",
 			"beginCaptures": {
 				"1": { "name": "entity.name.function.mgs" },
-				"2": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "\\)",
-			"name": "mega.block.mgs punctuation.section.block.end.mgs",
+			"name": "punctuation.section.block.end.mgs",
 			"patterns": [
 				{
 					"match": "\"[-_a-zA-Z0-9 \\.]+\\.mgs\"",
-					"name": "string.variable.mgs"
+					"name": "string.quoted"
 				}
 			]
 		},
@@ -197,10 +197,10 @@
 			"begin": "\\b(const!)\\s*(\\()",
 			"beginCaptures": {
 				"1": { "name": "entity.name.function.mgs" },
-				"2": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "\\)",
-			"name": "mega.block.mgs punctuation.section.block.end.mgs",
+			"name": "punctuation.section.block.end.mgs",
 			"patterns": [
 				{ "include": "#comment_node" },
 				{
@@ -217,15 +217,15 @@
 			"begin": "\\b(debug!)\\s*(\\()",
 			"beginCaptures": {
 				"1": { "name": "entity.name.function.mgs" },
-				"2": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "\\)",
-			"name": "mega.block.mgs punctuation.section.block.end.mgs",
+			"name": "punctuation.section.block.end.mgs",
 			"patterns": [
 				{ "include": "#serial_message" },
 				{
 					"match": "(\\b[-A-Za-z0-9_.#$]+\\b)",
-					"name": "variable.parameter.mgs support.variable.mgs"
+					"name": "variable.parameter.mgs"
 				}
 			]
 		},
@@ -234,24 +234,24 @@
 				{
 					"match": "\\b(entity)\\s+(['\"])(%PLAYER%|%SELF%)(\\2)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" },
 						"3": { "name": "variable.language.mgs" },
-						"4": { "name": "string.variable.mgs" }
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "\\b(entity)\\s+(\\$[-A-Za-z0-9_.#$]+)\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "variable.other.constant.mgs" }
 					}
 				},
 				{
 					"match": "\\b(entity)\\s+(([-A-Za-z0-9_.#$]+)|(['\"])([^`]*?)\\4)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" }
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" }
 					}
 				}
 			]
@@ -261,24 +261,24 @@
 				{
 					"match": "\\b(geometry)\\s+(['\"])(%ENTITY_PATH%)(\\2)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" },
 						"3": { "name": "variable.language.mgs" },
-						"4": { "name": "string.variable.mgs" }
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "\\b(geometry)\\s+(\\$[-A-Za-z0-9_.#$]+)\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "variable.other.constant.mgs" }
 					}
 				},
 				{
 					"match": "\\b(geometry)\\s+(([-A-Za-z0-9_.#$]+)|(['\"])([^`]*?)\\4)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" }
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" }
 					}
 				}
 			]
@@ -288,24 +288,24 @@
 				{
 					"match": "\\b(name)\\s+(['\"])(%[^%]+%)(\\2)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" },
 						"3": { "name": "variable.language.mgs" },
-						"4": { "name": "string.variable.mgs" }
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "\\b(name)\\s+(\\$[-A-Za-z0-9_.#$]+)\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "variable.other.constant.mgs" }
 					}
 				},
 				{
 					"match": "\\b(name)\\s+(([-A-Za-z0-9_.#$]+)|(['\"])([^`]*?)\\4)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" }
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" }
 					}
 				}
 			]
@@ -315,15 +315,15 @@
 				{
 					"match": "\\b(portrait|border_tileset)\\s+(\\$[-A-Za-z0-9_.#$]+)\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "variable.other.constant.mgs" }
 					}
 				},
 				{
 					"match": "\\b(portrait|border_tileset)\\s+(([-A-Za-z0-9_.#$]+)|(['\"])([^`]*?)\\4)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "string.variable.mgs" }
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" }
 					}
 				}
 			]
@@ -347,13 +347,13 @@
 				},
 				{
 					"match": "\\b(entity|name|portrait|alignment|border_tileset|emote)\\b",
-					"name": "variable.parameter.mgs support.variable.mgs"
+					"name": "variable.parameter.mgs"
 				},
 				{
 					"match": "\\b(wrap)(\\s+messages)(\\s+to)?\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"2": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.assignment.mgs" }
 					}
 				}
@@ -364,7 +364,7 @@
 			"captures": {
 				"1": { "name": "keyword.control.mgs" },
 				"2": { "name": "keyword.control.mgs" },
-				"3": { "name": "variable.parameter.mgs support.variable.mgs" },
+				"3": { "name": "variable.parameter.mgs" },
 				"4": { "name": "entity.name.function.mgs" }
 			}
 		},
@@ -386,11 +386,11 @@
 		"dialog_message": {
 			"begin": "\"",
 			"beginCaptures": {
-				"0": { "name": "string.quoted.double.mgs string.variable.mgs" }
+				"0": { "name": "string.quoted.double.mgs" }
 			},
 			"end": "(?<!\\\\)(?:\\\\{2})*\\K\"",
 			"endCaptures": {
-				"0": { "name": "string.quoted.double.mgs string.variable.mgs" }
+				"0": { "name": "string.quoted.double.mgs" }
 			},
 			"name": "constant.character.escape.mgs",
 			"patterns": [
@@ -415,11 +415,11 @@
 		"serial_message": {
 			"begin": "\"",
 			"beginCaptures": {
-				"0": { "name": "string.quoted.double.mgs string.variable.mgs" }
+				"0": { "name": "string.quoted.double.mgs" }
 			},
 			"end": "(?<!\\\\)(?:\\\\{2})*\\K\"",
 			"endCaptures": {
-				"0": { "name": "string.quoted.double.mgs string.variable.mgs" }
+				"0": { "name": "string.quoted.double.mgs" }
 			},
 			"name": "constant.character.escape.mgs",
 			"patterns": [
@@ -454,11 +454,11 @@
 			"begin": "(_)\\s+(\")",
 			"beginCaptures": {
 				"1": { "name": "keyword.control.mgs" },
-				"2": { "name": "string.quoted.double.mgs string.variable.mgs" }
+				"2": { "name": "string.quoted.double.mgs" }
 			},
 			"end": "(?<!\\\\)(?:\\\\{2})*\\K\"",
 			"endCaptures": {
-				"0": { "name": "string.quoted.double.mgs string.variable.mgs" }
+				"0": { "name": "string.quoted.double.mgs" }
 			},
 			"name": "constant.character.escape.mgs",
 			"patterns": [
@@ -476,15 +476,15 @@
 			"begin": "\\b(set)(\\s+serial\\s+connect(\\s+message)?)(\\s+to)?(\\s+(([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\8)))?\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"2": { "name": "variable.parameter.mgs support.variable.mgs" },
+				"2": { "name": "variable.parameter.mgs" },
 				"4": { "name": "keyword.operator.assignment.mgs" },
-				"5": { "name": "string.quoted.double.mgs string.variable.mgs" },
-				"9": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"5": { "name": "string.quoted.double.mgs" },
+				"9": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -495,14 +495,14 @@
 			"begin": "\\b(show|concat)\\s+(serial\\s+dialog)(\\s+(([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6)))?\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"2": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"3": { "name": "string.quoted.double.mgs string.variable.mgs" },
-				"7": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "variable.parameter.mgs" },
+				"3": { "name": "string.quoted.double.mgs" },
+				"7": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -513,13 +513,13 @@
 			"begin": "\\b(serial\\s+dialog)(\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\4))\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"2": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"5": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "variable.parameter.mgs" },
+				"5": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -530,7 +530,7 @@
 				"match": "\\b(wrap)(\\s+messages)?(\\s+to)?\\s+((\\$[-A-Za-z0-9_.#$]+)|([0-9]+))\\b",
 				"captures": {
 					"1": { "name": "storage.type.mgs" },
-					"2": { "name": "variable.parameter.mgs support.variable.mgs" },
+					"2": { "name": "variable.parameter.mgs" },
 					"3": { "name": "keyword.operator.assignment.mgs" },
 					"5": { "name": "variable.other.constant.mgs" },
 					"6": { "name": "constant.numeric.integer.mgs" }
@@ -553,14 +553,14 @@
 			"begin": "\\b(show)\\s+(dialog)(\\s+(([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6)))?\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"2": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"3": { "name": "string.quoted.double.mgs string.variable.mgs" },
-				"7": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "variable.parameter.mgs" },
+				"3": { "name": "string.quoted.double.mgs" },
+				"7": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -571,13 +571,13 @@
 			"begin": "\\b(dialog)(\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\4))\\s*({)",
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
-				"2": { "name": "variable.parameter.mgs support.variable.mgs" },
-				"5": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"2": { "name": "variable.parameter.mgs" },
+				"5": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -602,7 +602,7 @@
 			"end": "(?=\")",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -620,7 +620,7 @@
 			"end": "(?=\")",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -637,7 +637,7 @@
 			"end": "(?=\")",
 			"endCaptures": {
 				"0": {
-					"name": "mega.block.mgs punctuation.section.block.end.mgs"
+					"name": "punctuation.section.block.end.mgs"
 				}
 			},
 			"patterns": [
@@ -668,9 +668,9 @@
 		"condition_compounds": {
 			"patterns": [
 				{
-					"match": "\\b(on_(interact|tick|look))(\\s+is(\\s+not)?)\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5)",
+					"match": "\\b(on_(interact|tick|look))(\\s+is(\\s+not)?)\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.logical.mgs" },
 						"5": { "name": "entity.name.function.mgs" }
 					}
@@ -678,7 +678,7 @@
 				{
 					"match": "\\b(direction)\\s+(is\\s+(not\\s+)?)((north|south|east|west)|(\\$[-A-Za-z0-9_.#$]+))\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "keyword.operator.logical.mgs" },
 						"5": { "name": "constant.language.mgs" },
 						"6": { "name": "variable.other.constant.mgs" }
@@ -687,7 +687,7 @@
 				{
 					"match": "\\b(((serial\\s+)?dialog)|debug\\s+mode)\\s+(is\\s+)((open|closed|on|off|true|false)|(\\$[-A-Za-z0-9_.#$]+))\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"4": { "name": "keyword.operator.logical.mgs" },
 						"5": { "name": "constant.language.mgs" },
 						"7": { "name": "variable.other.constant.mgs" }
@@ -696,26 +696,26 @@
 				{
 					"match": "\\b(path)\\s+(is\\s+(not\\s+)?)(['\"])(%ENTITY_PATH%)(\\4)",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "keyword.operator.logical.mgs" },
-						"4": { "name": "string.variable.mgs" },
+						"4": { "name": "string.quoted" },
 						"5": { "name": "variable.language.mgs" },
-						"6": { "name": "string.variable.mgs" }
+						"6": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "\\b(name|type|entity_type|path|warp\\s+state)\\s+(is\\s+(not\\s+)?)((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+)|(['\"])[^`]*?\\7)",
+					"match": "\\b(name|type|entity_type|path|warp\\s+state)\\s+(is\\s+(not\\s+)?)((\\$[-A-Za-z0-9_.#$]+)|(([-A-Za-z0-9_.#$]+)|(['\"])[^`]*?\\8))",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "keyword.operator.logical.mgs" },
-						"4": { "name": "string.variable.mgs" },
-						"5": { "name": "variable.other.constant.mgs" }
+						"5": { "name": "variable.other.constant.mgs" },
+						"6": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "\\b(x|y|primary_id|secondary_id|primary_id_type|(current_)?animation|animation_frame)(\\s+is(\\s+not)?)\\s+((\\$[-A-Za-z0-9_.#$]+)|([0-9]+))",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.logical.mgs" },
 						"6": { "name": "variable.other.constant.mgs" },
 						"7": { "name": "constant.numeric.integer.mgs" }
@@ -726,25 +726,25 @@
 		"condition_subjects": {
 			"patterns": [
 				{
-					"match": "\\b(button|flag|variable|geometry)\\s+(\\$[-A-Za-z0-9_.#$]+)\\b",
+					"match": "\\b(button|flag|variable|geometry|alias)\\s+(\\$[-A-Za-z0-9_.#$]+)\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "variable.other.constant.mgs" }
 					}
 				},
 				{
 					"match": "\\b(button)(\\s+(MEM0|MEM1|MEM2|MEM3|BIT128|BIT64|BIT32|BIT16|BIT8|BIT4|BIT2|BIT1|XOR|ADD|SUB|PAGE|LJOY_CENTER|LJOY_UP|LJOY_DOWN|LJOY_LEFT|LJOY_RIGHT|RJOY_CENTER|RJOY_UP|RJOY_DOWN|RJOY_LEFT|RJOY_RIGHT|TRIANGLE|X|CROSS|CIRCLE|O|SQUARE|HAX|ANY))?\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "constant.language.mgs" }
 					}
 				},
 				{ "include": "#entity_specifier_string_pair" },
 				{
-					"match": "\\b(flag|variable|geometry)\\s+((([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\5))?",
+					"match": "\\b(flag|variable|geometry|alias)\\s+(([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\4)?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"3": { "name": "string.variable.mgs" }
+						"1": { "name": "variable.parameter.mgs" },
+						"2": { "name": "string.quoted" }
 					}
 				}
 			]
@@ -786,7 +786,7 @@
 					"captures": {
 						"1": { "name": "keyword.operator.logical.mgs" },
 						"3": { "name": "keyword.operator.logical.mgs" },
-						"5": { "name": "string.variable.mgs" }
+						"5": { "name": "string.quoted" }
 					}
 				}
 			]
@@ -801,11 +801,11 @@
 			"begin": "\\b(while)\\s*(\\()",
 			"beginCaptures": {
 				"1": { "name": "keyword.control.conditional.mgs" },
-				"2": { "name": "meta.parens.mgs punctuation.section.parens.begin.mgs" }
+				"2": { "name": "punctuation.section.parens.begin.mgs" }
 			},
 			"end": "\\)",
 			"endCaptures": {
-				"0": { "name": "meta.parens.mgs punctuation.section.parens.end.mgs" }
+				"0": { "name": "punctuation.section.parens.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -826,11 +826,11 @@
 			"begin": "\\b(for)\\s*(\\()",
 			"beginCaptures": {
 				"1": { "name": "keyword.control.conditional.mgs" },
-				"2": { "name": "meta.parens.mgs punctuation.section.parens.begin.mgs" }
+				"2": { "name": "punctuation.section.parens.begin.mgs" }
 			},
 			"end": "\\)",
 			"endCaptures": {
-				"0": { "name": "meta.parens.mgs punctuation.section.parens.end.mgs" }
+				"0": { "name": "punctuation.section.parens.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -849,11 +849,11 @@
 		"forwhile_body": {
 			"begin": "\\{",
 			"beginCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"0": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "\\}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -871,11 +871,11 @@
 			"begin": "\\b(if|else\\s+if)\\s*(\\()",
 			"beginCaptures": {
 				"1": { "name": "keyword.control.conditional.mgs" },
-				"2": { "name": "meta.parens.mgs punctuation.section.parens.begin.mgs" }
+				"2": { "name": "punctuation.section.parens.begin.mgs" }
 			},
 			"end": "\\)",
 			"endCaptures": {
-				"0": { "name": "meta.parens.mgs punctuation.section.parens.end.mgs" }
+				"0": { "name": "punctuation.section.parens.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -889,11 +889,11 @@
 		"zigzag_body": {
 			"begin": "\\{",
 			"beginCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"0": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "\\}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -904,11 +904,11 @@
 			"begin": "\\belse\\s+(\\{)",
 			"beginCaptures": {
 				"0": { "name": "keyword.control.conditional.mgs" },
-				"1": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"1": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "\\}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#comment_node" },
@@ -921,7 +921,7 @@
 				{
 					"match": "([-A-Za-z0-9_.#$]+)\\s*(:)",
 					"captures": {
-						"1": { "name": "entity.name.label.mgs" },
+						"1": { "name": "entity.name" },
 						"2": { "name": "keyword.operator.assignment.mgs" }
 					}
 				},
@@ -934,12 +934,11 @@
 				{ "include": "#set_serial_connect_node" },
 				{ "include": "#show_serial_node" },
 				{
-					"comment": "SCRIPT STRINGS",
 					"match": "\\b(then\\s+)?(goto)(\\s+script(?!-))?\\b",
 					"captures": {
 						"1": { "name": "keyword.control.mgs" },
 						"2": { "name": "keyword.control.mgs" },
-						"3": { "name": "variable.parameter.mgs support.variable.mgs" }
+						"3": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
@@ -947,40 +946,38 @@
 					"name": "storage.type.mgs"
 				},
 				{
-					"comment": "SCRIPT STRINGS",
 					"match": "\\b(copy)(\\s+script(?!-))?\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" }
+						"2": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
 					"match": "(->)(\\s*script\\b)?",
 					"captures": {
 						"1": { "name": "keyword.operator.assignment.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" }
+						"2": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
-					"match": "(?<=label)\\s+((\\$[-A-Za-z0-9_.#$]+)|[-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\3)?",
+					"match": "(?<=label)\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\4))?",
 					"captures": {
-						"1": { "name": "string.variable.mgs" },
-						"2": { "name": "variable.other.constant.mgs" }
+						"2": { "name": "variable.other.constant.mgs" },
+						"3": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "(?<=index)\\s+((\\$[-A-Za-z0-9_.#$]+)|([0-9]+))\\b",
 					"captures": {
-						"1": { "name": "constant.numeric.integer.mgs" },
-						"2": { "name": "variable.other.constant.mgs" }
+						"2": { "name": "variable.other.constant.mgs" },
+						"3": { "name": "constant.numeric.integer.mgs" }
 					}
 				},
 				{
 					"match": "(?<=goto)\\s+((label|index)\\b)",
-					"name": "variable.parameter.mgs support.variable.mgs"
+					"name": "variable.parameter.mgs"
 				},
 				{
-					"comment": "SCRIPT STRINGS",
 					"match": "(?<=goto|copy|script|->)\\s+(((['\"])[^`]*?\\3)|[-A-Za-z0-9_.#$]+\\b)",
 					"name": "entity.name.function.mgs"
 				},
@@ -992,41 +989,41 @@
 					"match": "\\b(mutate)\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5))?",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "string.variable.mgs" },
-						"3": { "name": "variable.other.constant.mgs" }
+						"3": { "name": "variable.other.constant.mgs" },
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "\\b(wait|block)\\s+((\\$[-A-Za-z0-9_.#$]+)|([0-9]+(ms|s)?))\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "constant.numeric.integer.mgs" },
-						"3": { "name": "variable.other.constant.mgs" }
+						"3": { "name": "variable.other.constant.mgs" },
+						"4": { "name": "constant.numeric.integer.mgs" }
 					}
 				},
 				{
 					"match": "\\b(save)(\\s+slot)?\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" }
+						"2": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
 					"match": "\\b(open|close)(\\s+hex(\\s+editor)?)?\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" }
+						"2": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
 					"match": "\\b(close)(\\s+(serial\\s+)?dialog)\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" }
+						"2": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
-					"match": "\\b(make|walk|loop|turn|rotate|teleport|pan|loop|play|set|fade\\s+in|fade\\s+out|load|erase|wait|block|shake|pause|unpause)\\b",
+					"match": "\\b(end|make|walk|loop|turn|rotate|teleport|pan|loop|play|set|fade\\s+in|fade\\s+out|load|erase|wait|block|shake|pause|unpause)\\b",
 					"name": "storage.type.mgs"
 				},
 				{
@@ -1034,10 +1031,10 @@
 					"name": "keyword.control.loop.mgs"
 				},
 				{
-					"match": "\\b(light)(\\s+(ALL|(LED_(XOR|ADD|SUB|PAGE|BIT128|BIT64|BIT32|BIT16|BIT8|BIT4|BIT2|BIT1|MEM0|MEM1|MEM2|MEM3|HAX|USB|SD|ANY))|(\\$[-A-Za-z0-9_.#$]+)))?\\b",
+					"match": "\\b(light)(\\s+(ALL|(LED_(XOR|ADD|SUB|PAGE|BIT128|BIT64|BIT32|BIT16|BIT8|BIT4|BIT2|BIT1|MEM0|MEM1|MEM2|MEM3|HAX|USB|SD|ANY)))|(\\$[-A-Za-z0-9_.#$]+))?\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"2": { "name": "constant.language.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
+						"3": { "name": "constant.language.mgs" },
 						"6": { "name": "variable.other.constant.mgs" }
 					}
 				},
@@ -1045,13 +1042,13 @@
 				{ "include": "#geometry_specifier_string_pair" },
 				{
 					"match": "\\b(fail|(current_)?animation|camera|(player|serial|lights)\\s+control|hex(\\s+(dialog\\s+mode|control|clipboard|editor))?)\\b",
-					"name": "variable.parameter.mgs support.variable.mgs"
+					"name": "variable.parameter.mgs"
 				},
 				{
 					"match": "\\b(to\\s+)?((true|false|on|off|glitched|unglitched)|(\\$[-A-Za-z0-9_.#$]+))\\b",
 					"captures": {
 						"1": { "name": "keyword.operator.assignment.mgs" },
-						"2": { "name": "constant.language.mgs" },
+						"3": { "name": "constant.language.mgs" },
 						"4": { "name": "variable.other.constant.mgs" }
 					}
 				},
@@ -1060,27 +1057,27 @@
 					"name": "constant.language.mgs"
 				},
 				{
-					"match": "\\b(name|type|path|warp\\s+state)(\\s+to)?\\s+((\\$[-A-Za-z0-9_.#$]+)|[-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5)?",
+					"match": "\\b(name|type|path|warp\\s+state)(\\s+to)?\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6))?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"2": { "name": "keyword.operator.assignment.mgs" },
-						"3": { "name": "string.variable.mgs" },
-						"4": { "name": "variable.other.constant.mgs" }
+						"4": { "name": "variable.other.constant.mgs" },
+						"5": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "\\b(on_(interact|tick|look))(\\s+to)?\\s+((\\$[-A-Za-z0-9_.#$]+)|[-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5)?",
+					"match": "\\b(on_(interact|tick|look))(\\s+to)?\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\7))?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.assignment.mgs" },
-						"4": { "name": "entity.name.function.mgs" },
-						"5": { "name": "variable.other.constant.mgs" }
+						"5": { "name": "variable.other.constant.mgs" },
+						"6": { "name": "entity.name.function.mgs" }
 					}
 				},
 				{
 					"match": "\\b(x|y|primary_id|secondary_id|primary_id_type|(current_)?animation|animation_frame|relative_direction)(\\s+to)?\\s+(([0-9]]+)|(\\$[-A-Za-z0-9_.#$]+))?\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.assignment.mgs" },
 						"5": { "name": "constant.numeric.integer.mgs" },
 						"6": { "name": "variable.other.constant.mgs" }
@@ -1089,7 +1086,7 @@
 				{
 					"match": "\\b(slot)\\s+(([0-2])|([0-9]+)|(\\$[-A-Za-z0-9_.#$]+))?\\b",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "constant.numeric.integer.mgs" },
 						"4": { "name": "invalid.illegal.mgs" },
 						"5": { "name": "variable.other.constant.mgs" }
@@ -1103,6 +1100,7 @@
 						"4": { "name": "variable.other.constant.mgs" }
 					}
 				},
+				{ "include": "#generic_var" },
 				{ "include": "#generic_numberish" },
 				{
 					"match": "\\b(along|follow|toward|from|into|over|for)\\b",
@@ -1111,9 +1109,9 @@
 					}
 				},
 				{
-					"match": "\\b(map\\s+(on_tick|on_load|on_command))(\\s+to)?(\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5))?",
+					"match": "\\b(map\\s+(on_tick|on_load|on_command))(\\s+to)?(\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6))?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.assignment.mgs" },
 						"4": { "name": "entity.name.function.mgs" }
 					}
@@ -1121,45 +1119,55 @@
 				{
 					"match": "\\b(serial\\s+connect(\\s+message)?)(\\s+to)?\\s+(([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6))?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.assignment.mgs" },
-						"4": { "name": "string.variable.mgs" }
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "\\b(flag|map|variable|(serial\\s+)?dialog)\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\6)?",
+					"match": "\\b(flag|map|variable|alias|(serial\\s+)?dialog)\\s+((\\$[-A-Za-z0-9_.#$]+)|(([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\7))?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"3": { "name": "string.variable.mgs" },
-						"4": { "name": "variable.other.constant.mgs" }
+						"1": { "name": "variable.parameter.mgs" },
+						"4": { "name": "variable.other.constant.mgs" },
+						"5": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "\\b((un)?register)\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\6)?",
+					"match": "\\b(remove)(\\s+alias)\\s+((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\6)?",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"3": { "name": "string.variable.mgs" },
+						"2": { "name": "variable.parameter.mgs" },
+						"3": { "name": "string.quoted" },
 						"4": { "name": "variable.other.constant.mgs" }
 					}
 				},
 				{
-					"match": "(\\+\\s*)((\\$[-A-Za-z0-9_.#$]+)|[-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\4)",
+					"match": "\\b((un)?hide)(\\s+command)\\s+((\\$[-A-Za-z0-9_.#$]+)|(([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\8))?",
 					"captures": {
-						"1": { "name": "keyword.operator.assignment.mgs" },
-						"2": { "name": "string.variable.mgs" },
-						"3": { "name": "variable.other.constant.mgs" }
+						"1": { "name": "storage.type.mgs" },
+						"3": { "name": "variable.parameter.mgs" },
+						"5": { "name": "variable.other.constant.mgs" },
+						"6": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "(\\+\\s*)((\\$[-A-Za-z0-9_.#$]+)|[-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\4)?\\s*(?=->)",
+					"match": "\\b((un)?register)\\s+((\\$[-A-Za-z0-9_.#$]+)|(([-A-Za-z0-9_.#$]+\\b)|(['\"])[^`]*?\\7))?",
 					"captures": {
-						"1": { "name": "keyword.operator.assignment.mgs" },
-						"2": { "name": "string.variable.mgs" },
-						"3": { "name": "variable.other.constant.mgs" }
+						"1": { "name": "storage.type.mgs" },
+						"4": { "name": "variable.other.constant.mgs" },
+						"5": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "(SET|ADD|SUB|MUL|DIV|MOD|RNG|set|add|sub|mul|div|mod|rng|=|\\+|-|\\*|\\/|%|\\?)\\s+(([0-9]+)|(\\$[-A-Za-z0-9_.#$]+))\\s*(?!->)",
+					"match": "(\\+)\\s+([0-9]+)\\s*->",
+					"captures": {
+						"1": { "name": "keyword.operator.assignment.mgs" },
+						"2": { "name": "string.quoted" },
+						"3": { "name": "keyword.operator.assignment.mgs" }
+					}
+				},
+				{
+					"match": "(SET|ADD|SUB|MUL|DIV|MOD|RNG|set|add|sub|mul|div|mod|rng|=|\\+|-|\\*|\\/|%|\\?)\\s+(([0-9]+)|(\\$[-A-Za-z0-9_.#$]+))",
 					"captures": {
 						"1": { "name": "keyword.operator.assignment.mgs" },
 						"3": { "name": "constant.numeric.integer.mgs" },
@@ -1167,24 +1175,32 @@
 					}
 				},
 				{
-					"match": "(SET|ADD|SUB|MUL|DIV|MOD|RNG|set|add|sub|mul|div|mod|rng|=|\\+|-|\\*|\\/|%|\\?)\\s+([-A-Za-z0-9_.#$]+\\b|(['\"])[^`]*?\\3)\\s*(?!->)",
+					"match": "(SET|ADD|SUB|MUL|DIV|MOD|RNG|set|add|sub|mul|div|mod|rng|=|\\+|-|\\*|\\/|%|\\?)\\s+([-A-Za-z0-9_.#$]+\\b|(['\"])[^`]*?\\3)",
 					"captures": {
 						"1": { "name": "keyword.operator.assignment.mgs" },
-						"2": { "name": "string.variable.mgs" }
+						"2": { "name": "string.quoted" }
+					}
+				},
+				{
+					"match": "(\\+\\s*)((\\$[-A-Za-z0-9_.#$]+)|([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5))",
+					"captures": {
+						"1": { "name": "keyword.operator.assignment.mgs" },
+						"3": { "name": "variable.other.constant.mgs" },
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
 					"match": "\\b(show|concat)\\s+((serial\\s+)?dialog)\\s+(([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6))",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
-						"2": { "name": "variable.parameter.mgs support.variable.mgs" },
-						"4": { "name": "string.variable.mgs" }
+						"2": { "name": "variable.parameter.mgs" },
+						"4": { "name": "string.quoted" }
 					}
 				},
 				{
-					"match": "\\b(on_(interact|tick|look))(\\s+to)?(\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\5))?",
+					"match": "\\b(on_(interact|tick|look))(\\s+to)?(\\s+([-A-Za-z0-9_.#$]+|(['\"])[^`]*?\\6))?",
 					"captures": {
-						"1": { "name": "variable.parameter.mgs support.variable.mgs" },
+						"1": { "name": "variable.parameter.mgs" },
 						"3": { "name": "keyword.operator.assignment.mgs" },
 						"4": { "name": "entity.name.function.mgs" }
 					}
@@ -1196,11 +1212,11 @@
 			"beginCaptures": {
 				"1": { "name": "storage.type.mgs" },
 				"2": { "name": "entity.name.function.mgs" },
-				"8": { "name": "mega.block.mgs punctuation.section.block.begin.mgs" }
+				"8": { "name": "punctuation.section.block.begin.mgs" }
 			},
 			"end": "}",
 			"endCaptures": {
-				"0": { "name": "mega.block.mgs punctuation.section.block.end.mgs" }
+				"0": { "name": "punctuation.section.block.end.mgs" }
 			},
 			"patterns": [
 				{ "include": "#script_body" }
