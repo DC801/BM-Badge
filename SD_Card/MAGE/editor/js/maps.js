@@ -223,23 +223,25 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			fileNameMap,
 			scenarioData,
 		);
-		// run sanity checks on entity
-		Object.keys(scenarioData.sanityChecks.checks).forEach(function(checkName) {
-			var checkFunction = scenarioData.sanityChecks.checks[checkName];
-			var problemMessage = checkFunction(tiledObject.compositeEntity);
-			if (problemMessage == null) {
+		// run checks on entity for warnings in "Additional reports about the build"
+		// (related: warnings.js and editor-warnings.js)
+		var warnings = scenarioData.warnings;
+		Object.keys(warningChecks).forEach(function(checkName) {
+			var checkFunction = warningChecks[checkName];
+			var warningMessage = checkFunction(tiledObject.compositeEntity);
+			if (warningMessage == null) {
 				return;
 			}
-			if (! (checkName in scenarioData.sanityChecks.problems)) {
-				scenarioData.sanityChecks.problems[checkName] = {};
+			if (! (checkName in warnings)) {
+				warnings[checkName] = {};
 			}
-			if (! (map.name in scenarioData.sanityChecks.problems[checkName])) {
-				scenarioData.sanityChecks.problems[checkName][map.name] = [];
+			if (! (map.name in warnings[checkName])) {
+				warnings[checkName][map.name] = [];
 			}
-			scenarioData.sanityChecks.problems[checkName][map.name].push({
+			warnings[checkName][map.name].push({
 				name: tiledObject.compositeEntity.name || 'NO NAME',
 				id: tiledObject.compositeEntity.id,
-				problemMessage: problemMessage
+				warningMessage: warningMessage
 			});
 		});
 	});

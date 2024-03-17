@@ -1,14 +1,8 @@
 /*
 TODO
 
-refactors
----
-get things out of encoding.js
-get checks out of sanityChecks
-
 Vue cleanup
 ---
-congrats message if there are no problems at all
 one accordion component
 slots / pass children for innermost's content
 - change other uses of accordion to my accordion?
@@ -30,15 +24,15 @@ misc
 ---
 documentation for API (e.g., return null or a string error message)
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
-ask about populating sanityChecks onto scenarioData even possibly causing any issues
+ask about populating warningChecks onto scenarioData even possibly causing any issues
 - game not running (says engine v11, dat v10, could just be not syncing my fork)
 - drag and drop not working on my linux setup (minor)
 presentation design
 - original design: a report like the python output that would be useful to download
-	- fixes separate from problems
-- new design: Vue component for each problem
-	- fixes presented next to problems
-problem counts for GUI and CLI
+	- fixes separate from warnings
+- new design: Vue component for each warnings
+	- fixes presented next to warnings
+warning counts for GUI and CLI
 - final print-out info in GUI?
 txt download next to copy button? (ask)
 how will look work for multiple entities of the same or similar names (eg bread, torch)
@@ -67,10 +61,10 @@ use fallback entity names that are generated somewhere late in the build process
 
 
 
-Vue.component('editor-sanity-check-problem', {
-	name: 'editor-sanity-check-problem',
+Vue.component('editor-warning-check-warning', {
+	name: 'editor-warning-check-warning',
 	props: {
-		problem: {
+		warning: {
 			type: Object,
 			required: true
 		},
@@ -97,7 +91,7 @@ Vue.component('editor-sanity-check-problem', {
 	template: /*html*/`
 <div class="card mb-1 text-white">
 	<div class="card-header bg-primary">
-		{{ problem.name || "NO NAME" }} (id {{ problem.id }})
+		{{ warning.name || "NO NAME" }} (id {{ warning.id }})
 		<span
 			class="position-absolute"
 			style="top: 6px; right: 6px;"
@@ -113,7 +107,7 @@ Vue.component('editor-sanity-check-problem', {
 		class="card-body p-3"
 		v-if="!collapsed"
 	>
-		<p>{{ problem.problemMessage }}</p>
+		<p>{{ warning.warningMessage }}</p>
 		
 	
 	
@@ -165,14 +159,14 @@ Vue.component('editor-sanity-check-problem', {
 
 
 
-Vue.component('editor-sanity-check-map', {
-	name: 'editor-sanity-check-map',
+Vue.component('editor-warning-check-map', {
+	name: 'editor-warning-check-map',
 	props: {
 		mapName: {
 			type: String,
 			required: true
 		},
-		problems: {
+		warnings: {
 			type: Array,
 			required: true
 		}
@@ -190,7 +184,7 @@ Vue.component('editor-sanity-check-map', {
 	template: /*html*/`
 <div class="card mb-1 text-white">
 	<div class="card-header bg-primary">
-		Problems in map '{{ mapName }}' ({{ problems.length }} entities)
+		Problems in map '{{ mapName }}' ({{ warnings.length }} entities)
 		<span
 			class="position-absolute"
 			style="top: 6px; right: 6px;"
@@ -206,11 +200,11 @@ Vue.component('editor-sanity-check-map', {
 		class="card-body p-3"
 		v-if="!collapsed"
 	>
-		<editor-sanity-check-problem
-			v-for="problem in problems"
-			:key="problem.id"
-			:problem="problem"
-		></editor-sanity-check-problem>
+		<editor-warning-check-warning
+			v-for="warning in warnings"
+			:key="warning.id"
+			:warning="warning"
+		></editor-warning-check-warning>
 	</div>
 </div>
 `});
@@ -222,8 +216,8 @@ Vue.component('editor-sanity-check-map', {
 
 
 
-Vue.component('editor-sanity-check', {
-	name: 'editor-sanity-check',
+Vue.component('editor-warning-check', {
+	name: 'editor-warning-check',
 	props: {
 		checkName: {
 			type: String,
@@ -263,12 +257,12 @@ Vue.component('editor-sanity-check', {
 		class="card-body p-3"
 		v-if="!collapsed"
 	>
-		<editor-sanity-check-map
-			v-for="(problems, mapName) in maps"
+		<editor-warning-check-map
+			v-for="(warnings, mapName) in maps"
 			:key="mapName"
 			:map-name="mapName"
-			:problems="problems"
-		></editor-sanity-check-map>
+			:warnings="warnings"
+		></editor-warning-check-map>
 	</div>
 </div>
 `});
@@ -280,10 +274,10 @@ Vue.component('editor-sanity-check', {
 
 
 
-Vue.component('editor-sanity-checks', {
-	name: 'editor-sanity-checks',
+Vue.component('editor-warning-checks', {
+	name: 'editor-warning-checks',
 	props: {
-		problems: {
+		warnings: {
 			type: Object,
 			required: true
 		}
@@ -317,17 +311,17 @@ Vue.component('editor-sanity-checks', {
 		class="card-body p-3"
 		v-if="!collapsed"
 	>
-		<template v-if="Object.keys(problems).length">
-			<editor-sanity-check
-				v-for="(maps, checkName) in problems"
+		<template v-if="Object.keys(warnings).length">
+			<editor-warning-check
+				v-for="(maps, checkName) in warnings"
 				:key="checkName"
 				:check-name="checkName"
 				:maps="maps"
-			></editor-sanity-check>
+			></editor-warning-check>
 		</template>
 		<div v-else>
 			<img src="./dependencies/MageDance.gif"/>
-			<span class="mx-1 align-bottom">None. How fastidious of you.</span>
+			<span class="mx-1 align-bottom">No problems found. Damg.</span>
 		</div>
 	</div>
 </div>`});
