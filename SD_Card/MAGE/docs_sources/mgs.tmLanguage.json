@@ -1016,14 +1016,14 @@
 					}
 				},
 				{
-					"match": "\\b(close)(\\s+(serial\\s+)?dialog)\\b",
+					"match": "\\b(end)(\\s+(serial\\s+)?dialog)\\b",
 					"captures": {
 						"1": { "name": "storage.type.mgs" },
 						"2": { "name": "variable.parameter.mgs" }
 					}
 				},
 				{
-					"match": "\\b(end|make|walk|loop|turn|rotate|teleport|pan|loop|play|set|fade\\s+in|fade\\s+out|load|erase|wait|block|shake|pause|unpause)\\b",
+					"match": "\\b(make|walk|loop|turn|rotate|teleport|pan|loop|play|set|fade\\s+in|fade\\s+out|load|erase|wait|block|shake|pause|unpause)\\b",
 					"name": "storage.type.mgs"
 				},
 				{

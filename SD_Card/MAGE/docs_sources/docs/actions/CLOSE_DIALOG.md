@@ -18,12 +18,12 @@ Use this [action](../actions) when you want to trigger a dialog that may potenti
 
 ```mgs
 script {
-  close dialog;
+  end dialog;
 }
 ```
 
 ### Dictionary entry
 
 ```
-close dialog (;)
+end dialog (;)
 ```

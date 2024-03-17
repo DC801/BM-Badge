@@ -244,6 +244,8 @@ var actionText = {
 			"Once a command is registered, the player can enter the command into the serial console and the corresponding script will run in a unique serial script slot.",
 			"- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`).\n- **Fail variant**: identifies a script for custom \"unknown argument\" behavior (in the event the player attempts to use an unregistered argument for this command).",
 			"Commands must be a single word.",
+			"The HELP command lists all currently-registered commands. To hide a command from this list, use [SET_SERIAL_DIALOG_COMMAND_VISIBILITY](#set_serial_command_visibility).",
+			"You can set an alias for a command with [REGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#register_serial_command_alias), and unset it with [UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#unregister_serial_command_alias). (Note: Alias are always unlisted in the HELP list.)",
 		]
 	},
 	"UNREGISTER_SERIAL_DIALOG_COMMAND": {
@@ -263,6 +265,26 @@ var actionText = {
 		"category": "Serial Console",
 		"info": [
 			"This action unregisters the specified argument from an [already-registered serial command](../actions/REGISTER_SERIAL_DIALOG_COMMAND)."
+		]
+	},
+	"SET_SERIAL_DIALOG_COMMAND_VISIBILITY": {
+		"category": "Serial Console",
+		"info": [
+			"This action hides (or unhides) a [command](commands) from the list provided by the default serial command HELP."
+		]
+	},
+	"REGISTER_SERIAL_DIALOG_COMMAND_ALIAS": {
+		"category": "Serial Console",
+		"info": [
+			"This action registers an \"alias\" for a [command](commands). For example, you might register `i` as an alias for `inventory`.",
+			"To unregister an alias, use [UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#unregister_serial_dialog_alias)",
+			"Aliases are not included in the list provided by the default serial command HELP, which lists all currently-registered commands."
+		]
+	},
+	"UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS": {
+		"category": "Serial Console",
+		"info": [
+			"This action unregisters an \"alias\" for a [command](commands). See: [REGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#register_serial_dialog_alias)"
 		]
 	},
 	// "SET_HEX_CURSOR_LOCATION": {

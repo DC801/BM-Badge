@@ -7,6 +7,10 @@ Once a command is registered, the player can enter the command into the serial c
 
 Commands must be a single word.
 
+The HELP command lists all currently-registered commands. To hide a command from this list, use [SET_SERIAL_DIALOG_COMMAND_VISIBILITY](#set_serial_command_visibility).
+
+You can set an alias for a command with [REGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#register_serial_command_alias), and unset it with [UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#unregister_serial_command_alias). (Note: Alias are always unlisted in the HELP list.)
+
 ## Example JSON
 
 ```json
