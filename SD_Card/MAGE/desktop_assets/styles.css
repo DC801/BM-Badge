@@ -67,6 +67,7 @@ p {
 	overflow-y: scroll;
 	transition-property: all;
 	transition-duration: 500ms;
+	line-height: 0.9rem;
 }
 #output.flash {
 	transition-duration: 0ms;
@@ -120,4 +121,12 @@ button:hover {
 button:active {
 	border: 1px solid #9f0;
 	color: #ff0;
+}
+
+/* why is their "yellow" so bad I gotta fix it */
+*[style="background-color:#A50"] {
+	background-color: #bbbb00 !important;
+}
+*[style="color:#A50"] {
+	color: #bbbb00 !important;
 }
