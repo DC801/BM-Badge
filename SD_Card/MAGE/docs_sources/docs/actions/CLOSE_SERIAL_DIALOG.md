@@ -16,12 +16,12 @@ Ends any [serial dialog](../serial_dialogs) that is awaiting user input, such as
 
 ```mgs
 script {
-  close serial dialog;
+  end serial dialog;
 }
 ```
 
 ### Dictionary entry
 
 ```
-close serial dialog (;)
+end serial dialog (;)
 ```

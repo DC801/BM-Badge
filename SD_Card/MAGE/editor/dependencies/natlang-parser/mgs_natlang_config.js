@@ -894,6 +894,24 @@ mgs.actionDictionary = [{
 		pattern: "unregister<v> $command:string<str> +<op> $argument:string<str> ?;<terminator>",
 	},
 	{
+		action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+		pattern: "hide<v> command<s> $command:string<str> ?;<terminator>",
+		values: { "is_visible": false },
+	},
+	{
+		action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+		pattern: "unhide<v> command<s> $command:string<str> ?;<terminator>",
+		values: { "is_visible": true },
+	},
+	{
+		action: "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+		pattern: "register<v> alias<kw> $alias:string<str> =<op> $command:string<str> ?;<terminator>",
+	},
+	{
+		action: "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+		pattern: "unregister<v> alias<kw> $alias:string<str> ?;<terminator>",
+	},
+	{
 		action: "SET_HEX_EDITOR_DIALOG_MODE",
 		pattern: "turn<v> hex<i> dialog<i> mode<i> $bool_value:boolean<enum> ?;<terminator>",
 	},
