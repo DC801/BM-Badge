@@ -142,10 +142,10 @@
 					</div>
 				</div>
 			</div>
-			<editor-sanity-checks
+			<editor-warning-checks
 				v-if="scenarioData"
-				:problems="scenarioData.sanityChecks.problems"
-			></editor-sanity-checks>
+				:warnings="scenarioData.warnings"
+			></editor-warning-checks>
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"
@@ -432,6 +432,7 @@
 	<script src="js/images.js"></script>
 	<script src="js/encoding.js"></script>
 	<script src="js/font-image.js"></script>
+	<script src="js/warnings.js"></script>
 	<script src="js/editor-entity_types.js"></script>
 	<script src="js/editor-scripts.js"></script>
 	<script src="js/editor-script.js"></script>
@@ -442,7 +443,7 @@
 	<script src="js/editor-dialog-phase-preview.js"></script>
 	<script src="js/editor-dialog-box.js"></script>
 	<script src="js/editor-action.js"></script>
-	<script src="js/editor-sanity-checks.js"></script>
+	<script src="js/editor-warning-checks.js"></script>
 	<script src="js/component-icon.js"></script>
 	<script src="js/store.js"></script>
 	<script src="js/index.js"></script>
