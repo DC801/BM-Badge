@@ -93,7 +93,6 @@ class MageCommandControl {
 		);
 		void debugAliases();
 		void unregisterCommandAlias(
-			uint16_t commandStringId,
 			uint16_t aliasStringId
 		);
 		void setCommandVisibility(

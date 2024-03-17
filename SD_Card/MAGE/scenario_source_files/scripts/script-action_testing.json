@@ -129,12 +129,10 @@
 	"map-action_testing-go_unalias": [
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
-			"command": "help",
 			"alias": "h"
 		},
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
-			"command": "secret",
 			"alias": "shh"
 		}
 	],

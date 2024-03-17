@@ -598,16 +598,13 @@ void MageCommandControl::debugAliases() {
 }
 
 void MageCommandControl::unregisterCommandAlias(
-	uint16_t commandStringId,
 	uint16_t aliasStringId
 ) {
-	auto command = MageGame->getString(commandStringId, NO_PLAYER);
 	auto alias = MageGame->getString(aliasStringId, NO_PLAYER);
 	if(MageGame->isEntityDebugOn) {
 		commandResponseBuffer += (
 				"unregisterCommandAlias:"
-				" commandString: " + command
-				+ "; aliasStringId: " + alias
+				" aliasStringId: " + alias
 				+ "\n"
 		);
 	}
