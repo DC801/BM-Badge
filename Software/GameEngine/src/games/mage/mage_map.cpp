@@ -181,7 +181,7 @@ void MapControl::Draw() const
    }
 }
 
-void MapControl::UpdateEntities(const InputState& delta)
+void MapControl::UpdateEntities()
 {
    auto playerData = getPlayerEntityData();
    for (auto i = 0; i < currentMap->entityCount; i++)
@@ -193,7 +193,7 @@ void MapControl::UpdateEntities(const InputState& delta)
    }
 }
 
-std::optional<uint16_t> MapControl::UpdatePlayer(const InputState& delta)
+std::optional<uint16_t> MapControl::UpdatePlayer()
 {
    // require a player on the map to move/interact
    auto playerData = getPlayerEntityData();
@@ -262,45 +262,43 @@ std::optional<uint16_t> MapControl::UpdatePlayer(const InputState& delta)
       }
    }
 
-   if (delta.Hack() || delta.Use())
+   const uint8_t interactLength = 32;
+   auto interactBox = EntityRect{ playerRenderableData->hitBox };
+   auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
+   if (direction == NORTH)
    {
-      const uint8_t interactLength = 32;
-      auto interactBox = playerRenderableData->hitBox;
-      auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
-      if (direction == NORTH)
+      interactBox.origin.y -= interactLength;
+      interactBox.h = interactLength;
+   }
+   if (direction == EAST)
+   {
+      interactBox.origin.x += interactBox.w;
+      interactBox.w = interactLength;
+   }
+   if (direction == SOUTH)
+   {
+      interactBox.origin.y += interactBox.h;
+      interactBox.h = interactLength;
+   }
+   if (direction == WEST)
+   {
+      interactBox.origin.x -= interactLength;
+      interactBox.w = interactLength;
+   }
+
+   for (auto i = 0; i < currentMap->entityCount; i++)
+   {
+      if (i == currentMap->playerEntityIndex)
       {
-         interactBox.origin.y -= interactLength;
-         interactBox.h = interactLength;
-      }
-      if (direction == EAST)
-      {
-         interactBox.origin.x += interactBox.w;
-         interactBox.w = interactLength;
-      }
-      if (direction == SOUTH)
-      {
-         interactBox.origin.y += interactBox.h;
-         interactBox.h = interactLength;
-      }
-      if (direction == WEST)
-      {
-         interactBox.origin.x -= interactLength;
-         interactBox.w = interactLength;
+         continue;
       }
 
-      for (auto i = 0; i < currentMap->entityCount; i++)
+      auto entityPosition = Get<RenderableData>(i).center();
+
+      if (interactBox.Contains(entityPosition))
       {
-         if (i == currentMap->playerEntityIndex)
-         {
-            continue;
-         }
-
-         auto entityPosition = Get<MageEntityData>(i).position;
-
-         if (interactBox.Contains(entityPosition))
-         {
-            return i;
-         }
+         return i;
       }
    }
+   return std::nullopt;
 }

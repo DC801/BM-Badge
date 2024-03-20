@@ -53,16 +53,28 @@ void MageHexEditor::updateHexStateVariables()
    totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
-void MageHexEditor::applyInput(const InputState& delta)
+void MageHexEditor::Update()
 {
    if (!hexEditorOn || !playerHasHexEditorControl || disableMovement)
    {
       return;
    }
 
+   if (inputHandler->IsPressed(KeyPress::Xor)) { setHexOp(HEX_OPS_XOR); }
+   if (inputHandler->IsPressed(KeyPress::Add)) { setHexOp(HEX_OPS_ADD); }
+   if (inputHandler->IsPressed(KeyPress::Sub)) { setHexOp(HEX_OPS_SUB); }
+   if (inputHandler->IsPressed(KeyPress::Bit128)) { runHex(0b10000000); }
+   if (inputHandler->IsPressed(KeyPress::Bit64)) { runHex(0b01000000); }
+   if (inputHandler->IsPressed(KeyPress::Bit32)) { runHex(0b00100000); }
+   if (inputHandler->IsPressed(KeyPress::Bit16)) { runHex(0b00010000); }
+   if (inputHandler->IsPressed(KeyPress::Bit8)) { runHex(0b00001000); }
+   if (inputHandler->IsPressed(KeyPress::Bit4)) { runHex(0b00000100); }
+   if (inputHandler->IsPressed(KeyPress::Bit2)) { runHex(0b00000010); }
+   if (inputHandler->IsPressed(KeyPress::Bit1)) { runHex(0b00000001); }
+
    uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
 
-   if (!delta.Hack())
+   if (!inputHandler->Hack())
    {
       disableMovement = false;
    }
@@ -73,17 +85,16 @@ void MageHexEditor::applyInput(const InputState& delta)
 
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:
-   if (delta.Hack())// activatedButton.IsPressed(KeyPress::Hax)) 
+   if (inputHandler->Hack())// activatedButton.IsPressed(KeyPress::Hax)) 
    {
       setHexEditorOn(false);
    }
 
-   const auto& button = delta.Buttons;
-   anyHexMovement = delta.Left() || delta.Right() || delta.Up() || delta.Down()
-      || delta.Increment() || delta.Decrement();
+   anyHexMovement = inputHandler->Left() || inputHandler->Right() || inputHandler->Up() || inputHandler->Down()
+      || inputHandler->Increment() || inputHandler->Decrement();
 
    static auto lastPageButtonPressTime = GameClock::now();
-   if (button.IsPressed(KeyPress::Page))
+   if (inputHandler->IsPressed(KeyPress::Page))
    {
       //reset last press time only when the page button switches from unpressed to pressed
       if (!previousPageButtonState)
@@ -94,21 +105,20 @@ void MageHexEditor::applyInput(const InputState& delta)
       previousPageButtonState = true;
 
       //check to see if there is any directional button action while the page button is pressed
-      if (delta.Up() || delta.Left())
+      if (inputHandler->Up() || inputHandler->Left())
       {
          currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
       }
-      else if (delta.Down() || delta.Right())
+      else if (inputHandler->Down() || inputHandler->Right())
       {
          currentMemPage = (currentMemPage + 1) % totalMemPages;
       }
       //check for memory button presses:
       int8_t memIndex = -1;
-      auto& activatedButton = delta.ActivatedButtons;
-      if (activatedButton.IsPressed(KeyPress::Mem0)) { memIndex = 0; }
-      if (activatedButton.IsPressed(KeyPress::Mem1)) { memIndex = 1; }
-      if (activatedButton.IsPressed(KeyPress::Mem2)) { memIndex = 2; }
-      if (activatedButton.IsPressed(KeyPress::Mem3)) { memIndex = 3; }
+      if (inputHandler->IsPressed(KeyPress::Mem0)) { memIndex = 0; }
+      else if (inputHandler->IsPressed(KeyPress::Mem1)) { memIndex = 1; }
+      else if (inputHandler->IsPressed(KeyPress::Mem2)) { memIndex = 2; }
+      else if (inputHandler->IsPressed(KeyPress::Mem3)) { memIndex = 3; }
       if (memIndex != -1)
       {
          memOffsets[memIndex] = hexCursorOffset % sizeof(MageEntityData);
@@ -116,7 +126,7 @@ void MageHexEditor::applyInput(const InputState& delta)
    }
    else
    {
-      applyMemRecallInputs(delta);
+      applyMemRecallInputs();
       //check to see if the page button was pressed and released quickly
       if (previousPageButtonState
          && (GameClock::now() - lastPageButtonPressTime).count() < HEXED_QUICK_PRESS_TIMEOUT)
@@ -128,63 +138,63 @@ void MageHexEditor::applyInput(const InputState& delta)
       previousPageButtonState = false;
 
       //check directional inputs and move cursor.
-      if (!button.IsPressed(KeyPress::Rjoy_right))
+      if (!inputHandler->IsPressed(KeyPress::Rjoy_right))
       {
          // not if in multi-byte selection mode
-         if (delta.Left())
+         if (inputHandler->Left())
          {
             hexCursorOffset = (hexCursorOffset + memTotal - 1) % memTotal;
             setPageToCursorLocation();
          }
-         if (delta.Right())
+         if (inputHandler->Right())
          {
             hexCursorOffset = (hexCursorOffset + 1) % memTotal;
             setPageToCursorLocation();
          }
-         if (delta.Up())
+         if (inputHandler->Up())
          {
             hexCursorOffset = (hexCursorOffset + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
             setPageToCursorLocation();
          }
-         if (delta.Down())
+         if (inputHandler->Down())
          {
             hexCursorOffset = (hexCursorOffset + HEXED_BYTES_PER_ROW) % memTotal;
             setPageToCursorLocation();
          }
-         if (delta.Increment())
+         if (inputHandler->Increment())
          {
             *currentByte += 1;
          }
-         if (delta.Decrement())
+         if (inputHandler->Decrement())
          {
             *currentByte -= 1;
          }
       }
       if (playerHasClipboardControl)
       {
-         if (delta.ActivatedButtons.IsPressed(KeyPress::Rjoy_right))
+         if (inputHandler->IsPressed(KeyPress::Rjoy_right))
          {
             //start copying
             clipboardLength = 1;
             isCopying = true;
          }
-         if (!button.IsPressed(KeyPress::Rjoy_right))
+         if (!inputHandler->IsPressed(KeyPress::Rjoy_right))
          {
             isCopying = false;
          }
-         if (button.IsPressed(KeyPress::Rjoy_right))
+         if (inputHandler->IsPressed(KeyPress::Rjoy_right))
          {
-            if (delta.Left())
+            if (inputHandler->Left())
             {
                clipboardLength = std::max(1, clipboardLength - 1);
             }
-            if (delta.Right())
+            if (inputHandler->Right())
             {
                clipboardLength = std::min<uint8_t>(sizeof(MageEntityData), clipboardLength + 1);
             }
             memcpy(clipboard, currentByte, clipboardLength);
          }
-         if (button.IsPressed(KeyPress::Rjoy_left))
+         if (inputHandler->IsPressed(KeyPress::Rjoy_left))
          {
             //paste
             memcpy(currentByte, clipboard, clipboardLength);
@@ -193,25 +203,24 @@ void MageHexEditor::applyInput(const InputState& delta)
    }
    if (anyHexMovement)
    {
-      hexTickDelay = HEXED_TICK_DELAY;
+      hexTickDelay = 1;
    }
    updateHexStateVariables();
 }
 
-void MageHexEditor::applyMemRecallInputs(const InputState& delta)
+void MageHexEditor::applyMemRecallInputs()
 {
-   uint8_t currentEntityIndex = hexCursorOffset / sizeof(MageEntityData);
-   uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntityData);
+   const auto currentEntityIndex = hexCursorOffset / sizeof(MageEntityData);
+   const auto currentEntityStart = currentEntityIndex * sizeof(MageEntityData);
    //check for memory button presses and set the hex cursor to the memory location
-   int8_t memIndex = -1;
-   const auto activatedButton = inputHandler->GetButtonActivatedState();
-   if (activatedButton.IsPressed(KeyPress::Mem0)) { memIndex = 0; }
-   if (activatedButton.IsPressed(KeyPress::Mem1)) { memIndex = 1; }
-   if (activatedButton.IsPressed(KeyPress::Mem2)) { memIndex = 2; }
-   if (activatedButton.IsPressed(KeyPress::Mem3)) { memIndex = 3; }
+   auto memIndex = -1;
+   if (inputHandler->IsPressed(KeyPress::Mem0)) { memIndex = 0; }
+   else if (inputHandler->IsPressed(KeyPress::Mem1)) { memIndex = 1; }
+   else if (inputHandler->IsPressed(KeyPress::Mem2)) { memIndex = 2; }
+   else if (inputHandler->IsPressed(KeyPress::Mem3)) { memIndex = 3; }
    if (memIndex != -1)
    {
-      auto memoryAddress = memOffsets[memIndex % MAGE_NUM_MEM_BUTTONS];
+      const auto memoryAddress = memOffsets[memIndex % MAGE_NUM_MEM_BUTTONS];
       SetCursorOffset(currentEntityStart + memoryAddress);
    }
 }

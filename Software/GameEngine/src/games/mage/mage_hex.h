@@ -30,7 +30,6 @@ class MageDialogControl;
 #define HEXED_CLIPBOARD_MAX_LENGTH 64
 
 #define HEXED_QUICK_PRESS_TIMEOUT 500
-#define HEXED_TICK_DELAY 1
 
 enum HEX_OPS {
 	HEX_OPS_XOR,
@@ -42,9 +41,9 @@ enum HEX_OPS {
 class MageHexEditor
 {
 public:
-	MageHexEditor(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
-		: screenManager(screenManager),
-		inputHandler(inputHandler),
+	MageHexEditor(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
+		: inputHandler(inputHandler),
+		screenManager(screenManager),
 		mapControl(mapControl),
 		memOffsets(memOffsets)
 	{};
@@ -93,8 +92,8 @@ public:
 	void updateHexStateVariables();
 
 	//this applies inputs to the hex editor state.
-	void applyInput(const InputState& delta);
-	void applyMemRecallInputs(const InputState& delta);
+	void Update();
+	void applyMemRecallInputs();
 
 	void Draw();
 
@@ -107,9 +106,9 @@ public:
 	bool playerHasHexEditorControl{ false };
 
 private:
+	std::shared_ptr<EngineInput> inputHandler;
 	std::shared_ptr<ScreenManager> screenManager;
 	std::shared_ptr<MapControl>  mapControl;
-	std::shared_ptr<EngineInput> inputHandler;
 
 	uint8_t clipboard[HEXED_CLIPBOARD_MAX_LENGTH]{ 0 };
 	uint8_t clipboardLength{ 0 };

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <format>
 #include <limits>
 #include <typeinfo>
 
@@ -25,16 +26,15 @@ void MageGameEngine::Run()
 
    // TODO: fix/move emscripten startup
 //#ifdef EMSCRIPTEN
-//   const auto EmscriptenUseRequestAnimation = 0;
+//   const auto EmscriptenFps_UseBrowser = 0;
 //   const auto EmscriptenSimulateInfiniteLoop = 0;
 //   emscripten_set_main_loop(gameLoopIteration, emscriptenFPS, emscriptenSimulateInfiniteLoop);
 //#else
 
    //update timing information at the start of every game loop
-   static auto lastTime = GameClock::now();
-   static auto updateAccumulator = GameClock::duration{ 0 };
-   static auto fps = 0;
-
+   auto lastTime = GameClock::now();
+   auto fps = 0;
+   auto frames = 0;
 
    while (inputHandler->KeepRunning())
    {
@@ -48,46 +48,40 @@ void MageGameEngine::Run()
          LoadMap();
       }
 
-      const auto loopStart = GameClock::now();
-      const auto deltaTime = loopStart - lastTime;
-      lastTime = loopStart;
-      updateAccumulator += deltaTime;
-
-      const auto input = inputHandler->GetDeltaState(deltaTime);
-      gameLoopIteration(input);
-      lastTime = loopStart;
+      frames++;
+      const auto newTime = GameClock::now();
+      if (newTime - lastTime >= GameClock::duration{ std::chrono::seconds{1} })
+      {
+         fps = frames / (newTime - lastTime).count();
+         lastTime = newTime;
+      }
+      gameLoopIteration();
+      frameBuffer->printMessage(std::format("FPS: {}", fps), Monaco9, COLOR_RED, 10, 10);
    }
 //#endif
 }
 
-void MageGameEngine::gameLoopIteration(const InputState& input)
+void MageGameEngine::gameLoopIteration()
 {
+   inputHandler->UpdateState();
    // if the map is about to change, don't bother updating entities since they're about to be reloaded
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
-   applyUniversalInputs(input);
-   applyGameModeInputs(input);
+   applyUniversalInputs();
+   applyGameModeInputs();
 
    const auto loopStart = GameClock::now();
-   const auto deltaTime = input.deltaTime;
-   auto updateAccumulator = input.deltaTime;
+   auto updateAccumulator = inputHandler->lastDelta;
    // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
    while (updateAccumulator >= IntegrationStepSize)
    {
       // always apply camera effects before any other updates that rely on camera data
       camera.applyEffects();
-
-      dialogControl->update();
-
-      // if (uiInputAccumulator >= MinTimeBetweenUIInput)
-      {
-         hexEditor->applyInput(input);
-         scriptControl->jumpScriptId = dialogControl->applyInput(input);
-         // uiInputAccumulator -= MinTimeBetweenUIInput;
-      }
+      scriptControl->jumpScriptId = dialogControl->Update();
+      hexEditor->Update();
 
       // always update entities last to accumulate all previous changes that may affect their hackable data
-      mapControl->UpdateEntities(input);
+      mapControl->UpdateEntities();
       updateAccumulator -= IntegrationStepSize;
    }
 
@@ -105,7 +99,6 @@ void MageGameEngine::gameLoopIteration(const InputState& input)
    updateHexLights();
 
    frameBuffer->blt();
-
 }
 
 void MageGameEngine::LoadMap()
@@ -132,74 +125,61 @@ void MageGameEngine::LoadMap()
    playerHasControl = true;
 }
 
-void MageGameEngine::applyUniversalInputs(const InputState& input)
+void MageGameEngine::applyUniversalInputs()
 {
-   //make sure any input.Buttons handling in this function can be processed in ANY game mode.
+   //make sure any inputHandler->Buttons handling in this function can be processed in ANY game mode.
    //that includes the game mode, hex editor mode, any menus, maps, etc.
-   ledSet(LED_PAGE, input.Buttons.IsPressed(KeyPress::Page) ? 0xFF : 0x00);
-   if (input.Buttons.IsPressed(KeyPress::Xor)) { hexEditor->setHexOp(HEX_OPS_XOR); }
-   if (input.Buttons.IsPressed(KeyPress::Add)) { hexEditor->setHexOp(HEX_OPS_ADD); }
-   if (input.Buttons.IsPressed(KeyPress::Sub)) { hexEditor->setHexOp(HEX_OPS_SUB); }
+   ledSet(LED_PAGE, inputHandler->IsPressed(KeyPress::Page) ? 0xFF : 0x00);
 
-   if (input.Buttons.IsPressed(KeyPress::Bit128)) { hexEditor->runHex(0b10000000); }
-   if (input.Buttons.IsPressed(KeyPress::Bit64)) { hexEditor->runHex(0b01000000); }
-   if (input.Buttons.IsPressed(KeyPress::Bit32)) { hexEditor->runHex(0b00100000); }
-   if (input.Buttons.IsPressed(KeyPress::Bit16)) { hexEditor->runHex(0b00010000); }
-   if (input.Buttons.IsPressed(KeyPress::Bit8)) { hexEditor->runHex(0b00001000); }
-   if (input.Buttons.IsPressed(KeyPress::Bit4)) { hexEditor->runHex(0b00000100); }
-   if (input.Buttons.IsPressed(KeyPress::Bit2)) { hexEditor->runHex(0b00000010); }
-   if (input.Buttons.IsPressed(KeyPress::Bit1)) { hexEditor->runHex(0b00000001); }
-
-   // only trigger on the first release of XOR MEM0, regardless of order it is pressed
-   if (input.Buttons.IsPressed(KeyPress::Xor) && input.ActivatedButtons.IsPressed(KeyPress::Mem0)
-      || input.ActivatedButtons.IsPressed(KeyPress::Xor) && input.Buttons.IsPressed(KeyPress::Mem0))
+   if (inputHandler->IsPressed(KeyPress::Xor) && inputHandler->IsPressed(KeyPress::Mem0))
    {
       screenManager->ToggleDrawGeometry();
    }
 }
 
-void MageGameEngine::applyGameModeInputs(const InputState& input)
+void MageGameEngine::applyGameModeInputs()
 {
    auto player = mapControl->getPlayerEntityData();
-   const auto moveAmount = input.Running() ? RunSpeed : WalkSpeed;
+   const auto moveAmount = inputHandler->IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
    auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
    auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
    auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
 
-   // don't update player based on input if they don't have control or are actioning
-   if (playerHasControl && !input.PlayerIsActioning())
+   // position updates while player is actioning cause loss of collision data
+   // because th
+   if (playerHasControl && !inputHandler->PlayerIsActioning())
    {
       // clip player to [0,max(uint16_t)]
-      if (input.Left())
+      if (inputHandler->Left())
       {
          player->position.x = int(player->position.x) - moveAmount < 0
             ? 0
             : player->position.x - moveAmount;
       }
-      else if (input.Right())
+      else if (inputHandler->Right())
       {
          player->position.x = int(player->position.x) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
             : player->position.x + moveAmount;
       }
 
-      if (input.Up())
+      if (inputHandler->Up())
       {
          player->position.y = int(player->position.y) - moveAmount < 0
             ? 0
             : player->position.y - moveAmount;
       }
-      else if (input.Down())
+      else if (inputHandler->Down())
       {
          player->position.y = int(player->position.y) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
             : player->position.y + moveAmount;
       }
-      auto entityInteractId = mapControl->UpdatePlayer(input);
-      if (entityInteractId)
+      auto entityInteractId = mapControl->UpdatePlayer();
+      if (entityInteractId.has_value())
       {
-         if (input.Hack() && hexEditor->playerHasHexEditorControl)
+         if (inputHandler->Hack() && hexEditor->playerHasHexEditorControl)
          {
             hexEditor->openToEntity(*entityInteractId);
          } 
@@ -217,7 +197,7 @@ void MageGameEngine::applyGameModeInputs(const InputState& input)
    auto playerRenderableData = mapControl->getPlayerRenderableData();
    //handle animation assignment for the player:
    //Scenario 1 - perform action:
-   if (input.PlayerIsActioning() && hasEntityType
+   if (inputHandler->PlayerIsActioning() && hasEntityType
       && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
    {
       playerRenderableData->SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
@@ -253,11 +233,11 @@ void MageGameEngine::applyGameModeInputs(const InputState& input)
 
    //opening the hex editor is the only button press that will lag actual gameplay by one frame
    //this is to allow entity scripts to check the hex editor state before it opens to run scripts
-   if (input.Hack())
+   if (inputHandler->Hack())
    {
       hexEditor->setHexEditorOn(true);
    }
-   hexEditor->applyMemRecallInputs(input);
+   hexEditor->applyMemRecallInputs();
 }
 
 void MageGameEngine::updateHexLights() const

@@ -117,10 +117,12 @@ class MageDialogControl
 {
 public:
    MageDialogControl(
+      std::shared_ptr<EngineInput> inputHandler,
       std::shared_ptr<ScreenManager> screenManager,
       std::shared_ptr<StringLoader> stringLoader,
       std::shared_ptr<MapControl> mapControl) noexcept
-      : screenManager(screenManager),
+      : inputHandler(inputHandler),
+      screenManager(screenManager),
       stringLoader(stringLoader),
       mapControl(mapControl)
    {}
@@ -134,11 +136,11 @@ public:
    constexpr void close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
-   std::optional<uint16_t> applyInput(const InputState& delta);
-   void update();
+   std::optional<uint16_t> Update();
    void Draw() const;
 
 private:
+   std::shared_ptr<EngineInput> inputHandler;
    std::shared_ptr<ScreenManager> screenManager;
    std::shared_ptr<StringLoader> stringLoader;
    std::shared_ptr<MapControl> mapControl;

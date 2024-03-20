@@ -6,28 +6,25 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <span>
 #include <string>
 #include <regex>
 
-ButtonState EngineInput::GetDesktopInputState()
+void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
 {
-   if (application_quit != 0)
+   if (application_quit)
    {
       running = false;
-      return 0;
+      return;
    }
 
-   SDL_PumpEvents();
-
-   const uint8_t* keys = SDL_GetKeyboardState(nullptr);
    auto e = SDL_Event{};
-
    while (SDL_PollEvent(&e))
    {
       if (e.type == SDL_QUIT)
       {
          running = false;
-         return 0;
+         return;
       }
 
       if (e.type == SDL_KEYDOWN)
@@ -39,97 +36,208 @@ ButtonState EngineInput::GetDesktopInputState()
          if (KMOD_ALT == (e.key.keysym.mod & KMOD_ALT) && e.key.keysym.sym == SDLK_F4)
          {
             running = false;
-            return 0;
+            return;
          }
          // ctrl-r should cause the desktop version of the game to
          // reload the `game.dat` from the filesystem
          else if (KMOD_CTRL == (e.key.keysym.mod & KMOD_CTRL) && e.key.keysym.sym == SDLK_r)
          {
             reset = true;
-            return 0;
+            return;
          }
-         // + or - keys increase or decrease screen size:
-//TODO: MOVE THIS
-         /*else if (e.key.keysym.sym == SDLK_MINUS)
+         else
          {
-            MainWindow->Resize(-1);
-            return 0;
+            auto keyDown = mapScanCode(e.key.keysym.scancode);
+            if (keyDown.has_value())
+            {
+               inputStates[keyDown.value()].lastPressed = curTime;
+            }
          }
-         else if (e.key.keysym.sym == SDLK_EQUALS)
-         {
-            MainWindow->Resize(1);
-            return 0;
-         }*/
       }
+      else if (e.type == SDL_KEYUP)
+      {
+         auto keyUp = mapScanCode(e.key.keysym.scancode);
+         if (keyUp.has_value())
+         {
+            inputStates[keyUp.value()].lastReleased = curTime;
+         }
+      }
+
+      // TODO: MOVE THIS (and hook it up)
+      // + or - keys increase or decrease screen size:
+      /*else if (e.key.keysym.sym == SDLK_MINUS)
+      {
+         MainWindow->Resize(-1);
+         return 0;
+      }
+      else if (e.key.keysym.sym == SDLK_EQUALS)
+      {
+         MainWindow->Resize(1);
+         return 0;
+      }*/
    }
-
-   uint32_t newValue = 0x00000000;
-
-   //primary bindings:
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F5] << (uint32_t)KeyPress::Mem0;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F6] << (uint32_t)KeyPress::Mem1;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F7] << (uint32_t)KeyPress::Mem2;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F8] << (uint32_t)KeyPress::Mem3;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_B] << (uint32_t)KeyPress::Mem0;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_N] << (uint32_t)KeyPress::Mem1;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_M] << (uint32_t)KeyPress::Mem2;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_COMMA] << (uint32_t)KeyPress::Mem3;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_1] << (uint32_t)KeyPress::Bit128;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_2] << (uint32_t)KeyPress::Bit64;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_3] << (uint32_t)KeyPress::Bit32;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_4] << (uint32_t)KeyPress::Bit16;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_5] << (uint32_t)KeyPress::Bit8;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_6] << (uint32_t)KeyPress::Bit4;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_7] << (uint32_t)KeyPress::Bit2;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_8] << (uint32_t)KeyPress::Bit1;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F1] << (uint32_t)KeyPress::Xor;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F2] << (uint32_t)KeyPress::Add;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F3] << (uint32_t)KeyPress::Sub;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_F4] << (uint32_t)KeyPress::Page;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_Z] << (uint32_t)KeyPress::Xor;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_X] << (uint32_t)KeyPress::Add;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_C] << (uint32_t)KeyPress::Sub;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_V] << (uint32_t)KeyPress::Page;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_1] << (uint32_t)KeyPress::Xor;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_2] << (uint32_t)KeyPress::Add;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_3] << (uint32_t)KeyPress::Sub;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_0] << (uint32_t)KeyPress::Page;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_Q] << (uint32_t)KeyPress::Ljoy_center;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_7] << (uint32_t)KeyPress::Ljoy_center;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_W] << (uint32_t)KeyPress::Ljoy_up;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_S] << (uint32_t)KeyPress::Ljoy_down;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_A] << (uint32_t)KeyPress::Ljoy_left;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_D] << (uint32_t)KeyPress::Ljoy_right;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_9] << (uint32_t)KeyPress::Rjoy_center;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_8] << (uint32_t)KeyPress::Rjoy_up;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_5] << (uint32_t)KeyPress::Rjoy_down;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_4] << (uint32_t)KeyPress::Rjoy_left;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_6] << (uint32_t)KeyPress::Rjoy_right;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_TAB] << (uint32_t)KeyPress::Hax;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_ESCAPE] << (uint32_t)KeyPress::Hax;
-   //secondary bindings that duplicate values above:
-   newValue |= (uint32_t)keys[SDL_SCANCODE_LSHIFT] << (uint32_t)KeyPress::Rjoy_down;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_LCTRL] << (uint32_t)KeyPress::Page;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_UP] << (uint32_t)KeyPress::Ljoy_up;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_DOWN] << (uint32_t)KeyPress::Ljoy_down;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_LEFT] << (uint32_t)KeyPress::Ljoy_left;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_RIGHT] << (uint32_t)KeyPress::Ljoy_right;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_O] << (uint32_t)KeyPress::Rjoy_center;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_I] << (uint32_t)KeyPress::Rjoy_up;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_K] << (uint32_t)KeyPress::Rjoy_down;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_J] << (uint32_t)KeyPress::Rjoy_left;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_L] << (uint32_t)KeyPress::Rjoy_right;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_E] << (uint32_t)KeyPress::Rjoy_right;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_KP_ENTER] << (uint32_t)KeyPress::Rjoy_right;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_GRAVE] << (uint32_t)KeyPress::Rjoy_up; // AKA Backtick
-   newValue |= (uint32_t)keys[SDL_SCANCODE_BACKSLASH] << (uint32_t)KeyPress::Rjoy_up;
-   newValue |= (uint32_t)keys[SDL_SCANCODE_RETURN] << (uint32_t)KeyPress::Rjoy_right;
-
-   return newValue;
 }
 
 #endif
 
+std::optional<KeyPress> EngineInput::mapScanCode(int scanCode) const
+{
+   switch (scanCode)
+   {
+      case SDL_SCANCODE_F5:
+      case SDL_SCANCODE_B:
+      {
+         return KeyPress::Mem0;
+      }
+
+      case SDL_SCANCODE_F6:
+      case SDL_SCANCODE_N:
+      {
+         return KeyPress::Mem1;
+      }
+
+      case SDL_SCANCODE_F7:
+      case SDL_SCANCODE_M:
+      {
+         return KeyPress::Mem2;
+      }
+
+      case SDL_SCANCODE_F8:
+      case SDL_SCANCODE_COMMA:
+      {
+         return KeyPress::Mem3;
+      }
+
+      case SDL_SCANCODE_1:
+      {
+         return KeyPress::Bit128;
+      }
+      case SDL_SCANCODE_2:
+      {
+         return KeyPress::Bit64;
+      }
+      case SDL_SCANCODE_3:
+      {
+         return KeyPress::Bit32;
+      }
+      case SDL_SCANCODE_4:
+      {
+         return KeyPress::Bit16;
+      }
+      case SDL_SCANCODE_5:
+      {
+         return KeyPress::Bit8;
+      }
+      case SDL_SCANCODE_6:
+      {
+         return KeyPress::Bit4;
+      }
+      case SDL_SCANCODE_7:
+      {
+         return KeyPress::Bit2;
+      }
+      case SDL_SCANCODE_8:
+      {
+         return KeyPress::Bit1;
+      }
+
+      case SDL_SCANCODE_F1:
+      case SDL_SCANCODE_Z:
+      case SDL_SCANCODE_KP_1:
+      {
+         return KeyPress::Xor;
+      }
+
+      case SDL_SCANCODE_F2:
+      case SDL_SCANCODE_X:
+      case SDL_SCANCODE_KP_2:
+      {
+         return KeyPress::Add;
+      }
+
+      case SDL_SCANCODE_F3:
+      case SDL_SCANCODE_C:
+      case SDL_SCANCODE_KP_3:
+      {
+         return KeyPress::Sub;
+      }
+
+      case SDL_SCANCODE_F4:
+      case SDL_SCANCODE_V:
+      case SDL_SCANCODE_KP_0:
+      case SDL_SCANCODE_LCTRL:
+      {
+         return KeyPress::Page;
+      }
+
+      case SDL_SCANCODE_TAB:
+      case SDL_SCANCODE_ESCAPE:
+      {
+         return KeyPress::Hax;
+      }
+
+
+      case SDL_SCANCODE_Q:
+      case SDL_SCANCODE_KP_7:
+      {
+         return KeyPress::Ljoy_center;
+      }
+      case SDL_SCANCODE_W:
+      case SDL_SCANCODE_UP:
+      {
+         return KeyPress::Ljoy_up;
+      }
+      case SDL_SCANCODE_S:
+      case SDL_SCANCODE_DOWN:
+      {
+         return KeyPress::Ljoy_down;
+      }
+      case SDL_SCANCODE_A:
+      case SDL_SCANCODE_LEFT:
+      {
+         return KeyPress::Ljoy_left;
+      }
+      case SDL_SCANCODE_D:
+      case SDL_SCANCODE_RIGHT:
+      {
+         return KeyPress::Ljoy_right;
+      }
+
+      case SDL_SCANCODE_KP_9:
+      case SDL_SCANCODE_O:
+      {
+         return KeyPress::Rjoy_center;
+      }
+      case SDL_SCANCODE_KP_8:
+      case SDL_SCANCODE_I:
+      case SDL_SCANCODE_GRAVE: // Grave accent mark, AKA Backtick, left of 1
+      case SDL_SCANCODE_BACKSLASH:
+      {
+         return KeyPress::Rjoy_up;
+      }
+      case SDL_SCANCODE_KP_5:
+      case SDL_SCANCODE_K:
+      case SDL_SCANCODE_LSHIFT:
+      {
+         return KeyPress::Rjoy_down;
+      }
+      case SDL_SCANCODE_KP_4:
+      case SDL_SCANCODE_J:
+      {
+         return KeyPress::Rjoy_left;
+      }
+      case SDL_SCANCODE_KP_6:
+      case SDL_SCANCODE_L:
+      case SDL_SCANCODE_E:
+      case SDL_SCANCODE_KP_ENTER:
+      case SDL_SCANCODE_RETURN:
+      {
+         return KeyPress::Rjoy_right;
+      }
+      default:
+         return std::nullopt;
+   }
+}
 
 #ifndef DC801_EMBEDDED
 std::string EngineInput::GetCommandStringFromStandardIn()
@@ -141,41 +249,27 @@ std::string EngineInput::GetCommandStringFromStandardIn()
 }
 #endif
 
-bool EngineInput::KeepRunning()
+void EngineInput::UpdateState()
 {
-
+   const auto curTime = GameClock::now();
 #ifdef DC801_EMBEDDED
    auto newValue = get_keyboard_mask();
-#else
-   auto newValue = GetDesktopInputState();
-#endif
-
-   buttons = newValue;
-   activated = ~activated & newValue;
-
-   //make map reload options global regardless of the player's other control state
-   if (buttons.IsPressed(KeyPress::Xor))
-   {
-      if (buttons.IsPressed(KeyPress::Mem3))
-      {
-         reset = true;
-      }
-      else if (buttons.IsPressed(KeyPress::Mem1))
-      {
-         isEntityDebugOn = false;
-         reset = true;
-      }
-   }
-
-
-   //on desktop, interact with stdin
-   //on embedded, interact with USBC com port over serial
-
-#ifdef DC801_EMBEDDED
    serial->HandleInput();
 #else
+   UpdateDesktopInputState(curTime);
    GetCommandStringFromStandardIn();
 #endif
 
-   return running;
+   //make map reload options global regardless of the player's other control state
+   if (IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem3))
+   {
+      reset = true;
+   }
+   else if (IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem1))
+   {
+      isEntityDebugOn = !isEntityDebugOn;
+      reset = true;
+   }
+   lastDelta = curTime - lastUpdate;
+   lastUpdate = curTime;
 }

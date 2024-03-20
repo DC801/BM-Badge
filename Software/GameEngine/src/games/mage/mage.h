@@ -36,9 +36,9 @@ public:
       screenManager = std::make_shared<ScreenManager>(frameBuffer, &camera);
 
       mapControl = std::make_shared<MapControl>(screenManager, ROM()->GetCurrentSave().currentMapId);
-      hexEditor = std::make_shared<MageHexEditor>(screenManager, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
+      hexEditor = std::make_shared<MageHexEditor>(inputHandler, screenManager, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(mapControl, ROM()->GetCurrentSave().scriptVariables);
-      dialogControl = std::make_unique<MageDialogControl>(screenManager, stringLoader, mapControl);
+      dialogControl = std::make_unique<MageDialogControl>(inputHandler, screenManager, stringLoader, mapControl);
 
       auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
       scriptControl = std::make_shared<MageScriptControl>(mapControl, std::move(scriptActions));
@@ -55,15 +55,15 @@ private:
    
    //this takes input information and moves the playerEntity around
    //If there is no playerEntity, it just moves the camera freely.
-   void applyGameModeInputs(const InputState& delta);
+   void applyGameModeInputs();
 
    //this handles inputs that apply in ALL game states. That includes when
    //the hex editor is open, when it is closed, when in any menus, etc.
-   void applyUniversalInputs(const InputState& delta);
+   void applyUniversalInputs();
 
    void updateHexLights() const;
 
-   void gameLoopIteration(const InputState& input);
+   void gameLoopIteration();
 
    uint8_t currentSaveIndex{ 0 };
 

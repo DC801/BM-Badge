@@ -730,8 +730,7 @@ std::optional<uint16_t> MageScriptActions::check_for_button_press(const uint8_t*
    } ActionCheckForButtonPress;
    auto argStruct = (ActionCheckForButtonPress*)args;
 
-   auto activeButton = inputHandler->GetButtonActivatedState();
-   if (activeButton.IsPressed((KeyPress)argStruct->buttonId))
+   if (inputHandler->IsPressed((KeyPress)argStruct->buttonId))
    {
       return argStruct->successScriptId;
    }
@@ -750,8 +749,7 @@ std::optional<uint16_t> MageScriptActions::check_for_button_state(const uint8_t*
       uint8_t paddingG;
    } ActionCheckForButtonState;
    auto argStruct = (ActionCheckForButtonState*)args;
-   auto button = inputHandler->GetButtonState();
-   if ((bool)(argStruct->expectedBoolValue) == button.IsPressed((KeyPress)argStruct->buttonId))
+   if ((bool)(argStruct->expectedBoolValue) == inputHandler->IsPressed((KeyPress)argStruct->buttonId))
    {
       return argStruct->successScriptId;
    }

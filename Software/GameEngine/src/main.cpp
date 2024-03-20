@@ -88,8 +88,8 @@ int main(int argc, char* argv[])
 
     // Setup the system
     log_init();
-    auto windowFrame = std::make_unique<EngineWindowFrame>();
     auto inputHandler = std::make_shared<EngineInput>();
+    auto windowFrame = std::make_unique<EngineWindowFrame>(inputHandler);
     auto frameBuffer = std::make_shared<FrameBuffer>(std::move(windowFrame));
 
 #ifdef DC801_EMBEDDED

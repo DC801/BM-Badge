@@ -107,10 +107,10 @@ public:
    void Load();
    void DrawLayer(uint8_t layer) const;
    void DrawEntities() const;
-   void UpdateEntities(const InputState& delta);
+   void UpdateEntities();
 
    // Return what entity is being interacted with or std::nullopt if there's no interaction
-   std::optional<uint16_t> UpdatePlayer(const InputState& delta);
+   std::optional<uint16_t> UpdatePlayer();
 
    constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {

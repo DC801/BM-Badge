@@ -69,7 +69,7 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 	);
 }
 
-EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
+EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents() noexcept
 {
 	SDL_FreeSurface(frameButtonSurface);
 	frameButtonSurface = nullptr;
@@ -85,17 +85,19 @@ EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
 	window = nullptr;
 }
 
-void EngineWindowFrame::DrawButtonStates(ButtonState button) const
+void EngineWindowFrame::DrawButtonStates() const
 {
-	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
+	const auto& inputs = inputHandler->GetInputStates();
+
+	for (auto i = 0; i < inputs.size(); i++)
 	{
-		auto& buttonPoint = buttonDestPoints[i];
-		auto buttonState = button.IsPressed((KeyPress)i);
+		const auto& keyState = inputs[i];
+		auto& buttonPoint = buttonDestPoints[(int)i];
 		const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
 		SDL_RenderCopy(
 			components.renderer,
 			components.frameButtonTexture,
-			buttonState ? &buttonOnSrcRect : &buttonOffSrcRect,
+			keyState.Pressed() ? &buttonOnSrcRect : &buttonOffSrcRect,
 			&buttonTargetRect
 		);
 	}

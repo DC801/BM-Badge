@@ -23,16 +23,19 @@ extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 class EngineWindowFrame
 {
 public:
+   EngineWindowFrame(std::shared_ptr<EngineInput> inputHandler) noexcept
+      : inputHandler(inputHandler)
+   {}
    void GameBlt(const uint16_t frame[]) const;
-   void DrawButtonStates(ButtonState button) const;
+   void DrawButtonStates() const;
    void DrawLEDStates() const;
    void Resize(int change);
 private:
-
+   std::shared_ptr<EngineInput> inputHandler;
    struct EngineWindowFrameComponents
    {
       EngineWindowFrameComponents();
-      ~EngineWindowFrameComponents();
+      ~EngineWindowFrameComponents() noexcept;
 
       SDL_Window* window = nullptr;
       SDL_Renderer* renderer = nullptr;

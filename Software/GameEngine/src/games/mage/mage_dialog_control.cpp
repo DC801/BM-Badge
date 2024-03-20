@@ -71,7 +71,7 @@ void MageDialogControl::loadNextScreen()
    currentScreenIndex++;
 }
 
-std::optional<uint16_t> MageDialogControl::applyInput(const InputState& delta)
+std::optional<uint16_t> MageDialogControl::Update()
 {
    if (!isOpen())
    {
@@ -82,17 +82,18 @@ std::optional<uint16_t> MageDialogControl::applyInput(const InputState& delta)
    if (shouldShowResponses(currentScreen))
    {
       //currentResponseIndex += currentScreen.responseCount;
-      if (delta.Up()) { currentResponseIndex--; }
-      if (delta.Down()) { currentResponseIndex++; }
+      if (inputHandler->Up()) { currentResponseIndex--; }
+      if (inputHandler->Down()) { currentResponseIndex++; }
       currentResponseIndex %= currentScreen.responseCount;
-      if (delta.Right())
+
+      if (inputHandler->Right())
       {
          open = false;
          return responses[currentResponseIndex].scriptIndex;
       }
    }
 
-   const auto shouldAdvance = delta.AdvanceDialog()
+   const auto shouldAdvance = inputHandler->AdvanceDialog()
       || MAGE_NO_MAP != mapControl->mapLoadId;
 
    if (shouldAdvance)
@@ -109,16 +110,6 @@ std::optional<uint16_t> MageDialogControl::applyInput(const InputState& delta)
       }
    }
    return std::nullopt;
-}
-
-void MageDialogControl::update()
-{
-   if (!open)
-   {
-      return;
-   }
-
-   cursorPhase += IntegrationStepSize.count();
 }
 
 void MageDialogControl::Draw() const
