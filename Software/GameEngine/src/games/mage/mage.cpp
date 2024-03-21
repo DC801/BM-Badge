@@ -67,7 +67,6 @@ void MageGameEngine::gameLoopIteration()
    // if the map is about to change, don't bother updating entities since they're about to be reloaded
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
-   applyUniversalInputs();
    applyGameModeInputs();
 
    const auto loopStart = GameClock::now();
@@ -125,18 +124,6 @@ void MageGameEngine::LoadMap()
    playerHasControl = true;
 }
 
-void MageGameEngine::applyUniversalInputs()
-{
-   //make sure any inputHandler->Buttons handling in this function can be processed in ANY game mode.
-   //that includes the game mode, hex editor mode, any menus, maps, etc.
-   ledSet(LED_PAGE, inputHandler->IsPressed(KeyPress::Page) ? 0xFF : 0x00);
-
-   if (inputHandler->IsPressed(KeyPress::Xor) && inputHandler->IsPressed(KeyPress::Mem0))
-   {
-      screenManager->ToggleDrawGeometry();
-   }
-}
-
 void MageGameEngine::applyGameModeInputs()
 {
    auto player = mapControl->getPlayerEntityData();
@@ -153,26 +140,26 @@ void MageGameEngine::applyGameModeInputs()
       // clip player to [0,max(uint16_t)]
       if (inputHandler->Left())
       {
-         player->position.x = int(player->position.x) - moveAmount < 0
+         player->position.x = static_cast<int>(player->position.x) - moveAmount < 0
             ? 0
             : player->position.x - moveAmount;
       }
       else if (inputHandler->Right())
       {
-         player->position.x = int(player->position.x) + moveAmount > std::numeric_limits<uint16_t>::max()
+         player->position.x = static_cast<int>(player->position.x) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
-            : player->position.x + moveAmount;
+            : player->position.x + moveAmount; 
       }
 
       if (inputHandler->Up())
       {
-         player->position.y = int(player->position.y) - moveAmount < 0
+         player->position.y = static_cast<int>(player->position.y) - moveAmount < 0
             ? 0
             : player->position.y - moveAmount;
       }
       else if (inputHandler->Down())
       {
-         player->position.y = int(player->position.y) + moveAmount > std::numeric_limits<uint16_t>::max()
+         player->position.y = static_cast<int>(player->position.y) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
             : player->position.y + moveAmount;
       }
@@ -245,6 +232,8 @@ void MageGameEngine::updateHexLights() const
    const auto entityDataPointer = mapControl->GetEntityDataPointer();
    const auto hexCursorOffset = hexEditor->GetCursorOffset();
    const auto currentByte = *(entityDataPointer + hexCursorOffset);
+   ledSet(LED_PAGE, inputHandler->IsPressed(KeyPress::Page) ? 0xFF : 0x00);
+
    ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);

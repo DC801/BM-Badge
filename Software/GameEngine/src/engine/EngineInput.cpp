@@ -235,6 +235,7 @@ std::optional<KeyPress> EngineInput::mapScanCode(int scanCode) const
          return KeyPress::Rjoy_right;
       }
       default:
+         // std::nullopt represents keys that have no mapping (alt, shift, etc) 
          return std::nullopt;
    }
 }
@@ -260,16 +261,27 @@ void EngineInput::UpdateState()
    GetCommandStringFromStandardIn();
 #endif
 
-   //make map reload options global regardless of the player's other control state
-   if (IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem3))
+
+   // The following handles inputs that apply in ALL game states. That includes when
+   // the hex editor is open, when it is closed, when in any menus, etc.
+
+   if (IsPressed(KeyPress::Xor))
    {
-      reset = true;
+      if (IsPressed(KeyPress::Mem3))
+      {
+         reset = true;
+      }
+      else if (IsPressed(KeyPress::Mem1))
+      {
+         isEntityDebugOn = !isEntityDebugOn;
+         reset = true;
+      }
+      else if (IsPressed(KeyPress::Mem0))
+      {
+         ToggleDrawGeometry();
+      }
    }
-   else if (IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem1))
-   {
-      isEntityDebugOn = !isEntityDebugOn;
-      reset = true;
-   }
+
    lastDelta = curTime - lastUpdate;
    lastUpdate = curTime;
 }

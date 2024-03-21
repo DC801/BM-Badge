@@ -228,10 +228,14 @@ public:
 
    GameClock::time_point lastUpdate{ GameClock::now() };
    GameClock::duration lastDelta{ 0 };
+   bool drawGeometry{ false };
 private:
    bool running{ true };
    bool reset{ false };
    bool isEntityDebugOn{ false };
+
+   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
+
    EnumClassArray<KeyPress, InputState, KEYBOARD_NUM_KEYS> inputStates{};
 
    std::optional<KeyPress> mapScanCode(int scanCode) const;

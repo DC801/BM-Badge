@@ -33,7 +33,7 @@ public:
       : inputHandler(inputHandler), frameBuffer(frameBuffer)
    {
       audioPlayer = std::make_unique<AudioPlayer>();
-      screenManager = std::make_shared<ScreenManager>(frameBuffer, &camera);
+      screenManager = std::make_shared<ScreenManager>(inputHandler, frameBuffer, &camera);
 
       mapControl = std::make_shared<MapControl>(screenManager, ROM()->GetCurrentSave().currentMapId);
       hexEditor = std::make_shared<MageHexEditor>(inputHandler, screenManager, mapControl, ROM()->GetCurrentSave().memOffsets);
@@ -56,10 +56,6 @@ private:
    //this takes input information and moves the playerEntity around
    //If there is no playerEntity, it just moves the camera freely.
    void applyGameModeInputs();
-
-   //this handles inputs that apply in ALL game states. That includes when
-   //the hex editor is open, when it is closed, when in any menus, etc.
-   void applyUniversalInputs();
 
    void updateHexLights() const;
 

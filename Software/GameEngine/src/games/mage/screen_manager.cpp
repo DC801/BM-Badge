@@ -87,7 +87,7 @@ void ScreenManager::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDr
    //    }
    // }
 
-   if (drawGeometry)
+   if (inputManager->drawGeometry)
    {
       //frameBuffer->drawRect(Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);
       auto geometry = tileset->GetGeometryForTile(tileId);

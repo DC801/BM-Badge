@@ -77,8 +77,8 @@ class ScreenManager
 {
    friend class MageCommandControl;
 public:
-   ScreenManager(std::shared_ptr<FrameBuffer> frameBuffer, const MageCamera* camera) noexcept
-      : frameBuffer(frameBuffer), camera(camera)
+   ScreenManager(std::shared_ptr<EngineInput> inputManager, std::shared_ptr<FrameBuffer> frameBuffer, const MageCamera* camera) noexcept
+      : inputManager(inputManager), frameBuffer(frameBuffer), camera(camera)
    {}
 
    inline void DrawFilledRect(int x, int y, int w, int h, uint16_t color) const
@@ -98,14 +98,13 @@ public:
 
    void DrawText(const std::string_view& text, uint16_t color, int x, int y) const;
 
-   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
    const MageCamera* camera;
 
 private:
    void drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags) const;
 
+   std::shared_ptr<EngineInput> inputManager;
    std::shared_ptr<FrameBuffer> frameBuffer;
-   bool drawGeometry{ false };
 };
 
 #endif //_MAGE_TILESET_H
