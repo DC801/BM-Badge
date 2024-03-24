@@ -4,7 +4,7 @@ on_load-main_menu {
 	mutate current-chapter = 0;
 	copy register-colors;
 
-	// TODO: write commentary
+	// todo: write commentary
 
 	// copy register-commentary
 	// if (flag ch1-commentary-notice is false) {
@@ -169,7 +169,7 @@ menu-credits {
 menu-credits2 {
 	set flag credits-from-menu to true;
 	load map credits2;
-	// todo: make credits for chapter 2
+	// TODO: make credits for chapter 2
 }
 
 /* ---------- BLING MODE ---------- */

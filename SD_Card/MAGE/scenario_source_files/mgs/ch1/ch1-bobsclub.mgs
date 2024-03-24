@@ -448,7 +448,8 @@ show_dialog-bobmoss-start {
 	turn player control on;
 }
 show_dialog-bobmoss-start-s {
-	// can't zigzag this without editing the Tiled map... TODO later
+	// can't zigzag this without editing the Tiled map... todo later
+	// (What the crap does this mean?? ^^)
 	copy face-player;
 	if (entity "%SELF%" is glitched) {
 		copy show_dialog-bobmoss-deglitch;

@@ -197,7 +197,7 @@ resume-walk {
 }
 
 capture_player_state {
-	// TODO: when we have functions, genericize this!
+	// todo: when we have functions, genericize this!
 	copy entity "%PLAYER%" x into variable playersave-x;
 	copy entity "%PLAYER%" y into variable playersave-y;
 	mutate playersave-room = ch2-in-room;

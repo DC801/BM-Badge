@@ -55,7 +55,7 @@ ch2-capture-ethernettle8 {
 
 on_tick-ch2-greenhouse {
 	// ethernettle interference checks
-	// TODO: Make these into functions in the individual Ether Nettle's on_tick when you get functions!
+	// todo: Make these into functions in the individual Ether Nettle's on_tick when you get functions!
 	if (
 		entity EtherNettle1 is not inside geometry EtherNettle1Origin
 		|| entity EtherNettle2 is not inside geometry EtherNettle2Origin

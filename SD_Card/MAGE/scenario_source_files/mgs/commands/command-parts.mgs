@@ -282,14 +282,12 @@ command-parts-ahead-confused {
 
 // ROUND ONE: normal
 
-// TODO: different convo for carrying vs installed vs needed
-
 command-parts-monitor {
 	show serial dialog spacer;
 	if (flag ch2-installed-monitor is true) {
 		show serial dialog { "<m>LAMBDA</>: You've got the monitor all set up already. If it looks broken, it's only because the mainframe can't boot up yet." }
 	} else if (flag ch2-carrying-monitor is true) {
-		show serial dialog { "<m>LAMBDA</>: Looks like you've got the monitor already. To install it, all you'll need to do is find the matching ports on the mainframe enclosure. It's all keyed, so there's no plugging anything in the wrong way." "\tOh, and don't forget to plug the monitor into power." }
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the monitor already. To install it, all you'll need to do is find the matching ports on the mainframe enclosure. It's all keyed, so there's no plugging anything in the wrong way.\n\tOh, and don't forget to plug the monitor into power." }
 	} else {
 		copy ch2-describe-monitor;
 	}
@@ -298,9 +296,9 @@ command-parts-monitor {
 command-parts-heatsink {
 	show serial dialog spacer;
 	if (flag ch2-installed-heatsink is true) {
-		show serial dialog { "<m>LAMBDA</>: You've got the heat sink in there already. I guess this means I can turn off the furnace in there!\n\tOh, maybe not until the whole machine is up and running, I guess...." }
+		show serial dialog { "<m>LAMBDA</>: You've got the heat sink ready to go, but you'll need to install the CPU first, so, uh, you can just leave it there for the moment." }
 	} else if (flag ch2-carrying-heatsink is true) {
-		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already!" "\t(TODO: You can't put the heatsink on until the CPU is in place, dummy! O.o)" }
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already! So, uh, I sort of forgot you can't install that until the CPU is in there, so... just set it aside for the moment. We'll do the actual install later." }
 	} else {
 		copy ch2-describe-heatsink;
 	}
@@ -309,9 +307,9 @@ command-parts-heatsink {
 command-parts-powersupply {
 	show serial dialog spacer;
 	if (flag ch2-installed-powersupply is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO powersupply is already installed." }
+		show serial dialog { "<m>LAMBDA</>: The power supply is in place already. Notice, though, that it's got a bunch of littler wires coming off of it -- you'll need to plug other components into those later. Everything is keyed, so it should be obvious how everything should be plugged when the time comes." }
 	} else if (flag ch2-carrying-powersupply is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO: how to install powersupply" }
+		show serial dialog { "<m>LAMBDA</>: There's a spot where the power supply goes -- it should be fairly obvious. Then screw it in so it won't wiggle around in there." }
 	} else {
 		copy ch2-describe-powersupply;
 	}
@@ -342,7 +340,7 @@ command-parts-mouse {
 	if (flag ch2-installed-mouse is true) {
 		show serial dialog { "<m>LAMBDA</>: You've got your mouse dongle plugged in, so the mouse will work fine now once we get the rest of the machine up and running. Oh, that's assuming its batteries are charged, I guess." }
 	} else if (flag ch2-carrying-mouse is true) {
-		show serial dialog { "<m>LAMBDA</>: Installing the mouse is easy. All you have to do is plug the end into a USB port. If it's an optical mouse, you can tell it's plugged in correctly when the red laser comes on.\n\tOh, but that trick only works when the machine is powered on...." }
+		show serial dialog { "<m>LAMBDA</>: Installing the mouse is easy. All you have to do is plug the end into a USB port. If it's an optical mouse, you can tell it's plugged in correctly if the red laser comes on once you turn on the computer.\n\tOh, whoops, yours is wireless, huh? Well, then, just plug the dongle into one of the USB ports, and make sure the mouse has fresh batteries." }
 	} else {
 		copy ch2-describe-mouse;
 	}
@@ -354,9 +352,9 @@ command-parts-harddrive {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-harddrive is true) {
-		show serial dialog { "<m>LAMBDA</>: The hard drive is already in place, so we'll have all the on-board storage we'll need. Not sure how much space we'll have, but... I'm sure it'll be fine." }
+		show serial dialog { "<m>LAMBDA</>: The hard drive is already in place, so we'll have all the on-board storage we'll need. Not sure how much space we'll have, given how it was constructed, but... I'm sure it'll be fine." }
 	} else if (flag ch2-carrying-harddrive is true) {
-		show serial dialog { "<m>LAMBDA</>: The hard drive will need to be plugged into two cables: first, a power cable from the power supply, and second, a SATA cable off the motherboard." "\tSince that hard drive is... uh, unconventional... just try your best to attach those cables somehow. You'll know if it fits." }
+		show serial dialog { "<m>LAMBDA</>: The hard drive will need to be plugged into two cables: first, a power cable from the power supply, and second, a SATA cable off the motherboard.\n\tSince that hard drive is... uh, unconventional... just try your best to attach those cables somehow. You'll know if it fits." }
 	} else {
 		copy ch2-describe-harddrive;
 		show serial dialog {
@@ -376,7 +374,7 @@ command-parts-plate {
 		if (flag ch2-carrying-needle is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got a good spinnable <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them." "\tHuh, so it seems the plate has enough iron content in the ceramic for this to actually work. Not that I was worried...." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them.\n\tHuh, so it seems the plate has enough iron content in the ceramic for this to actually work. Not that I was worried...." }
 		}
 	} else {
 		copy ch2-describe-plate;
@@ -394,7 +392,7 @@ command-parts-needle {
 		if (flag ch2-carrying-plate is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got a <m>needle</> for a read head already. So now what you need is a dinner <m>plate</> to act as a hard drive platter." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use the <c>FUSE</> command to combine them." "\tOh, wow, it looks like that phonograph needle is electric. Weird... but also serendipitous." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use the <c>FUSE</> command to combine them.\n\tOh, wow, it looks like that phonograph needle is electric. Weird... but also serendipitous." }
 		}
 	} else {
 		copy ch2-describe-needle;
@@ -407,9 +405,9 @@ command-parts-ramchips {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-ramchips is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO ramchips is already installed." }
+		show serial dialog { "<m>LAMBDA</>: The RAM is in place, nice and tight. They're all set." }
 	} else if (flag ch2-carrying-ramchips is true) {
-		show serial dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then...." "\tWell, it's going to be really freaky, but you need to <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." }
+		show serial dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then....\n\tWell, it's going to be really freaky, but you need to <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." }
 	} else {
 		copy ch2-describe-ramchips;
 	}
@@ -426,7 +424,7 @@ command-parts-clock {
 	if (flag ch2-installed-clock is true) {
 		show serial dialog { "<m>LAMBDA</>: The clock's installed already. It's just... you know... clocking away." }
 	} else if (flag ch2-carrying-clock is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO: how to install clock" }
+		show serial dialog { "<m>LAMBDA</>: So the system clock is normally built in, and -- well, you know what? You got that giant grandfather clock to fit inside your pocket somehow, so just... uh... do that again, but for the mainframe enclosure instead." }
 	} else {
 		copy ch2-describe-clock;
 	}
@@ -438,9 +436,9 @@ command-parts-cpu {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-cpu is true) {
-		show serial dialog { "<m>LAMBDA</>: Your CPU is in place already, ready to go off and be the brain of the whole operation." } // TODO: "Oh, I guess this means you can install the heat sink now."
+		show serial dialog { "<m>LAMBDA</>: Your CPU is in place already, ready to go off and be the brain of the whole operation." }
 	} else if (flag ch2-carrying-cpu is true) {
-		show serial dialog { "<m>LAMBDA</>: TODO: how to install cpu" }
+		show serial dialog { "<m>LAMBDA</>: Line up the CPU with the slot, and gently set it down. Then press the clamp down to lock it in place.\n\tNow the icky part. You got to put thermal paste on there. Try not to get any on your hands, and try to place it so there won't be any bubbles when you press the heat sink on top. Then... well, press the heat sink on top." }
 	} else {
 		copy ch2-describe-cpu;
 	}
@@ -457,7 +455,7 @@ command-parts-goldfish {
 		if (flag ch2-carrying-abacus is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got the goldfish already, the \"thinking\" part of the CPU, so you'll need to pick up the other half: the abacus." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use the <c>FUSE</> command to combine them." "\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use the <c>FUSE</> command to combine them.\n\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
 		}
 	} else {
 		copy ch2-describe-goldfish;
@@ -475,7 +473,7 @@ command-parts-abacus {
 		if (flag ch2-carrying-goldfish is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got an abacus already, the \"remembering\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use the <c>FUSE</> command to combine them." "\tYeah, it's... um... just kind of a magical invocation that doesn't make a lot of physical sense. But just trust the process." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use the <c>FUSE</> command to combine them.\n\tYeah, it's... um... just kind of a magical invocation that doesn't make a lot of physical sense. But just trust the process." }
 		}
 	} else {
 		copy ch2-describe-abacus;

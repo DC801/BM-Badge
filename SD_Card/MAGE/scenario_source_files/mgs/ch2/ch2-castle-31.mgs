@@ -36,7 +36,7 @@ look-ch2-speaker {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\t(TODO)"
+		"\tLarge and boxy, with velvety round circles set onto its face. It all looks very expensive."
 	}
 }
 

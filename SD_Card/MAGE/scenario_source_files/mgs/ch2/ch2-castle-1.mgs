@@ -77,9 +77,17 @@ look-ch2-mainframe {
 
 look-ch2-wizard {
 	show serial dialog spacer;
-	show serial dialog {
-		"TODO: Wizard on_look text\n "
-		" "
+	if (entity Wizard current_animation is 0) { // WIZARD IS DOWN
+		show serial dialog spacer;
+		show serial dialog {
+			"You looked at the <m>%SELF%</>."
+			"\tAt least, you looked at the trash can itself. It's... a trash can. It's pungent enough that you think it best to breathe through your mouth for the moment."
+		}
+	} else {
+		show serial dialog {
+			"You looked at the <m>%SELF%</>."
+			"\t...Adorable!"
+		}
 	}
 }
 

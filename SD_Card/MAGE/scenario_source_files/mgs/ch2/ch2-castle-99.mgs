@@ -22,7 +22,9 @@ const! (
 look-ch2-castle-99 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: SECRET LAB on_look text\n "
+		"You looked around the <c>SECRET LAB</>."
+		"\tTo say the room looked \"lived in\" is an understatement. There's a musty, stuffy smell, as if the air doesn't properly circulate -- as well as a hint of ozone. It's clear Lambda hasn't received company in some time."
+		" "
 	}
 }
 

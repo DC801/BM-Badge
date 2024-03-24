@@ -10,7 +10,11 @@ look-ch2-oldcouplehouse {
 }
 
 look-ch2-delmar {
-	//todo
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\t(TODO)"
+	}
 }
 
 /* ---------- ON_LOAD ---------- */

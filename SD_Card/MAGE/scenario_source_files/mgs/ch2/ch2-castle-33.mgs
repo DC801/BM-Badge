@@ -508,7 +508,7 @@ ch2-mousegame-tick {
 	}
 	// `mousegame-lights` is the ACTUAL number of lights to show
 
-	// reset old lights (TODO: when array support is done in natlang, redo this)
+	// reset old lights (todo: when array support is done in natlang, redo this)
 	
 	// NOTE: if you turn off all the lights and then turn them on as needed, it blinks on the hardware :/
 	// This makes the following a little bloated :X
