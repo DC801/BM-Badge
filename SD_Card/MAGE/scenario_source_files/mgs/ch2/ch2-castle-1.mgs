@@ -876,6 +876,12 @@ go to /dev/ and find something called ttyACM0
 use picocom (you might have to install it)
 add yourself to the serial so you're not running picocom as sudo `sudo adduser ~ dialout`
 
+Linux Mint(Ubuntu based):
+sudo apt install picocom
+ls /dev/serial/by-id/
+^ read the list of devices that come out of here
+picocom /dev/serial/by-id/(ONE OF THE DEVICES FROM THE LIST ABOVE)
+
 */
 	goto ch2-terminal-message-test;
 }
