@@ -105,6 +105,8 @@ man-warp {
 		"A very powerful command that teleports you to a room you've been to before."
 		" "
 		"To see a list of valid warp desinations, use <c>WARP</> on its own (without a room name)."
+		" "
+		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle dungeon wireless base station."
 	}
 }
 
@@ -120,6 +122,9 @@ warp-fail {
 // COMMAND
 
 command-warp {
+	if (flag ch2-wait-for-hat-touch is true) {
+		goto ch2-wait-for-hat-touch;
+	}
 	show serial dialog spacer;
 	show serial dialog {
 		"List of valid <c>WARP</> destinations:"
@@ -148,6 +153,15 @@ command-warp {
 // common
 
 warp-common {
+	// all warps will fail before the computer is ok
+	// if you're PHYSICALLY OUTSIDE the castle
+	if (flag ch2-ring-zero-enabled-in-castle is false) {
+		if (debug mode is off) {
+			if (variable ch2-in-room is 0) {
+				goto warp-ch2-town-check-fail-message;
+			}
+		}
+	}
 	mutate ch2-in-room = 0;
 	copy warping-out-fade-out;
 }
@@ -211,20 +225,50 @@ warp-ch2-99 {
 
 // ch1 stuff
 
+warp-ch2-town-destination-check {
+	// all warps will fail before the computer is ok
+	// if your DESTINATION is outside the castle
+	if (flag ch2-ring-zero-enabled-in-castle is false) {
+		if (debug mode is off) {
+			goto warp-ch2-town-check-fail-message;
+		}
+	}
+}
+
+warp-ch2-town-check-fail-message {
+	show serial dialog spacer;
+	show serial dialog {
+		"<bold><r>ERROR</>: <bold>warp-assistant</> timed out"
+		" "
+		"DNS lookup for warp destination failed. Could not confirm coordinates of destination. Aborting!"
+		" "
+		"Check your wifi connection and try again."
+		" "
+		"<bold>warp-assistant</>: exited with code -1"
+	}
+}
+
 warp-ch2-town {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-town;
 }
 warp-ch2-bakery {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-bakery;
 }
 warp-ch2-greenhouse {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-greenhouse;
 }
 warp-ch2-wopr {
-	if (flag wopr-backdoor-found is true) {
+	if (
+		flag wopr-backdoor-found is true
+		|| debug mode is on
+	) {
+		copy warp-ch2-town-destination-check;
 		copy warp-common;
 		load map woprhouse;
 	} else {
@@ -232,30 +276,37 @@ warp-ch2-wopr {
 	}
 }
 warp-ch2-library {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-lodge;
 }
 warp-ch2-rtfmroom {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-lodge-rtfm;
 }
 warp-ch2-magehouse {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-magehouse;
 }
 warp-ch2-bobsclub {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-bobsclub;
 }
 warp-ch2-bobsclub-basement {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-bobsclub-basement;
 }
 warp-ch2-oldcouplehouse {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-oldcouplehouse;
 }
 warp-ch2-smithfamily {
+	copy warp-ch2-town-destination-check;
 	copy warp-common;
 	load map ch2-smithfamily;
 }

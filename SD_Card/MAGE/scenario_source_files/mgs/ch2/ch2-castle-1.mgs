@@ -117,9 +117,9 @@ on_load-ch2-castle-1 {
 		register get + goldfish -> ch2-pickup-goldfish;
 		register get + abacus -> ch2-pickup-abacus;
 		register get + cpu -> ch2-fuse-cpu;
-		register round + "1" -> debug-round1;
-		register round + "2" -> debug-round2;
-		register round + "3" -> debug-round3;
+		register round + "1" -> debug-get-items-for-round1;
+		register round + "2" -> debug-get-items-for-round2;
+		register round + "3" -> debug-get-items-for-round3;
 		show serial dialog spacer;
 		show serial dialog {
 			"\t<g>DEBUG</> shortcuts"
@@ -274,6 +274,11 @@ on_tick-ch2-castle-1 {
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-1 { // sanitize ch2 room state
+	if (flag ch2-toot-done is false) {
+		goto on_go_ch2-notyet;
+	} else if (flag ch2-wait-for-hat-touch is true) {
+		goto ch2-wait-for-hat-touch;
+	}
 	mutate ch2-in-room = 0;
 }
 
@@ -289,28 +294,19 @@ on_go_ch2-notyet {
 }
 
 on_go-castle-1-north {
-	if (flag ch2-toot-done is false) {
-		goto on_go_ch2-notyet;
-	} else {
-		copy on_exit-ch2-castle-1;
-		copy warping-out-fade-out;
-		load map ch2-castle-11;
-	}
+	copy on_exit-ch2-castle-1;
+	copy warping-out-fade-out;
+	load map ch2-castle-11;
 }
 
 on_go-castle-1-south {
-	// entrance text
-	if (flag ch2-toot-done is false) {
-		goto on_go_ch2-notyet;
-	} else {
-		if (flag ch2-has-artifact is true) {
-			show serial dialog spacer;
-			show serial dialog { "Leaving the <bold>CASTLE</>..." }
-		}
-		copy on_exit-ch2-castle-1;
-		copy warping-out-fade-out;
-		load map ch2-castle-outside;
+	copy on_exit-ch2-castle-1;
+	if (flag ch2-has-artifact is true) {
+		show serial dialog spacer;
+		show serial dialog { "Leaving the <bold>CASTLE</>..." }
 	}
+	copy warping-out-fade-out;
+	load map ch2-castle-outside;
 }
 
 /* ---------- TUTORIAL ROOM STUFF ---------- */
@@ -468,14 +464,15 @@ interact-ch2-wizard {
 
 ch2-spin-wizard {
 	turn player control off;
+	wait 100ms;
 	rotate entity Wizard 1;
-	wait 150ms;
+	wait 100ms;
 	rotate entity Wizard 1;
-	wait 150ms;
+	wait 100ms;
 	rotate entity Wizard 1;
-	wait 150ms;
+	wait 100ms;
 	rotate entity Wizard 1;
-	wait 150ms;
+	wait 100ms;
 	turn player control on;
 }
 
@@ -497,6 +494,7 @@ ch2-install-wizard {
 	show dialog {
 		Wizard "Press the button on that slot there and the disc tray will open. Then set the disc on the tray, rainbow side down, and press the button again to close it."
 	}
+	turn player control off;
 	if (entity "%PLAYER%" is inside geometry mainframe-watchbox) {
 		// :3
 	} else if (entity "%PLAYER%" is inside geometry mainframe-watchdonut) {
@@ -504,7 +502,6 @@ ch2-install-wizard {
 	} else {
 		walk entity "%PLAYER%" to geometry mainframe-look-spot over 500ms;
 	}
-	turn player control off;
 	turn entity "%PLAYER%" north;
 	wait 900ms;
 	turn entity "%PLAYER%" toward entity Wizard;
@@ -523,21 +520,62 @@ ch2-install-wizard {
 	show dialog {
 		PLAYER "All right. Here we go...."
 	}
+	set entity "%PLAYER%" on_tick to ch2-wait-for-boot;
 	copy ch2-bootup;
-	wait 200ms;
+	wait 1200ms;
 	show dialog {
 		Wizard "Hey hey! There you go!"
 	}
 	set entity Wizard on_tick to face-player;
+	wait 300ms;
+	fade out camera to #FFDD00 over 600ms;
+	wait 100ms;
+	fade in camera from #FFDD00 over 600ms;
+	wait 400ms;
+	show dialog {
+		PLAYER "Whoa! What was that?"
+		Wizard "Your hand was glowing. Or maybe a ring?"
+		PLAYER "Ring Zero?"
+		"Oh! It's warm! I wonder if it'll work now?"
+		"What was it again? \"Touch the hat on the PCB\" -- right?"
+	}
 	set flag ch2-ring-zero-enabled-in-castle to true;
 	turn player control on;
-	// TODO: more source code
+	turn hex control on;
+	set flag ch2-wait-for-hat-touch to true;
+	show dialog {
+		name "" "(TODO: Here's the part where the player tries it!)"
+	}
+	// TODO LOLOLOL
+	set flag ch2-wait-for-hat-touch to false;
+	show dialog {
+		PLAYER "Hey! It works!"
+		"(TODO: the rest... in the meantime: you won the game! Good job!)"
+	}
+	mutate ch2-storyflag-round = 5;
+}
+
+ch2-wait-for-hat-touch {
+	show dialog {
+		PLAYER "(Hang on. First I should check whether Ring Zero is working in here. What was it again? \"Touch the hat on the PCB\"?)"
+	}
+}
+
+ch2-wait-for-boot {
+	wait 200ms;
+	turn entity "%PLAYER%" east;
+	wait 1100ms;
+	turn entity "%PLAYER%" west;
+	wait 500ms;
+	turn entity "%PLAYER%" south;
+	goto null_script;
 }
 
 const!(
 	$dot = 300ms
 )
 ch2-bootup {
+	turn serial control off;
 	show serial dialog spacer;
 	show serial dialog { "Starting" }
 	wait 1050ms;
@@ -578,6 +616,7 @@ ch2-bootup {
 	}
 	show serial dialog { "<g>Boot OK</>" }
 	show serial dialog { "Launching desktop environment..." }
+	turn serial control on;
 }
 
 interact-ch2-wizard-mainframedone {

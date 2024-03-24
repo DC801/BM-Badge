@@ -2,24 +2,84 @@
 
 // debug: "win" that storyflag round
 
-debug-round1 {
+debug-get-items-for-round1 {
 	copy ch2-pickup-monitor;
 	copy ch2-pickup-heatsink;
 	copy ch2-pickup-powersupply;
 }
-debug-round2 {
+debug-get-items-for-round2 {
 	copy ch2-pickup-keyboard;
 	copy ch2-pickup-mouse;
 	copy ch2-pickup-needle;
 	copy ch2-pickup-plate;
 	copy ch2-fuse-harddrive;
 }
-debug-round3 {
+debug-get-items-for-round3 {
 	copy ch2-pickup-ramchips;
 	copy ch2-pickup-clock;
 	copy ch2-pickup-goldfish;
 	copy ch2-pickup-abacus;
 	copy ch2-fuse-cpu;
+}
+debug-set-flags-to-round0 {
+	turn serial control on;
+	set flag ch2-has-artifact to true;
+	turn hex control on;
+	mutate current-chapter = 2;
+	set flag ch2-cutseen-birthday to true;
+	debug!("<y>debug-set-flags-to-round0")
+}
+debug-jump-to-round1 {
+	copy debug-set-flags-to-round1;
+	load map ch2-castle-1;
+}
+debug-jump-to-round2 {
+	copy debug-set-flags-to-round2;
+	load map ch2-castle-1;
+}
+debug-jump-to-round3 {
+	copy debug-set-flags-to-round3;
+	load map ch2-castle-1;
+}
+debug-jump-to-round4 {
+	copy debug-set-flags-to-round4;
+	load map ch2-castle-1;
+}
+
+debug-set-flags-to-round1 {
+	copy debug-set-flags-to-round0;
+	copy debug-finish-toot;
+	copy debug-map-flags-for-round1;
+}
+debug-set-flags-to-round2 {
+	copy debug-set-flags-to-round1;
+	copy debug-get-items-for-round1;
+	copy ch2-install-heatsink;
+	copy ch2-install-powersupply;
+	copy ch2-install-monitor;
+	set flag ch2-cutseen-bert-secret to true;
+	set flag ch2-parts-round-2-backstory to true;
+	copy debug-map-flags-for-round2;
+}
+debug-set-flags-to-round3 {
+	copy debug-set-flags-to-round2;
+	copy debug-get-items-for-round2;
+	copy ch2-install-harddrive;
+	copy ch2-install-keyboard;
+	copy ch2-install-mouse;
+	set flag ch2-cutseen-bert-message to true;
+	copy debug-map-flags-for-round3;
+}
+debug-set-flags-to-round4 {
+	copy debug-set-flags-to-round3;
+	copy debug-get-items-for-round3;
+	copy ch2-install-ramchips;
+	copy ch2-install-clock;
+	copy ch2-install-cpu;
+	set flag ch2-cutseen-last-parts-done to true;
+	set flag ch2-warp-granted to true;
+	set flag ch2-parts-round-4-backstory to true;
+	copy debug-map-flags-for-round4;
 }
 
 /* ---------- PUT QUEST MARKERS ON MAP ---------- */

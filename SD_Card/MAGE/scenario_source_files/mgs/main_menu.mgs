@@ -29,6 +29,10 @@ on_load-main_menu {
 		register rtfm -> command-rtfm;
 		register buffer + test -> debug-buffertest;
 		register boot -> ch2-bootup;
+		register skip + "1" -> debug-jump-to-round1;
+		register skip + "2" -> debug-jump-to-round2;
+		register skip + "3" -> debug-jump-to-round3;
+		register skip + "4" -> debug-jump-to-round4;
 		copy register-warp;
 		copy register-storyflag;
 		show serial dialog spacer;
@@ -44,6 +48,7 @@ on_load-main_menu {
 			"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
 			"<c>SIMON</>: fast forward to the Simon Says part"
 			"<c>BOOT</>: pretend to boot the weird computer"
+			"<c>SKIP _</>: skip ahead to that round (and set all prev flags)"
 			" "
 			"\t<g>Entire game debug options:</>"
 			"<c>RTFM</>: Early access to RTFM books"
@@ -91,11 +96,7 @@ debug-bob3 {
 }
 
 debug {
-	turn serial control on;
-	set flag ch2-has-artifact to true;
-	turn hex control on;
-	mutate current-chapter = 2;
-	set flag ch2-cutseen-birthday to true;
+	copy debug-set-flags-to-round0;
 	load map ch2-castle-1;
 }
 

@@ -45,7 +45,11 @@ ch2-map-init-serial {
 		if (flag ch2-has-map is true) {
 			copy register-map;
 		}
-		if (flag ch2-warp-granted is true) {
+		if (debug mode is on) {
+			copy register-storyflag;
+			copy register-warp;
+			turn serial control on;
+		} else if (flag ch2-warp-granted is true) {
 			copy register-warp;
 		}
 		if (flag ch2-permission-to-fuse is true) {
@@ -107,7 +111,7 @@ ch2-map-init-inventory-look {
 		register look + mainframeos -> look-mainframeos;
 	}
 }
-ch2-map-init-serial-debug {
+ch2-map-init-serial-debug-message {
 	if (debug mode is on) {
 		if (flag debug-curr-state is false) {
 			show serial dialog {
@@ -117,9 +121,6 @@ ch2-map-init-serial-debug {
 			}
 		}
 		set flag debug-curr-state to true;
-		turn serial control on;
-		copy register-storyflag;
-		copy register-warp;
 	} else {
 		if (flag debug-curr-state is true) {
 			show serial dialog {
@@ -144,7 +145,7 @@ ch2-map-init {
 	copy ch2-map-init-hex;
 	copy ch2-map-init-serial;
 	copy ch2-map-init-inventory-look;
-	copy ch2-map-init-serial-debug;
+	copy ch2-map-init-serial-debug-message;
 	copy ch2-map-init-warp-in;
 }
 
