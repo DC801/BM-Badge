@@ -46,10 +46,24 @@ ch2-count-flags {
 }
 
 ch2-interact-mainframe {
-	if (flag ch2-carrying-mainframeos is true) {
-		goto ch2-install-wizard;
-	}
-	if (flag ch2-toot-done is false) {
+	if (flag ch2-wait-for-hat-touch is true) {
+		turn entity "%PLAYER%" toward entity Wizard;
+		turn entity Wizard toward entity "%PLAYER%";
+		show dialog {
+			PLAYER "Um, how do I get the hex editor to come up again?"
+			Wizard "Don't look at me. I don't use touch screens."
+			PLAYER "Touch screens?"
+			Wizard "Capacitive buttons. Same diff. My little paws don't trigger them right."
+			"But there must be some kind of shiny copper surface on your whatsit, right? Try touching it with your finger. That's probably how it's done."
+		}
+		return;
+	} else if (flag ch2-carrying-mainframeos is true) {
+		copy ch2-install-wizard;
+		return;
+	} else if (flag ch2-installed-mainframeos is true) {
+		show dialog { name "" "(Nothing left to install! Everything is working!)" }
+		return;
+	} else if (flag ch2-toot-done is false) {
 		show dialog { PLAYER "What is this hunk of junk?" }
 		return;
 	}
