@@ -235,6 +235,9 @@ on_tick-ch2-castle-1 {
 		set warp state to walk_from-north;
 		load map ch2-castle-outside;
 	}
+	if (flag ch2-wait-for-hat-touch is true) {
+		goto on_tick-ch2-castle-1-hexwait1;
+	}
 	// if there's a dialog open currently, don't do anything! But...
 	if (dialog is closed) {
 		// check for hax button press
@@ -271,13 +274,36 @@ on_tick-ch2-castle-1 {
 	}
 }
 
+on_tick-ch2-castle-1-hexwait1 {
+	copy on_tick-ch2-castle-1-hexwait-protec;
+	if (button HAX) {
+		goto on_tick-ch2-castle-1-hexwait2;
+	}
+}
+on_tick-ch2-castle-1-hexwait2 {
+	copy on_tick-ch2-castle-1-hexwait-protec;
+	if (button HAX) {
+		set flag ch2-wait-for-hat-touch to false;
+		set entity "%PLAYER%" on_tick to ch2-install-wizard-resume;
+		goto on_tick-ch2-castle-1;
+	}
+}
+on_tick-ch2-castle-1-hexwait-protec {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy ch2-wait-for-hat-touch-message;
+		turn player control off;
+		walk entity "%PLAYER%" to geometry entrance1-path over 200ms;
+		turn player control on;
+	}
+}
+
 /* ---------- EXIT STUFF ---------- */
 
 on_exit-ch2-castle-1 { // sanitize ch2 room state
 	if (flag ch2-toot-done is false) {
 		goto on_go_ch2-notyet;
 	} else if (flag ch2-wait-for-hat-touch is true) {
-		goto ch2-wait-for-hat-touch;
+		goto ch2-wait-for-hat-touch-message;
 	}
 	mutate ch2-in-room = 0;
 }
@@ -407,13 +433,25 @@ interact-ch2-wizard {
 	// wizard is up now and can talk normally
 	if (flag ch2-toot-done is false) {// pre-toot version
 		show dialog { SELF "Hi." }
-	} else if (flag ch2-lambda-paging is true) {
+	}
+	else if (flag ch2-wait-for-hat-touch is true) {
+		turn entity "%PLAYER%" toward entity Wizard;
+		turn entity Wizard toward entity "%PLAYER%";
+		show dialog {
+			PLAYER "Um, how do I get the hex editor to come up again?"
+			Wizard "Don't look at me. I don't use touch screens."
+			PLAYER "Touch screens?"
+			Wizard "Capacitive buttons. Same diff. My little paws don't trigger them right."
+			"But there must be some kind of shiny copper surface on your whatsit, right? Try touching it with your finger. That's probably how it's done."
+		}
+	}
+	else if (flag ch2-lambda-paging is true) {
 		show dialog {
 			SELF "Looks like Lambda is paging you. Better answer him on the terminal."
 		}
 	}
 	else if (flag ch2-carrying-mainframeos is true) {
-		goto ch2-install-wizard;
+		copy ch2-install-wizard;
 	}
 	else {
 		if (flag ch2-wizard-backstory is false) {
@@ -543,28 +581,28 @@ ch2-install-wizard {
 	turn player control on;
 	turn hex control on;
 	set flag ch2-wait-for-hat-touch to true;
-	show dialog {
-		name "" "(TODO: Here's the part where the player tries it!)"
-	}
-	// TODO LOLOLOL
-	set flag ch2-wait-for-hat-touch to false;
+	copy ch2-install-mainframeos;
+}
+ch2-install-wizard-resume {
 	show dialog {
 		PLAYER "Hey! It works!"
 		"(TODO: the rest... in the meantime: you won the game! Good job!)"
+		"(TODO: Credits go here!)"
 	}
 	mutate ch2-storyflag-round = 5;
+	goto null_script;
 }
 
-ch2-wait-for-hat-touch {
+ch2-wait-for-hat-touch-message {
 	show dialog {
 		PLAYER "(Hang on. First I should check whether Ring Zero is working in here. What was it again? \"Touch the hat on the PCB\"?)"
 	}
 }
 
 ch2-wait-for-boot {
-	wait 200ms;
+	wait 500ms;
 	turn entity "%PLAYER%" east;
-	wait 1100ms;
+	wait 1600ms;
 	turn entity "%PLAYER%" west;
 	wait 500ms;
 	turn entity "%PLAYER%" south;
@@ -627,7 +665,15 @@ interact-ch2-wizard-mainframedone {
 }
 
 interact-ch2-xa {
-	if (flag ch2-toot-done is false) {
+	if (flag ch2-wait-for-hat-touch is true) {
+		show dialog {
+			PLAYER "How do I work Ring Zero again?"
+			Lambda "Hmm? What's that? Did you say something?"
+			PLAYER "I want to see if Ring Zero is working now that the mainframe is back online."
+			Lambda "Oh, yes! I see!"
+			"To open the hex editor, touch the hat at the top of the PCB you're holding. Should be just above the screen -- a shiny gold-colored area."
+		}
+	} else if (flag ch2-toot-done is false) {
 		if (flag ch2-has-artifact is false) {
 			turn player control off;
 			show dialog {

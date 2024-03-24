@@ -122,9 +122,6 @@ warp-fail {
 // COMMAND
 
 command-warp {
-	if (flag ch2-wait-for-hat-touch is true) {
-		goto ch2-wait-for-hat-touch;
-	}
 	show serial dialog spacer;
 	show serial dialog {
 		"List of valid <c>WARP</> destinations:"
@@ -153,6 +150,9 @@ command-warp {
 // common
 
 warp-common {
+	if (flag ch2-wait-for-hat-touch is true) {
+		goto ch2-wait-for-hat-touch-message;
+	}
 	// all warps will fail before the computer is ok
 	// if you're PHYSICALLY OUTSIDE the castle
 	if (flag ch2-ring-zero-enabled-in-castle is false) {
