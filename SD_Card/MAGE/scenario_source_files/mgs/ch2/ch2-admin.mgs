@@ -77,7 +77,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-heatsink is true) {
 			show dialog {
 				name "" "(Now installing... the heat sink!)"
-				"(No bubbles in the silvery, gooey thermal paste... you hope.)"
+				"(Or you would, but you can't install it until the CPU is in place. You set it aside for now.)"
 			}
 			set flag temp to true;
 			copy ch2-install-heatsink;
@@ -118,7 +118,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-keyboard is true) {
 			show dialog {
 				name "" "(Now installing... the keyboard!)"
-				"(Good thing the enclosure has a MIDI interface, or this wouldn't have worked.)"
+				"(Good thing the keytar can connect over USB, or this wouldn't have worked.)"
 			}
 			set flag temp to true;
 			copy ch2-install-keyboard;
@@ -128,7 +128,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-mouse is true) {
 			show dialog {
 				name "" "(Now installing... the mouse!)"
-				"(Or at least, installing the bluetooth dongle. Fortunately, there are USB ports after all.)"
+				"(...Or at least, installing the dongle.)"
 			}
 			set flag temp to true;
 			copy ch2-install-mouse;
@@ -175,7 +175,7 @@ ch2-interact-mainframe {
 		show dialog { PLAYER "That's all for now." }
 		copy ch2-count-flags;
 		// the below are separate scripts so that multiple things can trigger them
-		// (^^ should this be the case?) (TODO: determine this)
+		// (^^ should this be the case?) (todo: determine this)
 		if (variable ch2-storyflags-tally is == $goto-round-2) {
 			copy ch2-start-round-2;
 		} else if (variable ch2-storyflags-tally is == $goto-round-3) {

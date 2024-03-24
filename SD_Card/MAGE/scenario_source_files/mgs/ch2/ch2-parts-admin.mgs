@@ -121,7 +121,7 @@ ch2-take_off_map-round3 {
 	set flag ch2-map-abacus to false;
 	set flag ch2-map-ramchips to false;
 }
-ch2-take_off_map-round4 { // TODO: use this!
+ch2-take_off_map-round4 {
 	set flag ch2-map-mainframeos to false;
 }
 
@@ -325,7 +325,7 @@ ch2-install-abacus {
 	set flag ch2-installed-abacus to true;
 	unregister look + abacus;
 }
-ch2-install-mainframeos { // TODO: use this!
+ch2-install-mainframeos {
 	set flag ch2-carrying-mainframeos to false;
 	set flag ch2-installed-mainframeos to true;
 	unregister look + mainframeos;

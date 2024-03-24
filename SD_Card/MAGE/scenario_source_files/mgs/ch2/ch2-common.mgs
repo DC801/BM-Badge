@@ -172,6 +172,6 @@ warping-in-fade-in {
 	set entity "%PLAYER%" on_tick to null_script;
 	turn entity "%PLAYER%" south;
 	set warp state to warped; // it needs to be set to SOMETHING...
-	turn player control on; // TODO: remove after shared behavior is fully merged
-	turn serial control on; // TODO: remove after shared behavior is fully merged
+	turn player control on; // todo: remove after shared behavior is fully merged
+	turn serial control on; // todo: remove after shared behavior is fully merged
 }

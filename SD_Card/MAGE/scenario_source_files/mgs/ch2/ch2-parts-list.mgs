@@ -451,7 +451,7 @@ look-keyboard {
 look-mouse {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look mouse TODO"
+		"You look at the <m>mouse</>: black, round, with two buttons and a scroll wheel. It lacks a wire, but comes with a dongle sidekick."
 	}
 }
 look-harddrive {
@@ -469,7 +469,7 @@ look-plate {
 look-needle {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look needle TODO"
+		"You look at the <m>needle</>: an ordinary phonograph needle, meant for being drawn across a vinyl record."
 	}
 }
 look-ramchips {
@@ -479,6 +479,7 @@ look-ramchips {
 	}
 }
 look-clock {
+	show serial dialog spacer;
 	if (flag ch2-carrying-clock is false) {
 		show serial dialog {
 			"You look at the <m>clock</>: a giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
@@ -510,7 +511,7 @@ look-manual {
 look-abacus {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look abacus TODO"
+		"You look at the <m>abacus</>: a few dozen black beads set into rods on a wooden frame. It looks heavily used."
 	}
 }
 look-mainframeos {

@@ -666,11 +666,12 @@ ch2-lambda-person-scuzzy {
 	}
 	if (flag ch2-seen-room-22 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Scuzzy? Or did you mean SCSI, that old data interface? It was kind of a pain, to be honest. You couldn't just connect things together -- you had to daisy chain the devices, and have a SCSI terminator at the end or none of it would work. Good riddance."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Scuzzy? Oh yeah, that guy from the server room."
+			"\tScuzzy likes to see how things connect to each other. He's always coming up with ways people can connect to each other, or ways for unrelated objects to fit together to build something cool. It's usually stuff you wouldn't think of, too."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -684,7 +685,7 @@ ch2-lambda-person-ckwatt {
 	}
 	if (flag ch2-seen-room-22 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: C. K. Watt? Isn't that a bit from Fawlty Towers? I mean, it's a bit of an obnoxious reference, isn't it?"
 		}
 	} else {
 		show serial dialog {
@@ -720,7 +721,7 @@ ch2-lambda-person-rocco {
 	}
 	if (flag ch2-seen-room-23 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Rocco was... hmm, let me see... was he someone from the workshop? I think that's right. I don't know if we ever interacted much."
 		}
 	} else {
 		show serial dialog {

@@ -287,7 +287,7 @@ ch2-hide-goldfish {
 }
 
 ch2-touch-goldfish {
-	// todo add "king rescued" prerequisite to picking up goldfish etc
+	// TODO add "king rescued" prerequisite to picking up goldfish etc
 	if (flag ch2-cutseen-castle14 is false) {
 		show dialog { // don't use "self"; "Aurelius" is a label!
 			Aurelius "Do please check on King Gibson, would you? He's in his bedroom, just to the north of us."

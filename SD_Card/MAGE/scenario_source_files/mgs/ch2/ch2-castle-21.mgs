@@ -62,7 +62,7 @@ on_load-ch2-castle-21 {
 		turn entity Jean-Paul east;
 		// show dialog {
 		// 	Jean-Paul alignment TL "The north door... it's not physically blocked, but the control panel must have been damaged in the earthquake."
-		// 	"(TODO: bring us the pieces, and we can fix them)" // or something
+		// 	"(todo: bring us the pieces, and we can fix them)" // or something
 		// // re solder something? replace a wire? replace a ribbon cable? none of these?
 		// }
 		set entity Jean-Paul on_tick to face-player;
