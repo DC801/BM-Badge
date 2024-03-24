@@ -250,80 +250,80 @@ ch2-start-round-4 {
 
 register-storyflag {
 	register storyflag -> ch2-debug-storyflag;
-	register storyflag + "0" -> ch2-debug-storyflag-0;
-	register storyflag + "1" -> ch2-debug-storyflag-1;
-	register storyflag + "2" -> ch2-debug-storyflag-2;
-	register storyflag + "3" -> ch2-debug-storyflag-3;
-	register storyflag + "4" -> ch2-debug-storyflag-4;
-	register storyflag + "5" -> ch2-debug-storyflag-5;
+	register storyflag + "0" -> debug-map-flags-for-round0;
+	register storyflag + "1" -> debug-map-flags-for-round1;
+	register storyflag + "2" -> debug-map-flags-for-round2;
+	register storyflag + "3" -> debug-map-flags-for-round3;
+	register storyflag + "4" -> debug-map-flags-for-round4;
+	register storyflag + "5" -> debug-map-flags-for-round5;
 }
 
 ch2-debug-storyflag {
 	show serial dialog spacer;
 	show serial dialog {
 		"<g>DEBUG</>: Set flag 'ch2-storyflag-round' to what value? (0-5)"
-		_ "0" : ch2-debug-storyflag-0
-		_ "1" : ch2-debug-storyflag-1
-		_ "2" : ch2-debug-storyflag-2
-		_ "3" : ch2-debug-storyflag-3
-		_ "4" : ch2-debug-storyflag-4
-		_ "5" : ch2-debug-storyflag-5
+		_ "0" : debug-map-flags-for-round0
+		_ "1" : debug-map-flags-for-round1
+		_ "2" : debug-map-flags-for-round2
+		_ "3" : debug-map-flags-for-round3
+		_ "4" : debug-map-flags-for-round4
+		_ "5" : debug-map-flags-for-round5
 	}
 	show serial dialog {
 		"Nothing changed."
 	}
 }
 
-ch2-debug-storyflag-0 {
+debug-map-flags-for-round0 {
 	copy ch2-take_off_map-round1;
 	copy ch2-take_off_map-round2;
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 0;
-	goto ch2-debug-storyflag-wrapup;
+	copy ch2-debug-storyflag-log;
 }
-ch2-debug-storyflag-1 {
+debug-map-flags-for-round1 {
 	copy ch2-put_on_map-round1;
 	copy ch2-take_off_map-round2;
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 1;
-	goto ch2-debug-storyflag-wrapup;
+	copy ch2-debug-storyflag-log;
 }
-ch2-debug-storyflag-2 {
+debug-map-flags-for-round2 {
 	copy ch2-take_off_map-round1;
 	copy ch2-put_on_map-round2;
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 2;
-	goto ch2-debug-storyflag-wrapup;
+	copy ch2-debug-storyflag-log;
 }
-ch2-debug-storyflag-3 {
+debug-map-flags-for-round3 {
 	copy ch2-take_off_map-round1;
 	copy ch2-take_off_map-round2;
 	copy ch2-put_on_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 3;
-	goto ch2-debug-storyflag-wrapup;
+	copy ch2-debug-storyflag-log;
 }
-ch2-debug-storyflag-4 {
+debug-map-flags-for-round4 {
 	copy ch2-take_off_map-round1;
 	copy ch2-take_off_map-round2;
 	copy ch2-take_off_map-round3;
 	copy ch2-put_on_map-round4;
 	mutate ch2-storyflag-round = 4;
-	goto ch2-debug-storyflag-wrapup;
+	copy ch2-debug-storyflag-log;
 }
-ch2-debug-storyflag-5 {
+debug-map-flags-for-round5 {
 	copy ch2-take_off_map-round1;
 	copy ch2-take_off_map-round2;
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 5;
 	set flag ch2-cutseen-castle99 to true;
-	goto ch2-debug-storyflag-wrapup;
+	copy ch2-debug-storyflag-log;
 }
-ch2-debug-storyflag-wrapup {
+ch2-debug-storyflag-log {
 	show serial dialog spacer;
 	show serial dialog {
 		"Flag 'ch2-storyflag-round' is now $ch2-storyflag-round$"

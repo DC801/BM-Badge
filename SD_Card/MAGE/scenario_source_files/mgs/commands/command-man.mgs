@@ -864,7 +864,7 @@ ch2-lambda-person-lambda-q {
 		" "
 		"(Ask:)"
 		# "Where are you?" : ch2-lambda-person-lambda-where
-		# "How long have you been here?" : ch2-lambda-person-lambda-time
+		// # "How long have you been here?" : ch2-lambda-person-lambda-time
 		# "What's your real name?" : ch2-lambda-person-lambda-name
 		# "(Go back)" : ch2-lambda-topic-person-start
 	}
@@ -894,43 +894,43 @@ ch2-lambda-person-lambda-where {
 	}
 	goto ch2-lambda-person-lambda-q;
 }
-ch2-lambda-person-lambda-time {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: How long have you been here?"
-		" "
-		"<m>LAMBDA</>: Where I am now, or at the castle in general?"
-		" "
-		# "Where you are now." : ch2-lambda-person-lambda-time-2a
-		# "The castle in general." : ch2-lambda-person-lambda-time-2b
-		# "Both." : ch2-lambda-person-lambda-time-2c
-	}
-	goto ch2-lambda-person-lambda-q;
-}
-ch2-lambda-person-lambda-time-2a {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: Where you are now."
-		"TODO: rest of the convo"
-	}
-	goto ch2-lambda-person-lambda-q;
-}
-ch2-lambda-person-lambda-time-2b {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: The castle in general."
-		"TODO: rest of the convo"
-	}
-	goto ch2-lambda-person-lambda-q;
-}
-ch2-lambda-person-lambda-time-2c {
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: Both."
-		"TODO: rest of the convo"
-	}
-	goto ch2-lambda-person-lambda-q;
-}
+// ch2-lambda-person-lambda-time {
+// 	show serial dialog spacer;
+// 	show serial dialog {
+// 		"<c>YOU</>: How long have you been here?"
+// 		" "
+// 		"<m>LAMBDA</>: Where I am now, or at the castle in general?"
+// 		" "
+// 		# "Where you are now." : ch2-lambda-person-lambda-time-2a
+// 		# "The castle in general." : ch2-lambda-person-lambda-time-2b
+// 		# "Both." : ch2-lambda-person-lambda-time-2c
+// 	}
+// 	goto ch2-lambda-person-lambda-q;
+// }
+// ch2-lambda-person-lambda-time-2a {
+// 	show serial dialog spacer;
+// 	show serial dialog {
+// 		"<c>YOU</>: Where you are now."
+// 		"TODO: rest of the convo"
+// 	}
+// 	goto ch2-lambda-person-lambda-q;
+// }
+// ch2-lambda-person-lambda-time-2b {
+// 	show serial dialog spacer;
+// 	show serial dialog {
+// 		"<c>YOU</>: The castle in general."
+// 		"TODO: rest of the convo"
+// 	}
+// 	goto ch2-lambda-person-lambda-q;
+// }
+// ch2-lambda-person-lambda-time-2c {
+// 	show serial dialog spacer;
+// 	show serial dialog {
+// 		"<c>YOU</>: Both."
+// 		"TODO: rest of the convo"
+// 	}
+// 	goto ch2-lambda-person-lambda-q;
+// }
 ch2-lambda-person-lambda-name {
 	show serial dialog spacer;
 	show serial dialog {

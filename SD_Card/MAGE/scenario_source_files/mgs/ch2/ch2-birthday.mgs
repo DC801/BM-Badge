@@ -95,7 +95,6 @@ on_load-ch2-magehouse-birthday {
 	goto cutscene-ch2-birthday-exit;
 }
 cutscene-ch2-birthday-exit {
-	unregister skip
 	set flag ch2-cutseen-birthday to true;
 	set warp state to cutscene-escort;
 	load map ch2-town;
