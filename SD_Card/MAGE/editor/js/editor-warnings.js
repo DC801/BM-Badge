@@ -15,9 +15,11 @@ generating script names
 - check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
 use fallback entity names that are generated somewhere late in the build process for fixes? (e.g. 'Mage 32')
 - are these only showing up sometimes?
+
 blacklisting
 ---
 maps.json strategy? would be map-level only
+how to associate a checker function to the appropriate disable flag
 
 CLI print-out
 ---
