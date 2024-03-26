@@ -223,7 +223,9 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			fileNameMap,
 			scenarioData,
 		);
-		// run checks on entity for warnings in "Additional reports about the build" (see: warnings.js and editor-warnings.js)
+		
+		// check for warnings on this entity
+		// ("Additional reports about the build" in the GUI, see: warnings.js and editor-warnings.js)
 		var warnings = scenarioData.warnings;
 		Object.keys(warningChecks).forEach(function(checkName) {
 			var checkFunction = warningChecks[checkName];

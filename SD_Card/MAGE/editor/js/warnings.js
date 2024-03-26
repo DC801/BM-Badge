@@ -1,5 +1,5 @@
-// this is where you add new check functions for the warnings system ("Additional reports about the build")
-
+// this is where you add new checks for the warnings system
+// ("Additional reports about the build")
 var warningChecks = {
 	checkInteractScript: function(compositeEntity) {
 		return checkMapEntityPropertyPresent(compositeEntity, 'on_interact');
@@ -8,10 +8,14 @@ var warningChecks = {
 		return checkMapEntityPropertyPresent(compositeEntity, 'on_look');
 	},
 	checkNamePresent: function(compositeEntity) {
-		if (compositeEntity.name == undefined || compositeEntity.name == null || ! (compositeEntity.name.replace(/\s/g, '').length)) {
+		if (
+			compositeEntity.name == undefined
+			|| compositeEntity.name == null
+			|| ! (compositeEntity.name.replace(/\s/g, '').length)
+		) {
 			return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a name in the map file`;
 		} else {
-			return null;
+			return null; // no problem found
 		}
 	}
 };
@@ -25,9 +29,7 @@ var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck) {
 		}
 	)) {
 		return null; // no problem found
+	} else {
+		return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a ${propertyToCheck} script`;		
 	}
-
-	// TODO go back to treating lack of `properties` as fine?
-
-	return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a ${propertyToCheck} script`;
 };
