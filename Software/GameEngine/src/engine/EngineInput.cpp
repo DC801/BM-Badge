@@ -250,9 +250,8 @@ std::string EngineInput::GetCommandStringFromStandardIn()
 }
 #endif
 
-void EngineInput::UpdateState()
+void EngineInput::UpdateState(const GameClock::time_point& curTime)
 {
-   const auto curTime = GameClock::now();
 #ifdef DC801_EMBEDDED
    auto newValue = get_keyboard_mask();
    serial->HandleInput();
@@ -260,27 +259,6 @@ void EngineInput::UpdateState()
    UpdateDesktopInputState(curTime);
    GetCommandStringFromStandardIn();
 #endif
-
-
-   // The following handles inputs that apply in ALL game states. That includes when
-   // the hex editor is open, when it is closed, when in any menus, etc.
-
-   if (IsPressed(KeyPress::Xor))
-   {
-      if (IsPressed(KeyPress::Mem3))
-      {
-         reset = true;
-      }
-      else if (IsPressed(KeyPress::Mem1))
-      {
-         isEntityDebugOn = !isEntityDebugOn;
-         reset = true;
-      }
-      else if (IsPressed(KeyPress::Mem0))
-      {
-         ToggleDrawGeometry();
-      }
-   }
 
    lastDelta = curTime - lastUpdate;
    lastUpdate = curTime;

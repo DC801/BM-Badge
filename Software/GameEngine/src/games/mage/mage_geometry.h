@@ -278,13 +278,13 @@ public:
       for (auto& p : GetPoints())
       {
          auto point = p + geometryOffset;
-         minX = std::min(point.x - pointToCheck.x, minX);
-         minY = std::min(point.y - pointToCheck.y, minY);
-         maxX = std::max(point.x - pointToCheck.x, maxX);
-         maxY = std::max(point.y - pointToCheck.y, maxY);
+         minX = std::min(point.x - static_cast<int>(pointToCheck.x), minX);
+         minY = std::min(point.y - static_cast<int>(pointToCheck.y), minY);
+         maxX = std::max(point.x - static_cast<int>(pointToCheck.x), maxX);
+         maxY = std::max(point.y - static_cast<int>(pointToCheck.y), maxY);
       }
 
-      return minX <= 0 && minY <= 0 && maxX >= 0 && maxY >= 0;
+      return minX < 0 && minY < 0 && maxX > 0 && maxY > 0;
    }
 
    std::span<Vector2T<int32_t>> GetPoints() const

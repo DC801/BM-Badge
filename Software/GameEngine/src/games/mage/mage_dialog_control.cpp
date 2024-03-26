@@ -50,6 +50,7 @@ void MageDialogControl::StartModalDialog(std::string messageString)
       currentMessage = messageString;
       responses.clear();
       open = true;
+      nextUpdateAllowed = GameClock::duration{ std::chrono::milliseconds{500} };
    }
 }
 
@@ -69,6 +70,7 @@ void MageDialogControl::loadNextScreen()
    currentFrameTilesetIndex = currentScreen.borderTilesetIndex;
 
    currentScreenIndex++;
+   nextUpdateAllowed = GameClock::duration{ std::chrono::milliseconds{500} };
 }
 
 std::optional<uint16_t> MageDialogControl::Update()
@@ -78,18 +80,26 @@ std::optional<uint16_t> MageDialogControl::Update()
       return std::nullopt;
    }
 
+   if (nextUpdateAllowed.count() > 0)
+   {
+      nextUpdateAllowed -= IntegrationStepSize;
+      return std::nullopt;
+   }
    const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    if (shouldShowResponses(currentScreen))
    {
       //currentResponseIndex += currentScreen.responseCount;
-      if (inputHandler->Up()) { currentResponseIndex--; }
-      if (inputHandler->Down()) { currentResponseIndex++; }
+      if (inputHandler->PreviousDialogResponse()) { currentResponseIndex--; }
+      if (inputHandler->NextDialogResponse()) { currentResponseIndex++; }
       currentResponseIndex %= currentScreen.responseCount;
 
-      if (inputHandler->Right())
+      if (inputHandler->SelectDialogResponse())
       {
-         open = false;
-         return responses[currentResponseIndex].scriptIndex;
+         if (currentResponseIndex < responses.size())
+         {
+            open = false;
+            return responses[currentResponseIndex].scriptIndex;
+         }
       }
    }
 

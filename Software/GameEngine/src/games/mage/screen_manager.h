@@ -100,7 +100,11 @@ public:
 
    const MageCamera* camera;
 
+   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
+
 private:
+   bool drawGeometry{ false };
+
    void drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags) const;
 
    std::shared_ptr<EngineInput> inputManager;

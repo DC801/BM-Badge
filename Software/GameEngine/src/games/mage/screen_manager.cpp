@@ -87,19 +87,20 @@ void ScreenManager::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDr
    //    }
    // }
 
-   if (inputManager->drawGeometry)
+   if (drawGeometry)
    {
-      //frameBuffer->drawRect(Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);
+      const auto tileDrawPoint = Vector2T{ tileDrawX, tileDrawY };
+      //frameBuffer->drawRect(EntityRect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);
       auto geometry = tileset->GetGeometryForTile(tileId);
       if (geometry)
       {
          auto geometryPoints = geometry->FlipByFlags(flags, tileset->TileWidth, tileset->TileHeight);
          for (auto i = 0; i < geometryPoints.size(); i++)
          {
-            //auto tileLinePointA = geometryPoints[i] + tileDrawPoint;
-            //auto tileLinePointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileDrawPoint;
+            const auto tileLinePointA = geometryPoints[i] + tileDrawPoint;
+            const auto tileLinePointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileDrawPoint;
 
-            //frameBuffer->drawLine(tileLinePointA, tileLinePointB, COLOR_GREEN);
+            frameBuffer->drawLine(tileLinePointA, tileLinePointB, COLOR_GREEN);
          }
       }
    }

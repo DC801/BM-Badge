@@ -77,7 +77,7 @@ void EngineWindowFrame::DrawButtonStates() const
    for (auto i = 0; i < inputs.size(); i++)
    {
       const auto& keyState = inputs[i];
-      auto& buttonPoint = buttonDestPoints[(int)i];
+      auto& buttonPoint = buttonDestPoints[i];
       const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
       SDL_RenderCopy(components.renderer, components.frameButtonTexture, keyState.Pressed() ? &buttonOnSrcRect : &buttonOffSrcRect, &buttonTargetRect);
    }

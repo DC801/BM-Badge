@@ -26,34 +26,20 @@ struct GameClock
 };
 
 template <typename IndexType, typename ValueType, int Length >
-class EnumClassArray
+class EnumClassArray : public std::array<ValueType, Length>
 {
 public:
    template <typename T>
    constexpr ValueType& operator[](T i)
    {
-      return vals[static_cast<int>(i)];
+      return this->at(static_cast<size_t>(i));
    }
 
    template <typename T>
    constexpr const ValueType& operator[](T i) const
    {
-      return vals[static_cast<int>(i)];
+      return this->at(static_cast<size_t>(i));
    }
-
-   constexpr int size() const { return Length; }
-
-   constexpr auto begin() 
-   {
-      return &vals[0];
-   }
-   constexpr auto end()
-   {
-      return &vals[Length];
-   }
-
-private:
-   std::array<ValueType, Length> vals{};
 };
 
 struct InputState
@@ -69,92 +55,23 @@ struct InputState
    }
 };
 
-//struct InputState
-//{
-//   const GameClock::duration deltaTime;
-//
-   //inline bool PlayerIsActioning()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_left);
-   //}
-
-   //inline bool Hack()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_up);
-   //}
-
-   //inline bool Use()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_right);
-   //}
-
-   //inline bool Up()
-   //{
-   //   return IsPressed(KeyPress::Ljoy_up) && !IsPressed(KeyPress::Ljoy_down);
-   //}
-   //inline bool Down()
-   //{
-   //   return IsPressed(KeyPress::Ljoy_down) && !IsPressed(KeyPress::Ljoy_up);
-   //}
-   //inline bool Left()
-   //{
-   //   return IsPressed(KeyPress::Ljoy_left) && !IsPressed(KeyPress::Ljoy_right);
-   //}
-   //inline bool Right()
-   //{
-   //   return IsPressed(KeyPress::Ljoy_right) && !IsPressed(KeyPress::Ljoy_left);
-   //}
-
- 
-   //inline bool AdvanceDialog()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_down)
-   //       || IsPressed(KeyPress::Rjoy_left)
-   //       || IsPressed(KeyPress::Rjoy_right);
-   //}
-
-   //inline bool Increment()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_up) && !IsPressed(KeyPress::Rjoy_down);
-   //}
-   //inline bool Decrement()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_down) && !IsPressed(KeyPress::Rjoy_up);
-   //}
-
-   //inline bool Running()
-   //{
-   //   return IsPressed(KeyPress::Rjoy_right);
-   //}
-//
-//   //Xor
-//   //Add
-//   //Sub
-//   //Bit128
-//   //Bit64
-//   //Bit32
-//   //Bit16
-//   //Bit8
-//   //Bit4
-//   //Bit2
-//   //Bit1
-//
-//};
-
 class EngineInput
 {
 public:
-   void UpdateState();
+   void UpdateState(const GameClock::time_point& curTime);
 
    [[nodiscard("Value of KeepRunning should be used to handle the main input loop")]]
    const bool KeepRunning() { return running; }
 
-   [[nodiscard("Value of Reset should be used to trigger map/engine reload when true")]]
-   bool Reset()
+   [[nodiscard("Value of ShouldReset should be used to trigger map/engine reload when true")]]
+   inline bool ShouldReset()
    {
-      auto curReset = reset;
-      reset = false;
-      return curReset;
+      return IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem3);
+   }
+
+   inline bool ToggleEntityDebug()
+   {
+      return IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem1);
    }
 
    inline bool PlayerIsActioning()
@@ -189,12 +106,23 @@ public:
       return IsPressed(KeyPress::Ljoy_right) && !IsPressed(KeyPress::Ljoy_left);
    }
 
-
    inline bool AdvanceDialog()
    {
       return IsPressed(KeyPress::Rjoy_down)
-          || IsPressed(KeyPress::Rjoy_left)
-          || IsPressed(KeyPress::Rjoy_right);
+         || IsPressed(KeyPress::Rjoy_left)
+         || IsPressed(KeyPress::Rjoy_right);
+   }
+   inline bool NextDialogResponse()
+   {
+      return IsPressed(KeyPress::Ljoy_up);
+   }
+   inline bool PreviousDialogResponse()
+   {
+      return IsPressed(KeyPress::Ljoy_down);
+   }
+   inline bool SelectDialogResponse()
+   {
+      return IsPressed(KeyPress::Ljoy_right);
    }
 
    inline bool Increment()
@@ -228,13 +156,9 @@ public:
 
    GameClock::time_point lastUpdate{ GameClock::now() };
    GameClock::duration lastDelta{ 0 };
-   bool drawGeometry{ false };
 private:
    bool running{ true };
    bool reset{ false };
-   bool isEntityDebugOn{ false };
-
-   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
 
    EnumClassArray<KeyPress, InputState, KEYBOARD_NUM_KEYS> inputStates{};
 

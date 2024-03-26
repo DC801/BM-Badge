@@ -38,9 +38,14 @@ void MageGameEngine::Run()
 
    while (inputHandler->KeepRunning())
    {
-      if (inputHandler->Reset())
+      if (inputHandler->ShouldReset())
       {
          mapControl->mapLoadId = ROM()->GetCurrentSave().currentMapId;
+      }
+
+      if (inputHandler->ToggleEntityDebug())
+      {
+         screenManager->ToggleDrawGeometry();
       }
 
       if (mapControl->mapLoadId != MAGE_NO_MAP)
@@ -58,22 +63,22 @@ void MageGameEngine::Run()
       gameLoopIteration();
       frameBuffer->printMessage(std::format("FPS: {}", fps), Monaco9, COLOR_RED, 10, 10);
    }
-//#endif
+   //#endif
 }
 
 void MageGameEngine::gameLoopIteration()
 {
-   inputHandler->UpdateState();
-   // if the map is about to change, don't bother updating entities since they're about to be reloaded
-   if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
-
-   applyGameModeInputs();
-
    const auto loopStart = GameClock::now();
+   inputHandler->UpdateState(loopStart);
    auto updateAccumulator = inputHandler->lastDelta;
    // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
    while (updateAccumulator >= IntegrationStepSize)
    {
+      // if the map is about to change, don't bother updating entities since they're about to be reloaded
+      if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
+
+      applyGameModeInputs();
+      
       // always apply camera effects before any other updates that rely on camera data
       camera.applyEffects();
       scriptControl->jumpScriptId = dialogControl->Update();
@@ -85,11 +90,11 @@ void MageGameEngine::gameLoopIteration()
    }
 
    // methods that should only happen once per frame follow:
-   if (!hexEditor->isHexEditorOn()) 
-   { 
-      scriptControl->tickScripts(); 
+   if (!hexEditor->isHexEditorOn())
+   {
+      scriptControl->tickScripts();
    }
-   
+
    commandControl->sendBufferedOutput();
 
    mapControl->Draw();
@@ -105,6 +110,9 @@ void MageGameEngine::LoadMap()
    // clear any scripts that might trigger
    scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
 
+   // finish any buffered serial I/O
+   commandControl->reset();
+
    // reset any fading that might be in progress
    frameBuffer->ResetFade();
 
@@ -112,10 +120,8 @@ void MageGameEngine::LoadMap()
    dialogControl->close();
    hexEditor->setHexEditorOn(false);
 
-   commandControl->reset();
-
    // Load the map and trigger its OnLoad script
-   // This is the only place OnLoad should be called
+   // This is the only place a map's OnLoad should be called
    mapControl->Load();
    auto onLoad = MageScriptState{ mapControl->currentMap->onLoadScriptId, true };
    scriptControl->processScript(onLoad, MAGE_MAP_ENTITY);
@@ -148,7 +154,7 @@ void MageGameEngine::applyGameModeInputs()
       {
          player->position.x = static_cast<int>(player->position.x) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
-            : player->position.x + moveAmount; 
+            : player->position.x + moveAmount;
       }
 
       if (inputHandler->Up())
@@ -169,7 +175,7 @@ void MageGameEngine::applyGameModeInputs()
          if (inputHandler->Hack() && hexEditor->playerHasHexEditorControl)
          {
             hexEditor->openToEntity(*entityInteractId);
-         } 
+         }
          else
          {
             const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
@@ -212,7 +218,7 @@ void MageGameEngine::applyGameModeInputs()
    {
       playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
    }
-   
+
    if (!hexEditor->playerHasHexEditorControl || !playerHasControl)
    {
       return;
@@ -244,13 +250,17 @@ void MageGameEngine::updateHexLights() const
    ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
 
    const auto entityRelativeMemOffset = hexCursorOffset % sizeof(MageEntityData);
-   ledSet(LED_MEM0, (entityRelativeMemOffset == hexEditor->memOffsets[0]) ? 0xFF : 0x00);
-   ledSet(LED_MEM1, (entityRelativeMemOffset == hexEditor->memOffsets[1]) ? 0xFF : 0x00);
-   ledSet(LED_MEM2, (entityRelativeMemOffset == hexEditor->memOffsets[2]) ? 0xFF : 0x00);
-   ledSet(LED_MEM3, (entityRelativeMemOffset == hexEditor->memOffsets[3]) ? 0xFF : 0x00);
-
-   //update the state of the LEDs
-   // drawButtonStates(inputHandler->GetButtonState());
-   // drawLEDStates();
-
+   const auto leds = std::array{ LED_MEM0, LED_MEM1, LED_MEM2, LED_MEM3 };
+   for (auto i = 0; i < leds.size(); i++)
+   {
+      const auto led = leds[i];
+      if (entityRelativeMemOffset == hexEditor->memOffsets[i])
+      {
+         ledOn(led);
+      }
+      else
+      {
+         ledOff(led);
+      }
+   }
 }

@@ -145,13 +145,15 @@ private:
    std::shared_ptr<StringLoader> stringLoader;
    std::shared_ptr<MapControl> mapControl;
    bool open{ false };
+   GameClock::duration nextUpdateAllowed{ 0 };
 
    void drawBackground(const EntityRect& box) const;
 
    inline bool shouldShowResponses(const MageDialogScreen& currentScreen) const
    {
       // last page of messages on this screen and we have responses
-      return currentMessageIndex == (currentScreen.messageCount - 1)
+      return responses.size() > 0 
+         && currentMessageIndex == (currentScreen.messageCount - 1)
          && (currentScreen.responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
             || currentScreen.responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
    }
