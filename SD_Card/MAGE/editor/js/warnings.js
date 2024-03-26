@@ -18,34 +18,16 @@ var warningChecks = {
 
 // utilities for making warning check functions
 var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck) {
-	var scriptName = '';
-	var foundScriptDefinition = false; // TODO
-
-	if (! ('properties' in compositeEntity)) {
-		return null;
-	}
-
-	for (var index in compositeEntity.properties) {
-		var entityProperty = compositeEntity.properties[index];
-		if (entityProperty.name == propertyToCheck) {
-			scriptName = entityProperty.value;
-			// if (findScriptDefinition(scriptName)) {
-			// 	foundScriptDefinition = true;
-			// } // TODO
-			break; // no need to search for the right property object more after finding it
+	if (
+		'properties' in compositeEntity
+		&& compositeEntity.properties.some(function(property) {
+			return property.name == propertyToCheck;
 		}
+	)) {
+		return null; // no problem found
 	}
 
-	if (foundScriptDefinition) {
-		return null; // no problem found for this check
-	} // note foundScriptDefinition being true implies scriptName is also set
+	// TODO go back to treating lack of `properties` as fine?
 
-	var result = `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a ${propertyToCheck} script`;
-
-	if (scriptName) { // a script name is present in map data but never defined in mgs folder
-		// num_undefined_scripts += 1; // TODO
-		result += ` (UNDEFINED: script \'${scriptName}\' expected from the map file is never defined)`;
-	}
-
-	return result;
+	return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a ${propertyToCheck} script`;
 };
