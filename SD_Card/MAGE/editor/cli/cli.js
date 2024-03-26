@@ -41,6 +41,7 @@ const modules = [
 	"dialogs",
 	"serial_dialogs",
 	"images",
+	"warnings",
 	"encoding"
 ];
 

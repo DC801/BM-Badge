@@ -7,6 +7,14 @@ one accordion component
 slots / pass children for innermost's content
 - change other uses of accordion to my accordion?
 
+generated fixes
+---
+generating script names
+- nice indenting to be able to paste into maps
+- what to do with a no-name entity?
+- check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
+use fallback entity names that are generated somewhere late in the build process for fixes? (e.g. 'Mage 32')
+- are these only showing up sometimes?
 blacklisting
 ---
 maps.json strategy? would be map-level only
@@ -14,24 +22,13 @@ maps.json strategy? would be map-level only
 CLI print-out
 ---
 --verbose arg?
-
-definitions checking
----
-implement for JS
-check for script definitions in JSON files as well as MGS files (there are a couple)
+ask about hiding crc32 messages behind verbose
 
 misc
 ---
 documentation for API (e.g., return null or a string error message)
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
-ask about populating warningChecks onto scenarioData even possibly causing any issues
-- game not running (says engine v11, dat v10, could just be not syncing my fork)
-- drag and drop not working on my linux setup (minor)
-presentation design
-- original design: a report like the python output that would be useful to download
-	- fixes separate from warnings
-- new design: Vue component for each warnings
-	- fixes presented next to warnings
+ask about drag and drop game.dat not working on my linux setup
 warning counts for GUI and CLI
 - final print-out info in GUI?
 txt download next to copy button? (ask)
@@ -43,16 +40,6 @@ ask Mary for a pattern for "TODO" script definitions
 - newline then space at end?
 move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
 - (also naming of script look-ch2-castle-34 but it's really for the pantry?)
-use a predicate function for blacklisted_files? e.g. positive string match 'ch2'
-
-generated fixes
----
-generating script names
-- nice indenting to be able to paste into maps
-- what to do with a no-name entity?
-- check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
-use fallback entity names that are generated somewhere late in the build process for fixes? (e.g. 'Mage 32')
-- are these only showing up sometimes? 
 */
 
 
