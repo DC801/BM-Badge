@@ -21,7 +21,17 @@ var warningChecks = {
 };
 
 // utilities for making warning check functions
-var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck) {
+var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck, checkPlayerEntity = false) {
+	if (
+		! checkPlayerEntity
+		&& 'properties' in compositeEntity
+		&& compositeEntity.properties.some(function(property) {
+			return (property.name == 'is_player') && (property.value == true);
+		})
+	) {
+		return null; // no problem found because this is the player, who we're skipping
+	}
+	
 	if (
 		'properties' in compositeEntity
 		&& compositeEntity.properties.some(function(property) {
