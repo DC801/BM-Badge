@@ -8,6 +8,18 @@ const window = {
 	imageCache: {},
 };
 
+var verbose = false;
+['-v', '--verbose'].forEach(function(verboseArgForm) {
+	// recognize multiple forms of specifying that the user wants verbose behavior,
+	// then take all instances of those forms out of the process.argv so that the fixed position
+	// logic below for input and output args still works (reconsider this if more args are added)
+	const index = process.argv.indexOf(verboseArgForm);
+	if (index > -1) {
+		verbose = true;
+		delete process.argv[index];
+	}
+});
+
 var DEFAULT_OUTPUT_PATH = `${__dirname}/../../game.dat`;
 var DEFAULT_SOURCE_PATH = `${__dirname}/../../scenario_source_files`;
 
@@ -91,6 +103,51 @@ function makeMap(path) {
 	return map
 }
 
+function printWarningsIfVerbose(scenarioData) {
+	if (
+		verbose
+		&& 'warnings' in scenarioData
+	) {
+		let totalWarningCount = 0;
+		const mapsWithWarnings = [];
+		const checkWarningCounts = Object.fromEntries(
+			Object.keys(scenarioData.warnings).map(function (checkName) {
+				return [checkName, 0];
+			})
+		);
+
+		console.log();
+		Object.entries(scenarioData.warnings).forEach(function ([checkName, checkWarnings]) {
+			console.log(`Warnings for '${checkName}' (${Object.keys(checkWarnings).length} maps):`);
+
+			Object.entries(checkWarnings).forEach(function ([mapName, mapWarnings]) {
+				if (!mapsWithWarnings.includes(mapName)) {
+					mapsWithWarnings.push(mapName);
+				}
+				console.log(`    Warnings in map '${mapName}' (${Object.keys(mapWarnings).length} entities):`);
+
+				mapWarnings.forEach(function (warning) {
+					totalWarningCount += 1;
+					checkWarningCounts[checkName] += 1;
+					console.log(`        WARNING: ${warning.warningMessage}`);
+				});
+				console.log();
+			});
+		});
+
+		Object.entries(checkWarningCounts).forEach(function ([checkName, checkFailureCount]) {
+			if (checkFailureCount > 0) {
+				console.log(`Found ${checkFailureCount} total entities with a warning for check '${checkName}'`);
+			}
+		});
+
+		console.log(`Found ${totalWarningCount} total warnings across ${mapsWithWarnings.length} total maps`);
+		console.log();
+	}
+
+	return scenarioData;
+}
+
 var fileNameMap = makeMap(inputPath);
 var scenarioFile = fileNameMap['scenario.json'];
 if (!scenarioFile) {
@@ -98,6 +155,7 @@ if (!scenarioFile) {
 } else {
 	getFileJson(scenarioFile)
 		.then(handleScenarioData(fileNameMap))
+		.then(printWarningsIfVerbose)
 		.then(generateIndexAndComposite)
 		.then(function (compositeArray) {
 			console.log('Starting game.dat write to:', outputPath);
