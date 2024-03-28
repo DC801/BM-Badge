@@ -21,19 +21,13 @@ blacklisting
 maps.json strategy? would be map-level only
 how to associate a checker function to the appropriate disable flag
 
-CLI print-out
----
---verbose arg?
-ask about hiding crc32 messages behind verbose
-
 misc
 ---
-documentation for API (e.g., return null or a string error message)
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 ask about drag and drop game.dat not working on my linux setup
-warning counts for GUI and CLI
-- final print-out info in GUI?
-txt download next to copy button? (ask)
+ask about hiding crc32 messages behind verbose
+ask re adding final warning counts from CLI to GUI
+documentation for API (e.g., return null or a string error message)
 how will look work for multiple entities of the same or similar names (eg bread, torch)
 gameengine prettier mage_command_control.cpp:185
 - commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
