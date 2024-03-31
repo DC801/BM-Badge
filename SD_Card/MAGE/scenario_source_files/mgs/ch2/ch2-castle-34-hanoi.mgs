@@ -1,0 +1,457 @@
+include!("header.mgs")
+
+start-hanoi {
+	turn player control off;
+	copy hanoi_init;
+	copy draw_hanoi;
+	set map on_tick to tick_hanoi;
+}
+
+check_cursor {
+	if (variable cursor_pos is 1) {
+		if (variable array1_length is 0) {
+			mutate checked_value = 0;
+		} else if (variable array1_length is 1) {
+			mutate checked_value = array1_1;
+		} else if (variable array1_length is 2) {
+			mutate checked_value = array1_2;
+		} else if (variable array1_length is 3) {
+			mutate checked_value = array1_3;
+		} else if (variable array1_length is 4) {
+			mutate checked_value = array1_4;
+		} else if (variable array1_length is 5) {
+			mutate checked_value = array1_5;
+		} else if (variable array1_length is 6) {
+			mutate checked_value = array1_6;
+		} else if (variable array1_length is 7) {
+			mutate checked_value = array1_7;
+		}
+	} else if (variable cursor_pos is 2) {
+		if (variable array2_length is 0) {
+			mutate checked_value = 0;
+		} else if (variable array2_length is 1) {
+			mutate checked_value = array2_1;
+		} else if (variable array2_length is 2) {
+			mutate checked_value = array2_2;
+		} else if (variable array2_length is 3) {
+			mutate checked_value = array2_3;
+		} else if (variable array2_length is 4) {
+			mutate checked_value = array2_4;
+		} else if (variable array2_length is 5) {
+			mutate checked_value = array2_5;
+		} else if (variable array2_length is 6) {
+			mutate checked_value = array2_6;
+		} else if (variable array2_length is 7) {
+			mutate checked_value = array2_7;
+		}
+	} else if (variable cursor_pos is 3) {
+		if (variable array3_length is 0) {
+			mutate checked_value = 0;
+		} else if (variable array3_length is 1) {
+			mutate checked_value = array3_1;
+		} else if (variable array3_length is 2) {
+			mutate checked_value = array3_2;
+		} else if (variable array3_length is 3) {
+			mutate checked_value = array3_3;
+		} else if (variable array3_length is 4) {
+			mutate checked_value = array3_4;
+		} else if (variable array3_length is 5) {
+			mutate checked_value = array3_5;
+		} else if (variable array3_length is 6) {
+			mutate checked_value = array3_6;
+		} else if (variable array3_length is 7) {
+			mutate checked_value = array3_7;
+		}
+	}
+	set flag can_drop to false;
+	if (variable checked_value is 0) {
+		set flag can_drop to true;
+	} else if (variable checked_value is > cursor_value) {
+		set flag can_drop to true;
+	}
+}
+
+tick_hanoi {
+	if (button HAX) {
+		turn player control on;
+		goto main_menu; // or whatever map it is
+	} else if (
+		button LJOY_LEFT
+		|| button RJOY_LEFT
+		|| button LJOY_RIGHT
+		|| button RJOY_RIGHT
+	) {
+		if (variable cursor_value is 0) {
+			if (variable cursor_pos is 1) {
+				if (variable array1_length is > 0) {
+					copy array1_pop;
+				}
+			} else if (variable cursor_pos is 2) {
+				if (variable array2_length is > 0) {
+					copy array2_pop;
+				}
+			} else if (variable cursor_pos is 3) {
+				if (variable array3_length is > 0) {
+					copy array3_pop;
+				}
+			}
+		} else {
+			copy check_cursor;
+			if (flag can_drop is true) {
+				if (variable cursor_pos is 1) {
+					copy array1_push;
+				} else if (variable cursor_pos is 2) {
+					copy array2_push;
+				} else if (variable cursor_pos is 3) {
+					copy array3_push;
+				}
+			} else {
+				set flag hanoi_warning_size to true;
+			}
+		}
+		if (variable cursor_value is 7) {
+			set flag hanoi_won to true;
+		}
+		copy draw_hanoi;
+	} else if (button LJOY_DOWN || button RJOY_DOWN) {
+		if (variable cursor_pos is 1 || variable cursor_pos is 2) {
+			mutate cursor_pos + 1;
+		}
+		copy draw_hanoi;
+	} else if (button LJOY_UP || button RJOY_UP) {
+		if (variable cursor_pos is 2 || variable cursor_pos is 3) {
+			mutate cursor_pos - 1;
+		}
+		copy draw_hanoi;
+	}
+}
+
+draw_cursor {
+	if (variable cursor_value is 0) {
+		concat serial dialog {
+			"  <m><-----</>"
+		}
+	} else {
+		concat serial dialog {
+			"  <m><-[</>$cursor_value$<m>]-</>"
+		}
+	}
+	if (flag hanoi_warning_size is true) {
+		concat serial dialog {" Can't put larger plate on smaller plate!"}
+		set flag hanoi_warning_size to false;
+	} else if (flag hanoi_won is true) {
+		concat serial dialog {" <g>YOU WIN! Plate #7 acquired!"}
+		set flag hanoi_won to false;
+	}
+}
+
+draw_hanoi {
+	show serial dialog spacer;
+	show serial dialog {
+		wrap 70
+		"<m>THE PLATES OF HANOI</>"
+		" "
+		"Grab plate #7 to win!"
+		" "
+		"\t- Use the joysticks to move the grabber arm."
+		"\t- The grabber can only hold one plate at a time."
+		"\t- You can't put a larger plate on top of a smaller plate."
+		"\t- Press the HAX button (touch the hat) to quit."
+		" "
+	}
+	copy array1_print;
+	if (variable cursor_pos is 1) {
+		copy draw_cursor;
+	}
+	concat serial dialog {"\n"}
+	copy array2_print;
+	if (variable cursor_pos is 2) {
+		copy draw_cursor;
+	}
+	concat serial dialog {"\n"}
+	copy array3_print;
+	if (variable cursor_pos is 3) {
+		copy draw_cursor;
+	}
+	show serial dialog {" "}
+	if (flag hanoi_won is true) {
+		goto main_menu; // or whatever map it is
+	}
+}
+
+hanoi_init {
+	mutate cursor_pos = 1;
+	mutate cursor_value = 0;
+	mutate array1_7 = 1;
+	mutate array1_6 = 2;
+	mutate array1_5 = 3;
+	mutate array1_4 = 4;
+	mutate array1_3 = 5;
+	mutate array1_2 = 6;
+	mutate array1_1 = 7;
+	mutate array1_length = 7;
+	mutate array2_7 = 0;
+	mutate array2_6 = 0;
+	mutate array2_5 = 0;
+	mutate array2_4 = 0;
+	mutate array2_3 = 0;
+	mutate array2_2 = 0;
+	mutate array2_1 = 0;
+	mutate array2_length = 0;
+	mutate array3_7 = 0;
+	mutate array3_6 = 0;
+	mutate array3_5 = 0;
+	mutate array3_4 = 0;
+	mutate array3_3 = 0;
+	mutate array3_2 = 0;
+	mutate array3_1 = 0;
+	mutate array3_length = 0;
+}
+array1_pop {
+	if (variable array1_length is 0) {
+		show serial dialog { "<r>ERROR!</> Tray #1 is already empty. Cannot pop!" }
+	} else {
+		if (variable array1_length is 7) {
+			mutate cursor_value = array1_7;
+			mutate array1_7 = 0;
+		} else if (variable array1_length is 6) {
+			mutate cursor_value = array1_6;
+			mutate array1_6 = 0;
+		} else if (variable array1_length is 5) {
+			mutate cursor_value = array1_5;
+			mutate array1_5 = 0;
+		} else if (variable array1_length is 4) {
+			mutate cursor_value = array1_4;
+			mutate array1_4 = 0;
+		} else if (variable array1_length is 3) {
+			mutate cursor_value = array1_3;
+			mutate array1_3 = 0;
+		} else if (variable array1_length is 2) {
+			mutate cursor_value = array1_2;
+			mutate array1_2 = 0;
+		} else if (variable array1_length is 1) {
+			mutate cursor_value = array1_1;
+			mutate array1_1 = 0;
+		}
+		mutate array1_length - 1;
+	}
+}
+array1_push {
+	if (variable cursor_value is 0) {
+		show serial dialog { "<r>ERROR!</> No value to push to Array #1!" }
+	} else if (variable array1_length is >= 7) {
+		show serial dialog { "<r>ERROR!</> Array #1 is full! Cannot push!" }
+	} else {
+		if (variable array1_length is 6) {
+			mutate array1_7 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 5) {
+			mutate array1_6 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 4) {
+			mutate array1_5 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 3) {
+			mutate array1_4 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 2) {
+			mutate array1_3 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 1) {
+			mutate array1_2 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 0) {
+			mutate array1_1 = cursor_value;
+			mutate cursor_value = 0;
+		}
+		mutate array1_length + 1;
+	}
+}
+array1_print {
+	concat serial dialog array_print_left;
+	for (mutate i = 1; variable i is <= array1_length; mutate i + 1) {
+		if (variable i is not 1) {
+			concat serial dialog {" "}
+		}
+		if (variable i is 1) { mutate printme = array1_1; }
+		else if (variable i is 2) { mutate printme = array1_2; }
+		else if (variable i is 3) { mutate printme = array1_3; }
+		else if (variable i is 4) { mutate printme = array1_4; }
+		else if (variable i is 5) { mutate printme = array1_5; }
+		else if (variable i is 6) { mutate printme = array1_6; }
+		else if (variable i is 7) { mutate printme = array1_7; }
+		copy printme;
+		mutate printme = 0;
+	}
+	concat serial dialog array_print_right;
+}
+printme {
+	if (variable printme is 1) { concat serial dialog {"1"} }
+	else if (variable printme is 2) { concat serial dialog {"2"} }
+	else if (variable printme is 3) { concat serial dialog {"3"} }
+	else if (variable printme is 4) { concat serial dialog {"4"} }
+	else if (variable printme is 5) { concat serial dialog {"5"} }
+	else if (variable printme is 6) { concat serial dialog {"6"} }
+	else if (variable printme is 7) { concat serial dialog {"7"} }
+}
+serial dialog array_print_left { "<m>[</> "}
+serial dialog array_print_right { " "}
+
+array2_pop {
+	if (variable array2_length is 0) {
+		show serial dialog { "<r>ERROR!</> Array #2 is already empty. Cannot pop!" }
+	} else {
+		if (variable array2_length is 7) {
+			mutate cursor_value = array2_7;
+			mutate array2_7 = 0;
+		} else if (variable array2_length is 6) {
+			mutate cursor_value = array2_6;
+			mutate array2_6 = 0;
+		} else if (variable array2_length is 5) {
+			mutate cursor_value = array2_5;
+			mutate array2_5 = 0;
+		} else if (variable array2_length is 4) {
+			mutate cursor_value = array2_4;
+			mutate array2_4 = 0;
+		} else if (variable array2_length is 3) {
+			mutate cursor_value = array2_3;
+			mutate array2_3 = 0;
+		} else if (variable array2_length is 2) {
+			mutate cursor_value = array2_2;
+			mutate array2_2 = 0;
+		} else if (variable array2_length is 1) {
+			mutate cursor_value = array2_1;
+			mutate array2_1 = 0;
+		}
+		mutate array2_length - 1;
+	}
+}
+array2_push {
+	if (variable cursor_value is 0) {
+		show serial dialog { "<r>ERROR!</> No value to push to Array #2!" }
+	} else if (variable array2_length is >= 7) {
+		show serial dialog { "<r>ERROR!</> Array #2 is full! Cannot push!" }
+	} else {
+		if (variable array2_length is 6) {
+			mutate array2_7 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 5) {
+			mutate array2_6 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 4) {
+			mutate array2_5 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 3) {
+			mutate array2_4 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 2) {
+			mutate array2_3 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 1) {
+			mutate array2_2 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 0) {
+			mutate array2_1 = cursor_value;
+			mutate cursor_value = 0;
+		}
+		mutate array2_length + 1;
+	}
+}
+array2_print {
+	concat serial dialog array_print_left;
+	for (mutate i = 1; variable i is <= array2_length; mutate i + 1) {
+		if (variable i is not 1) {
+			concat serial dialog {" "}
+		}
+		if (variable i is 1) { mutate printme = array2_1; }
+		else if (variable i is 2) { mutate printme = array2_2; }
+		else if (variable i is 3) { mutate printme = array2_3; }
+		else if (variable i is 4) { mutate printme = array2_4; }
+		else if (variable i is 5) { mutate printme = array2_5; }
+		else if (variable i is 6) { mutate printme = array2_6; }
+		else if (variable i is 7) { mutate printme = array2_7; }
+		copy printme;
+		mutate printme = 0;
+	}
+	concat serial dialog array_print_right;
+}
+
+array3_pop {
+	if (variable array3_length is 0) {
+		show serial dialog { "<r>ERROR!</> Array #3 is already empty. Cannot pop!" }
+	} else {
+		if (variable array3_length is 7) {
+			mutate cursor_value = array3_7;
+			mutate array3_7 = 0;
+		} else if (variable array3_length is 6) {
+			mutate cursor_value = array3_6;
+			mutate array3_6 = 0;
+		} else if (variable array3_length is 5) {
+			mutate cursor_value = array3_5;
+			mutate array3_5 = 0;
+		} else if (variable array3_length is 4) {
+			mutate cursor_value = array3_4;
+			mutate array3_4 = 0;
+		} else if (variable array3_length is 3) {
+			mutate cursor_value = array3_3;
+			mutate array3_3 = 0;
+		} else if (variable array3_length is 2) {
+			mutate cursor_value = array3_2;
+			mutate array3_2 = 0;
+		} else if (variable array3_length is 1) {
+			mutate cursor_value = array3_1;
+			mutate array3_1 = 0;
+		}
+		mutate array3_length - 1;
+	}
+}
+array3_push {
+	if (variable cursor_value is 0) {
+		show serial dialog { "<r>ERROR!</> No value to push to Array #3!" }
+	} else if (variable array3_length is >= 7) {
+		show serial dialog { "<r>ERROR!</> Array #3 is full! Cannot push!" }
+	} else {
+		if (variable array3_length is 6) {
+			mutate array3_7 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 5) {
+			mutate array3_6 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 4) {
+			mutate array3_5 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 3) {
+			mutate array3_4 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 2) {
+			mutate array3_3 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 1) {
+			mutate array3_2 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 0) {
+			mutate array3_1 = cursor_value;
+			mutate cursor_value = 0;
+		}
+		mutate array3_length + 1;
+	}
+}
+
+array3_print {
+	concat serial dialog array_print_left;
+	for (mutate i = 1; variable i is <= array3_length; mutate i + 1) {
+		if (variable i is not 1) {
+			concat serial dialog {" "}
+		}
+		if (variable i is 1) { mutate printme = array3_1; }
+		else if (variable i is 2) { mutate printme = array3_2; }
+		else if (variable i is 3) { mutate printme = array3_3; }
+		else if (variable i is 4) { mutate printme = array3_4; }
+		else if (variable i is 5) { mutate printme = array3_5; }
+		else if (variable i is 6) { mutate printme = array3_6; }
+		else if (variable i is 7) { mutate printme = array3_7; }
+		copy printme;
+		mutate printme = 0;
+	}
+	concat serial dialog array_print_right;
+}
