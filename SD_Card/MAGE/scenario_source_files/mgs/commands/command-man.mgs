@@ -193,7 +193,7 @@ ch2-lambda-mainframe-broken {
 		"<c>YOU</>: Why did you break it?"
 		" "
 		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
-		"\tTODO: more convo"
+		"\tThat artifact is capable of doing quite a lot of damage, you know. It's only a problem that we're lacking it now because of that recent earthquake."
 		" "
 	}
 	goto ch2-lambda-topic-mainframe-q;
@@ -205,11 +205,11 @@ ch2-lambda-mainframe-broken-1 {
 		"<c>YOU</>: What exactly about it is broken?"
 		" "
 		"<m>LAMBDA</>: Well, sort of... everything. It's in a million pieces, to be precise."
-		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-1a
-		# "Was that necessary?" : ch2-lambda-mainframe-broken-1a
+		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-2
+		# "Was that necessary?" : ch2-lambda-mainframe-broken-2
 	}
 }
-ch2-lambda-mainframe-broken-1a {
+ch2-lambda-mainframe-broken-2 {
 	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
@@ -308,6 +308,7 @@ ch2-lambda-topic-person-q {
 		_ "SEBSTIAN" : ch2-lambda-person-sebastian
 		_ "THE GOLDFISH" : ch2-lambda-person-goldfish
 		_ "GOLDFISH" : ch2-lambda-person-goldfish
+		_ "AURELIUS" : ch2-lambda-person-aurelius
 		_ "KING" : ch2-lambda-person-kinggibson
 		_ "THE KING" : ch2-lambda-person-kinggibson
 		_ "GIBSON" : ch2-lambda-person-kinggibson
@@ -442,7 +443,7 @@ ch2-lambda-person-templeton {
 	}
 	if (flag ch2-seen-room-13 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Templeton, Templeton. One of King Gibson's advisors, I think. Or was he a giant blancmange? Sorry, I guess I don't know much about that guy."
 		}
 	} else {
 		show serial dialog {
@@ -460,7 +461,7 @@ ch2-lambda-person-sebastian {
 	}
 	if (flag ch2-seen-room-13 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Sebastian? He was one of King Gibson's advisors, wasn't he? I seem to recall him being combatative fairly often. Some kind of magic user, too."
 		}
 	} else {
 		show serial dialog {
@@ -470,20 +471,27 @@ ch2-lambda-person-sebastian {
 	goto ch2-lambda-topic-person-s;
 }
 // Goldfish
+ch2-lambda-person-aurelius {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Aurelius."
+		" "
+		"<m>LAMBDA</>: Aurelius, the goldfish? He's the King's regent."
+	}
+	goto ch2-lambda-person-goldfish-aurelius;
+}
 ch2-lambda-person-goldfish {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: Tell me about the goldfish." // TODO more specific variants
+		"<c>YOU</>: Tell me about the goldfish."
 		" "
+		"<m>LAMBDA</>: The goldfish? You mean the castle goldfish? Aurelius, his name is. He's the King's regent."
 	}
-	if (flag ch2-seen-room-13 is false) {
-		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
-		}
-	} else {
-		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
-		}
+	goto ch2-lambda-person-goldfish-aurelius;
+}
+ch2-lambda-person-goldfish-aurelius {
+	show serial dialog {
+		"\tHe mostly just goes to all the meetings and observes everything quietly. But when King Gibson is away, Aurelius is put in charge, and he does a fantastic job. He's a reasonable guy."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -865,7 +873,6 @@ ch2-lambda-person-lambda-q {
 		" "
 		"(Ask:)"
 		# "Where are you?" : ch2-lambda-person-lambda-where
-		// # "How long have you been here?" : ch2-lambda-person-lambda-time
 		# "What's your real name?" : ch2-lambda-person-lambda-name
 		# "(Go back)" : ch2-lambda-topic-person-start
 	}
@@ -895,43 +902,6 @@ ch2-lambda-person-lambda-where {
 	}
 	goto ch2-lambda-person-lambda-q;
 }
-// ch2-lambda-person-lambda-time {
-// 	show serial dialog spacer;
-// 	show serial dialog {
-// 		"<c>YOU</>: How long have you been here?"
-// 		" "
-// 		"<m>LAMBDA</>: Where I am now, or at the castle in general?"
-// 		" "
-// 		# "Where you are now." : ch2-lambda-person-lambda-time-2a
-// 		# "The castle in general." : ch2-lambda-person-lambda-time-2b
-// 		# "Both." : ch2-lambda-person-lambda-time-2c
-// 	}
-// 	goto ch2-lambda-person-lambda-q;
-// }
-// ch2-lambda-person-lambda-time-2a {
-// 	show serial dialog spacer;
-// 	show serial dialog {
-// 		"<c>YOU</>: Where you are now."
-// 		"TODO: rest of the convo"
-// 	}
-// 	goto ch2-lambda-person-lambda-q;
-// }
-// ch2-lambda-person-lambda-time-2b {
-// 	show serial dialog spacer;
-// 	show serial dialog {
-// 		"<c>YOU</>: The castle in general."
-// 		"TODO: rest of the convo"
-// 	}
-// 	goto ch2-lambda-person-lambda-q;
-// }
-// ch2-lambda-person-lambda-time-2c {
-// 	show serial dialog spacer;
-// 	show serial dialog {
-// 		"<c>YOU</>: Both."
-// 		"TODO: rest of the convo"
-// 	}
-// 	goto ch2-lambda-person-lambda-q;
-// }
 ch2-lambda-person-lambda-name {
 	show serial dialog spacer;
 	show serial dialog {
@@ -1045,11 +1015,22 @@ ch2-lambda-person-big-bad {
 		"<c>YOU</>: Tell me about the <r>Big Bad</>."
 		" "
 		"<m>LAMBDA</>: Oh, um, that's complicated."
-		"TODO: rest of the convo"
+		"\tBut he was ruthless. Smart, yes, and very capable, but he seemed to lack compassion. Like it was a bother to him when other people brought up the problems his actions were causing other people. Like he might not have even noticed otherwise."
+		" "
+		# "You're making it sound like you knew him." : ch2-lambda-person-big-bad2
+	}
+}
+ch2-lambda-person-big-bad2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You're making it sound like you knew him."
+		" "
+		"<m>LAMBDA</>: I mean -- that is, we -- we were...."
+		"\tUm, y-yes, we were acquainted, you could say. We'd certainly met. More than once. He always rubbed me the wrong way, though, even before he decided to do all the terrible things he did."
+		"\tIt's, um... it's been long enough that the details are fuzzy. But even if I can't remember exactly how things might have gone down, I can definitely remember the way he made me feel when we interacted. I guess that's all I have to say about that."
 	}
 	goto ch2-lambda-topic-person-s;
 }
-
 // Bert
 
 ch2-lambda-person-bert {

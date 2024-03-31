@@ -237,8 +237,8 @@ Plot points implemented:
 
 - FIRST ROUND: normal (`ch2-storyflag-round` = 1)
 	- [x] (1.) `monitor` (room 11)
-	- [~] (2.) `heatsink` (room 23)
-		- [ ] The power plant guys need a substitute cooling source if you are to take their heatsink
+	- [x] (2.) `heatsink` (room 23)
+		- [x] The power plant guys need a substitute cooling source if you are to take their heatsink
 		- [x] `cactuscooler` (Bob's club)
 	- [x] (3.) `powersupply` (room 22)
 	- [x] Bert secret cutscene happens when all of the above are done
@@ -249,10 +249,9 @@ Plot points implemented:
 	- [x] (5.) `mouse` (rodent) (room 33)
 	- [ ] (6.) `harddrive`
 		- [ ] `plate` (dinner plate) (room 34)
-			- [ ] Run several plates through some kind of serial minigame, detecting their spin or stability or something
-		- [ ] `needle` (phonograph needle) (room 12)
-			- [ ] Fix the existing speakers so they can use the digital media system, rather than the phonograph
-			- [ ] This should involve the terminal somehow
+			- [ ] Run several plates through some kind of serial minigame, currently a tower of Hanoi puzzle
+		- [x] `needle` (phonograph needle) (room 12)
+			- [x] Fix the existing speakers so they can use the digital media system, rather than the phonograph
 	- [x] Bert "any messages yet?" convo happens when all of the above are done
 	- [x] Lambda gives next round of the parts list
 
@@ -283,9 +282,8 @@ Plot points implemented:
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
 	- [x] Lambda talks to you in person
-		- [ ] Set map checkpoint: outer edge should tell you to go back to the mainframe to put in the OS
-	- [ ] (10.) `mainframeos` (room 99) (might be handled differently from other items)
-	- [ ] Cutscene: OS installation wizard
+	- [x] (10.) `mainframeos` (room 99) (might be handled differently from other items)
+	- [~] Cutscene: OS installation wizard
 		- [ ] Should need to go into town for an ethernet cable -- ("Oh, crud! I need to pull some dependencies... This is your last errand, I promise! Go get a spare cable from Trekkie, would you?")
 	- [ ] "You did it" cutscene
 	- [ ] Credits
