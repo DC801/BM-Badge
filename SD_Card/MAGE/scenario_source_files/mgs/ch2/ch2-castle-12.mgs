@@ -225,8 +225,14 @@ ch2-touch-needle {
 				> "No" : ch2-touch-needle-no
 			}
 		} else {
-			show dialog {
-				PLAYER "(Will the concierge get mad at me if I take the needle from this record player? I guess I should ask.)"
+			if (flag ch2-ws-backstory is false) {
+				show dialog {
+					PLAYER "(Will the concierge get mad at me if I take the needle from this record player? I guess I should ask.)"
+				}
+			} else {
+				show dialog {
+					PLAYER "(I can have the needle off the phonograph once I fix the stereo. I better get on that.)"
+				}
 			}
 		}
 	}
@@ -308,6 +314,7 @@ ch2-ws-guess-quit {
 		}
 	} else {
 		set flag ch2-ws-won to true;
+		// TODO: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
 		show serial dialog {
 			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
 			" "
