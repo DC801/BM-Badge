@@ -1,5 +1,5 @@
 const!(
-	$close = 1 $repeat = 2 $hit = 3 $miss = 4
+	$close = 1 $repeat = 2 $hit = 3 $miss = 4 $cheat = 5
 	// target words
 	$album = 1 $analog = 2 $audio = 3 $aux = 4 $bass = 5 $beat = 6 $bpm = 7 $broadcast = 8 $cassette = 9 $chiptune = 10 $codec = 11 $compact = 12 $frequency = 13 $headphones = 14 $hifi = 15 $laser = 16 $lofi = 17 $media = 18 $microphone = 19 $midi = 20 $mixing = 21 $music = 22 $phonograph = 23 $radio = 24 $recording = 25 $rhythm = 26 $sequencer = 27 $song = 28 $soundtrack = 29 $speakers = 30 $stereo = 31 $stream = 32 $subwoofer = 33 $surround = 34 $synthesizer = 35 $tape = 36 $treble = 37 $vinyl = 38 $vocoder = 39 $volume = 40
 	// "close" words
@@ -1297,6 +1297,55 @@ serial dialog ch2-ws-input {
 	_ "TUNES" : ch2-ws-guess-tunes
 	_ "VINYLS" : ch2-ws-guess-vinyls
 	_ "VOCODERS" : ch2-ws-guess-vocoders
+	// cheats
+	_ "GLITTERING PRIZES" : ch2-ws-guess-cheat
+}
+
+// Guesses: cheat
+ch2-ws-guess-cheat {
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = $cheat;
+	set flag ch2-ws-album to true;
+	set flag ch2-ws-analog to true;
+	set flag ch2-ws-audio to true;
+	set flag ch2-ws-aux to true;
+	set flag ch2-ws-bass to true;
+	set flag ch2-ws-beat to true;
+	set flag ch2-ws-bpm to true;
+	set flag ch2-ws-broadcast to true;
+	set flag ch2-ws-cassette to true;
+	set flag ch2-ws-chiptune to true;
+	set flag ch2-ws-codec to true;
+	set flag ch2-ws-compact to true;
+	set flag ch2-ws-frequency to true;
+	set flag ch2-ws-headphones to true;
+	set flag ch2-ws-hifi to true;
+	set flag ch2-ws-laser to true;
+	set flag ch2-ws-lofi to true;
+	set flag ch2-ws-media to true;
+	set flag ch2-ws-microphone to true;
+	set flag ch2-ws-midi to true;
+	set flag ch2-ws-mixing to true;
+	set flag ch2-ws-music to true;
+	set flag ch2-ws-phonograph to true;
+	set flag ch2-ws-radio to true;
+	set flag ch2-ws-recording to true;
+	set flag ch2-ws-rhythm to true;
+	set flag ch2-ws-sequencer to true;
+	set flag ch2-ws-song to true;
+	set flag ch2-ws-soundtrack to true;
+	set flag ch2-ws-speakers to true;
+	set flag ch2-ws-stereo to true;
+	set flag ch2-ws-stream to true;
+	set flag ch2-ws-subwoofer to true;
+	set flag ch2-ws-surround to true;
+	set flag ch2-ws-synthesizer to true;
+	set flag ch2-ws-tape to true;
+	set flag ch2-ws-treble to true;
+	set flag ch2-ws-vinyl to true;
+	set flag ch2-ws-vocoder to true;
+	set flag ch2-ws-volume to true;
+	goto ch2-ws-doturn;
 }
 
 // Guesses: "close" words:
@@ -1901,7 +1950,11 @@ ch2-ws-guess-volume {
 // MESSAGES
 
 ch2-ws-turn-message {
-	if (variable ch2-ws-turn-status is $miss) {
+	if (variable ch2-ws-turn-status is $cheat) {
+		concat serial dialog {
+			"Whoa! Look who's a medieval man!"
+		}
+	} else if (variable ch2-ws-turn-status is $miss) {
 		concat serial dialog {
 			"Huh? I don't think I know that word."
 		}
