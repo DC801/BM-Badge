@@ -6,6 +6,7 @@ const!(
 	$albums = 41 $base = 42 $beats = 43 $broadcasts = 44 $cassettes = 45 $chiptunes = 46 $codecs = 47 $frequencies = 48 $gramophone = 49 $headphone = 50 $lasers = 51 $microphones = 52 $phones = 53 $phone = 54 $mic = 55 $musician = 56 $radios = 57 $recordings = 58 $record = 59 $sequence = 60 $sequencers = 61 $sing = 62 $singing = 63 $songs = 64 $sound = 65 $soundtracks = 66 $synth = 67 $synthesizers = 68 $track = 69 $tracks = 70 $speaker = 71 $stereos = 72 $streams = 73 $subwoofers = 74 $tapes = 75 $tune = 76 $tunes = 77 $vinyls = 78 $vocoders = 79
 )
 
+// todo: should the "unfound" letters be lowercase for accessibility?
 ch2-ws-count-flags {
 	mutate ch2-ws-flags-tally = 0;
 	if (flag ch2-ws-album is true) {

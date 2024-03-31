@@ -195,7 +195,7 @@ ch2-touch-needle {
 			show dialog {
 				PLAYER "That's a funny looking trumpet."
 				Concierge "It mechanically amplifies the vibrations captured by the needle upon the vinyl record."
-				"I got this old thing out after the earthquake damaged the intercom system. I couldn't bear how quiet it was in here."
+				"I got this old thing out after the earthquake damaged the intercom system -- and the stereo. I couldn't bear how quiet it was in here."
 			}
 			set flag ch2-needle-firstlook to true;
 		} else {

@@ -141,7 +141,7 @@ ch2-pickup-powersupply {
 	set flag ch2-carrying-powersupply to true;
 	register look + "power supply" -> look-powersupply;
 }
-ch2-handoff-powersupply-to-cactuscooler {
+ch2-handoff-heatsink-to-cactuscooler {
 	set flag ch2-map-heatsink to false;
 	set flag ch2-map-cactuscooler-castle to true;
 }
