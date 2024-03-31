@@ -230,7 +230,7 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 		Object.keys(warningChecks).forEach(function(checkName) {
 			var checkFunction = warningChecks[checkName];
 			var warningMessage = checkFunction(tiledObject.compositeEntity);
-			if (warningMessage == null) {
+			if (warningMessage === null) {
 				return;
 			}
 			if (! (checkName in warnings)) {

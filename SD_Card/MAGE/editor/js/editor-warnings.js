@@ -91,11 +91,6 @@ Vue.component('editor-warning-check-warning', {
 		v-if="!collapsed"
 	>
 		<p>{{ warning.warningMessage }}</p>
-		
-	
-	
-
-
 		<div
 			class="alert alert-info"
 			role="alert"

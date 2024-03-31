@@ -16,7 +16,7 @@ var verbose = false;
 	const index = process.argv.indexOf(verboseArgForm);
 	if (index > -1) {
 		verbose = true;
-		delete process.argv[index];
+		process.argv.splice(index, 1);
 	}
 });
 
@@ -106,15 +106,15 @@ function makeMap(path) {
 function printWarningsIfVerbose(scenarioData) {
 	if (
 		verbose
-		&& 'warnings' in scenarioData
+		&& scenarioData.warnings
 	) {
 		let totalWarningCount = 0;
 		const mapsWithWarnings = [];
-		const checkWarningCounts = Object.fromEntries(
-			Object.keys(scenarioData.warnings).map(function (checkName) {
-				return [checkName, 0];
-			})
-		);
+
+		const checkWarningCounts = {};
+		Object.keys(scenarioData.warnings).forEach(function (checkName) {
+			return checkWarningCounts[checkName] = 0;
+		});
 
 		console.log();
 		Object.entries(scenarioData.warnings).forEach(function ([checkName, checkWarnings]) {

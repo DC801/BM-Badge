@@ -61,7 +61,7 @@ window.vueApp = new window.Vue({
 						.then(handleScenarioData(fileNameMap))
 						.then(function (scenarioData) {
 							vm.fileNameMap = fileNameMap;
-							vm.scenarioData = scenarioData;							
+							vm.scenarioData = scenarioData;
 							vm.$store.commit('INIT_CURRENT_DATA');
 							return scenarioData;
 						})
