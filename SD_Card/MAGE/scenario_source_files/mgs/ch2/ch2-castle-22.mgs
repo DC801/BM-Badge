@@ -107,20 +107,20 @@ ch2-hide-powersupply {
 }
 
 ch2-touch-powersupply {
-	if (flag ch2-powersupply-firstlook is false) {
+	if (flag ch2-powersupply-permission is false) {
 		show dialog {
-			PLAYER "TODO powersupply1"
+			PLAYER "This has a power cable coming out of it, so it must be the power supply."
+			"But it probably belongs to someone. I better ask permission before taking it."
 		}
-		set flag ch2-powersupply-firstlook to true;
+		return;
 	}
-	show dialog {
-		PLAYER "TODO powersupply2."
-	}
-	if (flag ch2-powersupply-permission is false) { // TODO make this a thing
+	if (flag interrupt is false) {
 		show dialog {
-			PLAYER "I better ask permission before taking this, since it probably belongs to someone."
+			PLAYER "All right, power supply!"
 		}
-	} else {
+		set flag interrupt to true;
+	}
+	if (flag ch2-powersupply-permission is true) {
 		show dialog {
 			name "" "(Pick up the power supply?)"
 			> "Yes" : ch2-touch-powersupply-yes

@@ -45,8 +45,11 @@ serial dialog ch2-describe-clock {
 	"\tIn our case... well, I know <m>King Gibson has a very nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
 serial dialog ch2-describe-cpu {
-	"<m>LAMBDA</>: The <m>CPU</> is the most important part of the computer -- it's like the computer's brain. There aren't any spare lying around, but we could approximate one... maybe?"
-	"\tTODO: (all the rest)"
+	"<m>LAMBDA</>: The <m>CPU</> is the most important part of the computer. It's like the computer's brain. There aren't any spare lying around, but we could approximate one. I think."
+	"\tFirst you'll need some means of storing a little bit of data. You don't need much -- just enough for the CPU to do some mental math and remember what it's doing. There's an <m>ABACUS</> in the <m>workshop</> that might fit the bill."
+	"\tNext is the \"deciding\" part of the CPU. Doesn't have to be too much. A small animal, say, a <m>GOLDFISH</> would work -- uh, as uncomfortable as the thought is. I wonder if the king's regent would be willing to volunteer, if only briefly. Look for him in the <m>throne room</>."
+	// todo: make it so you could use Mr. Tickles instead! (You must choose!)
+	// "\tThat is, unless you know any other goldfish you might want to use instead...."
 }
 serial dialog ch2-describe-goldfish {
 	"<m>LAMBDA</>: TODO: goldfish description"
@@ -457,7 +460,7 @@ look-mouse {
 look-harddrive {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look harddrive TODO"
+		"You look at the <m>hard drive</>: a magical fusion of a dinner plate and a phonograph needle, the sight of which is somehow impossible to put into words."
 	}
 }
 look-plate {
@@ -499,7 +502,7 @@ look-cpu {
 look-goldfish {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look goldfish TODO"
+		"You look at the <m>goldfish</>: a small orange koi inside a standard goldfish bowl, complete with plastic decorations. Unnervingly, the goldfish has an eye fixed on you."
 	}
 }
 look-manual {

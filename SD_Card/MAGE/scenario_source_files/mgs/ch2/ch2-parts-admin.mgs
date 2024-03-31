@@ -59,6 +59,7 @@ debug-set-flags-to-round2 {
 	copy ch2-install-monitor;
 	set flag ch2-cutseen-bert-secret to true;
 	set flag ch2-parts-round-2-backstory to true;
+	set flag ch2-permission-to-fuse to true;
 	copy debug-map-flags-for-round2;
 }
 debug-set-flags-to-round3 {

@@ -199,7 +199,7 @@ ch2-touch-clock {
 				PLAYER "Um, excuse me, your majesty. I sort of need this clock --"
 				KING "Clock? What are you on about? Stay focused, please! Get this door working, and then we can discuss whatever else you want."
 			}
-		} else if (flag ch2-clock-permission is false) { // TODO make this a thing
+		} else if (flag ch2-clock-permission is false) {
 			show dialog {
 				PLAYER "Can I just take this, though? Maybe I should ask the king first."
 			}
