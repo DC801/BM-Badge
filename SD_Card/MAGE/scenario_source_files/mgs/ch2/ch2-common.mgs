@@ -42,22 +42,22 @@ ch2-map-init-serial {
 		copy register-rtfm;
 		copy register-inventory;
 		copy register-manual;
-		if (flag ch2-has-map is true) {
-			copy register-map;
-		}
-		if (debug mode is on) {
-			copy register-storyflag;
-			copy register-warp;
-			turn serial control on;
-		} else if (flag ch2-warp-granted is true) {
-			copy register-warp;
-		}
-		if (flag ch2-permission-to-fuse is true) {
-			copy register-fuse;
-		}
-		if (variable ch2-storyflag-round is > 0) {
-			copy register-parts;
-		}
+	}
+	if (flag ch2-has-map is true) {
+		copy register-map;
+	}
+	if (debug mode is on) {
+		copy register-storyflag;
+		copy register-warp;
+		turn serial control on;
+	} else if (flag ch2-warp-granted is true) {
+		copy register-warp;
+	}
+	if (flag ch2-permission-to-fuse is true) {
+		copy register-fuse;
+	}
+	if (variable ch2-storyflag-round is > 0) {
+		copy register-parts;
 	}
 }
 ch2-map-init-inventory-look {

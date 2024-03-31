@@ -619,7 +619,7 @@ ch2-ws-draw-map {
 	} else {
 		concat serial dialog { "O " }
 	}
-	concat serial dialog { "O O B B " }
+	concat serial dialog { "R O B B " }
 	if (flag ch2-ws-song is true) {
 		concat serial dialog { "<y><bold>O </><r>" }
 	} else {
@@ -2197,7 +2197,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>HEADPHONES</>! Yeah, I remember these! Get's get tinitus together!"
+				"<y>HEADPHONES</>! Yeah, I remember these! Let's get tinitus together!"
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $hifi) {

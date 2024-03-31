@@ -18,7 +18,7 @@ var lispish = [
 
 	['D',['N','microphone'],['C','vocoder'],'T',['R','laser'],'VNQD',['S','song'],['A','cassette'],'V',['STREAM'],'GA',['E','codec'],'HOEZ'],
 
-	['I',['E','microphone'],'O',['O','vocoder'],'OOBB',['O','song'],'D',['S','cassette'],'QLYUEMLT',['C','codec'],['AUDIO']],
+	['I',['E','microphone'],'O',['O','vocoder'],'ROBB',['O','song'],'D',['S','cassette'],'QLYUEMLT',['C','codec'],['AUDIO']],
 
 	['WVQF',['D','vocoder'],'VJ',['N','song'],'OO',['S','cassette'],'RQN',['MIDI'],'DW',['S','stereo'],['A','album'],'YYO'],
 
