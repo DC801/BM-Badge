@@ -1,4 +1,7 @@
 include!("header.mgs")
+settings for serial dialog {
+	wrap 70
+}
 
 start-hanoi {
 	turn player control off;
@@ -123,18 +126,18 @@ tick_hanoi {
 		turn player control on;
 		copy hanoi_quit;
 	} else if (
-		button LJOY_LEFT
-		|| button RJOY_LEFT
-		|| button LJOY_RIGHT
-		|| button RJOY_RIGHT
+		button LJOY_UP
+		|| button RJOY_UP
+		|| button LJOY_DOWN
+		|| button RJOY_DOWN
 	) {
 		copy hanoi_move;
-	} else if (button LJOY_DOWN || button RJOY_DOWN) {
+	} else if (button LJOY_RIGHT || button RJOY_RIGHT) {
 		if (variable cursor_pos is 1 || variable cursor_pos is 2) {
 			mutate cursor_pos + 1;
 		}
 		copy draw_hanoi;
-	} else if (button LJOY_UP || button RJOY_UP) {
+	} else if (button LJOY_LEFT || button RJOY_LEFT) {
 		if (variable cursor_pos is 2 || variable cursor_pos is 3) {
 			mutate cursor_pos - 1;
 		}
@@ -142,70 +145,273 @@ tick_hanoi {
 	}
 }
 
-draw_cursor {
-	if (variable cursor_value is 0) {
-		concat serial dialog {
-			"  <m><-----</>"
-		}
-	} else {
-		concat serial dialog {
-			"  <m><-[</>$cursor_value$<m>]-</>"
-		}
-	}
-	if (flag hanoi_warning_size is true) {
-		concat serial dialog {" Can't put larger plate on smaller plate!"}
-		set flag hanoi_warning_size to false;
-	} else if (flag hanoi_won is true) {
-		concat serial dialog {" <g>YOU WIN! Plate #7 acquired! (score: $hanoi_move_count$)"}
-		set flag hanoi_won to false;
-		copy hanoi_quit;
+/*
+============================================================
+     Cannot place larger plate on top of a smaller plate!    // row 10
+         ||      YOU WON! Plate #7 grabbed!      ||          // row 11
+         ||              Score: xx               ||          // row 10 (more digits = less spaces)
+============================================================
+=------------------ THE PLATES OF HANOI -------------------=
+=----------------- Grab plate #7 to win! ------------------=
+============================================================
+         ||                  ||                  ||          // row 11
+        /  \                 ||                  ||          // row 10
+       [    ]               /  \                 ||          // row 9
+                           [1111]                ||          // row 8
+        1111                                     ||          // row 7
+       222222              222222                ||          // row 6
+      33333333            33333333               ||          // row 5
+     4444444444          4444444444             /  \         // row 4
+    555555555555        555555555555           [    ]        // row 3
+   66666666666666      66666666666666                        // row 2
+  7777777777777777    7777777777777777          1111         // row 1
+============================================================
+  Joysticks to control grabber arm, HAX button to quit ~OR~
+  Tray (1-3) to grab/release plate, (T)ips, (R)eset, (Q)uit
+============================================================
+*/
+hanoi_won_message_A {
+	if (variable cursor_pos is 1) {
+		concat serial dialog hanoi_won_message1a;
+	} else if (variable cursor_pos is 2) {
+		concat serial dialog hanoi_won_message2a;
+	} else if (variable cursor_pos is 3) {
+		concat serial dialog hanoi_won_message3a;
 	}
 }
-
-draw_hanoi {
-	show serial dialog spacer;
-	show serial dialog {
-		wrap 70
-		"<m>THE PLATES OF HANOI</> Grab plate #7 to win!"
-		" "
-		"<bold>Buttons</>: <c>Joysticks</> to control grabber arm"
-		"   <c>HAX button</> to quit"
-		"<bold>Console</>: (<c>R</>)eset, (<c>T</>)ips, (<c>Q</>)uit"
-		"   Tray number (<c>1</>, <c>2</>, <c>3</>) to grab/release plate"
-		" "
-		// TODO: add tip: odd numbers like to be next to even numbers and vice versa. E.g. '4' next to '1'
-	}
-	concat serial dialog { "<m>1</>"}
-	copy array1_print;
+hanoi_won_message_B {
 	if (variable cursor_pos is 1) {
-		copy draw_cursor;
+		concat serial dialog hanoi_won_message1b;
+	} else if (variable cursor_pos is 2) {
+		concat serial dialog hanoi_won_message2b;
+	} else if (variable cursor_pos is 3) {
+		if (variable hanoi_move_count is < 100) {
+			concat serial dialog hanoi_won_message3b2; // 2-digit
+		} else if (variable hanoi_move_count is < 1000) {
+			concat serial dialog hanoi_won_message3b3; // 3-digit
+		} else {
+			concat serial dialog hanoi_won_message3b4; // 4-digit (or more I guess)
+		}
 	}
-	concat serial dialog {"\n"}
-	concat serial dialog { "<m>2</>"}
-	copy array2_print;
-	if (variable cursor_pos is 2) {
-		copy draw_cursor;
+}
+serial dialog hanoi_size_warning  { "     <m>Cannot place larger plate on top of a smaller plate!</>" }
+serial dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #7 grabbed!</>" }
+serial dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #7 grabbed!</>" }
+serial dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #7 grabbed!</>      ||" }
+serial dialog hanoi_won_message1b  { "         ||              <g>Score: $hanoi_move_count$</>" }
+serial dialog hanoi_won_message2b  { "                         <g>Score: $hanoi_move_count$</>" }
+serial dialog hanoi_won_message3b2 { "                         <g>Score: $hanoi_move_count$</>               ||" }
+serial dialog hanoi_won_message3b3 { "                         <g>Score: $hanoi_move_count$</>              ||" }
+serial dialog hanoi_won_message3b4 { "                         <g>Score: $hanoi_move_count$</>             ||" }
+serial dialog hanoi_space         { "                    " }
+serial dialog hanoi_cursor_arm    { "         ||         " }
+serial dialog hanoi_cursor_hinge  { "        /  \\        " }
+serial dialog hanoi_cursor_grip_0 { "       [    ]       " }
+serial dialog hanoi_cursor_grip_1 { "       [1111]       " }
+serial dialog hanoi_cursor_grip_2 { "      [222222]      " }
+serial dialog hanoi_cursor_grip_3 { "     [33333333]     " }
+serial dialog hanoi_cursor_grip_4 { "    [4444444444]    " }
+serial dialog hanoi_cursor_grip_5 { "   [555555555555]   " }
+serial dialog hanoi_cursor_grip_6 { "  [66666666666666]  " }
+serial dialog hanoi_cursor_grip_7 { " [7777777777777777] " }
+serial dialog hanoi_plate_1       { "        1111        " }
+serial dialog hanoi_plate_2       { "       222222       " }
+serial dialog hanoi_plate_3       { "      33333333      " }
+serial dialog hanoi_plate_4       { "     4444444444     " }
+serial dialog hanoi_plate_5       { "    555555555555    " }
+serial dialog hanoi_plate_6       { "   66666666666666   " }
+serial dialog hanoi_plate_7       { "  7777777777777777  " }
+draw_cursor_grip {
+	if (variable cursor_value is 0) {
+		concat serial dialog hanoi_cursor_grip_0;
+	} else if (variable cursor_value is 1) {
+		concat serial dialog hanoi_cursor_grip_1;
+	} else if (variable cursor_value is 2) {
+		concat serial dialog hanoi_cursor_grip_2;
+	} else if (variable cursor_value is 3) {
+		concat serial dialog hanoi_cursor_grip_3;
+	} else if (variable cursor_value is 4) {
+		concat serial dialog hanoi_cursor_grip_4;
+	} else if (variable cursor_value is 5) {
+		concat serial dialog hanoi_cursor_grip_5;
+	} else if (variable cursor_value is 6) {
+		concat serial dialog hanoi_cursor_grip_6;
+	} else if (variable cursor_value is 7) {
+		concat serial dialog hanoi_cursor_grip_7;
 	}
-	concat serial dialog {"\n"}
-	concat serial dialog { "<m>3</>"}
-	copy array3_print;
-	if (variable cursor_pos is 3) {
-		copy draw_cursor;
+}
+get_curr_plate {
+	// needs `row` and `column` to be set in advance
+	// Because COPY_SCRIPT copies this stuff inline, the resulting script is hideously large, but the draw logic is easier to follow when abstracted like this. If our high instruction count ever becomes a problem, feel free to bake some of this down so that it's not checking which column it's in (in multiple layers) every single time, or even every row every time.
+	if (variable row is > 7) {
+		mutate curr_plate = 0;
+	} else if (variable column is 1) {
+		if (variable row is 1) {
+			mutate curr_plate = array1_1;
+		} else if (variable row is 2) {
+			mutate curr_plate = array1_2;
+		} else if (variable row is 3) {
+			mutate curr_plate = array1_3;
+		} else if (variable row is 4) {
+			mutate curr_plate = array1_4;
+		} else if (variable row is 5) {
+			mutate curr_plate = array1_5;
+		} else if (variable row is 6) {
+			mutate curr_plate = array1_6;
+		} else if (variable row is 7) {
+			mutate curr_plate = array1_7;
+		}
+	} else if (variable column is 2) {
+		if (variable row is 1) {
+			mutate curr_plate = array2_1;
+		} else if (variable row is 2) {
+			mutate curr_plate = array2_2;
+		} else if (variable row is 3) {
+			mutate curr_plate = array2_3;
+		} else if (variable row is 4) {
+			mutate curr_plate = array2_4;
+		} else if (variable row is 5) {
+			mutate curr_plate = array2_5;
+		} else if (variable row is 6) {
+			mutate curr_plate = array2_6;
+		} else if (variable row is 7) {
+			mutate curr_plate = array2_7;
+		}
+	} else if (variable column is 3) {
+		if (variable row is 1) {
+			mutate curr_plate = array3_1;
+		} else if (variable row is 2) {
+			mutate curr_plate = array3_2;
+		} else if (variable row is 3) {
+			mutate curr_plate = array3_3;
+		} else if (variable row is 4) {
+			mutate curr_plate = array3_4;
+		} else if (variable row is 5) {
+			mutate curr_plate = array3_5;
+		} else if (variable row is 6) {
+			mutate curr_plate = array3_6;
+		} else if (variable row is 7) {
+			mutate curr_plate = array3_7;
+		}
 	}
-	show serial dialog {" "}
+}
+draw_curr_plate {
+	if (variable curr_plate is 0) {
+		concat serial dialog hanoi_space;
+	} else if (variable curr_plate is 1) {
+		concat serial dialog hanoi_plate_1;
+	} else if (variable curr_plate is 2) {
+		concat serial dialog hanoi_plate_2;
+	} else if (variable curr_plate is 3) {
+		concat serial dialog hanoi_plate_3;
+	} else if (variable curr_plate is 4) {
+		concat serial dialog hanoi_plate_4;
+	} else if (variable curr_plate is 5) {
+		concat serial dialog hanoi_plate_5;
+	} else if (variable curr_plate is 6) {
+		concat serial dialog hanoi_plate_6;
+	} else if (variable curr_plate is 7) {
+		concat serial dialog hanoi_plate_7;
+	}
+}
+draw_hanoi {
+	if (variable cursor_pos is 1) {
+		mutate cursor_grip_height = array1_length;
+	} else if (variable cursor_pos is 2) {
+		mutate cursor_grip_height = array2_length;
+	} else if (variable cursor_pos is 3) {
+		mutate cursor_grip_height = array3_length;
+	}
+	mutate cursor_grip_height + 2;
+	mutate cursor_hinge_height = cursor_grip_height;
+	mutate cursor_hinge_height + 1;
+	// HEADER
+	show serial dialog {
+		" "
+		" "
+		"============================================================"
+		"=------------------ <m>THE PLATES OF HANOI</> -------------------="
+		"=----------------- Grab plate #7 to win! ------------------="
+		"============================================================"
+	}
+	// ROW 11
+	mutate row = 11;
+	if (flag hanoi_won is true) {
+		copy hanoi_won_message_A;
+	} else {
+		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+			if (variable cursor_pos is == column) {
+				concat serial dialog hanoi_cursor_arm;
+			} else {
+				concat serial dialog hanoi_space;
+			}
+		}
+	}
+	concat serial dialog newline;
+	// ROW 10
+	mutate row = 10;
+	if (flag hanoi_warning_size is true) {
+		show serial dialog hanoi_size_warning;
+		set flag hanoi_warning_size to false;
+	} else if (flag hanoi_won is true) {
+		copy hanoi_won_message_B;
+	} else {
+		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+			if (variable cursor_pos is == column) {
+				if (variable cursor_hinge_height is < row) {
+					concat serial dialog hanoi_cursor_arm;
+				} else if (variable cursor_hinge_height is == row) {
+					concat serial dialog hanoi_cursor_hinge;
+				} else if (variable cursor_grip_height is == row) {
+					copy draw_cursor_grip;
+				} else {
+					concat serial dialog hanoi_space;
+				}
+			} else {
+				concat serial dialog hanoi_space;
+			}
+		}
+	}
+	concat serial dialog newline;
+	// ROW 9 -> 1
+	for (mutate row = 9; variable row is >= 1; mutate row - 1) {
+		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+			if (variable cursor_pos is == column) {
+				if (variable cursor_hinge_height is < row) {
+					concat serial dialog hanoi_cursor_arm;
+				} else if (variable cursor_hinge_height is == row) {
+					concat serial dialog hanoi_cursor_hinge;
+				} else if (variable cursor_grip_height is == row) {
+					copy draw_cursor_grip;
+				} else {
+					copy get_curr_plate;
+					copy draw_curr_plate;
+				}
+			} else {
+				copy get_curr_plate;
+				copy draw_curr_plate;
+			}
+		}
+		concat serial dialog newline;
+	}
+	// FOOTER
+	show serial dialog {
+		"============================================================"
+		"  <c>Joysticks</> to control grabber arm, <c>HAX button</> to quit ~OR~"
+		"  Tray (<c>1</>-<c>3</>) to grab/release plate, (<c>T</>)ips, (<c>R</>)eset, (<c>Q</>)uit"
+		"============================================================"
+	}
 	if (flag hanoi_won is true) {
 		copy hanoi_quit;
-	}
-	if (flag hanoi_draw_help is true) {
+	} else if (flag hanoi_draw_help is true) {
 		show serial dialog {
-			" "
-			"<m>------ <bold>Plates of Hanoi Tips</> <m>------------------------------</>"
-			"- Only put odd numbered plates on top of even plates and vice versa. E.g. put plate <bold>1</> on top of plate <bold>4</>, not 3 or 5."
-			"- You only need uncover (and grab) the #7 plate; you need not move it to another tray and build the tower of plates again."
+			"<m>TIP:</> You only need uncover (and grab) the #7 plate; you need not move it to another tray and build the tower of plates again."
+			"<m>TIP:</> Only put odd numbered plates on top of even plates and vice versa. E.g. put plate <bold>1</> on top of plate <bold>4</>, not <bold>3</> or <bold>5</>."
 		}
 		set flag hanoi_draw_help to false;
 	}
 }
+
 hanoi_quit {
 	turn player control on;
 	unregister "1";
@@ -217,6 +423,12 @@ hanoi_quit {
 	unregister "RESET";
 	unregister "Q";
 	unregister "QUIT";
+	if (flag hanoi_won is false) {
+		show serial dialog {
+			" "
+			"Quitting <m>Plates of Hanoi</> (your progress has been saved)"
+		}
+	}
 	goto main_menu; // or whatever map it is
 }
 hanoi_help {
@@ -231,16 +443,16 @@ hanoi_reset {
 }
 
 hanoi_variables {
-	mutate cursor_pos = 3;
+	mutate cursor_pos = 1;
 	mutate cursor_value = 0;
-	mutate array1_7 = 0;
-	mutate array1_6 = 0;
-	mutate array1_5 = 0;
-	mutate array1_4 = 0;
-	mutate array1_3 = 0;
-	mutate array1_2 = 0;
-	mutate array1_1 = 0;
-	mutate array1_length = 0;
+	mutate array1_7 = 1;
+	mutate array1_6 = 2;
+	mutate array1_5 = 3;
+	mutate array1_4 = 4;
+	mutate array1_3 = 5;
+	mutate array1_2 = 6;
+	mutate array1_1 = 7;
+	mutate array1_length = 7;
 	mutate array2_7 = 0;
 	mutate array2_6 = 0;
 	mutate array2_5 = 0;
@@ -249,19 +461,23 @@ hanoi_variables {
 	mutate array2_2 = 0;
 	mutate array2_1 = 0;
 	mutate array2_length = 0;
-	mutate array3_7 = 1;
-	mutate array3_6 = 2;
-	mutate array3_5 = 3;
-	mutate array3_4 = 4;
-	mutate array3_3 = 5;
-	mutate array3_2 = 6;
-	mutate array3_1 = 7;
-	mutate array3_length = 7;
+	mutate array3_7 = 0;
+	mutate array3_6 = 0;
+	mutate array3_5 = 0;
+	mutate array3_4 = 0;
+	mutate array3_3 = 0;
+	mutate array3_2 = 0;
+	mutate array3_1 = 0;
+	mutate array3_length = 0;
 	mutate hanoi_move_count = 0;
 	set flag hanoi_init_done to true;
+	set flag hanoi_won to false;
 }
 hanoi_init {
-	if (flag hanoi_init_done is false) {
+	if (
+		flag hanoi_init_done is false
+		|| flag hanoi_won is true
+	) {
 		copy hanoi_variables;
 	}
 	register "1" -> hanoi_move_1;
