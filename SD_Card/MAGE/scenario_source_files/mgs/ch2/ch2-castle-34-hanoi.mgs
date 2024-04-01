@@ -66,11 +66,12 @@ check_cursor {
 			mutate checked_value = array3_7;
 		}
 	}
-	set flag can_drop to false;
 	if (variable checked_value is 0) {
 		set flag can_drop to true;
 	} else if (variable checked_value is > cursor_value) {
 		set flag can_drop to true;
+	} else {
+		set flag can_drop to false;
 	}
 }
 
@@ -240,61 +241,6 @@ draw_cursor_grip {
 		concat serial dialog hanoi_cursor_grip_7;
 	}
 }
-get_curr_plate {
-	// needs `row` and `column` to be set in advance
-	// Because COPY_SCRIPT copies this stuff inline, the resulting script is hideously large, but the draw logic is easier to follow when abstracted like this. If our high instruction count ever becomes a problem, feel free to bake some of this down so that it's not checking which column it's in (in multiple layers) every single time, or even every row every time.
-	if (variable row is > 7) {
-		mutate curr_plate = 0;
-	} else if (variable column is 1) {
-		if (variable row is 1) {
-			mutate curr_plate = array1_1;
-		} else if (variable row is 2) {
-			mutate curr_plate = array1_2;
-		} else if (variable row is 3) {
-			mutate curr_plate = array1_3;
-		} else if (variable row is 4) {
-			mutate curr_plate = array1_4;
-		} else if (variable row is 5) {
-			mutate curr_plate = array1_5;
-		} else if (variable row is 6) {
-			mutate curr_plate = array1_6;
-		} else if (variable row is 7) {
-			mutate curr_plate = array1_7;
-		}
-	} else if (variable column is 2) {
-		if (variable row is 1) {
-			mutate curr_plate = array2_1;
-		} else if (variable row is 2) {
-			mutate curr_plate = array2_2;
-		} else if (variable row is 3) {
-			mutate curr_plate = array2_3;
-		} else if (variable row is 4) {
-			mutate curr_plate = array2_4;
-		} else if (variable row is 5) {
-			mutate curr_plate = array2_5;
-		} else if (variable row is 6) {
-			mutate curr_plate = array2_6;
-		} else if (variable row is 7) {
-			mutate curr_plate = array2_7;
-		}
-	} else if (variable column is 3) {
-		if (variable row is 1) {
-			mutate curr_plate = array3_1;
-		} else if (variable row is 2) {
-			mutate curr_plate = array3_2;
-		} else if (variable row is 3) {
-			mutate curr_plate = array3_3;
-		} else if (variable row is 4) {
-			mutate curr_plate = array3_4;
-		} else if (variable row is 5) {
-			mutate curr_plate = array3_5;
-		} else if (variable row is 6) {
-			mutate curr_plate = array3_6;
-		} else if (variable row is 7) {
-			mutate curr_plate = array3_7;
-		}
-	}
-}
 draw_curr_plate {
 	if (variable curr_plate is 0) {
 		concat serial dialog hanoi_space;
@@ -313,6 +259,37 @@ draw_curr_plate {
 	} else if (variable curr_plate is 7) {
 		concat serial dialog hanoi_plate_7;
 	}
+}
+draw_tile {
+	// wants `curr_plate` and `column`
+	if (variable curr_plate is not 0) {
+		copy draw_curr_plate;
+	} else if (variable cursor_pos is == column) {
+		if (variable cursor_hinge_height is < row) {
+			concat serial dialog hanoi_cursor_arm;
+		} else if (variable cursor_hinge_height is == row) {
+			concat serial dialog hanoi_cursor_hinge;
+		} else if (variable cursor_grip_height is == row) {
+			copy draw_cursor_grip;
+		} else {
+			concat serial dialog hanoi_space;
+		}
+	} else {
+		concat serial dialog hanoi_space;
+	}
+}
+draw_plate_row {
+	// wants `plate1`, `plate2`, `plate3`, and `row`
+	mutate column = 1; // col 1
+	mutate curr_plate = plate1;
+	copy draw_tile;
+	mutate column = 2; // col 2
+	mutate curr_plate = plate2;
+	copy draw_tile;
+	mutate column = 3; // col 3
+	mutate curr_plate = plate3;
+	copy draw_tile;
+	concat serial dialog newline;
 }
 draw_hanoi {
 	if (variable cursor_pos is 1) {
@@ -334,6 +311,10 @@ draw_hanoi {
 		"=----------------- Grab plate #7 to win! ------------------="
 		"============================================================"
 	}
+
+	// until we get to the plate rows:
+	mutate curr_plate = 0;
+
 	// ROW 11
 	mutate row = 11;
 	if (flag hanoi_won is true) {
@@ -348,6 +329,7 @@ draw_hanoi {
 		}
 	}
 	concat serial dialog newline;
+
 	// ROW 10
 	mutate row = 10;
 	if (flag hanoi_warning_size is true) {
@@ -357,43 +339,77 @@ draw_hanoi {
 		copy hanoi_won_message_B;
 	} else {
 		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
-			if (variable cursor_pos is == column) {
-				if (variable cursor_hinge_height is < row) {
-					concat serial dialog hanoi_cursor_arm;
-				} else if (variable cursor_hinge_height is == row) {
-					concat serial dialog hanoi_cursor_hinge;
-				} else if (variable cursor_grip_height is == row) {
-					copy draw_cursor_grip;
-				} else {
-					concat serial dialog hanoi_space;
-				}
-			} else {
-				concat serial dialog hanoi_space;
-			}
+			copy draw_tile;
 		}
 	}
 	concat serial dialog newline;
-	// ROW 9 -> 1
-	for (mutate row = 9; variable row is >= 1; mutate row - 1) {
-		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
-			if (variable cursor_pos is == column) {
-				if (variable cursor_hinge_height is < row) {
-					concat serial dialog hanoi_cursor_arm;
-				} else if (variable cursor_hinge_height is == row) {
-					concat serial dialog hanoi_cursor_hinge;
-				} else if (variable cursor_grip_height is == row) {
-					copy draw_cursor_grip;
-				} else {
-					copy get_curr_plate;
-					copy draw_curr_plate;
-				}
-			} else {
-				copy get_curr_plate;
-				copy draw_curr_plate;
-			}
-		}
-		concat serial dialog newline;
+
+	// ROW 9
+	mutate row = 9;
+	for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+		copy draw_tile;
 	}
+	concat serial dialog newline;
+
+	// ROW 8
+	mutate row = 8;
+	for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+		copy draw_tile;
+	}
+	concat serial dialog newline;
+	
+	// ROW 7
+	mutate row = 7;
+	mutate plate1 = array1_7;
+	mutate plate2 = array2_7;
+	mutate plate3 = array3_7;
+	copy draw_plate_row;
+
+	// ROW 6
+	mutate row = 6;
+	mutate plate1 = array1_6;
+	mutate plate2 = array2_6;
+	mutate plate3 = array3_6;
+	copy draw_plate_row;
+	
+	// ROW 5
+	mutate row = 5;
+	mutate plate1 = array1_5;
+	mutate plate2 = array2_5;
+	mutate plate3 = array3_5;
+	copy draw_plate_row;
+
+	// ROW 4
+	mutate row = 4;
+	mutate plate1 = array1_4;
+	mutate plate2 = array2_4;
+	mutate plate3 = array3_4;
+	copy draw_plate_row;
+	
+	// ROW 3
+	mutate row = 3;
+	mutate plate1 = array1_3;
+	mutate plate2 = array2_3;
+	mutate plate3 = array3_3;
+	copy draw_plate_row;
+	
+	// ROW 2
+	mutate row = 2;
+	mutate plate1 = array1_2;
+	mutate plate2 = array2_2;
+	mutate plate3 = array3_2;
+	copy draw_plate_row;
+
+	// ROW 1
+	mutate row = 1;
+	mutate curr_plate = array1_1;
+	copy draw_curr_plate;
+	mutate curr_plate = array2_1;
+	copy draw_curr_plate;
+	mutate curr_plate = array3_1;
+	copy draw_curr_plate;
+	concat serial dialog newline;
+
 	// FOOTER
 	show serial dialog {
 		"============================================================"
