@@ -5,7 +5,7 @@ settings for serial dialog {
 
 start-hanoi {
 	turn player control off;
-	copy hanoi_init;
+	copy hanoi_init_game;
 	copy draw_hanoi;
 	set map on_tick to tick_hanoi;
 }
@@ -444,8 +444,10 @@ hanoi_quit {
 			" "
 			"Quitting <m>Plates of Hanoi</> (your progress has been saved)"
 		}
+	} else if (flag ch2-carrying-plate is false || flag ch2-installed-plate is false) {
+		copy won_hanoi_get_plate;
 	}
-	goto main_menu; // or whatever map it is
+	goto on_tick-ch2-castle-34;
 }
 hanoi_help {
 	set flag hanoi_draw_help to true;
@@ -454,11 +456,11 @@ hanoi_help {
 
 hanoi_reset {
 	set flag hanoi_init_done to false;
-	copy hanoi_variables;
+	copy hanoi_init_variables;
 	copy draw_hanoi;
 }
 
-hanoi_variables {
+hanoi_init_variables {
 	mutate cursor_pos = 1;
 	mutate cursor_value = 0;
 	mutate array1_7 = 1;
@@ -489,12 +491,12 @@ hanoi_variables {
 	set flag hanoi_init_done to true;
 	set flag hanoi_won to false;
 }
-hanoi_init {
+hanoi_init_game {
 	if (
 		flag hanoi_init_done is false
 		|| flag hanoi_won is true
 	) {
-		copy hanoi_variables;
+		copy hanoi_init_variables;
 	}
 	register "1" -> hanoi_move_1;
 	register "2" -> hanoi_move_2;

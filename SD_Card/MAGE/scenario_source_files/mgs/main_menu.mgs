@@ -17,7 +17,6 @@ on_load-main_menu {
 	// }
 
 	/* DEBUG QUICK STUFFS */
-	register hanoi -> start-hanoi;
 	if (debug mode is on) {
 		register debug -> debug;
 		register hub -> debug-hub;
@@ -48,7 +47,6 @@ on_load-main_menu {
 			"<c>BOB2</>: ch2 bob's club basement"
 			"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
 			"<c>SIMON</>: fast forward to the Simon Says part"
-			"<c>HANOI</>: test Plates of Hanoi minigame"
 			"<c>BOOT</>: pretend to boot the weird computer"
 			"<c>SKIP _</>: skip ahead to that round (and set all prev flags)"
 			" "
