@@ -72,65 +72,32 @@ Vue.component('editor-warning-check-warning', {
 		}
 	},
 	template: /*html*/`
-<div class="card mb-1 text-white">
-	<div class="card-header bg-primary">
-		{{ warning.name || "NO NAME" }} (id {{ warning.id }})
-		<span
-			class="position-absolute"
-			style="top: 6px; right: 6px;"
-		>
-			<button
-				type="button"
-				class="btn btn-outline-info"
-				@click="collapse"
-			>_</button>
-		</span>
+<editor-accordion
+	:title="(warning.name || 'NO NAME') + ' (id ' + warning.id + ')'"
+>
+	<p>{{ warning.warningMessage }}</p>
+	<div class="alert alert-info" role="alert">
+		<span>You can click the "Copy" button to the right to put the current TODO dynamic your clipboard, then paste it
+			into your "<strong>TODO dynamic</strong>" file to save.</span>
 	</div>
-	<div
-		class="card-body p-3"
-		v-if="!collapsed"
-	>
-		<p>{{ warning.warningMessage }}</p>
-		<div
-			class="alert alert-info"
-			role="alert"
-		>
-			<span>You can click the "Copy" button to the right to put the current TODO dynamic your clipboard, then paste it into your "<strong>TODO dynamic</strong>" file to save.</span>
-		</div>
 
-		<p>You can click the button to the right to copy these suggested fixes.</p>
-		<div class="row align-items-start flex-nowrap">
-			<pre class="border border-primary rounded p-2 w-100">{{ fix }}</pre>
-			<button
-				type="button"
-				class="ml-1"
-				style="width: 2rem;"
-				title="Copy"
-				@click="copyFixes"
-			>
-				<span aria-hidden="true">📋</span>
-			</button>
-		</div>
-
-		<textarea
-			cols="80"
-			rows="16"
-			class="position-absolute"
-			style="
-				font-size: 0;
-				opacity: 0;
-			"
-			ref="copyFixesTextArea"
-		>{{ fix }}</textarea>
+	<p>You can click the button to the right to copy these suggested fixes.</p>
+	<div class="row align-items-start flex-nowrap">
+		<pre class="border border-primary rounded p-2 w-100">{{ fix }}</pre>
+		<button type="button" class="ml-1" style="width: 2rem;" title="Copy" @click="copyFixes">
+			<span aria-hidden="true">📋</span>
+		</button>
 	</div>
-</div>
+
+	<textarea
+		cols="80"
+		rows="16"
+		class="position-absolute"
+		style="font-size: 0; opacity: 0;"
+		ref="copyFixesTextArea"
+	>{{ fix }}</textarea>
+</editor-accordion>
 `});
-
-
-
-
-
-
 
 
 
@@ -160,31 +127,15 @@ Vue.component('editor-warning-check-map', {
 		}
 	},
 	template: /*html*/`
-<div class="card mb-1 text-white">
-	<div class="card-header bg-primary">
-		Problems in map '{{ mapName }}' ({{ warnings.length }} entities)
-		<span
-			class="position-absolute"
-			style="top: 6px; right: 6px;"
-		>
-			<button
-				type="button"
-				class="btn btn-outline-info"
-				@click="collapse"
-			>_</button>
-		</span>
-	</div>
-	<div
-		class="card-body p-3"
-		v-if="!collapsed"
-	>
-		<editor-warning-check-warning
-			v-for="warning in warnings"
-			:key="warning.id"
-			:warning="warning"
-		></editor-warning-check-warning>
-	</div>
-</div>
+<editor-accordion
+	:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
+>
+	<editor-warning-check-warning
+		v-for="warning in warnings"
+		:key="warning.id"
+		:warning="warning"
+	></editor-warning-check-warning>
+</editor-accordion>
 `});
 
 
@@ -217,32 +168,16 @@ Vue.component('editor-warning-check', {
 		}
 	},
 	template: /*html*/`
-<div class="card mb-1 text-white">
-	<div class="card-header bg-primary">
-		Problems with '{{ checkName }}' ({{ Object.keys(maps).length }} maps)
-		<span
-			class="position-absolute"
-			style="top: 6px; right: 6px;"
-		>
-			<button
-				type="button"
-				class="btn btn-outline-info"
-				@click="collapse"
-			>_</button>
-		</span>
-	</div>
-	<div
-		class="card-body p-3"
-		v-if="!collapsed"
-	>
-		<editor-warning-check-map
-			v-for="(warnings, mapName) in maps"
-			:key="mapName"
-			:map-name="mapName"
-			:warnings="warnings"
-		></editor-warning-check-map>
-	</div>
-</div>
+<editor-accordion
+	:title="'Problems with ' + checkName + ' (' + Object.keys(maps).length  + ' maps)'"
+>
+	<editor-warning-check-map
+		v-for="(warnings, mapName) in maps"
+		:key="mapName"
+		:map-name="mapName"
+		:warnings="warnings"
+	></editor-warning-check-map>
+</editor-accordion>
 `});
 
 
@@ -250,10 +185,8 @@ Vue.component('editor-warning-check', {
 
 
 
-
-
-Vue.component('editor-warning-checks', {
-	name: 'editor-warning-checks',
+Vue.component('editor-warnings', {
+	name: 'editor-warnings',
 	props: {
 		warnings: {
 			type: Object,
@@ -271,35 +204,21 @@ Vue.component('editor-warning-checks', {
 		}
 	},
 	template: /*html*/`
-<div class="card mb-3 text-white">
-	<div class="card-header">
-		Additional reports about the build
-		<span
-			class="position-absolute"
-			style="top: 6px; right: 6px;"
-		>
-			<button
-				type="button"
-				class="btn btn-outline-light"
-				@click="collapse"
-			>_</button>
-		</span>
+<editor-accordion
+	:title="'Additional reports about the build (' + Object.keys(warnings).length + ' checks)'"
+>
+	<template v-if="Object.keys(warnings).length">
+	<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
+		<editor-warning-check
+			v-for="(maps, checkName) in warnings"
+			:key="checkName"
+			:check-name="checkName"
+			:maps="maps"
+		></editor-warning-check>
+	</template >
+	<div v-else>
+		<img src="./dependencies/MageDance.gif" />
+		<span class="mx-1 align-bottom">No problems found. Damg.</span>
 	</div>
-	<div
-		class="card-body p-3"
-		v-if="!collapsed"
-	>
-		<template v-if="Object.keys(warnings).length">
-			<editor-warning-check
-				v-for="(maps, checkName) in warnings"
-				:key="checkName"
-				:check-name="checkName"
-				:maps="maps"
-			></editor-warning-check>
-		</template>
-		<div v-else>
-			<img src="./dependencies/MageDance.gif"/>
-			<span class="mx-1 align-bottom">No problems found. Damg.</span>
-		</div>
-	</div>
-</div>`});
+</editor-accordion>
+`});

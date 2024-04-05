@@ -142,10 +142,10 @@
 					</div>
 				</div>
 			</div>
-			<editor-warning-checks
+			<editor-warnings
 				v-if="scenarioData"
 				:warnings="scenarioData.warnings"
-			></editor-warning-checks>
+			></editor-warnings>
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"
@@ -421,6 +421,7 @@
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
 	<script src="js/editor-copy-changes.js"></script>
+	<script src="js/editor-accordion.js"></script>
 	<script src="js/entity_types.js"></script>
 	<script src="js/portraits.js"></script>
 	<script src="js/entities.js"></script>
