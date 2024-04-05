@@ -1,12 +1,6 @@
 /*
 TODO
 
-Vue cleanup
----
-one accordion component
-slots / pass children for innermost's content
-- change other uses of accordion to my accordion?
-
 generated fixes
 ---
 generating script names
@@ -23,6 +17,7 @@ how to associate a checker function to the appropriate disable flag
 
 misc
 ---
+change other uses of accordion to my accordion?
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 ask about drag and drop game.dat not working on my linux setup
 ask about hiding crc32 messages behind verbose
@@ -38,16 +33,10 @@ move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
 - (also naming of script look-ch2-castle-34 but it's really for the pantry?)
 */
 
-
-
-
-
-
-
-Vue.component('editor-warning-check-warning', {
-	name: 'editor-warning-check-warning',
+Vue.component('editor-warnings', {
+	name: 'editor-warnings',
 	props: {
-		warning: {
+		warnings: {
 			type: Object,
 			required: true
 		},
@@ -73,148 +62,45 @@ Vue.component('editor-warning-check-warning', {
 	},
 	template: /*html*/`
 <editor-accordion
-	:title="(warning.name || 'NO NAME') + ' (id ' + warning.id + ')'"
->
-	<p>{{ warning.warningMessage }}</p>
-	<div class="alert alert-info" role="alert">
-		<span>You can click the "Copy" button to the right to put the current TODO dynamic your clipboard, then paste it
-			into your "<strong>TODO dynamic</strong>" file to save.</span>
-	</div>
-
-	<p>You can click the button to the right to copy these suggested fixes.</p>
-	<div class="row align-items-start flex-nowrap">
-		<pre class="border border-primary rounded p-2 w-100">{{ fix }}</pre>
-		<button type="button" class="ml-1" style="width: 2rem;" title="Copy" @click="copyFixes">
-			<span aria-hidden="true">📋</span>
-		</button>
-	</div>
-
-	<textarea
-		cols="80"
-		rows="16"
-		class="position-absolute"
-		style="font-size: 0; opacity: 0;"
-		ref="copyFixesTextArea"
-	>{{ fix }}</textarea>
-</editor-accordion>
-`});
-
-
-
-
-
-
-Vue.component('editor-warning-check-map', {
-	name: 'editor-warning-check-map',
-	props: {
-		mapName: {
-			type: String,
-			required: true
-		},
-		warnings: {
-			type: Array,
-			required: true
-		}
-	},
-	data: function () {
-		return {
-			collapsed: true
-		}
-	},
-	methods: {
-		collapse: function () {
-			this.collapsed = !this.collapsed;
-		}
-	},
-	template: /*html*/`
-<editor-accordion
-	:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
->
-	<editor-warning-check-warning
-		v-for="warning in warnings"
-		:key="warning.id"
-		:warning="warning"
-	></editor-warning-check-warning>
-</editor-accordion>
-`});
-
-
-
-
-
-
-
-
-Vue.component('editor-warning-check', {
-	name: 'editor-warning-check',
-	props: {
-		checkName: {
-			type: String,
-			required: true
-		},
-		maps: {
-			type: Object,
-			required: true
-		}
-	},
-	data: function () {
-		return {
-			collapsed: true
-		}
-	},
-	methods: {
-		collapse: function () {
-			this.collapsed = !this.collapsed;
-		}
-	},
-	template: /*html*/`
-<editor-accordion
-	:title="'Problems with ' + checkName + ' (' + Object.keys(maps).length  + ' maps)'"
->
-	<editor-warning-check-map
-		v-for="(warnings, mapName) in maps"
-		:key="mapName"
-		:map-name="mapName"
-		:warnings="warnings"
-	></editor-warning-check-map>
-</editor-accordion>
-`});
-
-
-
-
-
-
-Vue.component('editor-warnings', {
-	name: 'editor-warnings',
-	props: {
-		warnings: {
-			type: Object,
-			required: true
-		}
-	},
-	data: function () {
-		return {
-			collapsed: true
-		}
-	},
-	methods: {
-		collapse: function () {
-			this.collapsed = !this.collapsed;
-		}
-	},
-	template: /*html*/`
-<editor-accordion
 	:title="'Additional reports about the build (' + Object.keys(warnings).length + ' checks)'"
 >
 	<template v-if="Object.keys(warnings).length">
 	<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
-		<editor-warning-check
+		<editor-accordion
 			v-for="(maps, checkName) in warnings"
 			:key="checkName"
-			:check-name="checkName"
-			:maps="maps"
-		></editor-warning-check>
+			:title="'Problems with ' + checkName + ' (' + Object.keys(maps).length  + ' maps)'"
+		>
+			<editor-accordion
+				v-for="(warnings, mapName) in maps"
+				:key="mapName"
+				:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
+			>
+				<editor-accordion
+					v-for="warning in warnings"
+					:key="warning.id"
+					:title="(warning.name || 'NO NAME') + ' (id ' + warning.id + ')'"
+				>
+					<p>{{ warning.warningMessage }}</p>
+					<div class="alert alert-info" role="alert">
+						<span>You can click the "Copy" button to the right to put the current TODO dynamic your clipboard, then
+							paste it
+							into your "<strong>TODO dynamic</strong>" file to save.</span>
+					</div>
+
+					<p>You can click the button to the right to copy these suggested fixes.</p>
+					<div class="row align-items-start flex-nowrap">
+						<pre class="border border-primary rounded p-2 w-100">{{ fix }}</pre>
+						<button type="button" class="ml-1" style="width: 2rem;" title="Copy" @click="copyFixes">
+							<span aria-hidden="true">📋</span>
+						</button>
+					</div>
+
+					<textarea cols="80" rows="16" class="position-absolute" style="font-size: 0; opacity: 0;"
+						ref="copyFixesTextArea">{{ fix }}</textarea>
+				</editor-accordion>
+			</editor-accordion>
+		</editor-accordion>
 	</template >
 	<div v-else>
 		<img src="./dependencies/MageDance.gif" />
