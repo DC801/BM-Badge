@@ -17,15 +17,13 @@ how to associate a checker function to the appropriate disable flag
 
 misc
 ---
-change other uses of accordion to my accordion?
+warn for handle scripts defined but never bound in a map?
 ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 ask about drag and drop game.dat not working on my linux setup
 ask about hiding crc32 messages behind verbose
 ask re adding final warning counts from CLI to GUI
 documentation for API (e.g., return null or a string error message)
 how will look work for multiple entities of the same or similar names (eg bread, torch)
-gameengine prettier mage_command_control.cpp:185
-- commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
 ask Mary for a pattern for "TODO" script definitions
 - <m> true names
 - newline then space at end?
@@ -39,11 +37,6 @@ Vue.component('editor-warnings', {
 		warnings: {
 			type: Object,
 			required: true
-		},
-		fix: {
-			type: String,
-			required: false,
-			default: '{\n    json: {\n        morejson: {\n            \'TODO generated fixes\'\n        }\n    }\n}'
 		}
 	},
 	data: function () {
@@ -82,22 +75,25 @@ Vue.component('editor-warnings', {
 					:title="(warning.name || 'NO NAME') + ' (id ' + warning.id + ')'"
 				>
 					<p>{{ warning.warningMessage }}</p>
-					<div class="alert alert-info" role="alert">
-						<span>You can click the "Copy" button to the right to put the current TODO dynamic your clipboard, then
-							paste it
-							into your "<strong>TODO dynamic</strong>" file to save.</span>
-					</div>
-
-					<p>You can click the button to the right to copy these suggested fixes.</p>
-					<div class="row align-items-start flex-nowrap">
-						<pre class="border border-primary rounded p-2 w-100">{{ fix }}</pre>
-						<button type="button" class="ml-1" style="width: 2rem;" title="Copy" @click="copyFixes">
-							<span aria-hidden="true">📋</span>
-						</button>
-					</div>
-
-					<textarea cols="80" rows="16" class="position-absolute" style="font-size: 0; opacity: 0;"
-						ref="copyFixesTextArea">{{ fix }}</textarea>
+					<p v-if="warning.fixes.length">You can click the button to the right of any of these fixes to copy it.</p>
+					<template v-for="(fix, fixIndex) in warning.fixes">
+						<div
+							class="row align-items-start flex-nowrap px-2"
+							:key="fixIndex"
+						>
+							<pre class="border border-primary rounded p-2 w-100">{{fix}}</pre>
+							<button type="button" class="ml-1" style="width: 2rem;" title="Copy" @click="copyFixes">
+								<span aria-hidden="true">📋</span>
+							</button>
+						</div>
+						<textarea
+							cols="80"
+							rows="16"
+							class="position-absolute"
+							style="font-size: 0; opacity: 0;"
+							ref="copyFixesTextArea"
+						>{{fix}}</textarea>
+					</template>
 				</editor-accordion>
 			</editor-accordion>
 		</editor-accordion>

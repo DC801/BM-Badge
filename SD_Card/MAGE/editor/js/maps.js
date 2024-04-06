@@ -223,7 +223,6 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			fileNameMap,
 			scenarioData,
 		);
-		
 		// check for warnings on this entity
 		// ("Additional reports about the build" in the GUI, see: warnings.js and editor-warnings.js)
 		var warnings = scenarioData.warnings;
@@ -232,6 +231,11 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			var warningMessage = checkFunction(tiledObject.compositeEntity);
 			if (warningMessage === null) {
 				return;
+			}
+			var fixes = [];
+			var checkFixGenerator = warningFixGenerators[checkName];
+			if (checkFixGenerator) {
+				fixes = checkFixGenerator(tiledObject.compositeEntity);
 			}
 			if (! (checkName in warnings)) {
 				warnings[checkName] = {};
@@ -242,7 +246,8 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			warnings[checkName][map.name].push({
 				name: tiledObject.compositeEntity.name || 'NO NAME',
 				id: tiledObject.compositeEntity.id,
-				warningMessage: warningMessage
+				warningMessage: warningMessage,
+				fixes: fixes
 			});
 		});
 	});
