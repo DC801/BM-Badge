@@ -18,7 +18,7 @@ Vue.component('editor-accordion', {
 		}
 	},
 	template: /*html*/`
-<div class="card mb-1 text-white mb-3">
+<div class="card text-white mb-3">
 	<div class="card-header bg-primary">
 		<span>{{title}}</span>
 		<span

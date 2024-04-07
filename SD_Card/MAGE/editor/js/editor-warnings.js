@@ -40,48 +40,56 @@ Vue.component('editor-warnings', {
 		}
 	},
 	template: /*html*/`
-<editor-accordion
-	:title="'Additional reports about the build (' + Object.keys(warnings).length + ' checks)'"
->
-	<template v-if="Object.keys(warnings).length">
-	<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
-		<editor-accordion
-			v-for="(maps, checkName) in warnings"
-			:key="checkName"
-			:title="'Problems with ' + checkName + ' (' + Object.keys(maps).length  + ' maps)'"
-		>
-			<editor-accordion
-				v-for="(warnings, mapName) in maps"
-				:key="mapName"
-				:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
-			>
+<div class="card text-white mb-3">
+	<div class="card-header bg-primary">Additional reports about the build ({{Object.keys(warnings).length}} checks)</div>
+	<div class="card-body">
+		<template v-if="Object.keys(warnings).length">
+			<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
 				<editor-accordion
-					v-for="warning in warnings"
-					:key="warning.id"
-					:title="(warning.name || 'NO NAME') + ' (id ' + warning.id + ')'"
+					v-for="(maps, checkName) in warnings"
+					:key="checkName"
+					:title="'Problems with ' + checkName + ' (' + Object.keys(maps).length  + ' maps)'"
 				>
-					<p>{{ warning.warningMessage }}</p>
-					<p v-if="warning.fixes.length">You can click the button to the right of any of these fixes to copy it.</p>
-					<div
-						v-for="(fix, fixIndex) in warning.fixes"
-						:key="fixIndex"
+					<editor-accordion
+						v-for="(warnings, mapName) in maps"
+						:key="mapName"
+						:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
 					>
-						<div class="row align-items-start flex-nowrap px-2">
-							<pre class="border border-primary rounded p-2 w-100">{{fix}}</pre>
-							<copy-button
-								:text="fix"
-								class="ml-1"
-								style="width: 2rem;"
-							></copy-button>
+
+
+
+
+						<div
+							class="card text-white mb-3"
+							v-for="warning in warnings"
+							:key="warning.id"
+						>
+							<div class="card-header bg-primary">{{warning.name || 'NO NAME'}} (id {{warning.id}})</div>
+							<div class="card-body">
+								<p>{{ warning.warningMessage }}</p>
+								<p v-if="warning.fixes.length">You can click the button to the right of any of these fixes to copy it.</p>
+								<div
+									v-for="(fix, fixIndex) in warning.fixes"
+									:key="fixIndex"
+								>
+									<div class="row align-items-start flex-nowrap px-2">
+										<pre class="border border-primary rounded p-2 w-100">{{fix}}</pre>
+										<copy-button
+											:text="fix"
+											class="ml-1"
+											style="width: 2rem;"
+										></copy-button>
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
+					</editor-accordion>
 				</editor-accordion>
-			</editor-accordion>
-		</editor-accordion>
-	</template >
-	<div v-else>
-		<img src="./dependencies/MageDance.gif" />
-		<span class="mx-1 align-bottom">No problems found. Damg.</span>
+			</template >
+			<div v-else>
+				<img src="./dependencies/MageDance.gif" />
+				<span class="mx-1 align-bottom">No problems found. Damg.</span>
+			</div>
 	</div>
-</editor-accordion>
+</div>
 `});
