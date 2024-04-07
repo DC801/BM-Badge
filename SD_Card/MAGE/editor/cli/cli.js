@@ -8,14 +8,14 @@ const window = {
 	imageCache: {},
 };
 
-var verbose = false;
+var shouldBeVerbose = false;
 ['-v', '--verbose'].forEach(function(verboseArgForm) {
 	// recognize multiple forms of specifying that the user wants verbose behavior,
 	// then take all instances of those forms out of the process.argv so that the fixed position
 	// logic below for input and output args still works (reconsider this if more args are added)
 	const index = process.argv.indexOf(verboseArgForm);
 	if (index > -1) {
-		verbose = true;
+		shouldBeVerbose = true;
 		process.argv.splice(index, 1);
 	}
 });
@@ -67,6 +67,10 @@ for (m of modules) {
 //JSON.parse(fs.readFileSync(scenarioFile))
 
 eval(moduleString);
+
+// use value from above for verbose since it got overwritten when evaluating the module string,
+// but parsing CLI args for it can't be moved down here after the input and output args are used
+verbose = shouldBeVerbose;
 
 function makeMap(path) {
 	let map = {}
