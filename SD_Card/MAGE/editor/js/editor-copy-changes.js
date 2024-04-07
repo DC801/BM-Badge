@@ -29,8 +29,9 @@ window.Vue.component('copy-button', {
 			font-size: 0;
 			opacity: 0;
 		"
+		:value="text"
 		ref="copyStateTextArea"
-	>{{text}}</textarea>
+	></textarea>
 </span>
 `});
 
