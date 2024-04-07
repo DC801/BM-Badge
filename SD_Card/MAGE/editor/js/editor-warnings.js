@@ -39,20 +39,6 @@ Vue.component('editor-warnings', {
 			required: true
 		}
 	},
-	data: function () {
-		return {
-			collapsed: true
-		}
-	},
-	methods: {
-		collapse: function () {
-			this.collapsed = !this.collapsed;
-		},
-		copyFixes: function () {
-			this.$refs.copyFixesTextArea.select();
-			document.execCommand('copy');
-		}
-	},
 	template: /*html*/`
 <editor-accordion
 	:title="'Additional reports about the build (' + Object.keys(warnings).length + ' checks)'"
@@ -76,24 +62,19 @@ Vue.component('editor-warnings', {
 				>
 					<p>{{ warning.warningMessage }}</p>
 					<p v-if="warning.fixes.length">You can click the button to the right of any of these fixes to copy it.</p>
-					<template v-for="(fix, fixIndex) in warning.fixes">
-						<div
-							class="row align-items-start flex-nowrap px-2"
-							:key="fixIndex"
-						>
+					<div
+						v-for="(fix, fixIndex) in warning.fixes"
+						:key="fixIndex"
+					>
+						<div class="row align-items-start flex-nowrap px-2">
 							<pre class="border border-primary rounded p-2 w-100">{{fix}}</pre>
-							<button type="button" class="ml-1" style="width: 2rem;" title="Copy" @click="copyFixes">
-								<span aria-hidden="true">📋</span>
-							</button>
+							<copy-button
+								:text="fix"
+								class="ml-1"
+								style="width: 2rem;"
+							></copy-button>
 						</div>
-						<textarea
-							cols="80"
-							rows="16"
-							class="position-absolute"
-							style="font-size: 0; opacity: 0;"
-							ref="copyFixesTextArea"
-						>{{fix}}</textarea>
-					</template>
+					</div>
 				</editor-accordion>
 			</editor-accordion>
 		</editor-accordion>
