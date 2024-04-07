@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-town {
 	show serial dialog spacer;
 	show serial dialog {
-		"   TODO: Town text"
+		"You looked around the <c>TOWN</>."
+		"\tThere's no place like home! You know practically every pebble on every dirt patch, and every cracked brick in every building."
+		" "
 	}
 }
 

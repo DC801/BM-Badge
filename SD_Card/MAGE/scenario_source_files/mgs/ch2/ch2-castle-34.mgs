@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-castle-34 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE PANTRY on_look text\n "
+		"You looked around the <c>CASTLE PANTRY</>."
+		"\tWell-stocked with canned, bottled, barrelled, and bagged foods, the place smells vaguely of cumin and garlic."
+		" "
 	}
 }
 
