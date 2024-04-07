@@ -67,7 +67,7 @@ p {
 	overflow-y: scroll;
 	transition-property: all;
 	transition-duration: 500ms;
-	line-height: 0.9rem;
+	line-height: 14px;
 }
 #output.flash {
 	transition-duration: 0ms;
