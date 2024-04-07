@@ -450,7 +450,7 @@ Vue.component(
 		},
 		template: /*html*/`
 <div
-	class="action-editor mb-3 mt-1 card border-secondary"
+	class="editor-action mb-3 mt-1 card border-secondary"
 >
 	<div class="card-header bg-secondary p-2">
 		<button

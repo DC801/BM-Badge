@@ -40,7 +40,7 @@ Vue.component('editor-warnings', {
 		}
 	},
 	template: /*html*/`
-<div class="card text-white mb-3">
+<div class="editor-warnings card text-white mb-3">
 	<div class="card-header bg-primary">Additional reports about the build ({{Object.keys(warnings).length}} checks)</div>
 	<div class="card-body">
 		<template v-if="Object.keys(warnings).length">
@@ -55,10 +55,6 @@ Vue.component('editor-warnings', {
 						:key="mapName"
 						:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
 					>
-
-
-
-
 						<div
 							class="card text-white mb-3"
 							v-for="warning in warnings"
