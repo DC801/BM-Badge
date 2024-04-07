@@ -247,9 +247,9 @@ Plot points implemented:
 - SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
 	- [x] (4.) `keyboard` (keytar) (room 31)
 	- [x] (5.) `mouse` (rodent) (room 33)
-	- [ ] (6.) `harddrive`
-		- [ ] `plate` (dinner plate) (room 34)
-			- [ ] Run several plates through some kind of serial minigame, currently a tower of Hanoi puzzle
+	- [x] (6.) `harddrive`
+		- [x] `plate` (dinner plate) (room 34)
+			- [x] Run several plates through some kind of serial minigame, currently a tower of Hanoi puzzle
 		- [x] `needle` (phonograph needle) (room 12)
 			- [x] Fix the existing speakers so they can use the digital media system, rather than the phonograph
 	- [x] Bert "any messages yet?" convo happens when all of the above are done

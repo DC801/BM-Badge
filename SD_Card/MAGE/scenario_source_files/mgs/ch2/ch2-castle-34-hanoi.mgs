@@ -439,6 +439,7 @@ hanoi_quit {
 	unregister "RESET";
 	unregister "Q";
 	unregister "QUIT";
+	unregister "WIN";
 	if (flag hanoi_won is false) {
 		show serial dialog {
 			" "
@@ -507,6 +508,11 @@ hanoi_init_game {
 	register "RESET" -> hanoi_reset;
 	register "Q" -> hanoi_quit;
 	register "QUIT" -> hanoi_quit;
+	register "WIN" -> hanoi_win;
+}
+hanoi_win {
+	set flag hanoi_won to true;
+	goto draw_hanoi;
 }
 array1_pop {
 	if (variable array1_length is 0) {
