@@ -51,7 +51,8 @@ on_load-ch2-castle-14 {
 		show serial dialog { "Entering <bold>KING GIBSON'S BEDROOM</>..." }
 	}
 
-	// yeet hidden things
+	// room unique stuff
+	register look + up -> look-ch2-castle-14-up;
 	if (
 		flag ch2-installed-clock is true
 		|| flag ch2-carrying-clock is true
@@ -235,21 +236,49 @@ interact-ch2-gibson-bedroom {
 }
 
 interact-ch2-keypad {
-	show dialog {
-		name "" "(TODO: insert keypad puzzle here)"
-		"(Hey! You thoroughly, cleverly, and instantly solved the keypad puzzle! Way to go!)"
+	// note that you can't run this script before the cutscene, so no need to have "neutral" "pre-quest" behavior
+	set flag ch2-password-command to true;
+	copy register-password;
+	if (flag interrupt is false) {
+		show dialog {
+			name "" "(TODO: keypad puzzle explanation: collect the admin password to reset the keypad.)"
+			"(The letters used in the password are written in out-of-the-way places within each room in the castle. Visit each room and look up and down. Particularly UP!)"
+			"(The king gave you a notebook to record the password hints you find. To access it, type PASSWORD in the terminal.)"
+			"(When you have discovered the password, speak to the keypad again and type the password in the serial terminal at the prompt.)"
+		}
+		set flag interrupt to true;
+	}
+	goto interact-ch2-keypad-prompt;
+}
+interact-ch2-keypad-prompt {
+	show serial dialog spacer;
+	show serial dialog {
+		"USER CONFIG CORRUPTED! Cannot unlock door with PINs! Perform manual unlocks with admin password."
+		"Enter password:"
+		_ "AUTHENTICATE" : interact-ch2-keypad-good-pass
+	}
+	goto interact-ch2-keypad-incorrect;
+}
+interact-ch2-keypad-incorrect {
+	show serial dialog {
+		"Password incorrect!"
+	}
+}
+interact-ch2-keypad-good-pass {
+	show serial dialog {
+		"<g>DOOR UNLOCKED</>"
 	}
 	goto ch2-cutscene-kingreturns-bedroom;
 }
 
 ch2-king-leaves {
-	walk entity "%SELF%" to geometry walking-out over 900ms;
+	walk entity "%SELF%" to geometry walking-out over 1500ms;
 }
 
 ch2-cutscene-kingreturns-bedroom {
 	show dialog {
 		KING "!!"
-		"You've done it! At last, I'm free!"
+		"Aha! You've done it! At last, I'm free!"
 	}
 	turn player control off;
 	set entity "King Gibson" on_tick to ch2-king-leaves;

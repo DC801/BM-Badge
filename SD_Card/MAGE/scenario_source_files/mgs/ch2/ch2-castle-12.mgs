@@ -40,7 +40,8 @@ on_load-ch2-castle-12 {
 		show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
 	}
 
-	// yeet hidden things
+	// room unique stuff
+	register look + up -> look-ch2-castle-12-up;
 	if (
 		flag ch2-installed-needle is true
 		|| flag ch2-carrying-needle is true

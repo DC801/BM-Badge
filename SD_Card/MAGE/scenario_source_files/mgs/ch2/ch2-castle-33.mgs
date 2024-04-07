@@ -25,6 +25,9 @@ on_load-ch2-castle-33 {
 	} else {
 		show serial dialog { "Entering <bold>HYDROPONICS ROOM</>..." }
 	}
+
+	// room unique stuff
+	register look + up -> look-ch2-castle-33-up;
 	if (
 		flag ch2-installed-mouse is true
 		|| flag ch2-carrying-mouse is true

@@ -270,6 +270,19 @@ Plot points implemented:
 					- Templeton (slime) thinks the king might be injured and they should rescue him (focus on King)
 					- The Aurelius (goldfish; current regent) thinking about the civilians
 			- [~] Use the terminal to repair the intercom and get them talking again
+				- [x] Password in the floors of each room: will spell AUTHENTICATE
+					- [x] A1 (room 32)
+					- [x] U2 (room 31)
+					- [x] T3 (room 22)
+					- [x] H4 (room 12)
+					- [x] E5 (room 33)
+					- [x] N6 (room 1 )
+					- [x] T7 (room 13)
+					- [x] I8 (room 14)
+					- [x] C9 (room 34)
+					- [x] A10 (room 23)
+					- [x] T11 (room 11)
+					- [x] E12 (room 21)
 			- [x] The King should return to the throne room
 				- After which the goldfish agrees to go with you
 	- [ ] (9.) `cpu`

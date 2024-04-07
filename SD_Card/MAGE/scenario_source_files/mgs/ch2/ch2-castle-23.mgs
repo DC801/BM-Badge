@@ -54,7 +54,8 @@ on_load-ch2-castle-23 {
 		show serial dialog { "Entering <bold>POWER PLANT</>..." }
 	}
 
-	// yeet hidden things
+	// room unique stuff
+	register look + up -> look-ch2-castle-23-up;
 	if (
 		flag ch2-installed-heatsink is true
 		|| flag ch2-carrying-heatsink is true

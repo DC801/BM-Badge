@@ -428,8 +428,7 @@ draw_hanoi {
 	}
 }
 
-hanoi_quit {
-	turn player control on;
+hanoi_unregister {
 	unregister "1";
 	unregister "2";
 	unregister "3";
@@ -440,6 +439,11 @@ hanoi_quit {
 	unregister "Q";
 	unregister "QUIT";
 	unregister "WIN";
+}
+
+hanoi_quit {
+	turn player control on;
+	copy hanoi_unregister;
 	if (flag hanoi_won is false) {
 		show serial dialog {
 			" "
@@ -512,6 +516,7 @@ hanoi_init_game {
 }
 hanoi_win {
 	set flag hanoi_won to true;
+	copy hanoi_unregister;
 	goto draw_hanoi;
 }
 array1_pop {

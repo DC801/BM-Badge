@@ -49,6 +49,10 @@ on_load-ch2-castle-13 {
 	} else {
 		show serial dialog { "Entering <bold>CASTLE THRONE ROOM</>..." }
 	}
+
+	// room unique stuff
+	register look + up -> look-ch2-castle-13-up;
+
 	if (
 		flag ch2-installed-goldfish is true
 		|| flag ch2-carrying-goldfish is true

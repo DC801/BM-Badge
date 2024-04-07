@@ -34,7 +34,10 @@ on_load-ch2-castle-11 {
 		show serial dialog { "Entering <bold>CASTLE HALLWAY FRONT</>..." }
 	}
 
-	// yeet hidden things
+
+	// room unique things
+	register look + up -> look-ch2-castle-11-up;
+
 	if (
 		flag ch2-installed-monitor is true
 		|| flag ch2-carrying-monitor is true

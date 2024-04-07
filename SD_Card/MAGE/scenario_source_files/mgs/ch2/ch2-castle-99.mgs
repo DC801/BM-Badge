@@ -42,6 +42,9 @@ on_load-ch2-castle-99 {
 	} else {
 		show serial dialog { "Entering <bold>SECRET LAB</>..." }
 	}
+
+	// room unique stuff
+	register look + up -> look-ch2-castle-99-up;
 	teleport camera to geometry camera;
 
 	// cutscene pre-fade :/
