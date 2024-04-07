@@ -18,8 +18,8 @@ Vue.component('editor-accordion', {
 		}
 	},
 	template: /*html*/`
-<div class="editor-accordion card text-white mb-3">
-	<div class="card-header bg-primary">
+<div class="editor-accordion card border-secondary text-white mb-3">
+	<div class="card-header bg-secondary">
 		<span>{{title}}</span>
 		<span
 			class="position-absolute"
@@ -27,7 +27,7 @@ Vue.component('editor-accordion', {
 		>
 			<button
 				type="button"
-				class="btn btn-outline-info"
+				class="btn btn-outline-light"
 				@click="collapse"
 			>_</button>
 		</span>

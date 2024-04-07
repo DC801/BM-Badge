@@ -60,7 +60,7 @@ Vue.component('editor-warnings', {
 							v-for="warning in warnings"
 							:key="warning.id"
 						>
-							<div class="card-header bg-primary">{{warning.name || 'NO NAME'}} (id {{warning.id}})</div>
+							<div class="card-header bg-secondary">{{warning.name || 'NO NAME'}} (id {{warning.id}})</div>
 							<div class="card-body">
 								<p>{{ warning.warningMessage }}</p>
 								<p v-if="warning.fixes.length">You can click the button to the right of any of these fixes to copy it.</p>
