@@ -52,7 +52,7 @@ Vue.component('font-image', {
 			return result;
 		}
 	},
-	template: `
+	template: /*html*/`
 <div
 	class="font-image"
 	:style="{

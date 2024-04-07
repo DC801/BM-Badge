@@ -83,7 +83,7 @@ Vue.component('field-text', {
 			}
 		},
 	},
-	template: `
+	template: /*html*/`
 <input
 	type="text"
 	class="form-control"
@@ -97,7 +97,7 @@ Vue.component('field-text', {
 
 Vue.component('field-number', {
 	mixins: [actionInputMixin],
-	template: `
+	template: /*html*/`
 <field-text
 	type="number"
 	:value="value"
@@ -116,7 +116,7 @@ Vue.component('field-select', {
 			required: true,
 		},
 	},
-	template: `
+	template: /*html*/`
 <select
 	class="form-select"
 	:value="value || ''"
@@ -135,7 +135,7 @@ Vue.component('field-select', {
 Vue.component('field-bool', {
 	mixins: [actionInputMixin],
 	operations: operations,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="[true, false]"
 	:value="value"
@@ -147,7 +147,7 @@ Vue.component('field-bool', {
 Vue.component('action-input-operations', {
 	mixins: [actionInputMixin],
 	operations: operations,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.operations"
 	:value="value"
@@ -159,7 +159,7 @@ Vue.component('action-input-operations', {
 Vue.component('action-input-comparisons', {
 	mixins: [actionInputMixin],
 	comparisons: comparisons,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.comparisons"
 	:value="value"
@@ -171,7 +171,7 @@ Vue.component('action-input-comparisons', {
 Vue.component('action-input-buttons', {
 	mixins: [actionInputMixin],
 	buttons: buttons,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.buttons"
 	:value="value"
@@ -183,7 +183,7 @@ Vue.component('action-input-buttons', {
 Vue.component('action-input-directions', {
 	mixins: [actionInputMixin],
 	directions: directions,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.directions"
 	:value="value"
@@ -195,7 +195,7 @@ Vue.component('action-input-directions', {
 Vue.component('action-input-slots', {
 	mixins: [actionInputMixin],
 	slots: slots,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.slots"
 	:value="value"
@@ -209,7 +209,7 @@ Vue.component('action-input-scripts', {
 	computed: window.Vuex.mapGetters([
 		'scriptsOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="scriptsOptions"
 	:value="value"
@@ -223,7 +223,7 @@ Vue.component('action-input-dialogs', {
 	computed: window.Vuex.mapGetters([
 		'dialogOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="dialogOptions"
 	:value="value"
@@ -237,7 +237,7 @@ Vue.component('action-input-entity_types', {
 	computed: window.Vuex.mapGetters([
 		'entityTypesOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="entityTypesOptions"
 	:value="value"
@@ -251,7 +251,7 @@ Vue.component('action-input-entities', {
 	computed: window.Vuex.mapGetters([
 		'entityNamesOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="entityNamesOptions"
 	:value="value"
@@ -265,7 +265,7 @@ Vue.component('action-input-geometry', {
 	computed: window.Vuex.mapGetters([
 		'geometryOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="geometryOptions"
 	:value="value"
@@ -279,7 +279,7 @@ Vue.component('action-input-maps', {
 	computed: window.Vuex.mapGetters([
 		'mapsOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="mapsOptions"
 	:value="value"
@@ -295,7 +295,7 @@ Vue.component('action-input-action-type', {
 			return Object.keys(actionFieldsMap);
 		}
 	},
-	template: `
+	template: /*html*/`
 <field-select
 	:options="actions"
 	:value="value"

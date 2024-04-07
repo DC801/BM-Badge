@@ -18,7 +18,7 @@ window.Vue.component('copy-changes', {
 			document.execCommand("copy");
 		},
 	},
-	template: `
+	template: /*html*/`
 <div
 	class="
 		copy-changes
