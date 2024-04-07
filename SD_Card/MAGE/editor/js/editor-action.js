@@ -92,8 +92,7 @@ Vue.component('field-text', {
 	:aria-label="property"
 	@input="$emit('input', $event.target.value)"
 />
-	`
-});
+`});
 
 Vue.component('field-number', {
 	mixins: [actionInputMixin],
@@ -103,8 +102,7 @@ Vue.component('field-number', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-text>
-	`
-});
+`});
 
 Vue.component('field-select', {
 	props: {
@@ -129,8 +127,7 @@ Vue.component('field-select', {
 		v-for="option in options"
 	>{{option}}</option>
 </select>
-	`
-});
+`});
 
 Vue.component('field-bool', {
 	mixins: [actionInputMixin],
@@ -141,8 +138,7 @@ Vue.component('field-bool', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-operations', {
 	mixins: [actionInputMixin],
@@ -153,8 +149,7 @@ Vue.component('action-input-operations', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-comparisons', {
 	mixins: [actionInputMixin],
@@ -165,8 +160,7 @@ Vue.component('action-input-comparisons', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-buttons', {
 	mixins: [actionInputMixin],
@@ -177,8 +171,7 @@ Vue.component('action-input-buttons', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-directions', {
 	mixins: [actionInputMixin],
@@ -189,8 +182,7 @@ Vue.component('action-input-directions', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-slots', {
 	mixins: [actionInputMixin],
@@ -201,8 +193,7 @@ Vue.component('action-input-slots', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-scripts', {
 	mixins: [actionInputMixin],
@@ -215,8 +206,7 @@ Vue.component('action-input-scripts', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-dialogs', {
 	mixins: [actionInputMixin],
@@ -229,8 +219,7 @@ Vue.component('action-input-dialogs', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-entity_types', {
 	mixins: [actionInputMixin],
@@ -243,8 +232,7 @@ Vue.component('action-input-entity_types', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-entities', {
 	mixins: [actionInputMixin],
@@ -257,8 +245,7 @@ Vue.component('action-input-entities', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-geometry', {
 	mixins: [actionInputMixin],
@@ -271,8 +258,7 @@ Vue.component('action-input-geometry', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-maps', {
 	mixins: [actionInputMixin],
@@ -285,8 +271,7 @@ Vue.component('action-input-maps', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-action-type', {
 	mixins: [actionInputMixin],
@@ -301,8 +286,7 @@ Vue.component('action-input-action-type', {
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 var propertyEditorComponentMap = {
 	duration: 'field-number',
@@ -516,5 +500,4 @@ Vue.component(
 		</div>
 	</div>
 </div>
-`}
-);
+`});

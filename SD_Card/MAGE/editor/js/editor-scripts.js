@@ -304,6 +304,4 @@ Vue.component(
 		</div>
 	</div>
 </div>
-		`
-	}
-);
+`});
