@@ -3,12 +3,25 @@ var outputBuffer = document.getElementById('output');
 var inputForm = document.getElementById('input_form');
 var commandInput = document.getElementById('command_input');
 outputBuffer.innerHTML = '';
+
+var debounce = function (callback, delay) {
+	let timeoutId
+	return function() {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(function () {
+			callback();
+		}, delay);
+	}
+};
+const debouncedScroll = debounce(function () {
+	outputBuffer.scrollTo(0, outputBuffer.scrollHeight);
+}, 24);
 var appendMessage = function (input, classname) {
 	var newMessage = document.createElement('div');
 	newMessage.className = classname;
 	newMessage.innerHTML = convert.toHtml(input);
 	outputBuffer.appendChild(newMessage);
-	outputBuffer.scrollTo(0, outputBuffer.scrollHeight);
+	debouncedScroll();
 	// system bell
 	if (input.includes("\u0007")) {
 		outputBuffer.className = "flash";
