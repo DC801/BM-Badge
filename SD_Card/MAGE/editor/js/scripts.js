@@ -1416,9 +1416,9 @@ var preProcessScript = function(
 						&& entry.jump_index !== undefined
 					) {
 						property = "jump_index";
-					} else if (entry.action == "GOTO_ACTION_INDEX") {
+					} else if (entry.action === "GOTO_ACTION_INDEX") {
 						property = "action_index";
-					} else if (entry.action == "LABEL") {
+					} else if (entry.action === "LABEL") {
 						property = "value";
 					}
 					if ( property
