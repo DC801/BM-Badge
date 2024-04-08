@@ -42,33 +42,33 @@ Vue.component('editor-warnings', {
 	template: /*html*/`
 <div class="editor-warnings card text-white mb-3">
 	<div class="card-header bg-primary">Additional reports about the build ({{Object.keys(warnings).length}} checks)</div>
-	<div class="card-body">
+	<div class="card-body py-1">
 		<template v-if="Object.keys(warnings).length">
 			<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
 				<editor-accordion
 					v-for="(maps, checkName) in warnings"
 					:key="checkName"
-					:title="'Problems with ' + checkName + ' (' + Object.keys(maps).length  + ' maps)'"
+					:title="'Problems with \`' + checkName + '\` (' + Object.keys(maps).length  + ' maps)'"
 				>
 					<editor-accordion
 						v-for="(warnings, mapName) in maps"
 						:key="mapName"
-						:title="'Problems in map ' + mapName + ' (' + warnings.length  + ' entities)'"
+						:title="'Problems in map \`' + mapName + '\` (' + warnings.length  + ' entities)'"
 					>
 						<div
-							class="card text-white mb-3"
+							class="warnings-warning card text-white border-secondary my-3"
 							v-for="warning in warnings"
 							:key="warning.id"
 						>
-							<div class="card-header bg-secondary">{{warning.name || 'NO NAME'}} (id {{warning.id}})</div>
-							<div class="card-body">
+							<div class="card-header bg-secondary">\`{{warning.name || 'NO NAME'}}\` (id {{warning.id}})</div>
+							<div class="card-body px-3 pt-3 pb-2">
 								<p>{{ warning.warningMessage }}</p>
-								<p v-if="warning.fixes.length">You can click the button to the right of any of these fixes to copy it.</p>
+								<label v-if="warning.fixes.length">Click the button by any of these fixes to copy it.</label>
 								<div
 									v-for="(fix, fixIndex) in warning.fixes"
 									:key="fixIndex"
 								>
-									<div class="row align-items-start flex-nowrap px-2">
+									<div class="row align-items-center flex-nowrap px-2">
 										<pre class="border border-primary rounded p-2 w-100">{{fix}}</pre>
 										<copy-button
 											:text="fix"

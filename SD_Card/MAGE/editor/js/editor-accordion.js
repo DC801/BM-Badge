@@ -18,9 +18,9 @@ Vue.component('editor-accordion', {
 		}
 	},
 	template: /*html*/`
-<div class="editor-accordion card border-secondary text-white mb-3">
+<div class="editor-accordion card border-secondary text-white my-3">
 	<div class="card-header bg-secondary">
-		<span>{{title}}</span>
+		<span v-html="title"></span>
 		<span
 			class="position-absolute"
 			style="top: 6px; right: 6px;"
@@ -33,7 +33,7 @@ Vue.component('editor-accordion', {
 		</span>
 	</div>
 	<div
-		class="card-body p-3"
+		class="card-body px-3 py-1"
 		v-if="!collapsed"
 	>
 		<slot></slot>
