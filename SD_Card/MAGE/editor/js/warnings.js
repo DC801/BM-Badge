@@ -51,6 +51,6 @@ var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck, c
 	)) {
 		return null; // no problem found
 	} else {
-		return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a ${propertyToCheck} script`;
+		return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs an ${propertyToCheck} script`;
 	}
 };
