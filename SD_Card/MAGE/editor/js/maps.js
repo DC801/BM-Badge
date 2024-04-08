@@ -237,17 +237,17 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			if (checkFixGenerator) {
 				fixes = checkFixGenerator(tiledObject.compositeEntity);
 			}
-			if (! (checkName in warnings)) {
+			if (! warnings[checkName]) {
 				warnings[checkName] = {};
 			}
-			if (! (map.name in warnings[checkName])) {
+			if (! warnings[checkName][map.name]) {
 				warnings[checkName][map.name] = [];
 			}
 			warnings[checkName][map.name].push({
 				name: tiledObject.compositeEntity.name || 'NO NAME',
 				id: tiledObject.compositeEntity.id,
 				warningMessage: warningMessage,
-				fixes: fixes
+				fixes: fixes,
 			});
 		});
 	});
