@@ -43,49 +43,49 @@ Vue.component('editor-warnings', {
 <div class="editor-warnings card text-white mb-3">
 	<div class="card-header bg-primary">Additional reports about the build ({{Object.keys(warnings).length}} checks)</div>
 	<div class="card-body py-1">
+		<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
 		<template v-if="Object.keys(warnings).length">
-			<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
+			<editor-accordion
+				v-for="(maps, checkName) in warnings"
+				:key="checkName"
+				:title="'Problems with &grave;' + checkName + '&grave; (' + Object.keys(maps).length  + ' maps)'"
+			>
 				<editor-accordion
-					v-for="(maps, checkName) in warnings"
-					:key="checkName"
-					:title="'Problems with &grave;' + checkName + '&grave; (' + Object.keys(maps).length  + ' maps)'"
+					v-for="(warnings, mapName) in maps"
+					:key="mapName"
+					:title="'Problems in map &grave;' + mapName + '&grave; (' + warnings.length  + ' entities)'"
 				>
-					<editor-accordion
-						v-for="(warnings, mapName) in maps"
-						:key="mapName"
-						:title="'Problems in map &grave;' + mapName + '&grave; (' + warnings.length  + ' entities)'"
+					<div
+						class="warnings-warning card text-white border-secondary my-3"
+						v-for="warning in warnings"
+						:key="warning.id"
 					>
-						<div
-							class="warnings-warning card text-white border-secondary my-3"
-							v-for="warning in warnings"
-							:key="warning.id"
-						>
-							<div class="card-header bg-secondary">Entity &grave;{{warning.name || 'NO NAME'}}&grave; (id {{warning.id}})</div>
-							<div class="card-body px-3 pt-3 pb-2">
-								<p>{{ warning.warningMessage }}</p>
-								<label v-if="warning.fixes.length">Click the button by any of these fixes to copy it.</label>
-								<div
-									v-for="(fix, fixIndex) in warning.fixes"
-									:key="fixIndex"
-								>
-									<div class="row align-items-center flex-nowrap px-2">
-										<pre class="border border-primary rounded p-2 w-100">{{fix.fixText}}</pre>
-										<copy-button
-											:text="fix.fixText"
-											class="ml-1"
-											style="width: 2rem;"
-										></copy-button>
-									</div>
+						<div class="card-header bg-secondary">Entity &grave;{{warning.name || 'NO NAME'}}&grave; (id {{warning.id}})</div>
+						<div class="card-body px-3 pt-3 pb-2">
+							<p>{{ warning.warningMessage }}</p>
+							<label v-if="warning.fixes.length">Click the button by any of these fixes to copy it.</label>
+							<div
+								v-for="(fix, fixIndex) in warning.fixes"
+								:key="fixIndex"
+							>
+								<div class="row align-items-center flex-nowrap px-2">
+									<pre class="border border-primary rounded p-2 w-100">{{fix.fixText}}</pre>
+									<copy-button
+										:text="fix.fixText"
+										class="ml-1"
+										style="width: 2rem;"
+									></copy-button>
 								</div>
 							</div>
 						</div>
-					</editor-accordion>
+					</div>
 				</editor-accordion>
-			</template >
-			<div v-else>
-				<img src="./dependencies/MageDance.gif" />
-				<span class="mx-1 align-bottom">No problems found. Damg.</span>
-			</div>
+			</editor-accordion>
+		</template >
+		<div v-else>
+			<img src="./dependencies/MageDance.gif" />
+			<span class="mx-1 align-bottom">No problems found. Damg.</span>
+		</div>
 	</div>
 </div>
 `});
