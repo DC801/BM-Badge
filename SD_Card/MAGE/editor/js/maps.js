@@ -240,11 +240,12 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			if (! warnings[checkName]) {
 				warnings[checkName] = {};
 			}
-			if (! warnings[checkName][map.name]) {
-				warnings[checkName][map.name] = [];
+			var mapFileName = map.path.split('/').pop();
+			if (! warnings[checkName][mapFileName]) {
+				warnings[checkName][mapFileName] = [];
 			}
-			warnings[checkName][map.name].push({
-				name: tiledObject.compositeEntity.name || 'NO NAME',
+			warnings[checkName][mapFileName].push({
+				name: entityNameOrNoName(tiledObject.compositeEntity.name),
 				id: tiledObject.compositeEntity.id,
 				warningMessage: warningMessage,
 				fixes: fixes,

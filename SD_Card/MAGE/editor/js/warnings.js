@@ -15,7 +15,7 @@ var warningChecks = {
 			|| compositeEntity.name === null
 			|| ! (compositeEntity.name.replace(/\s/g, '').length)
 		) {
-			return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs a name in the map file`;
+			return `${entityNameOrNoName(compositeEntity.name) } (id ${compositeEntity.id}) needs a name in the map file`;
 		} else {
 			return null; // no problem found
 		}
@@ -26,10 +26,56 @@ var warningChecks = {
 // using the same keys as in warningChecks above; a check there does not necessarily
 // need to have a fix generator. a fix generator returns an array of zero or more fixes
 var warningFixGenerators = {
-	checkInteractScript: function(...TODO) {
-		return ['fix 1', 'fix 2'];
+	checkInteractScript: function(compositeEntity) {
+		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
+		var interactScriptName = `look-${cleanEntityName}`;
+		var fixes = [];
+		var scriptNameFix = `                 "properties":[\n` +
+			`                        {\n` +
+			`                         "name":"on_interact",\n` +
+			`                         "type":"string",\n` +
+			`                         "value":"${interactScriptName}"\n` +
+			`                        }],\n`;
+		fixes.push({
+			fixText: scriptNameFix,
+		});
+		var scriptDefinitionFix = `${interactScriptName} {\n` +
+ 	        `\tshow dialog {\n` +
+			`\t\tPLAYER "TODO on_interact ${cleanEntityName}"\n` +
+ 	        `\t}\n` +
+			`}`;
+		fixes.push({
+			fixText: scriptDefinitionFix,
+		});
+		return fixes;
+	},
+	checkLookScript: function (compositeEntity) {
+		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
+		var lookScriptName = `look-${cleanEntityName}`;
+		var fixes = [];
+		var scriptNameFix = `                 "properties":[\n` +
+			`                        {\n` +
+			`                         "name":"on_interact",\n` +
+			`                         "type":"string",\n` +
+			`                         "value":"${lookScriptName}"\n` +
+			`                        }],\n`;
+		fixes.push({
+			fixText: scriptNameFix,
+		});
+		var scriptDefinitionFix = `${lookScriptName} {\n` +
+			`\tshow serial dialog spacer;\n` +
+			`\tshow serial dialog {\n` +
+			`\t\t"You looked at <m>%SELF%</>."\n` +
+			`\t\t"\\tTODO on_look ${cleanEntityName} (remember to add 'the' for objects)"\n` +
+			`\t}\n` +
+			`}\n\n`;
+		fixes.push({
+			fixText: scriptDefinitionFix,
+		});
+		return fixes;
 	}
 };
+
 
 // utilities for making warning check functions
 var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck, checkPlayerEntity = false) {
@@ -51,6 +97,14 @@ var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck, c
 	)) {
 		return null; // no problem found
 	} else {
-		return `${compositeEntity.name || "NO NAME"} (id ${compositeEntity.id}) needs an ${propertyToCheck} script`;
+		return `${entityNameOrNoName(compositeEntity.name)} (id ${compositeEntity.id}) needs an ${propertyToCheck} script`;
 	}
+};
+
+var entityNameOrNoName = function(entityName) {
+	return entityName || 'NO NAME';
+};
+
+var entityNameForScripts = function(entityName) {
+	return entityName.toLowerCase().replace(/[\s-]/g, '_');
 };
