@@ -18,7 +18,10 @@
 			height: auto;
 			border: inherit;
 		}
-		.tile-link {
+		[v-cloak] {
+			display: none;
+		}
+ 		.tile-link {
 			border-style: solid;
 			border-width: 4px;
 			appearance: none;
@@ -93,6 +96,7 @@
 							<div
 								v-if="isLoading"
 								class="alert alert-dismissible alert-secondary"
+								v-cloak
 							>
 								<h2>Loafing</h2>
 								<p>THINKING SO HARD ABOUT ENCODING THE BINARY</p>
@@ -100,6 +104,7 @@
 							<div
 								v-if="error"
 								class="alert alert-danger"
+								v-cloak
 							>
 								<button
 									type="button"
@@ -116,6 +121,7 @@
 							<div
 								v-if="downloadData"
 								class="alert alert-secondary"
+								v-cloak
 							>
 								<button
 									type="button"
