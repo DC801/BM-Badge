@@ -39,33 +39,57 @@ Vue.component('editor-warnings', {
 			required: true
 		}
 	},
+	computed: {
+		warningsSorted: function() {
+			// convert warnings data structure to its 2D array equivalent
+			// (sorted lexically by check or map name, or by `id` for entities)
+			// precomputing this is useful for ordered access and quicker length checks
+			var sortByNameInIndexZero = function(a, b) {
+				return a[0].localeCompare(b);
+			};
+			var checksSorted = [];
+			Object.entries(this.warnings).forEach(function ([checkName, maps]) {
+				var mapsSorted = [];
+				Object.entries(maps).forEach(function ([mapName, entities]) {
+					entities.sort(function(a, b) {
+						return a.id - b.id;
+					});
+					mapsSorted.push([mapName, entities]);
+				});
+				mapsSorted.sort(sortByNameInIndexZero);
+				checksSorted.push([checkName, mapsSorted]);
+			});
+			checksSorted.sort(sortByNameInIndexZero);
+			return checksSorted;
+		},
+	},
 	template: /*html*/`
 <div class="editor-warnings card text-white mb-3">
-	<div class="card-header bg-primary">Additional reports about the build ({{Object.keys(warnings).length}} checks)</div>
+	<div class="card-header bg-primary">Additional reports about the build ({{warningsSorted.length}} checks)</div>
 	<div class="card-body py-1">
 		<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
-		<template v-if="Object.keys(warnings).length">
+		<template v-if="warningsSorted.length">
 			<editor-accordion
-				v-for="(maps, checkName) in warnings"
+				v-for="[checkName, maps] in warningsSorted"
 				:key="checkName"
-				:title="'Problems with &grave;' + checkName + '&grave; (' + Object.keys(maps).length  + ' maps)'"
+				:title="'Problems with &grave;' + checkName + '&grave; (' + maps.length  + ' maps)'"
 			>
 				<editor-accordion
-					v-for="(warnings, mapName) in maps"
+					v-for="[mapName, entities] in maps"
 					:key="mapName"
-					:title="'Problems in map &grave;' + mapName + '&grave; (' + warnings.length  + ' entities)'"
+					:title="'Problems in map &grave;' + mapName + '&grave; (' + entities.length  + ' entities)'"
 				>
 					<div
 						class="warnings-warning card text-white border-secondary my-3"
-						v-for="warning in warnings"
-						:key="warning.id"
+						v-for="entity in entities"
+						:key="entity.id"
 					>
-						<div class="card-header bg-secondary">Entity &grave;{{warning.name || 'NO NAME'}}&grave; (id {{warning.id}})</div>
+						<div class="card-header bg-secondary">Entity &grave;{{entity.name || 'NO NAME'}}&grave; (id {{entity.id}})</div>
 						<div class="card-body px-3 pt-3 pb-2">
-							<p>{{ warning.warningMessage }}</p>
-							<label v-if="warning.fixes.length">Click the button by any of these fixes to copy it.</label>
+							<p>{{ entity.warningMessage }}</p>
+							<label v-if="entity.fixes.length">Click the button by any of these fixes to copy it.</label>
 							<div
-								v-for="(fix, fixIndex) in warning.fixes"
+								v-for="(fix, fixIndex) in entity.fixes"
 								:key="fixIndex"
 							>
 								<div class="row align-items-center flex-nowrap px-2">
