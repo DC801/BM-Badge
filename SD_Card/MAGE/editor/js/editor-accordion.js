@@ -34,7 +34,7 @@ Vue.component('editor-accordion', {
 	</div>
 	<div
 		class="card-body px-3 py-1"
-		v-if="!collapsed"
+		v-show="!collapsed"
 	>
 		<slot></slot>
 	</div>
