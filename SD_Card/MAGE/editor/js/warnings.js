@@ -30,18 +30,18 @@ var warningFixGenerators = {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
 		return {
 			parameters: {
-				scriptName: `interact-${cleanEntityName}`,
+				scriptNameEnd: cleanEntityName,
 			},
-			getFixes: function({scriptName}) {
+			getFixes: function ({ scriptNameEnd }) {
 				var scriptNameFix =
 					`                 "properties":[\n` +
 					`                        {\n` +
 					`                         "name":"on_interact",\n` +
 					`                         "type":"string",\n` +
-					`                         "value":"${scriptName}"\n` +
+					`                         "value":"interact-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd}"\n` +
 					`                        }],\n`;
 				var scriptDefinitionFix =
-					`${scriptName} {\n` +
+					`interact-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd} {\n` +
 					`\tshow dialog {\n` +
 					`\t\tPLAYER "TODO on_interact ${cleanEntityName}"\n` +
 					`\t}\n` +
@@ -54,18 +54,18 @@ var warningFixGenerators = {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
 		return {
 			parameters: {
-				scriptName: `look-${cleanEntityName}`,
+				scriptNameEnd: cleanEntityName,
 			},
-			getFixes: function ({ scriptName }) {
+			getFixes: function ({ scriptNameEnd }) {
 				var scriptNameFix =
 					`                 "properties":[\n` +
 					`                        {\n` +
-					`                         "name":"on_interact",\n` +
+					`                         "name":"on_look",\n` +
 					`                         "type":"string",\n` +
-					`                         "value":"${scriptName}"\n` +
+					`                         "value":"look-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd}"\n` +
 					`                        }],\n`;
 				var scriptDefinitionFix =
-					`${scriptName} {\n` +
+					`look-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd} {\n` +
 					`\tshow serial dialog spacer;\n` +
 					`\tshow serial dialog {\n` +
 					`\t\t"You looked at <m>%SELF%</>."\n` +
@@ -78,6 +78,10 @@ var warningFixGenerators = {
 	}
 };
 
+
+// for adding "-ch2-" infix to script names in generated fixes
+// change occasionally
+var SCRIPT_NAME_CHAPTER_INFIX = 'ch2';
 
 // utilities for making warning check functions
 var checkMapEntityPropertyPresent = function(compositeEntity, propertyToCheck, checkPlayerEntity = false) {

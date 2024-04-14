@@ -282,11 +282,6 @@ var generateIndexAndComposite = function (scenarioData) {
 		compositeSize,
 		IS_LITTLE_ENDIAN
 	);
-
-	console.log(
-		'compositeArray',
-		compositeArray
-	);
 	var hashHex = [
 		compositeArray[12],
 		compositeArray[13],

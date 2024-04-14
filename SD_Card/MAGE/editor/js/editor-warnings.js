@@ -1,35 +1,40 @@
 /*
 TODO
 
+source of truth IS scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
+
+add final warning counts from CLI to GUI
+
+how will look work for multiple entities of the same or similar names (eg bread, torch)
+- BIND ALL map entities
+- detect many2one?
+move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
+	- DON'T PREFER LOOKSCRIPTS FILE
+
+two more warning types
+---
+orphaned scripts
+room look scripts
+	- room looks can be in map or in maps.json (lately maps.json preferred)
+		-move all out of maps
+	- any more types of missing scripts, e.g. look for a room (ch2-PLANNING.md)?
+
 generated fixes
 ---
-should auto fixes include 'ch2' ever?
-reactive overrideable infix (e.g. ch2)?
-what to do with a no-name entity?
 check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
-use fallback entity names that are generated somewhere late in the build process for fixes? (e.g. 'Mage 32')
-	- are these only showing up sometimes?
 use randomness to get past taken names?
-do we care about other types of missing scripts, e.g. look for a room (ch2-PLANNING.md)?
 
 blacklisting
 ---
-maps.json strategy? would be map-level only
+use maps.json strategy: map-level only control
 how to associate a checker function to the appropriate disable flag
+- possibleEntityScripts variable?
 
 misc
 ---
 don't let card headers run into buttons
 - change other components with card headers as well?
-ask about ch2-bobsclub.mgs:15 bold not being closed
-warn for scripts defined but never bound in a map?
-ask about scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
-ask about drag and drop game.dat not working on my linux setup
-ask re adding final warning counts from CLI to GUI
-documentation for API (e.g., return null or a string error message)
-how will look work for multiple entities of the same or similar names (eg bread, torch)
-move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
-- (also naming of script look-ch2-castle-34 but it's really for the pantry?)
+documentation? little if any
 */
 
 Vue.component('editor-warning', {
