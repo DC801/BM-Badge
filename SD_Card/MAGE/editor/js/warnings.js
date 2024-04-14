@@ -30,18 +30,18 @@ var warningFixGenerators = {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
 		return {
 			parameters: {
-				scriptNameEnd: cleanEntityName,
+				scriptName: hyphenateSeveralPieces(['interact', SCRIPT_NAME_CHAPTER_INFIX, cleanEntityName]),
 			},
-			getFixes: function ({ scriptNameEnd }) {
+			getFixes: function ({ scriptName }) {
 				var scriptNameFix =
 					`                 "properties":[\n` +
 					`                        {\n` +
 					`                         "name":"on_interact",\n` +
 					`                         "type":"string",\n` +
-					`                         "value":"interact-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd}"\n` +
+					`                         "value":"${scriptName}"\n` +
 					`                        }],\n`;
 				var scriptDefinitionFix =
-					`interact-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd} {\n` +
+					`${scriptName} {\n` +
 					`\tshow dialog {\n` +
 					`\t\tPLAYER "TODO on_interact ${cleanEntityName}"\n` +
 					`\t}\n` +
@@ -54,18 +54,18 @@ var warningFixGenerators = {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
 		return {
 			parameters: {
-				scriptNameEnd: cleanEntityName,
+				scriptName: hyphenateSeveralPieces(['look', SCRIPT_NAME_CHAPTER_INFIX, cleanEntityName]),
 			},
-			getFixes: function ({ scriptNameEnd }) {
+			getFixes: function ({ scriptName }) {
 				var scriptNameFix =
 					`                 "properties":[\n` +
 					`                        {\n` +
 					`                         "name":"on_look",\n` +
 					`                         "type":"string",\n` +
-					`                         "value":"look-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd}"\n` +
+					`                         "value":"${scriptName}"\n` +
 					`                        }],\n`;
 				var scriptDefinitionFix =
-					`look-${SCRIPT_NAME_CHAPTER_INFIX}-${scriptNameEnd} {\n` +
+					`${scriptName} {\n` +
 					`\tshow serial dialog spacer;\n` +
 					`\tshow serial dialog {\n` +
 					`\t\t"You looked at <m>%SELF%</>."\n` +
@@ -113,4 +113,10 @@ var entityNameOrNoName = function(entityName) {
 
 var entityNameForScripts = function(entityName) {
 	return entityName.toLowerCase().replace(/[\s-]/g, '_');
+};
+
+var hyphenateSeveralPieces = function(pieces) {
+	return pieces.filter(function(piece) {
+		return piece.replace(/\s/g, '').length;
+	}).join('-');
 };
