@@ -66,7 +66,7 @@ Vue.component('editor-warning', {
 			<div class="mb-3" v-if="Object.keys(fixesParameters).length">
 				<span>Override certain aspects of the fixes if you need to:</span>
 				<div
-					class="input-group mb-1"
+					class="input-group my-1"
 					v-for="(parameterValue, parameterName) in fixesParameters"
 				>
 					<div class="input-group-prepend">

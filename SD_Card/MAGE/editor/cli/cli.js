@@ -117,18 +117,20 @@ function printWarningsIfVerbose(scenarioData) {
 
 		const checkWarningCounts = {};
 		Object.keys(scenarioData.warnings).forEach(function (checkName) {
-			return checkWarningCounts[checkName] = 0;
+			checkWarningCounts[checkName] = 0;
 		});
 
-		console.log();
+		console.log('\nWarnings');
+		console.log('(go use the GUI at `editor/index.html` for some automatic fixes)');
+		console.log('-----------------------------------------------');
 		Object.entries(scenarioData.warnings).forEach(function ([checkName, checkWarnings]) {
-			console.log(`Warnings for '${checkName}' (${Object.keys(checkWarnings).length} maps):`);
+			console.log(`Warnings for \`${checkName}\` (${Object.keys(checkWarnings).length} maps):`);
 
 			Object.entries(checkWarnings).forEach(function ([mapName, mapWarnings]) {
 				if (!mapsWithWarnings.includes(mapName)) {
 					mapsWithWarnings.push(mapName);
 				}
-				console.log(`    Warnings in map '${mapName}' (${Object.keys(mapWarnings).length} entities):`);
+				console.log(`    Warnings in map \`${mapName}\` (${Object.keys(mapWarnings).length} entities):`);
 
 				mapWarnings.forEach(function (warning) {
 					totalWarningCount += 1;
@@ -141,7 +143,7 @@ function printWarningsIfVerbose(scenarioData) {
 
 		Object.entries(checkWarningCounts).forEach(function ([checkName, checkFailureCount]) {
 			if (checkFailureCount > 0) {
-				console.log(`Found ${checkFailureCount} total entities with a warning for check '${checkName}'`);
+				console.log(`Found ${checkFailureCount} total entities with a warning for check \`${checkName}\``);
 			}
 		});
 
