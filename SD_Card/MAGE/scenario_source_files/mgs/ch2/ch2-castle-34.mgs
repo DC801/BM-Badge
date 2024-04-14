@@ -161,6 +161,10 @@ won_hanoi_get_plate {
 		show dialog {
 			Clara "Sweet. And it looks like you did it super efficiently, too. Nice!"
 		}
+	} else if (variable hanoi_move_count is 69) {
+		show dialog {
+			Clara "Nice."
+		}
 	} else {
 		show dialog {
 			Clara "Sweet."

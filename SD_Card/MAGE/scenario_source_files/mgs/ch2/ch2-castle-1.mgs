@@ -110,6 +110,7 @@ on_load-ch2-castle-1 {
 
 	// DEBUG
 	if (debug mode is on) {
+		register credits -> debug-ch2-credits;
 		register toot -> debug-finish-toot;
 		register walk -> debug-walk;
 		register get + monitor -> ch2-pickup-monitor;
@@ -133,6 +134,7 @@ on_load-ch2-castle-1 {
 		show serial dialog {
 			"\t<g>DEBUG</> shortcuts"
 			"<c>TOOT</>: skip tutorial"
+			"<c>CREDITS</>: roll credits as if you've beaten the game"
 			"<c>GET _</>: pick up the named item"
 			"<c>ROUND _</>: collect the items for that round"
 			"<c>WALK</>: set XA on_interact to do the walk part"
@@ -596,10 +598,19 @@ ch2-install-wizard-resume {
 	show dialog {
 		PLAYER "Hey! It works!"
 		"(TODO: the rest... in the meantime: you won the game! Good job!)"
-		"(TODO: Credits go here!)"
 	}
 	mutate ch2-storyflag-round = 5;
-	goto null_script;
+	turn player control off;
+	fade out camera to #000000 over 1500ms;
+	set flag credits-from-menu to false;
+	load map credits2;
+}
+debug-ch2-credits {
+	mutate ch2-storyflag-round = 5;
+	turn player control off;
+	fade out camera to #000000 over 1500ms;
+	set flag credits-from-menu to false;
+	load map credits2;
 }
 
 ch2-wait-for-hat-touch-message {

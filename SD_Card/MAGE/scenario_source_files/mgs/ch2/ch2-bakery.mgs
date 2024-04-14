@@ -66,9 +66,15 @@ on_go-ch2-bakery-south {
 
 interact-ch2-baker {
 	copy interrupt-walk;
-	show dialog {
-		SELF "Sorry, can't talk now."
-		"But good luck conquering the serial dungeon."
+	if (variable ch2-storyflag-round is >= 5) {
+		show dialog {
+			SELF "Good job building that computer. That's really impressive."
+		}
+	} else {
+		show dialog {
+			SELF "Sorry, can't talk now."
+			"But good luck conquering the serial dungeon."
+		}
 	}
 	copy resume-walk;
 }

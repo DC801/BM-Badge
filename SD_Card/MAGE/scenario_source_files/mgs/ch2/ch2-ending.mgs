@@ -1,0 +1,52 @@
+include!("header.mgs")
+
+on_tick-ch2-credits {
+	turn hex control off;
+	turn serial control off;
+	turn player control on;
+	turn entity "%PLAYER%" south;
+	make camera follow entity cameraman;
+	teleport entity cameraman to geometry credits_camera;
+	fade in camera from #000000 over 400ms;
+	
+	//TEMP
+	show serial dialog spacer;
+	show serial dialog {
+		"Welcome to the credits for DC801 Black Mage Badge Ch2!"
+		"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
+	}
+
+	set entity Goat current_animation to 1;
+	wait 1200ms;
+	walk entity cameraman along geometry credits_camera over 600ms; // lolol
+	wait 600ms;
+	play entity Cat animation 2 once;
+	wait 300ms;
+
+	// TEMP
+	show serial dialog {
+		"(THANK YOU)"
+	}
+
+	fade out camera to #000000 over 1200ms;
+	set warp state to exit_from-credits;
+	turn hex control on;
+	turn serial control on;
+	turn player control on;
+	if (flag credits-from-menu is true) {
+		load map main_menu;
+	}
+	load map ch2-magehouse;
+}
+
+ch2-post-credits {
+	// (in the outside of the castle)
+	turn player control off;
+	teleport entity "%PLAYER%" to geometry warp-spot;
+	turn entity "%PLAYER%" south;
+	fade in camera from #000000 over 500ms;
+	show dialog {
+		name "" "(Secret post-credits cutscene goes here)"
+	}
+	turn player control on;
+}

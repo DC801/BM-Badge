@@ -394,11 +394,14 @@ interact-ch2-jackob-end {
 		SELF "Ah, %PLAYER%, well done!"
 	}
 	if (flag ch1_finished is false) {
-		show dialog {
-			SELF "But you know, %PLAYER%, it seems like you still haven't finished chapter 1 in this save file."
-			"I'm not angry. Just disappointed."
-			"...Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
-			"In all seriousness, do feel free to give chapter 1 a go."
+		if (flag ch1_unfinished_backstory is false) {
+			show dialog {
+				SELF "But you know, %PLAYER%, it seems like you still haven't finished chapter 1 in this save file."
+				"I'm not angry. Just disappointed."
+				"...Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
+				"In all seriousness, do feel free to give chapter 1 a go."
+			}
+			set flag ch1_unfinished_backstory to true;
 		}
 	}
 }

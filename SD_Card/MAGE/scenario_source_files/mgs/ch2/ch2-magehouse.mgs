@@ -54,6 +54,9 @@ on_load-ch2-magehouse {
 		teleport entity "Uncle Zappy" to geometry alt-spot1;
 	}
 	copy ch2-map-init;
+	if (warp state is exit_from-credits) {
+		copy ch2-post-credits;
+	}
 }
 
 /* ---------- ON_TICK ---------- */

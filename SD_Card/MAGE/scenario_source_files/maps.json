@@ -313,7 +313,10 @@
 	},
 	"testbig": "maps/map-testbig.json",
 	"credits": "maps/map-credits.json",
-	"credits2": "maps/map-credits2.json",
+	"credits2": {
+		"path": "maps/map-credits2.json",
+		"on_tick": "on_tick-ch2-credits"
+	},
 	"woprhouse": {
 		"path": "maps/map-woprhouse.json",
 		"directions": {

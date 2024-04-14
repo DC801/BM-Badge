@@ -169,7 +169,6 @@ menu-credits {
 menu-credits2 {
 	set flag credits-from-menu to true;
 	load map credits2;
-	// TODO: make credits for chapter 2
 }
 
 /* ---------- BLING MODE ---------- */

@@ -238,49 +238,26 @@ loiter5 {
 	turn entity "%SELF%" east; /**/ wait 400ms;
 }
 
-on_tick-credits-shared-begin {
+on_tick-credits {
 	turn hex control off;
 	turn player control on;
 	turn entity "%PLAYER%" south;
 	make camera follow entity cameraman;
 	teleport entity cameraman to geometry credits_camera;
 	fade in camera from #000000 over 400ms;
-}
-
-on_tick-credits-shared-end {
+	wait 1200ms;
+	set entity Goat current_animation to 1;
+	walk entity cameraman along geometry credits_camera over 60000ms;
+	wait 600ms;
+	play entity Cat animation 2 once;
+	wait 300ms;
+	fade out camera to #000000 over 1200ms;
 	set warp state to exit_from-credits;
 	turn hex control on;
-	if flag credits-from-menu is true then goto load-main_menu;
-}
-
-on_tick-credits {
-	copy on_tick-credits-shared-begin;
-	wait 1200ms;
-	set entity Goat current_animation to 1;
-	walk entity cameraman along geometry credits_camera over 60000ms;
-	wait 600ms;
-	play entity Cat animation 2 once;
-	wait 300ms;
-	fade out camera to #000000 over 1200ms;
-	copy on_tick-credits-shared-end;
-	goto load_map-main;
-}
-
-on_tick-credits2 { // chapter 2 goes here
-	copy on_tick-credits-shared-begin;
-	set entity Goat current_animation to 1;
-	wait 1200ms;
-	walk entity cameraman along geometry credits_camera over 60000ms;
-	wait 600ms;
-	play entity Cat animation 2 once;
-	wait 300ms;
-	fade out camera to #000000 over 1200ms;
-	copy on_tick-credits-shared-end;
-	goto load_map-main;
-}
-
-load-main_menu {
-	load map main_menu;
+	if (flag credits-from-menu is true) {
+		load map main_menu;
+	}
+	load map main;
 }
 
 debug-roll-credits-q {
