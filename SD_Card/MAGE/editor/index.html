@@ -21,10 +21,6 @@
 		[v-cloak] {
 			display: none;
 		}
-		.editor-warnings-warning > .card-body pre {
-			margin: 0.5rem 0;
-			tab-size: 4;
-		}
  		.tile-link {
 			border-style: solid;
 			border-width: 4px;
@@ -154,7 +150,7 @@
 			</div>
 			<editor-warnings
 				v-if="scenarioData"
-				:warnings="scenarioData.warnings"
+				:scenario-data="scenarioData"
 			></editor-warnings>
 			<entity-type-editor
 				v-if="scenarioData"

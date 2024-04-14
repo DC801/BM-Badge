@@ -28,51 +28,53 @@ var warningChecks = {
 var warningFixGenerators = {
 	checkInteractScript: function(compositeEntity) {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
-		var interactScriptName = `look-${cleanEntityName}`;
-		var fixes = [];
-		var scriptNameFix = `                 "properties":[\n` +
-			`                        {\n` +
-			`                         "name":"on_interact",\n` +
-			`                         "type":"string",\n` +
-			`                         "value":"${interactScriptName}"\n` +
-			`                        }],\n`;
-		fixes.push({
-			fixText: scriptNameFix,
-		});
-		var scriptDefinitionFix = `${interactScriptName} {\n` +
- 	        `\tshow dialog {\n` +
-			`\t\tPLAYER "TODO on_interact ${cleanEntityName}"\n` +
- 	        `\t}\n` +
-			`}`;
-		fixes.push({
-			fixText: scriptDefinitionFix,
-		});
-		return fixes;
+		return {
+			parameters: {
+				scriptName: `interact-${cleanEntityName}`,
+			},
+			getFixes: function({scriptName}) {
+				var scriptNameFix =
+					`                 "properties":[\n` +
+					`                        {\n` +
+					`                         "name":"on_interact",\n` +
+					`                         "type":"string",\n` +
+					`                         "value":"${scriptName}"\n` +
+					`                        }],\n`;
+				var scriptDefinitionFix =
+					`${scriptName} {\n` +
+					`\tshow dialog {\n` +
+					`\t\tPLAYER "TODO on_interact ${cleanEntityName}"\n` +
+					`\t}\n` +
+					`}\n`;
+				return [scriptNameFix, scriptDefinitionFix];
+			}
+		};
 	},
 	checkLookScript: function (compositeEntity) {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
-		var lookScriptName = `look-${cleanEntityName}`;
-		var fixes = [];
-		var scriptNameFix = `                 "properties":[\n` +
-			`                        {\n` +
-			`                         "name":"on_interact",\n` +
-			`                         "type":"string",\n` +
-			`                         "value":"${lookScriptName}"\n` +
-			`                        }],\n`;
-		fixes.push({
-			fixText: scriptNameFix,
-		});
-		var scriptDefinitionFix = `${lookScriptName} {\n` +
-			`\tshow serial dialog spacer;\n` +
-			`\tshow serial dialog {\n` +
-			`\t\t"You looked at <m>%SELF%</>."\n` +
-			`\t\t"\\tTODO on_look ${cleanEntityName} (remember to add 'the' for objects)"\n` +
-			`\t}\n` +
-			`}\n\n`;
-		fixes.push({
-			fixText: scriptDefinitionFix,
-		});
-		return fixes;
+		return {
+			parameters: {
+				scriptName: `look-${cleanEntityName}`,
+			},
+			getFixes: function ({ scriptName }) {
+				var scriptNameFix =
+					`                 "properties":[\n` +
+					`                        {\n` +
+					`                         "name":"on_interact",\n` +
+					`                         "type":"string",\n` +
+					`                         "value":"${scriptName}"\n` +
+					`                        }],\n`;
+				var scriptDefinitionFix =
+					`${scriptName} {\n` +
+					`\tshow serial dialog spacer;\n` +
+					`\tshow serial dialog {\n` +
+					`\t\t"You looked at <m>%SELF%</>."\n` +
+					`\t\t"\\tTODO on_look ${cleanEntityName} (remember to add 'the' for objects)"\n` +
+					`\t}\n` +
+					`}\n`;
+				return [scriptNameFix, scriptDefinitionFix];
+			}
+		};
 	}
 };
 

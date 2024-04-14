@@ -232,7 +232,7 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			if (warningMessage === null) {
 				return;
 			}
-			var fixes = [];
+			var fixes = null;
 			var checkFixGenerator = warningFixGenerators[checkName];
 			if (checkFixGenerator) {
 				fixes = checkFixGenerator(tiledObject.compositeEntity);
