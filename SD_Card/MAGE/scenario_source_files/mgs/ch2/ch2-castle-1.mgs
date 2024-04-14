@@ -885,7 +885,8 @@ ch2-terminal-plugged-no {
 ch2-terminal-plugged-web {
 	show dialog {
 		Lambda "Oh, then you're all set already! Your console will be to the right (or directly below) the game screen, in your browser window."
-		"You may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
+		"Click \"Toggle Console\" if you don't see a console at all."
+		"Note that you may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
 	}
 	goto ch2-terminal-message-test;
 	set entity "%SELF%" on_interact to interact-ch2-xa;
@@ -893,28 +894,19 @@ ch2-terminal-plugged-web {
 
 ch2-terminal-plugged-yes {
 	show dialog {
-		Lambda "Great! So now, um, what OS do you have?"
-		> "Windows" : ch2-terminal-os-windows
-		> "Mac or Linux" : ch2-terminal-os-unix
-		> "Something else" : ch2-terminal-os-other
-		// TODO: Chromebook? Can do it with Crostini? Vanilla ChromeOS?
-		> "Never mind" : ch2-terminal-setup-nevermind
+		Lambda "Excellent! Well, from here we have two choices."
 	}
-	set entity "%SELF%" on_interact to interact-ch2-xa;
+	goto ch2-terminal-plugged-yes2;
 }
-
-ch2-terminal-os-other {
+ch2-terminal-plugged-yes2 {
 	show dialog {
-		Lambda "Oh, I see. Well, um, I'm afraid I can't be very much help then...."
-		"But, ahh, do please ask around at DC801, and maybe one of the folks there can help point you in the right direction."
-		"So, assuming you've gotten some help...."
-	}
-	goto ch2-terminal-message-test;
-}
-
-ch2-terminal-os-windows {
-	show dialog {
-		Lambda "   TODO: do it on Windows"
+		Lambda "You could connect the old fashioned way, via a terminal program. The exact program will vary by system: PuTTY, picocom, etc. Just set the baud to 115200."
+		"But for a super-easy one-size-fits-all method, visit the following website in a Chrome-based browser:\n\ngooglechromelabs.github.io/serial-terminal"
+		"Click \"Connect\" and choose your device from the list. (Try switching API modes if you're having trouble getting a list to appear.)"
+		"This might not work well on a phone, by the way, and it definitely won't work on iOS!"
+		"Um, do you need to hear all that again?"
+		> "Yes, say that all again" : ch2-terminal-plugged-yes2
+		> "No, I'm good" : ch2-terminal-message-test
 	}
 /*
 on Windows 10:
@@ -942,16 +934,7 @@ sudo apt install picocom
 ls /dev/serial/by-id/
 ^ read the list of devices that come out of here
 picocom /dev/serial/by-id/(ONE OF THE DEVICES FROM THE LIST ABOVE)
-
 */
-	goto ch2-terminal-message-test;
-}
-
-ch2-terminal-os-unix {
-	show dialog {
-		Lambda "Good! Ahh, you should have some kind of terminal program already. It might even be called \"Terminal.\" Though, uh, I'm fond of iTerm myself, haha...."
-		"   TODO: Mac/Linux tutorial"
-	}
 	goto ch2-terminal-message-test;
 }
 
