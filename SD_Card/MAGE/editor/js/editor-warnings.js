@@ -144,11 +144,13 @@ Vue.component('editor-warnings', {
 				v-for="[checkName, maps] in warningsSorted"
 				:key="checkName"
 				:title="'Problems with &grave;' + checkName + '&grave; (' + maps.length  + ' maps)'"
+				:useVShow="true"
 			>
 				<editor-accordion
 					v-for="[mapName, entities] in maps"
 					:key="mapName"
 					:title="'Problems in map &grave;' + mapName + '&grave; (' + entities.length  + ' entities)'"
+					:useVShow="true"
 				>
 					<editor-warning
 						:entity="entity"
