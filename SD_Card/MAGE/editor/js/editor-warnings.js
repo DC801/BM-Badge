@@ -3,11 +3,10 @@ TODO
 
 source of truth IS scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 
-add final warning counts from CLI to GUI
-
 how will look work for multiple entities of the same or similar names (eg bread, torch)
-- BIND ALL map entities
+- NEED TO BIND ALL map entities
 - detect many2one?
+
 move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
 	- DON'T PREFER LOOKSCRIPTS FILE
 
@@ -18,6 +17,7 @@ room look scripts
 	- room looks can be in map or in maps.json (lately maps.json preferred)
 		-move all out of maps
 	- any more types of missing scripts, e.g. look for a room (ch2-PLANNING.md)?
+	- warn for on_look etc in map definition
 
 generated fixes
 ---
@@ -56,12 +56,12 @@ Vue.component('editor-warning', {
 		},
 	},
 	template: /*html*/`
-<div
-	class="editor-warnings-warning card text-white border-secondary my-3"
+<editor-accordion
+	:title="'Entity &grave;' + (entity.name || 'NO NAME') + '&grave; (id ' + entity.id + ')'"
+	:useVShow="true"
+	:collapsedInitial="false"
 >
-	<div class="card-header bg-secondary">Entity &grave;{{entity.name || 'NO NAME'}}&grave; (id {{entity.id}})</div>
-	<div class="card-body px-3 pt-3 pb-2">
-		<div class="alert alert-primary" role="alert">{{ entity.warningMessage }}</div>
+	<div class="alert alert-primary" role="alert">{{ entity.warningMessage }}</div>
 		<div v-if="entity.fixes">
 			<div class="mb-3" v-if="Object.keys(fixesParameters).length">
 				<span>Override certain aspects of the fixes if you need to:</span>
@@ -98,7 +98,7 @@ Vue.component('editor-warning', {
 			</div>
 		</div>
 	</div>
-</div>
+</editor-accordion>
 `});
 
 

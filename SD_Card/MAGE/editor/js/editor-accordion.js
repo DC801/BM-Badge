@@ -5,6 +5,11 @@ Vue.component('editor-accordion', {
 			required: false,
 			default: '',
 		},
+		collapsedInitial: {
+			type: Boolean,
+			required: false,
+			default: true,
+		},
 		useVShow: {
 			// if you want to always render the slots contents invisibly instead of using v-if
 			type: Boolean,
@@ -15,7 +20,7 @@ Vue.component('editor-accordion', {
 	name: 'editor-accordion',
 	data: function () {
 		return {
-			collapsed: true,
+			collapsed: this.collapsedInitial,
 		};
 	},
 	methods: {
@@ -24,7 +29,7 @@ Vue.component('editor-accordion', {
 		},
 	},
 	template: /*html*/`
-<div class="editor-accordion card border-secondary text-white my-3">
+<div class="editor-accordion card border-secondary text-white my-2">
 	<div class="card-header bg-secondary">
 		<span v-html="title"></span>
 		<span
@@ -40,7 +45,7 @@ Vue.component('editor-accordion', {
 	</div>
 	<template v-if="useVShow">
 		<div
-			class="card-body px-3 py-1"
+			class="card-body px-3 py-2"
 			v-show="!collapsed"
 		>
 			<slot></slot>
@@ -48,7 +53,7 @@ Vue.component('editor-accordion', {
 	</template>
 	<template v-else>
 		<div
-			class="card-body px-3 py-1"
+			class="card-body px-3 py-2"
 			v-if="!collapsed"
 		>
 			<slot></slot>
