@@ -1,6 +1,8 @@
 {
 	"main_menu": {
 		"path": "maps/map-main_menu.json",
+		"on_load": "on_load-main_menu",
+		"on_tick": "on_tick-main_menu",
 		"disable_warn-on_look": true
 	},
 	"ch2-castle-outside": {
@@ -291,43 +293,65 @@
 		"on_load": "on_load-bling-dc801"
 	},
 	"demo": {
-		"path": "maps/map-demo.json"
+		"path": "maps/map-demo.json",
+		"on_load": "show_dialog-timewarp"
 	},
 	"main": {
-		"path": "maps/map-main.json"
+		"path": "maps/map-main.json",
+		"on_load": "on_load-map-main",
+		"on_tick": "on_tick-main"
 	},
 	"bobsclub": {
-		"path": "maps/map-bobsclub.json"
+		"path": "maps/map-bobsclub.json",
+		"on_load": "on_load-bobsclub1",
+		"on_tick": "on_tick-bobsclub"
 	},
 	"test": {
-		"path": "maps/map-test.json"
+		"path": "maps/map-test.json",
+		"on_load": "my_first_script"
 	},
 	"town": {
-		"path": "maps/map-town.json"
+		"path": "maps/map-town.json",
+		"on_load": "on_load-east_west",
+		"on_tick": "on_tick-town"
 	},
 	"oldcouplehouse": {
-		"path": "maps/map-oldcouplehouse.json"
+		"path": "maps/map-oldcouplehouse.json",
+		"on_load": "on_load-oldcouplehouse",
+		"on_tick":"on_tick-oldcouplehouse" 
 	},
 	"bakery": {
-		"path": "maps/map-bakery.json"
+		"path": "maps/map-bakery.json",
+		"on_tick": "on_tick-bakery"
 	},
 	"family": {
-		"path": "maps/map-family.json"
+		"path": "maps/map-family.json",
+		"on_load": "on_load-family",
+		"on_tick": "on_tick-family"
 	},
 	"magehouse": {
-		"path": "maps/map-magehouse.json"
+		"path": "maps/map-magehouse.json",
+		"on_load": "on_load-magehouse",
+		"on_tick": "on_tick-magehouse"
 	},
 	"lodge": {
-		"path": "maps/map-lodge.json"
+		"path": "maps/map-lodge.json",
+		"on_load": "on_load-lodge",
+		"on_tick": "on_tick-lodge"
 	},
 	"greenhouse": {
-		"path": "maps/map-greenhouse.json"
+		"path": "maps/map-greenhouse.json",
+		"on_load": "on_load-greenhouse",
+		"on_tick": "on_tick-greenhouse"
 	},
 	"secretroom": {
-		"path": "maps/map-secretroom.json"
+		"path": "maps/map-secretroom.json",
+		"on_load": "on_load-secretroom",
+		"on_tick": "on_tick-secretroom"
 	},
 	"warp_zone": {
 		"path": "maps/map-warp_zone.json",
+		"on_tick": "map_on_tick-doors",
 		"directions": {
 			"main": "load_map-main",
 			"test": "load_map-test",
@@ -342,13 +366,17 @@
 		"path": "maps/map-testbig.json"
 	},
 	"credits": {
-		"path": "maps/map-credits.json"
+		"path": "maps/map-credits.json",
+		"on_tick": "on_tick-credits"
 	},
 	"credits2": {
-		"path": "maps/map-credits2.json"
+		"path": "maps/map-credits2.json",
+		"on_tick": "on_tick-credits2"
 	},
 	"woprhouse": {
 		"path": "maps/map-woprhouse.json",
+		"on_load": "on_load-woprhouse",
+		"on_tick": "on_tick-woprhouse",
 		"directions": {
 			"north": "on_go-woprhouse-north"
 		}
