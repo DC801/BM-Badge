@@ -290,18 +290,42 @@
 		"path": "maps/map-bling-dc801.json",
 		"on_load": "on_load-bling-dc801"
 	},
-	"demo": "maps/map-demo.json",
-	"main": "maps/map-main.json",
-	"bobsclub": "maps/map-bobsclub.json",
-	"test": "maps/map-test.json",
-	"town": "maps/map-town.json",
-	"oldcouplehouse": "maps/map-oldcouplehouse.json",
-	"bakery": "maps/map-bakery.json",
-	"family": "maps/map-family.json",
-	"magehouse": "maps/map-magehouse.json",
-	"lodge": "maps/map-lodge.json",
-	"greenhouse": "maps/map-greenhouse.json",
-	"secretroom": "maps/map-secretroom.json",
+	"demo": {
+		"path": "maps/map-demo.json"
+	},
+	"main": {
+		"path": "maps/map-main.json"
+	},
+	"bobsclub": {
+		"path": "maps/map-bobsclub.json"
+	},
+	"test": {
+		"path": "maps/map-test.json"
+	},
+	"town": {
+		"path": "maps/map-town.json"
+	},
+	"oldcouplehouse": {
+		"path": "maps/map-oldcouplehouse.json"
+	},
+	"bakery": {
+		"path": "maps/map-bakery.json"
+	},
+	"family": {
+		"path": "maps/map-family.json"
+	},
+	"magehouse": {
+		"path": "maps/map-magehouse.json"
+	},
+	"lodge": {
+		"path": "maps/map-lodge.json"
+	},
+	"greenhouse": {
+		"path": "maps/map-greenhouse.json"
+	},
+	"secretroom": {
+		"path": "maps/map-secretroom.json"
+	},
 	"warp_zone": {
 		"path": "maps/map-warp_zone.json",
 		"directions": {
@@ -314,14 +338,22 @@
 			"testbig": "load_map-testbig"
 		}
 	},
-	"testbig": "maps/map-testbig.json",
-	"credits": "maps/map-credits.json",
-	"credits2": "maps/map-credits2.json",
+	"testbig": {
+		"path": "maps/map-testbig.json"
+	},
+	"credits": {
+		"path": "maps/map-credits.json"
+	},
+	"credits2": {
+		"path": "maps/map-credits2.json"
+	},
 	"woprhouse": {
 		"path": "maps/map-woprhouse.json",
 		"directions": {
 			"north": "on_go-woprhouse-north"
 		}
 	},
-	"action_testing_02": "maps/map-action_testing_02.json"
+	"action_testing_02": {
+		"path": "maps/map-action_testing_02.json"
+	}
 }
