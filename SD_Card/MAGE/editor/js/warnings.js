@@ -29,7 +29,7 @@ var warningFixGenerators = {
 	checkInteractScript: function(compositeEntity) {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
 		return {
-			parameters: {
+			parameters: { // a parameter `scriptName` will be treated specially by editor-warnings.js
 				scriptName: hyphenateSeveralPieces(['interact', SCRIPT_NAME_CHAPTER_INFIX, cleanEntityName]),
 			},
 			getFixes: function ({ scriptName }) {
@@ -53,7 +53,7 @@ var warningFixGenerators = {
 	checkLookScript: function (compositeEntity) {
 		var cleanEntityName = entityNameForScripts(entityNameOrNoName(compositeEntity.name));
 		return {
-			parameters: {
+			parameters: { // a parameter `scriptName` will be treated specially by editor-warnings.js
 				scriptName: hyphenateSeveralPieces(['look', SCRIPT_NAME_CHAPTER_INFIX, cleanEntityName]),
 			},
 			getFixes: function ({ scriptName }) {

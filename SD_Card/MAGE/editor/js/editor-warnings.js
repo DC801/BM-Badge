@@ -7,17 +7,17 @@ how will look work for multiple entities of the same or similar names (eg bread,
 - NEED TO BIND ALL map entities
 - detect many2one?
 
-move look scripts not in the look scripts file? e.g. see ch2-castle-34.mgs
-	- DON'T PREFER LOOKSCRIPTS FILE
-
 two more warning types
 ---
 orphaned scripts
-room look scripts
+missing room look scripts
 	- room looks can be in map or in maps.json (lately maps.json preferred)
-		-move all out of maps
-	- any more types of missing scripts, e.g. look for a room (ch2-PLANNING.md)?
-	- warn for on_look etc in map definition
+	- warn for on_look etc in map definition?
+
+remove encoder capabilities?
+---
+looking for scripts in top-level `properties` of a map file?
+reading string-value maps in maps.json (value implicitly `path`)?
 
 generated fixes
 ---
@@ -34,7 +34,6 @@ misc
 ---
 don't let card headers run into buttons
 - change other components with card headers as well?
-documentation? little if any
 */
 
 Vue.component('editor-warning', {
@@ -110,6 +109,11 @@ Vue.component('editor-warnings', {
 			required: true
 		}
 	},
+	data: function() {
+		return {
+			scriptNamesFromFixes: new Set(),
+		};
+	},
 	computed: {
 		warningsSorted: function() {
 			// convert warnings data structure to its 2D array equivalent
@@ -133,6 +137,14 @@ Vue.component('editor-warnings', {
 			checksSorted.sort(sortByNameInIndexZero);
 			return checksSorted;
 		},
+		scriptNamesFromScenarioData: function() {
+			return new Set(Object.keys(this.scenarioData.scripts));
+		},
+	},
+	methods: {
+		scriptNameIsTaken(scriptName) {
+			return this.scriptNamesFromScenarioData.has(scriptName) || this.scriptNamesFromFixes.has(scriptName);
+		}
 	},
 	template: /*html*/`
 <div class="editor-warnings card text-white mb-3">

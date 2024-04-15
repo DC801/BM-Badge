@@ -11,8 +11,8 @@ const window = {
 var shouldBeVerbose = false;
 ['-v', '--verbose'].forEach(function(verboseArgForm) {
 	// recognize multiple forms of specifying that the user wants verbose behavior,
-	// then take all instances of those forms out of the process.argv so that the fixed position
-	// logic below for input and output args still works (reconsider this if more args are added)
+	// then take them out of the process.argv so that the fixed position logic below for
+	// input and output args still works (reconsider this if more args are added)
 	const index = process.argv.indexOf(verboseArgForm);
 	if (index > -1) {
 		shouldBeVerbose = true;
@@ -68,8 +68,8 @@ for (m of modules) {
 
 eval(moduleString);
 
-// use value from above for verbose since it got overwritten when evaluating the module string,
-// but parsing CLI args for it can't be moved down here after the input and output args are used
+// use value from above for verbose since var `verbose` got overwritten when evaluating the module string,
+// but parsing for verbose arg can't be moved down here since input and output args have already been used
 verbose = shouldBeVerbose;
 
 function makeMap(path) {
