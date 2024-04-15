@@ -94,6 +94,7 @@ on_go-castle-12-south {
 /* ---------- ENTITIES ---------- */
 
 ch2-interact-guestbook {
+	set flag interrupt to false;
 	if (flag ch2-guestbook-signed is false) {
 		if (flag interrupt3 is false) {
 			show dialog {
@@ -130,6 +131,20 @@ ch2-interact-guestbook-signno {
 	set entity "%SELF%" on_interact to ch2-interact-guestbook;
 }
 
+ch2-stereo-fix-proposal{
+	show dialog ch2-stereo-fix-proposal {
+		PLAYER "Um, about that phonograph. I actually need to borrow the needle for something."
+		Concierge "Hmm? Whatever for?"
+		PLAYER "It'll help me fix the castle. Trust me."
+		Concierge "I could not in good conscience leave this room bereft of welcome music. But, perhaps...."
+		"You say you are going to fix the castle, therefore you must be the fixing type."
+		"Might you be able to fix that stereo behind me, perhaps? Were it repaired, I would have no need of this phonograph or its needle."
+		PLAYER "Fix the stereo? I can take a look."
+	}
+	set flag ch2-ws-backstory to true;
+	set flag ch2-needle-firstlook to true;
+}
+
 interact-ch2-concierge {
 	if (flag ch2-concierge-backstory is false) {
 		if (flag interrupt is true) {
@@ -150,24 +165,23 @@ interact-ch2-concierge {
 			"You'll have moral support music, if nothing else!"
 		}
 		set flag ch2-concierge-backstory to true;
+		if (variable ch2-storyflag-round is >= 2) {
+			copy ch2-stereo-fix-proposal;
+			set flag ch2-ws-backstory to true;
+		}
 	} else if (
 		variable ch2-storyflag-round is < 2
 		|| flag ch2-needle-permission is true
 	) {
 		show dialog {
 			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment."
-			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway!"
-			"I'll be cheering you on from here. Good luck!"
+			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway! I'll be cheering you on from here. Good luck!"
 		}
 	} else {
 		if (flag ch2-ws-won is true) {
 			copy ch2-ws-cutscene;
 		} else if (flag ch2-ws-backstory is false) {
-			show dialog {
-				PLAYER "(TODO: I want needle)"
-				Concierge "(TODO: well, fix the stereo first)"
-			}
-			set flag ch2-ws-backstory to true;
+			copy ch2-stereo-fix-proposal;
 		} else {
 			show dialog {
 				Concierge "Go on, now. I'll let you have the needle off this phonograph is you get the stereo working again. It's the black thing behind me."
@@ -183,6 +197,7 @@ ch2-hide-needle {
 }
 
 ch2-touch-needle {
+	set flag interrupt to false;
 	if (flag ch2-carrying-needle is true || flag ch2-installed-needle is true) {
 		show dialog ch2-concierge-old-timey { // there's a second reference to this dialog below!
 			PLAYER "Definitely an old-timey look, isn't it?"
@@ -195,7 +210,7 @@ ch2-touch-needle {
 			show dialog {
 				PLAYER "That's a funny looking trumpet."
 				Concierge "It mechanically amplifies the vibrations captured by the needle upon the vinyl record."
-				"I got this old thing out after the earthquake damaged the intercom system. I couldn't bear how quiet it was in here."
+				"I got this old thing out after the earthquake damaged the intercom system -- and the stereo. I couldn't bear how quiet it was in here."
 			}
 			set flag ch2-needle-firstlook to true;
 		} else {
@@ -210,8 +225,14 @@ ch2-touch-needle {
 				> "No" : ch2-touch-needle-no
 			}
 		} else {
-			show dialog {
-				PLAYER "(Will the concierge get mad at me if I take the needle from this record player? I guess I should ask.)"
+			if (flag ch2-ws-backstory is false) {
+				show dialog {
+					PLAYER "(Will the concierge get mad at me if I take the needle from this record player? I guess I should ask.)"
+				}
+			} else {
+				show dialog {
+					PLAYER "(I can have the needle off the phonograph once I fix the stereo. I better get on that.)"
+				}
 			}
 		}
 	}
@@ -238,6 +259,7 @@ ch2-touch-needle-no {
 const!( // make sure these are the same as in the auto one
 	$toWin = 20
 	$miss = 4
+	$cheat = 5
 )
 
 serial dialog ch2-ws-rowstart { "<r>" }
@@ -292,6 +314,7 @@ ch2-ws-guess-quit {
 		}
 	} else {
 		set flag ch2-ws-won to true;
+		// TODO: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
 		show serial dialog {
 			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
 			" "
@@ -312,6 +335,7 @@ ch2-ws-cutscene {
 }
 
 ch2-stereo-interact {
+	set flag interrupt to false;
 	if (flag ch2-ws-backstory is false) {
 		show dialog { PLAYER "A CD player or something? Looks half damaged." }
 	} else if (flag ch2-stereo-backstory is false) {

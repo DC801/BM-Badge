@@ -55,6 +55,7 @@
 	- Learning about one's environment
 	- Leaning toolsets, how to best use everyday tools
 	- Secrets to protect the vulnerable vs secrets to manipulate the vulnerable
+	- IDEA: character named Chicago that speaks with that font
 
 ## Serial dialogs styles
 

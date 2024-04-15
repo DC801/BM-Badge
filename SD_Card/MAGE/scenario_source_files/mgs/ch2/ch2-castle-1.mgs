@@ -620,6 +620,47 @@ ch2-wait-for-boot {
 const!(
 	$dot = 300ms
 )
+/*
+Welcome to GibBIOS v1.1 built on Aug 8 2024 10:11
+   Туре 'help' for detailed information
+Trying disk:a...
+[wait 700ms]
+GibsonOS Release 5.7 Version Generic_801-02 [UNIX(R) System V Release 4.0]
+Copyright (c) 1983-1999, Sun Microsystems, Inc.
+[wait 4s]
+Hostname: sunrise
+[wait 200ms]
+The system is coming up.  Please wait.
+checking ufs filesystems
+/dev/rdsk/côtod05c0t0d0s7: is clean.
+in.rdisc: No No interfaces up
+starting routing daemon.
+[wait 100ms]
+starting rpc services: rpcbindkeyserv: failed to generate host's netname when establishing root's key.
+ keyserv done
+Setting default interface for multicast: add net 224.0.0.0: gateway sunrise
+[wait 300ms]
+syslog service starting.
+[wait 300ms]
+Print services started.
+[wait 150ms]
+Mar 18 16:38:52 sunrise sendmail[195]: My unqualified host name (localhost) unknown; sleeping for retry
+volume management starting.
+The system is ready.
+[wait 200ms]
+
+sunrise console login: Mar 18 16:38:54 sunrise snmpXdmid: Error in Adding Row for Subscription Table Entry
+Mar 18 16:38:54 sunrise snmpXdmid: Failed to add filter to SP for Event delivery
+
+
+*****************************************************************************
+*
+* Starting Desktop Login on display :0...
+* 
+* Wait for the Desktop Login screen before logging in.
+* 
+*****************************************************************************
+*/
 ch2-bootup {
 	turn serial control off;
 	show serial dialog spacer;

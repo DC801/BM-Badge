@@ -435,13 +435,13 @@ interact-ch2-icechest {
 		} else {
 			// if you did just pick it up AND you know you need it
 			show dialog {
-				PLAYER "Got my can of Cactus Cooler. Time to bring it to the power plant guys."
+				PLAYER "Got my can of Cactus Cooler. Time to bring it to Rocco at the castle power plant."
 			}
 		}
 	} else if (flag ch2-cactuscooler-delivered is true) {
 		// you've already turned the soda in
 		show dialog {
-			PLAYER "The power plant guys already have their Cactus Cooler. I'll leave the rest for everyone else."
+			PLAYER "Rocco already has his Cactus Cooler. I'll leave the rest of these cans for everyone else at the party."
 		}
 	} else { // You get to pick up a Cactus Cooler!
 		if (flag ch2-want-cactuscooler is false) {

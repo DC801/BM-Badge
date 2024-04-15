@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-castle-34 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: CASTLE PANTRY on_look text\n "
+		"You looked around the <c>CASTLE PANTRY</>."
+		"\tWell-stocked with canned, bottled, barrelled, and bagged foods, the place smells vaguely of cumin and garlic."
+		" "
 	}
 }
 
@@ -22,12 +24,6 @@ on_load-ch2-castle-34 {
 		set flag ch2-seen-room-34 to true;
 	} else {
 		show serial dialog { "Entering the <bold>CASTLE PANTRY</>..." }
-	}
-	if (
-		flag ch2-installed-plate is true
-		|| flag ch2-carrying-plate is true
-	) {
-		copy script ch2-hide-plate;
 	}
 	
 	copy ch2-map-init;
@@ -94,6 +90,7 @@ ch2-interact-dishshelf {
 	show dialog {
 		PLAYER "Plates, cups, and tablecloths. How many place settings is this?"
 	}
+	// TODO: add a bit to lead to to the Hanoi stuff
 }
 ch2-interact-winerack {
 	show dialog {
@@ -114,45 +111,56 @@ interact-ch2-clara {
 			SELF "I'm new around here. I gotta say, this has been an interesting first week of work."
 		}
 	}
+	// TODO: add a bit to lead to to the Hanoi stuff
 	copy resume-walk;
 }
 
 /* ---------- HARDDRIVE (ADMIN) ---------- */
 
-ch2-hide-plate {
-	teleport entity "Plate" to geometry hiding-spot;
-	set entity "Plate" name to " ";
-}
-
 ch2-touch-plate {
 	if (flag ch2-plate-firstlook is false) {
 		show dialog {
-			PLAYER "TODO plate1"
+			PLAYER "This thing is a PlateMover 90?"
+			Clara "Oh, it's actually a PlateMover 9000. It's so old, the last few numbers have worn off."
+			"But it was supposed to be this high tech plate storage and organization machine."
+			PLAYER "It looks like a jukebox."
+			Clara "It acts like a jukebox."
 		}
 		set flag ch2-plate-firstlook to true;
-	}
-	show dialog {
-		PLAYER "TODO plate2."
-	}
-	if (variable ch2-storyflag-round is >= 2) {
+	} else if (
+		flag ch2-carrying-plate is true
+		|| flag ch2-installed-plate is true
+		|| variable ch2-storyflag-round is < 2
+	) {
 		show dialog {
-			name "" "(Pick up the plate?)"
-			> "Yes" : ch2-touch-plate-yes
-			> "No" : ch2-touch-plate-no
+			PLAYER "(TODO: Generic plate jukebox dialog.)"
+		}
+	} else if (flag ch2-hanoi-backstory is false) {
+		show dialog {
+			PLAYER "(TODO: ask how to get a plate)"
+			"(TODO: and have a cutscene introducing the plate minigame)"
+		}
+		set flag ch2-hanoi-backstory to true;
+		copy start-hanoi;
+	} else {
+		show dialog {
+			PLAYER "Well, here goes trying to get that #7 plate out of there."
+		}
+		copy start-hanoi;
+	}
+}
+won_hanoi_get_plate {
+	copy script ch2-pickup-plate;
+	show dialog {
+		PLAYER "Aha! I got plate #7!"
+	}
+	if (variable hanoi_move_count is 65) {
+		show dialog {
+			Clara "Sweet. And it looks like you did it super efficiently, too. Nice!"
+		}
+	} else {
+		show dialog {
+			Clara "Sweet."
 		}
 	}
-}
-ch2-touch-plate-yes {
-	show dialog {
-		name "" "(You pick up the plate!)"
-	}
-	copy script ch2-hide-plate;
-	copy script ch2-pickup-plate;
-	set entity "%SELF%" on_interact to null_script;
-}
-ch2-touch-plate-no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	}
-	set entity "%SELF%" on_interact to ch2-touch-plate;  // reset after script jump
 }

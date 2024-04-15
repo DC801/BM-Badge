@@ -120,33 +120,88 @@ interact-ch2-rocco {
 	copy face-player;
 	if (flag ch2-cactuscooler-delivered is true) {
 		show dialog {
-			SELF "TODO\n(Love Cactus Cooler! To cool the machines, I mean.)"
+			SELF "Now the hard part: figure out how to cool this thing with Cactus Cooler."
 		}
 	}
 	else if (flag ch2-rocco-backstory is false) {
 		show dialog {
-			SELF "TODO\n(Can't give heat sink; bring us Cactus Cooler first.)"
-			"(Blah blah blah)"
+			PLAYER "So... I was told you guys could help me find a heat sink."
+			SELF "A heat sink? What's the use case?"
+			PLAYER "A computer. Like a normal-looking kind of boxy computer."
+		}
+		turn player control off;
+		wait 100ms;
+		if (entity Rocco direction is south) {
+			turn entity Rocco west;
+		} else {
+			turn entity Rocco toward entity "heat sink";
+		}
+		wait 1000ms;
+		copy face-player;
+		wait 100ms;
+		turn player control on;
+		show dialog {
+			SELF "Well, there's this heat sink here, but it's not extra."
+			PLAYER "Do you have any extras anywhere, maybe \"in the back\" or something?"
+			SELF "In the \"back?\" We don't have a \"back.\""
+			PLAYER "It's really important. Lambda and I are trying to put the Gibson mainframe back together, and...."
+			SELF "Lambda? Lambda who?"
+		}
+		if (flag ch2-lambda-deletion-backstory is false) {
+			show dialog {
+				PLAYER "Lambda. He's -- you don't know who he is?"
+				SELF "Why would I? Is he famous or something?"
+			}
+		} else {
+			show dialog {
+				PLAYER "Lambda. You... really don't know who he is, do you? You actually forgot who he was?"
+				SELF "Forget? What are you on about?"
+				PLAYER "Wow. Lambda was right. He said none of you would remember him."
+				SELF "No, I think I would've remembered someone with the name Lambda."
+			}
+		}
+		rotate entity "%SELF%" 1;
+		show dialog {
+			SELF "Lambda.... It sounds like an alias. Is he a hacker?"
+			PLAYER "Actually, I don't know. Maybe?"
+			SELF "...."
+			"How strange. A place like this normally has an IT guy, or someone who's a hacker or software tinkerer at least, but... I'm can't think of who ours was."
+			"We must have had someone like that. I'm the one who usually fixes the computers, but why can't I remember who fixes the software?"
+			"Hmmmm."
+		}
+		copy face-player;
+		show dialog {
+			SELF "Regardless, this heat sink is spoken for. Although.... I concede that fixing the mainframe is more important than getting this thing working."
+			"Tell you what. Get me a substitute I can use for my build, and you can have this heat sink here."
+			PLAYER "Thanks! What kind of substitute?"
+			SELF "Let's try something really wacky. I wanted to experiment anyway. Liquid cooling, or -- no, let's be really crazy. Get me a can of Cactus Cooler."
+			PLAYER "Cactus Cooler?"
+			SELF "It's this rare brand of soda. It'll be extra funny if I can get it involved with cooling the machine, since it's got \"cooler\" in the name. Hilarious!"
 		}
 		set flag ch2-rocco-backstory to true;
 		set flag ch2-want-cactuscooler to true;
-		copy ch2-handoff-powersupply-to-cactuscooler;
+		set flag ch2-heatsink-firstlook to true;
+		copy ch2-handoff-heatsink-to-cactuscooler;
 		if (flag ch2-carrying-cactuscooler is true) {
 			show dialog {
-				SELF "Hey, wait a minute! You have a can of Cactus Cooler already! I don't suppose...."
+				PLAYER "Well, I actually have a can of Cactus Cooler right here."
+				SELF "Oh, really? In which case...."
 			}
 			set flag interrupt to true;
 			goto interact-ch2-rocco-give-q; // jump
+		} else {
+			show dialog {
+				PLAYER "Sure. Get you Cactus Cooler. Rare soda. Got it."
+			}
 		}
 	}
 	else if (flag ch2-carrying-cactuscooler is true) {
 		if (flag interrupt is false) {
 			show dialog {
-				SELF "Oh, it looks like you found a can of Cactus Cooler somewhere! Willing to give it to us?"
+				SELF "Looks like you found a can of Cactus Cooler somewhere! Willing to give it to me?"
 			}
 			set flag interrupt to true;
-		}
-		else {
+		} else {
 			show dialog {
 				SELF "Change your mind? Willing to give up your can of Cactus Cooler?"
 			}
@@ -155,7 +210,7 @@ interact-ch2-rocco {
 	}
 	else {
 		show dialog {
-			SELF "Remember, we'll give up this heat sink if you bring us a substitute. A can of Cactus Cooler will do."
+			SELF "Remember, I'll give up this heat sink if you bring me a substitute: a can of Cactus Cooler."
 		}
 	}
 	goto interact-ch2-rocco-wrapup;
@@ -183,7 +238,7 @@ interact-ch2-rocco-give {
 
 interact-ch2-rocco-nogive {
 	show dialog {
-		SELF "Aww, come on, now! No Cactus Cooler, no heat sink! That was the deal!"
+		SELF "Aww, come on. No Cactus Cooler, no heat sink."
 	}
 	goto interact-ch2-rocco-wrapup;
 }
@@ -195,23 +250,43 @@ interact-ch2-rocco-wrapup {
 /* ---------- HEAT SINK (ADMIN) ---------- */
 
 ch2-hide-heatsink {
-	teleport entity "Heat Sink" to geometry hiding-spot;
-	set entity "Heat Sink" name to " ";
+	teleport entity "heat sink" to geometry hiding-spot;
+	set entity "heat sink" name to " ";
 }
 
 ch2-touch-heatsink {
 	if (flag ch2-heatsink-firstlook is false) {
 		show dialog {
-			PLAYER "TODO heatsink1"
+			PLAYER "That's a really big tuning fork."
+			Rocco "It's a heat sink. It siphons heat away from a processor or whatever. Though I wonder if it would work as a tuning fork, too."
 		}
 		set flag ch2-heatsink-firstlook to true;
-	}
-	show dialog {
-		PLAYER "TODO heatsink2."
+		set flag temp to true;
+	} else {
+		show dialog {
+			PLAYER "Yup, a heat sink."
+		}
+		set flag temp to false;
 	}
 	if (flag ch2-heatsink-permission is false) {
-		show dialog {
-			PLAYER "But I think the power plant is still using this. I better convince the guys to let me have it."
+		if (flag ch2-rocco-backstory is false) {
+			if (flag temp is true) {
+				show dialog {
+					PLAYER "(I bet I can't just take it away with me though. I should ask first.)"
+				}
+			} else {
+				show dialog {
+					PLAYER "I better ask before taking it."
+				}
+			}
+		} else if (flag ch2-carrying-cactuscooler is false) {
+			show dialog {
+				PLAYER "Better go off to find Cactus Cooler to trade for it."
+			}
+		} else {
+			show dialog {
+				PLAYER "Better talk to Rocco to trade the Cactus Cooler for it."
+			}
 		}
 	} else {
 		show dialog {

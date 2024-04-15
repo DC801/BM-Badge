@@ -18,7 +18,7 @@ var lispish = [
 
 	['D',['N','microphone'],['C','vocoder'],'T',['R','laser'],'VNQD',['S','song'],['A','cassette'],'V',['STREAM'],'GA',['E','codec'],'HOEZ'],
 
-	['I',['E','microphone'],'O',['O','vocoder'],'OOBB',['O','song'],'D',['S','cassette'],'QLYUEMLT',['C','codec'],['AUDIO']],
+	['I',['E','microphone'],'O',['O','vocoder'],'ROBB',['O','song'],'D',['S','cassette'],'QLYUEMLT',['C','codec'],['AUDIO']],
 
 	['WVQF',['D','vocoder'],'VJ',['N','song'],'OO',['S','cassette'],'RQN',['MIDI'],'DW',['S','stereo'],['A','album'],'YYO'],
 
@@ -54,7 +54,7 @@ var hitWordsDescriptions = {
 	codec: "Oh, that's right, I think I know a few of these.",
 	compact: "Ha! Compact discs? More like--yeah, no, I got nothing.",
 	frequency: "Oh yeah, that's the best! Dial it in, find the sweet spot....",
-	headphones: "Yeah, I remember these! Get's get tinitus together!",
+	headphones: "Yeah, I remember these! Let's get tinitus together!",
 	hifi: "Who could forget? My audio standards are through the ROOF!",
 	laser: "Ahaha, that's right! It's all about the 1s and 0s, isn't it?",
 	lofi: "Oh, so nostalgic! Oh... I'm tearing up.",
@@ -377,9 +377,25 @@ var makeInputDialog = function () {
 		var scriptName = `${prefix}guess-${word}`;
 		ret.push(`\t_ "${word.toUpperCase()}" : ${scriptName}`);
 	});
+	ret.push('	// cheats')
+	ret.push(`	_ "GLITTERING PRIZES" : ${prefix}guess-cheat`)
 	ret.push('}')
 	return ret.join('\n');
 };
+
+
+var cheatGuessBulk = wordList.map(function(word) {
+	return `\tset flag ${prefix}${word} to true;`;
+}).join('\n')
+var cheatGuessScript = [
+	"// Guesses: cheat",
+	"ch2-ws-guess-cheat {",
+	"	mutate ch2-ws-turn-value = 0;",
+	"	mutate ch2-ws-turn-status = $cheat;",
+	cheatGuessBulk,
+	"	goto ch2-ws-doturn;",
+	"}"
+].join('\n');
 
 var makeCloseGuessScript = function (word) {
 return `ch2-ws-guess-${word.toLowerCase()} {
@@ -438,7 +454,11 @@ var hitMessages = '\t' + wordList.map(makeHitMessage)
 
 var makeTurnMessageScript = function () {
 	return `${prefix}turn-message {
-	if (variable ${prefix}turn-status is $miss) {
+	if (variable ${prefix}turn-status is $cheat) {
+		concat serial dialog {
+			"Whoa! Look who's a medieval man!"
+		}
+	} else if (variable ${prefix}turn-status is $miss) {
 		concat serial dialog {
 			"Huh? I don't think I know that word."
 		}
@@ -467,7 +487,7 @@ var makeTurnMessageScript = function () {
 var makeConst = function () {
 	return [
 		`const!(`,
-		`\t$close = 1 $repeat = 2 $hit = 3 $miss = 4`,
+		`\t$close = 1 $repeat = 2 $hit = 3 $miss = 4 $cheat = 5`,
 		`\t// target words`,
 		'\t' + wordList.map(function (s, i) {
 			return `$${s.toLowerCase()} = ${i+1}`;
@@ -485,6 +505,7 @@ var natlangFile = [
 	makeCountFlagScript(),
 	makeBoxPrintScript(),
 	makeInputDialog(),
+	cheatGuessScript,
 	closeGuessScripts,
 	hitGuessScripts,
 	`// MESSAGES`,
