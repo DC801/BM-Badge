@@ -142,9 +142,9 @@ Vue.component('editor-warnings', {
 		}
 	},
 	template: /*html*/`
-<div class="editor-warnings card text-white mb-3">
+<div class="editor-warnings card text-white my-3">
 	<div class="card-header bg-primary">Additional reports about the build ({{warningsSorted.length}} checks)</div>
-	<div class="card-body py-1">
+	<div class="card-body p-3">
 		<!-- "invisible wrapper" use of <template> because of v-for inside (good practice) -->
 		<template v-if="warningsSorted.length">
 			<editor-accordion

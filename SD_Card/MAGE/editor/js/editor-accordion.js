@@ -29,7 +29,7 @@ Vue.component('editor-accordion', {
 		},
 	},
 	template: /*html*/`
-<div class="editor-accordion card border-secondary text-white my-2">
+<div class="editor-accordion card border-secondary text-white mb-2">
 	<div class="card-header bg-secondary">
 		<span v-html="title"></span>
 		<span
