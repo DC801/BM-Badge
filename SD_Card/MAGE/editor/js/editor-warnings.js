@@ -55,49 +55,44 @@ Vue.component('editor-warning', {
 		},
 	},
 	template: /*html*/`
-<editor-accordion
-	:title="'Entity &grave;' + (entity.name || 'NO NAME') + '&grave; (id ' + entity.id + ')'"
-	:useVShow="true"
-	:collapsedInitial="false"
->
+<div class="editor-warning">
 	<div class="alert alert-primary" role="alert">{{ entity.warningMessage }}</div>
-		<div v-if="entity.fixes">
-			<div class="mb-3" v-if="Object.keys(fixesParameters).length">
-				<span>Override certain aspects of the fixes if you need to:</span>
-				<div
-					class="input-group my-1"
-					v-for="(parameterValue, parameterName) in fixesParameters"
-				>
-					<div class="input-group-prepend">
-						<span class="input-group-text">{{parameterName}}</span>
-					</div>
-					<input
-						class="form-control"
-						type="text"
-						v-model="fixesParameters[parameterName]"
-					/>
+	<div v-if="entity.fixes">
+		<div class="mb-3" v-if="Object.keys(fixesParameters).length">
+			<span>Override certain aspects of the fixes if you need to:</span>
+			<div
+				class="input-group my-1"
+				v-for="(parameterValue, parameterName) in fixesParameters"
+			>
+				<div class="input-group-prepend">
+					<span class="input-group-text">{{parameterName}}</span>
 				</div>
+				<input
+					class="form-control"
+					type="text"
+					v-model="fixesParameters[parameterName]"
+				/>
 			</div>
-			<div>
-				<span>Click the button by any of these fixes to copy it:</span>
-				<div
-					class="my-1"
-					v-for="(fixText, fixIndex) in fixesText"
-					:key="fixIndex"
-				>
-					<div class="row align-items-center flex-nowrap px-2">
-						<pre class="border border-primary rounded p-2 m-0 w-100">{{fixText}}</pre>
-						<copy-button
-							:text="fixText"
-							class="ml-1"
-							style="width: 2rem;"
-						></copy-button>
-					</div>
+		</div>
+		<div>
+			<span>Click the button by any of these fixes to copy it:</span>
+			<div
+				class="my-1"
+				v-for="(fixText, fixIndex) in fixesText"
+				:key="fixIndex"
+			>
+				<div class="row align-items-center flex-nowrap mx-0">
+					<pre class="border border-primary rounded p-2 m-0 w-100">{{fixText}}</pre>
+					<copy-button
+						:text="fixText"
+						class="ml-1"
+						style="width: 2rem;"
+					></copy-button>
 				</div>
 			</div>
 		</div>
 	</div>
-</editor-accordion>
+</div>
 `});
 
 
@@ -164,11 +159,17 @@ Vue.component('editor-warnings', {
 					:title="'Problems in map &grave;' + mapName + '&grave; (' + entities.length  + ' entities)'"
 					:useVShow="true"
 				>
-					<editor-warning
-						:entity="entity"
+					<editor-accordion
+						:title="'Entity &grave;' + (entity.name || 'NO NAME') + '&grave; (id ' + entity.id + ')'"
+						:useVShow="true"
+						:collapsedInitial="false"
 						v-for="entity in entities"
 						:key="entity.id"
-					></editor-warning>
+					>
+						<editor-warning
+							:entity="entity"
+						></editor-warning>
+					</editor-accordion>
 				</editor-accordion>
 			</editor-accordion>
 		</template >

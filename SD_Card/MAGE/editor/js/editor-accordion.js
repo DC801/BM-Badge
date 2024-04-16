@@ -45,7 +45,7 @@ Vue.component('editor-accordion', {
 	</div>
 	<template v-if="useVShow">
 		<div
-			class="card-body px-3 py-2"
+			class="card-body p-3"
 			v-show="!collapsed"
 		>
 			<slot></slot>
@@ -53,7 +53,7 @@ Vue.component('editor-accordion', {
 	</template>
 	<template v-else>
 		<div
-			class="card-body px-3 py-2"
+			class="card-body p-3"
 			v-if="!collapsed"
 		>
 			<slot></slot>
