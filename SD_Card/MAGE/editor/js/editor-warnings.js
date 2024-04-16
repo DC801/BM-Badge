@@ -70,6 +70,7 @@ Vue.component('editor-warning', {
 				<input
 					class="form-control"
 					type="text"
+					:name="parameterName"
 					v-model="fixesParameters[parameterName]"
 				/>
 			</div>

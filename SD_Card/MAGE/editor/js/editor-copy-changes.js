@@ -31,6 +31,7 @@ window.Vue.component('copy-button', {
 		"
 		:value="text"
 		ref="copyStateTextArea"
+		name="iminvisible"
 	></textarea>
 </span>
 `});
