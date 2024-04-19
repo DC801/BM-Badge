@@ -31,11 +31,6 @@ blacklisting
 use maps.json strategy: map-level only control
 how to associate a checker function to the appropriate disable flag
 - possibleEntityScripts variable?
-
-misc
----
-don't let card headers run into buttons
-- change other components with card headers as well?
 */
 
 Vue.component('editor-warning', {
