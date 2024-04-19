@@ -14,6 +14,8 @@ missing room look scripts
 	- room looks can be in map or in maps.json (lately maps.json preferred)
 	- warn for on_look etc in map definition?
 
+ask: warning type for duplicate files anywhere across scenario_source_files?
+
 remove encoder capabilities?
 ---
 looking for scripts in top-level `properties` of a map file?
@@ -56,7 +58,7 @@ Vue.component('editor-warning', {
 	},
 	template: /*html*/`
 <div class="editor-warning">
-	<div class="alert alert-primary" role="alert">{{ entity.warningMessage }}</div>
+	<div class="alert alert-primary" :class="{'mb-0': ! entity.fixes}" role="alert">{{ entity.warningMessage }}</div>
 	<div v-if="entity.fixes">
 		<div class="mb-3" v-if="Object.keys(fixesParameters).length">
 			<span>Override certain aspects of the fixes if you need to:</span>
