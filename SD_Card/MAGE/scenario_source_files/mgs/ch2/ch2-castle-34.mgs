@@ -147,7 +147,7 @@ ch2-touch-plate {
 		copy start-hanoi;
 	} else {
 		show dialog {
-			PLAYER "Well, here goes trying to get that #7 plate out of there."
+			PLAYER "Well, let's try to get that #7 plate out of there."
 		}
 		copy start-hanoi;
 	}

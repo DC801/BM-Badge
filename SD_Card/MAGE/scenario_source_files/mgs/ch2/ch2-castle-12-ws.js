@@ -53,7 +53,7 @@ var hitWordsDescriptions = {
 	chiptune: "Oh, right! So sine wavey and squarey....",
 	codec: "Oh, that's right, I think I know a few of these.",
 	compact: "Ha! Compact discs? More like--yeah, no, I got nothing.",
-	frequency: "Oh yeah, that's the best! Dial it in, find the sweet spot....",
+	frequency: "That's the best! Dial it in, find the sweet spot....",
 	headphones: "Yeah, I remember these! Let's get tinitus together!",
 	hifi: "Who could forget? My audio standards are through the ROOF!",
 	laser: "Ahaha, that's right! It's all about the 1s and 0s, isn't it?",

@@ -2241,7 +2241,7 @@ ch2-ws-turn-message {
 			}
 		} else {
 			concat serial dialog {
-				"<y>FREQUENCY</>! Oh yeah, that's the best! Dial it in, find the sweet spot...."
+				"<y>FREQUENCY</>! That's the best! Dial it in, find the sweet spot...."
 			}
 		}
 	} else if (variable ch2-ws-turn-value is $headphones) {
