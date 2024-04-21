@@ -74,7 +74,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":167,
+                 "gid":183,
                  "height":32,
                  "id":2,
                  "name":"Bub",
@@ -104,205 +104,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":273,
-                 "height":16,
-                 "id":25,
-                 "name":"Town History",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-hackbook"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":132,
-                 "y":226
-                }, 
-                {
-                 "class":"",
-                 "gid":2147483919,
-                 "height":16,
-                 "id":26,
-                 "name":"Math",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-math"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":203,
-                 "y":263
-                }, 
-                {
-                 "class":"",
-                 "gid":272,
-                 "height":16,
-                 "id":31,
-                 "name":"Bits & Bytes",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-bitsbytes"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":173,
-                 "y":257
-                }, 
-                {
-                 "class":"",
-                 "gid":273,
-                 "height":16,
-                 "id":32,
-                 "name":"Entities 1",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-entities1"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":201,
-                 "y":165
-                }, 
-                {
-                 "class":"",
-                 "gid":2147483920,
-                 "height":16,
-                 "id":33,
-                 "name":"Entities 2",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-entities2"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":230,
-                 "y":161
-                }, 
-                {
-                 "class":"",
-                 "gid":271,
-                 "height":16,
-                 "id":34,
-                 "name":"Entities 3",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-entities3"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":264,
-                 "y":163
-                }, 
-                {
-                 "class":"",
-                 "gid":273,
-                 "height":16,
-                 "id":35,
-                 "name":"Entities 4",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-entities4"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":298,
-                 "y":163
-                }, 
-                {
-                 "class":"",
-                 "gid":271,
-                 "height":16,
-                 "id":39,
-                 "name":"Hex Edits 1",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-hexediting"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":328,
-                 "y":166
-                }, 
-                {
-                 "class":"",
-                 "gid":274,
-                 "height":16,
-                 "id":40,
-                 "name":"Red Letters",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-redletters"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":392,
-                 "y":260
-                }, 
-                {
-                 "class":"",
-                 "gid":274,
-                 "height":16,
-                 "id":41,
-                 "name":"Book Origins",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-bookorigins"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":366,
-                 "y":262
-                }, 
-                {
-                 "class":"",
-                 "gid":2147483920,
-                 "height":16,
-                 "id":43,
-                 "name":"Hex Edits 2",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-hexediting2"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":16,
-                 "x":333,
-                 "y":263
-                }, 
-                {
-                 "class":"",
-                 "gid":233,
+                 "gid":261,
                  "height":40,
                  "id":49,
                  "name":"Alfonso",
@@ -325,7 +127,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":253,
+                 "gid":281,
                  "height":40,
                  "id":50,
                  "name":"Bert",
@@ -345,11 +147,10 @@
                  "width":40,
                  "x":360,
                  "y":220
-                },
-            
+                }, 
                 {
                  "class":"",
-                 "gid":222,
+                 "gid":250,
                  "height":32,
                  "id":52,
                  "name":"Jackob",
@@ -374,6 +175,205 @@
                  "width":32,
                  "x":358,
                  "y":241
+                }, 
+                {
+                 "class":"",
+                 "gid":301,
+                 "height":16,
+                 "id":25,
+                 "name":"Town History",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-hackbook"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":132,
+                 "y":226
+                }, 
+                {
+                 "class":"",
+                 "gid":2147483947,
+                 "height":16,
+                 "id":26,
+                 "name":"Math",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-math"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":203,
+                 "y":263
+                }, 
+                {
+                 "class":"",
+                 "gid":300,
+                 "height":16,
+                 "id":31,
+                 "name":"Bits & Bytes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bitsbytes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":173,
+                 "y":257
+                }, 
+                {
+                 "class":"",
+                 "gid":301,
+                 "height":16,
+                 "id":32,
+                 "name":"Entities 1",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-entities1"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":201,
+                 "y":165
+                }, 
+                {
+                 "class":"",
+                 "gid":2147483948,
+                 "height":16,
+                 "id":33,
+                 "name":"Entities 2",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-entities2"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":230,
+                 "y":161
+                }, 
+                {
+                 "class":"",
+                 "gid":299,
+                 "height":16,
+                 "id":34,
+                 "name":"Entities 3",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-entities3"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":264,
+                 "y":163
+                }, 
+                {
+                 "class":"",
+                 "gid":301,
+                 "height":16,
+                 "id":35,
+                 "name":"Entities 4",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-entities4"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":298,
+                 "y":163
+                }, 
+                {
+                 "class":"",
+                 "gid":299,
+                 "height":16,
+                 "id":39,
+                 "name":"Hex Edits 1",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-hexediting"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":328,
+                 "y":166
+                }, 
+                {
+                 "class":"",
+                 "gid":2147483948,
+                 "height":16,
+                 "id":43,
+                 "name":"Hex Edits 2",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-hexediting2"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":333,
+                 "y":263
+                }, 
+                {
+                 "class":"",
+                 "gid":302,
+                 "height":16,
+                 "id":40,
+                 "name":"Red Letters",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-redletters"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":392,
+                 "y":260
+                },
+            
+                {
+                 "class":"",
+                 "gid":302,
+                 "height":16,
+                 "id":41,
+                 "name":"Book Origins",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bookorigins"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":366,
+                 "y":262
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -466,27 +466,27 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":209,
+         "firstgid":237,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":233,
+         "firstgid":261,
          "source":"..\/entities\/entity-alfonso.json"
         }, 
         {
-         "firstgid":251,
+         "firstgid":279,
          "source":"..\/entities\/entity-bert.json"
         }, 
         {
-         "firstgid":269,
+         "firstgid":297,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":271,
+         "firstgid":299,
          "source":"..\/entities\/entity-journal.json"
         }],
  "tilewidth":32,

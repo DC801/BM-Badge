@@ -77,7 +77,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484155,
+                 "gid":2147484167,
                  "height":48,
                  "id":25,
                  "name":"Goose",
@@ -95,7 +95,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":706,
+                 "gid":718,
                  "height":32,
                  "id":28,
                  "name":"Cat",
@@ -135,7 +135,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484513,
+                 "gid":2147484525,
                  "height":48,
                  "id":106,
                  "name":"Timmy",
@@ -163,7 +163,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":890,
+                 "gid":902,
                  "height":16,
                  "id":110,
                  "name":"Sports",
@@ -181,7 +181,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":891,
+                 "gid":903,
                  "height":16,
                  "id":112,
                  "name":"Mage Facts",
@@ -199,7 +199,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":889,
+                 "gid":901,
                  "height":16,
                  "id":113,
                  "name":"Weird Facts",
@@ -268,9 +268,21 @@
                 }, 
                 {
                  "class":"",
-                 "gid":889,
+                 "height":0,
+                 "id":129,
+                 "name":"zappy-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":593,
+                 "y":254
+                }, 
+                {
+                 "class":"",
+                 "gid":905,
                  "height":16,
-                 "id":128,
+                 "id":130,
                  "name":"HP35c Man",
                  "properties":[
                         {
@@ -283,18 +295,6 @@
                  "width":16,
                  "x":585,
                  "y":330
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":129,
-                 "name":"zappy-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":593,
-                 "y":254
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -437,7 +437,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":130,
+ "nextobjectid":131,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -475,100 +475,100 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":285,
+         "firstgid":297,
          "source":"..\/entities\/entity-lightning_boy.json"
         }, 
         {
-         "firstgid":321,
+         "firstgid":333,
          "source":"..\/entities\/entity-lightning_boy2.json"
         }, 
         {
-         "firstgid":357,
+         "firstgid":369,
          "source":"..\/entities\/entity-cleo.json"
         }, 
         {
-         "firstgid":381,
+         "firstgid":393,
          "source":"..\/entities\/entity-old_lady.json"
         }, 
         {
-         "firstgid":396,
+         "firstgid":408,
          "source":"..\/entities\/entity-verthandi.json"
         }, 
         {
-         "firstgid":420,
+         "firstgid":432,
          "source":"..\/entities\/entity-trekkie.json"
         }, 
         {
-         "firstgid":441,
+         "firstgid":453,
          "source":"..\/entities\/entity-tailor.json"
         }, 
         {
-         "firstgid":471,
+         "firstgid":483,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":489,
+         "firstgid":501,
          "source":"..\/entities\/entity-baker.json"
         }, 
         {
-         "firstgid":507,
+         "firstgid":519,
          "source":"..\/entities\/entity-goose.json"
         }, 
         {
-         "firstgid":549,
+         "firstgid":561,
          "source":"..\/entities\/entity-marta.json"
         }, 
         {
-         "firstgid":573,
+         "firstgid":585,
          "source":"..\/entities\/entity-dragon_skull.json"
         }, 
         {
-         "firstgid":609,
+         "firstgid":621,
          "source":"..\/entities\/entity-ssen.json"
         }, 
         {
-         "firstgid":627,
+         "firstgid":639,
          "source":"..\/entities\/entity-pipscat.json"
         }, 
         {
-         "firstgid":726,
+         "firstgid":738,
          "source":"..\/entities\/entity-bookcase.json"
         }, 
         {
-         "firstgid":734,
+         "firstgid":746,
          "source":"..\/entities\/entity-rake.json"
         },
     
         {
-         "firstgid":735,
+         "firstgid":747,
          "source":"..\/entities\/entity-broom.json"
         }, 
         {
-         "firstgid":736,
+         "firstgid":748,
          "source":"..\/entities\/entity-bracelet.json"
         }, 
         {
-         "firstgid":737,
+         "firstgid":749,
          "source":"..\/entities\/entity-book.json"
         }, 
         {
-         "firstgid":742,
+         "firstgid":754,
          "source":"..\/entities\/entity-wand.json"
         }, 
         {
-         "firstgid":743,
+         "firstgid":755,
          "source":"..\/tilesets\/tileset-ring_zero.json"
         }, 
         {
-         "firstgid":863,
+         "firstgid":875,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":865,
+         "firstgid":877,
          "source":"..\/entities\/entity-eye_faerie.json"
         }, 
         {
-         "firstgid":889,
+         "firstgid":901,
          "source":"..\/entities\/entity-journal.json"
         }],
  "tilewidth":32,

@@ -615,6 +615,9 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - [ ] Put collision on the debris at the doors
 - [ ] `go up` synonym of `go north`?
 - [ ] Make the "password incorrect" bit more clear as to the current mode you're in
+- [ ] Characters in the rooms post-game can be freed?
+	- [ ] Debris-less versions of rooms?
+	- [ ] Doors work?
 
 - [~] Redo menu save management
 	- [ ] "Manage slots" rather than "save to current" and "load arbitrary"
