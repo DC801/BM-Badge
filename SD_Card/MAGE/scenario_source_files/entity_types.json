@@ -3154,8 +3154,8 @@
 					"flip_x": false
 				},
 				{
-					"tileid": 17,
-					"flip_x": true
+					"tileid": 19,
+					"flip_x": false
 				},
 				{
 					"tileid": 0,

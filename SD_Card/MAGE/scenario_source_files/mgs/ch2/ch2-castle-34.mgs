@@ -89,11 +89,69 @@ ch2-interact-pantryshelf {
 		PLAYER "Looks like a lot of dry and canned goods."
 	}
 }
-ch2-interact-dishshelf {
+ch2-iron-content {
+	pause entity Clara on_tick;
+	turn entity Clara toward entity "%PLAYER%";
+	turn entity "%PLAYER%" toward entity Clara;
 	show dialog {
-		PLAYER "Plates, cups, and tablecloths. How many place settings is this?"
+		PLAYER "Yeah, so I need a plate with high iron content. For reasons."
+		Clara "I mean... I guess there's the fancy orange ones from Hanoi. Oranges, browns, and reds are almost always an iron oxide glaze."
+		PLAYER "Orange plates from Hanoi. Okay. Where are they?"
+		Clara "Well, you're not gonna like this, but... you see that jukebox in the corner?"
 	}
-	// TODO: add a bit to lead to to the Hanoi stuff
+	turn entity "%PLAYER%" toward entity PlateMover90;
+	show dialog {
+		PLAYER "Yeah."
+	}
+	if (flag ch2-plate-firstlook is true) {
+		show dialog {
+			Clara "Well, the plates are in there."
+			PLAYER "The PlateMover 9000?"
+		}
+	} else {
+		show dialog {
+			Clara "Well, that thing is a PlateMover 9000. The plates are in there."
+		}
+		set flag ch2-plate-firstlook to true;
+	}
+	turn entity "%PLAYER%" toward entity Clara;
+	show dialog {
+		PLAYER "...Why?"
+		Clara "Don't ask me. It's part of this \"automated catering\" party gimmick my boss has been developing."
+		"Problem is, he's out of town for a few days, and I don't know where he keeps the tokens for that thing."
+		"If you're lucky, there's a token inserted already, waiting for you to choose which plate you want it to dispense. But without more tokens, it'll only dispense one."
+		PLAYER "I only need one. But I need it to have high iron content, and I need it to match this phonograph needle...."
+		Clara "You need the plate to match the size of a 12\" vinyl record?"
+		PLAYER "I hadn't thought about that, but probably, yeah."
+		Clara "Oh, no."
+		"Well, the good news: we do have a plate large enough. The #7. The bad news...."
+		"...the #7 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
+		"...Aaaaand the plates are fragile enough that you can't stack heavier ones on top of lighter ones."
+		PLAYER "...Oh, no."
+		Clara "Yeah, so... go on up to the PlateMover 9000 and... uh, good luck."
+	}
+	set flag ch2-jukebox-backstory to true;
+	unpause entity Clara on_tick;
+}
+ch2-interact-dishshelf {
+	if (
+		flag ch2-jukebox-backstory is true
+		|| variable ch2-storyflag-round is < 2
+	) {
+		show dialog {
+			PLAYER "Plates, cups, and tablecloths. How many place settings is this?"
+		}
+	} else {
+		show dialog {
+			PLAYER "Hmm. How do I tell which plates have high iron content?"
+		}
+		pause entity Clara on_tick;
+		turn entity Clara toward entity "%PLAYER%";
+		show dialog {
+			Clara "You need to tell what now?"
+		}
+		copy ch2-iron-content;
+	}
 }
 ch2-interact-winerack {
 	show dialog {
@@ -102,49 +160,88 @@ ch2-interact-winerack {
 }
 
 interact-ch2-clara {
-	copy interrupt-walk;
-	if (flag ch2-clara-backstory is true) {
-		show dialog {
-			SELF "Holy crap -- a new person!"
-			PLAYER "Yup, that's me."
+	if (variable ch2-storyflag-round is < 2) {
+		copy interrupt-walk;
+		if (flag ch2-clara-backstory is true) {
+			show dialog {
+				SELF "Holy crap -- a new person!"
+				PLAYER "Yup, that's me."
+			}
+			set flag ch2-clara-backstory to true;
+		} else {
+			show dialog {
+				SELF "I'm new around here. I gotta say, this has been an interesting first week of work."
+			}
 		}
-		set flag ch2-clara-backstory to true;
+		copy resume-walk;
+	} else if (flag ch2-jukebox-backstory is true) {
+		show dialog {
+			SELF "(TODO: generic post-Hanoi response)"
+		}
 	} else {
-		show dialog {
-			SELF "I'm new around here. I gotta say, this has been an interesting first week of work."
-		}
+		copy ch2-iron-content;
+		set flag ch2-jukebox-backstory to true;
 	}
-	// TODO: add a bit to lead to to the Hanoi stuff
-	copy resume-walk;
 }
 
 /* ---------- HARDDRIVE (ADMIN) ---------- */
 
 ch2-touch-plate {
-	if (flag ch2-plate-firstlook is false) {
-		show dialog {
-			PLAYER "This thing is a PlateMover 90?"
-			Clara "Oh, it's actually a PlateMover 9000. It's so old, the last few numbers have worn off."
-			"But it was supposed to be this high tech plate storage and organization machine."
-			PLAYER "It looks like a jukebox."
-			Clara "It acts like a jukebox."
+	if (variable ch2-storyflag-round is < 2) {
+		if (flag ch2-plate-firstlook is false) {
+			show dialog {
+				PLAYER "This thing is a PlateMover 90?"
+				Clara "Oh, it's actually a PlateMover 9000. It's so old, the last few numbers have worn off."
+				"But it was supposed to be this high tech plate storage and organization machine."
+				PLAYER "It looks like a jukebox."
+				Clara "It acts like a jukebox."
+			}
+			set flag ch2-plate-firstlook to true;
 		}
-		set flag ch2-plate-firstlook to true;
+	} else if (flag ch2-jukebox-backstory is false) {
+		show dialog {
+			PLAYER "There are plates in here, but... how do I know which ones have high iron content?"
+		}
+		pause entity Clara on_tick;
+		turn entity Clara toward entity "%PLAYER%";
+		turn entity "%PLAYER%" toward entity Clara;
+		show dialog {
+			Clara "High iron content?"
+			PLAYER "Yeah, so I need a plate with high iron content. For reasons."
+			Clara "Well, those are the fancy orange plates from Hanoi. Oranges, browns, and reds are almost always an iron oxide glaze."
+			PLAYER "Cool. So, how do I get the plates out?"
+			Clara "Well... you insert a token, and the PlateMover 9000 will let you move the grabber arm to select a plate for it to dispense."
+			PLAYER "That's very convoluted."
+			Clara "Sorry."
+			"So... I don't know where the tokens are kept, and my boss is out of town. So unless there's a token in there already...."
+		}
+		turn entity "%PLAYER%" toward entity PlateMover90;
+		show dialog {
+			PLAYER "Looks like there is."
+			Clara "Oh, good. So it can dispense one plate, but only one. You needed a plate with high iron content?"
+		}
+		turn entity "%PLAYER%" toward entity Clara;
+		show dialog {
+			PLAYER "Yeah. I need to combine it with a phonograph needle to approximate a hard drive."
+			Clara "You need a plate that'll match the size of a 12\" vinyl record?"
+			PLAYER "I hadn't thought about that, but probably, yeah."
+			Clara "Oh, no."
+			"Well, the good news: we do have a plate large enough. The #7. The bad news...."
+			"...the #7 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
+			"...Aaaaand the plates are fragile enough that you can't stack heavier ones on top of lighter ones."
+			PLAYER "...Oh, no."
+			Clara "Yeah, so... uh, good luck with that."
+		}
+		set flag ch2-jukebox-backstory to true;
+		unpause entity Clara on_tick;
 	} else if (
 		flag ch2-carrying-plate is true
 		|| flag ch2-installed-plate is true
-		|| variable ch2-storyflag-round is < 2
 	) {
 		show dialog {
-			PLAYER "(TODO: Generic plate jukebox dialog.)"
+			PLAYER "A jukebox seems like a really bad way to manage dishes."
+			Clara "You can say that again."
 		}
-	} else if (flag ch2-hanoi-backstory is false) {
-		show dialog {
-			PLAYER "(TODO: ask how to get a plate)"
-			"(TODO: and have a cutscene introducing the plate minigame)"
-		}
-		set flag ch2-hanoi-backstory to true;
-		copy start-hanoi;
 	} else {
 		show dialog {
 			PLAYER "Well, let's try to get that #7 plate out of there."

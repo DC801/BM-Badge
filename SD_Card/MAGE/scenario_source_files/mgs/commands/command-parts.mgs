@@ -372,9 +372,9 @@ command-parts-plate {
 		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the plate to make a CPU. You're good." }
 	} else if (flag ch2-carrying-plate is true) {
 		if (flag ch2-carrying-needle is false) {
-			show serial dialog { "<m>LAMBDA</>: You've got a good spinnable <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
+			show serial dialog { "<m>LAMBDA</>: You've got a good <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them.\n\tHuh, so it seems the plate has enough iron content in the ceramic for this to actually work. Not that I was worried...." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them.\n\tHuh, I can confirm that the iron content of the plate is high enough for this to actually work. Not that I was worried...." }
 		}
 	} else {
 		copy ch2-describe-plate;

@@ -27,12 +27,12 @@ serial dialog ch2-describe-mouse {
 }
 serial dialog ch2-describe-harddrive {
 	"<m>LAMBDA</>: As I said before, to make a <m>HARD DRIVE</> we'll need two things:"
-	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
+	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate with high iron content in its glaze. <m>Ask the kitchen <m>staff</> if they have a plate like that."
 	"\tNext, a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
 	// see aftermath of each usage for an additional line
 }
 serial dialog ch2-describe-plate { // some duplicate text; see above
-	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
+	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>PLATE</>. But not just any plate -- we need a plate with high iron content in its glaze. <m>Ask the kitchen staff</> if they have a plate like that."
 }
 serial dialog ch2-describe-needle { // some duplicate text; see above
 	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
@@ -466,7 +466,7 @@ look-harddrive {
 look-plate {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>plate</>: a normal dinner plate, with inlaid gold around the rim."
+		"You look at the <m>plate</>: a fancy orange dinner plate, with inlaid gold around the rim."
 	}
 }
 look-needle {
