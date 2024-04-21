@@ -611,6 +611,10 @@ We should take advantage of the badge hardware itself, especially since hex edit
 	- Should feel like a throwaway moment
 - Setting up the mainframe's networking
 - Mainframe needs software bodging because the hardware is so janky
+- [ ] Multiple-choice fall through should be more thought out -- which bits get repeated again, e.g. draw spacer?
+- [ ] Put collision on the debris at the doors
+- [ ] `go up` synonym of `go north`?
+- [ ] Make the "password incorrect" bit more clear as to the current mode you're in
 
 - [~] Redo menu save management
 	- [ ] "Manage slots" rather than "save to current" and "load arbitrary"

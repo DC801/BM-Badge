@@ -441,14 +441,8 @@ ch2-lambda-person-templeton {
 		"<c>YOU</>: Tell me about Templeton."
 		" "
 	}
-	if (flag ch2-seen-room-13 is false) {
-		show serial dialog {
-			"<m>LAMBDA</>: Templeton, Templeton. One of King Gibson's advisors, I think. Or was he a giant blancmange? Sorry, I guess I don't know much about that guy."
-		}
-	} else {
-		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
-		}
+	show serial dialog {
+		"<m>LAMBDA</>: Templeton, Templeton. One of King Gibson's advisors, I think. Or was he a giant blancmange? Sorry, I guess I don't know much about that guy."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -465,7 +459,7 @@ ch2-lambda-person-sebastian {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Sebastian's heart is in the right place, but he's stubborn enough and brash enough that it can be hard to remember that, particularly if he has an opinion about something. But there's a reason King Gibson keeps him around, after all. He's good at his job."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -733,7 +727,10 @@ ch2-lambda-person-rocco {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Rocco builds and maintains the castle's computers. The normal-sized computers, I mean. I guess once in a while he also works on the castle itself. The castle is a computer, too, you know. That's why there's circuitry all over the place."
+			"\tHuh, I just remembered this old project we did together a few years ago. It was this tiny LED screen and some random SOC on this board he drew up. We got a pair of really cheap joysticks, and I programmed a bunch of little arcade games for it."
+			"\tAw, man. He and I used to make a lot of cool stuff. I'd do the software half, he the hardware half. I... I miss those times. How did I forget about that?"
+			"\tI guess it's been a while since I've seen him in person. I hope he's doing okay."
 		}
 	}
 	goto ch2-lambda-topic-person-s;

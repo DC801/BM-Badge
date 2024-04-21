@@ -967,6 +967,7 @@ ch2-terminal-message-test-success {
 			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
 		// TODO: what should happen if you type "MAN" while the dialog is still up?
+		// (Currently "MAN" doesn't go through)
 		turn serial control on;
 		show serial dialog spacer;
 		show serial dialog {
