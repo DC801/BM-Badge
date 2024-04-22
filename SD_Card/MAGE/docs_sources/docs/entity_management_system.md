@@ -5,52 +5,56 @@ next: 'maps.md'
 
 # Entity Management System
 
-To manage entity [animations](animations), you must first upload your [`scenario_source_files`](mage_folder#scenario_source_files) folder to the [web encoder](encoder#web-encoder).
+The Entity Management System is a tool to assign [animations](animations) (created with Tiled) to [character entities](entity_types#character-entity). This allows entity behavior to change its current animation, e.g. walking vs idle, pointing north/east/south/west.
 
-NOTE: Changes you make using these tools are not automatically perpetuated to the `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
+To use the Entity Management System, launch the [web encoder](encoder#web-encoder) and upload your [`scenario_source_files`](mage_folder#scenario_source_files) folder.
+
+::: warning
+Changes you make using these tools are not automatically perpetuated to the encoded `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
 
 1. Click the "Copy" button in the red box to put the new [`entity_types.json`](mage_folder#entity_types-json) content into your clipboard.
 2. Manually paste into your [`entity_types.json`](mage_folder#entity_types-json) file, replacing all previous content.
-3. Run the encoder again to perpetuate the changes to a new `game.dat`.
+3. Run the encoder again.
+:::
 
 ## New `entity_type`
 
-In the "Entity Type Editor," type the name of the new `entity_type` ([character entity](entity_types#character-entity)) you wish to create, then click "Create."
+To assign animations to a new [character entity](entity_types#character-entity):
 
-You will then be given a drop-down list of tilesets that the encoder found. Select the one you want your new entity to use.
+1. Place a tile from the tileset somewhere in one of your game maps. This ensures the encoder will find it.
+2. Open the Entity Management System.
+3. In the "Entity Type Editor," type the name of the new `entity_type` (character entity) you wish to create, then click "Create."
+4. Select the tileset you wish to use from the drop-down list.
+5. The animations pane and tileset pane will now appear.
 
-Tilesets will not appear in this list unless they are actually used by the game in some way, so to guarantee they appear, you might want to place them into one of your game maps first.
+## Existing `entity_type`
 
-The animation pane and tileset pane will now appear.
+To edit an existing `entity_type` ([character entity](entity_types#character-entity)), choose one with the drop-down list, and then the animation and tileset panes will appear.
 
-## Edit Existing `entity_type`
+## Animations Pane
 
-To instead edit an existing `entity_type` ([character entity](entity_types#character-entity)), use the drop-down list to choose one, and then the animation and tileset panes will appear.
+![the web encoder's animations pane](media/mge-encoder-animation-pane.gif)
 
-## Animation Pane
-
-![the web encoder's animation pane](media/mge-encoder-animation-pane.gif)
-
-There is one animation tile slot for each cardinal direction: north, east, south, west.
-
-Each animation tile can be horizontally or vertically flipped, as well — simply click the arrows underneath the tile to flip it. (Click again to reverse the flip.)
-
-To add an additional animation, press the "Add Animation" button. To remove one, click the red X.
-
-Entities should have idle, walk, and action animations at the very least, but you can add more (to a point).
-
-You cannot change animation names with this tool — you must make such changes to [`entity_types.json`](mage_folder#entity_types-json) by hand after you're done with everything else.
+- There is one animation tile slot for each cardinal direction: north, east, south, west.
+- You can click the arrows underneath the tile to horizontally or vertically flip it. Click again to reverse the flip.
+- An entity's first three animations will be interpreted as their idle, walk, and action animations. Each entity should have at least these three.
+	- To add another animation, press the "Add Animation" button at the bottom of the animations pane. Note that the Entity Management System will not add more after a certain point, but more may be added by hand, and these *can* be managed with the Entity Management System.
+	- Click the red X at the right of an animation to remove it.
+- Animation names cannot be changed with this tool.
+	- Scripts cannot target animations by name, so naming them is not strictly necessary. It's often useful to be able to identify which one is which, however, so you may want to edit their names by hand.
 
 ## Tileset Pane
 
 ![the web encoder's tileset pane](media/mge-encoder-tileset-pane.png)
 
-The tileset pane will show every tile in the tileset JSON file, and if any tiles contain animation data, they will have a red outline. (They should also be moving.)
+The tileset pane will show every tile in the tileset JSON file. Animation tiles are outlined in red.
 
-You can change the tileset at any time by using the drop-down list.
+You can change the tileset at any time with the drop-down list.
 
-## To Assign Animations
+## Assigning Animations
 
-Animations will use the first tile in the tileset by default. To assign tileset tiles to animation tile slots, click on animation tile in the animation pane (on the left), then click a tileset tile in the tileset pane (on the right).
+Animations will use the first tile in the tileset by default.
 
-The selected tiles should have a green outline.
+To assign tiles to entity animation slots, click on animation tile in the animations pane (on the left), then click a tileset tile in the tileset pane (on the right).
+
+Selected tiles are outlined in green.

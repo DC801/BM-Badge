@@ -6,7 +6,7 @@ tags: [ 'name', 'class', 'direction', 'entities', 'on_tick', 'on_interact', 'on_
 
 #updateme
 
-This is the standard "hackable" data for entities in the DC801 black mage game. You can set all these properties with Tiled or with scripts from within the MGE.
+This is the standard "hackable" data for entities in the MGE. You can set all these properties with Tiled or with scripts from within the MGE.
 
 ## Standard
 
@@ -44,7 +44,7 @@ If you don't want an entity to have an `on_tick` script, you can leave this prop
 
 **`is_glitched` (bool)** — This gets written into a render flag on the "direction" byte. If checked, the entity will appear to be scrambled and glitchy within the MGE.
 
-**`is_debug` (bool)** — This indicates whether the entity is hidden when [debug mode](debug_tools#debug-mode) is off. (While this can be toggled in the hex editor within BMG2020, in practice it will not actually affect anything in-game, as the map is reloaded afresh when debug mode is toggled.)
+**`is_debug` (bool)** — This indicates whether the entity is hidden when [debug mode](debug_tools#debug-mode) is off. (While this can be toggled in the hex editor within the MGE, in practice it will not actually affect anything in-game, as the map is reloaded afresh when debug mode is toggled.)
 
 **`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.)
 

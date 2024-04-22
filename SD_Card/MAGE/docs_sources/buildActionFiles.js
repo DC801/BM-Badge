@@ -72,9 +72,9 @@ var colorCatMap = {
 	b: "bracket"
 };
 var actionsIntro = [
-	"**Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [entities](entities).",
-	"They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and are indicated with \"SCREAMING_SNAKE_CASE.\" In the encoded game, they are 8 bytes apiece.",
-	"Each action requires specific JSON properties, but through [MGS Natlang](mgs/mgs_natlang), they can instead be written as one or more \"natural language\" patterns which can then be converted into JSON.",
+	"**Actions** are a basic element of the Mage Game Engine (MGE).",
+	"Actions are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and their names are written in \"SCREAMING_SNAKE_CASE.\" In the final encoded data, they are 8 bytes apiece.",
+	"Through [MGS Natlang](mgs/mgs_natlang), they can be written as one or more \"natural language\" patterns.",
 ];
 
 var actionCategoryText = {
@@ -143,8 +143,7 @@ var actionText = {
 	"LOAD_MAP": {
 		"category": "Game Management",
 		"info": [
-			"Except for the player's name, all [entity properties](../entity_properties) are reset to their original values when a new [map is loaded](../map_loads).",
-			"If this action is told to load the current map, the current map will be reset. This behavior is equivalent to pressing `XOR` + `MEM3`.",
+			"See: [Map Loads](../map_loads)",
 			"For most normal [door](../techniques/doors) behavior, you will probably want to [set the warp state](../actions/SET_WARP_STATE) before using the this action."
 		]
 	},
@@ -154,14 +153,6 @@ var actionText = {
 		"info": [
 			"This action saves the [game state](../variables#save_data) into the current slot (the last slot loaded).",
 			"It is not possible to write save data into an arbitrary slots, nor is it possible to copy data from one save slot into another.",
-			"Things that are saved:",
-`- player name (string)
-- \`MEM\` button offsets (the player can change the \`MEM\` button mapping)
-- current map id (NOTE: this is saved, but not currently used upon load)
-- the warp state string
-- hex editor clipboard contents (up to 32 bytes)
-- save flags (booleans)
-- script variables (integers)`
 		]
 	},
 	"SLOT_LOAD": {
@@ -181,7 +172,6 @@ var actionText = {
 		"category": "Game Management",
 		"info": [
 			"Plays the named [dialog](../dialogs).",
-			"A script cannot execute any other actions until the dialog is entirely finished. To give a [cutscene](../techniques/cutscenes) sophisticated choreography, you will need to either split the dialog into multiple pieces or prepare additional scripts to manage concurrent behavior.",
 			"While a dialog screen is showing, the player can only advance to the next dialog message or choose a multiple choice option within that dialog (if any); the player cannot hack, interact with another [entity](../entities), move, etc.",
 			"This action is also available as a [combination block](../mgs/combination_block): [show dialog block](../mgs/dialog_block#show-dialog-block).",
 			"A script can close an open dialog with [CLOSE_DIALOG](../actions/CLOSE_DIALOG)."
@@ -206,7 +196,7 @@ var actionText = {
 		"info": [
 			"Turns on (or off) a specific LED light on the badge. The lights immediately around the screen can only be controlled this way when the lights are set to manual mode (see [SET_LIGHTS_CONTROL](../actions/SET_LIGHTS_CONTROL)); otherwise, those lights are strictly used for hex editor features.",
 			"If working with JSON, you can set the `lights` property to an array of strings instead of a single string if you wish to control multiple lights in one action. (Currently, lights must be toggled individually in MGS Natlang.)",
-			"NOTE: If you turn a light off and on during the same frame, the light will appear to flicker.",
+			"NOTE: If you turn a light off and on during the same frame, the light may appear to flicker on the real badge.",
 			"See [LED IDs](../enums#led-ids) for a list of valid `lights` values."
 		]
 	},
@@ -287,16 +277,10 @@ var actionText = {
 			"This action unregisters an \"alias\" for a [command](commands). See: [REGISTER_SERIAL_DIALOG_COMMAND_ALIAS](#register_serial_dialog_alias)"
 		]
 	},
-	// "SET_HEX_CURSOR_LOCATION": {
-	// 	"category": "Hex Editor",
-	// 	"info": [
-	// 		"??? (verify this is even implemented; BMG2020 does not use it anywhere)"
-	// 	]
-	// },
 	"SET_HEX_EDITOR_STATE": {
 		"category": "Hex Editor",
 		"info": [
-			"Setting this to true opens the [hex editor](../hex_editor). (Does the hex editor need to be enabled?) #verifyme "
+			"Setting this to true opens the [hex editor](../hex_editor). (Does the hex editor need to be enabled?) #researchme "
 		]
 	},
 	"SET_HEX_EDITOR_DIALOG_MODE": {
@@ -309,13 +293,13 @@ var actionText = {
 	"SET_HEX_EDITOR_CONTROL": {
 		"category": "Hex Editor",
 		"info": [
-			"This action enables or disables player access to to the [hex editor](../hex_editor). This is on by default."
+			"This action enables or disables player access to to the [hex editor](../hex_editor). It is enabled by default."
 		]
 	},
 	"SET_HEX_EDITOR_CONTROL_CLIPBOARD": {
 		"category": "Hex Editor",
 		"info": [
-			"This action enables or disables the clipboard and copy functionality within the [hex editor](../hex_editor). This is on by default. (? #verifyme)"
+			"This action enables or disables the clipboard and copy functionality within the [hex editor](../hex_editor). It is enabled by default. (? #verifyme)"
 		]
 	},
 	"CHECK_VARIABLE": {
@@ -763,9 +747,9 @@ var actionText = {
 	"SET_SCRIPT_PAUSE": {
 		"category": "Script Control",
 		"info": [
-			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script during its [`on_interact`](../script_slots#on-interact) event.",
+			"Pauses or unpauses a [script](../scripts). In practice, this is most useful for temporarily pausing an [entity](../entities)'s [`on_tick`](../script_slots#on-tick) script during an [`on_interact`](../script_slots#on-interact) event.",
 			"Entity variant: Any entity name can be used in all the normal ways ([`%PLAYER%`](../relative_references#player) etc.). Scripts slots for these are `on_tick`, `on_interact`, and [`on_look`](../script_slots#on-look).",
-			"Map variant: Script slots for these are [`on_load`](../script_slots#on-load), [`on_tick`](../script_slots#on-tick), and [on_command](../commands)."
+			"Map variant: Script slots for these are [`on_load`](../script_slots#on-load), [`on_tick`](../script_slots#on-tick), and [`on_command`](../commands)."
 		]
 	}
 };

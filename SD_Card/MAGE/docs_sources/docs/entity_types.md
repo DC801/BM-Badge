@@ -4,31 +4,29 @@ tags: [ 'entity_type', 'entities', 'PrimaryIdType', 'animations', 'PrimaryId', '
 
 # Entity Types
 
-In the MGE, there are three types of [entities](entities). Each have a `PrimaryIdType`:
+In the MGE, there are three types of [entities](entities). Each has a `PrimaryIdType` (determined by the type of tile being placed):
 
 - `0` = [tile](#tile-entity) (`tileset`)
 - `1` = [animation](#animation-entity) (`animation`)
 - `2` = [character](#character-entity) (`entity_type`)
 
-The an entity's `PrimaryIdType` is determined by the properties of the tile being placed in a Tiled [map](maps).
+For the first two types (tile and animation), the tile will rotate when the entity changes which direction it is "facing," whereas the last type (character) will instead choose the correct [animation](animations) among those it was [assigned](tilesets/entity_management_system) (north, south, east, or west). Therefore entities that are meant to have standard character animations (like the sheep below) or that need to retain their appearance when moving around the [map](maps) (like the rake below) *must* be the third type.
 
-One key difference between the three entity types: for the first two types (tile and animation), the tile will rotate when the entity changes which direction it is "facing," whereas the last type (character) will instead choose the correct [animation](animations) among those it was [assigned](tilesets/entity_management_system) (north, south, east, or west). Therefore entities that are meant to have standard character animations (like the sheep below) or that need to retain their appearance when moving around the map (like the rake below) *must* be the third type.
-
-| rotating tiles | assigned animations|
-| --- | --- |
+| Rotating Tiles | Assigned Animations|
+| :-- | :-- |
 | sheep (animation) | sheep (character) |
 | ![rotating rake](media/sheep-rotating.gif) | ![stable rake](media/sheep-stable.gif) |
 | rake (tile) | rake (character) |
 | ![rotating rake](media/rake-rotating.gif) | ![stable rake](media/rake-stable.gif) |
 
-In addition, there is currently no way to [control animations](actions/SET_ENTITY_CURRENT_ANIMATION) with scripts unless the entity is a character entity. (See the the modem and bookcase in BMG2020.)
+In addition, there is currently no way to [control animations](actions/SET_ENTITY_CURRENT_ANIMATION) with scripts unless the entity is a character entity. (See the the modem and bookcase in Chapter 1 of the Black Mage Game.)
 
 ## Tile Entity
 
 If you place a static (unanimated) tile from a [tileset](Tilesets) onto an object layer in a Tiled [map](maps), it will become a **tile entity**.
 
 ::: tip NOTE
-If the tile's `Class` (formerly `Type`) property is something defined within [`entity_types.json`](mage_folder#entity_types-json), it will instead become a [character entity](#character-entity).
+If the tile's `Class` property is defined within [`entity_types.json`](mage_folder#entity_types-json), it will instead become a [character entity](#character-entity).
 :::
 
 - **`PrimaryIdType`**: `0` (`tileset`)
@@ -47,38 +45,38 @@ A common use is to enable interaction behavior for things that aren't themselves
 
 **Disadvantages**: The null entity can be hacked into another tile (presumably one with pixel data), in which case a new object will seemingly appear out of nowhere.
 
-NOTE: Currently you cannot click on transparent pixels in Tiled. To select a null entity, you'll have to use the Layer pallet.
+You cannot click on transparent pixels in Tiled. To select a null entity, you'll need to use the Layers pallet. To move one, change its X and Y values in the properties pane once you've selected it.
 
 ## Animation Entity
 
 If you place a animated tile from a [tileset](tilesets) onto an object layer in a Tiled [map](maps), it will become an **animation entity**.
 
 ::: tip NOTE
-If the tile's `Class` (formerly `Type`) property is something defined within [`entity_types.json`](mage_folder#entity_types-json), it will instead become a [character entity](#character-entity).
+If the tile's `Class` property is defined within [`entity_types.json`](mage_folder#entity_types-json), it will instead become a [character entity](#character-entity).
 :::
 
 - **`PrimaryIdType`**: `1` (`animation`)
 - **`PrimaryId`**: the `id` of the animation the entity is playing
 - **`SecondaryId`**: does nothing
 
-When the game is [encoded](encoder#web-encoder), all animations are basically shoved together into a single list, so the `id` for `PrimaryId` is fairly subject to change at the whim of the encoder. Therefore, you will probably never want to use the `PrimaryId` to choose a specific animation — instead you will place the desired animation tile from a tileset onto a map with Tiled.
+When the game is [encoded](encoder#web-encoder), all animations are shoved together into a single list, so the `id` for `PrimaryId` is regularly subject to change. Therefore, you will never want to use the `PrimaryId` to choose a specific animation.
 
 Animation entities are most useful for animated props, e.g. a water fountain, a torch flickering on a wall, a birthday cake with a moving candle flame. Such entities need not use any of the [entity properties](entity_properties) available to them, though they could.
 
-While NPCs will likely need to be character entities, simpler ones might work perfectly well as animation entities, e.g. WOPR in the BMG2020.
+While NPCs will likely need to be character entities, simpler ones might work perfectly well as animation entities, e.g. WOPR in the Black Mage Game.
 
 ## Character Entity
 
-If you place a tile from a [tileset](tilesets) onto an object layer in a Tiled [map](maps), and the `Class` (formerly `Type`) property of the tile has been defined in [`entity_types.json`](mage_folder#entity_types-json), it will become an **character entity**.
+If you place a tile onto an object layer, and the `Class` (formerly `Type`) property of the tile has been defined in [`entity_types.json`](mage_folder#entity_types-json), it will become an **character entity**.
 
 - **`PrimaryIdType`**: `2` (`entity_type`)
 - **`PrimaryId`**: the `id` of the entity within [`entity_types.json`](mage_folder#entity_types-json)
 - **`SecondaryId`**: does nothing
 
-In scripts, you need not manipulate `PrimaryId` to alter the appearance of a character entity, though there are certainly [script](scripts) that are capable of doing this. Instead, you can use [actions](actions) with the argument `entity_type`, which is the name (string) of the character entity as defined within [`entity_types.json`](mage_folder#entity_types-json). (In the entity's [tileset](tilesets), this is what the property "Type" is set to.)
+You need not manipulate `PrimaryId` to alter the appearance of a character entity. Instead, you can use [actions](actions) that change the `entity_type` value to one of the ones defined within [`entity_types.json`](mage_folder#entity_types-json).
 
-What's special about character entities is that they can have a number of [animations](animations) [assigned](tilesets/entity_management_system) to them and they will switch animations automatically depending on context (walking or not, facing north/south/east/west, etc.), as well as having other attributes, like a permanently assigned portrait image. **NPCs will therefore likely be this type.**
+What's special about character entities is that they can have a number of [animations](animations) [assigned](tilesets/entity_management_system) to them and they will switch animations automatically depending on context (walking or not, facing north/south/east/west, etc.), as well as having other attributes, like a default portrait image. **NPCs will therefore likely be this type.**
 
-In the MGE, character entities will default to their idle animation regardless of whatever specific tile is being used within Tiled. (I.e. if you use a "walking animation" tile for the entity on the Tiled map, the entity will appear to be walking in Tiled, but not within the MGE.)
+In the MGE, character entities will default to their idle animation regardless of the tile that was placed Tiled. (I.e. if you use a "walking animation" tile for the entity on the Tiled map, the entity will appear to be walking in Tiled, but not within the MGE.)
 
-Character entities will face the north by default, but if the tile placed has been [assigned to a NSEW direction and a purpose](tilesets/entity_management_system), the entity will instead face the direction associated with that tile.
+Character entities will face the north by default, but if the tile placed has been [assigned to a NSEW direction and a purpose](tilesets/entity_management_system), the entity will instead face the direction associated with that tile's assignment.

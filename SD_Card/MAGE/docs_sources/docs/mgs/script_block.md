@@ -28,6 +28,7 @@ exampleScript {
   }
   mutate count + 1;
   goto label dejavu;
+  // this script will infinitely loop btw
 }
 ```
 

@@ -62,16 +62,11 @@ Prepare dialog skin(s). For each skin:
 Prepare game behavior. You can either use MGS or JSON for this, or even a mix.
 
 1. For MGS files: write [MGS Natlang](mgs/mgs_natlang). (See the natlang docs!)
-2. For JSON files (note: you must add each JSON file to [`scenario.json`](mage_folder#scenario-json) or the game encoder won't see it):
+2. For JSON files (note: you must also add each JSON file to [`scenario.json`](mage_folder#scenario-json) or the game encoder won't see it):
 	1. Prepare [dialogs](dialogs) inside `scenario_source_files/dialogs/`.
-	1. Prepare [serial dialogs](serial_dialogs) inside `scenario_source_files/serial_dialogs/`.
-	2. Prepare [script](scripts) inside `scenario_source_files/scripts/`.
+	2. Prepare [serial dialogs](serial_dialogs) inside `scenario_source_files/serial_dialogs/`.
+	3. Prepare [scripts](scripts) inside `scenario_source_files/scripts/`.
 		1. Plan logic with flowcharts (optional)
-		2. Example scripts:
-			1. Doorway watchers
-			2. "Walking out the door" behavior
-			3. Entity dialog
-			4. Cutscenes
 
 ## Encode Game
 
@@ -86,8 +81,8 @@ Test the game in one of three ways:
 	2. Drag the new `game.dat` into the browser window.
 	3. Run the game.
 2. Desktop build (see [MGE VM](mge_vm)):
-	2. Move `game.dat` to the right place.
-	3. Run the game.
+	1. Move `game.dat` to the right place.
+	2. Run the game.
 3. Verify on real badge hardware.
 	1. Copy `game.dat` onto a microSD card.
 	2. Insert the microSD card into hardware.

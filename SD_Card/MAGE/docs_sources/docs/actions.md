@@ -4,11 +4,11 @@ prev: script_slots.md
 
 # Actions
 
-**Actions** are a basic element of the DC801 Mage Game Engine (MGE) along with [entities](entities).
+**Actions** are a basic element of the Mage Game Engine (MGE).
 
-They are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and are indicated with "SCREAMING_SNAKE_CASE." In the encoded game, they are 8 bytes apiece.
+Actions are individual units of script behavior, such as a logic check or state management, given one after the other within a single [script](scripts). They each have predefined arguments, and their names are written in "SCREAMING_SNAKE_CASE." In the final encoded data, they are 8 bytes apiece.
 
-Each action requires specific JSON properties, but through [MGS Natlang](mgs/mgs_natlang), they can instead be written as one or more "natural language" patterns which can then be converted into JSON.
+Through [MGS Natlang](mgs/mgs_natlang), they can be written as one or more "natural language" patterns.
 
 ## Game Management
 

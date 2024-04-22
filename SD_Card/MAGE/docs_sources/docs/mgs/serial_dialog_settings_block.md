@@ -24,4 +24,6 @@ Serial dialog settings are applied to serial dialogs in order as the parser enco
 
 Parameters given in a serial dialog's body will override any other settings, however.
 
-Settings only apply to multiple files with the use of [`include!()`](advanced_syntax#include).
+## Serial Dialog Settings are Local!
+
+Settings only apply to scripts within the same file! (They are not global.) They can only apply to multiple files with the use of [`include!()`](advanced_syntax#include).

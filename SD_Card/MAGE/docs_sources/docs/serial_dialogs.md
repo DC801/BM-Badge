@@ -4,19 +4,19 @@ tags: [ 'mgs natlang', 'dialog names', 'actions', 'SHOW_SERIAL_DIALOG', 'given n
 
 # Serial Dialogs
 
-**Serial dialogs** are a means to print messages on the serial [terminal](terminal) (new as of the chapter 2+ version of the MGE).
+**Serial dialogs** are a means to print messages on the serial [terminal](terminal) (new as of the chapter 2 version of the MGE).
 
 They need not function as [character](entities) [dialog](dialogs), strictly speaking; they can be anything, including [debug messages](debug_tools#debug-scripting), ASCII maps, room or character descriptions, etc.
 
 Serial dialogs do nothing on their own. To show them, you must use the [SHOW_SERIAL_DIALOG](actions/SHOW_SERIAL_DIALOG) action within a [script](scripts).
 
-Serial dialog names must be unique throughout the entire game project, though [MGS Natlang](mgs/mgs_natlang) will auto generate dialog names when they are not declared.
+Serial dialog names must be unique throughout the entire game project. ([MGS Natlang](mgs/mgs_natlang) will auto generate dialog names when they are not declared.)
 
 ## Properties
 
 The only required serial dialog property is `messages`, though there are two types of dialog options: multiple choice and free response.
 
-Serial dialog messages are not wrapped by default (unless handled by [MGS Natlang](mgs/mgs_natlang)).
+Serial dialog messages are not auto wrapped unless handled by [MGS Natlang](mgs/mgs_natlang).
 
 ## JSON Structure
 

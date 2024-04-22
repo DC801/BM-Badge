@@ -12,7 +12,7 @@ Turn debug mode off the same way.
 
 ### Debug Entities
 
-Normally, the Mage Game Engine (MGE) omits [entities](entities) with the `is_debug` value of `true` when loading [maps](maps). Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [hex editor](hex_editor), will not appear anywhere on the map, cannot be the target of [script](scripts), etc.  #verifyme When debug mode is activated, however, the [current map is reloaded](map_loads) with `is_debug` entities included.
+Normally, the Mage Game Engine (MGE) omits [entities](entities) with the `is_debug` value of `true` when loading [maps](maps). Such entities effectively do not exist in "production mode," and therefore will not be included in the list of entities in the [hex editor](hex_editor), will not appear anywhere on the map, cannot be the target of [script](scripts), etc. (#verifyme) When debug mode is activated, however, the [current map is reloaded](map_loads) with `is_debug` entities included.
 
 The chapter 1 version of the engine *must* use debug entities to trigger debug scripts, as the serial [terminal](terminal) was not implemented yet, and there was not yet an action to check whether debug mode is on.
 
@@ -26,20 +26,14 @@ With [CHECK_DEBUG_MODE](actions/CHECK_DEBUG_MODE), you can add additional behavi
 
 #### Debug Logging
 
-Example:
+The [`debug!()` macro](mgs/advanced_syntax#debug) was introduced to provide the same behavior but in a much briefer form:
 
-```mgs
+```mgs{2,3,4,6}
 script {
   if (debug mode is true) {
     show serial dialog { "DEBUG INFO!" }
   }
-}
-```
-
-For your convenience, the [`debug!()` macro](mgs/advanced_syntax#debug) was introduced to provide the same behavior but in a much briefer form:
-
-```mgs
-script {
+  // these are equivalent
   debug!("DEBUG INFO")
 }
 ```
@@ -68,7 +62,7 @@ When using scripts to emulate a fresh game state, be sure you have a good list o
 
 While some puzzles can be simplified to accelerate play testing (such as naming the main character "Bub" when they will later need to be named "Bob"), it's much faster to make scripts to solve puzzles for you.
 
-By the end of game development in BMG2020, there was a "Debug Exa" capable of solving or partially solving the majority of puzzles.
+By the end of game development of Chapter 1 of the Black Mage Game, there was a "Debug Exa" capable of solving or partially solving the majority of puzzles.
 
 #### Choreography Controller
 

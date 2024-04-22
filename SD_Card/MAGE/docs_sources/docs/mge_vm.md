@@ -5,7 +5,7 @@ tags: [ 'google drive', 'visual studio code', 'chromium', 'repo' ]
 # MGE VM
 
 ::: warning
-This VM image was prepared for the Black Mage Game 2020 (chapter 1) version of the engine, back before there was a web build to use, so this information will have very limited utility now.
+This VM image was prepared for the Chapter 1 version of the Mage Game Engine (MGE), back before there was a web build to use.
 
 Seriously, just use the [web build](web_build) now! It's so much easier!
 :::
@@ -46,6 +46,6 @@ You could do all your game development in your host OS, but you might have to be
 
 ## Raw Game Data Folders
 
-The VM already contains the raw game data for BMG2020, which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
+The VM already contains the raw game data for the Black Mage Game, which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
 
 The [encoder](encoder) is capable of generating a `game.dat` file from an arbitrary `scenario_source_files/` folder, so having multiple project folders is not a problem.
