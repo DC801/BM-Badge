@@ -1474,7 +1474,7 @@ var linker = function (_actions) {
 			}
 			action.jump_index = labelMap[action.jump_index];
 		} else if (
-			action.action == "GOTO_ACTION_INDEX"
+			action.action === "GOTO_ACTION_INDEX"
 			&& typeof action.action_index === "string"
 		) {
 			if (labelMap[action.action_index] === undefined) {
