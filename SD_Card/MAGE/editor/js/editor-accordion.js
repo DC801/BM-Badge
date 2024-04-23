@@ -43,18 +43,11 @@ Vue.component('editor-accordion', {
 			>_</button>
 		</span>
 	</div>
-	<template v-if="useVShow">
+
+	<template v-if="useVShow || (! collapsed)">
 		<div
 			class="card-body px-3 pt-3 pb-2"
-			v-show="!collapsed"
-		>
-			<slot></slot>
-		</div>
-	</template>
-	<template v-else>
-		<div
-			class="card-body px-3 pt-3 pb-2"
-			v-if="!collapsed"
+			v-show="(! collapsed)"
 		>
 			<slot></slot>
 		</div>
