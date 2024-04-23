@@ -1,4 +1,5 @@
 window.Vue.component('copy-button', {
+	name: 'copy-button',
 	props: {
 		text: {
 			required: true,
@@ -37,6 +38,7 @@ window.Vue.component('copy-button', {
 `});
 
 window.Vue.component('copy-changes', {
+	name: 'copy-changes',
 	props: {
 		changes: {
 			required: true,

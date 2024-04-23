@@ -1,4 +1,5 @@
 Vue.component('editor-accordion', {
+	name: 'editor-accordion',
 	props: {
 		title: {
 			type: String,
@@ -17,7 +18,6 @@ Vue.component('editor-accordion', {
 			default: false,
 		},
 	},
-	name: 'editor-accordion',
 	data: function () {
 		return {
 			collapsed: this.collapsedInitial,

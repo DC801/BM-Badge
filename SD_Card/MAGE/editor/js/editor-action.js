@@ -74,6 +74,7 @@ var actionInputMixin = {
 }
 
 Vue.component('field-text', {
+	name: 'field-text',
 	mixins: [actionInputMixin],
 	props: {
 		type: {
@@ -95,6 +96,7 @@ Vue.component('field-text', {
 `});
 
 Vue.component('field-number', {
+	name: 'field-number',
 	mixins: [actionInputMixin],
 	template: /*html*/`
 <field-text
@@ -105,6 +107,7 @@ Vue.component('field-number', {
 `});
 
 Vue.component('field-select', {
+	name: 'field-select',
 	props: {
 		options: {
 			type: Array,
@@ -130,6 +133,7 @@ Vue.component('field-select', {
 `});
 
 Vue.component('field-bool', {
+	name: 'field-bool',
 	mixins: [actionInputMixin],
 	operations: operations,
 	template: /*html*/`
@@ -141,6 +145,7 @@ Vue.component('field-bool', {
 `});
 
 Vue.component('action-input-operations', {
+	name: 'action-input-operations',
 	mixins: [actionInputMixin],
 	operations: operations,
 	template: /*html*/`
@@ -152,6 +157,7 @@ Vue.component('action-input-operations', {
 `});
 
 Vue.component('action-input-comparisons', {
+	name: 'action-input-comparisons',
 	mixins: [actionInputMixin],
 	comparisons: comparisons,
 	template: /*html*/`
@@ -163,6 +169,7 @@ Vue.component('action-input-comparisons', {
 `});
 
 Vue.component('action-input-buttons', {
+	name: 'action-input-buttons',
 	mixins: [actionInputMixin],
 	buttons: buttons,
 	template: /*html*/`
@@ -174,6 +181,7 @@ Vue.component('action-input-buttons', {
 `});
 
 Vue.component('action-input-directions', {
+	name: 'action-input-directions',
 	mixins: [actionInputMixin],
 	directions: directions,
 	template: /*html*/`
@@ -185,6 +193,7 @@ Vue.component('action-input-directions', {
 `});
 
 Vue.component('action-input-slots', {
+	name: 'action-input-slots',
 	mixins: [actionInputMixin],
 	slots: slots,
 	template: /*html*/`
@@ -196,6 +205,7 @@ Vue.component('action-input-slots', {
 `});
 
 Vue.component('action-input-scripts', {
+	name: 'action-input-scripts',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'scriptsOptions'
@@ -209,6 +219,7 @@ Vue.component('action-input-scripts', {
 `});
 
 Vue.component('action-input-dialogs', {
+	name: 'action-input-dialogs',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'dialogOptions'
@@ -222,6 +233,7 @@ Vue.component('action-input-dialogs', {
 `});
 
 Vue.component('action-input-entity_types', {
+	name: 'action-input-entity_types',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'entityTypesOptions'
@@ -235,6 +247,7 @@ Vue.component('action-input-entity_types', {
 `});
 
 Vue.component('action-input-entities', {
+	name: 'action-input-entities',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'entityNamesOptions'
@@ -248,6 +261,7 @@ Vue.component('action-input-entities', {
 `});
 
 Vue.component('action-input-geometry', {
+	name: 'action-input-geometry',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'geometryOptions'
@@ -261,6 +275,7 @@ Vue.component('action-input-geometry', {
 `});
 
 Vue.component('action-input-maps', {
+	name: 'action-input-maps',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'mapsOptions'
@@ -274,6 +289,7 @@ Vue.component('action-input-maps', {
 `});
 
 Vue.component('action-input-action-type', {
+	name: 'action-input-action-type',
 	mixins: [actionInputMixin],
 	computed: {
 		actions: function () {

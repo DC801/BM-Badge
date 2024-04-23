@@ -8,6 +8,7 @@ var getCharBGCoords = function (charCode) {
 	return -x + 'px ' + -y + 'px';
 };
 Vue.component('font-image', {
+	name: 'font-image',
 	props: {
 		x: {
 			type: Number,

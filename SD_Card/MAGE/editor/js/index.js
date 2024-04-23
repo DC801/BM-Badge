@@ -1,6 +1,7 @@
 window.Vue.component(
 	'inputty',
 	{
+		name: 'inputty',
 		template: '#inputty'
 	}
 );
