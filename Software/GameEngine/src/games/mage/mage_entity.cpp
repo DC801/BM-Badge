@@ -1,4 +1,5 @@
 #include "mage_entity.h"
+#include "mage_animation.h"
 #include "mage_script_control.h"
 
 void RenderableData::UpdateFrom(const MageEntityData& entity)
@@ -22,8 +23,8 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
    if (lastTilesetId != tilesetId)
    {
       //get the difference between entity centers:
-      //entity.position.x += adjustmentPoint.x;
-      //entity.position.y += adjustmentPoint.y;
+      //entity.targetPosition.x += adjustmentPoint.x;
+      //entity.targetPosition.y += adjustmentPoint.y;
       lastTilesetId = tilesetId;
    }
 
@@ -31,17 +32,17 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
    auto halfWidth = uint16_t(tileset->TileWidth / 2);
    auto halfHeight = uint16_t(tileset->TileHeight / 2);
    
-   origin.x = entity.position.x;
-   origin.y = entity.position.y;
-   hitBox.origin.x = entity.position.x + halfWidth / 2;
-   hitBox.origin.y = entity.position.y + halfHeight / 2;
+   origin.x = entity.targetPosition.x;
+   origin.y = entity.targetPosition.y;
+   hitBox.origin.x = entity.targetPosition.x + halfWidth / 2;
+   hitBox.origin.y = entity.targetPosition.y + halfHeight / 2;
    hitBox.w = halfWidth;
    hitBox.h = halfHeight;
 }
 
-void RenderableData::Draw(const std::shared_ptr<ScreenManager>& screenManager) const
+void RenderableData::Draw(const std::shared_ptr<FrameBuffer>& frameBuffer) const
 {
-   screenManager->DrawTileWorldCoords(tilesetId, tileId, origin.x, origin.y, renderFlags);
+   frameBuffer->DrawTileWorldCoords(tilesetId, tileId, origin.x, origin.y, renderFlags);
 }
 
 void RenderableData::updateAsTileset(const MageEntityData& entity)

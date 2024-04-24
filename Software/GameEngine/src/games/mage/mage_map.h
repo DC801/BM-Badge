@@ -15,7 +15,7 @@ in a more accessible way.
 #include <vector>
 
 #include "mage_entity.h"
-#include "screen_manager.h"
+#include "FrameBuffer.h"
 #include "shim_timer.h"
 #include "EngineROM.h"
 #include "mage_script_state.h"
@@ -99,18 +99,15 @@ public:
    using OnTickScript = TaggedType<MageScriptState, struct OnTick>;
    using OnInteractScript = TaggedType<MageScriptState, struct OnInteract>;
 
-   MapControl(std::shared_ptr<ScreenManager> screenManager, int32_t initialMapId) noexcept
-      : screenManager(screenManager), mapLoadId(initialMapId)
+   MapControl(std::shared_ptr<FrameBuffer> frameBuffer, int32_t initialMapId) noexcept
+      : frameBuffer(frameBuffer), mapLoadId(initialMapId)
    {}
 
    inline uint8_t* GetEntityDataPointer() { return reinterpret_cast<uint8_t*>(entityDataArray.data()); }
    void Load();
    void DrawLayer(uint8_t layer) const;
    void DrawEntities() const;
-   void UpdateEntities();
-
-   // Return what entity is being interacted with or std::nullopt if there's no interaction
-   std::optional<uint16_t> UpdatePlayer();
+   std::optional<uint16_t> Update();
 
    constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
@@ -274,7 +271,7 @@ private:
 
    MageScriptState onTick;
 
-   std::shared_ptr<ScreenManager> screenManager;
+   std::shared_ptr<FrameBuffer> frameBuffer;
 
    std::optional<const MapData> currentMap;
    EntityDataArray entityDataArray{};

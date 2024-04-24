@@ -16,7 +16,7 @@
 
 class MapControl;
 class StringLoader;
-class ScreenManager;
+class FrameBuffer;
 
 static inline const auto DIALOG_SCREEN_NO_PORTRAIT = 255;
 
@@ -118,11 +118,11 @@ class MageDialogControl
 public:
    MageDialogControl(
       std::shared_ptr<EngineInput> inputHandler,
-      std::shared_ptr<ScreenManager> screenManager,
+      std::shared_ptr<FrameBuffer> frameBuffer,
       std::shared_ptr<StringLoader> stringLoader,
       std::shared_ptr<MapControl> mapControl) noexcept
       : inputHandler(inputHandler),
-      screenManager(screenManager),
+      frameBuffer(frameBuffer),
       stringLoader(stringLoader),
       mapControl(mapControl)
    {}
@@ -141,7 +141,7 @@ public:
 
 private:
    std::shared_ptr<EngineInput> inputHandler;
-   std::shared_ptr<ScreenManager> screenManager;
+   std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<StringLoader> stringLoader;
    std::shared_ptr<MapControl> mapControl;
    bool open{ false };

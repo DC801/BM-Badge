@@ -31,7 +31,7 @@ void MapControl::Load()
       ROM()->Read<MageEntityData>(entityData, entityAddress);
 
       // convert entity coordinates into map coordinates (0 at bottom -> 0 at top)
-      Get<MageEntityData>(i).position.y -= ROM()->GetReadPointerByIndex<MageTileset>(Get<MageEntityData>(i).primaryId)->TileHeight;
+      Get<MageEntityData>(i).targetPosition.y -= ROM()->GetReadPointerByIndex<MageTileset>(Get<MageEntityData>(i).primaryId)->TileHeight;
 
       // fill renderable data from the entity
       auto& renderableData = Get<RenderableData>(currentMap->entityGlobalIDs[i]);
@@ -100,8 +100,8 @@ void MapControl::DrawEntities() const
    std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
    const auto sortByY = [&](size_t i1, size_t i2) {
-      const auto i1LessThani2 = Get<MageEntityData>(i1).position.y
-         < Get<MageEntityData>(i2).position.y;
+      const auto i1LessThani2 = Get<MageEntityData>(i1).targetPosition.y
+         < Get<MageEntityData>(i2).targetPosition.y;
       return i1LessThani2;
       };
    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
@@ -110,7 +110,7 @@ void MapControl::DrawEntities() const
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex : entityDrawOrder)
    {
-      Get<RenderableData>(entityIndex).Draw(screenManager);
+      Get<RenderableData>(entityIndex).Draw(frameBuffer);
    }
 }
 
@@ -138,8 +138,8 @@ void MapControl::DrawLayer(uint8_t layer) const
 
 
    // identify start and stop tiles to draw
-   auto startTileX = std::max(0, (screenManager->camera->positionX - DrawWidth) / currentMap->tileWidth);
-   auto startTileY = std::max(0, (screenManager->camera->positionY - DrawHeight) / currentMap->tileHeight);
+   auto startTileX = std::max(0, (frameBuffer->camera.positionX - DrawWidth) / currentMap->tileWidth);
+   auto startTileY = std::max(0, (frameBuffer->camera.positionY - DrawHeight) / currentMap->tileHeight);
 
    auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
    auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
@@ -153,10 +153,10 @@ void MapControl::DrawLayer(uint8_t layer) const
 
          if (!currentTile->tileId) { continue; }
 
-         auto tileDrawX = currentMap->tileWidth * mapTileCol;
-         auto tileDrawY = currentMap->tileHeight * mapTileRow;
+         auto tileDrawX = frameBuffer->camera.positionX - currentMap->tileWidth * mapTileCol;
+         auto tileDrawY = frameBuffer->camera.positionY - currentMap->tileHeight * mapTileRow;
 
-         screenManager->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
+         frameBuffer->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
       }
    }
 }
@@ -181,9 +181,8 @@ void MapControl::Draw() const
    }
 }
 
-void MapControl::UpdateEntities()
+std::optional<uint16_t> MapControl::Update()
 {
-   auto playerData = getPlayerEntityData();
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
       auto& entity = Get<MageEntityData>(i);
@@ -191,20 +190,15 @@ void MapControl::UpdateEntities()
       renderableData.currentFrameMs += IntegrationStepSize.count();
       renderableData.UpdateFrom(entity);
    }
-}
-
-std::optional<uint16_t> MapControl::UpdatePlayer()
-{
+   
    // require a player on the map to move/interact
    auto playerData = getPlayerEntityData();
    if (!playerData) { return std::nullopt; }
 
-   auto interactingEntity = std::optional<uint16_t>{ std::nullopt };
-   auto playerRenderableData = getPlayerRenderableData();
+   const auto playerRenderableData = getPlayerRenderableData();
 
    const auto& oldPosition = playerRenderableData->origin;
-   auto& newPosition = playerData->position;
-   // moving when there's at least one button not being counteracted
+
    const auto& topLeft = oldPosition;
    const auto topRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, 0 };
    const auto botLeft = oldPosition + EntityPoint{ 0, playerRenderableData->hitBox.h };
@@ -212,26 +206,26 @@ std::optional<uint16_t> MapControl::UpdatePlayer()
 
    std::vector<EntityPoint> hitboxPointsToCheck{};
 
-   if (playerData->position.x < playerRenderableData->origin.x)
+   if (playerData->targetPosition.x < playerRenderableData->origin.x)
    {
       playerData->flags = WEST;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
-   else if (playerData->position.x > playerRenderableData->origin.x)
+   else if (playerData->targetPosition.x > playerRenderableData->origin.x)
    {
       playerData->flags = EAST;
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
 
-   if (playerData->position.y < playerRenderableData->origin.y)
+   if (playerData->targetPosition.y < playerRenderableData->origin.y)
    {
       playerData->flags = NORTH;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
-   else if (playerData->position.y > playerRenderableData->origin.y)
+   else if (playerData->targetPosition.y > playerRenderableData->origin.y)
    {
       playerData->flags = SOUTH;
       hitboxPointsToCheck.push_back(botLeft);
@@ -257,7 +251,7 @@ std::optional<uint16_t> MapControl::UpdatePlayer()
       if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
          // TODO: bring back the intersection-offset algorithm
-         newPosition = oldPosition;
+         playerData->targetPosition = oldPosition;
          break;
       }
    }

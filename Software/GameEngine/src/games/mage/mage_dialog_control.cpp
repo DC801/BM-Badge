@@ -2,7 +2,7 @@
 
 #include "mage_map.h"
 #include "mage_portrait.h"
-#include "screen_manager.h"
+#include "FrameBuffer.h"
 #include <utility>
 
 const MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
@@ -139,18 +139,18 @@ void MageDialogControl::Draw() const
    const auto messageY = (uint16_t)((coords.text.origin.y * tileset->TileHeight) + (tileset->TileHeight / 2));
 
    drawBackground({ labelX, labelY, coords.label.w, coords.label.h });
-   screenManager->DrawText(currentEntityName, COLOR_WHITE, labelX + tileset->TileWidth + 8, labelY + tileset->TileHeight - 2);
+   frameBuffer->DrawText(currentEntityName, COLOR_WHITE, labelX + tileset->TileWidth + 8, labelY + tileset->TileHeight - 2);
    drawBackground({ messageX, messageY, coords.text.w, coords.text.h });
-   screenManager->DrawText(currentMessage, COLOR_WHITE, messageX + tileset->TileWidth + 8, messageY + tileset->TileHeight - 2);
+   frameBuffer->DrawText(currentMessage, COLOR_WHITE, messageX + tileset->TileWidth + 8, messageY + tileset->TileHeight - 2);
 
    if (shouldShowResponses(currentScreen))
    {
       // render all of the response labels
       for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex)
       {
-         screenManager->DrawText(stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityName), COLOR_WHITE, messageX + tileset->TileWidth + 6, messageY);
+         frameBuffer->DrawText(stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityName), COLOR_WHITE, messageX + tileset->TileWidth + 6, messageY);
       }
-      screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId, messageX, messageY);
+      frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId, messageX, messageY);
    }
    else
    {
@@ -158,14 +158,14 @@ void MageDialogControl::Draw() const
       static const auto TAU = 6.283185307179586f;
       const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
       const auto bounce = cos(((float)cursorPhase / 1000.0f) * TAU) * 3;
-      screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId,
+      frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId,
          messageX + (coords.text.w - 2) * tileset->TileWidth,
          messageY + (coords.text.h - 2) * tileset->TileHeight + bounce);
    }
 
    if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
    {
-      screenManager->DrawTileScreenCoords(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, messageX + tileset->TileWidth, messageY + tileset->TileHeight, currentPortraitRenderableData.renderFlags);
+      frameBuffer->DrawTileScreenCoords(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, messageX + tileset->TileWidth, messageY + tileset->TileHeight, currentPortraitRenderableData.renderFlags);
    }
 }
 
@@ -188,43 +188,43 @@ void MageDialogControl::drawBackground(const EntityRect& box) const
          {
             if (topEdge)
             {
-               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_LEFT, drawX, drawY);
+               frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_LEFT, drawX, drawY);
             }
             else if (bottomEdge)
             {
-               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_LEFT, drawX, drawY);
+               frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_LEFT, drawX, drawY);
             }
             else
             {
-               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_LEFT_REPEAT, drawX, drawY);
+               frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_LEFT_REPEAT, drawX, drawY);
             }
          }
          else if (rightEdge)
          {
             if (topEdge)
             {
-               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_RIGHT, drawX, drawY);
+               frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_RIGHT, drawX, drawY);
             }
             else if (bottomEdge)
             {
-               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_RIGHT, drawX, drawY);
+               frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_RIGHT, drawX, drawY);
             }
             else
             {
-               screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_RIGHT_REPEAT, drawX, drawY);
+               frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_RIGHT_REPEAT, drawX, drawY);
             }
          }
          else if (topEdge)
          {
-            screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_REPEAT, drawX, drawY);
+            frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_TOP_REPEAT, drawX, drawY);
          }
          else if (bottomEdge)
          {
-            screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_REPEAT, drawX, drawY);
+            frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_BOTTOM_REPEAT, drawX, drawY);
          }
          else //background
          {
-            screenManager->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_CENTER_REPEAT, drawX, drawY);
+            frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_CENTER_REPEAT, drawX, drawY);
          }
       }
    }

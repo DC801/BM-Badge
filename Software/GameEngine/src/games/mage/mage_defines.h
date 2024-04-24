@@ -16,6 +16,11 @@ all of the old code used as the foundation of this badge.
 #include <chrono>
 #include "shim_timer.h"
 
+
+static inline const auto DrawWidth = uint16_t{ 320 };
+static inline const auto DrawHeight = uint16_t{ 240 };
+static inline const auto FramebufferSize = DrawWidth * DrawHeight;
+
 static inline const auto MapGoDirectionNameLength = 12;
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
@@ -83,5 +88,7 @@ static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
 //speed is in x/y pixels per update tick
 static inline const auto RunSpeed = uint16_t{ 2 };
 static inline const auto WalkSpeed = uint16_t{ 1 };
+
+static inline const auto TilesetNameLength = 16;
 
 #endif //_MAGE_DEFINES_H

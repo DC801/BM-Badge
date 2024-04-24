@@ -1,5 +1,5 @@
 #include "mage_geometry.h"
-#include "screen_manager.h"
+#include "FrameBuffer.h"
 #include <algorithm>
 
 #ifndef DC801_EMBEDDED

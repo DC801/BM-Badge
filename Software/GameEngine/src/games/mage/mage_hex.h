@@ -41,9 +41,9 @@ enum HEX_OPS {
 class MageHexEditor
 {
 public:
-	MageHexEditor(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
+	MageHexEditor(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
 		: inputHandler(inputHandler),
-		screenManager(screenManager),
+		frameBuffer(frameBuffer),
 		mapControl(mapControl),
 		memOffsets(memOffsets)
 	{};
@@ -107,7 +107,7 @@ public:
 
 private:
 	std::shared_ptr<EngineInput> inputHandler;
-	std::shared_ptr<ScreenManager> screenManager;
+	std::shared_ptr<FrameBuffer> frameBuffer;
 	std::shared_ptr<MapControl>  mapControl;
 
 	uint8_t clipboard[HEXED_CLIPBOARD_MAX_LENGTH]{ 0 };

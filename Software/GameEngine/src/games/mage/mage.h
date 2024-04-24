@@ -30,19 +30,17 @@ public:
     // This constructor acts like the composition root for the game
     // It depends on the EngineInput and FrameBuffer, which isolates the game logic from where I/O and display is handled
    MageGameEngine(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
-      : inputHandler(inputHandler), frameBuffer(frameBuffer)
+      : inputHandler(inputHandler), frameBuffer(frameBuffer), mapControl(new MapControl(frameBuffer, DEFAULT_MAP))
    {
       audioPlayer = std::make_unique<AudioPlayer>();
-      screenManager = std::make_shared<ScreenManager>(inputHandler, frameBuffer, &camera);
 
-      mapControl = std::make_shared<MapControl>(screenManager, ROM()->GetCurrentSave().currentMapId);
-      hexEditor = std::make_shared<MageHexEditor>(inputHandler, screenManager, mapControl, ROM()->GetCurrentSave().memOffsets);
+      hexEditor = std::make_shared<MageHexEditor>(inputHandler, frameBuffer, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(mapControl, ROM()->GetCurrentSave().scriptVariables);
-      dialogControl = std::make_unique<MageDialogControl>(inputHandler, screenManager, stringLoader, mapControl);
+      dialogControl = std::make_unique<MageDialogControl>(inputHandler, frameBuffer, stringLoader, mapControl);
 
       auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
       scriptControl = std::make_shared<MageScriptControl>(mapControl, std::move(scriptActions));
-      commandControl = std::make_shared<MageCommandControl>(mapControl, screenManager, scriptControl, stringLoader);
+      commandControl = std::make_shared<MageCommandControl>(mapControl, frameBuffer, scriptControl, stringLoader);
    }
    //this will load a map to be the current map.
    void LoadMap();
@@ -72,7 +70,6 @@ private:
    std::shared_ptr<MageHexEditor> hexEditor;
    std::shared_ptr<MageScriptControl> scriptControl;
    std::shared_ptr<MageCommandControl> commandControl;
-   std::shared_ptr<ScreenManager> screenManager;
    std::shared_ptr<MageDialogControl> dialogControl;
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<StringLoader> stringLoader;

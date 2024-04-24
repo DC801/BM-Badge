@@ -167,7 +167,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_x(const uint8_t* args, M
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.position.x == argStruct->expectedValue);
+      bool identical = (entity.targetPosition.x == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
          return argStruct->successScriptId;
@@ -192,7 +192,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_y(const uint8_t* args, M
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.position.y == argStruct->expectedValue);
+      bool identical = (entity.targetPosition.y == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
          return argStruct->successScriptId;
@@ -904,7 +904,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_x(const uint8_t* args, Mag
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.position.x = argStruct->newValue;
+      entity.targetPosition.x = argStruct->newValue;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -926,7 +926,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_y(const uint8_t* args, Mag
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.position.y = argStruct->newValue;
+      entity.targetPosition.y = argStruct->newValue;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1698,8 +1698,8 @@ std::optional<uint16_t> MageScriptActions::teleport_entity_to_geometry(const uin
       auto geometry = mapControl->GetGeometry(argStruct->geometryId);
       auto point = geometry->GetPoint(0);
 
-      //auto offsetPoint = EntityPoint{ entity.position.x, entity.position.y } + point;
-      entity.position = point;
+      //auto offsetPoint = EntityPoint{ entity.targetPosition.x, entity.targetPosition.y } + point;
+      entity.targetPosition = point;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1724,13 +1724,13 @@ std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t
       if (resumeState.totalLoopsToNextAction == 0)
       {
          //points we're interpolating between are from the entity location to the 
-         resumeState.geometry.pointA = { entity.position.x, entity.position.y };
+         resumeState.geometry.pointA = { entity.targetPosition.x, entity.targetPosition.y };
          resumeState.geometry.pointB = geometry->GetPoint(0) - resumeState.geometry.pointA - renderableData.center();
          entity.flags |= (resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB) & RENDER_FLAGS_DIRECTION_MASK);
          renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
       auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
-      entity.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
+      entity.targetPosition = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
       if (progress >= 1.0f)
       {
          renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
@@ -1760,7 +1760,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
    auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-   entity.position = geometry->GetPoint(0);
+   entity.targetPosition = geometry->GetPoint(0);
 
    // handle single point geometries
    if (geometry->GetPointCount() == 1)
@@ -1815,7 +1815,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
       entity.flags |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
    }
 
-   entity.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
+   entity.targetPosition = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
    if (resumeState.loopsToNextAction == 0)
    {
       resumeState.totalLoopsToNextAction = 0;
@@ -1847,7 +1847,7 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
       if (geometry->GetPointCount() == 1)
       {
          resumeState.totalLoopsToNextAction = 1;
-         entity.position = geometry->GetPoint(0) - renderableData.center() - entity.position;
+         entity.targetPosition = geometry->GetPoint(0) - renderableData.center() - entity.targetPosition;
          renderableData.UpdateFrom(entity);
          return NO_JUMP_SCRIPT;
       }
@@ -1906,7 +1906,7 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
          resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
          entity.flags |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
       }
-      entity.position = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
+      entity.targetPosition = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
    }
    return NO_JUMP_SCRIPT;
 }

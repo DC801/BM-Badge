@@ -38,8 +38,8 @@ public:
         if (!sdFile)
         {
             debug_print("No game.dat file found");
-            frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
-            frameBuffer->printMessage("No game.dat file found", Monaco9, 0xffff, 16, 96);
+            frameBuffer->DrawFilledRect(0, 96, DrawWidth, 96, 0x0000);
+            frameBuffer->DrawText("No game.dat file found", 0xffff, 16, 96);
             return;
         }
 
@@ -72,8 +72,8 @@ public:
         if (!qspi.read((char*)&engineVersionROM, sizeof(engineVersionROM), offsetROM))
         {
             error_print("Failed to read engineVersionROM");
-            frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
-            frameBuffer->printMessage("Could not read engineVersion from ROM", Monaco9, 0xffff, 16, 96);
+            frameBuffer->DrawFilledRect(0, 96, DrawWidth, 96, 0x0000);
+            frameBuffer->DrawText("Could not read engineVersion from ROM", 0xffff, 16, 96);
         }
 
         if (!qspi.read((char*)&gameDatHashROM, sizeof(gameDatHashROM), offsetROM))
@@ -82,8 +82,8 @@ public:
         }
 
 
-        frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
-        frameBuffer->printMessage("Successfully opened " MAGE_GAME_DAT_PATH ", reading hash...", Monaco9, 0xffff, 16, 96);
+        frameBuffer->DrawFilledRect(0, 96, DrawWidth, 96, 0x0000);
+        frameBuffer->DrawText("Successfully opened " MAGE_GAME_DAT_PATH ", reading hash...", 0xffff, 16, 96);
 
         if (FR_OK != sdFile.lseek(ENGINE_ROM_IDENTIFIER_STRING_LENGTH))
         {
@@ -98,8 +98,8 @@ public:
         if (!sdFile.read(&gameDatHashSD, sizeof(gameDatHashSD)))
         {
             error_print("Could not read hash from game.dat on SD card");
-            frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
-            frameBuffer->printMessage("Could not read hash from game.dat on SD card", Monaco9, 0xffff, 16, 96);
+            frameBuffer->DrawFilledRect(0, 96, DrawWidth, 96, 0x0000);
+            frameBuffer->DrawText("Could not read hash from game.dat on SD card", 0xffff, 16, 96);
         }
         headerHashMatch = gameDatHashROM != gameDatHashSD;
 
@@ -132,7 +132,7 @@ public:
                 engineVersionROM);
             debug_print(debugString);
             frameBuffer->clearScreen(COLOR_BLACK);
-            frameBuffer->printMessage(debugString, Monaco9, 0xffff, 16, 16);
+            frameBuffer->DrawText(debugString, 0xffff, 16, 16);
 
             auto eraseWholeRomChip = false;
             auto activatedButtons = inputHandler->GetButtonActivatedState();
@@ -161,7 +161,7 @@ public:
 
             if (eraseWholeRomChip)
             {
-                frameBuffer->printMessage("Erasing WHOLE ROM chip.\nPlease be patient, this may take a few minutes", Monaco9, COLOR_WHITE, 16, 96);
+                frameBuffer->DrawText("Erasing WHOLE ROM chip.\nPlease be patient, this may take a few minutes", COLOR_WHITE, 16, 96);
                 frameBuffer->blt();
                 if (!qspi.chipErase())
                 {
@@ -171,7 +171,7 @@ public:
             else
             {
                 sprintf(debugString, "Erasing ROM, romFileSize:%08x\n", romFileSize);
-                frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
+                frameBuffer->DrawText(debugString, COLOR_WHITE, 16, 96);
 
                 // I mean, you _COULD_ start by erasing the whole chip...
                 // or you could do it one page at a time, so it saves a LOT of time
@@ -180,8 +180,8 @@ public:
                     //Debug Print:
                     sprintf(debugString, "Erasing: 0x%08x\n", offset);
                     debug_print(debugString);
-                    frameBuffer->fillRect(0, 132, DrawWidth, DrawHeight - 132, COLOR_BLACK);
-                    frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 132);
+                    frameBuffer->DrawFilledRect(0, 132, DrawWidth, DrawHeight - 132, COLOR_BLACK);
+                    frameBuffer->DrawText(debugString, COLOR_WHITE, 16, 132);
 
                     if (!qspi.erase(offset))
                     {
@@ -204,8 +204,8 @@ public:
                 auto copySize = std::min(ENGINE_ROM_SD_CHUNK_READ_SIZE, romFileSize - offset);
                 sprintf(debugString, "Copying range %08x-%08x", offset, offset + copySize);
                 debug_print(debugString);
-                frameBuffer->fillRect(0, 140, DrawWidth, 11, COLOR_BLACK);
-                frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 141);
+                frameBuffer->DrawFilledRect(0, 140, DrawWidth, 11, COLOR_BLACK);
+                frameBuffer->DrawText(debugString, COLOR_WHITE, 16, 141);
                 
                 sdFile.lseek(offset);
                 if (!sdFile.read(sdReadBuffer->data(), copySize))
@@ -258,8 +258,8 @@ public:
             if (!qspi.read((char*)&engineVersionROM, sizeof(engineVersionROM), offsetROM))
             {
                 error_print("Failed to read engineVersionROM");
-                frameBuffer->fillRect(0, 78, DrawWidth, 96, 0x0000);
-                frameBuffer->printMessage("Could not read engineVersion from ROM", Monaco9, 0xffff, 16, 78);
+                frameBuffer->DrawFilledRect(0, 78, DrawWidth, 96, 0x0000);
+                frameBuffer->DrawText("Could not read engineVersion from ROM", 0xffff, 16, 78);
             }
 
             if (!qspi.read((char*)&gameDatHashROM, sizeof(gameDatHashROM), offsetROM))
@@ -269,8 +269,8 @@ public:
             
             //print success message:
             debug_print("Successfully copied ROM from SD to QSPI ROM");
-            frameBuffer->fillRect(0, 78, DrawWidth, 96, 0x0000);
-            frameBuffer->printMessage("Successfully copied ROM from SD to QSPI ROM", Monaco9, 0xffff, 16, 78);
+            frameBuffer->DrawFilledRect(0, 78, DrawWidth, 96, 0x0000);
+            frameBuffer->DrawText("Successfully copied ROM from SD to QSPI ROM", 0xffff, 16, 78);
         }
         
 

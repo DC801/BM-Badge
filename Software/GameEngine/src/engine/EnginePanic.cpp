@@ -15,7 +15,7 @@
 void panic_print(const char *msg, int x, int y)
 {
 	// Write to the screen
-	/*frameBuffer->printMessage(
+	/*frameBuffer->DrawText(
 		msg,
 		Monaco9,
 		COLOR_WHITE,

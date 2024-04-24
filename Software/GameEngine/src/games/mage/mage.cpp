@@ -45,7 +45,7 @@ void MageGameEngine::Run()
 
       if (inputHandler->ToggleEntityDebug())
       {
-         screenManager->ToggleDrawGeometry();
+         frameBuffer->ToggleDrawGeometry();
       }
 
       if (mapControl->mapLoadId != MAGE_NO_MAP)
@@ -55,13 +55,13 @@ void MageGameEngine::Run()
 
       frames++;
       const auto newTime = GameClock::now();
-      if (newTime - lastTime >= GameClock::duration{ std::chrono::seconds{1} })
+      if (newTime - lastTime >= GameClock::duration{ std::chrono::milliseconds{1000} })
       {
          fps = frames / (newTime - lastTime).count();
          lastTime = newTime;
       }
       gameLoopIteration();
-      frameBuffer->printMessage(std::format("FPS: {}", fps), Monaco9, COLOR_RED, 10, 10);
+      frameBuffer->DrawText(std::format("FPS: {}", fps), COLOR_RED, 10, 10);
    }
    //#endif
 }
@@ -85,7 +85,22 @@ void MageGameEngine::gameLoopIteration()
       hexEditor->Update();
 
       // always update entities last to accumulate all previous changes that may affect their hackable data
-      mapControl->UpdateEntities();
+      auto entityInteractId = mapControl->Update();
+      if (entityInteractId.has_value())
+      {
+         if (inputHandler->Hack() && hexEditor->playerHasHexEditorControl)
+         {
+            hexEditor->openToEntity(*entityInteractId);
+         }
+         else
+         {
+            const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
+            auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
+            scriptState.script = mapControl->scripts[scriptId];
+            scriptState.scriptIsRunning = true;
+            scriptControl->processScript(scriptState, *entityInteractId);
+         }
+      }
       updateAccumulator -= IntegrationStepSize;
    }
 
@@ -146,44 +161,28 @@ void MageGameEngine::applyGameModeInputs()
       // clip player to [0,max(uint16_t)]
       if (inputHandler->Left())
       {
-         player->position.x = static_cast<int>(player->position.x) - moveAmount < 0
+         player->targetPosition.x = static_cast<int>(player->targetPosition.x) - moveAmount < 0
             ? 0
-            : player->position.x - moveAmount;
+            : player->targetPosition.x - moveAmount;
       }
       else if (inputHandler->Right())
       {
-         player->position.x = static_cast<int>(player->position.x) + moveAmount > std::numeric_limits<uint16_t>::max()
+         player->targetPosition.x = static_cast<int>(player->targetPosition.x) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
-            : player->position.x + moveAmount;
+            : player->targetPosition.x + moveAmount;
       }
 
       if (inputHandler->Up())
       {
-         player->position.y = static_cast<int>(player->position.y) - moveAmount < 0
+         player->targetPosition.y = static_cast<int>(player->targetPosition.y) - moveAmount < 0
             ? 0
-            : player->position.y - moveAmount;
+            : player->targetPosition.y - moveAmount;
       }
       else if (inputHandler->Down())
       {
-         player->position.y = static_cast<int>(player->position.y) + moveAmount > std::numeric_limits<uint16_t>::max()
+         player->targetPosition.y = static_cast<int>(player->targetPosition.y) + moveAmount > std::numeric_limits<uint16_t>::max()
             ? std::numeric_limits<uint16_t>::max()
-            : player->position.y + moveAmount;
-      }
-      auto entityInteractId = mapControl->UpdatePlayer();
-      if (entityInteractId.has_value())
-      {
-         if (inputHandler->Hack() && hexEditor->playerHasHexEditorControl)
-         {
-            hexEditor->openToEntity(*entityInteractId);
-         }
-         else
-         {
-            const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
-            auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
-            scriptState.script = mapControl->scripts[scriptId];
-            scriptState.scriptIsRunning = true;
-            scriptControl->processScript(scriptState, *entityInteractId);
-         }
+            : player->targetPosition.y + moveAmount;
       }
    }
 

@@ -236,7 +236,7 @@ void MageHexEditor::renderHexHeader()
    sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
       currentMemPage, hexCursorOffset, totalMemPages, mapControl->currentMap.value().entityCount, memTotal);
 
-   screenManager->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, 0);
+   frameBuffer->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, 0);
    auto stringPreview = std::string{ entityDataPointer + hexCursorOffset,
                                      entityDataPointer + hexCursorOffset + MAGE_ENTITY_NAME_LENGTH };
 
@@ -265,7 +265,7 @@ void MageHexEditor::renderHexHeader()
       }
       sprintf(headerString + strlen(headerString), " | CP: 0x%s", clipboardPreview);
    }
-   screenManager->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2)));
+   frameBuffer->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2)));
 }
 
 void MageHexEditor::Draw()
@@ -277,7 +277,7 @@ void MageHexEditor::Draw()
 
    if ((hexCursorOffset / bytesPerPage) == currentMemPage)
    {
-      screenManager->DrawFilledRect(
+      frameBuffer->DrawFilledRect(
          (hexCursorOffset % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
          (hexCursorOffset % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
          HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x38FF);
@@ -286,7 +286,7 @@ void MageHexEditor::Draw()
          for (uint8_t i = 1; i < clipboardLength; i++)
          {
             uint16_t copyCursorOffset = (hexCursorOffset + i) % bytesPerPage;
-            screenManager->DrawFilledRect(
+            frameBuffer->DrawFilledRect(
                (copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
                (copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
                HEXED_BYTE_WIDTH,
@@ -321,7 +321,7 @@ void MageHexEditor::Draw()
          s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
          s[3 * j + 1] = hexmap[dataPage[i] & 0x0F];
       }
-      screenManager->DrawText(s.c_str(), color,
+      frameBuffer->DrawText(s.c_str(), color,
          HEXED_BYTE_OFFSET_X, HEXED_BYTE_OFFSET_Y + ((i - 1) / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT);
    }
 }

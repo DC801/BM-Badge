@@ -5,7 +5,7 @@
 #include "mage_camera.h"
 #include "mage_script_state.h"
 #include "mage_geometry.h"
-#include "screen_manager.h"
+#include "FrameBuffer.h"
 #include <stdint.h>
 #include <vector>
 #include <memory>
@@ -60,7 +60,7 @@ struct MageEntityType
 struct MageEntityData
 {
    char name[MAGE_ENTITY_NAME_LENGTH]{ 0 };
-   EntityPoint position{ 0 };
+   EntityPoint targetPosition{ 0 };
    uint16_t onInteractScriptId{ 0 };
    uint16_t onTickScriptId{ 0 };
    uint16_t primaryId{ 0 };
@@ -118,7 +118,7 @@ struct RenderableData
 
    void UpdateFrom(const MageEntityData& entity);
 
-   void Draw(const std::shared_ptr<ScreenManager>& screenManager) const;
+   void Draw(const std::shared_ptr<FrameBuffer>& frameBuffer) const;
 
 private:
    void updateAsAnimation(const MageEntityData& entity);
