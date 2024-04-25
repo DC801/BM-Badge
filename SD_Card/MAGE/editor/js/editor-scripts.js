@@ -31,6 +31,11 @@ Vue.component(
 				'currentData',
 				'initState',
 			]),
+			{
+				computed: window.Vuex.mapGetters([
+					'scriptsOptions',
+				]),
+			},
 			makeFileChangeTrackerMixinByResourceType('scripts'),
 		],
 		data: function () {
