@@ -4,6 +4,7 @@
 #include <chrono>
 #include <format>
 #include <limits>
+#include <thread>
 #include <typeinfo>
 
 #include "mage_defines.h"
@@ -31,10 +32,9 @@ void MageGameEngine::Run()
 //   emscripten_set_main_loop(gameLoopIteration, emscriptenFPS, emscriptenSimulateInfiniteLoop);
 //#else
 
-   //update timing information at the start of every game loop
-   auto lastTime = GameClock::now();
-   auto fps = 0;
    auto frames = 0;
+   auto fps = 0.0f;
+   auto lastTime = GameClock::now();
 
    while (inputHandler->KeepRunning())
    {
@@ -53,21 +53,26 @@ void MageGameEngine::Run()
          LoadMap();
       }
 
-      frames++;
-      const auto newTime = GameClock::now();
-      if (newTime - lastTime >= GameClock::duration{ std::chrono::milliseconds{1000} })
-      {
-         fps = frames / (newTime - lastTime).count();
-         lastTime = newTime;
-      }
       gameLoopIteration();
-      frameBuffer->DrawText(std::format("FPS: {}", fps), COLOR_RED, 10, 10);
+      frames++;
+      frameBuffer->DrawText(std::format("FPS: {:4}", fps), COLOR_RED, 10, 10, true);
+
+      if (GameClock::now() - lastTime > GameClock::duration(milliseconds{125}))
+      {
+         const auto smoothing = 0.9f;
+         fps = smoothing * (8 * frames) + (8 * frames * (1.0f - smoothing));
+         lastTime = GameClock::now();
+         frames = 0;
+      }
+
+      frameBuffer->blt();
    }
    //#endif
 }
 
 void MageGameEngine::gameLoopIteration()
 {
+   //update timing information at the start of every game loop
    const auto loopStart = GameClock::now();
    inputHandler->UpdateState(loopStart);
    auto updateAccumulator = inputHandler->lastDelta;
@@ -112,12 +117,15 @@ void MageGameEngine::gameLoopIteration()
 
    commandControl->sendBufferedOutput();
 
+   while (GameClock::now() - loopStart < MinTimeBetweenRenders)
+   {
+      std::this_thread::sleep_for(IntegrationStepSize / 2);
+   }
+
    mapControl->Draw();
    hexEditor->Draw();
    dialogControl->Draw();
    updateHexLights();
-
-   frameBuffer->blt();
 }
 
 void MageGameEngine::LoadMap()

@@ -38,7 +38,7 @@ void FrameBuffer::DrawFilledRect(int x, int y, int w, int h, uint16_t color)
 {
 
 #if DC801_EMBEDDED
-   ili9341_fill_rect(x, y, w, h, color);
+   ili9341_fill_rect(screenX, screenY, w, h, color);
 #else
    if ((x >= DrawWidth) || (y >= DrawHeight))
    {
@@ -126,20 +126,20 @@ void FrameBuffer::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, u
 
 void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, GFXfont font)
 {
-   // Character is assumed previously filtered by write() to eliminate
-   // newlines, returns, non-printable characters, etc.  Calling drawChar()
-   // directly with 'bad' characters of font may cause mayhem!
+   // Character is assumed previously filtered to eliminate
+   // newlines, returns, non-printable characters, etc.
+   // Calling with 'bad' characters of font may cause mayhem!
 
    c -= font.first;
    GFXglyph* glyph = &(font.glyph[c]);
    uint8_t* bitmap = font.bitmap;
 
-   uint16_t bo = glyph->bitmapOffset;
+   uint16_t bitmapOffset = glyph->bitmapOffset;
    uint8_t w = glyph->width;
    uint8_t h = glyph->height;
 
-   int8_t xo = glyph->xOffset;
-   int8_t yo = glyph->yOffset;
+   int8_t xOffset = glyph->xOffset;
+   int8_t yOffset = glyph->yOffset;
    uint8_t xx, yy, bits = 0, bit = 0;
 
    minXChange = std::min<int>(minXChange, x);
@@ -157,14 +157,14 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
       {
          if (!(bit++ & 7))
          {
-            bits = bitmap[bo++];
+            bits = bitmap[bitmapOffset++];
          }
          if (bits & 0x80)
          {
-            yyy = y + yo + yy;
+            yyy = y + yOffset + yy;
             if (yyy >= m_cursor_area.origin.y && yyy <= m_cursor_area.w)
             {
-               setPixel(x + xo + xx, y + yo + yy, color);
+               setPixel(x + xOffset + xx, y + yOffset + yy, color);
             }
          }
          bits <<= 1;
@@ -196,9 +196,9 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
 
          if ((w > 0) && (h > 0))
          { // Is there an associated bitmap?
-            int16_t xo = glyph->xOffset;
+            int16_t xOffset = glyph->xOffset;
 
-            if ((m_cursor_x + (xo + w)) >= m_cursor_area.w && m_wrap)
+            if ((m_cursor_x + (xOffset + w)) >= m_cursor_area.w && m_wrap)
             {
                // Drawing character would go off right edge; wrap to new line
                m_cursor_x = m_cursor_area.origin.x;
@@ -212,13 +212,17 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
    }
 }
 
-void FrameBuffer::DrawText(const std::string_view& text, uint16_t color, int x, int y, GFXfont font)
+void FrameBuffer::DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground, GFXfont font)
 {
    m_color = color;
-   m_cursor_area.origin.x = x;
+   m_cursor_area.origin.x = screenX;
    m_cursor_x = m_cursor_area.origin.x;
-   m_cursor_y = y + (font.yAdvance / 2);
+   m_cursor_y = screenY + (font.yAdvance / 2);
 
+   if (clearBackground)
+   {
+      DrawFilledRect(EntityPoint{ screenX,screenY }, font.glyph->width * text.size(), font.glyph->height * 2, COLOR_BLACK);
+   }
    for (uint16_t i = 0; i < text.length() && text[i]; i++)
    {
       write_char(text[i], font);
@@ -254,7 +258,7 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
 
    //if (flags & RENDER_FLAGS_IS_GLITCHED)
    //{
-   //    target.origin.x += target.w * 0.125;
+   //    target.origin.screenX += target.w * 0.125;
    //    target.w *= 0.75;
    //}
 

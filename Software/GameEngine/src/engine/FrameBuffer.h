@@ -21,31 +21,31 @@
 class MageGameEngine;
 
 // Color definitions
-#define COLOR_BLACK			0x0000	/*   0,   0,   0 */
-#define COLOR_BROWN			0x9B26
-#define COLOR_NAVY			0x000F	/*   0,   0, 128 */
-#define COLOR_DARKBLUE		0x18E8
-#define COLOR_DARKGREEN		0x03E0	/*   0, 128,   0 */
-#define COLOR_DARKCYAN		0x03EF	/*   0, 128, 128 */
-#define COLOR_MAROON		0x7800	/* 128,   0,   0 */
-#define COLOR_PURPLE		0x780F	/* 128,   0, 128 */
-#define COLOR_OLIVE			0x7BE0	/* 128, 128,   0 */
-#define COLOR_LIGHTBLUE		0xB6FF	/* #B4DEFF */
-#define COLOR_LIGHTGREY		0xC618	/* 192, 192, 192 */
-#define COLOR_DARKGREY		0x7BEF	/* 128, 128, 128 */
-#define COLOR_BLUE			0x001F	/*   0,   0, 255 */
-#define COLOR_GREEN			0x07E0	/*   0, 255,   0 */
-#define COLOR_CYAN			0x07FF	/*   0, 255, 255 */
-#define COLOR_RED			0xF800	/* 255,   0,   0 */
-#define COLOR_DARKRED		0x8000	/* 120,   0,   0 */
-#define COLOR_MAGENTA		0xF81F	/* 255,   0, 255 */
-#define COLOR_YELLOW		0xFFE0	/* 255, 255,   0 */
-#define COLOR_WHITE			0xFFFF	/* 255, 255, 255 */
-#define COLOR_ORANGE		0xFD20	/* 255, 165,   0 */
-#define COLOR_GREENYELLOW	0xAFE5	/* 173, 255,  47 */
-#define COLOR_PINK			0xFB56
-#define COLOR_NEONPURPLE	0xFD5F
-#define COLOR_BSOD			0x03DA
+inline static const auto COLOR_BLACK = 0x0000;/*   0,   0,   0 */
+inline static const auto COLOR_BROWN = 0x269B;
+inline static const auto COLOR_NAVY = 0x0F00; /*   0,   0, 128 */
+inline static const auto COLOR_DARKBLUE = 0xE818;
+inline static const auto COLOR_DARKGREEN = 0xE003;/*   0, 128,   0 */
+inline static const auto COLOR_DARKCYAN = 0xEF03;/*   0, 128, 128 */
+inline static const auto COLOR_MAROON = 0x0078;/* 128,   0,   0 */
+inline static const auto COLOR_PURPLE = 0x0F78;/* 128,   0, 128 */
+inline static const auto COLOR_OLIVE = 0xE07B;/* 128, 128,   0 */
+inline static const auto COLOR_LIGHTBLUE = 0xFFB6;/* #B4DEFF */
+inline static const auto COLOR_LIGHTGREY = 0x18C6;/* 192, 192, 192 */
+inline static const auto COLOR_DARKGREY = 0xEF7B;/* 128, 128, 128 */
+inline static const auto COLOR_BLUE = 0x1F00;/*   0,   0, 255 */
+inline static const auto COLOR_GREEN = 0xE007;/*   0, 255,   0 */
+inline static const auto COLOR_CYAN = 0xFF07;/*   0, 255, 255 */
+inline static const auto COLOR_RED = 0x00F8;/* 255,   0,   0 */
+inline static const auto COLOR_DARKRED = 0x0080;/* 120,   0,   0 */
+inline static const auto COLOR_MAGENTA = 0x1FF8;/* 255,   0, 255 */
+inline static const auto COLOR_YELLOW = 0xE0FF;/* 255, 255,   0 */
+inline static const auto COLOR_WHITE = 0xFFFF;/* 255, 255, 255 */
+inline static const auto COLOR_ORANGE = 0x20FD;/* 255, 165,   0 */
+inline static const auto COLOR_GREENYELLOW = 0xE5AF;/* 173, 255,  47 */
+inline static const auto COLOR_PINK = 0x56FB;
+inline static const auto COLOR_NEONPURPLE = 0x5FFD;
+inline static const auto COLOR_BSOD = 0xDA03;
 
 
 struct MageTileset
@@ -168,7 +168,7 @@ public:
    }
 
 
-   void DrawText(const std::string_view& text, uint16_t color, int x, int y, GFXfont font = Monaco9);
+   void DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground = false, GFXfont font = Monaco9);
 
    void blt();
    constexpr uint16_t* getFrameDataPtr()

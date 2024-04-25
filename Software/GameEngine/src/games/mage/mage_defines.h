@@ -15,7 +15,7 @@ all of the old code used as the foundation of this badge.
 
 #include <chrono>
 #include "shim_timer.h"
-
+using namespace std::chrono;
 
 static inline const auto DrawWidth = uint16_t{ 320 };
 static inline const auto DrawHeight = uint16_t{ 240 };
@@ -59,7 +59,6 @@ static inline const auto NoPlayer = nullptr;
 //all actions will have this many bytes, even if some are not used by a particular action
 static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 
-
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NO_SCRIPT std::nullopt
 #define MAGE_NO_MAP (-1)
@@ -81,7 +80,7 @@ static inline const auto RtcPrescaler = 992; // round(32768 Hz / 30 [target FPS 
 static inline const auto TargetFPS = 30;
 static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000) / TargetFPS;
 static inline const auto MinTimeBetweenUIInput = std::chrono::milliseconds(1000);
-static inline const auto IntegrationStepSize = std::chrono::milliseconds(1);
+static inline const auto IntegrationStepSize = MinTimeBetweenRenders/3;
 #endif
 
 //these are used for setting player speed
