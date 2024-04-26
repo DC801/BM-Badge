@@ -153,8 +153,8 @@ void MapControl::DrawLayer(uint8_t layer) const
 
          if (!currentTile->tileId) { continue; }
 
-         auto tileDrawX = frameBuffer->camera.positionX - currentMap->tileWidth * mapTileCol;
-         auto tileDrawY = frameBuffer->camera.positionY - currentMap->tileHeight * mapTileRow;
+         auto tileDrawX = currentMap->tileWidth * mapTileCol;
+         auto tileDrawY = currentMap->tileHeight * mapTileRow;
 
          frameBuffer->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
       }

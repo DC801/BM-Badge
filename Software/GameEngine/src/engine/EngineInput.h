@@ -1,6 +1,7 @@
 #ifndef ENGINE_INPUT_H
 #define ENGINE_INPUT_H
 
+#include "src/games/mage/mage_defines.h"
 #include "modules/keyboard.h"
 #include "EngineSerial.h"
 #include <signal.h>
@@ -9,21 +10,6 @@
 #include <queue>
 #include <utility>
 #include "shim_timer.h"
-
-struct GameClock
-{
-   using rep = uint32_t;
-   using period = std::milli;
-   using duration = std::chrono::duration<rep, period>;
-   using time_point = std::chrono::time_point<GameClock>;
-
-   static time_point now() noexcept
-   {
-      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
-      auto epochTime = now_ms.time_since_epoch().count();
-      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
-   }
-};
 
 template <typename IndexType, typename ValueType, int Length >
 class EnumClassArray : public std::array<ValueType, Length>

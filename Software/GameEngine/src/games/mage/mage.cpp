@@ -72,10 +72,10 @@ void MageGameEngine::Run()
 
 void MageGameEngine::gameLoopIteration()
 {
-   //update timing information at the start of every game loop
    const auto loopStart = GameClock::now();
    inputHandler->UpdateState(loopStart);
    auto updateAccumulator = inputHandler->lastDelta;
+
    // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
    while (updateAccumulator >= IntegrationStepSize)
    {
@@ -119,7 +119,7 @@ void MageGameEngine::gameLoopIteration()
 
    while (GameClock::now() - loopStart < MinTimeBetweenRenders)
    {
-      std::this_thread::sleep_for(IntegrationStepSize / 2);
+      std::this_thread::sleep_for(milliseconds{ 1 });
    }
 
    mapControl->Draw();
@@ -158,74 +158,76 @@ void MageGameEngine::applyGameModeInputs()
    auto player = mapControl->getPlayerEntityData();
    const auto moveAmount = inputHandler->IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
-   auto playerEntityTypeId = player->primaryIdType % NUM_PRIMARY_ID_TYPES;
+   auto playerEntityTypeId = player->primaryIdType;
    auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
-   auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
-
-   // position updates while player is actioning cause loss of collision data
-   // because th
-   if (playerHasControl && !inputHandler->PlayerIsActioning())
+   if (hasEntityType)
    {
-      // clip player to [0,max(uint16_t)]
-      if (inputHandler->Left())
+      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId);
+
+      // position updates while player is actioning cause loss of collision data
+      // because th
+      if (playerHasControl && !inputHandler->PlayerIsActioning())
       {
-         player->targetPosition.x = static_cast<int>(player->targetPosition.x) - moveAmount < 0
-            ? 0
-            : player->targetPosition.x - moveAmount;
+         // clip player to [0,max(uint16_t)]
+         if (inputHandler->Left())
+         {
+            player->targetPosition.x = static_cast<int>(player->targetPosition.x) - moveAmount < 0
+               ? 0
+               : player->targetPosition.x - moveAmount;
+         }
+         else if (inputHandler->Right())
+         {
+            player->targetPosition.x = static_cast<int>(player->targetPosition.x) + moveAmount > std::numeric_limits<uint16_t>::max()
+               ? std::numeric_limits<uint16_t>::max()
+               : player->targetPosition.x + moveAmount;
+         }
+
+         if (inputHandler->Up())
+         {
+            player->targetPosition.y = static_cast<int>(player->targetPosition.y) - moveAmount < 0
+               ? 0
+               : player->targetPosition.y - moveAmount;
+         }
+         else if (inputHandler->Down())
+         {
+            player->targetPosition.y = static_cast<int>(player->targetPosition.y) + moveAmount > std::numeric_limits<uint16_t>::max()
+               ? std::numeric_limits<uint16_t>::max()
+               : player->targetPosition.y + moveAmount;
+         }
       }
-      else if (inputHandler->Right())
+
+      auto playerRenderableData = mapControl->getPlayerRenderableData();
+      //handle animation assignment for the player:
+      //Scenario 1 - perform action:
+      if (inputHandler->PlayerIsActioning()
+         && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
-         player->targetPosition.x = static_cast<int>(player->targetPosition.x) + moveAmount > std::numeric_limits<uint16_t>::max()
-            ? std::numeric_limits<uint16_t>::max()
-            : player->targetPosition.x + moveAmount;
+         playerRenderableData->SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
       }
-
-      if (inputHandler->Up())
+      //Scenario 2 - show walk animation:
+      else if (mapControl->playerIsMoving
+         && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
-         player->targetPosition.y = static_cast<int>(player->targetPosition.y) - moveAmount < 0
-            ? 0
-            : player->targetPosition.y - moveAmount;
+         playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
-      else if (inputHandler->Down())
+      //Scenario 3 - show idle animation:
+      else if (playerHasControl)
       {
-         player->targetPosition.y = static_cast<int>(player->targetPosition.y) + moveAmount > std::numeric_limits<uint16_t>::max()
-            ? std::numeric_limits<uint16_t>::max()
-            : player->targetPosition.y + moveAmount;
+         playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+      }
+
+      //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
+      const bool isPlayingActionButShouldReturnControlToPlayer = 
+         (playerRenderableData->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
+         && (playerRenderableData->currentFrameIndex == playerRenderableData->frameCount - 1)
+         && (std::chrono::milliseconds{ playerRenderableData->currentFrameMs } >= playerRenderableData->duration);
+
+      //if the above bool is true, set the player back to their idle animation:
+      if (isPlayingActionButShouldReturnControlToPlayer)
+      {
+         playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
    }
-
-   auto playerRenderableData = mapControl->getPlayerRenderableData();
-   //handle animation assignment for the player:
-   //Scenario 1 - perform action:
-   if (inputHandler->PlayerIsActioning() && hasEntityType
-      && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
-   {
-      playerRenderableData->SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
-   }
-   //Scenario 2 - show walk animation:
-   else if (mapControl->playerIsMoving && hasEntityType
-      && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
-   {
-      playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
-   }
-   //Scenario 3 - show idle animation:
-   else if (playerHasControl)
-   {
-      playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-   }
-
-   //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
-   bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
-      && (playerRenderableData->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-      && (playerRenderableData->currentFrameIndex == playerRenderableData->frameCount - 1)
-      && (std::chrono::milliseconds{ playerRenderableData->currentFrameMs } >= playerRenderableData->duration);
-
-   //if the above bool is true, set the player back to their idle animation:
-   if (isPlayingActionButShouldReturnControlToPlayer)
-   {
-      playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-   }
-
    if (!hexEditor->playerHasHexEditorControl || !playerHasControl)
    {
       return;

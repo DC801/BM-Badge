@@ -17,8 +17,8 @@ all of the old code used as the foundation of this badge.
 #include "shim_timer.h"
 using namespace std::chrono;
 
-static inline const auto DrawWidth = uint16_t{ 320 };
-static inline const auto DrawHeight = uint16_t{ 240 };
+static inline const auto DrawWidth = 320;
+static inline const auto DrawHeight = 240;
 static inline const auto FramebufferSize = DrawWidth * DrawHeight;
 
 static inline const auto MapGoDirectionNameLength = 12;
@@ -77,9 +77,25 @@ static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 #ifdef DC801_EMBEDDED
 static inline const auto RtcPrescaler = 992; // round(32768 Hz / 30 [target FPS (Hz)]) - 1
 #else
+
+struct GameClock
+{
+   using rep = uint32_t;
+   using period = std::milli;
+   using duration = std::chrono::duration<rep, period>;
+   using time_point = std::chrono::time_point<GameClock>;
+
+   static time_point now() noexcept
+   {
+      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+      auto epochTime = now_ms.time_since_epoch().count();
+      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
+   }
+};
+
 static inline const auto TargetFPS = 30;
-static inline const auto MinTimeBetweenRenders = std::chrono::milliseconds(1000) / TargetFPS;
-static inline const auto MinTimeBetweenUIInput = std::chrono::milliseconds(1000);
+static inline const auto MinTimeBetweenRenders = GameClock::duration{ 1000 } / TargetFPS ;
+static inline const auto MinTimeBetweenUIInput = GameClock::duration{ 1000 };
 static inline const auto IntegrationStepSize = MinTimeBetweenRenders/3;
 #endif
 

@@ -324,6 +324,7 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
          }
       }
    }
+   //blt();
 }
 
 void FrameBuffer::blt()
