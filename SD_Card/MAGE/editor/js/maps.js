@@ -247,6 +247,7 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			warnings[checkName][mapFileName].push({
 				name: entityNameOrNoName(tiledObject.compositeEntity.name),
 				id: tiledObject.compositeEntity.id,
+				sourceFile: mapFileName,
 				warningMessage: warningMessage,
 				fixes: fixes,
 			});

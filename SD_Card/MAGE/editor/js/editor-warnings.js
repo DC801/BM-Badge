@@ -3,6 +3,13 @@ TODO
 
 source of truth IS scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 
+ask: commit e68dfc941a6f276959a064f752262d11c50000ed not needed?
+- https://github.com/DC801/BM-Badge/blame/chapter_2/SD_Card/MAGE/editor/js/editor-scripts.js
+
+meta / file info for fix
+- paste into `x` file
+- other?
+
 how will look work for multiple entities of the same or similar names (eg bread, torch)
 - NEED TO BIND ALL map entities
 - detect many2one?
@@ -16,6 +23,8 @@ missing room look scripts
 
 ask: warning type for duplicate files anywhere across scenario_source_files?
 
+has-danger removed from bootstrap: in other files
+
 remove encoder capabilities?
 ---
 looking for scripts in top-level `properties` of a map file?
@@ -25,6 +34,12 @@ generated fixes
 ---
 check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
 use randomness to get past taken names?
+flesh out scriptName fix parameter for scriptName store and document its special status
+anything needed for script editor once fix script names are generated uniquely? maybe not
+consider using store.scriptsOptions for scenarioData script names
+consider using existing store operations for scripts if nothing bad would happen
+consider using watch instead of reactivity for uniqueness
+debounce?
 
 blacklisting
 ---
@@ -43,52 +58,111 @@ Vue.component('editor-warning', {
 	},
 	data: function() {
 		return {
-			fixesParameters: this.entity.fixes ? this.entity.fixes.parameters : {},
+			fixParameters: this.entity.fixes ? this.entity.fixes.parameters : {},
+			fixText: [],
+			oldScriptName: null,
+			isScriptNameUnique: true,
 		};
 	},
-	computed: {
-		fixesText: function () {
-			return this.entity.fixes ? this.entity.fixes.getFixes(this.fixesParameters) : [];
-		},
+	watch: {
+		fixParameters: {
+			handler: function (newFixParameters) {
+				// TODO need to not run the scriptName stuff when a standard param changes
+
+				var newScriptName = newFixParameters.scriptName;
+				if (newScriptName !== undefined) {
+					// of all possible keys for this.fixParameters, `scriptName` gets
+					// special treatment (involving $store.state.warningsGeneratedScriptNames)
+
+					console.group(`XXX trying script ${newScriptName} from entity ${this.entity.name} from map ${this.entity.sourceFile}`);
+
+					var takenByWarnings = this.$store.state.warningsGeneratedScriptNames;
+					var takenByScenarioData = this.$store.getters.scriptsOptions;
+					var scriptNameTaken =
+						(! newScriptName)
+						|| takenByScenarioData.includes(newScriptName)
+						|| takenByWarnings.includes(newScriptName);
+
+					if (scriptNameTaken) {
+						console.log(`XXX clashing script ${newScriptName}`);
+
+						this.isScriptNameUnique = false;
+					} else {
+						console.log(`XXX reserving script ${newScriptName}`);
+
+						this.isScriptNameUnique = true;
+						this.$store.commit('RESERVE_WARNING_SCRIPT_NAME', {
+							scriptName: newScriptName,
+						});
+					}
+
+					var oldScriptName = this.oldScriptName;
+					if (oldScriptName) {
+						console.log(`XXX freeing script ${oldScriptName}`);
+						
+						this.$store.commit('FREE_WARNING_SCRIPT_NAME', {
+							scriptName: oldScriptName,
+						});
+					} else {
+						console.log('XXX oldScriptName was null');
+					}
+
+					console.log(`XXX stash old ${newScriptName}`);
+					this.oldScriptName = newScriptName;
+
+					console.groupEnd();
+				}
+
+				this.fixText = this.entity.fixes.getFixes(newFixParameters);
+			},
+			deep: true,
+			immediate: true,
+		}
 	},
 	template: /*html*/`
 <div class="editor-warning">
 	<div class="alert alert-primary" :class="{'mb-0': ! entity.fixes}" role="alert">{{ entity.warningMessage }}</div>
 	<div v-if="entity.fixes">
-		<div class="mb-3" v-if="Object.keys(fixesParameters).length">
+		<div class="mb-3" v-if="Object.keys(fixParameters).length">
 			<span>Override certain aspects of the fixes if you need to:</span>
 			<div
 				class="input-group my-1"
-				v-for="(parameterValue, parameterName) in fixesParameters"
+				v-for="(parameterValue, parameterName) in fixParameters"
 			>
 				<div class="input-group-prepend">
 					<span class="input-group-text">{{parameterName}}</span>
 				</div>
 				<input
 					class="form-control"
+					:class="{ 'is-invalid': (! isScriptNameUnique) && (parameterName === 'scriptName') }"
 					type="text"
 					:name="parameterName"
-					v-model="fixesParameters[parameterName]"
+					v-model.trim="fixParameters[parameterName]"
 				/>
 			</div>
 		</div>
-		<div>
+		<div v-if="isScriptNameUnique">
 			<span>Click the button by any of these fixes to copy it:</span>
 			<div
 				class="my-1"
-				v-for="(fixText, fixIndex) in fixesText"
-				:key="fixIndex"
+				v-for="(thisFixText, thisFixIndex) in fixText"
+				:key="thisFixIndex"
 			>
 				<div class="row align-items-center flex-nowrap mx-0">
-					<pre class="border border-primary rounded p-2 m-0 w-100">{{fixText}}</pre>
+					<pre class="border border-primary rounded p-2 m-0 w-100">{{thisFixText}}</pre>
 					<copy-button
-						:text="fixText"
+						:text="thisFixText"
 						class="ml-1"
 						style="width: 2rem;"
 					></copy-button>
 				</div>
 			</div>
 		</div>
+		<div 
+			v-else	
+			class="alert alert-danger"
+			role="alert">
+		Script name already taken or empty.</div>
 	</div>
 </div>
 `});
@@ -101,11 +175,6 @@ Vue.component('editor-warnings', {
 			type: Object,
 			required: true
 		}
-	},
-	data: function() {
-		return {
-			scriptNamesFromFixes: new Set(),
-		};
 	},
 	computed: {
 		warningsSorted: function() {
@@ -130,14 +199,6 @@ Vue.component('editor-warnings', {
 			checksSorted.sort(sortByNameInIndexZero);
 			return checksSorted;
 		},
-		scriptNamesFromScenarioData: function() {
-			return new Set(Object.keys(this.scenarioData.scripts));
-		},
-	},
-	methods: {
-		scriptNameIsTaken(scriptName) {
-			return this.scriptNamesFromScenarioData.has(scriptName) || this.scriptNamesFromFixes.has(scriptName);
-		}
 	},
 	template: /*html*/`
 <div class="editor-warnings card text-white my-3">

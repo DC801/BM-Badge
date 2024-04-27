@@ -31,6 +31,7 @@ var warningFixGenerators = {
 		return {
 			parameters: { // a parameter `scriptName` will be treated specially by editor-warnings.js
 				scriptName: hyphenateSeveralPieces(['interact', SCRIPT_NAME_CHAPTER_INFIX, cleanEntityName]),
+				testingParam: 'TODO remove me in warnings.js',
 			},
 			getFixes: function ({ scriptName }) {
 				var scriptNameFix =
