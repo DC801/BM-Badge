@@ -102,12 +102,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Should be involved with one of the puzzle items
 	- [x] Entity: Jean-Paul - human-sized cockatiel; buds with Frankie
 	- [x] Entity: Frankie - androgynous, Homestar Runner shirt-wearing tinkerer; buds with Jean-Paul
-	- [ ] SET: work room for fixing and making hardware (both old timey castle type hardware *and* computer type hardware); disheveled, but not hopelessly so (everything is sort of in the right place, it's just all out at the moment)
-		- [ ] Soldering stations
-		- [ ] Anvil
-		- [ ] Magnifying glasses on luxo lamp arms
-		- [ ] Cupboards and storage bays
-		- [ ] Miscellaneous semi-useful detritus
+	- [x] SET: work room for fixing and making hardware (both old timey castle type hardware *and* computer type hardware); disheveled, but not hopelessly so (everything is sort of in the right place, it's just all out at the moment)
 22. `Server room`
 	- [ ] Cutscene: Enter the room for the first time
 	- [x] Inventory item: powersupply

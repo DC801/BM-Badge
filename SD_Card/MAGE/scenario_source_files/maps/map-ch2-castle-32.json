@@ -148,7 +148,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":902,
+                 "gid":934,
                  "height":64,
                  "id":38,
                  "name":"Sea Moss",
@@ -171,7 +171,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":917,
+                 "gid":949,
                  "height":32,
                  "id":41,
                  "name":"RAM Chips",
@@ -189,7 +189,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":918,
+                 "gid":950,
                  "height":32,
                  "id":51,
                  "name":"Samson",
@@ -217,7 +217,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":936,
+                 "gid":968,
                  "height":48,
                  "id":52,
                  "name":"Gloria",
@@ -611,28 +611,28 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":635,
+         "firstgid":667,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":891,
+         "firstgid":923,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":901,
+         "firstgid":933,
          "source":"..\/entities\/entity-seamoss.json"
         }, 
         {
-         "firstgid":917,
+         "firstgid":949,
          "source":"..\/entities\/entity-ram_chips.json"
         }, 
         {
-         "firstgid":918,
+         "firstgid":950,
          "source":"..\/entities\/entity-wormy.json"
         },
     
         {
-         "firstgid":936,
+         "firstgid":968,
          "source":"..\/entities\/entity-beetle.json"
         }],
  "tilewidth":32,

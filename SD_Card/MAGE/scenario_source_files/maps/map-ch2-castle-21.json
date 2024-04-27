@@ -31,11 +31,11 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 635, 636, 637, 2147484034, 2147484033, 638, 639, 640, 0, 0,
             0, 0, 651, 652, 653, 2147484050, 2147484049, 654, 655, 656, 0, 0,
-            0, 0, 430, 0, 0, 0, 0, 0, 0, 430, 0, 0,
+            0, 0, 430, 387, 0, 0, 0, 0, 0, 430, 0, 0,
             0, 0, 625, 0, 0, 0, 0, 0, 0, 385, 0, 0,
-            0, 0, 641, 0, 0, 0, 0, 0, 0, 401, 0, 0,
+            0, 0, 641, 0, 0, 2147484051, 0, 0, 0, 401, 0, 0,
             0, 0, 657, 0, 612, 613, 614, 615, 0, 0, 0, 0,
-            0, 0, 0, 0, 430, 0, 0, 430, 0, 0, 0, 0,
+            0, 0, 0, 0, 430, 0, 0, 430, 0, 403, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 658, 659, 660, 0, 0, 663, 664, 665, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -177,10 +177,100 @@
                  "width":32,
                  "x":123,
                  "y":316
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":49,
+                 "name":"pie",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-pie"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":226,
+                 "y":241
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":50,
+                 "name":"3D printer",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-3dprinter"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":85,
+                 "y":103
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":51,
+                 "name":"cables box",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-cablesbox"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":153,
+                 "y":355
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":52,
+                 "name":"cables box",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-cablesbox"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":170,
+                 "y":355
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":53,
+                 "name":"cables box",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-cablesbox"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":188,
+                 "y":354
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -268,7 +358,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":47,
+ "nextobjectid":54,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

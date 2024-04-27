@@ -176,6 +176,16 @@ ch2-touch-abacus-no {
 
 /* ---------- ENTITIES ---------- */
 
+ch2-interact-pie {
+	show dialog { PLAYER "Huh. A raspberry pie." }
+}
+ch2-interact-3dprinter {
+	show dialog { PLAYER "I have zero idea what this is supposed to be." }
+}
+ch2-interact-cablesbox {
+	show dialog { PLAYER "Just some boxes full of cables." }
+}
+
 interact-ch2-jeanpaul {
 	copy face-player;
 	if (variable ch2-storyflag-round is < 3) {

@@ -65,19 +65,19 @@ on_go-castle-22-south {
 
 interact-ch2-scuzzy {
 	turn player control off;
-	copy face-player;
+	copy interrupt-walk;
 	show dialog {
 		SELF "Consider this castle. In a metaphorical sense, it's like a computer."
 		"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
 		"In isolation each room, and each of us, are capable of little. But together, we can collaborate and build amazing things."
 	}
-	turn entity "%SELF%" west;
+	copy resume-walk;
 	wait 500ms;
-	copy face-player;
+	copy interrupt-walk;
 	show dialog {
 		SELF "I mean, the castle is also a computer in a LITERAL sense, too...."
 	}
-	turn entity "%SELF%" west;
+	copy resume-walk;
 	turn player control on;
 }
 interact-ch2-ckwatt {
