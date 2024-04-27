@@ -60,65 +60,79 @@ Vue.component('editor-warning', {
 		return {
 			fixParameters: this.entity.fixes ? this.entity.fixes.parameters : {},
 			fixText: [],
-			oldScriptName: null,
-			isScriptNameUnique: true,
+			scriptNameTaken: false,
 		};
 	},
-	watch: {
-		fixParameters: {
-			handler: function (newFixParameters) {
-				// TODO need to not run the scriptName stuff when a standard param changes
+	mounted: function() {
+		var vm = this;
+		Object.keys(this.fixParameters).forEach(function(parameterName) {
+			vm.$watch(
+				function() {
+					// use a function in case parameterName isn't ok to access with a dot
+					return vm.fixParameters[parameterName];
+				},
+				function(newParameter, oldParameter) {
+					vm.reactToFixParameterChanged(
+						parameterName,
+						newParameter,
+						oldParameter
+					);
+				},
+				{
+					immediate: true
+				});
+		});
+	},
+	methods: {
+		reactToFixParameterChanged: function (parameterName, newParameter, oldParameter) {
+			console.group(`XXX param ${parameterName} changed from entity ${this.entity.name} from map ${this.entity.sourceFile}`);
 
-				var newScriptName = newFixParameters.scriptName;
-				if (newScriptName !== undefined) {
-					// of all possible keys for this.fixParameters, `scriptName` gets
-					// special treatment (involving $store.state.warningsGeneratedScriptNames)
+			if (parameterName === 'scriptName') {
+				// of all possible keys for this.fixParameters, `scriptName` gets
+				// special treatment (involving $store.state.warningsGeneratedScriptNames)
 
-					console.group(`XXX trying script ${newScriptName} from entity ${this.entity.name} from map ${this.entity.sourceFile}`);
+				console.log(`XXX trying script ${newParameter}`);
 
-					var takenByWarnings = this.$store.state.warningsGeneratedScriptNames;
-					var takenByScenarioData = this.$store.getters.scriptsOptions;
-					var scriptNameTaken =
-						(! newScriptName)
-						|| takenByScenarioData.includes(newScriptName)
-						|| takenByWarnings.includes(newScriptName);
+				var takenByWarnings = this.$store.state.warningsGeneratedScriptNames;
+				var takenByScenarioData = this.$store.getters.scriptsOptions;
+				var scriptNameTaken =
+					(!newParameter)
+					|| takenByScenarioData.includes(newParameter)
+					|| takenByWarnings.includes(newParameter);
 
-					if (scriptNameTaken) {
-						console.log(`XXX clashing script ${newScriptName}`);
+				if (scriptNameTaken) {
+					console.log(`XXX clashing script ${newParameter}`);
 
-						this.isScriptNameUnique = false;
-					} else {
-						console.log(`XXX reserving script ${newScriptName}`);
+					this.scriptNameTaken = true;
+				} else {
+					console.log(`XXX reserving script ${newParameter}`);
 
-						this.isScriptNameUnique = true;
-						this.$store.commit('RESERVE_WARNING_SCRIPT_NAME', {
-							scriptName: newScriptName,
-						});
-					}
-
-					var oldScriptName = this.oldScriptName;
-					if (oldScriptName) {
-						console.log(`XXX freeing script ${oldScriptName}`);
-						
-						this.$store.commit('FREE_WARNING_SCRIPT_NAME', {
-							scriptName: oldScriptName,
-						});
-					} else {
-						console.log('XXX oldScriptName was null');
-					}
-
-					console.log(`XXX stash old ${newScriptName}`);
-					this.oldScriptName = newScriptName;
-
-					console.groupEnd();
+					this.scriptNameTaken = false;
+					this.$store.commit('RESERVE_WARNING_SCRIPT_NAME', {
+						scriptName: newParameter,
+					});
 				}
 
-				this.fixText = this.entity.fixes.getFixes(newFixParameters);
-			},
-			deep: true,
-			immediate: true,
-		}
-	},
+				if (oldParameter) {
+					console.log(`XXX freeing script ${oldParameter}`);
+
+					this.$store.commit('FREE_WARNING_SCRIPT_NAME', {
+						scriptName: oldParameter,
+					});
+				} else {
+					console.log('XXX old scriptName was null');
+				}
+			}
+
+			if (! this.scriptNameTaken) { // save a bit of work if the fix text is going to be hidden
+				console.log('XXX update fixText');
+
+				this.fixText = this.entity.fixes.getFixes(this.fixParameters);
+			}
+
+			console.groupEnd();
+		},
+	},	
 	template: /*html*/`
 <div class="editor-warning">
 	<div class="alert alert-primary" :class="{'mb-0': ! entity.fixes}" role="alert">{{ entity.warningMessage }}</div>
@@ -134,14 +148,21 @@ Vue.component('editor-warning', {
 				</div>
 				<input
 					class="form-control"
-					:class="{ 'is-invalid': (! isScriptNameUnique) && (parameterName === 'scriptName') }"
+					:class="{ 'is-invalid': scriptNameTaken && (parameterName === 'scriptName') }"
 					type="text"
 					:name="parameterName"
 					v-model.trim="fixParameters[parameterName]"
 				/>
 			</div>
 		</div>
-		<div v-if="isScriptNameUnique">
+		<div
+			v-if="scriptNameTaken"
+			class="alert alert-danger"
+			role="alert"
+		>
+			Script name already taken or empty.
+		</div>
+		<div v-else>
 			<span>Click the button by any of these fixes to copy it:</span>
 			<div
 				class="my-1"
@@ -158,11 +179,7 @@ Vue.component('editor-warning', {
 				</div>
 			</div>
 		</div>
-		<div 
-			v-else	
-			class="alert alert-danger"
-			role="alert">
-		Script name already taken or empty.</div>
+
 	</div>
 </div>
 `});
