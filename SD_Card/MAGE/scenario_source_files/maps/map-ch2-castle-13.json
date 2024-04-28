@@ -31,7 +31,7 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 545, 2147484193, 354, 0, 0, 354, 545, 2147484193, 0, 0,
-            0, 0, 561, 2147484209, 370, 593, 2147484241, 370, 561, 2147484209, 0, 0,
+            0, 0, 561, 2147484209, 370, 289, 2147483937, 370, 561, 2147484209, 0, 0,
             0, 0, 577, 2147484225, 0, 306, 2147483954, 0, 577, 2147484225, 0, 0,
             0, 369, 0, 0, 0, 0, 0, 0, 0, 2147484035, 2147484017, 0,
             0, 539, 540, 403, 382, 381, 2147484029, 367, 0, 2147484188, 2147484187, 0,
@@ -163,7 +163,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":901,
+                 "gid":933,
                  "height":32,
                  "id":42,
                  "name":"Templeton",
@@ -186,7 +186,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484565,
+                 "gid":2147484597,
                  "height":48,
                  "id":43,
                  "name":"Sebastian",
@@ -209,7 +209,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":891,
+                 "gid":923,
                  "height":32,
                  "id":35,
                  "name":"Aurelius",
@@ -252,6 +252,18 @@
                  "width":32,
                  "x":176,
                  "y":113
+                }, 
+                {
+                 "class":"",
+                 "gid":1019,
+                 "height":64,
+                 "id":71,
+                 "name":"door",
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":160,
+                 "y":95
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -440,7 +452,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":969,
+                 "gid":1001,
                  "height":40,
                  "id":64,
                  "name":"King Gibson",
@@ -497,7 +509,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":71,
+ "nextobjectid":72,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -532,24 +544,29 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":635,
+         "firstgid":667,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":891,
+         "firstgid":923,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":901,
+         "firstgid":933,
          "source":"..\/entities\/entity-slimey.json"
         }, 
         {
-         "firstgid":916,
+         "firstgid":948,
          "source":"..\/entities\/entity-lizardwizard.json"
         }, 
         {
-         "firstgid":956,
+         "firstgid":988,
          "source":"..\/entities\/entity-gibson.json"
+        },
+    
+        {
+         "firstgid":1018,
+         "source":"..\/entities\/entity-usb-door.json"
         }],
  "tilewidth":32,
  "type":"map",

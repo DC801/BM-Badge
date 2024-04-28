@@ -52,6 +52,10 @@ on_load-ch2-castle-13 {
 
 	// room unique stuff
 	register look + up -> look-ch2-castle-13-up;
+	if (debug mode is on) {
+		register skip -> ch2-skip-13
+		debug!("<c>SKIP</>: skip this cutscene")
+	}
 
 	if (
 		flag ch2-installed-goldfish is true
@@ -65,6 +69,7 @@ on_load-ch2-castle-13 {
 		|| warp state is "Ch2 King Returns"
 	) {
 		teleport entity Templeton to geometry templeton-sit;
+		set entity door on_tick to yeet;
 	} else {
 		set entity "King Gibson" on_tick to yeet;
 	}
@@ -81,6 +86,11 @@ on_load-ch2-castle-13 {
 	} else if (warp state is "Ch2 King Returns") {
 		copy ch2-cutscene-kingreturns;
 	}
+}
+
+ch2-skip-13 {
+	set flag ch2-cutseen-castle13 to true;
+	load map ch2-castle-13;
 }
 
 ch2-templeton-pace {
@@ -259,7 +269,7 @@ on_tick-ch2-castle-13 {
 	if (flag ch2-king-rescued is true) {
 		if (entity "%PLAYER%" is inside geometry north-hitbox) {
 			set warp state to walk_from-south;
-			load map ch2-castle-14;
+			copy ch2-load-castle-14-special;
 		}
 	}
 }
@@ -275,7 +285,7 @@ on_exit-ch2-castle-13 { // sanitize ch2 room state
 on_go-castle-13-north {
 	copy on_exit-ch2-castle-13;
 	copy warping-out-fade-out;
-	load map ch2-castle-14;
+	copy ch2-load-castle-14-special;
 }
 on_go-castle-13-south {
 	copy on_exit-ch2-castle-13;

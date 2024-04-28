@@ -61,6 +61,15 @@
 			"south": "on_go-castle-14-south"
 		}
 	},
+	"ch2-castle-14-doorless": {
+		"path": "maps/map-ch2-castle-14-doorless.json",
+		"on_load": "on_load-ch2-castle-14",
+		"on_look": "look-ch2-castle-14",
+		"on_tick": "on_tick-ch2-castle-14",
+		"directions": {
+			"south": "on_go-castle-14-south"
+		}
+	},
 	"ch2-castle-21": {
 		"path": "maps/map-ch2-castle-21.json",
 		"on_load": "on_load-ch2-castle-21",

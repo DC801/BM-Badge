@@ -449,7 +449,7 @@
 		"emotes": {
 			"default": {
 				"tileid": 15,
-				"flip_x": false
+				"flip_x": true
 			}
 		}
 	},

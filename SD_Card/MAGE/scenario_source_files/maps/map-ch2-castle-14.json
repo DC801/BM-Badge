@@ -11,7 +11,7 @@
             299, 301, 1610613069, 339, 375, 296, 296, 296, 2147483949, 2147483947, 0, 0,
             315, 292, 296, 310, 293, 2147483964, 316, 307, 293, 2147483963, 0, 0,
             331, 292, 293, 372, 314, 2147483962, 296, 374, 332, 2147483979, 0, 0,
-            347, 348, 348, 348, 353, 2147484001, 2147483996, 2147483996, 2147483996, 2147483995, 0, 0,
+            347, 348, 348, 348, 348, 349, 2147483996, 2147483996, 2147483996, 2147483995, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
          "id":6,
@@ -74,7 +74,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":901,
+                 "gid":933,
                  "height":40,
                  "id":35,
                  "name":"Clock",
@@ -97,7 +97,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":919,
+                 "gid":951,
                  "height":40,
                  "id":36,
                  "name":"King Gibson",
@@ -334,19 +334,19 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":635,
+         "firstgid":667,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":891,
+         "firstgid":923,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":901,
+         "firstgid":933,
          "source":"..\/entities\/entity-clock.json"
         }, 
         {
-         "firstgid":906,
+         "firstgid":938,
          "source":"..\/entities\/entity-gibson.json"
         }],
  "tilewidth":32,

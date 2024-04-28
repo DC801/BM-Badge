@@ -117,7 +117,7 @@ on_load-ch2-town {
 		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms;
 	}
 	copy ch2-map-init;
-	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (TODO Maybe this counts as a bug; maybe really fix it?)
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo Maybe this counts as a bug; maybe really fix it?)
 	turn player control off;
 	wait 50ms;
 	turn player control on;

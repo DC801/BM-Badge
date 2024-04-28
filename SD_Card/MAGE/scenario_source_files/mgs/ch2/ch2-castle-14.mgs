@@ -25,6 +25,15 @@ look-ch2-gibson {
 
 /* ---------- ON_LOAD ---------- */
 
+ch2-load-castle-14-special {
+	if (flag ch2-king-rescued is true) {
+		set flag ch2-room14-go-doorless to true;
+		load map ch2-castle-14-doorless;
+	} else {
+		load map ch2-castle-14;
+	}
+}
+
 ch2-gibson-scramble {
 	copy variable ch2-gibson-x from entity "King Gibson" x;
 	if (flag ch2-gibson-pos-odd is true) {
@@ -39,6 +48,13 @@ ch2-gibson-scramble {
 }
 
 on_load-ch2-castle-14 {
+	if (warp state is "king returns teleport") {
+		goto ch2-cutscene-kingreturns-bedroom;
+	}
+	// jump to doorless version of the room
+	if (flag ch2-room14-go-doorless is true) {
+		set flag ch2-room14-go-doorless to false;
+	}
 	// ch2 room state
 	mutate ch2-in-room = 14;
 
@@ -273,7 +289,12 @@ interact-ch2-keypad-good-pass {
 		"<g>DOOR UNLOCKED</>"
 	}
 	set entity "%SELF%" on_interact to interact-ch2-keypad-prompt;
-	goto ch2-cutscene-kingreturns-bedroom;
+	copy capture_player_state;
+	copy entity "King Gibson" x into variable kingpos-x;
+	copy entity "King Gibson" y into variable kingpos-y;
+	// not necessary to capture the king's direction, as he always faces the player
+	set warp state to "king returns teleport";
+	load map ch2-castle-14-doorless;
 }
 
 ch2-king-leaves {
@@ -281,11 +302,15 @@ ch2-king-leaves {
 }
 
 ch2-cutscene-kingreturns-bedroom {
+	copy restore_player_state;
+	copy variable kingpos-x into entity "King Gibson" x;
+	copy variable kingpos-y into entity "King Gibson" y;
+	turn player control off;
+	wait 600ms;
 	show dialog {
 		KING "!!"
 		"Aha! You've done it! At last, I'm free!"
 	}
-	turn player control off;
 	set entity "King Gibson" on_tick to ch2-king-leaves;
 	wait 400ms;
 	fade out camera to black over 600ms;

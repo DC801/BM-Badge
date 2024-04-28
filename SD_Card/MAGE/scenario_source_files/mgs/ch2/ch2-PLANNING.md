@@ -14,6 +14,7 @@
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations
 - [ ] Check that every entity has an on_look script
+- [ ] Investigate and fix color pallet issues between tilesets (specifically grass in the castle/town tilesets, and the artifact cubby and the wall)
 
 ## Specific work needing done
 

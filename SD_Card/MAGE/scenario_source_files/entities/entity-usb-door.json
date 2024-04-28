@@ -1,0 +1,14 @@
+{ "columns":2,
+ "image":"entity-usb-door.png",
+ "imageheight":64,
+ "imagewidth":128,
+ "margin":0,
+ "name":"entity-usb-door",
+ "spacing":0,
+ "tilecount":2,
+ "tiledversion":"1.9.2",
+ "tileheight":64,
+ "tilewidth":64,
+ "type":"tileset",
+ "version":"1.9"
+}

@@ -188,7 +188,7 @@ warp-ch2-13 {
 }
 warp-ch2-14 {
 	copy warp-common;
-	load map ch2-castle-14;
+	copy ch2-load-castle-14-special;
 }
 warp-ch2-21 {
 	copy warp-common;
