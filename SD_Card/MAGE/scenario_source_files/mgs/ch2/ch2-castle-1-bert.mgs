@@ -63,7 +63,7 @@ ch2-cutscene-bert-secret {
 	}
 	walk entity Bert to geometry entrance1-path over 800ms;
 	wait 80ms;
-	teleport entity Bert to geometry hiding-spot;
+	set entity Bert on_tick to yeet;
 	set entity "%PLAYER%" on_tick to null_script;
 	turn player control on;
 	set flag interrupt to true;

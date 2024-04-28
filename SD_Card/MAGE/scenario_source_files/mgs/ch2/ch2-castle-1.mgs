@@ -107,6 +107,10 @@ on_load-ch2-castle-1 {
 
 	// room unique stuff
 	register look + up -> look-ch2-castle-1-up;
+	if (flag ch2-cutseen-bert-secret is true) {
+		set entity Bert on_tick to yeet;
+		// so his name is blank for when Ring Zero is back
+	}
 
 	// DEBUG
 	if (debug mode is on) {
@@ -226,7 +230,7 @@ ch2-artifact-walk {
 	// walks up to it
 	walk entity "%PLAYER%" to geometry artifact-get over 200ms;
 	wait 600ms;
-	set entity Artifact on_tick to yeet
+	set entity Artifact on_tick to yeet;
 	// remove artifact
 	wait 100ms;
 	set entity XA on_tick to ch2-camera-from-artifact;

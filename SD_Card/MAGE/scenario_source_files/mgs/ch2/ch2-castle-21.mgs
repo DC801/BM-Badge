@@ -233,6 +233,7 @@ interact-ch2-frankie {
 			PLAYER "Thank you!"
 		}
 		set flag ch2-carrying-manual to false;
+		set flag ch2-installed-manual to true;
 		set flag ch2-abacus-permission to true;
 		turn entity Frankie south;
 		return;

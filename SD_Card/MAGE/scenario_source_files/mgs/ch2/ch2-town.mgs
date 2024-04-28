@@ -208,6 +208,11 @@ on_go-ch2-town-bakery {
 	copy warping-out-fade-out;
 	load map ch2-bakery;
 }
+on_go-ch2-town-library {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-lodge;
+}
 on_go-ch2-town-greenhouse {
 	copy on_exit-ch2-town;
 	copy warping-out-fade-out;

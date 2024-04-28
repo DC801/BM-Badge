@@ -194,6 +194,7 @@
 			"west": "on_go-ch2-town-west",
 			"home": "on_go-ch2-town-home",
 			"bakery": "on_go-ch2-town-bakery",
+			"library": "on_go-ch2-town-library",
 			"greenhouse": "on_go-ch2-town-greenhouse",
 			"smith": "on_go-ch2-town-smith",
 			"beatrice": "on_go-ch2-town-beatrice",

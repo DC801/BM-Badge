@@ -10,6 +10,8 @@ start-hanoi {
 	set map on_tick to tick_hanoi;
 }
 
+const!($win_plate = 6)
+
 check_cursor {
 	if (variable cursor_pos is 1) {
 		if (variable array1_length is 0) {
@@ -104,7 +106,7 @@ hanoi_move {
 			set flag hanoi_warning_size to true;
 		}
 	}
-	if (variable cursor_value is 7) {
+	if (variable cursor_value is $win_plate) {
 		set flag hanoi_won to true;
 	}
 	copy draw_hanoi;
@@ -196,9 +198,9 @@ hanoi_won_message_B {
 	}
 }
 serial dialog hanoi_size_warning  { "     <m>Cannot place larger plate on top of a smaller plate!</>" }
-serial dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #7 grabbed!</>" }
-serial dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #7 grabbed!</>" }
-serial dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #7 grabbed!</>      ||" }
+serial dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #6 grabbed!</>" }
+serial dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #6 grabbed!</>" }
+serial dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #6 grabbed!</>      ||" }
 serial dialog hanoi_won_message1b  { "         ||              <g>Score: $hanoi_move_count$</>" }
 serial dialog hanoi_won_message2b  { "                         <g>Score: $hanoi_move_count$</>" }
 serial dialog hanoi_won_message3b2 { "                         <g>Score: $hanoi_move_count$</>               ||" }
@@ -308,7 +310,7 @@ draw_hanoi {
 		" "
 		"============================================================"
 		"=------------------ <m>THE PLATES OF HANOI</> -------------------="
-		"=----------------- Grab plate #7 to win! ------------------="
+		"=----------------- Grab plate #6 to win! ------------------="
 		"============================================================"
 	}
 
@@ -468,14 +470,14 @@ hanoi_reset {
 hanoi_init_variables {
 	mutate cursor_pos = 1;
 	mutate cursor_value = 0;
-	mutate array1_7 = 1;
-	mutate array1_6 = 2;
-	mutate array1_5 = 3;
-	mutate array1_4 = 4;
-	mutate array1_3 = 5;
-	mutate array1_2 = 6;
-	mutate array1_1 = 7;
-	mutate array1_length = 7;
+	mutate array1_7 = 0;
+	mutate array1_6 = 1;
+	mutate array1_5 = 2;
+	mutate array1_4 = 3;
+	mutate array1_3 = 4;
+	mutate array1_2 = 5;
+	mutate array1_1 = 6;
+	mutate array1_length = 6;
 	mutate array2_7 = 0;
 	mutate array2_6 = 0;
 	mutate array2_5 = 0;

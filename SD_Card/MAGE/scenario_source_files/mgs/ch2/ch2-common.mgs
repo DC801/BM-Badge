@@ -144,6 +144,7 @@ ch2-map-init-warp-in {
 }
 
 ch2-map-init {
+	turn lights control off;
 	copy ch2-map-init-registers;
 	copy ch2-map-init-hex;
 	copy ch2-map-init-serial;

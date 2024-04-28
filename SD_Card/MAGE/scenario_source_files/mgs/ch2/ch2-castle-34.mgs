@@ -124,8 +124,8 @@ ch2-iron-content {
 		Clara "You need the plate to match the size of a 12\" vinyl record?"
 		PLAYER "I hadn't thought about that, but probably, yeah."
 		Clara "Oh, no."
-		"Well, the good news: we do have a plate large enough. The #7. The bad news...."
-		"...the #7 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
+		"Well, the good news: we do have a plate large enough. The #6. The bad news...."
+		"...the #6 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
 		"...Aaaaand the plates are fragile enough that you can't stack heavier ones on top of lighter ones."
 		PLAYER "...Oh, no."
 		Clara "Yeah, so... go on up to the PlateMover 9000 and... uh, good luck."
@@ -229,8 +229,8 @@ ch2-touch-plate {
 			Clara "You need a plate that'll match the size of a 12\" vinyl record?"
 			PLAYER "I hadn't thought about that, but probably, yeah."
 			Clara "Oh, no."
-			"Well, the good news: we do have a plate large enough. The #7. The bad news...."
-			"...the #7 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
+			"Well, the good news: we do have a plate large enough. The #6. The bad news...."
+			"...the #6 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
 			"...Aaaaand the plates are fragile enough that you can't stack heavier ones on top of lighter ones."
 			PLAYER "...Oh, no."
 			Clara "Yeah, so... uh, good luck with that."
@@ -247,7 +247,7 @@ ch2-touch-plate {
 		}
 	} else {
 		show dialog {
-			PLAYER "Well, let's try to get that #7 plate out of there."
+			PLAYER "Well, let's try to get that #6 plate out of there."
 		}
 		copy start-hanoi;
 	}
@@ -255,9 +255,9 @@ ch2-touch-plate {
 won_hanoi_get_plate {
 	copy script ch2-pickup-plate;
 	show dialog {
-		PLAYER "Aha! I got plate #7!"
+		PLAYER "Aha! I got plate #6!"
 	}
-	if (variable hanoi_move_count is 65) {
+	if (variable hanoi_move_count is 33) {
 		show dialog {
 			Clara "Sweet. And it looks like you did it super efficiently, too. Nice!"
 		}
