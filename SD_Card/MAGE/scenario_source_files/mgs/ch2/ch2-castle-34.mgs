@@ -176,7 +176,10 @@ interact-ch2-clara {
 		copy resume-walk;
 	} else if (flag ch2-jukebox-backstory is true) {
 		show dialog {
-			SELF "(TODO: generic post-Hanoi response)"
+			SELF "Jeez, technology sometimes, you know?"
+			"We could have kept those plates on some normal shelf, but my boss wanted \"technological novelty\" for his project."
+			"Technology should empower us, not make normal things harder to do!"
+			"...Sorry for rambling. It's a pet peeve for me, is all."
 		}
 	} else {
 		copy ch2-iron-content;
@@ -210,7 +213,7 @@ ch2-touch-plate {
 			PLAYER "Yeah, so I need a plate with high iron content. For reasons."
 			Clara "Well, those are the fancy orange plates from Hanoi. Oranges, browns, and reds are almost always an iron oxide glaze."
 			PLAYER "Cool. So, how do I get the plates out?"
-			Clara "Well... you insert a token, and the PlateMover 9000 will let you move the grabber arm to select a plate for it to dispense."
+			Clara "Well, you insert a token, and the PlateMover 9000 will let you move the grabber arm to select a plate for it to dispense."
 			PLAYER "That's very convoluted."
 			Clara "Sorry."
 			"So... I don't know where the tokens are kept, and my boss is out of town. So unless there's a token in there already...."

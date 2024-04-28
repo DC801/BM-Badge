@@ -180,7 +180,7 @@ ch2-interact-pie {
 	show dialog { PLAYER "Huh. A raspberry pie." }
 }
 ch2-interact-3dprinter {
-	show dialog { PLAYER "I have zero idea what this is supposed to be." }
+	show dialog { PLAYER "I have no idea what this thing is supposed to do." }
 }
 ch2-interact-cablesbox {
 	show dialog { PLAYER "Just some boxes full of cables." }
@@ -190,7 +190,7 @@ interact-ch2-jeanpaul {
 	copy face-player;
 	if (variable ch2-storyflag-round is < 3) {
 		show dialog {
-			SELF "TODO (generic)"
+			SELF "The rubble is too much for us to move on our own, so instead we've been doing damage assessment for the castle's digital systems."
 		}
 	} else if (
 		flag ch2-carrying-ramchips is true
@@ -217,7 +217,8 @@ interact-ch2-frankie {
 	copy face-player;
 	if (variable ch2-storyflag-round is < 3) {
 		show dialog {
-			SELF "TODO (generic)"
+			SELF "If we can get the intercom system working, we coordinate with people trapped in other rooms."
+			"We've been able to reestablish contact with the room north of us, but that's it. There's a lot of work left for us to do."
 		}
 		turn entity Frankie south;
 		return;
@@ -242,7 +243,7 @@ interact-ch2-frankie {
 			show dialog {
 				PLAYER "Where did you say the manual was again?"
 				Frankie "The manual for my HP35s? It's in the library, in town. Black with a blue stripe at the top."
-				"I'll let you take my abacus if you bring it to me."
+				"I'll let you have my abacus if you bring it to me."
 				PLAYER "Okay. Be right back."
 			}
 			turn entity Frankie south;
@@ -304,7 +305,7 @@ interact-ch2-room21-split {
 	}
 	// They all turn toward each other
 	show dialog {
-		Jean-Paul "To be honest, the guy who can probably help best isn't here right now."
+		Jean-Paul "WEll, the guy who can help most isn't here right now."
 		Frankie "He's a bit distractable."
 		Jean-Paul "A bit?!"
 		Frankie "Yeah, maybe that was an understatement. But he was away when the earthquake hit. Don't know where he is, but wherever he is, he's stuck in that room."
@@ -348,7 +349,7 @@ interact-ch2-room21-split-s {
 	turn entity Jean-Paul toward entity "%PLAYER%";
 	turn entity Frankie toward entity "%PLAYER%";
 	show dialog {
-		PLAYER "So... I may have forgotten where I can find Sea Moss."
+		PLAYER "So, I may have forgotten where I can find Sea Moss."
 		Jean-Paul "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
 		PLAYER "And he'll be able to find me a substitute for RAM?"
 		Frankie "If anyone can, he can. He's good at being \"abstract.\""

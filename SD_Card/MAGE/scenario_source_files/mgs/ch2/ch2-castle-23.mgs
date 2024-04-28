@@ -29,7 +29,7 @@ look-ch2-helvetica {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tHer attention is fixed on the numerous gauges and dials at her workstation. She seems to be concentrating fiercely -- if the twitch of her tail is any indication."
+		"\tHer attention is fixed on the numerous gauges and dials at her workstation. She seems to be concentrating fiercely, if the twitch of her tail is any indication."
 	}
 }
 
