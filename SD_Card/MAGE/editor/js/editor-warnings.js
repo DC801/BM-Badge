@@ -1,34 +1,17 @@
 /*
 TODO
 
-source of truth IS scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
-
-ask: commit e68dfc941a6f276959a064f752262d11c50000ed not needed?
-- https://github.com/DC801/BM-Badge/blame/chapter_2/SD_Card/MAGE/editor/js/editor-scripts.js
-
-meta / file info for fix
-- paste into `x` file
-- other?
-
-how will look work for multiple entities of the same or similar names (eg bread, torch)
-- NEED TO BIND ALL map entities
-- detect many2one?
-
-two more warning types
+ask
 ---
-orphaned scripts
-missing room look scripts
+commit e68dfc941a6f276959a064f752262d11c50000ed not needed?
+	- https://github.com/DC801/BM-Badge/blame/chapter_2/SD_Card/MAGE/editor/js/editor-scripts.js
+
+warning: orphaned scripts
+- restart-wopr example of no binding but other access (goto)
+
+warning: missing room look scripts
 	- room looks can be in map or in maps.json (lately maps.json preferred)
 	- warn for on_look etc in map definition?
-
-ask: warning type for duplicate files anywhere across scenario_source_files?
-
-has-danger removed from bootstrap: in other files
-
-remove encoder capabilities?
----
-looking for scripts in top-level `properties` of a map file?
-reading string-value maps in maps.json (value implicitly `path`)?
 
 generated fixes
 ---
@@ -46,6 +29,18 @@ blacklisting
 use maps.json strategy: map-level only control
 how to associate a checker function to the appropriate disable flag
 - possibleEntityScripts variable?
+
+misc
+---
+has-danger removed from bootstrap: in other files
+source of truth IS scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
+meta / file info for fix
+- paste into `x` file
+	- look wherever editor-scripts looks just as a suggestion?
+- other?
+how will look work for multiple entities of the same or similar names (eg bread, torch)
+- NEED TO BIND ALL map entities
+- detect many2one?
 */
 
 Vue.component('editor-warning', {
@@ -58,7 +53,7 @@ Vue.component('editor-warning', {
 	},
 	data: function() {
 		return {
-			fixParameters: this.entity.fixes ? this.entity.fixes.parameters : {},
+			fixParameters: this.entity.fixes ? jsonClone(this.entity.fixes.parameters) : {},
 			fixText: [],
 			scriptNameTaken: false,
 		};
