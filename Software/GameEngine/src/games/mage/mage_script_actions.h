@@ -145,11 +145,10 @@ class MageScriptActions
    friend class MageScriptControl;
 public:
    MageScriptActions(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineInput> inputHandler,
-      MageCamera& camera, std::shared_ptr<MapControl> mapControl, std::shared_ptr<MageDialogControl> dialogControl,
+      std::shared_ptr<MapControl> mapControl, std::shared_ptr<MageDialogControl> dialogControl,
       std::shared_ptr<MageCommandControl> commandControl, std::shared_ptr<MageHexEditor> hexEditor, std::shared_ptr<StringLoader> stringLoader) noexcept
       : frameBuffer(frameBuffer),
       inputHandler(inputHandler),
-      camera(camera),
       mapControl(mapControl),
       dialogControl(dialogControl),
       commandControl(commandControl), 
@@ -413,7 +412,6 @@ private:
 private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<MageDialogControl> dialogControl;
-   MageCamera& camera;
    std::shared_ptr<EngineInput> inputHandler;
    std::shared_ptr<MageCommandControl> commandControl;
    std::shared_ptr<MageHexEditor> hexEditor;

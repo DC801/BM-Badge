@@ -112,7 +112,7 @@ public:
 
    inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0)
    {
-      drawTile(tilesetId, tileId, tileDrawX - camera.positionX, tileDrawY - camera.positionY, flags);
+      drawTile(tilesetId, tileId, tileDrawX - camera.position.x, tileDrawY - camera.position.y, flags);
    }
 
    inline void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0)

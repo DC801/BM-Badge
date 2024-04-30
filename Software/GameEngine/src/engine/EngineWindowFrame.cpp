@@ -106,11 +106,6 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
 {
    int pitch{ 0 };
 
-   if (frame == nullptr)
-   {
-      return;
-   }
-
    void* targetPixelBuffer;
    if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, &targetPixelBuffer, &pitch))
    {

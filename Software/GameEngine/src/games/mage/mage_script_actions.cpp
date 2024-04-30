@@ -1926,7 +1926,7 @@ std::optional<uint16_t> MageScriptActions::set_camera_to_follow_entity(const uin
    auto argStruct = (ActionSetCameraToFollowEntity*)args;
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    auto& renderableData = mapControl->Get<RenderableData>(sourceEntityIndex);
-   camera.setFollowEntity(&renderableData);
+   frameBuffer->camera.setFollowEntity(&renderableData);
    return NO_JUMP_SCRIPT;
 }
 
@@ -1945,10 +1945,9 @@ std::optional<uint16_t> MageScriptActions::teleport_camera_to_geometry(const uin
 
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-   camera.setFollowEntity(NoPlayer);
-   const auto midScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
-   camera.positionX = geometry->GetPoint(0).x - midScreen.x;
-   camera.positionY = geometry->GetPoint(0).y - midScreen.y;
+   frameBuffer->camera.setFollowEntity(NoPlayer);
+   frameBuffer->camera.position.x = geometry->GetPoint(0).x - DrawWidth / 2;
+   frameBuffer->camera.position.y = geometry->GetPoint(0).y - DrawHeight / 2;
    return NO_JUMP_SCRIPT;
 }
 
@@ -1971,22 +1970,22 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
 
       if (resumeState.totalLoopsToNextAction == 0)
       {
-         camera.setFollowEntity(NoPlayer);
+         frameBuffer->camera.setFollowEntity(NoPlayer);
          //this is the points we're interpolating between
          // TODO: subtract the tile corner's offset so that geometry is c
-         //resumeState.geometry.pointA = camera.position;
+         //resumeState.geometry.pointA = frameBuffer->camera.position;
       }
       auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
       resumeState.geometry.pointB = { (uint16_t)(renderableData.center().x - DrawWidth / 2), (uint16_t)(renderableData.center().y - DrawHeight / 2) };
       auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-      camera.positionX = betweenPoint.x;
-      camera.positionY = betweenPoint.y;
+      frameBuffer->camera.position.x = betweenPoint.x;
+      frameBuffer->camera.position.y = betweenPoint.y;
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
-         camera.setFollowEntity(&mapControl->Get<RenderableData>(sourceEntityIndex));
+         frameBuffer->camera.setFollowEntity(&mapControl->Get<RenderableData>(sourceEntityIndex));
       }
    }
    return NO_JUMP_SCRIPT;
@@ -2007,19 +2006,16 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_geometry(const uint8_t*
 
    if (resumeState.totalLoopsToNextAction == 0)
    {
-      camera.setFollowEntity(NoPlayer);
+      frameBuffer->camera.setFollowEntity(NoPlayer);
       //this is the points we're interpolating between
-      resumeState.geometry.pointA = {
-         camera.positionX,
-         camera.positionY,
-      };
+      resumeState.geometry.pointA = { frameBuffer->camera.position.x, frameBuffer->camera.position.y };
       resumeState.geometry.pointB = geometry->GetPoint(0) - (uint16_t)(DrawWidth / 2);
    }
    auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
 
    auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-   camera.positionX = betweenPoint.x;
-   camera.positionY = betweenPoint.y;
+   frameBuffer->camera.position.x = betweenPoint.x;
+   frameBuffer->camera.position.y = betweenPoint.y;
    return NO_JUMP_SCRIPT;
 }
 
@@ -2065,15 +2061,15 @@ std::optional<uint16_t> MageScriptActions::set_screen_shake(const uint8_t* args,
 
    if (progress < 1.0f)
    {
-      camera.shaking = true;
-      camera.shakeAmplitude = argStruct->amplitude;
-      camera.shakePhase = (progress * (float)argStruct->frequency) / 1000.0f;
+      frameBuffer->camera.shaking = true;
+      frameBuffer->camera.shakeAmplitude = argStruct->amplitude;
+      frameBuffer->camera.shakePhase = (progress * (float)argStruct->frequency) / 1000.0f;
    }
    else
    {
-      camera.shaking = false;
-      camera.shakeAmplitude = 0;
-      camera.shakePhase = 0;
+      frameBuffer->camera.shaking = false;
+      frameBuffer->camera.shakeAmplitude = 0;
+      frameBuffer->camera.shakePhase = 0;
    }
    return NO_JUMP_SCRIPT;
 }

@@ -138,8 +138,8 @@ void MapControl::DrawLayer(uint8_t layer) const
 
 
    // identify start and stop tiles to draw
-   auto startTileX = std::max(0, (frameBuffer->camera.positionX - DrawWidth) / currentMap->tileWidth);
-   auto startTileY = std::max(0, (frameBuffer->camera.positionY - DrawHeight) / currentMap->tileHeight);
+   auto startTileX = std::max(0, (frameBuffer->camera.position.x - DrawWidth) / currentMap->tileWidth);
+   auto startTileY = std::max(0, (frameBuffer->camera.position.y - DrawHeight) / currentMap->tileHeight);
 
    auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
    auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);

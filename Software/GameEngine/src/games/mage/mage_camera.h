@@ -21,11 +21,10 @@ public:
    {
       followEntity = toFollow;
    }
-   int32_t positionX;
-   int32_t positionY;
+   Vector2T<int32_t> position{};
    Vector2T<int32_t> GetScreenCenter() 
    {
-      return Vector2T<int32_t>{positionX - DrawWidth / 2, positionY - DrawHeight / 2};
+      return Vector2T<int32_t>{position.x - DrawWidth / 2, position.y - DrawHeight / 2};
    }
 private:
    bool    shaking{ false };

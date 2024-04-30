@@ -85,7 +85,7 @@ void MageGameEngine::gameLoopIteration()
       applyGameModeInputs();
       
       // always apply camera effects before any other updates that rely on camera data
-      camera.applyEffects();
+      frameBuffer->camera.applyEffects();
       scriptControl->jumpScriptId = dialogControl->Update();
       hexEditor->Update();
 
