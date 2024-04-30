@@ -272,12 +272,7 @@ Vue.component(
 						class="form-label"
 						for="newScriptName"
 					>New Script</label>
-					<div
-						class="input-group"
-						:class="{
-							'has-danger': !isNewScriptNameUnique
-						}"
-					>
+					<div class="input-group">
 						<button
 							class="btn btn-primary"
 							type="button"
