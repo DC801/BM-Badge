@@ -52,7 +52,11 @@ window.vueApp = new window.Vue({
 				vm.isLoading = true;
 
 				filesArray.forEach(function (file) {
-					fileNameMap[file.name] = file;
+					if (fileNameMap[file.name] === undefined) {
+						fileNameMap[file.name] = file;
+					} else {
+						throw new Error(`Multiple files with name '${file.name}' present in scenario source!`);
+					}
 				});
 
 				var scenarioFile = fileNameMap['scenario.json'];
