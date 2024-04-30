@@ -15,13 +15,12 @@ warning: missing room look scripts
 
 generated fixes
 ---
-check if name we generate was already used (like above, probably good enough to output to a separate section needing manual fixing)
 use randomness to get past taken names?
 flesh out scriptName fix parameter for scriptName store and document its special status
 anything needed for script editor once fix script names are generated uniquely? maybe not
 consider using store.scriptsOptions for scenarioData script names
-consider using existing store operations for scripts if nothing bad would happen
-consider using watch instead of reactivity for uniqueness
+consider using existing store mutations for scripts if nothing bad would happen
+consider using computed instead of watch for uniqueness
 debounce?
 
 blacklisting
@@ -32,7 +31,7 @@ how to associate a checker function to the appropriate disable flag
 
 misc
 ---
-has-danger removed from bootstrap: in other files
+.trim for text inputs?
 source of truth IS scripts.js: var possibleEntityScripts = [ 'on_interact', 'on_tick', 'on_look', ];
 meta / file info for fix
 - paste into `x` file
