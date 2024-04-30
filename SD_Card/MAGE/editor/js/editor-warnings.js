@@ -148,16 +148,13 @@ Vue.component('editor-warning', {
 					:name="parameterName"
 					v-model.trim="fixParameters[parameterName]"
 				/>
+				<div
+					v-if="scriptNameTaken"
+					class="invalid-feedback"
+				>Script name already taken or empty.</div>
 			</div>
 		</div>
-		<div
-			v-if="scriptNameTaken"
-			class="alert alert-danger"
-			role="alert"
-		>
-			Script name already taken or empty.
-		</div>
-		<div v-else>
+		<div v-if="! scriptNameTaken">
 			<span>Click the button by any of these fixes to copy it:</span>
 			<div
 				class="my-1"
