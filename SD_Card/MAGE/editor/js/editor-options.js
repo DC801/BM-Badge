@@ -46,7 +46,6 @@ Vue.component('editor-options', {
 	class="
 		editor-options
 		card
-		body-dark
 		mb-3
 	"
 >
