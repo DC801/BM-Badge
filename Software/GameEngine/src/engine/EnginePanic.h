@@ -25,6 +25,7 @@
 //
 //   Anything beyond 400 characters will be truncated
 template<typename... Ts>
+[[noreturn]]
 static inline void ENGINE_PANIC(const char* s, Ts... fmt)
 {
 	char buf[401];

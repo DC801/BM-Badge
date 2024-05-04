@@ -30,9 +30,9 @@ public:
 
 struct InputState
 {
-   std::optional<GameClock::time_point> lastPressed;
-   std::optional<GameClock::time_point> lastReleased;
-   std::optional<GameClock::time_point> lastChecked;
+   std::optional<GameClock::time_point> lastPressed{};
+   std::optional<GameClock::time_point> lastReleased{};
+   std::optional<GameClock::time_point> lastChecked{};
 
    constexpr bool Pressed() const
    {
@@ -44,15 +44,23 @@ struct InputState
 class EngineInput
 {
 public:
-   void UpdateState(const GameClock::time_point& curTime);
+   void Update(const GameClock::time_point& curTime);
 
    [[nodiscard("Value of KeepRunning should be used to handle the main input loop")]]
-   const bool KeepRunning() { return running; }
+   const bool KeepRunning() const { return running; }
 
    [[nodiscard("Value of ShouldReset should be used to trigger map/engine reload when true")]]
    inline bool ShouldReset()
    {
-      return IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem3);
+      if (reset)
+      {
+         reset = false;
+         return true;
+      }
+      else
+      {
+         return IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem3);
+      }
    }
 
    inline bool ToggleEntityDebug()
@@ -131,8 +139,9 @@ public:
    
    constexpr bool IsPressed(KeyPress key)
    {
+      const auto state = inputStates[key].Pressed();
       inputStates[key].lastChecked.emplace(GameClock::now());
-      return inputStates[key].Pressed();
+      return state;
    }
 
    constexpr const EnumClassArray<KeyPress, InputState, KEYBOARD_NUM_KEYS>& GetInputStates()

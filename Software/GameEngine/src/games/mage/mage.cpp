@@ -38,6 +38,9 @@ void MageGameEngine::Run()
 
    while (inputHandler->KeepRunning())
    {
+      const auto loopStart = GameClock::now();
+      inputHandler->Update(loopStart);
+
       if (inputHandler->ShouldReset())
       {
          mapControl->mapLoadId = ROM()->GetCurrentSave().currentMapId;
@@ -53,7 +56,19 @@ void MageGameEngine::Run()
          LoadMap();
       }
 
+      while (GameClock::now() - loopStart < MinTimeBetweenRenders)
+      {
+         std::this_thread::sleep_for(milliseconds{ 1 });
+         continue;
+      }
+
       gameLoopIteration();
+
+      mapControl->Draw();
+      hexEditor->Draw();
+      dialogControl->Draw();
+      updateHexLights();
+
       frames++;
       frameBuffer->DrawText(std::format("FPS: {:4}", fps), COLOR_RED, 10, 10, true);
 
@@ -72,8 +87,6 @@ void MageGameEngine::Run()
 
 void MageGameEngine::gameLoopIteration()
 {
-   const auto loopStart = GameClock::now();
-   inputHandler->UpdateState(loopStart);
    auto updateAccumulator = inputHandler->lastDelta;
 
    // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
@@ -116,16 +129,6 @@ void MageGameEngine::gameLoopIteration()
    }
 
    commandControl->sendBufferedOutput();
-
-   while (GameClock::now() - loopStart < MinTimeBetweenRenders)
-   {
-      std::this_thread::sleep_for(milliseconds{ 1 });
-   }
-
-   mapControl->Draw();
-   hexEditor->Draw();
-   dialogControl->Draw();
-   updateHexLights();
 }
 
 void MageGameEngine::LoadMap()

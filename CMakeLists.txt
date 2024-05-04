@@ -168,8 +168,8 @@ set(SOURCEFILES
 
 if(NOT EMBEDDED_BUILD)
     set(SOURCEFILES ${SOURCEFILES}
-        Software/GameEngine/src/engine/EngineWindowFrame.cpp
-        Software/GameEngine/src/engine/EngineWindowFrame.h
+        Software/GameEngine/src/engine/DesktopWindowOutput.cpp
+        Software/GameEngine/src/engine/DesktopWindowOutput.h
     )
 endif()
 

@@ -101,8 +101,8 @@ static inline const auto IntegrationStepSize = MinTimeBetweenRenders/3;
 
 //these are used for setting player speed
 //speed is in x/y pixels per update tick
-static inline const auto RunSpeed = uint16_t{ 2 };
-static inline const auto WalkSpeed = uint16_t{ 1 };
+static inline const auto RunSpeed = uint16_t{ 3 };
+static inline const auto WalkSpeed = uint16_t{ 2 };
 
 static inline const auto TilesetNameLength = 16;
 

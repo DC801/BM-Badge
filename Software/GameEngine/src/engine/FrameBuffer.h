@@ -15,7 +15,7 @@
 #ifdef DC801_EMBEDDED
 #include "modules/drv_ili9341.h"
 #else
-#include "EngineWindowFrame.h"
+#include "DesktopWindowOutput.h"
 #endif
 
 class MageGameEngine;
@@ -95,7 +95,7 @@ struct MagePortrait
 class FrameBuffer
 {
 public:
-   FrameBuffer(std::unique_ptr<EngineWindowFrame> windowFrame) noexcept
+   FrameBuffer(std::unique_ptr<DesktopWindowOutput> windowFrame) noexcept
       : windowFrame(std::move(windowFrame))
    {}
 
@@ -181,7 +181,7 @@ public:
    MageCamera camera{};
 private:
 #ifndef DC801_EMBEDDED
-   std::unique_ptr<EngineWindowFrame> windowFrame;
+   std::unique_ptr<DesktopWindowOutput> windowFrame;
    std::array<uint16_t, FramebufferSize> frame{};
 #endif
    bool drawGeometry{ false };

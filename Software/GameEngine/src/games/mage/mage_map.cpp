@@ -183,19 +183,20 @@ void MapControl::Draw() const
 
 std::optional<uint16_t> MapControl::Update()
 {
+   auto playerEntityData = getPlayerEntityData();
+   const auto playerRenderableData = getPlayerRenderableData();
+
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
       auto& entity = Get<MageEntityData>(i);
       auto& renderableData = Get<RenderableData>(i);
+      //if (playerEntityData == &entity) { continue; }
       renderableData.currentFrameMs += IntegrationStepSize.count();
       renderableData.UpdateFrom(entity);
    }
    
    // require a player on the map to move/interact
-   auto playerData = getPlayerEntityData();
-   if (!playerData) { return std::nullopt; }
-
-   const auto playerRenderableData = getPlayerRenderableData();
+   if (!playerEntityData) { return std::nullopt; }
 
    const auto& oldPosition = playerRenderableData->origin;
 
@@ -206,28 +207,28 @@ std::optional<uint16_t> MapControl::Update()
 
    std::vector<EntityPoint> hitboxPointsToCheck{};
 
-   if (playerData->targetPosition.x < playerRenderableData->origin.x)
+   if (playerEntityData->targetPosition.x < playerRenderableData->origin.x)
    {
-      playerData->flags = WEST;
+      playerEntityData->flags = WEST;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
-   else if (playerData->targetPosition.x > playerRenderableData->origin.x)
+   else if (playerEntityData->targetPosition.x > playerRenderableData->origin.x)
    {
-      playerData->flags = EAST;
+      playerEntityData->flags = EAST;
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
 
-   if (playerData->targetPosition.y < playerRenderableData->origin.y)
+   if (playerEntityData->targetPosition.y < playerRenderableData->origin.y)
    {
-      playerData->flags = NORTH;
+      playerEntityData->flags = NORTH;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
-   else if (playerData->targetPosition.y > playerRenderableData->origin.y)
+   else if (playerEntityData->targetPosition.y > playerRenderableData->origin.y)
    {
-      playerData->flags = SOUTH;
+      playerEntityData->flags = SOUTH;
       hitboxPointsToCheck.push_back(botLeft);
       hitboxPointsToCheck.push_back(botRight);
    }
@@ -251,16 +252,17 @@ std::optional<uint16_t> MapControl::Update()
       if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
          // TODO: bring back the intersection-offset algorithm
-         playerData->targetPosition = oldPosition;
+         playerEntityData->targetPosition = oldPosition;
          break;
       }
    }
 
    const uint8_t interactLength = 32;
    auto interactBox = EntityRect{ playerRenderableData->hitBox };
-   auto direction = playerData->flags & RENDER_FLAGS_DIRECTION_MASK;
+   auto direction = playerEntityData->flags & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
+      //playerRenderableData.
       interactBox.origin.y -= interactLength;
       interactBox.h = interactLength;
    }

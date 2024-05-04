@@ -20,10 +20,10 @@ extern int SDL_CreateWindowAndRenderer(int width, int height, uint32_t window_fl
 extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 #endif
 
-class EngineWindowFrame
+class DesktopWindowOutput
 {
 public:
-   EngineWindowFrame(std::shared_ptr<EngineInput> inputHandler) noexcept
+   DesktopWindowOutput(std::shared_ptr<EngineInput> inputHandler) noexcept
       : inputHandler(inputHandler)
    {}
    void GameBlt(const uint16_t frame[]) const;

@@ -7,7 +7,7 @@
 #include "EngineAudio.h"
 #include "EngineInput.h"
 #include "EngineSerial.h"
-#include "EngineWindowFrame.h"
+#include "DesktopWindowOutput.h"
 #include "mage_app_timers.h"
 #include "mage_camera.h"
 #include "mage_color_palette.h"

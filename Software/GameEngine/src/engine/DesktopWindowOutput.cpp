@@ -1,4 +1,4 @@
-#include "EngineWindowFrame.h"
+#include "DesktopWindowOutput.h"
 #include "EnginePanic.h"
 #include <SDL_image.h>
 
@@ -6,7 +6,7 @@
 
 int SCREEN_MULTIPLIER = 1;
 
-EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
+DesktopWindowOutput::EngineWindowFrameComponents::EngineWindowFrameComponents()
 {
    if (SDL_Init(SDL_INIT_VIDEO) < 0)
    {
@@ -54,7 +54,7 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
    gameViewportTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, 320, 240);
 }
 
-EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents() noexcept
+DesktopWindowOutput::EngineWindowFrameComponents::~EngineWindowFrameComponents() noexcept
 {
    SDL_FreeSurface(frameButtonSurface);
    frameButtonSurface = nullptr;
@@ -70,7 +70,7 @@ EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents() n
    window = nullptr;
 }
 
-void EngineWindowFrame::DrawButtonStates() const
+void DesktopWindowOutput::DrawButtonStates() const
 {
    const auto& inputs = inputHandler->GetInputStates();
 
@@ -83,7 +83,7 @@ void EngineWindowFrame::DrawButtonStates() const
    }
 }
 
-void EngineWindowFrame::DrawLEDStates() const
+void DesktopWindowOutput::DrawLEDStates() const
 {
    SDL_Point LEDPoint{};
    uint8_t LEDState{ 0 };
@@ -102,7 +102,7 @@ void EngineWindowFrame::DrawLEDStates() const
    }
 }
 
-void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
+void DesktopWindowOutput::GameBlt(const uint16_t frame[]) const
 {
    int pitch{ 0 };
 
@@ -118,7 +118,7 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
    SDL_RenderPresent(components.renderer);
 }
 
-void EngineWindowFrame::Resize(int change)
+void DesktopWindowOutput::Resize(int change)
 {
    SCREEN_MULTIPLIER += change;
    if (SCREEN_MULTIPLIER < 1)

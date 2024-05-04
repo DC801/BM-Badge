@@ -46,7 +46,7 @@
 #else
 
 #include <SDL.h>
-#include "EngineWindowFrame.h"
+#include "DesktopWindowOutput.h"
 #include <time.h>
 
 volatile sig_atomic_t application_quit = 0;
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     // Setup the system
     log_init();
     auto inputHandler = std::make_shared<EngineInput>();
-    auto windowFrame = std::make_unique<EngineWindowFrame>(inputHandler);
+    auto windowFrame = std::make_unique<DesktopWindowOutput>(inputHandler);
     auto frameBuffer = std::make_shared<FrameBuffer>(std::move(windowFrame));
 
 #ifdef DC801_EMBEDDED
