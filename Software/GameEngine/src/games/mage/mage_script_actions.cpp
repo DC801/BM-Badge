@@ -946,7 +946,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_interact_script(const uint
    auto sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
+      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       entity.onInteractScriptId = argStruct->scriptId;
    }
    return NO_JUMP_SCRIPT;
@@ -968,7 +968,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_tick_script(const uint8_t*
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
+      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       entity.onTickScriptId = argStruct->scriptId;
    }
    else
