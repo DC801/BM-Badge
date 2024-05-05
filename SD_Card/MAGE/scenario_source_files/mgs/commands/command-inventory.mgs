@@ -16,10 +16,10 @@ man-inventory {
 		" "
 		"Use this command to see what items you are currently carrying."
 	}
-	if (flag ch2-permission-to-fuse is true) {
+	if (flag ch2-have-things-to-solder is true) {
 		show serial dialog {
 			" "
-			"See also: <c>FUSE</>"
+			"Items may be combined at one of the solder stations in the castle workshop."
 		}
 	}
 }
@@ -27,81 +27,120 @@ man-inventory {
 // COMMAND
 
 command-inventory {
-	set flag temp to false;
-	show serial dialog spacer;
-	show serial dialog {
-		"<c>INVENTORY:</>"
+	// set the `count-inventory` flag first; if true, don't print anything! just count!
+	mutate ch2-count-inventory = 0;
+	if (flag only-count-inventory is false) {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>INVENTORY:</>"
+		}
 	}
 	// normal
 	if (flag ch2-carrying-cactuscooler is true) {
-		show serial dialog { "\tcan of Cactus Cooler" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tcan of Cactus Cooler" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-heatsink is true) {
-		show serial dialog { "\theat sink" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\theat sink" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-powersupply is true) {
-		show serial dialog { "\tpower supply" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tpower supply" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-monitor is true) {
-		show serial dialog { "\tmonitor" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmonitor" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	// abstract
 	if (flag ch2-carrying-harddrive is true) {
-		show serial dialog { "\thard drive" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\thard drive" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-plate is true) {
-		show serial dialog { "\tdinner plate" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tdinner plate" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-needle is true) {
-		show serial dialog { "\tphonograph needle" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tphonograph needle" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-keyboard is true) {
-		show serial dialog { "\tkeyboard" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tkeyboard" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-mouse is true) {
-		show serial dialog { "\tmouse" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmouse" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	// desperate
 	if (flag ch2-carrying-ramchips is true) {
-		show serial dialog { "\tramchips" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tramchips" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-clock is true) {
-		show serial dialog { "\tclock" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tclock" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-cpu is true) {
-		show serial dialog { "\tcpu" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tcpu" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-goldfish is true) {
-		show serial dialog { "\tgoldfish" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tgoldfish" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-manual is true) {
-		show serial dialog { "\tcalculator manual" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tcalculator manual" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	if (flag ch2-carrying-abacus is true) {
-		show serial dialog { "\tabacus" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tabacus" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
 	// final
 	if (flag ch2-carrying-mainframeos is true) {
-		show serial dialog { "\tmainframe os CD" }
-		set flag temp to true;
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmainframe os CD" }
+		}
+		mutate ch2-count-inventory + 1;
 	}
-	if (flag temp is false) {
-		show serial dialog { "\t(nothing)" }
+	if (variable ch2-count-inventory is 0) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\t(nothing)" }
+		}
 	}
-	set flag temp to false;
+	set flag only-count-inventory to false;
+	mutate ch2-counted-inventory = ch2-count-inventory;
+	mutate ch2-count-inventory = 0;
 }

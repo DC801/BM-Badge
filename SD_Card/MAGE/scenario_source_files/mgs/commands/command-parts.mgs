@@ -358,7 +358,7 @@ command-parts-harddrive {
 	} else {
 		copy ch2-describe-harddrive;
 		show serial dialog {
-			"\tUse the <c>FUSE</> command to combine both items into a <m>HARD DRIVE</>."
+			"\tUse one of the solder stations in the workshop to combine both items into a <m>HARD DRIVE</>."
 		}
 	}
 	goto command-parts-q;
@@ -374,7 +374,7 @@ command-parts-plate {
 		if (flag ch2-carrying-needle is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got a good <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use the <c>FUSE</> command to combine them.\n\tHuh, I can confirm that the iron content of the plate is high enough for this to actually work. Not that I was worried...." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use one of the solder stations to combine them.\n\tHuh, I can confirm that the iron content of the plate is high enough for this to actually work. Not that I was worried...." }
 		}
 	} else {
 		copy ch2-describe-plate;
@@ -392,7 +392,7 @@ command-parts-needle {
 		if (flag ch2-carrying-plate is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got a <m>needle</> for a read head already. So now what you need is a dinner <m>plate</> to act as a hard drive platter." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use the <c>FUSE</> command to combine them.\n\tOh, wow, it looks like that phonograph needle is electric. Weird... but also serendipitous." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use one of the solder stations to combine them.\n\tOh, wow, it looks like that phonograph needle is electric. Weird, but also serendipitous." }
 		}
 	} else {
 		copy ch2-describe-needle;
@@ -455,7 +455,7 @@ command-parts-goldfish {
 		if (flag ch2-carrying-abacus is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got the goldfish already, the \"thinking\" part of the CPU, so you'll need to pick up the other half: the abacus." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use the <c>FUSE</> command to combine them.\n\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use one of the solder stations to combine them.\n\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
 		}
 	} else {
 		copy ch2-describe-goldfish;
@@ -473,7 +473,7 @@ command-parts-abacus {
 		if (flag ch2-carrying-goldfish is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got an abacus already, the \"remembering\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
 		} else {
-			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use the <c>FUSE</> command to combine them.\n\tYeah, it's... um... just kind of a magical invocation that doesn't make a lot of physical sense. But just trust the process." }
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use one of the solder stations to combine them." }
 		}
 	} else {
 		copy ch2-describe-abacus;

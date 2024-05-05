@@ -1,3 +1,4 @@
+include!("header.mgs")
 /* ---------- DEBUG: Storyflag rounds ---------- */
 
 // debug: "win" that storyflag round
@@ -12,14 +13,14 @@ debug-get-items-for-round2 {
 	copy ch2-pickup-mouse;
 	copy ch2-pickup-needle;
 	copy ch2-pickup-plate;
-	copy ch2-fuse-harddrive;
+	copy ch2-solder-harddrive;
 }
 debug-get-items-for-round3 {
 	copy ch2-pickup-ramchips;
 	copy ch2-pickup-clock;
 	copy ch2-pickup-goldfish;
 	copy ch2-pickup-abacus;
-	copy ch2-fuse-cpu;
+	copy ch2-solder-cpu;
 }
 debug-set-flags-to-round0 {
 	turn serial control on;
@@ -60,7 +61,7 @@ debug-set-flags-to-round2 {
 	set flag ch2-cutseen-bert-secret to true;
 	set flag ch2-lambda-bert-backstory to true;
 	set flag ch2-parts-round-2-backstory to true;
-	set flag ch2-permission-to-fuse to true;
+	set flag ch2-have-things-to-solder to true;
 	copy debug-map-flags-for-round2;
 }
 debug-set-flags-to-round3 {
@@ -195,7 +196,7 @@ ch2-pickup-needle {
 	set flag ch2-carrying-needle to true;
 	register look + needle -> look-needle;
 }
-ch2-fuse-harddrive {
+ch2-solder-harddrive {
 	copy ch2-install-plate;
 	copy ch2-install-needle;
 	set flag ch2-carrying-harddrive to true;
@@ -229,7 +230,7 @@ ch2-pickup-abacus {
 	set flag ch2-carrying-abacus to true;
 	register look + abacus -> look-abacus;
 }
-ch2-fuse-cpu {
+ch2-solder-cpu {
 	copy ch2-install-goldfish;
 	copy ch2-install-abacus;
 	set flag ch2-carrying-cpu to true;
@@ -332,4 +333,35 @@ ch2-install-mainframeos {
 	set flag ch2-carrying-mainframeos to false;
 	set flag ch2-installed-mainframeos to true;
 	unregister look + mainframeos;
+}
+
+//--------------------------- SOLDER ZONE ---------------------------\\
+
+interact-ch2-solderzone {
+	if (flag ch2-have-things-to-solder is false) {
+		show dialog {
+			PLAYER "It's a metal pen resting inside a metal coil. But why is the pen plugged in? What does it do?"
+		}
+		return;
+	} else if (variable ch2-storyflag-round is >= 4) {
+		show dialog {
+			PLAYER "Guess I'm all done soldering."
+		}
+		return;
+	}
+	set flag only-count-inventory to true;
+	copy command-inventory;
+	if (variable ch2-counted-inventory is 0) {
+		show dialog {
+			PLAYER "(TODO: can't solder anything with nothing in inventory)"
+		}
+		return;
+	} else if (variable ch2-counted-inventory is 1) {
+		show dialog {
+			PLAYER "(TODO: need more than 1 item to use the solder station)"
+		}
+		return;
+	}
+	// TODO update this whole process
+	goto command-solder;
 }

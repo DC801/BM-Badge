@@ -179,10 +179,13 @@ ch2-interact-pie {
 	show dialog { PLAYER "Huh. A raspberry pie." }
 }
 ch2-interact-3dprinter {
-	show dialog { PLAYER "I have no idea what this thing is supposed to do." }
+	show dialog { PLAYER "I have no idea how this thing works." }
 }
 ch2-interact-cablesbox {
 	show dialog { PLAYER "Just some boxes full of cables." }
+}
+interact-ch2-figurines {
+	show dialog { PLAYER "A toy boat and sphinx. Plastic figurines?" }
 }
 
 interact-ch2-jeanpaul {

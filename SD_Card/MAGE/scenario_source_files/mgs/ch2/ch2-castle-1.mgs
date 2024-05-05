@@ -122,14 +122,14 @@ on_load-ch2-castle-1 {
 		register get + powersupply -> ch2-pickup-powersupply;
 		register get + keyboard -> ch2-pickup-keyboard;
 		register get + mouse -> ch2-pickup-mouse;
-		register get + harddrive -> ch2-fuse-harddrive;
+		register get + harddrive -> ch2-solder-harddrive;
 		register get + plate -> ch2-pickup-plate;
 		register get + needle -> ch2-pickup-needle;
 		register get + ramchips -> ch2-pickup-ramchips;
 		register get + clock -> ch2-pickup-clock;
 		register get + goldfish -> ch2-pickup-goldfish;
 		register get + abacus -> ch2-pickup-abacus;
-		register get + cpu -> ch2-fuse-cpu;
+		register get + cpu -> ch2-solder-cpu;
 		register round + "1" -> debug-get-items-for-round1;
 		register round + "2" -> debug-get-items-for-round2;
 		register round + "3" -> debug-get-items-for-round3;

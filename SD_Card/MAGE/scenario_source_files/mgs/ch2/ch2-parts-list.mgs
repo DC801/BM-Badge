@@ -239,7 +239,7 @@ ch2-lambda-round-2-parts5c {
 	}
 	show serial dialog ch2-describe-harddrive;
 	show serial dialog {
-		"\tI'll grant you access to the <c>FUSE</> command, which will let you construct a <m>HARD DRIVE</> once you have both items."
+		"\tOnce you have both items, go to the workshop and solder them together into a <m>HARD DRIVE</>."
 	}
 	show serial dialog {
 		" "
@@ -260,8 +260,7 @@ ch2-lambda-round-2-parts5d {
 		" "
 	}
 	show serial dialog lambda-over;
-	set flag ch2-permission-to-fuse to true;
-	copy register-fuse;
+	set flag ch2-have-things-to-solder to true;
 	copy ch2-put_on_map-round2;
 }
 
@@ -315,7 +314,7 @@ ch2-bert-message-lambda-intro3 {
 ch2-lambda-round-3-parts2 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO"
+		"(TODO: describe goldfish and abacus; mention you solder them into a CPU at a solder station)"
 		" "
 		# "What else?" : ch2-lambda-round-3-parts3
 	}

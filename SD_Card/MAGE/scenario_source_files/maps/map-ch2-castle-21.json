@@ -33,7 +33,7 @@
             0, 0, 651, 652, 653, 2147484050, 2147484049, 654, 655, 656, 0, 0,
             0, 0, 430, 387, 0, 0, 0, 0, 0, 430, 0, 0,
             0, 0, 625, 0, 0, 0, 0, 0, 0, 385, 0, 0,
-            0, 0, 641, 0, 0, 2147484051, 0, 0, 0, 401, 0, 0,
+            0, 0, 641, 0, 0, 0, 0, 0, 0, 401, 0, 0,
             0, 0, 657, 0, 612, 613, 614, 615, 0, 0, 0, 0,
             0, 0, 0, 0, 430, 0, 0, 430, 0, 403, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -267,6 +267,79 @@
                  "width":32,
                  "x":188,
                  "y":354
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":55,
+                 "name":"solder zone",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-solderzone"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":274,
+                 "y":108
+                },
+            
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":56,
+                 "name":"solder zone",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-solderzone"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":157,
+                 "y":237
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":57,
+                 "name":"solder zone",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-solderzone"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":186,
+                 "y":237
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":58,
+                 "name":"figurines",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-figurines"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":112,
+                 "y":100
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -358,7 +431,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":54,
+ "nextobjectid":59,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

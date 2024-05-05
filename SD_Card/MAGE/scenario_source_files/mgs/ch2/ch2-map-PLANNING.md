@@ -645,4 +645,5 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Multiple choice riddles!!!!! (After dark!!!!)
 - Reference IP over avian carriers
 - Log Forge (Log4J according to the Hacker Jeopardy guy)
+- The "Linq River" (or "Linq Lake")
 
