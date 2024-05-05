@@ -3,6 +3,8 @@ TODO
 
 ask
 ---
+when a script is missing in mgs, a browser console error shows but no GUI error text
+- possibly for lots of other possible errors too
 commit e68dfc941a6f276959a064f752262d11c50000ed not needed?
 	- https://github.com/DC801/BM-Badge/blame/chapter_2/SD_Card/MAGE/editor/js/editor-scripts.js
 
