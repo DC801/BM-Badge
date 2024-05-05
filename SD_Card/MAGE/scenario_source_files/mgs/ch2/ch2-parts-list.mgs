@@ -136,7 +136,7 @@ ch2-toot-step99-end {
 	show serial dialog {
 		"<c>YOU</>: Yeah, let's do it!"
 		" "
-		"<m>LAMBDA</>: Good luck! And don't forget you can reach me from anywhere with <c>MAN</>. Oh, and don't forget to <c>LOOK</> around wherever you are. The artifact might help you see something you wouldn't notice otherwise."
+		"<m>LAMBDA</>: Good luck! And don't forget you can reach me from anywhere with <c>MAN</>."
 		" "
 	}
 	show serial dialog lambda-over;

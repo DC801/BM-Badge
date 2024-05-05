@@ -131,7 +131,7 @@ ch2-lambda-topic-installation {
 	show serial dialog {
 		"<c>YOU</>: How do I install the parts once I've got them?"
 		" "
-		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be fairly straightforward to install."
+		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be straightforward to install."
 		" "
 	}
 	goto ch2-lambda-topic-q;

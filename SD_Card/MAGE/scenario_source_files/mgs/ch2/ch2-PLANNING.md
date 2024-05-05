@@ -13,8 +13,35 @@
 - [ ] Turn off serial control during cutscenes
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations
+- [ ] For "failed" multiple choice responses, make the chunk of the dialog that gets repeated more logical and consistent
 - [ ] Check that every entity has an on_look script
 - [ ] Investigate and fix color pallet issues between tilesets (specifically grass in the castle/town tilesets, and the artifact cubby and the wall)
+- [ ] Make fuse system more interesting
+	- [ ] Work out ≈ Cartesian product / Punnet squares for each grouping of combined items
+	- [ ] Write something funny for each failed combo
+- [ ] Make Lambda less hand-holdy at the beginning
+	- [ ] Explain `help` and `man` (both Lambda and `man _`) and nothing else!
+- [ ] Put the "password" letters in the floor
+	- [ ] Take out the "look up" stuff
+	- [ ] Letters should spell AUTHENTICATE when spacially placed along the rooms they were found:
+
+-------------------------------
+|  /----\      -       M A P  |
+|  |....|     /.\             |
+|  ------   /..A..\           |
+|           -------           |
+|            |...|   -------  |
+|   -----    |.U.|   |.T|H.|  |
+|  /..E..\   |...|   -------  |
+|  \...../   |...|    |.N.|   |
+|   -----    --------------   |
+|   |.T.|    |.I.|...C....|   |
+|   -----------------------   |
+|   |...A....|.T.|            |
+|   ----------------          |
+|          |...E...|          |
+|          ---------          |
+-------------------------------
 
 ## Specific work needing done
 
