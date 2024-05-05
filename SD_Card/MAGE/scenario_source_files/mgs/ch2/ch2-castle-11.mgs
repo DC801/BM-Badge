@@ -36,7 +36,6 @@ on_load-ch2-castle-11 {
 
 
 	// room unique things
-	register look + up -> look-ch2-castle-11-up;
 
 	if (
 		flag ch2-installed-monitor is true

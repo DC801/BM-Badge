@@ -55,7 +55,6 @@ on_load-ch2-castle-23 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-23-up;
 	if (
 		flag ch2-installed-heatsink is true
 		|| flag ch2-carrying-heatsink is true

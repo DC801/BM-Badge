@@ -16,14 +16,19 @@
 - [ ] For "failed" multiple choice responses, make the chunk of the dialog that gets repeated more logical and consistent
 - [ ] Check that every entity has an on_look script
 - [ ] Investigate and fix color pallet issues between tilesets (specifically grass in the castle/town tilesets, and the artifact cubby and the wall)
+- [ ] Make aliases, e.g.:
+	- [ ] `n` for `go north`
+	- [ ] `i` for `inventory`
+	- [ ] `x`, `examine`, `l` for `look` etc.
 - [ ] Make fuse system more interesting
 	- [ ] Work out ≈ Cartesian product / Punnet squares for each grouping of combined items
 	- [ ] Write something funny for each failed combo
+	- [ ] Perhaps: You need to fuse in person, at (one of the) the solder station(s)?
 - [ ] Make Lambda less hand-holdy at the beginning
 	- [ ] Explain `help` and `man` (both Lambda and `man _`) and nothing else!
-- [ ] Put the "password" letters in the floor
-	- [ ] Take out the "look up" stuff
-	- [ ] Letters should spell AUTHENTICATE when spacially placed along the rooms they were found:
+- [x] Put the "password" letters in the floor
+	- [x] Take out the "look up" stuff
+	- [x] Letters should spell AUTHENTICATE when spacially placed along the rooms they were found:
 
 -------------------------------
 |  /----\      -       M A P  |
@@ -52,21 +57,13 @@
 - [ ] Stories about building computers! I.e.
 	- What you like: what you get out of it personally, which bits are easy to do, which bits are the most fun
 	- What you dislike: what kinds of things goes wrong, specific horror stories, which bits are a pain to do
-- [ ] Your soldering setup
+- [x] Your soldering setup
 	- What equipment do you have?
 	- Is it always set up and left out, or do only get it out when you have a project?
 	- Do you have a "quick job" vs "pull out all the stops" range of stuff you use?
 	- How are things physically positioned on the desk? (Extra credit for an actual photo of everything laid out)
 	- Any piece of equipment you might see on someone else's desk that makes you go "Oh, that person does some serious soldering"?
-- [ ] How to set up a serial connection (COMPREHENSIVE PLZ)
-	- [ ] Windows
-		- Are there several ways of doing it?
-		- If so, is there a clear leader for best way, or easiest for beginners?
-		- Does the process vary based on which specific version of Windows you're on?
-	- [ ] Linux
-		- Is the hardware interface always the same, no matter the distro?
-		- Any traps or workarounds for weird setups?
-	- [ ] Mac (I think we've got it?)
+- [x] ~~How to set up a serial connection (COMPREHENSIVE PLZ)~~ Never mind, there's a web one
 
 ## Story themes
 
@@ -109,7 +106,7 @@ See below for color choices.
 
 ```mgs
 look-ch2-roomname {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>NAME OF ROOM</>."
 		"\t(description goes here)"
@@ -125,7 +122,7 @@ The extra line break at the end is only needed for places, since the exit list w
 
 ```mgs
 look-ch2-roomname {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%EntityName%</>."
 		// "You looked at the <m>%EntityName%</>." // for objects

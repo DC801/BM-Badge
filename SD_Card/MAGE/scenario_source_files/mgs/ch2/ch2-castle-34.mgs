@@ -27,7 +27,6 @@ on_load-ch2-castle-34 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-34-up;
 	
 	copy ch2-map-init;
 }

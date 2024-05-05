@@ -106,7 +106,6 @@ on_load-ch2-castle-1 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-1-up;
 	if (flag ch2-cutseen-bert-secret is true) {
 		set entity Bert on_tick to yeet;
 		// so his name is blank for when Ring Zero is back

@@ -68,7 +68,6 @@ on_load-ch2-castle-14 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-14-up;
 	if (
 		flag ch2-installed-clock is true
 		|| flag ch2-carrying-clock is true
@@ -254,13 +253,10 @@ interact-ch2-gibson-bedroom {
 interact-ch2-keypad {
 	// note that you can't run this script before the cutscene, so no need to have "neutral" "pre-quest" behavior
 	if (flag ch2-king-rescued is false) {
-		set flag ch2-password-command to true;
-		copy register-password;
 		if (flag interrupt is false) {
 			show dialog {
 				name "" "(TODO: keypad puzzle explanation: collect the admin password to reset the keypad.)"
-				"(The letters used in the password are written in out-of-the-way places within each room in the castle. Visit each room and look up and down. Particularly UP!)"
-				"(The king gave you a notebook to record the password hints you find. To access it, type PASSWORD in the terminal.)"
+				"(The letters used in the password are physicall written all over the castle)"
 				"(When you have discovered the password, speak to the keypad again and type the password in the serial terminal at the prompt.)"
 			}
 			set flag interrupt to true;
@@ -278,9 +274,10 @@ interact-ch2-keypad-prompt {
 	goto interact-ch2-keypad-incorrect;
 }
 interact-ch2-keypad-incorrect {
+	show serial dialog spacer;
 	show serial dialog {
 		"Password incorrect!"
-		"Touch keypad to reset password prompt."
+		"Touch keypad to try again."
 	}
 	set entity "%SELF%" on_interact to interact-ch2-keypad-prompt;
 }

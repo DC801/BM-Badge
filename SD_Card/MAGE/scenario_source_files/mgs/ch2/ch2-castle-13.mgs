@@ -51,7 +51,6 @@ on_load-ch2-castle-13 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-13-up;
 	if (debug mode is on) {
 		register skip -> ch2-skip-13
 		debug!("<c>SKIP</>: skip this cutscene")

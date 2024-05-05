@@ -69,7 +69,6 @@ on_load-ch2-castle-32 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-32-up;
 	if (flag ch2-ramchips-dispensed is false) {
 		copy script ch2-hide-ramchips;
 	}

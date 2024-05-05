@@ -44,7 +44,6 @@ on_load-ch2-castle-99 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-99-up;
 	teleport camera to geometry camera;
 
 	// cutscene pre-fade :/

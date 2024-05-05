@@ -25,7 +25,6 @@ on_load-ch2-castle-22 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-22-up;
 	if (
 		flag ch2-installed-powersupply is true
 		|| flag ch2-carrying-powersupply is true

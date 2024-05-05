@@ -56,9 +56,6 @@ ch2-map-init-serial {
 	if (flag ch2-permission-to-fuse is true) {
 		copy register-fuse;
 	}
-	if (flag ch2-password-command is true) {
-		copy register-password;
-	}
 	if (variable ch2-storyflag-round is > 0) {
 		copy register-parts;
 	}
