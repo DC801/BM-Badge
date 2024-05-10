@@ -136,6 +136,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-ckwatt"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ckwatt"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -154,6 +159,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-scuzzy"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-scuzzy"
                         }],
                  "rotation":0,
                  "visible":true,

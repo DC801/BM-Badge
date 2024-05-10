@@ -213,6 +213,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobbarstool"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobbarstool"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -249,6 +254,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobglasses"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobglasses"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -267,6 +277,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobcountertop"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobcountertop"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -285,6 +300,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobcupboard"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobcupboard"
                         }],
                  "rotation":0,
                  "visible":true,

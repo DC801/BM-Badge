@@ -17,6 +17,14 @@ look-ch2-delmar {
 	}
 }
 
+look-ch2-beatrice {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look beatrice (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-oldcouplehouse {

@@ -192,6 +192,17 @@
                  "height":32,
                  "id":35,
                  "name":"Lights",
+                 "properties":[
+                     {
+                      "name":"on_interact",
+                      "type":"string",
+                      "value":"interact-ch2-simonlights"
+                     },
+                     {
+                      "name":"on_look",
+                      "type":"string",
+                      "value":"look-ch2-simonlights"
+                     }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -269,6 +280,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-drum"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-drum"
                         }],
                  "rotation":0,
                  "visible":true,

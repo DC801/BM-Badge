@@ -40,6 +40,23 @@ look-ch2-speaker {
 	}
 }
 
+look-ch2-simonlights {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look lights (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-drum {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look drum (remember to add 'the' for objects)"
+	}
+}
+
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-31 {
@@ -249,6 +266,14 @@ interact-ch2-simon {
 			set flag ch2-simon-repeat-brunhilda-backstory to true;
 		}
 		copy simon-game-launcher;
+	}
+}
+
+interact-ch2-simonlights {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look lights (remember to add 'the' for objects)"
 	}
 }
 

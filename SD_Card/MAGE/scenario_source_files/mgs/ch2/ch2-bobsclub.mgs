@@ -18,6 +18,38 @@ look-ch2-bobsclub {
 	}
 }
 
+look-ch2-bobbarstool {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look barstool (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-bobglasses {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look glasses (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-bobcountertop {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look countertop (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-bobcupboard {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look cupboard (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 // DEBUG

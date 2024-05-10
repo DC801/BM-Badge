@@ -19,6 +19,15 @@ look-ch2-castle-1 {
 	}
 	// (Exits list goes here) (P.S. That's why there's an empty line above!)
 }
+
+look-ch2-artifact {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look artifact (remember to add 'the' for objects)"
+	}
+}
+
 look-ch2-mainframe {
 	show serial dialog spacer;
 	show serial dialog {
@@ -400,6 +409,12 @@ ch2-attempt-door-check {
 // 3: head poking up
 // 4: descend
 // 5: ascend
+
+interact-ch2-artifact {
+	show dialog {
+		PLAYER "TODO on_interact artifact"
+	}
+}
 
 ch2-wizard-ascend {
 	turn player control off;

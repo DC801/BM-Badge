@@ -23,6 +23,14 @@ look-ch2-gibson {
 	}
 }
 
+look-ch2-keypad {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look keypad (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 ch2-load-castle-14-special {

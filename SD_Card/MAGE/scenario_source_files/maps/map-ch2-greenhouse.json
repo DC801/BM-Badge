@@ -76,6 +76,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-trekkie"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-trekkie"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -94,7 +99,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle1"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -117,7 +127,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle2"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -140,7 +155,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle3"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -163,7 +183,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle4"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -186,7 +211,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle5"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -209,7 +239,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle6"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -232,7 +267,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle7"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -255,7 +295,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle8"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -277,7 +322,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-greenhouse-barrel"
+                         "value":"interact-ch2-barrel"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -296,6 +341,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-tumbleweed"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-tumbleweed"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -314,6 +364,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-ethernet"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernet"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -332,6 +387,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-mulch"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-mulch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -441,6 +501,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-modem"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-modem"
                         }],
                  "rotation":0,
                  "visible":true,

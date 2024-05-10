@@ -79,7 +79,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-beatrice"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-beatrice"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",

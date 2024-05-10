@@ -180,6 +180,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-ramchips"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ramchips"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -496,6 +501,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-vendingmachine"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-vendingmachine"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -562,6 +572,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-coffee"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-coffee"
                         }],
                  "rotation":0,
                  "visible":true,
