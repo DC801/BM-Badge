@@ -23,37 +23,37 @@ static inline const auto FramebufferSize = DrawWidth * DrawHeight;
 
 static inline const auto MapGoDirectionNameLength = 12;
 
-#define MAGE_COLLISION_SPOKE_COUNT 6
+static inline const auto MAGE_COLLISION_SPOKE_COUNT = 6;
 
 //this is the most unique entities that can be in any map.
-#define MAX_ENTITIES_PER_MAP 64
+static inline const auto MAX_ENTITIES_PER_MAP = 64;
 
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
 static inline const auto NoPlayer = nullptr;
-#define NO_PLAYER_INDEX 255
+static inline const auto NO_PLAYER_INDEX = 255;
 
 //this is a value used to indicate that an action's calling entity was
 //the map, and not actually one of the entities on the map.
-#define MAGE_MAP_ENTITY 255
-#define MAGE_ENTITY_SELF 254
-#define MAGE_ENTITY_PLAYER 253
-#define MAGE_ENTITY_PATH 65535
+static inline const auto MAGE_MAP_ENTITY = 255;
+static inline const auto MAGE_ENTITY_SELF = 254;
+static inline const auto MAGE_ENTITY_PLAYER = 253;
+static inline const auto MAGE_ENTITY_PATH = 65535;
 
 //these are the failover values that the game will use when an invalid hacked entity state is found:
-#define MAGE_TILESET_FAILOVER_ID 0
-#define MAGE_TILE_FAILOVER_ID 0
-#define MAGE_ANIMATION_DURATION_FAILOVER_VALUE 0
-#define MAGE_FRAME_COUNT_FAILOVER_VALUE 0
-#define MAGE_RENDER_FLAGS_FAILOVER_VALUE 0
+static inline const auto MAGE_TILESET_FAILOVER_ID = 0;
+static inline const auto MAGE_TILE_FAILOVER_ID = 0;
+static inline const auto MAGE_ANIMATION_DURATION_FAILOVER_VALUE = 0;
+static inline const auto MAGE_FRAME_COUNT_FAILOVER_VALUE = 0;
+static inline const auto MAGE_RENDER_FLAGS_FAILOVER_VALUE = 0;
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
 //not work as intended.
-#define MAGE_IDLE_ANIMATION_INDEX 0
-#define MAGE_WALK_ANIMATION_INDEX 1
-#define MAGE_ACTION_ANIMATION_INDEX 2
+static inline const auto MAGE_IDLE_ANIMATION_INDEX = 0;
+static inline const auto MAGE_WALK_ANIMATION_INDEX = 1;
+static inline const auto MAGE_ACTION_ANIMATION_INDEX = 2;
 
 //this is how many bytes of arguments each script action has.
 //all actions will have this many bytes, even if some are not used by a particular action
