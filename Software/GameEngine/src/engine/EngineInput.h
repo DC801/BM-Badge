@@ -37,7 +37,7 @@ struct InputState
    constexpr bool Pressed() const
    {
       return lastPressed.has_value()
-         && (!lastReleased.has_value() || lastReleased.value() <= lastPressed.value());
+         && (!lastReleased.has_value() || lastReleased.value() < lastPressed.value());
    }
 };
 
@@ -63,92 +63,84 @@ public:
       }
    }
 
-   inline bool ToggleEntityDebug()
+   inline bool ToggleEntityDebug() const
    {
       return IsPressed(KeyPress::Xor) && IsPressed(KeyPress::Mem1);
    }
 
-   inline bool PlayerIsActioning()
+   inline bool PlayerIsActioning() const
    {
       return IsPressed(KeyPress::Rjoy_left);
    }
 
-   inline bool Hack()
+   inline bool Hack() const
    {
       return IsPressed(KeyPress::Rjoy_up);
    }
 
-   inline bool Use()
+   inline bool Use() const
    {
       return IsPressed(KeyPress::Rjoy_right);
    }
 
-   inline bool Up()
+   inline bool Up() const
    {
       return IsPressed(KeyPress::Ljoy_up) && !IsPressed(KeyPress::Ljoy_down);
    }
-   inline bool Down()
+   inline bool Down() const
    {
       return IsPressed(KeyPress::Ljoy_down) && !IsPressed(KeyPress::Ljoy_up);
    }
-   inline bool Left()
+   inline bool Left() const
    {
       return IsPressed(KeyPress::Ljoy_left) && !IsPressed(KeyPress::Ljoy_right);
    }
-   inline bool Right()
+   inline bool Right() const
    {
       return IsPressed(KeyPress::Ljoy_right) && !IsPressed(KeyPress::Ljoy_left);
    }
 
-   inline bool AdvanceDialog()
+   inline bool AdvanceDialog() const
    {
       return IsPressed(KeyPress::Rjoy_down)
          || IsPressed(KeyPress::Rjoy_left)
          || IsPressed(KeyPress::Rjoy_right);
    }
-   inline bool NextDialogResponse()
+   inline bool NextDialogResponse() const
    {
       return IsPressed(KeyPress::Ljoy_up);
    }
-   inline bool PreviousDialogResponse()
+   inline bool PreviousDialogResponse() const
    {
       return IsPressed(KeyPress::Ljoy_down);
    }
-   inline bool SelectDialogResponse()
+   inline bool SelectDialogResponse() const
    {
       return IsPressed(KeyPress::Ljoy_right);
    }
-
-   inline bool Increment()
+   inline bool Increment() const
    {
       return IsPressed(KeyPress::Rjoy_up) && !IsPressed(KeyPress::Rjoy_down);
    }
-   inline bool Decrement()
+   inline bool Decrement() const
    {
       return IsPressed(KeyPress::Rjoy_down) && !IsPressed(KeyPress::Rjoy_up);
    }
-
-   inline bool Running()
+   inline bool Running() const
    {
       return IsPressed(KeyPress::Rjoy_right);
-   }
-
-   //this is a global that holds the amount of millis that a blocking delay will
-   //prevent the main loop from continuing for. It is set by the blockingDelay() action.
-   uint32_t blockingDelayTime{ 0 };
-   
-   constexpr bool IsPressed(KeyPress key)
+   }   
+   constexpr bool IsPressed(KeyPress key) const
    {
-      const auto state = inputStates[key].Pressed();
-      inputStates[key].lastChecked.emplace(GameClock::now());
-      return state;
+      return inputStates[key].Pressed();
    }
 
-   constexpr const EnumClassArray<KeyPress, InputState, KEYBOARD_NUM_KEYS>& GetInputStates()
+   constexpr const EnumClassArray<KeyPress, InputState, KEYBOARD_NUM_KEYS>& GetInputStates() const
    {
       return inputStates;
    }
-
+   
+   GameClock::duration blockingDelayTime{ 0 };
    GameClock::time_point lastUpdate{ GameClock::now() };
    GameClock::duration lastDelta{ 0 };
 private:

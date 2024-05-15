@@ -12,12 +12,6 @@
 
 void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
 {
-   if (application_quit)
-   {
-      running = false;
-      return;
-   }
-
    auto e = SDL_Event{};
    while (SDL_PollEvent(&e))
    {
@@ -36,7 +30,6 @@ void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
          if (KMOD_ALT == (e.key.keysym.mod & KMOD_ALT) && e.key.keysym.scancode == SDL_SCANCODE_F4)
          {
             running = false;
-            return;
          }
          // ctrl-r should cause the desktop version of the game to
          // reload the `game.dat` from the filesystem
@@ -44,11 +37,10 @@ void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
          {
             reset = true;
             inputStates.fill(InputState{});
-            return;
          }
          else
          {
-            auto keyDown = mapScanCode(e.key.keysym.scancode);
+            const auto keyDown = mapScanCode(e.key.keysym.scancode);
             if (keyDown.has_value())
             {
                inputStates[keyDown.value()].lastPressed = curTime;
@@ -57,7 +49,7 @@ void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
       }
       else if (e.type == SDL_KEYUP)
       {
-         auto keyUp = mapScanCode(e.key.keysym.scancode);
+         const auto keyUp = mapScanCode(e.key.keysym.scancode);
          if (keyUp.has_value())
          {
             inputStates[keyUp.value()].lastReleased = curTime;
@@ -253,6 +245,11 @@ std::string EngineInput::GetCommandStringFromStandardIn()
 
 void EngineInput::Update(const GameClock::time_point& curTime)
 {
+   if (application_quit)
+   {
+      running = false;
+      return;
+   }
 #ifdef DC801_EMBEDDED
    auto newValue = get_keyboard_mask();
    serial->HandleInput();

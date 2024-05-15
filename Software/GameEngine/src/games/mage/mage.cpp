@@ -46,14 +46,14 @@ void MageGameEngine::Run()
          mapControl->mapLoadId = ROM()->GetCurrentSave().currentMapId;
       }
 
-      if (inputHandler->ToggleEntityDebug())
-      {
-         frameBuffer->ToggleDrawGeometry();
-      }
-
       if (mapControl->mapLoadId != MAGE_NO_MAP)
       {
          LoadMap();
+      }
+
+      if (inputHandler->ToggleEntityDebug())
+      {
+         frameBuffer->ToggleDrawGeometry();
       }
 
       while (GameClock::now() - loopStart < MinTimeBetweenRenders)
@@ -168,7 +168,6 @@ void MageGameEngine::applyGameModeInputs()
       auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId);
 
       // position updates while player is actioning cause loss of collision data
-      // because th
       if (playerHasControl && !inputHandler->PlayerIsActioning())
       {
          // clip player to [0,max(uint16_t)]
