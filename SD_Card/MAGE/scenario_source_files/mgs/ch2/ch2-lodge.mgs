@@ -11,6 +11,46 @@ look-ch2-lodge {
 	}
 }
 
+look-ch2-cat-lodge {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look cat (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-timmy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look timmy (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-sportsbook {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look sports (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-dejavu {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look weird_facts (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-manual {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look hp35c_man (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-lodge {

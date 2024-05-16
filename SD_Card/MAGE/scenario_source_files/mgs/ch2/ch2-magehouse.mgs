@@ -35,6 +35,39 @@ look-ch2-zippy {
 	}
 }
 
+look-ch2-magejournal {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look mage_journal (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-magebox {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look mage_box (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-microwave-magehouse {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look microwave (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-cake {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look cake (remember to add 'the' for objects)"
+	}
+}
+
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-magehouse {

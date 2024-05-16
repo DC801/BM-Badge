@@ -11,6 +11,113 @@ look-ch2-greenhouse {
 	}
 }
 
+look-ch2-trekkie {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look trekkie (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle5 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle6 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle7 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle8 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-tumbleweed {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look tumbleweed (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernet {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernet (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-mulch {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look mulch (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-modem {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look modem (remember to add 'the' for objects)"
+	}
+}
+
+
+
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-greenhouse {

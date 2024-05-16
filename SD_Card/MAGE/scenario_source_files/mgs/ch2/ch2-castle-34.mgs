@@ -11,6 +11,46 @@ look-ch2-castle-34 {
 	}
 }
 
+look-ch2-snakebox {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look snake_box (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-winerack {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look wine_rack (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-pantryshelf {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look pantry_shelf (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-dishshelf {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look dishes_shelf (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-clara {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look clara (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-34 {

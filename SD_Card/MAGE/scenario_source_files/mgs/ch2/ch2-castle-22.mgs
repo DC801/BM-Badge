@@ -9,6 +9,22 @@ look-ch2-castle-22 {
 	}
 }
 
+look-ch2-ckwatt {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look c__k__watt (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-scuzzy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look scuzzy (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-22 {

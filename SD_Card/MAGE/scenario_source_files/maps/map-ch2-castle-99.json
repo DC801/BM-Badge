@@ -83,6 +83,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-lab"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-lab"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -101,6 +106,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-xc"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-xc"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -114,6 +124,17 @@
                  "height":32,
                  "id":42,
                  "name":"CRT",
+                 "properties":[
+                     {
+                      "name":"on_interact",
+                      "type":"string",
+                      "value":"interact-ch2-lambda-crt"
+                     },
+                     {
+                      "name":"on_look",
+                      "type":"string",
+                      "value":"look-ch2-lambda-crt"
+                     }],
                  "rotation":0,
                  "visible":true,
                  "width":28,
@@ -131,6 +152,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-books"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-books"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -149,6 +175,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-ration"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-ration"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,6 +198,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-poster"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-poster"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -185,6 +221,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-drawer"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-drawer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -203,6 +244,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-computer"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-computer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -221,6 +267,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-box"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-box"
                         }],
                  "rotation":0,
                  "visible":true,

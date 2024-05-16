@@ -9,6 +9,52 @@ look-ch2-castle-21 {
 	}
 }
 
+look-ch2-goose {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look goose (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-jean_paul {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look jean_paul (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-frankie {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look frankie (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-pie {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look pie (remember to add 'the' for objects)"
+	}
+}
+look-ch2-3dprinter {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look 3d_printer (remember to add 'the' for objects)"
+	}
+}
+look-ch2-cablesbox {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look cables_box (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-21 {

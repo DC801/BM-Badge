@@ -11,6 +11,22 @@ look-ch2-smithfamily {
 	}
 }
 
+look-ch2-sportskid {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look kid (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-smith {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look smith (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-smithfamily {

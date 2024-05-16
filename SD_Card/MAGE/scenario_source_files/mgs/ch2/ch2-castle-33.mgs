@@ -11,6 +11,14 @@ look-ch2-castle-33 {
 	}
 }
 
+look-ch2-gregory {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look gregory (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-33 {

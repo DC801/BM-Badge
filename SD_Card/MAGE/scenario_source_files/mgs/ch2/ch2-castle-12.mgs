@@ -25,6 +25,22 @@ look-ch2-concierge {
 	}
 }
 
+look-ch2-guest_book {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look guest_book (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-stereo {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look stereo (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-12 {

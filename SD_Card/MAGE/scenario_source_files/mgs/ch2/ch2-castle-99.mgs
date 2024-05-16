@@ -28,6 +28,78 @@ look-ch2-castle-99 {
 	}
 }
 
+look-ch2-lambda-lab {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look lambda (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-xc {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look xc (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-crt {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look crt (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-books {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look books (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-ration {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ration (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-poster {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look poster (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-drawer {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look drawer (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-computer {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look computer (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-box {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look box (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-99 {
@@ -333,6 +405,12 @@ interact-ch2-lambda-books {
 	show dialog {
 		PLAYER "(Why do these books all have weird black-and-white pictures of animals on their covers when they're about programmming?)"
 		"(Oh, this one has a cool dragon on the cover, but... no, I guess this one is about programming, too.)"
+	}
+}
+
+interact-ch2-lambda-crt {
+	show dialog {
+		PLAYER "TODO on_interact crt"
 	}
 }
 

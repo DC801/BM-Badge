@@ -176,6 +176,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-magejournal"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-magejournal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -194,6 +199,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-magebox"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-magebox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -230,6 +240,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-microwave-magehouse"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-microwave-magehouse"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -289,6 +304,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-cake"
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-cake"
                         }],
                  "rotation":0,
                  "visible":true,

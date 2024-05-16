@@ -50,6 +50,31 @@ look-ch2-gloria {
 	}
 }
 
+look-ch2-ramchips {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ram_chips (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-vendingmachine {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look vending (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-coffee {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look coffee (remember to add 'the' for objects)"
+	}
+}
+
+
 
 /* ---------- ON_LOAD ---------- */
 

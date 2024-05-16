@@ -130,7 +130,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-gregory"
-                        }, 
+                        },
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-gregory"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",
