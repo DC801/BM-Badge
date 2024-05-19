@@ -46,7 +46,6 @@ Vue.component('editor-options', {
 	class="
 		editor-options
 		card
-		body-dark
 		mb-3
 	"
 >
@@ -70,12 +69,7 @@ Vue.component('editor-options', {
 					@input="updateOption(index, 'label', $event || null)"
 				></field-text>
 			</div>
-			<div
-				class="input-group"
-				:class="{
-					'has-danger': !scriptPresenceMap[option.script]
-				}"
-			>
+			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Script</span>
 				</div>

@@ -509,12 +509,6 @@
  "nextlayerid":6,
  "nextobjectid":97,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-credits"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":16,

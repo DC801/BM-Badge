@@ -191,7 +191,7 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					pixelIndex += 1;
 				}
 				// console.table(wtfLog);
-				console.log(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
+				consoleLogIfVerbose(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
 				file.serialized = data;
 				colorPalette.serialized = serializeColorPalette(colorPalette);
 				createCacheForFile(crc, file, colorPalette);
@@ -229,7 +229,7 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 			.then(function ingeDataCacheInterceptor (arrayBuffer) {
 				var uint8Array = new Uint8Array(arrayBuffer);
 				var crc = crc32(uint8Array);
-				console.log(`What is the crc32 for ${file.name}? ${crc}`);
+				consoleLogIfVerbose(`What is the crc32 for ${file.name}? ${crc}`);
 				var cachedResult = getCacheForFile(crc, file);
 				if (cachedResult) {
 					Object.assign(colorPalette, cachedResult.colorPalette);

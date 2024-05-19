@@ -8,6 +8,13 @@ var MAX_ENTITIES_PER_MAP = 64;
 var DIALOG_SCREEN_NO_PORTRAIT = 255;
 var DIALOG_SCREEN_NO_ENTITY = 255;
 
+var verbose = true; // always behave as if the --verbose flag is present in the browser GUI
+var consoleLogIfVerbose = function() {
+	if (verbose) {
+		console.log.apply(console, arguments);
+	}
+};
+
 var getFileJson = function (file) {
 	return file.text()
 		.then(JSON.parse);

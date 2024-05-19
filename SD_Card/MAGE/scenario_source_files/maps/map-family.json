@@ -187,17 +187,6 @@
  "nextlayerid":6,
  "nextobjectid":14,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":"on_load-family"
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-family"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
  "tileheight":32,

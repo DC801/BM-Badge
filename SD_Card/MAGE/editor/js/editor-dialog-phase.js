@@ -85,7 +85,7 @@ Vue.component('editor-dialog-phase', {
 	},
 	template: /*html*/`
 <div
-	class="editor-dialog-phase card body-dark mb-3"
+	class="editor-dialog-phase card mb-3"
 >
 	<div
 		class="card-header"
