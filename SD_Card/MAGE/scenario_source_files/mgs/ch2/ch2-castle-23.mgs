@@ -123,43 +123,50 @@ const!(
 	$reach = 6
 )
 
-rocco-work-fancy-esc {
-	if (flag rocco-idle is true) {
-		set entity Rocco current_animation to 0;
-		goto null_script;
-	}
-}
 rocco-work-fancy {
-	copy rocco-work-fancy-esc;
 	set entity Rocco current_animation to $idle;
-	mutate tempvar ? 7;
-	mutate tempvar + 3;
-	for (mutate i = 1; variable i is < tempvar; mutate i + 1) {
+	mutate tempvar2 ? 7;
+	mutate tempvar2 + 3;
+	for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
 		play entity Rocco animation $twist once;
-		copy rocco-work-fancy-esc;
 	}
 	set entity Rocco current_animation to $idle;
+	mutate tempvar2 ? 2;
+	if (variable tempvar2 is 1) {
+		wait 800ms;
+		mutate tempvar2 ? 4;
+		mutate tempvar2 + 3;
+		for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
+			play entity Rocco animation $twist once;
+		}
+		set entity Rocco current_animation to $idle;
+		wait 900ms;
+	}
 	wait 200ms;
-	copy rocco-work-fancy-esc;
 	play entity Rocco animation $reach once;
-	copy rocco-work-fancy-esc;
-	mutate tempvar ? 2;
-	mutate tempvar + 1;
-	for (mutate i = 1; variable i is < tempvar; mutate i + 1) {
+	mutate tempvar2 ? 2;
+	mutate tempvar2 + 1;
+	for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
 		play entity Rocco animation $fiddle once;
-		copy rocco-work-fancy-esc;
 	}
 	set entity Rocco current_animation to $idle;
 	wait 1500ms;
+	play entity Rocco animation $reach once;
+	set entity Rocco current_animation to $idle;
 }
 rocco-work {
 	turn entity Rocco south;
-	set flag rocco-idle to false;
 	set entity Rocco on_tick to rocco-work-fancy;
 }
 rocco-idle {
-	set flag rocco-idle to true;
+	set entity Rocco on_tick to null_script;
 	set entity Rocco current_animation to 0;
+}
+
+settings for dialog {
+	label PLAYER { alignment TL }
+	label SELF { alignment TR }
+	label BLANK { name "" alignment TR }
 }
 
 interact-ch2-rocco {
@@ -215,11 +222,12 @@ interact-ch2-rocco {
 			"It would need a heavy-duty heat sink, though, and I don't have all the right supplies here. This isn't exactly my normal workstation."
 			PLAYER "What else would you need? I could fetch you something."
 		}
-		copy rocco-idle;
+		set entity Rocco on_tick to null_script;
 		set entity Rocco current_animation to $idle;
 		show dialog {
 			SELF "Well, given what I've got here...."
 		}
+		set entity Rocco current_animation to 0;
 		copy face-player;
 		show dialog {
 			SELF "All I'd really need is liquid coolant. And the only thing around town that would work is Cactus Cooler."
@@ -276,7 +284,7 @@ interact-ch2-rocco {
 
 interact-ch2-rocco-give-q {
 	show dialog {
-		name "" "(Give %Rocco% the Cactus Cooler)?"
+		BLANK "(Give %Rocco% the Cactus Cooler)?"
 		> "Yes" : interact-ch2-rocco-give
 		> "No" : interact-ch2-rocco-nogive
 	}
@@ -285,7 +293,7 @@ interact-ch2-rocco-give-q {
 interact-ch2-rocco-give {
 	show dialog {
 		SELF "Awesome!"
-		name "" "(Gave %Rocco% the can of Cactus Cooler!)"
+		BLANK "(Gave %Rocco% the can of Cactus Cooler!)"
 	}
 	turn entity Rocco south;
 	show dialog {
@@ -299,12 +307,12 @@ interact-ch2-rocco-give {
 	turn entity Rocco toward entity "%PLAYER%";
 	show dialog {
 		SELF "There we are."
-		name "" "(You received the heat sink!)"
+		BLANK "(You received the heat sink!)"
 		PLAYER "Thanks!"
 	}
 	copy rocco-work;
 	show dialog {
-		Rocco "You're welcome. Good luck fixing the mainframe."
+		SELF "You're welcome. Good luck fixing the mainframe."
 	}
 	copy script ch2-pickup-heatsink;
 	set flag ch2-cactuscooler-delivered to true;
@@ -324,67 +332,3 @@ interact-ch2-rocco-wrapup {
 	copy rocco-work;
 	set entity "%SELF%" on_interact to interact-ch2-rocco;
 }
-
-/* ---------- HEAT SINK (ADMIN) ---------- */
-
-// ch2-hide-heatsink {
-// 	teleport entity "heat sink" to geometry hiding-spot;
-// 	set entity "heat sink" name to " ";
-// }
-
-// ch2-touch-heatsink {
-// 	if (flag ch2-heatsink-firstlook is false) {
-// 		show dialog {
-// 			PLAYER "That's a really big tuning fork."
-// 			Rocco "It's a heat sink. It siphons heat away from a processor or whatever. Though I wonder if it would work as a tuning fork, too."
-// 		}
-// 		set flag ch2-heatsink-firstlook to true;
-// 		set flag temp to true;
-// 	} else {
-// 		show dialog {
-// 			PLAYER "Yup, a heat sink."
-// 		}
-// 		set flag temp to false;
-// 	}
-// 	if (flag ch2-heatsink-permission is false) {
-// 		if (flag ch2-rocco-backstory is false) {
-// 			if (flag temp is true) {
-// 				show dialog {
-// 					PLAYER "(I bet I can't just take it away with me though. I should ask first.)"
-// 				}
-// 			} else {
-// 				show dialog {
-// 					PLAYER "I better ask before taking it."
-// 				}
-// 			}
-// 		} else if (flag ch2-carrying-cactuscooler is false) {
-// 			show dialog {
-// 				PLAYER "Better go off to find Cactus Cooler to trade for it."
-// 			}
-// 		} else {
-// 			show dialog {
-// 				PLAYER "Better talk to Rocco to trade the Cactus Cooler for it."
-// 			}
-// 		}
-// 	} else {
-// 		show dialog {
-// 			name "" "(Pick up the heat sink?)"
-// 			> "Yes" : ch2-touch-heatsink-yes
-// 			> "No" : ch2-touch-heatsink-no
-// 		}
-// 	}
-// }
-// ch2-touch-heatsink-yes {
-// 	show dialog {
-// 		name "" "(You pick up the heat sink!)"
-// 	}
-// 	copy script ch2-hide-heatsink;
-// 	copy script ch2-pickup-heatsink;
-// 	set entity "%SELF%" on_interact to null_script;
-// }
-// ch2-touch-heatsink-no {
-// 	show dialog {
-// 		PLAYER "Another time, perhaps."
-// 	}
-// 	set entity "%SELF%" on_interact to ch2-touch-heatsink;  // reset after script jump
-// }

@@ -265,11 +265,11 @@
         {
          "animation":[
                 {
-                 "duration":200,
+                 "duration":10,
                  "tileid":25
                 }, 
                 {
-                 "duration":200,
+                 "duration":10,
                  "tileid":25
                 }],
          "class":"welder",
