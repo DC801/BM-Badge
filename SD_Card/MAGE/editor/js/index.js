@@ -44,10 +44,18 @@ window.vueApp = new window.Vue({
 			}
 		},
 		handleChange: function (event) {
-			this.closeError();
+			var vm = this;
+			var fileNameMap = {};
+			vm.closeError();
+
+			var handleError = function(error) {
+				vm.closeSuccess();
+				console.error(error);
+				vm.error = error.message;
+				vm.isLoading = false;
+			};
+
 			try {
-				var fileNameMap = {};
-				var vm = this;
 				var filesArray = Array.prototype.slice.call(event.target.files);
 				vm.isLoading = true;
 
@@ -76,6 +84,7 @@ window.vueApp = new window.Vue({
 							vm.prepareDownload([compositeArray], 'game.dat');
 						})
 						.catch(function (error) {
+							handleError(error);
 							throw error;
 						})
 						.then(function () {
@@ -84,10 +93,7 @@ window.vueApp = new window.Vue({
 						});
 				}
 			} catch (error) {
-				this.closeSuccess();
-				console.error(error);
-				vm.error = error.message;
-				vm.isLoading = false;
+				handleError(error);
 			}
 		}
 	}
