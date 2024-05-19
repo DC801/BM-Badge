@@ -3081,6 +3081,78 @@
 					"tileid": 21,
 					"flip_x": false
 				}
+			],
+			"project_idle": [
+				{
+					"tileid": 25,
+					"flip_x": false
+				},
+				{
+					"tileid": 25,
+					"flip_x": false
+				},
+				{
+					"tileid": 25,
+					"flip_x": false
+				},
+				{
+					"tileid": 25,
+					"flip_x": false
+				}
+			],
+			"project_twist": [
+				{
+					"tileid": 26,
+					"flip_x": false
+				},
+				{
+					"tileid": 26,
+					"flip_x": false
+				},
+				{
+					"tileid": 26,
+					"flip_x": false
+				},
+				{
+					"tileid": 26,
+					"flip_x": false
+				}
+			],
+			"project_fiddle": [
+				{
+					"tileid": 32,
+					"flip_x": false
+				},
+				{
+					"tileid": 32,
+					"flip_x": false
+				},
+				{
+					"tileid": 32,
+					"flip_x": false
+				},
+				{
+					"tileid": 32,
+					"flip_x": false
+				}
+			],
+			"project_reach": [
+				{
+					"tileid": 31,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				}
 			]
 		},
 		"scenarioIndex": 45,

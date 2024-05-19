@@ -782,7 +782,7 @@ ch2-lambda-person-marathonbob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about the Marathon Bobs."
 		" "
-		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever)"
+		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever, like 'gaming on the mac was a doomed prospect' or something)"
 	}
 	goto ch2-lambda-topic-person-s;
 }

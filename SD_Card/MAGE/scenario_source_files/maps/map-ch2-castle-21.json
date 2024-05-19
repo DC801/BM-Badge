@@ -125,7 +125,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-goose-generic"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -134,8 +134,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":285,
-                 "y":260
+                 "x":280,
+                 "y":258
                 }, 
                 {
                  "class":"",
@@ -153,7 +153,7 @@
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-jean_paul"
-                        },
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -176,12 +176,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-frankie"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-frankie"
-                        },
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -190,8 +190,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":123,
-                 "y":316
+                 "x":261,
+                 "y":317
                 }, 
                 {
                  "class":"",
@@ -204,7 +204,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-pie"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -227,7 +227,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-3dprinter"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -250,13 +250,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-cablesbox"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-cablesbox"
-                        }
-                     ],
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -274,13 +273,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-cablesbox"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-cablesbox"
-                        }
-                     ],
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -298,13 +296,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-cablesbox"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-cablesbox"
-                        }
-                     ],
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -386,7 +383,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -469,7 +466,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],

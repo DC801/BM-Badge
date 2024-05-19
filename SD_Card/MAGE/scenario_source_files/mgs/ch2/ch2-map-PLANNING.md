@@ -608,18 +608,14 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Mainframe needs software bodging because the hardware is so janky
 - [ ] Multiple-choice fall through should be more thought out -- which bits get repeated again, e.g. draw spacer?
 - [ ] Put collision on the debris at the doors
-- [ ] `go up` synonym of `go north`?
-- [ ] Make the "password incorrect" bit more clear as to the current mode you're in
 - [ ] Characters in the rooms post-game can be freed?
-	- [ ] Debris-less versions of rooms?
-	- [ ] Doors work?
-
+	- [~] Debris-less versions of rooms?
+	- [~] Doors work?
 - [~] Redo menu save management
 	- [ ] "Manage slots" rather than "save to current" and "load arbitrary"
 	- [x] Make it so "new game" isn't the first option -- so people mashing `A` won't erase their save by accident
 - [~] Load correct map on game start (depending on what chapter; currently they all load to town)
 - [ ] Old dudes need better excuse for not coming along; can't the player make a backdoor for them to come in?
-- [ ] People keep trying to `look` at inventory items or arbitrary stuff. How to handle this?
 - [ ] You should be able to ask the wizard for Bert messages (currently he ignores the question, and Lambda has `any messages` behavior)
 - [ ] `Look` should list items you can pick up
 - [ ] `plover` should trigger an Easter egg
@@ -646,4 +642,4 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - Reference IP over avian carriers
 - Log Forge (Log4J according to the Hacker Jeopardy guy)
 - The "Linq River" (or "Linq Lake")
-
+- Any Homestar Runner reference in ch2?

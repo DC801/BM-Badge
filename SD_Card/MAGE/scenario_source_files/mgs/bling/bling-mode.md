@@ -36,7 +36,7 @@ Your map *must* have an entity named "Timer" and another named "Math," even if t
 
 ## Other preparation
 
-1. Adjust the main menu to add a new option for the new bling map. (TODO: decide what to do when this list gets very big)
+1. Adjust the main menu to add a new option for the new bling map. (todo: decide what to do when this list gets very big)
 	- If you're adding the bling map to the bling slideshow, you don't necessarily *need* to add it as a new menu option, too, but you can if you want. (Probably best to keep the menu list short, though.)
 2. Add a new `start_bling` script. See existing scripts for examples.
 	- Before loading the bling map, set the flag `bling-hax-button-only`:

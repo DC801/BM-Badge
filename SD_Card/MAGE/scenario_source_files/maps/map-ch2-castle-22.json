@@ -136,7 +136,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-ckwatt"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -159,7 +159,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-scuzzy"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",

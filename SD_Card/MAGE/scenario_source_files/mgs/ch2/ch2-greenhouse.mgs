@@ -23,7 +23,7 @@ look-ch2-ethernettle1 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle1 (remember to add 'the' for objects)"
 	}
 }
 
@@ -31,7 +31,7 @@ look-ch2-ethernettle2 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle2 (remember to add 'the' for objects)"
 	}
 }
 
@@ -47,7 +47,7 @@ look-ch2-ethernettle4 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle4 (remember to add 'the' for objects)"
 	}
 }
 
@@ -55,7 +55,7 @@ look-ch2-ethernettle5 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle5 (remember to add 'the' for objects)"
 	}
 }
 
@@ -63,7 +63,7 @@ look-ch2-ethernettle6 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle6 (remember to add 'the' for objects)"
 	}
 }
 
@@ -71,7 +71,7 @@ look-ch2-ethernettle7 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle7 (remember to add 'the' for objects)"
 	}
 }
 
@@ -79,7 +79,7 @@ look-ch2-ethernettle8 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+		"\tTODO on_look ethernettle8 (remember to add 'the' for objects)"
 	}
 }
 

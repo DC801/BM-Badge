@@ -193,16 +193,16 @@
                  "id":35,
                  "name":"Lights",
                  "properties":[
-                     {
-                      "name":"on_interact",
-                      "type":"string",
-                      "value":"interact-ch2-simonlights"
-                     },
-                     {
-                      "name":"on_look",
-                      "type":"string",
-                      "value":"look-ch2-simonlights"
-                     }],
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-simonlights"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-simonlights"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -280,7 +280,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-drum"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -373,18 +373,6 @@
          "id":5,
          "name":"Vectors",
          "objects":[
-                {
-                 "class":"",
-                 "height":0,
-                 "id":15,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":-154,
-                 "y":462
-                }, 
                 {
                  "class":"",
                  "height":0,

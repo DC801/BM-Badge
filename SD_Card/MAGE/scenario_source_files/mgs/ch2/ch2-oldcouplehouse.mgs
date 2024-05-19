@@ -116,14 +116,11 @@ interact-ch2-beatrice {
 				SELF "He's mad at me. I can't say I blame him."
 				"I... need to think through some things."
 			}
-			rotate entity "%SELF%" -1;
-			show dialog ch2-beatrice-wait { // referenced below
-				SELF "I'm sorry, %PLAYER%, but please leave me alone for the next little while."
-			}
 			set flag ch2-beatrice-backstory1 to true;
-		} else {
-			rotate entity "%SELF%" -1;
-			show dialog ch2-beatrice-wait;
+		}
+		rotate entity "%SELF%" -1;
+		show dialog {
+			SELF "I'm sorry, %PLAYER%, but please leave me alone for the next little while."
 		}
 	} else if (flag ch2-delmar-is-man is true) {
 		show dialog {

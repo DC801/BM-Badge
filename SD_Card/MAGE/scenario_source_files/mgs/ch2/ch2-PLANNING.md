@@ -14,8 +14,8 @@
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations
 - [ ] For "failed" multiple choice responses, make the chunk of the dialog that gets repeated more logical and consistent
-- [ ] Check that every entity has an on_look script
-- [ ] Investigate and fix color pallet issues between tilesets (specifically grass in the castle/town tilesets, and the artifact cubby and the wall)
+- [x] Check that every entity has an on_look script
+- [x] Investigate and fix color pallet issues between tilesets (specifically grass in the castle/town tilesets, and the artifact cubby and the wall)
 - [ ] Make aliases, e.g.:
 	- [ ] `n` for `go north`
 	- [ ] `i` for `inventory`
@@ -23,12 +23,18 @@
 - [ ] Make fuse system more interesting
 	- [ ] Work out ≈ Cartesian product / Punnet squares for each grouping of combined items
 	- [ ] Write something funny for each failed combo
-	- [ ] Perhaps: You need to fuse in person, at (one of the) the solder station(s)?
+	- [~] You need to fuse in person, at (one of the) the solder station(s)?
 - [ ] Make Lambda less hand-holdy at the beginning
-	- [ ] Explain `help` and `man` (both Lambda and `man _`) and nothing else!
+	- [ ] Explain `help` and `man` (both to reach Lambda and `man _`) and nothing else!
 - [x] Put the "password" letters in the floor
 	- [x] Take out the "look up" stuff
 	- [x] Letters should spell AUTHENTICATE when spacially placed along the rooms they were found:
+- [x] Pair down the number of free computers in the place — gotta justify the need to build a weird one from scratch
+- [ ] Change each individual "hide" script to set the object's on_tick to the "yeet" script instead so that all properties (not manually chosen ones) can be blanked in a uniform way
+- [ ] Should each ethernettle have a different, generic on_look or should they be different per color?
+- [ ] Math book on_lock got skipped in RTFM room?
+- [ ] Make a graphic "install the computer part" minigame
+	- [ ] Q. Will this be fun?
 
 -------------------------------
 |  /----\      -       M A P  |
