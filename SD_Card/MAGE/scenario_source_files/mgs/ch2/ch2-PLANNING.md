@@ -36,6 +36,7 @@
 - [ ] Make a graphic "install the computer part" minigame
 	- [ ] Q. Will this be fun?
 
+```
 -------------------------------
 |  /----\      -       M A P  |
 |  |....|     /.\             |
@@ -53,6 +54,7 @@
 |          |...E...|          |
 |          ---------          |
 -------------------------------
+```
 
 ## Specific work needing done
 

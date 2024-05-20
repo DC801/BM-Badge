@@ -192,7 +192,7 @@ ch2-lambda-mainframe-broken {
 	show serial dialog {
 		"<c>YOU</>: Why did you break it?"
 		" "
-		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
+		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big <r>Bad</>'s hands."
 		"\tThat artifact is capable of doing quite a lot of damage, you know. It's only a problem that we're lacking it now because of that recent earthquake."
 		" "
 	}
@@ -205,6 +205,7 @@ ch2-lambda-mainframe-broken-1 {
 		"<c>YOU</>: What exactly about it is broken?"
 		" "
 		"<m>LAMBDA</>: Well, sort of... everything. It's in a million pieces, to be precise."
+		" "
 		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-2
 		# "Was that necessary?" : ch2-lambda-mainframe-broken-2
 	}
@@ -305,7 +306,7 @@ ch2-lambda-topic-person-q {
 		_ "CONCIERGE" : ch2-lambda-person-concierge
 		_ "THE CONCIERGE" : ch2-lambda-person-concierge
 		_ "TEMPLETON" : ch2-lambda-person-templeton
-		_ "SEBSTIAN" : ch2-lambda-person-sebastian
+		_ "SEBASTIAN" : ch2-lambda-person-sebastian
 		_ "THE GOLDFISH" : ch2-lambda-person-goldfish
 		_ "GOLDFISH" : ch2-lambda-person-goldfish
 		_ "AURELIUS" : ch2-lambda-person-aurelius
@@ -317,7 +318,7 @@ ch2-lambda-topic-person-q {
 		_ "ALVIN" : ch2-lambda-person-alvin
 		_ "SIMON" : ch2-lambda-person-simon
 		_ "THEODORE" : ch2-lambda-person-theodore
-		_ "BOB MOSS" : ch2-lambda-person-bobmoss
+		_ "SEA MOSS" : ch2-lambda-person-seamoss
 		_ "GLORIA" : ch2-lambda-person-gloria
 		_ "SAMSON" : ch2-lambda-person-samson
 		_ "GREGORY" : ch2-lambda-person-gregory
@@ -508,8 +509,19 @@ ch2-lambda-person-alvin {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Alvin."
 		" "
-		"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Alvin -- by reputation, she's the quiet, mysterious one of the group -- that's all I know."
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Alvin -- by reputation, she's the quiet, mysterious one of the group -- that's all I know."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -518,8 +530,19 @@ ch2-lambda-person-theodore {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Theodore."
 		" "
-		"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Theodore -- I've never met them personally. I've heard they're the straightforward, stoic type, though."
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Theodore -- I've never met them personally. I've heard they're the straightforward, stoic type, though."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -528,27 +551,38 @@ ch2-lambda-person-simon {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Simon."
 		" "
-		"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really <bold>want</> to meet him, you know?"
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really <bold>want</> to meet him, you know?"
 	}
 	goto ch2-lambda-topic-person-s;
 }
-// Bob Moss
-ch2-lambda-person-bobmoss {
+// Sea Moss
+ch2-lambda-person-seamoss {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: Tell me about Bob Moss."
+		"<c>YOU</>: Tell me about Sea Moss."
 		" "
 	}
 	if (flag ch2-seen-room-32 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: Bob Moss? Bob Moss... I-I think I...."
+			"<m>LAMBDA</>: Sea Moss? Sea Moss... I-I think I...."
 			"\tI think I used to be good friends with him, but... what did we do together?"
 			"\tI seem to remember we... no, it's gone. I'm sorry."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Yes! Bob Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry, like (TODO: more facts about CMOS microprocessors on a tight technical level)."
+			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry, like (TODO: more facts about CMOS microprocessors on a tight technical level)."
 			"\tAnd he makes the best crepes, too, believe it or not!"
 		}
 	}

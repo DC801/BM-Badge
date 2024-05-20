@@ -95,9 +95,11 @@ ch2-toot-step2-q {
 	show serial dialog {
 		"(Type <c>YES</> or <c>NO</>)"
 		_ "SURE" : ch2-toot-step2-yes-extra
+		_ "YEAH" : ch2-toot-step2-yes-extra
 		_ "YAH" : ch2-toot-step2-yes-extra
 		_ "YA" : ch2-toot-step2-yes-extra
 		_ "YES" : ch2-toot-step2-yes
+		_ "YE" : ch2-toot-step2-yes-extra
 		_ "Y" : ch2-toot-step2-yes-extra
 		_ "NAH" : ch2-toot-step2-no-extra
 		_ "NO" : ch2-toot-step2-no

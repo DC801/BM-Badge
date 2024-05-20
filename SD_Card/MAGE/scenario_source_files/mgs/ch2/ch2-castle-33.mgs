@@ -53,13 +53,24 @@ on_load-ch2-castle-33 {
 	copy ch2-map-init;
 	if (flag ch2-cutseen-castle33 is false) {
 		turn player control off;
-		wait 500ms;
-		show dialog {
-			Gregory "Oh!"
-		}
-		turn entity "%PLAYER%" toward entity Gregory;
-		show dialog {
-			Gregory "Well, that's a new face, isn't it?"
+		if (warp state is not warped) {
+			wait 600ms;
+			show dialog {
+				Gregory alignment BR "Oh!"
+			}
+			turn entity "%PLAYER%" toward entity Gregory;
+			show dialog {
+				Gregory alignment BR "Well, that's a new face, isn't it?"
+			}
+		} else {
+			wait 200ms;
+			show dialog {
+				Gregory alignment TR "Oh!"
+			}
+			turn entity "%PLAYER%" toward entity Gregory;
+			show dialog {
+				Gregory alignment TR "Well, that's a new face, isn't it?"
+			}
 		}
 		turn player control on;
 		set flag ch2-cutseen-castle33 to true;

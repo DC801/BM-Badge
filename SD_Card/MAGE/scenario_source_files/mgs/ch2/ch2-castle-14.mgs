@@ -264,7 +264,7 @@ interact-ch2-keypad {
 		if (flag interrupt is false) {
 			show dialog {
 				name "" "(TODO: keypad puzzle explanation: collect the admin password to reset the keypad.)"
-				"(The letters used in the password are physicall written all over the castle)"
+				"(The letters used in the password are physically written all over the castle)"
 				"(When you have discovered the password, speak to the keypad again and type the password in the serial terminal at the prompt.)"
 			}
 			set flag interrupt to true;
@@ -290,6 +290,7 @@ interact-ch2-keypad-incorrect {
 	set entity "%SELF%" on_interact to interact-ch2-keypad-prompt;
 }
 interact-ch2-keypad-good-pass {
+	show serial dialog spacer;
 	show serial dialog {
 		"<g>DOOR UNLOCKED</>"
 	}

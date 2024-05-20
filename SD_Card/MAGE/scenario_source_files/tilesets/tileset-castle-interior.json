@@ -6366,6 +6366,57 @@
             }
         }, 
         {
+         "id":333,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "class":"",
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":-6
+                            }, 
+                            {
+                             "x":19,
+                             "y":-6
+                            }, 
+                            {
+                             "x":19,
+                             "y":16
+                            }, 
+                            {
+                             "x":32,
+                             "y":16
+                            }, 
+                            {
+                             "x":32,
+                             "y":26
+                            }, 
+                            {
+                             "x":0,
+                             "y":26
+                            }],
+                     "rotation":0,
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":6
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
          "id":334,
          "objectgroup":
             {

@@ -133,16 +133,16 @@ rocco-work-fancy {
 	set entity Rocco current_animation to $idle;
 	mutate tempvar2 ? 2;
 	if (variable tempvar2 is 1) {
-		wait 800ms;
+		wait 1200ms;
 		mutate tempvar2 ? 4;
 		mutate tempvar2 + 3;
 		for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
 			play entity Rocco animation $twist once;
 		}
 		set entity Rocco current_animation to $idle;
-		wait 900ms;
+		wait 500ms;
 	}
-	wait 200ms;
+	wait 500ms;
 	play entity Rocco animation $reach once;
 	mutate tempvar2 ? 2;
 	mutate tempvar2 + 1;

@@ -171,7 +171,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-guestbook"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -190,21 +190,21 @@
                  "id":38,
                  "name":"Stereo",
                  "properties":[
-                     {
-                      "name":"on_interact",
-                      "type":"string",
-                      "value":"ch2-stereo-interact"
-                     },
-                     {
-                      "name":"on_look",
-                      "type":"string",
-                      "value":"look-ch2-stereo"
-                     }],
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-stereo-interact"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-stereo"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":224,
-                 "y":108
+                 "x":215,
+                 "y":104
                 }, 
                 {
                  "class":"",
@@ -213,16 +213,16 @@
                  "id":39,
                  "name":"Stereo",
                  "properties":[
-                     {
-                      "name":"on_interact",
-                      "type":"string",
-                      "value":"ch2-stereo-interact"
-                     },
-                     {
-                      "name":"on_look",
-                      "type":"string",
-                      "value":"look-ch2-stereo"
-                     }],
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-stereo-interact"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-stereo"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -236,16 +236,16 @@
                  "id":40,
                  "name":"Stereo",
                  "properties":[
-                     {
-                      "name":"on_interact",
-                      "type":"string",
-                      "value":"ch2-stereo-interact"
-                     },
-                     {
-                      "name":"on_look",
-                      "type":"string",
-                      "value":"look-ch2-stereo"
-                     }],
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-stereo-interact"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-stereo"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
