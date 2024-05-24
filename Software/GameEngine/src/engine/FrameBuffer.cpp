@@ -242,14 +242,14 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    auto iteratorX = int16_t{ 1 };
    auto iteratorY = int16_t{ 1 };
 
-   if (flags & RENDER_FLAGS_FLIP_X || flags & RENDER_FLAGS_FLIP_DIAG)
+   if ((flags & RENDER_FLAGS_FLIP_X) || (flags & RENDER_FLAGS_FLIP_DIAG))
    {
       xSourceMin = tileset->TileWidth - 1;
       xSourceMax = -1;
       iteratorX = -1;
    }
 
-   if (flags & RENDER_FLAGS_FLIP_Y || flags & RENDER_FLAGS_FLIP_DIAG)
+   if ((flags & RENDER_FLAGS_FLIP_Y) || (flags & RENDER_FLAGS_FLIP_DIAG))
    {
       ySourceMin = tileset->TileHeight - 1;
       ySourceMax = -1;
@@ -266,9 +266,7 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    const auto tiles = ROM()->GetReadPointerByIndex<MagePixel>(tilesetId);
    const auto tilePixels = std::span<const MagePixel>(&tiles[tileId * tileset->TileWidth * tileset->TileHeight], tileset->TileWidth * tileset->TileHeight);
 
-   for (auto yTarget = tileDrawY;
-      ySourceMin != ySourceMax;
-      ySourceMin += iteratorY, yTarget++)
+   for (auto yTarget = tileDrawY; ySourceMin != ySourceMax; ySourceMin += iteratorY, yTarget++)
    {
       auto sourceRowPtr = &tilePixels[ySourceMin * tileset->TileWidth];
 
@@ -277,9 +275,7 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
          continue;
       }
 
-      for (auto xSource = xSourceMin, xTarget = tileDrawX;
-         xSource != xSourceMax;
-         xSource += iteratorX, xTarget++)
+      for (auto xSource = xSourceMin, xTarget = tileDrawX; xSource != xSourceMax; xSource += iteratorX, xTarget++)
       {
          if (xTarget < 0 || xTarget >= DrawWidth)
          {
@@ -310,7 +306,6 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    if (drawGeometry)
    {
       const auto tileDrawPoint = Vector2T{ tileDrawX, tileDrawY };
-      //frameBuffer->drawRect(EntityRect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);
       auto geometry = tileset->GetGeometryForTile(tileId);
       if (geometry)
       {

@@ -58,7 +58,7 @@ void MageGameEngine::Run()
 
       while (GameClock::now() - loopStart < MinTimeBetweenRenders)
       {
-         std::this_thread::sleep_for(milliseconds{ 1 });
+         std::this_thread::sleep_for(GameClock::duration{ 1 });
          continue;
       }
 
@@ -72,7 +72,7 @@ void MageGameEngine::Run()
       frames++;
       frameBuffer->DrawText(std::format("FPS: {:4}", fps), COLOR_RED, 10, 10, true);
 
-      if (GameClock::now() - lastTime > GameClock::duration(milliseconds{125}))
+      if (GameClock::now() - lastTime > GameClock::duration(125))
       {
          const auto smoothing = 0.9f;
          fps = smoothing * (8 * frames) + (8 * frames * (1.0f - smoothing));
@@ -161,11 +161,9 @@ void MageGameEngine::applyGameModeInputs()
    auto player = mapControl->getPlayerEntityData();
    const auto moveAmount = inputHandler->IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
-   auto playerEntityTypeId = player->primaryIdType;
-   auto hasEntityType = playerEntityTypeId == ENTITY_TYPE;
-   if (hasEntityType)
+   if (player->primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId);
+      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(static_cast<uint16_t>(player->primaryIdType));
 
       // position updates while player is actioning cause loss of collision data
       if (playerHasControl && !inputHandler->PlayerIsActioning())
@@ -173,12 +171,14 @@ void MageGameEngine::applyGameModeInputs()
          // clip player to [0,max(uint16_t)]
          if (inputHandler->Left())
          {
+            player->SetDirection(MageEntityAnimationDirection::WEST);
             player->targetPosition.x = static_cast<int>(player->targetPosition.x) - moveAmount < 0
                ? 0
                : player->targetPosition.x - moveAmount;
          }
          else if (inputHandler->Right())
          {
+            player->SetDirection(MageEntityAnimationDirection::EAST);
             player->targetPosition.x = static_cast<int>(player->targetPosition.x) + moveAmount > std::numeric_limits<uint16_t>::max()
                ? std::numeric_limits<uint16_t>::max()
                : player->targetPosition.x + moveAmount;
@@ -186,12 +186,14 @@ void MageGameEngine::applyGameModeInputs()
 
          if (inputHandler->Up())
          {
+            player->SetDirection(MageEntityAnimationDirection::NORTH);
             player->targetPosition.y = static_cast<int>(player->targetPosition.y) - moveAmount < 0
                ? 0
                : player->targetPosition.y - moveAmount;
          }
          else if (inputHandler->Down())
          {
+            player->SetDirection(MageEntityAnimationDirection::SOUTH);
             player->targetPosition.y = static_cast<int>(player->targetPosition.y) + moveAmount > std::numeric_limits<uint16_t>::max()
                ? std::numeric_limits<uint16_t>::max()
                : player->targetPosition.y + moveAmount;
@@ -199,33 +201,25 @@ void MageGameEngine::applyGameModeInputs()
       }
 
       auto playerRenderableData = mapControl->getPlayerRenderableData();
-      //handle animation assignment for the player:
-      //Scenario 1 - perform action:
       if (inputHandler->PlayerIsActioning()
          && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
          playerRenderableData->SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
       }
-      //Scenario 2 - show walk animation:
       else if (mapControl->playerIsMoving
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
          playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
-      //Scenario 3 - show idle animation:
       else if (playerHasControl)
       {
          playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
 
-      //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
-      const bool isPlayingActionButShouldReturnControlToPlayer = 
-         (playerRenderableData->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-         && (playerRenderableData->currentFrameIndex == playerRenderableData->frameCount - 1)
-         && (std::chrono::milliseconds{ playerRenderableData->currentFrameMs } >= playerRenderableData->duration);
-
-      //if the above bool is true, set the player back to their idle animation:
-      if (isPlayingActionButShouldReturnControlToPlayer)
+      // stop playing action animation on the last frame of action
+      if (playerRenderableData->currentAnimation == MAGE_ACTION_ANIMATION_INDEX
+         && playerRenderableData->currentFrameIndex >= playerRenderableData->frameCount - 1
+         && playerRenderableData->curFrameDuration >= playerRenderableData->duration)
       {
          playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }

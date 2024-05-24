@@ -43,7 +43,12 @@ void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
             const auto keyDown = mapScanCode(e.key.keysym.scancode);
             if (keyDown.has_value())
             {
-               inputStates[keyDown.value()].lastPressed = curTime;
+               const auto& key = keyDown.value();
+               if (key == KeyPress::Rjoy_right)
+               {
+
+               }
+               inputStates[key].lastPressed = curTime;
             }
          }
       }
@@ -52,7 +57,12 @@ void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
          const auto keyUp = mapScanCode(e.key.keysym.scancode);
          if (keyUp.has_value())
          {
-            inputStates[keyUp.value()].lastReleased = curTime;
+            const auto& key = keyUp.value();
+            if (key == KeyPress::Rjoy_right)
+            {
+
+            }
+            inputStates[key].lastReleased = curTime;
          }
       }
 

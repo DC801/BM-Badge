@@ -23,7 +23,7 @@ void MageScriptControl::processScript(MageScriptState& scriptState, uint8_t curr
         auto nextScriptId = (scriptActions.get()->*actionFunction)(action->Args, scriptState, currentEntityId);
 
         //  changing maps terminates further script processing:
-        if (scriptState.totalLoopsToNextAction > 0 || mapControl->mapLoadId != MAGE_NO_MAP) { return; }
+        if (scriptState.totalSteps > 0 || mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
         // check to see if the action set a new script to jump to
         if (nextScriptId.has_value())

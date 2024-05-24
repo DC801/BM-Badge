@@ -51,6 +51,14 @@ static inline const auto MAGE_RENDER_FLAGS_FAILOVER_VALUE = 0;
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
 //not work as intended.
+enum class PlayerAnimation
+{
+   Idle,
+   Walk,
+   Action,
+   Invalid // enums always fill 
+};
+
 static inline const auto MAGE_IDLE_ANIMATION_INDEX = 0;
 static inline const auto MAGE_WALK_ANIMATION_INDEX = 1;
 static inline const auto MAGE_ACTION_ANIMATION_INDEX = 2;
@@ -64,19 +72,6 @@ static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 #define MAGE_NO_MAP (-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
-
-// 100px/sec, 1000ms/sec, 30frames/sec, 3px/frame or 6px/frame
-// this is how many ms must have passed before the main game loop will run again:
-// typical values:
-// 60fps: ~16ms
-// 30fps: ~33ms
-// 24fps: ~41ms
-// 
-// RTC for NRF52840:
-// PRESCALER = round(32768 Hz / [target FPS (Hz)]) - 1 = 992
-#ifdef DC801_EMBEDDED
-static inline const auto RtcPrescaler = 992; // round(32768 Hz / 30 [target FPS (Hz)]) - 1
-#else
 
 struct GameClock
 {
@@ -93,17 +88,27 @@ struct GameClock
    }
 };
 
+// 100px/sec, 1000ms/sec, 30frames/sec, 3px/frame or 6px/frame
+// this is how many ms must have passed before the main game loop will run again:
+// typical values:
+// 60fps: ~16ms
+// 30fps: ~33ms
+// 24fps: ~41ms
 static inline const auto TargetFPS = 30;
 static inline const auto MinTimeBetweenRenders = GameClock::duration{ 1000 } / TargetFPS ;
 static inline const auto MinTimeBetweenUIInput = GameClock::duration{ 1000 };
 static inline const auto IntegrationStepSize = MinTimeBetweenRenders/3;
+
+
+#ifdef DC801_EMBEDDED
+// RTC for NRF52840:
+// PRESCALER = round(32768 Hz / [target FPS (Hz)]) - 1
+static inline const auto RtcPrescaler = std::round(32768 / TargetFPS) - 1;
 #endif
 
 //these are used for setting player speed
 //speed is in x/y pixels per update tick
 static inline const auto RunSpeed = uint16_t{ 3 };
 static inline const auto WalkSpeed = uint16_t{ 2 };
-
-static inline const auto TilesetNameLength = 16;
 
 #endif //_MAGE_DEFINES_H

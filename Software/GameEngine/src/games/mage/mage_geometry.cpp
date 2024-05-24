@@ -15,14 +15,23 @@ std::vector<EntityPoint> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width
    for (uint8_t i = 0; i < pointCount; i++)
    {
       auto point = GetPoint(i);
-      if (flags == 0)
+      
+      if (flags | RENDER_FLAGS_FLIP_Y)
       {
-         points[i] = point;
+         points[i].x = width - point.x;
       }
-      else
+      if (flags | RENDER_FLAGS_FLIP_Y)
       {
-         points[i] = point.flipByFlags(flags, width, height);
+         points[i].y = height - point.y;
       }
+      if (flags | RENDER_FLAGS_FLIP_DIAG)
+      {
+         auto xTemp = point.x;
+         points[i].x = point.y;
+         points[i].y = xTemp;
+      }
+
+      points[i] = point;
    }
    return points;
 }

@@ -50,6 +50,7 @@ inline static const auto COLOR_BSOD = 0xDA03;
 
 struct MageTileset
 {
+   static inline const auto TilesetNameLength = 16;
    constexpr uint16_t TileCount() const { return Rows * Cols; }
 
    const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const
@@ -110,12 +111,12 @@ public:
       }
    }
 
-   inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0)
+   inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
    {
       drawTile(tilesetId, tileId, tileDrawX - camera.position.x, tileDrawY - camera.position.y, flags);
    }
 
-   inline void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = 0)
+   inline void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
    {
       drawTile(tilesetId, tileId, tileDrawX, tileDrawY, flags);
    }

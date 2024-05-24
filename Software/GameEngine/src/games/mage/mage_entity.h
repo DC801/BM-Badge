@@ -9,21 +9,40 @@
 #include <stdint.h>
 #include <vector>
 #include <memory>
+#include <variant>
 
 class MageScriptControl;
 
 //this contains the possible options for an entity PrimaryIdType value.
-typedef enum : uint8_t
+enum class MageEntityPrimaryIdType : uint8_t
 {
    TILESET = 0,
    ANIMATION = 1,
-   ENTITY_TYPE = 2
-} MageEntityPrimaryIdType;
-#define NUM_PRIMARY_ID_TYPES 3
+   ENTITY_TYPE = 2,
+   INVALID = 3
+};
+
+struct MageAnimation
+{
+   struct Frame
+   {
+      uint16_t tileId;
+      uint16_t durationMs;
+   };
+
+   const MageAnimation::Frame& GetFrame(uint32_t index) const noexcept
+   {
+      auto frames = (MageAnimation::Frame*)((uint8_t*)&frameCount + sizeof(uint16_t));
+      return frames[index % frameCount];
+   }
+
+   uint16_t tilesetId{ 0 };
+   uint16_t frameCount{ 1 };
+};
 
 struct MageEntityTypeAnimation
 {
-   constexpr const AnimationDirection& operator[](uint8_t direction) const
+   constexpr const AnimationDirection& operator[](MageEntityAnimationDirection direction) const
    {
       switch (direction)
       {
@@ -32,8 +51,8 @@ struct MageEntityTypeAnimation
       case MageEntityAnimationDirection::WEST: return West;
 
       default:
-      case MageEntityAnimationDirection::SOUTH: 
-      return South;
+      case MageEntityAnimationDirection::SOUTH:
+         return South;
       }
    }
    const AnimationDirection North;
@@ -65,17 +84,18 @@ struct MageEntityData
    uint16_t onTickScriptId{ 0 };
    uint16_t primaryId{ 0 };
    uint16_t secondaryId{ 0 };
-   uint8_t primaryIdType{ 0 };
+   MageEntityPrimaryIdType primaryIdType{ 0 };
 
    uint8_t  current_animation;
    uint8_t  current_frame;
-   uint8_t  flags;
+   uint8_t flags;
+
    uint8_t hackableStateA{ 0 };
    uint8_t hackableStateB{ 0 };
    uint8_t hackableStateC{ 0 };
    uint8_t hackableStateD{ 0 };
 
-   void SetName(std::string s)
+   inline void SetName(std::string s)
    {
       for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
       {
@@ -83,14 +103,18 @@ struct MageEntityData
       }
    }
 
-   inline bool IsDebug() const { return flags & RENDER_FLAGS_IS_DEBUG; }
+   constexpr void SetDirection(MageEntityAnimationDirection dir) { flags = (flags & 0x80) | (static_cast<uint8_t>(dir) & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
+   constexpr MageEntityAnimationDirection GetAnimationDirection() const {  return static_cast<MageEntityAnimationDirection>(flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
+   constexpr bool IsDebug() const { return flags & RENDER_FLAGS_IS_DEBUG; }
+   constexpr bool IsGlitched() const { return flags & RENDER_FLAGS_IS_GLITCHED; }
+   constexpr void SetGlitched(bool glitched) { if (glitched) { flags |= RENDER_FLAGS_IS_GLITCHED; } }
 };
 
 struct RenderableData
 {
    EntityPoint origin{ 0 };
    EntityRect hitBox{ 0 };
-   uint16_t currentFrameMs{ 0 };
+   GameClock::duration curFrameDuration{ 0 };
    uint16_t tilesetId{ 0 };
    uint16_t lastTilesetId{ 0 };
    uint16_t tileId{ 0 };
@@ -98,7 +122,7 @@ struct RenderableData
    uint16_t frameCount{ 0 };
    uint8_t currentAnimation{ 0 };
    uint8_t currentFrameIndex{ 0 };
-   uint8_t renderFlags{ 0 };
+   uint8_t renderFlags;
 
    constexpr EntityPoint center() const
    {
@@ -110,7 +134,7 @@ struct RenderableData
       //if the animation changed since the start of this function, reset to the first frame and restart the timer:
       if (animation != currentAnimation)
       {
-         currentFrameMs = 0;
+         curFrameDuration = GameClock::duration{ 0 };
          currentFrameIndex = 0;
          currentAnimation = animation;
       }

@@ -87,8 +87,8 @@ set(SOURCEFILES
     Software/GameEngine/src/engine/utility.cpp
     Software/GameEngine/src/engine/utility.h
 
-    Software/GameEngine/src/games/mage/mage_animation.cpp
-    Software/GameEngine/src/games/mage/mage_animation.h
+    
+    
     Software/GameEngine/src/games/mage/mage_app_timers.cpp
     Software/GameEngine/src/games/mage/mage_app_timers.h
     Software/GameEngine/src/games/mage/mage_camera.cpp

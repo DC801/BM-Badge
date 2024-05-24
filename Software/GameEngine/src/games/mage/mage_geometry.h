@@ -19,26 +19,25 @@ in a more accessible way.
 #include <vector>
 #include <optional>
 
-#define RENDER_FLAGS_IS_GLITCHED_MASK	0b01111111
-#define RENDER_FLAGS_IS_GLITCHED			0b10000000
-#define RENDER_FLAGS_IS_DEBUG				0b01000000
-#define RENDER_FLAGS_FLIP_X				0b00000100
-#define RENDER_FLAGS_FLIP_Y				0b00000010
-#define RENDER_FLAGS_FLIP_DIAG			0b00000001
+inline static const auto RENDER_FLAGS_TILE_FLIP_MASK = 0b00000111;
+inline static const auto RENDER_FLAGS_ENTITY_DIRECTION_MASK = 0b00000011;
 
-#define RENDER_FLAGS_FLIP_MASK			0b00000111
-#define RENDER_FLAGS_DIRECTION_MASK		0b00000011
-#define NUM_DIRECTIONS 4
+inline static const auto RENDER_FLAGS_IS_GLITCHED = 0b10000000;
+inline static const auto RENDER_FLAGS_IS_DEBUG = 0b01000000;
+inline static const auto RENDER_FLAGS_FLIP_X = 0b00000100;
+inline static const auto RENDER_FLAGS_FLIP_Y = 0b00000010;
+inline static const auto RENDER_FLAGS_FLIP_DIAG = 0b00000001;
+inline static const auto NUM_DIRECTIONS = 4;
+
 
 //this is the numerical translation for entity direction.
-enum MageEntityAnimationDirection : uint8_t
+enum class MageEntityAnimationDirection : uint8_t
 {
    NORTH = 0,
    EAST = 1,
    SOUTH = 2,
-   WEST = 3,
+   WEST = 3
 };
-
 
 //this is a point in 2D space. Due to the entity storing points as 16 bit unsigned integers 
 // and the remaining functions using 32 bit signed integers, 
@@ -50,7 +49,7 @@ struct Vector2T
    T y{ 0 };
 
    template <typename R>
-   operator Vector2T<R>() 
+   operator Vector2T<R>()
    {
       return Vector2T<R>{(R)x, (R)y};
    }
@@ -72,29 +71,6 @@ struct Vector2T
          Util::lerp(x, b.x, progress),
          Util::lerp(y, b.y, progress)
       };
-   }
-
-   Vector2T flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
-   {
-      Vector2T point = Vector2T{ x,y };
-
-      if (flags & RENDER_FLAGS_FLIP_X)
-      {
-         point.x = width - point.x;
-      }
-      if (flags & RENDER_FLAGS_FLIP_Y)
-      {
-         point.y = height - point.y;
-      }
-
-      if (flags & RENDER_FLAGS_FLIP_DIAG)
-      {
-         auto xTemp = point.x;
-         point.x = point.y;
-         point.y = xTemp;
-      }
-
-      return point;
    }
 
    template <class O>
@@ -152,7 +128,7 @@ struct Vector2T
 
    Vector2T operator-()
    {
-   	return Vector2T{ -x, -y };
+      return Vector2T{ -x, -y };
    }
 
    template <class O>
@@ -176,28 +152,24 @@ struct Vector2T
       return lhs.x == rhs.x && lhs.y == rhs.y;
    }
 
-   MageEntityAnimationDirection getRelativeDirection(const Vector2T& target) const
+   uint8_t getRelativeDirection(const Vector2T& target) const
    {
       float angle = atan2f(target.y - y, target.x - x);
       float absoluteAngle = abs(angle);
-      MageEntityAnimationDirection direction = SOUTH;
+      auto direction = MageEntityAnimationDirection::SOUTH;
       if (absoluteAngle > 2.356194f)
       {
-         direction = WEST;
+         direction = MageEntityAnimationDirection::WEST;
       }
       else if (absoluteAngle < 0.785398f)
       {
-         direction = EAST;
+         direction = MageEntityAnimationDirection::EAST;
       }
       else if (angle < 0)
       {
-         direction = NORTH;
+         direction = MageEntityAnimationDirection::NORTH;
       }
-      else if (angle > 0)
-      {
-         direction = SOUTH;
-      }
-      return direction;
+      return static_cast<uint8_t>(direction);
    }
 };
 

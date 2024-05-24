@@ -32,7 +32,6 @@ struct InputState
 {
    std::optional<GameClock::time_point> lastPressed{};
    std::optional<GameClock::time_point> lastReleased{};
-   std::optional<GameClock::time_point> lastChecked{};
 
    constexpr bool Pressed() const
    {

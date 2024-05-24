@@ -39,9 +39,9 @@ struct MapLayers
 {
    MapLayers() noexcept = default;
    //MapLayers(MapLayers& layers) noexcept = default;
-   MapLayers(uint32_t& offset, std::span<const MapTile>&& tiles, uint16_t layers) noexcept
+   MapLayers(uint32_t& offset, std::span<const MapTile>&& tiles, uint16_t layerSize) noexcept
       : tiles(std::move(tiles)),
-      layerSize(layers)
+      layerSize(layerSize)
    {}
 
    constexpr std::span<const MapTile> operator[](uint8_t i) const { return tiles.subspan(i * layerSize, layerSize); }
@@ -216,13 +216,13 @@ public:
    int32_t mapLoadId{ MAGE_NO_MAP };
 
    template <typename T>
-   T& Get(auto i) 
+   constexpr T& Get(auto i) 
    { 
       return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; 
    }
 
    template <typename T>
-   const T& Get(auto i) const
+   constexpr const T& Get(auto i) const
    {
       return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount];
    }
@@ -231,14 +231,6 @@ public:
    std::span<T> GetAll()
    {
       return std::span<T>(std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities));
-   }
-
-
-   template<typename... T>
-   constexpr std::tuple<std::array<T, MAX_ENTITIES_PER_MAP>&...> GetAllOf()
-   {
-      return std::make_tuple<T...>(std::span<T>(std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities))
-         .subspan(currentMap->entityCount)...);
    }
 
    std::span<MageEntityData> GetEntities()

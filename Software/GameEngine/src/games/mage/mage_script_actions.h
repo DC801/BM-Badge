@@ -162,7 +162,7 @@ private:
 //called directly by scripts, and preform their actions based on arguments read from ROM
 //each action has an action logic type, depending on how it will need to interact with the rest of the game loop:
 //I   = instant, will execute and immediately proceed to the next action
-//NB  = non-blocking, will use loopsToNextAction and totalLoopsToNextAction to run the action until it is completed
+//NB  = non-blocking, will use remainingSteps and totalSteps to run the action until it is completed
 //NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the mapLocalScriptId is changed
 //B   = blocking, will pause all game actions until complete.
 //I+C = scripts that may call another mapLocalScriptId, discarding any actions that occur after them in the current script
@@ -377,7 +377,7 @@ private:
 
    constexpr float getProgressOfAction(const MageScriptState& resumeState) const
    {
-       return 1.0f - (float)resumeState.loopsToNextAction / (float)resumeState.totalLoopsToNextAction;
+       return 1.0f - (float)resumeState.remainingSteps / (float)resumeState.totalSteps;
    }
    float manageProgressOfAction(MageScriptState& resumeState, uint32_t duration) const;
 

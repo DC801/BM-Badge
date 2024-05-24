@@ -1,10 +1,9 @@
 #include "mage_entity.h"
-#include "mage_animation.h"
 #include "mage_script_control.h"
 
 void RenderableData::UpdateFrom(const MageEntityData& entity)
 {
-   currentFrameMs += IntegrationStepSize.count();
+   curFrameDuration += IntegrationStepSize;
 
    if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
    {
@@ -49,19 +48,19 @@ void RenderableData::updateAsTileset(const MageEntityData& entity)
 {
    tilesetId = entity.primaryId;
    tileId = entity.secondaryId;
-   duration = std::chrono::milliseconds{ 0 }; //unused
-   frameCount = 0; //unused
-   renderFlags = entity.flags; //no need to check, it shouldn't cause a crash.
+   duration = std::chrono::milliseconds{ 0 };
+   frameCount = 0;
+   renderFlags = entity.flags;
 }
 
 void RenderableData::updateAsAnimation(const MageEntityData& entity)
 {
    //check for frame change and adjust if needed:
-   if (std::chrono::milliseconds{ currentFrameMs } >= duration)
+   if (curFrameDuration >= duration)
    {
       //increment frame and reset tick counter:
       currentFrameIndex++;
-      currentFrameMs = 0;
+      curFrameDuration = GameClock::duration{ 0 };
    }
    //reset animation to first frame after max frame is reached:
    else if (currentFrameIndex >= frameCount)
@@ -72,8 +71,8 @@ void RenderableData::updateAsAnimation(const MageEntityData& entity)
    tilesetId = animation->tilesetId;
    tileId = animation->GetFrame(currentFrameIndex).tileId;
    duration = std::chrono::milliseconds{ animation->GetFrame(currentFrameIndex).durationMs }; //no need to check, it shouldn't cause a crash.
-   frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-   renderFlags = entity.flags; //no need to check, it shouldn't cause a crash.
+   frameCount = animation->frameCount;
+   renderFlags = entity.flags;
 }
 
 void RenderableData::updateAsEntity(const MageEntityData& entity)
@@ -93,28 +92,29 @@ void RenderableData::updateAsEntity(const MageEntityData& entity)
    auto& animation = entityType->GetAnimation(currentAnimation);
 
    //create a animationDirection entity based on direction:
-   auto dirValue = static_cast<MageEntityAnimationDirection>(entity.flags & RENDER_FLAGS_DIRECTION_MASK);
-   auto& animationDirection = animation[dirValue];
+   auto& animationDirection = animation[entity.GetAnimationDirection()];
 
    //based on animationDirection.type, you can get two different outcomes:
-   // animationDirection.type != 0, animationDirection.Type - 1 = tileset id, animationDirection.typeId is the tileId.
-   // animationDirection.type == 0, TypeID is an animation ID:
-   if (animationDirection.type)
+   // * Not animated - animationDirection.type != 0:
+   //    ** tileSetId = animationDirection.type - 1
+   //    ** tileId = animationDirection.typeId
+   // * Animated - animationDirection.type == 0
+   //    ** animationId = animationDirection.typeID
+
+   if (animationDirection.type) // not animated
    {
       tilesetId = animationDirection.type - 1;
       tileId = animationDirection.typeId;
-      duration = std::chrono::milliseconds{ 0 }; //does not animate;
-      frameCount = 0; //does not animate
-      renderFlags = entity.flags; //no need to check, it shouldn't cause a crash.
+      duration = std::chrono::milliseconds{ 0 }; 
+      frameCount = 0;
+      renderFlags = animationDirection.renderFlags;
    }
-   else
+   else // animated
    {
-      //check for frame change and adjust if needed:
-      if (std::chrono::milliseconds{ currentFrameMs } >= duration)
+      if (curFrameDuration >= duration)
       {
-         //increment frame and reset tick counter:
          currentFrameIndex++;
-         currentFrameMs = 0;
+         curFrameDuration = GameClock::duration{ 0 };
       }
 
       //reset animation to first frame after max frame is reached:
@@ -126,8 +126,8 @@ void RenderableData::updateAsEntity(const MageEntityData& entity)
       auto& currentFrame = animation->GetFrame(currentFrameIndex);
       tilesetId = animation->tilesetId;
       tileId = currentFrame.tileId;
-      duration = std::chrono::milliseconds{ currentFrame.durationMs }; //no need to check, it shouldn't cause a crash.
-      frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-      renderFlags = animationDirection.renderFlags | (entity.flags & 0x80); //no need to check, it shouldn't cause a crash.
+      duration = GameClock::duration{ currentFrame.durationMs };
+      frameCount = animation->frameCount;
+      renderFlags = animationDirection.renderFlags | (entity.flags & 0x80);
    }
 }

@@ -267,7 +267,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_type(const uint8_t* args
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = entity.primaryId == argStruct->entityTypeId && entity.primaryIdType == ENTITY_TYPE;
+      bool identical = entity.primaryId == argStruct->entityTypeId && entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE;
 
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -293,12 +293,11 @@ std::optional<uint16_t> MageScriptActions::check_entity_primary_id(const uint8_t
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       uint16_t sizeLimit{ 1 };
-      uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
 
-      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = ROM()->GetCount<MageEntityType>(); }
-      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = ROM()->GetCount<MageAnimation>(); }
-      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = ROM()->GetCount<MageTileset>(); }
-      else { throw std::runtime_error{ "Sanitized Primary Type Unknown" }; }
+      if (entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = ROM()->GetCount<MageEntityType>(); }
+      else if (entity.primaryIdType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = ROM()->GetCount<MageAnimation>(); }
+      else if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET) { sizeLimit = ROM()->GetCount<MageTileset>(); }
+      else { throw std::runtime_error{ "Primary Type Unknown" }; }
 
       bool identical = ((entity.primaryId % sizeLimit) == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -326,10 +325,9 @@ std::optional<uint16_t> MageScriptActions::check_entity_secondary_id(const uint8
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       uint16_t sizeLimit = 1;
-      uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
-      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = 1; }
-      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
-      if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
+      if (entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = 1; }
+      if (entity.primaryIdType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
+      if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
       {
          auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(entity.primaryId);
          sizeLimit = tileset->TileCount();
@@ -359,9 +357,8 @@ std::optional<uint16_t> MageScriptActions::check_entity_primary_id_type(const ui
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      uint8_t sanitizedPrimaryType = entity.primaryIdType % NUM_PRIMARY_ID_TYPES;
-      bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
+      bool identical = static_cast<uint8_t>(entity.primaryIdType) == argStruct->expectedValue;
+      if (identical == static_cast<bool>(argStruct->expectedBool))
       {
          return argStruct->successScriptId;
       }
@@ -435,7 +432,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_direction(const uint8_t*
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.flags == argStruct->expectedValue);
+      bool identical = entity.flags == argStruct->expectedValue;
       if (identical == (bool)argStruct->expectedBool)
       {
          return argStruct->successScriptId;
@@ -461,7 +458,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_glitched(const uint8_t* 
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      if (entity.flags & RENDER_FLAGS_IS_GLITCHED)
+      if (entity.IsGlitched())
       {
          return argStruct->successScriptId;
       }
@@ -804,17 +801,17 @@ std::optional<uint16_t> MageScriptActions::blocking_delay(const uint8_t* args, M
    } ActionBlockingDelay;
    auto argStruct = (ActionBlockingDelay*)args;
 
-   //If there's already a total number of loops to next action set, a delay is currently in progress:
-   if (resumeState.totalLoopsToNextAction != 0)
+   //If there's already a total number of steps to next action set, a delay is currently in progress:
+   if (resumeState.totalSteps != 0)
    {
-      //decrement the number of loops to the end of the delay:
-      resumeState.loopsToNextAction--;
+      //decrement the number of steps to the end of the delay:
+      resumeState.remainingSteps--;
       //if we've reached the end:
-      if (resumeState.loopsToNextAction <= 0)
+      if (resumeState.remainingSteps <= 0)
       {
          //reset the variables and return, the delay is complete.
-         resumeState.totalLoopsToNextAction = 0;
-         resumeState.loopsToNextAction = 0;
+         resumeState.totalSteps = 0;
+         resumeState.remainingSteps = 0;
          return NO_JUMP_SCRIPT;
       }
    }
@@ -822,15 +819,15 @@ std::optional<uint16_t> MageScriptActions::blocking_delay(const uint8_t* args, M
    else
    {
       //always a single loop for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
-      uint16_t totalDelayLoops = 1;
+      uint16_t totalDelaysteps = 1;
       //also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->durationMs:
-      if (inputHandler->blockingDelayTime < argStruct->durationMs)
+      if (inputHandler->blockingDelayTime < GameClock::duration{ argStruct->durationMs })
       {
-         inputHandler->blockingDelayTime = argStruct->durationMs;
+         inputHandler->blockingDelayTime = GameClock::duration{ argStruct->durationMs };
       }
       //now set the resumeState variables:
-      resumeState.totalLoopsToNextAction = totalDelayLoops;
-      resumeState.loopsToNextAction = totalDelayLoops;
+      resumeState.totalSteps = totalDelaysteps;
+      resumeState.remainingSteps = totalDelaysteps;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -996,7 +993,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_type(const uint8_t* args, 
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       entity.primaryId = argStruct->entityTypeId;
-      entity.primaryIdType = ENTITY_TYPE;
+      entity.primaryIdType = MageEntityPrimaryIdType::ENTITY_TYPE;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1063,7 +1060,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_primary_id_type(const uint
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
+      entity.primaryIdType = argStruct->newValue;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1132,7 +1129,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction(const uint8_t* a
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.flags |= (argStruct->direction & RENDER_FLAGS_DIRECTION_MASK);
+      entity.flags |= static_cast<uint8_t>(argStruct->direction);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1155,8 +1152,8 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_relative(const u
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      auto newDirection = (entity.flags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS;
-      entity.flags |= (newDirection & RENDER_FLAGS_DIRECTION_MASK);
+      auto newDirection = (entity.flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK + argStruct->relativeDirection) % NUM_DIRECTIONS;
+      entity.flags |= newDirection;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1182,7 +1179,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_target_entity(co
       auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
       auto targetEntityCenter = mapControl->getRenderableDataByMapLocalId(targetEntityIndex).center();
       auto sourceEntityCenter = renderableData.center();
-      renderableData.renderFlags |= sourceEntityCenter.getRelativeDirection(targetEntityCenter) & RENDER_FLAGS_DIRECTION_MASK;
+      renderableData.renderFlags |= sourceEntityCenter.getRelativeDirection(targetEntityCenter);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1206,7 +1203,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_target_geometry(
       auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
       auto geometry = mapControl->GetGeometry(argStruct->geometryId);
       auto relativeDirection = renderableData.center().getRelativeDirection(geometry->GetPoint(0));
-      renderableData.renderFlags |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
+      renderableData.renderFlags|= relativeDirection;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1229,9 +1226,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_glitched(const uint8_t* ar
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.flags = (MageEntityAnimationDirection)(
-         (entity.flags & RENDER_FLAGS_IS_GLITCHED_MASK)
-         | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED));
+      entity.SetGlitched(argStruct->isGlitched);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1617,17 +1612,17 @@ std::optional<uint16_t> MageScriptActions::show_dialog(const uint8_t* args, Mage
    } ActionShowDialog;
    auto argStruct = (ActionShowDialog*)args;
 
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
       auto& entity = mapControl->Get<MageEntityData>(entityId);
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->load(argStruct->dialogId, entity.name);
-      resumeState.totalLoopsToNextAction = 1;
+      resumeState.totalSteps = 1;
    }
    else if (!dialogControl->isOpen())
    {
       // will be 0 any time there is no response; no jump
-      resumeState.totalLoopsToNextAction = 0;
+      resumeState.totalSteps = 0;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1651,10 +1646,10 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
-      if (resumeState.totalLoopsToNextAction == 0)
+      if (resumeState.totalSteps == 0)
       {
-         resumeState.totalLoopsToNextAction = argStruct->playCount;
-         resumeState.loopsToNextAction = argStruct->playCount;
+         resumeState.totalSteps = argStruct->playCount;
+         resumeState.remainingSteps = argStruct->playCount;
          renderableData.SetAnimation(argStruct->animationId);
          renderableData.UpdateFrom(entity);
       }
@@ -1662,10 +1657,10 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
       {
          // we just reset to 0
          // the previously rendered frame was the last in the animation
-         resumeState.loopsToNextAction--;
-         if (resumeState.loopsToNextAction == 0)
+         resumeState.remainingSteps--;
+         if (resumeState.remainingSteps == 0)
          {
-            resumeState.totalLoopsToNextAction = 0;   
+            resumeState.totalSteps = 0;   
             renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
             renderableData.UpdateFrom(entity);
          }
@@ -1721,12 +1716,12 @@ std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t
       auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
       auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-      if (resumeState.totalLoopsToNextAction == 0)
+      if (resumeState.totalSteps == 0)
       {
          //points we're interpolating between are from the entity location to the 
          resumeState.geometry.pointA = { entity.targetPosition.x, entity.targetPosition.y };
          resumeState.geometry.pointB = geometry->GetPoint(0) - resumeState.geometry.pointA - renderableData.center();
-         entity.flags |= (resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB) & RENDER_FLAGS_DIRECTION_MASK);
+         entity.flags |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
          renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
       auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
@@ -1734,7 +1729,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t
       if (progress >= 1.0f)
       {
          renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-         resumeState.totalLoopsToNextAction = 0;
+         resumeState.totalSteps = 0;
       }
    }
    return NO_JUMP_SCRIPT;
@@ -1765,18 +1760,18 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
    // handle single point geometries
    if (geometry->GetPointCount() == 1)
    {
-      resumeState.totalLoopsToNextAction = 1;
+      resumeState.totalSteps = 1;
       renderableData.UpdateFrom(entity);
       return NO_JUMP_SCRIPT;
    }
 
    // and for everything else...
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
-      const auto totalDelayLoops = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
+      const auto totalDelaysteps = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
       //now set the resumeState variables:
-      resumeState.totalLoopsToNextAction = totalDelayLoops;
-      resumeState.loopsToNextAction = totalDelayLoops;
+      resumeState.totalSteps = totalDelaysteps;
+      resumeState.remainingSteps = totalDelaysteps;
       resumeState.geometry.length = geometry->GetPathLength();
       resumeState.geometry.lengthOfPreviousSegments = 0;
       resumeState.geometry.currentSegmentIndex = 0;
@@ -1786,9 +1781,9 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
       renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       return NO_JUMP_SCRIPT;
    }
-   resumeState.loopsToNextAction--;
+   resumeState.remainingSteps--;
 
-   if (resumeState.loopsToNextAction > 0)
+   if (resumeState.remainingSteps > 0)
    {
       return NO_JUMP_SCRIPT;
    }
@@ -1816,9 +1811,9 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
    }
 
    entity.targetPosition = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
-   if (resumeState.loopsToNextAction == 0)
+   if (resumeState.remainingSteps == 0)
    {
-      resumeState.totalLoopsToNextAction = 0;
+      resumeState.totalSteps = 0;
       renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
    }
    renderableData.UpdateFrom(entity);
@@ -1846,19 +1841,19 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
       {
-         resumeState.totalLoopsToNextAction = 1;
+         resumeState.totalSteps = 1;
          entity.targetPosition = geometry->GetPoint(0) - renderableData.center() - entity.targetPosition;
          renderableData.UpdateFrom(entity);
          return NO_JUMP_SCRIPT;
       }
 
       // and for everything else...
-      if (resumeState.totalLoopsToNextAction == 0)
+      if (resumeState.totalSteps == 0)
       {
-         const auto totalDelayLoops = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
+         const auto totalDelaysteps = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
          //now set the resumeState variables:
-         resumeState.totalLoopsToNextAction = totalDelayLoops;
-         resumeState.loopsToNextAction = totalDelayLoops;
+         resumeState.totalSteps = totalDelaysteps;
+         resumeState.remainingSteps = totalDelaysteps;
          resumeState.geometry.length = /*(geometry->GetTypeId() == MageGeometryType::Polyline)
              ? geometry->GetPathLength() * 2
              : */geometry->GetPathLength();
@@ -1870,9 +1865,9 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
          renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
 
-      if (resumeState.loopsToNextAction == 0)
+      if (resumeState.remainingSteps == 0)
       {
-         resumeState.loopsToNextAction = resumeState.totalLoopsToNextAction;
+         resumeState.remainingSteps = resumeState.totalSteps;
 
          resumeState.geometry.lengthOfPreviousSegments = 0;
          resumeState.geometry.currentSegmentIndex = 0;
@@ -1880,7 +1875,7 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
          resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
          entity.flags |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
       }
-      resumeState.loopsToNextAction--;
+      resumeState.remainingSteps--;
       uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
       const auto totalProgress = getProgressOfAction(resumeState);
       const auto currentProgressLength = resumeState.geometry.length * totalProgress;
@@ -1968,7 +1963,7 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
 
-      if (resumeState.totalLoopsToNextAction == 0)
+      if (resumeState.totalSteps == 0)
       {
          frameBuffer->camera.setFollowEntity(NoPlayer);
          //this is the points we're interpolating between
@@ -2004,7 +1999,7 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_geometry(const uint8_t*
    auto& entity = mapControl->Get<MageEntityData>(entityId);
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
 
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
       frameBuffer->camera.setFollowEntity(NoPlayer);
       //this is the points we're interpolating between
@@ -2305,7 +2300,7 @@ std::optional<uint16_t> MageScriptActions::slot_save(const uint8_t* args, MageSc
    // their board to get out of that dialog lock. Better to protect the player
    // with an annoying confirm dialog than allowing them to quietly burn through
    // the ROM chip's 10000 write cycles.
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
       auto playerEntity = mapControl->getPlayerEntityData();
       auto currentSave = ROM()->GetCurrentSaveCopy();
@@ -2334,12 +2329,12 @@ std::optional<uint16_t> MageScriptActions::slot_save(const uint8_t* args, MageSc
       }
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->StartModalDialog("Save complete.");
-      resumeState.totalLoopsToNextAction = 1;
+      resumeState.totalSteps = 1;
       const_cast<MageROM*>(ROM())->SetCurrentSave(currentSave);
    }
    else if (!dialogControl->isOpen())
    {
-      resumeState.totalLoopsToNextAction = 0;
+      resumeState.totalSteps = 0;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -2359,16 +2354,16 @@ std::optional<uint16_t> MageScriptActions::slot_load(const uint8_t* args, MageSc
    auto argStruct = (ActionSlotLoad*)args;
    auto& currentSave = ROM()->GetCurrentSave();
    //delaying until next tick allows for displaying of an error message on read before resuming
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
       const_cast<MageROM*>(ROM())->LoadSaveSlot(argStruct->slotIndex);
       mapControl->mapLoadId = currentSave.currentMapId;
       mapControl->Load();
-      resumeState.totalLoopsToNextAction = 1;
+      resumeState.totalSteps = 1;
    }
    else if (!dialogControl->isOpen())
    {
-      resumeState.totalLoopsToNextAction = 0;
+      resumeState.totalSteps = 0;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -2394,7 +2389,7 @@ std::optional<uint16_t> MageScriptActions::slot_erase(const uint8_t* args, MageS
    // their board to get out of that dialog lock. Better to protect the player
    // with an annoying confirm dialog than allowing them to quietly burn through
    // the ROM chip's 10000 write cycles.
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
       // TODO FIXME:
       // setCurrentSaveToFreshState();
@@ -2408,11 +2403,11 @@ std::optional<uint16_t> MageScriptActions::slot_erase(const uint8_t* args, MageS
 
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->StartModalDialog("Save erased.");
-      resumeState.totalLoopsToNextAction = 1;
+      resumeState.totalSteps = 1;
    }
    else if (!dialogControl->isOpen())
    {
-      resumeState.totalLoopsToNextAction = 0;
+      resumeState.totalSteps = 0;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -2445,17 +2440,17 @@ std::optional<uint16_t> MageScriptActions::show_serial_dialog(const uint8_t* arg
       uint8_t paddingG;
    } ActionShowSerialDialog;
    auto argStruct = (ActionShowSerialDialog*)args;
-   if (resumeState.totalLoopsToNextAction == 0)
+   if (resumeState.totalSteps == 0)
    {
       commandControl->showSerialDialog(argStruct->serialDialogId);
       if (commandControl->isInputTrapped)
       {
-         resumeState.totalLoopsToNextAction = 1;
+         resumeState.totalSteps = 1;
       }
    }
    else if (!commandControl->isInputTrapped)
    {
-      resumeState.totalLoopsToNextAction = 0;
+      resumeState.totalSteps = 0;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -2609,19 +2604,19 @@ std::optional<uint16_t> MageScriptActions::check_ble_flag(const uint8_t* args, M
 
 float MageScriptActions::manageProgressOfAction(MageScriptState& resumeState, uint32_t durationMs) const
 {
-   resumeState.loopsToNextAction--;
-   if (resumeState.totalLoopsToNextAction == 0)
+   resumeState.remainingSteps--;
+   if (resumeState.totalSteps == 0)
    {
-      const auto totalDelayLoops = uint16_t(std::chrono::milliseconds{ durationMs } / MinTimeBetweenRenders);
-      resumeState.totalLoopsToNextAction = totalDelayLoops;
-      resumeState.loopsToNextAction = totalDelayLoops;
+      const auto totalDelaysteps = uint16_t(std::chrono::milliseconds{ durationMs } / MinTimeBetweenRenders);
+      resumeState.totalSteps = totalDelaysteps;
+      resumeState.remainingSteps = totalDelaysteps;
    }
 
-   auto result = resumeState.loopsToNextAction - resumeState.totalLoopsToNextAction;
+   auto result = resumeState.remainingSteps - resumeState.totalSteps;
    if (result <= 0)
    {
-      resumeState.totalLoopsToNextAction = 0;
-      resumeState.loopsToNextAction = 0;
+      resumeState.totalSteps = 0;
+      resumeState.remainingSteps = 0;
    }
    return result;
 }

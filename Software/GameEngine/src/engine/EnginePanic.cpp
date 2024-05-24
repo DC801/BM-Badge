@@ -100,10 +100,6 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	//#ifndef DC801_EMBEDDED
 	//	frameBuffer->blt(); // Keep the window frame updated
 
-	//	if (application_quit != 0)
-	//	{
-	//		break;
-	//	}
 	//#endif
 
 	//	// Sleep
