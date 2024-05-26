@@ -389,7 +389,7 @@ interact-ch2-templeton {
 	copy face-player;
 	if (flag ch2-cutseen-castle14 is false) {
 		show dialog {
-			SELF "I know King Gibson doesn't always get along with us -- that is, with Sebastian -- but this silence is very unlike him. I'm worried."
+			SELF "I know King Gibson doesn't always get along with us, but this silence is unlike him. I'm worried."
 		}
 	} else if (flag ch2-king-rescued is false) {
 		copy ch2-king-unharmed;

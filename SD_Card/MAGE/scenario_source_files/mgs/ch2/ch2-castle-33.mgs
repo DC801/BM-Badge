@@ -247,9 +247,11 @@ ch2-interact-gregory {
 				SELF "We are indeed."
 			}
 			turn player control off;
+			set entity Gregory on_tick to null_script;
 			rotate entity Gregory 1;
 			wait 800ms;
-			copy script face-player;
+			rotate entity Gregory -1;
+			set entity Gregory on_tick to face-player;
 			show dialog {
 				SELF "Here, this is a bluetooth proximity detector. It's got eight lights that will turn on depending on how close you are to the mouse."
 				PLAYER "Eight lights?"

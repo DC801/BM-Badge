@@ -215,8 +215,7 @@ interact-ch2-gloria {
 		turn entity Gloria toward entity Samson;
 	} else {
 		show dialog {
-			SELF "Are you here to rescue us?"
-			"Please, Samson is so upset."
+			SELF "Are you here to rescue us? Please, Samson is so upset."
 		}
 		set entity "%SELF%" on_tick to face-player;
 	}

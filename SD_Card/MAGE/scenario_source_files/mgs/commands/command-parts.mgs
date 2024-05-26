@@ -173,6 +173,7 @@ command-parts-print {
 				"<m>LAMBDA</>: You've got the mainframe OS now, so head on back to first room of the castle -- the room with the the mainframe enclosure -- so the Wizard can install it for you. Good luck."
 			}
 		}
+		show serial dialog lambda-over;
 		return;
 	}
 	// GAME FINISHED
@@ -181,6 +182,7 @@ command-parts-print {
 		show serial dialog {
 			"<m>LAMBDA</>: You're all done; no more parts to collect. Enjoy the power of the finished mainframe!"
 		}
+		show serial dialog lambda-over;
 		return;
 	}
 

@@ -358,7 +358,6 @@ ch2-stereo-interact {
 		show dialog {
 			PLAYER "?"
 			"Oh, there's a place where the artifact can plug into it."
-			"I wonder if I can investigate it via the terminal."
 		}
 		goto ch2-stereo-intro1;
 	} else {

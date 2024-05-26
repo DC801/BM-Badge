@@ -208,16 +208,18 @@ ch2-hide-clock {
 }
 
 ch2-touch-clock {
-	if (flag ch2-clock-firstlook is false) {
-		show dialog {
-			PLAYER "Wow, this thing looks like it's a million years old."
+	if (variable ch2-storyflag-round is < 3) {
+		if (flag ch2-clock-firstlook is false) {
+			show dialog {
+				PLAYER "Wow, this thing looks like it's a million years old."
+			}
+			set flag ch2-clock-firstlook to true;
+		} else {
+			show dialog {
+				PLAYER "What a robust ticking ambience."
+			}
 		}
-		set flag ch2-clock-firstlook to true;
-	}
-	show dialog {
-		PLAYER "What a robust ticking ambience."
-	}
-	if (variable ch2-storyflag-round is >= 3) {
+	} else {
 		if (flag ch2-king-rescued is false) {
 			show dialog {
 				PLAYER "Um, excuse me, your majesty. I sort of need this clock --"

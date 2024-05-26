@@ -95,6 +95,7 @@ on_load-ch2-castle-21 {
 		set entity Jean-Paul relative_direction to 0;
 		turn entity Jean-Paul east;
 		wait 200ms;
+		turn entity "%PLAYER%" toward entity Jean-Paul;
 		show dialog {
 			// TR because their portrait will block them otherwise
 			// Player is okay to still use BR (their default)
@@ -103,10 +104,14 @@ on_load-ch2-castle-21 {
 		wait 300ms;
 		walk entity Jean-Paul to geometry birdstep2 over 240ms;
 		wait 100ms;
+		turn entity "%PLAYER%" toward entity Frankie;
 		show dialog {
 			Frankie "You... you can move between rooms?"
 			"How are you doing that?"
 			PLAYER "I have this handheld artifact thingy, which lets me type --"
+		}
+		turn entity "%PLAYER%" toward entity Frankie;
+		show dialog {
 			Jean-Paul "You have a portable terminal with you?"
 			"(TODO: more words)"
 		}
@@ -275,7 +280,7 @@ interact-ch2-frankie {
 	copy face-player;
 	if (variable ch2-storyflag-round is < 3) {
 		show dialog {
-			Frankie "If we can get the intercom system working, we coordinate with people trapped in other rooms."
+			Frankie "If we can get the intercom system working, we can coordinate with people trapped in other rooms."
 			"We've been able to reestablish contact with the room north of us, but that's it. There's a lot of work left for us to do."
 		}
 		turn entity Frankie south;
@@ -338,6 +343,9 @@ interact-ch2-room21-split {
 	turn entity Jean-Paul toward entity "%PLAYER%";
 	show dialog {
 		PLAYER "So I'm rebuilding the castle mainframe, and I heard you guys might be able to help me get some RAM. Lambda couldn't find any to spare."
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "Lambda? Who's that?"
 		PLAYER "He's someone helping me."
 	}
@@ -346,18 +354,30 @@ interact-ch2-room21-split {
 			PLAYER "Though... I thought you might know him. He seems like a pretty important person around here."
 			Jean-Paul "What does he look like?"
 			PLAYER "I don't know. I've heard his voice before, but mostly we talk over text chat."
+		}
+		turn entity "%PLAYER%" toward entity Frankie;
+		show dialog {
 			Frankie "Sounds fishy to me."
 			PLAYER "...."
 		}
 	}
 	show dialog {
 		PLAYER "Anyway, if you don't have any RAM I can use, do you have any ideas for a substitute? It's okay if it's abstract."
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "\"Abstract?\""
 		PLAYER "Yeah, so like what even is RAM?"
 		Jean-Paul "It's a computer's working memory. Any programs that are running, or images or text that is loaded, or anything at all...."
 		"All that data needs somewhere to sit while it's being worked on."
+	}
+	turn entity "%PLAYER%" toward entity Frankie;
+	show dialog {
 		Frankie "Or shown on a screen."
 		PLAYER "Right, so for an \"abstract\" computer, what could work instead? A notebook? A jelly bean jar?"
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "How abstract are we talking?"
 		PLAYER "Well, so far I've made a hard drive from a dinner plate and a phonograph needle."
 		Jean-Paul "...Yikes."
@@ -365,25 +385,48 @@ interact-ch2-room21-split {
 	// They all turn toward each other
 	show dialog {
 		Jean-Paul "WEll, the guy who can help most isn't here right now."
+	}
+	turn entity "%PLAYER%" toward entity Frankie;
+	show dialog {
 		Frankie "He's a bit distractable."
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "A bit?!"
+	}
+	turn entity "%PLAYER%" toward entity Frankie;
+	show dialog {
 		Frankie "Yeah, maybe that was an understatement. But he was away when the earthquake hit. Don't know where he is, but wherever he is, he's stuck in that room."
 		PLAYER "Well, who is he? What does he look like?"
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "His name is Sea Moss, and he's a giant stone golem. Can't miss him."
 	}
 	if (flag ch2-seamoss-backstory is true) {
 		show dialog {
 			PLAYER "Wait, I think I saw that guy. He was in the grand hall."
+		}
+		turn entity "%PLAYER%" toward entity Frankie;
+		show dialog {
 			Frankie "No surprise there!"
+		}
+		turn entity "%PLAYER%" toward entity Jean-Paul;
+		show dialog {
 			Jean-Paul "Yep, that's him."
 		}
 	} else {
+		turn entity "%PLAYER%" toward entity Frankie;
 		show dialog {
 			Frankie "He's almost certainly near the kitchen. East wing. That's the first place I'd look."
 		}
 	}
+	turn entity "%PLAYER%" toward entity Frankie;
 	show dialog {
 		Frankie "He'll definitely be able to find you an \"abstract\" solution."
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "Good luck, kid."
 	}
 	set flag ch2-want-ramchips to true;
@@ -411,8 +454,14 @@ interact-ch2-room21-split-s {
 	turn entity Frankie toward entity "%PLAYER%";
 	show dialog {
 		PLAYER "So, I may have forgotten where I can find Sea Moss."
+	}
+	turn entity "%PLAYER%" toward entity Jean-Paul;
+	show dialog {
 		Jean-Paul "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
 		PLAYER "And he'll be able to find me a substitute for RAM?"
+	}
+	turn entity "%PLAYER%" toward entity Frankie;
+	show dialog {
 		Frankie "If anyone can, he can. He's good at being \"abstract.\""
 	}
 }

@@ -352,7 +352,7 @@ interact-ch2-verthandi {
 		}
 		turn player control off;
 		rotate entity "%SELF%" 1;
-		wait 500ms;
+		wait 1500ms;
 		rotate entity "%SELF%" -1;
 		show dialog {
 			SELF "How odd. I thought for a moment I sensed him far, far away."

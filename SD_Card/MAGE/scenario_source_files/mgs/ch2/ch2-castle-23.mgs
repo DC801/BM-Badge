@@ -102,9 +102,7 @@ on_go-castle-23-south {
 interact-ch2-helvetica {
 	copy interrupt-walk;
 	show dialog {
-		SELF
-		"At this power plant, we capture heat from deep below the earth and use it to turn water into steam, which we send through turbines to generate electricity."
-		"But this isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
+		SELF "It doesn't look like anything serious was damaged in this equipment. Still, we'd best be vigilant for a while."
 	}
 	copy resume-walk;
 }
@@ -112,7 +110,9 @@ interact-ch2-helvetica {
 interact-ch2-tracy {
 	copy face-player;
 	show dialog {
-		SELF "Our entire work revolves around moving heat from one place to another. It's often more efficient to move heat than it is to create it."
+		SELF "At this power plant, we capture heat from deep below the earth and use it to turn water into steam, which we send through turbines to generate electricity."
+		"But this isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
+		"Our entire work revolves around moving heat from one place to another. It's often more efficient to move heat than it is to create it."
 	}
 }
 
@@ -172,7 +172,7 @@ settings for dialog {
 interact-ch2-rocco {
 	if (flag ch2-cactuscooler-delivered is true) {
 		show dialog {
-			SELF "There's a lot to fix yet. I'll keep at it."
+			SELF "There's a lot to fix around here. I'll keep at it."
 		}
 	}
 	else if (flag ch2-rocco-backstory is false) {

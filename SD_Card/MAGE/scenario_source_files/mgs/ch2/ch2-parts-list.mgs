@@ -387,7 +387,7 @@ ch2-lambda-round-4c {
 		"<c>YOU</>: No entrances? How am I supposed to get there?"
 		" "
 		"<m>LAMBDA</>: I've granted you access to the <c>WARP</> command. You can use it to go to any place you've ever been, even if it's not an adjacent space to your current room. Oh, and I've also set the \"visit\" flag to my lab, which will make the system think you've been here before."
-		"\tAll you'd have to do then is enter <c>WARP SECRET LAB</> into the console, and you'll zip right to where I am now. Type <c>MAN WARP</> to see more about how <c>WARP</> works."
+		"\tAll you'd have to do then is enter <c>WARP SECRET LAB</> into the console, and you'll zip right to where I am now."
 		" "
 		# "But can't you warp out here? Why do I need to come to you?" : ch2-lambda-round-4d
 	}
