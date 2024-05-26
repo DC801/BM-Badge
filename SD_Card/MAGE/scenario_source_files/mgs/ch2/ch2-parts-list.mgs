@@ -109,7 +109,7 @@ ch2-toot-step5e {
 		"<c>YOU</>: Anything else?"
 		" "
 		"<m>LAMBDA</>: And... the rest might be a little tricky. I'll keep looking for options, but for now just start with those three. Let me rig up a command real quick... and...."
-		"\tThere we go. Now you can type <c>PARTS</> to call me about the parts list specifically. Oh, and I'll plot those part locations on your <c>MAP</>, as well."
+		"\tThere we go. Now you can type <c>PARTS</> to call me about the parts list specifically."
 	}
 	goto ch2-toot-step99;
 }
@@ -136,7 +136,7 @@ ch2-toot-step99-end {
 	show serial dialog {
 		"<c>YOU</>: Yeah, let's do it!"
 		" "
-		"<m>LAMBDA</>: Good luck! And don't forget you can reach me from anywhere with <c>MAN</>."
+		"<m>LAMBDA</>: Good luck!"
 		" "
 	}
 	show serial dialog lambda-over;

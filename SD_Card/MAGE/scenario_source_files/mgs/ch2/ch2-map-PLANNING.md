@@ -67,31 +67,31 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: needle (from phonograph)
 	- [x] Entity: Concierge (super nice suit, but like it's some kind of a scraggly werewolf)
-	- [ ] Entity: mid-90s tall black stereo system (one of those big CD changer / cassette deck thingies)
+	- [x] Entity: mid-90s tall black stereo system (one of those big CD changer / cassette deck thingies)
 	- [~] SET: the "human" half of the foyer, logistically speaking
 		- [x] Concierge desk with guestbook
 		- [ ] Wall of rubble at S separating this room from 11
 	- [x] PUZZLE NEEDED: use the serial terminal to fix the damaged digital entertainment system (which plays muzak in the foyer)
 13. `Throne room`
-	- [ ] Cutscene: Enter the room for the first time
+	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: goldfish (cpu part 1) (see below)
 	- [x] Entity: Goldfish (the regent in the king's absence)
 	- [x] Entity: Sebastian (a red lizard wizard; a "Jafar" type)
 	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
 	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
-		- [ ] Closed version of USB door (north version)
-		- [ ] Keypad for door
+		- [x] Closed version of USB door (north version)
+		- [x] ~~Keypad for door~~
 14. `King Gibson's bedroom`
 	- [~] Cutscene: Enter the room for the first time
 	- [x] Inventory item: clock
 	- [x] Entity: King Gibson
-	- [~] SET: old-timey king's bedroom
+	- [x] SET: old-timey king's bedroom
 		- [x] Four poster bed
 		- [x] Grandfather clock
 		- [x] Wardrobes or whatever idk
-		- [ ] Closed version of USB door (south version)
-		- [ ] Keypad (from below?)
-	- [ ] PUZZLE NEEDED: use the serial terminal to fix the keypad door locky-doo, possibly using a password or part of a passphrase the King and/or his staff knows
+		- [x] Closed version of USB door (south version)
+		- [x] Keypad (from below?)
+	- [~] PUZZLE NEEDED: use the serial terminal to fix the keypad door locky-doo, possibly using a password or part of a passphrase the King and/or his staff knows
 
 ### Industrial Area
 
@@ -108,19 +108,17 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Inventory item: powersupply
 	- [x] Entity: Scuzzy - generic conversation about the similarities between rooms in a building and components inside a computer
 	- [x] Entity: C.K. Watt - gives you the power supply because it's extra
-	- [ ] SET: More cleanroom looking than the workshop
-		- [ ] Racks of machines
-		- [ ] Trails of wires
-		- [ ] Cooling mechanisms
-		- [ ] Some computer buildery stuff (more computer, less electronics?)
+	- [x] SET: More cleanroom looking than the workshop
+		- [x] Racks of machines
+		- [x] ~~Trails of wires~~
+		- [x] ~~Cooling mechanisms~~
+		- [x] Some computer buildery stuff (more computer, less electronics?)
 23. `Power plant`
 	- [x] Cutscene: Enter the room for the first time (not necessary)
-	- [~] Inventory item: heatsink
-		- [ ] Needs sprite
-	- Entities should all be in lab coats;
+	- [x] Inventory item: heatsink
 	- [x] Entity: Tracy - generic engineer
-	- [~] Entity: Rocco - to trade you the heat sink for a can of Cactus Cooler
-	- [ ] Entity: Helvetica - succubus, but you wouldn't know it from how she was acting; consummate professional engineer
+	- [x] Entity: Rocco - to trade you the heat sink for a can of Cactus Cooler
+	- [x] Entity: Helvetica - succubus, but you wouldn't know it from how she was acting; consummate professional engineer
 	- [x] SET: Aiming for geothermal; whatever would sell that re: appearance
 
 ### Food
@@ -151,15 +149,15 @@ The following lists concern physical appearance (including the actual spriteshee
 33. `Hydroponics room`
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: mouse (no graphics necessary)
-	- [~] Entity: Gregory - a cat chef
+	- [x] Entity: Gregory - a cat chef
 		- [x] Needs cat chef spritesheet (currently a stand-in entity)
 	- [x] SET: Hydroponics area, with vegetables growing in individual plastic(?) bins, stacked to the ceiling
 34. `Castle pantry`
 	- [x] Cutscene: Enter the room for the first time (not necessary)
 	- [x] Inventory item: plate (harddrive part 2)
-	- [ ] Entity: Clara - someone who can help you measure and calibrate the spin of a "plate" (for a HD)
+	- [x] Entity: Clara - someone who can help you measure and calibrate the spin of a "plate" (for a HD)
 	- [x] SET: Larder-ish, wine-cellar-ish, pantry-ish.
-	- [ ] PUZZLE NEEDED: use the serial terminal to control a "spinning plate balance checker" machine, which totally lives in the pantry for unrelated reasons
+	- [x] PUZZLE NEEDED: use the serial terminal to do Towers of Hanoi
 
 ### The End
 
@@ -221,9 +219,7 @@ Plot points implemented:
 - INTRO (`ch2-storyflag-round` = 0)
 	- [x] Picking up the artifact from a sliding door cubby on the side of the wall: door opens, player character moves over there, turns to get it, then maybe door closes again (so we can reuse that temp entity)
 	- [x] Intro to Lambda
-		- [ ] Connecting the artifact on Windows
-		- [ ] Connecting the artifact on MacOS / Linux
-		- [x] Connecting the artifact on web
+		- [x] Connecting the artifact
 		- [x] Intro to artifact
 	- [x] Installation Wizard
 		- [x] Introduction
@@ -266,26 +262,15 @@ Plot points implemented:
 					- The Aurelius (goldfish; current regent) thinking about the civilians
 			- [~] Use the terminal to repair the intercom and get them talking again
 				- [x] Password in the floors of each room: will spell AUTHENTICATE
-					- [x] A1 (room 32)
-					- [x] U2 (room 31)
-					- [x] T3 (room 22)
-					- [x] H4 (room 12)
-					- [x] E5 (room 33)
-					- [x] N6 (room 1 )
-					- [x] T7 (room 13)
-					- [x] I8 (room 14)
-					- [x] C9 (room 34)
-					- [x] A10 (room 23)
-					- [x] T11 (room 11)
-					- [x] E12 (room 21)
 			- [x] The King should return to the throne room
-				- After which the goldfish agrees to go with you
+				- [ ] After which the king and his staff reconcile
+				- [ ] And after which the goldfish agrees to go with you
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
 			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
 		- [x] `abacus` (room 21)
 			- [x] Should need to go into town for something: the manual for Frankie's scientific calculator (HP35s)
-			- [ ] Manual needs sprite
+			- [x] Manual needs sprite
 	- [x] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software (`ch2-storyflag-round` = 4)
@@ -294,7 +279,7 @@ Plot points implemented:
 	- [~] Cutscene: OS installation wizard
 		- [ ] Should need to go into town for an ethernet cable -- ("Oh, crud! I need to pull some dependencies... This is your last errand, I promise! Go get a spare cable from Trekkie, would you?")
 	- [ ] "You did it" cutscene
-	- [ ] Credits
+	- [~] Credits
 
 - AFTERWARD (`ch2-storyflag-round` = 5)
 	- [ ] Post-credits sequence: Alfonso mentions one of the Big Bad's powers that most people don't know about
@@ -614,7 +599,7 @@ We should take advantage of the badge hardware itself, especially since hex edit
 - [~] Redo menu save management
 	- [ ] "Manage slots" rather than "save to current" and "load arbitrary"
 	- [x] Make it so "new game" isn't the first option -- so people mashing `A` won't erase their save by accident
-- [~] Load correct map on game start (depending on what chapter; currently they all load to town)
+- [x] Load correct map on game start (depending on what chapter; currently they all load to town)
 - [ ] Old dudes need better excuse for not coming along; can't the player make a backdoor for them to come in?
 - [ ] You should be able to ask the wizard for Bert messages (currently he ignores the question, and Lambda has `any messages` behavior)
 - [ ] `Look` should list items you can pick up

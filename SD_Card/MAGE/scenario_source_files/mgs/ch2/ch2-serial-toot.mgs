@@ -186,56 +186,25 @@ ch2-toot-step3-nomagic {
 }
 
 ch2-toot-step3-halftime {
-	show serial dialog {
-		"\tAnyway, for the final demonstration, I'll end our conversation so you can try using the magic word--that is, the command--<c>MAP</>. Here, I'll grant you permission to use the map program."
-		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
-		" "
-	}
-	show serial dialog lambda-over
 	set flag ch2-has-map to true;
-	mutate ch2-map-test = 1;
 	copy register-map;
+	show serial dialog {
+		"\tAnyway, I'll wrap things up so you can try some magic words--that is, some serial commands. I'll grant you access to a few that should be useful."
+	}
+	goto ch2-toot-step3-end;
 }
 
 ch2-toot-step3-check {
-	if (variable ch2-map-test is 0) {
-		// you haven't seen the map toot intro
-		show serial dialog spacer;
-		show serial dialog {
-			"<m>LAMBDA</>: Let's pick up where we left off, shall we?"
-		}
-		goto ch2-toot-step3-start;
-	} else if (variable ch2-map-test is 1) {
-		// you've seen the intro but haven't seen the map yet
-		goto ch2-toot-step3-summary;
-	} else if (variable ch2-map-test is 2) {
-		// you've seen the intro and seen the map; toot ends
-		goto ch2-toot-step3-end;
-	} else {
-		show serial dialog {
-			"<r><bold>DEBUG</>: Welp, you've done something strange!"
-			"\tVariable 'ch2-map-test' is $ch2-map-test$"
-			"\tScript: 'ch2-toot-step3-check'"
-		}
-	}
-}
-
-ch2-toot-step3-summary {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA</>: Try running the <c>MAP</> command using the artifact."
-		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
-		" "
+		"<m>LAMBDA</>: Let's pick up where we left off, shall we? Don't worry, we're almost done."
 	}
-	show serial dialog lambda-over
+	goto ch2-toot-step3-end;
 }
 
 ch2-toot-step3-end {
-	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA</>: Way to go! I hope you'll enjoy the <c>MAP</>. It's one of my favorite personal projects."
-		"\tRemember, to use any of the magic words, you can't be in a conversation already."
-		"\tThe command <c>HELP</> will show you what commands are available to you at the moment. To learn about what a command does, type <c>MAN</> followed by the name of a command."
+		"\tTo see a list of the commands you can use, type <c>HELP</>. And to learn about what a command does, type <c>MAN</> followed by the name of a command."
 		" "
 		# "Wait, I thought <c>MAN</> was how I talk to <bold>you</>." : ch2-toot-step3-end2
 	}

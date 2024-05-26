@@ -3,7 +3,7 @@ include!("header.mgs")
 // REGISTER
 
 register-parts {
-	// the default set
+	register man + parts -> man-parts;
 	register parts -> command-parts;
 }
 
@@ -14,7 +14,7 @@ man-parts {
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - PARTS</>"
 		" "
-		"Calls Lambda via <bold>lambda-talk</> using the subject line: <bold>PARTS</>."
+		"Calls Lambda via <bold>lambda-talk</> using the subject line \"<bold>PARTS</>\"."
 		" "
 		"<m>NOTE</>: Hi, there, birthday mage! This is just something I rigged up quickly so you could have a shortcut to talk to me about the parts list. :)"
 	}
