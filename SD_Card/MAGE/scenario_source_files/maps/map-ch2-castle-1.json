@@ -270,17 +270,6 @@
                  "height":32,
                  "id":56,
                  "name":"Artifact",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-artifact"
-                        },
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-artifact"
-                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,

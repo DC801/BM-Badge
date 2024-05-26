@@ -14,8 +14,8 @@ look-ch2-castle-34 {
 look-ch2-snakebox {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look snake_box (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tIt's an ordinary cardboard box with words \"THE ORANGE\" written on the sides."
 	}
 }
 

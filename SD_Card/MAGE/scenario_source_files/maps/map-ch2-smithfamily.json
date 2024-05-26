@@ -76,7 +76,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":371,
+                 "gid":383,
                  "height":32,
                  "id":12,
                  "name":"Sink",
@@ -106,16 +106,16 @@
                 }, 
                 {
                  "class":"",
-                 "gid":373,
+                 "gid":385,
                  "height":20,
                  "id":18,
-                 "name":"Kid",
+                 "name":"kid",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-sportskid"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -129,7 +129,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":355,
+                 "gid":367,
                  "height":32,
                  "id":19,
                  "name":"Smith",
@@ -138,12 +138,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-smith"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-smith"
-                        },
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -215,27 +215,27 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":303,
+         "firstgid":315,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":327,
+         "firstgid":339,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":351,
+         "firstgid":363,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":369,
+         "firstgid":381,
          "source":"..\/entities\/entity-pot.json"
         }, 
         {
-         "firstgid":371,
+         "firstgid":383,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":373,
+         "firstgid":385,
          "source":"..\/entities\/entity-blitzball.json"
         }],
  "tilewidth":32,

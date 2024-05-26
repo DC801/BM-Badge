@@ -28,8 +28,8 @@ look-ch2-concierge {
 look-ch2-guest_book {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look guest_book (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tIt's a massive volume open to a page filled with names in eclectic handwriting. An elegant gold bookmark, attached to the book at the top of the spine, is draped across the opposite page."
 	}
 }
 
@@ -37,7 +37,7 @@ look-ch2-stereo {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look stereo (remember to add 'the' for objects)"
+		"\tThis machine is massive by modern standards, large enough to house four CDs in the CD changer up top and two cassette decks side-by-side the front face. It's thoroughly wired into the wall."
 	}
 }
 
@@ -209,7 +209,7 @@ interact-ch2-concierge {
 /* ---------- NEEDLE (ADMIN) ---------- */
 
 ch2-hide-needle {
-	set entity Phonograph secondary_id to 0;
+	set entity phonograph secondary_id to 0;
 }
 
 ch2-touch-needle {
@@ -330,14 +330,14 @@ ch2-ws-guess-quit {
 		}
 	} else {
 		set flag ch2-ws-won to true;
-		// TODO: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
+		// todo: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
 		show serial dialog {
 			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
 			" "
 			# "Good for you!" : ch2-ws-cutscene
 		}
 	}
-	set entity Stereo on_interact to ch2-stereo-interact;
+	set entity stereo on_interact to ch2-stereo-interact;
 }
 
 ch2-ws-cutscene {
@@ -347,7 +347,7 @@ ch2-ws-cutscene {
 	}
 	set flag interrupt2 to true;
 	set flag ch2-needle-permission to true;
-	set entity Stereo on_interact to ch2-stereo-interact;
+	set entity stereo on_interact to ch2-stereo-interact;
 }
 
 ch2-stereo-interact {

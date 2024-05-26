@@ -17,7 +17,7 @@ look-ch2-castle-21 {
 look-ch2-goose {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
+		"You looked at the <m>%SELF%</>."
 		"\tTODO on_look goose (remember to add 'the' for objects)"
 	}
 }

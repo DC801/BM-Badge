@@ -14,8 +14,8 @@ look-ch2-smithfamily {
 look-ch2-sportskid {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look kid (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe child does not seem distressed that he has taken the form of sports equipment. On the contrary, best you can tell, he's elated. You shoot him a thumbs up, and he bounces up and down slightly."
 	}
 }
 
@@ -23,7 +23,7 @@ look-ch2-smith {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look smith (remember to add 'the' for objects)"
+		"\tYour neighbor seems to be taking the status of his son in stride. He's as friendly to you as ever, and is maintaining a cheerful -- if slightly baffled -- expression."
 	}
 }
 

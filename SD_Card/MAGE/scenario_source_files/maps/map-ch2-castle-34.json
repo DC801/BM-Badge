@@ -101,13 +101,13 @@
                  "gid":115,
                  "height":32,
                  "id":38,
-                 "name":"Snake Box",
+                 "name":"box",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"snake_box-interact"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -130,7 +130,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-winerack"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -153,7 +153,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-pantryshelf"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -176,7 +176,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-pantryshelf"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -199,7 +199,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-pantryshelf"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -222,7 +222,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-dishshelf"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -263,12 +263,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-clara"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-clara"
-                        },
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",

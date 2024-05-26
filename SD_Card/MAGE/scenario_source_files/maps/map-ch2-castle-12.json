@@ -107,7 +107,7 @@
                  "gid":319,
                  "height":32,
                  "id":24,
-                 "name":"Torch 4",
+                 "name":"torch",
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -142,7 +142,7 @@
                  "gid":940,
                  "height":40,
                  "id":35,
-                 "name":"Phonograph",
+                 "name":"phonograph",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -165,7 +165,7 @@
                  "gid":281,
                  "height":32,
                  "id":36,
-                 "name":"Guest Book",
+                 "name":"guest book",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -188,7 +188,7 @@
                  "gid":559,
                  "height":32,
                  "id":38,
-                 "name":"Stereo",
+                 "name":"stereo",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -211,18 +211,7 @@
                  "gid":446,
                  "height":32,
                  "id":39,
-                 "name":"Stereo",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-stereo-interact"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-stereo"
-                        }],
+                 "name":"speaker",
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -234,18 +223,7 @@
                  "gid":446,
                  "height":32,
                  "id":40,
-                 "name":"Stereo",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-stereo-interact"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-stereo"
-                        }],
+                 "name":"speaker",
                  "rotation":0,
                  "visible":true,
                  "width":32,

@@ -23,7 +23,7 @@ look-ch2-zappy {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\t%SELF%'s color brightens as you approach, and the edges of his body fuzzes ever so slightly. You've come to understand this change in his aspect as a smile -- you smile back."
+		"\t%SELF%'s color brightens as you approach, and the edges of his body fuzzes very slightly. You've come to understand this change in his aspect as a smile -- you smile back."
 	}
 }
 
@@ -38,32 +38,40 @@ look-ch2-zippy {
 look-ch2-magejournal {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look mage_journal (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tAunt Zippy gave you this journal on your previous birthday. You haven't written in it every day, but you're still proud that you're about a third of the way through it. There's a good number of doodles in there, too: dragons and fireballs, mostly."
 	}
 }
 
 look-ch2-magebox {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look mage_box (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tIt's one of the moving boxes you brought to your current house in town from your old house in the country. Still unpacked after all this time... which makes you wonder whether the contents were ultimately that important to you."
 	}
 }
 
 look-ch2-microwave-magehouse {
 	show serial dialog spacer;
-	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look microwave (remember to add 'the' for objects)"
+	if (flag ch2-microwave-time is false) {
+		show serial dialog {
+			"You looked at the <m>%SELF%</>."
+			"\tIt's one of those new flat-button models. Its tiny seven-segment display is glowing a soft blue-green... and you've just realized it's got the time wrong by an hour."
+		}
+		set flag ch2-microwave-time to true;
+	} else {
+		show serial dialog {
+			"You looked at the <m>%SELF%</>."
+			"\tIt's one of those new flat-button models. Its tiny seven-segment display is glowing a soft blue-green -- but you don't have the heart to tell it that it's got the time wrong."
+		}
 	}
 }
 
 look-ch2-cake {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look cake (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tIt's the remains of a very special cake that Aunt Zippy and Uncle Zappy made for your birthday -- lemon sponge and pink buttercream."
 	}
 }
 

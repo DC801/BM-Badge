@@ -21,8 +21,8 @@ look-ch2-bobsclub {
 look-ch2-bobbarstool {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look barstool (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThis lone piece of furniture feels out of place when not part of a lineup of identical pieces. It's a melancholy image, dwarfed in the open space."
 	}
 }
 
@@ -30,23 +30,58 @@ look-ch2-bobglasses {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look glasses (remember to add 'the' for objects)"
+	}
+	if (flag ch2-cutseen-bob-party is false) {
+		show serial dialog {
+			"\tFancy glass goblets for fancy parties. These pieces are definitely reserved for fancy drink orders. Not that you've ever seen a party in here."
+		}
+	} else {
+		show serial dialog {
+			"\tFancy glass goblets for fancy parties. These pieces are definitely reserved for fancy drink orders. Though from what you've seen, the Bob's Club partygoers prefer to use red plastic party cups."
+		}
 	}
 }
-
+look-ch2-bobsbox {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"It's still sealed. The sides are bulging, as though it was packed tightly with something."
+	}
+}
+look-ch2-bobsbarrel {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"It's not marked, though you always assumed barrels like this would contain ale or beer or something. You suppose it could just as easily contain oyster crackers."
+	}
+}
 look-ch2-bobcountertop {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look countertop (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThere are hard water rings on the surface in several places. Most of it is dry, but some of the larger spots are still holding onto droplets of water. Did someone set some drinks here recently?"
 	}
 }
 
 look-ch2-bobcupboard {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look cupboard (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tGlass tumblers are packed together in lines on each shelf. None are missing; there are no gaps."
+	}
+}
+look-ch2-bobsink {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThere's splashes of water -- and an emaciated ice cube -- near the drain. Someone has used the sink recently."
+	}
+}
+look-ch2-bobfridge {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's a larger-than-normal, industral-style refrigerator. There are a handful of small magnets on the front, but they mostly consist of the letters \"O\" and \"B\"."
 	}
 }
 
