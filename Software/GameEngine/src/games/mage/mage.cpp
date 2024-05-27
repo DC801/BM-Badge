@@ -110,13 +110,17 @@ void MageGameEngine::gameLoopIteration()
          {
             hexEditor->openToEntity(*entityInteractId);
          }
-         else
+         else if (inputHandler->Use())
          {
             const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
             auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
             scriptState.script = mapControl->scripts[scriptId];
             scriptState.scriptIsRunning = true;
             scriptControl->processScript(scriptState, *entityInteractId);
+         }
+         else
+         {
+            //__debugbreak();
          }
       }
       updateAccumulator -= IntegrationStepSize;

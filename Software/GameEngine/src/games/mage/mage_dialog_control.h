@@ -145,7 +145,7 @@ private:
    std::shared_ptr<StringLoader> stringLoader;
    std::shared_ptr<MapControl> mapControl;
    bool open{ false };
-   GameClock::duration nextUpdateAllowed{ 0 };
+   GameClock::time_point nextUpdateAllowed{ GameClock::now() };
 
    void drawBackground(const EntityRect& box) const;
 

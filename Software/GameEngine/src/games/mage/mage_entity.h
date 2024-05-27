@@ -104,7 +104,7 @@ struct MageEntityData
    }
 
    constexpr void SetDirection(MageEntityAnimationDirection dir) { flags = (flags & 0x80) | (static_cast<uint8_t>(dir) & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
-   constexpr MageEntityAnimationDirection GetAnimationDirection() const {  return static_cast<MageEntityAnimationDirection>(flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
+   constexpr MageEntityAnimationDirection GetDirection() const {  return static_cast<MageEntityAnimationDirection>(flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
    constexpr bool IsDebug() const { return flags & RENDER_FLAGS_IS_DEBUG; }
    constexpr bool IsGlitched() const { return flags & RENDER_FLAGS_IS_GLITCHED; }
    constexpr void SetGlitched(bool glitched) { if (glitched) { flags |= RENDER_FLAGS_IS_GLITCHED; } }

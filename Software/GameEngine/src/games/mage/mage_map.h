@@ -109,6 +109,10 @@ public:
    void DrawEntities() const;
    std::optional<uint16_t> Update();
 
+   const std::optional<uint16_t> getPlayerInteraction(RenderableData* const playerRenderableData, MageEntityData* playerEntityData);
+
+   void handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData);
+
    constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
       if (entityIndex >= currentMap->entityCount && entityIndex != MAGE_MAP_ENTITY)

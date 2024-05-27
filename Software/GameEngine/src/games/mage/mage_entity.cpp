@@ -92,7 +92,7 @@ void RenderableData::updateAsEntity(const MageEntityData& entity)
    auto& animation = entityType->GetAnimation(currentAnimation);
 
    //create a animationDirection entity based on direction:
-   auto& animationDirection = animation[entity.GetAnimationDirection()];
+   auto& animationDirection = animation[entity.GetDirection()];
 
    //based on animationDirection.type, you can get two different outcomes:
    // * Not animated - animationDirection.type != 0:

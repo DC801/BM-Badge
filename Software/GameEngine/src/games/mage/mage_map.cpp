@@ -181,10 +181,56 @@ void MapControl::Draw() const
 std::optional<uint16_t> MapControl::Update()
 {
    auto playerEntityData = getPlayerEntityData();
-   const auto playerRenderableData = getPlayerRenderableData();
-
    // require a player on the map to move/interact
    if (!playerEntityData) { return std::nullopt; }
+
+   const auto playerRenderableData = getPlayerRenderableData();
+   handleCollision(playerRenderableData, playerEntityData);
+   return getPlayerInteraction(playerRenderableData, playerEntityData);
+}
+
+const std::optional<uint16_t> MapControl::getPlayerInteraction(RenderableData* const playerRenderableData, MageEntityData* playerEntityData)
+{
+   static const auto interactLength = 32;
+   auto interactBox = playerRenderableData->hitBox;
+   std::optional<uint16_t> interactionId = std::nullopt;
+   const auto direction = static_cast<MageEntityAnimationDirection>(playerEntityData->flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK);
+   if (direction == MageEntityAnimationDirection::WEST)
+   {
+      interactBox.origin.x -= interactLength;
+   }
+   else if (direction == MageEntityAnimationDirection::EAST)
+   {
+      interactBox.origin.x += interactLength;
+   }
+
+   if (direction == MageEntityAnimationDirection::NORTH)
+   {
+      interactBox.origin.y -= interactLength;
+   }
+   else if (direction == MageEntityAnimationDirection::SOUTH)
+   {
+      interactBox.origin.y += interactLength;
+   }
+
+   for (auto i = 0; i < currentMap->entityCount; i++)
+   {
+      auto& entity = Get<MageEntityData>(i);
+      auto& renderableData = Get<RenderableData>(i);
+
+      if (&entity != playerEntityData && interactBox.Contains(renderableData.center()))
+      {
+         interactionId.emplace(i);
+      }
+
+      renderableData.UpdateFrom(entity);
+   }
+
+   return interactionId;
+}
+
+void MapControl::handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData)
+{
 
    const auto oldPosition = playerRenderableData->origin;
 
@@ -194,61 +240,32 @@ std::optional<uint16_t> MapControl::Update()
    const auto botRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, playerRenderableData->hitBox.h };
 
    std::vector<EntityPoint> hitboxPointsToCheck{};
-
-   const uint8_t interactLength = 32;
-   auto interactBox = EntityRect{ playerRenderableData->hitBox };
-   std::optional<uint16_t> interactionId = std::nullopt;
-
-   for (auto i = 0; i < currentMap->entityCount; i++)
-   {
-      auto& entity = Get<MageEntityData>(i);
-      auto& renderableData = Get<RenderableData>(i);
-      auto entityPosition = Get<RenderableData>(i).center();
-
-      renderableData.curFrameDuration += IntegrationStepSize;
-      renderableData.UpdateFrom(entity);
-
-      if (interactBox.Contains(entityPosition))
-      {
-         interactionId.emplace(i);
-      }
-   }
-
    if (playerEntityData->targetPosition.x < playerRenderableData->origin.x)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::WEST);
-      interactBox.origin.x -= interactLength;
-      interactBox.w = interactLength;
+      playerEntityData->flags = (playerEntityData->flags & 0x80) | static_cast<uint8_t>(MageEntityAnimationDirection::WEST);
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
    else if (playerEntityData->targetPosition.x > playerRenderableData->origin.x)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::EAST);
-      interactBox.origin.x += interactBox.w;
-      interactBox.w = interactLength;
+      playerEntityData->flags = (playerEntityData->flags & 0x80) | static_cast<uint8_t>(MageEntityAnimationDirection::EAST);
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
 
    if (playerEntityData->targetPosition.y < playerRenderableData->origin.y)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::NORTH);
-      interactBox.origin.y -= interactLength;
-      interactBox.h = interactLength;
+      playerEntityData->flags = (playerEntityData->flags & 0x80) |  static_cast<uint8_t>(MageEntityAnimationDirection::NORTH);
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
    else if (playerEntityData->targetPosition.y > playerRenderableData->origin.y)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::SOUTH);
-      interactBox.origin.y += interactBox.h;
-      interactBox.h = interactLength;
+      playerEntityData->flags = (playerEntityData->flags & 0x80) | static_cast<uint8_t>(MageEntityAnimationDirection::SOUTH);
       hitboxPointsToCheck.push_back(botLeft);
       hitboxPointsToCheck.push_back(botRight);
    }
 
-   auto collides = false;
    for (auto& hitboxPoint : hitboxPointsToCheck)
    {
       const auto column = hitboxPoint.x / currentMap->tileWidth;
@@ -257,7 +274,7 @@ std::optional<uint16_t> MapControl::Update()
       const auto tileId = column + currentMap->cols * row;
 
       // ignore checks that are outside the bounds of the map
-      if (tileId >= currentMap->layers[0].size()) { continue; }
+      if (tileId < 0 || tileId >= currentMap->layers[0].size()) { continue; }
 
       const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentMap->layers[0][tileId].tilesetId);
 
@@ -271,6 +288,4 @@ std::optional<uint16_t> MapControl::Update()
          break;
       }
    }
-
-   return interactionId;
 }

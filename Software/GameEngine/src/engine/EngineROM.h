@@ -197,26 +197,6 @@ struct EngineROM
       return std::span<const T, Extent>(data, count);
    }
 
-   template <typename T>
-   void InitializeVectorFrom(std::vector<T>& v, uint32_t& offset, uint16_t count) const
-   {
-      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>,
-         "Must be constructible from an offset or a standard layout type");
-
-      for (auto i = 0; i < count; i++)
-      {
-         if constexpr (std::is_standard_layout_v<T>)
-         {
-            v.push_back(*(const T*)(&romData[offset]));
-            offset += sizeof(T);
-         }
-         else
-         {
-            v.push_back(T{ offset });
-         }
-      }
-   }
-
    bool VerifyEqualsAtOffset(uint32_t offset, std::string value) const
    {
       if (value.empty())
