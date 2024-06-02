@@ -74,6 +74,7 @@ var actionInputMixin = {
 }
 
 Vue.component('field-text', {
+	name: 'field-text',
 	mixins: [actionInputMixin],
 	props: {
 		type: {
@@ -83,7 +84,7 @@ Vue.component('field-text', {
 			}
 		},
 	},
-	template: `
+	template: /*html*/`
 <input
 	type="text"
 	class="form-control"
@@ -92,21 +93,21 @@ Vue.component('field-text', {
 	:aria-label="property"
 	@input="$emit('input', $event.target.value)"
 />
-	`
-});
+`});
 
 Vue.component('field-number', {
+	name: 'field-number',
 	mixins: [actionInputMixin],
-	template: `
+	template: /*html*/`
 <field-text
 	type="number"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-text>
-	`
-});
+`});
 
 Vue.component('field-select', {
+	name: 'field-select',
 	props: {
 		options: {
 			type: Array,
@@ -116,7 +117,7 @@ Vue.component('field-select', {
 			required: true,
 		},
 	},
-	template: `
+	template: /*html*/`
 <select
 	class="form-select"
 	:value="value || ''"
@@ -129,180 +130,179 @@ Vue.component('field-select', {
 		v-for="option in options"
 	>{{option}}</option>
 </select>
-	`
-});
+`});
 
 Vue.component('field-bool', {
+	name: 'field-bool',
 	mixins: [actionInputMixin],
 	operations: operations,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="[true, false]"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-operations', {
+	name: 'action-input-operations',
 	mixins: [actionInputMixin],
 	operations: operations,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.operations"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-comparisons', {
+	name: 'action-input-comparisons',
 	mixins: [actionInputMixin],
 	comparisons: comparisons,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.comparisons"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-buttons', {
+	name: 'action-input-buttons',
 	mixins: [actionInputMixin],
 	buttons: buttons,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.buttons"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-directions', {
+	name: 'action-input-directions',
 	mixins: [actionInputMixin],
 	directions: directions,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.directions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-slots', {
+	name: 'action-input-slots',
 	mixins: [actionInputMixin],
 	slots: slots,
-	template: `
+	template: /*html*/`
 <field-select
 	:options="$options.slots"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-scripts', {
+	name: 'action-input-scripts',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'scriptsOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="scriptsOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-dialogs', {
+	name: 'action-input-dialogs',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'dialogOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="dialogOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-entity_types', {
+	name: 'action-input-entity_types',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'entityTypesOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="entityTypesOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-entities', {
+	name: 'action-input-entities',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'entityNamesOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="entityNamesOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-geometry', {
+	name: 'action-input-geometry',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'geometryOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="geometryOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-maps', {
+	name: 'action-input-maps',
 	mixins: [actionInputMixin],
 	computed: window.Vuex.mapGetters([
 		'mapsOptions'
 	]),
-	template: `
+	template: /*html*/`
 <field-select
 	:options="mapsOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 Vue.component('action-input-action-type', {
+	name: 'action-input-action-type',
 	mixins: [actionInputMixin],
 	computed: {
 		actions: function () {
 			return Object.keys(actionFieldsMap);
 		}
 	},
-	template: `
+	template: /*html*/`
 <field-select
 	:options="actions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
-	`
-});
+`});
 
 var propertyEditorComponentMap = {
 	duration: 'field-number',
@@ -450,7 +450,7 @@ Vue.component(
 		},
 		template: /*html*/`
 <div
-	class="action-editor mb-3 mt-1 card border-secondary"
+	class="editor-action mb-3 mt-1 card border-secondary"
 >
 	<div class="card-header bg-secondary p-2">
 		<button
@@ -516,5 +516,4 @@ Vue.component(
 		</div>
 	</div>
 </div>
-`}
-);
+`});

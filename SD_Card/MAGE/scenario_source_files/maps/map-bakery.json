@@ -596,12 +596,6 @@
  "nextlayerid":7,
  "nextobjectid":41,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-bakery"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
  "tileheight":32,

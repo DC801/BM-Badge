@@ -18,7 +18,10 @@
 			height: auto;
 			border: inherit;
 		}
-		.tile-link {
+		[v-cloak] {
+			display: none;
+		}
+ 		.tile-link {
 			border-style: solid;
 			border-width: 4px;
 			appearance: none;
@@ -71,7 +74,7 @@
 						"
 					>
 						<div class="card-header">
-							Drag your `scenario_source_files` folder to the button
+							Drag your &grave;scenario_source_files&grave; folder to the button
 						</div>
 						<div class="card-body">
 							<p>Drag your <code>scenario_source_files</code> to this button!</p>
@@ -87,12 +90,13 @@
 											webkitdirectory
 											@input="handleChange"
 									/>
-									<label class="custom-file-label" for="drag_target">Choose file</label>
+									<label class="custom-file-label" for="drag_target">Choose folder</label>
 								</div>
 							</div>
 							<div
 								v-if="isLoading"
 								class="alert alert-dismissible alert-secondary"
+								v-cloak
 							>
 								<h2>Loafing</h2>
 								<p>THINKING SO HARD ABOUT ENCODING THE BINARY</p>
@@ -100,6 +104,7 @@
 							<div
 								v-if="error"
 								class="alert alert-danger"
+								v-cloak
 							>
 								<button
 									type="button"
@@ -116,6 +121,7 @@
 							<div
 								v-if="downloadData"
 								class="alert alert-secondary"
+								v-cloak
 							>
 								<button
 									type="button"
@@ -142,6 +148,10 @@
 					</div>
 				</div>
 			</div>
+			<editor-warnings
+				v-if="scenarioData"
+				:scenario-data="scenarioData"
+			></editor-warnings>
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"
@@ -216,6 +226,7 @@
 						aria-label="Create new entityType"
 						aria-describedby="add-entity-type"
 						v-model="newEntityTypeId"
+						name="newEntityTypeId"
 					>
 					<div class="input-group-append">
 						<button
@@ -417,6 +428,7 @@
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
 	<script src="js/editor-copy-changes.js"></script>
+	<script src="js/editor-accordion.js"></script>
 	<script src="js/entity_types.js"></script>
 	<script src="js/portraits.js"></script>
 	<script src="js/entities.js"></script>
@@ -428,6 +440,7 @@
 	<script src="js/images.js"></script>
 	<script src="js/encoding.js"></script>
 	<script src="js/font-image.js"></script>
+	<script src="js/warnings.js"></script>
 	<script src="js/editor-entity_types.js"></script>
 	<script src="js/editor-scripts.js"></script>
 	<script src="js/editor-script.js"></script>
@@ -438,6 +451,7 @@
 	<script src="js/editor-dialog-phase-preview.js"></script>
 	<script src="js/editor-dialog-box.js"></script>
 	<script src="js/editor-action.js"></script>
+	<script src="js/editor-warnings.js"></script>
 	<script src="js/component-icon.js"></script>
 	<script src="js/store.js"></script>
 	<script src="js/index.js"></script>
