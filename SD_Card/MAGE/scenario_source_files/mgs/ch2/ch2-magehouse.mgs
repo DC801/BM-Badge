@@ -94,10 +94,21 @@ on_load-ch2-magehouse {
 		teleport entity "Aunt Zippy" to geometry alt-spot2;
 		teleport entity "Uncle Zappy" to geometry alt-spot1;
 	}
+	debug!("<c>POST</> to view post-credits cutscene")
+	if (debug mode is on) {
+		register post -> debug-post;
+	}
 	copy ch2-map-init;
 	if (warp state is exit_from-credits) {
-		copy ch2-post-credits;
+		if (flag ch2-cutseen-secret-ending is false) {
+			copy ch2-post-credits;
+		}
 	}
+}
+debug-post {
+	set warp state to exit_from-credits;
+	mutate ch2-storyflag-round = 5;
+	load map ch2-magehouse;
 }
 
 /* ---------- ON_TICK ---------- */

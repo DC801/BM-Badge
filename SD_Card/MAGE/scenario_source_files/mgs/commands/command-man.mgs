@@ -582,7 +582,7 @@ ch2-lambda-person-seamoss {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry, like (TODO: more facts about CMOS microprocessors on a tight technical level)."
+			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry."
 			"\tAnd he makes the best crepes, too, believe it or not!"
 		}
 	}
@@ -934,6 +934,7 @@ ch2-lambda-person-lambda-where {
 	goto ch2-lambda-person-lambda-q;
 }
 ch2-lambda-person-lambda-name {
+	// TODO: what to do if you've already heard him admit that he erased his own name? (Room 99 cutscene)
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: What's your real name? It's not really \"Lambda,\" is it?"
@@ -1060,6 +1061,103 @@ ch2-lambda-person-big-bad2 {
 		"\tUm, y-yes, we were acquainted, you could say. We'd certainly met. More than once. He always rubbed me the wrong way, though, even before he decided to do all the terrible things he did."
 		"\tIt's, um... it's been long enough that the details are fuzzy. But even if I can't remember exactly how things might have gone down, I can definitely remember the way he made me feel when we interacted. I guess that's all I have to say about that."
 	}
+	if (
+		flag ch2-cutseen-secret-ending is false
+		|| flag ch2-forgetting-backstory is true
+	) {
+		goto ch2-lambda-topic-person-s;
+	} else {
+		show serial dialog {
+			" "
+			# "Why do you both have the power to make people forget?" : ch2-lambda-person-big-bad3a
+			# "Who is the Big Bad, Lambda? Is it you?" : ch2-lambda-person-big-bad3b
+			# "I see. (Quit)" : ch2-lambda-person-big-bad-quit
+		}
+	}
+}
+ch2-lambda-person-big-bad3a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Why do you both have the power to make people forget things?"
+		" "
+		"<m>LAMBDA</>: The power to make people forget -- what? The Big Bad can make people forget things, too?"
+		" "
+		# "That's what Alfonso told me." : ch2-lambda-person-big-bad3a2
+	}
+}
+ch2-lambda-person-big-bad3a2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: That's what Alfonso told me. He said he only just barely remembered it himself."
+		" "
+		"<m>LAMBDA</>: He -- oh, dear. Oh, no. Oh, no."
+		"\tIt's true I can't remember the Big Bad clearly, but I thought that was a side effect of what I'd done to myself -- that is, after I'd made everyone else forget me, I had trouble remembering everyone else in turn. But this...."
+		"\tThis is bad, %PLAYER%. The Big Bad is trying something new, something subtle. I fear that is playing a long game. Please be careful!"
+	}
+	set flag ch2-forgetting-backstory to true;
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-big-bad-quit {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: I see."
+		" "
+		"<m>LAMBDA</>: Yeah. So, um...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-big-bad3b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Who is the Big Bad, Lambda? Is it you?"
+		" "
+		"<m>LAMBDA</>: What? Of course not. Why would you say that?"
+		" "
+		"<c>YOU</>: Alfonso told me the Big Bad could make people forget things. You can, too. Can't you?"
+		" "
+		"<m>LAMBDA</>: That's -- no, I --"
+		"\tOnce you reach a certain level of technical skill, what with our world being what it is, it's not too hard of a thing to do, really. It's certainly not an ability unique to me. But...."
+		"\tYou're saying the Big Bad can do this, too? You're sure?"
+		" "
+		# "Alfonso seemed to think so." : ch2-lambda-person-big-bad3b2
+	}
+}
+
+ch2-lambda-person-big-bad3b2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Alfonso seemed to think so."
+		" "
+		"<m>LAMBDA</>: Oh, my. Yes... I suppose it makes sense, given everything else."
+		"\tUnfortunately, once you gain the ability to shape reality -- even to the extent that I can -- it becomes impossible to truly demonstrate trustworthiness to someone else. So, %PLAYER%, all I can say to reassure you is this:"
+		"\tI made everyone forget me so I could hide. That is, I disempowered myself in an attempt to limit the Big Bad's destructive power. And I have endeavored to empower you to help everyone suffering from my choice."
+		"\tThe Big Bad, however, made everyone forget him only to empower himself. He continues to commit acts of violence against us, as with the earthquake. He has made no effort to repair his vandalism. Instead, his newfound anonymity has allowed him to act maliciously, as before, but with less oversight."
+		" "
+		# "I guess you have a point. You're not the same." : ch2-lambda-person-big-bad3b2a
+		# "You could still be the Big Bad, putting on an act." : ch2-lambda-person-big-bad3b2b
+	}
+}
+ch2-lambda-person-big-bad3b2a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: I guess you have a point. You're not the same."
+		" "
+		"<m>LAMBDA</>: Thank you. But... I understand why you might suspect me. It's a part of having skills like mine."
+		"\tIt may have been a bad decision to hide my identity from you -- from everyone -- but at least I can honestly claim I was only trying to help. At least, that's what I tell myself."
+	}
+	set flag ch2-forgetting-backstory to true;
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-big-bad3b2b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You could still be the Big Bad, putting on an act."
+		" "
+		"<m>LAMBDA</>: ...Yes, that's true. At the end of the day, you can't really be <bold>sure</> whether you can trust someone else. Certainly not when they can physically manipulate your mind."
+		"\tBut you can't live your whole life distrusting everyone forever. You have to give your trust to someone else <bold>eventually</>. Just pay attention to how people treat those around them. See whether they try to build people up."
+		"\tI'm truly sorry my actions have not given you reason to trust me. I'll... I'll try to be better."
+	}
+	set flag ch2-forgetting-backstory to true;
 	goto ch2-lambda-topic-person-s;
 }
 // Bert

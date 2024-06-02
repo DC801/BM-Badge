@@ -349,8 +349,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":334,
-                 "y":137
+                 "x":333,
+                 "y":113
                 }, 
                 {
                  "class":"",
@@ -381,7 +381,7 @@
                  "id":3,
                  "name":"south-hitbox",
                  "rotation":0,
-                 "visible":true,
+                 "visible":false,
                  "width":30,
                  "x":353,
                  "y":288
@@ -395,8 +395,28 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":437,
-                 "y":267
+                 "x":436,
+                 "y":251
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":71,
+                 "name":"doorwalk",
+                 "polyline":[
+                        {
+                         "x":-1,
+                         "y":1
+                        }, 
+                        {
+                         "x":-1,
+                         "y":-27
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":368,
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -450,7 +470,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":71,
+ "nextobjectid":72,
  "orientation":"orthogonal",
  "properties":[
         {

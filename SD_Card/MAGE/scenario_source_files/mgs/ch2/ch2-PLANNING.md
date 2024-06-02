@@ -24,8 +24,8 @@
 	- [ ] Work out ≈ Cartesian product / Punnet squares for each grouping of combined items
 	- [ ] Write something funny for each failed combo
 	- [~] You need to fuse in person, at (one of the) the solder station(s)?
-- [ ] Make Lambda less hand-holdy at the beginning
-	- [ ] Explain `help` and `man` (both to reach Lambda and `man _`) and nothing else!
+- [~] Make Lambda less hand-holdy at the beginning
+	- [x] Explain `help` and `man` (both to reach Lambda and `man _`) and nothing else!
 - [x] Put the "password" letters in the floor
 	- [x] Take out the "look up" stuff
 	- [x] Letters should spell AUTHENTICATE when spacially placed along the rooms they were found:
@@ -59,19 +59,6 @@
 ## Specific work needing done
 
 - [x] Teleport the player loading from save into the correct spot (overworld -> castle room #1)
-
-## Non-assets and scripting things we need
-
-- [ ] Stories about building computers! I.e.
-	- What you like: what you get out of it personally, which bits are easy to do, which bits are the most fun
-	- What you dislike: what kinds of things goes wrong, specific horror stories, which bits are a pain to do
-- [x] Your soldering setup
-	- What equipment do you have?
-	- Is it always set up and left out, or do only get it out when you have a project?
-	- Do you have a "quick job" vs "pull out all the stops" range of stuff you use?
-	- How are things physically positioned on the desk? (Extra credit for an actual photo of everything laid out)
-	- Any piece of equipment you might see on someone else's desk that makes you go "Oh, that person does some serious soldering"?
-- [x] ~~How to set up a serial connection (COMPREHENSIVE PLZ)~~ Never mind, there's a web one
 
 ## Story themes
 

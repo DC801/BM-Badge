@@ -417,7 +417,8 @@ interact-ch2-alfonso-end {
 	}
 	copy face-player;
 	show dialog {
-		SELF "Good job, %PLAYER%!"
-		"Looks like you can have a well-deserved break while we prepare things for the next dungeon."
+		SELF "I never congratulated you on acquiring the artifact and repairing its fundamental functions, %PLAYER%. Good job."
+		"The next dungeon will challenge you further, but you should still try to remember everything you've learned so far."
+		"Remember... yes, remember everything you've learned. We all must remember...."
 	}
 }

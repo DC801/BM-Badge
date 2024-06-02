@@ -265,9 +265,9 @@ interact-ch2-keypad {
 	if (flag ch2-king-rescued is false) {
 		if (flag interrupt is false) {
 			show dialog {
-				name "" "(TODO: keypad puzzle explanation: collect the admin password to reset the keypad.)"
-				"(The letters used in the password are physically written all over the castle)"
-				"(When you have discovered the password, speak to the keypad again and type the password in the serial terminal at the prompt.)"
+				PLAYER "Oh, there's something written on the bottom of the keypad."
+				name "(keypad)" "The default admin password can be found on the castle's --"
+				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found on the castle's what?"
 			}
 			set flag interrupt to true;
 		}

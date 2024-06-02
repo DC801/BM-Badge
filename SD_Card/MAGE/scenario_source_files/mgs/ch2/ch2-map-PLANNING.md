@@ -53,7 +53,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [ ] Wizard hat and cape sprite version
 	- [x] Mainframe enclosure
 	- [x] Save floppy
-	- [ ] SET: the inside equiv. of a front porch; spartan; this room precedes even a coat rack or the like
+	- [~] SET: the inside equiv. of a front porch; spartan; this room precedes even a coat rack or the like
 
 ### Admin Branch
 
@@ -61,16 +61,14 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: monitor
 	- [x] Entity: Kuro (a crow)
-	- [~] SET: more a proper foyer; grandiose, welcoming, but nothing specific happening in terms of personnel stations or equipment
-		- [ ] Wall of rubble at N separating this room from 12
+	- [x] SET: more a proper foyer; grandiose, welcoming, but nothing specific happening in terms of personnel stations or equipment
 12. `Castle hallway back`
 	- [x] Cutscene: Enter the room for the first time
 	- [x] Inventory item: needle (from phonograph)
 	- [x] Entity: Concierge (super nice suit, but like it's some kind of a scraggly werewolf)
 	- [x] Entity: mid-90s tall black stereo system (one of those big CD changer / cassette deck thingies)
-	- [~] SET: the "human" half of the foyer, logistically speaking
+	- [x] SET: the "human" half of the foyer, logistically speaking
 		- [x] Concierge desk with guestbook
-		- [ ] Wall of rubble at S separating this room from 11
 	- [x] PUZZLE NEEDED: use the serial terminal to fix the damaged digital entertainment system (which plays muzak in the foyer)
 13. `Throne room`
 	- [x] Cutscene: Enter the room for the first time
@@ -80,7 +78,6 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: Templeton (a giant blue slime; bumbling/flustered)
 	- [x] SET: the throne room: over the top, gilded and extravagantly furnished, and way bigger than it needs to be
 		- [x] Closed version of USB door (north version)
-		- [x] ~~Keypad for door~~
 14. `King Gibson's bedroom`
 	- [~] Cutscene: Enter the room for the first time
 	- [x] Inventory item: clock
@@ -91,7 +88,7 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [x] Wardrobes or whatever idk
 		- [x] Closed version of USB door (south version)
 		- [x] Keypad (from below?)
-	- [~] PUZZLE NEEDED: use the serial terminal to fix the keypad door locky-doo, possibly using a password or part of a passphrase the King and/or his staff knows
+	- [x] PUZZLE NEEDED: use the serial terminal to fix the keypad
 
 ### Industrial Area
 
@@ -110,8 +107,6 @@ The following lists concern physical appearance (including the actual spriteshee
 	- [x] Entity: C.K. Watt - gives you the power supply because it's extra
 	- [x] SET: More cleanroom looking than the workshop
 		- [x] Racks of machines
-		- [x] ~~Trails of wires~~
-		- [x] ~~Cooling mechanisms~~
 		- [x] Some computer buildery stuff (more computer, less electronics?)
 23. `Power plant`
 	- [x] Cutscene: Enter the room for the first time (not necessary)
@@ -130,9 +125,9 @@ The following lists concern physical appearance (including the actual spriteshee
 		- [x] Still needs keytar position sprites for the mage
 	- [x] Entity: Theodore - a band member from 1023 MB
 	- [x] Entity: Alvin - a band member from 1023 MB
-	- [~] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd
+	- [x] SET: A kind of a lounge area for sophisticated entertainment and dining space for a modest crowd
 		- [x] Cocktail tables and stools
-		- [~] Stage with band instruments (band: 1023 MB)
+		- [x] Stage with band instruments (band: 1023 MB)
 		- [x] ~~Copy Pasta bar (some booze, some small entrees)~~ Actually now just a table with bottles and cups (presumably stationed by an employee during events, not actually self serve)
 32. `Castle kitchen`
 	- [x] Cutscene: Enter the room for the first time (not necessary)
@@ -260,7 +255,7 @@ Plot points implemented:
 					- Sebastian (lizard wizard) thinks they should have a coup; that Gibson is being irresponsible and childish and has abandoned them (focus on ignoring the king)
 					- Templeton (slime) thinks the king might be injured and they should rescue him (focus on King)
 					- The Aurelius (goldfish; current regent) thinking about the civilians
-			- [~] Use the terminal to repair the intercom and get them talking again
+			- [x] Use the terminal to repair the intercom and get them talking again
 				- [x] Password in the floors of each room: will spell AUTHENTICATE
 			- [x] The King should return to the throne room
 				- [ ] After which the king and his staff reconcile
@@ -278,12 +273,12 @@ Plot points implemented:
 	- [x] (10.) `mainframeos` (room 99) (might be handled differently from other items)
 	- [~] Cutscene: OS installation wizard
 		- [ ] Should need to go into town for an ethernet cable -- ("Oh, crud! I need to pull some dependencies... This is your last errand, I promise! Go get a spare cable from Trekkie, would you?")
-	- [ ] "You did it" cutscene
+	- [~] "You did it" cutscene
 	- [~] Credits
 
 - AFTERWARD (`ch2-storyflag-round` = 5)
-	- [ ] Post-credits sequence: Alfonso mentions one of the Big Bad's powers that most people don't know about
-	- [ ] Go about the overworld now
+	- [x] Post-credits sequence: Alfonso mentions one of the Big Bad's powers that most people don't know about
+	- [~] Go about the overworld now
 
 ### Village elder locations
 

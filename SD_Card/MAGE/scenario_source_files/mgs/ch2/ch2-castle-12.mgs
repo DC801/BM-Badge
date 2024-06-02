@@ -126,7 +126,7 @@ ch2-interact-guestbook {
 		}
 	} else {
 		show dialog {
-			PLAYER "Ah, there's my name, logged for the ages."
+			PLAYER "There's my name, logged for the ages."
 			Concierge "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
 		}
 	}
@@ -170,7 +170,7 @@ interact-ch2-concierge {
 			}
 		} else {
 			show dialog {
-				PLAYER "Welcome to King Gibson's castle. I do hope you enjoy your visit!"
+				Concierge "Welcome to King Gibson's castle. I do hope you enjoy your visit!"
 			}
 		}
 		show dialog {
