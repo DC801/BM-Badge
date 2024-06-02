@@ -63,7 +63,10 @@
 	<title>MAGE GAME DATA TOOL</title>
 </head>
 <body>
-	<div id="app">
+	<div
+		id="app"
+		v-cloak
+	>
 		<div class="container pt-5">
 			<div class="row">
 				<div class="col-12">
@@ -96,7 +99,6 @@
 							<div
 								v-if="isLoading"
 								class="alert alert-dismissible alert-secondary"
-								v-cloak
 							>
 								<h2>Loafing</h2>
 								<p>THINKING SO HARD ABOUT ENCODING THE BINARY</p>
@@ -104,7 +106,6 @@
 							<div
 								v-if="error"
 								class="alert alert-danger"
-								v-cloak
 							>
 								<button
 									type="button"
@@ -121,7 +122,6 @@
 							<div
 								v-if="downloadData"
 								class="alert alert-secondary"
-								v-cloak
 							>
 								<button
 									type="button"

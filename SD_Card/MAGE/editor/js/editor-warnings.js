@@ -81,13 +81,13 @@ Vue.component('editor-warning', {
 	},
 	methods: {
 		reactToFixParameterChanged: function (parameterName, newParameter, oldParameter) {
-			console.group(`XXX param ${parameterName} changed from entity ${this.entity.name} from map ${this.entity.sourceFile}`);
+			// console.group(`XXX param ${parameterName} changed from entity ${this.entity.name} from map ${this.entity.sourceFile}`);
 
 			if (parameterName === 'scriptName') {
 				// of all possible keys for this.fixParameters, `scriptName` gets
 				// special treatment (involving $store.state.warningsGeneratedScriptNames)
 
-				console.log(`XXX trying script ${newParameter}`);
+				// console.log(`XXX trying script ${newParameter}`);
 
 				var takenByWarnings = this.$store.state.warningsGeneratedScriptNames;
 				var takenByScenarioData = this.$store.getters.scriptsOptions;
@@ -97,11 +97,11 @@ Vue.component('editor-warning', {
 					|| takenByWarnings.includes(newParameter);
 
 				if (scriptNameTaken) {
-					console.log(`XXX clashing script ${newParameter}`);
+					// console.log(`XXX clashing script ${newParameter}`);
 
 					this.scriptNameTaken = true;
 				} else {
-					console.log(`XXX reserving script ${newParameter}`);
+					// console.log(`XXX reserving script ${newParameter}`);
 
 					this.scriptNameTaken = false;
 					this.$store.commit('RESERVE_WARNING_SCRIPT_NAME', {
@@ -110,23 +110,23 @@ Vue.component('editor-warning', {
 				}
 
 				if (oldParameter) {
-					console.log(`XXX freeing script ${oldParameter}`);
+					// console.log(`XXX freeing script ${oldParameter}`);
 
 					this.$store.commit('FREE_WARNING_SCRIPT_NAME', {
 						scriptName: oldParameter,
 					});
 				} else {
-					console.log('XXX old scriptName was null');
+					// console.log('XXX old scriptName was null');
 				}
 			}
 
 			if (! this.scriptNameTaken) { // save a bit of work if the fix text is going to be hidden
-				console.log('XXX update fixText');
+				// console.log('XXX update fixText');
 
 				this.fixText = this.entity.fixes.getFixes(this.fixParameters);
 			}
 
-			console.groupEnd();
+			// console.groupEnd();
 		},
 	},	
 	template: /*html*/`
