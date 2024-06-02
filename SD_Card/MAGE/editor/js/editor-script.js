@@ -232,5 +232,4 @@ Vue.component(
 		</form>
 	</div>
 </div>
-`}
-);
+`});

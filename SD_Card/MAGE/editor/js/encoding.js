@@ -36,6 +36,7 @@ var handleScenarioData = function (fileNameMap) {
 			scenarioData.parsed[typeName] = [];
 		});
 		scenarioData.dialogSkinsTilesetMap = {}
+		scenarioData.warnings = {};
 		var preloadSkinsPromise = preloadAllDialogSkins(fileNameMap, scenarioData);
 		var portraitsFile = fileNameMap['portraits.json'];
 		var portraitsPromise = preloadSkinsPromise.then(function preloadSkinHandler () {
@@ -280,11 +281,6 @@ var generateIndexAndComposite = function (scenarioData) {
 		16,
 		compositeSize,
 		IS_LITTLE_ENDIAN
-	);
-
-	console.log(
-		'compositeArray',
-		compositeArray
 	);
 	var hashHex = [
 		compositeArray[12],

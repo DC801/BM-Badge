@@ -346,17 +346,6 @@
  "nextlayerid":5,
  "nextobjectid":24,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":"on_load-bobsclub1"
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-bobsclub"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,

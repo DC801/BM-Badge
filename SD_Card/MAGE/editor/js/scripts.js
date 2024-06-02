@@ -1416,9 +1416,9 @@ var preProcessScript = function(
 						&& entry.jump_index !== undefined
 					) {
 						property = "jump_index";
-					} else if (entry.action == "GOTO_ACTION_INDEX") {
+					} else if (entry.action === "GOTO_ACTION_INDEX") {
 						property = "action_index";
-					} else if (entry.action == "LABEL") {
+					} else if (entry.action === "LABEL") {
 						property = "value";
 					}
 					if ( property
@@ -1474,7 +1474,7 @@ var linker = function (_actions) {
 			}
 			action.jump_index = labelMap[action.jump_index];
 		} else if (
-			action.action == "GOTO_ACTION_INDEX"
+			action.action === "GOTO_ACTION_INDEX"
 			&& typeof action.action_index === "string"
 		) {
 			if (labelMap[action.action_index] === undefined) {
