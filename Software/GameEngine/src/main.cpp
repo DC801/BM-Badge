@@ -9,10 +9,6 @@
  *
  */
 
- // #if __cplusplus > 199711L
- // #define register      // Deprecated in C++11.
- // #endif  // #if __cplusplus > 199711L
-
 #include "main.h"
 #include "games/mage/mage.h"
 #include "games/mage/mage_app_timers.h"
@@ -88,9 +84,6 @@ int main(int argc, char* argv[])
 
     // Setup the system
     log_init();
-    auto inputHandler = std::make_shared<EngineInput>();
-    auto windowFrame = std::make_unique<DesktopWindowOutput>(inputHandler);
-    auto frameBuffer = std::make_shared<FrameBuffer>(std::move(windowFrame));
 
 #ifdef DC801_EMBEDDED
     // Init the clock 
@@ -164,8 +157,12 @@ int main(int argc, char* argv[])
     debug_print("Booted!\nCreating and started game...\n");
 
     //auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
-
+#else
+    auto inputHandler = std::make_shared<EngineInput>();
+    auto windowFrame = std::make_unique<DesktopWindowOutput>(inputHandler);
+    auto frameBuffer = std::make_shared<FrameBuffer>(std::move(windowFrame));
 #endif
+
     auto game = std::make_unique<MageGameEngine>(inputHandler, frameBuffer);
     game->Run();
 

@@ -11,7 +11,7 @@
 #include <utility>
 #include "shim_timer.h"
 
-template <typename IndexType, typename ValueType, int Length >
+template <typename IndexType, typename ValueType, int Length>
 class EnumClassArray : public std::array<ValueType, Length>
 {
 public:

@@ -111,6 +111,16 @@ public:
       }
    }
 
+   inline void DrawRectWorldCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
+   {
+      drawRect(EntityRect{ {uint16_t(rect.origin.x - camera.position.y), uint16_t(rect.origin.y - camera.position.y)}, rect.w, rect.h }, color);
+   }
+
+   inline void DrawRectScreenCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
+   {
+      drawRect(rect, color);
+   }
+
    inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
    {
       drawTile(tilesetId, tileId, tileDrawX - camera.position.x, tileDrawY - camera.position.y, flags);
@@ -154,6 +164,20 @@ public:
 
    void DrawFilledRect(int x, int y, int w, int h, uint16_t color);
 
+
+   void DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground = false, GFXfont font = Monaco9);
+
+   void blt();
+   constexpr uint16_t* getFrameDataPtr()
+   {
+      return frame.data();
+   }
+
+   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
+
+   MageCamera camera{};
+
+private:
    inline void drawRect(const EntityRect& r, uint16_t color)
    {
       auto x = r.origin.x;
@@ -167,20 +191,6 @@ public:
       // bottom
       drawLine(x, y + r.h, x + r.w, y + r.h, color);
    }
-
-
-   void DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground = false, GFXfont font = Monaco9);
-
-   void blt();
-   constexpr uint16_t* getFrameDataPtr()
-   {
-      return frame.data();
-   }
-
-   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
-
-   MageCamera camera{};
-private:
 #ifndef DC801_EMBEDDED
    std::unique_ptr<DesktopWindowOutput> windowFrame;
    std::array<uint16_t, FramebufferSize> frame{};

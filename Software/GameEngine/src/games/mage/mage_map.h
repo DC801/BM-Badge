@@ -109,7 +109,7 @@ public:
    void DrawEntities() const;
    std::optional<uint16_t> Update();
 
-   const std::optional<uint16_t> getPlayerInteraction(RenderableData* const playerRenderableData, MageEntityData* playerEntityData);
+   EntityRect getInteractBox() const;
 
    void handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData);
 
@@ -168,7 +168,29 @@ public:
       return &Get<MageEntityData>(currentMap->playerEntityIndex);
    }
 
+   inline const MageEntityData* getPlayerEntityData() const
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<MageEntityData>(currentMap->playerEntityIndex);
+   }
+
    inline RenderableData* getPlayerRenderableData()
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<RenderableData>(currentMap->playerEntityIndex);
+   }
+
+   inline const RenderableData* getPlayerRenderableData() const
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX

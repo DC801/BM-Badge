@@ -176,6 +176,11 @@ void MapControl::Draw() const
    {
       DrawLayer(LayerCount() - 1);
    }
+
+   // draw any geometry or overlay
+
+   const auto interactBox = getInteractBox();
+   frameBuffer->DrawRectWorldCoords(interactBox);
 }
 
 std::optional<uint16_t> MapControl::Update()
@@ -186,14 +191,31 @@ std::optional<uint16_t> MapControl::Update()
 
    const auto playerRenderableData = getPlayerRenderableData();
    handleCollision(playerRenderableData, playerEntityData);
-   return getPlayerInteraction(playerRenderableData, playerEntityData);
+
+   const auto interactBox = getInteractBox();
+   std::optional<uint16_t> interactionId = std::nullopt;
+   for (auto i = 0; i < currentMap->entityCount; i++)
+   {
+      auto& entity = Get<MageEntityData>(i);
+      auto& renderableData = Get<RenderableData>(i);
+
+      if (&entity != playerEntityData && interactBox.Contains(renderableData.center()))
+      {
+         interactionId.emplace(i);
+      }
+
+      renderableData.UpdateFrom(entity);
+   }
+
+   return interactionId;
 }
 
-const std::optional<uint16_t> MapControl::getPlayerInteraction(RenderableData* const playerRenderableData, MageEntityData* playerEntityData)
+EntityRect MapControl::getInteractBox() const
 {
-   static const auto interactLength = 32;
-   auto interactBox = playerRenderableData->hitBox;
-   std::optional<uint16_t> interactionId = std::nullopt;
+   const auto playerRenderableData = getPlayerRenderableData();
+   const auto playerEntityData = getPlayerEntityData();
+   static const auto interactLength = (playerRenderableData->hitBox.h + playerRenderableData->hitBox.w) / 2;
+   auto interactBox = EntityRect{ {uint16_t(playerRenderableData->hitBox.origin.x - playerRenderableData->hitBox.w/2), playerRenderableData->hitBox.origin.y}, uint16_t(playerRenderableData->hitBox.w * 2), uint16_t(playerRenderableData->hitBox.h * 2) };
    const auto direction = static_cast<MageEntityAnimationDirection>(playerEntityData->flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK);
    if (direction == MageEntityAnimationDirection::WEST)
    {
@@ -212,21 +234,7 @@ const std::optional<uint16_t> MapControl::getPlayerInteraction(RenderableData* c
    {
       interactBox.origin.y += interactLength;
    }
-
-   for (auto i = 0; i < currentMap->entityCount; i++)
-   {
-      auto& entity = Get<MageEntityData>(i);
-      auto& renderableData = Get<RenderableData>(i);
-
-      if (&entity != playerEntityData && interactBox.Contains(renderableData.center()))
-      {
-         interactionId.emplace(i);
-      }
-
-      renderableData.UpdateFrom(entity);
-   }
-
-   return interactionId;
+   return interactBox;
 }
 
 void MapControl::handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData)
