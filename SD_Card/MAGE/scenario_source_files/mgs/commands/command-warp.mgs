@@ -89,10 +89,12 @@ register-warp {
 	register warp + "beatrice's house" -> warp-ch2-oldcouplehouse;
 	register warp + "beatrices house" -> warp-ch2-oldcouplehouse;
 	register warp + "beatrice house" -> warp-ch2-oldcouplehouse;
+	register warp + "bea" -> warp-ch2-oldcouplehouse;
 
 	register warp + "smith's house" -> warp-ch2-smithfamily;
 	register warp + "smiths house" -> warp-ch2-smithfamily;
 	register warp + "smith house" -> warp-ch2-smithfamily;
+	register warp + "smith" -> warp-ch2-smithfamily;
 }
 
 // MAN PAGE

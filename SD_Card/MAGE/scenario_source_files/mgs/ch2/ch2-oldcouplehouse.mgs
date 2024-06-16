@@ -75,9 +75,14 @@ ch2-cutscene-delmar-reconnect {
 	wait 400ms;
 	fade in camera from #000000 over 300ms;
 	wait 800ms;
+	// a few sentences (back and forth?) where they recommit to enjoying each others' company
 	show dialog {
-		Beatrice "(TODO: cutscene, Reconciliation)"
+		Beatrice "Oh, Delmar, you're back!"
+		Delmar "Ah, that's better!"
+		"I do forgive you, Triss. And I promise to take a breath once in a while."
+		Beatrice "Once in a while is just fine, Del!"
 	}
+	// and then we good
 	turn entity Beatrice toward entity "%PLAYER%";
 	show dialog {
 		Beatrice "Thank you, %PLAYER%!"
@@ -104,12 +109,12 @@ on_walk-ch2-oldcouplehouse-south {
 
 interact-ch2-delmar {
 	show dialog {
-		SELF "[TODO]"
+		SELF "...."
 	}
 }
 interact-ch2-beatrice {
 	copy face-player;
-	if (variable ch2-storyflag-round is <= 4) {
+	if (variable ch2-storyflag-round is < 3) {
 		if (flag ch2-beatrice-backstory1 is false) {
 			show dialog {
 				PLAYER "Oh, where's Delmar?"
@@ -131,41 +136,64 @@ interact-ch2-beatrice {
 		turn entity Beatrice toward entity Delmar;
 	} else if (flag ch2-beatrice-backstory2 is false) {
 		show dialog {
-			SELF "(TODO: regret; decided she was partly to blame for not trying to better connect to him)"
-			"I've decided."
+			SELF "I've decided."
 			"Would you please have the shepherd bring my Delmar to me?"
 			"I need to apologize. I need to try. Life is too short."
 			PLAYER "Sure thing, %Beatrice%."
 		}
 		turn player control off;
-		debug!("Fading out")
 		fade out camera to #000000 over 300ms;
-		debug!("Set flag")
 		set flag ch2-delmar-in-house to true;
 		// undo yeet
-		debug!("Restoring Delmar")
 		teleport entity Delmar to geometry delmar-point;
 		set entity Delmar on_look to look-ch2-delmar;
 		set entity Delmar on_interact to interact-ch2-delmar;
 		set entity Delmar name to "Delmar";
 		// other state
-		debug!("Teleporting Player etc")
 		teleport entity "%PLAYER%" to geometry cutscene;
 		turn entity "%PLAYER%" north;
 		turn entity Beatrice toward entity Delmar;
 		turn entity Delmar toward entity Beatrice;
-		debug!("Waiting 400ms")
 		wait 400ms;
-		debug!("Fading in")
 		fade in camera from #000000 over 300ms;
-		debug!("Fade in finished!!!!")
-		turn player control on;
 		// heartfelt convo
-		debug!("Waiting 500ms")
 		wait 500ms;
 		show dialog {
 			SELF "Delmar, I...."
-			"(TODO: heartfelt stuff)"
+		}
+		// couple sentences reminiscing
+		turn entity Beatrice north;
+		show dialog {
+			SELF "I was looking through our old albums. Like the one from that camping trip we had up in Yosemite, remember?" // todo: think of better place name? a pun?
+		}
+		turn entity Beatrice toward entity Delmar;
+		show dialog {
+			SELF "I'd dropped our suitcase down a cliff, but you trekked down through the brambles to fetch it for me."
+			"That was the night we saw that shooting star. Remember, that bright green one?"
+		}
+		// couple sentences contemplating why they drifted apart (complacency?)
+		turn entity Beatrice south;
+		wait 1400ms;
+		show dialog {
+			SELF "When did we drift apart? Is that just something that happened slowly, without us realizing it?"
+			"I used to love hearing your stories. Yes, after you were turned back into a man you were running your mouth nonstop...."
+		}
+		turn entity Beatrice toward entity Delmar;
+		show dialog {
+			// couple sentences apologizing (maybe he can turn around the room as if considering)
+			SELF "...But I missed you dreadfully when you left. I miss you now."
+			"I'm very sorry for treating you the way I did. For having you turned back into a sheep, I mean."
+			"I love you. I miss you. Can you ever forgive me?"
+		}
+		wait 1500ms;
+		turn entity Delmar east;
+		wait 1200ms;
+		turn entity Delmar south;
+		wait 700ms;
+		walk entity Delmar to geometry delmar-walk over 300ms;
+		wait 900ms;
+		show dialog {
+			SELF "Oh, Delmar, thank you!"
 		}
 		turn entity Beatrice toward entity "%PLAYER%";
 		show dialog ch2-beatrice-plea { // referenced below
@@ -174,6 +202,7 @@ interact-ch2-beatrice {
 		set entity Beatrice on_tick to face-player;
 		set entity Delmar on_tick to face-player;
 		set flag ch2-beatrice-backstory2 to true;
+		turn player control on;
 	} else {
 		show dialog ch2-beatrice-plea;
 	}

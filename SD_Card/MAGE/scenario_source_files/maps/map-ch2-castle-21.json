@@ -84,6 +84,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -139,7 +144,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484683,
+                 "gid":2147484692,
                  "height":32,
                  "id":36,
                  "name":"Jean-Paul",
@@ -167,7 +172,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":1057,
+                 "gid":1066,
                  "height":32,
                  "id":37,
                  "name":"Frankie",
@@ -527,15 +532,15 @@
         },
     
         {
-         "firstgid":1023,
+         "firstgid":1032,
          "source":"..\/entities\/entity-cockatiel.json"
         }, 
         {
-         "firstgid":1044,
+         "firstgid":1053,
          "source":"..\/entities\/entity-npc01.json"
         }, 
         {
-         "firstgid":1065,
+         "firstgid":1074,
          "source":"..\/entities\/entity-npc05.json"
         }],
  "tilewidth":32,

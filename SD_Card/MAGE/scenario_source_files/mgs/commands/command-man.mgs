@@ -776,15 +776,9 @@ ch2-lambda-person-helvetica {
 		"<c>YOU</>: Tell me about Helvetica."
 		" "
 	}
-	if (flag ch2-seen-room-23 is false) {
-		show serial dialog {
-			"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
-			"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font...."
-		}
-	} else {
-		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
-		}
+	show serial dialog {
+		"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
+		"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font...."
 	}
 	goto ch2-lambda-topic-person-s;
 }
