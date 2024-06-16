@@ -30,7 +30,9 @@ ch2-map-init-hex {
 	) {
 		turn hex control on;
 		turn lights control off;
-		turn light ALL off;
+		if (variable ch2-in-room is 0) {
+			turn light LED_USB off;
+		}
 	} else {
 		turn hex control off;
 		turn hex clipboard off;
