@@ -201,12 +201,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-simonlights"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-simonlights"
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
                         }],
                  "rotation":0,
                  "visible":true,

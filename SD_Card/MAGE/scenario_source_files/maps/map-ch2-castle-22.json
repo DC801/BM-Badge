@@ -127,7 +127,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":1045,
+                 "gid":1054,
                  "height":48,
                  "id":39,
                  "name":"C. K. Watt",
@@ -150,7 +150,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":1036,
+                 "gid":1045,
                  "height":32,
                  "id":41,
                  "name":"Scuzzy",
@@ -170,6 +170,34 @@
                  "width":32,
                  "x":276,
                  "y":252
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":42,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-70,
+                 "y":-66
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -234,7 +262,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":42,
+ "nextobjectid":43,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -290,11 +318,11 @@
         },
     
         {
-         "firstgid":1023,
+         "firstgid":1032,
          "source":"..\/entities\/entity-npc02.json"
         }, 
         {
-         "firstgid":1044,
+         "firstgid":1053,
          "source":"..\/entities\/entity-bigears.json"
         }],
  "tilewidth":32,

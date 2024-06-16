@@ -2,6 +2,7 @@ include!("header.mgs")
 settings for serial dialog {
 	wrap 70
 }
+const!($lightsdefault = ch2-serial-light-manager)
 
 start-hanoi {
 	turn player control off;
@@ -444,7 +445,10 @@ hanoi_unregister {
 }
 
 hanoi_quit {
+	// run in the map's on_tick
 	turn player control on;
+	turn light LED_USB off;
+	set entity Lights on_tick to $lightsdefault;
 	copy hanoi_unregister;
 	if (flag hanoi_won is false) {
 		show serial dialog {
@@ -512,9 +516,15 @@ hanoi_init_game {
 	register "TIPS" -> hanoi_help;
 	register "R" -> hanoi_reset;
 	register "RESET" -> hanoi_reset;
-	register "Q" -> hanoi_quit;
-	register "QUIT" -> hanoi_quit;
+	register "Q" -> hanoi_quit_from_terminal;
+	register "QUIT" -> hanoi_quit_from_terminal;
 	register "WIN" -> hanoi_win;
+	debug!("hanoi_init_game")
+	turn light LED_USB on;
+	set entity Lights on_tick to null_script;
+}
+hanoi_quit_from_terminal {
+	set map on_tick to hanoi_quit;
 }
 hanoi_win {
 	set flag hanoi_won to true;

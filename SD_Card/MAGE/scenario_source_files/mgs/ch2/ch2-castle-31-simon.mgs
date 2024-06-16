@@ -1,4 +1,5 @@
 include!("header.mgs")
+const!($lightsdefault = ch2-serial-light-manager)
 
 /* ---------- LOAD ---------- */
 
@@ -92,7 +93,7 @@ simon-game-start-difference {
 	show dialog {
 		Simon "I'm talkin' about these lights up here, of course!"
 	}
-	set entity Lights on_tick to null_script;
+	set entity Lights on_tick to $lightsdefault;
 	turn light ALL off;
 	show dialog {
 		Simon "A LOW battle is more about quick fingers. It's better for those who prefer to hold their destiny in their own two hands."
@@ -101,9 +102,8 @@ simon-game-start-difference {
 	show dialog {
 		Simon "That means these lights down here, naturally!"
 	}
-	set entity Lights on_tick to null_script;
-	turn light ALL off;
-	turn lights control off;
+	set entity Lights on_tick to $lightsdefault;
+	copy ch2-map-init-hex;
 	goto simon-game-start-q;
 }
 
@@ -208,7 +208,7 @@ simon-game-start {
 			}
 		}
 	}
-	set entity Lights on_tick to null_script;
+	set entity Lights on_tick to $lightsdefault;
 	turn light ALL off;
 	goto simon-enemy-turn-start;
 }
@@ -538,8 +538,8 @@ simon-game-lose {
 	set entity Lights on_tick to screen-lights-lose;
 	set entity "%PLAYER%" on_tick to player-lose;
 	show dialog { Simon emote 3 "Too bad! Better luck next time!" }
-	set entity Lights on_tick to null_script;
-	turn lights control off;
+	set entity Lights on_tick to $lightsdefault;
+	copy ch2-map-init-hex;
 	turn player control on;
 	set entity Keyboard on_tick to null_script;
 	set entity Simon current_animation to 5;
@@ -564,8 +564,8 @@ simon-game-win {
 	play entity Simon animation 2 once
 	set entity Simon current_animation to 4;
 	show dialog { Simon emote 3 "GREAT JOB! Way to go, kid!" }
-	set entity Lights on_tick to null_script;
-	turn lights control off;
+	set entity Lights on_tick to $lightsdefault;
+	copy ch2-map-init-hex;
 	turn player control on;
 	if (flag ch2-simon-won-before is false) {
 		copy simon-game-restore-positions;

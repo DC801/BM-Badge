@@ -121,7 +121,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":960,
+                 "gid":969,
                  "height":48,
                  "id":66,
                  "name":"Gregory",
@@ -130,12 +130,12 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-gregory"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-gregory"
-                        },
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -146,6 +146,34 @@
                  "width":48,
                  "x":157,
                  "y":220
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":67,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-141,
+                 "y":-217
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -473,7 +501,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":67,
+ "nextobjectid":68,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -520,7 +548,7 @@
          "source":"..\/entities\/entity-welder.json"
         }, 
         {
-         "firstgid":957,
+         "firstgid":966,
          "source":"entity-catchef.json"
         }],
  "tilewidth":32,

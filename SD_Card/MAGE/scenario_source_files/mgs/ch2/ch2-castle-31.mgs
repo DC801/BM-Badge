@@ -40,14 +40,6 @@ look-ch2-speaker {
 	}
 }
 
-look-ch2-simonlights {
-	show serial dialog spacer;
-	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look lights (remember to add 'the' for objects)"
-	}
-}
-
 look-ch2-drum {
 	show serial dialog spacer;
 	show serial dialog {
@@ -199,12 +191,12 @@ interact-ch2-simon {
 				"I sort of need one for --"
 			}
 			set entity Simon current_animation to 13;
-			set entity Lights on_tick to camera-angry-shake;
+			set entity Alvin on_tick to camera-angry-shake;
 			show dialog {
 				Simon emote 2 "WHOA WHOA WHOA hey, hands off! I'm not just going to give you my precious Rosetta!"
 				PLAYER "(Rosetta?)"
 			}
-			set entity Lights on_tick to null_script;
+			set entity Alvin on_tick to null_script;
 			set entity Simon current_animation to 0;
 			show dialog {
 				Simon emote 1 "But hey, you know what? I'll give you the chance to prove you deserve this beauty."
@@ -266,14 +258,6 @@ interact-ch2-simon {
 			set flag ch2-simon-repeat-brunhilda-backstory to true;
 		}
 		copy simon-game-launcher;
-	}
-}
-
-interact-ch2-simonlights {
-	show serial dialog spacer;
-	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look lights (remember to add 'the' for objects)"
 	}
 }
 

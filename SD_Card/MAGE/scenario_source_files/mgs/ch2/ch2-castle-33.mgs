@@ -1,4 +1,5 @@
 include!("header.mgs")
+const!($lightsdefault = ch2-serial-light-manager)
 
 /* ---------- LOOK SCRIPTS ---------- */
 
@@ -138,7 +139,7 @@ ch2-interact-gregory-breakyes {
 		SELF "I'll take the mouse proximity detector back then, then."
 	}
 	set flag ch2-mousegame to false;
-	turn lights control off;
+	copy ch2-map-init-hex;
 	show dialog {
 		SELF "Let me know when you want to have another go."
 	}
@@ -258,14 +259,14 @@ ch2-interact-gregory {
 			}
 			turn lights control on;
 			turn light ALL off;
-			set entity Gregory on_tick to screen-lights-flash-bits;
+			set entity Lights on_tick to screen-lights-flash-bits;
 			show dialog {
 				SELF "Yes, these eight lights in a line, here along the bottom. You see?"
 				PLAYER "Um..."
 				SELF "The more lights come on, the closer you are to finding it. Walk around a bit and see for yourself."
 			}
-			turn lights control off;
-			set entity Gregory on_tick to face-player;
+			copy ch2-map-init-hex;
+			set entity Lights on_tick to $lightsdefault;
 			show dialog {
 				SELF "Well, let me know when you want to have a go, anyway."
 			}
@@ -346,7 +347,7 @@ ch2-touch-mouse {
 		turn entity "%PLAYER%" toward entity Gregory;
 		fade in camera from black over 400ms;
 		turn on player control;
-		turn lights control off;
+		copy ch2-map-init-hex;
 		copy script ch2-hide-mouse;
 		copy script ch2-pickup-mouse;
 		show dialog {

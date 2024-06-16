@@ -180,7 +180,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-ramchips"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -340,6 +340,34 @@
                  "width":32,
                  "x":256,
                  "y":206
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":68,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-66,
+                 "y":-94
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -501,7 +529,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-vendingmachine"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -572,7 +600,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-coffee"
-                        },
+                        }, 
                         {
                          "name":"on_look",
                          "type":"string",
@@ -591,7 +619,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":68,
+ "nextobjectid":69,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
