@@ -1,0 +1,14 @@
+{ "columns":20,
+ "image":"tileset-ch2-menu-background.gif",
+ "imageheight":240,
+ "imagewidth":320,
+ "margin":0,
+ "name":"tileset-ch2-menu-background",
+ "spacing":0,
+ "tilecount":300,
+ "tiledversion":"1.9.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.9"
+}
