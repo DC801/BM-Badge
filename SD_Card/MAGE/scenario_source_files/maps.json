@@ -1,6 +1,6 @@
 {
 	"main_menu": {
-		"path": "maps/map-main_menu.json",
+		"path": "maps/map-ch2-menu.json",
 		"on_load": "on_load-main_menu",
 		"on_tick": "on_tick-main_menu",
 		"disable_warn-on_look": true

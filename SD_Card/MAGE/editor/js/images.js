@@ -171,8 +171,10 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 						rgba.a,
 					);
 					var paletteIndex = getPaletteIndexForColor(color);
-					if (paletteIndex > 255) {
-						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 256.`);
+					// Guess what. The index of the 255th item in an array length 255 is 254.
+					// We may only have 255 colors in images, not the full 256 of a gif palette.
+					if (paletteIndex > 254) {
+						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 255.`);
 					}
 					// if (paletteIndex > 255) {
 					// 	wtfLog.push({
