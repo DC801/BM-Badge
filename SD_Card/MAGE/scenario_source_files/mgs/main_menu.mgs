@@ -97,6 +97,7 @@ debug-bob3 {
 	load map ch2-bobsclub-basement;
 }
 debug-king {
+	copy debug-set-flags-to-round3;
 	set flag ch2-cutseen-castle13 to true;
 	set flag ch2-cutseen-castle14 to true;
 	set flag ch2-king-rescued to true;
