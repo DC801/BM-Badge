@@ -5,6 +5,9 @@ settings for dialog {
 		entity Aurelius // if this doesn't work, change this to `name` instead of `entity`
 		portrait goldfish
 	}
+	label GIBSON {
+		entity "King Gibson"
+	}
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -51,9 +54,22 @@ on_load-ch2-castle-13 {
 	}
 
 	// room unique stuff
-	if (debug mode is on) {
-		register skip -> ch2-skip-13
-		debug!("<c>SKIP</>: skip this cutscene")
+
+	if (warp state is "Ch2 King Returns") {
+		set entity door on_tick to yeet;
+		teleport entity Templeton to geometry templeton-sit;
+		teleport entity "%PLAYER%" to geometry camera-spot2;
+		// TODO more
+	} else if (flag ch2-king-rescued is true) {
+		set entity door on_tick to yeet;
+		teleport entity "King Gibson" to geometry king-examine1;
+		teleport entity Sebastian to geometry end-sebastian;
+		teleport entity Templeton to geometry end-templeton1;
+		teleport entity Aurelius to geometry end-fish;
+		set entity Templeton on_tick to templeton-catalog-search;
+		set entity "King Gibson" on_tick to king-debris-ponder;
+	} else {
+		set entity "King Gibson" on_tick to yeet;
 	}
 
 	if (
@@ -61,20 +77,6 @@ on_load-ch2-castle-13 {
 		|| flag ch2-carrying-goldfish is true
 	) {
 		copy script ch2-hide-goldfish;
-	}
-	
-	if (
-		flag ch2-king-rescued is true
-		|| warp state is "Ch2 King Returns"
-	) {
-		teleport entity Templeton to geometry templeton-sit;
-		set entity door on_tick to yeet;
-	} else {
-		set entity "King Gibson" on_tick to yeet;
-	}
-
-	if (warp state is "Ch2 King Returns") {
-		teleport entity "%PLAYER%" to geometry camera-spot;
 	}
 
 	copy ch2-map-init;
@@ -128,6 +130,10 @@ ch2-lizard-withdraw {
 }
 const!($fadeTime = 600ms)
 ch2-cutscene-castle12 {
+	if (debug mode is on) {
+		register skip -> ch2-skip-13
+		debug!("<c>SKIP</>: skip this cutscene")
+	}
 	turn player control off;
 	wait 300ms;
 	// some kind of arguing
@@ -168,7 +174,7 @@ ch2-cutscene-castle12 {
 	wait 200ms;
 	show dialog {
 		Sebastian "Enough!"
-		"Clearly he's abandoned us. Thus, we must take action now, before anything else happens."
+		"Clearly he's abandoned us. Thus, we must take action now, before anything worse happens."
 	}
 	walk entity Sebastian to geometry lizard1 over 400ms;
 	show dialog {
@@ -238,14 +244,15 @@ ch2-cutscene-castle12 {
 		}
 	}
 	show dialog {
-		Aurelius "Very good."
-		"If I might ask something of you, %PLAYER%...."
+		Aurelius "Very good. And that device -- I was under the impression it was inoperative."
+		PLAYER "Mostly. I'm trying to fix the castle mainframe, which should get it working a lot better."
+		Aurelius "Then I'll let you have at it. But first, if I might ask something of you, %PLAYER%...."
 		"We have not seen or heard from King Gibson since last night. You see, prior to that, there was --"
 		Templeton "We all had an argument."
-		Sebastian "Balderdash! He was overreacting, and I only --"
+		Sebastian "Balderdash. He was overreacting, and I only --"
 		Aurelius "Nevertheless, I fear he is trapped in his bedroom, just to the north of us. He's not answering the intercom."
 		Templeton "He could be hurt!"
-		Sebastian "Bah! He's just ignoring us. He could've answered us if he wanted to talk to us! Or he'd've unlocked the door and come out!"
+		Sebastian "Bah! He's ignoring us. He could've answered us if he wanted to talk to us. Or he'd've unlocked the door and come out."
 		Aurelius "If you would be so kind as to check up on him, please?"
 		PLAYER "Sure."
 	}
@@ -253,13 +260,105 @@ ch2-cutscene-castle12 {
 	turn player control on;
 }
 
+// He can bench press 300lbs
 ch2-cutscene-kingreturns {
+	turn entity "%PLAYER%" toward entity "King Gibson";
+	turn entity Templeton toward entity "King Gibson";
+	turn entity Sebastian toward entity "King Gibson";
 	fade in camera from black over 600ms;
+	// King walks in
+	show dialog { name "" "(TODO: choreography)"}
+	show dialog { Templeton "Your majesty!" }
+	show dialog { Sebastian "!!" }
+	// They all gather
 	show dialog {
-		entity "King Gibson" "(TODO: cutscene goes here)"
+		Aurelius "You are well!"
 	}
+	turn entity "King Gibson" toward entity Aurelius;
+	show dialog {
+		GIBSON "Of course. You see, the intercom and doorlocks were broken, and the door failed shut."
+		"I regret...."
+	}
+	rotate entity "King Gibson" 1;
+	// turns in shame
+	show dialog {
+		GIBSON emote 3  "I regret the things I said yesterday. And... I regret I assumed you had locked me in there. I should have trusted you better."
+		Templeton "Oh, your majesty! I'm just glad you --"
+	}
+	turn entity "King Gibson" toward entity Sebastian;
+	// King perks up
+	show dialog {
+		Sebastian "Never mind any of that! This is an emergency!"
+		"Can we finally begin some damn rescue operations, or do we need to form a committee to draft a proposal and bring it to the populace to a vote?"
+		GIBSON "What have you tried so far?"
+	}
+	turn entity "King Gibson" toward entity Aurelius;
+	show dialog {
+		Aurelius "Neither Templeton nor I have the leverage to lift the debris. And Sebastian's telekinesis spell doesn't have enough power on its own."
+	}
+	turn entity "King Gibson" toward entity Sebastian;
+	show dialog {
+		Sebastian "I won't burn out my mana trying over and over again. It's obvious it won't work."
+	}
+	turn entity "King Gibson" south;
+	show dialog {
+		GIBSON "Well, maybe I can shift the debris."
+	}
+	fade out camera to black over $fadeTime; // cheaty :P
+	teleport entity "%PLAYER%" to geometry end-player;
+	teleport entity "King Gibson" to geometry end-king;
+	teleport entity Sebastian to geometry end-sebastian;
+	teleport entity Templeton to geometry end-templeton;
+	teleport entity Aurelius to geometry end-fish;
+	turn entity "%PLAYER%" toward entity "King Gibson";
+	teleport camera to geometry camera-spot3;
+	fade in camera from black over $fadeTime;
+	show dialog {
+		GIBSON "I can bench press three hundred pounds. I might be able to shift this."
+		Sebastian "At the speed my mana was draining, it's heavier than that. You'll only wear yourself out."
+		"But at least we're focused on the real problem now. Finally!"
+		Templeton "This debris wasn't going anywhere, and the king might have been bleeding to death!"
+		Aurelius "What's done is done. Focus."
+		"Neither the king nor Sebastian can move the debris alone, but what about together?"
+		Templeton "Oh, yes! But what if you lighten the load with telekinesis, Sebastian?"
+		Sebastian "Perhaps, but...."
+		"You there, stranger. The rest of the castle is damaged?"
+		PLAYER "Yes. Most doors are crumpled exactly like this."
+	}
+	// he turns to the side
+	show dialog {
+		Sebastian "Then I must pace myself. The mana required is the square of the weight being manipulated.... Ah, but if I don't have to introduce lateral motion myself --"
+		Aurelius "Yes, a gravitation spell."
+		Sebastian "That's much cheaper. But... blast, I need to check a few numbers in my physics spellbook. Templeton, please tell me you've eaten a copy?"
+	}
+	walk entity Templeton to geometry end-templeton1 over 200ms;
+	show dialog {
+		Templeton "I-I think so. Let me check. I've got it filed in here somewhere."
+	}
+	set entity Templeton on_tick to templeton-catalog-search;
+	show dialog {
+		GIBSON "Now we're getting somewhere."
+	}
+	// King begins to fuss about the debris
+	set entity "King Gibson" on_tick to king-walk-to-debris;
+	show dialog {
+		GIBSON "I can at least see if there are any pieces of this I can extract on my own."
+		Aurelius "%PLAYER%, we're making sufficient progress here. Don't let us keep you."
+		"Once the mainframe is repaired, we can use sysadmin tools to clear all the debris at once."
+		PLAYER "Right, of course."
+	}
+	// King pauses
+	show dialog {
+		GIBSON "Good luck. And thank you. Truly."
+	}
+	// King resumes
 	set flag ch2-king-rescued to true;
+	pan camera to entity "%PLAYER%" over 700ms;
 	turn player control on;
+}
+king-walk-to-debris {
+	walk entity "%SELF%" to geometry king-examine1 over 1200ms;
+	goto king-debris-ponder;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -315,9 +414,15 @@ ch2-touch-goldfish {
 		set flag ch2-king-report to true;
 	} else {
 		show dialog {
-			Aurelius "TODO."
+			Aurelius "Once the mainframe is repaired, we can use sysadmin tools to clear all the debris at once. Don't let us keep you."
 		}
 		if (variable ch2-storyflag-round is >= 3) {
+			show dialog {
+				PLAYER "Actually, I could use your help to fix it."
+				Aurelius "Of course. Anything."
+				PLAYER "I sort of need to borrow... you."
+				name "" "TODO: the rest of this convo, with choreography"
+			}
 			show dialog {
 				name "" "(Pick up the goldfish?)"
 				> "Yes" : ch2-touch-goldfish-yes
@@ -356,7 +461,6 @@ ch2-king-unharmed {
 		turn entity "%PLAYER%" toward entity Aurelius;
 		show dialog {
 			Aurelius "I see. Thank you."
-			Sebastian "...."
 		}
 	}
 	show dialog {
@@ -374,14 +478,21 @@ interact-ch2-sebastian {
 		copy ch2-king-unharmed;
 		if (flag ch2-king-report is true) {
 			show dialog {
-				SELF "Take your time, kid."
+				SELF "Forget the king. He's on his own."
 			}
 		}
 		set flag ch2-king-report to true;
 	} else {
 		show dialog {
-			SELF "TODO FIX THIS\nUnder the sea...\nI mean uhh...\nProgram in C..."
+			SELF "%Templeton%, I promise not to yell at you for eating my spellbooks again if you can produce the right page in the next 5 minutes."
 		}
+		set entity Templeton on_tick to null_script;
+		turn entity Templeton toward entity Sebastian;
+		// pauses fussing
+		show dialog {
+			Templeton "Darn it, you made me forget the filing number! Now I'll have to go through the card catalog all over again!"
+		}
+		set entity Templeton on_tick to templeton-catalog-search;
 	}
 }
 
@@ -400,36 +511,89 @@ interact-ch2-templeton {
 		}
 		set flag ch2-king-report to true;
 	} else {
+		copy interrupt-walk;
 		show dialog {
 			SELF "Thank you for rescuing the king. We were all very worried about him."
+			Sebastian "%Templeton%... please don't forget that you're trying to find my physics spellbook. The gravitation spell, please?"
+		}
+		copy resume-walk;
+		show dialog {
+			SELF "Yes, yes, of course."
 		}
 	}
 }
 
-interact-ch2-gibson-throneroom {
+interrupt-templeton-walk {
+	// todo: functions plz :/
+	copy entity Templeton current_animation into variable captured_animation;
+	set entity Templeton current_animation to 0;
+	pause entity Templeton on_tick;
+	if (entity Templeton direction is north) {
+		mutate tempvar2 = 0;
+	} else if (entity Templeton direction is east) {
+		mutate tempvar2 = 1;
+	} else if (entity Templeton direction is south) {
+		mutate tempvar2 = 2;
+	} else if (entity Templeton direction is west) {
+		mutate tempvar2 = 3;
+	}
 	copy face-player;
+}
+resume-templeton-walk {
+	copy entity Templeton current_animation from variable captured_animation;
+	unpause entity Templeton on_tick;
+	if (variable tempvar2 is 0) {
+		turn entity Templeton north;
+	} else if (variable tempvar2 is 1) {
+		turn entity Templeton east;
+	} else if (variable tempvar2 is 2) {
+		turn entity Templeton south;
+	} else if (variable tempvar2 is 3) {
+		turn entity Templeton west;
+	}
+}
+templeton-catalog-search {
+	copy tick-rand-mini; // from bob's club basement
+	walk entity Templeton to geometry end-templeton2 over 200ms;
+	copy tick-rand-mini; // from bob's club basement
+	walk entity Templeton to geometry end-templeton1 over 200ms;
+	copy tick-rand-mini; // from bob's club basement
+}
+king-debris-ponder {
+	copy tick-rand-mini; // from bob's club basement
+	walk entity "%SELF%" to geometry king-examine2 over 700ms;
+	turn entity "%SELF%" south;
+	copy tick-rand-broad; // from bob's club basement
+	wait 400ms;
+	walk entity "%SELF%" to geometry king-examine1 over 700ms;
+	turn entity "%SELF%" south;
+	copy tick-rand-broad; // from bob's club basement
+}
+
+interact-ch2-gibson-throneroom {
+	copy interrupt-walk;
 	if (variable ch2-storyflag-round is < 3) {
 		show dialog {
-			entity "King Gibson" "My staff and I are reconciled, thanks to you."
+			GIBSON "My staff and I are reconciled, thanks to you."
 			"I am in your debt."
 		}
 	} else if (flag ch2-clock-permission is false) {
 		show dialog {
 			PLAYER "So, your majesty, about the clock in your bedroom...."
-			entity "King Gibson" "What? What's this about my heirloom grandfather clock?"
-			PLAYER "I sort of need it to --"
-			entity "King Gibson" "Fine then. Have it, if you want it."
+			GIBSON "What? What's this about my heirloom grandfather clock?"
+			PLAYER "I sort of want to borrow it to --"
+			GIBSON "Fine then. Have it, if you want it."
 			PLAYER "Really? Just like that?"
-			entity "King Gibson" "It's just an object -- a thing. Replaceable."
-			"You reunited me with my advisors -- my friends. That's worth far more to me than a piece of furniture."
+			GIBSON "It's just an object. A thing. Replaceable."
+			"You reunited me with my advisors. My friends. That's worth far more to me than a piece of furniture."
 			"Take it, if you feel you can make good use of it."
 			PLAYER "Thank you very much!"
 		}
 		set flag ch2-clock-permission to true;
 	} else {
 		show dialog {
-			entity "King Gibson" "My staff and I are reconciled. You have my thanks."
+			GIBSON "My staff and I are reconciled. You have my thanks."
 		}
 	}
-	turn entity "%SELF%" south;
+	copy resume-walk;
 }

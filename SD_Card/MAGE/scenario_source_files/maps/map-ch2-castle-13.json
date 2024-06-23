@@ -38,9 +38,9 @@
             0, 555, 556, 0, 0, 2147484046, 2147484045, 0, 0, 2147484204, 2147484203, 0,
             0, 0, 0, 0, 0, 2147484046, 2147484045, 0, 0, 0, 0, 0,
             0, 369, 0, 0, 0, 2147484046, 398, 0, 0, 403, 2147484017, 0,
-            0, 539, 540, 0, 0, 2147484046, 398, 0, 0, 2147484188, 2147484187, 0,
+            0, 539, 540, 0, 0, 2147484046, 398, 0, 2147484035, 2147484188, 2147484187, 0,
             0, 555, 556, 0, 0, 2147484046, 2147484045, 0, 0, 2147484204, 2147484203, 0,
-            0, 0, 0, 0, 0, 2147484046, 398, 0, 2147484035, 0, 0, 0,
+            0, 0, 0, 0, 0, 2147484046, 398, 0, 0, 0, 0, 0,
             0, 369, 0, 387, 0, 397, 2147484045, 0, 0, 0, 2147484017, 0,
             0, 0, 2147484051, 0, 0, 397, 398, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -293,6 +293,34 @@
                  "width":32,
                  "x":-99,
                  "y":-55
+                }, 
+                {
+                 "class":"",
+                 "gid":1001,
+                 "height":40,
+                 "id":64,
+                 "name":"King Gibson",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-gibson-throneroom"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-gibson"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":172,
+                 "y":216
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -481,35 +509,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":1001,
-                 "height":40,
-                 "id":64,
-                 "name":"King Gibson",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-gibson-throneroom"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-gibson"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":40,
-                 "x":172,
-                 "y":216
-                },
-            
-                {
-                 "class":"",
                  "height":0,
                  "id":65,
                  "name":"templeton-sit",
@@ -519,7 +518,8 @@
                  "width":0,
                  "x":144,
                  "y":203
-                }, 
+                },
+            
                 {
                  "class":"",
                  "height":34,
@@ -530,6 +530,138 @@
                  "width":32,
                  "x":176,
                  "y":63
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":74,
+                 "name":"camera-spot2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":149,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":75,
+                 "name":"end-sebastian",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":251,
+                 "y":435
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":76,
+                 "name":"end-king",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":181,
+                 "y":389
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":77,
+                 "name":"end-templeton",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":231,
+                 "y":379
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":78,
+                 "name":"end-player",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":136,
+                 "y":406
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":79,
+                 "name":"king-examine1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":182,
+                 "y":419
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":80,
+                 "name":"camera-spot3",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":177,
+                 "y":440
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":81,
+                 "name":"king-examine2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":205,
+                 "y":419
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":82,
+                 "name":"end-templeton1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":231,
+                 "y":386
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":83,
+                 "name":"end-templeton2",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":238,
+                 "y":386
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":84,
+                 "name":"end-fish",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":280,
+                 "y":398
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -538,7 +670,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":73,
+ "nextobjectid":85,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
