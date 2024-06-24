@@ -113,7 +113,7 @@ public:
 
    inline void DrawRectWorldCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
    {
-      drawRect(EntityRect{ {uint16_t(rect.origin.x - camera.position.y), uint16_t(rect.origin.y - camera.position.y)}, rect.w, rect.h }, color);
+      drawRect(EntityRect{ rect.origin - camera.position, rect.w, rect.h }, color);
    }
 
    inline void DrawRectScreenCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
@@ -134,8 +134,8 @@ public:
    void clearScreen(uint16_t color);
    inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
    {
-      if (x < 0 || x >= DrawWidth
-         || y < 0 || y >= DrawHeight
+      if (x >= DrawWidth
+         || y >= DrawHeight
          || color == TRANSPARENCY_COLOR)
       {
          return;
@@ -196,8 +196,6 @@ private:
    std::array<uint16_t, FramebufferSize> frame{};
 #endif
    bool drawGeometry{ false };
-
-   int minXChange{ DrawWidth }, maxXChange{ -1 }, minYChange{ DrawHeight }, maxYChange{ -1 };
 
    //variables used for screen fading
    float fadeFraction{ 0.0f };

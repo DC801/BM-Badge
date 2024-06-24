@@ -26,11 +26,6 @@ static inline volatile bool m_stop = false;
 
 void FrameBuffer::clearScreen(uint16_t color)
 {
-   minXChange = 0;
-   maxXChange = DrawWidth - 1;
-   minYChange = 0;
-   maxYChange = DrawHeight - 1;
-
    frame.fill(color);
 }
 
@@ -69,11 +64,6 @@ void FrameBuffer::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, u
       std::swap(x1, x2);
       std::swap(y1, y2);
    }
-
-   minXChange = std::min<int>(minXChange, x1);
-   maxXChange = std::max<int>(maxXChange, x2);
-   minYChange = std::min<int>(minYChange, y1);
-   maxYChange = std::max<int>(maxYChange, y2);
 
    // optimization for vertical lines
    if (x1 == x2)
@@ -141,11 +131,6 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
    int8_t xOffset = glyph->xOffset;
    int8_t yOffset = glyph->yOffset;
    uint8_t xx, yy, bits = 0, bit = 0;
-
-   minXChange = std::min<int>(minXChange, x);
-   maxXChange = std::max<int>(maxXChange, x + w);
-   minYChange = std::min<int>(minYChange, y);
-   maxYChange = std::max<int>(maxYChange, y + h);
 
    // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
    // THIS IS ON PURPOSE AND BY DESIGN. 
@@ -256,11 +241,15 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
       iteratorY = -1;
    }
 
-   //if (flags & RENDER_FLAGS_IS_GLITCHED)
-   //{
-   //    target.origin.screenX += target.w * 0.125;
-   //    target.w *= 0.75;
-   //}
+   if (flags & RENDER_FLAGS_IS_GLITCHED)
+   {
+      xSourceMin = tileset->TileWidth - 1;
+      xSourceMax = -1;
+      iteratorX = -2;
+      ySourceMin = tileset->TileHeight - 1;
+      ySourceMax = -1;
+      iteratorY = -2;
+   }
 
    // offset to the start address of the tile
    const auto tiles = ROM()->GetReadPointerByIndex<MagePixel>(tilesetId);
@@ -339,10 +328,9 @@ void FrameBuffer::blt()
    // }
 
 #ifdef DC801_EMBEDDED 
-      // ili9341_set_addr(minXChange, minYChange, maxXChange, maxYChange);
    ili9341_set_addr(0, 0, DrawWidth - 1, DrawHeight - 1);
 
-   const auto bytecount = 2 * FramebufferSize;// (maxXChange - minXChange + 1 + maxYChange - minYChange + 1);
+   const auto bytecount = 2 * FramebufferSize;
    ili9341_push_colors((uint8_t*)frame.data(), bytecount);
 #else
    windowFrame->DrawLEDStates();

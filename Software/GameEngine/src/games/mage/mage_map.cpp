@@ -100,8 +100,8 @@ void MapControl::DrawEntities() const
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
    const auto sortByY = [&](size_t i1, size_t i2) {
       return Get<MageEntityData>(i1).targetPosition.y < Get<MageEntityData>(i2).targetPosition.y;
-      };
-   std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
+   };
+    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
    //now that we've got a sorted array with the lowest y values first,
    //iterate through it and draw the entities one by one:
@@ -135,11 +135,11 @@ void MapControl::DrawLayer(uint8_t layer) const
 
 
    // identify start and stop tiles to draw
-   auto startTileX = std::max(0, (frameBuffer->camera.position.x - DrawWidth) / currentMap->tileWidth);
-   auto startTileY = std::max(0, (frameBuffer->camera.position.y - DrawHeight) / currentMap->tileHeight);
+   const auto startTileX = std::max(0, (frameBuffer->camera.position.x - DrawWidth) / currentMap->tileWidth);
+   const auto startTileY = std::max(0, (frameBuffer->camera.position.y - DrawHeight) / currentMap->tileHeight);
 
-   auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
-   auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
+   const auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
+   const auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
 
    for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
    {
@@ -178,9 +178,7 @@ void MapControl::Draw() const
    }
 
    // draw any geometry or overlay
-
-   const auto interactBox = getInteractBox();
-   frameBuffer->DrawRectWorldCoords(interactBox);
+   frameBuffer->DrawRectWorldCoords(getInteractBox());
 }
 
 std::optional<uint16_t> MapControl::Update()
@@ -199,7 +197,7 @@ std::optional<uint16_t> MapControl::Update()
       auto& entity = Get<MageEntityData>(i);
       auto& renderableData = Get<RenderableData>(i);
 
-      if (&entity != playerEntityData && interactBox.Contains(renderableData.center()))
+      if (&entity != playerEntityData && interactBox.Overlaps(renderableData.hitBox))
       {
          interactionId.emplace(i);
       }
@@ -213,28 +211,26 @@ std::optional<uint16_t> MapControl::Update()
 EntityRect MapControl::getInteractBox() const
 {
    const auto playerRenderableData = getPlayerRenderableData();
-   const auto playerEntityData = getPlayerEntityData();
-   static const auto interactLength = (playerRenderableData->hitBox.h + playerRenderableData->hitBox.w) / 2;
-   auto interactBox = EntityRect{ {uint16_t(playerRenderableData->hitBox.origin.x - playerRenderableData->hitBox.w/2), playerRenderableData->hitBox.origin.y}, uint16_t(playerRenderableData->hitBox.w * 2), uint16_t(playerRenderableData->hitBox.h * 2) };
-   const auto direction = static_cast<MageEntityAnimationDirection>(playerEntityData->flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK);
-   if (direction == MageEntityAnimationDirection::WEST)
-   {
-      interactBox.origin.x -= interactLength;
-   }
-   else if (direction == MageEntityAnimationDirection::EAST)
-   {
-      interactBox.origin.x += interactLength;
-   }
-
-   if (direction == MageEntityAnimationDirection::NORTH)
-   {
-      interactBox.origin.y -= interactLength;
-   }
-   else if (direction == MageEntityAnimationDirection::SOUTH)
-   {
-      interactBox.origin.y += interactLength;
-   }
-   return interactBox;
+   static const uint16_t interactLength = playerRenderableData->hitBox.h / 2 + playerRenderableData->hitBox.w / 2;
+   const auto direction = static_cast<MageEntityAnimationDirection>(getPlayerEntityData()->flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK);
+   return EntityRect{
+         {
+            uint16_t{   
+               playerRenderableData->hitBox.origin.x 
+               - playerRenderableData->hitBox.w / 2
+               - (direction == MageEntityAnimationDirection::WEST ? interactLength : 0u)
+               + (direction == MageEntityAnimationDirection::EAST ? interactLength : 0u)
+            },
+            uint16_t{
+               playerRenderableData->hitBox.origin.y 
+               //- playerRenderableData->hitBox.h / 2
+               - (direction == MageEntityAnimationDirection::NORTH ? interactLength : 0u)
+               + (direction == MageEntityAnimationDirection::SOUTH ? interactLength : 0u)
+            }
+      }, 
+      uint16_t(playerRenderableData->hitBox.w * 2), 
+      uint16_t(playerRenderableData->hitBox.h * 2) 
+   };
 }
 
 void MapControl::handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData)
