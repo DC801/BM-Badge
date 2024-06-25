@@ -3,12 +3,6 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#ifdef DC801_EMBEDDED
-
-#include "nrfx_i2s.h"
 
 // NAU8810 Register map
 #define NAU8810_REG_RESET				0x00
@@ -283,6 +277,12 @@ extern "C" {
 #define NAU8810_AUXMOUT_SFT				2
 #define NAU8810_MOUTMXMT_SFT			6
 
+
+#ifdef DC801_EMBEDDED
+
+#include "nrfx_i2s.h"
+
+
 void nau8810_init(nrfx_i2s_data_handler_t handler);
 
 void nau8810_start(const uint32_t *data, uint16_t length);
@@ -291,8 +291,6 @@ void nau8810_stop(void);
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

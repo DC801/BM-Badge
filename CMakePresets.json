@@ -1,0 +1,123 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "msvc",
+      "hidden": true,
+      "architecture": "win32",
+      "binaryDir": "${sourceDir}/build/",
+      "generator": "Visual Studio 17 2022",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-msvc_win32.cmake",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "EMBEDDED_BUILD": "OFF",
+        "VS_DEBUGGER_WORKING_DIRECTORY": "$<TARGET_FILE_DIR:bm_badge>"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      }
+    },
+    {
+      "name": "gcc",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-gcc_x86.cmake",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "hardware",
+      "hidden": true,
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build_hw",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-gcc_arm.cmake",
+      "cacheVariables": {
+        "SDK_ROOT": "${sourceDir}/nordic-sdk17.1.0",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
+        "CMAKE_C_COMPILER": "arm-none-eabi-gcc",
+        "CMAKE_CXX_COMPILER": "arm-none-eabi-g++",
+        "EMBEDDED_BUILD": "ON"
+      }
+    },
+    {
+      "name": "msvc-debug",
+      "displayName": "Windows 32-bit config",
+      "description": "Build using Visual Studio generator",
+      "inherits": [
+        "debug",
+        "msvc"
+      ],
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Windows" ]
+        }
+      }
+    },
+    {
+      "name": "gcc-debug",
+      "displayName": "Linux 32-bit config",
+      "description": "Build using Unix Makefiles generator",
+      "inherits": [
+        "debug",
+        "gcc"
+      ],
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ]
+        },
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
+    },
+    {
+      "name": "hardware-debug",
+      "displayName": "Hardware debug config",
+      "description": "Build ARM target using Unix Makefiles generator",
+      "inherits": [
+        "debug",
+        "hardware"
+      ],
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ]
+        },
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
+    }
+  ]
+}

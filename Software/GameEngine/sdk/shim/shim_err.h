@@ -1,19 +1,17 @@
 #ifndef SHIM_ERR_H
 #define SHIM_ERR_H
 
+#ifdef DC801_EMBEDDED
+#include <app_error.h>
+#include <nrfx.h>
+#else
 
 #include <stdint.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <algorithm>
 
 #define UNUSED_VARIABLE(X)     ((void)(X))
 #define UNUSED_PARAMETER(X)    UNUSED_VARIABLE(X)
 #define UNUSED_RETURN_VALUE(X) UNUSED_VARIABLE(X)
-
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) < (b) ? (b) : (a))
 
 typedef enum {
     NRF_SUCCESS                      = (0x00), // Successful command
@@ -49,7 +47,7 @@ typedef enum {
     NRFX_ERROR_TIMEOUT               = (0x0BAD0007), // Operation timed out.
     NRFX_ERROR_FORBIDDEN             = (0x0BAD0008), // Operation is forbidden.
     NRFX_ERROR_NULL                  = (0x0BAD0009), // Null pointer.
-    NRFX_ERROR_INVALID_ADDR          = (0x0BAD000A), // Bad memory address.
+    NRFX_ERROR_INVALID_ADDR          = (0x0BAD000A), // Bad memory offset.
     NRFX_ERROR_BUSY                  = (0x0BAD000B), // Busy.
     NRFX_ERROR_ALREADY_INITIALIZED   = (0x0BAD000C), // Module already initialized.
 
@@ -71,8 +69,7 @@ void app_error_handler(ret_code_t error_code);
         }                                           \
     }
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif
+
+#endif //DC801_EMBEDDED
+#endif //SHIM_ERR_H

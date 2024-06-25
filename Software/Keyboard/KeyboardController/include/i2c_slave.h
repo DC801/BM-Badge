@@ -30,9 +30,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef void(I2C_0_callback)(void);
 
@@ -70,8 +68,6 @@ void I2C_0_set_bus_error_callback(I2C_0_callback handler);
 
 void I2C_0_slave_init(void);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* I2C_SLAVE_H */

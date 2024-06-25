@@ -2,45 +2,49 @@
 #define SOFTWARE_MAGE_COLOR_PALETTE_H
 
 #include <memory>
+#include <span>
+#include "mage_rom.h"
+#include "utility.h"
+
+class FrameBuffer;
+class MageGameEngine;
+
 #define COLOR_PALETTE_INTEGRITY_STRING_LENGTH 2048
-#define COLOR_PALETTE_NAME_LENGTH 32
+#define COLOR_PALETTE_NAME_LENGTH 31
 #define COLOR_PALETTE_NAME_SIZE COLOR_PALETTE_NAME_LENGTH + 1
+
+//this is the color that will appear transparent when drawing tiles:
+#define TRANSPARENCY_COLOR	0x2000
+
+
+struct Color_565
+{
+   Color_565(uint16_t color) noexcept
+      : r((color & 0b0000000011111000) >> 3),
+      g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
+      b((color & 0b0001111100000000) >> 8),
+      a((color & 0b0010000000000000) >> 13)
+   {}
+   operator uint16_t() { return r << 11 | g << 6 | a << 5| b ; }
+
+   uint8_t r : 5;
+   uint8_t g : 5;
+   uint8_t a : 1;
+   uint8_t b : 5;
+};
 
 class MageColorPalette
 {
 public:
-	#ifdef DC801_DESKTOP
-	char name[COLOR_PALETTE_NAME_SIZE];
-	char colorIntegrityString[COLOR_PALETTE_INTEGRITY_STRING_LENGTH];
-	#endif //DC801_DESKTOP
-	uint8_t colorCount;
-	std::unique_ptr<uint16_t[]> colors;
+   uint16_t get(uint8_t idx) const
+   {
+      const uint16_t* colorData{ (const uint16_t*)(&colorCount + 2) };
+      return colorData[idx % colorCount];
+   }
 
-	MageColorPalette() :
-		#ifdef DC801_DESKTOP
-		name {0},
-		colorIntegrityString {0},
-		#endif //DC801_DESKTOP
-		colorCount {0},
-		colors{std::make_unique<uint16_t[]>(colorCount)}
-	{};
-
-	MageColorPalette(uint32_t address);
-
-	MageColorPalette(
-		MageColorPalette *sourcePalette,
-		uint16_t transparentColor,
-		uint16_t fadeColor,
-		float fadeFraction
-	);
-
-	uint32_t size() const;
-
-	#ifdef DC801_DESKTOP
-	void generatePaletteIntegrityString(char *targetString);
-
-	void verifyColors(const char* errorTriggerDescription);
-	#endif //DC801_DESKTOP
+private:
+   char name[COLOR_PALETTE_NAME_SIZE]{ 0 };
+   uint8_t colorCount{ 0 };
 };
 
 #endif //SOFTWARE_MAGE_COLOR_PALETTE_H

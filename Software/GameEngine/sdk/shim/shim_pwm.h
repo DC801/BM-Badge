@@ -1,14 +1,15 @@
 #ifndef SHIM_PWM_H
 #define SHIM_PWM_H
 
+
+#ifdef DC801_EMBEDDED
+#include <app_pwm.h>
+#include <nrfx_pwm.h>
+#else
+
 #include <stdint.h>
 #include "shim_err.h"
 #include "shim_timer.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 typedef enum
 {
@@ -117,8 +118,6 @@ ret_code_t app_pwm_init(app_pwm_t const * const p_instance, app_pwm_config_t con
 void app_pwm_enable(app_pwm_t const * const p_instance);
 ret_code_t app_pwm_channel_duty_set(app_pwm_t const * const p_instance, uint8_t channel, app_pwm_duty_t duty);
 
-#ifdef __cplusplus
-}
-#endif
 
+#endif //DC801_EMBEDDED
 #endif

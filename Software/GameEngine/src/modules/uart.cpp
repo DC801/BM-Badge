@@ -2,12 +2,11 @@
 // Created by hamster on 8/2/18.
 //
 
+#include "uart.h"
 #ifdef DC801_EMBEDDED
 
-#include <mdk/nrf52840_bitfields.h>
-#include <hal/nrf_uart.h>
-
-#include "uart.h"
+#include <cstring> 
+#include <ctype.h> 
 
 #define UART_TX_BUF_SIZE                512                                         /**< UART TX buffer size. */
 #define UART_RX_BUF_SIZE                128                                         /**< UART RX buffer size. */
@@ -34,7 +33,8 @@ void uart_event_handle(app_uart_evt_t *p_event) {
 
             if ((data_array[index] == '\n') || (data_array[index] == '\r') || (index >= (64))) {
                 data_array[index + 1] = '\0';
-                serial_GotString((char *) data_array, index + 1);
+                //TODO FIXME: was this method ever defined?
+                // serial_GotString((char*)data_array, index + 1);
                 index = 0;
                 memset(data_array, 0, 64);
             }
@@ -77,5 +77,4 @@ void uart_init(void) {
 
     APP_ERROR_CHECK(err_code);
 }
-
-#endif
+#endif //DC801_EMBEDDED

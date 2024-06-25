@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 #include <signal.h>
 #include "sdk_shim.h"
 extern volatile sig_atomic_t application_quit;
@@ -25,7 +25,6 @@ extern volatile sig_atomic_t application_quit;
 
 static void speaker_init(void);
 static void log_init(void);
-static void rom_init(void);
 
 int main(int argc, char* argv[]);
 

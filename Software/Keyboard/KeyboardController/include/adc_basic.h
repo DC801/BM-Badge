@@ -31,9 +31,7 @@
 #include <compiler.h>
 #include <adc_basic.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef void (*adc_irq_cb_t)(void);
 
@@ -61,8 +59,6 @@ uint8_t ADC_0_get_resolution();
 
 void ADC_0_register_callback(adc_irq_cb_t f);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* ADC_BASIC_H_INCLUDED */

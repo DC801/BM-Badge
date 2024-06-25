@@ -1,63 +1,35 @@
 #include "mage_hex.h"
+#include "mage_rom.h"
 #include "EngineInput.h"
-#include "EngineROM.h"
+#include "utility.h"
+#include "mage_dialog_control.h"
+#include <fonts/Monaco9.h>
+#include <algorithm>
+#include <tuple>
 
-extern std::unique_ptr<FrameBuffer> mage_canvas;
-extern std::unique_ptr<MageGameControl> MageGame;
-extern std::unique_ptr<MageDialogControl> MageDialog;
-extern std::unique_ptr<MageEntity> hackableDataAddress;
+#ifndef DC801_EMBEDDED
+#include "shim_err.h"
+#else
+#include <nrf_error.h>
+#endif
 
-uint32_t MageHexEditor::size() const
-{
-	uint32_t size = (
-		sizeof(currentOp) +
-		sizeof(hexEditorState) +
-		sizeof(anyHexMovement) +
-		sizeof(hexTickDelay) +
-		sizeof(dialogState) +
-		sizeof(bytesPerPage) +
-		sizeof(hexRows) +
-		sizeof(memTotal) +
-		sizeof(currentMemPage) +
-		sizeof(totalMemPages) +
-		sizeof(hexCursorLocation) +
-		sizeof(previousPageButtonState) +
-		sizeof(lastPageButtonPressTime) +
-		sizeof(isCopying) +
-		sizeof(disableMovementUntilRJoyUpRelease)
-	);
-	return size;
-}
 
-bool MageHexEditor::getHexEditorState()
+void MageHexEditor::setHexEditorOn(bool on)
 {
-	return hexEditorState;
-}
-
-bool MageHexEditor::getHexDialogState()
-{
-	return dialogState;
-}
-uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
-{
-	return MageGame->currentSave.memOffsets[index % MAGE_NUM_MEM_BUTTONS];
-}
-
-void MageHexEditor::toggleHexEditor()
-{
-	hexEditorState = !hexEditorState;
-	//set LED to the state
-	ledSet(LED_HAX, hexEditorState ? 0xff : 0x00);
+   hexEditorOn = on;
+   //set LED to the state
+   ledSet(LED_HAX, on ? 0xff : 0x00);
 }
 
 void MageHexEditor::toggleHexDialog()
 {
-	dialogState = !dialogState;
-	// bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
+   dialogState = !dialogState;
+   // bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
 }
 
-void MageHexEditor::setHexOp (enum HEX_OPS op)
+void MageHexEditor::setHexOp(enum HEX_OPS op)
 {
+<<<<<<< HEAD
 	currentOp = op;
 	uint8_t led_op_xor = 0x00;
 	uint8_t led_op_add = 0x00;
@@ -121,18 +93,35 @@ uint16_t MageHexEditor::getCurrentMemPage()
 	//once it's <0, that should be the correct mem page:
 	return memPage;
 
+=======
+   currentOp = op;
+   uint8_t led_op_xor = 0x00;
+   uint8_t led_op_add = 0x00;
+   uint8_t led_op_sub = 0x00;
+   switch (op)
+   {
+   case HEX_OPS_XOR: led_op_xor = 0xFF; break;
+   case HEX_OPS_ADD: led_op_add = 0xFF; break;
+   case HEX_OPS_SUB: led_op_sub = 0xFF; break;
+   default: break;
+   }
+   ledSet(LED_XOR, led_op_xor);
+   ledSet(LED_ADD, led_op_add);
+   ledSet(LED_SUB, led_op_sub);
+>>>>>>> scriptFixes
 }
 
 void MageHexEditor::updateHexStateVariables()
 {
-	bytesPerPage = dialogState ? 64 : 192;
-	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
-	memTotal = MageGame->filteredEntityCountOnThisMap * sizeof(MageEntity);
-	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
+   bytesPerPage = dialogState ? 64 : 192;
+   hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
+   memTotal = std::tuple_size<MapControl::EntityDataArray>{};
+   totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
-void MageHexEditor::applyHexModeInputs()
+void MageHexEditor::Update()
 {
+<<<<<<< HEAD
 	if(EngineInput_Deactivated.rjoy_up) {
 		disableMovementUntilRJoyUpRelease = false;
 	}
@@ -150,25 +139,26 @@ void MageHexEditor::applyHexModeInputs()
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
 	if (EngineInput_Activated.hax) { toggleHexEditor(); }
+=======
+   if (!hexEditorOn || !playerHasHexEditorControl || disableMovement)
+   {
+      return;
+   }
+>>>>>>> scriptFixes
 
-	//debounce timer check.
-	if (!hexTickDelay) {
-		anyHexMovement = (
-			EngineInput_Buttons.ljoy_left
-			|| EngineInput_Buttons.ljoy_right
-			|| EngineInput_Buttons.ljoy_up
-			|| EngineInput_Buttons.ljoy_down
-			|| EngineInput_Buttons.rjoy_up // triangle for increment
-			|| EngineInput_Buttons.rjoy_down // x for decrement
-		);
-		if (EngineInput_Buttons.op_page) {
-			//reset last press time only when the page button switches from unpressed to pressed
-			if(!previousPageButtonState) {
-				lastPageButtonPressTime = millis();
-			}
-			//change the state to show the button has been pressed.
-			previousPageButtonState = true;
+   if (inputHandler->IsPressed(KeyPress::Xor)) { setHexOp(HEX_OPS_XOR); }
+   if (inputHandler->IsPressed(KeyPress::Add)) { setHexOp(HEX_OPS_ADD); }
+   if (inputHandler->IsPressed(KeyPress::Sub)) { setHexOp(HEX_OPS_SUB); }
+   if (inputHandler->IsPressed(KeyPress::Bit128)) { runHex(0b10000000); }
+   if (inputHandler->IsPressed(KeyPress::Bit64)) { runHex(0b01000000); }
+   if (inputHandler->IsPressed(KeyPress::Bit32)) { runHex(0b00100000); }
+   if (inputHandler->IsPressed(KeyPress::Bit16)) { runHex(0b00010000); }
+   if (inputHandler->IsPressed(KeyPress::Bit8)) { runHex(0b00001000); }
+   if (inputHandler->IsPressed(KeyPress::Bit4)) { runHex(0b00000100); }
+   if (inputHandler->IsPressed(KeyPress::Bit2)) { runHex(0b00000010); }
+   if (inputHandler->IsPressed(KeyPress::Bit1)) { runHex(0b00000001); }
 
+<<<<<<< HEAD
 			//check to see if there is any directional button action while the page button is pressed
 			if (
 				EngineInput_Buttons.ljoy_up
@@ -205,143 +195,164 @@ void MageHexEditor::applyHexModeInputs()
 			}
 			//reset this to false:
 			previousPageButtonState = false;
+=======
+   uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
+>>>>>>> scriptFixes
 
-			//check directional inputs and move cursor.
-			if(
-				!EngineInput_Buttons.rjoy_right // not if in multi-byte selection mode
-			) {
-				if (EngineInput_Buttons.ljoy_left) {
-					//move the cursor left:
-					hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
-					//change the current page to wherever the cursor is:
-					setPageToCursorLocation();
-				}
-				if (EngineInput_Buttons.ljoy_right) {
-					//move the cursor right:
-					hexCursorLocation = (hexCursorLocation + 1) % memTotal;
-					//change the current page to wherever the cursor is:
-					setPageToCursorLocation();
-				}
-				if (EngineInput_Buttons.ljoy_up) {
-					//move the cursor up:
-					hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
-					//change the current page to wherever the cursor is:
-					setPageToCursorLocation();
-				}
-				if (EngineInput_Buttons.ljoy_down) {
-					//move the cursor down:
-					hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
-					//change the current page to wherever the cursor is:
-					setPageToCursorLocation();
-				}
-				if (EngineInput_Buttons.rjoy_up) {
-					//decrement the value
-					*currentByte += 1;
-				}
-				if (EngineInput_Buttons.rjoy_down) {
-					//decrement the value
-					*currentByte -= 1;
-				}
-			}
-			if (MageGame->playerHasHexEditorControlClipboard) {
-				if (EngineInput_Activated.rjoy_right) {
-					//start copying
-					MageGame->currentSave.clipboardLength = 1;
-					isCopying = true;
-				}
-				if (!EngineInput_Buttons.rjoy_right) {
-					isCopying = false;
-				}
-				if (EngineInput_Buttons.rjoy_right) {
-					if (EngineInput_Buttons.ljoy_left) {
-						MageGame->currentSave.clipboardLength = MAX(
-							(uint8_t) 1,
-							MageGame->currentSave.clipboardLength - 1
-						);
-					}
-					if (EngineInput_Buttons.ljoy_right) {
-						MageGame->currentSave.clipboardLength = MIN(
-							(uint8_t) sizeof(MageEntity),
-							MageGame->currentSave.clipboardLength + 1
-						);
-					}
-					memcpy(
-						MageGame->currentSave.clipboard,
-						currentByte,
-						MageGame->currentSave.clipboardLength
-					);
-				}
-				if (EngineInput_Buttons.rjoy_left) {
-					//paste
-					memcpy(
-						currentByte,
-						MageGame->currentSave.clipboard,
-						MageGame->currentSave.clipboardLength
-					);
-					MageGame->UpdateEntities(0);
-					memcpy(
-						currentByte,
-						MageGame->currentSave.clipboard,
-						MageGame->currentSave.clipboardLength
-					);
-				}
-			}
-		}
-		if (anyHexMovement) {
-			hexTickDelay = HEXED_TICK_DELAY;
-		}
-	}
-	//decrement debounce timer
-	else
-	{
-		hexTickDelay--;
-	}
+   if (!inputHandler->Hack())
+   {
+      disableMovement = false;
+   }
+   if (disableMovement)
+   {
+      return;
+   }
+
+   //exiting the hex editor by pressing the hax button will happen immediately
+   //before any other input is processed:
+   if (inputHandler->Hack())// activatedButton.IsPressed(KeyPress::Hax)) 
+   {
+      setHexEditorOn(false);
+   }
+
+   anyHexMovement = inputHandler->Left() || inputHandler->Right() || inputHandler->Up() || inputHandler->Down()
+      || inputHandler->Increment() || inputHandler->Decrement();
+
+   static auto lastPageButtonPressTime = GameClock::now();
+   if (inputHandler->IsPressed(KeyPress::Page))
+   {
+      //reset last press time only when the page button switches from unpressed to pressed
+      if (!previousPageButtonState)
+      {
+         lastPageButtonPressTime = GameClock::now();
+      }
+      //change the state to show the button has been pressed.
+      previousPageButtonState = true;
+
+      //check to see if there is any directional button action while the page button is pressed
+      if (inputHandler->Up() || inputHandler->Left())
+      {
+         currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
+      }
+      else if (inputHandler->Down() || inputHandler->Right())
+      {
+         currentMemPage = (currentMemPage + 1) % totalMemPages;
+      }
+      //check for memory button presses:
+      int8_t memIndex = -1;
+      if (inputHandler->IsPressed(KeyPress::Mem0)) { memIndex = 0; }
+      else if (inputHandler->IsPressed(KeyPress::Mem1)) { memIndex = 1; }
+      else if (inputHandler->IsPressed(KeyPress::Mem2)) { memIndex = 2; }
+      else if (inputHandler->IsPressed(KeyPress::Mem3)) { memIndex = 3; }
+      if (memIndex != -1)
+      {
+         memOffsets[memIndex] = hexCursorOffset % sizeof(MageEntityData);
+      }
+   }
+   else
+   {
+      applyMemRecallInputs();
+      //check to see if the page button was pressed and released quickly
+      if (previousPageButtonState
+         && (GameClock::now() - lastPageButtonPressTime).count() < HEXED_QUICK_PRESS_TIMEOUT)
+      {
+         //if the page button was pressed and then released fast enough, advance one page.
+         currentMemPage = (currentMemPage + 1) % totalMemPages;
+      }
+      //reset this to false:
+      previousPageButtonState = false;
+
+      //check directional inputs and move cursor.
+      if (!inputHandler->IsPressed(KeyPress::Rjoy_right))
+      {
+         // not if in multi-byte selection mode
+         if (inputHandler->Left())
+         {
+            hexCursorOffset = (hexCursorOffset + memTotal - 1) % memTotal;
+            setPageToCursorLocation();
+         }
+         if (inputHandler->Right())
+         {
+            hexCursorOffset = (hexCursorOffset + 1) % memTotal;
+            setPageToCursorLocation();
+         }
+         if (inputHandler->Up())
+         {
+            hexCursorOffset = (hexCursorOffset + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
+            setPageToCursorLocation();
+         }
+         if (inputHandler->Down())
+         {
+            hexCursorOffset = (hexCursorOffset + HEXED_BYTES_PER_ROW) % memTotal;
+            setPageToCursorLocation();
+         }
+         if (inputHandler->Increment())
+         {
+            *currentByte += 1;
+         }
+         if (inputHandler->Decrement())
+         {
+            *currentByte -= 1;
+         }
+      }
+      if (playerHasClipboardControl)
+      {
+         if (inputHandler->IsPressed(KeyPress::Rjoy_right))
+         {
+            //start copying
+            clipboardLength = 1;
+            isCopying = true;
+         }
+         if (!inputHandler->IsPressed(KeyPress::Rjoy_right))
+         {
+            isCopying = false;
+         }
+         if (inputHandler->IsPressed(KeyPress::Rjoy_right))
+         {
+            if (inputHandler->Left())
+            {
+               clipboardLength = std::max(1, clipboardLength - 1);
+            }
+            if (inputHandler->Right())
+            {
+               clipboardLength = std::min<uint8_t>(sizeof(MageEntityData), clipboardLength + 1);
+            }
+            memcpy(clipboard, currentByte, clipboardLength);
+         }
+         if (inputHandler->IsPressed(KeyPress::Rjoy_left))
+         {
+            //paste
+            memcpy(currentByte, clipboard, clipboardLength);
+         }
+      }
+   }
+   if (anyHexMovement)
+   {
+      hexTickDelay = 1;
+   }
+   updateHexStateVariables();
 }
 
-void MageHexEditor::applyMemRecallInputs() {
-	uint8_t currentEntityIndex = hexCursorLocation / sizeof(MageEntity);
-	uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntity);
-	//check for memory button presses and set the hex cursor to the memory location
-	int8_t memIndex = -1;
-	if (EngineInput_Activated.mem0) { memIndex = 0; }
-	if (EngineInput_Activated.mem1) { memIndex = 1; }
-	if (EngineInput_Activated.mem2) { memIndex = 2; }
-	if (EngineInput_Activated.mem3) { memIndex = 3; }
-	if (memIndex != -1) {
-		setHexCursorLocation(
-			currentEntityStart
-			+ getMemoryAddress(memIndex)
-		);
-	}
-}
-
-void MageHexEditor::getHexStringForByte (uint8_t byte, char* outputString)
+void MageHexEditor::applyMemRecallInputs()
 {
-	sprintf(outputString,"%02X", byte);
-}
-
-uint16_t MageHexEditor::getRenderableStringLength(uint8_t *bytes, uint16_t maxLength) {
-	uint16_t offset = 0;
-	uint16_t renderableLength = 0;
-	uint8_t currentByte = bytes[0];
-	while (
-		currentByte != 0 &&
-		offset < maxLength
-	) {
-		offset++;
-		currentByte = bytes[renderableLength];
-		if(
-			currentByte >= 32 &&
-			currentByte < 128
-		) {
-			renderableLength++;
-		}
-	}
-	return renderableLength;
+   const auto currentEntityIndex = hexCursorOffset / sizeof(MageEntityData);
+   const auto currentEntityStart = currentEntityIndex * sizeof(MageEntityData);
+   //check for memory button presses and set the hex cursor to the memory location
+   auto memIndex = -1;
+   if (inputHandler->IsPressed(KeyPress::Mem0)) { memIndex = 0; }
+   else if (inputHandler->IsPressed(KeyPress::Mem1)) { memIndex = 1; }
+   else if (inputHandler->IsPressed(KeyPress::Mem2)) { memIndex = 2; }
+   else if (inputHandler->IsPressed(KeyPress::Mem3)) { memIndex = 3; }
+   if (memIndex != -1)
+   {
+      const auto memoryAddress = memOffsets[memIndex % MAGE_NUM_MEM_BUTTONS];
+      SetCursorOffset(currentEntityStart + memoryAddress);
+   }
 }
 
 void MageHexEditor::renderHexHeader()
 {
+<<<<<<< HEAD
 	char headerString[128];
 	char clipboardPreview[24];
 	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
@@ -421,10 +432,52 @@ void MageHexEditor::renderHexHeader()
 		HEXED_BYTE_OFFSET_X,
 		HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2))
 	);
+=======
+   char headerString[128]{ " " };
+   char clipboardPreview[24]{ " " };
+   auto entityDataPointer = mapControl->GetEntityDataPointer();
+   const uint8_t* currentByteAddress = entityDataPointer + hexCursorOffset;
+   uint8_t u1Value = *currentByteAddress;
+   uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorOffset % 2)));
+   sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
+      currentMemPage, hexCursorOffset, totalMemPages, mapControl->currentMap.value().entityCount, memTotal);
+
+   frameBuffer->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, 0);
+   auto stringPreview = std::string{ entityDataPointer + hexCursorOffset,
+                                     entityDataPointer + hexCursorOffset + MAGE_ENTITY_NAME_LENGTH };
+
+   sprintf(
+      headerString,
+      "Little Endian | uint8: %03d  | uint16: %05d\n"
+      "string output: %s",
+      u1Value,
+      u2Value,
+      stringPreview.c_str()
+   );
+
+   if (playerHasClipboardControl)
+   {
+      uint8_t clipboardPreviewClamp = std::min((uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH, clipboardLength);
+      for (uint8_t i = 0; i < clipboardPreviewClamp; i++)
+      {
+         sprintf(clipboardPreview + (i * 2), "%02X", *(clipboard + i));
+      }
+      if (clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH)
+      {
+         const auto offset = (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2);
+         clipboardPreview[offset] = '.';
+         clipboardPreview[offset + 1] = '.';
+         clipboardPreview[offset + 2] = '.';
+      }
+      sprintf(headerString + strlen(headerString), " | CP: 0x%s", clipboardPreview);
+   }
+   frameBuffer->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2)));
+>>>>>>> scriptFixes
 }
 
-void MageHexEditor::renderHexEditor()
+void MageHexEditor::Draw()
 {
+<<<<<<< HEAD
 	char currentByteString[2];
 	if ((hexCursorLocation / bytesPerPage) == currentMemPage)
 	{
@@ -462,33 +515,67 @@ void MageHexEditor::renderHexEditor()
 			*(((uint8_t *) hackableDataAddress) + (i + (currentMemPage * bytesPerPage))),
 			currentByteString
 		);
+=======
+   if (!hexEditorOn)
+   {
+      return;
+   }
+>>>>>>> scriptFixes
 
-		//this bit will color the playerEntity differently than the other entities in the hex editor:
-		uint32_t font_color = 0xffff;
-		if(MageGame->playerEntityIndex != NO_PLAYER)
-		{
-			if(
-				( (uint32_t)(i + (currentMemPage * bytesPerPage)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
-				( (uint32_t)(i + (currentMemPage * bytesPerPage)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
-			)
-			{
-				font_color = 0xfc10;
-			}
-		}
+   if ((hexCursorOffset / bytesPerPage) == currentMemPage)
+   {
+      frameBuffer->DrawFilledRect(
+         (hexCursorOffset % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
+         (hexCursorOffset % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
+         HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x38FF);
+      if (isCopying)
+      {
+         for (uint8_t i = 1; i < clipboardLength; i++)
+         {
+            uint16_t copyCursorOffset = (hexCursorOffset + i) % bytesPerPage;
+            frameBuffer->DrawFilledRect(
+               (copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
+               (copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
+               HEXED_BYTE_WIDTH,
+               HEXED_BYTE_HEIGHT,
+               0x00EE
+            );
+         }
+      }
+   }
+   renderHexHeader();
+   auto pageOffset = currentMemPage * bytesPerPage;
 
-		//print the byte:
-		mage_canvas->printMessage(
-			currentByteString,
-			Monaco9,
-			font_color,
-			(i % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X,
-			(i / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y
-		);
-	}
+   constexpr char hexmap[] = { '0', '1', '2', '3', '4', '5', '6', '7',
+                     '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+   auto entityDataPointer = mapControl->GetEntityDataPointer();
+   auto dataPage = entityDataPointer + pageOffset;
+   uint16_t i = 0;
+   std::string s(HEXED_BYTES_PER_ROW * 3, ' ');
+   while (i < bytesPerPage && i + pageOffset < memTotal)
+   {
+      auto color = COLOR_WHITE;
+      auto playerEntityIndex = mapControl->getPlayerEntityIndex();
+      if (NO_PLAYER_INDEX != playerEntityIndex
+         && i + pageOffset >= sizeof(MageEntityData) * playerEntityIndex
+         && i + pageOffset < sizeof(MageEntityData) * (playerEntityIndex + 1))
+      {
+         color = COLOR_RED;
+      }
+      for (uint16_t j = 0; j < HEXED_BYTES_PER_ROW; i++, j++)
+      {
+         s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
+         s[3 * j + 1] = hexmap[dataPage[i] & 0x0F];
+      }
+      frameBuffer->DrawText(s.c_str(), color,
+         HEXED_BYTE_OFFSET_X, HEXED_BYTE_OFFSET_Y + ((i - 1) / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT);
+   }
 }
 
 void MageHexEditor::runHex(uint8_t value)
 {
+<<<<<<< HEAD
 	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hexCursorLocation);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
@@ -498,10 +585,26 @@ void MageHexEditor::runHex(uint8_t value)
 		default: break;
 	}
 	*currentByte = changedValue;
+=======
+   uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
+   uint8_t changedValue = *currentByte;
+   switch (currentOp)
+   {
+   case HEX_OPS_XOR: changedValue ^= value; break;
+   case HEX_OPS_ADD: changedValue += value; break;
+   case HEX_OPS_SUB: changedValue -= value; break;
+   default: break;
+   }
+   *currentByte = changedValue;
+>>>>>>> scriptFixes
 }
 
-void MageHexEditor::openToEntityByIndex(uint8_t entityIndex) {
-	setHexCursorLocation(entityIndex * sizeof(MageEntity));
-	setPageToCursorLocation();
-	toggleHexEditor();
+void MageHexEditor::openToEntity(uint8_t entityIndex)
+{
+   disableMovement = true;
+   SetCursorOffset(entityIndex * sizeof(MageEntityData));
+   setPageToCursorLocation();
+   setHexEditorOn(true);
 }
+
+

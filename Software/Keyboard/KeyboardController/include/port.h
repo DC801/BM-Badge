@@ -28,9 +28,7 @@
 #ifndef PORT_INCLUDED
 #define PORT_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include <compiler.h>
 
@@ -711,8 +709,6 @@ static inline void PORTC_write_port(const uint8_t value)
 	VPORTC.OUT = value;
 }
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* PORT_INCLUDED */

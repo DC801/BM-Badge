@@ -36,37 +36,34 @@ void MageCommandControl::handleStart() {
 	}
 }
 
-void MageCommandControl::processCommand(const char *commandString) {
+void MageCommandControl::processCommand(char *commandString) {
 	std::string lowercasedInput = commandString;
 	badAsciiLowerCase(&lowercasedInput);
 	if (!isInputTrapped) {
-		processInputAsCommand(lowercasedInput);
+		processCommandAsVerb(lowercasedInput);
 	} else {
-		processInputAsTrappedResponse(lowercasedInput);
+		processCommandAsResponseInput(lowercasedInput);
 	}
 }
 
-void MageCommandControl::processInputAsCommand(std::string input) {
+void MageCommandControl::processCommandAsVerb(std::string input) {
 	// Used to split string around spaces.
+	bool syntaxValid = true;
 	uint8_t wordCount = 0;
-	std::string word;
+	std::string word = "";
 	std::string verb;
 	std::string subject;
 	std::string modifier;
 
 	// Traverse through all words
 	// while loop through segments to store in string word
-	while (!input.empty()) {
-		size_t index = input.find_first_of(' ');
-		if (index != std::string::npos) {
-			// we found a space
-			word = input.substr(0, index);
-			input = input.substr(index + 1, input.length());
-		} else {
-			// no more spaces
-			word = "" + input;
-			input = "";
-		}
+	while (
+		input.compare(word) != 0
+		&& syntaxValid
+	) {
+		size_t index = input.find_first_of(" ");
+		word = input.substr(0,index);
+		input = input.substr(index+1, input.length());
 		if (word.length() == 0) {
 			// skip space
 			continue;
@@ -74,124 +71,55 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 
 		wordCount++;
 		if (wordCount == 1) {
-			verb = "" + word;
-		} else if (
-				wordCount == 2
-				&& (word == "at" || word == "to")
-				) {
-			modifier = word;
+			verb.append(word);
+		} else if (wordCount == 2) {
+			subject.append(word);
 		} else {
-			if (!subject.empty()) {
-				subject += " ";
-			}
-			subject += word;
+			// only cases could be wordCount > 2
+			syntaxValid = false;
 		}
 	}
 
-	verb = aliasLookup(verb);
-
-	if (MageGame->isEntityDebugOn) {
+	if (syntaxValid) {
 		std::string message = "Verb: " + verb;
-		if (!modifier.empty()) { message += " | Modifier: " + modifier; }
-		if (!subject.empty()) { message += " | Subject: " + subject; }
-		message += "\n";
+		if (subject.length() == 0) {
+			message += "\n";
+		} else {
+			message += " | Subject: " + subject + "\n";
+		}
 		commandResponseBuffer += message;
+	} else if (!syntaxValid) {
+		commandResponseBuffer += (
+			"Invalid command! Commands are exactly one or two words.\n"
+			"Examples: help | look | look $ITEM | go $DIRECTION\n"
+		);
+		return;
 	}
 
-
-	MageSerialDialogCommand* foundCommand = searchForCommand(
-		verb,
-		subject
-	);
-	if (foundCommand != nullptr) {
-		if(MageGame->isEntityDebugOn) {
-			commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
-		}
-		MageScript->initScriptState(
-			&MageScript->resumeStates.serial,
-			foundCommand->scriptId,
-			true
-		);
-	} else if(verb == "help") {
+	if(verb == "help") {
 		// I sure thought `lastCommandUsed` & the `MageSerialCommands` enum
 		// would be really useful earlier, but I can't remember why now.
 		lastCommandUsed = COMMAND_HELP;
 		commandResponseBuffer += (
 			"Supported Verbs:\n"
-			"  help  look  go"
+			"\thelp\tlook\tgo\n"
 		);
-		if (!registeredCommands.empty()) {
-			for (const auto& command : registeredCommands) {
-				if (
-					command.argumentStringId == 0
-					&& !command.isFail
-					&& command.isVisible
-				) {
-					commandResponseBuffer += "  " + command.combinedString;
-				}
-			}
-		}
-		commandResponseBuffer += "\n";
 	}
 	else if(verb == "look") {
 		lastCommandUsed = COMMAND_LOOK;
-		if (subject.empty()) {
-			commandResponseBuffer += (
-				"You try to look.\n"
-			);
-			MageScript->initScriptState(
-				&MageScript->resumeStates.serial,
-				MageGame->Map().onLook,
-				true
-			);
-			std::string directionNames = MageGame->Map().getDirectionNames();
-			if (directionNames.length() > 0) {
-				postDialogBuffer += "Exits are:\n";
-				postDialogBuffer += directionNames;
-				postDialogBuffer += "\n";
-			}
-		} else {
-			// commandResponseBuffer += (
-			// 	"You try to look AT " +
-			// 	subject + "\n"
-			// );
-			// commandResponseBuffer += (
-			// 	"Entities in the room:\n"
-			// );
-			std::vector<std::string> names = MageGame->getEntityNamesInRoom();
-			std::string name;
-			bool entityFound = false;
-			uint16_t lookScriptId = 0;
-			for (size_t i = 0; i < names.size(); ++i) {
-				name = names[i];
-				badAsciiLowerCase(&name);
-				// commandResponseBuffer += (
-				// 	"\t" + std::to_string(i) + ":\"" + name + "\"\n"
-				// );
-				if (!strcmp(name.c_str(), subject.c_str())) {
-					entityFound = true;
-					// commandResponseBuffer += (
-					// 	"\tFound it! Entity index is: "+std::to_string(i)+"\n"
-					// );
-					lookScriptId = MageGame->entities[i].onLookScriptId;
-					// commandResponseBuffer += (
-					// 	"\tlookScriptId is: "+std::to_string(lookScriptId)+"\n"
-					// );
-					MageScript->initScriptState(
-						MageScript->getEntityLookResumeState(i),
-						lookScriptId,
-						true
-					);
-					break;
-				}
-			}
-			if(!entityFound) {
-				commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
-			} else if (!lookScriptId) {
-				commandResponseBuffer += "You looked at \"" + subject + "\", but learned nothing in particular.\n";
-			} else {
-				commandResponseBuffer += "You looked at \"" + subject + "\".\n";
-			}
+		commandResponseBuffer += (
+			"You try to look.\n"
+		);
+		MageScript->initScriptState(
+			&MageScript->resumeStates.commandLook,
+			MageGame->Map().onLook,
+			true
+		);
+		std::string directionNames = MageGame->Map().getDirectionNames();
+		if(directionNames.length() > 0) {
+			postDialogBuffer += "Exits are:\n";
+			postDialogBuffer += directionNames;
+			postDialogBuffer += "\n";
 		}
 	}
 	else if(verb == "go") {
@@ -201,6 +129,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 				"You cannot `go` nowhere. Pick a direction.\n"
 			);
 		} else {
+			subject = subject.substr (0, MAP_GO_DIRECTION_NAME_LENGTH);
 			std::string output = "You try to go `";
 			output += subject;
 			output += "`";
@@ -213,7 +142,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			commandResponseBuffer += output;
 			if(directionScriptId) {
 				MageScript->initScriptState(
-					&MageScript->resumeStates.serial,
+					&MageScript->resumeStates.commandGo,
 					directionScriptId,
 					true
 				);
@@ -235,7 +164,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			"               ######  ##### \n"
 		);
 	}
-	else if(verb == "feed" && subject == "goat") {
+	else if(input == "feed goat") {
 		commandResponseBuffer += (
 			"You have fed the secret goat!\n"
 			"               ##### ####    \n"
@@ -251,39 +180,19 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 	// end SECRET_GOAT
 	else {
-		commandResponseBuffer += "Unrecognized Verb: " + verb + "\n";
+		commandResponseBuffer = "Unrecognized Verb: " + verb + "\n";
 	}
 }
 
-std::string MageCommandControl::aliasLookup(std::string& input) {
-	auto result = input;
-	auto found = commandAliases.find(input);
-	if (found == commandAliases.end()) {
-		if(MageGame->isEntityDebugOn) {
-			commandResponseBuffer += "Alias NOT found: " + input + "\n";
-		}
-	}
-	else {
-		if(MageGame->isEntityDebugOn) {
-			commandResponseBuffer += "Alias found: " + found->first + " is " + found->second + "\n";
-		}
-		result = found->second;
-	}
-	return result;
-};
-
-void MageCommandControl::processInputAsTrappedResponse(const std::string& input) {
-
-	if(MageGame->isEntityDebugOn) {
-		commandResponseBuffer += "processInputAsTrappedResponse: " + input + "\n";
-	}
+void MageCommandControl::processCommandAsResponseInput(std::string input) {
+	commandResponseBuffer += "processCommandAsResponseInput: " + input + "\n";
 	MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
 	if (responseType == RESPONSE_ENTER_NUMBER) {
+		int responseIndex;
 		bool errorWhileParsingInt = false;
-		char *parseStatus;
-		long responseIndex = strtol(input.c_str(), &parseStatus, 0);
-		if(*parseStatus != 0){
-			// commandResponseBuffer += "Parse string as number FAIL!!!";
+		try {
+			responseIndex = std::stoi(input);
+		} catch(std::exception &err) {
 			errorWhileParsingInt = true;
 		}
 		if (
@@ -293,19 +202,15 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 		) {
 			MageSerialDialogResponse *response = &serialDialogResponses[responseIndex];
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
-			if(MageGame->isEntityDebugOn) {
-				commandResponseBuffer += (
-					"Valid response: " +
-					input + " - " +
-					responseLabel + "\n"
-				);
-			}
+			commandResponseBuffer += (
+				"Valid response: " +
+				input + " - " +
+				responseLabel + "\n"
+			);
 			jumpScriptId = response->scriptId;
 			isInputTrapped = false;
 		} else {
-			if(MageGame->isEntityDebugOn) {
-				commandResponseBuffer += "Invalid response: " + input + "\n";
-			}
+			commandResponseBuffer += "Invalid response: " + input + "\n";
 			showSerialDialog(serialDialogId);
 		}
 	}
@@ -317,9 +222,7 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
 			badAsciiLowerCase(&responseLabel);
 			if (responseLabel == input) {
-				if(MageGame->isEntityDebugOn) {
-					commandResponseBuffer += "Valid response: " + input + "\n";
-				}
+				commandResponseBuffer += "Valid response: " + input + "\n";
 				jumpScriptId = response->scriptId;
 				isInputTrapped = false;
 				validResponseFound = true;
@@ -333,15 +236,7 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 	}
 }
 
-void MageCommandControl::cancelTrap() {
-	isInputTrapped = false;
-};
-
-void MageCommandControl::showSerialDialog(
-	uint16_t _serialDialogId,
-	bool disableNewline,
-	uint8_t selfId
-) {
+void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogId = _serialDialogId;
 	jumpScriptId = MAGE_NO_SCRIPT;
 	uint32_t serialDialogAddress = MageGame->getSerialDialogAddress(serialDialogId);
@@ -354,7 +249,7 @@ void MageCommandControl::showSerialDialog(
 	ROM_ENDIAN_U2_BUFFER(&serialDialog.stringId, 1);
 	std::string dialogString = MageGame->getString(
 		serialDialog.stringId,
-		selfId
+		NO_PLAYER
 	);
 	// serialDialogBuffer += (
 	// 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
@@ -364,10 +259,7 @@ void MageCommandControl::showSerialDialog(
 	// 	"serialDialog.responseCount: " + std::to_string(serialDialog.responseCount) + "\n"
 	// 	"message:\n"
 	// );
-	serialDialogBuffer += dialogString;
-	if (!disableNewline) {
-		serialDialogBuffer += "\n";
-	}
+	serialDialogBuffer += dialogString + "\n";
 	isInputTrapped = serialDialog.serialResponseType != RESPONSE_NONE;
 	serialDialogResponses = std::make_unique<MageSerialDialogResponse[]>(serialDialog.responseCount);
 	EngineROM_Read(
@@ -396,8 +288,6 @@ uint32_t MageCommandControl::size() {
 		+ sizeof(commandResponseBuffer)
 		+ sizeof(serialDialogBuffer)
 		+ sizeof(postDialogBuffer)
-		+ sizeof(registeredCommands)
-		+ sizeof(commandAliases)
 		+ sizeof(serialDialog)
 		+ sizeof(serialDialogResponses)
 		+ sizeof(jumpScriptId)
@@ -668,19 +558,9 @@ MageSerialDialogCommand* MageCommandControl::searchForCommand(
 		? failStateCommand
 		: successStateCommand;
 }
-
 void MageCommandControl::reset() {
 	jumpScriptId = MAGE_NO_SCRIPT;
 	isInputTrapped = false;
-
-	// empties out the commandAliases and frees the memory?
-	commandAliases.clear();
-	commandAliases.rehash(0);
-
-	// empties out the registeredCommands and frees the memory?
-	registeredCommands.clear();
-	registeredCommands.shrink_to_fit();
-
 	// if reset has been run, you're probably on a new map
 	// so don't show the postDialogBuffer contents,
 	// but we do need to show the commandResponse and dialog
@@ -707,7 +587,7 @@ void MageCommandControl::sendBufferedOutput() {
 	}
 	if(anyOutput) {
 		EngineSendSerialMessage(
-			"\n> "
+			"> "
 		);
 	}
 }

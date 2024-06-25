@@ -1,13 +1,7 @@
-#include <EngineAudio.h>
-#include "cmixer.h"
-
+#ifndef DC801_EMBEDDED
+#include "EngineAudio.h"
+#include <cstring>
 #include <iostream>
-#include <mutex>
-
-#ifdef DC801_DESKTOP
-#include <SDL.h>
-
-AudioPlayer audio;
 
 /*
 
@@ -23,88 +17,63 @@ AudioPlayer audio;
 	a callback function is called asking for more data based on the configured size. This design works
 	and will make it easier to port to the embedded system.
 
+
  */
+uint32_t AudioPlayer::soundCount = 0;
 
-// SDL_AudioFormat of files, such as s16 little endian
-#define AUDIO_FORMAT AUDIO_S16LSB
-
-// Frequency of the file
-#define AUDIO_FREQUENCY 48000
-
-// 1 mono, 2 stereo, 4 quad, 6 (5.1)
-#define AUDIO_CHANNELS 2
-
-// Specifies a unit of audio data to be used at a time. Must be a power of 2
-#define AUDIO_SAMPLES 512
-
-// Max number of sounds that can be in the audio queue at anytime, stops too much mixing
-#define AUDIO_MAX_SOUNDS 25
-
-// Contains SDL Audio Device information
-typedef struct
+// Constructor:
+//  - Initialize SDL audio
+//  - Configure the SDL device structure
+//  - Setup the root to the list of audio samples
+//  - Unpause SDL audio (callbacks start now)
+AudioPlayer::AudioPlayer()
 {
-	SDL_AudioDeviceID id;		// SDL Audio Device ID
-	SDL_AudioSpec spec;			// Secifications of our audio
-	bool enabled;				// Whether the audio driver is loaded and ready
-} AudioDevice;
-
-// The audio player uses a linked list to play up to 25 sounds and one background track simultaneously
-typedef struct sound
-{
-	Uint8 fade;					// Sample has been dropped, fade it out
-	bool free;					// Whether to free the cmixer source
-	bool end;					// The sample is done playing, free it
-
-	cm_Source *source;			// cmixer audio source
-	SDL_AudioSpec spec;			// Specifications of the audio sample
-
-	struct sound *next;			// Next item in the list
-} Audio;
-
-AudioDevice device =
-{
-	0,
-	{ 0 },
-	false
-};
-
-Uint32 soundCount = 0;			// Current number of simultaneous audio samples
-AudioMutex mutex;
-
-void lockAudio(cm_Event *e)
-{
-	if (e->type == CM_EVENT_LOCK)
+	if (SDL_Init(SDL_INIT_AUDIO) < 0)
 	{
-		mutex.lock();
+		std::cout << "Audio Player: Failed to init SDL audio" << std::endl;
+		return;
 	}
 
-	if (e->type == CM_EVENT_UNLOCK)
+	const auto useDefaultDevice = (const char*)nullptr;
+	const int outputOnly = 0;
+	const int allowNoChanges = 0; //SDL_AUDIO_ALLOW_ANY_CHANGE
+	SDL_OpenAudioDevice(useDefaultDevice, outputOnly, &device.spec, NULL, allowNoChanges);
+
+	if (device.id == 0)
 	{
-		mutex.unlock();
+		std::cout << "Audio Player: Failed to open audio device" << std::endl;
+		std::cout << "    " << SDL_GetError() << std::endl;
+		return;
 	}
+
+	device.enabled = true;
+
+	// Initialize cmixer
+	cm_init(AUDIO_FREQUENCY);
+	//cm_set_lock(&mutex);
+	cm_set_master_gain(1.0);
+
+	SDL_PauseAudioDevice(device.id, 0);
 }
 
-// Walk the list and free items
-void freeAudio(Audio *audio)
+// Destructor:
+// - Pause the Audio device
+// - Free and delete all audio samples
+// - Close the audio device
+
+// Whether the SDL calls here are actually necessary remains to be seen.
+// main() calls SDL_Quit() before this destructor is called, which should
+// be cleaning up everything SDL, including pausing an closing.
+AudioPlayer::~AudioPlayer()
 {
-	Audio *temp;
-
-	while (audio != NULL)
+	if (device.enabled)
 	{
-		// If the SDL sample is loaded, free it
-		if (audio->free)
-		{
-			if (audio->source != NULL)
-			{
-				cm_destroy_source(audio->source);
-			}
-		}
-
-		// Unlink this item from the list
-		temp = audio;
-		audio = audio->next;
-		// And free it
-		delete temp;
+		// Pause SDL audio
+		SDL_PauseAudioDevice(device.id, 1);
+		// Free and delete all samples
+		head.reset(nullptr);
+		// Close SDL audio device
+		SDL_CloseAudioDevice(device.id);
 	}
 }
 
@@ -114,109 +83,100 @@ void freeAudio(Audio *audio)
 //   - Walk the tree, mixing all samples in progress
 //   - Loop audio samples, fading the volume when necessary
 //   - Free finished samples
-void callback(void *userdata, Uint8 *stream, int len)
+void AudioPlayer::callback(nrfx_i2s_buffers_t* stream, uint32_t len)
 {
 	// Capture the root of the list
-	Audio *previous = reinterpret_cast<Audio *>(userdata);
-	// Pull the first audio sample
-	Audio *audio = previous->next;
+	auto previous = head.get();
+	if (previous) {
+		// Pull the first audio sample
+		auto audio = previous->next.get();
 
-	memset(stream, 0, len);
-
-	// Walk the list
-	while (audio != NULL)
-	{
-		cm_Source *source = audio->source;
-
-		// If this sample has remaining data to play
-		if (audio->end == false)
+		//memset(stream, 0, len);
+		// Walk the list
+		while (audio != NULL)
 		{
-			// And the audio is being faded
-			if (audio->fade == 1)
+			cm_Source* source = audio->source;
+
+			// If this sample has remaining data to play
+			if (audio->end == false)
 			{
-				// Fade until gain is zero, then truncate sample to zero length
-				if (source->gain > 0.0)
+				// And the audio is being faded
+				if (audio->fade == 1)
 				{
-					cm_set_gain(source, source->gain - 0.1);
+					// Fade until gain is zero, then truncate sample to zero length
+					if (source->gain > 0.0)
+					{
+						cm_set_gain(source, source->gain - 0.1);
+					}
+					else
+					{
+						audio->end = true;
+					}
 				}
-				else
+
+				// Mix with cmixer
+				cm_process(reinterpret_cast<cm_Int16*>(stream), len / sizeof(cm_Int16));
+
+				// Continue to the next item
+				previous = audio;
+			}
+			// Otherwise, this sample is finished
+			else
+			{
+				// Offset our sample count for non-looped samples
+				if (source->loop == 0)
 				{
-					audio->end = true;
+					soundCount -= 1;
 				}
+				previous->next = std::move(audio->next);
 			}
 
-			// Mix with cmixer
-			cm_process(reinterpret_cast<cm_Int16*>(stream), len / sizeof(cm_Int16));
-
-			// Continue to the next item
-			previous = audio;
+			// Iterate to the next sample
+			audio = previous->next.get();
 		}
-		// Otherwise, this sample is finished
-		else
-		{
-			// Stop playing
-			cm_stop(audio->source);
-
-			// Unlink the sample
-			previous->next = audio->next;
-			// Offset our sample count for non-looped samples
-			if (audio->source->loop == 0)
-			{
-				soundCount -= 1;
-			}
-
-			// Unlink the next sample
-			audio->next = NULL;
-			// Free the sample and delete the audio object
-			freeAudio(audio);
-		}
-
-		// Iterate to the next sample
-		audio = previous->next;
 	}
 }
 
 // Indicate that an audio sample should be faded out and removed
 // The current driver only allows one looped audio sample
-void fadeAudio(Audio *audio)
+void AudioPlayer::fadeAudio()
 {
 	// Walk the tree
-	while ((audio != NULL) && (audio->source != NULL))
+	for (auto audio =head.get();
+		audio && audio->source;
+		audio = audio->next.get())
 	{
-		cm_Source *source = audio->source;
 		// Find any looped samples and fade them
-		if (source->loop == 1)
+		if (audio->source->loop == 1)
 		{
-			source->loop = 0;
+			audio->source->loop = 0;
 			audio->fade = 1;
 		}
-
-		// Iterate to the next sample
-		audio = audio->next;
 	}
 }
 
 // Add an audio sample to the end of the list
-void addAudio(Audio *root, Audio *audio)
+void AudioPlayer::addAudio(Audio* audio)
 {
+	auto root = head.get();
 	// Sanity check
-	if (root == NULL)
+	if (!root)
 	{
 		return;
 	}
 
 	// Walk the tree to the end
-	while (root->next != NULL)
+	while (root->next.get())
 	{
-		root = root->next;
+		root = root->next.get();
 	}
 
 	// Link the new item to the end
-	root->next = audio;
+	root->next = std::unique_ptr<Audio>{ audio };
 }
 
 // Loads a wave file and adds it to the list of samples to be played
-void playAudio(const char *filename, bool loop, double gain)
+void AudioPlayer::playAudio(const char* filename, bool loop, double gain)
 {
 	// Sanity check
 	if (filename == NULL)
@@ -240,18 +200,10 @@ void playAudio(const char *filename, bool loop, double gain)
 	soundCount += 1;
 
 	// Allocate a new audio object
-	Audio *audio = new Audio();
-
-	audio->next = NULL;				// At the end of the list
-	audio->fade = 0;				// New sample, don't fade
-	audio->free = 0;				// Sample isn't loaded yet
-
-	// Ask cmixer to load our wave file
-	audio->source = cm_new_source_from_file(filename);
+	auto audio = std::make_unique<Audio>(filename);
 
 	if (audio->source == NULL)
 	{
-		delete audio;
 		return;
 	}
 
@@ -284,111 +236,40 @@ void playAudio(const char *filename, bool loop, double gain)
 	// If the sample we're adding is looped, fade any and all existing looped samples
 	if (loop == true)
 	{
-		fadeAudio(reinterpret_cast<Audio *>(device.spec.userdata));
+		//reinterpret_cast<Audio*>(device.spec.userdata)
+		fadeAudio();
 	}
 
 	// Append the sample to the end of the list
-	addAudio(reinterpret_cast<Audio *>(device.spec.userdata), audio);
+	addAudio(reinterpret_cast<Audio*>(device.spec.userdata));
 
 	// Resume audio callback
 	SDL_UnlockAudioDevice(device.id);
 }
 
 // Public interface: Play an audio sound
-void AudioPlayer::play(const char *name, double gain)
+void AudioPlayer::play(const char* name, double gain)
 {
 	playAudio(name, false, gain);
 }
 
 // Public interface: Play a looped sound
-void AudioPlayer::loop(const char *name, double gain)
+void AudioPlayer::loop(const char* name, double gain)
 {
 	playAudio(name, true, gain);
 }
 
 void AudioPlayer::stop_loop()
 {
-	Audio *item = reinterpret_cast<Audio *>(device.spec.userdata);
-
-	while (item != NULL)
+	for (auto audio = head.get();
+		audio && audio->source;
+		audio = audio->next.get())
 	{
-		if (item->source != NULL)
+		// Find any looped samples and end them
+		if (audio->source->loop != 0)
 		{
-			if (item->source->loop != 0)
-			{
-				item->end = true;
-				return;
-			}
+			audio->end = true;
 		}
-
-		item = item->next;
 	}
 }
-
-// Constructor:
-//  - Initialize SDL audio
-//  - Configure the SDL device structure
-//  - Setup the root to the list of audio samples
-//  - Unpause SDL audio (callbacks start now)
-AudioPlayer::AudioPlayer()
-{
-	if (SDL_Init(SDL_INIT_AUDIO) < 0)
-	{
-		std::cout << "Audio Player: Failed to init SDL audio" << std::endl;
-		return;
-	}
-
-	device.spec.freq = AUDIO_FREQUENCY;
-	device.spec.format = AUDIO_FORMAT;
-	device.spec.channels = AUDIO_CHANNELS;
-	device.spec.samples = AUDIO_SAMPLES;
-	device.spec.callback = callback;
-
-	Audio *head = new Audio();
-
-	head->source = NULL;
-	head->next = NULL;
-
-	device.spec.userdata = head;
-
-	device.id = SDL_OpenAudioDevice(NULL, 0, &device.spec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
-
-	if (device.id == 0)
-	{
-		std::cout << "Audio Player: Failed to open audio device" << std::endl;
-		std::cout << "    " << SDL_GetError() << std::endl;
-		return;
-	}
-
-	device.enabled = true;
-
-	// Initialize cmixer
-	cm_init(AUDIO_FREQUENCY);
-	cm_set_lock(lockAudio);
-	cm_set_master_gain(1.0);
-
-	SDL_PauseAudioDevice(device.id, 0);
-}
-
-// Destructor:
-// - Pause the Audio device
-// - Free and delete all audio samples
-// - Close the audio device
-
-// Whether the SDL calls here are actually necessary remains to be seen.
-// main() calls SDL_Quit() before this destructor is called, which should
-// be cleaning up everything SDL, including pausing an closing.
-AudioPlayer::~AudioPlayer()
-{
-	if (device.enabled)
-	{
-		// Pause SDL audio
-		SDL_PauseAudioDevice(device.id, 1);
-		// Free and delete all samples
-		freeAudio(reinterpret_cast<Audio *>(device.spec.userdata));
-		// Close SDL audio device
-		SDL_CloseAudioDevice(device.id);
-	}
-}
-
-#endif
+#endif //DC801_EMBEDDED

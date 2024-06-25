@@ -31,9 +31,7 @@
 #include <compiler.h>
 #include <protected_io.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 /**
  * \brief Write to a CCP-protected 8-bit I/O register
@@ -69,8 +67,6 @@ static inline void ccp_write_spm(void *addr, uint8_t value)
 
 	/** @} */
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* CPU_CCP_H */

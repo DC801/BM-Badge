@@ -1,6 +1,6 @@
 
 #include "keyboard.h"
-#include <stdint.h>
+#include <stddef.h>
 
 volatile uint32_t keyboard_mask = 0;
 keyboard_evt_handler_t keyboard_evt_handler = NULL;
@@ -9,6 +9,9 @@ uint32_t last_keyboard_interrupt_time = 0;
 #ifdef DC801_EMBEDDED
 #include "nrfx_gpiote.h"
 #include "app_error.h"
+#include <config/custom_board.h>
+#include <shim_i2c.h>
+#include "utility.h"
 
 void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
@@ -28,8 +31,9 @@ void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 void keyboard_init(void){
 	#ifdef DC801_EMBEDDED
 	//setup keyboard interrupt pin
-    nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
-	#endif
+	nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
+	debug_print("Keyboard initialized")
+#endif
 }
 
 /**

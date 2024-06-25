@@ -5,8 +5,12 @@
 #include "mage.h"
 #include "mage_game_control.h"
 #include "mage_hex.h"
+#include "mage_map.h"
+#include "mage_script_actions.h"
+#include "mage_script_state.h"
 
 #define SCRIPT_NAME_LENGTH 32
+#define COMMAND_STATES_COUNT 5
 
 //these are the types of scripts that can be on a map or entity:
 typedef enum : uint8_t {
@@ -21,7 +25,11 @@ typedef enum : uint8_t {
 struct resumeStatesStruct {
 	MageScriptState mapLoad;
 	MageScriptState mapTick;
-	MageScriptState serial;
+	MageScriptState commandLook;
+	MageScriptState commandGo;
+	MageScriptState commandUse;
+	MageScriptState commandGet;
+	MageScriptState commandDrop;
 };
 
 //this is a class designed to handle all the scripting for the MAGE() game
@@ -31,6 +39,7 @@ struct resumeStatesStruct {
 class MageScriptControl
 {
 	private:
+
 		//this will process a script based on the state of the resumeStateStruct passed to it.
 		//it should only be called from the 
 		void processScript(MageScriptState * resumeStateStruct, uint8_t mapLocalEntityId, MageScriptType scriptType);
@@ -47,11 +56,6 @@ class MageScriptControl
 		void runAction(uint32_t argumentMemoryAddress, MageScriptState * resumeStateStruct);
 
 	public:
-		//variables for tracking suspended script states:
-		MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
-		MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
-		MageScriptState entityLookResumeStates[MAX_ENTITIES_PER_MAP];
-
 		//this allows an I+C action to set the calling map or entity script to match the new script.
 		void setEntityScript(
 			uint16_t mapLocalScriptId,
@@ -80,6 +84,13 @@ class MageScriptControl
 
 		//these functions return the specified MageScriptState struct:
 		resumeStatesStruct resumeStates;
+		MageScriptState* commandStates [COMMAND_STATES_COUNT] = {
+			&resumeStates.commandLook,
+			&resumeStates.commandGo,
+			&resumeStates.commandGet,
+			&resumeStates.commandDrop,
+			&resumeStates.commandUse,
+		};
 
 		MageScriptControl();
 
@@ -99,7 +110,6 @@ class MageScriptControl
 		);
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
-		MageScriptState* getEntityLookResumeState(uint8_t index);
 
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
@@ -107,7 +117,6 @@ class MageScriptControl
 		void handleCommandScript(MageScriptState *resumeState);
 		void handleEntityOnTickScript(uint8_t filteredEntityId);
 		void handleEntityOnInteractScript(uint8_t filteredEntityId);
-		void handleEntityOnLookScript(uint8_t filteredEntityId);
 
 		void tickScripts();
 }; //MageScriptControl

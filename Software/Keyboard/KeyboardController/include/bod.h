@@ -30,14 +30,10 @@
 
 #include <compiler.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 int8_t BOD_init();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* BROWNOUT_DETECTOR_H_INCLUDED */

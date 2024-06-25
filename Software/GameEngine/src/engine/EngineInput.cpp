@@ -1,18 +1,16 @@
-#include <string>
-#include <regex>
 #include "EngineInput.h"
-//#include "FrameBuffer.h"
-//#include "fonts/Monaco9.h"
+#include "main.h"
+#include "EngineSerial.h"
 
-#ifdef DC801_DESKTOP
-
+#ifndef DC801_EMBEDDED
 #include <SDL.h>
 #include <SDL_image.h>
-#include <cstdio>
-//#include <unistd.h>
-#include "EngineWindowFrame.h"
-#endif
+#include <iostream>
+#include <span>
+#include <string>
+#include <regex>
 
+<<<<<<< HEAD
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -57,26 +55,65 @@ bool *buttonBoolPointerArray[] = {
 
 int32_t buttonClickedOnScreenKeyboardIndex = -1;
 void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
+=======
+void EngineInput::UpdateDesktopInputState(const GameClock::time_point& curTime)
+>>>>>>> scriptFixes
 {
-	if (application_quit != 0)
-	{
-		running = false;
-		return;
-	}
+   auto e = SDL_Event{};
+   while (SDL_PollEvent(&e))
+   {
+      if (e.type == SDL_QUIT)
+      {
+         running = false;
+         return;
+      }
 
-	SDL_PumpEvents();
+      if (e.type == SDL_KEYDOWN)
+      {
+         // Players were pressing ESC intending to close the hex editor,
+         // but instead closing the program. ALT + F4 should be a more
+         // intuitive/intentional close combination.
+         // There is also the GUI close box.
+         if (KMOD_ALT == (e.key.keysym.mod & KMOD_ALT) && e.key.keysym.scancode == SDL_SCANCODE_F4)
+         {
+            running = false;
+         }
+         // ctrl-r should cause the desktop version of the game to
+         // reload the `game.dat` from the filesystem
+         else if ((e.key.keysym.mod & KMOD_CTRL) && e.key.keysym.scancode == SDL_SCANCODE_R)
+         {
+            reset = true;
+            inputStates.fill(InputState{});
+         }
+         else
+         {
+            const auto keyDown = mapScanCode(e.key.keysym.scancode);
+            if (keyDown.has_value())
+            {
+               const auto& key = keyDown.value();
+               if (key == KeyPress::Rjoy_right)
+               {
 
-	const uint8_t *keys = SDL_GetKeyboardState(nullptr);
-	SDL_Event e;
+               }
+               inputStates[key].lastPressed = curTime;
+            }
+         }
+      }
+      else if (e.type == SDL_KEYUP)
+      {
+         const auto keyUp = mapScanCode(e.key.keysym.scancode);
+         if (keyUp.has_value())
+         {
+            const auto& key = keyUp.value();
+            if (key == KeyPress::Rjoy_right)
+            {
 
-	while (SDL_PollEvent(&e))
-	{
-		if (e.type == SDL_QUIT)
-		{
-			running = false;
-			return;
-		}
+            }
+            inputStates[key].lastReleased = curTime;
+         }
+      }
 
+<<<<<<< HEAD
 		if (e.type == SDL_KEYDOWN) {
 			// Players were pressing ESC intending to close the hex editor,
 			// but instead closing the program. ALT + F4 should be a more
@@ -196,171 +233,210 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 
 	*keyboardBitmask = newValue;
 	// debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
+=======
+      // TODO: MOVE THIS (and hook it up)
+      // + or - keys increase or decrease screen size:
+      /*else if (e.key.keysym.sym == SDLK_MINUS)
+      {
+         MainWindow->Resize(-1);
+         return 0;
+      }
+      else if (e.key.keysym.sym == SDLK_EQUALS)
+      {
+         MainWindow->Resize(1);
+         return 0;
+      }*/
+   }
+>>>>>>> scriptFixes
 }
 
 #endif
 
-void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
+std::optional<KeyPress> EngineInput::mapScanCode(const int scanCode) const
 {
-	uint32_t oneBit = 0x00000001;
+   switch (scanCode)
+   {
+   case SDL_SCANCODE_F5:
+   case SDL_SCANCODE_B:
+   {
+      return KeyPress::Mem0;
+   }
 
-	memcpy(&EngineInput_Activated, &EngineInput_Buttons, sizeof(ButtonStates));
-	memcpy(&EngineInput_Deactivated, &EngineInput_Buttons, sizeof(ButtonStates));
+   case SDL_SCANCODE_F6:
+   case SDL_SCANCODE_N:
+   {
+      return KeyPress::Mem1;
+   }
 
-	EngineInput_Buttons.mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
-	EngineInput_Buttons.mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
-	EngineInput_Buttons.mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
-	EngineInput_Buttons.mem3 = (oneBit << KEYBOARD_KEY_MEM3) & keyboardBitmask;
-	EngineInput_Buttons.bit_128 = (oneBit << KEYBOARD_KEY_BIT128) & keyboardBitmask;
-	EngineInput_Buttons.bit_64 = (oneBit << KEYBOARD_KEY_BIT64) & keyboardBitmask;
-	EngineInput_Buttons.bit_32 = (oneBit << KEYBOARD_KEY_BIT32) & keyboardBitmask;
-	EngineInput_Buttons.bit_16 = (oneBit << KEYBOARD_KEY_BIT16) & keyboardBitmask;
-	EngineInput_Buttons.bit_8 = (oneBit << KEYBOARD_KEY_BIT8) & keyboardBitmask;
-	EngineInput_Buttons.bit_4 = (oneBit << KEYBOARD_KEY_BIT4) & keyboardBitmask;
-	EngineInput_Buttons.bit_2 = (oneBit << KEYBOARD_KEY_BIT2) & keyboardBitmask;
-	EngineInput_Buttons.bit_1 = (oneBit << KEYBOARD_KEY_BIT1) & keyboardBitmask;
-	EngineInput_Buttons.op_xor = (oneBit << KEYBOARD_KEY_XOR) & keyboardBitmask;
-	EngineInput_Buttons.op_add = (oneBit << KEYBOARD_KEY_ADD) & keyboardBitmask;
-	EngineInput_Buttons.op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
-	EngineInput_Buttons.op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
-	EngineInput_Buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
+   case SDL_SCANCODE_F7:
+   case SDL_SCANCODE_M:
+   {
+      return KeyPress::Mem2;
+   }
 
-	EngineInput_Activated.mem0 = !EngineInput_Activated.mem0 && EngineInput_Buttons.mem0;
-	EngineInput_Activated.mem1 = !EngineInput_Activated.mem1 && EngineInput_Buttons.mem1;
-	EngineInput_Activated.mem2 = !EngineInput_Activated.mem2 && EngineInput_Buttons.mem2;
-	EngineInput_Activated.mem3 = !EngineInput_Activated.mem3 && EngineInput_Buttons.mem3;
-	EngineInput_Activated.bit_128 = !EngineInput_Activated.bit_128 && EngineInput_Buttons.bit_128;
-	EngineInput_Activated.bit_64 = !EngineInput_Activated.bit_64 && EngineInput_Buttons.bit_64;
-	EngineInput_Activated.bit_32 = !EngineInput_Activated.bit_32 && EngineInput_Buttons.bit_32;
-	EngineInput_Activated.bit_16 = !EngineInput_Activated.bit_16 && EngineInput_Buttons.bit_16;
-	EngineInput_Activated.bit_8 = !EngineInput_Activated.bit_8 && EngineInput_Buttons.bit_8;
-	EngineInput_Activated.bit_4 = !EngineInput_Activated.bit_4 && EngineInput_Buttons.bit_4;
-	EngineInput_Activated.bit_2 = !EngineInput_Activated.bit_2 && EngineInput_Buttons.bit_2;
-	EngineInput_Activated.bit_1 = !EngineInput_Activated.bit_1 && EngineInput_Buttons.bit_1;
-	EngineInput_Activated.op_xor = !EngineInput_Activated.op_xor && EngineInput_Buttons.op_xor;
-	EngineInput_Activated.op_add = !EngineInput_Activated.op_add && EngineInput_Buttons.op_add;
-	EngineInput_Activated.op_sub = !EngineInput_Activated.op_sub && EngineInput_Buttons.op_sub;
-	EngineInput_Activated.op_page = !EngineInput_Activated.op_page && EngineInput_Buttons.op_page;
-	EngineInput_Activated.ljoy_center = !EngineInput_Activated.ljoy_center && EngineInput_Buttons.ljoy_center;
-	EngineInput_Activated.ljoy_up = !EngineInput_Activated.ljoy_up && EngineInput_Buttons.ljoy_up;
-	EngineInput_Activated.ljoy_down = !EngineInput_Activated.ljoy_down && EngineInput_Buttons.ljoy_down;
-	EngineInput_Activated.ljoy_left = !EngineInput_Activated.ljoy_left && EngineInput_Buttons.ljoy_left;
-	EngineInput_Activated.ljoy_right = !EngineInput_Activated.ljoy_right && EngineInput_Buttons.ljoy_right;
-	EngineInput_Activated.rjoy_center = !EngineInput_Activated.rjoy_center && EngineInput_Buttons.rjoy_center;
-	EngineInput_Activated.rjoy_up = !EngineInput_Activated.rjoy_up && EngineInput_Buttons.rjoy_up;
-	EngineInput_Activated.rjoy_down = !EngineInput_Activated.rjoy_down && EngineInput_Buttons.rjoy_down;
-	EngineInput_Activated.rjoy_left = !EngineInput_Activated.rjoy_left && EngineInput_Buttons.rjoy_left;
-	EngineInput_Activated.rjoy_right = !EngineInput_Activated.rjoy_right && EngineInput_Buttons.rjoy_right;
-	EngineInput_Activated.hax = !EngineInput_Activated.hax && EngineInput_Buttons.hax;
+   case SDL_SCANCODE_F8:
+   case SDL_SCANCODE_COMMA:
+   {
+      return KeyPress::Mem3;
+   }
 
-	EngineInput_Deactivated.mem0 = EngineInput_Deactivated.mem0 && !EngineInput_Buttons.mem0;
-	EngineInput_Deactivated.mem1 = EngineInput_Deactivated.mem1 && !EngineInput_Buttons.mem1;
-	EngineInput_Deactivated.mem2 = EngineInput_Deactivated.mem2 && !EngineInput_Buttons.mem2;
-	EngineInput_Deactivated.mem3 = EngineInput_Deactivated.mem3 && !EngineInput_Buttons.mem3;
-	EngineInput_Deactivated.bit_128 = EngineInput_Deactivated.bit_128 && !EngineInput_Buttons.bit_128;
-	EngineInput_Deactivated.bit_64 = EngineInput_Deactivated.bit_64 && !EngineInput_Buttons.bit_64;
-	EngineInput_Deactivated.bit_32 = EngineInput_Deactivated.bit_32 && !EngineInput_Buttons.bit_32;
-	EngineInput_Deactivated.bit_16 = EngineInput_Deactivated.bit_16 && !EngineInput_Buttons.bit_16;
-	EngineInput_Deactivated.bit_8 = EngineInput_Deactivated.bit_8 && !EngineInput_Buttons.bit_8;
-	EngineInput_Deactivated.bit_4 = EngineInput_Deactivated.bit_4 && !EngineInput_Buttons.bit_4;
-	EngineInput_Deactivated.bit_2 = EngineInput_Deactivated.bit_2 && !EngineInput_Buttons.bit_2;
-	EngineInput_Deactivated.bit_1 = EngineInput_Deactivated.bit_1 && !EngineInput_Buttons.bit_1;
-	EngineInput_Deactivated.op_xor = EngineInput_Deactivated.op_xor && !EngineInput_Buttons.op_xor;
-	EngineInput_Deactivated.op_add = EngineInput_Deactivated.op_add && !EngineInput_Buttons.op_add;
-	EngineInput_Deactivated.op_sub = EngineInput_Deactivated.op_sub && !EngineInput_Buttons.op_sub;
-	EngineInput_Deactivated.op_page = EngineInput_Deactivated.op_page && !EngineInput_Buttons.op_page;
-	EngineInput_Deactivated.ljoy_center = EngineInput_Deactivated.ljoy_center && !EngineInput_Buttons.ljoy_center;
-	EngineInput_Deactivated.ljoy_up = EngineInput_Deactivated.ljoy_up && !EngineInput_Buttons.ljoy_up;
-	EngineInput_Deactivated.ljoy_down = EngineInput_Deactivated.ljoy_down && !EngineInput_Buttons.ljoy_down;
-	EngineInput_Deactivated.ljoy_left = EngineInput_Deactivated.ljoy_left && !EngineInput_Buttons.ljoy_left;
-	EngineInput_Deactivated.ljoy_right = EngineInput_Deactivated.ljoy_right && !EngineInput_Buttons.ljoy_right;
-	EngineInput_Deactivated.rjoy_center = EngineInput_Deactivated.rjoy_center && !EngineInput_Buttons.rjoy_center;
-	EngineInput_Deactivated.rjoy_up = EngineInput_Deactivated.rjoy_up && !EngineInput_Buttons.rjoy_up;
-	EngineInput_Deactivated.rjoy_down = EngineInput_Deactivated.rjoy_down && !EngineInput_Buttons.rjoy_down;
-	EngineInput_Deactivated.rjoy_left = EngineInput_Deactivated.rjoy_left && !EngineInput_Buttons.rjoy_left;
-	EngineInput_Deactivated.rjoy_right = EngineInput_Deactivated.rjoy_right && !EngineInput_Buttons.rjoy_right;
-	EngineInput_Deactivated.hax = EngineInput_Deactivated.hax && !EngineInput_Buttons.hax;
+   case SDL_SCANCODE_1:
+   {
+      return KeyPress::Bit128;
+   }
+   case SDL_SCANCODE_2:
+   {
+      return KeyPress::Bit64;
+   }
+   case SDL_SCANCODE_3:
+   {
+      return KeyPress::Bit32;
+   }
+   case SDL_SCANCODE_4:
+   {
+      return KeyPress::Bit16;
+   }
+   case SDL_SCANCODE_5:
+   {
+      return KeyPress::Bit8;
+   }
+   case SDL_SCANCODE_6:
+   {
+      return KeyPress::Bit4;
+   }
+   case SDL_SCANCODE_7:
+   {
+      return KeyPress::Bit2;
+   }
+   case SDL_SCANCODE_8:
+   {
+      return KeyPress::Bit1;
+   }
+
+   case SDL_SCANCODE_F1:
+   case SDL_SCANCODE_Z:
+   case SDL_SCANCODE_KP_1:
+   {
+      return KeyPress::Xor;
+   }
+
+   case SDL_SCANCODE_F2:
+   case SDL_SCANCODE_X:
+   case SDL_SCANCODE_KP_2:
+   {
+      return KeyPress::Add;
+   }
+
+   case SDL_SCANCODE_F3:
+   case SDL_SCANCODE_C:
+   case SDL_SCANCODE_KP_3:
+   {
+      return KeyPress::Sub;
+   }
+
+   case SDL_SCANCODE_F4:
+   case SDL_SCANCODE_V:
+   case SDL_SCANCODE_KP_0:
+   case SDL_SCANCODE_LCTRL:
+   {
+      return KeyPress::Page;
+   }
+
+   case SDL_SCANCODE_TAB:
+   case SDL_SCANCODE_ESCAPE:
+   {
+      return KeyPress::Hax;
+   }
+
+
+   case SDL_SCANCODE_Q:
+   case SDL_SCANCODE_KP_7:
+   {
+      return KeyPress::Ljoy_center;
+   }
+   case SDL_SCANCODE_W:
+   case SDL_SCANCODE_UP:
+   {
+      return KeyPress::Ljoy_up;
+   }
+   case SDL_SCANCODE_S:
+   case SDL_SCANCODE_DOWN:
+   {
+      return KeyPress::Ljoy_down;
+   }
+   case SDL_SCANCODE_A:
+   case SDL_SCANCODE_LEFT:
+   {
+      return KeyPress::Ljoy_left;
+   }
+   case SDL_SCANCODE_D:
+   case SDL_SCANCODE_RIGHT:
+   {
+      return KeyPress::Ljoy_right;
+   }
+
+   case SDL_SCANCODE_KP_9:
+   case SDL_SCANCODE_O:
+   {
+      return KeyPress::Rjoy_center;
+   }
+   case SDL_SCANCODE_KP_8:
+   case SDL_SCANCODE_I:
+   case SDL_SCANCODE_GRAVE: // Grave accent mark, AKA Backtick, left of 1
+   case SDL_SCANCODE_BACKSLASH:
+   {
+      return KeyPress::Rjoy_up;
+   }
+   case SDL_SCANCODE_KP_5:
+   case SDL_SCANCODE_K:
+   case SDL_SCANCODE_LSHIFT:
+   {
+      return KeyPress::Rjoy_down;
+   }
+   case SDL_SCANCODE_KP_4:
+   case SDL_SCANCODE_J:
+   {
+      return KeyPress::Rjoy_left;
+   }
+   case SDL_SCANCODE_KP_6:
+   case SDL_SCANCODE_L:
+   case SDL_SCANCODE_E:
+   case SDL_SCANCODE_KP_ENTER:
+   case SDL_SCANCODE_RETURN:
+   {
+      return KeyPress::Rjoy_right;
+   }
+   default:
+      // std::nullopt represents keys that have no mapping (alt, shift, etc) 
+      return std::nullopt;
+   }
 }
 
-void EngineHandleKeyboardInput ()
+#ifndef DC801_EMBEDDED
+std::string EngineInput::GetCommandStringFromStandardIn()
 {
-	static uint32_t keyboardBitmask = 0x00000000;
-
-#ifdef DC801_DESKTOP
-	EngineGetDesktopInputState(&keyboardBitmask);
+   std::string commandBuffer;
+   auto& charsRead = std::getline(std::cin, commandBuffer, '\n');
+   //was_command_entered = bool(charsRead);
+   return commandBuffer;
+}
 #endif
 
+void EngineInput::Update(const GameClock::time_point& curTime)
+{
+   if (application_quit)
+   {
+      running = false;
+      return;
+   }
 #ifdef DC801_EMBEDDED
-	keyboardBitmask = get_keyboard_mask();
+   auto newValue = get_keyboard_mask();
+   serial->HandleInput();
+#else
+   UpdateDesktopInputState(curTime);
+   GetCommandStringFromStandardIn();
 #endif
-	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
 
-	/*
-	//screen logging, prints button states to screen:
-	char mask_string[128];
-	uint8_t length = 0;
-	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
-		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
-	}
-	p_canvas()->clearScreen(COLOR_DARKBLUE);
-	p_canvas()->printMessage(
-		mask_string,
-		Monaco9,
-		COLOR_WHITE,
-		32,
-		32
-	);
-	//p_canvas()->blt();
-
-	//nrf_delay_ms(500);
-
-	//screen logging:
-	length = 0;
-	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
-		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
-	}
-	//p_canvas()->clearScreen(COLOR_RED);
-	p_canvas()->printMessage(
-		mask_string,
-		Monaco9,
-		COLOR_RED,
-		32,
-		32
-	);
-	p_canvas()->blt();
-
-	nrf_delay_ms(500);
-	*/
+   lastDelta = curTime - lastUpdate;
+   lastUpdate = curTime;
 }
-
-bool EngineIsRunning()
-{
-	return running;
-}
-
-bool EngineShouldReloadGameDat()
-{
-	bool result = shouldReloadGameDat;
-	shouldReloadGameDat = false;
-	return result;
-}
-
-void EngineTriggerRomReload()
-{
-	shouldReloadGameDat = true;
-}
-
-
-#ifdef __cplusplus
-}
-#endif

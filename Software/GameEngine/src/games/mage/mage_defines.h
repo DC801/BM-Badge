@@ -13,100 +13,104 @@ all of the old code used as the foundation of this badge.
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 
-#include "EngineROM.h"
-#include "FrameBuffer.h"
-#include <memory>
-#include <utility>
-#include <string>
+#include <chrono>
+#include "shim_timer.h"
+using namespace std::chrono;
 
-//this is the path to the game.dat file on the SD card.
-//if an SD card is inserted with game.dat in this location
-//and its header hash is different from the one in the ROM chip
-//it will automatically be loaded.
-#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
+static inline const auto DrawWidth = 320;
+static inline const auto DrawHeight = 240;
+static inline const auto FramebufferSize = DrawWidth * DrawHeight;
 
+<<<<<<< HEAD
 #define ENGINE_VERSION 12
+=======
+static inline const auto MapGoDirectionNameLength = 12;
+>>>>>>> scriptFixes
 
-#define MAP_GO_DIRECTION_NAME_LENGTH 12
+static inline const auto MAGE_COLLISION_SPOKE_COUNT = 6;
 
 //this is the most unique entities that can be in any map.
-#define MAX_ENTITIES_PER_MAP 64
+static inline const auto MAX_ENTITIES_PER_MAP = 64;
 
-//this is the map that will load at the start of the game:
-#define DEFAULT_MAP 0
-
-#define DEFAULT_PLAYER_NAME "Bub"
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
-#define NO_PLAYER 255
+static inline const auto NoPlayer = nullptr;
+static inline const auto NO_PLAYER_INDEX = 255;
 
 //this is a value used to indicate that an action's calling entity was
 //the map, and not actually one of the entities on the map.
-#define MAGE_MAP_ENTITY 255
-
-//this is a value used in the entityId in actions that refers to the
-//entity the script is running on.
-#define MAGE_ENTITY_SELF 254
-
-//this is a value used in the entityId in actions that refers to the
-//current playerEntityId for the MageGameControl object.
-#define MAGE_ENTITY_PLAYER 253
-
-//this is a value used in the entityId in actions that refers to the
-//current playerEntityId for the MageGameControl object.
-#define MAGE_ENTITY_PATH 65535
+static inline const auto MAGE_MAP_ENTITY = 255;
+static inline const auto MAGE_ENTITY_SELF = 254;
+static inline const auto MAGE_ENTITY_PLAYER = 253;
+static inline const auto MAGE_ENTITY_PATH = 65535;
 
 //these are the failover values that the game will use when an invalid hacked entity state is found:
-#define MAGE_TILESET_FAILOVER_ID 0
-#define MAGE_TILE_FAILOVER_ID 0
-#define MAGE_ANIMATION_DURATION_FAILOVER_VALUE 0
-#define MAGE_FRAME_COUNT_FAILOVER_VALUE 0
-#define MAGE_RENDER_FLAGS_FAILOVER_VALUE 0
-
-//these are used for setting player speed
-//speed is in x/y units per update
-#define MAGE_RUNNING_SPEED 200
-#define MAGE_WALKING_SPEED 100
+static inline const auto MAGE_TILESET_FAILOVER_ID = 0;
+static inline const auto MAGE_TILE_FAILOVER_ID = 0;
+static inline const auto MAGE_ANIMATION_DURATION_FAILOVER_VALUE = 0;
+static inline const auto MAGE_FRAME_COUNT_FAILOVER_VALUE = 0;
+static inline const auto MAGE_RENDER_FLAGS_FAILOVER_VALUE = 0;
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
 //not work as intended.
-#define MAGE_IDLE_ANIMATION_INDEX 0
-#define MAGE_WALK_ANIMATION_INDEX 1
-#define MAGE_ACTION_ANIMATION_INDEX 2
+enum class PlayerAnimation
+{
+   Idle,
+   Walk,
+   Action,
+   Invalid // enums always fill 
+};
+
+static inline const auto MAGE_IDLE_ANIMATION_INDEX = 0;
+static inline const auto MAGE_WALK_ANIMATION_INDEX = 1;
+static inline const auto MAGE_ACTION_ANIMATION_INDEX = 2;
 
 //this is how many bytes of arguments each script action has.
 //all actions will have this many bytes, even if some are not used by a particular action
-#define MAGE_NUM_ACTION_ARGS 7
-
-#define MAGE_NUM_MEM_BUTTONS 4
-
-//this is the number of chars that are used in the entity struct as part of the entity name
-#define MAGE_ENTITY_NAME_LENGTH 12
-#define MAGE_SAVE_FLAG_COUNT 2048
-#define MAGE_SAVE_FLAG_BYTE_COUNT (MAGE_SAVE_FLAG_COUNT / 8)
-#define MAGE_SCRIPT_VARIABLE_COUNT 256
+static inline const auto MAGE_NUM_ACTION_ARGS = 7;
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
-#define MAGE_NO_SCRIPT (-1)
+#define MAGE_NO_SCRIPT std::nullopt
 #define MAGE_NO_MAP (-1)
-#define MAGE_NO_WARP_STATE (-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 
-//this is how many ms must have passed before the main game loop will run again:
-//typical values:
-//60fps: ~16ms
-//30fps: ~33ms
-//24fps: ~41ms
-#ifdef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
-#endif
+struct GameClock
+{
+   using rep = uint32_t;
+   using period = std::milli;
+   using duration = std::chrono::duration<rep, period>;
+   using time_point = std::chrono::time_point<GameClock>;
+
+   static time_point now() noexcept
+   {
+      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+      auto epochTime = now_ms.time_since_epoch().count();
+      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
+   }
+};
+
+// 100px/sec, 1000ms/sec, 30frames/sec, 3px/frame or 6px/frame
+// this is how many ms must have passed before the main game loop will run again:
+// typical values:
+// 60fps: ~16ms
+// 30fps: ~33ms
+// 24fps: ~41ms
+static inline const auto TargetFPS = 30;
+static inline const auto MinTimeBetweenRenders = GameClock::duration{ 1000 } / TargetFPS ;
+static inline const auto MinTimeBetweenUIInput = GameClock::duration{ 1000 };
+static inline const auto IntegrationStepSize = MinTimeBetweenRenders/3;
+
+
 #ifdef DC801_EMBEDDED
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
+// RTC for NRF52840:
+// PRESCALER = round(32768 Hz / [target FPS (Hz)]) - 1
+static inline const auto RtcPrescaler = std::round(32768 / TargetFPS) - 1;
 #endif
 
+<<<<<<< HEAD
 // color palette corruption detection - requires much ram, can only be run on desktop
 #ifdef DC801_DESKTOP
 #define LOG_COLOR_PALETTE_CORRUPTION(value) MageGame->verifyAllColorPalettes((value));
@@ -249,5 +253,11 @@ typedef struct {
 	uint8_t renderFlags;
 	bool isInteracting;
 } MageEntityRenderableData;
+=======
+//these are used for setting player speed
+//speed is in x/y pixels per update tick
+static inline const auto RunSpeed = uint16_t{ 3 };
+static inline const auto WalkSpeed = uint16_t{ 2 };
+>>>>>>> scriptFixes
 
 #endif //_MAGE_DEFINES_H

@@ -1,6 +1,6 @@
 {
     "files.associations": {
-		"*.make": "makefile",
+		"*.cmake": "cmake",
 		"*.x": "linkerscript",
 		"array": "cpp",
 		"atomic": "cpp",
@@ -74,5 +74,9 @@
 		"stop_token": "cpp",
 		"cfenv": "cpp",
 		"typeindex": "cpp"
-	}
+	},
+	"cortex-debug.showDevDebugOutput": "parsed",
+	"cortex-debug.variableUseNaturalFormat": false,
+	"C_Cpp.dimInactiveRegions": false,
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

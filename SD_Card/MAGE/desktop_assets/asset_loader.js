@@ -16,7 +16,7 @@ gameCanvas.addEventListener('wheel', function (event) {
 	// so prevent SDL's scroll handling from trapping scroll,
 	// which prevents a user's ability to scroll the page.
 	event.stopImmediatePropagation();
-});
+}, {passive: true});
 
 var loadedDataMap = {};
 var createdPaths = {};
@@ -161,7 +161,7 @@ var fetchBinaryDataFromPath = function (path) {
 
 var filesToPreload = [
 	'MAGE/desktop_assets/window_frame.png',
-	'MAGE/desktop_assets/window_frame-keyboard.png',
+	'MAGE/desktop_assets/window_frame-button.png',
 	'MAGE/desktop_assets/window_frame-led.png',
 	'MAGE/game.dat',
 ];
@@ -231,19 +231,3 @@ var handleFileDropIntoPage = function(event) {
 document.body.addEventListener('dragover', handleFileDropIntoPage);
 document.body.addEventListener('dragenter', handleFileDropIntoPage);
 document.body.addEventListener('drop', handleFileDropIntoPage);
-
-var consoleToggler = document.getElementById('toggle-console');
-var consoleHolder = document.getElementById('console-holder');
-var hideConsoleStyle = consoleHolder.style.cssText;
-var toggleConsole = function () {
-	consoleHolder.style = consoleHolder.style.cssText === ''
-		? hideConsoleStyle
-		: '';
-}
-var handleKeydown = function (keydownEvent) {
-	if (keydownEvent.key === '`') {
-		toggleConsole()
-	}
-};
-window.addEventListener('keydown', handleKeydown);
-consoleToggler.addEventListener('click', toggleConsole);

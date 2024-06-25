@@ -3258,7 +3258,6 @@
 #define NRFX_SPIM2_ENABLED 1
 #endif
 
-
 #ifndef NRFX_SPIM3_ENABLED
 #define NRFX_SPIM3_ENABLED 1
 #endif
@@ -3342,6 +3341,7 @@
 // <q> NRFX_SPIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED  - Enables nRF52 anomaly 109 workaround for SPIM.
 
 
+// NRFX_SPIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED - [198] nRF52840: SPIM3 transmit data might be corrupted
 // <i> The workaround uses interrupts to wake up the CPU by catching
 // <i> a start event of zero-length transmission to start the clock. This
 // <i> ensures that the DMA transfer will be executed without issues and
@@ -3353,7 +3353,19 @@
 #define NRFX_SPIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED 0
 #endif
 
+// Conditions
+// <i> Data accessed by CPU location in the same RAM block as where the SPIM3 TXD.PTR is pointing, and CPU
+// <i> does a read or write operation at the same clock cycle as the SPIM3 EasyDMA is fetching data.
+// Consequences
+// <i> Transmit data from SPIM3 is corrupted.
+// Workaround
+// <i> Reserve dedicated RAM blocks for the SPIM3 transmit buffer, not overlapping with application data used
+// <i> by the CPU.In addition, synchronize so that the CPU is not writing data to the transmit buffer while SPIM
+// <i> is transmitting data.
 
+#ifndef NRFX_SPIM3_NRF52840_ANOMALY_198_WORKAROUND_ENABLED
+#define NRFX_SPIM3_NRF52840_ANOMALY_198_WORKAROUND_ENABLED 1
+#endif
 
 #ifndef NRFX_SPIM_EXTENDED_ENABLED
 #define NRFX_SPIM_EXTENDED_ENABLED 1
@@ -7447,7 +7459,7 @@
 // <e> NRF_LOG_BACKEND_RTT_ENABLED - nrf_log_backend_rtt - Log RTT backend
 //==========================================================
 #ifndef NRF_LOG_BACKEND_RTT_ENABLED
-#define NRF_LOG_BACKEND_RTT_ENABLED 0
+#define NRF_LOG_BACKEND_RTT_ENABLED 1
 #endif
 // <o> NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE - Size of buffer for partially processed strings.
 // <i> Size of the buffer is a trade-off between RAM usage and processing.
@@ -7480,7 +7492,7 @@
 // <e> NRF_LOG_BACKEND_UART_ENABLED - nrf_log_backend_uart - Log UART backend
 //==========================================================
 #ifndef NRF_LOG_BACKEND_UART_ENABLED
-#define NRF_LOG_BACKEND_UART_ENABLED 1
+#define NRF_LOG_BACKEND_UART_ENABLED 0
 #endif
 // <o> NRF_LOG_BACKEND_UART_TX_PIN - UART TX pin
 #ifndef NRF_LOG_BACKEND_UART_TX_PIN
@@ -12753,4 +12765,3 @@
 
 // <<< end of configuration section >>>
 #endif //SDK_CONFIG_H
-

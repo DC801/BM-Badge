@@ -1,86 +1,307 @@
 /*
-This class contains the MageMap class and all related subclasses
+This class contains the MapControl class and all related subclasses
 It is a structure used to hold the binary information in the ROM
 in a more accessible way.
 */
 #ifndef _MAGE_MAP_H
 #define _MAGE_MAP_H
 
-#include "mage_defines.h"
+#include <array>
+#include <functional>
+#include <optional>
+#include <span>
+#include <tuple>
+#include <utility>
+#include <vector>
 
-typedef struct {
-	char name[MAP_GO_DIRECTION_NAME_LENGTH];
-	uint16_t mapLocalScriptId;
-	uint16_t padding;
-} MapGoDirection;
+#include "mage_entity.h"
+#include "FrameBuffer.h"
+#include "shim_timer.h"
+#include "EngineROM.h"
+#include "mage_script_state.h"
 
-class MageMap
+class MageScript;
+struct GoDirection
 {
+   const char name[MapGoDirectionNameLength]{ 0 };
+   const uint16_t mapLocalScriptId{ 0 };
+   const uint16_t padding{ 0 };
+};
+
+struct MapTile
+{
+   const uint16_t tileId{ 0 };
+   const uint8_t tilesetId{ 0 };
+   const uint8_t flags{ 0 };
+};
+
+struct MapLayers
+{
+   MapLayers() noexcept = default;
+   //MapLayers(MapLayers& layers) noexcept = default;
+   MapLayers(uint32_t& offset, std::span<const MapTile>&& tiles, uint16_t layerSize) noexcept
+      : tiles(std::move(tiles)),
+      layerSize(layerSize)
+   {}
+
+   constexpr std::span<const MapTile> operator[](uint8_t i) const { return tiles.subspan(i * layerSize, layerSize); }
+
+   std::span<const MapTile> tiles{};
+   uint16_t layerSize{ 0 };
+
+   constexpr auto size() const
+   {
+      return 1 + tiles.size() / layerSize;
+   }
+
+   auto begin() const
+   {
+      return (*this)[0];
+   }
+
+   auto end() const
+   {
+      return (*this)[size() - 1];
+   }
+};
+
+struct MapData
+{
+   MapData(uint32_t& offset);
+   static const inline int MapNameLength = 16;
+   char name[MapNameLength]{ 0 };
+   uint16_t tileWidth{ 0 };
+   uint16_t tileHeight{ 0 };
+   uint16_t cols{ 0 };
+   uint16_t rows{ 0 };
+   uint16_t onLoadScriptId{ 0 };
+   uint16_t onTickScriptId{ 0 };
+   uint16_t onLookScriptId{ 0 };
+   uint8_t playerEntityIndex{ 0 };
+   uint16_t entityCount{ 0 };
+   uint16_t geometryCount{ 0 };
+   uint16_t scriptCount{ 0 };
+   uint8_t goDirectionsCount{ 0 };
+
+   std::span<const uint16_t> entityGlobalIDs;
+   std::span<const uint16_t> geometryGlobalIDs;
+   std::span<const uint16_t> scriptGlobalIDs;
+   std::span<const GoDirection> goDirections;
+   MapLayers layers;
+};
+
+class MapControl
+{
+   friend class MageGameEngine;
+   friend class MageScriptControl;
+   friend class MageHexEditor;
 public:
-	char name[17];
-	uint16_t tileWidth;
-	uint16_t tileHeight;
-	uint16_t cols;
-	uint16_t rows;
-	uint16_t onLoad;
-	uint16_t onTick;
-	uint16_t onLook;
-	uint8_t layerCount;
-	uint8_t playerEntityIndex;
-	uint16_t entityCount;
-	uint16_t geometryCount;
-	uint16_t scriptCount;
-	uint8_t goDirectionCount;
-	std::unique_ptr<uint16_t[]> entityGlobalIds;
-	std::unique_ptr<uint16_t[]> geometryGlobalIds;
-	std::unique_ptr<uint16_t[]> scriptGlobalIds;
-	std::unique_ptr<MapGoDirection[]> goDirections;
-	std::unique_ptr<uint32_t[]> mapLayerOffsets;
+   using OnTickScript = TaggedType<MageScriptState, struct OnTick>;
+   using OnInteractScript = TaggedType<MageScriptState, struct OnInteract>;
 
-	MageMap() : name{0},
-		tileWidth{0},
-		tileHeight{0},
-		cols{0},
-		rows{0},
-		onLoad{0},
-		onTick{0},
-		onLook{0},
-		layerCount{0},
-		playerEntityIndex{0},
-		entityCount{0},
-		geometryCount{0},
-		scriptCount{0},
-		goDirectionCount{0},
-		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
-		geometryGlobalIds{std::make_unique<uint16_t[]>(1)},
-		scriptGlobalIds{std::make_unique<uint16_t[]>(1)},
-		goDirections{std::make_unique<MapGoDirection[]>(1)},
-		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
-	{ };
+   MapControl(std::shared_ptr<FrameBuffer> frameBuffer, int32_t initialMapId) noexcept
+      : frameBuffer(frameBuffer), mapLoadId(initialMapId)
+   {}
 
-	MageMap(uint32_t address);
+   inline uint8_t* GetEntityDataPointer() { return reinterpret_cast<uint8_t*>(entityDataArray.data()); }
+   void Load();
+   void DrawLayer(uint8_t layer) const;
+   void DrawEntities() const;
+   std::optional<uint16_t> Update();
 
-	uint32_t Size() const;
-	std::string Name() const;
-	uint16_t TileWidth() const;
-	uint16_t TileHeight() const;
-	uint16_t Cols() const;
-	uint16_t Rows() const;
-	uint8_t LayerCount() const;
-	uint8_t EntityCount() const;
-	uint16_t GeometryCount() const;
-	uint16_t ScriptCount() const;
-	//this returns a global entityId from the local entity index
-	uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const;
-	//this returns a global geometryId from the local geometry index
-	uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const;
-	//the returns a global mapLocalScriptId from the local script index
-	uint16_t getGlobalScriptId(uint16_t mapLocalScriptId) const;
-	std::string getDirectionNames() const;
-	uint16_t getDirectionScriptId(std::string directionName) const;
-	uint32_t LayerOffset(uint16_t num) const;
+   EntityRect getInteractBox() const;
 
-	uint8_t getMapLocalPlayerEntityIndex();
-}; //class MageMap
+   void handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData);
+
+   constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
+   {
+      if (entityIndex >= currentMap->entityCount && entityIndex != MAGE_MAP_ENTITY)
+      {
+         return NO_PLAYER_INDEX;
+      }
+
+      switch (entityIndex)
+      {
+      default:
+      case MAGE_MAP_ENTITY:
+         return entityIndex;
+
+      case MAGE_ENTITY_SELF:
+         return callingEntityId;
+
+      case MAGE_ENTITY_PLAYER:
+         return currentMap->playerEntityIndex;
+      }
+   }
+
+   void Draw() const;
+
+   [[nodiscard("This should always be part of a check that leads to map reload")]]
+   inline bool ShouldReload() const { return mapLoadId != MAGE_NO_MAP; }
+   inline std::string Name() const { return currentMap->name; }
+   inline uint16_t TileWidth() const { return currentMap->tileWidth; }
+   inline uint16_t TileHeight() const { return currentMap->tileHeight; }
+   inline uint16_t Cols() const { return currentMap->cols; }
+   inline uint16_t Rows() const { return currentMap->rows; }
+   inline uint8_t LayerCount() const { return currentMap->layers.tiles.size() / currentMap->layers.layerSize; }
+   inline uint8_t FilteredEntityCount() const { return currentMap->entityCount; }
+   inline uint16_t GeometryCount() const { return currentMap->geometryCount; }
+   inline uint16_t ScriptCount() const { return scripts.size(); }
+
+   const MageGeometry* GetGeometry(uint16_t mapLocalGeometryId) const
+   {
+      if (currentMap->geometryCount == 0)
+      {
+         return nullptr;
+      }
+      return ROM()->GetReadPointerByIndex<MageGeometry>(currentMap->geometryGlobalIDs[mapLocalGeometryId % currentMap->geometryCount]);
+   }
+
+   inline MageEntityData* getPlayerEntityData()
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<MageEntityData>(currentMap->playerEntityIndex);
+   }
+
+   inline const MageEntityData* getPlayerEntityData() const
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<MageEntityData>(currentMap->playerEntityIndex);
+   }
+
+   inline RenderableData* getPlayerRenderableData()
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<RenderableData>(currentMap->playerEntityIndex);
+   }
+
+   inline const RenderableData* getPlayerRenderableData() const
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<RenderableData>(currentMap->playerEntityIndex);
+   }
+
+   inline const RenderableData& getRenderableDataByMapLocalId(uint16_t mapLocalId) const
+   {
+      return Get<RenderableData>(mapLocalId % currentMap->entityCount);
+   }
+
+   inline RenderableData& getRenderableDataByMapLocalId(uint16_t mapLocalId)
+   {
+      return Get<RenderableData>(mapLocalId % currentMap->entityCount);
+   }
+
+   std::string getDirectionNames() const
+   {
+      std::string result = "";
+      for (auto& dir : currentMap->goDirections)
+      {
+         result += "\t";
+         result += dir.name;
+      }
+      return result;
+   }
+
+   uint16_t getDirectionScriptId(const std::string directionName) const
+   {
+      for (auto& dir : currentMap->goDirections)
+      {
+         if (directionName == dir.name)
+         {
+            return dir.mapLocalScriptId;
+         }
+      }
+      return 0;
+   }
+
+   inline uint8_t getPlayerEntityIndex() const { return currentMap->playerEntityIndex; }
+
+   //this is used by the loadMap action to indicate when a new map needs to be loaded.
+   //when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
+   //the new map will be loaded at the beginning of the next tick
+   int32_t mapLoadId{ MAGE_NO_MAP };
+
+   template <typename T>
+   constexpr T& Get(auto i) 
+   { 
+      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; 
+   }
+
+   template <typename T>
+   constexpr const T& Get(auto i) const
+   {
+      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount];
+   }
+
+   template <typename T>
+   std::span<T> GetAll()
+   {
+      return std::span<T>(std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities));
+   }
+
+   std::span<MageEntityData> GetEntities()
+   {
+      return entityDataArray;
+   }
+
+   void SetOnTick(uint16_t scriptId)
+   {
+      onTick = MageScriptState{ scriptId, false, onTick.isGlobalExecutionScope };
+   }
+
+   const MageScript* GetScript(uint16_t scriptIndex) const
+   {
+      if (scriptIndex > currentMap->scriptCount)
+      {
+         return nullptr;
+      }
+      return scripts[scriptIndex];
+   }
+
+   void OnTick(MageScriptControl* scriptControl);
+
+private:
+   using EntityDataArray = std::array<MageEntityData, MAX_ENTITIES_PER_MAP>;
+   using RenderableDataArray = std::array<RenderableData, MAX_ENTITIES_PER_MAP>;
+   using OnTickArray = std::array<OnTickScript, MAX_ENTITIES_PER_MAP>;
+   using OnInteractArray = std::array<OnInteractScript, MAX_ENTITIES_PER_MAP>;
+   using EntityData = std::tuple<EntityDataArray&, RenderableDataArray&, OnTickArray&, OnInteractArray&>;
+
+   MageScriptState onTick;
+
+   std::shared_ptr<FrameBuffer> frameBuffer;
+
+   std::optional<const MapData> currentMap;
+   EntityDataArray entityDataArray{};
+   RenderableDataArray renderableDataArray{};
+   OnTickArray onTickScriptsArray;
+   OnInteractArray onInteractScriptsArray{};
+
+   EntityData entities{ entityDataArray, renderableDataArray, onTickScriptsArray, onInteractScriptsArray };
+
+   std::vector<const MageScript*> scripts{};
+   bool playerIsMoving{ false };
+
+}; //class MapControl
 
 #endif //_MAGE_MAP_H

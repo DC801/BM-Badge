@@ -31,7 +31,6 @@ typedef enum : uint8_t {
 	CHECK_ENTITY_Y,
 	CHECK_ENTITY_INTERACT_SCRIPT,
 	CHECK_ENTITY_TICK_SCRIPT,
-	CHECK_ENTITY_LOOK_SCRIPT,
 	CHECK_ENTITY_TYPE,
 	CHECK_ENTITY_PRIMARY_ID,
 	CHECK_ENTITY_SECONDARY_ID,
@@ -40,6 +39,13 @@ typedef enum : uint8_t {
 	CHECK_ENTITY_CURRENT_FRAME,
 	CHECK_ENTITY_DIRECTION,
 	CHECK_ENTITY_GLITCHED,
+	CHECK_ENTITY_HACKABLE_STATE_A,
+	CHECK_ENTITY_HACKABLE_STATE_B,
+	CHECK_ENTITY_HACKABLE_STATE_C,
+	CHECK_ENTITY_HACKABLE_STATE_D,
+	CHECK_ENTITY_HACKABLE_STATE_A_U2,
+	CHECK_ENTITY_HACKABLE_STATE_C_U2,
+	CHECK_ENTITY_HACKABLE_STATE_A_U4,
 	CHECK_ENTITY_PATH,
 	CHECK_SAVE_FLAG,
 	CHECK_IF_ENTITY_IS_IN_GEOMETRY,
@@ -65,6 +71,13 @@ typedef enum : uint8_t {
 	SET_ENTITY_DIRECTION_TARGET_ENTITY,
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
 	SET_ENTITY_GLITCHED,
+	SET_ENTITY_HACKABLE_STATE_A,
+	SET_ENTITY_HACKABLE_STATE_B,
+	SET_ENTITY_HACKABLE_STATE_C,
+	SET_ENTITY_HACKABLE_STATE_D,
+	SET_ENTITY_HACKABLE_STATE_A_U2,
+	SET_ENTITY_HACKABLE_STATE_C_U2,
+	SET_ENTITY_HACKABLE_STATE_A_U4,
 	SET_ENTITY_PATH,
 	SET_SAVE_FLAG,
 	SET_PLAYER_CONTROL,
@@ -101,30 +114,15 @@ typedef enum : uint8_t {
 	SLOT_ERASE,
 	SET_CONNECT_SERIAL_DIALOG,
 	SHOW_SERIAL_DIALOG,
+	INVENTORY_GET,
+	INVENTORY_DROP,
+	CHECK_INVENTORY,
 	SET_MAP_LOOK_SCRIPT,
 	SET_ENTITY_LOOK_SCRIPT,
 	SET_TELEPORT_ENABLED,
 	CHECK_MAP,
 	SET_BLE_FLAG,
 	CHECK_BLE_FLAG,
-	SET_SERIAL_DIALOG_CONTROL,
-	REGISTER_SERIAL_DIALOG_COMMAND,
-	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
-	UNREGISTER_SERIAL_DIALOG_COMMAND,
-	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
-	SET_ENTITY_MOVEMENT_RELATIVE,
-	CHECK_DIALOG_OPEN,
-	CHECK_SERIAL_DIALOG_OPEN,
-	CHECK_DEBUG_MODE,
-	CLOSE_DIALOG,
-	CLOSE_SERIAL_DIALOG,
-	SET_LIGHTS_CONTROL,
-	SET_LIGHTS_STATE,
-	GOTO_ACTION_INDEX,
-	SET_SCRIPT_PAUSE,
-	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS,
-	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS,
-	SET_SERIAL_DIALOG_COMMAND_VISIBILITY,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -154,8 +152,6 @@ void action_check_entity_interact_script(uint8_t * args, MageScriptState * resum
 //Action Logic Type: I+C
 void action_check_entity_tick_script(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I+C
-void action_check_entity_look_script(uint8_t * args, MageScriptState * resumeStateStruct);
-//Action Logic Type: I+C
 void action_check_entity_type(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I+C
 void action_check_entity_primary_id(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -171,6 +167,20 @@ void action_check_entity_current_frame(uint8_t * args, MageScriptState * resumeS
 void action_check_entity_direction(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I+C
 void action_check_entity_glitched(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_a(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_b(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_c(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_d(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_a_u2(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_c_u2(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_entity_hackable_state_a_u4(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I+C
 void action_check_entity_path(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I+C
@@ -221,6 +231,20 @@ void action_set_entity_direction_target_entity(uint8_t * args, MageScriptState *
 void action_set_entity_direction_target_geometry(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_entity_glitched(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_a(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_b(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_c(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_d(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_a_u2(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_c_u2(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_entity_hackable_state_a_u4(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_entity_path(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
@@ -302,6 +326,12 @@ void action_set_connect_serial_dialog(uint8_t * args, MageScriptState * resumeSt
 //  OR resume current script flow
 //)
 void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_inventory_get(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_inventory_drop(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_check_inventory(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_map_look_script(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I

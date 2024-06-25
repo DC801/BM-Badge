@@ -21,9 +21,7 @@ Copyright (c) 2020 Microchip. All rights reserved.
 #ifndef TOUCH_H
 #define TOUCH_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+ // __cplusplus
 
 /*----------------------------------------------------------------------------
  *     include files
@@ -161,7 +159,5 @@ extern "C" {
  */
 #define DEF_MAX_ON_DURATION 0
 
-#ifdef __cplusplus
-}
-#endif // __cplusplus
+ // __cplusplus
 #endif // TOUCH_C

@@ -53,9 +53,7 @@
 #ifndef _ASSERT_H_INCLUDED
 #define _ASSERT_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include <stdbool.h>
 
@@ -78,7 +76,5 @@ extern "C" {
 #define ASSERT(condition) ((void)0)
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+
 #endif /* _ASSERT_H_INCLUDED */

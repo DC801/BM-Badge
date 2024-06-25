@@ -37,8 +37,6 @@ bool engineIsInitialized;
 
 uint32_t lastTime;
 uint32_t now;
-uint32_t lastFrameTime;
-uint32_t frameTimes[5];
 uint32_t deltaTime;
 uint32_t lastLoopTime;
 
@@ -185,7 +183,6 @@ void recordAndRenderFPS() {
 	int x = 8;
 	renderTextOutlined(fpsText, y, x);
 }
-
 void GameRender()
 {
 	#ifdef TIMING_DEBUG
@@ -291,15 +288,8 @@ void GameRender()
 			#endif
 		}
 	}
-
-	if(!MageGame->isLEDControlEnabled) {
-		// update the state of the LEDs
-		MageHex->updateHexLights();
-	}
-
-	if(MageGame->isEntityDebugOn){
-		recordAndRenderFPS();
-	}
+	//update the state of the LEDs
+	MageHex->updateHexLights();
 
 	//update the screen
 	mage_canvas->blt();
@@ -357,13 +347,10 @@ void EngineMainGameLoop ()
 
 	//If the loadMap() action has set a new map, we will load it before we render this frame.
 	if(MageScript->mapLoadId != MAGE_NO_MAP) {
-		//capture the mapLoadId before clearing
-		uint16_t tempMapId = MageScript->mapLoadId;
-		//clear the mapLoadId to prevent infinite reloads
-		//this NEEDS to be empty before calling loadMap!
-		MageScript->mapLoadId = MAGE_NO_MAP;
 		//load the new map data into MageGame
-		MageGame->LoadMap(tempMapId);
+		MageGame->LoadMap(MageScript->mapLoadId);
+		//clear the mapLoadId to prevent infinite reloads
+		MageScript->mapLoadId = MAGE_NO_MAP;
 		//Update the game for the new map
 		GameUpdate(deltaTime);
 
@@ -415,9 +402,7 @@ void onSerialStart () {
 	MageCommand->handleStart();
 }
 void onSerialCommand (char* commandString) {
-	if (MageCommand->isInputEnabled) {
-		MageCommand->processCommand(commandString);
-	}
+	MageCommand->processCommand(commandString);
 }
 
 void EngineInit () {

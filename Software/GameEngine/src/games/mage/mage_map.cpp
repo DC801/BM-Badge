@@ -303,7 +303,7 @@ std::string MageMap::getDirectionNames() const
 {
 	std::string result = "";
 	for (int i = 0; i < goDirectionCount; ++i) {
-		result += "\n\t";
+		result += "\t";
 		result += goDirections[i].name;
 	}
 	return result;
@@ -315,15 +315,11 @@ void badAsciiLowerCaser(std::string *data) {
 		(*data)[i] = std::tolower((*data)[i]);
 	}
 }
-
 uint16_t MageMap::getDirectionScriptId(const std::string directionName) const {
 	uint16_t result = 0;
 	for (int i = 0; i < goDirectionCount; i++) {
 		MapGoDirection direction = goDirections[i];
-		std::string lowercaseDirectionName = "";
-		lowercaseDirectionName += direction.name;
-		badAsciiLowerCaser(&lowercaseDirectionName);
-		if (!strcmp(lowercaseDirectionName.c_str(), directionName.c_str())) {
+		if (!strcmp(direction.name, directionName.c_str())) {
 			result = direction.mapLocalScriptId;
 			break;
 		}

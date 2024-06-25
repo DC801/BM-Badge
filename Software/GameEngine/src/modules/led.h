@@ -32,9 +32,7 @@
 
 
 
-#ifndef DC801_EMBEDDED
-#include "i2c.h"
-#endif
+#include <shim_i2c.h>
 
 #ifndef SOFTWARE_LED_H
 #define SOFTWARE_LED_H
@@ -86,9 +84,7 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef enum {
         LED_XOR = 0,
@@ -109,10 +105,10 @@ typedef enum {
         LED_MEM0,
         LED_USB,
         LED_HAX,
-        LED_SD,
-        LED_COUNT
+        LED_SD
 } LEDID;
 
+static inline const auto LED_COUNT = 19;
 extern uint8_t led_states[LED_COUNT];
 
 void ledSet (uint8_t, uint8_t);
@@ -128,10 +124,7 @@ extern void ledInvert(LEDID id);
 extern void ledPulse(LEDID id);
 extern void ledPulseFast(LEDID id);
 extern void ledPwm(LEDID id, uint8_t val);
-extern void ledShow();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif //SOFTWARE_LED_H

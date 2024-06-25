@@ -12,11 +12,9 @@
 #ifndef DC801_H
 #define DC801_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-//Start address of ROM memoryu addressing
+
+//Start address of ROM memory addressing
 #define ROM_START_ADDRESS (0x12000000)
 
 // Low is active
@@ -40,6 +38,8 @@ extern "C" {
 
 // LCD
 #define LCD_SPIM_INSTANCE   3
+
+#define NRFX_SPIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED
 
 #define ILI9341_SCK_PIN		28
 #define ILI9341_MOSI_PIN	30
@@ -93,8 +93,6 @@ extern "C" {
                                  .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM}
 
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif // DC801_H

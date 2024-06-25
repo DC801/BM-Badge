@@ -5,16 +5,18 @@
 #ifndef DC26_BADGE_UART_H
 #define DC26_BADGE_UART_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifdef DC801_EMBEDDED
+
+#include <config/custom_board.h>
+#include <mdk/nrf52840_bitfields.h>
+#include <hal/nrf_uart.h>
+#include <app_uart.h>
+
+#else
 
 void uart_init(void);
 
 bool jumpToGame(void);
 
-#ifdef __cplusplus
-}
-#endif
-
+#endif //DC801_EMBEDDED
 #endif //DC26_BADGE_UART_H

@@ -9,10 +9,10 @@
             "name": "Debug (Desktop)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/Software/GameEngine/output/bm_badge.out",
+            "program": "${workspaceRoot}/build/bm_badge",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/Software/GameEngine/output",
+            "cwd": "${workspaceFolder}/build/",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -22,34 +22,47 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "${defaultBuildTask}"
         },
         {
             "name": "Debug Launch (Physical Badge)",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
-            "serverpath": "/usr/bin/JLinkGDBServer",
-            "armToolchainPath": "/usr/bin",
-            "executable": "${workspaceRoot}/Software/GameEngine/output/bm_badge.out",
-            "runToMain": true,
-            "cwd": "${workspaceRoot}",
+            "serverpath": "JLinkGDBServerCLExe",
+           //"runToEntryPoint": "main",
+            "cwd": "${workspaceRoot}/build_hw",
             "device": "NRF52840_XXAA",
             "interface": "swd",
-            "svdFile": "${workspaceRoot}/../nordic-sdk15.3.0/modules/nrfx/mdk/nrf52840.svd"
+            "executable": "${workspaceRoot}/build_hw/bm_badge",
+            "svdFile": "${workspaceRoot}/nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd",
+            "ipAddress": "192.168.1.132",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+            "preLaunchTask": "${defaultBuildTask}"
         },
         {
             "name": "Debug Attach (Physical Badge)",
             "type": "cortex-debug",
             "request": "attach",
             "servertype": "jlink",
-            "serverpath": "/usr/bin/JLinkGDBServer",
-            "armToolchainPath": "/usr/bin",
-            "executable": "${workspaceRoot}/Software/GameEngine/output/bm_badge.out",
-            "cwd": "${workspaceRoot}",
+            "serverpath": "JLinkGDBServerCLExe",
+            "cwd": "${workspaceRoot}/build_hw",
             "device": "NRF52840_XXAA",
             "interface": "swd",
-            "svdFile": "${workspaceRoot}/../nordic-sdk15.3.0/modules/nrfx/mdk/nrf52840.svd"
+            "executable": "${workspaceRoot}/build_hw/bm_badge",
+            "svdFile": "${workspaceRoot}/nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd",
+            "ipAddress": "192.168.1.132"
         }
     ]
 }

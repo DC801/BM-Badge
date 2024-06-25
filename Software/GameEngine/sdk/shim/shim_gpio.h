@@ -1,11 +1,11 @@
 #ifndef SHIM_GPIO_H
 #define SHIM_GPIO_H
 
-#include "sdk_shim.h"
+#ifdef DC801_EMBEDDED
+#include <nrf_gpio.h>
+#else
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "sdk_shim.h"
 
 typedef enum
 {
@@ -33,8 +33,7 @@ typedef int (*nrf_gpio_callback)(uint32_t index, PIN *pin);
 
 void nrf_gpio_set_callback(nrf_gpio_callback *gpio_callback);
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif
+
+#endif //DC801_EMBEDDED
+#endif //SHIM_GPIO_H
