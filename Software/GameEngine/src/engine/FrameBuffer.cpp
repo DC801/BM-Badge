@@ -1,7 +1,6 @@
 #ifdef DC801_DESKTOP
 #include <SDL.h>
 #endif
-
 #include "main.h"
 #include "utility.h"
 #include "convert_endian.h"
@@ -14,7 +13,6 @@
 #include "adafruit/gfxfont.h"
 
 #include <algorithm>
-
 #ifdef DC801_DESKTOP
 #include "shim_timer.h"
 #include "shim_err.h"
@@ -70,7 +68,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 		if (
 			x >= 0
 			&& x < WIDTH
-			) {
+		) {
 			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
@@ -84,13 +82,13 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 		if (
 			y >= 0
 			&& y < HEIGHT
-			) {
+		) {
 			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
 {
 	int idx = 0;
 
@@ -104,25 +102,25 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data)
 
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data, uint16_t transparent_color)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color)
 {
 	int idx = 0;
 
 	for (int j = y; j < (y + h); ++j)
 	{
-		for (int i = x; i < (x + w); ++i)
+		for (int i=x; i < (x + w); ++i)
 		{
 			uint16_t c = data[idx++];
 
 			if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 			{
-				frame[j * WIDTH + i] = c;
+				frame[j*WIDTH+i] = c;
 			}
 		}
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
 {
 	int idx = 0;
 
@@ -133,12 +131,12 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data)
 			uint8_t d1 = data[idx++];
 			uint8_t d2 = data[idx++];
 
-			frame[j * WIDTH + i] = ((uint16_t)d1 << 8) | d2;
+			frame[j * WIDTH + i] = ((uint16_t) d1 << 8) | d2;
 		}
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data, uint16_t transparent_color)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color)
 {
 	int idx = 0;
 
@@ -148,7 +146,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data, uin
 		{
 			uint8_t d1 = data[idx++];
 			uint8_t d2 = data[idx++];
-			uint16_t c = ((uint16_t)d1 << 8) | d2;
+			uint16_t c = ((uint16_t) d1 << 8) | d2;
 
 			if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 			{
@@ -158,7 +156,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data, uin
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data, int fx, int fy, int pitch)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch)
 {
 	for (int i = 0, idx = pitch * fy + fx; i < h; ++i, idx += pitch)
 	{
@@ -171,7 +169,7 @@ void FrameBuffer::drawImage(
 	int y,
 	int w,
 	int h,
-	const uint16_t* data,
+	const uint16_t *data,
 	int fx,
 	int fy,
 	int pitch,
@@ -191,7 +189,7 @@ void FrameBuffer::drawImage(
 				&& current_x < WIDTH
 				&& current_y >= 0
 				&& current_y < HEIGHT
-				)
+			)
 			{
 				uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
 				if (color != SCREEN_ENDIAN_U2_VALUE(transparent_color))
@@ -208,7 +206,7 @@ void FrameBuffer::drawImageWithFlags(
 	int y,
 	int w,
 	int h,
-	const uint16_t* data,
+	const uint16_t *data,
 	int fx,
 	int fy,
 	int pitch,
@@ -221,8 +219,8 @@ void FrameBuffer::drawImageWithFlags(
 	uint32_t sprite_y = 0;
 	uint32_t source_x = 0;
 	uint32_t source_y = 0;
-	bool flip_x = flags & FLIPPED_HORIZONTALLY_FLAG;
-	bool flip_y = flags & FLIPPED_VERTICALLY_FLAG;
+	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
+	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
 	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
 	for (int offset_y = 0; (offset_y < h) && (current_y < HEIGHT); ++offset_y)
 	{
@@ -236,7 +234,7 @@ void FrameBuffer::drawImageWithFlags(
 				&& current_x < WIDTH
 				&& current_y >= 0
 				&& current_y < HEIGHT
-				)
+			)
 			{
 				source_x = flip_diag ? offset_y : offset_x;
 				source_y = flip_diag ? offset_x : offset_y;
@@ -258,7 +256,7 @@ void FrameBuffer::drawImageWithFlags(
 
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
-	MageColorPalette* colorPaletteOriginal,
+	MageColorPalette *colorPaletteOriginal,
 	int32_t screen_x, // top-left corner of screen coordinates to draw at
 	int32_t screen_y, // top-left corner of screen coordinates to draw at
 	uint16_t tile_width,
@@ -271,39 +269,36 @@ void FrameBuffer::drawChunkWithFlags(
 )
 {
 	MageColorPalette colorPaletteFaded;
-	MageColorPalette* colorPalette = colorPaletteOriginal;
+	MageColorPalette *colorPalette = colorPaletteOriginal;
 	RenderFlagsUnion flagSplit;
 	flagSplit.i = flags;
-	bool flip_x = flagSplit.f.horizontal;
-	bool flip_y = flagSplit.f.vertical;
+	bool flip_x    = flagSplit.f.horizontal;
+	bool flip_y    = flagSplit.f.vertical;
 	bool flip_diag = flagSplit.f.diagonal;
 	bool glitched = flagSplit.f.glitched;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
-
-	if (glitched) {
+	if(glitched) {
 		screen_x += tile_width * 0.125;
-		tile_height = tile_height * 0.75;
+		tile_width *= 0.75;
 	}
-
 	if (
-		screen_x + tile_width < 0 ||
-		screen_x >= WIDTH ||
-		screen_y + tile_width < 0 ||
+		screen_x + tile_width < 0	||
+		screen_x >= WIDTH			||
+		screen_y + tile_width < 0	||
 		screen_y >= HEIGHT
-		) {
+	) {
 		return;
 	}
-
-	auto pixels = std::unique_ptr<uint8_t[]>{ new uint8_t[tile_width * tile_height] };
+	uint8_t pixels[tile_width * tile_height];
 
 	EngineROM_Read(
 		address + ((source_y * pitch) + source_x),
 		tile_width * tile_height,
-		pixels.get(),
+		(uint8_t *)&pixels,
 		"Failed to read pixel data"
 	);
 
-	if (fadeFraction != 0) {
+	if(fadeFraction != 0) {
 		colorPaletteFaded = MageColorPalette(
 			colorPaletteOriginal,
 			transparent_color,
@@ -313,9 +308,9 @@ void FrameBuffer::drawChunkWithFlags(
 		colorPalette = &colorPaletteFaded;
 	}
 
-	if (flip_x == false && flip_y == false && flip_diag == false) {
+	if(flip_x == false && flip_y == false && flip_diag == false) {
 		tileToBufferNoXNoYNoZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -326,10 +321,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == true && flip_y == false && flip_diag == false) {
+	} else if (flip_x == true && flip_y == false && flip_diag == false) {
 		tileToBufferYesXNoYNoZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -340,10 +334,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == false && flip_y == true && flip_diag == false) {
+	} else if (flip_x == false && flip_y == true && flip_diag == false) {
 		tileToBufferNoXYesYNoZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -354,10 +347,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == true && flip_y == true && flip_diag == false) {
+	} else if (flip_x == true && flip_y == true && flip_diag == false) {
 		tileToBufferYesXYesYNoZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -368,10 +360,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == false && flip_y == false && flip_diag == true) {
+	} else if(flip_x == false && flip_y == false && flip_diag == true) {
 		tileToBufferNoXNoYYesZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -382,10 +373,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == true && flip_y == false && flip_diag == true) {
+	} else if (flip_x == true && flip_y == false && flip_diag == true) {
 		tileToBufferYesXNoYYesZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -396,10 +386,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == false && flip_y == true && flip_diag == true) {
+	} else if (flip_x == false && flip_y == true && flip_diag == true) {
 		tileToBufferNoXYesYYesZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -410,10 +399,9 @@ void FrameBuffer::drawChunkWithFlags(
 			pitch,
 			transparent_color
 		);
-	}
-	else if (flip_x == true && flip_y == true && flip_diag == true) {
+	} else if (flip_x == true && flip_y == true && flip_diag == true) {
 		tileToBufferYesXYesYYesZ(
-			pixels.get(),
+			pixels,
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -428,8 +416,8 @@ void FrameBuffer::drawChunkWithFlags(
 }
 
 void FrameBuffer::tileToBufferNoXNoYNoZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -444,50 +432,46 @@ void FrameBuffer::tileToBufferNoXNoYNoZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = -screen_x;
 		d.x = tile_width;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = 0;
 		d.x = WIDTH - screen_x;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = 0;
 		d.x = tile_width;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = -screen_y;
-		d.y = tile_height;
+		d.y= tile_height;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = 0;
 		d.y = HEIGHT - screen_y;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = 0;
 		d.y = tile_height;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = d.y - a.y;
 	uint16_t num_cols = d.x - a.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
 				(a.x + col) + //x
 				((a.y + row) * tile_width) //y
-				);
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -498,8 +482,8 @@ void FrameBuffer::tileToBufferNoXNoYNoZ(
 }
 
 void FrameBuffer::tileToBufferYesXNoYNoZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -514,50 +498,46 @@ void FrameBuffer::tileToBufferYesXNoYNoZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = screen_x + tile_width;
 		d.x = 0;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = tile_width;
 		d.x = (screen_x + tile_width) - WIDTH;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = tile_width;
 		d.x = 0;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = -screen_y;
-		d.y = tile_height;
+		d.y= tile_height;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = 0;
 		d.y = HEIGHT - screen_y;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = 0;
 		d.y = tile_height;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = d.y - a.y;
 	uint16_t num_cols = a.x - d.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
-				(a.x - (col + 1)) + //x (+1 to get back to zero-index)
+				(a.x - (col+1)) + //x (+1 to get back to zero-index)
 				((a.y + row) * tile_width) //y
-				);
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -568,8 +548,8 @@ void FrameBuffer::tileToBufferYesXNoYNoZ(
 }
 
 void FrameBuffer::tileToBufferNoXYesYNoZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -584,50 +564,46 @@ void FrameBuffer::tileToBufferNoXYesYNoZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = -screen_x;
 		d.x = tile_width;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = 0;
 		d.x = WIDTH - screen_x;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = 0;
 		d.x = tile_width;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = screen_y + tile_height;
 		d.y = 0;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = tile_height;
 		d.y = (screen_y + tile_height) - HEIGHT;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = tile_height;
 		d.y = 0;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = a.y - d.y;
 	uint16_t num_cols = d.x - a.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
 				(a.x + col) + //x
 				((a.y - (row + 1)) * tile_width) //y (+1 to get back to zero-index)
-				);
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -638,8 +614,8 @@ void FrameBuffer::tileToBufferNoXYesYNoZ(
 }
 
 void FrameBuffer::tileToBufferYesXYesYNoZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -654,50 +630,46 @@ void FrameBuffer::tileToBufferYesXYesYNoZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = screen_x + tile_width;
 		d.x = 0;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = tile_width;
 		d.x = (screen_x + tile_width) - WIDTH;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = tile_width;
 		d.x = 0;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = screen_y + tile_height;
 		d.y = 0;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = tile_height;
 		d.y = (screen_y + tile_height) - HEIGHT;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = tile_height;
 		d.y = 0;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = a.y - d.y;
 	uint16_t num_cols = a.x - d.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
-				(a.x - (col + 1)) + //x (+1 to get back to zero-index)
-				((a.y - (row + 1)) * tile_width) //y (+1 to get back to zero-index)
-				);
+				(a.x - (col+1)) + //x (+1 to get back to zero-index)
+				((a.y - (row+1)) * tile_width) //y (+1 to get back to zero-index)
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -708,8 +680,8 @@ void FrameBuffer::tileToBufferYesXYesYNoZ(
 }
 
 void FrameBuffer::tileToBufferNoXNoYYesZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -724,50 +696,46 @@ void FrameBuffer::tileToBufferNoXNoYYesZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = -screen_x;
 		d.x = tile_width;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = 0;
 		d.x = WIDTH - screen_x;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = 0;
 		d.x = tile_width;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = -screen_y;
-		d.y = tile_height;
+		d.y= tile_height;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = 0;
 		d.y = HEIGHT - screen_y;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = 0;
 		d.y = tile_height;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = d.y - a.y;
 	uint16_t num_cols = d.x - a.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
 				(a.y + row) + //transposed x
 				((a.x + col) * tile_width) //transposed y
-				);
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -778,8 +746,8 @@ void FrameBuffer::tileToBufferNoXNoYYesZ(
 }
 
 void FrameBuffer::tileToBufferYesXNoYYesZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -794,50 +762,46 @@ void FrameBuffer::tileToBufferYesXNoYYesZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = screen_x + tile_width;
 		d.x = 0;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = tile_width;
 		d.x = (screen_x + tile_width) - WIDTH;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = tile_width;
 		d.x = 0;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = -screen_y;
-		d.y = tile_height;
+		d.y= tile_height;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = 0;
 		d.y = HEIGHT - screen_y;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = 0;
 		d.y = tile_height;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = d.y - a.y;
 	uint16_t num_cols = a.x - d.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
 				(a.y + row) + //transposed x
-				((a.x - (col + 1)) * tile_width) //transposed y (+1 to get back to zero-index)
-				);
+				((a.x - (col+1)) * tile_width) //transposed y (+1 to get back to zero-index)
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -848,8 +812,8 @@ void FrameBuffer::tileToBufferYesXNoYYesZ(
 }
 
 void FrameBuffer::tileToBufferNoXYesYYesZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -864,50 +828,46 @@ void FrameBuffer::tileToBufferNoXYesYYesZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = -screen_x;
 		d.x = tile_width;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = 0;
 		d.x = WIDTH - screen_x;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = 0;
 		d.x = tile_width;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = screen_y + tile_height;
 		d.y = 0;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = tile_height;
 		d.y = (screen_y + tile_height) - HEIGHT;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = tile_height;
 		d.y = 0;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = a.y - d.y;
 	uint16_t num_cols = d.x - a.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
-				(a.y - (row + 1)) + //transposed x (+1 to get back to zero-index)
+				(a.y - (row+1)) + //transposed x (+1 to get back to zero-index)
 				((a.x + col) * tile_width) //transposed y
-				);
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index % colorPalette->colorCount];
 			if (color != transparent_color) {
@@ -918,8 +878,8 @@ void FrameBuffer::tileToBufferNoXYesYYesZ(
 }
 
 void FrameBuffer::tileToBufferYesXYesYYesZ(
-	uint8_t* pixels,
-	MageColorPalette* colorPalette,
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
 	int32_t screen_x,
 	int32_t screen_y,
 	uint16_t tile_width,
@@ -934,50 +894,46 @@ void FrameBuffer::tileToBufferYesXYesYYesZ(
 	int32_t screen_y_start = 0;
 	uint32_t screen_index = 0;
 	uint32_t tile_index = 0;
-	Point a = { 0,0 };
-	Point d = { 0,0 };
-	if (screen_x < 0) {
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
 		a.x = screen_x + tile_width;
 		d.x = 0;
 		screen_x_start = 0;
-	}
-	else if (screen_x + tile_width >= WIDTH) {
+	} else if (screen_x+tile_width >= WIDTH) {
 		a.x = tile_width;
 		d.x = (screen_x + tile_width) - WIDTH;
 		screen_x_start = screen_x;
-	}
-	else {
+	} else {
 		a.x = tile_width;
 		d.x = 0;
 		screen_x_start = screen_x;
 	}
-	if (screen_y < 0) {
+	if(screen_y < 0){
 		a.y = screen_y + tile_height;
 		d.y = 0;
 		screen_y_start = 0;
-	}
-	else if (screen_y + tile_height >= HEIGHT) {
+	} else if (screen_y+tile_height >= HEIGHT) {
 		a.y = tile_height;
 		d.y = (screen_y + tile_height) - HEIGHT;
 		screen_y_start = screen_y;
-	}
-	else {
+	} else {
 		a.y = tile_height;
 		d.y = 0;
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = a.y - d.y;
 	uint16_t num_cols = a.x - d.x;
-	for (uint16_t row = 0; row < num_rows; row++) {
-		for (uint16_t col = 0; col < num_cols; col++) {
-			screen_index = (
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
 				(screen_x_start + col) + //x
 				((screen_y_start + row) * WIDTH) //y
-				);
+			);
 			tile_index = (
-				(a.y - (row + 1)) + //transposed x (+1 to get back to zero-index)
-				((a.x - (col + 1)) * tile_width) //transposed y (+1 to get back to zero-index)
-				);
+				(a.y - (row+1)) + //transposed x (+1 to get back to zero-index)
+				((a.x - (col+1)) * tile_width) //transposed y (+1 to get back to zero-index)
+			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
 			if (color != transparent_color) {
@@ -988,133 +944,49 @@ void FrameBuffer::tileToBufferYesXYesYYesZ(
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
-	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
-	FILE* fd = fopen(filename, "rb");
-	fseek(fd, (pitch * fy + fx) * sizeof(uint16_t), SEEK_SET);
+	size_t bufferSize = w*h;
+	uint16_t buf[bufferSize];
+	FILE *fd = fopen(filename, "rb");
+	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
-	for (int i = 0; i < h; ++i)
+	for (int i=0; i<h; ++i)
 	{
-		size_t size = fread(&buf[i * w], sizeof(uint16_t), w, fd);
-		fseek(fd, (pitch - w) * sizeof(uint16_t), SEEK_CUR);
+		size_t size = fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
 	}
 
 	fclose(fd);
-	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-	drawImage(x, y, w, h, buf.get());
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+	drawImage(x, y, w, h, buf);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
-	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	size_t bufferSize = w*h;
+	uint16_t buf[bufferSize];
 
-	FILE* fd = fopen(filename, "rb");
-	fseek(fd, (pitch * fy + fx) * sizeof(uint16_t), SEEK_SET);
+	FILE *fd = fopen(filename, "rb");
+	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
-	for (int i = 0; i < h; ++i)
+	for (int i=0; i<h; ++i)
 	{
-		size_t size = fread(&buf[i * w], sizeof(uint16_t), w, fd);
-		fseek(fd, (pitch - w) * sizeof(uint16_t), SEEK_CUR);
+		size_t size = fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
 	}
 
 	fclose(fd);
 
-	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-	drawImage(x, y, w, h, buf.get(), transparent_color);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+	drawImage(x, y, w, h, buf, transparent_color);
 }
 
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename)
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename)
 {
-	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint32_t offset = 0;
 	m_stop = false;
 
-	FILE* file = fopen(filename, "rb");
-
-	if (file == NULL)
-	{
-		debug_print("Can't load file %s\n", filename);
-		return;
-	}
-
-	int retval = fseek(file, 0, SEEK_END);
-
-	if (retval != 0)
-	{
-		debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
-		fclose(file);
-		return;
-	}
-
-	long tell_size = ftell(file);
-
-	if (tell_size == -1)
-	{
-		debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
-		fclose(file);
-		return;
-	}
-
-	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
-	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
-
-	if (size == 0)
-	{
-		debug_print("Could not stat %s.\n", filename);
-		return;
-	}
-
-	for (uint16_t i = 0; i < frames; i++)
-	{
-		retval = fseek(file, offset, SEEK_SET);
-
-		if (retval != 0)
-		{
-			debug_print("Failed to seek the file %s\n", filename);
-			fclose(file);
-			return;
-		}
-
-		size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
-
-		if (read != size)
-		{
-			debug_print("Failed to read file %s\n", filename);
-			fclose(file);
-			return;
-		}
-
-		ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-		canvas.drawImage(x, y, w, h, buf.get());
-		canvas.blt();
-
-		uint8_t retVal = getButton(false);
-		if (retVal != USER_BUTTON_NONE || m_stop)
-		{
-			break;
-		}
-
-		offset += size;
-		nrf_delay_us(7500);
-	}
-
-	fclose(file);
-
-	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-	canvas.drawImage(x, y, w, h, buf.get());
-	canvas.blt();
-	return;
-}
-
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, void (*p_callback)(uint8_t frame, void* p_data), void* data)
-{
-	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
-	uint32_t offset = 0;
-	m_stop = false;
-
-	FILE* file;
+	FILE *file;
 
 	file = fopen(filename, "rb");
 
@@ -1162,7 +1034,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 			return;
 		}
 
-		size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
+		size_t read = fread(buf, sizeof(uint8_t), size, file);
 
 		if (read != size)
 		{
@@ -1171,8 +1043,94 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 			return;
 		}
 
-		ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-		canvas.drawImage(x, y, w, h, buf.get());
+		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+		canvas.drawImage(x, y, w, h, buf);
+		canvas.blt();
+
+		uint8_t retVal = getButton(false);
+		if (retVal != USER_BUTTON_NONE || m_stop)
+		{
+			break;
+		}
+
+		offset += size;
+		nrf_delay_us(7500);
+	}
+
+	fclose(file);
+
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+	canvas.drawImage(x, y, w, h, buf);
+	canvas.blt();
+	return;
+}
+
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
+{
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
+	uint32_t offset = 0;
+	m_stop = false;
+
+	FILE *file;
+
+	file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		debug_print("Can't load file %s\n", filename);
+		return;
+	}
+
+	int retval = fseek(file, 0, SEEK_END);
+
+	if (retval != 0)
+	{
+		debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
+		fclose(file);
+		return;
+	}
+
+	long tell_size = ftell(file);
+
+	if (tell_size == -1)
+	{
+		debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
+		fclose(file);
+		return;
+	}
+
+	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
+	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
+
+	if (size == 0)
+	{
+		debug_print("Could not stat %s.\n", filename);
+		return;
+	}
+
+	for (uint16_t i = 0; i < frames; i++)
+	{
+		retval = fseek(file, offset, SEEK_SET);
+
+		if (retval != 0)
+		{
+			debug_print("Failed to seek the file %s\n", filename);
+			fclose(file);
+			return;
+		}
+
+		size_t read = fread(buf, sizeof(uint8_t), size, file);
+
+		if (read != size)
+		{
+			debug_print("Failed to read file %s\n", filename);
+			fclose(file);
+			return;
+		}
+
+		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
 		if (p_callback != NULL)
@@ -1193,14 +1151,14 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	fclose(file);
 }
 
-uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char* filename)
+uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename)
 {
-	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
-	FILE* file;
+	FILE *file;
 
 	file = fopen(filename, "rb");
 
@@ -1267,7 +1225,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
+			size_t read = fread(buf, sizeof(uint8_t), size, file);
 
 			if (read != size)
 			{
@@ -1276,8 +1234,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-			canvas.drawImage(x, y, w, h, buf.get());
+			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
 			uint8_t retVal = getButton(false);
@@ -1297,12 +1255,12 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 			break;
 		}
 
-#ifdef DC801_DESKTOP
+	#ifdef DC801_DESKTOP
 		if (application_quit != 0)
 		{
 			break;
 		}
-#endif
+	#endif
 
 		nrf_delay_ms(10);
 	} while (m_stop == false);
@@ -1311,14 +1269,14 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 	return retVal;
 }
 
-uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char* filename, void (*p_callback)(uint8_t frame, void* p_data), void* data)
+uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
 {
 	size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	uint16_t buf[bufferSize];
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
-	FILE* file;
+	FILE *file;
 
 	file = fopen(filename, "rb");
 
@@ -1346,10 +1304,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 		return 0;
 	}
 
-	size_t size = (size_t)tell_size;
-	if (sizeof(uint16_t) * w * h < size) { size = sizeof(uint16_t) * w * h; }
-	uint16_t frames = 1;
-	if (frames < tell_size / w / h / sizeof(uint16_t)) { frames = tell_size / w / h / sizeof(uint16_t); }
+	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
+	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
 
 	if (size == 0)
 	{
@@ -1387,7 +1343,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
+			size_t read = fread(buf, sizeof(uint8_t), size, file);
 
 			if (read != size)
 			{
@@ -1396,8 +1352,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-			canvas.drawImage(x, y, w, h, buf.get());
+			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
+			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
 			if (p_callback != NULL)
@@ -1422,12 +1378,12 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 			break;
 		}
 
-#ifdef DC801_DESKTOP
+	#ifdef DC801_DESKTOP
 		if (application_quit != 0)
 		{
 			break;
 		}
-#endif
+	#endif
 
 		nrf_delay_ms(10);
 	} while (m_stop == false);
@@ -1450,15 +1406,21 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 	}
 
 	// Clip to screen
-	auto right = x + w;
-	if (x + w > WIDTH) { right = WIDTH; }
-	auto bottom = y + h;
-	if (y + h > HEIGHT) { bottom = HEIGHT; }
+	if ((x + w) > WIDTH)
+	{
+		w = WIDTH - x;
+	}
+
+	if ((y + h) > HEIGHT)
+	{
+		h = HEIGHT - y;
+	}
+
 	// X
-	for (int i = x; i < right; i++)
+	for (int i = x; i < (x + w); i++)
 	{
 		// Y
-		for (int j = y; j < bottom; j++)
+		for (int j = y; j < (y + h); j++)
 		{
 			int index = i + (WIDTH * j);
 			frame[index] = SCREEN_ENDIAN_U2_VALUE(color);
@@ -1491,17 +1453,17 @@ uint8_t FrameBuffer::lerp(uint8_t a, uint8_t b, float progress) {
 
 Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
 	Point point = {
-		(int32_t)lerp((float)a.x, (float)b.x, progress),
-		(int32_t)lerp((float)a.y, (float)b.y, progress),
+		.x = (int32_t)lerp((float)a.x, (float)b.x, progress),
+		.y = (int32_t)lerp((float)a.y, (float)b.y, progress),
 	};
 	return point;
 }
 
 uint16_t FrameBuffer::applyFadeColor(uint16_t color) {
 	uint16_t result = color;
-	if (fadeFraction) {
-		auto fadeColorUnion = ColorUnion{};
-		auto colorUnion = ColorUnion{};
+	if(fadeFraction) {
+		ColorUnion fadeColorUnion;
+		ColorUnion colorUnion;
 		fadeColorUnion.i = fadeColor;
 		colorUnion.i = result;
 		colorUnion.c.r = FrameBuffer::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
@@ -1516,21 +1478,21 @@ uint16_t FrameBuffer::applyFadeColor(uint16_t color) {
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
-	uint32_t length = ceil(sqrtf((float)((dx * dx) + (dy * dy))));
+	uint32_t length = ceil(sqrtf((float) ((dx * dx) + (dy * dy))));
 	int x;
 	int y;
 	float progress;
-	for (uint32_t i = 0; i <= length; i++)
+	for(uint32_t i = 0; i <= length; i++)
 	{
-		progress = ((float)i) / length;
-		x = round(lerp((float)x1, (float)x2, progress));
-		y = round(lerp((float)y1, (float)y2, progress));
+		progress = ((float) i) / length;
+		x = round(lerp((float) x1, (float) x2, progress));
+		y = round(lerp((float) y1, (float) y2, progress));
 		if ( // crop to screen bounds
 			x >= 0
 			&& x < WIDTH
 			&& y >= 0
 			&& y < HEIGHT
-			) {
+		) {
 			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
@@ -1554,7 +1516,7 @@ void FrameBuffer::drawPoint(int x, int y, uint8_t size, uint16_t color) {
 	);
 }
 
-void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color) {
+void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
 	int rad2 = radius * radius;
 
 	for (int j = (y - radius);j <= (y + radius); ++j)
@@ -1629,8 +1591,8 @@ static void __draw_char(
 	// directly with 'bad' characters of font may cause mayhem!
 
 	c -= font.first;
-	GFXglyph* glyph = &(font.glyph[c]);
-	uint8_t* bitmap = font.bitmap;
+	GFXglyph *glyph = &(font.glyph[c]);
+	uint8_t *bitmap = font.bitmap;
 
 	uint16_t bo = glyph->bitmapOffset;
 	uint8_t w = glyph->width;
@@ -1686,7 +1648,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font) {
 		//Valid char?
 		if ((c >= first) && (c <= font.last)) {
 			uint8_t c2 = c - first;
-			GFXglyph* glyph = &(font.glyph[c2]);
+			GFXglyph *glyph = &(font.glyph[c2]);
 
 			uint8_t w = glyph->width;
 			uint8_t h = glyph->height;
@@ -1707,7 +1669,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font) {
 	}
 }
 
-void FrameBuffer::printMessage(const char* text, GFXfont font, uint16_t color, int x, int y)
+void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, int x, int y)
 {
 	m_color = SCREEN_ENDIAN_U2_VALUE(color);
 	m_cursor_area.xs = x;
@@ -1715,7 +1677,7 @@ void FrameBuffer::printMessage(const char* text, GFXfont font, uint16_t color, i
 	m_cursor_y = y + (font.yAdvance / 2);
 
 	// this prevents crashing if the first character of the string is null
-	if (text[0] != '\0') {
+	if(text[0] != '\0') {
 		for (uint16_t i = 0; i < strlen(text); i++)
 		{
 			write_char(text[i], font);
@@ -1724,23 +1686,23 @@ void FrameBuffer::printMessage(const char* text, GFXfont font, uint16_t color, i
 	m_cursor_area.xs = 0;
 }
 
-void FrameBuffer::getCursorPosition(cursor_t* cursor)
+void FrameBuffer::getCursorPosition(cursor_t *cursor)
 {
 	cursor->x = m_cursor_x;
 	cursor->y = m_cursor_y;
 }
 
-void FrameBuffer::setTextArea(area_t* area)
+void FrameBuffer::setTextArea(area_t *area)
 {
 	m_cursor_area = *area;
 }
 
-void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16_t y, bounds_t* bounds)
+void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds)
 {
 	getTextBounds(font, text, x, y, NULL, bounds);
 }
 
-void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16_t y, area_t* near, bounds_t* bounds)
+void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds)
 {
 	bounds->width = 0;
 	bounds->height = 0;
@@ -1843,21 +1805,20 @@ uint8_t FrameBuffer::getFontHeight(GFXfont font)
 	return font.yAdvance;
 }
 
-void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_raw)
+void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_raw)
 {
 	//clip
-	if ((x < 0) || (x > WIDTH - w) || (y < 0) || (y > HEIGHT - h))
+    if ((x < 0) || (x > WIDTH - w) || (y < 0) || (y > HEIGHT - h))
 	{
-		return;
-	}
-#ifdef DC801_EMBEDDED
-	while (ili9341_is_busy()) {
+        return;
+    }
+	while(ili9341_is_busy()){
 		//wait for previous transfer to complete before starting a new one
 	}
-	ili9341_set_addr(x, y, x + w - 1, y + h - 1);
+    ili9341_set_addr(x, y, x + w - 1, y + h - 1);
 	uint32_t bytecount = w * h * 2;
 	ili9341_push_colors((uint8_t*)p_raw, bytecount);
-#endif
+
 	/*
 	//Blast data to TFT
 	while (bytecount > 0) {
@@ -1869,16 +1830,16 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_ra
 		p_raw += count / 2; //convert to uint16_t count
 		bytecount -= count;
 	}
-	//don't wait for it to finish
+    //don't wait for it to finish
 	*/
 }
 
 void FrameBuffer::blt()
 {
-#ifdef DC801_DESKTOP
-	EngineWindowFrameGameBlt(frame);
-#endif
-#ifdef DC801_EMBEDDED
-	draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
-#endif
+	#ifdef DC801_DESKTOP
+		EngineWindowFrameGameBlt(frame);
+	#endif
+	#ifdef DC801_EMBEDDED
+		draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
+	#endif
 }

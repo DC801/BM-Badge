@@ -100,7 +100,7 @@
 			"PLAYER: %PLAYER%",
 			"cli-variable: $cli-variable$",
 			"'Mage 01': %Mage 01%",
-			"chapter1-storyflag-tally: $chapter1-storyflag-tally$",
+			"ch1-storyflags-tally: $ch1-storyflags-tally$",
 			"SELF: %SELF%",
 			"MAP: %MAP%"
 		]
@@ -137,6 +137,238 @@
 	"serial_dialog-map-action_testing-go_hub": {
 		"messages": [
 			"You're goating to the Hub map now!"
+		]
+	},
+	"serial_dialog-go_register": {
+		"messages": [
+			"Registered Command: 'map'!"
+		]
+	},
+	"serial_dialog-go_register_fail": {
+		"messages": [
+			"Registered Command: 'map' fail fallback!"
+		]
+	},
+	"serial_dialog-go_unregister": {
+		"messages": [
+			"Unregistered Command: 'map'!"
+		]
+	},
+	"serial_dialog-go_register_secret": {
+		"messages": [
+			"Registered Command: 'secret'!"
+		]
+	},
+	"serial_dialog-go_hide_secret": {
+		"messages": [
+			"Command has been hidden from `help`: 'secret'!"
+		]
+	},
+	"serial_dialog-go_unhide_secret": {
+		"messages": [
+			"Command has been UNhidden from `help`: 'secret'!"
+		]
+	},
+	"serial_dialog-go_unregister_secret": {
+		"messages": [
+			"Unregistered Command: 'secret'!"
+		]
+	},
+	"serial_dialog-command-secret": {
+		"messages": [
+			"Yes, there's a secret, but what animal is secret?"
+		]
+	},
+	"serial_dialog-command-secret-fail": {
+		"messages": [
+			"No! Wrong Secret!"
+		]
+	},
+	"serial_dialog-command-secret-goat": {
+		"messages": [
+			"You found the secret goat!",
+			"               _))",
+			"              > *\\     _~",
+			"         yey- `;'\\__-' \\_",
+			"                 | )  _ \\ \\",
+			"                / / ``   w w",
+			"               w w"
+		]
+	},
+	"serial_dialog-go_register_arguments": {
+		"messages": [
+			"Registered Arguments: 'map' > ['town', 'dungeon']!"
+		]
+	},
+	"serial_dialog-go_unregister_arguments": {
+		"messages": [
+			"Unregistered Arguments: 'map' > ['town', 'dungeon']!"
+		]
+	},
+	"serial_dialog-command-map": {
+		"messages": [
+			"OMG! I can look at maps!! But which one???"
+		]
+	},
+	"serial_dialog-command-map-fail": {
+		"messages": [
+			"I don't have a map named that!!!"
+		]
+	},
+	"serial_dialog-command-map-town": {
+		"messages": [
+			"This map of the Town sure is... existing."
+		]
+	},
+	"serial_dialog-command-map-dungeon": {
+		"messages": [
+			"This map of the Dungeon is AWESOME!!!"
+		]
+	},
+	"serial_dialog-map-action_testing-go_concat": {
+		"messages": [
+			"This is a script about concatenation!",
+			"What would you like to concatenate?"
+		],
+		"options": [
+			{
+				"label": "Goat",
+				"script": "concat_response-goat"
+			},
+			{
+				"label": "Bird",
+				"script": "concat_response-bird"
+			},
+			{
+				"label": "Cat",
+				"script": "concat_response-cat"
+			},
+			{
+				"label": "Platypus",
+				"script": "concat_response-platypus"
+			},
+			{
+				"label": "Peregrine Falcon",
+				"script": "concat_response-peregrine_falcon"
+			}
+		]
+	},
+	"concat-start": {
+		"messages": [
+			"This is a story about a "
+		]
+	},
+	"concat-goat": {
+		"messages": [
+			"Goat"
+		]
+	},
+	"concat-bird": {
+		"messages": [
+			"Bird"
+		]
+	},
+	"concat-cat": {
+		"messages": [
+			"Cat"
+		]
+	},
+	"concat-platypus": {
+		"messages": [
+			"Platypus"
+		]
+	},
+	"concat-peregrine_falcon": {
+		"messages": [
+			"Peregrine Falcon"
+		]
+	},
+	"concat-end": {
+		"messages": [
+			" that set out to make the world's most awesome ice-cream!"
+		]
+	},
+	"serial_dialog-go_register_moon": {
+		"messages": [
+			"You have registered the verb 'moon' and the verb + argument 'moon moon'"
+		]
+	},
+	"serial_dialog-command-map-moon": {
+		"messages": [
+			"What would you like to moon?"
+		]
+	},
+	"serial_dialog-command-map-moon-fail": {
+		"messages": [
+			"You cannot moon that."
+		]
+	},
+	"serial_dialog-command-map-moon-moon": {
+		"messages": [
+			"You mooned the moon. It blushes."
+		]
+	},
+	"serial_dialog-mage01-look_script": {
+		"messages": [
+			"Looks like you just ran the look script on the entity named `%SELF%`! Goat job!"
+		]
+	},
+	"serial_dialog-map-action_testing-gui_open" : {
+		"messages": [
+			"---",
+			" ",
+			"Looks like a GUI dialog was indeed open!"
+		]
+	},
+	"serial_dialog-map-action_testing-gui_closed" : {
+		"messages": [
+			"---",
+			" ",
+			"Looks like a GUI dialog was NOT open!"
+		]
+	},
+	"serial_dialog-map-action_testing-debug_false" : {
+		"messages": [
+			"---",
+			" ",
+			"Oh hey! Normal mode! (not debug)"
+		]
+	},
+	"serial_dialog-map-action_testing-debug_true" : {
+		"messages": [
+			"---",
+			" ",
+			"Oh hey! Debug mode!"
+		]
+	},
+	"honk_point" : {
+		"messages": [
+			"HONK!"
+		]
+	},
+	"serial_dialog-go_override": {
+		"messages": [
+			"Verb Overrides registered: 'Look', 'look mage 01', 'go west'"
+		]
+	},
+	"serial_dialog-go_un-override": {
+		"messages": [
+			"Verb Overrides UN-registered: 'Look', 'look mage 01', 'go west'"
+		]
+	},
+	"dialog-debug-go-space": {
+		"messages": [
+			"HONK! The goose has stolen the door!"
+		]
+	},
+	"dialog-debug-look-override": {
+		"messages": [
+			"HONK! The goose tells you an awesome story about the rise and fall of his enemies, and prevents you from looking about the room!"
+		]
+	},
+	"dialog-debug-look-mage01-override": {
+		"messages": [
+			"HONK! The goose attacks when you try to look at the 'Mage 01'!"
 		]
 	}
 }

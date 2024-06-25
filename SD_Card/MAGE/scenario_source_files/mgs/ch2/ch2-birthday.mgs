@@ -1,0 +1,287 @@
+include!("header.mgs")
+
+/* --- CUTSCENE: Birthday (house) --- */
+
+// NON-DEBUG
+
+on_load-ch2-magehouse-birthday {
+	turn hex control on;
+	turn player control off;
+	if (debug mode is on) {
+		turn serial control on;
+		register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
+	} else {
+		turn serial control off;
+	}
+	close hex editor;
+	set entity "%PLAYER%" current_animation to 0;
+	fade out camera to #000000 over 0ms;
+	turn entity "%PLAYER%" east;
+	teleport camera to geometry cake-camera-1;
+	set entity "Stunt Cake" current_animation to 1;
+	wait 1000ms;
+	fade in camera from #000000 over 1000ms;
+	wait 500ms;
+	show dialog {
+		name " " // blank dialog label
+		border_tileset transparent
+		"Happy birthday to you!\nHappy birthday to you!"
+		"Happy birthday, dear %PLAYER%!\nHappy birthday to you!"
+	}
+	wait 200ms;
+	play entity "Stunt Cake" animation 2 once;
+	set entity "Stunt Cake" current_animation to 3;
+	fade out camera to #000000 over 0ms;
+	teleport camera to geometry cake-camera-2;
+	fade in camera from #000000 over 500ms;
+	show dialog {
+		ZIPPY "Now you're an official mage, %PLAYER%!"
+		PLAYER "Blowing out the candle didn't make me a mage, %Aunt Zippy%!"
+		ZIPPY "Well, you're officially sixteen now!"
+		PLAYER "I'm pretty sure I officially turned sixteen at midnight last night."
+		ZAPPY "Well, you're officially our favorite birthday mage!"
+		PLAYER "Aw, thanks, %Uncle Zappy%!"
+		ZIPPY "All right, everyone! Dig in!"
+	}
+	fade out camera to #000000 over 500ms;
+	set entity Cake current_animation to 4;
+	show dialog {
+		name " "
+		border_tileset menu
+		"*munch munch munch*"
+	}
+	fade in camera from #000000 over 1000ms;
+	show dialog {
+		ZAPPY
+		"How was your day, %PLAYER%? Are you getting used to Ring Zero?"
+
+		PLAYER
+		"Yeah, today was pretty wild. I went around town and fixed a lot of the stuff the Big Bad had ruined."
+		"I changed the color of some ether nettle blossoms, teleported some sheep, and impersonated a cat!"
+		"Oh, and I changed my name to Bob and drank some cactus cooler with a stone golem."
+
+		ZIPPY "I love that the water feature in the center of town is unglitched again. It really feels like old times."
+		ZAPPY "But then that earthquake hit. That was like old times, too."
+
+		PLAYER
+		"...Yeah, that was scary."
+		"I guess it's a sign that the Big Bad might be coming back."
+	}
+	wait 180ms;
+	turn entity "%PLAYER%" south;
+	wait 400ms;
+	show dialog {
+		PLAYER "First thing tomorrow, I'm supposed to meet the village elders and visit the mountain dungeon."
+		ZAPPY "They're really sending you to get the artifacts, then?"
+	}
+	turn entity "%PLAYER%" east;
+	show dialog {
+		PLAYER
+		"I guess so. The village elders say the artifacts are the only thing that can stop the Big Bad for good."
+
+		ZIPPY
+		"It's a lot to ask a sixteen year old, but if Ring Zero chose you...."
+		"Well, perhaps you're exactly the right mage for the job."
+
+		ZAPPY
+		"In which case we'd best get to bed soon. You'll need a good night's rest."
+
+		PLAYER
+		"Yeah."
+		"Good night, %Aunt Zippy%, %Uncle Zappy%."
+	}
+	fade out camera to #000000 over 1200ms;
+	wait 200ms;
+	goto cutscene-ch2-birthday-exit;
+}
+cutscene-ch2-birthday-exit {
+	set flag ch2-cutseen-birthday to true;
+	set warp state to cutscene-escort;
+	load map ch2-town;
+}
+
+/* --- CUTSCENE: Birthday (elders) --- */
+
+// helper scripts
+gossip-right-down {
+	wait 600ms;
+	turn entity "%SELF%" east;
+	wait 800ms;
+	turn entity "%SELF%" south;
+	wait 400ms;
+}
+gossip-left-and-right-down {
+	turn entity "%SELF%" west;
+	wait 600ms;
+	turn entity "%SELF%" south;
+	wait 300ms;
+	turn entity "%SELF%" east;
+	wait 360ms;
+}
+gossip-left-down {
+	wait 200ms;
+	turn entity "%SELF%" south;
+	wait 500ms;
+	turn entity "%SELF%" west;
+	wait 1100ms;
+}
+
+// cutscene
+ch2-escort-cutscene {
+	if (debug mode is on) {
+		turn serial control on;
+		register skip -> cutscene-ch2-escort-exit;
+	} else {
+		turn serial control off;
+	}
+	fade out camera to #000000 over 0ms
+	turn player control off;
+	close hex editor;
+	teleport entity Alfonso to geometry birthday-alfonso;
+	teleport entity Bert to geometry birthday-bert;
+	teleport entity Jackob to geometry birthday-jackob;
+	turn entity Alfonso north;
+	turn entity Bert north;
+	turn entity Jackob north;
+	teleport camera to geometry escort-camera;
+	fade in camera from #000000 over 1000ms;
+	turn entity "%PLAYER%" south;
+	wait 800ms;
+	teleport entity "%PLAYER%" to geometry walk_from-magehouse;
+	walk entity "%PLAYER%" along geometry walk_from-magehouse over 400ms;
+	wait 1200ms;
+	show dialog {
+		PLAYER "Oh... um...."
+		Alfonso "The time has come to visit the first dungeon, %PLAYER%."
+		PLAYER "...Yeah."
+		Alfonso "Ready to go?"
+		PLAYER "Yeah. I mean, no. I mean...."
+	}
+	wait 150ms;
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	wait 300ms;
+	show dialog {
+		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal dungeon?"
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" south;
+	show dialog {
+		Jackob
+		"The serial dungeon, yes. We did have a book about that."
+		"But... it's gone."
+
+		PLAYER "Gone? You lost the book?"
+		Alfonso "No, not lost! It's just missing!"
+		PLAYER "But you're in charge of the library! How did you lose a whole book?"
+		
+		Bert
+		"We will keep looking for it. But first you go."
+		"More important for you to get started right away."
+		
+		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the dungeon on your own."
+	}
+	wait 100ms;
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	wait 200ms;
+	show dialog {
+		PLAYER "On my own? You aren't coming inside with me?"
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" south;
+	show dialog {
+		Jackob "We are not hackers and cannot pass the gate."
+		Alfonso "Ring Zero should grant you access...."
+		PLAYER "\"Should?\""
+	}
+	wait 150ms;
+	turn entity Alfonso south;
+	wait 500ms;
+	show dialog {
+		Alfonso "If I remember correctly...."
+		PLAYER "You don't know? What kind of wise old men are you?"
+		Jackob "We'll certainly see, won't we?"
+	}
+	turn entity Alfonso toward entity "%PLAYER%";
+	show dialog {
+		PLAYER "That book... what did it say? Can you give me a summary at least?"
+	}
+	set entity Jackob on_tick to gossip-right-down;
+	set entity Alfonso on_tick to gossip-left-and-right-down;
+	set entity Bert on_tick to gossip-left-down;
+	wait 200ms;
+	show dialog {
+		Jackob "I must have read it once...."
+		Alfonso "Wasn't it something about...?"
+		Bert "I don't know."
+	}
+	wait 500ms;
+	set entity Alfonso on_tick to null_script;
+	set entity Jackob on_tick to null_script;
+	set entity Bert on_tick to null_script;
+	wait 100ms;
+	turn entity Alfonso north;
+	wait 50ms;
+	turn entity Bert north;
+	wait 40ms;
+	turn entity Jackob north;
+	show dialog {
+		Jackob "I can't remember."
+		Alfonso "Something about rooms... and magic words...."
+		PLAYER "Ho boy."
+		
+		Jackob
+		"We had hoped that book would give you a leg up, but ultimately, I doubt it was that important, %PLAYER%."
+		"Instead you will need to rely on XA, who will be able to provide you with a great deal of information."
+		
+		PLAYER "Exay?"
+		Bert "XA sits just inside. Is robot."
+		Alfonso "It literally has insider information about the place."
+		
+		Jackob
+		"I realize it's disappointing that we cannot help you very much in this chapter of your journey as a mage."
+		"But we promise you, %PLAYER%, that you will not be entirely on your own."
+		"Trust us. You'll be just fine."
+
+		Alfonso "You will not be in danger at any point!"
+		Bert "Unless Big Bad comes back."
+		Alfonso "Yes! And that is why you must hurry!"
+		PLAYER "All right. Let's not waste any more time."
+	}
+	set flag ch2-escort-cutscene to true;
+	wait 160ms;
+	set entity Jackob on_tick to birthday-march-on-own-path;
+	wait 180ms;
+	set entity Alfonso on_tick to birthday-march-on-own-path;
+	wait 90ms;
+	set entity Bert on_tick to birthday-march-on-own-path;
+	set entity "%PLAYER%" on_tick to birthday-march-on-own-path-player;
+}
+birthday-march-on-own-path {
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 2400ms;
+	goto yeet;
+}
+birthday-march-on-own-path-player {
+	wait 300ms;
+	walk entity "%PLAYER%" to geometry hesitation-point over 300ms;
+	wait 600ms;
+	walk entity "%PLAYER%" to geometry birthday-alfonso over 400ms;
+	turn entity "%PLAYER%" west;
+	wait 250ms;
+	pan camera to entity "%PLAYER%" over 400ms;
+	wait 300ms;
+	show dialog {
+		PLAYER "All right. Take a deep breath.\nYou can do it, %PLAYER%."
+	}
+	set warp state to none;
+	set entity Jackob on_tick to yeet;
+	set entity Alfonso on_tick to yeet;
+	set entity Bert on_tick to yeet;
+	turn player control on;
+	goto null_script;
+}
+cutscene-ch2-escort-exit {
+	set warp state to walk_from-east;
+	load map ch2-castle-outside;
+}
+
+/* --- AND THE REST OF THE OWL --- */

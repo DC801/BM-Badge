@@ -1,4 +1,4 @@
-var ENGINE_VERSION = 3; // MUST BE BUMPED BY WHOLE NUMBERS WHEN ENGINE CHANGES DATA SHAPES!!!
+var ENGINE_VERSION = 12; // MUST BE BUMPED BY WHOLE NUMBERS WHEN ENGINE CHANGES DATA SHAPES!!!
 var IS_LITTLE_ENDIAN = true;
 var IS_SCREEN_LITTLE_ENDIAN = false;
 var IS_GLITCHED_FLAG = 0b10000000;
@@ -8,11 +8,16 @@ var MAX_ENTITIES_PER_MAP = 64;
 var DIALOG_SCREEN_NO_PORTRAIT = 255;
 var DIALOG_SCREEN_NO_ENTITY = 255;
 
+var verbose = true; // always behave as if the --verbose flag is present in the browser GUI
+var consoleLogIfVerbose = function() {
+	if (verbose) {
+		console.log.apply(console, arguments);
+	}
+};
+
 var getFileJson = function (file) {
 	return file.text()
-		.then(function (text) {
-			return JSON.parse(text);
-		});
+		.then(JSON.parse);
 };
 
 var combineArrayBuffers = function (bufferA, bufferB) {
@@ -45,6 +50,20 @@ var getPaddedHeaderLength = function (length) {
 			? 4 - mod
 			: 0
 	);
+};
+
+var convertTextOptionsToResponses = function (textOptions) {
+	var result = [];
+	var textOptionKeys = Object.keys(textOptions || {});
+	if (textOptionKeys.length) {
+		result = textOptionKeys.map(function (key) {
+			return {
+				label: key.toLocaleLowerCase(),
+				script: textOptions[key],
+			};
+		});
+	}
+	return result;
 };
 
 var propertyTypeHandlerMap = {

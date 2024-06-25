@@ -1,0 +1,367 @@
+include!("header.mgs")
+/* ---------- DEBUG: Storyflag rounds ---------- */
+
+// debug: "win" that storyflag round
+
+debug-get-items-for-round1 {
+	copy ch2-pickup-monitor;
+	copy ch2-pickup-heatsink;
+	copy ch2-pickup-powersupply;
+}
+debug-get-items-for-round2 {
+	copy ch2-pickup-keyboard;
+	copy ch2-pickup-mouse;
+	copy ch2-pickup-needle;
+	copy ch2-pickup-plate;
+	copy ch2-solder-harddrive;
+}
+debug-get-items-for-round3 {
+	copy ch2-pickup-ramchips;
+	copy ch2-pickup-clock;
+	copy ch2-pickup-goldfish;
+	copy ch2-pickup-abacus;
+	copy ch2-solder-cpu;
+}
+debug-set-flags-to-round0 {
+	turn serial control on;
+	set flag ch2-has-artifact to true;
+	turn hex control on;
+	mutate current-chapter = 2;
+	set flag ch2-cutseen-birthday to true;
+	debug!("<y>debug-set-flags-to-round0")
+}
+debug-jump-to-round1 {
+	copy debug-set-flags-to-round1;
+	load map ch2-castle-1;
+}
+debug-jump-to-round2 {
+	copy debug-set-flags-to-round2;
+	load map ch2-castle-1;
+}
+debug-jump-to-round3 {
+	copy debug-set-flags-to-round3;
+	load map ch2-castle-1;
+}
+debug-jump-to-round4 {
+	copy debug-set-flags-to-round4;
+	load map ch2-castle-1;
+}
+
+debug-set-flags-to-round1 {
+	copy debug-set-flags-to-round0;
+	copy debug-finish-toot;
+	copy debug-map-flags-for-round1;
+}
+debug-set-flags-to-round2 {
+	copy debug-set-flags-to-round1;
+	copy debug-get-items-for-round1;
+	copy ch2-install-heatsink;
+	copy ch2-install-powersupply;
+	copy ch2-install-monitor;
+	set flag ch2-cutseen-bert-secret to true;
+	set flag ch2-lambda-bert-backstory to true;
+	set flag ch2-parts-round-2-backstory to true;
+	set flag ch2-have-things-to-solder to true;
+	copy debug-map-flags-for-round2;
+}
+debug-set-flags-to-round3 {
+	copy debug-set-flags-to-round2;
+	copy debug-get-items-for-round2;
+	copy ch2-install-harddrive;
+	copy ch2-install-keyboard;
+	copy ch2-install-mouse;
+	set flag ch2-cutseen-bert-message to true;
+	set flag ch2-parts-round-3-backstory to true;
+	copy debug-map-flags-for-round3;
+}
+debug-set-flags-to-round4 {
+	copy debug-set-flags-to-round3;
+	copy debug-get-items-for-round3;
+	copy ch2-install-ramchips;
+	copy ch2-install-clock;
+	copy ch2-install-cpu;
+	set flag ch2-cutseen-last-parts-done to true;
+	set flag ch2-warp-granted to true;
+	set flag ch2-parts-round-4-backstory to true;
+	copy debug-map-flags-for-round4;
+}
+
+/* ---------- PUT QUEST MARKERS ON MAP ---------- */
+
+ch2-put_on_map-round1 {
+	set flag ch2-map-monitor to true;
+	set flag ch2-map-heatsink to true;
+	set flag ch2-map-powersupply to true;
+}
+ch2-put_on_map-round2 {
+	set flag ch2-map-keyboard to true;
+	set flag ch2-map-mouse to true;
+	set flag ch2-map-plate to true;
+	set flag ch2-map-needle to true;
+}
+ch2-put_on_map-round3 {
+	set flag ch2-map-clock to true;
+	set flag ch2-map-goldfish to true;
+	set flag ch2-map-abacus to true;
+	set flag ch2-map-ramchips to true;
+}
+ch2-put_on_map-round4 {
+	set flag ch2-map-mainframeos to true;
+}
+ch2-take_off_map-round1 {
+	set flag ch2-map-monitor to false;
+	set flag ch2-map-heatsink to false;
+	set flag ch2-map-powersupply to false;
+}
+ch2-take_off_map-round2 {
+	set flag ch2-map-keyboard to false;
+	set flag ch2-map-mouse to false;
+	set flag ch2-map-plate to false;
+	set flag ch2-map-needle to false;
+}
+ch2-take_off_map-round3 {
+	set flag ch2-map-clock to false;
+	set flag ch2-map-goldfish to false;
+	set flag ch2-map-abacus to false;
+	set flag ch2-map-ramchips to false;
+}
+ch2-take_off_map-round4 {
+	set flag ch2-map-mainframeos to false;
+}
+
+/* ---------- ACQUIRE ITEM ---------- */
+
+// Also, remove quest marker from map
+
+//ROUND 1
+
+ch2-pickup-monitor {
+	set flag ch2-map-monitor to false;
+	set flag ch2-carrying-monitor to true;
+	register look + monitor -> look-monitor;
+}
+ch2-pickup-powersupply {
+	set flag ch2-map-powersupply to false;
+	set flag ch2-carrying-powersupply to true;
+	register look + "power supply" -> look-powersupply;
+}
+ch2-handoff-heatsink-to-cactuscooler {
+	set flag ch2-map-heatsink to false;
+	set flag ch2-map-cactuscooler-castle to true;
+}
+ch2-handoff-cactuscooler-to-bobaustin {
+	set flag ch2-map-cactuscooler-castle to false;
+	set flag ch2-map-cactuscooler-bobaustin to true;
+}
+ch2-pickup-cactuscooler {
+	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
+	set flag ch2-map-cactuscooler-bobaustin to false;
+	set flag ch2-map-heatsink to true;
+	set flag ch2-carrying-cactuscooler to true;
+	register look + "cactus cooler" -> look-cactuscooler;
+}
+ch2-pickup-heatsink {
+	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
+	set flag ch2-map-heatsink to false;
+	set flag ch2-carrying-heatsink to true;
+	register look + "heat sink" -> look-heatsink;
+}
+ch2-unpickup-cactuscooler { // DEBUG
+	// inverse of the above, lol, sorry for incorrect state
+	set flag ch2-map-cactuscooler-bobaustin to true;
+	set flag ch2-map-heatsink to false;
+	set flag ch2-carrying-cactuscooler to false;
+	unregister look + "cactus cooler"
+}
+
+// ROUND 2
+
+ch2-pickup-keyboard {
+	set flag ch2-map-keyboard to false;
+	set flag ch2-carrying-keyboard to true;
+	register look + keyboard -> look-keyboard;
+}
+ch2-pickup-mouse {
+	set flag ch2-map-mouse to false;
+	set flag ch2-carrying-mouse to true;
+	register look + mouse -> look-mouse;
+}
+ch2-pickup-plate {
+	set flag ch2-map-plate to false;
+	set flag ch2-carrying-plate to true;
+	register look + plate -> look-plate;
+}
+ch2-pickup-needle {
+	set flag ch2-map-needle to false;
+	set flag ch2-carrying-needle to true;
+	register look + needle -> look-needle;
+}
+ch2-solder-harddrive {
+	copy ch2-install-plate;
+	copy ch2-install-needle;
+	set flag ch2-carrying-harddrive to true;
+	register look + "hard drive" -> look-harddrive;
+}
+
+// ROUND 3
+
+ch2-pickup-clock {
+	set flag ch2-map-clock to false;
+	set flag ch2-carrying-clock to true;
+	register look + clock -> look-clock;
+}
+ch2-pickup-goldfish {
+	set flag ch2-map-goldfish to false;
+	set flag ch2-carrying-goldfish to true;
+	register look + goldfish -> look-goldfish;
+}
+ch2-pickup-manual {
+	set flag ch2-map-manual to false;
+	set flag ch2-map-abacus to true;
+	set flag ch2-carrying-manual to true;
+	register look + abacus -> look-abacus;
+}
+ch2-handoff-abacus-to-manual {
+	set flag ch2-map-abacus to false;
+	set flag ch2-map-manual to true;
+}
+ch2-pickup-abacus {
+	set flag ch2-map-abacus to false;
+	set flag ch2-carrying-abacus to true;
+	register look + abacus -> look-abacus;
+}
+ch2-solder-cpu {
+	copy ch2-install-goldfish;
+	copy ch2-install-abacus;
+	set flag ch2-carrying-cpu to true;
+	register look + cpu -> look-cpu;
+}
+ch2-handoff-ramchips-to-seamoss {
+	set flag ch2-map-ramchips to false;
+	set flag ch2-map-seamoss to true;
+}
+ch2-pickup-ramchips {
+	set flag ch2-map-ramchips to false;
+	set flag ch2-map-seamoss to false;
+	set flag ch2-carrying-ramchips to true;
+	register look + "ram chips" -> look-ramchips;
+	register look + ram -> look-ramchips;
+}
+
+// ROUND 4
+
+ch2-pickup-mainframeos {
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	register look + mainframeos -> look-mainframeos;
+}
+
+/* ---------- ITEM "INSTALL" ---------- */
+
+ch2-install-monitor {
+	set flag ch2-carrying-monitor to false;
+	set flag ch2-installed-monitor to true;
+	unregister look + monitor
+}
+ch2-turn_in-cactuscooler {
+	set flag ch2-carrying-cactuscooler to false;
+	unregister look + "cactus cooler";
+	// picking up heatsink is currently a separate step
+}
+ch2-install-heatsink {
+	set flag ch2-carrying-heatsink to false;
+	set flag ch2-installed-heatsink to true;
+	unregister look + "heat sink";
+}
+ch2-install-powersupply {
+	set flag ch2-carrying-powersupply to false;
+	set flag ch2-installed-powersupply to true;
+	unregister look + "power supply";
+}
+ch2-install-keyboard {
+	set flag ch2-carrying-keyboard to false;
+	set flag ch2-installed-keyboard to true;
+	unregister look + keyboard;
+}
+ch2-install-mouse {
+	set flag ch2-carrying-mouse to false;
+	set flag ch2-installed-mouse to true;
+	unregister look + mouse;
+}
+ch2-install-harddrive {
+	set flag ch2-carrying-harddrive to false;
+	set flag ch2-installed-harddrive to true;
+	unregister look + "hard drive";
+}
+ch2-install-plate {
+	set flag ch2-carrying-plate to false;
+	set flag ch2-installed-plate to true;
+	unregister look + plate;
+}
+ch2-install-needle {
+	set flag ch2-carrying-needle to false;
+	set flag ch2-installed-needle to true;
+	unregister look + needle;
+}
+ch2-install-ramchips {
+	set flag ch2-carrying-ramchips to false;
+	set flag ch2-installed-ramchips to true;
+	unregister look + "ram chips";
+	unregister look + ram;
+}
+ch2-install-clock {
+	set flag ch2-carrying-clock to false;
+	set flag ch2-installed-clock to true;
+	unregister look + clock;
+}
+ch2-install-cpu {
+	set flag ch2-carrying-cpu to false;
+	set flag ch2-installed-cpu to true;
+	unregister look + cpu;
+}
+ch2-install-goldfish {
+	set flag ch2-carrying-goldfish to false;
+	set flag ch2-installed-goldfish to true;
+	unregister look + goldfish;
+}
+ch2-install-abacus {
+	set flag ch2-carrying-abacus to false;
+	set flag ch2-installed-abacus to true;
+	unregister look + abacus;
+}
+ch2-install-mainframeos {
+	set flag ch2-carrying-mainframeos to false;
+	set flag ch2-installed-mainframeos to true;
+	unregister look + mainframeos;
+}
+
+//--------------------------- SOLDER ZONE ---------------------------\\
+
+interact-ch2-solderzone {
+	if (flag ch2-have-things-to-solder is false) {
+		show dialog {
+			PLAYER "It's a metal pen resting inside a metal coil. But why is the pen plugged in? What does it do?"
+		}
+		return;
+	} else if (variable ch2-storyflag-round is >= 4) {
+		show dialog {
+			PLAYER "Guess I'm all done soldering."
+		}
+		return;
+	}
+	set flag only-count-inventory to true;
+	copy command-inventory;
+	if (variable ch2-counted-inventory is 0) {
+		show dialog {
+			PLAYER "(TODO: can't solder anything with nothing in inventory)"
+		}
+		return;
+	} else if (variable ch2-counted-inventory is 1) {
+		show dialog {
+			PLAYER "(TODO: need more than 1 item to use the solder station)"
+		}
+		return;
+	}
+	// TODO update this whole process
+	goto command-solder;
+}

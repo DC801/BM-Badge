@@ -1,0 +1,36 @@
+ch1-count-flags {
+	mutate ch1-storyflags-tally = 0;
+	if (flag storyflag-catwork is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-shepherd is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-bender is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-baker is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-bobmoss is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-bea1 is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-trekkie is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-sportskid is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-verthandi is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-bea2 is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+	if (flag storyflag-rake is true) {
+		mutate ch1-storyflags-tally + 1;
+	}
+}

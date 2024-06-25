@@ -462,7 +462,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	EngineROM_Read(
 		address,
 		sizeof(entity.hackableStateA),
-		(uint8_t*)&entity.hackableStateA,
+		(uint8_t *)&entity.hackableStateA,
 		"Failed to read Entity property 'hackableStateA'"
 	);
 	//increment address
@@ -472,7 +472,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	EngineROM_Read(
 		address,
 		sizeof(entity.hackableStateB),
-		(uint8_t*)&entity.hackableStateB,
+		(uint8_t *)&entity.hackableStateB,
 		"Failed to read Entity property 'hackableStateB'"
 	);
 	//increment address
@@ -482,7 +482,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	EngineROM_Read(
 		address,
 		sizeof(entity.hackableStateC),
-		(uint8_t*)&entity.hackableStateC,
+		(uint8_t *)&entity.hackableStateC,
 		"Failed to read Entity property 'hackableStateC'"
 	);
 	//increment address
@@ -492,7 +492,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	EngineROM_Read(
 		address,
 		sizeof(entity.hackableStateD),
-		(uint8_t*)&entity.hackableStateD,
+		(uint8_t *)&entity.hackableStateD,
 		"Failed to read Entity property 'hackableStateD'"
 	);
 	//increment address

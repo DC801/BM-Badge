@@ -1,0 +1,394 @@
+include!("header.mgs")
+
+const! (
+	$reset = 0
+	$cupboard = 1
+	$glasses = 2
+	$fridge = 3
+)
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-bobsclub {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look around at the <m><bold>Bob's Club</>."
+		"\tYou can hear muffled, rhythmic thumping through the floor, though there's no clear source."
+		" "
+	}
+}
+
+look-ch2-bobbarstool {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThis lone piece of furniture feels out of place when not part of a lineup of identical pieces. It's a melancholy image, dwarfed in the open space."
+	}
+}
+
+look-ch2-bobglasses {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+	}
+	if (flag ch2-cutseen-bob-party is false) {
+		show serial dialog {
+			"\tFancy glass goblets for fancy parties. These pieces are definitely reserved for fancy drink orders. Not that you've ever seen a party in here."
+		}
+	} else {
+		show serial dialog {
+			"\tFancy glass goblets for fancy parties. These pieces are definitely reserved for fancy drink orders. Though from what you've seen, the Bob's Club partygoers prefer to use red plastic party cups."
+		}
+	}
+}
+look-ch2-bobsbox {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"It's still sealed. The sides are bulging, as though it was packed tightly with something."
+	}
+}
+look-ch2-bobsbarrel {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"It's not marked, though you always assumed barrels like this would contain ale or beer or something. You suppose it could just as easily contain oyster crackers."
+	}
+}
+look-ch2-bobcountertop {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThere are hard water rings on the surface in several places. Most of it is dry, but some of the larger spots are still holding onto droplets of water. Did someone set some drinks here recently?"
+	}
+}
+
+look-ch2-bobcupboard {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tGlass tumblers are packed together in lines on each shelf. None are missing; there are no gaps."
+	}
+}
+look-ch2-bobsink {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThere's splashes of water -- and an emaciated ice cube -- near the drain. Someone has used the sink recently."
+	}
+}
+look-ch2-bobfridge {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's a larger-than-normal, industral-style refrigerator. There are a handful of small magnets on the front, but they mostly consist of the letters \"O\" and \"B\"."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+// DEBUG
+find-cc { set flag ch1-found-cactuscooler to true; }
+unfind-cc { set flag ch1-found-cactuscooler to false; }
+want-cc { set flag ch2-want-cactuscooler to true; }
+unwant-cc { set flag ch2-want-cactuscooler to false; }
+basement { set flag ch2-cutseen-bob-party to true; }
+unbasement { set flag ch2-cutseen-bob-party to false; }
+toot {
+	set flag ch2-toot-done to true;
+	copy register-parts;
+}
+untoot {
+	set flag ch2-toot-done to false;
+	unregister parts;
+}
+reset {
+	set flag ch2-carrying-cactuscooler to false;
+	set flag ch2-want-cactuscooler to false;
+	set flag ch1-found-cactuscooler to false;
+	set flag ch2-cutseen-bob-party to false;
+	set flag ch2-toot-done to false;
+	mutate ch2-rattle-count = 0;
+	show serial dialog {
+		"RESET"
+	}
+}
+
+// END DEBUG
+
+on_load-ch2-bobsclub {
+	// do unique stuff first (but turn serial / player control off first, if you do)
+	mutate ch2-rattle-count = 0;
+
+	// DEBUG
+	if (debug mode is on) {
+		register find + cc -> find-cc;
+		register unfind + cc -> unfind-cc;
+		register want + cc -> want-cc;
+		register unwant + cc -> unwant-cc;
+		register basement -> basement;
+		register unbasement -> unbasement;
+		register toot -> toot;
+		register untoot -> untoot;
+		register carry + cc -> ch2-pickup-cactuscooler;
+		register uncarry + cc -> ch2-unpickup-cactuscooler;
+		register reset -> reset;
+		show serial dialog spacer;
+		show serial dialog {
+			"\t<g>Bob's Club debug options:</>"
+			"<c>FIND CC</>: you found CC in ch1"
+			"<c>UNFIND CC</>: you didn't find CC in ch1"
+			"<c>WANT CC</>: you know you want CC"
+			"<c>UNWANT CC</>: you don't yet know you want CC"
+			"<c>CARRY CC</>: you have CC on you"
+			"<c>UNCARRY CC</>: you don't have CC on you"
+			"<c>BASEMENT</>: you've been to the Bob's Club basement already"
+			"<c>UNBASEMENT</>: you've haven't been to the Bob's Club basement yet"
+			"<c>TOOT</>: you've finished Lambda's artifact tutorial already"
+			"<c>UNTOOT</>: you haven't finished Lambda's artifact tutorial yet"
+			"<c>RESET</>: set all above flags to false, and set the 'heard a dubstep rattle' to 0"
+		}
+	}
+	// END DEBUG
+	
+	copy ch2-map-init;
+
+	// Have NOT been in the basement
+	if (flag ch2-cutseen-bob-party is false) {
+		turn player control off;
+		if (warp state is not warped) {
+			walk entity "%PLAYER%" to geometry "walk-spot" over 400ms;
+		}
+		wait 220ms;
+		// Intro words
+		if (flag ch2-saw-emptybobroom is false) {
+			set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+			show dialog {
+				PLAYER "Huh? That's weird. Where did everyone go?"
+				"And what's that muffled thumping noise?"
+			}
+			set flag ch2-saw-emptybobroom to true;
+		} else {
+			show dialog {
+				PLAYER "Huh. Still empty... apart from that muffled thumping noise."
+			}
+		}
+		copy player-look-down;
+		// CC followup
+		if (flag ch2-want-cactuscooler is true) { // You KNOW you need CC
+			if (flag ch1-found-cactuscooler is true) {
+				show dialog {
+					PLAYER "At least I can grab some Cactus Cooler while I'm here. I know I saw some in the fridge yesterday."
+				}
+			}
+			else {
+				show dialog {
+					PLAYER "There might be Cactus Cooler around somewhere, though. This place has drinks and stuff, right?"
+				}
+			}
+		}
+		else { // You DON'T know you need CC
+			show dialog {
+				PLAYER "Maybe I should take a look around."
+			}
+		}
+		turn player control on;
+	}
+	else { // You HAVE been in the basement
+		if (flag ch2-want-cactuscooler is true) { // If you know you need CC
+			if ( // You've already collected the CC
+				flag ch2-carrying-cactuscooler is true
+				|| flag ch2-cactuscooler-delivered is true
+			) {
+				// DO NOTHING
+			}
+			else {
+				// REMIND THEM TO GET IT!
+				if (flag ch1-found-cactuscooler is true) {
+					show dialog {
+						PLAYER "Oh, yeah. I found Cactus Cooler in the fridge here yesterday. I should grab some while I'm here."
+					}
+				}
+				else {
+					show dialog {
+						PLAYER "Oh, right. They had drinks and stuff at the party. I wonder if they'll have a rare soda like Cactus Cooler?"
+					}
+				}
+			}
+		}
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-bobsclub {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-bobsclub;
+		load map ch2-town;
+	}
+	set map on_tick to on_tick-ch2-bobsclub // reset
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-bobsclub-stairs {
+	copy warping-out-fade-out;
+	load map ch2-bobsclub-basement;
+}
+on_go-ch2-bobsclub-south {
+	copy warping-out-fade-out;
+	load map ch2-town;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-bobbox {
+	if (flag ch2-cutseen-bob-party is false) {
+		show dialog {
+			PLAYER "It's a box of unfilled balloons. There used to be a ton more of them though."
+		}
+	}
+	else {
+		show dialog {
+			PLAYER "I guess they didn't need this box of balloons downstairs."
+		}
+	}
+}
+interact-ch2-bobbarstool {
+	if (flag ch2-cutseen-bob-party is false) {
+		show dialog {
+			PLAYER "Only one stool for the whole bar? Where's the rest?"
+		}
+	}
+	else {
+		show dialog {
+			PLAYER "They just left this stool by itself, huh? Guess there wasn't room downstairs."
+		}
+	}
+}
+interact-ch2-bobbarrel {
+	show dialog {
+		PLAYER "A beer keg maybe?"
+	}
+}
+interact-ch2-bobcountertop {
+	if (flag ch2-cutseen-bob-party is false) {
+		show dialog {
+			PLAYER "I KNOW there used to be bottles by the sink! Where did everything go?"
+		}
+	} // (no need to say anything once the basement is discovered)
+}
+
+// CALLBACK (ish) STUFF
+
+interact-ch2-bobcupboard {
+	if (flag ch2-touched-bobcupboard is false) {
+		show dialog {
+			PLAYER "Those are some hardy-looking glasses and tumblers."
+		}
+		set flag ch2-touched-bobcupboard to true;
+	}
+	else {
+		show dialog {
+			PLAYER "Yup, still glasses and tumblers in there."
+		}
+	}
+	copy ch2-bobrattling;
+}
+interact-ch2-bobglasses {
+	show dialog {
+		PLAYER "These glasses look super fancy."
+	}
+	copy ch2-bobrattling;
+}
+interact-ch2-bobfridge {
+	if ( // You've already collected the CC
+		flag ch2-carrying-cactuscooler is true
+		|| flag ch2-cactuscooler-delivered is true
+	) {
+		show dialog { PLAYER "Nothing in here." }
+	}
+	else {
+		if (flag ch1-found-cactuscooler is false) {
+			show dialog {
+				PLAYER "I would have thought there'd be some soda in here, but nothing. Not even a box of baking soda."
+			}
+		}
+		else {
+			show dialog {
+				PLAYER "I could have sworn there was Cactus Cooler in here yesterday, but it's gone now."
+			}
+		}
+	}
+	copy ch2-bobrattling;
+}
+
+player-look-down {
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" south;
+}
+
+ch2-bobrattling { // Hint that there's more inside the building
+	if (flag ch2-cutseen-bob-party is false) {
+		set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+		// naive only
+		if (variable ch2-rattle-count is 0) {
+			show dialog {
+				PLAYER "...Jeez, that weird thumping is actually rattling the shelves! Is that... music? Loud music?"
+			}
+			copy player-look-down;
+			show dialog {
+				PLAYER "Where the heck is it coming from? This is the only room in the building!"
+				"...Right?"
+			}
+		}
+		else if (variable ch2-rattle-count is 1) {
+			show dialog {
+				PLAYER "...Okay, that thumping is DEFINITELY music. I think the bass just dropped."
+			}
+			show dialog {
+				PLAYER "It sounds like the speaker is nearby, like just beyond a wall. But the only visible doorway is the main entrance."
+			}
+		}
+		else if (variable ch2-rattle-count is 2) {
+			show dialog {
+				PLAYER "...Wow, I think what I'm hearing is actually dubstep. It's muffled, but it's so loud it must be practically next door."
+			}
+			copy player-look-down;
+			show dialog {
+				PLAYER "Is it under the floor or something? I keeping looking but there aren't any stairs!"
+			}
+		}
+		// you have the artifact and can get more specific hints
+		else if (variable ch2-rattle-count is 3) {
+			show dialog {
+				PLAYER "...Okay, that music is starting to get on my nerves. But where..."
+			}
+			copy player-look-down;
+			show dialog {
+				PLAYER "...Oh, that's right! The artifact can identify the exits for each room!"
+				"I wonder if it could show me the way to a secret room."
+				"...With secret dubstep."
+			}
+		}
+		else if (variable ch2-rattle-count is 4) {
+			copy player-look-down;
+			show dialog {
+				PLAYER "...Ah, that's right, I remember now. I can use the artifact to LOOK around the room. Maybe I can find the source of the music that way."
+			}
+		}
+		else {
+			copy player-look-down;
+			show dialog {
+				PLAYER "...But enough distractions. I should use the LOOK command in the serial console to discover any secret doors."
+			}
+		}
+		copy player-look-down;
+
+		// advance the count
+		mutate ch2-rattle-count + 1;
+		if (flag ch2-toot-done is false) {
+			mutate ch2-rattle-count % 3;
+		}
+	}
+}

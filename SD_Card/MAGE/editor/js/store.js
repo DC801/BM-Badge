@@ -5,6 +5,7 @@ window.store = new window.Vuex.Store({
 			scenarioData: null,
 			currentData: null,
 			initState: null,
+			warningsGeneratedScriptNames: [],
 		};
 	},
 	mutations: {
@@ -23,6 +24,17 @@ window.store = new window.Vuex.Store({
 		},
 		UPDATE_SCRIPT_BY_NAME: function (state, args) {
 			state.currentData.scripts[args.scriptName] = args.script;
+		},
+		RESERVE_WARNING_SCRIPT_NAME: function(state, args) {
+			if (! state.warningsGeneratedScriptNames.includes(args.scriptName)) {
+				state.warningsGeneratedScriptNames.push(args.scriptName);
+			}
+		},
+		FREE_WARNING_SCRIPT_NAME: function (state, args) {
+			state.warningsGeneratedScriptNames = state.warningsGeneratedScriptNames
+				.filter(function(scriptName) {
+					return scriptName !== args.scriptName;
+				});
 		},
 		MOVE_DIALOG: function (state, args) {
 			var direction = args.direction;

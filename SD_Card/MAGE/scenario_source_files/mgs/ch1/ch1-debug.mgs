@@ -1,0 +1,320 @@
+include!("header.mgs")
+
+debug-hub-q {
+	show dialog {
+		SELF portrait goldfish
+		"Go to debug map hub?"
+		> "Yes" : debug-hub-go
+		> "No" : debug-hub-no
+	}
+}
+
+debug-hub-go {
+	goto script load_map-warp_zone;
+}
+
+debug-hub-no {
+	set entity "%SELF%" on_interact to debug-hub-q;
+}
+
+debug-demobonus-q {
+	turn entity "%SELF%" toward entity "%PLAYER%";
+	show dialog {
+		SELF portrait goldfish
+		"Demo bonus debugging"
+		> "Set story flags true + ch1_finished true" : debug-demobonus-pre-flags-true
+		> "Set story flags true + ch1_finished false" : debug-demobonus-pre-flags-false
+		> "Set demo bonus event flags false" : debug-demobonus-event-flags-false
+		> "Never mind" : debug-demobonus-no
+	}
+}
+
+debug-demobonus-pre-flags-true {
+	copy script set-story-flags-true;
+	set flag ch1_finished to true;
+	set warp state to exit_from-credits;
+	set entity "%SELF%" on_interact to debug-demobonus-q;
+}
+
+debug-demobonus-pre-flags-false {
+	copy script set-story-flags-false;
+	set flag ch1_finished to false;
+	set entity "%SELF%" on_interact to debug-demobonus-q;
+}
+
+debug-demobonus-event-flags-false {
+	set flag demobonus to false;
+	set flag demobonus-jackob-informed to false;
+	set flag demobonus-timmy-yell to false;
+	set flag demobonus-sportsbook-read to false;
+	set entity "%SELF%" on_interact to debug-demobonus-q;
+}
+
+debug-demobonus-no {
+	set entity "%SELF%" on_interact to debug-demobonus-q;
+}
+
+debug-set-flags-false-q {
+	turn entity "%SELF%" toward entity "%PLAYER%";
+	show dialog {
+		SELF "Set what to FALSE?"
+		> "Story flags and misc flags" : debug-set-story-and-misc-flags-false
+		> "Backstory flags" : debug-set-backstory-false
+		> "Unglitch flags" : debug-set-glitch-flags-false
+		> "Never mind" : debug-set-flags-false-no
+	}
+}
+
+debug-set-flags-true-q {
+	turn entity "%SELF%" toward entity "%PLAYER%";
+	show dialog {
+		SELF "Set what to TRUE?"
+		> "Everything (except winning)" : debug-set-all-true
+		> "Backstory flags" : debug-set-backstory-true
+		> "Unglitch flags" : debug-set-glitch-flags-true
+		> "Never mind" : debug-set-flags-true-no
+	}
+}
+
+debug-set-story-and-misc-flags-false {
+	mutate hint-tracking = 0;
+	copy script set-story-flags-false;
+	copy script set-misc-flags-false;
+	copy script set-ch1_finished-flags-false;
+	show dialog {
+		SELF "All story and misc flags set to FALSE."
+	}
+	set entity "%SELF%" on_interact to debug-set-flags-false-q;
+}
+
+debug-set-backstory-false {
+	copy script set-backstory-flags-false;
+	show dialog {
+		SELF "All entities have forgotten their first\nconversations with you."
+	}
+	set entity "%SELF%" on_interact to debug-set-flags-false-q;
+}
+
+debug-set-backstory-true {
+	copy script set-backstory-flags-true;
+	show dialog {
+		SELF "All entities are inexplicably under the\nimpression that you've spoken to them\nbefore."
+	}
+	set entity "%SELF%" on_interact to debug-set-flags-true-q;
+}
+
+debug-set-glitch-flags-true {
+	copy script set-glitch-flags-true;
+	make entity Billy unglitched;
+	make entity Kid unglitched;
+	make entity Fountain unglitched;
+	make entity Hamster unglitched;
+	set entity "%SELF%" on_interact to debug-set-flags-true-q;
+}
+
+debug-set-glitch-flags-false {
+	copy script set-glitch-flags-false;
+	make entity Billy glitched;
+	make entity Kid glitched;
+	make entity Fountain glitched;
+	make entity Hamster glitched;
+	set entity "%SELF%" on_interact to debug-set-flags-false-q;
+}
+
+debug-set-all-true {
+	copy script set-story-flags-true;
+	copy script set-glitch-flags-true;
+	copy script set-goodmorning-flags-true;
+	copy script set-tuesday-flags-true;
+	copy script set-artifact-flags-true;
+	copy script set-backstory-flags-true;
+	copy script set-misc-flags-true;
+	show dialog {
+		SELF "All flags set to TRUE. You may have to reload the map to see some changes."
+	}
+	set entity "%SELF%" on_interact to debug-set-flags-true-q;
+}
+
+debug-set-flags-false-no {
+	show dialog {
+		SELF "Nothing changed."
+	}
+	set entity "%SELF%" on_interact to debug-set-flags-false-q;
+}
+
+debug-set-flags-true-no {
+	show dialog {
+		SELF "Nothing changed."
+	}
+	set entity "%SELF%" on_interact to debug-set-flags-true-q;
+}
+
+load_map-warp_zone {
+	load map warp_zone;
+}
+
+load_map-testbig {
+	load map testbig;
+}
+
+set-artifact-flags-true {
+	set flag artifact-broom-touched to true;
+	set flag artifact-wand-touched to true;
+	set flag artifact-book-touched to true;
+	set flag artifact-glasses-touched to true;
+	set flag artifact-bracelet-touched to true;
+}
+
+set-artifact-flags-false {
+	set flag artifact-broom-touched to false;
+	set flag artifact-wand-touched to false;
+	set flag artifact-book-touched to false;
+	set flag artifact-glasses-touched to false;
+	set flag artifact-bracelet-touched to false;
+}
+
+set-story-flags-true {
+	set flag storyflag-bender to true;
+	set flag storyflag-baker to true;
+	set flag storyflag-bea1 to true;
+	set flag storyflag-bea2 to true;
+	set flag storyflag-shepherd to true;
+	set flag storyflag-sportskid to true;
+	set flag storyflag-catwork to true;
+	set flag storyflag-trekkie to true;
+	set flag storyflag-rake to true;
+	set flag storyflag-bobmoss to true;
+	set flag storyflag-verthandi to true;
+}
+
+set-story-flags-false {
+	set flag storyflag-bender to false;
+	set flag storyflag-baker to false;
+	set flag storyflag-bea1 to false;
+	set flag storyflag-bea2 to false;
+	set flag storyflag-shepherd to false;
+	set flag storyflag-sportskid to false;
+	set flag storyflag-catwork to false;
+	set flag storyflag-trekkie to false;
+	set flag storyflag-rake to false;
+	set flag storyflag-bobmoss to false;
+	set flag storyflag-verthandi to false;
+}
+
+set-goodmorning-flags-false {
+	set flag walked-to-lodge to false;
+	set flag goodmorning to false;
+}
+
+set-goodmorning-flags-true {
+	set flag walked-to-lodge to true;
+	set flag goodmorning to true;
+}
+
+set-tuesday-flags-true {
+	set flag tuesday-walkedup to true;
+	set flag ring-acquired to true;
+	set flag hide-lodge-crowd to true;
+	set flag hide-lodge-crowd-mini to true;
+	set flag tuesdayd to true;
+	set flag hintman-explanation to true;
+}
+
+set-tuesday-flags-false {
+	set flag tuesday-walkedup to false;
+	set flag ring-acquired to false;
+	set flag hide-lodge-crowd to false;
+	set flag hide-lodge-crowd-mini to false;
+	set flag tuesdayd to false;
+	set flag hintman-explanation to false;
+}
+
+set-misc-flags-true {
+	set flag bea-sequel-branch to true;
+	set flag bobsclub-entered to true;
+	set flag glitch-lesson to true;
+	set flag wopr-backdoor-found to true;
+}
+
+set-misc-flags-false {
+	set flag bobsclub-entered to false;
+	set flag bea-sequel-branch to false;
+	set flag glitch-lesson to false;
+	set flag wopr-backdoor-found to false;
+}
+
+set-begunthegame-flags-true {
+	set flag begunthegame to true;
+}
+
+set-begunthegame-flags-false {
+	set flag begunthegame to false;
+}
+
+set-ch1_finished-flags-true {
+	set flag ch1_finished to true;
+}
+
+set-ch1_finished-flags-false {
+	set flag ch1_finished to false;
+}
+
+set-glitch-flags-true {
+	set flag billy-unglitched to true;
+	set flag kid-unglitched to true;
+	set flag goats-both-unglitched to true;
+	set flag fountain-unglitched to true;
+	set flag lodge_cat-unglitched to true;
+	set flag timmy-unglitched to true;
+	set flag main_hamster-unglitched to true;
+	set flag goldfish-unglitched to true;
+}
+
+set-glitch-flags-false {
+	set flag billy-unglitched to false;
+	set flag kid-unglitched to false;
+	set flag goats-both-unglitched to false;
+	set flag fountain-unglitched to false;
+	set flag lodge_cat-unglitched to false;
+	set flag timmy-unglitched to false;
+	set flag main_hamster-unglitched to false;
+	set flag goldfish-unglitched to false;
+}
+
+set-backstory-flags-true {
+	set flag baker-backstory to true;
+	set flag bender-backstory to true;
+	set flag bobrock-backstory to true;
+	set flag strong_bad-backstory to true;
+	set flag bea1-backstory to true;
+	set flag bea2-backstory to true;
+	set flag shepherd-backstory to true;
+	set flag max-backstory to true;
+	set flag trekkie-backstory to true;
+	set flag hackbook-backstory to true;
+	set flag smith-backstory to true;
+	set flag verthandi-backstory to true;
+	set flag marta-backstory to true;
+	set flag hackbook-endstory to true;
+	set flag timmy-endstory to true;
+	set flag hamster-endstory to true;
+}
+
+set-backstory-flags-false {
+	set flag baker-backstory to false;
+	set flag bender-backstory to false;
+	set flag bobrock-backstory to false;
+	set flag strong_bad-backstory to false;
+	set flag bea1-backstory to false;
+	set flag bea2-backstory to false;
+	set flag shepherd-backstory to false;
+	set flag max-backstory to false;
+	set flag trekkie-backstory to false;
+	set flag hackbook-backstory to false;
+	set flag smith-backstory to false;
+	set flag verthandi-backstory to false;
+	set flag marta-backstory to false;
+	set flag hackbook-endstory to false;
+	set flag timmy-endstory to false;
+	set flag hamster-endstory to false;
+}

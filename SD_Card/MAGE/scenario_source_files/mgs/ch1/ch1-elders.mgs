@@ -1,0 +1,523 @@
+include!("header.mgs")
+
+hintman-cutscene {
+	wait 300ms;
+	walk entity Alfonso to geometry alfonso-talkspot over 600ms;
+	turn entity Alfonso toward entity "%PLAYER%";
+	wait 400ms;
+	turn entity "%PLAYER%" toward entity Alfonso;
+	show dialog {
+		Alfonso "There's a number of issues around town that your ring should be able to fix."
+		"There are... now, let's just see...."
+		"There are 11 tasks, according to my notes."
+		"I'll finish their paperwork as you go, so I'll be able to provide a running total."
+
+		PLAYER "You have to do paperwork when I hack things back to normal?"
+
+		Alfonso "My dear child, when you grow up, you'll understand:"
+		"There is paperwork for EVERYTHING!"
+	}
+	wait 100ms; /**/ walk entity Jackob along geometry hintman-walktalk over 900ms;
+	wait 200ms; /**/ turn entity "%PLAYER%" toward entity Jackob;
+	show dialog {
+		Jackob "And if you have a question about what you're doing, do feel free to ask me for advice."
+		"Or consult Bert over there, who has good intuition for who could still use assistance."
+	}
+	wait 100ms;
+	walk entity Bert to geometry bert-talkspot over 600ms;
+	turn entity "%PLAYER%" toward entity Bert;
+	show dialog {
+		Bert "Yes. I know who still needs help."
+	}
+	show dialog {
+		Alfonso "Right! Go get 'em!"
+		Bert "Good luck."
+	}
+	set entity Jackob on_tick to return-to-watchspot-jackob;
+	wait 200ms; /**/ set entity Alfonso on_tick to return-to-watchspot-alfonso;
+	wait 150ms; /**/ set entity Bert on_tick to return-to-watchspot-bert;
+}
+
+return-to-watchspot-alfonso {
+	walk entity "%SELF%" to geometry alfonso-waitspot over 500ms;
+	turn entity "%SELF%" south;
+	set entity "%SELF%" on_tick to null_script;
+}
+return-to-watchspot-jackob {
+	walk entity "%SELF%" along geometry hintman-walkback over 800ms;
+	turn entity "%SELF%" south;
+	set entity "%SELF%" on_tick to null_script;
+}
+return-to-watchspot-bert {
+	walk entity "%SELF%" to geometry bert-waitspot over 500ms;
+	turn entity "%SELF%" west;
+	set entity "%SELF%" on_tick to null_script;
+}
+
+show_dialog-bert-start {
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "...." "Bczv um jiks." }
+		set entity "%SELF%" on_interact to show_dialog-bert-start;
+	}
+	copy face-player;
+	show dialog { SELF "Who needs help?" }
+	copy calculate-hint-tracking-series; // sets `hint-tracking-check`
+	if (flag storyflag-shepherd is false) {
+		show dialog {
+			SELF "The shepherd."
+			"He had one job."
+		}
+		if (variable hint-tracking-check is not 1) {
+			// (NOTE: these are inverted from orig)
+			copy set-hint-shepherd-from-bert;
+		}
+	} else if (flag storyflag-baker is false) {
+		show dialog {
+			SELF "Baker."
+			"Baker is busy. He has trouble with customer."
+		}
+		if (variable hint-tracking-check is not 2) {
+			copy set-hint-baker-from-bert;
+		}
+	} else if (flag storyflag-bobmoss is false) {
+		show dialog {
+			SELF "Cousin of Stone Cold Bob Austin."
+			"He is lost. Or is he hiding?"
+		}
+		copy set-hint-bobmoss-from-bert;
+		// no need to check for hint series, because this is the advanced hint, not the basic one; always set this
+	} else if (flag storyflag-bea1 is false) {
+		show dialog {
+			SELF "Old woman, Beatrice."
+			"She has been sad a long time."
+		}
+		if (variable hint-tracking-check is not 4) {
+			copy set-hint-bea1-from-bert;
+		}
+	} else if (flag storyflag-bender is false) {
+		show dialog {
+			SELF "Robot?"
+			"Some kind of robot."
+			"I do not know this robot."
+			"...I think he took my watch."
+		}
+		if (variable hint-tracking-check is not 5) {
+			copy set-hint-bender-from-bert;
+		}
+	} else if (flag storyflag-catwork is false) {
+		show dialog {
+			SELF "Max. Purple man."
+			"Max wants his house to be built."
+		}
+		if (variable hint-tracking-check is not 6) {
+			copy set-hint-max-from-bert;
+		}
+	} else if (flag storyflag-trekkie is false) {
+		show dialog {
+			SELF "Trekkie."
+			"Trekkie works on plants in the glass house."
+		}
+		if (variable hint-tracking-check is not 7) {
+			copy set-hint-trekkie-from-bert;
+		}
+	} else if (flag storyflag-sportskid is false) {
+		show dialog {
+			SELF "Small child with big dream."
+			"Child lives with father."
+		}
+		if (variable hint-tracking-check is not 8) {
+			copy set-hint-sportskid-from-bert;
+		}
+	} else if (flag storyflag-bea2 is false) {
+		show dialog {
+			SELF "Old woman, Beatrice."
+			"Does she know what she wants?"
+		}
+		if (variable hint-tracking-check is not 9) {
+			copy set-hint-bea2-from-bert;
+		}
+	} else if (flag storyflag-rake is false) {
+		show dialog {
+			SELF "Goose is mad?"
+			"Goose is always mad."
+			"What angers the goose this time?"
+		}
+		if (variable hint-tracking-check is not 10) {
+			copy set-hint-goose-from-bert;
+		}
+	} else if (flag storyflag-verthandi is false) {
+		show dialog {
+			SELF"A goddess, mourning for lost souls."
+			"She watches the goats."
+		}
+		if (variable hint-tracking-check is not 11) {
+			copy set-hint-glitch-from-bert;
+		}
+	} else {
+		show dialog { SELF "Perhaps the world." }
+	}
+}
+
+calculate-hint-tracking-series {
+	// checks which hint series it is by dividing by 10
+	mutate hint-tracking-check = hint-tracking;
+	mutate hint-tracking-check / 10;
+}
+
+set-hint-shepherd-from-bert {
+	mutate hint-tracking = 10;
+}
+set-hint-shepherd {
+	mutate hint-tracking = 11;
+}
+set-hint-shepherd-partial {
+	mutate hint-tracking = 12;
+}
+set-hint-baker-from-bert {
+	mutate hint-tracking = 20;
+}
+set-hint-baker {
+	mutate hint-tracking = 21;
+}
+set-hint-bobmoss-from-bert {
+	mutate hint-tracking = 30;
+}
+set-hint-bobmoss-from-guardian {
+	mutate hint-tracking = 32;
+}
+set-hint-bea1-from-bert {
+	mutate hint-tracking = 40;
+}
+set-hint-bea1 {
+	mutate hint-tracking = 41;
+}
+set-hint-bender-from-bert {
+	mutate hint-tracking = 50;
+}
+set-hint-bender {
+	mutate hint-tracking = 51;
+}
+set-hint-max-from-bert {
+	mutate hint-tracking = 60;
+}
+set-hint-max {
+	mutate hint-tracking = 61;
+}
+set-hint-max-from-cleo {
+	mutate hint-tracking = 62;
+}
+set-hint-trekkie-from-bert {
+	mutate hint-tracking = 70;
+}
+set-hint-trekkie {
+	mutate hint-tracking = 71;
+}
+set-hint-sportskid-from-bert {
+	mutate hint-tracking = 80;
+}
+set-hint-sportskid {
+	mutate hint-tracking = 81;
+}
+set-hint-bea2-from-bert {
+	mutate hint-tracking = 90;
+}
+set-hint-bea2 {
+	mutate hint-tracking = 91;
+}
+set-hint-goose-from-bert {
+	mutate hint-tracking = 100;
+}
+set-hint-goose {
+	mutate hint-tracking = 101;
+}
+set-hint-glitch-from-bert {
+	mutate hint-tracking = 110;
+}
+set-hint-glitch {
+	mutate hint-tracking = 111;
+}
+set-hint-hackbook {
+	mutate hint-tracking = 201;
+}
+set-hint-none {
+	mutate hint-tracking = 0;
+}
+
+show_dialog-jackob-start {
+	if (entity "%SELF%" is glitched) {
+		show dialog {
+			SELF "Vg'f tbbq gung lbh'er cenpgvpvat, ohg creuncf lbh fubhyq sbphf ba erfgbevat gur gbja?"
+		}
+	} else {
+		copy face-player;
+		show dialog {
+			SELF "Did you have a question about something?"
+		}
+		if (variable hint-tracking is 10) {
+			show dialog {
+				PLAYER "How do I put the sheep back inside their pen?"
+			}
+			show dialog dialog-jackob-hint-shepherd2 { // reused below
+				SELF "That seems simple enough. All you must do is change their X and Y position until they are inside the sheep pen."
+				"The hard part will be learning their names."
+				PLAYER "Names?"
+				SELF "All sheep have names, but they don't share them except in the direst of emergencies."
+				"But their names are still inherent in the data of our world. Their names are not hidden from you."
+				"You can find their names -- and their data -- if you look long enough."
+				"...."
+				"I wonder if there was another way of identifying the entity you were facing.... I feel like I might have once read something about that, but...."
+				"Ah, well. These days my mind is like... some kind of... thing you strain rice with."
+			}
+		} else if (variable hint-tracking is 11 || variable hint-tracking is 12) {
+			show dialog {
+				PLAYER "I guess the shepherd wants me to put the sheep back inside their pen."
+			}
+			show dialog dialog-jackob-hint-shepherd2 // defined above
+		} else if (variable hint-tracking is 20) {
+			show dialog {
+				PLAYER "The baker's having trouble with a customer, apparently. But I don't know what I'm supposed to do about that."
+				SELF "Hmmm. I think in this particular case -- if what has happened is what I suspect has happened --"
+				"You might be the only one capable of getting to the bottom of it."
+				"Sometimes blindly following a rule can cause problems for others, you see. Better to be flexible, not rigid and stone- stubborn."
+				"Better to understand that sometimes rules must be broken."
+				Alfonso alignment BR "The piranha affair was an accident! How many times do I need to apologize, %Jackob%?"
+				SELF "I wasn't talking to you."
+			}	
+		} else if (variable hint-tracking is 21) {
+			show dialog {
+				PLAYER "How do I get into the Bob's Club?"
+				SELF "The bouncer, Stone Cold Bob Austin, is very strict. If your name is not 'Bob' exactly, he will not budge."
+				"And just so you know, there are multiple values which will APPEAR to be a blank space, but will not satisfy him."
+				"Fortunately, the correct value will terminate the string his logic is evaluating, so only the first byte after 'Bob' will matter."
+			}
+		} else if (variable hint-tracking is 30) {
+			show dialog {
+				PLAYER "I heard that Bob Austin's cousin has gotten lost."
+				SELF "Oh, you mean Bob Moss. Yes, he disappears once in a while."
+				"He's never far. But if you can't find him in town, you might have to look in places one cannot ordinarily walk."
+			}
+		} else if (variable hint-tracking is 32) {
+			show dialog {
+				PLAYER "I heard there might be a second rockgolem. Do you know anything about that?"
+				SELF "If you're referring to Bob Moss, then I'm not surprised he's absent. He disappears once in a while."
+				"He's never far. But if you can't find him in town, you might have to look in places one cannot ordinarily walk."
+			}
+		} else if (variable hint-tracking is 40) {
+			show dialog {
+				PLAYER "Is Beatrice sad about something?"
+				SELF "She misses her husband. The Big Bad hacked him, don't you know."
+				"But I imagine you can fix him with Ring Zero."
+			}
+		} else if (variable hint-tracking is 41) {
+			show dialog {
+				PLAYER "Beatrice wants her husband to become a managain."
+				SELF "A simple entity type change."
+				"You'll know you have the right entity type when you get to an old man, balding, hunched over, and in overalls."
+			}
+		} else if (variable hint-tracking is 50) {
+			show dialog {
+				PLAYER "I gotta help this robot, apparently."
+				SELF "What does this robot need?"
+				PLAYER "Not sure."
+				SELF "Then you'd better talk to it and find out."
+			}
+		} else if (variable hint-tracking is 51) {
+			show dialog {
+				PLAYER "This robot named Bender wants his ass back, I guess."
+				SELF "Back? Has it gone somewhere?"
+				PLAYER "Someone bit it off or something."
+				SELF "Well, our every state of being can be defined by data."
+				"In his case, he once existed with a whole ass, and therefore, there exists an entity type where his ass is whole."
+				"Though unless you are looking directly at his ass, it might be difficult to see if you have succeeded."
+			}
+		} else if (variable hint-tracking is 60) {
+			show dialog {
+				PLAYER "Bert says the \"purple man\" wants his house to be built. What purple man?"
+				SELF "Oh, Bert must mean the night elf tailor. He's new. You might not have met him yet."
+				"Hmm. What was his name? Top Confidence? High Bluster?"
+				"He'll be just outside his shop, I should think. The interior is still unfinished, you see."
+			}
+		} else if (variable hint-tracking is 61 || variable hint-tracking is 62) {
+			show dialog {
+				PLAYER "The cat crew needs their cat boss."
+				SELF "Well, if you can't give them their cat boss, you might try the next best thing:"
+				"An impersonator!"
+			}
+		} else if (variable hint-tracking is 70) {
+			show dialog {
+				PLAYER "Does Trekkie need help with something?"
+				SELF "Trekkie tends the Ether Nettle in the greenhouse. I imagine it's the Ether Nettle, not Trekkie, that actually needs help."
+				"But you had better see in person. I don't know much about why the internet is broken."
+			}
+		} else if (variable hint-tracking is 71) {
+			show dialog {
+				PLAYER "Trekkie needs me to change the color of the Ether Nettle flowers."
+				SELF "I see. That one might be tricky."
+				"If I understand plant genetics correctly, then hypothetically.... Ether Nettle colors are simply variations of a single entity type."
+				"You won't be able to change the flower color by changing the entity type, I'm afraid."
+				"All those flowers should have almost identical values, I imagine. Try to change a value they don't have in common."
+			}
+		} else if (variable hint-tracking is 80) {
+			show dialog {
+				PLAYER "According to Bert, a small child needs help."
+				SELF "Not many kids around here -- apart from the kids, of course, by which I mean the goats."
+				"But Bert probably means the smith's son. Or... was Smith the man's name? Oh, dear. Was it his name AND his occupation?"
+				PLAYER "I've always called him Mr. Smith."
+				SELF "Oh, that's right. He's your next-door neighbor, isn't he?"
+			}
+		} else if (variable hint-tracking is 81) {
+			show dialog {
+				PLAYER "This kid...."
+				"He's just running around in circles, saying he wants to grow up to be some kind of sports ball."
+				SELF "If that's what he wants, that's what he wants."
+				PLAYER "Yeah, but... that's not really fixing something that's broken, though, is it?"
+				"He's a living person, but if I change him into an inanimate object...."
+				"Does he cease to be alive? Or a human being? What if he can't breathe anymore?"
+				"What happens to his mind? His memories? If the ball doesn't have a brain, does it all go away if I change what he is?"
+				"Even if he WANTS to become a ball...."
+				"I mean, do I have that right? Does this stray too much into me playing God?"
+				"Don't I have a moral responsibility to avoid causing harm to those around me?"
+				SELF "If you turn him into a ball, will that harm him?"
+				PLAYER "I don't know. Will it?"
+				SELF "Everything you see around you is pixels and data. All ones and zeroes."
+				"Are any of us really alive? If you change something, does that change what fundamentally lies underneath, or only how it appears?"
+				"If life is a game, and you do something immoral you can immediately revert if you wish, with no one the wiser, is it truly an immoral act?"
+				"Wouldn't that simply be considered part of the game you are playing? Why would such an act speak ill of your character?"
+				PLAYER "Wouldn't it?"
+				"The way we behave when no one is looking... doesn't that say more about our character than anything else?"
+				SELF "These are questions for philosophers and gamers. All we mortals can do is fulfill a child's wish to become sports equipment."
+			}
+		} else if (variable hint-tracking is 90) {
+			show dialog {
+				PLAYER "Bert says I have to help Beatrice. But I already solved her problem!"
+				SELF "Did you? Or did you only give her the opportunity to rememeber something she had forgotten about her husband?"
+			}
+		} else if (variable hint-tracking is 91) {
+			show dialog {
+				PLAYER "Now Beatrice wants her husband to turn back into a sheep."
+				SELF "She must have gotten sick of his yammering again."
+				"Ah, well. You know what to do by now."
+			}
+		} else if (variable hint-tracking is 100) {
+			show dialog {
+				PLAYER "Apparently the goose is mad."
+				SELF "Is this news?"
+				"In all seriousness, you might want to check whether the goose is mad at something specific or the world at large."
+			}
+		} else if (variable hint-tracking is 101) {
+			show dialog {
+				PLAYER "I think the goose wants me to move the rake."
+				"Perhaps... into the lake?"
+				SELF "Likely. You'll need to change the rake's Y coordinates."
+				"But just so you know, each coordinate actually spans two bytes, and if the distance is great enough, you'll have to change both."
+			}
+		} else if (variable hint-tracking is 110) {
+			show dialog {
+				PLAYER "I'm looking for a goat-watching goddess."
+				SELF "Ah, the winged Belldandy."
+				"Or... no, that wasn't it. It was Verd... Verth...."
+				"...Um, regardless... it's true that she's fond of animals. She might very well be watching the goats today."
+				"Though they might not look like goats at the moment."
+			}
+		} else if (variable hint-tracking is 111) {
+			show dialog {
+				PLAYER "How do I unscramble someone's pixels?"
+				SELF "I think there was something in the Entity books about that, but I didn't quite understand."
+				"Something about changing a bit instead of a byte, I think...."
+				"But aren't all bytes made up of bits? How is changing a single bit different from changing a whole byte?"
+			}
+		} else if (variable hint-tracking is 201) {
+			goto show_dialog-jackob-hint-hackbook // JUMP
+		} else {
+			show dialog {
+				PLAYER "Not at the moment."
+				SELF "Well, then, here's a general hint:"
+				"If you've hacked things so badly you're not sure how you could possibly straighten things out again...."
+				"Walk through a door. The world will right itself."
+			}
+		}
+	}
+}
+show_dialog-jackob-hint-hackbook {
+	if (flag hackbook-endstory is true) {
+		show dialog {
+			PLAYER "About that glitched-out book...."
+			SELF "I'm sorry. I don't think there's anything you can do to fix it."
+		}
+		if (variable hint-tracking is 201) {
+			copy set-hint-none;
+		}
+	} else {
+		show dialog {
+			PLAYER "Well... I found this book in the inner sanctum, and I had a question about it."
+			SELF "Of course. What do you want to know?"
+			PLAYER "You see, it's a book about the Big Bad, but the words inside are all scrambled up."
+			SELF "I see."
+			"Perhaps that's something the Big Bad did. It would be logical for him to hide information about himself."
+			PLAYER "But what can I do to get the book back to normal?"
+			SELF "The Big Bad had powers beyond what you can do with that ring alone, %PLAYER%."
+			"I suspect it's something even Ring Zero cannot fix."
+			PLAYER "Do you know what the book used to say, at least?"
+			SELF "That book... I must have read it before, but...."
+		}
+		turn player control off;
+		wait 600ms; /**/ rotate entity "%SELF%" 1;
+		wait 1200ms; /**/ rotate entity "%SELF%" -2;
+		wait 600ms;
+		show dialog { SELF "...." }
+		wait 400ms; /**/ turn entity "%SELF%" toward entity "%PLAYER%";
+		wait 400ms; /**/ turn player control on;
+		show dialog {
+			SELF "Oh, %PLAYER%, I'm sorry."
+			"I can't remember anything about what the book said."
+		}
+		if (flag ch1_finished is true) {
+			show dialog {
+				SELF "I doubt there was much in there that would've helped you in a confrontation with him, though."
+			}
+		} else {
+			show dialog {
+				SELF "I suppose it doesn't matter, either way. The Big Bad is gone, perhaps for good."
+			}
+		}
+		show dialog {
+			PLAYER "But the Big Bad's name used to be in that book!"
+			"It made me realize that I've never heard his name before. Not once!"
+			"Do you know what his name is?"
+	
+			SELF "...."
+			"I must have known it, once."
+			"But...."
+			"I can't remember."
+			"I'm sorry, %PLAYER%."
+		}
+		set flag hackbook-endstory to true;
+	}
+	// RESET
+	set entity "%SELF%" on_interact to show_dialog-jackob-start;
+}
+
+show_dialog-alfonso-start {
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "Cdl iwpi'h fjxit jcctrthhpgn!" }
+	} else if (flag ch1_finished is true) {
+		show dialog { SELF "Congratulations! You fixed the town!" }
+	} else {
+		copy ch1-count-flags;
+		show dialog { SELF "You've completed $ch1-storyflags-tally$ out of 11 tasks." }
+		if (variable ch1-storyflags-tally is 0) {
+			show dialog { SELF "Uh...." "Nowhere to go now but up!" }
+		} else if (variable ch1-storyflags-tally is 1) {
+			show dialog { SELF "That's the spirit! What a great start!" }
+		} else if (variable ch1-storyflags-tally is <= 4) {
+			show dialog { SELF "You're getting the hang of this!" }
+		} else if (variable ch1-storyflags-tally is <= 8) {
+			show dialog { SELF "Oh, my! You're getting a lot of work done! Marvelous!" }
+		} else if ( variable ch1-storyflags-tally is <= 10) {
+			show dialog { SELF "Wow! You're nearly done!" }
+		} else if (variable ch1-storyflags-tally is 11) {
+			show dialog { SELF "Incredible! You've done everything on my list!" }
+			goto demoend-cutscene; // JUMP
+		}
+	}
+}

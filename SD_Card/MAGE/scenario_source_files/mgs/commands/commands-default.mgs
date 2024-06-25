@@ -1,0 +1,32 @@
+include!("header.mgs")
+
+man-look {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - LOOK</>"
+		" "
+		"Describes the room you're in. Will describe entities instead if an entity name is provided after the word <c>LOOK</>."
+		" "
+		"Importantly, it can list a room's exits, even if they are invisible."
+	}
+}
+
+man-go {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - GO</>"
+		" "
+		"Lets you travel to an adjacent room, even if the actual, physical door is blocked, locked, or hidden. Type <c>GO</> followed by the name of the exit, e.g. <c>GO NORTH</>"
+		" "
+		"To learn the names of the current room's exits, use <c>LOOK</>."
+	}
+}
+
+man-help {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - HELP</>"
+		" "
+		"Provides general information for the serial terminal, including a list of valid serial commands."
+	}
+}

@@ -13,7 +13,7 @@ var handlePortraitsData = function (
 				fileNameMap,
 				scenarioData,
 			)
-				.then(function () {
+				.then(function handlePortraitLoad () {
 					portrait.serialized = serializePortrait(
 						key,
 						portrait,

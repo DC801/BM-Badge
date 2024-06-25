@@ -1,0 +1,786 @@
+include!("header.mgs")
+settings for serial dialog {
+	wrap 70
+}
+const!($lightsdefault = ch2-serial-light-manager)
+
+start-hanoi {
+	turn player control off;
+	copy hanoi_init_game;
+	copy draw_hanoi;
+	set map on_tick to tick_hanoi;
+}
+
+const!($win_plate = 6)
+
+check_cursor {
+	if (variable cursor_pos is 1) {
+		if (variable array1_length is 0) {
+			mutate checked_value = 0;
+		} else if (variable array1_length is 1) {
+			mutate checked_value = array1_1;
+		} else if (variable array1_length is 2) {
+			mutate checked_value = array1_2;
+		} else if (variable array1_length is 3) {
+			mutate checked_value = array1_3;
+		} else if (variable array1_length is 4) {
+			mutate checked_value = array1_4;
+		} else if (variable array1_length is 5) {
+			mutate checked_value = array1_5;
+		} else if (variable array1_length is 6) {
+			mutate checked_value = array1_6;
+		} else if (variable array1_length is 7) {
+			mutate checked_value = array1_7;
+		}
+	} else if (variable cursor_pos is 2) {
+		if (variable array2_length is 0) {
+			mutate checked_value = 0;
+		} else if (variable array2_length is 1) {
+			mutate checked_value = array2_1;
+		} else if (variable array2_length is 2) {
+			mutate checked_value = array2_2;
+		} else if (variable array2_length is 3) {
+			mutate checked_value = array2_3;
+		} else if (variable array2_length is 4) {
+			mutate checked_value = array2_4;
+		} else if (variable array2_length is 5) {
+			mutate checked_value = array2_5;
+		} else if (variable array2_length is 6) {
+			mutate checked_value = array2_6;
+		} else if (variable array2_length is 7) {
+			mutate checked_value = array2_7;
+		}
+	} else if (variable cursor_pos is 3) {
+		if (variable array3_length is 0) {
+			mutate checked_value = 0;
+		} else if (variable array3_length is 1) {
+			mutate checked_value = array3_1;
+		} else if (variable array3_length is 2) {
+			mutate checked_value = array3_2;
+		} else if (variable array3_length is 3) {
+			mutate checked_value = array3_3;
+		} else if (variable array3_length is 4) {
+			mutate checked_value = array3_4;
+		} else if (variable array3_length is 5) {
+			mutate checked_value = array3_5;
+		} else if (variable array3_length is 6) {
+			mutate checked_value = array3_6;
+		} else if (variable array3_length is 7) {
+			mutate checked_value = array3_7;
+		}
+	}
+	if (variable checked_value is 0) {
+		set flag can_drop to true;
+	} else if (variable checked_value is > cursor_value) {
+		set flag can_drop to true;
+	} else {
+		set flag can_drop to false;
+	}
+}
+
+hanoi_move {
+	if (variable cursor_value is 0) {
+		if (variable cursor_pos is 1) {
+			if (variable array1_length is > 0) {
+				copy array1_pop;
+			}
+		} else if (variable cursor_pos is 2) {
+			if (variable array2_length is > 0) {
+				copy array2_pop;
+			}
+		} else if (variable cursor_pos is 3) {
+			if (variable array3_length is > 0) {
+				copy array3_pop;
+			}
+		}
+	} else {
+		copy check_cursor;
+		if (flag can_drop is true) {
+			if (variable cursor_pos is 1) {
+				copy array1_push;
+			} else if (variable cursor_pos is 2) {
+				copy array2_push;
+			} else if (variable cursor_pos is 3) {
+				copy array3_push;
+			}
+		} else {
+			set flag hanoi_warning_size to true;
+		}
+	}
+	if (variable cursor_value is $win_plate) {
+		set flag hanoi_won to true;
+	}
+	copy draw_hanoi;
+}
+hanoi_move_1 {
+	mutate cursor_pos = 1;
+	copy hanoi_move;
+}
+hanoi_move_2 {
+	mutate cursor_pos = 2;
+	copy hanoi_move;
+}
+hanoi_move_3 {
+	mutate cursor_pos = 3;
+	copy hanoi_move;
+}
+
+tick_hanoi {
+	if (button HAX) {
+		turn player control on;
+		copy hanoi_quit;
+	} else if (
+		button LJOY_UP
+		|| button RJOY_UP
+		|| button LJOY_DOWN
+		|| button RJOY_DOWN
+	) {
+		copy hanoi_move;
+	} else if (button LJOY_RIGHT || button RJOY_RIGHT) {
+		if (variable cursor_pos is 1 || variable cursor_pos is 2) {
+			mutate cursor_pos + 1;
+		}
+		copy draw_hanoi;
+	} else if (button LJOY_LEFT || button RJOY_LEFT) {
+		if (variable cursor_pos is 2 || variable cursor_pos is 3) {
+			mutate cursor_pos - 1;
+		}
+		copy draw_hanoi;
+	}
+}
+
+/*
+============================================================
+     Cannot place larger plate on top of a smaller plate!    // row 10
+         ||      YOU WON! Plate #7 grabbed!      ||          // row 11
+         ||              Score: xx               ||          // row 10 (more digits = less spaces)
+============================================================
+=------------------ THE PLATES OF HANOI -------------------=
+=----------------- Grab plate #7 to win! ------------------=
+============================================================
+         ||                  ||                  ||          // row 11
+        /  \                 ||                  ||          // row 10
+       [    ]               /  \                 ||          // row 9
+                           [1111]                ||          // row 8
+        1111                                     ||          // row 7
+       222222              222222                ||          // row 6
+      33333333            33333333               ||          // row 5
+     4444444444          4444444444             /  \         // row 4
+    555555555555        555555555555           [    ]        // row 3
+   66666666666666      66666666666666                        // row 2
+  7777777777777777    7777777777777777          1111         // row 1
+============================================================
+  Joysticks to control grabber arm, HAX button to quit ~OR~
+  Tray (1-3) to grab/release plate, (T)ips, (R)eset, (Q)uit
+============================================================
+*/
+hanoi_won_message_A {
+	if (variable cursor_pos is 1) {
+		concat serial dialog hanoi_won_message1a;
+	} else if (variable cursor_pos is 2) {
+		concat serial dialog hanoi_won_message2a;
+	} else if (variable cursor_pos is 3) {
+		concat serial dialog hanoi_won_message3a;
+	}
+}
+hanoi_won_message_B {
+	if (variable cursor_pos is 1) {
+		concat serial dialog hanoi_won_message1b;
+	} else if (variable cursor_pos is 2) {
+		concat serial dialog hanoi_won_message2b;
+	} else if (variable cursor_pos is 3) {
+		if (variable hanoi_move_count is < 100) {
+			concat serial dialog hanoi_won_message3b2; // 2-digit
+		} else if (variable hanoi_move_count is < 1000) {
+			concat serial dialog hanoi_won_message3b3; // 3-digit
+		} else {
+			concat serial dialog hanoi_won_message3b4; // 4-digit (or more I guess)
+		}
+	}
+}
+serial dialog hanoi_size_warning  { "     <m>Cannot place larger plate on top of a smaller plate!</>" }
+serial dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #6 grabbed!</>" }
+serial dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #6 grabbed!</>" }
+serial dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #6 grabbed!</>      ||" }
+serial dialog hanoi_won_message1b  { "         ||              <g>Score: $hanoi_move_count$</>" }
+serial dialog hanoi_won_message2b  { "                         <g>Score: $hanoi_move_count$</>" }
+serial dialog hanoi_won_message3b2 { "                         <g>Score: $hanoi_move_count$</>               ||" }
+serial dialog hanoi_won_message3b3 { "                         <g>Score: $hanoi_move_count$</>              ||" }
+serial dialog hanoi_won_message3b4 { "                         <g>Score: $hanoi_move_count$</>             ||" }
+serial dialog hanoi_space         { "                    " }
+serial dialog hanoi_cursor_arm    { "         ||         " }
+serial dialog hanoi_cursor_hinge  { "        /  \\        " }
+serial dialog hanoi_cursor_grip_0 { "       [    ]       " }
+serial dialog hanoi_cursor_grip_1 { "       [1111]       " }
+serial dialog hanoi_cursor_grip_2 { "      [222222]      " }
+serial dialog hanoi_cursor_grip_3 { "     [33333333]     " }
+serial dialog hanoi_cursor_grip_4 { "    [4444444444]    " }
+serial dialog hanoi_cursor_grip_5 { "   [555555555555]   " }
+serial dialog hanoi_cursor_grip_6 { "  [66666666666666]  " }
+serial dialog hanoi_cursor_grip_7 { " [7777777777777777] " }
+serial dialog hanoi_plate_1       { "        1111        " }
+serial dialog hanoi_plate_2       { "       222222       " }
+serial dialog hanoi_plate_3       { "      33333333      " }
+serial dialog hanoi_plate_4       { "     4444444444     " }
+serial dialog hanoi_plate_5       { "    555555555555    " }
+serial dialog hanoi_plate_6       { "   66666666666666   " }
+serial dialog hanoi_plate_7       { "  7777777777777777  " }
+draw_cursor_grip {
+	if (variable cursor_value is 0) {
+		concat serial dialog hanoi_cursor_grip_0;
+	} else if (variable cursor_value is 1) {
+		concat serial dialog hanoi_cursor_grip_1;
+	} else if (variable cursor_value is 2) {
+		concat serial dialog hanoi_cursor_grip_2;
+	} else if (variable cursor_value is 3) {
+		concat serial dialog hanoi_cursor_grip_3;
+	} else if (variable cursor_value is 4) {
+		concat serial dialog hanoi_cursor_grip_4;
+	} else if (variable cursor_value is 5) {
+		concat serial dialog hanoi_cursor_grip_5;
+	} else if (variable cursor_value is 6) {
+		concat serial dialog hanoi_cursor_grip_6;
+	} else if (variable cursor_value is 7) {
+		concat serial dialog hanoi_cursor_grip_7;
+	}
+}
+draw_curr_plate {
+	if (variable curr_plate is 0) {
+		concat serial dialog hanoi_space;
+	} else if (variable curr_plate is 1) {
+		concat serial dialog hanoi_plate_1;
+	} else if (variable curr_plate is 2) {
+		concat serial dialog hanoi_plate_2;
+	} else if (variable curr_plate is 3) {
+		concat serial dialog hanoi_plate_3;
+	} else if (variable curr_plate is 4) {
+		concat serial dialog hanoi_plate_4;
+	} else if (variable curr_plate is 5) {
+		concat serial dialog hanoi_plate_5;
+	} else if (variable curr_plate is 6) {
+		concat serial dialog hanoi_plate_6;
+	} else if (variable curr_plate is 7) {
+		concat serial dialog hanoi_plate_7;
+	}
+}
+draw_tile {
+	// wants `curr_plate` and `column`
+	if (variable curr_plate is not 0) {
+		copy draw_curr_plate;
+	} else if (variable cursor_pos is == column) {
+		if (variable cursor_hinge_height is < row) {
+			concat serial dialog hanoi_cursor_arm;
+		} else if (variable cursor_hinge_height is == row) {
+			concat serial dialog hanoi_cursor_hinge;
+		} else if (variable cursor_grip_height is == row) {
+			copy draw_cursor_grip;
+		} else {
+			concat serial dialog hanoi_space;
+		}
+	} else {
+		concat serial dialog hanoi_space;
+	}
+}
+draw_plate_row {
+	// wants `plate1`, `plate2`, `plate3`, and `row`
+	mutate column = 1; // col 1
+	mutate curr_plate = plate1;
+	copy draw_tile;
+	mutate column = 2; // col 2
+	mutate curr_plate = plate2;
+	copy draw_tile;
+	mutate column = 3; // col 3
+	mutate curr_plate = plate3;
+	copy draw_tile;
+	concat serial dialog newline;
+}
+draw_hanoi {
+	if (variable cursor_pos is 1) {
+		mutate cursor_grip_height = array1_length;
+	} else if (variable cursor_pos is 2) {
+		mutate cursor_grip_height = array2_length;
+	} else if (variable cursor_pos is 3) {
+		mutate cursor_grip_height = array3_length;
+	}
+	mutate cursor_grip_height + 2;
+	mutate cursor_hinge_height = cursor_grip_height;
+	mutate cursor_hinge_height + 1;
+	// HEADER
+	show serial dialog {
+		" "
+		" "
+		"============================================================"
+		"=------------------ <m>THE PLATES OF HANOI</> -------------------="
+		"=----------------- Grab plate #6 to win! ------------------="
+		"============================================================"
+	}
+
+	// until we get to the plate rows:
+	mutate curr_plate = 0;
+
+	// ROW 11
+	mutate row = 11;
+	if (flag hanoi_won is true) {
+		copy hanoi_won_message_A;
+	} else {
+		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+			if (variable cursor_pos is == column) {
+				concat serial dialog hanoi_cursor_arm;
+			} else {
+				concat serial dialog hanoi_space;
+			}
+		}
+	}
+	concat serial dialog newline;
+
+	// ROW 10
+	mutate row = 10;
+	if (flag hanoi_warning_size is true) {
+		show serial dialog hanoi_size_warning;
+		set flag hanoi_warning_size to false;
+	} else if (flag hanoi_won is true) {
+		copy hanoi_won_message_B;
+	} else {
+		for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+			copy draw_tile;
+		}
+	}
+	concat serial dialog newline;
+
+	// ROW 9
+	mutate row = 9;
+	for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+		copy draw_tile;
+	}
+	concat serial dialog newline;
+
+	// ROW 8
+	mutate row = 8;
+	for (mutate column = 1; variable column is <= 3; mutate column + 1) {
+		copy draw_tile;
+	}
+	concat serial dialog newline;
+	
+	// ROW 7
+	mutate row = 7;
+	mutate plate1 = array1_7;
+	mutate plate2 = array2_7;
+	mutate plate3 = array3_7;
+	copy draw_plate_row;
+
+	// ROW 6
+	mutate row = 6;
+	mutate plate1 = array1_6;
+	mutate plate2 = array2_6;
+	mutate plate3 = array3_6;
+	copy draw_plate_row;
+	
+	// ROW 5
+	mutate row = 5;
+	mutate plate1 = array1_5;
+	mutate plate2 = array2_5;
+	mutate plate3 = array3_5;
+	copy draw_plate_row;
+
+	// ROW 4
+	mutate row = 4;
+	mutate plate1 = array1_4;
+	mutate plate2 = array2_4;
+	mutate plate3 = array3_4;
+	copy draw_plate_row;
+	
+	// ROW 3
+	mutate row = 3;
+	mutate plate1 = array1_3;
+	mutate plate2 = array2_3;
+	mutate plate3 = array3_3;
+	copy draw_plate_row;
+	
+	// ROW 2
+	mutate row = 2;
+	mutate plate1 = array1_2;
+	mutate plate2 = array2_2;
+	mutate plate3 = array3_2;
+	copy draw_plate_row;
+
+	// ROW 1
+	mutate row = 1;
+	mutate curr_plate = array1_1;
+	copy draw_curr_plate;
+	mutate curr_plate = array2_1;
+	copy draw_curr_plate;
+	mutate curr_plate = array3_1;
+	copy draw_curr_plate;
+	concat serial dialog newline;
+
+	// FOOTER
+	show serial dialog {
+		"============================================================"
+		"  <c>Joysticks</> to control grabber arm, <c>HAX button</> to quit ~OR~"
+		"  Tray (<c>1</>-<c>3</>) to grab/release plate, (<c>T</>)ips, (<c>R</>)eset, (<c>Q</>)uit"
+		"============================================================"
+	}
+	if (flag hanoi_won is true) {
+		copy hanoi_quit;
+	} else if (flag hanoi_draw_help is true) {
+		show serial dialog {
+			"<m>TIP:</> You only need uncover (and grab) the #7 plate; you need not move it to another tray and build the tower of plates again."
+			"<m>TIP:</> Only put odd numbered plates on top of even plates and vice versa. E.g. put plate <bold>1</> on top of plate <bold>4</>, not <bold>3</> or <bold>5</>."
+		}
+		set flag hanoi_draw_help to false;
+	}
+}
+
+hanoi_unregister {
+	unregister "1";
+	unregister "2";
+	unregister "3";
+	unregister "T";
+	unregister "TIPS";
+	unregister "R";
+	unregister "RESET";
+	unregister "Q";
+	unregister "QUIT";
+	unregister "WIN";
+}
+
+hanoi_quit {
+	// run in the map's on_tick
+	turn player control on;
+	turn light LED_USB off;
+	set entity Lights on_tick to $lightsdefault;
+	copy hanoi_unregister;
+	if (flag hanoi_won is false) {
+		show serial dialog {
+			" "
+			"Quitting <m>Plates of Hanoi</> (your progress has been saved)"
+		}
+	} else if (flag ch2-carrying-plate is false || flag ch2-installed-plate is false) {
+		copy won_hanoi_get_plate;
+	}
+	goto on_tick-ch2-castle-34;
+}
+hanoi_help {
+	set flag hanoi_draw_help to true;
+	copy hanoi_move;
+}
+
+hanoi_reset {
+	set flag hanoi_init_done to false;
+	copy hanoi_init_variables;
+	copy draw_hanoi;
+}
+
+hanoi_init_variables {
+	mutate cursor_pos = 1;
+	mutate cursor_value = 0;
+	mutate array1_7 = 0;
+	mutate array1_6 = 1;
+	mutate array1_5 = 2;
+	mutate array1_4 = 3;
+	mutate array1_3 = 4;
+	mutate array1_2 = 5;
+	mutate array1_1 = 6;
+	mutate array1_length = 6;
+	mutate array2_7 = 0;
+	mutate array2_6 = 0;
+	mutate array2_5 = 0;
+	mutate array2_4 = 0;
+	mutate array2_3 = 0;
+	mutate array2_2 = 0;
+	mutate array2_1 = 0;
+	mutate array2_length = 0;
+	mutate array3_7 = 0;
+	mutate array3_6 = 0;
+	mutate array3_5 = 0;
+	mutate array3_4 = 0;
+	mutate array3_3 = 0;
+	mutate array3_2 = 0;
+	mutate array3_1 = 0;
+	mutate array3_length = 0;
+	mutate hanoi_move_count = 0;
+	set flag hanoi_init_done to true;
+	set flag hanoi_won to false;
+}
+hanoi_init_game {
+	if (
+		flag hanoi_init_done is false
+		|| flag hanoi_won is true
+	) {
+		copy hanoi_init_variables;
+	}
+	register "1" -> hanoi_move_1;
+	register "2" -> hanoi_move_2;
+	register "3" -> hanoi_move_3;
+	register "T" -> hanoi_help;
+	register "TIPS" -> hanoi_help;
+	register "R" -> hanoi_reset;
+	register "RESET" -> hanoi_reset;
+	register "Q" -> hanoi_quit_from_terminal;
+	register "QUIT" -> hanoi_quit_from_terminal;
+	register "WIN" -> hanoi_win;
+	debug!("hanoi_init_game")
+	turn light LED_USB on;
+	set entity Lights on_tick to null_script;
+}
+hanoi_quit_from_terminal {
+	set map on_tick to hanoi_quit;
+}
+hanoi_win {
+	set flag hanoi_won to true;
+	copy hanoi_unregister;
+	goto draw_hanoi;
+}
+array1_pop {
+	if (variable array1_length is 0) {
+		show serial dialog { "<r>ERROR!</> Tray #1 is already empty. Cannot pop!" }
+	} else {
+		if (variable array1_length is 7) {
+			mutate cursor_value = array1_7;
+			mutate array1_7 = 0;
+		} else if (variable array1_length is 6) {
+			mutate cursor_value = array1_6;
+			mutate array1_6 = 0;
+		} else if (variable array1_length is 5) {
+			mutate cursor_value = array1_5;
+			mutate array1_5 = 0;
+		} else if (variable array1_length is 4) {
+			mutate cursor_value = array1_4;
+			mutate array1_4 = 0;
+		} else if (variable array1_length is 3) {
+			mutate cursor_value = array1_3;
+			mutate array1_3 = 0;
+		} else if (variable array1_length is 2) {
+			mutate cursor_value = array1_2;
+			mutate array1_2 = 0;
+		} else if (variable array1_length is 1) {
+			mutate cursor_value = array1_1;
+			mutate array1_1 = 0;
+		}
+		mutate array1_length - 1;
+		mutate hanoi_move_count + 1;
+	}
+}
+array1_push {
+	if (variable cursor_value is 0) {
+		show serial dialog { "<r>ERROR!</> No value to push to Array #1!" }
+	} else if (variable array1_length is >= 7) {
+		show serial dialog { "<r>ERROR!</> Array #1 is full! Cannot push!" }
+	} else {
+		if (variable array1_length is 6) {
+			mutate array1_7 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 5) {
+			mutate array1_6 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 4) {
+			mutate array1_5 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 3) {
+			mutate array1_4 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 2) {
+			mutate array1_3 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 1) {
+			mutate array1_2 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array1_length is 0) {
+			mutate array1_1 = cursor_value;
+			mutate cursor_value = 0;
+		}
+		mutate array1_length + 1;
+		mutate hanoi_move_count + 1;
+	}
+}
+array1_print {
+	concat serial dialog array_print_left;
+	for (mutate i = 1; variable i is <= array1_length; mutate i + 1) {
+		if (variable i is not 1) {
+			concat serial dialog {" "}
+		}
+		if (variable i is 1) { mutate printme = array1_1; }
+		else if (variable i is 2) { mutate printme = array1_2; }
+		else if (variable i is 3) { mutate printme = array1_3; }
+		else if (variable i is 4) { mutate printme = array1_4; }
+		else if (variable i is 5) { mutate printme = array1_5; }
+		else if (variable i is 6) { mutate printme = array1_6; }
+		else if (variable i is 7) { mutate printme = array1_7; }
+		copy printme;
+		mutate printme = 0;
+	}
+	concat serial dialog array_print_right;
+}
+printme {
+	if (variable printme is 1) { concat serial dialog {"1"} }
+	else if (variable printme is 2) { concat serial dialog {"2"} }
+	else if (variable printme is 3) { concat serial dialog {"3"} }
+	else if (variable printme is 4) { concat serial dialog {"4"} }
+	else if (variable printme is 5) { concat serial dialog {"5"} }
+	else if (variable printme is 6) { concat serial dialog {"6"} }
+	else if (variable printme is 7) { concat serial dialog {"7"} }
+}
+serial dialog array_print_left { "<m>[</> "}
+serial dialog array_print_right { " "}
+
+array2_pop {
+	if (variable array2_length is 0) {
+		show serial dialog { "<r>ERROR!</> Array #2 is already empty. Cannot pop!" }
+	} else {
+		if (variable array2_length is 7) {
+			mutate cursor_value = array2_7;
+			mutate array2_7 = 0;
+		} else if (variable array2_length is 6) {
+			mutate cursor_value = array2_6;
+			mutate array2_6 = 0;
+		} else if (variable array2_length is 5) {
+			mutate cursor_value = array2_5;
+			mutate array2_5 = 0;
+		} else if (variable array2_length is 4) {
+			mutate cursor_value = array2_4;
+			mutate array2_4 = 0;
+		} else if (variable array2_length is 3) {
+			mutate cursor_value = array2_3;
+			mutate array2_3 = 0;
+		} else if (variable array2_length is 2) {
+			mutate cursor_value = array2_2;
+			mutate array2_2 = 0;
+		} else if (variable array2_length is 1) {
+			mutate cursor_value = array2_1;
+			mutate array2_1 = 0;
+		}
+		mutate array2_length - 1;
+		mutate hanoi_move_count + 1;
+	}
+}
+array2_push {
+	if (variable cursor_value is 0) {
+		show serial dialog { "<r>ERROR!</> No value to push to Array #2!" }
+	} else if (variable array2_length is >= 7) {
+		show serial dialog { "<r>ERROR!</> Array #2 is full! Cannot push!" }
+	} else {
+		if (variable array2_length is 6) {
+			mutate array2_7 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 5) {
+			mutate array2_6 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 4) {
+			mutate array2_5 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 3) {
+			mutate array2_4 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 2) {
+			mutate array2_3 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 1) {
+			mutate array2_2 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array2_length is 0) {
+			mutate array2_1 = cursor_value;
+			mutate cursor_value = 0;
+		}
+		mutate array2_length + 1;
+		mutate hanoi_move_count + 1;
+	}
+}
+array2_print {
+	concat serial dialog array_print_left;
+	for (mutate i = 1; variable i is <= array2_length; mutate i + 1) {
+		if (variable i is not 1) {
+			concat serial dialog {" "}
+		}
+		if (variable i is 1) { mutate printme = array2_1; }
+		else if (variable i is 2) { mutate printme = array2_2; }
+		else if (variable i is 3) { mutate printme = array2_3; }
+		else if (variable i is 4) { mutate printme = array2_4; }
+		else if (variable i is 5) { mutate printme = array2_5; }
+		else if (variable i is 6) { mutate printme = array2_6; }
+		else if (variable i is 7) { mutate printme = array2_7; }
+		copy printme;
+		mutate printme = 0;
+	}
+	concat serial dialog array_print_right;
+}
+
+array3_pop {
+	if (variable array3_length is 0) {
+		show serial dialog { "<r>ERROR!</> Array #3 is already empty. Cannot pop!" }
+	} else {
+		if (variable array3_length is 7) {
+			mutate cursor_value = array3_7;
+			mutate array3_7 = 0;
+		} else if (variable array3_length is 6) {
+			mutate cursor_value = array3_6;
+			mutate array3_6 = 0;
+		} else if (variable array3_length is 5) {
+			mutate cursor_value = array3_5;
+			mutate array3_5 = 0;
+		} else if (variable array3_length is 4) {
+			mutate cursor_value = array3_4;
+			mutate array3_4 = 0;
+		} else if (variable array3_length is 3) {
+			mutate cursor_value = array3_3;
+			mutate array3_3 = 0;
+		} else if (variable array3_length is 2) {
+			mutate cursor_value = array3_2;
+			mutate array3_2 = 0;
+		} else if (variable array3_length is 1) {
+			mutate cursor_value = array3_1;
+			mutate array3_1 = 0;
+		}
+		mutate array3_length - 1;
+		mutate hanoi_move_count + 1;
+	}
+}
+array3_push {
+	if (variable cursor_value is 0) {
+		show serial dialog { "<r>ERROR!</> No value to push to Array #3!" }
+	} else if (variable array3_length is >= 7) {
+		show serial dialog { "<r>ERROR!</> Array #3 is full! Cannot push!" }
+	} else {
+		if (variable array3_length is 6) {
+			mutate array3_7 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 5) {
+			mutate array3_6 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 4) {
+			mutate array3_5 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 3) {
+			mutate array3_4 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 2) {
+			mutate array3_3 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 1) {
+			mutate array3_2 = cursor_value;
+			mutate cursor_value = 0;
+		} else if (variable array3_length is 0) {
+			mutate array3_1 = cursor_value;
+			mutate cursor_value = 0;
+		}
+		mutate array3_length + 1;
+		mutate hanoi_move_count + 1;
+	}
+}
+array3_print {
+	concat serial dialog array_print_left;
+	for (mutate i = 1; variable i is <= array3_length; mutate i + 1) {
+		if (variable i is not 1) {
+			concat serial dialog {" "}
+		}
+		if (variable i is 1) { mutate printme = array3_1; }
+		else if (variable i is 2) { mutate printme = array3_2; }
+		else if (variable i is 3) { mutate printme = array3_3; }
+		else if (variable i is 4) { mutate printme = array3_4; }
+		else if (variable i is 5) { mutate printme = array3_5; }
+		else if (variable i is 6) { mutate printme = array3_6; }
+		else if (variable i is 7) { mutate printme = array3_7; }
+		copy printme;
+		mutate printme = 0;
+	}
+	concat serial dialog array_print_right;
+}

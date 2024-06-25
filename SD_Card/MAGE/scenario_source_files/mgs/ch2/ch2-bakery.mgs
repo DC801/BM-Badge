@@ -1,0 +1,89 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-bakery {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>BAKERY</>."
+		"\tThe smell inside is amazing! Warm, yeasty -- the very essence of nostalgia. The %Baker% keeps this place clean, tidy, and overflowing with baked goods."
+		" "
+	}
+}
+
+look-ch2-baker {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tHe rarely spares a glance for you as he rushes about, but his expression is warm when he does. He is smooth with his motions around the kitchen; it's clear he's had a lifetime of practice."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-bakery {
+	// The part of Aunt Zippy is being played by Jackob
+	if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		if (variable ch2-storyflag-round is 3) {
+			teleport entity Jackob to geometry zippy-spot1;
+		} else if (variable ch2-storyflag-round is 4) {
+			teleport entity Jackob to geometry zippy-spot2;
+		}
+		set entity Jackob name to "Aunt Zippy";
+		set entity Jackob on_look to look-ch2-zippy;
+		set entity Jackob on_tick to null_script;
+		set entity Jackob on_interact to interact-ch2-zippy;
+		set entity Jackob type to lightning_boy;
+		turn entity Jackob north;
+	} else if (variable ch2-storyflag-round is not 2) {
+		set entity Jackob on_tick to yeet;
+	}
+	// All the rest
+	copy ch2-map-init;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-bakery {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-bakery;
+		load map ch2-town;
+	}
+	set map on_tick to on_tick-ch2-bakery;
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-bakery-south {
+	copy warping-out-fade-out;
+	load map ch2-town;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-baker {
+	copy interrupt-walk;
+	if (variable ch2-storyflag-round is >= 5) {
+		show dialog {
+			SELF "Good job building that computer. That's really impressive."
+		}
+	} else {
+		show dialog {
+			SELF "Sorry, can't talk now."
+			"But good luck conquering the serial dungeon."
+		}
+	}
+	copy resume-walk;
+}
+
+interact-ch2-jackob-bakery {
+	copy face-player;
+	show dialog {
+		SELF "I'm just taking a little shopping break. Sometimes you just really want some fresh bread, you know?"
+		"Mmmm, fresh bread!"
+	}
+	turn entity "%SELF%" south;
+}

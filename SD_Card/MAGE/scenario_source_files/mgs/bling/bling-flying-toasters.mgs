@@ -1,0 +1,116 @@
+on_load-flying-toasters {
+	teleport camera to geometry flying-toasters-cam;
+	copy script on_load-bling-mode-map;
+}
+
+toasters-do_path-0 {
+	teleport entity "%SELF%" to geometry start0;
+	walk entity "%SELF%" to geometry end0 over 5000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-3;
+}
+
+toasters-do_path-1 {
+	teleport entity "%SELF%" to geometry start1;
+	walk entity "%SELF%" to geometry end1 over 5900ms;
+	set entity "%SELF%" on_tick to toasters-do_path-10;
+}
+
+toasters-do_path-2 {
+	teleport entity "%SELF%" to geometry start2;
+	walk entity "%SELF%" to geometry end2 over 6800ms;
+	set entity "%SELF%" on_tick to toasters-do_path-0;
+}
+
+toasters-do_path-3 {
+	teleport entity "%SELF%" to geometry start3;
+	walk entity "%SELF%" to geometry end3 over 7600ms;
+	set entity "%SELF%" on_tick to toasters-do_path-7;
+}
+
+toasters-do_path-4 {
+	teleport entity "%SELF%" to geometry start4;
+	walk entity "%SELF%" to geometry end4 over 8400ms;
+	set entity "%SELF%" on_tick to toasters-do_path-9;
+}
+
+toasters-do_path-5 {
+	teleport entity "%SELF%" to geometry start5;
+	walk entity "%SELF%" to geometry end5 over 9200ms;
+	set entity "%SELF%" on_tick to toasters-do_path-8;
+}
+
+toasters-do_path-6 {
+	teleport entity "%SELF%" to geometry start6;
+	walk entity "%SELF%" to geometry end6 over 10000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-1;
+}
+
+toasters-do_path-7 {
+	teleport entity "%SELF%" to geometry start7;
+	walk entity "%SELF%" to geometry end7 over 9000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-5;
+}
+
+toasters-do_path-8 {
+	teleport entity "%SELF%" to geometry start8;
+	walk entity "%SELF%" to geometry end8 over 8000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-4;
+}
+
+toasters-do_path-9 {
+	teleport entity "%SELF%" to geometry start9;
+	walk entity "%SELF%" to geometry end9 over 7000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-11;
+}
+
+toasters-do_path-10 {
+	teleport entity "%SELF%" to geometry start10;
+	walk entity "%SELF%" to geometry end10 over 6000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-2;
+}
+
+toasters-do_path-11 {
+	teleport entity "%SELF%" to geometry start11;
+	walk entity "%SELF%" to geometry end11 over 5000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-6;
+}
+
+toasters-do_path-0-50 {
+	walk entity "%SELF%" to geometry end0 over 2500ms;
+	set entity "%SELF%" on_tick to toasters-do_path-3;
+}
+
+toasters-do_path-2-50 {
+	walk entity "%SELF%" to geometry end2 over 3400ms;
+	set entity "%SELF%" on_tick to toasters-do_path-0;
+}
+
+toasters-do_path-4-50 {
+	walk entity "%SELF%" to geometry end4 over 4200ms;
+	set entity "%SELF%" on_tick to toasters-do_path-9;
+}
+
+toasters-do_path-5-75 {
+	walk entity "%SELF%" to geometry end5 over 2208ms;
+	set entity "%SELF%" on_tick to toasters-do_path-8;
+}
+
+toasters-do_path-6-66 {
+	walk entity "%SELF%" to geometry end6 over 3333ms;
+	set entity "%SELF%" on_tick to toasters-do_path-1;
+}
+
+toasters-do_path-7-60 {
+	walk entity "%SELF%" to geometry end7 over 3600ms;
+	set entity "%SELF%" on_tick to toasters-do_path-5;
+}
+
+toasters-do_path-8-15 {
+	walk entity "%SELF%" to geometry end8 over 6800ms;
+	set entity "%SELF%" on_tick to toasters-do_path-4;
+}
+
+toasters-do_path-10-50 {
+	walk entity "%SELF%" to geometry end10 over 3000ms;
+	set entity "%SELF%" on_tick to toasters-do_path-2;
+}

@@ -1,0 +1,484 @@
+include!("header.mgs")
+
+// REGISTER
+
+register-parts {
+	register man + parts -> man-parts;
+	register parts -> command-parts;
+}
+
+// MAN PAGE
+
+man-parts {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - PARTS</>"
+		" "
+		"Calls Lambda via <bold>lambda-talk</> using the subject line \"<bold>PARTS</>\"."
+		" "
+		"<m>NOTE</>: Hi, there, birthday mage! This is just something I rigged up quickly so you could have a shortcut to talk to me about the parts list. :)"
+	}
+}
+
+// COMMAND
+
+command-parts {
+	if (
+		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
+		|| variable ch2-in-room is not 0 // OR you're in the castle
+	) {
+		// `parts` works normally
+		if (variable ch2-storyflag-round is < 4) {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: For parts, we still need:"
+			}
+			goto command-parts-print;
+		} else {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: You've found all the parts. Well done!"
+			}
+			goto command-parts-print;
+		}
+	} else {
+		// otherwise, `parts` cannot reach Lambda
+		copy ch2-wireless-error;
+	}
+}
+command-parts-print {
+	if (variable ch2-storyflag-round is == 0) {
+		show serial dialog { "<r>DEBUG</>: You've asked for a parts list but 'ch2-storyflag-round' is still set to '0'!" }
+	}
+	// ROUND ONE: normal
+	if (variable ch2-storyflag-round is == 1) {
+
+		if (flag ch2-installed-heatsink is true) {
+			show serial dialog { "\t- [x] heat sink" }
+		} else if (flag ch2-carrying-heatsink is true) {
+			show serial dialog { "\t- [~] heat sink" }
+		} else {
+			show serial dialog { "\t- [ ] heat sink" }
+		}
+
+		if (flag ch2-installed-powersupply is true) {
+			show serial dialog { "\t- [x] power supply" }
+		} else if (flag ch2-carrying-powersupply is true) {
+			show serial dialog { "\t- [~] power supply" }
+		} else {
+			show serial dialog { "\t- [ ] power supply" }
+		}
+
+		if (flag ch2-installed-monitor is true) {
+			show serial dialog { "\t- [x] monitor" }
+		} else if (flag ch2-carrying-monitor is true) {
+			show serial dialog { "\t- [~] monitor" }
+		} else {
+			show serial dialog { "\t- [ ] monitor" }
+		}
+	}
+	// ROUND TWO: abstract
+	else if (variable ch2-storyflag-round is == 2) {
+
+		if (flag ch2-installed-harddrive is true) {
+			show serial dialog { "\t- [x] hard drive" }
+		} else if (flag ch2-carrying-harddrive is true) {
+			show serial dialog { "\t- [~] hard drive" }
+		} else {
+			show serial dialog { "\t- [ ] hard drive" }
+		}
+		if (flag ch2-installed-plate is true) {
+			show serial dialog { "\t\t- [x] dinner plate" }
+		} else if (flag ch2-carrying-plate is true) {
+			show serial dialog { "\t\t- [~] dinner plate" }
+		} else {
+			show serial dialog { "\t\t- [ ] dinner plate" }
+		}
+		if (flag ch2-installed-needle is true) {
+			show serial dialog { "\t\t- [x] phonograph needle" }
+		} else if (flag ch2-carrying-needle is true) {
+			show serial dialog { "\t\t- [~] phonograph needle" }
+		} else {
+			show serial dialog { "\t\t- [ ] phonograph needle" }
+		}
+
+		if (flag ch2-installed-keyboard is true) {
+			show serial dialog { "\t- [x] keyboard" }
+		} else if (flag ch2-carrying-keyboard is true) {
+			show serial dialog { "\t- [~] keyboard" }
+		} else {
+			show serial dialog { "\t- [ ] keyboard" }
+		}
+
+		if (flag ch2-installed-mouse is true) {
+			show serial dialog { "\t- [x] mouse" }
+		} else if (flag ch2-carrying-mouse is true) {
+			show serial dialog { "\t- [~] mouse" }
+		} else {
+			show serial dialog { "\t- [ ] mouse" }
+		}
+	}
+	// ROUND THREE: desperate
+	else if (variable ch2-storyflag-round is == 3) {
+
+		if (flag ch2-installed-ramchips is true) {
+			show serial dialog { "\t- [x] RAM chips" }
+		} else if (flag ch2-carrying-ramchips is true) {
+			show serial dialog { "\t- [~] RAM chips" }
+		} else {
+			show serial dialog { "\t- [ ] RAM chips" }
+		}
+
+		if (flag ch2-installed-clock is true) {
+			show serial dialog { "\t- [x] clock" }
+		} else if (flag ch2-carrying-clock is true) {
+			show serial dialog { "\t- [~] clock" }
+		} else {
+			show serial dialog { "\t- [ ] clock" }
+		}
+
+		if (flag ch2-installed-cpu is true) {
+			show serial dialog { "\t- [x] cpu" }
+		} else if (flag ch2-carrying-cpu is true) {
+			show serial dialog { "\t- [~] cpu" }
+		} else {
+			show serial dialog { "\t- [ ] cpu" }
+		}
+		if (flag ch2-installed-goldfish is true) {
+			show serial dialog { "\t\t- [x] goldfish" }
+		} else if (flag ch2-carrying-goldfish is true) {
+			show serial dialog { "\t\t- [~] goldfish" }
+		} else {
+			show serial dialog { "\t\t- [ ] goldfish" }
+		}
+		if (flag ch2-installed-abacus is true) {
+			show serial dialog { "\t\t- [x] abacus" }
+		} else if (flag ch2-carrying-abacus is true) {
+			show serial dialog { "\t\t- [~] abacus" }
+		} else {
+			show serial dialog { "\t\t- [ ] abacus" }
+		}
+
+	}
+	// FINAL ROUND: software
+	else if (variable ch2-storyflag-round is == 4) {
+		if (flag ch2-cutseen-castle99 is false) {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: You'll all done with the mainframe hardware, so come get the OS from me in my <c>SECRET LAB</>. Use <c>WARP</> to reach me."
+			}
+		} else {
+			show serial dialog spacer;
+			show serial dialog {
+				"<m>LAMBDA</>: You've got the mainframe OS now, so head on back to first room of the castle -- the room with the the mainframe enclosure -- so the Wizard can install it for you. Good luck."
+			}
+		}
+		show serial dialog lambda-over;
+		return;
+	}
+	// GAME FINISHED
+	else {
+		show serial dialog spacer;
+		show serial dialog {
+			"<m>LAMBDA</>: You're all done; no more parts to collect. Enjoy the power of the finished mainframe!"
+		}
+		show serial dialog lambda-over;
+		return;
+	}
+
+	// FINISH
+	goto command-parts-q;
+}
+
+command-man-stop {
+	show serial dialog spacer;
+	show serial dialog lambda-over;
+}
+
+command-parts-q {
+	show serial dialog {
+		" "
+		"(Type the part name for more info, <c>PARTS</> to see the parts list again, or <c>QUIT</> to stop)"
+
+		_ "PARTS" : command-parts
+
+		_ "Q" : command-man-stop
+		_ "QUIT" : command-man-stop
+		_ "EXIT" : command-man-stop
+
+		// ROUND ONE: normal
+		
+		_ "MONITOR" : command-parts-monitor
+
+		_ "HEAT SINK" : command-parts-heatsink
+		_ "HEATSINK" : command-parts-heatsink
+
+		_ "POWER SUPPLY" : command-parts-powersupply
+		_ "POWERSUPPLY" : command-parts-powersupply
+
+		// ROUND TWO: abstract
+		
+		_ "KEYBOARD" : command-parts-keyboard
+		
+		_ "MOUSE" : command-parts-mouse
+		
+		_ "HARD DRIVE" : command-parts-harddrive
+		_ "HARDDRIVE" : command-parts-harddrive
+		_ "HARD DISK" : command-parts-harddrive
+		_ "HARDDISK" : command-parts-harddrive
+		_ "HDD" : command-parts-harddrive
+
+		_ "PLATE" : command-parts-plate
+		_ "DINNER PLATE" : command-parts-plate
+		
+		_ "NEEDLE" : command-parts-needle
+		_ "PHONOGRAPH NEEDLE" : command-parts-needle
+	
+		// ROUND THREE: desperate
+
+		_ "RAM CHIPS" : command-parts-ramchips
+		_ "RAMCHIPS" : command-parts-ramchips
+		_ "RAM" : command-parts-ramchips
+		
+		_ "CLOCK" : command-parts-clock
+
+		_ "CPU" : command-parts-cpu
+
+		_ "GOLDFISH" : command-parts-goldfish
+
+		_ "ABACUS" : command-parts-abacus
+	}
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Not sure what you mean. Want to ask about something else?"
+	}
+	goto command-parts-q;
+}
+
+ch2-describe-monitor { show serial dialog ch2-describe-monitor; }
+ch2-describe-heatsink { show serial dialog ch2-describe-heatsink; }
+ch2-describe-powersupply { show serial dialog ch2-describe-powersupply; }
+
+ch2-describe-keyboard { show serial dialog ch2-describe-keyboard; }
+ch2-describe-mouse { show serial dialog ch2-describe-mouse; }
+ch2-describe-harddrive { show serial dialog ch2-describe-harddrive; }
+ch2-describe-plate { show serial dialog ch2-describe-plate; }
+ch2-describe-needle { show serial dialog ch2-describe-needle; }
+
+ch2-describe-ramchips { show serial dialog ch2-describe-ramchips; }
+ch2-describe-clock { show serial dialog ch2-describe-clock; }
+ch2-describe-cpu { show serial dialog ch2-describe-cpu; }
+ch2-describe-goldfish { show serial dialog ch2-describe-goldfish; }
+ch2-describe-abacus { show serial dialog ch2-describe-abacus; }
+
+command-parts-ahead {
+	show serial dialog spacer;
+	show serial dialog { "<m>LAMBDA</>: Hold on! Don't get ahead of yourself, haha.... For now just focus on the below:" }
+	goto command-parts-print;
+}
+command-parts-ahead-confused {
+	show serial dialog spacer;
+	show serial dialog { "<m>LAMBDA</>: I don't know if that will be of any use, but... want to ask about something else?" }
+	goto command-parts-q;
+}
+
+// ROUND ONE: normal
+
+command-parts-monitor {
+	show serial dialog spacer;
+	if (flag ch2-installed-monitor is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got the monitor all set up already. If it looks broken, it's only because the mainframe can't boot up yet." }
+	} else if (flag ch2-carrying-monitor is true) {
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the monitor already. To install it, all you'll need to do is find the matching ports on the mainframe enclosure. It's all keyed, so there's no plugging anything in the wrong way.\n\tOh, and don't forget to plug the monitor into power." }
+	} else {
+		copy ch2-describe-monitor;
+	}
+	goto command-parts-q;
+}
+command-parts-heatsink {
+	show serial dialog spacer;
+	if (flag ch2-installed-heatsink is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got the heat sink ready to go, but you'll need to install the CPU first, so, uh, you can just leave it there for the moment." }
+	} else if (flag ch2-carrying-heatsink is true) {
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already! So, uh, I sort of forgot you can't install that until the CPU is in there, so... just set it aside for the moment. We'll do the actual install later." }
+	} else {
+		copy ch2-describe-heatsink;
+	}
+	goto command-parts-q;
+}
+command-parts-powersupply {
+	show serial dialog spacer;
+	if (flag ch2-installed-powersupply is true) {
+		show serial dialog { "<m>LAMBDA</>: The power supply is in place already. Notice, though, that it's got a bunch of littler wires coming off of it -- you'll need to plug other components into those later. Everything is keyed, so it should be obvious how everything should be plugged when the time comes." }
+	} else if (flag ch2-carrying-powersupply is true) {
+		show serial dialog { "<m>LAMBDA</>: There's a spot where the power supply goes -- it should be fairly obvious. Then screw it in so it won't wiggle around in there." }
+	} else {
+		copy ch2-describe-powersupply;
+	}
+	goto command-parts-q;
+}
+
+// ROUND TWO: abstract
+
+command-parts-keyboard {
+	if (variable ch2-storyflag-round is < 2) {
+		goto command-parts-ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-keyboard is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got a keyboard plugged in already... though I realize it's not going to be the easiest to use. But hey, did you know that very early keyboards used a lot of \"chords\" as part of their normal input paradigm?\n\t...Yeah, they kind of sucked. QWERTY is much nicer." }
+	} else if (flag ch2-carrying-keyboard is true) {
+		show serial dialog { "<m>LAMBDA</>: I've checked up on that specific model of keytar, and fortunately it can connect to a computer over USB. Just plug it into the outside of the case and you're good to go.\n\tA MIDI interface would have been trickier, but I'm sure we could have found an adaptor around somewhere." }
+	} else {
+		copy ch2-describe-keyboard;
+	}
+	goto command-parts-q;
+}
+command-parts-mouse {
+	if (variable ch2-storyflag-round is < 2) {
+		goto command-parts-ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-mouse is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got your mouse dongle plugged in, so the mouse will work fine now once we get the rest of the machine up and running. Oh, that's assuming its batteries are charged, I guess." }
+	} else if (flag ch2-carrying-mouse is true) {
+		show serial dialog { "<m>LAMBDA</>: Installing the mouse is easy. All you have to do is plug the end into a USB port. If it's an optical mouse, you can tell it's plugged in correctly if the red laser comes on once you turn on the computer.\n\tOh, whoops, yours is wireless, huh? Well, then, just plug the dongle into one of the USB ports, and make sure the mouse has fresh batteries." }
+	} else {
+		copy ch2-describe-mouse;
+	}
+	goto command-parts-q;
+}
+command-parts-harddrive {
+	if (variable ch2-storyflag-round is < 2) {
+		goto command-parts-ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-harddrive is true) {
+		show serial dialog { "<m>LAMBDA</>: The hard drive is already in place, so we'll have all the on-board storage we'll need. Not sure how much space we'll have, given how it was constructed, but... I'm sure it'll be fine." }
+	} else if (flag ch2-carrying-harddrive is true) {
+		show serial dialog { "<m>LAMBDA</>: The hard drive will need to be plugged into two cables: first, a power cable from the power supply, and second, a SATA cable off the motherboard.\n\tSince that hard drive is... uh, unconventional... just try your best to attach those cables somehow. You'll know if it fits." }
+	} else {
+		copy ch2-describe-harddrive;
+		show serial dialog {
+			"\tUse one of the solder stations in the workshop to combine both items into a <m>HARD DRIVE</>."
+		}
+	}
+	goto command-parts-q;
+}
+command-parts-plate {
+	if (variable ch2-storyflag-round is < 2) {
+		goto command-parts-ahead-confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-plate is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the plate to make a CPU. You're good." }
+	} else if (flag ch2-carrying-plate is true) {
+		if (flag ch2-carrying-needle is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got a good <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use one of the solder stations to combine them.\n\tHuh, I can confirm that the iron content of the plate is high enough for this to actually work. Not that I was worried...." }
+		}
+	} else {
+		copy ch2-describe-plate;
+	}
+	goto command-parts-q;
+}
+command-parts-needle {
+	if (variable ch2-storyflag-round is < 2) {
+		goto command-parts-ahead-confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-needle is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the <m>needle</> to make a <m>hard drive</>. You're good." }
+	} else if (flag ch2-carrying-needle is true) {
+		if (flag ch2-carrying-plate is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got a <m>needle</> for a read head already. So now what you need is a dinner <m>plate</> to act as a hard drive platter." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use one of the solder stations to combine them.\n\tOh, wow, it looks like that phonograph needle is electric. Weird, but also serendipitous." }
+		}
+	} else {
+		copy ch2-describe-needle;
+	}
+	goto command-parts-q;
+}
+command-parts-ramchips {
+	if (variable ch2-storyflag-round is < 2) {
+		goto command-parts-ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-ramchips is true) {
+		show serial dialog { "<m>LAMBDA</>: The RAM is in place, nice and tight. They're all set." }
+	} else if (flag ch2-carrying-ramchips is true) {
+		show serial dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then....\n\tWell, it's going to be really freaky, but you need to <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." }
+	} else {
+		copy ch2-describe-ramchips;
+	}
+	goto command-parts-q;
+}
+
+// ROUND THREE: desperate
+
+command-parts-clock {
+	if (variable ch2-storyflag-round is < 3) {
+		goto command-parts-ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-clock is true) {
+		show serial dialog { "<m>LAMBDA</>: The clock's installed already. It's just... you know... clocking away." }
+	} else if (flag ch2-carrying-clock is true) {
+		show serial dialog { "<m>LAMBDA</>: So the system clock is normally built in, and -- well, you know what? You got that giant grandfather clock to fit inside your pocket somehow, so just... uh... do that again, but for the mainframe enclosure instead." }
+	} else {
+		copy ch2-describe-clock;
+	}
+	goto command-parts-q;
+}
+command-parts-cpu {
+	if (variable ch2-storyflag-round is < 3) {
+		goto command-parts-ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-cpu is true) {
+		show serial dialog { "<m>LAMBDA</>: Your CPU is in place already, ready to go off and be the brain of the whole operation." }
+	} else if (flag ch2-carrying-cpu is true) {
+		show serial dialog { "<m>LAMBDA</>: Line up the CPU with the slot, and gently set it down. Then press the clamp down to lock it in place.\n\tNow the icky part. You got to put thermal paste on there. Try not to get any on your hands, and try to place it so there won't be any bubbles when you press the heat sink on top. Then... well, press the heat sink on top." }
+	} else {
+		copy ch2-describe-cpu;
+	}
+	goto command-parts-q;
+}
+command-parts-goldfish {
+	if (variable ch2-storyflag-round is < 3) {
+		goto command-parts-ahead-confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-goldfish is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the goldfish to make a CPU. You're good." }
+	} else if (flag ch2-carrying-goldfish is true) {
+		if (flag ch2-carrying-abacus is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got the goldfish already, the \"thinking\" part of the CPU, so you'll need to pick up the other half: the abacus." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use one of the solder stations to combine them.\n\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
+		}
+	} else {
+		copy ch2-describe-goldfish;
+	}
+	goto command-parts-q;
+}
+command-parts-abacus {
+	if (variable ch2-storyflag-round is < 3) {
+		goto command-parts-ahead-confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2-installed-abacus is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already got the abacus combined with the goldfish into a CPU, so don't worry about the abacus half of things now." }
+	} else if (flag ch2-carrying-abacus is true) {
+		if (flag ch2-carrying-goldfish is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got an abacus already, the \"remembering\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use one of the solder stations to combine them." }
+		}
+	} else {
+		copy ch2-describe-abacus;
+	}
+	goto command-parts-q;
+}

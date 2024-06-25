@@ -1,0 +1,435 @@
+include!("header.mgs")
+settings for dialog {
+	label Concierge {
+		entity Concierge
+		portrait concierge
+	}
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-12 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>CASTLE HALLWAY BACK</>."
+		"\tThe rubble from the ceiling has split this room into two, but the air is a little stuffier here than it had been in the other half. Perhaps more was destroyed on this side, more dust scattered and more moisture entrapped, or perhaps it's a sign that you're come deeper into the mountain."
+		" "
+	}
+}
+
+look-ch2-concierge {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe man is professionalism itself, from his well-fitten suit and his professional body language -- apart from the expression on his face, which is incongruously aggressive. You think you can make out the sound of growling."
+	}
+}
+
+look-ch2-guest_book {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's a massive volume open to a page filled with names in eclectic handwriting. An elegant gold bookmark, attached to the book at the top of the spine, is draped across the opposite page."
+	}
+}
+
+look-ch2-stereo {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThis machine is massive by modern standards, large enough to house four CDs in the CD changer up top and two cassette decks side-by-side the front face. It's thoroughly wired into the wall."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-12 {
+	// ch2 room state
+	mutate ch2-in-room = 12;
+	
+	// entrance text
+	show serial dialog spacer;
+	if (flag ch2-seen-room-12 is false) {
+		show serial dialog { "Discovered <bold><c>CASTLE HALLWAY BACK</>! Room added to map!" }
+		set flag ch2-seen-room-12 to true;
+	} else {
+		show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
+	}
+
+	// room unique stuff
+	if (
+		flag ch2-installed-needle is true
+		|| flag ch2-carrying-needle is true
+	) {
+		copy script ch2-hide-needle;
+	}
+	
+	// initialize everything
+	copy ch2-map-init;
+
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle12 is false) {
+		show dialog {
+			Concierge "Welcome!"
+		}
+		set flag interrupt to true;
+		set flag ch2-cutseen-castle12 to true;
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-12 {
+	// nothing yet
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-12 { // sanitize ch2 room state
+	mutate ch2-in-room = 0;
+}
+
+// SERIAL: go
+
+on_go-castle-12-north {
+	copy on_exit-ch2-castle-12;
+	copy warping-out-fade-out;
+	load map ch2-castle-13;
+}
+on_go-castle-12-east {
+	copy on_exit-ch2-castle-12;
+	copy warping-out-fade-out;
+	load map ch2-castle-31;
+}
+on_go-castle-12-south {
+	copy on_exit-ch2-castle-12;
+	copy warping-out-fade-out;
+	load map ch2-castle-11;
+}
+
+/* ---------- ENTITIES ---------- */
+
+ch2-interact-guestbook {
+	set flag interrupt to false;
+	if (flag ch2-guestbook-signed is false) {
+		if (flag interrupt3 is false) {
+			show dialog {
+				PLAYER "Huh? It's just a book with a bunch of people's names."
+				Concierge "Oh, yes! Do sign our guest book before you go!"
+			}
+			set flag interrupt3 to true;
+		}
+		show dialog {
+			name "" "(Sign the guest book?)"
+			> "Yes" : ch2-interact-guestbook-signyes
+			> "No" : ch2-interact-guestbook-signno
+		}
+	} else {
+		show dialog {
+			PLAYER "There's my name, logged for the ages."
+			Concierge "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
+		}
+	}
+}
+ch2-interact-guestbook-signyes {
+	show dialog {
+		PLAYER "All right, here I go...."
+		name "" "(scribble scribble scribble)"
+		Concierge "Thank you for signing!"
+	}
+	set flag ch2-guestbook-signed to true;
+	set entity "%SELF%" on_interact to ch2-interact-guestbook;
+}
+ch2-interact-guestbook-signno {
+	show dialog {
+		PLAYER "Maybe later."
+	}
+	set entity "%SELF%" on_interact to ch2-interact-guestbook;
+}
+
+ch2-stereo-fix-proposal{
+	show dialog ch2-stereo-fix-proposal {
+		PLAYER "Um, about that phonograph. I actually need to borrow the needle for something."
+		Concierge "Hmm? Whatever for?"
+		PLAYER "It'll help me fix the castle. Trust me."
+		Concierge "I could not in good conscience leave this room bereft of welcome music. But, perhaps...."
+		"You say you are going to fix the castle, therefore you must be the fixing type."
+		"Might you be able to fix that stereo behind me, perhaps? Were it repaired, I would have no need of this phonograph or its needle."
+		PLAYER "Fix the stereo? I can take a look."
+	}
+	set flag ch2-ws-backstory to true;
+	set flag ch2-needle-firstlook to true;
+}
+
+interact-ch2-concierge {
+	if (flag ch2-concierge-backstory is false) {
+		if (flag interrupt is true) {
+			show dialog {
+				PLAYER "Welcome?"
+				Concierge "Yes, welcome to King Gibson's castle. I do hope you enjoy your visit!"
+			}
+		} else {
+			show dialog {
+				Concierge "Welcome to King Gibson's castle. I do hope you enjoy your visit!"
+			}
+		}
+		show dialog {
+			PLAYER "Um, thanks. Listen, I know things are messed up right now...."
+			Concierge "Fear not! I am confident everyone is working to clear the doors and restore the intercom system."
+			"You, at least, seem to have overcome the door problem on your own, and should be applauded for your resourcefulness."
+			"You have my full support -- though alas, the best I can do to help is keep this phonograph turning."
+			"You'll have moral support music, if nothing else!"
+		}
+		set flag ch2-concierge-backstory to true;
+		if (variable ch2-storyflag-round is >= 2) {
+			copy ch2-stereo-fix-proposal;
+			set flag ch2-ws-backstory to true;
+		}
+	} else if (
+		variable ch2-storyflag-round is < 2
+		|| flag ch2-needle-permission is true
+	) {
+		show dialog {
+			Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment."
+			"How admirable it is to acquire and leverage one's limited resources and perform great work anyway! I'll be cheering you on from here. Good luck!"
+		}
+	} else {
+		if (flag ch2-ws-won is true) {
+			copy ch2-ws-cutscene;
+		} else if (flag ch2-ws-backstory is false) {
+			copy ch2-stereo-fix-proposal;
+		} else {
+			show dialog {
+				Concierge "Go on, now. I'll let you have the needle off this phonograph is you get the stereo working again. It's the black thing behind me."
+			}
+		}
+	}
+}
+
+/* ---------- NEEDLE (ADMIN) ---------- */
+
+ch2-hide-needle {
+	set entity phonograph secondary_id to 0;
+}
+
+ch2-touch-needle {
+	set flag interrupt to false;
+	if (flag ch2-carrying-needle is true || flag ch2-installed-needle is true) {
+		show dialog ch2-concierge-old-timey { // there's a second reference to this dialog below!
+			PLAYER "Definitely an old-timey look, isn't it?"
+			Concierge "If you like this, you should see King Gibson's bedroom."
+		}
+		return;
+	}
+	if (flag interrupt2 is false) {
+		if (flag ch2-needle-firstlook is false) {
+			show dialog {
+				PLAYER "That's a funny looking trumpet."
+				Concierge "It mechanically amplifies the vibrations captured by the needle upon the vinyl record."
+				"I got this old thing out after the earthquake damaged the intercom system -- and the stereo. I couldn't bear how quiet it was in here."
+			}
+			set flag ch2-needle-firstlook to true;
+		} else {
+			show dialog ch2-concierge-old-timey; // dialog defined above
+		}
+	}
+	if (variable ch2-storyflag-round is >= 2) {
+		if (flag ch2-needle-permission is true) {
+			show dialog {
+				name "" "(Pick up the phonograph needle?)"
+				> "Yes" : ch2-touch-needle-yes
+				> "No" : ch2-touch-needle-no
+			}
+		} else {
+			if (flag ch2-ws-backstory is false) {
+				show dialog {
+					PLAYER "(Will the concierge get mad at me if I take the needle from this record player? I guess I should ask.)"
+				}
+			} else {
+				show dialog {
+					PLAYER "(I can have the needle off the phonograph once I fix the stereo. I better get on that.)"
+				}
+			}
+		}
+	}
+}
+
+ch2-touch-needle-yes {
+	show dialog {
+		name "" "(You pick up the needle!)"
+	}
+	copy script ch2-hide-needle;
+	copy script ch2-pickup-needle;
+	set flag interrupt2 to false;
+	set entity "%SELF%" on_interact to ch2-touch-needle;
+}
+ch2-touch-needle-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" on_interact to ch2-touch-needle;
+}
+
+/* ---------- WORD SEARCH (non-auto generated stuff) ---------- */
+
+const!( // make sure these are the same as in the auto one
+	$toWin = 20
+	$miss = 4
+	$cheat = 5
+)
+
+serial dialog ch2-ws-rowstart { "<r>" }
+serial dialog ch2-ws-col { "</>   " }
+
+ch2-ws-doturn {
+	show serial dialog spacer;
+	copy ch2-ws-count-flags;
+	show serial dialog {
+		wrap 100
+		"                          <bold>WORD SEARCH!</>"
+		"Find words meaningful to the stereo system to cut through its amnesia."
+		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2-ws-flags-tally$/20</>"
+	}
+	copy ch2-ws-draw-map;
+	copy ch2-ws-turn-message;
+	show serial dialog ch2-ws-input;
+	// if you didn't trigger one of the defined inputs, it counts as a miss:
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = $miss;
+	goto ch2-ws-doturn;
+}
+include!("header.mgs")
+
+// QUIT
+
+ch2-ws-guess-quit {
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = 0;
+	copy ch2-ws-count-flags;
+	show serial dialog spacer;
+	if (variable ch2-ws-flags-tally is 0) {
+		show serial dialog {
+			"<y>STEREO</>: All done for now? Well, thanks for taking a look."
+		}
+	} else if (variable ch2-ws-flags-tally is < $toWin) {
+		mutate diff = $toWin;
+		mutate diff - ch2-ws-flags-tally;
+		if (variable diff is 1) {
+			show serial dialog {
+				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, you hear?"
+			}
+		} else {
+			show serial dialog {
+				"<y>STEREO</>: Done for now? Okay, thanks for trying."
+				"\tOh, you know what? I bet if you found <y>$diff$</> more words, I'd be as right as rain. Try again later, if you would?"
+			}
+		}
+	} else if (flag ch2-ws-won is true) {
+		show serial dialog {
+			"<y>STEREO</>: Hey! Thanks for helping me remember who I am! Good luck out there!"
+		}
+	} else {
+		set flag ch2-ws-won to true;
+		// todo: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
+		show serial dialog {
+			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
+			" "
+			# "Good for you!" : ch2-ws-cutscene
+		}
+	}
+	set entity stereo on_interact to ch2-stereo-interact;
+}
+
+ch2-ws-cutscene {
+	show dialog {
+		Concierge "Oh! Oh! I can hear it! The old, reliable stereo is back in business!"
+		"Go ahead and take the needle off that phonograph. Many thanks!"
+	}
+	set flag interrupt2 to true;
+	set flag ch2-needle-permission to true;
+	set entity stereo on_interact to ch2-stereo-interact;
+}
+
+ch2-stereo-interact {
+	set flag interrupt to false;
+	if (flag ch2-ws-backstory is false) {
+		show dialog { PLAYER "A CD player or something? Looks half damaged." }
+	} else if (flag ch2-stereo-backstory is false) {
+		show dialog {
+			PLAYER "?"
+			"Oh, there's a place where the artifact can plug into it."
+		}
+		goto ch2-stereo-intro1;
+	} else {
+		show dialog { PLAYER "All right, plugging in the artifact again...." }
+		goto ch2-ws-doturn;
+	}
+}
+
+ch2-stereo-intro1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<y>STEREO</>: Huh? Is there someone there? I-I think I hear a voice!"
+		" "
+		# "Hello." : ch2-stereo-intro2a
+		# "Howdy." : ch2-stereo-intro2b
+		# "Ahoy." : ch2-stereo-intro2c
+	}
+}
+
+ch2-stereo-intro2a {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Hello. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+ch2-stereo-intro2b {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Howdy. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+ch2-stereo-intro2c {
+	show serial dialog spacer;
+	show serial dialog { "<c>YOU</>: Ahoy. Are you okay?" }
+	goto ch2-stereo-intro2;
+}
+
+ch2-stereo-intro2 {
+	show serial dialog {
+		" "
+		"<y>STEREO</>: Sure! Um, maybe? I can't remember. I think I might be hurt. Last thing I remember was some shaking, then a thud. But I can't remember who I am or what I'm doing here. Other than that, I'm doing great."
+		" "
+		# "You have amnesia?" : ch2-stereo-intro3
+	}
+}
+ch2-stereo-intro3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You have amnesia?"
+		" "
+		"<y>STEREO</>: I don't know. Would I remember if I had amnesia?"
+		" "
+		# "You're a stereo system. You're supposed to be playing music." : ch2-stereo-intro4
+	}
+}
+ch2-stereo-intro4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You're a stereo system. You're supposed to be playing music."
+		" "
+		"<y>STEREO</>: I don't know what that stuff is. My mind is all jumbled up. Let's see... can you get any closer? I'm on the cusp of understanding what you're talking about, but I need a little help."
+		" "
+		# "Help like what?" : ch2-stereo-intro5
+	}
+}
+ch2-stereo-intro5 {
+	set flag ch2-stereo-backstory to true;
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Help like what?"
+		" "
+		"<y>STEREO</>: Can you dig through my mind and help me find the right words? The words I need to remember? They're all mixed up, top to down, left to right... and maybe diagonal."
+		"\tHere. I'll just show you:"
+		" "
+		# "(Get closer)" : ch2-ws-doturn
+	}
+}

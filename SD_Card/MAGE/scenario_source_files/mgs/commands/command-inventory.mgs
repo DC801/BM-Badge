@@ -1,0 +1,146 @@
+include!("header.mgs")
+
+// REGISTER
+
+register-inventory {
+	register man + inventory -> man-inventory;
+	register inventory -> command-inventory;
+}
+
+// MAN PAGE
+
+man-inventory {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - INVENTORY</>"
+		" "
+		"Use this command to see what items you are currently carrying."
+	}
+	if (flag ch2-have-things-to-solder is true) {
+		show serial dialog {
+			" "
+			"Items may be combined at one of the solder stations in the castle workshop."
+		}
+	}
+}
+
+// COMMAND
+
+command-inventory {
+	// set the `count-inventory` flag first; if true, don't print anything! just count!
+	mutate ch2-count-inventory = 0;
+	if (flag only-count-inventory is false) {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>INVENTORY:</>"
+		}
+	}
+	// normal
+	if (flag ch2-carrying-cactuscooler is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tcan of Cactus Cooler" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-heatsink is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\theat sink" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-powersupply is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tpower supply" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-monitor is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmonitor" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	// abstract
+	if (flag ch2-carrying-harddrive is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\thard drive" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-plate is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tdinner plate" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-needle is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tphonograph needle" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-keyboard is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tkeyboard" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-mouse is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmouse" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	// desperate
+	if (flag ch2-carrying-ramchips is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tramchips" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-clock is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tclock" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-cpu is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tcpu" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-goldfish is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tgoldfish" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-manual is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tcalculator manual" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (flag ch2-carrying-abacus is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tabacus" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	// final
+	if (flag ch2-carrying-mainframeos is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmainframe os CD" }
+		}
+		mutate ch2-count-inventory + 1;
+	}
+	if (variable ch2-count-inventory is 0) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\t(nothing)" }
+		}
+	}
+	set flag only-count-inventory to false;
+	mutate ch2-counted-inventory = ch2-count-inventory;
+	mutate ch2-count-inventory = 0;
+}

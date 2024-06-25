@@ -3,7 +3,19 @@
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            0, 0, 0, 0, 0, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88],
          "height":13,
          "id":1,
          "name":"Tile Layer 1",
@@ -20,6 +32,7 @@
          "name":"Entities",
          "objects":[
                 {
+                 "class":"",
                  "gid":257,
                  "height":48,
                  "id":1,
@@ -31,13 +44,13 @@
                          "value":"toasters-do_path-6-66"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":248,
                  "y":325
                 }, 
                 {
+                 "class":"",
                  "gid":293,
                  "height":48,
                  "id":2,
@@ -49,13 +62,13 @@
                          "value":"toasters-do_path-5-75"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":207,
                  "y":310
                 }, 
                 {
+                 "class":"",
                  "gid":257,
                  "height":48,
                  "id":29,
@@ -67,13 +80,13 @@
                          "value":"toasters-do_path-8-15"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":450,
                  "y":267
                 }, 
                 {
+                 "class":"",
                  "gid":257,
                  "height":48,
                  "id":30,
@@ -85,13 +98,13 @@
                          "value":"toasters-do_path-2-50"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":226,
                  "y":220
                 }, 
                 {
+                 "class":"",
                  "gid":293,
                  "height":48,
                  "id":31,
@@ -103,13 +116,13 @@
                          "value":"toasters-do_path-0-50"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":174,
                  "y":188
                 }, 
                 {
+                 "class":"",
                  "gid":293,
                  "height":48,
                  "id":32,
@@ -121,13 +134,13 @@
                          "value":"toasters-do_path-10-50"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":404,
                  "y":378
                 }, 
                 {
+                 "class":"",
                  "gid":257,
                  "height":48,
                  "id":33,
@@ -139,13 +152,13 @@
                          "value":"toasters-do_path-7-60"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":285,
                  "y":342
                 }, 
                 {
+                 "class":"",
                  "gid":293,
                  "height":48,
                  "id":34,
@@ -157,13 +170,13 @@
                          "value":"toasters-do_path-4-50"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":257,
                  "y":235
                 }, 
                 {
+                 "class":"",
                  "gid":293,
                  "height":48,
                  "id":35,
@@ -175,13 +188,13 @@
                          "value":"toasters-do_path-5"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":591,
                  "y":229
                 }, 
                 {
+                 "class":"",
                  "gid":257,
                  "height":48,
                  "id":36,
@@ -193,13 +206,13 @@
                          "value":"toasters-do_path-10"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":591,
                  "y":278
                 }, 
                 {
+                 "class":"",
                  "gid":293,
                  "height":48,
                  "id":37,
@@ -211,13 +224,13 @@
                          "value":"toasters-do_path-3"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":591,
                  "y":327
                 }, 
                 {
+                 "class":"",
                  "gid":257,
                  "height":48,
                  "id":38,
@@ -229,23 +242,46 @@
                          "value":"toasters-do_path-0"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":591,
                  "y":376
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":40,
                  "name":"flying-toasters-cam",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":320,
                  "y":287
+                }, 
+                {
+                 "class":"",
+                 "gid":206,
+                 "height":32,
+                 "id":42,
+                 "name":"Math",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-48.7899394503959,
+                 "y":-85.8475392019873
+                }, 
+                {
+                 "class":"",
+                 "gid":206,
+                 "height":32,
+                 "id":43,
+                 "name":"Timer",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-11.5286446204006,
+                 "y":-84.8539046731874
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -259,6 +295,7 @@
          "name":"TEMPLATE",
          "objects":[
                 {
+                 "class":"",
                  "height":0,
                  "id":6,
                  "name":"template",
@@ -272,7 +309,6 @@
                          "y":71
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":315,
@@ -290,288 +326,289 @@
          "name":"Paths",
          "objects":[
                 {
+                 "class":"",
                  "height":0,
                  "id":3,
                  "name":"start0",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":260,
                  "y":131
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":4,
                  "name":"end1",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":116,
                  "y":275
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":7,
                  "name":"start1",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":318,
                  "y":131
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":8,
                  "name":"end0",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":117,
                  "y":231
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":9,
                  "name":"start2",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":362,
                  "y":130
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":10,
                  "name":"end2",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":117,
                  "y":303
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":11,
                  "name":"end3",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":118,
                  "y":336
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":12,
                  "name":"start3",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":413,
                  "y":129
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":13,
                  "name":"start5",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":470,
                  "y":130
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":14,
                  "name":"end5",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":119,
                  "y":377
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":15,
                  "name":"end4",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":118,
                  "y":355
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":16,
                  "name":"start4",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":443,
                  "y":128
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":17,
                  "name":"end6",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":120,
                  "y":420
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":18,
                  "name":"start6",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":526,
                  "y":131
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":19,
                  "name":"start7",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":528,
                  "y":179
-                }, 
+                },
+            
                 {
+                 "class":"",
                  "height":0,
                  "id":20,
                  "name":"end7",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":135,
                  "y":450
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":21,
                  "name":"end8",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":195,
                  "y":452
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":22,
                  "name":"start8",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":529,
                  "y":220
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":23,
                  "name":"end9",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":254,
                  "y":451
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":24,
                  "name":"start9",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":529,
                  "y":259
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":25,
                  "name":"start10",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":531,
                  "y":294
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":26,
                  "name":"end10",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":307,
                  "y":453
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":27,
                  "name":"start11",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":534,
                  "y":334
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":28,
                  "name":"end11",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":365,
@@ -584,10 +621,10 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":42,
+ "nextobjectid":44,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.8.2",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -604,6 +641,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.8",
+ "version":"1.9",
  "width":15
 }

@@ -15,10 +15,8 @@ var serializeEntity = function (
 		+ 1 // uint8_t current_animation
 		+ 1 // uint8_t current_frame
 		+ 1 // uint8_t direction OR render_flags
-		+ 1 // uint8_t hackable_state_a
-		+ 1 // uint8_t hackable_state_b
-		+ 1 // uint8_t hackable_state_c
-		+ 1 // uint8_t hackable_state_d
+		+ 2 // uint16_t path_id
+		+ 2 // uint16_t on_tick_script_id
 	);
 	var arrayBuffer = new ArrayBuffer(
 		getPaddedHeaderLength(headerLength)
@@ -92,6 +90,11 @@ var serializeEntity = function (
 	if(entity.is_glitched) {
 		directionOrRenderFlags |= IS_GLITCHED_FLAG;
 	}
+	if(entity.relative_direction) {
+		directionOrRenderFlags |= (
+			(entity.relative_direction % 4) << 4
+		);
+	}
 	if(entity.is_debug) {
 		directionOrRenderFlags |= IS_DEBUG_FLAG;
 	}
@@ -130,35 +133,22 @@ var serializeEntity = function (
 		directionOrRenderFlags
 	);
 	offset += 1;
-	var hackableStateAOffset = offset;
-	dataView.setUint8(
-		offset, // uint8_t hackable_state_a
-		entity.hackable_state_a || 0
-	);
-	offset += 1;
-	dataView.setUint8(
-		offset, // uint8_t hackable_state_b
-		entity.hackable_state_b || 0
-	);
-	offset += 1;
-	dataView.setUint8(
-		offset, // uint8_t hackable_state_c
-		entity.hackable_state_c || 0
-	);
-	offset += 1;
-	dataView.setUint8(
-		offset, // uint8_t hackable_state_d
-		entity.hackable_state_d || 0
-	);
-	offset += 1;
 	if(entity.path) {
 		// console.log('This entity has a path!', entity.path);
 		dataView.setUint16(
-			hackableStateAOffset,
+			offset,
 			entity.path.mapIndex,
 			IS_LITTLE_ENDIAN
 		);
 	}
+	offset += 2;
+	dataView.on_look_offset = offset;
+	dataView.setUint16(
+		offset, // uint16_t on_look_script_id
+		0, // set in another loop later
+		IS_LITTLE_ENDIAN
+	);
+	offset += 2;
 	entity.serialized = arrayBuffer;
 	entity.dataView = dataView;
 	entity.scenarioIndex = scenarioData.parsed.entities.length;

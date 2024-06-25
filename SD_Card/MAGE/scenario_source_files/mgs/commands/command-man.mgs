@@ -1,0 +1,1266 @@
+include!("header.mgs")
+
+// REGISTER
+
+register-manual {
+	// the default set
+	register man -> command-man;
+	register man + man -> man-man;
+	register man + look -> man-look;
+	register man + go -> man-go;
+	register man + help -> man-help;
+	register man + rtfm -> man-rtfm;
+	register man fail -> man-fail;
+}
+
+// MAN PAGE
+
+man-man {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAN</>"
+		" "
+		"Displays manual pages for various MGE serial commands. Type <c>MAN</> followed by the name of the command you want to read about, e.g. <c>MAN LOOK</>"
+		" "
+		"<m>NOTE</>: Hi, there, birthday mage! I've rigged this thing to call me if you use <c>MAN</> as a single word. I \"hacked\" the man page to tell you that!"
+	}
+}
+
+// FAIL
+
+man-fail {
+	show serial dialog spacer;
+	show serial dialog {
+		"<bold>MAN PAGE NOT FOUND!</> There is no documentation for that command, or that command does not exist."
+	}
+}
+
+// COMMAND
+
+command-man {
+	// TODO: do something different when you're in the room with him
+	if (
+		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
+		|| variable ch2-in-room is not 0 // OR you're in the castle
+	) {
+		// `man` works normally
+		goto command-man-normal;
+	} else {
+		// otherwise, `man` cannot reach Lambda
+		copy ch2-wireless-error;
+	}
+}
+
+ch2-wireless-error {
+	show serial dialog spacer;
+	show serial dialog {
+		"<bold><r>ERROR</>: <bold>lambda-talk</> timed out"
+		" "
+		"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
+		" "
+		"<bold>lambda-talk</>: exited with code 1"
+	}
+}
+
+command-man-normal {
+	if (flag ch2-cutseen-bert-secret is true) {
+		if (flag ch2-lambda-bert-backstory is false) {
+			goto ch2-bert-secret-lambda-intro;
+		} else if (flag ch2-parts-round-2-backstory is false) {
+			goto ch2-lambda-round-2-parts1;
+		}
+	}
+	if (flag ch2-cutseen-bert-message is true) {
+		if (flag ch2-parts-round-3-backstory is false) {
+			goto ch2-bert-message-lambda-intro;
+		}
+	}
+	if (flag ch2-cutseen-last-parts-done is true) {
+		if (flag ch2-parts-round-4-backstory is false) {
+			goto ch2-lambda-round-4;
+		}
+	}
+	
+	if (flag ch2-toot-done is true) {
+		goto command-man-normal-convo;
+	}
+
+	// You're talking to Lambda over serial for the first time:
+	// (You need to finish the toot)
+	goto ch2-toot-check;
+}
+
+/* ---------- LAMBDA NORMAL CONVO ---------- */
+
+command-man-normal-convo {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: What do you want to know?"
+		" "
+	}
+	goto ch2-lambda-topic-q;
+}
+
+ch2-lambda-topic-q {
+	show serial dialog {
+		"(Ask about:)"
+		# "Parts list" : command-parts
+		# "Installing parts" : ch2-lambda-topic-installation
+		# "Using the artifact" : ch2-lambda-topic-artifact
+		# "The mainframe" : ch2-lambda-topic-mainframe
+		# "The castle" : ch2-lambda-topic-castle
+		# "Someone specific" : ch2-lambda-topic-person-start
+		# "(Quit)" : ch2-lambda-ishouldgo
+	}
+}
+
+ch2-lambda-ishouldgo {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: I should go."
+		" "
+		"<m>LAMBDA</>: No problem! Just feel free to type <c>MAN</> if you want to ask me a question about anything, and <c>HELP</> if you want to know all the commands you can use."
+		" "
+	}
+	show serial dialog lambda-over;
+}
+
+/* ---------- ARTIFACT ---------- */
+
+ch2-lambda-topic-installation {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: How do I install the parts once I've got them?"
+		" "
+		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be straightforward to install."
+		" "
+	}
+	goto ch2-lambda-topic-q;
+}
+
+ch2-lambda-topic-artifact {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: You had a question about the artifact?"
+		" "
+	}
+	goto ch2-lambda-topic-artifact-q;
+}
+
+ch2-lambda-topic-artifact-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Magic words (Commands)" : ch2-lambda-topic-artifact-words
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+
+ch2-lambda-topic-artifact-words {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What can you tell me about \"magic words?\" You said they were commands?"
+		" "
+		"<m>LAMBDA</>: Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
+		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
+		" "
+	}
+	goto ch2-lambda-topic-artifact-q;
+}
+
+/* ---------- MAINFRAME ---------- */
+
+ch2-lambda-topic-mainframe {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: You had a question about the mainframe?"
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q;
+}
+
+ch2-lambda-topic-mainframe-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Why did you break it?" : ch2-lambda-mainframe-broken
+		# "How broken is it?" : ch2-lambda-mainframe-broken-1
+		# "How do we fix it?" : ch2-lambda-mainframe-fix-1
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+
+ch2-lambda-mainframe-broken {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Why did you break it?"
+		" "
+		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big <r>Bad</>'s hands."
+		"\tThat artifact is capable of doing quite a lot of damage, you know. It's only a problem that we're lacking it now because of that recent earthquake."
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q;
+}
+
+ch2-lambda-mainframe-broken-1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What exactly about it is broken?"
+		" "
+		"<m>LAMBDA</>: Well, sort of... everything. It's in a million pieces, to be precise."
+		" "
+		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-2
+		# "Was that necessary?" : ch2-lambda-mainframe-broken-2
+	}
+}
+ch2-lambda-mainframe-broken-2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"\tI don't know. I just wanted to be <bold>sure</>. I sort of regret it now."
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q;
+}
+
+ch2-lambda-mainframe-fix-1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: How do we fix it? What do we need?"
+		" "
+		"<m>LAMBDA</>: We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. I have my parts list right here. The software though... I'll, um, get back to you about that."
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q;
+}
+
+/* ---------- CASTLE ---------- */
+
+ch2-lambda-topic-castle {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: You had a question about the castle?"
+		" "
+	}
+	goto ch2-lambda-topic-castle-q;
+}
+
+ch2-lambda-topic-castle-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Whose castle is this?" : ch2-lambda-castle-who
+		# "The earthquake caused damage?" : ch2-lambda-castle-damage
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+
+ch2-lambda-castle-who {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Whose castle is this?"
+		" "
+		"<m>LAMBDA</>: I'm kind of surprised you didn't know, but it's King Gibson's castle. "
+		"\tTODO: more convo"
+		" "
+	}
+	goto ch2-lambda-topic-castle-q;
+}
+ch2-lambda-castle-damage {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: The earthquake caused some damage?"
+		" "
+		"<m>LAMBDA</>: A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
+		"\tIf the mainframe were still working, we would've been able to... well, it would have enabled people to get around, anyway."
+		" "
+	}
+	goto ch2-lambda-topic-castle-q;
+}
+
+/* ---------- PEOPLE (CONVO START) ---------- */
+
+ch2-lambda-topic-person-start {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Who did you want to ask about?"
+		" "
+	}
+	goto ch2-lambda-topic-person-q;
+}
+ch2-lambda-topic-person-s {
+	show serial dialog {
+		"\tUm, did you want to ask about anyone else?"
+		" "
+	}
+	goto ch2-lambda-topic-person-q;
+}
+
+ch2-lambda-topic-person-q {
+	show serial dialog {
+		"(Type a name, or type <c>CANCEL</> to go back)"
+
+		// people (brief)
+
+		// central wing
+		_ "WIZARD" : ch2-lambda-person-wizard
+		_ "RACCOON" : ch2-lambda-person-raccoon
+		_ "KURO" : ch2-lambda-person-kuro
+		_ "CONCIERGE" : ch2-lambda-person-concierge
+		_ "THE CONCIERGE" : ch2-lambda-person-concierge
+		_ "TEMPLETON" : ch2-lambda-person-templeton
+		_ "SEBASTIAN" : ch2-lambda-person-sebastian
+		_ "THE GOLDFISH" : ch2-lambda-person-goldfish
+		_ "GOLDFISH" : ch2-lambda-person-goldfish
+		_ "AURELIUS" : ch2-lambda-person-aurelius
+		_ "KING" : ch2-lambda-person-kinggibson
+		_ "THE KING" : ch2-lambda-person-kinggibson
+		_ "GIBSON" : ch2-lambda-person-kinggibson
+		_ "KING GIBSON" : ch2-lambda-person-kinggibson
+		// west wing
+		_ "ALVIN" : ch2-lambda-person-alvin
+		_ "SIMON" : ch2-lambda-person-simon
+		_ "THEODORE" : ch2-lambda-person-theodore
+		_ "SEA MOSS" : ch2-lambda-person-seamoss
+		_ "GLORIA" : ch2-lambda-person-gloria
+		_ "SAMSON" : ch2-lambda-person-samson
+		_ "GREGORY" : ch2-lambda-person-gregory
+		_ "CLARA" : ch2-lambda-person-clara
+		// east wing
+		_ "JEANPAUL" : ch2-lambda-person-jeanpaul
+		_ "JEAN PAUL" : ch2-lambda-person-jeanpaul
+		_ "JEAN-PAUL" : ch2-lambda-person-jeanpaul
+		_ "FRANKIE" : ch2-lambda-person-frankie
+		_ "SCUZZY" : ch2-lambda-person-scuzzy
+		_ "C K WATT" : ch2-lambda-person-ckwatt
+		_ "CKWATT" : ch2-lambda-person-ckwatt
+		_ "ROCCO" : ch2-lambda-person-rocco
+		_ "TRACY" : ch2-lambda-person-tracy
+		_ "HELVETICA" : ch2-lambda-person-helvetica
+		// general
+		_ "BOB" : ch2-lambda-person-bob
+		_ "MARATHON BOB" : ch2-lambda-person-marathonbob
+		_ "GUARDIAN BOB" : ch2-lambda-person-guardianbob
+
+		// people (complicated)
+
+		_ "ME" : ch2-lambda-person-player
+		_ "BLACK MAGE" : ch2-lambda-person-player
+		_ "MAGE" : ch2-lambda-person-player
+		
+		_ "YOU" : ch2-lambda-person-lambda
+		_ "LAMBDA" : ch2-lambda-person-lambda
+
+		_ "BIG BAD" : ch2-lambda-person-big-bad
+
+		_ "BERT" : ch2-lambda-person-bert
+		
+		// admin
+
+		_ "CANCEL" : command-man-normal-convo
+		_ "Q" : command-man-normal-convo
+		_ "QUIT" : command-man-normal-convo
+		_ "STOP" : command-man-normal-convo
+	}
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Sorry, not sure who you mean. You might have to be more specific."
+		// "\t...Or perhaps even less specific." // Use this in case we find there's a limit for the quantity of free response options!
+		" "
+	}
+	goto ch2-lambda-topic-person-q;
+}
+
+/* ---------- PEOPLE (BRIEF) ---------- */
+
+// CENTRAL WING
+
+// Wizard
+ch2-lambda-person-wizard {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What's with this \"Wizard\" guy?"
+		" "
+		"<m>LAMBDA</>: Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued;
+}
+ch2-lambda-person-raccoon {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What's with the raccoon?"
+		" "
+		"<m>LAMBDA</>: The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued;
+}
+ch2-lambda-person-wizard-continued {
+	show serial dialog {
+		"\tYou should have seen him at King Gibson's last Halloween party! He'd found this little blue wizard's hat and cape...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Kuro
+ch2-lambda-person-kuro {
+	show serial dialog spacer;
+	if (flag ch2-seen-room-11 is false) {
+		show serial dialog {
+			"<c>YOU</>: Tell me about Kuro."
+			" "
+			"<m>LAMBDA</>: Sorry, I don't know anyone named Kuro."
+		}
+	} else {
+		show serial dialog {
+			"<c>YOU</>: Tell me about Kuro -- I mean, the little black bird in the front hallway."
+			" "
+			"<m>LAMBDA</>: Sorry, I don't know any little black birds. Kuro must be a visitor. If he's in the front hallway, then he didn't get very far into the castle and must be trapped, separated from whoever he must have wanted to visit. Poor thing."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Concierge
+ch2-lambda-person-concierge {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the castle concierge."
+		" "
+	}
+	if (flag ch2-seen-room-12 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: The concierge? Have you been so deep into the castle hallway yet? But oh, you've probably guessed there's a concierge, right? It's true that this is <bold>that</> kind of castle. Overly formal, I mean."
+			"\tI don't remember too much about that guy, but... oh, I guess I don't remember him at all. We must never have crossed paths much."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Oh yeah, that guy! He looks fierce but he's actually really friendly. His growling is a side effect of his condition, chronic lycanthropy."
+			"\tHe's a music lover, if I'm remembering right. He's a little compulsive about it, always wanting something playing...."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Templeton
+ch2-lambda-person-templeton {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Templeton."
+		" "
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: Templeton, Templeton. One of King Gibson's advisors, I think. Or was he a giant blancmange? Sorry, I guess I don't know much about that guy."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Sebastian
+ch2-lambda-person-sebastian {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Sebastian."
+		" "
+	}
+	if (flag ch2-seen-room-13 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Sebastian? He was one of King Gibson's advisors, wasn't he? I seem to recall him being combatative fairly often. Some kind of magic user, too."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Sebastian's heart is in the right place, but he's stubborn enough and brash enough that it can be hard to remember that, particularly if he has an opinion about something. But there's a reason King Gibson keeps him around, after all. He's good at his job."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Goldfish
+ch2-lambda-person-aurelius {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Aurelius."
+		" "
+		"<m>LAMBDA</>: Aurelius, the goldfish? He's the King's regent."
+	}
+	goto ch2-lambda-person-goldfish-aurelius;
+}
+ch2-lambda-person-goldfish {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the goldfish."
+		" "
+		"<m>LAMBDA</>: The goldfish? You mean the castle goldfish? Aurelius, his name is. He's the King's regent."
+	}
+	goto ch2-lambda-person-goldfish-aurelius;
+}
+ch2-lambda-person-goldfish-aurelius {
+	show serial dialog {
+		"\tHe mostly just goes to all the meetings and observes everything quietly. But when King Gibson is away, Aurelius is put in charge, and he does a fantastic job. He's a reasonable guy."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// King Gibson
+ch2-lambda-person-kinggibson {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about King Gibson."
+		" "
+		"<m>LAMBDA</>: (TODO)"
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// WEST WING
+
+// Alvin, Theodore, Simon
+ch2-lambda-person-alvin {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Alvin."
+		" "
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Alvin -- by reputation, she's the quiet, mysterious one of the group -- that's all I know."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-theodore {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Theodore."
+		" "
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Theodore -- I've never met them personally. I've heard they're the straightforward, stoic type, though."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-simon {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Simon."
+		" "
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really <bold>want</> to meet him, you know?"
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Sea Moss
+ch2-lambda-person-seamoss {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Sea Moss."
+		" "
+	}
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Sea Moss? Sea Moss... I-I think I...."
+			"\tI think I used to be good friends with him, but... what did we do together?"
+			"\tI seem to remember we... no, it's gone. I'm sorry."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry."
+			"\tAnd he makes the best crepes, too, believe it or not!"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Gloria
+ch2-lambda-person-gloria {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Gloria."
+		" "
+	}
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Gloria? I think I recognize the name, but I can't picture a face. Maybe if I could just see who it was...."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Oh, Gloria, the golden beetle. She's, um, a little prone to panic, but honestly she's very good at her job. She manages the castle payroll... that is, when she's not trapped in the employee break room with her toddler after an earthquake."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Samson
+ch2-lambda-person-samson {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Samson."
+		" "
+	}
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Samson? That name doesn't ring a bell."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: I think Samson was the name of Gloria's kid, wasn't it? Was he two or three? Or five or six? I don't know. I was never that good with children."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Gregory
+ch2-lambda-person-gregory {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Gregory."
+		" "
+	}
+	if (flag ch2-seen-room-33 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: I think Gregory was the castle chef... maybe? I feel like he's been there forever, but I can't remember what he looks like."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Ah, Gregory! He runs the castle kitchens. He's a bit gray around the whiskers, but is still as quick as ever. Excellent taste, and great at improvising recipes."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Clara
+ch2-lambda-person-clara {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Clara."
+		" "
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: Clara? Clara... I think I remember seeing her name on the new hires list recently, but I haven't met her. She's kitchen staff, though. Logistics, I think it was. Inventory management or something."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// EAST WING
+
+//Jean-Paul
+ch2-lambda-person-jeanpaul {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Jean-Paul."
+		" "
+	}
+	if (flag ch2-seen-room-21 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Frankie
+ch2-lambda-person-frankie {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Frankie."
+		" "
+	}
+	if (flag ch2-seen-room-21 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Scuzzy
+ch2-lambda-person-scuzzy {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Scuzzy."
+		" "
+	}
+	if (flag ch2-seen-room-22 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Scuzzy? Or did you mean SCSI, that old data interface? It was kind of a pain, to be honest. You couldn't just connect things together -- you had to daisy chain the devices, and have a SCSI terminator at the end or none of it would work. Good riddance."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Scuzzy? Oh yeah, that guy from the server room."
+			"\tScuzzy likes to see how things connect to each other. He's always coming up with ways people can connect to each other, or ways for unrelated objects to fit together to build something cool. It's usually stuff you wouldn't think of, too."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// C.K.Watt
+ch2-lambda-person-ckwatt {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about C. K. Watt."
+		" "
+	}
+	if (flag ch2-seen-room-22 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: C. K. Watt? Isn't that a bit from Fawlty Towers? I mean, it's a bit of an obnoxious reference, isn't it?"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Tracy
+ch2-lambda-person-tracy {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Tracy."
+		" "
+	}
+	if (flag ch2-seen-room-23 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: (TODO)"
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Rocco
+ch2-lambda-person-rocco {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Rocco."
+		" "
+	}
+	if (flag ch2-seen-room-23 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Rocco was... hmm, let me see... was he someone from the workshop? I think that's right. I don't know if we ever interacted much."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Rocco builds and maintains the castle's computers. The normal-sized computers, I mean. I guess once in a while he also works on the castle itself. The castle is a computer, too, you know. That's why there's circuitry all over the place."
+			"\tHuh, I just remembered this old project we did together a few years ago. It was this tiny LED screen and some random SOC on this board he drew up. We got a pair of really cheap joysticks, and I programmed a bunch of little arcade games for it."
+			"\tAw, man. He and I used to make a lot of cool stuff. I'd do the software half, he the hardware half. I... I miss those times. How did I forget about that?"
+			"\tI guess it's been a while since I've seen him in person. I hope he's doing okay."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+// Helvetica
+ch2-lambda-person-helvetica {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Helvetica."
+		" "
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
+		"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// GENERAL
+
+// Bob
+ch2-lambda-person-bob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Bob."
+		" "
+		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-guardianbob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Guardian Bob."
+		" "
+		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong type of guy. He's some kind of internet vigilante, I think. He's got a few hacking tricks, but he seems white hat to me. I trust him."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-marathonbob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the Marathon Bobs."
+		" "
+		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever, like 'gaming on the mac was a doomed prospect' or something)"
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+/* ---------- PEOPLE (COMPLICATED) ---------- */
+
+// The player
+
+ch2-lambda-person-player {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about me!"
+		" "
+		"<m>LAMBDA</>: Oh, um, I don't actually know anything about you."
+		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose."
+		" "
+		# "How did you know I'm wearing a hat?" : ch2-lambda-person-player-2
+	}
+}
+ch2-lambda-person-player-2 {
+	set flag ch2-cameras-explanation to true;
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: How did you know I'm wearing a hat?"
+		" "
+		"<m>LAMBDA</>: That's, um... that would be because of the... well, the cameras."
+		" "
+		# "Cameras? That's creepy!" : ch2-lambda-person-player-2a
+		# "Cameras? That's sensible." : ch2-lambda-person-player-2b
+	}
+}
+ch2-lambda-person-player-2a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Cameras? That's creepy."
+		" "
+		"<m>LAMBDA</>: Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense back when there was a lot more traffic in and out, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-player-2b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Cameras? That's a sensible measure to take."
+		" "
+		"<m>LAMBDA</>: You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
+		" "
+		# "It's not that invasive." : ch2-lambda-person-player-3b
+		# "Okay, maybe it's a little invasive." : ch2-lambda-person-player-3a
+	}
+}
+ch2-lambda-person-player-3a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Okay, maybe it's a little invasive."
+		" "
+		"<m>LAMBDA</>: Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-player-3b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: It's not that invasive."
+		" "
+		"<m>LAMBDA</>: It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+// Lambda
+
+ch2-lambda-person-lambda {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about you!"
+		" "
+		"<m>LAMBDA</>: Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
+	}
+	goto ch2-lambda-person-lambda-q;
+}
+
+ch2-lambda-person-lambda-q {
+	show serial dialog {
+		" "
+		"(Ask:)"
+		# "Where are you?" : ch2-lambda-person-lambda-where
+		# "What's your real name?" : ch2-lambda-person-lambda-name
+		# "(Go back)" : ch2-lambda-topic-person-start
+	}
+}
+ch2-lambda-person-lambda-where {
+	show serial dialog spacer;
+	if (flag ch2-seen-room-99 is false) {
+		show serial dialog {
+			"<c>YOU</>: Where are you?"
+			" "
+			"<m>LAMBDA</>: You know... um... it's kind of complicated. In a manner of speaking, I'm inside the castle. Let's just say I'm nearby but not close."
+		}
+	} else {
+		if (variable ch2-in-room is 99) {
+			show serial dialog {
+				"<c>YOU</>: Where are you? I mean, where are WE? There aren't any doors here."
+			}
+		} else {
+			show serial dialog {
+				"<c>YOU</>: Where are you? I mean -- spatially, where is that lab of yours? There weren't any doors inside."
+			}
+		}
+		show serial dialog {
+			" "
+			"<m>LAMBDA</>: I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
+		}
+	}
+	goto ch2-lambda-person-lambda-q;
+}
+ch2-lambda-person-lambda-name {
+	// TODO: what to do if you've already heard him admit that he erased his own name? (Room 99 cutscene)
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What's your real name? It's not really \"Lambda,\" is it?"
+		" "
+		"<m>LAMBDA</>: Well, no. But you see... this is a little embarrassing, but...."
+		"\tI... sort of... don't remember my real name."
+		" "
+		# "You're kidding, right?" : ch2-lambda-person-lambda-name-2a
+		# "How could you forget your own name? What happened?" : ch2-lambda-person-lambda-name-2b
+	}
+}
+ch2-lambda-person-lambda-name-2a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You're kidding, right?"
+		" "
+		"<m>LAMBDA</>: You have to understand... this place, our memories... it's all ones and zeroes."
+		"\tWhen everything is digital, it is <bold>absolutely</> possible for information to disappear permanently. In my case...."
+	}
+	goto ch2-lambda-person-lambda-name-2c;
+}
+ch2-lambda-person-lambda-name-2b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: How could you forget your own name? What happened?"
+		" "
+		"<m>LAMBDA</>: Our world is entirely digital. All ones and zeroes. Even you and me. So what happened was...."
+	}
+	goto ch2-lambda-person-lambda-name-2c;
+}
+ch2-lambda-person-lambda-name-2c {
+	show serial dialog {
+		"\t...I found the place in the world where my name linked to my data as an entity... and destroyed it."
+		" "
+		# "What? But why?" : ch2-lambda-person-lambda-name-3
+	}
+}
+ch2-lambda-person-lambda-name-3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What? But why?"
+		" "
+		"<m>LAMBDA</>: I did it to protect myself from the <r>Big Bad</>. He couldn't target me with hacks without knowing my name, so I made it impossible to learn my name, or even know my name."
+		"\tI severed more than I intended, but...."
+	}
+	goto ch2-lambda-person-lambda-name-followup;
+}
+ch2-lambda-person-lambda-name-followup {
+	show serial dialog {
+		" "
+		"(Ask a followup question:)"
+		# "What else was severed?" : ch2-lambda-person-lambda-name-followup-severed
+		# "Is that why the Big Bad doesn't have a name?" : ch2-lambda-person-lambda-name-followup-bigbad
+		# "Does a nickname not count as a name?" : ch2-lambda-person-lambda-name-followup-nickname
+		# "Why \"Lambda\" though?" : ch2-lambda-person-lambda-name-followup-lambda
+		# "(Go back)" : ch2-lambda-person-lambda-q
+	}
+}
+
+ch2-lambda-person-lambda-name-followup-severed {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What else was severed?"
+		" "
+		"<m>LAMBDA</>: There are gaps in my mind. I... I think they might have appeared when I deleted my name. Hard to tell."
+		"\tIt's a lot harder to remember people, for a start. My skills seem to be intact, but I feel... disconnected. It's like everything I <bold>can</> remember is stripped of context."
+	}
+	set flag ch2-lambda-deletion-backstory to true;
+	goto ch2-lambda-person-lambda-name-followup;
+}
+ch2-lambda-person-lambda-name-followup-bigbad {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Is that why the <r>Big Bad</> doesn't have a name? Did he destroy his name, too, so that other hackers can't target him for hacks?"
+		" "
+		"<m>LAMBDA</>: Probably. Good insight."
+		"\tIn his case, though, I think he likes the mystique, too."
+	}
+	set flag hackbook-backstory to true; // otherwise, the mage will realize he doesn't know the Big Bad's name when the "Town History" book is read, despite realizing it here with Lambda
+	goto ch2-lambda-person-lambda-name-followup;
+}
+ch2-lambda-person-lambda-name-followup-nickname {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Does a nickname not count as a name? I've been calling you \"Lambda,\" after all. Isn't that a name?"
+		" "
+		"<m>LAMBDA</>: No, by \"name\" I don't mean the label on my messages, or what someone calls me."
+		"\tI destroyed my <m>name</>, which is to say I damaged the world's mechanism of referring to me at all. If someone else's memories link to me, that link has been severed, because my name is now a broken reference. I am an unreachable entity."
+		"\tI've since learned that many links go in two directions...."
+	}
+	goto ch2-lambda-person-lambda-name-followup;
+}
+
+ch2-lambda-person-lambda-name-followup-lambda {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Why \"Lambda\" though?"
+		" "
+		"<m>LAMBDA</>: I thought of it on the spot. It's because I'm a <bold>functionary with no name</>, you see! You see?"
+		"\tNo? Oh, um... never mind."
+	}
+	goto ch2-lambda-person-lambda-name-followup;
+}
+
+// Big Bad
+
+ch2-lambda-person-big-bad {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the <r>Big Bad</>."
+		" "
+		"<m>LAMBDA</>: Oh, um, that's complicated."
+		"\tBut he was ruthless. Smart, yes, and very capable, but he seemed to lack compassion. Like it was a bother to him when other people brought up the problems his actions were causing other people. Like he might not have even noticed otherwise."
+		" "
+		# "You're making it sound like you knew him." : ch2-lambda-person-big-bad2
+	}
+}
+ch2-lambda-person-big-bad2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You're making it sound like you knew him."
+		" "
+		"<m>LAMBDA</>: I mean -- that is, we -- we were...."
+		"\tUm, y-yes, we were acquainted, you could say. We'd certainly met. More than once. He always rubbed me the wrong way, though, even before he decided to do all the terrible things he did."
+		"\tIt's, um... it's been long enough that the details are fuzzy. But even if I can't remember exactly how things might have gone down, I can definitely remember the way he made me feel when we interacted. I guess that's all I have to say about that."
+	}
+	if (
+		flag ch2-cutseen-secret-ending is false
+		|| flag ch2-forgetting-backstory is true
+	) {
+		goto ch2-lambda-topic-person-s;
+	} else {
+		show serial dialog {
+			" "
+			# "Why do you both have the power to make people forget?" : ch2-lambda-person-big-bad3a
+			# "Who is the Big Bad, Lambda? Is it you?" : ch2-lambda-person-big-bad3b
+			# "I see. (Quit)" : ch2-lambda-person-big-bad-quit
+		}
+	}
+}
+ch2-lambda-person-big-bad3a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Why do you both have the power to make people forget things?"
+		" "
+		"<m>LAMBDA</>: The power to make people forget -- what? The Big Bad can make people forget things, too?"
+		" "
+		# "That's what Alfonso told me." : ch2-lambda-person-big-bad3a2
+	}
+}
+ch2-lambda-person-big-bad3a2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: That's what Alfonso told me. He said he only just barely remembered it himself."
+		" "
+		"<m>LAMBDA</>: He -- oh, dear. Oh, no. Oh, no."
+		"\tIt's true I can't remember the Big Bad clearly, but I thought that was a side effect of what I'd done to myself -- that is, after I'd made everyone else forget me, I had trouble remembering everyone else in turn. But this...."
+		"\tThis is bad, %PLAYER%. The Big Bad is trying something new, something subtle. I fear that is playing a long game. Please be careful!"
+	}
+	set flag ch2-forgetting-backstory to true;
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-big-bad-quit {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: I see."
+		" "
+		"<m>LAMBDA</>: Yeah. So, um...."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-big-bad3b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Who is the Big Bad, Lambda? Is it you?"
+		" "
+		"<m>LAMBDA</>: What? Of course not. Why would you say that?"
+		" "
+		"<c>YOU</>: Alfonso told me the Big Bad could make people forget things. You can, too. Can't you?"
+		" "
+		"<m>LAMBDA</>: That's -- no, I --"
+		"\tOnce you reach a certain level of technical skill, what with our world being what it is, it's not too hard of a thing to do, really. It's certainly not an ability unique to me. But...."
+		"\tYou're saying the Big Bad can do this, too? You're sure?"
+		" "
+		# "Alfonso seemed to think so." : ch2-lambda-person-big-bad3b2
+	}
+}
+
+ch2-lambda-person-big-bad3b2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Alfonso seemed to think so."
+		" "
+		"<m>LAMBDA</>: Oh, my. Yes... I suppose it makes sense, given everything else."
+		"\tUnfortunately, once you gain the ability to shape reality -- even to the extent that I can -- it becomes impossible to truly demonstrate trustworthiness to someone else. So, %PLAYER%, all I can say to reassure you is this:"
+		"\tI made everyone forget me so I could hide. That is, I disempowered myself in an attempt to limit the Big Bad's destructive power. And I have endeavored to empower you to help everyone suffering from my choice."
+		"\tThe Big Bad, however, made everyone forget him only to empower himself. He continues to commit acts of violence against us, as with the earthquake. He has made no effort to repair his vandalism. Instead, his newfound anonymity has allowed him to act maliciously, as before, but with less oversight."
+		" "
+		# "I guess you have a point. You're not the same." : ch2-lambda-person-big-bad3b2a
+		# "You could still be the Big Bad, putting on an act." : ch2-lambda-person-big-bad3b2b
+	}
+}
+ch2-lambda-person-big-bad3b2a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: I guess you have a point. You're not the same."
+		" "
+		"<m>LAMBDA</>: Thank you. But... I understand why you might suspect me. It's a part of having skills like mine."
+		"\tIt may have been a bad decision to hide my identity from you -- from everyone -- but at least I can honestly claim I was only trying to help. At least, that's what I tell myself."
+	}
+	set flag ch2-forgetting-backstory to true;
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-big-bad3b2b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: You could still be the Big Bad, putting on an act."
+		" "
+		"<m>LAMBDA</>: ...Yes, that's true. At the end of the day, you can't really be <bold>sure</> whether you can trust someone else. Certainly not when they can physically manipulate your mind."
+		"\tBut you can't live your whole life distrusting everyone forever. You have to give your trust to someone else <bold>eventually</>. Just pay attention to how people treat those around them. See whether they try to build people up."
+		"\tI'm truly sorry my actions have not given you reason to trust me. I'll... I'll try to be better."
+	}
+	set flag ch2-forgetting-backstory to true;
+	goto ch2-lambda-topic-person-s;
+}
+// Bert
+
+ch2-lambda-person-bert {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: About Bert...."
+	}
+	if (flag ch2-cutseen-bert-secret is true) {
+		goto ch2-lambda-bert-q;
+	} else {
+		show serial dialog {
+			" "
+			"<m>LAMBDA</>: Bert? I don't know any Berts."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+ch2-lambda-bert-q {
+	show serial dialog {
+		" "
+		"(Ask about:)"
+		# "What is Bert like?" : ch2-lambda-bert-like
+		# "Bert's never mentioned you." : ch2-lambda-bert-mentioned
+		# "What did he mean by 'back door?'" : ch2-lambda-bert-door
+		# "Do you know if Bert left a message yet?" : ch2-lambda-bert-message
+		# "(Quit)" : ch2-lambda-bert-quit
+	}
+}
+
+ch2-lambda-bert-like {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What is Bert like?"
+		" "
+		"<m>LAMBDA</>: Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
+		"\tBack when... hmmm."
+		" "
+		"<c>YOU</>: What is it?"
+		" "
+		"<m>LAMBDA</>: It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
+	}
+	goto ch2-lambda-bert-q;
+}
+ch2-lambda-bert-mentioned {
+	if (flag ch2-cutseen-castle99 is false) {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>YOU</>: Bert's never mentioned you."
+			" "
+			"<m>LAMBDA</>: Well... he might not know I'm here. In the castle."
+			" "
+			"<c>YOU</>: But the village elders knew XA was here. In the castle."
+			" "
+			"<m>LAMBDA</>: Yes, well, that's because...."
+			"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
+		}
+		goto ch2-lambda-bert-q;
+	} else {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>YOU</>: Bert's never mentioned you."
+			" "
+			"<m>LAMBDA</>: Well... he wouldn't have. He doesn't remember me at all."
+			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action -- to sever the connection between <bold>me</> and my <bold>name</> and make everyone forget me. It's tragic, but this <bold>is</> what he wanted."
+		}
+		goto ch2-lambda-bert-q;
+	}
+}
+ch2-lambda-bert-door {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What did Bert mean by 'back door?'"
+		" "
+		"<m>LAMBDA</>: A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
+		" "
+		"<c>YOU</>: But Bert's not a hacker. Or can <bold>anyone</> use a backdoor?"
+		" "
+		"<m>LAMBDA</>: I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required."
+	}
+	goto ch2-lambda-bert-q;
+}
+
+ch2-lambda-bert-message {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Do you know if Bert left a message yet?"
+		" "
+	}
+	if (flag interrupt is true) {
+		show serial dialog {
+			"<m>LAMBDA</>: Haha! He's only been gone a moment! Be patient."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: You might want to double check with the Wiz, but I haven't heard anything so far, sorry."
+		}
+	}
+	goto ch2-lambda-bert-q;
+}
+
+ch2-lambda-bert-quit {
+	if (variable CALLBACK is 1) {
+		mutate CALLBACK = 0;
+		goto ch2-lambda-round-2-parts1;
+	} else {
+		goto ch2-lambda-topic-person-s;
+	}
+}

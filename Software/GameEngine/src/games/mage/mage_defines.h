@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 3
+#define ENGINE_VERSION 12
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
@@ -126,10 +126,8 @@ typedef enum : uint8_t {
 	currentAnimation = 25,
 	currentFrame = 26,
 	direction = 27,
-	hackableStateA = 28,
-	hackableStateB = 29,
-	hackableStateC = 30,
-	hackableStateD = 31
+	pathId = 28,
+	onLookScriptId = 30
 } MageEntityField;
 
 //this contains the possible options for an entity PrimaryIdType value.
@@ -152,6 +150,7 @@ typedef enum : uint8_t{
 #define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
 #define RENDER_FLAGS_IS_GLITCHED			0b10000000
 #define RENDER_FLAGS_IS_DEBUG				0b01000000
+#define RENDER_FLAGS_RELATIVE_DIRECTION		0b00110000
 #define RENDER_FLAGS_FLIP_X					0b00000100
 #define RENDER_FLAGS_FLIP_Y					0b00000010
 #define RENDER_FLAGS_FLIP_DIAG				0b00000001
@@ -162,6 +161,7 @@ typedef enum : uint8_t{
 typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
 	bool scriptIsRunning;
+	bool scriptIsPaused;
 	bool isGlobalExecutionScope;
 	//the script Id to resume, scope determined by isGlobalExecutionScope
 	// - if false, should be treated as mapLocalScriptId
@@ -199,10 +199,8 @@ typedef struct {
 	uint8_t currentAnimation;
 	uint8_t currentFrame;
 	MageEntityAnimationDirection direction;
-	uint8_t hackableStateA;
-	uint8_t hackableStateB;
-	uint8_t hackableStateC;
-	uint8_t hackableStateD;
+	uint16_t pathId;
+	uint16_t onLookScriptId;
 } MageEntity;
 
 typedef struct MageSaveGame {

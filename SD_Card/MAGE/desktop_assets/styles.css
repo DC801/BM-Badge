@@ -28,7 +28,7 @@ body {
 }
 body.game_body {
 	font-size: 16px;
-	padding: 16px;
+	padding: 16px 16px 0 16px;
 }
 
 a {
@@ -46,20 +46,32 @@ body.game_body .container {
 	display: inline-block;
 	border: 1px solid #333;
 }
-body.game_body .container * + * {
-	padding-top: 8px;
+.box,
+p {
+	padding-bottom: 8px;
+}
+.inline-block {
+	display: inline-block;
+	vertical-align: top;
 }
 
 #input,
 #output {
 	box-sizing: border-box;
-	color: #9f0;
+	color: #ccc;
 	padding: 8px;
 	width: 100%;
 	height: 364px;
 	white-space: pre-wrap;
 	display: block;
 	overflow-y: scroll;
+	transition-property: all;
+	transition-duration: 500ms;
+	line-height: 14px;
+}
+#output.flash {
+	transition-duration: 0ms;
+	background-color: #666;
 }
 #input {
 	border-top: 1px solid #333;
@@ -91,4 +103,30 @@ body.game_body .container * + * {
 }
 #output .stderr {
 	color: #f00;
+}
+
+button {
+	padding: 0 4px;
+	background-color: #333;
+	border-radius: 4px;
+	border: 1px solid #666;
+	color: #9f0;
+	transition-property: all;
+	transition-duration: 0.25s;
+}
+button:hover {
+	background-color: #666;
+	border: 1px solid #999;
+}
+button:active {
+	border: 1px solid #9f0;
+	color: #ff0;
+}
+
+/* why is their "yellow" so bad I gotta fix it */
+*[style="background-color:#A50"] {
+	background-color: #bbbb00 !important;
+}
+*[style="color:#A50"] {
+	color: #bbbb00 !important;
 }

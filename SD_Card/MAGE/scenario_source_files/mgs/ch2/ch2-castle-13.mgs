@@ -1,0 +1,658 @@
+include!("header.mgs")
+
+settings for dialog {
+	label Aurelius {
+		entity Aurelius // if this doesn't work, change this to `name` instead of `entity`
+		portrait goldfish
+	}
+	label GIBSON {
+		entity "King Gibson"
+	}
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-13 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>CASTLE THRONE ROOM</>."
+		"\tTODO"
+		" "
+	}
+}
+
+look-ch2-sebastian {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tYou're not sure whether his glowing green eyes are evidence of powerful magic or whether this is typical for his species. You keep your distance, determined not to learn firsthand."
+		"\tThe lizard wizard is frowning at you -- you think."
+	}
+}
+
+look-ch2-templeton {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tYou're not sure what aspect of his gelatinous body might be his face -- if he even has one. His jiggling seems more born from nervousness than aggression, at least."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-13 {
+	// ch2 room state
+	mutate ch2-in-room = 13;
+
+	// entrance text
+	show serial dialog spacer;
+	if (flag ch2-seen-room-13 is false) {
+		show serial dialog { "Discovered <bold><c>CASTLE THRONE ROOM</>! Room added to map!" }
+		set flag ch2-seen-room-13 to true;
+	} else {
+		show serial dialog { "Entering <bold>CASTLE THRONE ROOM</>..." }
+	}
+
+	// room unique stuff
+
+	if (warp state is "Ch2 King Returns") {
+		set entity door on_tick to yeet;
+		teleport camera to geometry camera-spot2;
+		// TODO more
+	} else if (flag ch2-king-rescued is true) {
+		set entity door on_tick to yeet;
+		teleport entity "King Gibson" to geometry king-examine1;
+		teleport entity Sebastian to geometry end-sebastian;
+		teleport entity Templeton to geometry end-templeton1;
+		teleport entity Aurelius to geometry end-fish;
+		set entity Templeton on_tick to templeton-catalog-search;
+		set entity "King Gibson" on_tick to king-debris-ponder;
+	} else {
+		set entity "King Gibson" on_tick to yeet;
+	}
+
+	if (
+		flag ch2-installed-goldfish is true
+		|| flag ch2-carrying-goldfish is true
+	) {
+		set entity Aurelius on_tick to yeet;
+	}
+
+	copy ch2-map-init;
+	
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle13 is false) {
+		copy ch2-cutscene-castle12;
+	} else if (warp state is "Ch2 King Returns") {
+		copy ch2-cutscene-kingreturns;
+	}
+}
+
+ch2-skip-13 {
+	set flag ch2-cutseen-castle13 to true;
+	load map ch2-castle-13;
+}
+
+ch2-templeton-pace {
+	walk entity "%SELF%" to geometry templeton1 over 400ms;
+	walk entity "%SELF%" to geometry templeton2 over 400ms;
+	if (flag ch2-templeton-pace is false) {
+		goto null_script;
+	}
+}
+ch2-sebastian-paceonce {
+	walk entity "%SELF%" to geometry lizard1 over 600ms;
+	walk entity "%SELF%" to geometry lizard2 over 600ms;
+	goto null_script;
+}
+ch2-sebastian-stomp {
+	play entity Sebastian animation 2 once; // magical slam on the ground
+	goto null_script;
+}
+ch2-lizard-lurch {
+	walk entity "%SELF%" to geometry lizard-lurch over 300ms;
+	goto null_script;
+}
+ch2-sebastian-approach {
+	wait 800;
+	walk entity Sebastian to geometry lizard-walk over 800ms;
+	walk entity Sebastian along geometry lizard-walk over 600ms;
+	goto null_script;
+}
+ch2-mage-approach {
+	walk entity "%PLAYER%" along geometry mage-walk over 2500ms;
+	goto null_script;
+}
+ch2-lizard-withdraw {
+	walk entity Sebastian to geometry lizard-walk over 800ms;
+	goto null_script;
+}
+const!($fadeTime = 600ms)
+ch2-cutscene-castle12 {
+	if (debug mode is on) {
+		register skip -> ch2-skip-13
+		debug!("<c>SKIP</>: skip this cutscene")
+	}
+	turn player control off;
+	wait 300ms;
+	// some kind of arguing
+	show dialog {
+		Sebastian "...and I say we forget him!"
+	}
+	turn entity "%PLAYER%" north;
+	show dialog {
+		PLAYER "...?"
+	}
+	fade out camera to black over $fadeTime;
+	teleport camera to geometry camera-spot;
+	teleport entity "%PLAYER%" to geometry mage-walk;
+	fade in camera from black over $fadeTime;
+	set entity Templeton on_tick to spin_self_clockwise;
+	show dialog {
+		Templeton "Oh... oh dear."
+	}
+	set entity Sebastian on_tick to ch2-sebastian-paceonce;
+	show dialog {
+		Sebastian "How many hours has it been? It's clear to me he's not coming back."
+		"As usual, he's left us to clean up his messes for him."
+		Templeton "But what if he's injured? He could be stuck in there, bleeding out. Maybe he can't reach the intercom. Maybe he's waiting for us to --"
+		Sebastian "He won't be \"bleeding out\" after a tiny shake like that."
+	}
+	set flag ch2-templeton-pace to true;
+	set entity Templeton on_tick to ch2-templeton-pace;
+	show dialog {
+		Templeton "But what if a piece of debris hit him on the head, and --"
+		Sebastian "He has the constitution of an ox!"
+	}
+	set flag ch2-templeton-pace to false;
+	turn entity Templeton east;
+	show dialog {
+		Templeton "...Actually, he's a gnu."
+	}
+	set entity Sebastian on_tick to ch2-sebastian-stomp;
+	wait 200ms;
+	show dialog {
+		Sebastian "Enough!"
+		"Clearly he's abandoned us. Thus, we must take action now, before anything worse happens."
+	}
+	walk entity Sebastian to geometry lizard1 over 400ms;
+	show dialog {
+		Sebastian "We must take administrative control of the castle. We must --"
+		Aurelius "Sebastian, wait. Someone is here."
+	}
+	turn entity Templeton south;
+	show dialog {
+		Templeton "!!"
+	}
+	fade out camera to black over $fadeTime;
+	make camera follow entity "%PLAYER%";
+	set entity "%PLAYER%" on_tick to ch2-mage-approach;
+	fade in camera from black over $fadeTime;
+	set entity Sebastian on_tick to ch2-sebastian-approach;
+	wait 2600ms;
+	show dialog {
+		PLAYER "Sorry. I didn't mean to interrupt anything."
+		Sebastian "And who do you think you are?"
+		Templeton "Oh! How did you get in? Does this mean the door's been unblocked?"
+		PLAYER "No, the doors are still broken. But I have this portable terminal, and --"
+	}
+	set entity Sebastian on_tick to ch2-lizard-lurch;
+	wait 150ms;
+	set entity "%PLAYER%" relative_direction to 2;
+	walk entity "%PLAYER%" to geometry mage-backup over 200ms;
+	set entity "%PLAYER%" relative_direction to 0;
+	turn entity "%PLAYER%" east;
+	show dialog {
+		Sebastian "You have the artifact?"
+		"Give that to me. That belongs to --"
+		Aurelius "Stop, %Sebastian%. It does not belong to you. Nor to any of us."
+	}
+	turn entity "%PLAYER%" north;
+	show dialog {
+		Templeton "It belongs to the king!"
+	}
+	set entity Sebastian on_tick to ch2-lizard-withdraw;
+	turn entity "%PLAYER%" east;
+	show dialog {
+		Sebastian "But the king isn't here, is he? It's up to US --"
+	}
+	turn entity "%PLAYER%" north;
+	show dialog {
+		Aurelius "It is up to me, if it is up to anyone. I am regent."
+		"You, stranger. What is your name?"
+		PLAYER "It's %PLAYER%."
+		Aurelius "How is the rest of the castle?"
+	}
+	if (
+		flag ch2-seen-room-21 is false
+		|| flag ch2-seen-room-22 is false
+		|| flag ch2-seen-room-23 is false
+		|| flag ch2-seen-room-31 is false
+		|| flag ch2-seen-room-32 is false
+		|| flag ch2-seen-room-33 is false
+		|| flag ch2-seen-room-34 is false
+		|| flag ch2-seen-room-11 is false
+		|| flag ch2-seen-room-12 is false
+	) {
+		show dialog {
+			PLAYER "Um, the rooms are in bad shape, but everyone seems okay. The people I've met so far, anyway."
+		}
+	} else {
+		show dialog {
+			PLAYER "Um, the rooms are in bad shape, but I can report that everyone is okay."
+		}
+	}
+	show dialog {
+		Aurelius "Very good. And that device -- I was under the impression it was inoperative."
+		PLAYER "Mostly. I'm trying to fix the castle mainframe, which should get it working a lot better."
+		Aurelius "Then I'll let you have at it. But first, if I might ask something of you, %PLAYER%...."
+		"We have not seen or heard from King Gibson since last night. You see, prior to that, there was --"
+		Templeton "We all had an argument."
+		Sebastian "Balderdash. He was overreacting, and I only --"
+		Aurelius "Nevertheless, I fear he is trapped in his bedroom, just to the north of us. He's not answering the intercom."
+		Templeton "He could be hurt!"
+		Sebastian "Bah! He's ignoring us. He could've answered us if he wanted to talk to us. Or he'd've unlocked the door and come out."
+		Aurelius "If you would be so kind as to check up on him, please?"
+		PLAYER "Sure."
+	}
+	set flag ch2-cutseen-castle13 to true;
+	turn player control on;
+}
+
+walk-over-1500 {
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 1500ms;
+	goto null_script;
+}
+ch2-cutscene-kingreturns {
+	fade out camera to black over 1ms;
+	turn player control off;
+	turn entity "%PLAYER%" toward entity "King Gibson";
+	turn entity Templeton toward entity "King Gibson";
+	turn entity Sebastian toward entity "King Gibson";
+	set entity "King Gibson" on_tick to walk-over-1500;
+	wait 200ms;
+	set entity "%PLAYER%" on_tick to walk-over-1500;
+	fade in camera from black over 600ms;
+	turn entity Templeton toward entity "King Gibson";
+	show dialog { Templeton "Your majesty!" }
+	turn entity Sebastian toward entity "King Gibson";
+	show dialog { Sebastian "!!" }
+	show dialog {
+		Aurelius "You are well!"
+	}
+	turn entity "King Gibson" toward entity Aurelius;
+	show dialog {
+		GIBSON "Of course. You see, the intercom and doorlocks were broken, and the door failed shut."
+		"I regret...."
+	}
+	rotate entity "King Gibson" 1;
+	show dialog {
+		GIBSON emote 3 "I regret the things I said yesterday. And... I regret I assumed you had locked me in there. I should have trusted you better."
+		Templeton "Oh, your majesty! I'm just glad you --"
+	}
+	turn entity "King Gibson" toward entity Sebastian;
+	// King perks up
+	show dialog {
+		Sebastian "Never mind any of that! This is an emergency!"
+		"Can we finally begin some damn rescue operations, or do we need to form a committee to draft a proposal and bring it to the populace to a vote?"
+		GIBSON "What have you tried so far?"
+	}
+	turn entity "King Gibson" toward entity Aurelius;
+	show dialog {
+		Aurelius "Neither Templeton nor I have the leverage to lift the debris. And Sebastian's telekinesis spell doesn't have enough power on its own."
+	}
+	turn entity "King Gibson" toward entity Sebastian;
+	show dialog {
+		Sebastian "I won't burn out my mana trying over and over again. It's obvious it won't work."
+	}
+	turn entity "King Gibson" south;
+	show dialog {
+		GIBSON "Well, maybe I can shift it."
+	}
+	fade out camera to black over $fadeTime; // cheaty :P
+	teleport entity "%PLAYER%" to geometry end-player;
+	teleport entity "King Gibson" to geometry end-king;
+	teleport entity Sebastian to geometry end-sebastian;
+	teleport entity Templeton to geometry end-templeton;
+	teleport entity Aurelius to geometry end-fish;
+	turn entity "%PLAYER%" toward entity "King Gibson";
+	teleport camera to geometry camera-spot3;
+	fade in camera from black over $fadeTime;
+	show dialog {
+		GIBSON "I can bench press three hundred pounds. I might be able to move this."
+		Sebastian "At the speed my mana was draining, it's heavier than that. You'll wear yourself out for no reason."
+		"But at least we're focused on the real problem now. Finally!"
+		Templeton "This debris wasn't going anywhere, and the king might have been bleeding to death!"
+		Aurelius "What's done is done. Focus."
+		"Neither the king nor Sebastian can move the debris alone, but what about together?"
+		Templeton "Oh, yes! But what if you lighten the load with telekinesis, Sebastian?"
+		Sebastian "Perhaps, but...."
+	}
+	walk entity Sebastian to geometry end-sebastian2 over 400ms;
+	show dialog {
+		Sebastian "You there, stranger. The rest of the castle is damaged?"
+		PLAYER "Yes. Most doors are crumpled exactly like this."
+	}
+	// todo: he turns to the side
+	show dialog {
+		Sebastian "Then I must pace myself. The mana required is the square of the weight being manipulated.... Ah, but if I don't have to introduce lateral motion myself --"
+		Aurelius "Yes, a gravitation spell."
+	}
+	walk entity Sebastian to geometry end-sebastian over 400ms;
+	show dialog {
+		Sebastian "That's much cheaper. But... blast, I need to check a few numbers in my physics spellbook. Templeton, please tell me you've eaten a copy?"
+	}
+	walk entity Templeton to geometry end-templeton1 over 200ms;
+	show dialog {
+		Templeton "I-I think so. Let me check. I've got it filed in here somewhere."
+	}
+	set entity Templeton on_tick to templeton-catalog-search;
+	show dialog {
+		GIBSON "Now we're getting somewhere."
+	}
+	set entity "King Gibson" on_tick to king-walk-to-debris;
+	show dialog {
+		GIBSON "I can at least see if there are any pieces of this I can extract on my own."
+		Aurelius "%PLAYER%, we're making sufficient progress here. Don't let us keep you."
+		"Once the mainframe is repaired, we can use sysadmin tools to clear all the debris at once."
+		PLAYER "Right, of course."
+	}
+	copy interrupt-king-walk;
+	turn entity "King Gibson" toward entity "%PLAYER%";
+	show dialog {
+		GIBSON "Good luck. And thank you. Truly."
+	}
+	copy resume-king-walk;
+	set warp state to "nothing lol";
+	set flag ch2-king-rescued to true;
+	pan camera to entity "%PLAYER%" over 700ms;
+	turn player control on;
+}
+king-walk-to-debris {
+	walk entity "%SELF%" to geometry king-examine1 over 1200ms;
+	goto king-debris-ponder;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-13 {
+	if (flag ch2-king-rescued is true) {
+		if (entity "%PLAYER%" is inside geometry north-hitbox) {
+			set warp state to walk_from-south;
+			copy ch2-load-castle-14-special;
+		}
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-13 { // sanitize ch2 room state
+	mutate ch2-in-room = 0;
+}
+
+// SERIAL: go
+
+on_go-castle-13-north {
+	copy on_exit-ch2-castle-13;
+	copy warping-out-fade-out;
+	copy ch2-load-castle-14-special;
+}
+on_go-castle-13-south {
+	copy on_exit-ch2-castle-13;
+	copy warping-out-fade-out;
+	load map ch2-castle-12;
+}
+
+/* ---------- GOLDFISH (ADMIN) ---------- */
+
+
+ch2-touch-goldfish {
+	// TODO add "king rescued" prerequisite to picking up goldfish etc
+	if (flag ch2-cutseen-castle14 is false) {
+		show dialog { // don't use "self"; "Aurelius" is a label!
+			Aurelius "Do please check on King Gibson, would you? He's in his bedroom, just to the north of us."
+		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				Aurelius "Godspeed."
+			}
+		}
+		set flag ch2-king-report to true;
+	} else {
+		show dialog {
+			Aurelius "Once the mainframe is repaired, we can use sysadmin tools to clear all the debris at once. Don't let us keep you."
+		}
+		if (variable ch2-storyflag-round is >= 3) {
+			show dialog {
+				PLAYER "Actually, I could use your help to fix it."
+				Aurelius "Of course. Anything."
+				PLAYER "I sort of need to borrow... you."
+				"We're short a CPU. And I need a volunteer to act as the \"thinking\" part --"
+			}
+			copy interrupt-king-walk;
+			copy interrupt-templeton-walk;
+			set entity "King Gibson" current_animation to 2;
+			show dialog {
+				GIBSON emote 1 "What's this? What are you talking about?"
+			}
+			set entity "King Gibson" current_animation to 0;
+			show dialog {
+				PLAYER "It'd be temporary. After the mainframe is fixed, we can order a real CPU, and we can put you back to normal when it arrives. But for this short little while --"
+				Aurelius "I'll do it."
+				Templeton "%Aurelius%!"
+				Aurelius "The king has returned, so I'm of little use now."
+				GIBSON "Don't say that."
+				Aurelius "This is an emergency, and I can offer no physical assistance. You've valued me for my mind, haven't you? I've been your advisor. Ambassador."
+				GIBSON "And friend!"
+				Aurelius "It's only temporary. And it sounds like an interesting adventure. A new perspective... a novel experience. Wouldn't you say?"
+				Sebastian "And what if it's not temporary? This doesn't sound safe!"
+				Aurelius "I've read a monograph on this very subject. It's safe."
+				GIBSON emote 3 "...."
+				"If this is really what you want, I won't stop you."
+				Aurelius "It will empower the rest of you."
+				GIBSON "Very well. We'll continue to do our best here."
+			}
+			teleport entity Aurelius to geometry hiding-spot; // doing yeet now aborts the script early!
+			copy ch2-pickup-goldfish;
+			show dialog {
+				name "" "(You acquired a goldfish!)"
+				GIBSON "I'm counting on you both. Good luck."
+			}
+			copy resume-king-walk;
+			copy resume-templeton-walk;
+			set entity Aurelius on_tick to yeet;
+		}
+	}
+}
+
+/* ---------- ENTITIES ---------- */
+
+ch2-king-unharmed {
+	if (flag ch2-king-report is false) {
+		show dialog {
+			PLAYER "The king is okay, but he's trapped in there. Both the intercom and the keypad lock to his door seem to be broken."
+		}
+		turn entity "%PLAYER%" toward entity Templeton;
+		show dialog {
+			Templeton "Oh, thank goodness! He's all right!"
+		}
+		turn entity "%PLAYER%" toward entity Aurelius;
+		show dialog {
+			Aurelius "I see. Thank you."
+		}
+	}
+	show dialog {
+		PLAYER "I'll get the king out of there. Don't worry."
+	}
+}
+
+interact-ch2-sebastian {
+	copy face-player;
+	if (flag ch2-cutseen-castle14 is false) {
+		show dialog {
+			SELF "Mark my words: he's ignoring us. He's all but abdicated."
+		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				SELF "Forget the king. He's on his own."
+			}
+		}
+		set flag ch2-king-report to true;
+	} else {
+		show dialog {
+			SELF "%Templeton%, I promise not to yell at you for eating my spellbooks again if you can produce the right page in the next five minutes."
+		}
+		set entity Templeton on_tick to null_script;
+		turn entity Templeton toward entity Sebastian;
+		// pauses fussing
+		show dialog {
+			Templeton "Darn it, you made me forget the filing number! Now I'll have to go through the card catalog all over again!"
+		}
+		set entity Templeton on_tick to templeton-catalog-search;
+	}
+}
+
+interact-ch2-templeton {
+	copy face-player;
+	if (flag ch2-cutseen-castle14 is false) {
+		show dialog {
+			SELF "I know King Gibson doesn't always get along with us, but this silence is unlike him. I'm worried."
+		}
+	} else if (flag ch2-king-rescued is false) {
+		copy ch2-king-unharmed;
+		if (flag ch2-king-report is true) {
+			show dialog {
+				SELF "Oh, goodness! Thank you, thank you!"
+			}
+		}
+		set flag ch2-king-report to true;
+	} else {
+		copy interrupt-walk;
+		show dialog {
+			SELF "Thank you for rescuing the king. We were all very worried about him."
+			Sebastian "%Templeton%... please don't forget that you're trying to find my physics spellbook. The gravitation spell, please?"
+		}
+		copy resume-walk;
+		show dialog {
+			SELF "Yes, yes, of course."
+		}
+	}
+}
+
+interrupt-king-walk {
+	// todo: functions plz :/
+	copy entity "King Gibson" current_animation into variable captured_animation2;
+	set entity "King Gibson" current_animation to 0;
+	pause entity "King Gibson" on_tick;
+	if (entity "King Gibson" direction is north) {
+		mutate tempvar2 = 0;
+	} else if (entity "King Gibson" direction is east) {
+		mutate tempvar2 = 1;
+	} else if (entity "King Gibson" direction is south) {
+		mutate tempvar2 = 2;
+	} else if (entity "King Gibson" direction is west) {
+		mutate tempvar2 = 3;
+	}
+	turn entity "King Gibson" toward entity "%PLAYER%";
+}
+resume-king-walk {
+	copy entity "King Gibson" current_animation from variable captured_animation2;
+	unpause entity "King Gibson" on_tick;
+	if (variable tempvar2 is 0) {
+		turn entity "King Gibson" north;
+	} else if (variable tempvar2 is 1) {
+		turn entity "King Gibson" east;
+	} else if (variable tempvar2 is 2) {
+		turn entity "King Gibson" south;
+	} else if (variable tempvar2 is 3) {
+		turn entity "King Gibson" west;
+	}
+}
+interrupt-templeton-walk {
+	// todo: functions plz :/
+	copy entity Templeton current_animation into variable captured_animation3;
+	set entity Templeton current_animation to 0;
+	pause entity Templeton on_tick;
+	if (entity Templeton direction is north) {
+		mutate tempvar3 = 0;
+	} else if (entity Templeton direction is east) {
+		mutate tempvar3 = 1;
+	} else if (entity Templeton direction is south) {
+		mutate tempvar3 = 2;
+	} else if (entity Templeton direction is west) {
+		mutate tempvar3 = 3;
+	}
+	turn entity Templeton toward entity "%PLAYER%";
+}
+resume-templeton-walk {
+	copy entity Templeton current_animation from variable captured_animation3;
+	unpause entity Templeton on_tick;
+	if (variable tempvar3 is 0) {
+		turn entity Templeton north;
+	} else if (variable tempvar3 is 1) {
+		turn entity Templeton east;
+	} else if (variable tempvar3 is 2) {
+		turn entity Templeton south;
+	} else if (variable tempvar3 is 3) {
+		turn entity Templeton west;
+	}
+}
+templeton-catalog-search {
+	copy tick-rand-mini; // from bob's club basement
+	walk entity Templeton to geometry end-templeton2 over 200ms;
+	copy tick-rand-mini; // from bob's club basement
+	walk entity Templeton to geometry end-templeton1 over 200ms;
+	copy tick-rand-mini; // from bob's club basement
+}
+king-debris-ponder {
+	copy tick-rand-mini; // from bob's club basement
+	walk entity "%SELF%" to geometry king-examine2 over 700ms;
+	turn entity "%SELF%" south;
+	copy tick-rand-broad; // from bob's club basement
+	wait 400ms;
+	walk entity "%SELF%" to geometry king-examine1 over 700ms;
+	turn entity "%SELF%" south;
+	copy tick-rand-broad; // from bob's club basement
+}
+
+interact-ch2-gibson-throneroom {
+	copy interrupt-walk;
+	if (variable ch2-storyflag-round is < 3) {
+		show dialog {
+			GIBSON "My staff and I are reunited, thanks to you."
+			"I am in your debt."
+		}
+	} else if (flag ch2-clock-permission is false) {
+		show dialog {
+			PLAYER "So, your majesty, about the clock in your bedroom...."
+			GIBSON "What? What's this about my heirloom grandfather clock?"
+			PLAYER "I sort of want to borrow it to --"
+			GIBSON "Fine then. Have it, if you want it."
+			PLAYER "Really? Just like that?"
+			GIBSON "It's just an object. A thing. Replaceable."
+			"You reunited me with my advisors. My friends. That's worth far more to me than a piece of furniture."
+			"Take it, if you feel you can make good use of it."
+			PLAYER "Thank you very much!"
+		}
+		set flag ch2-clock-permission to true;
+	} else {
+		if (
+			flag ch2-installed-goldfish is true
+			|| flag ch2-carrying-goldfish is true
+		) {
+			show dialog {
+				GIBSON "Take good care of Aurelius for me."
+				PLAYER "I will."
+			}
+		} else {
+			show dialog {
+				GIBSON "My staff and I are reunited. You have my thanks."
+			}
+		}
+	}
+	copy resume-walk;
+}

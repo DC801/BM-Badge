@@ -18,26 +18,6 @@ var handleEntityTypesData = function (
 
 var defaultEntityTypeProperties = [
 	{
-		"name": "hackable_state_a",
-		"type": "int",
-		"value": 0
-	},
-	{
-		"name": "hackable_state_b",
-		"type": "int",
-		"value": 0
-	},
-	{
-		"name": "hackable_state_c",
-		"type": "int",
-		"value": 0
-	},
-	{
-		"name": "hackable_state_d",
-		"type": "int",
-		"value": 0
-	},
-	{
 		"name": "is_glitched",
 		"type": "bool",
 		"value": false
@@ -94,7 +74,7 @@ var handleObjectTypesData = function (
 				fileNameMap,
 				scenarioData,
 			)
-				.then(function () {
+				.then(function handleLoadedObjectTileset () {
 					entityType.serialized = serializeEntityType(
 						entityTypePlusProperties,
 						fileNameMap,

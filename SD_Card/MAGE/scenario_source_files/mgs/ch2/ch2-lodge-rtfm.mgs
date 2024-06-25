@@ -1,0 +1,168 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-lodge-rtfm {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around at the <c>RTFM ROOM</>."
+		"\tThe books in this room seem older than those in the rest of the library. More leather bindings, more handwritten pages. The air is mustier, but it's not unpleasant."
+		" "
+	}
+}
+
+look-ch2-hackbook {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look town_history (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-bitsbytes {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look bits_&_bytes (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-entities1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look entities_1 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-entities2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look entities_1 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-entities3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look entities_3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-entities4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look entities_4 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-hexediting {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look hex_edits_1 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-hexediting2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look hex_edits_2 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-redletters {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look red_letters (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-bookorigins {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look book_origins (remember to add 'the' for objects)"
+	}
+}
+
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-lodge-rtfm {
+	// do unique stuff first (but turn serial / player control off first, if you do)
+	
+	// Village elders hiding
+	if (variable ch2-storyflag-round is not 1) {
+		set entity Bert on_tick to yeet;
+	}
+	if (variable ch2-storyflag-round is not 3) {
+		set entity Jackob on_tick to yeet;
+		set entity Alfonso on_tick to yeet;
+	}
+	// unique stuff done
+	copy ch2-map-init;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-lodge-rtfm {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-north;
+		load map ch2-lodge;
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-lodge-rtfm-south {
+	copy warping-out-fade-out;
+	load map ch2-lodge;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-alfonso-rtfm {
+	// divert people trying to hack their way to see this convo early
+	if variable ch2-storyflag-round is not 3
+		then goto null_script;
+	copy face-player;
+	show dialog {
+		SELF
+		"Bert said he was going to check something, but whatever he's doing, he's sure is taking his time."
+		"I confess I'm getting worried, %PLAYER%. Something isn't right about all of this."
+	}
+	turn entity "%SELF%" west;
+}
+interact-ch2-jackob-rtfm {
+	// divert people trying to hack their way to see this convo early
+	if variable ch2-storyflag-round is not 3
+		then goto null_script;
+	copy face-player;
+	show dialog {
+		SELF
+		"We're doing just fine here, %PLAYER%, but don't you dawdle too long. Time is slipping away from us."
+		"There's so little we can do to help you right now, yet all I feel is this increasing urgency, like a vise tightening around my chest."
+		"Doom is coming, and only you can head it off. Please hurry."
+	}
+	turn entity "%SELF%" south;
+}
+interact-ch2-bert-rtfm {
+	// divert people trying to hack their way to see this convo early
+	if variable ch2-storyflag-round is not 1
+		then goto null_script;
+	copy face-player;
+	show dialog {
+		SELF
+		"This morning we could not find the book you need, but I want to find it still."
+		"Still I am looking. I will bring it if I find it."
+	}
+	turn entity "%SELF%" north;
+}
+

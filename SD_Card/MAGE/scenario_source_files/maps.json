@@ -1,34 +1,153 @@
 {
-	"xa-room": {
-		"path": "maps/map-mtn-xa_room.json",
-		"on_load": "on_load-mtn-xa_room",
-		"on_look": "on_look-mtn-xa_room",
-		"on_tick": "on_tick-mtn-xa_room",
+	"main_menu": {
+		"path": "maps/map-ch2-menu.json",
+		"on_load": "on_load-main_menu",
+		"on_tick": "on_tick-main_menu",
+		"disable_warn-on_look": true
+	},
+	"ch2-castle-outside": {
+		"path": "maps/map-ch2-castle-outside.json",
+		"on_load": "on_load-ch2-castle-outside",
+		"on_look": "look-ch2-castle-outside",
+		"on_tick": "on_tick-ch2-castle-outside",
 		"directions": {
-			"castle-door": "on_go-mtn-xa_room-to-castle_entrance-check"
+			"north": "on_go-castle-outside-north",
+			"east": "on_go-castle-outside-east"
 		}
 	},
-	"main_menu": "maps/map-main_menu.json",
-	"castle-door": {
-		"path": "maps/map-mtn-castle_entrance.json",
-		"on_load": "on_load-mtn-castle_entrance",
-		"on_look": "on_look-mtn-castle_entrance",
+	"ch2-castle-1": {
+		"path": "maps/map-ch2-castle-1.json",
+		"on_load": "on_load-ch2-castle-1",
+		"on_look": "look-ch2-castle-1",
+		"on_tick": "on_tick-ch2-castle-1",
 		"directions": {
-			"xa-room": "on_go-mtn-castle_entrance-to-xa_room-check"
+			"north": "on_go-castle-1-north",
+			"south": "on_go-castle-1-south"
 		}
 	},
-	"magehouse-birthday": {
-		"path": "maps/map-magehouse-birthday.json",
-		"on_load": "on_load-magehouse-birthday"
+	"ch2-castle-11": {
+		"path": "maps/map-ch2-castle-11.json",
+		"on_load": "on_load-ch2-castle-11",
+		"on_look": "look-ch2-castle-11",
+		"on_tick": "on_tick-ch2-castle-11",
+		"directions": {
+			"north": "on_go-castle-11-north",
+			"south": "on_go-castle-11-south",
+			"west": "on_go-castle-11-west"
+		}
 	},
-	"main2": {
-		"path": "maps/map-main2.json",
-		"on_load": "on_load-main2"
+	"ch2-castle-12": {
+		"path": "maps/map-ch2-castle-12.json",
+		"on_load": "on_load-ch2-castle-12",
+		"on_look": "look-ch2-castle-12",
+		"on_tick": "on_tick-ch2-castle-12",
+		"directions": {
+			"north": "on_go-castle-12-north",
+			"south": "on_go-castle-12-south",
+			"east": "on_go-castle-12-east"
+		}
 	},
-	"flying-toasters": {
-		"path": "maps/map-flying-toasters.json",
-		"on_tick": "on_tick-flying-toasters",
-		"on_load": "on_load-flying-toasters"
+	"ch2-castle-13": {
+		"path": "maps/map-ch2-castle-13.json",
+		"on_load": "on_load-ch2-castle-13",
+		"on_look": "look-ch2-castle-13",
+		"on_tick": "on_tick-ch2-castle-13",
+		"directions": {
+			"north": "on_go-castle-13-north",
+			"south": "on_go-castle-13-south"
+		}
+	},
+	"ch2-castle-14": {
+		"path": "maps/map-ch2-castle-14.json",
+		"on_load": "on_load-ch2-castle-14",
+		"on_look": "look-ch2-castle-14",
+		"on_tick": "on_tick-ch2-castle-14",
+		"directions": {
+			"south": "on_go-castle-14-south"
+		}
+	},
+	"ch2-castle-14-doorless": {
+		"path": "maps/map-ch2-castle-14-doorless.json",
+		"on_load": "on_load-ch2-castle-14",
+		"on_look": "look-ch2-castle-14",
+		"on_tick": "on_tick-ch2-castle-14",
+		"directions": {
+			"south": "on_go-castle-14-south"
+		}
+	},
+	"ch2-castle-21": {
+		"path": "maps/map-ch2-castle-21.json",
+		"on_load": "on_load-ch2-castle-21",
+		"on_look": "look-ch2-castle-21",
+		"on_tick": "on_tick-ch2-castle-21",
+		"directions": {
+			"north": "on_go-castle-21-north",
+			"east": "on_go-castle-21-east"
+		}
+	},
+	"ch2-castle-22": {
+		"path": "maps/map-ch2-castle-22.json",
+		"on_load": "on_load-ch2-castle-22",
+		"on_look": "look-ch2-castle-22",
+		"on_tick": "on_tick-ch2-castle-22",
+		"directions": {
+			"north": "on_go-castle-22-north",
+			"south": "on_go-castle-22-south"
+		}
+	},
+	"ch2-castle-23": {
+		"path": "maps/map-ch2-castle-23.json",
+		"on_load": "on_load-ch2-castle-23",
+		"on_look": "look-ch2-castle-23",
+		"on_tick": "on_tick-ch2-castle-23",
+		"directions": {
+			"south": "on_go-castle-23-south"
+		}
+	},
+	"ch2-castle-31": {
+		"path": "maps/map-ch2-castle-31.json",
+		"on_load": "on_load-ch2-castle-31",
+		"on_look": "look-ch2-castle-31",
+		"on_tick": "on_tick-ch2-castle-31",
+		"directions": {
+			"north": "on_go-castle-31-north",
+			"west": "on_go-castle-31-west"
+		}
+	},
+	"ch2-castle-32": {
+		"path": "maps/map-ch2-castle-32.json",
+		"on_load": "on_load-ch2-castle-32",
+		"on_look": "look-ch2-castle-32",
+		"on_tick": "on_tick-ch2-castle-32",
+		"directions": {
+			"northeast": "on_go-castle-32-northeast",
+			"northwest": "on_go-castle-32-northwest",
+			"south": "on_go-castle-32-south"
+		}
+	},
+	"ch2-castle-33": {
+		"path": "maps/map-ch2-castle-33.json",
+		"on_load": "on_load-ch2-castle-33",
+		"on_look": "look-ch2-castle-33",
+		"on_tick": "on_tick-ch2-castle-33",
+		"directions": {
+			"south": "on_go-castle-33-south"
+		}
+	},
+	"ch2-castle-34": {
+		"path": "maps/map-ch2-castle-34.json",
+		"on_load": "on_load-ch2-castle-34",
+		"on_look": "look-ch2-castle-34",
+		"on_tick": "on_tick-ch2-castle-34",
+		"directions": {
+			"south": "on_go-castle-34-south"
+		}
+	},
+	"ch2-castle-99": {
+		"path": "maps/map-ch2-castle-99.json",
+		"on_load": "on_load-ch2-castle-99",
+		"on_look": "look-ch2-castle-99",
+		"on_tick": "on_tick-ch2-castle-99"
 	},
 	"action_testing_01": {
 		"path": "maps/map-action_testing_01.json",
@@ -40,23 +159,209 @@
 			"cleveland": "map-action_testing-go_cleveland",
 			"numbers": "map-action_testing-go_numbers",
 			"sphinx": "map-action_testing-go_sphinx",
-			"hub": "map-action_testing-go_hub"
+			"hub": "map-action_testing-go_hub",
+			"concat": "map-action_testing-go_concat",
+			"reg": "map-action_testing-go_register",
+			"regFail": "map-action_testing-go_register_fail",
+			"regArg": "map-action_testing-go_register_arguments",
+			"unregArg": "map-action_testing-go_unregister_arguments",
+			"unreg": "map-action_testing-go_unregister",
+			"moon": "map-action_testing-go_moon",
+			"override": "map-action_testing-go_override",
+			"un-override": "map-action_testing-go_un-override",
+			"alias": "map-action_testing-go_alias",
+			"unalias": "map-action_testing-go_unalias",
+			"regSecret": "map-action_testing-go_register_secret",
+			"hideSecret": "map-action_testing-go_hide_secret",
+			"showSecret": "map-action_testing-go_unhide_secret",
+			"unregSecret": "map-action_testing-go_unregister_secret"
 		}
 	},
-	"demo": "maps/map-demo.json",
-	"main": "maps/map-main.json",
-	"bobsclub": "maps/map-bobsclub.json",
-	"test": "maps/map-test.json",
-	"town": "maps/map-town.json",
-	"oldcouplehouse": "maps/map-oldcouplehouse.json",
-	"bakery": "maps/map-bakery.json",
-	"family": "maps/map-family.json",
-	"magehouse": "maps/map-magehouse.json",
-	"lodge": "maps/map-lodge.json",
-	"greenhouse": "maps/map-greenhouse.json",
-	"secretroom": "maps/map-secretroom.json",
+	"ch2-magehouse-birthday": {
+		"path": "maps/map-magehouse-birthday.json",
+		"on_load": "on_load-ch2-magehouse-birthday"
+	},
+	"ch2-magehouse": {
+		"path": "maps/map-ch2-magehouse.json",
+		"on_load": "on_load-ch2-magehouse",
+		"on_tick": "on_tick-ch2-magehouse",
+		"on_look": "look-ch2-magehouse",
+		"directions": {
+			"south": "on_go-ch2-magehouse-south"
+		}
+	},
+	"ch2-town": {
+		"path": "maps/map-main2.json",
+		"on_load": "on_load-ch2-town",
+		"on_tick": "on_tick-ch2-town",
+		"on_look": "look-ch2-town",
+		"directions": {
+			"west": "on_go-ch2-town-west",
+			"home": "on_go-ch2-town-home",
+			"bakery": "on_go-ch2-town-bakery",
+			"library": "on_go-ch2-town-library",
+			"greenhouse": "on_go-ch2-town-greenhouse",
+			"smith": "on_go-ch2-town-smith",
+			"beatrice": "on_go-ch2-town-beatrice",
+			"wopr": "on_go-ch2-town-wopr",
+			"bobsclub": "on_go-ch2-town-bobsclub"
+		}
+	},
+	"ch2-oldcouplehouse":{
+		"path": "maps/map-ch2-oldcouplehouse.json",
+		"on_tick": "on_tick-ch2-oldcouplehouse",
+		"on_load": "on_load-ch2-oldcouplehouse",
+		"on_look": "look-ch2-oldcouplehouse",
+		"directions": {
+			"south": "on_go-ch2-oldcouplehouse-south"
+		}
+	},
+	"ch2-smithfamily":{
+		"path": "maps/map-ch2-smithfamily.json",
+		"on_tick": "on_tick-ch2-smithfamily",
+		"on_load": "on_load-ch2-smithfamily",
+		"on_look": "look-ch2-smithfamily",
+		"directions": {
+			"south": "on_go-ch2-smithfamily-south"
+		}
+	},
+	"ch2-bakery":{
+		"path": "maps/map-ch2-bakery.json",
+		"on_tick": "on_tick-ch2-bakery",
+		"on_load": "on_load-ch2-bakery",
+		"on_look": "look-ch2-bakery",
+		"directions": {
+			"south": "on_go-ch2-bakery-south"
+		}
+	},
+	"ch2-greenhouse":{
+		"path": "maps/map-ch2-greenhouse.json",
+		"on_tick": "on_tick-ch2-greenhouse",
+		"on_load": "on_load-ch2-greenhouse",
+		"on_look": "look-ch2-greenhouse",
+		"directions": {
+			"south": "on_go-ch2-greenhouse-south"
+		}
+	},
+	"ch2-lodge":{
+		"path": "maps/map-ch2-lodge.json",
+		"on_tick": "on_tick-ch2-lodge",
+		"on_load": "on_load-ch2-lodge",
+		"on_look": "look-ch2-lodge",
+		"directions": {
+			"north": "on_go-ch2-lodge-north",
+			"south": "on_go-ch2-lodge-south"
+		}
+	},
+	"ch2-lodge-rtfm":{
+		"path": "maps/map-ch2-lodge-rtfm.json",
+		"on_tick": "on_tick-ch2-lodge-rtfm",
+		"on_load": "on_load-ch2-lodge-rtfm",
+		"on_look": "look-ch2-lodge-rtfm",
+		"directions": {
+			"south": "on_go-ch2-lodge-rtfm-south"
+		}
+	},
+	"ch2-bobsclub":{
+		"path": "maps/map-ch2-bobsclub.json",
+		"on_tick": "on_tick-ch2-bobsclub",
+		"on_load": "on_load-ch2-bobsclub",
+		"on_look": "look-ch2-bobsclub",
+		"directions": {
+			"stairs": "on_go-ch2-bobsclub-stairs",
+			"south": "on_go-ch2-bobsclub-south"
+		}
+	},
+	"ch2-bobsclub-basement":{
+		"path": "maps/map-ch2-bobsclub-basement.json",
+		"on_tick": "on_tick-ch2-bobsclub-basement",
+		"on_load": "on_load-ch2-bobsclub-basement",
+		"on_look": "look-ch2-bobsclub-basement",
+		"directions": {
+			"stairs": "on_go-ch2-bobsclub-basement-stairs"
+		}
+	},
+
+	"flying-toasters": {
+		"path": "maps/map-flying-toasters.json",
+		"on_load": "on_load-flying-toasters"
+	},
+	"bling-zero": {
+		"path": "maps/map-bling-zero.json",
+		"on_load": "on_load-bling-zero"
+	},
+	"bling-qr": {
+		"path": "maps/map-bling-qr.json",
+		"on_load": "on_load-bling-qr"
+	},
+	"bling-digi-mage": {
+		"path": "maps/map-bling-digi-mage.json",
+		"on_load": "on_load-bling-digi-mage"
+	},
+	"bling-dc801": {
+		"path": "maps/map-bling-dc801.json",
+		"on_load": "on_load-bling-dc801"
+	},
+	"demo": {
+		"path": "maps/map-demo.json",
+		"on_load": "show_dialog-timewarp"
+	},
+	"main": {
+		"path": "maps/map-main.json",
+		"on_load": "on_load-map-main",
+		"on_tick": "on_tick-main"
+	},
+	"bobsclub": {
+		"path": "maps/map-bobsclub.json",
+		"on_load": "on_load-bobsclub1",
+		"on_tick": "on_tick-bobsclub"
+	},
+	"test": {
+		"path": "maps/map-test.json",
+		"on_load": "my_first_script"
+	},
+	"town": {
+		"path": "maps/map-town.json",
+		"on_load": "on_load-east_west",
+		"on_tick": "on_tick-town"
+	},
+	"oldcouplehouse": {
+		"path": "maps/map-oldcouplehouse.json",
+		"on_load": "on_load-oldcouplehouse",
+		"on_tick":"on_tick-oldcouplehouse" 
+	},
+	"bakery": {
+		"path": "maps/map-bakery.json",
+		"on_tick": "on_tick-bakery"
+	},
+	"family": {
+		"path": "maps/map-family.json",
+		"on_load": "on_load-family",
+		"on_tick": "on_tick-family"
+	},
+	"magehouse": {
+		"path": "maps/map-magehouse.json",
+		"on_load": "on_load-magehouse",
+		"on_tick": "on_tick-magehouse"
+	},
+	"lodge": {
+		"path": "maps/map-lodge.json",
+		"on_load": "on_load-lodge",
+		"on_tick": "on_tick-lodge"
+	},
+	"greenhouse": {
+		"path": "maps/map-greenhouse.json",
+		"on_load": "on_load-greenhouse",
+		"on_tick": "on_tick-greenhouse"
+	},
+	"secretroom": {
+		"path": "maps/map-secretroom.json",
+		"on_load": "on_load-secretroom",
+		"on_tick": "on_tick-secretroom"
+	},
 	"warp_zone": {
 		"path": "maps/map-warp_zone.json",
+		"on_tick": "map_on_tick-doors",
 		"directions": {
 			"main": "load_map-main",
 			"test": "load_map-test",
@@ -67,9 +372,26 @@
 			"testbig": "load_map-testbig"
 		}
 	},
-	"testbig": "maps/map-testbig.json",
-	"credits": "maps/map-credits.json",
-	"credits2": "maps/map-credits2.json",
-	"woprhouse": "maps/map-woprhouse.json",
-	"action_testing_02": "maps/map-action_testing_02.json"
+	"testbig": {
+		"path": "maps/map-testbig.json"
+	},
+	"credits": {
+		"path": "maps/map-credits.json",
+		"on_tick": "on_tick-credits"
+	},
+	"credits2": {
+		"path": "maps/map-credits2.json",
+		"on_tick": "on_tick-ch2-credits"
+	},
+	"woprhouse": {
+		"path": "maps/map-woprhouse.json",
+		"on_load": "on_load-woprhouse",
+		"on_tick": "on_tick-woprhouse",
+		"directions": {
+			"north": "on_go-woprhouse-north"
+		}
+	},
+	"action_testing_02": {
+		"path": "maps/map-action_testing_02.json"
+	}
 }

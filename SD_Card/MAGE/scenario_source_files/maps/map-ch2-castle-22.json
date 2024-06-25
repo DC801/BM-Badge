@@ -1,0 +1,332 @@
+{ "compressionlevel":-1,
+ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 283, 284, 284, 288, 284, 284, 288, 284, 284, 2147483931, 0,
+            0, 299, 300, 300, 304, 289, 2147483937, 304, 300, 300, 2147483947, 0,
+            0, 315, 1610613053, 316, 316, 316, 316, 316, 316, 316, 2147483963, 0,
+            0, 315, 316, 292, 296, 308, 312, 296, 293, 3758096716, 2147483963, 0,
+            0, 315, 316, 316, 316, 339, 339, 316, 316, 2684354892, 2147483963, 0,
+            0, 315, 294, 316, 316, 339, 339, 316, 316, 294, 2147483963, 0,
+            0, 315, 339, 316, 316, 339, 339, 316, 307, 374, 2147483963, 0,
+            0, 315, 339, 316, 316, 375, 378, 316, 371, 2684354893, 2147483963, 0,
+            0, 331, 372, 296, 293, 316, 316, 316, 316, 316, 2147483979, 0,
+            0, 347, 348, 348, 348, 353, 2147484001, 349, 349, 348, 2147483995, 0],
+         "height":10,
+         "id":6,
+         "name":"Floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 2147484243, 595, 0, 0, 0, 0, 594, 595, 0, 0,
+            0, 0, 2147484259, 611, 0, 385, 386, 0, 610, 611, 0, 0,
+            0, 0, 2147484275, 627, 0, 401, 402, 2147484035, 626, 627, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 387, 0, 0,
+            0, 0, 2147484051, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 2147484259, 2147484258, 2147484259, 2147484258, 0, 0, 610, 2147484258, 0, 0,
+            0, 0, 2147484275, 2147484274, 2147484275, 2147484274, 0, 0, 626, 2147484274, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 290, 2147483938, 403, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":7,
+         "name":"Floor Doodads",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"Entities",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":223,
+                 "y":174
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":19,
+                 "name":"door",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-attempt-door-check"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":95
+                }, 
+                {
+                 "class":"",
+                 "gid":183,
+                 "height":32,
+                 "id":32,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":242
+                }, 
+                {
+                 "class":"",
+                 "gid":951,
+                 "height":32,
+                 "id":33,
+                 "name":"Power Supply",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-powersupply"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-powersupply"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":131,
+                 "y":284
+                }, 
+                {
+                 "class":"",
+                 "gid":1054,
+                 "height":48,
+                 "id":39,
+                 "name":"C. K. Watt",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-ckwatt"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ckwatt"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":78,
+                 "y":252
+                }, 
+                {
+                 "class":"",
+                 "gid":1045,
+                 "height":32,
+                 "id":41,
+                 "name":"Scuzzy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-scuzzy"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-scuzzy"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":276,
+                 "y":252
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":42,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-70,
+                 "y":-66
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 2147484243, 2147484242, 2147484243, 2147484242, 0, 0, 594, 2147484242, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 650, 631, 0, 0, 0, 0, 630, 631, 0, 0,
+            0, 0, 666, 629, 0, 607, 608, 0, 628, 629, 0, 0,
+            0, 0, 0, 0, 0, 623, 624, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":8,
+         "name":"Floating Layer",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":15,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-154,
+                 "y":462
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":34,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-69.806464981351,
+                 "y":-49.8172399502694
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":9,
+ "nextobjectid":43,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/tilesets\/tileset-monstrosity.json"
+        }, 
+        {
+         "firstgid":177,
+         "source":"..\/entities\/entity-mage.json"
+        }, 
+        {
+         "firstgid":237,
+         "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":239,
+         "source":"..\/entities\/entity-save_floppy.json"
+        }, 
+        {
+         "firstgid":263,
+         "source":"..\/entities\/entity-bert.json"
+        }, 
+        {
+         "firstgid":281,
+         "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":283,
+         "source":"..\/tilesets\/tileset-castle-interior.json"
+        }, 
+        {
+         "firstgid":667,
+         "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":923,
+         "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":933,
+         "source":"..\/entities\/entity-ssen.json"
+        }, 
+        {
+         "firstgid":951,
+         "source":"..\/entities\/entity-powersupply.json"
+        }, 
+        {
+         "firstgid":999,
+         "source":"..\/entities\/entity-welder.json"
+        },
+    
+        {
+         "firstgid":1032,
+         "source":"..\/entities\/entity-npc02.json"
+        }, 
+        {
+         "firstgid":1053,
+         "source":"..\/entities\/entity-bigears.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.9",
+ "width":12
+}

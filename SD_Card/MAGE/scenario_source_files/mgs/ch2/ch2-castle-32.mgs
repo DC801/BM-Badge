@@ -1,0 +1,492 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-32 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>CASTLE KITCHEN</>."
+		"\tThis room seems to be a combination employee break room and industrial-strength kitchen. The smell of the place is a stange combination of corporate disinfectant and maybe-fresh coffee."
+		" "
+	}
+}
+
+ch2-look-onions {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tFresh and fragrant. You appreciate the care to flavor that this cook is putting into whatever it is they're intending to cook. You also appreciate that fact that you don't have to cut them yourself."
+	}
+}
+ch2-look-stove {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe glassy surface is very clean, perfectly black and very shiny."
+	}
+}
+
+look-ch2-seamoss {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThis old, moist stone golem hums softly to himself while he munches on his Skittles. When you look directly at him, he casts a smile your way."
+	}
+}
+
+look-ch2-samson {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe young larvae seems entirely oblivious to his mother's panic. He stares at you with wonder, as if you're the most interesting thing he's seen all day."
+	}
+}
+
+look-ch2-gloria {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tShe's checking %Samson% over again and again, as if the her child's condition might have changed in the last few seconds. Her antenna swivels toward you when you come close."
+	}
+}
+
+look-ch2-ramchips {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ram_chips (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-vendingmachine {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look vending (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-coffee {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look coffee (remember to add 'the' for objects)"
+	}
+}
+
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-32 {
+	// ch2 room state
+	mutate ch2-in-room = 32;
+	teleport entity Gloria to geometry worry-walk2;
+	turn entity Gloria toward entity Samson;
+
+	// entrance text
+	show serial dialog spacer;
+	if (flag ch2-seen-room-32 is false) {
+		show serial dialog { "Discovered <bold><c>CASTLE KITCHEN</>! Room added to map!" }
+		set flag ch2-seen-room-32 to true;
+	} else {
+		show serial dialog { "Entering <bold>CASTLE KITCHEN</>..." }
+	}
+
+	// room unique stuff
+	if (flag ch2-ramchips-dispensed is false) {
+		copy script ch2-hide-ramchips;
+	}
+
+	// DEBUG
+	if (debug mode is on) {
+		register want + chips -> debug-want-chips;
+		show serial dialog {
+			"<g>Debug</> command available: <c>WANT CHIPS</>"
+		}
+	}
+	// END DEBUG
+	
+	if (warp state is walk_from-northeast) {
+		teleport entity "%PLAYER%" to geometry walk_from-northeast;
+	}
+	if (warp state is walk_from-northwest) {
+		teleport entity "%PLAYER%" to geometry walk_from-northwest;
+	}
+	
+	copy ch2-map-init;
+}
+
+debug-want-chips {
+	set flag ch2-want-ramchips to true;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-32 {
+	if (entity "%PLAYER%" is inside geometry northwest-hitbox) {
+		set warp state to walk_from-south;
+		load map ch2-castle-33;
+	}
+	if (entity "%PLAYER%" is inside geometry northeast-hitbox) {
+		set warp state to walk_from-south;
+		load map ch2-castle-34;
+	}
+}
+
+const! (
+	$walkspeed = 200ms
+)
+ch2-gloria-worry-walk {
+	mutate tempvar ? 4;
+	if (variable tempvar is 0) {
+		wait 400ms;
+	} else if (variable tempvar is 1) {
+		wait 1100ms;
+	} else if (variable tempvar is 2) {
+		wait 1500ms;
+	} else {
+		wait 2200ms;
+	}
+	walk entity "%SELF%" to geometry "%ENTITY_PATH%" over $walkspeed
+	turn entity "%SELF%" toward entity Samson;
+	if (entity "%SELF%" path is not worry-walk2) {
+		set entity "%SELF%" path to worry-walk2;
+	} else {
+		mutate tempvar ? 2;
+		if (variable tempvar is 0) {
+			set entity "%SELF%" path to worry-walk1
+		} else {
+			set entity "%SELF%" path to worry-walk3;
+		}
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-32 { // sanitize ch2 room state
+	mutate ch2-in-room = 0;
+}
+
+// SERIAL: go
+
+on_go-castle-32-northeast {
+	copy on_exit-ch2-castle-32;
+	copy warping-out-fade-out;
+	load map ch2-castle-34;
+}
+on_go-castle-32-northwest {
+	copy on_exit-ch2-castle-32;
+	copy warping-out-fade-out;
+	load map ch2-castle-33;
+}
+on_go-castle-32-south {
+	copy on_exit-ch2-castle-32;
+	copy warping-out-fade-out;
+	load map ch2-castle-31;
+}
+
+/* ---------- ENTITIES ---------- */
+
+ch2-interact-onions {
+	show dialog {
+		PLAYER "Onions, nice! Guess there's a delicious meal in someone's future."
+	}
+}
+
+ch2-interact-stove {
+	show dialog {
+		PLAYER "This glasstop stove looks brand new. Or someone keeps it very clean, anyway."
+	}
+}
+
+interact-ch2-gloria {
+	turn player control off;
+	set entity "%SELF%" on_tick to null_script;
+	copy face-player;
+	play entity "%SELF%" animation 3 once;
+	set entity "%SELF%" current_animation to 4;
+	if (flag ch2-gloria-backstory is false) {
+		show dialog {
+			SELF "Oh, dear. What terrible timing. It was \"take your child to work\" day yesterday, and...."
+			"What a quake! Poor Samson was scared out of his wits. And now we're trapped in here."
+		}
+		set flag ch2-gloria-backstory to true;
+		turn entity Gloria toward entity Samson;
+	} else {
+		show dialog {
+			SELF "Are you here to rescue us? Please, Samson is so upset."
+		}
+		set entity "%SELF%" on_tick to face-player;
+	}
+	set entity "%SELF%" on_tick to ch2-gloria-worry-walk;
+	play entity "%SELF%" animation 5 once;
+	set entity "%SELF%" current_animation to 0;
+	turn player control on;
+}
+interact-ch2-samson {
+	copy face-player;
+	set entity "%SELF%" current_animation to 2;
+	if (variable ch2-samson-count is 0) {
+		show dialog {
+			SELF "Someone was kicking the castle yesterday!"
+		}
+	} else if (variable ch2-samson-count is 1) {
+		show dialog {
+			SELF "It woke up the big stone man!"
+		}
+	} else if (variable ch2-samson-count is 2) {
+		show dialog {
+			SELF "Mommy used her wings and flew around in the big room and then the kicking stopped!"
+		}
+	} else if (variable ch2-samson-count is 3) {
+		show dialog {
+			SELF "Chips fell out of the box, and I got to eat all of them!"
+		}
+	}
+	set entity "%SELF%" current_animation to 0;
+	mutate ch2-samson-count + 1;
+	mutate ch2-samson-count % 4;
+	turn entity "%SELF%" west;
+}
+
+interact-ch2-coffee {
+	show dialog {
+		PLAYER "Mmmm, fresh coffee!"
+	}
+}
+
+interact-ch2-vendingmachine {
+	if (variable ch2-storyflag-round is >= 3) {
+		if (flag ch2-cutseen-ramchips is false) {
+			turn player control false;
+			show dialog {
+				PLAYER "Oh! There's actually chips in here! Are those RAM chips?"
+			}
+			turn entity "%PLAYER%" toward entity "Sea Moss";
+			show dialog {
+				entity "Sea Moss" "Oh, for sure."
+			}
+			turn entity "%PLAYER%" toward entity Vending;
+			show dialog {
+				PLAYER "But... why are they being stocked in a vending machine? Do people like to eat RAM?"
+			}
+			turn entity "%PLAYER%" toward entity "Sea Moss";
+			show dialog {
+				entity "Sea Moss" "Silicon folk love silicon snacks."
+				PLAYER "I... what? Really? Silicon folk meaning...."
+				entity "Sea Moss" "Silicon folk like me!"
+			}
+			turn entity "%PLAYER%" north;
+			show dialog {
+				PLAYER "I don't see a code for it on the panel though."
+				entity "Sea Moss" "Oh, I'll help you out. Come here."
+			}
+			if (entity "%PLAYER%" is not inside geometry vending-watchbox) {
+				set entity "%PLAYER%" on_tick to ch2-walk-to-vend-short;
+			} else {
+				set entity "%PLAYER%" on_tick to ch2-watch-seamoss;
+			}
+			copy ch2-seamoss-summon-chips;
+		} else {
+			show dialog {
+				PLAYER "I wonder if they make \"cool ranch\" RAM chips."
+				entity "Sea Moss" "You betcha."
+			}
+		}
+	} else if (
+		flag ch2-want-cactuscooler is false
+		|| flag ch2-carrying-cactuscooler is true
+		|| flag ch2-cactuscooler-delivered is true
+	) {
+		show dialog {
+			PLAYER "There's sure a lot of snacks in there. Too bad I'm out of pocket change."
+		}
+	} else if (flag ch2-want-bobparty is false) {
+		show dialog {
+			PLAYER "Hmm. I thought there might be Cactus Cooler in here, but it's just chips and stuff. No soda."
+		}
+		turn entity "Sea Moss" toward entity "%PLAYER%";
+		show dialog {
+			entity "Sea Moss" "Oh, you're looking for Cactus Cooler? My cousin Bob Austin loves that stuff."
+		}
+		turn entity "%PLAYER%" toward entity "Sea Moss";
+		show dialog {
+			entity "Sea Moss" "Every time he throws a party, he brings loads and loads...."
+			PLAYER "Stone Cold Bob Austin brings Cactus Cooler to his parties?"
+			PLAYER "(But there's no Bob's Club party this year. Maybe I could go back to town and ask him if he has any extra from last year?)"
+		}
+		turn entity "Sea Moss" toward entity "%PLAYER%";
+		set flag ch2-want-bobparty to true;
+		copy ch2-handoff-cactuscooler-to-bobaustin;
+	} else {
+		show dialog {
+			PLAYER "Oh, right. No soda in here."
+		}
+		turn entity "%PLAYER%" toward entity "Sea Moss";
+		show dialog {
+			PLAYER "Hey, you -- you said that Bob Austin likes Cactus Cooler?"
+		}
+		turn entity "Sea Moss" toward entity "%PLAYER%";
+		show dialog {
+			entity "Sea Moss" "Oh, sure. He's always got loads."
+			PLAYER "(Well then, I should go back to the Bob's Club in town and ask him for some.)"
+		}
+		turn entity "Sea Moss" south;
+	}
+}
+
+interact-ch2-seamoss {
+	copy face-player;
+	if (flag ch2-want-ramchips is false) {
+		if (flag ch2-seamoss-backstory is false) {
+			show dialog {
+				PLAYER "You know, you remind me of Bob Moss."
+				SELF "Oh sure. Bob Moss is my cousin. I'm Sea Moss."
+				"Nice to meetcha."
+			}
+			set flag ch2-seamoss-backstory to true;
+		} else {
+			show dialog {
+				SELF "I've been stuck in here for a while now."
+				"I don't mind much, though, since this is where the vending machine is."
+			}
+		}
+	} else {
+		if (flag ch2-cutseen-ramchips is false) {
+			if (flag ch2-seamoss-backstory is false) {
+				show dialog {
+					PLAYER "Say, are you Sea Moss?"
+					SELF "Yup, that's me. How did you know?"
+					PLAYER "Lucky guess. Anyway, I heard you knew something about computer memory."
+				}
+				set flag ch2-seamoss-backstory to true;
+			} else {
+				show dialog {
+					PLAYER "Hey, Sea Moss. I heard you knew something about computer memory."
+				}
+			}
+			copy interact-ch2-seamoss-cutscene;
+		} else {
+			show dialog {
+				SELF "I do declare... chips are the greatest invention on the planet."
+				"Bar none."
+			}
+		}
+	}
+	turn entity "%SELF%" south;
+}
+
+ch2-walk-to-vend {
+	wait 400ms;
+	walk entity "%PLAYER%" to geometry vending-watch over 1900ms;
+	wait 200ms;
+	turn entity "%PLAYER%" north;
+	goto null_script;
+}
+
+ch2-walk-to-vend-short {
+	wait 700ms;
+	walk entity "%PLAYER%" to geometry vending-watch over 500ms;
+	wait 200ms;
+	turn entity "%PLAYER%" north;
+	goto null_script;
+}
+
+interact-ch2-seamoss-cutscene {
+	turn player control off;
+	show dialog {
+		SELF "Oh, sure. I remember all sorts of stuff about that."
+		PLAYER "Well, I need some RAM to build a computer, but Lambda can't think of anything around here that would work."
+		SELF "RAM, like RAM chips? You could try the vending machine over yonder."
+		PLAYER "...Because it dispenses chips?"
+		SELF "You gotta keep your mind open for this stuff, man. Feel like a computer. Breathe like one. Understand what a computer wants."
+		"It wants to contain the whole universe within itself, to build and share its stories with each and every one of us at a keyboard or network port."
+		"For a computer to live, it must remember itself and allow itself to exist from moment to moment."
+		PLAYER "Uh...."
+		SELF "And if you need RAM chips, the sky's the limit, my dude. Anything is possible. Chips is chips!"
+		PLAYER "I really don't think that's true."
+		SELF "It'll be fine. Come here, I'll show you."
+	}
+	wait 100ms;
+	set entity "%PLAYER%" on_tick to ch2-walk-to-vend;
+	copy ch2-seamoss-summon-chips;
+}
+
+ch2-watch-seamoss {
+	turn entity "%SELF%" toward entity "Sea Moss";
+}
+ch2-seamoss-summon-chips {
+	walk entity "Sea Moss" to geometry vending-spot over 1800ms;
+	wait 800ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" north;
+	show dialog {
+		entity "Sea Moss" "I know a secret code for the ultimate cache of cache. Just need some cash...."
+	}
+	wait 850ms;
+	// bag of RAM chips appears in front of the vending machine
+	set entity "RAM Chips" name to "RAM Chips";
+	teleport entity "RAM Chips" to geometry ch2-chips-slide;
+	// hovers for a moment
+	wait 500ms;
+	// then slides downward gently
+	walk entity "RAM Chips" to geometry ch2-chips-land over 400ms;
+	wait 1300ms;
+	show dialog {
+		PLAYER "Oh my god."
+	}
+	turn entity "Sea Moss" south;
+	show dialog {
+		entity "Sea Moss" "There you are, friend! Some spicy nacho DDR5 RAM chips, on the house."
+		PLAYER "Thanks...."
+		entity "Sea Moss" "Any time."
+	}
+	turn player control on;
+	set flag ch2-cutseen-ramchips to true;
+	set flag ch2-ramchips-dispensed to true;
+	set entity "%PLAYER%" on_tick to null_script;
+}
+
+/* ---------- RAMCHIPS (ADMIN) ---------- */
+
+ch2-hide-ramchips {
+	teleport entity "RAM Chips" to geometry hiding-spot;
+	set entity "RAM Chips" name to " ";
+	// ^^ when viewed with hex editor its name will appear blank
+	// (you must still target this entity with its original name, though)
+}
+
+ch2-touch-ramchips {
+	if (flag ch2-ramchips-firstlook is false) {
+		show dialog {
+			PLAYER "That's the biggest bag of chips I've ever seen in my life."
+			"...And it's probably only a quarter full."
+		}
+		set flag ch2-ramchips-firstlook to true;
+	} else {
+		show dialog {
+			PLAYER "That's an obscene amount of chips."
+		}
+	}
+	show dialog {
+		name "" "(Pick up the RAM chips?)"
+		> "Yes" : ch2-touch-ramchips-yes
+		> "No" : ch2-touch-ramchips-no
+	}
+}
+ch2-touch-ramchips-yes {
+	show dialog {
+		name "" "(You pick up the RAM chips!)"
+	}
+	copy script ch2-hide-ramchips;
+	copy script ch2-pickup-ramchips;
+	set flag ch2-ramchips-dispensed to false;
+	set entity "%SELF%" on_interact to null_script;
+}
+ch2-touch-ramchips-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" on_interact to ch2-touch-ramchips;  // reset after script jump
+}

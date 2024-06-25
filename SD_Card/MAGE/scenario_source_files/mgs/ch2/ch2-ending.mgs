@@ -1,0 +1,163 @@
+include!("header.mgs")
+
+on_tick-ch2-credits {
+	turn hex control off;
+	turn serial control off;
+	turn player control on;
+	turn entity "%PLAYER%" south;
+	make camera follow entity cameraman;
+	teleport entity cameraman to geometry credits_camera;
+	fade in camera from #000000 over 400ms;
+	
+	//TEMP
+	show serial dialog spacer;
+	show serial dialog {
+		"Welcome to the credits for DC801 Black Mage Badge Ch2!"
+		"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
+	}
+
+	set entity Goat current_animation to 1;
+	wait 1200ms;
+	walk entity cameraman along geometry credits_camera over 600ms; // lolol
+	wait 600ms;
+	play entity Cat animation 2 once;
+	wait 300ms;
+
+	// TEMP
+	show serial dialog {
+		"(THANK YOU)"
+	}
+
+	fade out camera to #000000 over 1200ms;
+	set warp state to exit_from-credits;
+	turn hex control on;
+	turn serial control on;
+	turn player control on;
+	if (flag credits-from-menu is true) {
+		load map main_menu;
+	}
+	load map ch2-magehouse;
+}
+
+/* ---------------- END CUTSCENE STUFF --------------- */
+
+const!(
+	$alfonso = "Uncle Zappy"
+	$walkdur = 400ms
+)
+settings for dialog {
+	label Alfonso {
+		entity $alfonso
+		name "Alfonso"
+		alignment TR
+	}
+	label PLAYER {
+		alignment TL
+	}
+}
+
+player-watch-alfonso {
+	turn entity "%PLAYER%" toward entity $alfonso;
+}
+ch2-post-credits {
+	// (in the outside of the castle)
+	// TODO: move this convo there, then teleport to your house after that?
+	/*
+	OKAY OKAY new plan
+
+	Credits ends, you are walking back to town from the castle.
+	Lambda chases you, says he'll try to reveal himself to the town elders at least. (Update secret lab cutscene to match intentions here.) He wants to catch them up and apologize.
+	But then Alfonso calls out to you — Lambda hides out of panic.
+	Alfonso (with Jackob trailing behind) show up from town, and declares that he just remembers that the Big Bad can erase memories. (etc as before)
+	Player, aloud, realizes that Lambda can also erase memories.
+	Player calls out to Lambda, who timidly reveals himself. Defends himself (as in the current serial convo, which will be removed)
+	Lambda's reaction to learning the Big Bad can erase memories should be ≈ Otakon learning that Metal Gear can shoot nukes
+	They consider that Jackob must have known something especially important to fight the Big Bad, since he's forgotten the most out of all of them.
+	(What if he were actually Light Yagami-ing it? Nah, actually, he can't because he's also doing earthquake and kidnapping.)
+	(But maybe have Lambda pause for a moment and wonder if he's erased his own mind, and that's why the memory erase program was in his toolkit. "Yagami gambit"? Then they can say, no, he's deliberately doing earthquake and stuff.)
+	They determine that Bert is actually actually AWOL (They speculate the Big Bad kidnapped him?)
+	Lambda returns to lab to investigate/research from there, and Alfonso and Jackob go back to their other places:
+		- Jackob is trying to remember what he's forgotten (but is happy to quip about chapter 1 not being done)
+		- Alfonso is trying to encourage him and keep him from being distracted
+		- They promise to not take their eyes off each other, so they don't get kidnapped, too.
+
+	*/
+	turn player control off;
+	teleport entity "%PLAYER%" to geometry warp-spot;
+	turn entity "%PLAYER%" south;
+	fade in camera from #000000 over 500ms;
+	wait 800ms;
+	// make Uncle Zappy into Alfonso
+	set entity $alfonso type to alfonso;
+	turn entity $alfonso north;
+	set entity $alfonso on_tick to null_script;
+	// cutscene:
+	teleport entity $alfonso to geometry doorwalk;
+	set entity "%PLAYER%" on_tick to player-watch-alfonso;
+	wait 500ms;
+	walk entity $alfonso along geometry doorwalk over $walkdur;
+	wait 200ms;
+	turn entity $alfonso toward entity "%PLAYER%";
+	wait 800ms;
+	show dialog {
+		Alfonso "%PLAYER%, thank goodness. I just remembered something very important. It's imperative that you know this."
+		PLAYER "Alfonso? What is it?"
+		Alfonso "It's about the Big Bad. He -- that is --"
+	}
+	wait 500ms;
+	rotate entity $alfonso 1;
+	show dialog {
+		Alfonso "The Big Bad, he...."
+	}
+	rotate entity $alfonso -1;
+	show dialog {
+		Alfonso "He can make you forget things... I think. Implant memories, perhaps, too. I can't remember. I can't --"
+	}
+	rotate entity $alfonso 1;
+	show dialog {
+		Alfonso "I can almost remember how this all works. Almost. It's getting a easier the more time passes, but...."
+	}
+	rotate entity $alfonso -1;
+	show dialog {
+		Alfonso "Be very careful who you trust, %PLAYER%."
+		"If you think you know something, just... understand why you think you know it. Understand?"
+		PLAYER "Be careful who I trust? But Alfonso, Lambda could make people forget things, too!"
+		"Who is the Big Bad? Is it Lambda?"
+		Alfonso "Lambda? Who is that?"
+		name "" alignment TR "(You explain things to Alfonso)"
+		Alfonso "He claimed to be one of the village elders?"
+	}
+	rotate entity $alfonso 1;
+	show dialog {
+		Alfonso "Were there four of us? Maybe. I can't remember. Can't be sure."
+	}
+	rotate entity $alfonso -1;
+	show dialog {
+		Alfonso "What did he look like?"
+		PLAYER "Brown hair, glasses. Maybe forty."
+	}
+	rotate entity $alfonso 1;
+	show dialog {
+		Alfonso "No, that's not what the Big Bad looked like. But if my memories were manipulated, how would I know?"
+		"I will try to remember more. I MUST remember more."
+	}
+	rotate entity $alfonso -1;
+	show dialog {
+		Alfonso "Take this time to rest, %PLAYER%. I'm afraid there's one more dungeon for you to face in the morning."
+		"But I wanted to make sure you knew the Big Bad could manipulate memories in case... in case I forgot again. I think I must have forgotten it several times."
+	}
+	rotate entity $alfonso 1;
+	show dialog {
+		Alfonso "Was there something else? I must -- I'll meditate further. I'd ask poor Jackob, but he has forgotten more than the rest of us combined."
+		"Oh, dear. Oh, dear!"
+	}
+	walk entity $alfonso to geometry doorwalk over $walkdur;
+	set entity "%PLAYER%" on_tick to null_script;
+	teleport entity $alfonso to geometry alt-spot1;
+	set flag ch2-cutseen-secret-ending to true;
+	// turn Alfonso back into Uncle Zappy
+	set entity $alfonso type to lightning_boy2;
+	turn entity $alfonso east;
+	set entity $alfonso on_tick to face-player;
+	turn player control on;
+}

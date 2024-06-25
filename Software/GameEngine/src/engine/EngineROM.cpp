@@ -268,10 +268,12 @@ void EngineROM_ReadSaveSlot(
 	fseek(saveFile, 0, SEEK_END);
 	size_t saveFileSize = ftell(saveFile);
 	rewind(saveFile);
+	/*
 	debug_print(
 		"Save file size: %d\n",
 		saveFileSize
 	);
+	*/
 	if(saveFileSize) {
 		if (fread(data, saveFileSize, 1, saveFile) != 1) {
 			fclose(saveFile);

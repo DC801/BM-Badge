@@ -1,0 +1,239 @@
+{ "compressionlevel":-1,
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 2, 2, 2, 2, 148, 2147483796, 2147483649, 1, 2147483650, 2147483650, 2147483650, 2147483650, 2147483650, 2147483650, 2147483649,
+            9, 10, 10, 10, 10, 49, 2147483697, 2147483657, 9, 2147483658, 116, 2147483764, 2147483658, 2147483658, 116, 2147483657,
+            25, 4, 5, 5, 5, 57, 2147483795, 2147483686, 38, 4, 124, 2147483772, 66, 2147483714, 124, 2147483673,
+            25, 12, 13, 13, 13, 13, 2147483660, 2147483667, 19, 12, 2147483661, 2147483661, 2147483661, 2147483661, 2147483660, 2147483673,
+            25, 12, 13, 13, 13, 13, 24, 30, 2147483678, 2147483672, 2147483661, 2147483661, 2147483661, 2147483661, 2147483660, 2147483673,
+            25, 12, 13, 13, 13, 13, 16, 21, 2147483669, 2147483664, 2147483661, 2147483661, 2147483661, 2147483661, 2147483660, 2147483673,
+            25, 12, 13, 13, 13, 13, 2147483660, 2147483674, 26, 12, 2147483661, 2147483661, 2147483661, 2147483661, 2147483660, 2147483673,
+            33, 1610612761, 1610612761, 1610612761, 1610612761, 1610612761, 1610612761, 2147483681, 33, 3758096409, 3758096409, 145, 3758096409, 3758096409, 3758096409, 2147483681],
+         "height":8,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483747, 2147483747, 2147483747, 0,
+            17, 0, 0, 0, 1073741852, 51, 59, 0, 0, 2147483723, 0, 0, 2147483757, 2147483757, 2147483755, 0,
+            0, 2147483694, 62, 2147483694, 62, 0, 2147483707, 0, 0, 2147483731, 0, 0, 2147483716, 2147483732, 0, 0,
+            0, 2147483702, 0, 2147483702, 0, 2147483709, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483736, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483709, 63, 2147483711, 0,
+            0, 0, 0, 0, 2147483687, 0, 0, 0, 0, 0, 0, 2147483688, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":2,
+         "name":"Tile Layer 2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "class":"",
+                 "height":24.5245253459659,
+                 "id":3,
+                 "name":"south-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":30,
+                 "x":352.211135563927,
+                 "y":224.30127942109
+                }, 
+                {
+                 "class":"",
+                 "gid":261,
+                 "height":32,
+                 "id":4,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":351.795367227423,
+                 "y":222.832108620239
+                }, 
+                {
+                 "class":"",
+                 "gid":383,
+                 "height":32,
+                 "id":12,
+                 "name":"Sink",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-sink"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":85
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":14,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":357.110407846184,
+                 "y":165.312485336959
+                }, 
+                {
+                 "class":"",
+                 "gid":385,
+                 "height":20,
+                 "id":18,
+                 "name":"kid",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-sportskid"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-sportskid"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":20,
+                 "x":306,
+                 "y":140
+                }, 
+                {
+                 "class":"",
+                 "gid":367,
+                 "height":32,
+                 "id":19,
+                 "name":"Smith",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-smith"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-smith"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":331,
+                 "y":142
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 2147483768, 0, 0, 0, 0, 0, 0, 0, 0, 3221225500, 0, 2147483724, 0, 0,
+            0, 0, 2147483776, 0, 0, 2147483693, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 47, 2147483695, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":3,
+         "name":"Tile Layer 3",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":6,
+ "nextobjectid":20,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/tilesets\/tileset-monstrosity.json"
+        }, 
+        {
+         "firstgid":177,
+         "source":"..\/entities\/entity-old_lady.json"
+        }, 
+        {
+         "firstgid":192,
+         "source":"..\/entities\/entity-sheep.json"
+        }, 
+        {
+         "firstgid":255,
+         "source":"..\/entities\/entity-mage.json"
+        }, 
+        {
+         "firstgid":315,
+         "source":"..\/entities\/entity-village_elder.json"
+        }, 
+        {
+         "firstgid":339,
+         "source":"..\/entities\/entity-sports_kid.json"
+        }, 
+        {
+         "firstgid":363,
+         "source":"..\/entities\/entity-blacksmith.json"
+        }, 
+        {
+         "firstgid":381,
+         "source":"..\/entities\/entity-pot.json"
+        }, 
+        {
+         "firstgid":383,
+         "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":385,
+         "source":"..\/entities\/entity-blitzball.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.9",
+ "width":16
+}

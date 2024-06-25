@@ -10,7 +10,6 @@
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
 
-#define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
 // color palette corruption detection - requires much ram, can only be run on desktop
@@ -112,6 +111,7 @@ public:
 	bool playerHasControl;
 	bool playerHasHexEditorControl;
 	bool playerHasHexEditorControlClipboard;
+	bool isLEDControlEnabled;
 	bool isCollisionDebugOn;
 	bool isEntityDebugOn;
 	uint8_t filteredEntityCountOnThisMap;
@@ -185,6 +185,9 @@ public:
 	MageEntityAnimationDirection getValidEntityTypeDirection(
 		MageEntityAnimationDirection direction
 	);
+	MageEntityAnimationDirection getRelativeEntityTypeDirection(
+		MageEntityAnimationDirection direction
+	);
 	MageEntityAnimationDirection updateDirectionAndPreserveFlags(
 		MageEntityAnimationDirection desired,
 		MageEntityAnimationDirection previous
@@ -218,16 +221,17 @@ public:
 	);
 
 	void updateEntityRenderableBoxes(
-		MageEntityRenderableData* data,
-		const MageEntity* entity,
-		const MageTileset* tileset
+		MageEntityRenderableData *data,
+		const MageEntity *entity,
+		const MageTileset *tileset
 	) const;
 
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
 	void computeEntityYAxisSort(
-		uint8_t* entitySortOrder
+		uint8_t *entitySortOrder,
+		uint8_t filteredEntityCountOnThisMap
 	);
 
 	//this will draw the entities over the current state of the screen
@@ -239,22 +243,22 @@ public:
 	Point getPushBackFromTilesThatCollideWithPlayer();
 
 	void getRenderableStateFromAnimationDirection(
-		MageEntityRenderableData* data,
-		const MageEntity* entity,
-		const MageEntityTypeAnimationDirection* animationDirection
+		MageEntityRenderableData *data,
+		const MageEntity *entity,
+		const MageEntityTypeAnimationDirection *animationDirection
 	);
 
 	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
 
-#ifdef DC801_DESKTOP
+	#ifdef DC801_DESKTOP
 	void verifyAllColorPalettes(const char* errorTriggerDescription);
-#endif //DC801_DESKTOP
+	#endif //DC801_DESKTOP
 
 	uint16_t entityTypeCount();
 	uint16_t animationCount();
 	uint16_t tilesetCount();
 
-	void logAllEntityScriptValues(const char* string);
+	void logAllEntityScriptValues(const char *string);
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL

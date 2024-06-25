@@ -36,14 +36,15 @@ var handleScenarioData = function (fileNameMap) {
 			scenarioData.parsed[typeName] = [];
 		});
 		scenarioData.dialogSkinsTilesetMap = {}
+		scenarioData.warnings = {};
 		var preloadSkinsPromise = preloadAllDialogSkins(fileNameMap, scenarioData);
 		var portraitsFile = fileNameMap['portraits.json'];
-		var portraitsPromise = preloadSkinsPromise.then(function () {
+		var portraitsPromise = preloadSkinsPromise.then(function preloadSkinHandler () {
 			return getFileJson(portraitsFile)
 				.then(handlePortraitsData(fileNameMap, scenarioData))
 		});
 		var entityTypesFile = fileNameMap['entity_types.json'];
-		var entityTypesPromise = portraitsPromise.then(function () {
+		var entityTypesPromise = portraitsPromise.then(function portraitPromiseHandler () {
 			return getFileJson(entityTypesFile)
 				.then(handleEntityTypesData(fileNameMap, scenarioData))
 		});
@@ -67,6 +68,9 @@ var handleScenarioData = function (fileNameMap) {
 					scenarioData[pathPropertyName].map(function(filePath) {
 						var fileName = filePath.split('/').pop();
 						var fileObject = fileNameMap[fileName];
+						if (!fileObject) {
+							throw new Error(`File listed in 'scenario.json' not found: '${fileName}'`);
+						}
 						return getFileJson(fileObject)
 							.then(function(fileData) {
 								Object.keys(fileData)
@@ -100,6 +104,11 @@ var handleScenarioData = function (fileNameMap) {
 			}
 		};
 
+		var natlangMgsPromise = convertMgsFilesIntoScenarioDataConfig(
+			fileNameMap,
+			scenarioData,
+		);
+
 		var mergeScriptDataIntoScenario = mergeNamedJsonIntoScenario(
 			'scriptPaths',
 			'scripts',
@@ -119,12 +128,17 @@ var handleScenarioData = function (fileNameMap) {
 		);
 		return Promise.all([
 			entityTypesPromise,
-			mergeScriptDataIntoScenario(fileNameMap, scenarioData),
-			mergeDialogDataIntoScenario(fileNameMap, scenarioData),
-			mergeSerialDialogDataIntoScenario(fileNameMap, scenarioData),
+			natlangMgsPromise,
 			mergeMapDataIntoScenario(fileNameMap, scenarioData),
 		])
-			.then(function () {
+			.then(function mergeScriptDialogAndSerialDialog () {
+				return Promise.all([
+					mergeScriptDataIntoScenario(fileNameMap, scenarioData),
+					mergeDialogDataIntoScenario(fileNameMap, scenarioData),
+					mergeSerialDialogDataIntoScenario(fileNameMap, scenarioData),
+				])
+			})
+			.then(function processMaps () {
 				serializeNullScript(
 					fileNameMap,
 					scenarioData,
@@ -267,11 +281,6 @@ var generateIndexAndComposite = function (scenarioData) {
 		16,
 		compositeSize,
 		IS_LITTLE_ENDIAN
-	);
-
-	console.log(
-		'compositeArray',
-		compositeArray
 	);
 	var hashHex = [
 		compositeArray[12],

@@ -2,6 +2,7 @@
 var FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 var FLIPPED_VERTICALLY_FLAG   = 0x40000000;
 var FLIPPED_DIAGONALLY_FLAG   = 0x20000000;
+
 var getMapTileAndOrientationByGID = function (tileGID, map) {
 	var targetTileset = {};
 	var tileId = tileGID;
@@ -92,9 +93,11 @@ var compositeEntityInheritedData = function (entity, map, objects, fileNameMap, 
 		tileData.tile,
 		entity
 	);
+	// Tiled changed the field name in the tilesets >:(
+	var entityType = mergedWithTile.type || mergedWithTile.class
 	var entityPrototype = (
-		scenarioData.entityTypesPlusProperties[mergedWithTile.type]
-		|| scenarioData.entityTypes[mergedWithTile.type]
+		scenarioData.entityTypesPlusProperties[entityType]
+		|| scenarioData.entityTypes[entityType]
 	);
 	var compositeEntity = assignToLessFalsy(
 		{},
@@ -220,6 +223,35 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			fileNameMap,
 			scenarioData,
 		);
+		// check for warnings on this entity
+		// ("Additional reports about the build" in the GUI, see: warnings.js and editor-warnings.js)
+		var warnings = scenarioData.warnings;
+		Object.keys(warningChecks).forEach(function(checkName) {
+			var checkFunction = warningChecks[checkName];
+			var warningMessage = checkFunction(tiledObject.compositeEntity);
+			if (warningMessage === null) {
+				return;
+			}
+			var fixes = null;
+			var checkFixGenerator = warningFixGenerators[checkName];
+			if (checkFixGenerator) {
+				fixes = checkFixGenerator(tiledObject.compositeEntity);
+			}
+			if (! warnings[checkName]) {
+				warnings[checkName] = {};
+			}
+			var mapFileName = map.path.split('/').pop();
+			if (! warnings[checkName][mapFileName]) {
+				warnings[checkName][mapFileName] = [];
+			}
+			warnings[checkName][mapFileName].push({
+				name: entityNameOrNoName(tiledObject.compositeEntity.name),
+				id: tiledObject.compositeEntity.id,
+				sourceFile: mapFileName,
+				warningMessage: warningMessage,
+				fixes: fixes,
+			});
+		});
 	});
 	return map;
 };

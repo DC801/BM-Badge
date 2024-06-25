@@ -3,7 +3,20 @@
  "infinite":false,
  "layers":[
         {
-         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 257, 1, 1, 258, 1, 1, 259, 1, 1, 260, 1, 1, 261, 1, 1, 262, 1, 1, 263, 1, 1, 264, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 265, 1, 1, 266, 1, 1, 267, 1, 1, 268, 1, 1, 269, 1, 1, 270, 1, 1, 271, 1, 1, 272, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 273, 1, 1, 274, 1, 1, 275, 1, 1, 276, 1, 1, 277, 1, 1, 278, 1, 1, 279, 1, 1, 280, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 281, 1, 1, 282, 1, 1, 283, 1, 1, 284, 1, 1, 285, 1, 1, 286, 1, 1, 287, 1, 1, 288, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 257, 1, 1, 258, 1, 1, 259, 1, 1, 260, 1, 1, 261, 1, 1, 262, 1, 1, 263, 1, 1, 264, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 265, 1, 1, 266, 1, 1, 267, 1, 1, 268, 1, 1, 269, 1, 1, 270, 1, 1, 271, 1, 1, 272, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 273, 1, 1, 274, 1, 1, 275, 1, 1, 276, 1, 1, 277, 1, 1, 278, 1, 1, 279, 1, 1, 280, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 281, 1, 1, 282, 1, 1, 283, 1, 1, 284, 1, 1, 285, 1, 1, 286, 1, 1, 287, 1, 1, 288, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
          "height":14,
          "id":1,
          "name":"Background",
@@ -20,6 +33,7 @@
          "name":"Entities",
          "objects":[
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":2,
@@ -36,18 +50,23 @@
                          "value":"mage01-check_entity_name"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"mage01-look_script"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":96,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":3,
@@ -64,13 +83,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":192,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":4,
@@ -87,13 +106,13 @@
                          "value":"mage03-check_entity_scripts"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":288,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":5,
@@ -110,13 +129,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":384,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":6,
@@ -133,13 +152,13 @@
                          "value":"mage05-check_player_current_animation"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":480,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":7,
@@ -156,13 +175,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":576,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":8,
@@ -179,13 +198,13 @@
                          "value":"mage07-point_at_player"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":672,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":9,
@@ -202,13 +221,13 @@
                          "value":"mage08-point_away_from_player"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":768,
                  "y":96
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":10,
@@ -225,13 +244,13 @@
                          "value":"mage09-copy_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":96,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":11,
@@ -248,13 +267,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":192,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":12,
@@ -271,13 +290,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":288,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":13,
@@ -294,13 +313,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":384,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":14,
@@ -317,13 +336,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":480,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":15,
@@ -340,13 +359,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":576,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":326,
                  "height":32,
                  "id":16,
@@ -363,13 +382,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":672,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":17,
@@ -386,13 +405,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":768,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":18,
@@ -409,13 +428,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":96,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":19,
@@ -432,13 +451,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":192,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":20,
@@ -455,13 +474,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":288,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":21,
@@ -478,13 +497,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":384,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":22,
@@ -501,13 +520,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":480,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":23,
@@ -524,13 +543,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":576,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":24,
@@ -547,13 +566,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":672,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":25,
@@ -575,13 +594,13 @@
                          "value":79
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":768,
                  "y":288
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":26,
@@ -590,7 +609,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage25-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -598,13 +617,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":96,
                  "y":384
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":27,
@@ -613,7 +632,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage26-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -621,13 +640,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":192,
                  "y":384
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":28,
@@ -636,7 +655,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage27-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -644,13 +663,14 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":288,
                  "y":384
-                }, 
+                },
+            
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":29,
@@ -659,7 +679,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage28-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -667,13 +687,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":384,
                  "y":384
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":30,
@@ -682,7 +702,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage29-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -690,13 +710,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":480,
                  "y":384
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":31,
@@ -705,7 +725,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage30-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -713,13 +733,13 @@
                          "value":"null_script"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":576,
                  "y":384
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":32,
@@ -728,21 +748,26 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage31-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage31-tick"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":83
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":672,
                  "y":384
                 }, 
                 {
+                 "class":"",
                  "gid":321,
                  "height":32,
                  "id":67,
@@ -754,67 +779,66 @@
                          "value":true
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":96,
                  "y":160
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":75,
                  "name":"mage_11-point-a",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":256,
                  "y":128
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":76,
                  "name":"mage_11-point-b",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":352,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":77,
                  "name":"mage_11-point-c",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":256,
                  "y":256
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":79,
                  "name":"mage24-geometry-a",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":784,
                  "y":280
                 }, 
                 {
+                 "class":"",
                  "height":0,
                  "id":80,
                  "name":"mage24-geometry-b",
                  "point":true,
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":816,
@@ -832,6 +856,7 @@
          "name":"Geometries",
          "objects":[
                 {
+                 "class":"",
                  "height":0,
                  "id":69,
                  "name":"act03_test_geometry",
@@ -857,11 +882,22 @@
                          "y":0
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":736,
                  "y":64
+                }, 
+                {
+                 "class":"",
+                 "ellipse":true,
+                 "height":50,
+                 "id":83,
+                 "name":"31",
+                 "rotation":0,
+                 "visible":true,
+                 "width":50,
+                 "x":662,
+                 "y":343
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -875,6 +911,7 @@
          "name":"Doors",
          "objects":[
                 {
+                 "class":"",
                  "gid":411,
                  "height":32,
                  "id":78,
@@ -886,7 +923,6 @@
                          "value":"debug-hub-q"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":32,
                  "x":32,
@@ -899,21 +935,10 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":81,
+ "nextobjectid":84,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":""
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":""
-        }],
  "renderorder":"right-down",
- "tiledversion":"1.7.0",
+ "tiledversion":"1.9.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -938,6 +963,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.6",
+ "version":"1.9",
  "width":27
 }

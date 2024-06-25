@@ -120,7 +120,7 @@ var serializeDialogScreen = function (
 	var name = (
 		dialogScreen.name
 		|| (
-			entityIndex
+			entityIndex !== undefined
 				? dialogScreen.entity
 				: ""
 		)
@@ -151,7 +151,7 @@ var serializeDialogScreen = function (
 	var dataView = new DataView(result);
 	var offset = 0;
 	var nameStringId = serializeString(
-		name,
+		name || "",
 		map,
 		fileNameMap,
 		scenarioData,

@@ -1,0 +1,3436 @@
+{
+	"zigzagTestsGood": [
+		{
+			"inputString": "testScript {\n   action1\n   if ( conditionA || conditionB ) { behaviorAB }\n   action2\n}",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "bareword",
+						"value": "testScript"
+					},
+					{
+						"pos": 11,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 16,
+						"type": "bareword",
+						"value": "action1"
+					},
+					{
+						"pos": 27,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 30,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 32,
+						"type": "bareword",
+						"value": "conditionA"
+					},
+					{
+						"pos": 43,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 46,
+						"type": "bareword",
+						"value": "conditionB"
+					},
+					{
+						"pos": 57,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 59,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 61,
+						"type": "bareword",
+						"value": "behaviorAB"
+					},
+					{
+						"pos": 72,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 77,
+						"type": "bareword",
+						"value": "action2"
+					},
+					{
+						"pos": 85,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 16,
+					"type": "bareword",
+					"value": "action1"
+				},
+				{
+					"pos": 27,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 32,
+					"type": "bareword",
+					"value": "conditionA"
+				},
+				{
+					"pos": 57,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 57,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 59,
+					"type": "bareword",
+					"value": "testScript-BRANCH59",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 27,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 46,
+					"type": "bareword",
+					"value": "conditionB"
+				},
+				{
+					"pos": 57,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 57,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 59,
+					"type": "bareword",
+					"value": "testScript-BRANCH59",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 72,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 72,
+					"type": "bareword",
+					"value": "testScript-CONVERGED72",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 72,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 59,
+					"type": "bareword",
+					"value": "testScript-BRANCH59",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 59,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 61,
+					"type": "bareword",
+					"value": "behaviorAB"
+				},
+				{
+					"pos": 72,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 72,
+					"type": "bareword",
+					"value": "testScript-CONVERGED72",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 72,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 72,
+					"type": "bareword",
+					"value": "testScript-CONVERGED72",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 73,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 77,
+					"type": "bareword",
+					"value": "action2"
+				},
+				{
+					"pos": 85,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "testScript {\n\taction1\n\tif ( conditionA || conditionB ) { behaviorAB }\n\telse { behaviorX }\n\taction2\n}",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "bareword",
+						"value": "testScript"
+					},
+					{
+						"pos": 11,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 14,
+						"type": "bareword",
+						"value": "action1"
+					},
+					{
+						"pos": 22,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 25,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 27,
+						"type": "bareword",
+						"value": "conditionA"
+					},
+					{
+						"pos": 38,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 41,
+						"type": "bareword",
+						"value": "conditionB"
+					},
+					{
+						"pos": 52,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 54,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 56,
+						"type": "bareword",
+						"value": "behaviorAB"
+					},
+					{
+						"pos": 67,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 70,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 75,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 77,
+						"type": "bareword",
+						"value": "behaviorX"
+					},
+					{
+						"pos": 87,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 90,
+						"type": "bareword",
+						"value": "action2"
+					},
+					{
+						"pos": 98,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 14,
+					"type": "bareword",
+					"value": "action1"
+				},
+				{
+					"pos": 22,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 27,
+					"type": "bareword",
+					"value": "conditionA"
+				},
+				{
+					"pos": 52,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 52,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 54,
+					"type": "bareword",
+					"value": "testScript-BRANCH54",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 22,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 41,
+					"type": "bareword",
+					"value": "conditionB"
+				},
+				{
+					"pos": 52,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 52,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 54,
+					"type": "bareword",
+					"value": "testScript-BRANCH54",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 77,
+					"type": "bareword",
+					"value": "behaviorX"
+				},
+				{
+					"pos": 87,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 87,
+					"type": "bareword",
+					"value": "testScript-CONVERGED87",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 87,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 54,
+					"type": "bareword",
+					"value": "testScript-BRANCH54",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 54,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 56,
+					"type": "bareword",
+					"value": "behaviorAB"
+				},
+				{
+					"pos": 67,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 87,
+					"type": "bareword",
+					"value": "testScript-CONVERGED87",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 67,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 87,
+					"type": "bareword",
+					"value": "testScript-CONVERGED87",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 88,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 90,
+					"type": "bareword",
+					"value": "action2"
+				},
+				{
+					"pos": 98,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "testScript { action1 if ( conditionA || conditionB ) { behaviorAB } else if ( conditionC ) { behaviorC } else { behaviorX1 behaviorX2 } action2 }",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "bareword",
+						"value": "testScript"
+					},
+					{
+						"pos": 11,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 13,
+						"type": "bareword",
+						"value": "action1"
+					},
+					{
+						"pos": 21,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 24,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 26,
+						"type": "bareword",
+						"value": "conditionA"
+					},
+					{
+						"pos": 37,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 40,
+						"type": "bareword",
+						"value": "conditionB"
+					},
+					{
+						"pos": 51,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 53,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 55,
+						"type": "bareword",
+						"value": "behaviorAB"
+					},
+					{
+						"pos": 66,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 68,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 73,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 76,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 78,
+						"type": "bareword",
+						"value": "conditionC"
+					},
+					{
+						"pos": 89,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 91,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 93,
+						"type": "bareword",
+						"value": "behaviorC"
+					},
+					{
+						"pos": 103,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 105,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 110,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 112,
+						"type": "bareword",
+						"value": "behaviorX1"
+					},
+					{
+						"pos": 123,
+						"type": "bareword",
+						"value": "behaviorX2"
+					},
+					{
+						"pos": 134,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 136,
+						"type": "bareword",
+						"value": "action2"
+					},
+					{
+						"pos": 144,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 13,
+					"type": "bareword",
+					"value": "action1"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 26,
+					"type": "bareword",
+					"value": "conditionA"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 40,
+					"type": "bareword",
+					"value": "conditionB"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 68,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 78,
+					"type": "bareword",
+					"value": "conditionC"
+				},
+				{
+					"pos": 89,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 89,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 91,
+					"type": "bareword",
+					"value": "testScript-BRANCH91",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 112,
+					"type": "bareword",
+					"value": "behaviorX1"
+				},
+				{
+					"pos": 123,
+					"type": "bareword",
+					"value": "behaviorX2"
+				},
+				{
+					"pos": 134,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 134,
+					"type": "bareword",
+					"value": "testScript-CONVERGED134",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 134,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 55,
+					"type": "bareword",
+					"value": "behaviorAB"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 134,
+					"type": "bareword",
+					"value": "testScript-CONVERGED134",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 91,
+					"type": "bareword",
+					"value": "testScript-BRANCH91",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 91,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 93,
+					"type": "bareword",
+					"value": "behaviorC"
+				},
+				{
+					"pos": 103,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 134,
+					"type": "bareword",
+					"value": "testScript-CONVERGED134",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 103,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 134,
+					"type": "bareword",
+					"value": "testScript-CONVERGED134",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 135,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 136,
+					"type": "bareword",
+					"value": "action2"
+				},
+				{
+					"pos": 144,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "texstScript { action1 if ( conditionA || conditionB ) { behaviorAB } else if ( conditionC ) { behaviorC } else if ( conditionD ) { behaviorE } else if ( conditionF ) { behaviorG } else { behaviorX1 behaviorX2 } action2 }",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "bareword",
+						"value": "testScript"
+					},
+					{
+						"pos": 11,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 13,
+						"type": "bareword",
+						"value": "action1"
+					},
+					{
+						"pos": 21,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 24,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 26,
+						"type": "bareword",
+						"value": "conditionA"
+					},
+					{
+						"pos": 37,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 40,
+						"type": "bareword",
+						"value": "conditionB"
+					},
+					{
+						"pos": 51,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 53,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 55,
+						"type": "bareword",
+						"value": "behaviorAB"
+					},
+					{
+						"pos": 66,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 68,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 73,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 76,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 78,
+						"type": "bareword",
+						"value": "conditionC"
+					},
+					{
+						"pos": 89,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 91,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 93,
+						"type": "bareword",
+						"value": "behaviorC"
+					},
+					{
+						"pos": 103,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 105,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 110,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 113,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 115,
+						"type": "bareword",
+						"value": "conditionD"
+					},
+					{
+						"pos": 126,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 128,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 130,
+						"type": "bareword",
+						"value": "behaviorE"
+					},
+					{
+						"pos": 140,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 142,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 147,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 150,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 152,
+						"type": "bareword",
+						"value": "conditionF"
+					},
+					{
+						"pos": 163,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 165,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 167,
+						"type": "bareword",
+						"value": "behaviorG"
+					},
+					{
+						"pos": 177,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 179,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 184,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 186,
+						"type": "bareword",
+						"value": "behaviorX1"
+					},
+					{
+						"pos": 197,
+						"type": "bareword",
+						"value": "behaviorX2"
+					},
+					{
+						"pos": 208,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 210,
+						"type": "bareword",
+						"value": "action2"
+					},
+					{
+						"pos": 218,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 13,
+					"type": "bareword",
+					"value": "action1"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 26,
+					"type": "bareword",
+					"value": "conditionA"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 40,
+					"type": "bareword",
+					"value": "conditionB"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 68,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 78,
+					"type": "bareword",
+					"value": "conditionC"
+				},
+				{
+					"pos": 89,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 89,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 91,
+					"type": "bareword",
+					"value": "testScript-BRANCH91",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 105,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 115,
+					"type": "bareword",
+					"value": "conditionD"
+				},
+				{
+					"pos": 126,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 126,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 128,
+					"type": "bareword",
+					"value": "testScript-BRANCH128",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 142,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 152,
+					"type": "bareword",
+					"value": "conditionF"
+				},
+				{
+					"pos": 163,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 163,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 165,
+					"type": "bareword",
+					"value": "testScript-BRANCH165",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 186,
+					"type": "bareword",
+					"value": "behaviorX1"
+				},
+				{
+					"pos": 197,
+					"type": "bareword",
+					"value": "behaviorX2"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "testScript-CONVERGED208",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 55,
+					"type": "bareword",
+					"value": "behaviorAB"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "testScript-CONVERGED208",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 91,
+					"type": "bareword",
+					"value": "testScript-BRANCH91",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 91,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 93,
+					"type": "bareword",
+					"value": "behaviorC"
+				},
+				{
+					"pos": 103,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "testScript-CONVERGED208",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 103,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 128,
+					"type": "bareword",
+					"value": "testScript-BRANCH128",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 128,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 130,
+					"type": "bareword",
+					"value": "behaviorE"
+				},
+				{
+					"pos": 140,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "testScript-CONVERGED208",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 140,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 165,
+					"type": "bareword",
+					"value": "testScript-BRANCH165",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 165,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 167,
+					"type": "bareword",
+					"value": "behaviorG"
+				},
+				{
+					"pos": 177,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "testScript-CONVERGED208",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 177,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 208,
+					"type": "bareword",
+					"value": "testScript-CONVERGED208",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 209,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 210,
+					"type": "bareword",
+					"value": "action2"
+				},
+				{
+					"pos": 218,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "testScript { action1 if ( conditionA || conditionB ) { behaviorAB } action2 if ( conditionC || conditionD ) { behaviorCD } action3 n}",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "bareword",
+						"value": "testScript"
+					},
+					{
+						"pos": 11,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 13,
+						"type": "bareword",
+						"value": "action1"
+					},
+					{
+						"pos": 21,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 24,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 26,
+						"type": "bareword",
+						"value": "conditionA"
+					},
+					{
+						"pos": 37,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 40,
+						"type": "bareword",
+						"value": "conditionB"
+					},
+					{
+						"pos": 51,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 53,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 55,
+						"type": "bareword",
+						"value": "behaviorAB"
+					},
+					{
+						"pos": 66,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 68,
+						"type": "bareword",
+						"value": "action2"
+					},
+					{
+						"pos": 76,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 79,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 81,
+						"type": "bareword",
+						"value": "conditionC"
+					},
+					{
+						"pos": 92,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 95,
+						"type": "bareword",
+						"value": "conditionD"
+					},
+					{
+						"pos": 106,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 108,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 110,
+						"type": "bareword",
+						"value": "behaviorCD"
+					},
+					{
+						"pos": 121,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 123,
+						"type": "bareword",
+						"value": "action3"
+					},
+					{
+						"pos": 131,
+						"type": "bareword",
+						"value": "n"
+					},
+					{
+						"pos": 132,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 13,
+					"type": "bareword",
+					"value": "action1"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 26,
+					"type": "bareword",
+					"value": "conditionA"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 40,
+					"type": "bareword",
+					"value": "conditionB"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "testScript-CONVERGED66",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 55,
+					"type": "bareword",
+					"value": "behaviorAB"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "testScript-CONVERGED66",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "testScript-CONVERGED66",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 67,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 68,
+					"type": "bareword",
+					"value": "action2"
+				},
+				{
+					"pos": 76,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 81,
+					"type": "bareword",
+					"value": "conditionC"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "bareword",
+					"value": "testScript-BRANCH108",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 76,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 95,
+					"type": "bareword",
+					"value": "conditionD"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "bareword",
+					"value": "testScript-BRANCH108",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 121,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 121,
+					"type": "bareword",
+					"value": "testScript-CONVERGED121",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 121,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "bareword",
+					"value": "testScript-BRANCH108",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 110,
+					"type": "bareword",
+					"value": "behaviorCD"
+				},
+				{
+					"pos": 121,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 121,
+					"type": "bareword",
+					"value": "testScript-CONVERGED121",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 121,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 121,
+					"type": "bareword",
+					"value": "testScript-CONVERGED121",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 122,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 123,
+					"type": "bareword",
+					"value": "action3"
+				},
+				{
+					"pos": 131,
+					"type": "bareword",
+					"value": "n"
+				},
+				{
+					"pos": 132,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "\"bea script\" { wait 200ms copy \"face-player\" if (  entity Delmar type is sheep  || entity Delmar type is sheep_helga ) {  copy script face-player  show dialog { Beatrice \"He's a sheep!\" }  wait 500ms } else if ( entity Delmar type is old_man ) {  copy script face-player  show dialog { Beatrice \"He's his old self!\" }  wait 500ms } else {  copy script face-player  show dialog { Beatrice \"I'm not sure what to make of this....\" }  wait 500ms } set entity \"%SELF%\" interact_script to \"bea script\" }",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "quotedString",
+						"value": "bea script",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 13,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 15,
+						"type": "bareword",
+						"value": "wait"
+					},
+					{
+						"type": "duration",
+						"value": 200,
+						"pos": 20,
+						"originalValue": "200ms"
+					},
+					{
+						"pos": 26,
+						"type": "bareword",
+						"value": "copy"
+					},
+					{
+						"pos": 31,
+						"type": "quotedString",
+						"value": "face-player",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 45,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 48,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 51,
+						"type": "bareword",
+						"value": "entity"
+					},
+					{
+						"pos": 58,
+						"type": "bareword",
+						"value": "Delmar"
+					},
+					{
+						"pos": 65,
+						"type": "bareword",
+						"value": "type"
+					},
+					{
+						"pos": 70,
+						"type": "bareword",
+						"value": "is"
+					},
+					{
+						"pos": 73,
+						"type": "bareword",
+						"value": "sheep"
+					},
+					{
+						"pos": 80,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 83,
+						"type": "bareword",
+						"value": "entity"
+					},
+					{
+						"pos": 90,
+						"type": "bareword",
+						"value": "Delmar"
+					},
+					{
+						"pos": 97,
+						"type": "bareword",
+						"value": "type"
+					},
+					{
+						"pos": 102,
+						"type": "bareword",
+						"value": "is"
+					},
+					{
+						"pos": 105,
+						"type": "bareword",
+						"value": "sheep_helga"
+					},
+					{
+						"pos": 117,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 119,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 122,
+						"type": "bareword",
+						"value": "copy"
+					},
+					{
+						"pos": 127,
+						"type": "bareword",
+						"value": "script"
+					},
+					{
+						"pos": 134,
+						"type": "bareword",
+						"value": "face-player"
+					},
+					{
+						"pos": 147,
+						"type": "bareword",
+						"value": "show"
+					},
+					{
+						"pos": 152,
+						"type": "bareword",
+						"value": "dialog"
+					},
+					{
+						"pos": 159,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 161,
+						"type": "bareword",
+						"value": "Beatrice"
+					},
+					{
+						"pos": 170,
+						"type": "quotedString",
+						"value": "He's a sheep!",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 186,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 189,
+						"type": "bareword",
+						"value": "wait"
+					},
+					{
+						"type": "duration",
+						"value": 500,
+						"pos": 194,
+						"originalValue": "500ms"
+					},
+					{
+						"pos": 200,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 202,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 207,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 210,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 212,
+						"type": "bareword",
+						"value": "entity"
+					},
+					{
+						"pos": 219,
+						"type": "bareword",
+						"value": "Delmar"
+					},
+					{
+						"pos": 226,
+						"type": "bareword",
+						"value": "type"
+					},
+					{
+						"pos": 231,
+						"type": "bareword",
+						"value": "is"
+					},
+					{
+						"pos": 234,
+						"type": "bareword",
+						"value": "old_man"
+					},
+					{
+						"pos": 242,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 244,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 247,
+						"type": "bareword",
+						"value": "copy"
+					},
+					{
+						"pos": 252,
+						"type": "bareword",
+						"value": "script"
+					},
+					{
+						"pos": 259,
+						"type": "bareword",
+						"value": "face-player"
+					},
+					{
+						"pos": 272,
+						"type": "bareword",
+						"value": "show"
+					},
+					{
+						"pos": 277,
+						"type": "bareword",
+						"value": "dialog"
+					},
+					{
+						"pos": 284,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 286,
+						"type": "bareword",
+						"value": "Beatrice"
+					},
+					{
+						"pos": 295,
+						"type": "quotedString",
+						"value": "He's his old self!",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 316,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 319,
+						"type": "bareword",
+						"value": "wait"
+					},
+					{
+						"type": "duration",
+						"value": 500,
+						"pos": 324,
+						"originalValue": "500ms"
+					},
+					{
+						"pos": 330,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 332,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 337,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 340,
+						"type": "bareword",
+						"value": "copy"
+					},
+					{
+						"pos": 345,
+						"type": "bareword",
+						"value": "script"
+					},
+					{
+						"pos": 352,
+						"type": "bareword",
+						"value": "face-player"
+					},
+					{
+						"pos": 365,
+						"type": "bareword",
+						"value": "show"
+					},
+					{
+						"pos": 370,
+						"type": "bareword",
+						"value": "dialog"
+					},
+					{
+						"pos": 377,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 379,
+						"type": "bareword",
+						"value": "Beatrice"
+					},
+					{
+						"pos": 388,
+						"type": "quotedString",
+						"value": "I'm not sure what to make of this....",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 428,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 431,
+						"type": "bareword",
+						"value": "wait"
+					},
+					{
+						"type": "duration",
+						"value": 500,
+						"pos": 436,
+						"originalValue": "500ms"
+					},
+					{
+						"pos": 442,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 444,
+						"type": "bareword",
+						"value": "set"
+					},
+					{
+						"pos": 448,
+						"type": "bareword",
+						"value": "entity"
+					},
+					{
+						"pos": 455,
+						"type": "quotedString",
+						"value": "%SELF%",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 464,
+						"type": "bareword",
+						"value": "interact_script"
+					},
+					{
+						"pos": 480,
+						"type": "bareword",
+						"value": "to"
+					},
+					{
+						"pos": 483,
+						"type": "quotedString",
+						"value": "bea script",
+						"quotationMark": "\""
+					},
+					{
+						"pos": 496,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "quotedString",
+					"value": "bea script",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 13,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 15,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"type": "duration",
+					"value": 200,
+					"pos": 20,
+					"originalValue": "200ms"
+				},
+				{
+					"pos": 26,
+					"type": "bareword",
+					"value": "copy"
+				},
+				{
+					"pos": 31,
+					"type": "quotedString",
+					"value": "face-player",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 45,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "entity"
+				},
+				{
+					"pos": 58,
+					"type": "bareword",
+					"value": "Delmar"
+				},
+				{
+					"pos": 65,
+					"type": "bareword",
+					"value": "type"
+				},
+				{
+					"pos": 70,
+					"type": "bareword",
+					"value": "is"
+				},
+				{
+					"pos": 73,
+					"type": "bareword",
+					"value": "sheep"
+				},
+				{
+					"pos": 117,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 117,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 119,
+					"type": "quotedString",
+					"value": "bea script-BRANCH119",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 45,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 83,
+					"type": "bareword",
+					"value": "entity"
+				},
+				{
+					"pos": 90,
+					"type": "bareword",
+					"value": "Delmar"
+				},
+				{
+					"pos": 97,
+					"type": "bareword",
+					"value": "type"
+				},
+				{
+					"pos": 102,
+					"type": "bareword",
+					"value": "is"
+				},
+				{
+					"pos": 105,
+					"type": "bareword",
+					"value": "sheep_helga"
+				},
+				{
+					"pos": 117,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 117,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 119,
+					"type": "quotedString",
+					"value": "bea script-BRANCH119",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 202,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 212,
+					"type": "bareword",
+					"value": "entity"
+				},
+				{
+					"pos": 219,
+					"type": "bareword",
+					"value": "Delmar"
+				},
+				{
+					"pos": 226,
+					"type": "bareword",
+					"value": "type"
+				},
+				{
+					"pos": 231,
+					"type": "bareword",
+					"value": "is"
+				},
+				{
+					"pos": 234,
+					"type": "bareword",
+					"value": "old_man"
+				},
+				{
+					"pos": 242,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 242,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 244,
+					"type": "quotedString",
+					"value": "bea script-BRANCH244",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 340,
+					"type": "bareword",
+					"value": "copy"
+				},
+				{
+					"pos": 345,
+					"type": "bareword",
+					"value": "script"
+				},
+				{
+					"pos": 352,
+					"type": "bareword",
+					"value": "face-player"
+				},
+				{
+					"pos": 365,
+					"type": "bareword",
+					"value": "show"
+				},
+				{
+					"pos": 370,
+					"type": "bareword",
+					"value": "dialog"
+				},
+				{
+					"pos": 377,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 379,
+					"type": "bareword",
+					"value": "Beatrice"
+				},
+				{
+					"pos": 388,
+					"type": "quotedString",
+					"value": "I'm not sure what to make of this....",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 428,
+					"type": "operator",
+					"value": "}"
+				},
+				{
+					"pos": 431,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"type": "duration",
+					"value": 500,
+					"pos": 436,
+					"originalValue": "500ms"
+				},
+				{
+					"pos": 442,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 442,
+					"type": "quotedString",
+					"value": "bea script-CONVERGED442",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 442,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 119,
+					"type": "quotedString",
+					"value": "bea script-BRANCH119",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 119,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 122,
+					"type": "bareword",
+					"value": "copy"
+				},
+				{
+					"pos": 127,
+					"type": "bareword",
+					"value": "script"
+				},
+				{
+					"pos": 134,
+					"type": "bareword",
+					"value": "face-player"
+				},
+				{
+					"pos": 147,
+					"type": "bareword",
+					"value": "show"
+				},
+				{
+					"pos": 152,
+					"type": "bareword",
+					"value": "dialog"
+				},
+				{
+					"pos": 159,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 161,
+					"type": "bareword",
+					"value": "Beatrice"
+				},
+				{
+					"pos": 170,
+					"type": "quotedString",
+					"value": "He's a sheep!",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 186,
+					"type": "operator",
+					"value": "}"
+				},
+				{
+					"pos": 189,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"type": "duration",
+					"value": 500,
+					"pos": 194,
+					"originalValue": "500ms"
+				},
+				{
+					"pos": 200,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 442,
+					"type": "quotedString",
+					"value": "bea script-CONVERGED442",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 200,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 244,
+					"type": "quotedString",
+					"value": "bea script-BRANCH244",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 244,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 247,
+					"type": "bareword",
+					"value": "copy"
+				},
+				{
+					"pos": 252,
+					"type": "bareword",
+					"value": "script"
+				},
+				{
+					"pos": 259,
+					"type": "bareword",
+					"value": "face-player"
+				},
+				{
+					"pos": 272,
+					"type": "bareword",
+					"value": "show"
+				},
+				{
+					"pos": 277,
+					"type": "bareword",
+					"value": "dialog"
+				},
+				{
+					"pos": 284,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 286,
+					"type": "bareword",
+					"value": "Beatrice"
+				},
+				{
+					"pos": 295,
+					"type": "quotedString",
+					"value": "He's his old self!",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 316,
+					"type": "operator",
+					"value": "}"
+				},
+				{
+					"pos": 319,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"type": "duration",
+					"value": 500,
+					"pos": 324,
+					"originalValue": "500ms"
+				},
+				{
+					"pos": 330,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 442,
+					"type": "quotedString",
+					"value": "bea script-CONVERGED442",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 330,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 442,
+					"type": "quotedString",
+					"value": "bea script-CONVERGED442",
+					"quotationMark": "\"",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 443,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 444,
+					"type": "bareword",
+					"value": "set"
+				},
+				{
+					"pos": 448,
+					"type": "bareword",
+					"value": "entity"
+				},
+				{
+					"pos": 455,
+					"type": "quotedString",
+					"value": "%SELF%",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 464,
+					"type": "bareword",
+					"value": "interact_script"
+				},
+				{
+					"pos": 480,
+					"type": "bareword",
+					"value": "to"
+				},
+				{
+					"pos": 483,
+					"type": "quotedString",
+					"value": "bea script",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 496,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "testScript { action1 if ( conditionA || conditionB ) { behaviorAB } action2 if ( conditionC || conditionD ) { behaviorCD if (condition1) { behavior1 } else { behavior99 } behaviorCDCD } action3 }",
+			"lex": {
+				"success": true,
+				"tokens": [
+					{
+						"pos": 0,
+						"type": "bareword",
+						"value": "testScript"
+					},
+					{
+						"pos": 11,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 13,
+						"type": "bareword",
+						"value": "action1"
+					},
+					{
+						"pos": 21,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 24,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 26,
+						"type": "bareword",
+						"value": "conditionA"
+					},
+					{
+						"pos": 37,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 40,
+						"type": "bareword",
+						"value": "conditionB"
+					},
+					{
+						"pos": 51,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 53,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 55,
+						"type": "bareword",
+						"value": "behaviorAB"
+					},
+					{
+						"pos": 66,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 68,
+						"type": "bareword",
+						"value": "action2"
+					},
+					{
+						"pos": 76,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 79,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 81,
+						"type": "bareword",
+						"value": "conditionC"
+					},
+					{
+						"pos": 92,
+						"type": "operator",
+						"value": "||"
+					},
+					{
+						"pos": 95,
+						"type": "bareword",
+						"value": "conditionD"
+					},
+					{
+						"pos": 106,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 108,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 110,
+						"type": "bareword",
+						"value": "behaviorCD"
+					},
+					{
+						"pos": 121,
+						"type": "bareword",
+						"value": "if"
+					},
+					{
+						"pos": 124,
+						"type": "operator",
+						"value": "("
+					},
+					{
+						"pos": 125,
+						"type": "bareword",
+						"value": "condition1"
+					},
+					{
+						"pos": 135,
+						"type": "operator",
+						"value": ")"
+					},
+					{
+						"pos": 137,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 139,
+						"type": "bareword",
+						"value": "behavior1"
+					},
+					{
+						"pos": 149,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 151,
+						"type": "bareword",
+						"value": "else"
+					},
+					{
+						"pos": 156,
+						"type": "operator",
+						"value": "{"
+					},
+					{
+						"pos": 158,
+						"type": "bareword",
+						"value": "behavior99"
+					},
+					{
+						"pos": 169,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 171,
+						"type": "bareword",
+						"value": "behaviorCDCD"
+					},
+					{
+						"pos": 184,
+						"type": "operator",
+						"value": "}"
+					},
+					{
+						"pos": 186,
+						"type": "bareword",
+						"value": "action3"
+					},
+					{
+						"pos": 194,
+						"type": "operator",
+						"value": "}"
+					}
+				]
+			},
+			"expectedOutput": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 13,
+					"type": "bareword",
+					"value": "action1"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 26,
+					"type": "bareword",
+					"value": "conditionA"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 21,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 40,
+					"type": "bareword",
+					"value": "conditionB"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 51,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "testScript-CONVERGED66",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "bareword",
+					"value": "testScript-BRANCH53",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 53,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 55,
+					"type": "bareword",
+					"value": "behaviorAB"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "testScript-CONVERGED66",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 66,
+					"type": "bareword",
+					"value": "testScript-CONVERGED66",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 67,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 68,
+					"type": "bareword",
+					"value": "action2"
+				},
+				{
+					"pos": 76,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 81,
+					"type": "bareword",
+					"value": "conditionC"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "bareword",
+					"value": "testScript-BRANCH108",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 76,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 95,
+					"type": "bareword",
+					"value": "conditionD"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 106,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "bareword",
+					"value": "testScript-BRANCH108",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 184,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 184,
+					"type": "bareword",
+					"value": "testScript-CONVERGED184",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 184,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "bareword",
+					"value": "testScript-BRANCH108",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 108,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 110,
+					"type": "bareword",
+					"value": "behaviorCD"
+				},
+				{
+					"pos": 121,
+					"type": "bareword",
+					"value": "if",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 125,
+					"type": "bareword",
+					"value": "condition1"
+				},
+				{
+					"pos": 135,
+					"type": "bareword",
+					"value": "then",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 135,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 137,
+					"type": "bareword",
+					"value": "testScript-BRANCH108-BRANCH137",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 158,
+					"type": "bareword",
+					"value": "behavior99"
+				},
+				{
+					"pos": 169,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 169,
+					"type": "bareword",
+					"value": "testScript-BRANCH108-CONVERGED169",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 169,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 137,
+					"type": "bareword",
+					"value": "testScript-BRANCH108-BRANCH137",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 137,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 139,
+					"type": "bareword",
+					"value": "behavior1"
+				},
+				{
+					"pos": 149,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 169,
+					"type": "bareword",
+					"value": "testScript-BRANCH108-CONVERGED169",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 149,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 169,
+					"type": "bareword",
+					"value": "testScript-BRANCH108-CONVERGED169",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 170,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 171,
+					"type": "bareword",
+					"value": "behaviorCDCD"
+				},
+				{
+					"pos": 184,
+					"type": "bareword",
+					"value": "goto",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 184,
+					"type": "bareword",
+					"value": "testScript-CONVERGED184",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 184,
+					"type": "operator",
+					"value": "}",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 184,
+					"type": "bareword",
+					"value": "testScript-CONVERGED184",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 185,
+					"type": "operator",
+					"value": "{",
+					"macro": "zigzag"
+				},
+				{
+					"pos": 186,
+					"type": "bareword",
+					"value": "action3"
+				},
+				{
+					"pos": 194,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		}
+	],
+	"zigzagTestsFail": [
+		{
+
+			"inputString": "testScript { action1 if ( conditionA || conditionB ) else { behaviorAB } action2 }",
+			"errorSubstring": "Zigzag parseSingleZig: Expected '{', found 'else'"
+		},
+		{
+			"inputString": "testScript { action1 if ( conditionA || conditionB { behaviorAB } action2 }",
+			"errorSubstring": "Zigzag parseSingleZig: Collection failure! (Is matching ')' missing?)"
+		},
+		{
+			"inputString": "testScript { action1 if ( conditionA || conditionB ) { behaviorAB",
+			"errorSubstring": "Zigzag parseSingleZig: Collection failure! (Is matching '}' missing?)"
+		}
+	],
+	"constantsTestsGood": [
+		{
+			"inputString": "testScript { const!($five = 5) wait $five }",
+			"outputTokens": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 11,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 31,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"pos": 36,
+					"type": "number",
+					"value": 5,
+					"declarationName": "$five",
+					"macro": "constants",
+					"declarationPos": 28
+				},
+				{
+					"pos": 42,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "const!($five = 5) testScript { wait $five }",
+			"outputTokens": [
+				{
+					"pos": 18,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 29,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 31,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"pos": 36,
+					"type": "number",
+					"value": 5,
+					"declarationName": "$five",
+					"macro": "constants",
+					"declarationPos": 15
+				},
+				{
+					"pos": 42,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		},
+		{
+			"inputString": "const! ( $five = 5 $four = 4 ) testScript { wait $four wait $five }",
+			"outputTokens": [
+				{
+					"pos": 31,
+					"type": "bareword",
+					"value": "testScript"
+				},
+				{
+					"pos": 42,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 44,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"pos": 49,
+					"type": "number",
+					"value": 4,
+					"declarationName": "$four",
+					"macro": "constants",
+					"declarationPos": 27
+				},
+				{
+					"pos": 55,
+					"type": "bareword",
+					"value": "wait"
+				},
+				{
+					"pos": 60,
+					"type": "number",
+					"value": 5,
+					"declarationName": "$five",
+					"macro": "constants",
+					"declarationPos": 17
+				},
+				{
+					"pos": 66,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		}
+	],
+	"constantsTestsFail" : [
+		{
+			"inputString": "wait $undefinedVar",
+			"errorSubstring": "Constant $undefinedVar is undefined!"
+		}
+	]
+}
