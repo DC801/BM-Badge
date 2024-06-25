@@ -33,6 +33,7 @@ output/
 .project
 .settings/
 .vscode/
+.vs/
 .idea/
 *.tiled-session
 *.code-workspace
