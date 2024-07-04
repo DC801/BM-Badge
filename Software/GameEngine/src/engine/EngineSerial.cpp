@@ -22,30 +22,6 @@ void EngineSerial::HandleInput()
 {
    //handle_usb_serial_input();
 
-<<<<<<< HEAD
-#ifdef DC801_EMBEDDED
-	handle_usb_serial_input();
-#endif
-	if(was_serial_started) {
-		if(on_start_function_pointer != nullptr) {
-			on_start_function_pointer();
-		}
-		was_serial_started = false;
-	}
-	if(was_command_entered) {
-		if(on_command_function_pointer != nullptr) {
-			on_command_function_pointer(command_buffer);
-		}
-		EngineSendSerialMessage("");
-		memset(
-			command_buffer,
-			0,
-			command_buffer_length
-		);
-		command_buffer_length = 0;
-		was_command_entered = false;
-	}
-=======
    if (was_serial_started)
    {
       if (onStart != nullptr)
@@ -65,7 +41,6 @@ void EngineSerial::HandleInput()
       //commandBuffer
       was_command_entered = false;
    }
->>>>>>> scriptFixes
 }
 
 

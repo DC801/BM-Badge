@@ -82,7 +82,7 @@ struct AnimationDirection
 
 struct MagePortrait
 {
-   char portrait[32];
+   char portrait[32]{ 0 };
    char padding[3]{ 0 };
    uint8_t emoteCount{ 0 };
 
@@ -141,11 +141,11 @@ public:
          return;
       }
 
-      minXChange = std::min<int>(minXChange, x);
-      maxXChange = std::max<int>(maxXChange, x);
+      //minXChange = std::min<int>(minXChange, x);
+      //maxXChange = std::max<int>(maxXChange, x);
 
-      minYChange = std::min<int>(minYChange, y);
-      maxYChange = std::max<int>(maxYChange, y);
+      //minYChange = std::min<int>(minYChange, y);
+      //maxYChange = std::max<int>(maxYChange, y);
 
       frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
    }

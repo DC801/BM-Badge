@@ -1,344 +1,277 @@
-#include "mage_map.h"
-#include "EngineROM.h"
+﻿#include "mage_map.h"
+#include <algorithm>
+#include <numeric>
+#include <optional>
+#include <ranges>
+#include <utility>
+#include <vector>
 #include "EnginePanic.h"
+#include "mage_rom.h"
+#include "mage_script_control.h"
+#include "shim_err.h"
 
-MageMap::MageMap(uint32_t address)
+#ifdef DC801_EMBEDDED
+#include "modules/drv_ili9341.h"
+#endif
+
+void MapControl::Load()
 {
-	uint32_t size = 0;
-	uint32_t tilesPerLayer = 0;
+   auto offset = ROM()->GetOffsetByIndex<MapData>(mapLoadId);
+   currentMap.emplace(offset);
 
-	// Read name
-	EngineROM_Read(
-		address,
-		16,
-		(uint8_t *)name,
-		"Failed to read Map property 'name'"
-	);
-	name[16] = 0; // Null terminate
-	address += 16;
+   for (auto i = 0; i < currentMap->scriptCount; i++)
+   {
+      scripts.push_back(ROM()->GetReadPointerByIndex<MageScript>(currentMap->scriptGlobalIDs[i]));
+   }
 
-	//read tileWidth
-	EngineROM_Read(
-		address,
-		sizeof(tileWidth),
-		(uint8_t *)&tileWidth,
-		"Failed to read Map property 'tileWidth'"
-	);
-	tileWidth = ROM_ENDIAN_U2_VALUE(tileWidth);
-	address += sizeof(tileWidth);
+   for (auto i = 0; i < currentMap->entityCount; i++)
+   {
+      // populate the MapControl's copy of the Entity Data
+      auto& entityData = Get<MageEntityData>(i);
+      auto entityAddress = ROM()->GetOffsetByIndex<MageEntityData>(currentMap->entityGlobalIDs[i]);
+      ROM()->Read<MageEntityData>(entityData, entityAddress);
 
-	//read tileHeight
-	EngineROM_Read(
-		address,
-		sizeof(tileHeight),
-		(uint8_t *)&tileHeight,
-		"Failed to read Map property 'tileHeight'"
-	);
-	tileHeight = ROM_ENDIAN_U2_VALUE(tileHeight);
-	address += sizeof(tileHeight);
+      // convert entity coordinates into map coordinates (0 at bottom -> 0 at top)
+      entityData.targetPosition.y -= ROM()->GetReadPointerByIndex<MageTileset>(entityData.primaryId)->TileHeight;
 
-	//read cols
-	EngineROM_Read(
-		address,
-		sizeof(cols),
-		(uint8_t *)&cols,
-		"Failed to read Map property 'cols'"
-	);
-	cols = ROM_ENDIAN_U2_VALUE(cols);
-	address += sizeof(cols);
+      // fill renderable data from the entity
+      Get<RenderableData>(i).UpdateFrom(entityData);
+   }
 
-	//read rows
-	EngineROM_Read(
-		address,
-		sizeof(rows),
-		(uint8_t *)&rows,
-		"Failed to read Map property 'rows'"
-	);
-	rows = ROM_ENDIAN_U2_VALUE(rows);
-	address += sizeof(rows);
-	tilesPerLayer = cols * rows;
+   onTick = MageScriptState{ currentMap->onTickScriptId, false };
 
-	//read onLoad
-	EngineROM_Read(
-		address,
-		sizeof(onLoad),
-		(uint8_t *)&onLoad,
-		"Failed to read Map property 'onLoad'"
-	);
-	onLoad = ROM_ENDIAN_U2_VALUE(onLoad);
-	address += sizeof(onLoad);
-
-	//read onTick
-	EngineROM_Read(
-		address,
-		sizeof(onTick),
-		(uint8_t *)&onTick,
-		"Failed to read Map property 'onTick'"
-	);
-	onTick = ROM_ENDIAN_U2_VALUE(onTick);
-	address += sizeof(onTick);
-
-	//read onLook
-	EngineROM_Read(
-		address,
-		sizeof(onLook),
-		(uint8_t *)&onLook,
-		"Failed to read Map property 'onLook'"
-	);
-	onLook = ROM_ENDIAN_U2_VALUE(onLook);
-	address += sizeof(onLook);
-
-	//read layerCount
-	EngineROM_Read(
-		address,
-		sizeof(layerCount),
-		&layerCount,
-		"Failed to read Map property 'layerCount'"
-	);
-	address += sizeof(layerCount);
-
-	//read playerEntityIndex
-	EngineROM_Read(
-		address,
-		sizeof(playerEntityIndex),
-		&playerEntityIndex,
-		"Failed to read Map property 'playerEntityIndex'"
-	);
-	address += sizeof(playerEntityIndex);
-
-	//read entityCount
-	EngineROM_Read(
-		address,
-		sizeof(entityCount),
-		(uint8_t *)&entityCount,
-		"Failed to read Map property 'entityCount'"
-	);
-	entityCount = ROM_ENDIAN_U2_VALUE(entityCount);
-	address += sizeof(entityCount);
-
-	//read geometryCount
-	EngineROM_Read(
-		address,
-		sizeof(geometryCount),
-		(uint8_t *)&geometryCount,
-		"Failed to read Map property 'geometryCount'"
-	);
-	geometryCount = ROM_ENDIAN_U2_VALUE(geometryCount);
-	address += sizeof(geometryCount);
-
-	//read scriptCount
-	EngineROM_Read(
-		address,
-		sizeof(scriptCount),
-		(uint8_t *)&scriptCount,
-		"Failed to read Map property 'scriptCount'"
-	);
-	scriptCount = ROM_ENDIAN_U2_VALUE(scriptCount);
-	address += sizeof(scriptCount);
-
-	//read goDirectionCount
-	EngineROM_Read(
-		address,
-		sizeof(goDirectionCount),
-		(uint8_t *)&goDirectionCount,
-		"Failed to read Map property 'goDirectionCount'"
-	);
-	address += sizeof(goDirectionCount);
-
-	address += sizeof(uint8_t); // padding
-
-	//read entityGlobalIds
-	entityGlobalIds = std::make_unique<uint16_t[]>(entityCount);
-	size = sizeof(uint16_t) * entityCount;
-	EngineROM_Read(
-		address,
-		size,
-		(uint8_t *)entityGlobalIds.get(),
-		"Failed to read Map property 'entityGlobalIds'"
-	);
-	ROM_ENDIAN_U2_BUFFER(entityGlobalIds.get(), entityCount);
-	address += size;
-
-	//read geometryGlobalIds
-	geometryGlobalIds = std::make_unique<uint16_t[]>(geometryCount);
-	size = sizeof(uint16_t) * geometryCount;
-	EngineROM_Read(
-		address,
-		size,
-		(uint8_t *)geometryGlobalIds.get(),
-		"Failed to read Map property 'geometryGlobalIds'"
-	);
-	ROM_ENDIAN_U2_BUFFER(geometryGlobalIds.get(), geometryCount);
-	address += size;
-
-	//read entityGlobalIds
-	scriptGlobalIds = std::make_unique<uint16_t[]>(scriptCount);
-	size = sizeof(uint16_t) * scriptCount;
-	EngineROM_Read(
-		address,
-		size,
-		(uint8_t *)scriptGlobalIds.get(),
-		"Failed to read Map property 'scriptGlobalIds'"
-	);
-	ROM_ENDIAN_U2_BUFFER(scriptGlobalIds.get(), scriptCount);
-	address += size;
-
-	//read goDirections
-	goDirections = std::make_unique<MapGoDirection[]>(goDirectionCount);
-	size = sizeof(MapGoDirection) * goDirectionCount;
-	EngineROM_Read(
-		address,
-		size,
-		(uint8_t *)goDirections.get(),
-		"Failed to read Map property 'goDirections'"
-	);
-	for (int i = 0; i < goDirectionCount; ++i) {
-		ROM_ENDIAN_U2_VALUE(&goDirections[i].mapLocalScriptId);
-	}
-	address += size;
-
-	//padding to align with uint32_t memory spacing:
-	if ((entityCount + geometryCount + scriptCount) % 2)
-	{
-		address += sizeof(uint16_t); // Padding
-	}
-
-	mapLayerOffsets = std::make_unique<uint32_t[]>(layerCount);
-
-	for (uint32_t i = 0; i < layerCount; i++)
-	{
-		mapLayerOffsets[i] = address;
-		address += tilesPerLayer * (sizeof(uint16_t) + (2 * sizeof(uint8_t)));
-	}
-
-	return;
+   auto player = getPlayerEntityData();
+   if (player)
+   {
+      player->SetName(ROM()->GetCurrentSave().name);
+   }
+   mapLoadId = MAGE_NO_MAP;
 }
 
-uint32_t MageMap::Size() const
+void MapControl::OnTick(MageScriptControl* scriptControl)
 {
-	return sizeof(name) +
-		sizeof(tileWidth) +
-		sizeof(tileHeight) +
-		sizeof(cols) +
-		sizeof(rows) +
-		sizeof(onLoad) +
-		sizeof(onTick) +
-		sizeof(onLook) +
-		sizeof(layerCount) +
-		sizeof(entityCount) +
-		sizeof(geometryCount) +
-		sizeof(scriptCount) +
-		sizeof(goDirectionCount) +
-		(entityCount * sizeof(uint16_t)) +
-		(geometryCount * sizeof(uint16_t)) +
-		(scriptCount * sizeof(uint16_t)) +
-		(goDirectionCount * sizeof(MapGoDirection)) +
-		(layerCount * sizeof(uint32_t));
+   //the map's onTick script will run every tick, restarting from the beginning as it completes
+   onTick.scriptIsRunning = true;
+   scriptControl->processScript(onTick, MAGE_MAP_ENTITY);
 }
 
-std::string MageMap::Name() const
+MapData::MapData(uint32_t& offset)
 {
-	return std::string(name);
+   auto layerCount = uint8_t{ 0 };
+   ROM()->Read(name, offset, MapNameLength);
+   ROM()->Read(tileWidth, offset);
+   ROM()->Read(tileHeight, offset);
+   ROM()->Read(cols, offset);
+   ROM()->Read(rows, offset);
+   ROM()->Read(onLoadScriptId, offset);
+   ROM()->Read(onTickScriptId, offset);
+   ROM()->Read(onLookScriptId, offset);
+   ROM()->Read(layerCount, offset);
+   ROM()->Read(playerEntityIndex, offset);
+   ROM()->Read(entityCount, offset);
+   ROM()->Read(geometryCount, offset);
+   ROM()->Read(scriptCount, offset);
+   ROM()->Read(goDirectionsCount, offset);
+
+   if (entityCount > MAX_ENTITIES_PER_MAP)
+   {
+      ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map", MAX_ENTITIES_PER_MAP);
+   }
+
+   offset += sizeof(uint8_t); // padding for 4-byte alignment
+
+   entityGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, entityCount);
+   geometryGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, geometryCount);
+   scriptGlobalIDs = ROM()->GetViewOf<uint16_t>(offset, scriptCount);
+   goDirections = ROM()->GetViewOf<GoDirection>(offset, goDirectionsCount);
+
+   //padding to align with uint32_t memory spacing:
+   if ((entityCount + geometryCount + scriptCount) % 2)
+   {
+      offset += sizeof(uint16_t);
+   }
+
+   layers = MapLayers(offset, ROM()->GetViewOf<MapTile>(offset, (uint16_t)(layerCount * rows * cols)), (uint16_t)(rows * cols));
 }
 
-uint16_t MageMap::TileWidth() const
+void MapControl::DrawEntities() const
 {
-	return tileWidth;
+   //sort entity indices by the entity y values:
+   std::vector<size_t> entityDrawOrder(currentMap->entityCount);
+   std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
+   const auto sortByY = [&](size_t i1, size_t i2) {
+      return Get<MageEntityData>(i1).targetPosition.y < Get<MageEntityData>(i2).targetPosition.y;
+      };
+   std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
+
+   //now that we've got a sorted array with the lowest y values first,
+   //iterate through it and draw the entities one by one:
+   for (auto& entityIndex : entityDrawOrder)
+   {
+      Get<RenderableData>(entityIndex).Draw(frameBuffer);
+   }
 }
 
-uint16_t MageMap::TileHeight() const
+void MapControl::DrawLayer(uint8_t layer) const
 {
-	return tileHeight;
+   //               map height - screen height
+   // *********************************************************** 
+   // *|             ____________________________              |*
+   // *|                                                       |*
+   // *|                                                       |*
+   // *|             ____________________________screen width  |* 
+   // *|             |##########################|              |*
+   // *|             |##########################|              |*
+   // *|             |##########################|              |* screen width + map width
+   // *|             |##########################|              |* 
+   // *|             |##########################|              |*
+   // *|             |##########################|              |*
+   // *|             ����������������������������              |*
+   // *|             screen height                             |*
+   // *|                                                       |*
+   // *|                                                       |*
+   // *|             ����������������������������              |*
+   // ***********************************************************
+   //                screen height + map height
+
+
+   // identify start and stop tiles to draw
+   auto startTileX = std::max(0, (frameBuffer->camera.position.x - DrawWidth) / currentMap->tileWidth);
+   auto startTileY = std::max(0, (frameBuffer->camera.position.y - DrawHeight) / currentMap->tileHeight);
+
+   auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
+   auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
+
+   for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
+   {
+      for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
+      {
+         auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
+         auto currentTile = &currentMap->layers[layer][tileIndex];
+
+         if (!currentTile->tileId) { continue; }
+
+         auto tileDrawX = currentMap->tileWidth * mapTileCol;
+         auto tileDrawY = currentMap->tileHeight * mapTileRow;
+
+         frameBuffer->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
+      }
+   }
 }
 
-uint16_t MageMap::Cols() const
+void MapControl::Draw() const
 {
-	return cols;
+   // always draw layer 0 
+   DrawLayer(0);
+
+   //draw remaining map layers except the last one before drawing entities.
+   for (uint8_t layerIndex = 1; layerIndex < LayerCount() - 1; layerIndex++)
+   {
+      DrawLayer(layerIndex);
+   }
+
+   DrawEntities();
+
+   //draw the final layer above the entities only when there is more than one layer
+   if (LayerCount() > 1)
+   {
+      DrawLayer(LayerCount() - 1);
+   }
 }
 
-uint16_t MageMap::Rows() const
+std::optional<uint16_t> MapControl::Update()
 {
-	return rows;
-}
+   auto playerEntityData = getPlayerEntityData();
+   const auto playerRenderableData = getPlayerRenderableData();
 
-uint8_t MageMap::LayerCount() const
-{
-	return layerCount;
-}
+   // require a player on the map to move/interact
+   if (!playerEntityData) { return std::nullopt; }
 
-uint8_t MageMap::EntityCount() const
-{
-	return entityCount;
-}
+   const auto oldPosition = playerRenderableData->origin;
 
-uint16_t MageMap::GeometryCount() const
-{
-	return geometryCount;
-}
+   const auto topLeft = oldPosition;
+   const auto topRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, 0 };
+   const auto botLeft = oldPosition + EntityPoint{ 0, playerRenderableData->hitBox.h };
+   const auto botRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, playerRenderableData->hitBox.h };
 
-uint16_t MageMap::ScriptCount() const
-{
-	return scriptCount;
-}
+   std::vector<EntityPoint> hitboxPointsToCheck{};
 
-uint16_t MageMap::getGlobalEntityId(uint16_t mapLocalEntityId) const
-{
-	if (!entityGlobalIds) return 0;
-	return entityGlobalIds[mapLocalEntityId % entityCount];
-}
+   const uint8_t interactLength = 32;
+   auto interactBox = EntityRect{ playerRenderableData->hitBox };
+   std::optional<uint16_t> interactionId = std::nullopt;
 
-uint16_t MageMap::getGlobalGeometryId(uint16_t mapLocalGeometryId) const
-{
-	if (!geometryGlobalIds) return 0;
-	return geometryGlobalIds[mapLocalGeometryId % geometryCount];
-}
+   for (auto i = 0; i < currentMap->entityCount; i++)
+   {
+      auto& entity = Get<MageEntityData>(i);
+      auto& renderableData = Get<RenderableData>(i);
+      auto entityPosition = Get<RenderableData>(i).center();
 
-uint16_t MageMap::getGlobalScriptId(uint16_t mapLocalScriptId) const
-{
-	if (!scriptGlobalIds) return 0;
-	return scriptGlobalIds[mapLocalScriptId % scriptCount];
-}
+      renderableData.curFrameDuration += IntegrationStepSize;
+      renderableData.UpdateFrom(entity);
 
-std::string MageMap::getDirectionNames() const
-{
-	std::string result = "";
-	for (int i = 0; i < goDirectionCount; ++i) {
-		result += "\t";
-		result += goDirections[i].name;
-	}
-	return result;
-}
+      if (interactBox.Contains(entityPosition))
+      {
+         interactionId.emplace(i);
+      }
+   }
 
-void badAsciiLowerCaser(std::string *data) {
-	size_t length = data->size();
-	for(size_t i=0; i < length; i++) {
-		(*data)[i] = std::tolower((*data)[i]);
-	}
-}
-uint16_t MageMap::getDirectionScriptId(const std::string directionName) const {
-	uint16_t result = 0;
-	for (int i = 0; i < goDirectionCount; i++) {
-		MapGoDirection direction = goDirections[i];
-		if (!strcmp(direction.name, directionName.c_str())) {
-			result = direction.mapLocalScriptId;
-			break;
-		}
-	}
-	return result;
-}
+   if (playerEntityData->targetPosition.x < playerRenderableData->origin.x)
+   {
+      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::WEST);
+      interactBox.origin.x -= interactLength;
+      interactBox.w = interactLength;
+      hitboxPointsToCheck.push_back(topLeft);
+      hitboxPointsToCheck.push_back(botLeft);
+   }
+   else if (playerEntityData->targetPosition.x > playerRenderableData->origin.x)
+   {
+      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::EAST);
+      interactBox.origin.x += interactBox.w;
+      interactBox.w = interactLength;
+      hitboxPointsToCheck.push_back(topRight);
+      hitboxPointsToCheck.push_back(botRight);
+   }
 
-uint32_t MageMap::LayerOffset(uint16_t num) const
-{
-	if (!mapLayerOffsets) return 0;
+   if (playerEntityData->targetPosition.y < playerRenderableData->origin.y)
+   {
+      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::NORTH);
+      interactBox.origin.y -= interactLength;
+      interactBox.h = interactLength;
+      hitboxPointsToCheck.push_back(topLeft);
+      hitboxPointsToCheck.push_back(topRight);
+   }
+   else if (playerEntityData->targetPosition.y > playerRenderableData->origin.y)
+   {
+      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::SOUTH);
+      interactBox.origin.y += interactBox.h;
+      interactBox.h = interactLength;
+      hitboxPointsToCheck.push_back(botLeft);
+      hitboxPointsToCheck.push_back(botRight);
+   }
 
-	if (layerCount > num)
-	{
-		return mapLayerOffsets[num];
-	}
+   auto collides = false;
+   for (auto& hitboxPoint : hitboxPointsToCheck)
+   {
+      const auto column = hitboxPoint.x / currentMap->tileWidth;
+      const auto row = hitboxPoint.y / currentMap->tileHeight;
+      const auto tileOffsetPoint = EntityPoint{ (uint16_t)(currentMap->tileWidth * column), (uint16_t)(currentMap->tileHeight * row) };
+      const auto tileId = column + currentMap->cols * row;
 
-	return 0;
-}
+      // ignore checks that are outside the bounds of the map
+      if (tileId >= currentMap->layers[0].size()) { continue; }
 
-uint8_t MageMap::getMapLocalPlayerEntityIndex() {
-	return playerEntityIndex;
+      const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentMap->layers[0][tileId].tilesetId);
+
+      // check for world collision:
+      const auto tileGeometryId = currentMap->layers[0][tileId].tileId;
+      auto geometry = tileset->GetGeometryForTile(tileGeometryId);
+      if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
+      {
+         // TODO: bring back the intersection-offset algorithm
+         playerEntityData->targetPosition = oldPosition;
+         break;
+      }
+   }
+
+   return interactionId;
 }

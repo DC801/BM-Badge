@@ -7,6 +7,10 @@
 #include <string>
 #include <string_view>
 
+#include "games/mage/mage_defines.h"
+#include "games/mage/mage_rom.h"
+#include "games/mage/mage_map.h"
+
 class MapControl;
 
 class StringLoader

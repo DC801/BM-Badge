@@ -1,5 +1,4 @@
 #include "mage_entity.h"
-#include "mage_script_control.h"
 
 void RenderableData::UpdateFrom(const MageEntityData& entity)
 {

@@ -141,7 +141,7 @@ private:
 	uint8_t hexRows{ 0 };
 
 	//this is the total number of bytes that will be accessible to the hex editor.
-	//it updates based on the MageGame map.entityCount()
+	//it updates based on the gameControl map.entityCount()
 	uint16_t memTotal{ 0 };
 
 	//this holds the current page that is displayed on the hex editor.

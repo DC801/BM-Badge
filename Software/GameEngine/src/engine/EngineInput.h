@@ -1,8 +1,7 @@
 #ifndef ENGINE_INPUT_H
 #define ENGINE_INPUT_H
 
-#include "src/games/mage/mage_defines.h"
-#include "modules/keyboard.h"
+#include "keyboard.h"
 #include "EngineSerial.h"
 #include <signal.h>
 #include <stdint.h>
@@ -10,6 +9,33 @@
 #include <queue>
 #include <utility>
 #include "shim_timer.h"
+
+struct GameClock
+{
+   using rep = uint32_t;
+   using period = std::milli;
+   using duration = std::chrono::duration<rep, period>;
+   using time_point = std::chrono::time_point<GameClock>;
+
+   static time_point now() noexcept
+   {
+      auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+      auto epochTime = now_ms.time_since_epoch().count();
+      return time_point{ std::chrono::milliseconds{now_ms.time_since_epoch().count()} };
+   }
+};
+
+// 100px/sec, 1000ms/sec, 30frames/sec, 3px/frame or 6px/frame
+// this is how many ms must have passed before the main game loop will run again:
+// typical values:
+// 60fps: ~16ms
+// 30fps: ~33ms
+// 24fps: ~41ms
+static inline const auto TargetFPS = 30;
+static inline const auto MinTimeBetweenRenders = GameClock::duration{ 1000 } / TargetFPS;
+static inline const auto MinTimeBetweenUIInput = GameClock::duration{ 1000 };
+static inline const auto IntegrationStepSize = MinTimeBetweenRenders / 3;
+
 
 template <typename IndexType, typename ValueType, int Length>
 class EnumClassArray : public std::array<ValueType, Length>

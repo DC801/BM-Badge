@@ -1,17 +1,13 @@
-#ifndef _MAGE_ENTITY_TYPE_H
-#define _MAGE_ENTITY_TYPE_H
+#ifndef _MAGE_ENTITY_H
+#define _MAGE_ENTITY_H
 
 #include "mage_rom.h"
-#include "mage_camera.h"
-#include "mage_script_state.h"
 #include "mage_geometry.h"
 #include "FrameBuffer.h"
 #include <stdint.h>
 #include <vector>
 #include <memory>
 #include <variant>
-
-class MageScriptControl;
 
 //this contains the possible options for an entity PrimaryIdType value.
 enum class MageEntityPrimaryIdType : uint8_t
@@ -104,14 +100,15 @@ struct MageEntityData
    }
 
    constexpr void SetDirection(MageEntityAnimationDirection dir) { flags = (flags & 0x80) | (static_cast<uint8_t>(dir) & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
-   constexpr MageEntityAnimationDirection GetDirection() const {  return static_cast<MageEntityAnimationDirection>(flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
+   constexpr MageEntityAnimationDirection GetDirection() const { return static_cast<MageEntityAnimationDirection>(flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
    constexpr bool IsDebug() const { return flags & RENDER_FLAGS_IS_DEBUG; }
    constexpr bool IsGlitched() const { return flags & RENDER_FLAGS_IS_GLITCHED; }
    constexpr void SetGlitched(bool glitched) { if (glitched) { flags |= RENDER_FLAGS_IS_GLITCHED; } }
 };
 
-struct RenderableData
+class RenderableData
 {
+public:
    EntityPoint origin{ 0 };
    EntityRect hitBox{ 0 };
    GameClock::duration curFrameDuration{ 0 };
@@ -150,4 +147,4 @@ private:
    void updateAsTileset(const MageEntityData& entity);
 };
 
-#endif //_MAGE_ENTITY_TYPE_H
+#endif //_MAGE_ENTITY_TYPE_H  

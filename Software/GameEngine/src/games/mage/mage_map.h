@@ -14,13 +14,14 @@ in a more accessible way.
 #include <utility>
 #include <vector>
 
-#include "mage_entity.h"
 #include "FrameBuffer.h"
-#include "shim_timer.h"
 #include "EngineROM.h"
+#include "mage_defines.h"
+#include "mage_entity.h"
+#include "mage_rom.h"
 #include "mage_script_state.h"
+#include "shim_timer.h"
 
-class MageScript;
 struct GoDirection
 {
    const char name[MapGoDirectionNameLength]{ 0 };
@@ -109,10 +110,6 @@ public:
    void DrawEntities() const;
    std::optional<uint16_t> Update();
 
-   EntityRect getInteractBox() const;
-
-   void handleCollision(RenderableData* const playerRenderableData, MageEntityData* playerEntityData);
-
    constexpr int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
       if (entityIndex >= currentMap->entityCount && entityIndex != MAGE_MAP_ENTITY)
@@ -168,29 +165,7 @@ public:
       return &Get<MageEntityData>(currentMap->playerEntityIndex);
    }
 
-   inline const MageEntityData* getPlayerEntityData() const
-   {
-      if (!currentMap
-         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
-         || currentMap->playerEntityIndex >= currentMap->entityCount)
-      {
-         return nullptr;
-      }
-      return &Get<MageEntityData>(currentMap->playerEntityIndex);
-   }
-
    inline RenderableData* getPlayerRenderableData()
-   {
-      if (!currentMap
-         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
-         || currentMap->playerEntityIndex >= currentMap->entityCount)
-      {
-         return nullptr;
-      }
-      return &Get<RenderableData>(currentMap->playerEntityIndex);
-   }
-
-   inline const RenderableData* getPlayerRenderableData() const
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX
@@ -242,9 +217,9 @@ public:
    int32_t mapLoadId{ MAGE_NO_MAP };
 
    template <typename T>
-   constexpr T& Get(auto i) 
-   { 
-      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount]; 
+   constexpr T& Get(auto i)
+   {
+      return std::get<std::array<T, MAX_ENTITIES_PER_MAP>&>(entities)[i % currentMap->entityCount];
    }
 
    template <typename T>
@@ -269,7 +244,7 @@ public:
       onTick = MageScriptState{ scriptId, false, onTick.isGlobalExecutionScope };
    }
 
-   const MageScript* GetScript(uint16_t scriptIndex) const
+   constexpr const MageScript* GetScript(uint16_t scriptIndex) const
    {
       if (scriptIndex > currentMap->scriptCount)
       {

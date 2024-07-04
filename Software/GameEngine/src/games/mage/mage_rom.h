@@ -71,10 +71,10 @@ class MageAnimation;
 class MageEntityType;
 class MageEntityData;
 class MageGeometry;
-class MageScript;
+struct MageScript;
 class MagePortrait;
 class MageDialog;
-class MageSerialDialog;
+struct MageSerialDialog;
 class MageColorPalette;
 
 template<typename T, typename Tag>

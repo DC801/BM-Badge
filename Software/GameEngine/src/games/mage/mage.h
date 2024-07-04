@@ -38,7 +38,7 @@ public:
       stringLoader = std::make_shared<StringLoader>(mapControl, ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(inputHandler, frameBuffer, stringLoader, mapControl);
 
-      auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
+      auto scriptActions = std::make_unique<MageScriptActions>(inputHandler, frameBuffer, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
       scriptControl = std::make_shared<MageScriptControl>(mapControl, std::move(scriptActions));
       commandControl = std::make_shared<MageCommandControl>(mapControl, frameBuffer, scriptControl, stringLoader);
    }

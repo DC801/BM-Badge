@@ -59,8 +59,8 @@ enum class MageDialogResponseType : uint8_t
 
 struct MageDialogResponse
 {
-   uint16_t stringIndex;
-   uint16_t scriptIndex;
+   uint16_t stringId;
+   uint16_t scriptId;
 };
 
 struct MageDialogAlignmentCoords
@@ -100,83 +100,6 @@ struct MageDialogScreen
 };
 
 
-<<<<<<< HEAD
-typedef struct {
-	uint16_t nameStringIndex;
-	uint16_t borderTilesetIndex;
-	MageDialogScreenAlignment alignment;
-	uint8_t fontIndex;
-	uint8_t messageCount;
-	MageDialogResponseType responseType;
-	uint8_t responseCount;
-	uint8_t entityIndex;
-	uint8_t portraitIndex;
-	uint8_t emoteIndex;
-} MageDialogScreen;
-
-typedef struct {
-	uint16_t stringIndex;
-	uint16_t mapLocalScriptIndex;
-} MageDialogResponse;
-
-typedef struct {
-	Rect text;
-	Rect label;
-	Rect portrait;
-} MageDialogAlignmentCoords;
-
-class MageDialogControl {
-	private:
-		// char dialogName[32];
-		MageTileset *currentFrameTileset;
-		int16_t triggeringEntityId;
-		int32_t currentDialogIndex;
-		uint32_t currentDialogAddress;
-		uint32_t currentDialogScreenCount;
-		int32_t currentScreenIndex;
-		int32_t currentMessageIndex;
-		uint16_t currentImageIndex;
-		uint32_t currentImageAddress;
-		uint32_t cursorPhase;
-		uint8_t currentResponseIndex;
-		uint8_t currentPortraitId;
-		MageEntityRenderableData currentPortraitRenderableData;
-		MageDialogScreen currentScreen;
-		std::string currentEntityName;
-		std::string currentMessage;
-		std::unique_ptr<uint16_t[]>messageIds;
-		std::unique_ptr<MageDialogResponse[]>responses;
-		uint8_t getTileIdFromXY(
-			uint8_t x,
-			uint8_t y,
-			Rect box
-		);
-		void drawDialogBox(
-			const std::string &string,
-			Rect box,
-			bool drawArrow = false,
-			bool drawPortrait = false
-		);
-		bool shouldShowResponses() const;
-
-	public:
-		bool isOpen;
-		int32_t mapLocalJumpScriptId;
-		MageDialogControl();
-		uint32_t size();
-		void load(
-			uint16_t dialogId,
-			int16_t currentEntityId
-		);
-		void loadNextScreen();
-		void showSaveMessageDialog(std::string messageString);
-		void advanceMessage();
-		void closeDialog();
-		void update();
-		void draw();
-
-	void loadCurrentScreenPortrait();
-=======
 struct MageDialog
 {
    const char Name[32];
@@ -187,9 +110,7 @@ struct MageDialog
       auto screenSpan = std::span<const MageDialogScreen>(screenOffset, ScreenCount);
       return screenSpan[screenId % ScreenCount];
    }
->>>>>>> scriptFixes
 };
-
 
 class MageDialogControl
 {
@@ -223,14 +144,14 @@ private:
    std::shared_ptr<StringLoader> stringLoader;
    std::shared_ptr<MapControl> mapControl;
    bool open{ false };
-   GameClock::time_point nextUpdateAllowed{ GameClock::now() };
+   GameClock::time_point nextUpdateAllowed{ };
 
    void drawBackground(const EntityRect& box) const;
 
    inline bool shouldShowResponses(const MageDialogScreen& currentScreen) const
    {
       // last page of messages on this screen and we have responses
-      return responses.size() > 0 
+      return responses.size() > 0
          && currentMessageIndex == (currentScreen.messageCount - 1)
          && (currentScreen.responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
             || currentScreen.responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
@@ -251,17 +172,17 @@ private:
    std::vector<MageDialogResponse> responses{};
 };
 
-enum MageSerialDialogResponseTypes : uint8_t
+enum class MageSerialDialogResponseTypes : uint8_t
 {
    RESPONSE_NONE = 0,
    RESPONSE_ENTER_NUMBER = 1,
-   RESPONSE_ENTER_STRING = 2,
-   NUM_RESPONSE_TYPES
+   RESPONSE_ENTER_STRING = 2
 };
 
-class MageSerialDialog
+static const inline auto NUM_RESPONSE_TYPES = 3;
+
+struct MageSerialDialog
 {
-public:
    ~MageSerialDialog() noexcept = default;
    MageSerialDialog(uint32_t& offset)
    {

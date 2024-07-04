@@ -27,6 +27,7 @@ inline static const auto RENDER_FLAGS_IS_DEBUG = 0b01000000;
 inline static const auto RENDER_FLAGS_FLIP_X = 0b00000100;
 inline static const auto RENDER_FLAGS_FLIP_Y = 0b00000010;
 inline static const auto RENDER_FLAGS_FLIP_DIAG = 0b00000001;
+
 inline static const auto NUM_DIRECTIONS = 4;
 
 
@@ -210,7 +211,7 @@ using EntityRect = RectT<uint16_t>;
 //these are the types of geometries that can be passed from the geometry data in ROM:
 enum class MageGeometryType : uint8_t
 {
-   Point = 0,
+   EntityPoint = 0,
    Polyline = 1,
    Polygon = 2
 };
@@ -282,7 +283,7 @@ public:
 private:
    char name[32]{ 0 };
    //can be any MageGeometryType:
-   MageGeometryType typeId{ MageGeometryType::Point };
+   MageGeometryType typeId{ MageGeometryType::EntityPoint };
    uint8_t pointCount{ 0 };
    uint8_t segmentCount{ 0 };
    //total length of all segments in the geometry
