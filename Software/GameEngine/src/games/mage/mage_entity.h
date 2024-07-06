@@ -80,11 +80,11 @@ struct MageEntityData
    uint16_t onTickScriptId{ 0 };
    uint16_t primaryId{ 0 };
    uint16_t secondaryId{ 0 };
-   MageEntityPrimaryIdType primaryIdType{ 0 };
+   MageEntityPrimaryIdType primaryIdType{ MageEntityPrimaryIdType::INVALID };
 
-   uint8_t  current_animation;
-   uint8_t  current_frame;
-   uint8_t flags;
+   uint8_t current_animation{ 0 };
+   uint8_t current_frame{ 0 };
+   uint8_t flags{ 0 };
 
    uint8_t hackableStateA{ 0 };
    uint8_t hackableStateB{ 0 };

@@ -20,6 +20,7 @@ in a more accessible way.
 #include "mage_entity.h"
 #include "mage_rom.h"
 #include "mage_script_state.h"
+#include "mage_script_control.h"
 #include "shim_timer.h"
 
 struct GoDirection
