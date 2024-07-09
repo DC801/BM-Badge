@@ -174,7 +174,7 @@
                  "gid":949,
                  "height":32,
                  "id":41,
-                 "name":"RAM Chips",
+                 "name":"RAM chips",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -523,7 +523,7 @@
                  "gid":281,
                  "height":32,
                  "id":50,
-                 "name":"Vending",
+                 "name":"vend machine",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -594,7 +594,7 @@
                  "gid":281,
                  "height":32,
                  "id":67,
-                 "name":"Coffee",
+                 "name":"coffee",
                  "properties":[
                         {
                          "name":"on_interact",

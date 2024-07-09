@@ -16,7 +16,7 @@ look-ch2-gregory {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look gregory (remember to add 'the' for objects)"
+		"\tThe cat is gray around the whiskers, but he moves with energy and precision. He appears happy to be receiving a visitor."
 	}
 }
 

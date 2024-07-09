@@ -9,8 +9,8 @@ settings for dialog {
 look-ch2-castle-14 {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked around the <c>KING GIBSON'S BEDROOM</>."
-		"\tOpulent and pretentious -- perhaps the archetypal royal bedroom. You're not sure whether the heirloom four poster bed completes the look or is just over-the-top. But you concede that the red and gold looks fabulous together."
+		"You looked around <c>KING GIBSON'S BEDROOM</>."
+		"\tOpulent and pretentious -- perhaps the archetypal royal bedroom. You're not sure whether the heirloom four poster bed completes the look or is just over the top. But you concede that the red and gold looks fabulous together."
 		" "
 	}
 }
@@ -27,7 +27,8 @@ look-ch2-keypad {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look keypad (remember to add 'the' for objects)"
+		"\tIt's a small boxy number pad. On the underside is a plug socket and a scribbled message: \"The default admin password can be found on the castle's --\""
+		"\tUnfortunately, the vital portion of the message has worn off with time."
 	}
 }
 

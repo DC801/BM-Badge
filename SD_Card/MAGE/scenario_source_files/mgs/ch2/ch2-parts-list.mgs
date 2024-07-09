@@ -447,7 +447,7 @@ look-powersupply {
 look-keyboard {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>keyboard</> -- that is, the <m>keytar</>: there's the normal piano-type keys, but there's assorted buttons scattered around the frame, too -- but these are not entirely labeled."
+		"You look at the <m>keyboard</> -- that is, the <m>keytar</>: there's the normal piano-type keys, but there's assorted buttons scattered around the frame, too -- though these are not entirely labeled."
 	}
 }
 look-mouse {
@@ -477,7 +477,7 @@ look-needle {
 look-ramchips {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>RAM chips</>: a super beefy, super spicy, super poofy bag of silicon chips. You wonder if they make Cool Ranch RAM...."
+		"You look at the <m>RAM chips</>: a super beefy, super spicy, super poofy bag of silicon chips. You wonder if they make Cool Ranch RAM."
 	}
 }
 look-clock {
@@ -513,12 +513,12 @@ look-manual {
 look-abacus {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>abacus</>: a few dozen black beads set into rods on a wooden frame. It looks heavily used."
+		"You look at the <m>abacus</>: a few dozen black beads set into rods on a wooden frame."
 	}
 }
 look-mainframeos {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the CD containing the <m>mainframe OS</>: the label is completely white, with no markings or writing on the top. The reverse side is very clean, and it makes cool patterns of reflected light when you angle it against the ceiling lamps."
+		"You look at the CD containing the <m>mainframe OS</>: the label is completely white, with no markings or writing on the top. The reverse side is very clean, and it makes patterns of reflected light when you angle it against the light."
 	}
 }

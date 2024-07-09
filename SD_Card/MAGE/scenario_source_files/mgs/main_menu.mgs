@@ -352,7 +352,7 @@ menu-player-name-confirm {
 // Random
 
 menu-player-name-random {
-	mutate random-name-count ? 19;
+	mutate random-name-count ? 20;
 	// The RNG operation returns a value range from 0 to (value - 1). In 17, Out 0~16. In 5, Out 0~4. It's like this because there's a non-zero chance that you're using this value to index into an array, like below.
 	if (variable random-name-count is 1) {
 		set entity "%PLAYER%" name to Chara;
@@ -390,6 +390,8 @@ menu-player-name-random {
 		set entity "%PLAYER%" name to "Tom Honks";
 	} else if (variable random-name-count is 18) {
 		set entity "%PLAYER%" name to VeeVee;
+	} else if (variable random-name-count is 19) {
+		set entity "%PLAYER%" name to XDDCC;
 	} else { // if it's 0 or any other value (the default):
 		set entity "%PLAYER%" name to Bub;
 	}

@@ -43,8 +43,8 @@ look-ch2-speaker {
 look-ch2-drum {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look drum (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe \"1023 MB\" logo is surprisingly well done, with its thoughtful serifs and clean linework. The professional logo and the aggressive red of the drumset make a strange contrast with the ragtag musicians."
 	}
 }
 

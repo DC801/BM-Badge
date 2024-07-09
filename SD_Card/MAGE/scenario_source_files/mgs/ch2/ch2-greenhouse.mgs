@@ -15,7 +15,7 @@ look-ch2-trekkie {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look trekkie (remember to add 'the' for objects)"
+		"\tHe's softly humming to himself, probably a song from one of those musicals he's always going on about. His eyes are darting back and forth across his screen."
 	}
 }
 

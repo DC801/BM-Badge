@@ -439,7 +439,7 @@ ch2-touch-goldfish {
 			}
 			set entity "King Gibson" current_animation to 0;
 			show dialog {
-				PLAYER "It'd be temporary. After the mainframe is fixed, we can order a real CPU, and we can put you back to normal when it arrives. But for this short little while --"
+				PLAYER "It'd be temporary. After the mainframe is fixed, we can mail order a real CPU, and we can put you back to normal when it arrives. But for this short little while --"
 				Aurelius "I'll do it."
 				Templeton "%Aurelius%!"
 				Aurelius "The king has returned, so I'm of little use now."
