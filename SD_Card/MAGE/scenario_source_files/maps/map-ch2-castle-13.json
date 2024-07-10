@@ -61,6 +61,34 @@
          "objects":[
                 {
                  "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":70,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":86
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":113
+                }, 
+                {
+                 "class":"",
                  "height":0,
                  "id":6,
                  "name":"warp-spot",
@@ -229,34 +257,6 @@
                  "width":32,
                  "x":224,
                  "y":177
-                }, 
-                {
-                 "class":"",
-                 "gid":182,
-                 "height":32,
-                 "id":70,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-player"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":86
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":176,
-                 "y":113
                 }, 
                 {
                  "class":"",

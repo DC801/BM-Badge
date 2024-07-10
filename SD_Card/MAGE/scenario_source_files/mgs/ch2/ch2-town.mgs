@@ -241,6 +241,30 @@ on_go-ch2-town-bobsclub {
 
 /* ---------- ENTITIES ---------- */
 
+look-ch2-townsign {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA worn wooden sign featuring the words \"to King Gibson's palace\" -- but \"palace\" is crossed out, and \"castle\" is scrawled above it."
+	}
+}
+look-ch2-lakesign {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA worn wooden sign that says \"LINQ PARKING.\""
+	}
+}
+interact-ch2-townsign {
+	show dialog {
+		PLAYER "\"To King Gibson's castle.\" Oh, but it looks like it used to say \"To King Gibson's palace.\" I wonder why they changed it."
+	}
+}
+interact-ch2-lakesign {
+	show dialog {
+		name "" "LINQ PARKING"
+	}
+}
 interact-ch2-rake {
 	set entity Marta on_tick to make-rake-float;
 }

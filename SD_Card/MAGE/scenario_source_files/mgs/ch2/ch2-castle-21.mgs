@@ -395,7 +395,7 @@ interact-ch2-room21-split {
 	}
 	// They all turn toward each other
 	show dialog {
-		Jean-Paul "WEll, the guy who can help most isn't here right now."
+		Jean-Paul "Well, the guy who can help most isn't here right now."
 	}
 	turn entity "%PLAYER%" toward entity Frankie;
 	show dialog {

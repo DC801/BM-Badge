@@ -67,7 +67,7 @@ ch2-toot-step1-okay {
 ch2-toot-step1-notokay {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA</>: ...Haha, well, that was a little aggressive, but well done."
+		"<m>LAMBDA</>: Haha, well, that was a little aggressive, but well done."
 	}
 	goto ch2-toot-step1-end;
 }
@@ -147,7 +147,7 @@ ch2-toot-step2-no-extra {
 
 ch2-toot-step2-end {
 	show serial dialog {
-		"\tSome free response options are left entirely undisclosed, so feel free to experiment when given a free response prompt."
+		"\tSome free response options are left undisclosed, so feel free to experiment when given a free response prompt."
 	}
 	mutate ch2-toot-level = 3;
 	goto ch2-toot-step3-start;

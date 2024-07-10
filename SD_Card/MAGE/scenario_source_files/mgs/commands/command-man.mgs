@@ -160,7 +160,7 @@ ch2-lambda-topic-artifact-words {
 	show serial dialog {
 		"<c>YOU</>: What can you tell me about \"magic words?\" You said they were commands?"
 		" "
-		"<m>LAMBDA</>: Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
+		"<m>LAMBDA</>: Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the castle artifact do something."
 		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
 		" "
 	}
@@ -214,7 +214,7 @@ ch2-lambda-mainframe-broken-1 {
 ch2-lambda-mainframe-broken-2 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA</>: Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"<m>LAMBDA</>: Yeah, so, um... it might not have been necessary, strictly speaking. I wiped its software first. That would've been enough on its own, to be honest."
 		"\tI don't know. I just wanted to be <bold>sure</>. I sort of regret it now."
 		" "
 	}
@@ -258,8 +258,7 @@ ch2-lambda-castle-who {
 	show serial dialog {
 		"<c>YOU</>: Whose castle is this?"
 		" "
-		"<m>LAMBDA</>: I'm kind of surprised you didn't know, but it's King Gibson's castle. "
-		"\tTODO: more convo"
+		"<m>LAMBDA</>: I'm kind of surprised you didn't know, but it's King Gibson's castle. He's in charge of the whole place. He used to be in charge of the whole geographical area, too, not just the castle structure itself, but -- well, the bits of land around here have become abruptly more isolated recently. It's complicated."
 		" "
 	}
 	goto ch2-lambda-topic-castle-q;
@@ -929,11 +928,12 @@ ch2-lambda-person-lambda-where {
 	goto ch2-lambda-person-lambda-q;
 }
 ch2-lambda-person-lambda-name {
-	// TODO: what to do if you've already heard him admit that he erased his own name? (Room 99 cutscene)
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: What's your real name? It's not really \"Lambda,\" is it?"
 		" "
+	}
+	show serial dialog {
 		"<m>LAMBDA</>: Well, no. But you see... this is a little embarrassing, but...."
 		"\tI... sort of... don't remember my real name."
 		" "

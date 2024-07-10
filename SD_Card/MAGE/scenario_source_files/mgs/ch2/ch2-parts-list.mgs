@@ -136,7 +136,8 @@ ch2-toot-step99-end {
 	show serial dialog {
 		"<c>YOU</>: Yeah, let's do it!"
 		" "
-		"<m>LAMBDA</>: Good luck!"
+		"<m>LAMBDA</>: Great! And don't forget to type <c>HELP</> to see all the commands you can use. You'll probably need to use all of them."
+		"\tGood luck!"
 		" "
 	}
 	show serial dialog lambda-over;

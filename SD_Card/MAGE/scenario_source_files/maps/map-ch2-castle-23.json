@@ -51,18 +51,6 @@
          "objects":[
                 {
                  "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":180,
-                 "y":174
-                }, 
-                {
-                 "class":"",
                  "gid":183,
                  "height":32,
                  "id":32,
@@ -83,6 +71,18 @@
                  "width":32,
                  "x":176,
                  "y":271
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":180,
+                 "y":174
                 }, 
                 {
                  "class":"",
