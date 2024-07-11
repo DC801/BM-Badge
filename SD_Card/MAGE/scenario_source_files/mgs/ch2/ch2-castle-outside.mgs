@@ -122,7 +122,7 @@ interact-ch2-alfonso-outside {
 
 interact-ch2-bert-outside {
 	show dialog {
-		SELF "Only hackers may cross door."
+		SELF "Only hackers may cross door into castle."
 	}
 }
 

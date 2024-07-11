@@ -18,6 +18,7 @@ ch2-map-init-registers {
 	set flag interrupt3 to false; // OwO
 	mutate tempvar = 0;
 	mutate tempvar2 = 0;
+	set flag can-interrupt-dialog to false;
 }
 ch2-map-init-hex {
 	if (

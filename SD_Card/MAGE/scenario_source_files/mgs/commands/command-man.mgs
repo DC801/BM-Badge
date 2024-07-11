@@ -38,6 +38,12 @@ man-fail {
 // COMMAND
 
 command-man {
+	if (dialog is open) {
+		if (flag can-interrupt-dialog is true) {
+			end dialog;
+			set flag can-interrupt-dialog to false;
+		}
+	}
 	// TODO: do something different when you're in the room with him
 	if (
 		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power

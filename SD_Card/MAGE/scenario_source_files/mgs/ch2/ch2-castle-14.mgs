@@ -27,7 +27,7 @@ look-ch2-keypad {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tIt's a small boxy number pad. On the underside is a plug socket and a scribbled message: \"The default admin password can be found on the castle's --\""
+		"\tIt's a small boxy number pad. On the underside is a plug socket and a scribbled message: \"The default admin password can be found throughout the castle's --\""
 		"\tUnfortunately, the vital portion of the message has worn off with time."
 	}
 }
@@ -267,8 +267,8 @@ interact-ch2-keypad {
 		if (flag interrupt is false) {
 			show dialog {
 				PLAYER "Oh, there's something written on the bottom of the keypad."
-				name "(keypad)" "The default admin password can be found on the castle's --"
-				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found on the castle's what?"
+				name "(keypad)" "The default admin password can be found throughout the castle's --"
+				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found throughout the castle's what?"
 			}
 			set flag interrupt to true;
 		}

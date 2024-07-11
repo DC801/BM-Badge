@@ -856,14 +856,27 @@ ch2-terminal-setup-nevermind {
 	if (flag ch2-toot-done is false) {
 		show dialog {
 			Lambda "Ah, okay! Um, if you change your mind, speak to the Exa again and I'll walk you through everything."
-			"To finish our conversation, type \"MAN\" into the console."
 		}
 		copy register-manual;
+		set flag can-interrupt-dialog to true;
 		turn serial control on;
+		show dialog {
+			Lambda "To finish our conversation, type \"MAN\" into the console."
+		}
+		set flag can-interrupt-dialog to false;
+		if (serial dialog is closed) {
+			show serial dialog spacer;
+			show serial dialog {
+				"(Type <c>MAN</> to finish your conversation with Lambda.)"
+			}
+		}
+
 	} else {
+		set flag can-interrupt-dialog to true;
 		show dialog {
 			Lambda "Ah, okay. Carry on!\n\nAlso, remember you can speak to me in the console with the command \"MAN\"."
 		}
+		set flag can-interrupt-dialog to false;
 	}
 	set entity "%SELF%" on_interact to interact-ch2-xa;
 }
@@ -973,15 +986,17 @@ ch2-terminal-message-test-fail {
 ch2-terminal-message-test-success {
 	if (flag ch2-toot-done is false) {
 		copy register-manual;
+		set flag can-interrupt-dialog to true;
+		turn serial control on;
 		show dialog {
 			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
-		// TODO: what should happen if you type "MAN" while the dialog is still up?
-		// (Currently "MAN" doesn't go through)
-		turn serial control on;
-		show serial dialog spacer;
-		show serial dialog {
-			"(Type <c>MAN</> to resume your conversation with Lambda.)"
+		set flag can-interrupt-dialog to false;
+		if (serial dialog is closed) {
+			show serial dialog spacer;
+			show serial dialog {
+				"(Type <c>MAN</> to continue your conversation with Lambda.)"
+			}
 		}
 	} else {
 		show dialog {
