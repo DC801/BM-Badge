@@ -156,7 +156,7 @@ ch2-touch-powersupply {
 
 ch2-touch-powersupply-yes {
 	show dialog {
-		name "" "(You pick up the powersupply!)"
+		name "" "(You pick up the power supply!)"
 	}
 	copy script ch2-hide-powersupply;
 	copy script ch2-pickup-powersupply;

@@ -261,7 +261,6 @@ ch2-lambda-round-2-parts5d {
 		" "
 	}
 	show serial dialog lambda-over;
-	set flag ch2-have-things-to-solder to true;
 	copy ch2-put_on_map-round2;
 }
 
