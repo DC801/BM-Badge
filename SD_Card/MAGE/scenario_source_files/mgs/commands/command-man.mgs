@@ -44,8 +44,11 @@ command-man {
 			set flag can-interrupt-dialog to false;
 		}
 	}
-	// TODO: do something different when you're in the room with him
-	if (
+	if (variable ch2-in-room is 99) {
+		show dialog {
+			name Lambda portrait lambda "Sorry, it's a little awkward to text chat with you when you're looking over my shoulder."
+		}
+	} else if (
 		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
 		|| variable ch2-in-room is not 0 // OR you're in the castle
 	) {
@@ -784,7 +787,7 @@ ch2-lambda-person-helvetica {
 	}
 	show serial dialog {
 		"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
-		"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font...."
+		"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -797,8 +800,8 @@ ch2-lambda-person-bob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Bob."
 		" "
-		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
-		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
+		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks. Oh yeah, and Bobs who ARE rocks."
+		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -807,7 +810,7 @@ ch2-lambda-person-guardianbob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Guardian Bob."
 		" "
-		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong type of guy. He's some kind of internet vigilante, I think. He's got a few hacking tricks, but he seems white hat to me. I trust him."
+		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong looking guy. He's some kind of internet vigilante, I think. He knows a few hacking tricks, but he seems white hat to me. I trust him."
 	}
 	goto ch2-lambda-topic-person-s;
 }
