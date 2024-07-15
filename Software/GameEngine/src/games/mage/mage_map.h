@@ -155,6 +155,31 @@ public:
       return ROM()->GetReadPointerByIndex<MageGeometry>(currentMap->geometryGlobalIDs[mapLocalGeometryId % currentMap->geometryCount]);
    }
 
+   inline EntityRect getPlayerInteractBox() const
+   {
+      const auto playerRenderableData = getPlayerRenderableData();
+      static const uint16_t interactLength = playerRenderableData->hitBox.h / 2 + playerRenderableData->hitBox.w / 2;
+      const auto direction = static_cast<MageEntityAnimationDirection>(getPlayerEntityData()->flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK);
+      return EntityRect{
+            {
+               uint16_t{
+                  playerRenderableData->hitBox.origin.x
+                  - playerRenderableData->hitBox.w / 2
+                  - (direction == MageEntityAnimationDirection::WEST ? interactLength : 0u)
+                  + (direction == MageEntityAnimationDirection::EAST ? interactLength : 0u)
+               },
+               uint16_t{
+                  playerRenderableData->hitBox.origin.y
+                  //- playerRenderableData->hitBox.h / 2
+                  - (direction == MageEntityAnimationDirection::NORTH ? interactLength : 0u)
+                  + (direction == MageEntityAnimationDirection::SOUTH ? interactLength : 0u)
+               }
+         },
+         uint16_t(playerRenderableData->hitBox.w * 2),
+         uint16_t(playerRenderableData->hitBox.h * 2)
+      };
+   }
+
    inline MageEntityData* getPlayerEntityData()
    {
       if (!currentMap
@@ -257,6 +282,31 @@ public:
    void OnTick(MageScriptControl* scriptControl);
 
 private:
+
+   EntityRect getInteractBox() const;
+
+   inline const RenderableData* getPlayerRenderableData() const
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<RenderableData>(currentMap->playerEntityIndex);
+   }
+
+   inline const MageEntityData* getPlayerEntityData() const
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return nullptr;
+      }
+      return &Get<MageEntityData>(currentMap->playerEntityIndex);
+   }
+
    using EntityDataArray = std::array<MageEntityData, MAX_ENTITIES_PER_MAP>;
    using RenderableDataArray = std::array<RenderableData, MAX_ENTITIES_PER_MAP>;
    using OnTickArray = std::array<OnTickScript, MAX_ENTITIES_PER_MAP>;

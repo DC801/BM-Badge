@@ -110,7 +110,7 @@ void MageGameEngine::gameLoopIteration()
          {
             hexEditor->openToEntity(*entityInteractId);
          }
-         else
+         else if (inputHandler->Use())
          {
             const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
             auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
@@ -198,6 +198,8 @@ void MageGameEngine::applyGameModeInputs()
       }
 
       auto playerRenderableData = mapControl->getPlayerRenderableData();
+      playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+
       if (inputHandler->PlayerIsActioning()
          && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
@@ -207,18 +209,6 @@ void MageGameEngine::applyGameModeInputs()
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
          playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
-      }
-      else if (playerHasControl)
-      {
-         playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-      }
-
-      // stop playing action animation on the last frame of action
-      if (playerRenderableData->currentAnimation == MAGE_ACTION_ANIMATION_INDEX
-         && playerRenderableData->currentFrameIndex >= playerRenderableData->frameCount - 1
-         && playerRenderableData->curFrameDuration >= playerRenderableData->duration)
-      {
-         playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
       }
    }
    if (!hexEditor->playerHasHexEditorControl || !playerHasControl)

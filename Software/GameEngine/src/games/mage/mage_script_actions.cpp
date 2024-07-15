@@ -456,7 +456,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_glitched(const uint8_t* 
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      if (entity.flags & RENDER_FLAGS_IS_GLITCHED)
+      if (entity.IsGlitched())
       {
          return argStruct->successScriptId;
       }
@@ -799,33 +799,33 @@ std::optional<uint16_t> MageScriptActions::blocking_delay(const uint8_t* args, M
    } ActionBlockingDelay;
    auto argStruct = (ActionBlockingDelay*)args;
 
-   //If there's already a total number of loops to next action set, a delay is currently in progress:
+   //If there's already a total number of steps to next action set, a delay is currently in progress:
    if (resumeState.totalSteps != 0)
    {
-      //decrement the number of loops to the end of the delay:
-      resumeState.totalSteps--;
+      //decrement the number of steps to the end of the delay:
+      resumeState.remainingSteps--;
       //if we've reached the end:
-      if (resumeState.totalSteps <= 0)
+      if (resumeState.remainingSteps <= 0)
       {
          //reset the variables and return, the delay is complete.
          resumeState.totalSteps = 0;
-         resumeState.totalSteps = 0;
+         resumeState.remainingSteps = 0;
          return NO_JUMP_SCRIPT;
       }
    }
    //a delay is not active, so we should start one:
    else
    {
-      //always a single loop for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
-      uint16_t totalDelayLoops = 1;
+      //always a single step for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
+      const uint16_t totalDelaySteps = 1;
       //also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->durationMs:
       if (inputHandler->blockingDelayTime < GameClock::duration{ argStruct->durationMs })
       {
          inputHandler->blockingDelayTime = GameClock::duration{ argStruct->durationMs };
       }
       //now set the resumeState variables:
-      resumeState.totalSteps = totalDelayLoops;
-      resumeState.totalSteps = totalDelayLoops;
+      resumeState.totalSteps = totalDelaySteps;
+      resumeState.remainingSteps = totalDelaySteps;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -941,7 +941,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_interact_script(const uint
    auto sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
+      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       entity.onInteractScriptId = argStruct->scriptId;
    }
    return NO_JUMP_SCRIPT;
@@ -963,7 +963,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_tick_script(const uint8_t*
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
+      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       entity.onTickScriptId = argStruct->scriptId;
    }
    else
@@ -1127,7 +1127,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction(const uint8_t* a
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.flags |= (uint8_t)argStruct->direction;
+      entity.flags |= static_cast<uint8_t>(argStruct->direction);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1150,8 +1150,8 @@ std::optional<uint16_t> MageScriptActions::set_entity_direction_relative(const u
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      auto newDirection = (entity.flags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS;
-      entity.flags |= (uint8_t)newDirection;
+      auto newDirection = (entity.flags + argStruct->relativeDirection) % NUM_DIRECTIONS;
+      entity.flags |= static_cast<uint8_t>(newDirection);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1224,7 +1224,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_glitched(const uint8_t* ar
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.flags = (entity.flags & ~RENDER_FLAGS_IS_GLITCHED) | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED);
+      entity.SetGlitched(argStruct->isGlitched);
    }
    return NO_JUMP_SCRIPT;
 }
@@ -1647,7 +1647,7 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
       if (resumeState.totalSteps == 0)
       {
          resumeState.totalSteps = argStruct->playCount;
-         resumeState.totalSteps = argStruct->playCount;
+         resumeState.remainingSteps = argStruct->playCount;
          renderableData.SetAnimation(argStruct->animationId);
          renderableData.UpdateFrom(entity);
       }
@@ -1655,8 +1655,8 @@ std::optional<uint16_t> MageScriptActions::play_entity_animation(const uint8_t* 
       {
          // we just reset to 0
          // the previously rendered frame was the last in the animation
-         resumeState.totalSteps--;
-         if (resumeState.totalSteps == 0)
+         resumeState.remainingSteps--;
+         if (resumeState.remainingSteps == 0)
          {
             resumeState.totalSteps = 0;
             renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
@@ -1716,7 +1716,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_to_geometry(const uint8_t
 
       if (resumeState.totalSteps == 0)
       {
-         //points we're interpolating between are from the entity location to the 
+         //points we're interpolating between are from the entity location to the target location
          resumeState.geometry.pointA = { entity.targetPosition.x, entity.targetPosition.y };
          resumeState.geometry.pointB = geometry->GetPoint(0) - resumeState.geometry.pointA - renderableData.center();
          entity.flags |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
@@ -1766,10 +1766,10 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
    // and for everything else...
    if (resumeState.totalSteps == 0)
    {
-      const auto totalDelayLoops = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
+      const auto totalDelaySteps = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
       //now set the resumeState variables:
-      resumeState.totalSteps = totalDelayLoops;
-      resumeState.totalSteps = totalDelayLoops;
+      resumeState.totalSteps = totalDelaySteps;
+      resumeState.remainingSteps = totalDelaySteps;
       resumeState.geometry.length = geometry->GetPathLength();
       resumeState.geometry.lengthOfPreviousSegments = 0;
       resumeState.geometry.currentSegmentIndex = 0;
@@ -1779,9 +1779,9 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
       renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       return NO_JUMP_SCRIPT;
    }
-   resumeState.totalSteps--;
+   resumeState.remainingSteps--;
 
-   if (resumeState.totalSteps > 0)
+   if (resumeState.remainingSteps > 0)
    {
       return NO_JUMP_SCRIPT;
    }
@@ -1809,7 +1809,7 @@ std::optional<uint16_t> MageScriptActions::walk_entity_along_geometry(const uint
    }
 
    entity.targetPosition = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progressBetweenPoints);
-   if (resumeState.totalSteps == 0)
+   if (resumeState.remainingSteps == 0)
    {
       resumeState.totalSteps = 0;
       renderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
@@ -1848,10 +1848,10 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
       // and for everything else...
       if (resumeState.totalSteps == 0)
       {
-         const auto totalDelayLoops = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
+         const auto totalDelaySteps = uint16_t(std::chrono::milliseconds{ argStruct->durationMs } / MinTimeBetweenRenders);
          //now set the resumeState variables:
-         resumeState.totalSteps = totalDelayLoops;
-         resumeState.totalSteps = totalDelayLoops;
+         resumeState.totalSteps = totalDelaySteps;
+         resumeState.remainingSteps = totalDelaySteps;
          resumeState.geometry.length = /*(geometry->GetTypeId() == MageGeometryType::Polyline)
              ? geometry->GetPathLength() * 2
              : */geometry->GetPathLength();
@@ -1863,9 +1863,9 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
          renderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
 
-      if (resumeState.totalSteps == 0)
+      if (resumeState.remainingSteps == 0)
       {
-         resumeState.totalSteps = resumeState.totalSteps;
+         resumeState.remainingSteps = resumeState.totalSteps;
 
          resumeState.geometry.lengthOfPreviousSegments = 0;
          resumeState.geometry.currentSegmentIndex = 0;
@@ -1873,7 +1873,7 @@ std::optional<uint16_t> MageScriptActions::loop_entity_along_geometry(const uint
          resumeState.geometry.pointB = geometry->GetPoint(resumeState.geometry.currentSegmentIndex + 1);
          entity.flags |= resumeState.geometry.pointA.getRelativeDirection(resumeState.geometry.pointB);
       }
-      resumeState.totalSteps--;
+      resumeState.remainingSteps--;
       uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.geometry.currentSegmentIndex);
       const auto totalProgress = getProgressOfAction(resumeState);
       const auto currentProgressLength = resumeState.geometry.length * totalProgress;
@@ -2605,21 +2605,20 @@ std::optional<uint16_t> MageScriptActions::check_ble_flag(const uint8_t* args, M
 
 float MageScriptActions::manageProgressOfAction(MageScriptState& resumeState, uint32_t durationMs) const
 {
-   resumeState.totalSteps--;
+   resumeState.remainingSteps--;
    if (resumeState.totalSteps == 0)
    {
-      const auto totalDelayLoops = uint16_t(std::chrono::milliseconds{ durationMs } / MinTimeBetweenRenders);
-      resumeState.totalSteps = totalDelayLoops;
-      resumeState.totalSteps = totalDelayLoops;
+      const auto totalDelaySteps = uint16_t(std::chrono::milliseconds{ durationMs } / MinTimeBetweenRenders);
+      resumeState.totalSteps = totalDelaySteps;
+      resumeState.remainingSteps = totalDelaySteps;
    }
 
-   auto result = resumeState.totalSteps - resumeState.totalSteps;
-   if (result <= 0)
+   if (resumeState.remainingSteps <= 0)
    {
       resumeState.totalSteps = 0;
-      resumeState.totalSteps = 0;
+      resumeState.remainingSteps = 0;
    }
-   return result;
+   return resumeState.totalSteps - resumeState.remainingSteps;
 }
 
 void MageScriptActions::mutate(MageMutateOperation operation, uint16_t& destination, uint16_t value)

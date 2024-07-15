@@ -99,9 +99,7 @@ void MapControl::DrawEntities() const
    //sort entity indices by the entity y values:
    std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
-   const auto sortByY = [&](size_t i1, size_t i2) {
-      return Get<MageEntityData>(i1).targetPosition.y < Get<MageEntityData>(i2).targetPosition.y;
-      };
+   const auto sortByY = [&](size_t i1, size_t i2) { return Get<MageEntityData>(i1).targetPosition.y < Get<MageEntityData>(i2).targetPosition.y; };
    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
    //now that we've got a sorted array with the lowest y values first,
@@ -177,6 +175,7 @@ void MapControl::Draw() const
    {
       DrawLayer(LayerCount() - 1);
    }
+   frameBuffer->DrawRectWorldCoords(getPlayerInteractBox());
 }
 
 std::optional<uint16_t> MapControl::Update()
@@ -189,6 +188,7 @@ std::optional<uint16_t> MapControl::Update()
 
    const auto oldPosition = playerRenderableData->origin;
 
+   const auto interactBox = getPlayerInteractBox();
    const auto topLeft = oldPosition;
    const auto topRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, 0 };
    const auto botLeft = oldPosition + EntityPoint{ 0, playerRenderableData->hitBox.h };
@@ -197,37 +197,15 @@ std::optional<uint16_t> MapControl::Update()
    std::vector<EntityPoint> hitboxPointsToCheck{};
 
    const uint8_t interactLength = 32;
-   auto interactBox = EntityRect{ playerRenderableData->hitBox };
-   std::optional<uint16_t> interactionId = std::nullopt;
-
-   for (auto i = 0; i < currentMap->entityCount; i++)
-   {
-      auto& entity = Get<MageEntityData>(i);
-      auto& renderableData = Get<RenderableData>(i);
-      auto entityPosition = Get<RenderableData>(i).center();
-
-      renderableData.curFrameDuration += IntegrationStepSize;
-      renderableData.UpdateFrom(entity);
-
-      if (interactBox.Contains(entityPosition))
-      {
-         interactionId.emplace(i);
-      }
-   }
-
    if (playerEntityData->targetPosition.x < playerRenderableData->origin.x)
    {
       playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::WEST);
-      interactBox.origin.x -= interactLength;
-      interactBox.w = interactLength;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
    else if (playerEntityData->targetPosition.x > playerRenderableData->origin.x)
    {
       playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::EAST);
-      interactBox.origin.x += interactBox.w;
-      interactBox.w = interactLength;
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
@@ -235,21 +213,16 @@ std::optional<uint16_t> MapControl::Update()
    if (playerEntityData->targetPosition.y < playerRenderableData->origin.y)
    {
       playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::NORTH);
-      interactBox.origin.y -= interactLength;
-      interactBox.h = interactLength;
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
    else if (playerEntityData->targetPosition.y > playerRenderableData->origin.y)
    {
       playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::SOUTH);
-      interactBox.origin.y += interactBox.h;
-      interactBox.h = interactLength;
       hitboxPointsToCheck.push_back(botLeft);
       hitboxPointsToCheck.push_back(botRight);
    }
 
-   auto collides = false;
    for (auto& hitboxPoint : hitboxPointsToCheck)
    {
       const auto column = hitboxPoint.x / currentMap->tileWidth;
@@ -273,5 +246,18 @@ std::optional<uint16_t> MapControl::Update()
       }
    }
 
+   std::optional<uint16_t> interactionId = std::nullopt;
+   for (auto i = 0; i < currentMap->entityCount; i++)
+   {
+      auto& entity = Get<MageEntityData>(i);
+      auto& renderableData = Get<RenderableData>(i);
+
+      renderableData.UpdateFrom(entity);
+
+      if (entity.primaryId != playerEntityData->primaryId && interactBox.Contains(renderableData.center()))
+      {
+         interactionId.emplace(i);
+      }
+   }
    return interactionId;
 }
