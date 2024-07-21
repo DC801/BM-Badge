@@ -325,14 +325,14 @@ typedef struct {
 
 typedef struct {
     action_type type;
-    uchar padding[7];
+    uchar args[7];
 } action;
 
 typedef struct {
     char name[32];
     uint32 action_count;
     if (action_count) {
-        action actions[action_count] <read=Str("%s(%d, %d, %d)", EnumToString(type), padding[0], padding[1], padding[2])>;
+        action actions[action_count] <read=Str("%s(%d, %d, %d)", EnumToString(type), args[0], args[1], args[2])>;
     }
 } script <read=(name)>;
 
