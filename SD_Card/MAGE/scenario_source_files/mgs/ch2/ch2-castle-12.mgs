@@ -316,7 +316,7 @@ ch2-ws-guess-quit {
 		mutate diff - ch2-ws-flags-tally;
 		if (variable diff is 1) {
 			show serial dialog {
-				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, you hear?"
+				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, would ya?"
 			}
 		} else {
 			show serial dialog {
@@ -341,6 +341,7 @@ ch2-ws-guess-quit {
 }
 
 ch2-ws-cutscene {
+	show serial dialog spacer;
 	show dialog {
 		Concierge "Oh! Oh! I can hear it! The old, reliable stereo is back in business!"
 		"Go ahead and take the needle off that phonograph. Many thanks!"

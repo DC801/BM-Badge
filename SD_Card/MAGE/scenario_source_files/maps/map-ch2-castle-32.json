@@ -100,42 +100,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
-                 "height":32,
-                 "id":19,
-                 "name":"door",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-attempt-door-check"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":272,
-                 "y":95
-                }, 
-                {
-                 "class":"",
-                 "gid":281,
-                 "height":32,
-                 "id":34,
-                 "name":"door",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-attempt-door-check"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":80,
-                 "y":95
-                }, 
-                {
-                 "class":"",
                  "height":0,
                  "id":36,
                  "name":"hiding-spot",
@@ -316,8 +280,7 @@
                  "width":32,
                  "x":96,
                  "y":206
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":281,

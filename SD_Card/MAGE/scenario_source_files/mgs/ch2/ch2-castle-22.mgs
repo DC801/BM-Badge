@@ -28,6 +28,7 @@ look-ch2-scuzzy {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-22 {
+	if warp state is "ch2 ending" then goto ch2-castle-22-ending;
 	// ch2 room state
 	mutate ch2-in-room = 22;
 

@@ -278,7 +278,7 @@ interact-ch2-keypad {
 interact-ch2-keypad-prompt {
 	show serial dialog spacer;
 	show serial dialog {
-		"USER CONFIG CORRUPTED! Cannot unlock door with PINs! Perform manual unlocks with admin password."
+		"<r>USER CONFIG CORRUPTED!</> Cannot unlock door with PINs! Perform manual unlocks with admin password."
 		"Enter password:"
 		_ "AUTHENTICATE" : interact-ch2-keypad-good-pass
 	}
@@ -287,7 +287,7 @@ interact-ch2-keypad-prompt {
 interact-ch2-keypad-incorrect {
 	show serial dialog spacer;
 	show serial dialog {
-		"Password incorrect!"
+		"<r>Password incorrect!</>"
 		"Touch keypad to try again."
 	}
 	set entity "%SELF%" on_interact to interact-ch2-keypad-prompt;

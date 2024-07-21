@@ -80,6 +80,7 @@ look-ch2-solder {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-21 {
+	if warp state is "ch2 ending" then goto ch2-castle-21-ending;
 	// ch2 room state
 	mutate ch2-in-room = 21;
 

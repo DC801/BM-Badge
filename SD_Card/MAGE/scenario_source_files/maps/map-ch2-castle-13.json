@@ -721,6 +721,18 @@
                  "width":0,
                  "x":238,
                  "y":435
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":88,
+                 "name":"end-sebastian3",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":221,
+                 "y":435
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -729,7 +741,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":88,
+ "nextobjectid":89,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

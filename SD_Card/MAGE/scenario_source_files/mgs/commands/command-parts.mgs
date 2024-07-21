@@ -300,7 +300,7 @@ command-parts-heatsink {
 	if (flag ch2-installed-heatsink is true) {
 		show serial dialog { "<m>LAMBDA</>: You've got the heat sink ready to go, but you'll need to install the CPU first, so, uh, you can just leave it there for the moment." }
 	} else if (flag ch2-carrying-heatsink is true) {
-		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already! So, uh, I sort of forgot you can't install that until the CPU is in there, so... just set it aside for the moment. We'll do the actual install later." }
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already! So, uh, I sort of forgot you can't install that until the CPU is in there, so just set it aside for the moment. We'll do the actual install later." }
 	} else {
 		copy ch2-describe-heatsink;
 	}
@@ -371,7 +371,7 @@ command-parts-plate {
 	}
 	show serial dialog spacer;
 	if (flag ch2-installed-plate is true) {
-		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the plate to make a CPU. You're good." }
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the plate to make a <m>hard drive</>. You're good." }
 	} else if (flag ch2-carrying-plate is true) {
 		if (flag ch2-carrying-needle is false) {
 			show serial dialog { "<m>LAMBDA</>: You've got a good <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
@@ -473,7 +473,7 @@ command-parts-abacus {
 		show serial dialog { "<m>LAMBDA</>: You've already got the abacus combined with the goldfish into a CPU, so don't worry about the abacus half of things now." }
 	} else if (flag ch2-carrying-abacus is true) {
 		if (flag ch2-carrying-goldfish is false) {
-			show serial dialog { "<m>LAMBDA</>: You've got an abacus already, the \"remembering\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
+			show serial dialog { "<m>LAMBDA</>: You've got an abacus already, the \"data\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
 		} else {
 			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use one of the solder stations to combine them." }
 		}

@@ -96,6 +96,7 @@ look-ch2-wizard {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-1 {
+	if warp state is "ch2 ending" then goto ch2-castle-1-ending;
 	// ch2 room state
 	mutate ch2-in-room = 1;
 	set flag ch2-seen-room-1 to true;
@@ -564,21 +565,43 @@ ch2-install-wizard {
 	turn entity "%PLAYER%" north;
 	wait 900ms;
 	turn entity "%PLAYER%" toward entity Wizard;
-	turn player control on;
 	show dialog {
 		PLAYER "Okay, now what?"
-		Wizard "Hit the power button. If everything is plugged in right (TODO!!! Some kind of BIOS something)"
-		Wizard "(TODO: cool installation config cutscene goes here)"
-	}
-	copy ch2-spin-wizard;
-	show dialog {
-		Wizard "And... hit boot up!"
+		Wizard "Hit the power button."
 	}
 	turn entity "%PLAYER%" toward entity mainframe;
-	turn player control off;
 	show dialog {
-		PLAYER "All right. Here we go...."
+		Wizard "The machine will try to boot from the hard drive first. If there's nothing there, it should try the optical drive next."
+		"Not sure if that disc will give us a full installer with a bunch of settings, or if it'll just start up on its own."
 	}
+	wait 800ms;
+	turn serial control off;
+	show serial dialog spacer;
+	show serial dialog { "Starting" }
+	wait 100ms;
+	show dialog {
+		PLAYER "!!"
+	}
+	turn entity "%PLAYER%" toward entity Wizard;
+	show dialog {
+		PLAYER "Look! It's working!"
+	}
+	turn entity "%PLAYER%" toward entity mainframe;
+	turn entity Wizard west;
+	wait 200ms;
+	turn entity Wizard east;
+	wait 200ms;
+	turn entity Wizard west;
+	wait 200ms;
+	turn entity Wizard east;
+	show dialog {
+		Wizard "Aw, come on! Straight to boot? No startup settings at least?"
+	}
+	turn entity Wizard south;
+	show dialog {
+		Wizard "Oh well. Guess that's how things are gonna play out. Not much fun for me though. Guess I still helped, technically."
+	}
+	turn entity Wizard east;
 	set entity "%PLAYER%" on_tick to ch2-wait-for-boot;
 	copy ch2-bootup;
 	wait 1200ms;
@@ -604,13 +627,83 @@ ch2-install-wizard {
 	set flag ch2-wait-for-hat-touch to true;
 	copy ch2-install-mainframeos;
 }
+ch2-ending-fadein {
+	fade in camera from #000000 over 500ms;
+}
+ch2-ending-fadeout {
+	wait 100ms;
+	fade out camera to #000000 over 500ms;
+}
 ch2-install-wizard-resume {
 	show dialog {
 		PLAYER "Hey! It works!"
-		"(TODO: the rest... in the meantime: you won the game! Good job!)"
+		Wizard "Looks like the castle's core services are gonna come back online on their own. I guess that'll make it a breeze to clean everything up, eh?"
+	}
+	set warp state to "ch2 ending";
+	copy ch2-ending-fadeout;
+	load map ch2-castle-21;
+}
+ch2-castle-21-ending {
+	teleport camera to geometry warp-spot;
+	teleport entity "%PLAYER%" to geometry hiding-spot;
+	copy ch2-ending-fadein;
+	wait 800ms;
+	show dialog {
+		Frankie alignment TL "...Oh!"
+		"I'm in! I've got full access again! Let's gooo!"
+	}
+	turn entity Jean-Paul toward entity Frankie;
+	wait 400ms;
+	turn entity Jean-Paul south;
+	copy ch2-ending-fadeout;
+	load map ch2-castle-22;
+}
+ch2-castle-22-ending {
+	teleport camera to geometry warp-spot;
+	teleport entity "%PLAYER%" to geometry hiding-spot;
+	copy ch2-ending-fadein;
+	wait 800ms;
+	show dialog {
+		entity "C. K. Watt" alignment TR "Aha, we got core services coming back up. Finally."
+	}
+	copy ch2-ending-fadeout;
+	load map ch2-castle-13;
+}
+sebastian-to-three {
+	walk entity Sebastian to geometry end-sebastian3 over 800ms;
+}
+ch2-castle-13-ending {
+	teleport camera to geometry camera-spot3;
+	copy ch2-ending-fadein;
+	wait 800ms;
+	show dialog {
+		Templeton "Did you hear that? Something changed."
+		Sebastian "Ah, yessss! The mana boosters have spun up!"
+		"Step aside, your majesty. I'll handle this."
+	}
+	set entity Sebastian on_tick to sebastian-to-three;
+	wait 200ms;
+	copy ch2-ending-fadeout;
+	load map ch2-castle-1;
+}
+
+ch2-player-exit {
+	walk entity "%PLAYER%" to geometry exit-spot1 over 2000ms;
+}
+ch2-castle-1-ending {
+	make camera follow entity "%PLAYER%";
+	teleport entity "%PLAYER%" to geometry mainframe-look-spot;
+	turn entity "%PLAYER%" south;
+	set entity Wizard current_animation to 3;
+	copy ch2-ending-fadein;
+	wait 300ms;
+	show dialog {
+		PLAYER "Awesome! I'll go tell the village elders I've got the artifact fully working."
+		"We're one step closer to facing the Big Bad!"
 	}
 	mutate ch2-storyflag-round = 5;
 	turn player control off;
+	set entity "%PLAYER%" on_tick to ch2-player-exit;
 	fade out camera to #000000 over 1500ms;
 	set flag credits-from-menu to false;
 	load map credits2;
@@ -684,9 +777,9 @@ Mar 18 16:38:54 sunrise snmpXdmid: Failed to add filter to SP for Event delivery
 *****************************************************************************
 */
 ch2-bootup {
-	turn serial control off;
-	show serial dialog spacer;
-	show serial dialog { "Starting" }
+	// turn serial control off;
+	// show serial dialog spacer;
+	// show serial dialog { "Starting" }
 	wait 1050ms;
 	show serial dialog { "GibsonOS version 3.7.1-TLS" }
 	wait 700ms;
@@ -741,7 +834,7 @@ interact-ch2-xa {
 			PLAYER "How do I work Ring Zero again?"
 			Lambda "Hmm? What's that? Did you say something?"
 			PLAYER "I want to see if Ring Zero is working now that the mainframe is back online."
-			Lambda "Oh, yes! I see!"
+			Lambda "Oh, yes, I see."
 			"To open the hex editor, touch the hat at the top of the PCB you're holding. Should be just above the screen -- a shiny gold-colored area."
 		}
 	} else if (flag ch2-toot-done is false) {

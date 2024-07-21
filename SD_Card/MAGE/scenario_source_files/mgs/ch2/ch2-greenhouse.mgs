@@ -111,7 +111,7 @@ look-ch2-modem {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look modem (remember to add 'the' for objects)"
+		"\tAn arcane black box with a series of enigmatic green lights across the front. It's slightly warm."
 	}
 }
 
