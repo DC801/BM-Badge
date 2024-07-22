@@ -272,7 +272,7 @@ interact-ch2-yabbomongo {
 	copy face-player;
 	show dialog {
 		SELF "Oi, I'm bummed out! The circle of infinity is broken!"
-		"Used to be you could go west and come back out east, and vice versa. But now the west road goes somewhere new. Bizzare."
+		"Used to be you could go west and come back out east, and vice versa. But now the west road goes to King Gibson's castle. Bizzare."
 	}
 }
 
@@ -280,8 +280,8 @@ interact-ch2-marta {
 	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Oh! You're heading out west, to the dungeon in the mountain?"
-			PLAYER "Yeah, the serial dungeon."
+			SELF "Oh! You're heading out west, to the castle in the mountain?"
+			PLAYER "Yeah, the serial castle."
 			SELF "That old castle always freaked me out a little bit."
 			"It's so ancient, and full of such strange humming and clicking noises. I never really want to stay over there for long."
 			"...."
@@ -325,7 +325,7 @@ interact-ch2-shepherd {
 			PLAYER "Apparently it's \"serial,\" not \"cereal.\""
 			SELF "???" "That's what I said, isn't it? Cereal. Like, granola?"
 			PLAYER "No, it's \"serial,\" like... well, I don't know what it's like, but it's not breakfast."
-			SELF "Huh, well, I don't really get it, but good luck in the dungeon."
+			SELF "Huh, well, I don't really get it, but good luck in the castle."
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {
 		show dialog {
@@ -360,7 +360,7 @@ interact-ch2-verthandi {
 	copy interrupt-walk;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Oh! You're doing the western dungeon today, aren't you?"
+			SELF "Oh! You're doing the castle today, aren't you?"
 			"I believe in you, %PLAYER%!"
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {
@@ -420,18 +420,24 @@ interact-ch2-jackob-end {
 	}
 	copy face-player;
 	show dialog {
-		SELF "Ah, %PLAYER%, well done!"
+		SELF "Ah, %PLAYER%, good work today."
 	}
 	if (flag ch1_finished is false) {
 		if (flag ch1_unfinished_backstory is false) {
 			show dialog {
-				SELF "But you know, %PLAYER%, it seems like you still haven't finished chapter 1 in this save file."
+				SELF "But you know, it seems like you still haven't finished chapter 1 in this save file."
 				"I'm not angry. Just disappointed."
 				"...Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
 				"In all seriousness, do feel free to give chapter 1 a go."
 			}
 			set flag ch1_unfinished_backstory to true;
 		}
+	}
+	show dialog {
+		Alfonso "Stop getting distracted! You must remember what you've forgotten!"
+		Jackob "I can't remember any more \"old songs\", %Alfonso%. This isn't working, and I need a break."
+		Alfonso "We don't have time for breaks! Sing \"Danny Boy\" again, and this time, try to really -- really -- remember where you learned it."
+		Jackob "The more I sing \"Danny Boy,\" the more I remember the last time I sang it -- which is right here, right now."
 	}
 }
 
@@ -442,7 +448,7 @@ interact-ch2-alfonso-end {
 	copy face-player;
 	show dialog {
 		SELF "I never congratulated you on acquiring the artifact and repairing its fundamental functions, %PLAYER%. Good job."
-		"The next dungeon will challenge you further, but you should still try to remember everything you've learned so far."
+		"The next challenge will test you further, but you should still try to remember everything you've learned so far."
 		"Remember... yes, remember everything you've learned. We all must remember...."
 	}
 }

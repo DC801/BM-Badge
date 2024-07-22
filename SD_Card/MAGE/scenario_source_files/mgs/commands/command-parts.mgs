@@ -181,6 +181,7 @@ command-parts-print {
 		show serial dialog spacer;
 		show serial dialog {
 			"<m>LAMBDA</>: You're all done; no more parts to collect. Enjoy the power of the finished mainframe!"
+			" "
 		}
 		show serial dialog lambda-over;
 		return;

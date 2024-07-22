@@ -152,11 +152,11 @@ tick_hanoi {
 /*
 ============================================================
      Cannot place larger plate on top of a smaller plate!    // row 10
-         ||      YOU WON! Plate #7 grabbed!      ||          // row 11
+         ||      YOU WON! Plate #6 grabbed!      ||          // row 11
          ||              Score: xx               ||          // row 10 (more digits = less spaces)
 ============================================================
 =------------------ THE PLATES OF HANOI -------------------=
-=----------------- Grab plate #7 to win! ------------------=
+=----------------- Grab plate #6 to win! ------------------=
 ============================================================
          ||                  ||                  ||          // row 11
         /  \                 ||                  ||          // row 10
@@ -424,7 +424,7 @@ draw_hanoi {
 		copy hanoi_quit;
 	} else if (flag hanoi_draw_help is true) {
 		show serial dialog {
-			"<m>TIP:</> You only need uncover (and grab) the #7 plate; you need not move it to another tray and build the tower of plates again."
+			"<m>TIP:</> You only need uncover (and grab) the #6 plate; you need not move it to another tray and build the tower of plates again."
 			"<m>TIP:</> Only put odd numbered plates on top of even plates and vice versa. E.g. put plate <bold>1</> on top of plate <bold>4</>, not <bold>3</> or <bold>5</>."
 		}
 		set flag hanoi_draw_help to false;

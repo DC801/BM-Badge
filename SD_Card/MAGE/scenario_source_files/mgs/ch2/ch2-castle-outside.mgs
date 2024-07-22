@@ -14,7 +14,7 @@ look-ch2-entrancesign {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\tA worn wooden sign inscribed with the words \"The serial dungeon: King Gibson's castle.\""
+		"\tA worn wooden sign inscribed with the words \"King Gibson's castle.\""
 	}
 }
 
@@ -53,6 +53,9 @@ on_load-ch2-castle-outside {
 	}
 	// unique stuff done
 	copy ch2-map-init; // (player control comes back here)
+	if (warp state is exit_from-credits) {
+		goto ch2-post-credits;
+	}
 }
 
 /* ---------- ON_TICK ---------- */
@@ -97,7 +100,7 @@ on_go-castle-outside-east {
 
 interact-ch2-entrancesign {
 	show dialog {
-		name "" "The serial dungeon:\nKing Gibson's castle"
+		name "" "King Gibson's castle"
 	}
 }
 

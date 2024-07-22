@@ -256,7 +256,7 @@ interact-ch2-trekkie {
 	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Oh, %PLAYER%! Me heard you were going to the serial dungeon in the mountain!"
+			SELF "Oh, %PLAYER%! Me heard you were going to the serial castle in the mountain!"
 			PLAYER "Yeah, I guess."
 			SELF "Me want to wish you the best of luck!"
 			PLAYER "Thanks, %SELF%."

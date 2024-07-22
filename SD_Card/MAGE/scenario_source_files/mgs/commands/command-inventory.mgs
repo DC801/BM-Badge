@@ -131,7 +131,7 @@ command-inventory {
 	// final
 	if (flag ch2-carrying-mainframeos is true) {
 		if (flag only-count-inventory is false) {
-			show serial dialog { "\tmainframe os CD" }
+			show serial dialog { "\tmainframe OS CD" }
 		}
 		mutate ch2-count-inventory + 1;
 	}

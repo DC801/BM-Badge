@@ -94,21 +94,7 @@ on_load-ch2-magehouse {
 		teleport entity "Aunt Zippy" to geometry alt-spot2;
 		teleport entity "Uncle Zappy" to geometry alt-spot1;
 	}
-	debug!("<c>POST</> to view post-credits cutscene")
-	if (debug mode is on) {
-		register post -> debug-post;
-	}
 	copy ch2-map-init;
-	if (warp state is exit_from-credits) {
-		if (flag ch2-cutseen-secret-ending is false) {
-			copy ch2-post-credits;
-		}
-	}
-}
-debug-post {
-	set warp state to exit_from-credits;
-	mutate ch2-storyflag-round = 5;
-	load map ch2-magehouse;
 }
 
 /* ---------- ON_TICK ---------- */
@@ -133,11 +119,11 @@ interact-ch2-zappy {
 	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Good morning, %PLAYER%! Off to the western dungeon this morning?"
+			SELF "Good morning, %PLAYER%! Off to the castle this morning?"
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {
 		show dialog {
-			SELF "I heard from Alfonso that you'll need to grapple with some insects in the dungeon. I had no idea."
+			SELF "I heard from Alfonso that you'll need to grapple with some insects in the castle. I had no idea."
 			PLAYER "Insects?"
 			SELF "I think he mentioned bees? Bees that were sheep? Or was it the other way around? Sheep that were bees?"
 			PLAYER "(Bees? Sheep?)"
@@ -167,7 +153,7 @@ interact-ch2-zippy {
 	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "If you need a break from the dungeon out west, don't forget to come back home for a visit."
+			SELF "If you need a break from the castle out west, don't forget to come back home for a visit."
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {
 		show dialog {
@@ -183,7 +169,7 @@ interact-ch2-zippy {
 		turn entity "%SELF%" north;
 	} else {
 		show dialog {
-			SELF "Good job, %PLAYER%! Congratulations on conquering that dungeon!"
+			SELF "Good job, %PLAYER%! Congratulations on conquering that castle!"
 		}
 	}
 }

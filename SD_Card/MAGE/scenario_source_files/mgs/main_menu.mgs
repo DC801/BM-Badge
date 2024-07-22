@@ -30,6 +30,7 @@ on_load-main_menu {
 		register rtfm -> command-rtfm;
 		register buffer + test -> debug-buffertest;
 		register boot -> ch2-bootup;
+		register post -> debug-post;
 		register skip + "1" -> debug-jump-to-round1;
 		register skip + "2" -> debug-jump-to-round2;
 		register skip + "3" -> debug-jump-to-round3;
@@ -50,6 +51,7 @@ on_load-main_menu {
 			"<c>SIMON</>: fast forward to the Simon Says part"
 			"<c>KING</>: skip to cutscene where the king meets his advisors"
 			"<c>BOOT</>: pretend to boot the weird computer"
+			"<c>POST</>: skip to the post credits scene"
 			"<c>SKIP _</>: skip ahead to that round (and set all prev flags)"
 			" "
 			"\t<g>Entire game debug options:</>"
@@ -61,6 +63,20 @@ on_load-main_menu {
 }
 
 /* DEBUGSSSS */
+debug-post {
+	set flag ch2-wizard-backstory to true;
+	copy debug-set-flags-to-round4;
+	set flag ch2-seen-room-99 to true;
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	set flag ch2-cutseen-castle99 to true;
+	copy ch2-install-mainframeos;
+	set flag ch2-ring-zero-enabled-in-castle to true;
+	mutate ch2-storyflag-round = 5;
+	set flag credits-from-menu to false;
+	set warp state to exit_from-credits;
+	load map ch2-castle-outside;
+}
 debug-menu-simon {
 	turn serial control on;
 	set flag ch2-has-artifact to true;
