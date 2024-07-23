@@ -113,7 +113,7 @@ void MageGameEngine::gameLoopIteration()
          else if (inputHandler->Use())
          {
             const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
-            auto& scriptState = mapControl->Get<MapControl::OnInteractScript>(scriptId);
+            auto& scriptState = mapControl->Get<OnInteractScript>(scriptId);
             scriptState.script = mapControl->scripts[scriptId];
             scriptState.scriptIsRunning = true;
             scriptControl->processScript(scriptState, *entityInteractId);

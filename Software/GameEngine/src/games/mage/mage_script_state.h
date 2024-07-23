@@ -5,15 +5,15 @@
 #include <stdint.h>
 
 //these are the types of scripts that can be on a map or entity:
-typedef enum : uint8_t
+enum class MageScriptType : uint8_t
 {
    ON_LOAD = 0,
    ON_TICK,
    ON_INTERACT,
    ON_LOOK,
-   ON_COMMAND,
-   NUM_SCRIPT_TYPES
-} MageScriptType;
+   ON_COMMAND
+};
+static const inline auto NUM_SCRIPT_TYPES = 5;
 
 struct ResumeGeometry
 {
@@ -48,7 +48,8 @@ struct MageScriptState
    MageScriptState() noexcept = default;
 
    MageScriptState(uint16_t scriptId, bool scriptIsRunning = false, bool isGlobalExecutionScope = false) noexcept
-      :script(ROM()->GetReadPointerByIndex<MageScript>(scriptId)),
+      : Id(scriptId),
+      script(ROM()->GetReadPointerByIndex<MageScript>(scriptId)),
       scriptIsRunning(scriptIsRunning),
       isGlobalExecutionScope(isGlobalExecutionScope)
    {}
@@ -59,7 +60,7 @@ struct MageScriptState
    //the script Id to resume, scope determined by isGlobalExecutionScope
    // - if false, should be treated as mapLocalScriptId
    // - if true, should be treated as globalScriptId
-   //uint16_t scriptId{ 0 };
+   uint16_t Id{ 0 };
 
    const MageScript* script{ nullptr };
    //the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
@@ -71,6 +72,7 @@ struct MageScriptState
 
    //indicated whether or not an active script is running on this MageScriptState
    bool scriptIsRunning{ false };
+   bool scriptIsPaused{ false };
    ResumeGeometry geometry{ 0 };
 };
 

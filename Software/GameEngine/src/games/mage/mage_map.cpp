@@ -38,7 +38,7 @@ void MapControl::Load()
       Get<RenderableData>(i).UpdateFrom(entityData);
    }
 
-   onTick = MageScriptState{ currentMap->onTickScriptId, false };
+   onTickScriptState = MageScriptState{ currentMap->onTickScriptId, false };
 
    auto player = getPlayerEntityData();
    if (player)
@@ -51,8 +51,8 @@ void MapControl::Load()
 void MapControl::OnTick(MageScriptControl* scriptControl)
 {
    //the map's onTick script will run every tick, restarting from the beginning as it completes
-   onTick.scriptIsRunning = true;
-   scriptControl->processScript(onTick, MAGE_MAP_ENTITY);
+   onTickScriptState.scriptIsRunning = true;
+   scriptControl->processScript(onTickScriptState, MAGE_MAP_ENTITY);
 }
 
 MapData::MapData(uint32_t& offset)

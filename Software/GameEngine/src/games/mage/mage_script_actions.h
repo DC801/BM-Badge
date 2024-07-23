@@ -19,6 +19,10 @@ class MageHexEditor;
 class MageEntity;
 class StringLoader;
 
+using OnTickScript = TaggedType<MageScriptState, struct OnTick>;
+using OnInteractScript = TaggedType<MageScriptState, struct OnInteract>;
+using OnLookScript = TaggedType<MageScriptState, struct OnLook>;
+
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,
 //so don't change any numbering unless you fix the binary generation as well.
@@ -43,6 +47,7 @@ typedef enum : uint8_t
    CHECK_ENTITY_Y,
    CHECK_ENTITY_INTERACT_SCRIPT,
    CHECK_ENTITY_TICK_SCRIPT,
+   CHECK_ENTITY_LOOK_SCRIPT,
    CHECK_ENTITY_TYPE,
    CHECK_ENTITY_PRIMARY_ID,
    CHECK_ENTITY_SECONDARY_ID,
@@ -134,11 +139,26 @@ typedef enum : uint8_t
    SET_TELEPORT_ENABLED,
    CHECK_MAP,
    SET_BLE_FLAG,
-   CHECK_BLE_FLAG
+   CHECK_BLE_FLAG,
+   SET_SERIAL_DIALOG_CONTROL,
+   REGISTER_SERIAL_DIALOG_COMMAND,
+   REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
+   UNREGISTER_SERIAL_DIALOG_COMMAND,
+   UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
+   SET_ENTITY_MOVEMENT_RELATIVE,
+   CHECK_DIALOG_OPEN,
+   CHECK_SERIAL_DIALOG_OPEN,
+   CHECK_DEBUG_MODE,
+   CLOSE_DIALOG,
+   CLOSE_SERIAL_DIALOG,
+   SET_LIGHTS_CONTROL,
+   SET_LIGHTS_STATE,
+   GOTO_ACTION_INDEX,
+   SET_SCRIPT_PAUSE
 } MageScriptActionTypeId;
 
 //this tracks the number of actions we're at
-static const inline uint8_t NUM_SCRIPT_ACTIONS = 98;
+static const inline uint8_t NUM_SCRIPT_ACTIONS = 116;
 
 class MageScriptActions
 {
@@ -177,6 +197,7 @@ private:
    std::optional<uint16_t> check_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> check_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
@@ -311,11 +332,8 @@ private:
    std::optional<uint16_t> check_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I
    std::optional<uint16_t> slot_save(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> slot_load(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> slot_erase(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_connect_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: NB+C (
    //  showSerialDialog will send a message out over serial
@@ -327,22 +345,35 @@ private:
    std::optional<uint16_t> show_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I
    std::optional<uint16_t> inventory_get(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> inventory_drop(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> check_inventory(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_map_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_teleport_enabled(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: C
    std::optional<uint16_t> check_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: C
    std::optional<uint16_t> check_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> set_serial_dialog_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> register_serial_dialog_command(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> register_serial_dialog_command_argument(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> unregister_serial_dialog_command(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> unregister_serial_dialog_command_argument(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> set_entity_movement_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   //Action Logic Type: I+C
+   std::optional<uint16_t> check_dialog_open(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> check_serial_dialog_open(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> check_debug_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> close_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> close_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> set_lights_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> set_lights_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> goto_action_index(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> set_script_pause(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   //Action Logic Type: I
+   std::optional<uint16_t> register_serial_dialog_command_alias(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> unregister_serial_dialog_command_alias(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
+   std::optional<uint16_t> set_serial_dialog_command_visibility(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
 
    constexpr float getProgressOfAction(const MageScriptState& resumeState) const
    {
@@ -387,11 +418,12 @@ private:
    std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<StringLoader> stringLoader;
 
+   std::optional<uint16_t> handleJump(bool shouldJump, uint8_t flags, uint16_t destination, MageScriptState& resumeState);
 };
 
 
 //typedef for the array of function pointers to script action functions:
-typedef void(*ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct);
+typedef void(*ActionFunctionPointer)(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
 
 //the actual array of action functions:
 extern ActionFunctionPointer actionFunctions[NUM_SCRIPT_ACTIONS];

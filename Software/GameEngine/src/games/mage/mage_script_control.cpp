@@ -48,7 +48,7 @@ void MageScriptControl::tickScripts()
    mapControl->OnTick(this);
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
-   for (auto& script : mapControl->GetAll<MapControl::OnTickScript>())
+   for (auto& script : mapControl->GetAll<OnTickScript>())
    {
       //handle Entity onTick scripts for the local entity at Id 'i':
       //these scripts will run every tick, starting from the beginning as they complete.

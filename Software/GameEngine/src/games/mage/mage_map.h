@@ -97,10 +97,7 @@ class MapControl
    friend class MageGameEngine;
    friend class MageScriptControl;
    friend class MageHexEditor;
-public:
-   using OnTickScript = TaggedType<MageScriptState, struct OnTick>;
-   using OnInteractScript = TaggedType<MageScriptState, struct OnInteract>;
-
+public:  
    MapControl(std::shared_ptr<FrameBuffer> frameBuffer, int32_t initialMapId) noexcept
       : frameBuffer(frameBuffer), mapLoadId(initialMapId)
    {}
@@ -267,7 +264,7 @@ public:
 
    void SetOnTick(uint16_t scriptId)
    {
-      onTick = MageScriptState{ scriptId, false, onTick.isGlobalExecutionScope };
+      onTickScriptState = MageScriptState{ scriptId, false, onTickScriptState.isGlobalExecutionScope };
    }
 
    constexpr const MageScript* GetScript(uint16_t scriptIndex) const
@@ -280,12 +277,11 @@ public:
    }
 
    void OnTick(MageScriptControl* scriptControl);
+   MageScriptState onLoadScriptState;
+   MageScriptState onTickScriptState;
 
 private:
-
-   EntityRect getInteractBox() const;
-
-   inline const RenderableData* getPlayerRenderableData() const
+      inline const RenderableData* getPlayerRenderableData() const
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX
@@ -311,9 +307,8 @@ private:
    using RenderableDataArray = std::array<RenderableData, MAX_ENTITIES_PER_MAP>;
    using OnTickArray = std::array<OnTickScript, MAX_ENTITIES_PER_MAP>;
    using OnInteractArray = std::array<OnInteractScript, MAX_ENTITIES_PER_MAP>;
-   using EntityData = std::tuple<EntityDataArray&, RenderableDataArray&, OnTickArray&, OnInteractArray&>;
-
-   MageScriptState onTick;
+   using OnLookArray = std::array<OnLookScript, MAX_ENTITIES_PER_MAP>;
+   using EntityData = std::tuple<EntityDataArray&, RenderableDataArray&, OnTickArray&, OnInteractArray&, OnLookArray&>;
 
    std::shared_ptr<FrameBuffer> frameBuffer;
 
@@ -322,8 +317,9 @@ private:
    RenderableDataArray renderableDataArray{};
    OnTickArray onTickScriptsArray;
    OnInteractArray onInteractScriptsArray{};
+   OnLookArray onLookScriptsArray{};
 
-   EntityData entities{ entityDataArray, renderableDataArray, onTickScriptsArray, onInteractScriptsArray };
+   EntityData entities{ entityDataArray, renderableDataArray, onTickScriptsArray, onInteractScriptsArray, onLookScriptsArray };
 
    std::vector<const MageScript*> scripts{};
    bool playerIsMoving{ false };

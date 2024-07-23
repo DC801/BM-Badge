@@ -28,7 +28,7 @@ void MageCommandControl::processCommand(std::string& commandString)
 {
    std::string lowercasedInput = commandString;
    badAsciiLowerCase(lowercasedInput);
-   if (!isInputTrapped)
+   if (!inputTrapped)
    {
       processCommandAsVerb(lowercasedInput);
    }
@@ -225,7 +225,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
             responseLabel + "\n"
             );
          scriptControl->jumpScriptId = response.scriptId;
-         isInputTrapped = false;
+         inputTrapped = false;
       }
       else
       {
@@ -246,7 +246,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
          {
             commandResponseBuffer += "Valid response: " + input + "\n";
             scriptControl->jumpScriptId = response.scriptId;
-            isInputTrapped = false;
+            inputTrapped = false;
             validResponseFound = true;
             break;
          }
@@ -254,7 +254,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
       if (!validResponseFound)
       {
          commandResponseBuffer += "Invalid response: " + input + "\n";
-         isInputTrapped = false;
+         inputTrapped = false;
       }
    }
 }
@@ -272,7 +272,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
     	"openSerialDialog->responseCount: " + std::to_string(openSerialDialog->Responses.size()) + "\n"
     	"message: " + dialogString + "\n";
 
-   isInputTrapped = openSerialDialog->serialResponseType != MageSerialDialogResponseTypes::RESPONSE_NONE;
+   inputTrapped = openSerialDialog->serialResponseType != MageSerialDialogResponseTypes::RESPONSE_NONE;
    auto address = ROM()->GetOffsetByIndex<MageSerialDialog>(serialDialogId) + sizeof(MageSerialDialog);
    auto serialDialogResponses = ROM()->GetViewOf<MageDialogResponse>(address, (uint16_t)openSerialDialog->Responses.size());
    

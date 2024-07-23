@@ -54,7 +54,7 @@ public:
 	uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 	uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 	MageSerialCommand lastCommandUsed = MageSerialCommand::NONE;
-	bool isInputTrapped = false;
+	MageScriptState serialScriptState;
 	int32_t getCommandIndex(const std::string& combinedString, bool isFail, bool useFail);
 	void handleStart();
 	void processCommand(std::string& commandString);
@@ -70,7 +70,19 @@ public:
 	void unregisterArgument(uint16_t commandStringId, uint16_t argumentStringId);
 	void unregisterCommand(uint16_t commandStringId, bool isFail);
 	void unregisterCommandAlias(uint16_t aliasStringId);
+
+	constexpr bool isInputTrapped() const
+	{
+		return inputTrapped;
+	}
+
+	constexpr void cancelTrap()
+	{
+		inputTrapped = false;
+	}
 private:
+	bool inputTrapped{ false };
+
 	std::shared_ptr<EngineSerial> serial;
 	std::shared_ptr<MapControl> mapControl;
 	std::shared_ptr<FrameBuffer> frameBuffer;

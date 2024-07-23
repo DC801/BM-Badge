@@ -22,6 +22,7 @@ const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTI
       &MageScriptActions::check_entity_y,
       &MageScriptActions::check_entity_interact_script,
       &MageScriptActions::check_entity_tick_script,
+      &MageScriptActions::check_entity_look_script,
       &MageScriptActions::check_entity_type,
       &MageScriptActions::check_entity_primary_id,
       &MageScriptActions::check_entity_secondary_id,
@@ -114,7 +115,41 @@ const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTI
       &MageScriptActions::check_map,
       &MageScriptActions::set_ble_flag,
       &MageScriptActions::check_ble_flag,
+      &MageScriptActions::set_serial_dialog_control,
+      &MageScriptActions::register_serial_dialog_command,
+      &MageScriptActions::register_serial_dialog_command_argument,
+      &MageScriptActions::unregister_serial_dialog_command,
+      &MageScriptActions::unregister_serial_dialog_command_argument,
+      &MageScriptActions::set_entity_movement_relative,
+      &MageScriptActions::check_dialog_open,
+      &MageScriptActions::check_serial_dialog_open,
+      &MageScriptActions::check_debug_mode,
+      &MageScriptActions::close_dialog,
+      &MageScriptActions::close_serial_dialog,
+      &MageScriptActions::set_lights_control,
+      &MageScriptActions::set_lights_state,
+      &MageScriptActions::goto_action_index,
+      &MageScriptActions::set_script_pause,
+      &MageScriptActions::register_serial_dialog_command_alias,
+      &MageScriptActions::unregister_serial_dialog_command_alias
 };
+
+static const inline auto JUMP_INDEX = 128;
+std::optional<uint16_t> MageScriptActions::handleJump(bool shouldJump, uint8_t flags, uint16_t destination, MageScriptState& resumeState)
+{
+   if (shouldJump)
+   {
+      if (flags & JUMP_INDEX)
+      {
+         resumeState.actionOffset = destination - 1;
+      }
+      else
+      {
+         return destination;
+      }
+   }
+   return NO_JUMP_SCRIPT;
+}
 
 std::optional<uint16_t> MageScriptActions::null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
@@ -243,6 +278,30 @@ std::optional<uint16_t> MageScriptActions::check_entity_tick_script(const uint8_
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       bool identical = (entity.onTickScriptId == argStruct->expectedScript);
       if (identical == (bool)argStruct->expectedBool)
+      {
+         return argStruct->successScriptId;
+      }
+   }
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::check_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t successScriptId;
+      uint16_t expectedScriptId;
+      uint8_t entityId;
+      uint8_t flags;
+      uint8_t paddingG;
+   } ActionCheckEntityLookScript;
+   auto* argStruct = (ActionCheckEntityLookScript*)args;
+
+   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (entityIndex != NO_PLAYER_INDEX)
+   {
+      auto& lookScript = mapControl->Get<OnLookScript>(entityIndex);
+      if (lookScript.Id == argStruct->expectedScriptId)
       {
          return argStruct->successScriptId;
       }
@@ -2434,7 +2493,7 @@ std::optional<uint16_t> MageScriptActions::show_serial_dialog(const uint8_t* arg
    typedef struct
    {
       uint16_t serialDialogId;
-      uint8_t paddingC;
+      uint8_t disableNewLine;
       uint8_t paddingD;
       uint8_t paddingE;
       uint8_t paddingF;
@@ -2444,12 +2503,12 @@ std::optional<uint16_t> MageScriptActions::show_serial_dialog(const uint8_t* arg
    if (resumeState.totalSteps == 0)
    {
       commandControl->showSerialDialog(argStruct->serialDialogId);
-      if (commandControl->isInputTrapped)
+      if (commandControl->isInputTrapped())
       {
          resumeState.totalSteps = 1;
       }
    }
-   else if (!commandControl->isInputTrapped)
+   else if (!commandControl->isInputTrapped())
    {
       resumeState.totalSteps = 0;
    }
@@ -2600,6 +2659,384 @@ std::optional<uint16_t> MageScriptActions::check_ble_flag(const uint8_t* args, M
    } ActionCheckBleFlag;
    auto argStruct = (ActionCheckBleFlag*)args;
    // TODO: implement this
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::set_serial_dialog_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint8_t playerHasControl;
+      uint8_t paddingB;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionSetPlayerControl;
+   auto* argStruct = (ActionSetPlayerControl*)args;
+   // TODO: implement this
+   //commandControl->isInputEnabled = argStruct->playerHasControl;
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::register_serial_dialog_command(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint16_t scriptId;
+      uint8_t isFail;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionRegisterSerialDialogVerb;
+   auto* argStruct = (ActionRegisterSerialDialogVerb*)args;
+   commandControl->registerCommand(argStruct->commandStringId, argStruct->scriptId, argStruct->isFail);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::register_serial_dialog_command_argument(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint16_t argumentStringId;
+      uint16_t scriptId;
+      uint8_t paddingG;
+   } ActionRegisterSerialDialogVerb;
+   auto* argStruct = (ActionRegisterSerialDialogVerb*)args;
+   commandControl->registerArgument(argStruct->commandStringId, argStruct->argumentStringId, argStruct->scriptId);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::unregister_serial_dialog_command(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint8_t isFail;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionUnregisterSerialDialogVerb;
+   auto* argStruct = (ActionUnregisterSerialDialogVerb*)args;
+   commandControl->unregisterCommand(argStruct->commandStringId, argStruct->isFail);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::unregister_serial_dialog_command_argument(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint16_t argumentStringId;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionRegisterSerialDialogVerb;
+   auto* argStruct = (ActionRegisterSerialDialogVerb*)args;
+   commandControl->unregisterArgument(argStruct->commandStringId, argStruct->argumentStringId);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::set_entity_movement_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint8_t relativeDirection;
+      uint8_t entityId;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionSetEntityMotionRelative;
+   auto* argStruct = (ActionSetEntityMotionRelative*)args;
+
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex == NO_PLAYER_INDEX)
+   {
+      return NO_JUMP_SCRIPT;
+   }
+
+   auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
+   auto& renderableData = mapControl->Get<RenderableData>(sourceEntityIndex);
+   auto direction = MageEntityAnimationDirection{ static_cast<uint8_t>(static_cast<uint8_t>(entity.GetDirection()) | argStruct->relativeDirection << 4) };
+   entity.SetDirection(direction);
+   renderableData.UpdateFrom(entity);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::check_dialog_open(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t successScriptId;
+      uint8_t flags;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckDialogOpen;
+   auto* argStruct = (ActionCheckDialogOpen*)args;
+
+   return handleJump(dialogControl->isOpen(), argStruct->flags, argStruct->successScriptId, resumeState);
+}
+
+std::optional<uint16_t> MageScriptActions::check_serial_dialog_open(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t successScriptId;
+      uint8_t flags;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+
+   return handleJump(commandControl->isInputTrapped(), argStruct->flags, argStruct->successScriptId, resumeState);
+}
+
+
+std::optional<uint16_t> MageScriptActions::check_debug_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t successScriptId;
+      uint8_t flags;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+
+   //bool value = MageGame->isEntityDebugOn;
+   //handle_jump(value, argStruct->flags, argStruct->successScriptId, resumeState);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::close_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint8_t paddingA;
+      uint8_t paddingB;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCloseDialog;
+   auto* argStruct = (ActionCloseDialog*)args;
+
+   dialogControl->close();
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::close_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint8_t paddingA;
+      uint8_t paddingB;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+
+   commandControl->cancelTrap();
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::set_lights_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint8_t isEnabled;
+      uint8_t paddingB;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+   //MageGame->isLEDControlEnabled = argStruct->isEnabled;
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::set_lights_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint32_t lights;
+      uint8_t isEnabled;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+
+   // std::string message = "Value of lights is:" + std::to_string(argStruct->lights);
+   // commandControl->processCommand(message.c_str());
+   for (uint8_t i = 0; i < LED_COUNT; i += 1)
+   {
+      bool current_light = (bool)((argStruct->lights >> i) & 1);
+      if (current_light)
+      {
+         if (argStruct->isEnabled)
+         {
+            ledOn((LEDID)i);
+         }
+         else
+         {
+            ledOff((LEDID)i);
+         }
+      }
+   }
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::goto_action_index(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t action_index;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+
+   // - 1 because it will be ++ in just a sec
+   resumeState.actionOffset = argStruct->action_index - 1;
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::set_script_pause(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint8_t entityId;
+      MageScriptType script_slot;
+      uint8_t bool_value;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionCheckSerialDialogOpen;
+   auto* argStruct = (ActionCheckSerialDialogOpen*)args;
+   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   MageScriptState* scriptState = NULL;
+   switch (argStruct->script_slot)
+   {
+   case MageScriptType::ON_LOAD: 
+      scriptState = &mapControl->onLoadScriptState;
+      break;
+   
+   case MageScriptType::ON_TICK:
+      if (entityIndex == NO_PLAYER_INDEX)
+      {
+         scriptState = &mapControl->onTickScriptState;
+      }
+      else
+      {
+         scriptState = &mapControl->Get<OnTickScript>(entityIndex);
+      }
+      break;
+   
+   case MageScriptType::ON_INTERACT: 
+      if (entityIndex != NO_PLAYER_INDEX)
+      {
+         scriptState = &mapControl->Get<OnInteractScript>(entityIndex);
+      }
+      break;
+   
+   case MageScriptType::ON_LOOK: 
+      if (entityIndex != NO_PLAYER_INDEX)
+      {
+         scriptState = &mapControl->Get<OnLookScript>(entityIndex);
+      }
+      break;
+   
+   case MageScriptType::ON_COMMAND: 
+      scriptState = &commandControl->serialScriptState;
+      break;
+   
+   default: 
+      std::string errorString = "Invalid script_slot used in:\n"
+         "action_set_script_pause\n"
+         "Invalid value was:\n"
+         + std::to_string(static_cast<uint8_t>(argStruct->script_slot));
+      ENGINE_PANIC(errorString.c_str());
+   }
+   if (!scriptState)
+   {
+      std::string errorString = "Invalid script_slot + entity_id in:\n"
+         "action_set_script_pause\n"
+         "script_slot was:\n"
+         + std::to_string(static_cast<uint8_t>(argStruct->script_slot))
+         + "entity_id was:\n"
+         + std::to_string(argStruct->entityId);
+      ENGINE_PANIC(errorString.c_str());
+   }
+   resumeState.scriptIsPaused = argStruct->bool_value;
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::register_serial_dialog_command_alias(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint16_t aliasStringId;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionRegisterSerialDialogCommandAlias;
+   auto* argStruct = (ActionRegisterSerialDialogCommandAlias*)args;
+   commandControl->registerCommandAlias(argStruct->commandStringId, argStruct->aliasStringId);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::unregister_serial_dialog_command_alias(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint16_t aliasStringId;
+      uint8_t paddingC;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionUnregisterSerialDialogCommandAlias;
+   auto* argStruct = (ActionUnregisterSerialDialogCommandAlias*)args;
+   commandControl->unregisterCommandAlias(argStruct->aliasStringId);
+   return NO_JUMP_SCRIPT;
+}
+
+std::optional<uint16_t> MageScriptActions::set_serial_dialog_command_visibility(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
+{
+   typedef struct
+   {
+      uint16_t commandStringId;
+      uint8_t isVisible;
+      uint8_t paddingD;
+      uint8_t paddingE;
+      uint8_t paddingF;
+      uint8_t paddingG;
+   } ActionSetSerialDialogCommandVisibility;
+   auto* argStruct = (ActionSetSerialDialogCommandVisibility*)args;
+   commandControl->setCommandVisibility(argStruct->commandStringId, argStruct->isVisible);
    return NO_JUMP_SCRIPT;
 }
 
