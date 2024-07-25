@@ -19,6 +19,7 @@ in a more accessible way.
 #include "mage_defines.h"
 #include "mage_entity.h"
 #include "mage_rom.h"
+#include "mage_script_actions.h"
 #include "mage_script_state.h"
 #include "mage_script_control.h"
 #include "shim_timer.h"
@@ -41,7 +42,7 @@ struct MapLayers
 {
    MapLayers() noexcept = default;
    //MapLayers(MapLayers& layers) noexcept = default;
-   MapLayers(uint32_t& offset, std::span<const MapTile>&& tiles, uint16_t layerSize) noexcept
+   MapLayers(std::span<const MapTile>&& tiles, uint16_t layerSize) noexcept
       : tiles(std::move(tiles)),
       layerSize(layerSize)
    {}
@@ -264,7 +265,8 @@ public:
 
    void SetOnTick(uint16_t scriptId)
    {
-      onTickScriptState = MageScriptState{ scriptId, false, onTickScriptState.isGlobalExecutionScope };
+      auto onTickScript = ROM()->GetReadPointerByIndex<MageScript>(scriptId);
+      onTickScriptState = MageScriptState{ scriptId, onTickScript };
    }
 
    constexpr const MageScript* GetScript(uint16_t scriptIndex) const

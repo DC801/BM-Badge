@@ -37,8 +37,8 @@ void MapControl::Load()
       // fill renderable data from the entity
       Get<RenderableData>(i).UpdateFrom(entityData);
    }
-
-   onTickScriptState = MageScriptState{ currentMap->onTickScriptId, false };
+   const auto onTickScript = ROM()->GetReadPointerByIndex<MageScript>(currentMap->onTickScriptId);
+   onTickScriptState = MageScriptState{ currentMap->onTickScriptId, onTickScript };
 
    auto player = getPlayerEntityData();
    if (player)
@@ -91,7 +91,7 @@ MapData::MapData(uint32_t& offset)
       offset += sizeof(uint16_t);
    }
 
-   layers = MapLayers(offset, ROM()->GetViewOf<MapTile>(offset, (uint16_t)(layerCount * rows * cols)), (uint16_t)(rows * cols));
+   layers = MapLayers(ROM()->GetViewOf<MapTile>(offset, (uint16_t)(layerCount * rows * cols)), (uint16_t)(rows * cols));
 }
 
 void MapControl::DrawEntities() const

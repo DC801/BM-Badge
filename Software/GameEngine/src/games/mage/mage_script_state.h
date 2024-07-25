@@ -35,10 +35,10 @@ struct MageScript
    const char name[32];
    const uint32_t actionCount;
 
-   const ScriptAction* GetAction(uint16_t actionOffset) const
+   const ScriptAction* GetAction(uint16_t currentAction) const
    {
       auto actionPointer = (const char*)&actionCount + sizeof(uint32_t);
-      return (const ScriptAction*)(actionPointer + actionOffset * sizeof(ScriptAction));
+      return (const ScriptAction*)(actionPointer + currentAction * sizeof(ScriptAction));
    }
 };
 
@@ -47,24 +47,16 @@ struct MageScriptState
 {
    MageScriptState() noexcept = default;
 
-   MageScriptState(uint16_t scriptId, bool scriptIsRunning = false, bool isGlobalExecutionScope = false) noexcept
-      : Id(scriptId),
-      script(ROM()->GetReadPointerByIndex<MageScript>(scriptId)),
-      scriptIsRunning(scriptIsRunning),
-      isGlobalExecutionScope(isGlobalExecutionScope)
+   MageScriptState(uint16_t scriptGlobalId, const MageScript* script) noexcept
+      : Id(scriptGlobalId),
+      script(script)
    {}
 
-
-   bool isGlobalExecutionScope{ false };
-
-   //the script Id to resume, scope determined by isGlobalExecutionScope
-   // - if false, should be treated as mapLocalScriptId
-   // - if true, should be treated as globalScriptId
    uint16_t Id{ 0 };
 
    const MageScript* script{ nullptr };
    //the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
-   uint16_t actionOffset{ 0 };
+   uint16_t currentAction{ 0 };
    //the number of loops until the next action in the script is to run
    uint16_t remainingSteps{ 0 };
    //the total number of loops from the start of the action until the next action

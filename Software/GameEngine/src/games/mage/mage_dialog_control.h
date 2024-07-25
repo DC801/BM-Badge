@@ -152,14 +152,14 @@ private:
    {
       // last page of messages on this screen and we have responses
       return responses.size() > 0
-         && currentMessageIndex == (currentScreen.messageCount - 1)
+         && currentMessageId == (currentScreen.messageCount - 1)
          && (currentScreen.responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
             || currentScreen.responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
    }
 
    std::string triggeringEntityName{};
    uint32_t currentScreenIndex{ 0 };
-   uint32_t currentMessageIndex{ 0 };
+   uint32_t currentMessageId{ 0 };
    uint16_t currentFrameTilesetIndex{ 0 };
    uint32_t cursorPhase{ 0 };
    uint8_t currentResponseIndex{ 0 };

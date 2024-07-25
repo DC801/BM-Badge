@@ -7,6 +7,7 @@
 #include "mage_camera.h"
 #include "mage_defines.h"
 #include "mage_geometry.h"
+#include "mage_script_actions.h"
 #include "mage_script_state.h"
 
 // structs/classes that this class depends on, forward defined:

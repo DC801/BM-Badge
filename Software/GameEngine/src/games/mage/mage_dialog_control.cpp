@@ -47,7 +47,7 @@ void MageDialogControl::StartModalDialog(std::string messageString)
       // Recycle all of the values set by the previous dialog to preserve look and feel
       // If there was no previous dialog... uhhhhhhh good luck with that?
       currentResponseIndex = 0;
-      currentMessageIndex = 0;
+      currentMessageId = 0;
       currentMessage = messageString;
       responses.clear();
       open = true;
@@ -57,7 +57,7 @@ void MageDialogControl::StartModalDialog(std::string messageString)
 
 void MageDialogControl::loadNextScreen()
 {
-   currentMessageIndex = 0;
+   currentMessageId = 0;
    if (currentScreenIndex >= currentDialog->ScreenCount)
    {
       open = false;
@@ -67,7 +67,7 @@ void MageDialogControl::loadNextScreen()
    const auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    loadCurrentScreenPortrait();
 
-   currentMessage = currentScreen.GetMessage(stringLoader, currentMessageIndex, triggeringEntityName);
+   currentMessage = currentScreen.GetMessage(stringLoader, currentMessageId, triggeringEntityName);
    currentFrameTilesetIndex = currentScreen.borderTilesetIndex;
 
    currentScreenIndex++;
@@ -103,15 +103,14 @@ std::optional<uint16_t> MageDialogControl::Update()
 
    if (shouldAdvance)
    {
-      currentMessageIndex++;
-      if (currentMessageIndex >= currentScreen.messageCount)
+      currentMessageId++;
+      if (currentMessageId >= currentScreen.messageCount)
       {
          loadNextScreen();
       }
       else
       {
-         currentMessage = currentScreen.GetMessage(stringLoader, currentMessageIndex, triggeringEntityName);
-         //currentMessage = stringLoader->getString(currentMessageId, triggeringEntityName);
+         currentMessage = currentScreen.GetMessage(stringLoader, currentMessageId, triggeringEntityName);
       }
    }
    return std::nullopt;

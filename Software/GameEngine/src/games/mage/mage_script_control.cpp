@@ -1,4 +1,3 @@
-#include "mage_script_actions.h"
 #include "mage_script_control.h"
 #include "mage_command_control.h"
 #include "mage_rom.h"
@@ -7,17 +6,15 @@
 
 void MageScriptControl::processScript(MageScriptState& scriptState, uint8_t currentEntityId) const
 {
-   //now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
-   //note we're using the value in scriptState directly as our index so it will update automatically as we proceed:
-   for (auto& script = scriptState.script; script && scriptState.scriptIsRunning && scriptState.actionOffset < script->actionCount; scriptState.actionOffset++)
+   // iterate through script actions, calling the appropriate functions
+   for (const auto& script = scriptState.script; script && scriptState.scriptIsRunning && scriptState.currentAction < script->actionCount; scriptState.currentAction++)
    {
-      auto action = script->GetAction(scriptState.actionOffset);
+      auto action = script->GetAction(scriptState.currentAction);
 
       //validate actionTypeId:
-      if (action->TypeId >= NUM_SCRIPT_ACTIONS)
+      if (scriptState.currentAction > script->actionCount || action->TypeId >= NUM_SCRIPT_ACTIONS)
       {
-         //throw std::runtime_error("Script Action Id out of bounds");
-         return;
+         break;
       }
 
       //get the function for actionTypeId, and feed it the actionArgs as args:
@@ -25,19 +22,16 @@ void MageScriptControl::processScript(MageScriptState& scriptState, uint8_t curr
       auto nextScriptId = (scriptActions.get()->*actionFunction)(action->Args, scriptState, currentEntityId);
 
       //  changing maps terminates further script processing:
-      if (scriptState.totalSteps > 0 || mapControl->mapLoadId != MAGE_NO_MAP) { return; }
+      if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
       // check to see if the action set a new script to jump to
       if (nextScriptId.has_value())
       {
          //If we have a new runningScript, we want to re-init the scriptState
          //to run the new runningScript from the beginning:
-         //auto resumeScript = scriptState.isGlobalExecutionScope
-         //   ? ROM()->GetReadPointerByIndex<MageScript>(nextScriptId.value())
-         //   : mapControl->GetScript(nextScriptId.value());
-
-         scriptState = MageScriptState{ nextScriptId.has_value(), true, scriptState.isGlobalExecutionScope };
-         return;
+         const auto nextScript = ROM()->GetReadPointerByIndex<MageScript>(nextScriptId.value());
+         scriptState = MageScriptState{ nextScriptId.value(), nextScript};
+         break;
       }
    }
    scriptState.scriptIsRunning = false;
@@ -52,7 +46,6 @@ void MageScriptControl::tickScripts()
    {
       //handle Entity onTick scripts for the local entity at Id 'i':
       //these scripts will run every tick, starting from the beginning as they complete.
-
       for (auto i = 0; i < MAX_ENTITIES_PER_MAP; i++)
       {
          processScript(script, i);

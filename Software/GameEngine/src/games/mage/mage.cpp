@@ -99,6 +99,7 @@ void MageGameEngine::gameLoopIteration()
 
       // always apply camera effects before any other updates that rely on camera data
       frameBuffer->camera.applyEffects();
+
       scriptControl->jumpScriptId = dialogControl->Update();
       hexEditor->Update();
 
@@ -133,23 +134,24 @@ void MageGameEngine::gameLoopIteration()
 
 void MageGameEngine::LoadMap()
 {
-   // clear any scripts that might trigger
-   scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+   // disable player control while loading map
+   playerHasControl = false;
 
-   // reset any fading that might be in progress
+   // ensure that processing the map's onload won't immediately jump to a different script
+   scriptControl->jumpScriptId = std::nullopt;
+
    frameBuffer->ResetFade();
-
-   // close any open dialogs/hex editor overlays
    dialogControl->close();
    hexEditor->setHexEditorOn(false);
 
-   // Load the map and trigger its OnLoad script
-   // This is the only place a map's OnLoad should be called
    mapControl->Load();
-   auto onLoad = MageScriptState{ mapControl->currentMap->onLoadScriptId, true };
+
+   // This is the only place a map's OnLoad script should be processed
+   const auto onLoadScript = ROM()->GetReadPointerByIndex<MageScript>(mapControl->currentMap->onLoadScriptId);
+   auto onLoad = MageScriptState{ mapControl->currentMap->onLoadScriptId, onLoadScript };
+   onLoad.scriptIsRunning = true;
    scriptControl->processScript(onLoad, MAGE_MAP_ENTITY);
 
-   // ensure the player has control
    playerHasControl = true;
 }
 
@@ -157,6 +159,11 @@ void MageGameEngine::applyGameModeInputs()
 {
    auto player = mapControl->getPlayerEntityData();
    const auto moveAmount = inputHandler->IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
+
+   if (!playerHasControl)
+   {
+      return;
+   }
 
    if (player->primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
@@ -211,7 +218,7 @@ void MageGameEngine::applyGameModeInputs()
          playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
    }
-   if (!hexEditor->playerHasHexEditorControl || !playerHasControl)
+   if (!hexEditor->playerHasHexEditorControl)
    {
       return;
    }

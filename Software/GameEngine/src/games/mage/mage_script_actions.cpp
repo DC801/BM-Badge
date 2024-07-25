@@ -13,7 +13,7 @@
 #include "mage_hex.h"
 #include "utility.h"
 
-#define NO_JUMP_SCRIPT std::nullopt
+static inline const auto NO_JUMP_SCRIPT = std::nullopt;
 
 const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTIONS> MageScriptActions::actionFunctions{
       &MageScriptActions::null_action,
@@ -141,7 +141,7 @@ std::optional<uint16_t> MageScriptActions::handleJump(bool shouldJump, uint8_t f
    {
       if (flags & JUMP_INDEX)
       {
-         resumeState.actionOffset = destination - 1;
+         resumeState.currentAction = destination - 1;
       }
       else
       {
@@ -1025,10 +1025,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_tick_script(const uint8_t*
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
       entity.onTickScriptId = argStruct->scriptId;
    }
-   else
-   {
-      mapControl->SetOnTick(argStruct->scriptId);
-   }
+
    return NO_JUMP_SCRIPT;
 }
 
@@ -2305,7 +2302,7 @@ std::optional<uint16_t> MageScriptActions::check_variable(const uint8_t* args, M
    auto& currentSave = ROM()->GetCurrentSave();
    uint16_t variableValue = currentSave.scriptVariables[argStruct->variableId];
    bool comparison = compare(argStruct->comparison, variableValue, argStruct->value);
-   if (comparison == (bool)argStruct->expectedBool)
+   if (comparison == static_cast<bool>(argStruct->expectedBool))
    {
       return argStruct->successScriptId;
    }
@@ -2328,11 +2325,8 @@ std::optional<uint16_t> MageScriptActions::check_variables(const uint8_t* args, 
    auto& currentSave = ROM()->GetCurrentSave();
    uint16_t variableValue = currentSave.scriptVariables[argStruct->variableId];
    uint16_t sourceValue = currentSave.scriptVariables[argStruct->sourceId];
-   bool comparison = compare(
-      argStruct->comparison,
-      variableValue,
-      sourceValue);
-   if (comparison == (bool)argStruct->expectedBool)
+   bool comparison = compare(argStruct->comparison, variableValue, sourceValue);
+   if (comparison == static_cast<bool>(argStruct->expectedBool))
    {
       return argStruct->successScriptId;
    }
@@ -2917,7 +2911,7 @@ std::optional<uint16_t> MageScriptActions::goto_action_index(const uint8_t* args
    auto* argStruct = (ActionCheckSerialDialogOpen*)args;
 
    // - 1 because it will be ++ in just a sec
-   resumeState.actionOffset = argStruct->action_index - 1;
+   resumeState.currentAction = argStruct->action_index - 1;
    return NO_JUMP_SCRIPT;
 }
 
