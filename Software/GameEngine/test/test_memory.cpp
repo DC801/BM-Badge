@@ -18,7 +18,7 @@ namespace DC801_Test
 
 		canvas.blt();
 
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 		debug_print("%s\n", message);
 	#endif
 	}

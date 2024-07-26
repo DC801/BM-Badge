@@ -183,21 +183,15 @@ static const inline auto NUM_RESPONSE_TYPES = 3;
 
 struct MageSerialDialog
 {
-   ~MageSerialDialog() noexcept = default;
-   MageSerialDialog(uint32_t& offset)
-   {
-      ROM()->Read(name, offset, 32);
-      ROM()->Read(stringId, offset);
-      ROM()->Read(serialResponseType, offset);
-
-      auto responseCount = uint8_t{ 0 };
-      ROM()->Read(responseCount, offset);
-      Responses = ROM()->GetViewOf<MageDialogResponse>(offset, responseCount);
-   }
    char name[32]{ 0 };
    uint16_t stringId{ 0 };
    MageSerialDialogResponseTypes serialResponseType{ 0 };
-   std::span<const MageDialogResponse> Responses;
+   uint8_t responseCount{ 0 };
+
+   const MageDialogResponse GetResponse(uint8_t responseId)
+   {
+      
+   }  
 };
 
 

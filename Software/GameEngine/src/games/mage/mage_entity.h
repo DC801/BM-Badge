@@ -85,11 +85,9 @@ struct MageEntityData
    uint8_t current_animation{ 0 };
    uint8_t current_frame{ 0 };
    uint8_t flags{ 0 };
-
-   uint8_t hackableStateA{ 0 };
-   uint8_t hackableStateB{ 0 };
-   uint8_t hackableStateC{ 0 };
-   uint8_t hackableStateD{ 0 };
+   MageEntityAnimationDirection direction{ MageEntityAnimationDirection::NORTH };
+   uint16_t pathId{ 0 };
+   uint16_t onLookScriptId{ 0 };
 
    inline void SetName(std::string s)
    {

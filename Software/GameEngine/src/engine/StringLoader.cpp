@@ -68,33 +68,3 @@ std::string StringLoader::replaceVars(std::function<const std::string(int, const
 
    return outputString;
 }
-
-
-//cursor = 0;
-//variableStartPosition = 0;
-//variableEndPosition = 0;
-//replaceCount = 0;
-//while ((variableStartPosition = inputString.find(variableIndicator, variableStartPosition)) != std::string::npos)
-//{
-//   outputString += inputString.substr(cursor, variableStartPosition - cursor);
-//   variableStartPosition += 2;
-//   variableEndPosition = inputString.find(variableIndicator, variableStartPosition);
-//   if (variableEndPosition == std::string::npos)
-//   {
-//      break;
-//   }
-
-//   auto variableHolder = inputString.substr(variableStartPosition, variableEndPosition - variableStartPosition);
-//   auto parsedVariableIndex = std::stoi(variableHolder);
-
-//   uint16_t variableValue = scriptVariables[parsedVariableIndex];
-//   std::string valueString = std::to_string(variableValue);
-//   outputString += valueString.c_str();
-//   variableStartPosition = variableEndPosition + 1;
-//   cursor = variableStartPosition;
-//   replaceCount++;
-//}
-//if (replaceCount)
-//{
-//   outputString += inputString.substr(cursor, inputString.length() - 1);
-//}

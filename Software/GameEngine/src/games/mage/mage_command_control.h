@@ -44,8 +44,8 @@ struct MageSerialDialogCommand
 class MageCommandControl
 {
 public:
-	MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<MageScriptControl> scriptControl, std::shared_ptr<StringLoader> stringLoader) noexcept
-		: mapControl(mapControl), frameBuffer(frameBuffer), scriptControl(scriptControl), stringLoader(stringLoader)
+	MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<FrameBuffer> frameBuffer, std::optional<uint16_t>& jumpScriptId, std::shared_ptr<StringLoader> stringLoader) noexcept
+		: mapControl(mapControl), frameBuffer(frameBuffer), jumpScriptId(jumpScriptId), stringLoader(stringLoader)
 	{}
 
 	std::string commandResponseBuffer;
@@ -86,13 +86,13 @@ private:
 	std::shared_ptr<EngineSerial> serial;
 	std::shared_ptr<MapControl> mapControl;
 	std::shared_ptr<FrameBuffer> frameBuffer;
-	std::shared_ptr<MageScriptControl> scriptControl;
+	std::optional<uint16_t>& jumpScriptId;
 	std::shared_ptr<StringLoader> stringLoader;
 
 	std::vector<MageSerialDialogCommand> registeredCommands = {};
 	std::unordered_map<std::string, std::string> commandAliases = {};
 
-	std::unique_ptr<const MageSerialDialog> openSerialDialog{ nullptr };
+	const MageSerialDialog* openSerialDialog{ nullptr };
 
 	inline void badAsciiLowerCase(std::string& data)
 	{

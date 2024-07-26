@@ -14,13 +14,11 @@ void MageCommandControl::handleStart()
    }
    else
    {
-      commandResponseBuffer += (
-         "WELCOME TO MAGE NET\n"
+      commandResponseBuffer += "WELCOME TO MAGE NET\n"
          "   __  ______  _________  _  ____________\n"
          "  /  |/  / _ |/ ___/ __/ / |/ / __/_  __/\n"
          " / /|_/ / __ / (_ / _/  /    / _/  / /   \n"
-         "/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \n"
-         );
+         "/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \n";
    }
 }
 
@@ -92,10 +90,8 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
    }
    else if (!syntaxValid)
    {
-      commandResponseBuffer += (
-         "Invalid command! Commands are exactly one or two words.\n"
-         "Examples: help | look | look $ITEM | go $DIRECTION\n"
-         );
+      commandResponseBuffer += "Invalid command! Commands are exactly one or two words.\n"
+         "Examples: help | look | look $ITEM | go $DIRECTION\n";
       return;
    }
 
@@ -104,17 +100,13 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
       // I sure thought `lastCommandUsed` & the `MageSerialCommands` enum
       // would be really useful earlier, but I can't remember why now.
       lastCommandUsed = MageSerialCommand::HELP;
-      commandResponseBuffer += (
-         "Supported Verbs:\n"
-         "\thelp\tlook\tgo\n"
-         );
+      commandResponseBuffer += "Supported Verbs:\n"
+         "\thelp\tlook\tgo\n";
    }
    else if (verb == "look")
    {
       lastCommandUsed = MageSerialCommand::LOOK;
-      commandResponseBuffer += (
-         "You try to look.\n"
-         );
+      commandResponseBuffer += "You try to look.\n";
       /*scriptControl->initScriptState(
          &scriptControl->resumeStates.commandLook,
          mapControl->onLook,
@@ -133,9 +125,7 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
       lastCommandUsed = MageSerialCommand::GO;
       if (!subject.length())
       {
-         commandResponseBuffer += (
-            "You cannot `go` nowhere. Pick a direction.\n"
-            );
+         commandResponseBuffer += "You cannot `go` nowhere. Pick a direction.\n";
       }
       else
       {
@@ -164,7 +154,7 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
    // start SECRET_GOAT
    else if (verb == "goat")
    {
-      commandResponseBuffer += (
+      commandResponseBuffer +=
          "You have found a secret goat!\n"
          "               ##### ####    \n"
          "             ##   #  ##      \n"
@@ -174,12 +164,11 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
          "             ###           # \n"
          "               #  #      # # \n"
          "               ##  ##  ##  # \n"
-         "               ######  ##### \n"
-         );
+         "               ######  ##### \n";
    }
    else if (input == "feed goat")
    {
-      commandResponseBuffer += (
+      commandResponseBuffer +=
          "You have fed the secret goat!\n"
          "               ##### ####    \n"
          "             ##   #  ##      \n"
@@ -189,8 +178,7 @@ void MageCommandControl::processCommandAsVerb(std::string& input)
          "             ###           # \n"
          "               #  #      # # \n"
          "               ##  ##  ##  # \n"
-         "               ######  ##### \n"
-         );
+         "               ######  ##### \n";
    }
    // end SECRET_GOAT
    else
@@ -215,13 +203,14 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
       {
          errorWhileParsingInt = true;
       }
-      if (!errorWhileParsingInt && responseIndex >= 0 && responseIndex < openSerialDialog->Responses.size())
+      if (!errorWhileParsingInt && responseIndex >= 0 && responseIndex < openSerialDialog->responseCount)
       {
-         const auto& response = openSerialDialog->Responses[responseIndex];
-         const auto responseLabel = stringLoader->getString(response.stringId);
-         commandResponseBuffer += "Valid response: " + input + " - " + responseLabel + "\n";
-         scriptControl->jumpScriptId = response.scriptId;
-         inputTrapped = false;
+         // TODO: script responses?
+         //const auto& response = openSerialDialog->Responses[responseIndex];
+         //const auto responseLabel = stringLoader->getString(response.stringId);
+         //commandResponseBuffer += "Valid response: " + input + " - " + responseLabel + "\n";
+         //jumpScriptId = response.scriptId;
+         //inputTrapped = false;
       }
       else
       {
@@ -231,17 +220,17 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
    }
    else if (responseType == MageSerialDialogResponseTypes::RESPONSE_ENTER_STRING)
    {
-      bool validResponseFound = false;
-      for (uint8_t i = 0; i < openSerialDialog->Responses.size(); i++)
+      // TODO: serial responses?
+     /* bool validResponseFound = false;
+      for (uint8_t i = 0; i < openSerialDialog->responseCount; i++)
       {
-         
          const auto& response = openSerialDialog->Responses[i];
          std::string responseLabel = stringLoader->getString(response.stringId);
          badAsciiLowerCase(responseLabel);
          if (responseLabel == input)
          {
             commandResponseBuffer += "Valid response: " + input + "\n";
-            scriptControl->jumpScriptId = response.scriptId;
+            jumpScriptId = response.scriptId;
             inputTrapped = false;
             validResponseFound = true;
             break;
@@ -251,35 +240,35 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
       {
          commandResponseBuffer += "Invalid response: " + input + "\n";
          inputTrapped = false;
-      }
+      }*/
    }
 }
 
 void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
 {
    serialDialogId = _serialDialogId;
-   scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-   openSerialDialog.reset(ROM()->GetReadPointerByIndex<MageSerialDialog>(serialDialogId));
+   jumpScriptId = MAGE_NO_SCRIPT;
+   openSerialDialog = ROM()->GetReadPointerByIndex<MageSerialDialog>(serialDialogId);
    
    std::string dialogString = stringLoader->getString(openSerialDialog->stringId);
     serialDialogBuffer += "showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
     	"openSerialDialog->stringId: " + std::to_string(openSerialDialog->stringId) + "\n"
-//    	"openSerialDialog->serialResponseType: " + openSerialDialog->serialResponseType + "\n"
-    	"openSerialDialog->responseCount: " + std::to_string(openSerialDialog->Responses.size()) + "\n"
+    	"openSerialDialog->responseCount: " + std::to_string(openSerialDialog->responseCount) + "\n"
     	"message: " + dialogString + "\n";
 
    inputTrapped = openSerialDialog->serialResponseType != MageSerialDialogResponseTypes::RESPONSE_NONE;
-   auto address = ROM()->GetOffsetByIndex<MageSerialDialog>(serialDialogId) + sizeof(MageSerialDialog);
-   auto serialDialogResponses = ROM()->GetViewOf<MageDialogResponse>(address, (uint16_t)openSerialDialog->Responses.size());
+   auto address = ROM()->GetOffsetByIndex<MageSerialDialog>(serialDialogId);
+   auto serialDialogResponses = ROM()->GetViewOf<MageDialogResponse>(address, (uint16_t)openSerialDialog->responseCount);
    
-   for (auto i = 0; i < openSerialDialog->Responses.size(); i++)
+   for (auto i = 0; i < openSerialDialog->responseCount; i++)
    {
-      auto& response = openSerialDialog->Responses[i];
+      // TODO: are there any serial responses?
+      /*auto& response = openSerialDialog->Responses[i];
       if (openSerialDialog->serialResponseType == MageSerialDialogResponseTypes::RESPONSE_ENTER_NUMBER)
       {
          std::string responseLabel = stringLoader->getString(response.stringId);
          serialDialogBuffer += "\t" + std::to_string(i) + ": " + responseLabel + "\n";
-      }
+      }*/
    }
 }
 
@@ -287,13 +276,15 @@ void MageCommandControl::registerCommand(uint16_t commandStringId, uint16_t scri
 {
    std::string lowercasedString = stringLoader->getString(commandStringId);
    badAsciiLowerCase(lowercasedString);
-   MageSerialDialogCommand command;
-   command.combinedString = lowercasedString;
-   command.argumentStringId = 0;
-   command.commandStringId = commandStringId;
-   command.scriptId = scriptId;
-   command.isFail = isFail;
-   command.isVisible = true;
+   MageSerialDialogCommand command
+   {
+      .combinedString = lowercasedString,
+      .commandStringId = commandStringId,
+      .argumentStringId = 0,
+      .scriptId = scriptId,
+      .isFail = isFail,
+      .isVisible = true 
+   };
    int32_t existingCommandIndex = getCommandIndex(command.combinedString, command.isFail, true);
    if (existingCommandIndex != -1)
    {
@@ -306,6 +297,7 @@ void MageCommandControl::registerCommand(uint16_t commandStringId, uint16_t scri
       registeredCommands.push_back(command);
    }
 }
+
 void MageCommandControl::registerArgument(uint16_t commandStringId, uint16_t argumentStringId, uint16_t scriptId)
 {
    std::string lowercasedString = stringLoader->getString(commandStringId) + " " + stringLoader->getString(argumentStringId);
@@ -330,6 +322,7 @@ void MageCommandControl::registerArgument(uint16_t commandStringId, uint16_t arg
       registeredCommands.push_back(command);
    }
 }
+
 int32_t MageCommandControl::getCommandIndex(const std::string& combinedString, bool isFail, bool useFail)
 {
    int32_t result = -1;
@@ -337,22 +330,7 @@ int32_t MageCommandControl::getCommandIndex(const std::string& combinedString, b
    {
       bool areStringsTheSame = combinedString == command.combinedString;
       bool areFailureStatesTheSame = useFail ? command.isFail == isFail : true;
-      /*
-      std::string debugMessage = "";
-      debugMessage += "'" + combinedString + "'";
-      debugMessage += " == ";
-      debugMessage += "'" + command.combinedString + "'";
-      debugMessage += ": areStringsTheSame?";
-      debugMessage += areStringsTheSame ? "Yes" : "No";
-      debugMessage += " fails?: ";
-      debugMessage += isFail ? "1" : "0";
-      debugMessage += " == ";
-      debugMessage += command.isFail ? "1" : "0";
-      debugMessage += " | areFailureStatesTheSame?:";
-      debugMessage += areFailureStatesTheSame ? "Yes" : "No";
-      debugMessage += "\n";
-      printf(debugMessage.c_str());
-      */
+
       if (areStringsTheSame && areFailureStatesTheSame)
       {
          // found an existing incomingCommand with the same params, get its id
@@ -372,12 +350,7 @@ void MageCommandControl::unregisterCommand(uint16_t commandStringId, bool isFail
       // We're unregistering ONLY the fail state
       for (const auto& command : registeredCommands)
       {
-         if (
-            !(
-               command.commandStringId == commandStringId
-               && command.isFail
-               )
-            )
+         if (command.commandStringId != commandStringId || !command.isFail)
          {
             newCommands.push_back(command);
          }
@@ -417,10 +390,8 @@ void MageCommandControl::unregisterCommand(uint16_t commandStringId, bool isFail
    }
    if (!wasCommandFound)
    {
-      commandResponseBuffer += (
-         "Unable to unregister command because it was not already registered: "
-         + stringLoader->getString(commandStringId)
-         );
+      commandResponseBuffer += "Unable to unregister command because it was not already registered: "
+         + stringLoader->getString(commandStringId);
    }
    registeredCommands = newCommands;
 }
@@ -431,12 +402,7 @@ void MageCommandControl::unregisterArgument(uint16_t commandStringId, uint16_t a
    bool wasCommandFound = false;
    for (auto& registeredCommand : registeredCommands)
    {
-      if (
-         !(
-            registeredCommand.commandStringId == commandStringId
-            && registeredCommand.argumentStringId == argumentStringId
-            )
-         )
+      if (registeredCommand.commandStringId != commandStringId || registeredCommand.argumentStringId || argumentStringId)
       {
          newCommands.push_back(registeredCommand);
       }
@@ -447,10 +413,8 @@ void MageCommandControl::unregisterArgument(uint16_t commandStringId, uint16_t a
    }
    if (!wasCommandFound)// && gameControl->isEntityDebugOn)
    {
-      commandResponseBuffer += (
-         "Unable to unregister Argument because it was not already registered: "
-         + stringLoader->getString(commandStringId)
-         );
+      commandResponseBuffer += "Unable to unregister Argument because it was not already registered: "
+         + stringLoader->getString(commandStringId);
    }
    registeredCommands = newCommands;
 }
@@ -495,20 +459,15 @@ MageSerialDialogCommand* MageCommandControl::searchForCommand(const std::string&
    {
       combinedString += " " + subject;
    }
+
    for (auto& command : registeredCommands)
    {
-      if (
-         command.combinedString == combinedString
-         && !command.isFail
-         )
+      if (command.combinedString == combinedString && !command.isFail)
       {
          successStateCommand = &command;
          break;
       }
-      else if (
-         command.combinedString == verb
-         && command.isFail
-         )
+      else if (command.combinedString == verb && command.isFail)
       {
          failStateCommand = &command;
       }
@@ -527,7 +486,7 @@ void MageCommandControl::sendBufferedOutput()
    {
       if (currentString->length())
       {
-         serial->SendMessage(*currentString);
+         serial->SendMessage(currentString->data());
          *currentString = "";
          anyOutput = true;
       }

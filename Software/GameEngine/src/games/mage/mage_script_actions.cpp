@@ -31,13 +31,6 @@ const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTI
       &MageScriptActions::check_entity_current_frame,
       &MageScriptActions::check_entity_direction,
       &MageScriptActions::check_entity_glitched,
-      &MageScriptActions::check_entity_hackable_state_a,
-      &MageScriptActions::check_entity_hackable_state_b,
-      &MageScriptActions::check_entity_hackable_state_c,
-      &MageScriptActions::check_entity_hackable_state_d,
-      &MageScriptActions::check_entity_hackable_state_a_u2,
-      &MageScriptActions::check_entity_hackable_state_c_u2,
-      &MageScriptActions::check_entity_hackable_state_a_u4,
       &MageScriptActions::check_entity_path,
       &MageScriptActions::check_save_flag,
       &MageScriptActions::check_if_entity_is_in_geometry,
@@ -63,13 +56,6 @@ const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTI
       &MageScriptActions::set_entity_direction_target_entity,
       &MageScriptActions::set_entity_direction_target_geometry,
       &MageScriptActions::set_entity_glitched,
-      &MageScriptActions::set_entity_hackable_state_a,
-      &MageScriptActions::set_entity_hackable_state_b,
-      &MageScriptActions::set_entity_hackable_state_c,
-      &MageScriptActions::set_entity_hackable_state_d,
-      &MageScriptActions::set_entity_hackable_state_a_u2,
-      &MageScriptActions::set_entity_hackable_state_c_u2,
-      &MageScriptActions::set_entity_hackable_state_a_u4,
       &MageScriptActions::set_entity_path,
       &MageScriptActions::set_save_flag,
       &MageScriptActions::set_player_control,
@@ -106,9 +92,6 @@ const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTI
       &MageScriptActions::slot_erase,
       &MageScriptActions::set_connect_serial_dialog,
       &MageScriptActions::show_serial_dialog,
-      &MageScriptActions::inventory_get,
-      &MageScriptActions::inventory_drop,
-      &MageScriptActions::check_inventory,
       &MageScriptActions::set_map_look_script,
       &MageScriptActions::set_entity_look_script,
       &MageScriptActions::set_teleport_enabled,
@@ -131,7 +114,8 @@ const std::array<const MageScriptActions::ActionFunctionPointer, NUM_SCRIPT_ACTI
       &MageScriptActions::goto_action_index,
       &MageScriptActions::set_script_pause,
       &MageScriptActions::register_serial_dialog_command_alias,
-      &MageScriptActions::unregister_serial_dialog_command_alias
+      &MageScriptActions::unregister_serial_dialog_command_alias,
+      &MageScriptActions::set_serial_dialog_command_visibility,
 };
 
 static const inline auto JUMP_INDEX = 128;
@@ -523,179 +507,6 @@ std::optional<uint16_t> MageScriptActions::check_entity_glitched(const uint8_t* 
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t successScriptId;
-      uint8_t entityId;
-      uint8_t expectedValue;
-      uint8_t expectedBool;
-      uint8_t paddingG;
-   } ActionCheckEntityHackableStateA;
-   auto argStruct = (ActionCheckEntityHackableStateA*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.hackableStateA == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t successScriptId;
-      uint8_t entityId;
-      uint8_t expectedValue;
-      uint8_t expectedBool;
-      uint8_t paddingG;
-   } ActionCheckEntityHackableStateB;
-   auto argStruct = (ActionCheckEntityHackableStateB*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.hackableStateB == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t successScriptId;
-      uint8_t entityId;
-      uint8_t expectedValue;
-      uint8_t expectedBool;
-      uint8_t paddingG;
-   } ActionCheckEntityHackableStateC;
-   auto argStruct = (ActionCheckEntityHackableStateC*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.hackableStateC == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t successScriptId;
-      uint8_t entityId;
-      uint8_t expectedValue;
-      uint8_t expectedBool;
-      uint8_t paddingG;
-   } ActionCheckEntityHackableStateD;
-   auto argStruct = (ActionCheckEntityHackableStateD*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      bool identical = (entity.hackableStateD == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t successScriptId;
-      uint16_t expectedValue;
-      uint8_t entityId;
-      uint8_t expectedBool;
-   } ActionCheckEntityHackableStateAU2;
-   auto argStruct = (ActionCheckEntityHackableStateAU2*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.hackableStateA);
-      bool identical = (u2_value == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t successScriptId;
-      uint16_t expectedValue;
-      uint8_t entityId;
-      uint8_t expectedBool;
-   } ActionCheckEntityHackableStateCU2;
-   auto argStruct = (ActionCheckEntityHackableStateCU2*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity.hackableStateC);
-      bool identical = (u2_value == argStruct->expectedValue);
-      if (identical == (bool)argStruct->expectedBool)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint32_t expectedValue;
-      uint16_t successScriptId;
-      uint8_t entityId;
-   } ActionCheckEntityHackableStateAU4;
-   auto argStruct = (ActionCheckEntityHackableStateAU4*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      uint32_t u4_value = *(uint32_t*)((uint8_t*)&entity.hackableStateA);
-      if (u4_value == argStruct->expectedValue)
-      {
-         return argStruct->successScriptId;
-      }
-   }
-   return NO_JUMP_SCRIPT;
-}
-
 std::optional<uint16_t> MageScriptActions::check_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
@@ -711,7 +522,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_path(const uint8_t* args
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      uint16_t pathId = *(uint16_t*)((uint8_t*)&entity.hackableStateA);
+      uint16_t pathId = *(uint16_t*)((uint8_t*)&entity.pathId);
       bool identical = (pathId == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -1285,162 +1096,6 @@ std::optional<uint16_t> MageScriptActions::set_entity_glitched(const uint8_t* ar
    return NO_JUMP_SCRIPT;
 }
 
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint8_t newValue;
-      uint8_t entityId;
-      uint8_t paddingC;
-      uint8_t paddingD;
-      uint8_t paddingE;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateA;
-   auto argStruct = (ActionSetEntityHackableStateA*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.hackableStateA = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint8_t newValue;
-      uint8_t entityId;
-      uint8_t paddingC;
-      uint8_t paddingD;
-      uint8_t paddingE;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateB;
-   auto argStruct = (ActionSetEntityHackableStateB*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.hackableStateB = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint8_t newValue;
-      uint8_t entityId;
-      uint8_t paddingC;
-      uint8_t paddingD;
-      uint8_t paddingE;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateC;
-   auto argStruct = (ActionSetEntityHackableStateC*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.hackableStateC = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint8_t newValue;
-      uint8_t entityId;
-      uint8_t paddingC;
-      uint8_t paddingD;
-      uint8_t paddingE;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateD;
-   auto argStruct = (ActionSetEntityHackableStateD*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      entity.hackableStateD = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t newValue;
-      uint8_t entityId;
-      uint8_t paddingD;
-      uint8_t paddingE;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateAU2;
-   auto argStruct = (ActionSetEntityHackableStateAU2*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      *(uint16_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint16_t newValue;
-      uint8_t entityId;
-      uint8_t paddingD;
-      uint8_t paddingE;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateCU2;
-   auto argStruct = (ActionSetEntityHackableStateCU2*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      *(uint16_t*)((uint8_t*)&entity.hackableStateC) = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
-std::optional<uint16_t> MageScriptActions::set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
-{
-   typedef struct
-   {
-      uint32_t newValue;
-      uint8_t entityId;
-      uint8_t paddingF;
-      uint8_t paddingG;
-   } ActionSetEntityHackableStateAU4;
-   auto argStruct = (ActionSetEntityHackableStateAU4*)args;
-
-   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (sourceEntityIndex != NO_PLAYER_INDEX)
-   {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      *(uint32_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
-   }
-   return NO_JUMP_SCRIPT;
-}
-
 std::optional<uint16_t> MageScriptActions::set_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
@@ -1458,7 +1113,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_path(const uint8_t* args, 
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      *(uint16_t*)((uint8_t*)&entity.hackableStateA) = argStruct->newValue;
+      *(uint16_t*)((uint8_t*)&entity.pathId) = argStruct->newValue;
    }
    return NO_JUMP_SCRIPT;
 }
@@ -2877,8 +2532,6 @@ std::optional<uint16_t> MageScriptActions::set_lights_state(const uint8_t* args,
    } ActionCheckSerialDialogOpen;
    auto* argStruct = (ActionCheckSerialDialogOpen*)args;
 
-   // std::string message = "Value of lights is:" + std::to_string(argStruct->lights);
-   // commandControl->processCommand(message.c_str());
    for (uint8_t i = 0; i < LED_COUNT; i += 1)
    {
       bool current_light = (bool)((argStruct->lights >> i) & 1);

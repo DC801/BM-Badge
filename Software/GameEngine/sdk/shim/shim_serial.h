@@ -25,13 +25,6 @@
 #define USBD_POWER_DETECTION false
 #endif
 
-#define COMMAND_BUFFER_SIZE 1024
-#define COMMAND_RESPONSE_SIZE (COMMAND_BUFFER_SIZE + 128)
-
- // always allow for a null termination byte
-#define COMMAND_BUFFER_MAX_READ (COMMAND_BUFFER_SIZE - 1)
-
-
 // UART
 void uart_init();
 uint32_t app_uart_put(uint8_t byte);

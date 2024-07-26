@@ -198,11 +198,11 @@ void setUpRandomSeed()
         );
 #else
     //Set random seed with number of seconds since
-    //unix epoc so two desktops launched the same
+    //unix epoch so two desktops launched the same
     //second get the same rng, and that totally
     //doesn't matter. Good enough for a simple
     //dice roll for scripts.
     uint32_t seed = time(NULL);
-#endif //DC801_DESKTOP
+#endif
     srand(seed);
 }

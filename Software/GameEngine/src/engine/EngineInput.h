@@ -3,6 +3,7 @@
 
 #include "keyboard.h"
 #include "EngineSerial.h"
+#include <array>
 #include <signal.h>
 #include <stdint.h>
 #include <chrono>

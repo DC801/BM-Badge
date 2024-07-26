@@ -38,9 +38,11 @@ public:
       stringLoader = std::make_shared<StringLoader>(mapControl, ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(inputHandler, frameBuffer, stringLoader, mapControl);
 
+      scriptControl = std::make_shared<MageScriptControl>(mapControl);
+      commandControl = std::make_shared<MageCommandControl>(mapControl, frameBuffer, scriptControl->jumpScriptId, stringLoader);
+
       auto scriptActions = std::make_unique<MageScriptActions>(inputHandler, frameBuffer, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
-      scriptControl = std::make_shared<MageScriptControl>(mapControl, std::move(scriptActions));
-      commandControl = std::make_shared<MageCommandControl>(mapControl, frameBuffer, scriptControl, stringLoader);
+      scriptControl->SetActions(std::move(scriptActions));
    }
    //this will load a map to be the current map.
    void LoadMap();
