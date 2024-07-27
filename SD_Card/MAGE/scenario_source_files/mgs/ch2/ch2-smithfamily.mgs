@@ -55,7 +55,7 @@ on_go-ch2-smithfamily-south {
 interact-ch2-smith {
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Hey, neighbor. Good luck in the dungeon out west."
+			SELF "Hey, neighbor. Good luck in the castle out west."
 			"Knock 'em dead! Or... break their legs! Or... whatever it is you need to do. Go get 'em!"
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {

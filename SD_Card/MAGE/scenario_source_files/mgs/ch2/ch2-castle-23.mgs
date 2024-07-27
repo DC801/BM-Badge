@@ -15,14 +15,14 @@ look-ch2-tracy {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO: Tracy on_look"
+		"\tShe's staring you, but it's like she's trying trying not to <bold>look</> like she's staring at you. She gives you a tight smile as if encouraging you to be on your best behavior."
 	}
 }
 look-ch2-rocco {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO: Rocco on_look"
+		"\tHis hands are moving about a small circuit board in a way that makes it clear he's done this a hundred times. You seem to be outside his notice."
 	}
 }
 look-ch2-helvetica {

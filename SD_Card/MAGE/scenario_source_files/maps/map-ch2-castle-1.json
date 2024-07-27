@@ -494,6 +494,30 @@
                  "width":44,
                  "x":100,
                  "y":105
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":60,
+                 "name":"exit-spot1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":121,
+                 "y":245
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":61,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-114.8065,
+                 "y":-63.8172
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -502,7 +526,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":60,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

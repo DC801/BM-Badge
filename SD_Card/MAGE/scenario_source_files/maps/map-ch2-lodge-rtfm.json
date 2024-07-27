@@ -260,7 +260,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities1"
+                         "value":"look-ch2-entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -283,7 +283,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities2"
+                         "value":"look-ch2-entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -306,7 +306,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities3"
+                         "value":"look-ch2-entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -329,7 +329,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities4"
+                         "value":"look-ch2-entities"
                         }],
                  "rotation":0,
                  "visible":true,

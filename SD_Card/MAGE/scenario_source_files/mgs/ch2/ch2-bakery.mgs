@@ -73,7 +73,7 @@ interact-ch2-baker {
 	} else {
 		show dialog {
 			SELF "Sorry, can't talk now."
-			"But good luck conquering the serial dungeon."
+			"But good luck conquering the serial castle."
 		}
 	}
 	copy resume-walk;

@@ -57,24 +57,6 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":281,
-                 "height":32,
-                 "id":19,
-                 "name":"door",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-attempt-door-check"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":176,
-                 "y":95
-                }, 
-                {
-                 "class":"",
                  "gid":181,
                  "height":32,
                  "id":31,
@@ -95,6 +77,24 @@
                  "width":32,
                  "x":266,
                  "y":213
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":19,
+                 "name":"door",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-attempt-door-check"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":95
                 }, 
                 {
                  "class":"",
@@ -361,6 +361,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-solderzone"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-solder"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -379,6 +384,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-figurines"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-figurines"
                         }],
                  "rotation":0,
                  "visible":true,

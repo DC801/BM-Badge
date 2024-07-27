@@ -16,7 +16,7 @@ man-inventory {
 		" "
 		"Use this command to see what items you are currently carrying."
 	}
-	if (flag ch2-have-things-to-solder is true) {
+	if (flag ch2-parts-round-2-backstory is true) {
 		show serial dialog {
 			" "
 			"Items may be combined at one of the solder stations in the castle workshop."
@@ -131,7 +131,7 @@ command-inventory {
 	// final
 	if (flag ch2-carrying-mainframeos is true) {
 		if (flag only-count-inventory is false) {
-			show serial dialog { "\tmainframe os CD" }
+			show serial dialog { "\tmainframe OS CD" }
 		}
 		mutate ch2-count-inventory + 1;
 	}

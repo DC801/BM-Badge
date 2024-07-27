@@ -108,7 +108,7 @@ man-warp {
 		" "
 		"To see a list of valid warp desinations, use <c>WARP</> on its own (without a room name)."
 		" "
-		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle dungeon wireless base station."
+		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle wireless base station."
 	}
 }
 

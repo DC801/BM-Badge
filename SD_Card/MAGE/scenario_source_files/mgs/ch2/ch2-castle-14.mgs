@@ -9,8 +9,8 @@ settings for dialog {
 look-ch2-castle-14 {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked around the <c>KING GIBSON'S BEDROOM</>."
-		"\tOpulent and pretentious -- perhaps the archetypal royal bedroom. You're not sure whether the heirloom four poster bed completes the look or is just over-the-top. But you concede that the red and gold looks fabulous together."
+		"You looked around <c>KING GIBSON'S BEDROOM</>."
+		"\tOpulent and pretentious -- perhaps the archetypal royal bedroom. You're not sure whether the heirloom four poster bed completes the look or is just over the top. But you concede that the red and gold looks fabulous together."
 		" "
 	}
 }
@@ -27,7 +27,8 @@ look-ch2-keypad {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look keypad (remember to add 'the' for objects)"
+		"\tIt's a small boxy number pad. On the underside is a plug socket and a scribbled message: \"The default admin password can be found throughout the castle's --\""
+		"\tUnfortunately, the vital portion of the message has worn off with time."
 	}
 }
 
@@ -266,8 +267,8 @@ interact-ch2-keypad {
 		if (flag interrupt is false) {
 			show dialog {
 				PLAYER "Oh, there's something written on the bottom of the keypad."
-				name "(keypad)" "The default admin password can be found on the castle's --"
-				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found on the castle's what?"
+				name "(keypad)" "The default admin password can be found throughout the castle's --"
+				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found throughout the castle's what?"
 			}
 			set flag interrupt to true;
 		}
@@ -277,7 +278,7 @@ interact-ch2-keypad {
 interact-ch2-keypad-prompt {
 	show serial dialog spacer;
 	show serial dialog {
-		"USER CONFIG CORRUPTED! Cannot unlock door with PINs! Perform manual unlocks with admin password."
+		"<r>USER CONFIG CORRUPTED!</> Cannot unlock door with PINs! Perform manual unlocks with admin password."
 		"Enter password:"
 		_ "AUTHENTICATE" : interact-ch2-keypad-good-pass
 	}
@@ -286,7 +287,7 @@ interact-ch2-keypad-prompt {
 interact-ch2-keypad-incorrect {
 	show serial dialog spacer;
 	show serial dialog {
-		"Password incorrect!"
+		"<r>Password incorrect!</>"
 		"Touch keypad to try again."
 	}
 	set entity "%SELF%" on_interact to interact-ch2-keypad-prompt;

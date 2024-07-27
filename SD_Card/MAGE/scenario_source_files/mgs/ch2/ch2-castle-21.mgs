@@ -10,7 +10,9 @@ settings for dialog {
 look-ch2-castle-21 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: WORKSHOP on_look text\n "
+		"You looked around the <c>WORKSHOP</>."
+		"\t(TODO)"
+		" "
 	}
 }
 
@@ -18,7 +20,7 @@ look-ch2-goose {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\tTODO on_look goose (remember to add 'the' for objects)"
+		"\tA plain white goose reminiscent of one -- or several -- you've seen before. You wonder whether the red bow is some attempt at a disguise, and whether you have actually met this goose before."
 	}
 }
 
@@ -26,7 +28,7 @@ look-ch2-jean_paul {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look jean_paul (remember to add 'the' for objects)"
+		"\tA solemn cockatiel, if ever there was one. His crest lifts slightly once in a while."
 	}
 }
 
@@ -41,28 +43,44 @@ look-ch2-frankie {
 look-ch2-pie {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look pie (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tBizarrely out of place is this golden, flakey pastry with its glistening ruby filling. Though not steaming hot, or even warm, it's still fresh enough to eat."
 	}
 }
 look-ch2-3dprinter {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look 3d_printer (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe colored spools on the left of the device are counterparts to the one currently attached, as if the line of yellow plastic might be swapped out with any of the other colors."
+	}
+}
+look-ch2-figurines {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tTheir yellow plastic seems to match that from the spool attached to the nearby device. In fact, the figurines themselves seem to have been built up by lines of the stuff."
 	}
 }
 look-ch2-cablesbox {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look cables_box (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tInside is a mishmash of cables, most of which are worn. They're all tangled to the point that any one cable might be near impossible to extract on its own."
+	}
+}
+
+look-ch2-solder {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe metal pens evoke a mild industrial hazard. It seems the kind of thing that might hurt you if you don't know what you're doing."
 	}
 }
 
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-21 {
+	if warp state is "ch2 ending" then goto ch2-castle-21-ending;
 	// ch2 room state
 	mutate ch2-in-room = 21;
 
@@ -378,7 +396,7 @@ interact-ch2-room21-split {
 	}
 	// They all turn toward each other
 	show dialog {
-		Jean-Paul "WEll, the guy who can help most isn't here right now."
+		Jean-Paul "Well, the guy who can help most isn't here right now."
 	}
 	turn entity "%PLAYER%" toward entity Frankie;
 	show dialog {

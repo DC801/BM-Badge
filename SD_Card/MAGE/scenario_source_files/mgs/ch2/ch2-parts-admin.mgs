@@ -61,7 +61,6 @@ debug-set-flags-to-round2 {
 	set flag ch2-cutseen-bert-secret to true;
 	set flag ch2-lambda-bert-backstory to true;
 	set flag ch2-parts-round-2-backstory to true;
-	set flag ch2-have-things-to-solder to true;
 	copy debug-map-flags-for-round2;
 }
 debug-set-flags-to-round3 {
@@ -337,31 +336,97 @@ ch2-install-mainframeos {
 
 //--------------------------- SOLDER ZONE ---------------------------\\
 
+interact-ch2-solderzone-harddrive {
+	show dialog {
+		PLAYER "Got the plate and the needle. All right, let's solder!"
+		name "" "(You created a hard drive!)"
+	}
+	copy ch2-solder-harddrive;
+}
+interact-ch2-solderzone-cpu {
+	show dialog {
+		PLAYER "Got the goldfish and the abacus. All right, let's solder!"
+		name "" "(You created a cpu!)"
+	}
+	copy ch2-solder-cpu;
+}
 interact-ch2-solderzone {
-	if (flag ch2-have-things-to-solder is false) {
+	if (flag ch2-parts-round-2-backstory is false) {
 		show dialog {
 			PLAYER "It's a metal pen resting inside a metal coil. But why is the pen plugged in? What does it do?"
 		}
 		return;
-	} else if (variable ch2-storyflag-round is >= 4) {
+	}
+	if (flag ch2-solder-sight is false) {
+		show dialog {
+			PLAYER "So this is a solder station."
+		}
+		set flag ch2-solder-sight to true;
+	}
+	// plate + needle = harddrive
+	if (variable ch2-storyflag-round is 2) {
+		if (
+			flag ch2-installed-plate is false
+			|| flag ch2-installed-needle is false
+		) {
+			if (flag ch2-carrying-plate is true) {
+				if (flag ch2-carrying-needle is false) {
+					show dialog {
+						PLAYER "I have the plate. Now I just need the needle, and then I can solder them together here."
+					}
+				} else {
+					copy interact-ch2-solderzone-harddrive;
+				}
+			} else if (flag ch2-carrying-needle is true) {
+				if (flag ch2-carrying-plate is false) {
+					show dialog {
+						PLAYER "I have the needle. Now I just need the plate, and then I can solder them together here."
+					}
+				} else {
+					copy interact-ch2-solderzone-harddrive;
+				}
+			} else {
+				show dialog {
+					PLAYER "When I have the plate and the needle, I can solder them together here."
+				}
+			}
+		} else {
+			show dialog { PLAYER "All done soldering for now." }
+		}
+	}
+	// goldfish + abacus = cpu
+	else if (variable ch2-storyflag-round is 3) {
+		if (
+			flag ch2-installed-goldfish is false
+			|| flag ch2-installed-abacus is false
+		) {
+			if (flag ch2-carrying-goldfish is true) {
+				if (flag ch2-carrying-abacus is false) {
+					show dialog {
+						PLAYER "I have the goldfish. Now I just need the abacus, and then I can solder them together here."
+					}
+				} else {
+					copy interact-ch2-solderzone-cpu;
+				}
+			} else if (flag ch2-carrying-abacus is true) {
+				if (flag ch2-carrying-goldfish is false) {
+					show dialog {
+						PLAYER "I have the abacus. Now I just need the goldfish, and then I can solder them together here."
+					}
+				} else {
+					copy interact-ch2-solderzone-cpu;
+				}
+			} else {
+				show dialog {
+					PLAYER "When I have the goldfish and the abacus, I can solder them together here."
+				}
+			}
+		} else {
+			show dialog { PLAYER "All done soldering for now." }
+		}
+	} else {
 		show dialog {
 			PLAYER "Guess I'm all done soldering."
 		}
-		return;
 	}
-	set flag only-count-inventory to true;
-	copy command-inventory;
-	if (variable ch2-counted-inventory is 0) {
-		show dialog {
-			PLAYER "(TODO: can't solder anything with nothing in inventory)"
-		}
-		return;
-	} else if (variable ch2-counted-inventory is 1) {
-		show dialog {
-			PLAYER "(TODO: need more than 1 item to use the solder station)"
-		}
-		return;
-	}
-	// TODO update this whole process
-	goto command-solder;
 }

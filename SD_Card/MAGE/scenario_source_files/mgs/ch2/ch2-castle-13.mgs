@@ -41,6 +41,13 @@ look-ch2-templeton {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-13 {
+	if (warp state is "ch2 ending") {
+		set entity door on_tick to yeet;
+		teleport entity "King Gibson" to geometry king-examine1;
+		teleport entity Sebastian to geometry end-sebastian;
+		teleport entity Templeton to geometry end-templeton1;
+		goto ch2-castle-13-ending;
+	}
 	// ch2 room state
 	mutate ch2-in-room = 13;
 
@@ -58,7 +65,6 @@ on_load-ch2-castle-13 {
 	if (warp state is "Ch2 King Returns") {
 		set entity door on_tick to yeet;
 		teleport camera to geometry camera-spot2;
-		// TODO more
 	} else if (flag ch2-king-rescued is true) {
 		set entity door on_tick to yeet;
 		teleport entity "King Gibson" to geometry king-examine1;
@@ -439,7 +445,7 @@ ch2-touch-goldfish {
 			}
 			set entity "King Gibson" current_animation to 0;
 			show dialog {
-				PLAYER "It'd be temporary. After the mainframe is fixed, we can order a real CPU, and we can put you back to normal when it arrives. But for this short little while --"
+				PLAYER "It'd be temporary. After the mainframe is fixed, we can mail order a real CPU, and we can put you back to normal when it arrives. But for this short little while --"
 				Aurelius "I'll do it."
 				Templeton "%Aurelius%!"
 				Aurelius "The king has returned, so I'm of little use now."

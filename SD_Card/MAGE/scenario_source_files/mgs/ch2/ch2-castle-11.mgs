@@ -194,17 +194,9 @@ ch2-hide-monitor {
 }
 
 ch2-touch-monitor {
-	if (flag ch2-monitor-firstlook is false) {
-		show dialog {
-			PLAYER "Um, how do I take it?"
-			Kuro "Just unplug all the cables from the computer case. One power cable, one data cable."
-		}
-		set flag ch2-monitor-firstlook to true;
-	} else {
-		show dialog {
-			PLAYER "Is the computer sad? It keeps making frowny faces."
-			Kuro "Computer's basically dead. And I know a dead thing when I see one. Monitor's fine, though."
-		}
+	show dialog {
+		PLAYER "Is the computer sad? It keeps making frowny faces."
+		Kuro "Computer's basically dead. And I know a dead thing when I see one. Monitor's fine, though."
 	}
 	show dialog {
 		name "" "(Pick up the monitor?)"
@@ -214,10 +206,15 @@ ch2-touch-monitor {
 }
 ch2-touch-monitor-yes {
 	show dialog {
+		PLAYER "Um, how do I take it?"
+		Kuro "Just unplug all the cables from the computer case. One power cable, one data cable."
+	}
+	copy script ch2-pickup-monitor;
+	teleport entity "%SELF%" to geometry hiding-spot; // for visuals; don't wanna change the script slot yet though! That will come AFTER the dialog so that execution isn't halted early
+	show dialog {
 		name "" "(You pick up the monitor!)"
 	}
 	copy script ch2-hide-monitor;
-	copy script ch2-pickup-monitor;
 	set entity "%SELF%" on_interact to null_script;
 }
 ch2-touch-monitor-no {

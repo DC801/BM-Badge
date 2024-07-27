@@ -212,9 +212,14 @@
                          "value":"interact-ch2-bobbox"
                         }, 
                         {
-                         "name":"on_tick",
+                         "name":"on_look",
                          "type":"string",
                          "value":"look-ch2-bobsbox"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
                         }],
                  "rotation":0,
                  "visible":true,

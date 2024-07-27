@@ -10,6 +10,13 @@ look-ch2-castle-outside {
 		" "
 	}
 }
+look-ch2-entrancesign {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA worn wooden sign inscribed with the words \"King Gibson's castle.\""
+	}
+}
 
 /* ---------- ON_LOAD ---------- */
 
@@ -33,6 +40,10 @@ on_load-ch2-castle-outside {
 	}
 	// animations
 	if (warp state is walk_from-north) {
+		if (flag ch2-has-artifact is true) {
+			show serial dialog spacer;
+			show serial dialog { "Leaving the castle..." }
+		}
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 	} else if (warp state is walk_from-east) {
 		set entity "%PLAYER%" path to walk_from-east;
@@ -42,6 +53,9 @@ on_load-ch2-castle-outside {
 	}
 	// unique stuff done
 	copy ch2-map-init; // (player control comes back here)
+	if (warp state is exit_from-credits) {
+		goto ch2-post-credits;
+	}
 }
 
 /* ---------- ON_TICK ---------- */
@@ -84,6 +98,12 @@ on_go-castle-outside-east {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-entrancesign {
+	show dialog {
+		name "" "King Gibson's castle"
+	}
+}
+
 interact-ch2-alfonso-outside {
 	if (variable ch2-storyflag-round is 4) {
 		if (flag ch2-alfonso-almostdone is false) {
@@ -105,7 +125,7 @@ interact-ch2-alfonso-outside {
 
 interact-ch2-bert-outside {
 	show dialog {
-		SELF "Only hackers may cross door."
+		SELF "Only hackers may cross door into castle."
 	}
 }
 
