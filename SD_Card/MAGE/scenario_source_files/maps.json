@@ -302,6 +302,14 @@
 		"path": "maps/map-bling-dc801.json",
 		"on_load": "on_load-bling-dc801"
 	},
+	"bling-digi-mage2": {
+		"path": "maps/map-bling-digi-mage2.json",
+		"on_load": "on_load-bling-digi-mage2"
+	},
+	"bling-dc801-2": {
+		"path": "maps/map-bling-dc801-2.json",
+		"on_load": "on_load-bling-dc801-2"
+	},
 	"demo": {
 		"path": "maps/map-demo.json",
 		"on_load": "show_dialog-timewarp"
