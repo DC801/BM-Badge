@@ -6,6 +6,9 @@
 
 ## Generic work needing done
 
+- [ ] Make `go s` for `go south` an engine default alias (ditto for `sw` = `southwest`)
+- [ ] Tone down the alias logging in debug mode!
+- [ ] Make the menu mage more chiseled (like last ch)
 - [ ] Rename scripts so they're consistent
 	- e.g. `ch2-interact-asdfasdf` should all be `interact-ch2-asdfasdf` -- or vice versa (pick one!)
 - [x] Move Tiled files to the folders they should actually be (some entity JSON files are in the maps folder, etc.)
@@ -13,32 +16,52 @@
 - [ ] Turn off serial control during cutscenes
 	- [ ] Determine which
 	- [ ] Determine whether this should include all conversations
-- [ ] Check that every entity has an on_look script
+- [ ] For "failed" multiple choice responses, make the chunk of the dialog that gets repeated more logical and consistent
+- [x] Check that every entity has an on_look script
+- [x] Investigate and fix color pallet issues between tilesets (specifically grass in the castle/town tilesets, and the artifact cubby and the wall)
+- [ ] Make aliases, e.g.:
+	- [ ] `n` for `go north` (?)
+	- [x] `i` for `inventory`
+	- [x] `x`, `examine`, `l` for `look` etc.
+- [~] ~~Make fuse system more interesting~~
+	- [~] ~~Work out ≈ Cartesian product / Punnet squares for each grouping of combined items~~
+	- [~] ~~Write something funny for each failed combo~~
+	- (Re: above -- it's MVP now, and no time to change it much now)
+	- [x] You need to fuse in person, at (one of the) the solder station(s)?
+- [x] Make Lambda less hand-holdy at the beginning
+	- [x] Explain `help` and `man` (both to reach Lambda and `man _`) and nothing else!
+	- [ ] Did we go too far?? Make him hold more hands?
+- [x] Put the "password" letters in the floor
+	- [x] Take out the "look up" stuff
+	- [x] Letters should spell AUTHENTICATE when spacially placed along the rooms they were found
+	- [ ] Make sure the hint/context is ironclad!
+- [x] Pair down the number of free computers in the place — gotta justify the need to build a weird one from scratch
+- [ ] Change each individual "hide" script to set the object's on_tick to the "yeet" script instead so that all properties (not manually chosen ones) can be blanked in a uniform way
+- [ ] Math book on_lock got skipped in RTFM room?
+
+```
+-------------------------------
+|  /----\      -       M A P  |
+|  |....|     /.\             |
+|  ------   /..A..\           |
+|           -------           |
+|            |...|   -------  |
+|   -----    |.U.|   |.T|H.|  |
+|  /..E..\   |...|   -------  |
+|  \...../   |...|    |.N.|   |
+|   -----    --------------   |
+|   |.T.|    |.I.|...C....|   |
+|   -----------------------   |
+|   |...A....|.T.|            |
+|   ----------------          |
+|          |...E...|          |
+|          ---------          |
+-------------------------------
+```
 
 ## Specific work needing done
 
 - [x] Teleport the player loading from save into the correct spot (overworld -> castle room #1)
-
-## Non-assets and scripting things we need
-
-- [ ] Stories about building computers! I.e.
-	- What you like: what you get out of it personally, which bits are easy to do, which bits are the most fun
-	- What you dislike: what kinds of things goes wrong, specific horror stories, which bits are a pain to do
-- [ ] Your soldering setup
-	- What equipment do you have?
-	- Is it always set up and left out, or do only get it out when you have a project?
-	- Do you have a "quick job" vs "pull out all the stops" range of stuff you use?
-	- How are things physically positioned on the desk? (Extra credit for an actual photo of everything laid out)
-	- Any piece of equipment you might see on someone else's desk that makes you go "Oh, that person does some serious soldering"?
-- [ ] How to set up a serial connection (COMPREHENSIVE PLZ)
-	- [ ] Windows
-		- Are there several ways of doing it?
-		- If so, is there a clear leader for best way, or easiest for beginners?
-		- Does the process vary based on which specific version of Windows you're on?
-	- [ ] Linux
-		- Is the hardware interface always the same, no matter the distro?
-		- Any traps or workarounds for weird setups?
-	- [ ] Mac (I think we've got it?)
 
 ## Story themes
 
@@ -81,7 +104,7 @@ See below for color choices.
 
 ```mgs
 look-ch2-roomname {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>NAME OF ROOM</>."
 		"\t(description goes here)"
@@ -97,7 +120,7 @@ The extra line break at the end is only needed for places, since the exit list w
 
 ```mgs
 look-ch2-roomname {
-	show serial dialog spacer
+	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%EntityName%</>."
 		// "You looked at the <m>%EntityName%</>." // for objects

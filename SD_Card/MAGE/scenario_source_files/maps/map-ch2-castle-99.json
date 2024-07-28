@@ -5,12 +5,12 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 961, 962, 963, 964, 965, 966, 967, 968, 0, 0,
-            0, 0, 969, 970, 971, 972, 973, 974, 975, 976, 0, 0,
-            0, 0, 977, 978, 979, 980, 981, 982, 983, 984, 0, 0,
-            0, 0, 985, 986, 987, 988, 989, 990, 991, 992, 0, 0,
             0, 0, 993, 994, 995, 996, 997, 998, 999, 1000, 0, 0,
             0, 0, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 0, 0,
+            0, 0, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 0, 0,
+            0, 0, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024, 0, 0,
+            0, 0, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032, 0, 0,
+            0, 0, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
@@ -74,7 +74,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":939,
+                 "gid":971,
                  "height":32,
                  "id":38,
                  "name":"Lambda",
@@ -83,6 +83,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-lab"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-lab"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -101,6 +106,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-xc"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-xc"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -110,10 +120,21 @@
                 }, 
                 {
                  "class":"",
-                 "gid":1009,
+                 "gid":1041,
                  "height":32,
                  "id":42,
                  "name":"CRT",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-lambda-crt"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-crt"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":28,
@@ -131,6 +152,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-books"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-books"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -149,6 +175,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-ration"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-ration"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,6 +198,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-poster"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-poster"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -185,6 +221,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-drawer"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-drawer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -203,6 +244,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-computer"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-computer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -221,6 +267,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-lambda-box"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-lambda-box"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -230,10 +281,38 @@
                 }, 
                 {
                  "class":"",
-                 "gid":1028,
+                 "gid":281,
+                 "height":32,
+                 "id":63,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-49,
+                 "y":-56
+                }, 
+                {
+                 "class":"",
+                 "gid":1059,
                  "height":24,
                  "id":64,
-                 "name":"clothes rake",
+                 "name":"",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -243,8 +322,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":24,
-                 "x":250.5,
-                 "y":208.75
+                 "x":261,
+                 "y":225
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -440,36 +519,32 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":635,
+         "firstgid":667,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":891,
+         "firstgid":923,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":901,
+         "firstgid":933,
          "source":"..\/entities\/entity-harddrive.json"
         }, 
         {
-         "firstgid":925,
+         "firstgid":957,
          "source":"..\/entities\/entity-lambda.json"
         }, 
         {
-         "firstgid":961,
+         "firstgid":993,
          "source":"..\/tilesets\/tileset-secretroom.json"
         },
     
         {
-         "firstgid":1009,
+         "firstgid":1041,
          "source":"..\/entities\/entity-lambda-monitor.json"
         }, 
         {
-         "firstgid":1027,
-         "source":"..\/entities\/entity-rake.json"
-        }, 
-        {
-         "firstgid":1028,
+         "firstgid":1059,
          "source":"..\/entities\/entity-minirake.json"
         }],
  "tilewidth":32,

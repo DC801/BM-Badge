@@ -11,6 +11,22 @@ look-ch2-smithfamily {
 	}
 }
 
+look-ch2-sportskid {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe child does not seem distressed that he has taken the form of sports equipment. On the contrary, best you can tell, he's elated. You shoot him a thumbs up, and he bounces up and down slightly."
+	}
+}
+
+look-ch2-smith {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tYour neighbor seems to be taking the status of his son in stride. He's as friendly to you as ever, and is maintaining a cheerful -- if slightly baffled -- expression."
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-smithfamily {
@@ -39,7 +55,7 @@ on_go-ch2-smithfamily-south {
 interact-ch2-smith {
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Hey, neighbor. Good luck in the dungeon out west."
+			SELF "Hey, neighbor. Good luck in the castle out west."
 			"Knock 'em dead! Or... break their legs! Or... whatever it is you need to do. Go get 'em!"
 		}
 	} else if (variable ch2-storyflag-round is <= 2) {

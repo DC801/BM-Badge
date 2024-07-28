@@ -15,21 +15,21 @@ look-ch2-tracy {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO: Tracy on_look"
+		"\tShe's staring you, but it's like she's trying trying not to <bold>look</> like she's staring at you. She gives you a tight smile as if encouraging you to be on your best behavior."
 	}
 }
 look-ch2-rocco {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO: Rocco on_look"
+		"\tHis hands are moving about a small circuit board in a way that makes it clear he's done this a hundred times. You seem to be outside his notice."
 	}
 }
 look-ch2-helvetica {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tHer attention is fixed on the numerous gauges and dials at her workstation. She seems to be concentrating fiercely -- if the twitch of her tail is any indication."
+		"\tHer attention is fixed on the numerous gauges and dials at her workstation. She seems to be concentrating fiercely, if the twitch of her tail is any indication."
 	}
 }
 
@@ -55,13 +55,12 @@ on_load-ch2-castle-23 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-23-up;
-	if (
-		flag ch2-installed-heatsink is true
-		|| flag ch2-carrying-heatsink is true
-	) {
-		copy script ch2-hide-heatsink;
-	}
+	// if (
+	// 	flag ch2-installed-heatsink is true
+	// 	|| flag ch2-carrying-heatsink is true
+	// ) {
+	// 	copy script ch2-hide-heatsink;
+	// }
 
 	// initialize everything
 	copy ch2-map-init;
@@ -103,9 +102,7 @@ on_go-castle-23-south {
 interact-ch2-helvetica {
 	copy interrupt-walk;
 	show dialog {
-		SELF
-		"At this power plant, we capture heat from deep below the earth and use it to turn water into steam, which we send through turbines to generate electricity."
-		"But this isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
+		SELF "It doesn't look like anything serious was damaged in this equipment. Still, we'd best be vigilant for a while."
 	}
 	copy resume-walk;
 }
@@ -113,39 +110,87 @@ interact-ch2-helvetica {
 interact-ch2-tracy {
 	copy face-player;
 	show dialog {
-		SELF "Our entire work revolves around moving heat from one place to another. It's often more efficient to move heat than it is to create it."
+		SELF "At this power plant, we capture heat from deep below the earth and use it to turn water into steam, which we send through turbines to generate electricity."
+		"But this isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
+		"Our entire work revolves around moving heat from one place to another. It's often more efficient to move heat than it is to create it."
 	}
 }
 
+const!(
+	$idle = 3
+	$twist = 4
+	$fiddle = 5
+	$reach = 6
+)
+
+rocco-work-fancy {
+	set entity Rocco current_animation to $idle;
+	mutate tempvar2 ? 7;
+	mutate tempvar2 + 3;
+	for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
+		play entity Rocco animation $twist once;
+	}
+	set entity Rocco current_animation to $idle;
+	mutate tempvar2 ? 2;
+	if (variable tempvar2 is 1) {
+		wait 1200ms;
+		mutate tempvar2 ? 4;
+		mutate tempvar2 + 3;
+		for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
+			play entity Rocco animation $twist once;
+		}
+		set entity Rocco current_animation to $idle;
+		wait 500ms;
+	}
+	wait 500ms;
+	play entity Rocco animation $reach once;
+	mutate tempvar2 ? 2;
+	mutate tempvar2 + 1;
+	for (mutate i = 0; variable i is < tempvar2; mutate i + 1) {
+		play entity Rocco animation $fiddle once;
+	}
+	set entity Rocco current_animation to $idle;
+	wait 1500ms;
+	play entity Rocco animation $reach once;
+	set entity Rocco current_animation to $idle;
+}
+rocco-work {
+	turn entity Rocco south;
+	set entity Rocco on_tick to rocco-work-fancy;
+}
+rocco-idle {
+	set entity Rocco on_tick to null_script;
+	set entity Rocco current_animation to 0;
+}
+
+settings for dialog {
+	label PLAYER { alignment TL }
+	label SELF { alignment TR }
+	label BLANK { name "" alignment TR }
+}
+
 interact-ch2-rocco {
-	copy face-player;
 	if (flag ch2-cactuscooler-delivered is true) {
 		show dialog {
-			SELF "Now the hard part: figure out how to cool this thing with Cactus Cooler."
+			SELF "There's a lot to fix around here. I'll keep at it."
 		}
 	}
 	else if (flag ch2-rocco-backstory is false) {
+		copy face-player;
+		copy rocco-idle;
 		show dialog {
-			PLAYER "So... I was told you guys could help me find a heat sink."
+			PLAYER "I was told you could help me find a heat sink."
 			SELF "A heat sink? What's the use case?"
 			PLAYER "A computer. Like a normal-looking kind of boxy computer."
 		}
-		turn player control off;
-		wait 100ms;
-		if (entity Rocco direction is south) {
-			turn entity Rocco west;
-		} else {
-			turn entity Rocco toward entity "heat sink";
-		}
-		wait 1000ms;
-		copy face-player;
-		wait 100ms;
-		turn player control on;
+		copy rocco-work;
 		show dialog {
-			SELF "Well, there's this heat sink here, but it's not extra."
-			PLAYER "Do you have any extras anywhere, maybe \"in the back\" or something?"
-			SELF "In the \"back?\" We don't have a \"back.\""
-			PLAYER "It's really important. Lambda and I are trying to put the Gibson mainframe back together, and...."
+			SELF "We don't have any extra, but I could rig you one after we fixed up all the earthquake damage. Maybe in a month or so."
+			PLAYER "A month? But I need it right away. Lambda and I are trying to put the Gibson mainframe back together, and...."
+		}
+		copy rocco-idle;
+		copy face-player;
+		show dialog {
 			SELF "Lambda? Lambda who?"
 		}
 		if (flag ch2-lambda-deletion-backstory is false) {
@@ -156,7 +201,7 @@ interact-ch2-rocco {
 		} else {
 			show dialog {
 				PLAYER "Lambda. You... really don't know who he is, do you? You actually forgot who he was?"
-				SELF "Forget? What are you on about?"
+				SELF "Forget? What are you talking about?"
 				PLAYER "Wow. Lambda was right. He said none of you would remember him."
 				SELF "No, I think I would've remembered someone with the name Lambda."
 			}
@@ -164,20 +209,34 @@ interact-ch2-rocco {
 		rotate entity "%SELF%" 1;
 		show dialog {
 			SELF "Lambda.... It sounds like an alias. Is he a hacker?"
-			PLAYER "Actually, I don't know. Maybe?"
+			PLAYER "Actually, I don't know. It's possible."
 			SELF "...."
-			"How strange. A place like this normally has an IT guy, or someone who's a hacker or software tinkerer at least, but... I'm can't think of who ours was."
+			"How strange. A place like this normally has an IT guy, or someone who's a hacker or software tinkerer at least, but I can't think of who ours was."
 			"We must have had someone like that. I'm the one who usually fixes the computers, but why can't I remember who fixes the software?"
-			"Hmmmm."
+			"Hmm."
 		}
+		turn entity Rocco south;
+		copy rocco-work;
+		show dialog {
+			SELF "Regardless, fixing the Gibson mainframe will simplify a lot of my work, so I'll help you out."
+			"It would need a heavy-duty heat sink, though, and I don't have all the right supplies here. This isn't exactly my normal workstation."
+			PLAYER "What else would you need? I could fetch you something."
+		}
+		set entity Rocco on_tick to null_script;
+		set entity Rocco current_animation to $idle;
+		show dialog {
+			SELF "Well, given what I've got here...."
+		}
+		set entity Rocco current_animation to 0;
 		copy face-player;
 		show dialog {
-			SELF "Regardless, this heat sink is spoken for. Although.... I concede that fixing the mainframe is more important than getting this thing working."
-			"Tell you what. Get me a substitute I can use for my build, and you can have this heat sink here."
-			PLAYER "Thanks! What kind of substitute?"
-			SELF "Let's try something really wacky. I wanted to experiment anyway. Liquid cooling, or -- no, let's be really crazy. Get me a can of Cactus Cooler."
+			SELF "All I'd really need is liquid coolant. And the only thing around town that would work is Cactus Cooler."
 			PLAYER "Cactus Cooler?"
-			SELF "It's this rare brand of soda. It'll be extra funny if I can get it involved with cooling the machine, since it's got \"cooler\" in the name. Hilarious!"
+			SELF "It's this rare brand of soda. It's got \"cooler\" in the name, so it's guaranteed to be a good heat conductor."
+		}
+		copy rocco-work;
+		show dialog {
+			SELF "That settles it! Get me a can of Cactus Cooler, and I can build you a heat sink."
 		}
 		set flag ch2-rocco-backstory to true;
 		set flag ch2-want-cactuscooler to true;
@@ -186,6 +245,10 @@ interact-ch2-rocco {
 		if (flag ch2-carrying-cactuscooler is true) {
 			show dialog {
 				PLAYER "Well, I actually have a can of Cactus Cooler right here."
+			}
+			copy rocco-idle;
+			copy face-player;
+			show dialog {
 				SELF "Oh, really? In which case...."
 			}
 			set flag interrupt to true;
@@ -197,21 +260,23 @@ interact-ch2-rocco {
 		}
 	}
 	else if (flag ch2-carrying-cactuscooler is true) {
+		copy face-player;
+		copy rocco-idle;
 		if (flag interrupt is false) {
 			show dialog {
-				SELF "Looks like you found a can of Cactus Cooler somewhere! Willing to give it to me?"
+				SELF "Looks like you found a can of Cactus Cooler! Give it here, and I'll build your heat sink."
 			}
 			set flag interrupt to true;
 		} else {
 			show dialog {
-				SELF "Change your mind? Willing to give up your can of Cactus Cooler?"
+				SELF "Change your mind? Ready to give me your can of Cactus Cooler?"
 			}
 		}
 		goto interact-ch2-rocco-give-q; // jump
 	}
 	else {
 		show dialog {
-			SELF "Remember, I'll give up this heat sink if you bring me a substitute: a can of Cactus Cooler."
+			SELF "Remember, I need a can of Cactus Cooler before I can make your heat sink."
 		}
 	}
 	goto interact-ch2-rocco-wrapup;
@@ -219,7 +284,7 @@ interact-ch2-rocco {
 
 interact-ch2-rocco-give-q {
 	show dialog {
-		name "" "(Give %Rocco% the Cactus Cooler)?"
+		BLANK "(Give %Rocco% the Cactus Cooler)?"
 		> "Yes" : interact-ch2-rocco-give
 		> "No" : interact-ch2-rocco-nogive
 	}
@@ -227,87 +292,43 @@ interact-ch2-rocco-give-q {
 
 interact-ch2-rocco-give {
 	show dialog {
-		SELF "Hey, thanks, buddy!"
-		name "" "(Gave %Rocco% the can of Cactus Cooler!)"
-		SELF "Hey, that's swell! Go ahead and take that heat sink now. We'll be all right with this stuff instead."
+		SELF "Awesome!"
+		BLANK "(Gave %Rocco% the can of Cactus Cooler!)"
 	}
+	turn entity Rocco south;
+	show dialog {
+		SELF "Okay, give me a few minutes."
+	}
+	turn player control off;
+	fade out camera to black over 400ms;
+	wait 900ms;
+	fade in camera from black over 400ms;
+	turn player control on;
+	turn entity Rocco toward entity "%PLAYER%";
+	show dialog {
+		SELF "There we are."
+		BLANK "(You received the heat sink!)"
+		PLAYER "Thanks!"
+	}
+	copy rocco-work;
+	show dialog {
+		SELF "You're welcome. Good luck fixing the mainframe."
+	}
+	copy script ch2-pickup-heatsink;
 	set flag ch2-cactuscooler-delivered to true;
-	set flag ch2-heatsink-permission to true;
+	// set flag ch2-heatsink-permission to true;
 	copy ch2-turn_in-cactuscooler;
 	goto interact-ch2-rocco-wrapup;
 }
 
 interact-ch2-rocco-nogive {
 	show dialog {
-		SELF "Aww, come on. No Cactus Cooler, no heat sink."
+		SELF "Well, uh, I can't make the heat sink without Cactus Cooler, so do be sure to give it to me soon."
 	}
 	goto interact-ch2-rocco-wrapup;
 }
 
 interact-ch2-rocco-wrapup {
+	copy rocco-work;
 	set entity "%SELF%" on_interact to interact-ch2-rocco;
-}
-
-/* ---------- HEAT SINK (ADMIN) ---------- */
-
-ch2-hide-heatsink {
-	teleport entity "heat sink" to geometry hiding-spot;
-	set entity "heat sink" name to " ";
-}
-
-ch2-touch-heatsink {
-	if (flag ch2-heatsink-firstlook is false) {
-		show dialog {
-			PLAYER "That's a really big tuning fork."
-			Rocco "It's a heat sink. It siphons heat away from a processor or whatever. Though I wonder if it would work as a tuning fork, too."
-		}
-		set flag ch2-heatsink-firstlook to true;
-		set flag temp to true;
-	} else {
-		show dialog {
-			PLAYER "Yup, a heat sink."
-		}
-		set flag temp to false;
-	}
-	if (flag ch2-heatsink-permission is false) {
-		if (flag ch2-rocco-backstory is false) {
-			if (flag temp is true) {
-				show dialog {
-					PLAYER "(I bet I can't just take it away with me though. I should ask first.)"
-				}
-			} else {
-				show dialog {
-					PLAYER "I better ask before taking it."
-				}
-			}
-		} else if (flag ch2-carrying-cactuscooler is false) {
-			show dialog {
-				PLAYER "Better go off to find Cactus Cooler to trade for it."
-			}
-		} else {
-			show dialog {
-				PLAYER "Better talk to Rocco to trade the Cactus Cooler for it."
-			}
-		}
-	} else {
-		show dialog {
-			name "" "(Pick up the heat sink?)"
-			> "Yes" : ch2-touch-heatsink-yes
-			> "No" : ch2-touch-heatsink-no
-		}
-	}
-}
-ch2-touch-heatsink-yes {
-	show dialog {
-		name "" "(You pick up the heat sink!)"
-	}
-	copy script ch2-hide-heatsink;
-	copy script ch2-pickup-heatsink;
-	set entity "%SELF%" on_interact to null_script;
-}
-ch2-touch-heatsink-no {
-	show dialog {
-		PLAYER "Another time, perhaps."
-	}
-	set entity "%SELF%" on_interact to ch2-touch-heatsink;  // reset after script jump
 }

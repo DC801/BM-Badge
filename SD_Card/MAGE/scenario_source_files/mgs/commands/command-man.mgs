@@ -38,7 +38,17 @@ man-fail {
 // COMMAND
 
 command-man {
-	if (
+	if (dialog is open) {
+		if (flag can-interrupt-dialog is true) {
+			end dialog;
+			set flag can-interrupt-dialog to false;
+		}
+	}
+	if (variable ch2-in-room is 99) {
+		show dialog {
+			name Lambda portrait lambda "Sorry, it's a little awkward to text chat with you when you're looking over my shoulder."
+		}
+	} else if (
 		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
 		|| variable ch2-in-room is not 0 // OR you're in the castle
 	) {
@@ -131,7 +141,7 @@ ch2-lambda-topic-installation {
 	show serial dialog {
 		"<c>YOU</>: How do I install the parts once I've got them?"
 		" "
-		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be fairly straightforward to install."
+		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be straightforward to install."
 		" "
 	}
 	goto ch2-lambda-topic-q;
@@ -159,7 +169,7 @@ ch2-lambda-topic-artifact-words {
 	show serial dialog {
 		"<c>YOU</>: What can you tell me about \"magic words?\" You said they were commands?"
 		" "
-		"<m>LAMBDA</>: Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
+		"<m>LAMBDA</>: Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the castle artifact do something."
 		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
 		" "
 	}
@@ -192,7 +202,7 @@ ch2-lambda-mainframe-broken {
 	show serial dialog {
 		"<c>YOU</>: Why did you break it?"
 		" "
-		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
+		"<m>LAMBDA</>: Like I said, I broke it to keep it out of the <r>Big <r>Bad</>'s hands."
 		"\tThat artifact is capable of doing quite a lot of damage, you know. It's only a problem that we're lacking it now because of that recent earthquake."
 		" "
 	}
@@ -205,6 +215,7 @@ ch2-lambda-mainframe-broken-1 {
 		"<c>YOU</>: What exactly about it is broken?"
 		" "
 		"<m>LAMBDA</>: Well, sort of... everything. It's in a million pieces, to be precise."
+		" "
 		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-2
 		# "Was that necessary?" : ch2-lambda-mainframe-broken-2
 	}
@@ -212,7 +223,7 @@ ch2-lambda-mainframe-broken-1 {
 ch2-lambda-mainframe-broken-2 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<m>LAMBDA</>: Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"<m>LAMBDA</>: Yeah, so, um... it might not have been necessary, strictly speaking. I wiped its software first. That would've been enough on its own, to be honest."
 		"\tI don't know. I just wanted to be <bold>sure</>. I sort of regret it now."
 		" "
 	}
@@ -256,8 +267,7 @@ ch2-lambda-castle-who {
 	show serial dialog {
 		"<c>YOU</>: Whose castle is this?"
 		" "
-		"<m>LAMBDA</>: I'm kind of surprised you didn't know, but it's King Gibson's castle. "
-		"\tTODO: more convo"
+		"<m>LAMBDA</>: I'm kind of surprised you didn't know, but it's King Gibson's castle. He's in charge of the whole place. He used to be in charge of the whole geographical area, too, not just the castle structure itself, but -- well, the bits of land around here have become abruptly more isolated recently. It's complicated."
 		" "
 	}
 	goto ch2-lambda-topic-castle-q;
@@ -305,7 +315,7 @@ ch2-lambda-topic-person-q {
 		_ "CONCIERGE" : ch2-lambda-person-concierge
 		_ "THE CONCIERGE" : ch2-lambda-person-concierge
 		_ "TEMPLETON" : ch2-lambda-person-templeton
-		_ "SEBSTIAN" : ch2-lambda-person-sebastian
+		_ "SEBASTIAN" : ch2-lambda-person-sebastian
 		_ "THE GOLDFISH" : ch2-lambda-person-goldfish
 		_ "GOLDFISH" : ch2-lambda-person-goldfish
 		_ "AURELIUS" : ch2-lambda-person-aurelius
@@ -317,7 +327,7 @@ ch2-lambda-topic-person-q {
 		_ "ALVIN" : ch2-lambda-person-alvin
 		_ "SIMON" : ch2-lambda-person-simon
 		_ "THEODORE" : ch2-lambda-person-theodore
-		_ "BOB MOSS" : ch2-lambda-person-bobmoss
+		_ "SEA MOSS" : ch2-lambda-person-seamoss
 		_ "GLORIA" : ch2-lambda-person-gloria
 		_ "SAMSON" : ch2-lambda-person-samson
 		_ "GREGORY" : ch2-lambda-person-gregory
@@ -508,8 +518,19 @@ ch2-lambda-person-alvin {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Alvin."
 		" "
-		"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Alvin -- by reputation, she's the quiet, mysterious one of the group -- that's all I know."
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Alvin? Oh, you mean the Alvin from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Alvin -- by reputation, she's the quiet, mysterious one of the group -- that's all I know."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -518,8 +539,19 @@ ch2-lambda-person-theodore {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Theodore."
 		" "
-		"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Theodore -- I've never met them personally. I've heard they're the straightforward, stoic type, though."
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Theodore? Oh, you mean the Theodore from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Theodore -- I've never met them personally. I've heard they're the straightforward, stoic type, though."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -528,27 +560,38 @@ ch2-lambda-person-simon {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Simon."
 		" "
-		"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
-		"\tBut Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really <bold>want</> to meet him, you know?"
+	}
+	if (flag band-backstory is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\" Oh yeah, they were supposed to play tonight in the grand hall."
+		}
+		set flag band-backstory to true;
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Simon? Oh, you mean the Simon from the band \"1023 MB.\""
+		}
+	}
+	show serial dialog {
+		"\tYeah, so, Simon -- from what I understand he's brash and kind of a pain to be around. Never met him, but I don't really <bold>want</> to meet him, you know?"
 	}
 	goto ch2-lambda-topic-person-s;
 }
-// Bob Moss
-ch2-lambda-person-bobmoss {
+// Sea Moss
+ch2-lambda-person-seamoss {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: Tell me about Bob Moss."
+		"<c>YOU</>: Tell me about Sea Moss."
 		" "
 	}
 	if (flag ch2-seen-room-32 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: Bob Moss? Bob Moss... I-I think I...."
+			"<m>LAMBDA</>: Sea Moss? Sea Moss... I-I think I...."
 			"\tI think I used to be good friends with him, but... what did we do together?"
 			"\tI seem to remember we... no, it's gone. I'm sorry."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Yes! Bob Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry, like (TODO: more facts about CMOS microprocessors on a tight technical level)."
+			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry."
 			"\tAnd he makes the best crepes, too, believe it or not!"
 		}
 	}
@@ -742,15 +785,9 @@ ch2-lambda-person-helvetica {
 		"<c>YOU</>: Tell me about Helvetica."
 		" "
 	}
-	if (flag ch2-seen-room-23 is false) {
-		show serial dialog {
-			"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
-			"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font...."
-		}
-	} else {
-		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
-		}
+	show serial dialog {
+		"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
+		"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -763,8 +800,8 @@ ch2-lambda-person-bob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Bob."
 		" "
-		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
-		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
+		"<m>LAMBDA</>: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks. Oh yeah, and Bobs who ARE rocks."
+		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -773,7 +810,7 @@ ch2-lambda-person-guardianbob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about Guardian Bob."
 		" "
-		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong type of guy. He's some kind of internet vigilante, I think. He's got a few hacking tricks, but he seems white hat to me. I trust him."
+		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong looking guy. He's some kind of internet vigilante, I think. He knows a few hacking tricks, but he seems white hat to me. I trust him."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -782,7 +819,7 @@ ch2-lambda-person-marathonbob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about the Marathon Bobs."
 		" "
-		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever)"
+		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever, like 'gaming on the mac was a doomed prospect' or something)"
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -904,6 +941,8 @@ ch2-lambda-person-lambda-name {
 	show serial dialog {
 		"<c>YOU</>: What's your real name? It's not really \"Lambda,\" is it?"
 		" "
+	}
+	show serial dialog {
 		"<m>LAMBDA</>: Well, no. But you see... this is a little embarrassing, but...."
 		"\tI... sort of... don't remember my real name."
 		" "
@@ -1028,6 +1067,7 @@ ch2-lambda-person-big-bad2 {
 	}
 	goto ch2-lambda-topic-person-s;
 }
+
 // Bert
 
 ch2-lambda-person-bert {

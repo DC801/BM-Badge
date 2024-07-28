@@ -23,10 +23,6 @@ man-map {
 // COMMAND
 
 command-map {
-	// for ch2-toot:
-	if (variable ch2-map-test is 1) {
-		mutate ch2-map-test = 2;
-	}
 	// normal stuff
 	show serial dialog {
 		" "

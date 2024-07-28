@@ -4,7 +4,7 @@ tags: [ 'spritesheets', 'tilesets', 'tiled', 'entity', 'entity management system
 
 # Animations
 
-In Tiled, animations are assigned to tiles within the [spritesheet](tilesets). To an assign an animation to a tile, select a tile — preferably something indicative of what the animation will be, such as a first step for a walking animation — and press the button for the animation editor, which looks like a movie camera:
+In Tiled, animations are assigned to tiles within a [spritesheet](tilesets). To an assign an animation to a tile, select a tile — preferably something indicative of what the animation will be, such as a first step for a walking animation — and press the button for the animation editor, which looks like a movie camera:
 
 ![the fourth icon is a movie camera](media/tiled-animation-editor.png)
 
@@ -16,7 +16,7 @@ For [character entities](entity_types#character-entity), you need not prepare an
 
 The [encoder](encoder) accommodates animation flipping with its [entity management system](entity_management_system), so you don't need sprite tiles for both left-facing and right-facing sprites if you're comfortable with mirroring your left-facing and right-facing sprites.
 
-The Mage Game Engine (MGE) animation system requires that each animation have at least two frames, though, so for animations that aren't actually "animated," you might set two of the same frame back-to-back. #verifythis
+The Mage Game Engine (MGE) animation system requires that each animation have at least two frames, though, so for animations that aren't actually "animated," you might set two of the same frame back-to-back. #researchthis
 
 ## Animation Types
 
@@ -58,9 +58,9 @@ Action animations are not expected to loop. Instead they are expected to interru
 
 You can add additional animations after the first three, too, as you like.
 
-Keep in mind that these animations can only be deliberately triggered by scripts, either for an arbitrary number of loops with [PLAY_ENTITY_ANIMATION](actions/PLAY_ENTITY_ANIMATION), or indefinitely with [SET_ENTITY_CURRENT_ANIMATION](actions/SET_ENTITY_CURRENT_ANIMATION).
+These animations can only be triggered by scripts, either for an arbitrary number of loops with [PLAY_ENTITY_ANIMATION](actions/PLAY_ENTITY_ANIMATION), or indefinitely with [SET_ENTITY_CURRENT_ANIMATION](actions/SET_ENTITY_CURRENT_ANIMATION).
 
-Any animation set this way will be overridden by the walk animation if the character entity is compelled to move, and the entity will return to its idle after the walk motion is completed. Teleports don't count as "movement" in this case because entities don't switch to their walking animation when teleported.
+Any animation set this way will be overridden by the walk animation if the character entity is compelled to move, and the entity will return to its idle after the walk motion is completed. (Teleports are an exception because entities don't switch animations when teleported.)
 
 ## Animation Transitions and Vamping
 
@@ -70,22 +70,23 @@ An action animation cannot be started and held (or [vamped](https://en.wikipedia
 - [SET_ENTITY_CURRENT_ANIMATION](actions/SET_ENTITY_CURRENT_ANIMATION) for the "vamp," or the portion you want to repeat for an indeterminate amount of time
 - [PLAY_ENTITY_ANIMATION](actions/PLAY_ENTITY_ANIMATION) with a `play_count` of `1` for the end transition
 
-See Strong Bad in the Bob-Only Club cutscene in BMG2020 for an example of this approach.
+See Strong Bad in the Bob-Only Club cutscene in Chapter 1 of the Black Mage Game for an example of this approach.
 
 ## MGE Animation Timing
 
 Requirements:
 
-- Animations must have less than 256 total frames.
+- Animations must have less than 256 frames.
 - Frames must be less than 65,535 milliseconds long.
+- (Don't worry, these are very difficult limits to hit!)
 
 Animation frames will play for a minimum of one game frame regardless of duration (which, on the badge hardware, is currently in the ballpark of 130 ms, or 8 fps), so animations might play back very slowly in practice if you are frequently using short durations.
 
-::: tip Best Practice
+::: tip Best Practices
 Because animations are not aborted when a character entity faces a new direction (it picks up where it left off in the new direction), it is beneficial to keep each animation of the same type completely uniform in terms of frame count and frame duration. This includes animations with fewer unique frames than others of its type, such as an animation from behind (where the face is obscured).
-:::
 
 In addition, we recommend making sure each animation of the same type uses the same tile rows for each frame, even if some of the tiles within the column are technically identical, so that future changes to any of the previously identical frames will not create the need for timing adjustments.
+:::
 
 ## Assigning Animations to Character Entities
 

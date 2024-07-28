@@ -31,6 +31,11 @@ Vue.component(
 				'currentData',
 				'initState',
 			]),
+			{
+				computed: window.Vuex.mapGetters([
+					'scriptsOptions',
+				]),
+			},
 			makeFileChangeTrackerMixinByResourceType('scripts'),
 		],
 		data: function () {
@@ -267,12 +272,7 @@ Vue.component(
 						class="form-label"
 						for="newScriptName"
 					>New Script</label>
-					<div
-						class="input-group"
-						:class="{
-							'has-danger': !isNewScriptNameUnique
-						}"
-					>
+					<div class="input-group">
 						<button
 							class="btn btn-primary"
 							type="button"
@@ -304,6 +304,4 @@ Vue.component(
 		</div>
 	</div>
 </div>
-		`
-	}
-);
+`});

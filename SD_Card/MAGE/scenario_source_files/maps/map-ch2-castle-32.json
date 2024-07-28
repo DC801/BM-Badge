@@ -6,18 +6,18 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 283, 284, 284, 284, 284, 284, 284, 284, 284, 2147483931, 0,
             0, 299, 289, 2147483937, 300, 300, 300, 300, 289, 2147483937, 2147483947, 0,
-            0, 315, 316, 294, 316, 316, 316, 3221225789, 292, 314, 2147483963, 0,
+            0, 315, 2684354893, 294, 316, 316, 316, 3221225789, 292, 314, 2147483963, 0,
             0, 315, 316, 372, 296, 314, 307, 296, 293, 339, 2147483963, 0,
             0, 315, 316, 292, 293, 339, 339, 316, 316, 371, 2147483963, 0,
-            0, 331, 316, 316, 316, 339, 339, 316, 316, 316, 2147483979, 0,
-            0, 347, 349, 2147483996, 350, 339, 339, 2147483998, 348, 2147483997, 2147483995, 0,
-            0, 283, 284, 284, 285, 339, 339, 2147483933, 2147483932, 2147483932, 2147483931, 0,
-            0, 299, 300, 300, 301, 339, 339, 2147483949, 2147483948, 2147483948, 2147483947, 0,
-            0, 315, 332, 316, 294, 339, 372, 296, 296, 293, 2147483963, 0,
-            0, 315, 316, 316, 339, 339, 292, 296, 296, 314, 2147483963, 0,
-            0, 315, 316, 292, 374, 339, 316, 316, 316, 339, 2147483963, 0,
-            0, 315, 307, 296, 296, 374, 294, 316, 316, 339, 2147484000, 0,
-            0, 331, 371, 316, 292, 296, 376, 296, 296, 374, 2147483979, 0,
+            0, 331, 316, 316, 316, 323, 374, 316, 316, 316, 2147483979, 0,
+            0, 347, 349, 2147483996, 350, 371, 316, 2147483998, 348, 2147483997, 2147483995, 0,
+            0, 283, 284, 284, 285, 316, 291, 2147483933, 2147483932, 2147483932, 2147483931, 0,
+            0, 299, 300, 300, 301, 316, 316, 2147483949, 2147483948, 2147483948, 2147483947, 0,
+            0, 315, 316, 316, 295, 314, 316, 316, 316, 294, 2147483963, 0,
+            0, 315, 294, 316, 339, 372, 314, 316, 316, 339, 2147483963, 0,
+            0, 315, 339, 316, 339, 316, 372, 314, 316, 339, 2147483963, 0,
+            0, 315, 339, 316, 339, 316, 316, 372, 314, 339, 2147484000, 0,
+            0, 331, 371, 316, 371, 316, 316, 3221225804, 372, 378, 2147483979, 0,
             0, 347, 348, 348, 348, 353, 2147484001, 349, 349, 348, 2147483995, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":17,
@@ -34,7 +34,7 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 390, 391, 392, 393, 0, 0, 0, 0,
-            0, 0, 2684354893, 0, 406, 407, 408, 409, 0, 0, 0, 0,
+            0, 0, 0, 0, 406, 407, 408, 409, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 438, 439, 440, 0, 0, 438, 439, 440, 0, 0,
@@ -65,36 +65,6 @@
          "objects":[
                 {
                  "class":"",
-                 "height":0,
-                 "id":6,
-                 "name":"warp-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":192,
-                 "y":401
-                }, 
-                {
-                 "class":"",
-                 "gid":281,
-                 "height":32,
-                 "id":19,
-                 "name":"door",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-attempt-door-check"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":272,
-                 "y":95
-                }, 
-                {
-                 "class":"",
                  "gid":183,
                  "height":32,
                  "id":32,
@@ -113,26 +83,20 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":175.814771143745,
-                 "y":479.376031729017
+                 "x":174,
+                 "y":461
                 }, 
                 {
                  "class":"",
-                 "gid":281,
-                 "height":32,
-                 "id":34,
-                 "name":"door",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-attempt-door-check"
-                        }],
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
                  "rotation":0,
                  "visible":true,
-                 "width":32,
-                 "x":80,
-                 "y":95
+                 "width":0,
+                 "x":192,
+                 "y":401
                 }, 
                 {
                  "class":"",
@@ -148,7 +112,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":902,
+                 "gid":934,
                  "height":64,
                  "id":38,
                  "name":"Sea Moss",
@@ -171,15 +135,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":917,
+                 "gid":949,
                  "height":32,
                  "id":41,
-                 "name":"RAM Chips",
+                 "name":"RAM chips",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-touch-ramchips"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ramchips"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -189,7 +158,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":918,
+                 "gid":950,
                  "height":32,
                  "id":51,
                  "name":"Samson",
@@ -217,7 +186,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":936,
+                 "gid":968,
                  "height":48,
                  "id":52,
                  "name":"Gloria",
@@ -311,8 +280,7 @@
                  "width":32,
                  "x":96,
                  "y":206
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":281,
@@ -335,6 +303,34 @@
                  "width":32,
                  "x":256,
                  "y":206
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":68,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-66,
+                 "y":-94
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -357,8 +353,8 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 2147484142, 494, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 575, 576, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 591, 592, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 607, 608, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 623, 624, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":17,
          "id":8,
@@ -490,12 +486,17 @@
                  "gid":281,
                  "height":32,
                  "id":50,
-                 "name":"Vending",
+                 "name":"vend machine",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-vendingmachine"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-vendingmachine"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -556,12 +557,17 @@
                  "gid":281,
                  "height":32,
                  "id":67,
-                 "name":"Coffee",
+                 "name":"coffee",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-coffee"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-coffee"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -576,7 +582,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":68,
+ "nextobjectid":69,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -611,28 +617,28 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":635,
+         "firstgid":667,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":891,
+         "firstgid":923,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":901,
+         "firstgid":933,
          "source":"..\/entities\/entity-seamoss.json"
         }, 
         {
-         "firstgid":917,
+         "firstgid":949,
          "source":"..\/entities\/entity-ram_chips.json"
         }, 
         {
-         "firstgid":918,
+         "firstgid":950,
          "source":"..\/entities\/entity-wormy.json"
         },
     
         {
-         "firstgid":936,
+         "firstgid":968,
          "source":"..\/entities\/entity-beetle.json"
         }],
  "tilewidth":32,

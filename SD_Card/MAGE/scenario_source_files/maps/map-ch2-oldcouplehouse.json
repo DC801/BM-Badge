@@ -42,8 +42,8 @@
         }, 
         {
          "draworder":"topdown",
-         "id":5,
-         "name":"Object Layer 1",
+         "id":6,
+         "name":"entities",
          "objects":[
                 {
                  "class":"",
@@ -58,6 +58,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":""
@@ -67,6 +72,34 @@
                  "width":32,
                  "x":160.618896639188,
                  "y":219.890932149651
+                }, 
+                {
+                 "class":"",
+                 "gid":193,
+                 "height":32,
+                 "id":17,
+                 "name":"Delmar",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-delmar"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-delmar"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":385,
+                 "y":163
                 }, 
                 {
                  "class":"",
@@ -81,6 +114,11 @@
                          "value":"interact-ch2-beatrice"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-beatrice"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"null_script"
@@ -93,18 +131,7 @@
                 }, 
                 {
                  "class":"",
-                 "height":25.8186429930247,
-                 "id":3,
-                 "name":"south-hitbox",
-                 "rotation":0,
-                 "visible":true,
-                 "width":30,
-                 "x":161.034664975692,
-                 "y":222.830691185796
-                }, 
-                {
-                 "class":"",
-                 "gid":329,
+                 "gid":341,
                  "height":32,
                  "id":9,
                  "name":"Sink",
@@ -124,6 +151,28 @@
                  "width":32,
                  "x":64,
                  "y":85
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":25.8186429930247,
+                 "id":3,
+                 "name":"south-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":30,
+                 "x":161.034664975692,
+                 "y":222.830691185796
                 }, 
                 {
                  "class":"",
@@ -211,34 +260,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":193,
-                 "height":32,
-                 "id":17,
-                 "name":"Delmar",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-delmar"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-delmar"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"null_script"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":379,
-                 "y":163
-                }, 
-                {
-                 "class":"",
                  "height":0,
                  "id":18,
                  "name":"cutscene",
@@ -258,7 +279,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":395,
+                 "x":401,
                  "y":155
                 }, 
                 {
@@ -271,6 +292,18 @@
                  "visible":true,
                  "width":0,
                  "x":368,
+                 "y":155
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":21,
+                 "name":"delmar-walk",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":394,
                  "y":155
                 }],
          "opacity":1,
@@ -298,8 +331,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":21,
+ "nextlayerid":7,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -322,15 +355,15 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":303,
+         "firstgid":315,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":327,
+         "firstgid":339,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":329,
+         "firstgid":341,
          "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,

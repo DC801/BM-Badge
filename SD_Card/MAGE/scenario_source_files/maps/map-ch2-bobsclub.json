@@ -79,7 +79,7 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":227,
+                 "gid":243,
                  "height":32,
                  "id":7,
                  "name":"Bob",
@@ -88,6 +88,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -120,7 +125,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":17,
                  "name":"Wall of Bobs",
@@ -138,15 +143,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":18,
-                 "name":"Fridge",
+                 "name":"fridge",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobfridge"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobfridge"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -156,15 +166,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":23,
-                 "name":"Sink",
+                 "name":"sink",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-sink"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobsink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -186,15 +201,25 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":26,
-                 "name":"Box",
+                 "name":"box",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobbox"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobsbox"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
                         }],
                  "rotation":0,
                  "visible":true,
@@ -204,15 +229,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":27,
-                 "name":"Barstool",
+                 "name":"barstool",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobbarstool"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobbarstool"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -222,10 +252,10 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":29,
-                 "name":"Barrel",
+                 "name":"barrel",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -240,15 +270,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":31,
-                 "name":"Glasses",
+                 "name":"glasses",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobglasses"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobglasses"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -258,15 +293,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":32,
-                 "name":"Countertop",
+                 "name":"countertop",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobcountertop"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobcountertop"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -276,15 +316,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":281,
+                 "gid":309,
                  "height":32,
                  "id":33,
-                 "name":"Cupboard",
+                 "name":"cupboard",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-bobcupboard"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bobcupboard"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -357,35 +402,35 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":161,
+         "firstgid":177,
          "source":"..\/entities\/entity-strong_bad.json"
         }, 
         {
-         "firstgid":203,
+         "firstgid":219,
          "source":"..\/entities\/entity-bob.json"
         }, 
         {
-         "firstgid":221,
+         "firstgid":237,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":269,
+         "firstgid":297,
          "source":"..\/entities\/entity-golem.json"
         }, 
         {
-         "firstgid":281,
+         "firstgid":309,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":283,
+         "firstgid":311,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":539,
+         "firstgid":567,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":541,
+         "firstgid":569,
          "source":"..\/entities\/entity-bobmoss.json"
         }],
  "tilewidth":32,

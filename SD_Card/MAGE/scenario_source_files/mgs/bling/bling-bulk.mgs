@@ -8,7 +8,16 @@ on_load-bling-digi-mage {
 	copy script on_load-bling-mode-map;
 }
 
+on_load-bling-digi-mage2 {
+	teleport camera to geometry camera-spot;
+	copy script on_load-bling-mode-map;
+}
+
 on_load-bling-dc801 {
+	teleport camera to geometry camera-spot;
+	copy script on_load-bling-mode-map;
+}
+on_load-bling-dc801-2 {
 	teleport camera to geometry camera-spot;
 	copy script on_load-bling-mode-map;
 }

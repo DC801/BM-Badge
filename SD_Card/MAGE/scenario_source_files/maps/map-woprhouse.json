@@ -72,6 +72,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -234,17 +239,6 @@
  "nextlayerid":6,
  "nextobjectid":11,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":"on_load-woprhouse"
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-woprhouse"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,

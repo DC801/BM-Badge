@@ -1,6 +1,7 @@
 window.Vue.component(
 	'inputty',
 	{
+		name: 'inputty',
 		template: '#inputty'
 	}
 );
@@ -43,19 +44,32 @@ window.vueApp = new window.Vue({
 			}
 		},
 		handleChange: function (event) {
-			var fileNameMap = {};
 			var vm = this;
-			var filesArray = Array.prototype.slice.call(event.target.files);
-			vm.isLoading = true;
-			filesArray.forEach(function (file) {
-				fileNameMap[file.name] = file;
-			});
-			var scenarioFile = fileNameMap['scenario.json'];
+			var fileNameMap = {};
+			vm.closeError();
+
+			var handleError = function(error) {
+				vm.closeSuccess();
+				console.error(error);
+				vm.error = error.message;
+				vm.isLoading = false;
+			};
+
 			try {
+				var filesArray = Array.prototype.slice.call(event.target.files);
+				vm.isLoading = true;
+
+				filesArray.forEach(function (file) {
+					if (fileNameMap[file.name] === undefined) {
+						fileNameMap[file.name] = file;
+					} else {
+						throw new Error(`Multiple files with name '${file.name}' present in scenario source!`);
+					}
+				});
+
+				var scenarioFile = fileNameMap['scenario.json'];
 				if (!scenarioFile) {
-					vm.error = 'No `scenario.json` file detected in folder, nowhere to start!';
-					vm.isLoading = false;
-					vm.closeSuccess();
+					throw new Error('No `scenario.json` file detected in folder, nowhere to start!');
 				} else {
 					getFileJson(scenarioFile)
 						.then(handleScenarioData(fileNameMap))
@@ -70,8 +84,8 @@ window.vueApp = new window.Vue({
 							vm.prepareDownload([compositeArray], 'game.dat');
 						})
 						.catch(function (error) {
-							console.error(error);
-							vm.error = error.message;
+							handleError(error);
+							throw error;
 						})
 						.then(function () {
 							vm.isLoading = false;
@@ -79,9 +93,7 @@ window.vueApp = new window.Vue({
 						});
 				}
 			} catch (error) {
-				vm.error = error.message;
-				vm.isLoading = false;
-				vm.uniqueEncodeAttempt = Math.random();
+				handleError(error);
 			}
 		}
 	}

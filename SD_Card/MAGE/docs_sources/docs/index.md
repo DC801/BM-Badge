@@ -1,6 +1,6 @@
 # Mage Game Engine (MGE) Documentation and Content Creation Guide
 
-Content creation guide for the "Mage Game Engine" (MGE), and other information for working with the "Black Mage" game for DC801's party badge (BMG2020).
+Content creation guide for the "Mage Game Engine" (MGE), and other information for working with the "Black Mage Game" for DC801's party badge.
 
 ## Table of Contents
 

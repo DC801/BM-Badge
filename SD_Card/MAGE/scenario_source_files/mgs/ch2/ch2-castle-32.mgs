@@ -15,7 +15,7 @@ ch2-look-onions {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\tFresh and fragrant. You appreciate the care to flavor that this cook is putting into whatever it is they're intending to cook. You also appreciate that fact that you don't have to cut them."
+		"\tFresh and fragrant. You appreciate the care to flavor that this cook is putting into whatever it is they're intending to cook. You also appreciate that fact that you don't have to cut them yourself."
 	}
 }
 ch2-look-stove {
@@ -50,6 +50,31 @@ look-ch2-gloria {
 	}
 }
 
+look-ch2-ramchips {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tYou can't decide whether the promise of spicy nacho outweighs the fact that the chips are made of metal and silicon. The image on the package (enlarged to show texture) isn't helping. You're astounded there's a market for this."
+	}
+}
+
+look-ch2-vendingmachine {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tAt first glance, the machine contains the standard smattering of snacks, but you eventually notice some oddities: red twisted pair licorice, lemon silicon wafers, and mixed nuts-and-bolts granola bars."
+	}
+}
+
+look-ch2-coffee {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tWarm and fresh -- by some corporate standard. It's coffee that aims for the floor and achieves its goals completely."
+	}
+}
+
+
 
 /* ---------- ON_LOAD ---------- */
 
@@ -69,7 +94,6 @@ on_load-ch2-castle-32 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-32-up;
 	if (flag ch2-ramchips-dispensed is false) {
 		copy script ch2-hide-ramchips;
 	}
@@ -191,8 +215,7 @@ interact-ch2-gloria {
 		turn entity Gloria toward entity Samson;
 	} else {
 		show dialog {
-			SELF "Are you here to rescue us?"
-			"Please, Samson is so upset."
+			SELF "Are you here to rescue us? Please, Samson is so upset."
 		}
 		set entity "%SELF%" on_tick to face-player;
 	}
@@ -244,9 +267,9 @@ interact-ch2-vendingmachine {
 			show dialog {
 				entity "Sea Moss" "Oh, for sure."
 			}
-			turn entity "%PLAYER%" toward entity Vending;
+			turn entity "%PLAYER%" toward entity "vend machine";
 			show dialog {
-				PLAYER "But... why are they being stocked in a vending machine? Do people like to eat RAM?"
+				PLAYER "But why are they being stocked in a vending machine? Do people like to eat RAM?"
 			}
 			turn entity "%PLAYER%" toward entity "Sea Moss";
 			show dialog {
@@ -403,12 +426,12 @@ ch2-seamoss-summon-chips {
 	}
 	wait 850ms;
 	// bag of RAM chips appears in front of the vending machine
-	set entity "RAM Chips" name to "RAM Chips";
-	teleport entity "RAM Chips" to geometry ch2-chips-slide;
+	set entity "RAM chips" name to "RAM chips";
+	teleport entity "RAM chips" to geometry ch2-chips-slide;
 	// hovers for a moment
 	wait 500ms;
 	// then slides downward gently
-	walk entity "RAM Chips" to geometry ch2-chips-land over 400ms;
+	walk entity "RAM chips" to geometry ch2-chips-land over 400ms;
 	wait 1300ms;
 	show dialog {
 		PLAYER "Oh my god."
@@ -428,8 +451,8 @@ ch2-seamoss-summon-chips {
 /* ---------- RAMCHIPS (ADMIN) ---------- */
 
 ch2-hide-ramchips {
-	teleport entity "RAM Chips" to geometry hiding-spot;
-	set entity "RAM Chips" name to " ";
+	teleport entity "RAM chips" to geometry hiding-spot;
+	set entity "RAM chips" name to " ";
 	// ^^ when viewed with hex editor its name will appear blank
 	// (you must still target this entity with its original name, though)
 }

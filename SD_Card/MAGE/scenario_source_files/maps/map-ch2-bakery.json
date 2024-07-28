@@ -361,6 +361,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -398,7 +403,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":20,
                  "name":"Sink",
@@ -416,7 +421,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":21,
                  "name":"Bread",
@@ -434,7 +439,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":22,
                  "name":"Bread",
@@ -452,7 +457,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":23,
                  "name":"Bread",
@@ -470,7 +475,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":24,
                  "name":"Bread",
@@ -488,7 +493,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":25,
                  "name":"Bread",
@@ -506,7 +511,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":26,
                  "name":"Bread",
@@ -524,7 +529,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":27,
                  "name":"Bread",
@@ -542,7 +547,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":28,
                  "name":"Bread",
@@ -560,7 +565,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":29,
                  "name":"Bread",
@@ -578,7 +583,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":30,
                  "name":"Bread",
@@ -596,7 +601,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":31,
                  "name":"Bread",
@@ -614,7 +619,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":32,
                  "name":"Bread",
@@ -632,7 +637,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":33,
                  "name":"Bread",
@@ -650,7 +655,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":34,
                  "name":"Bread",
@@ -668,7 +673,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":35,
                  "name":"Bread",
@@ -686,7 +691,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":243,
+                 "gid":255,
                  "height":32,
                  "id":36,
                  "name":"Bread",
@@ -705,7 +710,7 @@
             
                 {
                  "class":"",
-                 "gid":258,
+                 "gid":270,
                  "height":32,
                  "id":48,
                  "name":"Jackob",
@@ -762,12 +767,6 @@
  "nextlayerid":7,
  "nextobjectid":52,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":""
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,
@@ -785,11 +784,11 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":243,
+         "firstgid":255,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":245,
+         "firstgid":257,
          "source":"..\/entities\/entity-village_elder.json"
         }],
  "tilewidth":32,

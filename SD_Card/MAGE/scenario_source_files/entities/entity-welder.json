@@ -1,11 +1,11 @@
 { "columns":3,
  "image":"entity-welder.png",
- "imageheight":256,
+ "imageheight":352,
  "imagewidth":96,
  "margin":0,
  "name":"entity-welder",
  "spacing":0,
- "tilecount":24,
+ "tilecount":33,
  "tiledversion":"1.9.2",
  "tileheight":32,
  "tiles":[
@@ -257,6 +257,130 @@
                 }],
          "class":"welder",
          "id":23
+        }, 
+        {
+         "class":"welder",
+         "id":24
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":10,
+                 "tileid":25
+                }, 
+                {
+                 "duration":10,
+                 "tileid":25
+                }],
+         "class":"welder",
+         "id":25
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":26
+                }, 
+                {
+                 "duration":200,
+                 "tileid":29
+                }, 
+                {
+                 "duration":200,
+                 "tileid":32
+                }],
+         "class":"welder",
+         "id":26
+        }, 
+        {
+         "class":"welder",
+         "id":27
+        }, 
+        {
+         "class":"welder",
+         "id":28
+        }, 
+        {
+         "class":"welder",
+         "id":29
+        }, 
+        {
+         "class":"welder",
+         "id":30
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":25
+                }, 
+                {
+                 "duration":150,
+                 "tileid":28
+                }, 
+                {
+                 "duration":400,
+                 "tileid":31
+                }, 
+                {
+                 "duration":150,
+                 "tileid":28
+                }, 
+                {
+                 "duration":150,
+                 "tileid":25
+                }],
+         "class":"welder",
+         "id":31
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":300,
+                 "tileid":32
+                }, 
+                {
+                 "duration":300,
+                 "tileid":29
+                }, 
+                {
+                 "duration":300,
+                 "tileid":32
+                }, 
+                {
+                 "duration":800,
+                 "tileid":29
+                }, 
+                {
+                 "duration":300,
+                 "tileid":32
+                }, 
+                {
+                 "duration":300,
+                 "tileid":29
+                }, 
+                {
+                 "duration":300,
+                 "tileid":32
+                }, 
+                {
+                 "duration":300,
+                 "tileid":29
+                }, 
+                {
+                 "duration":300,
+                 "tileid":32
+                }, 
+                {
+                 "duration":300,
+                 "tileid":29
+                }, 
+                {
+                 "duration":300,
+                 "tileid":32
+                }],
+         "class":"welder",
+         "id":32
         }],
  "tilewidth":32,
  "type":"tileset",

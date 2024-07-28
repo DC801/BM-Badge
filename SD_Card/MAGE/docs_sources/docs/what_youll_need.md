@@ -4,15 +4,15 @@ tags: [ 'VSCode', 'VS Code', 'Visual Studio Code', 'word processor', 'mac', 'win
 
 # What You'll Need
 
-The MGE is data driven, meaning you won't need special hardware or a compiler to generate game content for your DC801 black mage badge. All you'll need are:
+The MGE is data driven, meaning you won't need special hardware or a compiler to generate game content for your Black Mage Badge. All you'll need are:
 
 ## Text Editor
 
-You will need a text editor. (NOTE: a word processor like Apple's Pages or Microsoft Word will not work for this!)
+You will need a text editor. (NOTE: a word processor like Apple's Pages or Microsoft Word will not suffice!)
 
-While any text editor might do the trick, we strongly recommend an IDE with project management features like syntax parsing and Git integration. Our strong recommendation, especially for beginners, is [Visual Studio Code](https://code.visualstudio.com/) (Mac, Linux, or Windows), which is free and open source. Importantly, we have prepared a VSCode Marketplace plugin for [MGS Natlang](mgs/mgs_natlang) [syntax highlighting](mgs/mgs_natlang#syntax-colors), which will make it much easier to work with MGS game script files.
+What will work best is an IDE with project management features like syntax parsing and Git integration. Our recommendation, especially for beginners, is [Visual Studio Code](https://code.visualstudio.com/) (Mac, Linux, or Windows), which is free and open source. Importantly, we have prepared a VSCode Marketplace plugin for [MGS Natlang](mgs/mgs_natlang) [syntax highlighting](mgs/mgs_natlang#syntax-colors), which will make it much easier to work with MGS game script files.
 
-`.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](mgs/mgs_natlang#syntax-colors) for up-to-date details and instructions.) The following can manage decent support as of late 2023:
+`.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](mgs/mgs_natlang#syntax-colors) for up-to-date details and instructions.) The following can manage decent support as of mid 2024:
 
 - [Sublime Text](https://sublimetext.com)
 - [JetBrains' IDEs](https://www.jetbrains.com/) (excellent IDE but not inexpensive)
@@ -20,7 +20,7 @@ While any text editor might do the trick, we strongly recommend an IDE with proj
 
 ## Graphics Editor
 
-Any graphics program capable of pixel art can be used to make sprite sheets or [tilesets](tilesets). But if you need custom [animation](animations), we highly recommend investing in [Aseprite](https://www.aseprite.org/), which is about $20. It specializes in sprite animations, and it makes previewing animations and exporting sprite sheets quite painless.
+Any graphics program capable of pixel art can be used to make sprite sheets or [tilesets](tilesets). But if you need custom [animation](animations), we recommend investing in [Aseprite](https://www.aseprite.org/), which is about $20. It specializes in sprite animations, and it makes previewing animations and exporting sprite sheets quite painless.
 
 If you don't want to make art from scratch, a good source of premade tilesets is [OpenGameArt.org](https://OpenGameArt.org).
 
@@ -34,7 +34,7 @@ Newer versions of Tiled use a slightly different file structure that is not comp
 
 ## Git
 
-~~While strictly optional, it's always nice to version control your projects,~~ If you are not using Git to version control your projects, you bring dishonor and suffering on your house, especially if working with multiple people. We recommend [Sublime Merge](https://www.sublimemerge.com/) if you're just getting started with Git, particularly if you're using VSCode, as VSCode's version control interface is fairly bare bones. If you're already using one of [JetBrains' IDEs](https://www.jetbrains.com/), you can use their excellent built-in Git tools.
+~~While strictly optional, it's always nice to version control your projects,~~ If you are not using Git to version control your projects, you bring dishonor and suffering on your house, especially if working with multiple people. We recommend [Sublime Merge](https://www.sublimemerge.com/) if you're just getting started with Git, particularly if you're using VSCode, as VSCode's version control interface is limited. If you're already using one of [JetBrains' IDEs](https://www.jetbrains.com/), you can use their excellent built-in Git tools.
 
 ## Web Browser
 
@@ -56,7 +56,7 @@ To put a new `game.dat` onto the badge, you'll need a microSD card formatted to 
 
 ## Linux (optional)
 
-The tools listed above can be run in any environment, but at the moment (late 2023), you need Linux to run the game natively on your computer.
+The tools listed above can be run in any environment, but at the moment (mid 2024), you need Linux to run the game natively on your computer.
 
 A virtual machine will be sufficient for this. For your convenience, we have prepared a VM image with project files and tooling in place for you to start a new MGE project (see: [MGE VM](mge_vm)) — but know that you will likely need to update everything, as the VM was prepared for the chapter 1 engine.
 

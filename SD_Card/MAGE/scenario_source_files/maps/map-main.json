@@ -2861,17 +2861,6 @@
  "nextlayerid":10,
  "nextobjectid":317,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":"on_load-map-main"
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-main"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,

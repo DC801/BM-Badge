@@ -1,39 +1,35 @@
-{ "columns":4,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
+{ "columns":5,
  "image":"entity-journal.png",
  "imageheight":16,
- "imagewidth":64,
+ "imagewidth":80,
  "margin":0,
  "name":"entity-journal",
  "spacing":0,
- "tilecount":4,
- "tiledversion":"1.4.3",
+ "tilecount":5,
+ "tiledversion":"1.9.2",
  "tileheight":16,
  "tiles":[
         {
-         "id":0,
-         "type":"journal"
+         "class":"journal",
+         "id":0
         }, 
         {
-         "id":1,
-         "type":"journal"
+         "class":"journal",
+         "id":1
         }, 
         {
-         "id":2,
-         "type":"journal"
+         "class":"journal",
+         "id":2
         }, 
         {
-         "id":3,
-         "type":"parchment"
+         "class":"parchment",
+         "id":3
+        }, 
+        {
+         "class":"journal",
+         "id":4
         }],
  "tilewidth":16,
  "type":"tileset",
- "version":1.4
+ "version":"1.9"
 }

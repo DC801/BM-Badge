@@ -449,7 +449,7 @@
 		"emotes": {
 			"default": {
 				"tileid": 15,
-				"flip_x": false
+				"flip_x": true
 			}
 		}
 	},
@@ -677,6 +677,51 @@
 		"emotes": {
 			"default": {
 				"tileid": 34,
+				"flip_x": true
+			}
+		}
+	},
+	"npc05": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 38,
+				"flip_x": true
+			}
+		}
+	},
+	"npc04": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 39,
+				"flip_x": true
+			}
+		}
+	},
+	"npc01": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 40,
+				"flip_x": true
+			}
+		}
+	},
+	"welder": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 42,
+				"flip_x": true
+			}
+		}
+	},
+	"npc02": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 41,
 				"flip_x": true
 			}
 		}

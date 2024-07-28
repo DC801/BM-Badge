@@ -6,10 +6,63 @@ look-ch2-lodge-rtfm {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around at the <c>RTFM ROOM</>."
-		"\tThe books in this room seem older than those in the rest of the library. More leather bindings, more handwritten pages. The air is mustier, but it's not unpleasant."
+		"\tThe books in this room seem older than those in the rest of the library. More leather bindings, more handwritten pages. The air is mustier, but not in an unpleasant way."
 		" "
 	}
 }
+
+look-ch2-hackbook {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tWorn, and apparently forgotten. It's splayed on the ground as if it had been knocked down unknowingly."
+	}
+}
+
+look-ch2-bitsbytes {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThe cover is crisp and clean as if the book were brand new. The bright and simple geometric design on the cover is the epitome of a textbook choosing to not commit to its subject."
+	}
+}
+
+look-ch2-entities {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThe page edges are misaligned as if the book were bound by hand. The gold leaf lettering on the cover certainly looks hand done. It's one of a set of four."
+	}
+}
+
+look-ch2-hexediting {
+	show serial dialog spacer;
+	show serial dialog books-extra { // referred to elsewhere
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThis tome resembles the hand-made \"Entities\" books, but this one was more neatly constructed and is less worn. It's one of a set of two."
+	}
+}
+
+look-ch2-hexediting2 {
+	show serial dialog spacer;
+	show serial dialog books-extra;
+}
+
+look-ch2-redletters {
+	show serial dialog spacer;
+	show serial dialog red-letter-pamphlet{ // referred to elsewhere
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThis sheet -- and its nearby counterpart -- are ripped on the left side, as if torn from a bound book. The paper is yellowed, particularly on the edges, and the ink is smeared in places."
+		"\tSome words are written in an ominous red."
+	}
+}
+
+look-ch2-bookorigins {
+	show serial dialog spacer;
+	show serial dialog red-letter-pamphlet;
+}
+
+
 
 /* ---------- ON_LOAD ---------- */
 

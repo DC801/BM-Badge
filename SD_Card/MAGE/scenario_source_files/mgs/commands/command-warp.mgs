@@ -89,10 +89,12 @@ register-warp {
 	register warp + "beatrice's house" -> warp-ch2-oldcouplehouse;
 	register warp + "beatrices house" -> warp-ch2-oldcouplehouse;
 	register warp + "beatrice house" -> warp-ch2-oldcouplehouse;
+	register warp + "bea" -> warp-ch2-oldcouplehouse;
 
 	register warp + "smith's house" -> warp-ch2-smithfamily;
 	register warp + "smiths house" -> warp-ch2-smithfamily;
 	register warp + "smith house" -> warp-ch2-smithfamily;
+	register warp + "smith" -> warp-ch2-smithfamily;
 }
 
 // MAN PAGE
@@ -106,7 +108,7 @@ man-warp {
 		" "
 		"To see a list of valid warp desinations, use <c>WARP</> on its own (without a room name)."
 		" "
-		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle dungeon wireless base station."
+		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle wireless base station."
 	}
 }
 
@@ -188,7 +190,7 @@ warp-ch2-13 {
 }
 warp-ch2-14 {
 	copy warp-common;
-	load map ch2-castle-14;
+	copy ch2-load-castle-14-special;
 }
 warp-ch2-21 {
 	copy warp-common;

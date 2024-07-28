@@ -1,4 +1,5 @@
 include!("header.mgs")
+const!($lightsdefault = ch2-serial-light-manager)
 
 /* ---------- LOOK SCRIPTS ---------- */
 
@@ -8,6 +9,14 @@ look-ch2-castle-33 {
 		"You looked around the <c>HYDROPONICS ROOM</>."
 		"\tThis room is sweetly humid and surprisingly cold. The faint buzz of the lights compete with a dripping noise coming from the pipes tucked into the rims of each box. You catch a whiff of leafy green onion."
 		" "
+	}
+}
+
+look-ch2-gregory {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe cat is gray around the whiskers, but he moves with energy and precision. He appears happy to be receiving a visitor."
 	}
 }
 
@@ -27,7 +36,6 @@ on_load-ch2-castle-33 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-33-up;
 	if (
 		flag ch2-installed-mouse is true
 		|| flag ch2-carrying-mouse is true
@@ -46,13 +54,24 @@ on_load-ch2-castle-33 {
 	copy ch2-map-init;
 	if (flag ch2-cutseen-castle33 is false) {
 		turn player control off;
-		wait 500ms;
-		show dialog {
-			Gregory "Oh!"
-		}
-		turn entity "%PLAYER%" toward entity Gregory;
-		show dialog {
-			Gregory "Well, that's a new face, isn't it?"
+		if (warp state is not warped) {
+			wait 600ms;
+			show dialog {
+				Gregory alignment BR "Oh!"
+			}
+			turn entity "%PLAYER%" toward entity Gregory;
+			show dialog {
+				Gregory alignment BR "Well, that's a new face, isn't it?"
+			}
+		} else {
+			wait 200ms;
+			show dialog {
+				Gregory alignment TR "Oh!"
+			}
+			turn entity "%PLAYER%" toward entity Gregory;
+			show dialog {
+				Gregory alignment TR "Well, that's a new face, isn't it?"
+			}
 		}
 		turn player control on;
 		set flag ch2-cutseen-castle33 to true;
@@ -120,7 +139,7 @@ ch2-interact-gregory-breakyes {
 		SELF "I'll take the mouse proximity detector back then, then."
 	}
 	set flag ch2-mousegame to false;
-	turn lights control off;
+	copy ch2-map-init-hex;
 	show dialog {
 		SELF "Let me know when you want to have another go."
 	}
@@ -229,23 +248,25 @@ ch2-interact-gregory {
 				SELF "We are indeed."
 			}
 			turn player control off;
+			set entity Gregory on_tick to null_script;
 			rotate entity Gregory 1;
 			wait 800ms;
-			copy script face-player;
+			rotate entity Gregory -1;
+			set entity Gregory on_tick to face-player;
 			show dialog {
 				SELF "Here, this is a bluetooth proximity detector. It's got eight lights that will turn on depending on how close you are to the mouse."
 				PLAYER "Eight lights?"
 			}
 			turn lights control on;
 			turn light ALL off;
-			set entity Gregory on_tick to screen-lights-flash-bits;
+			set entity Lights on_tick to screen-lights-flash-bits;
 			show dialog {
 				SELF "Yes, these eight lights in a line, here along the bottom. You see?"
 				PLAYER "Um..."
 				SELF "The more lights come on, the closer you are to finding it. Walk around a bit and see for yourself."
 			}
-			turn lights control off;
-			set entity Gregory on_tick to face-player;
+			copy ch2-map-init-hex;
+			set entity Lights on_tick to $lightsdefault;
 			show dialog {
 				SELF "Well, let me know when you want to have a go, anyway."
 			}
@@ -326,7 +347,7 @@ ch2-touch-mouse {
 		turn entity "%PLAYER%" toward entity Gregory;
 		fade in camera from black over 400ms;
 		turn on player control;
-		turn lights control off;
+		copy ch2-map-init-hex;
 		copy script ch2-hide-mouse;
 		copy script ch2-pickup-mouse;
 		show dialog {

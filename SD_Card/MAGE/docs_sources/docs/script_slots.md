@@ -53,14 +53,12 @@ These are useful for identifying and re-implementing the "permanent" changes the
 
 `look` on its own triggers the maps's `on_look` script. `look` + the [current name](variables#printing-current-values) of an entity will trigger that entity's `on_look` script.
 
-If multiple entities in a map have the same **given name** (the name assigned to that entity within Tiled), and one or more of those entities have had their name changed, `look`ing at any of them will use the current name of the first entity the map found with the shared **given name**.
-
 `on_look` scripts can be overridden with a manual [command](commands) registration.
 
 ## One Slot, One Script
 
-Importantly, a script slot can only run one script — if a script jumps to another script (either with [RUN_SCRIPT](actions/RUN_SCRIPT) or by [script jumping via some kind of logic check](conditional_gotos)) the current script is *completely abandoned* and the new script is run instead. It is therefore important to check the order in which actions are given, as any action listed after a script change will be ignored.
+Importantly, a script slot can only run one script — if a script jumps to another script (either with [RUN_SCRIPT](actions/RUN_SCRIPT) or by [script jumping via some kind of logic check](conditional_gotos)) the current script is *completely abandoned* and the new script is run instead. It is therefore important to check the order in which actions are given, as any action listed after a script jump will be ignored.
 
-There is no nested callback structure, no child function returning something to its parent function, nor anything like that.
+There is no call stack — no means for a script to jump to another script and then pick back up where it left off.
 
-Nor is it possible to do more than one logic check simultaneously. If you want to check multiple conditions at once, you must branch to a different script for each aspect of the fail condition and let the remainder of the original script contain the actions for the success condition. [MGS Natlang](mgs/mgs_natlang) simplifies this a little bit by allowing multiple conditions to be written per behavior block, but these conditions can only be linked with OR (`||`) not AND (`&&`) for this reason; the [if and else](mgs/advanced_syntax#if-and-else) macro expands each OR condition into an individual logic check and jump, jumping to a common [label](mgs/advanced_syntax#labels) index for all shared `{}` behavior.
+Nor is it possible to do more than one logic check simultaneously. If you want to check multiple conditions at once, you must branch to a different script for each aspect of the fail condition and let the remainder of the original script contain the actions for the success condition. [MGS Natlang](mgs/mgs_natlang) simplifies this by allowing multiple conditions to be written per behavior block, but these conditions can only be linked with OR (`||`) not AND (`&&`) for this reason.

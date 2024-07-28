@@ -68,6 +68,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -111,6 +116,11 @@
                          "value":"interact-ch2-cat-lodge"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-cat-lodge"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":""
@@ -151,6 +161,11 @@
                          "value":"interact-ch2-timmy"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-timmy"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":""
@@ -172,6 +187,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-sportsbook"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-sportsbook"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -208,6 +228,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-dejavu"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-dejavu"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -289,6 +314,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-manual"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-manual"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -439,17 +469,6 @@
  "nextlayerid":9,
  "nextobjectid":131,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":""
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":""
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,

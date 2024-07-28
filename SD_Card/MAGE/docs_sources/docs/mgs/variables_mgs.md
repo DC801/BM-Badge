@@ -19,8 +19,7 @@ For the example syntax `entity $string`:
 
 ```
 entity Alice       // variable value = "Alice"
-entity Bob         // variable value = "Bob"
-entity Charlie     // variable value = "Charlie"
+entity "Bob"       // variable value = "Bob"
 entity "Tom Honks" // variable value = "Tom Honks"
                    // for all, variable type = string
 ```

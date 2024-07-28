@@ -1,5 +1,10 @@
 {
-	"main_menu": "maps/map-main_menu.json",
+	"main_menu": {
+		"path": "maps/map-ch2-menu.json",
+		"on_load": "on_load-main_menu",
+		"on_tick": "on_tick-main_menu",
+		"disable_warn-on_look": true
+	},
 	"ch2-castle-outside": {
 		"path": "maps/map-ch2-castle-outside.json",
 		"on_load": "on_load-ch2-castle-outside",
@@ -54,6 +59,15 @@
 	},
 	"ch2-castle-14": {
 		"path": "maps/map-ch2-castle-14.json",
+		"on_load": "on_load-ch2-castle-14",
+		"on_look": "look-ch2-castle-14",
+		"on_tick": "on_tick-ch2-castle-14",
+		"directions": {
+			"south": "on_go-castle-14-south"
+		}
+	},
+	"ch2-castle-14-doorless": {
+		"path": "maps/map-ch2-castle-14-doorless.json",
 		"on_load": "on_load-ch2-castle-14",
 		"on_look": "look-ch2-castle-14",
 		"on_tick": "on_tick-ch2-castle-14",
@@ -185,6 +199,7 @@
 			"west": "on_go-ch2-town-west",
 			"home": "on_go-ch2-town-home",
 			"bakery": "on_go-ch2-town-bakery",
+			"library": "on_go-ch2-town-library",
 			"greenhouse": "on_go-ch2-town-greenhouse",
 			"smith": "on_go-ch2-town-smith",
 			"beatrice": "on_go-ch2-town-beatrice",
@@ -287,20 +302,74 @@
 		"path": "maps/map-bling-dc801.json",
 		"on_load": "on_load-bling-dc801"
 	},
-	"demo": "maps/map-demo.json",
-	"main": "maps/map-main.json",
-	"bobsclub": "maps/map-bobsclub.json",
-	"test": "maps/map-test.json",
-	"town": "maps/map-town.json",
-	"oldcouplehouse": "maps/map-oldcouplehouse.json",
-	"bakery": "maps/map-bakery.json",
-	"family": "maps/map-family.json",
-	"magehouse": "maps/map-magehouse.json",
-	"lodge": "maps/map-lodge.json",
-	"greenhouse": "maps/map-greenhouse.json",
-	"secretroom": "maps/map-secretroom.json",
+	"bling-digi-mage2": {
+		"path": "maps/map-bling-digi-mage2.json",
+		"on_load": "on_load-bling-digi-mage2"
+	},
+	"bling-dc801-2": {
+		"path": "maps/map-bling-dc801-2.json",
+		"on_load": "on_load-bling-dc801-2"
+	},
+	"demo": {
+		"path": "maps/map-demo.json",
+		"on_load": "show_dialog-timewarp"
+	},
+	"main": {
+		"path": "maps/map-main.json",
+		"on_load": "on_load-map-main",
+		"on_tick": "on_tick-main"
+	},
+	"bobsclub": {
+		"path": "maps/map-bobsclub.json",
+		"on_load": "on_load-bobsclub1",
+		"on_tick": "on_tick-bobsclub"
+	},
+	"test": {
+		"path": "maps/map-test.json",
+		"on_load": "my_first_script"
+	},
+	"town": {
+		"path": "maps/map-town.json",
+		"on_load": "on_load-east_west",
+		"on_tick": "on_tick-town"
+	},
+	"oldcouplehouse": {
+		"path": "maps/map-oldcouplehouse.json",
+		"on_load": "on_load-oldcouplehouse",
+		"on_tick":"on_tick-oldcouplehouse" 
+	},
+	"bakery": {
+		"path": "maps/map-bakery.json",
+		"on_tick": "on_tick-bakery"
+	},
+	"family": {
+		"path": "maps/map-family.json",
+		"on_load": "on_load-family",
+		"on_tick": "on_tick-family"
+	},
+	"magehouse": {
+		"path": "maps/map-magehouse.json",
+		"on_load": "on_load-magehouse",
+		"on_tick": "on_tick-magehouse"
+	},
+	"lodge": {
+		"path": "maps/map-lodge.json",
+		"on_load": "on_load-lodge",
+		"on_tick": "on_tick-lodge"
+	},
+	"greenhouse": {
+		"path": "maps/map-greenhouse.json",
+		"on_load": "on_load-greenhouse",
+		"on_tick": "on_tick-greenhouse"
+	},
+	"secretroom": {
+		"path": "maps/map-secretroom.json",
+		"on_load": "on_load-secretroom",
+		"on_tick": "on_tick-secretroom"
+	},
 	"warp_zone": {
 		"path": "maps/map-warp_zone.json",
+		"on_tick": "map_on_tick-doors",
 		"directions": {
 			"main": "load_map-main",
 			"test": "load_map-test",
@@ -311,17 +380,26 @@
 			"testbig": "load_map-testbig"
 		}
 	},
-	"testbig": "maps/map-testbig.json",
-	"credits": "maps/map-credits.json",
+	"testbig": {
+		"path": "maps/map-testbig.json"
+	},
+	"credits": {
+		"path": "maps/map-credits.json",
+		"on_tick": "on_tick-credits"
+	},
 	"credits2": {
 		"path": "maps/map-credits2.json",
 		"on_tick": "on_tick-ch2-credits"
 	},
 	"woprhouse": {
 		"path": "maps/map-woprhouse.json",
+		"on_load": "on_load-woprhouse",
+		"on_tick": "on_tick-woprhouse",
 		"directions": {
 			"north": "on_go-woprhouse-north"
 		}
 	},
-	"action_testing_02": "maps/map-action_testing_02.json"
+	"action_testing_02": {
+		"path": "maps/map-action_testing_02.json"
+	}
 }

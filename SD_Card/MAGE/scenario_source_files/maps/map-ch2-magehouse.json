@@ -64,6 +64,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -73,7 +78,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484017,
+                 "gid":2147484029,
                  "height":48,
                  "id":11,
                  "name":"Aunt Zippy",
@@ -101,7 +106,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484053,
+                 "gid":2147484065,
                  "height":48,
                  "id":12,
                  "name":"Uncle Zappy",
@@ -134,7 +139,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":441,
+                 "gid":453,
                  "height":32,
                  "id":25,
                  "name":"Mr. Tickles",
@@ -167,7 +172,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":452,
+                 "gid":464,
                  "height":16,
                  "id":27,
                  "name":"Mage Journal",
@@ -176,6 +181,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-magejournal"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-magejournal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -185,15 +195,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":455,
+                 "gid":468,
                  "height":32,
                  "id":32,
-                 "name":"Mage Box",
+                 "name":"box",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-magebox"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-magebox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -203,7 +218,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":455,
+                 "gid":468,
                  "height":32,
                  "id":39,
                  "name":"Sink",
@@ -221,15 +236,20 @@
                 }, 
                 {
                  "class":"",
-                 "gid":455,
+                 "gid":468,
                  "height":32,
                  "id":41,
-                 "name":"Microwave",
+                 "name":"microwave",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-microwave-magehouse"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-microwave-magehouse"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -239,7 +259,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":455,
+                 "gid":468,
                  "height":32,
                  "id":47,
                  "name":"Mage Facts",
@@ -257,7 +277,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":441,
+                 "gid":453,
                  "height":32,
                  "id":61,
                  "name":"Chaos Fish",
@@ -280,7 +300,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":475,
+                 "gid":488,
                  "height":32,
                  "id":66,
                  "name":"Cake",
@@ -289,6 +309,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-cake"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-cake"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -329,8 +354,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":334,
-                 "y":137
+                 "x":333,
+                 "y":113
                 }, 
                 {
                  "class":"",
@@ -361,7 +386,7 @@
                  "id":3,
                  "name":"south-hitbox",
                  "rotation":0,
-                 "visible":true,
+                 "visible":false,
                  "width":30,
                  "x":353,
                  "y":288
@@ -375,8 +400,28 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":437,
-                 "y":267
+                 "x":436,
+                 "y":251
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":71,
+                 "name":"doorwalk",
+                 "polyline":[
+                        {
+                         "x":-1,
+                         "y":1
+                        }, 
+                        {
+                         "x":-1,
+                         "y":-27
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":368,
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -430,19 +475,8 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":71,
+ "nextobjectid":72,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":""
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":""
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,
@@ -464,47 +498,47 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":303,
+         "firstgid":315,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":327,
+         "firstgid":339,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":351,
+         "firstgid":363,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":369,
+         "firstgid":381,
          "source":"..\/entities\/entity-lightning_boy.json"
         }, 
         {
-         "firstgid":405,
+         "firstgid":417,
          "source":"..\/entities\/entity-lightning_boy2.json"
         }, 
         {
-         "firstgid":441,
+         "firstgid":453,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":451,
+         "firstgid":463,
          "source":"..\/entities\/entity-journal.json"
         }, 
         {
-         "firstgid":455,
+         "firstgid":468,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":457,
+         "firstgid":470,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":459,
+         "firstgid":472,
          "source":"..\/entities\/entity-cake.json"
         }, 
         {
-         "firstgid":461,
+         "firstgid":474,
          "source":"..\/entities\/entity-cake2.json"
         }],
  "tilewidth":32,

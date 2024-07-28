@@ -193,6 +193,9 @@ ch2-start-round-2 {
 	wait 200ms;
 	show serial dialog spacer;
 	show serial dialog { " (DING)" }
+	set flag ch2-lambda-paging to true;
+	set flag ch2-cutseen-bert-secret to true;
+	mutate ch2-storyflag-round = 2;
 	wait 900ms;
 	show dialog {
 		PLAYER "...? Did I just hear some kind of digital sound effect?"
@@ -202,9 +205,6 @@ ch2-start-round-2 {
 	show serial dialog {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
-	set flag ch2-lambda-paging to true;
-	set flag ch2-cutseen-bert-secret to true;
-	mutate ch2-storyflag-round = 2;
 	turn player control on;
 }
 ch2-start-round-3 {
@@ -226,6 +226,9 @@ ch2-start-round-3 {
 	show serial dialog {
 		" (DING)"
 	}
+	set flag ch2-cutseen-bert-message to true;
+	set flag ch2-lambda-paging to true;
+	mutate ch2-storyflag-round = 3;
 	wait 700ms;
 	show dialog {
 		PLAYER "...? Oh, that's the terminal bell. I guess Lambda is calling me."
@@ -234,9 +237,6 @@ ch2-start-round-3 {
 	show serial dialog {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
-	set flag ch2-cutseen-bert-message to true;
-	set flag ch2-lambda-paging to true;
-	mutate ch2-storyflag-round = 3;
 	turn player control on;
 }
 ch2-start-round-4 {
@@ -244,6 +244,9 @@ ch2-start-round-4 {
 	show serial dialog {
 		" (DING)"
 	}
+	set flag ch2-cutseen-last-parts-done to true;
+	set flag ch2-lambda-paging to true;
+	mutate ch2-storyflag-round = 4;
 	wait 700ms;
 	show dialog {
 		PLAYER "...! Oh, the terminal bell. That scared me."
@@ -253,9 +256,6 @@ ch2-start-round-4 {
 	show serial dialog {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
-	set flag ch2-cutseen-last-parts-done to true;
-	set flag ch2-lambda-paging to true;
-	mutate ch2-storyflag-round = 4;
 	// show serial dialog { "\t<g>DEBUG: Lambda invites you to room #99 cutscene! (Round 4)</>" }
 	// show serial dialog { "\t<g>DEBUG: the Wiz installs thing! More cutscene I guess!</>" }
 }
@@ -341,5 +341,35 @@ ch2-debug-storyflag-log {
 	show serial dialog spacer;
 	show serial dialog {
 		"Flag 'ch2-storyflag-round' is now $ch2-storyflag-round$"
+	}
+}
+
+const!($time = 200ms)
+ch2-serial-light-manager {
+	if (serial dialog is open) {
+		// solid light while in a serial dialog (interactable)
+		turn light LED_USB on;
+	} else if (flag ch2-lambda-paging is true) {
+		// blinking light while Lambda wants to talk to you
+		if (flag ch2-lambda-paging-pulsar is true) {
+			set flag ch2-lambda-paging-pulsar to false;
+			turn light LED_USB off;
+		} else {
+			set flag ch2-lambda-paging-pulsar to true;
+			turn light LED_USB on;
+		}
+		wait $time;
+	} else if (flag ch2-mousegame is true) {
+		// if flag ch2-mousegame is true, turn off and wait for it to be false before resuming above behavior
+		goto ch2-serial-light-manager-mouse;
+	} else {
+		// no light otherwise
+		turn light LED_USB off;
+	}
+}
+
+ch2-serial-light-manager-mouse {
+	if (flag ch2-mousegame is false) {
+		goto ch2-serial-light-manager;
 	}
 }

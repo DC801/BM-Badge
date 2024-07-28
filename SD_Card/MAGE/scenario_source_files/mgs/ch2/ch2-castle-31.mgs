@@ -40,6 +40,15 @@ look-ch2-speaker {
 	}
 }
 
+look-ch2-drum {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe \"1023 MB\" logo is surprisingly well done, with its thoughtful serifs and clean linework. The professional logo and the aggressive red of the drumset make a strange contrast with the ragtag musicians."
+	}
+}
+
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-31 {
@@ -56,7 +65,6 @@ on_load-ch2-castle-31 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-31-up;
 	if (
 		flag ch2-installed-keyboard is true
 		|| flag ch2-carrying-keyboard is true
@@ -183,12 +191,12 @@ interact-ch2-simon {
 				"I sort of need one for --"
 			}
 			set entity Simon current_animation to 13;
-			set entity Lights on_tick to camera-angry-shake;
+			set entity Alvin on_tick to camera-angry-shake;
 			show dialog {
 				Simon emote 2 "WHOA WHOA WHOA hey, hands off! I'm not just going to give you my precious Rosetta!"
 				PLAYER "(Rosetta?)"
 			}
-			set entity Lights on_tick to null_script;
+			set entity Alvin on_tick to null_script;
 			set entity Simon current_animation to 0;
 			show dialog {
 				Simon emote 1 "But hey, you know what? I'll give you the chance to prove you deserve this beauty."

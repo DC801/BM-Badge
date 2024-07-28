@@ -20,7 +20,7 @@ settings for dialog {
 }
 ```
 
-#### Behavior
+## Behavior
 
 Dialog settings are applied to [dialogs](../dialogs) in order as the parser encounters them; a dialog settings block partway down the file will affect only the dialogs afterward, and none before.
 
@@ -31,4 +31,6 @@ Dialog settings are applied to [dialogs](../dialogs) in order as the parser enco
 - Dialog label settings will override entity settings.
 - Properties given in a dialog's body will override any other settings, however.
 
-Settings only apply to multiple files with the use of [`include!()`](advanced_syntax#include).
+## Dialog Settings are Local!
+
+Settings only apply to scripts within the same file! (They are not global.) They can only apply to multiple files with the use of [`include!()`](advanced_syntax#include).

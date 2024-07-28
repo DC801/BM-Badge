@@ -28,6 +28,78 @@ look-ch2-castle-99 {
 	}
 }
 
+look-ch2-lambda-lab {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look lambda (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-xc {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look xc (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-crt {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look crt (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-books {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look books (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-ration {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ration (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-poster {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look poster (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-drawer {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look drawer (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-computer {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look computer (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-lambda-box {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look box (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-99 {
@@ -44,7 +116,6 @@ on_load-ch2-castle-99 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-99-up;
 	teleport camera to geometry camera;
 
 	// cutscene pre-fade :/
@@ -77,12 +148,12 @@ ch2-skip-99 {
 	load map ch2-castle-1;
 }
 
-ch2-lambda-shving_on {
+ch2-lambda-shving_on-tickversion {
 	play entity Lambda animation $toTransparent once;
 	set entity Lambda current_animation to $transparent;
 	goto null_script;
 }
-ch2-lambda-shving_off {
+ch2-lambda-shving_off-tickversion {
 	play entity Lambda animation $toOpaque once;
 	set entity Lambda current_animation to $opaque;
 	goto null_script;
@@ -90,11 +161,17 @@ ch2-lambda-shving_off {
 ch2-lambda-lower {
 	play entity Lambda animation $lowering once;
 	set entity Lambda current_animation to $lowered;
+}
+ch2-lambda-lower-tickversion {
+	copy ch2-lambda-lower;
 	goto null_script;
 }
 ch2-lambda-raise {
 	play entity Lambda animation $raising once;
 	set entity Lambda current_animation to $opaque;
+}
+ch2-lambda-raise-tickversion {
+	copy ch2-lambda-raise;
 	goto null_script;
 }
 ch2-lambda-walkup {
@@ -114,8 +191,7 @@ ch2-cutscene-castle99 {
 	wait 200ms;
 	turn entity "%PLAYER%" north;
 	wait 700ms;
-	set entity Lambda current_animation to $opaque;
-	play entity Lambda animation $raising once;
+	copy ch2-lambda-raise;
 	wait 1100ms;
 	walk entity Lambda to geometry lambda-walk-line over 800ms;
 	set entity Lambda current_animation to $opaque;
@@ -127,20 +203,18 @@ ch2-cutscene-castle99 {
 		Lambda "So... welcome, %PLAYER%. I'm Lambda."
 	}
 	wait 400ms;
-	play entity Lambda animation $lowering once;
-	set entity Lambda current_animation to $lowered;
+	copy ch2-lambda-lower;
 	wait 100ms;
 	show dialog {
 		Lambda emote $opaque_lowered "Oh, I guess you already knew that."
 		"Sorry, I...."
 	}
 	wait 600ms;
-	play entity Lambda animation $raising once;
-	set entity Lambda current_animation to $opaque;
+	copy ch2-lambda-raise;
 	show dialog {
 		Lambda "Anyway, what you probably didn't know is that I'm...."
 	}
-	set entity Lambda on_tick to ch2-lambda-shving_on;
+	set entity Lambda on_tick to ch2-lambda-shving_on-tickversion;
 	show dialog {
 		Lambda emote $transparent_serious "...I'm one of the village elders."
 		PLAYER "!!"
@@ -172,27 +246,30 @@ ch2-cutscene-castle99 {
 		Lambda emote $opaque_lowered_almost  "I wiped their memories of me, but I didn't think I would lose my own memories of them, too!"
 	}
 	turn entity Lambda west;
-	set entity Lambda on_tick to ch2-lambda-lower;
+	set entity Lambda on_tick to ch2-lambda-lower-tickversion;
 	show dialog {
 		Lambda emote $opaque_lowered "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
-		"Even the individual people! I'd forgotten how funny -- and so insightful -- Sea Moss is. I forgot how (TODO more people here pls)"
+		"Even the individual people! I'd forgotten how funny -- and insightful -- Sea Moss is."
+		"I forgot how resourceful and inventive Rocco is, and how cool it is that he can make something awesome and functional out of scrap."
+		// todo: more peeps?
+		"All my friends... everyone...."
 	}
 	turn entity Lambda south;
-	set entity Lambda on_tick to ch2-lambda-raise;
+	set entity Lambda on_tick to ch2-lambda-raise-tickversion;
 	show dialog {
-		Lambda emote $opaque_lowered_almost "All these problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
-		"Most of those problems wouldn't have happened. Hell, maybe NONE of them would have happened."
+		Lambda emote $opaque_lowered_almost "These problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
+		"Most of those problems wouldn't have happened. Hell, maybe none of them would have happened."
 	}
 	set entity Lambda on_tick to ch2-lambda-walkup;
 	show dialog {
-		Lambda emote $opaque_lowered_almost  "I've been suffering, but I've been selfish, too, thinking that by closing doors and letting my friends live their lives without me, I was protecting them."
+		Lambda emote $opaque_lowered_almost  "I've been suffering. But I've been selfish, too, thinking that by closing doors and letting my friends live their lives without me, I was protecting them."
 		"I was holding onto my pain like it was concrete proof I was doing the right thing."
 	}
 	show dialog {
 		Lambda "But I was wrong, wasn't I?"
 	}
 	walk entity Lambda to geometry lambda-walk-line2 over 500ms;
-	set entity Lambda on_tick to ch2-lambda-shving_on;
+	set entity Lambda on_tick to ch2-lambda-shving_on-tickversion;
 	show dialog {
 		Lambda emote $transparent_serious "It's better to be connected to people. However dangerous things might become, it's better to face those dangers together."
 		"Don't you think?"
@@ -206,7 +283,7 @@ ch2-cutscene-castle99-dangeryes {
 		PLAYER "Yeah, better to face danger together."
 		Lambda emote $transparent_grin "Yeah!"
 	}
-	set entity Lambda on_tick to ch2-lambda-shving_off;
+	set entity Lambda on_tick to ch2-lambda-shving_off-tickversion;
 	show dialog {
 		Lambda emote $opaque_lowered_almost "So, um, to that end -- here, take this."
 	}
@@ -216,7 +293,7 @@ ch2-cutscene-castle99-dangeridk {
 	show dialog {
 		PLAYER "I don't know."
 	}
-	set entity Lambda on_tick to ch2-lambda-shving_off;
+	set entity Lambda on_tick to ch2-lambda-shving_off-tickversion;
 	show dialog {
 		Lambda "Yeah, I guess things are pretty complicated, aren't they?"
 		Lambda "So, um, anyway -- here, take this."
@@ -259,7 +336,7 @@ ch2-cutscene-castle99-continue {
 	wait 100ms;
 	show dialog {
 		Lambda "Put that in the mainframe's optical drive, and we can get the new OS installed."
-		"Head on back to the XA room. I'll walk you through it from here."
+		"Head on back to the XA room. The Wizard can help you set it all up."
 		PLAYER "You're not going to come with me?"
 	}
 	wait 150ms;
@@ -284,7 +361,6 @@ ch2-cutscene-castle99-continue {
 		Lambda "Go ahead, and I'll help out like before."
 	}
 	turn entity Lambda north;
-	set entity Lambda current_animation to $opaque;
 	turn player control on;
 	set flag ch2-map-mainframeos to false;
 	set flag ch2-carrying-mainframeos to true;
@@ -342,18 +418,24 @@ interact-ch2-lambda-books {
 	}
 }
 
+interact-ch2-lambda-crt {
+	show dialog {
+		PLAYER "TODO on_interact crt"
+	}
+}
+
 interact-ch2-lambda-lab {
 	copy face-player;
 	set entity Lambda current_animation to $opaque;
 	if (variable ch2-storyflag-round is < 5) {
 		show dialog {
-			Lambda "Go ahead, and I'll help from here. Though I think the Wizard will be able to offer most of the help you're likely to need."
+			Lambda "Go ahead, and I'll watch over things from here."
 		}
 	} else {
 		show dialog {
 			Lambda emote $opaque_grin "Hey, good to see you %PLAYER%."
 			Lambda emote $opaque_grin "Don't worry about me -- I'm leaving my cave now and then."
-			Lambda "There's still a lot of administrative work I need to do here, so I'm not entirely free of this place yet."
+			Lambda "There's still a lot of research I need to do here, at this station, so I'm not entirely free of this place yet."
 		}
 	}
 	turn entity "%SELF%" toward entity CRT;

@@ -1,0 +1,22 @@
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,Reference,Value,Package,Source,Datasheet,Quantity
+,,"C2, C4, C7, C8, C9, C11, C12, C13, C14, C16",100n,0603,~,,10
+,,"C1, C3, C10, C15",1u,0603,~,,4
+,,"C5, C6",1pF,0603,~,,2
+,,"R8, R9, R10",1M,0603,~,,3
+,,"R1, R2",27,0603,~,,2
+,,"R4, R7",10k,0603,~,,2
+,,"R3, R5, R6",1k,0603,~,,3
+,,"D3, D4, D5, D6, D7, D8, D9, D10, D11, D12",SK6812SIDE-A,,https://www.lcsc.com/product-detail/Light-Emitting-Diodes-LED_OPSCO-Optoelectronics-SK6812SIDE-A-RVS_C2890037.html,~,10
+,,D1,Schottky,SOD-123,https://www.digikey.com/en/products/detail/micro-commercial-co/SM5819PL-TP/1793253,,1
+,,D2,Red,0402,https://www.lcsc.com/product-detail/Light-Emitting-Diodes-span-style-background-color-ff0-LED-span_Foshan-NationStar-Optoelectronics-NCD0402R1_C130719.html,,1
+,,Q1,DMG2301L,SOT-23,https://www.digikey.com/en/products/detail/diodes-incorporated/DMG2301L-7/5768820,,1
+,,U1,RP2040,QFN56,https://www.lcsc.com/product-detail/Microcontroller-Units-MCUs-MPUs-SOCs_Raspberry-Pi-RP2040_C2040.html,,1
+,,U2,W25Q32JVSS,SOIC-8,https://www.lcsc.com/product-detail/NOR-FLASH_Winbond-Elec-W25Q32JVSSIQ_C179173.html,,1
+,,Y1,ABLS-12.000MHZ-B4-T,,https://www.digikey.com/en/products/detail/abracon-llc/ABLS-12-000MHZ-B4-T/2184161,~,1
+,,"SW1, SW2",SPST,,https://www.lcsc.com/product-detail/Tactile-Switches_TE-Connectivity-1825910-6_C428628.html,,2
+,,J1,2x5 2.54 SMD,,https://www.digikey.com/en/products/detail/amphenol-cs-fci/10129383-910002ALF/7916193,,1
+,,J4,USB Micro Molex,,https://www.digikey.com/en/products/detail/molex/0473460001/1782470?s=N4IgTCBcDaIAwBYDsBmBA2OWCMIC6AvkA,,1
+,,VR1,AP7366-33W5-7,SOT-25,https://www.lcsc.com/product-detail/Linear-Voltage-Regulators-LDO_Diodes-Incorporated-AP7366-33W5-7_C526385.html,~,1

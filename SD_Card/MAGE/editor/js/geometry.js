@@ -206,7 +206,7 @@ var getPathFromGeometry = function (geometry) {
 		geometry.path = result;
 		geometry.geometryType = geometryTypeKeyMap[type];
 	} else {
-		console.warn(`Unsupported Geometry Type: ${type}\n`);
+		console.warn(`Unsupported Geometry Type: ${type}`);
 	}
 	return result;
 };

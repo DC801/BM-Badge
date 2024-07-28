@@ -6,11 +6,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 283, 284, 288, 284, 284, 284, 284, 288, 284, 2147483931, 0,
             0, 299, 300, 304, 300, 289, 2147483937, 300, 304, 300, 2147483947, 0,
-            0, 315, 316, 292, 297, 316, 316, 316, 316, 316, 2147483963, 0,
-            0, 315, 294, 316, 339, 316, 316, 316, 316, 316, 2147483963, 0,
-            0, 315, 372, 296, 329, 296, 296, 293, 339, 333, 2147483953, 0,
-            0, 315, 291, 316, 355, 296, 296, 296, 378, 316, 2147483969, 0,
-            0, 331, 316, 316, 371, 316, 316, 292, 296, 293, 2147483979, 0,
+            0, 315, 294, 316, 292, 3221225845, 312, 293, 316, 332, 2147483963, 0,
+            0, 315, 339, 316, 316, 339, 339, 316, 316, 316, 2147483963, 0,
+            0, 315, 339, 316, 316, 339, 339, 316, 316, 317, 2147483963, 0,
+            0, 315, 371, 316, 316, 339, 339, 316, 316, 316, 2147483969, 0,
+            0, 331, 316, 316, 292, 376, 373, 293, 316, 291, 2147483979, 0,
             0, 347, 348, 348, 348, 353, 2147484001, 349, 349, 348, 2147483995, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
@@ -29,8 +29,8 @@
             0, 0, 0, 0, 370, 2147484034, 2147484033, 0, 0, 0, 0, 0,
             0, 0, 2147484051, 0, 0, 2147484050, 2147484049, 0, 0, 394, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 441, 442, 410, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 385, 0, 0,
-            0, 539, 540, 0, 0, 0, 0, 0, 0, 401, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483953, 0,
+            0, 539, 540, 0, 0, 0, 0, 0, 0, 401, 402, 0,
             0, 555, 556, 387, 0, 290, 2147483938, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -70,7 +70,7 @@
                  "visible":true,
                  "width":32,
                  "x":175,
-                 "y":247
+                 "y":239
                 }, 
                 {
                  "class":"",
@@ -107,7 +107,7 @@
                  "gid":319,
                  "height":32,
                  "id":24,
-                 "name":"Torch 4",
+                 "name":"torch",
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -116,7 +116,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":903,
+                 "gid":935,
                  "height":32,
                  "id":33,
                  "name":"Concierge",
@@ -139,10 +139,10 @@
                 }, 
                 {
                  "class":"",
-                 "gid":908,
+                 "gid":940,
                  "height":40,
                  "id":35,
-                 "name":"Phonograph",
+                 "name":"phonograph",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -165,12 +165,17 @@
                  "gid":281,
                  "height":32,
                  "id":36,
-                 "name":"Guest Book",
+                 "name":"guest book",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-guestbook"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-guest_book"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -183,25 +188,30 @@
                  "gid":559,
                  "height":32,
                  "id":38,
-                 "name":"Stereo",
+                 "name":"stereo",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-stereo-interact"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-stereo"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":224,
-                 "y":108
+                 "x":215,
+                 "y":104
                 }, 
                 {
                  "class":"",
                  "gid":446,
                  "height":32,
                  "id":39,
-                 "name":"Stereo",
+                 "name":"speaker",
                  "rotation":0,
                  "visible":true,
                  "width":32,
@@ -213,12 +223,40 @@
                  "gid":446,
                  "height":32,
                  "id":40,
-                 "name":"Stereo",
+                 "name":"speaker",
                  "rotation":0,
                  "visible":true,
                  "width":32,
                  "x":64,
                  "y":77
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":41,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-84,
+                 "y":-33
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -232,10 +270,10 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 426, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 386, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 402, 0,
-            0, 0, 0, 0, 0, 575, 576, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 591, 592, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 385, 386, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 607, 608, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 623, 624, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
          "id":8,
@@ -282,7 +320,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":41,
+ "nextobjectid":42,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -317,19 +355,19 @@
          "source":"..\/tilesets\/tileset-castle-interior.json"
         }, 
         {
-         "firstgid":635,
+         "firstgid":667,
          "source":"..\/tilesets\/tileset-town.json"
         }, 
         {
-         "firstgid":891,
+         "firstgid":923,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":901,
+         "firstgid":933,
          "source":"..\/entities\/entity-concierge.json"
         }, 
         {
-         "firstgid":907,
+         "firstgid":939,
          "source":"..\/entities\/entity-phonograph.json"
         }],
  "tilewidth":32,

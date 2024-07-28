@@ -4,7 +4,7 @@ next: blocks.md
 
 # MGS Natlang Structure
 
-Because [MGS Natlang](../mgs/mgs_natlang) is fairly white space agnostic, formatting is flexible.
+Because [MGS Natlang](../mgs/mgs_natlang) is white space agnostic, formatting is flexible.
 
 ```mgs
 // all these are equally valid:
@@ -30,15 +30,13 @@ Commonly, Natlang syntax involves declarations followed by matching pairs of bra
 
 Free form phrases often have a known size, such as actions within a script block (with limited numbers of possible arrangements) or dialog parameters (which always appear in pairs). In such cases, terminating characters or brackets are not used.
 
-However, due to an increasing desire for complex syntax parsing, terminating or separating characters being gradually introduced. As of late 2023, this is limited to semicolons (`;`) being used to mark the end of an action:
-
-- [Actions](../actions): `ACTION;`
+…However, due to an increasing desire for complex syntax parsing, terminating or separating characters is being gradually introduced. As of mid 2024, this is limited to semicolons (`;`) being used to mark the end of an action, e.g. `save slot 4;`
 
 ## Variables
 
 See: [Variables (MGS)](../mgs/variables_mgs)
 
-MGS Natlang variables are more strict (and nuanced) than the JSON/JavaScript equivalents. For example, in some cases, a [bareword](../mgs/variables_mgs#bareword) string may be required when the JSON version might have accepted any type of JS string.
+MGS Natlang variables are more strict (and complicated) than the JSON/JavaScript equivalents. For example, in some cases, a [bareword](../mgs/variables_mgs#bareword) string may be required when the JSON version might have accepted any type of JS string.
 
 In all "dictionary" syntax definitions in this documentation, words in parentheses are optional, and words starting with dollar signs are [MGS Natlang variables](../mgs/variables_mgs).
 

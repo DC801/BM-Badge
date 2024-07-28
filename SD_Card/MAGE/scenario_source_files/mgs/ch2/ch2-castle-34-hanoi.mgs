@@ -2,6 +2,7 @@ include!("header.mgs")
 settings for serial dialog {
 	wrap 70
 }
+const!($lightsdefault = ch2-serial-light-manager)
 
 start-hanoi {
 	turn player control off;
@@ -9,6 +10,8 @@ start-hanoi {
 	copy draw_hanoi;
 	set map on_tick to tick_hanoi;
 }
+
+const!($win_plate = 6)
 
 check_cursor {
 	if (variable cursor_pos is 1) {
@@ -104,7 +107,7 @@ hanoi_move {
 			set flag hanoi_warning_size to true;
 		}
 	}
-	if (variable cursor_value is 7) {
+	if (variable cursor_value is $win_plate) {
 		set flag hanoi_won to true;
 	}
 	copy draw_hanoi;
@@ -149,11 +152,11 @@ tick_hanoi {
 /*
 ============================================================
      Cannot place larger plate on top of a smaller plate!    // row 10
-         ||      YOU WON! Plate #7 grabbed!      ||          // row 11
+         ||      YOU WON! Plate #6 grabbed!      ||          // row 11
          ||              Score: xx               ||          // row 10 (more digits = less spaces)
 ============================================================
 =------------------ THE PLATES OF HANOI -------------------=
-=----------------- Grab plate #7 to win! ------------------=
+=----------------- Grab plate #6 to win! ------------------=
 ============================================================
          ||                  ||                  ||          // row 11
         /  \                 ||                  ||          // row 10
@@ -196,9 +199,9 @@ hanoi_won_message_B {
 	}
 }
 serial dialog hanoi_size_warning  { "     <m>Cannot place larger plate on top of a smaller plate!</>" }
-serial dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #7 grabbed!</>" }
-serial dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #7 grabbed!</>" }
-serial dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #7 grabbed!</>      ||" }
+serial dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #6 grabbed!</>" }
+serial dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #6 grabbed!</>" }
+serial dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #6 grabbed!</>      ||" }
 serial dialog hanoi_won_message1b  { "         ||              <g>Score: $hanoi_move_count$</>" }
 serial dialog hanoi_won_message2b  { "                         <g>Score: $hanoi_move_count$</>" }
 serial dialog hanoi_won_message3b2 { "                         <g>Score: $hanoi_move_count$</>               ||" }
@@ -308,7 +311,7 @@ draw_hanoi {
 		" "
 		"============================================================"
 		"=------------------ <m>THE PLATES OF HANOI</> -------------------="
-		"=----------------- Grab plate #7 to win! ------------------="
+		"=----------------- Grab plate #6 to win! ------------------="
 		"============================================================"
 	}
 
@@ -421,7 +424,7 @@ draw_hanoi {
 		copy hanoi_quit;
 	} else if (flag hanoi_draw_help is true) {
 		show serial dialog {
-			"<m>TIP:</> You only need uncover (and grab) the #7 plate; you need not move it to another tray and build the tower of plates again."
+			"<m>TIP:</> You only need uncover (and grab) the #6 plate; you need not move it to another tray and build the tower of plates again."
 			"<m>TIP:</> Only put odd numbered plates on top of even plates and vice versa. E.g. put plate <bold>1</> on top of plate <bold>4</>, not <bold>3</> or <bold>5</>."
 		}
 		set flag hanoi_draw_help to false;
@@ -442,7 +445,10 @@ hanoi_unregister {
 }
 
 hanoi_quit {
+	// run in the map's on_tick
 	turn player control on;
+	turn light LED_USB off;
+	set entity Lights on_tick to $lightsdefault;
 	copy hanoi_unregister;
 	if (flag hanoi_won is false) {
 		show serial dialog {
@@ -468,14 +474,14 @@ hanoi_reset {
 hanoi_init_variables {
 	mutate cursor_pos = 1;
 	mutate cursor_value = 0;
-	mutate array1_7 = 1;
-	mutate array1_6 = 2;
-	mutate array1_5 = 3;
-	mutate array1_4 = 4;
-	mutate array1_3 = 5;
-	mutate array1_2 = 6;
-	mutate array1_1 = 7;
-	mutate array1_length = 7;
+	mutate array1_7 = 0;
+	mutate array1_6 = 1;
+	mutate array1_5 = 2;
+	mutate array1_4 = 3;
+	mutate array1_3 = 4;
+	mutate array1_2 = 5;
+	mutate array1_1 = 6;
+	mutate array1_length = 6;
 	mutate array2_7 = 0;
 	mutate array2_6 = 0;
 	mutate array2_5 = 0;
@@ -510,9 +516,15 @@ hanoi_init_game {
 	register "TIPS" -> hanoi_help;
 	register "R" -> hanoi_reset;
 	register "RESET" -> hanoi_reset;
-	register "Q" -> hanoi_quit;
-	register "QUIT" -> hanoi_quit;
+	register "Q" -> hanoi_quit_from_terminal;
+	register "QUIT" -> hanoi_quit_from_terminal;
 	register "WIN" -> hanoi_win;
+	debug!("hanoi_init_game")
+	turn light LED_USB on;
+	set entity Lights on_tick to null_script;
+}
+hanoi_quit_from_terminal {
+	set map on_tick to hanoi_quit;
 }
 hanoi_win {
 	set flag hanoi_won to true;

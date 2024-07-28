@@ -58,7 +58,7 @@ on_load-ch2-magehouse-birthday {
 		PLAYER
 		"Yeah, today was pretty wild. I went around town and fixed a lot of the stuff the Big Bad had ruined."
 		"I changed the color of some ether nettle blossoms, teleported some sheep, and impersonated a cat!"
-		"Oh, and I changed my name to Bob and drank some cactus cooler with a stone golem."
+		"Oh, and I changed my name to Bob and drank some Cactus Cooler with a stone golem."
 
 		ZIPPY "I love that the water feature in the center of town is unglitched again. It really feels like old times."
 		ZAPPY "But then that earthquake hit. That was like old times, too."
@@ -71,7 +71,7 @@ on_load-ch2-magehouse-birthday {
 	turn entity "%PLAYER%" south;
 	wait 400ms;
 	show dialog {
-		PLAYER "First thing tomorrow, I'm supposed to meet the village elders and visit the mountain dungeon."
+		PLAYER "First thing tomorrow, I'm supposed to meet the village elders and visit the castle."
 		ZAPPY "They're really sending you to get the artifacts, then?"
 	}
 	turn entity "%PLAYER%" east;
@@ -152,7 +152,7 @@ ch2-escort-cutscene {
 	wait 1200ms;
 	show dialog {
 		PLAYER "Oh... um...."
-		Alfonso "The time has come to visit the first dungeon, %PLAYER%."
+		Alfonso "The time has come to tackle the first challenge, %PLAYER%."
 		PLAYER "...Yeah."
 		Alfonso "Ready to go?"
 		PLAYER "Yeah. I mean, no. I mean...."
@@ -161,13 +161,13 @@ ch2-escort-cutscene {
 	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
 	wait 300ms;
 	show dialog {
-		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal dungeon?"
+		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal castle?"
 	}
 	set entity "%PLAYER%" on_tick to null_script;
 	turn entity "%PLAYER%" south;
 	show dialog {
 		Jackob
-		"The serial dungeon, yes. We did have a book about that."
+		"The serial castle, yes. We did have a book about that."
 		"But... it's gone."
 
 		PLAYER "Gone? You lost the book?"
@@ -178,7 +178,7 @@ ch2-escort-cutscene {
 		"We will keep looking for it. But first you go."
 		"More important for you to get started right away."
 		
-		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the dungeon on your own."
+		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the castle on your own."
 	}
 	wait 100ms;
 	set entity "%PLAYER%" on_tick to look-left-and-right-fast;

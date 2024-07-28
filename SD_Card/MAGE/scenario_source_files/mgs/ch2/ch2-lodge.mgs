@@ -11,6 +11,46 @@ look-ch2-lodge {
 	}
 }
 
+look-ch2-cat-lodge {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIts eyes are fixed on your every movement. This is probably normal for a cat."
+	}
+}
+
+look-ch2-timmy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe child monster-bug wears his heart on his... arms? In any case, he is clearly excited by what he's reading."
+	}
+}
+
+look-ch2-sportsbook {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe cover of this book is so vague that it's unclear which sport it's celebrating."
+	}
+}
+
+look-ch2-dejavu {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe magazine itself seems not to have run very long, as this issue claims to be both the third issue and the final issue. The glossy cover is a badly-Photoshopped collage of improbable monsters in implausible situations."
+	}
+}
+
+look-ch2-manual {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tOverall, you're left with confusion as to why a calculator would require a whole book to use it properly."
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-lodge {

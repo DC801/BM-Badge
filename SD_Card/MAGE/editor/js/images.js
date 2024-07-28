@@ -171,8 +171,10 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 						rgba.a,
 					);
 					var paletteIndex = getPaletteIndexForColor(color);
-					if (paletteIndex > 255) {
-						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 256.`);
+					// Guess what. The index of the 255th item in an array length 255 is 254.
+					// We may only have 255 colors in images, not the full 256 of a gif palette.
+					if (paletteIndex > 254) {
+						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 255.`);
 					}
 					// if (paletteIndex > 255) {
 					// 	wtfLog.push({
@@ -191,7 +193,7 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					pixelIndex += 1;
 				}
 				// console.table(wtfLog);
-				console.log(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
+				consoleLogIfVerbose(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
 				file.serialized = data;
 				colorPalette.serialized = serializeColorPalette(colorPalette);
 				createCacheForFile(crc, file, colorPalette);
@@ -229,7 +231,7 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 			.then(function ingeDataCacheInterceptor (arrayBuffer) {
 				var uint8Array = new Uint8Array(arrayBuffer);
 				var crc = crc32(uint8Array);
-				console.log(`What is the crc32 for ${file.name}? ${crc}`);
+				consoleLogIfVerbose(`What is the crc32 for ${file.name}? ${crc}`);
 				var cachedResult = getCacheForFile(crc, file);
 				if (cachedResult) {
 					Object.assign(colorPalette, cachedResult.colorPalette);

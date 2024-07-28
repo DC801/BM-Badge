@@ -7,8 +7,8 @@ next: 'tilesets.md'
 
 There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new content are:
 
-| file | purpose |
-|---|---|
+| File | Purpose |
+|:--|:--|
 | `editor/index.html` | The [web encoder](encoder#web-encoder).
 | `game.dat` | Encoded game data. Your `game.dat` must be here for the [desktop build](desktop_build) to see it. (The [CLI encoder](encoder#cli_encoder) will update the `game.dat` in place.)
 | `replace_dat_file_with_downloaded.sh` | Grabs the latest `game.dat` from your Downloads folder and moves it to your current directory.
@@ -24,9 +24,9 @@ There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new
 
 The folders described below provide the only means for the encoder to tell JSON files apart. (In contrast, MGS files contain multiple types of data, so all MGS files anywhere in the `scenario_source_files` folder are treated the same way.)
 
-JSON file names should be prefixed with the type of MGE data they contain, even when they're placed inside the corresponding folder. This will make them easier to debug during and after they're encoded.
+JSON file names should be prefixed with the type of MGE data they contain, even when they're placed inside the corresponding folder. This will make them easier to debug.
 
-Make sure all Tiled files are in the correct place before working on them or they'll break when you move them.
+Make sure all Tiled files are in the correct place before working on them or references to them will break when you move them.
 
 ## Folders
 
@@ -48,7 +48,7 @@ JSON files inside `scenario_source_files`:
 
 ### `scenario.json`
 
-This file tells the [encoder](encoder) which JSON files to include for its scripts, dialogs, maps, and dialogSkins processing. ([MGS files](mgs/mgs_natlang) are converted to JSON and bundled with this data automatically, and need not be individually declared.)
+This file tells the [encoder](encoder) which JSON files to include for its scripts, dialogs, maps, and dialogSkins processing.
 
 It will look something like this:
 
@@ -74,13 +74,9 @@ It will look something like this:
 }
 ```
 
-`scriptPaths`, `dialogPaths`, and `serialDialogPaths` contain arrays (square brackets). Each array will simply contain a list of all file paths you want the game encoder to see.
+`scriptPaths`, `dialogPaths`, and `serialDialogPaths` each contain a list (JS array) of all file paths you want the game encoder to see.
 
-`maps` and `dialogSkins` contain object literals (curly braces), which contain name-value pairs. For those object literals, the "name" is the name of the map/dialogSkin for an action to use, and the "value" is the file path for the appropriate JSON file.
-
-A `dialogSkin` called `default` is mandatory.
-
-NOTE: As of the ch2 version of the engine, map data is kept in its own JSON file, and is no longer included in `scenario.json`. (See below.)
+`dialogSkins` is a list (JS object) of dialog skin names mapped to the file path of their tileset JSON file. The "name" is what you'll use to target that dialog skin. A `dialogSkin` called `default` is mandatory.
 
 ### `entity_types.json`
 
@@ -143,16 +139,16 @@ Each character entity should at least have an idle, walk, and action animation. 
 
 ### `maps.json`
 
-This file is new for the chapter 2+ version of the MGE.
+This file is new for the chapter 2 version of the MGE.
 
-[Map properties](map_properties) defined in a map's Tiled JSON file (in the old way) are still honored, but it's recommended to move such properties to this file for easier access.
+[Map properties](map_properties) defined in a map's Tiled JSON file (as was done in chapter 1) are still honored (for now!), but it's recommended to move such properties to this file for easier access.
 
 The first map given is the map run when the game is opened.
 
 ```json
 {
-  "sample": {
-    "path": "maps/map-sample.json",
+  "sample1": {
+    "path": "maps/map-sample1.json",
     "on_load": "on_load-sample",
     "on_look": "on_look-sample",
     "on_tick": "on_tick-sample",
@@ -160,6 +156,9 @@ The first map given is the map run when the game is opened.
       "north": "on_go-sample-map",
       "south": "on_go-sample-map"
     }
+  },
+  "sample2": {
+    "path": "maps/map-sample2.json"
   }
 }
 ```
@@ -195,14 +194,12 @@ Data for portraits, which reference tileset JSON files from the `entities/` fold
 }
 ```
 
-The top-level string is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](entity_types#character-entity).
+`tileset` is the file path for the [tileset JSON file](tilesets) with the portrait image.
 
-`tileset` is the file path for the [JSON file](tilesets) [`portraits.json`](mage_folder#portraits-json) with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
+`tileid` is how you define which tile in the tileset you want to use. You can simply count the tiles in the tileset left-to-right and top-to-down, beginning from `0`, but it might be easier to select the appropriate tile within Tiled and see what it says the "ID" is.
 
-`tileid` is how you define which tile in the tileset you want to use. You can simply count the tiles in the tileset left-to-right and top-to-down, beginning from `0`, but it might be easier to simply select the appropriate tile within Tiled and see what it says the "ID" is.
-
-Game portraits are determined to be in their default position when alignment is `BOTTOM_LEFT` (or `TOP_LEFT`), and the game automatically flips them when in the `BOTTOM_RIGHT` (or `TOP_RIGHT`) position. For normal RPG-style contexts, you'll want your entities facing the center of the screen, so if the portraits in your tileset image aren't facing the right, you should set `flip_x` to `true`.
+Game portraits are determined to be in their default position when alignment is `BOTTOM_LEFT` (or `TOP_LEFT`). For normal RPG-style contexts, you'll want your entities facing the center of the screen, which means your graphics should face the right in the tileset file. (These graphics are flipped automatically when used in the `BOTTOM_RIGHT` or `TOP_RIGHT` position.) If the portraits in your tileset image aren't facing the right, you should set `flip_x` to `true`.
 
 You should at least have a `default` emote, but you can define any others as you like. Emotes are currently identified by their index / `id`.
 
-The MGE supports animated emotes.
+The MGE supports animated emotes. To animate an emote, create an animation for that tile the same way you would [make an entity animation](animations).

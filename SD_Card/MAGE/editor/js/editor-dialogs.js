@@ -33,7 +33,7 @@ Vue.component('editor-dialogs', {
 	class="editor-dialogs card mb-4"
 >
 	<div
-		class="card-header bg-secondary p-2"
+		class="card-header bg-secondary"
 	>Dialog Editor</div>
 	<div
 		class="card-body"

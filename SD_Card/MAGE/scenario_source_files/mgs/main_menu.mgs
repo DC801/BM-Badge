@@ -25,10 +25,12 @@ on_load-main_menu {
 		register bob2 -> debug-bob2;
 		register bob3 -> debug-bob3;
 		register simon -> debug-menu-simon;
+		register king -> debug-king;
 		register ch2 -> menu-chapter_select-2;
 		register rtfm -> command-rtfm;
 		register buffer + test -> debug-buffertest;
 		register boot -> ch2-bootup;
+		register post -> debug-post;
 		register skip + "1" -> debug-jump-to-round1;
 		register skip + "2" -> debug-jump-to-round2;
 		register skip + "3" -> debug-jump-to-round3;
@@ -47,7 +49,9 @@ on_load-main_menu {
 			"<c>BOB2</>: ch2 bob's club basement"
 			"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
 			"<c>SIMON</>: fast forward to the Simon Says part"
+			"<c>KING</>: skip to cutscene where the king meets his advisors"
 			"<c>BOOT</>: pretend to boot the weird computer"
+			"<c>POST</>: skip to the post credits scene"
 			"<c>SKIP _</>: skip ahead to that round (and set all prev flags)"
 			" "
 			"\t<g>Entire game debug options:</>"
@@ -59,6 +63,20 @@ on_load-main_menu {
 }
 
 /* DEBUGSSSS */
+debug-post {
+	set flag ch2-wizard-backstory to true;
+	copy debug-set-flags-to-round4;
+	set flag ch2-seen-room-99 to true;
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	set flag ch2-cutseen-castle99 to true;
+	copy ch2-install-mainframeos;
+	set flag ch2-ring-zero-enabled-in-castle to true;
+	mutate ch2-storyflag-round = 5;
+	set flag credits-from-menu to false;
+	set warp state to exit_from-credits;
+	load map ch2-castle-outside;
+}
 debug-menu-simon {
 	turn serial control on;
 	set flag ch2-has-artifact to true;
@@ -93,6 +111,14 @@ debug-bob3 {
 	set flag ch2-has-map to true;
 	set flag ch2-cutseen-bob-party to true;
 	load map ch2-bobsclub-basement;
+}
+debug-king {
+	copy debug-set-flags-to-round3;
+	set flag ch2-cutseen-castle13 to true;
+	set flag ch2-cutseen-castle14 to true;
+	set flag ch2-king-rescued to true;
+	set warp state to "Ch2 King Returns";
+	load map ch2-castle-13;
 }
 
 debug {
@@ -342,7 +368,7 @@ menu-player-name-confirm {
 // Random
 
 menu-player-name-random {
-	mutate random-name-count ? 19;
+	mutate random-name-count ? 20;
 	// The RNG operation returns a value range from 0 to (value - 1). In 17, Out 0~16. In 5, Out 0~4. It's like this because there's a non-zero chance that you're using this value to index into an array, like below.
 	if (variable random-name-count is 1) {
 		set entity "%PLAYER%" name to Chara;
@@ -380,6 +406,8 @@ menu-player-name-random {
 		set entity "%PLAYER%" name to "Tom Honks";
 	} else if (variable random-name-count is 18) {
 		set entity "%PLAYER%" name to VeeVee;
+	} else if (variable random-name-count is 19) {
+		set entity "%PLAYER%" name to XDDCC;
 	} else { // if it's 0 or any other value (the default):
 		set entity "%PLAYER%" name to Bub;
 	}

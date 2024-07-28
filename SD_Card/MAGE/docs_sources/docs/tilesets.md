@@ -21,7 +21,7 @@ All **tileset tiles need to be perfect squares** because tiles can be rotated or
 
 **Spritesheets** are tilesets that contain every iteration of a sprite needed for its animations.
 
-Spritesheets are handled like tilesets within Tiled and the [encoder](encoder). They are not required to be square, but non-square spritesheets are currently (as of Nov 2023) bugged, and may crash the game once the tile goes offscreen, so best to keep everything square for now.
+Spritesheets are handled like tilesets within Tiled and the [encoder](encoder). They are not required to be square, strictly speaking, but non-square spritesheets currently (as of mid 2024) crash the game when the tile goes offscreen, so best to keep everything square for now.
 
 ## Other Kinds of Tilesets
 
@@ -37,7 +37,7 @@ Put dialogSkin files in `tilesets/` and entity portraits in `entities/`. (See: [
 
 For tilesets and spritesheets, tiles **should not exceed 128x128 in size** or the game may not run on the badge hardware.
 
-If you need to play animations larger than this, such as an animated logo on a menu screen, you can split the tile into several pieces and place them on a map in such a way that they appear to be a single unit. (This won't work for entities that need to move around on their own, however.)
+If you need to play animations larger than this, such as an animated logo on a menu screen, you can split the tile into several pieces and place them on a map in such a way that they appear to be a single unit. (This may work poorly for entities that need to move around on their own, however.)
 
 ### Transparency
 
@@ -47,7 +47,13 @@ To encode alpha, the MGE repurposes the least-significant green bit in the RGB56
 
 ### Pallet
 
-The [encoder](encoder) indexes the pallets of each image, and there is therefore a **maximum of 256 colors per tileset image**. If you need extra colors, consider splitting the tileset into multiple files — maps will quite happily use tiles from multiple tilesets with no trouble, provided the tiles are the correct size. The encoder will let you know if one of your tilesets is over the color limit.
+The [encoder](encoder) indexes the pallets of each image, and there is therefore a **maximum of 256 colors per tileset image**. The encoder will let you know if one of your tilesets is over the color limit.
+
+::: tip
+If you're having trouble keeping your pallets under control, consider using the PNG-8 and GIF file formats, as they cannot contain more than 256 colors.
+:::
+
+If you need extra colors, consider splitting the tileset into multiple files — maps will quite happily use tiles from multiple tilesets with no trouble, provided the tiles are of uniform size.
 
 ::: tip Best Practice
 On embedded, pixel data is streamed from the ROM chip, but the tileset pallets must be held in RAM. Because RAM is very, very precious, **please combine tilesets if there isn't a compelling reason to keep them in separate files**. Entity sprite sheets are typically kept separate, for instance, but you might combine spritesheets for similar entities, or combine all character entity portraits. (And naturally, tilesets with differing tile sizes must be separate!)
@@ -98,7 +104,7 @@ For the MGE, each tile can have only one vector shape, and each vertex must fall
 It's helpful to turn on pixel snapping before drawing collision polygons ("View > Snapping > Snap to Pixels").
 
 ::: tip Best Practices
-Very precise collision shapes are possible, but best practice is to avoid very concave shapes and to avoid diagonals for tiles that are expected to be placed adjacent to other tiles with collision.
+Precise collision shapes are possible, but avoid very concave shapes and avoid diagonals for tiles that are expected to be placed adjacent to other tiles with collision.
 
-When defining your collision polygons and designing your maps, it's good to test the tiles in their map contexts and determine whether the player character is able to push themselves inside one of these shapes.
+When defining your collision polygons and designing your maps, test the tiles in their map contexts and determine whether the player character is able to push themselves inside one of these shapes.
 :::

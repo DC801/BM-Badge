@@ -70,7 +70,7 @@ We found that the joystick clicks were aggressive on the hardware, and would tri
 - `LED_HAX` (capacitive touch button on the PCB)
 - `LED_USB`
 - `LED_SD`
-- `LED_ALL` (will turn on/off *all* the lights)
+- `LED_ALL` (will turn on/off all the lights)
 
 ## Comparators
 

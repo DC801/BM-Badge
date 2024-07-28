@@ -58,6 +58,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -76,6 +81,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-trekkie"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-trekkie"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -94,6 +104,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle1"
                         }, 
                         {
                          "name":"on_tick",
@@ -119,6 +134,11 @@
                          "value":"show_dialog-ethernettle-start"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle2"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"ch2-capture-ethernettle2"
@@ -140,6 +160,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle3"
                         }, 
                         {
                          "name":"on_tick",
@@ -165,6 +190,11 @@
                          "value":"show_dialog-ethernettle-start"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle4"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"ch2-capture-ethernettle4"
@@ -186,6 +216,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle5"
                         }, 
                         {
                          "name":"on_tick",
@@ -211,6 +246,11 @@
                          "value":"show_dialog-ethernettle-start"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle6"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"ch2-capture-ethernettle6"
@@ -232,6 +272,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle7"
                         }, 
                         {
                          "name":"on_tick",
@@ -257,6 +302,11 @@
                          "value":"show_dialog-ethernettle-start"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernettle8"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"ch2-capture-ethernettle8"
@@ -269,7 +319,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":352,
+                 "gid":364,
                  "height":32,
                  "id":25,
                  "name":"Barrel",
@@ -277,7 +327,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-greenhouse-barrel"
+                         "value":"interact-ch2-barrel"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -296,6 +346,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-tumbleweed"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-tumbleweed"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -314,6 +369,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-ethernet"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-ethernet"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -332,6 +392,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-mulch"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-mulch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -341,7 +406,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":352,
+                 "gid":364,
                  "height":32,
                  "id":39,
                  "name":"Barrel ",
@@ -432,7 +497,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":325,
+                 "gid":337,
                  "height":24,
                  "id":44,
                  "name":"Modem",
@@ -441,6 +506,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-modem"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-modem"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -607,17 +677,6 @@
  "nextlayerid":6,
  "nextobjectid":45,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":""
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":""
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,
@@ -643,19 +702,19 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":318,
+         "firstgid":330,
          "source":"..\/entities\/entity-modem.json"
         }, 
         {
-         "firstgid":326,
+         "firstgid":338,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":350,
+         "firstgid":362,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":352,
+         "firstgid":364,
          "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,

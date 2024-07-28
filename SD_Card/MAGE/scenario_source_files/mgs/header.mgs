@@ -7,4 +7,10 @@ settings for dialog {
 	label ZIPPY { entity "Aunt Zippy" }
 	label ZAPPY { entity "Uncle Zappy" }
 }
+/* todo: make this wrap to 64 instead, and adjust wrapped word colors */
 settings for serial dialog { wrap 60 }
+
+/*
+Please note that a `//` style comment in this file breaks the `whyle` macro because line breaks go away and I guess it means everything after the comment is consumed by the comment. Whoopsie! (Natlang v3 should fix this automatically, on account of `include` no longer being a preprocessor find/replace type deal.)
+todo: actually, maybe just have the preprocessor eat /\/\/.*\n/g
+*/

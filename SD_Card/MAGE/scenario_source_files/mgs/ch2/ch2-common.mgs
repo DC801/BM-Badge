@@ -18,6 +18,7 @@ ch2-map-init-registers {
 	set flag interrupt3 to false; // OwO
 	mutate tempvar = 0;
 	mutate tempvar2 = 0;
+	set flag can-interrupt-dialog to false;
 }
 ch2-map-init-hex {
 	if (
@@ -29,9 +30,15 @@ ch2-map-init-hex {
 		|| debug mode is on
 	) {
 		turn hex control on;
+		turn lights control off;
+		if (variable ch2-in-room is 0) {
+			turn light LED_USB off;
+		}
 	} else {
 		turn hex control off;
 		turn hex clipboard off;
+		turn lights control on;
+		turn light ALL off;
 	}
 }
 ch2-map-init-serial {
@@ -52,12 +59,6 @@ ch2-map-init-serial {
 		turn serial control on;
 	} else if (flag ch2-warp-granted is true) {
 		copy register-warp;
-	}
-	if (flag ch2-permission-to-fuse is true) {
-		copy register-fuse;
-	}
-	if (flag ch2-password-command is true) {
-		copy register-password;
 	}
 	if (variable ch2-storyflag-round is > 0) {
 		copy register-parts;
@@ -150,6 +151,9 @@ ch2-map-init {
 	copy ch2-map-init-inventory-look;
 	copy ch2-map-init-serial-debug-message;
 	copy ch2-map-init-warp-in;
+	// These commands are built into the engine, so let's just handle them here
+	register alias h = help;
+	register alias l = look;
 }
 
 

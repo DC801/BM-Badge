@@ -25,6 +25,22 @@ look-ch2-concierge {
 	}
 }
 
+look-ch2-guest_book {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's a massive volume open to a page filled with names in eclectic handwriting. An elegant gold bookmark, attached to the book at the top of the spine, is draped across the opposite page."
+	}
+}
+
+look-ch2-stereo {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThis machine is massive by modern standards, large enough to house four CDs in the CD changer up top and two cassette decks side-by-side the front face. It's thoroughly wired into the wall."
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-12 {
@@ -41,7 +57,6 @@ on_load-ch2-castle-12 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-12-up;
 	if (
 		flag ch2-installed-needle is true
 		|| flag ch2-carrying-needle is true
@@ -111,7 +126,7 @@ ch2-interact-guestbook {
 		}
 	} else {
 		show dialog {
-			PLAYER "Ah, there's my name, logged for the ages."
+			PLAYER "There's my name, logged for the ages."
 			Concierge "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
 		}
 	}
@@ -155,7 +170,7 @@ interact-ch2-concierge {
 			}
 		} else {
 			show dialog {
-				PLAYER "Welcome to King Gibson's castle. I do hope you enjoy your visit!"
+				Concierge "Welcome to King Gibson's castle. I do hope you enjoy your visit!"
 			}
 		}
 		show dialog {
@@ -194,7 +209,7 @@ interact-ch2-concierge {
 /* ---------- NEEDLE (ADMIN) ---------- */
 
 ch2-hide-needle {
-	set entity Phonograph secondary_id to 0;
+	set entity phonograph secondary_id to 0;
 }
 
 ch2-touch-needle {
@@ -301,7 +316,7 @@ ch2-ws-guess-quit {
 		mutate diff - ch2-ws-flags-tally;
 		if (variable diff is 1) {
 			show serial dialog {
-				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, you hear?"
+				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, would ya?"
 			}
 		} else {
 			show serial dialog {
@@ -315,24 +330,25 @@ ch2-ws-guess-quit {
 		}
 	} else {
 		set flag ch2-ws-won to true;
-		// TODO: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
+		// todo: make this happen if you talk to the concierge or whatever. Maybe make it so any badge button press will trigger the ws quit behavior, too?
 		show serial dialog {
 			"<y>STEREO</>: Oh! Oh! Oh! Goodness! I think you've done it! I <bold>remember!</> I'm a <bold><y>STEREO SYSTEM</>! Hey, check this out! There's music inside me! LET'S GOOOOO!"
 			" "
 			# "Good for you!" : ch2-ws-cutscene
 		}
 	}
-	set entity Stereo on_interact to ch2-stereo-interact;
+	set entity stereo on_interact to ch2-stereo-interact;
 }
 
 ch2-ws-cutscene {
+	show serial dialog spacer;
 	show dialog {
 		Concierge "Oh! Oh! I can hear it! The old, reliable stereo is back in business!"
 		"Go ahead and take the needle off that phonograph. Many thanks!"
 	}
 	set flag interrupt2 to true;
 	set flag ch2-needle-permission to true;
-	set entity Stereo on_interact to ch2-stereo-interact;
+	set entity stereo on_interact to ch2-stereo-interact;
 }
 
 ch2-stereo-interact {
@@ -343,7 +359,6 @@ ch2-stereo-interact {
 		show dialog {
 			PLAYER "?"
 			"Oh, there's a place where the artifact can plug into it."
-			"I wonder if I can investigate it via the terminal."
 		}
 		goto ch2-stereo-intro1;
 	} else {

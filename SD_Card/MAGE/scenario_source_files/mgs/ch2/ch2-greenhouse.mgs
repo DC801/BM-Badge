@@ -5,11 +5,118 @@ include!("header.mgs")
 look-ch2-greenhouse {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked around the<c>GREENHOUSE</>."
+		"You looked around the <c>GREENHOUSE</>."
 		"\tThe interior is bright and warm, and the air is lightly muggy. Fragrance from the ether nettle blossoms tempers the scent of greenery and soil. The raised planters smells earthy but not musty."
 		" "
 	}
 }
+
+look-ch2-trekkie {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tHe's softly humming to himself, probably a song from one of those musicals he's always going on about. His eyes are darting back and forth across his screen."
+	}
+}
+
+look-ch2-ethernettle1 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle1 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle2 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle3 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle4 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle5 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle5 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle6 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle6 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle7 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle7 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernettle8 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernettle8 (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-tumbleweed {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look tumbleweed (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-ethernet {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look ethernet (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-mulch {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look mulch (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-modem {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tAn arcane black box with a series of enigmatic green lights across the front. It's slightly warm."
+	}
+}
+
+
+
 
 /* ---------- ON_LOAD ---------- */
 
@@ -149,7 +256,7 @@ interact-ch2-trekkie {
 	copy face-player;
 	if (variable ch2-storyflag-round is 0) {
 		show dialog {
-			SELF "Oh, %PLAYER%! Me heard you were going to the serial dungeon in the mountain!"
+			SELF "Oh, %PLAYER%! Me heard you were going to the serial castle in the mountain!"
 			PLAYER "Yeah, I guess."
 			SELF "Me want to wish you the best of luck!"
 			PLAYER "Thanks, %SELF%."

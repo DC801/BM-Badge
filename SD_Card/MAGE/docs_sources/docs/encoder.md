@@ -4,7 +4,7 @@ next: hex_editor.md
 
 # Encoder
 
-There are two versions of the encoder, but both produce exactly the same `game.dat` file. They are both deterministic.
+There are two versions of the encoder, but both produce exactly the same `game.dat` file.
 
 What gets encoded:
 
@@ -42,7 +42,7 @@ Superfluous JSON properties are completely ignored by the encoder. This is the o
 
 The `game.dat` file is the binary file containing all your game scenario content, including images.
 
-Note that [save data](variables#save_data) will persist when using the same `game.dat` file. (Will reflashing the `game.dat` on the hardware wipe the save data explicitly? Probably. #verifyme)
+Note that [save data](variables#save_data) will persist when using the same `game.dat` file. (Will reflashing the `game.dat` on the hardware wipe the save data explicitly? Probably. #verifyme — this is correct on the web at least.)
 
 There is currently no way to bring save data from an old version of the `game.dat` to a new one, as the data structure of the save data is unlikely to be consistent between versions.
 
@@ -51,7 +51,6 @@ There is currently no way to bring save data from an old version of the `game.da
 - [Web build](web_build): Open the web build in your browser, then drag the `game.dat` into the browser window.
 	- NOTE: If you play the game a little then drag the same `game.dat` in again, the game will appear to restart afresh — but in fact, save flags and the like may not be reset, **even when you didn't explicitly save inside the game**. Refresh the browser window to wipe existing game state.
 - [Desktop build](desktop_build): If you use the [CLI encoder](#cli-encoder) to build the game, the `game.dat` will already be in the appropriate place to run the game. Otherwise, you must move your new `game.dat` to the [`MAGE` folder](mage_folder).
-	- (Does the same note above pertain to the desktop build, too? Probably? #verifyme)
 - Badge: see [Updating the Hardware](updating_the_hardware)
 
 Also see: [debug tools](debug_tools)
@@ -68,7 +67,7 @@ If you have Node.js installed, you can run the shell script `regenerate_dat_file
 	- second argument: where to write the `game.dat`
 	- This version of the shell script also launches the game automatically.
 
-This encoder is more useful than the web version when you want to test rapid iterations of your game data.
+This encoder is more useful than the web version when you want to test rapid iterations of your game data, as it is less involved. It is also much faster due to its ability to cache encoded graphics.
 
 ## Web Encoder
 

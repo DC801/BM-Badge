@@ -8,13 +8,13 @@ Dialogs are a visual novel or RPG style dialog system for the screen. These incl
 
 Dialogs do nothing on their own. To show them, you must use the [SHOW_DIALOG](actions/SHOW_DIALOG) action within a [script](scripts).
 
-Arbitrary [actions](actions) cannot be performed by the [script](scripts) running a dialog. Therefore, if an [entity](entities) must change their behavior partway through a dialog message, you must split the dialog into multiple pieces or use another [script slot](script_slots) to control the entity's behavior.
+[Scripts](scripts) running a dialog cannot simultaneously perform other [actions](actions). If an [entity](entities) must change their behavior partway through a dialog, you must split the dialog into multiple pieces and insert those actions between the pieces, or use another [script slot](script_slots) to control the entity's behavior.
 
-Dialog names must be unique throughout the entire game project, though [MGS Natlang](mgs/mgs_natlang) will auto generate dialog names when they are not declared.
+Dialog names must be unique throughout the entire game project. (Dialogs written with [MGS Natlang](mgs/mgs_natlang) need not be named; their names are auto generated based on the file and line number when not defined.)
 
 ## Properties
 
-Dialogs must, at bare minimum, have `messages`. If no `name` or `entity` is provided (or is set to an empty string `""`), the dialog box label will not appear.
+Dialogs must, at bare minimum, have `messages`. If no `name` or `entity` is provided (or if the `name` is set to an empty string `""`), no dialog box label will appear.
 
 ### `alignment`
 
@@ -27,11 +27,13 @@ Dialogs must, at bare minimum, have `messages`. If no `name` or `entity` is prov
 
 In [MGS Natlang](mgs/mgs_natlang), these can be abbreviated to `BL`, `TR`, etc.
 
-::: options DC801 Usage
-For the DC801 black mage game, dialog alignment should be `BOTTOM_RIGHT` for the player character, and `BOTTOM_LEFT` for everything else. `TOP_LEFT` and `TOP_RIGHT` are only used when an entity is positioned in such a way that it would most likely be obscured by the dialog box itself.
-:::
-
 [MGS Natlang](mgs/mgs_natlang) will use `BOTTOM_LEFT` if this property is not provided. A default can also be set for each MGS file individually using `settings for dialog {}`, or in multiple files when combined with `include!()`.
+
+::: tip Black Mage Game Usage
+For the Black Mage Game, dialog alignment should be `BOTTOM_RIGHT` for the player character, and `BOTTOM_LEFT` for everything else. `TOP_LEFT` and `TOP_RIGHT` are only used when an entity is positioned in such a way that it would most likely be obscured by the dialog box itself.
+
+Put `include!("header.mgs")` at the top of new `.mgs` files to include these and other default project settings.
+:::
 
 ### `entity`
 
@@ -43,9 +45,9 @@ This property can be any of the following:
 2. [`%SELF%`](relative_references#self), which refers to the entity running the script
 3. the **given name** of an entity (no percent signs)
 
-The MGE will use the referenced entity's [current name](variables#printing-current-values)) for the dialog label automatically.
+The MGE will use the referenced entity's [current name](variables#printing-current-values) for the dialog label automatically.
 
-For the `entity` property, you must not use percent signs to refer to entities, or the [encoder](encoder) will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [current name](variables#printing-current-values)) in the dialog label, you must use the `name` property, which can print a string literally.
+For the `entity` property, you must not use percent signs to refer to entities, or the [encoder](encoder) will give you a message in the vein of `No entity named %Helga% found on map default!` If you don't want to use an entity's [current name](variables#printing-current-values) in the dialog label, you must use the `name` property, which can print a string literally.
 
 If the referenced entity is a [character entity](entity_types#character-entity), the [encoder](encoder) will use [`entity_types.json`](mage_folder#entity_types-json) to automatically determine the portrait image.
 
@@ -60,7 +62,7 @@ This property can be any of the following:
 3. an arbitrary ASCII string up to 12 characters long
 4. the **given name** of an entity, but enclosed in percent signs: `%Entity Name%`
 
-If you use the entity's given name without percent signs, it will behave as a static string #3. This will appear to behave the same as #4 in most cases, but #4 will allow inherited dialog labels to reflect the [entity's name as it currently exists in RAM](variables#printing-current-values)) and not the name it was originally assigned.
+If you use the entity's given name without percent signs, it will behave as a static string #3. This will appear to behave the same as #4 in most cases, but #4 will allow inherited dialog labels to reflect the [entity's name as it currently exists in RAM](variables#printing-current-values) and not the name it was originally assigned.
 
 ### `portrait`
 
@@ -70,7 +72,7 @@ If the dialog cannot find a portrait to use (either via `portrait` or `entity`),
 
 ### `border_tileset`
 
-Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [`scenario.json`](mage_folder#scenario-json).)
+Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [`scenario.json`](mage_folder#scenario-json).) (Or is it the one named "default"? #researchme)
 
 ### `emote`
 
@@ -79,6 +81,12 @@ Optional. Allows you to select a specific emote within the entity's entry in [`p
 ### `messages`
 
 Each dialog message is limited to five rows of 42 ASCII characters. [MGS Natlang](mgs/mgs_natlang) will wrap this text automatically, though you can still hard wrap if you want with `\n`.
+
+If the dialog contains any dialog options, however, the final message is limited to a single line (42 characters).
+
+### `options`
+
+Complicated. See below.
 
 ## JSON Structure
 
@@ -96,11 +104,7 @@ Easiest might be to copy an existing dialog file and make changes to it, particu
 }
 ```
 
-At the top level of the dialog file is a series of several name-value pairs separated by commas. These are the dialog names and their data.
-
-Within the square brackets above can be any number of object literals (marked with curly braces), each containing a number of name-value pairs for the dialog message and its properties.
-
-An expanded dialog:
+At the top level of the dialog file is the dialog names and their data. Within the arrays (square brackets) above can be any number of dialog objects (curly braces, comma-separated), each with that dialog's properties:
 
 ```json
 "dialog-name1": [
@@ -117,9 +121,9 @@ An expanded dialog:
 ]
 ```
 
-In the examples above, there are three dialog properties: `alignment`, `entity`, and `messages`. There are additional or alternate properties you might use, but these three are a reasonable minimum.
+There are three dialog properties used in the example above: `alignment`, `entity`, and `messages`. These three are a reasonable minimum.
 
-The property `messages` is an array containing the strings for the messages themselves (up to 255 total). Multiple messages within the array will be shown on subsequent dialog boxes, so you don't need a whole new object literal unless something else about the dialog properties must change, such as a new character beginning to speak.
+`messages` is an array containing the strings for the messages themselves (up to 255 total). Multiple messages within the array will be shown on subsequent dialog boxes, so you don't need a whole new dialog object unless something else about the dialog properties must change, such as a new character beginning to speak, or a different emote.
 
 An expanded `messages` entry:
 
@@ -157,11 +161,11 @@ For a multiple choice prompt, there are additional dialog properties:
 }
 ```
 
-Since there are five rows within the dialog box, you can have up to four `options`. But also take into account how many lines the string in `messages` is.
+Since there are five rows within the dialog box, you can have up to four `options`. (Any message with options should be limited to one line of 42 characters.)
 
 - **`response_type`** — Currently only `SELECT_FROM_SHORT_LIST` is implemented.
-- **`label`** — How the multiple choice option appears within the game. Normally there is room for 42 characters per line, but since the select cursor takes up a few columns of space, you should instead plan on no more than 39 characters for each of these.
-- **`script`** — This is the name of the script that runs if the player chooses that option.
+- **`label`** — How the multiple choice option appears within the game. Normally there is room for 42 characters per line, but since the cursor takes up a few columns of space, you should instead plan on no more than 39 characters for these.
+- **`script`** — This is the script that runs if the player chooses that option.
 
 ### Text Wrapping
 

@@ -9,9 +9,26 @@ look-ch2-castle-22 {
 	}
 }
 
+look-ch2-ckwatt {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look c__k__watt (remember to add 'the' for objects)"
+	}
+}
+
+look-ch2-scuzzy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTODO on_look scuzzy (remember to add 'the' for objects)"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-22 {
+	if warp state is "ch2 ending" then goto ch2-castle-22-ending;
 	// ch2 room state
 	mutate ch2-in-room = 22;
 
@@ -25,7 +42,6 @@ on_load-ch2-castle-22 {
 	}
 
 	// room unique stuff
-	register look + up -> look-ch2-castle-22-up;
 	if (
 		flag ch2-installed-powersupply is true
 		|| flag ch2-carrying-powersupply is true
@@ -65,19 +81,26 @@ on_go-castle-22-south {
 
 interact-ch2-scuzzy {
 	turn player control off;
-	copy face-player;
-	show dialog {
-		SELF "Consider this castle. In a metaphorical sense, it's like a computer."
-		"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
-		"In isolation each room, and each of us, are capable of little. But together, we can collaborate and build amazing things."
+	copy interrupt-walk;
+	if (flag ch2-scuzzy-backstory is false) {
+		show dialog {
+			SELF "The quake caused a lot of infrastructure damage around here. We're trying to reroute things and compensate with software."
+		}
+		set flag ch2-scuzzy-backstory to true;
+	} else {
+		show dialog {
+			SELF "In a metaphorical sense, the castle a computer."
+			"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
+			"In isolation each room, and each of us, are capable of little. But when we can connect people to each other, we can collaborate and build amazing things."
+		}
+		copy resume-walk;
+		wait 500ms;
+		copy interrupt-walk;
+		show dialog {
+			SELF "I mean, the castle is also a computer in a LITERAL sense, too...."
+		}
 	}
-	turn entity "%SELF%" west;
-	wait 500ms;
-	copy face-player;
-	show dialog {
-		SELF "I mean, the castle is also a computer in a LITERAL sense, too...."
-	}
-	turn entity "%SELF%" west;
+	copy resume-walk;
 	turn player control on;
 }
 interact-ch2-ckwatt {
@@ -134,7 +157,7 @@ ch2-touch-powersupply {
 
 ch2-touch-powersupply-yes {
 	show dialog {
-		name "" "(You pick up the powersupply!)"
+		name "" "(You pick up the power supply!)"
 	}
 	copy script ch2-hide-powersupply;
 	copy script ch2-pickup-powersupply;

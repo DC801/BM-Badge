@@ -27,12 +27,12 @@ serial dialog ch2-describe-mouse {
 }
 serial dialog ch2-describe-harddrive {
 	"<m>LAMBDA</>: As I said before, to make a <m>HARD DRIVE</> we'll need two things:"
-	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
+	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate with high iron content in its glaze. <m>Ask the kitchen <m>staff</> if they have a plate like that."
 	"\tNext, a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
 	// see aftermath of each usage for an additional line
 }
 serial dialog ch2-describe-plate { // some duplicate text; see above
-	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
+	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>PLATE</>. But not just any plate -- we need a plate with high iron content in its glaze. <m>Ask the kitchen staff</> if they have a plate like that."
 }
 serial dialog ch2-describe-needle { // some duplicate text; see above
 	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
@@ -44,18 +44,18 @@ serial dialog ch2-describe-clock {
 	"<m>LAMBDA</>: We'll need a <m>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
 	"\tIn our case... well, I know <m>King Gibson has a very nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
-serial dialog ch2-describe-cpu {
-	"<m>LAMBDA</>: The <m>CPU</> is the most important part of the computer. It's like the computer's brain. There aren't any spare lying around, but we could approximate one. I think."
-	"\tFirst you'll need some means of storing a little bit of data. You don't need much -- just enough for the CPU to do some mental math and remember what it's doing. There's an <m>ABACUS</> in the <m>workshop</> that might fit the bill."
-	"\tNext is the \"deciding\" part of the CPU. Doesn't have to be too much. A small animal, say, a <m>GOLDFISH</> would work -- uh, as uncomfortable as the thought is. I wonder if the king's regent would be willing to volunteer, if only briefly. Look for him in the <m>throne room</>."
+serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both questions
+	"<m>LAMBDA</>: The <m>CPU</> is like the brain of the computer. There aren't any spare lying around, but we can approximate one."
+	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the workshop</> has one."
+	"\tFor the rest, we'll need a volunteer who is very small and will make decisions very consistently. The best candidate is <m>Aurelius</>, the <m>GOLDFISH</> in the <m>throne room</>. Just make sure he understands what he's getting into."
 	// todo: make it so you could use Mr. Tickles instead! (You must choose!)
 	// "\tThat is, unless you know any other goldfish you might want to use instead...."
 }
-serial dialog ch2-describe-goldfish {
-	"<m>LAMBDA</>: TODO: goldfish description"
+serial dialog ch2-describe-goldfish { // slightly redundant with original intro; be sure to change both questions
+	"<m>LAMBDA</>: To make a CPU, we'll need a volunteer to act as the interpretor and executor of program data. We'll need someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
 }
-serial dialog ch2-describe-abacus {
-	"<m>LAMBDA</>: TODO: abacus description"
+serial dialog ch2-describe-abacus { // slightly redundant with original intro; be sure to change both questions
+	"<m>LAMBDA</>: To make a CPU, we'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the workshop</> has one."
 }
 serial dialog ch2-describe-ramchips {
 	"<m>LAMBDA</>: For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. But <m>ask the hardware guys in the <m>workshop</>. Those guys know their stuff, and I trust them to come up with something."
@@ -109,7 +109,7 @@ ch2-toot-step5e {
 		"<c>YOU</>: Anything else?"
 		" "
 		"<m>LAMBDA</>: And... the rest might be a little tricky. I'll keep looking for options, but for now just start with those three. Let me rig up a command real quick... and...."
-		"\tThere we go. Now you can type <c>PARTS</> to call me about the parts list specifically. Oh, and I'll plot those part locations on your <c>MAP</>, as well."
+		"\tThere we go. Now you can type <c>PARTS</> to call me about the parts list specifically."
 	}
 	goto ch2-toot-step99;
 }
@@ -136,7 +136,8 @@ ch2-toot-step99-end {
 	show serial dialog {
 		"<c>YOU</>: Yeah, let's do it!"
 		" "
-		"<m>LAMBDA</>: Good luck! And don't forget you can reach me from anywhere with <c>MAN</>. Oh, and don't forget to <c>LOOK</> around wherever you are. The artifact might help you see something you wouldn't notice otherwise."
+		"<m>LAMBDA</>: Great! And don't forget to type <c>HELP</> to see all the commands you can use. You'll probably need to use all of them."
+		"\tGood luck!"
 		" "
 	}
 	show serial dialog lambda-over;
@@ -239,7 +240,7 @@ ch2-lambda-round-2-parts5c {
 	}
 	show serial dialog ch2-describe-harddrive;
 	show serial dialog {
-		"\tI'll grant you access to the <c>FUSE</> command, which will let you construct a <m>HARD DRIVE</> once you have both items."
+		"\tOnce you have both items, go to the workshop and solder them together into a <m>HARD DRIVE</>."
 	}
 	show serial dialog {
 		" "
@@ -260,8 +261,6 @@ ch2-lambda-round-2-parts5d {
 		" "
 	}
 	show serial dialog lambda-over;
-	set flag ch2-permission-to-fuse to true;
-	copy register-fuse;
 	copy ch2-put_on_map-round2;
 }
 
@@ -315,15 +314,41 @@ ch2-bert-message-lambda-intro3 {
 ch2-lambda-round-3-parts2 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO"
+		"<c>YOU</>: In what way?"
 		" "
-		# "What else?" : ch2-lambda-round-3-parts3
+		"<m>LAMBDA</>: Well, we'll have to make a CPU from scratch, but I've worked it out so we only need two things."
+		"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the workshop</> has one."
+		"\tFor the rest of the CPU, including the interpretation of program instructions and changing the values on the abacus itself, we'll need a... volunteer."
+		" "
+		# "Volunteer?" : ch2-lambda-round-3-parts2b
+	}
+}
+ch2-lambda-round-3-parts2b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Volunteer?"
+		" "
+		"<m>LAMBDA</>: Yes. We'll need a living, sentient being to agree to be... \"combined\"... with the abacus. It'll have to be someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
+		"\tIt'll be a temporary thing -- just until I can have a CPU delivered by mail order. Given that, I think he'll agree."
+		" "
+		# "Is this safe?" : ch2-lambda-round-3-parts2c
+	}
+}
+ch2-lambda-round-3-parts2c {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Is this safe?"
+		" "
+		"<m>LAMBDA</>: Actually, yes. Due to the nature of what we're doing and where we're doing it, the volunteer's mind will remain intact. And their body can be completely restored at a later time -- whatever can be soldered can be unsoldered, after all. I've quadruple checked."
+		"\tIt's still an uncomfortable prospect to ask someone to do this, which is why I want you to make sure he understands what he's getting into, and that he's doing it willingly. I'm counting on you."
+		" "
+		# "All right. What else?" : ch2-lambda-round-3-parts3
 	}
 }
 ch2-lambda-round-3-parts3 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: What else?"
+		"<c>YOU</>: All right. What else?"
 		" "
 	}
 	show serial dialog ch2-describe-ramchips;
@@ -388,7 +413,7 @@ ch2-lambda-round-4c {
 		"<c>YOU</>: No entrances? How am I supposed to get there?"
 		" "
 		"<m>LAMBDA</>: I've granted you access to the <c>WARP</> command. You can use it to go to any place you've ever been, even if it's not an adjacent space to your current room. Oh, and I've also set the \"visit\" flag to my lab, which will make the system think you've been here before."
-		"\tAll you'd have to do then is enter <c>WARP SECRET LAB</> into the console, and you'll zip right to where I am now. Type <c>MAN WARP</> to see more about how <c>WARP</> works."
+		"\tAll you'd have to do then is enter <c>WARP SECRET LAB</> into the console, and you'll zip right to where I am now."
 		" "
 		# "But can't you warp out here? Why do I need to come to you?" : ch2-lambda-round-4d
 	}
@@ -448,7 +473,7 @@ look-powersupply {
 look-keyboard {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>keyboard</> -- that is, the <m>keytar</>: there's the normal piano-type keys, but there's assorted buttons scattered around the frame, too -- but these are not entirely labeled."
+		"You look at the <m>keyboard</> -- that is, the <m>keytar</>: there's the normal piano-type keys, but there's assorted buttons scattered around the frame, too -- though these are not entirely labeled."
 	}
 }
 look-mouse {
@@ -466,7 +491,7 @@ look-harddrive {
 look-plate {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>plate</>: a normal dinner plate, with inlaid gold around the rim."
+		"You look at the <m>plate</>: a fancy orange dinner plate, with inlaid gold around the rim."
 	}
 }
 look-needle {
@@ -478,7 +503,7 @@ look-needle {
 look-ramchips {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>RAM chips</>: a super beefy, super spicy, super poofy bag of silicon chips. You wonder if they make Cool Ranch RAM...."
+		"You look at the <m>RAM chips</>: a super beefy, super spicy, super poofy bag of silicon chips. You wonder if they make Cool Ranch RAM."
 	}
 }
 look-clock {
@@ -496,13 +521,13 @@ look-clock {
 look-cpu {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look cpu TODO"
+		"You look at the <m>CPU</> -- and are amazed at how classy the goldfish looks after having been soldered with the abacus. It defies description. Aurelius is really taking this seriously."
 	}
 }
 look-goldfish {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>goldfish</>: a small orange koi inside a standard goldfish bowl, complete with plastic decorations. Unnervingly, the goldfish has an eye fixed on you."
+		"You look at the <m>goldfish</>: a small orange koi inside a standard goldfish bowl, complete with plastic decorations. Aurelius has a patient eye fixed upon you."
 	}
 }
 look-manual {
@@ -514,12 +539,12 @@ look-manual {
 look-abacus {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the <m>abacus</>: a few dozen black beads set into rods on a wooden frame. It looks heavily used."
+		"You look at the <m>abacus</>: a few dozen black beads set into rods on a wooden frame."
 	}
 }
 look-mainframeos {
 	show serial dialog spacer;
 	show serial dialog {
-		"You look at the CD containing the <m>mainframe OS</>: the label is completely white, with no markings or writing on the top. The reverse side is very clean, and it makes cool patterns of reflected light when you angle it against the ceiling lamps."
+		"You look at the CD containing the <m>mainframe OS</>: the label is completely white, with no markings or writing on the top. The reverse side is very clean, and it makes patterns of reflected light when you angle it against the light."
 	}
 }
