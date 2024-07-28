@@ -92,7 +92,7 @@ on_tick-ch2-castle-33 {
 			turn player control on;
 		} else {
 			set warp state to walk_from-northwest;
-			load map ch2-castle-32;
+			copy ch2-load-castle-32-special;
 		}
 	}
 	if (flag ch2-mousegame is true) {
@@ -111,7 +111,7 @@ on_exit-ch2-castle-33 { // sanitize ch2 room state
 on_go-castle-33-south {
 	copy on_exit-ch2-castle-33;
 	copy warping-out-fade-out;
-	load map ch2-castle-32;
+	copy ch2-load-castle-32-special;
 }
 
 /* ---------- ENTITIES ---------- */

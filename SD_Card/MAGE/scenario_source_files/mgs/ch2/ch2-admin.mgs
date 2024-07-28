@@ -45,6 +45,9 @@ ch2-count-flags {
 	}
 }
 
+ch2-interact-mainframe-end {
+	show dialog { name "" "(Nothing left to install! Everything is working!)" }
+}
 ch2-interact-mainframe {
 	if (flag ch2-wait-for-hat-touch is true) {
 		turn entity "%PLAYER%" toward entity Wizard;
@@ -372,4 +375,86 @@ ch2-serial-light-manager-mouse {
 	if (flag ch2-mousegame is false) {
 		goto ch2-serial-light-manager;
 	}
+}
+
+// MAP THINGS
+
+ch2-load-castle-1-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-1-doorless;
+	} else {
+		load map ch2-castle-1;
+	}
+}
+ch2-load-castle-11-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-11-doorless;
+	} else {
+		load map ch2-castle-11;
+	}
+}
+ch2-load-castle-12-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-12-doorless;
+	} else {
+		load map ch2-castle-12;
+	}
+}
+ch2-load-castle-13-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-13-doorless;
+	} else {
+		load map ch2-castle-13;
+	}
+}
+ch2-load-castle-14-special {
+	if (
+		variable ch2-storyflag-round is >= 5
+		|| flag ch2-king-rescued is true
+	) {
+		load map ch2-castle-14-doorless;
+	} else {
+		load map ch2-castle-14;
+	}
+}
+ch2-load-castle-21-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-21-doorless;
+	} else {
+		load map ch2-castle-21;
+	}
+}
+ch2-load-castle-22-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-22-doorless;
+	} else {
+		load map ch2-castle-22;
+	}
+}
+ch2-load-castle-23-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-23-doorless;
+	} else {
+		load map ch2-castle-23;
+	}
+}
+ch2-load-castle-31-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-31-doorless;
+	} else {
+		load map ch2-castle-31;
+	}
+}
+ch2-load-castle-32-special {
+	if (variable ch2-storyflag-round is >= 5) {
+		load map ch2-castle-32-doorless;
+	} else {
+		load map ch2-castle-32;
+	}
+}
+ch2-load-castle-33-special {
+	load map ch2-castle-33;
+}
+ch2-load-castle-34-special {
+	load map ch2-castle-34;
 }

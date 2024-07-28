@@ -170,23 +170,19 @@ warp-common {
 
 warp-ch2-1 {
 	copy warp-common;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 warp-ch2-11 {
 	copy warp-common;
-	load map ch2-castle-11;
+	copy ch2-load-castle-11-special;
 }
 warp-ch2-12 {
 	copy warp-common;
-	load map ch2-castle-12;
-}
-warp-ch2-12 {
-	copy warp-common;
-	load map ch2-castle-12;
+	copy ch2-load-castle-12-special;
 }
 warp-ch2-13 {
 	copy warp-common;
-	load map ch2-castle-13;
+	copy ch2-load-castle-13-special;
 }
 warp-ch2-14 {
 	copy warp-common;
@@ -194,23 +190,23 @@ warp-ch2-14 {
 }
 warp-ch2-21 {
 	copy warp-common;
-	load map ch2-castle-21;
+	copy ch2-load-castle-21-special;
 }
 warp-ch2-22 {
 	copy warp-common;
-	load map ch2-castle-22;
+	copy ch2-load-castle-22-special;
 }
 warp-ch2-23 {
 	copy warp-common;
-	load map ch2-castle-23;
+	copy ch2-load-castle-23-special;
 }
 warp-ch2-31 {
 	copy warp-common;
-	load map ch2-castle-31;
+	copy ch2-load-castle-31-special;
 }
 warp-ch2-32 {
 	copy warp-common;
-	load map ch2-castle-32;
+	copy ch2-load-castle-32-special;
 }
 warp-ch2-33 {
 	copy warp-common;

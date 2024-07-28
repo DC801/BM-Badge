@@ -27,6 +27,19 @@ look-ch2-scuzzy {
 
 /* ---------- ON_LOAD ---------- */
 
+on_load-ch2-castle-22-doorless {
+	// abbreviated copy-pasta of the below
+	mutate ch2-in-room = 22;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>SERVER ROOM</>..." }
+	if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	} else if (warp state is walk_from-north) {
+		teleport entity "%PLAYER%" to geometry walk_from-north;
+	}
+	copy ch2-map-init;
+}
 on_load-ch2-castle-22 {
 	if warp state is "ch2 ending" then goto ch2-castle-22-ending;
 	// ch2 room state
@@ -54,8 +67,17 @@ on_load-ch2-castle-22 {
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-castle-22 {
-	goto null_script;
+on_tick-ch2-castle-22 {}
+on_tick-ch2-castle-22-doorless {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-22;
+		set warp state to walk_from-north;
+		copy ch2-load-castle-21-special;
+	} else if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		copy on_exit-ch2-castle-22;
+		set warp state to walk_from-south;
+		copy ch2-load-castle-23-special;
+	}
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -69,12 +91,12 @@ on_exit-ch2-castle-22 { // sanitize ch2 room state
 on_go-castle-22-north {
 	copy on_exit-ch2-castle-22;
 	copy warping-out-fade-out;
-	load map ch2-castle-23;
+	copy ch2-load-castle-23-special;
 }
 on_go-castle-22-south {
 	copy on_exit-ch2-castle-22;
 	copy warping-out-fade-out;
-	load map ch2-castle-21;
+	copy ch2-load-castle-21-special;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -122,6 +144,16 @@ interact-ch2-ckwatt {
 			"Glad that old power supply will see some use."
 		}
 	}
+	turn entity "%SELF%" south;
+}
+interact-ch2-ckwatt-end {
+	copy face-player;
+	show dialog { SELF "I wanna get down to the great hall, but we're not quite done yet. Don't wanna be sloppy."}
+	turn entity "%SELF%" south;
+}
+interact-ch2-scuzzy-end {
+	copy face-player;
+	show dialog { SELF "I'm glad the king and his staff were able to clear the debris blocking the doors. Not that we can leave yet -- still more to do."}
 	turn entity "%SELF%" south;
 }
 

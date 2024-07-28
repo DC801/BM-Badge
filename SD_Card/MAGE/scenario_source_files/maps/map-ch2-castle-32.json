@@ -34,7 +34,7 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 390, 391, 392, 393, 0, 0, 0, 0,
-            0, 0, 0, 0, 406, 407, 408, 409, 0, 0, 0, 0,
+            0, 0, 306, 2147483954, 406, 407, 408, 409, 306, 2147483954, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 438, 439, 440, 0, 0, 438, 439, 440, 0, 0,
@@ -421,26 +421,6 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":44,
-                 "name":"walk_from-northeast",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":17.5
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":289,
-                 "y":99
-                }, 
-                {
-                 "class":"",
                  "height":34,
                  "id":45,
                  "name":"northeast-hitbox",
@@ -449,26 +429,6 @@
                  "width":32,
                  "x":272,
                  "y":63
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":46,
-                 "name":"walk_from-northwest",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":17.5
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":97,
-                 "y":99
                 }, 
                 {
                  "class":"",
@@ -539,8 +499,7 @@
                  "width":0,
                  "x":264,
                  "y":417
-                },
-            
+                }, 
                 {
                  "class":"",
                  "height":39,
@@ -574,6 +533,31 @@
                  "width":32,
                  "x":56,
                  "y":333
+                },
+            
+                {
+                 "class":"",
+                 "height":0,
+                 "id":69,
+                 "name":"walk_from-northwest",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":99
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":71,
+                 "name":"walk_from-northeast",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":288,
+                 "y":99
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -582,7 +566,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":69,
+ "nextobjectid":72,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

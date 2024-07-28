@@ -61,7 +61,7 @@ ch2-cutscene-bert-secret {
 		"If I find answer, I will leave message with trash panda Wizard."
 		"Good luck."
 	}
-	walk entity Bert to geometry entrance1-path over 800ms;
+	walk entity Bert to geometry walk_from-south over 800ms;
 	wait 80ms;
 	set entity Bert on_tick to yeet;
 	set entity "%PLAYER%" on_tick to null_script;

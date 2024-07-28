@@ -34,15 +34,6 @@ look-ch2-keypad {
 
 /* ---------- ON_LOAD ---------- */
 
-ch2-load-castle-14-special {
-	if (flag ch2-king-rescued is true) {
-		set flag ch2-room14-go-doorless to true;
-		load map ch2-castle-14-doorless;
-	} else {
-		load map ch2-castle-14;
-	}
-}
-
 ch2-gibson-scramble {
 	copy variable ch2-gibson-x from entity "King Gibson" x;
 	if (flag ch2-gibson-pos-odd is true) {
@@ -59,10 +50,6 @@ ch2-gibson-scramble {
 on_load-ch2-castle-14 {
 	if (warp state is "king returns teleport") {
 		goto ch2-cutscene-kingreturns-bedroom;
-	}
-	// jump to doorless version of the room
-	if (flag ch2-room14-go-doorless is true) {
-		set flag ch2-room14-go-doorless to false;
 	}
 	// ch2 room state
 	mutate ch2-in-room = 14;
@@ -83,7 +70,10 @@ on_load-ch2-castle-14 {
 	) {
 		copy script ch2-hide-clock;
 	}
-	if (flag ch2-king-rescued is true) {
+	if (
+		variable ch2-storyflag-round is >= 5
+		|| flag ch2-king-rescued is true
+	) {
 		set entity "King Gibson" on_tick to yeet;
 		set entity "keypad" on_interact to null_script;
 	}
@@ -91,98 +81,103 @@ on_load-ch2-castle-14 {
 	// initialize everything
 	copy ch2-map-init;
 
-	// check if you do the cutscene or not
-	if (flag ch2-cutseen-castle14 is false) {
-		turn player control off;
-		wait 400ms;
-		set entity "King Gibson" current_animation to 2;
-		show dialog {
-			KING emote 1 "?"
+	if (variable ch2-storyflag-round is < 5) {
+		// check if you do the cutscene or not
+		if (flag ch2-cutseen-castle14 is false) {
+			turn player control off;
+			wait 400ms;
+			set entity "King Gibson" current_animation to 2;
+			show dialog {
+				KING emote 1 "?"
+			}
+			set entity "King Gibson" on_tick to ch2-gibson-scramble;
+			set entity "King Gibson" current_animation to 3;
+			show dialog {
+				KING emote 2 "!!!"
+				"Intruder! Someone's in my bedroom!"
+			}
+			turn entity "%PLAYER%" toward entity "King Gibson";
+			show dialog {
+				KING emote 2 "Help! Guards!"
+			}
+			set entity "King Gibson" on_tick to null_script;
+			set entity "King Gibson" current_animation to 2;
+			wait 400ms;
+			show dialog {
+				KING emote 1 "...But no, of course. I'm alone."
+			}
+			set entity "King Gibson" current_animation to 0;
+			wait 1100ms;
+			turn entity "King Gibson" west;
+			wait 350ms;
+			show dialog {
+				KING emote 3 "They locked me in here to rot. Why would they bother with me now?"
+			}
+			turn entity "King Gibson" north;
+			show dialog {
+				KING emote 3 "Well, assassin, do your worst. Get it over with."
+				PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, your majesty! I'm not an assassin!"
+			}
+			turn entity "King Gibson" south;
+			show dialog {
+				KING "Then you've come to mock me."
+				PLAYER "No, of course not. I'm here to check up on you. Your -- um, advisors? -- are very worried about you."
+				KING "I doubt that. They've disabled the lock on the door, and they won't answer the intercom. I've tried to reach them dozens of times."
+				PLAYER "Intercom?"
+				KING "Yes. That panel by the door, next to the keypad."
+			}
+			turn entity "King Gibson" north;
+			show dialog {
+				KING emote 3 "Hmph. I'm sure Sebastian is halfway through a coup d'etat by now."
+				PLAYER "But they said they've tried calling you."
+				"Could it be... perhaps the intercom is broken?"
+			}
+			turn entity "King Gibson" south;
+			show dialog {
+				KING "Broken?"
+				PLAYER "Well, there was an earthquake. Maybe the lock is busted, too."
+				"They said they've tried to call you, but haven't heard anything back. In fact, they think YOU'RE ignoring THEM."
+				KING "Ignoring them? No, I would never...."
+				PLAYER "They said you had an argument last night."
+				KING "Yes but --"
+			}
+			turn entity "King Gibson" west;
+			show dialog {
+				KING emote 3 "*sigh*"
+				"I thought... I thought maybe I had gone too far this time. That they had finally written me off."
+			}
+			turn entity "King Gibson" south;
+			show dialog {
+				KING "They really tried to call me?"
+				"This whole time, it was only a broken line of communication? They don't hate me?"
+				PLAYER "The big, blue one is worried you might be hurt from the earthquake."
+				"It was the goldfish who asked me to check up on you."
+				KING "I am relieved to hear that. I knew I was more fond of them than they were of me, but I feared...."
+			}
+			walk entity "King Gibson" to geometry walk-spot over 800ms;
+			show dialog {
+				KING "If you were able to enter this room, you must have the serial artifact working. Is that correct?"
+				PLAYER "Yeah."
+				KING "If the intercom -- and the door locks -- were broken in the earthquake, then you should be able to plug the artifact into the keypad and do some diagnostics."
+				"If you would?"
+			}
+			set entity "King Gibson" on_tick to face-player;
+			set flag ch2-cutseen-castle14 to true;
+			turn player control on;
 		}
-		set entity "King Gibson" on_tick to ch2-gibson-scramble;
-		set entity "King Gibson" current_animation to 3;
-		show dialog {
-			KING emote 2 "!!!"
-			"Intruder! Someone's in my bedroom!"
-		}
-		turn entity "%PLAYER%" toward entity "King Gibson";
-		show dialog {
-			KING emote 2 "Help! Guards!"
-		}
-		set entity "King Gibson" on_tick to null_script;
-		set entity "King Gibson" current_animation to 2;
-		wait 400ms;
-		show dialog {
-			KING emote 1 "...But no, of course. I'm alone."
-		}
-		set entity "King Gibson" current_animation to 0;
-		wait 1100ms;
-		turn entity "King Gibson" west;
-		wait 350ms;
-		show dialog {
-			KING emote 3 "They locked me in here to rot. Why would they bother with me now?"
-		}
-		turn entity "King Gibson" north;
-		show dialog {
-			KING emote 3 "Well, assassin, do your worst. Get it over with."
-			PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, your majesty! I'm not an assassin!"
-		}
-		turn entity "King Gibson" south;
-		show dialog {
-			KING "Then you've come to mock me."
-			PLAYER "No, of course not. I'm here to check up on you. Your -- um, advisors? -- are very worried about you."
-			KING "I doubt that. They've disabled the lock on the door, and they won't answer the intercom. I've tried to reach them dozens of times."
-			PLAYER "Intercom?"
-			KING "Yes. That panel by the door, next to the keypad."
-		}
-		turn entity "King Gibson" north;
-		show dialog {
-			KING emote 3 "Hmph. I'm sure Sebastian is halfway through a coup d'etat by now."
-			PLAYER "But they said they've tried calling you."
-			"Could it be... perhaps the intercom is broken?"
-		}
-		turn entity "King Gibson" south;
-		show dialog {
-			KING "Broken?"
-			PLAYER "Well, there was an earthquake. Maybe the lock is busted, too."
-			"They said they've tried to call you, but haven't heard anything back. In fact, they think YOU'RE ignoring THEM."
-			KING "Ignoring them? No, I would never...."
-			PLAYER "They said you had an argument last night."
-			KING "Yes but --"
-		}
-		turn entity "King Gibson" west;
-		show dialog {
-			KING emote 3 "*sigh*"
-			"I thought... I thought maybe I had gone too far this time. That they had finally written me off."
-		}
-		turn entity "King Gibson" south;
-		show dialog {
-			KING "They really tried to call me?"
-			"This whole time, it was only a broken line of communication? They don't hate me?"
-			PLAYER "The big, blue one is worried you might be hurt from the earthquake."
-			"It was the goldfish who asked me to check up on you."
-			KING "I am relieved to hear that. I knew I was more fond of them than they were of me, but I feared...."
-		}
-		walk entity "King Gibson" to geometry walk-spot over 800ms;
-		show dialog {
-			KING "If you were able to enter this room, you must have the serial artifact working. Is that correct?"
-			PLAYER "Yeah."
-			KING "If the intercom -- and the door locks -- were broken in the earthquake, then you should be able to plug the artifact into the keypad and do some diagnostics."
-			"If you would?"
-		}
-		set entity "King Gibson" on_tick to face-player;
-		set flag ch2-cutseen-castle14 to true;
-		turn player control on;
 	}
 }
 
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-castle-14 {
-	if (flag ch2-king-rescued is true) {
+	if (
+		variable ch2-storyflag-round is >= 5
+		|| flag ch2-king-rescued is true
+	) {
 		if (entity "%PLAYER%" is inside geometry south-hitbox) {
 			set warp state to walk_from-north;
-			load map ch2-castle-13;
+			copy ch2-load-castle-13-special;
 		}
 	}
 }
@@ -198,7 +193,7 @@ on_exit-ch2-castle-14 { // sanitize ch2 room state
 on_go-castle-14-south {
 	copy on_exit-ch2-castle-14;
 	copy warping-out-fade-out;
-	load map ch2-castle-13;
+	copy ch2-load-castle-13-special;
 }
 
 /* ---------- CLOCK (ADMIN) ---------- */

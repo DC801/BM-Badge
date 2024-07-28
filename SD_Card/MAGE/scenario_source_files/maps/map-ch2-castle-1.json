@@ -79,39 +79,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147483885,
-                 "height":32,
-                 "id":3,
-                 "name":"XA",
-                 "properties":[
-                        {
-                         "name":"is_debug",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-xa"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-xa"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"null_script"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":289,
-                 "y":110
-                }, 
-                {
-                 "class":"",
                  "gid":239,
                  "height":32,
                  "id":4,
@@ -282,6 +249,39 @@
                  "width":32,
                  "x":-115,
                  "y":-49
+                }, 
+                {
+                 "class":"",
+                 "gid":2147483885,
+                 "height":32,
+                 "id":3,
+                 "name":"XA",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-xa"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-xa"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":289,
+                 "y":110
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -354,7 +354,7 @@
                  "class":"",
                  "height":0,
                  "id":36,
-                 "name":"entrance1-path",
+                 "name":"walk_from-south",
                  "point":true,
                  "rotation":0,
                  "visible":true,

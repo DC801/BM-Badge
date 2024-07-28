@@ -140,7 +140,7 @@ ch2-skip-99 {
 	set flag ch2-map-mainframeos to false;
 	set flag ch2-carrying-mainframeos to true;
 	set flag ch2-cutseen-castle99 to true;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 
 ch2-lambda-shving_on-tickversion {
@@ -429,8 +429,8 @@ interact-ch2-lambda-lab {
 	} else {
 		show dialog {
 			Lambda emote $opaque_grin "Hey, good to see you %PLAYER%."
-			Lambda emote $opaque_grin "Don't worry about me -- I'm leaving my cave now and then."
-			Lambda "There's still a lot of research I need to do here, at this station, so I'm not entirely free of this place yet."
+			Lambda emote $opaque_grin "Don't worry about me -- I'll leave my cave now and then."
+			Lambda "But there's still a lot of research I need to do here at this station, so I'm not entirely free of this place yet."
 		}
 	}
 	turn entity "%SELF%" toward entity CRT;

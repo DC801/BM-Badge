@@ -43,6 +43,22 @@ look-ch2-stereo {
 
 /* ---------- ON_LOAD ---------- */
 
+on_load-ch2-castle-12-doorless {
+	// abbreviated copy-pasta of the below
+	mutate ch2-in-room = 12;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
+	if (warp state is walk_from-north) {
+		teleport entity "%PLAYER%" to geometry walk_from-north;
+	} else if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	} else if (warp state is walk_from-east) {
+		teleport entity "%PLAYER%" to geometry walk_from-east;
+	}
+	copy ch2-map-init;
+}
+
 on_load-ch2-castle-12 {
 	// ch2 room state
 	mutate ch2-in-room = 12;
@@ -79,8 +95,21 @@ on_load-ch2-castle-12 {
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-castle-12 {
-	// nothing yet
+on_tick-ch2-castle-12 {}
+on_tick-ch2-castle-12-doorless {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-12;
+		set warp state to walk_from-north;
+		copy ch2-load-castle-11-special;
+	} else if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		copy on_exit-ch2-castle-12;
+		set warp state to walk_from-south;
+		copy ch2-load-castle-13-special;
+	} else if (entity "%PLAYER%" is inside geometry east-hitbox) {
+		copy on_exit-ch2-castle-12;
+		set warp state to walk_from-west;
+		copy ch2-load-castle-31-special;
+	}
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -94,17 +123,17 @@ on_exit-ch2-castle-12 { // sanitize ch2 room state
 on_go-castle-12-north {
 	copy on_exit-ch2-castle-12;
 	copy warping-out-fade-out;
-	load map ch2-castle-13;
+	copy ch2-load-castle-13-special;
 }
 on_go-castle-12-east {
 	copy on_exit-ch2-castle-12;
 	copy warping-out-fade-out;
-	load map ch2-castle-31;
+	copy ch2-load-castle-31-special;
 }
 on_go-castle-12-south {
 	copy on_exit-ch2-castle-12;
 	copy warping-out-fade-out;
-	load map ch2-castle-11;
+	copy ch2-load-castle-11-special;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -204,6 +233,9 @@ interact-ch2-concierge {
 			}
 		}
 	}
+}
+interact-ch2-concierge-end {
+	show dialog { SELF "King Gibson's castle is now under (mostly) normal operation! Please enjoy your stay!" }
 }
 
 /* ---------- NEEDLE (ADMIN) ---------- */

@@ -32,19 +32,19 @@ debug-set-flags-to-round0 {
 }
 debug-jump-to-round1 {
 	copy debug-set-flags-to-round1;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 debug-jump-to-round2 {
 	copy debug-set-flags-to-round2;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 debug-jump-to-round3 {
 	copy debug-set-flags-to-round3;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 debug-jump-to-round4 {
 	copy debug-set-flags-to-round4;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 
 debug-set-flags-to-round1 {

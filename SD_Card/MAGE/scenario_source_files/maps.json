@@ -25,11 +25,32 @@
 			"south": "on_go-castle-1-south"
 		}
 	},
+	"ch2-castle-1-doorless": {
+		"path": "maps/map-ch2-castle-1-doorless.json",
+		"on_load": "on_load-ch2-castle-1-doorless",
+		"on_look": "look-ch2-castle-1",
+		"on_tick": "on_tick-ch2-castle-1-doorless",
+		"directions": {
+			"north": "on_go-castle-1-north",
+			"south": "on_go-castle-1-south"
+		}
+	},
 	"ch2-castle-11": {
 		"path": "maps/map-ch2-castle-11.json",
 		"on_load": "on_load-ch2-castle-11",
 		"on_look": "look-ch2-castle-11",
 		"on_tick": "on_tick-ch2-castle-11",
+		"directions": {
+			"north": "on_go-castle-11-north",
+			"south": "on_go-castle-11-south",
+			"west": "on_go-castle-11-west"
+		}
+	},
+	"ch2-castle-11-doorless": {
+		"path": "maps/map-ch2-castle-11-doorless.json",
+		"on_load": "on_load-ch2-castle-11-doorless",
+		"on_look": "look-ch2-castle-11",
+		"on_tick": "on_tick-ch2-castle-11-doorless",
 		"directions": {
 			"north": "on_go-castle-11-north",
 			"south": "on_go-castle-11-south",
@@ -47,11 +68,32 @@
 			"east": "on_go-castle-12-east"
 		}
 	},
+	"ch2-castle-12-doorless": {
+		"path": "maps/map-ch2-castle-12-doorless.json",
+		"on_load": "on_load-ch2-castle-12-doorless",
+		"on_look": "look-ch2-castle-12",
+		"on_tick": "on_tick-ch2-castle-12-doorless",
+		"directions": {
+			"north": "on_go-castle-12-north",
+			"south": "on_go-castle-12-south",
+			"east": "on_go-castle-12-east"
+		}
+	},
 	"ch2-castle-13": {
 		"path": "maps/map-ch2-castle-13.json",
 		"on_load": "on_load-ch2-castle-13",
 		"on_look": "look-ch2-castle-13",
 		"on_tick": "on_tick-ch2-castle-13",
+		"directions": {
+			"north": "on_go-castle-13-north",
+			"south": "on_go-castle-13-south"
+		}
+	},
+	"ch2-castle-13-doorless": {
+		"path": "maps/map-ch2-castle-13-doorless.json",
+		"on_load": "on_load-ch2-castle-13-doorless",
+		"on_look": "look-ch2-castle-13",
+		"on_tick": "on_tick-ch2-castle-13-doorless",
 		"directions": {
 			"north": "on_go-castle-13-north",
 			"south": "on_go-castle-13-south"
@@ -85,11 +127,31 @@
 			"east": "on_go-castle-21-east"
 		}
 	},
+	"ch2-castle-21-doorless": {
+		"path": "maps/map-ch2-castle-21-doorless.json",
+		"on_load": "on_load-ch2-castle-21-doorless",
+		"on_look": "look-ch2-castle-21",
+		"on_tick": "on_tick-ch2-castle-21-doorless",
+		"directions": {
+			"north": "on_go-castle-21-north",
+			"east": "on_go-castle-21-east"
+		}
+	},
 	"ch2-castle-22": {
 		"path": "maps/map-ch2-castle-22.json",
 		"on_load": "on_load-ch2-castle-22",
 		"on_look": "look-ch2-castle-22",
 		"on_tick": "on_tick-ch2-castle-22",
+		"directions": {
+			"north": "on_go-castle-22-north",
+			"south": "on_go-castle-22-south"
+		}
+	},
+	"ch2-castle-22-doorless": {
+		"path": "maps/map-ch2-castle-22-doorless.json",
+		"on_load": "on_load-ch2-castle-22-doorless",
+		"on_look": "look-ch2-castle-22",
+		"on_tick": "on_tick-ch2-castle-22-doorless",
 		"directions": {
 			"north": "on_go-castle-22-north",
 			"south": "on_go-castle-22-south"
@@ -104,6 +166,15 @@
 			"south": "on_go-castle-23-south"
 		}
 	},
+	"ch2-castle-23-doorless": {
+		"path": "maps/map-ch2-castle-23-doorless.json",
+		"on_load": "on_load-ch2-castle-23-doorless",
+		"on_look": "look-ch2-castle-23",
+		"on_tick": "on_tick-ch2-castle-23-doorless",
+		"directions": {
+			"south": "on_go-castle-23-south"
+		}
+	},
 	"ch2-castle-31": {
 		"path": "maps/map-ch2-castle-31.json",
 		"on_load": "on_load-ch2-castle-31",
@@ -114,11 +185,32 @@
 			"west": "on_go-castle-31-west"
 		}
 	},
+	"ch2-castle-31-doorless": {
+		"path": "maps/map-ch2-castle-31-doorless.json",
+		"on_load": "on_load-ch2-castle-31-doorless",
+		"on_look": "look-ch2-castle-31",
+		"on_tick": "on_tick-ch2-castle-31-doorless",
+		"directions": {
+			"north": "on_go-castle-31-north",
+			"west": "on_go-castle-31-west"
+		}
+	},
 	"ch2-castle-32": {
 		"path": "maps/map-ch2-castle-32.json",
 		"on_load": "on_load-ch2-castle-32",
 		"on_look": "look-ch2-castle-32",
 		"on_tick": "on_tick-ch2-castle-32",
+		"directions": {
+			"northeast": "on_go-castle-32-northeast",
+			"northwest": "on_go-castle-32-northwest",
+			"south": "on_go-castle-32-south"
+		}
+	},
+	"ch2-castle-32-doorless": {
+		"path": "maps/map-ch2-castle-32-doorless.json",
+		"on_load": "on_load-ch2-castle-32-doorless",
+		"on_look": "look-ch2-castle-32",
+		"on_tick": "on_tick-ch2-castle-32-doorless",
 		"directions": {
 			"northeast": "on_go-castle-32-northeast",
 			"northwest": "on_go-castle-32-northwest",

@@ -40,6 +40,19 @@ look-ch2-templeton {
 
 /* ---------- ON_LOAD ---------- */
 
+on_load-ch2-castle-13-doorless {
+	// abbreviated copy-pasta of the below
+	mutate ch2-in-room = 13;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>CASTLE THRONE ROOM</>..." }
+	if (warp state is walk_from-north) {
+		teleport entity "%PLAYER%" to geometry walk_from-north;
+	} else if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	}
+	copy ch2-map-init;
+}
 on_load-ch2-castle-13 {
 	if (warp state is "ch2 ending") {
 		set entity door on_tick to yeet;
@@ -381,6 +394,17 @@ king-walk-to-debris {
 
 /* ---------- ON_TICK ---------- */
 
+on_tick-ch2-castle-13-doorless {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-13;
+		set warp state to walk_from-north;
+		copy ch2-load-castle-12-special;
+	} else if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		copy on_exit-ch2-castle-13;
+		set warp state to walk_from-south;
+		copy ch2-load-castle-14-special;
+	}
+}
 on_tick-ch2-castle-13 {
 	if (flag ch2-king-rescued is true) {
 		if (entity "%PLAYER%" is inside geometry north-hitbox) {
@@ -406,7 +430,7 @@ on_go-castle-13-north {
 on_go-castle-13-south {
 	copy on_exit-ch2-castle-13;
 	copy warping-out-fade-out;
-	load map ch2-castle-12;
+	copy ch2-load-castle-12-special;
 }
 
 /* ---------- GOLDFISH (ADMIN) ---------- */
@@ -660,4 +684,19 @@ interact-ch2-gibson-throneroom {
 		}
 	}
 	copy resume-walk;
+}
+
+interact-ch2-sebastian-end {
+	show dialog { SELF "*whew* All the doors are cleared now, so time for a break." }
+}
+interact-ch2-templeton-end {
+	show dialog { SELF "Jeez Louise. I hope nothing else goes wrong today." }
+}
+interact-ch2-gibson-throneroom-end {
+	copy face-player;
+	show dialog {
+		SELF "Do let me know when we can get Aurelius back."
+		PLAYER "Of course."
+}
+	turn entity "%SELF%" south;
 }

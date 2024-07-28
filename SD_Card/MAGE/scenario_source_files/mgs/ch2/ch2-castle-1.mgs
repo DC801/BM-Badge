@@ -20,6 +20,15 @@ look-ch2-castle-1 {
 	// (Exits list goes here) (P.S. That's why there's an empty line above!)
 }
 
+look-ch2-mainframe-end {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's one majestic computer, full of your sweat, blood, and tears -- in some proportion."
+	}
+
+}
+
 look-ch2-mainframe {
 	show serial dialog spacer;
 	show serial dialog {
@@ -94,6 +103,29 @@ look-ch2-wizard {
 
 
 /* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-1-doorless {
+	// abbreviated copy-pasta of the below
+	mutate ch2-in-room = 1;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>CASTLE ENTRANCE</>..." }
+
+	set entity "Wizard" on_interact to interact-ch2-wizard-mainframedone;
+	set entity "Wizard" current_animation to 3; // head poking up
+	if (warp state is raw_game_load-ch2) {
+		copy restore_player_state;
+	} else if (warp state is walk_from-north) {
+		teleport entity "%PLAYER%" to geometry walk_from-north;
+	} else if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	}
+	copy ch2-map-init;
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo Maybe this counts as a bug; maybe really fix it?)
+	turn player control off;
+	wait 50ms;
+	turn player control on;
+}
 
 on_load-ch2-castle-1 {
 	if warp state is "ch2 ending" then goto ch2-castle-1-ending;
@@ -245,6 +277,19 @@ ch2-camera-from-artifact {
 
 /* ---------- ON_TICK ---------- */
 
+on_tick-ch2-castle-1-doorless {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-1;
+		set warp state to walk_from-north;
+		load map ch2-castle-outside;
+	}
+	if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		copy on_exit-ch2-castle-1;
+		set warp state to walk_from-south;
+		copy ch2-load-castle-11-special;
+	}
+}
+
 on_tick-ch2-castle-1 {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
 		copy on_exit-ch2-castle-1;
@@ -308,7 +353,7 @@ on_tick-ch2-castle-1-hexwait-protec {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {
 		copy ch2-wait-for-hat-touch-message;
 		turn player control off;
-		walk entity "%PLAYER%" to geometry entrance1-path over 200ms;
+		walk entity "%PLAYER%" to geometry walk_from-south over 200ms;
 		turn player control on;
 	}
 }
@@ -339,7 +384,7 @@ on_go-castle-1-north {
 	} else {
 		copy on_exit-ch2-castle-1;
 		copy warping-out-fade-out;
-		load map ch2-castle-11;
+		copy ch2-load-castle-11-special;
 	}
 }
 
@@ -646,6 +691,8 @@ ch2-install-wizard-resume {
 ch2-castle-21-ending {
 	teleport camera to geometry warp-spot;
 	teleport entity "%PLAYER%" to geometry hiding-spot;
+	set entity abacus on_tick to yeet;
+	turn entity Jean-Paul south;
 	copy ch2-ending-fadein;
 	wait 800ms;
 	show dialog {
@@ -661,6 +708,7 @@ ch2-castle-21-ending {
 ch2-castle-22-ending {
 	teleport camera to geometry warp-spot;
 	teleport entity "%PLAYER%" to geometry hiding-spot;
+	set entity "Power Supply" on_tick to yeet;
 	copy ch2-ending-fadein;
 	wait 800ms;
 	show dialog {
@@ -684,7 +732,7 @@ ch2-castle-13-ending {
 	set entity Sebastian on_tick to sebastian-to-three;
 	wait 200ms;
 	copy ch2-ending-fadeout;
-	load map ch2-castle-1;
+	copy ch2-load-castle-1-special;
 }
 
 ch2-player-exit {
@@ -825,6 +873,14 @@ interact-ch2-wizard-mainframedone {
 	show dialog {
 		SELF "I love the smell of software in the morning."
 		"...What? That's a thing."
+	}
+}
+
+interact-ch2-xa-end {
+	show dialog {
+		Lambda "Hey, there %PLAYER%! I'm a little busy just now, but why don't you come see me in person?"
+		"Just type WARP SECRET LAB into the artifact and you'll zoop straight to me."
+		// TODO: make the artifact assistance stuff still work (might be complicated)
 	}
 }
 

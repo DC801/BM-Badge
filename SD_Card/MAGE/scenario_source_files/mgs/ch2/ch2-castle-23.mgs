@@ -35,6 +35,18 @@ look-ch2-helvetica {
 
 /* ---------- ON_LOAD ---------- */
 
+on_load-ch2-castle-23-doorless {
+	// abbreviated copy-pasta of the below
+	mutate ch2-in-room = 23;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>POWER PLANT</>..." }
+	if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	}
+	copy ch2-map-init;
+}
+
 on_load-ch2-castle-23 {
 	// ch2 room state
 	mutate ch2-in-room = 23;
@@ -68,8 +80,13 @@ on_load-ch2-castle-23 {
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-castle-23 {
-	goto null_script;
+on_tick-ch2-castle-23 {}
+on_tick-ch2-castle-23-doorless {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-23;
+		set warp state to walk_from-north;
+		copy ch2-load-castle-22-special;
+	}
 }
 
 ch2-powerplant-supervise {
@@ -94,7 +111,7 @@ on_exit-ch2-castle-23 { // sanitize ch2 room state
 on_go-castle-23-south {
 	copy on_exit-ch2-castle-23;
 	copy warping-out-fade-out;
-	load map ch2-castle-22;
+	copy ch2-load-castle-22-special;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -331,4 +348,8 @@ interact-ch2-rocco-nogive {
 interact-ch2-rocco-wrapup {
 	copy rocco-work;
 	set entity "%SELF%" on_interact to interact-ch2-rocco;
+}
+
+interact-ch2-rocco-end {
+	show dialog { SELF "I'm gonna keep on keepin' on." }
 }

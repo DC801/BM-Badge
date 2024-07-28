@@ -192,7 +192,7 @@ ch2-post-credits {
 	}
 	show dialog {
 		Alfonso "I can almost remember how this all works. Almost. It's getting a easier the more time passes, but...."
-		PLAYER "He can make people forget things? But... Lambda can make people forget things, too!"
+		PLAYER "He can make people forget things? But... Lambda can do that, too!"
 		"Who actually is the Big Bad? Could it be... Lambda?"
 		Jackob "Lambda? Who's that?"
 	}
@@ -225,7 +225,7 @@ ch2-post-credits {
 	show dialog {
 		Jackob "Your robes! Those colors!"
 		Lambda emote $opaque_lowered "Y-yes. I'm sorry."
-		"I'm one of the village elders, but I made everyone forget that. Made them forget about me altogether. W-we were close friends."
+		"I'm one of the village elders, but I made everyone forget that. Made them forget about me altogether. But w-we were close friends once."
 		Alfonso "You're Lambda?"
 		Jackob "Were there four of us? Maybe. Can't remember. Can't be sure."
 		PLAYER "Why do you and the Big Bad both have the power to make people forget things, Lambda?"

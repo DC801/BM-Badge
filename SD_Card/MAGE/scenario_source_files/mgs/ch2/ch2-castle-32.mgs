@@ -78,6 +78,19 @@ look-ch2-coffee {
 
 /* ---------- ON_LOAD ---------- */
 
+on_load-ch2-castle-32-doorless {
+	// abbreviated copy-pasta of the below
+	mutate ch2-in-room = 32;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>CASTLE KITCHEN</>..." }
+	if (warp state is walk_from-northeast) {
+		teleport entity "%PLAYER%" to geometry walk_from-northeast;
+	} else if (warp state is walk_from-northwest) {
+		teleport entity "%PLAYER%" to geometry walk_from-northwest;
+	}
+	copy ch2-map-init;
+}
 on_load-ch2-castle-32 {
 	// ch2 room state
 	mutate ch2-in-room = 32;
@@ -109,8 +122,7 @@ on_load-ch2-castle-32 {
 	
 	if (warp state is walk_from-northeast) {
 		teleport entity "%PLAYER%" to geometry walk_from-northeast;
-	}
-	if (warp state is walk_from-northwest) {
+	} else if (warp state is walk_from-northwest) {
 		teleport entity "%PLAYER%" to geometry walk_from-northwest;
 	}
 	
@@ -125,12 +137,28 @@ debug-want-chips {
 
 on_tick-ch2-castle-32 {
 	if (entity "%PLAYER%" is inside geometry northwest-hitbox) {
+		copy on_exit-ch2-castle-32;
 		set warp state to walk_from-south;
-		load map ch2-castle-33;
+		copy ch2-load-castle-33-special;
+	} else if (entity "%PLAYER%" is inside geometry northeast-hitbox) {
+		copy on_exit-ch2-castle-32;
+		set warp state to walk_from-south;
+		copy ch2-load-castle-34-special;
 	}
-	if (entity "%PLAYER%" is inside geometry northeast-hitbox) {
+}
+on_tick-ch2-castle-32-doorless {
+	if (entity "%PLAYER%" is inside geometry northwest-hitbox) {
+		copy on_exit-ch2-castle-32;
 		set warp state to walk_from-south;
-		load map ch2-castle-34;
+		copy ch2-load-castle-33-special;
+	} else if (entity "%PLAYER%" is inside geometry northeast-hitbox) {
+		copy on_exit-ch2-castle-32;
+		set warp state to walk_from-south;
+		copy ch2-load-castle-34-special;
+	} else if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-32;
+		set warp state to walk_from-north;
+		copy ch2-load-castle-31-special;
 	}
 }
 
@@ -173,17 +201,17 @@ on_exit-ch2-castle-32 { // sanitize ch2 room state
 on_go-castle-32-northeast {
 	copy on_exit-ch2-castle-32;
 	copy warping-out-fade-out;
-	load map ch2-castle-34;
+	copy ch2-load-castle-34-special;
 }
 on_go-castle-32-northwest {
 	copy on_exit-ch2-castle-32;
 	copy warping-out-fade-out;
-	load map ch2-castle-33;
+	copy ch2-load-castle-33-special;
 }
 on_go-castle-32-south {
 	copy on_exit-ch2-castle-32;
 	copy warping-out-fade-out;
-	load map ch2-castle-31;
+	copy ch2-load-castle-31-special;
 }
 
 /* ---------- ENTITIES ---------- */
@@ -447,6 +475,8 @@ ch2-seamoss-summon-chips {
 	set flag ch2-ramchips-dispensed to true;
 	set entity "%PLAYER%" on_tick to null_script;
 }
+
+interact-ch2-vendingmachine-end {} //TODO
 
 /* ---------- RAMCHIPS (ADMIN) ---------- */
 
