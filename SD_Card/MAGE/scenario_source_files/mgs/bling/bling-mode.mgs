@@ -1,4 +1,4 @@
-const!($maxBling = 4)
+const!($maxBling = 5)
 
 /* --- Entrypoints from main menu --- */
 
@@ -22,6 +22,7 @@ bling-goto-branches {
 	if variable bling-rotate-state is 2 then goto script start_bling-digi-mage2;
 	if variable bling-rotate-state is 3 then goto script start_bling-digi-mage;
 	if variable bling-rotate-state is 4 then goto script start_bling-zero;
+	if variable bling-rotate-state is 5 then goto script start_bling-serial;
 	goto script bling-goto-menu;
 }
 
@@ -135,6 +136,11 @@ start_bling-dc801-2 {
 start_bling-zero {
 	set flag bling-hax-button-only to false;
 	load map bling-zero;
+}
+
+start_bling-serial {
+	set flag bling-hax-button-only to false;
+	load map bling-serial;
 }
 
 start_bling-digi-mage {

@@ -382,6 +382,10 @@
 		"path": "maps/map-bling-zero.json",
 		"on_load": "on_load-bling-zero"
 	},
+	"bling-serial": {
+		"path": "maps/map-bling-serial.json",
+		"on_load": "on_load-bling-serial"
+	},
 	"bling-qr": {
 		"path": "maps/map-bling-qr.json",
 		"on_load": "on_load-bling-qr"

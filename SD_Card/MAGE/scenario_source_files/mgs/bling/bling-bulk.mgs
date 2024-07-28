@@ -3,6 +3,11 @@ on_load-bling-zero {
 	copy script on_load-bling-mode-map;
 }
 
+on_load-bling-serial {
+	teleport camera to geometry camera-spot;
+	copy script on_load-bling-mode-map;
+}
+
 on_load-bling-digi-mage {
 	teleport camera to geometry camera-spot;
 	copy script on_load-bling-mode-map;
