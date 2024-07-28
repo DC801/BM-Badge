@@ -200,6 +200,14 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 				"You cannot `go` nowhere. Pick a direction.\n"
 			);
 		} else {
+			if (subject == "n") { subject = "north"; }
+			if (subject == "s") { subject = "south"; }
+			if (subject == "e") { subject = "east"; }
+			if (subject == "w") { subject = "west"; }
+			if (subject == "ne") { subject = "northeast"; }
+			if (subject == "sw") { subject = "southwest"; }
+			if (subject == "se") { subject = "southeast"; }
+			if (subject == "nw") { subject = "northwest"; }
 			std::string output = "You try to go `";
 			output += subject;
 			output += "`";
@@ -524,7 +532,7 @@ void MageCommandControl::unregisterCommand(
 				++alias;
 			}
 		}
-		debugAliases();
+		// debugAliases();
 		// We're unregistering all the arguments, the fail state, and the root command
 		for (auto & registeredCommand : registeredCommands) {
 			if (registeredCommand.commandStringId != commandStringId) {
@@ -585,7 +593,7 @@ void MageCommandControl::registerCommandAlias(
 		);
 	}
 	commandAliases[alias] = command;
-	debugAliases();
+	// debugAliases();
 }
 
 void MageCommandControl::debugAliases() {
@@ -609,7 +617,7 @@ void MageCommandControl::unregisterCommandAlias(
 		);
 	}
 	commandAliases.erase(alias);
-	debugAliases();
+	// debugAliases();
 }
 
 void MageCommandControl::setCommandVisibility(
