@@ -1,0 +1,19 @@
+{ "columns":1,
+ "image":"entity-minirake.png",
+ "imageheight":24,
+ "imagewidth":24,
+ "margin":0,
+ "name":"minirake",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.9.2",
+ "tileheight":24,
+ "tiles":[
+        {
+         "class":"minirake",
+         "id":0
+        }],
+ "tilewidth":24,
+ "type":"tileset",
+ "version":"1.9"
+}

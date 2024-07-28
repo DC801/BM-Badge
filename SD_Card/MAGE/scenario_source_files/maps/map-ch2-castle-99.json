@@ -306,6 +306,24 @@
                  "width":32,
                  "x":-49,
                  "y":-56
+                }, 
+                {
+                 "class":"",
+                 "gid":1059,
+                 "height":24,
+                 "id":64,
+                 "name":"clothes rake",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-minirake-99"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":24,
+                 "x":261,
+                 "y":225
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -466,7 +484,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":64,
+ "nextobjectid":65,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -524,6 +542,10 @@
         {
          "firstgid":1041,
          "source":"..\/entities\/entity-lambda-monitor.json"
+        }, 
+        {
+         "firstgid":1059,
+         "source":"..\/entities\/entity-minirake.json"
         }],
  "tilewidth":32,
  "type":"map",

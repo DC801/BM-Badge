@@ -123,6 +123,11 @@ on_load-ch2-castle-99 {
 		set entity Lambda current_animation to $lowered
 	}
 
+	// Check if rake has been obtained
+	if (flag ch2-has-minirake-99 is true) {
+		copy ch2-minirake-99-hide;
+	}
+	
 	// initialize everything
 	copy ch2-map-init;
 
@@ -434,4 +439,22 @@ interact-ch2-lambda-lab {
 		}
 	}
 	turn entity "%SELF%" toward entity CRT;
+}
+
+interact-ch2-minirake-99 {
+	show dialog {
+		PLAYER alignment TL "(Lambda seems to have been using this rake to help keep his laundry together.)"
+		"(I hope he doesn't mind me borrowing it.)"
+	}
+	copy ch2-minirake-99-hide;
+	set flag ch2-carrying-minirake-99 to true;
+	show dialog {
+		name "" alignment TL "(You picked up the mini rake!)"
+	}
+}
+
+ch2-minirake-99-hide {
+	teleport entity "clothes rake" to geometry hiding-spot;
+	set entity "clothes rake" name to " ";
+	set entity "clothes rake" on_interact to null_script;
 }

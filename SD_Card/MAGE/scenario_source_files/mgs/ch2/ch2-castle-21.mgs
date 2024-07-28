@@ -510,3 +510,28 @@ interact-ch2-jeanpaul-end {
 	show dialog { SELF "Almost done patching things up. Then it's off to see the band!" }
 	turn entity "%SELF%" south;
 }
+interact-ch2-goose {
+	if (flag ch2-installed-minirake-99 is true) {
+		show dialog {
+			PLAYER "I guess the goose likes me."
+			Goose "Honk!"
+		}
+	} else if (flag ch2-carrying-minirake-99 is false) {
+	    show dialog {
+			name "" "(An image of the goose honking atop a mountain of rakes floods your mind.)"
+			PLAYER "Did the goose just..."
+	    	Goose "HONK! (with a desire for rakes?)"
+			PLAYER "Must have been my imagination."
+		}
+    } else { // rake is carried, but not installed
+		show dialog {
+			name "" "(You feel compelled to present the rake to the goose like a treasure to Caesar.)"
+			PLAYER "Um, here you go."
+			name "" "(You give the rake to the goose!)"
+			name "" "(The goose seems to fluff its feathers and almost glow with an RGB shimmer. Somehow it seems stronger, and it honks with a mischievious smile in eyes.)"
+			PLAYER "We seem to be an... accomplice? Or perhaps this is a new partnership?"
+		}
+		set flag ch2-carrying-minirake-99 to false;
+		set flag ch2-installed-minirake-99 to true;
+    }
+}

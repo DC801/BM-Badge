@@ -143,6 +143,13 @@ command-inventory {
 			show serial dialog { "\t(nothing)" }
 		}
 	}
+	// mini-rake quest
+	if (flag ch2-carrying-minirake-99 is true) {
+		if (flag only-count-inventory is false) {
+			show serial dialog { "\tmini rake" }
+		}
+		// mutate ch2-count-inventory + 1; // (This is a bonus item so won't count toward the main menu ch progress count)
+	}
 	set flag only-count-inventory to false;
 	mutate ch2-counted-inventory = ch2-count-inventory;
 	mutate ch2-count-inventory = 0;
