@@ -448,6 +448,8 @@ interact-ch2-minirake-99 {
 	}
 	copy ch2-minirake-99-hide;
 	set flag ch2-has-minirake-99 to true;
+	set flag ch2-carrying-minirake-99 to true;
+	set flag ch2-installed-minirake-99 to false;
 }
 
 ch2-minirake-99-hide {

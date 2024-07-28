@@ -2,6 +2,7 @@ include!("header.mgs")
 settings for dialog {
 	entity Frankie { alignment TL }
 	entity Jean-Paul { alignment TR }
+	label GOOSE { entity "Goose"}
 	// todo: ascertain best practices for alignment in a situation like this
 }
 
@@ -18,10 +19,26 @@ look-ch2-castle-21 {
 
 look-ch2-goose {
 	show serial dialog spacer;
-	show serial dialog {
-		"You looked at the <m>%SELF%</>."
-		"\tA plain white goose reminiscent of one -- or several -- you've seen before. You wonder whether the red bow is some attempt at a disguise, and whether you have actually met this goose before."
-	}
+	if (flag ch2-has-minirake-99 is false) {
+	    show dialog {
+		    PLAYER "\tA plain white goose reminiscent of one -- or several -- you've seen before. You wonder whether the red bow is some attempt at a disguise, and whether you have actually met this goose before."
+			PLAYER "An image of the goose honking atop a mountain of rakes floods your mind."
+			PLAYER "\tDid the goose just..."
+	    	GOOSE "HONK! (with a desire for rakes?)"
+			PLAYER "Must have been my imagination."
+		}
+    }
+	if (flag ch2-has-minirake-99 is true) {
+		if (flag ch2-carrying-minirake-99 is true) {
+		    show dialog {
+			    PLAYER "You feel compelled to present the rake to the goose like a treasure to Cesar."
+		    	GOOSE "\tThe goose seems to fluff it's feathers and almost glow with an RGB shimmer. Some how it seems stronger and honks with a mischievious smile in eyes."
+				PLAYER "We seem to be an.... accomplice? Or perhaps this is a new partnership?"
+	    	}
+			set flag ch2-carrying-minirake-99 to false;
+			set flag ch2-installed-minirake-99 to true;
+		}
+    }
 }
 
 look-ch2-jean_paul {

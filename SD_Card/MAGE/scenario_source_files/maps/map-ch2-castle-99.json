@@ -312,7 +312,7 @@
                  "gid":1059,
                  "height":24,
                  "id":64,
-                 "name":"",
+                 "name":"clothes rake",
                  "properties":[
                         {
                          "name":"on_interact",

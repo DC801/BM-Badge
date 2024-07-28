@@ -129,11 +129,6 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-generic"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
                          "value":"look-ch2-goose"
                         }],
                  "rotation":0,

@@ -143,6 +143,15 @@ command-inventory {
 			show serial dialog { "\t(nothing)" }
 		}
 	}
+	// mini-rake quest
+	if (flag ch2-has-minirake-99 is true) {
+		if (flag only-count-inventory is false) {
+			if (flag ch2-installed-minirake-99 is false) {
+			show serial dialog { "\tMini-Rake" }
+			}
+		}
+		mutate ch2-count-inventory + 1;
+	}
 	set flag only-count-inventory to false;
 	mutate ch2-counted-inventory = ch2-count-inventory;
 	mutate ch2-count-inventory = 0;
