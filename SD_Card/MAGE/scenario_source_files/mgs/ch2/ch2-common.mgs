@@ -151,6 +151,9 @@ ch2-map-init {
 	copy ch2-map-init-inventory-look;
 	copy ch2-map-init-serial-debug-message;
 	copy ch2-map-init-warp-in;
+	// These commands are built into the engine, so let's just handle them here
+	register alias h = help;
+	register alias l = look;
 }
 
 

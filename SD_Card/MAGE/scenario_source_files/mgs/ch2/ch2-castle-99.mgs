@@ -244,12 +244,15 @@ ch2-cutscene-castle99 {
 	set entity Lambda on_tick to ch2-lambda-lower-tickversion;
 	show dialog {
 		Lambda emote $opaque_lowered "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
-		"Even the individual people! I'd forgotten how funny -- and so insightful -- Sea Moss is. I forgot how (TODO more people here pls)"
+		"Even the individual people! I'd forgotten how funny -- and insightful -- Sea Moss is."
+		"I forgot how resourceful and inventive Rocco is, and how cool it is that he can make something awesome and functional out of scrap."
+		// todo: more peeps?
+		"All my friends... everyone...."
 	}
 	turn entity Lambda south;
 	set entity Lambda on_tick to ch2-lambda-raise-tickversion;
 	show dialog {
-		Lambda emote $opaque_lowered_almost "All these problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
+		Lambda emote $opaque_lowered_almost "These problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
 		"Most of those problems wouldn't have happened. Hell, maybe none of them would have happened."
 	}
 	set entity Lambda on_tick to ch2-lambda-walkup;

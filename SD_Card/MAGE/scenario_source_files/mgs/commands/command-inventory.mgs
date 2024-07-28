@@ -5,6 +5,9 @@ include!("header.mgs")
 register-inventory {
 	register man + inventory -> man-inventory;
 	register inventory -> command-inventory;
+	register alias i = inventory;
+	register alias examine = inventory;
+	register alias x = inventory;
 }
 
 // MAN PAGE
