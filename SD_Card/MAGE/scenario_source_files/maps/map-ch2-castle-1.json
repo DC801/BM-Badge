@@ -258,11 +258,6 @@
                  "name":"XA",
                  "properties":[
                         {
-                         "name":"is_debug",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-xa"
@@ -518,6 +513,30 @@
                  "width":0,
                  "x":-114.8065,
                  "y":-63.8172
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":62,
+                 "name":"exit-line",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":49
+                        }, 
+                        {
+                         "x":64,
+                         "y":49
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":122,
+                 "y":126
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -526,7 +545,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":62,
+ "nextobjectid":63,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

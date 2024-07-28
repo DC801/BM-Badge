@@ -307,7 +307,7 @@ ch2-cutscene-kingreturns {
 	rotate entity "King Gibson" 1;
 	show dialog {
 		GIBSON emote 3 "I regret the things I said yesterday. And... I regret I assumed you had locked me in there. I should have trusted you better."
-		Templeton "Oh, your majesty! I'm just glad you --"
+		Templeton "Oh, Your Majesty! I'm just glad you --"
 	}
 	turn entity "King Gibson" toward entity Sebastian;
 	// King perks up
@@ -657,7 +657,7 @@ interact-ch2-gibson-throneroom {
 		}
 	} else if (flag ch2-clock-permission is false) {
 		show dialog {
-			PLAYER "So, your majesty, about the clock in your bedroom...."
+			PLAYER "So, Your Majesty, about the clock in your bedroom...."
 			GIBSON "What? What's this about my heirloom grandfather clock?"
 			PLAYER "I sort of want to borrow it to --"
 			GIBSON "Fine then. Have it, if you want it."

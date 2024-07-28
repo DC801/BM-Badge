@@ -235,7 +235,7 @@ interact-ch2-concierge {
 	}
 }
 interact-ch2-concierge-end {
-	show dialog { SELF "King Gibson's castle is now under (mostly) normal operation! Please enjoy your stay!" }
+	show dialog { Concierge "King Gibson's castle is now under (mostly) normal operation! Please enjoy your stay!" }
 }
 
 /* ---------- NEEDLE (ADMIN) ---------- */

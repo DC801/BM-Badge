@@ -6,9 +6,10 @@
 
 ## Generic work needing done
 
-- [ ] Make `go s` for `go south` an engine default alias (ditto for `sw` = `southwest`)
-- [ ] Tone down the alias logging in debug mode!
+- [x] Make `go s` for `go south` an engine default alias (ditto for `sw` = `southwest`)
+- [~] Tone down the alias logging in debug mode!
 - [ ] Make the menu mage more chiseled (like last ch)
+- [ ] Decide what to do with the null entity `door`, and be consistent about it
 - [ ] Rename scripts so they're consistent
 	- e.g. `ch2-interact-asdfasdf` should all be `interact-ch2-asdfasdf` -- or vice versa (pick one!)
 - [x] Move Tiled files to the folders they should actually be (some entity JSON files are in the maps folder, etc.)

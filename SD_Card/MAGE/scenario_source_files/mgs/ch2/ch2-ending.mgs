@@ -191,7 +191,7 @@ ch2-post-credits {
 		turn entity Alfonso toward entity "%PLAYER%";
 	}
 	show dialog {
-		Alfonso "I can almost remember how this all works. Almost. It's getting a easier the more time passes, but...."
+		Alfonso "I can almost remember how this all works. Almost. It's getting easier the more time passes, but...."
 		PLAYER "He can make people forget things? But... Lambda can do that, too!"
 		"Who actually is the Big Bad? Could it be... Lambda?"
 		Jackob "Lambda? Who's that?"
@@ -377,7 +377,7 @@ ch2-post-credits {
 	}
 	turn entity $Lambda toward entity "%PLAYER%";
 	show dialog {
-		Lambda emote $opaque_grin "For fixing on the mainframe with me. For making me feel like I can make a difference again. I have more hope now than I've had for a while."
+		Lambda emote $opaque_grin "For fixing the mainframe with me. For making me feel like I can make a difference again. I have more hope now than I've had for a while."
 		Lambda "We can always forge new connections, even after old ones are permanently broken. I will remember that."
 	}
 	turn entity $Lambda west;

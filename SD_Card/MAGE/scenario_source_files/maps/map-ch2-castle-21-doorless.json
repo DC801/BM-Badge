@@ -88,7 +88,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-generic"
+                         "value":"interact-ch2-goose"
                         }, 
                         {
                          "name":"on_look",

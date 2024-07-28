@@ -727,7 +727,7 @@ ch2-castle-13-ending {
 	show dialog {
 		Templeton "Did you hear that? Something changed."
 		Sebastian "Ah, yessss! The mana boosters have spun up!"
-		"Step aside, your majesty. I'll handle this."
+		"Step aside, Your Majesty. I'll handle this."
 	}
 	set entity Sebastian on_tick to sebastian-to-three;
 	wait 200ms;
@@ -736,7 +736,7 @@ ch2-castle-13-ending {
 }
 
 ch2-player-exit {
-	walk entity "%PLAYER%" to geometry exit-spot1 over 2000ms;
+	walk entity "%PLAYER%" along geometry exit-line over 2000ms;
 }
 ch2-castle-1-ending {
 	make camera follow entity "%PLAYER%";

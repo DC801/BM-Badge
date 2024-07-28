@@ -295,7 +295,7 @@ interact-ch2-alvin-end {
 	show dialog { SELF portrait alvin "I hope we'll get a larger audience than this. Let's give it a few more minutes, maybe?" }
 }
 interact-ch2-kuro-end {
-	show dialog { SELF "I've been following this group since they were \"64 Bits\"! I hope they play \"Scary Pointer Math\" tonight! Or maybe \"The Off By One Blues\"!" }
+	show dialog { SELF "I've been following this group since they were \"64 Bits\"! I hope they play \"Scary Pointer Math\" tonight! Or maybe \"The Off-By-One Blues\"!" }
 }
 interact-ch2-gloria-end {
 	copy face-player;

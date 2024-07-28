@@ -277,11 +277,11 @@ Plot points implemented:
 			- [x] Use the terminal to repair the intercom and get them talking again
 				- [x] Password in the floors of each room: will spell AUTHENTICATE
 			- [x] The King should return to the throne room
-				- [ ] After which the king and his staff reconcile
-				- [ ] And after which the goldfish agrees to go with you
-	- [ ] (9.) `cpu`
-		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
-			- [ ] The goldfish nobly sacrifices itself, but not before the King returns
+				- [x] After which the king and his staff reconcile
+				- [x] And after which the goldfish agrees to go with you
+	- [x] (9.) `cpu`
+		- [x] `goldfish` (same goldfish sprite as bedroom) (room 13)
+			- [x] The goldfish nobly sacrifices itself, but not before the King returns
 		- [x] `abacus` (room 21)
 			- [x] Should need to go into town for something: the manual for Frankie's scientific calculator (HP35s)
 			- [x] Manual needs sprite

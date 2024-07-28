@@ -116,7 +116,7 @@ on_load-ch2-castle-14 {
 			turn entity "King Gibson" north;
 			show dialog {
 				KING emote 3 "Well, assassin, do your worst. Get it over with."
-				PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, your majesty! I'm not an assassin!"
+				PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, Your Majesty! I'm not an assassin!"
 			}
 			turn entity "King Gibson" south;
 			show dialog {
@@ -218,7 +218,7 @@ ch2-touch-clock {
 	} else {
 		if (flag ch2-king-rescued is false) {
 			show dialog {
-				PLAYER "Um, excuse me, your majesty. I sort of need this clock --"
+				PLAYER "Um, excuse me, Your Majesty. I sort of need this clock --"
 				KING "Clock? What are you on about? Stay focused, please! Get this door working, and then we can discuss whatever else you want."
 			}
 		} else if (flag ch2-clock-permission is false) {
