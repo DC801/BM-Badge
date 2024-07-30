@@ -105,10 +105,7 @@ public:
    {
       fadeColor = color;
       fadeFraction = progress;
-      if (progress < 1.0f)
-      {
-         isFading = true;
-      }
+      isFading = progress < 1.0f;
    }
 
    inline void DrawRectWorldCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
@@ -123,7 +120,9 @@ public:
 
    inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
    {
-      drawTile(tilesetId, tileId, tileDrawX - camera.position.x, tileDrawY - camera.position.y, flags);
+      const auto drawX = tileDrawX - camera.position.x;
+      const auto drawY = tileDrawY - camera.position.y;
+      drawTile(tilesetId, tileId, drawX, drawY, flags);
    }
 
    inline void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })

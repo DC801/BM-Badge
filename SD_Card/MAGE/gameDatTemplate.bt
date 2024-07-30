@@ -124,7 +124,8 @@ set_lights_state,
 goto_action_index,
 set_script_pause,
 register_serial_dialog_command_alias,
-unregister_serial_dialog_command_alias
+unregister_serial_dialog_command_alias,
+set_serial_dialog_command_visibility
 };
 
 enum <uchar>  dialog_screen_alignment_type{

@@ -169,14 +169,14 @@ private:
    //called directly by scripts, and preform their actions based on arguments read from ROM
    //each action has an action logic type, depending on how it will need to interact with the rest of the game loop:
    //I   = instant, will execute and immediately proceed to the next action
-   //NB  = non-blocking, will use remainingSteps and totalSteps to run the action until it is completed
+   //NB  = non-blocking, will use loopsToNextAction and totalLoopsToNextAction to run the action until it is completed
    //NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the mapLocalScriptId is changed
    //B   = blocking, will pause all game actions until complete.
    //I+C = scripts that may call another mapLocalScriptId, discarding any actions that occur after them in the current script
    //NB+C= non-blocking + check, MAY block the continuation of that script until the user has provided input of some type. These actions may also branch via mapLocalScriptId, OR continue to the next action in the current script.
    //I've noted the blocking state of actions below on the line above the action:
 
-      //Action Logic Type: I
+   //Action Logic Type: I
    std::optional<uint16_t> null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I+C
    std::optional<uint16_t> check_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
@@ -193,13 +193,6 @@ private:
    std::optional<uint16_t> check_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   std::optional<uint16_t> check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    std::optional<uint16_t> check_if_entity_is_in_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
@@ -213,71 +206,32 @@ private:
    std::optional<uint16_t> non_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I
    std::optional<uint16_t> set_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_direction_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_direction_target_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_direction_target_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
-   std::optional<uint16_t> set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_player_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_map_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_hex_cursor_location(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_hex_editor_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_hex_editor_dialog_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_hex_editor_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> set_hex_editor_control_clipboard(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I (loadMap will stop all other scripts immediately, loading a new map with new scripts)
+   // (loadMap will stop all other scripts immediately, loading a new map with new scripts)
    std::optional<uint16_t> load_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: NB+C (
    //  note showDialog will render over the main game loop and not return player control until the dialog is concluded
@@ -290,19 +244,15 @@ private:
    std::optional<uint16_t> teleport_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: NB
    std::optional<uint16_t> walk_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: NB
    std::optional<uint16_t> walk_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: NBC
    std::optional<uint16_t> loop_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I
    std::optional<uint16_t> set_camera_to_follow_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I
    std::optional<uint16_t> teleport_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: NB
    std::optional<uint16_t> pan_camera_to_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: NB
    std::optional<uint16_t> pan_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: NB
    std::optional<uint16_t> pan_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: NBC
    std::optional<uint16_t> loop_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
@@ -315,7 +265,6 @@ private:
    std::optional<uint16_t> copy_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I+C
    std::optional<uint16_t> check_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
-   //Action Logic Type: I+C
    std::optional<uint16_t> check_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
    //Action Logic Type: I
    std::optional<uint16_t> slot_save(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
@@ -364,7 +313,7 @@ private:
 
    constexpr float getProgressOfAction(const MageScriptState& resumeState) const
    {
-      return 1.0f - (float)resumeState.remainingSteps / (float)resumeState.totalSteps;
+      return 1.0f - (float)resumeState.loopsToNextAction / (float)resumeState.totalLoopsToNextAction;
    }
    float manageProgressOfAction(MageScriptState& resumeState, uint32_t duration) const;
 

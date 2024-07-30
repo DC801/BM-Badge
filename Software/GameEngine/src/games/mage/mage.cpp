@@ -89,6 +89,14 @@ void MageGameEngine::gameLoopIteration()
 {
    auto updateAccumulator = inputHandler->lastDelta;
 
+   // methods that should only happen once per frame:
+   if (!hexEditor->isHexEditorOn())
+   {
+      scriptControl->tickScripts();
+   }
+
+   commandControl->sendBufferedOutput();
+
    // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
    while (updateAccumulator >= IntegrationStepSize)
    {
@@ -123,13 +131,6 @@ void MageGameEngine::gameLoopIteration()
       updateAccumulator -= IntegrationStepSize;
    }
 
-   // methods that should only happen once per frame follow:
-   if (!hexEditor->isHexEditorOn())
-   {
-      scriptControl->tickScripts();
-   }
-
-   commandControl->sendBufferedOutput();
 }
 
 void MageGameEngine::LoadMap()

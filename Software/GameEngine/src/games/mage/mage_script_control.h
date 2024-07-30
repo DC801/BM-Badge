@@ -29,13 +29,14 @@ public:
    std::optional<uint16_t> jumpScriptId{ MAGE_NO_SCRIPT };
 
    void tickScripts();
-   void processScript(MageScriptState& resumeState, uint8_t currentEntityId) const;
+   void processScript(MageScriptState& resumeState, uint8_t currentEntityId);
 
 private:
    std::shared_ptr<MapControl> mapControl;
    std::unique_ptr<MageScriptActions> scriptActions;
 
+   void processScriptActions(MageScriptState& scriptState, uint8_t currentEntityId);
 
-}; //MageScriptControl
+};
 
 #endif //_MAGE_SCRIPT_CONTROL_H
