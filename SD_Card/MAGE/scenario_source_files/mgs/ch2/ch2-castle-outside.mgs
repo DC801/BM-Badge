@@ -25,6 +25,9 @@ on_load-ch2-castle-outside {
 	if (flag ch2-full-escort-cutseen is false) {
 		// todo: cutscene: leading you inside
 	}
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>CASTLE ENTRANCE</>..." }
 	// Village elders hiding
 	if (variable ch2-storyflag-round is not 0) {
 		set entity Bert on_tick to yeet;
@@ -40,10 +43,6 @@ on_load-ch2-castle-outside {
 	}
 	// animations
 	if (warp state is walk_from-north) {
-		if (flag ch2-has-artifact is true) {
-			show serial dialog spacer;
-			show serial dialog { "Leaving the castle..." }
-		}
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 	} else if (warp state is walk_from-east) {
 		set entity "%PLAYER%" path to walk_from-east;

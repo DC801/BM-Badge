@@ -117,6 +117,9 @@ reset {
 // END DEBUG
 
 on_load-ch2-bobsclub {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>BOB'S CLUB</>..." }
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	mutate ch2-rattle-count = 0;
 
@@ -347,7 +350,7 @@ ch2-bobrattling { // Hint that there's more inside the building
 				PLAYER "...Okay, that thumping is DEFINITELY music. I think the bass just dropped."
 			}
 			show dialog {
-				PLAYER "It sounds like the speaker is nearby, like just beyond a wall. But the only visible doorway is the main entrance."
+				PLAYER "It sounds like the speaker is nearby, like just beyond a wall. But the only exit to this room is the main entrance."
 			}
 		}
 		else if (variable ch2-rattle-count is 2) {

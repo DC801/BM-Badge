@@ -5,6 +5,9 @@ on_load-woprhouse {
 		register rtfm -> command-rtfm;
 	}
 	if (variable current-chapter is 2) {
+		// entrance text
+		show serial dialog spacer;
+		show serial dialog { "Entering <bold>WOPR ROOM</>..." }
 		copy ch2-map-init;
 	}
 	if (flag wopr-backdoor-found is false) {

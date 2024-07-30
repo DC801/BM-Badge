@@ -67,7 +67,7 @@ on_load-ch2-castle-13 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-13 is false) {
-		show serial dialog { "Discovered <bold><c>CASTLE THRONE ROOM</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>CASTLE THRONE ROOM</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-13 to true;
 	} else {
 		show serial dialog { "Entering <bold>CASTLE THRONE ROOM</>..." }
@@ -192,7 +192,7 @@ ch2-cutscene-castle12 {
 	wait 200ms;
 	show dialog {
 		Sebastian "Enough!"
-		"Clearly he's abandoned us. Thus, we must take action now, before anything worse happens."
+		"In either case, we must take action before anything worse happens."
 	}
 	walk entity Sebastian to geometry lizard1 over 400ms;
 	show dialog {
@@ -228,7 +228,7 @@ ch2-cutscene-castle12 {
 	}
 	turn entity "%PLAYER%" north;
 	show dialog {
-		Templeton "It belongs to the king!"
+		Templeton "It's up to the king who gets to wield it!"
 	}
 	set entity Sebastian on_tick to ch2-lizard-withdraw;
 	turn entity "%PLAYER%" east;
@@ -341,8 +341,8 @@ ch2-cutscene-kingreturns {
 		GIBSON "I can bench press three hundred pounds. I might be able to move this."
 		Sebastian "At the speed my mana was draining, it's heavier than that. You'll wear yourself out for no reason."
 		"But at least we're focused on the real problem now. Finally!"
-		Templeton "This debris wasn't going anywhere, and the king might have been bleeding to death!"
-		Aurelius "What's done is done. Focus."
+		Templeton "This debris wasn't going anywhere, and the king might have been lying in a pool of his own blood, gasping for air, with his every bone broken!"
+		Aurelius "Fortunately, the king is all right, and what's done is done. Focus."
 		"Neither the king nor Sebastian can move the debris alone, but what about together?"
 		Templeton "Oh, yes! But what if you lighten the load with telekinesis, Sebastian?"
 		Sebastian "Perhaps, but...."
@@ -700,3 +700,9 @@ interact-ch2-gibson-throneroom-end {
 }
 	turn entity "%SELF%" south;
 }
+interact-ch2-statue {
+	show dialog {
+		PLAYER "Neat detail work in the beard. I wonder what kind of stone this is."
+	}
+}
+

@@ -167,7 +167,7 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":76,
+                 "x":72,
                  "y":104
                 }, 
                 {
@@ -257,6 +257,11 @@
                  "id":3,
                  "name":"XA",
                  "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":false
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",

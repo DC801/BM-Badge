@@ -54,6 +54,9 @@ look-ch2-manual {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-lodge {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>LIBRARY</>..." }
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	if (variable ch2-storyflag-round is not 1) {
 		set entity Alfonso on_tick to yeet;

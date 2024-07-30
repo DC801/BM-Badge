@@ -6,7 +6,7 @@ look-ch2-castle-31 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>GRAND HALL</>."
-		"\tThis place seems to be a hybrid entertainment ampitheater and mess hall. But, empty of people and other distractions, the stage -- and its performers -- steal all your attention. Those cocktail chairs and tables seem to tall and too small to be comfortable."
+		"\tThis place seems to be a hybrid entertainment ampitheater and mess hall. But, empty of people and other distractions, the stage -- and its performers -- steal all your attention. Those cocktail chairs and tables seem too tall and too small to be comfortable." // TODO: move this line to interacting with chairs/tables, and do something else for the rest of this
 		" "
 	}
 }
@@ -47,6 +47,13 @@ look-ch2-drum {
 		"\tThe \"1023 MB\" logo is surprisingly well done, with its thoughtful serifs and clean linework. The professional logo and the aggressive red of the drumset make a strange contrast with the ragtag musicians."
 	}
 }
+look-ch2-bartable {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\t(TODO)"
+	}
+}
 
 
 /* ---------- ON_LOAD ---------- */
@@ -74,7 +81,7 @@ on_load-ch2-castle-31 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-31 is false) {
-		show serial dialog { "Discovered <bold><c>GRAND HALL</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>GRAND HALL</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-31 to true;
 	} else {
 		show serial dialog { "Entering <bold>GRAND HALL</>..." }
@@ -202,6 +209,14 @@ interact-ch2-drum {
 		Alvin portrait alvin "It's 'cause we can't get a real gig."
 	}
 }
+interact-ch2-bartable {
+	show dialog {
+		PLAYER "These tables -- and chairs -- look way too tall and narrow to be comfortable."
+	}
+}
+interact-ch2-banddrinks {
+	show dialog { PLAYER "Just a bunch of fancy drinks." }
+}
 
 interact-ch2-simon {
 	if (variable ch2-storyflag-round is < 2) {
@@ -310,7 +325,7 @@ interact-ch2-samson-end {
 }
 interact-ch2-tracy-end {
 	copy face-player;
-	show dialog { SELF "Guess the refreshments are self-serve now. That's a bit on the cheap side...." }
+	show dialog { SELF "Guess the refreshments are self serve this time. That's a bit on the cheap side...." }
 	turn entity "%SELF%" south;
 }
 
@@ -341,6 +356,11 @@ ch2-touch-keyboard {
 		Simon emote 2 "Hey! Hey! Don't you insult Rosetta like that!"
 	}
 	set entity Simon current_animation to 0;
+	if (variable ch2-storyflag-round is 2) {
+		show dialog {
+			PLAYER "(I can't just take this without asking. Better talk to %Simon%.)"
+		}
+	}
 }
 
 camera-angry-shake {

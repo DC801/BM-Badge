@@ -67,6 +67,9 @@ look-ch2-bookorigins {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-lodge-rtfm {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>RTFM ROOM</>..." }
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	
 	// Village elders hiding

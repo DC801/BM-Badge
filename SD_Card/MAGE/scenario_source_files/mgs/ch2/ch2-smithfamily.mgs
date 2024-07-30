@@ -30,6 +30,9 @@ look-ch2-smith {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-smithfamily {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>SMITH'S HOUSE</>..." }
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	copy ch2-map-init;
 }

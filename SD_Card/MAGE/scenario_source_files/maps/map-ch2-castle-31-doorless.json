@@ -413,6 +413,140 @@
                  "width":64,
                  "x":349,
                  "y":233
+                },
+            
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":119,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":80,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":120,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":144,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":121,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":208,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":122,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":272,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":123,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":336,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":124,
+                 "name":"drinks",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-banddrinks"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":445,
+                 "y":265
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -526,7 +660,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":64,
+ "nextobjectid":125,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

@@ -79,6 +79,9 @@ look-ch2-cake {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-magehouse {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>YOUR HOUSE</>..." }
 	if (
 		variable ch2-storyflag-round is 0
 	) {

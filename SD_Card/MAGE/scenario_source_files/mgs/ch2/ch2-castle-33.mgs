@@ -29,7 +29,7 @@ on_load-ch2-castle-33 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-33 is false) {
-		show serial dialog { "Discovered <bold><c>HYDROPONICS ROOM</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>HYDROPONICS ROOM</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-33 to true;
 	} else {
 		show serial dialog { "Entering <bold>HYDROPONICS ROOM</>..." }
@@ -159,15 +159,15 @@ ch2-interact-gregory {
 			show dialog {
 				SELF "That bluetooth proximity detector will tell you how close you are to the mouse. The closer you are to it, the more lights will light up."
 				"Or did you want to take a break?"
-				> "Yes, I want to take a break" : ch2-interact-gregory-breakyes
-				> "No, I want to keep trying" : ch2-interact-gregory-breakno
+				> "Yes, I want to take a break." : ch2-interact-gregory-breakyes
+				> "No, I want to keep trying." : ch2-interact-gregory-breakno
 			}
 			set flag interrupt to true;
 		} else {
 			show dialog {
 				SELF "Did you want to take a break?"
-				> "Yes, I want to take a break" : ch2-interact-gregory-breakyes
-				> "No, I want to keep trying" : ch2-interact-gregory-breakno
+				> "Yes, I want to take a break." : ch2-interact-gregory-breakyes
+				> "No, I want to keep trying." : ch2-interact-gregory-breakno
 			}
 		}
 	}
@@ -192,7 +192,7 @@ ch2-interact-gregory {
 			copy face-player;
 			show dialog {
 				SELF "They did some structural reinforcement, too, but don't remember specifics."
-				"At the time, the only thing I cared about was my new stovestop!"
+				"At the time, the only thing I cared about was my new stovetop."
 			}
 			set flag ch2-gregory-backstory to true;
 		} else {
@@ -355,7 +355,7 @@ ch2-touch-mouse {
 			PLAYER "This thingy plugs into a USB port? What if the mainframe doesn't have one of those?"
 			Gregory "Then...."
 			"...."
-			"Well, we'll cross that bridge when we get to it. You should be fine, unless the enclosure is more than 15 years old or so."
+			"Well, we'll cross that bridge when we get to it. You should be fine, unless the enclosure is more than 25 years old or so."
 			PLAYER "I don't know how old it is."
 			Gregory "Well, what does it look like?"
 			PLAYER "I guess it's sort of beige...."

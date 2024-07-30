@@ -100,7 +100,7 @@ on_load-ch2-castle-32 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-32 is false) {
-		show serial dialog { "Discovered <bold><c>CASTLE KITCHEN</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>CASTLE KITCHEN</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-32 to true;
 	} else {
 		show serial dialog { "Entering <bold>CASTLE KITCHEN</>..." }

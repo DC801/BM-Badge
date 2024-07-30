@@ -23,7 +23,7 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {" "}
 	}
-	concat serial dialog {"       M A P  |"}
+	concat serial dialog {"      CASTLE  |"}
 	concat serial dialog newline;
 
 	// ROW 2
@@ -62,7 +62,7 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"   "}
 	}
-	concat serial dialog {"             |"}
+	concat serial dialog {"        MAP  |"}
 	concat serial dialog newline;
 
 	// ROW 3
@@ -112,7 +112,7 @@ draw-ch2-serial-map {
 		concat serial dialog {" "}
 	}
 	if (flag ch2-seen-room-14 is true || flag ch2-seen-room-13 is true) {
-		concat serial dialog {"-----"}
+		concat serial dialog {"--+--"}
 	} else {
 		concat serial dialog {"     "}
 	}
@@ -280,7 +280,7 @@ draw-ch2-serial-map {
 		concat serial dialog {" "}
 	}
 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-32 is true) {
-		concat serial dialog {"--"}
+		concat serial dialog {"-+"}
 	} else {
 		concat serial dialog {"  "}
 	}
@@ -290,7 +290,7 @@ draw-ch2-serial-map {
 		concat serial dialog {" "}
 	}
 	if (flag ch2-seen-room-32 is true || flag ch2-seen-room-34 is true) {
-		concat serial dialog {"--"}
+		concat serial dialog {"+-"}
 	} else {
 		concat serial dialog {"  "}
 	}
@@ -355,13 +355,13 @@ draw-ch2-serial-map {
 	// ROW 9
 	concat serial dialog {"|   "}
 	if (flag ch2-seen-room-22 is true || flag ch2-seen-room-23 is true) {
-		concat serial dialog {"-----"}
+		concat serial dialog {"--+--"}
 	} else {
 		concat serial dialog {"     "}
 	}
 	concat serial dialog {"    "}
 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-13 is true) {
-		concat serial dialog {"----"}
+		concat serial dialog {"--+-"}
 	} else {
 		concat serial dialog {"    "}
 	}
@@ -376,7 +376,7 @@ draw-ch2-serial-map {
 		concat serial dialog {"    "}
 	}
 	if (flag ch2-seen-room-31 is true || flag ch2-seen-room-32 is true) {
-		concat serial dialog {"-----"}
+		concat serial dialog {"--+--"}
 	} else {
 		concat serial dialog {"     "}
 	}
@@ -443,7 +443,7 @@ draw-ch2-serial-map {
 		}
 	}
 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-31 is true) {
-		concat serial dialog {"|"}
+		concat serial dialog {"+"}
 	} else {
 		concat serial dialog {" "}
 	}
@@ -491,7 +491,7 @@ draw-ch2-serial-map {
 	// ROW 11
 	concat serial dialog {"|   "}
 	if (flag ch2-seen-room-22 is true || flag ch2-seen-room-21 is true) {
-		concat serial dialog {"-----"}
+		concat serial dialog {"--+--"}
 	} else {
 		concat serial dialog {"     "}
 	}
@@ -506,7 +506,7 @@ draw-ch2-serial-map {
 		concat serial dialog {" "}
 	}
 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true) {
-		concat serial dialog {"---"}
+		concat serial dialog {"-+-"}
 	} else {
 		concat serial dialog {"   "}
 	}
@@ -564,7 +564,7 @@ draw-ch2-serial-map {
 		concat serial dialog {"  "}
 	}
 	if (flag ch2-seen-room-21 is true || flag ch2-seen-room-11 is true) {
-		concat serial dialog {"|"}
+		concat serial dialog {"+"}
 	} else {
 		concat serial dialog {" "}
 	}
@@ -606,7 +606,7 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {"       "}
 	}
-	concat serial dialog {"---------          |"}
+	concat serial dialog {"----+----          |"}
 	if (flag ch2-map-cactuscooler-castle is true) {
 		concat serial dialog {"   <g>?</> Look for <m>Cactus Cooler</>"}
 	} else if (flag ch2-map-cactuscooler-bobaustin is true) {
@@ -642,7 +642,7 @@ draw-ch2-serial-map {
 	concat serial dialog newline;
 
 	// ROW 15
-	concat serial dialog {"|          ---------          |"}
+	concat serial dialog {"|          ----+----          |"}
 	if (flag ch2-map-cactuscooler-castle is true) {
 		concat serial dialog {"   refreshments or drinks."}
 	} else if (flag ch2-map-cactuscooler-bobaustin is true) {

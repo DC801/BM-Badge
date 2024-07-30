@@ -335,6 +335,158 @@
                  "width":32,
                  "x":446,
                  "y":105
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":52,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":80,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":57,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":144,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":70,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":208,
+                 "y":267
+                },
+            
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":71,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":272,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":72,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":336,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":74,
+                 "name":"drinks",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-banddrinks"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":444,
+                 "y":265
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":75,
+                 "name":"door",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-attempt-door-check"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":46,
+                 "y":171
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -425,7 +577,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":51,
+ "nextobjectid":76,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

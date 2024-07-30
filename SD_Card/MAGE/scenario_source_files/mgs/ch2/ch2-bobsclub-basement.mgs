@@ -71,6 +71,9 @@ look-ch2-pizza {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-bobsclub-basement {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>BOB'S CLUB BASEMENT</>..." }
 	if (flag ch2-cutseen-bob-party is false) {
 		teleport camera to geometry gasp-spot;
 	} else {
@@ -361,8 +364,8 @@ interact-ch2-bobaustin {
 		SELF "I'm the MC for Bob Jeopardy this year."
 		"Of course, I'm the MC for Bob Jeopardy every year."
 		PLAYER "What's Bob Jeopardy like?"
-		SELF "Like Jeopardy."
-		"But with Bobs."
+		SELF "Like Jeopardy, but with drinking."
+		"And Bobs."
 	}
 	turn entity "%SELF%" south;
 }

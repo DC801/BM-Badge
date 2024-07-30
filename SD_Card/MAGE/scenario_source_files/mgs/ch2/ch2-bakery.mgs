@@ -22,6 +22,9 @@ look-ch2-baker {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-bakery {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>BAKERY</>..." }
 	// The part of Aunt Zippy is being played by Jackob
 	if (
 		variable ch2-storyflag-round is 3

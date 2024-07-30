@@ -48,7 +48,7 @@ on_load-ch2-castle-22 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-22 is false) {
-		show serial dialog { "Discovered <bold><c>SERVER ROOM</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>SERVER ROOM</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-22 to true;
 	} else {
 		show serial dialog { "Entering <bold>SERVER ROOM</>..." }
@@ -113,7 +113,7 @@ interact-ch2-scuzzy {
 		show dialog {
 			SELF "In a metaphorical sense, the castle a computer."
 			"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
-			"In isolation each room, and each of us, are capable of little. But when we can connect people to each other, we can collaborate and build amazing things."
+			"In isolation each room -- and each of us -- are capable of little. But when we can connect people to each other, we can collaborate and build amazing things."
 		}
 		copy resume-walk;
 		wait 500ms;

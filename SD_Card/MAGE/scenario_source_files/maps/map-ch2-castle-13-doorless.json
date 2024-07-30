@@ -390,6 +390,78 @@
                  "width":0,
                  "x":192,
                  "y":99
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":118,
+                 "name":"statue",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-statue"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":43,
+                 "y":201
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":119,
+                 "name":"statue",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-statue"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":310,
+                 "y":201
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":120,
+                 "name":"statue",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-statue"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":43,
+                 "y":329
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":121,
+                 "name":"statue",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-statue"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":310,
+                 "y":329
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -398,7 +470,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":94,
+ "nextobjectid":122,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

@@ -57,7 +57,7 @@ on_load-ch2-castle-14 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-14 is false) {
-		show serial dialog { "Discovered <bold><c>KING GIBSON'S BEDROOM</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>KING GIBSON'S BEDROOM</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-14 to true;
 	} else {
 		show serial dialog { "Entering <bold>KING GIBSON'S BEDROOM</>..." }
@@ -122,7 +122,7 @@ on_load-ch2-castle-14 {
 			show dialog {
 				KING "Then you've come to mock me."
 				PLAYER "No, of course not. I'm here to check up on you. Your -- um, advisors? -- are very worried about you."
-				KING "I doubt that. They've disabled the lock on the door, and they won't answer the intercom. I've tried to reach them dozens of times."
+				KING "I doubt that. They've disabled the locking mechanism on the door, and they won't answer the intercom. I've tried to reach them dozens of times."
 				PLAYER "Intercom?"
 				KING "Yes. That panel by the door, next to the keypad."
 			}
@@ -130,12 +130,12 @@ on_load-ch2-castle-14 {
 			show dialog {
 				KING emote 3 "Hmph. I'm sure Sebastian is halfway through a coup d'etat by now."
 				PLAYER "But they said they've tried calling you."
-				"Could it be... perhaps the intercom is broken?"
+				"Could it be... perhaps the intercom is broken, too?"
 			}
 			turn entity "King Gibson" south;
 			show dialog {
 				KING "Broken?"
-				PLAYER "Well, there was an earthquake. Maybe the lock is busted, too."
+				PLAYER "Well, there was an earthquake. Maybe that's what busted the lock."
 				"They said they've tried to call you, but haven't heard anything back. In fact, they think YOU'RE ignoring THEM."
 				KING "Ignoring them? No, I would never...."
 				PLAYER "They said you had an argument last night."
@@ -152,7 +152,7 @@ on_load-ch2-castle-14 {
 				"This whole time, it was only a broken line of communication? They don't hate me?"
 				PLAYER "The big, blue one is worried you might be hurt from the earthquake."
 				"It was the goldfish who asked me to check up on you."
-				KING "I am relieved to hear that. I knew I was more fond of them than they were of me, but I feared...."
+				KING "I am relieved to hear that."
 			}
 			walk entity "King Gibson" to geometry walk-spot over 800ms;
 			show dialog {

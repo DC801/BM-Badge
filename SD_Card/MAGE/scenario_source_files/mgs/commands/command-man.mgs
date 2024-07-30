@@ -111,10 +111,27 @@ command-man-normal-convo {
 }
 
 ch2-lambda-topic-q {
+	if (variable ch2-storyflag-round is < 5) {
+		goto ch2-lambda-topic-q-midgame;
+	} else {
+		goto ch2-lambda-topic-q-end;
+	}
+}
+ch2-lambda-topic-q-midgame {
 	show serial dialog {
 		"(Ask about:)"
 		# "Parts list" : command-parts
 		# "Installing parts" : ch2-lambda-topic-installation
+		# "Using the artifact" : ch2-lambda-topic-artifact
+		# "The mainframe" : ch2-lambda-topic-mainframe
+		# "The castle" : ch2-lambda-topic-castle
+		# "Someone specific" : ch2-lambda-topic-person-start
+		# "(Quit)" : ch2-lambda-ishouldgo
+	}
+}
+ch2-lambda-topic-q-end {
+	show serial dialog {
+		"(Ask about:)"
 		# "Using the artifact" : ch2-lambda-topic-artifact
 		# "The mainframe" : ch2-lambda-topic-mainframe
 		# "The castle" : ch2-lambda-topic-castle
@@ -232,12 +249,31 @@ ch2-lambda-mainframe-broken-2 {
 
 ch2-lambda-mainframe-fix-1 {
 	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: How do we fix it? What do we need?"
-		" "
-		"<m>LAMBDA</>: We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
-		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. I have my parts list right here. The software though... I'll, um, get back to you about that."
-		" "
+	if (variable ch2-storyflag-round is < 4) {
+		show serial dialog {
+			"<c>YOU</>: How do we fix it? What do we need?"
+			" "
+			"<m>LAMBDA</>: We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+			"\tBut there should be enough <m>computer parts</> scattered throughout the castle. I have my parts list right here. The software though... I'll, um, get back to you about that."
+			" "
+		}
+	} else if (variable ch2-storyflag-round is 4) {
+		show serial dialog {
+			"<c>YOU</>: How do we fix it? What do we need?"
+			" "
+			"<m>LAMBDA</>: We've rebuilt the computer itself, so all we need now is its operating system. I've got it ready now, so come on up to my secret lab and I'll give it to you."
+			" "
+		}
+	} else {
+		show serial dialog {
+			"<c>YOU</>: How do we fix it? What do we need?"
+			" "
+			"<m>LAMBDA</>: The mainframe itself is all fixed -- which is to say, we've bodged things well enough for now."
+			"\tThough there's still the matter of Aurelius. I've already sent for a CPU to come in the mail, so all we have to do is wait for it to get here, then we can swap it out and put him back to normal."
+			"\tAs for the other bodges... you know, maybe it's best not to mess with anything else if it's all working."
+			" "
+		}
+
 	}
 	goto ch2-lambda-topic-mainframe-q;
 }
@@ -304,7 +340,7 @@ ch2-lambda-topic-person-s {
 
 ch2-lambda-topic-person-q {
 	show serial dialog {
-		"(Type a name, or type <c>CANCEL</> to go back)"
+		"(Type a name, or type <c>BACK</> to go back)"
 
 		// people (brief)
 
@@ -363,7 +399,7 @@ ch2-lambda-topic-person-q {
 		
 		// admin
 
-		_ "CANCEL" : command-man-normal-convo
+		_ "BACK" : command-man-normal-convo
 		_ "Q" : command-man-normal-convo
 		_ "QUIT" : command-man-normal-convo
 		_ "STOP" : command-man-normal-convo
@@ -972,8 +1008,18 @@ ch2-lambda-person-lambda-name-2b {
 ch2-lambda-person-lambda-name-2c {
 	show serial dialog {
 		"\t...I found the place in the world where my name linked to my data as an entity... and destroyed it."
-		" "
-		# "What? But why?" : ch2-lambda-person-lambda-name-3
+	}
+	if (variable ch2-storyflag-round is < 5) {
+		show serial dialog {
+			" "
+			# "What? But why?" : ch2-lambda-person-lambda-name-3
+		}
+	} else {
+		show serial dialog {
+			"\tThe <r>Big Bad</> couldn't target me with hacks without knowing my name, you see, so I made it impossible to learn my name, or even know my name."
+			"\tI severed more than I intended, but...."
+		}
+		goto ch2-lambda-person-lambda-name-followup;
 	}
 }
 ch2-lambda-person-lambda-name-3 {
@@ -982,6 +1028,14 @@ ch2-lambda-person-lambda-name-3 {
 		"<c>YOU</>: What? But why?"
 		" "
 		"<m>LAMBDA</>: I did it to protect myself from the <r>Big Bad</>. He couldn't target me with hacks without knowing my name, so I made it impossible to learn my name, or even know my name."
+		"\tI severed more than I intended, but...."
+	}
+	goto ch2-lambda-person-lambda-name-followup;
+}
+
+ch2-lambda-person-lambda-name-2c-alt {
+	show serial dialog {
+		"\t...I found the place in the world where my name linked to my data as an entity... and destroyed it. The <r>Big Bad</> couldn't target me with hacks without knowing my name, you see, so I made it impossible to learn my name, or even know my name."
 		"\tI severed more than I intended, but...."
 	}
 	goto ch2-lambda-person-lambda-name-followup;

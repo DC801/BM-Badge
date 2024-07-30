@@ -100,7 +100,7 @@
                  "visible":true,
                  "width":32,
                  "x":176,
-                 "y":95
+                 "y":70
                 }, 
                 {
                  "class":"",
@@ -198,6 +198,24 @@
                  "width":32,
                  "x":-70,
                  "y":-66
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":43,
+                 "name":"door",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-attempt-door-check"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":301
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -262,7 +280,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":43,
+ "nextobjectid":44,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

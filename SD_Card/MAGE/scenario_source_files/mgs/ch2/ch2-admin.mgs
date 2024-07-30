@@ -46,7 +46,7 @@ ch2-count-flags {
 }
 
 ch2-interact-mainframe-end {
-	show dialog { name "" "(Nothing left to install! Everything is working!)" }
+	show dialog mainframe-working { name "" "(Nothing left to install. The computer is humming and buzzing along, and Aurelius seems to be doing okay.)" }
 }
 ch2-interact-mainframe {
 	if (flag ch2-wait-for-hat-touch is true) {
@@ -64,7 +64,7 @@ ch2-interact-mainframe {
 		copy ch2-install-wizard;
 		return;
 	} else if (flag ch2-installed-mainframeos is true) {
-		show dialog { name "" "(Nothing left to install! Everything is working!)" }
+		show dialog mainframe-working; // references above
 		return;
 	} else if (flag ch2-toot-done is false) {
 		show dialog { PLAYER "What is this hunk of junk?" }
@@ -111,7 +111,7 @@ ch2-interact-mainframe {
 		if (flag ch2-carrying-harddrive is true) {
 			show dialog {
 				name "" "(Now installing... the hard drive!)"
-				"(Spinning rust? Spinning ceramic? What's the read head going to be? Will this work?!)"
+				"(What's the read head going to be? Will this work?!)"
 			}
 			set flag temp to true;
 			copy ch2-install-harddrive;

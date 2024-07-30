@@ -7,7 +7,7 @@ include!("header.mgs")
 // ROUND ONE: normal
 
 serial dialog ch2-describe-monitor {
-	"<m>LAMBDA</>: You'll need a computer <m>MONITOR</> if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor near the front of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
+	"<m>LAMBDA</>: You'll need a computer <m>MONITOR</> if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor in the next room of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
 }
 serial dialog ch2-describe-heatsink {
 	"<m>LAMBDA</>: The mainframe generates so much heat we'll need a <m>HEAT SINK</> -- or any means of drawing heat away from the CPU. The <m>power plant guys</> can probably help you out on that front."
@@ -46,7 +46,7 @@ serial dialog ch2-describe-clock {
 }
 serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both questions
 	"<m>LAMBDA</>: The <m>CPU</> is like the brain of the computer. There aren't any spare lying around, but we can approximate one."
-	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the workshop</> has one."
+	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 	"\tFor the rest, we'll need a volunteer who is very small and will make decisions very consistently. The best candidate is <m>Aurelius</>, the <m>GOLDFISH</> in the <m>throne room</>. Just make sure he understands what he's getting into."
 	// todo: make it so you could use Mr. Tickles instead! (You must choose!)
 	// "\tThat is, unless you know any other goldfish you might want to use instead...."
@@ -55,7 +55,7 @@ serial dialog ch2-describe-goldfish { // slightly redundant with original intro;
 	"<m>LAMBDA</>: To make a CPU, we'll need a volunteer to act as the interpretor and executor of program data. We'll need someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
 }
 serial dialog ch2-describe-abacus { // slightly redundant with original intro; be sure to change both questions
-	"<m>LAMBDA</>: To make a CPU, we'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the workshop</> has one."
+	"<m>LAMBDA</>: To make a CPU, we'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 }
 serial dialog ch2-describe-ramchips {
 	"<m>LAMBDA</>: For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. But <m>ask the hardware guys in the <m>workshop</>. Those guys know their stuff, and I trust them to come up with something."
@@ -317,7 +317,7 @@ ch2-lambda-round-3-parts2 {
 		"<c>YOU</>: In what way?"
 		" "
 		"<m>LAMBDA</>: Well, we'll have to make a CPU from scratch, but I've worked it out so we only need two things."
-		"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the workshop</> has one."
+		"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 		"\tFor the rest of the CPU, including the interpretation of program instructions and changing the values on the abacus itself, we'll need a... volunteer."
 		" "
 		# "Volunteer?" : ch2-lambda-round-3-parts2b
@@ -331,16 +331,26 @@ ch2-lambda-round-3-parts2b {
 		"<m>LAMBDA</>: Yes. We'll need a living, sentient being to agree to be... \"combined\"... with the abacus. It'll have to be someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
 		"\tIt'll be a temporary thing -- just until I can have a CPU delivered by mail order. Given that, I think he'll agree."
 		" "
-		# "Is this safe?" : ch2-lambda-round-3-parts2c
+		# "Will he be okay in the meantime?" : ch2-lambda-round-3-parts2c
 	}
 }
 ch2-lambda-round-3-parts2c {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: Is this safe?"
+		"<c>YOU</>: Will he be okay in the meantime?"
 		" "
-		"<m>LAMBDA</>: Actually, yes. Due to the nature of what we're doing and where we're doing it, the volunteer's mind will remain intact. And their body can be completely restored at a later time -- whatever can be soldered can be unsoldered, after all. I've quadruple checked."
+		"<m>LAMBDA</>: Actually, yes. Due to the nature of what we're doing and where we're doing it, the volunteer's mind will remain intact. And their body can be completely restored at a later time -- whatever can be soldered can be unsoldered, after all."
 		"\tIt's still an uncomfortable prospect to ask someone to do this, which is why I want you to make sure he understands what he's getting into, and that he's doing it willingly. I'm counting on you."
+		" "
+		# "He's a goldfish. Won't soldering him cook him?" : ch2-lambda-round-3-parts2d
+	}
+}
+ch2-lambda-round-3-parts2d {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: He's a goldfish. Won't soldering him cook him?"
+		" "
+		"<m>LAMBDA</>: It'll be fine. I've quadruple checked."
 		" "
 		# "All right. What else?" : ch2-lambda-round-3-parts3
 	}
@@ -402,7 +412,7 @@ ch2-lambda-round-4b {
 		"<c>YOU</>: Pick it up? Can't you drop it off?"
 		"\tSay, where are you, anyway?"
 		" "
-		"<m>LAMBDA</>: I'm somewhere split off, isolated from the rest of the castle. All conventional exits and entrances have been destroyed, but with the power of Ring Zero, even as crippled as it is now, you should be able to reach me anyway. I'll explain more after you arrive."
+		"<m>LAMBDA</>: I'm somewhere split off, isolated from the rest of the castle. All conventional exits and entrances have been destroyed, but you should still be able to reach me. I'll explain more after you arrive."
 		" "
 		# "No entrances? How am I supposed to get there?" : ch2-lambda-round-4c
 	}

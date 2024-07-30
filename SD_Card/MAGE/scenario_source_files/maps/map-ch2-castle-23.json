@@ -195,6 +195,96 @@
                  "width":32,
                  "x":-91,
                  "y":-58
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":54,
+                 "name":"door",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-attempt-door-check"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":301
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":55,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":24,
+                 "y":134
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":57,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":120,
+                 "y":71
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":58,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":70
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":59,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":334,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -271,7 +361,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":54,
+ "nextobjectid":60,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

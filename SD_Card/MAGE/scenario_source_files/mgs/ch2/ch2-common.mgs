@@ -61,7 +61,9 @@ ch2-map-init-serial {
 		copy register-warp;
 	}
 	if (variable ch2-storyflag-round is > 0) {
-		copy register-parts;
+		if (variable ch2-storyflag-round is < 5) {
+			copy register-parts;
+		}
 	}
 }
 ch2-map-init-inventory-look {

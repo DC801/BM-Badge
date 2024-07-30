@@ -44,18 +44,18 @@ simon-game-start-q {
 	if (flag ch2-simon-high is true) {
 		show dialog {
 			Simon emote 1 "How about it? Want a high battle?"
-			> "Sure" : simon-game-start
+			> "Absolutely. A high battle it is!" : simon-game-start
 			> "No, let's do a low battle" : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
-			> "Actually, never mind" : simon-game-start-nevermind
+			> "Actually, never mind." : simon-game-start-nevermind
 		}
 	} else {
 		show dialog {
 			Simon emote 1 "How about it? Want a low battle?"
-			> "Sure" : simon-game-start
-			> "No, let's do a high battle" : simon-game-start-q-swap
+			> "Definitely. Low battle all the way!" : simon-game-start
+			> "No, let's do a high battle." : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
-			> "Actually, never mind" : simon-game-start-nevermind
+			> "Actually, never mind." : simon-game-start-nevermind
 		}
 	}
 }
@@ -64,20 +64,20 @@ simon-game-start-q-swap {
 		set flag ch2-simon-high to false;
 		show dialog {
 			Simon emote 1 "Oho, so you'd like a low battle?"
-			> "Sure" : simon-game-start
-			> "No, let's do a high battle" : simon-game-start-q-swap
+			> "Definitely. Low battle all the way!" : simon-game-start
+			> "No, let's do a high battle." : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
-			> "Actually, never mind" : simon-game-start-nevermind
+			> "Actually, never mind." : simon-game-start-nevermind
 
 		}
 	} else {
 		set flag ch2-simon-high to true;
 		show dialog {
 			Simon emote 1 "I see, so you'd like a high battle?"
-			> "Sure" : simon-game-start
-			> "No, let's do a low battle" : simon-game-start-q-swap
+			> "Absolutely. A high battle it is!" : simon-game-start
+			> "No, let's do a low battle." : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
-			> "Actually, never mind" : simon-game-start-nevermind
+			> "Actually, never mind." : simon-game-start-nevermind
 		}
 	}
 }
@@ -621,8 +621,8 @@ simon-game-go-again {
 	set entity Simon current_animation to 12;
 	show dialog {
 		Simon emote 1 "Well? Wanna have another go?"
-		> "Sure" : simon-game-go-again-yes
-		> "No thanks" : simon-game-start-q-wrapup
+		> "Sure." : simon-game-go-again-yes
+		> "No, thanks." : simon-game-start-q-wrapup
 	}
 }
 
@@ -634,19 +634,19 @@ simon-game-start-q-reprise {
 	if (flag ch2-simon-high is true) {
 		show dialog {
 			Simon emote 1 "Want another high battle?"
-			> "Sure" : simon-game-start
-			> "No, let's do a low battle" : simon-game-start-q-swap
+			> "Absolutely!" : simon-game-start
+			> "No, let's do a low battle." : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
-			> "Actually, never mind" : simon-game-start-nevermind
+			> "Actually, never mind." : simon-game-start-nevermind
 
 		}
 	} else {
 		show dialog {
 			Simon emote 1 "Want another low battle?"
-			> "Sure" : simon-game-start
-			> "No, let's do a high battle" : simon-game-start-q-swap
+			> "Definitely!" : simon-game-start
+			> "No, let's do a high battle." : simon-game-start-q-swap
 			> "What's the difference?" : simon-game-start-difference
-			> "Actually, never mind" : simon-game-start-nevermind
+			> "Actually, never mind." : simon-game-start-nevermind
 		}
 	}
 }

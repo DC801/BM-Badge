@@ -60,7 +60,7 @@ on_load-ch2-castle-34 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-34 is false) {
-		show serial dialog { "Discovered the <bold><c>CASTLE PANTRY</>! Room added to map!" }
+		show serial dialog { "Discovered the <bold><c>CASTLE PANTRY</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-34 to true;
 	} else {
 		show serial dialog { "Entering the <bold>CASTLE PANTRY</>..." }
@@ -119,8 +119,18 @@ snake_box-interact {
 }
 
 ch2-interact-pantryfridge {
-	show dialog {
-		PLAYER "Meats and fruits and vegetables... oh my."
+	if (
+		flag ch2-want-cactuscooler is false
+		|| flag ch2-carrying-cactuscooler is true
+		|| flag ch2-cactuscooler-delivered is true
+	) {
+		show dialog {
+			PLAYER "Meats and fruits and vegetables... oh my."
+		}
+	} else {
+		show dialog {
+			PLAYER "Meats and fruits and vegetables... but no Cactus Cooler."
+		}
 	}
 }
 ch2-interact-pantryshelf {

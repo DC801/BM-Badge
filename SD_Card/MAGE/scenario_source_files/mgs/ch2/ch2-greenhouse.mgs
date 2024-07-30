@@ -121,6 +121,9 @@ look-ch2-modem {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-greenhouse {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>GREENHOUSE</>..." }
 	copy entity EtherNettle1 primary_id into variable ethernettle_id;
 	copy entity EtherNettle1 primary_id into variable EtherNettle1;
 	copy entity EtherNettle2 primary_id into variable EtherNettle2;

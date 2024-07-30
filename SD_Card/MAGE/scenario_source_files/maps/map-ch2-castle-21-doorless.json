@@ -405,6 +405,42 @@
                  "width":0,
                  "x":310,
                  "y":195
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":75,
+                 "name":"printer",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-printer"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":60,
+                 "y":161
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":76,
+                 "name":"scanner",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-scanner"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":61,
+                 "y":197
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -519,7 +555,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":67,
+ "nextobjectid":77,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

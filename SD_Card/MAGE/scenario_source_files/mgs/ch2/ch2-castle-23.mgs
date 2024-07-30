@@ -60,7 +60,7 @@ on_load-ch2-castle-23 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-23 is false) {
-		show serial dialog { "Discovered <bold><c>POWER PLANT</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>POWER PLANT</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-23 to true;
 	} else {
 		show serial dialog { "Entering <bold>POWER PLANT</>..." }
@@ -203,7 +203,7 @@ interact-ch2-rocco {
 		copy rocco-work;
 		show dialog {
 			SELF "We don't have any extra, but I could rig you one after we fixed up all the earthquake damage. Maybe in a month or so."
-			PLAYER "A month? But I need it right away. Lambda and I are trying to put the Gibson mainframe back together, and...."
+			PLAYER "A month? But I need it right away. Lambda and I are trying to put the castle mainframe back together, and...."
 		}
 		copy rocco-idle;
 		copy face-player;
@@ -352,4 +352,8 @@ interact-ch2-rocco-wrapup {
 
 interact-ch2-rocco-end {
 	show dialog { SELF "I'm gonna keep on keepin' on." }
+}
+
+interact-ch2-pipes {
+	show dialog { PLAYER "Yowch, that's hot!" }
 }

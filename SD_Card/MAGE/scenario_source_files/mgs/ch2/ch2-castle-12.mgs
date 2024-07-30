@@ -12,7 +12,7 @@ look-ch2-castle-12 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE HALLWAY BACK</>."
-		"\tThe rubble from the ceiling has split this room into two, but the air is a little stuffier here than it had been in the other half. Perhaps more was destroyed on this side, more dust scattered and more moisture entrapped, or perhaps it's a sign that you're come deeper into the mountain."
+		"\tThe rubble from the ceiling has split this room into two, but the air is a little stuffier here than it had been in the other half. Perhaps more was destroyed on this side, more dust scattered and more moisture entrapped, or perhaps it's a sign that you've come deeper into the castle."
 		" "
 	}
 }
@@ -66,7 +66,7 @@ on_load-ch2-castle-12 {
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-12 is false) {
-		show serial dialog { "Discovered <bold><c>CASTLE HALLWAY BACK</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>CASTLE HALLWAY BACK</>! Room added to <c>MAP</>!" }
 		set flag ch2-seen-room-12 to true;
 	} else {
 		show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
@@ -247,9 +247,8 @@ ch2-hide-needle {
 ch2-touch-needle {
 	set flag interrupt to false;
 	if (flag ch2-carrying-needle is true || flag ch2-installed-needle is true) {
-		show dialog ch2-concierge-old-timey { // there's a second reference to this dialog below!
-			PLAYER "Definitely an old-timey look, isn't it?"
-			Concierge "If you like this, you should see King Gibson's bedroom."
+		show dialog {
+			PLAYER "Too bad the record won't work as a plate for the hard drive. It's the perfect size."
 		}
 		return;
 	}
@@ -258,11 +257,14 @@ ch2-touch-needle {
 			show dialog {
 				PLAYER "That's a funny looking trumpet."
 				Concierge "It mechanically amplifies the vibrations captured by the needle upon the vinyl record."
-				"I got this old thing out after the earthquake damaged the intercom system -- and the stereo. I couldn't bear how quiet it was in here."
+				"I dusted it off after the earthquake damaged the intercom system and the stereo. I couldn't bear how quiet it was in here."
 			}
 			set flag ch2-needle-firstlook to true;
 		} else {
-			show dialog ch2-concierge-old-timey; // dialog defined above
+			show dialog {
+				PLAYER "Definitely an old-timey look, isn't it?"
+				Concierge "If you like this, you should see King Gibson's bedroom."
+			}
 		}
 	}
 	if (variable ch2-storyflag-round is >= 2) {

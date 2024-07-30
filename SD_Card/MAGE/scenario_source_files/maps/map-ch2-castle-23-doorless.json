@@ -190,6 +190,78 @@
                  "width":0,
                  "x":192,
                  "y":278
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":80,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":24,
+                 "y":133
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":81,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":120,
+                 "y":70
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":82,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":69
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":83,
+                 "name":"pipes",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-pipes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":334,
+                 "y":191
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -266,7 +338,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":56,
+ "nextobjectid":84,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
