@@ -134,8 +134,18 @@ ch2-interact-pantryfridge {
 	}
 }
 ch2-interact-pantryshelf {
-	show dialog {
+	if (
+		flag ch2-want-cactuscooler is false
+		|| flag ch2-carrying-cactuscooler is true
+		|| flag ch2-cactuscooler-delivered is true
+	) {
+		show dialog {
 		PLAYER "Looks like a lot of dry and canned goods."
+		}
+	} else {
+		show dialog {
+			PLAYER "Looks like a lot of dry and canned goods. No soda, though."
+		}
 	}
 }
 ch2-iron-content {
@@ -208,18 +218,37 @@ ch2-interact-winerack {
 	}
 }
 
+/*               1st   1st+CC   2nd   2nd+CC
+Yup that's me    X     X        .     .
+New around here  .     .        X     .
+Cactus Cooler    .     X        .     X
+*/
+
 interact-ch2-clara {
 	if (variable ch2-storyflag-round is < 2) {
 		copy interrupt-walk;
-		if (flag ch2-clara-backstory is true) {
+		if (flag ch2-clara-backstory is false) {
 			show dialog {
 				SELF "Holy crap -- a new person!"
 				PLAYER "Yup, that's me."
 			}
-			set flag ch2-clara-backstory to true;
+		}
+		if (
+			flag ch2-want-cactuscooler is false
+			|| flag ch2-carrying-cactuscooler is true
+			|| flag ch2-cactuscooler-delivered is true
+		) {
+			if (flag ch2-clara-backstory is false) {
+				// just so it doesn't take this branch the first time:
+				set flag ch2-clara-backstory to true;
+			} else {
+				show dialog { SELF "I'm new around here. I gotta say, this has been an interesting first week of work." }
+			}
 		} else {
-			show dialog {
-				SELF "I'm new around here. I gotta say, this has been an interesting first week of work."
+			set flag ch2-clara-backstory to true;
+			show dialog ch2-clara-soda { // reused
+				PLAYER "So... I'm looking for some Cactus Cooler. It's this rare kind of soda...."
+				SELF "Rare is right. Never heard of it, so I doubt we have any stocked. Sorry about that."
 			}
 		}
 		copy resume-walk;

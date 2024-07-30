@@ -195,16 +195,38 @@ ch2-interact-gregory {
 				"At the time, the only thing I cared about was my new stovetop."
 			}
 			set flag ch2-gregory-backstory to true;
-		} else {
-			show dialog {
-				SELF "I'm slowing down in my old age, but even so, I don't want my habits ingrained to the point that I'm sabotaging myself. I try to keep my mind spry."
-				"So when new tech comes out, I make an effort to give it a fair shot, and I learn how to use it properly, even if there's a tradeoff."
-				"I can't use my favorite wok on my new stovetop, but all my other pans heat more quickly and evenly with induction. For me, that's a good trade."
-				"As for my new bluetooth mouse...."
-				"...bad trade. For me, it'll be wired mice forever!"
-				"But hey, at least I know I don't hate bluetooth mice because I'm old and stubborn."
+			if (
+				flag ch2-want-cactuscooler is false
+				|| flag ch2-carrying-cactuscooler is true
+				|| flag ch2-cactuscooler-delivered is true
+			) { /*NADA*/ } else {
+				show dialog {
+					PLAYER "Gotcha. So, um...."
+				}
+				show dialog ch2-gregory-cactus-help { // reused bit
+					PLAYER "I was looking for this soda called Cactus Cooler. Do you know if the castle has any stocked?"
+					SELF "Hmm, doubt it, but I don't know for certain. I haven't been in charge of vending machine stocking for -- goodness, two or three decades."
+					"You might check the vending machine itself, though."
+				}
 			}
-			set flag ch2-bluetooth-mouse-rant to true;
+		} else {
+			if (
+				flag ch2-want-cactuscooler is false
+					|| flag ch2-carrying-cactuscooler is true
+					|| flag ch2-cactuscooler-delivered is true
+			) {
+				show dialog {
+					SELF "I'm slowing down in my old age, but even so, I don't want my habits ingrained to the point that I'm sabotaging myself. I try to keep my mind spry."
+					"So when new tech comes out, I make an effort to give it a fair shot, and I learn how to use it properly, even if there's a tradeoff."
+					"I can't use my favorite wok on my new stovetop, but all my other pans heat more quickly and evenly with induction. For me, that's a good trade."
+					"As for my new bluetooth mouse...."
+					"...bad trade. For me, it'll be wired mice forever!"
+					"But hey, at least I know I don't hate bluetooth mice because I'm old and stubborn."
+				}
+				set flag ch2-bluetooth-mouse-rant to true;
+			} else {
+				show dialog ch2-gregory-cactus-help; // from above
+			}
 		}
 	} else {
 		if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {

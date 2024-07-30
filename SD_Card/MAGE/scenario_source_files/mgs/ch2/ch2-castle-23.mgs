@@ -332,8 +332,6 @@ interact-ch2-rocco-give {
 		SELF "You're welcome. Good luck fixing the mainframe."
 	}
 	copy script ch2-pickup-heatsink;
-	set flag ch2-cactuscooler-delivered to true;
-	// set flag ch2-heatsink-permission to true;
 	copy ch2-turn_in-cactuscooler;
 	goto interact-ch2-rocco-wrapup;
 }

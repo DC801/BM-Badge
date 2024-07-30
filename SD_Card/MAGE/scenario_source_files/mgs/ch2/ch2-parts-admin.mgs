@@ -160,6 +160,7 @@ ch2-pickup-cactuscooler {
 	register look + "cactus cooler" -> look-cactuscooler;
 }
 ch2-pickup-heatsink {
+	set flag ch2-cactuscooler-delivered to true;
 	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
 	set flag ch2-map-heatsink to false;
 	set flag ch2-carrying-heatsink to true;
