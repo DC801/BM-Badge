@@ -41,6 +41,8 @@ on_load-ch2-castle-outside {
 		set entity Jackob on_tick to yeet;
 		set entity Alfonso on_tick to yeet;
 	}
+	// unique stuff done
+	copy ch2-map-init; // (player control comes back here)
 	// animations
 	if (warp state is walk_from-north) {
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
@@ -49,10 +51,7 @@ on_load-ch2-castle-outside {
 		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein;
 			// borrowing this from town scripts
 		fade in camera from #000000 over 400ms;
-	}
-	// unique stuff done
-	copy ch2-map-init; // (player control comes back here)
-	if (warp state is exit_from-credits) {
+	} else if (warp state is ch2-ending) {
 		goto ch2-post-credits;
 	}
 }

@@ -57,29 +57,6 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":181,
-                 "height":32,
-                 "id":31,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-player"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":266,
-                 "y":213
-                }, 
-                {
-                 "class":"",
                  "gid":957,
                  "height":48,
                  "id":34,
@@ -325,8 +302,7 @@
                  "width":32,
                  "x":112,
                  "y":100
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":281,
@@ -354,7 +330,8 @@
                  "width":32,
                  "x":-77,
                  "y":-44
-                }, 
+                },
+            
                 {
                  "class":"",
                  "gid":1045,
@@ -441,6 +418,29 @@
                  "width":32,
                  "x":61,
                  "y":197
+                }, 
+                {
+                 "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":77,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":178,
+                 "y":284
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -555,7 +555,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":77,
+ "nextobjectid":78,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

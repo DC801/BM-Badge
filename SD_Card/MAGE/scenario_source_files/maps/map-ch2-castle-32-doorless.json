@@ -65,29 +65,6 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":183,
-                 "height":32,
-                 "id":32,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-player"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":174,
-                 "y":461
-                }, 
-                {
-                 "class":"",
                  "height":0,
                  "id":6,
                  "name":"warp-spot",
@@ -247,6 +224,29 @@
                  "width":0,
                  "x":192,
                  "y":470
+                }, 
+                {
+                 "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":75,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":177,
+                 "y":409
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -386,7 +386,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":75,
+ "nextobjectid":76,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

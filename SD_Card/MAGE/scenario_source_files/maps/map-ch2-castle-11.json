@@ -51,29 +51,6 @@
          "objects":[
                 {
                  "class":"",
-                 "gid":183,
-                 "height":32,
-                 "id":2,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-player"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":175,
-                 "y":241
-                }, 
-                {
-                 "class":"",
                  "gid":281,
                  "height":32,
                  "id":19,
@@ -337,6 +314,29 @@
                  "width":32,
                  "x":42,
                  "y":169
+                }, 
+                {
+                 "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":44,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":175,
+                 "y":184
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -345,7 +345,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":44,
+ "nextobjectid":45,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

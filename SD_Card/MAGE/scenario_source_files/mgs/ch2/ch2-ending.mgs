@@ -29,14 +29,17 @@ on_tick-ch2-credits {
 	}
 
 	fade out camera to #000000 over 1200ms;
-	set warp state to exit_from-credits;
 	turn hex control on;
 	turn serial control on;
 	turn player control on;
-	if (flag credits-from-menu is true) {
+	if (
+		warp state is ch2-ending
+		|| flag credits-from-menu is false // todo: is this redundant with warp state? Maybe manage warp state better?
+	) {
+		copy ch2-load-castle-1-special;
+	} else {
 		load map main_menu;
 	}
-	load map ch2-castle-outside;
 }
 
 /* ---------------- END CUTSCENE STUFF --------------- */
@@ -384,10 +387,15 @@ ch2-post-credits {
 	show dialog {
 		Lambda "Good luck with everything, %PLAYER%."
 	}
-	walk entity $Lambda to geometry lambda9 over 2600ms;
+	set entity $Lambda on_tick to ch2-lambda-walkout;
 	set flag ch2-cutseen-secret-ending to true;
+	wait 800ms;
 	set entity "%PLAYER%" on_tick to null_script;
+	fade out camera to #000000 over 1200ms;
+	load map credits2;
+}
+
+ch2-lambda-walkout {
+	walk entity $Lambda to geometry lambda9 over 2600ms;
 	set entity $Lambda on_tick to yeet;
-	turn player control on;
-	turn hex control on;
 }

@@ -74,7 +74,7 @@ debug-post {
 	set flag ch2-ring-zero-enabled-in-castle to true;
 	mutate ch2-storyflag-round = 5;
 	set flag credits-from-menu to false;
-	set warp state to exit_from-credits;
+	set warp state to ch2-ending;
 	load map ch2-castle-outside;
 }
 debug-menu-simon {
