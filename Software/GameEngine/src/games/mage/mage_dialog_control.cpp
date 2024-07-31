@@ -49,7 +49,6 @@ void MageDialogControl::StartModalDialog(std::string messageString)
       currentResponseIndex = 0;
       currentMessageId = 0;
       currentMessage = messageString;
-      responses.clear();
       open = true;
       nextUpdateAllowed = GameClock::now() + GameClock::duration{ 500 };
    }
@@ -90,10 +89,10 @@ std::optional<uint16_t> MageDialogControl::Update()
 
       if (inputHandler->SelectDialogResponse())
       {
-         if (currentResponseIndex == responses.size() - 1)
+         if (currentResponseIndex == currentScreen.responseCount - 1)
          {
             open = false;
-            return responses[currentResponseIndex].scriptId;
+            return currentScreen.GetResponse(currentResponseIndex).scriptId;
          }
       }
    }
@@ -129,12 +128,12 @@ void MageDialogControl::Draw() const
 
    const auto labelX = (uint16_t)((coords.label.origin.x * tileset->TileWidth) + (tileset->TileWidth / 2));
    const auto labelY = (uint16_t)((coords.label.origin.y * tileset->TileHeight) + (tileset->TileHeight / 2));
+   drawBackground(EntityRect{ labelX, labelY, coords.label.w, coords.label.h });
+   frameBuffer->DrawText(currentEntityName, COLOR_WHITE, labelX + tileset->TileWidth + 8, labelY + tileset->TileHeight - 2);
+
    const auto messageX = (uint16_t)((coords.text.origin.x * tileset->TileWidth) + (tileset->TileWidth / 2));
    const auto messageY = (uint16_t)((coords.text.origin.y * tileset->TileHeight) + (tileset->TileHeight / 2));
-
-   drawBackground({ labelX, labelY, coords.label.w, coords.label.h });
-   frameBuffer->DrawText(currentEntityName, COLOR_WHITE, labelX + tileset->TileWidth + 8, labelY + tileset->TileHeight - 2);
-   drawBackground({ messageX, messageY, coords.text.w, coords.text.h });
+   drawBackground(EntityRect{ messageX, messageY, coords.text.w, coords.text.h });
    frameBuffer->DrawText(currentMessage, COLOR_WHITE, messageX + tileset->TileWidth + 8, messageY + tileset->TileHeight - 2);
 
    if (shouldShowResponses(currentScreen))
@@ -142,7 +141,10 @@ void MageDialogControl::Draw() const
       // render all of the response labels
       for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex)
       {
-         frameBuffer->DrawText(stringLoader->getString(responses[responseIndex].stringId, triggeringEntityName), COLOR_WHITE, messageX + tileset->TileWidth + 6, messageY);
+         const auto responseText = stringLoader->getString(currentScreen.GetResponse(responseIndex).stringId, triggeringEntityName);
+         const auto responseX = messageX + tileset->TileWidth + 6;
+         const auto responseY = tileset->TileHeight * (responseIndex + 1) + messageY + tileset->TileHeight - 2;
+         frameBuffer->DrawText(responseText, COLOR_WHITE, responseX, responseY);
       }
       frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, tileset->ImageId, messageX, messageY);
    }
@@ -166,9 +168,9 @@ void MageDialogControl::Draw() const
 void MageDialogControl::drawBackground(const EntityRect& box) const
 {
    const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
-   for (auto x = box.w - 1; x >= 0; x--)
+   for (auto x = 0; x < box.w; x++)
    {
-      for (auto y = box.h - 1; y >= 0; y--)
+      for (auto y = box.h; y < box.h; y++)
       {
          const auto leftEdge = x == 0;
          const auto rightEdge = x == (box.w - 1);

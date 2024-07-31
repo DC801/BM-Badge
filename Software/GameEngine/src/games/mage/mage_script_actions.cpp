@@ -1649,8 +1649,8 @@ std::optional<uint16_t> MageScriptActions::teleport_camera_to_geometry(const uin
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
    frameBuffer->camera.setFollowEntity(NoPlayer);
    const auto midScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
-   frameBuffer->camera.position.x = geometry->GetPoint(0).x - midScreen.x;
-   frameBuffer->camera.position.y = geometry->GetPoint(0).y - midScreen.y;
+   const auto newCameraCenter = geometry->GetPoint(0);
+   frameBuffer->camera.position = newCameraCenter - midScreen;
    return NO_JUMP_SCRIPT;
 }
 

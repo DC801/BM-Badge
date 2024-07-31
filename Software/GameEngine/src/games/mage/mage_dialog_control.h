@@ -151,7 +151,7 @@ private:
    inline bool shouldShowResponses(const MageDialogScreen& currentScreen) const
    {
       // last page of messages on this screen and we have responses
-      return responses.size() > 0
+      return currentScreen.responseCount > 0
          && currentMessageId == (currentScreen.messageCount - 1)
          && (currentScreen.responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
             || currentScreen.responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
@@ -169,7 +169,6 @@ private:
    const MageDialog* currentDialog{ nullptr };
    std::string currentEntityName{};
    std::string currentMessage{};
-   std::vector<MageDialogResponse> responses{};
 };
 
 enum class MageSerialDialogResponseTypes : uint8_t

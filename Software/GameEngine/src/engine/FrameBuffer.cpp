@@ -35,7 +35,7 @@ void FrameBuffer::DrawFilledRect(int x, int y, int w, int h, uint16_t color)
 #if DC801_EMBEDDED
    ili9341_fill_rect(screenX, screenY, w, h, color);
 #else
-   if ((x >= DrawWidth) || (y >= DrawHeight))
+   if (x >= DrawWidth || y >= DrawHeight || x + w < 0 || y + h < 0)
    {
       return;
    }
@@ -206,7 +206,7 @@ void FrameBuffer::DrawText(const std::string_view& text, uint16_t color, uint16_
 
    if (clearBackground)
    {
-      DrawFilledRect(EntityPoint{ screenX,screenY }, font.glyph->width * text.size(), font.glyph->height * 2, COLOR_BLACK);
+      DrawFilledRect(EntityPoint{ screenX, screenY }, font.glyph->width * text.length(), font.glyph->height * 2, COLOR_BLACK);
    }
    for (uint16_t i = 0; i < text.length() && text[i]; i++)
    {
@@ -219,6 +219,12 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
 {
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
    auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
+
+   if (tileDrawX + tileset->TileWidth < 0 || tileDrawX > DrawWidth
+      || tileDrawY + tileset->TileHeight < 0 || tileDrawY > DrawHeight)
+   {
+      return;
+   }
 
    auto ySourceMin = int32_t{ 0 };
    auto ySourceMax = int32_t{ tileset->TileHeight };

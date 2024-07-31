@@ -63,14 +63,13 @@ void MageGameEngine::Run()
       }
 
       gameLoopIteration();
-
+      frameBuffer->clearScreen(COLOR_BLUE);
       mapControl->Draw();
       hexEditor->Draw();
       dialogControl->Draw();
       updateHexLights();
 
       frames++;
-      frameBuffer->DrawText(std::format("FPS: {:4}", fps), COLOR_RED, 10, 10, true);
 
       if (GameClock::now() - lastTime > GameClock::duration(125))
       {

@@ -33,7 +33,7 @@ inline static const auto COLOR_OLIVE = 0xE07B;/* 128, 128,   0 */
 inline static const auto COLOR_LIGHTBLUE = 0xFFB6;/* #B4DEFF */
 inline static const auto COLOR_LIGHTGREY = 0x18C6;/* 192, 192, 192 */
 inline static const auto COLOR_DARKGREY = 0xEF7B;/* 128, 128, 128 */
-inline static const auto COLOR_BLUE = 0x1F00;/*   0,   0, 255 */
+inline static const auto COLOR_BLUE = 0x001F;/*   0,   0, 255 */
 inline static const auto COLOR_GREEN = 0xE007;/*   0, 255,   0 */
 inline static const auto COLOR_CYAN = 0xFF07;/*   0, 255, 255 */
 inline static const auto COLOR_RED = 0x00F8;/* 255,   0,   0 */
@@ -177,6 +177,12 @@ public:
    MageCamera camera{};
 
 private:
+
+#ifndef DC801_EMBEDDED
+   std::unique_ptr<DesktopWindowOutput> windowFrame;
+   std::array<uint16_t, FramebufferSize> frame{};
+#endif
+
    inline void drawRect(const EntityRect& r, uint16_t color)
    {
       auto x = r.origin.x;
@@ -190,10 +196,6 @@ private:
       // bottom
       drawLine(x, y + r.h, x + r.w, y + r.h, color);
    }
-#ifndef DC801_EMBEDDED
-   std::unique_ptr<DesktopWindowOutput> windowFrame;
-   std::array<uint16_t, FramebufferSize> frame{};
-#endif
    bool drawGeometry{ false };
 
    //variables used for screen fading

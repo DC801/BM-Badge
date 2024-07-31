@@ -4,18 +4,6 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
 {
    curFrameDuration += IntegrationStepSize;
 
-   if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
-   {
-      updateAsTileset(entity);
-   }
-   else if (entity.primaryIdType == MageEntityPrimaryIdType::ANIMATION)
-   {
-      updateAsAnimation(entity);
-   }
-   else if (entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
-   {
-      updateAsEntity(entity);
-   }
 
    // hacking can change the resulting tile size, update tile size accordingly
    if (lastTilesetId != tilesetId)
@@ -31,11 +19,24 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
    auto halfHeight = uint16_t(tileset->TileHeight / 2);
    
    origin.x = entity.targetPosition.x;
-   origin.y = entity.targetPosition.y;
+   origin.y = entity.targetPosition.y - tileset->TileHeight;
    hitBox.origin.x = entity.targetPosition.x + halfWidth / 2;
    hitBox.origin.y = entity.targetPosition.y + halfHeight / 2;
    hitBox.w = halfWidth;
    hitBox.h = halfHeight;
+
+   if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
+   {
+      updateAsTileset(entity);
+   }
+   else if (entity.primaryIdType == MageEntityPrimaryIdType::ANIMATION)
+   {
+      updateAsAnimation(entity);
+   }
+   else if (entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+   {
+      updateAsEntity(entity);
+   }
 }
 
 void RenderableData::Draw(const std::shared_ptr<FrameBuffer>& frameBuffer) const

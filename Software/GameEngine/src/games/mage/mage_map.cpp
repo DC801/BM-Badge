@@ -31,9 +31,6 @@ void MapControl::Load()
       auto entityAddress = ROM()->GetOffsetByIndex<MageEntityData>(currentMap->entityGlobalIDs[i]);
       ROM()->Read<MageEntityData>(entityData, entityAddress);
 
-      // convert entity coordinates into map coordinates (0 at bottom -> 0 at top)
-      entityData.targetPosition.y -= ROM()->GetReadPointerByIndex<MageTileset>(entityData.primaryId)->TileHeight;
-
       // fill renderable data from the entity
       Get<RenderableData>(i).UpdateFrom(entityData);
    }
@@ -134,23 +131,22 @@ void MapControl::DrawLayer(uint8_t layer) const
 
 
    // identify start and stop tiles to draw
-   auto startTileX = std::max(0, (frameBuffer->camera.position.x - DrawWidth) / currentMap->tileWidth);
-   auto startTileY = std::max(0, (frameBuffer->camera.position.y - DrawHeight) / currentMap->tileHeight);
-
-   auto endTileX = std::min(int{ currentMap->cols - 1 }, (startTileX + DrawWidth) / currentMap->tileWidth);
-   auto endTileY = std::min(int{ currentMap->rows - 1 }, (startTileY + DrawHeight) / currentMap->tileHeight + 1);
+   const auto startTileX = std::max(0, frameBuffer->camera.position.x / currentMap->tileWidth);
+   const auto startTileY = std::max(0, frameBuffer->camera.position.y / currentMap->tileHeight);
+   const auto endTileX = std::min(int{ currentMap->cols - 1 }, startTileX + DrawWidth / currentMap->tileWidth);
+   const auto endTileY = std::min(int{ currentMap->rows - 1 }, startTileY + DrawHeight / currentMap->tileHeight + 1);
 
    for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
    {
       for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
       {
-         auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
-         auto currentTile = &currentMap->layers[layer][tileIndex];
+         const auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
+         const auto currentTile = &currentMap->layers[layer][tileIndex];
 
          if (!currentTile->tileId) { continue; }
 
-         auto tileDrawX = currentMap->tileWidth * mapTileCol;
-         auto tileDrawY = currentMap->tileHeight * mapTileRow;
+         const auto tileDrawX = currentMap->tileWidth * mapTileCol;
+         const auto tileDrawY = currentMap->tileHeight * mapTileRow;
 
          frameBuffer->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
       }
