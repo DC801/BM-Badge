@@ -6,7 +6,7 @@ look-ch2-castle-22 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>SERVER ROOM</>."
-		"\Racks upon racks of servers hum with a buzz so deep you can feel it through your bones. Cold air flows in from somewhere, presumably to keep the stacks cool, but it rustles your hat and clothes."
+		"\tRacks upon racks of servers hum with a buzz so deep you can feel it through your bones. Cold air flows in from somewhere, presumably to keep the stacks cool, but it rustles your hat and clothes."
 		" "
 	}
 }
@@ -23,7 +23,7 @@ look-ch2-scuzzy {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tHis cool, slick hair looks like it would take a lot of time to care for. %SELF% might spend as much time on it as he does his work, even when catastrophy had struck the castle."
+		"\tHis cool, slick hair looks like it would take a lot of time to care for. %SELF% might spend as much time on it as he does his work, even when catastrophe had struck the castle."
 	}
 }
 

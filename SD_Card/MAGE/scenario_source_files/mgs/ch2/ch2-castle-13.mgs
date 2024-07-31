@@ -373,7 +373,7 @@ ch2-cutscene-kingreturns {
 	show dialog {
 		GIBSON "I can at least see if there are any pieces of this I can extract on my own."
 		Aurelius "%PLAYER%, we're making sufficient progress here. Don't let us keep you."
-		"Once the mainframe is repaired, we can use sysadmin tools to clear all the debris at once."
+		"Once the mainframe is repaired, we will be much better equipped to clear all the debris at once."
 		PLAYER "Right, of course."
 	}
 	copy interrupt-king-walk;
@@ -451,7 +451,7 @@ ch2-touch-goldfish {
 		set flag ch2-king-report to true;
 	} else {
 		show dialog {
-			Aurelius "Once the mainframe is repaired, we can use sysadmin tools to clear all the debris at once. Don't let us keep you."
+			Aurelius "Once the mainframe is repaired, we will be much better equipped to clear all the debris at once. Don't let us keep you."
 		}
 		if (variable ch2-storyflag-round is >= 3) {
 			show dialog {

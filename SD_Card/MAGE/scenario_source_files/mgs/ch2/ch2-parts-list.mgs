@@ -157,7 +157,12 @@ ch2-toot-step99-continue {
 
 
 ch2-lambda-round-2-parts1 {
-	show serial dialog spacer;
+	if (flag ch2-lambdabert-skip-spacer is true) {
+		set flag ch2-lambdabert-skip-spacer to false;
+		show serial dialog { " " }
+	} else {
+		show serial dialog spacer;
+	}
 	show serial dialog {
 		"<m>LAMBDA</>: Sorry, um, that was a bit of a tangent. But I actually wanted you to know that I have another round of parts for the parts list."
 		"\tJust as a heads up, these parts are going to be a little... abstract."

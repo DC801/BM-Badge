@@ -1153,6 +1153,7 @@ ch2-lambda-bert-q {
 }
 
 ch2-lambda-bert-like {
+	set flag ch2-lambdabert-q1 to true;
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: What is Bert like?"
@@ -1164,9 +1165,10 @@ ch2-lambda-bert-like {
 		" "
 		"<m>LAMBDA</>: It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
 	}
-	goto ch2-lambda-bert-q;
+	goto ch2-lambda-bert-autocontinue-check;
 }
 ch2-lambda-bert-mentioned {
+	set flag ch2-lambdabert-q2 to true;
 	if (flag ch2-cutseen-castle99 is false) {
 		show serial dialog spacer;
 		show serial dialog {
@@ -1179,7 +1181,7 @@ ch2-lambda-bert-mentioned {
 			"<m>LAMBDA</>: Yes, well, that's because...."
 			"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
 		}
-		goto ch2-lambda-bert-q;
+		goto ch2-lambda-bert-autocontinue-check;
 	} else {
 		show serial dialog spacer;
 		show serial dialog {
@@ -1188,10 +1190,11 @@ ch2-lambda-bert-mentioned {
 			"<m>LAMBDA</>: Well... he wouldn't have. He doesn't remember me at all."
 			"\tI have a lot of regrets about everything, but he was actually one of the ones who argued that I take this course of action -- to sever the connection between <bold>me</> and my <bold>name</> and make everyone forget me. It's tragic, but this <bold>is</> what he wanted."
 		}
-		goto ch2-lambda-bert-q;
+		goto ch2-lambda-bert-autocontinue-check;
 	}
 }
 ch2-lambda-bert-door {
+	set flag ch2-lambdabert-q3 to true;
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: What did Bert mean by 'back door?'"
@@ -1202,10 +1205,11 @@ ch2-lambda-bert-door {
 		" "
 		"<m>LAMBDA</>: I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required."
 	}
-	goto ch2-lambda-bert-q;
+	goto ch2-lambda-bert-autocontinue-check;
 }
 
 ch2-lambda-bert-message {
+	set flag ch2-lambdabert-q4 to true;
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: Do you know if Bert left a message yet?"
@@ -1220,7 +1224,22 @@ ch2-lambda-bert-message {
 			"<m>LAMBDA</>: You might want to double check with the Wiz, but I haven't heard anything so far, sorry."
 		}
 	}
-	goto ch2-lambda-bert-q;
+	goto ch2-lambda-bert-autocontinue-check;
+}
+
+ch2-lambda-bert-autocontinue-check {
+	if (
+		flag ch2-parts-round-2-backstory is true
+		|| flag ch2-lambdabert-q1 is false
+		|| flag ch2-lambdabert-q2 is false
+		|| flag ch2-lambdabert-q3 is false
+		|| flag ch2-lambdabert-q4 is false
+	) {
+		goto ch2-lambda-bert-q;
+	} else {
+		set flag ch2-lambdabert-skip-spacer to true;
+		goto ch2-lambda-round-2-parts1;	
+	}
 }
 
 ch2-lambda-bert-quit {

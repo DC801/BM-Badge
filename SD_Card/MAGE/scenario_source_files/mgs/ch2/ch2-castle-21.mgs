@@ -36,7 +36,7 @@ look-ch2-frankie {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tYour typical techie, Frankie is working hard on... something. The text on the screen is far too small for you to read clearly."
+		"\tYour typical techie, Frankie is working hard on... something. The text on the screen is far too small for you to read clearly."
 	}
 }
 

@@ -31,7 +31,7 @@ look-ch2-pantryshelf {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\tAtop each plastic are lots of ingredients one would need to feed the residents of a castle this large, with plenty extra. Despite this, a conspicuously large quantity of the foods shelved here are snacks."
+		"\tAtop each plastic shelf are lots of ingredients one would need to feed the residents of a castle this large, with plenty extra. Despite this, a conspicuously large quantity of the foods shelved here are snacks."
 	}
 }
 
@@ -47,7 +47,7 @@ look-ch2-clara {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tClara wears an apron, bearing the teltale signs of regular, frequent use."
+		"\t%SELF% wears an apron, bearing the teltale signs of regular, frequent use."
 	}
 }
 
