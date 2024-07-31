@@ -32,71 +32,71 @@ look-ch2-lambda-lab {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look lambda (remember to add 'the' for objects)"
+		"\tLambda could be the dictionary image for the word \"disheveled\". Above deep purple robes he wears a white labcoat, rife with pockets. The lenses of his round glasses seem to magnify the dark circles under his eyes."
 	}
 }
 
 look-ch2-xc {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look xc (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tIt's difficult to tell whether the machine is orange on purpose or if it is simply very thoroughly rusted. Its legs look odd, somehow -- you imagine it could scoot around the floor without moving any of the joints in its legs."
 	}
 }
 
 look-ch2-lambda-crt {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look crt (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe screen displays a map of the castle, a vague audit of the castle's contents, and a diagram of the current mainframe. The diagram has a list of parts on the side, included some rejected alternates."
 	}
 }
 
 look-ch2-lambda-books {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look books (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tEach book in the line is very tall. Black-and-white drawings adorn every cover alongside bright, saturated colors."
 	}
 }
 
 look-ch2-lambda-ration {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ration (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tA can of food, claiming to take very little preparation in order to eat. This can is already open, and Lambda has apparently supplemented the dried food bars with ketchup."
 	}
 }
 
 look-ch2-lambda-poster {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look poster (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe large poster depicts five astronauts. Must be one of those \"japanese animes\" you've heard about -- one of them even has blue hair. You gotta have blue hair."
 	}
 }
 
 look-ch2-lambda-drawer {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look drawer (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tEach drawer of the filing cabnet is stuffed full of cables. Each drawer has only one kind of cable in it, but the organization stops there."
 	}
 }
 
 look-ch2-lambda-computer {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look computer (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tThe lights on this computer flicker madly. Whatever it's doing, it's sure working hard. The beige enclosure matches the devices attached to it, all of which show signs of yellowing on the edges."
 	}
 }
 
 look-ch2-lambda-box {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look box (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tAn ordinary cardboard box. Inside are rations, bottles of ketchup, as well as a rubber snake."
 	}
 }
 

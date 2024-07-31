@@ -22,24 +22,24 @@ look-ch2-snakebox {
 look-ch2-winerack {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look wine_rack (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tWines of a wide range of vintages lie nestled in little nooks on the rack. Some of these vintages are quite old, yet one of them claims to be from next year."
 	}
 }
 
 look-ch2-pantryshelf {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look pantry_shelf (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tAtop each plastic are lots of ingredients one would need to feed the residents of a castle this large, with plenty extra. Despite this, a conspicuously large quantity of the foods shelved here are snacks."
 	}
 }
 
 look-ch2-dishshelf {
 	show serial dialog spacer;
 	show serial dialog {
-		"You looked at <m>%SELF%</>."
-		"\tTODO on_look dishes_shelf (remember to add 'the' for objects)"
+		"You looked at the <m>%SELF%</>."
+		"\tPlates, bowls, glasses, napkins, tablecloths. It would be really hard to reach the supplies in the back of the shelf, but you can see stacks of plastic cups behind everything else."
 	}
 }
 
@@ -47,7 +47,7 @@ look-ch2-clara {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look clara (remember to add 'the' for objects)"
+		"\tClara wears an apron, bearing the teltale signs of regular, frequent use."
 	}
 }
 

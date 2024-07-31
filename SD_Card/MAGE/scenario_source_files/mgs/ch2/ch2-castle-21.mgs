@@ -11,7 +11,7 @@ look-ch2-castle-21 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>WORKSHOP</>."
-		"\t(TODO)"
+		"The scents of solder and ozone fill the room. While there are less chairs than workstations, scratches on the floor show signs of people enthusiastically skating between desks."
 		" "
 	}
 }
@@ -36,7 +36,7 @@ look-ch2-frankie {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look frankie (remember to add 'the' for objects)"
+		"\tYour typical techie, Frankie is working hard on... something. The text on the screen is far too small for you to read clearly."
 	}
 }
 

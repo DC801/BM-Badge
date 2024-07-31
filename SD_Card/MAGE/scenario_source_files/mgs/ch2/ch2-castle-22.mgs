@@ -5,7 +5,9 @@ include!("header.mgs")
 look-ch2-castle-22 {
 	show serial dialog spacer;
 	show serial dialog {
-		"TODO: SERVER ROOM on_look text\n "
+		"You looked around the <c>SERVER ROOM</>."
+		"\Racks upon racks of servers hum with a buzz so deep you can feel it through your bones. Cold air flows in from somewhere, presumably to keep the stacks cool, but it rustles your hat and clothes."
+		" "
 	}
 }
 
@@ -13,7 +15,7 @@ look-ch2-ckwatt {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look c__k__watt (remember to add 'the' for objects)"
+		"\tThe purple fur of this rabbit-like creature looks incredibly soft. You're tempted to pet it, but that may in fact be a rude thing to do to a sapient creature. Rude, or weird."
 	}
 }
 
@@ -21,7 +23,7 @@ look-ch2-scuzzy {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look scuzzy (remember to add 'the' for objects)"
+		"\tHis cool, slick hair looks like it would take a lot of time to care for. %SELF% might spend as much time on it as he does his work, even when catastrophy had struck the castle."
 	}
 }
 
