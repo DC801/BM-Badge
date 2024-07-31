@@ -491,8 +491,14 @@ ch2-lambda-person-templeton {
 		"<c>YOU</>: Tell me about Templeton."
 		" "
 	}
-	show serial dialog {
-		"<m>LAMBDA</>: Templeton, Templeton. One of King Gibson's advisors, I think. Or was he a giant blancmange? Sorry, I guess I don't know much about that guy."
+	if (flag ch2-seen-room-13 is false) {
+		show serial dialog {
+			"<m>LAMBDA</>: Templeton, Templeton. One of King Gibson's advisors, I think. Or was he a giant blancmange? Sorry, I guess I don't know much about that guy."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Templeton is one of the king's advisors. You've met him, so you understand how paranoid he can be, but in practice he provides a good balance to Sebastian, who is more aggressive and who doesn't tend to think things through enough. He's really friendly, and a very heavy reader."
+		}
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -545,7 +551,7 @@ ch2-lambda-person-kinggibson {
 	show serial dialog {
 		"<c>YOU</>: Tell me about King Gibson."
 		" "
-		"<m>LAMBDA</>: (TODO)"
+		"<m>LAMBDA</>: Well, he's king of the castle. That means he makes most of the logistical decisions, and bears most of the responsibility for what happens here. He knows a thing or two about tech but not to the level needed to maintain this place, so he's made an effort to hire and train technicians and advisors to help him keep everything running."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -631,7 +637,7 @@ ch2-lambda-person-seamoss {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry."
+			"<m>LAMBDA</>: Yes! Sea Moss! He's a big computer tinkerer. Knows everything about all the weird, low-level layers of computer circuitry, all the way down to the transistors themselves."
 			"\tAnd he makes the best crepes, too, believe it or not!"
 		}
 	}
@@ -715,7 +721,7 @@ ch2-lambda-person-jeanpaul {
 	}
 	if (flag ch2-seen-room-21 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Jean-Paul. A French... hen? Chicken? Some kind of bird? Gosh, I really can't remember, I'm sorry."
 		}
 	} else {
 		show serial dialog {
@@ -774,7 +780,7 @@ ch2-lambda-person-ckwatt {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Oh, yeah, Charles. Oh, I'm sorry, I guess I should call him Mr. Watt now. He recently got promoted, so he's technically my boss when it comes to my responsibilities within the castle. Er, not that the normal castle hierarchy is much in play at the moment."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -788,7 +794,7 @@ ch2-lambda-person-tracy {
 	}
 	if (flag ch2-seen-room-23 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Tracy. Hmm. I think there was someone named Tracy in the workshop. Can't remember what their job was, though."
 		}
 	} else {
 		show serial dialog {
@@ -859,7 +865,13 @@ ch2-lambda-person-marathonbob {
 	show serial dialog {
 		"<c>YOU</>: Tell me about the Marathon Bobs."
 		" "
-		"<m>LAMBDA</>: Right, so thirty years ago or more, (TODO: facts about Marathon for the Mac, incorporating puns about QUAKE or DOOM or whatever, like 'gaming on the mac was a doomed prospect' or something)"
+		"<m>LAMBDA</>: Right, so thirty years ago or more, gaming on the Macintosh was a <bold>doom</>ed prospect. But then came a contender that <bold>quake</>d the very foundations of the platform: Marathon!"
+		"\tAnyway, \"BoBs\" were just some of the NPCs. Most of them were good guys, but some of them were all evil and explodey."
+		"\t...Don't worry, no assimilated Bobs around here."
+		// todo: more game name puns?
+		// duke nuken
+		// hexen
+		// strife
 	}
 	goto ch2-lambda-topic-person-s;
 }

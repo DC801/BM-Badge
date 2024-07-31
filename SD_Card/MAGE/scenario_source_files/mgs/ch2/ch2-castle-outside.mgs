@@ -27,7 +27,7 @@ on_load-ch2-castle-outside {
 	}
 	// entrance text
 	show serial dialog spacer;
-	show serial dialog { "Entering <bold>CASTLE ENTRANCE</>..." }
+	show serial dialog { "Entering <bold>CASTLE EXTERIOR</>..." }
 	// Village elders hiding
 	if (variable ch2-storyflag-round is not 0) {
 		set entity Bert on_tick to yeet;

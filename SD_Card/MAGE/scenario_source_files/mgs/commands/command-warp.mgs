@@ -28,6 +28,7 @@ register-warp {
 
 	// CH2 ROOMS
 
+	register warp + "castle exterior" -> warp-ch2-castle-exterior;
 	register warp + "castle entrance" -> warp-ch2-1;
 	register warp + "castle hallway front" -> warp-ch2-11;
 	register warp + "castle hallway back" -> warp-ch2-12;
@@ -129,13 +130,13 @@ command-warp {
 		"List of valid <c>WARP</> destinations:"
 		" "
 		"<bold>-------------------- CASTLE --------------------</>"
+		"  Castle exterior          Server room"
 		"  Castle entrance          Power plant"
 		"  Castle hallway front     Grand hall"
 		"  Castle hallway back      Castle kitchen"
 		"  Castle throne room       Hydroponics room"
 		"  King Gibson's bedroom    Castle pantry"
 		"  Workshop                 Secret lab"
-		"  Server room"
 		" "
 		"<bold>-------------------- TOWN ----------------------</>"
 		"  Town                     Bob's Club"
@@ -168,6 +169,10 @@ warp-common {
 	copy warping-out-fade-out;
 }
 
+warp-ch2-castle-exterior {
+	copy warp-common;
+	load map ch2-castle-outside;
+}
 warp-ch2-1 {
 	copy warp-common;
 	copy ch2-load-castle-1-special;

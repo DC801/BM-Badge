@@ -327,7 +327,7 @@ interact-ch2-vendingmachine {
 		|| flag ch2-carrying-cactuscooler is true
 		|| flag ch2-cactuscooler-delivered is true
 	) {
-		show dialog {
+		show dialog vending-pocket-change { // reused
 			PLAYER "There's sure a lot of snacks in there. Too bad I'm out of pocket change."
 		}
 	} else if (flag ch2-want-bobparty is false) {
@@ -476,7 +476,9 @@ ch2-seamoss-summon-chips {
 	set entity "%PLAYER%" on_tick to null_script;
 }
 
-interact-ch2-vendingmachine-end {} //TODO
+interact-ch2-vendingmachine-end {
+	show dialog vending-pocket-change;
+}
 
 /* ---------- RAMCHIPS (ADMIN) ---------- */
 

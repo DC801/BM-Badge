@@ -422,7 +422,7 @@ interact-ch2-lambda-books {
 
 // interact-ch2-lambda-crt {
 // 	show dialog {
-// 		PLAYER "TODO on_interact crt"
+// 		PLAYER "todo on_interact crt"
 // 	}
 // }
 

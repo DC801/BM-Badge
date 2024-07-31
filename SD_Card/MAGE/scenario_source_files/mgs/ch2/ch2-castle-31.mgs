@@ -51,7 +51,7 @@ look-ch2-bartable {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\t(TODO)"
+		"\tComplete with a pair of chairs, the set is all tall and fancy like those at a high class cocktail bar. All the tables could support are a handful of tiny plates and very tall, very narrow drinks. Not much fun in your opinion."
 	}
 }
 
