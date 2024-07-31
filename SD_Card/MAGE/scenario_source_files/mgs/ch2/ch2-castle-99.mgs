@@ -418,11 +418,13 @@ interact-ch2-lambda-books {
 	}
 }
 
-interact-ch2-lambda-crt {
-	show dialog {
-		PLAYER "TODO on_interact crt"
-	}
-}
+// I think the CRT is too hard to aim at, so taking this out:
+
+// interact-ch2-lambda-crt {
+// 	show dialog {
+// 		PLAYER "TODO on_interact crt"
+// 	}
+// }
 
 interact-ch2-lambda-lab {
 	copy face-player;

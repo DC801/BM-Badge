@@ -30,6 +30,7 @@ look-ch2-keypad {
 		"\tIt's a small boxy number pad. On the underside is a plug socket and a scribbled message: \"The default admin password can be found throughout the castle's --\""
 		"\tUnfortunately, the vital portion of the message has worn off with time."
 	}
+	set flag ch2-keypad-backstory to true;
 }
 
 /* ---------- ON_LOAD ---------- */
@@ -250,9 +251,34 @@ ch2-touch-clock-no {
 }
 
 interact-ch2-gibson-bedroom {
-	show dialog {
-		KING "If you would, please use the artifact to interface with the keypad by the door. You can probably run some diagnostics."
-		"Get me out of here."
+	if (flag ch2-keypad-backstory is false) {
+		show dialog {
+			KING "If you would, please use the artifact to interface with the keypad by the door. You can probably run some diagnostics or something."
+			"Get me out of here."
+		}
+	} else if (flag ch2-architect-backstory is false) {
+		show dialog {
+			PLAYER "Your Majesty, do you happen to know what the default keypad password is?"
+			KING "I did help set that thing up, but I don't remember...."
+			"Oh, actually, there was some trick to it, yes."
+			"I wanted the architect to incorporate the password into the building itself, such that it wasn't written down in an obvious way, but we could still derive the password again if we had to."
+			PLAYER "You incorporated the password into the building?"
+			KING "Yes, all over the castle. Only someone who could get into every room -- which is to say, someone with the king's authority -- should be able to acquire the whole password. That was my intention."
+			"At the present moment, I suppose that means you and you alone."
+			PLAYER "Written where exactly?"
+			KING "One letter per room, but I don't know how the architect ended up implementing the idea, I'm afraid."
+			"Just... one letter per room."
+		}
+		set flag ch2-architect-backstory to true;
+	} else {
+		show dialog {
+			PLAYER "Remind me how to derive the default keypad password again?"
+			KING "Well, I only wanted someone who could get into every room -- which is to say, someone with the king's authority -- to be able to recover every letter in the password."
+			"But I don't know how the architect ended up implementing the idea, beyond the edict of \"one letter hidden per room.\""
+			PLAYER "The architect? That means these letters wouldn't be incorporated into furniture, or paint, or the banners, or something that could be replaced or switched around by someone who didn't know it was supposed to be a hint."
+			"That leaves the infrastructure itself: the walls, floors, ceiling. Something like that?"
+			KING "Exactly."
+		}
 	}
 }
 
@@ -266,6 +292,7 @@ interact-ch2-keypad {
 				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found throughout the castle's what?"
 			}
 			set flag interrupt to true;
+			set flag ch2-keypad-backstory to true;
 		}
 		goto interact-ch2-keypad-prompt;
 	}

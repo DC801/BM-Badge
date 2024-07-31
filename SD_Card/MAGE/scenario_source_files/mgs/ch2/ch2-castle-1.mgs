@@ -134,10 +134,8 @@ on_load-ch2-castle-1 {
 	set flag ch2-seen-room-1 to true;
 
 	// entrance text
-	if (flag ch2-has-artifact is true) {
-		show serial dialog spacer;
-		show serial dialog { "Entering <bold>CASTLE ENTRANCE</>..." }
-	}
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>CASTLE ENTRANCE</>..." }
 
 	// room unique stuff
 	if (flag ch2-cutseen-bert-secret is true) {

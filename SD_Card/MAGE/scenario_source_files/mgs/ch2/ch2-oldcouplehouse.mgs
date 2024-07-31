@@ -13,7 +13,7 @@ look-ch2-delmar {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\t(TODO)"
+		"\tNo matter what shape he takes, it's clearly still %SELF%."
 	}
 }
 

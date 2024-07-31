@@ -455,3 +455,45 @@ interact-ch2-alfonso-end {
 		"Remember... yes, remember everything you've learned. We all must remember...."
 	}
 }
+
+interact-ch2-cleo {
+	turn entity Cleo toward entity "%PLAYER%";
+	turn entity Cat toward entity "%PLAYER%";
+	show dialog ch2-catpuddle { // reused
+		Cleo "Hey there, %PLAYER%."
+		"Sorry, can't chat now. The cat had a really bad day."
+		Cat "Meow."
+		PLAYER "What happened?"
+		Cleo "He accidentally rolled over into a puddle of water. Threw off his whole groove."
+		PLAYER "Aw, I'm so sorry. That's rough."
+		Cat "Meow!"
+	}
+	turn entity Cleo toward entity Cat;
+	turn entity Cat toward entity Cleo;
+}
+
+interact-ch2-cat {
+	copy face-player;
+	show dialog ch2-catpuddle;
+	turn entity "%SELF%" toward entity Cleo;
+}
+
+interact-ch2-hamster {
+	copy face-player;
+	if (variable ch2-hamstertalk is 0) {
+		show dialog {
+			SELF "Ohhh... the wheel is still spinning, but the hamster is dead."
+		}
+		mutate ch2-hamstertalk = 1;
+	} else if (variable ch2-hamstertalk is 1) {
+		show dialog {
+			SELF "I demand more asbestos!"
+		}
+		mutate ch2-hamstertalk = 2;
+	} else if (variable ch2-hamstertalk is 2) {
+		show dialog {
+			SELF "Fungible."
+		}
+		mutate ch2-hamstertalk = 0;
+	}
+}

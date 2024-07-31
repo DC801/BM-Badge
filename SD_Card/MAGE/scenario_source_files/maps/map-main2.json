@@ -514,7 +514,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-hamster"
                         }, 
                         {
                          "name":"on_tick",
@@ -714,7 +714,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-cat"
                         }, 
                         {
                          "name":"on_tick",
@@ -742,7 +742,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-cleo"
                         }, 
                         {
                          "name":"on_tick",

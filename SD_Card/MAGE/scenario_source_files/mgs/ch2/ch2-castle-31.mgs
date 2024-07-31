@@ -6,7 +6,7 @@ look-ch2-castle-31 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>GRAND HALL</>."
-		"\tThis place seems to be a hybrid entertainment ampitheater and mess hall. But, empty of people and other distractions, the stage -- and its performers -- steal all your attention. Those cocktail chairs and tables seem too tall and too small to be comfortable." // TODO: move this line to interacting with chairs/tables, and do something else for the rest of this
+		"\tThis place seems to be a hybrid entertainment ampitheater and mess hall. But, empty of people and other distractions, the stage -- and its performers -- steal all your attention."
 		" "
 	}
 }
