@@ -8,14 +8,25 @@ settings for dialog {
 	}
 }
 
+const!($calc = #5AB5F7)
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 look-ch2-castle-1 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE ENTRANCE</>."
-		"\tThis castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
-		" "
+	}
+	if (variable ch2-storyflag-round is < 5) {
+		show serial dialog {
+			"\tThis castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
+			" "
+		}
+	} else {
+		show serial dialog {
+			"\tThe banners have seen better days, but the room looks much better without the large slabs of debris blocking the doors. The air smells cleaner, too."
+			" "
+		}
 	}
 	// (Exits list goes here) (P.S. That's why there's an empty line above!)
 }
@@ -186,6 +197,8 @@ on_load-ch2-castle-1 {
 	}
 	if (warp state is raw_game_load-ch2) {
 		copy restore_player_state;
+	} else if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
 	}
 	if (flag ch2-carrying-mainframeos is true) {
 		set entity Wizard current_animation to 3;
@@ -267,6 +280,31 @@ ch2-artifact-walk {
 	set entity XA on_tick to ch2-camera-from-artifact;
 	wait 200ms;
 	walk entity "%PLAYER%" to geometry artifact-approach over 600ms;
+	wait 300ms;
+	turn entity "%PLAYER%" west;
+	fade out camera to $calc over 800ms;
+	set entity calc1 animation_frame to 55;
+	set entity calc2 animation_frame to 55;
+	teleport entity calc1 to geometry calc1-spot;
+	teleport entity calc2 to geometry calc2-spot;
+	teleport camera to geometry artifact-approach;
+	teleport entity "%PLAYER%" to geometry hiding-spot;
+	fade in camera from $calc over 800ms;
+	wait 2800ms;
+	pan camera to geometry calc-camera over 900ms;
+	wait 200ms;
+	show dialog {
+		PLAYER "Huh. Almost looks like one of those old, fancy calculators."
+	}
+	pan camera to geometry artifact-approach over 700ms;
+	wait 300ms;
+	fade out camera to $calc over 800ms;
+	teleport entity "%PLAYER%" to geometry artifact-approach;
+	make camera follow entity "%PLAYER%";
+	set entity calc1 on_tick to yeet;
+	set entity calc2 on_tick to yeet;
+	fade in camera from $calc over 800ms;
+	turn entity "%PLAYER%" south;
 }
 ch2-camera-from-artifact {
 	pan camera to entity "%PLAYER%" over 300ms;
@@ -526,7 +564,7 @@ interact-ch2-wizard {
 				PLAYER "Oh, yeah? Could you help me install computer parts into the mainframe?"
 				SELF "Nah, I'm a software guy, actually."
 				PLAYER "Oh."
-				SELF "But once it's built, I can help install up the OS or whatever programs you might need to do whatever. Always happy to help."
+				SELF "But once it's built, I can help install the OS or whatever programs you might need to do whatever. Always happy to help."
 			}
 			set flag ch2-wizard-backstory to true;
 			set flag interrupt2 to true; // `interrupt` is used for Bert cutscene 
@@ -921,19 +959,13 @@ interact-ch2-xa {
 			}
 			copy ch2-artifact-walk
 			wait 300ms;
-			turn entity "%PLAYER%" west;
-			show dialog {
-				PLAYER "Huh. Almost looks like one of those old, fancy calculators."
-			}
-			turn entity "%PLAYER%" south;
-			wait 300ms;
 			show dialog {
 				PLAYER "That was easy. I thought there would be a quest or something. Puzzles, at least."
 				Lambda "Well, it doesn't exactly work right now, so...."
 			}
 			turn entity "%PLAYER%" east;
 			show dialog {
-				PLAYER "...Wait, what?"
+				PLAYER "Wait. What?"
 				Lambda "That little thing can't do much on its own. The real powerful stuff was handled by the castle mainframe. They were linked wirelessly."
 				"But the mainframe was crippled."
 			}

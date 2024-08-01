@@ -26,7 +26,7 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 354, 0, 0, 0, 0, 354, 0, 0, 0,
-            0, 0, 0, 370, 0, 0, 0, 0, 370, 0, 0, 0,
+            0, 0, 0, 370, 0, 385, 386, 0, 370, 0, 0, 0,
             0, 0, 0, 0, 0, 401, 402, 0, 0, 0, 0, 0,
             0, 0, 0, 387, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -285,14 +285,14 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 385, 386, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -542,6 +542,66 @@
                  "width":0,
                  "x":122,
                  "y":126
+                }, 
+                {
+                 "class":"",
+                 "gid":979,
+                 "height":80,
+                 "id":64,
+                 "name":"calc1",
+                 "rotation":0,
+                 "visible":true,
+                 "width":192,
+                 "x":-328,
+                 "y":-163
+                }, 
+                {
+                 "class":"",
+                 "gid":980,
+                 "height":80,
+                 "id":65,
+                 "name":"calc2",
+                 "rotation":0,
+                 "visible":true,
+                 "width":192,
+                 "x":-328,
+                 "y":-83
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":68,
+                 "name":"calc2-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":182
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":69,
+                 "name":"calc1-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":102
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":70,
+                 "name":"calc-camera",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":149
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -550,7 +610,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":64,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -608,6 +668,10 @@
         {
          "firstgid":966,
          "source":"..\/entities\/entity-artifact.json"
+        }, 
+        {
+         "firstgid":979,
+         "source":"..\/tilesets\/tileset-serial_terminal.json"
         }],
  "tilewidth":32,
  "type":"map",

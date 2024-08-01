@@ -11,7 +11,7 @@ look-ch2-castle-21 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>WORKSHOP</>."
-		"The scents of solder and ozone fill the room. While there are less chairs than workstations, scratches on the floor show signs of people enthusiastically skating between desks."
+		"\tThe scents of solder and ozone fill the room. While there are less chairs than workstations, scratches on the floor show signs of people enthusiastically skating between desks."
 		" "
 	}
 }

@@ -23,7 +23,7 @@ look-ch2-ethernettles {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the ethernettles."
-		"\tThe blossoms are strangely fluffy, as if the petals were graced with downy hair. The plant itself is less inviting, with its spines and the sharp corners on its leaves."
+		"\tThe blossoms are strangely fluffy, as if the petals were graced with downy hair. The plants themselves are less inviting, with their spines and the sharp corners on their leaves."
 	}
 
 }
@@ -103,7 +103,7 @@ look-ch2-tumbleweed {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look tumbleweed (remember to add 'the' for objects)"
+		"\tThis cable looks hopelessly tangled. You hope no one needs to use this one any time soon."
 	}
 }
 
@@ -111,7 +111,7 @@ look-ch2-ethernet {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look ethernet (remember to add 'the' for objects)"
+		"\tThe looping on the bundle is tight and neat, like the cable was only just freed from its plastic packaging. The friendly blue makes it look like a network cable to you, but you're not sure why."
 	}
 }
 
@@ -119,7 +119,7 @@ look-ch2-mulch {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tTODO on_look mulch (remember to add 'the' for objects)"
+		"\tThe bag looks to be a bajillion pounds, and is well worn. It's dirty but in a wholesome, earthy way."
 	}
 }
 
