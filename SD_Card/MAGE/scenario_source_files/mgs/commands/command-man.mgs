@@ -393,6 +393,7 @@ ch2-lambda-topic-person-q {
 		_ "YOU" : ch2-lambda-person-lambda
 		_ "LAMBDA" : ch2-lambda-person-lambda
 
+		_ "THE BIG BAD" : ch2-lambda-person-big-bad
 		_ "BIG BAD" : ch2-lambda-person-big-bad
 
 		_ "BERT" : ch2-lambda-person-bert

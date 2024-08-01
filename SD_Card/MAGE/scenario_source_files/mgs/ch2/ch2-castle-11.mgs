@@ -6,8 +6,17 @@ look-ch2-castle-11 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE HALLWAY FRONT</>."
-		"\tThe ceiling has collapsed, probably from the recent earthquake, cleaving the hallway into two. What's left standing appears stable, fortunately -- at least, structurally stable."
-		" "
+	}
+	if (variable ch2-storyflag-round is < 5) {
+		show serial dialog {
+			"\tThe ceiling has collapsed, probably from the recent earthquake. What's left standing appears stable, fortunately -- at least, structurally stable."
+			" "
+		}
+	} else {
+		show serial dialog {
+			"\t(TODO)"
+			" "
+		}
 	}
 }
 
@@ -124,7 +133,7 @@ ch2-cutscene-castle11 {
 	}
 	set entity Kuro current_animation to 0;
 	show dialog {
-		PLAYER "So I need a monitor. Lambda said was one in here I could use. I think he meant..."
+		PLAYER "So I need a monitor. Lambda said there was one in here I could use. I think he meant..."
 	}
 	set entity Kuro on_tick to ch2-walk-to-monitor;
 	set entity "%PLAYER%" on_tick to null_script;

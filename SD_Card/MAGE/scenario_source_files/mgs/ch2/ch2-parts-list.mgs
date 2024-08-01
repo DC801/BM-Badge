@@ -548,7 +548,7 @@ look-goldfish {
 look-manual {
 	show serial dialog spacer;
 	show serial dialog {
-		"on_look manual TODO"
+		"You look at the <m>manual</>: a modest-sized book depicting a sophisticated calculator. Overall, you're left with confusion as to why a calculator would require a whole book to use it properly."
 	}
 }
 look-abacus {

@@ -12,8 +12,17 @@ look-ch2-castle-12 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE HALLWAY BACK</>."
-		"\tThe rubble from the ceiling has split this room into two, but the air is a little stuffier here than it had been in the other half. Perhaps more was destroyed on this side, more dust scattered and more moisture entrapped, or perhaps it's a sign that you've come deeper into the castle."
-		" "
+	}
+	if (variable ch2-storyflag-round is < 5) {
+		show serial dialog {
+			"\tThe air is a little stuffier here than it had been nearer the entrance. Perhaps more was destroyed in t his room, more dust scattered and more moisture entrapped, or perhaps it's a sign that you've come deeper into the castle."
+			" "
+		}
+	} else {
+		show serial dialog {
+			"\t(TODO)"
+			" "
+		}
 	}
 }
 
