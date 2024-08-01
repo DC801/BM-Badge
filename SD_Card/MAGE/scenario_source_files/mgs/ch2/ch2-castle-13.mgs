@@ -16,7 +16,7 @@ look-ch2-castle-13 {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE THRONE ROOM</>."
-		"\tTODO"
+		"\tTall, imposing statues line the walls, regal and bovine. Banners bearing the castle crest hang beside them. The floors gleam in the torchlight. The whole place is fancy enough that it makes you feel like you should stand a little straighter."
 		" "
 	}
 }

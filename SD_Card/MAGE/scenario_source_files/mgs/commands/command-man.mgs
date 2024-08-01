@@ -383,6 +383,7 @@ ch2-lambda-topic-person-q {
 		_ "BOB" : ch2-lambda-person-bob
 		_ "MARATHON BOB" : ch2-lambda-person-marathonbob
 		_ "GUARDIAN BOB" : ch2-lambda-person-guardianbob
+		_ "SOLID SNEK" : ch2-lambda-person-solidsnek
 
 		// people (complicated)
 
@@ -725,7 +726,7 @@ ch2-lambda-person-jeanpaul {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Ah, Jean-Paul! He's a cockatiel -- that's a kind of parakeet. He's always very tidy about his workspace. Unlike me, ha ha.... Oh! You should hear him whistle sometime! Whistles pretty well for a guy with a beak." // You can remove the last sentence if you want. 
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -739,11 +740,11 @@ ch2-lambda-person-frankie {
 	}
 	if (flag ch2-seen-room-21 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Hmm, \"Frankie,\" let's see.... Was he one of the hardware guys? I can't remember anything else, sorry."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: Frankie is a great guy to have around if you're experiencing a hardware issue. He's our printer-wrangler, be they 2D or 3D printers."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -794,11 +795,11 @@ ch2-lambda-person-tracy {
 	}
 	if (flag ch2-seen-room-23 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: Tracy. Hmm. I think there was someone named Tracy in the workshop. Can't remember what their job was, though."
+			"<m>LAMBDA</>: Tracy. Hmm. I think there was someone named Tracy in the power plant. Can't remember what their job was, though."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: (TODO)"
+			"<m>LAMBDA</>: That's right, Tracy is the logistics manager for the power plant. Makes sure the whole operation is funded and supplied which in turn keeps the whole castle running."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -857,6 +858,19 @@ ch2-lambda-person-guardianbob {
 		"<c>YOU</>: Tell me about Guardian Bob."
 		" "
 		"<m>LAMBDA</>: Guardian Bob? Oh, right, that Lambert-or-Phong looking guy. He's some kind of internet vigilante, I think. He knows a few hacking tricks, but he seems white hat to me. I trust him."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-solidsnek {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Solid Snek."
+		" "
+		"<m>LAMBDA</>: Hmm.... Did I know somebody who was called that? I might be thinking of a movie I saw a while back. It sounds kinda like the name of a movie hero, y'know?"
+		" "
+		"<c>YOU</>: A movie hero? Called \"snek\"?"
+		" "
+		"<m>LAMBDA</>: Well, I think so."
 	}
 	goto ch2-lambda-topic-person-s;
 }
