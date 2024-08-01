@@ -15,12 +15,12 @@ look-ch2-castle-12 {
 	}
 	if (variable ch2-storyflag-round is < 5) {
 		show serial dialog {
-			"\tThe air is a little stuffier here than it had been nearer the entrance. Perhaps more was destroyed in t his room, more dust scattered and more moisture entrapped, or perhaps it's a sign that you've come deeper into the castle."
+			"\tThe air is a little stuffier here than it had been nearer the entrance. Perhaps more was destroyed in this room, more dust scattered and more moisture entrapped, or perhaps it's a sign that you've come deeper into the castle."
 			" "
 		}
 	} else {
 		show serial dialog {
-			"\t(TODO)"
+			"\tCleared of debris, the hall is much larger than it appeared when you first arrived. Without the monitor and it's welcoming slideshow, however, the room feels quite a bit emptier as well."
 			" "
 		}
 	}

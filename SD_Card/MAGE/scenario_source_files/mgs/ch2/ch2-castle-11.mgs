@@ -14,7 +14,7 @@ look-ch2-castle-11 {
 		}
 	} else {
 		show serial dialog {
-			"\t(TODO)"
+			"\tDespite a little bit of lingering damage from the recent quake, the castle entryway is much neater than before. The cobbled mainframe hums contentedly, and soon the rest of the castle, too, will be back to its old self."
 			" "
 		}
 	}
