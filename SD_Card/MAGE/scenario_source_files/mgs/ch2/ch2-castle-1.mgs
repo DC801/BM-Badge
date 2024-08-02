@@ -921,24 +921,10 @@ interact-ch2-wizard-mainframedone {
 	}
 }
 
-interact-ch2-xa-end {
-	show dialog {
-		Lambda "Hey, there %PLAYER%! I'm a little busy just now, but why don't you come see me in person?"
-		"Just type WARP SECRET LAB into the artifact and you'll zoop straight to me."
-		// TODO: make the artifact assistance stuff still work (might be complicated)
-	}
-}
-
 interact-ch2-xa {
-	if (flag ch2-wait-for-hat-touch is true) {
-		show dialog {
-			PLAYER "How do I work Ring Zero again?"
-			Lambda "Hmm? What's that? Did you say something?"
-			PLAYER "I want to see if Ring Zero is working now that the mainframe is back online."
-			Lambda "Oh, yes, I see."
-			"To open the hex editor, touch the hat at the top of the PCB you're holding. Should be just above the screen -- a shiny gold-colored area."
-		}
-	} else if (flag ch2-toot-done is false) {
+	if (flag ch2-toot-done is true) {
+		goto ch2-terminal-setup-check;
+	} else {
 		if (flag ch2-has-artifact is false) {
 			turn player control off;
 			show dialog {
@@ -1026,17 +1012,25 @@ interact-ch2-xa {
 			> "Yes, please!" : ch2-terminal-setup-start
 			> "No, thanks." : ch2-terminal-setup-nevermind
 		}
-	} else {
-		goto ch2-terminal-setup-check;
 	}
 }
 /* ---------- XA SERIAL CONSOLE WALKTHROUGH ---------- */
 
 ch2-terminal-setup-check {
-	show dialog {
-		Lambda "Need help getting the terminal working?"
-		> "Yes" : ch2-terminal-setup-start
-		> "No" : ch2-terminal-setup-nevermind
+	if (flag ch2-wait-for-hat-touch is true) {
+		show dialog {
+			PLAYER "How do I work Ring Zero again?"
+			Lambda "Hmm? What's that? Did you say something?"
+			PLAYER "I want to see if Ring Zero is working now that the mainframe is back online."
+			Lambda "Oh, yes, I see."
+			"To open the hex editor, touch the hat at the top of the PCB you're holding. Should be just above the screen -- a shiny gold-colored area."
+		}
+	} else {
+		show dialog {
+			Lambda "Need help getting the terminal working?"
+			> "Yes" : ch2-terminal-setup-start
+			> "No" : ch2-terminal-setup-nevermind
+		}
 	}
 }
 
@@ -1058,7 +1052,6 @@ ch2-terminal-setup-nevermind {
 				"(Type <c>MAN</> to finish your conversation with Lambda.)"
 			}
 		}
-
 	} else {
 		set flag can-interrupt-dialog to true;
 		show dialog {
@@ -1066,7 +1059,7 @@ ch2-terminal-setup-nevermind {
 		}
 		set flag can-interrupt-dialog to false;
 	}
-	set entity "%SELF%" on_interact to interact-ch2-xa;
+	set entity "%SELF%" on_interact to ch2-terminal-setup-check;
 }
 
 ch2-terminal-setup-start {
@@ -1100,7 +1093,7 @@ ch2-terminal-plugged-web {
 		"Note that you may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
 	}
 	goto ch2-terminal-message-test;
-	set entity "%SELF%" on_interact to interact-ch2-xa;
+	set entity "%SELF%" on_interact to ch2-terminal-plugged-check;
 }
 
 ch2-terminal-plugged-yes {
@@ -1191,5 +1184,5 @@ ch2-terminal-message-test-success {
 			Lambda "Excellent! You're all set!"
 		}
 	}
-	set entity "%SELF%" on_interact to interact-ch2-xa;
+	set entity "%SELF%" on_interact to ch2-terminal-setup-check;
 }

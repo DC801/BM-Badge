@@ -275,7 +275,8 @@ interact-ch2-gibson-bedroom {
 			PLAYER "Remind me how to derive the default keypad password again?"
 			KING "Well, I only wanted someone who could get into every room -- which is to say, someone with the king's authority -- to be able to recover every letter in the password."
 			"But I don't know how the architect ended up implementing the idea, beyond the edict of \"one letter hidden per room.\""
-			PLAYER "The architect? That means these letters wouldn't be incorporated into furniture, or paint, or the banners, or something that could be replaced or switched around by someone who didn't know it was supposed to be a hint."
+			PLAYER "The architect? That means...."
+			"These letters won't be incorporated into furniture, or paint, or the banners, or something that could be replaced or switched around by someone who didn't know it was supposed to be a hint."
 			"That leaves the infrastructure itself: the walls, floors, ceiling. Something like that?"
 			KING "Exactly."
 		}

@@ -28,7 +28,7 @@ debug-set-flags-to-round0 {
 	turn hex control on;
 	mutate current-chapter = 2;
 	set flag ch2-cutseen-birthday to true;
-	debug!("<y>debug-set-flags-to-round0")
+	// debug!("<y>debug-set-flags-to-round0")
 }
 debug-jump-to-round1 {
 	copy debug-set-flags-to-round1;

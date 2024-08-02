@@ -242,7 +242,7 @@ command-parts-print {
 	wrapup:
 	show serial dialog {
 		" "
-		"(For information about one of these parts, type <c>PARTS</> followed by the part name.)"
+		"(For information about one of the above parts, type <c>PARTS</> followed by the part name.)"
 
 	}
 }

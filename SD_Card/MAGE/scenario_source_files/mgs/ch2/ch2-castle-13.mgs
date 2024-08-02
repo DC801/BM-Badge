@@ -100,11 +100,13 @@ on_load-ch2-castle-13 {
 	copy ch2-map-init;
 	
 	// check if you do the cutscene or not
-	if (flag ch2-cutseen-castle13 is false) {
-		copy ch2-cutscene-castle12;
-	} else if (warp state is "Ch2 King Returns") {
+	if (warp state is "Ch2 King Returns") {
 		set flag ch2-cutseen-castle13 to true; // in case you didn't see the whole prev cutscene, set this flag so the reunion cutscene will play out correctly
 		copy ch2-cutscene-kingreturns;
+	} else {
+		if (flag ch2-cutseen-castle13 is false) {
+			copy ch2-cutscene-castle12;
+		}
 	}
 }
 
