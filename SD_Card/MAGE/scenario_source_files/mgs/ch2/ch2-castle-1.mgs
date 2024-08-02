@@ -614,6 +614,8 @@ ch2-spin-wizard {
 }
 
 ch2-install-wizard {
+	turn serial control off;
+	turn player control off;
 	show dialog {
 		Wizard "Oh! Oh! You have software for the new computer?"
 		"Can I help install it? Please?"
@@ -681,6 +683,8 @@ ch2-install-wizard {
 	turn entity Wizard east;
 	set entity "%PLAYER%" on_tick to ch2-wait-for-boot;
 	copy ch2-bootup;
+	turn serial control off;
+	turn player control off;
 	wait 1200ms;
 	show dialog {
 		Wizard "Hey hey! There you go!"
@@ -721,6 +725,8 @@ ch2-install-wizard-resume {
 	load map ch2-castle-21;
 }
 ch2-castle-21-ending {
+	turn player control off;
+	turn serial control off;
 	teleport camera to geometry warp-spot;
 	teleport entity "%PLAYER%" to geometry hiding-spot;
 	set entity abacus on_tick to yeet;
@@ -738,6 +744,8 @@ ch2-castle-21-ending {
 	load map ch2-castle-22;
 }
 ch2-castle-22-ending {
+	turn player control off;
+	turn serial control off;
 	teleport camera to geometry warp-spot;
 	teleport entity "%PLAYER%" to geometry hiding-spot;
 	set entity "Power Supply" on_tick to yeet;
@@ -753,6 +761,8 @@ sebastian-to-three {
 	walk entity Sebastian to geometry end-sebastian3 over 800ms;
 }
 ch2-castle-13-ending {
+	turn player control off;
+	turn serial control off;
 	teleport camera to geometry camera-spot3;
 	copy ch2-ending-fadein;
 	wait 800ms;
@@ -771,6 +781,8 @@ ch2-player-exit {
 	walk entity "%PLAYER%" along geometry exit-line over 2000ms;
 }
 ch2-castle-1-ending {
+	turn player control off;
+	turn serial control off;
 	make camera follow entity "%PLAYER%";
 	teleport entity "%PLAYER%" to geometry mainframe-look-spot;
 	turn entity "%PLAYER%" south;

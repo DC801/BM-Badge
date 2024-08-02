@@ -103,6 +103,7 @@ on_load-ch2-castle-13 {
 	if (flag ch2-cutseen-castle13 is false) {
 		copy ch2-cutscene-castle12;
 	} else if (warp state is "Ch2 King Returns") {
+		set flag ch2-cutseen-castle13 to true; // in case you didn't see the whole prev cutscene, set this flag so the reunion cutscene will play out correctly
 		copy ch2-cutscene-kingreturns;
 	}
 }
@@ -352,7 +353,6 @@ ch2-cutscene-kingreturns {
 		Sebastian "You there, stranger. The rest of the castle is damaged?"
 		PLAYER "Yes. Most doors are crumpled exactly like this."
 	}
-	// todo: he turns to the side
 	show dialog {
 		Sebastian "Then I must pace myself. The mana required is the square of the weight being manipulated.... Ah, but if I don't have to introduce lateral motion myself --"
 		Aurelius "Yes, a gravitation spell."

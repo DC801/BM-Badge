@@ -251,8 +251,7 @@ ch2-cutscene-castle99 {
 		Lambda emote $opaque_lowered "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
 		"Even the individual people! I'd forgotten how funny -- and insightful -- Sea Moss is."
 		"I forgot how resourceful and inventive Rocco is, and how cool it is that he can make something awesome and functional out of scrap."
-		// todo: more peeps?
-		"All my friends... everyone...."
+		"Gregory, Mr. Watt, Jean-Paul, even the king... all these people I used to spend time with...."
 	}
 	turn entity Lambda south;
 	set entity Lambda on_tick to ch2-lambda-raise-tickversion;

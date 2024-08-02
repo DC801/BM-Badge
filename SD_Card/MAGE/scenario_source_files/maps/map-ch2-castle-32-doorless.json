@@ -320,11 +320,6 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-vendingmachine-end"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-vendingmachine"
                         }],
                  "rotation":0,
                  "visible":true,

@@ -15,7 +15,7 @@ look-ch2-snakebox {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at the <m>%SELF%</>."
-		"\tIt's an ordinary cardboard box with words \"THE ORANGE\" written on the sides."
+		"\tIt's an ordinary cardboard box with the words \"THE ORANGE\" written on the sides."
 	}
 }
 

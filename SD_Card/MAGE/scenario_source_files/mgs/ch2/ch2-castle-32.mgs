@@ -46,7 +46,7 @@ look-ch2-gloria {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tShe's checking %Samson% over again and again, as if the her child's condition might have changed in the last few seconds. Her antenna swivels toward you when you come close."
+		"\tShe's checking %Samson% over again and again, as if the child's condition might have changed in the last few seconds. Her antenna swivels toward you when you come close."
 	}
 }
 
@@ -89,6 +89,7 @@ on_load-ch2-castle-32-doorless {
 	} else if (warp state is walk_from-northwest) {
 		teleport entity "%PLAYER%" to geometry walk_from-northwest;
 	}
+	register look + "vending machine" -> look-ch2-vendingmachine;
 	copy ch2-map-init;
 }
 on_load-ch2-castle-32 {
@@ -126,6 +127,7 @@ on_load-ch2-castle-32 {
 		teleport entity "%PLAYER%" to geometry walk_from-northwest;
 	}
 	
+	register look + "vending machine" -> look-ch2-vendingmachine;
 	copy ch2-map-init;
 }
 

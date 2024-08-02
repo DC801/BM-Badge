@@ -452,13 +452,13 @@ ch2-stereo-intro3 {
 		" "
 		"<y>STEREO</>: I don't know. Would I remember if I had amnesia?"
 		" "
-		# "You're a stereo system. You're supposed to be playing music." : ch2-stereo-intro4
+		# "You're a stereo system. You're supposed to play music." : ch2-stereo-intro4
 	}
 }
 ch2-stereo-intro4 {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: You're a stereo system. You're supposed to be playing music."
+		"<c>YOU</>: You're a stereo system. You're supposed to play music."
 		" "
 		"<y>STEREO</>: I don't know what that stuff is. My mind is all jumbled up. Let's see... can you get any closer? I'm on the cusp of understanding what you're talking about, but I need a little help."
 		" "

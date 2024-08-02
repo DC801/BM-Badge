@@ -112,7 +112,7 @@ ch2-elder-ending-walkin-end {
 }
 
 ch2-post-credits {
-	turn hex control off;
+	turn serial control off;
 	turn player control off;
 
 	// Make Bert into Lambda

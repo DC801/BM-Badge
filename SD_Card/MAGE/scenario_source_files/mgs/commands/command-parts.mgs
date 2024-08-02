@@ -5,6 +5,55 @@ include!("header.mgs")
 register-parts {
 	register man + parts -> man-parts;
 	register parts -> command-parts;
+	register parts fail -> command-parts-fail;
+
+	// if (variable ch2-storyflag-round is >= 1) {
+		copy register-parts1;
+	// }
+	// if (variable ch2-storyflag-round is >= 2) {
+		copy register-parts2;
+	// }
+	// if (variable ch2-storyflag-round is >= 3) {
+		copy register-parts3;
+	// }
+	// if (variable ch2-storyflag-round is >= 4) {
+		copy register-parts4;
+	// }
+}
+register-parts1 {
+	register parts + "MONITOR" -> command-parts-monitor;
+	register parts + "HEAT SINK" -> command-parts-heatsink;
+	register parts + "HEATSINK" -> command-parts-heatsink;
+	register parts + "POWER SUPPLY" -> command-parts-powersupply;
+	register parts + "POWERSUPPLY" -> command-parts-powersupply;
+}
+register-parts2 {
+	register parts + "KEYBOARD" -> command-parts-keyboard;
+	register parts + "MOUSE" -> command-parts-mouse;
+	register parts + "HARD DRIVE" -> command-parts-harddrive;
+	register parts + "HARDDRIVE" -> command-parts-harddrive;
+	register parts + "HARD DISK" -> command-parts-harddrive;
+	register parts + "HARDDISK" -> command-parts-harddrive;
+	register parts + "HDD" -> command-parts-harddrive;
+	register parts + "PLATE" -> command-parts-plate;
+	register parts + "DINNER PLATE" -> command-parts-plate;
+	register parts + "NEEDLE" -> command-parts-needle;
+	register parts + "PHONOGRAPH NEEDLE" -> command-parts-needle;
+}
+register-parts3 {
+	register parts + "RAM CHIPS" -> command-parts-ramchips;
+	register parts + "RAMCHIPS" -> command-parts-ramchips;
+	register parts + "RAM" -> command-parts-ramchips;
+	register parts + "CLOCK" -> command-parts-clock;
+	register parts + "CPU" -> command-parts-cpu;
+	register parts + "GOLDFISH" -> command-parts-goldfish;
+	register parts + "ABACUS" -> command-parts-abacus;
+}
+register-parts4 {
+	register parts + "MAINFRAME OS" -> command-parts-os;
+	register parts + "MAINFRAMEOS" -> command-parts-os;
+	register parts + "OS" -> command-parts-os;
+	register parts + "OPERATINGSYSTEM" -> command-parts-os;
 }
 
 // MAN PAGE
@@ -14,13 +63,31 @@ man-parts {
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - PARTS</>"
 		" "
-		"Calls Lambda via <bold>lambda-talk</> using the subject line \"<bold>PARTS</>\"."
+		"This command uses the program <bold>lambda-talk</> to call Lambda with the subject line \"parts.\" To learn about a specific part, add the part name, e.g. <c>PARTS MONITOR</>."
 		" "
 		"<m>NOTE</>: Hi, there, birthday mage! This is just something I rigged up quickly so you could have a shortcut to talk to me about the parts list. :)"
 	}
 }
 
 // COMMAND
+command-parts-fail {
+	if (
+		flag ch2-ring-zero-enabled-in-castle is true // the artifact is full power
+		|| variable ch2-in-room is not 0 // OR you're in the castle
+	) {
+		// `parts` works normally
+		show serial dialog spacer;
+		show serial dialog {
+			"<m>LAMBDA</>: Not sure what you mean. Want to ask about one of these instead?"
+			" "
+		}
+		goto command-parts-print;
+	} else {
+		// otherwise, `parts` cannot reach Lambda
+		copy ch2-wireless-error;
+	}
+
+}
 
 command-parts {
 	if (
@@ -28,232 +95,156 @@ command-parts {
 		|| variable ch2-in-room is not 0 // OR you're in the castle
 	) {
 		// `parts` works normally
-		if (variable ch2-storyflag-round is < 4) {
-			show serial dialog spacer;
-			show serial dialog {
-				"<m>LAMBDA</>: For parts, we still need:"
-			}
-			goto command-parts-print;
-		} else {
-			show serial dialog spacer;
-			show serial dialog {
-				"<m>LAMBDA</>: You've found all the parts. Well done!"
-			}
-			goto command-parts-print;
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>PARTS LIST</>"
+			" "
 		}
+		goto command-parts-print;
 	} else {
 		// otherwise, `parts` cannot reach Lambda
 		copy ch2-wireless-error;
 	}
 }
 command-parts-print {
-	if (variable ch2-storyflag-round is == 0) {
-		show serial dialog { "<r>DEBUG</>: You've asked for a parts list but 'ch2-storyflag-round' is still set to '0'!" }
-	}
-	// ROUND ONE: normal
 	if (variable ch2-storyflag-round is == 1) {
-
-		if (flag ch2-installed-heatsink is true) {
-			show serial dialog { "\t- [x] heat sink" }
-		} else if (flag ch2-carrying-heatsink is true) {
-			show serial dialog { "\t- [~] heat sink" }
+		goto label one;
+	} else if (variable ch2-storyflag-round is == 2) {
+		if (flag ch2-parts-round-2-backstory is false) {
+			goto label one;
 		} else {
-			show serial dialog { "\t- [ ] heat sink" }
+			goto label two;
 		}
-
-		if (flag ch2-installed-powersupply is true) {
-			show serial dialog { "\t- [x] power supply" }
-		} else if (flag ch2-carrying-powersupply is true) {
-			show serial dialog { "\t- [~] power supply" }
+	} else if (variable ch2-storyflag-round is == 3) {
+		if (flag ch2-parts-round-3-backstory is false) {
+			goto label two;
 		} else {
-			show serial dialog { "\t- [ ] power supply" }
+			goto label three;
 		}
-
-		if (flag ch2-installed-monitor is true) {
-			show serial dialog { "\t- [x] monitor" }
-		} else if (flag ch2-carrying-monitor is true) {
-			show serial dialog { "\t- [~] monitor" }
+	} else if (variable ch2-storyflag-round is >= 4) {
+		if (flag ch2-parts-round-4-backstory is false) {
+			goto label three;
 		} else {
-			show serial dialog { "\t- [ ] monitor" }
+			goto label four;
 		}
 	}
-	// ROUND TWO: abstract
-	else if (variable ch2-storyflag-round is == 2) {
-
-		if (flag ch2-installed-harddrive is true) {
-			show serial dialog { "\t- [x] hard drive" }
-		} else if (flag ch2-carrying-harddrive is true) {
-			show serial dialog { "\t- [~] hard drive" }
-		} else {
-			show serial dialog { "\t- [ ] hard drive" }
-		}
-		if (flag ch2-installed-plate is true) {
-			show serial dialog { "\t\t- [x] dinner plate" }
-		} else if (flag ch2-carrying-plate is true) {
-			show serial dialog { "\t\t- [~] dinner plate" }
-		} else {
-			show serial dialog { "\t\t- [ ] dinner plate" }
-		}
-		if (flag ch2-installed-needle is true) {
-			show serial dialog { "\t\t- [x] phonograph needle" }
-		} else if (flag ch2-carrying-needle is true) {
-			show serial dialog { "\t\t- [~] phonograph needle" }
-		} else {
-			show serial dialog { "\t\t- [ ] phonograph needle" }
-		}
-
-		if (flag ch2-installed-keyboard is true) {
-			show serial dialog { "\t- [x] keyboard" }
-		} else if (flag ch2-carrying-keyboard is true) {
-			show serial dialog { "\t- [~] keyboard" }
-		} else {
-			show serial dialog { "\t- [ ] keyboard" }
-		}
-
-		if (flag ch2-installed-mouse is true) {
-			show serial dialog { "\t- [x] mouse" }
-		} else if (flag ch2-carrying-mouse is true) {
-			show serial dialog { "\t- [~] mouse" }
-		} else {
-			show serial dialog { "\t- [ ] mouse" }
-		}
-	}
-	// ROUND THREE: desperate
-	else if (variable ch2-storyflag-round is == 3) {
-
-		if (flag ch2-installed-ramchips is true) {
-			show serial dialog { "\t- [x] RAM chips" }
-		} else if (flag ch2-carrying-ramchips is true) {
-			show serial dialog { "\t- [~] RAM chips" }
-		} else {
-			show serial dialog { "\t- [ ] RAM chips" }
-		}
-
-		if (flag ch2-installed-clock is true) {
-			show serial dialog { "\t- [x] clock" }
-		} else if (flag ch2-carrying-clock is true) {
-			show serial dialog { "\t- [~] clock" }
-		} else {
-			show serial dialog { "\t- [ ] clock" }
-		}
-
-		if (flag ch2-installed-cpu is true) {
-			show serial dialog { "\t- [x] cpu" }
-		} else if (flag ch2-carrying-cpu is true) {
-			show serial dialog { "\t- [~] cpu" }
-		} else {
-			show serial dialog { "\t- [ ] cpu" }
-		}
-		if (flag ch2-installed-goldfish is true) {
-			show serial dialog { "\t\t- [x] goldfish" }
-		} else if (flag ch2-carrying-goldfish is true) {
-			show serial dialog { "\t\t- [~] goldfish" }
-		} else {
-			show serial dialog { "\t\t- [ ] goldfish" }
-		}
-		if (flag ch2-installed-abacus is true) {
-			show serial dialog { "\t\t- [x] abacus" }
-		} else if (flag ch2-carrying-abacus is true) {
-			show serial dialog { "\t\t- [~] abacus" }
-		} else {
-			show serial dialog { "\t\t- [ ] abacus" }
-		}
-
-	}
-	// FINAL ROUND: software
-	else if (variable ch2-storyflag-round is == 4) {
-		if (flag ch2-cutseen-castle99 is false) {
-			show serial dialog spacer;
-			show serial dialog {
-				"<m>LAMBDA</>: You'll all done with the mainframe hardware, so come get the OS from me in my <c>SECRET LAB</>. Use <c>WARP</> to reach me."
-			}
-		} else {
-			show serial dialog spacer;
-			show serial dialog {
-				"<m>LAMBDA</>: You've got the mainframe OS now, so head on back to first room of the castle -- the room with the the mainframe enclosure -- so the Wizard can install it for you. Good luck."
-			}
-		}
-		show serial dialog lambda-over;
-		return;
-	}
-	// GAME FINISHED
-	else {
-		show serial dialog spacer;
-		show serial dialog {
-			"<m>LAMBDA</>: You're all done; no more parts to collect. Enjoy the power of the finished mainframe!"
-			" "
-		}
-		show serial dialog lambda-over;
-		return;
+	one:
+	if (flag ch2-installed-heatsink is true) {
+		show serial dialog { "- [x] heat sink" }
+	} else if (flag ch2-carrying-heatsink is true) {
+		show serial dialog { "- [~] heat sink" }
+	} else {
+		show serial dialog { "- [ ] heat sink" }
 	}
 
-	// FINISH
-	goto command-parts-q;
-}
+	if (flag ch2-installed-powersupply is true) {
+		show serial dialog { "- [x] power supply" }
+	} else if (flag ch2-carrying-powersupply is true) {
+		show serial dialog { "- [~] power supply" }
+	} else {
+		show serial dialog { "- [ ] power supply" }
+	}
 
-command-man-stop {
-	show serial dialog spacer;
-	show serial dialog lambda-over;
-}
+	if (flag ch2-installed-monitor is true) {
+		show serial dialog { "- [x] monitor" }
+	} else if (flag ch2-carrying-monitor is true) {
+		show serial dialog { "- [~] monitor" }
+	} else {
+		show serial dialog { "- [ ] monitor" }
+	}
+	goto label wrapup;
+	two:
+	if (flag ch2-installed-harddrive is true) {
+		show serial dialog { "- [x] hard drive" }
+	} else if (flag ch2-carrying-harddrive is true) {
+		show serial dialog { "- [~] hard drive" }
+	} else {
+		show serial dialog { "- [ ] hard drive" }
+	}
+	if (flag ch2-installed-plate is true) {
+		show serial dialog { "\t- [x] dinner plate" }
+	} else if (flag ch2-carrying-plate is true) {
+		show serial dialog { "\t- [~] dinner plate" }
+	} else {
+		show serial dialog { "\t- [ ] dinner plate" }
+	}
+	if (flag ch2-installed-needle is true) {
+		show serial dialog { "\t- [x] phonograph needle" }
+	} else if (flag ch2-carrying-needle is true) {
+		show serial dialog { "\t- [~] phonograph needle" }
+	} else {
+		show serial dialog { "\t- [ ] phonograph needle" }
+	}
 
-command-parts-q {
+	if (flag ch2-installed-keyboard is true) {
+		show serial dialog { "- [x] keyboard" }
+	} else if (flag ch2-carrying-keyboard is true) {
+		show serial dialog { "- [~] keyboard" }
+	} else {
+		show serial dialog { "- [ ] keyboard" }
+	}
+
+	if (flag ch2-installed-mouse is true) {
+		show serial dialog { "- [x] mouse" }
+	} else if (flag ch2-carrying-mouse is true) {
+		show serial dialog { "- [~] mouse" }
+	} else {
+		show serial dialog { "- [ ] mouse" }
+	}
+	goto label wrapup;
+	three:
+	if (flag ch2-installed-ramchips is true) {
+		show serial dialog { "- [x] RAM chips" }
+	} else if (flag ch2-carrying-ramchips is true) {
+		show serial dialog { "- [~] RAM chips" }
+	} else {
+		show serial dialog { "- [ ] RAM chips" }
+	}
+
+	if (flag ch2-installed-clock is true) {
+		show serial dialog { "- [x] clock" }
+	} else if (flag ch2-carrying-clock is true) {
+		show serial dialog { "- [~] clock" }
+	} else {
+		show serial dialog { "- [ ] clock" }
+	}
+
+	if (flag ch2-installed-cpu is true) {
+		show serial dialog { "- [x] cpu" }
+	} else if (flag ch2-carrying-cpu is true) {
+		show serial dialog { "- [~] cpu" }
+	} else {
+		show serial dialog { "- [ ] cpu" }
+	}
+	if (flag ch2-installed-goldfish is true) {
+		show serial dialog { "\t- [x] goldfish" }
+	} else if (flag ch2-carrying-goldfish is true) {
+		show serial dialog { "\t- [~] goldfish" }
+	} else {
+		show serial dialog { "\t- [ ] goldfish" }
+	}
+	if (flag ch2-installed-abacus is true) {
+		show serial dialog { "\t- [x] abacus" }
+	} else if (flag ch2-carrying-abacus is true) {
+		show serial dialog { "\t- [~] abacus" }
+	} else {
+		show serial dialog { "\t- [ ] abacus" }
+	}
+	goto label wrapup;
+	four:
+	if (flag ch2-installed-mainframeos is true) {
+		show serial dialog { "\t- [x] mainframe os" }
+	} else if (flag ch2-cutseen-castle99 is true) {
+		show serial dialog { "\t- [~] mainframe os" }
+	} else {
+		show serial dialog { "\t- [ ] mainframe os" }
+	}
+	wrapup:
 	show serial dialog {
 		" "
-		"(Type the part name for more info, <c>PARTS</> to see the parts list again, or <c>QUIT</> to stop)"
+		"(For information about one of these parts, type <c>PARTS</> followed by the part name.)"
 
-		_ "PARTS" : command-parts
-
-		_ "Q" : command-man-stop
-		_ "QUIT" : command-man-stop
-		_ "EXIT" : command-man-stop
-
-		// ROUND ONE: normal
-		
-		_ "MONITOR" : command-parts-monitor
-
-		_ "HEAT SINK" : command-parts-heatsink
-		_ "HEATSINK" : command-parts-heatsink
-
-		_ "POWER SUPPLY" : command-parts-powersupply
-		_ "POWERSUPPLY" : command-parts-powersupply
-
-		// ROUND TWO: abstract
-		
-		_ "KEYBOARD" : command-parts-keyboard
-		
-		_ "MOUSE" : command-parts-mouse
-		
-		_ "HARD DRIVE" : command-parts-harddrive
-		_ "HARDDRIVE" : command-parts-harddrive
-		_ "HARD DISK" : command-parts-harddrive
-		_ "HARDDISK" : command-parts-harddrive
-		_ "HDD" : command-parts-harddrive
-
-		_ "PLATE" : command-parts-plate
-		_ "DINNER PLATE" : command-parts-plate
-		
-		_ "NEEDLE" : command-parts-needle
-		_ "PHONOGRAPH NEEDLE" : command-parts-needle
-	
-		// ROUND THREE: desperate
-
-		_ "RAM CHIPS" : command-parts-ramchips
-		_ "RAMCHIPS" : command-parts-ramchips
-		_ "RAM" : command-parts-ramchips
-		
-		_ "CLOCK" : command-parts-clock
-
-		_ "CPU" : command-parts-cpu
-
-		_ "GOLDFISH" : command-parts-goldfish
-
-		_ "ABACUS" : command-parts-abacus
 	}
-	show serial dialog spacer;
-	show serial dialog {
-		"<m>LAMBDA</>: Not sure what you mean. Want to ask about something else?"
-	}
-	goto command-parts-q;
 }
 
 ch2-describe-monitor { show serial dialog ch2-describe-monitor; }
@@ -274,13 +265,18 @@ ch2-describe-abacus { show serial dialog ch2-describe-abacus; }
 
 command-parts-ahead {
 	show serial dialog spacer;
-	show serial dialog { "<m>LAMBDA</>: Hold on! Don't get ahead of yourself, haha.... For now just focus on the below:" }
+	show serial dialog {
+		"<m>LAMBDA</>: Hold on! Don't get ahead of yourself, haha.... For now just focus on the below:"
+		" "
+}
 	goto command-parts-print;
 }
 command-parts-ahead-confused {
 	show serial dialog spacer;
-	show serial dialog { "<m>LAMBDA</>: I don't know if that will be of any use, but... want to ask about something else?" }
-	goto command-parts-q;
+	show serial dialog {
+		"<m>LAMBDA</>: I don't know if that will be of any use, but... want to ask about something else?"
+	}
+	goto command-parts-print;
 }
 
 // ROUND ONE: normal
@@ -294,7 +290,8 @@ command-parts-monitor {
 	} else {
 		copy ch2-describe-monitor;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-heatsink {
 	show serial dialog spacer;
@@ -305,18 +302,20 @@ command-parts-heatsink {
 	} else {
 		copy ch2-describe-heatsink;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-powersupply {
 	show serial dialog spacer;
 	if (flag ch2-installed-powersupply is true) {
-		show serial dialog { "<m>LAMBDA</>: The power supply is in place already. Notice, though, that it's got a bunch of littler wires coming off of it -- you'll need to plug other components into those later. Everything is keyed, so it should be obvious how everything should be plugged when the time comes." }
+		show serial dialog { "<m>LAMBDA</>: The power supply is in place already. Notice, though, that it's got a bunch of smaller wires coming off of it -- you'll need to plug other components into those later. Everything is keyed, so it should be obvious how everything should be plugged when the time comes." }
 	} else if (flag ch2-carrying-powersupply is true) {
 		show serial dialog { "<m>LAMBDA</>: There's a spot where the power supply goes -- it should be fairly obvious. Then screw it in so it won't wiggle around in there." }
 	} else {
 		copy ch2-describe-powersupply;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 
 // ROUND TWO: abstract
@@ -333,7 +332,8 @@ command-parts-keyboard {
 	} else {
 		copy ch2-describe-keyboard;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-mouse {
 	if (variable ch2-storyflag-round is < 2) {
@@ -347,7 +347,8 @@ command-parts-mouse {
 	} else {
 		copy ch2-describe-mouse;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-harddrive {
 	if (variable ch2-storyflag-round is < 2) {
@@ -364,7 +365,8 @@ command-parts-harddrive {
 			"\tUse one of the solder stations in the workshop to combine both items into a <m>HARD DRIVE</>."
 		}
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-plate {
 	if (variable ch2-storyflag-round is < 2) {
@@ -382,7 +384,8 @@ command-parts-plate {
 	} else {
 		copy ch2-describe-plate;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-needle {
 	if (variable ch2-storyflag-round is < 2) {
@@ -400,7 +403,8 @@ command-parts-needle {
 	} else {
 		copy ch2-describe-needle;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-ramchips {
 	if (variable ch2-storyflag-round is < 2) {
@@ -414,7 +418,8 @@ command-parts-ramchips {
 	} else {
 		copy ch2-describe-ramchips;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 
 // ROUND THREE: desperate
@@ -431,7 +436,8 @@ command-parts-clock {
 	} else {
 		copy ch2-describe-clock;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-cpu {
 	if (variable ch2-storyflag-round is < 3) {
@@ -445,7 +451,8 @@ command-parts-cpu {
 	} else {
 		copy ch2-describe-cpu;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-goldfish {
 	if (variable ch2-storyflag-round is < 3) {
@@ -463,7 +470,8 @@ command-parts-goldfish {
 	} else {
 		copy ch2-describe-goldfish;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }
 command-parts-abacus {
 	if (variable ch2-storyflag-round is < 3) {
@@ -481,5 +489,18 @@ command-parts-abacus {
 	} else {
 		copy ch2-describe-abacus;
 	}
-	goto command-parts-q;
+	show serial dialog {" "}
+	show serial dialog lambda-over;
+}
+command-parts-os {
+	show serial dialog spacer;
+	if (variable ch2-storyflag-round is < 4) {
+		show serial dialog { "<m>LAMBDA</>: The operating system isn't quite ready yet. Sorry. Keep working on the hardware and I'll keep working on getting the OS ready for you." }
+	} else if (flag ch2-cutseen-castle99 is false) {
+		show serial dialog { "<m>LAMBDA</>: You'll all done with the mainframe hardware, so come get the OS from me in my <c>SECRET LAB</>. Use <c>WARP</> to reach me." }
+	} else {
+		show serial dialog { "<m>LAMBDA</>: You've got the mainframe OS now, so head on back to first room of the castle -- the room with the the mainframe enclosure -- so the Wizard can install it for you. Good luck." }
+	}
+	show serial dialog {" "}
+	show serial dialog lambda-over;
 }

@@ -121,34 +121,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484692,
-                 "height":32,
-                 "id":36,
-                 "name":"Jean-Paul",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"interact-ch2-jeanpaul"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"look-ch2-jean_paul"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"null_script"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":76,
-                 "y":313
-                }, 
-                {
-                 "class":"",
                  "gid":1066,
                  "height":32,
                  "id":37,
@@ -325,8 +297,7 @@
                  "width":32,
                  "x":157,
                  "y":237
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":281,
@@ -349,7 +320,8 @@
                  "width":32,
                  "x":186,
                  "y":237
-                }, 
+                },
+            
                 {
                  "class":"",
                  "gid":281,
@@ -477,6 +449,34 @@
                  "width":32,
                  "x":177,
                  "y":284
+                }, 
+                {
+                 "class":"",
+                 "gid":1045,
+                 "height":32,
+                 "id":64,
+                 "name":"Jean-Paul",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-jeanpaul"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-jean_paul"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":76,
+                 "y":313
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -568,7 +568,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":64,
+ "nextobjectid":65,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

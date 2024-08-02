@@ -120,8 +120,7 @@ ch2-lambda-topic-q {
 ch2-lambda-topic-q-midgame {
 	show serial dialog {
 		"(Ask about:)"
-		# "Parts list" : command-parts
-		# "Installing parts" : ch2-lambda-topic-installation
+		# "Parts" : ch2-lambda-topic-parts
 		# "Using the artifact" : ch2-lambda-topic-artifact
 		# "The mainframe" : ch2-lambda-topic-mainframe
 		# "The castle" : ch2-lambda-topic-castle
@@ -153,15 +152,43 @@ ch2-lambda-ishouldgo {
 
 /* ---------- ARTIFACT ---------- */
 
-ch2-lambda-topic-installation {
+ch2-lambda-topic-parts {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: You had a question about the parts?"
+		" "
+	}
+	goto ch2-lambda-topic-parts-q;
+}
+ch2-lambda-topic-parts-q {
+	show serial dialog {
+		"(Ask about:)"
+		# "Parts list" : ch2-lambda-topic-parts-list
+		# "Installing parts" : ch2-lambda-topic-parts-installation
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+ch2-lambda-topic-parts-list {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What is the parts list?"
+		" "
+		"<m>LAMBDA</>: To see the parts list, use the magic word -- that is, the command -- <c>PARTS</>. To see information about a specific part, type <c>PARTS</> and then the name of the part. For example, to ask about the monitor, type: <c>PARTS <c>MONITOR</>."
+		" "
+	}
+	goto ch2-lambda-topic-parts-q;
+	
+}
+
+ch2-lambda-topic-parts-installation {
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: How do I install the parts once I've got them?"
 		" "
-		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle, and I can help you from there as needed. Most of the parts should be straightforward to install."
+		"<m>LAMBDA</>: Just bring them to the mainframe enclosure in the first room of the castle. That's the sort of beige-looking computer box by the northernmost exit. The parts themselves should be straightforward to install, but do feel free to ask me for help."
 		" "
 	}
-	goto ch2-lambda-topic-q;
+	goto ch2-lambda-topic-parts-q;
 }
 
 ch2-lambda-topic-artifact {

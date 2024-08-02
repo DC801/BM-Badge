@@ -44,10 +44,11 @@ serial dialog ch2-describe-clock {
 	"<m>LAMBDA</>: We'll need a <m>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
 	"\tIn our case... well, I know <m>King Gibson has a very nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
-serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both questions
+serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both if changing anything
 	"<m>LAMBDA</>: The <m>CPU</> is like the brain of the computer. There aren't any spare lying around, but we can approximate one."
 	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 	"\tFor the rest, we'll need a volunteer who is very small and will make decisions very consistently. The best candidate is <m>Aurelius</>, the <m>GOLDFISH</> in the <m>throne room</>. Just make sure he understands what he's getting into."
+	"\tOnce you have both, <m>solder them together</> in the workshop."
 	// todo: make it so you could use Mr. Tickles instead! (You must choose!)
 	// "\tThat is, unless you know any other goldfish you might want to use instead...."
 }
@@ -257,6 +258,7 @@ ch2-lambda-round-2-parts5c {
 ch2-lambda-round-2-parts5d {
 	set flag ch2-lambda-paging to false;
 	set flag ch2-parts-round-2-backstory to true;
+	copy ch2-put_on_map-round2;
 	show serial dialog spacer;
 	show serial dialog {
 		"<c>YOU</>: Anything else?"
@@ -266,12 +268,12 @@ ch2-lambda-round-2-parts5d {
 		" "
 	}
 	show serial dialog lambda-over;
-	copy ch2-put_on_map-round2;
 }
 
 /* ---------- PARTS LIST: ROUND 3 ---------- */
 
 ch2-bert-message-lambda-intro {
+	copy ch2-put_on_map-round3;
 	show serial dialog spacer;
 	show serial dialog {
 		"<m>LAMBDA</>: Hey, there! I saw that you finished the last list, and had just worked out the last few parts we need...."
@@ -396,7 +398,6 @@ ch2-lambda-round-3-parts5 {
 		"\tRemember you can type <c>PARTS</> To see the parts list again. Good luck."
 		" "
 	}
-	copy ch2-put_on_map-round3;
 	set flag ch2-lambda-paging to false;
 	show serial dialog lambda-over;
 }
