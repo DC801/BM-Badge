@@ -30,7 +30,7 @@ Commonly, Natlang syntax involves declarations followed by matching pairs of bra
 
 Free form phrases often have a known size, such as actions within a script block (with limited numbers of possible arrangements) or dialog parameters (which always appear in pairs). In such cases, terminating characters or brackets are not used.
 
-…However, due to an increasing desire for complex syntax parsing, terminating or separating characters is being gradually introduced. As of mid 2024, this is limited to semicolons (`;`) being used to mark the end of an action, e.g. `save slot 4;`
+…However, due to an increasing desire for complex syntax parsing, terminating or separating characters is being gradually introduced. As of August 2024, this is limited to semicolons (`;`) being used to mark the end of an action, e.g. `save slot 4;`
 
 ## Variables
 
@@ -54,6 +54,10 @@ testScript {
 ```
 
 This is the only time that line breaks are syntactic in Natlang. Line comments start with `//` and end either with a line break or the end of the document.
+
+::: warning
+Do not use line comments in a file that is to be referenced by [`include!()`](advanced_syntax#include)! Such files have their line breaks changed to spaces when copied into the secondary file — this is done so that the secondary file's line numbers can remain intact for error handling. As a result, line comments are never terminated, and whole swaths of code might be lost, which can result in a wide range of baffling encoder errors. (This will be fixed eventually, but is not fixed as of August 2024. Be ye warned!)
+:::
 
 Fun fact: the MGS Natlang translator (JSON -> Natlang) will take [extraneous properties from actions](../comments) and the like and turn them into line comments automatically.
 

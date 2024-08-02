@@ -7,6 +7,10 @@ next: entities.md
 
 These can be used as paths or destinations for [entities](entities) or the camera. Place these on a [map](maps) with Tiled. Be sure to give these vector objects a name in the `Name` properties view so that scripts can identify them.
 
+::: warning
+When a vector object has the same name as an entity on the map, you may experience errant behavior. Best to keep all vector objects uniquely named.
+:::
+
 The Mage Game Engine (MGE) can detect whether an entity's hitbox is inside a polygon, so polygons are useful for script triggers such as [doorways](techniques/doors).
 
 All geometric shapes can be made visible when using [vector view](debug_tools#vector-view) while running the game.

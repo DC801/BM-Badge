@@ -195,6 +195,10 @@ This macro will copy and paste the plaintext contents of the named [MGS](../mgs/
 
 This is recursive, so be careful.
 
+::: warning
+Do not use [line comments](mgs_natlang_structure#line-comment) (`//`) in a file that is to be referenced by [`include!()`](advanced_syntax#include)! Such comments will never terminate and whole swaths of code might be lost, which can result in a wide range of baffling encoder errors.
+:::
+
 This is best used for common settings, such as the [player dialog label](../mgs/dialog_settings_target_block).
 
 ```mgs

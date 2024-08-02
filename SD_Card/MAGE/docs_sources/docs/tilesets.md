@@ -21,7 +21,7 @@ All **tileset tiles need to be perfect squares** because tiles can be rotated or
 
 **Spritesheets** are tilesets that contain every iteration of a sprite needed for its animations.
 
-Spritesheets are handled like tilesets within Tiled and the [encoder](encoder). They are not required to be square, strictly speaking, but non-square spritesheets currently (as of mid 2024) crash the game when the tile goes offscreen, so best to keep everything square for now.
+Spritesheets are handled like tilesets within Tiled and the [encoder](encoder). They are not required to be square, strictly speaking, but non-square spritesheets currently (as of August 2024) crash the game when the tile goes partially offscreen, so best to keep everything square for now.
 
 ## Other Kinds of Tilesets
 
@@ -47,10 +47,10 @@ To encode alpha, the MGE repurposes the least-significant green bit in the RGB56
 
 ### Pallet
 
-The [encoder](encoder) indexes the pallets of each image, and there is therefore a **maximum of 256 colors per tileset image**. The encoder will let you know if one of your tilesets is over the color limit.
+The [encoder](encoder) indexes the pallets of each image, and there is therefore a **maximum of 255 colors per tileset image** (excluding transparency, which is always included, making it 256 colors total). The encoder will let you know if one of your tilesets is over the color limit.
 
 ::: tip
-If you're having trouble keeping your pallets under control, consider using the PNG-8 and GIF file formats, as they cannot contain more than 256 colors.
+If you're having trouble keeping your pallets under control, consider using the PNG-8 and GIF file formats, as they cannot contain more than 256 colors. Just remember that at least one of these colors must be transparent!
 :::
 
 If you need extra colors, consider splitting the tileset into multiple files — maps will quite happily use tiles from multiple tilesets with no trouble, provided the tiles are of uniform size.

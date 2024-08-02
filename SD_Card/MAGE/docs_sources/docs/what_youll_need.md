@@ -12,7 +12,7 @@ You will need a text editor. (NOTE: a word processor like Apple's Pages or Micro
 
 What will work best is an IDE with project management features like syntax parsing and Git integration. Our recommendation, especially for beginners, is [Visual Studio Code](https://code.visualstudio.com/) (Mac, Linux, or Windows), which is free and open source. Importantly, we have prepared a VSCode Marketplace plugin for [MGS Natlang](mgs/mgs_natlang) [syntax highlighting](mgs/mgs_natlang#syntax-colors), which will make it much easier to work with MGS game script files.
 
-`.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](mgs/mgs_natlang#syntax-colors) for up-to-date details and instructions.) The following can manage decent support as of mid 2024:
+`.mgs` syntax highlighting can be manually added to a handful of other text editors, too. (See [Syntax Colors](mgs/mgs_natlang#syntax-colors) for up-to-date details and instructions.) The following can manage decent support as of August 2024:
 
 - [Sublime Text](https://sublimetext.com)
 - [JetBrains' IDEs](https://www.jetbrains.com/) (excellent IDE but not inexpensive)
@@ -56,7 +56,7 @@ To put a new `game.dat` onto the badge, you'll need a microSD card formatted to 
 
 ## Linux (optional)
 
-The tools listed above can be run in any environment, but at the moment (mid 2024), you need Linux to run the game natively on your computer.
+The tools listed above can be run in any environment, but at the moment (August 2024), you need Linux to run the game natively on your computer.
 
 A virtual machine will be sufficient for this. For your convenience, we have prepared a VM image with project files and tooling in place for you to start a new MGE project (see: [MGE VM](mge_vm)) — but know that you will likely need to update everything, as the VM was prepared for the chapter 1 engine.
 

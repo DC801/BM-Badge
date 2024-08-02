@@ -8,7 +8,7 @@ prev: mgs/advanced_syntax.md
 
 Debug mode is triggered in-game by pressing `XOR` and `MEM1` (the top button on the left of the screen and the second button on the right) at the same time. On desktop: press `F1` and `F6` instead. This counts as a [map reload](map_loads).
 
-Turn debug mode off the same way.
+Turn off debug mode in the same way.
 
 ### Debug Entities
 

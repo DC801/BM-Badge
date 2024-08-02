@@ -83,7 +83,7 @@ Test the game in one of three ways:
 2. Desktop build (see [MGE VM](mge_vm)):
 	1. Move `game.dat` to the right place.
 	2. Run the game.
-3. Verify on real badge hardware.
+3. Verify on real badge hardware. See: [Updating the Hardware](updating_the_hardware)
 	1. Copy `game.dat` onto a microSD card.
 	2. Insert the microSD card into hardware.
 	3. Flash the game.
