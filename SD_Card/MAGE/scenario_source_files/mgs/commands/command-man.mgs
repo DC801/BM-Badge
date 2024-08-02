@@ -394,6 +394,9 @@ ch2-lambda-topic-person-q {
 		_ "GLORIA" : ch2-lambda-person-gloria
 		_ "SAMSON" : ch2-lambda-person-samson
 		_ "GREGORY" : ch2-lambda-person-gregory
+		_ "THE CAT" : ch2-lambda-person-the-cat
+		_ "A CAT" : ch2-lambda-person-a-cat
+		_ "CAT" : ch2-lambda-person-a-cat
 		_ "CLARA" : ch2-lambda-person-clara
 		// east wing
 		_ "JEANPAUL" : ch2-lambda-person-jeanpaul
@@ -723,6 +726,28 @@ ch2-lambda-person-gregory {
 		show serial dialog {
 			"<m>LAMBDA</>: Ah, Gregory! He runs the castle kitchens. He's a bit gray around the whiskers, but is still as quick as ever. Excellent taste, and great at improvising recipes."
 		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-a-cat {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about a cat."
+		" "
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: A cat? The only cat I know is Gregory, I think. He's the castle chef."
+	}
+	goto ch2-lambda-topic-person-s;
+}
+ch2-lambda-person-the-cat {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about the cat."
+		" "
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: The cat? The only cat I know is Gregory, I think. He's the castle chef."
 	}
 	goto ch2-lambda-topic-person-s;
 }
