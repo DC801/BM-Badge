@@ -1,0 +1,447 @@
+{ "compressionlevel":-1,
+ "height":17,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 283, 284, 284, 284, 284, 284, 284, 284, 284, 2147483931, 0,
+            0, 299, 289, 2147483937, 300, 300, 300, 300, 289, 2147483937, 2147483947, 0,
+            0, 336, 2684354893, 294, 316, 316, 316, 3221225789, 292, 314, 2147483984, 0,
+            0, 352, 316, 372, 296, 314, 307, 296, 293, 339, 2147484000, 0,
+            0, 315, 316, 292, 293, 339, 339, 316, 316, 371, 2147483963, 0,
+            0, 331, 316, 316, 316, 323, 374, 316, 316, 316, 2147483979, 0,
+            0, 347, 349, 2147483996, 350, 371, 316, 2147483998, 348, 2147483997, 2147483995, 0,
+            0, 283, 284, 284, 285, 316, 291, 2147483933, 2147483932, 2147483932, 2147483931, 0,
+            0, 299, 300, 300, 301, 316, 316, 2147483949, 2147483948, 2147483948, 2147483947, 0,
+            0, 315, 316, 316, 295, 314, 316, 316, 316, 294, 2147483963, 0,
+            0, 336, 294, 316, 339, 372, 314, 316, 316, 339, 2147483984, 0,
+            0, 352, 339, 316, 339, 316, 372, 314, 316, 339, 2147484000, 0,
+            0, 315, 339, 316, 339, 316, 316, 372, 314, 339, 2147483963, 0,
+            0, 331, 371, 316, 371, 316, 316, 3221225804, 372, 378, 2147483979, 0,
+            0, 347, 348, 348, 348, 353, 2147484001, 349, 349, 348, 2147483995, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":17,
+         "id":6,
+         "name":"Floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 390, 391, 392, 393, 0, 0, 0, 0,
+            0, 0, 306, 2147483954, 406, 407, 408, 409, 306, 2147483954, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 438, 439, 440, 0, 0, 438, 439, 440, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 383, 384, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 399, 400, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 509, 2147484157, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 509, 510, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 2147484035, 290, 2147483938, 0, 0, 403, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":17,
+         "id":7,
+         "name":"Floor Doodads",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"Entities",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":401
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":36,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-77.3333333333333,
+                 "y":-12
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":61,
+                 "name":"sink",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-sink"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":102
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":62,
+                 "name":"onions",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-onions"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"ch2-look-onions"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":100
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":64,
+                 "name":"stove",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-stove"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"ch2-look-stove"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":206
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":65,
+                 "name":"stove",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-stove"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"ch2-look-stove"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":206
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":68,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-66,
+                 "y":-94
+                }, 
+                {
+                 "class":"",
+                 "height":24.152,
+                 "id":69,
+                 "name":"south-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":31.416,
+                 "x":176,
+                 "y":479
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":70,
+                 "name":"walk_from-south",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":470
+                }, 
+                {
+                 "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":75,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":177,
+                 "y":409
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 422, 423, 424, 0, 0, 422, 423, 424, 0, 0,
+            0, 0, 0, 0, 334, 0, 0, 2147483982, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 2147484142, 494, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 2147484142, 494, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 337, 2147483985, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":17,
+         "id":8,
+         "name":"Floating Layer",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":34,
+                 "id":45,
+                 "name":"northeast-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":272,
+                 "y":63
+                }, 
+                {
+                 "class":"",
+                 "height":34,
+                 "id":47,
+                 "name":"northwest-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":80,
+                 "y":63
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":50,
+                 "name":"vend machine",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-vendingmachine-end"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":93,
+                 "y":342
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":67,
+                 "name":"coffee",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-coffee"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-coffee"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":56,
+                 "y":333
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":73,
+                 "name":"walk_from-northwest",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":99
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":74,
+                 "name":"walk_from-northeast",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":288,
+                 "y":99
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":9,
+ "nextobjectid":76,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/tilesets\/tileset-monstrosity.json"
+        }, 
+        {
+         "firstgid":177,
+         "source":"..\/entities\/entity-mage.json"
+        }, 
+        {
+         "firstgid":237,
+         "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":239,
+         "source":"..\/entities\/entity-save_floppy.json"
+        }, 
+        {
+         "firstgid":263,
+         "source":"..\/entities\/entity-bert.json"
+        }, 
+        {
+         "firstgid":281,
+         "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":283,
+         "source":"..\/tilesets\/tileset-castle-interior.json"
+        }, 
+        {
+         "firstgid":667,
+         "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":923,
+         "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":933,
+         "source":"..\/entities\/entity-seamoss.json"
+        }, 
+        {
+         "firstgid":949,
+         "source":"..\/entities\/entity-ram_chips.json"
+        }, 
+        {
+         "firstgid":950,
+         "source":"..\/entities\/entity-wormy.json"
+        },
+    
+        {
+         "firstgid":968,
+         "source":"..\/entities\/entity-beetle.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.9",
+ "width":12
+}

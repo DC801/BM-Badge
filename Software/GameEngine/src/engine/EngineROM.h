@@ -26,6 +26,10 @@
 //this is the length of the 'identifier' at the start of the game.dat file:
 #define ENGINE_ROM_IDENTIFIER_STRING_LENGTH 8
 
+//this is the length of the 'engine rom version number' at the start of the game.dat file:
+//it is to determine if the game rom is compatible with the engine version
+#define ENGINE_ROM_VERSION_NUMBER_LENGTH 4
+
 //this is the length of the crc32 that follows the magic string in game.dat
 //it is used to let us check if we need to re-flash the ROM chip with the file on
 //the SD card.
@@ -34,7 +38,9 @@
 //this is the length of the scenario data from the 0 address to the end
 #define ENGINE_ROM_GAME_LENGTH 4
 
-#define ENGINE_ROM_MAGIC_HASH_LENGTH (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_GAME_LENGTH + ENGINE_ROM_CRC32_LENGTH)
+#define ENGINE_ROM_START_OF_CRC_OFFSET (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH)
+
+#define ENGINE_ROM_MAGIC_HASH_LENGTH (ENGINE_ROM_START_OF_CRC_OFFSET + ENGINE_ROM_CRC32_LENGTH + ENGINE_ROM_GAME_LENGTH)
 
 //this is all the bytes on our ROM chip. We aren't able to write more than this
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
@@ -86,6 +92,10 @@ void EngineROM_WriteSaveSlot(
 	size_t length,
 	uint8_t *hauntedDataPointer
 );
-bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat);
+bool EngineROM_SD_Copy(
+	uint32_t gameDatFilesize,
+	FIL gameDat,
+	bool eraseWholeRomChip
+);
 
 #endif

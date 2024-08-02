@@ -78,6 +78,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 		// 	tilesetFile.name,
 		// 	tilesetData
 		// );
+		scenarioData.tilesetMap[tilesetData.filename] = tilesetData;
 		tilesetData.serializedTiles = new ArrayBuffer(
 			getPaddedHeaderLength(tilesetData.tilecount * 2)
 		);
@@ -133,6 +134,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 				return tilesetData;
 			});
 		var imageFileName = tilesetData.image.split('/').pop();
+		tilesetData.imageFileName = imageFileName;
 		var imageFile = fileNameMap[imageFileName];
 		tilesetData.imageFile = imageFile;
 		tilesetData.serialized = serializeTileset(tilesetData, imageFile);

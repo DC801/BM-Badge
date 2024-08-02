@@ -1,16 +1,22 @@
 var textDecoder = new TextDecoder();
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
+var gameCanvas = document.getElementById('canvas');
+var context = gameCanvas.getContext('2d');
 context.fillStyle = '#000';
-context.fillRect(0, 0, canvas.width, canvas.height);
+context.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 context.fillStyle = '#dc8';
 context.textAlign = 'center';
 context.font = '32px monospace';
 context.fillText(
 	':: LOAFING ::',
-	(canvas.width / 2),
-	(canvas.height / 2) + 8,
+	(gameCanvas.width / 2),
+	(gameCanvas.height / 2) + 8,
 );
+gameCanvas.addEventListener('wheel', function (event) {
+	// I will never care about using scroll events in engine,
+	// so prevent SDL's scroll handling from trapping scroll,
+	// which prevents a user's ability to scroll the page.
+	event.stopImmediatePropagation();
+});
 
 var loadedDataMap = {};
 var createdPaths = {};
@@ -83,10 +89,13 @@ var emscriptenReadyPromise = new Promise(function (resolve, reject) {
 	};
 });
 var Module = {
-	canvas: canvas, // compensates for emscripten startup weirdness - IMPORTANT
+	canvas: gameCanvas, // compensates for emscripten startup weirdness - IMPORTANT
 	noInitialRun: true, // because preInit isn't promise based, need to start manually
 	onRuntimeInitialized: emscriptenReadyResolve,
+	print: createOutputFunction('stdout'), // handles output strings from stdout
+	printErr: createOutputFunction('stderr'),// handles output strings from stderr
 	preInit: function() {
+		installStdInReplacement(FS);
 		Object.keys(loadedDataMap).forEach(addLoadedFilePathToVirtualFS);
 		Promise.all([
 			enableSaveFilePersistence(),
@@ -110,15 +119,38 @@ var Module = {
 	},
 };
 
+var getModificationHeaders = function (response) {
+	return response.headers.get('last-modified');
+};
+
 var fetchBinaryDataFromPath = function (path) {
-	return localforage.getItem(path).then(function (content) {
-		var result = content;
-		if (result === null) {
-			result = fetch(path).then(function (file) {
-				return file.arrayBuffer().then(function (arrayBuffer) {
-					return localforage.setItem(path, arrayBuffer);
+	var headersPromise = fetch(path, {
+		method: 'HEAD'
+	}).then(getModificationHeaders);
+	var localAssetAndRemoteHeadPromises = Promise.all([
+		localforage.getItem(path),
+		headersPromise,
+	]);
+	return localAssetAndRemoteHeadPromises.then(function (results) {
+		var localResult = (results[0] || {data: null});
+		var serverLastModified = results[1];
+		var result = localResult.data;
+		var localDataIsEmpty = result === null;
+		var modificationMismatch = localResult.lastModified !== serverLastModified;
+		if (
+			localDataIsEmpty
+			|| modificationMismatch
+		) {
+			result = fetch(path).then(function (response) {
+				return response.arrayBuffer().then(function (arrayBuffer) {
+					return localforage.setItem(path, {
+						lastModified: getModificationHeaders(response),
+						data: arrayBuffer,
+					}).then(function () {
+						return arrayBuffer;
+					});
 				});
-			})
+			});
 		}
 		return result;
 	})
@@ -129,7 +161,7 @@ var fetchBinaryDataFromPath = function (path) {
 
 var filesToPreload = [
 	'MAGE/desktop_assets/window_frame.png',
-	'MAGE/desktop_assets/window_frame-button.png',
+	'MAGE/desktop_assets/window_frame-keyboard.png',
 	'MAGE/desktop_assets/window_frame-led.png',
 	'MAGE/game.dat',
 ];
@@ -180,7 +212,15 @@ var handleFileDropIntoPage = function(event) {
 					'MAGE/game.dat',
 					uint8Array,
 				);
-				Module.ccall('EngineTriggerRomReload');
+				Module.ccall(
+					'EngineTriggerRomReload',
+					undefined,
+					undefined,
+					undefined,
+					{
+						async: true
+					}
+				);
 			}
 		});
 	}
@@ -191,3 +231,19 @@ var handleFileDropIntoPage = function(event) {
 document.body.addEventListener('dragover', handleFileDropIntoPage);
 document.body.addEventListener('dragenter', handleFileDropIntoPage);
 document.body.addEventListener('drop', handleFileDropIntoPage);
+
+var consoleToggler = document.getElementById('toggle-console');
+var consoleHolder = document.getElementById('console-holder');
+var hideConsoleStyle = consoleHolder.style.cssText;
+var toggleConsole = function () {
+	consoleHolder.style = consoleHolder.style.cssText === ''
+		? hideConsoleStyle
+		: '';
+}
+var handleKeydown = function (keydownEvent) {
+	if (keydownEvent.key === '`') {
+		toggleConsole()
+	}
+};
+window.addEventListener('keydown', handleKeydown);
+consoleToggler.addEventListener('click', toggleConsole);

@@ -1,23 +1,26 @@
-
 window.Vue.component(
 	'inputty',
 	{
+		name: 'inputty',
 		template: '#inputty'
 	}
 );
 
 window.vueApp = new window.Vue({
 	el: '#app',
+	store: window.store,
+	mixins: [
+		makeComputedStoreGetterSettersMixin([
+			'scenarioData',
+			'fileNameMap',
+			'currentData',
+		]),
+	],
 	data: {
 		uniqueEncodeAttempt: Math.random(),
 		isLoading: false,
 		error: null,
 		downloadData: null,
-		scenarioData: null,
-		fileNameMap: null,
-	},
-	created: function () {
-		console.log('Created');
 	},
 	methods: {
 		closeError: function () {
@@ -34,50 +37,63 @@ window.vueApp = new window.Vue({
 			if (this.downloadData) {
 				window.URL.revokeObjectURL(this.downloadData.url);
 			}
-			window.Vue.set(
-				this,
-				'downloadData',
-				{
-					href: url,
-					target: '_blank',
-					download: name
-				}
-			);
+			this.downloadData = {
+				href: url,
+				target: '_blank',
+				download: name
+			}
 		},
 		handleChange: function (event) {
-			var fileNameMap = {};
 			var vm = this;
-			var filesArray = Array.prototype.slice.call(event.target.files);
-			vm.isLoading = true;
-			filesArray.forEach(function (file) {
-				fileNameMap[file.name] = file;
-			});
-			var scenarioFile = fileNameMap['scenario.json'];
+			var fileNameMap = {};
+			vm.closeError();
+
+			var handleError = function(error) {
+				vm.closeSuccess();
+				console.error(error);
+				vm.error = error.message;
+				vm.isLoading = false;
+			};
+
 			try {
+				var filesArray = Array.prototype.slice.call(event.target.files);
+				vm.isLoading = true;
+
+				filesArray.forEach(function (file) {
+					if (fileNameMap[file.name] === undefined) {
+						fileNameMap[file.name] = file;
+					} else {
+						throw new Error(`Multiple files with name '${file.name}' present in scenario source!`);
+					}
+				});
+
+				var scenarioFile = fileNameMap['scenario.json'];
 				if (!scenarioFile) {
-					vm.error = 'No `scenario.json` file detected in folder, nowhere to start!';
+					throw new Error('No `scenario.json` file detected in folder, nowhere to start!');
 				} else {
 					getFileJson(scenarioFile)
 						.then(handleScenarioData(fileNameMap))
 						.then(function (scenarioData) {
 							vm.fileNameMap = fileNameMap;
 							vm.scenarioData = scenarioData;
+							vm.$store.commit('INIT_CURRENT_DATA');
 							return scenarioData;
 						})
 						.then(generateIndexAndComposite)
 						.then(function (compositeArray) {
 							vm.prepareDownload([compositeArray], 'game.dat');
-							vm.isLoading = false;
 						})
 						.catch(function (error) {
-							console.error(error);
-							vm.error = error.message;
+							handleError(error);
+							throw error;
+						})
+						.then(function () {
 							vm.isLoading = false;
+							vm.uniqueEncodeAttempt = Math.random();
 						});
 				}
 			} catch (error) {
-				vm.error = error.message;
-				vm.isLoading = false;
+				handleError(error);
 			}
 		}
 	}

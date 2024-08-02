@@ -443,5 +443,287 @@
 				"flip_x": false
 			}
 		}
+	},
+	"concierge": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 15,
+				"flip_x": true
+			}
+		}
+	},
+	"gibson": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"idle": {
+				"tileid": 24,
+				"flip_x": true
+			},
+			"surprised": {
+				"tileid": 25,
+				"flip_x": true
+			},
+			"big_surprised": {
+				"tileid": 26,
+				"flip_x": true
+			},
+			"embarrassed": {
+				"tileid": 27,
+				"flip_x": true
+			}
+		}
+	},
+	"lambda-codec": {
+		"tileset": "entity-codec-portrait.json",
+		"emotes": {
+			"normal": {
+				"tileid": 5,
+				"flip_x": true
+			},
+			"mysterious": {
+				"tileid": 4,
+				"flip_x": true
+			}
+		}
+	},
+	"lambda": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"opaque_serious": {
+				"tileid": 33,
+				"flip_x": true
+			},
+			"opaque_grin": {
+				"tileid": 35,
+				"flip_x": true
+			},
+			"transparent_serious": {
+				"tileid": 32,
+				"flip_x": true
+			},
+			"transparent_grin": {
+				"tileid": 34,
+				"flip_x": true
+			},
+			"lowered": {
+				"tileid": 36,
+				"flip_x": true
+			},
+			"lowered_almost": {
+				"tileid": 37,
+				"flip_x": true
+			}
+		}
+	},
+	"cockatiel": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 6,
+				"flip_x": true
+			}
+		}
+	},
+	"raccoon": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 16,
+				"flip_x": true
+			}
+		}
+	},
+	"marathon_bob_red": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 28,
+				"flip_x": true
+			}
+		}
+	},
+	"marathon_bob_blue": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 29,
+				"flip_x": true
+			}
+		}
+	},
+	"marathon_bob_green": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 30,
+				"flip_x": true
+			}
+		}
+	},
+	"npc03": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 31,
+				"flip_x": true
+			}
+		}
+	},
+	"alvin": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 25,
+				"flip_x": false
+			}
+		}
+	},
+	"theodore": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 26,
+				"flip_x": true
+			}
+		}
+	},
+	"simon": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"pout": {
+				"tileid": 21,
+				"flip_x": true
+			},
+			"pleased": {
+				"tileid": 22,
+				"flip_x": true
+			},
+			"angry": {
+				"tileid": 23,
+				"flip_x": true
+			},
+			"laughing": {
+				"tileid": 24,
+				"flip_x": true
+			}
+		}
+	},
+	"seamoss": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 27,
+				"flip_x": true
+			}
+		}
+	},
+	"crow": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 28,
+				"flip_x": true
+			}
+		}
+	},
+	"catchef": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 29,
+				"flip_x": true
+			}
+		}
+	},
+	"bigears": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 30,
+				"flip_x": true
+			}
+		}
+	},
+	"lizardwizard": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 31,
+				"flip_x": true
+			}
+		}
+	},
+	"slimey": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 32,
+				"flip_x": true
+			}
+		}
+	},
+	"wormy": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 33,
+				"flip_x": true
+			}
+		}
+	},
+	"beetle": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 34,
+				"flip_x": true
+			}
+		}
+	},
+	"npc05": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 38,
+				"flip_x": true
+			}
+		}
+	},
+	"npc04": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 39,
+				"flip_x": true
+			}
+		}
+	},
+	"npc01": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 40,
+				"flip_x": true
+			}
+		}
+	},
+	"welder": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 42,
+				"flip_x": true
+			}
+		}
+	},
+	"npc02": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 41,
+				"flip_x": true
+			}
+		}
 	}
 }

@@ -547,17 +547,6 @@
  "nextlayerid":6,
  "nextobjectid":40,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"on_load",
-         "type":"string",
-         "value":"on_load-greenhouse"
-        }, 
-        {
-         "name":"on_tick",
-         "type":"string",
-         "value":"on_tick-greenhouse"
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
  "tileheight":32,

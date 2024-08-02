@@ -1,0 +1,2532 @@
+const!(
+	$close = 1 $repeat = 2 $hit = 3 $miss = 4 $cheat = 5
+	// target words
+	$album = 1 $analog = 2 $audio = 3 $aux = 4 $bass = 5 $beat = 6 $bpm = 7 $broadcast = 8 $cassette = 9 $chiptune = 10 $codec = 11 $compact = 12 $frequency = 13 $headphones = 14 $hifi = 15 $laser = 16 $lofi = 17 $media = 18 $microphone = 19 $midi = 20 $mixing = 21 $music = 22 $phonograph = 23 $radio = 24 $recording = 25 $rhythm = 26 $sequencer = 27 $song = 28 $soundtrack = 29 $speakers = 30 $stereo = 31 $stream = 32 $subwoofer = 33 $surround = 34 $synthesizer = 35 $tape = 36 $treble = 37 $vinyl = 38 $vocoder = 39 $volume = 40
+	// "close" words
+	$albums = 41 $base = 42 $beats = 43 $broadcasts = 44 $cassettes = 45 $chiptunes = 46 $codecs = 47 $frequencies = 48 $gramophone = 49 $headphone = 50 $lasers = 51 $microphones = 52 $phones = 53 $phone = 54 $mic = 55 $musician = 56 $radios = 57 $recordings = 58 $record = 59 $sequence = 60 $sequencers = 61 $sing = 62 $singing = 63 $songs = 64 $sound = 65 $soundtracks = 66 $synth = 67 $synthesizers = 68 $track = 69 $tracks = 70 $speaker = 71 $stereos = 72 $streams = 73 $subwoofers = 74 $tapes = 75 $tune = 76 $tunes = 77 $vinyls = 78 $vocoders = 79
+)
+
+// todo: should the "unfound" letters be lowercase for accessibility?
+ch2-ws-count-flags {
+	mutate ch2-ws-flags-tally = 0;
+	if (flag ch2-ws-album is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-analog is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-audio is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-aux is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-bass is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-beat is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-bpm is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-broadcast is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-cassette is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-chiptune is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-codec is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-compact is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-frequency is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-headphones is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-hifi is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-laser is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-lofi is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-media is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-microphone is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-midi is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-mixing is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-music is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-phonograph is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-radio is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-recording is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-rhythm is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-sequencer is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-song is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-soundtrack is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-speakers is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-stereo is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-stream is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-subwoofer is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-surround is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-synthesizer is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-tape is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-treble is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-vinyl is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-vocoder is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+	if (flag ch2-ws-volume is true) {
+		mutate ch2-ws-flags-tally + 1;
+	}
+}
+
+ch2-ws-draw-map {
+
+	// ROW 0
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-tape is true) {
+		concat serial dialog { "<y><bold>T </><r>" }
+	} else {
+		concat serial dialog { "T " }
+	}
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>M </><r>" }
+	} else {
+		concat serial dialog { "M " }
+	}
+	concat serial dialog { "T " }
+	if (flag ch2-ws-vinyl is true) {
+		concat serial dialog { "<y><bold>V I N Y L </><r>" }
+	} else {
+		concat serial dialog { "V I N Y L " }
+	}
+	concat serial dialog { "U J Z D U H E A A U Z " }
+	if (flag ch2-ws-media is true) {
+		concat serial dialog { "<y><bold>M </><r>" }
+	} else {
+		concat serial dialog { "M " }
+	}
+	concat serial dialog { "Q Z G S M " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-aux is true) {
+		concat serial dialog { "aux" }
+	} else {
+		concat serial dialog { "---" }
+	}
+	concat serial dialog { "  " }
+	if (flag ch2-ws-synthesizer is true) {
+		concat serial dialog { "synthesizer" }
+	} else {
+		concat serial dialog { "-----------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 1
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-tape is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "P " }
+	if (flag ch2-ws-music is true) {
+		concat serial dialog { "<y><bold>M </><r>" }
+	} else {
+		concat serial dialog { "M " }
+	}
+	concat serial dialog { "L K " }
+	if (flag ch2-ws-chiptune is true) {
+		concat serial dialog { "<y><bold>C H I P T U N E </><r>" }
+	} else {
+		concat serial dialog { "C H I P T U N E " }
+	}
+	concat serial dialog { "F B P S " }
+	if (flag ch2-ws-media is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog { "P Q R S A P " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-bpm is true) {
+		concat serial dialog { "bpm" }
+	} else {
+		concat serial dialog { "---" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-soundtrack is true) {
+		concat serial dialog { "soundtrack" }
+	} else {
+		concat serial dialog { "----------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 2
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-tape is true) {
+		concat serial dialog { "<y><bold>P </><r>" }
+	} else {
+		concat serial dialog { "P " }
+	}
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	concat serial dialog { "V F " }
+	if (flag ch2-ws-music is true) {
+		concat serial dialog { "<y><bold>U </><r>" }
+	} else {
+		concat serial dialog { "U " }
+	}
+	concat serial dialog { "F " }
+	if (flag ch2-ws-aux is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "X S Y N V R Z K K Y " }
+	if (flag ch2-ws-media is true) {
+		concat serial dialog { "<y><bold>D </><r>" }
+	} else {
+		concat serial dialog { "D " }
+	}
+	concat serial dialog { "F " }
+	if (flag ch2-ws-radio is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	concat serial dialog { "O S U L " }
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "<y><bold>M </><r>" }
+	} else {
+		concat serial dialog { "M " }
+	}
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-bass is true) {
+		concat serial dialog { "bass" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "  " }
+	if (flag ch2-ws-phonograph is true) {
+		concat serial dialog { "phonograph" }
+	} else {
+		concat serial dialog { "----------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 3
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-tape is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	concat serial dialog { "S T S " }
+	if (flag ch2-ws-music is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	concat serial dialog { "I " }
+	if (flag ch2-ws-aux is true) {
+		concat serial dialog { "<y><bold>U </><r>" }
+	} else {
+		concat serial dialog { "U " }
+	}
+	concat serial dialog { "K A S Y P N K D " }
+	if (flag ch2-ws-media is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "H I " }
+	if (flag ch2-ws-radio is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "N P F " }
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "O " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-beat is true) {
+		concat serial dialog { "beat" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "  " }
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "microphone" }
+	} else {
+		concat serial dialog { "----------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 4
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "T " }
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	concat serial dialog { "H G " }
+	if (flag ch2-ws-laser is true) {
+		concat serial dialog { "<y><bold>L </><r>" }
+	} else {
+		concat serial dialog { "L " }
+	}
+	concat serial dialog { "Q " }
+	if (flag ch2-ws-music is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "B " }
+	if (flag ch2-ws-aux is true) {
+		concat serial dialog { "<y><bold>X </><r>" }
+	} else {
+		concat serial dialog { "X " }
+	}
+	concat serial dialog { "V L H N P I " }
+	if (flag ch2-ws-media is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "Z V W " }
+	if (flag ch2-ws-radio is true) {
+		concat serial dialog { "<y><bold>D </><r>" }
+	} else {
+		concat serial dialog { "D " }
+	}
+	concat serial dialog { "V N " }
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "<y><bold>X </><r>" }
+	} else {
+		concat serial dialog { "X " }
+	}
+	concat serial dialog { "B Y " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-hifi is true) {
+		concat serial dialog { "hifi" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "  " }
+	if (flag ch2-ws-headphones is true) {
+		concat serial dialog { "headphones" }
+	} else {
+		concat serial dialog { "----------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 5
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "Y " }
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>P </><r>" }
+	} else {
+		concat serial dialog { "P " }
+	}
+	concat serial dialog { "U M " }
+	if (flag ch2-ws-laser is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "Y W " }
+	if (flag ch2-ws-music is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	concat serial dialog { "E M A O " }
+	if (flag ch2-ws-compact is true) {
+		concat serial dialog { "<y><bold>C O M P A C T </><r>" }
+	} else {
+		concat serial dialog { "C O M P A C T " }
+	}
+	if (flag ch2-ws-radio is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "P " }
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "V " }
+	if (flag ch2-ws-codec is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	concat serial dialog { "Z " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-lofi is true) {
+		concat serial dialog { "lofi" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-subwoofer is true) {
+		concat serial dialog { "subwoofer" }
+	} else {
+		concat serial dialog { "---------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 6
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>V </><r>" }
+	} else {
+		concat serial dialog { "V " }
+	}
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>H </><r>" }
+	} else {
+		concat serial dialog { "H " }
+	}
+	concat serial dialog { "Y K " }
+	if (flag ch2-ws-laser is true || flag ch2-ws-sequencer is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	if (flag ch2-ws-sequencer is true) {
+		concat serial dialog { "<y><bold>E Q U E N C E R </><r>" }
+	} else {
+		concat serial dialog { "E Q U E N C E R " }
+	}
+	concat serial dialog { "Z P W V Q R " }
+	if (flag ch2-ws-radio is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "<y><bold>N </><r>" }
+	} else {
+		concat serial dialog { "N " }
+	}
+	concat serial dialog { "M " }
+	if (flag ch2-ws-codec is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	concat serial dialog { "V U " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-midi is true) {
+		concat serial dialog { "midi" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-sequencer is true) {
+		concat serial dialog { "sequencer" }
+	} else {
+		concat serial dialog { "---------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 7
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "F " }
+	if (flag ch2-ws-microphone is true || flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	concat serial dialog { "N F " }
+	if (flag ch2-ws-laser is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog { "N M W W T " }
+	if (flag ch2-ws-cassette is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	concat serial dialog { "G X E Q H Z O J " }
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "<y><bold>G </><r>" }
+	} else {
+		concat serial dialog { "G " }
+	}
+	concat serial dialog { "J " }
+	if (flag ch2-ws-codec is true) {
+		concat serial dialog { "<y><bold>D </><r>" }
+	} else {
+		concat serial dialog { "D " }
+	}
+	concat serial dialog { "J J R " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-song is true) {
+		concat serial dialog { "song" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "recording" }
+	} else {
+		concat serial dialog { "---------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 8
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "D " }
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>N </><r>" }
+	} else {
+		concat serial dialog { "N " }
+	}
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	concat serial dialog { "T " }
+	if (flag ch2-ws-laser is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	concat serial dialog { "V N Q D " }
+	if (flag ch2-ws-song is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	if (flag ch2-ws-cassette is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "V " }
+	if (flag ch2-ws-stream is true) {
+		concat serial dialog { "<y><bold>S T R E A M </><r>" }
+	} else {
+		concat serial dialog { "S T R E A M " }
+	}
+	concat serial dialog { "G A " }
+	if (flag ch2-ws-codec is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog { "H O E Z " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-tape is true) {
+		concat serial dialog { "tape" }
+	} else {
+		concat serial dialog { "----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-frequency is true) {
+		concat serial dialog { "frequency" }
+	} else {
+		concat serial dialog { "---------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 9
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "I " }
+	if (flag ch2-ws-microphone is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog { "O " }
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	concat serial dialog { "R O B B " }
+	if (flag ch2-ws-song is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	concat serial dialog { "D " }
+	if (flag ch2-ws-cassette is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	concat serial dialog { "Q L Y U E M L T " }
+	if (flag ch2-ws-codec is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	if (flag ch2-ws-audio is true) {
+		concat serial dialog { "<y><bold>A U D I O </><r>" }
+	} else {
+		concat serial dialog { "A U D I O " }
+	}
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-album is true) {
+		concat serial dialog { "album" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "  " }
+	if (flag ch2-ws-broadcast is true) {
+		concat serial dialog { "broadcast" }
+	} else {
+		concat serial dialog { "---------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 10
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "W V Q F " }
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>D </><r>" }
+	} else {
+		concat serial dialog { "D " }
+	}
+	concat serial dialog { "V J " }
+	if (flag ch2-ws-song is true) {
+		concat serial dialog { "<y><bold>N </><r>" }
+	} else {
+		concat serial dialog { "N " }
+	}
+	concat serial dialog { "O O " }
+	if (flag ch2-ws-cassette is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	concat serial dialog { "R Q N " }
+	if (flag ch2-ws-midi is true) {
+		concat serial dialog { "<y><bold>M I D I </><r>" }
+	} else {
+		concat serial dialog { "M I D I " }
+	}
+	concat serial dialog { "D W " }
+	if (flag ch2-ws-stereo is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	if (flag ch2-ws-album is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "Y Y O " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-audio is true) {
+		concat serial dialog { "audio" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-surround is true) {
+		concat serial dialog { "surround" }
+	} else {
+		concat serial dialog { "--------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 11
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	concat serial dialog { "S O N U " }
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	if (flag ch2-ws-song is true) {
+		concat serial dialog { "<y><bold>G </><r>" }
+	} else {
+		concat serial dialog { "G " }
+	}
+	concat serial dialog { "M J " }
+	if (flag ch2-ws-headphones is true) {
+		concat serial dialog { "<y><bold>H </><r>" }
+	} else {
+		concat serial dialog { "H " }
+	}
+	if (flag ch2-ws-headphones is true || flag ch2-ws-cassette is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	if (flag ch2-ws-headphones is true) {
+		concat serial dialog { "<y><bold>A D P H O N E S </><r>" }
+	} else {
+		concat serial dialog { "A D P H O N E S " }
+	}
+	if (flag ch2-ws-stereo is true) {
+		concat serial dialog { "<y><bold>T </><r>" }
+	} else {
+		concat serial dialog { "T " }
+	}
+	if (flag ch2-ws-lofi is true) {
+		concat serial dialog { "<y><bold>L </><r>" }
+	} else {
+		concat serial dialog { "L " }
+	}
+	if (flag ch2-ws-album is true) {
+		concat serial dialog { "<y><bold>L </><r>" }
+	} else {
+		concat serial dialog { "L " }
+	}
+	concat serial dialog { "U O " }
+	if (flag ch2-ws-bpm is true || flag ch2-ws-beat is true) {
+		concat serial dialog { "<y><bold>B </><r>" }
+	} else {
+		concat serial dialog { "B " }
+	}
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-codec is true) {
+		concat serial dialog { "codec" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-speakers is true) {
+		concat serial dialog { "speakers" }
+	} else {
+		concat serial dialog { "--------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 12
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "M " }
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog { "X R F U " }
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	if (flag ch2-ws-rhythm is true) {
+		concat serial dialog { "<y><bold>R H Y </><r>" }
+	} else {
+		concat serial dialog { "R H Y " }
+	}
+	if (flag ch2-ws-cassette is true || flag ch2-ws-rhythm is true) {
+		concat serial dialog { "<y><bold>T </><r>" }
+	} else {
+		concat serial dialog { "T " }
+	}
+	if (flag ch2-ws-rhythm is true) {
+		concat serial dialog { "<y><bold>H M </><r>" }
+	} else {
+		concat serial dialog { "H M " }
+	}
+	concat serial dialog { "W H G C R " }
+	if (flag ch2-ws-stereo is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog { "O " }
+	if (flag ch2-ws-lofi is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	if (flag ch2-ws-album is true) {
+		concat serial dialog { "<y><bold>B </><r>" }
+	} else {
+		concat serial dialog { "B " }
+	}
+	concat serial dialog { "H " }
+	if (flag ch2-ws-bpm is true) {
+		concat serial dialog { "<y><bold>P </><r>" }
+	} else {
+		concat serial dialog { "P " }
+	}
+	if (flag ch2-ws-beat is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-laser is true) {
+		concat serial dialog { "laser" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-chiptune is true) {
+		concat serial dialog { "chiptune" }
+	} else {
+		concat serial dialog { "--------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 13
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "W R " }
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>C </><r>" }
+	} else {
+		concat serial dialog { "C " }
+	}
+	concat serial dialog { "P G C T " }
+	if (flag ch2-ws-synthesizer is true) {
+		concat serial dialog { "<y><bold>S Y N </><r>" }
+	} else {
+		concat serial dialog { "S Y N " }
+	}
+	if (flag ch2-ws-cassette is true || flag ch2-ws-synthesizer is true) {
+		concat serial dialog { "<y><bold>T </><r>" }
+	} else {
+		concat serial dialog { "T " }
+	}
+	if (flag ch2-ws-synthesizer is true) {
+		concat serial dialog { "<y><bold>H E S I Z E </><r>" }
+	} else {
+		concat serial dialog { "H E S I Z E " }
+	}
+	if (flag ch2-ws-stereo is true || flag ch2-ws-synthesizer is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	concat serial dialog { "T A " }
+	if (flag ch2-ws-lofi is true) {
+		concat serial dialog { "<y><bold>F </><r>" }
+	} else {
+		concat serial dialog { "F " }
+	}
+	if (flag ch2-ws-album is true) {
+		concat serial dialog { "<y><bold>U </><r>" }
+	} else {
+		concat serial dialog { "U " }
+	}
+	if (flag ch2-ws-bpm is true) {
+		concat serial dialog { "<y><bold>M </><r>" }
+	} else {
+		concat serial dialog { "M " }
+	}
+	concat serial dialog { "T " }
+	if (flag ch2-ws-beat is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-media is true) {
+		concat serial dialog { "media" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "   " }
+	if (flag ch2-ws-cassette is true) {
+		concat serial dialog { "cassette" }
+	} else {
+		concat serial dialog { "--------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 14
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "U D W " }
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	concat serial dialog { "H K X Q H Y " }
+	if (flag ch2-ws-cassette is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	if (flag ch2-ws-frequency is true) {
+		concat serial dialog { "<y><bold>F R E Q U </><r>" }
+	} else {
+		concat serial dialog { "F R E Q U " }
+	}
+	if (flag ch2-ws-frequency is true || flag ch2-ws-stereo is true) {
+		concat serial dialog { "<y><bold>E </><r>" }
+	} else {
+		concat serial dialog { "E " }
+	}
+	if (flag ch2-ws-frequency is true) {
+		concat serial dialog { "<y><bold>N C Y </><r>" }
+	} else {
+		concat serial dialog { "N C Y " }
+	}
+	if (flag ch2-ws-lofi is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	if (flag ch2-ws-album is true) {
+		concat serial dialog { "<y><bold>M </><r>" }
+	} else {
+		concat serial dialog { "M " }
+	}
+	concat serial dialog { "T I " }
+	if (flag ch2-ws-beat is true) {
+		concat serial dialog { "<y><bold>T </><r>" }
+	} else {
+		concat serial dialog { "T " }
+	}
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-music is true) {
+		concat serial dialog { "music" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "    " }
+	if (flag ch2-ws-vocoder is true) {
+		concat serial dialog { "vocoder" }
+	} else {
+		concat serial dialog { "-------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 15
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "S " }
+	if (flag ch2-ws-surround is true) {
+		concat serial dialog { "<y><bold>S U R </><r>" }
+	} else {
+		concat serial dialog { "S U R " }
+	}
+	if (flag ch2-ws-surround is true || flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>R </><r>" }
+	} else {
+		concat serial dialog { "R " }
+	}
+	if (flag ch2-ws-surround is true) {
+		concat serial dialog { "<y><bold>O U N D </><r>" }
+	} else {
+		concat serial dialog { "O U N D " }
+	}
+	concat serial dialog { "V E B G " }
+	if (flag ch2-ws-broadcast is true) {
+		concat serial dialog { "<y><bold>B R </><r>" }
+	} else {
+		concat serial dialog { "B R " }
+	}
+	if (flag ch2-ws-broadcast is true || flag ch2-ws-stereo is true) {
+		concat serial dialog { "<y><bold>O </><r>" }
+	} else {
+		concat serial dialog { "O " }
+	}
+	if (flag ch2-ws-broadcast is true) {
+		concat serial dialog { "<y><bold>A D C A S T </><r>" }
+	} else {
+		concat serial dialog { "A D C A S T " }
+	}
+	if (flag ch2-ws-hifi is true) {
+		concat serial dialog { "<y><bold>H </><r>" }
+	} else {
+		concat serial dialog { "H " }
+	}
+	concat serial dialog { "K A " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-radio is true) {
+		concat serial dialog { "radio" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "    " }
+	if (flag ch2-ws-compact is true) {
+		concat serial dialog { "compact" }
+	} else {
+		concat serial dialog { "-------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 16
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "L " }
+	if (flag ch2-ws-soundtrack is true) {
+		concat serial dialog { "<y><bold>S O U N </><r>" }
+	} else {
+		concat serial dialog { "S O U N " }
+	}
+	if (flag ch2-ws-soundtrack is true || flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>D </><r>" }
+	} else {
+		concat serial dialog { "D " }
+	}
+	if (flag ch2-ws-soundtrack is true) {
+		concat serial dialog { "<y><bold>T R A C K </><r>" }
+	} else {
+		concat serial dialog { "T R A C K " }
+	}
+	concat serial dialog { "C " }
+	if (flag ch2-ws-treble is true) {
+		concat serial dialog { "<y><bold>T R E </><r>" }
+	} else {
+		concat serial dialog { "T R E " }
+	}
+	if (flag ch2-ws-treble is true || flag ch2-ws-bass is true) {
+		concat serial dialog { "<y><bold>B </><r>" }
+	} else {
+		concat serial dialog { "B " }
+	}
+	if (flag ch2-ws-treble is true) {
+		concat serial dialog { "<y><bold>L E </><r>" }
+	} else {
+		concat serial dialog { "L E " }
+	}
+	concat serial dialog { "P R C " }
+	if (flag ch2-ws-hifi is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "D Y M " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-vinyl is true) {
+		concat serial dialog { "vinyl" }
+	} else {
+		concat serial dialog { "-----" }
+	}
+	concat serial dialog { "     " }
+	if (flag ch2-ws-volume is true) {
+		concat serial dialog { "volume" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 17
+	concat serial dialog ch2-ws-rowstart;
+	if (flag ch2-ws-volume is true) {
+		concat serial dialog { "<y><bold>V O L U M E </><r>" }
+	} else {
+		concat serial dialog { "V O L U M E " }
+	}
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "O " }
+	if (flag ch2-ws-analog is true) {
+		concat serial dialog { "<y><bold>A N A L O G </><r>" }
+	} else {
+		concat serial dialog { "A N A L O G " }
+	}
+	concat serial dialog { "F " }
+	if (flag ch2-ws-bass is true) {
+		concat serial dialog { "<y><bold>A </><r>" }
+	} else {
+		concat serial dialog { "A " }
+	}
+	concat serial dialog { "D V M A " }
+	if (flag ch2-ws-hifi is true) {
+		concat serial dialog { "<y><bold>F </><r>" }
+	} else {
+		concat serial dialog { "F " }
+	}
+	concat serial dialog { "C K Z D " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-analog is true) {
+		concat serial dialog { "analog" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog { "    " }
+	if (flag ch2-ws-treble is true) {
+		concat serial dialog { "treble" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 18
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "U I X X H X E " }
+	if (flag ch2-ws-recording is true) {
+		concat serial dialog { "<y><bold>N </><r>" }
+	} else {
+		concat serial dialog { "N " }
+	}
+	if (flag ch2-ws-speakers is true) {
+		concat serial dialog { "<y><bold>S P E A K E R </><r>" }
+	} else {
+		concat serial dialog { "S P E A K E R " }
+	}
+	if (flag ch2-ws-bass is true || flag ch2-ws-speakers is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	concat serial dialog { "K S V " }
+	if (flag ch2-ws-hifi is true) {
+		concat serial dialog { "<y><bold>I </><r>" }
+	} else {
+		concat serial dialog { "I " }
+	}
+	concat serial dialog { "K Z X Y N " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-mixing is true) {
+		concat serial dialog { "mixing" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog { "    " }
+	if (flag ch2-ws-stream is true) {
+		concat serial dialog { "stream" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog newline;
+
+	// ROW 19
+	concat serial dialog ch2-ws-rowstart;
+	concat serial dialog { "Q X C " }
+	if (flag ch2-ws-phonograph is true) {
+		concat serial dialog { "<y><bold>P H O N O </><r>" }
+	} else {
+		concat serial dialog { "P H O N O " }
+	}
+	if (flag ch2-ws-recording is true || flag ch2-ws-phonograph is true) {
+		concat serial dialog { "<y><bold>G </><r>" }
+	} else {
+		concat serial dialog { "G " }
+	}
+	if (flag ch2-ws-phonograph is true) {
+		concat serial dialog { "<y><bold>R A P H </><r>" }
+	} else {
+		concat serial dialog { "R A P H " }
+	}
+	concat serial dialog { "O Y " }
+	if (flag ch2-ws-subwoofer is true || flag ch2-ws-bass is true) {
+		concat serial dialog { "<y><bold>S </><r>" }
+	} else {
+		concat serial dialog { "S " }
+	}
+	if (flag ch2-ws-subwoofer is true) {
+		concat serial dialog { "<y><bold>U B W O O F E R </><r>" }
+	} else {
+		concat serial dialog { "U B W O O F E R " }
+	}
+	concat serial dialog { "C " }
+	concat serial dialog ch2-ws-col;
+	if (flag ch2-ws-rhythm is true) {
+		concat serial dialog { "rhythm" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog { "    " }
+	if (flag ch2-ws-stereo is true) {
+		concat serial dialog { "stereo" }
+	} else {
+		concat serial dialog { "------" }
+	}
+	concat serial dialog newline;
+}
+
+serial dialog ch2-ws-input {
+	" "
+	_ "Q" : ch2-ws-guess-quit
+	_ "QUIT" : ch2-ws-guess-quit
+	_ "EXIT" : ch2-ws-guess-quit
+	// target words
+	_ "ALBUM" : ch2-ws-guess-album
+	_ "ANALOG" : ch2-ws-guess-analog
+	_ "AUDIO" : ch2-ws-guess-audio
+	_ "AUX" : ch2-ws-guess-aux
+	_ "BASS" : ch2-ws-guess-bass
+	_ "BEAT" : ch2-ws-guess-beat
+	_ "BPM" : ch2-ws-guess-bpm
+	_ "BROADCAST" : ch2-ws-guess-broadcast
+	_ "CASSETTE" : ch2-ws-guess-cassette
+	_ "CHIPTUNE" : ch2-ws-guess-chiptune
+	_ "CODEC" : ch2-ws-guess-codec
+	_ "COMPACT" : ch2-ws-guess-compact
+	_ "FREQUENCY" : ch2-ws-guess-frequency
+	_ "HEADPHONES" : ch2-ws-guess-headphones
+	_ "HIFI" : ch2-ws-guess-hifi
+	_ "LASER" : ch2-ws-guess-laser
+	_ "LOFI" : ch2-ws-guess-lofi
+	_ "MEDIA" : ch2-ws-guess-media
+	_ "MICROPHONE" : ch2-ws-guess-microphone
+	_ "MIDI" : ch2-ws-guess-midi
+	_ "MIXING" : ch2-ws-guess-mixing
+	_ "MUSIC" : ch2-ws-guess-music
+	_ "PHONOGRAPH" : ch2-ws-guess-phonograph
+	_ "RADIO" : ch2-ws-guess-radio
+	_ "RECORDING" : ch2-ws-guess-recording
+	_ "RHYTHM" : ch2-ws-guess-rhythm
+	_ "SEQUENCER" : ch2-ws-guess-sequencer
+	_ "SONG" : ch2-ws-guess-song
+	_ "SOUNDTRACK" : ch2-ws-guess-soundtrack
+	_ "SPEAKERS" : ch2-ws-guess-speakers
+	_ "STEREO" : ch2-ws-guess-stereo
+	_ "STREAM" : ch2-ws-guess-stream
+	_ "SUBWOOFER" : ch2-ws-guess-subwoofer
+	_ "SURROUND" : ch2-ws-guess-surround
+	_ "SYNTHESIZER" : ch2-ws-guess-synthesizer
+	_ "TAPE" : ch2-ws-guess-tape
+	_ "TREBLE" : ch2-ws-guess-treble
+	_ "VINYL" : ch2-ws-guess-vinyl
+	_ "VOCODER" : ch2-ws-guess-vocoder
+	_ "VOLUME" : ch2-ws-guess-volume
+	// "close" words
+	_ "ALBUMS" : ch2-ws-guess-albums
+	_ "BASE" : ch2-ws-guess-base
+	_ "BEATS" : ch2-ws-guess-beats
+	_ "BROADCASTS" : ch2-ws-guess-broadcasts
+	_ "CASSETTES" : ch2-ws-guess-cassettes
+	_ "CHIPTUNES" : ch2-ws-guess-chiptunes
+	_ "CODECS" : ch2-ws-guess-codecs
+	_ "FREQUENCIES" : ch2-ws-guess-frequencies
+	_ "GRAMOPHONE" : ch2-ws-guess-gramophone
+	_ "HEADPHONE" : ch2-ws-guess-headphone
+	_ "LASERS" : ch2-ws-guess-lasers
+	_ "MICROPHONES" : ch2-ws-guess-microphones
+	_ "PHONES" : ch2-ws-guess-phones
+	_ "PHONE" : ch2-ws-guess-phone
+	_ "MIC" : ch2-ws-guess-mic
+	_ "MUSICIAN" : ch2-ws-guess-musician
+	_ "RADIOS" : ch2-ws-guess-radios
+	_ "RECORDINGS" : ch2-ws-guess-recordings
+	_ "RECORD" : ch2-ws-guess-record
+	_ "SEQUENCE" : ch2-ws-guess-sequence
+	_ "SEQUENCERS" : ch2-ws-guess-sequencers
+	_ "SING" : ch2-ws-guess-sing
+	_ "SINGING" : ch2-ws-guess-singing
+	_ "SONGS" : ch2-ws-guess-songs
+	_ "SOUND" : ch2-ws-guess-sound
+	_ "SOUNDTRACKS" : ch2-ws-guess-soundtracks
+	_ "SYNTH" : ch2-ws-guess-synth
+	_ "SYNTHESIZERS" : ch2-ws-guess-synthesizers
+	_ "TRACK" : ch2-ws-guess-track
+	_ "TRACKS" : ch2-ws-guess-tracks
+	_ "SPEAKER" : ch2-ws-guess-speaker
+	_ "STEREOS" : ch2-ws-guess-stereos
+	_ "STREAMS" : ch2-ws-guess-streams
+	_ "SUBWOOFERS" : ch2-ws-guess-subwoofers
+	_ "TAPES" : ch2-ws-guess-tapes
+	_ "TUNE" : ch2-ws-guess-tune
+	_ "TUNES" : ch2-ws-guess-tunes
+	_ "VINYLS" : ch2-ws-guess-vinyls
+	_ "VOCODERS" : ch2-ws-guess-vocoders
+	// cheats
+	_ "GLITTERING PRIZES" : ch2-ws-guess-cheat
+}
+
+// Guesses: cheat
+ch2-ws-guess-cheat {
+	mutate ch2-ws-turn-value = 0;
+	mutate ch2-ws-turn-status = $cheat;
+	set flag ch2-ws-album to true;
+	set flag ch2-ws-analog to true;
+	set flag ch2-ws-audio to true;
+	set flag ch2-ws-aux to true;
+	set flag ch2-ws-bass to true;
+	set flag ch2-ws-beat to true;
+	set flag ch2-ws-bpm to true;
+	set flag ch2-ws-broadcast to true;
+	set flag ch2-ws-cassette to true;
+	set flag ch2-ws-chiptune to true;
+	set flag ch2-ws-codec to true;
+	set flag ch2-ws-compact to true;
+	set flag ch2-ws-frequency to true;
+	set flag ch2-ws-headphones to true;
+	set flag ch2-ws-hifi to true;
+	set flag ch2-ws-laser to true;
+	set flag ch2-ws-lofi to true;
+	set flag ch2-ws-media to true;
+	set flag ch2-ws-microphone to true;
+	set flag ch2-ws-midi to true;
+	set flag ch2-ws-mixing to true;
+	set flag ch2-ws-music to true;
+	set flag ch2-ws-phonograph to true;
+	set flag ch2-ws-radio to true;
+	set flag ch2-ws-recording to true;
+	set flag ch2-ws-rhythm to true;
+	set flag ch2-ws-sequencer to true;
+	set flag ch2-ws-song to true;
+	set flag ch2-ws-soundtrack to true;
+	set flag ch2-ws-speakers to true;
+	set flag ch2-ws-stereo to true;
+	set flag ch2-ws-stream to true;
+	set flag ch2-ws-subwoofer to true;
+	set flag ch2-ws-surround to true;
+	set flag ch2-ws-synthesizer to true;
+	set flag ch2-ws-tape to true;
+	set flag ch2-ws-treble to true;
+	set flag ch2-ws-vinyl to true;
+	set flag ch2-ws-vocoder to true;
+	set flag ch2-ws-volume to true;
+	goto ch2-ws-doturn;
+}
+
+// Guesses: "close" words:
+ch2-ws-guess-albums {
+	mutate ch2-ws-turn-value = $albums;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-base {
+	mutate ch2-ws-turn-value = $base;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-beats {
+	mutate ch2-ws-turn-value = $beats;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-broadcasts {
+	mutate ch2-ws-turn-value = $broadcasts;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-cassettes {
+	mutate ch2-ws-turn-value = $cassettes;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-chiptunes {
+	mutate ch2-ws-turn-value = $chiptunes;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-codecs {
+	mutate ch2-ws-turn-value = $codecs;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-frequencies {
+	mutate ch2-ws-turn-value = $frequencies;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-gramophone {
+	mutate ch2-ws-turn-value = $gramophone;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-headphone {
+	mutate ch2-ws-turn-value = $headphone;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-lasers {
+	mutate ch2-ws-turn-value = $lasers;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-microphones {
+	mutate ch2-ws-turn-value = $microphones;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-phones {
+	mutate ch2-ws-turn-value = $phones;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-phone {
+	mutate ch2-ws-turn-value = $phone;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-mic {
+	mutate ch2-ws-turn-value = $mic;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-musician {
+	mutate ch2-ws-turn-value = $musician;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-radios {
+	mutate ch2-ws-turn-value = $radios;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-recordings {
+	mutate ch2-ws-turn-value = $recordings;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-record {
+	mutate ch2-ws-turn-value = $record;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-sequence {
+	mutate ch2-ws-turn-value = $sequence;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-sequencers {
+	mutate ch2-ws-turn-value = $sequencers;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-sing {
+	mutate ch2-ws-turn-value = $sing;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-singing {
+	mutate ch2-ws-turn-value = $singing;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-songs {
+	mutate ch2-ws-turn-value = $songs;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-sound {
+	mutate ch2-ws-turn-value = $sound;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-soundtracks {
+	mutate ch2-ws-turn-value = $soundtracks;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-synth {
+	mutate ch2-ws-turn-value = $synth;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-synthesizers {
+	mutate ch2-ws-turn-value = $synthesizers;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-track {
+	mutate ch2-ws-turn-value = $track;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-tracks {
+	mutate ch2-ws-turn-value = $tracks;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-speaker {
+	mutate ch2-ws-turn-value = $speaker;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-stereos {
+	mutate ch2-ws-turn-value = $stereos;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-streams {
+	mutate ch2-ws-turn-value = $streams;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-subwoofers {
+	mutate ch2-ws-turn-value = $subwoofers;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-tapes {
+	mutate ch2-ws-turn-value = $tapes;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-tune {
+	mutate ch2-ws-turn-value = $tune;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-tunes {
+	mutate ch2-ws-turn-value = $tunes;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-vinyls {
+	mutate ch2-ws-turn-value = $vinyls;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-vocoders {
+	mutate ch2-ws-turn-value = $vocoders;
+	mutate ch2-ws-turn-status = $close;
+	goto ch2-ws-doturn;
+}
+
+// Guesses: hits
+ch2-ws-guess-album {
+	mutate ch2-ws-turn-value = $album;
+	if (flag ch2-ws-album is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-album to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-analog {
+	mutate ch2-ws-turn-value = $analog;
+	if (flag ch2-ws-analog is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-analog to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-audio {
+	mutate ch2-ws-turn-value = $audio;
+	if (flag ch2-ws-audio is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-audio to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-aux {
+	mutate ch2-ws-turn-value = $aux;
+	if (flag ch2-ws-aux is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-aux to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-bass {
+	mutate ch2-ws-turn-value = $bass;
+	if (flag ch2-ws-bass is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-bass to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-beat {
+	mutate ch2-ws-turn-value = $beat;
+	if (flag ch2-ws-beat is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-beat to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-bpm {
+	mutate ch2-ws-turn-value = $bpm;
+	if (flag ch2-ws-bpm is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-bpm to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-broadcast {
+	mutate ch2-ws-turn-value = $broadcast;
+	if (flag ch2-ws-broadcast is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-broadcast to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-cassette {
+	mutate ch2-ws-turn-value = $cassette;
+	if (flag ch2-ws-cassette is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-cassette to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-chiptune {
+	mutate ch2-ws-turn-value = $chiptune;
+	if (flag ch2-ws-chiptune is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-chiptune to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-codec {
+	mutate ch2-ws-turn-value = $codec;
+	if (flag ch2-ws-codec is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-codec to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-compact {
+	mutate ch2-ws-turn-value = $compact;
+	if (flag ch2-ws-compact is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-compact to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-frequency {
+	mutate ch2-ws-turn-value = $frequency;
+	if (flag ch2-ws-frequency is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-frequency to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-headphones {
+	mutate ch2-ws-turn-value = $headphones;
+	if (flag ch2-ws-headphones is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-headphones to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-hifi {
+	mutate ch2-ws-turn-value = $hifi;
+	if (flag ch2-ws-hifi is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-hifi to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-laser {
+	mutate ch2-ws-turn-value = $laser;
+	if (flag ch2-ws-laser is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-laser to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-lofi {
+	mutate ch2-ws-turn-value = $lofi;
+	if (flag ch2-ws-lofi is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-lofi to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-media {
+	mutate ch2-ws-turn-value = $media;
+	if (flag ch2-ws-media is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-media to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-microphone {
+	mutate ch2-ws-turn-value = $microphone;
+	if (flag ch2-ws-microphone is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-microphone to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-midi {
+	mutate ch2-ws-turn-value = $midi;
+	if (flag ch2-ws-midi is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-midi to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-mixing {
+	mutate ch2-ws-turn-value = $mixing;
+	if (flag ch2-ws-mixing is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-mixing to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-music {
+	mutate ch2-ws-turn-value = $music;
+	if (flag ch2-ws-music is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-music to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-phonograph {
+	mutate ch2-ws-turn-value = $phonograph;
+	if (flag ch2-ws-phonograph is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-phonograph to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-radio {
+	mutate ch2-ws-turn-value = $radio;
+	if (flag ch2-ws-radio is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-radio to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-recording {
+	mutate ch2-ws-turn-value = $recording;
+	if (flag ch2-ws-recording is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-recording to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-rhythm {
+	mutate ch2-ws-turn-value = $rhythm;
+	if (flag ch2-ws-rhythm is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-rhythm to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-sequencer {
+	mutate ch2-ws-turn-value = $sequencer;
+	if (flag ch2-ws-sequencer is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-sequencer to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-song {
+	mutate ch2-ws-turn-value = $song;
+	if (flag ch2-ws-song is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-song to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-soundtrack {
+	mutate ch2-ws-turn-value = $soundtrack;
+	if (flag ch2-ws-soundtrack is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-soundtrack to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-speakers {
+	mutate ch2-ws-turn-value = $speakers;
+	if (flag ch2-ws-speakers is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-speakers to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-stereo {
+	mutate ch2-ws-turn-value = $stereo;
+	if (flag ch2-ws-stereo is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-stereo to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-stream {
+	mutate ch2-ws-turn-value = $stream;
+	if (flag ch2-ws-stream is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-stream to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-subwoofer {
+	mutate ch2-ws-turn-value = $subwoofer;
+	if (flag ch2-ws-subwoofer is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-subwoofer to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-surround {
+	mutate ch2-ws-turn-value = $surround;
+	if (flag ch2-ws-surround is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-surround to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-synthesizer {
+	mutate ch2-ws-turn-value = $synthesizer;
+	if (flag ch2-ws-synthesizer is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-synthesizer to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-tape {
+	mutate ch2-ws-turn-value = $tape;
+	if (flag ch2-ws-tape is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-tape to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-treble {
+	mutate ch2-ws-turn-value = $treble;
+	if (flag ch2-ws-treble is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-treble to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-vinyl {
+	mutate ch2-ws-turn-value = $vinyl;
+	if (flag ch2-ws-vinyl is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-vinyl to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-vocoder {
+	mutate ch2-ws-turn-value = $vocoder;
+	if (flag ch2-ws-vocoder is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-vocoder to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+ch2-ws-guess-volume {
+	mutate ch2-ws-turn-value = $volume;
+	if (flag ch2-ws-volume is true) {
+		mutate ch2-ws-turn-status = $repeat;
+	} else {
+		set flag ch2-ws-volume to true;
+		mutate ch2-ws-turn-status = $hit;
+	}
+	goto ch2-ws-doturn;
+}
+
+// MESSAGES
+
+ch2-ws-turn-message {
+	if (variable ch2-ws-turn-status is $cheat) {
+		concat serial dialog {
+			"Whoa! Look who's a medieval man!"
+		}
+	} else if (variable ch2-ws-turn-status is $miss) {
+		concat serial dialog {
+			"Huh? I don't think I know that word."
+		}
+	} else 	if (variable ch2-ws-turn-value is $albums) {
+		concat serial dialog {
+			"ALBUMS? Love your enthusiasm, but I'm a single-slot kind of guy."
+		}
+	} else if (variable ch2-ws-turn-value is $base) {
+		concat serial dialog {
+			"BASE? Hmmm. Is that how you spell that?"
+		}
+	} else if (variable ch2-ws-turn-value is $beats) {
+		concat serial dialog {
+			"BEATS? Almost, but not quite what I'm looking for."
+		}
+	} else if (variable ch2-ws-turn-value is $broadcasts) {
+		concat serial dialog {
+			"BROADCASTS? Optimistic, but I don't know about that."
+		}
+	} else if (variable ch2-ws-turn-value is $cassettes) {
+		concat serial dialog {
+			"CASSETTES? As in multiple? What decade is this?"
+		}
+	} else if (variable ch2-ws-turn-value is $chiptunes) {
+		concat serial dialog {
+			"CHIPTUNES? I think you're a smidge off, but keep trying."
+		}
+	} else if (variable ch2-ws-turn-value is $codecs) {
+		concat serial dialog {
+			"CODECS? I think you're nearly there, but not quite."
+		}
+	} else if (variable ch2-ws-turn-value is $frequencies) {
+		concat serial dialog {
+			"FREQUENCIES? Almost, but not what I'm thinking of."
+		}
+	} else if (variable ch2-ws-turn-value is $gramophone) {
+		concat serial dialog {
+			"GRAMOPHONE? Are you just making things up now?"
+		}
+	} else if (variable ch2-ws-turn-value is $headphone) {
+		concat serial dialog {
+			"HEADPHONE? Is that like a 'scissor'? Or a 'pant'?"
+		}
+	} else if (variable ch2-ws-turn-value is $lasers) {
+		concat serial dialog {
+			"LASERS? Almost, but not quite. Sounds fun though!"
+		}
+	} else if (variable ch2-ws-turn-value is $microphones) {
+		concat serial dialog {
+			"MICROPHONES? Do I look like I need more than one?"
+		}
+	} else if (variable ch2-ws-turn-value is $phones) {
+		concat serial dialog {
+			"PHONES? Close, but way off."
+		}
+	} else if (variable ch2-ws-turn-value is $phone) {
+		concat serial dialog {
+			"PHONE? Getting close to something, I can feel it."
+		}
+	} else if (variable ch2-ws-turn-value is $mic) {
+		concat serial dialog {
+			"MIC? No, but I think that's almost something."
+		}
+	} else if (variable ch2-ws-turn-value is $musician) {
+		concat serial dialog {
+			"MUSICIAN? A bit overboard, but you're on to something."
+		}
+	} else if (variable ch2-ws-turn-value is $radios) {
+		concat serial dialog {
+			"RADIOS? Sorry, there's only one of me here."
+		}
+	} else if (variable ch2-ws-turn-value is $recordings) {
+		concat serial dialog {
+			"RECORDINGS? Close, but I think you're going a bit overboard."
+		}
+	} else if (variable ch2-ws-turn-value is $record) {
+		concat serial dialog {
+			"RECORD? Aha, yes! Oh, no, wait. Not this time. Close though."
+		}
+	} else if (variable ch2-ws-turn-value is $sequence) {
+		concat serial dialog {
+			"SEQUENCE? You're getting somewhere, but no dice this time."
+		}
+	} else if (variable ch2-ws-turn-value is $sequencers) {
+		concat serial dialog {
+			"SEQUENCERS? Were that I was that cool! Maybe scale that back."
+		}
+	} else if (variable ch2-ws-turn-value is $sing) {
+		concat serial dialog {
+			"SING? I feel like that's close, but I don't know."
+		}
+	} else if (variable ch2-ws-turn-value is $singing) {
+		concat serial dialog {
+			"SINGING? I mean sure, but... no, that's not what I'm missing."
+		}
+	} else if (variable ch2-ws-turn-value is $songs) {
+		concat serial dialog {
+			"SONGS? Almost! Not exactly though."
+		}
+	} else if (variable ch2-ws-turn-value is $sound) {
+		concat serial dialog {
+			"SOUND? I mean sure, but... no, not what I'm looking for."
+		}
+	} else if (variable ch2-ws-turn-value is $soundtracks) {
+		concat serial dialog {
+			"SOUNDTRACKS? Enthusiastic, aren't you! Not quite, though."
+		}
+	} else if (variable ch2-ws-turn-value is $synth) {
+		concat serial dialog {
+			"SYNTH? Getting there, but I think you can go bigger!"
+		}
+	} else if (variable ch2-ws-turn-value is $synthesizers) {
+		concat serial dialog {
+			"SYNTHESIZERS? Almost there, but maybe a little different."
+		}
+	} else if (variable ch2-ws-turn-value is $track) {
+		concat serial dialog {
+			"TRACK? Was it more than that? It's on the tip of my silicon."
+		}
+	} else if (variable ch2-ws-turn-value is $tracks) {
+		concat serial dialog {
+			"TRACKS? No, but I think that's close."
+		}
+	} else if (variable ch2-ws-turn-value is $speaker) {
+		concat serial dialog {
+			"SPEAKER? Hey, I'm more sophisticated than that! Go bigger!"
+		}
+	} else if (variable ch2-ws-turn-value is $stereos) {
+		concat serial dialog {
+			"STEREOS? Can you use the word like that? Was it something similar?"
+		}
+	} else if (variable ch2-ws-turn-value is $streams) {
+		concat serial dialog {
+			"STREAMS? I'm loving the river vibe, but not exactly right."
+		}
+	} else if (variable ch2-ws-turn-value is $subwoofers) {
+		concat serial dialog {
+			"SUBWOOFERS? I hardly know her!"
+		}
+	} else if (variable ch2-ws-turn-value is $tapes) {
+		concat serial dialog {
+			"TAPES? So close, but a little too much."
+		}
+	} else if (variable ch2-ws-turn-value is $tune) {
+		concat serial dialog {
+			"TUNE? Hmmm... almost, but not quite. Maybe it's something more."
+		}
+	} else if (variable ch2-ws-turn-value is $tunes) {
+		concat serial dialog {
+			"TUNES? Hmmm, maybe something else, something similar."
+		}
+	} else if (variable ch2-ws-turn-value is $vinyls) {
+		concat serial dialog {
+			"VINYLS? No, I don't know if that's quite how that goes."
+		}
+	} else if (variable ch2-ws-turn-value is $vocoders) {
+		concat serial dialog {
+			"VOCODERS? Technically, yes, but not what I'm looking for this time."
+		}
+	} else 	if (variable ch2-ws-turn-value is $album) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"ALBUM? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>ALBUM</>! Oh, of course! This is my bread and butter!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $analog) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"ANALOG? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>ANALOG</>! Yeah! Who could forget that warm, velvety sound?"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $audio) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"AUDIO? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>AUDIO</>! That's right! My raison d'etre! My joie de vivre!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $aux) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"AUX? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>AUX</>! How could I forget? Who would ever want to lose this?"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $bass) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"BASS? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>BASS</>! Oh, yeah! I'm all about that low frequency! It's the butter zone!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $beat) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"BEAT? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>BEAT</>! It's all coming back! Makes my LEDs all tingly."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $bpm) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"BPM? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>BPM</>! Oh, yeah! Reminds me of my buddy, Metronome!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $broadcast) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"BROADCAST? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>BROADCAST</>! Oh, yeah! Reminds me of those aluminum flags I used to wear."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $cassette) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"CASSETTE? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>CASSETTE</>! Oh, I remember those! They're so cute and spindly!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $chiptune) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"CHIPTUNE? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>CHIPTUNE</>! Oh, right! So sine wavey and squarey...."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $codec) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"CODEC? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>CODEC</>! Oh, that's right, I think I know a few of these."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $compact) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"COMPACT? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>COMPACT</>! Ha! Compact discs? More like--yeah, no, I got nothing."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $frequency) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"FREQUENCY? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>FREQUENCY</>! That's the best! Dial it in, find the sweet spot...."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $headphones) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"HEADPHONES? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>HEADPHONES</>! Yeah, I remember these! Let's get tinitus together!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $hifi) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"HIFI? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>HIFI</>! Who could forget? My audio standards are through the ROOF!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $laser) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"LASER? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>LASER</>! Ahaha, that's right! It's all about the 1s and 0s, isn't it?"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $lofi) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"LOFI? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>LOFI</>! Oh, so nostalgic! Oh... I'm tearing up."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $media) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"MEDIA? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>MEDIA</>! Oh, that's right! Anything you can throw at me, I can take!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $microphone) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"MICROPHONE? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>MICROPHONE</>! Oh yeah! I used to host karaoke parties all the time!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $midi) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"MIDI? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>MIDI</>! WOW, that's right! Who has a classy sound font? This guy!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $mixing) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"MIXING? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>MIXING</>! Aha, so that's what my second tape deck was for!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $music) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"MUSIC? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>MUSIC</>! Oh, yes! I remember! This is the best part about all of this!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $phonograph) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"PHONOGRAPH? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>PHONOGRAPH</>! Oh, that's right, my great-grandpa! That takes me back."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $radio) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"RADIO? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>RADIO</>! Yeah, let's take a caller! Let's go to a commercial!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $recording) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"RECORDING? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>RECORDING</>! Yes! This is the best part! It's like having a time machine!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $rhythm) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"RHYTHM? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>RHYTHM</>! Yeah! You've hit the nail on the head! That's why we're here!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $sequencer) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SEQUENCER? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SEQUENCER</>! Oh yeah! I always wanted to be one of these when I grew up."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $song) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SONG? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SONG</>! Oh, yes! These are like stories, or like memories! I remember...."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $soundtrack) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SOUNDTRACK? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SOUNDTRACK</>! Aha! Wonderful. I'm remembering...."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $speakers) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SPEAKERS? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SPEAKERS</>! Oh, yeah! Without these, music would be DEAD."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $stereo) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"STEREO? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>STEREO</>! Ooh ooh! Yeah, I control the horizontal... of a sort."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $stream) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"STREAM? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>STREAM</>! Oh, yeah! Buffer 'til the cows come home!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $subwoofer) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SUBWOOFER? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SUBWOOFER</>! Oh, that's right! Let's rattle some windows!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $surround) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SURROUND? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SURROUND</>! I remember filling the world with sound from all around!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $synthesizer) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"SYNTHESIZER? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>SYNTHESIZER</>! Oh! I had a job in college where I worked as one of these."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $tape) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"TAPE? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>TAPE</>! Aha, I remember... those things give me indigestion! Yuck!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $treble) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"TREBLE? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>TREBLE</>! Of course! Sends shivers down my copper wiring!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $vinyl) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"VINYL? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>VINYL</>! Oh! What a nostalgic thought! Reminds me of old grandpappy...."
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $vocoder) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"VOCODER? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>VOCODER</>! Oh, yeah! I remembered how to do a Dalek voice!"
+			}
+		}
+	} else if (variable ch2-ws-turn-value is $volume) {
+		if (variable ch2-ws-turn-status is $repeat) {
+			concat serial dialog {
+				"VOLUME? Oh, but you've found that one already."
+			}
+		} else {
+			concat serial dialog {
+				"<y>VOLUME</>! Aha, I remember this! And why stop at 11?"
+			}
+		}
+	} else {
+		if (variable ch2-ws-flags-tally is 40) {
+			concat serial dialog {
+				"You know? I think you've done it! Everything is clear to me now!"
+			}
+		} else if (flag ch2-ws-won is true) {
+			concat serial dialog {
+				"Oh boy! What else is there inside my head?"
+			}
+		} else {
+			concat serial dialog {
+				"My head is all jumbled up. I can almost remember...."
+			}
+		}
+	}
+}

@@ -1,0 +1,79 @@
+include!("header.mgs")
+
+on_load-woprhouse {
+	if (flag tuesdayd is true) {
+		register rtfm -> command-rtfm;
+	}
+	if (variable current-chapter is 2) {
+		// entrance text
+		show serial dialog spacer;
+		show serial dialog { "Entering <bold>WOPR ROOM</>..." }
+		copy ch2-map-init;
+	}
+	if (flag wopr-backdoor-found is false) {
+		turn player control off;
+		set flag wopr-backdoor-found to true;
+		if (warp state is not warped) {
+			walk entity "%PLAYER%" along geometry walk_from-north over 600ms;
+		}
+		wait 400ms;
+		show dialog {
+			PLAYER "Whoa! It looks like I found some kind of back door."
+		}
+		turn player control on;
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-woprhouse {
+	if entity "%PLAYER%" is inside geometry north-hitbox
+		then goto on_walk-woprhouse-north;
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_walk-woprhouse-north {
+	// triggered by map's on_tick
+	if (variable current-chapter is 1) {
+		set warp state to exit_from-woprhouse;
+		load map main;
+	} else if (variable current-chapter is 2) {
+		set warp state to walk_from-woprhouse;
+		load map ch2-town;
+	} else {
+		show serial dialog spacer;
+		show serial dialog {
+			"<r>ERROR:</> You're in chapter '$current-chapter$'??"
+			"Back to the main menu for you!"
+		}
+		load map main_menu;
+	}
+}
+
+on_go-woprhouse-north {
+	copy warping-out-fade-out;
+	load map ch2-town;
+}
+
+/* ---------- ENTITIES ---------- */
+
+show_dialog-wopr-start {
+	show dialog {
+		SELF portrait wopr
+		"SHALL WE PLAY A GAME?"
+
+		SELF portrait wopr
+		"PLAY?"
+		> "DO NOT PLAY" : goto "restart-wopr"
+	}
+}
+restart-wopr {
+	set entity "%SELF%" on_interact to show_dialog-wopr-start;
+}
+
+show_dialog-woprbooks {
+	show dialog {
+		PLAYER "These shelves are full of Vogon poetry! What an odd sort of thing for a computer to collect."
+	}
+}

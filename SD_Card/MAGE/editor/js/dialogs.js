@@ -120,7 +120,7 @@ var serializeDialogScreen = function (
 	var name = (
 		dialogScreen.name
 		|| (
-			entityIndex
+			entityIndex !== undefined
 				? dialogScreen.entity
 				: ""
 		)
@@ -151,7 +151,7 @@ var serializeDialogScreen = function (
 	var dataView = new DataView(result);
 	var offset = 0;
 	var nameStringId = serializeString(
-		name,
+		name || "",
 		map,
 		fileNameMap,
 		scenarioData,
@@ -257,37 +257,15 @@ var serializeDialogScreen = function (
 	return result;
 };
 
-var mergeDialogDataIntoScenario = function(
-	fileNameMap,
-	scenarioData,
-) {
-	var allDialogs = {};
-	scenarioData.dialogs = allDialogs;
-	return Promise.all(
-		scenarioData.dialogPaths.map(function(dialogPath) {
-			var dialogFileName = dialogPath.split('/').pop();
-			var dialogFile = fileNameMap[dialogFileName];
-			return getFileJson(dialogFile)
-				.then(function(dialogFileData) {
-					Object.keys(dialogFileData)
-						.forEach(function(dialogName) {
-							if (allDialogs[dialogName]) {
-								throw new Error(`Duplicate dialog name "${dialogName}" found in ${dialogFileName}!`);
-							}
-							dialogFileData[dialogName].name = dialogName;
-							allDialogs[dialogName] = dialogFileData[dialogName]
-						})
-				});
-		})
-	);
-};
-
 var preloadAllDialogSkins = function (filenameMap, scenarioData) {
 	return Promise.all(Object.keys(scenarioData.dialogSkins).map((function(key) {
 		return loadTilesetByName(
 			scenarioData.dialogSkins[key],
 			filenameMap,
 			scenarioData,
-		);
+		)
+			.then(function (tilesetData) {
+				scenarioData.dialogSkinsTilesetMap[key] = tilesetData;
+			});
 	})));
 };

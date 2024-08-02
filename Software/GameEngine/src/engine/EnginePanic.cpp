@@ -108,7 +108,9 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	while (EngineInput_Buttons.rjoy_center == false)
 	{
 		// Update EngineInput_Buttons
-		EngineHandleInput();
+		EngineHandleKeyboardInput();
+
+		EngineHandleSerialInput();
 
 		// If we manually exit
 		if (EngineIsRunning() == false)

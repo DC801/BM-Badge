@@ -1,0 +1,90 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-smithfamily {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the<c>SMITH'S HOUSE</>."
+		"\tThere are faint rubber skid marks on the floor and -- impressively -- the ceiling. One of the beds, likely the child's, is more disheveled. Still, Mr. %Smith% does well to keep the rest of the house tidy."
+		" "
+	}
+}
+
+look-ch2-sportskid {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe child does not seem distressed that he has taken the form of sports equipment. On the contrary, best you can tell, he's elated. You shoot him a thumbs up, and he bounces up and down slightly."
+	}
+}
+
+look-ch2-smith {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tYour neighbor seems to be taking the status of his son in stride. He's as friendly to you as ever, and is maintaining a cheerful -- if slightly baffled -- expression."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-smithfamily {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>SMITH'S HOUSE</>..." }
+	// do unique stuff first (but turn serial / player control off first, if you do)
+	copy ch2-map-init;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-smithfamily {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-smithfamily;
+		load map ch2-town;
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-smithfamily-south {
+	copy warping-out-fade-out;
+	load map ch2-town;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-smith {
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Hey, neighbor. Good luck in the castle out west."
+			"Knock 'em dead! Or... break their legs! Or... whatever it is you need to do. Go get 'em!"
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "So I just looked it up, and apparently USB stands for universal serial bus."
+			"I guess it's like... you plug something in, and it's like there's a bus that drives along the cable, back and forth. Right?"
+			PLAYER "Sure."
+			SELF "So what is it that makes it universal?"
+			PLAYER "I guess you can plug it in and it sort of just works, universally."
+			SELF "Mmm, mmm. So if the plug fits, you're good to go. Right? So the data gets on the bus, and is driven to the other side?"
+			PLAYER "I... sure. Yeah, why not?"
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, do you know if Bert went anywhere?"
+			SELF "Sorry. Don't know anything about the myserious comings and goings of the mysterious village elders."
+		}
+	} else {
+		show dialog {
+			SELF "Hey, I heard you did the thing! Way to go!"
+		}
+	}
+}
+
+interact-ch2-sportskid {
+	show dialog {
+		SELF "WHEEEEEE!"
+	}
+}

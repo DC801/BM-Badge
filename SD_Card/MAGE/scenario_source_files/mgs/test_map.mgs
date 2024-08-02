@@ -1,0 +1,148 @@
+settings for dialog {
+	default { alignment TR }
+	label PLAYER { entity "%PLAYER%" alignment BL }
+	label SELF { entity "%SELF%" alignment BR }
+}
+
+show_dialog-wisdom {
+	show dialog {
+		SELF alignment BL
+		"Ah, hello little %PLAYER%.\nHave you come to me seeking wisdom?"
+
+		PLAYER alignment TR
+		":: goat noises ::"
+
+		SELF alignment BL
+		"If you are the smartest person in the room,\nthen you are in the wrong room"
+		"You cannot cross the sea merely by standing\nand staring at the water."
+		"Your assumptions are your windows on the\nworld. Scrub them off every once in a\nwhile, or the light won't come in."
+		"Before you criticize someone,\nyou should walk a mile in their shoes.\nThat way, when you criticize them, you're\na mile away and you have their shoes."
+
+		PLAYER alignment BR
+		":: goat noises intensify ::"
+
+		SELF alignment BL
+		"..."
+		"Ah, I see that you are seeking only\nmy strongest wisdom."
+		"When you see a variable prefixed with an\nampersand, think:\n\"that is the `And`ress (address)\"\nof the data in question."
+
+		PLAYER alignment TL
+		":: happy goat noises ::"
+	}
+}
+
+show_dialog-strong_bad {
+	show dialog {
+		SELF "I was told that Fhqwhgads would be here.\nHave you seen him?\nI don't know who it is,\nbut it probably is Fhqwhgads."
+
+		PLAYER "Sounds kinda sketchy.\nAnd I'm into it.\nI'll keep an eye out."
+
+		SELF "Yeah, you BETTER keep an eye out."
+		"You don't wanna know what could happen...\nto someone who doesn't keep an eye out."
+	}
+}
+
+show_dialog-bender {
+	show dialog {
+		PLAYER "Hey, robot, could you make me a smoothie?"
+
+		SELF "PFFFFT NO, make your own smoothie!\nWho do I look like to you?"
+
+		PLAYER "I don't know, I thought your name was\nlike... Blender or something?"
+
+		entity "Strong Bad" "BWAHAHAHA!"
+
+		SELF "HEY, CAN IT BOXING-MASK FOR FACE!"
+		"For your information, PLAYER,\nmy name is BENDER! Don't wear it out!"
+	}
+}
+
+show_dialog-trekkie {
+	show dialog {
+		SELF "Oh no! All me AOL free trial hours have expired! Me need to get back on INTERNET!"
+
+		PLAYER "Wait, what?"
+
+		SELF "Me being left behind in Yahoo Chat Rooms!"
+	}
+}
+
+show_dialog-pipscat {
+	show dialog {
+		SELF "You know, %Strong Bad% and %Bender% are having a feud. It would be more awesome if they teamed up - %Bender% is some kinda robot."
+	}
+}
+
+check_if_player_is_at_log {
+	if entity "%PLAYER%" is inside geometry log_ellipse then goto walk_self_to_path_and_loop;
+}
+
+check_if_player_is_named_bob {
+	if entity "%PLAYER%" name is Bob then goto spin_self_clockwise;
+	if entity "%PLAYER%" name is baby_ then goto spin_self_clockwise;
+}
+
+check_if_player_is_named_pat {
+	if entity "%PLAYER%" name is Pat then goto spin_self_clockwise;
+}
+
+walk_self_to_path_and_loop {
+	walk entity "%SELF%" to geometry "%ENTITY_PATH%" over 5000ms;
+	loop entity "%SELF%" along geometry "%ENTITY_PATH%" over 10000ms;
+}
+
+walk_self_to_path_and_walk {
+	walk entity "%SELF%" to geometry "%ENTITY_PATH%" over 5000ms;
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 10000ms;
+	goto null_script;
+}
+
+check_save_flag-bobs_not_on_fire {
+	if flag "No two Bobs are not on fire" is true then goto show_dialog-thanks_for_setting_bob_on_fire;
+	show dialog {
+		SELF "%Bob%, AKA \"Stone Cold %Bob% Austin\"\nis cold. Would you please warm him up?"
+	}
+}
+
+show_dialog-thanks_for_setting_bob_on_fire {
+	show dialog {
+		SELF "Thank for warming %Bob% up?\nI mean, there were other ways to do it,\nbut that works I guess..."
+	}
+	set entity "%SELF%" on_interact to check_save_flag-bobs_not_on_fire;
+}
+
+set_save_flag-bobs_not_on_fire {
+	if flag "No two Bobs are not on fire" is true then goto set_save_flag-bobs_on_fire;
+	set flag "No two Bobs are not on fire" to true;
+	show dialog {
+		SELF "I AM %SELF%!\nI HAVE SET %Bob% ON FIRE!!"
+
+		Bob "Oh yeah! I am so hot right now!"
+	}
+}
+
+set_save_flag-bobs_on_fire {
+	set flag "No two Bobs are not on fire" to false;
+	show dialog {
+		SELF "I AM MERCIFUL %SELF%!\nI HAVE SET %Bob% OFF FIRE!!"
+
+		Bob "Aww man, I was just getting toasty!"
+	}
+	set entity "%SELF%" on_interact to set_save_flag-bobs_not_on_fire;
+}
+
+test_camera_follow_bert {
+	make camera follow entity Bert;
+	set entity Bert on_interact to test_camera_follow_player;
+}
+
+test_camera_follow_player {
+	make camera follow entity "%PLAYER%";
+	set entity Bert on_interact to test_camera_follow_bert;
+}
+
+show_dialog-lots_of_text {
+	show dialog {
+		SELF "How long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################"
+	}
+}

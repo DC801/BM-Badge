@@ -1,3 +1,4 @@
+var ENGINE_VERSION = 12; // MUST BE BUMPED BY WHOLE NUMBERS WHEN ENGINE CHANGES DATA SHAPES!!!
 var IS_LITTLE_ENDIAN = true;
 var IS_SCREEN_LITTLE_ENDIAN = false;
 var IS_GLITCHED_FLAG = 0b10000000;
@@ -7,11 +8,16 @@ var MAX_ENTITIES_PER_MAP = 64;
 var DIALOG_SCREEN_NO_PORTRAIT = 255;
 var DIALOG_SCREEN_NO_ENTITY = 255;
 
+var verbose = true; // always behave as if the --verbose flag is present in the browser GUI
+var consoleLogIfVerbose = function() {
+	if (verbose) {
+		console.log.apply(console, arguments);
+	}
+};
+
 var getFileJson = function (file) {
 	return file.text()
-		.then(function (text) {
-			return JSON.parse(text);
-		});
+		.then(JSON.parse);
 };
 
 var combineArrayBuffers = function (bufferA, bufferB) {
@@ -44,6 +50,20 @@ var getPaddedHeaderLength = function (length) {
 			? 4 - mod
 			: 0
 	);
+};
+
+var convertTextOptionsToResponses = function (textOptions) {
+	var result = [];
+	var textOptionKeys = Object.keys(textOptions || {});
+	if (textOptionKeys.length) {
+		result = textOptionKeys.map(function (key) {
+			return {
+				label: key.toLocaleLowerCase(),
+				script: textOptions[key],
+			};
+		});
+	}
+	return result;
 };
 
 var propertyTypeHandlerMap = {
@@ -129,3 +149,88 @@ var jsonClone = function (input) {
 	return JSON.parse(JSON.stringify(input));
 };
 
+var makeComputedStoreGetterSetter = function (propertyName) {
+	return {
+		get: function () {
+			return this.$store.state[propertyName]
+		},
+		set: function (value) {
+			return this.$store.commit('GENERIC_MUTATOR', {
+				propertyName: propertyName,
+				value: value,
+			});
+		}
+	}
+};
+
+var makeComputedStoreGetterSettersMixin = function (config) {
+	var vuexPropertyNames = config;
+	var computedNames = config;
+	var computed = {};
+	if (!(config instanceof Array)) {
+		vuexPropertyNames = Object.values(config);
+		computedNames = Object.keys(config);
+	}
+	vuexPropertyNames.forEach(function (vuexPropertyName, index) {
+		computed[computedNames[index]] = makeComputedStoreGetterSetter(
+			vuexPropertyName
+		);
+	});
+	return {
+		computed: computed
+	};
+}
+
+var makeFileChangeTrackerMixinByResourceType = function (resourceName) {
+	var fileMapPropertyName = resourceName + 'FileItemMap';
+	var resourceJsonStatePropertyName = resourceName + 'JsonOutput'
+	var changedFileMapPropertyName = resourceName + 'ChangedFileMap'
+	return {
+		computed: {
+			startFileMap: function () {
+				return this.getAllRecombinedFilesForResource(this.initState, resourceName);
+			},
+			[changedFileMapPropertyName]: function () {
+				var result = {}
+				var currentFileMap = this.getAllRecombinedFilesForResource(this.currentData, resourceName)
+				var startFileMap = this.startFileMap
+				Object.keys(currentFileMap).forEach(function (fileName) {
+					if (currentFileMap[fileName] !== startFileMap[fileName]) {
+						result[fileName] = currentFileMap[fileName]
+					}
+				})
+				return result;
+			},
+			[resourceJsonStatePropertyName]: function () {
+				return JSON.stringify(this.currentData[fileMapPropertyName]);
+			},
+			[resourceName + 'NeedSave']: function () {
+				return Object.keys(this[changedFileMapPropertyName]).length > 0;
+			},
+		},
+		methods: {
+			getAllRecombinedFilesForResource (source, resourceName) {
+				var fileMapPropertyName = resourceName + 'FileItemMap';
+				var self = this;
+				var result = {};
+				Object.keys(
+					source[fileMapPropertyName]
+				).forEach(function (fileName) {
+					result[fileName] = self.recombineFileForResource(
+						fileName,
+						source
+					);
+				});
+				return result
+			},
+			recombineFileForResource (fileName, source) {
+				var resourceNamesInFile = source[fileMapPropertyName][fileName];
+				var result = {};
+				resourceNamesInFile.forEach(function (scriptName) {
+					result[scriptName] = source[resourceName][scriptName];
+				});
+				return JSON.stringify(result, null, '\t') + '\n';
+			},
+		}
+	}
+}

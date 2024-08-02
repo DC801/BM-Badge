@@ -1,0 +1,296 @@
+include!("header.mgs")
+
+earthquake {
+	fade out camera to #FF0000 over 300ms;
+	fade in camera from #FF0000 over 300ms;
+	shake camera 250ms 10px for 1400ms;
+}
+
+earthquake-setpiece {
+	teleport camera to geometry earthquake-setpiece-camera-spot;
+	teleport entity Verthandi to geometry earthquake-setpiece-verthandi-spot;
+	teleport entity Marta to geometry earthquake-setpiece-marta-spot;
+	fade in camera from #000000 over 300ms;
+	set entity Cleo on_tick to loiter1;
+	set entity Verthandi on_tick to loiter2;
+	set entity Marta on_tick to loiter3;
+	set entity Cat on_tick to loiter4;
+	set entity Hamster on_tick to loiter5;
+	wait 1800ms;
+	set entity Cleo on_tick to null_script;
+	set entity Verthandi on_tick to null_script;
+	set entity Marta on_tick to null_script;
+	set entity Cat on_tick to null_script;
+	set entity Hamster on_tick to null_script;
+	turn entity Marta south;
+	turn entity Cleo south;
+	turn entity Cat south;
+	turn entity Verthandi south;
+	turn entity Hamster south;
+	copy earthquake;
+	wait 500ms;
+	set entity Marta on_tick to marta-walk;
+	set entity Cleo on_tick to loiter1;
+	set entity Verthandi on_tick to loiter2;
+	set entity Cat on_tick to loiter4;
+	set entity Hamster on_tick to loiter5;
+	wait 500ms;
+	fade out camera to #000000 over 300ms;
+}
+
+marta-walk {
+	walk entity Marta to geometry earthquake-setpiece-marta-walk over 900ms;
+}
+
+demoend-cutscene-move {
+	teleport entity Alfonso to geometry demoend-alfonso-point;
+	teleport entity Bert to geometry demoend-bert-point;
+	teleport entity Jackob to geometry demoend-jackob-point;
+	set entity Marta on_tick to null_script;
+	teleport entity Marta to geometry demoend-marta-start;
+	teleport entity Ram to geometry demoend-beatrice-point;
+	// for some reason, teleport doesn't happen if it comes after changing entity type
+	teleport entity Helga to geometry demoend-trekkie-point;
+	// The part of Beatrice will be played by Ram in this episode:
+	set entity Ram type to old_lady;
+	// The part of Trekkie will be played by Helga in this episode:
+	set entity Helga type to trekkie;
+	teleport entity "%PLAYER%" to geometry demoend-player-point;
+	set entity Ram on_tick to loiter1;
+	set entity Helga on_tick to loiter2;
+}
+
+demoend-everyone-south {
+	set entity Ram on_tick to null_script;
+	set entity Marta on_tick to null_script;
+	set entity Helga on_tick to null_script;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity Ram south;
+	turn entity Marta south;
+	turn entity "%PLAYER%" south;
+	turn entity Helga south;
+	turn entity Bert south;
+	turn entity Alfonso south;
+	turn entity Jackob south;
+}
+
+demoend-everyone-look-at-jackob {
+	turn entity Helga toward entity Jackob;
+	turn entity Marta toward entity Jackob;
+	turn entity Ram toward entity Jackob;
+	turn entity "%PLAYER%" toward entity Jackob;
+	turn entity Alfonso toward entity Jackob;
+	turn entity Bert toward entity Jackob;
+}
+
+demoend-cutscene {
+	turn player control off;
+	copy earthquake;
+	show dialog {
+		Alfonso "Good heavens! What was that?"
+	}
+	fade out camera to #000000 over 300ms;
+	copy earthquake-setpiece;
+	copy demoend-cutscene-move;
+	make camera follow entity "%PLAYER%";
+	fade in camera from #000000 over 300ms;
+	walk entity Marta to geometry demoend-marta-point over 600ms;
+	set entity Marta on_tick to loiter3;
+	wait 600ms;
+	show dialog {
+		name Beatrice alignment TR portrait old_lady
+		"Oh, no! This is just like last time!"
+	}
+	wait 200ms; /**/ turn entity "%PLAYER%" toward entity Ram;
+	wait 200ms; /**/ show dialog {
+		PLAYER alignment TR "Last time?"
+	}
+	wait 200ms;
+	set entity Helga on_tick to null_script;
+	turn entity Helga toward entity "%PLAYER%";
+	wait 200ms;
+	show dialog {
+		name Trekkie alignment TL portrait trekkie
+		"Last time Big Bad came!"
+	}
+	wait 200ms; /**/ turn entity "%PLAYER%" toward entity Helga;
+	wait 200ms; /**/ show dialog {
+		PLAYER alignment TR "Last time WHAT?"
+	}
+	copy demoend-everyone-south;
+	copy earthquake;
+	wait 600ms;
+	copy demoend-everyone-look-at-jackob;
+	// Jackob paces:
+	walk entity Jackob to geometry demoend-jackob-pace over 500ms;
+	walk entity Jackob to geometry demoend-jackob-point over 500ms;
+	walk entity Jackob to geometry demoend-jackob-pace over 500ms;
+	walk entity Jackob to geometry demoend-jackob-point over 500ms;
+	turn entity Jackob south;
+	// end pacing
+	turn entity "%PLAYER%" toward entity Alfonso;
+	show dialog {
+		Jackob "Oh, dear. Oh, goodness gracious."
+		"I was afraid of this."
+		PLAYER "Afraid of WHAT?"
+	}
+	wait 200ms; /**/ turn entity Jackob toward entity "%PLAYER%";
+	wait 200ms; /**/ show dialog {
+		Jackob "I was afraid the Big Bad would notice what you were doing."
+	}
+	wait 200ms; /**/ turn entity Alfonso toward entity Jackob;
+	wait 200ms; /**/ show dialog {
+		Alfonso "You think the Big Bad somehow knows that someone here has been using Ring Zero?"
+	}
+	set entity Marta on_tick to loiter2;
+	show dialog {
+		Marta alignment TL "But it's been so long since the Big Bad was seen at all! You think he might still be out there, somewhere?"
+	}
+	set entity Marta on_tick to null_script;
+	turn entity "%SELF%" north;
+	show dialog {
+		Bert "Perhaps."
+		Jackob "What else does this earthquake mean?"
+		Alfonso "Oh, dear.... Oh, dear!"
+	}
+	turn entity Alfonso toward entity "%PLAYER%";
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	show dialog {
+		PLAYER "But I can't fight the Big Bad! What am I supposed to do?"
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity Alfonso;
+	show dialog {
+		Alfonso "I suppose... I suppose we must consider...."
+		Jackob "The other artifacts?"
+		Alfonso "Dangerous. Dangerous, but...."
+	}
+	copy demoend-everyone-south;
+	copy earthquake;
+	wait 900ms;
+	show dialog {
+		Alfonso "*sigh*"
+		"We have no choice."
+		"%PLAYER%, you must collect the artifacts of power."
+		"Just outside the town are several challenges, and at the end of each there is one magical artifact."
+		"That ring will not be enough to defeat the Big Bad, but with those three artifacts...."
+		Jackob "Yes, %PLAYER%!"
+		"You must go and retrieve them!"
+		"Go!"
+	}
+	fade out camera to #000000 over 1500ms;
+	wait 1000ms;
+	fade in camera from #000000 over 300ms;
+	wait 300ms;
+	show dialog {
+		Jackob "Next year."
+		PLAYER "Next... huh?"
+		Jackob "This has been DC801's badge game for 2020!"
+		"Thank you for playing, and we hope you'll play the rest of the game next year!"
+		PLAYER "Buh?"
+		Jackob "As a reward for completing the demo, I'll tell you how to unlock debug mode."
+	}
+	set entity Jackob on_tick to look-left-and-right;
+	show dialog {
+		Jackob "Press XOR and MEM0 at the same time -- that's the top button on each side of the screen -- and...."
+	}
+	set entity Jackob on_tick to null_script;
+	turn entity Jackob toward entity "%PLAYER%";
+	show dialog {
+		Jackob "Voila!"
+		PLAYER "(Zuh)"
+	}
+	fade out camera to #000000 over 1200ms;
+	set flag ch1_finished to true;
+	goto roll-credits;
+}
+
+loiter1 {
+	turn entity "%SELF%" south; /**/ wait 500ms;
+	turn entity "%SELF%" east; /**/ wait 800ms;
+	turn entity "%SELF%" west; /**/ wait 1200ms;
+}
+
+loiter2 {
+	turn entity "%SELF%" west; /**/ wait 800ms;
+	turn entity "%SELF%" east; /**/ wait 900ms;
+	turn entity "%SELF%" south; /**/ wait 400ms;
+}
+
+loiter3 {
+	turn entity "%SELF%" south; /**/ wait 600ms;
+	turn entity "%SELF%" north; /**/ wait 900ms;
+	turn entity "%SELF%" east; /**/ wait 200ms;
+}
+
+loiter4 {
+	turn entity "%SELF%" west; /**/ wait 300ms;
+	turn entity "%SELF%" south; /**/ wait 500ms;
+	turn entity "%SELF%" north; /**/ wait 400ms;
+	turn entity "%SELF%" east; /**/ wait 400ms;
+}
+
+loiter5 {
+	turn entity "%SELF%" south; /**/ wait 400ms;
+	turn entity "%SELF%" north; /**/ wait 400ms;
+	turn entity "%SELF%" east; /**/ wait 400ms;
+	turn entity "%SELF%" west; /**/ wait 400ms;
+	turn entity "%SELF%" east; /**/ wait 400ms;
+}
+
+on_tick-credits {
+	turn hex control off;
+	turn player control on;
+	turn entity "%PLAYER%" south;
+	make camera follow entity cameraman;
+	teleport entity cameraman to geometry credits_camera;
+	fade in camera from #000000 over 400ms;
+	wait 1200ms;
+	set entity Goat current_animation to 1;
+	walk entity cameraman along geometry credits_camera over 60000ms;
+	wait 600ms;
+	play entity Cat animation 2 once;
+	wait 300ms;
+	fade out camera to #000000 over 1200ms;
+	set warp state to exit_from-credits;
+	turn hex control on;
+	if (flag credits-from-menu is true) {
+		load map main_menu;
+	}
+	load map main;
+}
+
+debug-roll-credits-q {
+	show dialog {
+		SELF alignment BL portrait goldfish
+		"Show credits?"
+		> "Yes" : goto "roll-credits"
+		> "No" : goto "debug-roll-credits-no"
+	}
+}
+
+roll-credits {
+	set flag credits-from-menu to false;
+	load map credits;
+}
+
+debug-roll-credits-no {
+	set entity "%SELF%" on_interact to debug-roll-credits-q;
+}
+
+goose-loiter-honk {
+	wait 1500ms;
+	play entity "%SELF%" animation 2 twice;
+}
+
+helga-munch {
+	play entity "%SELF%" animation 2 once;
+	wait 3000ms;
+}
+
+pixie-training {
+	play entity "%SELF%" animation 2 once;
+	wait 1500ms;
+	play entity "%SELF%" animation 2 twice;
+	wait 600ms;
+}

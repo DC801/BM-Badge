@@ -8,6 +8,7 @@ var dataTypes = [
 	'scripts',
 	'portraits',
 	'dialogs',
+	'serialDialogs',
 	'imageColorPalettes',
 	'strings',
 	'save_flags',
@@ -21,6 +22,7 @@ var handleScenarioData = function (fileNameMap) {
 			'scenario.json',
 			scenarioData
 		);
+		scenarioData.tilesetMap = {};
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
 		scenarioData.uniqueStringLikeMaps = {
@@ -33,23 +35,110 @@ var handleScenarioData = function (fileNameMap) {
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
+		scenarioData.dialogSkinsTilesetMap = {}
+		scenarioData.warnings = {};
 		var preloadSkinsPromise = preloadAllDialogSkins(fileNameMap, scenarioData);
 		var portraitsFile = fileNameMap['portraits.json'];
-		var portraitsPromise = preloadSkinsPromise.then(function () {
+		var portraitsPromise = preloadSkinsPromise.then(function preloadSkinHandler () {
 			return getFileJson(portraitsFile)
 				.then(handlePortraitsData(fileNameMap, scenarioData))
 		});
 		var entityTypesFile = fileNameMap['entity_types.json'];
-		var entityTypesPromise = portraitsPromise.then(function () {
+		var entityTypesPromise = portraitsPromise.then(function portraitPromiseHandler () {
 			return getFileJson(entityTypesFile)
 				.then(handleEntityTypesData(fileNameMap, scenarioData))
 		});
+
+		var mergeNamedJsonIntoScenario = function (
+			pathPropertyName,
+			destinationPropertyName,
+			mergeSuccessCallback
+		) {
+			return function (
+				fileNameMap,
+				scenarioData,
+			) {
+				var collectedTypeMap = {};
+				var itemSourceFileMap = {};
+				var fileItemMap = {};
+				scenarioData[destinationPropertyName] = collectedTypeMap;
+				scenarioData[destinationPropertyName + 'SourceFileMap'] = itemSourceFileMap;
+				scenarioData[destinationPropertyName + 'FileItemMap'] = fileItemMap;
+				var result = Promise.all(
+					scenarioData[pathPropertyName].map(function(filePath) {
+						var fileName = filePath.split('/').pop();
+						var fileObject = fileNameMap[fileName];
+						if (!fileObject) {
+							throw new Error(`File listed in 'scenario.json' not found: '${fileName}'`);
+						}
+						return getFileJson(fileObject)
+							.then(function(fileData) {
+								Object.keys(fileData)
+									.forEach(function(itemName, index) {
+										if (collectedTypeMap[itemName]) {
+											throw new Error(`Duplicate ${destinationPropertyName} name "${itemName}" found in ${fileName}!`);
+										}
+										fileData[itemName].name = itemName;
+										collectedTypeMap[itemName] = fileData[itemName];
+										itemSourceFileMap[itemName] = {
+											fileName: fileName,
+											index: index
+										};
+										if (!fileItemMap[fileName]) {
+											fileItemMap[fileName] = [];
+										}
+										fileItemMap[fileName].push(
+											itemName
+										);
+									});
+							});
+					})
+				)
+					.then(function () {
+						return collectedTypeMap;
+					});
+				if (mergeSuccessCallback) {
+					result = result.then(mergeSuccessCallback);
+				}
+				return result;
+			}
+		};
+
+		var natlangMgsPromise = convertMgsFilesIntoScenarioDataConfig(
+			fileNameMap,
+			scenarioData,
+		);
+
+		var mergeScriptDataIntoScenario = mergeNamedJsonIntoScenario(
+			'scriptPaths',
+			'scripts',
+			function (allScripts) {
+				var lookaheadAndIdentifyAllScriptVariables = makeVariableLookaheadFunction(scenarioData);
+				Object.values(allScripts)
+					.forEach(lookaheadAndIdentifyAllScriptVariables);
+			}
+		);
+		var mergeDialogDataIntoScenario = mergeNamedJsonIntoScenario(
+			'dialogPaths',
+			'dialogs',
+		);
+		var mergeSerialDialogDataIntoScenario = mergeNamedJsonIntoScenario(
+			'serialDialogPaths',
+			'serialDialogs',
+		);
 		return Promise.all([
 			entityTypesPromise,
-			mergeScriptDataIntoScenario(fileNameMap, scenarioData),
-			mergeDialogDataIntoScenario(fileNameMap, scenarioData),
+			natlangMgsPromise,
+			mergeMapDataIntoScenario(fileNameMap, scenarioData),
 		])
-			.then(function () {
+			.then(function mergeScriptDialogAndSerialDialog () {
+				return Promise.all([
+					mergeScriptDataIntoScenario(fileNameMap, scenarioData),
+					mergeDialogDataIntoScenario(fileNameMap, scenarioData),
+					mergeSerialDialogDataIntoScenario(fileNameMap, scenarioData),
+				])
+			})
+			.then(function processMaps () {
 				serializeNullScript(
 					fileNameMap,
 					scenarioData,
@@ -120,11 +209,11 @@ var crc32 = function(data) {
 };
 
 var generateIndexAndComposite = function (scenarioData) {
-	console.log(
-		'generateIndexAndComposite:scenarioData',
-		scenarioData
-	);
-	var signature = new ArrayBuffer(16);
+	// console.log(
+	// 	'generateIndexAndComposite:scenarioData',
+	// 	scenarioData
+	// );
+	var signature = new ArrayBuffer(20);
 	var signatureDataView = new DataView(signature);
 	setCharsIntoDataView(
 		signatureDataView,
@@ -180,32 +269,32 @@ var generateIndexAndComposite = function (scenarioData) {
 	var checksum = crc32(compositeArrayDataViewOffsetBySignature);
 	compositeArrayDataView.setUint32(
 		8,
-		checksum,
+		ENGINE_VERSION,
 		IS_LITTLE_ENDIAN
 	);
 	compositeArrayDataView.setUint32(
 		12,
+		checksum,
+		IS_LITTLE_ENDIAN
+	);
+	compositeArrayDataView.setUint32(
+		16,
 		compositeSize,
 		IS_LITTLE_ENDIAN
 	);
-
-	console.log(
-		'compositeArray',
-		compositeArray
-	);
 	var hashHex = [
-		compositeArray[8],
-		compositeArray[9],
-		compositeArray[10],
-		compositeArray[11],
-	].map(function (value) {
-		return value.toString(16).padStart(2, 0)
-	}).join('');
-	var lengthHex = [
 		compositeArray[12],
 		compositeArray[13],
 		compositeArray[14],
 		compositeArray[15],
+	].map(function (value) {
+		return value.toString(16).padStart(2, 0)
+	}).join('');
+	var lengthHex = [
+		compositeArray[16],
+		compositeArray[17],
+		compositeArray[18],
+		compositeArray[19],
 	].map(function (value) {
 		return value.toString(16).padStart(2, 0)
 	}).join('');

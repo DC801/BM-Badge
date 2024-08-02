@@ -65,7 +65,6 @@ CFLAGS += -DDC801_EMBEDDED --short-enums
 
 # C++ flags common to all targets
 CXXFLAGS = -felide-constructors \
-	-fno-exceptions \
 	-fno-rtti \
 	-Wno-register
 else
@@ -102,6 +101,7 @@ else
 	else
 		ifdef WEB
 			LD_LIBRARIES += \
+				-s ASYNCIFY \
 				-s USE_SDL=2 \
 				-s USE_SDL_IMAGE=2 \
 				-s SDL2_IMAGE_FORMATS='["png"]' \

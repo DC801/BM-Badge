@@ -1,151 +1,117 @@
 var actionFieldsMap = {
 	NULL_ACTION: null,
 	CHECK_ENTITY_NAME: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'string', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_X: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_Y: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_INTERACT_SCRIPT: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_script', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_TICK_SCRIPT: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
+		{propertyName: 'expected_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_LOOK_SCRIPT: [
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_script', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_TYPE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity_type', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_PRIMARY_ID: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_SECONDARY_ID: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'expected_u2', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_PRIMARY_ID_TYPE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_byte', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_CURRENT_ANIMATION: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_byte', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_CURRENT_FRAME: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_byte', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_DIRECTION: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'direction', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_ENTITY_GLITCHED: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_A: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_B: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_C: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_D: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_A_U2: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'expected_u2', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_C_U2: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'expected_u2', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_A_U4: [
-		{propertyName: 'expected_u4', size: 4},
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
 	],
 	CHECK_ENTITY_PATH: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_SAVE_FLAG: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'save_flag', size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_IF_ENTITY_IS_IN_GEOMETRY: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_FOR_BUTTON_PRESS: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'button_id', size: 1},
+		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_FOR_BUTTON_STATE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'button_id', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_WARP_STATE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'string', size: 2},
 		{propertyName: 'expected_bool', size: 1},
 	],
@@ -221,34 +187,6 @@ var actionFieldsMap = {
 	SET_ENTITY_GLITCHED: [
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'bool_value', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_A: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_B: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_C: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_D: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_A_U2: [
-		{propertyName: 'u2_value', size: 2},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_C_U2: [
-		{propertyName: 'u2_value', size: 2},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_A_U4: [
-		{propertyName: 'u4_value', size: 4},
-		{propertyName: 'entity', size: 1},
 	],
 	SET_ENTITY_PATH: [
 		{propertyName: 'geometry', size: 2},
@@ -366,14 +304,14 @@ var actionFieldsMap = {
 		{propertyName: 'inbound', size: 1},
 	],
 	CHECK_VARIABLE: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'value', size: 2},
 		{propertyName: 'variable', size: 1},
 		{propertyName: 'comparison', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
 	CHECK_VARIABLES: [
-		{propertyName: 'success_script', size: 2},
+		{propertyName: ['success_script', 'jump_index'], size: 2},
 		{propertyName: 'variable', size: 1},
 		{propertyName: 'source', size: 1},
 		{propertyName: 'comparison', size: 1},
@@ -386,6 +324,102 @@ var actionFieldsMap = {
 	SLOT_ERASE: [
 		{propertyName: 'slot', size: 1},
 	],
+	SET_CONNECT_SERIAL_DIALOG: [
+		{propertyName: 'serial_dialog', size: 2},
+	],
+	SHOW_SERIAL_DIALOG: [
+		{propertyName: 'serial_dialog', size: 2},
+		{propertyName: 'disable_newline', size: 1},
+	],
+	SET_MAP_LOOK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+	],
+	SET_ENTITY_LOOK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_TELEPORT_ENABLED: [
+		{propertyName: 'bool_value', size: 1},
+	],
+	CHECK_MAP: [
+		{propertyName: ['success_script', 'jump_index'], size: 2},
+		{propertyName: 'map', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_BLE_FLAG: [
+		{propertyName: 'ble_flag', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	CHECK_BLE_FLAG: [
+		{propertyName: ['success_script', 'jump_index'], size: 2},
+		{propertyName: 'ble_flag', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_SERIAL_DIALOG_CONTROL: [
+		{propertyName: 'bool_value', size: 1},
+	],
+	REGISTER_SERIAL_DIALOG_COMMAND: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'script', size: 2},
+		{propertyName: 'is_fail', size: 1},
+	],
+	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'argument', size: 2},
+		{propertyName: 'script', size: 2},
+	],
+	UNREGISTER_SERIAL_DIALOG_COMMAND: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'is_fail', size: 1},
+	],
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'argument', size: 2},
+	],
+	SET_ENTITY_MOVEMENT_RELATIVE: [
+		{propertyName: 'relative_direction', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	CHECK_DIALOG_OPEN: [
+		{propertyName: ['success_script', 'jump_index'], size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_SERIAL_DIALOG_OPEN: [
+		{propertyName: ['success_script', 'jump_index'], size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_DEBUG_MODE: [
+		{propertyName: ['success_script', 'jump_index'], size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CLOSE_DIALOG: [],
+	CLOSE_SERIAL_DIALOG: [],
+	SET_LIGHTS_CONTROL: [
+		{propertyName: 'enabled', size: 1},
+	],
+	SET_LIGHTS_STATE: [
+		{propertyName: 'lights', size: 4},
+		{propertyName: 'enabled', size: 1},
+	],
+	GOTO_ACTION_INDEX: [
+		{propertyName: 'action_index', size: 2},
+	],
+	SET_SCRIPT_PAUSE: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'script_slot', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'alias', size: 2},
+	],
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: [
+		{propertyName: 'alias', size: 2},
+	],
+	SET_SERIAL_DIALOG_COMMAND_VISIBILITY: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'is_visible', size: 1},
+	],
 };
 
 var actionNames = [
@@ -395,6 +429,7 @@ var actionNames = [
 	'CHECK_ENTITY_Y',
 	'CHECK_ENTITY_INTERACT_SCRIPT',
 	'CHECK_ENTITY_TICK_SCRIPT',
+	'CHECK_ENTITY_LOOK_SCRIPT',
 	'CHECK_ENTITY_TYPE',
 	'CHECK_ENTITY_PRIMARY_ID',
 	'CHECK_ENTITY_SECONDARY_ID',
@@ -403,13 +438,6 @@ var actionNames = [
 	'CHECK_ENTITY_CURRENT_FRAME',
 	'CHECK_ENTITY_DIRECTION',
 	'CHECK_ENTITY_GLITCHED',
-	'CHECK_ENTITY_HACKABLE_STATE_A',
-	'CHECK_ENTITY_HACKABLE_STATE_B',
-	'CHECK_ENTITY_HACKABLE_STATE_C',
-	'CHECK_ENTITY_HACKABLE_STATE_D',
-	'CHECK_ENTITY_HACKABLE_STATE_A_U2',
-	'CHECK_ENTITY_HACKABLE_STATE_C_U2',
-	'CHECK_ENTITY_HACKABLE_STATE_A_U4',
 	'CHECK_ENTITY_PATH',
 	'CHECK_SAVE_FLAG',
 	'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
@@ -435,13 +463,6 @@ var actionNames = [
 	'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 	'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
 	'SET_ENTITY_GLITCHED',
-	'SET_ENTITY_HACKABLE_STATE_A',
-	'SET_ENTITY_HACKABLE_STATE_B',
-	'SET_ENTITY_HACKABLE_STATE_C',
-	'SET_ENTITY_HACKABLE_STATE_D',
-	'SET_ENTITY_HACKABLE_STATE_A_U2',
-	'SET_ENTITY_HACKABLE_STATE_C_U2',
-	'SET_ENTITY_HACKABLE_STATE_A_U4',
 	'SET_ENTITY_PATH',
 	'SET_SAVE_FLAG',
 	'SET_PLAYER_CONTROL',
@@ -476,6 +497,32 @@ var actionNames = [
 	'SLOT_SAVE',
 	'SLOT_LOAD',
 	'SLOT_ERASE',
+	'SET_CONNECT_SERIAL_DIALOG',
+	'SHOW_SERIAL_DIALOG',
+	'SET_MAP_LOOK_SCRIPT',
+	'SET_ENTITY_LOOK_SCRIPT',
+	'SET_TELEPORT_ENABLED',
+	'CHECK_MAP',
+	'SET_BLE_FLAG',
+	'CHECK_BLE_FLAG',
+	'SET_SERIAL_DIALOG_CONTROL',
+	'REGISTER_SERIAL_DIALOG_COMMAND',
+	'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
+	'UNREGISTER_SERIAL_DIALOG_COMMAND',
+	'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
+	'SET_ENTITY_MOVEMENT_RELATIVE',
+	'CHECK_DIALOG_OPEN',
+	'CHECK_SERIAL_DIALOG_OPEN',
+	'CHECK_DEBUG_MODE',
+	'CLOSE_DIALOG',
+	'CLOSE_SERIAL_DIALOG',
+	'SET_LIGHTS_CONTROL',
+	'SET_LIGHTS_STATE',
+	'GOTO_ACTION_INDEX',
+	'SET_SCRIPT_PAUSE',
+	'REGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
+	'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
+	'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 ];
 
 var specialKeywordsEnum = {
@@ -588,6 +635,43 @@ var getGeometryIndexFromAction = function (
 	return geometry.specialIndex || geometry.mapIndex;
 };
 
+var buttonMap = {
+	MEM0: 0,
+	MEM1: 1,
+	MEM2: 2,
+	MEM3: 3,
+	BIT128: 4,
+	BIT64: 5,
+	BIT32: 6,
+	BIT16: 7,
+	BIT8: 8,
+	BIT4: 9,
+	BIT2: 10,
+	BIT1: 11,
+	XOR: 12,
+	ADD: 13,
+	SUB: 14,
+	PAGE: 15,
+	LJOY_CENTER: 16,
+	LJOY_UP: 17,
+	LJOY_DOWN: 18,
+	LJOY_LEFT: 19,
+	LJOY_RIGHT: 20,
+	RJOY_CENTER: 21,
+	RJOY_UP: 22,
+	RJOY_DOWN: 23,
+	RJOY_LEFT: 24,
+	RJOY_RIGHT: 25,
+	TRIANGLE: 22,
+	X: 23,
+	CROSS: 23,
+	CIRCLE: 24,
+	O: 24,
+	SQUARE: 25,
+	HAX: 26, // Cap Touch
+	ANY: 27, // the elusive `any key`
+};
+
 var getButtonFromAction = function (
 	propertyName,
 	action,
@@ -599,46 +683,10 @@ var getButtonFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
-	var buttons = {
-		MEM0: 0,
-		MEM1: 1,
-		MEM2: 2,
-		MEM3: 3,
-		BIT128: 4,
-		BIT64: 5,
-		BIT32: 6,
-		BIT16: 7,
-		BIT8: 8,
-		BIT4: 9,
-		BIT2: 10,
-		BIT1: 11,
-		XOR: 12,
-		ADD: 13,
-		SUB: 14,
-		PAGE: 15,
-		LJOY_CENTER: 16,
-		LJOY_UP: 17,
-		LJOY_DOWN: 18,
-		LJOY_LEFT: 19,
-		LJOY_RIGHT: 20,
-		RJOY_CENTER: 21,
-		RJOY_UP: 22,
-		RJOY_DOWN: 23,
-		RJOY_LEFT: 24,
-		RJOY_RIGHT: 25,
-		TRIANGLE: 22,
-		X: 23,
-		CROSS: 23,
-		CIRCLE: 24,
-		O: 24,
-		SQUARE: 25,
-		HAX: 26, // Cap Touch
-		ANY: 27, // the elusive `any key`
-	};
-	var button = buttons[value];
+	var button = buttonMap[value];
 	if (button === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(buttons)
+			Object.keys(buttonMap)
 		}`);
 	}
 	return button;
@@ -712,6 +760,59 @@ var getNumberFromAction = function (
 	return value;
 };
 
+var ledNameMap = {
+	LED_XOR    : 0b0000000000000000001,
+	LED_ADD    : 0b0000000000000000010,
+	LED_SUB    : 0b0000000000000000100,
+	LED_PAGE   : 0b0000000000000001000,
+	LED_BIT128 : 0b0000000000000010000,
+	LED_BIT64  : 0b0000000000000100000,
+	LED_BIT32  : 0b0000000000001000000,
+	LED_BIT16  : 0b0000000000010000000,
+	LED_BIT8   : 0b0000000000100000000,
+	LED_BIT4   : 0b0000000001000000000,
+	LED_BIT2   : 0b0000000010000000000,
+	LED_BIT1   : 0b0000000100000000000,
+	LED_MEM3   : 0b0000001000000000000,
+	LED_MEM2   : 0b0000010000000000000,
+	LED_MEM1   : 0b0000100000000000000,
+	LED_MEM0   : 0b0001000000000000000,
+	LED_USB    : 0b0010000000000000000,
+	LED_HAX    : 0b0100000000000000000,
+	LED_SD     : 0b1000000000000000000,
+	ALL        : 0b1111111111111111111,
+};
+var getLightsFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData
+) {
+	var value = 0;
+	var rawValue = action[propertyName];
+	if (typeof rawValue === 'string') {
+		rawValue = [rawValue];
+	}
+	if (!Array.isArray(rawValue)) {
+		throw new Error(`${action.action} requires either a string or array for the value of "${propertyName}"!`);
+	}
+	if (!rawValue.length) {
+		throw new Error(`${action.action} requires a non-empty array of lights for "${propertyName}"!`);
+	}
+	rawValue.forEach(function (name) {
+		var currentLightValue = ledNameMap[name];
+		if (!currentLightValue) {
+			throw new Error(`${action.action} Invalid light name "${name}" for value "${propertyName}"!`);
+		}
+		value |= currentLightValue;
+	});
+	if (value < 1) {
+		throw new Error(`${action.action} "${propertyName}" value "${rawValue}" must be greater than or equal to zero!`);
+	}
+	return value;
+};
+
 var getByteFromAction = function (propertyName, action, map) {
 	var value = getNumberFromAction(propertyName, action, map);
 	var maxSize = 255;
@@ -767,6 +868,28 @@ var getBoolFromAction = function (
 	scenarioData,
 ) {
 	var value = action[propertyName];
+	if (typeof value !== 'boolean') {
+		throw new Error(`${action.action} requires a (true | false) value for "${propertyName}"!`);
+	}
+	// Type crimes in JavaScript; bools can be cast to 0 or 1
+	// Set the upper bit in a byte to use the expected_bool field as a bitmask.
+	if (
+		action.success_script === undefined
+		&& action.jump_index !== undefined
+	) {
+		value += 128;
+	}
+	return value;
+};
+
+var getDefaultFalseBoolFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName] || false;
 	if (typeof value !== 'boolean') {
 		throw new Error(`${action.action} requires a (true | false) value for "${propertyName}"!`);
 	}
@@ -830,6 +953,20 @@ var getVariableIdFromAction = function (
 	);
 };
 
+var entityFieldMap = {
+	x: 12,
+	y: 14,
+	interact_script_id: 16,
+	tick_script_id: 18,
+	primary_id: 20,
+	secondary_id: 22,
+	primary_id_type: 24,
+	current_animation: 25,
+	current_frame: 26,
+	direction: 27,
+	path_id: 28,
+	look_script_id: 30,
+};
 var getFieldFromAction = function (
 	propertyName,
 	action,
@@ -841,31 +978,24 @@ var getFieldFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
-	var fields = {
-		x: 12,
-		y: 14,
-		interact_script_id: 16,
-		tick_script_id: 18,
-		primary_id: 20,
-		secondary_id: 22,
-		primary_id_type: 24,
-		current_animation: 25,
-		current_frame: 26,
-		direction: 27,
-		hackable_state_a: 28,
-		hackable_state_b: 29,
-		hackable_state_c: 30,
-		hackable_state_d: 31,
-	};
-	var field = fields[value];
+	var field = entityFieldMap[value];
 	if (field === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(fields)
+			Object.keys(entityFieldMap)
 		}`);
 	}
 	return field;
 };
 
+var operationMap = {
+	SET: 0,
+	ADD: 1,
+	SUB: 2,
+	DIV: 3,
+	MUL: 4,
+	MOD: 5,
+	RNG: 6,
+};
 var getOperationFromAction = function (
 	propertyName,
 	action,
@@ -877,24 +1007,27 @@ var getOperationFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
 	}
-	var operations = {
-		SET: 0,
-		ADD: 1,
-		SUB: 2,
-		DIV: 3,
-		MUL: 4,
-		MOD: 5,
-		RNG: 6,
-	};
-	var operation = operations[value];
+	var operation = operationMap[value];
 	if (operation === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(operations)
+			Object.keys(operationMap)
 		}`);
 	}
 	return operation;
 };
 
+var comparisonMap = {
+	LT  : 0,
+	LTEQ: 1,
+	EQ  : 2,
+	GTEQ: 3,
+	GT  : 4,
+	"<" : 0,
+	"<=": 1,
+	"==": 2,
+	">=": 3,
+	">" : 4,
+};
 var getComparisonFromAction = function (
 	propertyName,
 	action,
@@ -906,22 +1039,10 @@ var getComparisonFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
 	}
-	var comparisons = {
-		LT  : 0,
-		LTEQ: 1,
-		EQ  : 2,
-		GTEQ: 3,
-		GT  : 4,
-		"<" : 0,
-		"<=": 1,
-		"==": 2,
-		">=": 3,
-		">" : 4,
-	};
-	var comparison = comparisons[value];
+	var comparison = comparisonMap[value];
 	if (comparison === undefined) {
 		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(comparisons)
+			Object.keys(comparisonMap)
 		}`);
 	}
 	return comparison;
@@ -1007,9 +1128,68 @@ var initActionData = function (action) {
 	}
 };
 
+var getSerialDialogIdFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
+	}
+	var serialDialog = scenarioData.serialDialogs[value];
+	if (!serialDialog) {
+		throw new Error(`${action.action} was unable to find a serial_dialog named "${value}"!`);
+	}
+	return serializeSerialDialog(
+		serialDialog,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
+var getItemIdFromAction = function () {
+	throw new Error('getItemIdFromAction is not implemented yet!');
+};
+
+var getBleFlagIdFromAction = function () {
+	throw new Error('getBleFlagIdFromAction is not implemented yet!');
+};
+
+var scriptSlotMap = {
+	ON_LOAD: 0,
+	ON_TICK: 1,
+	ON_INTERACT: 2,
+	ON_LOOK: 3,
+	ON_COMMAND: 4,
+};
+var getScriptSlotFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var key = action[propertyName];
+	if (key === undefined) {
+		throw new Error(`${action.action} was given value "${key}", but requires a value for "${propertyName}"`);
+	}
+	var value = scriptSlotMap[key.toLocaleUpperCase()];
+	if (value === undefined) {
+		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(scriptSlotMap)
+		}`);
+	}
+	return value;
+};
+
 var actionPropertyNameToHandlerMap = {
 	duration: getNumberFromAction,
 	expected_u4: getNumberFromAction,
+	lights: getLightsFromAction,
 	map: getMapIndexFromAction,
 	entity: getMapLocalEntityIndexFromAction,
 	target_entity: getMapLocalEntityIndexFromAction,
@@ -1018,8 +1198,13 @@ var actionPropertyNameToHandlerMap = {
 	target_geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
 	success_script: getMapLocalScriptIdFromAction,
+	jump_index: getTwoBytesFromAction,
+	action_index: getTwoBytesFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
+	alias: getStringIdFromAction,
 	string: getStringIdFromAction,
+	command: getStringIdFromAction,
+	argument: getStringIdFromAction,
 	save_flag: getSaveFlagIdFromAction,
 	dialog: getDialogIdFromAction,
 	address: getTwoBytesFromAction,
@@ -1039,9 +1224,12 @@ var actionPropertyNameToHandlerMap = {
 	slot: getByteFromAction,
 	direction: getDirectionFromAction,
 	relative_direction: getRelativeDirectionFromAction,
+	enabled: getBoolFromAction,
 	bool_value: getBoolFromAction,
+	is_visible: getBoolFromAction,
 	expected_bool: getBoolFromAction,
-	state: getBoolFromAction,
+	disable_newline: getDefaultFalseBoolFromAction,
+	is_fail: getDefaultFalseBoolFromAction,
 	value: getTwoBytesFromAction,
 	variable: getVariableIdFromAction,
 	source: getVariableIdFromAction,
@@ -1049,6 +1237,10 @@ var actionPropertyNameToHandlerMap = {
 	inbound: getBoolFromAction,
 	operation: getOperationFromAction,
 	comparison: getComparisonFromAction,
+	serial_dialog: getSerialDialogIdFromAction,
+	item_name: getItemIdFromAction,
+	ble_flag: getBleFlagIdFromAction,
+	script_slot: getScriptSlotFromAction,
 };
 
 var sizeHandlerMap = [
@@ -1073,12 +1265,22 @@ var handleActionWithFields = function(
 	var data = initActionData(action);
 	var offset = 1; // always start at 1 because that's the actionId
 	fields.forEach(function (field) {
-		var handler = actionPropertyNameToHandlerMap[field.propertyName];
+		var propertyName = field.propertyName;
+		if (Array.isArray(field.propertyName)) {
+			for (var i = 0; i < field.propertyName.length; i++) {
+				var searchName = field.propertyName[i];
+				if (action[searchName] !== undefined) {
+					propertyName = searchName;
+					break;
+				}
+			}
+		}
+		var handler = actionPropertyNameToHandlerMap[propertyName];
 		if (!handler) {
-			throw new Error(`No action field handler for property "${field.propertyName}"!`)
+			throw new Error(`No action field handler for property "${propertyName}"!`)
 		}
 		var value = handler(
-			field.propertyName,
+			propertyName,
 			action,
 			map,
 			fileNameMap,
@@ -1135,6 +1337,7 @@ var preProcessScript = function(
 ) {
 	var result = script;
 	var read = script;
+	var copyScriptCount = 0; // For linker
 	while (detectCopyScript(read)) {
 		result = [];
 		read.forEach(function (action) {
@@ -1142,12 +1345,91 @@ var preProcessScript = function(
 				var scriptName = getScriptByPropertyName(
 					'script',
 					action,
-				)
+				);
 				var sourceScript = getScriptByName(
 					scriptName,
 					scenarioData
 				);
-				var copiedScript = jsonClone(sourceScript);
+				var copiedScriptSource = JSON.stringify(sourceScript);
+				if (action.search_and_replace) {
+					Object.entries(action.search_and_replace).map(function (pair) {
+						var search = pair[0];
+						var replace = pair[1];
+						var regex = new RegExp(search, 'gm');
+						copiedScriptSource = copiedScriptSource.replace(
+							regex,
+							replace
+						);
+					});
+				}
+				var copiedScript = JSON.parse(copiedScriptSource);
+
+				// Linker things!
+
+				// This number will be unique each time COPY_SCRIPT is evaluated, preventing label collisions
+				copyScriptCount += 1;
+				var safetyPrefix = `COPY${copyScriptCount} `; // should become "COPY4 LABEL 72" or whatever
+
+				// Make the hardcoded index jumps into string labels
+				var destinationMap = {}; // The action indices and what their label will be
+				var destinationCount = 0; // To make unique labels
+				var getOrMakeLabel = function (index) {
+					if (destinationMap[index] === undefined) {
+						destinationCount += 1;
+						destinationMap[index] = `AUTOLABEL ${destinationCount}`;
+					}
+					return destinationMap[index];
+				}
+				copiedScript.forEach(function (entry) {
+					if (
+						entry.action.includes("CHECK_")
+						&& entry.jump_index !== undefined
+						&& typeof entry.jump_index === "number"
+					) {
+						entry.jump_index = getOrMakeLabel(entry.jump_index);
+					} else if (
+						entry.action === "GOTO_ACTION_INDEX"
+						&& entry.action_index !== undefined
+						&& typeof entry.action_index === "number"
+					) {
+						entry.action_index = getOrMakeLabel(entry.action_index);
+					}
+				});
+				var destinationIndicies = Object.keys(destinationMap)
+					.map(function (n) { return n * 1; })
+					.sort(function (a, b) { return b - a; }); // descending order
+				destinationIndicies.forEach(function (insertionIndex) {
+					copiedScript.splice(
+						insertionIndex,
+						0,
+						{
+							action: "LABEL",
+							value: destinationMap[insertionIndex],
+						}
+					)
+				});
+				// Prefix the (now-all-string) labels
+				copiedScript = copiedScript.map(function (entry) {
+					var property;
+					if (
+						entry.action.includes("CHECK_")
+						&& entry.jump_index !== undefined
+					) {
+						property = "jump_index";
+					} else if (entry.action === "GOTO_ACTION_INDEX") {
+						property = "action_index";
+					} else if (entry.action === "LABEL") {
+						property = "value";
+					}
+					if ( property
+						&& typeof entry[property] === "string"
+					) {
+						entry[property] = safetyPrefix + entry[property];
+					}
+					return entry;
+				});
+				// Linker helper done!
+
 				result = result.concat(copiedScript);
 			} else {
 				result.push(action);
@@ -1156,6 +1438,52 @@ var preProcessScript = function(
 		read = result;
 	}
 	return result;
+};
+
+var getNextLabelIndex = function (actionArray) {
+	return actionArray.findIndex(function (entry) {
+		return entry.action === "LABEL";
+	});
+};
+
+var linker = function (_actions) {
+	var actions = JSON.parse(JSON.stringify(_actions));
+	actions.push({ // this is so any `return` statements have a place to go (lololol)
+		action: "LABEL",
+		value: "auto return" // fyi labels with a space can only be auto generated
+	});
+	var labelMap = {}; // label name -> action index
+	var index = getNextLabelIndex(actions);
+	while (index !== -1) {
+		if (labelMap[actions[index].value] !== undefined) {
+			console.warn("Label already present for " + labelMap[actions[index].value]);
+		}
+		labelMap[actions[index].value] = index;
+		actions.splice(index,1)
+		index = getNextLabelIndex(actions);
+	}
+	// hardcoding action indicies
+	actions.forEach(function(action) {
+		if (
+			action.action.includes("CHECK_")
+			&& action.jump_index
+			&& typeof action.jump_index === "string"
+		) {
+			if (labelMap[action.jump_index] === undefined) {
+				throw new Error (`Could not find a label named '${action.jump_index}'!`);
+			}
+			action.jump_index = labelMap[action.jump_index];
+		} else if (
+			action.action === "GOTO_ACTION_INDEX"
+			&& typeof action.action_index === "string"
+		) {
+			if (labelMap[action.action_index] === undefined) {
+				throw new Error (`Could not find a label named '${action.action_index}'!`);
+			}
+			action.action_index = labelMap[action.action_index]
+		}
+	});
+	return actions;
 };
 
 var serializeScript = function (
@@ -1187,6 +1515,7 @@ var serializeScript = function (
 		fileNameMap,
 		scenarioData,
 	);
+	compositeScript = linker(compositeScript);
 	dataView.setUint32(
 		offset,
 		compositeScript.length,
@@ -1275,7 +1604,11 @@ var handleScript = function(
 	return result;
 };
 
-var possibleEntityScripts = ['on_interact', 'on_tick'];
+var possibleEntityScripts = [
+	'on_interact',
+	'on_tick',
+	'on_look',
+];
 
 var handleMapEntityScripts = function (
 	map,
@@ -1305,7 +1638,39 @@ var handleMapEntityScripts = function (
 	});
 };
 
-var possibleMapScripts = ['on_load', 'on_tick'];
+var possibleMapScripts = [
+	'on_load',
+	'on_tick',
+	'on_look',
+];
+
+var collectMapScripts = function (
+	map,
+) {
+	var result = {};
+	// this is the shape if it came from a tiled map file
+	(map.properties || []).forEach(function(property) {
+		if (
+			property.value // because if it's empty, don't bother
+			&& possibleMapScripts.includes(property.name)
+		) {
+			result[property.name] = property.value;
+		}
+	});
+	// this is if it's a property defined in maps.json
+	possibleMapScripts.forEach(function (scriptSlot) {
+		var scriptName = map[scriptSlot];
+		var existingScriptName = result[scriptSlot];
+		if (scriptName) {
+			if (existingScriptName) {
+				throw new Error(`Duplicate "${scriptSlot}" definition on map "${map.name}": Your map has this script defined in the Tiled map, as well as maps.json. Remove one of them to continue.`);
+			} else {
+				result[scriptSlot] = scriptName;
+			}
+		}
+	});
+	return result;
+};
 
 var handleMapScripts = function (
 	map,
@@ -1323,18 +1688,27 @@ var handleMapScripts = function (
 		fileNameMap,
 		scenarioData,
 	);
-	(map.properties || []).forEach(function(property) {
-		if (
-			property.value // because if it's empty, don't bother
-			&& possibleMapScripts.includes(property.name)
-		) {
-			map[property.name] = handleScript(
-				property.value,
-				map,
-				fileNameMap,
-				scenarioData,
-			).mapLocalScriptId;
-		}
+	var mapScripts = collectMapScripts(map);
+	// console.log(`Processing scripts for map: "${map.name}"`);
+	Object.keys(mapScripts).forEach(function (scriptSlot) {
+		var scriptName = mapScripts[scriptSlot];
+		// console.log(`	- ${scriptSlot}:${scriptName}`);
+		map[scriptSlot] = handleScript(
+			scriptName,
+			map,
+			fileNameMap,
+			scenarioData,
+		).mapLocalScriptId;
+	});
+	map.directionScriptIds = {};
+	Object.keys(map.directions || {}).forEach(function (directionName) {
+		var scriptName = map.directions[directionName];
+		map.directionScriptIds[directionName] = handleScript(
+			scriptName,
+			map,
+			fileNameMap,
+			scenarioData,
+		).mapLocalScriptId;
 	});
 	handleMapEntityScripts(
 		map,
@@ -1354,33 +1728,4 @@ var makeVariableLookaheadFunction = function(scenarioData) {
 			}
 		});
 	}
-};
-
-var mergeScriptDataIntoScenario = function(
-	fileNameMap,
-	scenarioData,
-) {
-	var allScripts = {};
-	scenarioData.scripts = allScripts;
-	var lookaheadAndIdentifyAllScriptVariables = makeVariableLookaheadFunction(scenarioData);
-	return Promise.all(
-		scenarioData.scriptPaths.map(function(scriptPath) {
-			var scriptFileName = scriptPath.split('/').pop();
-			var scriptFile = fileNameMap[scriptFileName];
-			return getFileJson(scriptFile)
-				.then(function(scriptFileData) {
-					Object.keys(scriptFileData)
-						.forEach(function(scriptName) {
-							if (allScripts[scriptName]) {
-								throw new Error(`Duplicate script name "${scriptName}" found in ${scriptFileName}!`);
-							}
-							allScripts[scriptName] = scriptFileData[scriptName]
-						})
-				});
-		})
-	)
-		.then(function () {
-			Object.values(allScripts)
-				.forEach(lookaheadAndIdentifyAllScriptVariables);
-		});
 };

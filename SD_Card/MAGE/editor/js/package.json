@@ -1,0 +1,14 @@
+{
+  "name": "black-mage-game-editor",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "fast-json-stable-stringify": "^2.1.0",
+    "jest": "^28.1.3"
+  }
+}

@@ -42,7 +42,7 @@ extern ButtonStates EngineInput_Activated;
 extern ButtonStates EngineInput_Deactivated;
 extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
-void EngineHandleInput();
+void EngineHandleKeyboardInput();
 bool EngineIsRunning();
 bool EngineShouldReloadGameDat();
 void EngineTriggerRomReload();

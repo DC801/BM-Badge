@@ -7,15 +7,44 @@
 	<title>DC801 BLACK MAGE GAME</title>
 	<link rel="stylesheet" href="./MAGE/desktop_assets/styles.css" />
 </head>
-<body>
+<body class="game_body">
 	<div class="container">
-		<canvas id="canvas"></canvas>
-		<p>Controls: <a href="https://github.com/DC801/BM-Badge/blob/main/EnvironmentSetup.md#desktop-build-controls" target="_blank">EnvironmentSetup.md</a></p>
+		<div class="inline-block">
+			<div class="box">
+				<canvas
+					id="canvas"
+					width="544"
+					height="400"
+					tabindex="0"
+				></canvas>
+			</div>
+			<p>
+				<span>Controls: <a href="https://github.com/DC801/BM-Badge/blob/main/EnvironmentSetup.md#desktop-build-controls" target="_blank">EnvironmentSetup.md</a></span>
+				<span> | </span>
+				<button id="toggle-console">Toggle Console</button>
+			</p>
+		</div>
+		<div
+			id="console-holder"
+			class="inline-block"
+			style="display: none;"
+		>
+			<div class="box">
+				<iframe
+					id="terminal_iframe"
+					width="544"
+					height="400"
+					src="./MAGE/desktop_assets/terminal.html"
+					border="0"
+				></iframe>
+			</div>
+		</div>
 	</div>
 	<script
 		data-original-src="https://unpkg.com/localforage@1.9.0/dist/localforage.min.js"
 		src="./MAGE/desktop_assets/localforage.min.js"
 	></script>
+	<script src="./MAGE/desktop_assets/hijack_repair_stdio.js"></script>
 	<script src="./MAGE/desktop_assets/asset_loader.js"></script>
 </body>
 </html>

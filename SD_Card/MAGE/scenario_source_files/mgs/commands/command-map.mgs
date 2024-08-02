@@ -1,0 +1,98 @@
+include!("header.mgs")
+
+// REGISTER
+
+register-map {
+	register man + map -> man-map;
+	register map -> command-map;
+}
+
+// MAN PAGE
+
+man-map {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAP</>"
+		" "
+		"Displays an ASCII map of King Gibson's castle. Rooms are added to the map as you visit them."
+		" "
+		"The <c><bold>@</> symbol indicates which room you're in, and items from the parts list are marked with <g>?</>."
+	}
+}
+
+// COMMAND
+
+command-map {
+	// normal stuff
+	show serial dialog {
+		" "
+	}
+	goto draw-ch2-serial-map;
+}
+
+draw-ch2-serial-map-footer {
+	concat serial dialog {
+		"\nCurrent location: <c>"
+	}
+	if (variable ch2-in-room is 1) {
+		concat serial dialog {
+			"CASTLE ENTRANCE"
+		}
+	} else if (variable ch2-in-room is 11) {
+		concat serial dialog {
+			"CASTLE HALLWAY FRONT"
+		}
+	} else if (variable ch2-in-room is 12) {
+		concat serial dialog {
+			"CASTLE HALLWAY BACK"
+		}
+	} else if (variable ch2-in-room is 13) {
+		concat serial dialog {
+			"THRONE ROOM"
+		}
+	} else if (variable ch2-in-room is 14) {
+		concat serial dialog {
+			"KING GIBSON'S BEDROOM"
+		}
+	} else if (variable ch2-in-room is 21) {
+		concat serial dialog {
+			"WORKSHOP"
+		}
+	} else if (variable ch2-in-room is 22) {
+		concat serial dialog {
+			"SERVER ROOM"
+		}
+	} else if (variable ch2-in-room is 23) {
+		concat serial dialog {
+			"POWER PLANT"
+		}
+	} else if (variable ch2-in-room is 31) {
+		concat serial dialog {
+			"GRAND HALL"
+		}
+	} else if (variable ch2-in-room is 32) {
+		concat serial dialog {
+			"CASTLE KITCHEN"
+		}
+	} else if (variable ch2-in-room is 33) {
+		concat serial dialog {
+			"HYDROPONICS ROOM"
+		}
+	} else if (variable ch2-in-room is 34) {
+		concat serial dialog {
+			"CASTLE PANTRY"
+		}
+	} else if (variable ch2-in-room is 99) {
+		concat serial dialog {
+			"LAMBDA'S LAB"
+		}
+	} else {
+		concat serial dialog {
+			"</><bold>(outside the castle)"
+		}
+	}
+	concat serial dialog {
+		"</>\n"
+	}
+	turn serial control on;
+}

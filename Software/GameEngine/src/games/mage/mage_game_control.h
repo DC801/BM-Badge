@@ -9,6 +9,7 @@
 #include "mage_entity_type.h"
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
+#include <vector>
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
@@ -51,6 +52,7 @@ private:
 	MageHeader scriptHeader;
 	MageHeader portraitHeader;
 	MageHeader dialogHeader;
+	MageHeader serialDialogHeader;
 	MageHeader colorPaletteHeader;
 	MageHeader stringHeader;
 	MageHeader saveFlagHeader;
@@ -58,6 +60,7 @@ private:
 	MageHeader imageHeader;
 
 	//used to verify whether a save is compatible with game data
+	uint32_t engineVersion;
 	uint32_t scenarioDataCRC32;
 	uint32_t scenarioDataLength;
 
@@ -99,8 +102,6 @@ private:
 	uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
 	uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
 
-	//this handles script initialization when loading a new map
-	void initializeScriptsOnMapLoad();
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.
@@ -117,6 +118,7 @@ public:
 	bool playerHasControl;
 	bool playerHasHexEditorControl;
 	bool playerHasHexEditorControlClipboard;
+	bool isLEDControlEnabled;
 	bool isCollisionDebugOn;
 	bool isEntityDebugOn;
 	uint8_t filteredEntityCountOnThisMap;
@@ -193,6 +195,9 @@ public:
 	MageEntityAnimationDirection getValidEntityTypeDirection(
 		MageEntityAnimationDirection direction
 	);
+	MageEntityAnimationDirection getRelativeEntityTypeDirection(
+		MageEntityAnimationDirection direction
+	);
 	MageEntityAnimationDirection updateDirectionAndPreserveFlags(
 		MageEntityAnimationDirection desired,
 		MageEntityAnimationDirection previous
@@ -213,9 +218,10 @@ public:
 	uint32_t getImageAddress(uint16_t imageId);
 	uint32_t getPortraitAddress(uint16_t portraitId);
 	uint32_t getDialogAddress(uint16_t dialogId);
+	uint32_t getSerialDialogAddress(uint16_t serialDialogId);
 
 	//this returns the address offset for a specific script Id:
-	uint32_t getScriptAddress(uint32_t scriptId);
+	uint32_t getScriptAddressFromGlobalScriptId(uint32_t scriptId);
 
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
@@ -253,6 +259,8 @@ public:
 	);
 
 	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
+
+	std::vector<std::string> getEntityNamesInRoom() const;
 
 	#ifdef DC801_DESKTOP
 	void verifyAllColorPalettes(const char* errorTriggerDescription);

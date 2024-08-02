@@ -1,0 +1,566 @@
+include!("header.mgs")
+
+/* ---------- GENERICS ---------- */
+
+// NOTE: These must be written generically enough to be seen in isolation
+
+// ROUND ONE: normal
+
+serial dialog ch2-describe-monitor {
+	"<m>LAMBDA</>: You'll need a computer <m>MONITOR</> if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor in the next room of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
+}
+serial dialog ch2-describe-heatsink {
+	"<m>LAMBDA</>: The mainframe generates so much heat we'll need a <m>HEAT SINK</> -- or any means of drawing heat away from the CPU. The <m>power plant guys</> can probably help you out on that front."
+}
+serial dialog ch2-describe-powersupply {
+	"<m>LAMBDA</>: The mainframe will need a <m>POWER SUPPLY</> to turn AC power from the wall into DC power. We'll need the kind that goes on the inside of a computer enclosure. According to the castle's inventory sheets, the <m>server room</> has a bunch extra. I'm sure they'd let you take one."
+}
+
+// ROUND TWO: abstract
+
+serial dialog ch2-describe-keyboard {
+	"<m>LAMBDA</>: You're definitely going to need a <m>KEYBOARD</>. Fortunately the <m>band in the Great Hall</> has one they're not exactly using. Okay, it's not QWERTY or DVORAK so much as it is a twelve-tone scale, but I think it'll work as an input device. Better than nothing, anyway."
+}
+serial dialog ch2-describe-mouse {
+	"<m>LAMBDA</>: To be honest, you don't need a <m>MOUSE</> to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you to have if you're not used to a terminal."
+	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat to fetch one</> for you."
+}
+serial dialog ch2-describe-harddrive {
+	"<m>LAMBDA</>: As I said before, to make a <m>HARD DRIVE</> we'll need two things:"
+	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate with high iron content in its glaze. <m>Ask the kitchen <m>staff</> if they have a plate like that."
+	"\tNext, a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
+	// see aftermath of each usage for an additional line
+}
+serial dialog ch2-describe-plate { // some duplicate text; see above
+	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>PLATE</>. But not just any plate -- we need a plate with high iron content in its glaze. <m>Ask the kitchen staff</> if they have a plate like that."
+}
+serial dialog ch2-describe-needle { // some duplicate text; see above
+	"<m>LAMBDA</>: To build a <m>hard drive</>, we'll need a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
+}
+
+// ROUND THREE: desperate
+
+serial dialog ch2-describe-clock {
+	"<m>LAMBDA</>: We'll need a <m>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
+	"\tIn our case... well, I know <m>King Gibson has a very nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
+}
+serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both if changing anything
+	"<m>LAMBDA</>: The <m>CPU</> is like the brain of the computer. There aren't any spare lying around, but we can approximate one."
+	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
+	"\tFor the rest, we'll need a volunteer who is very small and will make decisions very consistently. The best candidate is <m>Aurelius</>, the <m>GOLDFISH</> in the <m>throne room</>. Just make sure he understands what he's getting into."
+	"\tOnce you have both, <m>solder them together</> in the workshop."
+	// todo: make it so you could use Mr. Tickles instead! (You must choose!)
+	// "\tThat is, unless you know any other goldfish you might want to use instead...."
+}
+serial dialog ch2-describe-goldfish { // slightly redundant with original intro; be sure to change both questions
+	"<m>LAMBDA</>: To make a CPU, we'll need a volunteer to act as the interpretor and executor of program data. We'll need someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
+}
+serial dialog ch2-describe-abacus { // slightly redundant with original intro; be sure to change both questions
+	"<m>LAMBDA</>: To make a CPU, we'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
+}
+serial dialog ch2-describe-ramchips {
+	"<m>LAMBDA</>: For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. But <m>ask the hardware guys in the <m>workshop</>. Those guys know their stuff, and I trust them to come up with something."
+}
+
+/* ---------- PARTS LIST: ROUND 1 ---------- */
+
+ch2-toot-step5a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Really? Around here? Parts like what?"
+		" "
+	}
+	show serial dialog ch2-describe-monitor;
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5b
+	}
+}
+ch2-toot-step5b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: What else?"
+		" "
+	}
+	show serial dialog ch2-describe-heatsink;
+	show serial dialog {
+		" "
+		# "Then what?" : ch2-toot-step5c
+	}
+}
+ch2-toot-step5c {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Then what?"
+		" "
+	}
+	show serial dialog ch2-describe-powersupply;
+	show serial dialog {
+		" "
+		# "Anything else?" : ch2-toot-step5e
+	}
+}
+
+ch2-toot-step5e {
+	// state must be set first because the serial dialog branches
+	copy ch2-toot-step99-cleanstate;
+	// actual convo
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Anything else?"
+		" "
+		"<m>LAMBDA</>: And... the rest might be a little tricky. I'll keep looking for options, but for now just start with those three. Let me rig up a command real quick... and...."
+		"\tThere we go. Now you can type <c>PARTS</> to call me about the parts list specifically."
+	}
+	goto ch2-toot-step99;
+}
+
+ch2-toot-step99-cleanstate {
+	mutate ch2-toot-level = 99;
+	set flag ch2-toot-done to true;
+}
+
+ch2-toot-step99 {
+	mutate ch2-storyflag-round = 1;
+	copy register-parts;
+	copy ch2-put_on_map-round1;
+	show serial dialog {
+		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"
+		" "
+		# "Let's do it!" : ch2-toot-step99-end
+		# "Actually, I had a different question." : ch2-toot-step99-continue
+	}
+}
+
+ch2-toot-step99-end {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Yeah, let's do it!"
+		" "
+		"<m>LAMBDA</>: Great! And don't forget to type <c>HELP</> to see all the commands you can use. You'll probably need to use all of them."
+		"\tGood luck!"
+		" "
+	}
+	show serial dialog lambda-over;
+}
+
+ch2-toot-step99-continue {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Actually, I had a different question."
+		" "
+		"<m>LAMBDA</>: Sure. What did you want to know?"
+	}
+	goto ch2-lambda-topic-q;
+}
+
+/* ---------- PARTS LIST: ROUND 2 ---------- */
+
+
+ch2-lambda-round-2-parts1 {
+	if (flag ch2-lambdabert-skip-spacer is true) {
+		set flag ch2-lambdabert-skip-spacer to false;
+		show serial dialog { " " }
+	} else {
+		show serial dialog spacer;
+	}
+	show serial dialog {
+		"<m>LAMBDA</>: Sorry, um, that was a bit of a tangent. But I actually wanted you to know that I have another round of parts for the parts list."
+		"\tJust as a heads up, these parts are going to be a little... abstract."
+		" "
+		# "Abstract?" : ch2-lambda-round-2-parts2
+	}
+}
+
+ch2-lambda-round-2-parts2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Abstract? What is that supposed to mean?"
+		" "
+		"<m>LAMBDA</>: Yeah, so, like the hard drive, for example. I can't find one in storage anywhere, and no one I've contacted have any to spare, so we're going to have to <m>make one</>."
+		"\tOld-style hard drives are made of spinning plates of metal, and they have a little read head in there that can magnetically interact with the plate... I mean, it needs electricity, but it can read a 1 and a 0, or change a 1 to a 0... that is, magnetic fields and electric fields are sort of the same thing, in the sense that --"
+		" "
+		# "...What?" : ch2-lambda-round-2-parts3
+	}
+}
+
+ch2-lambda-round-2-parts3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: ...What?"
+		" "
+		"<m>LAMBDA</>: <dim>*ahem*</> Well, it's all pretty cool, but the point is... we'll need a <m>plate</> and we'll need a <m>needle</>, and together they can approximate a hard drive."
+		" "
+		"<c>YOU</>: Plate? Like a dinner plate?"
+		" "
+		"<m>LAMBDA</>: Like I said..."
+		"\t...<bold>abstract</>."
+		" "
+		# "Is this really going to work?" : ch2-lambda-round-2-parts4
+	}
+}
+
+ch2-lambda-round-2-parts4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Is this really going to work?"
+		" "
+		"<m>LAMBDA</>: ...<bold>Sure</>."
+		" "
+		# "Okay, so what's the new parts list?" : ch2-lambda-round-2-parts5a
+	}
+}
+
+ch2-lambda-round-2-parts5a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Okay, so what's the new parts list?"
+		" "
+	}
+	show serial dialog ch2-describe-keyboard;
+	show serial dialog {
+		" "
+		# "Then what?" : ch2-lambda-round-2-parts5b
+	}
+
+}
+
+ch2-lambda-round-2-parts5b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Then what?"
+		" "
+	}
+	show serial dialog ch2-describe-mouse;
+	show serial dialog {
+		" "
+		# "Okay, and then?" : ch2-lambda-round-2-parts5c
+	}
+
+}
+ch2-lambda-round-2-parts5c {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Okay, and then?"
+		" "
+	}
+	show serial dialog ch2-describe-harddrive;
+	show serial dialog {
+		"\tOnce you have both items, go to the workshop and solder them together into a <m>HARD DRIVE</>."
+	}
+	show serial dialog {
+		" "
+		# "Anything else?" : ch2-lambda-round-2-parts5d
+	}
+
+}
+
+ch2-lambda-round-2-parts5d {
+	set flag ch2-lambda-paging to false;
+	set flag ch2-parts-round-2-backstory to true;
+	copy ch2-put_on_map-round2;
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Anything else?"
+		" "
+		"<m>LAMBDA</>: That's all for the moment. The last few parts are going to be really esoteric compared to these, so I'll need more time to come up with ideas."
+		"\tI'll leave you to it. Good luck."
+		" "
+	}
+	show serial dialog lambda-over;
+}
+
+/* ---------- PARTS LIST: ROUND 3 ---------- */
+
+ch2-bert-message-lambda-intro {
+	copy ch2-put_on_map-round3;
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Hey, there! I saw that you finished the last list, and had just worked out the last few parts we need...."
+		" "
+		# "Does that mean we're almost done?" : ch2-bert-message-lambda-intro1a
+		# "Wait! What about Bert?" : ch2-bert-message-lambda-intro1b
+	}
+}
+ch2-bert-message-lambda-intro1a {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Oh yeah? Does that mean we're almost done?"
+	}
+	goto ch2-bert-message-lambda-intro3;
+}
+ch2-bert-message-lambda-intro1b {
+	// todo: if you've asked around the village about Bert, you could like say "I've asked around but..."
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Wait! What about Bert? Have you heard anything?"
+		" "
+		"<m>LAMBDA</>: Heard anything from Bert? No, nothing. I'm sorry. We'll just have to keep being patient."
+		" "
+		# "Okay...." : ch2-bert-message-lambda-intro2
+	}
+}
+ch2-bert-message-lambda-intro2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Okay.... I don't like it, but I guess I don't have much choice."
+		"\tYou said you had the last few parts. Does that mean we're almost done?"
+	}
+	goto ch2-bert-message-lambda-intro3;
+}
+ch2-bert-message-lambda-intro3 {
+	set flag ch2-parts-round-3-backstory to true;
+	show serial dialog {
+		" "
+		"<m>LAMBDA</>: Yeah, we're getting pretty close to the end here. Only a few parts left, but one is a bit of a doozy."
+		" "
+		# "In what way?" : ch2-lambda-round-3-parts2
+	}
+}
+
+ch2-lambda-round-3-parts2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: In what way?"
+		" "
+		"<m>LAMBDA</>: Well, we'll have to make a CPU from scratch, but I've worked it out so we only need two things."
+		"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
+		"\tFor the rest of the CPU, including the interpretation of program instructions and changing the values on the abacus itself, we'll need a... volunteer."
+		" "
+		# "Volunteer?" : ch2-lambda-round-3-parts2b
+	}
+}
+ch2-lambda-round-3-parts2b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Volunteer?"
+		" "
+		"<m>LAMBDA</>: Yes. We'll need a living, sentient being to agree to be... \"combined\"... with the abacus. It'll have to be someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
+		"\tIt'll be a temporary thing -- just until I can have a CPU delivered by mail order. Given that, I think he'll agree."
+		" "
+		# "Will he be okay in the meantime?" : ch2-lambda-round-3-parts2c
+	}
+}
+ch2-lambda-round-3-parts2c {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Will he be okay in the meantime?"
+		" "
+		"<m>LAMBDA</>: Actually, yes. Due to the nature of what we're doing and where we're doing it, the volunteer's mind will remain intact. And their body can be completely restored at a later time -- whatever can be soldered can be unsoldered, after all."
+		"\tIt's still an uncomfortable prospect to ask someone to do this, which is why I want you to make sure he understands what he's getting into, and that he's doing it willingly. I'm counting on you."
+		" "
+		# "He's a goldfish. Won't soldering him cook him?" : ch2-lambda-round-3-parts2d
+	}
+}
+ch2-lambda-round-3-parts2d {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: He's a goldfish. Won't soldering him cook him?"
+		" "
+		"<m>LAMBDA</>: It'll be fine. I've quadruple checked."
+		" "
+		# "All right. What else?" : ch2-lambda-round-3-parts3
+	}
+}
+ch2-lambda-round-3-parts3 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: All right. What else?"
+		" "
+	}
+	show serial dialog ch2-describe-ramchips;
+	show serial dialog {
+		" "
+		# "Anything else?" : ch2-lambda-round-3-parts4
+	}
+}
+
+ch2-lambda-round-3-parts4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: And then?"
+		" "
+	}
+	show serial dialog ch2-describe-clock;
+	show serial dialog {
+		" "
+		# "And then?" : ch2-lambda-round-3-parts5
+	}
+}
+
+ch2-lambda-round-3-parts5 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: And then?"
+		" "
+		"<m>LAMBDA</>: Then we're done."
+		"\tAfter that, you'll have to install the OS, and I'm still tweaking that. I should be done right about when you finish up there."
+		"\tRemember you can type <c>PARTS</> To see the parts list again. Good luck."
+		" "
+	}
+	set flag ch2-lambda-paging to false;
+	show serial dialog lambda-over;
+}
+
+/* ---------- PARTS LIST: ROUND 4 ---------- */
+
+ch2-lambda-round-4 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Hiya, %PLAYER%! I see that you're finished building the mainframe. As it happens, I'm finished with the OS, too. All that's left is for you to come pick it up."
+		" "
+		# "Pick it up? Can't you drop it off?" : ch2-lambda-round-4b
+	}
+}
+ch2-lambda-round-4b {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Pick it up? Can't you drop it off?"
+		"\tSay, where are you, anyway?"
+		" "
+		"<m>LAMBDA</>: I'm somewhere split off, isolated from the rest of the castle. All conventional exits and entrances have been destroyed, but you should still be able to reach me. I'll explain more after you arrive."
+		" "
+		# "No entrances? How am I supposed to get there?" : ch2-lambda-round-4c
+	}
+}
+ch2-lambda-round-4c {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: No entrances? How am I supposed to get there?"
+		" "
+		"<m>LAMBDA</>: I've granted you access to the <c>WARP</> command. You can use it to go to any place you've ever been, even if it's not an adjacent space to your current room. Oh, and I've also set the \"visit\" flag to my lab, which will make the system think you've been here before."
+		"\tAll you'd have to do then is enter <c>WARP SECRET LAB</> into the console, and you'll zip right to where I am now."
+		" "
+		# "But can't you warp out here? Why do I need to come to you?" : ch2-lambda-round-4d
+	}
+}
+ch2-lambda-round-4d {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: But can't you warp out here? Why do I need to come to you?"
+		" "
+		"<m>LAMBDA</>: It's... well, it's all very complicated, %PLAYER%. Like I said, I'll explain once you get here."
+		"\tI'll... uh, I guess I'll see you soon. Good luck."
+		" "
+	}
+	copy ch2-put_on_map-round4;
+	set flag ch2-lambda-paging to false;
+	set flag ch2-warp-granted to true;
+	set flag ch2-parts-round-4-backstory to true;
+	if (debug mode is false) {
+		copy register-warp;
+	}
+	show serial dialog lambda-over;
+}
+
+
+/* ---------- ITEM ON_LOOK ---------- */
+
+look-monitor {
+	show serial dialog spacer;
+	if (flag ch2-carrying-monitor is false) {
+		show serial dialog {
+			"You look at the <m>monitor</>: a modestly large flat screen monitor or television. The colors are crispy enough, though there's a dead pixel in the lower-right corner."
+		}
+	} else {
+		show serial dialog {
+			"You look at the <m>monitor</>: a modestly large flat screen monitor or television. The casing feels flimsy in your hands, but since the screen is unpowered, you can't judge its image quality at the moment."
+		}
+	}
+}
+look-heatsink {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>heat sink</>: a bizarre bank of metal prongs, like a tuning fork crossed with a head of broccoli."
+	}
+}
+look-cactuscooler {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the can of <m>Cactus Cooler</>: a mundane aluminum can of soda -- apparently some kind of pineapple-orange concoction, vaguely desert themed. It's still cold."
+	}
+}
+look-powersupply {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>power supply</>: an enigmatic box with a grill and a fan right underneath. A beefy cable sticks out of the side."
+	}
+}
+look-keyboard {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>keyboard</> -- that is, the <m>keytar</>: there's the normal piano-type keys, but there's assorted buttons scattered around the frame, too -- though these are not entirely labeled."
+	}
+}
+look-mouse {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>mouse</>: black, round, with two buttons and a scroll wheel. It lacks a wire, but comes with a dongle sidekick."
+	}
+}
+look-harddrive {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>hard drive</>: a magical fusion of a dinner plate and a phonograph needle, the sight of which is somehow impossible to put into words."
+	}
+}
+look-plate {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>plate</>: a fancy orange dinner plate, with inlaid gold around the rim."
+	}
+}
+look-needle {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>needle</>: an ordinary phonograph needle, meant for being drawn across a vinyl record."
+	}
+}
+look-ramchips {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>RAM chips</>: a super beefy, super spicy, super poofy bag of silicon chips. You wonder if they make Cool Ranch RAM."
+	}
+}
+look-clock {
+	show serial dialog spacer;
+	if (flag ch2-carrying-clock is false) {
+		show serial dialog {
+			"You look at the <m>clock</>: a giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
+		}
+	} else {
+		show serial dialog {
+			"You look at the <m>clock</>: a giant grandfather clock that's very definitely larger than you. Never mind how it fits in your pocket."
+		}
+	}
+}
+look-cpu {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>CPU</> -- and are amazed at how classy the goldfish looks after having been soldered with the abacus. It defies description. Aurelius is really taking this seriously."
+	}
+}
+look-goldfish {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>goldfish</>: a small orange koi inside a standard goldfish bowl, complete with plastic decorations. Aurelius has a patient eye fixed upon you."
+	}
+}
+look-manual {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>manual</>: a modest-sized book depicting a sophisticated calculator. Overall, you're left with confusion as to why a calculator would require a whole book to use it properly."
+	}
+}
+look-abacus {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the <m>abacus</>: a few dozen black beads set into rods on a wooden frame."
+	}
+}
+look-mainframeos {
+	show serial dialog spacer;
+	show serial dialog {
+		"You look at the CD containing the <m>mainframe OS</>: the label is completely white, with no markings or writing on the top. The reverse side is very clean, and it makes patterns of reflected light when you angle it against the light."
+	}
+}

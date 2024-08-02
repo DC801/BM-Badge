@@ -1,0 +1,227 @@
+face-player {
+	turn entity "%SELF%" toward entity "%PLAYER%";
+}
+
+set_tick-watch-player {
+	set entity "%SELF%" on_tick to face-player;
+}
+
+clear-own-tick {
+	set entity "%SELF%" on_tick to null_script;
+}
+
+loop_on_path_30s {
+	loop entity "%SELF%" along geometry "%ENTITY_PATH%" over 30000ms;
+}
+
+loop_on_path_10s {
+	loop entity "%SELF%" along geometry "%ENTITY_PATH%" over 10000ms;
+}
+
+loop_on_path_3s {
+	loop entity "%SELF%" along geometry "%ENTITY_PATH%" over 3000ms;
+}
+
+walk_on_path_20s {
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 20000ms;
+	goto script null_script;
+}
+
+spin_self_clockwise {
+	// This script should spin an entity around
+	wait 500ms; /**/ turn entity "%SELF%" north;
+	wait 500ms; /**/ turn entity "%SELF%" east;
+	wait 500ms; /**/ turn entity "%SELF%" south;
+	wait 500ms; /**/ turn entity "%SELF%" west;
+	goto script spin_self_counterclockwise;
+}
+
+spin_self_counterclockwise {
+	// This script should spin an entity around
+	wait 500ms; /**/ turn entity "%SELF%" north;
+	wait 500ms; /**/ turn entity "%SELF%" west;
+	wait 500ms; /**/ turn entity "%SELF%" south;
+	wait 500ms; /**/ turn entity "%SELF%" east;
+	goto script spin_self_clockwise;
+}
+
+map_on_tick-doors {
+	if entity "%PLAYER%" is inside geometry door-main then goto script load_map-main;
+	if entity "%PLAYER%" is inside geometry door-test then goto script load_map-test;
+	if entity "%PLAYER%" is inside geometry door-town then goto script load_map-town;
+	if entity "%PLAYER%" is inside geometry door-episode2 then goto script load_map-chapter2-start;
+	if entity "%PLAYER%" is inside geometry door-action_testing_01 then goto script load_map-action_testing_01;
+	if entity "%PLAYER%" is inside geometry door-action_testing_02 then goto script load_map-action_testing_02;
+	if entity "%PLAYER%" is inside geometry door-testbig then goto script load_map-testbig;
+}
+
+load_map-main {
+	load map main;
+}
+
+load_map-test {
+	load map test;
+}
+
+load_map-demo_map {
+	load map demo;
+}
+
+load_map-town {
+	load map town;
+}
+
+load_map-main-enter_from-east {
+	set warp state to enter_from-east;
+	goto script load_map-main;
+}
+
+load_map-main-enter_from-west {
+	set warp state to enter_from-west;
+	goto script load_map-main;
+}
+
+load_map-town-enter_from-east {
+	set warp state to enter_from-east;
+	goto script load_map-town;
+}
+
+load_map-town-enter_from-west {
+	set warp state to enter_from-west;
+	goto script load_map-town;
+}
+
+on_load-east_west {
+	if warp state is enter_from-east then goto script enter_from-east;
+	if warp state is enter_from-west then goto script enter_from-west;
+}
+
+enter_from-east {
+	turn player control off;
+	walk entity "%PLAYER%" along geometry enter_from-east over 1000ms;
+	turn player control on;
+}
+
+enter_from-west {
+	turn player control off;
+	walk entity "%PLAYER%" along geometry enter_from-west over 1000ms;
+	turn player control on;
+}
+
+load_map-action_testing_01 {
+	load map action_testing_01;
+}
+
+load_map-action_testing_02 {
+	load map action_testing_02;
+}
+
+load_map-chapter2-start {
+	load map ch2-magehouse;
+}
+
+// from script-town_map.json
+
+on_tick-town {
+	if entity "%PLAYER%" is inside geometry door_to-main-east then goto load_map-main-enter_from-east;
+	if entity "%PLAYER%" is inside geometry door_to-main-west then goto load_map-main-enter_from-west;
+}
+
+// test_scripts
+
+my_first_script {
+	wait 100ms;
+	open hex editor;
+	block 200ms;
+	close hex editor;
+}
+
+entity_on_interact_script {
+	goto my_first_script;
+	// notes: These are documentation notes for humans.
+}
+
+test_tick_script {
+	if button ANY then goto button_success_script;
+}
+
+button_success_script {
+	turn hex dialog mode on;
+	wait 5000ms;
+	turn hex dialog mode off;
+	goto test_tick_script;
+}
+
+yeet {
+	teleport entity "%SELF%" to geometry "hiding-spot";
+	set entity "%SELF%" on_interact to null_script;
+	set entity "%SELF%" on_look to null_script;
+	set entity "%SELF%" name to " ";
+	goto null_script;
+}
+
+capture_self_direction {
+	if (entity "%SELF%" direction is north) {
+		mutate tempvar = 0;
+	} else if (entity "%SELF%" direction is east) {
+		mutate tempvar = 1;
+	} else if (entity "%SELF%" direction is south) {
+		mutate tempvar = 2;
+	} else if (entity "%SELF%" direction is west) {
+		mutate tempvar = 3;
+	}
+}
+restore_self_direction {
+	if (variable tempvar is 0) {
+		turn entity "%SELF%" north;
+	} else if (variable tempvar is 1) {
+		turn entity "%SELF%" east;
+	} else if (variable tempvar is 2) {
+		turn entity "%SELF%" south;
+	} else if (variable tempvar is 3) {
+		turn entity "%SELF%" west;
+	}
+}
+
+interrupt-walk {
+	copy entity "%SELF%" current_animation into variable captured_animation;
+	set entity "%SELF%" current_animation to 0;
+	pause entity "%SELF%" on_tick;
+	copy capture_self_direction;
+	copy face-player;
+}
+resume-walk {
+	copy entity "%SELF%" current_animation from variable captured_animation;
+	unpause entity "%SELF%" on_tick;
+	copy restore_self_direction;
+}
+
+capture_player_state {
+	// todo: when we have functions, genericize this!
+	copy entity "%PLAYER%" x into variable playersave-x;
+	copy entity "%PLAYER%" y into variable playersave-y;
+	mutate playersave-room = ch2-in-room;
+	if (entity "%PLAYER%" direction is north) {
+		mutate playersave-dir = 0;
+	} else if (entity "%PLAYER%" direction is east) {
+		mutate playersave-dir = 1;
+	} else if (entity "%PLAYER%" direction is south) {
+		mutate playersave-dir = 2;
+	} else if (entity "%PLAYER%" direction is west) {
+		mutate playersave-dir = 3;
+	}
+}
+
+restore_player_state {
+	copy variable playersave-x into entity "%PLAYER%" x;
+	copy variable playersave-y into entity "%PLAYER%" y;
+	if (variable playersave-dir is 0) {
+		turn entity "%PLAYER%" north;
+	} else if (variable playersave-dir is 1) {
+		turn entity "%PLAYER%" east;
+	} else if (variable playersave-dir is 2) {
+		turn entity "%PLAYER%" south;
+	} else if (variable playersave-dir is 3) {
+		turn entity "%PLAYER%" west;
+	}
+}

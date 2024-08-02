@@ -1,75 +1,18 @@
 {
 	"scriptPaths": [
-		"scripts/script-main_menu.json",
-		"scripts/script-demo_map.json",
-		"scripts/script-generic_entity_scripts.json",
-		"scripts/script-test_scripts.json",
 		"scripts/script-action_testing.json",
-		"scripts/script-test_map_script.json",
-		"scripts/script-town_map.json",
-		"scripts/script-map-main.json",
-		"scripts/script-shepherd.json",
-		"scripts/script-bobsclub.json",
-		"scripts/script-oldcouplehouse.json",
-		"scripts/script-bender.json",
-		"scripts/script-family.json",
-		"scripts/script-greenhouse.json",
-		"scripts/script-magehouse.json",
-		"scripts/script-lodge.json",
-		"scripts/script-secretroom.json",
-		"scripts/script-goose.json",
-		"scripts/script-goats.json",
-		"scripts/script-enddemo.json",
-		"scripts/script-elders.json",
-		"scripts/script-debug.json",
-		"scripts/script-woprhouse.json",
-		"scripts/script-max.json"
+		"scripts/script-test.json"
 	],
 	"dialogPaths": [
-		"dialog/dialog-main_menu.json",
-		"dialog/dialog-demo_map.json",
-		"dialog/dialog-test_map.json",
-		"dialog/dialog-action_testing.json",
-		"dialog/dialog-shepherd.json",
-		"dialog/dialog-bobsclub.json",
-		"dialog/dialog-oldcouplehouse.json",
-		"dialog/dialog-main.json",
-		"dialog/dialog-bender.json",
-		"dialog/dialog-family.json",
-		"dialog/dialog-greenhouse.json",
-		"dialog/dialog-lodge.json",
-		"dialog/dialog-secretroom.json",
-		"dialog/dialog-enddemo.json",
-		"dialog/dialog-elders.json",
-		"dialog/dialog-magehouse.json",
-		"dialog/dialog-goats.json",
-		"dialog/dialog-woprhouse.json",
-		"dialog/dialog-max.json"
+		"dialog/dialog-action_testing.json"
 	],
-	"maps": {
-		"main_menu": "maps/map-main_menu.json",
-		"demo": "maps/map-demo.json",
-		"main": "maps/map-main.json",
-		"bobsclub": "maps/map-bobsclub.json",
-		"test": "maps/map-test.json",
-		"town": "maps/map-town.json",
-		"oldcouplehouse": "maps/map-oldcouplehouse.json",
-		"bakery": "maps/map-bakery.json",
-		"family": "maps/map-family.json",
-		"magehouse": "maps/map-magehouse.json",
-		"lodge": "maps/map-lodge.json",
-		"greenhouse": "maps/map-greenhouse.json",
-		"secretroom": "maps/map-secretroom.json",
-		"warp_zone": "maps/map-warp_zone.json",
-		"action_testing_01": "maps/map-action_testing_01.json",
-		"testbig": "maps/map-testbig.json",
-		"credits": "maps/map-credits.json",
-		"woprhouse": "maps/map-woprhouse.json",
-		"action_testing_02": "maps/map-action_testing_02.json"
-	},
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json",
 		"codec": "tilesets/tileset-dialog_codec.json",
-		"menu": "tilesets/tileset-dialog_transparent_menu.json"
-	}
+		"menu": "tilesets/tileset-dialog_transparent_menu.json",
+		"transparent": "tilesets/tileset-dialog_transparent_menu-white.json"
+	},
+	"serialDialogPaths": [
+		"serial_dialog/serial_dialog-action_testing.json"
+	]
 }

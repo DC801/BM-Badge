@@ -73,10 +73,20 @@ MageMap::MageMap(uint32_t address)
 		address,
 		sizeof(onTick),
 		(uint8_t *)&onTick,
-		"Failed to read Map property 'onLoad'"
+		"Failed to read Map property 'onTick'"
 	);
 	onTick = ROM_ENDIAN_U2_VALUE(onTick);
 	address += sizeof(onTick);
+
+	//read onLook
+	EngineROM_Read(
+		address,
+		sizeof(onLook),
+		(uint8_t *)&onLook,
+		"Failed to read Map property 'onLook'"
+	);
+	onLook = ROM_ENDIAN_U2_VALUE(onLook);
+	address += sizeof(onLook);
 
 	//read layerCount
 	EngineROM_Read(
@@ -126,6 +136,17 @@ MageMap::MageMap(uint32_t address)
 	scriptCount = ROM_ENDIAN_U2_VALUE(scriptCount);
 	address += sizeof(scriptCount);
 
+	//read goDirectionCount
+	EngineROM_Read(
+		address,
+		sizeof(goDirectionCount),
+		(uint8_t *)&goDirectionCount,
+		"Failed to read Map property 'goDirectionCount'"
+	);
+	address += sizeof(goDirectionCount);
+
+	address += sizeof(uint8_t); // padding
+
 	//read entityGlobalIds
 	entityGlobalIds = std::make_unique<uint16_t[]>(entityCount);
 	size = sizeof(uint16_t) * entityCount;
@@ -162,6 +183,20 @@ MageMap::MageMap(uint32_t address)
 	ROM_ENDIAN_U2_BUFFER(scriptGlobalIds.get(), scriptCount);
 	address += size;
 
+	//read goDirections
+	goDirections = std::make_unique<MapGoDirection[]>(goDirectionCount);
+	size = sizeof(MapGoDirection) * goDirectionCount;
+	EngineROM_Read(
+		address,
+		size,
+		(uint8_t *)goDirections.get(),
+		"Failed to read Map property 'goDirections'"
+	);
+	for (int i = 0; i < goDirectionCount; ++i) {
+		ROM_ENDIAN_U2_VALUE(&goDirections[i].mapLocalScriptId);
+	}
+	address += size;
+
 	//padding to align with uint32_t memory spacing:
 	if ((entityCount + geometryCount + scriptCount) % 2)
 	{
@@ -188,13 +223,16 @@ uint32_t MageMap::Size() const
 		sizeof(rows) +
 		sizeof(onLoad) +
 		sizeof(onTick) +
+		sizeof(onLook) +
 		sizeof(layerCount) +
 		sizeof(entityCount) +
 		sizeof(geometryCount) +
 		sizeof(scriptCount) +
+		sizeof(goDirectionCount) +
 		(entityCount * sizeof(uint16_t)) +
 		(geometryCount * sizeof(uint16_t)) +
 		(scriptCount * sizeof(uint16_t)) +
+		(goDirectionCount * sizeof(MapGoDirection)) +
 		(layerCount * sizeof(uint32_t));
 }
 
@@ -221,16 +259,6 @@ uint16_t MageMap::Cols() const
 uint16_t MageMap::Rows() const
 {
 	return rows;
-}
-
-uint16_t MageMap::getMapLocalMapOnLoadScriptId() const
-{
-	return onLoad;
-}
-
-uint16_t MageMap::getMapLocalMapOnTickScriptId() const
-{
-	return onTick;
 }
 
 uint8_t MageMap::LayerCount() const
@@ -271,6 +299,38 @@ uint16_t MageMap::getGlobalScriptId(uint16_t mapLocalScriptId) const
 	return scriptGlobalIds[mapLocalScriptId % scriptCount];
 }
 
+std::string MageMap::getDirectionNames() const
+{
+	std::string result = "";
+	for (int i = 0; i < goDirectionCount; ++i) {
+		result += "\n\t";
+		result += goDirections[i].name;
+	}
+	return result;
+}
+
+void badAsciiLowerCaser(std::string *data) {
+	size_t length = data->size();
+	for(size_t i=0; i < length; i++) {
+		(*data)[i] = std::tolower((*data)[i]);
+	}
+}
+
+uint16_t MageMap::getDirectionScriptId(const std::string directionName) const {
+	uint16_t result = 0;
+	for (int i = 0; i < goDirectionCount; i++) {
+		MapGoDirection direction = goDirections[i];
+		std::string lowercaseDirectionName = "";
+		lowercaseDirectionName += direction.name;
+		badAsciiLowerCaser(&lowercaseDirectionName);
+		if (!strcmp(lowercaseDirectionName.c_str(), directionName.c_str())) {
+			result = direction.mapLocalScriptId;
+			break;
+		}
+	}
+	return result;
+}
+
 uint32_t MageMap::LayerOffset(uint16_t num) const
 {
 	if (!mapLayerOffsets) return 0;
@@ -281,16 +341,6 @@ uint32_t MageMap::LayerOffset(uint16_t num) const
 	}
 
 	return 0;
-}
-
-void MageMap::setOnLoad(uint16_t scriptId)
-{
-	onLoad = scriptId;
-}
-
-void MageMap::setOnTick(uint16_t scriptId)
-{
-	onTick = scriptId;
 }
 
 uint8_t MageMap::getMapLocalPlayerEntityIndex() {

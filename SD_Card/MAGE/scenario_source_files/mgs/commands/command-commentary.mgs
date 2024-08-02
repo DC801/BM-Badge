@@ -1,0 +1,48 @@
+include!("header.mgs")
+
+// REGISTER
+
+register-commentary {
+	register commentary -> command-commentary-solo;
+	register commentary + on -> command-commentary-on;
+	register commentary + off -> command-commentary-off;
+}
+
+// COMMAND
+
+command-commentary-solo {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>Serial commentary</> <c>is available for chapter 1!</> Play the game normally, and keep your eye on the serial console for gameplay tips, behind-the-scenes information, and DC801 lore!"
+		" "
+		"To enable or disable serial commentary, type <c>COMMENTARY ON</> or <c>COMMENTARY OFF</> at the main menu."
+	}
+}
+
+command-commentary-on {
+	show serial dialog spacer;
+	if (flag serial-commentary is false) {
+		show serial dialog {
+			"Serial commentary is now <bold>on</>! (Turn it off again by typing <c>COMMENTARY OFF</> at the main menu.)"
+		}
+		set flag serial-commentary to true;
+	} else {
+		show serial dialog {
+			"Serial commentary was already on! :P"
+		}
+	}
+}
+
+command-commentary-off {
+	show serial dialog spacer;
+	if (flag serial-commentary is true) {
+		show serial dialog {
+			"Serial commentary is now <bold>off</>! (Turn it off again by typing <c>COMMENTARY OFF</> at the main menu.)"
+		}
+		set flag serial-commentary to false;
+	} else {
+		show serial dialog {
+			"Serial commentary was already off! :P"
+		}
+	}
+}

@@ -97,6 +97,11 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
 	if (file.scenarioIndex === undefined) {
+		if (window.Navigator) {
+			// node < 16.7 doesn't have a createObjectURL, and in > 16.7 it's broken
+			// we need this for UI components to display these images, but not in CLI
+			file.blobUrl = URL.createObjectURL(file);
+		}
 		var mimeTypeSuffix = file.type.split('/').pop();
 		var imageHandler = imageTypeHandlerMap[mimeTypeSuffix];
 		if (!imageHandler) {
@@ -118,11 +123,8 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 			scenarioIndex: scenarioData.parsed.imageColorPalettes.length,
 		};
 		scenarioData.parsed.imageColorPalettes.push(colorPalette);
-		result = file.arrayBuffer()
-			.then(function (arrayBuffer) {
-				return imageHandler(new Uint8Array(arrayBuffer));
-			})
-			.then(function (result) {
+		var readImageArrayBuffer = function (uint8Array, crc) {
+			return (function encodeImage(result) {
 				var getPaletteIndexForColor = function (color) {
 					var colorIndex = colorPalette.colorArray.indexOf(color);
 					if (colorIndex === -1) {
@@ -169,8 +171,10 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 						rgba.a,
 					);
 					var paletteIndex = getPaletteIndexForColor(color);
-					if (paletteIndex > 255) {
-						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 256.`);
+					// Guess what. The index of the 255th item in an array length 255 is 254.
+					// We may only have 255 colors in images, not the full 256 of a gif palette.
+					if (paletteIndex > 254) {
+						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 255.`);
 					}
 					// if (paletteIndex > 255) {
 					// 	wtfLog.push({
@@ -189,10 +193,52 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					pixelIndex += 1;
 				}
 				// console.table(wtfLog);
-				console.log(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
+				consoleLogIfVerbose(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
 				file.serialized = data;
 				colorPalette.serialized = serializeColorPalette(colorPalette);
+				createCacheForFile(crc, file, colorPalette);
 				return file;
+			})(imageHandler(uint8Array));
+		};
+		var createCacheForFile = function (crc, file, colorPalette) {
+			window.imageCache[crc + file.name] = {
+				imageData: Array.from(new Uint8Array(file.serialized)),
+				colorPalette: {
+					name: colorPalette.name,
+					colorArray: colorPalette.colorArray,
+					serialized: Array.from(new Uint8Array(colorPalette.serialized)),
+				}
+			}
+		};
+		var getCacheForFile = function (crc, file) {
+			if (!window.imageCache) {
+				window.imageCache = {};
+			}
+			var result = window.imageCache[crc + file.name];
+			if (result) {
+				result = {
+					imageData: Uint8Array.from(result.imageData),
+					colorPalette: {
+						name: colorPalette.name,
+						colorArray: colorPalette.colorArray,
+						serialized: Uint8Array.from(result.colorPalette.serialized),
+					}
+				}
+			}
+			return result;
+		};
+		result = file.arrayBuffer()
+			.then(function ingeDataCacheInterceptor (arrayBuffer) {
+				var uint8Array = new Uint8Array(arrayBuffer);
+				var crc = crc32(uint8Array);
+				consoleLogIfVerbose(`What is the crc32 for ${file.name}? ${crc}`);
+				var cachedResult = getCacheForFile(crc, file);
+				if (cachedResult) {
+					Object.assign(colorPalette, cachedResult.colorPalette);
+					file.serialized = cachedResult.imageData;
+					return file;
+				}
+				return readImageArrayBuffer(uint8Array, crc);
 			});
 	}
 	return result;

@@ -1,4 +1,558 @@
 {
+	"map-action_testing-go_register": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map",
+			"script": "command-map-test"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register"
+		}
+	],
+	"map-action_testing-go_override": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "go",
+			"argument": "west",
+			"script": "debug-go-space"
+		},
+		{
+			"is_fail": false,
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "look",
+			"script": "debug-look-override"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "look",
+			"argument": "Mage 01",
+			"script": "debug-look-mage01-override"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_override"
+		}
+	],
+	"map-action_testing-go_un-override": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "go",
+			"argument": "west",
+			"script": "debug-go-space"
+		},
+		{
+			"is_fail": false,
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "look",
+			"script": "debug-look-override"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "look",
+			"argument": "keyboard",
+			"script": "debug-look-mage01-override"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_un-override"
+		}
+	],
+	"map-action_testing-go_register_fail": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map",
+			"script": "command-map-fail",
+			"is_fail": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register_fail"
+		}
+	],
+	"map-action_testing-go_register_arguments": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "town",
+			"script": "command-map-town"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "dungeon",
+			"script": "command-map-dungeon"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register_arguments"
+		}
+	],
+	"map-action_testing-go_unregister_arguments": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "town"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "dungeon"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_unregister_arguments"
+		}
+	],
+	"map-action_testing-go_unregister": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_unregister"
+		}
+	],
+	"map-action_testing-go_alias": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "help",
+			"alias": "h"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "secret",
+			"alias": "shh"
+		}
+	],
+	"map-action_testing-go_unalias": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"alias": "h"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"alias": "shh"
+		}
+	],
+	"map-action_testing-go_register_secret": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret",
+			"script": "command-secret"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret",
+			"script": "command-secret-fail",
+			"is_fail": true
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "secret",
+			"argument": "goat",
+			"script": "command-secret-goat"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_register_secret"
+		}
+	],
+	"map-action_testing-go_hide_secret": [
+		{
+			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+			"command": "secret",
+			"is_visible": false
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_hide_secret"
+		}
+	],
+	"map-action_testing-go_unhide_secret": [
+		{
+			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+			"command": "secret",
+			"is_visible": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_unhide_secret"
+		}
+	],
+	"map-action_testing-go_unregister_secret": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-go_unregister_secret"
+		}
+	],
+	"command-secret": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-command-secret"
+		}
+	],
+	"command-secret-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-command-secret-fail"
+		}
+	],
+	"command-secret-goat": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-command-secret-goat"
+		}
+	],
+	"command-map-test": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map"
+		}
+	],
+	"command-map-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-fail"
+		}
+	],
+	"command-map-town": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-town"
+		}
+	],
+	"command-map-dungeon": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-dungeon"
+		}
+	],
+	"map-action_testing-go_concat": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-map-action_testing-go_concat"
+		}
+	],
+	"concat_response-goat": [
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-start",
+			"disable_newline": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-goat",
+			"disable_newline": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-end"
+		},
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": true
+		}
+	],
+	"concat_response-bird": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "bird",
+				"Goat": "Bird"
+			}
+		}
+	],
+	"concat_response-cat": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "cat",
+				"Goat": "Cat"
+			}
+		}
+	],
+	"concat_response-platypus": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "platypus",
+				"Goat": "Platypus"
+			}
+		}
+	],
+	"concat_response-peregrine_falcon": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "peregrine_falcon",
+				"Goat": "Peregrine Falcon"
+			}
+		}
+	],
+	"map-action_testing-go_moon": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "moon",
+			"script": "command-map-moon"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "moon",
+			"is_fail": true,
+			"script": "command-map-moon-fail"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "moon",
+			"argument": "moon",
+			"script": "command-map-moon-moon"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register_moon"
+		}
+	],
+	"command-map-moon": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-moon"
+		}
+	],
+	"command-map-moon-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-moon-fail"
+		}
+	],
+	"command-map-moon-moon": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-moon-moon"
+		}
+	],
+	"map-action_testing-load": [
+		{
+			"action": "SET_CONNECT_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-on_connect"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": true
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "check_dialog",
+			"script": "check_dialog"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "close_dialog",
+			"script": "close_dialog"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "check_debug",
+			"script": "check_debug"
+		}
+	],
+	"close_dialog": [
+		{
+			"action": "CLOSE_DIALOG"
+		}
+	],
+	"check_dialog": [
+		{
+			"action": "CHECK_DIALOG_OPEN",
+			"expected_bool": true,
+			"success_script": "check_dialog-gui_open"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-gui_closed"
+		}
+	],
+	"check_dialog-gui_open": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-gui_open"
+		}
+	],
+	"close_serial_dialog": [
+		{
+			"action": "CLOSE_SERIAL_DIALOG"
+		}
+	],
+	"check_debug": [
+		{
+			"action": "CHECK_DEBUG_MODE",
+			"expected_bool": true,
+			"success_script": "check_debug-true"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-debug_false"
+		}
+	],
+	"check_debug-true": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-debug_true"
+		}
+	],
+	"map-action_testing-look": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-look"
+		}
+	],
+	"map-action_testing-go_north": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_north"
+		}
+	],
+	"map-action_testing-go_cleveland": [
+		{
+			"action": "CHECK_ENTITY_NAME",
+			"success_script": "map-action_testing-go_cleveland-protected",
+			"string": "Bob",
+			"entity": "%PLAYER%",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_cleveland"
+		}
+	],
+	"map-action_testing-go_cleveland-protected": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_cleveland-protected"
+		}
+	],
+	"map-action_testing-go_numbers": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_numbers"
+		}
+	],
+	"map-action_testing-go_sphinx": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-fail"
+		}
+	],
+	"map-action_testing-go_sphinx-success": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-success"
+		}
+	],
+	"map-action_testing-go_sphinx-wtf": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-wtf"
+		}
+	],
+	"map-action_testing-go_hub": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_hub"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "warp_zone"
+		}
+	],
+	"map-action_testing-cli-run_script": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "map-action_testing-cli-success"
+		}
+	],
+	"map-action_testing-cli-check_save_flag": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "cli-flag",
+			"expected_bool": true,
+			"success_script": "map-action_testing-cli-success"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-cli-fail"
+		}
+	],
+	"map-action_testing-cli-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-cli-fail"
+		}
+	],
+	"map-action_testing-cli-success": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-cli-success"
+		}
+	],
+	"map-action_testing-cli-set_save_flag": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "cli-flag",
+			"bool_value": true
+		}
+	],
+	"map-action_testing-cli-check_variable": [
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "cli-variable",
+			"value": 5,
+			"comparison": ">",
+			"expected_bool": true,
+			"success_script": "map-action_testing-cli-success"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-cli-fail"
+		}
+	],
+	"map-action_testing-cli-mutate_variable": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "cli-variable",
+			"operation": "ADD",
+			"value": 5
+		}
+	],
 	"mage01-check_entity_name": [
 		{
 			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
@@ -29,6 +583,12 @@
 			"script": "mage01-check_entity_name"
 		}
 	],
+	"mage01-look_script": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-mage01-look_script"
+		}
+	],
 	"mage02-check_entity_x": [
 		{
 			"doc": "Mage 02 tests CHECK_ENTITY_(X/Y) and then SET_ENTITY_(X/Y) after a successful check to reset itself.",
@@ -39,7 +599,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage02_1"
 		}
 	],
@@ -79,7 +639,7 @@
 	],
 	"mage03-check_entity_scripts": [
 		{
-			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
+			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
 			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
 			"success_script": "mage03-success_script",
 			"entity": "%PLAYER%",
@@ -97,22 +657,22 @@
 	"mage03-success_script": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity":"Mage 03",
+			"entity": "Mage 03",
 			"script": "mage03-success_prompt"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity":"%PLAYER%",
+			"entity": "%PLAYER%",
 			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity":"%PLAYER%",
+			"entity": "%PLAYER%",
 			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity":"Mage 03",
+			"entity": "Mage 03",
 			"script": "mage03-check_entity_scripts"
 		}
 	],
@@ -143,7 +703,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage04_1"
 		}
 	],
@@ -156,7 +716,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage04_1"
 		}
 	],
@@ -169,7 +729,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage04_1"
 		}
 	],
@@ -349,10 +909,7 @@
 		}
 	],
 	"mage09-copy_script_delay": [
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 500
-		}
+
 	],
 	"mage10-interact": [
 		{
@@ -751,7 +1308,7 @@
 			"variable": "entity_type_id",
 			"inbound": false,
 			"entity": "%SELF%",
-			"field": "hackable_state_a"
+			"field": "path_id"
 		},
 		{
 			"action": "COPY_VARIABLE",
@@ -772,7 +1329,7 @@
 			"variable": "entity_type_id",
 			"inbound": true,
 			"entity": "%SELF%",
-			"field": "hackable_state_a"
+			"field": "path_id"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -1164,14 +1721,16 @@
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "ANY",
-			"success_script": "mage23-show_dialog-was_pressed"
+			"success_script": "mage23-show_dialog-was_pressed",
+			"expected_bool": true
 		}
 	],
 	"mage23-tick-press-page": [
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "PAGE",
-			"success_script": "mage23-show_dialog-was_pressed"
+			"success_script": "mage23-show_dialog-was_pressed",
+			"expected_bool": true
 		}
 	],
 	"mage23-tick-state-any": [
@@ -1245,6 +1804,493 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%"
+		}
+	],
+	"mage25-interact": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage19-interact",
+			"search_and_replace": {
+				"\"entity_type\":\"bender\"": "\"entity_type\": \"baby_goat\"",
+				"\"entity_type\":\"verthandi\"": "\"entity_type\": \"bert\"",
+				"\"entity_type\":\"mage\"": "\"entity_type\": \"strong_bad\""
+			}
+		}
+	],
+	"mage26-interact": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage26-delay_interrupt"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage26-interact"
+		}
+	],
+	"mage26-reset": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage26-interact"
+		}
+	],
+	"mage26-delay_interrupt": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "honk_point"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "honk_point"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage26-delay_interrupt"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "honk_point"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	],
+	"mage27-interact": [
+		{
+			"action": "CHECK_SERIAL_DIALOG_OPEN",
+			"success_script": "mage27-interact_trapped",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage27-interact_closed"
+		}
+	],
+	"mage27-interact_trapped": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage27-interact_open"
+		}
+	],
+	"mage27-reset": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage27-interact"
+		}
+	],
+	"mage27-reset_with_dialog": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage27-interact"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-go_sphinx"
+		}
+	],
+	"mage28-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage28-interact"
+		},
+		{
+			"action": "SET_LIGHTS_CONTROL",
+			"enabled": true
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT64"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT32"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT16"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT8"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT4"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT2"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT1"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "ALL",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "ALL",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_CONTROL",
+			"enabled": false
+		}
+	],
+	"mage29-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage29-interact"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "mage29-skippydoodle",
+			"operation": "SET",
+			"value": 1
+		},
+		{
+			"action": "CHECK_ENTITY_NAME",
+			"jump_index": 4,
+			"entity": "%SELF%",
+			"string": "Nage 29",
+			"expected_bool": true
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "mage29-skippydoodle",
+			"operation": "SET",
+			"value": 0
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage29-test"
+		}
+	],
+	"mage30-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-1"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-2"
+		},
+		{
+			"action": "GOTO_ACTION_INDEX",
+			"action_index": 4
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-3"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage30-interact-4"
+		}
+	],
+	"mage31-tick": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "Mage 31",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 2400
+		}
+	],
+	"mage31-interact": [
+		{
+			"action": "SET_SCRIPT_PAUSE",
+			"entity": "%SELF%",
+			"script_slot": "on_tick",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "mage31-interact"
+		},
+		{
+			"action": "SET_SCRIPT_PAUSE",
+			"entity": "%SELF%",
+			"script_slot": "on_tick",
+			"bool_value": false
+		}
+	],
+	"debug-go-space": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "dialog-debug-go-space"
+		}
+	],
+	"debug-look-override": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "dialog-debug-look-override"
+		}
+	],
+	"debug-look-mage01-override": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "dialog-debug-look-mage01-override"
 		}
 	]
 }

@@ -2,6 +2,7 @@
 
 #include <utility>
 #include "mage_portrait.h"
+#include "mage_script_actions.h"
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
@@ -310,7 +311,9 @@ bool MageDialogControl::shouldShowResponses() const {
 void MageDialogControl::draw() {
 	MageDialogAlignmentCoords coords = alignments[currentScreen.alignment];
 	drawDialogBox(currentMessage, coords.text, true);
-	drawDialogBox(currentEntityName, coords.label);
+	if (currentEntityName != "") {
+		drawDialogBox(currentEntityName, coords.label);
+	}
 	if(currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT) {
 		drawDialogBox("", coords.portrait, false, true);
 	}
@@ -453,7 +456,7 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 	MageEntity currentEntity = {};
 	currentPortraitId = currentScreen.portraitIndex;
 	if(currentScreen.entityIndex != NO_PLAYER) {
-		uint8_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+		uint8_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 			currentScreen.entityIndex,
 			triggeringEntityId
 		);

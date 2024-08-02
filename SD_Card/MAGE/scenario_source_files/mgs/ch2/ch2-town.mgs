@@ -1,0 +1,499 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-town {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>TOWN</>."
+		"\tThere's no place like home! You know practically every pebble on every dirt patch, and every cracked brick in every building."
+		" "
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+ch2-setup-alfonso-verthandi {
+	teleport entity Alfonso to geometry alfonso-verthandi-spot;
+	turn entity Alfonso west;
+	turn entity Verthandi east;
+	set entity Alfonso on_interact to interact-ch2-alfonso-verthandi;
+	set entity Verthandi on_interact to interact-ch2-alfonso-verthandi;
+}
+
+on_load-ch2-town {
+	// cutscene interrupt:
+	if (warp state is cutscene-escort) {
+		goto ch2-escort-cutscene;
+	}
+
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>TOWN</>..." }
+	// sending entities to their places
+	// elders
+	set entity Bert on_tick to yeet; // always hiding
+	if (variable ch2-storyflag-round is < 5) {
+		set entity Jackob on_tick to yeet; // always hiding before end
+		if (variable ch2-storyflag-round is 2) {
+			copy ch2-setup-alfonso-verthandi;
+		} else {
+			set entity Alfonso on_tick to yeet;
+		}
+	}
+	// shepherd
+	if (
+		variable ch2-storyflag-round is 1
+		|| variable ch2-storyflag-round is 2
+	) {
+		teleport entity Shepherd to geometry shepherd2;
+		turn entity Shepherd east;
+		set entity Shepherd on_tick to null_script;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Shepherd to geometry shepherd1;
+	}
+	// verthandi
+	if (variable ch2-storyflag-round is 0) {
+		teleport entity Verthandi to geometry verthandi1;
+		turn entity Verthandi west;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Verthandi to geometry verthandi2;
+		turn entity Verthandi north;
+	}
+	// marta
+	if (
+		variable ch2-storyflag-round is 1
+		|| variable ch2-storyflag-round is 2
+	) {
+		teleport entity Marta to geometry marta1;
+		turn entity Marta west;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		teleport entity Marta to geometry marta2;
+		turn entity Marta south;
+	}
+	// delmar
+	if (flag ch2-delmar-in-house is true) {
+		set entity Delmar on_tick to yeet;
+	}
+
+	// walking out of doorways:
+	turn player control off;
+	if (warp state is raw_game_load-ch2) {
+		copy restore_player_state;
+	} else if (warp state is exit_from-credits) {
+		teleport entity "%PLAYER%" to geometry from-credits-spot;
+		fade in camera from #000000 over 800ms;
+	} else if (warp state is walk_from-east) {
+		set entity "%PLAYER%" path to walk_from-east
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein;
+		fade in camera from #000000 over 400ms;
+	} else if (warp state is walk_from-west) {
+		set entity "%PLAYER%" path to walk_from-west
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadein;
+		fade in camera from #000000 over 400ms;
+	} else if (warp state is walk_from-bobsclub) {
+		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms;
+	} else if (warp state is walk_from-bakery) {
+		walk entity "%PLAYER%" along geometry walk_from-bakery over 200ms;
+	} else if (warp state is walk_from-lodge) {
+		walk entity "%PLAYER%" along geometry walk_from-lodge over 200ms;
+	} else if (warp state is walk_from-greenhouse) {
+		walk entity "%PLAYER%" along geometry walk_from-greenhouse over 200ms;
+	} else if (warp state is walk_from-magehouse) {
+		walk entity "%PLAYER%" along geometry walk_from-magehouse over 200ms;
+	} else if (warp state is walk_from-oldcouplehouse) {
+		walk entity "%PLAYER%" along geometry walk_from-oldcouplehouse over 200ms;
+	} else if (warp state is walk_from-smithfamily) {
+		walk entity "%PLAYER%" along geometry walk_from-smithfamily over 200ms;
+	} else if (warp state is walk_from-woprhouse) {
+		walk entity "%PLAYER%" along geometry walk_from-woprhouse over 200ms;
+	} else if (warp state is walk_from-bobsclub) {
+		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms;
+	}
+	copy ch2-map-init;
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo Maybe this counts as a bug; maybe really fix it?)
+	turn player control off;
+	wait 50ms;
+	turn player control on;
+}
+
+/* ---------- ON_TICK ---------- */
+
+// map loading scripts
+
+on_tick-ch2-town {
+	if (entity "%PLAYER%" is inside geometry door-bakery) {
+		set warp state to ch2-town;
+		load map ch2-bakery;
+	}
+	if (entity "%PLAYER%" is inside geometry door-smithfamily) {
+		set warp state to ch2-town;
+		load map ch2-smithfamily;
+	}
+	if (entity "%PLAYER%" is inside geometry door-greenhouse) {
+		set warp state to ch2-town;
+		load map ch2-greenhouse;
+	}
+	if (entity "%PLAYER%" is inside geometry door-magehouse) {
+		set warp state to ch2-town;
+		load map ch2-magehouse;
+	}
+	if (entity "%PLAYER%" is inside geometry door-lodge) {
+		set warp state to ch2-town;
+		load map ch2-lodge;
+	}
+	if (entity "%PLAYER%" is inside geometry door-oldcouplehouse) {
+		set warp state to ch2-town;
+		load map ch2-oldcouplehouse;
+	}
+	if (entity "%PLAYER%" is inside geometry door-bobsclub) {
+		set warp state to ch2-town;
+		load map ch2-bobsclub;
+	}
+	if (entity "%PLAYER%" is inside geometry door-woprhouse) {
+		set warp state to ch2-town;
+		load map woprhouse; // both chapters use the same map
+	}
+	if (entity "%PLAYER%" is inside geometry east-hitbox) {
+		set entity "%PLAYER%" path to east-point;
+		set warp state to walk_from-west;
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout;
+		fade out camera to #000000 over 500ms;
+		load map ch2-town;
+	}
+	if (entity "%PLAYER%" is inside geometry west-hitbox) {
+		set entity "%PLAYER%" path to west-point;
+		set warp state to walk_from-east;
+		set entity "%PLAYER%" on_tick to on_tick-ch2-town-walkfadeout;
+		fade out camera to #000000 over 500ms;
+		load map ch2-castle-outside;
+	}
+}
+
+on_tick-ch2-town-walkfadeout {
+	turn player control off;
+	walk entity "%PLAYER%" to geometry "%ENTITY_PATH%" over 3500ms;
+	goto null_script;
+}
+on_tick-ch2-town-walkfadein {
+	walk entity "%PLAYER%" along geometry "%ENTITY_PATH%" over 500ms;
+	turn player control on;
+	goto null_script;
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-town {
+	// universal behavior
+}
+
+on_go-ch2-town-west {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-castle-outside;
+}
+on_go-ch2-town-home {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-magehouse;
+}
+on_go-ch2-town-bakery {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-bakery;
+}
+on_go-ch2-town-library {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-lodge;
+}
+on_go-ch2-town-greenhouse {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-greenhouse;
+}
+on_go-ch2-town-wopr {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map woprhouse // both chapters use the same map
+}
+on_go-ch2-town-beatrice {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-oldcouplehouse;
+}
+on_go-ch2-town-smith {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-smithfamily;
+}
+on_go-ch2-town-bobsclub {
+	copy on_exit-ch2-town;
+	copy warping-out-fade-out;
+	load map ch2-bobsclub;
+}
+
+/* ---------- ENTITIES ---------- */
+
+look-ch2-townsign {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA worn wooden sign featuring the words \"to King Gibson's palace\" -- but \"palace\" is crossed out, and \"castle\" is scrawled above it."
+	}
+}
+look-ch2-lakesign {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA worn wooden sign that says \"LINQ PARKING.\""
+	}
+}
+interact-ch2-townsign {
+	show dialog {
+		PLAYER "\"To King Gibson's castle.\" Oh, but it looks like it used to say \"To King Gibson's palace.\" I wonder why they changed it."
+	}
+}
+interact-ch2-lakesign {
+	show dialog {
+		name "" "LINQ PARKING"
+	}
+}
+interact-ch2-rake {
+	set entity Marta on_tick to make-rake-float;
+}
+interact-ch2-yabbomongo {
+	copy face-player;
+	show dialog {
+		SELF "Oi, I'm bummed out! The circle of infinity is broken!"
+		"Used to be you could go west and come back out east, and vice versa. But now the west road goes to King Gibson's castle. Bizzare."
+	}
+}
+
+interact-ch2-marta {
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Oh! You're heading out west, to the castle in the mountain?"
+			PLAYER "Yeah, the serial castle."
+			SELF "That old castle always freaked me out a little bit."
+			"It's so ancient, and full of such strange humming and clicking noises. I never really want to stay over there for long."
+			"...."
+			"Oh, I mean... I'm sure it's perfectly safe. Seriously, I hear King Gibson is actually really nice, and --"
+			PLAYER "It's okay, I'll face a spooky old castle to protect the town, even if it is a little creepy."
+			SELF "You'll do great. Good luck."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "How's it going over there? Learning anything about computers?"
+			PLAYER "I guess so. I'm starting to build one, anyway."
+			"I've been getting a lot of help, though."
+			SELF "That's okay. I'm glad you found a mentor to help you learn and do these things. It's a great jump start to learning a new skill."
+			PLAYER "I suppose so."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, %SELF%, I'm looking for Bert. Have you seen him?"
+			SELF "Here and there, but not for a while. Do you need him for something?"
+			PLAYER "No. Yeah. I don't know."
+			"He just said he was going to investigate something, then come right back and tell me what he found out."
+			"But I haven't heard anything yet. I'm getting worried."
+			SELF "Well, he can't have gotten far. He'll turn up eventually, I'm sure."
+			"I'll keep an eye out, though."
+		}
+	} else {
+		show dialog {
+			SELF "You've got two artifacts under your belt now. Save some for the rest of us, eh?"
+			"In all seriousness, way to go, %PLAYER%!"
+		}
+	}
+	set entity "%SELF%" on_interact to interact-ch2-marta;
+}
+
+interact-ch2-shepherd {
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "So, um, I don't really know what's so special about cereal."
+			"Like, is the artifact a prize from inside a cereal box?"
+			PLAYER "Apparently it's \"serial,\" not \"cereal.\""
+			SELF "???" "That's what I said, isn't it? Cereal. Like, granola?"
+			PLAYER "No, it's \"serial,\" like... well, I don't know what it's like, but it's not breakfast."
+			SELF "Huh, well, I don't really get it, but good luck in the castle."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "You know, it's the weirdest thing, but I could've sworn there were only four sheep before."
+		}
+		turn entity "%SELF%" east;
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, have you seen Bert recently?"
+			SELF "I saw him coming in and out of the library a few times."
+			PLAYER "When was that?"
+			SELF "Let's see.... Not for kind of a while, I guess."
+			"He sure looked like he was in a hurry though. Especially that last time."
+			"He came racing out of the library like something was on fire."
+			PLAYER "(Oh my goodness. Was that when he came to see me in the castle?)"
+			"(But what happened after that?)"
+		}
+	} else {
+		show dialog {
+			SELF "Hey, I heard you built a computer or something. That's so cool! Way to go!"
+		}
+	}
+	set entity "%SELF%" on_interact to interact-ch2-shepherd;
+}
+
+interact-ch2-delmar-town {
+	copy face-player;
+	show dialog { SELF alignment TL "...." }
+	rotate entity "%SELF%" 2;
+}
+interact-ch2-verthandi {
+	copy interrupt-walk;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Oh! You're doing the castle today, aren't you?"
+			"I believe in you, %PLAYER%!"
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "Hello, %PLAYER%. I hope you're making friends and learning all sorts of wonderful things."
+			PLAYER "Thank you. I'm doing my best."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Excuse me, Miss %Verthandi%, but have you seen Bert recently?"
+			SELF "No, I haven't, I'm afraid. Though... oh."
+			PLAYER "What is it?"
+		}
+		turn player control off;
+		rotate entity "%SELF%" 1;
+		wait 1500ms;
+		rotate entity "%SELF%" -1;
+		show dialog {
+			SELF "How odd. I thought for a moment I sensed him in distress, far, far away."
+			PLAYER "You can sense where he is?"
+			SELF "Not with any precision, nor any certainty. I do apologize, %PLAYER%."
+			"I'll let him know you're looking for him if I see him today."
+			PLAYER "Thank you."
+		}
+		turn player control on;
+
+	} else {
+		show dialog {
+			SELF "Oh, how wonderful, %PLAYER%! I knew you could do it! Well done!"
+		}
+	}
+	copy resume-walk;
+}
+
+interact-ch2-alfonso-verthandi {
+	turn entity Alfonso toward entity "%PLAYER%";
+	turn entity Verthandi toward entity "%PLAYER%";
+	show dialog {
+		Alfonso "You know, miss Verthandi here is very knowledgeable about the nature of reality and our relationship to our digital environment."
+	}
+	turn entity Verthandi toward entity Alfonso;
+	show dialog {
+		Verthandi "Oh, you're too kind! I am only a hobbyist when it comes to such topics. There is always more to learn."
+	}
+	turn entity Verthandi toward entity "%PLAYER%";
+	show dialog {
+		Alfonso "In any case, we are brainstorming things we might do to help you on your quest."
+		Verthandi "We will at least wish you luck!"
+	}
+	turn entity Alfonso toward entity Verthandi;
+	turn entity Verthandi toward entity Alfonso;
+}
+
+interact-ch2-jackob-end {
+	if (variable ch2-storyflag-round is < 5) {
+		goto null_script;
+	}
+	copy face-player;
+	show dialog {
+		SELF "Ah, %PLAYER%, good work today."
+	}
+	if (flag ch1_finished is false) {
+		if (flag ch1_unfinished_backstory is false) {
+			show dialog {
+				SELF "But you know, it seems like you still haven't finished chapter 1 in this save file."
+				"I'm not angry. Just disappointed."
+				"...Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
+				"In all seriousness, do feel free to give chapter 1 a go."
+			}
+			set flag ch1_unfinished_backstory to true;
+		}
+	}
+	show dialog {
+		Alfonso "Stop getting distracted! You must remember what you've forgotten!"
+		Jackob "I can't remember any more \"old songs\", %Alfonso%. This isn't working, and I need a break."
+		Alfonso "We don't have time for breaks! Sing \"Danny Boy\" again, and this time, try to really -- really -- remember where you learned it."
+		Jackob "The more I sing \"Danny Boy,\" the more I remember the last time I sang it -- which is right here, right now."
+	}
+}
+
+interact-ch2-alfonso-end {
+	if (variable ch2-storyflag-round is < 5) {
+		goto null_script;
+	}
+	copy face-player;
+	show dialog {
+		SELF "I never congratulated you on acquiring the artifact and repairing its fundamental functions, %PLAYER%. Good job."
+		"The next challenge will test you further, but you should still try to remember everything you've learned so far."
+		"Remember... yes, remember everything you've learned. We all must remember...."
+	}
+}
+
+interact-ch2-cleo {
+	turn entity Cleo toward entity "%PLAYER%";
+	turn entity Cat toward entity "%PLAYER%";
+	show dialog ch2-catpuddle { // reused
+		Cleo "Hey there, %PLAYER%."
+		"Sorry, can't chat now. The cat had a really bad day."
+		Cat "Meow."
+		PLAYER "What happened?"
+		Cleo "He accidentally rolled over into a puddle of water. Threw off his whole groove."
+		PLAYER "Aw, I'm so sorry. That's rough."
+		Cat "Meow!"
+	}
+	turn entity Cleo toward entity Cat;
+	turn entity Cat toward entity Cleo;
+}
+
+interact-ch2-cat {
+	copy face-player;
+	show dialog ch2-catpuddle;
+	turn entity "%SELF%" toward entity Cleo;
+}
+
+interact-ch2-hamster {
+	copy face-player;
+	if (variable ch2-hamstertalk is 0) {
+		show dialog {
+			SELF "Ohhh... the wheel is still spinning, but the hamster is dead."
+		}
+		mutate ch2-hamstertalk = 1;
+	} else if (variable ch2-hamstertalk is 1) {
+		show dialog {
+			SELF "I demand more asbestos!"
+		}
+		mutate ch2-hamstertalk = 2;
+	} else if (variable ch2-hamstertalk is 2) {
+		show dialog {
+			SELF "Fungible."
+		}
+		mutate ch2-hamstertalk = 0;
+	}
+}

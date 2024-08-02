@@ -1,0 +1,259 @@
+include!("header.mgs")
+
+on_load-greenhouse {
+	if (flag tuesdayd is true) {
+		register rtfm -> command-rtfm;
+	}
+	if (flag storyflag-trekkie is true) {
+		copy script ch1-ethernettle-restore;
+	}
+}
+
+on_tick-greenhouse {
+	if entity "%PLAYER%" is inside geometry door-greenhouse then goto leave-greenhouse;
+	if entity EtherNettle1 is not inside geometry EtherNettle1Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle2 is not inside geometry EtherNettle2Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle3 is not inside geometry EtherNettle3Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle4 is not inside geometry EtherNettle4Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle5 is not inside geometry EtherNettle5Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle6 is not inside geometry EtherNettle6Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle7 is not inside geometry EtherNettle7Origin then goto show_dialog-no_uproot_ethernettle;
+	if entity EtherNettle8 is not inside geometry EtherNettle8Origin then goto show_dialog-no_uproot_ethernettle;
+}
+leave-greenhouse {
+	set warp state to exit_from-greenhouse;
+	load map main;
+}
+show_dialog-no_uproot_ethernettle {
+	show dialog {
+		Trekkie "Me sorry, but Ether Nettle cannot be uprooted, %PLAYER%!"
+	}
+	teleport entity EtherNettle1 to geometry EtherNettle1Origin;
+	teleport entity EtherNettle2 to geometry EtherNettle2Origin;
+	teleport entity EtherNettle3 to geometry EtherNettle3Origin;
+	teleport entity EtherNettle4 to geometry EtherNettle4Origin;
+	teleport entity EtherNettle5 to geometry EtherNettle5Origin;
+	teleport entity EtherNettle6 to geometry EtherNettle6Origin;
+	teleport entity EtherNettle7 to geometry EtherNettle7Origin;
+	teleport entity EtherNettle8 to geometry EtherNettle8Origin;
+	goto on_tick-greenhouse;
+}
+
+ch1-ethernettle-restore {
+	set entity EtherNettle1 secondary_id to 3;
+	set entity EtherNettle2 secondary_id to 2;
+	set entity EtherNettle3 secondary_id to 7;
+	set entity EtherNettle4 secondary_id to 0;
+	set entity EtherNettle5 secondary_id to 1;
+	set entity EtherNettle6 secondary_id to 6;
+	set entity EtherNettle7 secondary_id to 5;
+	set entity EtherNettle8 secondary_id to 4;
+	set entity Modem current_animation to 4; // modem working animation
+}
+
+show_dialog-ethernet {
+	show dialog { PLAYER "Now that's a neat-looking pile of cable." }
+}
+show_dialog-tumbleweed {
+	show dialog { PLAYER "Oof. I'd hate to have to untangle this!" }
+}
+show_dialog-mulch {
+	show dialog { PLAYER "Oh, I thought this was flour, but it's actually mulch." }
+}
+show_dialog-modem {
+	show dialog { PLAYER "What does this thing do? Just light up?" }
+}
+show_dialog-greenhouse-barrel {
+	show dialog { PLAYER "What's in here? Water?" }
+}
+
+show_dialog-trekkie-start {
+	copy script clear-own-tick;
+	copy script face-player;
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "Hu bu. Qvq zr trg n ivehf?" }
+	} else if (flag storyflag-trekkie is true) {
+		copy ch1-greenhouse-trekkie-aftermath;
+	} else if (
+		entity EtherNettle1 secondary_id is not 3 // orange-white
+		|| entity EtherNettle2 secondary_id is not 2 // orange
+		|| entity EtherNettle3 secondary_id is not 7 // green-white
+		|| entity EtherNettle4 secondary_id is not 0 // blue
+		|| entity EtherNettle5 secondary_id is not 1 // blue-white
+		|| entity EtherNettle6 secondary_id is not 6 // green
+		|| entity EtherNettle7 secondary_id is not 5 // brown-white
+		|| entity EtherNettle8 secondary_id is not 4 // brown
+	) {
+		if (flag trekkie-backstory is true) {
+			copy ch1-greenhouse-trekkie-backstory-reminder;
+		} else {
+			copy ch1-greenhouse-trekkie-backstory-cutscene;
+		}
+	} else {
+		copy ch1-greenhouse-modem-turning-on-cutscene;
+		if (variable hint-tracking-check is 7) {
+			copy script set-hint-none;
+			// ^^ if the hint series is the same, reset hint
+		}
+	}
+	set entity "%SELF%" on_interact to show_dialog-trekkie-start;
+}
+
+ch1-greenhouse-trekkie-backstory-cutscene {
+	show dialog {
+		SELF "Me want to wish you a happy birthday, %PLAYER%."
+		PLAYER "Aww, gee, thanks, Farmer %Trekkie%!"
+	}
+	turn player control off;
+	wait 200ms;
+	turn entity "%SELF%" toward entity Modem;
+	wait 900ms;
+	turn entity "%SELF%" toward geometry Computer
+	wait 900ms;
+	copy script face-player;
+	wait 200ms;
+	show dialog {
+		SELF "Me sorry, %PLAYER%... but the internet still no working."
+		PLAYER "It's the Ether Nettles, again?"
+	}
+	wait 100ms;
+	turn entity "%SELF%" toward entity Modem;
+	wait 400ms;
+	show dialog {
+		SELF "It always the Ether Nettles. Modem need Ether Nettles. Ever since the big bad hack, the Ether Nettles line up wrong."
+		PLAYER "You can't move the flowers? Put them in the right order?"
+	}
+	copy script face-player;
+	show dialog {
+		SELF "Can't just dig up Ether Nettles. Wired in super, super well."
+		"If you move flowers, you must move wires underneath or everything breaks. Very slow, very difficult work."
+		"Once in a while, me move one, take all week, but it no work."
+		PLAYER "Well, maybe I can help. What order are they supposed to be in?"
+		SELF "Ether Nettle spec on internet. But no Ether Nettle, no internet, me no can check!"
+		"Me remember orange stripey is first."
+		"But trial and error take so long, me want to give up."
+		PLAYER "Well, lemme have a go. I can change their colors instantly."
+		"Probably."
+		SELF "%PLAYER% has new magic zeroed ring. Maybe %PLAYER% can change flower colors!"
+	}
+	copy script set-hint-trekkie;
+	set flag trekkie-backstory to true;
+	copy script set_tick-watch-player;
+	turn player control on;
+}
+
+ch1-greenhouse-trekkie-backstory-reminder {
+	copy script face-player;
+	show dialog {
+		SELF "Me can't remember Ether Nettle color order. Me need internet to check!"
+		"But me do remember orange stripey is first!"
+	}
+	copy script set-hint-trekkie;
+	copy script set_tick-watch-player;
+}
+
+ch1-greenhouse-modem-turning-on-cutscene {
+	turn entity "%SELF%" toward entity Modem;
+	turn entity "%PLAYER%" toward entity Modem;
+	turn player control off;
+	wait 200ms;
+	pan camera to entity Modem over 1400ms;
+	wait 200ms;
+	turn entity "%SELF%" toward geometry Computer;
+	wait 1500ms;
+	turn entity "%SELF%" toward entity Modem;
+	wait 1200ms;
+	set entity Modem current_animation to 1;
+	wait 1400ms;
+	show dialog {
+		SELF alignment TOP_LEFT "Oh! The lights!"
+	}
+	wait 800ms;
+	copy script face-player;
+	turn entity "%PLAYER%" toward entity "%SELF%";
+	wait 500ms;
+	turn entity "%PLAYER%" toward entity Modem;
+	turn entity "%SELF%" toward entity Modem;
+	wait 1500ms;
+	set entity Modem current_animation to 2;
+	wait 1400ms;
+	set entity Modem current_animation to 3;
+	wait 1700ms;
+	set entity Modem current_animation to 4;
+	wait 900ms;
+	pan camera to entity "%PLAYER%" over 1400ms;
+	wait 400ms;
+	turn entity "%PLAYER%" toward entity "%SELF%";
+	wait 150ms;
+	turn entity "%SELF%" toward geometry Computer;
+	wait 750ms;
+	turn entity "%SELF%" toward entity Modem;
+	wait 600ms;
+	turn entity "%SELF%" toward geometry Computer;
+	wait 800ms;
+	copy script face-player;
+	show dialog {
+		SELF "%PLAYER% did it! Made Ether Nettle talk to outside world again!"
+		"Me can go on the internet! Can use so many free AOL hours!"
+		"Me has so, so many AOL CDs! Me excited!"
+		PLAYER "Sounds great, %Trekkie%."
+	}
+	turn entity "%SELF%" toward geometry Computer
+	set flag storyflag-trekkie to true;
+	copy script calculate-hint-tracking-series;
+	turn player control on;
+}
+
+ch1-greenhouse-trekkie-aftermath {
+	turn entity "%SELF%" toward entity "%PLAYER%";
+	show dialog {
+		PLAYER "So, %Trekkie%.... What's the internet for, anyway?"
+		SELF "Oh, me know what the internet is for. The internet is for...."
+		"...."
+		PLAYER "...?"
+		SELF "How old is %PLAYER%, again?"
+	}
+	turn entity "%SELF%" toward geometry Computer;
+}
+
+debug-ethernet-puzzle-q {
+	copy script face-player;
+	show dialog {
+		SELF
+		"Restore Ether Nettle?"
+		> "Yes" : goto "ch1-debug-ethernettle"
+		> "No" : goto "ch1-debug-ethernettle-no"
+	}
+}
+ch1-debug-ethernettle-no {
+	show dialog { SELF "Wanna do it the hard way, huh? Suit yourself." }
+	set entity "%SELF%" on_interact to debug-ethernet-puzzle-q;
+}
+ch1-debug-ethernettle {
+	copy script ch1-ethernettle-restore;
+	set entity Modem current_animation to 0; // the modem still won't until you speak to Trekkie
+	copy script face-player;
+	show dialog { SELF "Ether Nettle restored." }
+	set entity "%SELF%" on_interact to debug-ethernet-puzzle-q;
+}
+
+show_dialog-ethernettle-start {
+	if (entity "%SELF%" secondary_id is 3) {
+		show dialog { PLAYER "White-orange." }
+	} else if (entity "%SELF%" secondary_id is 2) {
+		show dialog { PLAYER "Orange." }
+	} else if (entity "%SELF%" secondary_id is 7) {
+		show dialog { PLAYER "White-green." }
+	} else if (entity "%SELF%" secondary_id is 0) {
+		show dialog { PLAYER "Blue." }
+	} else if (entity "%SELF%" secondary_id is 1) {
+		show dialog { PLAYER "White-blue." }
+	} else if (entity "%SELF%" secondary_id is 6) {
+		show dialog { PLAYER "Green." }
+	} else if (entity "%SELF%" secondary_id is 5) {
+		show dialog { PLAYER "White-brown." }
+	} else if (entity "%SELF%" secondary_id is 4) {
+		show dialog { PLAYER "Brown." }
+	}
+	set entity "%SELF%" on_interact to show_dialog-ethernettle-start;
+}

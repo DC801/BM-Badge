@@ -18,7 +18,10 @@
 			height: auto;
 			border: inherit;
 		}
-		.tile-link {
+		[v-cloak] {
+			display: none;
+		}
+ 		.tile-link {
 			border-style: solid;
 			border-width: 4px;
 			appearance: none;
@@ -27,11 +30,43 @@
 			padding: 0;
 			line-height: 0;
 		}
+		.editor-dialog-phase .input-group-text {
+			width: 128px;
+		}
+		.editor-dialog-phase select {
+			display: block;
+			right: 0;
+			left: 128px;
+			position: absolute;
+			height: 100%;
+		}
+		.editor-dialog-phase-preview {
+			position: relative;
+			width: 320px;
+			height: 240px;
+			background-color: #000;
+			border: 1px solid #333;
+		}
+		.font-image {
+			position: absolute;
+		}
+		.font-image-relative {
+			position: relative;
+		}
+		.image_font-monaco_9-6x12 {
+			width: 6px;
+			height: 12px;
+			position: absolute;
+			background-image: url('./dependencies/font-monaco_9-6x12-transparent.png')
+		}
 	</style>
 	<title>MAGE GAME DATA TOOL</title>
 </head>
 <body>
-	<div id="app">
+	<div
+		id="app"
+		v-cloak
+	>
 		<div class="container pt-5">
 			<div class="row">
 				<div class="col-12">
@@ -42,7 +77,7 @@
 						"
 					>
 						<div class="card-header">
-							Drag your `scenario_source_files` folder to the button
+							Drag your &grave;scenario_source_files&grave; folder to the button
 						</div>
 						<div class="card-body">
 							<p>Drag your <code>scenario_source_files</code> to this button!</p>
@@ -58,7 +93,7 @@
 											webkitdirectory
 											@input="handleChange"
 									/>
-									<label class="custom-file-label" for="drag_target">Choose file</label>
+									<label class="custom-file-label" for="drag_target">Choose folder</label>
 								</div>
 							</div>
 							<div
@@ -106,18 +141,30 @@
 											btn-block
 											w-100
 										"
-									>Download <code>game.dat</code></a>
+									>Download <code>{{downloadData.download}}</code></a>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<editor-warnings
+				v-if="scenarioData"
+				:scenario-data="scenarioData"
+			></editor-warnings>
 			<entity-type-editor
 				v-if="scenarioData"
 				:file-name-map="fileNameMap"
 				:scenario-data="scenarioData"
 			></entity-type-editor>
+			<editor-scripts
+				v-if="currentData"
+			></editor-scripts>
+			<editor-dialogs
+					v-if="scenarioData"
+					:file-name-map="fileNameMap"
+					:scenario-data="scenarioData"
+			></editor-dialogs>
 		</div>
 	</div>
 	<script
@@ -148,38 +195,12 @@
 		>
 			<div class="card-header">Entity Type Editor</div>
 			<div class="card-body">
-				<div
+				<copy-changes
 					v-if="needsSave"
-					class="
-						alert
-						alert-danger
-						alert-dismissible
-						fade
-						show
-					"
-					role="alert"
-				>
-					<strong>Unsaved changes!</strong>
-					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
-					<button
-						type="button"
-						class="close"
-						title="Copy"
-						@click="copyState"
-					>
-						<span aria-hidden="true">📋</span>
-					</button>
-					<textarea
-						cols="80"
-						rows="16"
-						class="position-absolute"
-						style="
-							font-size: 0;
-							opacity: 0;
-						"
-						ref="copyStateTextArea"
-					>{{ jsonOutput }}</textarea>
-				</div>
+					file-name="entity_types.json"
+					:changes="jsonOutput"
+					resource-name="entityTypes"
+				></copy-changes>
 				<div class="form-group">
 					<label for="currentEntityTypeId">Entity Types:</label>
 					<select
@@ -205,6 +226,7 @@
 						aria-label="Create new entityType"
 						aria-describedby="add-entity-type"
 						v-model="newEntityTypeId"
+						name="newEntityTypeId"
 					>
 					<div class="input-group-append">
 						<button
@@ -311,7 +333,7 @@
 									</tbody>
 								</table>
 								<div
-									v-if="Object.keys(currentEntityType.animations).length < 7"
+									v-if="Object.keys(currentEntityType.animations).length < 13"
 									class="pt-3"
 								>
 									<button
@@ -374,9 +396,14 @@
 			</div>
 		</div>
 	</script>
+
 	<script
-		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"
+		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"
 		src="./dependencies/vue.js"
+	></script>
+	<script
+		data-original-src="https://cdn.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.js"
+		src="./dependencies/vuex.js"
 	></script>
 	<script
 		data-original-src="https://wzrd.in/standalone/fast-png@5.0.4"
@@ -386,11 +413,22 @@
 		data-original-src="https://wzrd.in/standalone/omggif@1.0.10"
 		src="./dependencies/omggif.js"
 	></script>
-	<script src="js/editor-entity_types.js"></script>
+	<script src="dependencies/natlang-parser/natlang-lex.js"></script>
+	<script src="dependencies/natlang-parser/natlang-parse.js"></script>
+	<script src="dependencies/natlang-parser/natlang-utils.js"></script>
+	<script src="dependencies/natlang-parser/mgs-macro-debugprint.js"></script>
+	<script src="dependencies/natlang-parser/mgs-macro-constants.js"></script>
+	<script src="dependencies/natlang-parser/mgs-macro-whyle.js"></script>
+	<script src="dependencies/natlang-parser/mgs-macro-zigzag.js"></script>
+	<script src="dependencies/natlang-parser/mgs_natlang_config.js"></script>
+	<script src="dependencies/natlang-parser/mgs_json_to_natlang.js"></script>
+	<script src="js/natlang_mgs.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
+	<script src="js/editor-copy-changes.js"></script>
+	<script src="js/editor-accordion.js"></script>
 	<script src="js/entity_types.js"></script>
 	<script src="js/portraits.js"></script>
 	<script src="js/entities.js"></script>
@@ -398,8 +436,24 @@
 	<script src="js/strings.js"></script>
 	<script src="js/scripts.js"></script>
 	<script src="js/dialogs.js"></script>
+	<script src="js/serial_dialogs.js"></script>
 	<script src="js/images.js"></script>
 	<script src="js/encoding.js"></script>
+	<script src="js/font-image.js"></script>
+	<script src="js/warnings.js"></script>
+	<script src="js/editor-entity_types.js"></script>
+	<script src="js/editor-scripts.js"></script>
+	<script src="js/editor-script.js"></script>
+	<script src="js/editor-options.js"></script>
+	<script src="js/editor-dialogs.js"></script>
+	<script src="js/editor-dialog.js"></script>
+	<script src="js/editor-dialog-phase.js"></script>
+	<script src="js/editor-dialog-phase-preview.js"></script>
+	<script src="js/editor-dialog-box.js"></script>
+	<script src="js/editor-action.js"></script>
+	<script src="js/editor-warnings.js"></script>
+	<script src="js/component-icon.js"></script>
+	<script src="js/store.js"></script>
 	<script src="js/index.js"></script>
 </body>
 </html>

@@ -1,0 +1,119 @@
+include!("header.mgs")
+
+/* ---------- BERT SECRET CUTSCENE ---------- */
+
+watch-bert {
+	turn entity "%SELF%" toward entity Bert;
+}
+
+ch2-cutscene-bert-secret {
+	turn player control off;
+	wait 800ms;
+	teleport entity Bert to geometry bert-spot;
+	turn entity Bert north;
+	show dialog {
+		Bert "%PLAYER%, wait."
+	}
+	wait 100ms;
+	set entity "%PLAYER%" on_tick to watch-bert;
+	wait 400ms;
+	// the below is unnecessary if this cutscene is triggered via normal means; cannot use a zigzag here, though, since this script is run with COPY_SCRIPT
+	// you can't trigger the "stuck on animation 5" with this, though, since you can't feasibly get to this part of the script before the Wiz is all the way ascended anyway. (Hitting `tick-ch2-wizard-ascend-and-watch-with-check` when it's in progress breaks things!)
+	set entity Wizard on_tick to tick-ch2-wizard-ascend-and-watch-with-check;
+	walk entity Bert along geometry bert-spot over 1200ms;
+	wait 100ms;
+	turn entity Bert toward entity "%PLAYER%";
+	wait 900ms;
+	show dialog {
+		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold."
+		Bert "I remembered back door. But...."
+	}
+	set entity Bert on_tick to spin_self_clockwise;
+	wait 400ms;
+	show dialog {
+		Bert "No. I can go no further. I could, once. Perhaps."
+	}
+	set entity Bert on_tick to null_script;
+	turn entity Bert toward entity "%PLAYER%";
+	show dialog {
+		Bert "%PLAYER%, I must not stay long. But I must tell you this."
+		"Something is wrong."
+		"That book we wanted to give you... it was not gone yesterday. It was on shelf, in library."
+		"It is only gone today. This morning."
+		PLAYER "The book only went missing this morning?"
+		Bert "Yes. I am sure of it."
+		"%PLAYER%, something wants to stop you. Or delay you."
+		PLAYER "Are we too late, then? Is the Big Bad here?"
+		Bert "No. We would know. Big Bad would not hide."
+	}
+	turn entity Bert east;
+	show dialog {
+		Bert "But perhaps he can still reach into our village. Small hacks. Subtle things."
+		"Perhaps he left traps. Protocols. Magic that waits for his signal before working."
+		"I once knew more. But I am old, and...."
+		"...."
+		PLAYER "...?"
+	}
+	turn entity Bert south;
+	show dialog {
+		Bert "I must go. There is something I must learn. Quickly. But I will return."
+		"Do not wait for me. Go and fix artifact."
+		"If I find answer, I will leave message with trash panda Wizard."
+		"Good luck."
+	}
+	walk entity Bert to geometry walk_from-south over 800ms;
+	wait 80ms;
+	set entity Bert on_tick to yeet;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn player control on;
+	set flag interrupt to true;
+}
+
+ch2-bert-secret-lambda-intro {
+	show serial dialog spacer;
+	if (flag interrupt is true) {
+		show serial dialog {
+			"<m>LAMBDA</>: Bert? BERT! Oh my God, Bert! I remember that guy!"
+			" "
+			"<c>YOU</>: What? You know him?"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA</>: Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
+			" "
+			"<c>YOU</>: What? You know Bert?"
+		}
+	}
+	show serial dialog {
+		" "
+		"<m>LAMBDA</>: His name was a complete blank until you said it, but I recognized his face!"
+	}
+	if (flag ch2-cameras-explanation is false) {
+		show serial dialog {
+			" "
+			"<c>YOU</>: Wait, how did you see his face?"
+			" "
+			"<m>LAMBDA</>: The cameras! They're all around in -- look, it doesn't matter. The point is...."
+		}
+		set flag ch2-cameras-explanation to true;
+	}
+	show serial dialog {
+		"\tAw, man. The two of us? We go way back!"
+		" "
+		# "Should I go back and fetch him?" : ch2-bert-secret-lambda-intro2
+	}
+}
+ch2-bert-secret-lambda-intro2 {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Should I go back and fetch him? Let you talk to him?"
+		" "
+		"<m>LAMBDA</>: No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
+		"\t...Damn. It's been a while, though."
+		" "
+		"<c>YOU</>: Wow, you know Bert, huh?"
+	}
+	set flag ch2-lambda-bert-backstory to true;
+	mutate CALLBACK = 1;
+	goto ch2-lambda-bert-q
+}

@@ -1,0 +1,140 @@
+{ "compressionlevel":-1,
+ "height":15,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+            501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501, 501,
+            502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502, 502,
+            503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503, 503,
+            504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504, 504,
+            505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505, 505,
+            506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506, 506,
+            507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507, 507,
+            508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508, 508,
+            509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509,
+            510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510, 510,
+            511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511, 511,
+            512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512,
+            513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513, 513,
+            514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514, 514],
+         "height":15,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Entities",
+         "objects":[
+                {
+                 "class":"",
+                 "gid":452,
+                 "height":80,
+                 "id":49,
+                 "name":"Math",
+                 "rotation":0,
+                 "visible":true,
+                 "width":160,
+                 "x":97,
+                 "y":80
+                }, 
+                {
+                 "class":"",
+                 "gid":453,
+                 "height":80,
+                 "id":50,
+                 "name":"Timer",
+                 "rotation":0,
+                 "visible":true,
+                 "width":160,
+                 "x":97,
+                 "y":160
+                }, 
+                {
+                 "class":"",
+                 "gid":454,
+                 "height":80,
+                 "id":51,
+                 "name":"null_entity",
+                 "rotation":0,
+                 "visible":true,
+                 "width":160,
+                 "x":97,
+                 "y":240
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"camera-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":160,
+                 "y":120
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":6,
+ "nextobjectid":52,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":16,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":257,
+         "source":"..\/entities\/entity-dragon_skull.json"
+        }, 
+        {
+         "firstgid":293,
+         "source":"..\/entities\/entity-eye_faerie.json"
+        }, 
+        {
+         "firstgid":317,
+         "source":"..\/tilesets\/tileset-ring_zero.json"
+        }, 
+        {
+         "firstgid":437,
+         "source":"..\/tilesets\/tileset-dc801_gradient.json"
+        }, 
+        {
+         "firstgid":452,
+         "source":"..\/tilesets\/tileset-main_menu-animation.json"
+        }, 
+        {
+         "firstgid":500,
+         "source":"..\/tilesets\/tileset-main_menu-gradient.json"
+        }],
+ "tilewidth":16,
+ "type":"map",
+ "version":"1.9",
+ "width":20
+}

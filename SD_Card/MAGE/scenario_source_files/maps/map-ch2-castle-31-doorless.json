@@ -1,0 +1,745 @@
+{ "compressionlevel":-1,
+ "height":25,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 283, 284, 284, 284, 284, 284, 284, 284, 284, 284, 284, 284, 284, 284, 2147483931, 0, 0,
+            0, 299, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 289, 2147483937, 300, 2147483947, 0, 0,
+            0, 315, 316, 292, 297, 316, 316, 316, 316, 333, 316, 316, 316, 316, 291, 2147483963, 0, 0,
+            0, 305, 316, 316, 339, 316, 316, 307, 296, 296, 296, 293, 316, 316, 316, 2147483984, 0, 0,
+            0, 321, 316, 316, 328, 293, 316, 339, 316, 316, 316, 316, 316, 316, 294, 2147484000, 0, 0,
+            0, 336, 292, 296, 374, 316, 316, 339, 316, 316, 316, 316, 316, 291, 339, 2147483963, 0, 0,
+            0, 352, 316, 316, 316, 316, 316, 339, 316, 316, 316, 316, 316, 307, 378, 2147483963, 0, 0,
+            0, 331, 316, 3221225805, 291, 316, 316, 372, 296, 296, 296, 293, 316, 371, 316, 2147483979, 0, 0,
+            0, 347, 348, 348, 348, 348, 348, 349, 349, 348, 348, 348, 348, 348, 348, 2147483995, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":25,
+         "id":6,
+         "name":"Floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":18,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 416, 417, 418, 419, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 369, 0, 0, 387, 432, 433, 434, 435, 0, 0, 0, 306, 2147483954, 0, 2147484017, 0, 0,
+            0, 0, 322, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 338, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 538, 2147484186, 0, 0, 538, 2147484186, 0, 0, 0, 0, 0, 2147484017, 0, 0,
+            0, 0, 538, 2147484186, 0, 0, 538, 2147484186, 0, 403, 538, 2147484186, 0, 507, 508, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 469, 469, 469, 469, 469, 469, 469, 469, 469, 469, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":25,
+         "id":7,
+         "name":"Floor Doodads",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":18,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"Entities",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":341,
+                 "y":185
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":35,
+                 "name":"Lights",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"ch2-serial-light-manager"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":-87,
+                 "y":-80
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":37,
+                 "name":"simon-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":221,
+                 "y":653
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":38,
+                 "name":"mage-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":173,
+                 "y":658
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":39,
+                 "name":"camera-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":197,
+                 "y":659
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":41,
+                 "name":"drum",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-drum"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-drum"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":217,
+                 "y":115
+                }, 
+                {
+                 "class":"",
+                 "gid":1060,
+                 "height":32,
+                 "id":44,
+                 "name":"Theodore",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-theodore-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-theodore"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":181,
+                 "y":131
+                }, 
+                {
+                 "class":"",
+                 "gid":1059,
+                 "height":32,
+                 "id":45,
+                 "name":"Alvin",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-alvin-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-alvin"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":249,
+                 "y":123
+                }, 
+                {
+                 "class":"",
+                 "gid":446,
+                 "height":32,
+                 "id":49,
+                 "name":"speaker",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":68,
+                 "y":106
+                }, 
+                {
+                 "class":"",
+                 "gid":446,
+                 "height":32,
+                 "id":50,
+                 "name":"speaker",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":446,
+                 "y":105
+                }, 
+                {
+                 "class":"",
+                 "gid":1069,
+                 "height":48,
+                 "id":52,
+                 "name":"Kuro",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-kuro-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-kuro"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"face-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":169,
+                 "y":194
+                }, 
+                {
+                 "class":"",
+                 "gid":1130,
+                 "height":32,
+                 "id":53,
+                 "name":"Samson",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-samson-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-samson"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":264,
+                 "y":190
+                }, 
+                {
+                 "class":"",
+                 "gid":1102,
+                 "height":48,
+                 "id":55,
+                 "name":"Gloria",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-gloria-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-gloria"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":209,
+                 "y":209
+                }, 
+                {
+                 "class":"",
+                 "gid":1161,
+                 "height":32,
+                 "id":56,
+                 "name":"Tracy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-tracy-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-tracy"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":446,
+                 "y":249
+                }, 
+                {
+                 "class":"",
+                 "height":45,
+                 "id":61,
+                 "name":"west-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":32,
+                 "y":139
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":62,
+                 "name":"walk_from-west",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":74,
+                 "y":164
+                }, 
+                {
+                 "class":"",
+                 "gid":1191,
+                 "height":64,
+                 "id":63,
+                 "name":"Sea Moss",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-seamoss-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-seamoss"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":349,
+                 "y":233
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":119,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":80,
+                 "y":267
+                },
+            
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":120,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":144,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":121,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":208,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":122,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":272,
+                 "y":235
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":123,
+                 "name":"bar table",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bartable"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bartable"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":336,
+                 "y":267
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":124,
+                 "name":"drinks",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-banddrinks"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":445,
+                 "y":265
+                }, 
+                {
+                 "class":"",
+                 "gid":182,
+                 "height":32,
+                 "id":125,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":324,
+                 "y":192
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 522, 2147484170, 0, 0, 522, 2147484170, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 522, 2147484171, 0, 0, 522, 2147484170, 0, 0, 522, 2147484170, 0, 491, 492, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":25,
+         "id":8,
+         "name":"Floating Layer",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":18,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":33,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-41,
+                 "y":-36
+                }, 
+                {
+                 "class":"",
+                 "gid":1034,
+                 "height":48,
+                 "id":43,
+                 "name":"Simon",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-simon-end"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-simon"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":208,
+                 "y":137
+                }, 
+                {
+                 "class":"",
+                 "height":34,
+                 "id":59,
+                 "name":"north-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":401,
+                 "y":63
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":60,
+                 "name":"walk_from-north",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":417,
+                 "y":99
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":9,
+ "nextobjectid":126,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/tilesets\/tileset-monstrosity.json"
+        }, 
+        {
+         "firstgid":177,
+         "source":"..\/entities\/entity-mage.json"
+        }, 
+        {
+         "firstgid":237,
+         "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":239,
+         "source":"..\/entities\/entity-save_floppy.json"
+        }, 
+        {
+         "firstgid":263,
+         "source":"..\/entities\/entity-bert.json"
+        }, 
+        {
+         "firstgid":281,
+         "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":283,
+         "source":"..\/tilesets\/tileset-castle-interior.json"
+        }, 
+        {
+         "firstgid":667,
+         "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":923,
+         "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":933,
+         "source":"..\/entities\/entity-keyboard.json"
+        }, 
+        {
+         "firstgid":1033,
+         "source":"..\/entities\/entity-simon.json"
+        }, 
+        {
+         "firstgid":1059,
+         "source":"..\/entities\/entity-simon-friends.json"
+        }, 
+        {
+         "firstgid":1067,
+         "source":"..\/entities\/entity-crow.json"
+        }, 
+        {
+         "firstgid":1100,
+         "source":"..\/entities\/entity-beetle.json"
+        }, 
+        {
+         "firstgid":1130,
+         "source":"..\/entities\/entity-wormy.json"
+        }, 
+        {
+         "firstgid":1148,
+         "source":"..\/entities\/entity-npc03.json"
+        }, 
+        {
+         "firstgid":1169,
+         "source":"..\/entities\/entity-bigears.json"
+        }, 
+        {
+         "firstgid":1190,
+         "source":"..\/entities\/entity-seamoss.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.9",
+ "width":18
+}

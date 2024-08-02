@@ -1,0 +1,196 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-magehouse {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around <c>YOUR HOUSE</>."
+		"\tThere's a certain smell to home that you'll always remember and that will always be nostalgic for you -- maybe it's the smell of ozone that seems to follow Aunt Zippy and Uncle Zappy around the room."
+		" "
+	}
+}
+
+look-ch2-tickles {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tIt's your childhood goldfish. An adage comes to your mind at the sight of him: \"You shouldn't feed Mr. Tickles three hams!\""
+	}
+}
+
+look-ch2-zappy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\t%SELF%'s color brightens as you approach, and the edges of his body fuzzes very slightly. You've come to understand this change in his aspect as a smile -- you smile back."
+	}
+}
+
+look-ch2-zippy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tShe nods encouragingly at you as you pass her. Love is apparent in her glowing, golden-yellow eyes."
+	}
+}
+
+look-ch2-magejournal {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tAunt Zippy gave you this journal on your previous birthday. You haven't written in it every day, but you're still proud that you're about a third of the way through it. There's a good number of doodles in there, too: dragons and fireballs, mostly."
+	}
+}
+
+look-ch2-magebox {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's one of the moving boxes you brought to your current house in town from your old house in the country. Still unpacked after all this time... which makes you wonder whether the contents were ultimately that important to you."
+	}
+}
+
+look-ch2-microwave-magehouse {
+	show serial dialog spacer;
+	if (flag ch2-microwave-time is false) {
+		show serial dialog {
+			"You looked at the <m>%SELF%</>."
+			"\tIt's one of those new flat-button models. Its tiny seven-segment display is glowing a soft blue-green... and you've just realized it's got the time wrong by an hour."
+		}
+		set flag ch2-microwave-time to true;
+	} else {
+		show serial dialog {
+			"You looked at the <m>%SELF%</>."
+			"\tIt's one of those new flat-button models. Its tiny seven-segment display is glowing a soft blue-green -- but you don't have the heart to tell it that it's got the time wrong."
+		}
+	}
+}
+
+look-ch2-cake {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's the remains of a very special cake that Aunt Zippy and Uncle Zappy made for your birthday -- lemon sponge and pink buttercream."
+	}
+}
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-magehouse {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>YOUR HOUSE</>..." }
+	if (
+		variable ch2-storyflag-round is 0
+	) {
+		teleport entity "Aunt Zippy" to geometry alt-spot1;
+		teleport entity "Uncle Zappy" to geometry alt-spot3;
+	} else if (
+		variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is 4
+	) {
+		set entity "Aunt Zippy" on_tick to yeet;
+		set entity "Uncle Zappy" on_tick to yeet;
+	} else if (variable ch2-storyflag-round is 5) {
+		teleport entity "Aunt Zippy" to geometry alt-spot2;
+		teleport entity "Uncle Zappy" to geometry alt-spot1;
+	}
+	copy ch2-map-init;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-magehouse {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-magehouse;
+		load map ch2-town;
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-magehouse-south {
+	copy warping-out-fade-out;
+	load map ch2-town;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-zappy {
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Good morning, %PLAYER%! Off to the castle this morning?"
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "I heard from Alfonso that you'll need to grapple with some insects in the castle. I had no idea."
+			PLAYER "Insects?"
+			SELF "I think he mentioned bees? Bees that were sheep? Or was it the other way around? Sheep that were bees?"
+			PLAYER "(Bees? Sheep?)"
+			SELF "Qu'avait-il dit? \"Ewe est bee\"?"
+			PLAYER "...." "Are you kidding me?"
+			SELF "...Ha! Yes, sorry! I was trying to think of a \"dad joke\" about this all morning, but that was the best I could do."
+			PLAYER "Thanks, %SELF%. I appreciate the effort."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Hey, %SELF%, I'm looking for Bert. I don't suppose you've seen him today?"
+			SELF "Sorry, I haven't been paying much attention to library patrons. I've been glued to these Spanish textbooks."
+			PLAYER "Spanish?"
+			SELF "Well, if I couldn't work out a \"dad joke\" for USB in French, I thought I might try Spanish."
+			"I could use \"es\" for the \"S\", you see? But I'm stuck on the nuance between \"ser\" and \"estar\", so...."
+			PLAYER "Is it a dad joke if you need to know a second language to get it?"
+			SELF "Sure. Anything works as long as it makes you roll your eyes in exasperation."
+		}
+		turn entity "%SELF%" north;
+	} else {
+		show dialog {
+			SELF "Hey, %PLAYER%! I heard the good news! Great job getting the artifact working!"
+		}
+	}
+}
+interact-ch2-zippy {
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "If you need a break from the castle out west, don't forget to come back home for a visit."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "I'm so proud of you, %PLAYER%, for all the things you've learned. You've grown a lot this year, and I want you to know that."
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			SELF "Why, hello, %PLAYER%. I was just doing this week's shopping. How does French toast sound for breakfast tomorrow?"
+			PLAYER "That would be awesome. But, um, I was wondering...."
+			"Have you seen Bert around today? I can't seem to find him."
+			SELF "Sorry, %PLAYER%. Haven't seen him today."
+		}
+		turn entity "%SELF%" north;
+	} else {
+		show dialog {
+			SELF "Good job, %PLAYER%! Congratulations on conquering that castle!"
+		}
+	}
+}
+interact-ch2-cake {
+	show dialog {
+		PLAYER "There's a little frosting left. I wonder if Aunt Zappy would let me lick the plate clean?"
+	}
+}
+interact-ch2-magejournal {
+	show dialog {
+		entity "Mage Journal" portrait journal
+		"Dear Diary,"
+		"I just turned 16, and apparently, Ring Zero chose me! It was a little scary, but everyone is being very supportive."
+		"It looks like computers are super complicated."
+	}
+}
+interact-ch2-magebox {
+	show dialog {
+		PLAYER "Yeah, I should probably unpack. It's been years...."
+	}
+}

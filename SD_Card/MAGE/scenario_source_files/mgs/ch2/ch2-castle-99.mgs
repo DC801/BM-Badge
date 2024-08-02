@@ -1,0 +1,461 @@
+include!("header.mgs")
+
+const! (
+	$opaque = 3 // idle_plain_opaque (glasses are opaque)
+	$transparent = 4 // idle_plain_transparent (can see eyes through glasses)
+	$toTransparent  = 5 // shving_on (opaque -> transparent)
+	$toOpaque  = 6 // shving_off (transparent -> opaque)
+	$lowering = 7 // downcast_lowering (raised -> lowered)
+	$lowered = 8 // downcast
+	$raising = 9 // downcast_raising (lowered -> raised)
+
+	$opaque_serious = 0
+	$opaque_grin = 1
+	$transparent_serious = 2
+	$transparent_grin = 3
+	$opaque_lowered = 4
+	$opaque_lowered_almost = 5
+)
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-99 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>SECRET LAB</>."
+		"\tTo say the room looked \"lived in\" is an understatement. There's a musty, stuffy smell, as if the air doesn't properly circulate -- as well as a hint of ozone. It's clear Lambda hasn't received company in some time."
+		" "
+	}
+}
+
+look-ch2-lambda-lab {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\t%SELF% could be the dictionary image for the word \"disheveled.\" Above deep purple robes he wears a white labcoat, rife with pockets. The lenses of his round glasses seem to magnify the dark circles under his eyes."
+	}
+}
+
+look-ch2-xc {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tIt's difficult to tell whether the machine is orange on purpose or if it is simply very thoroughly rusted. Its legs look odd, somehow -- you imagine it could scoot around the floor without moving any of the joints in its legs."
+	}
+}
+
+look-ch2-lambda-crt {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe screen displays a map of the castle, a vague audit of the castle's contents, and a diagram of the current mainframe. The diagram has a list of parts on the side, included some rejected alternates."
+	}
+}
+
+look-ch2-lambda-books {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tEach book in the line is very tall. Black-and-white drawings adorn every cover alongside bright, saturated colors."
+	}
+}
+
+look-ch2-lambda-ration {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA can of food, claiming to take very little preparation in order to eat. This can is already open, and Lambda has apparently supplemented the dried food bars with ketchup."
+	}
+}
+
+look-ch2-lambda-poster {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe large poster depicts five astronauts. Must be one of those \"japanese animes\" you've heard about -- one of them even has blue hair. You gotta have blue hair."
+	}
+}
+
+look-ch2-lambda-drawer {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe filing cabinet is stuffed full of cables. Each drawer has only one kind of cable in it, but the organization stops there."
+	}
+}
+
+look-ch2-lambda-computer {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe lights on this computer flicker madly. Whatever it's doing, it's sure working hard. The beige enclosure matches the devices attached to it, all of which show signs of yellowing on the edges."
+	}
+}
+
+look-ch2-lambda-box {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tAn ordinary cardboard box. Inside are rations, bottles of ketchup, as well as a rubber snake."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-99 {
+	// ch2 room state
+	mutate ch2-in-room = 99;
+	
+	// entrance text
+	show serial dialog spacer;
+	if (flag ch2-seen-room-99 is false) {
+		show serial dialog { "Discovered <bold><c>SECRET LAB</>! Room added to <c>MAP</>!" }
+		set flag ch2-seen-room-99 to true;
+	} else {
+		show serial dialog { "Entering <bold>SECRET LAB</>..." }
+	}
+
+	// room unique stuff
+	teleport camera to geometry camera;
+
+	// cutscene pre-fade :/
+	if (flag ch2-cutseen-castle99 is false) {
+		set entity Lambda current_animation to $lowered
+	}
+
+	// Check if rake has been obtained
+	if (flag ch2-has-minirake-99 is true) {
+		copy ch2-minirake-99-hide;
+	}
+	
+	// initialize everything
+	copy ch2-map-init;
+
+	// check if you do the cutscene or not
+	if (flag ch2-cutseen-castle99 is false) {
+		if (debug mode is on) {
+			register skip -> ch2-skip-99
+			debug!("<c>SKIP</>: skip this cutscene")
+		}
+		goto ch2-cutscene-castle99; // NOTE: branching means `goto`! Deadend things here!
+	}
+}
+
+ch2-skip-99 {
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	set flag ch2-cutseen-castle99 to true;
+	copy ch2-load-castle-1-special;
+}
+
+ch2-lambda-shving_on-tickversion {
+	play entity Lambda animation $toTransparent once;
+	set entity Lambda current_animation to $transparent;
+	goto null_script;
+}
+ch2-lambda-shving_off-tickversion {
+	play entity Lambda animation $toOpaque once;
+	set entity Lambda current_animation to $opaque;
+	goto null_script;
+}
+ch2-lambda-lower {
+	play entity Lambda animation $lowering once;
+	set entity Lambda current_animation to $lowered;
+}
+ch2-lambda-lower-tickversion {
+	copy ch2-lambda-lower;
+	goto null_script;
+}
+ch2-lambda-raise {
+	play entity Lambda animation $raising once;
+	set entity Lambda current_animation to $opaque;
+}
+ch2-lambda-raise-tickversion {
+	copy ch2-lambda-raise;
+	goto null_script;
+}
+ch2-lambda-walkup {
+	wait 200ms;
+	walk entity Lambda to geometry lambda-walk-line1 over 200ms;
+	set entity Lambda current_animation to $opaque;
+	goto null_script;
+}
+ch2-cutscene-castle99 {
+	turn player control off;
+	wait 1500ms;
+	turn entity "%PLAYER%" east;
+	wait 1200ms;
+	turn entity "%PLAYER%" south;
+	wait 800ms;
+	turn entity "%PLAYER%" west;
+	wait 200ms;
+	turn entity "%PLAYER%" north;
+	wait 700ms;
+	copy ch2-lambda-raise;
+	wait 1100ms;
+	walk entity Lambda to geometry lambda-walk-line over 800ms;
+	set entity Lambda current_animation to $opaque;
+	wait 1200ms;
+	walk entity Lambda to geometry lambda-walk-line1 over 500ms;
+	set entity Lambda current_animation to $opaque;
+	wait 1900ms;
+	show dialog {
+		Lambda "So... welcome, %PLAYER%. I'm Lambda."
+	}
+	wait 400ms;
+	copy ch2-lambda-lower;
+	wait 100ms;
+	show dialog {
+		Lambda emote $opaque_lowered "Oh, I guess you already knew that."
+		"Sorry, I...."
+	}
+	wait 600ms;
+	copy ch2-lambda-raise;
+	show dialog {
+		Lambda "Anyway, what you probably didn't know is that I'm...."
+	}
+	set entity Lambda on_tick to ch2-lambda-shving_on-tickversion;
+	show dialog {
+		Lambda emote $transparent_serious "...I'm one of the village elders."
+		PLAYER "!!"
+		"What? How? Since when?"
+		Lambda emote $transparent_serious "Since always."
+		PLAYER "But I know Jackob, Alfonso, and Bert. I don't know you."
+		Lambda emote $transparent_serious "That was by design."
+	}
+	turn entity Lambda west;
+	show dialog {
+		Lambda emote $transparent_serious "I made everyone else forget me so I could stay here, behind the scenes, and protect this artifact from the Big Bad."
+		"But...."
+	}
+	wait 400ms;
+	play entity Lambda animation $toOpaque once;
+	set entity Lambda current_animation to $opaque;
+	wait 250ms;
+	show dialog {
+		Lambda "Being disconnected from everything, like this... it's hard. I'm surprised how little time it took for things to become hard."
+	}
+	turn entity Lambda north;
+	show dialog {
+		Lambda "I did what I thought had to be done, but...."
+		Lambda emote $opaque_lowered_almost "Watching you meeting everyone, doing things with everyone...."
+		"BUILDING things with everyone...."
+	}
+	walk entity Lambda to geometry mid-spot over 300ms;
+	show dialog {
+		Lambda emote $opaque_lowered_almost  "I wiped their memories of me, but I didn't think I would lose my own memories of them, too!"
+	}
+	turn entity Lambda west;
+	set entity Lambda on_tick to ch2-lambda-lower-tickversion;
+	show dialog {
+		Lambda emote $opaque_lowered "How could I forget what how fun it was to try to build wacky projects with my friends? Teaching, learning, getting to know someone better...."
+		"Even the individual people! I'd forgotten how funny -- and insightful -- Sea Moss is."
+		"I forgot how resourceful and inventive Rocco is, and how cool it is that he can make something awesome and functional out of scrap."
+		"Gregory, Mr. Watt, Jean-Paul, even the king... all these people I used to spend time with...."
+	}
+	turn entity Lambda south;
+	set entity Lambda on_tick to ch2-lambda-raise-tickversion;
+	show dialog {
+		Lambda emote $opaque_lowered_almost "These problems everyone has been having lately -- if I hadn't cut everyone off from the castle mainframe, and if I hadn't cut myself off from them...."
+		"Most of those problems wouldn't have happened. Hell, maybe none of them would have happened."
+	}
+	set entity Lambda on_tick to ch2-lambda-walkup;
+	show dialog {
+		Lambda emote $opaque_lowered_almost  "I've been suffering. But I've been selfish, too, thinking that by closing doors and letting my friends live their lives without me, I was protecting them."
+		"I was holding onto my pain like it was concrete proof I was doing the right thing."
+	}
+	show dialog {
+		Lambda "But I was wrong, wasn't I?"
+	}
+	walk entity Lambda to geometry lambda-walk-line2 over 500ms;
+	set entity Lambda on_tick to ch2-lambda-shving_on-tickversion;
+	show dialog {
+		Lambda emote $transparent_serious "It's better to be connected to people. However dangerous things might become, it's better to face those dangers together."
+		"Don't you think?"
+		> "Yeah, better to face danger together." : ch2-cutscene-castle99-dangeryes
+		> "I don't know...." : ch2-cutscene-castle99-dangeridk
+	}
+}
+
+ch2-cutscene-castle99-dangeryes {
+	show dialog {
+		PLAYER "Yeah, better to face danger together."
+		Lambda emote $transparent_grin "Yeah!"
+	}
+	set entity Lambda on_tick to ch2-lambda-shving_off-tickversion;
+	show dialog {
+		Lambda emote $opaque_lowered_almost "So, um, to that end -- here, take this."
+	}
+	goto ch2-cutscene-castle99-continue;
+}
+ch2-cutscene-castle99-dangeridk {
+	show dialog {
+		PLAYER "I don't know."
+	}
+	set entity Lambda on_tick to ch2-lambda-shving_off-tickversion;
+	show dialog {
+		Lambda "Yeah, I guess things are pretty complicated, aren't they?"
+		Lambda "So, um, anyway -- here, take this."
+	}
+	goto ch2-cutscene-castle99-continue;
+}
+
+ch2-cutscene-castle99-os-pickup {
+	wait 350ms;
+	set entity "%PLAYER%" current_animation to 1;
+	walk entity "%PLAYER%" to geometry pickup-spot over 300ms;
+	set entity "%PLAYER%" current_animation to 0;
+	goto null_script;
+}
+ch2-cutscene-castle99-os-pickup-return {
+	wait 150ms;
+	set entity "%PLAYER%" relative_direction to 2;
+	set entity "%PLAYER%" current_animation to 1;
+	walk entity "%PLAYER%" to geometry warp-spot over 300ms;
+	set entity "%PLAYER%" current_animation to 0;
+	set entity "%PLAYER%" relative_direction to 0;
+	turn entity "%PLAYER%" north;
+	goto null_script;
+}
+ch2-cutscene-castle99-continue {
+	set entity "%PLAYER%" on_tick to ch2-cutscene-castle99-os-pickup;
+	walk entity Lambda to geometry lambda-walk-line3 over 400ms;
+	set entity Lambda current_animation to $opaque;
+	wait 700ms;
+	show dialog {
+		name "" "(You received the mainframe OS!)"
+	}
+	wait 200ms;
+	set entity "%PLAYER%" on_tick to ch2-cutscene-castle99-os-pickup-return;
+	set entity Lambda relative_direction to 2;
+	walk entity Lambda to geometry lambda-walk-line2 over 400ms;
+	set entity Lambda current_animation to $opaque;
+	turn entity Lambda south;
+	set entity Lambda relative_direction to 0;
+	wait 100ms;
+	show dialog {
+		Lambda "Put that in the mainframe's optical drive, and we can get the new OS installed."
+		"Head on back to the XA room. The Wizard can help you set it all up."
+		PLAYER "You're not going to come with me?"
+	}
+	wait 150ms;
+	walk entity Lambda to geometry lambda-walk-line over 700ms;
+	set entity Lambda current_animation to $lowered;
+	wait 100ms;
+	show dialog {
+		Lambda emote $opaque_lowered_almost "No, I'm staying here."
+		Lambda emote $opaque_lowered "I'm not quite ready to face everyone else yet. There's no way to recover their memories, so we'll have to start our friendships over, and...."
+		Lambda emote $opaque_lowered_almost "I'll just need a little time first. Sorry."
+	}
+	walk entity Lambda to geometry computer-spot over 700ms;
+	set entity Lambda current_animation to $opaque;
+	turn entity Lambda north;
+	wait 800ms;
+	walk entity "%PLAYER%" to geometry pickup-spot over 200ms;
+	wait 250ms;
+	walk entity "%PLAYER%" to geometry lambda-walk-line3 over 400ms;
+	wait 300ms;
+	turn entity Lambda west;
+	show dialog {
+		Lambda "Go ahead, and I'll help out like before."
+	}
+	turn entity Lambda north;
+	turn player control on;
+	set flag ch2-map-mainframeos to false;
+	set flag ch2-carrying-mainframeos to true;
+	set flag ch2-cutseen-castle99 to true;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-99 {
+	goto null_script;
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-99 { // sanitize ch2 room state
+	mutate ch2-in-room = 0;
+}
+
+/* ---------- ENTITY THINGS ---------- */
+
+interact-ch2-xc {
+	show dialog {
+		PLAYER "(Wow, it looks just like the spider robot in the first room of the castle.)"
+	}
+}
+interact-ch2-lambda-drawer {
+	show dialog {
+		PLAYER "(It's full of cables. But how many years of tangle is this?)"
+	}
+}
+interact-ch2-lambda-computer {
+	show dialog {
+		PLAYER "(That looks a lot like the mainframe in the XA room.)"
+	}
+}
+interact-ch2-lambda-ration {
+	show dialog {
+		PLAYER "(It's a meal, ready to eat.)"
+	}
+}
+interact-ch2-lambda-box {
+	show dialog {
+		PLAYER "(It's just a box....)"
+	}
+}
+interact-ch2-lambda-poster {
+	show dialog {
+		PLAYER "(Policenauts? Must be an anime.)"
+	}
+}
+interact-ch2-lambda-books {
+	show dialog {
+		PLAYER "(Why do these books all have weird black-and-white pictures of animals on their covers when they're about programmming?)"
+		"(Oh, this one has a cool dragon on the cover, but... no, I guess this one is about programming, too.)"
+	}
+}
+
+// I think the CRT is too hard to aim at, so taking this out:
+
+// interact-ch2-lambda-crt {
+// 	show dialog {
+// 		PLAYER "todo on_interact crt"
+// 	}
+// }
+
+interact-ch2-lambda-lab {
+	copy face-player;
+	set entity Lambda current_animation to $opaque;
+	if (variable ch2-storyflag-round is < 5) {
+		show dialog {
+			Lambda "Go ahead, and I'll watch over things from here."
+		}
+	} else {
+		show dialog {
+			Lambda emote $opaque_grin "Hey, good to see you %PLAYER%."
+			Lambda emote $opaque_grin "Don't worry about me -- I'll leave my cave now and then."
+			Lambda "But there's still a lot of research I need to do here at this station, so I'm not entirely free of this place yet."
+		}
+	}
+	turn entity "%SELF%" toward entity CRT;
+}
+
+interact-ch2-minirake-99 {
+	show dialog {
+		PLAYER alignment TL "(Lambda seems to have been using this rake to help keep his laundry together.)"
+		"(I hope he doesn't mind me borrowing it.)"
+	}
+	copy ch2-minirake-99-hide;
+	set flag ch2-carrying-minirake-99 to true;
+	show dialog {
+		name "" alignment TL "(You picked up the mini rake!)"
+	}
+}
+
+ch2-minirake-99-hide {
+	teleport entity "clothes rake" to geometry hiding-spot;
+	set entity "clothes rake" name to " ";
+	set entity "clothes rake" on_interact to null_script;
+}

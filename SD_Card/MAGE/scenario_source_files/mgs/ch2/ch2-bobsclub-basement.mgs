@@ -1,0 +1,461 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-bobsclub-basement {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>BOB'S CLUB BASEMENT</>."
+		"\tThe downstairs strongly resembles the upstairs in terms of furnishings, though of course, it's much more heavily populated. As for the Bobs themselves, what they lack in variety they make up in volume -- both in terms of their quantity and their noise. Everyone is in the middle of a conversation, and they have to speak loudly to be heard over the raucous dubstep."
+		" "
+	}
+}
+
+look-ch2-bobaustin {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tStoic and inscrutable, the giant stone golem could as easily be a hundred years old as a thousand. With his eyes glowing as they are, you can't be sure where he's looking, but you wouldn't be surprised if his gaze was following you as you move about the room."
+	}
+}
+look-ch2-bobmoss {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\t%SELF% may share the same sharp edges and chiseled brow as his cousin, %Bob Austin%, but somehow %SELF%'s demeanor is more cheerful and friendly. It may be his mossy afro -- or it may be the way he lifts his hands more freely, as if they didn't weigh anything."
+	}
+}
+look-ch2-icechest {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tA half dozen cans of assorted sodas peak through the mountain of ice within the chest, but the vast majority of cans are a bold orange, yellow, and green. The ice isn't very melted yet, so all the cans must be frosty."
+	}
+}
+look-ch2-marathonbob {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at one of the <m>%SELF%s</>."
+		"\tEach Bob has a military look to them: a holstered firearm, combat boots, and a headset -- though the nature of their eyepieces escapes you. Each of these Bobs act alike, and apart from their colored uniforms, might as well be entirely interchangable with one another."
+	}
+}
+look-ch2-guardianbob {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tStrangely, this Bob has a different cast to his skin, as if he were made of metal and plastic -- as if the shadows didn't land quite right around his body. But perhaps that's just how people from the 'net usually look."
+	}
+}
+look-ch2-bob {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>Bob</>."
+		"\t...Or you would, but there's a lot of Bobs around, and \"Bob\" is a bit vague, isn't it?"
+	}
+}
+look-ch2-party-cups {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the red <m>%SELF%</>."
+		"\tClassic party fare! It wouldn't be a party without plastic <bold>American Name Brand Party Cups (c)</>!"
+	}
+}
+look-ch2-pizza {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the <m>pizza</>."
+		"\tPlentiful boxes from a local pizza establishment, but there's only cheese and pepperoni -- this party seems to be about quantity instead of quality. From the shine of the cheese, the pizzas are a little greasier than was strictly necessary. Still, the smell is enticing!"
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-bobsclub-basement {
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>BOB'S CLUB BASEMENT</>..." }
+	if (flag ch2-cutseen-bob-party is false) {
+		teleport camera to geometry gasp-spot;
+	} else {
+		teleport entity "Guardian Bob" to geometry bob-walk2;
+		set entity "Guardian Bob" on_tick to loiter-slow;
+	}
+	copy ch2-map-init;
+	register look + bob -> look-ch2-bob;
+	if (flag ch2-cutseen-bob-party is false) {
+		copy ch2-cutscene-bob-party;
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-bobsclub-basement {
+	goto null_script;
+}
+
+tick-linger-1 {
+	copy tick-rand-mini;
+	walk entity "%SELF%" to geometry linger-spot-1b over 500ms;
+	turn entity "%SELF%" east;
+	wait 15s;
+	walk entity "%SELF%" to geometry linger-spot-1a over 500ms;
+	turn entity "%SELF%" east;
+	wait 4s;
+}
+
+on_tick-turn-right-and-down-kinda {
+	wait 4500ms;
+	turn entity "%SELF%" south;
+	wait 2400ms;
+	turn entity "%SELF%" east;
+	wait 800ms;
+}
+
+tick-rand-mini {
+	mutate rand ? 3;
+	if (variable rand is 2) {
+		wait 2s;
+	} else if (variable rand is 1) {
+		wait 3s;
+	} else {
+		wait 4s;
+	}
+}
+tick-rand-broad {
+	mutate rand ? 3;
+	if (variable rand is 2) {
+		wait 3s;
+	} else if (variable rand is 1) {
+		wait 9s;
+	} else {
+		wait 14s;
+	}
+}
+
+tick-linger-2 {
+	copy tick-rand-broad
+	wait 3s;
+	walk entity "%SELF%" to geometry linger-spot-2b over 1s;
+	turn entity "%SELF%" south;
+	wait 12s;
+	turn entity "%SELF%" east;
+	wait 10s;
+	turn entity "%SELF%" south;
+	wait 4s;
+	walk entity "%SELF%" to geometry linger-spot-2a over 1s;
+	turn entity "%SELF%" south;
+	wait 20s;
+}
+tick-linger-3 {
+	copy tick-rand-mini
+	wait 5s;
+	walk entity "%SELF%" to geometry linger-spot-3b over 750ms;
+	turn entity "%SELF%" east;
+	wait 32s;
+	walk entity "%SELF%" to geometry linger-spot-3a over 750ms;
+	turn entity "%SELF%" east;
+	wait 4s;
+}
+tick-linger-4 {
+	copy tick-rand-broad
+	walk entity "%SELF%" to geometry linger-spot-4b over 1s;
+	turn entity "%SELF%" north;
+	wait 15s;
+	turn entity "%SELF%" west;
+	wait 12s;
+	walk entity "%SELF%" to geometry linger-spot-4a over 1s;
+	turn entity "%SELF%" north;
+	wait 12s;
+}
+on_tick-turn-right-and-down-kinda2 {
+	wait 3300ms;
+	turn entity "%SELF%" south;
+	wait 3820ms;
+	turn entity "%SELF%" east;
+	wait 3800ms;
+}
+on_tick-turn-left-and-down-kinda {
+	wait 2200ms;
+	turn entity "%SELF%" south;
+	wait 3200ms;
+	turn entity "%SELF%" west;
+	wait 2800ms;
+}
+on_tick-turn-left-and-down-kinda2 {
+	wait 1310ms;
+	turn entity "%SELF%" south;
+	wait 2700ms;
+	turn entity "%SELF%" west;
+	wait 4900ms;
+}
+on_tick-turn-right-and-up-kinda {
+	wait 400ms;
+	turn entity "%SELF%" east;
+	wait 3100ms;
+	turn entity "%SELF%" north;
+	wait 5840ms;
+}
+
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-bobsclub-basement-stairs {
+	copy warping-out-fade-out;
+	load map ch2-bobsclub;
+}
+
+/* ---------- CUTSCENE ---------- */
+
+ch2-cutscene-bob-party {
+	// Fade in.
+	// turn serial control off;
+	turn player control off;
+	wait 1500ms;
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	wait 700ms;
+	show dialog {
+		PLAYER "Huh. Well, I found the source of the noise...."
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
+	show dialog {
+		GBob "Hey! You're not allowed in here!"
+	}
+	walk entity "Guardian Bob" along geometry bob-walk over 1200ms;
+	wait 800ms;
+	show dialog {
+		GBob "Oh, wait. I remember you. Your name was Bob, wasn't it?"
+	}
+	if (entity "%PLAYER%" name is "Bob") {
+		show dialog {
+			PLAYER "Oh, I guess it is."
+		}
+	} else {
+		show dialog {
+			PLAYER "Um, technically, it WAS Bob...."
+			"(At one point....)"
+		}
+	}
+	show dialog {
+		GBob "Oh, well. Too late regardless."
+	}
+	set entity "Guardian Bob" on_tick to spin_self_clockwise;
+	show dialog {
+		GBob "Welcome to the annual Bob's Club party."
+		PLAYER "I thought the party was canceled this year."
+	}
+	set entity "Guardian Bob" on_tick to null_script;
+	turn entity "Guardian Bob" toward entity "%PLAYER%";
+	show dialog {
+		GBob "It was, but we seem to be experiencing a time anomaly."
+		PLAYER "What? A time anomaly?"
+		GBob "Yeah. The flow of time is being simultaneously compressed and expanded."
+		"The Bob's Club party was canceled this year, but simultaneously, this is a year where it WASN'T canceled."
+		"Your 16th birthday, for another example. When did you get chosen by Ring Zero?"
+		PLAYER "Yesterday."
+		GBob "Was it yesterday? Or was it actually a few years ago?"
+	}
+	wait 100ms;
+	// (turn animations backward)
+	set entity "%PLAYER%" relative_direction to 2;
+	walk entity "%PLAYER%" to geometry gasp-spot over 200ms;
+	// (turn animations forward)
+	set entity "%PLAYER%" relative_direction to 0;
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
+	show dialog {
+		PLAYER "Wait. What?"
+	}
+	turn entity "Guardian Bob" south;
+	show dialog {
+		GBob "That's what makes this an anomaly. It wasn't yesterday, and it wasn't a few years ago. It was BOTH."
+	}
+	turn entity "%PLAYER%" south;
+	show dialog {
+		PLAYER "That's... impossible."
+		"What does that even mean?"
+		GBob "It means someone is messing with reality."
+	}
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
+	show dialog {
+		PLAYER "The Big Bad?"
+	}
+	turn entity "Guardian Bob" toward entity "%PLAYER%";
+	show dialog {
+		GBob "Probably."
+	}
+	wait 100ms;
+	set entity "%PLAYER%" on_tick to spin_self_clockwise;
+	wait 240ms;
+	show dialog {
+		PLAYER "This is freaking me out. How do we stop it?"
+	}
+	turn entity "Guardian Bob" south;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity "Guardian Bob";
+	show dialog {
+		GBob "Depends on the exact cause. I've been keeping my eye on it with my keytool, Glitch. Trying to investigate from several angles."
+		"But I don't have a lot of power in here."
+	}
+	turn entity "Guardian Bob" toward entity "%PLAYER%";
+	show dialog {
+		GBob  "Honestly, Bob, the sooner you can stop the Big Bad, the better."
+		"No pressure!"
+	}
+	wait 80ms;
+	turn entity "Guardian Bob" north;
+	wait 400ms;
+	show dialog {
+		GBob "Anyway, I'll keep watch here."
+		"Help yourself to the food. There's plenty."
+	}
+	if (flag ch2-want-cactuscooler is true) {
+		show dialog {
+			PLAYER "Oh, do you have any Cactus Cooler?"
+		}
+		turn entity "Guardian Bob" toward entity "%PLAYER%";
+		show dialog {
+			GBob "Sure. We've got a lifetime supply in the ice chest back there. Help yourself."
+		}
+	}
+	set flag ch2-cutseen-bob-party to true;
+	wait 150ms;
+	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms;
+	set entity "Guardian Bob" on_tick to loiter-slow;
+	make camera follow entity "%PLAYER%";
+	turn player control on;
+}
+
+loiter-slow {
+	turn entity "%SELF%" south;
+	wait 3s;
+	turn entity "%SELF%" east;
+	wait 2s;
+	turn entity "%SELF%" west;
+	wait 4s;
+	walk entity "%SELF%" to geometry bob-walk3 over 400ms;
+	turn entity "%SELF%" south;
+	wait 4s;
+	turn entity "%SELF%" west;
+	wait 3s;
+	turn entity "%SELF%" north;
+	wait 2s;
+	walk entity "%SELF%" to geometry bob-walk2 over 400ms;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-guardianbob {
+	copy interrupt-walk;
+	show dialog {
+		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up and everything."
+		SELF "Well, we WERE going to have the party upstairs, but someone broke in and pretended to be named Bob. After that we upped our security."
+		PLAYER "...Oh yeah?"
+		SELF "Yeah, this guy Strong Bad. The photo on his fake ID looked nothing like him, but Bob Austin let him in anyway."
+		PLAYER "No kidding."
+		SELF "I've been manually teleporting Bobs down here ever since, just to be sure. My teleport program is very strict. It won't let non-Bobs through at all."
+		PLAYER "Good to know."
+	}
+	copy resume-walk;
+}
+
+interact-ch2-bobaustin {
+	copy face-player;
+	show dialog {
+		SELF "I'm the MC for Bob Jeopardy this year."
+		"Of course, I'm the MC for Bob Jeopardy every year."
+		PLAYER "What's Bob Jeopardy like?"
+		SELF "Like Jeopardy, but with drinking."
+		"And Bobs."
+	}
+	turn entity "%SELF%" south;
+}
+
+interact-ch2-bobmoss {
+	copy face-player;
+	show dialog {
+		SELF "Hey there, friend. Have a drink, on the house."
+		"Plenty of Cactus Cooler to go around."
+	}
+	turn entity "%SELF%" south;
+}
+interact-ch2-party-cups {
+	copy face-player;
+	show dialog {
+		PLAYER "It's always red plastic cups, isn't it?"
+	}
+	turn entity "%SELF%" south;
+}
+interact-ch2-pizza {
+	copy face-player;
+	show dialog {
+		PLAYER "Mmmm, fresh pizza!"
+
+	}
+	turn entity "%SELF%" south;
+}
+
+interact-ch2-marathonbob {
+	// capture original facing direction
+	copy interrupt-walk;
+	// normal behavior
+	mutate bobtalkrand ? 10;
+	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
+	if (variable bobtalkrand is 1) {
+		show dialog { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" }
+	} else if (variable bobtalkrand is 2) {
+		show dialog { SELF "Ah! Watch it!" "You stepped on my foot!" }
+	} else if (variable bobtalkrand is 3) {
+		show dialog { SELF "Follow me!" "Let's start a conga line!" }
+	} else if (variable bobtalkrand is 4) {
+		show dialog { SELF "AAHHHH!" "I bit my tongue!" }
+	} else if (variable bobtalkrand is 5) {
+		show dialog { SELF "Get me outta here." "This dubstep is too much." }
+	} else if (variable bobtalkrand is 6) {
+		show dialog { SELF "Hey! He's shooting at us!" "That DSLR looks nice. Wonder where he got it." }
+	} else if (variable bobtalkrand is 7) {
+		show dialog { SELF "Perimeter secured." "No non-Bobs here!" }
+	} else if (variable bobtalkrand is 8) {
+		show dialog { SELF "All right!" "This is the best Bob's Club party yet!" }
+	} else if (variable bobtalkrand is 9) {
+		show dialog { SELF "Thank god it's you!" "Another Bob!" }
+	} else {
+		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
+	}
+	// turn back to the original facing direction
+	copy resume-walk;
+	mutate bobtalkrand = 0; // courtesy reset
+}
+
+interact-ch2-icechest {
+	if (flag ch2-carrying-cactuscooler is true) {
+		if (
+			flag interrupt is false // you didn't just pick it up
+			|| flag ch2-want-cactuscooler is false // OR you don't know you need it
+		) {
+			show dialog {
+				PLAYER "I won't need more Cactus Cooler than this. I'll leave the rest for everyone else."
+			}
+		} else {
+			// if you did just pick it up AND you know you need it
+			show dialog {
+				PLAYER "Got my can of Cactus Cooler. Time to bring it to Rocco at the castle power plant."
+			}
+		}
+	} else if (flag ch2-cactuscooler-delivered is true) {
+		// you've already turned the soda in
+		show dialog {
+			PLAYER "Rocco already has his Cactus Cooler. I'll leave the rest of these cans for everyone else at the party."
+		}
+	} else { // You get to pick up a Cactus Cooler!
+		if (flag ch2-want-cactuscooler is false) {
+			show dialog { PLAYER "This really is a lot of Cactus Cooler. Guess I'll grab a can for the road." }
+		} else {
+			show dialog { PLAYER "Bingo! Cactus Cooler!" }
+		}
+		show dialog {
+			name "" "(You pick up the can of Cactus Cooler!)"
+		}
+		copy ch2-pickup-cactuscooler;
+		set flag interrupt to true; // you just picked it up
+	}
+}

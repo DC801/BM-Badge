@@ -6,6 +6,12 @@ var possibleNameList = [
 	'extra_special',
 	'really_extra_special',
 	'why_do_you_have_this_many_animations',
+	'calm_down_animator',
+	'or_good_job_animator',
+	'whichever',
+	'i_guess_im_just_glad',
+	'youre_using_the_tools_we_made',
+	'carry_on',
 ];
 
 Vue.component(
@@ -186,10 +192,6 @@ Vue.component(
 				});
 				this.currentEntityType.animations = newValues;
 			},
-			copyState: function () {
-				this.$refs.copyStateTextArea.select();
-				document.execCommand("copy");
-			},
 		}
 	}
 );
@@ -207,6 +209,9 @@ Vue.component(
 			tileid: {
 				type: Number,
 				required: true,
+			},
+			hideBorder: {
+				type: Boolean,
 			}
 		},
 		data: function () {
@@ -215,10 +220,6 @@ Vue.component(
 			};
 		},
 		created: function() {
-			var imageFile = this.tileset.imageFile;
-			if (imageFile && !imageFile.blobUrl) {
-				imageFile.blobUrl = URL.createObjectURL(imageFile);
-			}
 			if(this.animation) {
 				this.animate();
 			}
@@ -232,7 +233,7 @@ Vue.component(
 			},
 			animation: function () {
 				var tileid = this.tileid;
-				var currentTile = this.tileset.tiles.find(function (tile) {
+				var currentTile = (this.tileset.tiles || []).find(function (tile) {
 					return tile.id === tileid;
 				});
 				return currentTile && currentTile.animation;
@@ -248,11 +249,14 @@ Vue.component(
 			outerStyle: function () {
 				var tileset = this.tileset;
 				var animation = this.animation;
+				var border = this.hideBorder
+					? undefined
+					: `1px solid ${animation ? '#f44' : '#333'}`
 				return {
 					display: 'inline-block',
 					width: tileset.tilewidth + 2 + 'px',
 					height: tileset.tileheight + 2 + 'px',
-					border: `1px solid ${animation ? '#f44' : '#333'}`,
+					border: border,
 				};
 			},
 			innerStyle: function () {

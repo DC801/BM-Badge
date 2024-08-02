@@ -1,0 +1,401 @@
+include!("header.mgs")
+
+on_tick-ch2-credits {
+	turn hex control off;
+	turn serial control off;
+	turn player control on;
+	turn entity "%PLAYER%" south;
+	make camera follow entity cameraman;
+	teleport entity cameraman to geometry credits_camera;
+	fade in camera from #000000 over 400ms;
+	
+	//TEMP
+	show serial dialog spacer;
+	show serial dialog {
+		"Welcome to the credits for DC801 Black Mage Badge Ch2!"
+		"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
+	}
+
+	set entity Goat current_animation to 1;
+	wait 1200ms;
+	walk entity cameraman along geometry credits_camera over 600ms; // lolol
+	wait 600ms;
+	play entity Cat animation 2 once;
+	wait 300ms;
+
+	// TEMP
+	show serial dialog {
+		"(THANK YOU)"
+	}
+
+	fade out camera to #000000 over 1200ms;
+	turn hex control on;
+	turn serial control on;
+	turn player control on;
+	if (
+		warp state is ch2-ending
+		|| flag credits-from-menu is false // todo: is this redundant with warp state? Maybe manage warp state better?
+	) {
+		copy ch2-load-castle-1-special;
+	} else {
+		load map main_menu;
+	}
+}
+
+/* ---------------- END CUTSCENE STUFF --------------- */
+
+// ACTOR: The part of Lambda will be played by Bert.
+const!($Lambda = "Bert")
+
+settings for dialog {
+	label Lambda {
+		entity $Lambda
+		name "Lambda"
+	}
+}
+const! ( // Lambda animations and emotes
+	$opaque = 3 // idle_plain_opaque (glasses are opaque)
+	$transparent = 4 // idle_plain_transparent (can see eyes through glasses)
+	$toTransparent  = 5 // shving_on (opaque -> transparent)
+	$toOpaque  = 6 // shving_off (transparent -> opaque)
+	$lowering = 7 // downcast_lowering (raised -> lowered)
+	$lowered = 8 // downcast
+	$raising = 9 // downcast_raising (lowered -> raised)
+
+	$opaque_serious = 0
+	$opaque_grin = 1
+	$transparent_serious = 2
+	$transparent_grin = 3
+	$opaque_lowered = 4
+	$opaque_lowered_almost = 5
+	$panicked = 5
+)
+player-watch-lambda-actor {
+	turn entity "%PLAYER%" toward entity $Lambda;
+}
+alfonso-watch-lambda-actor {
+	turn entity "Alfonso" toward entity $Lambda;
+}
+jackob-watch-lambda-actor {
+	turn entity "Jackob" toward entity $Lambda;
+}
+ch2-lambda-lower-actor {
+	play entity $Lambda animation $lowering once;
+	set entity $Lambda current_animation to $lowered;
+}
+ch2-lambda-raise-actor {
+	play entity $Lambda animation $raising once;
+	set entity $Lambda current_animation to $opaque;
+}
+
+// CUTSCENE
+
+ch2-post-credits-walkin {
+	walk entity "%PLAYER%" along geometry end-walkin over 1800ms;
+	goto null_script;
+}
+lambda-cower {
+	walk entity $Lambda along geometry lambda-hide over 1000ms;
+	goto null_script;
+}
+player-watch-alfonso {
+	turn entity "%PLAYER%" toward entity Alfonso;
+}
+ch2-elder-ending-walkin {
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 3000ms;
+	goto null_script;
+}
+ch2-elder-ending-walkin-end {
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 3000ms;
+	set entity "%SELF%" on_tick to yeet;
+	goto null_script;
+}
+
+ch2-post-credits {
+	turn serial control off;
+	turn player control off;
+
+	// Make Bert into Lambda
+	set entity $Lambda on_tick to null_script;
+	teleport entity $Lambda to geometry hiding-spot;
+	set entity $Lambda type to lambda;
+
+	// the rest of the owl
+	set entity "%PLAYER%" on_tick to ch2-post-credits-walkin;
+	fade in camera from #000000 over 1100ms;
+	wait 700ms;
+	teleport entity $Lambda to geometry lambda1;
+	show dialog {
+		Lambda "%PLAYER%, wait!"
+	}
+	set entity "%PLAYER%" on_tick to player-watch-lambda-actor;
+	walk entity $Lambda to geometry lambda2 over 1800ms;
+	set entity $Lambda current_animation to $opaque;
+	wait 1200ms;
+	show dialog {
+		Lambda "I heard over the intercom that you were going to give a status report to the village elders. I... I want to come with you."
+	}
+	turn entity $Lambda south;
+	show dialog {
+		Lambda emote $opaque_lowered_almost "I'm a village elder, too, dammit. I should act like one, even if it's hard."
+		Lambda emote $opaque_serious "I-I want to apologize to the other village elders for all the problems I caused in the castle. Apologize for my cowardice, and --"
+	}
+	turn entity $Lambda east;
+	show dialog {
+		Lambda "?!"
+		Jackob alignment BR "%PLAYER%! %PLAYER%!"
+		Alfonso alignment BR "%PLAYER%! We've discovered something!"
+	}
+	set entity $Lambda relative_direction to 2;
+	walk entity $Lambda to geometry lambda-hide over 150ms;
+	set entity $Lambda relative_direction to 0;
+	turn entity $Lambda east;
+	wait 200ms;
+	show dialog {
+		Lambda emote $panicked "Wait a minute! I --"
+	}
+	set entity $Lambda on_tick to spin_self_clockwise;
+	show dialog {
+		PLAYER "What's wrong? You wanted to talk to them."
+		Lambda emote $panicked "Yes, but not quite so fast! I-I need to work myself up to it! I gotta --"
+	}
+	set entity $Lambda on_tick to null_script;
+	set entity $Lambda on_tick to lambda-cower;
+	set entity "%PLAYER%" on_tick to player-watch-lambda-actor;
+	show dialog {
+		Lambda emote $panicked "HIDE!"
+		PLAYER "Hey!"
+	}
+	set entity "%PLAYER%" on_tick to player-watch-alfonso;
+	set entity Alfonso path to alfonso-walkin;
+	set entity Jackob path to jackob-walkin;
+	set entity Alfonso on_tick to ch2-elder-ending-walkin;
+	wait 200ms;
+	set entity Jackob on_tick to ch2-elder-ending-walkin;
+	wait 100ms;
+	show dialog {
+		Alfonso "There you are, %PLAYER%. We've learned something terribly important."
+		Jackob "%PLAYER%, I know my eyes aren't what they used to be, but was there someone else here with you just now?"
+		PLAYER "Well, you see --"
+		Alfonso "Never mind, never mind! It's the Big Bad!"
+	}
+	wait 500ms;
+	if (entity Alfonso current_animation is 0) {
+		// just in case he's still walking up, in which case he shouldn't do this turn
+		turn entity Alfonso toward entity Jackob;
+	}
+	show dialog {
+		Alfonso "The Big Bad, he --"
+		Jackob "He can make you forget things. Implant memories, too, perhaps. I can't really remember."
+		PLAYER "What?"
+	}
+	if (entity Alfonso current_animation is 0) {
+		// just in case he's still walking up, in which case he shouldn't do this turn
+		turn entity Alfonso toward entity "%PLAYER%";
+	}
+	show dialog {
+		Alfonso "I can almost remember how this all works. Almost. It's getting easier the more time passes, but...."
+		PLAYER "He can make people forget things? But... Lambda can do that, too!"
+		"Who actually is the Big Bad? Could it be... Lambda?"
+		Jackob "Lambda? Who's that?"
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity $Lambda;
+	show dialog {
+		PLAYER "Well?"
+	}
+	wait 1200ms;
+	set entity Alfonso on_tick to alfonso-watch-lambda-actor;
+	wait 200ms;
+	set entity Jackob on_tick to jackob-watch-lambda-actor;
+	wait 1400ms;
+	show dialog {
+		Lambda emote $opaque_lowered_almost "I-I'll come out. I'm sorry."
+		Alfonso "!!"
+	}
+	wait 500ms;
+	walk entity $Lambda to geometry lambda6 over 1200ms;
+	turn entity $Lambda south;
+	wait 500ms;
+	walk entity $Lambda to geometry lambda7 over 2300ms;
+	set entity $Lambda current_animation to $opaque;
+	set entity "%PLAYER%" on_tick to null_script;
+	set entity Jackob on_tick to null_script;
+	set entity Alfonso on_tick to null_script;
+	wait 200ms;
+	turn entity $Lambda toward entity Alfonso;
+	wait 1400ms;
+	show dialog {
+		Jackob "Your robes! Those colors!"
+		Lambda emote $opaque_lowered "Y-yes. I'm sorry."
+		"I'm one of the village elders, but I made everyone forget that. Made them forget about me altogether. But w-we were close friends once."
+		Alfonso "You're Lambda?"
+		Jackob "Were there four of us? Maybe. Can't remember. Can't be sure."
+		PLAYER "Why do you and the Big Bad both have the power to make people forget things, Lambda?"
+	}
+	rotate entity $Lambda 1;
+	copy ch2-lambda-lower-actor;
+	wait 1400ms;
+	show dialog {
+		Lambda emote $panicked "The Big Bad...? Oh, dear. Oh, no."
+	}
+	turn entity $Lambda toward entity Alfonso;
+	set entity $Lambda current_animation to $opaque;
+	show dialog {
+		Lambda emote $opaque_serious "You're sure, Alfonso? The Big Bad can make people forget things, too?"
+	}
+	show dialog {
+		Alfonso "It's something I recently remembered. Or almost remembered."
+		"But I needed to tell you, %PLAYER%, in case I forgot again. I think... I must have forgotten it several times."
+	}
+	rotate entity $Lambda 1;
+	show dialog {
+		Jackob "I admit it's the only thing that makes sense. It could explain why I don't know the Big Bad's name, though I must have known it once."
+		"Why I can't remember his face, either, even though we've had several direct confrontations."
+		"There's so much I can't remember. So much that it's suspicious."
+	}
+	turn entity $Lambda toward entity Alfonso;
+	show dialog {
+		Lambda emote $opaque_serious "It's true I can't remember the Big Bad clearly, but I thought that was a side effect of what I'd done to myself."
+		"That is, after I'd made everyone else forget me, I had trouble remembering everyone else in turn. But this...."
+	}
+	rotate entity $Lambda 1;
+	show dialog {
+		Lambda emote $opaque_serious "It's also true that I found the memory manipulation program in a space I already had access to. Could... I actually be the Big Bad without knowing it?"
+	}
+	rotate entity $Lambda 1;
+	show dialog {
+		Lambda "Might I have erased my own memories to protect myself somehow? A Yagami gambit?"
+		Alfonso "No, the Big Bad knows who he is, because he is still acting against us. He triggered that earthquake."
+	}
+	turn entity $Lambda toward entity "%PLAYER%";
+	show dialog {
+		PLAYER "And the Big Bad hid the serial book AFTER we went to bed last night, but BEFORE we all met this morning. At least that's what Bert told me before he rushed off."
+		Jackob "Where even is Bert? Where has he gone?"
+	}
+	turn entity Alfonso toward entity Jackob;
+	show dialog {
+		Alfonso "He must have discovered something the Big Bad didn't want us to know."
+	}
+	turn entity $Lambda toward entity Jackob;
+	show dialog {
+		Lambda emote $panicked "Bert's been kidnapped?!"
+	}
+	turn entity Jackob south;
+	turn entity Alfonso toward entity $Lambda; 
+	show dialog {
+		Jackob "Oh, dear. Oh, dear."
+	}
+	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	wait 800ms;
+	show dialog {
+		PLAYER "This is getting dangerous, isn't it?"
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity Alfonso; 
+	turn entity Jackob toward entity "%PLAYER%"; 
+	show dialog {
+		Jackob "If only Bert had mentioned to us what he was researching! We're working in the dark! And I can't remember hardly anything about any of this!"
+	}
+	turn entity Alfonso toward entity Jackob;
+	show dialog {
+		Alfonso "Ah, Jackob, you're onto something!"
+		"If the Big Bad was wiping all our minds, he must have been especially thorough with you!"
+	}
+	turn entity Jackob toward entity Alfonso;
+	show dialog {
+		Alfonso "You must have known something absolutely vital. You MUST try to remember whatever it is you knew! It could be the key to everything!"
+	}
+	set entity Jackob on_tick to look-left-and-up-fast;
+	show dialog {
+		Jackob "But how do I remember what I don't know I don't remember?"
+		Alfonso "I don't know. We'll have you meditate. Do some free association. Think of songs or smells from your past or something."
+	}
+	turn entity Alfonso toward entity $Lambda;
+	wait 800ms;
+	set entity Jackob on_tick to null_script;
+	turn entity Jackob toward entity $Lambda;
+	show dialog {
+		Alfonso "I don't know if I can trust you, Lambda."
+	}
+	copy ch2-lambda-lower-actor;
+	show dialog {
+		Lambda emote $opaque_lowered "I-I know. It's part of having skills like mine, I think."
+		Alfonso "No, it's because you literally manipulated our minds."
+		"We're supposed to just believe that you're one of us? Or trust you after you've done something like that?"
+		Lambda emote $opaque_lowered "...."
+	}
+	copy ch2-lambda-raise-actor;
+	show dialog {
+		Lambda emote $opaque_lowered_almost "If it means anything, I've been trying to make things right."
+		PLAYER "It's true. He helped me fix the serial artifact."
+	}
+	turn entity Jackob toward entity "%PLAYER%";
+	show dialog {
+		Jackob "It's fixed? That's good news."
+		PLAYER "And he's been helping me clean up the castle."
+		Alfonso "Hmph. Even the Big Bad wouldn't bother with that, not even as an attempt at social engineering. Not unless he's learned to play a long game."
+		Lambda "And I can still help you."
+		"If the memory manipulation program was written by the Big Bad, then I might find files or other programs that could give us more information about his identity."
+		Alfonso "Well, I wish you luck with that. Let us know what you find. But otherwise... stay out of our way."
+		Lambda emote $opaque_lowered "....Y-yes. I understand."
+	}
+	turn entity $Lambda south;
+	turn entity Jackob toward entity "%PLAYER%";
+	show dialog {
+		Jackob "Take this time to rest, %PLAYER%. I'm afraid there's one more challenge for you to face in the morning. A third artifact you must acquire."
+		"I can't quite remember what it is, but when it's time, it'll be out east, on the other side of town."
+	}
+	set entity Alfonso path to alfonso-walkout;
+	set entity Jackob path to jackob-walkout;
+	set entity Alfonso on_tick to ch2-elder-ending-walkin-end;
+	wait 100ms;
+	set entity Jackob on_tick to ch2-elder-ending-walkin-end;
+	show dialog {
+		Alfonso "Never mind that! You must remember what you've forgotten, Jackob! Hurry!"
+		name "Jackob" portrait village_elder // in case he's yeeted before this card comes up
+		"Don't rush me! You're making it worse!"
+	}
+	wait 1100ms;
+	copy ch2-lambda-lower-actor;
+	turn entity $Lambda south;
+	wait 200ms;
+	set entity "%PLAYER%" on_tick to player-watch-lambda-actor;
+	show dialog {
+		Lambda  emote $opaque_lowered "They'll never really trust me again. Maybe I was better off where I was, in hiding."
+		"...."
+	}
+	turn entity $Lambda west;
+	set entity $Lambda current_animation to $transparent;
+	show dialog {
+		Lambda emote $transparent_serious "No. That line of thinking is unproductive. We can't go back to how things were, but that doesn't mean we can't move forward."
+		"I want to stop hiding. I want to be better. I'll prove my trustworthiness by how I act from here, even if it's slow."
+	}
+	walk entity $Lambda to geometry lambda8 over 300ms;
+	set entity $Lambda current_animation to $opaque;
+	wait 500ms;
+	show dialog {
+		Lambda "Thank you, %PLAYER%."
+		PLAYER "What for?"
+	}
+	turn entity $Lambda toward entity "%PLAYER%";
+	show dialog {
+		Lambda emote $opaque_grin "For fixing the mainframe with me. For making me feel like I can make a difference again. I have more hope now than I've had for a while."
+		Lambda "We can always forge new connections, even after old ones are permanently broken. I will remember that."
+	}
+	turn entity $Lambda west;
+	show dialog {
+		Lambda "Good luck with everything, %PLAYER%."
+	}
+	set entity $Lambda on_tick to ch2-lambda-walkout;
+	set flag ch2-cutseen-secret-ending to true;
+	wait 800ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	fade out camera to #000000 over 1200ms;
+	load map credits2;
+}
+
+ch2-lambda-walkout {
+	walk entity $Lambda to geometry lambda9 over 2600ms;
+	set entity $Lambda on_tick to yeet;
+}

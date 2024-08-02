@@ -1,0 +1,329 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-greenhouse {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>GREENHOUSE</>."
+		"\tThe interior is bright and warm, and the air is lightly muggy. Fragrance from the ether nettle blossoms tempers the scent of greenery and soil. The raised planters smells earthy but not musty."
+		" "
+	}
+}
+
+look-ch2-trekkie {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tHe's softly humming to himself, probably a song from one of those musicals he's always going on about. His eyes dart back and forth across the screen."
+	}
+}
+
+look-ch2-ethernettles {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at the ethernettles."
+		"\tThe blossoms are strangely fluffy, as if the petals were graced with downy hair. The plants themselves are less inviting, with their spines and the sharp corners on their leaves."
+	}
+
+}
+look-ch2-ethernettle-top {
+	show serial dialog spacer;
+	concat serial dialog {
+		"You looked at <m>%SELF%</>.\n"
+		"\tThe "
+	}
+}
+look-ch2-ethernettle-bot {
+	concat serial dialog {
+		/*orange*/" blossoms are strangely fluffy, as if the petals\n"
+	}
+	show serial dialog {
+		"were graced with downy hair. The plant itself is less inviting, with its spines and the sharp corners on its leaves."
+	}
+}
+look-ch2-ethernettle-bot-long {
+	concat serial dialog {
+		/*orange-and-white*/" blossoms are strangely fluffy, as if\n"
+	}
+	show serial dialog {
+		"the petals were graced with downy hair. The plant itself is less inviting, with its spines and the sharp corners on its leaves."
+	}
+}
+
+look-ch2-ethernettle1 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "orange-and-white" }
+	copy look-ch2-ethernettle-bot-long;
+}
+
+look-ch2-ethernettle2 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "orange" }
+	copy look-ch2-ethernettle-bot;
+}
+
+look-ch2-ethernettle3 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "green-and-white" }
+	copy look-ch2-ethernettle-bot-long;
+}
+
+look-ch2-ethernettle4 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "blue" }
+	copy look-ch2-ethernettle-bot;
+}
+
+look-ch2-ethernettle5 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "blue-and-white" }
+	copy look-ch2-ethernettle-bot-long;
+}
+
+look-ch2-ethernettle6 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "green" }
+	copy look-ch2-ethernettle-bot;
+}
+
+look-ch2-ethernettle7 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "brown-and-white" }
+	copy look-ch2-ethernettle-bot-long;
+}
+
+look-ch2-ethernettle8 {
+	copy look-ch2-ethernettle-top;
+	concat serial dialog { "brown" }
+	copy look-ch2-ethernettle-bot;
+}
+
+look-ch2-tumbleweed {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThis cable looks hopelessly tangled. You hope no one needs to use this one any time soon."
+	}
+}
+
+look-ch2-ethernet {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe looping on the bundle is tight and neat, like the cable was only just freed from its plastic packaging. The friendly blue makes it look like a network cable to you, but you're not sure why."
+	}
+}
+
+look-ch2-mulch {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe bag looks to be a bajillion pounds, and is well worn. It's dirty but in a wholesome, earthy way."
+	}
+}
+
+look-ch2-modem {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tAn arcane black box with a series of enigmatic green lights across the front. It's slightly warm."
+	}
+}
+
+
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-greenhouse {
+	register look + ethernettles -> look-ch2-ethernettles;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>GREENHOUSE</>..." }
+	copy entity EtherNettle1 primary_id into variable ethernettle_id;
+	copy entity EtherNettle1 primary_id into variable EtherNettle1;
+	copy entity EtherNettle2 primary_id into variable EtherNettle2;
+	copy entity EtherNettle3 primary_id into variable EtherNettle3;
+	copy entity EtherNettle4 primary_id into variable EtherNettle4;
+	copy entity EtherNettle5 primary_id into variable EtherNettle5;
+	copy entity EtherNettle6 primary_id into variable EtherNettle6;
+	copy entity EtherNettle7 primary_id into variable EtherNettle7;
+	copy entity EtherNettle8 primary_id into variable EtherNettle8;
+	copy ch2-map-init;
+}
+
+/* ---------- ON_TICK ---------- */
+
+ch2-capture-ethernettle1 {
+	copy entity EtherNettle1 primary_id into variable EtherNettle1;
+}
+ch2-capture-ethernettle2 {
+	copy entity EtherNettle2 primary_id into variable EtherNettle2;
+}
+ch2-capture-ethernettle3 {
+	copy entity EtherNettle3 primary_id into variable EtherNettle3;
+}
+ch2-capture-ethernettle4 {
+	copy entity EtherNettle4 primary_id into variable EtherNettle4;
+}
+ch2-capture-ethernettle5 {
+	copy entity EtherNettle5 primary_id into variable EtherNettle5;
+}
+ch2-capture-ethernettle6 {
+	copy entity EtherNettle6 primary_id into variable EtherNettle6;
+}
+ch2-capture-ethernettle7 {
+	copy entity EtherNettle7 primary_id into variable EtherNettle7;
+}
+ch2-capture-ethernettle8 {
+	copy entity EtherNettle8 primary_id into variable EtherNettle8;
+}
+
+on_tick-ch2-greenhouse {
+	// ethernettle interference checks
+	// todo: Make these into functions in the individual Ether Nettle's on_tick when you get functions!
+	if (
+		entity EtherNettle1 is not inside geometry EtherNettle1Origin
+		|| entity EtherNettle2 is not inside geometry EtherNettle2Origin
+		|| entity EtherNettle3 is not inside geometry EtherNettle3Origin
+		|| entity EtherNettle4 is not inside geometry EtherNettle4Origin
+		|| entity EtherNettle5 is not inside geometry EtherNettle5Origin
+		|| entity EtherNettle6 is not inside geometry EtherNettle6Origin
+		|| entity EtherNettle7 is not inside geometry EtherNettle7Origin
+		|| entity EtherNettle8 is not inside geometry EtherNettle8Origin
+		|| variable EtherNettle1 is not ethernettle_id
+		|| variable EtherNettle2 is not ethernettle_id
+		|| variable EtherNettle3 is not ethernettle_id
+		|| variable EtherNettle4 is not ethernettle_id
+		|| variable EtherNettle5 is not ethernettle_id
+		|| variable EtherNettle6 is not ethernettle_id
+		|| variable EtherNettle7 is not ethernettle_id
+		|| variable EtherNettle8 is not ethernettle_id
+		|| entity EtherNettle1 secondary_id is not 3
+		|| entity EtherNettle2 secondary_id is not 2
+		|| entity EtherNettle3 secondary_id is not 7
+		|| entity EtherNettle4 secondary_id is not 0
+		|| entity EtherNettle5 secondary_id is not 1
+		|| entity EtherNettle6 secondary_id is not 6
+		|| entity EtherNettle7 secondary_id is not 5
+		|| entity EtherNettle8 secondary_id is not 4
+		|| entity EtherNettle1 primary_id_type is not 0
+		|| entity EtherNettle2 primary_id_type is not 0
+		|| entity EtherNettle3 primary_id_type is not 0
+		|| entity EtherNettle4 primary_id_type is not 0
+		|| entity EtherNettle5 primary_id_type is not 0
+		|| entity EtherNettle6 primary_id_type is not 0
+		|| entity EtherNettle7 primary_id_type is not 0
+		|| entity EtherNettle8 primary_id_type is not 0
+	) {
+		show dialog {
+			Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
+		}
+		teleport entity EtherNettle1 to geometry EtherNettle1Origin;
+		teleport entity EtherNettle2 to geometry EtherNettle2Origin;
+		teleport entity EtherNettle3 to geometry EtherNettle3Origin;
+		teleport entity EtherNettle4 to geometry EtherNettle4Origin;
+		teleport entity EtherNettle5 to geometry EtherNettle5Origin;
+		teleport entity EtherNettle6 to geometry EtherNettle6Origin;
+		teleport entity EtherNettle7 to geometry EtherNettle7Origin;
+		teleport entity EtherNettle8 to geometry EtherNettle8Origin;
+		copy entity EtherNettle1 primary_id from variable ethernettle_id;
+		copy entity EtherNettle2 primary_id from variable ethernettle_id;
+		copy entity EtherNettle3 primary_id from variable ethernettle_id;
+		copy entity EtherNettle4 primary_id from variable ethernettle_id;
+		copy entity EtherNettle5 primary_id from variable ethernettle_id;
+		copy entity EtherNettle6 primary_id from variable ethernettle_id;
+		copy entity EtherNettle7 primary_id from variable ethernettle_id;
+		copy entity EtherNettle8 primary_id from variable ethernettle_id;
+		set entity EtherNettle1 secondary_id to 3;
+		set entity EtherNettle2 secondary_id to 2;
+		set entity EtherNettle3 secondary_id to 7;
+		set entity EtherNettle4 secondary_id to 0;
+		set entity EtherNettle5 secondary_id to 1;
+		set entity EtherNettle6 secondary_id to 6;
+		set entity EtherNettle7 secondary_id to 5;
+		set entity EtherNettle8 secondary_id to 4;
+		set entity EtherNettle1 primary_id_type to 0;
+		set entity EtherNettle2 primary_id_type to 0;
+		set entity EtherNettle3 primary_id_type to 0;
+		set entity EtherNettle4 primary_id_type to 0;
+		set entity EtherNettle5 primary_id_type to 0;
+		set entity EtherNettle6 primary_id_type to 0;
+		set entity EtherNettle7 primary_id_type to 0;
+		set entity EtherNettle8 primary_id_type to 0;
+	}
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-greenhouse;
+		load map ch2-town;
+	}
+}
+
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-greenhouse-south {
+	copy warping-out-fade-out;
+	load map ch2-town;
+}
+on_walk-ch2-greenhouse-south {
+	// triggered by map's on_tick
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-trekkie {
+	copy face-player;
+	if (variable ch2-storyflag-round is 0) {
+		show dialog {
+			SELF "Oh, %PLAYER%! Me heard you were going to the serial castle in the mountain!"
+			PLAYER "Yeah, I guess."
+			SELF "Me want to wish you the best of luck!"
+			PLAYER "Thanks, %SELF%."
+		}
+	} else if (variable ch2-storyflag-round is <= 2) {
+		show dialog {
+			SELF "How are things going, %PLAYER%?"
+			PLAYER "They're going okay, %SELF%. What about you?"
+			SELF "Me thinking of replacing the Ether Nettles with a faster spec. Gigabit Ether Nettles!"
+			PLAYER "(Giga what?)"
+		}
+	} else if (variable ch2-storyflag-round is <= 4) {
+		show dialog {
+			PLAYER "Say, %SELF%, have you seen Bert around here recently?"
+			SELF "Me have not seen Bert for a long time. Me sorry, %PLAYER%."
+		}
+	} else {
+		show dialog {
+			SELF "Me heard %PLAYER% got the serial artifact."
+			"Me knew you could do it! Good job!"
+		}
+	}
+	turn entity "%SELF%" east;
+}
+
+interact-ch2-modem {
+	show dialog {
+		PLAYER "Oh, good. Looks like the internet is still working."
+	}
+}
+interact-ch2-tumbleweed {
+	show dialog {
+		PLAYER "I swear, this thing gets more tangled every time I see it."
+	}
+}
+interact-ch2-ethernet {
+	show dialog {
+		PLAYER "Looks like this one is new out of the box. Not a kink or pretzel in the whole thing."
+	}
+}
+interact-ch2-mulch {
+	show dialog {
+		PLAYER "I bet this mulch is really heavy."
+	}
+}
+interact-ch2-barrel {
+	show dialog {
+		PLAYER "I wonder if this is rainwater."
+	}
+}

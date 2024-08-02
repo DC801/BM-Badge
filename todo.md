@@ -74,6 +74,7 @@
 		- [x] CHECK_ENTITY_Y
 		- [x] CHECK_ENTITY_INTERACT_SCRIPT
 		- [x] CHECK_ENTITY_TICK_SCRIPT
+		- [x] CHECK_ENTITY_LOOK_SCRIPT
 		- [x] CHECK_ENTITY_TYPE
 		- [x] CHECK_ENTITY_PRIMARY_ID
 		- [x] CHECK_ENTITY_SECONDARY_ID
@@ -82,14 +83,7 @@
 		- [x] CHECK_ENTITY_CURRENT_FRAME
 		- [x] CHECK_ENTITY_DIRECTION
 		- [x] CHECK_ENTITY_GLITCHED
-		- [x] CHECK_ENTITY_HACKABLE_STATE_A
-		- [x] CHECK_ENTITY_HACKABLE_STATE_B
-		- [x] CHECK_ENTITY_HACKABLE_STATE_C
-		- [x] CHECK_ENTITY_HACKABLE_STATE_D
-		- [x] CHECK_ENTITY_HACKABLE_STATE_A_U2
-		- [x] CHECK_ENTITY_HACKABLE_STATE_C_U2
-		- [x] CHECK_ENTITY_HACKABLE_STATE_A_U4
-		- [x] CHECK_ENTITY_PATH (specific hackable state check by name)
+		- [x] CHECK_ENTITY_PATH
 		- [x] CHECK_SAVE_FLAG
 		- [x] CHECK_IF_ENTITY_IS_IN_GEOMETRY
 		- [x] CHECK_FOR_BUTTON_PRESS
@@ -103,6 +97,7 @@
 		- [x] SET_ENTITY_Y
 		- [x] SET_ENTITY_INTERACT_SCRIPT
 		- [x] SET_ENTITY_TICK_SCRIPT
+		- [x] SET_ENTITY_LOOK_SCRIPT
 		- [x] SET_ENTITY_TYPE
 		- [x] SET_ENTITY_PRIMARY_ID
 		- [x] SET_ENTITY_SECONDARY_ID
@@ -114,14 +109,7 @@
 		- [x] SET_ENTITY_DIRECTION_TARGET_ENTITY
 		- [x] SET_ENTITY_DIRECTION_TARGET_GEOMETRY
 		- [x] SET_ENTITY_GLITCHED
-		- [x] SET_ENTITY_HACKABLE_STATE_A
-		- [x] SET_ENTITY_HACKABLE_STATE_B
-		- [x] SET_ENTITY_HACKABLE_STATE_C
-		- [x] SET_ENTITY_HACKABLE_STATE_D
-		- [x] SET_ENTITY_HACKABLE_STATE_A_U2
-		- [x] SET_ENTITY_HACKABLE_STATE_C_U2
-		- [x] SET_ENTITY_HACKABLE_STATE_A_U4
-		- [x] SET_ENTITY_PATH (specific hackable state check by name)
+		- [x] SET_ENTITY_PATH
 		- [x] SET_SAVE_FLAG
 		- [x] SET_PLAYER_CONTROL
 		- [x] SET_MAP_TICK_SCRIPT
@@ -204,6 +192,20 @@
 				- [ ] from a numerical value
 				- [ ] from an alphanumeric value
 		- [x] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
+	- [ ] Dialog editor:
+		- [x] File selector
+		- [x] List of Dialogs by name in file
+		- [ ] Show the `dialog phases` in a dialog
+			- [ ] Add `phase`
+			- [ ] Delete `phase`
+			- [ ] Preview/edit `phase`
+				- [x] Preview message
+				- [ ] Select current message
+				- [ ] edit message
+				- [ ] add message
+				- [ ] delete message
+				- [ ] text entry for entity name
+				- [ ] text entry for entity portrait
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long
@@ -368,6 +370,7 @@
 	- [x] Verify that the header of dragged file contains `MAGEGAME`
 	- [x] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
 	- [x] Reloading the page starts game fresh from original `game.dat` in IndexedDB
+- [x] !!!CRITICAL!!! Make HTTP HEAD request for `game.dat` on server, compare size/modification to local, and re-download on change
 - [ ] Fancy extra `game.dat` features
 	- [ ] The dragged-in `game.dat` should be cached between refreshes
 	- [ ] Should show the Path/CRC32/Length of each `game.dat`
@@ -441,23 +444,133 @@
 - [x] Bender + shiny metal ass
 
 # 2022 big picture objectives
+- [x] How to version the game.dat and the engine together?
+	- [!] Programmatically? No, the security boundary of the browser `file://` path prevents us from reading the `mage_dat.ksy`
+	- [x] Manually? Yes, just update the docs for "Adding new actions" to manually include a data file version in these places
+		- kaitai
+		- encoder
+		- c code decoder
+	- [x] Add data version to kaitai
+	- [x] Add data version to encoder
+	- [x] Throw error on mismatch in C
+	- [x] Fix web build issues with infinite loop in the `ENGINE_PANIC` screen
+	- [x] Add the docs to the actions update instructions
+- [ ] New actions
+	- [x] `SET_CONNECT_SERIAL_DIALOG` (serial_dialog_id)
+	- [ ] `SHOW_SERIAL_DIALOG` (serial_dialog_id)
+		- [x] Output text
+		- [x] Sanitize & handle input
+	- [ ] `INVENTORY_GET` (item_name)
+	- [ ] `INVENTORY_DROP` (item_name)
+	- [ ] `CHECK_INVENTORY` (item_name, expected_state, success_script)
+	- [ ] `SET_MAP_LOOK_SCRIPT` (script_name)
+	- [ ] `SET_ENTITY_LOOK_SCRIPT` (entity_name, script_name)
+	- [ ] `SET_TELEPORT_ENABLED` (bool_value)
+	- [ ] `CHECK_MAP` (map_name, expected_state, success_script)
+	- [ ] `SET_BLE_FLAG` (flag_constant_name, bool_value)
+	- [ ] `CHECK_BLE_FLAG` (flag_constant_name, expected_state, success_script)
+	- [!] Don't implement because this introduces more state to track. Item use/look scripts will be stateless like the map go scripts
+		- [!] `SET_ITEM_LOOK` (item_name, script_name)
+		- [!] `SET_ITEM_USE` (item_name, script_name)
+- [ ] Add numeric "constants" support to encoder
 - [ ] Serial Dungeon
+	- [ ] Create a new `maps.json`; Maps are named keys full of objects:
+		- [x] `path` example "maps/map-main_menu.json"
+		- [x] `on_tick` script
+		- [x] `on_load` script
+		- [x] `on_look` script
+		- [ ] `items` is an array of strings that map to global item names
+		- [x] `directions` is an object of `"direction_name": "script_name"`, so `go $DIRECTION` calls a script
+			- JSON looks like:
+				```
+				directions: {
+					north: 'go_main_hall_north',
+					east: 'go_torii_gate',
+					south: 'go_goat_room',
+					west: 'go_west_room',
+				}
+				```
+	- [x] Map struct changes
+		- [x] `on_look` script
+		- [x] `script_padding` 2 bytes
+			- [x] Change the encoder to handle this new shape
+			- [x] Update the kaitai struct
+			- [x] Update the C
+		- [x] `direction_count` uint8_t
+		- [x] `directions` is an array, so `go $DIRECTION` calls a script
+			- [x] `name` 12 bytes script ids,
+			- [x] `script_id` 2 bytes
+			- [x] `padding` 2 bytes to get us back into 16 alignment
+	- [ ] Entity struct changes
+		- [ ] `on_look` script, stored in bytes 30 & 31
+	- [ ] Action `setEntityScript` needs some TLC and testing for setting look scripts
+	- [ ] New Item struct - managed in `items.json`
+		- [ ] There may not be more than 64 items in the whole universe
+		- [ ] 16 of these items need to be held in ram because the scripts need to be mutable to allow branching
+		- [ ] When you load map, loop through the `ItemLocationArray` and load items in the room, or in player inventory, into 1 of 16 slots in ram
+		- [ ] Struct details
+			- [ ] `name` 12 chars
+			- [ ] The following script IDs are GLOBAL SCRIPT IDS because they can be run from ANY room!
+				- [ ] `on_look` script ID
+				- [ ] `on_use` script ID
+	- [ ] New ItemLocationArray
+		- [ ] Part of the save struct
+		- [ ] It's an array of 64 long, matching the `items` limit
+		- [ ] 2 bytes per item `current_location` value
+			- [ ] 0x0000 means nowhere
+			- [ ] 0x0001 0xFFFE means it's on a map
+			- [ ] 0xFFFF means it's in the player's inventory
+	- [ ] Web build should get a toggleable "console" area below the gameplay window, that basically looks like the `text_based_adventure_prototype`
 	- [ ] Text based adventure
 		- [ ] Player loses control over the joysticks and things are instead done over the serial CLI
+		- [ ] Serial command processing system
+			- [ ] Complete list of possible command formats
+				- [ ] Verb: 'look', 'inventory' 'help'
+				- [ ] Verb, Target: 'look flask', 'get flask', 'go north'
+			- [ ] Verbs to implement
+				- [ ] help - shows a list of available commands and their syntax
+				- [ ] look - Without an argument, runs the current room's `on_look` script, or a fallback to "There is nothing here but sadness". If there is an argument, looks to the items in that room, and then the inventory to try and find an item with a matching name.
+					- [x] Implement execution of `on_look` script
+					- [x] Implement listing of available directions
+					- [ ] Implement listing of items on map/in room
+					- [ ] Implement running `on_look` for items
+					- [ ] Implement running `on_look` for entities
+					- [ ] If `teleport` is enabled, the `on_look` output is prefixed with the name of the room that the player is in
+				- [x] go - Looks up the `directions` in the current room, and if there is one that matches the second argument, runs the script for going that direction
+				- [ ] get/take
+				- [ ] drop/yeet
+				- [ ] inventory - Shows the names of current inventory items
+				- [ ] use - runs the item's `on_use` script from any item in the current room, or your inventory
+				- [ ] teleport - allows you to teleport to any room that you know the name of. This functions as a "fast travel" after you have built the server. Becomes enabled via a specific flag like the Hex Editor.
 		- [ ] The tileset actually just looks like a Zelda MiniMap
 			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
 		- [ ] This dungeon can has an inventory system
-		- [ ] Different rooms can act as mini-tutorials for the features of the "terminal"
-			- [ ] Do you `cd` to uhh... Change Dungeon?
-			- [ ] Do you `ls` to uhh... Look Somewhere?
-			- [ ] Do you `cat` to uhh... Ask a cat to read a file to you?
-				- [ ] Does a cat walk up to you at the start of the dungeon and follow you around? is it your secretary?
-			- [ ] Do we "|" or "pipe" things from one command into another other?
+		- [ ] What powers do the Serial artifact give you?
+			- [ ] Having an inventory at all
+			- [ ] Teleport - if you know the name of a room anywhere in the game, you can type `warp $ROOM_NAME`
+		- [ ] The end goal of the Serial Dungeon + having inventory
 		- [ ] We need an interactive character named PuTTY
 			- [ ] It should be illustrated or described as a Morph suit like the PUTTYs from Power Rangers
+	- [ ] You need to be able to build a ~~PC~~ Server from multiple components found in the Serial Dungeon
+		- [ ] In the story, you need to build a server so that you can access/use the serial commands outside of the serial dungeon, and progress in the game by finding secret parts of rooms you've already been in with the `look` command.
+		- [ ] You need a Case
+		- [ ] You need a Motherboard
+		- [ ] You need a Power Supply
+		- [ ] You need a CPU
+		- [ ] You need RAM
+		- [ ] You need a Keyboard - but you can only find a Keytar, or a midi-enabled Button Accordion with a midi to USB keyboard adapter
+		- [ ] There's a cat, and you need to convince it to give you its mouse
+		- [ ] There's a Bitcoin Mine, and you need to convince them to stop burning down the planet and free the video cards
+		- [ ] When you have all of the components are ready, the EXA says: `Now all we need is a Banana, and some Hope!`
+			- [ ] Procure Banana
+			- [ ] Procure Hope
+			- [ ] In the end, the `hope` doesn't help, and you must resort to `percussive maintenance` to get the server to turn on
 - [ ] Filesystem Dungeon
 	- [ ] Figure out how to create a USB Mass Storage disk from of the contents of like 4KB of RAM.
 		- [ ] Use a super tiny block size.
+	- [ ] Serial command `mount` will cause Mass Storage device to mount
+	- [ ] Serial command `open` will uhh... invoke a file on the virtual FS
+		- [ ] Somewhere there should be a `sesame.sh`, and `open sesame.sh` should solve that puzzle
 	- [ ] A chmod/chown puzzle.
 		- [ ] Enemy dies. drops weapon on to the FileSystem.
 		- [ ] Player can't pick up weapon because its permissions are wrong.
@@ -475,6 +588,9 @@
 	- [ ] They are teleported back into the dungeons, but much deeper, and you have to go the long way to get them back
 
 ### Puzzle ideas
+- [ ] There's an exit somewhere in a forest that you can't get to any way other than being in that room, but using serial to `go $SECRET_ROOM_NAME` when you're in there
+- [ ] There's a sleeping Snorlax blocking your path in one of the forests.
+	- [ ] You need the inventory system so that you can cary an otamatone to play music and wake him up.
 - [ ] A floor might be on fire. The player has to turn off the "firewall" to cross that part.
 - [ ] Liar'sville puzzle. Start unsolveable. Two black-hats
 	- [ ] Must change one of the color of one of their hats so at least one tells truth

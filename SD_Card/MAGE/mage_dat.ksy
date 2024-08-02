@@ -4,7 +4,11 @@ meta:
 seq:
   - id: identifier
     contents: MAGEGAME
-  - id: crc32
+  - id: engine_version
+    type: u4
+    valid: 12
+    doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
+  - id: dat_file_content_crc32
     type: u4
   - id: dat_file_length
     type: u4
@@ -25,6 +29,8 @@ seq:
   - id: portrait_offsets
     type: count_with_offsets
   - id: dialog_offsets
+    type: count_with_offsets
+  - id: serial_dialog_offsets
     type: count_with_offsets
   - id: image_color_palette_offsets
     type: count_with_offsets
@@ -72,6 +78,10 @@ seq:
     type: dialog
     repeat: expr
     repeat-expr: dialog_offsets.count
+  - id: serial_dialogs
+    type: serial_dialog
+    repeat: expr
+    repeat-expr: serial_dialog_offsets.count
   - id: image_color_palettes
     type: image_color_palette
     repeat: expr
@@ -135,6 +145,9 @@ types:
       - id: on_tick
         type: u2
         doc: local index to the map's script list
+      - id: on_look
+        type: u2
+        doc: local index to the map's script list
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
@@ -150,6 +163,12 @@ types:
       - id: script_count
         type: u2
         doc: The number of scripts used on this map
+      - id: go_direction_count
+        type: u1
+        doc: the number of items in the directions array
+      - id: count_padding
+        type: u1
+        doc: padding to get back to u2 alignment
       - id: entity_global_ids
         type: u2
         repeat: expr
@@ -165,6 +184,10 @@ types:
         repeat: expr
         repeat-expr: script_count
         doc: The global IDs of the scripts this map and its entities use
+      - id: go_directions
+        type: go_direction
+        repeat: expr
+        repeat-expr: go_direction_count
       - id: map_header_padding
         type: u2
         repeat: expr
@@ -177,6 +200,18 @@ types:
     instances:
       tiles_per_layer:
         value: 'cols * rows'
+
+  go_direction:
+    seq:
+      - id: name
+        type: str
+        size: 12
+        encoding: ASCII
+      - id: script_id
+        type: u2
+      - id: padding
+        type: u2
+        doc: to get us back into 16 alignment
 
   map_layer:
     params:
@@ -227,6 +262,8 @@ types:
         value: (flags & 0b10000000) != 0
       is_debug:
         value: (flags & 0b01000000) != 0
+      relative_direction:
+        value: (flags & 0b00110000) >> 4
       direction:
         value: (flags & 0b00000011)
         enum: direction_type
@@ -360,14 +397,12 @@ types:
             'entity_primary_id_type::tileset_id': render_flags
             'entity_primary_id_type::animation_id': render_flags
             'entity_primary_id_type::entity_type_id': entity_render_flags
-      - id: hackable_state_a
-        type: u1
-      - id: hackable_state_b
-        type: u1
-      - id: hackable_state_c
-        type: u1
-      - id: hackable_state_d
-        type: u1
+      - id: path_id
+        type: u2
+        doc: local index to the map's geometry list
+      - id: on_look_script_id
+        type: u2
+        doc: local index to the map's script list
 
   geometry:
     seq:
@@ -512,6 +547,31 @@ types:
       - id: map_local_script_id
         type: u2
 
+  serial_dialog:
+    seq:
+      - id: name
+        type: str
+        size: 32
+        encoding: ASCII
+      - id: string_id
+        type: u2
+      - id: serial_response_type
+        type: u1
+        enum: serial_response_type
+      - id: response_count
+        type: u1
+      - id: responses
+        type: serial_dialog_response
+        repeat: expr
+        repeat-expr: response_count
+
+  serial_dialog_response:
+    seq:
+      - id: string_id
+        type: u2
+      - id: map_local_script_id
+        type: u2
+
   string:
     params:
       - id: index
@@ -600,87 +660,100 @@ enums:
     03: check_entity_y
     04: check_entity_interact_script
     05: check_entity_tick_script
-    06: check_entity_type
-    07: check_entity_primary_id
-    08: check_entity_secondary_id
-    09: check_entity_primary_id_type
-    10: check_entity_current_animation
-    11: check_entity_current_frame
-    12: check_entity_direction
-    13: check_entity_glitched
-    14: check_entity_hackable_state_a
-    15: check_entity_hackable_state_b
-    16: check_entity_hackable_state_c
-    17: check_entity_hackable_state_d
-    18: check_entity_hackable_state_a_u2
-    19: check_entity_hackable_state_c_u2
-    20: check_entity_hackable_state_a_u4
-    21: check_entity_path
-    22: check_save_flag
-    23: check_if_entity_is_in_geometry
-    24: check_for_button_press
-    25: check_for_button_state
-    26: check_warp_state
-    27: run_script
-    28: blocking_delay
-    29: non_blocking_delay
-    30: set_entity_name
-    31: set_entity_x
-    32: set_entity_y
-    33: set_entity_interact_script
-    34: set_entity_tick_script
-    35: set_entity_type
-    36: set_entity_primary_id
-    37: set_entity_secondary_id
-    38: set_entity_primary_id_type
-    39: set_entity_current_animation
-    40: set_entity_current_frame
-    41: set_entity_direction
-    42: set_entity_direction_relative
-    43: set_entity_direction_target_entity
-    44: set_entity_direction_target_geometry
-    45: set_entity_glitched
-    46: set_entity_hackable_state_a
-    47: set_entity_hackable_state_b
-    48: set_entity_hackable_state_c
-    49: set_entity_hackable_state_d
-    50: set_entity_hackable_state_a_u2
-    51: set_entity_hackable_state_c_u2
-    52: set_entity_hackable_state_a_u4
-    53: set_entity_path
-    54: set_save_flag
-    55: set_player_control
-    56: set_map_tick_script
-    57: set_hex_cursor_location
-    58: set_warp_state
-    59: set_hex_editor_state
-    60: set_hex_editor_dialog_mode
-    61: set_hex_editor_control
-    62: set_hex_editor_control_clipboard
-    63: load_map
-    64: show_dialog
-    65: play_entity_animation
-    66: teleport_entity_to_geometry
-    67: walk_entity_to_geometry
-    68: walk_entity_along_geometry
-    69: loop_entity_along_geometry
-    70: set_camera_to_follow_entity
-    71: teleport_camera_to_geometry
-    72: pan_camera_to_entity
-    73: pan_camera_to_geometry
-    74: pan_camera_along_geometry
-    75: loop_camera_along_geometry
-    76: set_screen_shake
-    77: screen_fade_out
-    78: screen_fade_in
-    79: mutate_variable
-    80: mutate_variables
-    81: copy_variable
-    82: check_variable
-    83: check_variables
-    84: slot_save
-    85: slot_load
-    86: slot_erase
+    06: check_entity_look_script
+    07: check_entity_type
+    08: check_entity_primary_id
+    09: check_entity_secondary_id
+    10: check_entity_primary_id_type
+    11: check_entity_current_animation
+    12: check_entity_current_frame
+    13: check_entity_direction
+    14: check_entity_glitched
+    15: check_entity_path
+    16: check_save_flag
+    17: check_if_entity_is_in_geometry
+    18: check_for_button_press
+    19: check_for_button_state
+    20: check_warp_state
+    21: run_script
+    22: blocking_delay
+    23: non_blocking_delay
+    24: set_entity_name
+    25: set_entity_x
+    26: set_entity_y
+    27: set_entity_interact_script
+    28: set_entity_tick_script
+    29: set_entity_type
+    30: set_entity_primary_id
+    31: set_entity_secondary_id
+    32: set_entity_primary_id_type
+    33: set_entity_current_animation
+    34: set_entity_current_frame
+    35: set_entity_direction
+    36: set_entity_direction_relative
+    37: set_entity_direction_target_entity
+    38: set_entity_direction_target_geometry
+    39: set_entity_glitched
+    40: set_entity_path
+    41: set_save_flag
+    42: set_player_control
+    43: set_map_tick_script
+    44: set_hex_cursor_location
+    45: set_warp_state
+    46: set_hex_editor_state
+    47: set_hex_editor_dialog_mode
+    48: set_hex_editor_control
+    49: set_hex_editor_control_clipboard
+    50: load_map
+    51: show_dialog
+    52: play_entity_animation
+    53: teleport_entity_to_geometry
+    54: walk_entity_to_geometry
+    55: walk_entity_along_geometry
+    56: loop_entity_along_geometry
+    57: set_camera_to_follow_entity
+    58: teleport_camera_to_geometry
+    59: pan_camera_to_entity
+    60: pan_camera_to_geometry
+    61: pan_camera_along_geometry
+    62: loop_camera_along_geometry
+    63: set_screen_shake
+    64: screen_fade_out
+    65: screen_fade_in
+    66: mutate_variable
+    67: mutate_variables
+    68: copy_variable
+    69: check_variable
+    70: check_variables
+    71: slot_save
+    72: slot_load
+    73: slot_erase
+    74: set_connect_serial_dialog
+    75: show_serial_dialog
+    76: set_map_look_script
+    77: set_entity_look_script
+    78: set_teleport_enabled
+    79: check_map
+    80: set_ble_flag
+    81: check_ble_flag
+    82: set_serial_dialog_control
+    83: register_serial_dialog_command
+    84: register_serial_dialog_command_argument
+    85: unregister_serial_dialog_command
+    86: unregister_serial_dialog_command_argument
+    87: set_entity_movement_relative
+    88: check_dialog_open
+    89: check_serial_dialog_open
+    90: check_debug_mode
+    91: close_dialog
+    92: close_serial_dialog
+    93: set_lights_control
+    94: set_lights_state
+    95: goto_action_index
+    96: set_script_pause
+    97: register_serial_dialog_command_alias
+    98: unregister_serial_dialog_command_alias
+    99: set_serial_dialog_command_visibility
 
   dialog_screen_alignment_type:
     0: bottom_left
@@ -698,3 +771,8 @@ enums:
     2: select_from_long_list
     3: enter_number
     4: enter_alphanumeric
+
+  serial_response_type:
+    0: response_none
+    1: response_enter_number
+    2: response_enter_string

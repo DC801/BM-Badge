@@ -1,0 +1,164 @@
+const!($maxBling = 5)
+
+/* --- Entrypoints from main menu --- */
+
+start_bling-rotate-auto {
+	set warp state to bling-rotate-auto;
+	mutate bling-rotate-state = 0;
+	goto script bling-goto-branches;
+}
+
+start_bling-rotate-manual {
+	set warp state to bling-rotate-manual;
+	mutate bling-rotate-state = 0;
+	goto script bling-goto-branches;
+}
+
+bling-goto-branches {
+	set flag bling-rotate-state-calc-done to false;
+	// can't zigzag
+	if variable bling-rotate-state is 0 then goto script start_bling-dc801-2;
+	if variable bling-rotate-state is 1 then goto script start_bling-dc801;
+	if variable bling-rotate-state is 2 then goto script start_bling-digi-mage2;
+	if variable bling-rotate-state is 3 then goto script start_bling-digi-mage;
+	if variable bling-rotate-state is 4 then goto script start_bling-zero;
+	if variable bling-rotate-state is 5 then goto script start_bling-serial;
+	goto script bling-goto-menu;
+}
+
+/* --- Common to all bling maps --- */
+
+on_load-bling-mode-map {
+	turn hex control off;
+	turn player control off;
+	set map on_tick to bling-detect-mode;
+}
+
+bling-detect-mode {
+	// delay listening for button presses
+	// otherwise buttons just immediately trigger
+	wait 150ms;
+	// detect rotation modes
+	if (warp state is bling-rotate-manual) {
+		goto script loop-bling-listen-manualrotate;
+	} else if (warp state is bling-rotate-auto) {
+		// start the timer
+		set entity Timer on_tick to loop-bling_timer;
+		goto script loop-bling-listen-any;
+	}
+	// not a rotating mode
+	if (flag bling-hax-button-only is true) {
+		goto script loop-bling-listen-hax;
+	} else {
+		goto script loop-bling-listen-any;
+	}
+}
+
+loop-bling-listen-any {
+	if button ANY then goto script bling-goto-menu;
+}
+
+loop-bling-listen-hax {
+	if button HAX then goto script bling-goto-menu;
+}
+
+bling-goto-menu {
+	set warp state to from-bling;
+	load map main_menu;
+}
+
+/* --- for the "Math" entity --- */
+
+bling-rotate-state-increment {
+	mutate bling-rotate-state + 1;
+	mutate temp = $maxBling;
+	mutate temp + 1;
+	if (variable bling-rotate-state is == temp) {
+		mutate bling-rotate-state = 0;
+	}
+	set flag bling-rotate-state-calc-done to true;
+	set entity "%SELF%" on_tick to null_script;
+}
+
+bling-rotate-state-decrement {
+	mutate bling-rotate-state - 1;
+	if (variable bling-rotate-state is 65535) { // aka -1
+		mutate bling-rotate-state = $maxBling;
+	}
+	set flag bling-rotate-state-calc-done to true;
+	set entity "%SELF%" on_tick to null_script;
+}
+
+/* --- for the "Timer" entity --- */
+
+loop-bling_timer {
+	wait 13000ms;
+	set entity Math on_tick to bling-rotate-state-increment;
+	goto script loop-bling_timer-wait;
+}
+
+loop-bling_timer-wait {
+	// Waits for entity "Math" to finish
+	if flag bling-rotate-state-calc-done is true
+		then goto script bling-goto-branches;
+}
+
+loop-bling-listen-manualrotate {
+	if button LJOY_LEFT then goto script bling-manual-rotate-left;
+	if button RJOY_LEFT then goto script bling-manual-rotate-left;
+	if button LJOY_RIGHT then goto script bling-manual-rotate-right;
+	if button RJOY_RIGHT then goto script bling-manual-rotate-right;
+	if button HAX then goto script bling-goto-menu;
+}
+
+bling-manual-rotate-left {
+	set entity Math on_tick to bling-rotate-state-decrement;
+	goto script loop-bling_timer-wait;
+}
+
+bling-manual-rotate-right {
+	set entity Math on_tick to bling-rotate-state-increment;
+	goto script loop-bling_timer-wait;
+}
+
+/* --- Initializing bling map state (and loading the map) --- */
+
+start_bling-dc801 {
+	set flag bling-hax-button-only to false;
+	load map bling-dc801;
+}
+
+start_bling-dc801-2 {
+	set flag bling-hax-button-only to false;
+	load map bling-dc801-2;
+}
+
+start_bling-zero {
+	set flag bling-hax-button-only to false;
+	load map bling-zero;
+}
+
+start_bling-serial {
+	set flag bling-hax-button-only to false;
+	load map bling-serial;
+}
+
+start_bling-digi-mage {
+	set flag bling-hax-button-only to false;
+	load map bling-digi-mage;
+}
+
+start_bling-digi-mage2 {
+	set flag bling-hax-button-only to false;
+	load map bling-digi-mage2;
+}
+
+start_bling-flying-toasters {
+	set flag bling-hax-button-only to false;
+	load map flying-toasters;
+}
+
+start_bling-qr {
+	set flag bling-hax-button-only to true;
+	load map bling-qr;
+}

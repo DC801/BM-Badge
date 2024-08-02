@@ -12,13 +12,11 @@ class MageHeader
 {
 private:
 	uint32_t counts;
-	std::unique_ptr<uint32_t[]> offsets;
-	std::unique_ptr<uint32_t[]> lengths;
+	uint32_t start;
 
 public:
 	MageHeader() : counts{0},
-		offsets{std::make_unique<uint32_t[]>(1)},
-		lengths{std::make_unique<uint32_t[]>(1)}
+	start{0}
 	{ };
 
 	MageHeader(uint32_t address);
@@ -27,6 +25,7 @@ public:
 	uint32_t offset(uint32_t num) const;
 	uint32_t length(uint32_t num) const;
 	uint32_t size() const;
+	uint32_t ramSize() const;
 	bool valid() const;
 }; //class MageHeader
 
