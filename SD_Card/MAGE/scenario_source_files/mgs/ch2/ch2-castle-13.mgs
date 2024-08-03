@@ -153,7 +153,10 @@ const!($fadeTime = 600ms)
 ch2-cutscene-castle12 {
 	if (debug mode is on) {
 		register skip -> ch2-skip-13
-		debug!("<c>SKIP</>: skip this cutscene")
+		show serial dialog {
+			" "
+			"<y>DEBUG></> <c>SKIP</>: skip this cutscene"
+		}
 	}
 	turn player control off;
 	wait 300ms;

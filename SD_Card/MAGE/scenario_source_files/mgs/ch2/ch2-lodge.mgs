@@ -39,7 +39,7 @@ look-ch2-dejavu {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tThe magazine itself seems not to have run very long, as this issue claims to be both the third issue and the final issue. The glossy cover is a badly-Photoshopped collage of improbable monsters in implausible situations."
+		"\tThe magazine itself seems not to have run long, as this issue claims to be both the third issue and the final issue. The glossy cover is a badly-Photoshopped collage of improbable monsters in implausible situations."
 	}
 }
 
@@ -86,7 +86,7 @@ on_load-ch2-lodge {
 
 	if (warp state is walk_from-north) {
 		turn player control off;
-		walk entity "%PLAYER%" along geometry walk_from-north over 200ms;
+		teleport entity "%PLAYER%" to geometry walk_from-north;
 	}
 	// player control comes on after this next script is over:
 	copy ch2-map-init;

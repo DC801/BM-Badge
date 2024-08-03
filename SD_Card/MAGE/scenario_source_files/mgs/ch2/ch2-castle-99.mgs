@@ -135,7 +135,10 @@ on_load-ch2-castle-99 {
 	if (flag ch2-cutseen-castle99 is false) {
 		if (debug mode is on) {
 			register skip -> ch2-skip-99
-			debug!("<c>SKIP</>: skip this cutscene")
+			show serial dialog {
+				" "
+				"<y>DEBUG></> <c>SKIP</>: skip this cutscene"
+			}
 		}
 		goto ch2-cutscene-castle99; // NOTE: branching means `goto`! Deadend things here!
 	}

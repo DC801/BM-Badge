@@ -51,12 +51,6 @@ on_load-ch2-castle-23 {
 	// ch2 room state
 	mutate ch2-in-room = 23;
 
-	// DEBUG
-	if (debug mode is on) {
-		register get + thing -> ch2-pickup-cactuscooler;
-		show serial dialog { "\t<g>DEBUG option</>: 'get thing' to acquire Cactus Cooler" }
-	}
-
 	// entrance text
 	show serial dialog spacer;
 	if (flag ch2-seen-room-23 is false) {
@@ -66,16 +60,16 @@ on_load-ch2-castle-23 {
 		show serial dialog { "Entering <bold>POWER PLANT</>..." }
 	}
 
-	// room unique stuff
-	// if (
-	// 	flag ch2-installed-heatsink is true
-	// 	|| flag ch2-carrying-heatsink is true
-	// ) {
-	// 	copy script ch2-hide-heatsink;
-	// }
-
 	// initialize everything
 	copy ch2-map-init;
+	// DEBUG
+	if (debug mode is on) {
+		register get + thing -> ch2-pickup-cactuscooler;
+		show serial dialog {
+			" "
+			"<y>DEBUG></> <c>GET THING</> to acquire Cactus Cooler"
+		}
+	}
 }
 
 /* ---------- ON_TICK ---------- */

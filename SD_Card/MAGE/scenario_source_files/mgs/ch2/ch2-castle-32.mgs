@@ -111,15 +111,6 @@ on_load-ch2-castle-32 {
 	if (flag ch2-ramchips-dispensed is false) {
 		copy script ch2-hide-ramchips;
 	}
-
-	// DEBUG
-	if (debug mode is on) {
-		register want + chips -> debug-want-chips;
-		show serial dialog {
-			"<g>Debug</> command available: <c>WANT CHIPS</>"
-		}
-	}
-	// END DEBUG
 	
 	if (warp state is walk_from-northeast) {
 		teleport entity "%PLAYER%" to geometry walk_from-northeast;
@@ -129,6 +120,16 @@ on_load-ch2-castle-32 {
 	
 	register look + "vending machine" -> look-ch2-vendingmachine;
 	copy ch2-map-init;
+
+	// DEBUG
+	if (debug mode is on) {
+		register want + chips -> debug-want-chips;
+		show serial dialog {
+			" "
+			"<y>DEBUG></> <c>WANT CHIPS</>"
+		}
+	}
+	// END DEBUG
 }
 
 debug-want-chips {

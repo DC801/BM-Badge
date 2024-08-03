@@ -38,28 +38,26 @@ on_load-main_menu {
 		register skip + "4" -> debug-jump-to-round4;
 		copy register-warp;
 		copy register-storyflag;
-		show serial dialog spacer;
 		show serial dialog {
-			"\t<g>Main menu debug options:</>"
-			"<c>BUFFER TEST</>: test various serial messages in various shapes"
-			"<c>HUB</>: go to debug hub map"
-			"<c>CH2</>: start ch2 (birthday cutscene)"
-			"\tOnce there, type <c>SKIP</> to end cutscenes early"
-			"<c>DEBUG</>: ch2 room #1, after first half of Lambda convo"
-			"<c>BOB</>: ch2 bob's club entrance"
-			"<c>BOB2</>: ch2 bob's club basement"
-			"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
-			"<c>SIMON</>: fast forward to the Simon Says part"
-			"<c>KING</>: skip to cutscene where the king meets his advisors"
-			"<c>BOOT</>: pretend to boot the weird computer"
-			"<c>POST</>: skip to the post credits scene"
-			"<c>SKIP _</>: skip ahead to that round (and set all prev flags)"
-			// "<c>CUTBUG</>: cutbug instance #1"
 			" "
-			"\t<g>Entire game debug options:</>"
-			"<c>RTFM</>: Early access to RTFM books"
-			"<c>STORYFLAG _</>: choose round (whole game, not just menu)"
-			"<c>WARP _</>: warp to that castle room"
+			"<y>DEBUG></> main menu only:"
+			"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
+			"<y>></> <c>HUB</>: go to debug hub map"
+			"<y>></> <c>CH2</>: start ch2 (birthday cutscene)"
+			"<y>></> <c>DEBUG</>: ch2 room #1, after first half of Lambda convo"
+			"<y>></> <c>BOB</>: ch2 bob's club entrance"
+			"<y>></> <c>BOB2</>: ch2 bob's club basement"
+			"<y>></> <c>BOB3</>: ch2 bob's club basement (after cutscene)"
+			"<y>></> <c>SIMON</>: fast forward to the Simon Says part"
+			"<y>></> <c>KING</>: skip to cutscene where the king meets his advisors"
+			"<y>></> <c>BOOT</>: pretend to boot the weird computer"
+			"<y>></> <c>POST</>: skip to the post credits scene"
+			"<y>></> <c>SKIP _</>: skip ahead to that round (and set all prev flags)"
+			" "
+			"<y>DEBUG></> whole game:"
+			"<y>></> <c>RTFM</>: Early access to RTFM books"
+			"<y>></> <c>STORYFLAG _</>: choose round (whole game, not just menu)"
+			"<y>></> <c>WARP _</>: warp to that castle room"
 		}
 	}
 }

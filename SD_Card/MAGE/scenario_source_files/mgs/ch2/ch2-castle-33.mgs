@@ -42,16 +42,16 @@ on_load-ch2-castle-33 {
 	) {
 		copy script ch2-hide-mouse;
 	}
-	if (debug mode is on) {
-		register mousegame -> ch2-debug-mousegame;
-		show serial dialog spacer;
-		show serial dialog {
-			"<c>MOUSEGAME</>: start the mouse game!"
-		}
-	}
 	set flag ch2-mousegame to false;
 
 	copy ch2-map-init;
+	if (debug mode is on) {
+		register mousegame -> ch2-debug-mousegame;
+		show serial dialog {
+			" "
+			"<y>DEBUG></> <c>MOUSEGAME</>: start the mouse game!"
+		}
+	}
 	if (flag ch2-cutseen-castle33 is false) {
 		turn player control off;
 		if (warp state is not warped) {

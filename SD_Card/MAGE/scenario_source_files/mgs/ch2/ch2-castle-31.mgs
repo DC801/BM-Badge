@@ -98,6 +98,7 @@ on_load-ch2-castle-31 {
 	set flag ch2-simon-heard-high to false;
 	set flag ch2-simon-heard-low to false;
 
+	copy ch2-map-init;
 	//DEBUG STUFF
 	if (debug mode is true) {
 		register simon -> debug-simon;
@@ -107,16 +108,14 @@ on_load-ch2-castle-31 {
 		register simon + lose -> debug-simon-lose;
 		show serial dialog {
 			" "
-			"<bold><g>DEBUG:</><bold> Play Simon Says!</>"
-			"<c>SIMON</>: replay last game type (default: low)"
-			"<c>SIMON HIGH</>: play high game (easier on desktop)"
-			"<c>SIMON LOW</>: play low game (easier on the real badge)"
-			"<c>SIMON WIN</>: play the win animation(s)"
-			"<c>SIMON LOSE</>: play the lose animation(s)"
-			" "
+			"<y>DEBUG></> Play Simon Says!"
+			"<y>></> <c>SIMON</>: replay last game type (default: low)"
+			"<y>></> <c>SIMON HIGH</>: play high game (easier on desktop)"
+			"<y>></> <c>SIMON LOW</>: play low game (easier on the real badge)"
+			"<y>></> <c>SIMON WIN</>: play the win animation(s)"
+			"<y>></> <c>SIMON LOSE</>: play the lose animation(s)"
 		}
 	}
-	copy ch2-map-init;
 }
 
 debug-simon {

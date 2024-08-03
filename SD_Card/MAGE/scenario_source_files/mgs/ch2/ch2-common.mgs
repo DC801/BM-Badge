@@ -49,6 +49,8 @@ ch2-map-init-serial {
 		copy register-rtfm;
 		copy register-inventory;
 		copy register-manual;
+		register alias h = help;
+		register alias l = look;
 	}
 	if (flag ch2-has-map is true) {
 		copy register-map;
@@ -121,18 +123,18 @@ ch2-map-init-serial-debug-message {
 	if (debug mode is on) {
 		if (flag debug-curr-state is false) {
 			show serial dialog {
-				"<g>-----------------------</>"
-				"<g>|  DEBUG MODE IS ON!  |</>"
-				"<g>-----------------------</>"
+				"<y>+-------------------------+</>"
+				"<y>|  DEBUG MODE IS NOW ON!  |</>"
+				"<y>+-------------------------+</>"
 			}
 		}
 		set flag debug-curr-state to true;
 	} else {
 		if (flag debug-curr-state is true) {
 			show serial dialog {
-				"<g>------------------------</>"
-				"<g>|  DEBUG MODE IS OFF!  |</>"
-				"<g>------------------------</>"
+				"<y>+--------------------------+</>"
+				"<y>|  DEBUG MODE IS NOW OFF!  |</>"
+				"<y>+--------------------------+</>"
 			}
 		}
 		set flag debug-curr-state to false;
@@ -153,9 +155,6 @@ ch2-map-init {
 	copy ch2-map-init-inventory-look;
 	copy ch2-map-init-serial-debug-message;
 	copy ch2-map-init-warp-in;
-	// These commands are built into the engine, so let's just handle them here
-	register alias h = help;
-	register alias l = look;
 	// extra goose stuff
 	if (flag ch2-goosefacts is true) {
 		register stop -> stop-goosefacts;

@@ -105,7 +105,7 @@ man-warp {
 	show serial dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - WARP</>"
 		" "
-		"A very powerful command that teleports you to a room you've been to before."
+		"A powerful command that teleports you to a room you've been to before."
 		" "
 		"To see a list of valid warp desinations, use <c>WARP</> on its own (without a room name)."
 		" "
@@ -166,6 +166,7 @@ warp-common {
 		}
 	}
 	mutate ch2-in-room = 0;
+	mutate current-chapter = 2; // todo: remove this; it's here for ch2 debug mode protection for the WOPR room
 	copy warping-out-fade-out;
 }
 

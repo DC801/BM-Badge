@@ -688,7 +688,7 @@ ch2-lambda-person-gloria {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Oh, Gloria, the golden beetle. She's, um, a little prone to panic, but honestly she's very good at her job. She manages the castle payroll... that is, when she's not trapped in the employee break room with her toddler after an earthquake."
+			"<m>LAMBDA</>: Oh, Gloria, the golden beetle. She's, um, a little prone to panic, but honestly she's good at her job. She manages the castle payroll... that is, when she's not trapped in the employee break room with her toddler after an earthquake."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -779,7 +779,7 @@ ch2-lambda-person-jeanpaul {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Ah, Jean-Paul! He's a cockatiel -- that's a kind of parakeet. He's always very tidy about his workspace. Unlike me, ha ha.... Oh! You should hear him whistle sometime! Whistles pretty well for a guy with a beak." // You can remove the last sentence if you want. 
+			"<m>LAMBDA</>: Ah, Jean-Paul! He's a cockatiel -- that's a kind of parakeet. He's always tidy about his workspace. Unlike me, ha ha.... Oh! You should hear him whistle sometime!"
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -886,7 +886,7 @@ ch2-lambda-person-helvetica {
 		" "
 	}
 	show serial dialog {
-		"<m>LAMBDA</>: It's a very classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
+		"<m>LAMBDA</>: It's a classy font! Old school, maybe, but it's tightly designed. Don't let its simplicity fool you...."
 		"\t...Oh, you meant a person named Helvetica? Hmm. I wonder if I know anyone named after a font."
 	}
 	goto ch2-lambda-topic-person-s;
@@ -951,7 +951,7 @@ ch2-lambda-person-xa {
 		"<c>YOU</>: Tell me about XA."
 		" "
 		"<m>LAMBDA</>: XA is a device called an Exa, which is a tool I use to do certain kinds of administrative work. Mostly networking."
-		"\tExas are easy to program, but they take up a lot of space when I use them inside the castle -- that is, in physical space -- so I don't tend to use them very much anymore. I guess I mostly like using them once in a while as a tinking project, like as a form a play."
+		"\tExas are easy to program, but they take up a lot of space when I use them inside the castle -- that is, in physical space -- so I don't tend to use them much anymore. I guess I mostly like using them once in a while as a tinking project, like as a form a play."
 	}
 	goto ch2-lambda-topic-person-s;
 }
@@ -1228,7 +1228,7 @@ ch2-lambda-person-big-bad {
 		"<c>YOU</>: Tell me about the <r>Big Bad</>."
 		" "
 		"<m>LAMBDA</>: Oh, um, that's complicated."
-		"\tBut he was ruthless. Smart, yes, and very capable, but he seemed to lack compassion. Like it was a bother to him when other people brought up the problems his actions were causing other people. Like he might not have even noticed otherwise."
+		"\tBut he was ruthless. Smart, yes, and capable, but he seemed to lack compassion. Like it was a bother to him when other people brought up the problems his actions were causing other people. Like he might not have even noticed otherwise."
 		" "
 		# "You're making it sound like you knew him." : ch2-lambda-person-big-bad2
 	}

@@ -42,7 +42,7 @@ serial dialog ch2-describe-needle { // some duplicate text; see above
 
 serial dialog ch2-describe-clock {
 	"<m>LAMBDA</>: We'll need a <m>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
-	"\tIn our case... well, I know <m>King Gibson has a very nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
+	"\tIn our case... well, I know <m>King Gibson has a nice <m>grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
 serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both if changing anything
 	"<m>LAMBDA</>: The <m>CPU</> is like the brain of the computer. There aren't any spare lying around, but we can approximate one."
@@ -526,11 +526,11 @@ look-clock {
 	show serial dialog spacer;
 	if (flag ch2-carrying-clock is false) {
 		show serial dialog {
-			"You look at the <m>clock</>: a giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
+			"You look at the <m>clock</>: a giant grandfather clock that's definitely larger than you. Never mind how it could fit in your pocket."
 		}
 	} else {
 		show serial dialog {
-			"You look at the <m>clock</>: a giant grandfather clock that's very definitely larger than you. Never mind how it fits in your pocket."
+			"You look at the <m>clock</>: a giant grandfather clock that's definitely larger than you. Never mind how it fits in your pocket."
 		}
 	}
 }

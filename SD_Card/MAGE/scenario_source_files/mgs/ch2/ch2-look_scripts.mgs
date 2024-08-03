@@ -33,7 +33,7 @@ look-ch2-xa {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tIt's difficult to tell whether the machine is orange on purpose or if it is simply very thoroughly rusted. Its legs look odd, somehow -- you imagine it could scoot around the floor without moving any of the joints in its legs."
+		"\tIt's difficult to tell whether the machine is orange on purpose or if it is simply thoroughly rusted. Its legs look odd, somehow -- you imagine it could scoot around the floor without moving any of the joints in its legs."
 	}
 }
 

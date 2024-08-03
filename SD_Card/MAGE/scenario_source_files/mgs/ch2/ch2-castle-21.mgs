@@ -484,7 +484,7 @@ interact-ch2-room21-split {
 		return;
 	} else {
 		show serial dialog {
-			"<r>DEBUG</>: Something went wrong splitting into entity wrapup scripts after shared behavior in 'interact-ch2-room21-split'! 'CALLBACK' value: $CALLBACK$"
+			"<r>DEBUG></>: Something went wrong splitting into entity wrapup scripts after shared behavior in 'interact-ch2-room21-split'! 'CALLBACK' value: $CALLBACK$"
 		}
 	}
 }

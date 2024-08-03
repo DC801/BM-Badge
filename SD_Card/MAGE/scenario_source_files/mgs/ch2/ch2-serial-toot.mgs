@@ -18,7 +18,7 @@ ch2-toot-check {
 		goto ch2-toot-step4-start;
 	} else {
 		show serial dialog {
-			"<r><bold>DEBUG</>: Welp, you've done something strange!"
+			"<r>DEBUG></>: Welp, you've done something strange!"
 			"\tVariable 'ch2-toot-level' is $ch2-toot-level$"
 			"\tScript: 'ch2-toot-check'"
 		}

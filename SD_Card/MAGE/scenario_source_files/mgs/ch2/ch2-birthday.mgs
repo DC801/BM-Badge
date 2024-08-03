@@ -10,6 +10,10 @@ on_load-ch2-magehouse-birthday {
 	if (debug mode is on) {
 		turn serial control on;
 		register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
+		show serial dialog {
+			" "
+			"<y>DEBUG></> <c>SKIP</>: skip this cutscene"
+		}
 	} else {
 		turn serial control off;
 	}
@@ -131,6 +135,10 @@ ch2-escort-cutscene {
 	if (debug mode is on) {
 		turn serial control on;
 		register skip -> cutscene-ch2-escort-exit;
+		show serial dialog {
+			" "
+			"<y>DEBUG></> <c>SKIP</>: skip this cutscene"
+		}
 	} else {
 		turn serial control off;
 	}

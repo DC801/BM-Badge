@@ -278,7 +278,7 @@ register-storyflag {
 ch2-debug-storyflag {
 	show serial dialog spacer;
 	show serial dialog {
-		"<g>DEBUG</>: Set flag 'ch2-storyflag-round' to what value? (0-5)"
+		"<y>DEBUG></>: Set flag 'ch2-storyflag-round' to what value? (0-5)"
 		_ "0" : debug-map-flags-for-round0
 		_ "1" : debug-map-flags-for-round1
 		_ "2" : debug-map-flags-for-round2

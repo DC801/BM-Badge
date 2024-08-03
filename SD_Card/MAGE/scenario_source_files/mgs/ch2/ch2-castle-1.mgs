@@ -151,6 +151,23 @@ on_load-ch2-castle-1 {
 		// so his name is blank for when Ring Zero is back
 	}
 
+	if (flag ch2-ring-zero-enabled-in-castle is true) {
+		set entity "Wizard" on_interact to interact-ch2-wizard-mainframedone;
+		set entity "Wizard" current_animation to 3; // head poking up
+	}
+	if (flag ch2-has-artifact is true) {
+		set entity Artifact on_tick to yeet;
+	}
+	if (warp state is raw_game_load-ch2) {
+		copy restore_player_state;
+	} else if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	}
+	if (flag ch2-carrying-mainframeos is true) {
+		set entity Wizard current_animation to 3;
+	}
+	copy ch2-map-init;
+
 	// DEBUG
 	if (debug mode is on) {
 		register credits -> debug-ch2-credits;
@@ -173,34 +190,17 @@ on_load-ch2-castle-1 {
 		register round + "1" -> debug-get-items-for-round1;
 		register round + "2" -> debug-get-items-for-round2;
 		register round + "3" -> debug-get-items-for-round3;
-		show serial dialog spacer;
 		show serial dialog {
-			"\t<g>DEBUG</> shortcuts"
-			"<c>TOOT</>: skip tutorial"
-			"<c>CREDITS</>: roll credits as if you've beaten the game"
-			"<c>GET _</>: pick up the named item"
-			"<c>ROUND _</>: collect the items for that round"
-			"<c>WALK</>: set XA on_interact to do the walk part"
+			" "
+			"<y>DEBUG></> this room only"
+			"<y>></> <c>TOOT</>: skip tutorial"
+			"<y>></> <c>CREDITS</>: roll credits as if you've beaten the game"
+			"<y>></> <c>GET _</>: pick up the named item"
+			"<y>></> <c>ROUND _</>: collect the items for that round"
+			"<y>></> <c>WALK</>: set XA on_interact to do the walk part"
 		}
 	}
 	// END DEBUG
-
-	if (flag ch2-ring-zero-enabled-in-castle is true) {
-		set entity "Wizard" on_interact to interact-ch2-wizard-mainframedone;
-		set entity "Wizard" current_animation to 3; // head poking up
-	}
-	if (flag ch2-has-artifact is true) {
-		set entity Artifact on_tick to yeet;
-	}
-	if (warp state is raw_game_load-ch2) {
-		copy restore_player_state;
-	} else if (warp state is walk_from-south) {
-		teleport entity "%PLAYER%" to geometry walk_from-south;
-	}
-	if (flag ch2-carrying-mainframeos is true) {
-		set entity Wizard current_animation to 3;
-	}
-	copy ch2-map-init;
 	copy ch2-player-spawn-click-protection;
 }
 debug-finish-toot {

@@ -6,7 +6,7 @@ look-ch2-castle-outside {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>CASTLE EXTERIOR</>."
-		"\tThe building itself is undeniably ominous with its stark, charcoal-colored stone. You can just make out that the green orbs of light embedded in its walls are flickering very slightly. A subtle humming emanates from the nearby pillars. It is no surprise that the townsfolk avoid this place."
+		"\tThe building itself is undeniably ominous with its stark, charcoal-colored stone. You can just make out that the green orbs of light embedded in its walls are flickering slightly. A subtle humming emanates from the nearby pillars. It is no surprise that the townsfolk avoid this place."
 		" "
 	}
 }

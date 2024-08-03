@@ -6,7 +6,7 @@ look-ch2-oldcouplehouse {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around <c>BEATRICE'S HOUSE</>."
-		"\tThe interior has a cozy, lived-in feel to it. All the furniture is of an older style and worn down on some of the edges. A house for two, and it has been that way for a very long time. Probably, like, 100 years or something."
+		"\tThe interior has a cozy, lived-in feel to it. All the furniture is of an older style and worn down on some of the edges. A house for two, and it has been that way for a long time. Probably, like, 100 years or something."
 		" "
 	}
 }
