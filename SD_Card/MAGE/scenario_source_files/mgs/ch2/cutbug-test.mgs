@@ -1,0 +1,74 @@
+include!("header.mgs")
+
+cutbug-auto {
+    turn player control off;
+    set entity "%PLAYER%" y to 0;
+    for (mutate j = 0; variable i is < 1030; mutate j + 1) {
+        copy entity "%PLAYER%" y from variable j;
+        copy cutbug;
+        wait 250ms;
+    }
+}
+
+cutbug {
+    copy entity "%PLAYER%" y into variable qty;
+    // mutate qty % 256;
+    show serial dialog spacer;
+    concat serial dialog {
+        "<c>CUTBUG!</> "
+    }
+    if (variable qty is <10) {
+        concat serial dialog {
+            "000"
+        }
+    } else if (variable qty is <100) {
+        concat serial dialog {
+            "00"
+        }
+    } else if (variable qty is <1000) {
+        concat serial dialog {
+            "0"
+        }
+    }
+    concat serial dialog {
+        "$qty$\n"
+    }
+    for (mutate i = 0; variable i is <= qty; mutate i + 1) {
+        print:
+        mutate mod = i;
+        mutate mod % 16;
+        if (variable mod is 0) {
+            concat serial dialog { "\n" }
+        } else if (variable mod is 1) {
+            concat serial dialog { "1" }
+        } else if (variable mod is 2) {
+            concat serial dialog { "2" }
+        } else if (variable mod is 3) {
+            concat serial dialog { "3" }
+        } else if (variable mod is 4) {
+            concat serial dialog { "4" }
+        } else if (variable mod is 5) {
+            concat serial dialog { "5" }
+        } else if (variable mod is 6) {
+            concat serial dialog { "6" }
+        } else if (variable mod is 7) {
+            concat serial dialog { "7" }
+        } else if (variable mod is 8) {
+            concat serial dialog { "8" }
+        } else if (variable mod is 9) {
+            concat serial dialog { "9" }
+        } else if (variable mod is 10) {
+            concat serial dialog { "A" }
+        } else if (variable mod is 11) {
+            concat serial dialog { "B" }
+        } else if (variable mod is 12) {
+            concat serial dialog { "C" }
+        } else if (variable mod is 13) {
+            concat serial dialog { "D" }
+        } else if (variable mod is 14) {
+            concat serial dialog { "E" }
+        } else if (variable mod is 15) {
+            concat serial dialog { "F" }
+        }
+    }
+}

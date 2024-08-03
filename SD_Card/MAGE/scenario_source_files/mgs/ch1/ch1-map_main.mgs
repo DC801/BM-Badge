@@ -87,7 +87,8 @@ on_load-map-main {
 		walk entity "%PLAYER%" along geometry enter_from-woprhouse over 200ms; 
 	} else if (warp state is exit_from-credits) {
 		teleport entity "%PLAYER%" to geometry from-credits-spot;
-		fade in camera from #000000 over 800ms; 
+		fade in camera from #000000 over 800ms;
+		turn player control on;
 		if flag ch1_finished is false then goto null_script;
 		if flag storyflag-catwork is false then goto null_script;
 		if flag storyflag-shepherd is false then goto null_script;

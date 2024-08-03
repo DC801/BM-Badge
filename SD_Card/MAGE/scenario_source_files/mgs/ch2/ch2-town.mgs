@@ -119,6 +119,12 @@ on_load-ch2-town {
 	} else if (warp state is walk_from-bobsclub) {
 		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms;
 	}
+	if (debug mode is true) {
+		register cutbug -> cutbug;
+		register cutbug + auto -> cutbug-auto;
+	}
+	debug!("<g>CUTBUG:</> use player Y position for <c>CUTBUG</> test")
+	debug!("<g>CUTBUG AUTO:</> cycle through all cutbugs 0-255 automatically")
 	copy ch2-map-init;
 	copy ch2-player-spawn-click-protection;
 }
