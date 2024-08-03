@@ -132,10 +132,7 @@ on_load-ch2-castle-1-doorless {
 		teleport entity "%PLAYER%" to geometry walk_from-south;
 	}
 	copy ch2-map-init;
-	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo Maybe this counts as a bug; maybe really fix it?)
-	turn player control off;
-	wait 50ms;
-	turn player control on;
+	copy ch2-player-spawn-click-protection;
 }
 
 on_load-ch2-castle-1 {
@@ -204,10 +201,7 @@ on_load-ch2-castle-1 {
 		set entity Wizard current_animation to 3;
 	}
 	copy ch2-map-init;
-	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo Maybe this counts as a bug; maybe really fix it?)
-	turn player control off;
-	wait 50ms;
-	turn player control on;
+	copy ch2-player-spawn-click-protection;
 }
 debug-finish-toot {
 	mutate ch2-storyflag-round = 1;

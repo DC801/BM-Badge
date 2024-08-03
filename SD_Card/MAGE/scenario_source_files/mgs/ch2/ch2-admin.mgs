@@ -458,3 +458,12 @@ ch2-load-castle-33-special {
 ch2-load-castle-34-special {
 	load map ch2-castle-34;
 }
+
+ch2-player-spawn-click-protection {
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo: Maybe this counts as a bug; maybe really fix it?)
+	if (warp state is raw_game_load-ch2) {
+		turn player control off;
+		wait 150ms;
+		turn player control on;
+	}
+}

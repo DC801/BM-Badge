@@ -65,7 +65,7 @@ man-parts {
 		" "
 		"This command uses the program <bold>lambda-talk</> to call Lambda with the subject line \"parts.\" To learn about a specific part, add the part name, e.g. <c>PARTS MONITOR</>."
 		" "
-		"<m>NOTE</>: Hi, there, birthday mage! This is just something I rigged up quickly so you could have a shortcut to talk to me about the parts list. :)"
+		"<m>NOTE</>: Hi, there, birthday mage! This is just something I rigged up so you could have a shortcut to ask me quick questions about the parts list. :)"
 	}
 }
 

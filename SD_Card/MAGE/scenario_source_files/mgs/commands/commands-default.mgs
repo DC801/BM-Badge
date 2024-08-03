@@ -8,6 +8,8 @@ man-look {
 		"Describes the room you're in. Will describe entities instead if an entity name is provided after the word <c>LOOK</>."
 		" "
 		"Importantly, it can list a room's exits, even if they are invisible."
+		" "
+		"This command may also be triggered with the alias <c>EXAMINE</> or the abbreviations <c>L</> or <c>X</>."
 	}
 }
 

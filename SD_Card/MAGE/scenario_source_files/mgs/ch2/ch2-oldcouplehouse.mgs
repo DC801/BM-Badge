@@ -53,8 +53,18 @@ on_load-ch2-oldcouplehouse {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-oldcouplehouse {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-oldcouplehouse-south;
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		goto on_walk-ch2-oldcouplehouse-south;
+	}
+	if (flag ch2-cutseen-delmar is true) {
+		// and just leave him watching...
+		if (entity Delmar type is not old_man) {
+			set entity Delmar on_tick to face-player;
+			set flag interrupt to true;
+		}
+		// He'll watch Bea until he's changed into anyting else,
+		// then he'll stare at you suspiciously, even if you fix him afterward
+	}
 }
 
 ch2-check-if-sheep {
@@ -69,6 +79,7 @@ ch2-check-if-sheep {
 	}
 }
 ch2-cutscene-delmar-reconnect {
+	// Why did I put the fade in/out here? To make sure their positions weren't changed before they talk to each other in a cinematic cutscene? todo: figure it out
 	turn player control off;
 	fade out camera to #000000 over 300ms;
 	teleport entity Beatrice to geometry beatrice-point;
@@ -113,8 +124,18 @@ on_walk-ch2-oldcouplehouse-south {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-delmar {
-	show dialog {
-		SELF "...."
+	copy script face-player;
+	if (flag interrupt is true) {
+		if (entity Delmar type is sheep || entity Delmar type is helga) {
+			show dialog { SELF "...." }
+		} else {
+			show dialog { SELF "I've got my eye on you, sonny...." }
+		}
+	} else if (entity Delmar type is old_man) {
+		show dialog { SELF "Thanks a lot, lad. I'll try to be a little more attentive from here on, eh?" }
+		turn entity "%SELF%" toward entity Beatrice;
+	} else {
+		show dialog { SELF "...." }
 	}
 }
 interact-ch2-beatrice {
