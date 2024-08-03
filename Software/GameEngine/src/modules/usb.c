@@ -288,7 +288,7 @@ void send_serial_message_with_length(
 	}
 	for (size_t i = 0; i < pages; i++) {
 		size_t offset = i * page_size_max;
-		size_t page_size = (message_length - offset) > page_size_max
+		size_t page_size = (message_length - offset) >= page_size_max
 			? page_size_max
 			: remainder;
 		// This may seem super wacky, but unless I call either `debug_print`
