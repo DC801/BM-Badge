@@ -227,16 +227,20 @@ interact-ch2-concierge {
 		variable ch2-storyflag-round is < 2
 		|| flag ch2-needle-permission is true
 	) {
-		if (
-			flag ch2-carrying-needle is true
-			|| flag ch2-installed-needle is true
-		) {
-			show dialog {
+		if (flag ch2-needle-permission is false) {
+			show dialog ch2-trying-times { //reused
 				Concierge "In trying times, we may find ourselves with limited resources or a constrictive environment."
 				"How admirable it is to acquire and leverage one's limited resources and perform great work anyway! I'll be cheering you on from here. Good luck!"
 			}
 		} else {
-			show dialog ch2-needle-prompt; // defined when concierge is originally surprised
+			if (
+				flag ch2-carrying-needle is true
+				|| flag ch2-installed-needle is true
+			) {
+				show dialog ch2-trying-times;
+			} else {
+				show dialog ch2-needle-prompt; // defined when concierge is originally surprised
+			}
 		}
 	} else {
 		if (flag ch2-ws-won is true) {

@@ -31,6 +31,7 @@ on_load-main_menu {
 		register buffer + test -> debug-buffertest;
 		register boot -> ch2-bootup;
 		register post -> debug-post;
+		// register cutbug -> ch2-toot-step3-end2;
 		register skip + "1" -> debug-jump-to-round1;
 		register skip + "2" -> debug-jump-to-round2;
 		register skip + "3" -> debug-jump-to-round3;
@@ -53,6 +54,7 @@ on_load-main_menu {
 			"<c>BOOT</>: pretend to boot the weird computer"
 			"<c>POST</>: skip to the post credits scene"
 			"<c>SKIP _</>: skip ahead to that round (and set all prev flags)"
+			// "<c>CUTBUG</>: cutbug instance #1"
 			" "
 			"\t<g>Entire game debug options:</>"
 			"<c>RTFM</>: Early access to RTFM books"

@@ -189,16 +189,23 @@ ch2-pickup-mouse {
 ch2-pickup-plate {
 	set flag ch2-map-plate to false;
 	set flag ch2-carrying-plate to true;
+	if (flag ch2-carrying-needle is true) {
+		set flag ch2-map-solder to true;
+	}
 	register look + plate -> look-plate;
 }
 ch2-pickup-needle {
 	set flag ch2-map-needle to false;
 	set flag ch2-carrying-needle to true;
+	if (flag ch2-carrying-plate is true) {
+		set flag ch2-map-solder to true;
+	}
 	register look + needle -> look-needle;
 }
 ch2-solder-harddrive {
 	copy ch2-install-plate;
 	copy ch2-install-needle;
+	set flag ch2-map-solder to false;
 	set flag ch2-carrying-harddrive to true;
 	register look + "hard drive" -> look-harddrive;
 }
@@ -213,6 +220,9 @@ ch2-pickup-clock {
 ch2-pickup-goldfish {
 	set flag ch2-map-goldfish to false;
 	set flag ch2-carrying-goldfish to true;
+	if (flag ch2-carrying-abacus is true) {
+		set flag ch2-map-solder to true;
+	}
 	register look + goldfish -> look-goldfish;
 }
 ch2-pickup-manual {
@@ -228,11 +238,15 @@ ch2-handoff-abacus-to-manual {
 ch2-pickup-abacus {
 	set flag ch2-map-abacus to false;
 	set flag ch2-carrying-abacus to true;
+	if (flag ch2-carrying-goldfish is true) {
+		set flag ch2-map-solder to true;
+	}
 	register look + abacus -> look-abacus;
 }
 ch2-solder-cpu {
 	copy ch2-install-goldfish;
 	copy ch2-install-abacus;
+	set flag ch2-map-solder to false;
 	set flag ch2-carrying-cpu to true;
 	register look + cpu -> look-cpu;
 }

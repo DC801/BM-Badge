@@ -193,7 +193,7 @@ var flagConditions = {
 	"12": [ "ch2-map-needle" ],
 	"13": [ "ch2-map-goldfish" ],
 	"14": [ "ch2-map-clock" ],
-	"21": [ "ch2-map-abacus", "ch2-map-ramchips" ],
+	"21": [ "ch2-map-abacus", "ch2-map-ramchips", "ch2-map-solder" ],
 	"22": [ "ch2-map-powersupply" ],
 	"23": [ "ch2-map-heatsink" ],
 	"31": [ "ch2-map-keyboard" ],

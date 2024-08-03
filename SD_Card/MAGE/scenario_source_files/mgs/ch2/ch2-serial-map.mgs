@@ -549,7 +549,7 @@ draw-ch2-serial-map {
 	} else {
 		concat serial dialog {" "}
 	}
-	if (flag ch2-map-abacus is true || flag ch2-map-ramchips is true) {
+	if (flag ch2-map-abacus is true || flag ch2-map-ramchips is true || flag ch2-map-solder is true) {
 		concat serial dialog item;
 	} else {
 		if (flag ch2-seen-room-21 is true) {
