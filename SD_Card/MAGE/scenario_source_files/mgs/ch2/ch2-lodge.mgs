@@ -221,3 +221,24 @@ interact-ch2-alfonso-library {
 	}
 	turn entity "%SELF%" north;
 }
+
+ch2-goose-library {
+	if (flag ch2-has-artifact is false) {
+		show dialog {
+			SELF "Honk!"
+		}
+
+	} else {
+		if (flag ch2-goosefacts is false) {
+			show dialog {
+				SELF "HONK! You are now subscribed to goose facts!"
+			}
+			set flag ch2-goosefacts to true;
+			register stop -> stop-goosefacts;
+		} else {
+			show dialog {
+				SELF "Enjoy your free goose facts!"
+			}
+		}
+	}
+}

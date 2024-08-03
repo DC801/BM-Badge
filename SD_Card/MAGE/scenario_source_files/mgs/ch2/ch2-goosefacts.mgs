@@ -1,0 +1,107 @@
+include!("header.mgs")
+
+const!($goosefactcount = 21)
+
+stop-goosefacts {
+    show serial dialog spacer;
+    show serial dialog {
+        "You are no longer subscribed to goose facts."
+    }
+    set flag ch2-goosefacts to false;
+    unregister stop;
+}
+goosefacts {
+    if (flag ch2-goosefacts is true) {
+        show serial dialog {" \n<g>You are subscribed to goose facts!</>\n "}
+        if (variable goosefact is 0) {
+            show serial dialog {
+                "Did you know? <bold>Geese are monogamous!</> They form strong bonds and have complex mating rituals, engaging in courtship displays which include honking, wing-flapping, and head-bobbing."
+            }
+        } else if (variable goosefact is 1) {
+            show serial dialog {
+                "Did you know? <bold>Geese are excellent navigators!</> They have a remarkable ability to navigate over long distances, scientists believe they utilize the earth's magnetic fields, the sun's position and landmarks to contextualize location."
+            }
+        } else if (variable goosefact is 2) {
+            show serial dialog {
+                "Did you know? <bold>Geese have complex communication systems!</> Outside of honking, geese employ a range of vocalizations as well as head-bobbing and wing-flapping to communicate with their flock."
+            }
+        } else if (variable goosefact is 3) {
+            show serial dialog {
+                "Did you know? <bold>The most common goose name is <bold>Goosey-McGooseface!</>"
+            }
+        } else if (variable goosefact is 4) {
+            show serial dialog {
+                "Did you know? <bold>Geese have long lifespans!</> They can live up to two decades in the wild."
+            }
+        } else if (variable goosefact is 5) {
+            show serial dialog {
+                "Did you know? <bold>Geese assist in controlling weeds!</> Their feeding habits consist of mainly grass and vegetation, in some cases geese are introduced to environments to assist with the control of invasive specifies."
+            }
+        } else if (variable goosefact is 6) {
+            show serial dialog {
+                "Did you know? <bold>Geese are important ecological indicators!</> Geese rely on wetlands for nesting and feeding, by monitoring geese populations, ecologists can gain insights into the overall health of wetland habitats."
+            }
+        } else if (variable goosefact is 7) {
+            show serial dialog {
+                "Did you know? <bold>A single Canadian goose has between 20,000 and <bold>25,000 individual feathers!</>"
+            }
+        } else if (variable goosefact is 8) {
+            show serial dialog {
+                "Did you know? <bold>Geese mate for life!</> Like many other bird species including puffins, swans, and eagles, geese mate for life forming a bond from between 2-3 years until death."
+            }
+        } else if (variable goosefact is 9) {
+            show serial dialog {
+                "Did you know? <bold>The collective pronoun for geese are called <bold>gaggles or skeins!</>"
+            }
+        } else if (variable goosefact is 10) {
+            show serial dialog {
+                "Did you know? <bold>Undercover geese are quite prevelant!</> Secret agents have been known to disguise themselves as geese to infiltrate bird communities and gather intelligence. Their cover is usually blown when they start honking during covert operations."
+            }
+        } else if (variable goosefact is 11) {
+            show serial dialog {
+                "Did you know? <bold>Geese have complex sport rituals!</> Geese hold their own version of the Olympics, featuring events like synchronized swimming, aerial acrobatics, and honking marathons. The gold medalists are awarded with an extra-long honk of honor."
+            }
+        } else if (variable goosefact is 12) {
+            show serial dialog {
+                "Did you know? <bold>Geese have complex sport rituals!</> Geese hold their own version of the Olympics, featuring events like synchronized swimming, aerial acrobatics, and honking marathons. The gold medalists are awarded with an extra-long honk of honor."
+            }
+        } else if (variable goosefact is 13) {
+            show serial dialog {
+                "Did you know? <bold>Geese form secret societies!</> Geese have a secret society called \"The Order of the Golden Gander,\" dedicated to preserving ancient goose wisdom and plotting elaborate pranks on humans. Membership is by invitation only and involves a rigorous initiation ritual known as the \"Honk of Allegiance.\""
+            }
+        } else if (variable goosefact is 14) {
+            show serial dialog {
+                "Did you know? <bold>Geese are skilled technologists!</> Geese are tech-savvy birds and have their own Silicon Valley-esque hub known as \"Honkitech Valley.\" They're pioneers in inventing gadgets like the feather-resistant smartphone and the GPS (Goose Positioning System) for navigating migratory routes."
+            }
+        } else if (variable goosefact is 15) {
+            show serial dialog {
+                "Did you know? <bold>Geese cannot fly when molting!</> When shedding their feathers during the end of their breeding season geese are unable to fly. This lasts for between 20-40 days until they regrow."
+            }
+        } else if (variable goosefact is 16) {
+            show serial dialog {
+                "Did you know? <bold>Goslings bond with the first living thing <bold>they see!</> Newly hatched geese (called goslings) assume the first living thing they see is their mother. This is known as \"imprinting\"."
+            }
+        } else if (variable goosefact is 17) {
+            show serial dialog {
+                "Did you know? <bold>Geese make constant improvements to their <bold>nests!</> Geese keep their nests for several years and make constant improvements using twigs, feathers, bark, and leaves."
+            }
+        } else if (variable goosefact is 18) {
+            show serial dialog {
+                "Did you know? <bold>Geese have been domesticated for thousands of <bold>years!</> Geese have been domesticated for at least 3,000 years there are references to geese in ancient Egyptian hieroglyphics."
+            }
+        } else if (variable goosefact is 19) {
+            show serial dialog {
+                "Did you know? <bold>Geese have advanced detection techniques!</> Geese are natural sleuths and operate their own detective agency, specializing in solving \"fowl\" play cases. With their keen observational skills and honed instincts, they've cracked some of the toughest rake theft mysteries."
+            }
+        } else if (variable goosefact is 20) {
+            show serial dialog {
+                "Did you know? <bold>Geese have complex oral histories!</> In ancient goose mythology, it's believed that the world rests on the back of a giant cosmic goose, whose honks create the rhythms of the universe."
+            }
+        }
+        show serial dialog {" \nReply <g>STOP</> to stop receiving goose facts."}
+        mutate goosefact + 1;
+        if (variable goosefact is $goosefactcount) {
+            mutate goosefact = 0;
+        }
+    }
+}

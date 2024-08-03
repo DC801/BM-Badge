@@ -156,6 +156,11 @@ ch2-map-init {
 	// These commands are built into the engine, so let's just handle them here
 	register alias h = help;
 	register alias l = look;
+	// extra goose stuff
+	if (flag ch2-goosefacts is true) {
+		register stop -> stop-goosefacts;
+		copy goosefacts;
+	}
 }
 
 

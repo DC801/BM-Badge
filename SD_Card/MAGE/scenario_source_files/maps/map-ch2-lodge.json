@@ -90,7 +90,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-generic"
+                         "value":"ch2-goose-library"
                         }],
                  "rotation":0,
                  "visible":true,

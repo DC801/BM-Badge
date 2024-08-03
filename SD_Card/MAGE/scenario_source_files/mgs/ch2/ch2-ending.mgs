@@ -16,11 +16,11 @@ on_tick-ch2-credits {
 		"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
 	}
 
-	set entity Goat current_animation to 1;
+	set entity Gregory current_animation to 1;
 	wait 1200ms;
 	walk entity cameraman along geometry credits_camera over 600ms; // lolol
 	wait 600ms;
-	play entity Cat animation 2 once;
+	// play entity Cat animation 2 once;
 	wait 300ms;
 
 	// TEMP
