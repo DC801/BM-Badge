@@ -82,9 +82,14 @@ ch2-cutscene-castle11 {
 	turn player control off;
 	wait 500ms;
 	set entity Kuro on_tick to null_script;
+	if (flag ch2-blockage is false) {
+		set flag ch2-blockage to true;
+		show dialog {
+			PLAYER "Oh, cool, I got past the blockage."
+			"This artifact is handy."
+		}
+	}
 	show dialog {
-		PLAYER "Oh, cool, I got past the blockage."
-		"This artifact is handy."
 		name "???" "Intruder! Intruder!"
 	}
 	set entity "%PLAYER%" on_tick to watch-kuro;

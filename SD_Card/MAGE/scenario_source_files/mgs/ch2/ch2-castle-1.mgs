@@ -162,6 +162,8 @@ on_load-ch2-castle-1 {
 		copy restore_player_state;
 	} else if (warp state is walk_from-south) {
 		teleport entity "%PLAYER%" to geometry walk_from-south;
+	} else if (warp state is ch2-ending) {
+		teleport entity "%PLAYER%" to geometry mainframe-look-spot;
 	}
 	if (flag ch2-carrying-mainframeos is true) {
 		set entity Wizard current_animation to 3;
@@ -327,6 +329,7 @@ on_tick-ch2-castle-1 {
 		load map ch2-castle-outside;
 	}
 	if (flag ch2-wait-for-hat-touch is true) {
+		// show serial dialog {"if (flag ch2-wait-for-hat-touch is true) {"}
 		goto on_tick-ch2-castle-1-hexwait1;
 	}
 	// if there's a dialog open currently, don't do anything! But...
@@ -685,6 +688,10 @@ ch2-install-wizard {
 	show dialog {
 		Wizard "Hey hey! There you go!"
 	}
+	// goto ch2-install-wizard2;
+	goto ch2-install-wizard-resume2;
+}
+ch2-install-wizard2 {
 	set entity Wizard on_tick to face-player;
 	wait 300ms;
 	fade out camera to #FFDD00 over 600ms;
@@ -696,13 +703,23 @@ ch2-install-wizard {
 		Wizard "Your hand was glowing. Or maybe a ring?"
 		PLAYER "Ring Zero?"
 		"Oh! It's warm! I wonder if it'll work now?"
-		"What was it again? \"Touch the hat on the PCB\" -- right?"
+		PLAYER "What was it again? \"Touch the hat on the PCB\" -- right?"
 	}
 	set flag ch2-ring-zero-enabled-in-castle to true;
+	// show serial dialog {"set flag ch2-ring-zero-enabled-in-castle to true;"}
 	turn player control on;
-	turn hex control on;
+	// show serial dialog {"turn player control on;"}
+	if (debug mode is off) {
+		// show serial dialog {"turn hex control on;"}
+		turn hex control on;
+	} else {
+		// show serial dialog {"debug mode is on; no need to enable hex control;"}
+	}
+	// show serial dialog {"turn hex control on;"}
 	set flag ch2-wait-for-hat-touch to true;
+	// show serial dialog {"set flag ch2-wait-for-hat-touch to true;"}
 	copy ch2-install-mainframeos;
+	// show serial dialog {"copy ch2-install-mainframeos;"}
 }
 ch2-ending-fadein {
 	fade in camera from #000000 over 500ms;
@@ -716,6 +733,10 @@ ch2-install-wizard-resume {
 		PLAYER "Hey! It works!"
 		Wizard "Looks like the castle's core services are gonna come back online on their own. I guess that'll make it a breeze to clean everything up, eh?"
 	}
+	goto ch2-castle-1-ending2;
+	// goto ch2-install-wizard-resume2;
+}
+ch2-install-wizard-resume2 {
 	set warp state to "ch2 ending";
 	copy ch2-ending-fadeout;
 	load map ch2-castle-21;
@@ -785,13 +806,17 @@ ch2-castle-1-ending {
 	set entity Wizard current_animation to 3;
 	copy ch2-ending-fadein;
 	wait 300ms;
+	// goto ch2-castle-1-ending2;
+	goto ch2-install-wizard2;
+}
+ch2-castle-1-ending2 {
 	show dialog {
 		PLAYER "Awesome! I'll go tell the village elders I've got the artifact fully working."
 		"We're one step closer to facing the Big Bad!"
 	}
 	mutate ch2-storyflag-round = 5;
 	turn player control off;
-	set entity "%PLAYER%" on_tick to ch2-player-exit;
+	set entity XA on_tick to ch2-player-exit;
 	set warp state to ch2-ending;
 	fade out camera to #000000 over 1500ms;
 	set flag credits-from-menu to false;

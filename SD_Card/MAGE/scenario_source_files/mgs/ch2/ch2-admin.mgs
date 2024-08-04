@@ -297,7 +297,7 @@ debug-map-flags-for-round0 {
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 0;
-	copy ch2-debug-storyflag-log;
+	// copy ch2-debug-storyflag-log;
 }
 debug-map-flags-for-round1 {
 	copy ch2-put_on_map-round1;
@@ -305,7 +305,7 @@ debug-map-flags-for-round1 {
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 1;
-	copy ch2-debug-storyflag-log;
+	// copy ch2-debug-storyflag-log;
 }
 debug-map-flags-for-round2 {
 	copy ch2-take_off_map-round1;
@@ -313,7 +313,7 @@ debug-map-flags-for-round2 {
 	copy ch2-take_off_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 2;
-	copy ch2-debug-storyflag-log;
+	// copy ch2-debug-storyflag-log;
 }
 debug-map-flags-for-round3 {
 	copy ch2-take_off_map-round1;
@@ -321,7 +321,7 @@ debug-map-flags-for-round3 {
 	copy ch2-put_on_map-round3;
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 3;
-	copy ch2-debug-storyflag-log;
+	// copy ch2-debug-storyflag-log;
 }
 debug-map-flags-for-round4 {
 	copy ch2-take_off_map-round1;
@@ -329,7 +329,7 @@ debug-map-flags-for-round4 {
 	copy ch2-take_off_map-round3;
 	copy ch2-put_on_map-round4;
 	mutate ch2-storyflag-round = 4;
-	copy ch2-debug-storyflag-log;
+	// copy ch2-debug-storyflag-log;
 }
 debug-map-flags-for-round5 {
 	copy ch2-take_off_map-round1;
@@ -338,7 +338,7 @@ debug-map-flags-for-round5 {
 	copy ch2-take_off_map-round4;
 	mutate ch2-storyflag-round = 5;
 	set flag ch2-cutseen-castle99 to true;
-	copy ch2-debug-storyflag-log;
+	// copy ch2-debug-storyflag-log;
 }
 ch2-debug-storyflag-log {
 	show serial dialog spacer;

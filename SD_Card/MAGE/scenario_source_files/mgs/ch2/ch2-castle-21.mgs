@@ -445,7 +445,7 @@ interact-ch2-room21-split {
 	}
 	if (flag ch2-seamoss-backstory is true) {
 		show dialog {
-			PLAYER "Wait, I think I saw that guy. He was in the grand hall."
+			PLAYER "Wait, I think I saw that guy. He was in the castle kitchen."
 		}
 		turn entity "%PLAYER%" toward entity Frankie;
 		show dialog {

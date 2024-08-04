@@ -427,6 +427,8 @@ ch2-lambda-topic-person-q {
 		_ "THE BIG BAD" : ch2-lambda-person-big-bad
 		_ "BIG BAD" : ch2-lambda-person-big-bad
 
+		_ "ALFONSO" : ch2-lambda-person-alfonso
+		_ "JACKOB" : ch2-lambda-person-jackob
 		_ "BERT" : ch2-lambda-person-bert
 
 		_ "XA" : ch2-lambda-person-xa
@@ -1245,20 +1247,64 @@ ch2-lambda-person-big-bad2 {
 	goto ch2-lambda-topic-person-s;
 }
 
+// Elders
+
+ch2-lambda-person-alfonso {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Alfonso."
+	}
+	if (flag ch2-cutseen-secret-ending is false) {
+		show serial dialog {
+			" "
+			"<m>LAMBDA</>: Alfonso? That name rings a bell... maybe? I-I feel like I should know who that is."
+			"\tAw, man. I feel terrible. I'm having this sort of painful nostalgia about that name right now. Did I let him down about something? Hmm."
+		}
+	} else {
+		show serial dialog {
+			" "
+			"<m>LAMBDA</>: Alfonso, yes! I look up to him a lot. And he's fond of me -- or, um, I guess he <bold>was</> fond of me. N-not anymore, I guess."
+			"\tI hope... I really do hope he'll try to get to know me again. I was the rookie of the group, so I feel like they were all sort of hard on me sometimes, but we mostly got along back then...."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
+ch2-lambda-person-jackob {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c>YOU</>: Tell me about Jackob."
+	}
+	if (flag ch2-cutseen-secret-ending is false) {
+		show serial dialog {
+			" "
+			"<m>LAMBDA</>: Jackob... Jackob.... That name is a bit odd, isn't it? There's something about that name... like there's something wrong about it. Is that really how it's spelled?"
+		}
+	} else {
+		show serial dialog {
+			" "
+			"<m>LAMBDA</>: Jackob! He's the oldest village elder, of course, so he's the most knowledgeable of all of us. Or... at least he <bold>was</>. I-I confess he looked very old and very confused to me just now. That was hard to watch. The Big Bad must have really done a number on him."
+		}
+	}
+	goto ch2-lambda-topic-person-s;
+}
+
 // Bert
 
 ch2-lambda-person-bert {
 	show serial dialog spacer;
-	show serial dialog {
-		"<c>YOU</>: About Bert...."
-	}
-	if (flag ch2-cutseen-bert-secret is true) {
-		goto ch2-lambda-bert-q;
+	if (flag ch2-cutseen-bert-secret is false) {
+		show serial dialog {
+			"<c>YOU</>: Tell me about Bert."
+			" "
+			"<m>LAMBDA</>: Bert? I don't know any Berts... I think? You know, maybe -- no, no, I think I'm mixing myself up. I just had the image of Sasquatch in my head for a second when you said that."
+		}
 	} else {
 		show serial dialog {
-			" "
-			"<m>LAMBDA</>: Bert? I don't know any Berts."
+			"<c>YOU</>: About Bert...."
 		}
+	
+		goto ch2-lambda-bert-q;
 	}
 	goto ch2-lambda-topic-person-s;
 }

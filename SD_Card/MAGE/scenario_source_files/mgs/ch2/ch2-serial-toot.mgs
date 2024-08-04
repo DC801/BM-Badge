@@ -246,7 +246,7 @@ ch2-toot-step4a {
 		"<m>LAMBDA</>: We'll have to <c>build a new computer from scratch</>. There's items around the castle we could... um, MacGuyver... to build something functional. Most of the parts are less than ideal, but we have little choice right now. I can put together a parts list."
 		" "
 		# "But I don't know how to build a computer!" : ch2-toot-step4b-noob
-		# "This'll be a sinch!" : ch2-toot-step4b-pro
+		# "This'll be a cinch!" : ch2-toot-step4b-pro
 	}
 }
 
@@ -264,7 +264,7 @@ ch2-toot-step4b-noob {
 ch2-toot-step4b-pro {
 	show serial dialog spacer;
 	show serial dialog {
-		"<c>YOU</>: This'll be a sinch!"
+		"<c>YOU</>: This'll be a cinch!"
 		" "
 		"<m>LAMBDA</>: Yeah! Building a new computer is never as hard as it sounds. And it looks like... yeah, I think we can scavenge just enough parts to make this really work."
 		" "
