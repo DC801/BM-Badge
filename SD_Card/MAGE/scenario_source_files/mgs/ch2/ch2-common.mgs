@@ -49,6 +49,7 @@ ch2-map-init-serial {
 		copy register-rtfm;
 		copy register-inventory;
 		copy register-manual;
+		copy register-eastereggs;
 		register alias h = help;
 		register alias l = look;
 	}
