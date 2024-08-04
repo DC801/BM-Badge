@@ -1,5 +1,21 @@
 include!("header.mgs")
 
+ch2-wizard-stomp {
+	wait 1800ms;
+	play entity "%SELF%" animation 2 once;
+}
+ch2-bird-hyper {
+	turn entity "%SELF%" west;
+	set entity "%SELF%" current_animation to 0;
+	wait 1100ms;
+	turn entity "%SELF%" south;
+	wait 550ms;
+	turn entity "%SELF%" east;
+	set entity "%SELF%" current_animation to 1;
+	wait 600ms;
+	turn entity "%SELF%" south;
+	wait 800ms;
+}
 on_tick-ch2-credits {
 	turn hex control off;
 	turn serial control off;
@@ -9,24 +25,28 @@ on_tick-ch2-credits {
 	teleport entity cameraman to geometry credits_camera;
 	fade in camera from #000000 over 400ms;
 	
-	//TEMP
-	show serial dialog spacer;
-	show serial dialog {
-		"Welcome to the credits for DC801 Black Mage Badge Ch2!"
-		"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
-	}
+	// //TEMP
+	// show serial dialog spacer;
+	// show serial dialog {
+	// 	"Welcome to the credits for DC801 Black Mage Badge Ch2!"
+	// 	"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
+	// }
 
 	set entity Gregory current_animation to 1;
 	wait 1200ms;
-	walk entity cameraman along geometry credits_camera over 600ms; // lolol
+	walk entity cameraman along geometry credits_camera over 52000ms;
 	wait 600ms;
-	// play entity Cat animation 2 once;
-	wait 300ms;
+	turn entity Wizard south;
+	play entity Wizard animation 5 once;
+	set entity Wizard current_animation to 3;
+	wait 2300ms;
+	play entity Wizard animation 4 once;
+	set entity Wizard current_animation to 0;
 
-	// TEMP
-	show serial dialog {
-		"(THANK YOU)"
-	}
+	// // TEMP
+	// show serial dialog {
+	// 	"(THANK YOU)"
+	// }
 
 	fade out camera to #000000 over 1200ms;
 	turn hex control on;
