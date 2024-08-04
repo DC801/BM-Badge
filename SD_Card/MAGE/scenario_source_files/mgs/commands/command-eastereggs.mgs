@@ -5,6 +5,8 @@ include!("header.mgs")
 register-eastereggs {
 	register plover -> command-plover;
 	register xyzzy -> command-xyzzy;
+	hide command plover;
+	hide command xyzzy;
 }
 
 // COMMAND
@@ -40,11 +42,14 @@ command-plover {
 		"~~~~~~~~~~~~~~~~!!77?JY5YJ?YY??^::::^^:^~~~!??JYYY^^~!7?J7~~"
 		"~~~~~~~~~~~~~~~~~~~~~!!!!^^JY5PPP5Y?7!~^:^~JY?Y7Y7.^~7?7~!~~"
 		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~!!7??JY55PP5J7JYY5!:Y7 ^~~~~~~~~"
-		""
+		" "
 		"       no you plover"
 	}
 }
 
 command-xyzzy {
 	show serial dialog spacer;
+	show serial dialog {
+		"You hex a decimal. It looks surprised."
+	}
 }
