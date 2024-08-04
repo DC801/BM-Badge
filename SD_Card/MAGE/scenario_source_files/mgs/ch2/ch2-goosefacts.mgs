@@ -12,7 +12,7 @@ stop-goosefacts {
 }
 goosefacts {
     if (flag ch2-goosefacts is true) {
-        show serial dialog {" \n<g>You are subscribed to goose facts!</>\n "}
+        show serial dialog {" \n<g>You are subscribed to goose facts! HONK!<bell></>\n "}
         if (variable goosefact is 0) {
             show serial dialog {
                 "Did you know? <bold>Geese are monogamous!</> They form strong bonds and have complex mating rituals, engaging in courtship displays which include honking, wing-flapping, and head-bobbing."
@@ -55,7 +55,7 @@ goosefacts {
             }
         } else if (variable goosefact is 10) {
             show serial dialog {
-                "Did you know? <bold>Undercover geese are quite prevelant!</> Secret agents have been known to disguise themselves as geese to infiltrate bird communities and gather intelligence. Their cover is usually blown when they start honking during covert operations."
+                "Did you know? <bold>Undercover geese are quite prevalent!</> Secret agents have been known to disguise themselves as geese to infiltrate bird communities and gather intelligence. Their cover is usually blown when they start honking during covert operations."
             }
         } else if (variable goosefact is 11) {
             show serial dialog {

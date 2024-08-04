@@ -650,7 +650,9 @@ ch2-install-wizard {
 	wait 800ms;
 	turn serial control off;
 	show serial dialog spacer;
-	show serial dialog { "Starting" }
+	show serial dialog {
+		"Starting"
+	}
 	wait 100ms;
 	show dialog {
 		PLAYER "!!"
@@ -822,89 +824,424 @@ ch2-wait-for-boot {
 const!(
 	$dot = 300ms
 )
-/*
-Welcome to GibBIOS v1.1 built on Aug 8 2024 10:11
-   Туре 'help' for detailed information
-Trying disk:a...
-[wait 700ms]
-GibsonOS Release 5.7 Version Generic_801-02 [UNIX(R) System V Release 4.0]
-Copyright (c) 1983-1999, Sun Microsystems, Inc.
-[wait 4s]
-Hostname: sunrise
-[wait 200ms]
-The system is coming up.  Please wait.
-checking ufs filesystems
-/dev/rdsk/côtod05c0t0d0s7: is clean.
-in.rdisc: No No interfaces up
-starting routing daemon.
-[wait 100ms]
-starting rpc services: rpcbindkeyserv: failed to generate host's netname when establishing root's key.
- keyserv done
-Setting default interface for multicast: add net 224.0.0.0: gateway sunrise
-[wait 300ms]
-syslog service starting.
-[wait 300ms]
-Print services started.
-[wait 150ms]
-Mar 18 16:38:52 sunrise sendmail[195]: My unqualified host name (localhost) unknown; sleeping for retry
-volume management starting.
-The system is ready.
-[wait 200ms]
-
-sunrise console login: Mar 18 16:38:54 sunrise snmpXdmid: Error in Adding Row for Subscription Table Entry
-Mar 18 16:38:54 sunrise snmpXdmid: Failed to add filter to SP for Event delivery
-
-
-*****************************************************************************
-*
-* Starting Desktop Login on display :0...
-* 
-* Wait for the Desktop Login screen before logging in.
-* 
-*****************************************************************************
-*/
+ch2-bootup-mgs2 {
+	show serial dialog {
+		"Loading MGZ" // several seconds
+		" "
+		"Memory: 1048576k/1049216k available (1162k kernel code, 6812k reserved, 482k data,240k init, Ok highmem)"
+		" "
+		"Dentry-cache hash table entries: 32768 (order: 6, 262144 bytes)"
+		"Buffer-cache hash table entries: 8192 (order: 3, 32768 bytes)"
+		"Page-cache hash table entries: 65536 (order: 6, 262144 bytes)"
+		"Inode-cache hash table entries: 16384 (order: 5, 131072 bytes)"
+		" "
+		"Enabling fast FPU save and restore... done."
+		"Enabling unmasked SIMD FPU exception support... done."
+		"Checking 'hlt' instruction... OK."
+		" "
+		"MGX NET9.0 for MGX 6.0"
+		"BIOS Vendor: Konami Computer Entertainment Japan"
+		"BIOS Version: 5.73" // 15f
+	}
+	wait 50ms;
+	show serial dialog {
+		" "
+		"Starting kswapd v3.0" // 10f
+	}
+	wait 500ms;
+	show serial dialog {
+		" "
+		"pty: 256 Unix98 ptys configured" //1f>
+	}
+	wait 50ms;
+	show serial dialog {
+		"Uniform Multi-Platform E-IDE driver Revision: 9.11" //1f>
+	}
+	wait 50ms;
+	show serial dialog {
+		"    ide0: BM_DMA at 0xf000-0xf007, BIOS settings: da0:DMA, da1:pio" //1f?
+	}
+	wait 50ms;
+	show serial dialog {
+		"19623/16/255 from BIOS ignored" //1f?
+	}
+	wait 50ms;
+	show serial dialog {
+		" "
+		"da0: C/H/S=19623/16/255 from BIOS ignored" //1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"da0: TOKUGAWA HD4192 E, ATA DISK drive"
+		"da1: TOKUGAWA CF2048J, REMOVABLE drive" //9f
+	}
+	wait 450ms;
+	show serial dialog {
+		"ide0 at 0x1f0-0x1f7, 0x3f6 on irq 14" //1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"da0: 160126848 sectors (81984 MB) w/2048KiB Cache, CHS-158856/16/63, UDMA(33)"
+		"Partition check:" //15f
+	}
+	wait 750ms;
+	show serial dialog {
+		"    da0: da01 da02 da03 <da06 da06 dao7>"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		" "
+		"eth0: ARMSTECH Corporation 826557, 00:03:47:70:29:86, IRQ 9."//4f
+	}
+	wait 200ms;
+	show serial dialog {
+		" "//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"NET9: MGX TCP/IP 4.0 for NET9.0"
+		"IP Proyocols: ICMP, UDP, TCP, IGMP"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"IP: routing cache hash table of 512 buckets, 4Kbytes"
+		"ICP: hash tables configured (established 8192 bind 8192)"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"NET4: Un*x domain sockets 1.0/SMP for MGX NET 9.0"//10f
+	}
+	wait 500ms;
+	show serial dialog {
+		" "
+		"UFS: Mounted root (ext4 filesystem) readonly"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"Freeing unused kernel memory: 176k freed"
+		"Adding Swap: 211640k swap space (priority -1)"//16f
+	}
+	wait 800ms;
+	show serial dialog {
+		" "//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"INIT Version 5.64"
+		"Welcome to MONORITH SERVICE SYSTEM"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"PROVIDED BY STRATELOGIC INC.,LTD."
+		"FOR USE ONLY ON THE CONSOLE\"CYBERSPACE_4\" "//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"######################CAUTION#########################"
+		"FOR MILITARY USE ONLY."//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"UNAUTHORIZED PERSONNEL MAKING ACCESS OR ATTEMPTING ACCESS WILL BE"
+		"PENALIZED SEVERELY UNDER MARTIAL LAW."//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"######################CAUTION#########################"
+		" "//16f
+	}
+	wait 800ms;
+	show serial dialog {
+		"Mounting proc filesystem"//6f
+	}
+	wait 300ms;
+	show serial dialog {
+		"Configuring kernel parameters"//4f
+	}
+	wait 200ms;
+	show serial dialog {
+		"Loading default keymap"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"Activating swap partitions"//11f
+	}
+	wait 550ms;
+	show serial dialog {
+		"Setting hostname policenauts"//6f
+	}
+	wait 300ms;
+	show serial dialog {
+		"Checking root filesystem"//32f
+	}
+	wait 1600ms;
+	show serial dialog {
+		"/dev/da01: clean, 2676/788800 files, 492275/3155200  blocks"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		" "//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"Remounting root filesystem in read-write mode"
+		"Finding module dependencies"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		" "//22f
+	}
+	wait 1100ms;
+	show serial dialog {
+		"/dev/da05: clean, 21/82328 files, 10415/329301 blocks"//32f
+	}
+	wait 1600ms;
+	show serial dialog {
+		"/dev/da06: clean, 75098/9729792 files, 316284/38919168 blocks"//32f
+	}
+	wait 1600ms;
+	show serial dialog {
+		"/dev/da07: clean, 20881/9729792 files, 834953/38919168 blocks"//7f
+	}
+	wait 350ms;
+	show serial dialog {
+		" "
+		" "//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"Mounting local filesystems"//2f
+	}
+	wait 100ms;
+	show serial dialog {
+		"Enabling swap space"//4f
+	}
+	wait 200ms;
+	show serial dialog {
+		"INIT: Entering runlevel: 4"
+		"Entering non-interactive startup"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"Setting network parameters"
+		"Bringing up interface lo"//3f
+	}
+	wait 150ms;
+	show serial dialog {
+		"Bringing up interface eth0"
+		" "//1.5s
+	}
+	wait 2500ms;
+	show serial dialog {
+		"MONORITH MGX 2.1.5"
+		"Kernel 6.2.38"//2f
+	}
+}
+ch2-bootup-solaris {
+	// show serial dialog {
+	// 	"Welcome to GibBIOS v1.1 built on Aug 8 2024 10:11"
+	// 	"Trying disk:a..."
+	// }
+	wait 2400ms;
+	show serial dialog {
+		"GibsonOS Release 5.7 Version Generic_801-02 [UNIX(R) System V Release 4.0]"
+		"Copyright (c) 1983-1999, Sun Microsystems, Inc."
+	} // :19s
+	wait 4000ms;
+	show serial dialog {
+		"Hostname: sunrise"
+	}
+	wait 2400ms;
+	show serial dialog {
+		"The system is coming up.  Please wait."
+	}
+	wait 80ms;
+	show serial dialog {
+		"checking ufs filesystems"
+	}
+	wait 80ms;
+	show serial dialog {
+		"/dev/rdsk/c0t0d0s7: is clean."
+	}
+	wait 800ms;
+	show serial dialog {
+		"in.rdisc: No interfaces up"
+	}
+	wait 50ms;
+	show serial dialog {
+		"starting routing daemon."
+	}
+	wait 1100ms;
+	show serial dialog {
+		"starting rpc services: rpcbindkeyserv: failed to generate host's netname when establishing root's key."
+	}
+	wait 50ms;
+	show serial dialog {
+		"keyserv done"
+	}
+	wait 50ms;
+	show serial dialog {
+		"Setting default interface for multicast: add net 224.0.0.0: gateway sunrise"
+	}
+	wait 1400ms;
+	show serial dialog {
+		"syslog service starting."
+	}
+	wait 700ms;
+	show serial dialog {
+		"Print services started."
+	}
+	wait 600ms;
+	show serial dialog {
+		"Mar 18 16:38:52 sunrise sendmail[195]: My unqualified host name (localhost) unknown; sleeping for retry"
+	}
+	wait 50ms;
+	show serial dialog {
+		"volume management starting."
+	}
+	wait 2900ms;
+	show serial dialog {
+		"The system is ready."
+	}
+	wait 1200ms;
+	show serial dialog {
+		" "
+		"sunrise console login: Mar 18 16:38:54 sunrise snmpXdmid: Error in Adding Row for Subscription Table Entry"
+	}
+	wait 180ms;
+	show serial dialog {
+		"Mar 18 16:38:54 sunrise snmpXdmid: Failed to add filter to SP for Event delivery"
+	}
+	wait 900ms;
+	show serial dialog {
+		" "
+		"************************************************************"
+		"*"
+	}
+	wait 50ms;
+	show serial dialog {
+		"* Starting Desktop Login on display :0..."
+		"* "
+	}
+	wait 40ms;
+	show serial dialog {
+		"* Wait for the Desktop Login screen before logging in."
+		"* "
+	}
+	wait 50ms;
+	show serial dialog {
+		"************************************************************"
+	}
+	turn serial control on;
+}
 ch2-bootup {
 	// turn serial control off;
 	// show serial dialog spacer;
-	// show serial dialog { "Starting" }
+	// ^^ moved from here to the other place, but this is what it was fyi
 	wait 1050ms;
-	show serial dialog { "GibsonOS version 3.7.1-TLS" }
+	show serial dialog {
+		"GibsonOS version 3.7.1-TLS"
+	}
 	wait 700ms;
-	show serial dialog { "Starting intercom manager" }
+	show serial dialog {
+		wrap 70
+		"Memory: 1048576k/1049216k available"
+		" "
+		"Dentry-cache hash table entries: 32768 (order: 6, 262144 bytes)"
+		"Buffer-cache hash table entries: 8192 (order: 3, 32768 bytes)"
+		"Page-cache hash table entries: 65536 (order: 6, 262144 bytes)"
+		"Inode-cache hash table entries: 16384 (order: 5, 131072 bytes)"
+		" "
+		"Enabling fast FPU save and restore... done."
+		"Enabling unmasked SIMD FPU exception support... done."
+		"Checking 'hlt' instruction... OK."
+	}
+	wait 50ms;
+	show serial dialog {
+		" "
+		"GibBOOT 4.0"
+		"BIOS Vendor: Gibson Computing Corporation Limited"
+		"BIOS Version: 2.14" // 15f
+	}
+	wait 120ms;
+	show serial dialog {
+		" "
+		"Partition check:" //15f
+	}
+	wait 750ms;
+	show serial dialog {
+		"    da0: da01 da02 da03 <da06 da06 dao7>"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		" "
+		"Mounting local filesystems"//2f
+	}
 	wait 100ms;
-	show serial dialog { "   Status: <g>OK</>" }
-	show serial dialog { "Starting door manager" }
-	wait 210ms;
-	show serial dialog { "   Status: <g>OK</>" }
-	show serial dialog { "Fetching latest from underground data center" }
+	show serial dialog {
+		"Enabling swap space"//4f
+	}
+	wait 200ms;
+	show serial dialog {
+		"INIT: Entering runlevel: 4"
+		"Entering non-interactive startup"//1f
+	}
+	wait 50ms;
+	show serial dialog {
+		"Setting network parameters"
+		"Bringing up interface lo"//3f
+	}
+	wait 150ms;
+	show serial dialog {
+		"Bringing up interface eth0"
+	}
+	wait 50ms;
+	show serial dialog {
+	" "
+	"Starting intercom manager"
+	}
+	wait 100ms;
+	show serial dialog {
+		"   Status: <g>OK</>"
+		"Starting door manager"
+	}
+	wait 230ms;
+	show serial dialog {
+		"   Status: <g>OK</>"
+		"Fetching latest from underground data center"
+	}
 	wait 3000ms;
-	show serial dialog { "   Status: <r>ERROR</>" }
-	show serial dialog { "   Connection refused" }
-	show serial dialog { "Launching power plant controller" }
-	wait 100ms;
-	show serial dialog { "   Status: <g>OK</>" }
-	show serial dialog { "Launching HVAC controller" }
-	wait 70ms;
-	show serial dialog { "   Status: <g>OK</>" }
-	show serial dialog { "Establishing Ring Zero bridge" }
+	show serial dialog {
+		"   Status: <r>ERROR</>"
+		"   Connection refused"
+		"Launching power plant controller"
+	}
+	wait 400ms;
+	show serial dialog {
+		"   Status: <g>OK</>"
+		"Launching HVAC controller"
+	}
+	wait 170ms;
+	show serial dialog {
+		"   Status: <g>OK</>"
+		"Establishing Ring Zero bridge"
+	}
 	wait 700ms;
-	show serial dialog { "   Status: <g>OK</>" }
-	show serial dialog { "Installing additional support packages..." }
-	for (mutate i = 1; variable i is <= 9; mutate i + 1) {
-		wait $dot;
-		show serial dialog { "." }
+	show serial dialog {
+		"   Status: <g>OK</>"
+		"Installing additional support packages"
 	}
-	show serial dialog { "45 Packages installed with 2 warnings" }
-	show serial dialog { "   2 packages are deprecated" }
-	show serial dialog { "   15 packages are looking for funding" }
-	show serial dialog { "No GPU devices found" }
-	show serial dialog { "Reticulating splines..." }
-	for (mutate i = 1; variable i is <= 6; mutate i + 1) {
-		wait $dot;
-		show serial dialog { "." }
+	wait 2300ms;
+	show serial dialog {
+		"No GPU devices found"
+		"Reticulating splines"
 	}
-	show serial dialog { "<g>Boot OK</>" }
-	show serial dialog { "Launching desktop environment..." }
+	wait 3800ms;
+	show serial dialog {
+		" "
+		"<g>Boot OK</>"
+		"Launching desktop environment"
+	}
 	turn serial control on;
 }
 
