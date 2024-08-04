@@ -420,7 +420,7 @@
                  "visible":true,
                  "width":32,
                  "x":224,
-                 "y":1345
+                 "y":1333
                 }, 
                 {
                  "class":"",
@@ -432,7 +432,7 @@
                  "visible":true,
                  "width":48,
                  "x":216,
-                 "y":1585
+                 "y":1831
                 }, 
                 {
                  "class":"",
@@ -467,8 +467,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":225,
-                 "y":1825
+                 "x":224,
+                 "y":1580
                 }, 
                 {
                  "class":"",
@@ -480,7 +480,7 @@
                  "visible":true,
                  "width":32,
                  "x":224,
-                 "y":2325
+                 "y":2307
                 }],
          "opacity":1,
          "type":"objectgroup",

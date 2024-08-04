@@ -230,6 +230,7 @@ ch2-goose-library {
 
 	} else {
 		if (flag ch2-goosefacts is false) {
+			concat serial dialog { "<bell>" }
 			show dialog {
 				SELF "HONK! You are now subscribed to goose facts!"
 			}

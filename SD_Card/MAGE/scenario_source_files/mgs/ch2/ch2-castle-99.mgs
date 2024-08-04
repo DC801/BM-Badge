@@ -124,7 +124,7 @@ on_load-ch2-castle-99 {
 	}
 
 	// Check if rake has been obtained
-	if (flag ch2-has-minirake-99 is true) {
+	if (flag ch2-carrying-minirake-99 is true) {
 		copy ch2-minirake-99-hide;
 	}
 	

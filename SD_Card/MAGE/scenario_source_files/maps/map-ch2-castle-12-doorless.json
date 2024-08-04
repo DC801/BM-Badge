@@ -214,18 +214,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":940,
-                 "height":40,
-                 "id":50,
-                 "name":"phonograph",
-                 "rotation":0,
-                 "visible":true,
-                 "width":40,
-                 "x":283,
-                 "y":138
-                }, 
-                {
-                 "class":"",
                  "gid":182,
                  "height":32,
                  "id":51,
@@ -246,6 +234,18 @@
                  "width":32,
                  "x":175,
                  "y":181
+                }, 
+                {
+                 "class":"",
+                 "gid":939,
+                 "height":40,
+                 "id":52,
+                 "name":"phonograph",
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":283,
+                 "y":138
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -367,7 +367,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":52,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
