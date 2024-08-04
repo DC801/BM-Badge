@@ -5,8 +5,12 @@ include!("header.mgs")
 register-eastereggs {
 	register plover -> command-plover;
 	register xyzzy -> command-xyzzy;
+	register plugh -> command-plugh;
+	register fum -> command-fum;
 	hide command plover;
 	hide command xyzzy;
+	hide command plugh;
+	hide command fum;
 }
 
 // COMMAND
@@ -51,5 +55,19 @@ command-xyzzy {
 	show serial dialog spacer;
 	show serial dialog {
 		"You hex a decimal. It looks surprised."
+	}
+}
+
+command-plugh {
+	show serial dialog spacer;
+	show serial dialog {
+		"Bless you."
+	}
+}
+
+command-fum {
+	show serial dialog spacer;
+	show serial dialog {
+		"While I've never actually made a mistake, there have been a few, let's call 'em \"stnanks,\" that could be worthy of a do-over."
 	}
 }
