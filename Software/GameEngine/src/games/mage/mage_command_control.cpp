@@ -89,6 +89,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 
 	verb = aliasLookup(verb);
 
+	/*
 	if (MageGame->isEntityDebugOn) {
 		std::string message = "Verb: " + verb;
 		if (!modifier.empty()) { message += " | Modifier: " + modifier; }
@@ -96,16 +97,18 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		message += "\n";
 		commandResponseBuffer += message;
 	}
-
+	*/
 
 	MageSerialDialogCommand* foundCommand = searchForCommand(
 		verb,
 		subject
 	);
 	if (foundCommand != nullptr) {
+		/*
 		if(MageGame->isEntityDebugOn) {
 			commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
 		}
+		*/
 		MageScript->initScriptState(
 			&MageScript->resumeStates.serial,
 			foundCommand->scriptId,
@@ -116,7 +119,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		// would be really useful earlier, but I can't remember why now.
 		lastCommandUsed = COMMAND_HELP;
 		commandResponseBuffer += (
-			"Supported Verbs:\n"
+			"Supported Commands:\n"
 			"  help  look  go"
 		);
 		if (!registeredCommands.empty()) {
@@ -258,7 +261,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 	// end SECRET_GOAT
 	else {
-		commandResponseBuffer += "Unrecognized Verb: " + verb + "\n";
+		commandResponseBuffer += "Unrecognized Command: " + verb + "\n";
 	}
 }
 
@@ -266,24 +269,29 @@ std::string MageCommandControl::aliasLookup(std::string& input) {
 	auto result = input;
 	auto found = commandAliases.find(input);
 	if (found == commandAliases.end()) {
+		/*
 		if(MageGame->isEntityDebugOn) {
 			commandResponseBuffer += "Alias NOT found: " + input + "\n";
 		}
+		*/
 	}
 	else {
+		/*
 		if(MageGame->isEntityDebugOn) {
 			commandResponseBuffer += "Alias found: " + found->first + " is " + found->second + "\n";
 		}
+		*/
 		result = found->second;
 	}
 	return result;
 };
 
 void MageCommandControl::processInputAsTrappedResponse(const std::string& input) {
-
+	/*
 	if(MageGame->isEntityDebugOn) {
 		commandResponseBuffer += "processInputAsTrappedResponse: " + input + "\n";
 	}
+	*/
 	MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
 	if (responseType == RESPONSE_ENTER_NUMBER) {
 		bool errorWhileParsingInt = false;
@@ -300,6 +308,7 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 		) {
 			MageSerialDialogResponse *response = &serialDialogResponses[responseIndex];
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
+			/*
 			if(MageGame->isEntityDebugOn) {
 				commandResponseBuffer += (
 					"Valid response: " +
@@ -307,12 +316,15 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 					responseLabel + "\n"
 				);
 			}
+			*/
 			jumpScriptId = response->scriptId;
 			isInputTrapped = false;
 		} else {
+			/*
 			if(MageGame->isEntityDebugOn) {
 				commandResponseBuffer += "Invalid response: " + input + "\n";
 			}
+			*/
 			showSerialDialog(serialDialogId);
 		}
 	}
@@ -324,9 +336,11 @@ void MageCommandControl::processInputAsTrappedResponse(const std::string& input)
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
 			badAsciiLowerCase(&responseLabel);
 			if (responseLabel == input) {
+				/*
 				if(MageGame->isEntityDebugOn) {
 					commandResponseBuffer += "Valid response: " + input + "\n";
 				}
+				*/
 				jumpScriptId = response->scriptId;
 				isInputTrapped = false;
 				validResponseFound = true;
@@ -583,7 +597,7 @@ void MageCommandControl::registerCommandAlias(
 ) {
 	auto command = MageGame->getString(commandStringId, NO_PLAYER);
 	auto alias = MageGame->getString(aliasStringId, NO_PLAYER);
-
+	/*
 	if(MageGame->isEntityDebugOn) {
 		commandResponseBuffer += (
 				"registerCommandAlias: "
@@ -592,6 +606,7 @@ void MageCommandControl::registerCommandAlias(
 				+ "\n"
 		);
 	}
+	*/
 	commandAliases[alias] = command;
 	// debugAliases();
 }
@@ -609,6 +624,7 @@ void MageCommandControl::unregisterCommandAlias(
 	uint16_t aliasStringId
 ) {
 	auto alias = MageGame->getString(aliasStringId, NO_PLAYER);
+	/*
 	if(MageGame->isEntityDebugOn) {
 		commandResponseBuffer += (
 				"unregisterCommandAlias:"
@@ -616,6 +632,7 @@ void MageCommandControl::unregisterCommandAlias(
 				+ "\n"
 		);
 	}
+	*/
 	commandAliases.erase(alias);
 	// debugAliases();
 }
@@ -625,6 +642,7 @@ void MageCommandControl::setCommandVisibility(
 	bool isVisible
 ) {
 	auto commandString = MageGame->getString(commandStringId, NO_PLAYER);
+	/*
 	if(MageGame->isEntityDebugOn) {
 		commandResponseBuffer += (
 			"setCommandVisibility:"
@@ -633,6 +651,7 @@ void MageCommandControl::setCommandVisibility(
 			+ "\n"
 		);
 	}
+	*/
 	int32_t existingCommandIndex = getCommandIndex(commandString, false, true);
 	if (existingCommandIndex != -1) {
 		// set the visibility
