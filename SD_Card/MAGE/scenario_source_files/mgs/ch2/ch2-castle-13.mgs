@@ -192,7 +192,7 @@ ch2-cutscene-castle12 {
 	set flag ch2-templeton-pace to false;
 	turn entity Templeton east;
 	show dialog {
-		Templeton "...Actually, he's a gnu."
+		Templeton "Actually, he's a gnu."
 	}
 	set entity Sebastian on_tick to ch2-sebastian-stomp;
 	wait 200ms;
@@ -568,7 +568,7 @@ interact-ch2-templeton {
 		copy interrupt-walk;
 		show dialog {
 			SELF "Thank you for rescuing the king. We were all very worried about him."
-			Sebastian "%Templeton%... please don't forget that you're trying to find my physics spellbook. The gravitation spell, please?"
+			Sebastian "%Templeton%, please don't forget that you're trying to find my physics spellbook. The gravitation spell, please?"
 		}
 		copy resume-walk;
 		show dialog {

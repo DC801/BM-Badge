@@ -105,7 +105,7 @@ on_load-ch2-castle-14 {
 			set entity "King Gibson" current_animation to 2;
 			wait 400ms;
 			show dialog {
-				KING emote 1 "...But no, of course. I'm alone."
+				KING emote 1 "But no, of course. I'm alone."
 			}
 			set entity "King Gibson" current_animation to 0;
 			wait 1100ms;

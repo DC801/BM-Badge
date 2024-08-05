@@ -243,8 +243,6 @@ command-parts-print {
 	show serial dialog {
 		" "
 		"(For information about one of the above parts, type <c>PARTS</> followed by the part name.)"
-		// CUTBUG INSTANCE #2
-		// Old version, cuts off but only when storyflag is 1 : "(For information about one of these parts, type <c>PARTS</> followed by the part name.)"
 	}
 }
 

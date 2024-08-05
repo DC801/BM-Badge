@@ -68,7 +68,7 @@ on_load-ch2-magehouse-birthday {
 		ZAPPY "But then that earthquake hit. That was like old times, too."
 
 		PLAYER
-		"...Yeah, that was scary."
+		"Yeah, that was scary."
 		"I guess it's a sign that the Big Bad might be coming back."
 	}
 	wait 180ms;
@@ -159,9 +159,9 @@ ch2-escort-cutscene {
 	walk entity "%PLAYER%" along geometry walk_from-magehouse over 400ms;
 	wait 1200ms;
 	show dialog {
-		PLAYER "Oh... um...."
+		PLAYER "Oh, um...."
 		Alfonso "The time has come to tackle the first challenge, %PLAYER%."
-		PLAYER "...Yeah."
+		PLAYER "Yeah."
 		Alfonso "Ready to go?"
 		PLAYER "Yeah. I mean, no. I mean...."
 	}

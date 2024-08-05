@@ -795,11 +795,11 @@ ch2-lambda-person-frankie {
 	}
 	if (flag ch2-seen-room-21 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: Hmm, \"Frankie,\" let's see.... Was he one of the hardware guys? I can't remember anything else, sorry."
+			"<m>LAMBDA</>: Hmm, \"Frankie,\" let's see.... Was that one of the hardware guys? I can't remember anything else, sorry."
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA</>: Frankie is a great guy to have around if you're experiencing a hardware issue. He's our printer-wrangler, be they 2D or 3D printers."
+			"<m>LAMBDA</>: Frankie is a great guy to have around if you're experiencing a hardware issue. They're our printer-wrangler, be they 2D or 3D printers."
 		}
 	}
 	goto ch2-lambda-topic-person-s;
@@ -936,7 +936,7 @@ ch2-lambda-person-marathonbob {
 		" "
 		"<m>LAMBDA</>: Right, so thirty years ago or more, gaming on the Macintosh was a <bold>doom</>ed prospect. But then came a contender that <bold>quake</>d the very foundations of the platform: Marathon!"
 		"\tAnyway, \"BoBs\" were just some of the NPCs. Most of them were good guys, but some of them were all evil and explodey."
-		"\t...Don't worry, no assimilated Bobs around here."
+		"\tDon't worry, no assimilated Bobs around here."
 		// todo: more game name puns?
 		// duke nuken
 		// hexen
@@ -974,7 +974,7 @@ ch2-lambda-person-xc {
 	}
 	if (flag ch2-seen-room-99 is false) {
 		show serial dialog {
-			"<m>LAMBDA</>: I mean, it's true I have an Exa named XC in here with me. I guess you were extrapolating the name XC, right?"
+			"<m>LAMBDA</>: I mean, it's true I have an Exa named XC in here with me. I guess you extrapolated the name XC, right?"
 		}
 	} else {
 		show serial dialog {
@@ -1230,7 +1230,7 @@ ch2-lambda-person-big-bad {
 		"<c>YOU</>: Tell me about the <r>Big Bad</>."
 		" "
 		"<m>LAMBDA</>: Oh, um, that's complicated."
-		"\tBut he was ruthless. Smart, yes, and capable, but he seemed to lack compassion. Like it was a bother to him when other people brought up the problems his actions were causing other people. Like he might not have even noticed otherwise."
+		"\tBut he was ruthless. Smart, yes, and capable, but he seemed to lack compassion. Like it was a bother to him when other people brought up the problems his actions were causing for other people. Like he might not have even noticed otherwise."
 		" "
 		# "You're making it sound like you knew him." : ch2-lambda-person-big-bad2
 	}
@@ -1283,7 +1283,7 @@ ch2-lambda-person-jackob {
 	} else {
 		show serial dialog {
 			" "
-			"<m>LAMBDA</>: Jackob! He's the oldest village elder, of course, so he's the most knowledgeable of all of us. Or... at least he <bold>was</>. I-I confess he looked very old and very confused to me just now. That was hard to watch. The Big Bad must have really done a number on him."
+			"<m>LAMBDA</>: Jackob! He's the oldest village elder, of course, so he's the most knowledgeable of all of us. Or... at least he <bold>was</>. I-I confess he looked old and confused to me just now. That was hard to watch. The Big Bad must have really done a number on him."
 		}
 	}
 	goto ch2-lambda-topic-person-s;

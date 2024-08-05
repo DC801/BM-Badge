@@ -288,7 +288,7 @@ interact-ch2-simon {
 			set entity Simon current_animation to 12;
 			show dialog {
 				Simon emote 1 "Not a problem, not a problem! Here, you can borrow Brunhilda, just for now. But don't walk away with it, you hear?"
-				PLAYER "...How many keytars do you have with you, exactly?"
+				PLAYER "How many keytars do you have with you, exactly?"
 			}
 			set entity Simon current_animation to 0;
 			show dialog {

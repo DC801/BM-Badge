@@ -129,7 +129,6 @@ on_load-ch2-town {
 			"<y>></> <c>CUTBUG</>: use player Y position for test"
 			"<y>></> <c>CUTBUG AUTO</>: run cutbugs 0-1030"
 		}
-
 	}
 	copy ch2-player-spawn-click-protection;
 }
@@ -438,7 +437,7 @@ interact-ch2-jackob-end {
 			show dialog {
 				SELF "But you know, it seems like you still haven't finished chapter 1 in this save file."
 				"I'm not angry. Just disappointed."
-				"...Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
+				"Just kidding! If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you."
 				"In all seriousness, do feel free to give chapter 1 a go."
 			}
 			set flag ch1_unfinished_backstory to true;

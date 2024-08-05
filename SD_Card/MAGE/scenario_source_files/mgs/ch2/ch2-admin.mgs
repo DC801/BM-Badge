@@ -215,7 +215,7 @@ ch2-start-round-3 {
 	wait 800ms;
 	turn entity "%PLAYER%" toward entity "Wizard";
 	show dialog {
-		PLAYER "So, um.... do you know if Bert has come back?"
+		PLAYER "So, um, do you know if Bert has come back?"
 		Wizard "Bert? The big hairy guy?"
 		"Nope. Since he left, no one's been in and out here but you."
 		PLAYER "Well, has he phoned or anything?"

@@ -6,7 +6,7 @@ look-ch2-bakery {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked around the <c>BAKERY</>."
-		"\tThe smell inside is amazing! Warm, yeasty -- the very essence of nostalgia. The %Baker% keeps this place clean, tidy, and overflowing with baked goods."
+		"\tThe place smells amazing! Warm, yeasty -- the very essence of nostalgia. The %Baker% keeps this place clean, tidy, and overflowing with baked goods."
 		" "
 	}
 }

@@ -11,7 +11,7 @@ look-ch2-alfonso {
 	show serial dialog spacer;
 	show serial dialog {
 		"You looked at <m>%SELF%</>."
-		"\tThe man may genuinely be having trouble standing still; he is fidgetting with his fingers, and the robe at his feet is is jerking slightly, rhythmically, as if he is aggressively tapping his toes."
+		"\tThe man may genuinely be having trouble standing still; he is fidgetting with his fingers, and the robe at his feet is jerking slightly, rhythmically, as if he is aggressively tapping his toes."
 	}
 }
 look-ch2-jackob {

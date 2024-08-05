@@ -109,7 +109,7 @@ interact-ch2-alfonso-rtfm {
 	copy face-player;
 	show dialog {
 		SELF
-		"Bert said he was going to check something, but whatever he's doing, he's sure is taking his time."
+		"Bert said he was going to check something, but whatever he's doing, he's sure taking his time."
 		"I confess I'm getting worried, %PLAYER%. Something isn't right about all of this."
 	}
 	turn entity "%SELF%" west;

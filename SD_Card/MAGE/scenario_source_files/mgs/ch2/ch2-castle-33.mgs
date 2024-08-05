@@ -220,7 +220,7 @@ ch2-interact-gregory {
 					"So when new tech comes out, I make an effort to give it a fair shot, and I learn how to use it properly, even if there's a tradeoff."
 					"I can't use my favorite wok on my new stovetop, but all my other pans heat more quickly and evenly with induction. For me, that's a good trade."
 					"As for my new bluetooth mouse...."
-					"...bad trade. For me, it'll be wired mice forever!"
+					"Bad trade. For me, it'll be wired mice forever!"
 					"But hey, at least I know I don't hate bluetooth mice because I'm old and stubborn."
 				}
 				set flag ch2-bluetooth-mouse-rant to true;
@@ -232,7 +232,7 @@ ch2-interact-gregory {
 		if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
 			show dialog {
 				SELF "I like my mouse to be physically connected to my computer."
-				"...Hmm, is that too on the nose?"
+				"Hmm, is that too on the nose?"
 			}
 		} else if (flag ch2-mousegame-backstory is false) {
 			show dialog {
@@ -240,7 +240,7 @@ ch2-interact-gregory {
 				SELF "A mouse? A rodent, or a computer mouse?"
 				PLAYER "A computer mouse."
 				SELF "A bit cliche to ask a cat about this, don't you think?"
-				PLAYER "...It wasn't my idea."
+				PLAYER "It wasn't my idea."
 			}
 			if (flag ch2-bluetooth-mouse-rant is false) {
 				show dialog { SELF "Well, you're in luck. I have a spare bluetooth mouse I'm not using anymore. You're welcome to it if you can catch it." }
@@ -284,7 +284,7 @@ ch2-interact-gregory {
 			set entity Lights on_tick to screen-lights-flash-bits;
 			show dialog {
 				SELF "Yes, these eight lights in a line, here along the bottom. You see?"
-				PLAYER "Um..."
+				PLAYER "Um...."
 				SELF "The more lights come on, the closer you are to finding it. Walk around a bit and see for yourself."
 			}
 			copy ch2-map-init-hex;
@@ -381,7 +381,7 @@ ch2-touch-mouse {
 			PLAYER "I don't know how old it is."
 			Gregory "Well, what does it look like?"
 			PLAYER "I guess it's sort of beige...."
-			Gregory "...Oh dear."
+			Gregory "Oh dear."
 			"Well, you might be fine anyway. Good luck with everything."
 		}
 		set entity Mouse on_interact to null_script;

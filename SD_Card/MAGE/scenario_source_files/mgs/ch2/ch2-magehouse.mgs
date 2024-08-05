@@ -132,7 +132,7 @@ interact-ch2-zappy {
 			PLAYER "(Bees? Sheep?)"
 			SELF "Qu'avait-il dit? \"Ewe est bee\"?"
 			PLAYER "...." "Are you kidding me?"
-			SELF "...Ha! Yes, sorry! I was trying to think of a \"dad joke\" about this all morning, but that was the best I could do."
+			SELF "Ha! Yes, sorry! I was trying to think of a \"dad joke\" about this all morning, but that was the best I could do."
 			PLAYER "Thanks, %SELF%. I appreciate the effort."
 		}
 	} else if (variable ch2-storyflag-round is <= 4) {
@@ -191,6 +191,6 @@ interact-ch2-magejournal {
 }
 interact-ch2-magebox {
 	show dialog {
-		PLAYER "Yeah, I should probably unpack. It's been years...."
+		PLAYER "Yeah, I should probably unpack. It's been years."
 	}
 }

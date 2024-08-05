@@ -180,7 +180,7 @@ ch2-toot-step3-nomagic {
 	show serial dialog {
 		"<c>YOU</>: \"Magic words?\" That's a bit ridiculous."
 		" "
-		"<m>LAMBDA</>: ...Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
+		"<m>LAMBDA</>: Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
 	}
 	goto ch2-toot-step3-halftime;
 }
@@ -229,14 +229,6 @@ ch2-toot-step4-start {
 		# "How do we fix the mainframe?" : ch2-toot-step4a
 	}
 }
-/*
-CUTBUG INSTANCE #1
-The message was originally:
-
-"\tSo, um, now that you know the basics of using the artifact... I think maybe we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
-
-This text message was broken in Putty: no text would print after `...help clean up some of the` (including the multiple choice option). Changing the contents of this message in any way (making it longer/shorter) made this bug go away, and I could not reproduce this bug in any other place, so just keep an eye out for similar bugs I guess? (Longer messages were printing fine! WTF?)
-*/
 
 ch2-toot-step4a {
 	show serial dialog spacer;

@@ -202,12 +202,12 @@ interact-ch2-beatrice {
 		wait 1400ms;
 		show dialog {
 			SELF "When did we drift apart? Is that just something that happened slowly, without us realizing it?"
-			"I used to love hearing your stories. Yes, after you were turned back into a man you were running your mouth nonstop...."
+			"I used to love hearing your stories. Yes, after you were turned back into a man you ran your mouth nonstop...."
 		}
 		turn entity Beatrice toward entity Delmar;
 		show dialog {
 			// couple sentences apologizing (maybe he can turn around the room as if considering)
-			SELF "...But I missed you dreadfully when you left. I miss you now."
+			SELF "But I missed you dreadfully when you left. I miss you now."
 			"I'm very sorry for treating you the way I did. For having you turned back into a sheep, I mean."
 			"I love you. I miss you. Can you ever forgive me?"
 		}

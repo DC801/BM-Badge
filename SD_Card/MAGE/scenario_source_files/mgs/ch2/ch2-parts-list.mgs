@@ -46,7 +46,7 @@ serial dialog ch2-describe-clock {
 }
 serial dialog ch2-describe-cpu { // slightly redundant with original intro; be sure to change both if changing anything
 	"<m>LAMBDA</>: The <m>CPU</> is like the brain of the computer. There aren't any spare lying around, but we can approximate one."
-	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
+	"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set values that a program modifies with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 	"\tFor the rest, we'll need a volunteer who is very small and will make decisions very consistently. The best candidate is <m>Aurelius</>, the <m>GOLDFISH</> in the <m>throne room</>. Just make sure he understands what he's getting into."
 	"\tOnce you have both, <m>solder them together</> in the workshop."
 	// todo: make it so you could use Mr. Tickles instead! (You must choose!)
@@ -56,7 +56,7 @@ serial dialog ch2-describe-goldfish { // slightly redundant with original intro;
 	"<m>LAMBDA</>: To make a CPU, we'll need a volunteer to act as the interpretor and executor of program data. We'll need someone we can trust will make decisions very consistently, as well as someone very small. The only one around here that fits the bill is the <m>King's regent, Aurelius</>. He's the <m>GOLDFISH</> in the <m>throne room</>."
 }
 serial dialog ch2-describe-abacus { // slightly redundant with original intro; be sure to change both questions
-	"<m>LAMBDA</>: To make a CPU, we'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
+	"<m>LAMBDA</>: To make a CPU, we'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program modifies with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 }
 serial dialog ch2-describe-ramchips {
 	"<m>LAMBDA</>: For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. But <m>ask the hardware guys in the <m>workshop</>. Those guys know their stuff, and I trust them to come up with something."
@@ -324,7 +324,7 @@ ch2-lambda-round-3-parts2 {
 		"<c>YOU</>: In what way?"
 		" "
 		"<m>LAMBDA</>: Well, we'll have to make a CPU from scratch, but I've worked it out so we only need two things."
-		"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program is modifying with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
+		"\tWe'll need something to act as the <bold>register file</> -- that is, the place the CPU keeps the very small set of values that a program modifies with each instruction. An <m>ABACUS</> should work well for this. Looks like <m>Frankie in the <m>workshop</> has one."
 		"\tFor the rest of the CPU, including the interpretation of program instructions and changing the values on the abacus itself, we'll need a... volunteer."
 		" "
 		# "Volunteer?" : ch2-lambda-round-3-parts2b

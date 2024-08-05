@@ -186,7 +186,7 @@ ch2-iron-content {
 		"Well, the good news: we do have a plate large enough. The #6. The bad news...."
 		"...the #6 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
 		"...Aaaaand the plates are fragile enough that you can't stack heavier ones on top of lighter ones."
-		PLAYER "...Oh, no."
+		PLAYER "Oh, no."
 		Clara "Yeah, so... go on up to the PlateMover 9000 and... uh, good luck."
 	}
 	set flag ch2-jukebox-backstory to true;
@@ -310,7 +310,7 @@ ch2-touch-plate {
 			"Well, the good news: we do have a plate large enough. The #6. The bad news...."
 			"...the #6 is at the bottom of the stack. You'll have to rearrange the plates to uncover it."
 			"...Aaaaand the plates are fragile enough that you can't stack heavier ones on top of lighter ones."
-			PLAYER "...Oh, no."
+			PLAYER "Oh, no."
 			Clara "Yeah, so... uh, good luck with that."
 		}
 		set flag ch2-jukebox-backstory to true;

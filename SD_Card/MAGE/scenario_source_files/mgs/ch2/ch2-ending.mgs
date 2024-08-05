@@ -24,14 +24,6 @@ on_tick-ch2-credits {
 	make camera follow entity cameraman;
 	teleport entity cameraman to geometry credits_camera;
 	fade in camera from #000000 over 400ms;
-	
-	// //TEMP
-	// show serial dialog spacer;
-	// show serial dialog {
-	// 	"Welcome to the credits for DC801 Black Mage Badge Ch2!"
-	// 	"(PRETEND THE REAL CREDITS ARE HERE AND THAT IT'S NOT LITERALLY THE CH1 CREDITS AS A PLACEHOLDER)"
-	// }
-
 	set entity Gregory current_animation to 1;
 	wait 1200ms;
 	walk entity cameraman along geometry credits_camera over 52000ms;
@@ -42,12 +34,6 @@ on_tick-ch2-credits {
 	wait 2300ms;
 	play entity Wizard animation 4 once;
 	set entity Wizard current_animation to 0;
-
-	// // TEMP
-	// show serial dialog {
-	// 	"(THANK YOU)"
-	// }
-
 	fade out camera to #000000 over 1200ms;
 	turn hex control on;
 	turn serial control on;
@@ -257,7 +243,7 @@ ch2-post-credits {
 	copy ch2-lambda-lower-actor;
 	wait 1400ms;
 	show dialog {
-		Lambda emote $panicked "The Big Bad...? Oh, dear. Oh, no."
+		Lambda emote $panicked "The Big Bad? Oh, dear. Oh, no."
 	}
 	turn entity $Lambda toward entity Alfonso;
 	set entity $Lambda current_animation to $opaque;
@@ -358,7 +344,7 @@ ch2-post-credits {
 		Lambda "And I can still help you."
 		"If the memory manipulation program was written by the Big Bad, then I might find files or other programs that could give us more information about his identity."
 		Alfonso "Well, I wish you luck with that. Let us know what you find. But otherwise... stay out of our way."
-		Lambda emote $opaque_lowered "....Y-yes. I understand."
+		Lambda emote $opaque_lowered "Y-yes. I understand."
 	}
 	turn entity $Lambda south;
 	turn entity Jackob toward entity "%PLAYER%";

@@ -171,7 +171,7 @@ ch2-interact-guestbook {
 }
 ch2-interact-guestbook-signyes {
 	show dialog {
-		PLAYER "All right, here I go...."
+		PLAYER "All right, here I go."
 		name "" "(scribble scribble scribble)"
 		Concierge "Thank you for signing!"
 	}
@@ -418,7 +418,7 @@ ch2-stereo-interact {
 		}
 		goto ch2-stereo-intro1;
 	} else {
-		show dialog { PLAYER "All right, plugging in the artifact again...." }
+		show dialog { PLAYER "All right, plugging in the artifact again." }
 		goto ch2-ws-doturn;
 	}
 }
