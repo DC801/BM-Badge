@@ -1,7 +1,7 @@
 #include "StringLoader.h"
 
 
-std::string StringLoader::getString(uint16_t stringId, std::string triggeringEntityName) const
+std::string StringLoader::GetString(uint16_t stringId, std::string triggeringEntityName) const
 {
    const auto entityVariableIndicator = std::string{ "%%" };
    const auto scriptVariableIndicator = std::string{ "$$" };

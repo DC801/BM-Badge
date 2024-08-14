@@ -131,7 +131,7 @@ public:
                 gameDatHashROM,
                 engineVersionROM);
             debug_print(debugString);
-            frameBuffer->clearScreen(COLOR_BLACK);
+            frameBuffer->ClearScreen(COLOR_BLACK);
             frameBuffer->DrawText(debugString, 0xffff, 16, 16);
 
             auto eraseWholeRomChip = false;
@@ -142,7 +142,7 @@ public:
                 inputHandler->HandleKeyboard();
                 if (activatedButtons.IsPressed(KeyPress::Mem0))
                 {
-                    frameBuffer->clearScreen(COLOR_BLACK);
+                    frameBuffer->ClearScreen(COLOR_BLACK);
                     frameBuffer->blt();
                     return;
                 }

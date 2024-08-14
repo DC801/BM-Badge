@@ -63,7 +63,7 @@ void MageGameEngine::Run()
       }
 
       gameLoopIteration();
-      frameBuffer->clearScreen(COLOR_BLUE);
+      
       mapControl->Draw();
       hexEditor->Draw();
       dialogControl->Draw();
@@ -105,9 +105,17 @@ void MageGameEngine::gameLoopIteration()
       applyGameModeInputs();
 
       // always apply camera effects before any other updates that rely on camera data
-      frameBuffer->camera.applyEffects();
+      frameBuffer->camera.Update();
 
-      scriptControl->jumpScriptId = dialogControl->Update();
+      auto dialogScriptId = dialogControl->Update();
+      if (dialogScriptId != MAGE_NO_SCRIPT)
+      {
+         const auto dialogScript = ROM()->GetReadPointerByIndex<MageScript>(dialogScriptId.value());
+         auto dialogScriptState = MageScriptState{ dialogScriptId.value(), dialogScript };
+         dialogScriptState.scriptIsRunning = true;
+         scriptControl->processScript(dialogScriptState, MAGE_MAP_ENTITY);
+         return;
+      }
       hexEditor->Update();
 
       // always update entities last to accumulate all previous changes that may affect their hackable data
@@ -139,12 +147,15 @@ void MageGameEngine::LoadMap()
 
    // ensure that processing the map's onload won't immediately jump to a different script
    scriptControl->jumpScriptId = std::nullopt;
-
+   frameBuffer->ClearScreen(COLOR_BLACK);
    frameBuffer->ResetFade();
-   dialogControl->close();
+   dialogControl->Close();
    hexEditor->setHexEditorOn(false);
 
    mapControl->Load();
+
+   // center the camera on the player
+   frameBuffer->camera.SetFollowEntity(mapControl->getPlayerRenderableData());
 
    // This is the only place a map's OnLoad script should be processed
    const auto onLoadScript = ROM()->GetReadPointerByIndex<MageScript>(mapControl->currentMap->onLoadScriptId);

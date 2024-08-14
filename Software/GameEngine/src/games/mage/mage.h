@@ -36,9 +36,9 @@ public:
 
       hexEditor = std::make_shared<MageHexEditor>(inputHandler, frameBuffer, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(mapControl, ROM()->GetCurrentSave().scriptVariables);
-      dialogControl = std::make_unique<MageDialogControl>(inputHandler, frameBuffer, stringLoader, mapControl);
-
       scriptControl = std::make_shared<MageScriptControl>(mapControl);
+      dialogControl = std::make_unique<MageDialogControl>(inputHandler, frameBuffer, stringLoader, mapControl, scriptControl);
+
       commandControl = std::make_shared<MageCommandControl>(mapControl, frameBuffer, scriptControl->jumpScriptId, stringLoader);
 
       auto scriptActions = std::make_unique<MageScriptActions>(inputHandler, frameBuffer, mapControl, dialogControl, commandControl, hexEditor, stringLoader);

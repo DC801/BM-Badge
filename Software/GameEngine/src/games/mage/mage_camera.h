@@ -16,15 +16,15 @@ class MageCamera
    friend class MageGameEngine;
    friend class MageScriptActions;
 public:
-   void applyEffects();
-   void setFollowEntity(const RenderableData* toFollow)
+   void Update();
+   void SetFollowEntity(const RenderableData* toFollow)
    {
       followEntity = toFollow;
    }
-   Vector2T<int32_t> position{};
+   Vector2T<int32_t> Position{};
    Vector2T<int32_t> GetScreenCenter() 
    {
-      return Vector2T<int32_t>{position.x - DrawWidth / 2, position.y - DrawHeight / 2};
+      return Vector2T<int32_t>{Position.x - DrawWidth / 2, Position.y - DrawHeight / 2};
    }
 private:
    bool    shaking{ false };

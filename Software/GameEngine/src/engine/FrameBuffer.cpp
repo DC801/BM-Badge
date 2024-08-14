@@ -24,7 +24,7 @@ static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;
 
 
-void FrameBuffer::clearScreen(uint16_t color)
+void FrameBuffer::ClearScreen(uint16_t color)
 {
    frame.fill(color);
 }
@@ -233,18 +233,25 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    auto iteratorX = int16_t{ 1 };
    auto iteratorY = int16_t{ 1 };
 
-   if ((flags & RENDER_FLAGS_FLIP_X) || (flags & RENDER_FLAGS_FLIP_DIAG))
+   if (flags & RENDER_FLAGS_FLIP_X)
    {
       xSourceMin = tileset->TileWidth - 1;
       xSourceMax = -1;
       iteratorX = -1;
    }
 
-   if ((flags & RENDER_FLAGS_FLIP_Y) || (flags & RENDER_FLAGS_FLIP_DIAG))
+   if (flags & RENDER_FLAGS_FLIP_Y)
    {
       ySourceMin = tileset->TileHeight - 1;
       ySourceMax = -1;
       iteratorY = -1;
+   }
+
+   if (flags & RENDER_FLAGS_FLIP_DIAG)
+   {
+      const auto temp = tileDrawX;
+      tileDrawX = tileDrawY;
+      tileDrawY = tileDrawX;
    }
 
    //if (flags & RENDER_FLAGS_IS_GLITCHED)
@@ -259,7 +266,7 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
 
    for (auto yTarget = tileDrawY; ySourceMin != ySourceMax; ySourceMin += iteratorY, yTarget++)
    {
-      auto sourceRowPtr = &tilePixels[ySourceMin * tileset->TileWidth];
+      const auto sourceRowPtr = &tilePixels[ySourceMin * tileset->TileWidth];
 
       if (yTarget < 0 || yTarget >= DrawHeight)
       {
@@ -275,7 +282,7 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
 
          const auto& sourceColorIndex = sourceRowPtr[xSource];
          const auto color = colorPalette->get(sourceColorIndex);
-
+         
          setPixel(xTarget, yTarget, color);
       }
    }

@@ -20,7 +20,7 @@ public:
       : mapControl(mapControl), scriptVariables(scriptVariables)
    {}
 
-   std::string getString(uint16_t stringId, std::string triggeringEntityName = "") const;
+   std::string GetString(uint16_t stringId, std::string triggeringEntityName = "") const;
 private:
    std::string replaceVars(std::function<const std::string(int, const std::string)>, const std::string& inputString, const std::string& variableIndicator, uint16_t stringId, std::string triggeringEntityName = "") const;
    const uint16_t* scriptVariables;

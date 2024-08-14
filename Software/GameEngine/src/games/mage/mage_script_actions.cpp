@@ -157,7 +157,7 @@ std::optional<uint16_t> MageScriptActions::check_entity_name(const uint8_t* args
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
       auto entityName = mapControl->Get<MageEntityData>(entityId).name;
-      auto romString = stringLoader->getString(argStruct->stringId, entityName);
+      auto romString = stringLoader->GetString(argStruct->stringId, entityName);
 
       int compare = strcmp(entityName, romString.c_str());
       bool identical = compare == 0;
@@ -729,7 +729,7 @@ std::optional<uint16_t> MageScriptActions::set_entity_name(const uint8_t* args, 
    auto argStruct = (ActionSetEntityName*)args;
 
    std::string entityName = mapControl->Get<MageEntityData>(entityId).name;
-   std::string romString = stringLoader->getString(argStruct->stringId, entityName);
+   std::string romString = stringLoader->GetString(argStruct->stringId, entityName);
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
@@ -1629,7 +1629,7 @@ std::optional<uint16_t> MageScriptActions::set_camera_to_follow_entity(const uin
    auto argStruct = (ActionSetCameraToFollowEntity*)args;
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    auto& renderableData = mapControl->Get<RenderableData>(sourceEntityIndex);
-   frameBuffer->camera.setFollowEntity(&renderableData);
+   frameBuffer->camera.SetFollowEntity(&renderableData);
    return NO_JUMP_SCRIPT;
 }
 
@@ -1647,10 +1647,10 @@ std::optional<uint16_t> MageScriptActions::teleport_camera_to_geometry(const uin
    auto argStruct = (ActionTeleportCameraToGeometry*)args;
 
    auto geometry = mapControl->GetGeometry(argStruct->geometryId);
-   frameBuffer->camera.setFollowEntity(NoPlayer);
-   const auto midScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
+   frameBuffer->camera.SetFollowEntity(NoPlayer);
+   
    const auto newCameraCenter = geometry->GetPoint(0);
-   frameBuffer->camera.position = newCameraCenter - midScreen;
+   frameBuffer->camera.Position = newCameraCenter - MidScreen;
    return NO_JUMP_SCRIPT;
 }
 
@@ -1673,22 +1673,22 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
 
       if (resumeState.totalLoopsToNextAction == 0)
       {
-         frameBuffer->camera.setFollowEntity(NoPlayer);
+         frameBuffer->camera.SetFollowEntity(NoPlayer);
          //this is the points we're interpolating between
          // TODO: subtract the tile corner's offset so that geometry is c
-         //resumeState.geometry.pointA = frameBuffer->camera.position;
+         //resumeState.geometry.pointA = frameBuffer->camera.Position;
       }
       auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
       resumeState.geometry.pointB = { (uint16_t)(renderableData.center().x - DrawWidth / 2), (uint16_t)(renderableData.center().y - DrawHeight / 2) };
       auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-      frameBuffer->camera.position.x = betweenPoint.x;
-      frameBuffer->camera.position.y = betweenPoint.y;
+      frameBuffer->camera.Position.x = betweenPoint.x;
+      frameBuffer->camera.Position.y = betweenPoint.y;
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
-         frameBuffer->camera.setFollowEntity(&mapControl->Get<RenderableData>(sourceEntityIndex));
+         frameBuffer->camera.SetFollowEntity(&mapControl->Get<RenderableData>(sourceEntityIndex));
       }
    }
    return NO_JUMP_SCRIPT;
@@ -1709,19 +1709,19 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_geometry(const uint8_t*
 
    if (resumeState.totalLoopsToNextAction == 0)
    {
-      frameBuffer->camera.setFollowEntity(NoPlayer);
+      frameBuffer->camera.SetFollowEntity(NoPlayer);
       //this is the points we're interpolating between
       resumeState.geometry.pointA = {
-         frameBuffer->camera.position.x,
-         frameBuffer->camera.position.y,
+         frameBuffer->camera.Position.x,
+         frameBuffer->camera.Position.y,
       };
       resumeState.geometry.pointB = geometry->GetPoint(0) - (uint16_t)(DrawWidth / 2);
    }
    auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
 
    auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-   frameBuffer->camera.position.x = betweenPoint.x;
-   frameBuffer->camera.position.y = betweenPoint.y;
+   frameBuffer->camera.Position.x = betweenPoint.x;
+   frameBuffer->camera.Position.y = betweenPoint.y;
    return NO_JUMP_SCRIPT;
 }
 
@@ -2066,7 +2066,6 @@ std::optional<uint16_t> MageScriptActions::slot_load(const uint8_t* args, MageSc
    {
       const_cast<MageROM*>(ROM())->LoadSaveSlot(argStruct->slotIndex);
       mapControl->mapLoadId = currentSave.currentMapId;
-      mapControl->Load();
       resumeState.totalLoopsToNextAction = 1;
    }
    else if (!dialogControl->isOpen())
@@ -2481,7 +2480,7 @@ std::optional<uint16_t> MageScriptActions::close_dialog(const uint8_t* args, Mag
    } ActionCloseDialog;
    auto* argStruct = (ActionCloseDialog*)args;
 
-   dialogControl->close();
+   dialogControl->Close();
    return NO_JUMP_SCRIPT;
 }
 

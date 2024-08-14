@@ -207,7 +207,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
       {
          // TODO: script responses?
          //const auto& response = openSerialDialog->Responses[responseIndex];
-         //const auto responseLabel = stringLoader->getString(response.stringId);
+         //const auto responseLabel = stringLoader->GetString(response.stringId);
          //commandResponseBuffer += "Valid response: " + input + " - " + responseLabel + "\n";
          //jumpScriptId = response.scriptId;
          //inputTrapped = false;
@@ -225,7 +225,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string& input)
       for (uint8_t i = 0; i < openSerialDialog->responseCount; i++)
       {
          const auto& response = openSerialDialog->Responses[i];
-         std::string responseLabel = stringLoader->getString(response.stringId);
+         std::string responseLabel = stringLoader->GetString(response.stringId);
          badAsciiLowerCase(responseLabel);
          if (responseLabel == input)
          {
@@ -250,7 +250,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
    jumpScriptId = MAGE_NO_SCRIPT;
    openSerialDialog = ROM()->GetReadPointerByIndex<MageSerialDialog>(serialDialogId);
    
-   std::string dialogString = stringLoader->getString(openSerialDialog->stringId);
+   std::string dialogString = stringLoader->GetString(openSerialDialog->stringId);
     serialDialogBuffer += "showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
     	"openSerialDialog->stringId: " + std::to_string(openSerialDialog->stringId) + "\n"
     	"openSerialDialog->responseCount: " + std::to_string(openSerialDialog->responseCount) + "\n"
@@ -266,7 +266,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
       /*auto& response = openSerialDialog->Responses[i];
       if (openSerialDialog->serialResponseType == MageSerialDialogResponseTypes::RESPONSE_ENTER_NUMBER)
       {
-         std::string responseLabel = stringLoader->getString(response.stringId);
+         std::string responseLabel = stringLoader->GetString(response.stringId);
          serialDialogBuffer += "\t" + std::to_string(i) + ": " + responseLabel + "\n";
       }*/
    }
@@ -274,7 +274,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
 
 void MageCommandControl::registerCommand(uint16_t commandStringId, uint16_t scriptId, bool isFail)
 {
-   std::string lowercasedString = stringLoader->getString(commandStringId);
+   std::string lowercasedString = stringLoader->GetString(commandStringId);
    badAsciiLowerCase(lowercasedString);
    MageSerialDialogCommand command
    {
@@ -300,7 +300,7 @@ void MageCommandControl::registerCommand(uint16_t commandStringId, uint16_t scri
 
 void MageCommandControl::registerArgument(uint16_t commandStringId, uint16_t argumentStringId, uint16_t scriptId)
 {
-   std::string lowercasedString = stringLoader->getString(commandStringId) + " " + stringLoader->getString(argumentStringId);
+   std::string lowercasedString = stringLoader->GetString(commandStringId) + " " + stringLoader->GetString(argumentStringId);
    badAsciiLowerCase(lowercasedString);
    MageSerialDialogCommand command = {
       .combinedString = lowercasedString,
@@ -363,7 +363,7 @@ void MageCommandControl::unregisterCommand(uint16_t commandStringId, bool isFail
    else
    {
       // un-register command aliases
-      auto command = stringLoader->getString(commandStringId);
+      auto command = stringLoader->GetString(commandStringId);
       for (auto alias = commandAliases.begin(); alias != commandAliases.end(); )
       {
          if (alias->second == command)
@@ -391,7 +391,7 @@ void MageCommandControl::unregisterCommand(uint16_t commandStringId, bool isFail
    if (!wasCommandFound)
    {
       commandResponseBuffer += "Unable to unregister command because it was not already registered: "
-         + stringLoader->getString(commandStringId);
+         + stringLoader->GetString(commandStringId);
    }
    registeredCommands = newCommands;
 }
@@ -414,28 +414,28 @@ void MageCommandControl::unregisterArgument(uint16_t commandStringId, uint16_t a
    if (!wasCommandFound)// && gameControl->isEntityDebugOn)
    {
       commandResponseBuffer += "Unable to unregister Argument because it was not already registered: "
-         + stringLoader->getString(commandStringId);
+         + stringLoader->GetString(commandStringId);
    }
    registeredCommands = newCommands;
 }
 
 void MageCommandControl::registerCommandAlias(uint16_t commandStringId, uint16_t aliasStringId)
 {
-   auto command = stringLoader->getString(commandStringId);
-   auto alias = stringLoader->getString(aliasStringId);
+   auto command = stringLoader->GetString(commandStringId);
+   auto alias = stringLoader->GetString(aliasStringId);
 
    commandAliases[alias] = command;
 }
 
 void MageCommandControl::unregisterCommandAlias(uint16_t aliasStringId)
 {
-   auto alias = stringLoader->getString(aliasStringId);
+   auto alias = stringLoader->GetString(aliasStringId);
    commandAliases.erase(alias);
 }
 
 void MageCommandControl::setCommandVisibility(uint16_t commandStringId, bool isVisible)
 {
-   auto commandString = stringLoader->getString(commandStringId);
+   auto commandString = stringLoader->GetString(commandStringId);
    
    int32_t existingCommandIndex = getCommandIndex(commandString, false, true);
    if (existingCommandIndex != -1)

@@ -110,7 +110,7 @@ public:
 
    inline void DrawRectWorldCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
    {
-      drawRect(EntityRect{ rect.origin - camera.position, rect.w, rect.h }, color);
+      drawRect(EntityRect{ rect.origin - camera.Position, rect.w, rect.h }, color);
    }
 
    inline void DrawRectScreenCoords(const EntityRect& rect, uint16_t color = COLOR_BLUE)
@@ -120,8 +120,8 @@ public:
 
    inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
    {
-      const auto drawX = tileDrawX - camera.position.x;
-      const auto drawY = tileDrawY - camera.position.y;
+      const auto drawX = tileDrawX - camera.Position.x;
+      const auto drawY = tileDrawY - camera.Position.y;
       drawTile(tilesetId, tileId, drawX, drawY, flags);
    }
 
@@ -130,7 +130,7 @@ public:
       drawTile(tilesetId, tileId, tileDrawX, tileDrawY, flags);
    }
 
-   void clearScreen(uint16_t color);
+   void ClearScreen(uint16_t color);
    inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
    {
       if (x >= DrawWidth

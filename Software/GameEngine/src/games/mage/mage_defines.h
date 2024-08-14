@@ -15,10 +15,12 @@ all of the old code used as the foundation of this badge.
 
 #include <chrono>
 #include "shim_timer.h"
+#include "mage_geometry.h"
 using namespace std::chrono;
 
 static inline const auto DrawWidth = 320;
 static inline const auto DrawHeight = 240;
+static inline const auto MidScreen = EntityPoint{ DrawWidth / 2, DrawHeight / 2 };
 static inline const auto FramebufferSize = DrawWidth * DrawHeight;
 
 static inline const auto MapGoDirectionNameLength = 12;

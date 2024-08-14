@@ -7,7 +7,6 @@ in a more accessible way.
 #define _MAGE_GEOMETRY_H
 
 #include "mage_rom.h"
-#include "mage_defines.h"
 #include "utility.h"
 #include <stdint.h>
 #include <algorithm>

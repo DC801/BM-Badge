@@ -109,30 +109,9 @@ void MapControl::DrawEntities() const
 
 void MapControl::DrawLayer(uint8_t layer) const
 {
-   //               map height - screen height
-   // *********************************************************** 
-   // *|             ____________________________              |*
-   // *|                                                       |*
-   // *|                                                       |*
-   // *|             ____________________________screen width  |* 
-   // *|             |##########################|              |*
-   // *|             |##########################|              |*
-   // *|             |##########################|              |* screen width + map width
-   // *|             |##########################|              |* 
-   // *|             |##########################|              |*
-   // *|             |##########################|              |*
-   // *|             ����������������������������              |*
-   // *|             screen height                             |*
-   // *|                                                       |*
-   // *|                                                       |*
-   // *|             ����������������������������              |*
-   // ***********************************************************
-   //                screen height + map height
-
-
    // identify start and stop tiles to draw
-   const auto startTileX = std::max(0, frameBuffer->camera.position.x / currentMap->tileWidth);
-   const auto startTileY = std::max(0, frameBuffer->camera.position.y / currentMap->tileHeight);
+   const auto startTileX = std::max(0, frameBuffer->camera.Position.x / currentMap->tileWidth);
+   const auto startTileY = std::max(0, frameBuffer->camera.Position.y / currentMap->tileHeight);
    const auto endTileX = std::min(int{ currentMap->cols - 1 }, startTileX + DrawWidth / currentMap->tileWidth);
    const auto endTileY = std::min(int{ currentMap->rows - 1 }, startTileY + DrawHeight / currentMap->tileHeight + 1);
 

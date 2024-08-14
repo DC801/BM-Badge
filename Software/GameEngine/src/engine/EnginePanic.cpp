@@ -32,7 +32,7 @@ void panic_print(const char *msg, int x, int y)
 void EnginePanic(const char *filename, int lineno, const char *format, ...)
 {
 	// BSOD background
-	//frameBuffer->clearScreen(COLOR_BSOD);
+	//frameBuffer->ClearScreen(COLOR_BSOD);
 
 	// y advance value from text
 	const uint8_t yAdvance = Monaco9.yAdvance;

@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
     ili9341_init();
     ili9341_start();
 
-    frameBuffer->clearScreen(COLOR_DARKCYAN);
+    frameBuffer->ClearScreen(COLOR_DARKCYAN);
     frameBuffer->DrawText("Screen initialized", 0xffff, 16, 16);
     frameBuffer->blt();
 

@@ -142,7 +142,7 @@ public:
    }
    inline bool SelectDialogResponse() const
    {
-      return IsPressed(KeyPress::Ljoy_right);
+      return IsPressed(KeyPress::Rjoy_right);
    }
    inline bool Increment() const
    {

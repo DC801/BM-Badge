@@ -15,6 +15,7 @@
 #include "StringLoader.h"
 
 class MapControl;
+class MageScriptControl;
 class StringLoader;
 class FrameBuffer;
 
@@ -89,7 +90,7 @@ struct MageDialogScreen
       if (messageCount == 0) { return ""; }
 
       auto messages = (const uint16_t*)(&emoteIndex + sizeof(emoteIndex));
-      return stringLoader->getString(messages[messageId % messageCount], triggeringEntityName);;
+      return stringLoader->GetString(messages[messageId % messageCount], triggeringEntityName);;
    }
 
    const MageDialogResponse& GetResponse(uint8_t responseId) const
@@ -119,11 +120,13 @@ public:
       std::shared_ptr<EngineInput> inputHandler,
       std::shared_ptr<FrameBuffer> frameBuffer,
       std::shared_ptr<StringLoader> stringLoader,
-      std::shared_ptr<MapControl> mapControl) noexcept
+      std::shared_ptr<MapControl> mapControl,
+      std::shared_ptr<MageScriptControl> scriptControl) noexcept
       : inputHandler(inputHandler),
       frameBuffer(frameBuffer),
       stringLoader(stringLoader),
-      mapControl(mapControl)
+      mapControl(mapControl),
+      scriptControl(scriptControl)
    {}
 
    void StartModalDialog(std::string messageString);
@@ -132,7 +135,7 @@ public:
    void loadCurrentScreenPortrait();
    void loadNextScreen();
 
-   constexpr void close() { open = false; }
+   constexpr void Close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
    std::optional<uint16_t> Update();
@@ -143,6 +146,7 @@ private:
    std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<StringLoader> stringLoader;
    std::shared_ptr<MapControl> mapControl;
+   std::shared_ptr<MageScriptControl> scriptControl;
    bool open{ false };
    GameClock::time_point nextUpdateAllowed{ };
 
@@ -186,11 +190,6 @@ struct MageSerialDialog
    uint16_t stringId{ 0 };
    MageSerialDialogResponseTypes serialResponseType{ 0 };
    uint8_t responseCount{ 0 };
-
-   const MageDialogResponse GetResponse(uint8_t responseId)
-   {
-      
-   }  
 };
 
 
