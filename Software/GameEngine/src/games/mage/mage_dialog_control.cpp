@@ -183,7 +183,7 @@ void MageDialogControl::Draw() const
       arrowX = messageX + ((coords.text.w - 2) * tileset->TileWidth);
       arrowY = messageY + ((coords.text.h - 2) * tileset->TileHeight) + bounce;
    }
-   frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_ARROW, arrowX, arrowY, RENDER_FLAGS_FLIP_DIAG);
+   frameBuffer->DrawTileScreenCoords(currentFrameTilesetIndex, DIALOG_TILES_ARROW, arrowX, 3 + arrowY + tileset->TileHeight/4 * currentResponseIndex, RENDER_FLAGS_FLIP_DIAG);
 
    if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
    {

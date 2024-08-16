@@ -230,28 +230,21 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    auto ySourceMax = int32_t{ tileset->TileHeight };
    auto xSourceMin = int32_t{ 0 };
    auto xSourceMax = int32_t{ tileset->TileWidth };
-   auto iteratorX = int16_t{ 1 };
-   auto iteratorY = int16_t{ 1 };
+   auto xIterator = int16_t{ 1 };
+   auto yIterator = int16_t{ 1 };
 
    if (flags & RENDER_FLAGS_FLIP_X)
    {
       xSourceMin = tileset->TileWidth - 1;
       xSourceMax = -1;
-      iteratorX = -1;
+      xIterator = -1;
    }
 
    if (flags & RENDER_FLAGS_FLIP_Y)
    {
       ySourceMin = tileset->TileHeight - 1;
       ySourceMax = -1;
-      iteratorY = -1;
-   }
-
-   if (flags & RENDER_FLAGS_FLIP_DIAG)
-   {
-      const auto temp = tileDrawX;
-      tileDrawX = tileDrawY;
-      tileDrawY = tileDrawX;
+      yIterator = -1;
    }
 
    //if (flags & RENDER_FLAGS_IS_GLITCHED)
@@ -264,26 +257,34 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    const auto tiles = ROM()->GetReadPointerByIndex<MagePixel>(tilesetId);
    const auto tilePixels = std::span<const MagePixel>(&tiles[tileId * tileset->TileWidth * tileset->TileHeight], tileset->TileWidth * tileset->TileHeight);
 
-   for (auto yTarget = tileDrawY; ySourceMin != ySourceMax; ySourceMin += iteratorY, yTarget++)
+   for (auto yTarget = tileDrawY, ySource = ySourceMin; ySource != ySourceMax; ySource += yIterator, yTarget++)
    {
-      const auto sourceRowPtr = &tilePixels[ySourceMin * tileset->TileWidth];
-
       if (yTarget < 0 || yTarget >= DrawHeight)
       {
          continue;
       }
 
-      for (auto xSource = xSourceMin, xTarget = tileDrawX; xSource != xSourceMax; xSource += iteratorX, xTarget++)
+      for (auto xTarget = tileDrawX, xSource = xSourceMin; xSource != xSourceMax; xSource += xIterator, xTarget++)
       {
          if (xTarget < 0 || xTarget >= DrawWidth)
          {
             continue;
          }
 
-         const auto& sourceColorIndex = sourceRowPtr[xSource];
-         const auto color = colorPalette->get(sourceColorIndex);
-         
-         setPixel(xTarget, yTarget, color);
+         if (flags & RENDER_FLAGS_FLIP_DIAG)
+         {
+            const auto sourceRowPtr = &tilePixels[xSource * tileset->TileWidth];
+            const auto& sourceColorIndex = sourceRowPtr[ySource];
+            const auto color = colorPalette->get(sourceColorIndex);
+            setPixel(xTarget, yTarget, color);
+         }
+         else
+         {
+            const auto sourceRowPtr = &tilePixels[ySource * tileset->TileWidth];
+            const auto& sourceColorIndex = sourceRowPtr[xSource];
+            const auto color = colorPalette->get(sourceColorIndex);
+            setPixel(xTarget, yTarget, color);
+         }
       }
    }
 
@@ -317,7 +318,6 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
          }
       }
    }
-   //blt();
 }
 
 void FrameBuffer::blt()
