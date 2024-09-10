@@ -47,52 +47,6 @@ inline static const auto COLOR_PINK = 0x56FB;
 inline static const auto COLOR_NEONPURPLE = 0x5FFD;
 inline static const auto COLOR_BSOD = 0xDA03;
 
-
-struct MageTileset
-{
-   static inline const auto TilesetNameLength = 16;
-   constexpr uint16_t TileCount() const { return Rows * Cols; }
-
-   const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const
-   {
-      auto geometriesPtr = (uint16_t*)((uint8_t*)&Rows + sizeof(uint16_t));
-
-      if (tileIndex >= Cols * Rows || !geometriesPtr[tileIndex]) { return nullptr; }
-      auto geometryIndex = geometriesPtr[tileIndex];
-
-      return ROM()->GetReadPointerByIndex<MageGeometry>(geometryIndex - 1);
-   }
-
-   char     Name[TilesetNameLength]{ 0 };
-   uint16_t ImageId{ 0 };
-   uint16_t ImageWidth{ 0 };
-   uint16_t ImageHeight{ 0 };
-   uint16_t TileWidth{ 0 };
-   uint16_t TileHeight{ 0 };
-   uint16_t Cols{ 0 };
-   uint16_t Rows{ 0 };
-};
-
-struct AnimationDirection
-{
-   uint16_t typeId{ 0 };
-   uint8_t type{ 0 };
-   uint8_t renderFlags{ 0 };
-};
-
-struct MagePortrait
-{
-   char portrait[32]{ 0 };
-   char padding[3]{ 0 };
-   uint8_t emoteCount{ 0 };
-
-   const AnimationDirection* getEmoteById(uint8_t emoteId) const
-   {
-      auto animationPtr = (const AnimationDirection*)((uint8_t*)&emoteCount + sizeof(uint8_t));
-      return &animationPtr[emoteId % emoteCount];
-   }
-};
-
 class FrameBuffer
 {
 public:

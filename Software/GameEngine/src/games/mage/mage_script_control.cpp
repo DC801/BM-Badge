@@ -54,7 +54,7 @@ void MageScriptControl::processScriptActions(MageScriptState& scriptState, uint8
       // abort further processing because:
       // 1) there's a new map being loaded
       // 2) a non-blocking action has not completed
-      if (mapControl->mapLoadId != MAGE_NO_MAP || scriptState.totalLoopsToNextAction != 0)
+      if (mapControl->mapLoadId != MAGE_NO_MAP || scriptState.loopsToNextAction < scriptState.totalLoopsToNextAction)
       {
          return;
       }

@@ -14,80 +14,37 @@
 #endif
 
 
-void MageHexEditor::setHexEditorOn(bool on)
-{
-   hexEditorOn = on;
-   //set LED to the state
-   ledSet(LED_HAX, on ? 0xff : 0x00);
-}
-
-void MageHexEditor::toggleHexDialog()
-{
-   dialogState = !dialogState;
-   // bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
-}
-
-void MageHexEditor::setHexOp(enum HEX_OPS op)
-{
-   currentOp = op;
-   uint8_t led_op_xor = 0x00;
-   uint8_t led_op_add = 0x00;
-   uint8_t led_op_sub = 0x00;
-   switch (op)
-   {
-   case HEX_OPS_XOR: led_op_xor = 0xFF; break;
-   case HEX_OPS_ADD: led_op_add = 0xFF; break;
-   case HEX_OPS_SUB: led_op_sub = 0xFF; break;
-   default: break;
-   }
-   ledSet(LED_XOR, led_op_xor);
-   ledSet(LED_ADD, led_op_add);
-   ledSet(LED_SUB, led_op_sub);
-}
-
-void MageHexEditor::updateHexStateVariables()
-{
-   bytesPerPage = dialogState ? 64 : 192;
-   hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
-   memTotal = std::tuple_size<MapControl::EntityDataArray>{};
-   totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
-}
-
 void MageHexEditor::Update()
 {
+   applyMemRecallInputs();
+
+   currentOp = inputHandler->IsPressed(KeyPress::Xor) ? HexOperation::XOR
+      : inputHandler->IsPressed(KeyPress::Add) ? HexOperation::ADD
+      : inputHandler->IsPressed(KeyPress::Sub) ? HexOperation::SUB
+      : currentOp;
+
    if (!hexEditorOn || !playerHasHexEditorControl || disableMovement)
    {
       return;
    }
 
-   if (inputHandler->IsPressed(KeyPress::Xor)) { setHexOp(HEX_OPS_XOR); }
-   if (inputHandler->IsPressed(KeyPress::Add)) { setHexOp(HEX_OPS_ADD); }
-   if (inputHandler->IsPressed(KeyPress::Sub)) { setHexOp(HEX_OPS_SUB); }
-   if (inputHandler->IsPressed(KeyPress::Bit128)) { runHex(0b10000000); }
-   if (inputHandler->IsPressed(KeyPress::Bit64)) { runHex(0b01000000); }
-   if (inputHandler->IsPressed(KeyPress::Bit32)) { runHex(0b00100000); }
-   if (inputHandler->IsPressed(KeyPress::Bit16)) { runHex(0b00010000); }
-   if (inputHandler->IsPressed(KeyPress::Bit8)) { runHex(0b00001000); }
-   if (inputHandler->IsPressed(KeyPress::Bit4)) { runHex(0b00000100); }
-   if (inputHandler->IsPressed(KeyPress::Bit2)) { runHex(0b00000010); }
-   if (inputHandler->IsPressed(KeyPress::Bit1)) { runHex(0b00000001); }
+   const auto hexOpValue = static_cast<uint8_t>(
+      (inputHandler->IsPressed(KeyPress::Bit128) ? 0b10000000 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit64) ? 0b01000000 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit32) ? 0b00100000 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit16) ? 0b00010000 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit8) ? 0b00001000 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit4) ? 0b00000100 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit2) ? 0b00000010 : 0) |
+      (inputHandler->IsPressed(KeyPress::Bit1) ? 0b00000001 : 0)
+      );
 
    uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
-
-   if (!inputHandler->Hack())
+   switch (currentOp)
    {
-      disableMovement = false;
-   }
-   if (disableMovement)
-   {
-      return;
-   }
-
-   //exiting the hex editor by pressing the hax button will happen immediately
-   //before any other input is processed:
-   if (inputHandler->Hack())// activatedButton.IsPressed(KeyPress::Hax)) 
-   {
-      setHexEditorOn(false);
+   case HexOperation::XOR:  *currentByte ^= hexOpValue; break;
+   case HexOperation::ADD:  *currentByte += hexOpValue; break;
+   case HexOperation::SUB:  *currentByte -= hexOpValue; break;
    }
 
    anyHexMovement = inputHandler->Left() || inputHandler->Right() || inputHandler->Up() || inputHandler->Down()
@@ -126,10 +83,8 @@ void MageHexEditor::Update()
    }
    else
    {
-      applyMemRecallInputs();
       //check to see if the page button was pressed and released quickly
-      if (previousPageButtonState
-         && (GameClock::now() - lastPageButtonPressTime).count() < HEXED_QUICK_PRESS_TIMEOUT)
+      if (previousPageButtonState && GameClock::now() - lastPageButtonPressTime < TimeBetweenHexUpdates)
       {
          //if the page button was pressed and then released fast enough, advance one page.
          currentMemPage = (currentMemPage + 1) % totalMemPages;
@@ -201,11 +156,12 @@ void MageHexEditor::Update()
          }
       }
    }
-   if (anyHexMovement)
-   {
-      hexTickDelay = 1;
-   }
-   updateHexStateVariables();
+   if (anyHexMovement) {}
+
+   bytesPerPage = dialogState ? 64 : 192;
+   hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
+   memTotal = std::tuple_size<MapControl::EntityDataArray>{};
+   totalMemPages = ceil(float(memTotal) / float(bytesPerPage));
 }
 
 void MageHexEditor::applyMemRecallInputs()
@@ -229,10 +185,10 @@ void MageHexEditor::renderHexHeader()
 {
    char headerString[128]{ " " };
    char clipboardPreview[24]{ " " };
-   auto entityDataPointer = mapControl->GetEntityDataPointer();
-   const uint8_t* currentByteAddress = entityDataPointer + hexCursorOffset;
-   uint8_t u1Value = *currentByteAddress;
-   uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorOffset % 2)));
+   const auto entityDataPointer = mapControl->GetEntityDataPointer();
+   const auto currentByteAddress = entityDataPointer + hexCursorOffset;
+   const auto u1Value = *currentByteAddress;
+   const auto u2Value = *(uint16_t*)((currentByteAddress - (hexCursorOffset % 2)));
    sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
       currentMemPage, hexCursorOffset, totalMemPages, mapControl->currentMap.value().entityCount, memTotal);
 
@@ -270,52 +226,67 @@ void MageHexEditor::renderHexHeader()
 
 void MageHexEditor::Draw()
 {
+   ledSet(LED_XOR, currentOp == HexOperation::XOR ? 0xFF : 0x00);
+   ledSet(LED_ADD, currentOp == HexOperation::ADD ? 0xFF : 0x00);
+   ledSet(LED_SUB, currentOp == HexOperation::SUB ? 0xFF : 0x00);
+
+   ledSet(LED_PAGE, inputHandler->IsPressed(KeyPress::Page) ? 0xFF : 0x00);
+
+   const auto entityDataPointer = mapControl->GetEntityDataPointer();
+   const auto currentByte = *(entityDataPointer + hexCursorOffset);
+
+   ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT16, ((currentByte >> 4) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT8, ((currentByte >> 3) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
+   ledSet(LED_MEM0, hexCursorOffset % sizeof(MageEntityData) == memOffsets[0] ? 0xFF : 0x00);
+   ledSet(LED_MEM1, hexCursorOffset % sizeof(MageEntityData) == memOffsets[1] ? 0xFF : 0x00);
+   ledSet(LED_MEM2, hexCursorOffset % sizeof(MageEntityData) == memOffsets[2] ? 0xFF : 0x00);
+   ledSet(LED_MEM3, hexCursorOffset % sizeof(MageEntityData) == memOffsets[3] ? 0xFF : 0x00);
+
    if (!hexEditorOn)
    {
       return;
    }
 
+   renderHexHeader();
+
    if ((hexCursorOffset / bytesPerPage) == currentMemPage)
    {
-      frameBuffer->DrawFilledRect(
-         (hexCursorOffset % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
-         (hexCursorOffset % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
-         HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x38FF);
+      const auto xCursorOffset = (hexCursorOffset % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X;
+      const auto yCursorOffset = (hexCursorOffset % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y;
+      frameBuffer->DrawFilledRect(xCursorOffset, yCursorOffset, HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x38FF);
       if (isCopying)
       {
          for (uint8_t i = 1; i < clipboardLength; i++)
          {
-            uint16_t copyCursorOffset = (hexCursorOffset + i) % bytesPerPage;
-            frameBuffer->DrawFilledRect(
-               (copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
-               (copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
-               HEXED_BYTE_WIDTH,
-               HEXED_BYTE_HEIGHT,
-               0x00EE
-            );
+            const auto copyCursorOffset = (hexCursorOffset + i) % bytesPerPage;
+            const auto xCopyCursorOffset = (copyCursorOffset % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X;
+            const auto yCopyCursorOffset = (copyCursorOffset % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y;
+
+            frameBuffer->DrawFilledRect(xCopyCursorOffset, yCopyCursorOffset, HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x00EE);
          }
       }
    }
-   renderHexHeader();
-   auto pageOffset = currentMemPage * bytesPerPage;
 
-   constexpr char hexmap[] = { '0', '1', '2', '3', '4', '5', '6', '7',
-                     '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+   constexpr char hexmap[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-   auto entityDataPointer = mapControl->GetEntityDataPointer();
-   auto dataPage = entityDataPointer + pageOffset;
-   uint16_t i = 0;
+   const auto pageOffset = currentMemPage * bytesPerPage;
+   const auto dataPage = entityDataPointer + pageOffset;
+   auto i = 0;
    std::string s(HEXED_BYTES_PER_ROW * 3, ' ');
    while (i < bytesPerPage && i + pageOffset < memTotal)
    {
-      auto color = COLOR_WHITE;
-      auto playerEntityIndex = mapControl->getPlayerEntityIndex();
-      if (NO_PLAYER_INDEX != playerEntityIndex
+      const auto playerEntityIndex = mapControl->getPlayerEntityIndex();
+      const auto color = NO_PLAYER_INDEX != playerEntityIndex
          && i + pageOffset >= sizeof(MageEntityData) * playerEntityIndex
-         && i + pageOffset < sizeof(MageEntityData) * (playerEntityIndex + 1))
-      {
-         color = COLOR_RED;
-      }
+         && i + pageOffset < sizeof(MageEntityData) * (playerEntityIndex + 1)
+         ? COLOR_RED : COLOR_WHITE;
+
       for (uint16_t j = 0; j < HEXED_BYTES_PER_ROW; i++, j++)
       {
          s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
@@ -324,20 +295,6 @@ void MageHexEditor::Draw()
       frameBuffer->DrawText(s.c_str(), color,
          HEXED_BYTE_OFFSET_X, HEXED_BYTE_OFFSET_Y + ((i - 1) / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT);
    }
-}
-
-void MageHexEditor::runHex(uint8_t value)
-{
-   uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
-   uint8_t changedValue = *currentByte;
-   switch (currentOp)
-   {
-   case HEX_OPS_XOR: changedValue ^= value; break;
-   case HEX_OPS_ADD: changedValue += value; break;
-   case HEX_OPS_SUB: changedValue -= value; break;
-   default: break;
-   }
-   *currentByte = changedValue;
 }
 
 void MageHexEditor::openToEntity(uint8_t entityIndex)

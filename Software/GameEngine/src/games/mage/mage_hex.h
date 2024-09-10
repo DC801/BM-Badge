@@ -29,13 +29,13 @@ class MageDialogControl;
 #define HEXED_CLIPBOARD_PREVIEW_LENGTH 6
 #define HEXED_CLIPBOARD_MAX_LENGTH 64
 
-#define HEXED_QUICK_PRESS_TIMEOUT 500
-
-enum HEX_OPS {
-	HEX_OPS_XOR,
-	HEX_OPS_ADD,
-	HEX_OPS_SUB
+enum class HexOperation {
+	XOR,
+	ADD,
+	SUB
 };
+
+static inline const auto TimeBetweenHexUpdates = GameClock::duration{ 250 };
 
 //this class handles the hex editor mode, including input and drawing to the screen.
 class MageHexEditor
@@ -54,25 +54,17 @@ public:
 		return hexEditorOn;
 	}
 
-	//returns true if hex editor is open.
-	constexpr bool getHexDialogState() const
+	// squish the hex editor to accomodate a dialog box
+	constexpr void setHexDialogState(bool state)
 	{
-		return dialogState;
+		dialogState = state;
 	}
 
 	//this turns the hex editor mode on or off.
-	void setHexEditorOn(bool on);
-
-	//this changes the hex editor layout to allow for a dialog window
-	//to be present on the bottom of the screen.
-	void toggleHexDialog();
-
-	//sets the current operation to be applied when pressing the bit buttons.
-	void setHexOp(enum HEX_OPS op);
-
-	constexpr auto GetCursorOffset() const
+	void setHexEditorOn(bool on)
 	{
-		return hexCursorOffset;
+		hexEditorOn = on;
+		ledSet(LED_HAX, on ? 0xff : 0x00);
 	}
 
 	inline void SetCursorOffset(uint16_t offset)
@@ -86,23 +78,16 @@ public:
 		currentMemPage = hexCursorOffset / bytesPerPage;
 	}
 
-	uint16_t getCurrentMemPage();
-
-	//this updates the variables used by the hex editor when applying inputs and rendering.
-	void updateHexStateVariables();
-
 	//this applies inputs to the hex editor state.
 	void Update();
 	void applyMemRecallInputs();
 
 	void Draw();
 
-	//apply input to the current byte value based on the state of currentOp
-	void runHex(uint8_t value);
 	void openToEntity(uint8_t entityIndex);
 	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }
 
-	std::array<uint8_t, 4> memOffsets;
+	std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets;
 	bool playerHasHexEditorControl{ false };
 
 private:
@@ -118,8 +103,8 @@ private:
 	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();
 
-	//this variable stores the operation that will be preformed when pressing the bit buttons.
-	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };
+	//this variable stores the operation that will be performed when pressing the bit buttons.
+	HexOperation currentOp{ HexOperation::XOR };
 
 	//tells the game if the hex editor should be visible or not.
 	bool hexEditorOn{ false };
@@ -127,8 +112,8 @@ private:
 	//true if there has been any button presses that change the cursor position.
 	bool anyHexMovement{ false };
 
-	//delays all hex input by this many ticks
-	uint8_t hexTickDelay{ 0 };
+	//delays all hex input until the specified time point
+	GameClock::time_point nextHexUpdate{ GameClock::now() };
 
 	//true if the hex editor screen is reduced in size to allow for a
 	//dialog window to be displayed.

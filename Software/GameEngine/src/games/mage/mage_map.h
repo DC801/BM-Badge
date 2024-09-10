@@ -24,6 +24,8 @@ in a more accessible way.
 #include "mage_script_control.h"
 #include "shim_timer.h"
 
+static const inline auto interactLength = 32;
+
 struct GoDirection
 {
    const char name[MapGoDirectionNameLength]{ 0 };
@@ -41,7 +43,6 @@ struct MapTile
 struct MapLayers
 {
    MapLayers() noexcept = default;
-   //MapLayers(MapLayers& layers) noexcept = default;
    MapLayers(std::span<const MapTile>&& tiles, uint16_t layerSize) noexcept
       : tiles(std::move(tiles)),
       layerSize(layerSize)
@@ -156,48 +157,57 @@ public:
    inline EntityRect getPlayerInteractBox() const
    {
       const auto playerRenderableData = getPlayerRenderableData();
-      static const uint16_t interactLength = playerRenderableData->hitBox.h / 2 + playerRenderableData->hitBox.w / 2;
-      const auto direction = static_cast<MageEntityAnimationDirection>(getPlayerEntityData()->flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK);
+      static const uint16_t interactLength = playerRenderableData.hitBox.h / 2 + playerRenderableData.hitBox.w / 2;
+      const auto playerDirection = getPlayerEntityData()->direction;
       return EntityRect{
             {
                uint16_t{
-                  playerRenderableData->hitBox.origin.x
-                  - playerRenderableData->hitBox.w / 2
-                  - (direction == MageEntityAnimationDirection::WEST ? interactLength : 0u)
-                  + (direction == MageEntityAnimationDirection::EAST ? interactLength : 0u)
+                  playerRenderableData.hitBox.origin.x - playerRenderableData.hitBox.w / 2
+                  - (playerDirection == MageEntityAnimationDirection::WEST ? interactLength : 0u)
+                  + (playerDirection == MageEntityAnimationDirection::EAST ? interactLength : 0u)
                },
                uint16_t{
-                  playerRenderableData->hitBox.origin.y
-                  //- playerRenderableData->hitBox.h / 2
-                  - (direction == MageEntityAnimationDirection::NORTH ? interactLength : 0u)
-                  + (direction == MageEntityAnimationDirection::SOUTH ? interactLength : 0u)
+                  playerRenderableData.hitBox.origin.y - playerRenderableData.hitBox.h / 4
+                  - (playerDirection == MageEntityAnimationDirection::NORTH ? interactLength : 0u)
+                  + (playerDirection == MageEntityAnimationDirection::SOUTH ? interactLength : 0u)
                }
          },
-         uint16_t(playerRenderableData->hitBox.w * 2),
-         uint16_t(playerRenderableData->hitBox.h * 2)
+         uint16_t(playerRenderableData.hitBox.w * 2),
+         uint16_t(playerRenderableData.hitBox.h * 2)
       };
    }
 
-   inline MageEntityData* getPlayerEntityData()
+   inline MageEntityData& getPlayerEntityData()
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX
          || currentMap->playerEntityIndex >= currentMap->entityCount)
       {
-         return nullptr;
+         return Get<MageEntityData>(0);
       }
-      return &Get<MageEntityData>(currentMap->playerEntityIndex);
+      return Get<MageEntityData>(currentMap->playerEntityIndex);
    }
 
-   inline RenderableData* getPlayerRenderableData()
+   inline const RenderableData& getPlayerRenderableData() const
    {
       if (!currentMap
          || currentMap->playerEntityIndex == NO_PLAYER_INDEX
          || currentMap->playerEntityIndex >= currentMap->entityCount)
       {
-         return nullptr;
+         return Get<RenderableData>(0);
       }
-      return &Get<RenderableData>(currentMap->playerEntityIndex);
+      return Get<RenderableData>(currentMap->playerEntityIndex);
+   }
+
+   inline RenderableData& getPlayerRenderableData()
+   {
+      if (!currentMap
+         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
+         || currentMap->playerEntityIndex >= currentMap->entityCount)
+      {
+         return Get<RenderableData>(0);
+      }
+      return Get<RenderableData>(currentMap->playerEntityIndex);
    }
 
    inline const RenderableData& getRenderableDataByMapLocalId(uint16_t mapLocalId) const
@@ -283,16 +293,6 @@ public:
    MageScriptState onTickScriptState;
 
 private:
-      inline const RenderableData* getPlayerRenderableData() const
-   {
-      if (!currentMap
-         || currentMap->playerEntityIndex == NO_PLAYER_INDEX
-         || currentMap->playerEntityIndex >= currentMap->entityCount)
-      {
-         return nullptr;
-      }
-      return &Get<RenderableData>(currentMap->playerEntityIndex);
-   }
 
    inline const MageEntityData* getPlayerEntityData() const
    {

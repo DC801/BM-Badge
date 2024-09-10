@@ -9,7 +9,7 @@ void MageCamera::Update()
 {
    if (followEntity)
    {
-      Position = followEntity->center() - MidScreen;
+      Position = Vector2T<int32_t>{ followEntity->center().x - MidScreen.x, followEntity->center().y - MidScreen.y };
    }
 
    if (shaking)

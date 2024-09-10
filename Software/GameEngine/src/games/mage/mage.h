@@ -57,8 +57,6 @@ private:
    //If there is no playerEntity, it just moves the camera freely.
    void applyGameModeInputs();
 
-   void updateHexLights() const;
-
    void gameLoopIteration();
 
    uint8_t currentSaveIndex{ 0 };

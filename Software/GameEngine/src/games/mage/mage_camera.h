@@ -13,13 +13,17 @@ struct RenderableData;
 
 class MageCamera
 {
-   friend class MageGameEngine;
    friend class MageScriptActions;
 public:
    void Update();
-   void SetFollowEntity(const RenderableData* toFollow)
+
+   void ClearFollowEntity()
    {
-      followEntity = toFollow;
+      followEntity = nullptr;
+   }
+   void SetFollowEntity(const RenderableData& toFollow)
+   {
+      followEntity = &toFollow;
    }
    Vector2T<int32_t> Position{};
    Vector2T<int32_t> GetScreenCenter() 

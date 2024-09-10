@@ -1,9 +1,9 @@
 #include "mage_entity.h"
+#include "mage_rom.h"
 
 void RenderableData::UpdateFrom(const MageEntityData& entity)
 {
    curFrameDuration += IntegrationStepSize;
-
 
    // hacking can change the resulting tile size, update tile size accordingly
    if (lastTilesetId != tilesetId)
@@ -11,7 +11,6 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
       //get the difference between entity centers:
       //entity.targetPosition.x += adjustmentPoint.x;
       //entity.targetPosition.y += adjustmentPoint.y;
-      lastTilesetId = tilesetId;
    }
 
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
@@ -37,6 +36,7 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
    {
       updateAsEntity(entity);
    }
+   lastTilesetId = tilesetId;
 }
 
 void RenderableData::Draw(const std::shared_ptr<FrameBuffer>& frameBuffer) const
@@ -50,7 +50,7 @@ void RenderableData::updateAsTileset(const MageEntityData& entity)
    tileId = entity.secondaryId;
    duration = std::chrono::milliseconds{ 0 };
    frameCount = 0;
-   renderFlags = entity.flags;
+   renderFlags = entity.flags.value;
 }
 
 void RenderableData::updateAsAnimation(const MageEntityData& entity)
@@ -72,12 +72,11 @@ void RenderableData::updateAsAnimation(const MageEntityData& entity)
    tileId = animation->GetFrame(currentFrameIndex).tileId;
    duration = std::chrono::milliseconds{ animation->GetFrame(currentFrameIndex).durationMs }; //no need to check, it shouldn't cause a crash.
    frameCount = animation->frameCount;
-   renderFlags = entity.flags;
 }
 
 void RenderableData::updateAsEntity(const MageEntityData& entity)
 {
-   auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(entity.primaryId);
+   const auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(entity.primaryId);
 
    //If the entity has no animations defined, return default:
    if (entityType->animationCount == 0)
@@ -89,10 +88,9 @@ void RenderableData::updateAsEntity(const MageEntityData& entity)
       renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
    }
 
-   auto& animation = entityType->GetAnimation(currentAnimation);
+   const auto& animation = entityType->GetAnimation(currentAnimation);
 
-   //create a animationDirection entity based on direction:
-   auto& animationDirection = animation[entity.GetDirection()];
+   const auto& animationDirection = animation[entity.direction];
 
    //based on animationDirection.type, you can get two different outcomes:
    // * Not animated - animationDirection.type != 0:
@@ -128,6 +126,6 @@ void RenderableData::updateAsEntity(const MageEntityData& entity)
       tileId = currentFrame.tileId;
       duration = GameClock::duration{ currentFrame.durationMs };
       frameCount = animation->frameCount;
-      renderFlags = animationDirection.renderFlags | (entity.flags & 0x80);
+      renderFlags = animationDirection.renderFlags | (entity.flags.value & 0x80);
    }
 }

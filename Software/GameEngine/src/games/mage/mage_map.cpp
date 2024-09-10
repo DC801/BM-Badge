@@ -37,11 +37,8 @@ void MapControl::Load()
    const auto onTickScript = ROM()->GetReadPointerByIndex<MageScript>(currentMap->onTickScriptId);
    onTickScriptState = MageScriptState{ currentMap->onTickScriptId, onTickScript };
 
-   auto player = getPlayerEntityData();
-   if (player)
-   {
-      player->SetName(ROM()->GetCurrentSave().name);
-   }
+   auto& player = getPlayerEntityData();
+   player.SetName(ROM()->GetCurrentSave().name);
    mapLoadId = MAGE_NO_MAP;
 }
 
@@ -155,45 +152,40 @@ void MapControl::Draw() const
 
 std::optional<uint16_t> MapControl::Update()
 {
-   auto playerEntityData = getPlayerEntityData();
-   const auto playerRenderableData = getPlayerRenderableData();
+   auto& playerEntityData = getPlayerEntityData();
+   const auto& playerRenderableData = getPlayerRenderableData();
 
-   // require a player on the map to move/interact
-   if (!playerEntityData) { return std::nullopt; }
+   const auto oldPosition = playerRenderableData.origin;
 
-   const auto oldPosition = playerRenderableData->origin;
-
-   const auto interactBox = getPlayerInteractBox();
    const auto topLeft = oldPosition;
-   const auto topRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, 0 };
-   const auto botLeft = oldPosition + EntityPoint{ 0, playerRenderableData->hitBox.h };
-   const auto botRight = oldPosition + EntityPoint{ playerRenderableData->hitBox.w, playerRenderableData->hitBox.h };
+   const auto topRight = oldPosition + EntityPoint{ playerRenderableData.hitBox.w, 0 };
+   const auto botLeft = oldPosition + EntityPoint{ 0, playerRenderableData.hitBox.h };
+   const auto botRight = oldPosition + EntityPoint{ playerRenderableData.hitBox.w, playerRenderableData.hitBox.h };
 
    std::vector<EntityPoint> hitboxPointsToCheck{};
 
-   const uint8_t interactLength = 32;
-   if (playerEntityData->targetPosition.x < playerRenderableData->origin.x)
+   if (playerEntityData.targetPosition.x < oldPosition.x)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::WEST);
+      playerEntityData.SetDirection(MageEntityAnimationDirection::WEST);
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
-   else if (playerEntityData->targetPosition.x > playerRenderableData->origin.x)
+   else if (playerEntityData.targetPosition.x > oldPosition.x)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::EAST);
+      playerEntityData.SetDirection(MageEntityAnimationDirection::EAST);
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
 
-   if (playerEntityData->targetPosition.y < playerRenderableData->origin.y)
+   if (playerEntityData.targetPosition.y < oldPosition.y)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::NORTH);
+      playerEntityData.SetDirection(MageEntityAnimationDirection::NORTH);
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
-   else if (playerEntityData->targetPosition.y > playerRenderableData->origin.y)
+   else if (playerEntityData.targetPosition.y > oldPosition.y)
    {
-      playerEntityData->flags |= static_cast<uint8_t>(MageEntityAnimationDirection::SOUTH);
+      playerEntityData.SetDirection(MageEntityAnimationDirection::SOUTH);
       hitboxPointsToCheck.push_back(botLeft);
       hitboxPointsToCheck.push_back(botRight);
    }
@@ -216,7 +208,7 @@ std::optional<uint16_t> MapControl::Update()
       if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
          // TODO: bring back the intersection-offset algorithm
-         playerEntityData->targetPosition = oldPosition;
+         playerEntityData.targetPosition = oldPosition;
          break;
       }
    }
@@ -229,7 +221,7 @@ std::optional<uint16_t> MapControl::Update()
 
       renderableData.UpdateFrom(entity);
 
-      if (entity.primaryId != playerEntityData->primaryId && interactBox.Contains(renderableData.center()))
+      if (entity.primaryId != playerEntityData.primaryId && getPlayerInteractBox().Overlaps(renderableData.hitBox))
       {
          interactionId.emplace(i);
       }

@@ -64,10 +64,10 @@ void MageGameEngine::Run()
 
       gameLoopIteration();
       
+      frameBuffer->ClearScreen(COLOR_BLACK);
       mapControl->Draw();
       hexEditor->Draw();
       dialogControl->Draw();
-      updateHexLights();
 
       frames++;
 
@@ -147,7 +147,6 @@ void MageGameEngine::LoadMap()
 
    // ensure that processing the map's onload won't immediately jump to a different script
    scriptControl->jumpScriptId = std::nullopt;
-   frameBuffer->ClearScreen(COLOR_BLACK);
    frameBuffer->ResetFade();
    dialogControl->Close();
    hexEditor->setHexEditorOn(false);
@@ -168,7 +167,7 @@ void MageGameEngine::LoadMap()
 
 void MageGameEngine::applyGameModeInputs()
 {
-   auto player = mapControl->getPlayerEntityData();
+   auto& playerEntityData = mapControl->getPlayerEntityData();
    const auto moveAmount = inputHandler->IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
    if (!playerHasControl)
@@ -176,57 +175,55 @@ void MageGameEngine::applyGameModeInputs()
       return;
    }
 
-   if (player->primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+   if (playerEntityData.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(static_cast<uint16_t>(player->primaryIdType));
+      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(static_cast<uint16_t>(playerEntityData.primaryIdType));
 
       // position updates while player is actioning cause loss of collision data
       if (playerHasControl && !inputHandler->PlayerIsActioning())
       {
+         const auto playerXInt = static_cast<int>(playerEntityData.targetPosition.x);
+         const auto playerYInt = static_cast<int>(playerEntityData.targetPosition.y);
          // clip player to [0,max(uint16_t)]
          if (inputHandler->Left())
          {
-            player->SetDirection(MageEntityAnimationDirection::WEST);
-            player->targetPosition.x = static_cast<int>(player->targetPosition.x) - moveAmount < 0
+            playerEntityData.targetPosition.x = playerXInt - moveAmount < 0
                ? 0
-               : player->targetPosition.x - moveAmount;
+               : playerXInt - moveAmount;
          }
          else if (inputHandler->Right())
          {
-            player->SetDirection(MageEntityAnimationDirection::EAST);
-            player->targetPosition.x = static_cast<int>(player->targetPosition.x) + moveAmount > std::numeric_limits<uint16_t>::max()
+            playerEntityData.targetPosition.x = playerXInt + moveAmount > std::numeric_limits<uint16_t>::max()
                ? std::numeric_limits<uint16_t>::max()
-               : player->targetPosition.x + moveAmount;
+               : playerXInt + moveAmount;
          }
 
          if (inputHandler->Up())
          {
-            player->SetDirection(MageEntityAnimationDirection::NORTH);
-            player->targetPosition.y = static_cast<int>(player->targetPosition.y) - moveAmount < 0
+            playerEntityData.targetPosition.y = playerYInt - moveAmount < 0
                ? 0
-               : player->targetPosition.y - moveAmount;
+               : playerYInt - moveAmount;
          }
          else if (inputHandler->Down())
          {
-            player->SetDirection(MageEntityAnimationDirection::SOUTH);
-            player->targetPosition.y = static_cast<int>(player->targetPosition.y) + moveAmount > std::numeric_limits<uint16_t>::max()
+            playerEntityData.targetPosition.y = playerYInt + moveAmount > std::numeric_limits<uint16_t>::max()
                ? std::numeric_limits<uint16_t>::max()
-               : player->targetPosition.y + moveAmount;
+               : playerYInt + moveAmount;
          }
       }
 
-      auto playerRenderableData = mapControl->getPlayerRenderableData();
-      playerRenderableData->SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+      auto& playerRenderableData = mapControl->getPlayerRenderableData();
+      playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
 
       if (inputHandler->PlayerIsActioning()
          && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
-         playerRenderableData->SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
+         playerRenderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
       }
       else if (mapControl->playerIsMoving
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
-         playerRenderableData->SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+         playerRenderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
       }
    }
    if (!hexEditor->playerHasHexEditorControl)
@@ -241,36 +238,4 @@ void MageGameEngine::applyGameModeInputs()
       hexEditor->setHexEditorOn(true);
    }
    hexEditor->applyMemRecallInputs();
-}
-
-void MageGameEngine::updateHexLights() const
-{
-   const auto entityDataPointer = mapControl->GetEntityDataPointer();
-   const auto hexCursorOffset = hexEditor->GetCursorOffset();
-   const auto currentByte = *(entityDataPointer + hexCursorOffset);
-   ledSet(LED_PAGE, inputHandler->IsPressed(KeyPress::Page) ? 0xFF : 0x00);
-
-   ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT16, ((currentByte >> 4) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT8, ((currentByte >> 3) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
-   ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
-
-   const auto entityRelativeMemOffset = hexCursorOffset % sizeof(MageEntityData);
-   const auto leds = std::array{ LED_MEM0, LED_MEM1, LED_MEM2, LED_MEM3 };
-   for (auto i = 0; i < leds.size(); i++)
-   {
-      const auto led = leds[i];
-      if (entityRelativeMemOffset == hexEditor->memOffsets[i])
-      {
-         ledOn(led);
-      }
-      else
-      {
-         ledOff(led);
-      }
-   }
 }

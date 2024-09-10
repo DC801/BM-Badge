@@ -1,7 +1,6 @@
 #ifndef _MAGE_ENTITY_H
 #define _MAGE_ENTITY_H
 
-#include "mage_rom.h"
 #include "mage_geometry.h"
 #include "FrameBuffer.h"
 #include <stdint.h>
@@ -45,9 +44,8 @@ struct MageEntityTypeAnimation
       case MageEntityAnimationDirection::NORTH: return North;
       case MageEntityAnimationDirection::EAST: return East;
       case MageEntityAnimationDirection::WEST: return West;
-
-      default:
       case MageEntityAnimationDirection::SOUTH:
+      default:
          return South;
       }
    }
@@ -84,7 +82,28 @@ struct MageEntityData
 
    uint8_t current_animation{ 0 };
    uint8_t current_frame{ 0 };
-   uint8_t flags{ 0 };
+   union
+   {
+      uint8_t value;
+      struct RenderFlags
+      {
+         bool flipDiag : 1;
+         bool flipY : 1;
+         bool flipX : 1;
+         uint8_t _ : 3;
+         bool debug : 1;
+         bool glitched : 1;
+      } render;
+
+      struct EntityFlags
+      {
+         MageEntityAnimationDirection direction : 2;
+         uint8_t _ : 4;
+         bool debug : 1;
+         bool glitched : 1;
+      } entity;
+   } flags;
+
    MageEntityAnimationDirection direction{ MageEntityAnimationDirection::NORTH };
    uint16_t pathId{ 0 };
    uint16_t onLookScriptId{ 0 };
@@ -97,11 +116,14 @@ struct MageEntityData
       }
    }
 
-   constexpr void SetDirection(MageEntityAnimationDirection dir) { flags = (flags & 0x80) | (static_cast<uint8_t>(dir) & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
-   constexpr MageEntityAnimationDirection GetDirection() const { return static_cast<MageEntityAnimationDirection>(flags & RENDER_FLAGS_ENTITY_DIRECTION_MASK); }
-   constexpr bool IsDebug() const { return flags & RENDER_FLAGS_IS_DEBUG; }
-   constexpr bool IsGlitched() const { return flags & RENDER_FLAGS_IS_GLITCHED; }
-   constexpr void SetGlitched(bool glitched) { if (glitched) { flags |= RENDER_FLAGS_IS_GLITCHED; } }
+   constexpr void SetDirection(MageEntityAnimationDirection dir) 
+   {
+      direction = dir;
+      flags.entity.direction = dir;
+   }
+   constexpr bool IsDebug() const { return flags.entity.debug; }
+   constexpr bool IsGlitched() const { return flags.entity.glitched; }
+   constexpr void SetGlitched(bool glitched) { flags.entity.glitched = 1; }
 };
 
 class RenderableData

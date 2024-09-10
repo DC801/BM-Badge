@@ -51,10 +51,10 @@ struct MageSaveGame
 
    //this stores the byte offsets for the hex memory buttons:
    std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets{
-      (uint8_t)MageEntityFieldOffset::x,
-         (uint8_t)MageEntityFieldOffset::y,
-         (uint8_t)MageEntityFieldOffset::primaryId, // entityType
-         (uint8_t)MageEntityFieldOffset::direction,
+      static_cast<uint8_t>(MageEntityFieldOffset::x),
+      static_cast<uint8_t>(MageEntityFieldOffset::y),
+      static_cast<uint8_t>(MageEntityFieldOffset::primaryId), // entityType
+      static_cast<uint8_t>(MageEntityFieldOffset::direction),
    };
    uint16_t currentMapId{ DEFAULT_MAP };
    uint16_t warpState{ MAGE_NO_WARP_STATE };
@@ -66,16 +66,53 @@ struct MageSaveGame
 };
 
 class MapData;
-class MageTileset;
 class MageAnimation;
 class MageEntityType;
 class MageEntityData;
 class MageGeometry;
 struct MageScript;
-class MagePortrait;
 class MageDialog;
 struct MageSerialDialog;
 class MageColorPalette;
+
+
+struct MageTileset
+{
+   static inline const auto TilesetNameLength = 16;
+   constexpr uint16_t TileCount() const { return Rows * Cols; }
+
+   const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const;
+
+   char     Name[TilesetNameLength]{ 0 };
+   uint16_t ImageId{ 0 };
+   uint16_t ImageWidth{ 0 };
+   uint16_t ImageHeight{ 0 };
+   uint16_t TileWidth{ 0 };
+   uint16_t TileHeight{ 0 };
+   uint16_t Cols{ 0 };
+   uint16_t Rows{ 0 };
+};
+
+
+struct AnimationDirection
+{
+   uint16_t typeId{ 0 };
+   uint8_t type{ 0 };
+   uint8_t renderFlags{ 0 };
+};
+
+struct MagePortrait
+{
+   char portrait[32]{ 0 };
+   char padding[3]{ 0 };
+   uint8_t emoteCount{ 0 };
+
+   const AnimationDirection* getEmoteById(uint8_t emoteId) const
+   {
+      auto animationPtr = (const AnimationDirection*)((uint8_t*)&emoteCount + sizeof(uint8_t));
+      return &animationPtr[emoteId % emoteCount];
+   }
+};
 
 template<typename T, typename Tag>
 struct TaggedType : T {};

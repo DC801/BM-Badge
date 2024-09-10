@@ -84,8 +84,6 @@
 
 #include <stdint.h>
 
-
-
 typedef enum {
         LED_XOR = 0,
         LED_ADD,
@@ -124,7 +122,5 @@ extern void ledInvert(LEDID id);
 extern void ledPulse(LEDID id);
 extern void ledPulseFast(LEDID id);
 extern void ledPwm(LEDID id, uint8_t val);
-
-
 
 #endif //SOFTWARE_LED_H

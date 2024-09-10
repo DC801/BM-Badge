@@ -2,7 +2,6 @@
 
 #include "mage_entity.h"
 #include "mage_map.h"
-#include "mage_portrait.h"
 #include "FrameBuffer.h"
 #include <utility>
 
@@ -88,6 +87,7 @@ std::optional<uint16_t> MageDialogControl::Update()
    {
       if (GameClock::now() > nextUpdateAllowed)
       {
+         nextUpdateAllowed = GameClock::now() + TimeBetweenSelectionChange;
          if (inputHandler->PreviousDialogResponse())
          {
             currentResponseIndex++;
@@ -97,18 +97,16 @@ std::optional<uint16_t> MageDialogControl::Update()
             currentResponseIndex--;
          }
          currentResponseIndex %= currentScreen.responseCount;
-
-         nextUpdateAllowed = GameClock::now() + TimeBetweenSelectionChange;
       }
 
       if (inputHandler->SelectDialogResponse())
       {
+         nextUpdateAllowed = GameClock::now() + TimeBetweenSelectionChange;
          open = false;
          if (currentResponseIndex < currentScreen.responseCount)
          {
             return currentScreen.GetResponse(currentResponseIndex).scriptId;
          }
-         nextUpdateAllowed = GameClock::now() + TimeBetweenSelectionChange;
       }
    }
 
@@ -269,7 +267,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
 
          auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
          auto animationDirection = portrait->getEmoteById(currentScreen.emoteIndex);
-         currentEntity.flags = animationDirection->renderFlags;
+         currentEntity.flags.value = animationDirection->renderFlags;
 
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
          if (((uint8_t)currentScreen.alignment % 2))

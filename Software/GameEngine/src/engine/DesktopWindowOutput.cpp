@@ -1,4 +1,5 @@
 #include "DesktopWindowOutput.h"
+
 #include "EnginePanic.h"
 #include <SDL_image.h>
 
@@ -76,8 +77,11 @@ void DesktopWindowOutput::DrawButtonStates() const
 
    for (auto i = 0; i < inputs.size(); i++)
    {
+      const SDL_Rect buttonOffSrcRect = { i * 32, 0, 32, 32 };
+      const SDL_Rect buttonOnSrcRect = { i * 32, 32, 32, 32 };
+      const SDL_Point buttonHalf = { 16, 16 };
       const auto& keyState = inputs[i];
-      auto& buttonPoint = buttonDestPoints[i];
+      const auto& buttonPoint = buttonDestPoints[i];
       const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
       SDL_RenderCopy(components.renderer, components.frameButtonTexture, keyState.Pressed() ? &buttonOnSrcRect : &buttonOffSrcRect, &buttonTargetRect);
    }
@@ -85,20 +89,14 @@ void DesktopWindowOutput::DrawButtonStates() const
 
 void DesktopWindowOutput::DrawLEDStates() const
 {
-   SDL_Point LEDPoint{};
-   uint8_t LEDState{ 0 };
+   const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };
+   const SDL_Rect LEDOnSrcRect = { 0, 8, 16, 8 };
    for (int i = 0; i < LED_COUNT; ++i)
    {
-      LEDPoint = LEDDestPoints[i];
-      LEDState = led_states[i];
+      const auto& LEDPoint = LEDDestPoints[i];
       const auto LEDTargetRect = SDL_Rect{ LEDPoint.x - LEDHalf.x, LEDPoint.y - LEDHalf.y, 16, 8 };
-      SDL_SetTextureAlphaMod(components.frameLEDTexture, 255);
-      SDL_RenderCopy(components.renderer, components.frameLEDTexture, &LEDOffSrcRect, &LEDTargetRect);
-      if (LEDState > 0)
-      {
-         SDL_SetTextureAlphaMod(components.frameLEDTexture, LEDState);
-         SDL_RenderCopy(components.renderer, components.frameLEDTexture, &LEDOnSrcRect, &LEDTargetRect);
-      }
+      //SDL_SetTextureAlphaMod(components.frameLEDTexture, 255);
+      SDL_RenderCopy(components.renderer, components.frameLEDTexture, led_states[i] ? &LEDOnSrcRect : &LEDOffSrcRect, &LEDTargetRect);
    }
 }
 
@@ -112,9 +110,11 @@ void DesktopWindowOutput::GameBlt(const uint16_t frame[]) const
       memmove(targetPixelBuffer, frame, 320 * 240 * sizeof(uint16_t));
       SDL_UnlockTexture(components.gameViewportTexture);
    }
-
    SDL_RenderCopy(components.renderer, components.frameTexture, &components.frameSurface->clip_rect, &components.frameSurface->clip_rect);
    SDL_RenderCopy(components.renderer, components.gameViewportTexture, &gameViewportSrcRect, &gameViewportDstRect);
+   DrawButtonStates();
+   DrawLEDStates();
+
    SDL_RenderPresent(components.renderer);
 }
 

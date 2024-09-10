@@ -16,10 +16,7 @@ void morseTickHandler(void* p_context)
     uint8_t s = morseMessage[morseIdx];
     if (s != ls)
     {
-        if (s)
-            ledOn(LED_HAX);
-        else
-            ledOff(LED_HAX);
+       ledSet(LED_HAX, s ? 0xFF : 0x00);
     }
     ls = s;
 

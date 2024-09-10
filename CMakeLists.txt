@@ -108,8 +108,8 @@ set(SOURCEFILES
     Software/GameEngine/src/games/mage/mage_hex.h
     Software/GameEngine/src/games/mage/mage_map.cpp
     Software/GameEngine/src/games/mage/mage_map.h
-    Software/GameEngine/src/games/mage/mage_portrait.cpp
-    Software/GameEngine/src/games/mage/mage_portrait.h
+    
+    
     Software/GameEngine/src/games/mage/mage_rom.cpp
     Software/GameEngine/src/games/mage/mage_rom.h
     Software/GameEngine/src/games/mage/mage_script_actions.cpp
@@ -145,25 +145,25 @@ set(SOURCEFILES
 	Software/GameEngine/sdk/shim/shim_timer.h
 	Software/GameEngine/sdk/shim/shim_timer.cpp
     
-        Software/GameEngine/src/modules/cmixer/cmixer.h
-        Software/GameEngine/src/modules/drv_ili9341.h
-        Software/GameEngine/src/modules/sd.h
-        Software/GameEngine/src/modules/uart.h
-        Software/GameEngine/src/modules/led.h
-        Software/GameEngine/src/modules/mutex.h
-        Software/GameEngine/src/modules/keyboard.h
-        Software/GameEngine/src/modules/qspi.h
-        Software/GameEngine/src/modules/usb.h
+    Software/GameEngine/src/modules/cmixer/cmixer.h
+    Software/GameEngine/src/modules/drv_ili9341.h
+    Software/GameEngine/src/modules/sd.h
+    Software/GameEngine/src/modules/uart.h
+    Software/GameEngine/src/modules/led.h
+    Software/GameEngine/src/modules/mutex.h
+    Software/GameEngine/src/modules/keyboard.h
+    Software/GameEngine/src/modules/qspi.h
+    Software/GameEngine/src/modules/usb.h
         
-        Software/GameEngine/src/modules/cmixer/cmixer.cpp
-        Software/GameEngine/src/modules/drv_ili9341.cpp
-        Software/GameEngine/src/modules/sd.cpp
-        Software/GameEngine/src/modules/uart.cpp
-        Software/GameEngine/src/modules/led.cpp
-        Software/GameEngine/src/modules/mutex.cpp
-        Software/GameEngine/src/modules/keyboard.cpp
-        Software/GameEngine/src/modules/qspi.cpp
-        Software/GameEngine/src/modules/usb.cpp
+    Software/GameEngine/src/modules/cmixer/cmixer.cpp
+    Software/GameEngine/src/modules/drv_ili9341.cpp
+    Software/GameEngine/src/modules/sd.cpp
+    Software/GameEngine/src/modules/uart.cpp
+    Software/GameEngine/src/modules/led.cpp
+    Software/GameEngine/src/modules/mutex.cpp
+    Software/GameEngine/src/modules/keyboard.cpp
+    Software/GameEngine/src/modules/qspi.cpp
+    Software/GameEngine/src/modules/usb.cpp
 )
 
 if(NOT EMBEDDED_BUILD)

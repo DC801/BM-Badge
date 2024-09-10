@@ -101,7 +101,7 @@ public:
 
    inline bool Hack() const
    {
-      return IsPressed(KeyPress::Rjoy_up);
+      return IsPressed(KeyPress::Hax);
    }
 
    inline bool Use() const

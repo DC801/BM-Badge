@@ -177,35 +177,6 @@ void ledSet(uint8_t index, uint8_t intensity)
    ledRegSet(led_address[index], 0);
 }
 
-
-void ledsOff(void)
-{
-   int i;
-   for (i = 0; i < LED_COUNT; i++)
-   {
-      ledSet(i, 0);
-   }
-}
-
-void ledsOn(void)
-{
-   int i;
-   for (i = 0; i < LED_COUNT; i++)
-   {
-      ledSet(i, 0xff);
-   }
-}
-
-void ledOn(LEDID id)
-{
-   ledSet(id, 0xff);
-}
-
-void ledOff(LEDID id)
-{
-   ledSet(id, 0);
-}
-
 void ledInvert(LEDID id)
 {
    uint8_t value = 0xFF - led_states[id];

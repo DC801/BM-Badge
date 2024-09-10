@@ -152,7 +152,7 @@ struct Vector2T
       return lhs.x == rhs.x && lhs.y == rhs.y;
    }
 
-   uint8_t getRelativeDirection(const Vector2T& target) const
+   MageEntityAnimationDirection getRelativeDirection(const Vector2T& target) const
    {
       float angle = atan2f(target.y - y, target.x - x);
       float absoluteAngle = abs(angle);
@@ -169,7 +169,7 @@ struct Vector2T
       {
          direction = MageEntityAnimationDirection::NORTH;
       }
-      return static_cast<uint8_t>(direction);
+      return direction;
    }
 };
 
@@ -247,9 +247,9 @@ public:
    {
       auto minX{ 0 }, minY{ 0 }, maxX{ 0 }, maxY{ 0 };
 
-      for (auto& p : GetPoints())
+      for (const auto& p : GetPoints())
       {
-         auto point = p + geometryOffset;
+         const auto point = p + geometryOffset;
          minX = std::min(point.x - static_cast<int>(pointToCheck.x), minX);
          minY = std::min(point.y - static_cast<int>(pointToCheck.y), minY);
          maxX = std::max(point.x - static_cast<int>(pointToCheck.x), maxX);
