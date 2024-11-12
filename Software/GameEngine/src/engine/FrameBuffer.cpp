@@ -19,9 +19,7 @@
 static inline int16_t m_cursor_x = 0;
 static inline int16_t m_cursor_y = 0;
 static inline EntityRect m_cursor_area = { 0, 0, DrawWidth, DrawHeight };
-static inline uint16_t m_color = COLOR_WHITE;
 static inline bool m_wrap = true;
-static inline volatile bool m_stop = false;
 
 
 void FrameBuffer::ClearScreen(uint16_t color)
@@ -57,8 +55,14 @@ void FrameBuffer::DrawFilledRect(int x, int y, int w, int h, uint16_t color)
 #endif
 }
 
-void FrameBuffer::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
+void FrameBuffer::DrawLineScreenCoords(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
 {
+   if ((x1 >= DrawWidth && x2 >= DrawWidth)
+      || (y1 >= DrawHeight && y2 >= DrawHeight)) 
+   {
+      return;
+   }
+
    if (x2 < x1)
    {
       std::swap(x1, x2);
@@ -157,7 +161,7 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
    }
 }
 
-void FrameBuffer::write_char(uint8_t c, GFXfont font)
+void FrameBuffer::write_char(uint8_t c, GFXfont font, uint16_t color)
 {
    //If newline, move down a row
    if (c == '\n')
@@ -190,7 +194,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
                m_cursor_y += font.yAdvance;
             }
 
-            __draw_char(m_cursor_x, m_cursor_y, c, m_color, COLOR_BLACK, font);
+            __draw_char(m_cursor_x, m_cursor_y, c, color, COLOR_BLACK, font);
          }
          m_cursor_x += glyph->xAdvance;
       }
@@ -199,7 +203,6 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
 
 void FrameBuffer::DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground, GFXfont font)
 {
-   m_color = color;
    m_cursor_area.origin.x = screenX;
    m_cursor_x = m_cursor_area.origin.x;
    m_cursor_y = screenY + (font.yAdvance / 2);
@@ -210,12 +213,12 @@ void FrameBuffer::DrawText(const std::string_view& text, uint16_t color, uint16_
    }
    for (uint16_t i = 0; i < text.length() && text[i]; i++)
    {
-      write_char(text[i], font);
+      write_char(text[i], font, color);
    }
    m_cursor_area.origin.x = 0;
 }
 
-void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags)
+void FrameBuffer::DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags)
 {
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
    auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
@@ -302,22 +305,6 @@ void FrameBuffer::drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDraw
    //    }
    // }
 
-   if (drawGeometry)
-   {
-      const auto tileDrawPoint = Vector2T{ tileDrawX, tileDrawY };
-      auto geometry = tileset->GetGeometryForTile(tileId);
-      if (geometry)
-      {
-         auto geometryPoints = geometry->FlipByFlags(flags, tileset->TileWidth, tileset->TileHeight);
-         for (auto i = 0; i < geometryPoints.size(); i++)
-         {
-            const auto tileLinePointA = geometryPoints[i] + tileDrawPoint;
-            const auto tileLinePointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileDrawPoint;
-
-            drawLine(tileLinePointA, tileLinePointB, COLOR_GREEN);
-         }
-      }
-   }
 }
 
 void FrameBuffer::blt()

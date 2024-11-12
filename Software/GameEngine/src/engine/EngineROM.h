@@ -175,12 +175,6 @@ struct EngineROM
    }
 
    template <typename T>
-   constexpr const T* GetReadPointerToOffset(uint32_t offset) const
-   {
-      return reinterpret_cast<const T*>(&romData[offset]);
-   }
-
-   template <typename T>
    inline std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
       static_assert(std::is_constructible_v<T, uint32_t&>, "Must be constructible from an offset");

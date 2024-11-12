@@ -121,8 +121,8 @@ void MapControl::DrawLayer(uint8_t layer) const
 
          if (!currentTile->tileId) { continue; }
 
-         const auto tileDrawX = currentMap->tileWidth * mapTileCol;
-         const auto tileDrawY = currentMap->tileHeight * mapTileRow;
+         const auto tileDrawX = uint16_t(currentMap->tileWidth * mapTileCol);
+         const auto tileDrawY = uint16_t(currentMap->tileHeight * mapTileRow);
 
          frameBuffer->DrawTileWorldCoords(currentTile->tilesetId, currentTile->tileId - 1, tileDrawX, tileDrawY, currentTile->flags);
       }
@@ -147,45 +147,82 @@ void MapControl::Draw() const
    {
       DrawLayer(LayerCount() - 1);
    }
+
+   if (frameBuffer->drawGeometry)
+   {
+      const auto startTileX = std::max(0, frameBuffer->camera.Position.x / currentMap->tileWidth);
+      const auto startTileY = std::max(0, frameBuffer->camera.Position.y / currentMap->tileHeight);
+      const auto endTileX = std::min(int{ currentMap->cols - 1 }, startTileX + DrawWidth / currentMap->tileWidth);
+      const auto endTileY = std::min(int{ currentMap->rows - 1 }, startTileY + DrawHeight / currentMap->tileHeight + 1);
+
+      for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
+      for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
+      for (auto layerIndex = 0; layerIndex < LayerCount(); layerIndex++)
+      {
+         const auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
+         const auto currentTile = &currentMap->layers[layerIndex][tileIndex];
+
+         if (!currentTile->tileId) { continue; }
+
+         const auto tileDrawX = uint16_t(currentMap->tileWidth * mapTileCol);
+         const auto tileDrawY = uint16_t(currentMap->tileHeight * mapTileRow);
+
+         const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
+         const auto geometry = tileset->GetGeometryForTile(currentTile->tileId);
+
+         const auto layerColor = layerIndex == 0 ? COLOR_CYAN
+            : layerIndex == 1 ? COLOR_PINK
+            : COLOR_RED;
+         
+         if (geometry)
+         {
+            const auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
+            for (auto i = 0; i < geometryPoints.size(); i++)
+            {
+               const auto tileLinePointAx = tileDrawX + geometryPoints[i].x;
+               const auto tileLinePointAy = tileDrawY + geometryPoints[i].y;
+               const auto tileLinePointBx = tileDrawX + geometryPoints[(i + 1) % geometryPoints.size()].x;
+               const auto tileLinePointBy = tileDrawY + geometryPoints[(i + 1) % geometryPoints.size()].y;
+               frameBuffer->DrawLineWorldCoords(tileLinePointAx, tileLinePointAy, tileLinePointBx, tileLinePointBy, layerColor);
+            }
+         }
+      }
+   }
    frameBuffer->DrawRectWorldCoords(getPlayerInteractBox());
 }
 
 std::optional<uint16_t> MapControl::Update()
 {
    auto& playerEntityData = getPlayerEntityData();
-   const auto& playerRenderableData = getPlayerRenderableData();
+   const auto& interactBox = getPlayerInteractBox();
 
-   const auto oldPosition = playerRenderableData.origin;
+   const auto oldPosition = interactBox.origin;
 
    const auto topLeft = oldPosition;
-   const auto topRight = oldPosition + EntityPoint{ playerRenderableData.hitBox.w, 0 };
-   const auto botLeft = oldPosition + EntityPoint{ 0, playerRenderableData.hitBox.h };
-   const auto botRight = oldPosition + EntityPoint{ playerRenderableData.hitBox.w, playerRenderableData.hitBox.h };
+   const auto topRight = oldPosition + EntityPoint{ interactBox.w, 0 };
+   const auto botLeft = oldPosition + EntityPoint{ 0, interactBox.h };
+   const auto botRight = oldPosition + EntityPoint{ interactBox.w, interactBox.h };
 
    std::vector<EntityPoint> hitboxPointsToCheck{};
 
-   if (playerEntityData.targetPosition.x < oldPosition.x)
+   if (playerEntityData.direction == MageEntityAnimationDirection::WEST)
    {
-      playerEntityData.SetDirection(MageEntityAnimationDirection::WEST);
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(botLeft);
    }
-   else if (playerEntityData.targetPosition.x > oldPosition.x)
+   else if (playerEntityData.direction == MageEntityAnimationDirection::EAST)
    {
-      playerEntityData.SetDirection(MageEntityAnimationDirection::EAST);
       hitboxPointsToCheck.push_back(topRight);
       hitboxPointsToCheck.push_back(botRight);
    }
 
-   if (playerEntityData.targetPosition.y < oldPosition.y)
+   if (playerEntityData.direction == MageEntityAnimationDirection::NORTH)
    {
-      playerEntityData.SetDirection(MageEntityAnimationDirection::NORTH);
       hitboxPointsToCheck.push_back(topLeft);
       hitboxPointsToCheck.push_back(topRight);
    }
-   else if (playerEntityData.targetPosition.y > oldPosition.y)
+   else if (playerEntityData.direction == MageEntityAnimationDirection::SOUTH)
    {
-      playerEntityData.SetDirection(MageEntityAnimationDirection::SOUTH);
       hitboxPointsToCheck.push_back(botLeft);
       hitboxPointsToCheck.push_back(botRight);
    }
@@ -198,13 +235,13 @@ std::optional<uint16_t> MapControl::Update()
       const auto tileId = column + currentMap->cols * row;
 
       // ignore checks that are outside the bounds of the map
-      if (tileId >= currentMap->layers[0].size()) { continue; }
+      if (tileId < 0 || tileId >= currentMap->layers[0].size()) { continue; }
 
       const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentMap->layers[0][tileId].tilesetId);
 
       // check for world collision:
       const auto tileGeometryId = currentMap->layers[0][tileId].tileId;
-      auto geometry = tileset->GetGeometryForTile(tileGeometryId);
+      const auto geometry = tileset->GetGeometryForTile(tileGeometryId);
       if (geometry && geometry->IsPointInside(hitboxPoint, tileOffsetPoint))
       {
          // TODO: bring back the intersection-offset algorithm

@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
     //morseInit();
 
     // Boot! Boot! Boot!
-    debug_print("Booted!\nCreating and started game...\n");
+    debug_print("Booted!\nCreating and starting game...\n");
 
     //auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 #else

@@ -73,7 +73,7 @@ public:
    void Update(const GameClock::time_point& curTime);
 
    [[nodiscard("Value of KeepRunning should be used to handle the main input loop")]]
-   const bool KeepRunning() const { return running; }
+   inline const bool KeepRunning() const { return running; }
 
    [[nodiscard("Value of ShouldReset should be used to trigger map/engine reload when true")]]
    inline bool ShouldReset()
@@ -104,7 +104,7 @@ public:
       return IsPressed(KeyPress::Hax);
    }
 
-   inline bool Use() const
+   inline bool Interact() const
    {
       return IsPressed(KeyPress::Rjoy_right);
    }
@@ -113,14 +113,17 @@ public:
    {
       return IsPressed(KeyPress::Ljoy_up) && !IsPressed(KeyPress::Ljoy_down);
    }
+
    inline bool Down() const
    {
       return IsPressed(KeyPress::Ljoy_down) && !IsPressed(KeyPress::Ljoy_up);
    }
+
    inline bool Left() const
    {
       return IsPressed(KeyPress::Ljoy_left) && !IsPressed(KeyPress::Ljoy_right);
    }
+
    inline bool Right() const
    {
       return IsPressed(KeyPress::Ljoy_right) && !IsPressed(KeyPress::Ljoy_left);
@@ -132,30 +135,37 @@ public:
          || IsPressed(KeyPress::Rjoy_left)
          || IsPressed(KeyPress::Rjoy_right);
    }
+
    inline bool NextDialogResponse() const
    {
       return IsPressed(KeyPress::Ljoy_up);
    }
+
    inline bool PreviousDialogResponse() const
    {
       return IsPressed(KeyPress::Ljoy_down);
    }
+
    inline bool SelectDialogResponse() const
    {
       return IsPressed(KeyPress::Rjoy_right);
    }
+
    inline bool Increment() const
    {
       return IsPressed(KeyPress::Rjoy_up) && !IsPressed(KeyPress::Rjoy_down);
    }
+
    inline bool Decrement() const
    {
       return IsPressed(KeyPress::Rjoy_down) && !IsPressed(KeyPress::Rjoy_up);
    }
+
    inline bool Running() const
    {
       return IsPressed(KeyPress::Rjoy_right);
    }   
+
    constexpr bool IsPressed(KeyPress key) const
    {
       return inputStates[key].Pressed();

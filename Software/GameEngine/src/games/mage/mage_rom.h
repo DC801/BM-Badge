@@ -1,6 +1,7 @@
 ﻿#ifndef MAGE_ROM_H_
 #define MAGE_ROM_H_
 
+#include "mage_rom.h"
 #include <stdint.h>
 #include "EngineROM.h"
 #include "EngineInput.h"
@@ -72,26 +73,10 @@ class MageEntityData;
 class MageGeometry;
 struct MageScript;
 class MageDialog;
-struct MageSerialDialog;
+class MageSerialDialog;
 class MageColorPalette;
+struct MageTileset;
 
-
-struct MageTileset
-{
-   static inline const auto TilesetNameLength = 16;
-   constexpr uint16_t TileCount() const { return Rows * Cols; }
-
-   const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const;
-
-   char     Name[TilesetNameLength]{ 0 };
-   uint16_t ImageId{ 0 };
-   uint16_t ImageWidth{ 0 };
-   uint16_t ImageHeight{ 0 };
-   uint16_t TileWidth{ 0 };
-   uint16_t TileHeight{ 0 };
-   uint16_t Cols{ 0 };
-   uint16_t Rows{ 0 };
-};
 
 
 struct AnimationDirection
@@ -140,5 +125,35 @@ typedef EngineROM<MageSaveGame,
 
 const MageROM* ROM();
 
+struct MageTileset
+{
+   static inline const auto TilesetNameLength = 16;
+   constexpr uint16_t TileCount() const { return Rows * Cols; }
+
+   const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const
+   {
+      auto geometriesPtr = (uint16_t*)((uint8_t*)&Rows + sizeof(uint16_t));
+
+      if (tileIndex >= Cols * Rows || !geometriesPtr[tileIndex]) { return nullptr; }
+      auto geometryIndex = geometriesPtr[tileIndex - 1];
+      if (geometryIndex)
+      {
+         return ROM()->GetReadPointerByIndex<MageGeometry>(geometryIndex);
+      }
+      else
+      {
+         return nullptr;
+      }
+   }
+
+   const char     Name[TilesetNameLength]{ 0 };
+   const uint16_t ImageId{ 0 };
+   const uint16_t ImageWidth{ 0 };
+   const uint16_t ImageHeight{ 0 };
+   const uint16_t TileWidth{ 0 };
+   const uint16_t TileHeight{ 0 };
+   const uint16_t Cols{ 0 };
+   const uint16_t Rows{ 0 };
+};
 #endif
    

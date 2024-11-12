@@ -1667,13 +1667,13 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
       uint8_t paddingF;
       uint8_t paddingG;
    } ActionPanCameraToEntity;
-   auto argStruct = (ActionPanCameraToEntity*)args;
+   const auto argStruct = (ActionPanCameraToEntity*)args;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER_INDEX)
    {
-      auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
-      auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
+      const auto& entity = mapControl->Get<MageEntityData>(sourceEntityIndex);
+      const auto& renderableData = mapControl->getRenderableDataByMapLocalId(sourceEntityIndex);
 
       if (resumeState.totalLoopsToNextAction == 0)
       {
@@ -1682,13 +1682,12 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_entity(const uint8_t* a
          // TODO: subtract the tile corner's offset so that geometry is c
          //resumeState.geometry.pointA = frameBuffer->camera.Position;
       }
-      auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
+      const auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
       resumeState.geometry.pointB = { (uint16_t)(renderableData.center().x - DrawWidth / 2), (uint16_t)(renderableData.center().y - DrawHeight / 2) };
-      auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
-      frameBuffer->camera.Position.x = betweenPoint.x;
-      frameBuffer->camera.Position.y = betweenPoint.y;
+      const auto betweenPoint = resumeState.geometry.pointA.lerp(resumeState.geometry.pointB, progress);
+      frameBuffer->camera.Position = { betweenPoint.x, betweenPoint.y };
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
@@ -1716,7 +1715,7 @@ std::optional<uint16_t> MageScriptActions::pan_camera_to_geometry(const uint8_t*
       frameBuffer->camera.ClearFollowEntity();
       //this is the points we're interpolating between
       resumeState.geometry.pointA = frameBuffer->camera.Position;
-      resumeState.geometry.pointB = geometry->GetPoint(0) - (uint16_t)(DrawWidth / 2);
+      resumeState.geometry.pointB = geometry->GetPoint(0) - MidScreen;
    }
    auto progress = manageProgressOfAction(resumeState, argStruct->durationMs);
 
@@ -1767,13 +1766,11 @@ std::optional<uint16_t> MageScriptActions::set_screen_shake(const uint8_t* args,
 
    if (progress < 1.0f)
    {
-      frameBuffer->camera.shaking = true;
       frameBuffer->camera.shakeAmplitude = argStruct->amplitude;
       frameBuffer->camera.shakePhase = (progress * (float)argStruct->frequency) / 1000.0f;
    }
    else
    {
-      frameBuffer->camera.shaking = false;
       frameBuffer->camera.shakeAmplitude = 0;
       frameBuffer->camera.shakePhase = 0;
    }

@@ -2,11 +2,13 @@
 #define _MAGE_ENTITY_H
 
 #include "mage_geometry.h"
-#include "FrameBuffer.h"
 #include <stdint.h>
 #include <vector>
 #include <memory>
 #include <variant>
+
+// forward declaration
+class FrameBuffer;
 
 //this contains the possible options for an entity PrimaryIdType value.
 enum class MageEntityPrimaryIdType : uint8_t

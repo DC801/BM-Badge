@@ -156,9 +156,10 @@ public:
 
    inline EntityRect getPlayerInteractBox() const
    {
-      const auto playerRenderableData = getPlayerRenderableData();
+      const auto& playerRenderableData = getPlayerRenderableData();
       static const uint16_t interactLength = playerRenderableData.hitBox.h / 2 + playerRenderableData.hitBox.w / 2;
-      const auto playerDirection = getPlayerEntityData()->direction;
+      const auto& playerDirection = getPlayerEntityData()->direction;
+      //return playerRenderableData.hitBox;
       return EntityRect{
             {
                uint16_t{
@@ -224,7 +225,7 @@ public:
    {
       std::string result = "";
       for (auto& dir : currentMap->goDirections)
-      {
+      { 
          result += "\t";
          result += dir.name;
       }
@@ -324,7 +325,6 @@ private:
    EntityData entities{ entityDataArray, renderableDataArray, onTickScriptsArray, onInteractScriptsArray, onLookScriptsArray };
 
    std::vector<const MageScript*> scripts{};
-   bool playerIsMoving{ false };
 
 }; //class MapControl
 

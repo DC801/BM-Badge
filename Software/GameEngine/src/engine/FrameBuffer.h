@@ -50,6 +50,7 @@ inline static const auto COLOR_BSOD = 0xDA03;
 class FrameBuffer
 {
 public:
+   MageCamera camera{};
    FrameBuffer(std::unique_ptr<DesktopWindowOutput> windowFrame) noexcept
       : windowFrame(std::move(windowFrame))
    {}
@@ -76,13 +77,10 @@ public:
    {
       const auto drawX = tileDrawX - camera.Position.x;
       const auto drawY = tileDrawY - camera.Position.y;
-      drawTile(tilesetId, tileId, drawX, drawY, flags);
+      DrawTileScreenCoords(tilesetId, tileId, drawX, drawY, flags);
    }
 
-   inline void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
-   {
-      drawTile(tilesetId, tileId, tileDrawX, tileDrawY, flags);
-   }
+   void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 });
 
    void ClearScreen(uint16_t color);
    inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
@@ -102,13 +100,31 @@ public:
 
       frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
    }
+   void DrawLineScreenCoords(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 
-   inline void drawLine(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
+   void DrawLineWorldCoords(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
    {
-      drawLine(p1.x, p1.y, p2.x, p2.y, color);
-   }
+      const auto p1x = x1 - camera.Position.x;
+      const auto p1y = y1 - camera.Position.y;
+      const auto p2x = x2 - camera.Position.x;
+      const auto p2y = y2 - camera.Position.y;
 
-   void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
+      // skip lines entirely offscreen
+      if (p1x < 0 && p2x < 0
+         || p1y < 0 && p2y < 0
+         || p1x >= DrawWidth && p2x >= DrawWidth
+         || p1y >= DrawHeight && p2y >= DrawHeight)
+      {
+         return;
+      }
+
+      DrawLineScreenCoords(std::clamp(p1x, 0, DrawWidth), std::clamp(p1y, 0, DrawHeight), std::clamp(p2x, 0, DrawWidth), std::clamp(p2y, 0, DrawHeight), color);
+   }
+   
+   void DrawLineWorldCoords(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
+   {
+      DrawLineWorldCoords(p1.x, p1.y, p2.x, p2.y, color);
+   }
 
    inline void DrawFilledRect(const EntityPoint& p, int w, int h, uint16_t color)
    {
@@ -126,10 +142,9 @@ public:
       return frame.data();
    }
 
-   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
+   constexpr void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
 
-   MageCamera camera{};
-
+   bool drawGeometry{ true };
 private:
 
 #ifndef DC801_EMBEDDED
@@ -139,26 +154,24 @@ private:
 
    inline void drawRect(const EntityRect& r, uint16_t color)
    {
-      auto x = r.origin.x;
-      auto y = r.origin.y;
+      const auto x = r.origin.x;
+      const auto y = r.origin.y;
       // top
-      drawLine(x, y, x + r.w, y, color);
+      DrawLineScreenCoords(x, y, x + r.w, y, color);
       // left
-      drawLine(x, y, x, y + r.h, color);
+      DrawLineScreenCoords(x, y, x, y + r.h, color);
       // right
-      drawLine(x + r.w, y, x + r.w, y + r.h, color);
+      DrawLineScreenCoords(x + r.w, y, x + r.w, y + r.h, color);
       // bottom
-      drawLine(x, y + r.h, x + r.w, y + r.h, color);
+      DrawLineScreenCoords(x, y + r.h, x + r.w, y + r.h, color);
    }
-   bool drawGeometry{ false };
 
    //variables used for screen fading
    float fadeFraction{ 0.0f };
    bool isFading{ false };
    uint16_t fadeColor{ 0 };
 
-   void drawTile(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags);
-   void write_char(uint8_t c, GFXfont font);
+   void write_char(uint8_t c, GFXfont font, uint16_t color = COLOR_WHITE);
    void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, GFXfont font);
 };
 

@@ -56,14 +56,20 @@ void MageGameEngine::Run()
          frameBuffer->ToggleDrawGeometry();
       }
 
+      auto updateAccumulator = inputHandler->lastDelta;
+      // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
+      while (updateAccumulator >= IntegrationStepSize)
+      {
+         gameLoopIteration();
+         updateAccumulator -= IntegrationStepSize;
+      }
+
       while (GameClock::now() - loopStart < MinTimeBetweenRenders)
       {
          std::this_thread::sleep_for(GameClock::duration{ 1 });
          continue;
       }
 
-      gameLoopIteration();
-      
       frameBuffer->ClearScreen(COLOR_BLACK);
       mapControl->Draw();
       hexEditor->Draw();
@@ -86,8 +92,6 @@ void MageGameEngine::Run()
 
 void MageGameEngine::gameLoopIteration()
 {
-   auto updateAccumulator = inputHandler->lastDelta;
-
    // methods that should only happen once per frame:
    if (!hexEditor->isHexEditorOn())
    {
@@ -96,48 +100,43 @@ void MageGameEngine::gameLoopIteration()
 
    commandControl->sendBufferedOutput();
 
-   // step forward in IntegrationStepSize increments until MinTimeBetweenRenders has passed
-   while (updateAccumulator >= IntegrationStepSize)
+   inputHandler->Update(GameClock::now());
+   // if the map is about to change, don't bother updating entities since they're about to be reloaded
+   if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
+
+   applyGameModeInputs();
+
+   // always apply camera effects before any other updates that rely on camera data
+   frameBuffer->camera.Update();
+
+   auto dialogScriptId = dialogControl->Update();
+   if (dialogScriptId != MAGE_NO_SCRIPT)
    {
-      // if the map is about to change, don't bother updating entities since they're about to be reloaded
-      if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
-
-      applyGameModeInputs();
-
-      // always apply camera effects before any other updates that rely on camera data
-      frameBuffer->camera.Update();
-
-      auto dialogScriptId = dialogControl->Update();
-      if (dialogScriptId != MAGE_NO_SCRIPT)
-      {
-         const auto dialogScript = ROM()->GetReadPointerByIndex<MageScript>(dialogScriptId.value());
-         auto dialogScriptState = MageScriptState{ dialogScriptId.value(), dialogScript };
-         dialogScriptState.scriptIsRunning = true;
-         scriptControl->processScript(dialogScriptState, MAGE_MAP_ENTITY);
-         return;
-      }
-      hexEditor->Update();
-
-      // always update entities last to accumulate all previous changes that may affect their hackable data
-      auto entityInteractId = mapControl->Update();
-      if (entityInteractId.has_value())
-      {
-         if (inputHandler->Hack() && hexEditor->playerHasHexEditorControl)
-         {
-            hexEditor->openToEntity(*entityInteractId);
-         }
-         else if (inputHandler->Use())
-         {
-            const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
-            auto& scriptState = mapControl->Get<OnInteractScript>(scriptId);
-            scriptState.script = mapControl->scripts[scriptId];
-            scriptState.scriptIsRunning = true;
-            scriptControl->processScript(scriptState, *entityInteractId);
-         }
-      }
-      updateAccumulator -= IntegrationStepSize;
+      const auto dialogScript = ROM()->GetReadPointerByIndex<MageScript>(dialogScriptId.value());
+      auto dialogScriptState = MageScriptState{ dialogScriptId.value(), dialogScript };
+      dialogScriptState.scriptIsRunning = true;
+      scriptControl->processScript(dialogScriptState, MAGE_MAP_ENTITY);
+      return;
    }
+   hexEditor->Update();
 
+   // always update entities last to accumulate all previous changes that may affect their hackable data
+   auto entityInteractId = mapControl->Update();
+   if (entityInteractId.has_value())
+   {
+      if (inputHandler->Hack() && hexEditor->playerHasHexEditorControl)
+      {
+         hexEditor->openToEntity(*entityInteractId);
+      }
+      else if (inputHandler->Interact())
+      {
+         const auto scriptId = mapControl->Get<MageEntityData>(*entityInteractId).onInteractScriptId;
+         auto& scriptState = mapControl->Get<OnInteractScript>(scriptId);
+         scriptState.script = mapControl->scripts[scriptId];
+         scriptState.scriptIsRunning = true;
+         scriptControl->processScript(scriptState, *entityInteractId);
+      }
+   }
 }
 
 void MageGameEngine::LoadMap()
@@ -167,7 +166,6 @@ void MageGameEngine::LoadMap()
 
 void MageGameEngine::applyGameModeInputs()
 {
-   auto& playerEntityData = mapControl->getPlayerEntityData();
    const auto moveAmount = inputHandler->IsPressed(KeyPress::Rjoy_down) ? RunSpeed : WalkSpeed;
 
    if (!playerHasControl)
@@ -175,24 +173,30 @@ void MageGameEngine::applyGameModeInputs()
       return;
    }
 
+   auto& playerEntityData = mapControl->getPlayerEntityData();
+   auto& playerRenderableData = mapControl->getPlayerRenderableData();
+
+   const auto playerEntityType = ROM()->GetReadPointerByIndex<MageEntityType>(static_cast<uint16_t>(playerEntityData.primaryIdType));
+
    if (playerEntityData.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(static_cast<uint16_t>(playerEntityData.primaryIdType));
-
       // position updates while player is actioning cause loss of collision data
       if (playerHasControl && !inputHandler->PlayerIsActioning())
       {
          const auto playerXInt = static_cast<int>(playerEntityData.targetPosition.x);
          const auto playerYInt = static_cast<int>(playerEntityData.targetPosition.y);
+
          // clip player to [0,max(uint16_t)]
          if (inputHandler->Left())
          {
+            playerEntityData.SetDirection(MageEntityAnimationDirection::WEST);
             playerEntityData.targetPosition.x = playerXInt - moveAmount < 0
                ? 0
                : playerXInt - moveAmount;
          }
          else if (inputHandler->Right())
          {
+            playerEntityData.SetDirection(MageEntityAnimationDirection::EAST);
             playerEntityData.targetPosition.x = playerXInt + moveAmount > std::numeric_limits<uint16_t>::max()
                ? std::numeric_limits<uint16_t>::max()
                : playerXInt + moveAmount;
@@ -200,38 +204,42 @@ void MageGameEngine::applyGameModeInputs()
 
          if (inputHandler->Up())
          {
+            playerEntityData.SetDirection(MageEntityAnimationDirection::NORTH);
             playerEntityData.targetPosition.y = playerYInt - moveAmount < 0
                ? 0
                : playerYInt - moveAmount;
          }
          else if (inputHandler->Down())
          {
+            playerEntityData.SetDirection(MageEntityAnimationDirection::SOUTH);
             playerEntityData.targetPosition.y = playerYInt + moveAmount > std::numeric_limits<uint16_t>::max()
                ? std::numeric_limits<uint16_t>::max()
                : playerYInt + moveAmount;
          }
-      }
 
-      auto& playerRenderableData = mapControl->getPlayerRenderableData();
-      playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
-
-      if (inputHandler->PlayerIsActioning()
-         && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
-      {
-         playerRenderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
-      }
-      else if (mapControl->playerIsMoving
-         && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
-      {
-         playerRenderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+         const auto playerIsMoving = inputHandler->Right() != inputHandler->Left() || inputHandler->Up() != inputHandler->Down();
+         if (playerIsMoving && playerEntityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
+         {
+            playerRenderableData.SetAnimation(MAGE_WALK_ANIMATION_INDEX);
+         }
+         else if (inputHandler->PlayerIsActioning()
+            && playerEntityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
+         {
+            playerRenderableData.SetAnimation(MAGE_ACTION_ANIMATION_INDEX);
+         }
+         else
+         {
+            playerRenderableData.SetAnimation(MAGE_IDLE_ANIMATION_INDEX);
+         }
       }
    }
+
    if (!hexEditor->playerHasHexEditorControl)
    {
       return;
    }
 
-   //opening the hex editor is the only button press that will lag actual gameplay by one frame
+   //opening the hex editor will delay by one frame
    //this is to allow entity scripts to check the hex editor state before it opens to run scripts
    if (inputHandler->Hack())
    {

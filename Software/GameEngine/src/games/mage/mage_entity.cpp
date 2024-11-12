@@ -1,5 +1,7 @@
+#include "mage_defines.h"
 #include "mage_entity.h"
 #include "mage_rom.h"
+#include "FrameBuffer.h"
 
 void RenderableData::UpdateFrom(const MageEntityData& entity)
 {
@@ -20,7 +22,7 @@ void RenderableData::UpdateFrom(const MageEntityData& entity)
    origin.x = entity.targetPosition.x;
    origin.y = entity.targetPosition.y - tileset->TileHeight;
    hitBox.origin.x = entity.targetPosition.x + halfWidth / 2;
-   hitBox.origin.y = entity.targetPosition.y + halfHeight / 2;
+   hitBox.origin.y = entity.targetPosition.y - tileset->TileHeight + halfHeight / 2;
    hitBox.w = halfWidth;
    hitBox.h = halfHeight;
 

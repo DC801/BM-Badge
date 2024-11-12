@@ -175,13 +175,6 @@ struct Vector2T
 
 using EntityPoint = Vector2T<uint16_t>;
 
-
-//struct Line
-//{
-//	Vector2T A;
-//	Vector2T B;
-//};
-
 template <class T>
 struct RectT
 {
@@ -204,7 +197,6 @@ struct RectT
    }
 };
 
-using Rect = RectT<int>;
 using EntityRect = RectT<uint16_t>;
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
@@ -259,16 +251,8 @@ public:
       return minX < 0 && minY < 0 && maxX > 0 && maxY > 0;
    }
 
-   std::span<Vector2T<int32_t>> GetPoints() const
-   {
-      return std::span<Vector2T<int32_t>>{(Vector2T<int32_t>*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount};
-   }
-
-   Vector2T<int32_t> GetPoint(uint16_t i) const
-   {
-      auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
-      return Vector2T<int32_t>{ points[2 * i], points[2 * i + 1] };
-   }
+   const std::span<EntityPoint> GetPoints() const { return points(); }
+   const EntityPoint GetPoint(uint16_t i) const { return pointCount > 0 ? points()[i % pointCount] : EntityPoint{}; }
    uint16_t GetPointCount() const { return pointCount; }
 
    MageGeometryType GetTypeId() const { return typeId; }
@@ -287,7 +271,7 @@ private:
    uint8_t segmentCount{ 0 };
    //total length of all segments in the geometry
    float pathLength{ 0.0f };
-
+   std::span<EntityPoint> points() const { return std::span{ (EntityPoint*)((uint8_t*)&pathLength + sizeof(pathLength)), pointCount }; }
 };
 
 #endif //_MAGE_GEOMETRY_H

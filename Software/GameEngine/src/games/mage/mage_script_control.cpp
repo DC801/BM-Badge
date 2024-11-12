@@ -39,7 +39,7 @@ void MageScriptControl::processScriptActions(MageScriptState& scriptState, uint8
    // iterate through script actions, calling the appropriate functions
    while (scriptState.scriptIsRunning && scriptState.currentAction < scriptState.script->actionCount)
    {
-      auto action = scriptState.script->GetAction(scriptState.currentAction);
+      const auto action = scriptState.script->GetAction(scriptState.currentAction);
 
       //validate actionTypeId:
       if (!action || action->TypeId >= NUM_SCRIPT_ACTIONS)

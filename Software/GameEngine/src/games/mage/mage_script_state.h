@@ -17,33 +17,35 @@ static const inline auto NUM_SCRIPT_TYPES = 5;
 
 struct ResumeGeometry
 {
-   Vector2T<int32_t> pointA{ 0,0 };
-   Vector2T<int32_t> pointB{ 0,0 };
+   EntityPoint pointA{ 0,0 };
+   EntityPoint pointB{ 0,0 };
    float length{ 0.0f };
    float lengthOfPreviousSegments{ 0.0f };
    uint8_t currentSegmentIndex{ 0 };
 };
 
-struct ScriptAction
-{
-   const uint8_t TypeId{ 0 };
-   const uint8_t Args[MAGE_NUM_ACTION_ARGS]{ 0 };
-};
 
 struct MageScript
 {
    const char name[32];
    const uint32_t actionCount;
 
-   const ScriptAction* GetAction(uint16_t currentAction) const
+
+   struct Action
    {
-      if (currentAction >= actionCount)
+      const uint8_t TypeId{ 0 };
+      const uint8_t Args[MAGE_NUM_ACTION_ARGS]{ 0 };
+   };
+
+   const Action* GetAction(uint16_t actionId) const
+   {
+      if (actionId >= actionCount)
       {
          return nullptr;
       }
 
       auto actionPointer = (const char*)&actionCount + sizeof(uint32_t);
-      return (const ScriptAction*)(actionPointer + currentAction * sizeof(ScriptAction));
+      return (const Action*)(actionPointer + actionId * sizeof(Action));
    }
 };
 
