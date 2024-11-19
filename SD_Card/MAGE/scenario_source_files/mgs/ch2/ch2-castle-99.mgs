@@ -338,7 +338,7 @@ ch2-cutscene-castle99-continue {
 	wait 100ms;
 	show dialog {
 		Lambda "Put that in the mainframe's optical drive, and we can get the new OS installed."
-		"Head on back to the XA room. The Wizard can help you set it all up."
+		"Head on back to the castle entrance. The Wizard can help you set it all up."
 		PLAYER "You're not going to come with me?"
 	}
 	wait 150ms;
@@ -395,7 +395,7 @@ interact-ch2-lambda-drawer {
 }
 interact-ch2-lambda-computer {
 	show dialog {
-		PLAYER "(That looks a lot like the mainframe in the XA room.)"
+		PLAYER "(That looks a lot like the mainframe in the castle entrance.)"
 	}
 }
 interact-ch2-lambda-ration {

@@ -57,7 +57,7 @@ return-to-watchspot-bert {
 show_dialog-bert-start {
 	if (entity "%SELF%" is glitched) {
 		show dialog { SELF "...." "Bczv um jiks." }
-		set entity "%SELF%" on_interact to show_dialog-bert-start;
+		return;
 	}
 	copy face-player;
 	show dialog { SELF "Who needs help?" }

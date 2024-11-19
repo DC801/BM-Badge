@@ -83,7 +83,7 @@ goosefacts {
             }
         } else if (variable goosefact is 17) {
             show serial dialog {
-                "Did you know? <bold>Geese have been domesticated for thousands of <bold>years!</> Geese have been domesticated for at least 3,000 years there are references to geese in ancient Egyptian hieroglyphics."
+                "Did you know? <bold>Geese have been domesticated for thousands of <bold>years!</> Geese have been domesticated for at least 3,000 years. There are references to geese in ancient Egyptian hieroglyphics."
             }
         } else if (variable goosefact is 18) {
             show serial dialog {

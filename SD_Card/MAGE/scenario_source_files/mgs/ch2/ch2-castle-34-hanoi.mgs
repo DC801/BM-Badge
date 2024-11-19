@@ -441,7 +441,9 @@ hanoi_unregister {
 	unregister "RESET";
 	unregister "Q";
 	unregister "QUIT";
-	unregister "WIN";
+	if (debug mode is on) {
+		unregister "WIN";
+	}
 }
 
 hanoi_quit {
@@ -518,7 +520,9 @@ hanoi_init_game {
 	register "RESET" -> hanoi_reset;
 	register "Q" -> hanoi_quit_from_terminal;
 	register "QUIT" -> hanoi_quit_from_terminal;
-	register "WIN" -> hanoi_win;
+	if (debug mode is on) {
+		register "WIN" -> hanoi_win;
+	}
 	// debug!("hanoi_init_game")
 	turn light LED_USB on;
 	set entity Lights on_tick to null_script;

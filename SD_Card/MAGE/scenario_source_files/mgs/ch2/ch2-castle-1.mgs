@@ -712,6 +712,7 @@ ch2-install-wizard2 {
 	if (debug mode is off) {
 		// show serial dialog {"turn hex control on;"}
 		turn hex control on;
+		turn lights control off;
 	} else {
 		// show serial dialog {"debug mode is on; no need to enable hex control;"}
 	}
