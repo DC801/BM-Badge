@@ -55,14 +55,16 @@ void FrameBuffer::DrawFilledRect(int x, int y, int w, int h, uint16_t color)
 #endif
 }
 
-void FrameBuffer::DrawLineScreenCoords(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
+void FrameBuffer::DrawLineScreenCoords(int x1, int y1, int x2, int y2, uint16_t color)
 {
-   if ((x1 >= DrawWidth && x2 >= DrawWidth)
-      || (y1 >= DrawHeight && y2 >= DrawHeight)) 
+   // skip lines entirely offscreen
+   if ( x1 < 0 && x2 < 0 || x1 >= DrawWidth && x2 >= DrawWidth
+      || y1 < 0 && y2 < 0 || y1 >= DrawHeight && y2 >= DrawHeight)
    {
       return;
    }
 
+   // always plot from left to right
    if (x2 < x1)
    {
       std::swap(x1, x2);
@@ -86,35 +88,34 @@ void FrameBuffer::DrawLineScreenCoords(uint16_t x1, uint16_t y1, uint16_t x2, ui
          setPixel(x1, y1, color);
       }
    }
-   // Bresenham’s Line Generation Algorithm
-   // with ability to draw downwards
    else
    {
-      auto drawDownward = false;
-      if (y2 < y1)
-      {
-         std::swap(y1, y2);
-         drawDownward = true;
-      }
+      const auto dx = std::abs(x2 - x1);
+      const auto sx = 1;
+      const auto dy = -std::abs(y2 - y1);
+      const auto sy = y1 < y2 ? 1 : -1;
+      auto error = dx + dy;
 
-      auto dx = x2 - x1;
-      auto dy = y2 - y1;
-      for (int p = 2 * dy - dx; x1 < x2; x1++)
+      while (true)
       {
-         if (p >= 0)
+         setPixel(x1, y1, color);
+         if (x1 == x2 && y1 == y2)
          {
-            auto y = drawDownward ? DrawHeight - y1 : y1;
-            setPixel(x1, y, color);
-            y1++;
-            p = p + 2 * dy - 2 * dx;
+            break;
          }
-         else
+
+         const auto twiceError = 2 * error;
+         if (twiceError >= dy)
          {
-            auto y = drawDownward ? DrawHeight - y1 : y1;
-            setPixel(x1, y, color);
-            p = p + 2 * dy;
+            error = error + dy;
+            x1 = x1 + sx;
          }
-      }
+         if (twiceError <= dx)
+         {
+            error = error + dx;
+            y1 = y1 + sy;
+         }
+      } 
    }
 }
 

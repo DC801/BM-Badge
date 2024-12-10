@@ -16,17 +16,17 @@
 
 void MageHexEditor::Update()
 {
+   if (!hexEditorOn || !playerHasHexEditorControl || disableMovement)
+   {
+      return;
+   }
+
    applyMemRecallInputs();
 
    currentOp = inputHandler->IsPressed(KeyPress::Xor) ? HexOperation::XOR
       : inputHandler->IsPressed(KeyPress::Add) ? HexOperation::ADD
       : inputHandler->IsPressed(KeyPress::Sub) ? HexOperation::SUB
       : currentOp;
-
-   if (!hexEditorOn || !playerHasHexEditorControl || disableMovement)
-   {
-      return;
-   }
 
    const auto hexOpValue = static_cast<uint8_t>(
       (inputHandler->IsPressed(KeyPress::Bit128) ? 0b10000000 : 0) |
@@ -36,8 +36,7 @@ void MageHexEditor::Update()
       (inputHandler->IsPressed(KeyPress::Bit8) ? 0b00001000 : 0) |
       (inputHandler->IsPressed(KeyPress::Bit4) ? 0b00000100 : 0) |
       (inputHandler->IsPressed(KeyPress::Bit2) ? 0b00000010 : 0) |
-      (inputHandler->IsPressed(KeyPress::Bit1) ? 0b00000001 : 0)
-      );
+      (inputHandler->IsPressed(KeyPress::Bit1) ? 0b00000001 : 0));
 
    uint8_t* currentByte = mapControl->GetEntityDataPointer() + hexCursorOffset;
    switch (currentOp)
@@ -47,8 +46,8 @@ void MageHexEditor::Update()
    case HexOperation::SUB:  *currentByte -= hexOpValue; break;
    }
 
-   anyHexMovement = inputHandler->Left() || inputHandler->Right() || inputHandler->Up() || inputHandler->Down()
-      || inputHandler->Increment() || inputHandler->Decrement();
+   //anyHexMovement = inputHandler->Left() || inputHandler->Right() || inputHandler->Up() || inputHandler->Down()
+   //   || inputHandler->Increment() || inputHandler->Decrement();
 
    static auto lastPageButtonPressTime = GameClock::now();
    if (inputHandler->IsPressed(KeyPress::Page))
@@ -156,7 +155,6 @@ void MageHexEditor::Update()
          }
       }
    }
-   if (anyHexMovement) {}
 
    bytesPerPage = dialogState ? 64 : 192;
    hexRows = ceil(float(bytesPerPage) / float(HEXED_BYTES_PER_ROW));
@@ -189,21 +187,21 @@ void MageHexEditor::renderHexHeader()
    const auto currentByteAddress = entityDataPointer + hexCursorOffset;
    const auto u1Value = *currentByteAddress;
    const auto u2Value = *(uint16_t*)((currentByteAddress - (hexCursorOffset % 2)));
-   sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
+   sprintf(headerString, 
+      "CurrentPage: %03u  CurrentByte: 0x%04X\n"
+      "TotalPages:  %03u  Entities: %05zu  Mem: 0x%04X",
       currentMemPage, hexCursorOffset, totalMemPages, mapControl->currentMap.value().entityCount, memTotal);
 
    frameBuffer->DrawText(headerString, 0xffff, HEXED_BYTE_OFFSET_X, 0);
    auto stringPreview = std::string{ entityDataPointer + hexCursorOffset,
                                      entityDataPointer + hexCursorOffset + MAGE_ENTITY_NAME_LENGTH };
 
-   sprintf(
-      headerString,
+   sprintf(headerString,
       "Little Endian | uint8: %03d  | uint16: %05d\n"
       "string output: %s",
       u1Value,
       u2Value,
-      stringPreview.c_str()
-   );
+      stringPreview.c_str());
 
    if (playerHasClipboardControl)
    {

@@ -109,9 +109,6 @@ private:
 	//tells the game if the hex editor should be visible or not.
 	bool hexEditorOn{ false };
 
-	//true if there has been any button presses that change the cursor position.
-	bool anyHexMovement{ false };
-
 	//delays all hex input until the specified time point
 	GameClock::time_point nextHexUpdate{ GameClock::now() };
 

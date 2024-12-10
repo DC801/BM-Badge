@@ -96,7 +96,8 @@ void DesktopWindowOutput::DrawLEDStates() const
       const auto& LEDPoint = LEDDestPoints[i];
       const auto LEDTargetRect = SDL_Rect{ LEDPoint.x - LEDHalf.x, LEDPoint.y - LEDHalf.y, 16, 8 };
       //SDL_SetTextureAlphaMod(components.frameLEDTexture, 255);
-      SDL_RenderCopy(components.renderer, components.frameLEDTexture, led_states[i] ? &LEDOnSrcRect : &LEDOffSrcRect, &LEDTargetRect);
+      const auto ledSrcRect = led_states[i] ? &LEDOnSrcRect : &LEDOffSrcRect;
+      SDL_RenderCopy(components.renderer, components.frameLEDTexture, ledSrcRect, &LEDTargetRect);
    }
 }
 

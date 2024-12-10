@@ -210,7 +210,7 @@ enum class MageGeometryType : uint8_t
 class MageGeometry
 {
 public:
-   std::vector<EntityPoint> FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
+   std::vector<EntityPoint> FlipByFlags(uint8_t flags, int16_t width, int16_t height) const;
 
    static std::optional<EntityPoint> getIntersectPointBetweenLineSegments(const EntityPoint& lineAPointA, const EntityPoint& lineAPointB, const EntityPoint& lineBPointA, const EntityPoint& lineBPointB);
 

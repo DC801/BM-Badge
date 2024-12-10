@@ -72,6 +72,25 @@ public:
    {
       drawRect(rect, color);
    }
+   void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 });
+
+   void ClearScreen(uint16_t color);
+   void DrawLineScreenCoords(int x1, int y1, int x2, int y2, uint16_t color);
+
+   inline void DrawLineWorldCoords(int x1, int y1, int x2, int y2, uint16_t color)
+   {
+      const auto p1x = x1 - camera.Position.x;
+      const auto p1y = y1 - camera.Position.y;
+      const auto p2x = x2 - camera.Position.x;
+      const auto p2y = y2 - camera.Position.y;
+
+      DrawLineScreenCoords(p1x, p1y, p2x, p2y, color);
+   }
+   
+   inline void DrawLineWorldCoords(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
+   {
+      DrawLineWorldCoords(p1.x, p1.y, p2.x, p2.y, color);
+   }
 
    inline void DrawTileWorldCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 })
    {
@@ -80,9 +99,28 @@ public:
       DrawTileScreenCoords(tilesetId, tileId, drawX, drawY, flags);
    }
 
-   void DrawTileScreenCoords(uint16_t tilesetId, uint16_t tileId, int32_t tileDrawX, int32_t tileDrawY, uint8_t flags = uint8_t{ 0 });
 
-   void ClearScreen(uint16_t color);
+   inline void DrawFilledRect(const EntityPoint& p, int w, int h, uint16_t color)
+   {
+      DrawFilledRect(p.x, p.y, w, h, color);
+   }
+
+   void DrawFilledRect(int x, int y, int w, int h, uint16_t color);
+
+
+   void DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground = false, GFXfont font = Monaco9);
+
+   void blt();
+
+   constexpr void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
+
+   bool drawGeometry{ true };
+private:
+#ifndef DC801_EMBEDDED
+   std::unique_ptr<DesktopWindowOutput> windowFrame;
+#endif
+   std::array<uint16_t, FramebufferSize> frame{};
+
    inline void setPixel(uint16_t x, uint16_t y, uint16_t color)
    {
       if (x >= DrawWidth
@@ -100,57 +138,6 @@ public:
 
       frame[y * DrawWidth + x] = (color >> 8) | (color << 8);
    }
-   void DrawLineScreenCoords(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
-
-   void DrawLineWorldCoords(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
-   {
-      const auto p1x = x1 - camera.Position.x;
-      const auto p1y = y1 - camera.Position.y;
-      const auto p2x = x2 - camera.Position.x;
-      const auto p2y = y2 - camera.Position.y;
-
-      // skip lines entirely offscreen
-      if (p1x < 0 && p2x < 0
-         || p1y < 0 && p2y < 0
-         || p1x >= DrawWidth && p2x >= DrawWidth
-         || p1y >= DrawHeight && p2y >= DrawHeight)
-      {
-         return;
-      }
-
-      DrawLineScreenCoords(std::clamp(p1x, 0, DrawWidth), std::clamp(p1y, 0, DrawHeight), std::clamp(p2x, 0, DrawWidth), std::clamp(p2y, 0, DrawHeight), color);
-   }
-   
-   void DrawLineWorldCoords(const EntityPoint& p1, const EntityPoint& p2, uint16_t color)
-   {
-      DrawLineWorldCoords(p1.x, p1.y, p2.x, p2.y, color);
-   }
-
-   inline void DrawFilledRect(const EntityPoint& p, int w, int h, uint16_t color)
-   {
-      DrawFilledRect(p.x, p.y, w, h, color);
-   }
-
-   void DrawFilledRect(int x, int y, int w, int h, uint16_t color);
-
-
-   void DrawText(const std::string_view& text, uint16_t color, uint16_t screenX, uint16_t screenY, bool clearBackground = false, GFXfont font = Monaco9);
-
-   void blt();
-   constexpr uint16_t* getFrameDataPtr()
-   {
-      return frame.data();
-   }
-
-   constexpr void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
-
-   bool drawGeometry{ true };
-private:
-
-#ifndef DC801_EMBEDDED
-   std::unique_ptr<DesktopWindowOutput> windowFrame;
-   std::array<uint16_t, FramebufferSize> frame{};
-#endif
 
    inline void drawRect(const EntityRect& r, uint16_t color)
    {

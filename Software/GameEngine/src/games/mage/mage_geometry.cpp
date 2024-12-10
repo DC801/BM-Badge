@@ -8,30 +8,28 @@
 #include <nrf_error.h>
 #endif
 
-std::vector<EntityPoint> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
+std::vector<EntityPoint> MageGeometry::FlipByFlags(uint8_t flags, int16_t width, int16_t height) const
 {
    auto points = std::vector<EntityPoint>{ pointCount };
 
    for (uint8_t i = 0; i < pointCount; i++)
    {
-      auto point = GetPoint(i);
-      
+      points[i] = GetPoint(i);
+
       if (flags & RENDER_FLAGS_FLIP_X)
       {
-         points[i].x = width - point.x;
+         points[i].x = width - points[i].x;
       }
       if (flags & RENDER_FLAGS_FLIP_Y)
       {
-         points[i].y = height - point.y;
+         points[i].y = height - points[i].y;
       }
       if (flags & RENDER_FLAGS_FLIP_DIAG)
       {
-         auto xTemp = point.x;
-         points[i].x = point.y;
+         auto xTemp = points[i].x;
+         points[i].x = points[i].y;
          points[i].y = xTemp;
       }
-
-      points[i] = point;
    }
    return points;
 }

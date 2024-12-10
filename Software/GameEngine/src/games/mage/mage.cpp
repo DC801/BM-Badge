@@ -245,5 +245,4 @@ void MageGameEngine::applyGameModeInputs()
    {
       hexEditor->setHexEditorOn(true);
    }
-   hexEditor->applyMemRecallInputs();
 }

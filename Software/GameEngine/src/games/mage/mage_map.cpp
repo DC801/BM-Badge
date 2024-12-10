@@ -164,31 +164,33 @@ void MapControl::Draw() const
 
          if (!currentTile->tileId) { continue; }
 
-         const auto tileDrawX = uint16_t(currentMap->tileWidth * mapTileCol);
-         const auto tileDrawY = uint16_t(currentMap->tileHeight * mapTileRow);
+         const auto tileDrawPoint = EntityPoint{ 
+            uint16_t(currentMap->tileWidth * mapTileCol), 
+            uint16_t(currentMap->tileHeight * mapTileRow) 
+         };
 
          const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
          const auto geometry = tileset->GetGeometryForTile(currentTile->tileId);
 
-         const auto layerColor = layerIndex == 0 ? COLOR_CYAN
-            : layerIndex == 1 ? COLOR_PINK
-            : COLOR_RED;
-         
          if (geometry)
          {
+            const auto layerColor = layerIndex == 0 ? COLOR_CYAN
+               : layerIndex == 1 ? COLOR_PINK
+               : layerIndex == 2 ? COLOR_RED
+               : layerIndex == 3 ? COLOR_GREEN
+               : layerIndex == 4 ? COLOR_BLUE
+               : COLOR_YELLOW;
+
             const auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
             for (auto i = 0; i < geometryPoints.size(); i++)
             {
-               const auto tileLinePointAx = tileDrawX + geometryPoints[i].x;
-               const auto tileLinePointAy = tileDrawY + geometryPoints[i].y;
-               const auto tileLinePointBx = tileDrawX + geometryPoints[(i + 1) % geometryPoints.size()].x;
-               const auto tileLinePointBy = tileDrawY + geometryPoints[(i + 1) % geometryPoints.size()].y;
-               frameBuffer->DrawLineWorldCoords(tileLinePointAx, tileLinePointAy, tileLinePointBx, tileLinePointBy, layerColor);
+               frameBuffer->DrawLineWorldCoords(tileDrawPoint + geometryPoints[i], tileDrawPoint + geometryPoints[(i + 1) % geometryPoints.size()], layerColor);
             }
          }
       }
+
+      frameBuffer->DrawRectWorldCoords(getPlayerInteractBox(), COLOR_ORANGE);
    }
-   frameBuffer->DrawRectWorldCoords(getPlayerInteractBox());
 }
 
 std::optional<uint16_t> MapControl::Update()
