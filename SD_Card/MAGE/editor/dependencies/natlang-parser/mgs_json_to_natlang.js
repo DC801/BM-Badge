@@ -1,5 +1,7 @@
 // "use strict";
 
+// BTW this is probably long out of date
+
 // low budget module system, go! -SB
 var window = window || {};
 window.natlang = window.natlang || {};

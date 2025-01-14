@@ -36,7 +36,7 @@ var mgs = {
 				{ branch: "dialogSettingsTarget", count: "*" },
 			],
 			closeChar: "}",
-			onClose: function () {}
+			onClose: () => {}
 			// just to silence the "no onClose?!?!" warning
 		},
 		"dialogSettingsTarget": {
@@ -44,7 +44,7 @@ var mgs = {
 				{ branch: "dialogParameter", count: "*" },
 			],
 			closeChar: "}",
-			onClose: function (state) {
+			onClose: state => {
 				state.pushNew(
 					"final",
 					"dialogSettings",
@@ -61,7 +61,7 @@ var mgs = {
 				{ branch: "serialDialogParameter", count: "*" },
 			],
 			closeChar: "}",
-			onClose: function (state) {
+			onClose: state => {
 				state.applyProperties(
 					"final",
 					"serialDialogParameters",
@@ -85,7 +85,7 @@ var mgs = {
 			],
 			closeChar: "}",
 			// TODO consolidate the below somehow?
-			onLoop: function (state) {
+			onLoop: state => {
 				state.pushNew(
 					"inserts",
 					"dialogs",
@@ -98,7 +98,7 @@ var mgs = {
 					"dialogOptions",
 				]);
 			},
-			onClose: function (state) {
+			onClose: state => {
 				state.pushNew(
 					"inserts",
 					"dialogs",
@@ -135,7 +135,7 @@ var mgs = {
 				{ branch: "serialDialogOptionFixed", count: "*" },
 			],
 			closeChar: "}",
-			onClose: function (state) {
+			onClose: state => {
 				state.replaceValueDeep(
 					"final",
 					"serialDialogs",
@@ -157,7 +157,7 @@ var mgs = {
 				{ branch: "action", count: "*" }
 			],
 			closeChar: "}",
-			onClose: function (state) {
+			onClose: state => {
 				state.replaceValueDeep(
 					"final",
 					"scripts",
@@ -175,7 +175,7 @@ var mgs = {
 		dialogSettingsNode: [
 			{
 				pattern: "settings<kw> ?for<h> dialog<i> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialogSettings");
 				}
 			}
@@ -183,7 +183,7 @@ var mgs = {
 		serialDialogSettingsNode: [
 			{
 				pattern: "settings<kw> ?for<h> serial<i> ?dialog<i> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialogSettings");
 				}
 			}
@@ -191,7 +191,7 @@ var mgs = {
 		dialogNode: [
 			{
 				pattern: "dialog<s> $dialog:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.clearCaptures();
@@ -201,7 +201,7 @@ var mgs = {
 		serialDialogNode: [
 			{
 				pattern: "serial<s> dialog<s> $serial_dialog:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.clearCaptures();
@@ -211,7 +211,7 @@ var mgs = {
 		scriptNode: [
 			{
 				pattern: "?script<s> $scriptName:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("script");
 					state.replaceValue(
 						"inserts",
@@ -225,7 +225,7 @@ var mgs = {
 		dialogSettingsTarget: [
 			{
 				pattern: "label<s> $target:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -236,7 +236,7 @@ var mgs = {
 			},
 			{
 				pattern: "entity<s> $target:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -247,7 +247,7 @@ var mgs = {
 			},
 			{
 				pattern: "default<enum> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialogSettingsTarget");
 					state.processCaptures(
 						"dialogSettingsTarget",
@@ -260,7 +260,7 @@ var mgs = {
 		dialogParameter: [
 			{
 				pattern: "entity<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "entity" }
@@ -270,7 +270,7 @@ var mgs = {
 			},
 			{
 				pattern: "name<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "name" }
@@ -280,7 +280,7 @@ var mgs = {
 			},
 			{
 				pattern: "portrait<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "portrait" }
@@ -290,7 +290,7 @@ var mgs = {
 			},
 			{
 				pattern: "alignment<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "alignment" }
@@ -300,7 +300,7 @@ var mgs = {
 			},
 			{
 				pattern: "border_tileset<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "border_tileset" }
@@ -310,7 +310,7 @@ var mgs = {
 			},
 			{
 				pattern: "emote<s> $value:number<n>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "emote" }
@@ -320,7 +320,7 @@ var mgs = {
 			},
 			{
 				pattern: "wrap<v> messages<i> ?to<op> $value:number<n>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "messageWrap" }
@@ -331,7 +331,7 @@ var mgs = {
 			},
 			{
 				pattern: "wrap<v> options<i> ?to<op> $value:number<n>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogParameter",
 						{ parameterName: "optionWrap" }
@@ -343,7 +343,7 @@ var mgs = {
 		dialogIdentifier: [
 			{
 				pattern: "$value:bareword<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "label" }
@@ -353,7 +353,7 @@ var mgs = {
 			},
 			{
 				pattern: "entity<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "entity" }
@@ -363,7 +363,7 @@ var mgs = {
 			},
 			{
 				pattern: "name<s> $value:string<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures(
 						"dialogIdentifier",
 						{ type: "name" }
@@ -375,7 +375,7 @@ var mgs = {
 		dialogMessage: [
 			{
 				pattern: "$message:quotedString<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.pushNew(
 						"inserts",
 						"dialogMessages",
@@ -388,7 +388,7 @@ var mgs = {
 		dialogOption: [
 			{
 				pattern: "><control> $label:quotedString<str> :<control> ?goto<control> ?script<s> $script:string<f>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.pushNew(
 						"inserts",
 						"dialogOptions",
@@ -404,7 +404,7 @@ var mgs = {
 		serialDialogParameter: [
 			{
 				pattern: "wrap<v> ?messages<i> ?to<op> $value:number<n>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.replaceValueDeep(
 						"inserts",
 						"serialDialogParameters",
@@ -418,7 +418,7 @@ var mgs = {
 		serialDialogMessage: [
 			{
 				pattern: "$message:quotedString<str>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.processCaptures("serialDialogMessage");
 					state.clearCaptures();
 				}
@@ -427,7 +427,7 @@ var mgs = {
 		serialDialogOptionFree: [
 			{
 				pattern: "_<control> $label:quotedString<str> :<control> ?goto<control> ?script<s> $script:string<f>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.replaceValue("inserts", "serialOptionType", "text_options");
 					state.pushNew(
 						"inserts",
@@ -443,7 +443,7 @@ var mgs = {
 		serialDialogOptionFixed: [
 			{
 				pattern: "#<control> $label:quotedString<str> :<control> ?goto<control> ?script<s> $script:string<f>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.replaceValue("inserts", "serialOptionType", "options");
 					state.pushNew(
 						"inserts",
@@ -460,7 +460,7 @@ var mgs = {
 		action: [
 			{
 				pattern: "show<v> dialog<s> $dialog:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.processCaptures("action",
@@ -471,7 +471,7 @@ var mgs = {
 			},
 			{
 				pattern: "show<v> dialog<i> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.processCaptures( "action",
@@ -485,7 +485,7 @@ var mgs = {
 			},
 			{
 				pattern: "show<v> serial<s> dialog<s> $serial_dialog:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -496,7 +496,7 @@ var mgs = {
 			},
 			{
 				pattern: "show<v> serial<i> dialog<i> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -511,7 +511,7 @@ var mgs = {
 			},
 			{
 				pattern: "concat<v> serial<s> dialog<s> $serial_dialog:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -522,7 +522,7 @@ var mgs = {
 			},
 			{
 				pattern: "concat<v> serial<i> dialog<i> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -537,7 +537,7 @@ var mgs = {
 			},
 			{
 				pattern: "set<v> serial<i> connect<i> ?message<i> ?to<op> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -551,7 +551,7 @@ var mgs = {
 			},
 			{
 				pattern: "set<v> serial<i> connect<i> ?message<u> ?to<op> $serial_dialog:string<str> {<b>",
-				onMatch: function (state) {
+				onMatch: state => {
 					state.startBlock("serialDialog");
 					state.processCaptures("serialDialogName");
 					state.processCaptures("action",
@@ -564,7 +564,7 @@ var mgs = {
 		],
 	},
 	capture: {
-		dialogName: function (state) {
+		dialogName: state => {
 			state.replaceValue(
 				"inserts",
 				"dialogName",
@@ -573,7 +573,7 @@ var mgs = {
 					: state.makeAutoIdentifierName()
 			);
 		},
-		serialDialogName: function (state) {
+		serialDialogName: state => {
 			state.replaceValue(
 				"inserts",
 				"serialDialogName",
@@ -582,7 +582,7 @@ var mgs = {
 					: state.makeAutoIdentifierName()
 			);
 		},
-		dialogSettingsTarget: function (state, args) {
+		dialogSettingsTarget: (state, args) => {
 			state.replaceValue(
 				"inserts",
 				"dialogSettingsTarget",
@@ -594,7 +594,7 @@ var mgs = {
 				}
 			);
 		},
-		dialogParameter: function (state, args) {
+		dialogParameter: (state, args) => {
 			state.replaceValueDeep(
 				"inserts",
 				"dialogParameters",
@@ -602,7 +602,7 @@ var mgs = {
 				state.captures.value
 			);
 		},
-		dialogIdentifier: function (state, args) {
+		dialogIdentifier: (state, args) => {
 			state.replaceValue(
 				"inserts",
 				"dialogIdentifier",
@@ -612,22 +612,22 @@ var mgs = {
 				}
 			);
 		},
-		serialDialogMessage: function (state) {
+		serialDialogMessage: state => {
 			state.pushNew(
 				"inserts",
 				"serialDialogMessages",
 				state.captures.message
 			);
 		},
-		action: function (state, args) {
-			var newAction = args
+		action: (state, args) => {
+			const newAction = args
 				? JSON.parse(JSON.stringify(args))
 				: {};
 			newAction.action = args.action;
-			Object.keys(state.captures).forEach(function (propertyName) {
+			Object.keys(state.captures).forEach(propertyName => {
 				newAction[propertyName] = state.captures[propertyName];
 			});
-			Object.keys(newAction).forEach(function (paramName) {
+			Object.keys(newAction).forEach(paramName => {
 				if (paramName === "operation") {
 					newAction[paramName] = natlang.opLookup[newAction[paramName]];
 				}
@@ -1257,52 +1257,46 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 // adding tedious entity properties to action dictionary
 
 Object.keys(mgs.entityPropertyMap)
-	.filter(function (actionName) {
-		return actionName.includes('SET_');
-	})
-	.forEach(function (actionName) {
-		var entry = mgs.entityPropertyMap[actionName];
-		var natLangProperties = Array.isArray(entry.natLangProperties)
+	.filter(actionName => actionName.includes('SET_'))
+	.forEach(action => {
+		const entry = mgs.entityPropertyMap[action];
+		const natLangProperties = Array.isArray(entry.natLangProperties)
 			? entry.natLangProperties
 			: [ entry.natLangProperties ];
-		natLangProperties.forEach(function(natLangProperty) {
+		natLangProperties.forEach(prop => {
 			mgs.actionDictionary.push({
-				action: actionName,
-				pattern: `set<v> entity<s> $entity:string<str> ${natLangProperty} ?to<op> $${entry.actionProperty}${entry.dictionaryRef} ?;<terminator>`,
+				action,
+				pattern: `set<v> entity<s> $entity:string<str> ${prop} ?to<op> $${entry.actionProperty}${entry.dictionaryRef} ?;<terminator>`,
 			});
 		})
 	});
 
 Object.keys(mgs.entityPropertyMap)
-	.filter(function (actionName) {
-		return actionName.includes('CHECK_');
-	})
-	.forEach(function (actionName) {
-		var entry = mgs.entityPropertyMap[actionName];
-		var natLangProperties = Array.isArray(entry.natLangProperties)
+	.filter(actionName => actionName.includes('CHECK_'))
+	.forEach(action => {
+		const entry = mgs.entityPropertyMap[action];
+		const natLangProperties = Array.isArray(entry.natLangProperties)
 			? entry.natLangProperties
 			: [ entry.natLangProperties ];
-		natLangProperties.forEach(function(natLangProperty) {
+		natLangProperties.forEach(natLangProperty => {
 			mgs.actionDictionary.push({
-				action: actionName,
+				action,
 				pattern: `if<control> entity<s> $entity:string<str> ${natLangProperty} is<op> $${entry.actionProperty}${entry.dictionaryRef} then<control> goto<control> ?script<s> $success_script:string<f> ?;`,
 				values: { "expected_bool" : true }
 			});
 			mgs.actionDictionary.push({
-				action: actionName,
+				action,
 				pattern: `if<control> entity<s> $entity:string<str> ${natLangProperty} is<op> not<op> $${entry.actionProperty}${entry.dictionaryRef} then<control> goto<control> ?script<s> $success_script:string<f> ?;`,
 				values: { "expected_bool" : false }
 			});
 		})
-	})
+	});
 
 mgs.actionDictionary
-	.filter(function (entry) {
-		return entry.action.includes('CHECK_');
-	})
-	.forEach(function (entry) {
-		var numberVariant = JSON.parse(JSON.stringify(entry));
-		var stringVariant = JSON.parse(JSON.stringify(entry));
+	.filter(entry => entry.action.includes('CHECK_'))
+	.forEach(entry => {
+		const numberVariant = JSON.parse(JSON.stringify(entry));
+		const stringVariant = JSON.parse(JSON.stringify(entry));
 		numberVariant.pattern = numberVariant.pattern.replace(
 			"then<control> goto<control> ?script<s> $success_script:string<f>",
 			"then<control> goto<control> index<s> $jump_index:number<n>"
@@ -1317,16 +1311,16 @@ mgs.actionDictionary
 	})
 
 // adding action dictionary items to the "flat" tree
-mgs.actionDictionary.forEach(function (item) {
+mgs.actionDictionary.forEach(rawItem => {
 	// // We have semicolons now (actions only)
 	// if (!item.pattern.endsWith("{")) {
 	// 	item.pattern = item.pattern + " ?;<terminator>";
 	// }
-	item = JSON.parse(JSON.stringify(item));
-	var values = item.values || {};
+	const item = JSON.parse(JSON.stringify(rawItem));
+	const values = item.values || {};
 	values.action = item.action;
-	var autoActionFunction = function (values) {
-		return function (state) {
+	const autoActionFunction = values => {
+		return state => {
 			state.processCaptures("action", values);
 		}
 	}
@@ -1340,7 +1334,7 @@ mgs.actionDictionary.forEach(function (item) {
 
 /* ------ building MGS dialogs ------ */
 
-mgs.cleanString = function (inputString) {
+mgs.cleanString = inputString => {
 	return inputString
 		.replace(/(“|”)/g, '"')
 		.replace(/(‘|’)/g, "'")
@@ -1350,12 +1344,8 @@ mgs.cleanString = function (inputString) {
 		.replace(/–/g, "-"); // endash
 };
 
-mgs.identifyEscapedChar = function (inputString) {
-	// returns 2nd char if 1st char is `\` and 2nd is in bounds
-	if (inputString[0] === '\\') {
-		return inputString[1];
-	}
-};
+// returns 2nd char if 1st char is `\` and 2nd is in bounds
+mgs.identifyEscapedChar = inputString => inputString[0] === '\\' ? inputString[1] : null;
 
 mgs.dialogWrapSpecials = {
 	"%": { // entity names: max 12 chars ASCII
@@ -1368,13 +1358,13 @@ mgs.dialogWrapSpecials = {
 	},
 };
 
-mgs.countWordChars = function (inputString, _wrapSpecials) {
-	var wrapSpecials = _wrapSpecials || {};
-	var size = 0;
-	var pos = 0;
-	var mode = null;
+mgs.countWordChars = (inputString, origWrapSpecials) => {
+	const wrapSpecials = origWrapSpecials || {};
+	let size = 0;
+	let pos = 0;
+	let mode = null;
 	while (pos < inputString.length) {
-		var nextChar = inputString[pos];
+		const nextChar = inputString[pos];
 		if (mode) { // we're in a special mode
 			if (nextChar === mode.endChar) { // if the mode char matches, end mode
 				size += mode.length; // size was arbitrary
@@ -1382,7 +1372,7 @@ mgs.countWordChars = function (inputString, _wrapSpecials) {
 				mode = null;
 				continue;
 			}
-			var escaped = mgs.identifyEscapedChar(inputString.substring(pos));
+			const escaped = mgs.identifyEscapedChar(inputString.substring(pos));
 			if (escaped) { // atm will fall through
 				pos += 2;
 				continue;
@@ -1393,7 +1383,7 @@ mgs.countWordChars = function (inputString, _wrapSpecials) {
 		}
 		// we're not in a special mode
 		// escaped chars:
-		var escaped = mgs.identifyEscapedChar(inputString.substring(pos));
+		const escaped = mgs.identifyEscapedChar(inputString.substring(pos));
 		if (escaped) { // atm will fall through
 			size += 1;
 			pos += 2;
@@ -1410,12 +1400,11 @@ mgs.countWordChars = function (inputString, _wrapSpecials) {
 		) { // if the end char is in sight, start mode
 			mode = wrapSpecials[nextChar];
 			if (mode.wholeMustMatch) { // if there's limited whole matches allowed
-				var wholeMatch = inputString.substring(pos)
+				const wholeMatch = inputString.substring(pos)
 					.match(mode.wholeMustMatch);
 				if (wholeMatch) { // a whole match is satisfied
-					var matchedStringSize = wholeMatch[0].length;
 					size += mode.length;
-					pos += matchedStringSize;
+					pos += wholeMatch[0].length;
 					mode = null; // turn off special mode 'cause we're done
 					continue;
 				} else {// it's not a special mode after all
@@ -1437,24 +1426,23 @@ mgs.countWordChars = function (inputString, _wrapSpecials) {
 	}
 };
 
-mgs.wrapText = function (inputString, wrapTo, wrapSpecials) {
+mgs.wrapText = (inputString, wrapTo, wrapSpecials) => {
 	// TODO: hyphenated words?
 	wrapTo = wrapTo || 42; // magic number alert!
-	var stringSplits = inputString.split('\n'); // TODO: more line breaks
-	var stringsResults = [];
-	var countSpaces = function (string) {
-		var match = string.match(/^ +/);
+	const stringsResults = [];
+	const countSpaces = string => {
+		const match = string.match(/^ +/);
 		return match ? match[0].length : false;
 	};
-	stringSplits.forEach(function (line) {
-		var workingString = mgs.cleanString(line);
-		var pos = 0;
-		var insert = '';
-		var insertLength = 0;
-		var lastSpaceFound = null;
+	inputString.split('\n').forEach(line => {
+		let workingString = mgs.cleanString(line);
+		let pos = 0;
+		let insert = '';
+		let insertLength = 0;
+		let lastSpaceFound = null;
 		while (workingString.substring(pos).length) {
 			// spaces (newlines removed above; tabs were converted to spaces prior)
-			var spaceCount = countSpaces(workingString.substring(pos));
+			const spaceCount = countSpaces(workingString.substring(pos));
 			if (spaceCount) {
 				lastSpaceFound = pos;
 				pos += spaceCount;
@@ -1463,12 +1451,12 @@ mgs.wrapText = function (inputString, wrapTo, wrapSpecials) {
 				continue;
 			}
 			// things other than spaces
-			var word = mgs.countWordChars(
+			const word = mgs.countWordChars(
 				workingString.substring(pos),
 				wrapSpecials
 			);
 			if (insertLength + word.size > wrapTo) {
-				var choppedInsert = insert.substring(0, lastSpaceFound);
+				const choppedInsert = insert.substring(0, lastSpaceFound);
 				stringsResults.push(choppedInsert);
 				workingString = workingString.substring(pos);
 				pos = 0;
@@ -1485,28 +1473,27 @@ mgs.wrapText = function (inputString, wrapTo, wrapSpecials) {
 	return stringsResults.join('\n');
 };
 
-mgs.buildDialogFromState = function (state) {
-	var dialogSettings = state.final.dialogSettings || [];
-	var identifier = state.inserts.dialogIdentifier;
-	var parameters = state.inserts.dialogParameters;
-	var messages = state.inserts.dialogMessages || [];
-	var options = state.inserts.dialogOptions;
-	var result = {};
+mgs.buildDialogFromState = state => {
+	const dialogSettings = state.final.dialogSettings || [];
+	const identifier = state.inserts.dialogIdentifier;
+	const parameters = state.inserts.dialogParameters;
+	const messages = state.inserts.dialogMessages || [];
+	const options = state.inserts.dialogOptions;
+	const result = {};
 	// getting params from dialogSettings
 	if (identifier.type === "name") {
 		result.name = identifier.value;
 	}
 	if (identifier.type === "label") {
-		var entityEntries = dialogSettings.filter(function (item) {
-				return item.type === "label"
-					&& item.value === identifier.value;
-			})
+		const entityEntries = dialogSettings.filter(item => {
+			return item.type === "label"
+				&& item.value === identifier.value;
+		});
 		if (entityEntries.length > 0) {
-			entityEntries.forEach(function (entry) {
-				var capturedParams = Object.keys(entry.parameters);
-				capturedParams.forEach(function (propertyName) {
+			entityEntries.forEach(entry => {
+				Object.keys(entry.parameters).forEach(propertyName => {
 					result[propertyName] = entry.parameters[propertyName];
-				})
+				});
 			})
 		} else {
 			identifier.type = "entity";
@@ -1515,14 +1502,13 @@ mgs.buildDialogFromState = function (state) {
 		}
 	}
 	if (identifier.type === "entity" || Object.keys(result).length === 0) {
-		var entityEntries = dialogSettings.filter(function (entry) {
+		const entityEntries = dialogSettings.filter(entry => {
 				return entry.type === "entity"
 					&& entry.value === identifier.value;
 			})
 		if (entityEntries.length) {
-			entityEntries.forEach(function (entry) {
-				var capturedParams = Object.keys(entry.parameters);
-				capturedParams.forEach(function (propertyName) {
+			entityEntries.forEach(entry => {
+				Object.keys(entry.parameters).forEach(propertyName => {
 					result[propertyName] = entry.parameters[propertyName];
 				})
 			})
@@ -1530,12 +1516,10 @@ mgs.buildDialogFromState = function (state) {
 		result.entity = identifier.value;
 	}
 	// put in global params only if no existing params by that name
-	var globalParams = dialogSettings.filter(function (item) {
-		return item.type === "global"
-	})
+	const globalParams = dialogSettings.filter(item=>item.type === "global");
 	if (globalParams.length) {
-		globalParams.forEach(function (globalEntry) {
-			Object.keys(globalEntry.parameters).forEach(function (propertyName) {
+		globalParams.forEach(globalEntry => {
+			Object.keys(globalEntry.parameters).forEach(propertyName => {
 				if (!result[propertyName]) {
 					result[propertyName] = globalEntry.parameters[propertyName];
 				}
@@ -1544,11 +1528,24 @@ mgs.buildDialogFromState = function (state) {
 	}
 	// override the above with params found in the dialog itself
 	if (parameters) {
-		Object.keys(parameters).forEach(function (parameterName) {
+		Object.keys(parameters).forEach(parameterName => {
 			result[parameterName] = parameters[parameterName];
 		})
 	}
-	var alignmentMap = {
+	result.messages = messages.map(string => {
+		const cleanedString = mgs.cleanString(string);
+		return mgs.wrapText(cleanedString, result.messageWrap, mgs.dialogWrapSpecials);
+	});
+	if (options?.length) {
+		result.response_type = "SELECT_FROM_SHORT_LIST";
+		result.options = options.map(option => {
+			return {
+				label: mgs.cleanString(option.label),
+				script: option.script
+			}
+		});
+	}
+	const alignmentMap = {
 		"BL": "BOTTOM_LEFT",
 		"BR": "BOTTOM_RIGHT",
 		"TL": "TOP_LEFT",
@@ -1557,23 +1554,10 @@ mgs.buildDialogFromState = function (state) {
 		"BOTTOM_RIGHT": "BOTTOM_RIGHT",
 		"TOP_LEFT": "TOP_LEFT",
 		"TOP_RIGHT": "TOP_RIGHT"
-	}
-	result.messages = messages.map(function (string) {
-		var cleanedString = mgs.cleanString(string);
-		return mgs.wrapText(cleanedString, result.messageWrap, mgs.dialogWrapSpecials);
-	});
-	if (options && options.length) {
-		result.response_type = "SELECT_FROM_SHORT_LIST";
-		result.options = options.map(function (option) {
-			return {
-				label: mgs.cleanString(option.label),
-				script: option.script
-			}
-		});
-	}
-	var newAlignment = alignmentMap[result.alignment];
+	};
+	const newAlignment = alignmentMap[result.alignment];
 	if (!newAlignment) {
-		var warningMessage = "Alignment cannot be " + result.alignment + "; falling back to 'BOTTOM_LEFT'";
+		const warningMessage = "Alignment cannot be " + result.alignment + "; falling back to 'BOTTOM_LEFT'";
 		console.warn(warningMessage);
 		result.alignWarning = warningMessage;
 		result.alignment = "BOTTOM_LEFT";
@@ -1586,35 +1570,35 @@ mgs.buildDialogFromState = function (state) {
 
 /* ------ building MGS serial dialogs ------ */
 
-mgs.buildSerialDialogFromState = function (state) {
-	var messages = state.inserts.serialDialogMessages || [];
-	var options = state.inserts.serialDialogOptions || [];
-	var optionType = state.inserts.serialOptionType || null;
-	var result = {};
+mgs.buildSerialDialogFromState = state => {
+	const messages = state.inserts.serialDialogMessages || [];
+	const options = state.inserts.serialDialogOptions || [];
+	const optionType = state.inserts.serialOptionType || null;
+	const result = {};
 	// wrap amount
-	var globalParams = state.final.serialDialogParameters || {};
-	var localParams = state.inserts.serialDialogParameters || {};
-	var wrapTo = 80;
+	const globalParams = state.final.serialDialogParameters || {};
+	const localParams = state.inserts.serialDialogParameters || {};
+	let wrapTo = 80;
 	if (localParams.messageWrap) {
 		wrapTo = localParams.messageWrap;
 	} else if (globalParams.messageWrap) {
 		wrapTo = globalParams.messageWrap;
 	}	
-	result.messages = messages.map(function (string) {
-		var cleanedString = mgs.cleanString(string);
-		var wrappedString = mgs.wrapText(cleanedString, wrapTo, mgs.serialWrapSpecials);
+	result.messages = messages.map(string => {
+		const cleanedString = mgs.cleanString(string);
+		const wrappedString = mgs.wrapText(cleanedString, wrapTo, mgs.serialWrapSpecials);
 		return mgs.replaceTagsWithAnsi(wrappedString);
 	});
-	if (options && options.length) {
+	if (options?.length) {
 		if (optionType === 'options') { // multiple choice
-			result.options = options.map(function (item) {
+			result.options = options.map(item => {
 				item.label = mgs.cleanString(mgs.replaceTagsWithAnsi(item.label));
 				return item;
 			});
 		} else if (optionType === 'text_options') { // free choice
 			result.text_options = {};
-			options.forEach(function (item) {
-				var label = mgs.cleanString(item.label);
+			options.forEach(item => {
+				const label = mgs.cleanString(item.label);
 				result.text_options[label] = item.script;
 			})
 		}
@@ -1623,93 +1607,30 @@ mgs.buildSerialDialogFromState = function (state) {
 };
 
 mgs.ansiMap = [
-	// bold/bright
-	{
-		natlang: [ 'bold' ],
-		ansi: '\u001B[1m',
-	},
-	// faint/dim
-	{
-		natlang: [ 'dim' ],
-		ansi: '\u001B[2m',
-	},
-	// reset styles
-	{
-		natlang: [ '/', 'reset' ],
-		ansi: '\u001B[0m',
-	},
+	// Linux-sempai says use only red, or red and cyan, and don't use the others; you have no idea whether they're using a dark or light theme, or what their theme is like and some colors WILL NOT show up, depending.
+	{ natlang: [ 'bold' ],        ansi: '\u001B[1m' }, // bold/bright
+	{ natlang: [ 'dim' ],         ansi: '\u001B[2m' }, // faint/dim
+	{ natlang: [ '/', 'reset' ],  ansi: '\u001B[0m' }, // reset styles
 	// fg colors
-	{
-		natlang: [ 'k', 'black' ],
-		ansi: '\u001B[30m',
-	},
-	{
-		natlang: [ 'r', 'red' ],
-		ansi: '\u001B[31m',
-	},
-	{
-		natlang: [ 'g', 'green' ],
-		ansi: '\u001B[32m',
-	},
-	{
-		natlang: [ 'y', 'yellow' ],
-		ansi: '\u001B[33m',
-	},
-	{
-		natlang: [ 'b', 'blue' ],
-		ansi: '\u001B[34m',
-	},
-	{
-		natlang: [ 'm', 'magenta' ],
-		ansi: '\u001B[35m',
-	},
-	{
-		natlang: [ 'c', 'cyan' ],
-		ansi: '\u001B[36m',
-	},
-	{
-		natlang: [ 'w', 'white' ],
-		ansi: '\u001B[37m',
-	},
+	{ natlang: [ 'k', 'black' ],   ansi: '\u001B[30m' },
+	{ natlang: [ 'r', 'red' ],     ansi: '\u001B[31m' },
+	{ natlang: [ 'g', 'green' ],   ansi: '\u001B[32m' },
+	{ natlang: [ 'y', 'yellow' ],  ansi: '\u001B[33m' },
+	{ natlang: [ 'b', 'blue' ],    ansi: '\u001B[34m' },
+	{ natlang: [ 'm', 'magenta' ], ansi: '\u001B[35m' },
+	{ natlang: [ 'c', 'cyan' ],    ansi: '\u001B[36m' },
+	{ natlang: [ 'w', 'white' ],   ansi: '\u001B[37m' },
 	// bg colors
-	{
-		natlang: [ 'bg-k', 'bg-black' ],
-		ansi: '\u001B[40m',
-	},
-	{
-		natlang: [ 'bg-r', 'bg-red' ],
-		ansi: '\u001B[41m',
-	},
-	{
-		natlang: [ 'bg-g', 'bg-green' ],
-		ansi: '\u001B[42m',
-	},
-	{
-		natlang: [ 'bg-y', 'bg-yellow' ],
-		ansi: '\u001B[43m',
-	},
-	{
-		natlang: [ 'bg-b', 'bg-blue' ],
-		ansi: '\u001B[44m',
-	},
-	{
-		natlang: [ 'bg-m', 'bg-magenta' ],
-		ansi: '\u001B[45m',
-	},
-	{
-		natlang: [ 'bg-c', 'bg-cyan' ],
-		ansi: '\u001B[46m',
-	},
-	{
-		natlang: [ 'bg-w', 'bg-white' ],
-		ansi: '\u001B[47m',
-	},
-	// Linux-sempai says use only red, or red and cyan, and don't use the others; you have no idea whether they're using a dark or light theme, or what their theme is like and some colors WILL NOT show up, depending,
+	{ natlang: [ 'bg-k', 'bg-black' ],   ansi: '\u001B[40m' },
+	{ natlang: [ 'bg-r', 'bg-red' ],     ansi: '\u001B[41m' },
+	{ natlang: [ 'bg-g', 'bg-green' ],   ansi: '\u001B[42m' },
+	{ natlang: [ 'bg-y', 'bg-yellow' ],  ansi: '\u001B[43m' },
+	{ natlang: [ 'bg-b', 'bg-blue' ],    ansi: '\u001B[44m' },
+	{ natlang: [ 'bg-m', 'bg-magenta' ], ansi: '\u001B[45m' },
+	{ natlang: [ 'bg-c', 'bg-cyan' ],    ansi: '\u001B[46m' },
+	{ natlang: [ 'bg-w', 'bg-white' ],   ansi: '\u001B[47m' },
 	// non-color-related
-	{
-		natlang: [ 'bell' ],
-		ansi: '',
-	},
+	{ natlang: [ 'bell' ], ansi: '' },
 ];
 
 mgs.serialWrapSpecials = {
@@ -1721,29 +1642,26 @@ mgs.serialWrapSpecials = {
 };
 
 mgs.tagToAnsiLookup = {};
-mgs.ansiMap.forEach(function (entry) {
-	entry.natlang.forEach(function (natlangEntry) {
+mgs.ansiMap.forEach(entry => {
+	entry.natlang.forEach(natlangEntry => {
 		mgs.tagToAnsiLookup[natlangEntry] = entry.ansi;
 	});
 });
 
-mgs.replaceTagsWithAnsi = function (string) {
-	var result = string;
-	var tags = Object.keys(mgs.tagToAnsiLookup);
-	tags.forEach(function (tag) {
-		var target = '<' + tag + '>';
-		if (tag === '/') {
-			target = '<\\/>';
-		}
-		var reg = new RegExp(target, 'g');
-		result = result.replace(reg, mgs.tagToAnsiLookup[tag]);
-	});
+mgs.replaceTagsWithAnsi = string => {
+	let result = string;
+	Object.keys(mgs.tagToAnsiLookup)
+		.forEach(tag => {
+			const target = tag === '/'
+				? '<\\/>'
+				: `<${tag}>`;
+			const reg = new RegExp(target, 'g');
+			result = result.replace(reg, mgs.tagToAnsiLookup[tag]);
+		});
 	return result;
 };
 
-mgs.stripAnsi = function (string) {
-	return string.replace(/\u001B\[[0-9]{1,2}m/g, '');
-};
+mgs.stripAnsi = string => string.replace(/\u001B\[[0-9]{1,2}m/g, '');
 
 window.mgs = mgs;
 

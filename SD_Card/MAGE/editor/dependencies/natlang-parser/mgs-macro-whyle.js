@@ -11,7 +11,7 @@ if (typeof module === 'object') {
 }
 
 var whyle = {
-	identifyWhyle: function (tokens, tokenPos) {
+	identifyWhyle: (tokens, tokenPos) => {
 		return tokens[tokenPos]
 			&& (
 				tokens[tokenPos].value === "while"
@@ -22,54 +22,50 @@ var whyle = {
 	},
 };
 
-var literalValue = function (token) {
-	if (token.barewordValue) {
-		return token.barewordValue;
-	} else if (typeof token.value === "string") {
-		return token.value;
-	} else {
-		return false;
-	}
+const literalValue = token => {
+	if (token.barewordValue) return token.barewordValue;
+	if (typeof token.value === "string")  return token.value;
+	return false;
 };
 
-whyle.parseSingleWhyle = function (tokens, startPos) {
+whyle.parseSingleWhyle = (tokens, startPos) => {
 	// start from index of first matchable bracket
-	var pos = startPos;
+	let pos = startPos;
 	if (tokens[pos].value !== "(") {
-		var errorObject = new Error(`Whyle parseSingleWhyle: Collection failure! No '('?`);
+		const errorObject = new Error(`Whyle parseSingleWhyle: Collection failure! No '('?`);
 		errorObject.tokenIndex = pos;
 		errorObject.token = tokens[pos];
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
-	var conditionsInfo = utils.collectBetween(tokens, pos, ")");
+	const conditionsInfo = utils.collectBetween(tokens, pos, ")");
 	if (!conditionsInfo || !conditionsInfo.success) {
-		var errorObject = new Error(`Whyle parseSingleWhyle: Collection failure! (Is matching ')' missing?)`);
+		const errorObject = new Error(`Whyle parseSingleWhyle: Collection failure! (Is matching ')' missing?)`);
 		errorObject.tokenIndex = pos;
 		errorObject.token = tokens[pos];
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
 	pos = conditionsInfo.nextTokenIndex;
-	var conditions = conditionsInfo.collection;
+	const conditions = conditionsInfo.collection;
 	// collect behavior(s)
 	if (tokens[pos].value !== "{") {
-		var errorObject = new Error(`Whyle parseSingleWhyle: Expected '{', found '${tokens[pos].value}'`);
+		const errorObject = new Error(`Whyle parseSingleWhyle: Expected '{', found '${tokens[pos].value}'`);
 		errorObject.tokenIndex = pos;
 		errorObject.token = tokens[pos];
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
-	var behaviorsInfo = utils.collectBetween(tokens, pos, "}");
+	const behaviorsInfo = utils.collectBetween(tokens, pos, "}");
 	if (!behaviorsInfo || !behaviorsInfo.success) {
-		var errorObject = new Error(`Whyle parseSingleWhyle: Collection failure! (Is matching '}' missing?)`);
+		const errorObject = new Error(`Whyle parseSingleWhyle: Collection failure! (Is matching '}' missing?)`);
 		errorObject.tokenIndex = pos;
 		errorObject.token = tokens[pos];
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
 	return {
-		conditions: conditions,
+		conditions,
 		behaviors: behaviorsInfo.collection,
 		nextTokenIndex: behaviorsInfo.nextTokenIndex,
 		brackets: {
@@ -81,33 +77,33 @@ whyle.parseSingleWhyle = function (tokens, startPos) {
 	};
 };
 
-whyle.parseWholeWhyle = function (tokens, startTokenIndex) {
+whyle.parseWholeWhyle = (tokens, startTokenIndex) => {
 	// startTokenIndex should be a while or for start: `while (...` (or `for`)
 	// (We will confirm first!)
-	var pos = startTokenIndex;
+	let pos = startTokenIndex;
 	if (!whyle.identifyWhyle(tokens, pos)) {
-		var errorObject = new Error(`Whyle parseWholeWhyle: Token index ${startTokenIndex} not valid 'while' or 'for' start. Cannot parse!`);
+		const errorObject = new Error(`Whyle parseWholeWhyle: Token index ${startTokenIndex} not valid 'while' or 'for' start. Cannot parse!`);
 		errorObject.tokenIndex = pos;
 		errorObject.token = tokens[pos];
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
-	var rootToken = tokens[pos];
+	const rootToken = tokens[pos];
 	// get past the `while` (or `for`)
 	pos += 1;
 	// get info out of ( __ ) { __ }
-	var statement = whyle.parseSingleWhyle(tokens, pos);
+	const statement = whyle.parseSingleWhyle(tokens, pos);
 	statement.rootToken = rootToken;
 	return {
 		origTokenIndex: startTokenIndex, // what it was given
-		statement: statement, // whyle.parseSingleWhyle() output
+		statement, // whyle.parseSingleWhyle() output
 		nextTokenIndex: statement.nextTokenIndex, // pick up from here
 		type: rootToken.value, // "while" or "for"
 	};
 };
 
-var buildToken = function (_token, value, type, extra) {
-	var token = JSON.parse(JSON.stringify(_token));
+const buildWhyleToken = (rawToken, value, type, extra) => {
+	const token = JSON.parse(JSON.stringify(rawToken));
 	token.value = value || "WHYLE " + token.pos; // change to provided or auto made
 	token.type = type || token.type; // change to provided or use orig
 	if (extra !== undefined) {
@@ -116,16 +112,16 @@ var buildToken = function (_token, value, type, extra) {
 	return token;
 };
 
-var parseForInner = function (inner) {
-	var order = [ "initial", "condition", "increment" ];
-	var result = {
+const parseForInner = inner => {
+	const order = [ "initial", "condition", "increment" ];
+	const result = {
 		initial: [],
 		condition: [],
 		increment: [],
 	}
-	var semicolons = [];
-	var chunk = 0;
-	inner.forEach(function (token) {
+	const semicolons = [];
+	let chunk = 0;
+	inner.forEach(token => {
 		if (token.value === ";") {
 			semicolons.push(token);
 			chunk += 1;
@@ -147,33 +143,33 @@ var parseForInner = function (inner) {
 	return result;
 };
 
-whyle.expandWhyle = function (report, reportType) {
-	var src = report.statement;
+whyle.expandWhyle = (report, reportType) => {
+	const src = report.statement;
 
-	var curlyOpen = src.brackets.curlyOpenToken;
-	var curlyClose = src.brackets.curlyCloseToken;
-	var parenOpen = src.brackets.parenOpenToken;
-	var parenClose = src.brackets.parenCloseToken;
+	const curlyOpen = src.brackets.curlyOpenToken;
+	const curlyClose = src.brackets.curlyCloseToken;
+	const parenOpen = src.brackets.parenOpenToken;
+	const parenClose = src.brackets.parenCloseToken;
 
-	var initial = [];
-	var condition = src.conditions;
-	var increment = [];
+	let initial = [];
+	let condition = src.conditions;
+	let increment = [];
 
-	var behaviors = src.behaviors || [];
+	let behaviors = src.behaviors || [];
 
 	if (reportType === "for") {
-		var inner = parseForInner(condition);
+		const inner = parseForInner(condition);
 		initial = inner.initial;
 		condition = inner.condition;
 		increment = inner.increment;
 	}
 
 	// LABELS
-	var rootToken = src.rootToken;             // while
-	var loopcheck = buildToken(parenOpen, null, "bareword", "loopcheck");      // (
-	var continuepoint = buildToken(parenClose, null, "bareword", "continuepoint"); // )
-	var loopbody = buildToken(curlyOpen, null, "bareword", "loopbody");       // {
-	var loopover = buildToken(curlyClose, null, "bareword", "loopover");      // }
+	const rootToken = src.rootToken;             // while
+	const loopcheck = buildWhyleToken(parenOpen, null, "bareword", "loopcheck");      // (
+	const continuepoint = buildWhyleToken(parenClose, null, "bareword", "continuepoint"); // )
+	const loopbody = buildWhyleToken(curlyOpen, null, "bareword", "loopbody");       // {
+	const loopover = buildWhyleToken(curlyClose, null, "bareword", "loopover");      // }
 
 	loopcheck.value = "loopcheck " + loopcheck.value;
 	continuepoint.value = "continuepoint " + continuepoint.value;
@@ -183,18 +179,18 @@ whyle.expandWhyle = function (report, reportType) {
 
 	// BREAK / CONTINUE
 
-	var parsedBehaviors = [];
-	behaviors.forEach(function (token) {
+	const parsedBehaviors = [];
+	behaviors.forEach(token => {
 		if (token.value === "break") {
-			parsedBehaviors.push(buildToken(token, "goto", "bareword", "break"));
-			parsedBehaviors.push(buildToken(token, "label", "bareword", "break"));
-			parsedBehaviors.push(buildToken(token, loopover.value, "bareword", "break"));
-			parsedBehaviors.push(buildToken(token, ";", "operator", "break"));
+			parsedBehaviors.push(buildWhyleToken(token, "goto", "bareword", "break"));
+			parsedBehaviors.push(buildWhyleToken(token, "label", "bareword", "break"));
+			parsedBehaviors.push(buildWhyleToken(token, loopover.value, "bareword", "break"));
+			parsedBehaviors.push(buildWhyleToken(token, ";", "operator", "break"));
 		} else if (token.value === "continue") {
-			parsedBehaviors.push(buildToken(token,"goto", "bareword", "continue"));
-			parsedBehaviors.push(buildToken(token,"label", "bareword", "continue"));
-			parsedBehaviors.push(buildToken(token, continuepoint.value, "bareword", "continue"));
-			parsedBehaviors.push(buildToken(token, ";", "operator", "continue"));
+			parsedBehaviors.push(buildWhyleToken(token,"goto", "bareword", "continue"));
+			parsedBehaviors.push(buildWhyleToken(token,"label", "bareword", "continue"));
+			parsedBehaviors.push(buildWhyleToken(token, continuepoint.value, "bareword", "continue"));
+			parsedBehaviors.push(buildWhyleToken(token, ";", "operator", "continue"));
 		} else {
 			parsedBehaviors.push(token);
 		}
@@ -206,64 +202,63 @@ whyle.expandWhyle = function (report, reportType) {
 	// while ( CONDITION ) { CODE } =>
 	// for (INITIAL; CONDITION; INCREMENT) { CODE } =>
 
-	var tokens = initial // INITIAL (`for` only)
+	const tokens = initial // INITIAL (`for` only)
 	.concat([
 		// goto label $loopcheck
-		buildToken(rootToken, "goto", "bareword", reportType),
-		buildToken(rootToken, "label", "bareword", reportType),
-		buildToken(rootToken, loopcheck.value, "bareword", reportType),
-		buildToken(rootToken, ";", "operator", reportType),
+		buildWhyleToken(rootToken, "goto", "bareword", reportType),
+		buildWhyleToken(rootToken, "label", "bareword", reportType),
+		buildWhyleToken(rootToken, loopcheck.value, "bareword", reportType),
+		buildWhyleToken(rootToken, ";", "operator", reportType),
 		// loopbody :
 		loopbody,
-		buildToken(loopbody, ":", "operator"),
+		buildWhyleToken(loopbody, ":", "operator"),
 	])
 	.concat(behaviors) // CODE
 	.concat([
 		// continuepoint :
 		continuepoint,
-		buildToken(continuepoint, ":", "operator"),
+		buildWhyleToken(continuepoint, ":", "operator"),
 	])
 	.concat(increment) // INCREMENT (`for` only)
 	.concat([
 		// loopcheck :
 		loopcheck,
-		buildToken(loopcheck, ":", "operator"),
+		buildWhyleToken(loopcheck, ":", "operator"),
 		// if (
-		buildToken(loopcheck, "if"),
+		buildWhyleToken(loopcheck, "if"),
 		parenOpen,
 	])
 	.concat(condition) // CONDITION
 	.concat([
 		// ) {
 		parenClose,
-		buildToken(parenClose, "{", "operator"),
+		buildWhyleToken(parenClose, "{", "operator"),
 		// goto label loopbody
-		buildToken(parenClose, "goto", "bareword", "goto label loopbody"),
-		buildToken(parenClose, "label", "bareword", "goto label loopbody"),
-		buildToken(parenClose, loopbody.value, "bareword", "goto label loopbody"),
-		buildToken(parenClose, ";", "operator", "goto label loopbody"),
-		buildToken(parenClose, "}", "operator", "goto label loopbody"),
+		buildWhyleToken(parenClose, "goto", "bareword", "goto label loopbody"),
+		buildWhyleToken(parenClose, "label", "bareword", "goto label loopbody"),
+		buildWhyleToken(parenClose, loopbody.value, "bareword", "goto label loopbody"),
+		buildWhyleToken(parenClose, ";", "operator", "goto label loopbody"),
+		buildWhyleToken(parenClose, "}", "operator", "goto label loopbody"),
 		// loopover :
 		loopover,
-		buildToken(loopover, ":", "operator"),
+		buildWhyleToken(loopover, ":", "operator"),
 	]);
 	return tokens;
 };
 
-whyle.processOnce = function (tokens) {
-	var pos = 0;
-	var crawledTokens = [];
-	var punctuationStack = [];
-	var naiveScriptNameToken = {}; // why the crap was I using this??
+whyle.processOnce = tokens => {
+	const punctuationStack = [];
+	let crawledTokens = [];
+	let pos = 0;
 	while (pos < tokens.length) {
 		if (whyle.identifyWhyle(tokens, pos)) {
-			var info = whyle.parseWholeWhyle(tokens, pos);
-			var expanded = whyle.expandWhyle(info, info.type);
+			const info = whyle.parseWholeWhyle(tokens, pos);
+			const expanded = whyle.expandWhyle(info, info.type);
 			crawledTokens = crawledTokens.concat(expanded);
 			pos = info.nextTokenIndex;
 			continue;
 		} else { // no whiling; mundane stuff
-			var naiveValue = literalValue(tokens[pos]);
+			const naiveValue = literalValue(tokens[pos]);
 			// naive bracket handling
 			if (naiveValue === "{") { // if this token is a block opening
 				// get possible scriptnames
@@ -286,7 +281,7 @@ whyle.processOnce = function (tokens) {
 					pos += 1;
 					continue;
 				} else { // ...but there's no chars in the stack
-					var errorObject = new Error(`Whyle processOnce: Found "${naiveValue}" but no "${top}" to close!`)
+					const errorObject = new Error(`Whyle processOnce: Found "${naiveValue}" but no "${top}" to close!`)
 					errorObject.tokenIndex = pos;
 					errorObject.token = tokens[pos];
 					errorObject.pos = tokens[pos].pos;
@@ -302,12 +297,12 @@ whyle.processOnce = function (tokens) {
 	return crawledTokens;
 };
 
-whyle.process = function (origTokens) { // natlang.parse looks for ".process()"
+whyle.process = origTokens => { // natlang.parse looks for ".process()"
 	// first check whether the whole lex object was passed by accident:
-	var tokens = origTokens.success ? origTokens.tokens : origTokens;
+	let tokens = origTokens.success ? origTokens.tokens : origTokens;
 	// (okay we're good now)
-	var origLength;
-	var newLength = tokens.length;
+	let origLength;
+	let newLength = tokens.length;
 	do {
 		try {
 			tokens = whyle.processOnce(tokens);
@@ -320,17 +315,17 @@ whyle.process = function (origTokens) { // natlang.parse looks for ".process()"
 	return tokens;
 };
 
-whyle.log = function (tokens) {
-	var string = '';
-	var bracketStack = [];
-	var newline = false;
-	tokens.forEach(function (token, index) {
-		var tokenValue = token.barewordValue || token.value;
+whyle.log = tokens => {
+	const bracketStack = [];
+	let logBody = '';
+	let newline = false;
+	tokens.forEach((token, index) => {
+		let tokenValue = token.barewordValue || token.value;
 		if (token.type === "quotedString") {
 			tokenValue = token.quotationMark + token.value + token.quotationMark;
 		}
-		if (string === '') {
-			string = tokenValue;
+		if (logBody === '') {
+			logBody = tokenValue;
 		} else {
 			if (tokenValue === '}') {
 				newline = true;
@@ -343,12 +338,12 @@ whyle.log = function (tokens) {
 				newline = true;
 			}
 			if (newline) {
-				string += '\n' + '\t'.repeat(bracketStack.length);
+				logBody += '\n' + '\t'.repeat(bracketStack.length);
 			} else {
-				string += ' ';
+				logBody += ' ';
 			}
 			newline = false;
-			string += tokenValue;
+			logBody += tokenValue;
 			if (tokenValue === '{') {
 				newline = true;
 				bracketStack.push(tokenValue);
@@ -359,7 +354,7 @@ whyle.log = function (tokens) {
 		}
 	})
 	return {
-		logBody: string,
+		logBody,
 		logType: "mgs",
 		raw: tokens
 	};

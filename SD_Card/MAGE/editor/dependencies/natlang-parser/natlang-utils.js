@@ -20,12 +20,12 @@ Returns the tokens found between a pair of characters or strings. (Meant for mat
 
 The collection is successful only if the endChar is actually encountered. */
 
-utils.collectBetween = function (tokens, tokenPos, endChar) {
-	var startChar = tokens[tokenPos].value;
-	var pos = tokenPos + 1;
-	var nested = 0;
-	var collection = [];
-	var success = false;
+utils.collectBetween = (tokens, tokenPos, endChar) => {
+	const startChar = tokens[tokenPos].value;
+	const collection = [];
+	let nested = 0;
+	let success = false;
+	let pos = tokenPos + 1;
 	while (pos < tokens.length) {
 		if (tokens[pos].value === startChar) {
 			nested += 1;
@@ -42,12 +42,12 @@ utils.collectBetween = function (tokens, tokenPos, endChar) {
 		}
 	}
 	return {
-		success: success,
-		collection: collection,
-		startChar: startChar,
+		success,
+		collection,
+		startChar,
 		startToken: tokens[tokenPos],
 		startTokenIndex: tokenPos,
-		endChar: endChar,
+		endChar,
 		endToken: tokens[pos-1],
 		endTokenIndex: pos-1,
 		nextTokenIndex: pos,

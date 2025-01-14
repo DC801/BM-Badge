@@ -10,59 +10,42 @@ if (typeof module === 'object') {
 	utils = require('./natlang-utils.js');
 }
 
-var zigzag = {
-	identifyIf: function (tokens, tokenPos) {
-		return tokens[tokenPos]
-			&& tokens[tokenPos].value === "if"
-			&& tokens[tokenPos+1]
-			&& tokens[tokenPos+1].value === "(";
-	},
-	identifyElseIf: function (tokens, tokenPos) {
-		return tokens[tokenPos]
-			&& tokens[tokenPos].value === "else"
-			&& tokens[tokenPos+1]
-			&& tokens[tokenPos+1].value === "if"
-			&& tokens[tokenPos+2]
-			&& tokens[tokenPos+2].value === "(";
-	},
-	identifyElse: function (tokens, tokenPos) {
-		return tokens[tokenPos]
-			&& tokens[tokenPos].value === "else"
-			&& tokens[tokenPos+1]
-			&& tokens[tokenPos+1].value === "{";
-	},
+var zigzag = { // load-bearing var?
+	identifyIf: (tokens, i) => tokens[i]?.value === "if"
+		&& tokens[i+1]?.value === "(",
+	identifyElseIf: (tokens, i) => tokens[i]?.value === "else"
+		&& tokens[i+1]?.value === "if"
+		&& tokens[i+2]?.value === "(",
+	identifyElse: (tokens, i) => tokens[i]?.value === "else"
+		&& tokens[i+1]?.value === "{",
 };
 
-var findLitValue = function (token) {
-	if (token.barewordValue) {
-		return token.barewordValue;
-	} else if (typeof token.value === "string") {
-		return token.value;
-	} else {
-		return false;
-	}
+const findLitValue = token => {
+	if (token.barewordValue) return token.barewordValue;
+	if (typeof token.value === "string") return token.value;
+	return false;
 };
 
-zigzag.parseSingleZig = function (tokens, startPos) {
+zigzag.parseSingleZig = (tokens, startPos) => {
 	// start from index of first matchable bracket
-	var pos = startPos;
-	var conditions = [];
-	var conditionsInfo;
-	var conditionsType = "none";
+	const conditions = [];
+	let pos = startPos;
+	let conditionsInfo;
+	let conditionsType = "none";
 	if (tokens[pos].value === "(") {
 		conditionsInfo = utils.collectBetween(tokens, pos, ")");
 		if (!conditionsInfo || !conditionsInfo.success) {
-			var errorObject = new Error(`Zigzag parseSingleZig: Collection failure! (Is matching ')' missing?)`);
-			errorObject.tokenIndex = pos;
-			errorObject.token = tokens[pos];
-			errorObject.pos = tokens[pos].pos;
-			throw errorObject;
+			const err = new Error(`Zigzag parseSingleZig: Collection failure! (Is matching ')' missing?)`);
+			err.tokenIndex = pos;
+			err.token = tokens[pos];
+			err.pos = tokens[pos].pos;
+			throw err;
 		}
 		pos = conditionsInfo.nextTokenIndex;
 		// checking for multiple condition statements
 		conditionsType = "single";
-		var insert = [];
-		conditionsInfo.collection.forEach(function (token) {
+		let insert = [];
+		conditionsInfo.collection.forEach(token => {
 			if (token.value === "||") {
 				conditions.push(insert);
 				insert = [];
@@ -75,23 +58,23 @@ zigzag.parseSingleZig = function (tokens, startPos) {
 	}
 	// whether or not there were condition(s), check for behavior(s)
 	if (tokens[pos].value !== "{") {
-		var errorObject = new Error(`Zigzag parseSingleZig: Expected '{', found '${tokens[pos].value}'`);
-		errorObject.tokenIndex = pos;
-		errorObject.token = tokens[pos];
-		errorObject.pos = tokens[pos].pos;
-		throw errorObject;
+		const err = new Error(`Zigzag parseSingleZig: Expected '{', found '${tokens[pos].value}'`);
+		err.tokenIndex = pos;
+		err.token = tokens[pos];
+		err.pos = tokens[pos].pos;
+		throw err;
 	}
-	var behaviorsInfo = utils.collectBetween(tokens, pos, "}");
+	const behaviorsInfo = utils.collectBetween(tokens, pos, "}");
 	if (!behaviorsInfo || !behaviorsInfo.success) {
-		var errorObject = new Error(`Zigzag parseSingleZig: Collection failure! (Is matching '}' missing?)`);
-		errorObject.tokenIndex = pos;
-		errorObject.token = tokens[pos];
-		errorObject.pos = tokens[pos].pos;
-		throw errorObject;
+		const err = new Error(`Zigzag parseSingleZig: Collection failure! (Is matching '}' missing?)`);
+		err.tokenIndex = pos;
+		err.token = tokens[pos];
+		err.pos = tokens[pos].pos;
+		throw err;
 	}
-	var report = {
-		conditions: conditions,
-		conditionsType: conditionsType,
+	const report = {
+		conditions,
+		conditionsType,
 		behaviors: behaviorsInfo.collection,
 		nextTokenIndex: behaviorsInfo.nextTokenIndex,
 		brackets: {
@@ -99,90 +82,85 @@ zigzag.parseSingleZig = function (tokens, startPos) {
 			curlyCloseToken: behaviorsInfo.endToken,
 		},
 	};
-	if (conditionsInfo && conditionsInfo.success) {
+	if (conditionsInfo?.success) {
 		report.brackets.parenOpenToken = conditionsInfo.startToken;
 		report.brackets.parenCloseToken = conditionsInfo.endToken;
 	}
 	return report;
 };
 
-zigzag.parseWholeZig = function (tokens, startTokenIndex) {
+zigzag.parseWholeZig = (tokens, startTokenIndex) => {
 	// startTokenIndex should be a zigzag start: `if (...`
 	// (We will confirm first!)
-	var pos = startTokenIndex;
+	let pos = startTokenIndex;
 	if (!zigzag.identifyIf(tokens, pos)) {
-		var errorObject = new Error(`Zigzag parseWholeZig: Token index ${startTokenIndex} not valid zigzag start. Cannot parse!`);
+		const errorObject = new Error(`Zigzag parseWholeZig: Token index ${startTokenIndex} not valid zigzag start. Cannot parse!`);
 		errorObject.tokenIndex = pos;
 		errorObject.token = tokens[pos];
 		errorObject.pos = tokens[pos].pos;
 		throw errorObject;
 	}
-	var rootToken = tokens[pos];
+	const rootToken = tokens[pos];
 	// get past the "if"
 	pos += 1;
 	// get info out of `if ( _ ) { _ }`
-	var statement = zigzag.parseSingleZig(tokens,pos);
+	let statement = zigzag.parseSingleZig(tokens,pos);
 	statement.rootToken = rootToken;
 	// make it the first of (possibly) several /(if|else if|else)/ statements:
-	var statements = [
+	let statements = [
 		statement
 	];
-	var pos = statement.nextTokenIndex;
+	pos = statement.nextTokenIndex;
 	while (pos < tokens.length) { // until we exhaust the tokens
 		// check for an `else if` statement
-		var elseIfCheck = zigzag.identifyElseIf(tokens, pos);
+		const elseIfCheck = zigzag.identifyElseIf(tokens, pos);
 		if (elseIfCheck) {
-			var elseIfRootToken = tokens[pos];
+			const elseIfRootToken = tokens[pos];
 			pos += 2;
-			var nextStatement = zigzag.parseSingleZig(tokens,pos);
+			const nextStatement = zigzag.parseSingleZig(tokens,pos);
 			nextStatement.rootToken = elseIfRootToken;
 			statements.push(nextStatement);
-			var pos = nextStatement.nextTokenIndex;
+			pos = nextStatement.nextTokenIndex;
 			continue; // check for another `else if` statement
 		}
 		// check for an `else` statement
-		var elseCheck = zigzag.identifyElse(tokens, pos);
+		const elseCheck = zigzag.identifyElse(tokens, pos);
 		if (elseCheck) {
-			var elseRootToken = tokens[pos];
+			const elseRootToken = tokens[pos];
 			pos += 1;
-			var nextStatement = zigzag.parseSingleZig(tokens,pos);
+			const nextStatement = zigzag.parseSingleZig(tokens,pos);
 			nextStatement.rootToken = elseRootToken;
 			statements.push(nextStatement);
-			var pos = nextStatement.nextTokenIndex;
+			pos = nextStatement.nextTokenIndex;
 		}
 		break; // nothing comes after an `else` so stop looping
 	}
 	// get the last statement
-	var lastStatement = statements[statements.length - 1];
-	var nextPos = lastStatement.nextTokenIndex;
+	const lastStatement = statements[statements.length - 1];
+	const nextPos = lastStatement.nextTokenIndex;
 	return {
 		origTokenIndex: startTokenIndex, // what it was given
-		statements: statements, // an array of zigzag.parseSingleZig() output
+		statements, // an array of zigzag.parseSingleZig() output
 		nextTokenIndex: nextPos, // pick up from here
 	};
 };
 
-var buildToken = function (_token, value, type, extra) {
-	var token = JSON.parse(JSON.stringify(_token));
+const buildZigzagToken = (rawToken, value, type, extra) => {
+	const token = JSON.parse(JSON.stringify(rawToken));
 	token.value = value || "ZIGZAG " + token.pos; // change to provided or auto made
 	token.type = type || token.type; // change to provided or use orig
 	token.macro = "zigzag";
-	if (extra !== undefined) {
-		token.meta = extra;
-	}
+	if (extra !== undefined) token.meta = extra;
 	return token;
 };
 
-var bodge = 0;
-zigzag.expandZigzag = function (report, scriptNameToken) {
-	var srcs = report.statements; // QOL
-
-	bodge += 1;
+zigzag.expandZigzag = (report, _scriptNameToken) => {
+	const srcs = report.statements;
 	
 	// CONVERGE TOKEN
 	// info for the last curly (token) in the zigzag:
-	var finalCurly = srcs[srcs.length - 1].brackets.curlyCloseToken;
-	var forover = buildToken(
+	const finalCurly = srcs[srcs.length-1].brackets.curlyCloseToken;
+	const forover = buildZigzagToken(
 		finalCurly,
 		"LABEL f" + finalCurly.pos,
 		"bareword",
@@ -190,19 +168,19 @@ zigzag.expandZigzag = function (report, scriptNameToken) {
 	);
 
 	// other state:
-	var topTokens = [];
-	var tokenBatch = []; // when done, this will get glued to `ret`
+	let topTokens = [];
+	let tokenBatch = []; // when done, this will get glued to `ret`
 
-	srcs.forEach(function (src, index) {
+	srcs.forEach((src, i) => {
 
 		// BASE TOKENS for this `if` / `else if` / `else` statement
-		var curlyOpen = src.brackets.curlyOpenToken;
-		var curlyClose = src.brackets.curlyCloseToken;
+		const curlyOpen = src.brackets.curlyOpenToken;
+		const curlyClose = src.brackets.curlyCloseToken;
 
 		// tokens for `if` and `{` and `}`
-		var rootToken = src.rootToken; // `if` (all become `if` in final, even elsess)
-		var bodyStart = buildToken(curlyOpen, null, "bareword", "bodyStart"); // {
-		var bodyEnd = buildToken(curlyClose, null, "bareword", "bodyEnd"); // }
+		const rootToken = src.rootToken; // `if` (all become `if` in final, even elsess)
+		const bodyStart = buildZigzagToken(curlyOpen, null, "bareword", "bodyStart"); // {
+		const bodyEnd = buildZigzagToken(curlyClose, null, "bareword", "bodyEnd"); // }
 		bodyStart.value = "bodyStart " + bodyStart.value;
 		bodyEnd.value = "bodyEnd " + bodyEnd.value;
 
@@ -212,45 +190,45 @@ zigzag.expandZigzag = function (report, scriptNameToken) {
 			|| src.conditionsType === "single"
 		) {
 			// token info for `(` and `)`
-			var parenOpen = src.brackets.parenOpenToken || null;
-			var parenClose = src.brackets.parenCloseToken || null;
-			var conditionStart = buildToken(parenOpen, null, "bareword", "conditionStart"); // (
-			var conditionEnd = buildToken(parenClose, null, "bareword", "conditionEnd"); // )
+			const parenOpen = src.brackets.parenOpenToken || null;
+			const parenClose = src.brackets.parenCloseToken || null;
+			const conditionStart = buildZigzagToken(parenOpen, null, "bareword", "conditionStart"); // (
+			const conditionEnd = buildZigzagToken(parenClose, null, "bareword", "conditionEnd"); // )
 			conditionStart.value = "conditionStart " + conditionStart.value;
 			conditionEnd.value = "conditionEnd " + conditionEnd.value;
 
-			src.conditions.forEach(function (condition) {
+			src.conditions.forEach(condition => {
 				// `if`
 				topTokens.push(
-					buildToken(rootToken, "if", "bareword", "zigzag"),
+					buildZigzagToken(rootToken, "if", "bareword", "zigzag"),
 				);
 				topTokens = topTokens.concat(
 					// condition
 					condition
 				).concat([
 					// `then goto label`
-					buildToken(conditionEnd, "then", "bareword", "zigzag"),
-					buildToken(bodyStart, "goto", "bareword", "zigzag"),
-					buildToken(bodyStart, "label", "bareword", "zigzag"),
+					buildZigzagToken(conditionEnd, "then", "bareword", "zigzag"),
+					buildZigzagToken(bodyStart, "goto", "bareword", "zigzag"),
+					buildZigzagToken(bodyStart, "label", "bareword", "zigzag"),
 					// bodyStart `;`
 					bodyStart,
-					buildToken(bodyStart, ";", "operator", "zigzag"),
+					buildZigzagToken(bodyStart, ";", "operator", "zigzag"),
 				]);
 			})
 			// (IN LOWER HALF OF EXPANDED TOKENS)
 			tokenBatch = tokenBatch.concat([
 				// bodyStart `:`
 				bodyStart,
-				buildToken(bodyStart, ":", "operator", "zigzag"),
+				buildZigzagToken(bodyStart, ":", "operator", "zigzag"),
 			]).concat(
 				// behavior
 				src.behaviors,
 			).concat([
 				// `goto label` forover `;`
-				buildToken(forover, "goto", "bareword", "zigzag"),
-				buildToken(forover, "label", "bareword", "zigzag"),
+				buildZigzagToken(forover, "goto", "bareword", "zigzag"),
+				buildZigzagToken(forover, "label", "bareword", "zigzag"),
 				forover,
-				buildToken(forover, ";", "operator", "zigzag"),
+				buildZigzagToken(forover, ";", "operator", "zigzag"),
 			]);
 		} else if (
 			src.conditionsType === "none" // no conditions found
@@ -262,22 +240,22 @@ zigzag.expandZigzag = function (report, scriptNameToken) {
 				src.behaviors
 			)
 		}
-		if (index === srcs.length - 1) { // if it's the last statement
+		if (i === srcs.length - 1) { // if it's the last statement
 			// close the "default" script
 			topTokens = topTokens.concat([
 				// `goto label` forover `;`
-				buildToken(forover, "goto", "bareword", "zigzag"),
-				buildToken(forover, "label", "bareword", "zigzag"),
+				buildZigzagToken(forover, "goto", "bareword", "zigzag"),
+				buildZigzagToken(forover, "label", "bareword", "zigzag"),
 				forover,
-				buildToken(forover, ";", "operator", "zigzag"),
+				buildZigzagToken(forover, ";", "operator", "zigzag"),
 			]);
 		}
 	});
-	var combinedTokens = topTokens.concat(tokenBatch);
+	let combinedTokens = topTokens.concat(tokenBatch);
 	// forover `:`
 	combinedTokens = combinedTokens.concat([
 		forover,
-		buildToken(forover, ":", "operator", "zigzag"),
+		buildZigzagToken(forover, ":", "operator", "zigzag"),
 	]);
 	return {
 		tokens: combinedTokens,
@@ -285,20 +263,20 @@ zigzag.expandZigzag = function (report, scriptNameToken) {
 	}
 };
 
-zigzag.processOnce = function (tokens) {
-	var pos = 0;
-	var crawledTokens = [];
-	var punctuationStack = [];
-	var naiveScriptNameToken = {};
+zigzag.processOnce = tokens => {
+	const punctuationStack = [];
+	let pos = 0;
+	let crawledTokens = [];
+	let naiveScriptNameToken = {};
 	while (pos < tokens.length) {
 		if (zigzag.identifyIf(tokens, pos)) { // we need to zigzag
-			var zigReport = zigzag.parseWholeZig(tokens, pos);
-			var zigzagResults = zigzag.expandZigzag(zigReport, naiveScriptNameToken);
+			const zigReport = zigzag.parseWholeZig(tokens, pos);
+			const zigzagResults = zigzag.expandZigzag(zigReport, naiveScriptNameToken);
 			crawledTokens = crawledTokens.concat(zigzagResults.tokens);
 			pos = zigzagResults.nextTokenIndex;
 			continue;
 		} else { // no zigzagging; mundane stuff
-			var naiveValue = findLitValue(tokens[pos]);
+			const naiveValue = findLitValue(tokens[pos]);
 			// naive bracket handling
 			if (naiveValue === "{") { // if this token is a block opening
 				// get possible scriptnames
@@ -321,7 +299,7 @@ zigzag.processOnce = function (tokens) {
 					pos += 1;
 					continue;
 				} else { // ...but there's no chars in the stack
-					var errorObject = new Error(`Zigzag processOnce: Found "${naiveValue}" but no "${top}" to close!`)
+					const errorObject = new Error(`Zigzag processOnce: Found "${naiveValue}" but no "${top}" to close!`)
 					errorObject.tokenIndex = pos;
 					errorObject.token = tokens[pos];
 					errorObject.pos = tokens[pos].pos;
@@ -337,13 +315,13 @@ zigzag.processOnce = function (tokens) {
 	return crawledTokens;
 };
 
-zigzag.process = function (origTokens) { // natlang.parse looks for ".process()"
+zigzag.process = origTokens => { // natlang.parse looks for ".process()"
 	// first check whether the whole lex object was passed by accident:
-	var tokens = origTokens.success ? origTokens.tokens : origTokens;
+	const tokens = origTokens.success ? origTokens.tokens : origTokens;
 	// (okay we're good now)	
-	var origLength;
-	var expandedTokens = tokens;
-	var newLength = tokens.length;
+	let origLength;
+	let expandedTokens = tokens;
+	let newLength = tokens.length;
 	do {
 		try {
 			expandedTokens = zigzag.processOnce(expandedTokens);
@@ -356,12 +334,12 @@ zigzag.process = function (origTokens) { // natlang.parse looks for ".process()"
 	return expandedTokens;
 };
 
-zigzag.log = function (tokens) {
-	var string = '';
-	var bracketStack = [];
-	var newline = false;
-	tokens.forEach(function (token, index) {
-		var tokenValue = token.barewordValue || token.value;
+zigzag.log = tokens => {
+	const bracketStack = [];
+	let string = '';
+	let newline = false;
+	tokens.forEach((token, i) => {
+		let tokenValue = token.barewordValue || token.value;
 		if (token.type === "quotedString") {
 			tokenValue = token.quotationMark + token.value + token.quotationMark;
 		}
@@ -375,7 +353,7 @@ zigzag.log = function (tokens) {
 			if (tokenValue === 'if') {
 				newline = true;
 			}
-			if (tokenValue === 'goto' && tokens[index-1] && tokens[index-1].value !== 'then') {
+			if (tokenValue === 'goto' && tokens[i-1] && tokens[i-1].value !== 'then') {
 				newline = true;
 			}
 			if (newline) {
