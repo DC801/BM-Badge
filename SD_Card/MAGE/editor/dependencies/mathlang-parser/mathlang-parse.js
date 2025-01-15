@@ -8,7 +8,7 @@ const exampleLex = {
 		{ type: "bareword", rawValue: "include", value: "include", pos: 0, },
 		{ type: "operator", rawValue: "!", value: "!", pos: 7, },
 		{ type: "operator", rawValue: "(", value: "(", pos: 8,},
-		{ type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
+		// { type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
 		{ type: "operator", rawValue: ")", value: ")", pos: 21, },
 		{ type: "newline", rawValue: "\n\n", value: "\n\n", pos: 22, ignorable: true, },
 		{ type: "constant", rawValue: "$trombones", value: "$trombones", pos: 24, },
@@ -120,7 +120,7 @@ const onMatch = {
 		const capture = state.unlabeledCaptures.shift();
 		if (capture?.value !== 'EOF') throw new Error("No EOF at end of file");
 	},
-	include_macro: state => {
+	include_macro: (state, startPos) => {
 		if (
 			state.captures[0]?.pattern === 'include_macro'
 			&& state.captures[0]?.label === 'fileName'
@@ -130,19 +130,184 @@ const onMatch = {
 				node: 'include_macro',
 				value: capture.value,
 				tokenPos: capture.pos,
-				// the fileName property will be added at the end
+				ignorable: false,
 			})
 		} else {
 			// Looks like there wasn't a filename to include. Should be a warning, not an error.
-			state.captures.unshift(capture);
 			state.warnings.push({
 				value: 'Include macro lacks a filename',
 				message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
-				pos: capture.pos,
+				pos: state.pos,
 			});
+			// including it as an ignorable node makes it easier (probably?) to involve in suggestions and red squiglies
+			state.nodes.push({
+				node: 'include_macro',
+				value: '',
+				tokenPos: startPos,
+				ignorable: true,
+			})
+
 		}
 	},
 }
+
+const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
+const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
+
+const tryBranchReturns =  {
+	matched: true, // whether the branch pattern matched the tokens
+	expected: '', // if no match, the token the branch wanted next
+	startPos: NaN, // token index where the branch tried to start matching
+	pos: NaN, // if no match, the non-match token index
+	nextPos: NaN, // where the tokens are to pick up again with the subsequent branch match attempt
+	// in the event of an error, this'll be the same as `pos`, but this still means trying from here, since this token may belong to a different pattern and the previous one just wasn't finished being typed yet or something
+}
+const tryBranch = (state, startPos, branchName, branchIndex) => {
+	const tokens = state.tokens;
+	const captures = state.captures;
+	const unlabeledCaptures = state.unlabeledCaptures;
+	const branch = state.tree[branchName]?.[branchIndex];
+	let twigPos = 0;
+	let tokenPos = startPos;
+	let repeated = false;
+	const advanceTwig = () => {
+		twigPos += 1;
+		repeated = false;
+	}
+	const advanceToken = () => {
+		tokenPos += 1;
+	}
+	while (twigPos < branch.length && tokenPos < tokens.length) {
+		const token = tokens[tokenPos];
+		const twig = branch[twigPos];
+		if (token.ignorable) {
+			// keeping track of these may make error handling easier, as it'll be more clear when certain kinds of broken things have terminated to try starting a fresh pattern
+			state.nodes.push({
+				node: token.type,
+				value: token.value,
+				tokenPos,
+				ignorable: true,
+			});
+			advanceToken();
+			continue;
+		}
+		const rep = twig.rep;
+		const zeroOkay = rep === '*' || rep === '?';
+		const multipleOkay = rep === '*' || rep === '+';
+		if (twig.type === 'literal') {
+			if (twig.value === token.value) {
+				if (twig.label) {
+					captures.unshift({
+						pattern: branchName,
+						label: twig.label,
+						value: twig.value,
+						pos: tokenPos,
+					});
+				}
+				advanceToken();
+				advanceTwig();
+			} else {
+				if (
+					(multipleOkay && repeated)
+					|| zeroOkay
+				) {
+					advanceTwig();
+				} else {
+					return {
+						matched: false,
+						expected: twig.value,
+						startPos,
+						pos: tokenPos,
+						nextPos: tokenPos,
+					};
+				}
+			}
+			continue;
+		}
+		if (twig.type === 'capture') {
+			if (twig.value === token.type) {
+				if (twig.label) {
+					captures.unshift({
+						pattern: branchName,
+						label: twig.label,
+						value: token.value,
+						pos: tokenPos,
+					});
+				} else {
+					unlabeledCaptures.unshift({
+						value: token.value,
+						pos: tokenPos,
+					});
+				}
+				advanceToken();
+				advanceTwig();
+			} else {
+				if (
+					(multipleOkay && repeated)
+					|| zeroOkay
+				) {
+					advanceTwig();
+				} else {
+					return {
+						matched: false,
+						expected: `'${twig.value}'`,
+						startPos,
+						pos: tokenPos,
+						nextPos: tokenPos,
+					};
+				}
+			}
+			continue;
+		}
+		if (twig.type === 'lookup') {
+			let lookedUp = tryBranches(
+				state,
+				tokenPos,
+				twig.value,
+			);
+			if (lookedUp.matched) {
+				if (unlabeledCaptures?.length && twig.label) {
+					const uncaptured = unlabeledCaptures.shift();
+					captures.unshift({
+						pattern: lookedUp.pattern,
+						label: twig.label,
+						value: uncaptured.value,
+						pos: uncaptured.pos,
+					});
+				}
+				tokenPos = lookedUp.nextPos;
+				if (multipleOkay) {
+					repeated = true;
+					// no twigPos advance
+				} else {
+					advanceTwig();
+				}
+				continue;
+			}
+			if (
+				(multipleOkay && repeated)
+				|| zeroOkay
+			) {
+				advanceTwig();
+			} else {
+				return {
+					matched: false,
+					startPos,
+					expected: lookedUp.expected.join(', '),
+					pos: lookedUp.pos,
+					nextPos: lookedUp.nextPos,
+				};
+			}
+		}
+	}
+	return {
+		matched: true,
+		expected: '',
+		startPos,
+		pos: tokenPos,
+		nextPos: tokenPos,
+	};
+};
 
 const tryBranchesReturn = {
 	pattern: '', // name of the pattern as it appears in the tree
@@ -188,7 +353,7 @@ const tryBranches = (state, startPos, branchName) => {
 	} else {
 		const success = successes[0];
 		if (onMatch[branchName]) {
-			onMatch[branchName](state);
+			onMatch[branchName](state, startPos);
 		}
 		return {
 			pattern: branchName,
@@ -199,140 +364,6 @@ const tryBranches = (state, startPos, branchName) => {
 			nextPos: success.nextPos,
 		};
 	}
-};
-
-const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
-const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
-
-const tryBranchReturns =  {
-	matched: true, // whether the branch pattern matched the tokens
-	expected: '', // if no match, the token the branch wanted next
-	startPos: NaN, // token index where the branch tried to start matching
-	pos: NaN, // if no match, the non-match token index
-	nextPos: NaN, // where the tokens are to pick up again with the subsequent branch match attempt
-	// in the event of an error, this'll be the same as `pos`, but this still means trying from here, since this token may belong to a different pattern and the previous one just wasn't finished being typed yet or something
-}
-const tryBranch = (state, startPos, branchName, branchIndex) => {
-	const tokens = state.tokens;
-	const captures = state.captures;
-	const unlabeledCaptures = state.unlabeledCaptures;
-	const branch = state.tree[branchName]?.[branchIndex];
-	let twigPos = 0;
-	let tokenPos = startPos;
-	let repeated = false;
-	while (twigPos < branch.length && tokenPos < tokens.length) {
-		const token = tokens[tokenPos];
-		const twig = branch[twigPos];
-		const rep = twig.rep;
-		const zeroOkay = rep === '*' || rep === '?';
-		const multipleOkay = rep === '*' || rep === '+';
-		if (token.ignorable) {
-			tokenPos += 1;
-			continue;
-		}
-		if (twig.type === 'literal') {
-			if (twig.value === token.value) {
-				tokenPos += 1;
-				twigPos += 1;
-				repeated = false;
-				if (twig.label) {
-					captures.unshift({
-						pattern: branchName,
-						label: twig.label,
-						value: twig.value,
-						pos: tokenPos,
-					});
-				}
-			} else {
-				return {
-					matched: false,
-					expected: twig.value,
-					startPos,
-					pos: tokenPos,
-					nextPos: tokenPos,
-				};
-			}
-			continue;
-		}
-		if (twig.type === 'capture') {
-			if (twig.value === token.type) {
-				tokenPos += 1;
-				twigPos += 1;
-				repeated = false;
-				if (twig.label) {
-					captures.unshift({
-						pattern: branchName,
-						label: twig.label,
-						value: token.value,
-						pos: tokenPos,
-					});
-				} else {
-					unlabeledCaptures.unshift({
-						value: token.value,
-						pos: tokenPos,
-					});
-				}
-			} else {
-				return {
-					matched: false,
-					expected: `'${twig.value}'`,
-					startPos,
-					pos: tokenPos,
-					nextPos: tokenPos,
-				};
-			}
-			continue;
-		}
-		if (twig.type === 'lookup') {
-			let lookedUp = tryBranches(
-				state,
-				tokenPos,
-				twig.value,
-			);
-			if (lookedUp.matched) {
-				if (unlabeledCaptures?.length && twig.label) {
-					const uncaptured = unlabeledCaptures.shift();
-					captures.unshift({
-						pattern: lookedUp.pattern,
-						label: twig.label,
-						value: uncaptured.value,
-						pos: uncaptured.pos,
-					});
-				}
-				tokenPos = lookedUp.nextPos;
-				if (multipleOkay) {
-					repeated = true;
-					// no twigPos advance
-				} else {
-					twigPos += 1;
-					repeated = false;
-				}
-				continue;
-			}
-			if (
-				(multipleOkay && repeated)
-				|| zeroOkay
-			) {
-				twigPos += 1;
-				repeated = false;
-			} else {
-				return {
-					matched: false,
-					startPos,
-					expected: lookedUp.expected.join(', '),
-					pos: lookedUp.pos,
-					nextPos: lookedUp.nextPos,
-				};
-			}
-		}
-	}
-	return {
-		matched: true,
-		expected: '',
-		startPos,
-		pos: tokenPos,
-		nextPos: tokenPos,
-	};
 };
 
 const parseFile = (tokens, tree, givenFileName) => {
