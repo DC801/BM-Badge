@@ -9,7 +9,6 @@ const tokenStructure = {
 	type: '', // e.g. bareword, duration, operator
 	rawValue: '', // the actual thing captured, e.g. `"%PLAYER%"` or `1s`
 	value: '', // translated for the JSON output, e.g. `%PLAYER%` or `1000`
-	fileName: '', // for times tokens are copypasta'd in from other file
 	pos: NaN, // the char position in the file the token starts from
 	ignorable: false, // only comments and newlines are `true`
 };
@@ -76,8 +75,7 @@ const WORDS_WITH_TYPES = {
 	thrice: { type: 'quantity', value: 3 },
 };
 
-const lex = (string, givenFileName) => {
-	const fileName = givenFileName ? givenFileName : 'auto' + Math.floor(Math.random()*10000000000);
+const lex = (string) => {
 	const errors = [];
 	const warnings = [];
 	const tokens = [];
@@ -115,7 +113,6 @@ const lex = (string, givenFileName) => {
 				type: 'newline',
 				rawValue: newlines,
 				value: newlines,
-				fileName,
 				pos: startPos,
 				ignorable: true,
 			});
@@ -131,7 +128,6 @@ const lex = (string, givenFileName) => {
 					type: 'line_comment',
 					rawValue: string.slice(startPos, pos),
 					value: string.slice(startPos+2, pos),
-					fileName,
 					pos: startPos,
 					ignorable: true,
 				})
@@ -147,7 +143,6 @@ const lex = (string, givenFileName) => {
 					type: 'block_comment',
 					rawValue: string.slice(startPos, pos),
 					value: string.slice(startPos+2, pos).replace(/\*\/$/,''),
-					fileName,
 					pos: startPos,
 					ignorable: true,
 				})
@@ -162,7 +157,6 @@ const lex = (string, givenFileName) => {
 					type: 'operator',
 					rawValue: curr,
 					value: curr,
-					fileName,
 					pos,
 				});
 				advance();
@@ -180,7 +174,6 @@ const lex = (string, givenFileName) => {
 						type: 'color',
 						rawValue: '#' + hexChars,
 						value: color,
-						fileName,
 						pos,
 					});
 				} else if (hexChars.length === 6) {
@@ -189,7 +182,6 @@ const lex = (string, givenFileName) => {
 						type: 'color',
 						rawValue: color,
 						value: color,
-						fileName,
 						pos,
 					});
 				} else {
@@ -198,7 +190,6 @@ const lex = (string, givenFileName) => {
 						type: 'error:color',
 						rawValue: color,
 						value: color,
-						fileName,
 						pos,
 					});
 					errors.push({
@@ -216,7 +207,6 @@ const lex = (string, givenFileName) => {
 				type: 'operator',
 				rawValue: curr,
 				value: curr,
-				fileName,
 				pos,
 			});
 			advance();
@@ -227,7 +217,6 @@ const lex = (string, givenFileName) => {
 				type: '',
 				rawValue: '',
 				value: NaN,
-				fileName,
 				pos: startPos,
 			}
 			let number = minus;
@@ -270,7 +259,6 @@ const lex = (string, givenFileName) => {
 				type: 'operator',
 				rawValue: op,
 				value: op,
-				fileName,
 				pos,
 			});
 			advance();
@@ -280,7 +268,6 @@ const lex = (string, givenFileName) => {
 				type: 'operator',
 				rawValue: curr,
 				value: curr,
-				fileName,
 				pos,
 			});
 			advance();
@@ -296,7 +283,6 @@ const lex = (string, givenFileName) => {
 				type: 'constant',
 				rawValue: constant,
 				value: constant,
-				fileName,
 				pos: startPos,
 			})
 			continue;
@@ -313,7 +299,6 @@ const lex = (string, givenFileName) => {
 					type: typeInfo.type,
 					rawValue: word,
 					value: typeInfo.value,
-					fileName,
 					pos: startPos,
 				});
 			} else {
@@ -321,7 +306,6 @@ const lex = (string, givenFileName) => {
 					type: 'bareword',
 					rawValue: word,
 					value: word,
-					fileName,
 					pos: startPos,
 				});
 			}
@@ -346,7 +330,6 @@ const lex = (string, givenFileName) => {
 						type: 'error:quoted_string',
 						rawValue: value,
 						value: value,
-						fileName,
 						pos: startPos,
 
 					});
@@ -367,7 +350,6 @@ const lex = (string, givenFileName) => {
 				type: 'quoted_string',
 				rawValue: string.slice(startPos, pos),
 				value: string.slice(startPos+1, pos-1),
-				fileName,
 				pos: startPos,
 			})
 			continue;
@@ -381,7 +363,6 @@ const lex = (string, givenFileName) => {
 			type: 'error:unknown_token',
 			rawValue: unknown,
 			value: unknown,
-			fileName,
 			pos: startPos,
 		});
 		errors.push({
@@ -394,14 +375,12 @@ const lex = (string, givenFileName) => {
 		type: 'EOF',
 		rawValue: 'EOF',
 		value: 'EOF',
-		fileName,
 		pos: string.length,
 	})
 	return {
 		errors,
 		tokens,
 		warnings,
-		fileName,
 		completed: true,
 	}
 }

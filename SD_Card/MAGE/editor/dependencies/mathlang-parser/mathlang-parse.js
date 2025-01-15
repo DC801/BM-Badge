@@ -4,22 +4,22 @@ const exampleLex = {
 	warnings: [],
 	errors: [],
 	tokens: [
-		{ type: "bareword", rawValue: "include", value: "include", fileName: "auto667025", pos: 0, },
-		{ type: "operator", rawValue: "!", value: "!", fileName: "auto667025", pos: 7, },
-		{ type: "operator", rawValue: "(", value: "(", fileName: "auto667025", pos: 8,},
-		{ type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", fileName: "auto667025", pos: 9, },
-		{ type: "operator", rawValue: ")", value: ")", fileName: "auto667025", pos: 21, },
-		{ type: "newline", rawValue: "\n\n", value: "\n\n", fileName: "auto667025", pos: 22, ignorable: true, },
-		{ type: "constant", rawValue: "$trombones", value: "$trombones", fileName: "auto667025", pos: 24, },
-		{ type: "operator", rawValue: "=", value: "=", fileName: "auto667025", pos: 35, },
-		{ type: "number", rawValue: "76", value: 76, fileName: "auto667025", pos: 37, },
-		{ type: "operator", rawValue: ";", value: ";", fileName: "auto667025", pos: 39, },
-		{ type: "newline", rawValue: "\n", value: "\n", fileName: "auto667025", pos: 40, ignorable: true, },
-		{ type: "constant", rawValue: "$player", value: "$player", fileName: "auto667025", pos: 41, },
-		{ type: "operator", rawValue: "=", value: "=", fileName: "auto667025", pos: 49, },
-		{ type: "quoted_string", rawValue: "\"%PLAYER%\"", value: "%PLAYER%", fileName: "auto667025", pos: 51, },
-		{ type: "operator", rawValue: ";", value: ";", fileName: "auto667025", pos: 61, },
-		{ type: "EOF", rawValue: "EOF", value: "EOF", fileName: "auto667025", pos: 62, },
+		{ type: "bareword", rawValue: "include", value: "include", pos: 0, },
+		{ type: "operator", rawValue: "!", value: "!", pos: 7, },
+		{ type: "operator", rawValue: "(", value: "(", pos: 8,},
+		{ type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
+		{ type: "operator", rawValue: ")", value: ")", pos: 21, },
+		{ type: "newline", rawValue: "\n\n", value: "\n\n", pos: 22, ignorable: true, },
+		{ type: "constant", rawValue: "$trombones", value: "$trombones", pos: 24, },
+		{ type: "operator", rawValue: "=", value: "=", pos: 35, },
+		{ type: "number", rawValue: "76", value: 76, pos: 37, },
+		{ type: "operator", rawValue: ";", value: ";", pos: 39, },
+		{ type: "newline", rawValue: "\n", value: "\n", pos: 40, ignorable: true, },
+		{ type: "constant", rawValue: "$player", value: "$player", pos: 41, },
+		{ type: "operator", rawValue: "=", value: "=", pos: 49, },
+		{ type: "quoted_string", rawValue: "\"%PLAYER%\"", value: "%PLAYER%", pos: 51, },
+		{ type: "operator", rawValue: ";", value: ";", pos: 61, },
+		{ type: "EOF", rawValue: "EOF", value: "EOF", pos: 62, },
 	],
 };
 
@@ -138,6 +138,7 @@ const onMatch = {
 				node: 'include_macro',
 				value: capture.value,
 				tokenPos: capture.pos,
+				// the fileName property will be added at the end
 			})
 		}
 	},
@@ -201,7 +202,7 @@ const tryBranches = (state, startPos, branchName) => {
 };
 
 const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
-const exampleToken = { type: "bareword", rawValue: "include", value: "include", fileName: "auto667025", pos: 0, };
+const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
 
 const tryBranchReturns =  {
 	matched: true, // whether the branch pattern matched the tokens
@@ -222,9 +223,14 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 	while (twigPos < branch.length && tokenPos < tokens.length) {
 		const token = tokens[tokenPos];
 		const twig = branch[twigPos];
+		const rep = twig.rep;
+		const zeroOkay = rep === '*' || rep === '?';
+		const multipleOkay = rep === '*' || rep === '+';
 		if (token.ignorable) {
 			tokenPos += 1;
-		} else if (twig.type === 'literal') {
+			continue;
+		}
+		if (twig.type === 'literal') {
 			if (twig.value === token.value) {
 				tokenPos += 1;
 				twigPos += 1;
@@ -246,7 +252,9 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 					nextPos: tokenPos,
 				};
 			}
-		} else if (twig.type === 'capture') {
+			continue;
+		}
+		if (twig.type === 'capture') {
 			if (twig.value === token.type) {
 				tokenPos += 1;
 				twigPos += 1;
@@ -273,15 +281,14 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 					nextPos: tokenPos,
 				};
 			}
-		} else if (twig.type === 'lookup') {
+			continue;
+		}
+		if (twig.type === 'lookup') {
 			let lookedUp = tryBranches(
 				state,
 				tokenPos,
 				twig.value,
 			);
-			const rep = twig.rep;
-			const zeroOkay = rep === '*' || rep === '?';
-			const multipleOkay = rep === '*' || rep === '+';
 			if (lookedUp.matched) {
 				if (unlabeledCaptures?.length && twig.label) {
 					const uncaptured = unlabeledCaptures.pop();
@@ -300,22 +307,22 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 					twigPos += 1;
 					repeated = false;
 				}
+				continue;
+			}
+			if (
+				(multipleOkay && repeated)
+				|| zeroOkay
+			) {
+				twigPos += 1;
+				repeated = false;
 			} else {
-				if (
-					(multipleOkay && repeated)
-					|| zeroOkay
-				) {
-					twigPos += 1;
-					repeated = false;
-				} else {
-					return {
-						matched: false,
-						startPos,
-						expected: lookedUp.expected.join(', '),
-						pos: lookedUp.pos,
-						nextPos: lookedUp.nextPos,
-					};
-				}
+				return {
+					matched: false,
+					startPos,
+					expected: lookedUp.expected.join(', '),
+					pos: lookedUp.pos,
+					nextPos: lookedUp.nextPos,
+				};
 			}
 		}
 	}
@@ -328,8 +335,10 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 	};
 };
 
-const parse = (tokens, tree) => {
+const parse = (tokens, tree, givenFileName) => {
+	const fileName = givenFileName ? givenFileName : 'auto' + Math.floor(Math.random()*10000000000);
 	const state = {
+		fileName,
 		success: false, // whether the file parsing succeeded
 		nodes: [], // the file nodes discovered
 		// these will have no actual effect yet, and are still per-file, but now files can reference each other and build into more interdependent things
@@ -357,8 +366,13 @@ const parse = (tokens, tree) => {
 			pos: capture.pos,
 		});
 	});
+	nodes.forEach(node=>{
+		node.fileName = fileName;
+	})
 	return state;
 };
+// TODO: once the files are parsed, we can:
+// Add the 
 
 const test = parse(exampleLex.tokens, exampleTree);
 console.log(test.state);
