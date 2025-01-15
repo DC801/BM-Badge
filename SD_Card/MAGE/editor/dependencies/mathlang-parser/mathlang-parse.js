@@ -1,5 +1,6 @@
+// `captures` and `unlabeledCaptures` use shift/unshift! Everything else uses pop/push!
+
 const exampleLex = {
-	fileName: "auto667025",
 	completed: true,
 	warnings: [],
 	errors: [],
@@ -116,30 +117,29 @@ const exampleTree = {
 };
 const onMatch = {
 	document: state => {
-		const capture = state.unlabeledCaptures.pop();
+		const capture = state.unlabeledCaptures.shift();
 		if (capture?.value !== 'EOF') throw new Error("No EOF at end of file");
 	},
 	include_macro: state => {
-		const capture = state.captures.pop();
 		if (
-			capture?.pattern !== 'include_macro'
-			|| capture?.label !== 'fileName'
+			state.captures[0]?.pattern === 'include_macro'
+			&& state.captures[0]?.label === 'fileName'
 		) {
-			// Looks like there wasn't a filename to include. Should be a warning, not an error.
-			state.captures.push(capture);
-			state.warnings.push({
-				value: 'Include macro lacks a filename',
-				message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
-				pos: capture.pos,
-			});
-			//
-		} else {
+			const capture = state.captures.shift();
 			state.nodes.push({
 				node: 'include_macro',
 				value: capture.value,
 				tokenPos: capture.pos,
 				// the fileName property will be added at the end
 			})
+		} else {
+			// Looks like there wasn't a filename to include. Should be a warning, not an error.
+			state.captures.unshift(capture);
+			state.warnings.push({
+				value: 'Include macro lacks a filename',
+				message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
+				pos: capture.pos,
+			});
 		}
 	},
 }
@@ -236,7 +236,7 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 				twigPos += 1;
 				repeated = false;
 				if (twig.label) {
-					captures.push({
+					captures.unshift({
 						pattern: branchName,
 						label: twig.label,
 						value: twig.value,
@@ -260,14 +260,14 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 				twigPos += 1;
 				repeated = false;
 				if (twig.label) {
-					captures.push({
+					captures.unshift({
 						pattern: branchName,
 						label: twig.label,
 						value: token.value,
 						pos: tokenPos,
 					});
 				} else {
-					unlabeledCaptures.push({
+					unlabeledCaptures.unshift({
 						value: token.value,
 						pos: tokenPos,
 					});
@@ -291,8 +291,8 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 			);
 			if (lookedUp.matched) {
 				if (unlabeledCaptures?.length && twig.label) {
-					const uncaptured = unlabeledCaptures.pop();
-					captures.push({
+					const uncaptured = unlabeledCaptures.shift();
+					captures.unshift({
 						pattern: lookedUp.pattern,
 						label: twig.label,
 						value: uncaptured.value,
@@ -335,9 +335,9 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 	};
 };
 
-const parse = (tokens, tree, givenFileName) => {
+const parseFile = (tokens, tree, givenFileName) => {
 	const fileName = givenFileName ? givenFileName : 'auto' + Math.floor(Math.random()*10000000000);
-	const state = {
+	const state = { // state == file info
 		fileName,
 		success: false, // whether the file parsing succeeded
 		nodes: [], // the file nodes discovered
@@ -350,8 +350,17 @@ const parse = (tokens, tree, givenFileName) => {
 		captures: [], // there shouldn't be anything left in here, but generate an error if there is
 		unlabeledCaptures: [], // there shouldn't be anything left in here, but generate an error if there is
 	};
+
+	// do the thing
 	const triedAll = tryBranches(state, 0, 'document');
 	state.success = triedAll.matched;
+
+	// smooth things out
+	state.nodes.forEach(node=>{
+		node.fileName = fileName;
+	});
+
+	// review errors and warnings
 	state.captures.forEach(capture => { // won't run if empty
 		state.errors.push({
 			value: 'Orphaned capture',
@@ -366,15 +375,12 @@ const parse = (tokens, tree, givenFileName) => {
 			pos: capture.pos,
 		});
 	});
-	nodes.forEach(node=>{
-		node.fileName = fileName;
-	})
+
+	// done!
 	return state;
 };
-// TODO: once the files are parsed, we can:
-// Add the 
 
-const test = parse(exampleLex.tokens, exampleTree);
-console.log(test.state);
+const testFile = parseFile(exampleLex.tokens, exampleTree);
+console.log(testFile);
 
 console.log('break');
