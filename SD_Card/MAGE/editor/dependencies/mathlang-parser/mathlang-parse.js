@@ -206,6 +206,11 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 		const rep = twig.rep;
 		const zeroOkay = rep === '*' || rep === '?';
 		const multipleOkay = rep === '*' || rep === '+';
+		if (twig.toCollection) {
+			const collex = crawlState.collections;
+			collex[twig.toCollection] = collex[twig.toCollection] || {};
+			collex[twig.toCollection][token.value] = true;
+		}
 		if (twig.type === 'literal') {
 			if (twig.value === token.value) {
 				if (twig.label) {
@@ -343,6 +348,7 @@ const tryBranches = (state, origCrawlState, branchName) => {
 			expected,
 			crawlState: {
 				tokenPos: maxPos,
+				collections: {},
 				captures: [],
 				unusedLabels: [],
 				nodes: [],
@@ -354,6 +360,14 @@ const tryBranches = (state, origCrawlState, branchName) => {
 	} else {
 		const success = successes[0];
 		const newCrawlState = success.crawlState;
+		Object.entries(newCrawlState.collections).forEach(entry=>{
+			const [name, dict] = entry;
+			const collex = state.collections;
+			collex[name] = collex[name] || {};
+			Object.keys(dict).forEach(value => {
+				collex[name][value] = true;
+			});
+		})
 		newCrawlState.nodes.forEach(node=>{
 			state.nodes.push(node); // or is concat more efficient?
 		})
@@ -375,6 +389,7 @@ const parseFile = (tokens, tree, givenFileName) => {
 	let crawlState = {
 		tokenPos: 0,
 		// these should be empty when we're done:
+		collections: {},
 		captures: [],
 		unusedLabels: [],
 		nodes: [],
@@ -384,7 +399,7 @@ const parseFile = (tokens, tree, givenFileName) => {
 		success: false, // whether the file parsing succeeded
 		nodes: [], // the file nodes discovered
 		// these will have no actual effect yet, and are still per-file, but now files can reference each other and build into more interdependent things
-		collections: [], // definitions are collected here to populate autocomplete (TODO)
+		collections: {}, // definitions are collected here to populate autocomplete (TODO)
 		warnings: [], // good things to know but non-breaking
 		errors: [], // parsing might have still finished if there are errors, but some nodes will be broken so the scenario might be wonky
 		tokens, // still useful for error handling; you can get a token by its index (from a node) and look at the token pos within the file (char) to get the line/col to make error messages

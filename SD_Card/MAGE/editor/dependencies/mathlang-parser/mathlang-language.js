@@ -3,7 +3,8 @@ const patterns = {
 	root: `@include_macro
 		| @constant_assignment`,
 	include_macro: `'include' '!' '(' $quoted_string:fileName? ')'`,
-	constant_assignment: `$constant:constantName>constantNames '=' @constant_value:constantValue ';'`,
+	constant_assignment: `$constant:constantName>constantNames
+		'=' @constant_value:constantValue ';'`,
 	constant_value: `$constant<constantNames
 		| $boolean
 		| $quoted_string | $bareword
@@ -11,6 +12,32 @@ const patterns = {
 		| @enum_alignment`,
 	enum_alignment: `'TR' | 'BR' | 'TL' | 'BL'
 		| 'TOP_RIGHT' | 'BOTTOM_RIGHT' | 'TOP_LEFT' | 'BOTTOM_LEFT'`,
+	// adding new:
+
+	// for later (test these):
+	enum_lights: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
+		| 'LED_BIT128' | 'LED_BIT64' | 'LED_BIT32' | 'LED_BIT16'
+		| 'LED_BIT8' | 'LED_BIT4' | 'LED_BIT2' | 'LED_BIT1'
+		| 'LED_MEM0' | 'LED_MEM1' | 'LED_MEM2' | 'LED_MEM3'
+		| 'LED_HAX' | 'LED_USB' | 'LED_SD' | 'LED_ALL'`,
+	enum_buttons: `'MEM0' | 'MEM1' | 'MEM2' | 'MEM3'
+		| 'BIT128' | 'BIT64' | 'BIT32' | 'BIT16'
+		| 'BIT8' | 'BIT4' | 'BIT2' | 'BIT1'
+		| 'XOR' | 'ADD' | 'SUB' | 'PAGE'
+		| 'LJOY_CENTER' | 'LJOY_UP' | 'LJOY_DOWN'
+		| 'LJOY_LEFT' | 'LJOY_RIGHT'
+		| 'RJOY_CENTER' | 'RJOY_UP' | 'RJOY_DOWN'
+		| 'RJOY_LEFT' | 'RJOY_RIGHT'
+		| 'TRIANGLE' | 'X' | 'CROSS' | 'O' | 'CIRCLE'
+		| 'SQUARE' | 'HAX' | 'ANY'`,
+	enum_map_slots: `'on_load' | 'on_tick' | 'on_look'`,
+	enum_entity_slots: `'on_interact' | 'on_tick' | 'on_look'`,
+	enum_save_slots: `'1' | '2' | '3'`,
+	enum_nsew: `'north' | 'south' | 'east' | 'west'`,
+	enum_entity_field: `'x' | 'y'
+		| 'primary_id' | 'secondary_id' | 'primary_id_type'
+		| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
+		| 'current_animation' | 'current_frame' | 'direction' | 'path_id'`,
 };
 
 // CONSTRAINTS (for now)
