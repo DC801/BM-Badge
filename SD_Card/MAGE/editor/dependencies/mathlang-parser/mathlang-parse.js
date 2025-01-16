@@ -1,4 +1,4 @@
-// `captures` and `unlabeledCaptures` use shift/unshift! Everything else uses pop/push!
+// `captures` and `unusedLabels` use shift/unshift! Everything else uses pop/push!
 
 const exampleLex = {
 	completed: true,
@@ -8,7 +8,7 @@ const exampleLex = {
 		{ type: "bareword", rawValue: "include", value: "include", pos: 0, },
 		{ type: "operator", rawValue: "!", value: "!", pos: 7, },
 		{ type: "operator", rawValue: "(", value: "(", pos: 8,},
-		// { type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
+		{ type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
 		{ type: "operator", rawValue: ")", value: ")", pos: 21, },
 		{ type: "newline", rawValue: "\n\n", value: "\n\n", pos: 22, ignorable: true, },
 		{ type: "constant", rawValue: "$trombones", value: "$trombones", pos: 24, },
@@ -116,16 +116,36 @@ const exampleTree = {
 	],
 };
 const onMatch = {
-	document: state => {
-		const capture = state.unlabeledCaptures.shift();
-		if (capture?.value !== 'EOF') throw new Error("No EOF at end of file");
+	// document: (state, crawlState) => {
+	// 	const capture = crawlState.unlabeledCaptures.shift();
+	// 	if (capture?.value !== 'EOF') throw new Error("No EOF at end of file");
+	// },
+	constant_assignment: (state, crawlState) => {
+		if (crawlState.captures.length < 2) {
+			state.warnings.push({
+				value: 'Constant assignment error',
+				message: 'A constant name or a constant value (or both) is missing!',
+				pos: state.pos,
+			});
+		}
+		const value = crawlState.captures.shift();
+		const label = crawlState.captures.shift();
+		if (value.pattern !== 'constant_value') throw new Error('constant_assignment capture error');
+		if (label.pattern !== 'constant_assignment') throw new Error('constant_assignment capture error');
+		state.nodes.push({
+			node: 'constant_assignment',
+			label: label.value,
+			value: value.value,
+			tokenPos: label.pos,
+			ignorable: false,
+		});
 	},
-	include_macro: (state, startPos) => {
+	include_macro: (state, crawlState, startPos) => {
 		if (
-			state.captures[0]?.pattern === 'include_macro'
-			&& state.captures[0]?.label === 'fileName'
+			crawlState.captures[0]?.pattern === 'include_macro'
+			&& crawlState.captures[0]?.label === 'fileName'
 		) {
-			const capture = state.captures.shift();
+			const capture = crawlState.captures.shift();
 			state.nodes.push({
 				node: 'include_macro',
 				value: capture.value,
@@ -154,21 +174,12 @@ const onMatch = {
 const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
 const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
 
-const tryBranchReturns =  {
-	matched: true, // whether the branch pattern matched the tokens
-	expected: '', // if no match, the token the branch wanted next
-	startPos: NaN, // token index where the branch tried to start matching
-	pos: NaN, // if no match, the non-match token index
-	nextPos: NaN, // where the tokens are to pick up again with the subsequent branch match attempt
-	// in the event of an error, this'll be the same as `pos`, but this still means trying from here, since this token may belong to a different pattern and the previous one just wasn't finished being typed yet or something
-}
-const tryBranch = (state, startPos, branchName, branchIndex) => {
+const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 	const tokens = state.tokens;
-	const captures = state.captures;
-	const unlabeledCaptures = state.unlabeledCaptures;
+	let crawlState = JSON.parse(JSON.stringify(origCrawlState)); 
 	const branch = state.tree[branchName]?.[branchIndex];
 	let twigPos = 0;
-	let tokenPos = startPos;
+	let tokenPos = crawlState.tokenPos;
 	let repeated = false;
 	const advanceTwig = () => {
 		twigPos += 1;
@@ -176,13 +187,14 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 	}
 	const advanceToken = () => {
 		tokenPos += 1;
+		crawlState.tokenPos += 1;
 	}
 	while (twigPos < branch.length && tokenPos < tokens.length) {
 		const token = tokens[tokenPos];
 		const twig = branch[twigPos];
 		if (token.ignorable) {
 			// keeping track of these may make error handling easier, as it'll be more clear when certain kinds of broken things have terminated to try starting a fresh pattern
-			state.nodes.push({
+			crawlState.nodes.push({
 				node: token.type,
 				value: token.value,
 				tokenPos,
@@ -197,7 +209,7 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 		if (twig.type === 'literal') {
 			if (twig.value === token.value) {
 				if (twig.label) {
-					captures.unshift({
+					crawlState.captures.unshift({
 						pattern: branchName,
 						label: twig.label,
 						value: twig.value,
@@ -216,9 +228,7 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 					return {
 						matched: false,
 						expected: twig.value,
-						startPos,
-						pos: tokenPos,
-						nextPos: tokenPos,
+						crawlState,
 					};
 				}
 			}
@@ -227,17 +237,23 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 		if (twig.type === 'capture') {
 			if (twig.value === token.type) {
 				if (twig.label) {
-					captures.unshift({
+					crawlState.captures.unshift({
 						pattern: branchName,
 						label: twig.label,
 						value: token.value,
 						pos: tokenPos,
 					});
-				} else {
-					unlabeledCaptures.unshift({
+				} else if (crawlState.unusedLabels.length > 0) {
+					crawlState.captures.unshift({
+						pattern: branchName,
+						label: crawlState.unusedLabels.shift(),
 						value: token.value,
 						pos: tokenPos,
 					});
+				} else if (token.type === 'EOF') {
+
+				} else {
+					throw new Error ('Capture found without label');
 				}
 				advanceToken();
 				advanceTwig();
@@ -251,34 +267,27 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 					return {
 						matched: false,
 						expected: `'${twig.value}'`,
-						startPos,
-						pos: tokenPos,
-						nextPos: tokenPos,
+						crawlState,
 					};
 				}
 			}
 			continue;
 		}
 		if (twig.type === 'lookup') {
+			if (twig.label) {
+				crawlState.unusedLabels.push(twig.label);
+			}
 			let lookedUp = tryBranches(
 				state,
-				tokenPos,
+				crawlState,
 				twig.value,
 			);
 			if (lookedUp.matched) {
-				if (unlabeledCaptures?.length && twig.label) {
-					const uncaptured = unlabeledCaptures.shift();
-					captures.unshift({
-						pattern: lookedUp.pattern,
-						label: twig.label,
-						value: uncaptured.value,
-						pos: uncaptured.pos,
-					});
-				}
-				tokenPos = lookedUp.nextPos;
+				crawlState = lookedUp.crawlState;
+				tokenPos = crawlState.tokenPos;
 				if (multipleOkay) {
 					repeated = true;
-					// no twigPos advance
+					// no advanceTwig() here
 				} else {
 					advanceTwig();
 				}
@@ -292,10 +301,8 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 			} else {
 				return {
 					matched: false,
-					startPos,
 					expected: lookedUp.expected.join(', '),
-					pos: lookedUp.pos,
-					nextPos: lookedUp.nextPos,
+					crawlState,
 				};
 			}
 		}
@@ -303,28 +310,19 @@ const tryBranch = (state, startPos, branchName, branchIndex) => {
 	return {
 		matched: true,
 		expected: '',
-		startPos,
-		pos: tokenPos,
-		nextPos: tokenPos,
+		crawlState,
 	};
 };
 
-const tryBranchesReturn = {
-	pattern: '', // name of the pattern as it appears in the tree
-	matched: false, // whether one of the branches matched the tokens
-	expected: [], // if no matches, a collection of the expected tokens for all the longest matches
-	startPos: NaN, // token index where the branch tried to start matching
-	pos: NaN, // if no matches, the best non-match token index
-	nextPos: NaN, // where the tokens are to pick up again with the subsequent branches match attempt
-	// in the event of an error, this'll be the same as `pos`, but this still means trying from here, since this token may belong to a different pattern and the previous one just wasn't finished being typed yet or something
-}
-const tryBranches = (state, startPos, branchName) => {
+const tryBranches = (state, origCrawlState, branchName) => {
 	const tree = state.tree;
 	const branches = tree[branchName];
+	const startPos = origCrawlState.tokenPos;
+	const crawlState = JSON.parse(JSON.stringify(origCrawlState)); 
 	const successes = [];
 	const fails = [];
 	for (let i = 0; i < branches.length; i++) {
-		const triedBranch = tryBranch(state, startPos, branchName, i);
+		const triedBranch = tryBranch(state, crawlState, branchName, i);
 		if (triedBranch.matched) {
 			successes.push(triedBranch);
 			break; // don't waste time trying matches after you've got one from the set; mathlang patterns should be mutually exclusive, whereas in the original natlang they could be subsets of each other
@@ -334,40 +332,53 @@ const tryBranches = (state, startPos, branchName) => {
 		}
 	}
 	if (successes.length === 0) {
-		fails.sort((a,b)=>b.nextPos - a.nextPos);
+		fails.sort((a,b)=>b.crawlState.tokenPos - a.crawlState.tokenPos);
 		const maxPos = fails[0];
 		const expected = fails
-			.filter(item=>item.nextPos === maxPos)
+			.filter(item=>item.crawlState.tokenPos === maxPos)
 			.map(item=>item.expected);
 		return { // keeping the succeed/fail return values uniform for sanity's sake
-			pattern: branchName,
 			matched: false,
+			pattern: branchName,
 			expected,
-			startPos,
-			pos: maxPos,
-			nextPos: maxPos, // ...otherwise this one makes no sense to include
+			crawlState: {
+				tokenPos: maxPos,
+				captures: [],
+				unusedLabels: [],
+				nodes: [],
+			},
 		};
 	}
 	if (successes.length > 1) {
 		throw new Error ("Handle multiple matching patterns please!");
 	} else {
 		const success = successes[0];
+		const newCrawlState = success.crawlState;
+		newCrawlState.nodes.forEach(node=>{
+			state.nodes.push(node); // or is concat more efficient?
+		})
+		newCrawlState.nodes = [];
 		if (onMatch[branchName]) {
-			onMatch[branchName](state, startPos);
+			onMatch[branchName](state, newCrawlState, startPos);
 		}
 		return {
-			pattern: branchName,
 			matched: true,
-			expected: [], // ...or this
-			startPos,
-			pos: success.pos, // ...or this
-			nextPos: success.nextPos,
+			pattern: branchName,
+			expected: [],
+			crawlState: newCrawlState,
 		};
 	}
 };
 
 const parseFile = (tokens, tree, givenFileName) => {
 	const fileName = givenFileName ? givenFileName : 'auto' + Math.floor(Math.random()*10000000000);
+	let crawlState = {
+		tokenPos: 0,
+		// these should be empty when we're done:
+		captures: [],
+		unusedLabels: [],
+		nodes: [],
+	};
 	const state = { // state == file info
 		fileName,
 		success: false, // whether the file parsing succeeded
@@ -378,13 +389,12 @@ const parseFile = (tokens, tree, givenFileName) => {
 		errors: [], // parsing might have still finished if there are errors, but some nodes will be broken so the scenario might be wonky
 		tokens, // still useful for error handling; you can get a token by its index (from a node) and look at the token pos within the file (char) to get the line/col to make error messages
 		tree, // doesn't hurt to keep
-		captures: [], // there shouldn't be anything left in here, but generate an error if there is
-		unlabeledCaptures: [], // there shouldn't be anything left in here, but generate an error if there is
 	};
 
 	// do the thing
-	const triedAll = tryBranches(state, 0, 'document');
+	const triedAll = tryBranches(state, crawlState, 'document');
 	state.success = triedAll.matched;
+	state.crawlState = triedAll.crawlState;
 
 	// smooth things out
 	state.nodes.forEach(node=>{
@@ -392,17 +402,17 @@ const parseFile = (tokens, tree, givenFileName) => {
 	});
 
 	// review errors and warnings
-	state.captures.forEach(capture => { // won't run if empty
+	triedAll.crawlState.captures.forEach(capture => { // won't run if empty
 		state.errors.push({
 			value: 'Orphaned capture',
 			message: `Found orphaned capture at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
 			pos: capture.pos,
 		});
 	});
-	state.unlabeledCaptures.forEach(capture => { // won't run if empty
+	triedAll.crawlState.unusedLabels.forEach(capture => { // won't run if empty
 		state.errors.push({
-			value: 'Orphaned capture (without label)',
-			message: `Found orphaned (unlabeled) capture at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
+			value: 'Unused capture label',
+			message: `Found unused capture label at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
 			pos: capture.pos,
 		});
 	});
