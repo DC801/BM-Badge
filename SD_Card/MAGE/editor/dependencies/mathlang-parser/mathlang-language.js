@@ -1,18 +1,40 @@
 const patterns = {
 	document: `@root* $EOF`,
 	root: `@include_macro
-		| @constant_assignment`,
+		| @constant_assignment
+		| @add_serial_dialog_settings
+		| @add_dialog_settings
+	`,
 	include_macro: `'include' '!' '(' $quoted_string:fileName? ')'`,
 	constant_assignment: `$constant:constantName>constantNames
 		'=' @constant_value:constantValue ';'`,
 	constant_value: `$constant<constantNames
 		| $boolean
 		| $quoted_string | $bareword
-		| $number | $duration | $distance | $color | $quantity
-		| @enum_alignment`,
+		| $number | $duration | $distance | $color | $quantity`,
 	enum_alignment: `'TR' | 'BR' | 'TL' | 'BL'
 		| 'TOP_RIGHT' | 'BOTTOM_RIGHT' | 'TOP_LEFT' | 'BOTTOM_LEFT'`,
+	add_serial_dialog_settings: `'add' 'serial_dialog' 'settings' '{'
+			@serial_dialog_parameter*
+		'}'`,
+	serial_dialog_parameter: `'wrap':property $number:value`,
 	// adding new:
+	add_dialog_settings: `'add' 'dialog' 'settings' '{'
+		@dialog_settings_target*
+	'}'`,
+	dialog_settings_target: `'default':target '{' @dialog_parameter* '}'
+	| 'label':dialogSettingsTarget $bareword:dialogSettingsTargetValue '{' @dialog_parameter* '}'
+	| 'entity':dialogSettingsTarget $string:dialogSettingsTargetValue '{' @dialog_parameter* '}'
+	`,
+	dialog_parameter: `
+		'entity':dialogSettingsProperty $string:dialogSettingsValue<>entityNames
+		| 'name':dialogSettingsProperty $string:dialogSettingsValue
+		| 'portrait':dialogSettingsProperty $string:dialogSettingsValue<portraitNames
+		| 'alignment':dialogSettingsProperty @enum_alignment:dialogSettingsValue
+		| 'border_tileset':dialogSettingsProperty $string:dialogSettingsValue
+		| 'emote':dialogSettingsProperty $number:dialogSettingsValue
+		| 'wrap':dialogSettingsProperty $number:dialogSettingsValue
+	`,
 
 	// for later (test these):
 	enum_lights: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
@@ -67,12 +89,18 @@ const tokenTypesFound = new Set();
 const collectionsFound = new Set();
 const capturesIdentified = {};
 const getWordReport = (word, patternName) => {
-	const fragments = word.split(/\b/g);
+	const literal = word.match(/^'(.+?)'/);
+	const remainder = literal
+		? word.replace(literal[0], '')
+		: word;
+	const fragments = remainder.length > 0
+		? remainder.split(/\b/g)
+		: [];
 	const token = {
 		original: word,
 		rep: '',
-		type: '',
-		value: '',
+		type: literal ? 'literal' : '',
+		value: literal ? literal[1] : '',
 	}
 	if (
 		fragments[fragments.length-1] === '?'
@@ -81,28 +109,10 @@ const getWordReport = (word, patternName) => {
 	) {
 		token.rep = fragments.pop();
 	}
-	if (fragments[0].startsWith("'")) {
-		const fancy = fragments[0].match(/'(.+?)'/);
-		if (fancy) {
-			keywordsFound.add(fancy[1]);
-			token.value = fancy[1];
-			token.type = 'literal';
-			return token;
-		}
-		if (fragments[fragments.length-1] !== "'") {
-			throw new Error("Subpattern lacks matching single quote: " + word);
-		} else if (fragments.length !== 3) {
-			throw new Error("Subpattern of unusual length: " + word);
-		}
-		keywordsFound.add(fragments[1]);
-		token.value = fragments[1];
-		token.type = 'literal';
-		return token;
-	}
-	if (fragments.length % 2 !== 0) {
-		throw new Error("Subpattern not built up from pairs: " + word);
-	}
 	while (fragments.length > 0) {
+		if (fragments.length % 2 !== 0) {
+			throw new Error("Subpattern not built up from pairs: " + word);
+		}
 		const left = fragments.shift();
 		const right = fragments.shift();
 		if (!/[a-zA-Z_]+/.test(right)) {
@@ -138,11 +148,10 @@ const tree = {};
 Object.entries(patterns).forEach(([patternName, pattern])=>{
 	const allTokenPatterns = [];
 	const splits = pattern.trim()
-		.replace(/[\s\n\t]+/,' ')
 		.split('|')
 		.map(str=>str.trim());
 	splits.forEach(subpattern=>{
-		const words = subpattern.split(' ').map(item=>getWordReport(item,patternName));
+		const words = subpattern.split(/[\t\n\s]+/g).map(item=>getWordReport(item,patternName));
 		allTokenPatterns.push(words);
 	});
 	tree[patternName] = allTokenPatterns;
@@ -239,30 +248,5 @@ const parsedPatterns = { // generated from `patterns`, to be rebuilt each time; 
     ],
   ],
 };
-const exampleLex = {
-	completed: true,
-	warnings: [],
-	errors: [],
-	tokens: [
-		{ type: "bareword", rawValue: "include", value: "include", pos: 0, },
-		{ type: "operator", rawValue: "!", value: "!", pos: 7, },
-		{ type: "operator", rawValue: "(", value: "(", pos: 8,},
-		{ type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
-		{ type: "operator", rawValue: ")", value: ")", pos: 21, },
-		{ type: "newline", rawValue: "\n\n", value: "\n\n", pos: 22, ignorable: true, },
-		{ type: "constant", rawValue: "$trombones", value: "$trombones", pos: 24, },
-		{ type: "operator", rawValue: "=", value: "=", pos: 35, },
-		{ type: "number", rawValue: "76", value: 76, pos: 37, },
-		{ type: "operator", rawValue: ";", value: ";", pos: 39, },
-		{ type: "newline", rawValue: "\n", value: "\n", pos: 40, ignorable: true, },
-		{ type: "constant", rawValue: "$player", value: "$player", pos: 41, },
-		{ type: "operator", rawValue: "=", value: "=", pos: 49, },
-		{ type: "quoted_string", rawValue: "\"%PLAYER%\"", value: "%PLAYER%", pos: 51, },
-		{ type: "operator", rawValue: ";", value: ";", pos: 61, },
-		{ type: "EOF", rawValue: "EOF", value: "EOF", pos: 62, },
-	],
-};
-
-const exampleTokens = exampleLex.tokens;
 
 console.log('break');

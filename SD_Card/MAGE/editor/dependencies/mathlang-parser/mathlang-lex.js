@@ -56,23 +56,23 @@ const NUMBER_SUFFIXES = {
     x: (n) => { return { type: 'quantity', value: n } },
 };
 const WORDS_WITH_TYPES = {
-	on: { type: 'boolean', value: true },
-	off: { type: 'boolean', value: false },
-	true: { type: 'boolean', value: true },
-	false: { type: 'boolean', value: false },
-	open: { type: 'boolean', value: true },
-	closed: { type: 'boolean', value: false },
-	black: { type: 'color', value: '#000000' },
-	white: { type: 'color', value: '#FFFFFF' },
-	red: { type: 'color', value: '#FF0000' },
-	green: { type: 'color', value: '#00FF00' },
-	blue: { type: 'color', value: '#0000FF' },
-	magenta: { type: 'color', value: '#FF00FF' },
-	yellow: { type: 'color', value: '#FF00FF' },
-	cyan: { type: 'color', value: '#00FFFF' },
-	once: { type: 'quantity', value: 1 },
-	twice: { type: 'quantity', value: 2 },
-	thrice: { type: 'quantity', value: 3 },
+	on: { type: 'boolean', value: true, barewordValue: 'on' },
+	off: { type: 'boolean', value: false, barewordValue: 'off' },
+	true: { type: 'boolean', value: true, barewordValue: 'true' },
+	false: { type: 'boolean', value: false, barewordValue: 'false' },
+	open: { type: 'boolean', value: true, barewordValue: 'open' },
+	closed: { type: 'boolean', value: false, barewordValue: 'closed' },
+	black: { type: 'color', value: '#000000', barewordValue: 'black' },
+	white: { type: 'color', value: '#FFFFFF', barewordValue: 'white' },
+	red: { type: 'color', value: '#FF0000', barewordValue: 'red' },
+	green: { type: 'color', value: '#00FF00', barewordValue: 'green' },
+	blue: { type: 'color', value: '#0000FF', barewordValue: 'blue' },
+	magenta: { type: 'color', value: '#FF00FF', barewordValue: 'magenta' },
+	yellow: { type: 'color', value: '#FF00FF', barewordValue: 'yellow' },
+	cyan: { type: 'color', value: '#00FFFF', barewordValue: 'cyan' },
+	once: { type: 'quantity', value: 1, barewordValue: 'once' },
+	twice: { type: 'quantity', value: 2, barewordValue: 'twice' },
+	thrice: { type: 'quantity', value: 3, barewordValue: 'thrice' },
 };
 
 const lex = (string) => {
@@ -381,11 +381,34 @@ const lex = (string) => {
 		errors,
 		tokens,
 		warnings,
+		plaintext: string,
 		completed: true,
 	}
 }
 
-const test = `include!("header.mgs")\n\n$trombones = 76;\n/* comment */\n$player = "%PLAYER%";`
+const test = `include!("header.mgs")
+
+$trombones = 76;
+/* comment */
+$player = "%PLAYER%";
+
+add serial_dialog settings {
+	wrap 88
+}
+add dialog settings {
+	default {
+		alignment BL
+		warp 10
+	}
+	label PLAYER {
+		entity "%PLAYER%"
+		alignment BR
+	}
+	entity Bob {
+		name "True Bob"
+	}
+}
+`
 
 const report = lex(test);
 // console.log(JSON.stringify(report.tokens, null, '  '));
