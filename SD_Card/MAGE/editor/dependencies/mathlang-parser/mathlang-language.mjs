@@ -18,71 +18,175 @@
 // + = 1+; must match at least once, but can be multiple
 // * = 0+; can be zero matches, or can be an unlimited number of matches
 
-
 // for error recovery... what if each pattern also had an error recovery function??
-const patterns = {
-	document: `@root* $EOF`,
-	root: `@include_macro
-		| @constant_assignment
-		| @add_serial_dialog_settings
-		| @add_dialog_settings
-	`,
-	include_macro: `'include' '!' '(' $quoted_string:fileName? ')'`,
-	constant_assignment: `$constant:constantName>constantNames
-		'=' @constant_value:constantValue ';'`,
-	constant_value: `$constant<constantNames
-		| $boolean
-		| $quoted_string | $bareword
-		| $number | $duration | $distance | $color | $quantity`,
-	enum_alignment: `'TR' | 'BR' | 'TL' | 'BL'
-		| 'TOP_RIGHT' | 'BOTTOM_RIGHT' | 'TOP_LEFT' | 'BOTTOM_LEFT'`,
-	add_serial_dialog_settings: `'add' 'serial_dialog' 'settings' '{'
-			@serial_dialog_parameter*
-		'}'`,
-	serial_dialog_parameter: `'wrap':property $number:value`,
-	add_dialog_settings: `'add' 'dialog' 'settings' '{'
-		@dialog_settings_target*
-	'}'`,
-	dialog_settings_target: `'default':dialogSettingsTarget '{' @dialog_parameter* '}'
-	| 'label':dialogSettingsTarget $bareword:dialogSettingsTargetValue '{' @dialog_parameter* '}'
-	| 'entity':dialogSettingsTarget $string:dialogSettingsTargetValue '{' @dialog_parameter* '}'
-	`,
-	dialog_parameter: `
-		'entity':dialogSettingsProperty $string:dialogSettingsValue<>entityNames
-		| 'name':dialogSettingsProperty $string:dialogSettingsValue
-		| 'portrait':dialogSettingsProperty $string:dialogSettingsValue<portraitNames
-		| 'alignment':dialogSettingsProperty @enum_alignment:dialogSettingsValue
-		| 'border_tileset':dialogSettingsProperty $string:dialogSettingsValue
-		| 'emote':dialogSettingsProperty $number:dialogSettingsValue
-		| 'wrap':dialogSettingsProperty $number:dialogSettingsValue
-	`,
-	entity_identifier: `'player' | 'self' | 'entity' $string:entityName`,
-	geometry_identifier: `'geometry' $string:geometryName`,
-	// for later (test these):
-	enum_lights: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
-		| 'LED_BIT128' | 'LED_BIT64' | 'LED_BIT32' | 'LED_BIT16'
-		| 'LED_BIT8' | 'LED_BIT4' | 'LED_BIT2' | 'LED_BIT1'
-		| 'LED_MEM0' | 'LED_MEM1' | 'LED_MEM2' | 'LED_MEM3'
-		| 'LED_HAX' | 'LED_USB' | 'LED_SD' | 'LED_ALL'`,
-	enum_buttons: `'MEM0' | 'MEM1' | 'MEM2' | 'MEM3'
-		| 'BIT128' | 'BIT64' | 'BIT32' | 'BIT16'
-		| 'BIT8' | 'BIT4' | 'BIT2' | 'BIT1'
-		| 'XOR' | 'ADD' | 'SUB' | 'PAGE'
-		| 'LJOY_CENTER' | 'LJOY_UP' | 'LJOY_DOWN'
-		| 'LJOY_LEFT' | 'LJOY_RIGHT'
-		| 'RJOY_CENTER' | 'RJOY_UP' | 'RJOY_DOWN'
-		| 'RJOY_LEFT' | 'RJOY_RIGHT'
-		| 'TRIANGLE' | 'X' | 'CROSS' | 'O' | 'CIRCLE'
-		| 'SQUARE' | 'HAX' | 'ANY'`,
-	enum_map_slots: `'on_load' | 'on_tick' | 'on_look'`,
-	enum_entity_slots: `'on_interact' | 'on_tick' | 'on_look'`,
-	enum_save_slots: `'1' | '2' | '3'`,
-	enum_nsew: `'north' | 'south' | 'east' | 'west'`,
-	enum_entity_field: `'x' | 'y'
-		| 'primary_id' | 'secondary_id' | 'primary_id_type'
-		| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
-		| 'current_animation' | 'current_frame' | 'direction' | 'path_id'`,
+const dictionary = {
+	document: {
+		pattern: `@root* $EOF`
+	},
+	root: {
+		pattern: `@include_macro
+			| @constant_assignment
+			| @add_serial_dialog_settings
+			| @add_dialog_settings`,
+	},
+	include_macro: {
+		pattern: `'include' '!' '(' $quoted_string:fileName? ')'`,
+		onMatch: (state, crawlState, startPos) => {
+			const fileNameCapture = extractMostRecentCaptures(crawlState, 'fileName', 1)[0];
+			if (fileNameCapture) {
+				state.nodes.push({
+					node: 'include_macro',
+					value: fileNameCapture.value,
+					tokenPos: fileNameCapture.pos,
+				});
+			} else {
+				state.warnings.push({
+					value: 'Include macro lacks a filename',
+					message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
+					pos: crawlState.tokenPos,
+				});
+				state.nodes.push({
+					node: 'include_macro',
+					value: '',
+					tokenPos: startPos,
+					ignorable: true,
+				});
+			}
+		},
+	},
+	constant_assignment: {
+		pattern: `$constant:constantName>constantNames '=' @constant_value:constantValue ';'`,
+		onMatch: (state, crawlState) => {
+			const nameCapture = extractMostRecentCaptures(crawlState, 'constantName', 1)[0];
+			const valueCapture = extractMostRecentCaptures(crawlState, 'constantValue', 1)[0];
+			if (!nameCapture || !valueCapture) throw new Error (`constant_assignment error`);
+			state.nodes.push({
+				node: 'constant_assignment',
+				label: nameCapture.value,
+				value: valueCapture.value,
+				tokenPos: nameCapture.pos,
+			});
+		},
+	},
+	constant_value: {
+		pattern: `$constant<constantNames | $boolean | $quoted_string | $bareword
+			| $number | $duration | $distance | $color | $quantity`,
+	},
+	add_serial_dialog_settings: {
+		pattern: `'add' 'serial_dialog' 'settings' '{' @serial_dialog_parameter* '}'`,
+		onMatch: (state, _crawlState, startPos) => {
+			state.nodes.push({
+				node: 'add_serial_dialog_settings',
+				settings: extractMostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity),
+				tokenPos: startPos,
+			});
+		},
+	},
+	serial_dialog_parameter: {
+		pattern: `'wrap':property $number:value`,
+		onMatch: (state, crawlState) => {
+			const propertyCapture = extractMostRecentCaptures(crawlState, 'property', 1)[0];
+			const valueCapture = extractMostRecentCaptures(crawlState, 'value', 1)[0];
+			state.nodes.push({
+				node: 'serial_dialog_parameter',
+				label: propertyCapture.value,
+				value: valueCapture.value,
+				tokenPos: propertyCapture.pos,
+			});
+		},
+	},
+	add_dialog_settings: {
+		pattern: `'add' 'dialog' 'settings' '{' @dialog_settings_target* '}'`,
+	},
+	dialog_settings_target: {
+		pattern: `'default':dialogSettingsTarget '{' @dialog_parameter* '}'
+			| 'label':dialogSettingsTarget $bareword:dialogSettingsTargetValue '{' @dialog_parameter* '}'
+			| 'entity':dialogSettingsTarget $string:dialogSettingsTargetValue '{' @dialog_parameter* '}'`,
+		onMatch: (state, crawlState) => {
+			const target = extractMostRecentCaptures(crawlState, 'dialogSettingsTarget', 1)[0];
+			const targetValue = extractMostRecentCaptures(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
+			const entry = {
+				node: 'add_dialog_settings',
+				settings: extractMostRecentNodes(state, 'dialog_parameter', 0, Infinity),
+				tokenPos: target.pos,
+				target: target.value,
+				targetValue: !targetValue && target.value === 'default' ? '' : targetValue.value,
+			};
+			state.nodes.push(entry);
+		},
+	},
+	enum_alignment: {
+		pattern: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
+			| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
+	},
+	dialog_parameter: {
+		pattern: `'entity':dialogSettingsProperty $string:dialogSettingsValue<>entityNames
+			| 'name':dialogSettingsProperty $string:dialogSettingsValue
+			| 'portrait':dialogSettingsProperty $string:dialogSettingsValue<portraitNames
+			| 'alignment':dialogSettingsProperty @enum_alignment:dialogSettingsValue
+			| 'border_tileset':dialogSettingsProperty $string:dialogSettingsValue
+			| 'emote':dialogSettingsProperty $number:dialogSettingsValue
+			| 'wrap':dialogSettingsProperty $number:dialogSettingsValue`,
+		onMatch: (state, crawlState) => {
+			const propertyCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsProperty', 1)[0];
+			const valueCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsValue', 1)[0];
+			state.nodes.push({
+				node: 'dialog_parameter',
+				label: propertyCapture.value,
+				value: valueCapture.value,
+				tokenPos: propertyCapture.pos,
+			});
+		},
+	},
+	entity_identifier: {
+		pattern: `'player' | 'self' | 'entity' $string:entityName`,
+	},
+	geometry_identifier: {
+		pattern: `'geometry' $string:geometryName`,
+	},
+	// untested:
+	enum_map_slots: {
+		pattern: `'on_load' | 'on_tick' | 'on_look'`,
+	},
+	enum_entity_slots: {
+		pattern: `'on_interact' | 'on_tick' | 'on_look'`,
+	},
+	enum_save_slots: {
+		pattern: `'1' | '2' | '3'`,
+	},
+	enum_nsew: {
+		pattern: `'north' | 'south' | 'east' | 'west'`,
+	},
+	enum_lights: {
+		pattern: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
+			| 'LED_BIT128' | 'LED_BIT64' | 'LED_BIT32' | 'LED_BIT16'
+			| 'LED_BIT8' | 'LED_BIT4' | 'LED_BIT2' | 'LED_BIT1'
+			| 'LED_MEM0' | 'LED_MEM1' | 'LED_MEM2' | 'LED_MEM3'
+			| 'LED_HAX' | 'LED_USB' | 'LED_SD' | 'LED_ALL'`,
+	},
+	enum_buttons: {
+		pattern: `'MEM0' | 'MEM1' | 'MEM2' | 'MEM3' | 'XOR' | 'ADD' | 'SUB' | 'PAGE'
+			| 'BIT128' | 'BIT64' | 'BIT32' | 'BIT16' | 'BIT8' | 'BIT4' | 'BIT2' | 'BIT1'
+			| 'LJOY_CENTER' | 'LJOY_UP' | 'LJOY_DOWN' | 'LJOY_LEFT' | 'LJOY_RIGHT'
+			| 'RJOY_CENTER' | 'RJOY_UP' | 'RJOY_DOWN' | 'RJOY_LEFT' | 'RJOY_RIGHT'
+			| 'TRIANGLE' | 'X' | 'CROSS' | 'O' | 'CIRCLE' | 'SQUARE' | 'HAX' | 'ANY'`,
+	},
+	enum_entity_field: {
+		pattern: `'x' | 'y' | 'primary_id' | 'secondary_id' | 'primary_id_type'
+			| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
+			| 'current_animation' | 'current_frame' | 'direction' | 'path_id'`,
+	},
+
 };
+
+const onMatch = {};
+const patterns = {};
+
+Object.keys(dictionary).forEach(entryName=>{
+	const entry = dictionary[entryName];
+	if (entry.pattern) patterns[entryName] = entry.pattern;
+	if (entry.onMatch) onMatch[entryName] = entry.onMatch;
+});
 
 const extractMostRecentCaptures = (crawlState, captureLabel, min = 1, max = 1) => {
 	// skip the irrelevant ones by setting them aside for a second
@@ -139,81 +243,6 @@ const extractMostRecentNodes = (state, nodeName, min = 1, max = 1) => {
 	return extracted;
 };
 
-const onMatch = {
-	constant_assignment: (state, crawlState) => {
-		const nameCapture = extractMostRecentCaptures(crawlState, 'constantName', 1)[0];
-		const valueCapture = extractMostRecentCaptures(crawlState, 'constantValue', 1)[0];
-		if (!nameCapture || !valueCapture) throw new Error (`constant_assignment error`);
-		state.nodes.push({
-			node: 'constant_assignment',
-			label: nameCapture.value,
-			value: valueCapture.value,
-			tokenPos: nameCapture.pos,
-		});
-	},
-	include_macro: (state, crawlState, startPos) => {
-		const fileNameCapture = extractMostRecentCaptures(crawlState, 'fileName', 1)[0];
-		if (fileNameCapture) {
-			state.nodes.push({
-				node: 'include_macro',
-				value: fileNameCapture.value,
-				tokenPos: fileNameCapture.pos,
-			});
-		} else {
-			state.warnings.push({
-				value: 'Include macro lacks a filename',
-				message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
-				pos: crawlState.tokenPos,
-			});
-			state.nodes.push({
-				node: 'include_macro',
-				value: '',
-				tokenPos: startPos,
-				ignorable: true,
-			});
-		}
-	},
-	add_dialog_settings: () => {},
-	dialog_settings_target: (state, crawlState) => {
-		const target = extractMostRecentCaptures(crawlState, 'dialogSettingsTarget', 1)[0];
-		const targetValue = extractMostRecentCaptures(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
-		const entry = {
-			node: 'add_dialog_settings',
-			settings: extractMostRecentNodes(state, 'dialog_parameter', 0, Infinity),
-			tokenPos: target.pos,
-			target: target.value,
-			targetValue: !targetValue && target.value === 'default' ? '' : targetValue.value,
-		};
-		state.nodes.push(entry);
-	},
-	dialog_parameter: (state, crawlState) => {
-		const propertyCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsProperty', 1)[0];
-		const valueCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsValue', 1)[0];
-		state.nodes.push({
-			node: 'dialog_parameter',
-			label: propertyCapture.value,
-			value: valueCapture.value,
-			tokenPos: propertyCapture.pos,
-		});
-	},
-	serial_dialog_parameter: (state, crawlState) => {
-		const propertyCapture = extractMostRecentCaptures(crawlState, 'property', 1)[0];
-		const valueCapture = extractMostRecentCaptures(crawlState, 'value', 1)[0];
-		state.nodes.push({
-			node: 'serial_dialog_parameter',
-			label: propertyCapture.value,
-			value: valueCapture.value,
-			tokenPos: propertyCapture.pos,
-		});
-	},
-	add_serial_dialog_settings: (state, _crawlState, startPos) => {
-		state.nodes.push({
-			node: 'add_serial_dialog_settings',
-			settings: extractMostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity),
-			tokenPos: startPos,
-		});
-	},
-}
 
 // auditing the above pattern dictionary structure
 const keywordsFound = new Set();
