@@ -44,9 +44,9 @@ const isLetter = (char) => (char >= 'a' && char <= 'z')
 const isBarewordInitial = (char) => isLetter(char) || char === '_'
 const isBarewordable = (char) => isBarewordInitial(char) || isDigit(char) || char === '-'
 
-OPERATORS_SINGLE = new Set('{}[]()<>+-=*/?!%:;,#'.split(''));
-OPERATORS_LONG = new Set([ "!=", "==", ">=", "<=", "||", "->" ]);
-IGNORE_WHITESPACE = new Set([' ', '\t'])
+const OPERATORS_SINGLE = new Set('{}[]()<>+-=*/?!%:;,#'.split(''));
+const OPERATORS_LONG = new Set([ "!=", "==", ">=", "<=", "||", "->" ]);
+const IGNORE_WHITESPACE = new Set([' ', '\t'])
 
 const NUMBER_SUFFIXES = {
     ms: (n) => { return { type: 'duration', value: n } },
@@ -386,35 +386,13 @@ const lex = (string) => {
 	}
 }
 
-const test = `include!("header.mgs")
 
-$trombones = 76;
-/* comment */
-$player = "%PLAYER%";
 
-add serial_dialog settings {
-	wrap 88
-}
-add dialog settings {
-	default {
-		alignment BL
-		warp 10
-	}
-	label PLAYER {
-		entity "%PLAYER%"
-		alignment BR
-	}
-	entity Bob {
-		name "True Bob"
-	}
-}
-`
+// const report = lex(test);
+// // console.log(JSON.stringify(report.tokens, null, '  '));
+// const flatReport = report.tokens
+// 	.filter(token=>!token.ignorable)
+// 	.map(token=>token.value).join(' ');
+// console.log(flatReport);
 
-const report = lex(test);
-// console.log(JSON.stringify(report.tokens, null, '  '));
-const flatReport = report.tokens
-	.filter(token=>!token.ignorable)
-	.map(token=>token.value).join(' ');
-console.log(flatReport);
-
-// export default lex;
+export default lex;
