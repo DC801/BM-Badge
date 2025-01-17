@@ -1,0 +1,278 @@
+/* ------------------------------ ROOT LEVEL ------------------------------ */
+
+// STARTS WITH LITERALS
+include!("captureFileName.mgs")
+dialog dialogName {}
+serial_dialog serialDialogName {}
+script scriptName {}
+add serial_dialog settings {}
+add dialog settings {}
+// line comment, parsed but ignored
+/* block comment, parsed but ignored */
+// whitespace is also parsed but ignored fwiw
+
+// STARTS WITH CAPTURE TOKENS
+$const_literal = $string_literal;
+$const_literal = $number_literal;
+$const_literal = $bool_literal;
+scriptName {}
+
+/* ------------------------------ DIALOG SETTINGS TARGET LEVEL ------------------------------ */
+
+add dialog settings {
+	label labelName {}
+	entity entityName {}
+	default {}
+}
+
+add serial_dialog settings {
+	wrap 60
+}
+
+/* ------------------------------ DIALOG SETTINGS LEVEL ------------------------------ */
+
+add dialog settings {
+	label labelName {
+		entity "%PLAYER%"
+		name $string_literal
+		portrait TOP_RIGHT
+		alignment TOP_RIGHT
+		border_tileset tilesetName
+		emote 500
+		wrap $constantName
+	}
+	entity entityName { /*ditto*/ }
+	default { /*ditto*/ }
+}
+
+/* ------------------------------ SCRIPT LEVEL ------------------------------ */
+
+_ {
+
+	/* -------------------------------- LEFT TO RIGHT -------------------------------- */
+
+	// as before, anything purple means script jumping or maneuvering will happen
+	while (/* @condition */) {/* @script_actions */}
+	for (/* @initial */ ; /* @condition */ ; /* @increment */) {
+		break;
+		continue;
+	}
+	if (/* @condition */) {/* @script_actions */}
+	else if (/* @condition */) {/* @script_actions */}
+	else {/* @script_actions */}
+	
+	return;
+
+	load map mapName; //LOAD_MAP
+	goto scriptName; //RUN_SCRIPT
+	goto index $number_literal; //GOTO_ACTION_INDEX
+	goto label labelName; //GOTO_ACTION_INDEX
+	// non-purple:
+	delete command $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND
+	delete command $string_literal + $argName; //UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+	delete alias $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS
+	hide command $string_literal; //SET_SERIAL_DIALOG_COMMAND_VISIBILITY
+	unhide command $string_literal; //SET_SERIAL_DIALOG_COMMAND_VISIBILITY
+	save slot; //SLOT_SAVE
+	load slot $enum_slot; //SLOT_LOAD
+	erase slot $enum_slot; //SLOT_ERASE
+	block $var_duration; //BLOCKING_DELAY
+	wait $var_duration; //NON_BLOCKING_DELAY
+	close dialog; //CLOSE_DIALOG
+	close serial_dialog; //CLOSE_SERIAL_DIALOG
+	pause map on_tick; //SET_SCRIPT_PAUSE
+	pause entity entityName on_tick; //SET_SCRIPT_PAUSE
+	pause player on_tick; //SET_SCRIPT_PAUSE
+	pause self on_tick; //SET_SCRIPT_PAUSE
+	unpause map on_tick; //SET_SCRIPT_PAUSE
+	unpause entity entityName on_tick; //SET_SCRIPT_PAUSE
+	// with dialog / serial_dialog literals
+	show dialog {}; //SHOW_DIALOG
+	show dialog dialogName; //SHOW_DIALOG
+	show dialog dialogName {}; //SHOW_DIALOG
+	show serial_dialog {}; //SHOW_SERIAL_DIALOG
+	show serial_dialog serialDialogName; //SHOW_SERIAL_DIALOG
+	show serial_dialog serialDialogName {}; //SHOW_SERIAL_DIALOG
+
+	/* ---------------------- LEFT TO RIGHT BUT ALSO CHECK THE SECOND TOKEN ---------------------- */
+
+	debug!()
+	debug!(serialDialogName)
+	debug!("serial dialog messages")
+	copy!(scriptName) //COPY_SCRIPT
+	json![] // Anything inside the brackets will be arbitrary actions. Action == obj literal, comma-separated
+	rand!()
+
+	/* REMINDER
+	rand!(wait [100ms, 400ms, 500ms];)
+	// becomes:
+	rand ?= 3;
+	if (rand == 0) { wait 100ms; }
+	else if (rand == 1) { wait 400ms; }
+	else if (rand == 2) { wait 500ms; }
+	*/
+
+
+	/* -------------------------------- DEFINITELY THE SECOND TOKEN -------------------------------- */
+
+	$bareword_literal: // label
+
+	/* -------------------------------- DO OVER TIME OPERATOR -------------------------------- */
+
+	camera fade out -> $color over $duration; //SCREEN_FADE_OUT
+	camera fade in -> $color over $duration; //SCREEN_FADE_IN
+	camera shake -> $duration $dist for $duration; //SET_SCREEN_SHAKE
+	camera -> geometry geometryName origin over $duration; //PAN_CAMERA_TO_GEOMETRY
+	camera -> geometry geometryName length over $duration; //PAN_CAMERA_ALONG_GEOMETRY
+	camera -> geometry geometryName length forever; //LOOP_CAMERA_ALONG_GEOMETRY
+	camera -> entity Bob position over $duration; //PAN_CAMERA_TO_ENTITY
+    entity Bob position -> geometry geometryName origin over $duration; //WALK_ENTITY_TO_GEOMETRY
+    entity Bob position -> geometry geometryName length over $duration; //WALK_ENTITY_ALONG_GEOMETRY
+    entity Bob position -> geometry geometryName length forever; //LOOP_ENTITY_ALONG_GEOMETRY
+	entity Bob animation -> 3 twice; //PLAY_ENTITY_ANIMATION
+
+	/* -------------------------------- ASSIGNMENT -------------------------------- */
+
+	// RHS: coordinates
+	camera position = geometry geometryName; //TELEPORT_CAMERA_TO_GEOMETRY
+	camera position = entity Bob position; //SET_CAMERA_TO_FOLLOW_ENTITY
+	entity Bob position = geometry geometryName; //TELEPORT_ENTITY_TO_GEOMETRY
+	// RHS: booleans
+	entity entityName glitched = $enum_trueFalse; //SET_ENTITY_GLITCHED
+	player_control = $enum_onOff; //SET_PLAYER_CONTROL
+	lights_control = $enum_onOff; //SET_LIGHTS_CONTROL
+	hex_editor = $enum_openClose; //SET_HEX_EDITOR_STATE
+	hex_dialog_mode = $enum_onOff; //SET_HEX_EDITOR_DIALOG_MODE
+	hex_control = $enum_onOff; //SET_HEX_EDITOR_CONTROL
+	hex_clipboard = $enum_onOff; //SET_HEX_EDITOR_CONTROL_CLIPBOARD
+	serial_control = $enum_onOff; //SET_SERIAL_DIALOG_CONTROL
+	flagName = $enum_trueFalse; //SET_SAVE_FLAG
+		// use !! to coerce to bool on RHS, in the event that $string = $string and you need
+		// to know if the RHS is a bool expression or a number expression
+		// otherwise, no flagName/variableName collisions detected
+	// RHS: numbers
+	entity entityName x = $number_literal; //SET_ENTITY_X
+	entity entityName y = $number_literal; //SET_ENTITY_Y
+	entity entityName primary_id = $number_literal; //SET_ENTITY_PRIMARY_ID
+	entity entityName secondary_id = $number_literal; //SET_ENTITY_SECONDARY_ID
+	entity entityName primary_id_type = $number_literal; //SET_ENTITY_PRIMARY_ID_TYPE
+	entity entityName current_animation = 1; //SET_ENTITY_CURRENT_ANIMATION
+	entity entityName animation_frame = 1; //SET_ENTITY_CURRENT_FRAME
+	entity entityName strafe = $number_literal; //SET_ENTITY_MOVEMENT_RELATIVE
+	entity entityName $entityField = variableName; //COPY_VARIABLE
+	variableName = entity entityName $entityField; //COPY_VARIABLE
+	variableName = $number_literal; //MUTATE_VARIABLE
+	variableName1 = variableName2; //MUTATE_VARIABLES
+	// RHS: strings
+	alias $string_literal = $string_literal; //REGISTER_SERIAL_DIALOG_COMMAND_ALIAS
+	warp_state = $string_literal; //SET_WARP_STATE
+	map on_tick = scriptName; //SET_MAP_TICK_SCRIPT
+	entity entityName name = $string_literal; //SET_ENTITY_NAME
+	entity entityName path = geometryName; //SET_ENTITY_PATH
+	entity entityName on_tick = scriptName; //SET_ENTITY_TICK_SCRIPT
+	entity entityName on_look = scriptName; //SET_ENTITY_LOOK_SCRIPT
+	entity entityName on_interact = scriptName; //SET_ENTITY_INTERACT_SCRIPT
+	entity entityName direction = entity entityName; //SET_ENTITY_DIRECTION_TARGET_ENTITY
+	entity entityName direction = geometry geometryName; //SET_ENTITY_DIRECTION_TARGET_GEOMETRY
+	entity entityName direction = $enum_nsew; //SET_ENTITY_DIRECTION
+	// RHS: serial_dialog names and serial_dialog literals
+	serial_connect = serial_dialog {}; //SET_CONNECT_SERIAL_DIALOG
+	serial_connect = serial_dialog serialDialogName; //SET_CONNECT_SERIAL_DIALOG
+	serial_connect = serial_dialog serialDialogName {}; //SET_CONNECT_SERIAL_DIALOG
+	// RHS: scriptnames
+	command $string_literal = scriptName; //REGISTER_SERIAL_DIALOG_COMMAND
+	command $string_literal fail = scriptName; //REGISTER_SERIAL_DIALOG_COMMAND
+	command $string_literal + $argName = scriptName; //REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+	// RHS: enums
+	light $enum_light = $enum_onOff; //SET_LIGHTS_STATE
+
+	/* -------------------------------- MATHABLES -------------------------------- */
+
+		$string_literal ?= /*[right side]*/
+		$string_literal += /*[right side]*/
+		$string_literal -= /*[right side]*/
+		$string_literal *= /*[right side]*/
+		$string_literal /= /*[right side]*/
+		$string_literal %= /*[right side]*/
+	//right sides:
+	$number_literal //MUTATE_VARIABLE
+	$string_literal //MUTATE_VARIABLES
+
+	// ADD or SUB only:
+	entity entityName direction += $number_literal; //SET_ENTITY_DIRECTION_RELATIVE
+	entity entityName direction -= $number_literal; //SET_ENTITY_DIRECTION_RELATIVE
+
+	/* -------------------------------- CONDITIONS -------------------------------- */
+
+	// for each:
+	if ( /*condition*/ ) {}
+	if /*condition*/ then goto label $number_literal;
+	if /*condition*/ then goto label labelName;
+	if /*condition*/ then goto index $number_literal;
+	if /*condition*/ then goto index 500;
+	if /*condition*/ then goto script scriptName;
+	if /*condition*/ then goto scriptName;
+	goto label asdfasdf;
+	label $constant;
+	label asdfasdf;
+	goto index 50000;
+	index $constant;
+	index 50000;
+
+	/* ----------- STRING (EQUALITY ONLY) ---------- */
+
+		/*[left side]*/ == $string_literal
+		/*[left side]*/ != $string_literal
+	//left sides:
+	entity entityName name //CHECK_ENTITY_NAME
+	entity entityName on_interact //CHECK_ENTITY_INTERACT_SCRIPT
+	entity entityName on_tick //CHECK_ENTITY_TICK_SCRIPT
+	entity entityName on_look //CHECK_ENTITY_LOOK_SCRIPT
+	entity entityName type //CHECK_ENTITY_TYPE
+	entity entityName path //CHECK_ENTITY_PATH
+	warp_state //CHECK_WARP_STATE
+	// is $enum_direction rather than just string though:
+	entity entityName direction //CHECK_ENTITY_DIRECTION
+
+	/* -------- NUMBER (EQUALITY ONLY) -------- */
+
+		/*[left side]*/ == $number_literal
+		/*[left side]*/ != $number_literal
+	//left sides:
+	entity entityName x //CHECK_ENTITY_X
+	entity entityName y //CHECK_ENTITY_Y
+	entity entityName primary_id //CHECK_ENTITY_PRIMARY_ID
+	entity entityName secondary_id //CHECK_ENTITY_SECONDARY_ID
+	entity entityName primary_id_type //CHECK_ENTITY_PRIMARY_ID_TYPE
+	entity entityName current_animation //CHECK_ENTITY_CURRENT_ANIMATION
+	entity entityName animation_frame //CHECK_ENTITY_CURRENT_FRAME
+
+	/* ---------- NUMBER (ANY COMPARISON) ---------- */
+
+		$string_literal < /*[right side]*/
+		$string_literal <= /*[right side]*/
+		$string_literal == /*[right side]*/
+		$string_literal => /*[right side]*/
+		$string_literal > /*[right side]*/
+	//right sides:
+	$number_literal //CHECK_VARIABLE
+	$string_literal //CHECK_VARIABLES
+
+	/* -------- BOOLEAN -------- */
+	
+	/*[left side]*/
+	!/*[left side]*/
+	/*[left side]*/ == $bool_literal
+	/*[left side]*/ != $bool_literal
+	//left sides:
+	debug_mode //CHECK_DEBUG_MODE
+	$string_literal //CHECK_SAVE_FLAG
+	entity "entityName" glitched //CHECK_ENTITY_GLITCHED
+	dialog open //CHECK_DIALOG_OPEN
+	serial_dialog open //CHECK_SERIAL_DIALOG_OPEN
+	button $enum_button down //CHECK_FOR_BUTTON_STATE
+	button $enum_button up //CHECK_FOR_BUTTON_STATE
+	button $enum_button pressed //CHECK_FOR_BUTTON_PRESS
+	entity entityName intersects geometry geometryName //CHECK_IF_ENTITY_IS_IN_GEOMETRY
+	
+}

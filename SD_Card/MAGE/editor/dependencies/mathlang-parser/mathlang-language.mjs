@@ -1,3 +1,25 @@
+// CONSTRAINTS (for now)
+// Each entry is linear apart from `|`, which means that any of the "split" phrases will trigger as a match for that pattern
+// Phrases cannot be built up from more complicated logic than this; no `()` indicating subphrase splits, etc.
+// Every "word" is a single unit of token logic within its larger pattern
+// WORD TYPES
+// 'literal' = aka terminal; must literally match the token value (no matter what type the token says it is)
+// @lookup = aka nonterminal; a reference to another pattern
+// $token_literal = any base-level token; the value of that token is captured and labeled either at that token or at the "caller" token (not sure what to do if there's more than one captured token when that label tries to label things (TODO: maybe just add multiple captures with that label? The captures are an array, not an object, after all))
+// WORD MODIFIERS
+// :label = any captures in that pattern (or any refernced pattern) will be called this in the output handed up
+// <collectionName = the token value can be autocompleted from a "collection", e.g. `entityNames`
+// >collectionName = the token value populates a "collection", which is used for autocompletion
+// <>collectionName = counts as both '<' and '>' at the same time
+// ><collectionName = (same as above)
+// WORD repitition
+// no repitition mark means there must be one token that matches exactly
+// ? = 0-1; proceed even if missing
+// + = 1+; must match at least once, but can be multiple
+// * = 0+; can be zero matches, or can be an unlimited number of matches
+
+
+// for error recovery... what if each pattern also had an error recovery function??
 const patterns = {
 	document: `@root* $EOF`,
 	root: `@include_macro
@@ -62,25 +84,136 @@ const patterns = {
 		| 'current_animation' | 'current_frame' | 'direction' | 'path_id'`,
 };
 
-// CONSTRAINTS (for now)
-// Each entry is linear apart from `|`, which means that any of the "split" phrases will trigger as a match for that pattern
-// Phrases cannot be built up from more complicated logic than this; no `()` indicating subphrase splits, etc.
-// Every "word" is a single unit of token logic within its larger pattern
-// WORD TYPES
-// 'literal' = aka terminal; must literally match the token value (no matter what type the token says it is)
-// @lookup = aka nonterminal; a reference to another pattern
-// $token_literal = any base-level token; the value of that token is captured and labeled either at that token or at the "caller" token (not sure what to do if there's more than one captured token when that label tries to label things (TODO: maybe just add multiple captures with that label? The captures are an array, not an object, after all))
-// WORD MODIFIERS
-// :label = any captures in that pattern (or any refernced pattern) will be called this in the output handed up
-// <collectionName = the token value can be autocompleted from a "collection", e.g. `entityNames`
-// >collectionName = the token value populates a "collection", which is used for autocompletion
-// <>collectionName = counts as both '<' and '>' at the same time
-// ><collectionName = (same as above)
-// WORD repitition
-// no repitition mark means there must be one token that matches exactly
-// ? = 0-1; proceed even if missing
-// + = 1+; must match at least once, but can be multiple
-// * = 0+; can be zero matches, or can be an unlimited number of matches
+const extractMostRecentCaptures = (crawlState, captureLabel, min = 1, max = 1) => {
+	// skip the irrelevant ones by setting them aside for a second
+	const top = [];
+	while (
+		crawlState.captures[0]
+		&& crawlState.captures[0].label !== captureLabel
+	) {
+		top.push(crawlState.captures.shift())
+	}
+	// collect the ones we want
+	const extracted = [];
+	const zero = min === 0;
+	const loopMin = zero ? 1 : min;
+	for (let i = loopMin; i <= max; i++) {
+		if (crawlState.captures.length === 0) {
+			if (zero) {
+				return [];
+			} else {
+				const message = `Not enough captures labeled ${captureLabel};`
+					+`found ${extracted.length}, needed at least ${min}`;
+				throw new Error (message);
+			}
+		}
+		extracted.push(crawlState.captures.shift());
+	}
+	// put the skipped ones back
+	crawlState.captures = top.concat(crawlState.captures);
+	return extracted;
+};
+
+const extractMostRecentNodes = (state, nodeName, min = 1, max = 1) => {
+	// collect the ones we want
+	const extracted = [];
+	if (state.nodes.length === 0) throw new Error (`No node ${nodeName}`);
+	const zero = min === 0;
+	const loopMin = zero ? 1 : min;
+	for (let i = loopMin; i <= max; i++) {
+		if (state.nodes.length === 0) {
+			const message = `Not enough '${nodeName}' nodes;`
+				+`found ${extracted.length}, needed at least ${min}`;
+			throw new Error (message);
+		}
+		const foundName = state.nodes[state.nodes.length-1].node;
+		if (foundName !== nodeName) {
+			if (max === Infinity) {
+				break;
+			} else {
+				throw new Error (`Most recent node is not '${nodeName}' (found ${foundName})`);
+			}
+		}
+		extracted.unshift(state.nodes.pop());
+	}
+	return extracted;
+};
+
+const onMatch = {
+	constant_assignment: (state, crawlState) => {
+		const nameCapture = extractMostRecentCaptures(crawlState, 'constantName', 1)[0];
+		const valueCapture = extractMostRecentCaptures(crawlState, 'constantValue', 1)[0];
+		if (!nameCapture || !valueCapture) throw new Error (`constant_assignment error`);
+		state.nodes.push({
+			node: 'constant_assignment',
+			label: nameCapture.value,
+			value: valueCapture.value,
+			tokenPos: nameCapture.pos,
+		});
+	},
+	include_macro: (state, crawlState, startPos) => {
+		const fileNameCapture = extractMostRecentCaptures(crawlState, 'fileName', 1)[0];
+		if (fileNameCapture) {
+			state.nodes.push({
+				node: 'include_macro',
+				value: fileNameCapture.value,
+				tokenPos: fileNameCapture.pos,
+			});
+		} else {
+			state.warnings.push({
+				value: 'Include macro lacks a filename',
+				message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
+				pos: crawlState.tokenPos,
+			});
+			state.nodes.push({
+				node: 'include_macro',
+				value: '',
+				tokenPos: startPos,
+				ignorable: true,
+			});
+		}
+	},
+	add_dialog_settings: () => {},
+	dialog_settings_target: (state, crawlState) => {
+		const target = extractMostRecentCaptures(crawlState, 'dialogSettingsTarget', 1)[0];
+		const targetValue = extractMostRecentCaptures(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
+		const entry = {
+			node: 'add_dialog_settings',
+			settings: extractMostRecentNodes(state, 'dialog_parameter', 0, Infinity),
+			tokenPos: target.pos,
+			target: target.value,
+			targetValue: !targetValue && target.value === 'default' ? '' : targetValue.value,
+		};
+		state.nodes.push(entry);
+	},
+	dialog_parameter: (state, crawlState) => {
+		const propertyCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsProperty', 1)[0];
+		const valueCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsValue', 1)[0];
+		state.nodes.push({
+			node: 'dialog_parameter',
+			label: propertyCapture.value,
+			value: valueCapture.value,
+			tokenPos: propertyCapture.pos,
+		});
+	},
+	serial_dialog_parameter: (state, crawlState) => {
+		const propertyCapture = extractMostRecentCaptures(crawlState, 'property', 1)[0];
+		const valueCapture = extractMostRecentCaptures(crawlState, 'value', 1)[0];
+		state.nodes.push({
+			node: 'serial_dialog_parameter',
+			label: propertyCapture.value,
+			value: valueCapture.value,
+			tokenPos: propertyCapture.pos,
+		});
+	},
+	add_serial_dialog_settings: (state, _crawlState, startPos) => {
+		state.nodes.push({
+			node: 'add_serial_dialog_settings',
+			settings: extractMostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity),
+			tokenPos: startPos,
+		});
+	},
+}
 
 // auditing the above pattern dictionary structure
 const keywordsFound = new Set();
@@ -300,6 +433,9 @@ Object.entries(patterns).forEach(([patternName, pattern])=>{
 // 	},
 // ];
 
+
 console.log('break');
 
-export default tree;
+const language = { tree, onMatch };
+
+export default language;

@@ -1,7 +1,10 @@
 import lex from "./mathlang-lex.mjs"
-import tree from "./mathlang-language.mjs"
+import language from "./mathlang-language.mjs"
 
-const testInputString = `include!("header.mgs")
+const { tree, onMatch } = language;
+
+const testInputString = `
+include!("header.mgs")
 
 $trombones = 76;
 /* comment */
@@ -17,6 +20,10 @@ add dialog settings {
 	label PLAYER {
 		alignment BR
 		entity "%PLAYER%"
+	}
+	entity Bob {
+		name "Real Bob"
+		portrait old_man
 	}
 }
 `;
@@ -82,137 +89,7 @@ const decayTo = {
 const verbose = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
-const getAllCapturesByLabel = (crawlState, label, providedMin, providedMax) => {
-	const min = providedMin || 0;
-	const max = providedMax || min;
-	const filtered = crawlState.captures
-		.filter(item=>item.label === label);
-	if (filtered.length < min || filtered.length > max) {
-		let message = `Found ${filtered.length} captures with label ${label}; `
-			message += min === max ? `needed ${min}` : `needed ${min}-${max}`;
-		return false;
-	} else {
-		crawlState.captures = crawlState.captures
-			.filter(item=>item.label !== label);
-		return filtered;
-	}
-};
 
-const getAllCapturesByPattern = (crawlState, pattern, providedMin, providedMax) => {
-	const min = providedMin || 0;
-	const max = providedMax || min;
-	const filtered = crawlState.captures
-		.filter(item=>item.pattern === pattern);
-	if (filtered.length < min || filtered.length > max) {
-		const message = `Found ${filtered.length} captures with label ${pattern}; `
-			message += min === max ? `needed ${min}` : `needed ${min}-${max}`;
-		return false;
-	} else {
-		crawlState.captures = crawlState.captures
-			.filter(item=>item.label !== pattern);
-		return filtered;
-	}
-};
-
-const onMatch = {
-	constant_assignment: (state, crawlState) => {
-		const nameCapture = getAllCapturesByLabel(crawlState, 'constantName', 1)[0];
-		const valueCapture = getAllCapturesByLabel(crawlState, 'constantValue', 1)[0];
-		if (!nameCapture || !valueCapture) throw new Error (`constant_assignment error`);
-		state.nodes.push({
-			node: 'constant_assignment',
-			label: nameCapture.value,
-			value: valueCapture.value,
-			tokenPos: nameCapture.pos,
-			ignorable: false,
-		});
-	},
-	include_macro: (state, crawlState, startPos) => {
-		const fileNameCapture = getAllCapturesByLabel(crawlState, 'fileName', 1)[0];
-		if (fileNameCapture) {
-			state.nodes.push({
-				node: 'include_macro',
-				value: fileNameCapture.value,
-				tokenPos: fileNameCapture.pos,
-				ignorable: false,
-			});
-		} else {
-			// Looks like there wasn't a filename to include. Should be a warning, not an error.
-			state.warnings.push({
-				value: 'Include macro lacks a filename',
-				message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
-				pos: crawlState.tokenPos,
-			});
-			// including it as an ignorable node makes it easier (probably?) to involve in suggestions and red squiglies
-			state.nodes.push({
-				node: 'include_macro',
-				value: '',
-				tokenPos: startPos,
-				ignorable: true,
-			});
-		}
-	},
-	add_dialog_settings: (state, crawlState) => {
-
-	},
-	dialog_settings_target: (state, crawlState, startPos) => {
-		// get settings
-		const settings = [];
-		let lastNode = state.nodes[state.nodes.length-1];
-		while (lastNode.node === 'dialog_parameter') {
-			settings.unshift(state.nodes.pop());
-			lastNode = state.nodes[state.nodes.length-1]
-		}
-		// get target
-		const target = getAllCapturesByLabel(crawlState, 'dialogSettingsTarget', 1)[0];
-		const targetValue = getAllCapturesByLabel(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
-		const entry = {
-			node: 'add_dialog_settings',
-			settings,
-			tokenPos: target.pos,
-			target: target.value,
-			targetValue: !targetValue && target.value === 'default' ? '' : targetValue.value,
-			ignorable: false,
-		};
-		state.nodes.push(entry);
-	},
-	dialog_parameter: (state, crawlState) => {
-		const propertyCapture = getAllCapturesByLabel(crawlState, 'dialogSettingsProperty', 1)[0];
-		const valueCapture = getAllCapturesByLabel(crawlState, 'dialogSettingsValue', 1)[0];
-		state.nodes.push({
-			node: 'dialog_parameter',
-			label: propertyCapture.value,
-			value: valueCapture.value,
-			tokenPos: propertyCapture.pos,
-			ignorable: false,
-		});
-	},
-	serial_dialog_parameter: (state, crawlState) => {
-		const propertyCapture = getAllCapturesByLabel(crawlState, 'property', 1)[0];
-		const valueCapture = getAllCapturesByLabel(crawlState, 'value', 1)[0];
-		state.nodes.push({
-			node: 'serial_dialog_parameter',
-			label: propertyCapture.value,
-			value: valueCapture.value,
-			tokenPos: propertyCapture.pos,
-			ignorable: false,
-		});
-	},
-	add_serial_dialog_settings: (state, _crawlState, startPos) => {
-		const settings = [];
-		let lastNode = state.nodes[state.nodes.length-1];
-		while (lastNode.node === 'serial_dialog_parameter') {
-			settings.unshift(state.nodes.pop());
-			lastNode = state.nodes[state.nodes.length-1]
-		}
-		state.nodes.push({
-			node: 'add_serial_dialog_settings',
-			values: settings,
-			tokenPos: startPos,
-			ignorable: false,
-		});
-	},
-}
 
 const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
 const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
@@ -281,7 +158,7 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 				} else {
 					return {
 						matched: false,
-						expected: twig.value,
+						expected: `'${twig.value}'`,
 						crawlState,
 					};
 				}
@@ -321,7 +198,7 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 				} else {
 					return {
 						matched: false,
-						expected: `'${twig.value}'`,
+						expected: `${twig.value}`,
 						crawlState,
 					};
 				}
@@ -457,7 +334,7 @@ const tryBranches = (state, origCrawlState, branchName) => {
 };
 
 const parseFile = (lexObject, tree, givenFileName) => {
-	const fileName = givenFileName ? givenFileName : 'auto' + Math.floor(Math.random()*10000000000);
+	const fileName = givenFileName ? givenFileName : 'anon' + Math.floor(Math.random()*10000000000);
 	let crawlState = {
 		tokenPos: 0,
 		// these should be empty when we're done:
