@@ -162,19 +162,19 @@ const dictionary = {
 	dialog: {
 		pattern: `@dialog_identifier
 			@dialog_parameter*
-			$string:dialogMessage+
+			$quoted_string:dialogMessage+
 			@dialog_option*`,
 			onMatch: (state, crawlState, startPos) => {
-				const optionCaptures = mostRecentNodes(state, 'dialog_option', 0, Infinity);
+				const optionNodes = mostRecentNodes(state, 'dialog_option', 0, Infinity);
 				const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
-				const parameterCaptures = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
-				const identifierCapture = mostRecentNode(state, 'dialog_identifier');
+				const parameterNodes = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
+				const identifierNode = mostRecentNode(state, 'dialog_identifier');
 				state.nodes.push({
 					node: 'dialog',
-					identifier: identifierCapture,
-					parameters: parameterCaptures,
-					messages: messageCaptures.reverse(),
-					options: optionCaptures,
+					identifier: identifierNode,
+					parameters: parameterNodes,
+					messages: messageCaptures,
+					options: optionNodes,
 					tokenPos: startPos,
 				});
 			},
@@ -225,14 +225,14 @@ const dictionary = {
 	serial_dialog: {
 		pattern: `@serial_dialog_parameter* $string:serialDialogMessage+ @serial_dialog_option*`,
 			onMatch: (state, crawlState, startPos) => {
-				const optionCaptures = mostRecentNodes(state, 'serial_dialog_option', 0, Infinity);
+				const optionNodes = mostRecentNodes(state, 'serial_dialog_option', 0, Infinity);
 				const messageCaptures = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
-				const parameterCaptures = mostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity);
+				const parameterNodes = mostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity);
 				state.nodes.push({
 					node: 'serial_dialog',
-					parameters: parameterCaptures,
-					messages: messageCaptures.reverse(),
-					options: optionCaptures,
+					parameters: parameterNodes,
+					messages: messageCaptures,
+					options: optionNodes,
 					tokenPos: startPos,
 				});
 			},
@@ -323,20 +323,20 @@ Object.keys(dictionary).forEach(entryName=>{
 
 const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	// skip the irrelevant ones by setting them aside for a second
-	const top = [];
+	const bot = [];
 	while (
-		crawlState.captures[0]
-		&& crawlState.captures[0].label !== captureLabel
+		crawlState.captures[crawlState.captures.length-1]
+		&& crawlState.captures[crawlState.captures.length-1].label !== captureLabel
 	) {
-		top.push(crawlState.captures.shift())
+		bot.unshift(crawlState.captures.pop())
 	}
 	// collect the ones we want
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
-		const latest = crawlState.captures[0];
+		const latest = crawlState.captures[crawlState.captures.length-1];
 		if (!latest) break;
 		if (latest.label !== captureLabel) break;
-		extracted.push(crawlState.captures.shift());
+		extracted.unshift(crawlState.captures.pop());
 	}
 	if (extracted.length < min) {
 		const message = `Not enough captures labeled ${captureLabel};`
@@ -344,7 +344,7 @@ const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 		throw new Error (message);
 	}
 	// put the skipped ones back
-	crawlState.captures = top.concat(crawlState.captures);
+	crawlState.captures = crawlState.captures.concat(bot);
 	return extracted;
 };
 const semiRecentCapture = (crawlState, captureLabel) => {
@@ -354,10 +354,10 @@ const semiRecentCapture = (crawlState, captureLabel) => {
 const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
-		const latest = crawlState.captures[0];
+		const latest = crawlState.captures[crawlState.captures.length-1];
 		if (!latest) break;
 		if (latest.label !== captureLabel) break;
-		extracted.push(crawlState.captures.shift());
+		extracted.unshift(crawlState.captures.pop());
 	}
 	if (extracted.length < min) {
 		const message = `Not enough captures labeled ${captureLabel};`

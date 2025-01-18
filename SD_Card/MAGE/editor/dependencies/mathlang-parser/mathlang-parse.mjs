@@ -154,7 +154,7 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 					const label = twig.label
 						? twig.label
 						: crawlState.unusedLabels.pop();
-					crawlState.captures.unshift({
+					crawlState.captures.push({
 						pattern: branchName,
 						label: label,
 						value: twig.value,
@@ -180,16 +180,16 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 			const decayedValue = decayTo[twig.value](token);
 			if (decayedValue !== null) {
 				if (twig.label) {
-					crawlState.captures.unshift({
+					crawlState.captures.push({
 						pattern: branchName,
 						label: twig.label,
 						value: token.value,
 						pos: tokenPos,
 					});
 				} else if (crawlState.unusedLabels.length > 0) {
-					crawlState.captures.unshift({
+					crawlState.captures.push({
 						pattern: branchName,
-						label: crawlState.unusedLabels.shift(),
+						label: crawlState.unusedLabels.pop(),
 						value: token.value,
 						pos: tokenPos,
 					});
