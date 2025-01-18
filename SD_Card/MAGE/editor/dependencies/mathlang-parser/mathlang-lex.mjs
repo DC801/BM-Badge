@@ -152,15 +152,7 @@ const lex = (string) => {
 		// color
 		if (curr === '#') {
 			const next = peek();
-			if (!isHexDigit(next)) {
-				tokens.push({
-					type: 'operator',
-					rawValue: curr,
-					value: curr,
-					pos,
-				});
-				advance();
-			} else {
+			if (isHexDigit(next)) {
 				do {
 					advance();
 				} while (isHexDigit(curr))

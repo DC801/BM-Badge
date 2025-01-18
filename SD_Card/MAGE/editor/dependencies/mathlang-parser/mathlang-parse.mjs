@@ -27,11 +27,21 @@ add dialog settings {
 	}
 }
 dialog restaurant {
-	entity "%PLAYER%" "Hello!"
-	Bob "Oh, um, hi."
+	entity "%PLAYER%" alignment BR emote 0 
+	"Hello!" "Welcome to a restaurant!"
+	Bob"Oh, um, hi."
 	entity Dennis "What'll it be?"
 	> "Oh, uh, let me take a look at the menu first." = scriptMenu
 	> "I'll have the usual!" = scriptRegularCustomer
+}
+
+serial_dialog console {
+	wrap 60
+	"In a hole in the ground there lived a Zork."
+	"I think."
+	# "Tell me more!" = scriptMore
+	# "I've heard this one before." = scriptDejaVu
+	_ "I think this type of option doesn't belong here." = warningNotError
 }
 `;
 
@@ -73,29 +83,27 @@ const decayTo = {
 	bareword: token => {
 		if (token.type === "bareword") return token.value;
 		if (token.barewordValue) return token.barewordValue;
-		return false;
+		return null;
 	},
-	operator: token => token.type === "operator" ? token.value : false,
-	color: token => token.type === "color" ? token.value : false,
-	boolean: token => token.type === "boolean" ? token.value : false,
-	quoted_string: token => token.type === "quoted_string" ? token.value : false,
-	number: token => token.type === "number" ? token.value : false,
-	duration: token => token.type === "duration" || token.type === "number" ? token.value : false,
-	distance: token => token.type === "distance" || token.type === "number" ? token.value : false,
-	quantity: token => token.type === "quantity" || token.type === "number" ? token.value : false,
-	constant: token => token.type === "constant" ? token.value : false,
+	operator: token => token.type === "operator" ? token.value : null,
+	color: token => token.type === "color" ? token.value : null,
+	boolean: token => token.type === "boolean" ? token.value : null,
+	quoted_string: token => token.type === "quoted_string" ? token.value : null,
+	number: token => token.type === "number" ? token.value : null,
+	duration: token => token.type === "duration" || token.type === "number" ? token.value : null,
+	distance: token => token.type === "distance" || token.type === "number" ? token.value : null,
+	quantity: token => token.type === "quantity" || token.type === "number" ? token.value : null,
+	constant: token => token.type === "constant" ? token.value : null,
 	string: token => {
 		const bareWord = decayTo.bareword(token);
 		if (bareWord) return bareWord;
 		if (token.type === "quoted_string") return token.value;
-		return false;
+		return null;
 	},
 };
 
 const verbose = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
-
-
 
 const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
 const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
@@ -156,10 +164,7 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 				advanceToken();
 				advanceTwig();
 			} else {
-				if (
-					(multipleOkay && repeated)
-					|| zeroOkay
-				) {
+				if ((multipleOkay && repeated)|| zeroOkay) {
 					advanceTwig();
 				} else {
 					return {
@@ -173,7 +178,7 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 		}
 		if (twig.type === 'capture') {
 			const decayedValue = decayTo[twig.value](token);
-			if (decayedValue) {
+			if (decayedValue !== null) {
 				if (twig.label) {
 					crawlState.captures.unshift({
 						pattern: branchName,
@@ -194,17 +199,22 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 					throw new Error ('Capture found without label');
 				}
 				advanceToken();
-				advanceTwig();
+				if (multipleOkay) {
+					repeated = true;
+				} else {
+					advanceTwig();
+				}
+				continue;
 			} else {
-				if (
-					(multipleOkay && repeated)
-					|| zeroOkay
-				) {
+				if ((multipleOkay && repeated) || zeroOkay ) {
 					advanceTwig();
 				} else {
+					const expectedLabel = twig.label
+						? `:${twig.label}`
+						: ''
 					return {
 						matched: false,
-						expected: `${twig.value}`,
+						expected: `${twig.value}${expectedLabel}`,
 						crawlState,
 					};
 				}
@@ -221,20 +231,17 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 				twig.value,
 			);
 			if (lookedUp.matched) {
+				// (the token is already advanced)
 				crawlState = lookedUp.crawlState;
 				tokenPos = crawlState.tokenPos;
 				if (multipleOkay) {
 					repeated = true;
-					// no advanceTwig() here
 				} else {
 					advanceTwig();
 				}
 				continue;
 			}
-			if (
-				(multipleOkay && repeated)
-				|| zeroOkay
-			) {
+			if ((multipleOkay && repeated)|| zeroOkay) {
 				advanceTwig();
 			} else {
 				return {

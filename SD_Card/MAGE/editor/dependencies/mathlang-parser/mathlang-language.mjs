@@ -33,6 +33,7 @@ const dictionary = {
 			| @add_serial_dialog_settings
 			| @add_dialog_settings
 			| @dialog_definition
+			| @serial_dialog_definition
 		`,
 	},
 	include_macro: {
@@ -145,8 +146,6 @@ const dictionary = {
 			});
 		},
 	},
-
-	// current
 	dialog_definition: {
 		pattern: `'dialog' $string:dialogName '{' @dialog* '}'`,
 		onMatch: (state, crawlState, startPos) => {
@@ -174,7 +173,7 @@ const dictionary = {
 					node: 'dialog',
 					identifier: identifierCapture,
 					parameters: parameterCaptures,
-					messages: messageCaptures,
+					messages: messageCaptures.reverse(),
 					options: optionCaptures,
 					tokenPos: startPos,
 				});
@@ -202,6 +201,55 @@ const dictionary = {
 			const labelNameCapture = mostRecentCapture(crawlState, 'label');
 			state.nodes.push({
 				node: 'dialog_option',
+				label: labelNameCapture.value,
+				script: scriptNameCapture.value,
+				tokenPos: startPos,
+			});
+		},
+	},
+
+	// current
+	serial_dialog_definition: {
+		pattern: `'serial_dialog' $string:serialDialogName '{' @serial_dialog? '}'`,
+		onMatch: (state, crawlState, startPos) => {
+			const serialDialog = mostRecentNode(state, 'serial_dialog', 0, 1);
+			const serialDialogNameCapture = mostRecentCapture(crawlState, 'serialDialogName');
+			state.nodes.push({
+				node: 'serial_dialog_definition',
+				dialogName: serialDialogNameCapture.value,
+				serialDialog,
+				tokenPos: startPos,
+			});
+		},
+	},
+	serial_dialog: {
+		pattern: `@serial_dialog_parameter* $string:serialDialogMessage+ @serial_dialog_option*`,
+			onMatch: (state, crawlState, startPos) => {
+				const optionCaptures = mostRecentNodes(state, 'serial_dialog_option', 0, Infinity);
+				const messageCaptures = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
+				const parameterCaptures = mostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity);
+				state.nodes.push({
+					node: 'serial_dialog',
+					parameters: parameterCaptures,
+					messages: messageCaptures.reverse(),
+					options: optionCaptures,
+					tokenPos: startPos,
+				});
+			},
+		},
+	serial_dialog_option: {
+		pattern: `'#':optionType $quoted_string:label '=' $string:script
+			| '_':optionType $quoted_string:label '=' $string:script`,
+		onMatch: (state, crawlState, startPos) => {
+			const scriptNameCapture = mostRecentCapture(crawlState, 'script');
+			const labelNameCapture = mostRecentCapture(crawlState, 'label');
+			const optionTypeCapture = mostRecentCapture(crawlState, 'optionType');
+			let type = '';
+			if (optionTypeCapture.value === '#') type = 'options';
+			if (optionTypeCapture.value === '_') type = 'text_options';
+			state.nodes.push({
+				node: 'serial_dialog_option',
+				type,
 				label: labelNameCapture.value,
 				script: scriptNameCapture.value,
 				tokenPos: startPos,
