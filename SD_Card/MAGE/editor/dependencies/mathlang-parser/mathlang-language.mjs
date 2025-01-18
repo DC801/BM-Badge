@@ -18,7 +18,11 @@
 // + = 1+; must match at least once, but can be multiple
 // * = 0+; can be zero matches, or can be an unlimited number of matches
 
-// for error recovery... what if each pattern also had an error recovery function??
+
+// `captures` and `unusedLabels` use shift/unshift! Everything else uses pop/push!
+// (though `nodes` doesn't, so if I'm having helper functions do that stuff anyway, should I change it back?)
+
+// for error recovery... ooh, what if each pattern also had an error recovery function??
 const dictionary = {
 	document: {
 		pattern: `@root* $EOF`
@@ -27,12 +31,14 @@ const dictionary = {
 		pattern: `@include_macro
 			| @constant_assignment
 			| @add_serial_dialog_settings
-			| @add_dialog_settings`,
+			| @add_dialog_settings
+			| @dialog_definition
+		`,
 	},
 	include_macro: {
 		pattern: `'include' '!' '(' $quoted_string:fileName? ')'`,
 		onMatch: (state, crawlState, startPos) => {
-			const fileNameCapture = extractMostRecentCaptures(crawlState, 'fileName', 1)[0];
+			const fileNameCapture = semiRecentCaptures(crawlState, 'fileName', 1)[0];
 			if (fileNameCapture) {
 				state.nodes.push({
 					node: 'include_macro',
@@ -57,8 +63,8 @@ const dictionary = {
 	constant_assignment: {
 		pattern: `$constant:constantName>constantNames '=' @constant_value:constantValue ';'`,
 		onMatch: (state, crawlState) => {
-			const nameCapture = extractMostRecentCaptures(crawlState, 'constantName', 1)[0];
-			const valueCapture = extractMostRecentCaptures(crawlState, 'constantValue', 1)[0];
+			const nameCapture = semiRecentCaptures(crawlState, 'constantName', 1)[0];
+			const valueCapture = semiRecentCaptures(crawlState, 'constantValue', 1)[0];
 			if (!nameCapture || !valueCapture) throw new Error (`constant_assignment error`);
 			state.nodes.push({
 				node: 'constant_assignment',
@@ -77,7 +83,7 @@ const dictionary = {
 		onMatch: (state, _crawlState, startPos) => {
 			state.nodes.push({
 				node: 'add_serial_dialog_settings',
-				settings: extractMostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity),
+				settings: mostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity),
 				tokenPos: startPos,
 			});
 		},
@@ -85,8 +91,8 @@ const dictionary = {
 	serial_dialog_parameter: {
 		pattern: `'wrap':property $number:value`,
 		onMatch: (state, crawlState) => {
-			const propertyCapture = extractMostRecentCaptures(crawlState, 'property', 1)[0];
-			const valueCapture = extractMostRecentCaptures(crawlState, 'value', 1)[0];
+			const propertyCapture = semiRecentCaptures(crawlState, 'property', 1)[0];
+			const valueCapture = semiRecentCaptures(crawlState, 'value', 1)[0];
 			state.nodes.push({
 				node: 'serial_dialog_parameter',
 				label: propertyCapture.value,
@@ -103,11 +109,11 @@ const dictionary = {
 			| 'label':dialogSettingsTarget $bareword:dialogSettingsTargetValue '{' @dialog_parameter* '}'
 			| 'entity':dialogSettingsTarget $string:dialogSettingsTargetValue '{' @dialog_parameter* '}'`,
 		onMatch: (state, crawlState) => {
-			const target = extractMostRecentCaptures(crawlState, 'dialogSettingsTarget', 1)[0];
-			const targetValue = extractMostRecentCaptures(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
+			const target = semiRecentCaptures(crawlState, 'dialogSettingsTarget', 1)[0];
+			const targetValue = semiRecentCaptures(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
 			const entry = {
 				node: 'add_dialog_settings',
-				settings: extractMostRecentNodes(state, 'dialog_parameter', 0, Infinity),
+				settings: mostRecentNodes(state, 'dialog_parameter', 0, Infinity),
 				tokenPos: target.pos,
 				target: target.value,
 				targetValue: !targetValue && target.value === 'default' ? '' : targetValue.value,
@@ -128,8 +134,8 @@ const dictionary = {
 			| 'emote':dialogSettingsProperty $number:dialogSettingsValue
 			| 'wrap':dialogSettingsProperty $number:dialogSettingsValue`,
 		onMatch: (state, crawlState) => {
-			const propertyCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsProperty', 1)[0];
-			const valueCapture = extractMostRecentCaptures(crawlState, 'dialogSettingsValue', 1)[0];
+			const propertyCapture = semiRecentCaptures(crawlState, 'dialogSettingsProperty', 1)[0];
+			const valueCapture = semiRecentCaptures(crawlState, 'dialogSettingsValue', 1)[0];
 			state.nodes.push({
 				node: 'dialog_parameter',
 				label: propertyCapture.value,
@@ -138,13 +144,93 @@ const dictionary = {
 			});
 		},
 	},
+
+	// current
+	dialog_definition: {
+		pattern: `'dialog' $string:dialogName '{' @dialog* '}'`,
+		onMatch: (state, crawlState, startPos) => {
+			const dialogs = mostRecentNodes(state, 'dialog', 0, Infinity);
+			const dialogNameCapture = mostRecentCaptures(crawlState, 'dialogName', 1)[0];
+			state.nodes.push({
+				node: 'dialog_definition',
+				dialogs,
+				dialogName: dialogNameCapture.value,
+				tokenPos: startPos,
+			});
+		},
+	},
+	dialog: {
+		pattern: `@dialog_identifier
+			@dialog_parameter*
+			$string:dialogMessage+
+			@dialog_option*`,
+			onMatch: (state, crawlState) => {
+				const optionCaptures = mostRecentNodes(state, 'dialog_option', 0, Infinity);
+				const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
+				const parameterCaptures = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
+				const identifierCapture = mostRecentNodes(state, 'dialog_identifier', 1)[0];
+				state.nodes.push({
+					node: 'dialog',
+					identifier: identifierCapture,
+					parameters: parameterCaptures,
+					messages: messageCaptures,
+					options: optionCaptures,
+					tokenPos: identifierCapture.pos,
+				});
+			},
+		},
+	dialog_identifier: {
+		pattern: `'entity':identifierType $string:identifierValue
+			| 'name':identifierType $string:identifierValue
+			| $bareword:identifierValue`,
+		onMatch: (state, crawlState) => {
+			const identifierTypeCapture = semiRecentCaptures(crawlState, 'identifierType', 0, 1)[0];
+			const identifierValueCapture = semiRecentCaptures(crawlState, 'identifierValue', 1)[0];
+			state.nodes.push({
+				node: 'dialog_identifier',
+				type: identifierTypeCapture ? identifierTypeCapture.value : 'label',
+				value: identifierValueCapture.value,
+				tokenPos: identifierTypeCapture? identifierTypeCapture.pos : identifierValueCapture.pos,
+			});
+		},
+	},
+	dialog_option: {
+		pattern: `'>' $quoted_string:label '=' $string:script`,
+		onMatch: (state, crawlState, startPos) => {
+			const scriptNameCapture = mostRecentCaptures(crawlState, 'script', 1)[0];
+			const labelNameCapture = mostRecentCaptures(crawlState, 'label', 1)[0];
+			state.nodes.push({
+				node: 'dialog_option',
+				label: labelNameCapture.value,
+				script: scriptNameCapture.value,
+				tokenPos: startPos,
+			});
+		},
+	},
+	// untested:
 	entity_identifier: {
-		pattern: `'player' | 'self' | 'entity' $string:entityName`,
+		pattern: `'player':entityType
+			| 'self':entityType
+			| 'entity':entityType $string:entityName`,
+		onMatch: (state, crawlState) => {
+			const entityType = semiRecentCaptures(crawlState, 'entityType', 1)[0];
+			let entityName = '';
+			if (entityType.value === 'self') entityName = '%SELF%';
+			else if (entityType.value === 'player') entityName = '%PLAYER%';
+			else {
+				const valueCapture = semiRecentCaptures(crawlState, 'entityName', 1)[0];
+				entityName = valueCapture.entityName
+			}
+			state.nodes.push({
+				node: 'entity_identifier',
+				value: 'entityName',
+				tokenPos: entityType.pos,
+			});
+		}
 	},
 	geometry_identifier: {
 		pattern: `'geometry' $string:geometryName`,
 	},
-	// untested:
 	enum_map_slots: {
 		pattern: `'on_load' | 'on_tick' | 'on_look'`,
 	},
@@ -188,7 +274,7 @@ Object.keys(dictionary).forEach(entryName=>{
 	if (entry.onMatch) onMatch[entryName] = entry.onMatch;
 });
 
-const extractMostRecentCaptures = (crawlState, captureLabel, min = 1, max = 1) => {
+const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	// skip the irrelevant ones by setting them aside for a second
 	const top = [];
 	while (
@@ -199,50 +285,52 @@ const extractMostRecentCaptures = (crawlState, captureLabel, min = 1, max = 1) =
 	}
 	// collect the ones we want
 	const extracted = [];
-	const zero = min === 0;
-	const loopMin = zero ? 1 : min;
-	for (let i = loopMin; i <= max; i++) {
-		if (crawlState.captures.length === 0) {
-			if (zero) {
-				return [];
-			} else {
-				const message = `Not enough captures labeled ${captureLabel};`
-					+`found ${extracted.length}, needed at least ${min}`;
-				throw new Error (message);
-			}
-		}
+	for (let i = min || 1; i <= max; i++) {
+		const latest = crawlState.captures[0];
+		if (!latest) break;
+		if (latest.label !== captureLabel) break;
 		extracted.push(crawlState.captures.shift());
+	}
+	if (extracted.length < min) {
+		const message = `Not enough captures labeled ${captureLabel};`
+			+`found ${extracted.length}, needed at least ${min}`;
+		throw new Error (message);
 	}
 	// put the skipped ones back
 	crawlState.captures = top.concat(crawlState.captures);
 	return extracted;
 };
-
-const extractMostRecentNodes = (state, nodeName, min = 1, max = 1) => {
-	// collect the ones we want
+const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	const extracted = [];
-	if (state.nodes.length === 0) throw new Error (`No node ${nodeName}`);
-	const zero = min === 0;
-	const loopMin = zero ? 1 : min;
-	for (let i = loopMin; i <= max; i++) {
-		if (state.nodes.length === 0) {
-			const message = `Not enough '${nodeName}' nodes;`
-				+`found ${extracted.length}, needed at least ${min}`;
-			throw new Error (message);
-		}
-		const foundName = state.nodes[state.nodes.length-1].node;
-		if (foundName !== nodeName) {
-			if (max === Infinity) {
-				break;
-			} else {
-				throw new Error (`Most recent node is not '${nodeName}' (found ${foundName})`);
-			}
-		}
-		extracted.unshift(state.nodes.pop());
+	for (let i = min || 1; i <= max; i++) {
+		const latest = crawlState.captures[0];
+		if (!latest) break;
+		if (latest.label !== captureLabel) break;
+		extracted.push(crawlState.captures.shift());
+	}
+	if (extracted.length < min) {
+		const message = `Not enough captures labeled ${captureLabel};`
+			+`found ${extracted.length}, needed at least ${min}`;
+		throw new Error (message);
 	}
 	return extracted;
 };
 
+const mostRecentNodes = (state, nodeName, min = 1, max = min) => {
+	const extracted = [];
+	for (let i = min || 1; i <= max; i++) {
+		const latest = state.nodes[state.nodes.length-1];
+		if (!latest) break;
+		if (latest.node !== nodeName) break;
+		extracted.unshift(state.nodes.pop());
+	}
+	if (extracted.length < min) {
+		const message = `Not enough ${nodeName} nodes;`
+			+`found ${extracted.length}, needed at least ${min}`;
+		throw new Error (message);
+	}
+	return extracted;
+};
 
 // auditing the above pattern dictionary structure
 const keywordsFound = new Set();

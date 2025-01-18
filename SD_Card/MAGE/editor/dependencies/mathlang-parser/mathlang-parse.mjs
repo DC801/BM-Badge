@@ -26,9 +26,15 @@ add dialog settings {
 		portrait old_man
 	}
 }
+dialog greetings {
+	entity "%PLAYER%" "Hello!"
+	Bob "Oh, um, hi."
+	entity Dennis "What'll it be?"
+	> "Oh, uh, let me take a look at the menu first." = scriptMenu
+	> "I'll have the usual!" = scriptRegularCustomer
+}
 `;
 
-// `captures` and `unusedLabels` use shift/unshift! Everything else uses pop/push!
 
 const findLineAndCharNumbers = (input, pos) => {
 	const splits = input.substring(0,pos).split('\n')
