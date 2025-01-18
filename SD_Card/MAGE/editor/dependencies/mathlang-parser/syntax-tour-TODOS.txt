@@ -12,7 +12,6 @@ _ {
 	else if (/* @condition */) {/* @script_actions */}
 	else {/* @script_actions */}
 	
-	load map mapName; //LOAD_MAP
 	goto scriptName; //RUN_SCRIPT
 	goto index $number_literal; //GOTO_ACTION_INDEX
 	goto label labelName; //GOTO_ACTION_INDEX

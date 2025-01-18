@@ -39,21 +39,21 @@ const dictionary = {
 	},
 	include_macro: {
 		pattern: `'include' '!' '(' $quoted_string:fileName? ')'`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const fileNameCapture = mostRecentCapture(crawlState, 'fileName');
 			if (fileNameCapture) {
-				state.nodes.push({
+				file.nodes.push({
 					node: 'include_macro',
 					value: fileNameCapture.value,
 					tokenPos: fileNameCapture.pos,
 				});
 			} else {
-				state.warnings.push({
+				file.warnings.push({
 					value: 'Include macro lacks a filename',
 					message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
 					pos: crawlState.tokenPos,
 				});
-				state.nodes.push({
+				file.nodes.push({
 					node: 'include_macro',
 					value: '',
 					tokenPos: startPos,
@@ -64,10 +64,10 @@ const dictionary = {
 	},
 	constant_assignment: {
 		pattern: `$constant:constantName>constantNames '=' @constant_value:constantValue ';'`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const valueCapture = mostRecentCapture(crawlState, 'constantValue');
 			const nameCapture = mostRecentCapture(crawlState, 'constantName');
-			state.nodes.push({
+			file.nodes.push({
 				node: 'constant_assignment',
 				label: nameCapture.value,
 				value: valueCapture.value,
@@ -81,20 +81,20 @@ const dictionary = {
 	},
 	add_serial_dialog_settings: {
 		pattern: `'add' 'serial_dialog' 'settings' '{' @serial_dialog_parameter* '}'`,
-		onMatch: (state, _crawlState, startPos) => {
-			state.nodes.push({
+		onMatch: (file, _crawlState, startPos) => {
+			file.nodes.push({
 				node: 'add_serial_dialog_settings',
-				settings: mostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity),
+				settings: mostRecentNodes(file, 'serial_dialog_parameter', 0, Infinity),
 				tokenPos: startPos,
 			});
 		},
 	},
 	serial_dialog_parameter: {
 		pattern: `'wrap':property $number:value`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const valueCapture = semiRecentCapture(crawlState, 'value');
 			const propertyCapture = semiRecentCapture(crawlState, 'property');
-			state.nodes.push({
+			file.nodes.push({
 				node: 'serial_dialog_parameter',
 				label: propertyCapture.value,
 				value: valueCapture.value,
@@ -109,8 +109,8 @@ const dictionary = {
 		pattern: `'default':target '{' @dialog_parameter* '}'
 			| 'label':target $bareword:targetValue '{' @dialog_parameter* '}'
 			| 'entity':target $string:targetValue '{' @dialog_parameter* '}'`,
-		onMatch: (state, crawlState, startPos) => {
-			const settings = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
+		onMatch: (file, crawlState, startPos) => {
+			const settings = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
 			const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
 			const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
 			const target = mostRecentCapture(crawlState, 'target');
@@ -121,7 +121,7 @@ const dictionary = {
 				settings,
 				tokenPos: startPos,
 			};
-			state.nodes.push(entry);
+			file.nodes.push(entry);
 		},
 	},
 	enum_alignment: {
@@ -136,10 +136,10 @@ const dictionary = {
 			| 'border_tileset':settingsProperty $string:settingsValue
 			| 'emote':settingsProperty $number:settingsValue
 			| 'wrap':settingsProperty $number:settingsValue`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
 			const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
-			state.nodes.push({
+			file.nodes.push({
 				node: 'dialog_parameter',
 				label: propertyCapture.value,
 				value: valueCapture.value,
@@ -149,10 +149,10 @@ const dictionary = {
 	},
 	dialog_definition: {
 		pattern: `'dialog' $string:dialogName '{' @dialog* '}'`,
-		onMatch: (state, crawlState, startPos) => {
-			const dialogs = mostRecentNodes(state, 'dialog', 0, Infinity);
+		onMatch: (file, crawlState, startPos) => {
+			const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
 			const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
-			state.nodes.push({
+			file.nodes.push({
 				node: 'dialog_definition',
 				dialogName: dialogNameCapture.value,
 				dialogs,
@@ -165,12 +165,12 @@ const dictionary = {
 			@dialog_parameter*
 			$quoted_string:dialogMessage+
 			@dialog_option*`,
-			onMatch: (state, crawlState, startPos) => {
-				const optionNodes = mostRecentNodes(state, 'dialog_option', 0, Infinity);
+			onMatch: (file, crawlState, startPos) => {
+				const optionNodes = mostRecentNodes(file, 'dialog_option', 0, Infinity);
 				const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
-				const parameterNodes = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
-				const identifierNode = mostRecentNode(state, 'dialog_identifier');
-				state.nodes.push({
+				const parameterNodes = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
+				const identifierNode = mostRecentNode(file, 'dialog_identifier');
+				file.nodes.push({
 					node: 'dialog',
 					identifier: identifierNode,
 					parameters: parameterNodes,
@@ -184,10 +184,10 @@ const dictionary = {
 		pattern: `'entity':identifierType $string:identifierValue
 			| 'name':identifierType $string:identifierValue
 			| $bareword:identifierValue`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const identifierValueCapture = mostRecentCapture(crawlState, 'identifierValue');
 			const identifierTypeCapture = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
-			state.nodes.push({
+			file.nodes.push({
 				node: 'dialog_identifier',
 				type: identifierTypeCapture.length > 0 ? identifierTypeCapture[0].value : 'label',
 				value: identifierValueCapture.value,
@@ -197,10 +197,10 @@ const dictionary = {
 	},
 	dialog_option: {
 		pattern: `'>' $quoted_string:label '=' $string:script`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const scriptNameCapture = mostRecentCapture(crawlState, 'script');
 			const labelNameCapture = mostRecentCapture(crawlState, 'label');
-			state.nodes.push({
+			file.nodes.push({
 				node: 'dialog_option',
 				label: labelNameCapture.value,
 				script: scriptNameCapture.value,
@@ -210,10 +210,10 @@ const dictionary = {
 	},
 	serial_dialog_definition: {
 		pattern: `'serial_dialog' $string:serialDialogName '{' @serial_dialog? '}'`,
-		onMatch: (state, crawlState, startPos) => {
-			const serialDialog = mostRecentNode(state, 'serial_dialog', 0, 1);
+		onMatch: (file, crawlState, startPos) => {
+			const serialDialog = mostRecentNode(file, 'serial_dialog', 0, 1);
 			const serialDialogNameCapture = mostRecentCapture(crawlState, 'serialDialogName');
-			state.nodes.push({
+			file.nodes.push({
 				node: 'serial_dialog_definition',
 				dialogName: serialDialogNameCapture.value,
 				serialDialog,
@@ -223,11 +223,11 @@ const dictionary = {
 	},
 	serial_dialog: {
 		pattern: `@serial_dialog_parameter* $string:serialDialogMessage+ @serial_dialog_option*`,
-			onMatch: (state, crawlState, startPos) => {
-				const optionNodes = mostRecentNodes(state, 'serial_dialog_option', 0, Infinity);
+			onMatch: (file, crawlState, startPos) => {
+				const optionNodes = mostRecentNodes(file, 'serial_dialog_option', 0, Infinity);
 				const messageCaptures = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
-				const parameterNodes = mostRecentNodes(state, 'serial_dialog_parameter', 0, Infinity);
-				state.nodes.push({
+				const parameterNodes = mostRecentNodes(file, 'serial_dialog_parameter', 0, Infinity);
+				file.nodes.push({
 					node: 'serial_dialog',
 					parameters: parameterNodes,
 					messages: messageCaptures,
@@ -239,14 +239,14 @@ const dictionary = {
 	serial_dialog_option: {
 		pattern: `'#':optionType $quoted_string:label '=' $string:script
 			| '_':optionType $quoted_string:label '=' $string:script`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const scriptNameCapture = mostRecentCapture(crawlState, 'script');
 			const labelNameCapture = mostRecentCapture(crawlState, 'label');
 			const optionTypeCapture = mostRecentCapture(crawlState, 'optionType');
 			let type = '';
 			if (optionTypeCapture.value === '#') type = 'options';
 			if (optionTypeCapture.value === '_') type = 'text_options';
-			state.nodes.push({
+			file.nodes.push({
 				node: 'serial_dialog_option',
 				type,
 				label: labelNameCapture.value,
@@ -255,26 +255,26 @@ const dictionary = {
 			});
 		},
 	},
-	scriptName: {
+	script_name: {
 		pattern: `$string:scriptName`,
-		onMatch: (state, crawlState, startPos) => {
-			state.nodes.push({
-				node: 'scriptName',
+		onMatch: (file, crawlState, startPos) => {
+			file.nodes.push({
+				node: 'script_name',
 				scriptName: mostRecentCapture(crawlState, 'scriptName'),
 				tokenPos: startPos,
-			})
+			});
 		},
 	},
 	script_definition: {
 		pattern: `'script'? @scriptName '{' @script_body_item* '}'`,
-		onMatch: (state, _crawlState, startPos) => {
-			const body = collectUntilNode(state, 'scriptName');
-			state.nodes.push({
+		onMatch: (file, _crawlState, startPos) => {
+			const body = collectUntilNode(file, 'script_name');
+			file.nodes.push({
 				node: 'script',
-				scriptName: mostRecentNode(state, 'scriptName'),
+				scriptName: mostRecentNode(file, 'script_name'),
 				body,
 				tokenPos: startPos,
-			})
+			});
 		},
 	},
 	script_body_item: {
@@ -285,32 +285,32 @@ const dictionary = {
 	},
 	action_return: {
 		pattern: `'return' ';'`,
-		onMatch: (state, _crawlState, startPos) => {
-			state.nodes.push({
+		onMatch: (file, _crawlState, startPos) => {
+			file.nodes.push({
 				node: 'action', tokenPos: startPos,
 				action: 'GOTO_ACTION_LABEL',
 				label: 'auto return',
-			})
+			});
 		},
 	},
 	action_label: {
 		pattern: `$bareword:labelName ':'`,
-		onMatch: (state, crawlState, startPos) => {
-			state.nodes.push({
+		onMatch: (file, crawlState, startPos) => {
+			file.nodes.push({
 				node: 'action', tokenPos: startPos,
 				action: 'LABEL',
 				value: semiRecentCapture(crawlState, 'labelName').value,
-			})
+			});
 		},
 	},
 	action_load_map: {
 		pattern: `'load' 'map' $string:mapName ';'`,
-		onMatch: (state, crawlState, startPos) => {
-			state.nodes.push({
+		onMatch: (file, crawlState, startPos) => {
+			file.nodes.push({
 				node: 'action', tokenPos: startPos,
 				action: 'LOAD_MAP',
 				map: semiRecentCapture(crawlState, 'mapName').value,
-			})
+			});
 		},
 	},
 	// untested:
@@ -318,14 +318,14 @@ const dictionary = {
 		pattern: `'player':entityIdentifierType
 			| 'self':entityIdentifierType
 			| 'entity':entityIdentifierType $string:entityName`,
-		onMatch: (state, crawlState, startPos) => {
+		onMatch: (file, crawlState, startPos) => {
 			const entityNameCapture = mostRecentCaptures(crawlState, 'entityName', 0, 1);
 			const entityIdentifierType = mostRecentCapture(crawlState, 'entityIdentifierType');
 			let entityName = '';
 			if (entityIdentifierType.value === 'self') entityName = '%SELF%';
 			else if (entityIdentifierType.value === 'player') entityName = '%PLAYER%';
 			else entityName = entityNameCapture[0].entityName
-			state.nodes.push({
+			file.nodes.push({
 				node: 'entity_identifier',
 				value: entityName,
 				tokenPos: startPos,
@@ -382,14 +382,14 @@ Object.keys(dictionary).forEach(entryName=>{
 	if (entry.onMatch) onMatch[entryName] = entry.onMatch;
 });
 
-const collectUntilNode = (state, nodeName) => {
+const collectUntilNode = (file, nodeName) => {
 	// skip the irrelevant ones by setting them aside for a second
 	const extracted = [];
 	while (
-		state.nodes[state.nodes.length-1]
-		&& state.nodes[state.nodes.length-1].node !== nodeName
+		file.nodes[file.nodes.length-1]
+		&& file.nodes[file.nodes.length-1].node !== nodeName
 	) {
-		extracted.unshift(state.nodes.pop());
+		extracted.unshift(file.nodes.pop());
 	}
 	return extracted;
 };
@@ -444,13 +444,13 @@ const mostRecentCapture = (crawlState, captureLabel) => {
 	return extracted ? extracted[0] : false;
 };
 
-const mostRecentNodes = (state, nodeName, min = 1, max = min) => {
+const mostRecentNodes = (file, nodeName, min = 1, max = min) => {
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
-		const latest = state.nodes[state.nodes.length-1];
+		const latest = file.nodes[file.nodes.length-1];
 		if (!latest) break;
 		if (latest.node !== nodeName) break;
-		extracted.unshift(state.nodes.pop());
+		extracted.unshift(file.nodes.pop());
 	}
 	if (extracted.length < min) {
 		const message = `Not enough ${nodeName} nodes;`
@@ -459,8 +459,8 @@ const mostRecentNodes = (state, nodeName, min = 1, max = min) => {
 	}
 	return extracted;
 };
-const mostRecentNode = (state, nodeName) => {
-	const extracted = mostRecentNodes(state, nodeName, 1);
+const mostRecentNode = (file, nodeName) => {
+	const extracted = mostRecentNodes(file, nodeName, 1);
 	return extracted ? extracted[0] : false;
 };
 

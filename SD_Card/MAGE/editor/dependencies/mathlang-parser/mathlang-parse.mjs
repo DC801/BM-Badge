@@ -114,10 +114,10 @@ const debugLog = (string) => { if (verbose) console.log(string); };
 const exampleTwig = { rep: "", type: "literal", value: "include", original: "'include'", };
 const exampleToken = { type: "bareword", rawValue: "include", value: "include", pos: 0, };
 
-const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
-	const tokens = state.tokens;
+const tryBranch = (file, origCrawlState, branchName, branchIndex) => {
+	const tokens = file.tokens;
 	let crawlState = JSON.parse(JSON.stringify(origCrawlState)); 
-	const branch = state.tree[branchName]?.[branchIndex];
+	const branch = file.tree[branchName]?.[branchIndex];
 	let twigPos = 0;
 	let tokenPos = crawlState.tokenPos;
 	let repeated = false;
@@ -240,7 +240,7 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 				crawlState.unusedLabels.push(twig.label);
 			}
 			let lookedUp = tryBranches(
-				state,
+				file,
 				crawlState,
 				twig.value,
 			);
@@ -275,22 +275,22 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 
 let printToken = '';
 let printStack = [];
-const tryBranches = (state, origCrawlState, branchName) => {
-	const tree = state.tree;
+const tryBranches = (file, origCrawlState, branchName) => {
+	const tree = file.tree;
 	const branches = tree[branchName];
 	const startPos = origCrawlState.tokenPos;
 	const crawlState = JSON.parse(JSON.stringify(origCrawlState)); 
 	const successes = [];
 	const fails = [];
-	const newPrintToken = state.tokens[startPos].value;
+	const newPrintToken = file.tokens[startPos].value;
 	if (newPrintToken !== printToken) {
 		printToken = newPrintToken;
-		debugLog (`\ttokens[${startPos}]: ${state.tokens[startPos].value}`);
+		debugLog (`\ttokens[${startPos}]: ${file.tokens[startPos].value}`);
 	}
 	printStack.push(branchName);
 	debugLog(`${printStack.join(' > ')}`);
 	for (let i = 0; i < branches.length; i++) {
-		const triedBranch = tryBranch(state, crawlState, branchName, i);
+		const triedBranch = tryBranch(file, crawlState, branchName, i);
 		if (triedBranch.matched) {
 			successes.push(triedBranch);
 			break; // don't waste time trying matches after you've got one from the set; mathlang patterns should be mutually exclusive, whereas in the original natlang they could be subsets of each other
@@ -307,15 +307,15 @@ const tryBranches = (state, origCrawlState, branchName) => {
 		const expected = fails
 			.filter(item=>item.crawlState.tokenPos === maxPos)
 			.map(item=>item.expected);
-		const crawlError = JSON.parse(JSON.stringify(state.crawlError));
+		const crawlError = JSON.parse(JSON.stringify(file.crawlError));
 		if (maxPos === crawlError.bestPos) {
-			state.crawlError.expected = crawlError.expected.concat(expected);
+			file.crawlError.expected = crawlError.expected.concat(expected);
 		}
 		if (maxPos > crawlError.bestPos) {
 			crawlError.bestPos = maxPos;
 			crawlError.expected = expected;
 			crawlError.message = `Error at '${printStack.join(' > ')}'`
-			state.crawlError = crawlError;
+			file.crawlError = crawlError;
 		}
 		return { // keeping the succeed/fail return values uniform for sanity's sake
 			matched: false,
@@ -338,18 +338,18 @@ const tryBranches = (state, origCrawlState, branchName) => {
 		const newCrawlState = success.crawlState;
 		Object.entries(newCrawlState.collections).forEach(entry=>{
 			const [name, dict] = entry;
-			const collex = state.collections;
+			const collex = file.collections;
 			collex[name] = collex[name] || {};
 			Object.keys(dict).forEach(value => {
 				collex[name][value] = true;
 			});
 		})
 		newCrawlState.nodes.forEach(node=>{
-			state.nodes.push(node); // or is concat more efficient?
+			file.nodes.push(node); // or is concat more efficient?
 		})
 		newCrawlState.nodes = [];
 		if (onMatch[branchName]) {
-			onMatch[branchName](state, newCrawlState, startPos);
+			onMatch[branchName](file, newCrawlState, startPos);
 		}
 		return {
 			matched: true,
@@ -370,7 +370,7 @@ const parseFile = (lexObject, tree, givenFileName) => {
 		unusedLabels: [],
 		nodes: [],
 	};
-	const state = { // state == file info
+	const file = {
 		fileName,
 		plaintext: lexObject.plaintext,
 		success: false, // whether the file parsing succeeded
@@ -389,14 +389,14 @@ const parseFile = (lexObject, tree, givenFileName) => {
 	};
 
 	// do the thing
-	const triedAll = tryBranches(state, crawlState, 'document');
-	state.success = triedAll.matched;
-	state.crawlState = triedAll.crawlState;
-	const crawlError = state.crawlError;
-	const expected = [...new Set(state.crawlError.expected)];
-	state.crawlError.message = `Expected: ${expected.join(', ')}`;
-	if (!state.success) {
-		state.errors.push({
+	const triedAll = tryBranches(file, crawlState, 'document');
+	file.success = triedAll.matched;
+	file.crawlState = triedAll.crawlState;
+	const crawlError = file.crawlError;
+	const expected = [...new Set(file.crawlError.expected)];
+	file.crawlError.message = `Expected: ${expected.join(', ')}`;
+	if (!file.success) {
+		file.errors.push({
 			value: 'Parse error',
 			message: crawlError.message,
 			pos: crawlError.bestPos,
@@ -404,22 +404,22 @@ const parseFile = (lexObject, tree, givenFileName) => {
 	}
 
 	// smooth things out
-	state.nodes.forEach(node=>{
+	file.nodes.forEach(node=>{
 		// so that file nodes can be referenced and copypasta'd while preserving error messages
 		node.fileName = fileName;
 	});
-	// if (state.success) state.crawlError = {};
+	// if (file.success) file.crawlError = {};
 
 	// review errors and warnings
 	triedAll.crawlState.captures.forEach(capture => {
-		state.errors.push({
+		file.errors.push({
 			value: 'Orphaned capture',
 			message: `Found orphaned capture at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
 			pos: capture.pos,
 		});
 	});
 	triedAll.crawlState.unusedLabels.forEach(capture => {
-		state.errors.push({
+		file.errors.push({
 			value: 'Unused capture label',
 			message: `Found unused capture label at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
 			pos: capture.pos,
@@ -427,7 +427,7 @@ const parseFile = (lexObject, tree, givenFileName) => {
 	});
 
 	// done!
-	return state;
+	return file;
 };
 
 const exampleLex = lex(testInputString);
