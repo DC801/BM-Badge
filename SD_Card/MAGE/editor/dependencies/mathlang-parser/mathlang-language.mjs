@@ -277,42 +277,55 @@ const dictionary = {
 			});
 		},
 	},
-	script_body_item: {
-		pattern: `@action_return
-			| @action_label
-			| @action_load_map
-		`,
-	},
-	action_return: {
-		pattern: `'return' ';'`,
-		onMatch: (file, _crawlState, startPos) => {
-			file.nodes.push({
-				node: 'action', tokenPos: startPos,
-				action: 'GOTO_ACTION_LABEL',
-				label: 'auto return',
-			});
-		},
-	},
-	action_label: {
-		pattern: `$bareword:labelName ':'`,
+	show_dialog_block: {
+		pattern: `'show' 'dialog:dialogName' $string:dialogName '{' @dialog* '}'`,
 		onMatch: (file, crawlState, startPos) => {
+			const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
+			const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
 			file.nodes.push({
-				node: 'action', tokenPos: startPos,
-				action: 'LABEL',
-				value: semiRecentCapture(crawlState, 'labelName').value,
+				node: 'dialog_definition',
+				dialogName: dialogNameCapture.value,
+				dialogs,
+				tokenPos: startPos,
 			});
 		},
 	},
-	action_load_map: {
-		pattern: `'load' 'map' $string:mapName ';'`,
-		onMatch: (file, crawlState, startPos) => {
-			file.nodes.push({
-				node: 'action', tokenPos: startPos,
-				action: 'LOAD_MAP',
-				map: semiRecentCapture(crawlState, 'mapName').value,
-			});
-		},
-	},
+	// script_body_item: {
+	// 	pattern: `@action_return
+	// 		| @action_label
+	// 		| @action_load_map
+	// 	`,
+	// },
+	// action_return: {
+	// 	pattern: `'return' ';'`,
+	// 	onMatch: (file, _crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'action', tokenPos: startPos,
+	// 			action: 'GOTO_ACTION_LABEL',
+	// 			label: 'auto return',
+	// 		});
+	// 	},
+	// },
+	// action_label: {
+	// 	pattern: `$bareword:labelName ':'`,
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'action', tokenPos: startPos,
+	// 			action: 'LABEL',
+	// 			value: semiRecentCapture(crawlState, 'labelName').value,
+	// 		});
+	// 	},
+	// },
+	// action_load_map: {
+	// 	pattern: `'load' 'map' $string:mapName ';'`,
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'action', tokenPos: startPos,
+	// 			action: 'LOAD_MAP',
+	// 			map: semiRecentCapture(crawlState, 'mapName').value,
+	// 		});
+	// 	},
+	// },
 	// untested:
 	entity_identifier: {
 		pattern: `'player':entityIdentifierType
@@ -540,152 +553,144 @@ Object.entries(patterns).forEach(([patternName, pattern])=>{
 	tree[patternName] = allTokenPatterns;
 });
 
-// const parsedPatterns = { // generated from `patterns`, to be rebuilt each time; here for refernced purposes only
-//   document: [
-//     [
-//       { rep: "*", type: "lookup", value: "root", original: "@root*", },
-//       { rep: "", type: "capture", value: "EOF", original: "$EOF", },
-//     ],
-//   ],
-//   root: [
-//     [
-//       { rep: "", type: "lookup", value: "include_macro", original: "@include_macro", },
-//     ],
-//     [
-//       { rep: "", type: "lookup", value: "constant_assignment", original: "@constant_assignment", },
-//     ],
-//   ],
-//   include_macro: [
-//     [
-//       { rep: "", type: "literal", value: "include", original: "'include'", },
-//       { rep: "", type: "literal", value: "!", original: "'!'", },
-//       { rep: "", type: "literal", value: "(", original: "'('", },
-//       { rep: "?", type: "capture", value: "quoted_string", label: "fileName", original: "$quoted_string:fileName?", },
-//       { rep: "", type: "literal", value: ")", original: "')'", },
-//     ],
-//   ],
-//   constant_assignment: [
-//     [
-//       { rep: "", type: "capture", value: "constant", label: "constantName", toCollection: "constantNames", original: "$constant:constantName>constantNames", },
-//       { rep: "", type: "literal", value: "=", original: "'='", },
-//       { rep: "", type: "lookup", value: "constant_value", label: "constantValue", original: "@constant_value:constantValue", },
-//       { rep: "", type: "literal", value: ";", original: "';'", },
-//     ],
-//   ],
-//   constant_value: [
-//     [
-//       { rep: "", type: "capture", value: "constant", autoComplete: "constantNames", original: "$constant<constantNames", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "boolean", original: "$boolean", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "quoted_string", original: "$quoted_string", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "bareword", original: "$bareword", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "number", original: "$number", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "duration", original: "$duration", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "distance", original: "$distance", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "color", original: "$color", },
-//     ],
-//     [
-//       { rep: "", type: "capture", value: "quantity", original: "$quantity", },
-//     ],
-//     [
-//       { rep: "", type: "lookup", value: "enum_alignment", original: "@enum_alignment", },
-//     ],
-//   ],
-//   enum_alignment: [
-//     [
-//       { rep: "", type: "literal", value: "TR", original: "'TR'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "BR", original: "'BR'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "TL", original: "'TL'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "BL", original: "'BL'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "TOP_RIGHT", original: "'TOP_RIGHT'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "BOTTOM_RIGHT", original: "'BOTTOM_RIGHT'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "TOP_LEFT", original: "'TOP_LEFT'", },
-//     ],
-//     [
-//       { rep: "", type: "literal", value: "BOTTOM_LEFT", original: "'BOTTOM_LEFT'", },
-//     ],
-//   ],
-// };
+const conditionsLHS = [
+	{
+		action: 'CHECK_DEBUG_MODE',
+		pattern: `'debug_mode'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_SAVE_FLAG',
+		pattern: `$string:flagName<>flagNames`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_ENTITY_GLITCHED',
+		pattern: `@entity_identifier 'glitched'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_DIALOG_OPEN',
+		pattern: `'dialog' 'open'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_SERIAL_DIALOG_OPEN',
+		pattern: `'serial_dialog' 'open'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_FOR_BUTTON_STATE',
+		pattern: `'button' $enum_button:buttonName 'down'`,
+		type: 'boolean',
+		values: { expected_bool: true },
+	},
+	{
+		action: 'CHECK_FOR_BUTTON_STATE',
+		pattern: `'button' $enum_button:buttonName 'up'`,
+		type: 'boolean',
+		values: { expected_bool: false },
+	},
+	{
+		action: 'CHECK_FOR_BUTTON_PRESS',
+		pattern: `'button' $enum_button:buttonName 'pressed'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
+		pattern: `@entity_identifier 'intersects' @geometry_identifier`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_ENTITY_X',
+		pattern: `@entity_identifier 'x'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_Y',
+		pattern: `@entity_identifier 'y'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_PRIMARY_ID',
+		pattern: `@entity_identifier 'primary_id'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_SECONDARY_ID',
+		pattern: `@entity_identifier 'secondary_id'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_PRIMARY_ID_TYPE',
+		pattern: `@entity_identifier 'primary_id_type'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_CURRENT_ANIMATION',
+		pattern: `@entity_identifier 'current_animation'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_CURRENT_FRAME',
+		pattern: `@entity_identifier 'animation_frame'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_NAME',
+		pattern: `@entity_identifier 'name'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_INTERACT_SCRIPT',
+		pattern: `@entity_identifier 'on_interact'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_TICK_SCRIPT',
+		pattern: `@entity_identifier 'on_tick'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_LOOK_SCRIPT',
+		pattern: `@entity_identifier 'on_look'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_TYPE',
+		pattern: `@entity_identifier 'type'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_PATH',
+		pattern: `@entity_identifier 'path'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_WARP_STATE',
+		pattern: `'warp_state'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_DIRECTION',
+		pattern: `@entity_identifier 'direction'`,
+		type: 'string_nsew',
+	},
+	{
+		action: 'CHECK_VARIABLE',
+		pattern: `$string:variable`,
+		type: 'string_against_number', // < <= == => >
+		// rhs = ':value'
+	},
+	{
+		action: 'CHECK_VARIABLES',
+		pattern: `$string:variable`,
+		type: 'string_against_string', // < <= == => >
+		// rhs = ':source'
+	},
+];
 
-// // CONDITIONS
-
-// const conditions = [
-
-// 	{
-// 		action: 'CHECK_DEBUG_MODE',
-// 		pattern: `'debug_mode'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_SAVE_FLAG',
-// 		pattern: `$string:flagName<>flagNames`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_ENTITY_GLITCHED',
-// 		pattern: `@entity_identifier 'glitched'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_DIALOG_OPEN',
-// 		pattern: `'dialog' 'open'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_SERIAL_DIALOG_OPEN',
-// 		pattern: `'serial_dialog' 'open'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_FOR_BUTTON_STATE',
-// 		pattern: `'button' $enum_button:buttonName 'down'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_FOR_BUTTON_STATE',
-// 		pattern: `'button' $enum_button:buttonName 'up'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_FOR_BUTTON_PRESS',
-// 		pattern: `'button' $enum_button:buttonName 'pressed'`,
-// 		type: 'boolean',
-// 	},
-// 	{
-// 		action: 'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
-// 		pattern: `@entity_identifier 'intersects' @geometry_identifier`,
-// 		type: 'boolean',
-// 	},
-// ];
-
-
-console.log('break');
+// console.log('break');
 
 const language = { tree, onMatch, keywords: keywordsFound };
-
 export default language;

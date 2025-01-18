@@ -81,6 +81,7 @@ _ {
 	camera position = geometry geometryName; //TELEPORT_CAMERA_TO_GEOMETRY
 	camera position = entity Bob position; //SET_CAMERA_TO_FOLLOW_ENTITY
 	entity Bob position = geometry geometryName; //TELEPORT_ENTITY_TO_GEOMETRY
+	
 	// RHS: booleans
 	entity entityName glitched = $enum_trueFalse; //SET_ENTITY_GLITCHED
 	player_control = $enum_onOff; //SET_PLAYER_CONTROL
@@ -94,6 +95,7 @@ _ {
 		// use !! to coerce to bool on RHS, in the event that $string = $string and you need
 		// to know if the RHS is a bool expression or a number expression
 		// otherwise, no flagName/variableName collisions detected
+	
 	// RHS: numbers
 	entity entityName x = $number_literal; //SET_ENTITY_X
 	entity entityName y = $number_literal; //SET_ENTITY_Y
@@ -107,6 +109,7 @@ _ {
 	variableName = entity entityName $entityField; //COPY_VARIABLE
 	variableName = $number_literal; //MUTATE_VARIABLE
 	variableName1 = variableName2; //MUTATE_VARIABLES
+	
 	// RHS: strings
 	alias $string_literal = $string_literal; //REGISTER_SERIAL_DIALOG_COMMAND_ALIAS
 	warp_state = $string_literal; //SET_WARP_STATE
@@ -119,14 +122,17 @@ _ {
 	entity entityName direction = entity entityName; //SET_ENTITY_DIRECTION_TARGET_ENTITY
 	entity entityName direction = geometry geometryName; //SET_ENTITY_DIRECTION_TARGET_GEOMETRY
 	entity entityName direction = $enum_nsew; //SET_ENTITY_DIRECTION
+	
 	// RHS: serial_dialog names and serial_dialog literals
 	serial_connect = serial_dialog {}; //SET_CONNECT_SERIAL_DIALOG
 	serial_connect = serial_dialog serialDialogName; //SET_CONNECT_SERIAL_DIALOG
 	serial_connect = serial_dialog serialDialogName {}; //SET_CONNECT_SERIAL_DIALOG
+	
 	// RHS: scriptnames
 	command $string_literal = scriptName; //REGISTER_SERIAL_DIALOG_COMMAND
 	command $string_literal fail = scriptName; //REGISTER_SERIAL_DIALOG_COMMAND
 	command $string_literal + $argName = scriptName; //REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+	
 	// RHS: enums
 	light $enum_light = $enum_onOff; //SET_LIGHTS_STATE
 
@@ -163,60 +169,4 @@ _ {
 	index $constant;
 	index 50000;
 
-	/* ----------- STRING (EQUALITY ONLY) ---------- */
-
-		/*[left side]*/ == $string_literal
-		/*[left side]*/ != $string_literal
-	//left sides:
-	entity entityName name //CHECK_ENTITY_NAME
-	entity entityName on_interact //CHECK_ENTITY_INTERACT_SCRIPT
-	entity entityName on_tick //CHECK_ENTITY_TICK_SCRIPT
-	entity entityName on_look //CHECK_ENTITY_LOOK_SCRIPT
-	entity entityName type //CHECK_ENTITY_TYPE
-	entity entityName path //CHECK_ENTITY_PATH
-	warp_state //CHECK_WARP_STATE
-	// is $enum_direction rather than just string though:
-	entity entityName direction //CHECK_ENTITY_DIRECTION
-
-	/* -------- NUMBER (EQUALITY ONLY) -------- */
-
-		/*[left side]*/ == $number_literal
-		/*[left side]*/ != $number_literal
-	//left sides:
-	entity entityName x //CHECK_ENTITY_X
-	entity entityName y //CHECK_ENTITY_Y
-	entity entityName primary_id //CHECK_ENTITY_PRIMARY_ID
-	entity entityName secondary_id //CHECK_ENTITY_SECONDARY_ID
-	entity entityName primary_id_type //CHECK_ENTITY_PRIMARY_ID_TYPE
-	entity entityName current_animation //CHECK_ENTITY_CURRENT_ANIMATION
-	entity entityName animation_frame //CHECK_ENTITY_CURRENT_FRAME
-
-	/* ---------- NUMBER (ANY COMPARISON) ---------- */
-
-		$string_literal < /*[right side]*/
-		$string_literal <= /*[right side]*/
-		$string_literal == /*[right side]*/
-		$string_literal => /*[right side]*/
-		$string_literal > /*[right side]*/
-	//right sides:
-	$number_literal //CHECK_VARIABLE
-	$string_literal //CHECK_VARIABLES
-
-	/* -------- BOOLEAN -------- */
-	
-	/*[left side]*/
-	!/*[left side]*/
-	/*[left side]*/ == $bool_literal
-	/*[left side]*/ != $bool_literal
-	//left sides:
-	debug_mode //CHECK_DEBUG_MODE
-	$string_literal //CHECK_SAVE_FLAG
-	entity "entityName" glitched //CHECK_ENTITY_GLITCHED
-	dialog open //CHECK_DIALOG_OPEN
-	serial_dialog open //CHECK_SERIAL_DIALOG_OPEN
-	button $enum_button down //CHECK_FOR_BUTTON_STATE
-	button $enum_button up //CHECK_FOR_BUTTON_STATE
-	button $enum_button pressed //CHECK_FOR_BUTTON_PRESS
-	entity entityName intersects geometry geometryName //CHECK_IF_ENTITY_IS_IN_GEOMETRY
-	
 }
