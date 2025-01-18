@@ -34,6 +34,7 @@ const dictionary = {
 			| @add_dialog_settings
 			| @dialog_definition
 			| @serial_dialog_definition
+			| @script_definition
 		`,
 	},
 	include_macro: {
@@ -207,8 +208,6 @@ const dictionary = {
 			});
 		},
 	},
-
-	// current
 	serial_dialog_definition: {
 		pattern: `'serial_dialog' $string:serialDialogName '{' @serial_dialog? '}'`,
 		onMatch: (state, crawlState, startPos) => {
@@ -254,6 +253,64 @@ const dictionary = {
 				script: scriptNameCapture.value,
 				tokenPos: startPos,
 			});
+		},
+	},
+	scriptName: {
+		pattern: `$string:scriptName`,
+		onMatch: (state, crawlState, startPos) => {
+			state.nodes.push({
+				node: 'scriptName',
+				scriptName: mostRecentCapture(crawlState, 'scriptName'),
+				tokenPos: startPos,
+			})
+		},
+	},
+	script_definition: {
+		pattern: `'script'? @scriptName '{' @script_body_item* '}'`,
+		onMatch: (state, _crawlState, startPos) => {
+			const body = collectUntilNode(state, 'scriptName');
+			state.nodes.push({
+				node: 'script',
+				scriptName: mostRecentNode(state, 'scriptName'),
+				body,
+				tokenPos: startPos,
+			})
+		},
+	},
+	script_body_item: {
+		pattern: `@action_return
+			| @action_label
+			| @action_load_map
+		`,
+	},
+	action_return: {
+		pattern: `'return' ';'`,
+		onMatch: (state, _crawlState, startPos) => {
+			state.nodes.push({
+				node: 'action', tokenPos: startPos,
+				action: 'GOTO_ACTION_LABEL',
+				label: 'auto return',
+			})
+		},
+	},
+	action_label: {
+		pattern: `$bareword:labelName ':'`,
+		onMatch: (state, crawlState, startPos) => {
+			state.nodes.push({
+				node: 'action', tokenPos: startPos,
+				action: 'LABEL',
+				value: semiRecentCapture(crawlState, 'labelName').value,
+			})
+		},
+	},
+	action_load_map: {
+		pattern: `'load' 'map' $string:mapName ';'`,
+		onMatch: (state, crawlState, startPos) => {
+			state.nodes.push({
+				node: 'action', tokenPos: startPos,
+				action: 'LOAD_MAP',
+				map: semiRecentCapture(crawlState, 'mapName').value,
+			})
 		},
 	},
 	// untested:
@@ -309,8 +366,12 @@ const dictionary = {
 			| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
 			| 'current_animation' | 'current_frame' | 'direction' | 'path_id'`,
 	},
+};
+
+const actionDictionary = {
 
 };
+
 
 const onMatch = {};
 const patterns = {};
@@ -320,6 +381,18 @@ Object.keys(dictionary).forEach(entryName=>{
 	if (entry.pattern) patterns[entryName] = entry.pattern;
 	if (entry.onMatch) onMatch[entryName] = entry.onMatch;
 });
+
+const collectUntilNode = (state, nodeName) => {
+	// skip the irrelevant ones by setting them aside for a second
+	const extracted = [];
+	while (
+		state.nodes[state.nodes.length-1]
+		&& state.nodes[state.nodes.length-1].node !== nodeName
+	) {
+		extracted.unshift(state.nodes.pop());
+	}
+	return extracted;
+};
 
 const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	// skip the irrelevant ones by setting them aside for a second
@@ -411,6 +484,7 @@ const getWordReport = (word, patternName) => {
 		type: literal ? 'literal' : '',
 		value: literal ? literal[1] : '',
 	}
+	if (literal) keywordsFound.add(literal[1]);
 	if (
 		fragments[fragments.length-1] === '?'
 		|| fragments[fragments.length-1] === '*'
@@ -435,7 +509,7 @@ const getWordReport = (word, patternName) => {
 			token.type = 'lookup';
 			token.value = right;
 			patternLookupsFound.add(right);
-		} else if (left === ":") {
+		} else if (left === ':') {
 			token.label = right;
 			capturesIdentified[patternName] = capturesIdentified[patternName] || [];
 			capturesIdentified[patternName].push(word);
@@ -612,6 +686,6 @@ Object.entries(patterns).forEach(([patternName, pattern])=>{
 
 console.log('break');
 
-const language = { tree, onMatch };
+const language = { tree, onMatch, keywords: keywordsFound };
 
 export default language;

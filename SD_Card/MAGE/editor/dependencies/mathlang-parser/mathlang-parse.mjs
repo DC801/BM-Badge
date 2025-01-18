@@ -1,10 +1,16 @@
 import lex from "./mathlang-lex.mjs"
 import language from "./mathlang-language.mjs"
 
-const { tree, onMatch } = language;
+const { tree, onMatch, keywords } = language;
 
 const testInputString = `
-include!("header.mgs")
+include("header.mgs")
+
+exampleScript {
+	start:
+	return;
+	load map main;
+}
 
 $trombones = 76;
 /* comment */
@@ -193,8 +199,16 @@ const tryBranch = (state, origCrawlState, branchName, branchIndex) => {
 						value: token.value,
 						pos: tokenPos,
 					});
-				} else if (token.type === 'EOF') {
-
+				} else if (twig.original === '$EOF') {
+					if (token.type !== 'EOF') {
+						// patterns are exhausted but tokens aren't;
+						// it broke!
+						return {
+							matched: false,
+							expected: `???`,
+							crawlState,
+						};
+					}
 				} else {
 					throw new Error ('Capture found without label');
 				}
@@ -286,8 +300,8 @@ const tryBranches = (state, origCrawlState, branchName) => {
 		}
 	}
 	if (successes.length === 0) {
-		// debugLog('...Failed!');
-		printStack.pop();
+		const failedPattern = printStack.pop();
+		debugLog(`Failed to match '${failedPattern}'!`);
 		fails.sort((a,b)=>b.crawlState.tokenPos - a.crawlState.tokenPos);
 		const maxPos = fails[0].crawlState.tokenPos;
 		const expected = fails
@@ -394,6 +408,7 @@ const parseFile = (lexObject, tree, givenFileName) => {
 		// so that file nodes can be referenced and copypasta'd while preserving error messages
 		node.fileName = fileName;
 	});
+	// if (state.success) state.crawlError = {};
 
 	// review errors and warnings
 	triedAll.crawlState.captures.forEach(capture => {
