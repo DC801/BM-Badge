@@ -38,7 +38,7 @@ const dictionary = {
 	include_macro: {
 		pattern: `'include' '!' '(' $quoted_string:fileName? ')'`,
 		onMatch: (state, crawlState, startPos) => {
-			const fileNameCapture = semiRecentCaptures(crawlState, 'fileName', 1)[0];
+			const fileNameCapture = mostRecentCapture(crawlState, 'fileName');
 			if (fileNameCapture) {
 				state.nodes.push({
 					node: 'include_macro',
@@ -62,15 +62,14 @@ const dictionary = {
 	},
 	constant_assignment: {
 		pattern: `$constant:constantName>constantNames '=' @constant_value:constantValue ';'`,
-		onMatch: (state, crawlState) => {
-			const nameCapture = semiRecentCaptures(crawlState, 'constantName', 1)[0];
-			const valueCapture = semiRecentCaptures(crawlState, 'constantValue', 1)[0];
-			if (!nameCapture || !valueCapture) throw new Error (`constant_assignment error`);
+		onMatch: (state, crawlState, startPos) => {
+			const valueCapture = mostRecentCapture(crawlState, 'constantValue');
+			const nameCapture = mostRecentCapture(crawlState, 'constantName');
 			state.nodes.push({
 				node: 'constant_assignment',
 				label: nameCapture.value,
 				value: valueCapture.value,
-				tokenPos: nameCapture.pos,
+				tokenPos: startPos,
 			});
 		},
 	},
@@ -90,14 +89,14 @@ const dictionary = {
 	},
 	serial_dialog_parameter: {
 		pattern: `'wrap':property $number:value`,
-		onMatch: (state, crawlState) => {
-			const propertyCapture = semiRecentCaptures(crawlState, 'property', 1)[0];
-			const valueCapture = semiRecentCaptures(crawlState, 'value', 1)[0];
+		onMatch: (state, crawlState, startPos) => {
+			const valueCapture = semiRecentCapture(crawlState, 'value');
+			const propertyCapture = semiRecentCapture(crawlState, 'property');
 			state.nodes.push({
 				node: 'serial_dialog_parameter',
 				label: propertyCapture.value,
 				value: valueCapture.value,
-				tokenPos: propertyCapture.pos,
+				tokenPos: startPos,
 			});
 		},
 	},
@@ -105,18 +104,20 @@ const dictionary = {
 		pattern: `'add' 'dialog' 'settings' '{' @dialog_settings_target* '}'`,
 	},
 	dialog_settings_target: {
-		pattern: `'default':dialogSettingsTarget '{' @dialog_parameter* '}'
-			| 'label':dialogSettingsTarget $bareword:dialogSettingsTargetValue '{' @dialog_parameter* '}'
-			| 'entity':dialogSettingsTarget $string:dialogSettingsTargetValue '{' @dialog_parameter* '}'`,
-		onMatch: (state, crawlState) => {
-			const target = semiRecentCaptures(crawlState, 'dialogSettingsTarget', 1)[0];
-			const targetValue = semiRecentCaptures(crawlState, 'dialogSettingsTargetValue', 0, 1)[0];
+		pattern: `'default':target '{' @dialog_parameter* '}'
+			| 'label':target $bareword:targetValue '{' @dialog_parameter* '}'
+			| 'entity':target $string:targetValue '{' @dialog_parameter* '}'`,
+		onMatch: (state, crawlState, startPos) => {
+			const settings = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
+			const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
+			const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
+			const target = mostRecentCapture(crawlState, 'target');
 			const entry = {
 				node: 'add_dialog_settings',
-				settings: mostRecentNodes(state, 'dialog_parameter', 0, Infinity),
-				tokenPos: target.pos,
 				target: target.value,
-				targetValue: !targetValue && target.value === 'default' ? '' : targetValue.value,
+				targetValue,
+				settings,
+				tokenPos: startPos,
 			};
 			state.nodes.push(entry);
 		},
@@ -126,21 +127,21 @@ const dictionary = {
 			| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
 	},
 	dialog_parameter: {
-		pattern: `'entity':dialogSettingsProperty $string:dialogSettingsValue<>entityNames
-			| 'name':dialogSettingsProperty $string:dialogSettingsValue
-			| 'portrait':dialogSettingsProperty $string:dialogSettingsValue<portraitNames
-			| 'alignment':dialogSettingsProperty @enum_alignment:dialogSettingsValue
-			| 'border_tileset':dialogSettingsProperty $string:dialogSettingsValue
-			| 'emote':dialogSettingsProperty $number:dialogSettingsValue
-			| 'wrap':dialogSettingsProperty $number:dialogSettingsValue`,
-		onMatch: (state, crawlState) => {
-			const propertyCapture = semiRecentCaptures(crawlState, 'dialogSettingsProperty', 1)[0];
-			const valueCapture = semiRecentCaptures(crawlState, 'dialogSettingsValue', 1)[0];
+		pattern: `'entity':settingsProperty $string:settingsValue<>entityNames
+			| 'name':settingsProperty $string:settingsValue
+			| 'portrait':settingsProperty $string:settingsValue<portraitNames
+			| 'alignment':settingsProperty @enum_alignment:settingsValue
+			| 'border_tileset':settingsProperty $string:settingsValue
+			| 'emote':settingsProperty $number:settingsValue
+			| 'wrap':settingsProperty $number:settingsValue`,
+		onMatch: (state, crawlState, startPos) => {
+			const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
+			const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
 			state.nodes.push({
 				node: 'dialog_parameter',
 				label: propertyCapture.value,
 				value: valueCapture.value,
-				tokenPos: propertyCapture.pos,
+				tokenPos: startPos,
 			});
 		},
 	},
@@ -150,11 +151,11 @@ const dictionary = {
 		pattern: `'dialog' $string:dialogName '{' @dialog* '}'`,
 		onMatch: (state, crawlState, startPos) => {
 			const dialogs = mostRecentNodes(state, 'dialog', 0, Infinity);
-			const dialogNameCapture = mostRecentCaptures(crawlState, 'dialogName', 1)[0];
+			const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
 			state.nodes.push({
 				node: 'dialog_definition',
-				dialogs,
 				dialogName: dialogNameCapture.value,
+				dialogs,
 				tokenPos: startPos,
 			});
 		},
@@ -164,18 +165,18 @@ const dictionary = {
 			@dialog_parameter*
 			$string:dialogMessage+
 			@dialog_option*`,
-			onMatch: (state, crawlState) => {
+			onMatch: (state, crawlState, startPos) => {
 				const optionCaptures = mostRecentNodes(state, 'dialog_option', 0, Infinity);
 				const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
 				const parameterCaptures = mostRecentNodes(state, 'dialog_parameter', 0, Infinity);
-				const identifierCapture = mostRecentNodes(state, 'dialog_identifier', 1)[0];
+				const identifierCapture = mostRecentNode(state, 'dialog_identifier');
 				state.nodes.push({
 					node: 'dialog',
 					identifier: identifierCapture,
 					parameters: parameterCaptures,
 					messages: messageCaptures,
 					options: optionCaptures,
-					tokenPos: identifierCapture.pos,
+					tokenPos: startPos,
 				});
 			},
 		},
@@ -183,22 +184,22 @@ const dictionary = {
 		pattern: `'entity':identifierType $string:identifierValue
 			| 'name':identifierType $string:identifierValue
 			| $bareword:identifierValue`,
-		onMatch: (state, crawlState) => {
-			const identifierTypeCapture = semiRecentCaptures(crawlState, 'identifierType', 0, 1)[0];
-			const identifierValueCapture = semiRecentCaptures(crawlState, 'identifierValue', 1)[0];
+		onMatch: (state, crawlState, startPos) => {
+			const identifierValueCapture = mostRecentCapture(crawlState, 'identifierValue');
+			const identifierTypeCapture = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
 			state.nodes.push({
 				node: 'dialog_identifier',
-				type: identifierTypeCapture ? identifierTypeCapture.value : 'label',
+				type: identifierTypeCapture.length > 0 ? identifierTypeCapture[0].value : 'label',
 				value: identifierValueCapture.value,
-				tokenPos: identifierTypeCapture? identifierTypeCapture.pos : identifierValueCapture.pos,
+				tokenPos: startPos,
 			});
 		},
 	},
 	dialog_option: {
 		pattern: `'>' $quoted_string:label '=' $string:script`,
 		onMatch: (state, crawlState, startPos) => {
-			const scriptNameCapture = mostRecentCaptures(crawlState, 'script', 1)[0];
-			const labelNameCapture = mostRecentCaptures(crawlState, 'label', 1)[0];
+			const scriptNameCapture = mostRecentCapture(crawlState, 'script');
+			const labelNameCapture = mostRecentCapture(crawlState, 'label');
 			state.nodes.push({
 				node: 'dialog_option',
 				label: labelNameCapture.value,
@@ -209,22 +210,20 @@ const dictionary = {
 	},
 	// untested:
 	entity_identifier: {
-		pattern: `'player':entityType
-			| 'self':entityType
-			| 'entity':entityType $string:entityName`,
-		onMatch: (state, crawlState) => {
-			const entityType = semiRecentCaptures(crawlState, 'entityType', 1)[0];
+		pattern: `'player':entityIdentifierType
+			| 'self':entityIdentifierType
+			| 'entity':entityIdentifierType $string:entityName`,
+		onMatch: (state, crawlState, startPos) => {
+			const entityNameCapture = mostRecentCaptures(crawlState, 'entityName', 0, 1);
+			const entityIdentifierType = mostRecentCapture(crawlState, 'entityIdentifierType');
 			let entityName = '';
-			if (entityType.value === 'self') entityName = '%SELF%';
-			else if (entityType.value === 'player') entityName = '%PLAYER%';
-			else {
-				const valueCapture = semiRecentCaptures(crawlState, 'entityName', 1)[0];
-				entityName = valueCapture.entityName
-			}
+			if (entityIdentifierType.value === 'self') entityName = '%SELF%';
+			else if (entityIdentifierType.value === 'player') entityName = '%PLAYER%';
+			else entityName = entityNameCapture[0].entityName
 			state.nodes.push({
 				node: 'entity_identifier',
-				value: 'entityName',
-				tokenPos: entityType.pos,
+				value: entityName,
+				tokenPos: startPos,
 			});
 		}
 	},
@@ -300,6 +299,10 @@ const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	crawlState.captures = top.concat(crawlState.captures);
 	return extracted;
 };
+const semiRecentCapture = (crawlState, captureLabel) => {
+	const extracted = semiRecentCaptures(crawlState, captureLabel, 1);
+	return extracted ? extracted[0] : false;
+};
 const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
@@ -314,6 +317,10 @@ const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 		throw new Error (message);
 	}
 	return extracted;
+};
+const mostRecentCapture = (crawlState, captureLabel) => {
+	const extracted = mostRecentCaptures(crawlState, captureLabel, 1);
+	return extracted ? extracted[0] : false;
 };
 
 const mostRecentNodes = (state, nodeName, min = 1, max = min) => {
@@ -330,6 +337,10 @@ const mostRecentNodes = (state, nodeName, min = 1, max = min) => {
 		throw new Error (message);
 	}
 	return extracted;
+};
+const mostRecentNode = (state, nodeName) => {
+	const extracted = mostRecentNodes(state, nodeName, 1);
+	return extracted ? extracted[0] : false;
 };
 
 // auditing the above pattern dictionary structure

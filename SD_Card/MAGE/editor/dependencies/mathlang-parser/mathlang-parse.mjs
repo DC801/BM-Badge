@@ -26,7 +26,7 @@ add dialog settings {
 		portrait old_man
 	}
 }
-dialog greetings {
+dialog restaurant {
 	entity "%PLAYER%" "Hello!"
 	Bob "Oh, um, hi."
 	entity Dennis "What'll it be?"
