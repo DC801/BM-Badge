@@ -2,56 +2,6 @@ import lex from "./mathlang-lex.mjs"
 import language from "./mathlang-language.mjs"
 
 const { tree, onMatch, keywords } = language;
-
-const testInputString = `
-include("header.mgs")
-
-exampleScript {
-	start:
-	return;
-	load map main;
-}
-
-$trombones = 76;
-/* comment */
-$player = "%PLAYER%";
-
-add serial_dialog settings {
-	wrap 88
-}
-add dialog settings {
-	default {
-		alignment BL
-	}
-	label PLAYER {
-		alignment BR
-		entity "%PLAYER%"
-	}
-	entity Bob {
-		name "Real Bob"
-		portrait old_man
-	}
-}
-dialog restaurant {
-	entity "%PLAYER%" alignment BR emote 0 
-	"Hello!" "Welcome to a restaurant!"
-	Bob"Oh, um, hi."
-	entity Dennis "What'll it be?"
-	> "Oh, uh, let me take a look at the menu first." = scriptMenu
-	> "I'll have the usual!" = scriptRegularCustomer
-}
-
-serial_dialog console {
-	wrap 60
-	"In a hole in the ground there lived a Zork."
-	"I think."
-	# "Tell me more!" = scriptMore
-	# "I've heard this one before." = scriptDejaVu
-	_ "I think this type of option doesn't belong here." = warningNotError
-}
-`;
-
-
 const findLineAndCharNumbers = (input, pos) => {
 	const splits = input.substring(0,pos).split('\n')
 	const charCount = splits[splits.length - 1].length;
@@ -107,6 +57,286 @@ const decayTo = {
 		return null;
 	},
 };
+/* ------------------------------------- TESTS ------------------------------------- */
+const tryBranchTests = [
+	{
+		input: `include!("header.mgs")\nadd`, nextPos: 5,
+		matched: true, malformed: false,
+	},
+	{
+		input: `include("header.mgs")\nadd`, nextPos: 4,
+		matched: true, malformed: true,
+	},
+	{
+		input: `include!()\nadd`, nextPos: 4,
+		matched: true, malformed: true,
+	},
+	{
+		input: `include()\nadd`, nextPos: 3,
+		matched: true, malformed: true,
+	},
+	{
+		input: `include(\nadd`, nextPos: 3,
+		matched: true, malformed: true,
+	},
+	{
+		input: `include( add`, nextPos: 3,
+		matched: true, malformed: true,
+	},
+];
+tryBranchTests.forEach(test=>{ test.tokens = lex(test.input).tokens; });
+const exampleTokens = [
+	{ type: "bareword", rawValue: "include", value: "include", pos: 0, },
+	{ type: "operator", rawValue: "!", value: "!", pos: 7, },
+	{ type: "operator", rawValue: "(", value: "(", pos: 8, },
+	{ type: "quoted_string", rawValue: "\"header.mgs\"", value: "header.mgs", pos: 9, },
+	{ type: "operator", rawValue: ")", value: ")", pos: 21, },
+	{ type: "newline", rawValue: "\n", value: "\n", pos: 22, ignorable: true, },
+	{ type: "bareword", rawValue: "add", value: "add", pos: 23, },
+	{ type: "EOF", rawValue: "EOF", value: "EOF", pos: 26, },
+];
+const testBranch = [
+	{ original: "'include'", rep: "", type: "literal", value: "include", confirmNode: true, },
+	{ original: "'!'", rep: "", type: "literal", value: "!", },
+	{ original: "'('", rep: "", type: "literal", value: "(", },
+	{ original: "$quoted_string:fileName", rep: "", type: "capture", value: "quoted_string", label: "fileName", },
+	{ original: "')'", rep: "", type: "literal", value: ")", terminator: true, },
+];
+
+const crawl = {
+	tokenPos: 0,
+	captures: [],
+	unusedLabels: [],
+	nodes: [],
+};
+const tryBranch2 = (tokens, branch, origCrawlState) => {
+	let crawlState = JSON.parse(JSON.stringify(origCrawlState)); 
+	const startPos = crawlState.tokenPos;
+	let twigPos = 0;
+	let twig = branch[twigPos];
+	let tokenPos = startPos;
+	let token = tokens[tokenPos]
+	let repeated = false;
+	const advanceTwig = () => {
+		twigPos += 1;
+		twig = branch[twigPos];
+		repeated = false;
+	};
+	const advanceToken = () => {
+		tokenPos += 1;
+		token = tokens[tokenPos];
+	};
+	let confirmed = false;
+	let matched = false;
+	let malformed = false;
+	let expected;
+	let expectedPos;
+	const addCapture = (label, value) => {
+		if (!label) throw new Error("Found capture sans label!");
+		crawlState.captures.push({
+			label: label,
+			value: value,
+			pos: tokenPos,
+		});
+	};
+	// BIG LOOP
+	while (twigPos < branch.length && tokenPos < tokens.length) {
+		if (token.ignorable) {
+			advanceToken();
+			continue;
+		}
+		const rep = twig.rep;
+		const zeroOkay = rep === '*' || rep === '?';
+		const multipleOkay = rep === '*' || rep === '+';
+		let tokenMatchedTwig = false;
+		// looking at the token
+		if (twig.type === 'literal') {
+			tokenMatchedTwig = token.value === twig.value;
+			if (tokenMatchedTwig && twig.label) {
+				addCapture(label, token.value);
+			}
+		} else if (twig.type === 'capture') {
+			const found = decayTo[twig.value](token);
+			tokenMatchedTwig = found !== null;
+			if (tokenMatchedTwig) {
+				let label = twig.label;
+				if (!label && crawlState.unusedLabels.length > 0) {
+					label = crawlState.unusedLabels.pop();
+				}
+				if (label) addCapture(label, token.value)
+			}
+		} else if (twig.type === 'lookup') {
+			// TODO
+		}
+		if (!tokenMatchedTwig) {
+			if ((multipleOkay && repeated)|| zeroOkay) {
+				advanceTwig();
+				continue;
+			} else {
+				if (twig.type === 'literal') {
+					expected = `'${twig.value}'`;
+				} else if (twig.type === 'capture') {
+					expected = `${twig.value}`;
+				}
+				if (confirmed) {
+					malformed = true;
+				}
+				// no advance token; tokenPos is pos of error
+				break;
+			}
+		} else { // tokenMatchedTwig is yes
+			if (twig.confirmNode) {
+				confirmed = true;
+			}
+			advanceToken();
+			advanceTwig();
+		}
+	}
+	if (twigPos === branch.length) {
+		matched = true;
+	}
+	if (malformed) {
+		expectedPos = tokenPos;
+		matched = true;
+		let terminatorTwig;
+		while (twigPos < branch.length) {
+			if (branch[twigPos].terminator) {
+				terminatorTwig = branch[twigPos];
+			}
+			advanceTwig();
+		}
+		const endTokensPos = {
+			terminator: null,
+			newline: null,
+			eof: tokens.length-1,
+		};
+
+		let foundTerminator = false;
+		let foundNewline = false;
+		// advance tokens until you hit both a terminator token and newline token
+		if (!terminatorTwig) foundTerminator = true;
+		while (tokenPos < tokens.length) {
+			token = tokens[tokenPos];
+			if (token.type === 'newline') {
+				if (!foundNewline) {
+					endTokensPos.newline = tokenPos;
+					foundNewline = true;
+					if (foundTerminator) break;
+				}
+			} else {
+				if (!foundTerminator) {
+					if (terminatorTwig.type === 'literal') {
+						if (token.value === terminatorTwig.value) {
+							endTokensPos.terminator = tokenPos;
+							foundTerminator = true;
+							if (foundNewline) break;
+						};
+					} else if (twig.type === 'capture') {
+						found = decayTo[twig.value](token);
+						if (found) {
+							endTokensPos.terminator.token = tokens[tokenPos];
+							endTokensPos.terminator.tokenPos = tokenPos;
+							foundTerminator = true;
+							if (foundNewline) break;
+						}
+					}
+				}
+			}
+			advanceToken();
+		}
+		// advanceToken();
+		const nextPos = endTokensPos.terminator !== null
+			? endTokensPos.terminator + 1
+			: endTokensPos.newline !== null
+				? endTokensPos.newline + 1
+				: endTokensPos.eof;
+		tokenPos = nextPos;
+	}
+	crawlState.tokenPos = tokenPos;
+	return {
+		matched,
+		malformed,
+		startPos,
+		expected,
+		expectedPos,
+		tokenPos,
+		crawlState,
+	};
+};
+const totalTests = tryBranchTests.length;
+let passedTests = 0;
+const failedTests = [];
+tryBranchTests.forEach((test, i)=>{
+	const tried = tryBranch2(test.tokens, testBranch, crawl);
+	const nextPosTest = tried.tokenPos === test.nextPos;
+	const matchedTest = tried.matched === test.matched;
+	const malformedTest = tried.malformed === test.malformed;
+	if (nextPosTest && matchedTest && malformedTest) {
+		passedTests += 1;
+	} else {
+		const report = {
+			testID: i,
+			test: test.input,
+		};
+		if (!nextPosTest) {
+			report.nextPos = {expected: test.nextPos, found: tried.tokenPos};
+		}
+		if (!matchedTest) {
+			report.matched = {expected: test.matched, found: tried.matched};
+		}
+		if (!malformedTest) {
+			report.malformed = {expected: test.malformed, found: tried.malformed};
+		}
+		failedTests.push(report);
+	}
+});
+if (totalTests !== failedTests) {
+	console.log(failedTests);
+}
+/* ----------------------------------- TESTS OVER ----------------------------------- */
+
+const testInputString = `include!("header.mgs")`
+// +`\n\nexampleScript {
+// 	start:
+// 	return;
+// 	load map main;
+// }`
+// +`\n\n$trombones = 76;
+// /* comment */
+// $player = "%PLAYER%";`
+// +`\n\nadd serial_dialog settings {
+// 	wrap 88
+// }
+// add dialog settings {
+// 	default {
+// 		alignment BL
+// 	}
+// 	label PLAYER {
+// 		alignment BR
+// 		entity "%PLAYER%"
+// 	}
+// 	entity Bob {
+// 		name "Real Bob"
+// 		portrait old_man
+// 	}
+// }`
+// +`\n\ndialog restaurant {
+// 	entity "%PLAYER%" alignment BR emote 0 
+// 	"Hello!" "Welcome to a restaurant!"
+// 	Bob"Oh, um, hi."
+// 	entity Dennis "What'll it be?"
+// 	> "Oh, uh, let me take a look at the menu first." = scriptMenu
+// 	> "I'll have the usual!" = scriptRegularCustomer
+// }`
+// +`\n\nserial_dialog console {
+// 	wrap 60
+// 	"In a hole in the ground there lived a Zork."
+// 	"I think."
+// 	# "Tell me more!" = scriptMore
+// 	# "I've heard this one before." = scriptDejaVu
+// 	_ "I think this type of option doesn't belong here." = warningNotError
+// }`;
+
 
 const verbose = false;
 const debugLog = (string) => { if (verbose) console.log(string); };

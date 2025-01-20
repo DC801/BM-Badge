@@ -677,9 +677,9 @@ Object.entries(patterns).forEach(([patternName, origPatterns])=>{
 					twigs = twigs.concat(words);
 				});
 			}
-		})
+		});
 		allTokenPatterns.push(twigs);
-	})
+	});
 	tree[patternName] = allTokenPatterns;
 });
 
