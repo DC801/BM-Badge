@@ -48,11 +48,13 @@ const dictionary = {
 		}],
 		onEnd: (file, crawlState) => {
 			const value = mostRecentCapture(crawlState, 'fileName');
+			const malformed = !value;
 			file.nodes.push({
 				node: 'include_macro',
 				value: value ? value.value : '',
 				startPos: crawlState.startPos,
 				tokenPos: crawlState.tokenPos,
+				malformed,
 			});
 		},
 	},
@@ -67,12 +69,14 @@ const dictionary = {
 		onEnd: (file, crawlState) => {
 			const value = mostRecentCapture(crawlState, 'constantValue');
 			const name = mostRecentCapture(crawlState, 'constantName');
+			const malformed = !value || !name;
 			file.nodes.push({
 				node: 'constant_assignment',
 				name: name ? name.value : '',
 				value: value ? value.value : '',
 				startPos: crawlState.startPos,
 				tokenPos: crawlState.tokenPos,
+				malformed,
 			});
 		},
 	},
