@@ -32,45 +32,28 @@ const dictionary = {
 	},
 	root: {
 		patterns:`@include_macro
-			| @constant_assignment
-			| @add_serial_dialog_settings
-			| @add_dialog_settings
-			| @dialog_definition
-			| @serial_dialog_definition
-			| @script_definition`,
+			| @constant_assignment`,
 	},
 	include_macro: {
 		patterns: [{
-			// match 'start' and it's a definite match
-			// failures after this are considered to be this branch malformed, not a misidentified branch
+			// Match 'start' and it's a definite match.
+			// Failures after this are considered to be this branch malformed, not a misidentified branch.
 			start: `'include'`,
 			body: `'!' '(' $quoted_string:fileName`,
-			// if things are broken but you match 'end' you can put in a
+			// If things are broken but you match 'end' you can put in a
 			// placeholder node with the values you did get, plus {malformed:true}
-			// then proceed as if it matched correctly
+			// then proceed as if it matched correctly.
+			// Currently 'end' is only one toekn/word
 			end: `')'`,
 		}],
-		onMatch: (file, crawlState, startPos) => {
-			const fileNameCapture = mostRecentCapture(crawlState, 'fileName');
-			if (fileNameCapture) {
-				file.nodes.push({
-					node: 'include_macro',
-					value: fileNameCapture.value,
-					tokenPos: fileNameCapture.pos,
-				});
-			} else {
-				file.warnings.push({
-					value: 'Include macro lacks a filename',
-					message: 'Nothing will break, but this is useless in practice. Maybe put a file name in there!',
-					pos: crawlState.tokenPos,
-				});
-				file.nodes.push({
-					node: 'include_macro',
-					value: '',
-					tokenPos: startPos,
-					ignorable: true,
-				});
-			}
+		onEnd: (file, crawlState) => {
+			const value = mostRecentCapture(crawlState, 'fileName');
+			file.nodes.push({
+				node: 'include_macro',
+				value: value ? value.value : '',
+				startPos: crawlState.startPos,
+				tokenPos: crawlState.tokenPos,
+			});
 		},
 	},
 	constant_assignment: {
@@ -81,14 +64,15 @@ const dictionary = {
 				end: `';'`,
 			}
 		],
-		onMatch: (file, crawlState, startPos) => {
-			const valueCapture = mostRecentCapture(crawlState, 'constantValue');
-			const nameCapture = mostRecentCapture(crawlState, 'constantName');
+		onEnd: (file, crawlState) => {
+			const value = mostRecentCapture(crawlState, 'constantValue');
+			const name = mostRecentCapture(crawlState, 'constantName');
 			file.nodes.push({
 				node: 'constant_assignment',
-				label: nameCapture.value,
-				value: valueCapture.value,
-				tokenPos: startPos,
+				name: name ? name.value : '',
+				value: value ? value.value : '',
+				startPos: crawlState.startPos,
+				tokenPos: crawlState.tokenPos,
 			});
 		},
 	},
@@ -132,380 +116,376 @@ const dictionary = {
 			});
 		},
 	},
-	add_dialog_settings: {
-		patterns: [
-			{
-				start: `'add' 'dialog'`,
-				body: `'settings' '{' @serial_dialog_parameter*`,
-				end: `'}'`
-			},
-		],
-	},
-	dialog_settings_target: {
-		patterns: [
-			{
-				start: `'default':target`,
-				body: `'{' @dialog_parameter*`,
-				end: `'}'`
-			},
-			{
-				start: `'label':target`,
-				body: `$bareword:targetValue '{' @dialog_parameter*`,
-				end: `'}'`
-			},
-			{
-				start: `'entity':target`,
-				body: `$string:targetValue '{' @dialog_parameter*`,
-				end: `'}'`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const settings = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
-			const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
-			const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
-			const target = mostRecentCapture(crawlState, 'target');
-			const entry = {
-				node: 'add_dialog_settings',
-				target: target.value,
-				targetValue,
-				settings,
-				tokenPos: startPos,
-			};
-			file.nodes.push(entry);
-		},
-	},
-	enum_alignment: {
-		patterns: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
-			| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
-	},
-	dialog_parameter: {
-		patterns: [
-			{ start:`'entity':settingsProperty`, body: `$string:settingsValue<>entityNames` },
-			{ start:`'name':settingsProperty`, body: `$string:settingsValue` },
-			{ start:`'portrait':settingsProperty`, body: `$string:settingsValue<portraitNames` },
-			{ start:`'alignment':settingsProperty`, body: `@enum_alignment:settingsValue` },
-			{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
-			{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
-			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
-			const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
-			file.nodes.push({
-				node: 'dialog_parameter',
-				label: propertyCapture.value,
-				value: valueCapture.value,
-				tokenPos: startPos,
-			});
-		},
-	},
-	dialog_definition: {
-		patterns: [
-			{
-				start: `'dialog'`,
-				body: `$string:dialogName '{' @dialog*`,
-				end: `'}'`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
-			const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
-			file.nodes.push({
-				node: 'dialog_definition',
-				dialogName: dialogNameCapture.value,
-				dialogs,
-				tokenPos: startPos,
-			});
-		},
-	},
-	dialog: {
-		patterns: `@dialog_identifier
-			@dialog_parameter*
-			$quoted_string:dialogMessage+
-			@dialog_option*`,
-		onMatch: (file, crawlState, startPos) => {
-			const optionNodes = mostRecentNodes(file, 'dialog_option', 0, Infinity);
-			const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
-			const parameterNodes = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
-			const identifierNode = mostRecentNode(file, 'dialog_identifier');
-			file.nodes.push({
-				node: 'dialog',
-				identifier: identifierNode,
-				parameters: parameterNodes,
-				messages: messageCaptures,
-				options: optionNodes,
-				tokenPos: startPos,
-			});
-		},
-	},
-	dialog_identifier: {
-		patterns: [
-			{ start: `'entity':identifierType`, body: `$string:identifierValue` },
-			{ start: `'name':identifierType`, body: `$string:identifierValue` },
-			{ body: `$bareword:identifierValue` },
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const identifierValueCapture = mostRecentCapture(crawlState, 'identifierValue');
-			const identifierTypeCapture = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
-			file.nodes.push({
-				node: 'dialog_identifier',
-				type: identifierTypeCapture.length > 0 ? identifierTypeCapture[0].value : 'label',
-				value: identifierValueCapture.value,
-				tokenPos: startPos,
-			});
-		},
-	},
-	dialog_option: {
-		patterns: [
-			{
-				start: `'>'`,
-				body: `$quoted_string:label '=' $string:script`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const scriptNameCapture = mostRecentCapture(crawlState, 'script');
-			const labelNameCapture = mostRecentCapture(crawlState, 'label');
-			file.nodes.push({
-				node: 'dialog_option',
-				label: labelNameCapture.value,
-				script: scriptNameCapture.value,
-				tokenPos: startPos,
-			});
-		},
-	},
-	serial_dialog_definition: {
-		patterns: [
-			{
-				start: `'serial_dialog'`,
-				body: `$string:serialDialogName '{' @serial_dialog?`,
-				end: `'}'`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const serialDialog = mostRecentNode(file, 'serial_dialog', 0, 1);
-			const serialDialogNameCapture = mostRecentCapture(crawlState, 'serialDialogName');
-			file.nodes.push({
-				node: 'serial_dialog_definition',
-				dialogName: serialDialogNameCapture.value,
-				serialDialog,
-				tokenPos: startPos,
-			});
-		},
-	},
-	serial_dialog: {
-		patterns: `@serial_dialog_parameter*
-			$string:serialDialogMessage+
-			@serial_dialog_option*`,
-		onMatch: (file, crawlState, startPos) => {
-			const optionNodes = mostRecentNodes(file, 'serial_dialog_option', 0, Infinity);
-			const messageCaptures = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
-			const parameterNodes = mostRecentNodes(file, 'serial_dialog_parameter', 0, Infinity);
-			file.nodes.push({
-				node: 'serial_dialog',
-				parameters: parameterNodes,
-				messages: messageCaptures,
-				options: optionNodes,
-				tokenPos: startPos,
-			});
-		},
-	},
-	serial_dialog_option: {
-		patterns: [
-			{
-				start: `'#':optionType`,
-				body: `$quoted_string:label '=' $string:script`
-			},
-			{
-				start: `'_':optionType`,
-				body: `$quoted_string:label '=' $string:script`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const scriptNameCapture = mostRecentCapture(crawlState, 'script');
-			const labelNameCapture = mostRecentCapture(crawlState, 'label');
-			const optionTypeCapture = mostRecentCapture(crawlState, 'optionType');
-			let type = '';
-			if (optionTypeCapture.value === '#') type = 'options';
-			if (optionTypeCapture.value === '_') type = 'text_options';
-			file.nodes.push({
-				node: 'serial_dialog_option',
-				type,
-				label: labelNameCapture.value,
-				script: scriptNameCapture.value,
-				tokenPos: startPos,
-			});
-		},
-	},
-	script_name: {
-		patterns: `$string:scriptName`,
-		onMatch: (file, crawlState, startPos) => {
-			file.nodes.push({
-				node: 'script_name',
-				scriptName: mostRecentCapture(crawlState, 'scriptName'),
-				tokenPos: startPos,
-			});
-		},
-	},
-	script_definition: {
-		patterns: [
-			{
-				start: `'script'? @scriptName`,
-				body: `'{' @script_body_item*`,
-				end: `'}'`
-			},
-		],
-		onMatch: (file, _crawlState, startPos) => {
-			const body = collectUntilNode(file, 'script_name');
-			file.nodes.push({
-				node: 'script',
-				scriptName: mostRecentNode(file, 'script_name'),
-				body,
-				tokenPos: startPos,
-			});
-		},
-	},
-	show_dialog_block: {
-		patterns: [
-			{
-				start: `'show' 'dialog' '{'`,
-				body: `@dialog*`,
-				end: `'}'`
-			},
-			{
-				start: `'show' 'dialog' $string:dialogName '{'`,
-				body: `@dialog*`,
-				end: `'}'`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
-			const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
-			file.nodes.push({
-				node: 'dialog_definition',
-				dialogName: dialogNameCapture.value,
-				dialogs,
-				tokenPos: startPos,
-			});
-		},
-	},
-	script_body_item: {
-		patterns: `@action_return | @action_label | @action_load_map`,
-	},
-	action_return: {
-		patterns: [
-			{ start: `'return'`, end: `';'` },
-		],
-		onMatch: (file, _crawlState, startPos) => {
-			file.nodes.push({
-				node: 'action', tokenPos: startPos,
-				action: 'GOTO_ACTION_LABEL',
-				label: 'auto return',
-			});
-		},
-	},
-	action_label: {
-		patterns: `$bareword:labelName ':'`,
-		onMatch: (file, crawlState, startPos) => {
-			file.nodes.push({
-				node: 'action', tokenPos: startPos,
-				action: 'LABEL',
-				value: semiRecentCapture(crawlState, 'labelName').value,
-			});
-		},
-	},
-	action_load_map: {
-		patterns: [
-			{
-				start: `'load' 'map'`,
-				body: `$string:mapName`,
-				end: `';'`
-			},
-		],
-		onMatch: (file, crawlState, startPos) => {
-			file.nodes.push({
-				node: 'action', tokenPos: startPos,
-				action: 'LOAD_MAP',
-				map: semiRecentCapture(crawlState, 'mapName').value,
-			});
-		},
-	},
-	// untested:
-	entity_identifier: {
-		patterns: [
-			{ body: `'player':entityIdentifierType` },
-			{ body: `'self':entityIdentifierType` },
-			{ start: `'entity':entityIdentifierType`, body: `$string:entityName` },
-		],
-		onMatch: (file, crawlState, startPos) => {
-			const entityNameCapture = mostRecentCaptures(crawlState, 'entityName', 0, 1);
-			const entityIdentifierType = mostRecentCapture(crawlState, 'entityIdentifierType');
-			let entityName = '';
-			if (entityIdentifierType.value === 'self') entityName = '%SELF%';
-			else if (entityIdentifierType.value === 'player') entityName = '%PLAYER%';
-			else entityName = entityNameCapture[0].entityName
-			file.nodes.push({
-				node: 'entity_identifier',
-				value: entityName,
-				tokenPos: startPos,
-			});
-		}
-	},
-	geometry_identifier: {
-		patterns: [
-			{ start: `'geometry'`, body: `$string:geometryName` },
-		],
-	},
-	enum_map_slots: {
-		patterns: `'on_load' | 'on_tick' | 'on_look'`,
-	},
-	enum_entity_slots: {
-		patterns: `'on_interact' | 'on_tick' | 'on_look'`,
-	},
-	enum_save_slots: {
-		patterns: `'1' | '2' | '3'`,
-	},
-	enum_nsew: {
-		patterns: `'north' | 'south' | 'east' | 'west'`,
-	},
-	enum_lights: {
-		patterns: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
-			| 'LED_BIT128' | 'LED_BIT64' | 'LED_BIT32' | 'LED_BIT16'
-			| 'LED_BIT8' | 'LED_BIT4' | 'LED_BIT2' | 'LED_BIT1'
-			| 'LED_MEM0' | 'LED_MEM1' | 'LED_MEM2' | 'LED_MEM3'
-			| 'LED_HAX' | 'LED_USB' | 'LED_SD' | 'LED_ALL'`,
-	},
-	enum_buttons: {
-		patterns: `'MEM0' | 'MEM1' | 'MEM2' | 'MEM3'
-			| 'XOR' | 'ADD' | 'SUB' | 'PAGE'
-			| 'BIT128' | 'BIT64' | 'BIT32' | 'BIT16'
-			| 'BIT8' | 'BIT4' | 'BIT2' | 'BIT1'
-			| 'LJOY_CENTER' | 'LJOY_UP' | 'LJOY_DOWN'
-			| 'LJOY_LEFT' | 'LJOY_RIGHT'
-			| 'RJOY_CENTER' | 'RJOY_UP' | 'RJOY_DOWN'
-			| 'RJOY_LEFT' | 'RJOY_RIGHT'
-			| 'TRIANGLE' | 'SQUARE' | 'X' | 'CROSS'
-			| 'O' | 'CIRCLE' | 'HAX' | 'ANY'`,
-	},
-	enum_entity_field: {
-		patterns: `'x' | 'y' | 'direction' | 'path_id'
-			| 'primary_id' | 'secondary_id' | 'primary_id_type'
-			| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
-			| 'current_animation' | 'current_frame'`,
-	},
-};
-
-const actionDictionary = {
-
+	// add_dialog_settings: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'add' 'dialog'`,
+	// 			body: `'settings' '{' @serial_dialog_parameter*`,
+	// 			end: `'}'`
+	// 		},
+	// 	],
+	// },
+	// dialog_settings_target: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'default':target`,
+	// 			body: `'{' @dialog_parameter*`,
+	// 			end: `'}'`
+	// 		},
+	// 		{
+	// 			start: `'label':target`,
+	// 			body: `$bareword:targetValue '{' @dialog_parameter*`,
+	// 			end: `'}'`
+	// 		},
+	// 		{
+	// 			start: `'entity':target`,
+	// 			body: `$string:targetValue '{' @dialog_parameter*`,
+	// 			end: `'}'`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const settings = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
+	// 		const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
+	// 		const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
+	// 		const target = mostRecentCapture(crawlState, 'target');
+	// 		const entry = {
+	// 			node: 'add_dialog_settings',
+	// 			target: target.value,
+	// 			targetValue,
+	// 			settings,
+	// 			tokenPos: startPos,
+	// 		};
+	// 		file.nodes.push(entry);
+	// 	},
+	// },
+	// enum_alignment: {
+	// 	patterns: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
+	// 		| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
+	// },
+	// dialog_parameter: {
+	// 	patterns: [
+	// 		{ start:`'entity':settingsProperty`, body: `$string:settingsValue<>entityNames` },
+	// 		{ start:`'name':settingsProperty`, body: `$string:settingsValue` },
+	// 		{ start:`'portrait':settingsProperty`, body: `$string:settingsValue<portraitNames` },
+	// 		{ start:`'alignment':settingsProperty`, body: `@enum_alignment:settingsValue` },
+	// 		{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
+	// 		{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
+	// 		{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
+	// 		const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
+	// 		file.nodes.push({
+	// 			node: 'dialog_parameter',
+	// 			label: propertyCapture.value,
+	// 			value: valueCapture.value,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// dialog_definition: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'dialog'`,
+	// 			body: `$string:dialogName '{' @dialog*`,
+	// 			end: `'}'`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
+	// 		const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
+	// 		file.nodes.push({
+	// 			node: 'dialog_definition',
+	// 			dialogName: dialogNameCapture.value,
+	// 			dialogs,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// dialog: {
+	// 	patterns: `@dialog_identifier
+	// 		@dialog_parameter*
+	// 		$quoted_string:dialogMessage+
+	// 		@dialog_option*`,
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const optionNodes = mostRecentNodes(file, 'dialog_option', 0, Infinity);
+	// 		const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
+	// 		const parameterNodes = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
+	// 		const identifierNode = mostRecentNode(file, 'dialog_identifier');
+	// 		file.nodes.push({
+	// 			node: 'dialog',
+	// 			identifier: identifierNode,
+	// 			parameters: parameterNodes,
+	// 			messages: messageCaptures,
+	// 			options: optionNodes,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// dialog_identifier: {
+	// 	patterns: [
+	// 		{ start: `'entity':identifierType`, body: `$string:identifierValue` },
+	// 		{ start: `'name':identifierType`, body: `$string:identifierValue` },
+	// 		{ body: `$bareword:identifierValue` },
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const identifierValueCapture = mostRecentCapture(crawlState, 'identifierValue');
+	// 		const identifierTypeCapture = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
+	// 		file.nodes.push({
+	// 			node: 'dialog_identifier',
+	// 			type: identifierTypeCapture.length > 0 ? identifierTypeCapture[0].value : 'label',
+	// 			value: identifierValueCapture.value,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// dialog_option: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'>'`,
+	// 			body: `$quoted_string:label '=' $string:script`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const scriptNameCapture = mostRecentCapture(crawlState, 'script');
+	// 		const labelNameCapture = mostRecentCapture(crawlState, 'label');
+	// 		file.nodes.push({
+	// 			node: 'dialog_option',
+	// 			label: labelNameCapture.value,
+	// 			script: scriptNameCapture.value,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// serial_dialog_definition: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'serial_dialog'`,
+	// 			body: `$string:serialDialogName '{' @serial_dialog?`,
+	// 			end: `'}'`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const serialDialog = mostRecentNode(file, 'serial_dialog', 0, 1);
+	// 		const serialDialogNameCapture = mostRecentCapture(crawlState, 'serialDialogName');
+	// 		file.nodes.push({
+	// 			node: 'serial_dialog_definition',
+	// 			dialogName: serialDialogNameCapture.value,
+	// 			serialDialog,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// serial_dialog: {
+	// 	patterns: `@serial_dialog_parameter*
+	// 		$string:serialDialogMessage+
+	// 		@serial_dialog_option*`,
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const optionNodes = mostRecentNodes(file, 'serial_dialog_option', 0, Infinity);
+	// 		const messageCaptures = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
+	// 		const parameterNodes = mostRecentNodes(file, 'serial_dialog_parameter', 0, Infinity);
+	// 		file.nodes.push({
+	// 			node: 'serial_dialog',
+	// 			parameters: parameterNodes,
+	// 			messages: messageCaptures,
+	// 			options: optionNodes,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// serial_dialog_option: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'#':optionType`,
+	// 			body: `$quoted_string:label '=' $string:script`
+	// 		},
+	// 		{
+	// 			start: `'_':optionType`,
+	// 			body: `$quoted_string:label '=' $string:script`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const scriptNameCapture = mostRecentCapture(crawlState, 'script');
+	// 		const labelNameCapture = mostRecentCapture(crawlState, 'label');
+	// 		const optionTypeCapture = mostRecentCapture(crawlState, 'optionType');
+	// 		let type = '';
+	// 		if (optionTypeCapture.value === '#') type = 'options';
+	// 		if (optionTypeCapture.value === '_') type = 'text_options';
+	// 		file.nodes.push({
+	// 			node: 'serial_dialog_option',
+	// 			type,
+	// 			label: labelNameCapture.value,
+	// 			script: scriptNameCapture.value,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// script_name: {
+	// 	patterns: `$string:scriptName`,
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'script_name',
+	// 			scriptName: mostRecentCapture(crawlState, 'scriptName'),
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// script_definition: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'script'? @scriptName`,
+	// 			body: `'{' @script_body_item*`,
+	// 			end: `'}'`
+	// 		},
+	// 	],
+	// 	onMatch: (file, _crawlState, startPos) => {
+	// 		const body = collectUntilNode(file, 'script_name');
+	// 		file.nodes.push({
+	// 			node: 'script',
+	// 			scriptName: mostRecentNode(file, 'script_name'),
+	// 			body,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// show_dialog_block: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'show' 'dialog' '{'`,
+	// 			body: `@dialog*`,
+	// 			end: `'}'`
+	// 		},
+	// 		{
+	// 			start: `'show' 'dialog' $string:dialogName '{'`,
+	// 			body: `@dialog*`,
+	// 			end: `'}'`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
+	// 		const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
+	// 		file.nodes.push({
+	// 			node: 'dialog_definition',
+	// 			dialogName: dialogNameCapture.value,
+	// 			dialogs,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	},
+	// },
+	// script_body_item: {
+	// 	patterns: `@action_return | @action_label | @action_load_map`,
+	// },
+	// action_return: {
+	// 	patterns: [
+	// 		{ start: `'return'`, end: `';'` },
+	// 	],
+	// 	onMatch: (file, _crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'action', tokenPos: startPos,
+	// 			action: 'GOTO_ACTION_LABEL',
+	// 			label: 'auto return',
+	// 		});
+	// 	},
+	// },
+	// action_label: {
+	// 	patterns: `$bareword:labelName ':'`,
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'action', tokenPos: startPos,
+	// 			action: 'LABEL',
+	// 			value: semiRecentCapture(crawlState, 'labelName').value,
+	// 		});
+	// 	},
+	// },
+	// action_load_map: {
+	// 	patterns: [
+	// 		{
+	// 			start: `'load' 'map'`,
+	// 			body: `$string:mapName`,
+	// 			end: `';'`
+	// 		},
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		file.nodes.push({
+	// 			node: 'action', tokenPos: startPos,
+	// 			action: 'LOAD_MAP',
+	// 			map: semiRecentCapture(crawlState, 'mapName').value,
+	// 		});
+	// 	},
+	// },
+	// // untested:
+	// entity_identifier: {
+	// 	patterns: [
+	// 		{ body: `'player':entityIdentifierType` },
+	// 		{ body: `'self':entityIdentifierType` },
+	// 		{ start: `'entity':entityIdentifierType`, body: `$string:entityName` },
+	// 	],
+	// 	onMatch: (file, crawlState, startPos) => {
+	// 		const entityNameCapture = mostRecentCaptures(crawlState, 'entityName', 0, 1);
+	// 		const entityIdentifierType = mostRecentCapture(crawlState, 'entityIdentifierType');
+	// 		let entityName = '';
+	// 		if (entityIdentifierType.value === 'self') entityName = '%SELF%';
+	// 		else if (entityIdentifierType.value === 'player') entityName = '%PLAYER%';
+	// 		else entityName = entityNameCapture[0].entityName
+	// 		file.nodes.push({
+	// 			node: 'entity_identifier',
+	// 			value: entityName,
+	// 			tokenPos: startPos,
+	// 		});
+	// 	}
+	// },
+	// geometry_identifier: {
+	// 	patterns: [
+	// 		{ start: `'geometry'`, body: `$string:geometryName` },
+	// 	],
+	// },
+	// enum_map_slots: {
+	// 	patterns: `'on_load' | 'on_tick' | 'on_look'`,
+	// },
+	// enum_entity_slots: {
+	// 	patterns: `'on_interact' | 'on_tick' | 'on_look'`,
+	// },
+	// enum_save_slots: {
+	// 	patterns: `'1' | '2' | '3'`,
+	// },
+	// enum_nsew: {
+	// 	patterns: `'north' | 'south' | 'east' | 'west'`,
+	// },
+	// enum_lights: {
+	// 	patterns: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
+	// 		| 'LED_BIT128' | 'LED_BIT64' | 'LED_BIT32' | 'LED_BIT16'
+	// 		| 'LED_BIT8' | 'LED_BIT4' | 'LED_BIT2' | 'LED_BIT1'
+	// 		| 'LED_MEM0' | 'LED_MEM1' | 'LED_MEM2' | 'LED_MEM3'
+	// 		| 'LED_HAX' | 'LED_USB' | 'LED_SD' | 'LED_ALL'`,
+	// },
+	// enum_buttons: {
+	// 	patterns: `'MEM0' | 'MEM1' | 'MEM2' | 'MEM3'
+	// 		| 'XOR' | 'ADD' | 'SUB' | 'PAGE'
+	// 		| 'BIT128' | 'BIT64' | 'BIT32' | 'BIT16'
+	// 		| 'BIT8' | 'BIT4' | 'BIT2' | 'BIT1'
+	// 		| 'LJOY_CENTER' | 'LJOY_UP' | 'LJOY_DOWN'
+	// 		| 'LJOY_LEFT' | 'LJOY_RIGHT'
+	// 		| 'RJOY_CENTER' | 'RJOY_UP' | 'RJOY_DOWN'
+	// 		| 'RJOY_LEFT' | 'RJOY_RIGHT'
+	// 		| 'TRIANGLE' | 'SQUARE' | 'X' | 'CROSS'
+	// 		| 'O' | 'CIRCLE' | 'HAX' | 'ANY'`,
+	// },
+	// enum_entity_field: {
+	// 	patterns: `'x' | 'y' | 'direction' | 'path_id'
+	// 		| 'primary_id' | 'secondary_id' | 'primary_id_type'
+	// 		| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
+	// 		| 'current_animation' | 'current_frame'`,
+	// },
 };
 
 
-const onMatch = {};
+const onEnd = {};
 const patterns = {};
 
 Object.keys(dictionary).forEach(entryName=>{
 	const entry = dictionary[entryName];
 	if (entry.patterns) patterns[entryName] = entry.patterns;
-	if (entry.onMatch) onMatch[entryName] = entry.onMatch;
+	if (entry.onEnd) onEnd[entryName] = entry.onEnd;
 });
 
 const collectUntilNode = (file, nodeName) => {
@@ -559,9 +539,9 @@ const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 		extracted.unshift(crawlState.captures.pop());
 	}
 	if (extracted.length < min) {
-		const message = `Not enough captures labeled ${captureLabel};`
-			+`found ${extracted.length}, needed at least ${min}`;
-		throw new Error (message);
+		return [];
+		// return `Not enough captures labeled ${captureLabel};`
+		// 	+`found ${extracted.length}, needed at least ${min}`;
 	}
 	return extracted;
 };
@@ -822,5 +802,5 @@ const conditionsLHS = [
 
 // console.log('break');
 
-const language = { tree, onMatch, keywords: keywordsFound };
+const language = { tree, onEnd, keywords: keywordsFound };
 export default language;
