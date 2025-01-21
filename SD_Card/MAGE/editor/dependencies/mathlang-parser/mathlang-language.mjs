@@ -35,6 +35,7 @@ const dictionary = {
 			`@include_macro`
 			+ ` | @constant_assignment`
 			+ ` | @add_serial_dialog_settings`
+			+ ` | @add_dialog_settings`
 	},
 	include_macro: {
 		patterns: [{
@@ -48,12 +49,12 @@ const dictionary = {
 			// Currently 'end' is only one token/word
 			end: `')'`,
 		}],
-		onEnd: (file, crawlState, startPos) => {
+		onEnd: (file, crawlState) => {
 			const value = mostRecentCapture(crawlState, 'fileName');
 			const malformed = !value;
 			file.nodes.push({
 				node: 'include_macro',
-				value: value ? value.value : '',
+				value: value?.value || '',
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
@@ -74,8 +75,8 @@ const dictionary = {
 			const malformed = !value || !name;
 			file.nodes.push({
 				node: 'constant_assignment',
-				name: name ? name.value : '',
-				value: value ? value.value : null,
+				name: name?.value || '',
+				value: value?.value || null,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
@@ -101,6 +102,7 @@ const dictionary = {
 		},
 		onEnd: (file, crawlState) => {
 			const settings = crawlState.staged.serialDialogParameters;
+			delete crawlState.staged.serialDialogParameters;
 			file.nodes.push({
 				node: 'add_serial_dialog_settings',
 				settings: settings,
@@ -122,6 +124,106 @@ const dictionary = {
 			const malformed = !value || !property;
 			crawlState.staged.serialDialogParameters.push({
 				node: 'serial_dialog_parameter',
+				property: property?.value || '',
+				value: value?.value || null,
+				startPos: crawlState.startPos,
+				tokenPos: crawlState.tokenPos,
+				malformed,
+			});
+		},
+	},
+	add_dialog_settings: {
+		patterns: [
+			{
+				start: `'add' 'dialog'`,
+				body: `'settings' '{' @dialog_settings_target*`,
+				end: `'}'`
+			},
+		],
+		onStart: (file, crawlState) => {
+			crawlState.staged.dialogSettings = [];
+		},
+		onEnd: (file, crawlState) => {
+			const settings = crawlState.staged.dialogSettings;
+			delete crawlState.staged.dialogSettingsTarget;
+			file.nodes.push({
+				node: 'add_dialog_settings',
+				settings: settings,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	dialog_settings_target: {
+		patterns: [
+			{
+				start: `'default':target`,
+				body: `'{' @dialog_parameter*`,
+				end: `'}'`
+			},
+			{
+				start: `'label':target`,
+				body: `$bareword:targetValue '{' @dialog_parameter*`,
+				end: `'}'`
+			},
+			{
+				start: `'entity':target`,
+				body: `$string:targetValue '{' @dialog_parameter*`,
+				end: `'}'`
+			},
+		],
+		onStart: (file, crawlState) => {
+			crawlState.staged.dialogParameters = [];
+		},
+		onEnd: (file, crawlState) => {
+			const targetValue = mostRecentCapture(crawlState, 'targetValue');
+			const target = mostRecentCapture(crawlState, 'target');
+			const settings = crawlState.staged.dialogParameters;
+			delete crawlState.staged.dialogParameters;
+			crawlState.staged.dialogSettings.push({
+				node: 'add_dialog_settings_target',
+				targetType: target?.value || '',
+				targetValue: targetValue?.value || null,
+				settings: settings,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+		// onMatch: (file, crawlState, startPos) => {
+		// 	const settings = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
+		// 	const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
+		// 	const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
+		// 	const target = mostRecentCapture(crawlState, 'target');
+		// 	const entry = {
+		// 		node: 'add_dialog_settings',
+		// 		target: target.value,
+		// 		targetValue,
+		// 		settings,
+		// 		tokenPos: startPos,
+		// 	};
+		// 	file.nodes.push(entry);
+		// },
+	},
+	enum_alignment: {
+		patterns: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
+			| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
+	},
+	dialog_parameter: {
+		patterns: [
+			{ start:`'entity':settingsProperty`, body: `$string:settingsValue<>entityNames` },
+			{ start:`'name':settingsProperty`, body: `$string:settingsValue` },
+			{ start:`'portrait':settingsProperty`, body: `$string:settingsValue<portraitNames` },
+			{ start:`'alignment':settingsProperty`, body: `@enum_alignment:settingsValue` },
+			{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
+			{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
+			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
+		],
+		onEnd: (file, crawlState) => {
+			const value = mostRecentCapture(crawlState, 'settingsValue');
+			const property = mostRecentCapture(crawlState, 'settingsProperty');
+			const malformed = !value || !property;
+			crawlState.staged.dialogParameters.push({
+				node: 'dialog_parameter',
 				property: property ? property.value : '',
 				value: value ? value.value : null,
 				startPos: crawlState.startPos,
@@ -129,74 +231,17 @@ const dictionary = {
 				malformed,
 			});
 		},
+		// onMatch: (file, crawlState, startPos) => {
+		// 	const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
+		// 	const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
+		// 	file.nodes.push({
+		// 		node: 'dialog_parameter',
+		// 		label: propertyCapture.value,
+		// 		value: valueCapture.value,
+		// 		tokenPos: startPos,
+		// 	});
+		// },
 	},
-	// add_dialog_settings: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'add' 'dialog'`,
-	// 			body: `'settings' '{' @serial_dialog_parameter*`,
-	// 			end: `'}'`
-	// 		},
-	// 	],
-	// },
-	// dialog_settings_target: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'default':target`,
-	// 			body: `'{' @dialog_parameter*`,
-	// 			end: `'}'`
-	// 		},
-	// 		{
-	// 			start: `'label':target`,
-	// 			body: `$bareword:targetValue '{' @dialog_parameter*`,
-	// 			end: `'}'`
-	// 		},
-	// 		{
-	// 			start: `'entity':target`,
-	// 			body: `$string:targetValue '{' @dialog_parameter*`,
-	// 			end: `'}'`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const settings = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
-	// 		const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
-	// 		const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
-	// 		const target = mostRecentCapture(crawlState, 'target');
-	// 		const entry = {
-	// 			node: 'add_dialog_settings',
-	// 			target: target.value,
-	// 			targetValue,
-	// 			settings,
-	// 			tokenPos: startPos,
-	// 		};
-	// 		file.nodes.push(entry);
-	// 	},
-	// },
-	// enum_alignment: {
-	// 	patterns: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
-	// 		| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
-	// },
-	// dialog_parameter: {
-	// 	patterns: [
-	// 		{ start:`'entity':settingsProperty`, body: `$string:settingsValue<>entityNames` },
-	// 		{ start:`'name':settingsProperty`, body: `$string:settingsValue` },
-	// 		{ start:`'portrait':settingsProperty`, body: `$string:settingsValue<portraitNames` },
-	// 		{ start:`'alignment':settingsProperty`, body: `@enum_alignment:settingsValue` },
-	// 		{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
-	// 		{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
-	// 		{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
-	// 		const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
-	// 		file.nodes.push({
-	// 			node: 'dialog_parameter',
-	// 			label: propertyCapture.value,
-	// 			value: valueCapture.value,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
 	// dialog_definition: {
 	// 	patterns: [
 	// 		{

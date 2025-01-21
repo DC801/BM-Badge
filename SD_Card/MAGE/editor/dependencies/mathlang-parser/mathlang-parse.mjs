@@ -120,12 +120,13 @@ const tryToken = (file, crawlState, twig, token) => {
 			branchName: twig.value,
 			startPos: crawlState.tokenPos,
 		});
-		debugLog('----adding to stack: ' + crawlState.stack[0].branchName);
+		debugLog(`----adding to stack: ${crawlState.stack[0].branchName}[${crawlState.stack[0].startPos}]`);
 		lookup = tryBranches(file, crawlState);
 		matched = lookup.matched;
+		const shift = crawlState.stack.shift();
+		debugLog(`----shifting off the top of stack: ${shift.branchName}[${shift.startPos}]`);
+		debugLog(printStack(crawlState.stack));
 	}
-	// if (matched) debugLog('\tMATCH');
-	// else debugLog('\tNo match');
 	return {
 		matched,
 		lookup,
@@ -133,7 +134,7 @@ const tryToken = (file, crawlState, twig, token) => {
 }
 const tryBranch = (file, crawlState, branch) => {
 	const branchName = crawlState.stack[0].branchName;
-	debugLog(`tryBranch: ${branchName}`);
+	debugLog(`\ttryBranch: ${branchName}`);
 	const tokens = file.tokens;
 	const report = {
 		startPos: crawlState.stack[0].tokenPos,
@@ -154,6 +155,7 @@ const tryBranch = (file, crawlState, branch) => {
 		repeating = false;
 	};
 	const repeatTwig = () => {
+		debugLog("REPEATING")
 		twigPos -=1 ;
 		twig = branch[twigPos];
 		repeating = true;
@@ -178,9 +180,9 @@ const tryBranch = (file, crawlState, branch) => {
 		const triedToken = tryToken(file, crawlState, twig, token);
 
 		if (triedToken.matched) {
-			debugLog(`Matched [${crawlState.tokenPos}] ${token.value} with ${twig.original}`)
+			debugLog(`\tMatched [${crawlState.tokenPos}] ${token.value} with ${twig.original}`)
 		} else {
-			debugLog(`[${crawlState.tokenPos}] ${token.value} did not match ${twig.original}`)
+			debugLog(`\t[${crawlState.tokenPos}] ${token.value} did not match ${twig.original}`)
 		}
 		if (triedToken.matched) {
 			if (twig.type === 'lookup') {
@@ -309,7 +311,8 @@ const tryBranches = (file, origCrawlState) => {
 	if (triedBranch) {
 		crawlState = triedBranch.crawlState;
 		const shift = crawlState.stack.shift();
-		debugLog('----shifting off the top of stack: ' + shift.branchName)
+		debugLog(`----shifting off the top of stack: ${shift.branchName}[${shift.startPos}]`);
+		debugLog(printStack(crawlState.stack));
 		if (onEnd[branchName]) {
 			onEnd[branchName](file, crawlState);
 		}
@@ -542,7 +545,11 @@ const testInput = ``
 +`\ninclude!()`
 +`\ninclude!("header.mgs")`
 +`\nadd serial_dialog settings { wrap 60 }`
-+`\nadd serial_dialog settings { wrap 70 wrap }`
++`\nadd serial_dialog settings { wrap 60 }`
++`\nadd serial_dialog settings { wrap 70 wrappp }`
++`\nadd dialog settings {
+	default { alignment BL }
+}`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 
@@ -553,4 +560,12 @@ testParsedFile.errors.forEach(error=>{
 console.log('break');
 
 /* TODOS */
+
 // Don't use JSON clone; make a function to move the values over instead
+
+/* should also expect 'wrap':
+╓ "testMGSFile.mgs" line 8:38: add_serial_dialog_settings error
+║ add serial_dialog settings { wrap 70 wrappp }
+╙~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+Expected: '}'
+*/
