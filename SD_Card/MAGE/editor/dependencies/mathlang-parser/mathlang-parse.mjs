@@ -1,7 +1,13 @@
 import lex from "./mathlang-lex.mjs"
 import language from "./mathlang-language.mjs"
 
-const { tree, onEnd, keywords } = language;
+const { tree, onStart, onEnd, keywords } = language;
+
+const printStack = (stack) => {
+	return stack.map(item=>`${item.branchName}[${item.startPos}]`)
+		.reverse()
+		.join(' > ');
+}
 const findLineAndCharNumbers = (input, pos) => {
 	const splits = input.substring(0,pos).split('\n')
 	const charCount = splits[splits.length - 1].length;
@@ -14,10 +20,17 @@ const findLineAndCharNumbers = (input, pos) => {
 		char: input[pos]
 	};
 };
-const getPosContext = (inputString, pos, message) => {
-	const errorCoords = findLineAndCharNumbers(inputString, pos);
-	const arrow = '~'.repeat(errorCoords.col) + '^';
-	const lineString = errorCoords.lineString.replace(/\t/g,' ');
+const getPosContext = (inputString, origPos, message) => {
+	let pos = origPos;
+	let errorCoords = findLineAndCharNumbers(inputString, pos);
+	let arrow = '~'.repeat(errorCoords.col) + '^';
+	let lineString = errorCoords.lineString.replace(/\t/g,' ');
+	while (lineString.replace(/[\s\t]/g, '').length === 0) {
+		pos -= 1;
+		errorCoords = findLineAndCharNumbers(inputString, pos);
+		arrow = '~'.repeat(errorCoords.col) + '^';
+		lineString = errorCoords.lineString.replace(/\t/g,' ');
+	}
 	const newMessage
 		= `\n╓ Line ${errorCoords.row}:${errorCoords.col}: ${message}`
 		+ '\n║ ' + `${lineString}`
@@ -58,12 +71,13 @@ const decayTo = {
 	},
 };
 const verbose = true;
-const runTests = true;
+const runTests = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 /* ------------------------------------- TRYBRANCH TESTS ------------------------------------- */
 
 const tryToken = (file, crawlState, twig, token) => {
+	// debugLog(`tryToken: ${token.value} == ${twig.original}`);
 	let matched = false;
 	let lookup;
 	if (twig.type === 'capture' && twig.value === 'EOF') {
@@ -83,7 +97,7 @@ const tryToken = (file, crawlState, twig, token) => {
 	if (twig.type === 'literal') {
 		matched = token.value === twig.value;
 		if (matched && twig.label) {
-			addCapture(crawlState, label, token.value);
+			addCapture(crawlState, twig.label, token.value);
 		}
 	} else if (twig.type === 'capture') {
 		const found = decayTo[twig.value](token);
@@ -101,18 +115,27 @@ const tryToken = (file, crawlState, twig, token) => {
 		if (twig.label) {
 			crawlState.unusedLabels.push(twig.label);
 		}
-		lookup = tryBranches(file, crawlState, twig.value);
+		crawlState.stack.unshift({
+			branchName: twig.value,
+			startPos: crawlState.tokenPos,
+		});
+		debugLog('----adding to stack: ' + crawlState.stack[0].branchName);
+		lookup = tryBranches(file, crawlState);
 		matched = lookup.matched;
 	}
+	// if (matched) debugLog('\tMATCH');
+	// else debugLog('\tNo match');
 	return {
 		matched,
 		lookup,
 	};
 }
 const tryBranch = (file, crawlState, branch) => {
+	const branchName = crawlState.stack[0].branchName;
+	debugLog(`tryBranch: ${branchName}`);
 	const tokens = file.tokens;
 	const report = {
-		startPos: crawlState.tokenPos,
+		startPos: crawlState.stack[0].tokenPos,
 		expected: null,
 		expectedPos: null,
 		matched: false,
@@ -129,13 +152,16 @@ const tryBranch = (file, crawlState, branch) => {
 		twig = branch[twigPos];
 		repeating = false;
 	};
+	const repeatTwig = () => {
+		twigPos -=1 ;
+		twig = branch[twigPos];
+		repeating = true;
+	};
 	const advanceToken = () => {
 		crawlState.tokenPos += 1;
 		token = tokens[crawlState.tokenPos];
 	};
 	const updateCrawlState = (newCrawlState) => {
-		newCrawlState.startPos = crawlState.startPos;
-		newCrawlState.branchName = crawlState.branchName;
 		crawlState = newCrawlState;
 		token = tokens[crawlState.tokenPos];
 	};
@@ -151,22 +177,29 @@ const tryBranch = (file, crawlState, branch) => {
 		const triedToken = tryToken(file, crawlState, twig, token);
 
 		if (triedToken.matched) {
-			debugLog(`Matched [${crawlState.tokenPos}] ${token.value} with ${twig.value}`)
+			debugLog(`Matched [${crawlState.tokenPos}] ${token.value} with ${twig.original}`)
 		} else {
-			debugLog(`[${crawlState.tokenPos}] ${token.value} did not match ${twig.value}`)
+			debugLog(`[${crawlState.tokenPos}] ${token.value} did not match ${twig.original}`)
 		}
 		if (triedToken.matched) {
 			if (twig.type === 'lookup') {
 				updateCrawlState(triedToken.lookup.crawlState);
+				const shift = crawlState.stack.shift();
+				debugLog('----shifting off the top of stack: ' + shift.branchName)
 				// we already advanced the token in there; time to undo that
 				crawlState.tokenPos -=1;
 			}
-			if (twig.confirmNode) confirmed = true;
+			if (twig.confirmNode) {
+				confirmed = true;
+				if (onStart[branchName]) {
+					onStart[branchName](file, crawlState);
+				}
+			}
 			advanceToken();
-			if (!multipleOkay) {
-				advanceTwig();
-			} else {
-				twigPos = 0;
+			advanceTwig();
+			if (multipleOkay) {
+				repeatTwig();
+				crawlState.stack[0].tokenPos = crawlState.tokenPos;
 			}
 		} else {
 			if ((multipleOkay && repeating)|| zeroOkay) {
@@ -176,6 +209,8 @@ const tryBranch = (file, crawlState, branch) => {
 				if (twig.type === 'lookup') {
 					report.crawlState = updateCrawlState(triedToken.lookup.crawlState);
 					report.expected = triedToken.lookup.expected;
+					const shift = crawlState.stack.shift();
+					debugLog('----shifting off the top of stack: ' + shift.branchName);
 				} else if (twig.type === 'literal') {
 					report.expected = `'${twig.value}'`;
 				} else if (twig.type === 'capture') {
@@ -187,7 +222,9 @@ const tryBranch = (file, crawlState, branch) => {
 			}
 		}
 	}
-	if (twigPos === branch.length) report.matched = true;
+	if (twigPos === branch.length) {
+		report.matched = true;
+	}
 	if (report.malformed) {
 		report.matched = true;
 		report.expectedPos = crawlState.tokenPos;
@@ -245,21 +282,22 @@ const errorRecoverPos = (tokens, origTokenPos, terminatorTwig) => {
 		? endTokensPos.terminatorPos + 1
 		: endTokensPos.newlinePos !== null
 			? endTokensPos.newlinePos + 1
-			: null;
-}
+			: origTokenPos;
+};
 
-const tryBranches = (file, origCrawlState, branchName) => {
+const tryBranches = (file, origCrawlState) => {
+	debugLog('tryBranches: ' + printStack(origCrawlState.stack));
+	const branchName = origCrawlState.stack[0].branchName;
+	const startPos = origCrawlState.stack[0].startPos;
 	const branches = file.tree[branchName];
-	const startPos = origCrawlState.startPos;
 	let triedBranch = null;
 	let crawlState = null;
 	let expected = '';
 	const fails = [];
-	debugLog(`\tTRYING BRANCH: ${branchName}`);
 	for (let i = 0; i < branches.length; i++) {
 		const branch = branches[i];
 		crawlState = JSON.parse(JSON.stringify(origCrawlState));
-		const tryingBranch = tryBranch(file, crawlState, branch);
+		const tryingBranch = tryBranch(file, crawlState, branch, branchName);
 		if (tryingBranch.report.matched) {
 			triedBranch = tryingBranch;
 			break;
@@ -276,7 +314,7 @@ const tryBranches = (file, origCrawlState, branchName) => {
 			file.errors.push({
 				file: file.fileName,
 				value: 'Malformed node',
-				message: `${branchName} error`,
+				message: `[${file.fileName}] ${branchName} error`,
 				startPos: startPos,
 				expected: triedBranch.report.expected, 
 				errorPos: triedBranch.report.expectedPos,
@@ -318,80 +356,87 @@ const tryBranches = (file, origCrawlState, branchName) => {
 
 if (runTests) {
 
-	const tryBranchTests = [
-		{
-			input: `include!("header.mgs")\nadd`, branchName: 'include_macro', branchID: 0,
-			matched: true, malformed: false,  nextPos: 5,
-		},
-		{
-			input: `include("header.mgs")\nadd`, branchName: 'include_macro', branchID: 0,
-			matched: true, malformed: true,  nextPos: 4,
-		},
-		{
-			input: `include!()\nadd`, branchName: 'include_macro', branchID: 0,
-			matched: true, malformed: true,  nextPos: 4,
-		},
-		{
-			input: `include()\nadd`, branchName: 'include_macro', branchID: 0,
-			matched: true, malformed: true,  nextPos: 3,
-		},
-		{
-			input: `include(\nadd`, branchName: 'include_macro', branchID: 0,
-			matched: true, malformed: true,  nextPos: 3,
-		},
-		{
-			input: `include( add`, branchName: 'include_macro', branchID: 0,
-			matched: true, malformed: true,  nextPos: 2,
-		},
-		{
-			input: `$trombones = 76;`, branchName: 'constant_assignment', branchID: 0,
-			matched: true, malformed: false, nextPos: 4,
-		},
-		{
-			input: `$trombones = ;`, branchName: 'constant_assignment', branchID: 0,
-			matched: true, malformed: true, nextPos: 3,
-		},
-	];
-	tryBranchTests.forEach(test=>{
-		test.tokens = lex(test.input).tokens;
-		test.tree = tree;
-	});
-	const testCrawl = {
-		tokenPos: 0,
-		captures: [],
-		unusedLabels: [],
-		nodes: [],
-	};
-	let passedTests = 0;
-	const failedTests = [];
-	tryBranchTests.forEach((test, i)=>{
-		const branch = tree[test.branchName][test.branchID];
-		const tried = tryBranch(test, JSON.parse(JSON.stringify(testCrawl)), branch);
-		const nextPosTest = tried.crawlState.tokenPos === test.nextPos;
-		const matchedTest = (tried.report.matched || false) === test.matched;
-		const malformedTest = (tried.report.malformed || false) === test.malformed;
-		if (nextPosTest && matchedTest && malformedTest) {
-			passedTests += 1;
-		} else {
-			const testReport = {
-				testID: i,
-				test: test.input,
-			};
-			if (!nextPosTest) {
-				testReport.nextPos = {expected: test.nextPos, found: tried.crawlState.tokenPos};
-			}
-			if (!matchedTest) {
-				testReport.matched = {expected: test.matched, found: tried.report.matched};
-			}
-			if (!malformedTest) {
-				testReport.malformed = {expected: test.malformed, found: tried.report.malformed};
-			}
-			failedTests.push(testReport);
+const tryBranchTests = [
+	{
+		input: `include!("header.mgs")\nadd`, branchName: 'include_macro', branchID: 0,
+		matched: true, malformed: false,  nextPos: 5,
+	},
+	{
+		input: `include("header.mgs")\nadd`, branchName: 'include_macro', branchID: 0,
+		matched: true, malformed: true,  nextPos: 4,
+	},
+	{
+		input: `include!()\nadd`, branchName: 'include_macro', branchID: 0,
+		matched: true, malformed: true,  nextPos: 4,
+	},
+	{
+		input: `include()\nadd`, branchName: 'include_macro', branchID: 0,
+		matched: true, malformed: true,  nextPos: 3,
+	},
+	{
+		input: `include(\nadd`, branchName: 'include_macro', branchID: 0,
+		matched: true, malformed: true,  nextPos: 3,
+	},
+	{
+		input: `include( add`, branchName: 'include_macro', branchID: 0,
+		matched: true, malformed: true,  nextPos: 2,
+	},
+	{
+		input: `$trombones = 76;`, branchName: 'constant_assignment', branchID: 0,
+		matched: true, malformed: false, nextPos: 4,
+	},
+	{
+		input: `$trombones = ;`, branchName: 'constant_assignment', branchID: 0,
+		matched: true, malformed: true, nextPos: 3,
+	},
+];
+tryBranchTests.forEach((test, i)=>{
+	test.tokens = lex(test.input).tokens;
+	test.tree = tree;
+	test.stack = [{
+		branchName: test.branchName,
+		startPos: 0,
+	}];
+});
+const testCrawl = {
+	tokenPos: 0,
+	captures: [],
+	unusedLabels: [],
+	nodes: [],
+	stack: [],
+};
+let passedTests = 0;
+const failedTests = [];
+tryBranchTests.forEach((test, i)=>{
+	const branch = tree[test.branchName][test.branchID];
+	const crawlState = JSON.parse(JSON.stringify(testCrawl));
+	crawlState.stack = test.stack;
+	const tried = tryBranch(test, crawlState, branch, test.branchName);
+	const nextPosTest = tried.crawlState.tokenPos === test.nextPos;
+	const matchedTest = (tried.report.matched || false) === test.matched;
+	const malformedTest = (tried.report.malformed || false) === test.malformed;
+	if (nextPosTest && matchedTest && malformedTest) {
+		passedTests += 1;
+	} else {
+		const testReport = {
+			testID: i,
+			test: test.input,
+		};
+		if (!nextPosTest) {
+			testReport.nextPos = {expected: test.nextPos, found: tried.crawlState.tokenPos};
 		}
-	});
-	if (failedTests.length > 0) {
-		console.log(failedTests);
+		if (!matchedTest) {
+			testReport.matched = {expected: test.matched, found: tried.report.matched};
+		}
+		if (!malformedTest) {
+			testReport.malformed = {expected: test.malformed, found: tried.report.malformed};
+		}
+		failedTests.push(testReport);
 	}
+});
+if (failedTests.length > 0) {
+	console.log(failedTests);
+}
 }
 
 /* ------------------------------------------ PARSE FILE ------------------------------------------ */
@@ -399,10 +444,17 @@ if (runTests) {
 const parseFile = (lexResult, tree, givenFileName) => {
 	const fileName = givenFileName ? givenFileName : 'anon' + Math.floor(Math.random()*10000000000);
 	const startCrawlState = {
+		stack: [
+			{
+				branchName: 'document',
+				startPos: 0,
+			}
+		],
 		tokenPos: 0,
 		captures: [],
 		unusedLabels: [],
 		nodes: [],
+		staged: {},
 	};
 	const file = {
 		fileName,
@@ -419,9 +471,25 @@ const parseFile = (lexResult, tree, givenFileName) => {
 			expected: [],
 		},
 	};
-	const triedAll = tryBranches(file, startCrawlState, 'document');
-	file.success = triedAll.matched;
-	file.crawlState = triedAll.crawlState;
+	let triedAll;
+	do {
+		triedAll = tryBranches(file, startCrawlState);
+		file.success = triedAll.matched;
+		file.crawlState = triedAll.crawlState;
+		if (!file.success) {
+			file.errors.push({
+				value: 'Syntax error',
+				message: `Unknown syntax error`,
+				errorPos: file.crawlError.bestPos,
+				expected: [...new Set (file.crawlError.expected)]
+					.sort()
+					.join(', '),
+			});
+			const continuePos = errorRecoverPos(file.tokens, file.crawlError.bestPos);
+			if (continuePos === file.tokens.length) break;
+			startCrawlState.tokenPos = continuePos;
+		}
+	} while (!file.success);
 
 	// review errors and warnings
 	triedAll.crawlState.captures.forEach(capture => {
@@ -445,7 +513,9 @@ const parseFile = (lexResult, tree, givenFileName) => {
 			value: 'Syntax error',
 			message: `Unknown syntax error`,
 			errorPos: file.crawlError.bestPos,
-			expected: [...new Set (file.crawlError.expected)].join(', '),
+			expected: [...new Set (file.crawlError.expected)]
+				.sort()
+				.join(', '),
 		});
 	}
 	file.errors.sort((a,b)=>a.errorPos - b.errorPos);
@@ -467,13 +537,14 @@ const parseFile = (lexResult, tree, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = `
-include!("header.mgs")
-include!()
-$trombones = ;
-$steamedhams = "Hamburgers";
-add
-`;
+const testInput = ``
++`\nblarg`
++`\n$trombones = ;`
++`\n$steamedhams = "Hamburgers";`
++`\ninclude!()`
++`\ninclude!("header.mgs")`
++`\nadd serial_dialog settings { wrap 60 }`
++``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile');
 
 testParsedFile.errors.forEach(error=>{
@@ -481,3 +552,6 @@ testParsedFile.errors.forEach(error=>{
 })
 
 console.log('break');
+
+/* TODOS */
+// Don't use JSON clone; make a function to move the values over instead

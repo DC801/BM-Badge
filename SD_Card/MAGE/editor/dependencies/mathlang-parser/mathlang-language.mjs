@@ -31,8 +31,10 @@ const dictionary = {
 		],
 	},
 	root: {
-		patterns:`@include_macro
-			| @constant_assignment`,
+		patterns:
+			`@include_macro`
+			+ ` | @constant_assignment`
+			+ ` | @add_serial_dialog_settings`
 	},
 	include_macro: {
 		patterns: [{
@@ -43,16 +45,16 @@ const dictionary = {
 			// If things are broken but you match 'end' you can put in a
 			// placeholder node with the values you did get, plus {malformed:true}
 			// then proceed as if it matched correctly.
-			// Currently 'end' is only one toekn/word
+			// Currently 'end' is only one token/word
 			end: `')'`,
 		}],
-		onEnd: (file, crawlState) => {
+		onEnd: (file, crawlState, startPos) => {
 			const value = mostRecentCapture(crawlState, 'fileName');
 			const malformed = !value;
 			file.nodes.push({
 				node: 'include_macro',
 				value: value ? value.value : '',
-				startPos: crawlState.startPos,
+				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
 			});
@@ -74,7 +76,7 @@ const dictionary = {
 				node: 'constant_assignment',
 				name: name ? name.value : '',
 				value: value ? value.value : '',
-				startPos: crawlState.startPos,
+				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
 			});
@@ -94,11 +96,16 @@ const dictionary = {
 				end: `'}'`,
 			}
 		],
-		onMatch: (file, _crawlState, startPos) => {
+		onStart: (file, crawlState) => {
+			crawlState.staged.serialDialogParameters = [];
+		},
+		onEnd: (file, crawlState) => {
+			const settings = crawlState.staged.serialDialogParameters;
 			file.nodes.push({
 				node: 'add_serial_dialog_settings',
-				settings: mostRecentNodes(file, 'serial_dialog_parameter', 0, Infinity),
-				tokenPos: startPos,
+				settings: settings,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
 			});
 		},
 	},
@@ -109,14 +116,17 @@ const dictionary = {
 				body: `$number:value`,
 			}
 		],
-		onMatch: (file, crawlState, startPos) => {
-			const valueCapture = semiRecentCapture(crawlState, 'value');
-			const propertyCapture = semiRecentCapture(crawlState, 'property');
-			file.nodes.push({
+		onEnd: (file, crawlState) => {
+			const value = mostRecentCapture(crawlState, 'value');
+			const property = mostRecentCapture(crawlState, 'property');
+			const malformed = !value || !property;
+			crawlState.staged.serialDialogParameters.push({
 				node: 'serial_dialog_parameter',
-				label: propertyCapture.value,
-				value: valueCapture.value,
-				tokenPos: startPos,
+				property: property ? property.value : '',
+				value: value ? value.value : '',
+				startPos: crawlState.startPos,
+				tokenPos: crawlState.tokenPos,
+				malformed,
 			});
 		},
 	},
@@ -483,12 +493,14 @@ const dictionary = {
 };
 
 
+const onStart = {};
 const onEnd = {};
 const patterns = {};
 
 Object.keys(dictionary).forEach(entryName=>{
 	const entry = dictionary[entryName];
 	if (entry.patterns) patterns[entryName] = entry.patterns;
+	if (entry.onStart) onStart[entryName] = entry.onStart;
 	if (entry.onEnd) onEnd[entryName] = entry.onEnd;
 });
 
@@ -806,5 +818,5 @@ const conditionsLHS = [
 
 // console.log('break');
 
-const language = { tree, onEnd, keywords: keywordsFound };
+const language = { tree, onStart, onEnd, keywords: keywordsFound };
 export default language;
