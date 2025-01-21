@@ -75,7 +75,7 @@ const dictionary = {
 			file.nodes.push({
 				node: 'constant_assignment',
 				name: name ? name.value : '',
-				value: value ? value.value : '',
+				value: value ? value.value : null,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
@@ -123,7 +123,7 @@ const dictionary = {
 			crawlState.staged.serialDialogParameters.push({
 				node: 'serial_dialog_parameter',
 				property: property ? property.value : '',
-				value: value ? value.value : '',
+				value: value ? value.value : null,
 				startPos: crawlState.startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
