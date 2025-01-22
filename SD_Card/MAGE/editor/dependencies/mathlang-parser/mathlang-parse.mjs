@@ -550,6 +550,8 @@ const testInput = ``
 	goto index 45;
 	goto scriptName;
 	load map mainMenu;
+	close dialog;
+	unpause map on_tick;
 }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');

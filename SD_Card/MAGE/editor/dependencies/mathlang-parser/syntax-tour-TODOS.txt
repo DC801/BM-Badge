@@ -16,21 +16,6 @@ _ {
 	delete command $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND
 	delete command $string_literal + $argName; //UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 	delete alias $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS
-	hide command $string_literal; //SET_SERIAL_DIALOG_COMMAND_VISIBILITY
-	unhide command $string_literal; //SET_SERIAL_DIALOG_COMMAND_VISIBILITY
-	save slot; //SLOT_SAVE
-	load slot $enum_slot; //SLOT_LOAD
-	erase slot $enum_slot; //SLOT_ERASE
-	block $var_duration; //BLOCKING_DELAY
-	wait $var_duration; //NON_BLOCKING_DELAY
-	close dialog; //CLOSE_DIALOG
-	close serial_dialog; //CLOSE_SERIAL_DIALOG
-	pause map on_tick; //SET_SCRIPT_PAUSE
-	pause entity entityName on_tick; //SET_SCRIPT_PAUSE
-	pause player on_tick; //SET_SCRIPT_PAUSE
-	pause self on_tick; //SET_SCRIPT_PAUSE
-	unpause map on_tick; //SET_SCRIPT_PAUSE
-	unpause entity entityName on_tick; //SET_SCRIPT_PAUSE
 	// with dialog / serial_dialog literals
 	show dialog {}; //SHOW_DIALOG
 	show dialog dialogName; //SHOW_DIALOG
@@ -167,3 +152,140 @@ _ {
 	index 50000;
 
 }
+
+const conditionsLHS = [
+	{
+		action: 'CHECK_DEBUG_MODE',
+		pattern: `'debug_mode'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_SAVE_FLAG',
+		pattern: `$string:flagName<>flagNames`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_ENTITY_GLITCHED',
+		pattern: `@entity_identifier 'glitched'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_DIALOG_OPEN',
+		pattern: `'dialog' 'open'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_SERIAL_DIALOG_OPEN',
+		pattern: `'serial_dialog' 'open'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_FOR_BUTTON_STATE',
+		pattern: `'button' $enum_button:buttonName 'down'`,
+		type: 'boolean',
+		values: { expected_bool: true },
+	},
+	{
+		action: 'CHECK_FOR_BUTTON_STATE',
+		pattern: `'button' $enum_button:buttonName 'up'`,
+		type: 'boolean',
+		values: { expected_bool: false },
+	},
+	{
+		action: 'CHECK_FOR_BUTTON_PRESS',
+		pattern: `'button' $enum_button:buttonName 'pressed'`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
+		pattern: `@entity_identifier 'intersects' @geometry_identifier`,
+		type: 'boolean',
+	},
+	{
+		action: 'CHECK_ENTITY_X',
+		pattern: `@entity_identifier 'x'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_Y',
+		pattern: `@entity_identifier 'y'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_PRIMARY_ID',
+		pattern: `@entity_identifier 'primary_id'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_SECONDARY_ID',
+		pattern: `@entity_identifier 'secondary_id'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_PRIMARY_ID_TYPE',
+		pattern: `@entity_identifier 'primary_id_type'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_CURRENT_ANIMATION',
+		pattern: `@entity_identifier 'current_animation'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_CURRENT_FRAME',
+		pattern: `@entity_identifier 'animation_frame'`,
+		type: 'number_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_NAME',
+		pattern: `@entity_identifier 'name'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_INTERACT_SCRIPT',
+		pattern: `@entity_identifier 'on_interact'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_TICK_SCRIPT',
+		pattern: `@entity_identifier 'on_tick'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_LOOK_SCRIPT',
+		pattern: `@entity_identifier 'on_look'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_TYPE',
+		pattern: `@entity_identifier 'type'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_PATH',
+		pattern: `@entity_identifier 'path'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_WARP_STATE',
+		pattern: `'warp_state'`,
+		type: 'string_equality',
+	},
+	{
+		action: 'CHECK_ENTITY_DIRECTION',
+		pattern: `@entity_identifier 'direction'`,
+		type: 'string_nsew',
+	},
+	{
+		action: 'CHECK_VARIABLE',
+		pattern: `$string:variable`,
+		type: 'string_against_number', // < <= == => >
+		// rhs = ':value'
+	},
+	{
+		action: 'CHECK_VARIABLES',
+		pattern: `$string:variable`,
+		type: 'string_against_string', // < <= == => >
+		// rhs = ':source'
+	},
+];

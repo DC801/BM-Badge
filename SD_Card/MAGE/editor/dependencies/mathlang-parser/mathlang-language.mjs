@@ -176,18 +176,12 @@ const dictionary = {
 			delete crawlState.staged.dialogParameters;
 		},
 	},
-	enum_alignment: {
-		patterns: `'TOP_RIGHT':settingsValue | 'TR':settingsValue
-			| 'TOP_LEFT':settingsValue | 'TL':settingsValue
-			| 'BOTTOM_RIGHT':settingsValue | 'BR':settingsValue
-			| 'BOTTOM_LEFT':settingsValue | 'BL':settingsValue`,
-	},
 	dialog_parameter: {
 		patterns: [
 			{ start:`'entity':settingsProperty`, body: `$string:settingsValue<>entityNames` },
 			{ start:`'name':settingsProperty`, body: `$string:settingsValue` },
 			{ start:`'portrait':settingsProperty`, body: `$string:settingsValue<portraitNames` },
-			{ start:`'alignment':settingsProperty`, body: `@enum_alignment` },
+			{ start:`'alignment':settingsProperty`, body: `$bareword:settingsValue<enum_alignment` },
 			{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
 			{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
 			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
@@ -338,10 +332,10 @@ const dictionary = {
 		],
 		onEnd: (file, crawlState) => {
 			const identifierValue = mostRecentCapture(crawlState, 'identifierValue');
-			const identifierType = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
+			const identifierType = optionalCapture(crawlState, 'identifierType');
 			crawlState.staged.dialogIdentifier ={
 				node: 'dialog_identifier',
-				type: identifierType[0]?.value || 'label',
+				type: identifierType?.value || 'label',
 				value: identifierValue?.value || '',
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
@@ -383,15 +377,25 @@ const dictionary = {
 		onEnd: (file, crawlState) => {
 			const name = mostRecentCapture(crawlState, 'scriptName').value;
 			const scriptBodyItems = crawlState.staged.scriptBodyItems;
-			// maybe move this later? let the script handler do this?
-			crawlState.staged.scriptBodyItems.push({
-				node: 'action',
-				action: 'LABEL',
-				label: 'auto return',
-				startPos: crawlState.tokenPos-1,
-				tokenPos: crawlState.tokenPos,
-			});
+			// // maybe move this later? let the script handler do this?
+			// crawlState.staged.scriptBodyItems.push({
+			// 	node: 'action',
+			// 	action: 'LABEL',
+			// 	label: 'auto return',
+			// 	startPos: crawlState.tokenPos-1,
+			// 	tokenPos: crawlState.tokenPos,
+			// });
+			// // it's confusing me now so I'm hiding this
 			// back to our regular programming
+
+			// for my own visual QOL
+			scriptBodyItems.forEach(item=>{
+				delete item.node;
+				if (!item.malformed) {
+					delete item.malformed;
+				}
+			})
+
 			file.nodes.push({
 				node: 'script_definition',
 				name,
@@ -405,106 +409,6 @@ const dictionary = {
 	script_body_item: {
 		patterns: [],
 	},
-	// action_return: {
-	// 	patterns: [{ start: `'return'`, end: `';'` }],
-	// 	onEnd: (file, crawlState) => {
-	// 		crawlState.staged.scriptBodyItems.push({
-	// 			node: 'action',
-	// 			action: 'GOTO_ACTION_LABEL',
-	// 			label: 'auto return',
-	// 			startPos: crawlState.stack[0].startPos,
-	// 			tokenPos: crawlState.tokenPos,
-	// 		});
-	// 	},
-	// },
-	// action_label: {
-	// 	patterns: `$bareword:labelName ':'`, // must wait until ':'; no split into body!
-	// 	onEnd: (file, crawlState) => {
-	// 		const label = semiRecentCapture(crawlState, 'labelName')?.value || '';
-	// 		crawlState.staged.scriptBodyItems.push({
-	// 			node: 'action',
-	// 			action: 'LABEL',
-	// 			label,
-	// 			malformed: !label,
-	// 			startPos: crawlState.stack[0].startPos,
-	// 			tokenPos: crawlState.tokenPos,
-	// 		});
-	// 	},
-	// },
-	// action_load_map: {
-	// 	patterns: [{
-	// 		start: `'load' 'map'`,
-	// 		body: `$string:map`,
-	// 		end: `';'`
-	// 	}],
-	// 	onEnd: (file, crawlState) => {
-	// 		const map = semiRecentCapture(crawlState, 'map')?.value || '';
-	// 		crawlState.staged.scriptBodyItems.push({
-	// 			node: 'action',
-	// 			action: 'LOAD_MAP',
-	// 			map,
-	// 			malformed: !map,
-	// 			startPos: crawlState.stack[0].startPos,
-	// 			tokenPos: crawlState.tokenPos,
-	// 		});
-	// 	},
-	// },
-	// action_goto_index: {
-	// 	patterns: [{
-	// 		start: `'goto' 'index'`,
-	// 		body: `$number:action_index`,
-	// 		end: `';'`
-	// 	}],
-	// 	onEnd: (file, crawlState) => {
-	// 		const action_index = semiRecentCapture(crawlState, 'action_index')?.value || -1;
-	// 		crawlState.staged.scriptBodyItems.push({
-	// 			node: 'action',
-	// 			action: 'GOTO_ACTION_INDEX',
-	// 			action_index,
-	// 			malformed: !action_index,
-	// 			startPos: crawlState.stack[0].startPos,
-	// 			tokenPos: crawlState.tokenPos,
-	// 		});
-	// 	},
-	// },
-	// action_goto_label: {
-	// 	patterns: [{
-	// 		start: `'goto' 'label'`,
-	// 		body: `$bareword:label`,
-	// 		end: `';'`
-	// 	}],
-	// 	onEnd: (file, crawlState) => {
-	// 		const label = semiRecentCapture(crawlState, 'label')?.value || '';
-	// 		crawlState.staged.scriptBodyItems.push({
-	// 			node: 'action',
-	// 			action: 'GOTO_ACTION_LABEL',
-	// 			label,
-	// 			malformed: !label,
-	// 			startPos: crawlState.stack[0].startPos,
-	// 			tokenPos: crawlState.tokenPos,
-	// 		});
-	// 	},
-	// },
-	// action_goto_script: {
-	// 	patterns: [{
-	// 		body: `'goto' $string:script`,
-	// 		end: `';'`
-	// 	}],
-	// 	onEnd: (file, crawlState) => {
-	// 		const script = semiRecentCapture(crawlState, 'script')?.value || '';
-	// 		crawlState.staged.scriptBodyItems.push({
-	// 			node: 'action',
-	// 			action: 'RUN_SCRIPT',
-	// 			script,
-	// 			malformed: !script,
-	// 			startPos: crawlState.stack[0].startPos,
-	// 			tokenPos: crawlState.tokenPos,
-	// 		});
-	// 	},
-	// },
-
-
-
 	// show_dialog_block: {
 	// 	patterns: [
 	// 		{
@@ -530,14 +434,8 @@ const dictionary = {
 	// 	},
 	// },
 	// // untested:
-	// entity_identifier: {
-	// 	patterns: [
-	// 		{ body: `'player':entityIdentifierType` },
-	// 		{ body: `'self':entityIdentifierType` },
-	// 		{ start: `'entity':entityIdentifierType`, body: `$string:entityName` },
-	// 	],
 	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const entityNameCapture = mostRecentCaptures(crawlState, 'entityName', 0, 1);
+	// 		const entityNameCapture = optionalCapture(crawlState, 'entityName');
 	// 		const entityIdentifierType = mostRecentCapture(crawlState, 'entityIdentifierType');
 	// 		let entityName = '';
 	// 		if (entityIdentifierType.value === 'self') entityName = '%SELF%';
@@ -551,47 +449,50 @@ const dictionary = {
 	// 	}
 	// },
 	// geometry_identifier: {
-	// 	patterns: [
-	// 		{ start: `'geometry'`, body: `$string:geometryName` },
-	// 	],
+	// 	patterns: [{ start: `'geometry'`, body: `$string:geometryName` }],
 	// },
-	// enum_map_slots: {
-	// 	patterns: `'on_load' | 'on_tick' | 'on_look'`,
-	// },
-	// enum_entity_slots: {
-	// 	patterns: `'on_interact' | 'on_tick' | 'on_look'`,
-	// },
-	// enum_save_slots: {
-	// 	patterns: `'1' | '2' | '3'`,
-	// },
-	// enum_nsew: {
-	// 	patterns: `'north' | 'south' | 'east' | 'west'`,
-	// },
-	// enum_lights: {
-	// 	patterns: `'LED_XOR' | 'LED_ADD' | 'LED_SUB' | 'LED_PAGE'
-	// 		| 'LED_BIT128' | 'LED_BIT64' | 'LED_BIT32' | 'LED_BIT16'
-	// 		| 'LED_BIT8' | 'LED_BIT4' | 'LED_BIT2' | 'LED_BIT1'
-	// 		| 'LED_MEM0' | 'LED_MEM1' | 'LED_MEM2' | 'LED_MEM3'
-	// 		| 'LED_HAX' | 'LED_USB' | 'LED_SD' | 'LED_ALL'`,
-	// },
-	// enum_buttons: {
-	// 	patterns: `'MEM0' | 'MEM1' | 'MEM2' | 'MEM3'
-	// 		| 'XOR' | 'ADD' | 'SUB' | 'PAGE'
-	// 		| 'BIT128' | 'BIT64' | 'BIT32' | 'BIT16'
-	// 		| 'BIT8' | 'BIT4' | 'BIT2' | 'BIT1'
-	// 		| 'LJOY_CENTER' | 'LJOY_UP' | 'LJOY_DOWN'
-	// 		| 'LJOY_LEFT' | 'LJOY_RIGHT'
-	// 		| 'RJOY_CENTER' | 'RJOY_UP' | 'RJOY_DOWN'
-	// 		| 'RJOY_LEFT' | 'RJOY_RIGHT'
-	// 		| 'TRIANGLE' | 'SQUARE' | 'X' | 'CROSS'
-	// 		| 'O' | 'CIRCLE' | 'HAX' | 'ANY'`,
-	// },
-	// enum_entity_field: {
-	// 	patterns: `'x' | 'y' | 'direction' | 'path_id'
-	// 		| 'primary_id' | 'secondary_id' | 'primary_id_type'
-	// 		| 'interact_script_id' | 'tick_script_id' | 'look_script_id'
-	// 		| 'current_animation' | 'current_frame'`,
-	// },
+	entity_identifier: {
+		patterns: [
+			{ body: `'player':identifierType` },
+			{ body: `'self':identifierType` },
+			{ start: `'entity':identifierType`, body: `$string:entityName` },
+		],
+		onEnd: (file, crawlState) => {
+			const identifierType = mostRecentCapture(crawlState, 'identifierType');
+			let entity;
+			if (identifierType === 'player') entity = '%PLAYER%';
+			if (identifierType === 'self') entity = '%SELF%';
+			if (identifierType === 'entity') {
+				entity = optionalCapture(crawlState, 'entityName');
+			}
+			crawlState.staged.entityIdentifier = {
+				identifierType: mostRecentCapture(crawlState, 'identifierType'),
+				entity: entity || '',
+			}
+		},
+	},
+	entity_or_map_identifier: {
+		patterns: [
+			{ body: `'map':identifierType` },
+			{ body: `'player':identifierType` },
+			{ body: `'self':identifierType` },
+			{ start: `'entity':identifierType`, body: `$string:entityName` },
+		],
+		onEnd: (file, crawlState) => {
+			const identifierType = mostRecentCapture(crawlState, 'identifierType');
+			let entity = '';
+			if (identifierType === 'map') entity = '%MAP%';
+			if (identifierType === 'player') entity = '%PLAYER%';
+			if (identifierType === 'self') entity = '%SELF%';
+			if (identifierType === 'entity') {
+				entity = optionalCapture(crawlState, 'entityName');
+			}
+			crawlState.staged.entityOrMap = {
+				identifierType: mostRecentCapture(crawlState, 'identifierType'),
+				entity: entity || '',
+			}
+		},
+	},
 };
 
 const exampleActionResult = {
@@ -618,11 +519,6 @@ const actionDictionary = {
 		values: { label: 'auto return' },
 		patterns: [{ start: `'return'`, end: `';'` }],
 	},
-	action_label: {
-		action: 'LABEL',
-		captures: [ 'label' ],
-		patterns: `$bareword:labelName ':'`,
-	},
 	action_load_map: {
 		action: 'LOAD_MAP',
 		captures: [ 'map' ],
@@ -643,26 +539,110 @@ const actionDictionary = {
 		captures: [ 'script' ],
 		patterns: [{ body: `'goto' $string:script`, end: `';'` }],
 	},
+	action_close_dialog: {
+		action: 'CLOSE_DIALOG',
+		captures: [],
+		patterns: [{ body: `'close' 'dialog'`, end: `';'` }],
+	},
+	action_close_serial_dialog: {
+		action: 'CLOSE_SERIAL_DIALOG',
+		captures: [],
+		patterns: [{ body: `'close' 'serial_dialog'`, end: `';'` }],
+	},
+	action_slot_save: {
+		action: 'SLOT_SAVE',
+		captures: [],
+		patterns: [{ start: `'save'`, body: `'slot'`, end: `';'` }],
+	},
+	action_slot_load: {
+		action: 'SLOT_LOAD',
+		captures: [ 'slot' ],
+		patterns: [{ start: `'load' 'slot'`, body: `$number:slot`, end: `';'` }],
+	},
+	action_slot_erase: {
+		action: 'SLOT_ERASE',
+		captures: [ 'slot' ],
+		patterns: [{ start: `'erase'`, body: `'slot' $number:slot`, end: `';'` }],
+	},
+	action_blocking_delay: {
+		action: 'BLOCKING_DELAY',
+		captures: [ 'duration' ],
+		patterns: [{ start: `'block'`, body: `$number:duration`, end: `';'` }],
+	},
+	action_non_blocking_delay: {
+		action: 'NON_BLOCKING_DELAY',
+		captures: [ 'duration' ],
+		patterns: [{ start: `'wait'`, body: `$number:duration`, end: `';'` }],
+	},
+	action_label: {
+		action: 'LABEL',
+		captures: [ 'label' ],
+		patterns: `$bareword:labelName ':'`,
+	},
+	action_hide_command: {
+		action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
+		captures: [ 'command' ],
+		values: { is_visible: false },
+		patterns: [{ start: `'hide'`, body: `'command' $string:command`, end: `';'` }],
+	},
+	action_unhide_command: {
+		action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
+		captures: [ 'command' ],
+		values: { is_visible: true },
+		patterns: [{ start: `'unhide'`, body: `'command' $string:command`, end: `';'` }],
+	},
+	action_pause_script: {
+		action: 'SET_SCRIPT_PAUSE',
+		captures: [ 'script_slot' ],
+		values: { bool_value: true },
+		patterns: [{
+			start: `'pause'`,
+			body: `@entity_or_map_identifier $bareword:script_slot`,
+			// deciding now that the file playback system can handle invalid enum
+			// options (rather than the parser); parsing will become much simpler
+			end: `';'`
+		}],
+		cleanupStaged: [ 'entityOrMap' ],
+	},
+	action_unpause_script: {
+		action: 'SET_SCRIPT_PAUSE',
+		captures: [ 'script_slot' ],
+		values: { bool_value: false },
+		patterns: [{
+			start: `'unpause'`,
+			body: `@entity_or_map_identifier $bareword:script_slot<enum_script_slot`,
+			end: `';'`
+		}],
+	},
 }
 
-const makeTreeEntry = (slug, data) => {
+const makeTreeEntry = (slug, treeEntry) => {
 	return {
-		patterns: data.patterns,
+		patterns: treeEntry.patterns,
 		onEnd: (file, crawlState) => {
-			const insert = data.values
-				? JSON.parse(JSON.stringify(data.values))
+			const insert = treeEntry.values
+				? JSON.parse(JSON.stringify(treeEntry.values))
 				: {};
-			data.captures.forEach(captureName=>{
+			const captures = treeEntry.captures || [];
+			captures.forEach(captureName=>{
 				insert[captureName] = mostRecentCapture(crawlState, captureName)?.value || null;
 			})
+			if (crawlState.staged.actionValues) {
+				Object.entries(crawlState.staged.actionValues)
+					.forEach(([key,value])=>{ insert[key] = value; });
+			}
 			insert.node = 'action',
-			insert.action = data.action; // e.g. 'RUN_SCRIPT'
+			insert.action = treeEntry.action; // e.g. 'RUN_SCRIPT'
 			insert.startPos = crawlState.stack[0].startPos;
 			insert.tokenPos = crawlState.tokenPos;
-			insert.malformed = data.captures.reduce((acc, curr)=>{
+			insert.malformed = captures.reduce((acc, curr)=>{
 				return acc || insert[curr] === null;
 			}, false);
 			crawlState.staged.scriptBodyItems.push(insert);
+			if (actionDictionary[slug].cleanupStaged) {
+				actionDictionary[slug].cleanupStaged
+					.forEach(v=>{ delete crawlState.staged[v]; });
+			}
 		},
 	}
 };
@@ -713,7 +693,7 @@ const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 };
 const semiRecentCapture = (crawlState, captureLabel) => {
 	const extracted = semiRecentCaptures(crawlState, captureLabel, 1);
-	return extracted ? extracted[0] : false;
+	return extracted ? extracted[0] : null;
 };
 const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	const extracted = [];
@@ -732,7 +712,11 @@ const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 };
 const mostRecentCapture = (crawlState, captureLabel) => {
 	const extracted = mostRecentCaptures(crawlState, captureLabel, 1);
-	return extracted ? extracted[0] : false;
+	return extracted ? extracted[0] : null;
+};
+const optionalCapture = (crawlState, captureLabel) => {
+	const extracted = mostRecentCaptures(crawlState, captureLabel, 0, 1);
+	return extracted ? extracted[0] : null;
 };
 
 // auditing the above pattern dictionary structure
@@ -827,143 +811,6 @@ Object.entries(patterns).forEach(([patternName, origPatterns])=>{
 	});
 	tree[patternName] = allTokenPatterns;
 });
-
-const conditionsLHS = [
-	{
-		action: 'CHECK_DEBUG_MODE',
-		pattern: `'debug_mode'`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_SAVE_FLAG',
-		pattern: `$string:flagName<>flagNames`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_ENTITY_GLITCHED',
-		pattern: `@entity_identifier 'glitched'`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_DIALOG_OPEN',
-		pattern: `'dialog' 'open'`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_SERIAL_DIALOG_OPEN',
-		pattern: `'serial_dialog' 'open'`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_FOR_BUTTON_STATE',
-		pattern: `'button' $enum_button:buttonName 'down'`,
-		type: 'boolean',
-		values: { expected_bool: true },
-	},
-	{
-		action: 'CHECK_FOR_BUTTON_STATE',
-		pattern: `'button' $enum_button:buttonName 'up'`,
-		type: 'boolean',
-		values: { expected_bool: false },
-	},
-	{
-		action: 'CHECK_FOR_BUTTON_PRESS',
-		pattern: `'button' $enum_button:buttonName 'pressed'`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
-		pattern: `@entity_identifier 'intersects' @geometry_identifier`,
-		type: 'boolean',
-	},
-	{
-		action: 'CHECK_ENTITY_X',
-		pattern: `@entity_identifier 'x'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_Y',
-		pattern: `@entity_identifier 'y'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_PRIMARY_ID',
-		pattern: `@entity_identifier 'primary_id'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_SECONDARY_ID',
-		pattern: `@entity_identifier 'secondary_id'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_PRIMARY_ID_TYPE',
-		pattern: `@entity_identifier 'primary_id_type'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_CURRENT_ANIMATION',
-		pattern: `@entity_identifier 'current_animation'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_CURRENT_FRAME',
-		pattern: `@entity_identifier 'animation_frame'`,
-		type: 'number_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_NAME',
-		pattern: `@entity_identifier 'name'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_INTERACT_SCRIPT',
-		pattern: `@entity_identifier 'on_interact'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_TICK_SCRIPT',
-		pattern: `@entity_identifier 'on_tick'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_LOOK_SCRIPT',
-		pattern: `@entity_identifier 'on_look'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_TYPE',
-		pattern: `@entity_identifier 'type'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_PATH',
-		pattern: `@entity_identifier 'path'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_WARP_STATE',
-		pattern: `'warp_state'`,
-		type: 'string_equality',
-	},
-	{
-		action: 'CHECK_ENTITY_DIRECTION',
-		pattern: `@entity_identifier 'direction'`,
-		type: 'string_nsew',
-	},
-	{
-		action: 'CHECK_VARIABLE',
-		pattern: `$string:variable`,
-		type: 'string_against_number', // < <= == => >
-		// rhs = ':value'
-	},
-	{
-		action: 'CHECK_VARIABLES',
-		pattern: `$string:variable`,
-		type: 'string_against_string', // < <= == => >
-		// rhs = ':source'
-	},
-];
 
 // console.log('break');
 
