@@ -29,6 +29,7 @@ const dictionary = {
 			+ ` | @add_serial_dialog_settings`
 			+ ` | @add_dialog_settings`
 			+ ` | @serial_dialog_definition`
+			+ ` | @dialog_definition`
 	},
 	include_macro: {
 		patterns: [{
@@ -163,12 +164,11 @@ const dictionary = {
 		onEnd: (file, crawlState) => {
 			const targetValue = mostRecentCapture(crawlState, 'targetValue');
 			const target = mostRecentCapture(crawlState, 'target');
-			const settings = crawlState.staged.dialogParameters;
 			crawlState.staged.dialogSettings.push({
 				node: 'add_dialog_settings_target',
 				targetType: target?.value || '',
 				targetValue: targetValue?.value || null,
-				settings: settings,
+				settings: crawlState.staged.dialogParameters,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			});
@@ -176,15 +176,17 @@ const dictionary = {
 		},
 	},
 	enum_alignment: {
-		patterns: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
-			| 'BOTTOM_RIGHT' | 'BOTTOM_LEFT' | 'BR' | 'BL'`,
+		patterns: `'TOP_RIGHT':settingsValue | 'TR':settingsValue
+			| 'TOP_LEFT':settingsValue | 'TL':settingsValue
+			| 'BOTTOM_RIGHT':settingsValue | 'BR':settingsValue
+			| 'BOTTOM_LEFT':settingsValue | 'BL':settingsValue`,
 	},
 	dialog_parameter: {
 		patterns: [
 			{ start:`'entity':settingsProperty`, body: `$string:settingsValue<>entityNames` },
 			{ start:`'name':settingsProperty`, body: `$string:settingsValue` },
 			{ start:`'portrait':settingsProperty`, body: `$string:settingsValue<portraitNames` },
-			{ start:`'alignment':settingsProperty`, body: `@enum_alignment:settingsValue` },
+			{ start:`'alignment':settingsProperty`, body: `@enum_alignment` },
 			{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
 			{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
 			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
@@ -215,17 +217,13 @@ const dictionary = {
 			crawlState.staged.serialDialogParameters = [];
 		},
 		onEnd: (file, crawlState) => {
-			const options = crawlState.staged.serialDialogOptions;
-			const messages = crawlState.staged.serialDialogMessages;
-			const parameters = crawlState.staged.serialDialogParameters;
 			const name = mostRecentCapture(crawlState, 'serialDialogName');
-			crawlState.staged.serialDialogName = name.value;
 			file.nodes.push({
 				node: 'serial_dialog_definition',
-				name: name.value,
-				options,
-				messages,
-				parameters,
+				name: name?.value || '',
+				parameters: crawlState.staged.serialDialogParameters,
+				messages: crawlState.staged.serialDialogMessages,
+				options: crawlState.staged.serialDialogOptions,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			});
@@ -263,7 +261,7 @@ const dictionary = {
 			const script = mostRecentCapture(crawlState, 'script');
 			const label = mostRecentCapture(crawlState, 'label');
 			const optionType = mostRecentCapture(crawlState, 'optionType');
-			const malformed = !label || !optionType;
+			const malformed = !label || !script;
 			let type = '';
 			if (optionType.value === '#') type = 'options';
 			if (optionType.value === '_') type = 'text_options';
@@ -278,88 +276,101 @@ const dictionary = {
 			});
 		},
 	},
-	// dialog_definition: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'dialog'`,
-	// 			body: `$string:dialogName '{' @dialog*`,
-	// 			end: `'}'`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
-	// 		const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
-	// 		file.nodes.push({
-	// 			node: 'dialog_definition',
-	// 			dialogName: dialogNameCapture.value,
-	// 			dialogs,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// dialog: {
-	// 	patterns: `@dialog_identifier
-	// 		@dialog_parameter*
-	// 		$quoted_string:dialogMessage+
-	// 		@dialog_option*`,
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const optionNodes = mostRecentNodes(file, 'dialog_option', 0, Infinity);
-	// 		const messageCaptures = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
-	// 		const parameterNodes = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
-	// 		const identifierNode = mostRecentNode(file, 'dialog_identifier');
-	// 		file.nodes.push({
-	// 			node: 'dialog',
-	// 			identifier: identifierNode,
-	// 			parameters: parameterNodes,
-	// 			messages: messageCaptures,
-	// 			options: optionNodes,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// dialog_identifier: {
-	// 	patterns: [
-	// 		{ start: `'entity':identifierType`, body: `$string:identifierValue` },
-	// 		{ start: `'name':identifierType`, body: `$string:identifierValue` },
-	// 		{ body: `$bareword:identifierValue` },
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const identifierValueCapture = mostRecentCapture(crawlState, 'identifierValue');
-	// 		const identifierTypeCapture = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
-	// 		file.nodes.push({
-	// 			node: 'dialog_identifier',
-	// 			type: identifierTypeCapture.length > 0 ? identifierTypeCapture[0].value : 'label',
-	// 			value: identifierValueCapture.value,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// dialog_option: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'>'`,
-	// 			body: `$quoted_string:label '=' $string:script`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const scriptNameCapture = mostRecentCapture(crawlState, 'script');
-	// 		const labelNameCapture = mostRecentCapture(crawlState, 'label');
-	// 		file.nodes.push({
-	// 			node: 'dialog_option',
-	// 			label: labelNameCapture.value,
-	// 			script: scriptNameCapture.value,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
+	dialog_definition: {
+		patterns: [
+			{
+				start: `'dialog'`,
+				body: `$string:dialogName '{' @dialog*`,
+				end: `'}'`
+			},
+		],
+		onStart: (file, crawlState) => {
+			crawlState.staged.dialogs = [];
+			crawlState.staged.dialogIdentifier = {};
+			crawlState.staged.dialogParameters = [];
+			crawlState.staged.dialogOptions = [];
+			crawlState.staged.dialogMessages = [];
+		},
+		onEnd: (file, crawlState) => {
+			const name = mostRecentCapture(crawlState, 'dialogName')?.value || ''
+			file.nodes.push({
+				node: 'dialog_definition',
+				name,
+				dialogs: crawlState.staged.dialogs,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.dialogs;
+			delete crawlState.staged.dialogIdentifier;
+			delete crawlState.staged.dialogParameters;
+			delete crawlState.staged.dialogMessages;
+			delete crawlState.staged.dialogOptions;
+		},
+	},
+	dialog: {
+		patterns: `@dialog_identifier
+			@dialog_parameter*
+			$quoted_string:dialogMessage+
+			@dialog_option*`,
+		onEnd: (file, crawlState) => {
+			const messages = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
+			crawlState.staged.dialogs.push({
+				node: 'dialog',
+				identifier: crawlState.staged.dialogIdentifier,
+				parameters: crawlState.staged.dialogParameters,
+				messages: messages,
+				options: crawlState.staged.dialogOptions,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			crawlState.staged.dialogIdentifier = {};
+			crawlState.staged.dialogParameters = [];
+			crawlState.staged.dialogMessages = [];
+			crawlState.staged.dialogOptions = [];
+		},
+	},
+	dialog_identifier: {
+		patterns: [
+			{ start: `'entity':identifierType`, body: `$string:identifierValue` },
+			{ start: `'name':identifierType`, body: `$string:identifierValue` },
+			{ body: `$bareword:identifierValue` },
+		],
+		onEnd: (file, crawlState) => {
+			const identifierValue = mostRecentCapture(crawlState, 'identifierValue');
+			const identifierType = mostRecentCaptures(crawlState, 'identifierType', 0, 1);
+			crawlState.staged.dialogIdentifier ={
+				node: 'dialog_identifier',
+				type: identifierType[0]?.value || 'label',
+				value: identifierValue?.value || '',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			};
+		},
+	},
+	dialog_option: {
+		patterns: [
+			{
+				start: `'>'`,
+				body: `$quoted_string:label '=' $string:script`
+			},
+		],
+		onEnd: (file, crawlState) => {
+			const script = mostRecentCapture(crawlState, 'script');
+			const label = mostRecentCapture(crawlState, 'label');
+			const malformed = !label || !script;
+			crawlState.staged.dialogOptions.push({
+				node: 'dialog_option',
+				label: label?.value || '',
+				script: script?.value || '',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+				malformed,
+			});
+		},
+	},
 	// script_name: {
 	// 	patterns: `$string:scriptName`,
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		file.nodes.push({
-	// 			node: 'script_name',
-	// 			scriptName: mostRecentCapture(crawlState, 'scriptName'),
-	// 			tokenPos: startPos,
-	// 		});
+	// 	onEnd: (file, crawlState) => {
 	// 	},
 	// },
 	// script_definition: {

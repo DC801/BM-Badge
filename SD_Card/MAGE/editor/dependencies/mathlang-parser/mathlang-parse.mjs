@@ -66,7 +66,7 @@ const decayTo = {
 		return null;
 	},
 };
-const verbose = false;
+const verbose = true;
 const runTests = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
@@ -162,7 +162,9 @@ const tryToken = (file, crawlState, twig, token) => {
 			if (label) addCapture(crawlState, label, token.value);
 		}
 	} else if (twig.type === 'lookup') {
-		if (twig.label) crawlState.unusedLabels.push(twig.label);
+		if (twig.label) {
+			crawlState.unusedLabels.push(twig.label);
+		}
 		pushStack(crawlState, twig.value, crawlState.tokenPos);
 		lookup = tryBranches(file, crawlState);
 		matched = lookup.matched;
@@ -518,22 +520,29 @@ const parseFile = (lexResult, tree, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testInput = ``
-+`\n$trombones = ;` // error
-+`\n$steamedhams = "Hamburgers";`
-+`\nblarg` // error
-+`\ninclude!()` // error
-+`\ninclude!("header.mgs")`
-+`\nadd serial_dialog settings { wrap 1 }`
-+`\nadd serial_dialog settings { wrap 2 one }` // error
-+`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
-+`\nadd dialog settings {
-	default { alignment BL }
-}`
-+`\nserial_dialog testName {
-	"Message!"
-	# "Why not?" = scriptWhyNot
-	# "Why though?" = actuallyWhy
-	_ "You're mixing option types now." = errorScript
+// +`\n$trombones = ;` // error
+// +`\n$steamedhams = "Hamburgers";`
+// +`\nblarg` // error
+// +`\ninclude!()` // error
+// +`\ninclude!("header.mgs")`
+// +`\nadd serial_dialog settings { wrap 1 }`
+// +`\nadd serial_dialog settings { wrap 2 one }` // error
+// +`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
+// +`\nadd dialog settings {
+// 	default { alignment BL }
+// }`
+// +`\nserial_dialog testName {
+// 	"Message!"
+// 	# "Why not?" = scriptWhyNot
+// 	# "Why though?" = actuallyWhy
+// 	_ "You're mixing option types now." = errorScript
+// }`
++`\ndialog bobconversation {
+	Bob alignment TR "Hello!" "I'm Bob!"
+	PLAYER "...What?"
+	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
+	> "Dare I ask?" = ohNoScript
+	> "Is that what it sounds like?" = soundsSCript
 }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
