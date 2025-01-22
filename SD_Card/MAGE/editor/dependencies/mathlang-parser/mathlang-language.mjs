@@ -20,10 +20,7 @@
 
 const dictionary = {
 	document: {
-		patterns: [
-			{ body: `@root*`, end: `$EOF` }
-
-		],
+		patterns: [{ body: `@root*`, end: `$EOF` }],
 	},
 	root: {
 		patterns:
@@ -31,6 +28,7 @@ const dictionary = {
 			+ ` | @constant_assignment`
 			+ ` | @add_serial_dialog_settings`
 			+ ` | @add_dialog_settings`
+			+ ` | @serial_dialog_definition`
 	},
 	include_macro: {
 		patterns: [{
@@ -57,13 +55,11 @@ const dictionary = {
 		},
 	},
 	constant_assignment: {
-		patterns: [
-			{
+		patterns: [{
 				start: `$constant:constantName>constantNames`,
 				body: `'=' @constant_value:constantValue`,
 				end: `';'`,
-			}
-		],
+			}],
 		onEnd: (file, crawlState) => {
 			const value = mostRecentCapture(crawlState, 'constantValue');
 			const name = mostRecentCapture(crawlState, 'constantName');
@@ -85,34 +81,30 @@ const dictionary = {
 			| $duration | $quantity | $distance | $color`,
 	},
 	add_serial_dialog_settings: {
-		patterns: [
-			{
-				start: `'add' 'serial_dialog'`,
-				body: `'settings' '{' @serial_dialog_parameter*`,
-				end: `'}'`,
-			}
-		],
+		patterns: [{
+			start: `'add' 'serial_dialog'`,
+			body: `'settings' '{' @serial_dialog_parameter*`,
+			end: `'}'`,
+		}],
 		onStart: (file, crawlState) => {
 			crawlState.staged.serialDialogParameters = [];
 		},
 		onEnd: (file, crawlState) => {
 			const settings = crawlState.staged.serialDialogParameters;
-			delete crawlState.staged.serialDialogParameters;
 			file.nodes.push({
 				node: 'add_serial_dialog_settings',
 				settings: settings,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			});
+			delete crawlState.staged.serialDialogParameters;
 		},
 	},
 	serial_dialog_parameter: {
-		patterns: [
-			{
-				start: `'wrap':property`,
-				body: `$number:value`,
-			}
-		],
+		patterns: [{
+			start: `'wrap':property`,
+			body: `$number:value`,
+		}],
 		onEnd: (file, crawlState) => {
 			const value = mostRecentCapture(crawlState, 'value');
 			const property = mostRecentCapture(crawlState, 'property');
@@ -121,32 +113,30 @@ const dictionary = {
 				node: 'serial_dialog_parameter',
 				property: property?.value || '',
 				value: value?.value || null,
-				startPos: crawlState.startPos,
+				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
 			});
 		},
 	},
 	add_dialog_settings: {
-		patterns: [
-			{
-				start: `'add' 'dialog'`,
-				body: `'settings' '{' @dialog_settings_target*`,
-				end: `'}'`
-			},
-		],
+		patterns: [{
+			start: `'add' 'dialog'`,
+			body: `'settings' '{' @dialog_settings_target*`,
+			end: `'}'`
+		}],
 		onStart: (file, crawlState) => {
 			crawlState.staged.dialogSettings = [];
 		},
 		onEnd: (file, crawlState) => {
 			const settings = crawlState.staged.dialogSettings;
-			delete crawlState.staged.dialogSettingsTarget;
 			file.nodes.push({
 				node: 'add_dialog_settings',
 				settings: settings,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			});
+			delete crawlState.staged.dialogSettingsTarget;
 		},
 	},
 	dialog_settings_target: {
@@ -174,7 +164,6 @@ const dictionary = {
 			const targetValue = mostRecentCapture(crawlState, 'targetValue');
 			const target = mostRecentCapture(crawlState, 'target');
 			const settings = crawlState.staged.dialogParameters;
-			delete crawlState.staged.dialogParameters;
 			crawlState.staged.dialogSettings.push({
 				node: 'add_dialog_settings_target',
 				targetType: target?.value || '',
@@ -183,21 +172,8 @@ const dictionary = {
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			});
+			delete crawlState.staged.dialogParameters;
 		},
-		// onMatch: (file, crawlState, startPos) => {
-		// 	const settings = mostRecentNodes(file, 'dialog_parameter', 0, Infinity);
-		// 	const targetValueCapture = mostRecentCaptures(crawlState, 'targetValue', 0, 1);
-		// 	const targetValue = targetValueCapture ? targetValueCapture.value : 'default';
-		// 	const target = mostRecentCapture(crawlState, 'target');
-		// 	const entry = {
-		// 		node: 'add_dialog_settings',
-		// 		target: target.value,
-		// 		targetValue,
-		// 		settings,
-		// 		tokenPos: startPos,
-		// 	};
-		// 	file.nodes.push(entry);
-		// },
 	},
 	enum_alignment: {
 		patterns: `'TOP_RIGHT' | 'TOP_LEFT' | 'TR' | 'TL'
@@ -221,21 +197,86 @@ const dictionary = {
 				node: 'dialog_parameter',
 				property: property ? property.value : '',
 				value: value ? value.value : null,
-				startPos: crawlState.startPos,
+				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 				malformed,
 			});
 		},
-		// onMatch: (file, crawlState, startPos) => {
-		// 	const valueCapture = mostRecentCapture(crawlState, 'settingsValue');
-		// 	const propertyCapture = mostRecentCapture(crawlState, 'settingsProperty');
-		// 	file.nodes.push({
-		// 		node: 'dialog_parameter',
-		// 		label: propertyCapture.value,
-		// 		value: valueCapture.value,
-		// 		tokenPos: startPos,
-		// 	});
-		// },
+	},
+	serial_dialog_definition: {
+		patterns: [{
+			start: `'serial_dialog'`,
+			body: `$string:serialDialogName '{' @serial_dialog?`,
+			end: `'}'`
+		}],
+		onStart: (file, crawlState) => {
+			crawlState.staged.serialDialogOptions = [];
+			crawlState.staged.serialDialogMessages = [];
+			crawlState.staged.serialDialogParameters = [];
+		},
+		onEnd: (file, crawlState) => {
+			const options = crawlState.staged.serialDialogOptions;
+			const messages = crawlState.staged.serialDialogMessages;
+			const parameters = crawlState.staged.serialDialogParameters;
+			const name = mostRecentCapture(crawlState, 'serialDialogName');
+			crawlState.staged.serialDialogName = name.value;
+			file.nodes.push({
+				node: 'serial_dialog_definition',
+				name: name.value,
+				options,
+				messages,
+				parameters,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.serialDialogOptions;
+			delete crawlState.staged.serialDialogMessages;
+			delete crawlState.staged.serialDialogParameters;
+		},
+	},
+	serial_dialog: {
+		patterns: `@serial_dialog_parameter*
+			$string:serialDialogMessage+
+			@serial_dialog_option*`,
+		onEnd: (file, crawlState) => {
+			const messages = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
+			crawlState.staged.serialDialogMessages.push({
+				node: 'serial_dialog',
+				messages,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	serial_dialog_option: {
+		patterns: [
+			{
+				start: `'#':optionType`,
+				body: `$quoted_string:label '=' $string:script`
+			},
+			{
+				start: `'_':optionType`,
+				body: `$quoted_string:label '=' $string:script`
+			},
+		],
+		onEnd: (file, crawlState) => {
+			const script = mostRecentCapture(crawlState, 'script');
+			const label = mostRecentCapture(crawlState, 'label');
+			const optionType = mostRecentCapture(crawlState, 'optionType');
+			const malformed = !label || !optionType;
+			let type = '';
+			if (optionType.value === '#') type = 'options';
+			if (optionType.value === '_') type = 'text_options';
+			crawlState.staged.serialDialogOptions.push({
+				node: 'serial_dialog_option',
+				type,
+				label: label?.value || '',
+				script: script?.value || '',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+				malformed,
+			});
+		},
 	},
 	// dialog_definition: {
 	// 	patterns: [
@@ -305,69 +346,6 @@ const dictionary = {
 	// 		const labelNameCapture = mostRecentCapture(crawlState, 'label');
 	// 		file.nodes.push({
 	// 			node: 'dialog_option',
-	// 			label: labelNameCapture.value,
-	// 			script: scriptNameCapture.value,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// serial_dialog_definition: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'serial_dialog'`,
-	// 			body: `$string:serialDialogName '{' @serial_dialog?`,
-	// 			end: `'}'`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const serialDialog = mostRecentNode(file, 'serial_dialog', 0, 1);
-	// 		const serialDialogNameCapture = mostRecentCapture(crawlState, 'serialDialogName');
-	// 		file.nodes.push({
-	// 			node: 'serial_dialog_definition',
-	// 			dialogName: serialDialogNameCapture.value,
-	// 			serialDialog,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// serial_dialog: {
-	// 	patterns: `@serial_dialog_parameter*
-	// 		$string:serialDialogMessage+
-	// 		@serial_dialog_option*`,
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const optionNodes = mostRecentNodes(file, 'serial_dialog_option', 0, Infinity);
-	// 		const messageCaptures = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
-	// 		const parameterNodes = mostRecentNodes(file, 'serial_dialog_parameter', 0, Infinity);
-	// 		file.nodes.push({
-	// 			node: 'serial_dialog',
-	// 			parameters: parameterNodes,
-	// 			messages: messageCaptures,
-	// 			options: optionNodes,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// serial_dialog_option: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'#':optionType`,
-	// 			body: `$quoted_string:label '=' $string:script`
-	// 		},
-	// 		{
-	// 			start: `'_':optionType`,
-	// 			body: `$quoted_string:label '=' $string:script`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const scriptNameCapture = mostRecentCapture(crawlState, 'script');
-	// 		const labelNameCapture = mostRecentCapture(crawlState, 'label');
-	// 		const optionTypeCapture = mostRecentCapture(crawlState, 'optionType');
-	// 		let type = '';
-	// 		if (optionTypeCapture.value === '#') type = 'options';
-	// 		if (optionTypeCapture.value === '_') type = 'text_options';
-	// 		file.nodes.push({
-	// 			node: 'serial_dialog_option',
-	// 			type,
 	// 			label: labelNameCapture.value,
 	// 			script: scriptNameCapture.value,
 	// 			tokenPos: startPos,
@@ -543,18 +521,6 @@ Object.keys(dictionary).forEach(entryName=>{
 	if (entry.onEnd) onEnd[entryName] = entry.onEnd;
 });
 
-const collectUntilNode = (file, nodeName) => {
-	// skip the irrelevant ones by setting them aside for a second
-	const extracted = [];
-	while (
-		file.nodes[file.nodes.length-1]
-		&& file.nodes[file.nodes.length-1].node !== nodeName
-	) {
-		extracted.unshift(file.nodes.pop());
-	}
-	return extracted;
-};
-
 const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	// skip the irrelevant ones by setting them aside for a second
 	const bot = [];
@@ -602,26 +568,6 @@ const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 };
 const mostRecentCapture = (crawlState, captureLabel) => {
 	const extracted = mostRecentCaptures(crawlState, captureLabel, 1);
-	return extracted ? extracted[0] : false;
-};
-
-const mostRecentNodes = (file, nodeName, min = 1, max = min) => {
-	const extracted = [];
-	for (let i = min || 1; i <= max; i++) {
-		const latest = file.nodes[file.nodes.length-1];
-		if (!latest) break;
-		if (latest.node !== nodeName) break;
-		extracted.unshift(file.nodes.pop());
-	}
-	if (extracted.length < min) {
-		const message = `Not enough ${nodeName} nodes;`
-			+`found ${extracted.length}, needed at least ${min}`;
-		throw new Error (message);
-	}
-	return extracted;
-};
-const mostRecentNode = (file, nodeName) => {
-	const extracted = mostRecentNodes(file, nodeName, 1);
 	return extracted ? extracted[0] : false;
 };
 

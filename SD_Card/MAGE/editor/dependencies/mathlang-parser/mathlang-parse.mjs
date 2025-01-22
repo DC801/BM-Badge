@@ -66,7 +66,7 @@ const decayTo = {
 		return null;
 	},
 };
-const verbose = true;
+const verbose = false;
 const runTests = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
@@ -203,6 +203,7 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 		twigPos -=1 ;
 		twig = branch[twigPos];
 		repeating = true;
+		crawlState.stack[0].startPos = crawlState.tokenPos;
 	};
 	const advanceToken = () => {
 		crawlState.tokenPos += 1;
@@ -527,6 +528,12 @@ const testInput = ``
 +`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
 +`\nadd dialog settings {
 	default { alignment BL }
+}`
++`\nserial_dialog testName {
+	"Message!"
+	# "Why not?" = scriptWhyNot
+	# "Why though?" = actuallyWhy
+	_ "You're mixing option types now." = errorScript
 }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
