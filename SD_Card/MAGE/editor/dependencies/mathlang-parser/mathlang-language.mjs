@@ -388,7 +388,7 @@ const dictionary = {
 				node: 'action',
 				action: 'LABEL',
 				label: 'auto return',
-				startPos: crawlState.stack[0].startPos,
+				startPos: crawlState.tokenPos-1,
 				tokenPos: crawlState.tokenPos,
 			});
 			// back to our regular programming
@@ -403,54 +403,108 @@ const dictionary = {
 		},
 	},
 	script_body_item: {
-		patterns: `@action_return
-			| @action_label
-			| @action_load_map`,
+		patterns: [],
 	},
-	action_return: {
-		patterns: [{ start: `'return'`, end: `';'` }],
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
-				node: 'action',
-				action: 'GOTO_ACTION_LABEL',
-				label: 'auto return',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
-		},
-	},
-	action_label: {
-		patterns: `$bareword:labelName ':'`, // must wait until ':'; no split into body!
-		onEnd: (file, crawlState) => {
-			const label = semiRecentCapture(crawlState, 'labelName')?.value || '';
-			crawlState.staged.scriptBodyItems.push({
-				node: 'action',
-				action: 'LABEL',
-				label,
-				malformed: !label,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
-		},
-	},
-	action_load_map: {
-		patterns: [{
-			start: `'load' 'map'`,
-			body: `$string:mapName`,
-			end: `';'`
-		}],
-		onEnd: (file, crawlState) => {
-			const map = semiRecentCapture(crawlState, 'mapName')?.value || '';
-			crawlState.staged.scriptBodyItems.push({
-				node: 'action',
-				action: 'LOAD_MAP',
-				map,
-				malformed: !map,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
-		},
-	},
+	// action_return: {
+	// 	patterns: [{ start: `'return'`, end: `';'` }],
+	// 	onEnd: (file, crawlState) => {
+	// 		crawlState.staged.scriptBodyItems.push({
+	// 			node: 'action',
+	// 			action: 'GOTO_ACTION_LABEL',
+	// 			label: 'auto return',
+	// 			startPos: crawlState.stack[0].startPos,
+	// 			tokenPos: crawlState.tokenPos,
+	// 		});
+	// 	},
+	// },
+	// action_label: {
+	// 	patterns: `$bareword:labelName ':'`, // must wait until ':'; no split into body!
+	// 	onEnd: (file, crawlState) => {
+	// 		const label = semiRecentCapture(crawlState, 'labelName')?.value || '';
+	// 		crawlState.staged.scriptBodyItems.push({
+	// 			node: 'action',
+	// 			action: 'LABEL',
+	// 			label,
+	// 			malformed: !label,
+	// 			startPos: crawlState.stack[0].startPos,
+	// 			tokenPos: crawlState.tokenPos,
+	// 		});
+	// 	},
+	// },
+	// action_load_map: {
+	// 	patterns: [{
+	// 		start: `'load' 'map'`,
+	// 		body: `$string:map`,
+	// 		end: `';'`
+	// 	}],
+	// 	onEnd: (file, crawlState) => {
+	// 		const map = semiRecentCapture(crawlState, 'map')?.value || '';
+	// 		crawlState.staged.scriptBodyItems.push({
+	// 			node: 'action',
+	// 			action: 'LOAD_MAP',
+	// 			map,
+	// 			malformed: !map,
+	// 			startPos: crawlState.stack[0].startPos,
+	// 			tokenPos: crawlState.tokenPos,
+	// 		});
+	// 	},
+	// },
+	// action_goto_index: {
+	// 	patterns: [{
+	// 		start: `'goto' 'index'`,
+	// 		body: `$number:action_index`,
+	// 		end: `';'`
+	// 	}],
+	// 	onEnd: (file, crawlState) => {
+	// 		const action_index = semiRecentCapture(crawlState, 'action_index')?.value || -1;
+	// 		crawlState.staged.scriptBodyItems.push({
+	// 			node: 'action',
+	// 			action: 'GOTO_ACTION_INDEX',
+	// 			action_index,
+	// 			malformed: !action_index,
+	// 			startPos: crawlState.stack[0].startPos,
+	// 			tokenPos: crawlState.tokenPos,
+	// 		});
+	// 	},
+	// },
+	// action_goto_label: {
+	// 	patterns: [{
+	// 		start: `'goto' 'label'`,
+	// 		body: `$bareword:label`,
+	// 		end: `';'`
+	// 	}],
+	// 	onEnd: (file, crawlState) => {
+	// 		const label = semiRecentCapture(crawlState, 'label')?.value || '';
+	// 		crawlState.staged.scriptBodyItems.push({
+	// 			node: 'action',
+	// 			action: 'GOTO_ACTION_LABEL',
+	// 			label,
+	// 			malformed: !label,
+	// 			startPos: crawlState.stack[0].startPos,
+	// 			tokenPos: crawlState.tokenPos,
+	// 		});
+	// 	},
+	// },
+	// action_goto_script: {
+	// 	patterns: [{
+	// 		body: `'goto' $string:script`,
+	// 		end: `';'`
+	// 	}],
+	// 	onEnd: (file, crawlState) => {
+	// 		const script = semiRecentCapture(crawlState, 'script')?.value || '';
+	// 		crawlState.staged.scriptBodyItems.push({
+	// 			node: 'action',
+	// 			action: 'RUN_SCRIPT',
+	// 			script,
+	// 			malformed: !script,
+	// 			startPos: crawlState.stack[0].startPos,
+	// 			tokenPos: crawlState.tokenPos,
+	// 		});
+	// 	},
+	// },
+
+
+
 	// show_dialog_block: {
 	// 	patterns: [
 	// 		{
@@ -539,6 +593,86 @@ const dictionary = {
 	// 		| 'current_animation' | 'current_frame'`,
 	// },
 };
+
+const exampleActionResult = {
+	patterns: [{
+		body: `'goto' $string:script`,
+		end: `';'`
+	}],
+	onEnd: (file, crawlState) => {
+		const script = semiRecentCapture(crawlState, 'script')?.value || '';
+		crawlState.staged.scriptBodyItems.push({
+			node: 'action',
+			action: 'RUN_SCRIPT',
+			script,
+			malformed: !script,
+			startPos: crawlState.stack[0].startPos,
+			tokenPos: crawlState.tokenPos,
+		});
+	},
+};
+const actionDictionary = {
+	action_return: {
+		action: 'GOTO_ACTION_LABEL',
+		captures: [],
+		values: { label: 'auto return' },
+		patterns: [{ start: `'return'`, end: `';'` }],
+	},
+	action_label: {
+		action: 'LABEL',
+		captures: [ 'label' ],
+		patterns: `$bareword:labelName ':'`,
+	},
+	action_load_map: {
+		action: 'LOAD_MAP',
+		captures: [ 'map' ],
+		patterns: [{ start: `'load' 'map'`, body: `$string:map`, end: `';'` }],
+	},
+	action_goto_index: {
+		action: 'GOTO_ACTION_INDEX',
+		captures: [ 'action_index' ],
+		patterns: [{ start: `'goto' 'index'`, body: `$number:action_index`, end: `';'` }],
+	},
+	action_goto_label: {
+		action: 'GOTO_ACTION_LABEL',
+		captures: [ 'label' ],
+		patterns: [{ start: `'goto' 'label'`, body: `$bareword:label`, end: `';'`}],
+	},
+	action_goto_script: {
+		action: 'RUN_SCRIPT',
+		captures: [ 'script' ],
+		patterns: [{ body: `'goto' $string:script`, end: `';'` }],
+	},
+}
+
+const makeTreeEntry = (slug, data) => {
+	return {
+		patterns: data.patterns,
+		onEnd: (file, crawlState) => {
+			const insert = data.values
+				? JSON.parse(JSON.stringify(data.values))
+				: {};
+			data.captures.forEach(captureName=>{
+				insert[captureName] = mostRecentCapture(crawlState, captureName)?.value || null;
+			})
+			insert.node = 'action',
+			insert.action = data.action; // e.g. 'RUN_SCRIPT'
+			insert.startPos = crawlState.stack[0].startPos;
+			insert.tokenPos = crawlState.tokenPos;
+			insert.malformed = data.captures.reduce((acc, curr)=>{
+				return acc || insert[curr] === null;
+			}, false);
+			crawlState.staged.scriptBodyItems.push(insert);
+		},
+	}
+};
+Object.keys(actionDictionary).forEach(slug=>{
+	const data = actionDictionary[slug];
+	const insert = makeTreeEntry(slug, data);
+	dictionary[slug] = insert;
+	dictionary.script_body_item.patterns.push(`@${slug}`);
+});
+dictionary.script_body_item.patterns = dictionary.script_body_item.patterns.join(' | ');
 
 const onStart = {};
 const onEnd = {};

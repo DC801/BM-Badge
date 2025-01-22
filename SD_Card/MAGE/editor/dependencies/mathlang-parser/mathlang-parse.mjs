@@ -545,9 +545,11 @@ const testInput = ``
 // 	> "Is that what it sounds like?" = soundsSCript
 // }`
 +`script testScriptName {
-	start:
-	load map mainMenu;
+	goto label labelname;
 	return;
+	goto index 45;
+	goto scriptName;
+	load map mainMenu;
 }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');

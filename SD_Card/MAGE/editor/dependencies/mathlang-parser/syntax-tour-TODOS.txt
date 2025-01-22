@@ -12,9 +12,6 @@ _ {
 	else if (/* @condition */) {/* @script_actions */}
 	else {/* @script_actions */}
 	
-	goto scriptName; //RUN_SCRIPT
-	goto index $number_literal; //GOTO_ACTION_INDEX
-	goto label labelName; //GOTO_ACTION_INDEX
 	// non-purple:
 	delete command $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND
 	delete command $string_literal + $argName; //UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
