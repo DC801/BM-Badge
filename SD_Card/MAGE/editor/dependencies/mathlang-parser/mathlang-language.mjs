@@ -18,11 +18,6 @@
 // + = 1+; must match at least once, but can be multiple
 // * = 0+; can be zero matches, or can be an unlimited number of matches
 
-
-// `captures` and `unusedLabels` use shift/unshift! Everything else uses pop/push!
-// (though `nodes` doesn't, so if I'm having helper functions do that stuff anyway, should I change it back?)
-
-// for error recovery... ooh, what if each pattern also had an error recovery function??
 const dictionary = {
 	document: {
 		patterns: [
@@ -537,7 +532,6 @@ const dictionary = {
 	// },
 };
 
-
 const onStart = {};
 const onEnd = {};
 const patterns = {};
@@ -863,5 +857,12 @@ const conditionsLHS = [
 
 // console.log('break');
 
-const language = { tree, onStart, onEnd, keywords: keywordsFound };
+const terminators = {};
+Object.entries(tree).map(([patternName, value])=>{
+	terminators[patternName] = value.map(branch=>{
+		return branch.find(branch=>branch.terminator)
+	})
+})
+
+const language = { tree, onStart, onEnd, terminators, keywords: keywordsFound };
 export default language;
