@@ -66,7 +66,7 @@ const decayTo = {
 		return null;
 	},
 };
-const verbose = true;
+const verbose = false;
 const runTests = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
@@ -537,12 +537,17 @@ const testInput = ``
 // 	# "Why though?" = actuallyWhy
 // 	_ "You're mixing option types now." = errorScript
 // }`
-+`\ndialog bobconversation {
-	Bob alignment TR "Hello!" "I'm Bob!"
-	PLAYER "...What?"
-	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
-	> "Dare I ask?" = ohNoScript
-	> "Is that what it sounds like?" = soundsSCript
+// +`\ndialog bobconversation {
+// 	Bob alignment TR "Hello!" "I'm Bob!"
+// 	PLAYER "...What?"
+// 	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
+// 	> "Dare I ask?" = ohNoScript
+// 	> "Is that what it sounds like?" = soundsSCript
+// }`
++`script testScriptName {
+	start:
+	load map mainMenu;
+	return;
 }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');

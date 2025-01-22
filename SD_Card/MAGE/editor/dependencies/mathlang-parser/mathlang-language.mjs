@@ -30,6 +30,7 @@ const dictionary = {
 			+ ` | @add_dialog_settings`
 			+ ` | @serial_dialog_definition`
 			+ ` | @dialog_definition`
+			+ ` | @script_definition`
 	},
 	include_macro: {
 		patterns: [{
@@ -368,29 +369,88 @@ const dictionary = {
 			});
 		},
 	},
-	// script_name: {
-	// 	patterns: `$string:scriptName`,
-	// 	onEnd: (file, crawlState) => {
-	// 	},
-	// },
-	// script_definition: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'script'? @scriptName`,
-	// 			body: `'{' @script_body_item*`,
-	// 			end: `'}'`
-	// 		},
-	// 	],
-	// 	onMatch: (file, _crawlState, startPos) => {
-	// 		const body = collectUntilNode(file, 'script_name');
-	// 		file.nodes.push({
-	// 			node: 'script',
-	// 			scriptName: mostRecentNode(file, 'script_name'),
-	// 			body,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
+	script_definition: {
+		patterns: [
+			{
+				start: `'script'? $string:scriptName`,
+				body: `'{' @script_body_item*`,
+				end: `'}'`
+			},
+		],
+		onStart: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems = [];
+		},
+		onEnd: (file, crawlState) => {
+			const name = mostRecentCapture(crawlState, 'scriptName').value;
+			const scriptBodyItems = crawlState.staged.scriptBodyItems;
+			// maybe move this later? let the script handler do this?
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'LABEL',
+				label: 'auto return',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			// back to our regular programming
+			file.nodes.push({
+				node: 'script_definition',
+				name,
+				body: scriptBodyItems,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.scriptBodyItems;
+		},
+	},
+	script_body_item: {
+		patterns: `@action_return
+			| @action_label
+			| @action_load_map`,
+	},
+	action_return: {
+		patterns: [{ start: `'return'`, end: `';'` }],
+		onEnd: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'GOTO_ACTION_LABEL',
+				label: 'auto return',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	action_label: {
+		patterns: `$bareword:labelName ':'`, // must wait until ':'; no split into body!
+		onEnd: (file, crawlState) => {
+			const label = semiRecentCapture(crawlState, 'labelName')?.value || '';
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'LABEL',
+				label,
+				malformed: !label,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	action_load_map: {
+		patterns: [{
+			start: `'load' 'map'`,
+			body: `$string:mapName`,
+			end: `';'`
+		}],
+		onEnd: (file, crawlState) => {
+			const map = semiRecentCapture(crawlState, 'mapName')?.value || '';
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'LOAD_MAP',
+				map,
+				malformed: !map,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
 	// show_dialog_block: {
 	// 	patterns: [
 	// 		{
@@ -412,47 +472,6 @@ const dictionary = {
 	// 			dialogName: dialogNameCapture.value,
 	// 			dialogs,
 	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// script_body_item: {
-	// 	patterns: `@action_return | @action_label | @action_load_map`,
-	// },
-	// action_return: {
-	// 	patterns: [
-	// 		{ start: `'return'`, end: `';'` },
-	// 	],
-	// 	onMatch: (file, _crawlState, startPos) => {
-	// 		file.nodes.push({
-	// 			node: 'action', tokenPos: startPos,
-	// 			action: 'GOTO_ACTION_LABEL',
-	// 			label: 'auto return',
-	// 		});
-	// 	},
-	// },
-	// action_label: {
-	// 	patterns: `$bareword:labelName ':'`,
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		file.nodes.push({
-	// 			node: 'action', tokenPos: startPos,
-	// 			action: 'LABEL',
-	// 			value: semiRecentCapture(crawlState, 'labelName').value,
-	// 		});
-	// 	},
-	// },
-	// action_load_map: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'load' 'map'`,
-	// 			body: `$string:mapName`,
-	// 			end: `';'`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		file.nodes.push({
-	// 			node: 'action', tokenPos: startPos,
-	// 			action: 'LOAD_MAP',
-	// 			map: semiRecentCapture(crawlState, 'mapName').value,
 	// 		});
 	// 	},
 	// },
@@ -552,7 +571,7 @@ const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	if (extracted.length < min) {
 		const message = `Not enough captures labeled ${captureLabel};`
 			+`found ${extracted.length}, needed at least ${min}`;
-		throw new Error (message);
+		// throw new Error (message);
 	}
 	// put the skipped ones back
 	crawlState.captures = crawlState.captures.concat(bot);
