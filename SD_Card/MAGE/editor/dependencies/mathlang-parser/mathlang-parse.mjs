@@ -24,6 +24,50 @@ const printNode = (origNode) => {
 	}
 };
 
+const indentSpace = '  ';
+const conditionPrint = {
+	operand: (node, indent) => {
+		if (node.node === 'boolean_literal') return `${node.label}:${node.value}`;
+		const lines = [
+			`${node.node} -->`,
+			conditionPrint[node.node](node, indentSpace),
+		];
+		return lines.join('\n')
+			.split('\n').map(s=>indent+s).join('\n');
+	},
+	boolean_literal: (node, indent) => `${node.label}:${node.value}`,
+	unary_expression: (node, indent) => {
+		const lines = [
+			'op = ' + node.operator.value,
+			'operand = ' + conditionPrint.operand(node.operand, indentSpace).trim(),
+		]
+		return lines.join('\n')
+			.split('\n').map(s=>indent+s).join('\n');
+	},
+	grouping: (node, indent) => {
+		const inner = node.group;
+		const header = `${inner.node} -->\n`;
+		const fn = conditionPrint[inner.node];
+		return header + fn(inner, indent);
+	},
+	binary_expression: (node, indent) => {
+		const lines = [
+			'op = ' + node.operator.value,
+			'lhs = ' + conditionPrint.operand(node.lhs, indentSpace).trim(),
+			'rhs = ' + conditionPrint.operand(node.rhs, indentSpace).trim(),
+		]
+		return lines.join('\n')
+			.split('\n').map(s=>indent+s).join('\n');
+	}
+}
+const printCondition = (node) => {
+	const header = `------ ${node.node} ------\n`;
+	const message = header
+		+ conditionPrint[node.node](node, '');
+	console.log(message);
+	return header;
+}
+
 const printNodeGeneric = (node) => {
 	const header = `---- ${node.node} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
 	delete node.node;
@@ -46,7 +90,7 @@ const printNodeGeneric = (node) => {
 
 const printAction = (node) => {
 	const space = '   ';
-	const header = `${space}---- ${node.action} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
+	const header = `${space}---- ${node.node} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
 	const workingNode = JSON.parse(JSON.stringify(node));
 	delete workingNode.node;
 	delete workingNode.startPos;
@@ -371,7 +415,7 @@ const tryBranches = (file, origCrawlState) => {
 	}
 	if (triedBranch) {
 		crawlState = triedBranch.crawlState;
-		popStack(crawlState);
+		// popStack(crawlState); // ??
 		if (onEnd[branchName]) {
 			onEnd[branchName](file, crawlState);
 		}
@@ -610,17 +654,17 @@ const testInput = ``
 // 	close dialog;
 // 	unpause map on_tick;
 // }`
-+`\ntestScript2 {
-	show dialog {
-		name "Guide"
-		alignment BR
-		"WELCOME TO"
-		"MAIN MENU"
-		> "Load" = loadGame
-		> "New" = newGame
-		> "Quit" = quitGame
-	};
-}`
+// +`\ntestScript2 {
+// 	show dialog {
+// 		name "Guide"
+// 		alignment BR
+// 		"WELCOME TO"
+// 		"MAIN MENU"
+// 		> "Load" = loadGame
+// 		> "New" = newGame
+// 		> "Quit" = quitGame
+// 	};
+// }`
 // +`\ntestScript {
 // 	show serial_dialog YesReferenceNoDefinition;
 // 	show serial_dialog {
@@ -634,9 +678,8 @@ const testInput = ``
 // 		"named 'definitionAndReference'"
 // 	};
 // }`
-+``;
-const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 
+const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 testParsedFile.nodes.forEach(node=>{
 	console.log(printNode(node));
 });
@@ -644,15 +687,21 @@ testParsedFile.errors.forEach(error=>{
 	console.error(error.printable);
 });
 
-// console.log('break');
 
-/* TODOS */
+// ========================== CONDITION EXPRESSION TESTS
 
-// Don't use JSON clone; make a function to move the values over instead
-
-/* should also expect 'wrap':
-╓ "testMGSFile.mgs" line 8:38: add_serial_dialog_settings error
-║ add serial_dialog settings { wrap 70 wrappp }
-╙~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-Expected: '}'
-*/
+// !(a || b) // Oh, I can have && now!
+// a=true, b=true = false
+// a=false, b=true = false
+// a=true, b=false = false
+// a=false, b=false = true
+// (a&&b) == !(a||b)
+const testConditionScript = `_ {
+	if (
+		(falseFlag || trueFlag || unknownFlag)
+		&& !debug_mode
+	) {}
+}`
+const testConditionParseFile = parseFile(lex(testConditionScript), tree, 'testMGSFile.mgs')
+const testConditions = testConditionParseFile.nodes[0].body[1].conditions[0];
+console.log(printCondition(testConditions));

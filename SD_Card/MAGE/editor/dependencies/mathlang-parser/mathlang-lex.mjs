@@ -45,7 +45,7 @@ const isBarewordInitial = (char) => isLetter(char) || char === '_'
 const isBarewordable = (char) => isBarewordInitial(char) || isDigit(char) || char === '-'
 
 const OPERATORS_SINGLE = new Set('{}[]()<>+-=*/?!%:;,#'.split(''));
-const OPERATORS_LONG = new Set([ "!=", "==", ">=", "<=", "||", "->" ]);
+const OPERATORS_LONG = new Set([ "!=", "==", ">=", "<=", "||", "&&", "->" ]);
 const IGNORE_WHITESPACE = new Set([' ', '\t'])
 
 const NUMBER_SUFFIXES = {

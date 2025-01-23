@@ -506,54 +506,6 @@ const dictionary = {
 			});
 		},
 	},
-	script_definition: {
-		patterns: [
-			{
-				start: `'script'? $string:scriptName '{'`,
-				body: `@script_body_item*`,
-				end: `'}'`
-			},
-		],
-		onStart: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems = [];
-		},
-		onEnd: (file, crawlState) => {
-			const name = mostRecentCapture(crawlState, 'scriptName').value;
-			const scriptBodyItems = crawlState.staged.scriptBodyItems;
-			// // maybe move this later? let the script handler do this?
-			// crawlState.staged.scriptBodyItems.push({
-			// 	node: 'action',
-			// 	action: 'LABEL',
-			// 	label: 'auto return',
-			// 	startPos: crawlState.tokenPos-1,
-			// 	tokenPos: crawlState.tokenPos,
-			// });
-			// // it's confusing me now so I'm hiding this
-			// back to our regular programming
-
-			// for my own visual QOL
-			scriptBodyItems.forEach(item=>{
-				delete item.node;
-				if (!item.malformed) {
-					delete item.malformed;
-				}
-			})
-			file.nodes.push({
-				node: 'script_definition',
-				name,
-				body: scriptBodyItems,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
-			delete crawlState.staged.scriptBodyItems;
-		},
-	},
-	script_body_item: {
-		patterns: [
-			`@show_dialog_block`,
-			`@show_serial_dialog_block`,
-		], // also auto populated
-	},
 	show_dialog_block: {
 		patterns: [{
 			start: `'show' 'dialog' $string:dialogName?`,
@@ -681,6 +633,212 @@ const dictionary = {
 				entity: entity || '',
 			}
 		},
+	},
+	script_definition: {
+		patterns: [
+			{
+				start: `'script'? $string:scriptName '{'`,
+				body: `@script_body_item*`,
+				end: `'}'`
+			},
+		],
+		onStart: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems = [];
+		},
+		onEnd: (file, crawlState) => {
+			const name = mostRecentCapture(crawlState, 'scriptName').value;
+			const scriptBodyItems = crawlState.staged.scriptBodyItems;
+			// // maybe move this later? let the script handler do this?
+			// crawlState.staged.scriptBodyItems.push({
+			// 	node: 'action', action: 'LABEL', label: 'auto return',
+			// 	startPos: crawlState.tokenPos-1, tokenPos: crawlState.tokenPos,
+			// });
+			// // it's confusing me now so I'm hiding this
+			// for my own visual QOL
+			scriptBodyItems.forEach(item=>{
+				// delete item.node;
+				if (!item.malformed) {
+					delete item.malformed;
+				}
+			})
+			file.nodes.push({
+				node: 'script_definition',
+				name,
+				body: scriptBodyItems,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.scriptBodyItems;
+		},
+	},
+	// if_plain: {
+	// 	patterns: [{ start: `'if' @boolean_expression`, body: `'then' 'goto' @then_goto`, end: `';'` }],
+	// 	onEnd: [{
+	// 		//todo
+	// 	}],
+	// },
+	if_block: {
+		patterns: [{ start: `'if' '('`, body: `@boolean_expression ')' '{' @script_body_item*`, end: `'}'`}],
+		onStart: (file, crawlState) => {
+			crawlState.staged.conditions = [];
+			crawlState.staged.booleanUnits = [];
+			crawlState.staged.lhs = [];
+			crawlState.staged.scriptBodyItems.push({
+				node: 'zigzag_macro',
+				action: 'if_block_start',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+		onEnd: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'zigzag_macro',
+				action: 'if_block_end',
+				conditions: crawlState.staged.conditions,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.conditions;
+			delete crawlState.staged.booleanUnits;
+			delete crawlState.staged.lhs;
+		}
+	},
+	else_if_block: {
+		patterns: [{ start: `'else' 'if'`, body: `'(' @boolean_expression ')' '{' @script_body_item*`, end: `'}'`}],
+		onStart: (file, crawlState) => {
+			crawlState.staged.conditions = [];
+			crawlState.staged.booleanUnits = [];
+			crawlState.staged.lhs = [];
+			crawlState.staged.scriptBodyItems.push({
+				node: 'else_if_block_start',
+				action: 'zigzag_macro',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+		onEnd: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'else_if_block_end',
+				action: 'zigzag_macro',
+				conditions: crawlState.staged.conditions,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.conditions;
+			delete crawlState.staged.booleanUnits;
+			delete crawlState.staged.lhs;
+		}
+	},
+	else_block: {
+		patterns: [{ start: `'else' '{'`, body: `@script_body_item*`, end: `'}'`}],
+		onStart: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'zigzag_macro',
+				action: 'else_block_start',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+		onEnd: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'zigzag_macro',
+				action: 'else_block_end',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		}
+	},
+	boolean_expression: {
+		patterns: [
+			{start: `@boolean_unit`, body: `@boolean_chain*`},
+		],
+		// onStart: (file, crawlState) => {},
+		onEnd: (file, crawlState) => {
+			const node = crawlState.staged.booleanUnits.pop();
+			crawlState.staged.conditions.push(node);
+		},
+	},
+	boolean_unit: {
+		patterns: `@boolean_grouping | @boolean_unary | @boolean_literal`,
+	},
+	boolean_grouping: {
+		patterns: [{ start: `'('`, body: `@boolean_expression`, end: `')'`}],
+		onStart: (file, crawlState) => {
+			crawlState.staged.lhs.push({
+				node: 'groupStart',
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+		onEnd: (file, crawlState) => {
+			const exp = crawlState.staged.conditions.pop();
+			crawlState.staged.lhs.pop(); // cleanup placeholder
+			crawlState.staged.booleanUnits.push({
+				node: 'grouping',
+				group: exp,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	boolean_unary: {
+		patterns: [{ start: `'!':operator`, body: `@boolean_unit`}],
+		onEnd: (file, crawlState) => {
+			const node = crawlState.staged.booleanUnits.pop();
+			crawlState.staged.booleanUnits.push({
+				node: 'unary_expression',
+				operand: node,
+				operator: mostRecentCapture(crawlState, 'operator'),
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	boolean_operator: {
+		patterns: `$operator:operator`,
+		onEnd: (file, crawlState) => {
+			crawlState.staged.lhs.push(crawlState.staged.booleanUnits.pop());
+		},
+
+	},
+	boolean_chain: {
+		patterns: `@boolean_operator @boolean_unit`,
+		onEnd: (file, crawlState) => {
+			const operator = mostRecentCapture(crawlState, 'operator');
+			const node = crawlState.staged.booleanUnits.pop();
+			const lhs = crawlState.staged.lhs.pop();
+			crawlState.staged.booleanUnits.push({
+				node: 'binary_expression',
+				operator,
+				rhs: node,
+				lhs,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	boolean_literal: {
+		patterns: `'debug_mode':engineBool | $boolean:booleanValue | $string:flagName`,
+		onEnd: (file, crawlState) => {
+			let type = getMostRecentCaptureAnyName(crawlState);
+			crawlState.staged.booleanUnits.push({
+				node: 'boolean_literal',
+				label: type.label,
+				value: type.value,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
+	script_body_item: {
+		patterns: [
+			`@show_dialog_block`,
+			`@show_serial_dialog_block`,
+			`@if_block`,
+			`@else_if_block`,
+			`@else_block`,
+			// `@if_plain`,
+		], // also auto populated
 	},
 };
 
@@ -921,6 +1079,12 @@ const semiRecentCapture = (crawlState, captureLabel) => {
 	const extracted = semiRecentCaptures(crawlState, captureLabel, 1);
 	return extracted ? extracted[0] : null;
 };
+const getMostRecentCaptureAnyName = (crawlState) => {
+	return crawlState.captures.pop();
+};
+const readMostRecentCapture = (crawlState) => {
+	return crawlState.captures[crawlState.captures.length-1];
+};
 const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
@@ -1020,8 +1184,9 @@ Object.entries(patterns).forEach(([patternName, origPatterns])=>{
 			const pattern = altPattern[subType];
 			if (pattern) {
 				const splits = pattern.trim()
+					.replace('||','**********')
 					.split('|')
-					.map(str=>str.trim());
+					.map(str=>str.replace('**********', '||').trim());
 				splits.forEach((subpattern, i, arr) => {
 					const words = subpattern.split(/[\t\n\s]+/g).map(item=>getWordReport(item,patternName));
 					if (subType === 'start') {
