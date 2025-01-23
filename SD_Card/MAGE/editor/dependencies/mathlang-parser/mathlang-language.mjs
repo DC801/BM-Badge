@@ -218,32 +218,84 @@ const dictionary = {
 			});
 		},
 	},
-	serial_dialog_definition: {
-		patterns: [{
-			start: `'serial_dialog'`,
-			body: `$string:serialDialogName '{' @serial_dialog?`,
-			end: `'}'`
-		}],
+	serial_dialog_literal: {
+		patterns: [{ start: `'{'`, body: `@serial_dialog?`, end: `'}'` }],
+		// can have an open brace for a start because nothing
+		// will launch into this other than serial_dialog stuff
 		onStart: (file, crawlState) => {
 			crawlState.staged.serialDialogOptions = [];
 			crawlState.staged.serialDialogMessages = [];
 			crawlState.staged.serialDialogParameters = [];
+			if (!crawlState.staged.serialDialogName) {
+				crawlState.staged.serialDialogName = makeAutoIdentifierName(
+					file.plaintext,
+					file.tokens[crawlState.stack[0].startPos].pos,
+					file.fileName,
+				);
+			}
 		},
 		onEnd: (file, crawlState) => {
-			const name = mostRecentCapture(crawlState, 'serialDialogName');
-			file.nodes.push({
-				node: 'serial_dialog_definition',
-				name: name?.value || '',
+			const debug = {
 				parameters: crawlState.staged.serialDialogParameters,
 				messages: crawlState.staged.serialDialogMessages,
 				options: crawlState.staged.serialDialogOptions,
+			};
+			const node = {
+				node: 'serial_dialog_definition',
+				name: crawlState.staged.serialDialogName,
+				debug,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
-			});
+			};
+			node.messages = debug.messages
+				.map(inner=>inner.messages.map(v=>v.value))[0];
+			if (debug.parameters.length > 0) {
+				node.parameters = debug.parameters
+					.map(inner=>{
+						if (inner.malformed) node.malformed = true;
+						return {
+							property: inner.property,
+							value: inner.value,
+						};
+					})
+			}
+			let optionType = debug.options[0]?.type;
+			if (optionType) {
+				debug.options.forEach(inner=>{
+					if (inner.malformed) node.malformed = true;
+					if (inner.type !== optionType) {
+						file.warnings.push({
+							value: 'Mixed serial dialog options',
+							message: `Serial dialog option types are mixed; the first type will be used.`,
+							errorPos: inner.startPos,
+						});
+					}
+					node[optionType] = node[optionType] || {};
+					node[optionType][inner.label] = inner.script;
+				});
+			}
+			file.nodes.push(node);
 			delete crawlState.staged.serialDialogOptions;
 			delete crawlState.staged.serialDialogMessages;
 			delete crawlState.staged.serialDialogParameters;
+			// Don't delete name yet!
+			// Wait for the 'SHOW_SERIAL_DIALOG' to use it first
 		},
+	},
+	serial_dialog_definition: {
+		patterns: [{
+			start: `'serial_dialog' $string:serialDialogName`,
+			body: `@serial_dialog_literal`
+		}],
+		onStart: (file, crawlState) => {
+			// guaranteed
+			let name = mostRecentCapture(crawlState, 'serialDialogName');
+			crawlState.staged.serialDialogName = name.value;
+		},
+		onEnd: (file, crawlState) => {
+			// have to wait to delete it now because of the 'show..block' variant
+			delete crawlState.staged.serialDialogName;
+		}
 	},
 	serial_dialog: {
 		patterns: `@serial_dialog_parameter*
@@ -384,8 +436,8 @@ const dictionary = {
 	script_definition: {
 		patterns: [
 			{
-				start: `'script'? $string:scriptName`,
-				body: `'{' @script_body_item*`,
+				start: `'script'? $string:scriptName '{'`,
+				body: `@script_body_item*`,
 				end: `'}'`
 			},
 		],
@@ -426,6 +478,7 @@ const dictionary = {
 	script_body_item: {
 		patterns: [
 			`@show_dialog_block`,
+			`@show_serial_dialog_block`,
 		], // also auto populated
 	},
 	show_dialog_block: {
@@ -446,9 +499,10 @@ const dictionary = {
 		onEnd: (file, crawlState) => {
 			let name = mostRecentCapture(crawlState, 'dialogName')?.value;
 			if (!name) {
+				const inputPos = file.tokens[crawlState.stack[0].startPos].pos;
 				name = makeAutoIdentifierName(
 					file.plaintext,
-					crawlState.stack[0].startPos,
+					inputPos,
 					file.fileName,
 				);
 			}
@@ -468,10 +522,37 @@ const dictionary = {
 				node: 'action',
 				action: 'SHOW_DIALOG',
 				dialog: name,
-				malformed: !name,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			});
+		},
+	},
+	show_serial_dialog_block: {
+		patterns: [{
+			start: `'show' 'serial_dialog' $string:serialDialogName?`,
+			body: `@serial_dialog_literal?`,
+			// and THAT's why there's a semicolon after braces sometimes!
+			end: `';'`,
+		}],
+		onStart: (file, crawlState) => {
+			let name = optionalCapture(crawlState, 'serialDialogName');
+			name = name?.value || makeAutoIdentifierName(
+				file.plaintext,
+				file.tokens[crawlState.stack[0].startPos].pos,
+				file.fileName,
+			);
+			// need the name ready now in case there's no literal here
+			crawlState.staged.serialDialogName = name;
+		},
+		onEnd: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'SHOW_SERIAL_DIALOG',
+				serial_dialog: crawlState.staged.serialDialogName,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.serialDialogName;
 		},
 	},
 	entity_identifier: {
@@ -674,23 +755,23 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_show_dialog_plain: {
-		action: 'SHOW_DIALOG',
-		captures: [ 'dialog' ],
-		patterns: [{
-			body: `'show' 'dialog' $string:dialog`,
-			end: `';'`
-		}],
-	},
-	action_show_serial_dialog_plain: {
-		action: 'SHOW_SERIAL_DIALOG',
-		captures: [ 'serial_dialog' ],
-		values: { disable_newline: false },
-		patterns: [{
-			body: `'show' 'serial_dialog' $string:serial_dialog`,
-			end: `';'`
-		}],
-	},
+	// action_show_dialog_plain: {
+	// 	action: 'SHOW_DIALOG',
+	// 	captures: [ 'dialog' ],
+	// 	patterns: [{
+	// 		body: `'show' 'dialog' $string:dialog`,
+	// 		end: `';'`
+	// 	}],
+	// },
+	// action_show_serial_dialog_plain: {
+	// 	action: 'SHOW_SERIAL_DIALOG',
+	// 	captures: [ 'serial_dialog' ],
+	// 	values: { disable_newline: false },
+	// 	patterns: [{
+	// 		body: `'show' 'serial_dialog' $string:serial_dialog`,
+	// 		end: `';'`
+	// 	}],
+	// },
 	action_concat_serial_dialog_plain: {
 		action: 'SHOW_SERIAL_DIALOG',
 		captures: [ 'serial_dialog' ],

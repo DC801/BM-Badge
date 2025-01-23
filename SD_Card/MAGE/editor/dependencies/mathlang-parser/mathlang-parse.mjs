@@ -3,6 +3,55 @@ import language from "./mathlang-language.mjs"
 
 const { tree, onStart, onEnd, terminators, keywords } = language;
 
+const printNode = (origNode) => {
+	const node = JSON.parse(JSON.stringify(origNode));
+	if (node.node === 'script_definition') {
+		const body = node.body;
+		delete node.body;
+		return printNodeGeneric(node)
+			+ '\n'
+			+ body.map(printAction).join('\n\n');
+	} else {
+		return printNodeGeneric(node);
+	}
+};
+
+const printNodeGeneric = (node) => {
+	const header = `---- ${node.node} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
+	delete node.node;
+	delete node.startPos;
+	delete node.tokenPos;
+	delete node.debug;
+	if (
+		node.malformed !== undefined
+		&& node.malformed === false
+	) {
+		delete node.malformed;
+	}
+	const space = '   ';
+	const result = header + JSON.stringify(node, null, space)
+		.replace(/^\{/,'')
+		.replace(/\}$/,'')
+		// .replaceAll('\n'+space,'\n');
+	return result;
+}
+
+const printAction = (node) => {
+	const space = '   ';
+	const header = `${space}---- ${node.action} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
+	const workingNode = JSON.parse(JSON.stringify(node));
+	delete node.node;
+	delete node.startPos;
+	delete node.tokenPos;
+	delete node.debug;
+	return header + JSON.stringify(node, null, space)
+		.replace(/^\{\n/,'')
+		.replace(/\n\}$/,'')
+		.split('\n')
+		.map(s=>space+s)
+		.join('\n');
+};
+
 const findLineAndCharNumbers = (input, pos) => {
 	const splits = input.substring(0,pos).split('\n')
 	const charCount = splits[splits.length - 1].length;
@@ -95,12 +144,12 @@ const addCapture = (crawlState, label, value) => {
 		pos: crawlState.tokenPos,
 	});
 };
-const errorRecoverPos = (tokens, origTokenPos, terminatorTwig) => {
+const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
 	const endTokensPos = {
 		terminatorPos: null,
 		newlinePos: null,
 	};
-	let tokenPos = origTokenPos;
+	let tokenPos = firstMismatched - 1; // change to "last to kind of match" token
 	let foundTerminator = false;
 	let foundNewline = false;
 	// advance tokens until you hit both a terminator token and newline token
@@ -137,7 +186,7 @@ const errorRecoverPos = (tokens, origTokenPos, terminatorTwig) => {
 	? endTokensPos.terminatorPos + 1
 	: endTokensPos.newlinePos !== null
 		? endTokensPos.newlinePos + 1
-		: origTokenPos;
+		: firstMismatched;
 	return continuePos;
 };
 
@@ -544,7 +593,7 @@ const testInput = ``
 // 	> "Dare I ask?" = ohNoScript
 // 	> "Is that what it sounds like?" = soundsSCript
 // }`
-// +`script testScriptName {
+// +`\nscript testScriptName {
 // 	goto label labelname;
 // 	return;
 // 	goto index 45;
@@ -553,8 +602,7 @@ const testInput = ``
 // 	close dialog;
 // 	unpause map on_tick;
 // }`
-+`
-testScript {
++`\ntestScript2 {
 	show dialog mainMenuChoice;
 	show dialog {
 		name "" "MAIN MENU"
@@ -562,11 +610,26 @@ testScript {
 		> "New" = newGame
 		> "Quit" = quitGame
 	}
-}
-`
+}`
+// +`\ntestScript {
+// 	show serial_dialog YesReferenceNoDefinition;
+// 	show serial_dialog {
+// 		wrap 90
+// 		"Defined two nodes above 'testScript'"
+// 		"autonamed"
+// 		# "Wait, what?" = destinationScript
+// 	};
+// 	show serial_dialog definitionAndReference {
+// 		"Defined one node above 'testScript'"
+// 		"named 'definitionAndReference'"
+// 	};
+// }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 
+testParsedFile.nodes.forEach(node=>{
+	console.log(printNode(node));
+});
 testParsedFile.errors.forEach(error=>{
 	console.error(error.printable);
 });
