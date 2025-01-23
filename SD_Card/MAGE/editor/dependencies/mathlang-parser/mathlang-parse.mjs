@@ -544,15 +544,26 @@ const testInput = ``
 // 	> "Dare I ask?" = ohNoScript
 // 	> "Is that what it sounds like?" = soundsSCript
 // }`
-+`script testScriptName {
-	goto label labelname;
-	return;
-	goto index 45;
-	goto scriptName;
-	load map mainMenu;
-	close dialog;
-	unpause map on_tick;
-}`
+// +`script testScriptName {
+// 	goto label labelname;
+// 	return;
+// 	goto index 45;
+// 	goto scriptName;
+// 	load map mainMenu;
+// 	close dialog;
+// 	unpause map on_tick;
+// }`
++`
+testScript {
+	show dialog mainMenuChoice;
+	show dialog {
+		name "" "MAIN MENU"
+		> "Load" = loadGame
+		> "New" = newGame
+		> "Quit" = quitGame
+	}
+}
+`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 

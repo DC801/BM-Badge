@@ -18,6 +18,24 @@
 // + = 1+; must match at least once, but can be multiple
 // * = 0+; can be zero matches, or can be an unlimited number of matches
 
+// DUPLICATE: todo fix that
+const findLineAndCharNumbers = (input, pos) => {
+	const splits = input.substring(0,pos).split('\n')
+	const charCount = splits[splits.length - 1].length;
+	const wholeString = input.split('\n')
+	const lineNumber = splits.length;
+	return {
+		row: lineNumber,
+		col: charCount+1,
+		lineString: wholeString[lineNumber - 1],
+		char: input[pos]
+	};
+};
+const makeAutoIdentifierName = (input, pos, fileName) => {
+	const coords = findLineAndCharNumbers(input, pos);
+	return fileName+':'+coords.row +':'+coords.col;
+};
+
 const dictionary = {
 	document: {
 		patterns: [{ body: `@root*`, end: `$EOF` }],
@@ -395,7 +413,6 @@ const dictionary = {
 					delete item.malformed;
 				}
 			})
-
 			file.nodes.push({
 				node: 'script_definition',
 				name,
@@ -407,50 +424,56 @@ const dictionary = {
 		},
 	},
 	script_body_item: {
-		patterns: [],
+		patterns: [
+			`@show_dialog_block`,
+		], // also auto populated
 	},
-	// show_dialog_block: {
-	// 	patterns: [
-	// 		{
-	// 			start: `'show' 'dialog' '{'`,
-	// 			body: `@dialog*`,
-	// 			end: `'}'`
-	// 		},
-	// 		{
-	// 			start: `'show' 'dialog' $string:dialogName '{'`,
-	// 			body: `@dialog*`,
-	// 			end: `'}'`
-	// 		},
-	// 	],
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const dialogs = mostRecentNodes(file, 'dialog', 0, Infinity);
-	// 		const dialogNameCapture = mostRecentCapture(crawlState, 'dialogName');
-	// 		file.nodes.push({
-	// 			node: 'dialog_definition',
-	// 			dialogName: dialogNameCapture.value,
-	// 			dialogs,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	},
-	// },
-	// // untested:
-	// 	onMatch: (file, crawlState, startPos) => {
-	// 		const entityNameCapture = optionalCapture(crawlState, 'entityName');
-	// 		const entityIdentifierType = mostRecentCapture(crawlState, 'entityIdentifierType');
-	// 		let entityName = '';
-	// 		if (entityIdentifierType.value === 'self') entityName = '%SELF%';
-	// 		else if (entityIdentifierType.value === 'player') entityName = '%PLAYER%';
-	// 		else entityName = entityNameCapture[0].entityName
-	// 		file.nodes.push({
-	// 			node: 'entity_identifier',
-	// 			value: entityName,
-	// 			tokenPos: startPos,
-	// 		});
-	// 	}
-	// },
-	// geometry_identifier: {
-	// 	patterns: [{ start: `'geometry'`, body: `$string:geometryName` }],
-	// },
+	show_dialog_block: {
+		patterns: [
+			{
+				start: `'show' 'dialog' $string:dialogName? '{'`,
+				body: `@dialog*`,
+				end: `'}'`
+			}
+		],
+		onStart: (file, crawlState) => {
+			crawlState.staged.dialogs = [];
+			crawlState.staged.dialogIdentifier = {};
+			crawlState.staged.dialogParameters = [];
+			crawlState.staged.dialogOptions = [];
+			crawlState.staged.dialogMessages = [];
+		},
+		onEnd: (file, crawlState) => {
+			let name = mostRecentCapture(crawlState, 'dialogName')?.value;
+			if (!name) {
+				name = makeAutoIdentifierName(
+					file.plaintext,
+					crawlState.stack[0].startPos,
+					file.fileName,
+				);
+			}
+			file.nodes.push({
+				node: 'show_dialog_block',
+				name,
+				dialogs: crawlState.staged.dialogs,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.dialogs;
+			delete crawlState.staged.dialogIdentifier;
+			delete crawlState.staged.dialogParameters;
+			delete crawlState.staged.dialogMessages;
+			delete crawlState.staged.dialogOptions;
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'SHOW_DIALOG',
+				dialog: name,
+				malformed: !name,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+		},
+	},
 	entity_identifier: {
 		patterns: [
 			{ body: `'player':identifierType` },
@@ -524,6 +547,21 @@ const actionDictionary = {
 		captures: [ 'map' ],
 		patterns: [{ start: `'load' 'map'`, body: `$string:map`, end: `';'` }],
 	},
+	action_slot_load: {
+		action: 'SLOT_LOAD',
+		captures: [ 'slot' ],
+		patterns: [{ start: `'load' 'slot'`, body: `$number:slot`, end: `';'` }],
+	},
+	action_slot_erase: {
+		action: 'SLOT_ERASE',
+		captures: [ 'slot' ],
+		patterns: [{ start: `'erase'`, body: `'slot' $number:slot`, end: `';'` }],
+	},
+	action_slot_save: {
+		action: 'SLOT_SAVE',
+		captures: [],
+		patterns: [{ start: `'save'`, body: `'slot'`, end: `';'` }],
+	},
 	action_goto_index: {
 		action: 'GOTO_ACTION_INDEX',
 		captures: [ 'action_index' ],
@@ -548,21 +586,6 @@ const actionDictionary = {
 		action: 'CLOSE_SERIAL_DIALOG',
 		captures: [],
 		patterns: [{ body: `'close' 'serial_dialog'`, end: `';'` }],
-	},
-	action_slot_save: {
-		action: 'SLOT_SAVE',
-		captures: [],
-		patterns: [{ start: `'save'`, body: `'slot'`, end: `';'` }],
-	},
-	action_slot_load: {
-		action: 'SLOT_LOAD',
-		captures: [ 'slot' ],
-		patterns: [{ start: `'load' 'slot'`, body: `$number:slot`, end: `';'` }],
-	},
-	action_slot_erase: {
-		action: 'SLOT_ERASE',
-		captures: [ 'slot' ],
-		patterns: [{ start: `'erase'`, body: `'slot' $number:slot`, end: `';'` }],
 	},
 	action_blocking_delay: {
 		action: 'BLOCKING_DELAY',
@@ -611,6 +634,69 @@ const actionDictionary = {
 		patterns: [{
 			start: `'unpause'`,
 			body: `@entity_or_map_identifier $bareword:script_slot<enum_script_slot`,
+			end: `';'`
+		}],
+	},
+	action_delete_alias: {
+		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
+		captures: [ 'alias' ],
+		patterns: [{
+			start: `'delete' 'alias'`,
+			body: `$string:alias<aliases`,
+			end: `';'`
+		}],
+	},
+	action_delete_command: {
+		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
+		captures: [ 'command' ],
+		values: { is_fail: false },
+		patterns: [{
+			body: `'delete' 'command' $string:command`,
+			end: `';'`
+		}],
+	},
+	action_delete_command_fail: {
+		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
+		captures: [ 'command' ],
+		values: { is_fail: true },
+		patterns: [{
+			body: `'delete' 'command' $string:command 'fail'`,
+			end: `';'`
+		}],
+	},
+	action_delete_command_argument: {
+		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
+		captures: [ 'argument', 'command' ],
+		values: { is_fail: true },
+		patterns: [{
+			start: `'delete' 'command' $string:command '+'`,
+			body: `$string:argument`,
+			end: `';'`
+		}],
+	},
+	action_show_dialog_plain: {
+		action: 'SHOW_DIALOG',
+		captures: [ 'dialog' ],
+		patterns: [{
+			body: `'show' 'dialog' $string:dialog`,
+			end: `';'`
+		}],
+	},
+	action_show_serial_dialog_plain: {
+		action: 'SHOW_SERIAL_DIALOG',
+		captures: [ 'serial_dialog' ],
+		values: { disable_newline: false },
+		patterns: [{
+			body: `'show' 'serial_dialog' $string:serial_dialog`,
+			end: `';'`
+		}],
+	},
+	action_concat_serial_dialog_plain: {
+		action: 'SHOW_SERIAL_DIALOG',
+		captures: [ 'serial_dialog' ],
+		values: { disable_newline: true },
+		patterns: [{
+			body: `'concat' 'serial_dialog' $string:serial_dialog`,
 			end: `';'`
 		}],
 	},

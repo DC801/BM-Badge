@@ -12,16 +12,7 @@ _ {
 	else if (/* @condition */) {/* @script_actions */}
 	else {/* @script_actions */}
 	
-	// non-purple:
-	delete command $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND
-	delete command $string_literal + $argName; //UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
-	delete alias $string_literal; //UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS
-	// with dialog / serial_dialog literals
-	show dialog {}; //SHOW_DIALOG
-	show dialog dialogName; //SHOW_DIALOG
-	show dialog dialogName {}; //SHOW_DIALOG
 	show serial_dialog {}; //SHOW_SERIAL_DIALOG
-	show serial_dialog serialDialogName; //SHOW_SERIAL_DIALOG
 	show serial_dialog serialDialogName {}; //SHOW_SERIAL_DIALOG
 
 	/* ---------------------- LEFT TO RIGHT BUT ALSO CHECK THE SECOND TOKEN ---------------------- */
@@ -150,7 +141,6 @@ _ {
 	goto index 50000;
 	index $constant;
 	index 50000;
-
 }
 
 const conditionsLHS = [
