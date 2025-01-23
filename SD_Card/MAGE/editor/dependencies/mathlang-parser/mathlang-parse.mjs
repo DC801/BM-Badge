@@ -569,61 +569,62 @@ const parseFile = (lexResult, tree, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testInput = ``
-// +`\n$trombones = ;` // error
-// +`\n$steamedhams = "Hamburgers";`
-// +`\nblarg` // error
-// +`\ninclude!()` // error
-// +`\ninclude!("header.mgs")`
-// +`\nadd serial_dialog settings { wrap 1 }`
-// +`\nadd serial_dialog settings { wrap 2 one }` // error
-// +`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
-// +`\nadd dialog settings {
-// 	default { alignment BL }
-// }`
-// +`\nserial_dialog testName {
-// 	"Message!"
-// 	# "Why not?" = scriptWhyNot
-// 	# "Why though?" = actuallyWhy
-// 	_ "You're mixing option types now." = errorScript
-// }`
-// +`\ndialog bobconversation {
-// 	Bob alignment TR "Hello!" "I'm Bob!"
-// 	PLAYER "...What?"
-// 	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
-// 	> "Dare I ask?" = ohNoScript
-// 	> "Is that what it sounds like?" = soundsSCript
-// }`
-// +`\nscript testScriptName {
-// 	goto label labelname;
-// 	return;
-// 	goto index 45;
-// 	goto scriptName;
-// 	load map mainMenu;
-// 	close dialog;
-// 	unpause map on_tick;
-// }`
++`\n$trombones = ;` // error
++`\n$steamedhams = "Hamburgers";`
++`\nblarg` // error
++`\ninclude!()` // error
++`\ninclude!("header.mgs")`
++`\nadd serial_dialog settings { wrap 1 }`
++`\nadd serial_dialog settings { wrap 2 one }` // error
++`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
++`\nadd dialog settings {
+	default { alignment BL }
+}`
++`\nserial_dialog testName {
+	"Message!"
+	# "Why not?" = scriptWhyNot
+	# "Why though?" = actuallyWhy
+	_ "You're mixing option types now." = errorScript
+}`
++`\ndialog bobconversation {
+	Bob alignment TR "Hello!" "I'm Bob!"
+	PLAYER "...What?"
+	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
+	> "Dare I ask?" = ohNoScript
+	> "Is that what it sounds like?" = soundsSCript
+}`
++`\nscript testScriptName {
+	goto label labelname;
+	return;
+	goto index 45;
+	goto scriptName;
+	load map mainMenu;
+	close dialog;
+	unpause map on_tick;
+}`
 +`\ntestScript2 {
 	show dialog mainMenuChoice;
+	wait 100ms;
 	show dialog {
 		name "" "MAIN MENU"
 		> "Load" = loadGame
 		> "New" = newGame
 		> "Quit" = quitGame
-	}
+	};
 }`
-// +`\ntestScript {
-// 	show serial_dialog YesReferenceNoDefinition;
-// 	show serial_dialog {
-// 		wrap 90
-// 		"Defined two nodes above 'testScript'"
-// 		"autonamed"
-// 		# "Wait, what?" = destinationScript
-// 	};
-// 	show serial_dialog definitionAndReference {
-// 		"Defined one node above 'testScript'"
-// 		"named 'definitionAndReference'"
-// 	};
-// }`
++`\ntestScript {
+	show serial_dialog YesReferenceNoDefinition;
+	show serial_dialog {
+		wrap 90
+		"Defined two nodes above 'testScript'"
+		"autonamed"
+		# "Wait, what?" = destinationScript
+	};
+	show serial_dialog definitionAndReference {
+		"Defined one node above 'testScript'"
+		"named 'definitionAndReference'"
+	};
+}`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 
@@ -634,7 +635,7 @@ testParsedFile.errors.forEach(error=>{
 	console.error(error.printable);
 });
 
-console.log('break');
+// console.log('break');
 
 /* TODOS */
 
