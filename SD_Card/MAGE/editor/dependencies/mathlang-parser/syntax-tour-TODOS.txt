@@ -11,9 +11,6 @@ _ {
 	if (/* @condition */) {/* @script_actions */}
 	else if (/* @condition */) {/* @script_actions */}
 	else {/* @script_actions */}
-	
-	show serial_dialog {}; //SHOW_SERIAL_DIALOG
-	show serial_dialog serialDialogName {}; //SHOW_SERIAL_DIALOG
 
 	/* ---------------------- LEFT TO RIGHT BUT ALSO CHECK THE SECOND TOKEN ---------------------- */
 

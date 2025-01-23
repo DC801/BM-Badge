@@ -11,6 +11,14 @@ const printNode = (origNode) => {
 		return printNodeGeneric(node)
 			+ '\n'
 			+ body.map(printAction).join('\n\n');
+	} if (node.node === 'dialog_definition') {
+		const dialogs = node.dialogs;
+		delete node.dialogs;
+		const top = printNodeGeneric(node) + '\n';
+		const bot = dialogs.map(dialog=>{
+			return printNodeGeneric(dialog, 1)
+		}).join('\n\n');;
+		return top+bot;
 	} else {
 		return printNodeGeneric(node);
 	}
@@ -30,8 +38,8 @@ const printNodeGeneric = (node) => {
 	}
 	const space = '   ';
 	const result = header + JSON.stringify(node, null, space)
-		.replace(/^\{/,'')
-		.replace(/\}$/,'')
+		.replace(/^[\[\{]/,'')
+		.replace(/[\]\}]$/,'')
 		// .replaceAll('\n'+space,'\n');
 	return result;
 }
@@ -40,11 +48,11 @@ const printAction = (node) => {
 	const space = '   ';
 	const header = `${space}---- ${node.action} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
 	const workingNode = JSON.parse(JSON.stringify(node));
-	delete node.node;
-	delete node.startPos;
-	delete node.tokenPos;
-	delete node.debug;
-	return header + JSON.stringify(node, null, space)
+	delete workingNode.node;
+	delete workingNode.startPos;
+	delete workingNode.tokenPos;
+	delete workingNode.debug;
+	return header + JSON.stringify(workingNode, null, space)
 		.replace(/^\{\n/,'')
 		.replace(/\n\}$/,'')
 		.split('\n')
@@ -276,7 +284,7 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 		const tryTokenReport = tryToken(file, crawlState, twig, token);
 
 		if (tryTokenReport.matched) {
-			debugLog(`\tMatched [${crawlState.tokenPos}] ${token.value} with ${twig.original}`)
+			debugLog(`\tMatched [${crawlState.tokenPos}] ${token.rawValue} with ${twig.original}`)
 			if (twig.type === 'lookup') {
 				updateCrawlState(tryTokenReport.lookup.crawlState);
 				// we already advanced the token in there; time to undo that now
@@ -569,62 +577,63 @@ const parseFile = (lexResult, tree, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testInput = ``
-+`\n$trombones = ;` // error
-+`\n$steamedhams = "Hamburgers";`
-+`\nblarg` // error
-+`\ninclude!()` // error
-+`\ninclude!("header.mgs")`
-+`\nadd serial_dialog settings { wrap 1 }`
-+`\nadd serial_dialog settings { wrap 2 one }` // error
-+`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
-+`\nadd dialog settings {
-	default { alignment BL }
-}`
-+`\nserial_dialog testName {
-	"Message!"
-	# "Why not?" = scriptWhyNot
-	# "Why though?" = actuallyWhy
-	_ "You're mixing option types now." = errorScript
-}`
-+`\ndialog bobconversation {
-	Bob alignment TR "Hello!" "I'm Bob!"
-	PLAYER "...What?"
-	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
-	> "Dare I ask?" = ohNoScript
-	> "Is that what it sounds like?" = soundsSCript
-}`
-+`\nscript testScriptName {
-	goto label labelname;
-	return;
-	goto index 45;
-	goto scriptName;
-	load map mainMenu;
-	close dialog;
-	unpause map on_tick;
-}`
+// +`\n$trombones = ;` // error
+// +`\n$steamedhams = "Hamburgers";`
+// +`\nblarg` // error
+// +`\ninclude!()` // error
+// +`\ninclude!("header.mgs")`
+// +`\nadd serial_dialog settings { wrap 1 }`
+// +`\nadd serial_dialog settings { wrap 2 one }` // error
+// +`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
+// +`\nadd dialog settings {
+// 	default { alignment BL }
+// }`
+// +`\nserial_dialog testName {
+// 	"Message!"
+// 	# "Why not?" = scriptWhyNot
+// 	# "Why though?" = actuallyWhy
+// 	_ "You're mixing option types now." = errorScript
+// }`
+// +`\ndialog bobconversation {
+// 	Bob alignment TR "Hello!" "I'm Bob!"
+// 	PLAYER "...What?"
+// 	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
+// 	> "Dare I ask?" = ohNoScript
+// 	> "Is that what it sounds like?" = soundsSCript
+// }`
+// +`\nscript testScriptName {
+// 	goto label labelname;
+// 	return;
+// 	goto index 45;
+// 	goto scriptName;
+// 	load map mainMenu;
+// 	close dialog;
+// 	unpause map on_tick;
+// }`
 +`\ntestScript2 {
-	show dialog mainMenuChoice;
-	wait 100ms;
 	show dialog {
-		name "" "MAIN MENU"
+		name "Guide"
+		alignment BR
+		"WELCOME TO"
+		"MAIN MENU"
 		> "Load" = loadGame
 		> "New" = newGame
 		> "Quit" = quitGame
 	};
 }`
-+`\ntestScript {
-	show serial_dialog YesReferenceNoDefinition;
-	show serial_dialog {
-		wrap 90
-		"Defined two nodes above 'testScript'"
-		"autonamed"
-		# "Wait, what?" = destinationScript
-	};
-	show serial_dialog definitionAndReference {
-		"Defined one node above 'testScript'"
-		"named 'definitionAndReference'"
-	};
-}`
+// +`\ntestScript {
+// 	show serial_dialog YesReferenceNoDefinition;
+// 	show serial_dialog {
+// 		wrap 90
+// 		"Defined two nodes above 'testScript'"
+// 		"autonamed"
+// 		# "Wait, what?" = destinationScript
+// 	};
+// 	show serial_dialog definitionAndReference {
+// 		"Defined one node above 'testScript'"
+// 		"named 'definitionAndReference'"
+// 	};
+// }`
 +``;
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 

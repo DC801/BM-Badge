@@ -237,45 +237,13 @@ const dictionary = {
 			}
 		},
 		onEnd: (file, crawlState) => {
-			const debug = {
-				parameters: crawlState.staged.serialDialogParameters,
-				messages: crawlState.staged.serialDialogMessages,
-				options: crawlState.staged.serialDialogOptions,
-			};
 			const node = {
 				node: 'dialog_definition',
 				name: crawlState.staged.dialogName,
-				debug,
+				dialogs: crawlState.staged.dialogs,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
 			};
-			// node.messages = debug.messages
-			// 	.map(inner=>inner.messages.map(v=>v.value))[0];
-			// if (debug.parameters.length > 0) {
-			// 	node.parameters = debug.parameters
-			// 		.map(inner=>{
-			// 			if (inner.malformed) node.malformed = true;
-			// 			return {
-			// 				property: inner.property,
-			// 				value: inner.value,
-			// 			};
-			// 		})
-			// }
-			// let optionType = debug.options[0]?.type;
-			// if (optionType) {
-			// 	debug.options.forEach(inner=>{
-			// 		if (inner.malformed) node.malformed = true;
-			// 		if (inner.type !== optionType) {
-			// 			file.warnings.push({
-			// 				value: 'Mixed serial dialog options',
-			// 				message: `Serial dialog option types are mixed; the first type will be used.`,
-			// 				errorPos: inner.startPos,
-			// 			});
-			// 		}
-			// 		node[optionType] = node[optionType] || {};
-			// 		node[optionType][inner.label] = inner.script;
-			// 	});
-			// }
 			file.nodes.push(node);
 			delete crawlState.staged.dialogIdentifier;
 			delete crawlState.staged.dialogParameters;
@@ -308,15 +276,35 @@ const dictionary = {
 			@dialog_option*`,
 		onEnd: (file, crawlState) => {
 			const messages = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
-			crawlState.staged.dialogs.push({
-				node: 'dialog',
+			const debug = {
 				identifier: crawlState.staged.dialogIdentifier,
 				parameters: crawlState.staged.dialogParameters,
 				messages: messages,
 				options: crawlState.staged.dialogOptions,
+			};
+			const node = {
+				node: 'dialog',
+				debug,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
+			};
+			node.messages = debug.messages.map(inner=>inner.value);
+			if (debug.parameters.length > 0) {
+				node.parameters = debug.parameters
+					.map(inner=>{
+						if (inner.malformed) node.malformed = true;
+						return {
+							property: inner.property,
+							value: inner.value,
+						};
+					})
+			}
+			debug.options.forEach(inner=>{
+				if (inner.malformed) node.malformed = true;
+				node.options = node.options || {};
+				node.options[inner.label] = inner.script;
 			});
+			crawlState.staged.dialogs.push(node);
 			crawlState.staged.dialogIdentifier = {};
 			crawlState.staged.dialogParameters = [];
 			crawlState.staged.dialogMessages = [];
@@ -592,34 +580,6 @@ const dictionary = {
 				tokenPos: crawlState.tokenPos,
 			});
 			delete crawlState.staged.dialogName;
-		// 	let name = mostRecentCapture(crawlState, 'dialogName')?.value;
-		// 	if (!name) {
-		// 		const inputPos = file.tokens[crawlState.stack[0].startPos].pos;
-		// 		name = makeAutoIdentifierName(
-		// 			file.plaintext,
-		// 			inputPos,
-		// 			file.fileName,
-		// 		);
-		// 	}
-		// 	file.nodes.push({
-		// 		node: 'show_dialog_block',
-		// 		name,
-		// 		dialogs: crawlState.staged.dialogs,
-		// 		startPos: crawlState.stack[0].startPos,
-		// 		tokenPos: crawlState.tokenPos,
-		// 	});
-		// 	delete crawlState.staged.dialogs;
-		// 	delete crawlState.staged.dialogIdentifier;
-		// 	delete crawlState.staged.dialogParameters;
-		// 	delete crawlState.staged.dialogMessages;
-		// 	delete crawlState.staged.dialogOptions;
-		// 	crawlState.staged.scriptBodyItems.push({
-		// 		node: 'action',
-		// 		action: 'SHOW_DIALOG',
-		// 		dialog: name,
-		// 		startPos: crawlState.stack[0].startPos,
-		// 		tokenPos: crawlState.tokenPos,
-		// 	});
 		},
 	},
 	show_serial_dialog_block: {
@@ -643,6 +603,36 @@ const dictionary = {
 			crawlState.staged.scriptBodyItems.push({
 				node: 'action',
 				action: 'SHOW_SERIAL_DIALOG',
+				serial_dialog: crawlState.staged.serialDialogName,
+				startPos: crawlState.stack[0].startPos,
+				tokenPos: crawlState.tokenPos,
+			});
+			delete crawlState.staged.serialDialogName;
+		},
+	},
+	concat_serial_dialog_block: {
+		// COPY PASTA'D FROM 'show'
+		patterns: [{
+			start: `'concat' 'serial_dialog' $string:serialDialogName?`,
+			body: `@serial_dialog_literal?`,
+			// and THAT's why there's a semicolon after braces sometimes!
+			end: `';'`,
+		}],
+		onStart: (file, crawlState) => {
+			let name = optionalCapture(crawlState, 'serialDialogName');
+			name = name?.value || makeAutoIdentifierName(
+				file.plaintext,
+				file.tokens[crawlState.stack[0].startPos].pos,
+				file.fileName,
+			);
+			// need the name ready now in case there's no literal here
+			crawlState.staged.serialDialogName = name;
+		},
+		onEnd: (file, crawlState) => {
+			crawlState.staged.scriptBodyItems.push({
+				node: 'action',
+				action: 'SHOW_SERIAL_DIALOG',
+				disable_newline: true, // EXCEPT FOR THIS, LOL
 				serial_dialog: crawlState.staged.serialDialogName,
 				startPos: crawlState.stack[0].startPos,
 				tokenPos: crawlState.tokenPos,
@@ -847,15 +837,6 @@ const actionDictionary = {
 		patterns: [{
 			start: `'delete' 'command' $string:command '+'`,
 			body: `$string:argument`,
-			end: `';'`
-		}],
-	},
-	action_concat_serial_dialog_plain: {
-		action: 'SHOW_SERIAL_DIALOG',
-		captures: [ 'serial_dialog' ],
-		values: { disable_newline: true },
-		patterns: [{
-			body: `'concat' 'serial_dialog' $string:serial_dialog`,
 			end: `';'`
 		}],
 	},
