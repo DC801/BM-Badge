@@ -1,21 +1,10 @@
 _ {
-
-	/* -------------------------------- LEFT TO RIGHT -------------------------------- */
-
-	// as before, anything purple means script jumping or maneuvering will happen
-	while (/* @condition */) {/* @script_actions */}
 	for (/* @initial */ ; /* @condition */ ; /* @increment */) {
 		break;
 		continue;
 	}
-	if (/* @condition */) {/* @script_actions */}
-	else if (/* @condition */) {/* @script_actions */}
-	else {/* @script_actions */}
-
-	/* ---------------------- LEFT TO RIGHT BUT ALSO CHECK THE SECOND TOKEN ---------------------- */
 
 	debug!()
-	debug!(serialDialogName)
 	debug!("serial dialog messages")
 	copy!(scriptName) //COPY_SCRIPT
 	json![] // Anything inside the brackets will be arbitrary actions. Action == obj literal, comma-separated

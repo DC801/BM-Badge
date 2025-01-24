@@ -59,18 +59,15 @@ const dictionary = {
 			// If things are broken but you match 'end' you can put in a
 			// placeholder node with the values you did get, plus {malformed:true}
 			// then proceed as if it matched correctly.
-			// Currently 'end' is only one token/word
+			// Currently 'end' is assumed to be only one token/word; no lookups please!
 			end: `')'`,
 		}],
-		onEnd: (file, crawlState) => {
-			const value = mostRecentCapture(crawlState, 'fileName');
-			const malformed = !value;
-			file.nodes.push({
+		onEnd: (f, cs) => {
+			const name = mostRecentCapture(cs, 'fileName');
+			addNode(f, cs, {
 				node: 'include_macro',
-				value: value?.value || '',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-				malformed,
+				value: name?.value || '',
+				malformed: !name,
 			});
 		},
 	},
@@ -80,16 +77,14 @@ const dictionary = {
 				body: `'=' @constant_value:constantValue`,
 				end: `';'`,
 			}],
-		onEnd: (file, crawlState) => {
-			const value = mostRecentCapture(crawlState, 'constantValue');
-			const name = mostRecentCapture(crawlState, 'constantName');
+		onEnd: (f, cs) => {
+			const value = mostRecentCapture(cs, 'constantValue');
+			const name = mostRecentCapture(cs, 'constantName');
 			const malformed = !value || !name;
-			file.nodes.push({
+			addNode(f, cs, {
 				node: 'constant_assignment',
 				name: name?.value || '',
 				value: value?.value || null,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 				malformed,
 			});
 		},
@@ -106,18 +101,12 @@ const dictionary = {
 			body: `'settings' '{' @serial_dialog_parameter*`,
 			end: `'}'`,
 		}],
-		onStart: (file, crawlState) => {
-			crawlState.staged.serialDialogParameters = [];
-		},
-		onEnd: (file, crawlState) => {
-			const settings = crawlState.staged.serialDialogParameters;
-			file.nodes.push({
+		onEnd: (f, cs) => {
+			addNode(f, cs, {
 				node: 'add_serial_dialog_settings',
-				settings: settings,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				settings: getStaged(cs, 'serialDialogParameters[]'),
 			});
-			delete crawlState.staged.serialDialogParameters;
+			deleteStaged(cs, 'serialDialogParameters[]');
 		},
 	},
 	serial_dialog_parameter: {
@@ -125,17 +114,14 @@ const dictionary = {
 			start: `'wrap':property`,
 			body: `$number:value`,
 		}],
-		onEnd: (file, crawlState) => {
-			const value = mostRecentCapture(crawlState, 'value');
-			const property = mostRecentCapture(crawlState, 'property');
-			const malformed = !value || !property;
-			crawlState.staged.serialDialogParameters.push({
+		onEnd: (f, cs) => {
+			const value = mostRecentCapture(cs, 'value');
+			const property = mostRecentCapture(cs, 'property');
+			pushToStaged(cs, 'serialDialogParameters[]', {
 				node: 'serial_dialog_parameter',
 				property: property?.value || '',
 				value: value?.value || null,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-				malformed,
+				malformed: !value || !property,
 			});
 		},
 	},
@@ -145,18 +131,12 @@ const dictionary = {
 			body: `'settings' '{' @dialog_settings_target*`,
 			end: `'}'`
 		}],
-		onStart: (file, crawlState) => {
-			crawlState.staged.dialogSettings = [];
-		},
-		onEnd: (file, crawlState) => {
-			const settings = crawlState.staged.dialogSettings;
-			file.nodes.push({
+		onEnd: (f, cs) => {
+			addNode(f, cs, {
 				node: 'add_dialog_settings',
-				settings: settings,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				settings: getStaged(cs, 'dialogSettings[]'),
 			});
-			delete crawlState.staged.dialogSettingsTarget;
+			deleteStaged(cs, 'dialogSettingsTarget');
 		},
 	},
 	dialog_settings_target: {
@@ -177,21 +157,16 @@ const dictionary = {
 				end: `'}'`
 			},
 		],
-		onStart: (file, crawlState) => {
-			crawlState.staged.dialogParameters = [];
-		},
-		onEnd: (file, crawlState) => {
-			const targetValue = mostRecentCapture(crawlState, 'targetValue');
-			const target = mostRecentCapture(crawlState, 'target');
-			crawlState.staged.dialogSettings.push({
+		onEnd: (f, cs) => {
+			const targetValue = mostRecentCapture(cs, 'targetValue');
+			const target = mostRecentCapture(cs, 'target');
+			pushToStaged(cs, 'dialogSettings[]', {
 				node: 'add_dialog_settings_target',
 				targetType: target?.value || '',
 				targetValue: targetValue?.value || null,
-				settings: crawlState.staged.dialogParameters,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				settings: getStaged(cs, 'dialogParameters[]'),
 			});
-			delete crawlState.staged.dialogParameters;
+			delete deleteStaged(cs, 'dialogParameters[]');
 		},
 	},
 	dialog_parameter: {
@@ -204,52 +179,46 @@ const dictionary = {
 			{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
 			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
 		],
-		onEnd: (file, crawlState) => {
-			const value = mostRecentCapture(crawlState, 'settingsValue');
-			const property = mostRecentCapture(crawlState, 'settingsProperty');
-			const malformed = !value || !property;
-			crawlState.staged.dialogParameters.push({
+		onEnd: (f, cs) => {
+			const value = mostRecentCapture(cs, 'settingsValue');
+			const property = mostRecentCapture(cs, 'settingsProperty');
+			pushToStaged(cs, 'dialogParameters[]', {
 				node: 'dialog_parameter',
 				property: property ? property.value : '',
 				value: value ? value.value : null,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-				malformed,
+				malformed: !value || !property,
 			});
 		},
 	},
 	dialog_literal: {
 		patterns: [{ start: `'{'`, body: `@dialog*`, end: `'}'` }],
 		// can have an open brace for a start because nothing
-		// will launch into this other than serial_dialog stuff
-		onStart: (file, crawlState) => {
-			crawlState.staged.dialogIdentifier = {};
-			crawlState.staged.dialogParameters = [];
-			crawlState.staged.dialogMessages = [];
-			crawlState.staged.dialogOptions = [];
-			crawlState.staged.dialogs = [];
-			if (!crawlState.staged.dialogName) {
-				crawlState.staged.dialogName = makeAutoIdentifierName(
-					file.plaintext,
-					file.tokens[crawlState.stack[0].startPos].pos,
-					file.fileName,
-				);
+		// will launch into this other than dialog stuff
+		onStart: (f, cs) => {
+			prepStaged(cs, 'dialogIdentifier{}');
+			prepStaged(cs, 'dialogParameters[]');
+			prepStaged(cs, 'dialogMessages[]');
+			prepStaged(cs, 'dialogOptions[]');
+			prepStaged(cs, 'dialogs[]');
+			if (!getStaged(cs, 'dialogName')) {
+				replaceStaged(cs, 'dialogName', makeAutoIdentifierName(
+					f.plaintext,
+					f.tokens[cs.stack[0].startPos].pos,
+					f.fileName,
+				));
 			}
 		},
-		onEnd: (file, crawlState) => {
-			const node = {
+		onEnd: (f, cs) => {
+			addNode(f, cs, {
 				node: 'dialog_definition',
-				name: crawlState.staged.dialogName,
-				dialogs: crawlState.staged.dialogs,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			};
-			file.nodes.push(node);
-			delete crawlState.staged.dialogIdentifier;
-			delete crawlState.staged.dialogParameters;
-			delete crawlState.staged.dialogMessages;
-			delete crawlState.staged.dialogOptions;
-			delete crawlState.staged.dialogs;
+				name: getStaged(cs, 'dialogName'),
+				dialogs: getStaged(cs, 'dialogs[]'),
+			});
+			deleteStaged(cs, 'dialogIdentifier{}');
+			deleteStaged(cs, 'dialogParameters[]');
+			deleteStaged(cs, 'dialogMessages[]');
+			deleteStaged(cs, 'dialogOptions[]');
+			deleteStaged(cs, 'dialogs[]');
 			// Don't delete name yet!
 			// Wait for the 'SHOW_DIALOG' to use it first
 		},
@@ -259,14 +228,13 @@ const dictionary = {
 			start: `'dialog' $string:dialogName`,
 			body: `@dialog_literal`
 		}],
-		onStart: (file, crawlState) => {
-			// guaranteed
-			let name = mostRecentCapture(crawlState, 'dialogName');
-			crawlState.staged.dialogName = name.value;
+		onStart: (f, cs) => {
+			let name = mostRecentCapture(cs, 'dialogName');
+			replaceStaged(cs, 'dialogName', name.value);
 		},
-		onEnd: (file, crawlState) => {
+		onEnd: (f, cs) => {
 			// have to wait to delete it now because of the 'show..block' variant
-			delete crawlState.staged.dialogName;
+			deleteStaged(cs, 'dialogName');
 		}
 	},
 	dialog: {
@@ -274,20 +242,14 @@ const dictionary = {
 			@dialog_parameter*
 			$quoted_string:dialogMessage+
 			@dialog_option*`,
-		onEnd: (file, crawlState) => {
-			const messages = mostRecentCaptures(crawlState, 'dialogMessage', 1, Infinity);
+		onEnd: (f, cs) => {
 			const debug = {
-				identifier: crawlState.staged.dialogIdentifier,
-				parameters: crawlState.staged.dialogParameters,
-				messages: messages,
-				options: crawlState.staged.dialogOptions,
+				identifier: getStaged(cs, 'dialogIdentifier'),
+				parameters: getStaged(cs, 'dialogParameters[]'),
+				messages: mostRecentCaptures(cs, 'dialogMessage', 1, Infinity),
+				options: getStaged(cs, 'dialogOptions[]'),
 			};
-			const node = {
-				node: 'dialog',
-				debug,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			};
+			const node = { node: 'dialog', debug };
 			node.messages = debug.messages.map(inner=>inner.value);
 			if (debug.parameters.length > 0) {
 				node.parameters = debug.parameters
@@ -304,44 +266,62 @@ const dictionary = {
 				node.options = node.options || {};
 				node.options[inner.label] = inner.script;
 			});
-			crawlState.staged.dialogs.push(node);
-			crawlState.staged.dialogIdentifier = {};
-			crawlState.staged.dialogParameters = [];
-			crawlState.staged.dialogMessages = [];
-			crawlState.staged.dialogOptions = [];
+			pushToStaged(cs, 'dialogs[]', node);
+			prepStaged(cs, 'dialogIdentifier{}');
+			prepStaged(cs, 'dialogParameters[]');
+			prepStaged(cs, 'dialogMessages[]');
+			prepStaged(cs, 'dialogOptions[]');
 		},
 	},
 	serial_dialog_literal: {
 		patterns: [{ start: `'{'`, body: `@serial_dialog?`, end: `'}'` }],
 		// can have an open brace for a start because nothing
 		// will launch into this other than serial_dialog stuff
-		onStart: (file, crawlState) => {
-			crawlState.staged.serialDialogOptions = [];
-			crawlState.staged.serialDialogMessages = [];
-			crawlState.staged.serialDialogParameters = [];
-			if (!crawlState.staged.serialDialogName) {
-				crawlState.staged.serialDialogName = makeAutoIdentifierName(
-					file.plaintext,
-					file.tokens[crawlState.stack[0].startPos].pos,
-					file.fileName,
-				);
+		onStart: (f, cs) => {
+			if (!getStaged(cs, 'serialDialogName')) {
+				replaceStaged(cs, 'serialDialogName', makeAutoIdentifierName(
+					f.plaintext,
+					f.tokens[cs.stack[0].startPos].pos,
+					f.fileName,
+				));
 			}
 		},
-		onEnd: (file, crawlState) => {
+		onEnd: (f, cs) => {
+			// Don't delete name yet!
+			// Wait for the 'SHOW_SERIAL_DIALOG' to use it first
+		},
+	},
+	serial_dialog_definition: {
+		patterns: [{
+			start: `'serial_dialog' $string:serialDialogName`,
+			body: `@serial_dialog_literal`
+		}],
+		onStart: (f, cs) => {
+			let name = mostRecentCapture(cs, 'serialDialogName');
+			replaceStaged(cs, 'serialDialogName', name.value);
+		},
+		onEnd: (f, cs) => {
+			// have to wait to delete it now because of the 'show..block' variant
+			deleteStaged(cs, 'serialDialogName');
+		}
+	},
+	serial_dialog: {
+		patterns: `@serial_dialog_parameter*
+			$string:serialDialogMessage+
+			@serial_dialog_option*`,
+		onEnd: (f, cs) => {
 			const debug = {
-				parameters: crawlState.staged.serialDialogParameters,
-				messages: crawlState.staged.serialDialogMessages,
-				options: crawlState.staged.serialDialogOptions,
+				parameters: getStaged(cs, 'serialDialogParameters[]'),
+				messages: mostRecentCaptures(cs, 'serialDialogMessage', 1, Infinity),
+				options: getStaged(cs, 'serialDialogOptions'),
 			};
 			const node = {
 				node: 'serial_dialog_definition',
-				name: crawlState.staged.serialDialogName,
+				name: getStaged(cs, 'serialDialogName'),
 				debug,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			};
 			node.messages = debug.messages
-				.map(inner=>inner.messages.map(v=>v.value))[0];
+				.map(inner=>inner.value);
 			if (debug.parameters.length > 0) {
 				node.parameters = debug.parameters
 					.map(inner=>{
@@ -357,7 +337,7 @@ const dictionary = {
 				debug.options.forEach(inner=>{
 					if (inner.malformed) node.malformed = true;
 					if (inner.type !== optionType) {
-						file.warnings.push({
+						f.warnings.push({
 							value: 'Mixed serial dialog options',
 							message: `Serial dialog option types are mixed; the first type will be used.`,
 							errorPos: inner.startPos,
@@ -367,41 +347,10 @@ const dictionary = {
 					node[optionType][inner.label] = inner.script;
 				});
 			}
-			file.nodes.push(node);
-			delete crawlState.staged.serialDialogOptions;
-			delete crawlState.staged.serialDialogMessages;
-			delete crawlState.staged.serialDialogParameters;
-			// Don't delete name yet!
-			// Wait for the 'SHOW_SERIAL_DIALOG' to use it first
-		},
-	},
-	serial_dialog_definition: {
-		patterns: [{
-			start: `'serial_dialog' $string:serialDialogName`,
-			body: `@serial_dialog_literal`
-		}],
-		onStart: (file, crawlState) => {
-			// guaranteed
-			let name = mostRecentCapture(crawlState, 'serialDialogName');
-			crawlState.staged.serialDialogName = name.value;
-		},
-		onEnd: (file, crawlState) => {
-			// have to wait to delete it now because of the 'show..block' variant
-			delete crawlState.staged.serialDialogName;
-		}
-	},
-	serial_dialog: {
-		patterns: `@serial_dialog_parameter*
-			$string:serialDialogMessage+
-			@serial_dialog_option*`,
-		onEnd: (file, crawlState) => {
-			const messages = mostRecentCaptures(crawlState, 'serialDialogMessage', 1, Infinity);
-			crawlState.staged.serialDialogMessages.push({
-				node: 'serial_dialog',
-				messages,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
+			deleteStaged(cs, 'serialDialogOptions[]');
+			deleteStaged(cs, 'serialDialogMessages[]');
+			deleteStaged(cs, 'serialDialogParameters[]');
+			addNode(f, cs, node);
 		},
 	},
 	serial_dialog_option: {
@@ -415,22 +364,19 @@ const dictionary = {
 				body: `$quoted_string:label '=' $string:script`
 			},
 		],
-		onEnd: (file, crawlState) => {
-			const script = mostRecentCapture(crawlState, 'script');
-			const label = mostRecentCapture(crawlState, 'label');
-			const optionType = mostRecentCapture(crawlState, 'optionType');
-			const malformed = !label || !script;
+		onEnd: (f, cs) => {
+			const script = mostRecentCapture(cs, 'script');
+			const label = mostRecentCapture(cs, 'label');
+			const optionType = mostRecentCapture(cs, 'optionType');
 			let type = '';
 			if (optionType.value === '#') type = 'options';
 			if (optionType.value === '_') type = 'text_options';
-			crawlState.staged.serialDialogOptions.push({
+			pushToStaged(cs, 'serialDialogOptions[]', {
 				node: 'serial_dialog_option',
 				type,
 				label: label?.value || '',
 				script: script?.value || '',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-				malformed,
+				malformed: !label || !script,
 			});
 		},
 	},
@@ -442,29 +388,22 @@ const dictionary = {
 				end: `'}'`
 			},
 		],
-		onStart: (file, crawlState) => {
-			crawlState.staged.dialogs = [];
-			crawlState.staged.dialogIdentifier = {};
-			crawlState.staged.dialogParameters = [];
-			crawlState.staged.dialogMessages = [];
-			crawlState.staged.dialogOptions = [];
-			let name = mostRecentCapture(crawlState, 'dialogName');
-			crawlState.staged.dialogName = name.value;
+		onStart: (f, cs) => {
+			let name = mostRecentCapture(cs, 'dialogName');
+			replaceStaged(cs, 'dialogName', name.value);
 		},
-		onEnd: (file, crawlState) => {
-			const name = mostRecentCapture(crawlState, 'dialogName')?.value || ''
-			file.nodes.push({
+		onEnd: (f, cs) => {
+			const name = mostRecentCapture(cs, 'dialogName')?.value || '';
+			addNode(f, cs, {
 				node: 'dialog_definition',
 				name,
-				dialogs: crawlState.staged.dialogs,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				dialogs: getStaged(cs, 'dialogs[]'),
 			});
-			delete crawlState.staged.dialogs;
-			delete crawlState.staged.dialogIdentifier;
-			delete crawlState.staged.dialogParameters;
-			delete crawlState.staged.dialogMessages;
-			delete crawlState.staged.dialogOptions;
+			deleteStaged(cs, 'dialogs[]');
+			deleteStaged(cs, 'dialogIdentifier{}');
+			deleteStaged(cs, 'dialogParameters[]');
+			deleteStaged(cs, 'dialogMessages[]');
+			deleteStaged(cs, 'dialogOptions[]');
 		},
 	},
 	dialog_identifier: {
@@ -473,16 +412,15 @@ const dictionary = {
 			{ start: `'name':identifierType`, body: `$string:identifierValue` },
 			{ body: `$bareword:identifierValue` },
 		],
-		onEnd: (file, crawlState) => {
-			const identifierValue = mostRecentCapture(crawlState, 'identifierValue');
-			const identifierType = optionalCapture(crawlState, 'identifierType');
-			crawlState.staged.dialogIdentifier ={
+		onEnd: (f, cs) => {
+			const identifierValue = mostRecentCapture(cs, 'identifierValue');
+			const identifierType = optionalCapture(cs, 'identifierType');
+			const insert = buildNode(cs, {
 				node: 'dialog_identifier',
 				type: identifierType?.value || 'label',
 				value: identifierValue?.value || '',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			};
+			})
+			replaceStaged(cs, 'dialogIdentifier', insert);
 		},
 	},
 	dialog_option: {
@@ -492,17 +430,14 @@ const dictionary = {
 				body: `$quoted_string:label '=' $string:script`
 			},
 		],
-		onEnd: (file, crawlState) => {
-			const script = mostRecentCapture(crawlState, 'script');
-			const label = mostRecentCapture(crawlState, 'label');
-			const malformed = !label || !script;
-			crawlState.staged.dialogOptions.push({
+		onEnd: (f, cs) => {
+			const script = mostRecentCapture(cs, 'script');
+			const label = mostRecentCapture(cs, 'label');
+			pushToStaged(cs, 'dialogOptions[]', {
 				node: 'dialog_option',
 				label: label?.value || '',
 				script: script?.value || '',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-				malformed,
+				malformed: !label || !script,
 			});
 		},
 	},
@@ -512,26 +447,24 @@ const dictionary = {
 			body: `@dialog_literal?`,
 			end: `';'`,
 		}],
-		onStart: (file, crawlState) => {
-			let name = optionalCapture(crawlState, 'dialogName');
+		onStart: (f, cs) => {
+			let name = optionalCapture(cs, 'dialogName');
 			name = name?.value || makeAutoIdentifierName(
-				file.plaintext,
-				file.tokens[crawlState.stack[0].startPos].pos,
-				file.fileName,
+				f.plaintext,
+				f.tokens[cs.stack[0].startPos].pos,
+				f.fileName,
 			);
 			// need the name ready now in case there's no literal here
-			crawlState.staged.dialogName = name;
+			replaceStaged(cs, 'dialogName', name);
 
 		},
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', buildNode(cs, {
 				node: 'action',
-				action: 'SERIAL_DIALOG',
-				serial_dialog: crawlState.staged.dialogName,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
-			delete crawlState.staged.dialogName;
+				action: 'SHOW_DIALOG',
+				serial_dialog: getStaged(cs, 'dialogName'),
+			}));
+			deleteStaged(cs, 'dialogName');
 		},
 	},
 	show_serial_dialog_block: {
@@ -541,25 +474,26 @@ const dictionary = {
 			// and THAT's why there's a semicolon after braces sometimes!
 			end: `';'`,
 		}],
-		onStart: (file, crawlState) => {
-			let name = optionalCapture(crawlState, 'serialDialogName');
+		onStart: (f, cs) => {
+			prepStaged(cs, 'serialDialogOptions[]');
+			prepStaged(cs, 'serialDialogMessages[]');
+			prepStaged(cs, 'serialDialogParameters[]');
+			let name = optionalCapture(cs, 'serialDialogName');
 			name = name?.value || makeAutoIdentifierName(
-				file.plaintext,
-				file.tokens[crawlState.stack[0].startPos].pos,
-				file.fileName,
+				f.plaintext,
+				f.tokens[cs.stack[0].startPos].pos,
+				f.fileName,
 			);
 			// need the name ready now in case there's no literal here
-			crawlState.staged.serialDialogName = name;
+			replaceStaged(cs, 'serialDialogName', name);
 		},
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems', {
 				node: 'action',
 				action: 'SHOW_SERIAL_DIALOG',
-				serial_dialog: crawlState.staged.serialDialogName,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				serial_dialog: getStaged(cs, 'serialDialogName'),
 			});
-			delete crawlState.staged.serialDialogName;
+			deleteStaged(cs, 'serialDialogName');
 		},
 	},
 	concat_serial_dialog_block: {
@@ -570,46 +504,64 @@ const dictionary = {
 			// and THAT's why there's a semicolon after braces sometimes!
 			end: `';'`,
 		}],
-		onStart: (file, crawlState) => {
-			let name = optionalCapture(crawlState, 'serialDialogName');
+		onStart: (f, cs) => {
+			let name = optionalCapture(cs, 'serialDialogName');
 			name = name?.value || makeAutoIdentifierName(
-				file.plaintext,
-				file.tokens[crawlState.stack[0].startPos].pos,
-				file.fileName,
+				f.plaintext,
+				f.tokens[cs.stack[0].startPos].pos,
+				f.fileName,
 			);
 			// need the name ready now in case there's no literal here
-			crawlState.staged.serialDialogName = name;
+			replaceStaged(cs, 'serialDialogName', name);
 		},
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'action',
 				action: 'SHOW_SERIAL_DIALOG',
 				disable_newline: true, // EXCEPT FOR THIS, LOL
-				serial_dialog: crawlState.staged.serialDialogName,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				serial_dialog: getStaged(cs, 'serialDialogName'),
 			});
-			delete crawlState.staged.serialDialogName;
+			deleteStaged(cs, 'serialDialogName');
 		},
 	},
+	// debug_macro: {
+	// 	patterns: [{
+	// 		start: `'debug'`,
+	// 		body: `'!' '(' @serial_dialog`,
+	// 		end: `')'`,
+	// 	}],
+	// 	onEnd: (f, cs) => {
+	// 		const name = makeAutoIdentifierName(
+	// 			f.plaintext,
+	// 			f.tokens[cs.stack[0].startPos].pos,
+	// 			f.fileName,
+	// 		);
+	// 		// need the name ready now in case there's no literal here
+	// 		pushToStaged(cs, 'scriptBodyItems[]', {
+	// 			node: 'debug_macro',
+	// 			action: 'SHOW_SERIAL_DIALOG',
+	// 			serial_dialog: name,
+	// 		});
+	// 	},
+	// },
 	entity_identifier: {
 		patterns: [
 			{ body: `'player':identifierType` },
 			{ body: `'self':identifierType` },
 			{ start: `'entity':identifierType`, body: `$string:entityName` },
 		],
-		onEnd: (file, crawlState) => {
-			const identifierType = mostRecentCapture(crawlState, 'identifierType');
+		onEnd: (f, cs) => {
+			const identifierType = mostRecentCapture(cs, 'identifierType');
 			let entity;
 			if (identifierType === 'player') entity = '%PLAYER%';
 			if (identifierType === 'self') entity = '%SELF%';
 			if (identifierType === 'entity') {
-				entity = optionalCapture(crawlState, 'entityName');
+				entity = optionalCapture(cs, 'entityName');
 			}
-			crawlState.staged.entityIdentifier = {
-				identifierType: mostRecentCapture(crawlState, 'identifierType'),
+			replaceStaged(cs, 'entityIdentifier', {
+				identifierType: mostRecentCapture(cs, 'identifierType'),
 				entity: entity || '',
-			}
+			});
 		},
 	},
 	entity_or_map_identifier: {
@@ -619,19 +571,19 @@ const dictionary = {
 			{ body: `'self':identifierType` },
 			{ start: `'entity':identifierType`, body: `$string:entityName` },
 		],
-		onEnd: (file, crawlState) => {
-			const identifierType = mostRecentCapture(crawlState, 'identifierType');
+		onEnd: (f, cs) => {
+			const identifierType = mostRecentCapture(cs, 'identifierType');
 			let entity = '';
 			if (identifierType === 'map') entity = '%MAP%';
 			if (identifierType === 'player') entity = '%PLAYER%';
 			if (identifierType === 'self') entity = '%SELF%';
 			if (identifierType === 'entity') {
-				entity = optionalCapture(crawlState, 'entityName');
+				entity = optionalCapture(cs, 'entityName');
 			}
-			crawlState.staged.entityOrMap = {
-				identifierType: mostRecentCapture(crawlState, 'identifierType'),
+			replaceStaged(cs, 'entityOrMap', {
+				identifierType: mostRecentCapture(cs, 'identifierType'),
 				entity: entity || '',
-			}
+			});
 		},
 	},
 	script_definition: {
@@ -642,12 +594,12 @@ const dictionary = {
 				end: `'}'`
 			},
 		],
-		onStart: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems = [];
+		onStart: (f, cs) => {
+			prepStaged(cs, 'scriptBodyItems[]');
 		},
-		onEnd: (file, crawlState) => {
-			const name = mostRecentCapture(crawlState, 'scriptName').value;
-			const scriptBodyItems = crawlState.staged.scriptBodyItems;
+		onEnd: (f, cs) => {
+			const name = mostRecentCapture(cs, 'scriptName').value;
+			const scriptBodyItems = getStaged(cs, 'scriptBodyItems[]');
 			// // maybe move this later? let the script handler do this?
 			// crawlState.staged.scriptBodyItems.push({
 			// 	node: 'action', action: 'LABEL', label: 'auto return',
@@ -660,15 +612,13 @@ const dictionary = {
 				if (!item.malformed) {
 					delete item.malformed;
 				}
-			})
-			file.nodes.push({
+			});
+			addNode(f, cs, {
 				node: 'script_definition',
 				name,
 				body: scriptBodyItems,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			});
-			delete crawlState.staged.scriptBodyItems;
+			deleteStaged(cs, 'scriptBodyItems[]');
 		},
 	},
 	// if_plain: {
@@ -679,83 +629,109 @@ const dictionary = {
 	// },
 	if_block: {
 		patterns: [{ start: `'if' '('`, body: `@boolean_expression ')' '{' @script_body_item*`, end: `'}'`}],
-		onStart: (file, crawlState) => {
-			crawlState.staged.conditions = [];
-			crawlState.staged.booleanUnits = [];
-			crawlState.staged.lhs = [];
-			crawlState.staged.scriptBodyItems.push({
+		onStart: (f, cs) => {
+			prepStaged(cs, 'conditions[]');
+			prepStaged(cs, 'booleanUnits[]');
+			prepStaged(cs, 'lhs[]');
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'zigzag_macro',
 				action: 'if_block_start',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			});
 		},
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'zigzag_macro',
 				action: 'if_block_end',
-				conditions: crawlState.staged.conditions,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				conditions: getStaged(cs, 'conditions[]'),
 			});
-			delete crawlState.staged.conditions;
-			delete crawlState.staged.booleanUnits;
-			delete crawlState.staged.lhs;
+			deleteStaged(cs, 'conditions[]');
+			deleteStaged(cs, 'booleanUnits[]');
+			deleteStaged(cs, 'lhs[]');
 		}
 	},
 	else_if_block: {
 		patterns: [{ start: `'else' 'if'`, body: `'(' @boolean_expression ')' '{' @script_body_item*`, end: `'}'`}],
-		onStart: (file, crawlState) => {
-			crawlState.staged.conditions = [];
-			crawlState.staged.booleanUnits = [];
-			crawlState.staged.lhs = [];
-			crawlState.staged.scriptBodyItems.push({
+		onStart: (f, cs) => {
+			prepStaged(cs, 'conditions[]');
+			prepStaged(cs, 'booleanUnits[]');
+			prepStaged(cs, 'lhs[]');
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'else_if_block_start',
 				action: 'zigzag_macro',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			});
 		},
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'else_if_block_end',
 				action: 'zigzag_macro',
-				conditions: crawlState.staged.conditions,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				conditions: getStaged(cs, 'conditions[]'),
 			});
-			delete crawlState.staged.conditions;
-			delete crawlState.staged.booleanUnits;
-			delete crawlState.staged.lhs;
+			deleteStaged(cs, 'conditions[]');
+			deleteStaged(cs, 'booleanUnits[]');
+			deleteStaged(cs, 'lhs[]');
 		}
 	},
 	else_block: {
 		patterns: [{ start: `'else' '{'`, body: `@script_body_item*`, end: `'}'`}],
-		onStart: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onStart: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'zigzag_macro',
 				action: 'else_block_start',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			});
 		},
-		onEnd: (file, crawlState) => {
-			crawlState.staged.scriptBodyItems.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'zigzag_macro',
 				action: 'else_block_end',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			});
+		}
+	},
+	whyle_body_item: {
+		patterns: `@script_body_item | 'break':specialGoto ';' | 'continue':specialGoto ';'`,
+		onEnd: (f, cs) => {
+			const special = mostRecentCapture(cs, 'specialGoto');
+			if (special) {
+				let label = '';
+				if (special.value === 'break') label = 'auto break';
+				else if (special.value === 'continue') label = 'auto continue';
+				addNode(f, cs, {
+					node: 'action',
+					action: 'GOTO_ACTION_LABEL',
+					label,
+				});
+			}
+		},
+	},
+	while_block: {
+		patterns: [{ start: `'while'`, body: `'(' @boolean_expression ')' '{' @whyle_body_item*`, end: `'}'`}],
+		onStart: (f, cs) => {
+			prepStaged(cs, 'conditions[]');
+			prepStaged(cs, 'booleanUnits[]');
+			prepStaged(cs, 'lhs[]');
+			pushToStaged(cs, 'scriptBodyItems', {
+				node: 'whyle_block_start',
+				action: 'whyle_macro',
+			});
+		},
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems', {
+				node: 'whyle_block_end',
+				action: 'whyle_macro',
+				conditions: getStaged(cs, 'conditions[]'),
+			});
+			deleteStaged(cs, 'conditions[]');
+			deleteStaged(cs, 'booleanUnits[]');
+			deleteStaged(cs, 'lhs[]');
 		}
 	},
 	boolean_expression: {
 		patterns: [
 			{start: `@boolean_unit`, body: `@boolean_chain*`},
 		],
-		// onStart: (file, crawlState) => {},
-		onEnd: (file, crawlState) => {
-			const node = crawlState.staged.booleanUnits.pop();
-			crawlState.staged.conditions.push(node);
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'conditions[]',
+				popFromStaged(cs, 'booleanUnits[]')
+			);
 		},
 	},
 	boolean_unit: {
@@ -763,70 +739,55 @@ const dictionary = {
 	},
 	boolean_grouping: {
 		patterns: [{ start: `'('`, body: `@boolean_expression`, end: `')'`}],
-		onStart: (file, crawlState) => {
-			crawlState.staged.lhs.push({
-				node: 'groupStart',
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
-			});
+		onStart: (f, cs) => {
+			pushToStaged(cs, 'lhs[]', { node: 'groupStart' });
 		},
-		onEnd: (file, crawlState) => {
-			const exp = crawlState.staged.conditions.pop();
-			crawlState.staged.lhs.pop(); // cleanup placeholder
-			crawlState.staged.booleanUnits.push({
+		onEnd: (f, cs) => {
+			popFromStaged(cs, 'lhs[]'); // cleanup placeholder
+			pushToStaged(cs, 'booleanUnits[]', {
 				node: 'grouping',
-				group: exp,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				group: popFromStaged(cs, 'conditions[]'),
 			});
 		},
 	},
 	boolean_unary: {
 		patterns: [{ start: `'!':operator`, body: `@boolean_unit`}],
-		onEnd: (file, crawlState) => {
-			const node = crawlState.staged.booleanUnits.pop();
-			crawlState.staged.booleanUnits.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'booleanUnits[]', {
 				node: 'unary_expression',
-				operand: node,
-				operator: mostRecentCapture(crawlState, 'operator'),
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				operand: popFromStaged(cs, 'booleanUnits[]'),
+				operator: mostRecentCapture(cs, 'operator'),
 			});
 		},
 	},
 	boolean_operator: {
 		patterns: `$operator:operator`,
-		onEnd: (file, crawlState) => {
-			crawlState.staged.lhs.push(crawlState.staged.booleanUnits.pop());
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'lhs[]',
+				popFromStaged(cs, 'booleanUnits[]')
+			);
 		},
 
 	},
 	boolean_chain: {
 		patterns: `@boolean_operator @boolean_unit`,
-		onEnd: (file, crawlState) => {
-			const operator = mostRecentCapture(crawlState, 'operator');
-			const node = crawlState.staged.booleanUnits.pop();
-			const lhs = crawlState.staged.lhs.pop();
-			crawlState.staged.booleanUnits.push({
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'booleanUnits[]', {
 				node: 'binary_expression',
-				operator,
-				rhs: node,
-				lhs,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
+				operator: mostRecentCapture(cs, 'operator'),
+				rhs: popFromStaged(cs, 'booleanUnits[]'),
+				lhs: popFromStaged(cs, 'lhs[]'),
 			});
 		},
 	},
 	boolean_literal: {
 		patterns: `'debug_mode':engineBool | $boolean:booleanValue | $string:flagName`,
-		onEnd: (file, crawlState) => {
-			let type = getMostRecentCaptureAnyName(crawlState);
-			crawlState.staged.booleanUnits.push({
+		onEnd: (f, cs) => {
+			let type = getMostRecentCaptureAnyName(cs);
+			pushToStaged(cs, 'booleanUnits[]', {
 				node: 'boolean_literal',
 				label: type.label,
 				value: type.value,
-				startPos: crawlState.stack[0].startPos,
-				tokenPos: crawlState.tokenPos,
 			});
 		},
 	},
@@ -837,6 +798,7 @@ const dictionary = {
 			`@if_block`,
 			`@else_if_block`,
 			`@else_block`,
+			`@while_block`,
 			// `@if_plain`,
 		], // also auto populated
 	},
@@ -847,15 +809,13 @@ const exampleActionResult = {
 		body: `'goto' $string:script`,
 		end: `';'`
 	}],
-	onEnd: (file, crawlState) => {
-		const script = semiRecentCapture(crawlState, 'script')?.value || '';
-		crawlState.staged.scriptBodyItems.push({
+	onEnd: (f, cs) => {
+		const script = semiRecentCapture(cs, 'script')?.value || '';
+		pushToStaged(cs, 'scriptBodyItems[]', {
 			node: 'action',
 			action: 'RUN_SCRIPT',
 			script,
 			malformed: !script,
-			startPos: crawlState.stack[0].startPos,
-			tokenPos: crawlState.tokenPos,
 		});
 	},
 };
@@ -1003,29 +963,30 @@ const actionDictionary = {
 const makeTreeEntry = (slug, treeEntry) => {
 	return {
 		patterns: treeEntry.patterns,
-		onEnd: (file, crawlState) => {
+		onEnd: (f, cs) => {
 			const insert = treeEntry.values
 				? JSON.parse(JSON.stringify(treeEntry.values))
 				: {};
 			const captures = treeEntry.captures || [];
 			captures.forEach(captureName=>{
-				insert[captureName] = mostRecentCapture(crawlState, captureName)?.value || null;
+				insert[captureName] = mostRecentCapture(cs, captureName)?.value || null;
 			})
-			if (crawlState.staged.actionValues) {
-				Object.entries(crawlState.staged.actionValues)
+			const actionValues = getStaged(cs, 'actionValues[]');
+			if (actionValues) {
+				Object.entries(actionValues)
 					.forEach(([key,value])=>{ insert[key] = value; });
 			}
 			insert.node = 'action',
 			insert.action = treeEntry.action; // e.g. 'RUN_SCRIPT'
-			insert.startPos = crawlState.stack[0].startPos;
-			insert.tokenPos = crawlState.tokenPos;
+			insert.startPos = cs.stack[0].startPos;
+			insert.tokenPos = cs.tokenPos;
 			insert.malformed = captures.reduce((acc, curr)=>{
 				return acc || insert[curr] === null;
 			}, false);
-			crawlState.staged.scriptBodyItems.push(insert);
+			pushToStaged(cs, 'scriptBodyItems[]', insert);
 			if (actionDictionary[slug].cleanupStaged) {
 				actionDictionary[slug].cleanupStaged
-					.forEach(v=>{ delete crawlState.staged[v]; });
+					.forEach(v=>{ deleteStaged(cs, v); });
 			}
 		},
 	}
@@ -1049,22 +1010,22 @@ Object.keys(dictionary).forEach(entryName=>{
 	if (entry.onEnd) onEnd[entryName] = entry.onEnd;
 });
 
-const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
+const semiRecentCaptures = (cs, captureLabel, min = 1, max = min) => {
 	// skip the irrelevant ones by setting them aside for a second
 	const bot = [];
 	while (
-		crawlState.captures[crawlState.captures.length-1]
-		&& crawlState.captures[crawlState.captures.length-1].label !== captureLabel
+		cs.captures[cs.captures.length-1]
+		&& cs.captures[cs.captures.length-1].label !== captureLabel
 	) {
-		bot.unshift(crawlState.captures.pop())
+		bot.unshift(cs.captures.pop())
 	}
 	// collect the ones we want
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
-		const latest = crawlState.captures[crawlState.captures.length-1];
+		const latest = cs.captures[cs.captures.length-1];
 		if (!latest) break;
 		if (latest.label !== captureLabel) break;
-		extracted.unshift(crawlState.captures.pop());
+		extracted.unshift(cs.captures.pop());
 	}
 	if (extracted.length < min) {
 		const message = `Not enough captures labeled ${captureLabel};`
@@ -1072,26 +1033,26 @@ const semiRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 		// throw new Error (message);
 	}
 	// put the skipped ones back
-	crawlState.captures = crawlState.captures.concat(bot);
+	cs.captures = cs.captures.concat(bot);
 	return extracted;
 };
-const semiRecentCapture = (crawlState, captureLabel) => {
-	const extracted = semiRecentCaptures(crawlState, captureLabel, 1);
+const semiRecentCapture = (cs, captureLabel) => {
+	const extracted = semiRecentCaptures(cs, captureLabel, 1);
 	return extracted ? extracted[0] : null;
 };
-const getMostRecentCaptureAnyName = (crawlState) => {
-	return crawlState.captures.pop();
+const getMostRecentCaptureAnyName = (cs) => {
+	return cs.captures.pop();
 };
-const readMostRecentCapture = (crawlState) => {
-	return crawlState.captures[crawlState.captures.length-1];
+const readMostRecentCapture = (cs) => {
+	return cs.captures[cs.captures.length-1];
 };
-const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
+const mostRecentCaptures = (cs, captureLabel, min = 1, max = min) => {
 	const extracted = [];
 	for (let i = min || 1; i <= max; i++) {
-		const latest = crawlState.captures[crawlState.captures.length-1];
+		const latest = cs.captures[cs.captures.length-1];
 		if (!latest) break;
 		if (latest.label !== captureLabel) break;
-		extracted.unshift(crawlState.captures.pop());
+		extracted.unshift(cs.captures.pop());
 	}
 	if (extracted.length < min) {
 		return [];
@@ -1100,13 +1061,63 @@ const mostRecentCaptures = (crawlState, captureLabel, min = 1, max = min) => {
 	}
 	return extracted;
 };
-const mostRecentCapture = (crawlState, captureLabel) => {
-	const extracted = mostRecentCaptures(crawlState, captureLabel, 1);
+const mostRecentCapture = (cs, captureLabel) => {
+	const extracted = mostRecentCaptures(cs, captureLabel, 1);
 	return extracted ? extracted[0] : null;
 };
-const optionalCapture = (crawlState, captureLabel) => {
-	const extracted = mostRecentCaptures(crawlState, captureLabel, 0, 1);
+const optionalCapture = (cs, captureLabel) => {
+	const extracted = mostRecentCaptures(cs, captureLabel, 0, 1);
 	return extracted ? extracted[0] : null;
+};
+
+const pushToStaged = (cs, prop, value) => {
+	// initialize first first
+	const propName = prop.replace('[]', '');
+	cs.staged[propName] = cs.staged[propName] || [];
+	// insert
+	cs.staged[propName].push(buildNode(cs, value));
+};
+const popFromStaged = (cs, prop) => {
+	const propName = value.replace('[]', '');
+	return cs.staged[propName].pop();
+};
+const replaceStaged = (cs, prop, value) => {
+	const propName = prop.replace('[]', '').replace('{}', '');
+	cs.staged[propName] = value;
+};
+const deleteStaged = (cs, prop) => {
+	const propName = prop.replace('[]', '').replace('{}', '');
+	delete cs.staged[propName];
+};
+const getStaged = (cs, prop) => {
+	const propName = prop.replace('[]', '').replace('{}', '');
+	return cs.staged[propName];
+};
+const getAndDeleteStaged = (cs, prop) => {
+	const propName = prop.replace('[]', '').replace('{}', '');
+	const get = getStaged(cs, propName);
+	deleteStaged(cs, propName);
+	return get;
+};
+const buildNode = (cs, item) => Object.assign({
+		startPos: cs.stack[0].startPos,
+		tokenPos: cs.tokenPos,
+	}, item);
+
+const prepStaged = (cs, value) => {
+	const arr = value.endsWith('[]');
+	const obj = value.endsWith('{}');
+	if (arr) {
+		const prop = value.replace('[]', '');
+		cs.staged[prop] = cs.staged[prop] || [];
+	} else if (obj) {
+		const prop = value.replace('{}', '');
+		cs.staged[prop] = cs.staged[prop] || {};
+	}
+};
+
+const addNode = (f, cs, node) => {
+	f.nodes.push(buildNode(cs, node));
 };
 
 // auditing the above pattern dictionary structure

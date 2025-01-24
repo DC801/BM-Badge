@@ -415,7 +415,7 @@ const tryBranches = (file, origCrawlState) => {
 	}
 	if (triedBranch) {
 		crawlState = triedBranch.crawlState;
-		// popStack(crawlState); // ??
+		popStack(crawlState); // ??
 		if (onEnd[branchName]) {
 			onEnd[branchName](file, crawlState);
 		}
@@ -621,8 +621,8 @@ const parseFile = (lexResult, tree, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testInput = ``
-// +`\n$trombones = ;` // error
 // +`\n$steamedhams = "Hamburgers";`
+// +`\n$trombones = ;` // error
 // +`\nblarg` // error
 // +`\ninclude!()` // error
 // +`\ninclude!("header.mgs")`
@@ -665,6 +665,12 @@ const testInput = ``
 // 		> "Quit" = quitGame
 // 	};
 // }`
+// +`\n
+// $trombones = 76;
+// _ {
+// 	wait 4000;
+// }
+// `
 // +`\ntestScript {
 // 	show serial_dialog YesReferenceNoDefinition;
 // 	show serial_dialog {
@@ -678,6 +684,7 @@ const testInput = ``
 // 		"named 'definitionAndReference'"
 // 	};
 // }`
+// + ``
 
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 testParsedFile.nodes.forEach(node=>{
@@ -690,18 +697,18 @@ testParsedFile.errors.forEach(error=>{
 
 // ========================== CONDITION EXPRESSION TESTS
 
-// !(a || b) // Oh, I can have && now!
-// a=true, b=true = false
-// a=false, b=true = false
-// a=true, b=false = false
-// a=false, b=false = true
-// (a&&b) == !(a||b)
-const testConditionScript = `_ {
-	if (
-		(falseFlag || trueFlag || unknownFlag)
-		&& !debug_mode
-	) {}
-}`
-const testConditionParseFile = parseFile(lex(testConditionScript), tree, 'testMGSFile.mgs')
-const testConditions = testConditionParseFile.nodes[0].body[1].conditions[0];
-console.log(printCondition(testConditions));
+// // !(a || b) // Oh, I can have && now!
+// // a=true, b=true = false
+// // a=false, b=true = false
+// // a=true, b=false = false
+// // a=false, b=false = true
+// // (a&&b) == !(a||b)
+// const testConditionScript = `_ {
+// 	if (
+// 		(falseFlag || trueFlag || unknownFlag)
+// 		&& !debug_mode
+// 	) {}
+// }`
+// const testConditionParseFile = parseFile(lex(testConditionScript), tree, 'testMGSFile.mgs')
+// const testConditions = testConditionParseFile.nodes[0].body[1].conditions[0];
+// console.log(printCondition(testConditions));
