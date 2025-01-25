@@ -104,9 +104,8 @@ const dictionary = {
 		onEnd: (f, cs) => {
 			addNode(f, cs, {
 				node: 'add_serial_dialog_settings',
-				settings: getStaged(cs, 'serialDialogParameters[]'),
+				settings: getAndDeleteStaged(cs, 'serialDialogParameters[]'),
 			});
-			deleteStaged(cs, 'serialDialogParameters[]');
 		},
 	},
 	serial_dialog_parameter: {
@@ -136,7 +135,7 @@ const dictionary = {
 				node: 'add_dialog_settings',
 				settings: getStaged(cs, 'dialogSettings[]'),
 			});
-			deleteStaged(cs, 'dialogSettingsTarget');
+			deleteStaged(cs, 'dialogSettings[');
 		},
 	},
 	dialog_settings_target: {
@@ -164,9 +163,8 @@ const dictionary = {
 				node: 'add_dialog_settings_target',
 				targetType: target?.value || '',
 				targetValue: targetValue?.value || null,
-				settings: getStaged(cs, 'dialogParameters[]'),
+				settings: getAndDeleteStaged(cs, 'dialogParameters[]'),
 			});
-			delete deleteStaged(cs, 'dialogParameters[]');
 		},
 	},
 	dialog_parameter: {
@@ -195,11 +193,6 @@ const dictionary = {
 		// can have an open brace for a start because nothing
 		// will launch into this other than dialog stuff
 		onStart: (f, cs) => {
-			prepStaged(cs, 'dialogIdentifier{}');
-			prepStaged(cs, 'dialogParameters[]');
-			prepStaged(cs, 'dialogMessages[]');
-			prepStaged(cs, 'dialogOptions[]');
-			prepStaged(cs, 'dialogs[]');
 			if (!getStaged(cs, 'dialogName')) {
 				replaceStaged(cs, 'dialogName', makeAutoIdentifierName(
 					f.plaintext,
@@ -212,13 +205,12 @@ const dictionary = {
 			addNode(f, cs, {
 				node: 'dialog_definition',
 				name: getStaged(cs, 'dialogName'),
-				dialogs: getStaged(cs, 'dialogs[]'),
+				dialogs: getAndDeleteStaged(cs, 'dialogs[]'),
 			});
 			deleteStaged(cs, 'dialogIdentifier{}');
 			deleteStaged(cs, 'dialogParameters[]');
 			deleteStaged(cs, 'dialogMessages[]');
 			deleteStaged(cs, 'dialogOptions[]');
-			deleteStaged(cs, 'dialogs[]');
 			// Don't delete name yet!
 			// Wait for the 'SHOW_DIALOG' to use it first
 		},
@@ -229,8 +221,9 @@ const dictionary = {
 			body: `@dialog_literal`
 		}],
 		onStart: (f, cs) => {
-			let name = mostRecentCapture(cs, 'dialogName');
-			replaceStaged(cs, 'dialogName', name.value);
+			replaceStaged(cs, 'dialogName',
+				mostRecentCapture(cs, 'dialogName').value
+			);
 		},
 		onEnd: (f, cs) => {
 			// have to wait to delete it now because of the 'show..block' variant
@@ -311,9 +304,9 @@ const dictionary = {
 			@serial_dialog_option*`,
 		onEnd: (f, cs) => {
 			const debug = {
-				parameters: getStaged(cs, 'serialDialogParameters[]'),
+				parameters: getAndDeleteStaged(cs, 'serialDialogParameters[]'),
 				messages: mostRecentCaptures(cs, 'serialDialogMessage', 1, Infinity),
-				options: getStaged(cs, 'serialDialogOptions'),
+				options: getAndDeleteStaged(cs, 'serialDialogOptions[]'),
 			};
 			const node = {
 				node: 'serial_dialog_definition',
@@ -322,7 +315,7 @@ const dictionary = {
 			};
 			node.messages = debug.messages
 				.map(inner=>inner.value);
-			if (debug.parameters.length > 0) {
+			if (debug.parameters?.length > 0) {
 				node.parameters = debug.parameters
 					.map(inner=>{
 						if (inner.malformed) node.malformed = true;
@@ -332,7 +325,7 @@ const dictionary = {
 						};
 					})
 			}
-			let optionType = debug.options[0]?.type;
+			let optionType = debug?.options?.[0]?.type;
 			if (optionType) {
 				debug.options.forEach(inner=>{
 					if (inner.malformed) node.malformed = true;
@@ -347,22 +340,13 @@ const dictionary = {
 					node[optionType][inner.label] = inner.script;
 				});
 			}
-			deleteStaged(cs, 'serialDialogOptions[]');
-			deleteStaged(cs, 'serialDialogMessages[]');
-			deleteStaged(cs, 'serialDialogParameters[]');
 			addNode(f, cs, node);
 		},
 	},
 	serial_dialog_option: {
 		patterns: [
-			{
-				start: `'#':optionType`,
-				body: `$quoted_string:label '=' $string:script`
-			},
-			{
-				start: `'_':optionType`,
-				body: `$quoted_string:label '=' $string:script`
-			},
+			{ start: `'#':optionType`, body: `$quoted_string:label '=' $string:script` },
+			{ start: `'_':optionType`, body: `$quoted_string:label '=' $string:script` },
 		],
 		onEnd: (f, cs) => {
 			const script = mostRecentCapture(cs, 'script');
@@ -382,11 +366,7 @@ const dictionary = {
 	},
 	dialog_definition: {
 		patterns: [
-			{
-				start: `'dialog' $string:dialogName`,
-				body: `'{' @dialog*`,
-				end: `'}'`
-			},
+			{ start: `'dialog' $string:dialogName`, body: `'{' @dialog*`, end: `'}'` },
 		],
 		onStart: (f, cs) => {
 			let name = mostRecentCapture(cs, 'dialogName');
@@ -501,7 +481,6 @@ const dictionary = {
 		patterns: [{
 			start: `'concat' 'serial_dialog' $string:serialDialogName?`,
 			body: `@serial_dialog_literal?`,
-			// and THAT's why there's a semicolon after braces sometimes!
 			end: `';'`,
 		}],
 		onStart: (f, cs) => {
@@ -511,7 +490,6 @@ const dictionary = {
 				f.tokens[cs.stack[0].startPos].pos,
 				f.fileName,
 			);
-			// need the name ready now in case there's no literal here
 			replaceStaged(cs, 'serialDialogName', name);
 		},
 		onEnd: (f, cs) => {
@@ -524,26 +502,28 @@ const dictionary = {
 			deleteStaged(cs, 'serialDialogName');
 		},
 	},
-	// debug_macro: {
-	// 	patterns: [{
-	// 		start: `'debug'`,
-	// 		body: `'!' '(' @serial_dialog`,
-	// 		end: `')'`,
-	// 	}],
-	// 	onEnd: (f, cs) => {
-	// 		const name = makeAutoIdentifierName(
-	// 			f.plaintext,
-	// 			f.tokens[cs.stack[0].startPos].pos,
-	// 			f.fileName,
-	// 		);
-	// 		// need the name ready now in case there's no literal here
-	// 		pushToStaged(cs, 'scriptBodyItems[]', {
-	// 			node: 'debug_macro',
-	// 			action: 'SHOW_SERIAL_DIALOG',
-	// 			serial_dialog: name,
-	// 		});
-	// 	},
-	// },
+	debug_macro: {
+		patterns: [{
+			start: `'debug'`,
+			body: `'!' '(' @serial_dialog`,
+			end: `')'`,
+		}],
+		onStart: (f, cs) => {
+			const name = makeAutoIdentifierName(
+				f.plaintext,
+				f.tokens[cs.stack[0].startPos].pos,
+				f.fileName,
+			);
+			replaceStaged(cs, 'serialDialogName', name);
+		},
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
+				node: 'debug_macro',
+				action: 'SHOW_SERIAL_DIALOG',
+				serial_dialog: getStaged(cs, 'serialDialogName'),
+			});
+		},
+	},
 	entity_identifier: {
 		patterns: [
 			{ body: `'player':identifierType` },
@@ -551,7 +531,7 @@ const dictionary = {
 			{ start: `'entity':identifierType`, body: `$string:entityName` },
 		],
 		onEnd: (f, cs) => {
-			const identifierType = mostRecentCapture(cs, 'identifierType');
+			const identifierType = mostRecentCapture(cs, 'identifierType')?.value;
 			let entity;
 			if (identifierType === 'player') entity = '%PLAYER%';
 			if (identifierType === 'self') entity = '%SELF%';
@@ -559,7 +539,7 @@ const dictionary = {
 				entity = optionalCapture(cs, 'entityName');
 			}
 			replaceStaged(cs, 'entityIdentifier', {
-				identifierType: mostRecentCapture(cs, 'identifierType'),
+				identifierType,
 				entity: entity || '',
 			});
 		},
@@ -598,7 +578,6 @@ const dictionary = {
 			prepStaged(cs, 'scriptBodyItems[]');
 		},
 		onEnd: (f, cs) => {
-			const name = mostRecentCapture(cs, 'scriptName').value;
 			const scriptBodyItems = getStaged(cs, 'scriptBodyItems[]');
 			// // maybe move this later? let the script handler do this?
 			// crawlState.staged.scriptBodyItems.push({
@@ -615,7 +594,7 @@ const dictionary = {
 			});
 			addNode(f, cs, {
 				node: 'script_definition',
-				name,
+				name: mostRecentCapture(cs, 'scriptName').value,
 				body: scriptBodyItems,
 			});
 			deleteStaged(cs, 'scriptBodyItems[]');
@@ -630,9 +609,6 @@ const dictionary = {
 	if_block: {
 		patterns: [{ start: `'if' '('`, body: `@boolean_expression ')' '{' @script_body_item*`, end: `'}'`}],
 		onStart: (f, cs) => {
-			prepStaged(cs, 'conditions[]');
-			prepStaged(cs, 'booleanUnits[]');
-			prepStaged(cs, 'lhs[]');
 			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'zigzag_macro',
 				action: 'if_block_start',
@@ -652,9 +628,6 @@ const dictionary = {
 	else_if_block: {
 		patterns: [{ start: `'else' 'if'`, body: `'(' @boolean_expression ')' '{' @script_body_item*`, end: `'}'`}],
 		onStart: (f, cs) => {
-			prepStaged(cs, 'conditions[]');
-			prepStaged(cs, 'booleanUnits[]');
-			prepStaged(cs, 'lhs[]');
 			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'else_if_block_start',
 				action: 'zigzag_macro',
@@ -686,6 +659,16 @@ const dictionary = {
 			});
 		}
 	},
+	copy_script: {
+		patterns: [{ start: `'copy'`, body: `'!' '(' $string:script`, end: `')'` }],
+		onEnd: (f, cs) => {
+			pushToStaged(cs, 'scriptBodyItems[]', {
+				node: 'action',
+				action: 'COPY_SCRIPT',
+				script: mostRecentCapture(cs, 'script'),
+			});
+		},
+	},
 	whyle_body_item: {
 		patterns: `@script_body_item | 'break':specialGoto ';' | 'continue':specialGoto ';'`,
 		onEnd: (f, cs) => {
@@ -694,7 +677,7 @@ const dictionary = {
 				let label = '';
 				if (special.value === 'break') label = 'auto break';
 				else if (special.value === 'continue') label = 'auto continue';
-				addNode(f, cs, {
+				pushToStaged(cs, 'scriptBodyItems[]', {
 					node: 'action',
 					action: 'GOTO_ACTION_LABEL',
 					label,
@@ -705,9 +688,6 @@ const dictionary = {
 	while_block: {
 		patterns: [{ start: `'while'`, body: `'(' @boolean_expression ')' '{' @whyle_body_item*`, end: `'}'`}],
 		onStart: (f, cs) => {
-			prepStaged(cs, 'conditions[]');
-			prepStaged(cs, 'booleanUnits[]');
-			prepStaged(cs, 'lhs[]');
 			pushToStaged(cs, 'scriptBodyItems', {
 				node: 'whyle_block_start',
 				action: 'whyle_macro',
@@ -799,6 +779,7 @@ const dictionary = {
 			`@else_if_block`,
 			`@else_block`,
 			`@while_block`,
+			`@debug_macro`,
 			// `@if_plain`,
 		], // also auto populated
 	},
@@ -911,6 +892,7 @@ const actionDictionary = {
 		}],
 		cleanupStaged: [ 'entityOrMap' ],
 	},
+	// TODO: the action above and below might not work; entity_or_map_identifier can't be summoned here?
 	action_unpause_script: {
 		action: 'SET_SCRIPT_PAUSE',
 		captures: [ 'script_slot' ],
@@ -958,6 +940,41 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
+	action_camera_fade_out: {
+		action: 'SCREEN_FADE_OUT',
+		captures: [ 'color', 'duration' ],
+		patterns: [{
+			start: `'camera' 'fade' 'out'`,
+			body: `'->' $color:color 'over' $duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_camera_fade_in: {
+		action: 'SCREEN_FADE_IN',
+		captures: [ 'color', 'duration' ],
+		patterns: [{
+			start: `'camera' 'fade' 'in'`,
+			body: `'->' $color:color 'over' $duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_camera_shake: {
+		action: 'SET_SCREEN_SHAKE',
+		captures: [ 'amplitude', 'distance', 'duration' ],
+		patterns: [{
+			start: `'camera' 'shake'`,
+			body: `'->' $duration:amplitude $distance:distance 'for' $duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_play_entity_animation: {
+		action: 'PLAY_ENTITY_ANIMATION',
+		patterns: [{
+			start: `@entity_identifier 'animation'`,
+			body: `'->' $number:animation $quantity:play_count?`,
+			end: `';'`
+		}],
+	}
 }
 
 const makeTreeEntry = (slug, treeEntry) => {

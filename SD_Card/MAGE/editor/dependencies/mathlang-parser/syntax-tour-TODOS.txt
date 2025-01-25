@@ -1,12 +1,6 @@
 _ {
-	for (/* @initial */ ; /* @condition */ ; /* @increment */) {
-		break;
-		continue;
-	}
+	for (/* @initial */ ; /* @condition */ ; /* @increment */) {}
 
-	debug!()
-	debug!("serial dialog messages")
-	copy!(scriptName) //COPY_SCRIPT
 	json![] // Anything inside the brackets will be arbitrary actions. Action == obj literal, comma-separated
 	rand!()
 
@@ -22,9 +16,6 @@ _ {
 
 	/* -------------------------------- DO OVER TIME OPERATOR -------------------------------- */
 
-	camera fade out -> $color over $duration; //SCREEN_FADE_OUT
-	camera fade in -> $color over $duration; //SCREEN_FADE_IN
-	camera shake -> $duration $dist for $duration; //SET_SCREEN_SHAKE
 	camera -> geometry geometryName origin over $duration; //PAN_CAMERA_TO_GEOMETRY
 	camera -> geometry geometryName length over $duration; //PAN_CAMERA_ALONG_GEOMETRY
 	camera -> geometry geometryName length forever; //LOOP_CAMERA_ALONG_GEOMETRY

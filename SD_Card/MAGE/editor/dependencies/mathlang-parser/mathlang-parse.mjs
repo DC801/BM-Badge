@@ -685,6 +685,9 @@ const testInput = ``
 // 	};
 // }`
 // + ``
++ `_ {
+debug!("Debug message")
+}`
 
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 testParsedFile.nodes.forEach(node=>{
