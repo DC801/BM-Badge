@@ -1,174 +1,11 @@
 import lex from "./mathlang-lex.mjs"
 import language from "./mathlang-language.mjs"
+import utilities from "./mathlang-utilities.mjs"
 
 const { tree, onStart, onEnd, terminators, keywords } = language;
+const { getPosContext, printCondition, printNode, errorRecoverPos, decayTo } = utilities;
 
-const printNode = (origNode) => {
-	const node = JSON.parse(JSON.stringify(origNode));
-	if (node.node === 'script_definition') {
-		const body = node.body;
-		delete node.body;
-		return printNodeGeneric(node)
-			+ '\n'
-			+ body.map(printAction).join('\n\n');
-	} if (node.node === 'dialog_definition') {
-		const dialogs = node.dialogs;
-		delete node.dialogs;
-		const top = printNodeGeneric(node) + '\n';
-		const bot = dialogs.map(dialog=>{
-			return printNodeGeneric(dialog, 1)
-		}).join('\n\n');;
-		return top+bot;
-	} else {
-		return printNodeGeneric(node);
-	}
-};
-
-const indentSpace = '  ';
-const conditionPrint = {
-	operand: (node, indent) => {
-		if (node.node === 'boolean_literal') return `${node.label}:${node.value}`;
-		const lines = [
-			`${node.node} -->`,
-			conditionPrint[node.node](node, indentSpace),
-		];
-		return lines.join('\n')
-			.split('\n').map(s=>indent+s).join('\n');
-	},
-	boolean_literal: (node, indent) => `${node.label}:${node.value}`,
-	unary_expression: (node, indent) => {
-		const lines = [
-			'op = ' + node.operator.value,
-			'operand = ' + conditionPrint.operand(node.operand, indentSpace).trim(),
-		]
-		return lines.join('\n')
-			.split('\n').map(s=>indent+s).join('\n');
-	},
-	grouping: (node, indent) => {
-		const inner = node.group;
-		const header = `${inner.node} -->\n`;
-		const fn = conditionPrint[inner.node];
-		return header + fn(inner, indent);
-	},
-	binary_expression: (node, indent) => {
-		const lines = [
-			'op = ' + node.operator.value,
-			'lhs = ' + conditionPrint.operand(node.lhs, indentSpace).trim(),
-			'rhs = ' + conditionPrint.operand(node.rhs, indentSpace).trim(),
-		]
-		return lines.join('\n')
-			.split('\n').map(s=>indent+s).join('\n');
-	}
-}
-const printCondition = (node) => {
-	const header = `------ ${node.node} ------\n`;
-	const message = header
-		+ conditionPrint[node.node](node, '');
-	console.log(message);
-	return header;
-}
-
-const printNodeGeneric = (node) => {
-	const header = `---- ${node.node} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
-	delete node.node;
-	delete node.startPos;
-	delete node.tokenPos;
-	delete node.debug;
-	if (
-		node.malformed !== undefined
-		&& node.malformed === false
-	) {
-		delete node.malformed;
-	}
-	const space = '   ';
-	const result = header + JSON.stringify(node, null, space)
-		.replace(/^[\[\{]/,'')
-		.replace(/[\]\}]$/,'')
-		// .replaceAll('\n'+space,'\n');
-	return result;
-}
-
-const printAction = (node) => {
-	const space = '   ';
-	const header = `${space}---- ${node.node} ---- tokens ${node.startPos} thru ${node.tokenPos}\n`
-	const workingNode = JSON.parse(JSON.stringify(node));
-	delete workingNode.node;
-	delete workingNode.startPos;
-	delete workingNode.tokenPos;
-	delete workingNode.debug;
-	return header + JSON.stringify(workingNode, null, space)
-		.replace(/^\{\n/,'')
-		.replace(/\n\}$/,'')
-		.split('\n')
-		.map(s=>space+s)
-		.join('\n');
-};
-
-const findLineAndCharNumbers = (input, pos) => {
-	const splits = input.substring(0,pos).split('\n')
-	const charCount = splits[splits.length - 1].length;
-	const wholeString = input.split('\n')
-	const lineNumber = splits.length;
-	return {
-		row: lineNumber,
-		col: charCount+1,
-		lineString: wholeString[lineNumber - 1],
-		char: input[pos]
-	};
-};
-const getPosContext = (inputString, origPos, message, fileName) => {
-	let printFileName = fileName ? `"${fileName}" l` : 'L';
-	let pos = origPos;
-	let errorCoords = findLineAndCharNumbers(inputString, pos);
-	let arrow = '~'.repeat(errorCoords.col) + '^';
-	let lineString = errorCoords.lineString.replace(/\t/g,' ');
-	while (lineString.replace(/[\s\t]/g, '').length === 0) {
-		pos -= 1;
-		errorCoords = findLineAndCharNumbers(inputString, pos);
-		arrow = '~'.repeat(errorCoords.col) + '^';
-		lineString = errorCoords.lineString.replace(/\t/g,' ');
-	}
-	const newMessage
-		= `\n╓ ${printFileName}ine ${errorCoords.row}:${errorCoords.col}: ${message}`
-		+ '\n║ ' + `${lineString}`
-		+ '\n╙' + arrow
-	return newMessage;
-};
-const printParseMessage = (inputString, pos, message, fileName, messageType) => {
-	const fancyMessage = getPosContext(inputString, pos, message, fileName);
-	if (messageType === "error") {
-		console.error(fancyMessage);
-	} else if (messageType === "warning") {
-		console.warn(fancyMessage);
-	} else {
-		console.log(fancyMessage);
-	}
-};
-const decayTo = {
-	EOF: token => token.type === 'EOF',
-	bareword: token => {
-		if (token.type === "bareword") return token.value;
-		if (token.barewordValue) return token.barewordValue;
-		return null;
-	},
-	operator: token => token.type === "operator" ? token.value : null,
-	color: token => token.type === "color" ? token.value : null,
-	boolean: token => token.type === "boolean" ? token.value : null,
-	quoted_string: token => token.type === "quoted_string" ? token.value : null,
-	number: token => token.type === "number" ? token.value : null,
-	duration: token => token.type === "duration" || token.type === "number" ? token.value : null,
-	distance: token => token.type === "distance" || token.type === "number" ? token.value : null,
-	quantity: token => token.type === "quantity" || token.type === "number" ? token.value : null,
-	constant: token => token.type === "constant" ? token.value : null,
-	string: token => {
-		const bareWord = decayTo.bareword(token);
-		if (bareWord) return bareWord;
-		if (token.type === "quoted_string") return token.value;
-		return null;
-	},
-};
 const verbose = false;
-const runTests = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 const printStack = (stack) => {
@@ -195,51 +32,6 @@ const addCapture = (crawlState, label, value) => {
 		value,
 		pos: crawlState.tokenPos,
 	});
-};
-const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
-	const endTokensPos = {
-		terminatorPos: null,
-		newlinePos: null,
-	};
-	let tokenPos = firstMismatched - 1; // change to "last to kind of match" token
-	let foundTerminator = false;
-	let foundNewline = false;
-	// advance tokens until you hit both a terminator token and newline token
-	if (!terminatorTwig) foundTerminator = true;
-	while (tokenPos < tokens.length) {
-		const token = tokens[tokenPos];
-		if (token.type === 'newline') {
-			if (!foundNewline) {
-				endTokensPos.newlinePos = tokenPos;
-				foundNewline = true;
-				if (foundTerminator) break;
-			}
-		} else {
-			if (!foundTerminator) {
-				if (terminatorTwig.type === 'literal') {
-					if (token.value === terminatorTwig.value) {
-						endTokensPos.terminatorPos = tokenPos;
-						foundTerminator = true;
-						if (foundNewline) break;
-					};
-				} else if (terminatorTwig.type === 'capture') {
-					found = decayTo[terminatorTwig.value](token);
-					if (found) {
-						endTokensPos.terminatorPos = tokenPos;
-						foundTerminator = true;
-						if (foundNewline) break;
-					}
-				}
-			}
-		}
-		tokenPos += 1;
-	}
-	const continuePos = endTokensPos.terminatorPos !== null
-	? endTokensPos.terminatorPos + 1
-	: endTokensPos.newlinePos !== null
-		? endTokensPos.newlinePos + 1
-		: firstMismatched;
-	return continuePos;
 };
 
 /* ------------------------------------- TRYBRANCH ------------------------------------- */
@@ -352,8 +144,20 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 				if (twigPos === branch.length) report.matched = true;
 				continue;
 			} else {
-				if (twig.type === 'literal') report.expected = `'${twig.value}'`;
-				else if (twig.type === 'capture') report.expected = `${twig.value}`;
+				if (twig.type === 'literal') {
+					const pos = crawlState.tokenPos;
+					const checkpoints = file.crawlErrors.checkpoints;
+					checkpoints[pos] = checkpoints[pos] || new Set();
+					checkpoints[pos].add(`'${twig.value}'`);
+					report.expected = `'${twig.value}'`;
+				}
+				else if (twig.type === 'capture') {
+					const pos = crawlState.tokenPos;
+					const checkpoints = file.crawlErrors.checkpoints;
+					checkpoints[pos] = checkpoints[pos] || new Set();
+					checkpoints[pos].add(twig.value);
+					report.expected = `${twig.value}`;
+				}
 				else if (twig.type === 'lookup') {
 					updateCrawlState(tryTokenReport.lookup.crawlState);
 					report.crawlState = crawlState;
@@ -378,17 +182,19 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 	return {crawlState, report};
 };
 
-const processFails = (crawlError, fails) => {
+const processFails = (crawlErrors, fails) => {
 	fails.sort((a,b)=>b.crawlState.tokenPos - a.crawlState.tokenPos);
 	const maxPos = fails[0].crawlState.tokenPos;
 	const expectedArr = fails
 		.filter(item=>item.crawlState.tokenPos === maxPos)
 		.map(item=>item.report.expected);
-	if (maxPos > crawlError.bestPos) {
-		crawlError.bestPos = maxPos;
-		crawlError.expected = expectedArr;
-	} else if (maxPos === crawlError.bestPos) {
-		crawlError.expected = crawlError.expected.concat(expectedArr);
+	if (maxPos > crawlErrors.bestPos) {
+		crawlErrors.checkpoints[maxPos] = new Set(expectedArr);
+		crawlErrors.bestPos = maxPos;
+	} else if (maxPos === crawlErrors.bestPos) {
+		expectedArr.forEach(v=>{
+			crawlErrors.checkpoints[maxPos].add(v)
+		})
 	}
 	return expectedArr.join(', ');
 };
@@ -420,12 +226,13 @@ const tryBranches = (file, origCrawlState) => {
 			onEnd[branchName](file, crawlState);
 		}
 		if (triedBranch.report.malformed) {
+			const fileExpecteds = file.crawlErrors.checkpoints[triedBranch.report.expectedPos];
 			file.errors.push({
 				file: file.fileName,
 				value: 'Malformed node',
 				message: `${branchName} error`,
 				startPos: startPos,
-				expected: triedBranch.report.expected, 
+				expected: [...fileExpecteds].sort().join(', '), 
 				errorPos: triedBranch.report.expectedPos,
 				endPos: triedBranch.crawlState.tokenPos,
 			});
@@ -433,7 +240,7 @@ const tryBranches = (file, origCrawlState) => {
 	} else {
 		// add to `file` the branch(es) that made it the furthest
 		// (in `file` because it persists)
-		expected = processFails(file.crawlError, fails);
+		expected = processFails(file.crawlErrors, fails);
 		// what to do with these fails in an error recovery way?
 	}
 	return {
@@ -442,94 +249,6 @@ const tryBranches = (file, origCrawlState) => {
 		crawlState,
 		expected,
 	};
-}
-
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TESTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-if (runTests) {
-
-const tryBranchTests = [
-	{
-		input: `include!("header.mgs")\nadd`, branchName: 'include_macro', branchID: 0,
-		matched: true, malformed: false,  nextPos: 5,
-	},
-	{
-		input: `include("header.mgs")\nadd`, branchName: 'include_macro', branchID: 0,
-		matched: true, malformed: true,  nextPos: 4,
-	},
-	{
-		input: `include!()\nadd`, branchName: 'include_macro', branchID: 0,
-		matched: true, malformed: true,  nextPos: 4,
-	},
-	{
-		input: `include()\nadd`, branchName: 'include_macro', branchID: 0,
-		matched: true, malformed: true,  nextPos: 3,
-	},
-	{
-		input: `include(\nadd`, branchName: 'include_macro', branchID: 0,
-		matched: true, malformed: true,  nextPos: 3,
-	},
-	{
-		input: `include( add`, branchName: 'include_macro', branchID: 0,
-		matched: true, malformed: true,  nextPos: 2,
-	},
-	{
-		input: `$trombones = 76;`, branchName: 'constant_assignment', branchID: 0,
-		matched: true, malformed: false, nextPos: 4,
-	},
-	{
-		input: `$trombones = ;`, branchName: 'constant_assignment', branchID: 0,
-		matched: true, malformed: true, nextPos: 3,
-	},
-];
-tryBranchTests.forEach((test, i)=>{
-	test.tokens = lex(test.input).tokens;
-	test.tree = tree;
-	test.stack = [{
-		branchName: test.branchName,
-		startPos: 0,
-	}];
-});
-const testCrawl = {
-	tokenPos: 0,
-	captures: [],
-	unusedLabels: [],
-	nodes: [],
-	stack: [],
-};
-let passedTests = 0;
-const failedTests = [];
-tryBranchTests.forEach((test, i)=>{
-	const branch = tree[test.branchName][test.branchID];
-	const crawlState = JSON.parse(JSON.stringify(testCrawl));
-	crawlState.stack = test.stack;
-	const tried = tryBranch(test, crawlState, branch);
-	const nextPosTest = tried.crawlState.tokenPos === test.nextPos;
-	const matchedTest = (tried.report.matched || false) === test.matched;
-	const malformedTest = (tried.report.malformed || false) === test.malformed;
-	if (nextPosTest && matchedTest && malformedTest) {
-		passedTests += 1;
-	} else {
-		const testReport = {
-			testID: i,
-			test: test.input,
-		};
-		if (!nextPosTest) {
-			testReport.nextPos = {expected: test.nextPos, found: tried.crawlState.tokenPos};
-		}
-		if (!matchedTest) {
-			testReport.matched = {expected: test.matched, found: tried.report.matched};
-		}
-		if (!malformedTest) {
-			testReport.malformed = {expected: test.malformed, found: tried.report.malformed};
-		}
-		failedTests.push(testReport);
-	}
-});
-if (failedTests.length > 0) {
-	console.log(failedTests);
-}
 }
 
 /* ------------------------------------------ PARSE FILE ------------------------------------------ */
@@ -555,7 +274,12 @@ const parseFile = (lexResult, tree, givenFileName) => {
 		errors: [], // parsing might have still finished if there are errors, but some nodes will be broken so the scenario might be wonky
 		tokens: lexResult.tokens, // still useful for error handling; you can get a token by its index (from a node) and look at the token pos within the file (char) to get the line/col to make error messages
 		tree, // handed around because it's permanent and everything needs to see it
-		crawlError: { bestPos: 0, expected: [] },
+		crawlErrors: {
+			checkpoints: {
+				0: new Set (),
+			},
+			bestPos: 0,
+		},
 	};
 	
 	// parse file
@@ -566,13 +290,14 @@ const parseFile = (lexResult, tree, givenFileName) => {
 		file.success = tryBranchesReport.matched;
 		file.crawlState = tryBranchesReport.crawlState;
 		if (!file.success) {
-			const continuePos = errorRecoverPos(file.tokens, file.crawlError.bestPos);
+			const continuePos = errorRecoverPos(file.tokens, file.crawlErrors.bestPos);
 			if (prevContinuePos === continuePos) break;
+			const errorPos = file.crawlErrors.bestPos;
 			const error = {
 				value: 'Syntax error',
 				message: `Unknown syntax error`,
-				errorPos: file.crawlError.bestPos,
-				expected: [...new Set (file.crawlError.expected)].sort().join(', '),
+				errorPos: errorPos,
+				expected: [...file.crawlErrors.checkpoints[errorPos]].sort().join(', '),
 			};
 			file.errors.push(error);
 			prevContinuePos = continuePos;
@@ -628,7 +353,7 @@ const testInput = ``
 // +`\ninclude!("header.mgs")`
 // +`\nadd serial_dialog settings { wrap 1 }`
 // +`\nadd serial_dialog settings { wrap 2 one }` // error
-// +`\nadd serial_dialog settings { wrap 3 two wrap 4 }` // error
+// +`\nadd dialog settings { wrap 3 alignment 4 }`
 // +`\nadd dialog settings {
 // 	default { alignment BL }
 // }`
@@ -685,9 +410,6 @@ const testInput = ``
 // 	};
 // }`
 // + ``
-+ `_ {
-debug!("Debug message")
-}`
 
 const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
 testParsedFile.nodes.forEach(node=>{

@@ -102,9 +102,18 @@ const dictionary = {
 			end: `'}'`,
 		}],
 		onEnd: (f, cs) => {
+			const malformed = getAndDeleteStaged(cs, 'serialDialogParametersMalformed');
+			const debug = getAndDeleteStaged(cs, 'serialDialogParameters[]');
+			const settings = debug.map(v=>{
+				return {
+					property: v.property,
+					value: v.value,
+				};
+			})
 			addNode(f, cs, {
 				node: 'add_serial_dialog_settings',
-				settings: getAndDeleteStaged(cs, 'serialDialogParameters[]'),
+				settings,
+				malformed,
 			});
 		},
 	},
@@ -131,11 +140,24 @@ const dictionary = {
 			end: `'}'`
 		}],
 		onEnd: (f, cs) => {
+			const oldSettings = getAndDeleteStaged(cs, 'dialogSettings[]');
+			const debug = oldSettings || [];
+			const settings = debug.map(v=>{
+				return {
+					targetType: v.targetType,
+					targetValue: v.targetValue,
+					settings: v.settings.map(inner=>{
+						const insert = { property: inner.property, value: inner.value }
+						if (inner.malformed) insert.malformed = true;
+						return insert;
+					})
+				}
+			});
 			addNode(f, cs, {
 				node: 'add_dialog_settings',
-				settings: getStaged(cs, 'dialogSettings[]'),
+				debug,
+				settings,
 			});
-			deleteStaged(cs, 'dialogSettings[');
 		},
 	},
 	dialog_settings_target: {
