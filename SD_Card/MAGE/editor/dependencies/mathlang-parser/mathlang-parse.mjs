@@ -343,43 +343,6 @@ export const parseFile = (lexResult, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testInput = ``
-// +`\nscript testScriptName {
-// 	goto label labelname;
-// 	return;
-// 	close dialog;
-// 	load map mainMenu;
-// 	goto index 45;
-// 	goto scriptName;
-// 	unpause map on_tick;
-// }`
-// +`\ntestScript2 {
-// 	show dialog {
-// 		name "Guide"
-// 		alignment BR
-// 		"WELCOME TO"
-// 		"MAIN MENU"
-// 		> "Load" = loadGame
-// 		> "New" = newGame
-// 		> "Quit" = quitGame
-// 	};
-// }`
-// _ {
-// 	wait 4000;
-// }
-// `
-// +`\ntestScript {
-// 	show serial_dialog YesReferenceNoDefinition;
-// 	show serial_dialog {
-// 		wrap 90
-// 		"Defined two nodes above 'testScript'"
-// 		"autonamed"
-// 		# "Wait, what?" = destinationScript
-// 	};
-// 	show serial_dialog definitionAndReference {
-// 		"Defined one node above 'testScript'"
-// 		"named 'definitionAndReference'"
-// 	};
-// }`
 // + ``
 
 const testParsedFile = parseFile(lex(testInput), 'testMGSFile.mgs');

@@ -4,18 +4,144 @@ import { parseFile } from './mathlang-parse.mjs';
 // remember newlines count as a token, so avoid them
 // to make it easier to count them with your eyeballs!
 const patternTests = {
+	show_serial_dialog: [
+		{ name: 'inline definition vs reference & named vs autonamed',
+			pattern: `testScript {
+					show serial_dialog YesReferenceNoDefinition;
+					show serial_dialog {
+						"Defined two nodes above 'testScript'; autonamed"
+					};
+					show serial_dialog defAndRef {
+						"Defined one node above 'testScript'; named 'defAndRef'"
+					};
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { nodes: 3, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "unitTests.mgs:1:78",
+					messages: [ "Defined two nodes above 'testScript'; autonamed" ],
+				},
+				{
+					node: "serial_dialog_definition",
+					name: "defAndRef",
+					messages: [ "Defined one node above 'testScript'; named 'defAndRef'" ],
+				},
+				{
+					node: "script_definition",
+					name: "testScript",
+					body: [
+						{
+							node: "action",
+							action: "SHOW_SERIAL_DIALOG",
+							serial_dialog: "YesReferenceNoDefinition",
+						},
+						{
+							node: "action",
+							action: "SHOW_SERIAL_DIALOG",
+							serial_dialog: "unitTests.mgs:1:78",
+						},
+						{
+							node: "action",
+							action: "SHOW_SERIAL_DIALOG",
+							serial_dialog: "defAndRef",
+						},
+					],
+				},
+			]
+		},
+	],
+	show_dialog: [
+		{ name: 'inline definition vs reference & named vs autonamed',
+			pattern: `testScript {
+					show dialog YesReferenceNoDefinition;
+					show dialog {
+						PLAYER "Defined two nodes above 'testScript'; autonamed"
+					};
+					show dialog defAndRef {
+						PLAYER "Defined one node above 'testScript'; named 'defAndRef'"
+					};
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { nodes: 3, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "unitTests.mgs:1:64",
+					dialogs: [{
+						node: "dialog",
+						messages: [ "Defined two nodes above 'testScript'; autonamed", ],
+						identifier: { type: "label", value: "PLAYER" },
+					}],
+				},
+				{
+					node: "dialog_definition",
+					name: "defAndRef",
+					dialogs: [{
+						  node: "dialog",
+						  messages: [ "Defined one node above 'testScript'; named 'defAndRef'" ],
+						  identifier: { type: "label", value: "PLAYER" },
+					}],
+				},
+				{
+					node: "script_definition",
+					name: "testScript",
+					body: [
+						{
+							node: "action",
+							action: "SHOW_DIALOG",
+							serial_dialog: "YesReferenceNoDefinition",
+						},
+						{
+							node: "action",
+							action: "SHOW_DIALOG",
+							serial_dialog: "unitTests.mgs:1:64",
+						},
+						{
+							node: "action",
+							action: "SHOW_DIALOG",
+							serial_dialog: "defAndRef",
+						},
+					],
+				},
+			]
+		},
+	],
 	script_actions: [
+		{ name: 'dictionary entry with outside lookup',
+			pattern: `_ {
+				pause entity Bob on_tick;
+			}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_definition",
+					name: "_",
+					body: [
+						{
+							node: "action",
+							action: "SET_SCRIPT_PAUSE",
+							bool_value: true,
+							script_slot: "on_tick",
+							entity: "Bob",
+						},
+					],
+				}
+			]
+		},
 		{ name: 'game flow manip',
 			pattern: `_ {
 				goto index 44;
 				goto label outer_loop;
 				goto script "mainMenuStart";
 				load map mainMenu;
-				load slot 3; 
+				load slot 3;
 				erase slot 0;
 			}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { tokens: 27, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "script_definition",
@@ -39,7 +165,7 @@ const patternTests = {
 				return;
 			}`.replaceAll('\n',' '),
 			fileSuccess: true,
-			counts: { tokens: 14, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "script_definition",
@@ -58,7 +184,7 @@ const patternTests = {
 		{ name: 'double',
 			pattern: `serial_dialog test { "Test message!" "Another!" }`,
 			fileSuccess: true,
-			counts: { tokens: 6, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -70,7 +196,7 @@ const patternTests = {
 		{ name: 'parameters',
 			pattern: `serial_dialog test { wrap 80 "Test message!" "Another!" }`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -83,7 +209,7 @@ const patternTests = {
 		{ name: 'parameters with error at the end',
 			pattern: `serial_dialog test { wrap 80 asdf "Test message!" "Another!" }`,
 			fileSuccess: true,
-			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -97,7 +223,7 @@ const patternTests = {
 		{ name: 'parameters with error in the middle',
 			pattern: `serial_dialog test { wrap 80 asdf wrap 79 "Test message!" "Another!" }`,
 			fileSuccess: true,
-			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -116,7 +242,7 @@ const patternTests = {
 				+`_ "Fill in" = correctScriptChoice`
 				+`}`,
 			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -132,7 +258,7 @@ const patternTests = {
 				+`# "number" = wha`
 				+`}`,
 			fileSuccess: true,
-			counts: { tokens: 14, nodes: 1, errors: 0, warnings: 1 },
+			counts: { nodes: 1, errors: 0, warnings: 1 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -150,7 +276,7 @@ const patternTests = {
 				+`_ "Fill in" =`
 				+`}`,
 			fileSuccess: true,
-			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -165,7 +291,7 @@ const patternTests = {
 				+`_ "Fill in"`
 				+`}`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -180,7 +306,7 @@ const patternTests = {
 				+`_ `
 				+`}`,
 			fileSuccess: true,
-			counts: { tokens: 7, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -196,7 +322,7 @@ const patternTests = {
 				+`_ asdfasdf`
 				+`}`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -214,7 +340,7 @@ const patternTests = {
 				+ `PLAYER "Oh?" "I heard something!"`
 				+ `}`,
 			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -237,7 +363,7 @@ const patternTests = {
 		{ name: 'parameters',
 			pattern: `dialog _ { Bob alignment BR "Hello?" }`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -256,7 +382,7 @@ const patternTests = {
 		{ name: 'parameters failure at the end',
 			pattern: `dialog _ { Bob alignment BR ERRORTOKEN "Hello?" }`,
 			fileSuccess: true,
-			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -275,7 +401,7 @@ const patternTests = {
 		{ name: 'parameters failure in the middle',
 			pattern: `dialog _ { Bob alignment BR ERRORTOKEN wrap 10 "Hello?" }`,
 			fileSuccess: true,
-			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -297,7 +423,7 @@ const patternTests = {
 		{ name: 'options',
 			pattern: `dialog _ { Bob "Hello?" > "Oh?" = scriptName }`,
 			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -319,7 +445,7 @@ const patternTests = {
 		{ name: 'options no script',
 			pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
 			fileSuccess: true,
-			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -342,7 +468,7 @@ const patternTests = {
 		{ name: 'options no equal sign / script',
 			pattern: `dialog _ { Bob "Hello?" > "Oh?" }`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -365,7 +491,7 @@ const patternTests = {
 		{ name: 'options no label / equal sign / script',
 			pattern: `dialog _ { Bob "Hello?" > }`,
 			fileSuccess: true,
-			counts: { tokens: 7, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -389,7 +515,7 @@ const patternTests = {
 		{ name: 'options with garbage',
 			pattern: `dialog _ { Bob "Hello?" > asdfasdf }`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -414,7 +540,7 @@ const patternTests = {
 		{ name: 'normal',
 			pattern: `add dialog settings { default { alignment TR } }`,
 			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: 'add_dialog_settings',
@@ -431,7 +557,7 @@ const patternTests = {
 		{ name: 'error at the end',
 			pattern: `add dialog settings { default { alignment TR demigloss } }`,
 			fileSuccess: true,
-			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: 'add_dialog_settings',
@@ -449,7 +575,7 @@ const patternTests = {
 		{ name: 'error in the middle',
 			pattern: `add dialog settings { default { alignment TR deglaze portrait secretSnake } }`,
 			fileSuccess: true,
-			counts: { tokens: 13, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: 'add_dialog_settings',
@@ -471,7 +597,7 @@ const patternTests = {
 		{ name: 'normal',
 			pattern: `add serial_dialog settings { wrap 1 }`,
 			fileSuccess: true,
-			counts: { tokens: 7, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: 'add_serial_dialog_settings',
@@ -482,7 +608,7 @@ const patternTests = {
 		{ name: 'error at the end',
 			pattern: `add serial_dialog settings { wrap 1 two }`,
 			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: 'add_serial_dialog_settings',
@@ -496,7 +622,7 @@ const patternTests = {
 		{ name: 'error in the middle',
 			pattern: `add serial_dialog settings { wrap 1 two wrap 3 }`,
 			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					node: 'add_serial_dialog_settings',
@@ -514,7 +640,7 @@ const patternTests = {
 		{ name: 'normal',
 			pattern: `include!("header.mgs")`,
 			fileSuccess: true,
-			counts: { tokens: 5, nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
+			counts: { nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
 			nodes: [
 				{
 					node: 'include_macro',
@@ -525,7 +651,7 @@ const patternTests = {
 		{ name: 'empty',
 			pattern: `include!()`,
 			fileSuccess: true,
-			counts: { tokens: 4, nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
+			counts: { nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
 			nodes: [
 				{
 					node: 'include_macro',
@@ -539,7 +665,7 @@ const patternTests = {
 		{ name: 'normal',
 			pattern: `$steamedHams = "Hamburgers";`,
 			fileSuccess: true,
-			counts: { tokens: 4, nodes: 1, errors: 0, warnings: 0 },
+			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: 'constant_assignment',
@@ -551,7 +677,7 @@ const patternTests = {
 		{ name: 'no value',
 			pattern: `$trombones = ;`,
 			fileSuccess: true,
-			counts: { tokens: 3, nodes: 1, errors: 1, warnings: 0 },
+			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
 					name: '$trombones',
@@ -631,8 +757,8 @@ const simplifyObjects = (origLH = {}, origRH = {}) => {
 
 const doTest = (test) => {
 	const errors = [];
-	const lexObject = lex(test.pattern);
-	const file = parseFile(lexObject);
+	const lexObject = lex(test.pattern, 'unitTests.mgs');
+	const file = parseFile(lexObject, 'unitTests.mgs');
 	if (test.fileSuccess !== file.success) { // I doubt this will happen
 		const expected = test.fileSuccess ? 'succeeded' : 'failed';
 		const found = file.success ? 'succeeded' : 'failed';
@@ -709,5 +835,5 @@ const topTest = () => {
 	printTestResults(doneTest);
 }
 
-// megaTestGamut();
+megaTestGamut();
 topTest();

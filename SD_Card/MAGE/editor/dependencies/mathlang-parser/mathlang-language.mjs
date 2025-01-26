@@ -626,18 +626,18 @@ const dictionary = {
 			{ start: `'entity':identifierType`, body: `$string:entityName<entityNames` },
 		],
 		onEnd: (f, cs) => {
+			const entityNameCapture = optionalCapture(cs, 'entityName');
 			const identifierType = mostRecentCapture(cs, 'identifierType');
-			let entity = '';
-			if (identifierType === 'map') entity = '%MAP%';
-			if (identifierType === 'player') entity = '%PLAYER%';
-			if (identifierType === 'self') entity = '%SELF%';
-			if (identifierType === 'entity') {
-				entity = optionalCapture(cs, 'entityName');
+			let entity = null;
+			let pos = identifierType.pos;
+			if (identifierType?.value === 'map') entity = '%MAP%';
+			if (identifierType?.value === 'player') entity = '%PLAYER%';
+			if (identifierType?.value === 'self') entity = '%SELF%';
+			if (identifierType?.value === 'entity') {
+				entity = entityNameCapture.value;
+				pos = entityNameCapture.value;
 			}
-			replaceStaged(cs, 'entityOrMap', {
-				identifierType: mostRecentCapture(cs, 'identifierType'),
-				entity: entity || '',
-			});
+			pushCapture(cs, { label: 'entity', value: entity, pos });
 		},
 	},
 	script_definition: {
@@ -943,7 +943,7 @@ const actionDictionary = {
 		patterns: [{ start: `'unhide'`, body: `'command' $string:command`, end: `';'` }],
 	},
 	action_pause_script: { action: 'SET_SCRIPT_PAUSE',
-		captures: [ 'identifierType', 'entityName', 'script_slot' ],
+		captures: [ 'script_slot', 'entity'  ],
 		values: { bool_value: true },
 		patterns: [{
 			start: `'pause'`,
@@ -952,10 +952,9 @@ const actionDictionary = {
 			// options (rather than the parser); parsing will become much simpler
 			end: `';'`
 		}],
-		cleanupStaged: [ 'entityOrMap' ],
 	},
 	action_unpause_script: { action: 'SET_SCRIPT_PAUSE',
-		captures: [ 'identifierType', 'entityName', 'script_slot' ],
+		captures: [ 'script_slot', 'entity'  ],
 		values: { bool_value: false },
 		patterns: [{
 			start: `'unpause'`,
@@ -1057,10 +1056,10 @@ const makeTreeEntry = (slug, treeEntry) => {
 				return acc || insert[curr] === null;
 			}, false);
 			pushToStaged(cs, 'scriptBodyItems[]', insert);
-			if (actionDictionary[slug].cleanupStaged) {
-				actionDictionary[slug].cleanupStaged
-					.forEach(v=>{ deleteStaged(cs, v); }); // test this
-			}
+			// if (actionDictionary[slug].cleanupStaged) {
+			// 	actionDictionary[slug].cleanupStaged
+			// 		.forEach(v=>{ deleteStaged(cs, v); }); // test this
+			// }
 		},
 	}
 };
@@ -1118,6 +1117,9 @@ const getMostRecentCaptureAnyName = (cs) => {
 };
 const readMostRecentCapture = (cs) => {
 	return cs.captures[cs.captures.length-1];
+};
+const pushCapture = (cs, insert) => {
+	return cs.captures.push(insert);
 };
 const mostRecentCaptures = (cs, captureLabel, min = 1, max = min) => {
 	const extracted = [];
