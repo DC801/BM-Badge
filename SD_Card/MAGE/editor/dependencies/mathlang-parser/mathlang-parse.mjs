@@ -342,14 +342,7 @@ export const parseFile = (lexResult, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = `_{}`
-// `add serial_dialog settings { wrap 2 one }` // error
-// +`\nadd serial_dialog settings { wrap 3 }`
-// +`\nadd serial_dialog settings { wrap 3 ERRORTOKEN wrap 4 }`
-// +`\nadd dialog settings { wrap 3 alignment 4 }`
-// +`\nadd dialog settings {
-// 	default { alignment BL }
-// }`
+const testInput = `dialog _ { Bob "Hello?" > asdfasdf }`
 // +`\nserial_dialog testName {
 // 	"Message!"
 // 	# "Why not?" = scriptWhyNot

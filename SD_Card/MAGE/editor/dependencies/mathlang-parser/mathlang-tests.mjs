@@ -1,10 +1,214 @@
 import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
+// remember newlines count as a token, so avoid them
+// to make it easier to count them with your eyeballs!
 const patternTests = {
+	dialog_definition: [
+		{ name: 'options',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" = scriptName }`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+						options: [{
+							label: 'Oh?',
+							script: 'scriptName'
+						}],
+					  },
+					]
+				}
+			]
+		},
+		// Should only fail once:
+		{ name: 'options with garbage',
+			pattern: `dialog _ { Bob "Hello?" > asdfasdf }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						malformed: true,
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+						options: [{
+							label: '',
+							script: ''
+						}],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'options no script',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
+			fileSuccess: true,
+			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						malformed: true,
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+						options: [{
+							label: 'Oh?',
+							script: ''
+						}],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'options no equal sign / script',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						malformed: true,
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+						options: [{
+							label: 'Oh?',
+							script: ''
+						}],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'options no equal sign / script / label',
+			pattern: `dialog _ { Bob "Hello?" > }`,
+			fileSuccess: true,
+			counts: { tokens: 7, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						malformed: true,
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+						options: [{
+							label: '',
+							script: ''
+						}],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure at the end',
+			pattern: `dialog _ { Bob alignment BR ERRORTOKEN "Hello?" }`,
+			fileSuccess: true,
+			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						parameters: [{ property: 'alignment', value: 'BR' }],
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure in the middle',
+			pattern: `dialog _ { Bob alignment BR ERRORTOKEN wrap 10 "Hello?" }`,
+			fileSuccess: true,
+			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						parameters: [
+							{ property: 'alignment', value: 'BR' },
+							{ property: 'wrap', value: 10 },
+						],
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'parameters',
+			pattern: `dialog _ { Bob alignment BR "Hello?" }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+					  {
+						node: "dialog",
+						parameters: [{ property: 'alignment', value: 'BR' }],
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?" ],
+					  },
+					]
+				}
+			]
+		},
+		{ name: 'double',
+			pattern: `dialog greetings {`
+				+ `Bob "Hello?" "Is there anyone there?"`
+				+ `PLAYER "Oh?" "I heard something!"`
+				+ `}`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "greetings",
+					dialogs: [
+					  {
+						node: "dialog",
+						identifier: { type: "label", value: "Bob" },
+						messages: [ "Hello?", "Is there anyone there?" ],
+					  },
+					  {
+						node: "dialog",
+						identifier: { type: "label", value: "PLAYER" },
+						messages: [ "Oh?", "I heard something!"],
+					  }
+					]
+				}
+			]
+		}
+	],
 	add_dialog_settings: [
-		{
-			name: 'normal',
+		{ name: 'normal',
 			pattern: `add dialog settings { default { alignment TR } }`,
 			fileSuccess: true,
 			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
@@ -21,8 +225,7 @@ const patternTests = {
 				}
 			]
 		},
-		{
-			name: 'error at the end',
+		{ name: 'error at the end',
 			pattern: `add dialog settings { default { alignment TR demigloss } }`,
 			fileSuccess: true,
 			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
@@ -40,8 +243,7 @@ const patternTests = {
 				}
 			]
 		},
-		{
-			name: 'error in the middle',
+		{ name: 'error in the middle',
 			pattern: `add dialog settings { default { alignment TR deglaze portrait secretSnake } }`,
 			fileSuccess: true,
 			counts: { tokens: 13, nodes: 1, errors: 1, warnings: 0 },
@@ -63,8 +265,7 @@ const patternTests = {
 		},
 	],
 	add_serial_dialog_settings: [
-		{
-			name: 'normal',
+		{ name: 'normal',
 			pattern: `add serial_dialog settings { wrap 1 }`,
 			fileSuccess: true,
 			counts: { tokens: 7, nodes: 1, errors: 0, warnings: 0 },
@@ -75,8 +276,7 @@ const patternTests = {
 				}
 			]
 		},
-		{
-			name: 'error at the end',
+		{ name: 'error at the end',
 			pattern: `add serial_dialog settings { wrap 1 two }`,
 			fileSuccess: true,
 			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
@@ -90,8 +290,7 @@ const patternTests = {
 				}
 			]
 		},
-		{
-			name: 'error in the middle',
+		{ name: 'error in the middle',
 			pattern: `add serial_dialog settings { wrap 1 two wrap 3 }`,
 			fileSuccess: true,
 			counts: { tokens: 10, nodes: 1, errors: 1, warnings: 0 },
@@ -109,8 +308,7 @@ const patternTests = {
 		},
 	],
 	include_macro: [
-		{
-			name: 'normal',
+		{ name: 'normal',
 			pattern: `include!("header.mgs")`,
 			fileSuccess: true,
 			counts: { tokens: 5, nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
@@ -121,8 +319,7 @@ const patternTests = {
 				}
 			]
 		},
-		{
-			name: 'empty',
+		{ name: 'empty',
 			pattern: `include!()`,
 			fileSuccess: true,
 			counts: { tokens: 4, nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
@@ -136,8 +333,7 @@ const patternTests = {
 		}
 	],
 	constant_assignment: [
-		{
-			name: 'normal',
+		{ name: 'normal',
 			pattern: `$steamedHams = "Hamburgers";`,
 			fileSuccess: true,
 			counts: { tokens: 4, nodes: 1, errors: 0, warnings: 0 },
@@ -149,8 +345,7 @@ const patternTests = {
 				}
 			]
 		},
-		{
-			name: 'no value',
+		{ name: 'no value',
 			pattern: `$trombones = ;`,
 			fileSuccess: true,
 			counts: { tokens: 3, nodes: 1, errors: 1, warnings: 0 },
@@ -165,53 +360,70 @@ const patternTests = {
 		},
 	],
 }
+const ansiRed = '\u001b[1;31m';
+const ansiYellow = '\u001b[1;33m';
+const ansiReset = '\u001b[0m';
 const simplifyValues = (lh, rh) => {
-	if (lh === null) {
-		return { lh, rh };
-	} else if (Array.isArray(lh)) {
-		return simplifyArrays(lh, rh);
-	} else if (typeof lh === 'object') {
-		return simplifyObjects(lh, rh);
-	} else return { lh, rh };
+	if (lh === null) return simplifyLiteral(lh, rh);
+	if (Array.isArray(lh)) return simplifyArrays(lh, rh);
+	if (typeof lh === 'object') return simplifyObjects(lh, rh);
+	return simplifyLiteral(lh, rh);
 }
+const simplifyLiteral = (lh, rh) => {
+	const red = ansiRed+JSON.stringify(rh)+ansiReset;
+	const diff = lh === rh
+	? rh
+	: red + ` (expected ${ansiYellow}${JSON.stringify(lh)}${ansiReset})`;
+	return { lh, rh, diff };
+};
 const simplifyArrays = (origLH = [], origRH = []) => {
 	const newLH = [];
 	const newRH = [];
+	const newDiffs = [];
 	origLH.forEach((left, i)=>{
 		const right = origRH[i];
 		if (Array.isArray(left)) {
-			const { lh, rh } = simplifyArrays(lh, rh);
+			const { lh, rh, diff } = simplifyArrays(left, right);
 			newLH.push(lh);
 			newRH.push(rh);
+			newDiffs.push(diff);
 		} else if (typeof left === 'object') {
-			const { lh, rh } = simplifyObjects(left, right);
+			const { lh, rh, diff } = simplifyObjects(left, right);
 			newLH.push(lh);
 			newRH.push(rh);
+			newDiffs.push(diff);
 		} else {
-			newLH.push(origLH);
-			newRH.push(origRH);
+			const { lh, rh, diff } = simplifyLiteral(left, right);
+			newLH.push(lh);
+			newRH.push(rh);
+			newDiffs.push(diff);
 		}
 	});
-	return { lh: newLH, rh: newRH };
+	return { lh: newLH, rh: newRH, diff: newDiffs };
 }
-const simplifyObjects = (lh = {}, rh = {}) => {
+const simplifyObjects = (origLH = {}, origRH = {}) => {
 	const sortedLH = {};
 	const sortedRH = {};
-	Object.keys(lh).sort().forEach(k=>{
-		if (Array.isArray(lh[k])) {
-			const { newLH, newRH } = simplifyArrays(lh[k], rh[k]);
-			sortedLH[k] = newLH;
-			sortedRH[k] = newRH;
-		} else if (typeof lh[k] === 'object') {
-			const { newLH, newRH } = simplifyObjects(lh[k], rh[k]);
-			sortedLH[k] = newLH;
-			sortedRH[k] = newRH;
+	const sortedDiff = {};
+	Object.keys(origLH).sort().forEach(k=>{
+		if (Array.isArray(origLH[k])) {
+			const { lh, rh, diff } = simplifyArrays(origLH[k], origRH[k]);
+			sortedLH[k] = lh;
+			sortedRH[k] = rh;
+			sortedDiff[k] = diff;
+		} else if (typeof origLH[k] === 'object') {
+			const { lh, rh, diff } = simplifyObjects(origLH[k], origRH[k]);
+			sortedLH[k] = lh;
+			sortedRH[k] = rh;
+			sortedDiff[k] = diff;
 		} else {
-			sortedLH[k] = lh[k];
-			sortedRH[k] = rh[k];
+			const { lh, rh, diff } = simplifyLiteral(origLH[k], origRH[k]);
+			sortedLH[k] = lh;
+			sortedRH[k] = rh;
+			sortedDiff[k] = diff;
 		}
 	});
-	return { lh: sortedLH, rh: sortedRH };
+	return { lh: sortedLH, rh: sortedRH, diff: sortedDiff };
 }
 
 const doTest = (test) => {
@@ -222,7 +434,7 @@ const doTest = (test) => {
 		const expected = test.fileSuccess ? 'succeeded' : 'failed';
 		const found = file.success ? 'succeeded' : 'failed';
 		errors.push({
-			message: `Parsing ${found}; should have ${expected}`,
+			message: `Parsing ${ansiRed}${found}${ansiReset}; should have ${ansiYellow}${expected}${ansiReset}`,
 		});
 	}
 	Object.keys(test.counts).forEach(item=>{
@@ -239,21 +451,25 @@ const doTest = (test) => {
 			const foundI = foundP ? item : item.replace(/s$/,'');
 			const expected = test.counts[item];
 			errors.push({
-				message: `FOUND - ${found} ${foundI}, expected ${expected}`,
+				message: `Found ${ansiRed}${found} ${foundI}${ansiReset}, expected ${ansiYellow}${expected}${ansiReset}`,
 			});
 		}
 	});
 	test.nodes.forEach((expected, i)=>{
 		// expected.malformed = !!expected.malformed;
 		const found = file.nodes[i];
-		Object.entries(expected).forEach(([k,v])=>{
-			const {lh, rh} = simplifyValues(expected[k], found[k]);
-			const jsonLeft = JSON.stringify(lh);
-			const jsonRight = JSON.stringify(rh);
+		Object.keys(expected).forEach(key=>{
+			const {lh, rh, diff} = simplifyValues(expected[key], found[key]);
+			const jsonLeft = JSON.stringify(lh, null, '  ');
+			const jsonRight = JSON.stringify(rh, null, '  ');
 			if (jsonLeft !== jsonRight) {
-				errors.push({
-					message: `Found ${k}:${jsonLeft}, expected ${jsonRight}`,
-				});
+				if (typeof lh === 'object') {
+					const message = { message: `Found ${JSON.stringify(diff, null, '  ')}` }
+					errors.push(message);
+				} else {
+					const message = { message: `Found ${ansiRed}${key}: ${jsonLeft}${ansiReset}, expected value ${ansiYellow}${jsonRight}${ansiReset}` };
+					errors.push(message);
+				}
 			}
 		});
 	});
@@ -263,19 +479,32 @@ const doTest = (test) => {
 		pattern: test.pattern,
 	};
 };
-
-const indent = '    '
-Object.entries(patternTests).forEach(([testCat, tests])=>{
-	console.log(`=== ${testCat} =========>`);
-	tests.map(doTest).forEach(test=>{
-		if (test.errors.length === 0) {
-			console.log(`${indent}${test.testName} --> OK`);
-		} else {
-			console.error(`${indent}${test.testName} -->`);
-			console.error(indent+indent+'Pattern: `'+test.pattern+'`')
-			test.errors.map(error=>{
-				console.error(indent+indent+error.message)
-			});
-		}
+const printTestResults = (test) => {
+	if (test.errors.length === 0) {
+		console.log(`${indent}${test.testName} --> OK`);
+	} else {
+		console.error(`${indent}${test.testName} -->`);
+		console.error(indent+indent+'Pattern: `'+test.pattern+'`')
+		test.errors.map(error=>{
+			error.message = error.message.replaceAll('\\u001b[','\u001b[');
+			const print = error.message.split('\n').map(s=>indent+indent+s).join('\n');
+			console.error(print);
+		});
+	}
+};
+const indent = '    ';
+const megaTestGamut = () => {
+	Object.entries(patternTests).forEach(([testCat, tests])=>{
+		console.log(`=== ${testCat} =========>`);
+		tests.map(doTest).forEach(printTestResults);
 	});
-});
+}
+const topTest = () => {
+	const [testCat, tests] = Object.entries(patternTests)[0];
+	console.log(`=== ${testCat} =========>`);
+	const doneTest = doTest(tests[0]);
+	printTestResults(doneTest);
+}
+
+megaTestGamut();
+// topTest();

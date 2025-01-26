@@ -128,7 +128,9 @@ const dictionary = {
 		patterns: [
 			{ start: `'wrap':property`, body: `$number:value` },
 			// gotta do this for things without terminators :(
-			{ body: `@any:unknownToken` },
+			{ body: `@any_but_not_qstring:unknownToken` },
+			// RIP if you start typing a quoted string on its own...
+			// (need to be able to switch into messages)
 		],
 		onEnd: (f, cs) => {
 			const errorToken = mostRecentCapture(cs, 'unknownToken');
@@ -223,6 +225,8 @@ const dictionary = {
 			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
 			// gotta do this for things without terminators :(
 			{ body: `@any_but_not_qstring:unknownToken` },
+			// RIP if you start typing a quoted string on its own...
+			// (need to be able to switch into messages)
 		],
 		onEnd: (f, cs) => {
 			const errorToken = mostRecentCapture(cs, 'unknownToken');
@@ -259,10 +263,17 @@ const dictionary = {
 			}
 		},
 		onEnd: (f, cs) => {
+			const dialogs = getAndDeleteStaged(cs, 'dialogs[]')
+				.map(dialog=>{
+					dialog.debug = JSON.parse(JSON.stringify(dialog));
+					delete dialog.startPos;
+					delete dialog.tokenPos;
+					return dialog;
+				})
 			addNode(f, cs, {
 				node: 'dialog_definition',
 				name: getStaged(cs, 'dialogName'),
-				dialogs: getAndDeleteStaged(cs, 'dialogs[]'),
+				dialogs,
 			});
 			deleteStaged(cs, 'dialogIdentifier{}');
 			deleteStaged(cs, 'dialogParameters[]');
@@ -299,9 +310,16 @@ const dictionary = {
 				messages: mostRecentCaptures(cs, 'dialogMessage', 1, Infinity),
 				options: getStaged(cs, 'dialogOptions[]'),
 			};
-			const node = { node: 'dialog', debug };
-			node.messages = debug.messages.map(inner=>inner.value);
-			if (debug.parameters.length > 0) {
+			const node = {
+				node: 'dialog',
+				debug,
+				messages: debug.messages.map(inner=>inner.value),
+				identifier: {
+					type: debug.identifier.type,
+					value: debug.identifier.value,
+				},
+			};
+			if (debug.parameters?.length > 0) {
 				node.parameters = debug.parameters
 					.map(inner=>{
 						if (inner.malformed) node.malformed = true;
@@ -311,11 +329,18 @@ const dictionary = {
 						};
 					})
 			}
-			debug.options.forEach(inner=>{
-				if (inner.malformed) node.malformed = true;
-				node.options = node.options || {};
-				node.options[inner.label] = inner.script;
-			});
+			if (debug.options) {
+				const options = [];
+				debug.options.forEach(inner=>{
+					if (inner.malformed) node.malformed = true;
+					options.push({
+						label: inner.label || '',
+						script: inner.script || '',
+					});
+				});
+				node.options = options;
+			}
+			// can loop, so clear but not delete
 			pushToStaged(cs, 'dialogs[]', node);
 			prepStaged(cs, 'dialogIdentifier{}');
 			prepStaged(cs, 'dialogParameters[]');
@@ -423,24 +448,15 @@ const dictionary = {
 	},
 	dialog_definition: {
 		patterns: [
-			{ start: `'dialog' $string:dialogName`, body: `'{' @dialog*`, end: `'}'` },
+			{ start: `'dialog' $string:dialogName`, body: `@dialog_literal` },
 		],
 		onStart: (f, cs) => {
 			let name = mostRecentCapture(cs, 'dialogName');
 			replaceStaged(cs, 'dialogName', name.value);
 		},
 		onEnd: (f, cs) => {
-			const name = mostRecentCapture(cs, 'dialogName')?.value || '';
-			addNode(f, cs, {
-				node: 'dialog_definition',
-				name,
-				dialogs: getStaged(cs, 'dialogs[]'),
-			});
-			deleteStaged(cs, 'dialogs[]');
-			deleteStaged(cs, 'dialogIdentifier{}');
-			deleteStaged(cs, 'dialogParameters[]');
-			deleteStaged(cs, 'dialogMessages[]');
-			deleteStaged(cs, 'dialogOptions[]');
+			// have to wait to delete it now because of the 'show..block' variant
+			deleteStaged(cs, 'serialDialogName');
 		},
 	},
 	dialog_identifier: {
