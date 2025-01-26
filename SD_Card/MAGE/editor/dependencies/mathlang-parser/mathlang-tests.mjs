@@ -4,7 +4,230 @@ import { parseFile } from './mathlang-parse.mjs';
 // remember newlines count as a token, so avoid them
 // to make it easier to count them with your eyeballs!
 const patternTests = {
+	serial_dialog_definition: [
+		{ name: 'double',
+			pattern: `serial_dialog test { "Test message!" "Another!" }`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					dialogs: [{
+						node: "serial_dialog",
+						messages: [ "Test message!", "Another!" ],
+					}]
+				}
+			]
+		},
+		{ name: 'parameters',
+			pattern: `serial_dialog test { wrap 80 "Test message!" "Another!" }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					parameters: [{ property: 'wrap', value: 80 }],
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'parameters with error at the end',
+			pattern: `serial_dialog test { wrap 80 asdf "Test message!" "Another!" }`,
+			fileSuccess: true,
+			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					malformed: true,
+					name: "test",
+					parameters: [{ property: 'wrap', value: 80 }],
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'parameters with error in the middle',
+			pattern: `serial_dialog test { wrap 80 asdf wrap 79 "Test message!" "Another!" }`,
+			fileSuccess: true,
+			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					malformed: true,
+					name: "test",
+					parameters: [
+						{ property: 'wrap', value: 80 },
+						{ property: 'wrap', value: 79 },
+					],
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'options',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in" = correctScriptChoice`
+				+`}`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [{ label: 'Fill in', script: 'correctScriptChoice' }],
+				}
+			]
+		},
+		{ name: 'options no script',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in" =`
+				+`}`,
+			fileSuccess: true,
+			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [{ label: 'Fill in', script: '' }],
+				}
+			]
+		},
+		{ name: 'options no equal sign / script',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in"`
+				+`}`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [{ label: 'Fill in', script: '' }],
+				}
+			]
+		},
+		{ name: 'options no label / equal sign / script',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ `
+				+`}`,
+			fileSuccess: true,
+			counts: { tokens: 7, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [{ label: '', script: '' }],
+				}
+			]
+		},
+		// Should only fail once:
+		{ name: 'options with garbage',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ asdfasdf`
+				+`}`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [{ label: '', script: '' }],
+				}
+			]
+		},
+	],
 	dialog_definition: [
+		{ name: 'double',
+			pattern: `dialog greetings {`
+				+ `Bob "Hello?" "Is there anyone there?"`
+				+ `PLAYER "Oh?" "I heard something!"`
+				+ `}`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "greetings",
+					dialogs: [
+						{
+							node: "dialog",
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?", "Is there anyone there?" ],
+						},
+						{
+							node: "dialog",
+							identifier: { type: "label", value: "PLAYER" },
+							messages: [ "Oh?", "I heard something!"],
+						}
+					]
+				}
+			]
+		},
+		{ name: 'parameters',
+			pattern: `dialog _ { Bob alignment BR "Hello?" }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							parameters: [{ property: 'alignment', value: 'BR' }],
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure at the end',
+			pattern: `dialog _ { Bob alignment BR ERRORTOKEN "Hello?" }`,
+			fileSuccess: true,
+			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							parameters: [{ property: 'alignment', value: 'BR' }],
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure in the middle',
+			pattern: `dialog _ { Bob alignment BR ERRORTOKEN wrap 10 "Hello?" }`,
+			fileSuccess: true,
+			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							parameters: [
+								{ property: 'alignment', value: 'BR' },
+								{ property: 'wrap', value: 10 },
+							],
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
 		{ name: 'options',
 			pattern: `dialog _ { Bob "Hello?" > "Oh?" = scriptName }`,
 			fileSuccess: true,
@@ -14,15 +237,84 @@ const patternTests = {
 					node: "dialog_definition",
 					name: "_",
 					dialogs: [
-					  {
-						node: "dialog",
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-						options: [{
-							label: 'Oh?',
-							script: 'scriptName'
-						}],
-					  },
+						{
+							node: "dialog",
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+							options: [{
+								label: 'Oh?',
+								script: 'scriptName'
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options no script',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
+			fileSuccess: true,
+			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+							options: [{
+								label: 'Oh?',
+								script: ''
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options no equal sign / script',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+							options: [{
+								label: 'Oh?',
+								script: ''
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options no label / equal sign / script',
+			pattern: `dialog _ { Bob "Hello?" > }`,
+			fileSuccess: true,
+			counts: { tokens: 7, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_definition",
+					name: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+							options: [{
+								label: '',
+								script: ''
+							}],
+						},
 					]
 				}
 			]
@@ -37,175 +329,20 @@ const patternTests = {
 					node: "dialog_definition",
 					name: "_",
 					dialogs: [
-					  {
-						node: "dialog",
-						malformed: true,
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-						options: [{
-							label: '',
-							script: ''
-						}],
-					  },
+						{
+							node: "dialog",
+							malformed: true,
+							identifier: { type: "label", value: "Bob" },
+							messages: [ "Hello?" ],
+							options: [{
+								label: '',
+								script: ''
+							}],
+						},
 					]
 				}
 			]
 		},
-		{ name: 'options no script',
-			pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
-			fileSuccess: true,
-			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "_",
-					dialogs: [
-					  {
-						node: "dialog",
-						malformed: true,
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-						options: [{
-							label: 'Oh?',
-							script: ''
-						}],
-					  },
-					]
-				}
-			]
-		},
-		{ name: 'options no equal sign / script',
-			pattern: `dialog _ { Bob "Hello?" > "Oh?" }`,
-			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "_",
-					dialogs: [
-					  {
-						node: "dialog",
-						malformed: true,
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-						options: [{
-							label: 'Oh?',
-							script: ''
-						}],
-					  },
-					]
-				}
-			]
-		},
-		{ name: 'options no equal sign / script / label',
-			pattern: `dialog _ { Bob "Hello?" > }`,
-			fileSuccess: true,
-			counts: { tokens: 7, nodes: 1, errors: 1, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "_",
-					dialogs: [
-					  {
-						node: "dialog",
-						malformed: true,
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-						options: [{
-							label: '',
-							script: ''
-						}],
-					  },
-					]
-				}
-			]
-		},
-		{ name: 'parameters failure at the end',
-			pattern: `dialog _ { Bob alignment BR ERRORTOKEN "Hello?" }`,
-			fileSuccess: true,
-			counts: { tokens: 9, nodes: 1, errors: 1, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "_",
-					dialogs: [
-					  {
-						node: "dialog",
-						parameters: [{ property: 'alignment', value: 'BR' }],
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-					  },
-					]
-				}
-			]
-		},
-		{ name: 'parameters failure in the middle',
-			pattern: `dialog _ { Bob alignment BR ERRORTOKEN wrap 10 "Hello?" }`,
-			fileSuccess: true,
-			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "_",
-					dialogs: [
-					  {
-						node: "dialog",
-						parameters: [
-							{ property: 'alignment', value: 'BR' },
-							{ property: 'wrap', value: 10 },
-						],
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-					  },
-					]
-				}
-			]
-		},
-		{ name: 'parameters',
-			pattern: `dialog _ { Bob alignment BR "Hello?" }`,
-			fileSuccess: true,
-			counts: { tokens: 8, nodes: 1, errors: 0, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "_",
-					dialogs: [
-					  {
-						node: "dialog",
-						parameters: [{ property: 'alignment', value: 'BR' }],
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?" ],
-					  },
-					]
-				}
-			]
-		},
-		{ name: 'double',
-			pattern: `dialog greetings {`
-				+ `Bob "Hello?" "Is there anyone there?"`
-				+ `PLAYER "Oh?" "I heard something!"`
-				+ `}`,
-			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
-			nodes: [
-				{
-					node: "dialog_definition",
-					name: "greetings",
-					dialogs: [
-					  {
-						node: "dialog",
-						identifier: { type: "label", value: "Bob" },
-						messages: [ "Hello?", "Is there anyone there?" ],
-					  },
-					  {
-						node: "dialog",
-						identifier: { type: "label", value: "PLAYER" },
-						messages: [ "Oh?", "I heard something!"],
-					  }
-					]
-				}
-			]
-		}
 	],
 	add_dialog_settings: [
 		{ name: 'normal',
@@ -506,5 +643,5 @@ const topTest = () => {
 	printTestResults(doneTest);
 }
 
-megaTestGamut();
-// topTest();
+// megaTestGamut();
+topTest();

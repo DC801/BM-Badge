@@ -342,7 +342,10 @@ export const parseFile = (lexResult, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = `dialog _ { Bob "Hello?" > asdfasdf }`
+const testInput = ``
+// +`serial_dialog test { "Test message!" "Another!"`
+// 				+`_ "Fill in" = correctScriptChoice`
+// 				+`}`
 // +`\nserial_dialog testName {
 // 	"Message!"
 // 	# "Why not?" = scriptWhyNot

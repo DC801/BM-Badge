@@ -382,7 +382,7 @@ const dictionary = {
 	},
 	serial_dialog: {
 		patterns: `@serial_dialog_parameter*
-			$string:serialDialogMessage+
+			$quoted_string:serialDialogMessage+
 			@serial_dialog_option*`,
 		onEnd: (f, cs) => {
 			const debug = {
@@ -409,7 +409,7 @@ const dictionary = {
 			}
 			let optionType = debug?.options?.[0]?.type;
 			if (optionType) {
-				debug.options.forEach(inner=>{
+				node[optionType] = debug.options.map(inner=>{
 					if (inner.malformed) node.malformed = true;
 					if (inner.type !== optionType) {
 						f.warnings.push({
@@ -418,10 +418,14 @@ const dictionary = {
 							errorPos: inner.startPos,
 						});
 					}
-					node[optionType] = node[optionType] || {};
-					node[optionType][inner.label] = inner.script;
+					return {
+						label: inner.label,
+						script: inner.script,
+					};
 				});
 			}
+			const malformed = getAndDeleteStaged(cs, 'serialDialogParametersMalformed');
+			if (malformed) node.malformed = true;
 			addNode(f, cs, node);
 		},
 	},
@@ -528,9 +532,6 @@ const dictionary = {
 			end: `';'`,
 		}],
 		onStart: (f, cs) => {
-			prepStaged(cs, 'serialDialogOptions[]');
-			prepStaged(cs, 'serialDialogMessages[]');
-			prepStaged(cs, 'serialDialogParameters[]');
 			let name = optionalCapture(cs, 'serialDialogName');
 			name = name?.value || makeAutoIdentifierName(
 				f.plaintext,
