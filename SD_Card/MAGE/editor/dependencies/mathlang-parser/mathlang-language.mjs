@@ -1089,7 +1089,38 @@ const actionDictionary = {
 			body: `'->' $number:animation $quantity:play_count?`,
 			end: `';'`
 		}],
-	}
+	},
+	action_loop_camera_along_geometry: { action: 'LOOP_CAMERA_ALONG_GEOMETRY',
+		captures: [ 'geometryName' ],
+		patterns: [{
+			start: `'camera' '->' 'geometry' $string:geometryName<geometryNames 'length' 'forever'`,
+			end: `';'`
+		}],
+	},
+	action_pan_camera_along_geometry: { action: 'PAN_CAMERA_ALONG_GEOMETRY',
+		captures: [ 'duration', 'geometryName' ],
+		patterns: [{
+			start: `'camera' '->' 'geometry' $string:geometryName<geometryNames 'length' 'over'`,
+			body: `$duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_pan_camera_to_geometry: { action: 'PAN_CAMERA_TO_GEOMETRY',
+		captures: [  'duration', 'geometryName' ],
+		patterns: [{
+			start: `'camera' '->' 'geometry' $string:geometryName<geometryNames 'origin'`,
+			body: `'over' $duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_pan_camera_to_entity: { action: 'PAN_CAMERA_TO_ENTITY',
+		captures: [ 'duration', 'entity' ],
+		patterns: [{
+			start: `'camera' '->' @entity_identifier 'position'`,
+			body: `'over' $duration:duration`,
+			end: `';'`
+		}],
+	},
 }
 
 const makeTreeEntry = (slug, treeEntry) => {
@@ -1103,7 +1134,7 @@ const makeTreeEntry = (slug, treeEntry) => {
 			captures.forEach(captureName=>{
 				const capture = mostRecentCapture(cs, captureName);
 				insert[captureName] = capture ? capture.value : null;
-			})
+			});
 			const actionValues = treeEntry.values;
 			if (actionValues) {
 				Object.entries(actionValues)

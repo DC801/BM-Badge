@@ -192,9 +192,19 @@ export const lex = (string) => {
 				}
 			}
 		}
-		// minus sidetracking
-		const minus = curr === '-' ? '-' : '';
-		if (minus && !isDigit(peek())) {
+		// operators
+		const double = curr + peek();
+		if (OPERATORS_LONG.has(double)) {
+			let op = curr + advance();
+			tokens.push({
+				type: 'operator',
+				rawValue: op,
+				value: op,
+				pos,
+			});
+			advance();
+			continue;
+		} else if (OPERATORS_SINGLE.has(curr)) {
 			tokens.push({
 				type: 'operator',
 				rawValue: curr,
@@ -202,6 +212,7 @@ export const lex = (string) => {
 				pos,
 			});
 			advance();
+			continue;
 		}
 		// numbers
 		if (isDigit(curr)) {
@@ -211,7 +222,7 @@ export const lex = (string) => {
 				value: NaN,
 				pos: startPos,
 			}
-			let number = minus;
+			let number = '';
 			while (curr !== '' && isDigit(curr)) {
 				number += curr;
 				advance();
@@ -241,28 +252,15 @@ export const lex = (string) => {
 				token.type = 'number',
 				token.value = Number(number);
 			}
+			const lastToken = tokens[tokens.length-1];
+			if (
+				lastToken.value === '-'
+				&& lastToken.pos + 1 === token.pos
+			) {
+				token.value = -token.value;
+				tokens.pop();
+			}
 			tokens.push(token);
-			continue;
-		}
-		// operators
-		if (OPERATORS_LONG.has(curr + peek())) {
-			let op = curr + advance();
-			tokens.push({
-				type: 'operator',
-				rawValue: op,
-				value: op,
-				pos,
-			});
-			advance();
-			continue;
-		} else if (OPERATORS_SINGLE.has(curr)) {
-			tokens.push({
-				type: 'operator',
-				rawValue: curr,
-				value: curr,
-				pos,
-			});
-			advance();
 			continue;
 		}
 		// constant

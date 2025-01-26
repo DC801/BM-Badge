@@ -4,6 +4,19 @@ import { parseFile } from './mathlang-parse.mjs';
 // remember newlines count as a token, so avoid them
 // to make it easier to count them with your eyeballs!
 const patternTests = {
+	camera_actions: [
+		{ name: `'camera ->' actions`,
+			pattern: `_ {
+					camera -> geometry walkPath origin over 1s;
+					camera -> geometry "walkPath" length over 1000ms;
+					camera -> geometry walkPath length forever;
+					camera -> entity Bob position over 1ms;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: []
+		},
+	],
 	show_serial_dialog: [
 		{ name: 'inline definition vs reference & named vs autonamed',
 			pattern: `testScript {
@@ -875,4 +888,4 @@ const topTest = () => {
 }
 
 megaTestGamut();
-topTest();
+// topTest();

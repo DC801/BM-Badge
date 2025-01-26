@@ -362,7 +362,7 @@ export const parseFile = (lexResult, givenFileName) => {
 
 const testInput = ``
 // +`_ {
-// show dialog { PLAYER "What?" > asdf };
+// 	camera -> geometry walkPath origin over 1s;
 // `
 // +`}`
 // + ``
