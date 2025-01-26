@@ -2,23 +2,67 @@ import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
 const patternTests = {
+	add_dialog_settings: [
+		{
+			name: 'normal',
+			pattern: `add dialog settings { default { alignment TR } }`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: 'add_dialog_settings',
+					settings: [{
+						targetType: 'default',
+						targetValue: '',
+						settings: [
+							{ property: 'alignment', value: 'TR' },
+						]
+					}]
+				}
+			]
+		},
+		{
+			name: 'error at the end',
+			pattern: `add dialog settings { default { alignment TR demigloss } }`,
+			fileSuccess: true,
+			counts: { tokens: 11, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: 'add_dialog_settings',
+					malformed: true,
+					settings: [{
+						targetType: 'default',
+						targetValue: '',
+						settings: [
+							{ property: 'alignment', value: 'TR' },
+						]
+					}]
+				}
+			]
+		},
+		{
+			name: 'error in the middle',
+			pattern: `add dialog settings { default { alignment TR deglaze portrait secretSnake } }`,
+			fileSuccess: true,
+			counts: { tokens: 13, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: 'add_dialog_settings',
+					malformed: true,
+					settings: [{
+						targetType: 'default',
+						targetValue: '',
+						settings: [
+							{ property: 'alignment', value: 'TR' },
+							{ property: 'portrait', value: 'secretSnake' },
+						]
+					}]
+				},
+				
+			]
+		},
+	],
 	add_serial_dialog_settings: [
-		// { // PROBLEM: does not get marked as malformed!
-		// // Error is correctly reported, however
-		// // SOLUTION: find some way to jump back in?
-		// or some way to realize you haven't hit a terminator?
-		// 	name: 'error at the end',
-		// 	pattern: `add serial_dialog settings { wrap 1 two }`,
-		// 	fileSuccess: true,
-		// 	counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
-		// 	nodes: [
-		// 		{
-		// 			node: 'add_serial_dialog_settings',
-		// 			malformed: true,
-		// 			settings: [{ property: 'wrap', value: 1 }],
-		// 		}
-		// 	]
-		// },
 		{
 			name: 'normal',
 			pattern: `add serial_dialog settings { wrap 1 }`,
@@ -29,6 +73,38 @@ const patternTests = {
 					node: 'add_serial_dialog_settings',
 					settings: [{ property: 'wrap', value: 1 }],
 				}
+			]
+		},
+		{
+			name: 'error at the end',
+			pattern: `add serial_dialog settings { wrap 1 two }`,
+			fileSuccess: true,
+			counts: { tokens: 8, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: 'add_serial_dialog_settings',
+					malformed: true,
+					settings: [
+						{ property: 'wrap', value: 1 }
+					],
+				}
+			]
+		},
+		{
+			name: 'error in the middle',
+			pattern: `add serial_dialog settings { wrap 1 two wrap 3 }`,
+			fileSuccess: true,
+			counts: { tokens: 10, nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: 'add_serial_dialog_settings',
+					malformed: true,
+					settings: [
+						{ property: 'wrap', value: 1 },
+						{ property: 'wrap', value: 3 },
+					],
+				},
+				
 			]
 		},
 	],
@@ -98,7 +174,7 @@ const simplifyValues = (lh, rh) => {
 		return simplifyObjects(lh, rh);
 	} else return { lh, rh };
 }
-const simplifyArrays = (origLH, origRH) => {
+const simplifyArrays = (origLH = [], origRH = []) => {
 	const newLH = [];
 	const newRH = [];
 	origLH.forEach((left, i)=>{
@@ -118,7 +194,7 @@ const simplifyArrays = (origLH, origRH) => {
 	});
 	return { lh: newLH, rh: newRH };
 }
-const simplifyObjects = (lh, rh) => {
+const simplifyObjects = (lh = {}, rh = {}) => {
 	const sortedLH = {};
 	const sortedRH = {};
 	Object.keys(lh).sort().forEach(k=>{
@@ -168,7 +244,7 @@ const doTest = (test) => {
 		}
 	});
 	test.nodes.forEach((expected, i)=>{
-		expected.malformed = !!expected.malformed;
+		// expected.malformed = !!expected.malformed;
 		const found = file.nodes[i];
 		Object.entries(expected).forEach(([k,v])=>{
 			const {lh, rh} = simplifyValues(expected[k], found[k]);

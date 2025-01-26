@@ -36,7 +36,7 @@ const addCapture = (crawlState, label, value) => {
 const tryToken = (file, crawlState, twig, token) => {
 	// debugLog(`tryToken: ${token.value} == ${twig.original}`);
 	let matched = false;
-	let lookup;
+	let tryBranchesReport;
 	if (twig.type === 'literal') {
 		matched = token.value === twig.value;
 		if (matched && twig.label) {
@@ -44,7 +44,7 @@ const tryToken = (file, crawlState, twig, token) => {
 		}
 	} else if (twig.type === 'capture') {
 		if (twig.value === 'EOF' && token.type !== 'EOF') {
-			return { matched, lookup };
+			return { matched, lookup: tryBranchesReport };
 		}
 		matched = decayTo[twig.value](token) !== null;
 		if (matched) {
@@ -56,13 +56,13 @@ const tryToken = (file, crawlState, twig, token) => {
 			crawlState.unusedLabels.push(twig.label);
 		}
 		pushStack(crawlState, twig.value, crawlState.tokenPos);
-		lookup = tryBranches(file, crawlState);
-		matched = lookup.matched;
+		tryBranchesReport = tryBranches(file, crawlState);
+		matched = tryBranchesReport.matched;
 		popStack(crawlState);
 	}
 	return {
 		matched,
-		lookup,
+		lookup: tryBranchesReport,
 	};
 }
 
@@ -191,7 +191,7 @@ const processFails = (crawlErrors, fails) => {
 	} else if (maxPos === crawlErrors.bestPos) {
 		expectedArr.forEach(v=>{
 			crawlErrors.checkpoints[maxPos].add(v)
-		})
+		});
 	}
 	return expectedArr.join(', ');
 };
@@ -201,8 +201,8 @@ const tryBranches = (file, origCrawlState) => {
 	const branchName = stackBranchName(origCrawlState.stack);
 	const startPos = stackPos(origCrawlState.stack);
 	const branches = file.tree[branchName];
-	let triedBranch = null;
-	let crawlState = null;
+	let triedBranch;
+	let crawlState;
 	let expected = '';
 	const fails = [];
 	for (let i = 0; i < branches.length; i++) {
@@ -218,7 +218,7 @@ const tryBranches = (file, origCrawlState) => {
 	}
 	if (triedBranch) {
 		crawlState = triedBranch.crawlState;
-		popStack(crawlState); // ??
+		popStack(crawlState); // ?? why doing this twice? (startPos is broken if this is removed? why though?)
 		if (onEnd[branchName]) {
 			onEnd[branchName](file, crawlState);
 		}
@@ -253,7 +253,7 @@ const tryBranches = (file, origCrawlState) => {
 export const parseFile = (lexResult, givenFileName) => {
 	// state
 	const fileName = givenFileName ? givenFileName : 'anon' + Math.floor(Math.random()*10000000000);
-	const startCrawlState = {
+	const crawlState = {
 		stack: [{ branchName: 'document', startPos: 0 }],
 		tokenPos: 0,
 		captures: [],
@@ -283,7 +283,7 @@ export const parseFile = (lexResult, givenFileName) => {
 	let tryBranchesReport;
 	let prevContinuePos;
 	do {
-		tryBranchesReport = tryBranches(file, startCrawlState);
+		tryBranchesReport = tryBranches(file, crawlState);
 		file.success = tryBranchesReport.matched;
 		file.crawlState = tryBranchesReport.crawlState;
 		if (!file.success) {
@@ -299,7 +299,7 @@ export const parseFile = (lexResult, givenFileName) => {
 			file.errors.push(error);
 			prevContinuePos = continuePos;
 			if (continuePos === file.tokens.length) break;
-			startCrawlState.tokenPos = continuePos;
+			crawlState.tokenPos = continuePos;
 		}
 	} while (!file.success);
 
@@ -342,7 +342,10 @@ export const parseFile = (lexResult, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = `add serial_dialog settings { wrap 2 one }` // error
+const testInput = `_{}`
+// `add serial_dialog settings { wrap 2 one }` // error
+// +`\nadd serial_dialog settings { wrap 3 }`
+// +`\nadd serial_dialog settings { wrap 3 ERRORTOKEN wrap 4 }`
 // +`\nadd dialog settings { wrap 3 alignment 4 }`
 // +`\nadd dialog settings {
 // 	default { alignment BL }

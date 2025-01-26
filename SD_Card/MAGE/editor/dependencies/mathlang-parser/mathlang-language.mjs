@@ -74,7 +74,7 @@ const dictionary = {
 	constant_assignment: {
 		patterns: [{
 				start: `$constant:constantName>constantNames`,
-				body: `'=' @constant_value:constantValue`,
+				body: `'=' @any:constantValue`,
 				end: `';'`,
 			}],
 		onEnd: (f, cs) => {
@@ -89,9 +89,15 @@ const dictionary = {
 			});
 		},
 	},
-	constant_value: {
+	any: {
 		// in order of how common these are? should that matter?
 		patterns: `$number | $bareword | $quoted_string
+			| $boolean | $constant<constantNames
+			| $duration | $quantity | $distance | $color`,
+	},
+	any_but_not_qstring: {
+		// in order of how common these are? should that matter?
+		patterns: `$number | $bareword
 			| $boolean | $constant<constantNames
 			| $duration | $quantity | $distance | $color`,
 	},
@@ -112,25 +118,37 @@ const dictionary = {
 			})
 			addNode(f, cs, {
 				node: 'add_serial_dialog_settings',
+				debug,
 				settings,
 				malformed,
 			});
 		},
 	},
 	serial_dialog_parameter: {
-		patterns: [{
-			start: `'wrap':property`,
-			body: `$number:value`,
-		}],
+		patterns: [
+			{ start: `'wrap':property`, body: `$number:value` },
+			// gotta do this for things without terminators :(
+			{ body: `@any:unknownToken` },
+		],
 		onEnd: (f, cs) => {
-			const value = mostRecentCapture(cs, 'value');
-			const property = mostRecentCapture(cs, 'property');
-			pushToStaged(cs, 'serialDialogParameters[]', {
-				node: 'serial_dialog_parameter',
-				property: property?.value || '',
-				value: value?.value || null,
-				malformed: !value || !property,
-			});
+			const errorToken = mostRecentCapture(cs, 'unknownToken');
+			if (errorToken) {
+				f.errors.push({
+					value: 'Unknown property or value',
+					message: `Not part of a valid serial dialog property/value pair`,
+					errorPos: errorToken.pos,
+				});
+				replaceStaged(cs, 'serialDialogParametersMalformed', true);
+			} else {
+				const value = mostRecentCapture(cs, 'value');
+				const property = mostRecentCapture(cs, 'property');
+				pushToStaged(cs, 'serialDialogParameters[]', {
+					node: 'serial_dialog_parameter',
+					property: property?.value || '',
+					value: value?.value || null,
+					malformed: !value || !property,
+				});
+			}
 		},
 	},
 	add_dialog_settings: {
@@ -140,6 +158,7 @@ const dictionary = {
 			end: `'}'`
 		}],
 		onEnd: (f, cs) => {
+			const malformed = getAndDeleteStaged(cs, 'dialogParametersMalformed');
 			const oldSettings = getAndDeleteStaged(cs, 'dialogSettings[]');
 			const debug = oldSettings || [];
 			const settings = debug.map(v=>{
@@ -157,6 +176,7 @@ const dictionary = {
 				node: 'add_dialog_settings',
 				debug,
 				settings,
+				malformed,
 			});
 		},
 	},
@@ -179,12 +199,15 @@ const dictionary = {
 			},
 		],
 		onEnd: (f, cs) => {
-			const targetValue = mostRecentCapture(cs, 'targetValue');
-			const target = mostRecentCapture(cs, 'target');
+			const targetValueCapture = mostRecentCapture(cs, 'targetValue');
+			const targetCapture = mostRecentCapture(cs, 'target');
+			let targetType = targetCapture?.value || null;
+			let targetValue = targetValueCapture?.value || null;
+			if (targetType === 'default') targetValue = '';
 			pushToStaged(cs, 'dialogSettings[]', {
 				node: 'add_dialog_settings_target',
-				targetType: target?.value || '',
-				targetValue: targetValue?.value || null,
+				targetType,
+				targetValue,
 				settings: getAndDeleteStaged(cs, 'dialogParameters[]'),
 			});
 		},
@@ -198,16 +221,28 @@ const dictionary = {
 			{ start:`'border_tileset':settingsProperty`, body: `$string:settingsValue` },
 			{ start:`'emote':settingsProperty`, body: `$number:settingsValue` },
 			{ start:`'wrap':settingsProperty`, body: `$number:settingsValue` },
+			// gotta do this for things without terminators :(
+			{ body: `@any_but_not_qstring:unknownToken` },
 		],
 		onEnd: (f, cs) => {
-			const value = mostRecentCapture(cs, 'settingsValue');
-			const property = mostRecentCapture(cs, 'settingsProperty');
-			pushToStaged(cs, 'dialogParameters[]', {
-				node: 'dialog_parameter',
-				property: property ? property.value : '',
-				value: value ? value.value : null,
-				malformed: !value || !property,
-			});
+			const errorToken = mostRecentCapture(cs, 'unknownToken');
+			if (errorToken) {
+				f.errors.push({
+					value: 'Unknown property or value',
+					message: `Not part of a valid dialog property/value pair`,
+					errorPos: errorToken.pos,
+				});
+				replaceStaged(cs, 'dialogParametersMalformed', true);
+			} else {
+				const value = mostRecentCapture(cs, 'settingsValue');
+				const property = mostRecentCapture(cs, 'settingsProperty');
+				pushToStaged(cs, 'dialogParameters[]', {
+					node: 'dialog_parameter',
+					property: property ? property.value : '',
+					value: value ? value.value : null,
+					malformed: !value || !property,
+				});
+			}
 		},
 	},
 	dialog_literal: {
