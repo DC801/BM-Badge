@@ -13,7 +13,7 @@ const findLineAndCharNumbers = (input, pos) => {
 	};
 };
 
-const getPosContext = (inputString, origPos, message, fileName) => {
+export const getPosContext = (inputString, origPos, message, fileName) => {
 	let printFileName = fileName ? `"${fileName}" l` : 'L';
 	let pos = origPos;
 	let errorCoords = findLineAndCharNumbers(inputString, pos);
@@ -81,7 +81,7 @@ const conditionPrint = {
 			.split('\n').map(s=>indent+s).join('\n');
 	}
 };
-const printCondition = (node) => {
+export const printCondition = (node) => {
 	const header = `------ ${node.node} ------\n`;
 	const message = header
 		+ conditionPrint[node.node](node, '');
@@ -91,7 +91,7 @@ const printCondition = (node) => {
 
 // ---------------------- PRETTY PRINT NODES ---------------------- 
 
-const printNode = (origNode) => {
+export const printNode = (origNode) => {
 	const node = JSON.parse(JSON.stringify(origNode));
 	if (node.node === 'script_definition') {
 		const body = node.body;
@@ -149,7 +149,7 @@ const printAction = (node) => {
 
 // ---------------------- GENERAL ---------------------- 
 
-const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
+export const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
 	const endTokensPos = {
 		terminatorPos: null,
 		newlinePos: null,
@@ -195,7 +195,7 @@ const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
 	return continuePos;
 };
 
-const decayTo = {
+export const decayTo = {
 	EOF: token => token.type === 'EOF',
 	bareword: token => {
 		if (token.type === "bareword") return token.value;
@@ -218,11 +218,3 @@ const decayTo = {
 		return null;
 	},
 };
-
-export default {
-	getPosContext,
-	printCondition,
-	printNode,
-	errorRecoverPos,
-	decayTo,
-}

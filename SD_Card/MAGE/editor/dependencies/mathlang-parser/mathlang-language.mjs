@@ -1038,9 +1038,9 @@ Object.keys(actionDictionary).forEach(slug=>{
 });
 dictionary.script_body_item.patterns = dictionary.script_body_item.patterns.join(' | ');
 
-const onStart = {};
-const onEnd = {};
-const patterns = {};
+export const onStart = {};
+export const onEnd = {};
+export const patterns = {};
 
 Object.keys(dictionary).forEach(entryName=>{
 	const entry = dictionary[entryName];
@@ -1222,7 +1222,7 @@ const getWordReport = (word, patternName) => {
 	return token;
 };
 
-const tree = {};
+export const tree = {};
 Object.entries(patterns).forEach(([patternName, origPatterns])=>{
 	const allTokenPatterns = [];
 	let patterns = typeof origPatterns === 'string'
@@ -1255,12 +1255,9 @@ Object.entries(patterns).forEach(([patternName, origPatterns])=>{
 
 // console.log('break');
 
-const terminators = {};
+export const terminators = {};
 Object.entries(tree).map(([patternName, value])=>{
 	terminators[patternName] = value.map(branch=>{
 		return branch.find(branch=>branch.terminator)
 	})
 })
-
-const language = { tree, onStart, onEnd, terminators, keywords: keywordsFound };
-export default language;

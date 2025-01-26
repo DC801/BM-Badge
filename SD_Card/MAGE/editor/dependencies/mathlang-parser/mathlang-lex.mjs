@@ -75,7 +75,7 @@ const WORDS_WITH_TYPES = {
 	thrice: { type: 'quantity', value: 3, barewordValue: 'thrice' },
 };
 
-const lex = (string) => {
+export const lex = (string) => {
 	const errors = [];
 	const warnings = [];
 	const tokens = [];
@@ -378,13 +378,9 @@ const lex = (string) => {
 	}
 }
 
-
-
 // const report = lex(test);
 // // console.log(JSON.stringify(report.tokens, null, '  '));
 // const flatReport = report.tokens
 // 	.filter(token=>!token.ignorable)
 // 	.map(token=>token.value).join(' ');
 // console.log(flatReport);
-
-export default lex;

@@ -1,9 +1,6 @@
-import lex from "./mathlang-lex.mjs"
-import language from "./mathlang-language.mjs"
-import utilities from "./mathlang-utilities.mjs"
-
-const { tree, onStart, onEnd, terminators, keywords } = language;
-const { getPosContext, printCondition, printNode, errorRecoverPos, decayTo } = utilities;
+import { lex } from "./mathlang-lex.mjs"
+import { tree, onStart, onEnd, terminators } from "./mathlang-language.mjs"
+import { getPosContext, printCondition, printNode, errorRecoverPos, decayTo } from "./mathlang-utilities.mjs"
 
 const verbose = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
@@ -253,7 +250,7 @@ const tryBranches = (file, origCrawlState) => {
 
 /* ------------------------------------------ PARSE FILE ------------------------------------------ */
 
-const parseFile = (lexResult, tree, givenFileName) => {
+export const parseFile = (lexResult, givenFileName) => {
 	// state
 	const fileName = givenFileName ? givenFileName : 'anon' + Math.floor(Math.random()*10000000000);
 	const startCrawlState = {
@@ -345,14 +342,7 @@ const parseFile = (lexResult, tree, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = ``
-// +`\n$steamedhams = "Hamburgers";`
-// +`\n$trombones = ;` // error
-// +`\nblarg` // error
-// +`\ninclude!()` // error
-// +`\ninclude!("header.mgs")`
-// +`\nadd serial_dialog settings { wrap 1 }`
-// +`\nadd serial_dialog settings { wrap 2 one }` // error
+const testInput = `add serial_dialog settings { wrap 2 one }` // error
 // +`\nadd dialog settings { wrap 3 alignment 4 }`
 // +`\nadd dialog settings {
 // 	default { alignment BL }
@@ -411,7 +401,7 @@ const testInput = ``
 // }`
 // + ``
 
-const testParsedFile = parseFile(lex(testInput), tree, 'testMGSFile.mgs');
+const testParsedFile = parseFile(lex(testInput), 'testMGSFile.mgs');
 testParsedFile.nodes.forEach(node=>{
 	console.log(printNode(node));
 });
@@ -419,6 +409,7 @@ testParsedFile.errors.forEach(error=>{
 	console.error(error.printable);
 });
 
+console.log("")
 
 // ========================== CONDITION EXPRESSION TESTS
 
