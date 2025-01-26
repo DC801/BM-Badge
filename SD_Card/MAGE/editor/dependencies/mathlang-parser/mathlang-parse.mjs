@@ -343,29 +343,13 @@ export const parseFile = (lexResult, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testInput = ``
-// +`serial_dialog test { "Test message!" "Another!"`
-// 				+`_ "Fill in" = correctScriptChoice`
-// 				+`}`
-// +`\nserial_dialog testName {
-// 	"Message!"
-// 	# "Why not?" = scriptWhyNot
-// 	# "Why though?" = actuallyWhy
-// 	_ "You're mixing option types now." = errorScript
-// }`
-// +`\ndialog bobconversation {
-// 	Bob alignment TR "Hello!" "I'm Bob!"
-// 	PLAYER "...What?"
-// 	entity "Uncle Zappy" "Oh, this is the famous Bob's Club, then."
-// 	> "Dare I ask?" = ohNoScript
-// 	> "Is that what it sounds like?" = soundsSCript
-// }`
 // +`\nscript testScriptName {
 // 	goto label labelname;
 // 	return;
+// 	close dialog;
+// 	load map mainMenu;
 // 	goto index 45;
 // 	goto scriptName;
-// 	load map mainMenu;
-// 	close dialog;
 // 	unpause map on_tick;
 // }`
 // +`\ntestScript2 {
@@ -379,8 +363,6 @@ const testInput = ``
 // 		> "Quit" = quitGame
 // 	};
 // }`
-// +`\n
-// $trombones = 76;
 // _ {
 // 	wait 4000;
 // }

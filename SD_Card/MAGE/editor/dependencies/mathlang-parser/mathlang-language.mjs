@@ -602,7 +602,7 @@ const dictionary = {
 		patterns: [
 			{ body: `'player':identifierType` },
 			{ body: `'self':identifierType` },
-			{ start: `'entity':identifierType`, body: `$string:entityName` },
+			{ start: `'entity':identifierType`, body: `$string:entityName<entityNames` },
 		],
 		onEnd: (f, cs) => {
 			const identifierType = mostRecentCapture(cs, 'identifierType')?.value;
@@ -623,7 +623,7 @@ const dictionary = {
 			{ body: `'map':identifierType` },
 			{ body: `'player':identifierType` },
 			{ body: `'self':identifierType` },
-			{ start: `'entity':identifierType`, body: `$string:entityName` },
+			{ start: `'entity':identifierType`, body: `$string:entityName<entityNames` },
 		],
 		onEnd: (f, cs) => {
 			const identifierType = mostRecentCapture(cs, 'identifierType');
@@ -875,87 +875,75 @@ const exampleActionResult = {
 	},
 };
 const actionDictionary = {
-	action_return: {
-		action: 'GOTO_ACTION_LABEL',
+	// no captures
+	action_return: { action: 'GOTO_ACTION_LABEL',
 		captures: [],
 		values: { label: 'auto return' },
 		patterns: [{ start: `'return'`, end: `';'` }],
 	},
-	action_load_map: {
-		action: 'LOAD_MAP',
-		captures: [ 'map' ],
-		patterns: [{ start: `'load' 'map'`, body: `$string:map`, end: `';'` }],
-	},
-	action_slot_load: {
-		action: 'SLOT_LOAD',
-		captures: [ 'slot' ],
-		patterns: [{ start: `'load' 'slot'`, body: `$number:slot`, end: `';'` }],
-	},
-	action_slot_erase: {
-		action: 'SLOT_ERASE',
-		captures: [ 'slot' ],
-		patterns: [{ start: `'erase'`, body: `'slot' $number:slot`, end: `';'` }],
-	},
-	action_slot_save: {
-		action: 'SLOT_SAVE',
-		captures: [],
-		patterns: [{ start: `'save'`, body: `'slot'`, end: `';'` }],
-	},
-	action_goto_index: {
-		action: 'GOTO_ACTION_INDEX',
-		captures: [ 'action_index' ],
-		patterns: [{ start: `'goto' 'index'`, body: `$number:action_index`, end: `';'` }],
-	},
-	action_goto_label: {
-		action: 'GOTO_ACTION_LABEL',
-		captures: [ 'label' ],
-		patterns: [{ start: `'goto' 'label'`, body: `$bareword:label`, end: `';'`}],
-	},
-	action_goto_script: {
-		action: 'RUN_SCRIPT',
-		captures: [ 'script' ],
-		patterns: [{ body: `'goto' $string:script`, end: `';'` }],
-	},
-	action_close_dialog: {
-		action: 'CLOSE_DIALOG',
+	action_close_dialog: { action: 'CLOSE_DIALOG',
 		captures: [],
 		patterns: [{ body: `'close' 'dialog'`, end: `';'` }],
 	},
-	action_close_serial_dialog: {
-		action: 'CLOSE_SERIAL_DIALOG',
+	action_close_serial_dialog: { action: 'CLOSE_SERIAL_DIALOG',
 		captures: [],
 		patterns: [{ body: `'close' 'serial_dialog'`, end: `';'` }],
 	},
-	action_blocking_delay: {
-		action: 'BLOCKING_DELAY',
+	action_slot_save: { action: 'SLOT_SAVE',
+		captures: [],
+		patterns: [{ start: `'save'`, body: `'slot'`, end: `';'` }],
+	},
+	// game flow manip
+	action_load_map: { action: 'LOAD_MAP',
+		captures: [ 'map' ],
+		patterns: [{ start: `'load' 'map'`, body: `$string:map`, end: `';'` }],
+	},
+	action_slot_load: { action: 'SLOT_LOAD',
+		captures: [ 'slot' ],
+		patterns: [{ start: `'load' 'slot'`, body: `$number:slot`, end: `';'` }],
+	},
+	action_slot_erase: { action: 'SLOT_ERASE',
+		captures: [ 'slot' ],
+		patterns: [{ start: `'erase'`, body: `'slot' $number:slot`, end: `';'` }],
+	},
+	action_goto_index: { action: 'GOTO_ACTION_INDEX',
+		captures: [ 'action_index' ],
+		patterns: [{ start: `'goto' 'index'`, body: `$number:action_index`, end: `';'` }],
+	},
+	action_goto_label: { action: 'GOTO_ACTION_LABEL',
+		captures: [ 'label' ],
+		patterns: [{ start: `'goto' 'label'`, body: `$bareword:label`, end: `';'`}],
+	},
+	action_goto_script: { action: 'RUN_SCRIPT',
+		captures: [ 'script' ],
+		patterns: [{ body: `'goto' 'script'? $string:script`, end: `';'` }],
+	},
+
+	// uncategorized:
+	action_blocking_delay: { action: 'BLOCKING_DELAY',
 		captures: [ 'duration' ],
 		patterns: [{ start: `'block'`, body: `$duration:duration`, end: `';'` }],
 	},
-	action_non_blocking_delay: {
-		action: 'NON_BLOCKING_DELAY',
+	action_non_blocking_delay: { action: 'NON_BLOCKING_DELAY',
 		captures: [ 'duration' ],
 		patterns: [{ start: `'wait'`, body: `$duration:duration`, end: `';'` }],
 	},
-	action_label: {
-		action: 'LABEL',
+	action_label: { action: 'LABEL',
 		captures: [ 'label' ],
 		patterns: `$bareword:labelName ':'`,
 	},
-	action_hide_command: {
-		action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
+	action_hide_command: { action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 		captures: [ 'command' ],
 		values: { is_visible: false },
 		patterns: [{ start: `'hide'`, body: `'command' $string:command`, end: `';'` }],
 	},
-	action_unhide_command: {
-		action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
+	action_unhide_command: { action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 		captures: [ 'command' ],
 		values: { is_visible: true },
 		patterns: [{ start: `'unhide'`, body: `'command' $string:command`, end: `';'` }],
 	},
-	action_pause_script: {
-		action: 'SET_SCRIPT_PAUSE',
-		captures: [ 'script_slot' ],
+	action_pause_script: { action: 'SET_SCRIPT_PAUSE',
+		captures: [ 'identifierType', 'entityName', 'script_slot' ],
 		values: { bool_value: true },
 		patterns: [{
 			start: `'pause'`,
@@ -966,10 +954,8 @@ const actionDictionary = {
 		}],
 		cleanupStaged: [ 'entityOrMap' ],
 	},
-	// TODO: the action above and below might not work; entity_or_map_identifier can't be summoned here?
-	action_unpause_script: {
-		action: 'SET_SCRIPT_PAUSE',
-		captures: [ 'script_slot' ],
+	action_unpause_script: { action: 'SET_SCRIPT_PAUSE',
+		captures: [ 'identifierType', 'entityName', 'script_slot' ],
 		values: { bool_value: false },
 		patterns: [{
 			start: `'unpause'`,
@@ -977,8 +963,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_delete_alias: {
-		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
+	action_delete_alias: { action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
 		captures: [ 'alias' ],
 		patterns: [{
 			start: `'delete' 'alias'`,
@@ -986,8 +971,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_delete_command: {
-		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
+	action_delete_command: { action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
 		captures: [ 'command' ],
 		values: { is_fail: false },
 		patterns: [{
@@ -995,8 +979,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_delete_command_fail: {
-		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
+	action_delete_command_fail: { action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
 		captures: [ 'command' ],
 		values: { is_fail: true },
 		patterns: [{
@@ -1004,8 +987,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_delete_command_argument: {
-		action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
+	action_delete_command_argument: { action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 		captures: [ 'argument', 'command' ],
 		values: { is_fail: true },
 		patterns: [{
@@ -1014,8 +996,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_camera_fade_out: {
-		action: 'SCREEN_FADE_OUT',
+	action_camera_fade_out: { action: 'SCREEN_FADE_OUT',
 		captures: [ 'color', 'duration' ],
 		patterns: [{
 			start: `'camera' 'fade' 'out'`,
@@ -1023,8 +1004,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_camera_fade_in: {
-		action: 'SCREEN_FADE_IN',
+	action_camera_fade_in: { action: 'SCREEN_FADE_IN',
 		captures: [ 'color', 'duration' ],
 		patterns: [{
 			start: `'camera' 'fade' 'in'`,
@@ -1032,8 +1012,7 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_camera_shake: {
-		action: 'SET_SCREEN_SHAKE',
+	action_camera_shake: { action: 'SET_SCREEN_SHAKE',
 		captures: [ 'amplitude', 'distance', 'duration' ],
 		patterns: [{
 			start: `'camera' 'shake'`,
@@ -1041,8 +1020,8 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_play_entity_animation: {
-		action: 'PLAY_ENTITY_ANIMATION',
+	action_play_entity_animation: { action: 'PLAY_ENTITY_ANIMATION',
+		captures: [ 'identifierType', 'entityName', 'animation', 'play_count' ],
 		patterns: [{
 			start: `@entity_identifier 'animation'`,
 			body: `'->' $number:animation $quantity:play_count?`,
@@ -1060,12 +1039,15 @@ const makeTreeEntry = (slug, treeEntry) => {
 				: {};
 			const captures = treeEntry.captures || [];
 			captures.forEach(captureName=>{
-				insert[captureName] = mostRecentCapture(cs, captureName)?.value || null;
+				const capture = mostRecentCapture(cs, captureName);
+				insert[captureName] = capture ? capture.value : null;
 			})
-			const actionValues = getStaged(cs, 'actionValues[]');
+			const actionValues = treeEntry.values;
 			if (actionValues) {
 				Object.entries(actionValues)
-					.forEach(([key,value])=>{ insert[key] = value; });
+					.forEach(([key,value])=>{
+						insert[key] = value;
+					});
 			}
 			insert.node = 'action',
 			insert.action = treeEntry.action; // e.g. 'RUN_SCRIPT'
@@ -1077,7 +1059,7 @@ const makeTreeEntry = (slug, treeEntry) => {
 			pushToStaged(cs, 'scriptBodyItems[]', insert);
 			if (actionDictionary[slug].cleanupStaged) {
 				actionDictionary[slug].cleanupStaged
-					.forEach(v=>{ deleteStaged(cs, v); });
+					.forEach(v=>{ deleteStaged(cs, v); }); // test this
 			}
 		},
 	}

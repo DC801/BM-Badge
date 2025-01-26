@@ -4,19 +4,66 @@ import { parseFile } from './mathlang-parse.mjs';
 // remember newlines count as a token, so avoid them
 // to make it easier to count them with your eyeballs!
 const patternTests = {
+	script_actions: [
+		{ name: 'game flow manip',
+			pattern: `_ {
+				goto index 44;
+				goto label outer_loop;
+				goto script "mainMenuStart";
+				load map mainMenu;
+				load slot 3; 
+				erase slot 0;
+			}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { tokens: 27, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_definition",
+					name: "_",
+					body: [
+						{ node: "action", action: "GOTO_ACTION_INDEX", action_index: 44 },
+						{ node: "action", action: "GOTO_ACTION_LABEL", label: "outer_loop" },
+						{ node: "action", action: "RUN_SCRIPT", script: "mainMenuStart" },
+						{ node: "action", action: "LOAD_MAP", map: "mainMenu" },
+						{ node: "action", action: "SLOT_LOAD", slot: 3 },
+						{ node: "action", action: "SLOT_ERASE", slot: 0 },
+					],
+				}
+			]
+		},
+		{ name: 'no captures',
+			pattern: `_ {
+				save slot; 
+				close dialog; 
+				close serial_dialog;
+				return;
+			}`.replaceAll('\n',' '),
+			fileSuccess: true,
+			counts: { tokens: 14, nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_definition",
+					name: "_",
+					body: [
+						{ node: "action", action: "SLOT_SAVE" },
+						{ node: "action", action: "CLOSE_DIALOG" },
+						{ node: "action", action: "CLOSE_SERIAL_DIALOG" },
+						{ node: "action", action: "GOTO_ACTION_LABEL", label: "auto return" },
+					],
+				}
+			]
+		},
+	],
 	serial_dialog_definition: [
 		{ name: 'double',
 			pattern: `serial_dialog test { "Test message!" "Another!" }`,
 			fileSuccess: true,
-			counts: { tokens: 10, nodes: 1, errors: 0, warnings: 0 },
+			counts: { tokens: 6, nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
 					name: "test",
-					dialogs: [{
-						node: "serial_dialog",
-						messages: [ "Test message!", "Another!" ],
-					}]
+					messages: [ "Test message!", "Another!" ],
 				}
 			]
 		},
@@ -76,6 +123,25 @@ const patternTests = {
 					name: "test",
 					messages: [ "Test message!", "Another!" ],
 					text_options: [{ label: 'Fill in', script: 'correctScriptChoice' }],
+				}
+			]
+		},
+		{ name: 'options mixed types',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in" = correctScriptChoice `
+				+`# "number" = wha`
+				+`}`,
+			fileSuccess: true,
+			counts: { tokens: 14, nodes: 1, errors: 0, warnings: 1 },
+			nodes: [
+				{
+					node: "serial_dialog_definition",
+					name: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [
+						{ label: 'Fill in', script: 'correctScriptChoice' },
+						{ label: 'number', script: 'wha' },
+					],
 				}
 			]
 		},
