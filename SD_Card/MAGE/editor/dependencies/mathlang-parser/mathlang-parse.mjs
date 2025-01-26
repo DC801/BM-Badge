@@ -139,12 +139,16 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 			}
 			if (twigPos === branch.length) report.matched = true;
 		} else {
-			debugLog(`\t[${crawlState.tokenPos}] ${ansiYellow}${token.value}${ansiReset} did not match ${ansiRed}${twig.original}${ansiReset}`)
 			if ((multipleOkay && repeating)|| zeroOkay) {
+				const suffix = multipleOkay && repeating
+					? `because we've repeated at least once`
+					: `because it's okay to skip`
+				debugLog(`\t[${crawlState.tokenPos}] ${ansiYellow}${token.value}${ansiReset} did not match ${ansiYellow}${twig.original}${ansiReset} but that's okay ` + suffix);
 				advanceTwig();
 				if (twigPos === branch.length) report.matched = true;
 				continue;
 			} else {
+				debugLog(`\t[${crawlState.tokenPos}] ${ansiYellow}${token.value}${ansiReset} did not match ${ansiRed}${twig.original}${ansiReset}`)
 				if (twig.type === 'literal') {
 					const pos = crawlState.tokenPos;
 					const checkpoints = file.crawlErrors.checkpoints;
@@ -224,19 +228,27 @@ const tryBranches = (file, origCrawlState) => {
 		crawlState = triedBranch.crawlState;
 		popStack(crawlState); // ?? why doing this twice? (startPos is broken if this is removed? why though?)
 		if (onEnd[branchName]) {
+			debugLog(`${ansiGreen}----Doing the 'onEnd()' for '${branchName}'${ansiReset}`);
 			onEnd[branchName](file, crawlState);
 		}
 		if (triedBranch.report.malformed) {
 			const fileExpecteds = file.crawlErrors.checkpoints[triedBranch.report.expectedPos];
-			file.errors.push({
-				file: file.fileName,
-				value: 'Malformed node',
-				message: `${branchName} error`,
-				startPos: startPos,
-				expected: [...fileExpecteds].sort().join(', '), 
-				errorPos: triedBranch.report.expectedPos,
-				endPos: triedBranch.crawlState.tokenPos,
-			});
+			debugLog(`${ansiRed}----Logging an error: ${branchName} error${ansiReset}`);
+			const prevErrorPos = file.errors.length > 0
+				? file.errors[file.errors.length-1]?.errorPos
+				: -Infinity;
+			const errorPos = triedBranch.report.expectedPos;
+			if (prevErrorPos !== errorPos) {
+				file.errors.push({
+					file: file.fileName,
+					value: 'Malformed node',
+					message: `${branchName} error`,
+					startPos: startPos,
+					expected: [...fileExpecteds].sort().join(', '), 
+					errorPos,
+					endPos: triedBranch.crawlState.tokenPos,
+				});
+			}
 		}
 	} else {
 		// add to `file` the branch(es) that made it the furthest
@@ -328,9 +340,11 @@ export const parseFile = (lexResult, givenFileName) => {
 	// Print errors in the order they land in the file
 	file.errors.sort((a,b)=>a.errorPos - b.errorPos);
 	file.errors.map(error=>{
+		const origToken = file.tokens[error.errorPos]
+		const charPos = origToken ? origToken.pos : file.tokens.length-1;
 		let printable = getPosContext(
 			file.plaintext,
-			file.tokens[error.errorPos].pos,
+			charPos,
 			error.message,
 			file.fileName,
 		);
@@ -346,25 +360,11 @@ export const parseFile = (lexResult, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = `_ {`
-+`
-json![{
-	"action": "NEW_ACTION",
-	"prop1": "string",
-	"prop2": 100,
-	"prop3": false,
-	"prop4": [
-		"LED_BIT128",
-		"LED_BIT64",
-		"LED_BIT32",
-		"LED_BIT16"
-	],
-	"prop5": {
-		"inner": "This has gone too far!"
-	}
-}]
-`
-+`}`
+const testInput = ``
+// +`_ {
+// show dialog { PLAYER "What?" > asdf };
+// `
+// +`}`
 // + ``
 
 const testParsedFile = parseFile(lex(testInput), 'testMGSFile.mgs');

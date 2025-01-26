@@ -643,7 +643,7 @@ const dictionary = {
 	script_definition: {
 		patterns: [
 			{
-				start: `'script'? $string:scriptName '{'`,
+				start: `'script'? $string:scriptName>scriptNames '{'`,
 				body: `@script_body_item*`,
 				end: `'}'`
 			},
@@ -734,7 +734,7 @@ const dictionary = {
 		}
 	},
 	copy_script: {
-		patterns: [{ start: `'copy'`, body: `'!' '(' $string:script`, end: `')'` }],
+		patterns: [{ start: `'copy'`, body: `'!' '(' $string:script<scriptNames`, end: `')'` }],
 		onEnd: (f, cs) => {
 			pushToStaged(cs, 'scriptBodyItems[]', {
 				node: 'action',
@@ -979,7 +979,7 @@ const actionDictionary = {
 	},
 	action_goto_script: { action: 'RUN_SCRIPT',
 		captures: [ 'script' ],
-		patterns: [{ body: `'goto' 'script'? $string:script`, end: `';'` }],
+		patterns: [{ body: `'goto' 'script'? $string:script<scriptNames`, end: `';'` }],
 	},
 
 	// uncategorized:

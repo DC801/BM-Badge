@@ -356,7 +356,6 @@ const patternTests = {
 				}
 			]
 		},
-		// Should only fail once:
 		{ name: 'options with garbage',
 			pattern: `serial_dialog test { "Test message!" "Another!"`
 				+`_ asdfasdf`
@@ -551,7 +550,6 @@ const patternTests = {
 				}
 			]
 		},
-		// Should only fail once:
 		{ name: 'options with garbage',
 			pattern: `dialog _ { Bob "Hello?" > asdfasdf }`,
 			fileSuccess: true,
@@ -808,8 +806,6 @@ const doTest = (test) => {
 	}
 	Object.keys(test.counts).forEach(item=>{
 		const fileCounts = {
-			// Account for EOF as a token:
-			tokens: file.tokens.length - 1,
 			nodes: file.nodes.length,
 			warnings: file.warnings.length,
 			errors: file.errors.length,
@@ -821,6 +817,9 @@ const doTest = (test) => {
 			const expected = test.counts[item];
 			errors.push({
 				message: `Found ${ansiRed}${found} ${foundI}${ansiReset}, expected ${ansiYellow}${expected}${ansiReset}`,
+			});
+			file[item].forEach(v=>{
+				errors.push({message: v.printable});
 			});
 		}
 	});
