@@ -30,6 +30,10 @@ const addCapture = (crawlState, label, value) => {
 		pos: crawlState.tokenPos,
 	});
 };
+const ansiRed = '\u001b[1;31m';
+const ansiGreen = '\u001b[1;32m';
+const ansiYellow = '\u001b[1;33m';
+const ansiReset = '\u001b[0m';
 
 /* ------------------------------------- TRYBRANCH ------------------------------------- */
 
@@ -117,7 +121,7 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 		const tryTokenReport = tryToken(file, crawlState, twig, token);
 
 		if (tryTokenReport.matched) {
-			debugLog(`\tMatched [${crawlState.tokenPos}] ${token.rawValue} with ${twig.original}`)
+			debugLog(`\tMatched ${ansiGreen}[${crawlState.tokenPos}] ${token.rawValue} with ${twig.original}${ansiReset}!`)
 			if (twig.type === 'lookup') {
 				updateCrawlState(tryTokenReport.lookup.crawlState);
 				// we already advanced the token in there; time to undo that now
@@ -135,7 +139,7 @@ const tryBranch = (file, crawlState, branch, branchID) => {
 			}
 			if (twigPos === branch.length) report.matched = true;
 		} else {
-			debugLog(`\t[${crawlState.tokenPos}] ${token.value} did not match ${twig.original}`)
+			debugLog(`\t[${crawlState.tokenPos}] ${ansiYellow}${token.value}${ansiReset} did not match ${ansiRed}${twig.original}${ansiReset}`)
 			if ((multipleOkay && repeating)|| zeroOkay) {
 				advanceTwig();
 				if (twigPos === branch.length) report.matched = true;
@@ -342,7 +346,25 @@ export const parseFile = (lexResult, givenFileName) => {
 
 /* ------------------ tests ------------------ */
 
-const testInput = ``
+const testInput = `_ {`
++`
+json![{
+	"action": "NEW_ACTION",
+	"prop1": "string",
+	"prop2": 100,
+	"prop3": false,
+	"prop4": [
+		"LED_BIT128",
+		"LED_BIT64",
+		"LED_BIT32",
+		"LED_BIT16"
+	],
+	"prop5": {
+		"inner": "This has gone too far!"
+	}
+}]
+`
++`}`
 // + ``
 
 const testParsedFile = parseFile(lex(testInput), 'testMGSFile.mgs');

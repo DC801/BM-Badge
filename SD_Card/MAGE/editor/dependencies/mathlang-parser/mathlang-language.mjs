@@ -854,9 +854,101 @@ const dictionary = {
 			`@else_block`,
 			`@while_block`,
 			`@debug_macro`,
+			`@json_literal`,
 			// `@if_plain`,
 		], // also auto populated
 	},
+	json_literal: {
+		patterns: [{ start: `'json' '!'`, body: `@json_array?` }],
+		onEnd: (f, cs) => {
+			const json = mostRecentCaptures(cs, 'json', 0, Infinity);
+			const flat = json.map(s=>s.value).join('');
+			// todo: try/catch?
+			const parsed = JSON.parse(flat);
+			parsed.forEach(action=>{
+				action.node = 'action',
+				pushToStaged(cs, 'scriptBodyItems[]', action);
+			});
+		},
+	},
+	json_object: {
+		patterns: [{ start: `'{':json`, body: `@json_properties_expression?`, end: `'}':json` }],
+		onEnd: (f, cs) => {
+			console.log('json_object');
+		},
+	},
+	json_object_chain: {
+		patterns: [{ start: `',':json`, body: `'{':json @json_object`, end: `'}':json` }],
+		onEnd: (f, cs) => {
+			console.log('json_object_chain');
+		},
+	},
+	json_properties_expression: {
+		patterns: [{ start: `@json_property_value_pair @json_property_value_pair_chain*` }],
+		onEnd: (f, cs) => {
+			console.log('json_properties_expression');
+		},
+	},
+	json_property_value_pair: {
+		patterns: [{ start: `$quoted_string:jsonQ`, body: `':':json @json_value` }],
+		onStart: (f, cs) => {
+			const quotedString = mostRecentCapture(cs, 'jsonQ');
+			if (quotedString) {
+				quotedString.value = `"${quotedString.value}"`;
+				quotedString.label = `json`;
+			}
+			pushCapture(cs, quotedString);
+			console.log('json_property_value_pair');
+		},
+		onEnd: (f, cs) => {
+			console.log('json_property_value_pair');
+		},
+	},
+	json_property_value_pair_chain: {
+		patterns: [{ start: `',':json`, body: `@json_property_value_pair` }],
+		onEnd: (f, cs) => {
+			console.log('json_value');
+		},
+	},
+	json_value: {
+		patterns: [
+			{ body: '@json_array' },
+			{ body: '$quoted_string:jsonQ' },
+			{ body: '$number:json' },
+			{ body: '$boolean:json' },
+			{ body: '@json_object' },
+		],
+		onEnd: (f, cs) => {
+			const quotedString = mostRecentCapture(cs, 'jsonQ');
+			if (quotedString) {
+				quotedString.value = `"${quotedString.value}"`;
+				quotedString.label = `json`;
+				pushCapture(cs, quotedString);
+			}
+			console.log('json_value');
+		},
+	},
+	json_array: {
+		patterns: [{ start: `'[':json`, body: `@json_array_body?`, end: `']':json` }],
+		onStart: (f, cs) => {
+			console.log('json_array');
+		},
+		onEnd: (f, cs) => {
+			console.log('json_array');
+		},
+	},
+	json_array_body: {
+		patterns: [{body:`@json_value @json_value_chain*`}],
+		onEnd: (f, cs) => {
+			console.log('json_array_body');
+		},
+	},
+	json_value_chain: {
+		patterns: [{ start: `',':json`, body: `@json_value` }],
+		onEnd: (f, cs) => {
+			console.log('json_value_chain');
+		},
+	}
 };
 
 const exampleActionResult = {
