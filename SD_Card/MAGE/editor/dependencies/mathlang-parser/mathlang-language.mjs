@@ -605,17 +605,17 @@ const dictionary = {
 			{ start: `'entity':identifierType`, body: `$string:entityName<entityNames` },
 		],
 		onEnd: (f, cs) => {
-			const identifierType = mostRecentCapture(cs, 'identifierType')?.value;
-			let entity;
-			if (identifierType === 'player') entity = '%PLAYER%';
-			if (identifierType === 'self') entity = '%SELF%';
-			if (identifierType === 'entity') {
-				entity = optionalCapture(cs, 'entityName');
+			const entityNameCapture = optionalCapture(cs, 'entityName');
+			const identifierType = mostRecentCapture(cs, 'identifierType');
+			let entity = null;
+			let pos = identifierType.pos;
+			if (identifierType?.value === 'player') entity = '%PLAYER%';
+			if (identifierType?.value === 'self') entity = '%SELF%';
+			if (identifierType?.value === 'entity') {
+				entity = entityNameCapture.value;
+				pos = entityNameCapture.value;
 			}
-			replaceStaged(cs, 'entityIdentifier', {
-				identifierType,
-				entity: entity || '',
-			});
+			pushCapture(cs, { label: 'entity', value: entity, pos });
 		},
 	},
 	entity_or_map_identifier: {
@@ -873,21 +873,12 @@ const dictionary = {
 	},
 	json_object: {
 		patterns: [{ start: `'{':json`, body: `@json_properties_expression?`, end: `'}':json` }],
-		onEnd: (f, cs) => {
-			console.log('json_object');
-		},
 	},
 	json_object_chain: {
 		patterns: [{ start: `',':json`, body: `'{':json @json_object`, end: `'}':json` }],
-		onEnd: (f, cs) => {
-			console.log('json_object_chain');
-		},
 	},
 	json_properties_expression: {
 		patterns: [{ start: `@json_property_value_pair @json_property_value_pair_chain*` }],
-		onEnd: (f, cs) => {
-			console.log('json_properties_expression');
-		},
 	},
 	json_property_value_pair: {
 		patterns: [{ start: `$quoted_string:jsonQ`, body: `':':json @json_value` }],
@@ -898,17 +889,10 @@ const dictionary = {
 				quotedString.label = `json`;
 			}
 			pushCapture(cs, quotedString);
-			console.log('json_property_value_pair');
-		},
-		onEnd: (f, cs) => {
-			console.log('json_property_value_pair');
 		},
 	},
 	json_property_value_pair_chain: {
 		patterns: [{ start: `',':json`, body: `@json_property_value_pair` }],
-		onEnd: (f, cs) => {
-			console.log('json_value');
-		},
 	},
 	json_value: {
 		patterns: [
@@ -925,29 +909,16 @@ const dictionary = {
 				quotedString.label = `json`;
 				pushCapture(cs, quotedString);
 			}
-			console.log('json_value');
 		},
 	},
 	json_array: {
 		patterns: [{ start: `'[':json`, body: `@json_array_body?`, end: `']':json` }],
-		onStart: (f, cs) => {
-			console.log('json_array');
-		},
-		onEnd: (f, cs) => {
-			console.log('json_array');
-		},
 	},
 	json_array_body: {
 		patterns: [{body:`@json_value @json_value_chain*`}],
-		onEnd: (f, cs) => {
-			console.log('json_array_body');
-		},
 	},
 	json_value_chain: {
 		patterns: [{ start: `',':json`, body: `@json_value` }],
-		onEnd: (f, cs) => {
-			console.log('json_value_chain');
-		},
 	}
 };
 
@@ -1035,7 +1006,7 @@ const actionDictionary = {
 		patterns: [{ start: `'unhide'`, body: `'command' $string:command`, end: `';'` }],
 	},
 	action_pause_script: { action: 'SET_SCRIPT_PAUSE',
-		captures: [ 'script_slot', 'entity'  ],
+		captures: [ 'script_slot', 'entity' ],
 		values: { bool_value: true },
 		patterns: [{
 			start: `'pause'`,
@@ -1046,7 +1017,7 @@ const actionDictionary = {
 		}],
 	},
 	action_unpause_script: { action: 'SET_SCRIPT_PAUSE',
-		captures: [ 'script_slot', 'entity'  ],
+		captures: [ 'script_slot', 'entity' ],
 		values: { bool_value: false },
 		patterns: [{
 			start: `'unpause'`,
@@ -1112,7 +1083,7 @@ const actionDictionary = {
 		}],
 	},
 	action_play_entity_animation: { action: 'PLAY_ENTITY_ANIMATION',
-		captures: [ 'identifierType', 'entityName', 'animation', 'play_count' ],
+		captures: [ 'animation', 'play_count', 'entity' ],
 		patterns: [{
 			start: `@entity_identifier 'animation'`,
 			body: `'->' $number:animation $quantity:play_count?`,

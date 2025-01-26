@@ -108,6 +108,46 @@ const patternTests = {
 			]
 		},
 	],
+	json_literal: [
+		{ name: 'gamut of syntax',
+			pattern: `_ {
+					json![{
+						"action": "NEW_ACTION",
+						"prop1": "string",
+						"prop2": 100,
+						"prop3": false,
+						"prop4": [ "LED_BIT128", "LED_BIT8" ],
+						"prop5": {
+							"inner": "This has gone too far!",
+							"innerAgain": 9001
+						}
+					}]
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_definition",
+					name: "_",
+					body: [{
+						node: "action",
+						action: "NEW_ACTION",
+						prop1: "string",
+						prop2: 100,
+						prop3: false,
+						prop4: [
+							"LED_BIT128",
+							"LED_BIT8"
+						],
+						prop5: {
+							inner: "This has gone too far!",
+							innerAgain: 9001
+						},
+					}],
+				},
+			]
+		},
+	],
 	script_actions: [
 		{ name: 'dictionary entry with outside lookup',
 			pattern: `_ {
