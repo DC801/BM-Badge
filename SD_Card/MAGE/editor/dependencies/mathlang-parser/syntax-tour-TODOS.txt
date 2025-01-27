@@ -27,25 +27,6 @@ _ {
 
 	/* -------------------------------- ASSIGNMENT -------------------------------- */
 
-	// RHS: coordinates
-	camera position = geometry geometryName; //TELEPORT_CAMERA_TO_GEOMETRY
-	camera position = entity Bob position; //SET_CAMERA_TO_FOLLOW_ENTITY
-	entity Bob position = geometry geometryName; //TELEPORT_ENTITY_TO_GEOMETRY
-	
-	// RHS: booleans
-	entity entityName glitched = $enum_trueFalse; //SET_ENTITY_GLITCHED
-	player_control = $enum_onOff; //SET_PLAYER_CONTROL
-	lights_control = $enum_onOff; //SET_LIGHTS_CONTROL
-	hex_editor = $enum_openClose; //SET_HEX_EDITOR_STATE
-	hex_dialog_mode = $enum_onOff; //SET_HEX_EDITOR_DIALOG_MODE
-	hex_control = $enum_onOff; //SET_HEX_EDITOR_CONTROL
-	hex_clipboard = $enum_onOff; //SET_HEX_EDITOR_CONTROL_CLIPBOARD
-	serial_control = $enum_onOff; //SET_SERIAL_DIALOG_CONTROL
-	flagName = $enum_trueFalse; //SET_SAVE_FLAG
-		// use !! to coerce to bool on RHS, in the event that $string = $string and you need
-		// to know if the RHS is a bool expression or a number expression
-		// otherwise, no flagName/variableName collisions detected
-	
 	// RHS: numbers
 	entity entityName x = $number_literal; //SET_ENTITY_X
 	entity entityName y = $number_literal; //SET_ENTITY_Y

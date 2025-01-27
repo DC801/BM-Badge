@@ -919,7 +919,37 @@ const dictionary = {
 	},
 	json_value_chain: {
 		patterns: [{ start: `',':json`, body: `@json_value` }],
-	}
+	},
+	// enum_assignment_simple: {
+	// 	patterns: [
+	// 		{ start: `'player_control':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 		{ start: `'lights_control':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 		{ start: `'hex_editor':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 		{ start: `'hex_dialog_mode':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 		{ start: `'hex_control':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 		{ start: `'hex_clipboard':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 		{ start: `'serial_control':lhType`, body: `'=' @boolean:bool_value`, end: `';'` },
+	// 	],
+	// 	onEnd: (f, cs) => {
+	// 		const actionMap = {
+	// 			player_control: 'SET_PLAYER_CONTROL',
+	// 			lights_control: 'SET_LIGHTS_CONTROL',
+	// 			hex_editor: 'SET_HEX_EDITOR_STATE',
+	// 			hex_dialog_mode: 'SET_HEX_EDITOR_DIALOG_MODE',
+	// 			hex_control: 'SET_HEX_EDITOR_CONTROL',
+	// 			hex_clipboard: 'SET_HEX_EDITOR_CONTROL_CLIPBOARD',
+	// 			serial_control: 'SET_SERIAL_DIALOG_CONTROL',
+	// 		}
+	// 		const bool_value = mostRecentCapture(cs, 'bool_value')?.value;
+	// 		const lhTypeCapture = mostRecentCapture(cs, 'lhType');
+	// 		pushToStaged(cs, 'scriptBodyItems[]', {
+	// 			node: 'action',
+	// 			action: actionMap[lhTypeCapture?.value || ''],
+	// 			bool_value,
+	// 			malformed: !script,
+	// 		});
+	// 	}
+	// }
 };
 
 const exampleActionResult = {
@@ -990,10 +1020,6 @@ const actionDictionary = {
 	action_non_blocking_delay: { action: 'NON_BLOCKING_DELAY',
 		captures: [ 'duration' ],
 		patterns: [{ start: `'wait'`, body: `$duration:duration`, end: `';'` }],
-	},
-	action_label: { action: 'LABEL',
-		captures: [ 'label' ],
-		patterns: `$bareword:labelName ':'`,
 	},
 	action_hide_command: { action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 		captures: [ 'command' ],
@@ -1090,26 +1116,26 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
-	action_loop_camera_along_geometry: { action: 'LOOP_CAMERA_ALONG_GEOMETRY',
-		captures: [ 'geometryName' ],
+	action_pan_camera_to_geometry: { action: 'PAN_CAMERA_TO_GEOMETRY',
+		captures: [  'duration', 'geometry' ],
 		patterns: [{
-			start: `'camera' '->' 'geometry' $string:geometryName<geometryNames 'length' 'forever'`,
+			start: `'camera' '->' 'geometry' $string:geometry<geometryNames 'origin'`,
+			body: `'over' $duration:duration`,
 			end: `';'`
 		}],
 	},
 	action_pan_camera_along_geometry: { action: 'PAN_CAMERA_ALONG_GEOMETRY',
-		captures: [ 'duration', 'geometryName' ],
+		captures: [ 'duration', 'geometry' ],
 		patterns: [{
-			start: `'camera' '->' 'geometry' $string:geometryName<geometryNames 'length' 'over'`,
+			start: `'camera' '->' 'geometry' $string:geometry<geometryNames 'length' 'over'`,
 			body: `$duration:duration`,
 			end: `';'`
 		}],
 	},
-	action_pan_camera_to_geometry: { action: 'PAN_CAMERA_TO_GEOMETRY',
-		captures: [  'duration', 'geometryName' ],
+	action_loop_camera_along_geometry: { action: 'LOOP_CAMERA_ALONG_GEOMETRY',
+		captures: [ 'geometry' ],
 		patterns: [{
-			start: `'camera' '->' 'geometry' $string:geometryName<geometryNames 'origin'`,
-			body: `'over' $duration:duration`,
+			start: `'camera' '->' 'geometry' $string:geometry<geometryNames 'length' 'forever'`,
 			end: `';'`
 		}],
 	},
@@ -1121,6 +1147,159 @@ const actionDictionary = {
 			end: `';'`
 		}],
 	},
+	action_walk_entity_to_geometry: { action: 'WALK_ENTITY_TO_GEOMETRY',
+		captures: [  'duration', 'geometry', 'entity' ],
+		patterns: [{
+			start: `@entity_identifier 'position' '->' 'geometry' $string:geometry<geometryNames 'origin'`,
+			body: `'over' $duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_walk_entity_along_geometry: { action: 'WALK_ENTITY_ALONG_GEOMETRY',
+		captures: [ 'duration', 'geometry', 'entity' ],
+		patterns: [{
+			start: `@entity_identifier 'position' '->' 'geometry' $string:geometry<geometryNames 'length' 'over'`,
+			body: `$duration:duration`,
+			end: `';'`
+		}],
+	},
+	action_loop_entity_along_geometry: { action: 'LOOP_ENTITY_ALONG_GEOMETRY',
+		captures: [ 'geometry', 'entity' ],
+		patterns: [{
+			start: `@entity_identifier 'position' '->' 'geometry' $string:geometry<geometryNames 'length' 'forever'`,
+			end: `';'`
+		}],
+	},
+
+	action_play_entity_animation: { action: 'PLAY_ENTITY_ANIMATION',
+		captures: [ 'play_count', 'animation', 'entity' ],
+		patterns: [{
+			start: `@entity_identifier 'animation'`,
+			body: `'->' $number:animation $quantity:play_count`,
+			end: `';'`
+		}],
+	},
+	action_teleport_camera_geometry: { action: 'TELEPORT_CAMERA_TO_GEOMETRY',
+		captures: [ 'geometry' ],
+		patterns: [{
+			start: `'camera' 'position' '=' 'geometry'`,
+			body: `$string:geometry<geometryNames`,
+			end: `';'`
+		}],
+	},
+	action_camera_follow_entity: { action: 'SET_CAMERA_TO_FOLLOW_ENTITY',
+		captures: [ 'entity' ],
+		patterns: [{
+			start: `'camera' 'position' '='`,
+			body: `@entity_identifier 'position'`,
+			end: `';'`
+		}],
+	},
+	action_teleport_entity_geometry: { action: 'TELEPORT_ENTITY_TO_GEOMETRY',
+		captures: [ 'geometry', 'entity' ],
+		patterns: [{
+			start: `@entity_identifier 'position' '='`,
+			body: `'geometry' $string:geometry<geometryNames`,
+			end: `';'`
+		}],
+	},
+	// ASSIGNMENT: RH eventually to be boolean expression
+	action_set_entity_glitched: { action: 'SET_ENTITY_GLITCHED',
+		captures: [ 'bool_value', 'entity' ],
+		patterns: [{ start: `@entity_identifier 'glitched'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_player_control: { action: 'SET_PLAYER_CONTROL',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'player_control'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_lights_control: { action: 'SET_LIGHTS_CONTROL',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'lights_control'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_hex_editor_state: { action: 'SET_HEX_EDITOR_STATE',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'hex_editor'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_hex_editor_dialog_mode: { action: 'SET_HEX_EDITOR_DIALOG_MODE',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'hex_dialog_mode'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_hex_editor_control: { action: 'SET_HEX_EDITOR_CONTROL',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'hex_control'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_hex_editor_control_clipboard: { action: 'SET_HEX_EDITOR_CONTROL_CLIPBOARD',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'hex_clipboard'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	action_set_serial_control: { action: 'SET_SERIAL_DIALOG_CONTROL',
+		captures: [ 'bool_value' ],
+		patterns: [{ start: `'serial_control'`, body: `'=' $boolean:bool_value`, end: `';'` }],
+	},
+	// when the RH becomes a boolean expression rather than a straight boolean value,
+	// you can distinguish `varName1 = varName2` and `flagName1 = flagName2` by
+	// putting double-`!` on the right, like `flagName1 = !!flagName2`
+	action_set_save_flag: { action: 'SET_SAVE_FLAG',
+		captures: [ 'bool_value', 'save_flag' ],
+		patterns: [{ start: `$string:save_flag '=' $boolean:bool_value`, end: `';'` }],
+	},
+
+	// // ASSIGNMENT: RH eventually to be number expression
+	// action_set_entity_x: { action: 'SET_ENTITY_X',
+	// 	captures: [ 'u2_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'x'`, body: `'=' $number:u2_value`, end: `';'` }],
+	// },
+	// action_set_entity_y: { action: 'SET_ENTITY_Y',
+	// 	captures: [ 'u2_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'y'`, body: `'=' $number:u2_value`, end: `';'` }],
+	// },
+	// action_set_entity_primary_id: { action: 'SET_ENTITY_PRIMARY_ID',
+	// 	captures: [ 'u2_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'primary_id'`, body: `'=' $number:u2_value`, end: `';'` }],
+	// },
+	// action_set_entity_secondary_id: { action: 'SET_ENTITY_SECONDARY_ID',
+	// 	captures: [ 'u2_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'secondary_id'`, body: `'=' $number:u2_value`, end: `';'` }],
+	// },
+	// action_set_entity_primary_id_type: { action: 'SET_ENTITY_PRIMARY_ID_TYPE',
+	// 	captures: [ 'byte_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'primary_id_type'`, body: `'=' $number:byte_value`, end: `';'` }],
+	// },
+	// action_set_entity_current_animation: { action: 'SET_ENTITY_CURRENT_ANIMATION',
+	// 	captures: [ 'byte_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'current_animation'`, body: `'=' $number:byte_value`, end: `';'` }],
+	// },
+	// action_set_entity_animation_frame: { action: 'SET_ENTITY_CURRENT_FRAME',
+	// 	captures: [ 'byte_value', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'animation_frame'`, body: `'=' $number:byte_value`, end: `';'` }],
+	// },
+	// action_set_entity_movement_relative: { action: 'SET_ENTITY_MOVEMENT_RELATIVE',
+	// 	captures: [ 'relative_direction', 'entity' ],
+	// 	patterns: [{ start: `@entity_identifier 'strafe'`, body: `'=' $number:relative_direction`, end: `';'` }],
+	// },
+	// action_copy_variable_into_entity: { action: 'COPY_VARIABLE',
+	// 	captures: [ 'variable', 'field', 'entity' ],
+	// 	values: { inbound: false },
+	// 	patterns: [{ start: `@entity_identifier $bareword:field<entityFieldNames '='`, body: `$string:variable`, end: `';'` }],
+	// },
+	// action_copy_variable_from_entity: { action: 'COPY_VARIABLE',
+	// 	captures: [ 'field', 'entity', 'variable' ],
+	// 	values: { inbound: true },
+	// 	patterns: [{ start: `$string:variable<>variableNames '=' @entity_identifier`, body: `$bareword:field<entityFieldNames`, end: `';'` }],
+	// },
+	// action_mutate_variable: { action: 'MUTATE_VARIABLE',
+	// 	captures: [ 'field', 'entity', 'variable' ],
+	// 	patterns: [{ start: `$string:variable<>variableNames $operator:operation $number:value`, end: `';'` }],
+	// },
+	// action_mutate_variables: { action: 'MUTATE_VARIABLES',
+	// 	captures: [ 'source', 'variable' ],
+	// 	patterns: [{ start: `$string:variable<>variableNames $operator:operation $string:source<>variableNames`, end: `';'` }],
+	// },
+	action_label: { action: 'LABEL',
+		captures: [ 'label' ],
+		patterns: `$bareword:labelName ':'`,
+	},
+
 }
 
 const makeTreeEntry = (slug, treeEntry) => {

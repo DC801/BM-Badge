@@ -362,8 +362,12 @@ export const parseFile = (lexResult, givenFileName) => {
 
 const testInput = ``
 // +`_ {
-// 	camera -> geometry walkPath origin over 1s;
-// `
+// 	player_control = on;
+// 	hex_control =
+// 	hex_clipboard
+// 	debug_mode =;
+// 	lights_control;
+// }`
 // +`}`
 // + ``
 

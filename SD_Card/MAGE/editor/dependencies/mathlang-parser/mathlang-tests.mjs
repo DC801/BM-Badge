@@ -1,11 +1,137 @@
 import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
+const printIfOK = false;
+
 // remember newlines count as a token, so avoid them
 // to make it easier to count them with your eyeballs!
 const patternTests = {
-	camera_actions: [
-		{ name: `'camera ->' actions`,
+	set_save_flag: [
+		{ name: `set save flag`,
+			pattern: `_ {
+					storyflagBob = true;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [{
+				node: "script_definition",
+				name: "_",
+				body: [
+					{
+						node: "action",
+						action: "SET_SAVE_FLAG",
+						save_flag: "storyflagBob",
+						bool_value: true,
+					}
+				]
+			}]
+		},
+	],
+	boolean_assignment: [
+		// { name: `basic failures`,
+		// 	pattern: `_ {
+		// 			player_control = on;
+		// 			hex_control =
+		// 			hex_clipboard
+		// 			debug_mode =;
+		// 			lights_control;
+		// 		}`.replace(/[\s\n\t]+/g,' '),
+		// 	fileSuccess: true,
+		// 	counts: { bodyNodes: [3], nodes: 1, errors: 0, warnings: 0 },
+		// 	nodes: [{
+		// 		node: "script_definition",
+		// 		name: "_",
+		// 		body: [
+		// 			{
+		// 				node: "action",
+		// 				action: "SET_ENTITY_GLITCHED",
+		// 				entity: "Bob",
+		// 				bool_value: true,
+		// 			},
+		// 			{
+		// 				node: "action",
+		// 				action: "SET_ENTITY_GLITCHED",
+		// 				entity: "%PLAYER%",
+		// 				bool_value: true,
+		// 			},
+		// 			{
+		// 				node: "action",
+		// 				action: "SET_ENTITY_GLITCHED",
+		// 				entity: "%SELF%",
+		// 				bool_value: true,
+		// 			},
+		// 		]
+		// 	}]
+		// },
+		{ name: `entity glitched true`,
+			pattern: `_ {
+					entity Bob glitched = true;
+					player glitched = open;
+					self glitched = on;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [3], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [{
+				node: "script_definition",
+				name: "_",
+				body: [
+					{
+						node: "action",
+						action: "SET_ENTITY_GLITCHED",
+						entity: "Bob",
+						bool_value: true,
+					},
+					{
+						node: "action",
+						action: "SET_ENTITY_GLITCHED",
+						entity: "%PLAYER%",
+						bool_value: true,
+					},
+					{
+						node: "action",
+						action: "SET_ENTITY_GLITCHED",
+						entity: "%SELF%",
+						bool_value: true,
+					},
+				]
+			}]
+		},
+		{ name: `entity glitched false`,
+			pattern: `_ {
+					entity "Bob" glitched = false;
+					player glitched = closed;
+					self glitched = off;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [3], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [{
+				node: "script_definition",
+				name: "_",
+				body: [
+					{
+						node: "action",
+						action: "SET_ENTITY_GLITCHED",
+						entity: "Bob",
+						bool_value: false,
+					},
+					{
+						node: "action",
+						action: "SET_ENTITY_GLITCHED",
+						entity: "%PLAYER%",
+						bool_value: false,
+					},
+					{
+						node: "action",
+						action: "SET_ENTITY_GLITCHED",
+						entity: "%SELF%",
+						bool_value: false,
+					},
+				]
+			}]
+		},
+	],
+	do_over_time_operator: [
+		{ name: `camera over time`,
 			pattern: `_ {
 					camera -> geometry walkPath origin over 1s;
 					camera -> geometry "walkPath" length over 1000ms;
@@ -13,8 +139,110 @@ const patternTests = {
 					camera -> entity Bob position over 1ms;
 				}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 0, warnings: 0 },
-			nodes: []
+			counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [{
+				node: "script_definition",
+				name: "_",
+				body: [
+					{
+						node: "action",
+						action: "PAN_CAMERA_TO_GEOMETRY",
+						geometry: "walkPath",
+						duration: 1000,
+					},
+					{
+						node: "action",
+						action: "PAN_CAMERA_ALONG_GEOMETRY",
+						geometry: "walkPath",
+						duration: 1000,
+					},
+					{
+						node: "action",
+						action: "LOOP_CAMERA_ALONG_GEOMETRY",
+						geometry: "walkPath",
+					},
+					{
+						node: "action",
+						action: "PAN_CAMERA_TO_ENTITY",
+						entity: "Bob",
+						duration: 1,
+					}
+				]
+			}]
+		},
+		{ name: `entity identifier over time`,
+			pattern: `_ {
+					entity Bob position -> geometry walkPath origin over 1s;
+					player position -> geometry "walkPath" length over 1000ms;
+					self position -> geometry walkPath length forever;
+					entity Bob animation -> 3 twice;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [{
+				node: "script_definition",
+				name: "_",
+				body: [
+					{
+						node: "action",
+						action: "WALK_ENTITY_TO_GEOMETRY",
+						entity: "Bob",
+						geometry: "walkPath",
+						duration: 1000,
+					},
+					{
+						node: "action",
+						action: "WALK_ENTITY_ALONG_GEOMETRY",
+						entity: "%PLAYER%",
+						geometry: "walkPath",
+						duration: 1000,
+					},
+					{
+						node: "action",
+						action: "LOOP_ENTITY_ALONG_GEOMETRY",
+						entity: "%SELF%",
+						geometry: "walkPath",
+					},
+					{
+						node: "action",
+						action: "PLAY_ENTITY_ANIMATION",
+						entity: "Bob",
+						animation: 3,
+						play_count: 2,
+					}
+				]
+			}]
+		},
+		{ name: `not over time but similar`,
+			pattern: `_ {
+					camera position = geometry mapPath;
+					camera position = player position;
+					entity Bob position = geometry geometryName;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [3], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [{
+				node: "script_definition",
+				name: "_",
+				body: [
+					{
+						node: "action",
+						action: "TELEPORT_CAMERA_TO_GEOMETRY",
+						geometry: "mapPath",
+					},
+					{
+						node: "action",
+						action: "SET_CAMERA_TO_FOLLOW_ENTITY",
+						entity: "%PLAYER%",
+					},
+					{
+						node: "action",
+						action: "TELEPORT_ENTITY_TO_GEOMETRY",
+						entity: "Bob",
+						geometry: "geometryName",
+					},
+				]
+			}]
 		},
 	],
 	show_serial_dialog: [
@@ -29,7 +257,7 @@ const patternTests = {
 					};
 				}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { nodes: 3, errors: 0, warnings: 0 },
+			counts: { bodyNodes: [0,0,3], nodes: 3, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "serial_dialog_definition",
@@ -77,7 +305,7 @@ const patternTests = {
 					};
 				}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { nodes: 3, errors: 0, warnings: 0 },
+			counts: { bodyNodes: [0,0,3], nodes: 3, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "dialog_definition",
@@ -137,7 +365,7 @@ const patternTests = {
 					}]
 				}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 0, warnings: 0 },
+			counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "script_definition",
@@ -167,7 +395,7 @@ const patternTests = {
 				pause entity Bob on_tick;
 			}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 0, warnings: 0 },
+			counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "script_definition",
@@ -194,7 +422,7 @@ const patternTests = {
 				erase slot 0;
 			}`.replace(/[\s\n\t]+/g,' '),
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 0, warnings: 0 },
+			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "script_definition",
@@ -218,7 +446,7 @@ const patternTests = {
 				return;
 			}`.replaceAll('\n',' '),
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 0, warnings: 0 },
+			counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
 					node: "script_definition",
@@ -780,7 +1008,7 @@ const simplifyArrays = (origLH = [], origRH = []) => {
 		}
 	});
 	return { lh: newLH, rh: newRH, diff: newDiffs };
-}
+};
 const simplifyObjects = (origLH = {}, origRH = {}) => {
 	const sortedLH = {};
 	const sortedRH = {};
@@ -804,7 +1032,7 @@ const simplifyObjects = (origLH = {}, origRH = {}) => {
 		}
 	});
 	return { lh: sortedLH, rh: sortedRH, diff: sortedDiff };
-}
+};
 
 const doTest = (test) => {
 	const errors = [];
@@ -817,12 +1045,12 @@ const doTest = (test) => {
 			message: `Parsing ${ansiRed}${found}${ansiReset}; should have ${ansiYellow}${expected}${ansiReset}`,
 		});
 	}
-	Object.keys(test.counts).forEach(item=>{
+	['nodes', 'errors', 'warnings'].forEach(item=>{
 		const fileCounts = {
 			nodes: file.nodes.length,
 			warnings: file.warnings.length,
 			errors: file.errors.length,
-		}
+		};
 		if (fileCounts[item] !== test.counts[item]) {
 			const found = fileCounts[item];
 			const foundP = fileCounts[item] !== 1;
@@ -839,7 +1067,7 @@ const doTest = (test) => {
 	test.nodes.forEach((expected, i)=>{
 		// expected.malformed = !!expected.malformed;
 		const found = file.nodes[i];
-		Object.keys(expected).forEach(key=>{
+		Object.keys(expected).filter(s=>s!=='body').forEach(key=>{
 			const {lh, rh, diff} = simplifyValues(expected[key], found[key]);
 			const jsonLeft = JSON.stringify(lh, null, '  ');
 			const jsonRight = JSON.stringify(rh, null, '  ');
@@ -854,18 +1082,49 @@ const doTest = (test) => {
 			}
 		});
 	});
+	if (test.counts.bodyNodes) {
+		const foundScriptBodies = file.nodes.map(s=>s.body||[]);
+		const expectedScriptBodies = test.nodes.map(s=>s.body||[]);
+		expectedScriptBodies.forEach((expectedBody,i)=>{
+			const foundBody = foundScriptBodies[i];
+			Object.values(expectedBody).forEach((expectedAction, j)=>{
+				// expected.malformed = !!expected.malformed;
+				const foundAction = foundBody[j];
+				const {lh, rh, diff} = simplifyValues(expectedAction, foundAction);
+				const jsonLeft = JSON.stringify(lh, null, '  ');
+				const jsonRight = JSON.stringify(rh, null, '  ');
+				if (jsonLeft !== jsonRight) {
+					if (typeof lh === 'object') {
+						const message = { message: `Found nodes[${i}].body[${j}] = ${JSON.stringify(diff, null, '  ')}` }
+						errors.push(message);
+					} else {
+						const message = { message: `Found nodes[${i}].body[${j}] = ${ansiRed}${key}: ${jsonLeft}${ansiReset}, expected value ${ansiYellow}${jsonRight}${ansiReset}` };
+						errors.push(message);
+					}
+				}
+			});
+		});
+	}
 	return {
 		testName: test.name,
 		errors,
 		pattern: test.pattern,
 	};
 };
-const printTestResults = (test) => {
+let anyPrinted = false;
+const printTestResults = (test, testCat, i) => {
+	const printHeader = !i;
 	if (test.errors.length === 0) {
-		console.log(`${indent}${test.testName} --> OK`);
+		if (printIfOK) {
+			if (printHeader) console.log(`=== ${testCat} =========>`);
+			anyPrinted = true;
+			console.log(`${indent}${test.testName} --> OK`);
+		}
 	} else {
+		anyPrinted = true;
+		if (printHeader) console.log(`=== ${testCat} =========>`);
 		console.error(`${indent}${test.testName} -->`);
-		console.error(indent+indent+'Pattern: `'+test.pattern+'`')
+		console.error(indent+indent+'Pattern: `'+test.pattern+'`');
 		test.errors.map(error=>{
 			error.message = error.message.replaceAll('\\u001b[','\u001b[');
 			const print = error.message.split('\n').map(s=>indent+indent+s).join('\n');
@@ -876,16 +1135,18 @@ const printTestResults = (test) => {
 const indent = '    ';
 const megaTestGamut = () => {
 	Object.entries(patternTests).forEach(([testCat, tests])=>{
-		console.log(`=== ${testCat} =========>`);
-		tests.map(doTest).forEach(printTestResults);
+		tests.map(doTest).forEach((v, i)=>printTestResults(v, testCat, i));
 	});
 }
+
 const topTest = () => {
 	const [testCat, tests] = Object.entries(patternTests)[0];
 	console.log(`=== ${testCat} =========>`);
 	const doneTest = doTest(tests[0]);
 	printTestResults(doneTest);
-}
+};
 
 megaTestGamut();
 // topTest();
+
+if (!anyPrinted) console.log(`======= ALL TESTS OK =======`);
