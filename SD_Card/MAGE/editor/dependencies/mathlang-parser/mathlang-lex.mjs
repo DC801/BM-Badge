@@ -375,6 +375,7 @@ export const lex = (string) => {
 		completed: true,
 	}
 }
+// const test = `include "filename.mgs";`
 
 // const report = lex(test);
 // // console.log(JSON.stringify(report.tokens, null, '  '));

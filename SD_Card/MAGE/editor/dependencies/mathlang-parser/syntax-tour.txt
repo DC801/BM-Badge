@@ -1,7 +1,7 @@
 /* ------------------------------ ROOT LEVEL ------------------------------ */
 
 // STARTS WITH LITERALS
-include!("captureFileName.mgs")
+include "captureFileName.mgs";
 dialog dialogName {}
 serial_dialog serialDialogName {}
 script scriptName {}
@@ -134,8 +134,8 @@ _ {
 	/* -------------------------------- ASSIGNMENT -------------------------------- */
 
 	// RHS: coordinates
-	camera position = geometry geometryName; //TELEPORT_CAMERA_TO_GEOMETRY
-	camera position = entity Bob position; //SET_CAMERA_TO_FOLLOW_ENTITY
+	camera = geometry geometryName; //TELEPORT_CAMERA_TO_GEOMETRY
+	camera = entity Bob position; //SET_CAMERA_TO_FOLLOW_ENTITY
 	entity Bob position = geometry geometryName; //TELEPORT_ENTITY_TO_GEOMETRY
 	// RHS: booleans
 	entity entityName glitched = $enum_trueFalse; //SET_ENTITY_GLITCHED

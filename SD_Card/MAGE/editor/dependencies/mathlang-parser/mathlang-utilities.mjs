@@ -1,6 +1,6 @@
 // ---------------------- ERROR MESSAGE HANDLING ---------------------- 
 
-const findLineAndCharNumbers = (input, pos) => {
+export const findLineAndCharNumbers = (input, pos) => {
 	const splits = input.substring(0,pos).split('\n')
 	const charCount = splits[splits.length - 1].length;
 	const wholeString = input.split('\n')
@@ -44,6 +44,8 @@ const printParseMessage = (inputString, pos, message, fileName, messageType) => 
 };
 
 // ---------------------- PRETTY PRINT EXPRESSIONS ---------------------- 
+
+// as of tree revision I doubt any of this still works
 
 const indentSpace = '  ';
 const conditionPrint = {
@@ -149,6 +151,11 @@ const printAction = (node) => {
 
 // ---------------------- GENERAL ---------------------- 
 
+export const makeAutoIdentifierName = (input, pos, fileName) => {
+	const coords = findLineAndCharNumbers(input, pos);
+	return fileName+':'+coords.row +':'+coords.col;
+};
+
 export const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
 	const endTokensPos = {
 		terminatorPos: null,
@@ -196,7 +203,7 @@ export const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
 };
 
 export const decayTo = {
-	EOF: token => token.type === 'EOF',
+	EOF: token => token.type === 'EOF' ? token.type : null,
 	bareword: token => {
 		if (token.type === "bareword") return token.value;
 		if (token.barewordValue) return token.barewordValue;

@@ -1,400 +1,286 @@
 import { lex } from "./mathlang-lex.mjs"
-import { tree, onStart, onEnd, terminators } from "./mathlang-language.mjs"
-import { getPosContext, printCondition, printNode, errorRecoverPos, decayTo } from "./mathlang-utilities.mjs"
+import { tree } from "./mathlang-language.mjs"
+import { getPosContext } from "./mathlang-utilities.mjs"
 
 const verbose = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
-const printStack = (stack) => {
-	return stack.map(item=>`${item.branchName}[${item.startPos}]`)
-		.reverse()
-		.join(' > ');
-};
-const stackBranchName = (stack) => stack[0].branchName;
-const stackPos = (stack) => stack[0].startPos;
-
-const pushStack = (crawlState, branchName, startPos) => {
-	crawlState.stack.unshift({ branchName, startPos });
-	debugLog(`----adding to stack: ${branchName}[${startPos}]`);
-};
-const popStack = (crawlState) => {
-	const shift = crawlState.stack.shift();
-	debugLog(`----shifting off the top of stack: ${shift.branchName}[${shift.startPos}]`);
-	debugLog(printStack(crawlState.stack));
-};
-const addCapture = (crawlState, label, value) => {
-	if (!label) throw new Error("Found capture sans label!");
-	crawlState.captures.push({
-		label,
-		value,
-		pos: crawlState.tokenPos,
-	});
-};
 const ansiRed = '\u001b[1;31m';
 const ansiGreen = '\u001b[1;32m';
 const ansiYellow = '\u001b[1;33m';
 const ansiReset = '\u001b[0m';
 
-/* ------------------------------------- TRYBRANCH ------------------------------------- */
+/* ------------------------------------------ MUNCH ------------------------------------------ */
 
-const tryToken = (file, crawlState, twig, token) => {
-	// debugLog(`tryToken: ${token.value} == ${twig.original}`);
-	let matched = false;
-	let tryBranchesReport;
-	if (twig.type === 'literal') {
-		matched = token.value === twig.value;
-		if (matched && twig.label) {
-			addCapture(crawlState, twig.label, token.value);
-		}
-	} else if (twig.type === 'capture') {
-		if (twig.value === 'EOF' && token.type !== 'EOF') {
-			return { matched, lookup: tryBranchesReport };
-		}
-		matched = decayTo[twig.value](token) !== null;
-		if (matched) {
-			let label = twig.label ? twig.label : crawlState.unusedLabels.pop();
-			if (label) addCapture(crawlState, label, token.value);
-		}
-	} else if (twig.type === 'lookup') {
-		if (twig.label) {
-			crawlState.unusedLabels.push(twig.label);
-		}
-		pushStack(crawlState, twig.value, crawlState.tokenPos);
-		tryBranchesReport = tryBranches(file, crawlState);
-		matched = tryBranchesReport.matched;
-		popStack(crawlState);
+// should consume token or no? (currently yes)
+const munch = (cs, entry) => {
+	const token = cs.token;
+	const ret = {
+		originalPattern: null,
+		success: false,
+		capture: null,
+		nextEntry: null,
 	}
-	return {
-		matched,
-		lookup: tryBranchesReport,
-	};
-}
+	const literal = entry.literals[token.value];
+	if (literal) {
+		const twig = literal.twig;
+		if (twig.label) {
+			ret.capture = {
+				label: twig.label,
+				value: token.value,
+				tokenPos: cs.tokenPos,
+				originalPattern: twig.originalPattern,
+				debug: token,
+			};
+		}
+		debugLog(`Munched: ${token.value}`);
+		ret.success = true;
+		ret.nextEntry = literal;
+		cs.advance();
+	}
+	let capture = entry.captures[token.type];
+	if (
+		!capture &&
+		(token.type === 'bareword' || token.type === 'quoted_string')
+	) {
+		capture = entry.captures.string;
+	}
+	if (capture) {
+		const twig = capture.twig;
+		ret.capture = {
+			label: twig.label || 'UNLABELED_CAPTURE',
+			value: token.value,
+			tokenPos: cs.tokenPos,
+			originalPattern: twig.originalPattern,
+			debug: token,
+		};
+		debugLog(`Munched: ${token.value}`);
+		ret.success = true;
+		ret.nextEntry = capture;
+		cs.advance();
+	}
+	ret.originalPattern = ret.nextEntry?.twig.originalPattern;
+	return ret;
+};
 
-/* ------------------------------------- TRYBRANCH ------------------------------------- */
+// moves the cs.tokenPos until it lands ON (not past) the terminator,
+// or lacking a terminator, the next newline token
+// the caller can decide whether to advance to the terminator at that point (?)
+const fastForward = (cs, terminatorValue) => {
+	debugLog("FAST FORWARD!");
+	while (cs.tokenPos < cs.tokens.length) {
+		if (
+			cs.token.type === 'newline'
+			|| cs.token.value === terminatorValue
+		) {
+			return cs.token;
+		} else {
+			cs.advance();
+		}
+	}
+};
 
-const tryBranch = (file, crawlState, branch, branchID) => {
-	const branchName = stackBranchName(crawlState.stack);
-	debugLog(`\ttryBranch: ${branchName}`);
-	const tokens = file.tokens;
-	const report = {
-		startPos: stackPos(crawlState.stack),
-		expected: null,
-		expectedPos: null,
-		matched: false,
-		malformed: false,
+const parse = (f, cs, patternName, parentEntry) => {
+	const ret = {
+		originalPattern: patternName,
+		success: false,
+		startPos: cs.tokenPos,
+		captures: [],
+		expected: [],
 	};
-	let twigPos = 0;
-	let twig = branch[twigPos];
-	let token = tokens[crawlState.tokenPos];
-	let repeating = false;
-	let confirmed = false;
+	let entry = tree[patternName];
+	while (entry?.expected.size) {
+		// TODO: how to deal with skipping past the very newlines we seek
+		// for error recovering?
+		while (cs.token.type === 'newline') cs.advance();
 
-	const advanceTwig = () => {
-		twigPos += 1;
-		twig = branch[twigPos];
-		repeating = false;
-	};
-	const repeatTwig = () => {
-		debugLog("REPEATING")
-		twigPos -=1 ;
-		twig = branch[twigPos];
-		repeating = true;
-		crawlState.stack[0].startPos = crawlState.tokenPos;
-	};
-	const advanceToken = () => {
-		crawlState.tokenPos += 1;
-		token = tokens[crawlState.tokenPos];
-	};
-	const updateCrawlState = (newCrawlState) => {
-		crawlState = newCrawlState;
-		token = tokens[crawlState.tokenPos];
-	};
-	// BIG LOOP
-	while (twigPos < branch.length && crawlState.tokenPos < tokens.length) {
-		if (token.ignorable) {
-			advanceToken();
+		// EOF check
+		// I don't want it checking EOF after every root node, so handle that case now:
+		// (Could I just not do `cs.tokenPos < cs.tokens.length` in the while?)
+		if (cs.token.type === 'EOF') {
+			if (cs.tokenPos === cs.tokens.length - 1) {
+				ret.success = true;
+				return ret;
+			} else {
+				throw new Error("Unexpected end of file");
+			}
+		}
+		
+		// Try a literal or capture token match
+		const munched = munch(cs, entry);
+		if (munched.success) {
+			entry = munched.nextEntry;
+			if (munched.capture) {
+				ret.captures.push(munched.capture)
+			}
+			if (!entry.expected.size) {
+				// if there's no 'next' then we win
+				ret.originalPattern = munched.originalPattern;
+				ret.success = true;
+				return ret;
+			} else {
+				continue;
+			}
+		}
+
+		// If not, try a lookup (should only be @lookup*)
+		// Importantly, we should know when these should stop with 'until'!
+		const lookupNames = Object.keys(entry.lookups);
+		if (lookupNames.length) {
+			if (lookupNames.length > 1) {
+				throw new Error (`Multiple lookups possible here! (${lookupNames.join(", ")}) Badly designed tree??`);
+			}
+			const lookupName = lookupNames[0];
+			const nextEntry = entry.lookups[lookupName];
+			// (nested lookups might not have their own until, but the parent should)
+			const until = nextEntry || parentEntry;
+			// Try the until first, just so we don't get partial garbage matches
+			const munched = munch(cs, until);
+			// Prefer the twig's pattern name to the overall
+			// TODO: try to find a more consistent way to label these
+			const recoveredPatternName = munched.originalPattern || ret.originalPattern;
+			ret.originalPattern = recoveredPatternName;
+			if (munched.success) {
+				entry = munched.nextEntry;
+				if (munched.capture) ret.captures.push(munched.capture)
+				if (!entry.expected.size) {
+					// if there's no 'next' then we win
+					ret.originalPattern = munched.originalPattern;
+					ret.success = true;
+					return ret;
+				} else {
+					continue;
+				}
+			}
+			// was hoping the stack would help name things but nope
+			// (might still help debug)
+			cs.stack.unshift(lookupName);
+			const parsed = parse(f, cs, lookupName, nextEntry);
+			cs.stack.shift();
+			const insert = {
+				label: parsed.originalPattern,
+				startPos: parsed.startPos,
+				value: parsed.captures,
+				tokenPos: cs.tokenPos,
+			}
+			// This will contaminate everything to the root of the document tree,
+			// But that's probably exactly what's called for
+			if (parsed.malformed) {
+				ret.malformed = true;
+				insert.malformed = true;
+			}
+			ret.captures.push(insert);
 			continue;
 		}
-		const rep = twig.rep;
-		const zeroOkay = rep === '*' || rep === '?';
-		const multipleOkay = rep === '*' || rep === '+';
-		const tryTokenReport = tryToken(file, crawlState, twig, token);
-
-		if (tryTokenReport.matched) {
-			debugLog(`\tMatched ${ansiGreen}[${crawlState.tokenPos}] ${token.rawValue} with ${twig.original}${ansiReset}!`)
-			if (twig.type === 'lookup') {
-				updateCrawlState(tryTokenReport.lookup.crawlState);
-				// we already advanced the token in there; time to undo that now
-				crawlState.tokenPos -=1;
+		// Dictionary twig name work around!
+		// The syntax error should be labeled with the malformed twig's pattern name
+		const retPatternName = entry.twig.type === 'dictionary'
+			? entry.twig.value
+			: entry.twig.originalPattern
+		ret.originalPattern = retPatternName;
+		f.errors.push({
+			message: `${ret.originalPattern} syntax error`,
+			expected: ret.expected,
+			startPos: ret.startPos,
+			tokenPos: cs.tokenPos,
+		})
+		ret.expected = entry.expected;
+		ret.malformed = true;
+		ret.success = true;
+		console.error(getPosContext(f.inputString, cs.token.pos, `${ret.originalPattern} syntax error`));
+		console.error(`Expected: ${[...ret.expected].join(', ')}`)
+		// Error recovery goes here (?)
+		// (Yes, because otherwise literal/capture tokens don't get error recovery, right?)
+		if (entry.twig.errorRecoveryValue) {
+			// Rewind so fastForward can find a 'newline' right at the site of problem
+			if (cs.tokens[cs.tokenPos-1]?.type === 'newline') {
+				cs.backtrack();
 			}
-			if (twig.confirmNode) {
-				confirmed = true;
-				if (onStart[branchName]) onStart[branchName](file, crawlState);
-			}
-			advanceToken();
-			advanceTwig();
-			if (multipleOkay) {
-				repeatTwig();
-				continue;
-			}
-			if (twigPos === branch.length) report.matched = true;
+			fastForward(cs, entry.twig.errorRecoveryValue);
 		} else {
-			if ((multipleOkay && repeating)|| zeroOkay) {
-				const suffix = multipleOkay && repeating
-					? `because we've repeated at least once`
-					: `because it's okay to skip`
-				debugLog(`\t[${crawlState.tokenPos}] ${ansiYellow}${token.value}${ansiReset} did not match ${ansiYellow}${twig.original}${ansiReset} but that's okay ` + suffix);
-				advanceTwig();
-				if (twigPos === branch.length) report.matched = true;
-				continue;
-			} else {
-				debugLog(`\t[${crawlState.tokenPos}] ${ansiYellow}${token.value}${ansiReset} did not match ${ansiRed}${twig.original}${ansiReset}`)
-				if (twig.type === 'literal') {
-					const pos = crawlState.tokenPos;
-					const checkpoints = file.crawlErrors.checkpoints;
-					checkpoints[pos] = checkpoints[pos] || new Set();
-					checkpoints[pos].add(`'${twig.value}'`);
-					report.expected = `'${twig.value}'`;
-				}
-				else if (twig.type === 'capture') {
-					const pos = crawlState.tokenPos;
-					const checkpoints = file.crawlErrors.checkpoints;
-					checkpoints[pos] = checkpoints[pos] || new Set();
-					checkpoints[pos].add(twig.value);
-					report.expected = `${twig.value}`;
-				}
-				else if (twig.type === 'lookup') {
-					updateCrawlState(tryTokenReport.lookup.crawlState);
-					report.crawlState = crawlState;
-					report.expected = tryTokenReport.lookup.expected;
-				}
-				if (confirmed) report.malformed = true;
-				break; // no advance token; tokenPos is pos of error (?)
-			}
+			// skip over the offending token and retry
+			// I think this should work because we're trying the 'until's first each time
+			// (e.g. one bad match in the middle of a few @lookup*s; don't want to break the rest)
+			cs.advance();
 		}
+		return ret;
 	}
-	if (report.malformed) {
-		report.matched = true;
-		report.expectedPos = crawlState.tokenPos;
-		const terminatorTwig = terminators[branchName][branchID];
-		if (terminatorTwig) {
-			const continuePos = errorRecoverPos(tokens, crawlState.tokenPos, terminatorTwig);
-			crawlState.tokenPos = continuePos !== null
-				? continuePos
-				: crawlState.tokenPos + 1
-		}
-	}
-	return {crawlState, report};
+	return ret;
 };
 
-const processFails = (crawlErrors, fails) => {
-	fails.sort((a,b)=>b.crawlState.tokenPos - a.crawlState.tokenPos);
-	const maxPos = fails[0].crawlState.tokenPos;
-	const expectedArr = fails
-		.filter(item=>item.crawlState.tokenPos === maxPos)
-		.map(item=>item.report.expected);
-	if (maxPos > crawlErrors.bestPos) {
-		crawlErrors.checkpoints[maxPos] = new Set(expectedArr);
-		crawlErrors.bestPos = maxPos;
-	} else if (maxPos === crawlErrors.bestPos) {
-		expectedArr.forEach(v=>{
-			crawlErrors.checkpoints[maxPos].add(v)
-		});
+const makeCrawlState = (tokens) => {
+	const ret = {
+		tokens,
+		tokenPos: 0,
+		token: tokens[0],
+		stack: ['document'],
+		peek: (n=1) => tokens[ret.tokenPos+n],
+		advance: () => {
+			ret.tokenPos += 1;
+			ret.token = tokens[ret.tokenPos];
+			debugLog(`Advancing token to [${ret.tokenPos}]: ${ret.token?.value || 'OUT OF BOUNDS'}`);
+			return tokens[ret.tokenPos];
+		},
+		backtrack: () => {
+			ret.tokenPos -= 1;
+			ret.token = tokens[ret.tokenPos];
+			const printValue = ret.token.type === 'newline'
+				? '<newline(s)>'
+				: ret.token.value;
+			debugLog(`Rewinding token to [${ret.tokenPos}]: ${printValue}`);
+			return tokens[ret.tokenPos];
+		},
 	}
-	return expectedArr.join(', ');
+	return ret;
 };
-
-const tryBranches = (file, origCrawlState) => {
-	debugLog('tryBranches: ' + printStack(origCrawlState.stack));
-	const branchName = stackBranchName(origCrawlState.stack);
-	const startPos = stackPos(origCrawlState.stack);
-	const branches = file.tree[branchName];
-	let triedBranch;
-	let crawlState;
-	let expected = '';
-	const fails = [];
-	for (let i = 0; i < branches.length; i++) {
-		const branch = branches[i];
-		crawlState = JSON.parse(JSON.stringify(origCrawlState));
-		const tryBranchReport = tryBranch(file, crawlState, branch, i);
-		if (tryBranchReport.report.matched) {
-			triedBranch = tryBranchReport;
-			break;
-		} else {
-			fails.push(tryBranchReport);
-		}
-	}
-	if (triedBranch) {
-		crawlState = triedBranch.crawlState;
-		popStack(crawlState); // ?? why doing this twice? (startPos is broken if this is removed? why though?)
-		if (onEnd[branchName]) {
-			debugLog(`${ansiGreen}----Doing the 'onEnd()' for '${branchName}'${ansiReset}`);
-			onEnd[branchName](file, crawlState);
-		}
-		if (triedBranch.report.malformed) {
-			const fileExpecteds = file.crawlErrors.checkpoints[triedBranch.report.expectedPos];
-			debugLog(`${ansiRed}----Logging an error: ${branchName} error${ansiReset}`);
-			const prevErrorPos = file.errors.length > 0
-				? file.errors[file.errors.length-1]?.errorPos
-				: -Infinity;
-			const errorPos = triedBranch.report.expectedPos;
-			if (prevErrorPos !== errorPos) {
-				file.errors.push({
-					file: file.fileName,
-					value: 'Malformed node',
-					message: `${branchName} error`,
-					startPos: startPos,
-					expected: [...fileExpecteds].sort().join(', '), 
-					errorPos,
-					endPos: triedBranch.crawlState.tokenPos,
-				});
-			}
-		}
-	} else {
-		// add to `file` the branch(es) that made it the furthest
-		// (in `file` because it persists)
-		expected = processFails(file.crawlErrors, fails);
-		// what to do with these fails in an error recovery way?
-	}
-	return {
-		matched: !!triedBranch,
-		matchedBranch: triedBranch,
-		crawlState,
-		expected,
-	};
-}
 
 /* ------------------------------------------ PARSE FILE ------------------------------------------ */
 
-export const parseFile = (lexResult, givenFileName) => {
-	// state
+const parseFile = (inputString, givenFileName) => {
 	const fileName = givenFileName ? givenFileName : 'anon' + Math.floor(Math.random()*10000000000);
-	const crawlState = {
-		stack: [{ branchName: 'document', startPos: 0 }],
-		tokenPos: 0,
-		captures: [],
-		unusedLabels: [],
-		nodes: [],
-		staged: {},
+	const lexResult = lex(inputString, fileName);
+	lexResult.tokens.forEach(token=>token.fileName = fileName);
+	const cs = makeCrawlState(lexResult.tokens);
+	const f = {
+		inputString,
+		errors: [],
+		warnings: [],
 	};
-	const file = {
-		fileName,
-		plaintext: lexResult.plaintext,
-		success: false, // whether the file parsing succeeded
-		nodes: [], // the file nodes discovered
-		// these will have no actual effect yet, and are still per-file, but now files can reference each other and build into more interdependent things
-		warnings: [], // good things to know but non-breaking
-		errors: [], // parsing might have still finished if there are errors, but some nodes will be broken so the scenario might be wonky
-		tokens: lexResult.tokens, // still useful for error handling; you can get a token by its index (from a node) and look at the token pos within the file (char) to get the line/col to make error messages
-		tree, // handed around because it's permanent and everything needs to see it
-		crawlErrors: {
-			checkpoints: {
-				0: new Set (),
-			},
-			bestPos: 0,
-		},
-	};
-	
-	// parse file
-	let tryBranchesReport;
-	let prevContinuePos;
-	do {
-		tryBranchesReport = tryBranches(file, crawlState);
-		file.success = tryBranchesReport.matched;
-		file.crawlState = tryBranchesReport.crawlState;
-		if (!file.success) {
-			const continuePos = errorRecoverPos(file.tokens, file.crawlErrors.bestPos);
-			if (prevContinuePos === continuePos) break;
-			const errorPos = file.crawlErrors.bestPos;
-			const error = {
-				value: 'Syntax error',
-				message: `Unknown syntax error`,
-				errorPos: errorPos,
-				expected: [...file.crawlErrors.checkpoints[errorPos]].sort().join(', '),
-			};
-			file.errors.push(error);
-			prevContinuePos = continuePos;
-			if (continuePos === file.tokens.length) break;
-			crawlState.tokenPos = continuePos;
-		}
-	} while (!file.success);
+	const result = parse(f, cs, 'document');
 
-	// review errors and warnings
-	tryBranchesReport.crawlState.captures.forEach(capture => {
-		if (capture.pos !== file.tokens.length-1) {
-			file.errors.push({
-				value: 'Orphaned capture',
-				message: `Found orphaned capture at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
-				errorPos: capture.pos,
-			});
-		}
-	});
-	tryBranchesReport.crawlState.unusedLabels.forEach(capture => {
-		file.errors.push({
-			value: 'Unused capture label',
-			message: `Found unused capture label at token pos ${capture.pos}! ${capture.label}: ${capture.value}`,
-			errorPos: capture.pos,
-		});
-	});
-
-	// Print errors in the order they land in the file
-	file.errors.sort((a,b)=>a.errorPos - b.errorPos);
-	file.errors.map(error=>{
-		const origToken = file.tokens[error.errorPos]
-		const charPos = origToken ? origToken.pos : file.tokens.length-1;
-		let printable = getPosContext(
-			file.plaintext,
-			charPos,
-			error.message,
-			file.fileName,
-		);
-		if (error.expected?.length > 0) {
-			printable += `\nExpected: ${error.expected}`;
-		}
-		error.printable = printable;
-	});
+	// // Print errors in the order they land in the file
+	// file.errors.sort((a,b)=>a.errorPos - b.errorPos);
+	// file.errors.map(error=>{
+	// 	const origToken = file.tokens[error.errorPos]
+	// 	const charPos = origToken ? origToken.pos : file.tokens.length-1;
+	// 	let printable = getPosContext(
+	// 		file.plaintext,
+	// 		charPos,
+	// 		error.message,
+	// 		file.fileName,
+	// 	);
+	// 	if (error.expected?.length > 0) {
+	// 		printable += `\nExpected: ${error.expected}`;
+	// 	}
+	// 	error.printable = printable;
+	// });
 
 	// done!
-	return file;
+	return result;
 }
 
 /* ------------------ tests ------------------ */
 
-const testInput = ``
-// +`_ {
-// 	player_control = on;
-// 	hex_control =
-// 	hex_clipboard
-// 	debug_mode =;
-// 	lights_control;
-// }`
-// +`}`
-// + ``
+const testFile = parseFile(`
+	include "header.mgs"
+	add dialog settings {
+		label PLAYER { alignment BR entity "%PLAYER%" }
+		default { wrap 22 add alignment BL }
+	}
+	dialog greetings {
+		PLAYER "Hi"
+	}
 
-const testParsedFile = parseFile(lex(testInput), 'testMGSFile.mgs');
-testParsedFile.nodes.forEach(node=>{
-	console.log(printNode(node));
-});
-testParsedFile.errors.forEach(error=>{
-	console.error(error.printable);
-});
+`, 'bobPartyRoom');
 
-console.log("")
-
-// ========================== CONDITION EXPRESSION TESTS
-
-// // !(a || b) // Oh, I can have && now!
-// // a=true, b=true = false
-// // a=false, b=true = false
-// // a=true, b=false = false
-// // a=false, b=false = true
-// // (a&&b) == !(a||b)
-// const testConditionScript = `_ {
-// 	if (
-// 		(falseFlag || trueFlag || unknownFlag)
-// 		&& !debug_mode
-// 	) {}
-// }`
-// const testConditionParseFile = parseFile(lex(testConditionScript), tree, 'testMGSFile.mgs')
-// const testConditions = testConditionParseFile.nodes[0].body[1].conditions[0];
-// console.log(printCondition(testConditions));
+console.log(testFile);

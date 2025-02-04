@@ -1150,3 +1150,21 @@ megaTestGamut();
 // topTest();
 
 if (!anyPrinted) console.log(`======= ALL TESTS OK =======`);
+
+// ========================== CONDITION EXPRESSION TESTS
+
+// // !(a || b) // Oh, I can have && now!
+// // a=true, b=true = false
+// // a=false, b=true = false
+// // a=true, b=false = false
+// // a=false, b=false = true
+// // (a&&b) == !(a||b)
+// const testConditionScript = `_ {
+// 	if (
+// 		(falseFlag || trueFlag || unknownFlag)
+// 		&& !debug_mode
+// 	) {}
+// }`
+// const testConditionParseFile = parseFile(lex(testConditionScript), tree, 'testMGSFile.mgs')
+// const testConditions = testConditionParseFile.nodes[0].body[1].conditions[0];
+// console.log(printCondition(testConditions));
