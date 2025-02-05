@@ -1,8 +1,8 @@
 import { lex } from "./mathlang-lex.mjs"
 import { tree } from "./mathlang-language.mjs"
-import { getPosContext } from "./mathlang-utilities.mjs"
+import { getPosContext, decayTo } from "./mathlang-utilities.mjs"
 
-const verbose = false;
+const verbose = true;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 const ansiRed = '\u001b[1;31m';
@@ -12,52 +12,93 @@ const ansiReset = '\u001b[0m';
 
 /* ------------------------------------------ MUNCH ------------------------------------------ */
 
-// should consume token or no? (currently yes)
-const munch = (cs, entry) => {
+const matchTokenToCaptureBucket = (token, entry) => {
+	if (entry.captures[token.type]) return token.type;
+	const numberish = token.type === 'duration'
+		|| token.type === 'distance'
+		|| token.type === 'quantity';
+	if (entry.captures.number && numberish) return 'number';
+	const isBareword = token.type === 'bareword' || token.barewordValue
+	if (isBareword && token.barewordValue) return 'bareword';
+	const stringish = isBareword || token.type === 'quoted_string';
+	if (entry.captures.string && stringish) return 'string';
+}
+
+const createCapture = (cs, twig) => {
 	const token = cs.token;
-	const ret = {
-		originalPattern: null,
-		success: false,
-		capture: null,
-		nextEntry: null,
+	let label;
+	if (twig.type === 'literal' && twig.label) label = twig.label;
+	if (twig.type === 'capture') {
+		label = twig.label || 'UNLABELED_CAPTURE';
 	}
-	const literal = entry.literals[token.value];
-	if (literal) {
-		const twig = literal.twig;
-		if (twig.label) {
-			ret.capture = {
-				label: twig.label,
-				value: token.value,
-				tokenPos: cs.tokenPos,
-				originalPattern: twig.originalPattern,
-				debug: token,
-			};
-		}
-		debugLog(`Munched: ${token.value}`);
-		ret.success = true;
-		ret.nextEntry = literal;
-		cs.advance();
-	}
-	let capture = entry.captures[token.type];
-	if (
-		!capture &&
-		(token.type === 'bareword' || token.type === 'quoted_string')
-	) {
-		capture = entry.captures.string;
-	}
-	if (capture) {
-		const twig = capture.twig;
-		ret.capture = {
-			label: twig.label || 'UNLABELED_CAPTURE',
+	if (label) {
+		return {
+			label,
 			value: token.value,
 			tokenPos: cs.tokenPos,
 			originalPattern: twig.originalPattern,
 			debug: token,
-		};
-		debugLog(`Munched: ${token.value}`);
+		}
+	} else {
+		return null;
+	}
+};
+// should consume token or no? (currently yes)
+const munch = (cs, entry, peek) => {
+	const peekMessage = peek ? 'PEEKING' : 'trying'
+	debugLog(`[${cs.tokenPos}] '${cs.token.value}' --${peekMessage}--> ${[...entry.expected].join(', ')}`)
+	const token = cs.token;
+	const ret = {
+		originalPattern: null,
+		success: false,
+		captures: [],
+		nextEntry: null,
+	}
+	let bucketType;
+	let bucketName;
+	let newBucket;
+
+	// Try literals first
+	// match the value no matter what type the token thinks it is
+	newBucket = entry.literals[token.value];
+	if (newBucket) {
+		bucketType = 'literals';
+		bucketName = token.value;
+	} else {
+		// try captures if that didn't work
+		bucketName = matchTokenToCaptureBucket(token, entry) || null;
+		if (bucketName) {
+			newBucket = entry.captures[bucketName];
+			bucketType = 'captures';
+		}
+	}
+	// if we found anything:
+	if (newBucket) {
+		const twig = newBucket.twig;
+		const capture = createCapture(cs, twig);
+		if (capture) ret.captures.push(capture);
 		ret.success = true;
-		ret.nextEntry = capture;
-		cs.advance();
+		ret.nextEntry = newBucket;
+		const peekedMessage = peek ? 'PEEKED' : 'Munched'
+		debugLog(`${peekedMessage}: '${token.value}'`);
+		if (!peek) cs.advance();
+		if (twig.rep === '*' && !peek) {
+			let repeating = true;
+			while (repeating) {
+				const token = cs.token;
+				const repeatMatched = twig.type === 'literal'
+					? twig.value === token.value
+					: decayTo[bucketName](token) !== null;
+				if (repeatMatched) {
+					const capture = createCapture(cs, twig);
+					if (capture) ret.captures.push(capture);
+					debugLog(`REPEAT: '${token.value}'`);
+					cs.advance();
+				} else {
+					repeating = false;
+				}
+			}
+		}
 	}
 	ret.originalPattern = ret.nextEntry?.twig.originalPattern;
 	return ret;
@@ -110,20 +151,22 @@ const parse = (f, cs, patternName, parentEntry) => {
 		const munched = munch(cs, entry);
 		if (munched.success) {
 			entry = munched.nextEntry;
-			if (munched.capture) {
-				ret.captures.push(munched.capture)
-			}
-			if (!entry.expected.size) {
-				// if there's no 'next' then we win
-				ret.originalPattern = munched.originalPattern;
-				ret.success = true;
-				return ret;
-			} else {
-				continue;
-			}
+			munched.captures.forEach(capture=>{
+				ret.captures.push(capture)
+			});
+			continue;
+			// if (entry.expected.size) {
+			// 	continue;
+			// } else {
+			// 	// if there's no 'next' then we win
+			// 	ret.originalPattern = munched.originalPattern;
+			// 	ret.success = true;
+			// 	debugLog(`Just matched the pattern '${munched.originalPattern}'!`);
+			// 	return ret;
+			// }
 		}
 
-		// If not, try a lookup (should only be @lookup*)
+		// If not, try a lookup (should only be @lookup*s now)
 		// Importantly, we should know when these should stop with 'until'!
 		const lookupNames = Object.keys(entry.lookups);
 		if (lookupNames.length) {
@@ -135,25 +178,25 @@ const parse = (f, cs, patternName, parentEntry) => {
 			// (nested lookups might not have their own until, but the parent should)
 			const until = nextEntry || parentEntry;
 			// Try the until first, just so we don't get partial garbage matches
-			const munched = munch(cs, until);
-			// Prefer the twig's pattern name to the overall
-			// TODO: try to find a more consistent way to label these
-			const recoveredPatternName = munched.originalPattern || ret.originalPattern;
-			ret.originalPattern = recoveredPatternName;
-			if (munched.success) {
-				entry = munched.nextEntry;
-				if (munched.capture) ret.captures.push(munched.capture)
-				if (!entry.expected.size) {
-					// if there's no 'next' then we win
-					ret.originalPattern = munched.originalPattern;
-					ret.success = true;
-					return ret;
-				} else {
+			const peeked = munch(cs, until, true);
+			ret.originalPattern = peeked.originalPattern || ret.originalPattern;
+			if (peeked.success) {
+				// disregard capture and step the token back
+				// (we'll get them again on the other side)
+				// do advance the twig
+				entry = peeked.nextEntry;
+				if (entry.expected.size) {
 					continue;
+				} else {
+					// if there's no 'next' then we win
+					// ... but in which case we should actually munch the token
+					cs.advance();
+					ret.originalPattern = peeked.originalPattern;
+					ret.success = true;
+					debugLog(`Just matched the pattern '${peeked.originalPattern}'!`);
+					return ret;
 				}
 			}
-			// was hoping the stack would help name things but nope
-			// (might still help debug)
 			cs.stack.unshift(lookupName);
 			const parsed = parse(f, cs, lookupName, nextEntry);
 			cs.stack.shift();
@@ -194,7 +237,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 		if (entry.twig.errorRecoveryValue) {
 			// Rewind so fastForward can find a 'newline' right at the site of problem
 			if (cs.tokens[cs.tokenPos-1]?.type === 'newline') {
-				cs.backtrack();
+				cs.move(-1);
 			}
 			fastForward(cs, entry.twig.errorRecoveryValue);
 		} else {
@@ -218,16 +261,22 @@ const makeCrawlState = (tokens) => {
 		advance: () => {
 			ret.tokenPos += 1;
 			ret.token = tokens[ret.tokenPos];
-			debugLog(`Advancing token to [${ret.tokenPos}]: ${ret.token?.value || 'OUT OF BOUNDS'}`);
+			const printValue = !ret.token
+				? 'OUT OF BOUNDS'
+				: ret.token.type === 'newline'
+					? '<newline(s)>'
+					: ret.token.value;
+			debugLog(`=> [${ret.tokenPos}]: ${printValue}`);
 			return tokens[ret.tokenPos];
 		},
-		backtrack: () => {
-			ret.tokenPos -= 1;
+		move: (n) => {
+			ret.tokenPos += n;
 			ret.token = tokens[ret.tokenPos];
+			const header = n > 0 ? '=>' : '<='
 			const printValue = ret.token.type === 'newline'
 				? '<newline(s)>'
 				: ret.token.value;
-			debugLog(`Rewinding token to [${ret.tokenPos}]: ${printValue}`);
+			debugLog(`${header} [${ret.tokenPos}]: ${printValue}`);
 			return tokens[ret.tokenPos];
 		},
 	}
@@ -272,15 +321,22 @@ const parseFile = (inputString, givenFileName) => {
 /* ------------------ tests ------------------ */
 
 const testFile = parseFile(`
-	include "header.mgs"
-	add dialog settings {
-		label PLAYER { alignment BR entity "%PLAYER%" }
-		default { wrap 22 add alignment BL }
-	}
-	dialog greetings {
-		PLAYER "Hi"
-	}
+dialog greetings {
+	entity Bob "ONE" "TWO" "THREE";
+	PLAYER "ON" "THOSE" "TRAYS";
+}
 
-`, 'bobPartyRoom');
+	`
+	
+// 	`
+// dialog greetings {
+// 	entity Bob "Hi"
+// 		"What do you think you're doing now??";
+// 	PLAYER "Whoa, what?";
+// }
+
+// `
+
+, 'bobPartyRoom');
 
 console.log(testFile);

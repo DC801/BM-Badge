@@ -203,6 +203,7 @@ export const errorRecoverPos = (tokens, firstMismatched, terminatorTwig) => {
 };
 
 export const decayTo = {
+	// needs to be `null` because sometimes it's `false` or `0`
 	EOF: token => token.type === 'EOF' ? token.type : null,
 	bareword: token => {
 		if (token.type === "bareword") return token.value;

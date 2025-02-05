@@ -39,7 +39,8 @@ const patterns = {
 	dialog: `@dialog_identifier
 		@dialog_parameter*
 		$quoted_string:dialogMessage+
-		@dialog_option*`,
+		@dialog_option*
+		';'`, // SEMICOLON IS NEW!
 	dialog_identifier: `'entity':identifierType $string:identifierValue
 		| 'name':identifierType $string:identifierValue
 		| $bareword:identifierValue`,
@@ -293,6 +294,11 @@ const makeEntry = (patternName, twig) => {
 
 // Otherwise I think this is perfect!
 
-addFlatPatternToTree('document');
+Object.keys(flatTrees).forEach(patternName=>{
+	fillInPrerequesites(patternName);
+})
+Object.keys(flatTrees).forEach(patternName=>{
+	addFlatPatternToTree(patternName);
+})
 
-// console.log(tree);
+console.log(tree);
