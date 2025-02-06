@@ -1,6 +1,6 @@
 import { lex } from "./mathlang-lex.mjs"
 import { tree } from "./mathlang-language.mjs"
-import { getPosContext, decayTo } from "./mathlang-utilities.mjs"
+import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween } from "./mathlang-utilities.mjs"
 
 const verbose = true;
 const debugLog = (string) => { if (verbose) console.log(string); };
@@ -29,7 +29,7 @@ const createCapture = (cs, twig) => {
 	let label;
 	if (twig.type === 'literal' && twig.label) label = twig.label;
 	if (twig.type === 'capture') {
-		label = twig.label || 'UNLABELED_CAPTURE';
+		label = twig.label || twig.originalPattern || 'UNLABELED_CAPTURE';
 	}
 	if (label) {
 		return {
@@ -86,6 +86,10 @@ const munch = (cs, entry, peek) => {
 			let repeating = true;
 			while (repeating) {
 				const token = cs.token;
+				if (token.ignorable) {
+					cs.advance();
+					continue;
+				}
 				const repeatMatched = twig.type === 'literal'
 					? twig.value === token.value
 					: decayTo[bucketName](token) !== null;
@@ -121,6 +125,48 @@ const fastForward = (cs, terminatorValue) => {
 	}
 };
 
+const onMatch = {
+	json_literal: (f, cs, patternName, ret) => {
+		const startPos = cs.tokenPos;
+		const collection = collectBetween(cs, ']');
+		const clean = collection.map(token=>{
+			if (token.type === 'boolean') {
+				if (token.value === 'true') return true;
+				if (token.value === 'false') return false;
+			}
+			if (
+				token.type === 'bareword'
+				|| token.type === 'quoted_string'
+				|| token.barewordValue
+			) {
+				return `"${token.value}"`;
+			}
+			return token.value;
+		})
+		const json = '['+clean.join('');
+		let parsed = [];
+		try {
+			parsed = JSON.parse(json);
+		} catch (err) {
+			// todo: line up the error squigglies with this?
+			console.error(getPosContext(f.inputString, cs.token.pos, err.message));
+			f.errors.push({
+				message: err.message,
+				expected: ret.expected,
+				startPos: startPos,
+				tokenPos: cs.tokenPos,
+			})
+			ret.malformed = true;
+		}
+		ret.captures.push({
+			label: 'json_literal',
+			value: parsed,
+			startPos,
+			tokenPos: cs.tokenPos,
+		})
+		console.log(collection);
+	},
+}
 const parse = (f, cs, patternName, parentEntry) => {
 	const ret = {
 		originalPattern: patternName,
@@ -133,7 +179,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 	while (entry?.expected.size) {
 		// TODO: how to deal with skipping past the very newlines we seek
 		// for error recovering?
-		while (cs.token.type === 'newline') cs.advance();
+		while (cs.token.ignorable) cs.advance();
 
 		// EOF check
 		// I don't want it checking EOF after every root node, so handle that case now:
@@ -150,20 +196,22 @@ const parse = (f, cs, patternName, parentEntry) => {
 		// Try a literal or capture token match
 		const munched = munch(cs, entry);
 		if (munched.success) {
+			cs.mostRecentReportedPattern = entry.originalPattern;
 			entry = munched.nextEntry;
 			munched.captures.forEach(capture=>{
 				ret.captures.push(capture)
 			});
-			continue;
-			// if (entry.expected.size) {
-			// 	continue;
-			// } else {
-			// 	// if there's no 'next' then we win
-			// 	ret.originalPattern = munched.originalPattern;
-			// 	ret.success = true;
-			// 	debugLog(`Just matched the pattern '${munched.originalPattern}'!`);
-			// 	return ret;
-			// }
+			if (entry.expected.size) {
+				continue;
+			} else {
+				// if there's no 'next' then we win
+				const fn = onMatch[munched.originalPattern];
+				if (fn) fn(f, cs, patternName, ret);
+				ret.originalPattern = munched.originalPattern;
+				ret.success = true;
+				debugLog(`Just matched the pattern '${munched.originalPattern}'!`);
+				return ret;
+			}
 		}
 
 		// If not, try a lookup (should only be @lookup*s now)
@@ -191,7 +239,6 @@ const parse = (f, cs, patternName, parentEntry) => {
 					// if there's no 'next' then we win
 					// ... but in which case we should actually munch the token
 					cs.advance();
-					ret.originalPattern = peeked.originalPattern;
 					ret.success = true;
 					debugLog(`Just matched the pattern '${peeked.originalPattern}'!`);
 					return ret;
@@ -240,6 +287,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 				cs.move(-1);
 			}
 			fastForward(cs, entry.twig.errorRecoveryValue);
+			cs.advance();
 		} else {
 			// skip over the offending token and retry
 			// I think this should work because we're trying the 'until's first each time
@@ -250,6 +298,8 @@ const parse = (f, cs, patternName, parentEntry) => {
 	}
 	return ret;
 };
+
+/* ------------------------------------------ PARSE FILE ------------------------------------------ */
 
 const makeCrawlState = (tokens) => {
 	const ret = {
@@ -282,10 +332,7 @@ const makeCrawlState = (tokens) => {
 	}
 	return ret;
 };
-
-/* ------------------------------------------ PARSE FILE ------------------------------------------ */
-
-const parseFile = (inputString, givenFileName) => {
+export const parseFile = (inputString, givenFileName) => {
 	const fileName = givenFileName ? givenFileName : 'anon' + Math.floor(Math.random()*10000000000);
 	const lexResult = lex(inputString, fileName);
 	lexResult.tokens.forEach(token=>token.fileName = fileName);
@@ -296,6 +343,15 @@ const parseFile = (inputString, givenFileName) => {
 		warnings: [],
 	};
 	const result = parse(f, cs, 'document');
+	const nodes = result.captures.map(clean);
+	const ret = {
+		tokens: lexResult.tokens,
+		inputString: f.inputString,
+		errors: f.errors,
+		warnings: f.warnings,
+		success: f.success,
+		nodes,
+	}
 
 	// // Print errors in the order they land in the file
 	// file.errors.sort((a,b)=>a.errorPos - b.errorPos);
@@ -315,26 +371,141 @@ const parseFile = (inputString, givenFileName) => {
 	// });
 
 	// done!
-	return result;
+	return ret;
 }
+
+const cleanStructure = {
+	json_literal: {
+		actions: `json_literal`,
+	},
+	include_macro: {
+		fileName: `fileName`,
+	},
+	constant_assignment: {
+		label: `constantName`,
+		value: `constantValue`,
+	},
+	add_serial_dialog_settings: {
+		settings: 'serial_dialog_parameter[{}]'
+	},
+	add_dialog_settings: {
+		targets: 'dialog_settings_target[@]'
+	},
+	dialog_settings_target: {
+		targetType: 'target',
+		targetValue: 'tarvetValue',
+		settings: 'dialog_parameter[{}]'
+	},
+	dialog_literal: {
+		dialogName: `dialogName`,
+		dialogs: 'dialog[@]',
+	},
+	dialog: {
+		identifierType: `identifierType`,
+		identifierValue: `identifierValue`,
+		parameters: `dialog_parameter[{}]`,
+		messages: `dialogMessage['']`,
+		options: `dialog_option[{}]`,
+	},
+};
+
+const cleanGeneric = (raw) => {
+	const values = raw.value.slice();
+	const node = {
+		node: raw.label,
+		startPos: raw.startPos,
+		tokenPos: raw.tokenPos,
+		debug: raw,
+	};
+	if (raw.malformed) node.malformed;
+	const structure = cleanStructure[node.node];
+	if (!structure) throw new Error(`No node cleaning structure found for ${node.node}`);
+	Object.keys(structure).forEach(propName=>{
+		const value = structure[propName];
+		const splits = value.match(/([_a-zA-Z]+)(\[(.*?)\])?/);
+		const filterBy = splits[1];
+		const suffix = splits[2];
+		const suffixInner = splits[3];
+		const filtered = values.filter(v=>v.label === filterBy);
+		if (!suffix) {
+			if (filtered.length > 1) throw new Error(`Found more than 1 item in ${node.node} called '${filterBy}!'`)
+			node[propName] = Array.isArray(filtered)
+				? filtered[0]?.value
+				: filtered.value;
+			return;
+		}
+		if (suffixInner === '@') {
+			node[propName] = filtered.map(clean);
+		} else if (suffixInner === `''`) {
+			node[propName] = filtered.map(v=>v.value);
+		} else if (suffixInner === `{}`) {
+			node[propName] = filtered.map(v=>{
+				let insert = {};
+				v.value.forEach(capture=>{
+					insert[capture.label] = capture.value;
+				});
+				return insert;
+			});
+		}
+	});
+	return node;
+};
+
+const cleanCustomMap = {
+	root: (capture) => {
+		throw new Error("This shouldn't happen! (root node w/o identification)")
+		console.log('todo')
+	},
+	dialog_literal: (rawDialogBlock, f) => {
+		const node = clean(rawDialogBlock);
+		if (!node.dialogName) {
+			node.dialogName = makeAutoIdentifierName(
+				f.inputString,
+				f.tokens[rawDialogBlock.startPos].pos,
+				f.fileName
+			);
+		}
+		return node;
+	},
+}
+
+const clean = (raw) => {
+	const name = raw.label;
+	const cleanCustom = cleanCustomMap[name];
+	return cleanCustom ? cleanCustom(raw) : cleanGeneric(raw);
+};
 
 /* ------------------ tests ------------------ */
 
-const testFile = parseFile(`
-dialog greetings {
-	entity Bob "ONE" "TWO" "THREE";
-	PLAYER "ON" "THOSE" "TRAYS";
-}
+const testFile = parseFile(`// asdf\n`
+	+` json![{action:NEW_ACTION}] `
 
-	`
-	
-// 	`
+	// +` $steamedHams = ;\n`
+	// +` $trombones = 76;`
+// +` add serial_dialog settings {
+// 	wrap 80  wrap 99
+// }`
+// +` add dialog settings {
+// 	label PLAYER {
+// 		alignment BL
+// 		entity "%PLAYER%"
+// 	}
+// 	default {
+// 		alignment BR
+// 	}
+// }`
+// +	` 
 // dialog greetings {
-// 	entity Bob "Hi"
-// 		"What do you think you're doing now??";
-// 	PLAYER "Whoa, what?";
+// 	entity Bob alignment BR emote 44 "Hi"
+// 		"What do you think you're doing now??"
+// 	;
+// 	PLAYER alignment TL "I guess I'll need to choose one?"
+// 	> "I'll take the left door." = leftScript
+// 	> "I'll take the right door." = rightScript
+// 	;
 // }
 
+// // asdf
 // `
 
 , 'bobPartyRoom');

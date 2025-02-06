@@ -966,6 +966,31 @@ const patternTests = {
 		},
 	],
 }
+
+const success = {
+	originalPattern: "document",
+	success: true,
+	startPos: 0,
+	tokenPos: 4,
+	captures: [
+	  {
+		label: "constant_assignment",
+		startPos: 0,
+		tokenPos: 4,
+		value: [
+		  {
+			label: "constantName", value: "$steamedHams",
+			tokenPos: 0, originalPattern: "constant_assignment",
+		  },
+		  {
+			label: "constant_value", value: "Hamburgers",
+			tokenPos: 2, riginalPattern: "constant_value",
+		  },
+		],
+	  },
+	],
+  }
+
 const ansiRed = '\u001b[1;31m';
 const ansiYellow = '\u001b[1;33m';
 const ansiReset = '\u001b[0m';
@@ -1034,8 +1059,7 @@ const simplifyObjects = (origLH = {}, origRH = {}) => {
 
 const doTest = (test) => {
 	const errors = [];
-	const lexObject = lex(test.pattern, 'unitTests.mgs');
-	const file = parseFile(lexObject, 'unitTests.mgs');
+	const file = parseFile(test.pattern, 'unitTests.mgs');
 	if (test.fileSuccess !== file.success) { // I doubt this will happen
 		const expected = test.fileSuccess ? 'succeeded' : 'failed';
 		const found = file.success ? 'succeeded' : 'failed';

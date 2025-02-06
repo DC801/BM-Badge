@@ -151,6 +151,25 @@ const printAction = (node) => {
 
 // ---------------------- GENERAL ---------------------- 
 
+export const collectBetween = (cs, endChar) => {
+	const startPos = cs.tokenPos;
+	const startChar = cs.token.value;
+	let nested = 0;
+	let success = false;
+	while (cs.tokenPos < cs.tokens.length) {
+		cs.advance();
+		if (cs.token.value === startChar) nested += 1;
+		else if (cs.token.value === endChar) nested -= 1;
+		if (nested === -1) {
+			success = true;
+			cs.advance();
+			break;
+		}
+	}
+	if (!success) throw new Error(`Could not find matching ${endChar} for ${startChar}`);
+	return cs.tokens.slice(startPos,  cs.tokenPos);
+};
+
 export const makeAutoIdentifierName = (input, pos, fileName) => {
 	const coords = findLineAndCharNumbers(input, pos);
 	return fileName+':'+coords.row +':'+coords.col;

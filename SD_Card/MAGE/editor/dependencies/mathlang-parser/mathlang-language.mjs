@@ -12,6 +12,7 @@ const patterns = {
 		+` | @add_dialog_settings`
 		+` | @dialog_definition`
 		+` | @serial_dialog_definition`
+		+` | @json_literal`
 		,
 	// Derp, why was this in quotes? We just need one word out of it....
 	include_macro: `'include' $quoted_string:fileName ';'`,
@@ -50,6 +51,7 @@ const patterns = {
 	serial_dialog_option: `'#':optionType $quoted_string:label '=' $string:script
 		| '_':optionType $quoted_string:label '=' $string:script`,
 	dialog_option: `'>' $quoted_string:label '=' $string:script`,
+	json_literal: `'json' '!' '['` // the rest is handled in the parse fn
 };
 
 const getWordReport = (word, patternName) => {
@@ -130,7 +132,7 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 		const last = origVariant[origVariant.length-1];
 		last.terminator = true;
 		if (
-			origVariant.length > 1
+			origVariant.length > 2
 			&& last.type !== 'lookup'
 			&& (last.rep === '' || last.rep === '+')
 		) {
@@ -301,4 +303,4 @@ Object.keys(flatTrees).forEach(patternName=>{
 	addFlatPatternToTree(patternName);
 })
 
-console.log(tree);
+// console.log(tree);
