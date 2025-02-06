@@ -149,11 +149,18 @@ const onMatch = {
 			parsed = JSON.parse(json);
 		} catch (err) {
 			// todo: line up the error squigglies with this?
-			console.error(getPosContext(f.inputString, cs.token.pos, err.message));
+			const posCaptureRaw = err.message.match(/at position ([\d]+)/);
+			const posCapture = posCaptureRaw?.[1] || 0;
+			// const errorStringPos = cs.tokens[startPos].pos + (posCapture || 0);
+			console.error(getPosContext(json, Number(posCapture), 'JSON syntax error', f.fileName + ': JSON literal segment'));
+			const message = posCapture
+				? err.message.split('after property')[0]
+				: 'Unexpected token somewhere in this JSON literal segment';
+			console.error(message);
 			f.errors.push({
-				message: err.message,
+				message: message,
 				expected: ret.expected,
-				startPos: startPos,
+				startPos,
 				tokenPos: cs.tokenPos,
 			})
 			ret.malformed = true;
@@ -175,6 +182,12 @@ const parse = (f, cs, patternName, parentEntry) => {
 		captures: [],
 		expected: [],
 	};
+	const patternComplete = (patternName) => {
+		ret.success = true;
+		const fn = onMatch[patternName];
+		if (fn) fn(f, cs, patternName, ret);
+		debugLog(`Just matched the pattern '${patternName}'!`);
+	}
 	let entry = tree[patternName];
 	while (entry?.expected.size) {
 		// TODO: how to deal with skipping past the very newlines we seek
@@ -205,11 +218,8 @@ const parse = (f, cs, patternName, parentEntry) => {
 				continue;
 			} else {
 				// if there's no 'next' then we win
-				const fn = onMatch[munched.originalPattern];
-				if (fn) fn(f, cs, patternName, ret);
 				ret.originalPattern = munched.originalPattern;
-				ret.success = true;
-				debugLog(`Just matched the pattern '${munched.originalPattern}'!`);
+				patternComplete(munched.originalPattern);
 				return ret;
 			}
 		}
@@ -237,10 +247,9 @@ const parse = (f, cs, patternName, parentEntry) => {
 					continue;
 				} else {
 					// if there's no 'next' then we win
-					// ... but in which case we should actually munch the token
+					// ... but in this case we should actually munch the token
 					cs.advance();
-					ret.success = true;
-					debugLog(`Just matched the pattern '${peeked.originalPattern}'!`);
+					patternComplete(peeked.originalPattern);
 					return ret;
 				}
 			}
@@ -478,7 +487,7 @@ const clean = (raw) => {
 /* ------------------ tests ------------------ */
 
 const testFile = parseFile(`// asdf\n`
-	+` json![{action:NEW_ACTION}] `
+	+` json![{action:NEW_ACTION, asdf:asdf s}] `
 
 	// +` $steamedHams = ;\n`
 	// +` $trombones = 76;`

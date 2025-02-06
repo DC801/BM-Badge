@@ -13,9 +13,9 @@ export const findLineAndCharNumbers = (input, pos) => {
 	};
 };
 
-export const getPosContext = (inputString, origPos, message, fileName) => {
+export const getPosContext = (inputString, origPos, message, fileName, offset=0) => {
 	let printFileName = fileName ? `"${fileName}" l` : 'L';
-	let pos = origPos;
+	let pos = origPos + offset;
 	let errorCoords = findLineAndCharNumbers(inputString, pos);
 	let arrow = '~'.repeat(errorCoords.col) + '^';
 	let lineString = errorCoords.lineString.replace(/\t/g,' ');
