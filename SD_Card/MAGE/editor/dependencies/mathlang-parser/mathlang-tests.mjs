@@ -1,7 +1,7 @@
 import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
-const printIfOK = true;
+const printOKTests = true;
 const topTestOnly = false;
 
 const patternTests = {
@@ -914,31 +914,31 @@ const patternTests = {
 	// 		]
 	// 	},
 	// ],
-	// include_macro: [
-	// 	{ name: 'normal',
-	// 		pattern: `include!("header.mgs")`,
-	// 		fileSuccess: true,
-	// 		counts: { nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
-	// 		nodes: [
-	// 			{
-	// 				node: 'include_macro',
-	// 				value: 'header.mgs',
-	// 			}
-	// 		]
-	// 	},
-	// 	{ name: 'empty',
-	// 		pattern: `include!()`,
-	// 		fileSuccess: true,
-	// 		counts: { nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
-	// 		nodes: [
-	// 			{
-	// 				node: 'include_macro',
-	// 				value: '',
-	// 				malformed: true
-	// 			}
-	// 		]
-	// 	}
-	// ],
+	include_macro: [
+		{ name: 'empty',
+			pattern: `include`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
+			nodes: [
+				{
+					node: 'include_macro',
+					value: null,
+					malformed: true
+				}
+			]
+		},
+		{ name: 'normal',
+			pattern: `include "header.mgs";`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
+			nodes: [
+				{
+					node: 'include_macro',
+					value: 'header.mgs',
+				}
+			]
+		},
+	],
 	constant_assignment: [
 		{ name: 'no value',
 			pattern: `$trombones = ;`,
@@ -1117,18 +1117,19 @@ const doTest = (test) => {
 		pattern: test.pattern,
 	};
 };
-let anyPrinted = false;
+let aTestWasPrinted = false;
 const printTestResults = (test, testCat, i) => {
-	const printHeader = !i;
+	// print header only when it's the first test
+	const firstTest = !i;
 	if (test.errors.length === 0) {
-		if (printIfOK) {
-			if (printHeader) console.log(`=== ${testCat} =========>`);
-			anyPrinted = true;
+		if (printOKTests) {
+			if (firstTest) console.log(`=== ${testCat} =========>`);
+			aTestWasPrinted = true;
 			console.log(`${indent}${test.testName} --> OK`);
 		}
 	} else {
-		anyPrinted = true;
-		if (printHeader) console.log(`=== ${testCat} =========>`);
+		aTestWasPrinted = true;
+		if (firstTest) console.log(`=== ${testCat} =========>`);
 		console.error(`${indent}${test.testName} -->`);
 		console.error(indent+indent+'Pattern: `'+test.pattern+'`');
 		test.errors.map(error=>{
@@ -1147,7 +1148,6 @@ const megaTestGamut = () => {
 
 const topTest = () => {
 	const [testCat, tests] = Object.entries(patternTests)[0];
-	console.log(`=== ${testCat} =========>`);
 	const doneTest = doTest(tests[0]);
 	printTestResults(doneTest, testCat);
 };
@@ -1158,7 +1158,7 @@ if (topTestOnly) {
 	megaTestGamut();
 }
 
-if (!anyPrinted) console.log(`======= ALL TESTS OK =======`);
+if (!aTestWasPrinted) console.log(`======= ALL TESTS OK =======`);
 
 // ========================== CONDITION EXPRESSION TESTS
 

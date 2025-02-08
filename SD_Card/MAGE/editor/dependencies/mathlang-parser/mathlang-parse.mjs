@@ -3,6 +3,9 @@ import { tree } from "./mathlang-language.mjs"
 import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLineAndCharNumbers } from "./mathlang-utilities.mjs"
 
 const verbose = false;
+const printErrors = false;
+
+const printError = (string) => { if (printErrors) console.error(string); };
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 const ansiRed = '\u001b[1;31m';
@@ -119,6 +122,7 @@ const fastForward = (cs, terminatorValue) => {
 		if (
 			cs.token.type === 'newline'
 			|| cs.token.value === terminatorValue
+			|| cs.token.type === 'EOF'
 		) {
 			return cs.token;
 		} else {
@@ -157,10 +161,10 @@ const onMatch = {
 			// Expected ',' or '}' after property value in JSON at position 23
 			// Unexpected token '}', ...\"ON\",\"asdf\"}]\" is not valid JSON
 			// How nuanced can we make this? (The old mathlang actually parsed it for JSON structure!)
-			console.error(getPosContext(json, Number(posCapture), message, f.fileName + ': JSON literal segment'));
+			printError(getPosContext(json, Number(posCapture), message, f.fileName + ': JSON literal segment'));
 			const splits = err.message.split('in JSON');
 			if (splits[1]) {
-				console.error(splits[0]);
+				printError(splits[0]);
 			}
 			f.errors.push({
 				message: message,
@@ -209,28 +213,19 @@ const parse = (f, cs, patternName, parentEntry) => {
 		debugLog(`Just matched the pattern '${patternName}'!`);
 	}
 	let entry = tree[patternName];
-	while (entry?.expected.size) {
+	outer: while (entry?.expected.size && cs.token) {
 		// TODO: how to deal with skipping past the very newlines we seek
 		// for error recovering?
-		while (cs.token.ignorable) cs.advance();
-
-		// EOF check
-		// I don't want it checking EOF after every root node, so handle that case now:
-		// (Could I just not do `cs.tokenPos < cs.tokens.length` in the while?)
-		if (cs.token.type === 'EOF') {
-			if (cs.tokenPos === cs.tokens.length - 1) {
-				ret.success = true;
-				return ret;
-			} else {
-				throw new Error("Unexpected end of file");
-			}
+		while (cs.token?.ignorable) {
+			cs.advance();
+			if (!cs.token) break outer;
 		}
-		
 		// Try a literal or capture token match
 		const munched = munch(cs, entry);
 		if (munched.success) {
 			continuingSyntaxError = false;
 			entry = munched.nextEntry;
+			ret.originalPattern = munched.twigPattern;
 			munched.captures.forEach(capture=>{
 				ret.captures.push(capture)
 			});
@@ -277,7 +272,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 			cs.stack.unshift(lookupName);
 			const parsed = parse(f, cs, lookupName, nextEntry);
 			cs.stack.shift();
-			if (!continuingSyntaxError || parsed.captures.length) {
+			// if (!continuingSyntaxError || parsed.captures.length) {
 				const insert = {
 					label: parsed.originalPattern,
 					startPos: parsed.startPos,
@@ -291,7 +286,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 					insert.malformed = true;
 				}
 				ret.captures.push(insert);
-			}
+			// }
 			continue;
 		}
 		const patternLabel = patternNameFromEntry(entry).unambiguous;
@@ -312,8 +307,8 @@ const parse = (f, cs, patternName, parentEntry) => {
 				startPos: ret.startPos,
 				tokenPos: cs.tokenPos,
 			})
-			console.error(getPosContext(f.inputString, cs.token.pos, errorMessage));
-			console.error(`Expected: ${[...ret.expected].join(', ')}`);
+			printError(getPosContext(f.inputString, cs.token.pos, errorMessage));
+			printError(`Expected: ${[...ret.expected].join(', ')}`);
 			continuingSyntaxError = true;
 		} else {
 			f.errors[f.errors.length-1].tokenPos = cs.tokenPos;
@@ -335,6 +330,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 		}
 		return ret;
 	}
+	ret.success = true;
 	return ret;
 };
 
@@ -419,7 +415,7 @@ const cleanStructure = {
 		actions: `json_literal`,
 	},
 	include_macro: {
-		fileName: `fileName`,
+		value: `fileName`,
 	},
 	constant_assignment: {
 		label: `constantName`,
