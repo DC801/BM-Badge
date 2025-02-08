@@ -151,9 +151,8 @@ const printAction = (node) => {
 
 // ---------------------- GENERAL ---------------------- 
 
-export const collectBetween = (cs, endChar) => {
+export const collectBetween = (cs, startChar, endChar) => {
 	const startPos = cs.tokenPos;
-	const startChar = cs.token.value;
 	let nested = 0;
 	let success = false;
 	while (cs.tokenPos < cs.tokens.length) {

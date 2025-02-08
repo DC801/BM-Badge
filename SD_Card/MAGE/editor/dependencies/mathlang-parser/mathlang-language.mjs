@@ -119,7 +119,7 @@ Object.keys(patterns).forEach(patternName=>{
 
 // let's give the flat trees less nuance!
 // ...but let's do everything one at a time so we don't get confused
-// (this is gonna be slow but we can cache it so we don't do it every time)
+// (this is not efficient but we can cache it so we we're not doing this every time)
 
 Object.entries(flatTrees).forEach(([patternName, variants])=>{
 	let newVariants = [];
@@ -128,7 +128,7 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 		const origVariant = variants[j];
 		// get the terminator for the pattern, if any, and apply to
 		// every entry (since we can't scan to the end easily in a tree to see when we should stop)
-		// (and I don't want to define this manuall all the time)
+		// (and I don't want to define this manually all the time)
 		const last = origVariant[origVariant.length-1];
 		last.terminator = true;
 		if (
@@ -140,8 +140,8 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 				word.errorRecoveryValue = last.value;
 			})
 		}
-		// since simple lookups are copy-pastad and the identify of the pattern is now lost
-		// best to attach them to the twigs somehow and pull them when parsing
+		// since simple lookups are copy-pastad and the identity of the pattern is now lost,
+		// best to attach them to the twigs somehow and pull them when parsing (?)
 		// (particularly 'root': otherwise every single top label node is called 'root' with no further context!)
 		origVariant.forEach(word=>{
 			word.originalPattern = patternName;
@@ -185,12 +185,11 @@ const fillInPrerequesites = (patternName) => {
 	const origVariants = flatTrees[patternName];
 	const variantPrereq = collectLookupPrerequesites(origVariants.flat());
 	const prerequesites = new Set(variantPrereq);
-	if (!prerequesites.size) {
-		return;
-	}
+	if (!prerequesites.size) return;
 	[...prerequesites].map(fillInPrerequesites);
 	let newVariants = [];
 	origVariants.forEach(variant=>{
+		// similar to above:
 		let frontEnds = [[]];
 		variant.forEach(twig=>{
 			if (twig.type === 'lookup' && twig.rep === '') {
@@ -198,8 +197,8 @@ const fillInPrerequesites = (patternName) => {
 				let newFrontEnds = [];
 				lookupVariants.forEach(lookupVariant=>{
 					let kitty = frontEnds
-						.map(inner=>structuredClone(inner))
-						.map(inner=>inner=inner.concat(lookupVariant));
+						.map(v=>structuredClone(v))
+						.map(v=>v=v.concat(lookupVariant));
 					newFrontEnds = newFrontEnds.concat(kitty);
 				})
 				frontEnds = newFrontEnds;
@@ -213,7 +212,7 @@ const fillInPrerequesites = (patternName) => {
 	});
 	flatTrees[patternName] = newVariants;
 };
-fillInPrerequesites('root');
+// fillInPrerequesites('document'); // (turns out this wasn't sufficient to catch everything)
 Object.entries(flatTrees).forEach(([patternName, variants])=>{
 	const prereq = collectLookupPrerequesites(variants.flat());
 	prerequesites[patternName] = prereq;
@@ -238,17 +237,17 @@ const addFlatPatternToTree = (patternName) => {
 };
 
 const addTwigToNext = (entry, twig, patternName) => {
-	let label; // the peek name in the 'bucket'
-	// (e.g. `entity` (lit.) or `bareword` (cap.))
+	let peekName; // the peek name in the 'bucket'
+	// (e.g. `entity` (literal) or `bareword` (capture))
 	let bucket; // the object we will use for the 'bucket'
 	// (so we don't say its full name each time)
 	let expected; // what will print in errors if when all matches fail
 	if (twig.type === 'literal') {
-		label = twig.value;
+		peekName = twig.value;
 		bucket = entry.literals;
 		expected = `'${twig.value}'`;
 	} else if (twig.type === 'capture') {
-		label = twig.value;
+		peekName = twig.value;
 		bucket = entry.captures;
 		expected = twig.value;
 	} else if (twig.type === 'lookup') {
@@ -256,27 +255,27 @@ const addTwigToNext = (entry, twig, patternName) => {
 		// nonrepeating lookups will be transparent
 		// (it makes the tree hard but the dictionary easy)
 		// (it'll be worth it (?))
-		label = twig.value;
+		peekName = twig.value;
 		bucket = entry.lookups;
 		expected = `@${twig.value}`;
 		addFlatPatternToTree(twig.value);
 	}
-	if (bucket[label]) {
-		// if that value exists in the `next` already, supplement it
-		// (this tells us we don't have a solo pattern match yet)
-		bucket[label].patternName.add(patternName);
-	} else {
-		// otherwise add it to the tree
-		bucket[label] = makeEntry(patternName, twig);
-		// add the word to expected
+	if (!bucket[peekName]) {
+		// found a new thing, so let's add it:
+		bucket[peekName] = makeEntry(patternName, twig);
 		entry.expected.add(expected);
 	}
-	return bucket[label];
+	// either way we want to record the twig's original pattern
+	// this will help us label errors and identify matches
+	// since all the copy-pasta'ing wrecked which pattern is where
+	bucket[peekName].patternName.add(twig.originalPattern);
+	return bucket[peekName];
 }
 
 const makeEntry = (patternName, twig) => {
 	return {
-		patternName: new Set ([patternName]),
+		dictionaryLookupName: patternName,
+		patternName: new Set (),
 		// not sure how to best handle the first entry in each thing
 		// the lookup "caller" needs to determine loops and untils, so
 		// can supply that pattern's entry for the lookup, but what
@@ -303,4 +302,4 @@ Object.keys(flatTrees).forEach(patternName=>{
 	addFlatPatternToTree(patternName);
 })
 
-// console.log(tree);
+console.log(tree);

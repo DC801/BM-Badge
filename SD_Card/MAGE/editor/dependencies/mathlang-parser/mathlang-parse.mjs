@@ -1,6 +1,6 @@
 import { lex } from "./mathlang-lex.mjs"
 import { tree } from "./mathlang-language.mjs"
-import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween } from "./mathlang-utilities.mjs"
+import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLineAndCharNumbers } from "./mathlang-utilities.mjs"
 
 const verbose = true;
 const debugLog = (string) => { if (verbose) console.log(string); };
@@ -49,7 +49,7 @@ const munch = (cs, entry, peek) => {
 	debugLog(`[${cs.tokenPos}] '${cs.token.value}' --${peekMessage}--> ${[...entry.expected].join(', ')}`)
 	const token = cs.token;
 	const ret = {
-		originalPattern: null,
+		twigPattern: null,
 		success: false,
 		captures: [],
 		nextEntry: null,
@@ -103,8 +103,10 @@ const munch = (cs, entry, peek) => {
 				}
 			}
 		}
+		ret.twigPattern = patternNameFromEntry(newBucket).useful || entry.dictionaryLookupName;
+	} else {
+		ret.twigPattern = patternNameFromEntry(entry).useful || entry.dictionaryLookupName;
 	}
-	ret.originalPattern = ret.nextEntry?.twig.originalPattern;
 	return ret;
 };
 
@@ -128,19 +130,13 @@ const fastForward = (cs, terminatorValue) => {
 const onMatch = {
 	json_literal: (f, cs, patternName, ret) => {
 		const startPos = cs.tokenPos;
-		const collection = collectBetween(cs, ']');
+		const collection = collectBetween(cs, '[', ']');
 		const clean = collection.map(token=>{
 			if (token.type === 'boolean') {
 				if (token.value === 'true') return true;
 				if (token.value === 'false') return false;
 			}
-			if (
-				token.type === 'bareword'
-				|| token.type === 'quoted_string'
-				|| token.barewordValue
-			) {
-				return `"${token.value}"`;
-			}
+			if (token.type === 'quoted_string') return token.rawValue;
 			return token.value;
 		})
 		const json = '['+clean.join('');
@@ -152,11 +148,20 @@ const onMatch = {
 			const posCaptureRaw = err.message.match(/at position ([\d]+)/);
 			const posCapture = posCaptureRaw?.[1] || 0;
 			// const errorStringPos = cs.tokens[startPos].pos + (posCapture || 0);
-			console.error(getPosContext(json, Number(posCapture), 'JSON syntax error', f.fileName + ': JSON literal segment'));
-			const message = posCapture
-				? err.message.split('after property')[0]
-				: 'Unexpected token somewhere in this JSON literal segment';
-			console.error(message);
+			const jsonLineCol = findLineAndCharNumbers(f.inputString, cs.tokens[cs.tokenPos].pos);
+			let message = posCapture
+				? 'JSON syntax error'
+				: `Syntax error in JSON literal (file line ${jsonLineCol.col})`
+			// Errors discovered: 
+			// Expected double-quoted property name in JSON at position 24
+			// Expected ',' or '}' after property value in JSON at position 23
+			// Unexpected token '}', ...\"ON\",\"asdf\"}]\" is not valid JSON
+			// How nuanced can we make this? (The old mathlang actually parsed it for JSON structure!)
+			console.error(getPosContext(json, Number(posCapture), message, f.fileName + ': JSON literal segment'));
+			const splits = err.message.split('in JSON');
+			if (splits[1]) {
+				console.error(splits[0]);
+			}
 			f.errors.push({
 				message: message,
 				expected: ret.expected,
@@ -174,6 +179,18 @@ const onMatch = {
 		console.log(collection);
 	},
 }
+
+const patternNameFromEntry = (entry) => {
+	const isOne = entry.patternName.size <= 1;
+	const first = Object.values([...entry.patternName])[0] || entry.dictionaryLookupName;
+	const dictName = entry.dictionaryLookupName;
+	const allAlternatives = Object.values([...entry.patternName]).join('/');
+	return {
+		useful: isOne ? first : dictName,
+		unambiguous: isOne ? first : `${dictName}: (${allAlternatives})`,
+	}
+};
+let continuingSyntaxError = false;
 const parse = (f, cs, patternName, parentEntry) => {
 	const ret = {
 		originalPattern: patternName,
@@ -182,7 +199,10 @@ const parse = (f, cs, patternName, parentEntry) => {
 		captures: [],
 		expected: [],
 	};
-	const patternComplete = (patternName) => {
+	const patternComplete = (ret, entry) => {
+		// const patternName = entry.patternName; // as was originally done
+		const patternName = patternNameFromEntry(entry).useful;
+		ret.originalPattern = patternName;
 		ret.success = true;
 		const fn = onMatch[patternName];
 		if (fn) fn(f, cs, patternName, ret);
@@ -209,7 +229,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 		// Try a literal or capture token match
 		const munched = munch(cs, entry);
 		if (munched.success) {
-			cs.mostRecentReportedPattern = entry.originalPattern;
+			continuingSyntaxError = false;
 			entry = munched.nextEntry;
 			munched.captures.forEach(capture=>{
 				ret.captures.push(capture)
@@ -218,8 +238,8 @@ const parse = (f, cs, patternName, parentEntry) => {
 				continue;
 			} else {
 				// if there's no 'next' then we win
-				ret.originalPattern = munched.originalPattern;
-				patternComplete(munched.originalPattern);
+				// ret.originalPattern = munched.twigPattern;
+				patternComplete(ret, entry);
 				return ret;
 			}
 		}
@@ -237,8 +257,9 @@ const parse = (f, cs, patternName, parentEntry) => {
 			const until = nextEntry || parentEntry;
 			// Try the until first, just so we don't get partial garbage matches
 			const peeked = munch(cs, until, true);
-			ret.originalPattern = peeked.originalPattern || ret.originalPattern;
+			// ret.originalPattern = peeked.twigPattern || ret.originalPattern;
 			if (peeked.success) {
+				continuingSyntaxError = false;
 				// disregard capture and step the token back
 				// (we'll get them again on the other side)
 				// do advance the twig
@@ -249,45 +270,54 @@ const parse = (f, cs, patternName, parentEntry) => {
 					// if there's no 'next' then we win
 					// ... but in this case we should actually munch the token
 					cs.advance();
-					patternComplete(peeked.originalPattern);
+					patternComplete(ret, entry);
 					return ret;
 				}
 			}
 			cs.stack.unshift(lookupName);
 			const parsed = parse(f, cs, lookupName, nextEntry);
 			cs.stack.shift();
-			const insert = {
-				label: parsed.originalPattern,
-				startPos: parsed.startPos,
-				value: parsed.captures,
-				tokenPos: cs.tokenPos,
+			if (!continuingSyntaxError) {
+				const insert = {
+					label: parsed.originalPattern,
+					startPos: parsed.startPos,
+					value: parsed.captures,
+					tokenPos: cs.tokenPos,
+				}
+				// This will contaminate everything to the root of the document tree,
+				// But that's probably exactly what's called for
+				if (parsed.malformed) {
+					ret.malformed = true;
+					insert.malformed = true;
+				}
+				ret.captures.push(insert);
 			}
-			// This will contaminate everything to the root of the document tree,
-			// But that's probably exactly what's called for
-			if (parsed.malformed) {
-				ret.malformed = true;
-				insert.malformed = true;
-			}
-			ret.captures.push(insert);
 			continue;
 		}
-		// Dictionary twig name work around!
-		// The syntax error should be labeled with the malformed twig's pattern name
-		const retPatternName = entry.twig.type === 'dictionary'
-			? entry.twig.value
-			: entry.twig.originalPattern
-		ret.originalPattern = retPatternName;
-		f.errors.push({
-			message: `${ret.originalPattern} syntax error`,
-			expected: ret.expected,
-			startPos: ret.startPos,
-			tokenPos: cs.tokenPos,
-		})
+		const patternLabel = patternNameFromEntry(entry).unambiguous;
+		// const retPatternName = entry.twig.type === 'dictionary'
+		// 	? entry.twig.value
+		// 	: entry.twig.originalPattern;
+		const errorMessage = entry.patternName.size === 1
+			? patternLabel + ' syntax error'
+			: 'Syntax error in ' + patternLabel;
+		ret.originalPattern = patternLabel;
 		ret.expected = entry.expected;
 		ret.malformed = true;
 		ret.success = true;
-		console.error(getPosContext(f.inputString, cs.token.pos, `${ret.originalPattern} syntax error`));
-		console.error(`Expected: ${[...ret.expected].join(', ')}`)
+		if (!continuingSyntaxError) {
+			f.errors.push({
+				message: errorMessage,
+				expected: ret.expected,
+				startPos: ret.startPos,
+				tokenPos: cs.tokenPos,
+			})
+			console.error(getPosContext(f.inputString, cs.token.pos, errorMessage));
+			console.error(`Expected: ${[...ret.expected].join(', ')}`);
+			continuingSyntaxError = true;
+		} else {
+			f.errors[f.errors.length-1].tokenPos = cs.tokenPos;
+		}
 		// Error recovery goes here (?)
 		// (Yes, because otherwise literal/capture tokens don't get error recovery, right?)
 		if (entry.twig.errorRecoveryValue) {
@@ -347,6 +377,7 @@ export const parseFile = (inputString, givenFileName) => {
 	lexResult.tokens.forEach(token=>token.fileName = fileName);
 	const cs = makeCrawlState(lexResult.tokens);
 	const f = {
+		fileName,
 		inputString,
 		errors: [],
 		warnings: [],
@@ -392,7 +423,7 @@ const cleanStructure = {
 	},
 	constant_assignment: {
 		label: `constantName`,
-		value: `constantValue`,
+		value: `constant_value`,
 	},
 	add_serial_dialog_settings: {
 		settings: 'serial_dialog_parameter[{}]'
@@ -461,9 +492,13 @@ const cleanGeneric = (raw) => {
 };
 
 const cleanCustomMap = {
-	root: (capture) => {
-		throw new Error("This shouldn't happen! (root node w/o identification)")
-		console.log('todo')
+	root: (raw) => {
+		return {
+			node: raw.label,
+			startPos: raw.startPos,
+			tokenPos: raw.tokenPos,
+			debug: raw,
+		};
 	},
 	dialog_literal: (rawDialogBlock, f) => {
 		const node = clean(rawDialogBlock);
@@ -487,22 +522,31 @@ const clean = (raw) => {
 /* ------------------ tests ------------------ */
 
 const testFile = parseFile(`// asdf\n`
-	+` json![{action:NEW_ACTION, asdf:asdf s}] `
+	// +` json![
+	// 	{
+	// 		"action":"NEW_ACTION",
+	// 		"asdf": 90
+	// 	}
+	// ]`
 
 	// +` $steamedHams = ;\n`
 	// +` $trombones = 76;`
 // +` add serial_dialog settings {
 // 	wrap 80  wrap 99
 // }`
-// +` add dialog settings {
-// 	label PLAYER {
-// 		alignment BL
-// 		entity "%PLAYER%"
-// 	}
-// 	default {
-// 		alignment BR
-// 	}
-// }`
++` add dialog settings {
+	// label PLAYER {
+		entity "%PLAYER%"
+		alignment BL
+	}
+	default {
+		alignment BR
+	}
+}
+`
+// +`
+// $afterRoot = true;	
+// `
 // +	` 
 // dialog greetings {
 // 	entity Bob alignment BR emote 44 "Hi"
@@ -517,6 +561,6 @@ const testFile = parseFile(`// asdf\n`
 // // asdf
 // `
 
-, 'bobPartyRoom');
+, 'bobPartyRoom.mgs');
 
 console.log(testFile);
