@@ -252,7 +252,6 @@ const parse = (f, cs, patternName, parentEntry) => {
 			const until = nextEntry || parentEntry;
 			// Try the until first, just so we don't get partial garbage matches
 			const peeked = munch(cs, until, true);
-			// ret.originalPattern = peeked.twigPattern || ret.originalPattern;
 			if (peeked.success) {
 				continuingSyntaxError = false;
 				// disregard capture and step the token back
@@ -453,7 +452,7 @@ const cleanGeneric = (raw) => {
 		tokenPos: raw.tokenPos,
 		debug: raw,
 	};
-	if (raw.malformed) node.malformed;
+	if (raw.malformed) node.malformed = true;
 	const structure = cleanStructure[node.node];
 	if (!structure) throw new Error(`No node cleaning structure found for ${node.node}`);
 	Object.keys(structure).forEach(propName=>{
