@@ -1,7 +1,8 @@
 import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
-const printIfOK = false;
+const printIfOK = true;
+const topTestOnly = false;
 
 const patternTests = {
 	// set_save_flag: [
@@ -939,6 +940,19 @@ const patternTests = {
 	// 	}
 	// ],
 	constant_assignment: [
+		{ name: 'no value',
+			pattern: `$trombones = ;`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: 'constant_assignment',
+					label: '$trombones',
+					value: null,
+					malformed: true,
+				}
+			]
+		},
 		{ name: 'normal',
 			pattern: `$steamedHams = "Hamburgers";`,
 			fileSuccess: true,
@@ -946,50 +960,13 @@ const patternTests = {
 			nodes: [
 				{
 					node: 'constant_assignment',
-					name: '$steamedHams',
+					label: '$steamedHams',
 					value: 'Hamburgers'
 				}
 			]
 		},
-		{ name: 'no value',
-			pattern: `$trombones = ;`,
-			fileSuccess: true,
-			counts: { nodes: 1, errors: 1, warnings: 0 },
-			nodes: [
-				{
-					name: '$trombones',
-					value: null,
-					malformed: true,
-					node: 'constant_assignment',
-				}
-			]
-		},
 	],
-}
-
-const success = {
-	originalPattern: "document",
-	success: true,
-	startPos: 0,
-	tokenPos: 4,
-	captures: [
-	  {
-		label: "constant_assignment",
-		startPos: 0,
-		tokenPos: 4,
-		value: [
-		  {
-			label: "constantName", value: "$steamedHams",
-			tokenPos: 0, originalPattern: "constant_assignment",
-		  },
-		  {
-			label: "constant_value", value: "Hamburgers",
-			tokenPos: 2, riginalPattern: "constant_value",
-		  },
-		],
-	  },
-	],
-  }
+};
 
 const ansiRed = '\u001b[1;31m';
 const ansiYellow = '\u001b[1;33m';
@@ -1003,8 +980,8 @@ const simplifyValues = (lh, rh) => {
 const simplifyLiteral = (lh, rh) => {
 	const red = ansiRed+JSON.stringify(rh)+ansiReset;
 	const diff = lh === rh
-	? rh
-	: red + ` (expected ${ansiYellow}${JSON.stringify(lh)}${ansiReset})`;
+		? rh
+		: red + ` (expected ${ansiYellow}${JSON.stringify(lh)}${ansiReset})`;
 	return { lh, rh, diff };
 };
 const simplifyArrays = (origLH = [], origRH = []) => {
@@ -1089,6 +1066,13 @@ const doTest = (test) => {
 	test.nodes.forEach((expected, i)=>{
 		// expected.malformed = !!expected.malformed;
 		const found = file.nodes[i];
+		if (!found)  {
+			return {
+				testName: test.name,
+				errors: [{ message: `Node missing in real file` }],
+				pattern: test.pattern,
+			};
+		}
 		Object.keys(expected).filter(s=>s!=='body').forEach(key=>{
 			const {lh, rh, diff} = simplifyValues(expected[key], found[key]);
 			const jsonLeft = JSON.stringify(lh, null, '  ');
@@ -1165,11 +1149,14 @@ const topTest = () => {
 	const [testCat, tests] = Object.entries(patternTests)[0];
 	console.log(`=== ${testCat} =========>`);
 	const doneTest = doTest(tests[0]);
-	printTestResults(doneTest);
+	printTestResults(doneTest, testCat);
 };
 
-megaTestGamut();
-// topTest();
+if (topTestOnly) {
+	topTest();
+} else {
+	megaTestGamut();
+}
 
 if (!anyPrinted) console.log(`======= ALL TESTS OK =======`);
 

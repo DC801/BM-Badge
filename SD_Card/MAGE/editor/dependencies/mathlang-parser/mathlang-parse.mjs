@@ -2,7 +2,7 @@ import { lex } from "./mathlang-lex.mjs"
 import { tree } from "./mathlang-language.mjs"
 import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLineAndCharNumbers } from "./mathlang-utilities.mjs"
 
-const verbose = true;
+const verbose = false;
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 const ansiRed = '\u001b[1;31m';
@@ -277,7 +277,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 			cs.stack.unshift(lookupName);
 			const parsed = parse(f, cs, lookupName, nextEntry);
 			cs.stack.shift();
-			if (!continuingSyntaxError) {
+			if (!continuingSyntaxError || parsed.captures.length) {
 				const insert = {
 					label: parsed.originalPattern,
 					startPos: parsed.startPos,
@@ -389,7 +389,7 @@ export const parseFile = (inputString, givenFileName) => {
 		inputString: f.inputString,
 		errors: f.errors,
 		warnings: f.warnings,
-		success: f.success,
+		success: result.success,
 		nodes,
 	}
 
@@ -468,10 +468,18 @@ const cleanGeneric = (raw) => {
 		const suffixInner = splits[3];
 		const filtered = values.filter(v=>v.label === filterBy);
 		if (!suffix) {
-			if (filtered.length > 1) throw new Error(`Found more than 1 item in ${node.node} called '${filterBy}!'`)
-			node[propName] = Array.isArray(filtered)
-				? filtered[0]?.value
-				: filtered.value;
+			if (filtered.length === 0) {
+				node[propName] = null;
+				node.malformed = true;
+				// node.malformed = true; // TODO: do I need to literally add this here?
+			} else if (filtered.length > 1) {
+				throw new Error(`Found more than 1 item in ${node.node} called '${filterBy}!'`);
+			} else {
+				if (filtered[0]?.malformed) node.malformed = true;
+				node[propName] = Array.isArray(filtered)
+					? filtered[0]?.value
+					: filtered.value;
+			}
 			return;
 		}
 		if (suffixInner === '@') {
@@ -521,46 +529,46 @@ const clean = (raw) => {
 
 /* ------------------ tests ------------------ */
 
-const testFile = parseFile(`// asdf\n`
-	// +` json![
-	// 	{
-	// 		"action":"NEW_ACTION",
-	// 		"asdf": 90
-	// 	}
-	// ]`
+// const testFile = parseFile(`// asdf\n`
+// 	// +` json![
+// 	// 	{
+// 	// 		"action":"NEW_ACTION",
+// 	// 		"asdf": 90
+// 	// 	}
+// 	// ]`
 
-	// +` $steamedHams = ;\n`
-	// +` $trombones = 76;`
-// +` add serial_dialog settings {
-// 	wrap 80  wrap 99
-// }`
-+` add dialog settings {
-	// label PLAYER {
-		entity "%PLAYER%"
-		alignment BL
-	}
-	default {
-		alignment BR
-	}
-}
-`
-// +`
-// $afterRoot = true;	
-// `
-// +	` 
-// dialog greetings {
-// 	entity Bob alignment BR emote 44 "Hi"
-// 		"What do you think you're doing now??"
-// 	;
-// 	PLAYER alignment TL "I guess I'll need to choose one?"
-// 	> "I'll take the left door." = leftScript
-// 	> "I'll take the right door." = rightScript
-// 	;
+// 	// +` $steamedHams = ;\n`
+// 	// +` $trombones = 76;`
+// // +` add serial_dialog settings {
+// // 	wrap 80  wrap 99
+// // }`
+// +` add dialog settings {
+// 	// label PLAYER {
+// 		entity "%PLAYER%"
+// 		alignment BL
+// 	}
+// 	default {
+// 		alignment BR
+// 	}
 // }
-
-// // asdf
 // `
+// // +`
+// // $afterRoot = true;	
+// // `
+// // +	` 
+// // dialog greetings {
+// // 	entity Bob alignment BR emote 44 "Hi"
+// // 		"What do you think you're doing now??"
+// // 	;
+// // 	PLAYER alignment TL "I guess I'll need to choose one?"
+// // 	> "I'll take the left door." = leftScript
+// // 	> "I'll take the right door." = rightScript
+// // 	;
+// // }
 
-, 'bobPartyRoom.mgs');
+// // // asdf
+// // `
 
-console.log(testFile);
+// , 'bobPartyRoom.mgs');
+
+// console.log(testFile);

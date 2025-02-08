@@ -302,4 +302,4 @@ Object.keys(flatTrees).forEach(patternName=>{
 	addFlatPatternToTree(patternName);
 })
 
-console.log(tree);
+// console.log(tree);
