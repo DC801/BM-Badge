@@ -41,7 +41,7 @@ const patterns = {
 		@dialog_parameter*
 		$quoted_string:dialogMessage+
 		@dialog_option*
-		';'`, // SEMICOLON IS NEW!
+		';'`,
 	dialog_identifier: `'entity':identifierType $string:identifierValue
 		| 'name':identifierType $string:identifierValue
 		| $bareword:identifierValue`,
@@ -124,7 +124,7 @@ Object.keys(patterns).forEach(patternName=>{
 Object.entries(flatTrees).forEach(([patternName, variants])=>{
 	let newVariants = [];
 	for (let j = 0; j < variants.length; j++) {
-		const newVariant = [];
+		let newVariant = [];
 		const origVariant = variants[j];
 		// get the terminator for the pattern, if any, and apply to
 		// every entry (since we can't scan to the end easily in a tree to see when we should stop)
@@ -136,8 +136,10 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 			&& last.type !== 'lookup'
 			&& (last.rep === '' || last.rep === '+')
 		) {
+			// this is a known literal or capture that is not optional
+			// treat as a terminator
 			origVariant.forEach(word=>{
-				word.errorRecoveryValue = last.value;
+				word.endToken = last;
 			})
 		}
 		// since simple lookups are copy-pastad and the identity of the pattern is now lost,
@@ -146,17 +148,19 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 		origVariant.forEach(word=>{
 			word.originalPattern = patternName;
 		})
-		// expanding '+' into a '' and a '*'
-		while (origVariant.length) {
-			const twig = origVariant.shift();
-			if (twig.rep === '+') {
-				const double = structuredClone(twig);
-				double.rep = '*';
-				origVariant.unshift(double);
-				twig.rep = '';
-			}
-			newVariant.push(twig);
-		}
+		// Looks like we don't need this after all
+		// // expanding '+' into a '' and a '*'
+		// while (origVariant.length) {
+		// 	const twig = origVariant.shift();
+		// 	if (twig.rep === '+') {
+		// 		const double = structuredClone(twig);
+		// 		double.rep = '*';
+		// 		origVariant.unshift(double);
+		// 		twig.rep = '';
+		// 	}
+		// 	newVariant.push(twig);
+		// }
+		newVariant=origVariant;
 		// here's where a variant might become multiple variants
 		let frontEnds = [[]];
 		newVariant.forEach(twig=>{

@@ -5,13 +5,25 @@ import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLin
 const verbose = false;
 const printErrors = false;
 
-const printError = (string) => { if (printErrors) console.error(string); };
+const printError = (string) => { if (printErrors || verbose) console.error(string); };
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 const ansiRed = '\u001b[1;31m';
 const ansiGreen = '\u001b[1;32m';
 const ansiYellow = '\u001b[1;33m';
 const ansiReset = '\u001b[0m';
+const fakeLiterals = {
+	string: "FORGED STRING FOR ERROR RECOVERY",
+	bareword: "FORGED BAREWORD FOR ERROR RECOVERY",
+	quoted_string: "FORGED QUOTED_STRING FOR ERROR RECOVERY",
+	number: 65535,
+	duration: 65535,
+	distance: 65535,
+	quantity: 65535,
+	color: '#123456',
+	boolean: false,
+	operator: '=='
+}
 
 /* ------------------------------------------ MUNCH ------------------------------------------ */
 
@@ -56,8 +68,8 @@ const munch = (cs, entry, peek) => {
 		success: false,
 		captures: [],
 		nextEntry: null,
+		bucketType: null,
 	}
-	let bucketType;
 	let bucketName;
 	let newBucket;
 
@@ -65,14 +77,14 @@ const munch = (cs, entry, peek) => {
 	// match the value no matter what type the token thinks it is
 	newBucket = entry.literals[token.value];
 	if (newBucket) {
-		bucketType = 'literals';
+		ret.bucketType = 'literals';
 		bucketName = token.value;
 	} else {
 		// try captures if that didn't work
 		bucketName = matchTokenToCaptureBucket(token, entry) || null;
 		if (bucketName) {
 			newBucket = entry.captures[bucketName];
-			bucketType = 'captures';
+			ret.bucketType = 'captures';
 		}
 	}
 	// if we found anything:
@@ -84,8 +96,9 @@ const munch = (cs, entry, peek) => {
 		ret.nextEntry = newBucket;
 		const peekedMessage = peek ? 'PEEKED' : 'Munched'
 		debugLog(`${peekedMessage}: '${token.value}'`);
+		const repeatOK = twig.rep === '*' || twig.rep === '+';
 		if (!peek) cs.advance();
-		if (twig.rep === '*' && !peek) {
+		if (repeatOK && !peek) {
 			let repeating = true;
 			while (repeating) {
 				const token = cs.token;
@@ -116,18 +129,32 @@ const munch = (cs, entry, peek) => {
 // moves the cs.tokenPos until it lands ON (not past) the terminator,
 // or lacking a terminator, the next newline token
 // the caller can decide whether to advance to the terminator at that point (?)
-const fastForward = (cs, terminatorValue) => {
+const fastForward = (cs, skipEntry) => {
 	debugLog("FAST FORWARD!");
 	while (cs.tokenPos < cs.tokens.length) {
-		if (
-			cs.token.type === 'newline'
-			|| cs.token.value === terminatorValue
-			|| cs.token.type === 'EOF'
-		) {
-			return cs.token;
-		} else {
+		if (cs.token.type === 'newline' || cs.token.type === 'EOF') {
 			cs.advance();
+			return 'agnostic';
 		}
+		if (skipEntry) {
+			debugLog(`   Peeking the 'skip' for the current guy, ${cs.stack[0].pattern}: ${[...skipEntry.expected].join(', ')}`)
+			const peeked = munch(cs, skipEntry, true);
+			if (peeked.success) {
+				debugLog(`       YUP! Got it! SKIPPING THIS TOKEN`)
+				cs.advance();
+				return 'self';
+			}
+		}
+		const parentSkipEntry = cs.stack[1]?.skipValue;
+		if (parentSkipEntry) {
+			debugLog(`   Peeking the 'skip' for the parent, ${cs.stack[1].pattern}: ${[...parentSkipEntry.expected].join(', ')}`)
+			const parentPeeked = munch(cs, parentSkipEntry, true);
+			if (parentPeeked.success) {
+				debugLog(`       YUP! Got it!`)
+				return 'parent';
+			}
+		}
+		cs.advance();
 	}
 };
 
@@ -195,7 +222,7 @@ const patternNameFromEntry = (entry) => {
 	}
 };
 let continuingSyntaxError = false;
-const parse = (f, cs, patternName, parentEntry) => {
+const parse = (f, cs, patternName, givenEntry) => {
 	const ret = {
 		originalPattern: patternName,
 		success: false,
@@ -212,7 +239,7 @@ const parse = (f, cs, patternName, parentEntry) => {
 		if (fn) fn(f, cs, patternName, ret);
 		debugLog(`Just matched the pattern '${patternName}'!`);
 	}
-	let entry = tree[patternName];
+	let entry = givenEntry || tree[patternName];
 	outer: while (entry?.expected.size && cs.token) {
 		// TODO: how to deal with skipping past the very newlines we seek
 		// for error recovering?
@@ -233,7 +260,6 @@ const parse = (f, cs, patternName, parentEntry) => {
 				continue;
 			} else {
 				// if there's no 'next' then we win
-				// ret.originalPattern = munched.twigPattern;
 				patternComplete(ret, entry);
 				return ret;
 			}
@@ -246,30 +272,35 @@ const parse = (f, cs, patternName, parentEntry) => {
 			if (lookupNames.length > 1) {
 				throw new Error (`Multiple lookups possible here! (${lookupNames.join(", ")}) Badly designed tree??`);
 			}
-			const lookupName = lookupNames[0];
-			const nextEntry = entry.lookups[lookupName];
-			// (nested lookups might not have their own until, but the parent should)
-			const until = nextEntry || parentEntry;
+			const until = findNonOptionalEntryAfterNextOptionalLookup(entry)
 			// Try the until first, just so we don't get partial garbage matches
-			const peeked = munch(cs, until, true);
-			if (peeked.success) {
-				continuingSyntaxError = false;
-				// disregard capture and step the token back
-				// (we'll get them again on the other side)
-				// do advance the twig
-				entry = peeked.nextEntry;
-				if (entry.expected.size) {
-					continue;
-				} else {
-					// if there's no 'next' then we win
-					// ... but in this case we should actually munch the token
-					cs.advance();
-					patternComplete(ret, entry);
-					return ret;
+			if (until) {
+				const peeked = munch(cs, until, true);
+				if (peeked.success) {
+					continuingSyntaxError = false;
+					// disregard capture and ~~step the token back~~ use 'peek' mode so we don't step forward at all
+					// (we'll get the captures again on the other side) (?)
+					entry = until;
+					// if (!usedParentEntry) cs.advance();
+					if (entry.expected.size) {
+						continue;
+					} else {
+						// if there's no 'next' then we win
+						// ... but in this case we should actually munch the token
+						cs.advance();
+						patternComplete(ret, entry);
+						return ret;
+					}
 				}
 			}
-			cs.stack.unshift(lookupName);
-			const parsed = parse(f, cs, lookupName, nextEntry);
+			const lookupName = lookupNames[0];
+			const lookupEntry = entry.lookups[lookupName];
+			cs.stack.unshift({
+				pattern: lookupName,
+				twig: lookupEntry.twig,
+				skipValue: until,
+			});
+			const parsed = parse(f, cs, lookupName);
 			cs.stack.shift();
 			// if (!continuingSyntaxError || parsed.captures.length) {
 				const insert = {
@@ -278,8 +309,6 @@ const parse = (f, cs, patternName, parentEntry) => {
 					value: parsed.captures,
 					tokenPos: cs.tokenPos,
 				}
-				// This will contaminate everything to the root of the document tree,
-				// But that's probably exactly what's called for
 				if (parsed.malformed) {
 					ret.malformed = true;
 					insert.malformed = true;
@@ -289,14 +318,17 @@ const parse = (f, cs, patternName, parentEntry) => {
 			continue;
 		}
 		const patternLabel = patternNameFromEntry(entry).unambiguous;
-		// const retPatternName = entry.twig.type === 'dictionary'
-		// 	? entry.twig.value
-		// 	: entry.twig.originalPattern;
 		const errorMessage = entry.patternName.size === 1
 			? patternLabel + ' syntax error'
 			: 'Syntax error in ' + patternLabel;
 		ret.originalPattern = patternLabel;
-		ret.expected = entry.expected;
+		ret.expected = structuredClone(entry.expected);
+		// TODO NOW:
+		// hop over the current entry (you already know what's expected, so get that expected's expected in case of '*') (?)
+		// (This way didn't work fyi:)
+		// if (parentEntry.twig.rep === '*') {
+		// 	parentEntry.expected.forEach(k=>ret.expected.add(k))
+		// }
 		ret.malformed = true;
 		ret.success = true;
 		if (!continuingSyntaxError) {
@@ -314,13 +346,38 @@ const parse = (f, cs, patternName, parentEntry) => {
 		}
 		// Error recovery goes here (?)
 		// (Yes, because otherwise literal/capture tokens don't get error recovery, right?)
-		if (entry.twig.errorRecoveryValue) {
+		const errorRecoveryEntry = cs.stack?.[0].skipValue;
+		if (cs.stack?.[0].skipValue) {
 			// Rewind so fastForward can find a 'newline' right at the site of problem
-			if (cs.tokens[cs.tokenPos-1]?.type === 'newline') {
+			// if (cs.tokens[cs.tokenPos-1]?.type === 'newline') {
 				cs.move(-1);
+			// }
+			const ffType = fastForward(cs, errorRecoveryEntry);
+			if (ffType === 'parent') {
+				cs.move(-1);
+				// FORGERY
+				const literals = Object.keys(cs.stack[0].skipValue.literals);
+				const captures = Object.keys(cs.stack[0].skipValue.captures);
+				const optionCount = literals.length + captures.length;
+				if (optionCount !== 1) {
+					throw new Error ("Not sure what to do with this!");
+				}
+				const fakeToken = structuredClone(cs.token);
+				if (literals.length) {
+					fakeToken.type = 'bareword'; // probably fine
+					fakeToken.value = literals[0];
+				} else if (captures.length) {
+					fakeToken.type = captures[0];
+					fakeToken.value = fakeLiterals[captures[0]];
+				}
+				debugLog("FAKING A TOKEN! LOLOLOLOL")
+				cs.token = fakeToken;
+				// cs.advance();
+			} else if (ffType === 'self') {
+				cs.move(-1);
+			} else {
+				cs.advance();
 			}
-			fastForward(cs, entry.twig.errorRecoveryValue);
-			cs.advance();
 		} else {
 			// skip over the offending token and retry
 			// I think this should work because we're trying the 'until's first each time
@@ -333,6 +390,30 @@ const parse = (f, cs, patternName, parentEntry) => {
 	return ret;
 };
 
+const findNonOptionalEntryAfterNextOptionalLookup = (entry) => {
+	// So you expect `@root*` next, eh, document? How do we find $EOF now?
+	const lookupNames = Object.keys(entry.lookups);
+	if (entry.expected.size !== 1 || lookupNames.length !== 1) {
+		// if there isn't exactly one lookup and nothing else
+		return null; // it's a nope, dawg
+	}
+	const lookupBucket = entry.lookups[lookupNames[0]];
+	const allNextValues = Object.values(lookupBucket.literals)
+		.concat(Object.values(lookupBucket.lookups))
+		.concat(Object.values(lookupBucket.captures));
+	if (!allNextValues) {
+		return null;
+	}
+	const optionalNexts = allNextValues.filter(v=>{v.twig.rep === '*' || v.twig.rep === '?'});
+	if (optionalNexts.length) {
+		return findNonOptionalEntryAfterNextOptionalLookup(lookupBucket);
+	}
+	return lookupBucket;
+};
+
+// const test = findNonOptionalEntryAfterNextOptionalLookup(tree.document);
+// console.log(test);
+
 /* ------------------------------------------ PARSE FILE ------------------------------------------ */
 
 const makeCrawlState = (tokens) => {
@@ -340,7 +421,11 @@ const makeCrawlState = (tokens) => {
 		tokens,
 		tokenPos: 0,
 		token: tokens[0],
-		stack: ['document'],
+		stack: [],
+		// stack: [{
+		// 	pattern: 'document',
+		// 	skipValue: findNonOptionalEntryAfterNextOptionalLookup(tree.document),
+		// }],
 		peek: (n=1) => tokens[ret.tokenPos+n],
 		advance: () => {
 			ret.tokenPos += 1;
@@ -378,7 +463,9 @@ export const parseFile = (inputString, givenFileName) => {
 		warnings: [],
 	};
 	const result = parse(f, cs, 'document');
-	const nodes = result.captures.map(clean);
+	const nodes = result.captures
+		.filter(v=>v.label !== 'EOF')
+		.map(clean);
 	const ret = {
 		tokens: lexResult.tokens,
 		inputString: f.inputString,
@@ -431,8 +518,12 @@ const cleanStructure = {
 		targetValue: 'tarvetValue',
 		settings: 'dialog_parameter[{}]'
 	},
+	dialog_definition: {
+		label: `dialogName`,
+		dialogs: 'dialog[@]',
+	},
 	dialog_literal: {
-		dialogName: `dialogName`,
+		label: `dialogName`,
 		dialogs: 'dialog[@]',
 	},
 	dialog: {
@@ -504,9 +595,9 @@ const cleanCustomMap = {
 		};
 	},
 	dialog_literal: (rawDialogBlock, f) => {
-		const node = clean(rawDialogBlock);
-		if (!node.dialogName) {
-			node.dialogName = makeAutoIdentifierName(
+		const node = cleanGeneric(rawDialogBlock);
+		if (!node.label) {
+			node.label = makeAutoIdentifierName(
 				f.inputString,
 				f.tokens[rawDialogBlock.startPos].pos,
 				f.fileName
@@ -525,44 +616,17 @@ const clean = (raw) => {
 /* ------------------ tests ------------------ */
 
 // const testFile = parseFile(`// asdf\n`
-// 	// +` json![
-// 	// 	{
-// 	// 		"action":"NEW_ACTION",
-// 	// 		"asdf": 90
-// 	// 	}
-// 	// ]`
+// // +` json![
+// // 	{
+// // 		"action":"NEW_ACTION",
+// // 		"asdf": 90
+// // 	}
+// // ]`
 
-// 	// +` $steamedHams = ;\n`
-// 	// +` $trombones = 76;`
-// // +` add serial_dialog settings {
-// // 	wrap 80  wrap 99
-// // }`
-// +` add dialog settings {
-// 	// label PLAYER {
-// 		entity "%PLAYER%"
-// 		alignment BL
-// 	}
-// 	default {
-// 		alignment BR
-// 	}
-// }
-// `
-// // +`
-// // $afterRoot = true;	
-// // `
-// // +	` 
-// // dialog greetings {
-// // 	entity Bob alignment BR emote 44 "Hi"
-// // 		"What do you think you're doing now??"
-// // 	;
-// // 	PLAYER alignment TL "I guess I'll need to choose one?"
-// // 	> "I'll take the left door." = leftScript
-// // 	> "I'll take the right door." = rightScript
-// // 	;
-// // }
-
-// // // asdf
-// // `
+// +	`dialog greetings {`
+// + `Bob "Hello?" ;`
+// + `PLAYER "Oh?" "I heard something!";`
+// + `};`
 
 // , 'bobPartyRoom.mgs');
 

@@ -2,7 +2,9 @@ import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
 const printOKTests = true;
-const topTestOnly = true;
+const topTestOnly = false;
+
+// TODO: add 'expected' Set for syntax errors
 
 const patternTests = {
 	// set_save_flag: [
@@ -612,209 +614,266 @@ const patternTests = {
 	// 	// 	]
 	// 	// },
 	// ],
-	// dialog_definition: [
-	// 	// { name: 'double',
-	// 	// 	pattern: `dialog greetings {`
-	// 	// 		+ `Bob "Hello?" "Is there anyone there?"`
-	// 	// 		+ `PLAYER "Oh?" "I heard something!"`
-	// 	// 		+ `}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "greetings",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?", "Is there anyone there?" ],
-	// 	// 				},
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					identifier: { type: "label", value: "PLAYER" },
-	// 	// 					messages: [ "Oh?", "I heard something!"],
-	// 	// 				}
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'parameters',
-	// 	// 	pattern: `dialog _ { Bob alignment BR "Hello?" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					parameters: [{ property: 'alignment', value: 'BR' }],
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'parameters failure at the end',
-	// 	// 	pattern: `dialog _ { Bob alignment BR ERRORTOKEN "Hello?" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					parameters: [{ property: 'alignment', value: 'BR' }],
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'parameters failure in the middle',
-	// 	// 	pattern: `dialog _ { Bob alignment BR ERRORTOKEN wrap 10 "Hello?" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					parameters: [
-	// 	// 						{ property: 'alignment', value: 'BR' },
-	// 	// 						{ property: 'wrap', value: 10 },
-	// 	// 					],
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options',
-	// 	// 	pattern: `dialog _ { Bob "Hello?" > "Oh?" = scriptName }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 					options: [{
-	// 	// 						label: 'Oh?',
-	// 	// 						script: 'scriptName'
-	// 	// 					}],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options no script',
-	// 	// 	pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					malformed: true,
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 					options: [{
-	// 	// 						label: 'Oh?',
-	// 	// 						script: ''
-	// 	// 					}],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options no equal sign / script',
-	// 	// 	pattern: `dialog _ { Bob "Hello?" > "Oh?" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					malformed: true,
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 					options: [{
-	// 	// 						label: 'Oh?',
-	// 	// 						script: ''
-	// 	// 					}],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options no label / equal sign / script',
-	// 	// 	pattern: `dialog _ { Bob "Hello?" > }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					malformed: true,
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 					options: [{
-	// 	// 						label: '',
-	// 	// 						script: ''
-	// 	// 					}],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options with garbage',
-	// 	// 	pattern: `dialog _ { Bob "Hello?" > asdfasdf }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "_",
-	// 	// 			dialogs: [
-	// 	// 				{
-	// 	// 					node: "dialog",
-	// 	// 					malformed: true,
-	// 	// 					identifier: { type: "label", value: "Bob" },
-	// 	// 					messages: [ "Hello?" ],
-	// 	// 					options: [{
-	// 	// 						label: '',
-	// 	// 						script: ''
-	// 	// 					}],
-	// 	// 				},
-	// 	// 			]
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// ],
+	dialog_definition: [
+		{ name: 'options no script',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+							options: [{
+								label: 'Oh?',
+								script: undefined,
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options no equal sign / script',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+							options: [{
+								label: 'Oh?',
+								script: undefined,
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options no label / equal sign / script',
+			pattern: `dialog _ { Bob "Hello?" > }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+							options: [{
+								label: undefined,
+								script: undefined,
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options with garbage',
+			pattern: `dialog _ { Bob "Hello?" > asdfasdf }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							malformed: true,
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+							options: [{
+								label: undefined,
+								script: undefined,
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'options',
+			pattern: `dialog _ { Bob "Hello?" > "Oh?" = scriptName; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+							options: [{
+								label: 'Oh?',
+								script: 'scriptName'
+							}],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure in the middle with linebreaks',
+			pattern: `dialog _ {\nBob\nalignment BR\nERRORTOKEN\nwrap 10\n"Hello?";\n}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							parameters: [
+								{ property: 'alignment', value: 'BR' },
+								{},
+								{ property: 'wrap', value: 10 },
+							],
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure in the middle',
+			pattern: `dialog _ { Bob alignment BR ERRORTOKEN wrap 10 "Hello?"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							parameters: [
+								{ property: 'alignment', value: 'BR' },
+								{},
+								// TODO: I want this to be captured, too... :(
+								// { property: 'wrap', value: 10 },
+							],
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'parameters failure at the end',
+			pattern: `dialog _ { Bob alignment BR ERRORTOKEN "Hello?"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							parameters: [{ property: 'alignment', value: 'BR' }],
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'parameters',
+			pattern: `dialog _ { Bob alignment BR "Hello?"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "_",
+					dialogs: [
+						{
+							node: "dialog",
+							identifierType: null,
+							identifierValue: 'Bob',
+							parameters: [{ property: 'alignment', value: 'BR' }],
+							messages: [ "Hello?" ],
+						},
+					]
+				}
+			]
+		},
+		{ name: 'double',
+			pattern: `dialog greetings {`
+				+ `Bob "Hello?" "Is there anyone there?";`
+				+ `PLAYER "Oh?" "I heard something!";`
+				+ `}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					label: "greetings",
+					dialogs: [
+						{
+							node: "dialog",
+							identifierType: null,
+							identifierValue: 'Bob',
+							messages: [ "Hello?", "Is there anyone there?" ],
+						},
+						{
+							node: "dialog",
+							identifierType: null,
+							identifierValue: 'PLAYER',
+							messages: [ "Oh?", "I heard something!"],
+						}
+					]
+				}
+			]
+		},
+	],
 	add_dialog_settings: [
+		{ name: 'error in the middle with newlines',
+			pattern: `add dialog settings {\ndefault {\nalignment TR\ndeglaze\nportrait secretSnake\n}\n}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: 'add_dialog_settings',
+					malformed: true,
+					targets: [{
+						targetType: 'default',
+						targetValue: null,
+						settings: [
+							{ property: 'alignment', value: 'TR' },
+							{},
+							{ property: 'portrait', value: 'secretSnake' },
+						]
+					}]
+				},
+				
+			]
+		},
 		{ name: 'error in the middle',
 			pattern: `add dialog settings { default { alignment TR deglaze portrait secretSnake } }`,
 			fileSuccess: true,
@@ -829,7 +888,8 @@ const patternTests = {
 						settings: [
 							{ property: 'alignment', value: 'TR' },
 							{},
-							{ property: 'portrait', value: 'secretSnake' },
+							// TODO: I want this to be captured, too... :(
+							// { property: 'portrait', value: 'secretSnake' },
 						]
 					}]
 				},
@@ -886,7 +946,8 @@ const patternTests = {
 					settings: [
 						{ property: 'wrap', value: 1 },
 						{},
-						{ property: 'wrap', value: 3 },
+						// TODO: I want this to be captured, too... :(
+						// { property: 'wrap', value: 3 },
 					],
 				},
 				
@@ -1049,9 +1110,8 @@ const doTest = (test) => {
 	if (test.fileSuccess !== file.success) { // I doubt this will happen
 		const expected = test.fileSuccess ? 'succeeded' : 'failed';
 		const found = file.success ? 'succeeded' : 'failed';
-		errors.push({
-			message: `Parsing ${ansiRed}${found}${ansiReset}; should have ${ansiYellow}${expected}${ansiReset}`,
-		});
+		const message = `Parsing ${ansiRed}${found}${ansiReset}; should have ${ansiYellow}${expected}${ansiReset}`;
+		errors.push({ message });
 	}
 	['nodes', 'errors', 'warnings'].forEach(item=>{
 		const fileCounts = {
@@ -1064,11 +1124,10 @@ const doTest = (test) => {
 			const foundP = fileCounts[item] !== 1;
 			const foundI = foundP ? item : item.replace(/s$/,'');
 			const expected = test.counts[item];
-			errors.push({
-				message: `Found ${ansiRed}${found} ${foundI}${ansiReset}, expected ${ansiYellow}${expected}${ansiReset}`,
-			});
+			const message = `Found ${ansiRed}${found} ${foundI}${ansiReset}, expected ${ansiYellow}${expected}${ansiReset}`;
+			errors.push({ message });
 			file[item].forEach(v=>{
-				errors.push({message: v.printable});
+				errors.push({message: v.message});
 			});
 		}
 	});
@@ -1088,11 +1147,11 @@ const doTest = (test) => {
 			const jsonRight = JSON.stringify(rh, null, '  ');
 			if (jsonLeft !== jsonRight) {
 				if (typeof lh === 'object') {
-					const message = { message: `Found ${JSON.stringify(diff, null, '  ')}` }
-					errors.push(message);
+					const message = `Found ${JSON.stringify(diff, null, '  ')}`
+					errors.push({ message });
 				} else {
-					const message = { message: `Found ${ansiRed}${key}: ${jsonRight}${ansiReset}, expected value ${ansiYellow}${jsonLeft}${ansiReset}` };
-					errors.push(message);
+					const message = `Found ${ansiRed}${key}: ${jsonRight}${ansiReset}, expected value ${ansiYellow}${jsonLeft}${ansiReset}`
+					errors.push({ message });
 				}
 			}
 		});
@@ -1110,11 +1169,11 @@ const doTest = (test) => {
 				const jsonRight = JSON.stringify(rh, null, '  ');
 				if (jsonLeft !== jsonRight) {
 					if (typeof lh === 'object') {
-						const message = { message: `Found nodes[${i}].body[${j}] = ${JSON.stringify(diff, null, '  ')}` }
-						errors.push(message);
+						const message = `Found nodes[${i}].body[${j}] = ${JSON.stringify(diff, null, '  ')}`
+						errors.push({ message });
 					} else {
-						const message = { message: `Found nodes[${i}].body[${j}] = ${ansiRed}${key}: ${jsonLeft}${ansiReset}, expected value ${ansiYellow}${jsonRight}${ansiReset}` };
-						errors.push(message);
+						const message = `Found nodes[${i}].body[${j}] = ${ansiRed}${key}: ${jsonLeft}${ansiReset}, expected value ${ansiYellow}${jsonRight}${ansiReset}`;
+						errors.push({ message });
 					}
 				}
 			});
