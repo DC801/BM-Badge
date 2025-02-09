@@ -1028,7 +1028,7 @@ const actionDictionary = {
 	},
 	action_unhide_command: { action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 		captures: [ 'command' ],
-		values: { is_visible: false },
+		values: { is_visible: true },
 		patterns: [{ start: `'unhide'`, body: `'command' $string:command`, end: `';'` }],
 	},
 	action_pause_script: { action: 'SET_SCRIPT_PAUSE',

@@ -5,7 +5,11 @@ import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLin
 const verbose = false;
 const printErrors = false;
 
-const printError = (string) => { if (printErrors || verbose) console.error(string); };
+const printError = (string) => {
+	if (printErrors || verbose) {
+		console.error(string);
+	}
+};
 const debugLog = (string) => { if (verbose) console.log(string); };
 
 const ansiRed = '\u001b[1;31m';
@@ -350,7 +354,7 @@ const parse = (f, cs, patternName, givenEntry) => {
 		if (cs.stack?.[0].skipValue) {
 			// Rewind so fastForward can find a 'newline' right at the site of problem
 			// if (cs.tokens[cs.tokenPos-1]?.type === 'newline') {
-				cs.move(-1);
+				// cs.move(-1);
 			// }
 			const ffType = fastForward(cs, errorRecoveryEntry);
 			if (ffType === 'parent') {
@@ -375,8 +379,8 @@ const parse = (f, cs, patternName, givenEntry) => {
 				// cs.advance();
 			} else if (ffType === 'self') {
 				cs.move(-1);
-			} else {
-				cs.advance();
+			} else if (ffType === 'agnostic') {
+				// cs.advance();
 			}
 		} else {
 			// skip over the offending token and retry
@@ -601,7 +605,7 @@ const detectAction = (raw) => {
 	ret.node = structuredClone(match.node);
 	ret.node.startPos = raw.startPos;
 	ret.node.tokenPos = raw.tokenPos;
-	if (raw.malformed) ret.malformed = true;
+	if (raw.malformed) ret.node.malformed = true;
 	allTheRest.forEach(capture=>{
 		if (ret.node[capture.label]) {
 			throw new Error("Two captures for one action??")

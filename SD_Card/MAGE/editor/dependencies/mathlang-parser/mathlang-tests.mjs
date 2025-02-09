@@ -373,6 +373,81 @@ const patternTests = {
 		// 		}
 		// 	]
 		// },
+		{ name: 'simple with errors',
+			pattern: `_ { hide command walk }
+				_ { block "string"; }
+				_ { wait }
+				_ { unhide command }`,
+			fileSuccess: true,
+			counts: { bodyNodes: [1,1,1,1], nodes: 4, errors: 4, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [{
+						node: "action",
+						action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+						command: "walk",
+						is_visible: false,
+						malformed: true,
+					}],
+				},
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [{
+						node: "action",
+						action: "BLOCKING_DELAY",
+						duration: undefined,
+						malformed: true,
+					}],
+				},
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [
+					{
+						node: "action",
+						action: "NON_BLOCKING_DELAY",
+						duration: undefined,
+						malformed: true,
+					}],
+				},
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [{
+						node: "action",
+						action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+						command: undefined,
+						is_visible: true,
+						malformed: true,
+					}],
+				}
+			]
+		},
+		{ name: 'simple',
+			pattern: `_ {
+				hide command walk;
+				unhide command "walk";
+				wait 800ms;
+				block 1s;
+			}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [
+						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: false },
+						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: true },
+						{ node: "action", action: "NON_BLOCKING_DELAY", duration: 800 },
+						{ node: "action", action: "BLOCKING_DELAY", duration: 1000 },
+					],
+				}
+			]
+		},
 		{ name: 'game flow manip',
 			pattern: `_ {
 				goto script "mainMenuStart";
@@ -395,28 +470,6 @@ const patternTests = {
 						{ node: "action", action: "LOAD_MAP", map: "mainMenu" },
 						{ node: "action", action: "SLOT_LOAD", slot: 3 },
 						{ node: "action", action: "SLOT_ERASE", slot: 0 },
-					],
-				}
-			]
-		},
-		{ name: 'simple',
-			pattern: `_ {
-				hide command walk;
-				unhide command "walk";
-				wait 800ms;
-				block 1s;
-			}`.replace(/[\s\n\t]+/g,' '),
-			fileSuccess: true,
-			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
-			nodes: [
-				{
-					node: "script_literal", // I want this to be 'script_definition' :/
-					label: "_",
-					body: [
-						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: true },
-						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: false },
-						{ node: "action", action: "NON_BLOCKING_DELAY", duration: 800 },
-						{ node: "action", action: "BLOCKING_DELAY", duration: 1000 },
 					],
 				}
 			]

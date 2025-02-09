@@ -119,12 +119,12 @@ const actionDictionary = [
 	{
 		pattern: `'hide':actionKeyword 'command' $string:command ';'`,
 		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`,
-		is_visible: true,
+		is_visible: false,
 	},
 	{
 		pattern: `'unhide':actionKeyword 'command' $string:command ';'`,
 		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`,
-		is_visible: false,
+		is_visible: true,
 	},
 	{
 		pattern: `'wait':actionKeyword $duration:duration ';'`,
