@@ -350,6 +350,78 @@ const patternTests = {
 	// 	// 	]
 	// 	// },
 	// ],
+	script_actions: [
+		// { name: 'dictionary entry with outside lookup',
+		// 	pattern: `_ {
+		// 		pause entity Bob on_tick;
+		// 	}`.replace(/[\s\n\t]+/g,' '),
+		// 	fileSuccess: true,
+		// 	counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
+		// 	nodes: [
+		// 		{
+		// 			node: "script_definition",
+		// 			name: "_",
+		// 			body: [
+		// 				{
+		// 					node: "action",
+		// 					action: "SET_SCRIPT_PAUSE",
+		// 					bool_value: true,
+		// 					script_slot: "on_tick",
+		// 					entity: "Bob",
+		// 				},
+		// 			],
+		// 		}
+		// 	]
+		// },
+		{ name: 'game flow manip',
+			pattern: `_ {
+				goto script "mainMenuStart";
+				goto index 44;
+				goto label outer_loop;
+				load map mainMenu;
+				load slot 3;
+				erase slot 0;
+			}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [
+						{ node: "action", action: "RUN_SCRIPT", script: "mainMenuStart" },
+						{ node: "action", action: "GOTO_ACTION_INDEX", action_index: 44 },
+						{ node: "action", action: "GOTO_ACTION_LABEL", label: "outer_loop" },
+						{ node: "action", action: "LOAD_MAP", map: "mainMenu" },
+						{ node: "action", action: "SLOT_LOAD", slot: 3 },
+						{ node: "action", action: "SLOT_ERASE", slot: 0 },
+					],
+				}
+			]
+		},
+		{ name: 'no captures',
+			pattern: `_ {
+				save slot; 
+				close dialog; 
+				close serial_dialog;
+				return;
+			}`.replaceAll('\n',' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [
+						{ node: "action", action: "SLOT_SAVE" },
+						{ node: "action", action: "CLOSE_DIALOG" },
+						{ node: "action", action: "CLOSE_SERIAL_DIALOG" },
+						{ node: "action", action: "GOTO_ACTION_LABEL", label: "auto return" },
+					],
+				}
+			]
+		},
+	],
 	json_literal: [
 		{ name: 'gamut of syntax',
 			pattern: `_ {
@@ -391,78 +463,6 @@ const patternTests = {
 			]
 		},
 	],
-	// script_actions: [
-	// 	// { name: 'dictionary entry with outside lookup',
-	// 	// 	pattern: `_ {
-	// 	// 		pause entity Bob on_tick;
-	// 	// 	}`.replace(/[\s\n\t]+/g,' '),
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "script_definition",
-	// 	// 			name: "_",
-	// 	// 			body: [
-	// 	// 				{
-	// 	// 					node: "action",
-	// 	// 					action: "SET_SCRIPT_PAUSE",
-	// 	// 					bool_value: true,
-	// 	// 					script_slot: "on_tick",
-	// 	// 					entity: "Bob",
-	// 	// 				},
-	// 	// 			],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'game flow manip',
-	// 	// 	pattern: `_ {
-	// 	// 		goto index 44;
-	// 	// 		goto label outer_loop;
-	// 	// 		goto script "mainMenuStart";
-	// 	// 		load map mainMenu;
-	// 	// 		load slot 3;
-	// 	// 		erase slot 0;
-	// 	// 	}`.replace(/[\s\n\t]+/g,' '),
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "script_definition",
-	// 	// 			name: "_",
-	// 	// 			body: [
-	// 	// 				{ node: "action", action: "GOTO_ACTION_INDEX", action_index: 44 },
-	// 	// 				{ node: "action", action: "GOTO_ACTION_LABEL", label: "outer_loop" },
-	// 	// 				{ node: "action", action: "RUN_SCRIPT", script: "mainMenuStart" },
-	// 	// 				{ node: "action", action: "LOAD_MAP", map: "mainMenu" },
-	// 	// 				{ node: "action", action: "SLOT_LOAD", slot: 3 },
-	// 	// 				{ node: "action", action: "SLOT_ERASE", slot: 0 },
-	// 	// 			],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	{ name: 'no captures',
-	// 		pattern: `_ {
-	// 			save slot; 
-	// 			close dialog; 
-	// 			close serial_dialog;
-	// 			return;
-	// 		}`.replaceAll('\n',' '),
-	// 		fileSuccess: true,
-	// 		counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
-	// 		nodes: [
-	// 			{
-	// 				node: "script_definition",
-	// 				name: "_",
-	// 				body: [
-	// 					{ node: "action", action: "SLOT_SAVE" },
-	// 					{ node: "action", action: "CLOSE_DIALOG" },
-	// 					{ node: "action", action: "CLOSE_SERIAL_DIALOG" },
-	// 					{ node: "action", action: "GOTO_ACTION_LABEL", label: "auto return" },
-	// 				],
-	// 			}
-	// 		]
-	// 	},
-	// ],
 	serial_dialog_definition: [
 		{ name: 'double',
 			pattern: `serial_dialog test { "Test message!" "Another!"; }`,

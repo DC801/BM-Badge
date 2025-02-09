@@ -1,5 +1,5 @@
 import { lex } from "./mathlang-lex.mjs"
-import { tree } from "./mathlang-language.mjs"
+import { tree, actionDetective } from "./mathlang-language.mjs"
 import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLineAndCharNumbers } from "./mathlang-utilities.mjs"
 
 const verbose = false;
@@ -544,9 +544,9 @@ const cleanStructure = {
 	},
 };
 
-const cleanActions = {
-	json_literal: (oldRaws, newRaws, f) => {
-		const raw = oldRaws.shift();
+const cleanScriptBody = {
+	json_literal: (inputArr, outputArr, f) => {
+		const raw = inputArr.shift();
 		const node = {
 			node: raw.label,
 			startPos: raw.startPos,
@@ -554,9 +554,64 @@ const cleanActions = {
 			debug: raw,
 			value: raw.value[0]?.value
 		};
-		newRaws.push(node);
+		outputArr.push(node);
 	},
+	script_body_item: (oldRaws, newRaws, f) => {
+		const single = oldRaws.shift();
+	}
 }
+
+const detectAction = (raw) => {
+	const ret = {
+		success: false,
+		node: {},
+	}
+	const values = structuredClone(raw.value)
+	const allTheRest = [];
+	let keyword;
+	let foundInfo = {};
+	values.forEach(capture=>{
+		if (capture.label === 'actionKeyword') {
+			keyword = capture.value;
+		} else if (capture.label === 'actionTarget') {
+			foundInfo.actionTarget = capture.value;
+		} else {
+			allTheRest.push(capture);
+		}
+	})
+	if (!keyword) return ret;
+	const detective = actionDetective[keyword];
+	const filtered = detective.filter(entry=>{
+		return Object.keys(entry.info).length
+			=== Object.keys(foundInfo).length;
+	}).filter(entry=>{
+		return Object.keys(foundInfo).every(prop=>{
+			const expected = entry.info[prop];
+			const found = foundInfo[prop];
+			const result = expected === found;
+			return result;
+		});
+	});
+	if (filtered.length === 0) {
+		throw new Error ("The Action Detective (TM) could not detect the action!", raw)
+	} else if (filtered.length > 1) {
+		throw new Error ("The Action Detective (TM) detected too many actions!", raw)
+	}
+	const match = filtered[0];
+	ret.node = structuredClone(match.node);
+	ret.node.startPos = raw.startPos;
+	ret.node.tokenPos = raw.tokenPos;
+	if (raw.malformed) ret.malformed = true;
+	allTheRest.forEach(capture=>{
+		if (ret.node[capture.label]) {
+			throw new Error("Two captures for one action??")
+		}
+		ret.node[capture.label] = capture.value;
+	})
+	ret.success = true;
+	ret.debug = raw;
+	return ret;
+};
 
 const cleanCustomMap = {
 	root: (raw) => {
@@ -578,7 +633,21 @@ const cleanCustomMap = {
 				f.fileName
 			);
 		while (values.length) {
-			cleanActions[values[0].label](values, newValues, f);
+			const first = values.shift();
+			// Try the action detective first
+			const detection = detectAction(first, f);
+			if (detection.success) {
+				newValues.push(detection.node);
+				continue;
+			} else {
+				values.unshift(first);
+			}
+			// Otherwise, try a custom thing
+			const fn = cleanScriptBody[values[0].label];
+			if (!fn) {
+				throw new Error("No action cleaning function found for " + values[0].label);
+			}
+			cleanScriptBody[values[0].label](values, newValues, f);
 		}
 		const node = {
 			node: raw.label,

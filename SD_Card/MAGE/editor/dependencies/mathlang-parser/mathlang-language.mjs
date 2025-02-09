@@ -1,3 +1,56 @@
+
+const getWordReport = (word, patternName) => {
+	const literal = word.match(/^'(.+?)'/);
+	const remainder = literal
+		? word.replace(literal[0], '')
+		: word;
+	const fragments = remainder.length > 0
+		? remainder.split(/\b/g)
+		: [];
+	const token = {
+		original: word,
+		rep: '',
+		type: literal ? 'literal' : '',
+		value: literal ? literal[1] : '',
+	}
+	if (
+		fragments[fragments.length-1] === '?'
+		|| fragments[fragments.length-1] === '*'
+		|| fragments[fragments.length-1] === '+'
+	) {
+		token.rep = fragments.pop();
+	}
+	while (fragments.length > 0) {
+		if (fragments.length % 2 !== 0) {
+			throw new Error("Subpattern not built up from pairs: " + word);
+		}
+		const left = fragments.shift();
+		const right = fragments.shift();
+		if (!/[a-zA-Z_]+/.test(right)) {
+			throw new Error("Right half is not a word: " + left + right);
+		}
+		if (left === '$') {
+			token.type = 'capture';
+			token.value = right;
+		} else if (left === '@') {
+			token.type = 'lookup';
+			token.value = right;
+		} else if (left === ':') {
+			token.label = right;
+			// capturesIdentified[patternName] = capturesIdentified[patternName] || [];
+			// capturesIdentified[patternName].push(word);
+		}
+		if (left.includes("<")) {
+			token.autoComplete = right;
+		}
+		if (left.includes(">")) {
+			token.toCollection = right;
+		}
+		if (token.type === '') throw new Error("Unknown token sigil: " + left + right);
+	}
+	return token;
+};
+
 // the key here I think is this:
 // if it's a straight lookup, just copy-paste the entry transparently
 // if it's a * or + preserve the lookupiness, as this is how we go all nested,
@@ -55,69 +108,85 @@ const patterns = {
 	,
 	script_literal: `'{' @script_body_item* '}'`,
 	script_body_item: `@json_literal`
-		// + `| @debug_macro`
-		// + `| @action ';'`
+		// + ` | @debug_macro`;
 	,
-	// action: `'return':actionKeyword
-	// 	| 'close':actionKeyword 'dialog':value
-	// 	| 'close':actionKeyword 'serial_dialog':value
-	// 	| 'save':actionKeyword 'slot':value
-	// `,
 	json_literal: `'json' '!' '['`, // the rest is handled in the parse fn
 	// debug_macro: `'debug' '!' '(' @serial_dialog ')'`,
 };
 
-const getWordReport = (word, patternName) => {
-	const literal = word.match(/^'(.+?)'/);
-	const remainder = literal
-		? word.replace(literal[0], '')
-		: word;
-	const fragments = remainder.length > 0
-		? remainder.split(/\b/g)
-		: [];
-	const token = {
-		original: word,
-		rep: '',
-		type: literal ? 'literal' : '',
-		value: literal ? literal[1] : '',
-	}
-	if (
-		fragments[fragments.length-1] === '?'
-		|| fragments[fragments.length-1] === '*'
-		|| fragments[fragments.length-1] === '+'
-	) {
-		token.rep = fragments.pop();
-	}
-	while (fragments.length > 0) {
-		if (fragments.length % 2 !== 0) {
-			throw new Error("Subpattern not built up from pairs: " + word);
+const actionDictionary = [
+	{
+		pattern: `'goto':actionKeyword 'index':actionTarget $number:action_index ';'`,
+		action: `GOTO_ACTION_INDEX`,
+	},
+	{
+		pattern: `'goto':actionKeyword 'label':actionTarget $bareword:label ';'`,
+		action: `GOTO_ACTION_LABEL`,
+	},
+	{
+		pattern: `'goto':actionKeyword 'script'? $string:script<scriptNames ';'`,
+		action: `RUN_SCRIPT`,
+	},
+	{
+		pattern: `'load':actionKeyword 'map':actionTarget $string:map ';'`,
+		action: 'LOAD_MAP',
+	},
+	{
+		pattern: `'load':actionKeyword 'slot':actionTarget $number:slot ';'`,
+		action: `SLOT_LOAD`,
+	},
+	{
+		pattern: `'erase':actionKeyword 'slot' $number:slot ';'`,
+		action: `SLOT_ERASE`,
+	},
+	{
+		pattern: `'return':actionKeyword ';'`,
+		action: 'GOTO_ACTION_LABEL',
+		label: "auto return"
+	},
+	{
+		pattern: `'close':actionKeyword 'dialog':actionTarget ';'`,
+		action: 'CLOSE_DIALOG',
+	},
+	{
+		pattern: `'close':actionKeyword 'serial_dialog':actionTarget ';'`,
+		action: 'CLOSE_SERIAL_DIALOG',
+	},
+	{
+		pattern: `'save':actionKeyword 'slot':actionTarget ';'`,
+		action: 'SLOT_SAVE',
+	},
+	// should remove `pattern` from these, but otherwise use all properties from these in the output
+	// the labeled literals in the pattern are used for identification; they are not otherwise saved
+	// captures should come in if named in the pattern
+	// what to do with external captures though? Identify them by hand, as before?
+];
+
+export const actionDetective = {};
+actionDictionary.forEach(actionDict=>{
+	patterns.script_body_item += ` | ` + actionDict.pattern;
+	const words = actionDict.pattern
+		.split(/[\n\t\s]+/g)
+		.map(getWordReport);
+	const ret = {
+		node: structuredClone(actionDict),
+		info: {},
+		captures: structuredClone(actionDict.captures || []),
+	};
+	ret.node.node = 'action';
+	delete ret.node.pattern;
+	words.forEach(word=>{
+		if (word.label === 'actionKeyword') {
+			ret.keyword = word.value;
+		} else if (word.label === 'actionTarget' || word.label === 'actionInfo') {
+			ret.info[word.label] = word.value;
+		} else if (word.label) {
+			ret.captures.push(word.label);
 		}
-		const left = fragments.shift();
-		const right = fragments.shift();
-		if (!/[a-zA-Z_]+/.test(right)) {
-			throw new Error("Right half is not a word: " + left + right);
-		}
-		if (left === '$') {
-			token.type = 'capture';
-			token.value = right;
-		} else if (left === '@') {
-			token.type = 'lookup';
-			token.value = right;
-		} else if (left === ':') {
-			token.label = right;
-			// capturesIdentified[patternName] = capturesIdentified[patternName] || [];
-			// capturesIdentified[patternName].push(word);
-		}
-		if (left.includes("<")) {
-			token.autoComplete = right;
-		}
-		if (left.includes(">")) {
-			token.toCollection = right;
-		}
-		if (token.type === '') throw new Error("Unknown token sigil: " + left + right);
-	}
-	return token;
-};
+	})
+	actionDetective[ret.keyword] = actionDetective[ret.keyword] || [];
+	actionDetective[ret.keyword].push(ret);
+});
 
 const flatTrees = {};
 Object.keys(patterns).forEach(patternName=>{
