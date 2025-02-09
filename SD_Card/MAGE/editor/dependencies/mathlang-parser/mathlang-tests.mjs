@@ -2,7 +2,7 @@ import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
 const printOKTests = true;
-const topTestOnly = true;
+const topTestOnly = false;
 
 // TODO: add 'expected' Set for syntax errors
 
@@ -359,8 +359,8 @@ const patternTests = {
 		// 	counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
 		// 	nodes: [
 		// 		{
-		// 			node: "script_definition",
-		// 			name: "_",
+		// 			node: "script_literal", // I want this to be 'script_definition' :/
+		// 			label: "_",
 		// 			body: [
 		// 				{
 		// 					node: "action",
@@ -399,7 +399,29 @@ const patternTests = {
 				}
 			]
 		},
-		{ name: 'no captures',
+		{ name: 'simple',
+			pattern: `_ {
+				hide command walk;
+				unhide command "walk";
+				wait 800ms;
+				block 1s;
+			}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [
+						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: true },
+						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: false },
+						{ node: "action", action: "NON_BLOCKING_DELAY", duration: 800 },
+						{ node: "action", action: "BLOCKING_DELAY", duration: 1000 },
+					],
+				}
+			]
+		},
+		{ name: 'zero captures',
 			pattern: `_ {
 				save slot; 
 				close dialog; 

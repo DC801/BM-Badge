@@ -115,6 +115,26 @@ const patterns = {
 };
 
 const actionDictionary = [
+	// simple
+	{
+		pattern: `'hide':actionKeyword 'command' $string:command ';'`,
+		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`,
+		is_visible: true,
+	},
+	{
+		pattern: `'unhide':actionKeyword 'command' $string:command ';'`,
+		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`,
+		is_visible: false,
+	},
+	{
+		pattern: `'wait':actionKeyword $duration:duration ';'`,
+		action: `NON_BLOCKING_DELAY`,
+	},
+	{
+		pattern: `'block':actionKeyword $duration:duration ';'`,
+		action: `BLOCKING_DELAY`,
+	},
+	// game flow manip
 	{
 		pattern: `'goto':actionKeyword 'index':actionTarget $number:action_index ';'`,
 		action: `GOTO_ACTION_INDEX`,
@@ -139,6 +159,7 @@ const actionDictionary = [
 		pattern: `'erase':actionKeyword 'slot' $number:slot ';'`,
 		action: `SLOT_ERASE`,
 	},
+	// no captures
 	{
 		pattern: `'return':actionKeyword ';'`,
 		action: 'GOTO_ACTION_LABEL',
