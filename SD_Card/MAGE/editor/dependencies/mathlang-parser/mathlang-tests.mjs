@@ -2,7 +2,7 @@ import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
 const printOKTests = true;
-const topTestOnly = false;
+const topTestOnly = true;
 
 // TODO: add 'expected' Set for syntax errors
 
@@ -350,46 +350,47 @@ const patternTests = {
 	// 	// 	]
 	// 	// },
 	// ],
-	// json_literal: [
-	// 	// { name: 'gamut of syntax',
-	// 	// 	pattern: `_ {
-	// 	// 			json![{
-	// 	// 				"action": "NEW_ACTION",
-	// 	// 				"prop1": "string",
-	// 	// 				"prop2": 100,
-	// 	// 				"prop3": false,
-	// 	// 				"prop4": [ "LED_BIT128", "LED_BIT8" ],
-	// 	// 				"prop5": {
-	// 	// 					"inner": "This has gone too far!",
-	// 	// 					"innerAgain": 9001
-	// 	// 				}
-	// 	// 			}]
-	// 	// 		}`.replace(/[\s\n\t]+/g,' '),
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "script_definition",
-	// 	// 			name: "_",
-	// 	// 			body: [{
-	// 	// 				node: "action",
-	// 	// 				action: "NEW_ACTION",
-	// 	// 				prop1: "string",
-	// 	// 				prop2: 100,
-	// 	// 				prop3: false,
-	// 	// 				prop4: [
-	// 	// 					"LED_BIT128",
-	// 	// 					"LED_BIT8"
-	// 	// 				],
-	// 	// 				prop5: {
-	// 	// 					inner: "This has gone too far!",
-	// 	// 					innerAgain: 9001
-	// 	// 				},
-	// 	// 			}],
-	// 	// 		},
-	// 	// 	]
-	// 	// },
-	// ],
+	json_literal: [
+		{ name: 'gamut of syntax',
+			pattern: `_ {
+					json![{
+						"action": "NEW_ACTION",
+						"prop1": "string",
+						"prop2": 100,
+						"prop3": false,
+						"prop4": [ "LED_BIT128", "LED_BIT8" ],
+						"prop5": {
+							"inner": "This has gone too far!",
+							"innerAgain": 9001
+						}
+					}]
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal", // I want this to be 'script_definition' :/
+					label: "_",
+					body: [{
+						node: "json_literal",
+						value: [
+							{
+								action: "NEW_ACTION",
+								prop1: "string",
+								prop2: 100,
+								prop3: false,
+								prop4: [ "LED_BIT128", "LED_BIT8" ],
+								prop5: {
+									inner: "This has gone too far!",
+									innerAgain: 9001,
+								},
+							},
+						],
+					}],
+				},
+			]
+		},
+	],
 	// script_actions: [
 	// 	// { name: 'dictionary entry with outside lookup',
 	// 	// 	pattern: `_ {
@@ -439,28 +440,28 @@ const patternTests = {
 	// 	// 		}
 	// 	// 	]
 	// 	// },
-	// 	// { name: 'no captures',
-	// 	// 	pattern: `_ {
-	// 	// 		save slot; 
-	// 	// 		close dialog; 
-	// 	// 		close serial_dialog;
-	// 	// 		return;
-	// 	// 	}`.replaceAll('\n',' '),
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "script_definition",
-	// 	// 			name: "_",
-	// 	// 			body: [
-	// 	// 				{ node: "action", action: "SLOT_SAVE" },
-	// 	// 				{ node: "action", action: "CLOSE_DIALOG" },
-	// 	// 				{ node: "action", action: "CLOSE_SERIAL_DIALOG" },
-	// 	// 				{ node: "action", action: "GOTO_ACTION_LABEL", label: "auto return" },
-	// 	// 			],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
+	// 	{ name: 'no captures',
+	// 		pattern: `_ {
+	// 			save slot; 
+	// 			close dialog; 
+	// 			close serial_dialog;
+	// 			return;
+	// 		}`.replaceAll('\n',' '),
+	// 		fileSuccess: true,
+	// 		counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
+	// 		nodes: [
+	// 			{
+	// 				node: "script_definition",
+	// 				name: "_",
+	// 				body: [
+	// 					{ node: "action", action: "SLOT_SAVE" },
+	// 					{ node: "action", action: "CLOSE_DIALOG" },
+	// 					{ node: "action", action: "CLOSE_SERIAL_DIALOG" },
+	// 					{ node: "action", action: "GOTO_ACTION_LABEL", label: "auto return" },
+	// 				],
+	// 			}
+	// 		]
+	// 	},
 	// ],
 	serial_dialog_definition: [
 		{ name: 'double',

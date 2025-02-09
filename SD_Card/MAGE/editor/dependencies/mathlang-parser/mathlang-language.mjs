@@ -12,9 +12,8 @@ const patterns = {
 		+` | @add_dialog_settings`
 		+` | @dialog_definition`
 		+` | @serial_dialog_definition`
-		+` | @json_literal`
+		+ ` | @script_definition`
 		,
-	// Derp, why was this in quotes? We just need one word out of it....
 	include_macro: `'include' $quoted_string:fileName ';'`,
 	constant_assignment: `$constant:constantName '=' @constant_value:value ';'`,
 	constant_value: `$number | $bareword | $quoted_string
@@ -52,7 +51,20 @@ const patterns = {
 	serial_dialog_option: `'#':optionType $quoted_string:label '=' $string:script
 		| '_':optionType $quoted_string:label '=' $string:script`,
 	dialog_option: `'>' $quoted_string:label '=' $string:script`,
-	json_literal: `'json' '!' '['` // the rest is handled in the parse fn
+	script_definition: `'script'? $string:scriptName>scriptNames @script_literal`
+	,
+	script_literal: `'{' @script_body_item* '}'`,
+	script_body_item: `@json_literal`
+		// + `| @debug_macro`
+		// + `| @action ';'`
+	,
+	// action: `'return':actionKeyword
+	// 	| 'close':actionKeyword 'dialog':value
+	// 	| 'close':actionKeyword 'serial_dialog':value
+	// 	| 'save':actionKeyword 'slot':value
+	// `,
+	json_literal: `'json' '!' '['`, // the rest is handled in the parse fn
+	// debug_macro: `'debug' '!' '(' @serial_dialog ')'`,
 };
 
 const getWordReport = (word, patternName) => {

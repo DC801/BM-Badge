@@ -207,7 +207,7 @@ const onMatch = {
 			startPos,
 			tokenPos: cs.tokenPos,
 		})
-		console.log(collection);
+		// console.log(collection);
 	},
 }
 
@@ -544,6 +544,89 @@ const cleanStructure = {
 	},
 };
 
+const cleanActions = {
+	json_literal: (oldRaws, newRaws, f) => {
+		const raw = oldRaws.shift();
+		const node = {
+			node: raw.label,
+			startPos: raw.startPos,
+			tokenPos: raw.tokenPos,
+			debug: raw,
+			value: raw.value[0]?.value
+		};
+		newRaws.push(node);
+	},
+}
+
+const cleanCustomMap = {
+	root: (raw) => {
+		return {
+			node: raw.label,
+			startPos: raw.startPos,
+			tokenPos: raw.tokenPos,
+			debug: raw,
+		};
+	},
+	script_literal: (raw, f) => {
+		const values = raw.value.slice();
+		const newValues = [];
+		const scriptName = values[0].label === 'scriptName'
+			? values.shift().value
+			: makeAutoIdentifierName(
+				f.inputString,
+				f.tokens[raw.startPos].pos,
+				f.fileName
+			);
+		while (values.length) {
+			cleanActions[values[0].label](values, newValues, f);
+		}
+		const node = {
+			node: raw.label,
+			label: scriptName,
+			startPos: raw.startPos,
+			tokenPos: raw.tokenPos,
+			body: newValues,
+			debug: raw,
+		};
+		return node;
+	},
+	dialog_literal: (raw, f) => {
+		const node = cleanGeneric(raw, f);
+		if (!node.label) {
+			node.label = makeAutoIdentifierName(
+				f.inputString,
+				f.tokens[raw.startPos].pos,
+				f.fileName
+			);
+		}
+		return node;
+	},
+	serial_dialog_literal: (raw, f) => {
+		const node = cleanGeneric(raw, f);
+		if (!node.label) {
+			node.label = makeAutoIdentifierName(
+				f.inputString,
+				f.tokens[raw.startPos].pos,
+				f.fileName
+			);
+		}
+		const oldNode = structuredClone(node);
+		const mergedNode = Object.assign(oldNode, node.serial_dialog[0]);
+		mergedNode.node = node.node;
+		if (mergedNode.options.length) {
+			const firstType = mergedNode.options[0].optionType;
+			if (mergedNode.options.some(v=>v.optionType !== firstType)) {
+				f.warnings.push({
+					message: `Serial dialog option types are mixed; the first type will be used.`,
+					startPos: mergedNode.startPos,
+					tokenPos: mergedNode.tokenPos,
+				});
+			}
+		}
+		return mergedNode;
+	},
+};
+
 const cleanGeneric = (raw, f) => {
 	const values = raw.value.slice();
 	const node = {
@@ -593,52 +676,6 @@ const cleanGeneric = (raw, f) => {
 	});
 	return node;
 };
-
-const cleanCustomMap = {
-	root: (raw) => {
-		return {
-			node: raw.label,
-			startPos: raw.startPos,
-			tokenPos: raw.tokenPos,
-			debug: raw,
-		};
-	},
-	dialog_literal: (rawDialogBlock, f) => {
-		const node = cleanGeneric(rawDialogBlock, f);
-		if (!node.label) {
-			node.label = makeAutoIdentifierName(
-				f.inputString,
-				f.tokens[rawDialogBlock.startPos].pos,
-				f.fileName
-			);
-		}
-		return node;
-	},
-	serial_dialog_literal: (raw, f) => {
-		const node = cleanGeneric(raw, f);
-		if (!node.label) {
-			node.label = makeAutoIdentifierName(
-				f.inputString,
-				f.tokens[raw.startPos].pos,
-				f.fileName
-			);
-		}
-		const oldNode = structuredClone(node);
-		const mergedNode = Object.assign(oldNode, node.serial_dialog[0]);
-		mergedNode.node = node.node;
-		if (mergedNode.options.length) {
-			const firstType = mergedNode.options[0].optionType;
-			if (mergedNode.options.some(v=>v.optionType !== firstType)) {
-				f.warnings.push({
-					message: `Serial dialog option types are mixed; the first type will be used.`,
-					startPos: mergedNode.startPos,
-					tokenPos: mergedNode.tokenPos,
-				});
-			}
-		}
-		return mergedNode;
-	},
-}
 
 const clean = (raw, f) => {
 	const name = raw.label;
