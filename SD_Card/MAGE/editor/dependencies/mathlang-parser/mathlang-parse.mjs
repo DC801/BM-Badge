@@ -136,7 +136,7 @@ const fastForward = (cs, skipEntry) => {
 			cs.advance();
 			return 'agnostic';
 		}
-		if (skipEntry) {
+		if (skipEntry?.expected.size) {
 			debugLog(`   Peeking the 'skip' for the current guy, ${cs.stack[0].pattern}: ${[...skipEntry.expected].join(', ')}`)
 			const peeked = munch(cs, skipEntry, true);
 			if (peeked.success) {
@@ -146,7 +146,7 @@ const fastForward = (cs, skipEntry) => {
 			}
 		}
 		const parentSkipEntry = cs.stack[1]?.skipValue;
-		if (parentSkipEntry) {
+		if (parentSkipEntry?.expected.size) {
 			debugLog(`   Peeking the 'skip' for the parent, ${cs.stack[1].pattern}: ${[...parentSkipEntry.expected].join(', ')}`)
 			const parentPeeked = munch(cs, parentSkipEntry, true);
 			if (parentPeeked.success) {
@@ -431,7 +431,7 @@ const makeCrawlState = (tokens) => {
 			ret.tokenPos += 1;
 			ret.token = tokens[ret.tokenPos];
 			const printValue = !ret.token
-				? 'OUT OF BOUNDS'
+				? '<OUT OF BOUNDS>'
 				: ret.token.type === 'newline'
 					? '<newline(s)>'
 					: ret.token.value;
@@ -465,7 +465,7 @@ export const parseFile = (inputString, givenFileName) => {
 	const result = parse(f, cs, 'document');
 	const nodes = result.captures
 		.filter(v=>v.label !== 'EOF')
-		.map(clean);
+		.map(v=>clean(v, f));
 	const ret = {
 		tokens: lexResult.tokens,
 		inputString: f.inputString,
@@ -526,6 +526,10 @@ const cleanStructure = {
 		label: `dialogName`,
 		dialogs: 'dialog[@]',
 	},
+	serial_dialog_literal: {
+		label: `serialDialogName`,
+		serial_dialog: 'serial_dialog[@]',
+	},
 	dialog: {
 		identifierType: `identifierType`,
 		identifierValue: `identifierValue`,
@@ -533,9 +537,14 @@ const cleanStructure = {
 		messages: `dialogMessage['']`,
 		options: `dialog_option[{}]`,
 	},
+	serial_dialog: {
+		parameters: `serial_dialog_parameter[{}]`,
+		messages: `serialDialogMessage['']`,
+		options: `serial_dialog_option[{}]`,
+	},
 };
 
-const cleanGeneric = (raw) => {
+const cleanGeneric = (raw, f) => {
 	const values = raw.value.slice();
 	const node = {
 		node: raw.label,
@@ -569,7 +578,7 @@ const cleanGeneric = (raw) => {
 			return;
 		}
 		if (suffixInner === '@') {
-			node[propName] = filtered.map(clean);
+			node[propName] = filtered.map(v=>clean(v, f));
 		} else if (suffixInner === `''`) {
 			node[propName] = filtered.map(v=>v.value);
 		} else if (suffixInner === `{}`) {
@@ -595,7 +604,7 @@ const cleanCustomMap = {
 		};
 	},
 	dialog_literal: (rawDialogBlock, f) => {
-		const node = cleanGeneric(rawDialogBlock);
+		const node = cleanGeneric(rawDialogBlock, f);
 		if (!node.label) {
 			node.label = makeAutoIdentifierName(
 				f.inputString,
@@ -605,12 +614,36 @@ const cleanCustomMap = {
 		}
 		return node;
 	},
+	serial_dialog_literal: (raw, f) => {
+		const node = cleanGeneric(raw, f);
+		if (!node.label) {
+			node.label = makeAutoIdentifierName(
+				f.inputString,
+				f.tokens[raw.startPos].pos,
+				f.fileName
+			);
+		}
+		const oldNode = structuredClone(node);
+		const mergedNode = Object.assign(oldNode, node.serial_dialog[0]);
+		mergedNode.node = node.node;
+		if (mergedNode.options.length) {
+			const firstType = mergedNode.options[0].optionType;
+			if (mergedNode.options.some(v=>v.optionType !== firstType)) {
+				f.warnings.push({
+					message: `Serial dialog option types are mixed; the first type will be used.`,
+					startPos: mergedNode.startPos,
+					tokenPos: mergedNode.tokenPos,
+				});
+			}
+		}
+		return mergedNode;
+	},
 }
 
-const clean = (raw) => {
+const clean = (raw, f) => {
 	const name = raw.label;
 	const cleanCustom = cleanCustomMap[name];
-	return cleanCustom ? cleanCustom(raw) : cleanGeneric(raw);
+	return cleanCustom ? cleanCustom(raw, f) : cleanGeneric(raw, f);
 };
 
 /* ------------------ tests ------------------ */

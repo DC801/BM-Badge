@@ -47,7 +47,8 @@ const patterns = {
 		| $bareword:identifierValue`,
 	serial_dialog: `@serial_dialog_parameter*
 		$quoted_string:serialDialogMessage+
-		@serial_dialog_option*`,
+		@serial_dialog_option*
+		';'`,
 	serial_dialog_option: `'#':optionType $quoted_string:label '=' $string:script
 		| '_':optionType $quoted_string:label '=' $string:script`,
 	dialog_option: `'>' $quoted_string:label '=' $string:script`,
@@ -164,7 +165,7 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 		// here's where a variant might become multiple variants
 		let frontEnds = [[]];
 		newVariant.forEach(twig=>{
-			if (twig.rep === '?') {
+			if (twig.rep === '?' && twig.type !== 'lookup') {
 				let kitty = structuredClone(frontEnds);
 				twig.rep = ''
 				kitty.forEach(cat=>{cat.push(twig)});

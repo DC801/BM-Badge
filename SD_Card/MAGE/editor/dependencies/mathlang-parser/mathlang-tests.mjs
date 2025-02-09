@@ -462,158 +462,192 @@ const patternTests = {
 	// 	// 	]
 	// 	// },
 	// ],
-	// serial_dialog_definition: [
-	// 	// { name: 'double',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'parameters',
-	// 	// 	pattern: `serial_dialog test { wrap 80 "Test message!" "Another!" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			parameters: [{ property: 'wrap', value: 80 }],
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'parameters with error at the end',
-	// 	// 	pattern: `serial_dialog test { wrap 80 asdf "Test message!" "Another!" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			malformed: true,
-	// 	// 			name: "test",
-	// 	// 			parameters: [{ property: 'wrap', value: 80 }],
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'parameters with error in the middle',
-	// 	// 	pattern: `serial_dialog test { wrap 80 asdf wrap 79 "Test message!" "Another!" }`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			malformed: true,
-	// 	// 			name: "test",
-	// 	// 			parameters: [
-	// 	// 				{ property: 'wrap', value: 80 },
-	// 	// 				{ property: 'wrap', value: 79 },
-	// 	// 			],
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!"`
-	// 	// 		+`_ "Fill in" = correctScriptChoice`
-	// 	// 		+`}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 			text_options: [{ label: 'Fill in', script: 'correctScriptChoice' }],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options mixed types',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!"`
-	// 	// 		+`_ "Fill in" = correctScriptChoice `
-	// 	// 		+`# "number" = wha`
-	// 	// 		+`}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 0, warnings: 1 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 			text_options: [
-	// 	// 				{ label: 'Fill in', script: 'correctScriptChoice' },
-	// 	// 				{ label: 'number', script: 'wha' },
-	// 	// 			],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options no script',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!"`
-	// 	// 		+`_ "Fill in" =`
-	// 	// 		+`}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 			text_options: [{ label: 'Fill in', script: '' }],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options no equal sign / script',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!"`
-	// 	// 		+`_ "Fill in"`
-	// 	// 		+`}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 			text_options: [{ label: 'Fill in', script: '' }],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options no label / equal sign / script',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!"`
-	// 	// 		+`_ `
-	// 	// 		+`}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 			text_options: [{ label: '', script: '' }],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// 	// { name: 'options with garbage',
-	// 	// 	pattern: `serial_dialog test { "Test message!" "Another!"`
-	// 	// 		+`_ asdfasdf`
-	// 	// 		+`}`,
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { nodes: 1, errors: 1, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "serial_dialog_definition",
-	// 	// 			name: "test",
-	// 	// 			messages: [ "Test message!", "Another!" ],
-	// 	// 			text_options: [{ label: '', script: '' }],
-	// 	// 		}
-	// 	// 	]
-	// 	// },
-	// ],
+	serial_dialog_definition: [
+		{ name: 'double',
+			pattern: `serial_dialog test { "Test message!" "Another!"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'parameters',
+			pattern: `serial_dialog test { wrap 80 "Test message!" "Another!"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					parameters: [{ property: 'wrap', value: 80 }],
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'parameters with error at the end',
+			pattern: `serial_dialog test { wrap 80 asdf "Test message!" "Another!"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					malformed: true,
+					label: "test",
+					parameters: [{ property: 'wrap', value: 80 }],
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'parameters with error in the middle',
+			pattern: `serial_dialog test { wrap 80 asdf wrap 79 "Test message!" "Another!"; }`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					malformed: true,
+					label: "test",
+					parameters: [
+						{ property: 'wrap', value: 80 },
+						{},
+						// TODO: I want this to be captured, too... :(
+						// { property: 'wrap', value: 79 },
+					],
+					messages: [ "Test message!", "Another!" ],
+				}
+			]
+		},
+		{ name: 'options',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in" = correctScriptChoice;`
+				+`}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+					options: [
+						{
+							optionType: '_',
+							label: 'Fill in',
+							script: 'correctScriptChoice',
+						}
+					],
+				}
+			]
+		},
+		{ name: 'options mixed types',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in" = correctScriptChoice `
+				+`# "number" = wha`
+				+`;}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 0, warnings: 1 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+					options: [
+						{
+							optionType: '_',
+							label: 'Fill in',
+							script: 'correctScriptChoice',
+						},
+						{
+							optionType: '#',
+							label: 'number',
+							script: 'wha',
+						},
+					],
+				}
+			]
+		},
+		{ name: 'options no script',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in" =`
+				+`}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+					options: [
+						{
+							optionType: '_',
+							label: 'Fill in',
+							script: undefined,
+						},
+					],
+				}
+			]
+		},
+		{ name: 'options no equal sign / script',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ "Fill in"`
+				+`}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+					options: [
+						{
+							optionType: '_',
+							label: 'Fill in',
+							script: undefined,
+						},
+					],
+				}
+			]
+		},
+		{ name: 'options no label / equal sign / script',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ `
+				+`}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+					options: [
+						{
+							optionType: '_',
+							label: undefined,
+							script: undefined,
+						},
+					],
+				}
+			]
+		},
+		{ name: 'options with garbage',
+			pattern: `serial_dialog test { "Test message!" "Another!"`
+				+`_ asdfasdf`
+				+`}`,
+			fileSuccess: true,
+			counts: { nodes: 1, errors: 1, warnings: 0 },
+			nodes: [
+				{
+					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					label: "test",
+					messages: [ "Test message!", "Another!" ],
+					text_options: [{ label: undefined, script: undefined }],
+				}
+			]
+		},
+	],
 	dialog_definition: [
 		{ name: 'options no script',
 			pattern: `dialog _ { Bob "Hello?" > "Oh?" = }`,
