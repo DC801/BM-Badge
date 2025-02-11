@@ -5,17 +5,14 @@ import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLin
 const verbose = false;
 const printErrors = false;
 
-const printError = (string) => {
-	if (printErrors || verbose) {
-		console.error(string);
-	}
-};
 const debugLog = (string) => { if (verbose) console.log(string); };
+const printError = (string) => { if (printErrors || verbose) console.error(string); };
 
 const ansiRed = '\u001b[1;31m';
 const ansiGreen = '\u001b[1;32m';
 const ansiYellow = '\u001b[1;33m';
 const ansiReset = '\u001b[0m';
+
 const fakeLiterals = {
 	string: "FORGED STRING FOR ERROR RECOVERY",
 	bareword: "FORGED BAREWORD FOR ERROR RECOVERY",
@@ -62,10 +59,15 @@ const createCapture = (cs, twig) => {
 		return null;
 	}
 };
-// should consume token or no? (currently yes)
+
+// Checks only literals or capture twigs/buckets
+const peek = (cs, entry) => munch(cs, entry, true);
 const munch = (cs, entry, peek) => {
-	const peekMessage = peek ? 'PEEKING' : 'trying'
-	debugLog(`[${cs.tokenPos}] '${cs.token.value}' --${peekMessage}--> ${[...entry.expected].join(', ')}`)
+	debugLog(
+		`[${cs.tokenPos}] '${cs.token.value}'`
+		+ `--${peek ? 'PEEKING' : 'trying'}-->`
+		+ `${[...entry.expected].join(', ')}`
+	);
 	const token = cs.token;
 	const ret = {
 		twigPattern: null,
@@ -91,20 +93,24 @@ const munch = (cs, entry, peek) => {
 			ret.bucketType = 'captures';
 		}
 	}
-	// if we found anything:
-	if (newBucket) {
-		const twig = newBucket.twig;
-		const capture = createCapture(cs, twig);
-		if (capture) ret.captures.push(capture);
-		ret.success = true;
-		ret.nextEntry = newBucket;
-		const peekedMessage = peek ? 'PEEKED' : 'Munched'
-		debugLog(`${peekedMessage}: '${token.value}'`);
-		const repeatOK = twig.rep === '*' || twig.rep === '+';
-		if (!peek) cs.advance();
-		if (repeatOK && !peek) {
-			let repeating = true;
-			while (repeating) {
+
+	// if we found nothing, stop early
+	if (!newBucket) return ret;
+
+	// if we're here, we have a match
+	ret.success = true;
+	ret.nextEntry = newBucket;
+	const twig = newBucket.twig;
+	const capture = createCapture(cs, twig);
+	if (capture) ret.captures.push(capture);
+	debugLog(`${peek ? 'PEEKED' : 'Munched'}: '${token.value}'`);
+	if (!peek) {
+		ret.twigPattern = patternNameFromEntry(newBucket).useful;
+		cs.advance();
+		// try for multiples of this
+		// (can repeat, as opposed to check the token after, since non-matches are straightforward here)
+		if (twig.rep === '*' || twig.rep === '+') {
+			while (cs.token) {
 				const token = cs.token;
 				if (token.ignorable) {
 					cs.advance();
@@ -119,13 +125,10 @@ const munch = (cs, entry, peek) => {
 					debugLog(`REPEAT: '${token.value}'`);
 					cs.advance();
 				} else {
-					repeating = false;
+					break;
 				}
 			}
 		}
-		ret.twigPattern = patternNameFromEntry(newBucket).useful || entry.dictionaryLookupName;
-	} else {
-		ret.twigPattern = patternNameFromEntry(entry).useful || entry.dictionaryLookupName;
 	}
 	return ret;
 };
@@ -133,26 +136,26 @@ const munch = (cs, entry, peek) => {
 // moves the cs.tokenPos until it lands ON (not past) the terminator,
 // or lacking a terminator, the next newline token
 // the caller can decide whether to advance to the terminator at that point (?)
-const fastForward = (cs, skipEntry) => {
+const fastForward = (cs, stopEntry) => {
 	debugLog("FAST FORWARD!");
 	while (cs.tokenPos < cs.tokens.length) {
 		if (cs.token.type === 'newline' || cs.token.type === 'EOF') {
 			cs.advance();
 			return 'agnostic';
 		}
-		if (skipEntry?.expected.size) {
-			debugLog(`   Peeking the 'skip' for the current guy, ${cs.stack[0].pattern}: ${[...skipEntry.expected].join(', ')}`)
-			const peeked = munch(cs, skipEntry, true);
+		if (stopEntry?.expected.size) {
+			debugLog(`   Peeking the 'skip' for the current guy, ${cs.stack[0].pattern}: ${[...stopEntry.expected].join(', ')}`)
+			const peeked = peek(cs, stopEntry);
 			if (peeked.success) {
 				debugLog(`       YUP! Got it! SKIPPING THIS TOKEN`)
 				cs.advance();
 				return 'self';
 			}
 		}
-		const parentSkipEntry = cs.stack[1]?.skipValue;
+		const parentSkipEntry = cs.stack[1]?.stopAt;
 		if (parentSkipEntry?.expected.size) {
 			debugLog(`   Peeking the 'skip' for the parent, ${cs.stack[1].pattern}: ${[...parentSkipEntry.expected].join(', ')}`)
-			const parentPeeked = munch(cs, parentSkipEntry, true);
+			const parentPeeked = peek(cs, parentSkipEntry);
 			if (parentPeeked.success) {
 				debugLog(`       YUP! Got it!`)
 				return 'parent';
@@ -174,10 +177,10 @@ const onMatch = {
 			if (token.type === 'quoted_string') return token.rawValue;
 			return token.value;
 		})
-		const json = '['+clean.join('');
+		const rawJSON = '['+clean.join('');
 		let parsed = [];
 		try {
-			parsed = JSON.parse(json);
+			parsed = JSON.parse(rawJSON);
 		} catch (err) {
 			// todo: line up the error squigglies with this?
 			const posCaptureRaw = err.message.match(/at position ([\d]+)/);
@@ -192,7 +195,7 @@ const onMatch = {
 			// Expected ',' or '}' after property value in JSON at position 23
 			// Unexpected token '}', ...\"ON\",\"asdf\"}]\" is not valid JSON
 			// How nuanced can we make this? (The old mathlang actually parsed it for JSON structure!)
-			printError(getPosContext(json, Number(posCapture), message, f.fileName + ': JSON literal segment'));
+			printError(getPosContext(rawJSON, Number(posCapture), message, f.fileName + ': JSON literal segment'));
 			const splits = err.message.split('in JSON');
 			if (splits[1]) {
 				printError(splits[0]);
@@ -215,6 +218,7 @@ const onMatch = {
 	},
 }
 
+// Can I simplify or eliminate this?
 const patternNameFromEntry = (entry) => {
 	const isOne = entry.patternName.size <= 1;
 	const first = Object.values([...entry.patternName])[0] || entry.dictionaryLookupName;
@@ -225,6 +229,7 @@ const patternNameFromEntry = (entry) => {
 		unambiguous: isOne ? first : `${dictName}: (${allAlternatives})`,
 	}
 };
+
 let continuingSyntaxError = false;
 const parse = (f, cs, patternName, givenEntry) => {
 	const ret = {
@@ -235,19 +240,16 @@ const parse = (f, cs, patternName, givenEntry) => {
 		expected: [],
 	};
 	const patternComplete = (ret, entry) => {
-		// const patternName = entry.patternName; // as was originally done
-		const patternName = patternNameFromEntry(entry).useful;
-		ret.originalPattern = patternName;
+		const finalPatternName = patternNameFromEntry(entry).useful;
+		debugLog(`Just matched the pattern '${finalPatternName}'!`);
+		ret.originalPattern = finalPatternName;
 		ret.success = true;
-		const fn = onMatch[patternName];
-		if (fn) fn(f, cs, patternName, ret);
-		debugLog(`Just matched the pattern '${patternName}'!`);
+		const fn = onMatch[finalPatternName];
+		if (fn) fn(f, cs, finalPatternName, ret);
 	}
 	let entry = givenEntry || tree[patternName];
 	outer: while (entry?.expected.size && cs.token) {
-		// TODO: how to deal with skipping past the very newlines we seek
-		// for error recovering?
-		while (cs.token?.ignorable) {
+		while (cs.token.ignorable) {
 			cs.advance();
 			if (!cs.token) break outer;
 		}
@@ -257,9 +259,7 @@ const parse = (f, cs, patternName, givenEntry) => {
 			continuingSyntaxError = false;
 			entry = munched.nextEntry;
 			ret.originalPattern = munched.twigPattern;
-			munched.captures.forEach(capture=>{
-				ret.captures.push(capture)
-			});
+			munched.captures.forEach(capture=>{ ret.captures.push(capture); });
 			if (entry.expected.size) {
 				continue;
 			} else {
@@ -270,27 +270,25 @@ const parse = (f, cs, patternName, givenEntry) => {
 		}
 
 		// If not, try a lookup (should only be @lookup*s now)
-		// Importantly, we should know when these should stop with 'until'!
+		// Importantly, we should know when these should stop with 'stopAt'!
 		const lookupNames = Object.keys(entry.lookups);
 		if (lookupNames.length) {
 			if (lookupNames.length > 1) {
 				throw new Error (`Multiple lookups possible here! (${lookupNames.join(", ")}) Badly designed tree??`);
 			}
-			const until = findNonOptionalEntryAfterNextOptionalLookup(entry)
-			// Try the until first, just so we don't get partial garbage matches
-			if (until) {
-				const peeked = munch(cs, until, true);
+			const stopAt = findNonOptionalEntryAfterNextOptionalLookup(entry)
+			// Try the `stopAt` first, just so we don't get partial garbage matches
+			if (stopAt) {
+				const peeked = peek(cs, stopAt);
 				if (peeked.success) {
 					continuingSyntaxError = false;
-					// disregard capture and ~~step the token back~~ use 'peek' mode so we don't step forward at all
-					// (we'll get the captures again on the other side) (?)
-					entry = until;
-					// if (!usedParentEntry) cs.advance();
+					entry = stopAt;
 					if (entry.expected.size) {
+						// don't consume here; we'll get it in the next go around
 						continue;
 					} else {
-						// if there's no 'next' then we win
-						// ... but in this case we should actually munch the token
+						// but if there's no 'next' at all then we accidentally won
+						// ... though in this case we should actually munch the token
 						cs.advance();
 						patternComplete(ret, entry);
 						return ret;
@@ -302,23 +300,20 @@ const parse = (f, cs, patternName, givenEntry) => {
 			cs.stack.unshift({
 				pattern: lookupName,
 				twig: lookupEntry.twig,
-				skipValue: until,
+				stopAt: stopAt,
 			});
 			const parsed = parse(f, cs, lookupName);
-			cs.stack.shift();
-			// if (!continuingSyntaxError || parsed.captures.length) {
-				const insert = {
-					label: parsed.originalPattern,
-					startPos: parsed.startPos,
-					value: parsed.captures,
-					tokenPos: cs.tokenPos,
-				}
-				if (parsed.malformed) {
-					ret.malformed = true;
-					insert.malformed = true;
-				}
-				ret.captures.push(insert);
-			// }
+			const insert = {
+				label: parsed.originalPattern,
+				startPos: parsed.startPos,
+				value: parsed.captures,
+				tokenPos: cs.tokenPos,
+			}
+			if (parsed.malformed) {
+				ret.malformed = true;
+				insert.malformed = true;
+			}
+			ret.captures.push(insert);
 			continue;
 		}
 		const patternLabel = patternNameFromEntry(entry).unambiguous;
@@ -327,15 +322,12 @@ const parse = (f, cs, patternName, givenEntry) => {
 			: 'Syntax error in ' + patternLabel;
 		ret.originalPattern = patternLabel;
 		ret.expected = structuredClone(entry.expected);
-		// TODO NOW:
-		// hop over the current entry (you already know what's expected, so get that expected's expected in case of '*') (?)
-		// (This way didn't work fyi:)
-		// if (parentEntry.twig.rep === '*') {
-		// 	parentEntry.expected.forEach(k=>ret.expected.add(k))
-		// }
 		ret.malformed = true;
 		ret.success = true;
-		if (!continuingSyntaxError) {
+		if (continuingSyntaxError) {
+			f.errors[f.errors.length-1].tokenPos = cs.tokenPos;
+		} else {
+			continuingSyntaxError = true;
 			f.errors.push({
 				message: errorMessage,
 				expected: ret.expected,
@@ -344,24 +336,19 @@ const parse = (f, cs, patternName, givenEntry) => {
 			})
 			printError(getPosContext(f.inputString, cs.token.pos, errorMessage));
 			printError(`Expected: ${[...ret.expected].join(', ')}`);
-			continuingSyntaxError = true;
-		} else {
-			f.errors[f.errors.length-1].tokenPos = cs.tokenPos;
 		}
-		// Error recovery goes here (?)
-		// (Yes, because otherwise literal/capture tokens don't get error recovery, right?)
-		const errorRecoveryEntry = cs.stack?.[0].skipValue;
-		if (cs.stack?.[0].skipValue) {
-			// Rewind so fastForward can find a 'newline' right at the site of problem
-			// if (cs.tokens[cs.tokenPos-1]?.type === 'newline') {
-				// cs.move(-1);
-			// }
+
+		// Error recovery
+		// TODO: there are probably a lot of off by ones in here
+		// Rethink all of this
+		const errorRecoveryEntry = cs.stack?.[0].stopAt;
+		if (cs.stack?.[0].stopAt) {
 			const ffType = fastForward(cs, errorRecoveryEntry);
 			if (ffType === 'parent') {
 				cs.move(-1);
 				// FORGERY
-				const literals = Object.keys(cs.stack[0].skipValue.literals);
-				const captures = Object.keys(cs.stack[0].skipValue.captures);
+				const literals = Object.keys(cs.stack[0].stopAt.literals);
+				const captures = Object.keys(cs.stack[0].stopAt.captures);
 				const optionCount = literals.length + captures.length;
 				if (optionCount !== 1) {
 					throw new Error ("Not sure what to do with this!");
@@ -384,8 +371,8 @@ const parse = (f, cs, patternName, givenEntry) => {
 			}
 		} else {
 			// skip over the offending token and retry
-			// I think this should work because we're trying the 'until's first each time
-			// (e.g. one bad match in the middle of a few @lookup*s; don't want to break the rest)
+			// I think this should work because we're trying the `stopAt`s first each time
+			// (e.g. one bad match in the middle of a few @lookup*s; don't want to break the good ones afterward)
 			cs.advance();
 		}
 		return ret;
@@ -405,7 +392,8 @@ const findNonOptionalEntryAfterNextOptionalLookup = (entry) => {
 	const allNextValues = Object.values(lookupBucket.literals)
 		.concat(Object.values(lookupBucket.lookups))
 		.concat(Object.values(lookupBucket.captures));
-	if (!allNextValues) {
+	// if we skip over the lookup and there's nothing there:
+	if (!allNextValues.length) {
 		return null;
 	}
 	const optionalNexts = allNextValues.filter(v=>{v.twig.rep === '*' || v.twig.rep === '?'});
@@ -415,42 +403,32 @@ const findNonOptionalEntryAfterNextOptionalLookup = (entry) => {
 	return lookupBucket;
 };
 
-// const test = findNonOptionalEntryAfterNextOptionalLookup(tree.document);
-// console.log(test);
-
 /* ------------------------------------------ PARSE FILE ------------------------------------------ */
 
+const debugPrintToken = (token) => {
+	if (!token) return '<OUT OF BOUNDS>';
+	if (token.type === 'newline') return '<newline(s)>';
+	return token.value;
+};
 const makeCrawlState = (tokens) => {
 	const ret = {
 		tokens,
 		tokenPos: 0,
 		token: tokens[0],
 		stack: [],
-		// stack: [{
-		// 	pattern: 'document',
-		// 	skipValue: findNonOptionalEntryAfterNextOptionalLookup(tree.document),
-		// }],
 		peek: (n=1) => tokens[ret.tokenPos+n],
 		advance: () => {
 			ret.tokenPos += 1;
 			ret.token = tokens[ret.tokenPos];
-			const printValue = !ret.token
-				? '<OUT OF BOUNDS>'
-				: ret.token.type === 'newline'
-					? '<newline(s)>'
-					: ret.token.value;
-			debugLog(`=> [${ret.tokenPos}]: ${printValue}`);
-			return tokens[ret.tokenPos];
+			debugLog(`=> [${ret.tokenPos}]: ${debugPrintToken(ret.token)}`);
+			return ret.token;
 		},
 		move: (n) => {
 			ret.tokenPos += n;
 			ret.token = tokens[ret.tokenPos];
-			const header = n > 0 ? '=>' : '<='
-			const printValue = ret.token.type === 'newline'
-				? '<newline(s)>'
-				: ret.token.value;
-			debugLog(`${header} [${ret.tokenPos}]: ${printValue}`);
-			return tokens[ret.tokenPos];
+			const header = n > 0 ? '=>' : '<=';
+			debugLog(`${header} [${ret.tokenPos}]: ${debugPrintToken(ret.token)}`);
+			return ret.token;
 		},
 	}
 	return ret;
@@ -470,19 +448,16 @@ export const parseFile = (inputString, givenFileName) => {
 	const nodes = result.captures
 		.filter(v=>v.label !== 'EOF')
 		.map(v=>clean(v, f));
-	const ret = {
+	const ret = Object.assign(f, {
 		tokens: lexResult.tokens,
-		inputString: f.inputString,
-		errors: f.errors,
-		warnings: f.warnings,
 		success: result.success,
 		nodes,
-	}
+	});
 
 	// // Print errors in the order they land in the file
-	// file.errors.sort((a,b)=>a.errorPos - b.errorPos);
+	// file.errors.sort((a,b)=>a.tokenPos - b.tokenPos);
 	// file.errors.map(error=>{
-	// 	const origToken = file.tokens[error.errorPos]
+	// 	const origToken = file.tokens[error.tokenPos]
 	// 	const charPos = origToken ? origToken.pos : file.tokens.length-1;
 	// 	let printable = getPosContext(
 	// 		file.plaintext,
@@ -500,10 +475,11 @@ export const parseFile = (inputString, givenFileName) => {
 	return ret;
 }
 
+/* ------------------------------------------ CLEAN ------------------------------------------ */
+
+// Take the raw captures and shape it into something that doesn't make our eyes bleed
+
 const cleanStructure = {
-	json_literal: {
-		actions: `json_literal`,
-	},
 	include_macro: {
 		value: `fileName`,
 	},
@@ -548,7 +524,7 @@ const cleanStructure = {
 	},
 };
 
-const cleanScriptBody = {
+const cleanScriptBodyItem = {
 	json_literal: (inputArr, outputArr, f) => {
 		const raw = inputArr.shift();
 		const node = {
@@ -560,18 +536,15 @@ const cleanScriptBody = {
 		};
 		outputArr.push(node);
 	},
-	script_body_item: (oldRaws, newRaws, f) => {
-		const single = oldRaws.shift();
+	script_body_item: (inputArr, outputArr, f) => {
+		const single = inputArr.shift();
 	}
 }
 
 const detectAction = (raw) => {
-	const ret = {
-		success: false,
-		node: {},
-	}
 	const values = structuredClone(raw.value)
-	const allTheRest = [];
+	const novelCaptures = [];
+	// clues
 	let keyword;
 	let foundInfo = {};
 	values.forEach(capture=>{
@@ -580,12 +553,14 @@ const detectAction = (raw) => {
 		} else if (capture.label === 'actionTarget') {
 			foundInfo.actionTarget = capture.value;
 		} else {
-			allTheRest.push(capture);
+			novelCaptures.push(capture);
 		}
-	})
-	if (!keyword) return ret;
-	const detective = actionDetective[keyword];
-	const filtered = detective.filter(entry=>{
+	});
+	// if we found no keyword, we give up
+	if (!keyword) return { success: false };
+	// otherwise we have something to work with
+	const detected = actionDetective[keyword];
+	const filtered = detected.filter(entry=>{
 		return Object.keys(entry.info).length
 			=== Object.keys(foundInfo).length;
 	}).filter(entry=>{
@@ -599,21 +574,28 @@ const detectAction = (raw) => {
 	if (filtered.length === 0) {
 		throw new Error ("The Action Detective (TM) could not detect the action!", raw)
 	} else if (filtered.length > 1) {
+		// TODO: graceful handling of partials
 		throw new Error ("The Action Detective (TM) detected too many actions!", raw)
 	}
+	// if we're here, we win
 	const match = filtered[0];
-	ret.node = structuredClone(match.node);
-	ret.node.startPos = raw.startPos;
-	ret.node.tokenPos = raw.tokenPos;
-	if (raw.malformed) ret.node.malformed = true;
-	allTheRest.forEach(capture=>{
-		if (ret.node[capture.label]) {
+	const ret = {
+		success: true,
+		node: Object.assign(structuredClone(match.node),
+			{
+				debug: raw, // (was originally outside the `node`)
+				malformed: raw.malformed ? true : undefined, // (was originally outside the `node`)
+				startPos: raw.startPos,
+				tokenPos: raw.tokenPos,
+			},
+		),
+	}
+	novelCaptures.forEach(capture=>{
+		if (ret.node[capture.label] !== undefined) {
 			throw new Error("Two captures for one action??")
 		}
 		ret.node[capture.label] = capture.value;
 	})
-	ret.success = true;
-	ret.debug = raw;
 	return ret;
 };
 
@@ -640,18 +622,18 @@ const cleanCustomMap = {
 			const first = values.shift();
 			// Try the action detective first
 			const detection = detectAction(first, f);
-			if (detection.success) {
+			if (!detection.success) {
+				values.unshift(first); // undo
+			} else {
 				newValues.push(detection.node);
 				continue;
-			} else {
-				values.unshift(first);
 			}
 			// Otherwise, try a custom thing
-			const fn = cleanScriptBody[values[0].label];
-			if (!fn) {
+			const cleanFn = cleanScriptBodyItem[values[0].label];
+			if (!cleanFn) {
 				throw new Error("No action cleaning function found for " + values[0].label);
 			}
-			cleanScriptBody[values[0].label](values, newValues, f);
+			cleanFn(values, newValues, f);
 		}
 		const node = {
 			node: raw.label,
@@ -684,19 +666,19 @@ const cleanCustomMap = {
 			);
 		}
 		const oldNode = structuredClone(node);
-		const mergedNode = Object.assign(oldNode, node.serial_dialog[0]);
-		mergedNode.node = node.node;
-		if (mergedNode.options.length) {
-			const firstType = mergedNode.options[0].optionType;
-			if (mergedNode.options.some(v=>v.optionType !== firstType)) {
+		const flatNode = Object.assign(oldNode, node.serial_dialog[0]);
+		flatNode.node = node.node;
+		if (flatNode.options.length) {
+			const firstType = flatNode.options[0].optionType;
+			if (flatNode.options.some(v=>v.optionType !== firstType)) {
 				f.warnings.push({
-					message: `Serial dialog option types are mixed; the first type will be used.`,
-					startPos: mergedNode.startPos,
-					tokenPos: mergedNode.tokenPos,
+					message: `Serial dialog option types are mixed; the first type will be used`,
+					startPos: flatNode.startPos,
+					tokenPos: flatNode.tokenPos,
 				});
 			}
 		}
-		return mergedNode;
+		return flatNode;
 	},
 };
 
@@ -722,7 +704,6 @@ const cleanGeneric = (raw, f) => {
 			if (filtered.length === 0) {
 				node[propName] = null;
 				node.malformed = true;
-				// node.malformed = true; // TODO: do I need to literally add this here?
 			} else if (filtered.length > 1) {
 				throw new Error(`Found more than 1 item in ${node.node} called '${filterBy}!'`);
 			} else {
@@ -734,10 +715,13 @@ const cleanGeneric = (raw, f) => {
 			return;
 		}
 		if (suffixInner === '@') {
+			// lookup how to clean THAT
 			node[propName] = filtered.map(v=>clean(v, f));
 		} else if (suffixInner === `''`) {
+			// just want the flat values
 			node[propName] = filtered.map(v=>v.value);
 		} else if (suffixInner === `{}`) {
+			// want an object with all the labels mapped to their values
 			node[propName] = filtered.map(v=>{
 				let insert = {};
 				v.value.forEach(capture=>{
@@ -752,8 +736,8 @@ const cleanGeneric = (raw, f) => {
 
 const clean = (raw, f) => {
 	const name = raw.label;
-	const cleanCustom = cleanCustomMap[name];
-	return cleanCustom ? cleanCustom(raw, f) : cleanGeneric(raw, f);
+	const cleanCustomFn = cleanCustomMap[name];
+	return cleanCustomFn ? cleanCustomFn(raw, f) : cleanGeneric(raw, f);
 };
 
 /* ------------------ tests ------------------ */

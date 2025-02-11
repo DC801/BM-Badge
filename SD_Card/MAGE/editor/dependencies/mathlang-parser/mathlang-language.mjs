@@ -1,5 +1,4 @@
-
-const getWordReport = (word, patternName) => {
+const getWordReport = (word) => {
 	const literal = word.match(/^'(.+?)'/);
 	const remainder = literal
 		? word.replace(literal[0], '')
@@ -22,7 +21,7 @@ const getWordReport = (word, patternName) => {
 	}
 	while (fragments.length > 0) {
 		if (fragments.length % 2 !== 0) {
-			throw new Error("Subpattern not built up from pairs: " + word);
+			throw new Error(`Subpattern not built up from pairs in ${word}`);
 		}
 		const left = fragments.shift();
 		const right = fragments.shift();
@@ -37,8 +36,6 @@ const getWordReport = (word, patternName) => {
 			token.value = right;
 		} else if (left === ':') {
 			token.label = right;
-			// capturesIdentified[patternName] = capturesIdentified[patternName] || [];
-			// capturesIdentified[patternName].push(word);
 		}
 		if (left.includes("<")) {
 			token.autoComplete = right;
@@ -109,6 +106,7 @@ const patterns = {
 	script_literal: `'{' @script_body_item* '}'`,
 	script_body_item: `@json_literal`
 		// + ` | @debug_macro`;
+		// INDIVIDUAL ACTIONS ARE ADDED AUTOMATICALLY (see actionDictionary)
 	,
 	json_literal: `'json' '!' '['`, // the rest is handled in the parse fn
 	// debug_macro: `'debug' '!' '(' @serial_dialog ')'`,
@@ -178,7 +176,7 @@ const actionDictionary = [
 		action: 'SLOT_SAVE',
 	},
 	// should remove `pattern` from these, but otherwise use all properties from these in the output
-	// the labeled literals in the pattern are used for identification; they are not otherwise saved
+	// the labeled literals in the pattern are used for action identification; they are not otherwise saved (?)
 	// captures should come in if named in the pattern
 	// what to do with external captures though? Identify them by hand, as before?
 ];
@@ -199,7 +197,7 @@ actionDictionary.forEach(actionDict=>{
 	words.forEach(word=>{
 		if (word.label === 'actionKeyword') {
 			ret.keyword = word.value;
-		} else if (word.label === 'actionTarget' || word.label === 'actionInfo') {
+		} else if (word.label === 'actionTarget') {
 			ret.info[word.label] = word.value;
 		} else if (word.label) {
 			ret.captures.push(word.label);
@@ -223,7 +221,6 @@ Object.keys(patterns).forEach(patternName=>{
 // let's give the flat trees less nuance!
 // ...but let's do everything one at a time so we don't get confused
 // (this is not efficient but we can cache it so we we're not doing this every time)
-
 Object.entries(flatTrees).forEach(([patternName, variants])=>{
 	let newVariants = [];
 	for (let j = 0; j < variants.length; j++) {
@@ -251,7 +248,7 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 		origVariant.forEach(word=>{
 			word.originalPattern = patternName;
 		})
-		// Looks like we don't need this after all
+		// Looks like we don't need this after all?
 		// // expanding '+' into a '' and a '*'
 		// while (origVariant.length) {
 		// 	const twig = origVariant.shift();
@@ -263,7 +260,7 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 		// 	}
 		// 	newVariant.push(twig);
 		// }
-		newVariant=origVariant;
+		newVariant = origVariant;
 		// here's where a variant might become multiple variants
 		let frontEnds = [[]];
 		newVariant.forEach(twig=>{
@@ -319,7 +316,6 @@ const fillInPrerequesites = (patternName) => {
 	});
 	flatTrees[patternName] = newVariants;
 };
-// fillInPrerequesites('document'); // (turns out this wasn't sufficient to catch everything)
 Object.entries(flatTrees).forEach(([patternName, variants])=>{
 	const prereq = collectLookupPrerequesites(variants.flat());
 	prerequesites[patternName] = prereq;
