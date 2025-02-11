@@ -1,7 +1,7 @@
 import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
-const printOKTests = true;
+const printOKTests = false;
 const topTestOnly = false;
 
 // TODO: add 'expected' Set for syntax errors
@@ -351,29 +351,39 @@ const patternTests = {
 	// 	// },
 	// ],
 	script_actions: [
-		// { name: 'dictionary entry with outside lookup',
-		// 	pattern: `_ {
-		// 		pause entity Bob on_tick;
-		// 	}`.replace(/[\s\n\t]+/g,' '),
-		// 	fileSuccess: true,
-		// 	counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
-		// 	nodes: [
-		// 		{
-		// 			node: "script_literal", // I want this to be 'script_definition' :/
-		// 			label: "_",
-		// 			body: [
-		// 				{
-		// 					node: "action",
-		// 					action: "SET_SCRIPT_PAUSE",
-		// 					bool_value: true,
-		// 					script_slot: "on_tick",
-		// 					entity: "Bob",
-		// 				},
-		// 			],
-		// 		}
-		// 	]
-		// },
+		{ name: 'dictionary entry with outside lookup',
+			pattern: `_ {
+				pause entity Bob on_tick;
+				unpause player on_look;
+			}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [2], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal",
+					label: "_",
+					body: [
+						{
+							node: "action",
+							action: "SET_SCRIPT_PAUSE",
+							bool_value: true,
+							script_slot: "on_tick",
+							entity: "Bob",
+						},
+						{
+							node: "action",
+							action: "SET_SCRIPT_PAUSE",
+							bool_value: false,
+							script_slot: "on_look",
+							entity: "%PLAYER%",
+						},
+					],
+				}
+			]
+		},
 		{ name: 'simple with errors',
+			// NOTE: these are separate scripts because the errors accidentally glomp onto each other,
+			// e.g. `hide command \n wait` -> "hide command 'wait'" instead of two separate, broken things
 			pattern: `_ { hide command walk }
 				_ { block "string"; }
 				_ { wait }
@@ -382,7 +392,7 @@ const patternTests = {
 			counts: { bodyNodes: [1,1,1,1], nodes: 4, errors: 4, warnings: 0 },
 			nodes: [
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [{
 						node: "action",
@@ -393,7 +403,7 @@ const patternTests = {
 					}],
 				},
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [{
 						node: "action",
@@ -403,7 +413,7 @@ const patternTests = {
 					}],
 				},
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [
 					{
@@ -414,7 +424,7 @@ const patternTests = {
 					}],
 				},
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [{
 						node: "action",
@@ -437,7 +447,7 @@ const patternTests = {
 			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [
 						{ node: "action", action: "SET_SERIAL_DIALOG_COMMAND_VISIBILITY", command: "walk", is_visible: false },
@@ -461,7 +471,7 @@ const patternTests = {
 			counts: { bodyNodes: [6], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [
 						{ node: "action", action: "RUN_SCRIPT", script: "mainMenuStart" },
@@ -485,7 +495,7 @@ const patternTests = {
 			counts: { bodyNodes: [4], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [
 						{ node: "action", action: "SLOT_SAVE" },
@@ -516,7 +526,7 @@ const patternTests = {
 			counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "script_literal", // I want this to be 'script_definition' :/
+					node: "script_literal",
 					label: "_",
 					body: [{
 						node: "json_literal",
@@ -545,7 +555,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 				}
@@ -557,7 +567,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					parameters: [{ property: 'wrap', value: 80 }],
 					messages: [ "Test message!", "Another!" ],
@@ -570,7 +580,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					malformed: true,
 					label: "test",
 					parameters: [{ property: 'wrap', value: 80 }],
@@ -584,14 +594,13 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					malformed: true,
 					label: "test",
 					parameters: [
 						{ property: 'wrap', value: 80 },
 						{},
-						// TODO: I want this to be captured, too... :(
-						// { property: 'wrap', value: 79 },
+						// { property: 'wrap', value: 79 }, // TODO: I want this to be captured, too... :(
 					],
 					messages: [ "Test message!", "Another!" ],
 				}
@@ -605,7 +614,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 					options: [
@@ -627,7 +636,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 1 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 					options: [
@@ -653,7 +662,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 					options: [
@@ -674,7 +683,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 					options: [
@@ -695,7 +704,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 					options: [
@@ -716,7 +725,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "serial_dialog_literal", // I want this to be 'serial_dialog_definition' :/
+					node: "serial_dialog_literal",
 					label: "test",
 					messages: [ "Test message!", "Another!" ],
 					text_options: [{ label: undefined, script: undefined }],
@@ -731,7 +740,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -755,7 +764,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -779,7 +788,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -803,7 +812,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -827,7 +836,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -850,7 +859,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -874,7 +883,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -882,8 +891,7 @@ const patternTests = {
 							parameters: [
 								{ property: 'alignment', value: 'BR' },
 								{},
-								// TODO: I want this to be captured, too... :(
-								// { property: 'wrap', value: 10 },
+								// { property: 'wrap', value: 10 }, // TODO: I want this to be captured, too... :(
 							],
 							identifierType: null,
 							identifierValue: 'Bob',
@@ -899,7 +907,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 1, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -919,7 +927,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "_",
 					dialogs: [
 						{
@@ -942,7 +950,7 @@ const patternTests = {
 			counts: { nodes: 1, errors: 0, warnings: 0 },
 			nodes: [
 				{
-					node: "dialog_literal", // I want this to be 'dialog_definition' :/
+					node: "dialog_literal",
 					label: "greetings",
 					dialogs: [
 						{
@@ -998,8 +1006,7 @@ const patternTests = {
 						settings: [
 							{ property: 'alignment', value: 'TR' },
 							{},
-							// TODO: I want this to be captured, too... :(
-							// { property: 'portrait', value: 'secretSnake' },
+							// { property: 'portrait', value: 'secretSnake' }, // TODO: I want this to be captured, too... :(
 						]
 					}]
 				},
@@ -1056,8 +1063,7 @@ const patternTests = {
 					settings: [
 						{ property: 'wrap', value: 1 },
 						{},
-						// TODO: I want this to be captured, too... :(
-						// { property: 'wrap', value: 3 },
+						// { property: 'wrap', value: 3 }, // TODO: I want this to be captured, too... :(
 					],
 				},
 				
@@ -1093,7 +1099,7 @@ const patternTests = {
 		{ name: 'empty',
 			pattern: `include`,
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
+			counts: { nodes: 1, errors: 1, warnings: 0 }, // should be 1 warning, 0 errors? no state is *broken* broken
 			nodes: [
 				{
 					node: 'include_macro',
@@ -1105,7 +1111,7 @@ const patternTests = {
 		{ name: 'normal',
 			pattern: `include "header.mgs";`,
 			fileSuccess: true,
-			counts: { nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is broken
+			counts: { nodes: 1, errors: 0, warnings: 0 }, // should be 1 warning, 0 errors? no state is *broken* broken
 			nodes: [
 				{
 					node: 'include_macro',

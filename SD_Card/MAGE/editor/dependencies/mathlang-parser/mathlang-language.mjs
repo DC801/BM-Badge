@@ -101,8 +101,7 @@ const patterns = {
 	serial_dialog_option: `'#':optionType $quoted_string:label '=' $string:script
 		| '_':optionType $quoted_string:label '=' $string:script`,
 	dialog_option: `'>' $quoted_string:label '=' $string:script`,
-	script_definition: `'script'? $string:scriptName>scriptNames @script_literal`
-	,
+	script_definition: `'script'? $string:scriptName>scriptNames @script_literal`,
 	script_literal: `'{' @script_body_item* '}'`,
 	script_body_item: `@json_literal`
 		// + ` | @debug_macro`;
@@ -116,13 +115,11 @@ const actionDictionary = [
 	// simple
 	{
 		pattern: `'hide':actionKeyword 'command' $string:command ';'`,
-		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`,
-		is_visible: false,
+		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`, is_visible: false,
 	},
 	{
 		pattern: `'unhide':actionKeyword 'command' $string:command ';'`,
-		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`,
-		is_visible: true,
+		action: `SET_SERIAL_DIALOG_COMMAND_VISIBILITY`, is_visible: true,
 	},
 	{
 		pattern: `'wait':actionKeyword $duration:duration ';'`,
@@ -160,8 +157,7 @@ const actionDictionary = [
 	// no captures
 	{
 		pattern: `'return':actionKeyword ';'`,
-		action: 'GOTO_ACTION_LABEL',
-		label: "auto return"
+		action: 'GOTO_ACTION_LABEL', label: "auto return"
 	},
 	{
 		pattern: `'close':actionKeyword 'dialog':actionTarget ';'`,
@@ -175,6 +171,40 @@ const actionDictionary = [
 		pattern: `'save':actionKeyword 'slot':actionTarget ';'`,
 		action: 'SLOT_SAVE',
 	},
+	// script slots
+	{
+		pattern: `'pause':actionKeyword 'map':actionTarget $bareword:script_slot<enum_map_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: true, entity: "%MAP%",
+	},
+	{
+		pattern: `'pause':actionKeyword 'self':actionTarget $bareword:script_slot<enum_entity_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: true, entity: "%SELF%",
+	},
+	{
+		pattern: `'pause':actionKeyword 'player':actionTarget $bareword:script_slot<enum_entity_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: true, entity: "%PLAYER%",
+	},
+	{
+		pattern: `'pause':actionKeyword 'entity':actionTarget $string:entity $bareword:script_slot<enum_entity_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: true,
+	},
+	{
+		pattern: `'unpause':actionKeyword 'map':actionTarget $bareword:script_slot<enum_map_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: false, entity: "%MAP%",
+	},
+	{
+		pattern: `'unpause':actionKeyword 'self':actionTarget $bareword:script_slot<enum_entity_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: false, entity: "%SELF%",
+	},
+	{
+		pattern: `'unpause':actionKeyword 'player':actionTarget $bareword:script_slot<enum_entity_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: false, entity: "%PLAYER%",
+	},
+	{
+		pattern: `'unpause':actionKeyword 'entity':actionTarget $string:entity $bareword:script_slot<enum_entity_slots ';'`,
+		action: 'SET_SCRIPT_PAUSE', bool_value: false,
+	},
+	
 	// should remove `pattern` from these, but otherwise use all properties from these in the output
 	// the labeled literals in the pattern are used for action identification; they are not otherwise saved (?)
 	// captures should come in if named in the pattern

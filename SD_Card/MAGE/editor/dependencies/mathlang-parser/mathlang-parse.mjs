@@ -591,6 +591,17 @@ const detectAction = (raw) => {
 		),
 	}
 	novelCaptures.forEach(capture=>{
+		if (capture.label === 'entityIdentifierType') {
+			if (capture.value === 'map') {
+				ret.node.entity = '%MAP%'
+			} else if (capture.value === 'player') {
+				ret.node.entity = '%PLAYER%'
+			} else if (capture.value === 'self') {
+				ret.node.entity = '%SELF%'
+			}
+		} else if (capture.label === 'entityName') {
+			ret.node.entity = capture.value
+		}
 		if (ret.node[capture.label] !== undefined) {
 			throw new Error("Two captures for one action??")
 		}
