@@ -150,47 +150,56 @@ void MapControl::Draw() const
 
    if (frameBuffer->drawGeometry)
    {
-      const auto startTileX = std::max(0, frameBuffer->camera.Position.x / currentMap->tileWidth);
-      const auto startTileY = std::max(0, frameBuffer->camera.Position.y / currentMap->tileHeight);
-      const auto endTileX = std::min(int{ currentMap->cols - 1 }, startTileX + DrawWidth / currentMap->tileWidth);
-      const auto endTileY = std::min(int{ currentMap->rows - 1 }, startTileY + DrawHeight / currentMap->tileHeight + 1);
+      drawGeometry();
+   }
+}
 
-      for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
-      for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
-      for (auto layerIndex = 0; layerIndex < LayerCount(); layerIndex++)
+void MapControl::drawGeometry() const
+{
+   const auto startTileX = std::max(0, frameBuffer->camera.Position.x / currentMap->tileWidth);
+   const auto startTileY = std::max(0, frameBuffer->camera.Position.y / currentMap->tileHeight);
+   const auto endTileX = std::min(int{ currentMap->cols - 1 }, startTileX + DrawWidth / currentMap->tileWidth + 1);
+   const auto endTileY = std::min(int{ currentMap->rows - 1 }, startTileY + DrawHeight / currentMap->tileHeight + 1);
+
+   for (auto mapTileRow = startTileY; mapTileRow <= endTileY; mapTileRow++)
+   for (auto mapTileCol = startTileX; mapTileCol <= endTileX; mapTileCol++)
+   for (auto layerIndex = 0; layerIndex < LayerCount(); layerIndex++)
+   {
+      const auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
+      const auto currentTile = &currentMap->layers[layerIndex][tileIndex];
+
+      if (!currentTile->tileId) { continue; }
+
+      const auto tileDrawPoint = EntityPoint{
+         uint16_t(currentMap->tileWidth * mapTileCol),
+         uint16_t(currentMap->tileHeight * mapTileRow)
+      };
+
+      const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
+      const auto geometry = tileset->GetGeometryForTile(currentTile->tileId);
+
+      if (geometry)
       {
-         const auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
-         const auto currentTile = &currentMap->layers[layerIndex][tileIndex];
+         const auto layerColor = layerIndex == 0 ? COLOR_CYAN
+            : layerIndex == 1 ? COLOR_PINK
+            : layerIndex == 2 ? COLOR_RED
+            : layerIndex == 3 ? COLOR_GREEN
+            : layerIndex == 4 ? COLOR_BLUE
+            : COLOR_YELLOW;
 
-         if (!currentTile->tileId) { continue; }
-
-         const auto tileDrawPoint = EntityPoint{ 
-            uint16_t(currentMap->tileWidth * mapTileCol), 
-            uint16_t(currentMap->tileHeight * mapTileRow) 
-         };
-
-         const auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
-         const auto geometry = tileset->GetGeometryForTile(currentTile->tileId);
-
-         if (geometry)
+         const auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
+         for (auto i = 0; i < geometryPoints.size(); i++)
          {
-            const auto layerColor = layerIndex == 0 ? COLOR_CYAN
-               : layerIndex == 1 ? COLOR_PINK
-               : layerIndex == 2 ? COLOR_RED
-               : layerIndex == 3 ? COLOR_GREEN
-               : layerIndex == 4 ? COLOR_BLUE
-               : COLOR_YELLOW;
-
-            const auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
-            for (auto i = 0; i < geometryPoints.size(); i++)
-            {
-               frameBuffer->DrawLineWorldCoords(tileDrawPoint + geometryPoints[i], tileDrawPoint + geometryPoints[(i + 1) % geometryPoints.size()], layerColor);
-            }
+            frameBuffer->DrawLineWorldCoords(tileDrawPoint + geometryPoints[i], tileDrawPoint + geometryPoints[(i + 1) % geometryPoints.size()], layerColor);
          }
       }
-
-      frameBuffer->DrawRectWorldCoords(getPlayerInteractBox(), COLOR_ORANGE);
    }
+   for (const auto& renderableData : renderableDataArray)
+   {
+      frameBuffer->DrawRectWorldCoords(renderableData.hitBox, COLOR_LIGHTGREY);
+   }
+
+   frameBuffer->DrawRectWorldCoords(getPlayerInteractBox(), COLOR_ORANGE);
 }
 
 std::optional<uint16_t> MapControl::Update()
@@ -255,7 +264,7 @@ std::optional<uint16_t> MapControl::Update()
    std::optional<uint16_t> interactionId = std::nullopt;
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
-      auto& entity = Get<MageEntityData>(i);
+      const auto& entity = Get<MageEntityData>(i);
       auto& renderableData = Get<RenderableData>(i);
 
       renderableData.UpdateFrom(entity);
