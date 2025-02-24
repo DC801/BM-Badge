@@ -19,10 +19,6 @@ extern int SDL_CreateWindowAndRenderer(int width, int height, uint32_t window_fl
 extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 #endif
 
-static inline const auto LedSize = 42;
-static inline const auto gameViewportSrcRect = SDL_Rect{ 0, 0, 320, 240 };
-static inline const auto gameViewportDstRect = SDL_Rect{ 112, 56, 320, 240 };
-static inline const auto LEDHalf = SDL_Point{ 8, 4 };
 
 class DesktopWindowOutput
 {
@@ -52,6 +48,10 @@ private:
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
 
+static inline const auto LedSize = 42;
+static inline const auto gameViewportSrcRect = SDL_Rect{ 0, 0, 320, 240 };
+static inline const auto gameViewportDstRect = SDL_Rect{ 112, 56, 320, 240 };
+static inline const auto LEDHalf = SDL_Point{ 8, 4 };
 
    const SDL_Point buttonDestPoints[27] = {
       // Mem0-3

@@ -141,7 +141,7 @@ public:
    uint16_t frameCount{ 0 };
    uint8_t currentAnimation{ 0 };
    uint8_t currentFrameIndex{ 0 };
-   uint8_t renderFlags;
+   uint8_t renderFlags{ 0 };
 
    constexpr EntityPoint center() const
    {

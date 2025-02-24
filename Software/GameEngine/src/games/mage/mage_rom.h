@@ -135,7 +135,7 @@ struct MageTileset
       auto geometriesPtr = (uint16_t*)((uint8_t*)&Rows + sizeof(uint16_t));
 
       if (tileIndex >= Cols * Rows || !geometriesPtr[tileIndex]) { return nullptr; }
-      auto geometryIndex = geometriesPtr[tileIndex - 1];
+      const auto geometryIndex = geometriesPtr[tileIndex - 1];
       if (geometryIndex)
       {
          return ROM()->GetReadPointerByIndex<MageGeometry>(geometryIndex);

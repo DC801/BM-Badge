@@ -159,7 +159,6 @@ public:
       const auto& playerRenderableData = getPlayerRenderableData();
       static const uint16_t interactLength = playerRenderableData.hitBox.h / 2 + playerRenderableData.hitBox.w / 2;
       const auto& playerDirection = getPlayerEntityData()->direction;
-      //return playerRenderableData.hitBox;
       return EntityRect{
             {
                uint16_t{
@@ -294,6 +293,9 @@ public:
    MageScriptState onTickScriptState;
 
 private:
+
+
+   void drawGeometry() const;
 
    inline const MageEntityData* getPlayerEntityData() const
    {

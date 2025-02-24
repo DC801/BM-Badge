@@ -77,9 +77,9 @@ void DesktopWindowOutput::DrawButtonStates() const
 
    for (auto i = 0; i < inputs.size(); i++)
    {
-      const SDL_Rect buttonOffSrcRect = { i * 32, 0, 32, 32 };
-      const SDL_Rect buttonOnSrcRect = { i * 32, 32, 32, 32 };
-      const SDL_Point buttonHalf = { 16, 16 };
+      const auto buttonOffSrcRect = SDL_Rect{ i * 32, 0, 32, 32 };
+      const auto buttonOnSrcRect = SDL_Rect{ i * 32, 32, 32, 32 };
+      const auto buttonHalf = SDL_Point{ 16, 16 };
       const auto& keyState = inputs[i];
       const auto& buttonPoint = buttonDestPoints[i];
       const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
@@ -89,8 +89,8 @@ void DesktopWindowOutput::DrawButtonStates() const
 
 void DesktopWindowOutput::DrawLEDStates() const
 {
-   const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };
-   const SDL_Rect LEDOnSrcRect = { 0, 8, 16, 8 };
+   const auto LEDOffSrcRect = SDL_Rect{ 0, 0, 16, 8 };
+   const auto LEDOnSrcRect = SDL_Rect{ 0, 8, 16, 8 };
    for (int i = 0; i < LED_COUNT; ++i)
    {
       const auto& LEDPoint = LEDDestPoints[i];

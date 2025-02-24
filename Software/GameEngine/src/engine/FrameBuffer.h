@@ -129,7 +129,7 @@ private:
       {
          return;
       }
-
+      // TODO: track min and max changes, push when the size fits a transfer window or 
       //minXChange = std::min<int>(minXChange, x);
       //maxXChange = std::max<int>(maxXChange, x);
 
