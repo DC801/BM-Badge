@@ -160,7 +160,7 @@ While it is possible to build the `game.dat` file using only a browser, if you f
 
 ```sh
 sudo apt install curl
-curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
