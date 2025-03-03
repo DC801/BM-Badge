@@ -26,6 +26,8 @@ in a more accessible way.
 
 static const inline auto interactLength = 32;
 
+class MageScriptControl;
+
 struct GoDirection
 {
    const char name[MapGoDirectionNameLength]{ 0 };

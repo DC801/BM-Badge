@@ -73,7 +73,13 @@
 		"ranges": "cpp",
 		"stop_token": "cpp",
 		"cfenv": "cpp",
-		"typeindex": "cpp"
+		"typeindex": "cpp",
+		"charconv": "cpp",
+		"regex": "cpp",
+		"format": "cpp",
+		"numbers": "cpp",
+		"semaphore": "cpp",
+		"span": "cpp"
 	},
 	"cortex-debug.showDevDebugOutput": "parsed",
 	"cortex-debug.variableUseNaturalFormat": false,

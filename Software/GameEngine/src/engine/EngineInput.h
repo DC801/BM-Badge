@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <stdint.h>
 #include <chrono>
+#include <optional>
 #include <queue>
 #include <utility>
 #include "shim_timer.h"

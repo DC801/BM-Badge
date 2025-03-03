@@ -2,6 +2,7 @@
 #define MAGE_DIALOG_CONTROL_H
 
 
+#include <span>
 #include <array>
 #include <optional>
 #include <string_view>
