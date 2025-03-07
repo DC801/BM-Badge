@@ -223,14 +223,14 @@ If you see the above, you've got it right.
 
 ### Get the Nordic SDK 15
 
-[Download from Nordic](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/)
+[Download from Nordic](https://www.nordicsemi.com/Products/Development-software/nRF5-SDK/Download#infotabs)
 
-Grab the zip file of your choosing - for this we're going with `nRF5_SDK_15.3.0_59ac345.zip` but that might change by the time you get there.
+If the link in the wget below doesn't work, head to [Nordic's nRF5 SDK page](https://www.nordicsemi.com/Products/Development-tools/nRF-Command-Line-Tools/Download?lang=en#infotabs) and select the radio button next to version `15.3.0`. Then at the bottom of the page in a blue box, download just the `.zip` from the link `nRF5_SDK_15.3.0_59ac345.zip`.
 
 ```shell script
 cd ~/dev/installer/
-wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.3.0_59ac345.zip
-unzip nRF5_SDK_15.3.0_59ac345.zip
+wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/sdks/nrf5/binaries/nrf5sdk153059ac345.zip
+unzip nrf5sdk153059ac345.zip
 mv nRF5_SDK_*/ ../nordic-sdk15.3.0/
 ```
 
