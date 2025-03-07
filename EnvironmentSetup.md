@@ -167,9 +167,8 @@ You can now run `tiled` in the command line to start Tiled.
 While it is possible to build the `game.dat` file using only a browser, if you find that you are regenerating this file frequently, it may be very productive to use the CLI build for the `game.dat` file.
 
 ```sh
-sudo apt install curl
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt-get install -y nodejs
+wget -O - https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
 ```
 
 With Node installed, you can `cd SD_Card/MAGE` and execute `./regenerate_dat_file.sh` to regenerate the game.dat file for a very seamless editing workflow.
