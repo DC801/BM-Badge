@@ -53,13 +53,12 @@ sudo apt install -y \
   gdb \
   python3-pip
 
-pip3 install compiledb
+pip3 install compiledb --break-system-packages
 # pip installs packages into `~/.local/bin`, but doesn't bother
 # adding that do your path so you can, you know, use them.
 # These echo lines add the user local pip install path to the
 # PATH variable so you can run `compiledb`.
-echo 'PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bash_profile
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 # At this point, you may need to close your terminal, relaunch
 # your IDE, or even sign out and back in before you'll be able
 # to run the `compiledb` command in the context you need it.
