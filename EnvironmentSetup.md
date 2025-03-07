@@ -28,20 +28,29 @@ Since __**THE HARDWARE ISN'T READY YET**__, you early adopters will have to try 
     - this generates the `Software/GameEngine/compile-commands.json` file that allows VSCode's Intellisence system to understand the relationships between all the `.c` and `.h` files, and gives tab completion, include path stuff, etc.
 
 ```shell script
+# basic stuff
 sudo apt install -y \
   build-essential \
+  linux-headers-$(uname -r) \
   make \
   git \
-  git-gui \
-  gitk \
   wget \
+  firefox \
+  libncurses6 \
+  libncurses-dev
+
+# for the game's graphics
+sudo apt install -y \
   libsdl2-2.0-0 \
-  libsdl2-image-2.0-0 \
   libsdl2-dev \
-  libsdl2-image-dev \
+  libsdl2-image-2.0-0 \
+  libsdl2-image-dev
+
+# for development
+sudo apt install -y \
+  gitk \
+  git-gui \
   gdb \
-  libncurses5 \
-  libncurses-dev \
   python3-pip
 
 pip3 install compiledb
