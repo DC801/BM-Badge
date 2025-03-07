@@ -81,7 +81,7 @@ ASMFLAGS = -g3 \
 # Linker flags
 LDFLAGS = $(OPT) \
 	$(DEVICE_FLAGS) \
-	-Wl,--gc-sections
+	-Wl,--gc-sections,--allow-multiple-definition
 
 ifndef DESKTOP
 LDFLAGS += --specs=nano.specs \
