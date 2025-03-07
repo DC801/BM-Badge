@@ -289,18 +289,44 @@ If you see that, your toolchain is working, and you can generate binaries with t
 
 ### Install NRF Command Line Tools
 
-If the link in the wget below doesn't work, head to [J-Link](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) and download the latest nRF Command Line Tools for Linux. To do that, click the Downloads tab, switch the platform to Linux64, and download the tar.gz file provided. The one that's currently available is named `nRF-Command-Line-Tools_10_12_1_Linux-amd64.tar.gz`. Move it to your installer directory.
+If the link in the wget below doesn't work, head to [Nordic](https://www.nordicsemi.com/Products/Development-tools/nRF-Command-Line-Tools/Download?lang=en#infotabs) and download the latest nRF Command Line Tools for Linux. To do that, switch the platform dropdown to "Linux x86 64", and download the `.deb` file provided. The one that's currently available is named `nrf-command-line-tools_10.24.2_amd64.deb`. Then move it to your installer directory and run the `sudo apt install` line below, changing the filename as necessary.
 
 ```shell script
 cd ~/dev/installer
-wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-2/nRF-Command-Line-Tools_10_12_2_Linux-amd64.zip
-unzip nRF-Command-Line-Tools_10_12_2_Linux-amd64.zip
-cd nRF-Command-Line-Tools_10_12_2_Linux-amd64
-tar -xvf nRF-Command-Line-Tools_10_12_2_Linux-amd64.tar.gz
-sudo dpkg -i *.deb
+wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-24-2/nrf-command-line-tools_10.24.2_amd64.deb
+sudo apt install -y --fix-broken ./nrf-command-line-tools_10.24.2_amd64.deb
 ```
 
-Let's verify that it installed correctly:
+You should see something like this:
+```shell script
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Note, selecting 'nrf-command-line-tools' instead of './nrf-command-line-tools_10.24.2_amd64.deb'
+The following NEW packages will be installed:
+  nrf-command-line-tools
+0 upgraded, 1 newly installed, 0 to remove and 1 not upgraded.
+Need to get 0 B/91.7 MB of archives.
+After this operation, 190 MB of additional disk space will be used.
+Get:1 /home/<username>/dev/installer/nrf-command-line-tools_10.24.2_amd64.deb nrf-command-line-tools amd64 10.24.2 [91.7 MB]
+Selecting previously unselected package nrf-command-line-tools.
+(Reading database ... 174554 files and directories currently installed.)
+Preparing to unpack .../nrf-command-line-tools_10.24.2_amd64.deb ...
+Unpacking nrf-command-line-tools (10.24.2) ...
+Setting up nrf-command-line-tools (10.24.2) ...
+
+=============================================================
+The J-Link SW and documentation package is required for nrf command line tools to work.
+To install the version of J-Link that was tested and verified with nrf command line tools execute one of the following:
+sudo apt install /opt/nrf-command-line-tools/share/JLink_Linux_V794e_x86_64.deb --fix-broken
+```
+
+Then run,
+```shell script
+sudo apt install -y --fix-broken /opt/nrf-command-line-tools/share/JLink_Linux_*.deb
+```
+
+Let's verify that both the `nrf-command-line-tools` and `jlink` Debian packages installed correctly:
 
 ```shell script
 JLinkExe version
@@ -308,8 +334,8 @@ JLinkExe version
 
 You should see, depending on version:
 ```shell script
-SEGGER J-Link Commander V6.84a (Compiled Sep	7 2020 18:28:09)
-DLL version V6.84a, compiled Sep	7 2020 18:27:57
+SEGGER J-Link Commander V7.94e (Compiled Jan 15 2024 15:19:58)
+DLL version V7.94e, compiled Jan 15 2024 15:19:33
 
 Unknown command line option version.
 ```
@@ -321,8 +347,8 @@ nrfjprog --version
 
 You should see, depending on version:
 ```shell script
-nrfjprog version: 10.12.2
-JLinkARM.dll version: 6.88a
+nrfjprog version: 10.24.2 external
+JLinkARM.dll version: 7.94e
 ```
 
 If you see that, you're good. You have everything you need to program your badge now, how about that?
