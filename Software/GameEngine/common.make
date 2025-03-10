@@ -90,8 +90,8 @@ LDFLAGS += --specs=nano.specs \
 endif
 
 LD_LIBRARIES = -lc \
-	-lm \
-	-lstdc++
+	-lstdc++ \
+	-lm
 
 ifndef DESKTOP
 	LD_LIBRARIES += -lnosys
