@@ -10,8 +10,8 @@ else
 	MKDIR := mkdir -p
 
     ifeq ($(UNAME_S),Linux)
-        NRFJPROG := $(shell which nrfjprog)
-        MERGEHEX := $(shell which mergehex)
+        NRFJPROG := nrfjprog
+        MERGEHEX := mergehex
     endif
 
     ifeq ($(UNAME_S),Darwin)
