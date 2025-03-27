@@ -237,7 +237,7 @@ mv nRF5_SDK_*/ ../nordic-sdk15.3.0/
 
 Now you need to configure the SDK for the GCC compiler
 
-Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefike.posix`
+Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefile.posix`
 
 It should read:
 ```shell script
