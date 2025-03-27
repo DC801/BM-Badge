@@ -10,7 +10,7 @@ else
 	MKDIR := mkdir -p
 
     ifeq ($(UNAME_S),Linux)
-        NRFJPROG := nrfjprog
+        NRFJPROG := DISPLAY="" nrfjprog
         MERGEHEX := mergehex
     endif
 
