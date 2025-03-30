@@ -28,30 +28,20 @@ Since __**THE HARDWARE ISN'T READY YET**__, you early adopters will have to try 
     - this generates the `Software/GameEngine/compile-commands.json` file that allows VSCode's Intellisence system to understand the relationships between all the `.c` and `.h` files, and gives tab completion, include path stuff, etc.
 
 ```shell script
-# basic stuff
+# basic C/C++ build tools and what we need to pull our sources and dependencies
 sudo apt install -y \
   build-essential \
-  linux-headers-$(uname -r) \
-  make \
+  gdb \
   git \
   wget \
-  firefox \
-  libncurses6 \
-  libncurses-dev
+  python3-pip
 
-# for the game's graphics
+# window/graphics/input management for the desktop and web build of the game
 sudo apt install -y \
   libsdl2-2.0-0 \
   libsdl2-dev \
   libsdl2-image-2.0-0 \
   libsdl2-image-dev
-
-# for development
-sudo apt install -y \
-  gitk \
-  git-gui \
-  gdb \
-  python3-pip
 
 pip3 install compiledb --break-system-packages
 # pip installs packages into `~/.local/bin`, but doesn't bother
@@ -83,6 +73,7 @@ git clone https://github.com/DC801/BM-Badge/
 This clones the badge source code from git and saves it out to `~/dev/BM-Badge`.
 
 ### Install VSCode, if you don't already have it
+
 We're going to be using VSCode and GCC to do our development. There are other options out there like VIM or nice tools like CLion, but sticking with an open source stack means no pesky license fees and more flexibility.
 
 ```shell script
@@ -154,11 +145,11 @@ Tiled (https://www.mapeditor.org/) is being used to edit the game map & characte
 
 ```shell script
 cd ~/dev/installer
-wget https://github.com/mapeditor/tiled/releases/download/v1.7.0/Tiled-1.7.0-x86_64.AppImage
-chmod +x Tiled-*-x86_64.AppImage
+wget https://github.com/mapeditor/tiled/releases/download/v1.9.2/Tiled-1.9.2_Linux_x86_64.AppImage
+chmod +x Tiled-*x86_64.AppImage
 sudo mkdir -p /usr/share/tiled/
-sudo mv Tiled-*-x86_64.AppImage /usr/share/tiled/
-sudo ln -s /usr/share/tiled/Tiled-*-x86_64.AppImage /usr/bin/tiled
+sudo mv Tiled-*x86_64.AppImage /usr/share/tiled/
+sudo ln -s /usr/share/tiled/Tiled-*x86_64.AppImage /usr/bin/tiled
 ```
 
 You can now run `tiled` in the command line to start Tiled.
@@ -226,7 +217,7 @@ If you see the above, you've got it right.
 
 [Download from Nordic](https://www.nordicsemi.com/Products/Development-software/nRF5-SDK/Download#infotabs)
 
-If the link in the wget below doesn't work, head to [Nordic's nRF5 SDK page](https://www.nordicsemi.com/Products/Development-tools/nRF-Command-Line-Tools/Download?lang=en#infotabs) and select the radio button next to version `15.3.0`. Then at the bottom of the page in a blue box, download just the `.zip` from the link `nRF5_SDK_15.3.0_59ac345.zip`.
+If the link in the wget below doesn't work, head to [Nordic's nRF5 SDK page](https://www.nordicsemi.com/Products/Development-software/nRF5-SDK/Download#infotabs) and select the radio button next to version `15.3.0`. Then at the bottom of the page in a blue box, download just the `.zip` from the link `nRF5_SDK_15.3.0_59ac345.zip`.
 
 ```shell script
 cd ~/dev/installer/
@@ -242,7 +233,7 @@ Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefile.posix`
 It should read:
 ```shell script
 GNU_INSTALL_ROOT ?= /usr/bin/
-GNU_VERSION ?= <arm gcc version from above>
+GNU_VERSION ?= 10.2.1
 GNU_PREFIX ?= arm-none-eabi
 ```
 
