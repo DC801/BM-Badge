@@ -2,7 +2,7 @@ import { lex } from "./mathlang-lex.mjs"
 import { parseFile } from './mathlang-parse.mjs';
 
 const printOKTests = false;
-const topTestOnly = false;
+const topTestOnly = true;
 
 // TODO: add 'expected' Set for syntax errors
 
@@ -294,62 +294,82 @@ const patternTests = {
 	// 	// 	]
 	// 	// },
 	// ],
-	// show_dialog: [
-	// 	// { name: 'inline definition vs reference & named vs autonamed',
-	// 	// 	pattern: `testScript {
-	// 	// 			show dialog YesReferenceNoDefinition;
-	// 	// 			show dialog {
-	// 	// 				PLAYER "Defined two nodes above 'testScript'; autonamed"
-	// 	// 			};
-	// 	// 			show dialog defAndRef {
-	// 	// 				PLAYER "Defined one node above 'testScript'; named 'defAndRef'"
-	// 	// 			};
-	// 	// 		}`.replace(/[\s\n\t]+/g,' '),
-	// 	// 	fileSuccess: true,
-	// 	// 	counts: { bodyNodes: [0,0,3], nodes: 3, errors: 0, warnings: 0 },
-	// 	// 	nodes: [
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "unitTests.mgs:1:64",
-	// 	// 			dialogs: [{
-	// 	// 				node: "dialog",
-	// 	// 				messages: [ "Defined two nodes above 'testScript'; autonamed", ],
-	// 	// 				identifier: { type: "label", value: "PLAYER" },
-	// 	// 			}],
-	// 	// 		},
-	// 	// 		{
-	// 	// 			node: "dialog_definition",
-	// 	// 			name: "defAndRef",
-	// 	// 			dialogs: [{
-	// 	// 				  node: "dialog",
-	// 	// 				  messages: [ "Defined one node above 'testScript'; named 'defAndRef'" ],
-	// 	// 				  identifier: { type: "label", value: "PLAYER" },
-	// 	// 			}],
-	// 	// 		},
-	// 	// 		{
-	// 	// 			node: "script_definition",
-	// 	// 			name: "testScript",
-	// 	// 			body: [
-	// 	// 				{
-	// 	// 					node: "action",
-	// 	// 					action: "SHOW_DIALOG",
-	// 	// 					serial_dialog: "YesReferenceNoDefinition",
-	// 	// 				},
-	// 	// 				{
-	// 	// 					node: "action",
-	// 	// 					action: "SHOW_DIALOG",
-	// 	// 					serial_dialog: "unitTests.mgs:1:64",
-	// 	// 				},
-	// 	// 				{
-	// 	// 					node: "action",
-	// 	// 					action: "SHOW_DIALOG",
-	// 	// 					serial_dialog: "defAndRef",
-	// 	// 				},
-	// 	// 			],
-	// 	// 		},
-	// 	// 	]
-	// 	// },
-	// ],
+	show_dialog: [
+		{ name: 'show dialog plain',
+			pattern: `testScript {
+					show dialog talking;
+				}`.replace(/[\s\n\t]+/g,' '),
+			fileSuccess: true,
+			counts: { bodyNodes: [1], nodes: 1, errors: 0, warnings: 0 },
+			nodes: [
+				{
+					node: "script_literal",
+					label: "testScript",
+					body: [
+						{
+							node: "action",
+							action: "SHOW_DIALOG",
+							dialog: "talking",
+						},
+					],
+				},
+			]
+		},
+		// { name: 'inline definition vs reference & named vs autonamed',
+		// 	pattern: `testScript {
+		// 			show dialog YesReferenceNoDefinition;
+		// 			show dialog {
+		// 				PLAYER "Defined two nodes above 'testScript'; autonamed"
+		// 			};
+		// 			show dialog defAndRef {
+		// 				PLAYER "Defined one node above 'testScript'; named 'defAndRef'"
+		// 			};
+		// 		}`.replace(/[\s\n\t]+/g,' '),
+		// 	fileSuccess: true,
+		// 	counts: { bodyNodes: [0,0,3], nodes: 3, errors: 0, warnings: 0 },
+		// 	nodes: [
+		// 		{
+		// 			node: "dialog_literal",
+		// 			label: "unitTests.mgs:1:64",
+		// 			dialogs: [{
+		// 				node: "dialog",
+		// 				messages: [ "Defined two nodes above 'testScript'; autonamed", ],
+		// 				identifier: { type: "label", value: "PLAYER" },
+		// 			}],
+		// 		},
+		// 		{
+		// 			node: "dialog_literal",
+		// 			label: "defAndRef",
+		// 			dialogs: [{
+		// 				  node: "dialog",
+		// 				  messages: [ "Defined one node above 'testScript'; named 'defAndRef'" ],
+		// 				  identifier: { type: "label", value: "PLAYER" },
+		// 			}],
+		// 		},
+		// 		{
+		// 			node: "script_literal",
+		// 			label: "testScript",
+		// 			body: [
+		// 				{
+		// 					node: "action",
+		// 					action: "SHOW_DIALOG",
+		// 					dialog: "YesReferenceNoDefinition",
+		// 				},
+		// 				{
+		// 					node: "action",
+		// 					action: "SHOW_DIALOG",
+		// 					dialog: "unitTests.mgs:1:64",
+		// 				},
+		// 				{
+		// 					node: "action",
+		// 					action: "SHOW_DIALOG",
+		// 					dialog: "defAndRef",
+		// 				},
+		// 			],
+		// 		},
+		// 	]
+		// },
+	],
 	script_actions: [
 		{ name: 'dictionary entry with outside lookup',
 			pattern: `_ {

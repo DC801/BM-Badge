@@ -104,6 +104,7 @@ const patterns = {
 	script_definition: `'script'? $string:scriptName>scriptNames @script_literal`,
 	script_literal: `'{' @script_body_item* '}'`,
 	script_body_item: `@json_literal`
+		// + ` | 'show' 'dialog' $string:dialogName? @dialog_literal ';'`
 		// + ` | @debug_macro`;
 		// INDIVIDUAL ACTIONS ARE ADDED AUTOMATICALLY (see actionDictionary)
 	,
@@ -203,6 +204,18 @@ const actionDictionary = [
 	{
 		pattern: `'unpause':actionKeyword 'entity':actionTarget $string:entity $bareword:script_slot<enum_entity_slots ';'`,
 		action: 'SET_SCRIPT_PAUSE', bool_value: false,
+	},
+	{
+		pattern: `'show':actionKeyword 'dialog':actionTarget $string:dialogName ';'`,
+		action: 'SHOW_DIALOG',
+	},
+	{
+		pattern: `'show':actionKeyword 'dialog':actionTarget $string:dialogName @dialog_literal ';'`,
+		action: 'SHOW_DIALOG',
+	},
+	{
+		pattern: `'show':actionKeyword 'dialog':actionTarget @dialog_literal ';'`,
+		action: 'SHOW_DIALOG',
 	},
 	
 	// should remove `pattern` from these, but otherwise use all properties from these in the output
@@ -354,6 +367,7 @@ Object.entries(flatTrees).forEach(([patternName, variants])=>{
 export const tree = {};
 const flatPatternsDone = new Set();
 const addFlatPatternToTree = (patternName) => {
+	console.log(`Adding flat pattern '${patternName}'`)
 	if (flatPatternsDone.has(patternName)) {
 		return tree[patternName].next;
 	}

@@ -2,7 +2,7 @@ import { lex } from "./mathlang-lex.mjs"
 import { tree, actionDetective } from "./mathlang-language.mjs"
 import { getPosContext, decayTo, makeAutoIdentifierName, collectBetween, findLineAndCharNumbers } from "./mathlang-utilities.mjs"
 
-const verbose = false;
+const verbose = true;
 const printErrors = false;
 
 const debugLog = (string) => { if (verbose) console.log(string); };
@@ -560,17 +560,19 @@ const detectAction = (raw) => {
 	if (!keyword) return { success: false };
 	// otherwise we have something to work with
 	const detected = actionDetective[keyword];
-	const filtered = detected.filter(entry=>{
-		return Object.keys(entry.info).length
-			=== Object.keys(foundInfo).length;
-	}).filter(entry=>{
-		return Object.keys(foundInfo).every(prop=>{
-			const expected = entry.info[prop];
-			const found = foundInfo[prop];
-			const result = expected === found;
-			return result;
+	const filtered = detected
+		.filter(entry=>{
+			return Object.keys(entry.info).length
+				=== Object.keys(foundInfo).length;
+		})
+		.filter(entry=>{
+			return Object.keys(foundInfo).every(prop=>{
+				const expected = entry.info[prop];
+				const found = foundInfo[prop];
+				const result = expected === found;
+				return result;
+			});
 		});
-	});
 	if (filtered.length === 0) {
 		throw new Error ("The Action Detective (TM) could not detect the action!", raw)
 	} else if (filtered.length > 1) {

@@ -373,8 +373,8 @@ export const lex = (string) => {
 		warnings,
 		plaintext: string,
 		completed: true,
-	}
-}
+	};
+};
 // const test = `include "filename.mgs";`
 
 // const report = lex(test);
