@@ -1,229 +1,228 @@
-include!("header.mgs")
-settings for dialog {
-	entity Frankie { alignment TL }
-	entity Jean-Paul { alignment TR }
+include "header.mgs";
+add dialog settings {
+	entity "Frankie" { alignment TL }
+	label JEANPAUL { entity "Jean-Paul" alignment TR }
 	// todo: ascertain best practices for alignment in a situation like this
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-look-ch2-castle-21 {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_castle_21 {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked around the <c>WORKSHOP</>."
 		"\tThe scents of solder and ozone fill the room. While there are less chairs than workstations, scratches on the floor show signs of people enthusiastically skating between desks."
 		" "
-	}
+	};
 }
 
-look-ch2-goose {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_goose {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at the <m>%SELF%</>."
 		"\tA plain white goose reminiscent of one -- or several -- you've seen before. You wonder whether the red bow is some attempt at a disguise, and whether you have actually met this goose before."
-	}
+	};
 }
 
-look-ch2-jean_paul {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_jean_paul {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at <m>%SELF%</>."
 		"\tA solemn cockatiel, if ever there was one. His crest lifts slightly once in a while."
-	}
+	};
 }
 
-look-ch2-frankie {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_frankie {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at <m>%SELF%</>."
 		"\tFrankie's fingers are flying furiously across the keyboard. The text on the screen is far too small for you to read clearly, but the words are colored in an interesting pattern."
-	}
+	};
 }
 
-look-ch2-pie {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_pie {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at the <m>%SELF%</>."
 		"\tBizarrely out of place is this golden, flakey pastry with its glistening ruby filling. Though not steaming hot, or even warm, it's still fresh enough to eat."
-	}
+	};
 }
-look-ch2-3dprinter {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_3dprinter {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at the <m>%SELF%</>."
 		"\tThe colored spools on the left of the device are counterparts to the one currently attached, as if the line of yellow plastic might be swapped out with any of the other colors."
-	}
+	};
 }
-look-ch2-figurines {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_figurines {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at the <m>%SELF%</>."
 		"\tTheir yellow plastic seems to match that from the spool attached to the nearby device. In fact, the figurines themselves seem to have been built up by lines of the stuff."
-	}
+	};
 }
-look-ch2-cablesbox {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_cablesbox {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at the <m>%SELF%</>."
 		"\tInside is a mishmash of cables, most of which are worn. They're all tangled to the point that any one cable might be near impossible to extract on its own."
-	}
+	};
 }
 
-look-ch2-solder {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_solder {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at the <m>%SELF%</>."
 		"\tThe metal pens evoke a mild industrial hazard. It seems the kind of thing that might hurt you if you don't know what you're doing."
-	}
+	};
 }
 
 /* ---------- ON_LOAD ---------- */
 
-on_load-ch2-castle-21-doorless {
+on_load_ch2_castle_21_postgame {
 	// abbreviated copy-pasta of the below
-	mutate ch2-in-room = 21;
+	ch2_in_room = 21;
 	// entrance text
-	show serial dialog spacer;
-	show serial dialog { "Entering <bold>WORKSHOP</>..." }
-	if (warp state is walk_from-north) {
-		teleport entity "%PLAYER%" to geometry walk_from-north;
-	} else if (warp state is walk_from-east) {
-		teleport entity "%PLAYER%" to geometry walk_from-east;
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>WORKSHOP</>..." };
+	if (warp_state == "walk_from-north") {
+		player position = geometry "walk_from-north";
+	} else if (warp_state == "walk_from-east") {
+		player position = geometry "walk_from-east";
 	}
-	copy ch2-map-init;
+	copy!(ch2_map_init)
 }
-on_load-ch2-castle-21 {
-	if warp state is "ch2 ending" then goto ch2-castle-21-ending;
+on_load_ch2_castle_21 {
+	if (warp_state == "ch2 ending") {
+		goto ch2_castle_21_ending;
+	}
 	// ch2 room state
-	mutate ch2-in-room = 21;
+	ch2_in_room = 21;
 
 	// entrance text
-	show serial dialog spacer;
-	if (flag ch2-seen-room-21 is false) {
-		show serial dialog { "Discovered <bold><c>WORKSHOP</>! Room added to <c>MAP</>!" }
-		set flag ch2-seen-room-21 to true;
+	show serial_dialog spacer;
+	if (!ch2_seen_room_21) {
+		show serial_dialog { "Discovered <bold><c>WORKSHOP</>! Room added to <c>MAP</>!" };
+		ch2_seen_room_21 = true;
 	} else {
-		show serial dialog { "Entering <bold>WORKSHOP</>..." }
+		show serial_dialog { "Entering <bold>WORKSHOP</>..." };
 	}
 
 	// room unique stuff
-	if (
-		flag ch2-installed-abacus is true
-		|| flag ch2-carrying-abacus is true
-	) {
-		copy script ch2-hide-abacus;
+	if (ch2_installed_abacus || ch2_carrying_abacus) {
+		copy!(ch2_hide_abacus)
 	}
-	copy ch2-map-init;
-	if (flag ch2-cutseen-castle21 is false) {
-		turn player control off;
+	copy!(ch2_map_init)
+	if (!ch2_cutseen_castle21) {
+		player_control = off;
 		wait 500ms;
-		turn entity Frankie toward entity "%PLAYER%";
+		entity Frankie direction = player;
 		wait 250ms;
-		turn entity Jean-Paul toward entity "%PLAYER%";
+		entity "Jean-Paul" direction = player;
 		wait 140ms;
-		set entity Jean-Paul relative_direction to 2;
-		walk entity Jean-Paul to geometry birdstep over 150ms;
-		set entity Jean-Paul relative_direction to 0;
-		turn entity Jean-Paul east;
+		entity "Jean-Paul" strafe = 2;
+		entity "Jean-Paul" position -> geometry birdstep origin over 150ms;
+		entity "Jean-Paul" strafe = 0;
+		entity "Jean-Paul" direction = east;
 		wait 200ms;
-		turn entity "%PLAYER%" toward entity Jean-Paul;
+		player direction = entity "Jean-Paul";
 		show dialog {
 			// TR because their portrait will block them otherwise
 			// Player is okay to still use BR (their default)
-			Jean-Paul "Whoa! WHOA! Someone's here!"
-		}
+			JEANPAUL "Whoa! WHOA! Someone's here!"
+		};
 		wait 300ms;
-		walk entity Jean-Paul to geometry birdstep2 over 240ms;
+		entity "Jean-Paul" position -> geometry birdstep2 origin over 240ms;
 		wait 100ms;
-		turn entity "%PLAYER%" toward entity Frankie;
+		player direction = entity Frankie;
 		show dialog {
 			Frankie "You can move between rooms? How are you doing that?"
 			PLAYER "I have this handheld artifact thingy, which lets me type --"
-		}
-		turn entity "%PLAYER%" toward entity Jean-Paul;
+		};
+		player direction = entity "Jean-Paul";
 		show dialog {
-			Jean-Paul "You have a portable terminal with you?"
+			JEANPAUL "You have a portable terminal with you?"
 			"Oh, wow. We'd appreciate any help you can lend us. Maybe we can get on top of things now!"
-		}
+		};
 		wait 100ms;
-		turn entity Jean-Paul north;
+		entity "Jean-Paul" direction = north;
 		wait 500ms;
-		turn entity Jean-Paul east;
+		entity "Jean-Paul" direction = east;
 		wait 200ms;
-		turn entity Jean-Paul south;
-		turn entity Frankie south;
-		turn player control on;
-		set flag ch2-cutseen-castle21 to true;
+		entity "Jean-Paul" direction = south;
+		entity Frankie direction = south;
+		player_control = on;
+		ch2_cutseen_castle21 = true;
 	}
 }
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-castle-21 {}
-on_tick-ch2-castle-21-doorless {
-	if (entity "%PLAYER%" is inside geometry north-hitbox) {
-		copy on_exit-ch2-castle-21;
-		set warp state to walk_from-south;
-		copy ch2-load-castle-22-special;
-	} else if (entity "%PLAYER%" is inside geometry east-hitbox) {
-		copy on_exit-ch2-castle-21;
-		set warp state to walk_from-west;
-		copy ch2-load-castle-11-special;
+on_tick_ch2_castle_21 {}
+on_tick_ch2_castle_21_postgame {
+	if (player intersects geometry "north-hitbox") {
+		copy!(on_exit_ch2_castle_21)
+		warp_state = "walk_from-south";
+		copy!(ch2_load_castle_22_special)
+	} else if (player intersects geometry "east-hitbox") {
+		copy!(on_exit_ch2_castle_21)
+		warp_state = "walk_from-west";
+		copy!(ch2_load_castle_11_special)
 	}
 }
 
 /* ---------- EXIT STUFF ---------- */
 
-on_exit-ch2-castle-21 { // sanitize ch2 room state
-	mutate ch2-in-room = 0;
+on_exit_ch2_castle_21 { // sanitize ch2 room state
+	ch2_in_room = 0;
 }
 
 // SERIAL: go
 
-on_go-castle-21-north {
-	copy on_exit-ch2-castle-21;
-	copy warping-out-fade-out;
-	copy ch2-load-castle-22-special;
+on_go_castle_21_north {
+	copy!(on_exit_ch2_castle_21)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_22_special)
 }
-on_go-castle-21-east {
-	copy on_exit-ch2-castle-21;
-	copy warping-out-fade-out;
-	copy ch2-load-castle-11-special;
+on_go_castle_21_east {
+	copy!(on_exit_ch2_castle_21)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_11_special)
 }
 
 /* ---------- ABACUS (ADMIN) ---------- */
 
-ch2-touch-abacus {
-	if (variable ch2-storyflag-round is < 3) {
-		turn entity Frankie toward entity "%PLAYER%";
-		if (flag ch2-abacus-firstlook is false) {
+ch2_touch_abacus {
+	if (ch2_storyflag_round < 3) {
+		entity Frankie direction = player;
+		if (!ch2_abacus_firstlook) {
 			show dialog {
 				PLAYER alignment TR "What's this? One of those kids toys from a dentist office?"
 				Frankie "It's an old counting device called an abacus."
-			}
-			set flag ch2-abacus-firstlook to true;
+			};
+			ch2_abacus_firstlook = true;
 		}
 		show dialog {
 			PLAYER alignment TR "It looks fun to clack those beads up and down."
 			Frankie "It is! It makes a great sound."
-		}
-		turn entity Frankie south;
+		};
+		entity Frankie direction = south;
 		return;
 	}
-	if (flag ch2-abacus-permission is true) {
+	if (ch2_abacus_permission) {
 		show dialog {
 			name "" "(Pick up the abacus?)"
-			> "Yes" : ch2-touch-abacus-yes
-			> "No" : ch2-touch-abacus-no
-		}
+			> "Yes" = ch2_touch_abacus_yes
+			> "No" = ch2_touch_abacus_no
+		};
 		// auto end due to branching dialog
 	}
-	if (flag ch2-abacus-backstory is false) {
+	if (!ch2_abacus_backstory) {
 		show dialog {
 			PLAYER alignment TR "Hey, does this abacus belong to anyone?"
-		}
-		turn entity Frankie toward entity "%PLAYER%";
-		turn entity "%PLAYER%" toward entity Frankie;
+		};
+		entity Frankie direction = player;
+		player direction = entity Frankie;
 		show dialog {
 			Frankie "It's mine. Why?"
 			PLAYER alignment TR "Oh, um, I was hoping I could use it for something."
@@ -235,300 +234,294 @@ ch2-touch-abacus {
 			"I won't need the abacus after that."
 			PLAYER alignment TR "Cool, so all I need to do is grab that manual?"
 			Frankie "If you would. It's black with a blue stripe on the top. Thanks."
-		}
-		set flag ch2-abacus-backstory to true;
-		set flag ch2-want-manual to true;
-		copy ch2-handoff-abacus-to-manual;
-		turn entity Frankie south;
+		};
+		ch2_abacus_backstory = true;
+		ch2_want_manual = true;
+		copy!(ch2_handoff_abacus_to_manual)
+		entity Frankie direction = south;
 	} else {
 		show dialog {
 			PLAYER "(I'll need to deliver the calculator manual to Frankie before I'm allowed to take this.)"
-		}
+		};
 	}
 }
 
-ch2-hide-abacus {
-	teleport entity "abacus" to geometry hiding-spot;
-	set entity "abacus" name to " ";
+ch2_hide_abacus {
+	entity abacus position = geometry "hiding-spot";
+	entity abacus name = " ";
 }
 
-ch2-touch-abacus-yes {
+ch2_touch_abacus_yes {
 	show dialog {
 		name "" "(You pick up the abacus!)"
-	}
-	copy script ch2-hide-abacus;
-	copy script ch2-pickup-abacus;
-	set entity "%SELF%" on_interact to null_script;
+	};
+	copy!(ch2_hide_abacus)
+	copy!(ch2_pickup_abacus)
+	self on_interact = null_script;
 }
-ch2-touch-abacus-no {
+ch2_touch_abacus_no {
 	show dialog {
 		PLAYER "Maybe later, then."
-	}
-	set entity "%SELF%" on_interact to ch2-touch-abacus;  // reset after script jump
+	};
+	self on_interact = ch2_touch_abacus;  // reset after script jump
 }
 
 /* ---------- ENTITIES ---------- */
 
-ch2-interact-pie {
-	show dialog { PLAYER "Huh. A raspberry pie." }
+interact_ch2_pie {
+	show dialog { PLAYER "Huh. A raspberry pie." };
 }
-ch2-interact-3dprinter {
-	show dialog { PLAYER "I have no idea how this thing works." }
+interact_ch2_3dprinter {
+	show dialog { PLAYER "I have no idea how this thing works." };
 }
-interact-ch2-printer {
-	show dialog { PLAYER "\"Brother\"? Is this printer someone's brother, then? Or does this printer belong to someone's brother?" }
+interact_ch2_printer {
+	show dialog { PLAYER "\"Brother\"? Is this printer someone's brother, then? Or does this printer belong to someone's brother?" };
 }
-interact-ch2-scanner {
-	show dialog { PLAYER "This doesn't look like a cannon to me. Where's the barrel? The fuse?" }
+interact_ch2_scanner {
+	show dialog { PLAYER "This doesn't look like a cannon to me. Where's the barrel? The fuse?" };
 }
-ch2-interact-cablesbox {
-	show dialog { PLAYER "Just some boxes full of cables." }
+interact_ch2_cablesbox {
+	show dialog { PLAYER "Just some boxes full of cables." };
 }
-interact-ch2-figurines {
-	show dialog { PLAYER "A toy boat and sphinx. Plastic figurines?" }
+interact_ch2_figurines {
+	show dialog { PLAYER "A toy boat and sphinx. Plastic figurines?" };
 }
 
-interact-ch2-jeanpaul {
-	copy face-player;
-	if (variable ch2-storyflag-round is < 3) {
+interact_ch2_jeanpaul {
+	copy!(face_player)
+	if (ch2_storyflag_round < 3) {
 		show dialog {
-			Jean-Paul "The rubble is too much for us to move on our own, so instead we've been doing damage assessment for the castle's digital systems."
-		}
-	} else if (
-		flag ch2-carrying-ramchips is true
-		|| flag ch2-installed-ramchips is true
-	) {
+			JEANPAUL "The rubble is too much for us to move on our own, so instead we've been doing damage assessment for the castle's digital systems."
+		};
+	} else if (ch2_carrying_ramchips || ch2_installed_ramchips) {
 		show dialog {
-			Jean-Paul "Good luck building your computer."
-		}
-	} else if (flag ch2-want-ramchips is false) {
-		mutate CALLBACK = 1;
-		goto interact-ch2-room21-split;
-	} else if (flag interrupt is true) {
+			JEANPAUL "Good luck building your computer."
+		};
+	} else if (!ch2_want_ramchips) {
+		CALLBACK = 1;
+		goto interact_ch2_room21_split;
+	} else if (interrupt) {
 		show dialog {
-			Jean-Paul "Sea Moss is an odd duck."
+			JEANPAUL "Sea Moss is an odd duck."
 			PLAYER alignment TL "Wait, he's a duck?"
-			Jean-Paul "Erm, no, he's a stone golem, but let's just say he's a creative character."
-		}
+			JEANPAUL "Erm, no, he's a stone golem, but let's just say he's a creative character."
+		};
 	} else {
-		copy interact-ch2-room21-split-s;
+		copy!(interact_ch2_room21_split_s)
 	}
-	turn entity "%SELF%" south;
+	self direction = south;
 }
 
-interact-ch2-frankie {
-	copy face-player;
-	if (variable ch2-storyflag-round is < 3) {
+interact_ch2_frankie {
+	copy!(face_player)
+	if (ch2_storyflag_round < 3) {
 		show dialog {
 			Frankie "If we can get the intercom system working, we can coordinate with people trapped in other rooms."
 			"We've been able to reestablish contact with the room north of us, but that's it. There's a lot of work left for us to do."
-		}
-		turn entity Frankie south;
+		};
+		entity Frankie direction = south;
 		return;
 	}
 	// Calculator manual stuff
-	if (flag ch2-carrying-manual is true) {
+	if (ch2_carrying_manual) {
 		show dialog {
 			PLAYER alignment TR "Hey, I brought your calculator manual."
 			Frankie "Oh, thanks!"
 			"Perfect! Now I can figure out why my program isn't working correctly."
 			"Go ahead and take the abacus. I won't need it anymore."
 			PLAYER alignment TR "Thank you!"
-		}
-		set flag ch2-carrying-manual to false;
-		set flag ch2-installed-manual to true;
-		set flag ch2-abacus-permission to true;
-		turn entity Frankie south;
+		};
+		ch2_carrying_manual = false;
+		ch2_installed_manual = true;
+		ch2_abacus_permission = true;
+		entity Frankie direction = south;
 		return;
 	}
-	if (flag ch2-abacus-backstory is true) {
-		if (flag ch2-abacus-permission is false) {
-			turn entity Frankie toward entity "%PLAYER%";
+	if (ch2_abacus_backstory) {
+		if (!ch2_abacus_permission) {
+			entity Frankie direction = player;
 			show dialog {
 				PLAYER alignment TR "Where did you say the manual was again?"
 				Frankie "The manual for my HP35s? It's in the library, in town. Black with a blue stripe at the top."
 				"I'll let you have my abacus if you bring it to me."
 				PLAYER alignment TR "Okay. Be right back."
-			}
-			turn entity Frankie south;
+			};
+			entity Frankie direction = south;
 			return;
 		}
 	}
-	if (
-		flag ch2-carrying-ramchips is true
-		|| flag ch2-installed-ramchips is true
-	) {
+	if (ch2_carrying_ramchips || ch2_installed_ramchips) {
 		show dialog {
 			Frankie "Hey, if you ever need something soldered, just let us know. We'd be happy to walk you though it."
-		}
-		turn entity Frankie south;
+		};
+		entity Frankie direction = south;
 		return;
 	}
-	if (flag ch2-want-ramchips is false) {
-		mutate CALLBACK = 2;
-		goto interact-ch2-room21-split;
-	} else if (flag interrupt is true) {
+	if (!ch2_want_ramchips) {
+		CALLBACK = 2;
+		goto interact_ch2_room21_split;
+	} else if (interrupt) {
 		show dialog {
 			Frankie "Sea Moss sure loves his snacks."
 			"Because... you know."
-		}
+		};
 	} else {
-		copy interact-ch2-room21-split-s;
+		copy!(interact_ch2_room21_split_s)
 	}
-	turn entity Frankie south; // also added to all "early returns" O.o
+	entity Frankie direction = south; // also added to all "early returns" O.o
 }
 
-interact-ch2-room21-split {
-	turn entity Frankie toward entity "%PLAYER%";
-	turn entity Jean-Paul toward entity "%PLAYER%";
+interact_ch2_room21_split {
+	entity Frankie direction = player;
+	entity "Jean-Paul" direction = player;
 	show dialog {
 		PLAYER "So I'm rebuilding the castle mainframe, and I heard you guys might be able to help me get some RAM. Lambda couldn't find any to spare."
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "Lambda? Who's that?"
+		JEANPAUL "Lambda? Who's that?"
 		PLAYER "He's someone helping me."
-	}
-	if (flag ch2-lambda-deletion-backstory is false) {
+	};
+	if (!ch2_lambda_deletion_backstory) {
 		show dialog {
 			PLAYER "Though... I thought you might know him. He seems like a pretty important person around here."
-			Jean-Paul "What does he look like?"
+			JEANPAUL "What does he look like?"
 			PLAYER "I don't know. I've heard his voice before, but mostly we talk over text chat."
-		}
-		turn entity "%PLAYER%" toward entity Frankie;
+		};
+		player direction = entity Frankie;
 		show dialog {
 			Frankie "Sounds fishy to me."
 			PLAYER "...."
-		}
+		};
 	}
 	show dialog {
 		PLAYER "Anyway, if you don't have any RAM I can use, do you have any ideas for a substitute? It's okay if it's abstract."
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "\"Abstract?\""
+		JEANPAUL "\"Abstract?\""
 		PLAYER "Yeah, so like what even is RAM?"
-		Jean-Paul "It's a computer's working memory. Any programs that are running, or images or text that is loaded, or anything at all...."
+		JEANPAUL "It's a computer's working memory. Any programs that are running, or images or text that is loaded, or anything at all...."
 		"All that data needs somewhere to sit while it's being worked on."
-	}
-	turn entity "%PLAYER%" toward entity Frankie;
+	};
+	player direction = entity Frankie;
 	show dialog {
 		Frankie "Or shown on a screen."
 		PLAYER "Right, so for an \"abstract\" computer, what could work instead? A notebook? A jelly bean jar?"
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "How abstract are we talking?"
+		JEANPAUL "How abstract are we talking?"
 		PLAYER "Well, so far I've made a hard drive from a dinner plate and a phonograph needle."
-		Jean-Paul "...Yikes."
-	}
+		JEANPAUL "...Yikes."
+	};
 	// They all turn toward each other
 	show dialog {
-		Jean-Paul "Well, the guy who can help most isn't here right now."
-	}
-	turn entity "%PLAYER%" toward entity Frankie;
+		JEANPAUL "Well, the guy who can help most isn't here right now."
+	};
+	player direction = entity Frankie;
 	show dialog {
 		Frankie "He's a bit distractable."
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "A bit?!"
-	}
-	turn entity "%PLAYER%" toward entity Frankie;
+		JEANPAUL "A bit?!"
+	};
+	player direction = entity Frankie;
 	show dialog {
 		Frankie "Yeah, maybe that was an understatement. But he was away when the earthquake hit. Don't know where he is, but wherever he is, he's stuck in that room."
 		PLAYER "Well, who is he? What does he look like?"
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "His name is Sea Moss, and he's a giant stone golem. Can't miss him."
-	}
-	if (flag ch2-seamoss-backstory is true) {
+		JEANPAUL "His name is Sea Moss, and he's a giant stone golem. Can't miss him."
+	};
+	if (ch2_seamoss_backstory) {
 		show dialog {
 			PLAYER "Wait, I think I saw that guy. He was in the castle kitchen."
-		}
-		turn entity "%PLAYER%" toward entity Frankie;
+		};
+		player direction = entity Frankie;
 		show dialog {
 			Frankie "No surprise there!"
-		}
-		turn entity "%PLAYER%" toward entity Jean-Paul;
+		};
+		player direction = entity "Jean-Paul";
 		show dialog {
-			Jean-Paul "Yep, that's him."
-		}
+			JEANPAUL "Yep, that's him."
+		};
 	} else {
-		turn entity "%PLAYER%" toward entity Frankie;
+		player direction = entity Frankie;
 		show dialog {
 			Frankie "He's almost certainly near the kitchen. East wing. That's the first place I'd look."
-		}
+		};
 	}
-	turn entity "%PLAYER%" toward entity Frankie;
+	player direction = entity Frankie;
 	show dialog {
 		Frankie "He'll definitely be able to find you an \"abstract\" solution."
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "Good luck, kid."
-	}
-	set flag ch2-want-ramchips to true;
-	copy ch2-handoff-ramchips-to-seamoss;
-	set flag interrupt to true;
-	turn entity Jean-Paul south;
-	turn entity Frankie south;
-	if (variable CALLBACK is 1) {
-		mutate CALLBACK = 0;
-		set entity "%SELF%" on_interact to interact-ch2-jeanpaul;
+		JEANPAUL "Good luck, kid."
+	};
+	ch2_want_ramchips = true;
+	copy!(ch2_handoff_ramchips_to_seamoss)
+	interrupt = true;
+	entity "Jean-Paul" direction = south;
+	entity Frankie direction = south;
+	if (CALLBACK == 1) {
+		CALLBACK = 0;
+		self on_interact = interact_ch2_jeanpaul;
 		return;
-	} else if (variable CALLBACK is 2) {
-		mutate CALLBACK = 0;
-		set entity "%SELF%" on_interact to interact-ch2-frankie;
+	} else if (CALLBACK == 2) {
+		CALLBACK = 0;
+		self on_interact = interact_ch2_frankie;
 		return;
 	} else {
-		show serial dialog {
-			"<r>DEBUG></>: Something went wrong splitting into entity wrapup scripts after shared behavior in 'interact-ch2-room21-split'! 'CALLBACK' value: $CALLBACK$"
-		}
+		show serial_dialog {
+			"<r>DEBUG></>: Something went wrong splitting into entity wrapup scripts after shared behavior in 'interact_ch2_room21_split'! 'CALLBACK' value: $CALLBACK$"
+		};
 	}
 }
 
-interact-ch2-room21-split-s {
-	turn entity Jean-Paul toward entity "%PLAYER%";
-	turn entity Frankie toward entity "%PLAYER%";
+interact_ch2_room21_split_s {
+	entity "Jean-Paul" direction = player;
+	entity Frankie direction = player;
 	show dialog {
 		PLAYER "So, I may have forgotten where I can find Sea Moss."
-	}
-	turn entity "%PLAYER%" toward entity Jean-Paul;
+	};
+	player direction = entity "Jean-Paul";
 	show dialog {
-		Jean-Paul "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
+		JEANPAUL "Best place to look is in the grand hall, or near the kitchen, or somewhere like that. All those rooms are in the east wing."
 		PLAYER "And he'll be able to find me a substitute for RAM?"
-	}
-	turn entity "%PLAYER%" toward entity Frankie;
+	};
+	player direction = entity Frankie;
 	show dialog {
 		Frankie "If anyone can, he can. He's good at being \"abstract.\""
-	}
+	};
 }
 
-interact-ch2-frankie-end {
-	copy face-player;
-	show dialog { SELF "Wow, it's so much easier to fix everything with the castle connected. I was tearing my hair out!" }
-	turn entity "%SELF%" south;
+interact_ch2_frankie_end {
+	copy!(face_player)
+	show dialog { SELF "Wow, it's so much easier to fix everything with the castle connected. I was tearing my hair out!" };
+	self direction = south;
 }
-interact-ch2-jeanpaul-end {
-	copy face-player;
-	show dialog { SELF "Almost done patching things up. Then it's off to see the band!" }
-	turn entity "%SELF%" south;
+interact_ch2_jeanpaul_end {
+	copy!(face_player)
+	show dialog { SELF "Almost done patching things up. Then it's off to see the band!" };
+	self direction = south;
 }
-interact-ch2-goose {
-	if (flag ch2-installed-minirake-99 is true) {
+interact_ch2_goose {
+	if (ch2_installed_minirake_99) {
 		show dialog {
 			PLAYER "I guess the goose likes me."
 			Goose "Honk!"
-		}
-	} else if (flag ch2-carrying-minirake-99 is false) {
+		};
+	} else if (!ch2_carrying_minirake_99) {
 	    show dialog {
 			name "" "(An image of the goose honking atop a mountain of rakes floods your mind.)"
 			PLAYER "Did the goose just..."
 	    	Goose "HONK! (with a desire for rakes?)"
 			PLAYER "Must have been my imagination."
-		}
+		};
     } else { // rake is carried, but not installed
 		show dialog {
 			name "" "(You feel compelled to present the rake to the goose like a treasure to Caesar.)"
@@ -536,8 +529,8 @@ interact-ch2-goose {
 			name "" "(You give the rake to the goose!)"
 			name "" "(The goose seems to fluff its feathers and almost glow with an RGB shimmer. Somehow it seems stronger, and it honks with a mischievious smile in eyes.)"
 			PLAYER "We seem to be an... accomplice? Or perhaps this is a new partnership?"
-		}
-		set flag ch2-carrying-minirake-99 to false;
-		set flag ch2-installed-minirake-99 to true;
+		};
+		ch2_carrying_minirake_99 = false;
+		ch2_installed_minirake_99 = true;
     }
 }

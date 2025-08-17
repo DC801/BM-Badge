@@ -1,191 +1,191 @@
-include!("header.mgs")
+include "header.mgs";
 
-serial dialog spacer {
+serial_dialog "spacer" {
 	" "
 	"------------"
 	" "
 }
-serial dialog lambda-over {
+serial_dialog "lambda_over" {
 	// check if there's a blank line just before using this dialog (there should be one)
 	"<bold>lambda-talk</>: connection closed successfully"
 }
 
 /* ---------- CASTLE ON_LOAD INIT ---------- */
 
-ch2-map-init-registers {
-	set flag interrupt to false; // flag set when something happens in the room and you haven't left the room yet
-	set flag interrupt2 to false; // for when you need a second one
-	set flag interrupt3 to false; // OwO
-	mutate tempvar = 0;
-	mutate tempvar2 = 0;
-	set flag can-interrupt-dialog to false;
+ch2_map_init_registers {
+	interrupt = false; // flag set when something happens in the room and you haven't left the room yet
+	interrupt2 = false; // for when you need a second one
+	interrupt3 = false; // OwO
+	tempvar = 0;
+	tempvar2 = 0;
+	can_interrupt_dialog = false;
 }
-ch2-map-init-hex {
+ch2_map_init_hex {
 	if (
 		// if you've fixed the mainframe to the point you can use Ring Zero normally inside the castle
-		flag ch2-ring-zero-enabled-in-castle is true
+		ch2_ring_zero_enabled_in_castle
 		// OR you're not in the castle at all
-		|| variable ch2-in-room is 0
-		// OR debug mode is on
-		|| debug mode is on
+		|| ch2_in_room == 0
+		// OR debug_mode
+		|| debug_mode
 	) {
-		turn hex control on;
-		turn lights control off;
-		if (variable ch2-in-room is 0) {
-			turn light LED_USB off;
+		hex_control = on;
+		lights_control = off;
+		if (ch2_in_room == 0) {
+			light LED_USB = off;
 		}
 	} else {
-		turn hex control off;
-		turn hex clipboard off;
-		turn lights control on;
-		turn light ALL off;
+		hex_control = off;
+		hex_clipboard = off;
+		lights_control = on;
+		light ALL = off;
 	}
 }
-ch2-map-init-serial {
-	if (flag ch2-has-artifact is false) { // no artifact at all
-		turn serial control off;
+ch2_map_init_serial {
+	if (!ch2_has_artifact) { // no artifact at all
+		serial_control = off;
 	} else { // you have the artifact
-		turn serial control on;
-		copy register-rtfm;
-		copy register-inventory;
-		copy register-manual;
-		copy register-eastereggs;
-		register alias h = help;
-		register alias l = look;
+		serial_control = on;
+		copy!(register_rtfm)
+		copy!(register_inventory)
+		copy!(register_manual)
+		copy!(register_eastereggs)
+		alias h = help;
+		alias l = look;
 	}
-	if (flag ch2-has-map is true) {
-		copy register-map;
+	if (ch2_has_map) {
+		copy!(register_map)
 	}
-	if (debug mode is on) {
-		copy register-storyflag;
-		copy register-warp;
-		turn serial control on;
-	} else if (flag ch2-warp-granted is true) {
-		copy register-warp;
+	if (debug_mode) {
+		copy!(register_storyflag)
+		copy!(register_warp)
+		serial_control = on;
+	} else if (ch2_warp_granted) {
+		copy!(register_warp)
 	}
-	if (variable ch2-storyflag-round is > 0) {
-		if (variable ch2-storyflag-round is < 5) {
-			copy register-parts;
+	if (ch2_storyflag_round > 0) {
+		if (ch2_storyflag_round < 5) {
+			copy!(register_parts)
 		}
 	}
 }
-ch2-map-init-inventory-look {
-	if (flag ch2-carrying-monitor is true) {
-		register look + monitor -> look-monitor;
+ch2_map_init_inventory_look {
+	if (ch2_carrying_monitor) {
+		command look + monitor = look_monitor;
 	}
-	if (flag ch2-carrying-heatsink is true) {
-		register look + "heat sink" -> look-heatsink;
+	if (ch2_carrying_heatsink) {
+		command look + "heat sink" = look_heatsink;
 	}
-	if (flag ch2-carrying-cactuscooler is true) {
-		register look + "cactus cooler" -> look-cactuscooler;
+	if (ch2_carrying_cactuscooler) {
+		command look + "cactus cooler" = look_cactuscooler;
 	}
-	if (flag ch2-carrying-powersupply is true) {
-		register look + "power supply" -> look-powersupply;
+	if (ch2_carrying_powersupply) {
+		command look + "power supply" = look_powersupply;
 	}
-	if (flag ch2-carrying-keyboard is true) {
-		register look + keyboard -> look-keyboard;
+	if (ch2_carrying_keyboard) {
+		command look + keyboard = look_keyboard;
 	}
-	if (flag ch2-carrying-mouse is true) {
-		register look + mouse -> look-mouse;
+	if (ch2_carrying_mouse) {
+		command look + mouse = look_mouse;
 	}
-	if (flag ch2-carrying-harddrive is true) {
-		register look + "hard drive" -> look-harddrive;
+	if (ch2_carrying_harddrive) {
+		command look + "hard drive" = look_harddrive;
 	}
-	if (flag ch2-carrying-plate is true) {
-		register look + plate -> look-plate;
+	if (ch2_carrying_plate) {
+		command look + plate = look_plate;
 	}
-	if (flag ch2-carrying-needle is true) {
-		register look + needle -> look-needle;
+	if (ch2_carrying_needle) {
+		command look + needle = look_needle;
 	}
-	if (flag ch2-carrying-ramchips is true) {
-		register look + "ram chip" -> look-ramchips;
-		register look + ram -> look-ramchips;
+	if (ch2_carrying_ramchips) {
+		command look + "ram chip" = look_ramchips;
+		command look + ram = look_ramchips;
 	}
-	if (flag ch2-carrying-clock is true) {
-		register look + clock -> look-clock;
+	if (ch2_carrying_clock) {
+		command look + clock = look_clock;
 	}
-	if (flag ch2-carrying-cpu is true) {
-		register look + cpu -> look-cpu;
+	if (ch2_carrying_cpu) {
+		command look + cpu = look_cpu;
 	}
-	if (flag ch2-carrying-goldfish is true) {
-		register look + goldfish -> look-goldfish;
+	if (ch2_carrying_goldfish) {
+		command look + goldfish = look_goldfish;
 	}
-	if (flag ch2-carrying-manual is true) {
-		register look + manual -> look-manual;
+	if (ch2_carrying_manual) {
+		command look + manual = look_manual;
 	}
-	if (flag ch2-carrying-abacus is true) {
-		register look + abacus -> look-abacus;
+	if ("ch2_carrying_abacus") {
+		command look + abacus = look_abacus;
 	}
-	if (flag ch2-carrying-mainframeos is true) {
-		register look + mainframeos -> look-mainframeos;
+	if ("ch2_carrying_mainframeos") {
+		command look + mainframeos = look_mainframeos;
 	}
 }
-ch2-map-init-serial-debug-message {
-	if (debug mode is on) {
-		if (flag debug-curr-state is false) {
-			show serial dialog {
+ch2_map_init_serial_debug_message {
+	if (debug_mode) {
+		if (!debug_curr_state) {
+			show serial_dialog {
 				"<y>+-------------------------+</>"
 				"<y>|  DEBUG MODE IS NOW ON!  |</>"
 				"<y>+-------------------------+</>"
-			}
+			};
 		}
-		set flag debug-curr-state to true;
+		debug_curr_state = true;
 	} else {
-		if (flag debug-curr-state is true) {
-			show serial dialog {
+		if (debug_curr_state) {
+			show serial_dialog {
 				"<y>+--------------------------+</>"
 				"<y>|  DEBUG MODE IS NOW OFF!  |</>"
 				"<y>+--------------------------+</>"
-			}
+			};
 		}
-		set flag debug-curr-state to false;
+		debug_curr_state = false;
 	}
 }
 
-ch2-map-init-warp-in {
-	if (warp state is warping) {
-		copy warping-in-fade-in;
+ch2_map_init_warp_in {
+	if (warp_state == warping) {
+		copy!(warping_in_fade_in)
 	}
-	turn player control on;
+	player_control = on;
 }
 
-ch2-map-init {
-	copy ch2-map-init-registers;
-	copy ch2-map-init-hex;
-	copy ch2-map-init-serial;
-	copy ch2-map-init-inventory-look;
-	copy ch2-map-init-serial-debug-message;
-	copy ch2-map-init-warp-in;
+ch2_map_init {
+	copy!(ch2_map_init_registers)
+	copy!(ch2_map_init_hex)
+	copy!(ch2_map_init_serial)
+	copy!(ch2_map_init_inventory_look)
+	copy!(ch2_map_init_serial_debug_message)
+	copy!(ch2_map_init_warp_in)
 	// extra goose stuff
-	if (flag ch2-goosefacts is true) {
-		register stop -> stop-goosefacts;
-		copy goosefacts;
+	if (ch2_goosefacts) {
+		command stop = stop_goosefacts;
+		copy!(goosefacts)
 	}
 }
 
 
 /* ---------- ON_WARP & ON_GO ANIMATION ---------- */
 
-spin-quickly {
-	rotate entity "%SELF%" -1;
+spin_quickly {
+	self direction -= 1;
 	wait 150ms;
 }
 
-warping-out-fade-out {
-	turn player control off;
-	turn serial control off;
-	set warp state to warping;
-	set entity "%PLAYER%" on_tick to spin-quickly;
-	fade out camera to #000000 over 500ms;
+warping_out_fade_out {
+	player_control = off;
+	serial_control = off;
+	warp_state = warping;
+	player on_tick = spin_quickly;
+	camera fade out -> #000000 over 500ms;
 }
 
-warping-in-fade-in {
-	teleport entity "%PLAYER%" to geometry warp-spot;
-	set entity "%PLAYER%" on_tick to spin-quickly;
-	fade in camera from #000000 over 300ms;
-	set entity "%PLAYER%" on_tick to null_script;
-	turn entity "%PLAYER%" south;
-	set warp state to warped; // it needs to be set to SOMETHING...
-	turn player control on; // todo: remove after shared behavior is fully merged
-	turn serial control on; // todo: remove after shared behavior is fully merged
+warping_in_fade_in {
+	player position = geometry "warp-spot";
+	player on_tick = spin_quickly;
+	camera fade in -> #000000 over 300ms;
+	player on_tick = null_script;
+	player direction = south;
+	warp_state = warped; // it needs to be set to SOMETHING...
+	player_control = on; // todo: remove after shared behavior is fully merged
+	serial_control = on; // todo: remove after shared behavior is fully merged
 }

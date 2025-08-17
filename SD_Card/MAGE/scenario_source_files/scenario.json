@@ -1,10 +1,7 @@
 {
 	"scriptPaths": [
-		"scripts/script-action_testing.json",
-		"scripts/script-test.json"
 	],
 	"dialogPaths": [
-		"dialog/dialog-action_testing.json"
 	],
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json",
@@ -13,6 +10,5 @@
 		"transparent": "tilesets/tileset-dialog_transparent_menu-white.json"
 	},
 	"serialDialogPaths": [
-		"serial_dialog/serial_dialog-action_testing.json"
 	]
 }

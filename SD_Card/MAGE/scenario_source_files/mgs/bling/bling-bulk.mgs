@@ -1,34 +1,35 @@
-on_load-bling-zero {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
+on_load_bling_zero {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
 }
 
-on_load-bling-serial {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
+on_load_bling_serial {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
 }
 
-on_load-bling-digi-mage {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
+on_load_bling_digi_mage {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
 }
 
-on_load-bling-digi-mage2 {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
+on_load_bling_digi_mage2 {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
 }
 
-on_load-bling-dc801 {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
-}
-on_load-bling-dc801-2 {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
+on_load_bling_dc801 {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
 }
 
-on_load-bling-qr {
-	teleport camera to geometry camera-spot;
-	copy script on_load-bling-mode-map;
-	turn player control on;
+on_load_bling_dc801_2 {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
+}
+
+on_load_bling_qr {
+	camera = geometry "camera-spot";
+	copy!(on_load_bling_mode_map)
+	player_control = true;
 }

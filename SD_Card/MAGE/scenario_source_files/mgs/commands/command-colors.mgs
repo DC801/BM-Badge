@@ -1,28 +1,28 @@
-include!("header.mgs")
+include "header.mgs";
 
 // REGISTER
 
-register-colors {
-	register colors -> command-colors;
-	register colors + bg -> command-colors-bg;
-	register colors + bold -> command-colors-bold;
-	register colors + dim -> command-colors-dim;
+register_colors {
+	command colors = command_colors;
+	command colors + bg = command_colors_bg;
+	command colors + bold = command_colors_bold;
+	command colors + dim = command_colors_dim;
 }
 
 // COMMAND
 
-command-colors {
-	show serial dialog spacer;
-	show serial dialog {
+command_colors {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"This is a test of the MGE ANSI color system!"
 		"Also see options: bg, bold, dim"
 		" "
 		"<w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</>"
-	}
+	};
 }
-command-colors-bg {
-	show serial dialog spacer;
-	show serial dialog {
+command_colors_bg {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"MGE ANSI color test: \"bg\""
 		"<bg-w><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-white"
 		"<bg-r><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-red"
@@ -32,11 +32,11 @@ command-colors-bg {
 		"<bg-b><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-blue"
 		"<bg-m><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-magenta"
 		"<bg-k><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-black"
-	}
+	};
 }
-command-colors-bold {
-	show serial dialog spacer;
-	show serial dialog {
+command_colors_bold {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"MGE ANSI color test: \"bold\""
 		"<bold><bg-w><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-white"
 		"<bold><bg-r><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-red"
@@ -46,11 +46,11 @@ command-colors-bold {
 		"<bold><bg-b><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-blue"
 		"<bold><bg-m><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-magenta"
 		"<bold><bg-k><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-black"
-	}
+	};
 }
-command-colors-dim {
-	show serial dialog spacer;
-	show serial dialog {
+command_colors_dim {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"MGE ANSI color test: \"dim\""
 		"<dim><bg-w><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-white"
 		"<dim><bg-r><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-red"
@@ -60,5 +60,5 @@ command-colors-dim {
 		"<dim><bg-b><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-blue"
 		"<dim><bg-m><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-magenta"
 		"<dim><bg-k><w>W<r>R<y>Y<g>G<c>C<b>B<m>M<k>K</> bg-black"
-	}
+	};
 }

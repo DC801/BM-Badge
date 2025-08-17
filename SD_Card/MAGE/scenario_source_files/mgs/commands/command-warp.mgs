@@ -1,108 +1,108 @@
-include!("header.mgs")
+include "header.mgs";
 
 // REGISTER
 
-register-warp {
+register_warp {
 	// NOTE: No need to branch any of these (WOPR excepting); you only get warping powers when the castle has been entirely explored
 
-	register warp -> command-warp;
-	register warp fail -> warp-fail;
+	command warp = command_warp;
+	command warp fail = warp_fail;
 
-	register man + warp -> man-warp;
+	command man + warp = man_warp;
 
 	// convenience numbers -- not documented in game, but useful for debugging if nothing else
-	register warp + "1" -> warp-ch2-1;
-	register warp + "11" -> warp-ch2-11;
-	register warp + "12" -> warp-ch2-12;
-	register warp + "13" -> warp-ch2-13;
-	register warp + "14" -> warp-ch2-14;
-	register warp + "21" -> warp-ch2-21;
-	register warp + "22" -> warp-ch2-22;
-	register warp + "23" -> warp-ch2-23;
-	register warp + "31" -> warp-ch2-31;
-	register warp + "32" -> warp-ch2-32;
-	register warp + "33" -> warp-ch2-33;
-	register warp + "34" -> warp-ch2-34;
-	register warp + "99" -> warp-ch2-99;
+	command warp + "1" = warp_ch2_1;
+	command warp + "11" = warp_ch2_11;
+	command warp + "12" = warp_ch2_12;
+	command warp + "13" = warp_ch2_13;
+	command warp + "14" = warp_ch2_14;
+	command warp + "21" = warp_ch2_21;
+	command warp + "22" = warp_ch2_22;
+	command warp + "23" = warp_ch2_23;
+	command warp + "31" = warp_ch2_31;
+	command warp + "32" = warp_ch2_32;
+	command warp + "33" = warp_ch2_33;
+	command warp + "34" = warp_ch2_34;
+	command warp + "99" = warp_ch2_99;
 	// end debug
 
 	// CH2 ROOMS
 
-	register warp + "castle exterior" -> warp-ch2-castle-exterior;
-	register warp + "castle entrance" -> warp-ch2-1;
-	register warp + "castle hallway front" -> warp-ch2-11;
-	register warp + "castle hallway back" -> warp-ch2-12;
+	command warp + "castle exterior" = warp_ch2_castle_exterior;
+	command warp + "castle entrance" = warp_ch2_1;
+	command warp + "castle hallway front" = warp_ch2_11;
+	command warp + "castle hallway back" = warp_ch2_12;
 
-	register warp + "castle throne room" -> warp-ch2-13;
-	register warp + "throne room" -> warp-ch2-13;
+	command warp + "castle throne room" = warp_ch2_13;
+	command warp + "throne room" = warp_ch2_13;
 	
-	register warp + "castle bedroom" -> warp-ch2-14;
-	register warp + "gibson's bedroom" -> warp-ch2-14;
-	register warp + "gibsons bedroom" -> warp-ch2-14;
-	register warp + "gibson bedroom" -> warp-ch2-14;
-	register warp + "king gibson's bedroom" -> warp-ch2-14;
-	register warp + "king gibsons bedroom" -> warp-ch2-14;
-	register warp + "king gibson bedroom" -> warp-ch2-14;
+	command warp + "castle bedroom" = warp_ch2_14;
+	command warp + "gibson's bedroom" = warp_ch2_14;
+	command warp + "gibsons bedroom" = warp_ch2_14;
+	command warp + "gibson bedroom" = warp_ch2_14;
+	command warp + "king gibson's bedroom" = warp_ch2_14;
+	command warp + "king gibsons bedroom" = warp_ch2_14;
+	command warp + "king gibson bedroom" = warp_ch2_14;
 
-	register warp + "workshop" -> warp-ch2-21;
-	register warp + "server room" -> warp-ch2-22;
-	register warp + "power plant" -> warp-ch2-23;
+	command warp + workshop = warp_ch2_21;
+	command warp + "server room" = warp_ch2_22;
+	command warp + "power plant" = warp_ch2_23;
 
-	register warp + "grand hall" -> warp-ch2-31;
-	register warp + "castle hall" -> warp-ch2-31;
+	command warp + "grand hall" = warp_ch2_31;
+	command warp + "castle hall" = warp_ch2_31;
 
-	register warp + "castle kitchen" -> warp-ch2-32;
+	command warp + "castle kitchen" = warp_ch2_32;
 
-	register warp + "hydroponics" -> warp-ch2-33;
-	register warp + "castle hydroponics" -> warp-ch2-33;
-	register warp + "hydroponics room" -> warp-ch2-33;
+	command warp + hydroponics = warp_ch2_33;
+	command warp + "castle hydroponics" = warp_ch2_33;
+	command warp + "hydroponics room" = warp_ch2_33;
 	
-	register warp + "castle pantry" -> warp-ch2-34;
+	command warp + "castle pantry" = warp_ch2_34;
 
-	register warp + "secret lab" -> warp-ch2-99;
+	command warp + "secret lab" = warp_ch2_99;
 
 	// CH1 ROOMS
 	
-	register warp + "town" -> warp-ch2-town;
-	register warp + "bakery" -> warp-ch2-bakery;
-	register warp + "greenhouse" -> warp-ch2-greenhouse;
+	command warp + town = warp_ch2_town;
+	command warp + bakery = warp_ch2_bakery;
+	command warp + greenhouse = warp_ch2_greenhouse;
 
-	register warp + "wopr room" -> warp-ch2-wopr;
-	register warp + "wopr" -> warp-ch2-wopr;
+	command warp + "wopr room" = warp_ch2_wopr;
+	command warp + wopr = warp_ch2_wopr;
 
-	register warp + "library" -> warp-ch2-library;
-	register warp + "lodge" -> warp-ch2-library;
+	command warp + library = warp_ch2_library;
+	command warp + lodge = warp_ch2_library;
 
-	register warp + "inner sanctum" -> warp-ch2-rtfmroom;
-	register warp + "rtfm room" -> warp-ch2-rtfmroom;
-	register warp + "rtfm" -> warp-ch2-rtfmroom;
+	command warp + "inner sanctum" = warp_ch2_rtfmroom;
+	command warp + "rtfm room" = warp_ch2_rtfmroom;
+	command warp + rtfm = warp_ch2_rtfmroom;
 
-	register warp + "home" -> warp-ch2-magehouse;
-	register warp + "my home" -> warp-ch2-magehouse;
-	register warp + "my house" -> warp-ch2-magehouse;
+	command warp + home = warp_ch2_magehouse;
+	command warp + "my home" = warp_ch2_magehouse;
+	command warp + "my house" = warp_ch2_magehouse;
 	
-	register warp + "bobsclub" -> warp-ch2-bobsclub;
-	register warp + "bobs club" -> warp-ch2-bobsclub;
-	register warp + "bob's club" -> warp-ch2-bobsclub;
-	register warp + "bobs club basement" -> warp-ch2-bobsclub-basement;
-	register warp + "bob's club basement" -> warp-ch2-bobsclub-basement;
+	command warp + bobsclub = warp_ch2_bobsclub;
+	command warp + "bobs club" = warp_ch2_bobsclub;
+	command warp + "bob's club" = warp_ch2_bobsclub;
+	command warp + "bobs club basement" = warp_ch2_bobsclub_basement;
+	command warp + "bob's club basement" = warp_ch2_bobsclub_basement;
 	
-	register warp + "beatrice's house" -> warp-ch2-oldcouplehouse;
-	register warp + "beatrices house" -> warp-ch2-oldcouplehouse;
-	register warp + "beatrice house" -> warp-ch2-oldcouplehouse;
-	register warp + "bea" -> warp-ch2-oldcouplehouse;
+	command warp + "beatrice's house" = warp_ch2_oldcouplehouse;
+	command warp + "beatrices house" = warp_ch2_oldcouplehouse;
+	command warp + "beatrice house" = warp_ch2_oldcouplehouse;
+	command warp + bea = warp_ch2_oldcouplehouse;
 
-	register warp + "smith's house" -> warp-ch2-smithfamily;
-	register warp + "smiths house" -> warp-ch2-smithfamily;
-	register warp + "smith house" -> warp-ch2-smithfamily;
-	register warp + "smith" -> warp-ch2-smithfamily;
+	command warp + "smith's house" = warp_ch2_smithfamily;
+	command warp + "smiths house" = warp_ch2_smithfamily;
+	command warp + "smith house" = warp_ch2_smithfamily;
+	command warp + smith = warp_ch2_smithfamily;
 }
 
 // MAN PAGE
 
-man-warp {
-	show serial dialog spacer;
-	show serial dialog {
+man_warp {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - WARP</>"
 		" "
 		"A powerful command that teleports you to a room you've been to before."
@@ -110,23 +110,23 @@ man-warp {
 		"To see a list of valid warp desinations, use <c>WARP</> on its own (without a room name)."
 		" "
 		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle wireless base station."
-	}
+	};
 }
 
 // FAIL
 
-warp-fail {
-	show serial dialog spacer;
-	show serial dialog {
+warp_fail {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"<bold><r>WARP FAILED!</> You have not been to that destination yet or that destination does not exist."
-	}
+	};
 }
 
 // COMMAND
 
-command-warp {
-	show serial dialog spacer;
-	show serial dialog {
+command_warp {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"List of valid <c>WARP</> destinations:"
 		" "
 		"<bold>-------------------- CASTLE --------------------</>"
@@ -144,104 +144,104 @@ command-warp {
 		"  Greenhouse               Beatrice's house"
 		"  Library                  Smith's house"
 		"  RTFM room                My house"
-	}
-	if (flag wopr-backdoor-found is true) {
-		show serial dialog { "  WOPR room" }
+	};
+	if (wopr_backdoor_found) {
+		show serial_dialog { "  WOPR room" };
 	}
 }
 
 // common
 
-warp-common {
-	if (flag ch2-wait-for-hat-touch is true) {
-		goto ch2-wait-for-hat-touch-message;
+warp_common {
+	if (ch2_wait_for_hat_touch) {
+		goto ch2_wait_for_hat_touch_message;
 	}
 	// all warps will fail before the computer is ok
 	// if you're PHYSICALLY OUTSIDE the castle
-	if (flag ch2-ring-zero-enabled-in-castle is false) {
-		if (debug mode is off) {
-			if (variable ch2-in-room is 0) {
-				goto warp-ch2-town-check-fail-message;
+	if (!ch2_ring_zero_enabled_in_castle) {
+		if (!debug_mode) {
+			if (ch2_in_room == 0) {
+				goto warp_ch2_town_check_fail_message;
 			}
 		}
 	}
-	mutate ch2-in-room = 0;
-	mutate current-chapter = 2; // todo: remove this; it's here for ch2 debug mode protection for the WOPR room
-	copy warping-out-fade-out;
+	ch2_in_room = 0;
+	current_chapter = 2; // todo: remove this; it's here for ch2 debug mode protection for the WOPR room
+	copy!(warping_out_fade_out)
 }
 
-warp-ch2-castle-exterior {
-	copy warp-common;
-	load map ch2-castle-outside;
+warp_ch2_castle_exterior {
+	copy!(warp_common)
+	load map "ch2-castle-outside";
 }
-warp-ch2-1 {
-	copy warp-common;
-	copy ch2-load-castle-1-special;
+warp_ch2_1 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_1_special)
 }
-warp-ch2-11 {
-	copy warp-common;
-	copy ch2-load-castle-11-special;
+warp_ch2_11 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_11_special)
 }
-warp-ch2-12 {
-	copy warp-common;
-	copy ch2-load-castle-12-special;
+warp_ch2_12 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_12_special)
 }
-warp-ch2-13 {
-	copy warp-common;
-	copy ch2-load-castle-13-special;
+warp_ch2_13 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_13_special)
 }
-warp-ch2-14 {
-	copy warp-common;
-	copy ch2-load-castle-14-special;
+warp_ch2_14 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_14_special)
 }
-warp-ch2-21 {
-	copy warp-common;
-	copy ch2-load-castle-21-special;
+warp_ch2_21 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_21_special)
 }
-warp-ch2-22 {
-	copy warp-common;
-	copy ch2-load-castle-22-special;
+warp_ch2_22 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_22_special)
 }
-warp-ch2-23 {
-	copy warp-common;
-	copy ch2-load-castle-23-special;
+warp_ch2_23 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_23_special)
 }
-warp-ch2-31 {
-	copy warp-common;
-	copy ch2-load-castle-31-special;
+warp_ch2_31 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_31_special)
 }
-warp-ch2-32 {
-	copy warp-common;
-	copy ch2-load-castle-32-special;
+warp_ch2_32 {
+	copy!(warp_common)
+	copy!(ch2_load_castle_32_special)
 }
-warp-ch2-33 {
-	copy warp-common;
-	load map ch2-castle-33;
+warp_ch2_33 {
+	copy!(warp_common)
+	load map "ch2-castle-33";
 }
-warp-ch2-34 {
-	copy warp-common;
-	load map ch2-castle-34;
+warp_ch2_34 {
+	copy!(warp_common)
+	load map "ch2-castle-34";
 }
-warp-ch2-99 {
-	copy warp-common;
-	load map ch2-castle-99;
+warp_ch2_99 {
+	copy!(warp_common)
+	load map "ch2-castle-99";
 }
 
 // ch1 stuff
 
-warp-ch2-town-destination-check {
+warp_ch2_town_destination_check {
 	// all warps will fail before the computer is ok
 	// if your DESTINATION is outside the castle
-	if (flag ch2-ring-zero-enabled-in-castle is false) {
-		if (debug mode is off) {
-			goto warp-ch2-town-check-fail-message;
+	if (!ch2_ring_zero_enabled_in_castle) {
+		if (!debug_mode) {
+			goto warp_ch2_town_check_fail_message;
 		}
 	}
 }
 
-warp-ch2-town-check-fail-message {
-	show serial dialog spacer;
-	show serial dialog {
+warp_ch2_town_check_fail_message {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"<bold><r>ERROR</>: <bold>warp-assistant</> timed out"
 		" "
 		"DNS lookup for warp destination failed. Could not confirm coordinates of destination. Aborting!"
@@ -249,68 +249,65 @@ warp-ch2-town-check-fail-message {
 		"Check your wifi connection and try again."
 		" "
 		"<bold>warp-assistant</>: exited with code -1"
-	}
+	};
 }
 
-warp-ch2-town {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-town;
+warp_ch2_town {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-town";
 }
-warp-ch2-bakery {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-bakery;
+warp_ch2_bakery {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-bakery";
 }
-warp-ch2-greenhouse {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-greenhouse;
+warp_ch2_greenhouse {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-greenhouse";
 }
-warp-ch2-wopr {
-	if (
-		flag wopr-backdoor-found is true
-		|| debug mode is on
-	) {
-		copy warp-ch2-town-destination-check;
-		copy warp-common;
+warp_ch2_wopr {
+	if (wopr_backdoor_found || debug_mode) {
+		copy!(warp_ch2_town_destination_check)
+		copy!(warp_common)
 		load map woprhouse;
 	} else {
-		goto warp-fail;
+		goto warp_fail;
 	}
 }
-warp-ch2-library {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-lodge;
+warp_ch2_library {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-lodge";
 }
-warp-ch2-rtfmroom {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-lodge-rtfm;
+warp_ch2_rtfmroom {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-lodge-rtfm";
 }
-warp-ch2-magehouse {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-magehouse;
+warp_ch2_magehouse {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-magehouse";
 }
-warp-ch2-bobsclub {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-bobsclub;
+warp_ch2_bobsclub {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-bobsclub";
 }
-warp-ch2-bobsclub-basement {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-bobsclub-basement;
+warp_ch2_bobsclub_basement {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-bobsclub-basement";
 }
-warp-ch2-oldcouplehouse {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-oldcouplehouse;
+warp_ch2_oldcouplehouse {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-oldcouplehouse";
 }
-warp-ch2-smithfamily {
-	copy warp-ch2-town-destination-check;
-	copy warp-common;
-	load map ch2-smithfamily;
+warp_ch2_smithfamily {
+	copy!(warp_ch2_town_destination_check)
+	copy!(warp_common)
+	load map "ch2-smithfamily";
 }

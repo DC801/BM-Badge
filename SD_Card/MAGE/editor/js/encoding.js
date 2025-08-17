@@ -58,7 +58,7 @@ var handleScenarioData = function (fileNameMap) {
 				fileNameMap,
 				scenarioData,
 			) {
-				var collectedTypeMap = {};
+				var collectedTypeMap = scenarioData[destinationPropertyName] || {};
 				var itemSourceFileMap = {};
 				var fileItemMap = {};
 				scenarioData[destinationPropertyName] = collectedTypeMap;
@@ -104,10 +104,35 @@ var handleScenarioData = function (fileNameMap) {
 			}
 		};
 
-		var natlangMgsPromise = convertMgsFilesIntoScenarioDataConfig(
-			fileNameMap,
-			scenarioData,
-		);
+		var mgsPromise = Promise.all(
+			Object.entries(fileNameMap)
+				.filter(([filename, file]) => filename.endsWith('.mgs'))
+				.map(async ([filename, file]) => {
+					return file.fileText = await file.text();
+				})
+		).then(() => {
+			return window.MGSParser.parseProject(
+				fileNameMap,
+				scenarioData,
+			);
+		}).then((parserResult) => {
+			console.log('What is parserResult?', parserResult);
+			scenarioData.scripts = scenarioData.scripts || {};
+			scenarioData.dialogs = scenarioData.dialogs || {};
+			scenarioData.serialDialogs = scenarioData.serialDialogs || {};
+			Object.entries(parserResult.scripts).forEach(([name, value]) => {
+				scenarioData.scripts[name] = value.actions;
+			});
+			Object.entries(parserResult.dialogs).forEach(([name, value]) => {
+				value.dialogs.name = name;
+				scenarioData.dialogs[name] = value.dialogs;
+			});
+			Object.entries(parserResult.serialDialogs).forEach(([name, value]) => {
+				value.serialDialog.name = name;
+				scenarioData.serialDialogs[name] = value.serialDialog;
+			});
+			return parserResult;
+		});
 
 		var mergeScriptDataIntoScenario = mergeNamedJsonIntoScenario(
 			'scriptPaths',
@@ -128,7 +153,7 @@ var handleScenarioData = function (fileNameMap) {
 		);
 		return Promise.all([
 			entityTypesPromise,
-			natlangMgsPromise,
+			mgsPromise,
 			mergeMapDataIntoScenario(fileNameMap, scenarioData),
 		])
 			.then(function mergeScriptDialogAndSerialDialog () {

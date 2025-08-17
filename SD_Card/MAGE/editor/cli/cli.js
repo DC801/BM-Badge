@@ -3,8 +3,7 @@ const path = require('path');
 const window = {
 	fastPng: require(`${__dirname}/../dependencies/fast-png`),
 	omggif: require(`${__dirname}/../dependencies/omggif`),
-	natlang: require(`${__dirname}/../dependencies/natlang-parser/natlang-parse`),
-	mgs: require(`${__dirname}/../dependencies/natlang-parser/mgs_natlang_config`),
+	mgs: require(`${__dirname}/../dependencies/tree-sitter-magegamescript/dist/mgs-lib.umd.js`),
 	imageCache: {},
 };
 

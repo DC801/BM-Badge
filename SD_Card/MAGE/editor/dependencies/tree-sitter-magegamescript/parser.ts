@@ -190,7 +190,9 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 
 	// Snapshot current action state (post copy_script, post label baking)
 	Object.keys(p.scripts).forEach((scriptName) => {
-		p.scripts[scriptName].printed = printScript(scriptName, p.scripts[scriptName].actions);
+		const actions = p.scripts[scriptName].actions
+		p.scripts[scriptName].printed = printScript(scriptName, actions);
+		p.scripts[scriptName].actions = actions.filter(item => item instanceof Action);
 	});
 
 	// PRINT ERRORS

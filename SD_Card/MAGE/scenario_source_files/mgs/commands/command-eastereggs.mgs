@@ -1,12 +1,12 @@
-include!("header.mgs")
+include "header.mgs";
 
 // REGISTER
 
-register-eastereggs {
-	register plover -> command-plover;
-	register xyzzy -> command-xyzzy;
-	register plugh -> command-plugh;
-	register fum -> command-fum;
+register_eastereggs {
+	command plover = command_plover;
+	command xyzzy = command_xyzzy;
+	command plugh = command_plugh;
+	command fum = command_fum;
 	hide command plover;
 	hide command xyzzy;
 	hide command plugh;
@@ -15,9 +15,9 @@ register-eastereggs {
 
 // COMMAND
 
-command-plover {
-	show serial dialog spacer;
-	show serial dialog {
+command_plover {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 		"~~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -48,26 +48,26 @@ command-plover {
 		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~!!7??JY55PP5J7JYY5!:Y7 ^~~~~~~~~"
 		" "
 		"       no you plover"
-	}
+	};
 }
 
-command-xyzzy {
-	show serial dialog spacer;
-	show serial dialog {
+command_xyzzy {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You hex a decimal. It looks surprised."
-	}
+	};
 }
 
-command-plugh {
-	show serial dialog spacer;
-	show serial dialog {
+command_plugh {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"Bless you."
-	}
+	};
 }
 
-command-fum {
-	show serial dialog spacer;
-	show serial dialog {
+command_fum {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"While I've never actually made a mistake, there have been a few, let's call 'em \"stnanks,\" that could be worthy of a do-over."
-	}
+	};
 }

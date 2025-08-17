@@ -1,79 +1,83 @@
-include!("header.mgs")
+include "header.mgs";
 
-on_tick-family {
-	if entity "%PLAYER%" is inside geometry door-family then goto leave-family;
+on_tick_family {
+	if (player intersects geometry "door-family") {
+		goto leave_family;
+	}
 }
-leave-family {
-	set warp state to exit_from-family;
+leave_family {
+	warp_state = exit_from_family;
 	load map main;
 }
-watch-kid {
-	turn entity "%SELF%" toward entity Kid;
+watch_kid {
+	self direction = entity Kid;
 }
-kid-ballwatch {
-	if entity Kid type is blitzball then goto kid-now-ball;
+kid_ballwatch {
+	if (entity Kid type == blitzball) {
+		goto kid_now_ball;
+	}
 }
-kid-now-ball {
-	set flag storyflag-sportskid to true;
-	copy calculate-hint-tracking-series;
-	if (variable hint-tracking-check is 8) {
-		copy set-hint-none;
+kid_now_ball {
+	sportskid_quest_done = true;
+	copy!(calculate_hint_tracking_series)
+	if (hint_tracking_check == 8) {
+		copy!(set_hint_none)
 	}
 	goto null_script;
 }
 
-on_load-family {
-	if (flag tuesdayd is true) {
-		register rtfm -> command-rtfm;
+on_load_family {
+	if (tuesdayd) {
+		command rtfm = command_rtfm;
 	}
-	if (flag storyflag-sportskid is true) {
-		set entity Kid type to blitzball;
+	if (sportskid_quest_done) {
+		entity Kid type = blitzball;
 	}
 }
 
-show_dialog-kid {
-	set entity "%PLAYER%" on_tick to watch-kid;
-	if (entity "%SELF%" is glitched) {
+show_dialog_kid {
+	player on_tick = watch_kid;
+	if (self glitched) {
 		show dialog {
 			SELF "Stb N'r ns fstymjw inrjsxnts!"
-		}
-	} else if (entity Kid type is blitzball) {
-		show dialog dialog-kid-ball {
+		};
+	} else if (entity Kid type == blitzball) {
+		show dialog dialog_kid_ball {
 			SELF "I'm the wind! Whoosh!"
-		}
+		};
 	} else {
 		show dialog {
 			SELF "I'm gonna be a Blitzball when I grow up!"
-		}
-		copy set-hint-sportskid;
+		};
+		copy!(set_hint_sportskid)
 	}
 	// RESET
-	set entity "%PLAYER%" on_tick to null_script;
-	set entity "%SELF%" on_interact to show_dialog-kid;
+	player on_tick = null_script;
+	self on_interact = show_dialog_kid;
 }
 
-show_dialog-smith {
-	if (entity "%SELF%" is glitched) {
-		show dialog { SELF "Naa, ptl matm lttz itgxxk, hk lxz ytnem itgxxk?" }
+show_dialog_smith {
+	if (self glitched) {
+		show dialog { SELF "Naa, ptl matm lttz itgxxk, hk lxz ytnem itgxxk?" };
+		self on_interact = show_dialog_smith; 
+		return;
+	}
+	entity Smith direction = player;
+	if (!smith_backstory) {
+		show dialog {
+			SELF "What's for dinner?"
+			"Memory leek soup!"
+			"...."
+			"...Nah, just kidding. It's saag paneer."
+		};
+		smith_backstory = true;
 	} else {
-		turn entity Smith toward entity "%PLAYER%";
-		if (flag smith-backstory is true) {
-			show dialog { SELF "Real talk, don't eat memory leek soup. It'll mess with your head." }
-		} else {
-			show dialog {
-				SELF "What's for dinner?"
-				"Memory leek soup!"
-				"...."
-				"...Nah, just kidding. It's saag paneer."
-			}
-			set flag smith-backstory to true;
-		}
-		turn entity Smith east;
+		show dialog { SELF "Real talk, don't eat memory leek soup. It'll mess with your head." };
 	}
-	// RESET
-	set entity "%SELF%" on_interact to show_dialog-smith;
+	entity Smith direction = east;
+	self on_interact = show_dialog_smith;
 }
 
-show_dialog-smith-dinner {
-	show dialog { PLAYER "Smells good!" }
+show_dialog_smith_dinner {
+	show dialog { PLAYER "Smells good!" };
 }

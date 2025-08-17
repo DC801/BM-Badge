@@ -1,74 +1,63 @@
-include!("header.mgs")
+include "header.mgs";
 
-cutbug-auto {
-    turn player control off;
-    set entity "%PLAYER%" y to 0;
-    for (mutate j = 0; variable i is < 1030; mutate j + 1) {
-        copy entity "%PLAYER%" y from variable j;
-        copy cutbug;
+cutbug_auto {
+    player_control = off;
+    player y = 0;
+    for (j = 0; i < 1030; j += 1) {
+        player y = j;
+        copy!(cutbug)
         wait 250ms;
     }
 }
 
 cutbug {
-    copy entity "%PLAYER%" y into variable qty;
-    // mutate qty % 256;
-    show serial dialog spacer;
-    concat serial dialog {
+    qty = player y;
+    show serial_dialog spacer;
+    concat serial_dialog {
         "<c>CUTBUG!</> "
+    };
+    if (qty < 10) {
+        concat serial_dialog { "000" };
+    } else if (qty < 100) {
+        concat serial_dialog { "00" };
+    } else if (qty < 1000) {
+        concat serial_dialog { "0" };
     }
-    if (variable qty is <10) {
-        concat serial dialog {
-            "000"
-        }
-    } else if (variable qty is <100) {
-        concat serial dialog {
-            "00"
-        }
-    } else if (variable qty is <1000) {
-        concat serial dialog {
-            "0"
-        }
-    }
-    concat serial dialog {
-        "$qty$\n"
-    }
-    for (mutate i = 0; variable i is <= qty; mutate i + 1) {
-        print:
-        mutate mod = i;
-        mutate mod % 16;
-        if (variable mod is 0) {
-            concat serial dialog { "\n" }
-        } else if (variable mod is 1) {
-            concat serial dialog { "1" }
-        } else if (variable mod is 2) {
-            concat serial dialog { "2" }
-        } else if (variable mod is 3) {
-            concat serial dialog { "3" }
-        } else if (variable mod is 4) {
-            concat serial dialog { "4" }
-        } else if (variable mod is 5) {
-            concat serial dialog { "5" }
-        } else if (variable mod is 6) {
-            concat serial dialog { "6" }
-        } else if (variable mod is 7) {
-            concat serial dialog { "7" }
-        } else if (variable mod is 8) {
-            concat serial dialog { "8" }
-        } else if (variable mod is 9) {
-            concat serial dialog { "9" }
-        } else if (variable mod is 10) {
-            concat serial dialog { "A" }
-        } else if (variable mod is 11) {
-            concat serial dialog { "B" }
-        } else if (variable mod is 12) {
-            concat serial dialog { "C" }
-        } else if (variable mod is 13) {
-            concat serial dialog { "D" }
-        } else if (variable mod is 14) {
-            concat serial dialog { "E" }
-        } else if (variable mod is 15) {
-            concat serial dialog { "F" }
+    concat serial_dialog { "$qty$\n" };
+    for (i = 0; i <= qty; i += 1) {
+        mod = i % 16;
+        if (mod == 0) {
+            concat serial_dialog { "\n" };
+        } else if (mod == 1) {
+            concat serial_dialog { "1" };
+        } else if (mod == 2) {
+            concat serial_dialog { "2" };
+        } else if (mod == 3) {
+            concat serial_dialog { "3" };
+        } else if (mod == 4) {
+            concat serial_dialog { "4" };
+        } else if (mod == 5) {
+            concat serial_dialog { "5" };
+        } else if (mod == 6) {
+            concat serial_dialog { "6" };
+        } else if (mod == 7) {
+            concat serial_dialog { "7" };
+        } else if (mod == 8) {
+            concat serial_dialog { "8" };
+        } else if (mod == 9) {
+            concat serial_dialog { "9" };
+        } else if (mod == 10) {
+            concat serial_dialog { "A" };
+        } else if (mod == 11) {
+            concat serial_dialog { "B" };
+        } else if (mod == 12) {
+            concat serial_dialog { "C" };
+        } else if (mod == 13) {
+            concat serial_dialog { "D" };
+        } else if (mod == 14) {
+            concat serial_dialog { "E" };
+        } else if (mod == 15) {
+            concat serial_dialog { "F" };
         }
     }
 }

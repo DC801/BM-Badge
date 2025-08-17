@@ -1,98 +1,98 @@
-include!("header.mgs")
+include "header.mgs";
 
 // REGISTER
 
-register-map {
-	register man + map -> man-map;
-	register map -> command-map;
+register_map {
+	command man + map = man_map;
+	command map = command_map;
 }
 
 // MAN PAGE
 
-man-map {
-	show serial dialog spacer;
-	show serial dialog {
+man_map {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAP</>"
 		" "
 		"Displays an ASCII map of King Gibson's castle. Rooms are added to the map as you visit them."
 		" "
 		"The <c><bold>@</> symbol indicates which room you're in, and items from the parts list are marked with <g>?</>."
-	}
+	};
 }
 
 // COMMAND
 
-command-map {
+command_map {
 	// normal stuff
-	show serial dialog {
+	show serial_dialog {
 		" "
-	}
-	goto draw-ch2-serial-map;
+	};
+	goto draw_ch2_serial_map;
 }
 
-draw-ch2-serial-map-footer {
-	concat serial dialog {
+draw_ch2_serial_map_footer {
+	concat serial_dialog {
 		"\nCurrent location: <c>"
-	}
-	if (variable ch2-in-room is 1) {
-		concat serial dialog {
+	};
+	if (ch2_in_room == 1) {
+		concat serial_dialog {
 			"CASTLE ENTRANCE"
-		}
-	} else if (variable ch2-in-room is 11) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 11) {
+		concat serial_dialog {
 			"CASTLE HALLWAY FRONT"
-		}
-	} else if (variable ch2-in-room is 12) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 12) {
+		concat serial_dialog {
 			"CASTLE HALLWAY BACK"
-		}
-	} else if (variable ch2-in-room is 13) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 13) {
+		concat serial_dialog {
 			"THRONE ROOM"
-		}
-	} else if (variable ch2-in-room is 14) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 14) {
+		concat serial_dialog {
 			"KING GIBSON'S BEDROOM"
-		}
-	} else if (variable ch2-in-room is 21) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 21) {
+		concat serial_dialog {
 			"WORKSHOP"
-		}
-	} else if (variable ch2-in-room is 22) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 22) {
+		concat serial_dialog {
 			"SERVER ROOM"
-		}
-	} else if (variable ch2-in-room is 23) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 23) {
+		concat serial_dialog {
 			"POWER PLANT"
-		}
-	} else if (variable ch2-in-room is 31) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 31) {
+		concat serial_dialog {
 			"GRAND HALL"
-		}
-	} else if (variable ch2-in-room is 32) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 32) {
+		concat serial_dialog {
 			"CASTLE KITCHEN"
-		}
-	} else if (variable ch2-in-room is 33) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 33) {
+		concat serial_dialog {
 			"HYDROPONICS ROOM"
-		}
-	} else if (variable ch2-in-room is 34) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 34) {
+		concat serial_dialog {
 			"CASTLE PANTRY"
-		}
-	} else if (variable ch2-in-room is 99) {
-		concat serial dialog {
+		};
+	} else if (ch2_in_room == 99) {
+		concat serial_dialog {
 			"LAMBDA'S LAB"
-		}
+		};
 	} else {
-		concat serial dialog {
+		concat serial_dialog {
 			"</><bold>(outside the castle)"
-		}
+		};
 	}
-	concat serial dialog {
+	concat serial_dialog {
 		"</>\n"
-	}
-	turn serial control on;
+	};
+	serial_control = on;
 }

@@ -1,157 +1,157 @@
-include!("header.mgs")
+include "header.mgs";
 
 // REGISTER
 
-register-inventory {
-	register man + inventory -> man-inventory;
-	register inventory -> command-inventory;
-	register alias i = inventory;
-	register alias examine = look;
-	register alias x = look;
+register_inventory {
+	command man + inventory = man_inventory;
+	command inventory = command_inventory;
+	alias i = inventory;
+	alias examine = look;
+	alias x = look;
 }
 
 // MAN PAGE
 
-man-inventory {
-	show serial dialog spacer;
-	show serial dialog {
+man_inventory {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - INVENTORY</>"
 		" "
 		"Use this command to see what items you are currently carrying. This command may also be triggered with the abbreviation <c>I</>."
-	}
-	if (flag ch2-parts-round-2-backstory is true) {
-		show serial dialog {
+	};
+	if (ch2_parts_round_2_backstory) {
+		show serial_dialog {
 			" "
 			"Some items may be combined at one of the solder stations in the castle workshop."
-		}
+		};
 	}
 }
 
 // COMMAND
 
-command-inventory {
-	// set the `count-inventory` flag first; if true, don't print anything! just count!
-	mutate ch2-count-inventory = 0;
-	if (flag only-count-inventory is false) {
-		show serial dialog spacer;
-		show serial dialog {
+command_inventory {
+	// set the `count-inventory` flag "first"; if true, don't print anything! just count!
+	ch2_count_inventory = 0;
+	if (!only_count_inventory) {
+		show serial_dialog spacer;
+		show serial_dialog {
 			"<c>INVENTORY:</>"
-		}
+		};
 	}
 	// normal
-	if (flag ch2-carrying-cactuscooler is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tcan of Cactus Cooler" }
+	if (ch2_carrying_cactuscooler) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	can of Cactus Cooler" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-heatsink is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\theat sink" }
+	if (ch2_carrying_heatsink) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	heat sink" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-powersupply is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tpower supply" }
+	if (ch2_carrying_powersupply) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	power supply" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-monitor is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tmonitor" }
+	if (ch2_carrying_monitor) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	monitor" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
 	// abstract
-	if (flag ch2-carrying-harddrive is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\thard drive" }
+	if (ch2_carrying_harddrive) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	hard drive" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-plate is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tdinner plate" }
+	if (ch2_carrying_plate) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	dinner plate" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-needle is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tphonograph needle" }
+	if (ch2_carrying_needle) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	phonograph needle" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-keyboard is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tkeyboard" }
+	if (ch2_carrying_keyboard) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	keyboard" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-mouse is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tmouse" }
+	if (ch2_carrying_mouse) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	mouse" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
 	// desperate
-	if (flag ch2-carrying-ramchips is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tramchips" }
+	if (ch2_carrying_ramchips) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	ramchips" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-clock is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tclock" }
+	if (ch2_carrying_clock) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	clock" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-cpu is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tcpu" }
+	if (ch2_carrying_cpu) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	cpu" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-goldfish is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tgoldfish" }
+	if (ch2_carrying_goldfish) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	goldfish" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-manual is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tcalculator manual" }
+	if (ch2_carrying_manual) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	calculator manual" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
-	if (flag ch2-carrying-abacus is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tabacus" }
+	if (ch2_carrying_abacus) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	abacus" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
 	// final
-	if (flag ch2-carrying-mainframeos is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tmainframe OS CD" }
+	if (ch2_carrying_mainframeos) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	mainframe OS CD" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
 	// mini-rake quest
-	if (flag ch2-carrying-minirake-99 is true) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\tmini rake" }
+	if (ch2_carrying_minirake_99) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	mini rake" };
 		}
-		mutate ch2-count-inventory + 1;
+		ch2_count_inventory += 1;
 	}
 	// wrapup:
-	if (variable ch2-count-inventory is 0) {
-		if (flag only-count-inventory is false) {
-			show serial dialog { "\t(nothing)" }
+	if (ch2_count_inventory == 0) {
+		if (!only_count_inventory) {
+			show serial_dialog { "	(nothing)" };
 		}
 	}
-	set flag only-count-inventory to false;
-	mutate ch2-counted-inventory = ch2-count-inventory;
-	mutate ch2-count-inventory = 0;
+	only_count_inventory = false;
+	ch2_counted_inventory = ch2_count_inventory*1;
+	ch2_count_inventory = 0;
 }

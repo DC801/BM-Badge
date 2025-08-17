@@ -1,43 +1,43 @@
-include!("header.mgs")
+include "header.mgs";
 
 /* --- CUTSCENE: Birthday (house) --- */
 
 // NON-DEBUG
 
-on_load-ch2-magehouse-birthday {
-	turn hex control on;
-	turn player control off;
-	if (debug mode is on) {
-		turn serial control on;
-		register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
-		show serial dialog {
+on_load_ch2_magehouse_birthday {
+	hex_control = on;
+	player_control = off;
+	if (debug_mode) {
+		serial_control = on;
+		command skip = cutscene_ch2_birthday_exit; // this shows up twice if put first in the script O.o
+		show serial_dialog {
 			" "
 			"<y>DEBUG></> <c>SKIP</>: skip this cutscene"
-		}
+		};
 	} else {
-		turn serial control off;
+		serial_control = off;
 	}
-	close hex editor;
-	set entity "%PLAYER%" current_animation to 0;
-	fade out camera to #000000 over 0ms;
-	turn entity "%PLAYER%" east;
-	teleport camera to geometry cake-camera-1;
-	set entity "Stunt Cake" current_animation to 1;
+	hex_editor = closed;
+	player current_animation = 0;
+	camera fade out -> #000000 over 0ms;
+	player direction = east;
+	camera = geometry "cake-camera-1";
+	entity "Stunt Cake" current_animation = 1;
 	wait 1000ms;
-	fade in camera from #000000 over 1000ms;
+	camera fade in -> #000000 over 1000ms;
 	wait 500ms;
 	show dialog {
 		name " " // blank dialog label
 		border_tileset transparent
 		"Happy birthday to you!\nHappy birthday to you!"
 		"Happy birthday, dear %PLAYER%!\nHappy birthday to you!"
-	}
+	};
 	wait 200ms;
-	play entity "Stunt Cake" animation 2 once;
-	set entity "Stunt Cake" current_animation to 3;
-	fade out camera to #000000 over 0ms;
-	teleport camera to geometry cake-camera-2;
-	fade in camera from #000000 over 500ms;
+	entity "Stunt Cake" animation -> 2 once;
+	entity "Stunt Cake" current_animation = 3;
+	camera fade out -> #000000 over 0ms;
+	camera = geometry "cake-camera-2";
+	camera fade in -> #000000 over 500ms;
 	show dialog {
 		ZIPPY "Now you're an official mage, %PLAYER%!"
 		PLAYER "Blowing out the candle didn't make me a mage, %Aunt Zippy%!"
@@ -46,15 +46,15 @@ on_load-ch2-magehouse-birthday {
 		ZAPPY "Well, you're officially our favorite birthday mage!"
 		PLAYER "Aw, thanks, %Uncle Zappy%!"
 		ZIPPY "All right, everyone! Dig in!"
-	}
-	fade out camera to #000000 over 500ms;
-	set entity Cake current_animation to 4;
+	};
+	camera fade out -> #000000 over 500ms;
+	entity Cake current_animation = 4;
 	show dialog {
 		name " "
 		border_tileset menu
 		"*munch munch munch*"
-	}
-	fade in camera from #000000 over 1000ms;
+	};
+	camera fade in -> #000000 over 1000ms;
 	show dialog {
 		ZAPPY
 		"How was your day, %PLAYER%? Are you getting used to Ring Zero?"
@@ -70,15 +70,15 @@ on_load-ch2-magehouse-birthday {
 		PLAYER
 		"Yeah, that was scary."
 		"I guess it's a sign that the Big Bad might be coming back."
-	}
+	};
 	wait 180ms;
-	turn entity "%PLAYER%" south;
+	player direction = south;
 	wait 400ms;
 	show dialog {
 		PLAYER "First thing tomorrow, I'm supposed to meet the village elders and visit the castle."
 		ZAPPY "They're really sending you to get the artifacts, then?"
-	}
-	turn entity "%PLAYER%" east;
+	};
+	player direction = east;
 	show dialog {
 		PLAYER
 		"I guess so. The village elders say the artifacts are the only thing that can stop the Big Bad for good."
@@ -93,70 +93,70 @@ on_load-ch2-magehouse-birthday {
 		PLAYER
 		"Yeah."
 		"Good night, %Aunt Zippy%, %Uncle Zappy%."
-	}
-	fade out camera to #000000 over 1200ms;
+	};
+	camera fade out -> #000000 over 1200ms;
 	wait 200ms;
-	goto cutscene-ch2-birthday-exit;
+	goto cutscene_ch2_birthday_exit;
 }
-cutscene-ch2-birthday-exit {
-	set flag ch2-cutseen-birthday to true;
-	set warp state to cutscene-escort;
-	load map ch2-town;
+cutscene_ch2_birthday_exit {
+	ch2_cutseen_birthday = true;
+	warp_state = "cutscene-escort";
+	load map "ch2-town";
 }
 
 /* --- CUTSCENE: Birthday (elders) --- */
 
 // helper scripts
-gossip-right-down {
+gossip_right_down {
 	wait 600ms;
-	turn entity "%SELF%" east;
+	self direction = east;
 	wait 800ms;
-	turn entity "%SELF%" south;
+	self direction = south;
 	wait 400ms;
 }
-gossip-left-and-right-down {
-	turn entity "%SELF%" west;
+gossip_left_and_right_down {
+	self direction = west;
 	wait 600ms;
-	turn entity "%SELF%" south;
+	self direction = south;
 	wait 300ms;
-	turn entity "%SELF%" east;
+	self direction = east;
 	wait 360ms;
 }
-gossip-left-down {
+gossip_left_down {
 	wait 200ms;
-	turn entity "%SELF%" south;
+	self direction = south;
 	wait 500ms;
-	turn entity "%SELF%" west;
+	self direction = west;
 	wait 1100ms;
 }
 
 // cutscene
-ch2-escort-cutscene {
-	if (debug mode is on) {
-		turn serial control on;
-		register skip -> cutscene-ch2-escort-exit;
-		show serial dialog {
+ch2_escort_cutscene {
+	if (debug_mode) {
+		serial_control = on;
+		command skip = cutscene_ch2_escort_exit;
+		show serial_dialog {
 			" "
 			"<y>DEBUG></> <c>SKIP</>: skip this cutscene"
-		}
+		};
 	} else {
-		turn serial control off;
+		serial_control = off;
 	}
-	fade out camera to #000000 over 0ms
-	turn player control off;
-	close hex editor;
-	teleport entity Alfonso to geometry birthday-alfonso;
-	teleport entity Bert to geometry birthday-bert;
-	teleport entity Jackob to geometry birthday-jackob;
-	turn entity Alfonso north;
-	turn entity Bert north;
-	turn entity Jackob north;
-	teleport camera to geometry escort-camera;
-	fade in camera from #000000 over 1000ms;
-	turn entity "%PLAYER%" south;
+	camera fade out -> #000000 over 0ms;
+	player_control = off;
+	hex_editor = closed;
+	entity Alfonso position = geometry "birthday-alfonso";
+	entity Bert position = geometry "birthday-bert";
+	entity Jackob position = geometry "birthday-jackob";
+	entity Alfonso direction = north;
+	entity Bert direction = north;
+	entity Jackob direction = north;
+	camera = geometry "escort-camera";
+	camera fade in -> #000000 over 1000ms;
+	player direction = south;
 	wait 800ms;
-	teleport entity "%PLAYER%" to geometry walk_from-magehouse;
-	walk entity "%PLAYER%" along geometry walk_from-magehouse over 400ms;
+	player position = geometry "walk_from-magehouse";
+	player position -> geometry "walk_from-magehouse" length over 400ms;
 	wait 1200ms;
 	show dialog {
 		PLAYER "Oh, um...."
@@ -164,15 +164,15 @@ ch2-escort-cutscene {
 		PLAYER "Yeah."
 		Alfonso "Ready to go?"
 		PLAYER "Yeah. I mean, no. I mean...."
-	}
+	};
 	wait 150ms;
-	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	player on_tick = look_left_and_right_fast;
 	wait 300ms;
 	show dialog {
 		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal castle?"
-	}
-	set entity "%PLAYER%" on_tick to null_script;
-	turn entity "%PLAYER%" south;
+	};
+	player on_tick = null_script;
+	player direction = south;
 	show dialog {
 		Jackob
 		"The serial castle, yes. We did have a book about that."
@@ -187,51 +187,51 @@ ch2-escort-cutscene {
 		"More important for you to get started right away."
 		
 		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the castle on your own."
-	}
+	};
 	wait 100ms;
-	set entity "%PLAYER%" on_tick to look-left-and-right-fast;
+	player on_tick = look_left_and_right_fast;
 	wait 200ms;
 	show dialog {
 		PLAYER "On my own? You aren't coming inside with me?"
-	}
-	set entity "%PLAYER%" on_tick to null_script;
-	turn entity "%PLAYER%" south;
+	};
+	player on_tick = null_script;
+	player direction = south;
 	show dialog {
 		Jackob "We are not hackers and cannot pass the gate."
 		Alfonso "Ring Zero should grant you access...."
 		PLAYER "\"Should?\""
-	}
+	};
 	wait 150ms;
-	turn entity Alfonso south;
+	entity Alfonso direction = south;
 	wait 500ms;
 	show dialog {
 		Alfonso "If I remember correctly...."
 		PLAYER "You don't know? What kind of wise old men are you?"
 		Jackob "We'll certainly see, won't we?"
-	}
-	turn entity Alfonso toward entity "%PLAYER%";
+	};
+	entity Alfonso direction = player;
 	show dialog {
 		PLAYER "That book... what did it say? Can you give me a summary at least?"
-	}
-	set entity Jackob on_tick to gossip-right-down;
-	set entity Alfonso on_tick to gossip-left-and-right-down;
-	set entity Bert on_tick to gossip-left-down;
+	};
+	entity Jackob on_tick = gossip_right_down;
+	entity Alfonso on_tick = gossip_left_and_right_down;
+	entity Bert on_tick = gossip_left_down;
 	wait 200ms;
 	show dialog {
 		Jackob "I must have read it once...."
 		Alfonso "Wasn't it something about...?"
 		Bert "I don't know."
-	}
+	};
 	wait 500ms;
-	set entity Alfonso on_tick to null_script;
-	set entity Jackob on_tick to null_script;
-	set entity Bert on_tick to null_script;
+	entity Alfonso on_tick = null_script;
+	entity Jackob on_tick = null_script;
+	entity Bert on_tick = null_script;
 	wait 100ms;
-	turn entity Alfonso north;
+	entity Alfonso direction = north;
 	wait 50ms;
-	turn entity Bert north;
+	entity Bert direction = north;
 	wait 40ms;
-	turn entity Jackob north;
+	entity Jackob direction = north;
 	show dialog {
 		Jackob "I can't remember."
 		Alfonso "Something about rooms... and magic words...."
@@ -254,42 +254,42 @@ ch2-escort-cutscene {
 		Bert "Unless Big Bad comes back."
 		Alfonso "Yes! And that is why you must hurry!"
 		PLAYER "All right. Let's not waste any more time."
-	}
-	set flag ch2-escort-cutscene to true;
+	};
+	ch2_escort_cutscene = true;
 	wait 160ms;
-	set entity Jackob on_tick to birthday-march-on-own-path;
+	entity Jackob on_tick = birthday_march_on_own_path;
 	wait 180ms;
-	set entity Alfonso on_tick to birthday-march-on-own-path;
+	entity Alfonso on_tick = birthday_march_on_own_path;
 	wait 90ms;
-	set entity Bert on_tick to birthday-march-on-own-path;
-	set entity "%PLAYER%" on_tick to birthday-march-on-own-path-player;
+	entity Bert on_tick = birthday_march_on_own_path;
+	player on_tick = birthday_march_on_own_path_player;
 }
-birthday-march-on-own-path {
-	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 2400ms;
+birthday_march_on_own_path {
+	self position -> entity_path length over 2400ms;
 	goto yeet;
 }
-birthday-march-on-own-path-player {
+birthday_march_on_own_path_player {
 	wait 300ms;
-	walk entity "%PLAYER%" to geometry hesitation-point over 300ms;
+	player position -> geometry "hesitation-point" origin over 300ms;
 	wait 600ms;
-	walk entity "%PLAYER%" to geometry birthday-alfonso over 400ms;
-	turn entity "%PLAYER%" west;
+	player position -> geometry "birthday-alfonso" origin over 400ms;
+	player direction = west;
 	wait 250ms;
-	pan camera to entity "%PLAYER%" over 400ms;
+	camera -> player position over 400ms;
 	wait 300ms;
 	show dialog {
 		PLAYER "All right. Take a deep breath.\nYou can do it, %PLAYER%."
-	}
-	set warp state to none;
-	set entity Jackob on_tick to yeet;
-	set entity Alfonso on_tick to yeet;
-	set entity Bert on_tick to yeet;
-	turn player control on;
+	};
+	warp_state = none;
+	entity Jackob on_tick = yeet;
+	entity Alfonso on_tick = yeet;
+	entity Bert on_tick = yeet;
+	player_control = on;
 	goto null_script;
 }
-cutscene-ch2-escort-exit {
-	set warp state to walk_from-east;
-	load map ch2-castle-outside;
+cutscene_ch2_escort_exit {
+	warp_state = "walk_from-east";
+	load map "ch2-castle-outside";
 }
 
 /* --- AND THE REST OF THE OWL --- */

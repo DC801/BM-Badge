@@ -19,7 +19,6 @@ _obj/
 
 # Python artifacts
 .venv/
-dist/
 *.egg-info
 *.whl
 

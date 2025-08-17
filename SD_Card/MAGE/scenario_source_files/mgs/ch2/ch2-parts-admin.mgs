@@ -1,131 +1,131 @@
-include!("header.mgs")
+include "header.mgs";
 /* ---------- DEBUG: Storyflag rounds ---------- */
 
 // debug: "win" that storyflag round
 
-debug-get-items-for-round1 {
-	copy ch2-pickup-monitor;
-	copy ch2-pickup-heatsink;
-	copy ch2-pickup-powersupply;
+"debug_get_items_for_round1" {
+	copy!(ch2_pickup_monitor)
+	copy!(ch2_pickup_heatsink)
+	copy!(ch2_pickup_powersupply)
 }
-debug-get-items-for-round2 {
-	copy ch2-pickup-keyboard;
-	copy ch2-pickup-mouse;
-	copy ch2-pickup-needle;
-	copy ch2-pickup-plate;
-	copy ch2-solder-harddrive;
+"debug_get_items_for_round2" {
+	copy!(ch2_pickup_keyboard)
+	copy!(ch2_pickup_mouse)
+	copy!(ch2_pickup_needle)
+	copy!(ch2_pickup_plate)
+	copy!("ch2_solder_harddrive")
 }
-debug-get-items-for-round3 {
-	copy ch2-pickup-ramchips;
-	copy ch2-pickup-clock;
-	copy ch2-pickup-goldfish;
-	copy ch2-pickup-abacus;
-	copy ch2-solder-cpu;
+"debug_get_items_for_round3" {
+	copy!(ch2_pickup_ramchips)
+	copy!(ch2_pickup_clock)
+	copy!(ch2_pickup_goldfish)
+	copy!(ch2_pickup_abacus)
+	copy!("ch2_solder_cpu")
 }
-debug-set-flags-to-round0 {
-	turn serial control on;
-	set flag ch2-has-artifact to true;
-	turn hex control on;
-	mutate current-chapter = 2;
-	set flag ch2-cutseen-birthday to true;
-	// debug!("<y>debug-set-flags-to-round0")
+"debug_set_flags_to_round0" {
+	serial_control = on;
+	"ch2_has_artifact" = true;
+	hex_control = on;
+	"current_chapter" = 2;
+	ch2_cutseen_birthday = true;
+	// debug!("<y>debug_set_flags_to_round0")
 }
-debug-jump-to-round1 {
-	copy debug-set-flags-to-round1;
-	copy ch2-load-castle-1-special;
+"debug_jump_to_round1" {
+	copy!("debug_set_flags_to_round1")
+	copy!(ch2_load_castle_1_special)
 }
-debug-jump-to-round2 {
-	copy debug-set-flags-to-round2;
-	copy ch2-load-castle-1-special;
+"debug_jump_to_round2" {
+	copy!("debug_set_flags_to_round2")
+	copy!(ch2_load_castle_1_special)
 }
-debug-jump-to-round3 {
-	copy debug-set-flags-to-round3;
-	copy ch2-load-castle-1-special;
+"debug_jump_to_round3" {
+	copy!("debug_set_flags_to_round3")
+	copy!(ch2_load_castle_1_special)
 }
-debug-jump-to-round4 {
-	copy debug-set-flags-to-round4;
-	copy ch2-load-castle-1-special;
+"debug_jump_to_round4" {
+	copy!("debug_set_flags_to_round4")
+	copy!(ch2_load_castle_1_special)
 }
 
-debug-set-flags-to-round1 {
-	copy debug-set-flags-to-round0;
-	copy debug-finish-toot;
-	copy debug-map-flags-for-round1;
+"debug_set_flags_to_round1" {
+	copy!("debug_set_flags_to_round0")
+	copy!("debug_finish_toot")
+	copy!("debug_map_flags_for_round1")
 }
-debug-set-flags-to-round2 {
-	copy debug-set-flags-to-round1;
-	copy debug-get-items-for-round1;
-	copy ch2-install-heatsink;
-	copy ch2-install-powersupply;
-	copy ch2-install-monitor;
-	set flag ch2-cutseen-bert-secret to true;
-	set flag ch2-lambda-bert-backstory to true;
-	set flag ch2-parts-round-2-backstory to true;
-	copy debug-map-flags-for-round2;
+"debug_set_flags_to_round2" {
+	copy!("debug_set_flags_to_round1")
+	copy!("debug_get_items_for_round1")
+	copy!("ch2_install_heatsink")
+	copy!("ch2_install_powersupply")
+	copy!("ch2_install_monitor")
+	ch2_cutseen_bert_secret = true;
+	"ch2_lambda_bert_backstory" = true;
+	"ch2_parts_round_2_backstory" = true;
+	copy!("debug_map_flags_for_round2")
 }
-debug-set-flags-to-round3 {
-	copy debug-set-flags-to-round2;
-	copy debug-get-items-for-round2;
-	copy ch2-install-harddrive;
-	copy ch2-install-keyboard;
-	copy ch2-install-mouse;
-	set flag ch2-cutseen-bert-message to true;
-	set flag ch2-parts-round-3-backstory to true;
-	copy debug-map-flags-for-round3;
+"debug_set_flags_to_round3" {
+	copy!("debug_set_flags_to_round2")
+	copy!("debug_get_items_for_round2")
+	copy!("ch2_install_harddrive")
+	copy!("ch2_install_keyboard")
+	copy!("ch2_install_mouse")
+	ch2_cutseen_bert_message = true;
+	"ch2_parts_round_3_backstory" = true;
+	copy!("debug_map_flags_for_round3")
 }
-debug-set-flags-to-round4 {
-	copy debug-set-flags-to-round3;
-	copy debug-get-items-for-round3;
-	copy ch2-install-ramchips;
-	copy ch2-install-clock;
-	copy ch2-install-cpu;
-	set flag ch2-cutseen-last-parts-done to true;
-	set flag ch2-warp-granted to true;
-	set flag ch2-parts-round-4-backstory to true;
-	copy debug-map-flags-for-round4;
+"debug_set_flags_to_round4" {
+	copy!("debug_set_flags_to_round3")
+	copy!("debug_get_items_for_round3")
+	copy!("ch2_install_ramchips")
+	copy!("ch2_install_clock")
+	copy!("ch2_install_cpu")
+	ch2_cutseen_last_parts_done = true;
+	"ch2_warp_granted" = true;
+	"ch2_parts_round_4_backstory" = true;
+	copy!("debug_map_flags_for_round4")
 }
 
 /* ---------- PUT QUEST MARKERS ON MAP ---------- */
 
-ch2-put_on_map-round1 {
-	set flag ch2-map-monitor to true;
-	set flag ch2-map-heatsink to true;
-	set flag ch2-map-powersupply to true;
+"ch2_put_on_map_round1" {
+	"ch2_map_monitor" = true;
+	"ch2_map_heatsink" = true;
+	"ch2_map_powersupply" = true;
 }
-ch2-put_on_map-round2 {
-	set flag ch2-map-keyboard to true;
-	set flag ch2-map-mouse to true;
-	set flag ch2-map-plate to true;
-	set flag ch2-map-needle to true;
+"ch2_put_on_map_round2" {
+	"ch2_map_keyboard" = true;
+	"ch2_map_mouse" = true;
+	"ch2_map_plate" = true;
+	"ch2_map_needle" = true;
 }
-ch2-put_on_map-round3 {
-	set flag ch2-map-clock to true;
-	set flag ch2-map-goldfish to true;
-	set flag ch2-map-abacus to true;
-	set flag ch2-map-ramchips to true;
+"ch2_put_on_map_round3" {
+	"ch2_map_clock" = true;
+	"ch2_map_goldfish" = true;
+	"ch2_map_abacus" = true;
+	"ch2_map_ramchips" = true;
 }
-ch2-put_on_map-round4 {
-	set flag ch2-map-mainframeos to true;
+"ch2_put_on_map_round4" {
+	"ch2_map_mainframeos" = true;
 }
-ch2-take_off_map-round1 {
-	set flag ch2-map-monitor to false;
-	set flag ch2-map-heatsink to false;
-	set flag ch2-map-powersupply to false;
+"ch2_take_off_map_round1" {
+	"ch2_map_monitor" = false;
+	"ch2_map_heatsink" = false;
+	"ch2_map_powersupply" = false;
 }
-ch2-take_off_map-round2 {
-	set flag ch2-map-keyboard to false;
-	set flag ch2-map-mouse to false;
-	set flag ch2-map-plate to false;
-	set flag ch2-map-needle to false;
+"ch2_take_off_map_round2" {
+	"ch2_map_keyboard" = false;
+	"ch2_map_mouse" = false;
+	"ch2_map_plate" = false;
+	"ch2_map_needle" = false;
 }
-ch2-take_off_map-round3 {
-	set flag ch2-map-clock to false;
-	set flag ch2-map-goldfish to false;
-	set flag ch2-map-abacus to false;
-	set flag ch2-map-ramchips to false;
+"ch2_take_off_map_round3" {
+	"ch2_map_clock" = false;
+	"ch2_map_goldfish" = false;
+	"ch2_map_abacus" = false;
+	"ch2_map_ramchips" = false;
 }
-ch2-take_off_map-round4 {
-	set flag ch2-map-mainframeos to false;
+"ch2_take_off_map_round4" {
+	"ch2_map_mainframeos" = false;
 }
 
 /* ---------- ACQUIRE ITEM ---------- */
@@ -134,314 +134,314 @@ ch2-take_off_map-round4 {
 
 //ROUND 1
 
-ch2-pickup-monitor {
-	set flag ch2-map-monitor to false;
-	set flag ch2-carrying-monitor to true;
-	register look + monitor -> look-monitor;
+"ch2_pickup_monitor" {
+	"ch2_map_monitor" = false;
+	ch2_carrying_monitor = true;
+	command "look" + "monitor" = "look_monitor";
 }
-ch2-pickup-powersupply {
-	set flag ch2-map-powersupply to false;
-	set flag ch2-carrying-powersupply to true;
-	register look + "power supply" -> look-powersupply;
+"ch2_pickup_powersupply" {
+	"ch2_map_powersupply" = false;
+	ch2_carrying_powersupply = true;
+	command "look" + "power supply" = "look_powersupply";
 }
-ch2-handoff-heatsink-to-cactuscooler {
-	set flag ch2-map-heatsink to false;
-	set flag ch2-map-cactuscooler-castle to true;
+"ch2_handoff_heatsink_to_cactuscooler" {
+	"ch2_map_heatsink" = false;
+	"ch2_map_cactuscooler_castle" = true;
 }
-ch2-handoff-cactuscooler-to-bobaustin {
-	set flag ch2-map-cactuscooler-castle to false;
-	set flag ch2-map-cactuscooler-bobaustin to true;
+"ch2_handoff_cactuscooler_to_bobaustin" {
+	"ch2_map_cactuscooler_castle" = false;
+	"ch2_map_cactuscooler_bobaustin" = true;
 }
-ch2-pickup-cactuscooler {
-	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
-	set flag ch2-map-cactuscooler-bobaustin to false;
-	set flag ch2-map-heatsink to true;
-	set flag ch2-carrying-cactuscooler to true;
-	register look + "cactus cooler" -> look-cactuscooler;
+"ch2_pickup_cactuscooler" {
+	"ch2_map_cactuscooler_castle" = false; // just in case you went straight there
+	"ch2_map_cactuscooler_bobaustin" = false;
+	"ch2_map_heatsink" = true;
+	ch2_carrying_cactuscooler = true;
+	command "look" + "cactus cooler" = "look_cactuscooler";
 }
-ch2-pickup-heatsink {
-	set flag ch2-cactuscooler-delivered to true;
-	set flag ch2-map-cactuscooler-castle to false // just in case you went straight there
-	set flag ch2-map-heatsink to false;
-	set flag ch2-carrying-heatsink to true;
-	register look + "heat sink" -> look-heatsink;
+"ch2_pickup_heatsink" {
+	"ch2_cactuscooler_delivered" = true;
+	"ch2_map_cactuscooler_castle" = false; // just in case you went straight there
+	"ch2_map_heatsink" = false;
+	ch2_carrying_heatsink = true;
+	command "look" + "heat sink" = "look_heatsink";
 }
-ch2-unpickup-cactuscooler { // DEBUG
+"ch2_unpickup_cactuscooler" { // DEBUG
 	// inverse of the above, lol, sorry for incorrect state
-	set flag ch2-map-cactuscooler-bobaustin to true;
-	set flag ch2-map-heatsink to false;
-	set flag ch2-carrying-cactuscooler to false;
-	unregister look + "cactus cooler"
+	"ch2_map_cactuscooler_bobaustin" = true;
+	"ch2_map_heatsink" = false;
+	ch2_carrying_cactuscooler = false;
+	delete command "look"  + "cactus cooler";
 }
 
 // ROUND 2
 
-ch2-pickup-keyboard {
-	set flag ch2-map-keyboard to false;
-	set flag ch2-carrying-keyboard to true;
-	register look + keyboard -> look-keyboard;
+"ch2_pickup_keyboard" {
+	"ch2_map_keyboard" = false;
+	ch2_carrying_keyboard = true;
+	command "look" + "keyboard" = "look_keyboard";
 }
-ch2-pickup-mouse {
-	set flag ch2-map-mouse to false;
-	set flag ch2-carrying-mouse to true;
-	register look + mouse -> look-mouse;
+"ch2_pickup_mouse" {
+	"ch2_map_mouse" = false;
+	ch2_carrying_mouse = true;
+	command "look" + "mouse" = "look_mouse";
 }
-ch2-pickup-plate {
-	set flag ch2-map-plate to false;
-	set flag ch2-carrying-plate to true;
-	if (flag ch2-carrying-needle is true) {
-		set flag ch2-map-solder to true;
+"ch2_pickup_plate" {
+	"ch2_map_plate" = false;
+	ch2_carrying_plate = true;
+	if ("ch2_carrying_needle") {
+		"ch2_map_solder" = true;
 	}
-	register look + plate -> look-plate;
+	command "look" + "plate" = "look_plate";
 }
-ch2-pickup-needle {
-	set flag ch2-map-needle to false;
-	set flag ch2-carrying-needle to true;
-	if (flag ch2-carrying-plate is true) {
-		set flag ch2-map-solder to true;
+"ch2_pickup_needle" {
+	"ch2_map_needle" = false;
+	ch2_carrying_needle = true;
+	if ("ch2_carrying_plate") {
+		"ch2_map_solder" = true;
 	}
-	register look + needle -> look-needle;
+	command "look" + "needle" = "look_needle";
 }
-ch2-solder-harddrive {
-	copy ch2-install-plate;
-	copy ch2-install-needle;
-	set flag ch2-map-solder to false;
-	set flag ch2-carrying-harddrive to true;
-	register look + "hard drive" -> look-harddrive;
+"ch2_solder_harddrive" {
+	copy!("ch2_install_plate")
+	copy!("ch2_install_needle")
+	"ch2_map_solder" = false;
+	ch2_carrying_harddrive = true;
+	command "look" + "hard drive" = "look_harddrive";
 }
 
 // ROUND 3
 
-ch2-pickup-clock {
-	set flag ch2-map-clock to false;
-	set flag ch2-carrying-clock to true;
-	register look + clock -> look-clock;
+"ch2_pickup_clock" {
+	"ch2_map_clock" = false;
+	ch2_carrying_clock = true;
+	command "look" + "clock" = "look_clock";
 }
-ch2-pickup-goldfish {
-	set flag ch2-map-goldfish to false;
-	set flag ch2-carrying-goldfish to true;
-	if (flag ch2-carrying-abacus is true) {
-		set flag ch2-map-solder to true;
+"ch2_pickup_goldfish" {
+	"ch2_map_goldfish" = false;
+	ch2_carrying_goldfish = true;
+	if ("ch2_carrying_abacus") {
+		"ch2_map_solder" = true;
 	}
-	register look + goldfish -> look-goldfish;
+	command "look" + "goldfish" = "look_goldfish";
 }
-ch2-pickup-manual {
-	set flag ch2-map-manual to false;
-	set flag ch2-map-abacus to true;
-	set flag ch2-carrying-manual to true;
-	register look + abacus -> look-abacus;
+"ch2_pickup_manual" {
+	"ch2_map_manual" = false;
+	"ch2_map_abacus" = true;
+	ch2_carrying_manual = true;
+	command "look" + "abacus" = "look_abacus";
 }
-ch2-handoff-abacus-to-manual {
-	set flag ch2-map-abacus to false;
-	set flag ch2-map-manual to true;
+"ch2_handoff_abacus_to_manual" {
+	"ch2_map_abacus" = false;
+	"ch2_map_manual" = true;
 }
-ch2-pickup-abacus {
-	set flag ch2-map-abacus to false;
-	set flag ch2-carrying-abacus to true;
-	if (flag ch2-carrying-goldfish is true) {
-		set flag ch2-map-solder to true;
+"ch2_pickup_abacus" {
+	"ch2_map_abacus" = false;
+	ch2_carrying_abacus = true;
+	if ("ch2_carrying_goldfish") {
+		"ch2_map_solder" = true;
 	}
-	register look + abacus -> look-abacus;
+	command "look" + "abacus" = "look_abacus";
 }
-ch2-solder-cpu {
-	copy ch2-install-goldfish;
-	copy ch2-install-abacus;
-	set flag ch2-map-solder to false;
-	set flag ch2-carrying-cpu to true;
-	register look + cpu -> look-cpu;
+"ch2_solder_cpu" {
+	copy!("ch2_install_goldfish")
+	copy!("ch2_install_abacus")
+	"ch2_map_solder" = false;
+	ch2_carrying_cpu = true;
+	command "look" + "cpu" = "look_cpu";
 }
-ch2-handoff-ramchips-to-seamoss {
-	set flag ch2-map-ramchips to false;
-	set flag ch2-map-seamoss to true;
+"ch2_handoff_ramchips_to_seamoss" {
+	"ch2_map_ramchips" = false;
+	"ch2_map_seamoss" = true;
 }
-ch2-pickup-ramchips {
-	set flag ch2-map-ramchips to false;
-	set flag ch2-map-seamoss to false;
-	set flag ch2-carrying-ramchips to true;
-	register look + "ram chips" -> look-ramchips;
-	register look + ram -> look-ramchips;
+"ch2_pickup_ramchips" {
+	"ch2_map_ramchips" = false;
+	"ch2_map_seamoss" = false;
+	ch2_carrying_ramchips = true;
+	command "look" + "ram chips" = "look_ramchips";
+	command "look" + "ram" = "look_ramchips";
 }
 
 // ROUND 4
 
-ch2-pickup-mainframeos {
-	set flag ch2-map-mainframeos to false;
-	set flag ch2-carrying-mainframeos to true;
-	register look + mainframeos -> look-mainframeos;
+"ch2_pickup_mainframeos" {
+	"ch2_map_mainframeos" = false;
+	ch2_carrying_mainframeos = true;
+	command "look" + "mainframeos" = "look_mainframeos";
 }
 
 /* ---------- ITEM "INSTALL" ---------- */
 
-ch2-install-monitor {
-	set flag ch2-carrying-monitor to false;
-	set flag ch2-installed-monitor to true;
-	unregister look + monitor
+"ch2_install_monitor" {
+	ch2_carrying_monitor = false;
+	ch2_installed_monitor = true;
+	delete command "look"  + monitor;
 }
-ch2-turn_in-cactuscooler {
-	set flag ch2-carrying-cactuscooler to false;
-	unregister look + "cactus cooler";
+"ch2_turn_in_cactuscooler" {
+	ch2_carrying_cactuscooler = false;
+	delete command "look"  + "cactus cooler";
 	// picking up heatsink is currently a separate step
 }
-ch2-install-heatsink {
-	set flag ch2-carrying-heatsink to false;
-	set flag ch2-installed-heatsink to true;
-	unregister look + "heat sink";
+"ch2_install_heatsink" {
+	ch2_carrying_heatsink = false;
+	ch2_installed_heatsink = true;
+	delete command "look"  + "heat sink";
 }
-ch2-install-powersupply {
-	set flag ch2-carrying-powersupply to false;
-	set flag ch2-installed-powersupply to true;
-	unregister look + "power supply";
+"ch2_install_powersupply" {
+	ch2_carrying_powersupply = false;
+	ch2_installed_powersupply = true;
+	delete command "look"  + "power supply";
 }
-ch2-install-keyboard {
-	set flag ch2-carrying-keyboard to false;
-	set flag ch2-installed-keyboard to true;
-	unregister look + keyboard;
+"ch2_install_keyboard" {
+	ch2_carrying_keyboard = false;
+	ch2_installed_keyboard = true;
+	delete command "look"  + keyboard;
 }
-ch2-install-mouse {
-	set flag ch2-carrying-mouse to false;
-	set flag ch2-installed-mouse to true;
-	unregister look + mouse;
+"ch2_install_mouse" {
+	ch2_carrying_mouse = false;
+	ch2_installed_mouse = true;
+	delete command "look"  + mouse;
 }
-ch2-install-harddrive {
-	set flag ch2-carrying-harddrive to false;
-	set flag ch2-installed-harddrive to true;
-	unregister look + "hard drive";
+"ch2_install_harddrive" {
+	ch2_carrying_harddrive = false;
+	ch2_installed_harddrive = true;
+	delete command "look"  + "hard drive";
 }
-ch2-install-plate {
-	set flag ch2-carrying-plate to false;
-	set flag ch2-installed-plate to true;
-	unregister look + plate;
+"ch2_install_plate" {
+	ch2_carrying_plate = false;
+	ch2_installed_plate = true;
+	delete command "look"  + plate;
 }
-ch2-install-needle {
-	set flag ch2-carrying-needle to false;
-	set flag ch2-installed-needle to true;
-	unregister look + needle;
+"ch2_install_needle" {
+	ch2_carrying_needle = false;
+	ch2_installed_needle = true;
+	delete command "look"  + needle;
 }
-ch2-install-ramchips {
-	set flag ch2-carrying-ramchips to false;
-	set flag ch2-installed-ramchips to true;
-	unregister look + "ram chips";
-	unregister look + ram;
+"ch2_install_ramchips" {
+	ch2_carrying_ramchips = false;
+	ch2_installed_ramchips = true;
+	delete command "look"  + "ram chips";
+	delete command "look"  + ram;
 }
-ch2-install-clock {
-	set flag ch2-carrying-clock to false;
-	set flag ch2-installed-clock to true;
-	unregister look + clock;
+"ch2_install_clock" {
+	ch2_carrying_clock = false;
+	ch2_installed_clock = true;
+	delete command "look"  + clock;
 }
-ch2-install-cpu {
-	set flag ch2-carrying-cpu to false;
-	set flag ch2-installed-cpu to true;
-	unregister look + cpu;
+"ch2_install_cpu" {
+	ch2_carrying_cpu = false;
+	ch2_installed_cpu = true;
+	delete command "look"  + cpu;
 }
-ch2-install-goldfish {
-	set flag ch2-carrying-goldfish to false;
-	set flag ch2-installed-goldfish to true;
-	unregister look + goldfish;
+"ch2_install_goldfish" {
+	ch2_carrying_goldfish = false;
+	ch2_installed_goldfish = true;
+	delete command "look"  + goldfish;
 }
-ch2-install-abacus {
-	set flag ch2-carrying-abacus to false;
-	set flag ch2-installed-abacus to true;
-	unregister look + abacus;
+"ch2_install_abacus" {
+	ch2_carrying_abacus = false;
+	ch2_installed_abacus = true;
+	delete command "look"  + abacus;
 }
-ch2-install-mainframeos {
-	set flag ch2-carrying-mainframeos to false;
-	set flag ch2-installed-mainframeos to true;
-	unregister look + mainframeos;
+"ch2_install_mainframeos" {
+	ch2_carrying_mainframeos = false;
+	ch2_installed_mainframeos = true;
+	delete command "look"  + mainframeos;
 }
 
 //--------------------------- SOLDER ZONE ---------------------------\\
 
-interact-ch2-solderzone-harddrive {
+"interact_ch2_solderzone_harddrive" {
 	show dialog {
 		PLAYER "Got the plate and the needle. All right, let's solder!"
 		name "" "(You created a hard drive!)"
-	}
-	copy ch2-solder-harddrive;
+	};
+	copy!("ch2_solder_harddrive")
 }
-interact-ch2-solderzone-cpu {
+"interact_ch2_solderzone_cpu" {
 	show dialog {
 		PLAYER "Got the goldfish and the abacus. All right, let's solder!"
 		name "" "(You created a cpu!)"
-	}
-	copy ch2-solder-cpu;
+	};
+	copy!("ch2_solder_cpu")
 }
-interact-ch2-solderzone {
-	if (flag ch2-parts-round-2-backstory is false) {
+"interact_ch2_solderzone" {
+	if (!"ch2_parts_round_2_backstory") {
 		show dialog {
 			PLAYER "It's a metal pen resting inside a metal coil. But why is the pen plugged in? What does it do?"
-		}
+		};
 		return;
 	}
-	if (flag ch2-solder-sight is false) {
+	if (!"ch2_solder_sight") {
 		show dialog {
 			PLAYER "So this is a solder station."
-		}
-		set flag ch2-solder-sight to true;
+		};
+		"ch2_solder_sight" = true;
 	}
 	// plate + needle = harddrive
-	if (variable ch2-storyflag-round is 2) {
+	if ("ch2_storyflag_round" == 2) {
 		if (
-			flag ch2-installed-plate is false
-			|| flag ch2-installed-needle is false
+			!"ch2_installed_plate"
+			|| !"ch2_installed_needle"
 		) {
-			if (flag ch2-carrying-plate is true) {
-				if (flag ch2-carrying-needle is false) {
+			if ("ch2_carrying_plate") {
+				if (!ch2_carrying_needle) {
 					show dialog {
 						PLAYER "I have the plate. Now I just need the needle, and then I can solder them together here."
-					}
+					};
 				} else {
-					copy interact-ch2-solderzone-harddrive;
+					copy!("interact_ch2_solderzone_harddrive")
 				}
-			} else if (flag ch2-carrying-needle is true) {
-				if (flag ch2-carrying-plate is false) {
+			} else if ("ch2_carrying_needle") {
+				if (!ch2_carrying_plate) {
 					show dialog {
 						PLAYER "I have the needle. Now I just need the plate, and then I can solder them together here."
-					}
+					};
 				} else {
-					copy interact-ch2-solderzone-harddrive;
+					copy!("interact_ch2_solderzone_harddrive")
 				}
 			} else {
 				show dialog {
 					PLAYER "When I have the plate and the needle, I can solder them together here."
-				}
+				};
 			}
 		} else {
-			show dialog { PLAYER "All done soldering for now." }
+			show dialog { PLAYER "All done soldering for now." };
 		}
 	}
 	// goldfish + abacus = cpu
-	else if (variable ch2-storyflag-round is 3) {
+	else if ("ch2_storyflag_round" == 3) {
 		if (
-			flag ch2-installed-goldfish is false
-			|| flag ch2-installed-abacus is false
+			!"ch2_installed_goldfish"
+			|| !"ch2_installed_abacus"
 		) {
-			if (flag ch2-carrying-goldfish is true) {
-				if (flag ch2-carrying-abacus is false) {
+			if ("ch2_carrying_goldfish") {
+				if (!ch2_carrying_abacus) {
 					show dialog {
 						PLAYER "I have the goldfish. Now I just need the abacus, and then I can solder them together here."
-					}
+					};
 				} else {
-					copy interact-ch2-solderzone-cpu;
+					copy!("interact_ch2_solderzone_cpu")
 				}
-			} else if (flag ch2-carrying-abacus is true) {
-				if (flag ch2-carrying-goldfish is false) {
+			} else if ("ch2_carrying_abacus") {
+				if (!ch2_carrying_goldfish) {
 					show dialog {
 						PLAYER "I have the abacus. Now I just need the goldfish, and then I can solder them together here."
-					}
+					};
 				} else {
-					copy interact-ch2-solderzone-cpu;
+					copy!("interact_ch2_solderzone_cpu")
 				}
 			} else {
 				show dialog {
 					PLAYER "When I have the goldfish and the abacus, I can solder them together here."
-				}
+				};
 			}
 		} else {
-			show dialog { PLAYER "All done soldering for now." }
+			show dialog { PLAYER "All done soldering for now." };
 		}
 	} else {
 		show dialog {
 			PLAYER "Guess I'm all done soldering."
-		}
+		};
 	}
 }

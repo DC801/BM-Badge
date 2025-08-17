@@ -1,219 +1,214 @@
-include!("header.mgs")
-const!($lightsdefault = ch2-serial-light-manager)
+include "header.mgs";
+$lightsdefault = ch2_serial_light_manager;
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-look-ch2-castle-33 {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_castle_33 {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked around the <c>HYDROPONICS ROOM</>."
 		"\tThis room is sweetly humid and surprisingly cold. The faint buzz of the lights compete with a dripping noise coming from the pipes tucked into the rims of each box. You catch a whiff of leafy green onion."
 		" "
-	}
+	};
 }
 
-look-ch2-gregory {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_gregory {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at <m>%SELF%</>."
 		"\tThe cat is gray around the whiskers, but he moves with energy and precision. He appears happy to be receiving a visitor."
-	}
+	};
 }
 
 /* ---------- ON_LOAD ---------- */
 
-on_load-ch2-castle-33 {
+on_load_ch2_castle_33 {
 	// ch2 room state
-	mutate ch2-in-room = 33;
+	ch2_in_room = 33;
 
 	// entrance text
-	show serial dialog spacer;
-	if (flag ch2-seen-room-33 is false) {
-		show serial dialog { "Discovered <bold><c>HYDROPONICS ROOM</>! Room added to <c>MAP</>!" }
-		set flag ch2-seen-room-33 to true;
+	show serial_dialog spacer;
+	if (!ch2_seen_room_33) {
+		show serial_dialog { "Discovered <bold><c>HYDROPONICS ROOM</>! Room added to <c>MAP</>!" };
+		ch2_seen_room_33 = true;
 	} else {
-		show serial dialog { "Entering <bold>HYDROPONICS ROOM</>..." }
+		show serial_dialog { "Entering <bold>HYDROPONICS ROOM</>..." };
 	}
 
 	// room unique stuff
-	if (
-		flag ch2-installed-mouse is true
-		|| flag ch2-carrying-mouse is true
-	) {
-		copy script ch2-hide-mouse;
+	if (ch2_installed_mouse || ch2_carrying_mouse) {
+		copy!(ch2_hide_mouse)
 	}
-	set flag ch2-mousegame to false;
+	ch2_mousegame = false;
 
-	copy ch2-map-init;
-	if (debug mode is on) {
-		register mousegame -> ch2-debug-mousegame;
-		show serial dialog {
+	copy!(ch2_map_init)
+	if (debug_mode) {
+		command mousegame = ch2_debug_mousegame;
+		show serial_dialog {
 			" "
 			"<y>DEBUG></> <c>MOUSEGAME</>: start the mouse game!"
-		}
+		};
 	}
-	if (flag ch2-cutseen-castle33 is false) {
-		turn player control off;
-		if (warp state is not warped) {
+	if (!ch2_cutseen_castle33) {
+		player_control = off;
+		if (warp_state != warped) {
 			wait 600ms;
 			show dialog {
 				Gregory alignment BR "Oh!"
-			}
-			turn entity "%PLAYER%" toward entity Gregory;
+			};
+			player direction = entity Gregory;
 			show dialog {
 				Gregory alignment BR "Well, that's a new face, isn't it?"
-			}
+			};
 		} else {
 			wait 200ms;
 			show dialog {
 				Gregory alignment TR "Oh!"
-			}
-			turn entity "%PLAYER%" toward entity Gregory;
+			};
+			player direction = entity Gregory;
 			show dialog {
 				Gregory alignment TR "Well, that's a new face, isn't it?"
-			}
+			};
 		}
-		turn player control on;
-		set flag ch2-cutseen-castle33 to true;
+		player_control = on;
+		ch2_cutseen_castle33 = true;
 	}
 }
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-castle-33 {
-	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		if (flag ch2-mousegame is true) {
-			turn player control off;
-			set entity "%PLAYER%" current_animation to 0;
+on_tick_ch2_castle_33 {
+	if (player intersects geometry "south-hitbox") {
+		if (ch2_mousegame) {
+			player_control = off;
+			player current_animation = 0;
 			show dialog {
 				PLAYER "Wait, I shouldn't leave before giving back this mouse detector."
-			}
-			walk entity "%PLAYER%" to geometry south-hitbox-bounce over 300ms;
-			turn player control on;
+			};
+			player position -> geometry "south-hitbox-bounce" origin over 300ms;
+			player_control = on;
 		} else {
-			set warp state to walk_from-northwest;
-			copy ch2-load-castle-32-special;
+			warp_state = "walk_from-northwest";
+			copy!(ch2_load_castle_32_special)
 		}
 	}
-	if (flag ch2-mousegame is true) {
-		goto ch2-mousegame-tick // this script also resets to this script
+	if (ch2_mousegame) {
+		goto ch2_mousegame_tick; // this script also resets to this script
 	}
 }
 
 /* ---------- EXIT STUFF ---------- */
 
-on_exit-ch2-castle-33 { // sanitize ch2 room state
-	mutate ch2-in-room = 0;
+on_exit_ch2_castle_33 { // sanitize ch2 room state
+	ch2_in_room = 0;
 }
 
 // SERIAL: go
 
-on_go-castle-33-south {
-	copy on_exit-ch2-castle-33;
-	copy warping-out-fade-out;
-	copy ch2-load-castle-32-special;
+on_go_castle_33_south {
+	copy!(on_exit_ch2_castle_33)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_32_special)
 }
 
 /* ---------- ENTITIES ---------- */
 
-const! (
-	$time = 200ms
-)
+$time = 200ms;
 
-screen-lights-flash-bits {
-	turn light LED_BIT1 on;
-	turn light LED_BIT2 on;
-	turn light LED_BIT4 on;
-	turn light LED_BIT8 on;
-	turn light LED_BIT16 on;
-	turn light LED_BIT32 on;
-	turn light LED_BIT64 on;
-	turn light LED_BIT128 on;
+screen_lights_flash_bits {
+	light LED_BIT1 = on;
+	light LED_BIT2 = on;
+	light LED_BIT4 = on;
+	light LED_BIT8 = on;
+	light LED_BIT16 = on;
+	light LED_BIT32 = on;
+	light LED_BIT64 = on;
+	light LED_BIT128 = on;
 	wait $time;
-	turn light ALL off;
+	light ALL = off;
 	wait $time;
 }
 
-ch2-interact-gregory-breakyes {
+interact_ch2_gregory_breakyes {
 	show dialog {
 		SELF "I'll take the mouse proximity detector back then, then."
-	}
-	set flag ch2-mousegame to false;
-	copy ch2-map-init-hex;
+	};
+	ch2_mousegame = false;
+	copy!(ch2_map_init_hex)
 	show dialog {
 		SELF "Let me know when you want to have another go."
-	}
-	set entity "%SELF%" on_interact to ch2-interact-gregory;
+	};
+	self on_interact = interact_ch2_gregory;
 }
-ch2-interact-gregory-breakno {
+interact_ch2_gregory_breakno {
 	show dialog {
 		SELF "Good luck."
-	}
-	set entity "%SELF%" on_interact to ch2-interact-gregory;
+	};
+	self on_interact = interact_ch2_gregory;
 }
 
-ch2-interact-gregory {
-	copy face-player;
-	if (flag ch2-mousegame is true) {
-		if (flag interrupt is false) {
+interact_ch2_gregory {
+	copy!(face_player)
+	if (ch2_mousegame) {
+		if (!interrupt) {
 			show dialog {
 				SELF "That bluetooth proximity detector will tell you how close you are to the mouse. The closer you are to it, the more lights will light up."
 				"Or did you want to take a break?"
-				> "Yes, I want to take a break." : ch2-interact-gregory-breakyes
-				> "No, I want to keep trying." : ch2-interact-gregory-breakno
-			}
-			set flag interrupt to true;
+				> "Yes, I want to take a break." = interact_ch2_gregory_breakyes
+				> "No, I want to keep trying." = interact_ch2_gregory_breakno
+			};
+			interrupt = true;
 		} else {
 			show dialog {
 				SELF "Did you want to take a break?"
-				> "Yes, I want to take a break." : ch2-interact-gregory-breakyes
-				> "No, I want to keep trying." : ch2-interact-gregory-breakno
-			}
+				> "Yes, I want to take a break." = interact_ch2_gregory_breakyes
+				> "No, I want to keep trying." = interact_ch2_gregory_breakno
+			};
 		}
 	}
-	if (variable ch2-storyflag-round is < 2) {
-		if (flag ch2-gregory-backstory is false) {
+	if (ch2_storyflag_round < 2) {
+		if (!ch2_gregory_backstory) {
 			show dialog {
 				SELF "Not sure how you got in, but..."
 				"Oh! Unless the blockage is gone at last?"
 				PLAYER "No, the door by the vending machine is still blocked."
-			}
-			turn entity "%PLAYER%" south;
+			};
+			player direction = south;
 			show dialog {
 				PLAYER "But why isn't the door to this room crushed, damaged, or blocked like the rest?"
-			}
-			turn entity "%PLAYER%" toward entity Gregory;
-			set entity Gregory on_tick to spin_self_clockwise;
+			};
+			player direction = entity Gregory;
+			entity Gregory on_tick = spin_self_clockwise;
 			show dialog {
 				SELF "This wing was recently redone to install a bunch of fancy tech."
 				"These hydroponics trays, the induction stovetops in the next room... that kind of thing."
-			}
-			set entity Gregory on_tick to face-player;
-			copy face-player;
+			};
+			entity Gregory on_tick = face_player;
+			copy!(face_player)
 			show dialog {
 				SELF "They did some structural reinforcement, too, but don't remember specifics."
 				"At the time, the only thing I cared about was my new stovetop."
-			}
-			set flag ch2-gregory-backstory to true;
+			};
+			ch2_gregory_backstory = true;
 			if (
-				flag ch2-want-cactuscooler is false
-				|| flag ch2-carrying-cactuscooler is true
-				|| flag ch2-cactuscooler-delivered is true
+				!ch2_want_cactuscooler
+				|| ch2_carrying_cactuscooler
+				|| ch2_cactuscooler_delivered
 			) { /*NADA*/ } else {
 				show dialog {
 					PLAYER "Gotcha. So, um...."
-				}
-				show dialog ch2-gregory-cactus-help { // reused bit
+				};
+				show dialog ch2_gregory_cactus_help { // reused bit
 					PLAYER "I was looking for this soda called Cactus Cooler. Do you know if the castle has any stocked?"
 					SELF "Hmm, doubt it, but I don't know for certain. I haven't been in charge of vending machine stocking for -- goodness, two or three decades."
 					"You might check the vending machine itself, though."
-				}
+				};
 			}
 		} else {
 			if (
-				flag ch2-want-cactuscooler is false
-					|| flag ch2-carrying-cactuscooler is true
-					|| flag ch2-cactuscooler-delivered is true
+				!ch2_want_cactuscooler
+				|| ch2_carrying_cactuscooler
+				|| ch2_cactuscooler_delivered
 			) {
 				show dialog {
 					SELF "I'm slowing down in my old age, but even so, I don't want my habits ingrained to the point that I'm sabotaging myself. I try to keep my mind spry."
@@ -222,156 +217,160 @@ ch2-interact-gregory {
 					"As for my new bluetooth mouse...."
 					"Bad trade. For me, it'll be wired mice forever!"
 					"But hey, at least I know I don't hate bluetooth mice because I'm old and stubborn."
-				}
-				set flag ch2-bluetooth-mouse-rant to true;
+				};
+				ch2_bluetooth_mouse_rant = true;
 			} else {
-				show dialog ch2-gregory-cactus-help; // from above
+				show dialog ch2_gregory_cactus_help; // from above
 			}
 		}
 	} else {
-		if (flag ch2-carrying-mouse is true || flag ch2-installed-mouse is true) {
+		if (ch2_carrying_mouse || ch2_installed_mouse) {
 			show dialog {
 				SELF "I like my mouse to be physically connected to my computer."
 				"Hmm, is that too on the nose?"
-			}
-		} else if (flag ch2-mousegame-backstory is false) {
+			};
+			return;
+		}
+
+		if (!ch2_mousegame_backstory) {
 			show dialog {
 				PLAYER "This is kind of random, but I need a mouse for something, and was wondering --"
 				SELF "A mouse? A rodent, or a computer mouse?"
 				PLAYER "A computer mouse."
 				SELF "A bit cliche to ask a cat about this, don't you think?"
 				PLAYER "It wasn't my idea."
-			}
-			if (flag ch2-bluetooth-mouse-rant is false) {
-				show dialog { SELF "Well, you're in luck. I have a spare bluetooth mouse I'm not using anymore. You're welcome to it if you can catch it." }
+			};
+			if (!ch2_bluetooth_mouse_rant) {
+				show dialog { SELF "Well, you're in luck. I have a spare bluetooth mouse I'm not using anymore. You're welcome to it if you can catch it." };
 			} else {
-				show dialog { SELF "Well, you can have my old bluetooth mouse if you can catch it." }
+				show dialog { SELF "Well, you can have my old bluetooth mouse if you can catch it." };
 			}
 			show dialog {
 				PLAYER "Catch it?"
-			}
-			set entity Gregory on_tick to spin_self_clockwise;
+			};
+			entity Gregory on_tick = spin_self_clockwise;
 			show dialog {
 				SELF "It's loose in this room somewhere, but I'm not as fast as I used to be, and can't quite get ahold of it."
-			}
-			set entity Gregory on_tick to face-player;
-			copy face-player;
+			};
+			entity Gregory on_tick = face_player;
+			copy!(face_player)
 			show dialog {
 				SELF "It's hiding in one of the hydroponics bins, I should think."
 				PLAYER "I'm sorry... your bluetooth mouse is hiding in the vegetables?"
-			}
-			if (flag ch2-bluetooth-mouse-rant is false) {
-				show dialog { SELF "Well, it's not fond of cats. And I'm not fond of it, to be honest." }
+			};
+			if (!ch2_bluetooth_mouse_rant) {
+				show dialog { SELF "Well, it's not fond of cats. And I'm not fond of it, to be honest." };
 			} else {
-				show dialog { SELF "Well, it's not fond of cats." }
+				show dialog { SELF "Well, it's not fond of cats." };
 			}
 			show dialog {
 				PLAYER "We ARE talking about a computer mouse, right?"
 				SELF "We are indeed."
-			}
-			turn player control off;
-			set entity Gregory on_tick to null_script;
-			rotate entity Gregory 1;
+			};
+			player_control = off;
+			entity Gregory on_tick = null_script;
+			entity Gregory direction += 1;
 			wait 800ms;
-			rotate entity Gregory -1;
-			set entity Gregory on_tick to face-player;
+			entity Gregory direction -= 1;
+			entity Gregory on_tick = face_player;
 			show dialog {
 				SELF "Here, this is a bluetooth proximity detector. It's got eight lights that will turn on depending on how close you are to the mouse."
 				PLAYER "Eight lights?"
-			}
-			turn lights control on;
-			turn light ALL off;
-			set entity Lights on_tick to screen-lights-flash-bits;
+			};
+			lights_control = on;
+			light ALL = off;
+			entity Lights on_tick = screen_lights_flash_bits;
 			show dialog {
 				SELF "Yes, these eight lights in a line, here along the bottom. You see?"
 				PLAYER "Um...."
 				SELF "The more lights come on, the closer you are to finding it. Walk around a bit and see for yourself."
-			}
-			copy ch2-map-init-hex;
-			set entity Lights on_tick to $lightsdefault;
+			};
+			copy!(ch2_map_init_hex)
+			entity Lights on_tick = $lightsdefault;
 			show dialog {
 				SELF "Well, let me know when you want to have a go, anyway."
-			}
-			turn player control on;
-			set flag interrupt to true;
-			set flag ch2-mousegame-backstory to true;
-		} else {
-			if (flag interrupt is false) {
-				show dialog {
-					SELF "You still need that bluetooth mouse? I've still got that bluetooth proximity detector right here."
-				}
-			}
-			show dialog {
-				SELF "Want to try to catch the mouse?"
-				> "Yes" : ch2-interact-gregory-gameyes
-				> "No" : ch2-interact-gregory-gameno
-			}
+			};
+			player_control = on;
+			interrupt = true;
+			ch2_mousegame_backstory = true;
+			return;
 		}
+
+		if (!interrupt) {
+			show dialog {
+				SELF "You still need that bluetooth mouse? I've still got that bluetooth proximity detector right here."
+			};
+		}
+		show dialog {
+			SELF "Want to try to catch the mouse?"
+			> "Yes" = interact_ch2_gregory_gameyes
+			> "No" = interact_ch2_gregory_gameno
+		};
 	}
 }
 
-ch2-interact-gregory-gameyes {
-	set entity Mouse on_tick to ch2-mousegame-prepare-board;
-	set entity "%SELF%" on_interact to ch2-interact-gregory;
+interact_ch2_gregory_gameyes {
+	entity Mouse on_tick = ch2_mousegame_prepare_board;
+	self on_interact = interact_ch2_gregory;
 }
 
-ch2-interact-gregory-gameno {
+interact_ch2_gregory_gameno {
 	show dialog {
 		SELF "Oh. Well, let me know when you want to give it a shot."
-	}
-	set entity "%SELF%" on_interact to ch2-interact-gregory;
+	};
+	self on_interact = interact_ch2_gregory;
 }
 
 /* ---------- MOUSE (ADMIN) ---------- */
 
-ch2-hide-mouse {
-	teleport entity "Mouse" to geometry hiding-spot;
-	set entity "Mouse" name to " ";
-	set entity Mouse on_interact to null_script;
+ch2_hide_mouse {
+	entity Mouse position = geometry "hiding-spot";
+	entity Mouse name = " ";
+	entity Mouse on_interact = null_script;
 }
 
-ch2-touch-mouse {
+ch2_touch_mouse {
 	show dialog {
 		name "" "(You found the mouse!)"
-	}
-	mutate ch2-mousegame-catchcount + 1;
-	set flag ch2-mousegame to false;
-	if (variable ch2-mousegame-catchcount is 1) {
+	};
+	ch2_mousegame_catchcount += 1;
+	ch2_mousegame = false;
+	if (ch2_mousegame_catchcount == 1) {
 		show dialog {
 			PLAYER "Oh, I found it!"
-		}
-		turn light ALL off;
+		};
+		light ALL = off;
 		show dialog {
 			PLAYER "!!"
 			"Shoot! It got away from me. Where'd it go?"
 			Gregory "Mice are quick; you'd better be quicker. Try again."
-		}
-		set entity Mouse on_tick to ch2-mousegame-prepare-board;
-	} else if (variable ch2-mousegame-catchcount is 2) {
+		};
+		entity Mouse on_tick = ch2_mousegame_prepare_board;
+	} else if (ch2_mousegame_catchcount == 2) {
 		show dialog {
 			PLAYER "Aha! Got it again!"
-		}
-		turn light ALL off;
+		};
+		light ALL = off;
 		show dialog {
 			PLAYER "And -- aw, come on! I was so close to grabbing it that time!"
 			Gregory "It'll tire eventually. Keep going."
-		}
-		set entity Mouse on_tick to ch2-mousegame-prepare-board;
-	} else if (variable ch2-mousegame-catchcount is 3) {
+		};
+		entity Mouse on_tick = ch2_mousegame_prepare_board;
+	} else if (ch2_mousegame_catchcount == 3) {
 		show dialog {
 			PLAYER "There we go! Got it in my hands!"
 			name "" "(You pick up the mouse!)"
 			Gregory "Good job. Hope that mouse'll do the trick for you."
-		}
-		turn off player control;
-		fade out camera to black over 400ms;
-		teleport entity "%PLAYER%" to geometry dongle-handoff;
-		turn entity "%PLAYER%" toward entity Gregory;
-		fade in camera from black over 400ms;
-		turn on player control;
-		copy ch2-map-init-hex;
-		copy script ch2-hide-mouse;
-		copy script ch2-pickup-mouse;
+		};
+		player_control = off;
+		camera fade out -> black over 400ms;
+		player position = geometry "dongle-handoff";
+		player direction = entity Gregory;
+		camera fade in -> black over 400ms;
+		player_control = on;
+		copy!(ch2_map_init_hex)
+		copy!(ch2_hide_mouse)
+		copy!(ch2_pickup_mouse)
 		show dialog {
 			Gregory "Don't forget this -- the USB dongle. Now you can use that mouse with computers that don't have bluetooth hardware built in."
 			PLAYER "This thingy plugs into a USB port? What if the mainframe doesn't have one of those?"
@@ -383,255 +382,247 @@ ch2-touch-mouse {
 			PLAYER "I guess it's sort of beige...."
 			Gregory "Oh dear."
 			"Well, you might be fine anyway. Good luck with everything."
-		}
-		set entity Mouse on_interact to null_script;
+		};
+		entity Mouse on_interact = null_script;
 	}
 }
 
 /* ---------- MOUSE GAME ---------- */
 
-const! (
-	$max = 680 // small room was 418
-)
 
-ch2-debug-mousegame {
-	set entity "Mouse" name to "Mouse";
-	set entity Mouse on_interact to ch2-touch-mouse;
-	set entity Mouse on_tick to ch2-mousegame-prepare-board;
+	$max = 680; // small room was 418
+
+
+ch2_debug_mousegame {
+	entity Mouse name = Mouse;
+	entity Mouse on_interact = ch2_touch_mouse;
+	entity Mouse on_tick = ch2_mousegame_prepare_board;
 }
 
-ch2-mousegame-prepare-board {
+ch2_mousegame_prepare_board {
 	// redone so that the mouse can't respawn in the same row/column as last time; should be more interesting
-	// NOTE: `mutate _ ? X` will generate numbers between 0 and X-1, not X!
+	// NOTE: `"_" ?= "X` will generate numbers between 0 and X-1, not X!"
 
 	// bay column (left, right)
-	if (variable ch2-mousegame-column is 0) { // uninitialized
-		mutate ch2-mousegame-column ? 2 // random 0-1
-		mutate ch2-mousegame-column + 1 // now random 1-2
+	if (ch2_mousegame_column == 0) { // uninitialized
+		ch2_mousegame_column ?= 2; // random 0-1
+		ch2_mousegame_column += 1; // now random 1-2
 	} else { // invert the current one
-		if (variable ch2-mousegame-column is 1) {
-			mutate ch2-mousegame-column = 2;
+		if (ch2_mousegame_column == 1) {
+			ch2_mousegame_column = 2;
 		} else {
-			mutate ch2-mousegame-column = 1;
+			ch2_mousegame_column = 1;
 		}
 	}
 
 	// bay row (top, mid, bot)
-	mutate tempvar ? 2 // random 0-1 (coin flip)
-	if (variable ch2-mousegame-row is 0) { // uninitialized
-		mutate ch2-mousegame-row ? 3; // random 0-2
-		mutate ch2-mousegame-row + 1; // now random 1-3
+	tempvar ?= 2; // random 0-1 (coin flip)
+	if (ch2_mousegame_row == 0) { // uninitialized
+		ch2_mousegame_row ?= 3; // random 0-2
+		ch2_mousegame_row += 1; // now random 1-3
 	} else { // get a random one, but make sure it's not the current one
-		if (variable ch2-mousegame-row is 1) {
-			mutate tempvar + 2; // random 2-3
-			mutate ch2-mousegame-row = tempvar;
+		if (ch2_mousegame_row == 1) {
+			tempvar += 2; // random 2-3
+			ch2_mousegame_row = tempvar *1;
 			// 1 => 2|3
-		} else if (variable ch2-mousegame-row is 2) {
-			if (variable tempvar is 0) {
-				mutate ch2-mousegame-row = 1;
+		} else if (ch2_mousegame_row == 2) {
+			if (tempvar == 0) {
+				ch2_mousegame_row = 1;
 			} else {
-				mutate ch2-mousegame-row = 3;
+				ch2_mousegame_row = 3;
 			}
 			// 2 => 1|3
-		} else if (variable ch2-mousegame-row is 3) {
-			mutate tempvar + 1; // random 1-2
-			mutate ch2-mousegame-row = tempvar;
+		} else if (ch2_mousegame_row == 3) {
+			tempvar += 1; // random 1-2
+			ch2_mousegame_row = tempvar *1;
 			// 3 => 1|2
 		}
 	}
 
 	// cell within cell+column
-	if (variable ch2-mousegame-row is 1) {
+	if (ch2_mousegame_row == 1) {
 		// first row has 4 per region; others have 3
-		mutate ch2-mousegame-cell ? 4;
+		ch2_mousegame_cell ?= 4;
 	} else {
-		mutate ch2-mousegame-cell ? 3;
+		ch2_mousegame_cell ?= 3;
 	}
-	mutate ch2-mousegame-cell + 1 // might as well make this 1-indexed, like everything else :/
+	ch2_mousegame_cell += 1; // might as well make this 1-indexed, like everything else :/
 
 	// Teleport the mouse to the cell
-	if (variable ch2-mousegame-column is 1) { // left side
-		if (variable ch2-mousegame-row is 1) { // top
-			if (variable ch2-mousegame-cell is 1) {
-				teleport entity Mouse to geometry mouse-pos0;
-			} else if (variable ch2-mousegame-cell is 2) {
-				teleport entity Mouse to geometry mouse-pos1;
-			} else if (variable ch2-mousegame-cell is 3) {
-				teleport entity Mouse to geometry mouse-pos2;
+	if (ch2_mousegame_column == 1) { // left side
+		if (ch2_mousegame_row == 1) { // top
+			if (ch2_mousegame_cell == 1) {
+				entity Mouse position = geometry "mouse-pos0";
+			} else if (ch2_mousegame_cell == 2) {
+				entity Mouse position = geometry "mouse-pos1";
+			} else if (ch2_mousegame_cell == 3) {
+				entity Mouse position = geometry "mouse-pos2";
 			} else {
-				teleport entity Mouse to geometry mouse-pos3;
+				entity Mouse position = geometry "mouse-pos3";
 			}
-		} else if (variable ch2-mousegame-row is 2) { // mid
-			if (variable ch2-mousegame-cell is 1) {
-				teleport entity Mouse to geometry mouse-pos8;
-			} else if (variable ch2-mousegame-cell is 2) {
-				teleport entity Mouse to geometry mouse-pos9;
+		} else if (ch2_mousegame_row == 2) { // mid
+			if (ch2_mousegame_cell == 1) {
+				entity Mouse position = geometry "mouse-pos8";
+			} else if (ch2_mousegame_cell == 2) {
+				entity Mouse position = geometry "mouse-pos9";
 			} else {
-				teleport entity Mouse to geometry mouse-pos10;
+				entity Mouse position = geometry "mouse-pos10";
 			}
-		} else { // variable ch2-mousegame-row is 3 (bot)
-			if (variable ch2-mousegame-cell is 1) {
-				teleport entity Mouse to geometry mouse-pos14;
-			} else if (variable ch2-mousegame-cell is 2) {
-				teleport entity Mouse to geometry mouse-pos15;
+		} else { // ch2_mousegame_row == 3 (bot)
+			if (ch2_mousegame_cell == 1) {
+				entity Mouse position = geometry "mouse-pos14";
+			} else if (ch2_mousegame_cell == 2) {
+				entity Mouse position = geometry "mouse-pos15";
 			} else {
-				teleport entity Mouse to geometry mouse-pos16;
+				entity Mouse position = geometry "mouse-pos16";
 			}
 		}
-	} else { // ch2-mousegame-column is 2 (right side)
-		if (variable ch2-mousegame-row is 1) { // top
-			if (variable ch2-mousegame-cell is 1) {
-				teleport entity Mouse to geometry mouse-pos4;
-			} else if (variable ch2-mousegame-cell is 2) {
-				teleport entity Mouse to geometry mouse-pos5;
-			} else if (variable ch2-mousegame-cell is 3) {
-				teleport entity Mouse to geometry mouse-pos6;
+	} else { // ch2_mousegame_column is 2 (right side)
+		if (ch2_mousegame_row == 1) { // top
+			if (ch2_mousegame_cell == 1) {
+				entity Mouse position = geometry "mouse-pos4";
+			} else if (ch2_mousegame_cell == 2) {
+				entity Mouse position = geometry "mouse-pos5";
+			} else if (ch2_mousegame_cell == 3) {
+				entity Mouse position = geometry "mouse-pos6";
 			} else {
-				teleport entity Mouse to geometry mouse-pos7;
+				entity Mouse position = geometry "mouse-pos7";
 			}
-		} else if (variable ch2-mousegame-row is 2) { // mid
-			if (variable ch2-mousegame-cell is 1) {
-				teleport entity Mouse to geometry mouse-pos11;
-			} else if (variable ch2-mousegame-cell is 2) {
-				teleport entity Mouse to geometry mouse-pos12;
+		} else if (ch2_mousegame_row == 2) { // mid
+			if (ch2_mousegame_cell == 1) {
+				entity Mouse position = geometry "mouse-pos11";
+			} else if (ch2_mousegame_cell == 2) {
+				entity Mouse position = geometry "mouse-pos12";
 			} else {
-				teleport entity Mouse to geometry mouse-pos13;
+				entity Mouse position = geometry "mouse-pos13";
 			}
-		} else { // variable ch2-mousegame-row is 3 (bot)
-			if (variable ch2-mousegame-cell is 1) {
-				teleport entity Mouse to geometry mouse-pos17;
-			} else if (variable ch2-mousegame-cell is 2) {
-				teleport entity Mouse to geometry mouse-pos18;
+		} else { // ch2_mousegame_row == 3 (bot)
+			if (ch2_mousegame_cell == 1) {
+				entity Mouse position = geometry "mouse-pos17";
+			} else if (ch2_mousegame_cell == 2) {
+				entity Mouse position = geometry "mouse-pos18";
 			} else {
-				teleport entity Mouse to geometry mouse-pos19;
+				entity Mouse position = geometry "mouse-pos19";
 			}
 		}
 	}
 
-	turn lights control on;
-	turn light ALL off;
+	lights_control = on;
+	light ALL = off;
 	show dialog {
 		name "" "(SQUEAK!)"
-	}
-	set entity Mouse on_interact to ch2-touch-mouse;
-	copy entity Mouse x into variable mousegame-mouseX;
-	copy entity Mouse y into variable mousegame-mouseY;
-	set flag ch2-mousegame to true;
+	};
+	entity Mouse on_interact = ch2_touch_mouse;
+	mousegame_mouseX = entity Mouse x;
+	mousegame_mouseY = entity Mouse y;
+	ch2_mousegame = true;
 	goto null_script;
 }
 
-ch2-mousegame-tick {
+ch2_mousegame_tick {
 	wait 100ms;
-	copy entity "%PLAYER%" x into variable mousegame-playerX;
-	copy entity "%PLAYER%" y into variable mousegame-playerY;
+	mousegame_playerX = player x;
+	mousegame_playerY = player y;
 	// get diffX
-	if (variable mousegame-playerX is > mousegame-mouseX) {
-		mutate mousegame-diffX = mousegame-playerX;
-		mutate mousegame-diffX - mousegame-mouseX;
+	if (mousegame_playerX > mousegame_mouseX) {
+		mousegame_diffX = mousegame_playerX - mousegame_mouseX;
 	} else {
-		mutate mousegame-diffX = mousegame-mouseX;
-		mutate mousegame-diffX - mousegame-playerX;
+		mousegame_diffX = mousegame_mouseX - mousegame_playerX;
 	}
 	// get diffY
-	if (variable mousegame-playerY is > mousegame-mouseY) {
-		mutate mousegame-diffY = mousegame-playerY;
-		mutate mousegame-diffY - mousegame-mouseY;
+	if (mousegame_playerY > mousegame_mouseY) {
+		mousegame_diffY = mousegame_playerY - mousegame_mouseY;
 	} else {
-		mutate mousegame-diffY = mousegame-mouseY;
-		mutate mousegame-diffY - mousegame-playerY;
+		mousegame_diffY = mousegame_mouseY - mousegame_playerY;
 	}
-	mutate mousegame-manhattan = mousegame-diffX;
-	mutate mousegame-manhattan + mousegame-diffY;
-	mutate mousegame-diff = mousegame-manhattan;
-	mutate mousegame-diff * 16;
-	mutate mousegame-diff / $max;
-	// `mousegame-diff` is now the INVERSE of the number of lights to show
-	if (variable mousegame-diff is > 8) {
-		mutate mousegame-lights = 0;
+	mousegame_manhattan = mousegame_diffX + mousegame_diffY;
+	mousegame_diff = (mousegame_manhattan * 16) / $max;
+	// `mousegame_diff` is now the INVERSE of the number of lights to show
+	if (mousegame_diff > 8) {
+		mousegame_lights = 0;
 	} else {
-		mutate mousegame-lights = 8;
-		mutate mousegame-lights - mousegame-diff;
+		mousegame_lights = 8 - mousegame_diff;
 	}
-	// `mousegame-lights` is the ACTUAL number of lights to show
+	// `mousegame_lights` is the ACTUAL number of lights to show
 
 	// reset old lights (todo: when array support is done in natlang, redo this)
 	
 	// NOTE: if you turn off all the lights and then turn them on as needed, it blinks on the hardware :/
 	// This makes the following a little bloated :X
-	if (variable mousegame-lights is == 0) {
-		turn light ALL off;
-	} else if (variable mousegame-lights is == 1) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 off;
-		turn light LED_BIT32 off;
-		turn light LED_BIT16 off;
-		turn light LED_BIT8 off;
-		turn light LED_BIT4 off;
-		turn light LED_BIT2 off;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 2) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 off;
-		turn light LED_BIT16 off;
-		turn light LED_BIT8 off;
-		turn light LED_BIT4 off;
-		turn light LED_BIT2 off;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 3) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 on;
-		turn light LED_BIT16 off;
-		turn light LED_BIT8 off;
-		turn light LED_BIT4 off;
-		turn light LED_BIT2 off;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 4) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 on;
-		turn light LED_BIT16 on;
-		turn light LED_BIT8 off;
-		turn light LED_BIT4 off;
-		turn light LED_BIT2 off;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 5) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 on;
-		turn light LED_BIT16 on;
-		turn light LED_BIT8 on;
-		turn light LED_BIT4 off;
-		turn light LED_BIT2 off;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 6) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 on;
-		turn light LED_BIT16 on;
-		turn light LED_BIT8 on;
-		turn light LED_BIT4 on;
-		turn light LED_BIT2 off;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 7) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 on;
-		turn light LED_BIT16 on;
-		turn light LED_BIT8 on;
-		turn light LED_BIT4 on;
-		turn light LED_BIT2 on;
-		turn light LED_BIT1 off;
-	} else if (variable mousegame-lights is == 8) {
-		turn light LED_BIT128 on;
-		turn light LED_BIT64 on;
-		turn light LED_BIT32 on;
-		turn light LED_BIT16 on;
-		turn light LED_BIT8 on;
-		turn light LED_BIT4 on;
-		turn light LED_BIT2 on;
-		turn light LED_BIT1 on;
+	if (mousegame_lights == 0) {
+		light ALL = off;
+	} else if (mousegame_lights == 1) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = off;
+		light LED_BIT32 = off;
+		light LED_BIT16 = off;
+		light LED_BIT8 = off;
+		light LED_BIT4 = off;
+		light LED_BIT2 = off;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 2) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = off;
+		light LED_BIT16 = off;
+		light LED_BIT8 = off;
+		light LED_BIT4 = off;
+		light LED_BIT2 = off;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 3) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = on;
+		light LED_BIT16 = off;
+		light LED_BIT8 = off;
+		light LED_BIT4 = off;
+		light LED_BIT2 = off;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 4) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = on;
+		light LED_BIT16 = on;
+		light LED_BIT8 = off;
+		light LED_BIT4 = off;
+		light LED_BIT2 = off;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 5) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = on;
+		light LED_BIT16 = on;
+		light LED_BIT8 = on;
+		light LED_BIT4 = off;
+		light LED_BIT2 = off;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 6) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = on;
+		light LED_BIT16 = on;
+		light LED_BIT8 = on;
+		light LED_BIT4 = on;
+		light LED_BIT2 = off;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 7) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = on;
+		light LED_BIT16 = on;
+		light LED_BIT8 = on;
+		light LED_BIT4 = on;
+		light LED_BIT2 = on;
+		light LED_BIT1 = off;
+	} else if (mousegame_lights == 8) {
+		light LED_BIT128 = on;
+		light LED_BIT64 = on;
+		light LED_BIT32 = on;
+		light LED_BIT16 = on;
+		light LED_BIT8 = on;
+		light LED_BIT4 = on;
+		light LED_BIT2 = on;
+		light LED_BIT1 = on;
 	}
-	set map on_tick to on_tick-ch2-castle-33; // reset (NOTE: not an infinite loop, because it's not a `goto` here)
+	map on_tick = on_tick_ch2_castle_33; // reset (NOTE: not an infinite loop, because it's not a `goto` here)
 }

@@ -1,95 +1,95 @@
-include!("header.mgs")
+include "header.mgs";
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-look-ch2-oldcouplehouse {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_oldcouplehouse {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked around <c>BEATRICE'S HOUSE</>."
 		"\tThe interior has a cozy, lived-in feel to it. All the furniture is of an older style and worn down on some of the edges. A house for two, and it has been that way for a long time. Probably, like, 100 years or something."
 		" "
-	}
+	};
 }
 
-look-ch2-delmar {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_delmar {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at <m>%SELF%</>."
 		"\tNo matter what shape he takes, it's clearly still %SELF%."
-	}
+	};
 }
 
-look-ch2-beatrice {
-	show serial dialog spacer;
-	show serial dialog {
+look_ch2_beatrice {
+	show serial_dialog spacer;
+	show serial_dialog {
 		"You looked at <m>%SELF%</>."
 		"\tIs that exasperation in her eyes or is she just old? Right now, she might be both."
-	}
+	};
 }
 
 /* ---------- ON_LOAD ---------- */
 
-on_load-ch2-oldcouplehouse {
+on_load_ch2_oldcouplehouse {
 	// entrance text
-	show serial dialog spacer;
-	show serial dialog { "Entering <bold>BEATRICE'S HOUSE</>..." }
-	// do unique stuff first (but turn serial / player control off first, if you do)
-	if (flag ch2-delmar-in-house is false) {
-		set entity Delmar on_tick to yeet;
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>BEATRICE'S HOUSE</>..." };
+	// do unique stuff first (but player_control = serial / off first, if you do)
+	if (!ch2_delmar_in_house) {
+		entity Delmar on_tick = yeet;
 	} else {
-		if (flag ch2-delmar-is-man is false) {
-			set entity Beatrice on_tick to face-player;
-			set entity Delmar on_tick to face-player;
+		if (!ch2_delmar_is_man) {
+			entity Beatrice on_tick = face_player;
+			entity Delmar on_tick = face_player;
 		} else {
-			turn entity Beatrice toward entity Delmar;
-			turn entity Delmar toward entity Beatrice;
-			set entity Delmar type to old_man;
+			entity Beatrice direction = entity Delmar;
+			entity Delmar direction = entity Beatrice;
+			entity Delmar type = old_man;
 		}
 	}
 
-	copy ch2-map-init;
+	copy!(ch2_map_init)
 }
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-oldcouplehouse {
-	if (entity "%PLAYER%" is inside geometry south-hitbox) {
-		goto on_walk-ch2-oldcouplehouse-south;
+on_tick_ch2_oldcouplehouse {
+	if (player intersects geometry "south-hitbox") {
+		goto on_walk_ch2_oldcouplehouse_south;
 	}
-	if (flag ch2-cutseen-delmar is true) {
+	if (ch2_cutseen_delmar) {
 		// and just leave him watching...
-		if (entity Delmar type is not old_man) {
-			set entity Delmar on_tick to face-player;
-			set flag interrupt to true;
+		if (entity Delmar type != old_man) {
+			entity Delmar on_tick = face_player;
+			interrupt = true;
 		}
 		// He'll watch Bea until he's changed into anyting else,
 		// then he'll stare at you suspiciously, even if you fix him afterward
 	}
 }
 
-ch2-check-if-sheep {
-	if (flag ch2-delmar-is-man is true) {
+ch2_check_if_sheep {
+	if (ch2_delmar_is_man) {
 		goto null_script;
 	}
-	if (entity Delmar type is old_man) {
-		set flag ch2-delmar-is-man to true;
-		if (flag ch2-cutseen-delmar is false) {
-			goto ch2-cutscene-delmar-reconnect;
+	if (entity Delmar type == old_man) {
+		ch2_delmar_is_man = true;
+		if (!ch2_cutseen_delmar) {
+			goto ch2_cutscene_delmar_reconnect;
 		}
 	}
 }
-ch2-cutscene-delmar-reconnect {
+ch2_cutscene_delmar_reconnect {
 	// Why did I put the fade in/out here? To make sure their positions weren't changed before they talk to each other in a cinematic cutscene? todo: figure it out
-	turn player control off;
-	fade out camera to #000000 over 300ms;
-	teleport entity Beatrice to geometry beatrice-point;
-	teleport entity Delmar to geometry delmar-point;
-	set entity Beatrice on_tick to null_script;
-	set entity Delmar on_tick to null_script;
-	turn entity Beatrice toward entity Delmar;
-	turn entity Delmar toward entity Beatrice;
+	player_control = off;
+	camera fade out -> #000000 over 300ms;
+	entity Beatrice position = geometry "beatrice-point";
+	entity Delmar position = geometry "delmar-point";
+	entity Beatrice on_tick = null_script;
+	entity Delmar on_tick = null_script;
+	entity Beatrice direction = entity Delmar;
+	entity Delmar direction = entity Beatrice;
 	wait 400ms;
-	fade in camera from #000000 over 300ms;
+	camera fade in -> #000000 over 300ms;
 	wait 800ms;
 	// a few sentences (back and forth?) where they recommit to enjoying each others' company
 	show dialog {
@@ -97,139 +97,139 @@ ch2-cutscene-delmar-reconnect {
 		Delmar "Ah, that's better!"
 		"I do forgive you, Triss. And I promise to take a breath once in a while."
 		Beatrice "Once in a while is just fine, Del!"
-	}
+	};
 	// and then we good
-	turn entity Beatrice toward entity "%PLAYER%";
+	entity Beatrice direction = player;
 	show dialog {
 		Beatrice "Thank you, %PLAYER%!"
-	}
-	turn entity Beatrice toward entity Delmar;
-	set flag ch2-cutseen-delmar to true;
-	turn player control on;
+	};
+	entity Beatrice direction = entity Delmar;
+	ch2_cutseen_delmar = true;
+	player_control = on;
 	goto null_script;
 }
 
 /* ---------- EXIT STUFF ---------- */
 
-on_go-ch2-oldcouplehouse-south {
-	copy warping-out-fade-out;
-	load map ch2-town;
+on_go_ch2_oldcouplehouse_south {
+	copy!(warping_out_fade_out)
+	load map "ch2-town";
 }
-on_walk-ch2-oldcouplehouse-south {
+on_walk_ch2_oldcouplehouse_south {
 	// triggered by map's on_tick
-	set warp state to walk_from-oldcouplehouse;
-	load map ch2-town;
+	warp_state = "walk_from-oldcouplehouse";
+	load map "ch2-town";
 }
 
 /* ---------- ENTITIES ---------- */
 
-interact-ch2-delmar {
-	copy script face-player;
-	if (flag interrupt is true) {
-		if (entity Delmar type is sheep || entity Delmar type is helga) {
-			show dialog { SELF "...." }
+interact_ch2_delmar {
+	copy!(face_player)
+	if (interrupt) {
+		if (entity Delmar type == sheep || entity Delmar type == helga) {
+			show dialog { SELF "...." };
 		} else {
-			show dialog { SELF "I've got my eye on you, sonny...." }
+			show dialog { SELF "I've got my eye on you, sonny...." };
 		}
-	} else if (entity Delmar type is old_man) {
-		show dialog { SELF "Thanks a lot, lad. I'll try to be a little more attentive from here on, eh?" }
-		turn entity "%SELF%" toward entity Beatrice;
+	} else if (entity Delmar type == old_man) {
+		show dialog { SELF "Thanks a lot, lad. I'll try to be a little more attentive from here on, eh?" };
+		self direction = entity Beatrice;
 	} else {
-		show dialog { SELF "...." }
+		show dialog { SELF "...." };
 	}
 }
-interact-ch2-beatrice {
-	copy face-player;
-	if (variable ch2-storyflag-round is < 3) {
-		if (flag ch2-beatrice-backstory1 is false) {
+interact_ch2_beatrice {
+	copy!(face_player)
+	if (ch2_storyflag_round < 3) {
+		if (!ch2_beatrice_backstory1) {
 			show dialog {
 				PLAYER "Oh, where's Delmar?"
 				SELF "He's mad at me. I can't say I blame him."
 				"I... need to think through some things."
-			}
-			set flag ch2-beatrice-backstory1 to true;
+			};
+			ch2_beatrice_backstory1 = true;
 		}
-		rotate entity "%SELF%" -1;
+		self direction -= 1;
 		show dialog {
 			SELF "I'm sorry, %PLAYER%, but please leave me alone for the next little while."
-		}
-	} else if (flag ch2-delmar-is-man is true) {
+		};
+	} else if (ch2_delmar_is_man) {
 		show dialog {
 			SELF "Thank you, %PLAYER%. Delmar and I have a lot of talking to do."
 			"We'll finally be able to reconnect -- remember why we got married in the first place."
 			"You've made an old woman very happy!"
-		}
-		turn entity Beatrice toward entity Delmar;
-	} else if (flag ch2-beatrice-backstory2 is false) {
+		};
+		entity Beatrice direction = entity Delmar;
+	} else if (!ch2_beatrice_backstory2) {
 		show dialog {
 			SELF "I've decided."
 			"Would you please have the shepherd bring my Delmar to me?"
 			"I need to apologize. I need to try. Life is too short."
 			PLAYER "Sure thing, %Beatrice%."
-		}
-		turn player control off;
-		fade out camera to #000000 over 300ms;
-		set flag ch2-delmar-in-house to true;
+		};
+		player_control = off;
+		camera fade out -> #000000 over 300ms;
+		ch2_delmar_in_house = true;
 		// undo yeet
-		teleport entity Delmar to geometry delmar-point;
-		set entity Delmar on_look to look-ch2-delmar;
-		set entity Delmar on_interact to interact-ch2-delmar;
-		set entity Delmar name to "Delmar";
+		entity Delmar position = geometry "delmar-point";
+		entity Delmar on_look = look_ch2_delmar;
+		entity Delmar on_interact = interact_ch2_delmar;
+		entity Delmar name = Delmar;
 		// other state
-		teleport entity "%PLAYER%" to geometry cutscene;
-		turn entity "%PLAYER%" north;
-		turn entity Beatrice toward entity Delmar;
-		turn entity Delmar toward entity Beatrice;
+		player position = geometry cutscene;
+		player direction = north;
+		entity Beatrice direction = entity Delmar;
+		entity Delmar direction = entity Beatrice;
 		wait 400ms;
-		fade in camera from #000000 over 300ms;
+		camera fade in -> #000000 over 300ms;
 		// heartfelt convo
 		wait 500ms;
 		show dialog {
 			SELF "Delmar, I...."
-		}
+		};
 		// couple sentences reminiscing
-		turn entity Beatrice north;
+		entity Beatrice direction = north;
 		show dialog {
 			SELF "I was looking through our old albums. Like the one from that camping trip we had up in Yosemite, remember?" // todo: think of better place name? a pun?
-		}
-		turn entity Beatrice toward entity Delmar;
+		};
+		entity Beatrice direction = entity Delmar;
 		show dialog {
 			SELF "I'd dropped our suitcase down a cliff, but you trekked down through the brambles to fetch it for me."
 			"That was the night we saw that shooting star. Remember, that bright green one?"
-		}
+		};
 		// couple sentences contemplating why they drifted apart (complacency?)
-		turn entity Beatrice south;
+		entity Beatrice direction = south;
 		wait 1400ms;
 		show dialog {
 			SELF "When did we drift apart? Is that just something that happened slowly, without us realizing it?"
 			"I used to love hearing your stories. Yes, after you were turned back into a man you ran your mouth nonstop...."
-		}
-		turn entity Beatrice toward entity Delmar;
+		};
+		entity Beatrice direction = entity Delmar;
 		show dialog {
 			// couple sentences apologizing (maybe he can turn around the room as if considering)
 			SELF "But I missed you dreadfully when you left. I miss you now."
 			"I'm very sorry for treating you the way I did. For having you turned back into a sheep, I mean."
 			"I love you. I miss you. Can you ever forgive me?"
-		}
+		};
 		wait 1500ms;
-		turn entity Delmar east;
+		entity Delmar direction = east;
 		wait 1200ms;
-		turn entity Delmar south;
+		entity Delmar direction = south;
 		wait 700ms;
-		walk entity Delmar to geometry delmar-walk over 300ms;
+		entity Delmar position -> geometry "delmar-walk" origin over 300ms;
 		wait 900ms;
 		show dialog {
 			SELF "Oh, Delmar, thank you!"
-		}
-		turn entity Beatrice toward entity "%PLAYER%";
-		show dialog ch2-beatrice-plea { // referenced below
+		};
+		entity Beatrice direction = player;
+		show dialog ch2_beatrice_plea { // referenced below
 			SELF "%PLAYER%, would you be so kind as to return Delmar to his original state?"
-		}
-		set entity Beatrice on_tick to face-player;
-		set entity Delmar on_tick to face-player;
-		set flag ch2-beatrice-backstory2 to true;
-		turn player control on;
+		};
+		entity Beatrice on_tick = face_player;
+		entity Delmar on_tick = face_player;
+		ch2_beatrice_backstory2 = true;
+		player_control = on;
 	} else {
-		show dialog ch2-beatrice-plea;
+		show dialog ch2_beatrice_plea;
 	}
 }
