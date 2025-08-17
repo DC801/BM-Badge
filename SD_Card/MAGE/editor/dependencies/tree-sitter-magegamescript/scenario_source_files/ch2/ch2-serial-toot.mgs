@@ -1,0 +1,265 @@
+include "header.mgs";
+
+ch2_toot_check {
+	if (ch2_toot_level == 0) {
+		goto ch2_toot_intro;
+	} else if (ch2_toot_level == 3) {
+		goto ch2_toot_step3_check;
+	}
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Let's pick up where we left off, shall we?"
+	};
+	if (ch2_toot_level == 1) {
+		goto ch2_toot_step1_start;
+	} else if (ch2_toot_level == 2) {
+		goto ch2_toot_step2_start;
+	} else if (ch2_toot_level == 4) {
+		goto ch2_toot_step4_start;
+	} else {
+		show serial_dialog {
+			"<r>DEBUG></>: Welp, you've done something strange!"
+			"\tVariable 'ch2_toot_level' is $ch2_toot_level$"
+			"\tScript: 'ch2_toot_check'"
+		};
+	}
+
+}
+
+// Normal intro
+
+ch2_toot_intro {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Ahh, this is much more comfortable, isn't it?"
+		"\tSo, yeah. You can type things into the console, and interesting things will happen. First, let's try something basic."
+	};
+	ch2_toot_level = 1;
+	goto ch2_toot_step1_start;
+}
+
+// Part 1
+
+ch2_toot_step1_start {
+	show serial_dialog {
+		"\tTry to choose one of the following options with the keyboard."
+		" "
+	};
+	goto ch2_toot_step1_q;
+}
+
+ch2_toot_step1_q {
+	show serial_dialog {
+		"(Type one of the numbers shown to choose that dialog option.)"
+		# "Okay, I'll try." = ch2_toot_step1_okay
+		# "Make me." = ch2_toot_step1_notokay
+	};
+}
+
+ch2_toot_step1_okay {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Good job!"
+	};
+	goto ch2_toot_step1_end;
+}
+
+ch2_toot_step1_notokay {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Haha, well, that was a little aggressive, but well done."
+	};
+	goto ch2_toot_step1_end;
+}
+
+ch2_toot_step1_end {
+	show serial_dialog {
+		"\tNote that dialog options begin with \"0\" instead of \"1\". That's for \"<bold>computer reasons</>.\""
+	};
+	ch2_toot_level = 2;
+	goto ch2_toot_step2_start;
+}
+
+// Part 2
+
+ch2_toot_step2_start {
+	show serial_dialog {
+		"\tSo, um, the second type of dialog response is more \"free form\". For these, you can type whatever you want to advance the conversation, but only some responses will have a useful result."
+		"\tDoes that make sense?"
+		" "
+	};
+	goto ch2_toot_step2_q;
+}
+
+ch2_toot_step2_q {
+	show serial_dialog {
+		"(Type <c>YES</> or <c>NO</>)"
+		_ "SURE" = ch2_toot_step2_yes_extra
+		_ "YEAH" = ch2_toot_step2_yes_extra
+		_ "YAH" = ch2_toot_step2_yes_extra
+		_ "YA" = ch2_toot_step2_yes_extra
+		_ "YES" = ch2_toot_step2_yes
+		_ "YE" = ch2_toot_step2_yes_extra
+		_ "Y" = ch2_toot_step2_yes_extra
+		_ "NAH" = ch2_toot_step2_no_extra
+		_ "NO" = ch2_toot_step2_no
+		_ "N" = ch2_toot_step2_no_extra
+	};
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Sorry, that wasn't one of the choices! Want to try again?"
+		" "
+	};
+	goto ch2_toot_step2_q;
+}
+
+ch2_toot_step2_yes {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Excellent! You've got it!"
+	};
+	goto ch2_toot_step2_end;
+}
+
+ch2_toot_step2_yes_extra {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Excellent! You've also discovered that sometimes you can type something a little different and still achieve your goal, like typing <c>Y</> instead of <c>YES</>."
+	};
+	goto ch2_toot_step2_end;
+}
+
+ch2_toot_step2_no {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Haha, you say that, but you clearly understand! Good job!"
+	};
+	goto ch2_toot_step2_end;
+}
+
+ch2_toot_step2_no_extra {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Well, you seem to understand, anyway! You've also discovered that sometimes you can type something a little different and still achieve your goal, like typing <c>N</> instead of <c>NO</>."
+	};
+	goto ch2_toot_step2_end;
+}
+
+ch2_toot_step2_end {
+	show serial_dialog {
+		"\tSome free response options are left undisclosed, so feel free to experiment when given a free response prompt."
+	};
+	ch2_toot_level = 3;
+	goto ch2_toot_step3_start;
+}
+
+// Part 3
+
+ch2_toot_step3_start {
+	show serial_dialog {
+		"\tLastly, when you're not in a conversation with someone else, you can use the artifact to run simple commands. You might think of them as \"magic words.\""
+		" "
+		"(Choose an option:)"
+		# "\"Magic words?\" Neat!" = ch2_toot_step3_magic
+		# "\"Magic words?\" That's a bit ridiculous." = ch2_toot_step3_nomagic
+	};
+}
+
+ch2_toot_step3_magic {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: \"Magic words?\" Neat!"
+		" "
+		"<m>LAMBDA</>: Yeah! Computers are nothing more than melted sand, rocks, and tiny bits of lightning, yet we can make them perform math and send words and images to someone else far away! It really <bold>is</> like magic, isn't it?"
+	};
+	goto ch2_toot_step3_halftime;
+}
+
+ch2_toot_step3_nomagic {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: \"Magic words?\" That's a bit ridiculous."
+		" "
+		"<m>LAMBDA</>: Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
+	};
+	goto ch2_toot_step3_halftime;
+}
+
+ch2_toot_step3_halftime {
+	ch2_has_map = true;
+	copy!(register_map)
+	show serial_dialog {
+		"\tAnyway, I'll wrap things up so you can try some magic words--that is, some serial commands. I'll grant you access to a few that should be useful."
+	};
+	goto ch2_toot_step3_end;
+}
+
+ch2_toot_step3_check {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Let's pick up where we left off, shall we? Don't worry, we're almost done."
+	};
+	goto ch2_toot_step3_end;
+}
+
+ch2_toot_step3_end {
+	show serial_dialog {
+		"\tTo see a list of the commands you can use, type <c>HELP</>. And to learn about what a command does, type <c>MAN</> followed by the name of a command."
+		" "
+		# "Wait, I thought <c>MAN</> was how I talk to <bold>you</>." = ch2_toot_step3_end2
+	};
+}
+
+ch2_toot_step3_end2 {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: Wait, I thought <c>MAN</> was how I talk to <bold>you</>."
+		" "
+		"<m>LAMBDA</>: Yeah, I set it up that way because I thought it would be easy to remember. \"Man\" is short for \"manual,\" so think of <c>MAN</> as being for times you need long form help."
+	};
+	ch2_map_test = 0;
+	ch2_toot_level = 4;
+	goto ch2_toot_step4_start;
+}
+
+ch2_toot_step4_start {
+	show serial_dialog {
+		"\tSo, um, now that you know the basics of using the artifact... I think we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
+		" "
+		# "How do we fix the mainframe?" = ch2_toot_step4a
+	};
+}
+
+ch2_toot_step4a {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: How do we fix the mainframe?"
+		" "
+		"<m>LAMBDA</>: We'll have to <c>build a new computer from scratch</>. There's items around the castle we could... um, MacGuyver... to build something functional. Most of the parts are less than ideal, but we have little choice right now. I can put together a parts list."
+		" "
+		# "But I don't know how to build a computer!" = ch2_toot_step4b_noob
+		# "This'll be a cinch!" = ch2_toot_step4b_pro
+	};
+}
+
+ch2_toot_step4b_noob {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: But I don't know how to build a computer!"
+		" "
+		"<m>LAMBDA</>: Don't worry, I've done it a hundred times. I walk you through the whole thing one part at a time. It's not as hard as it sounds."
+		" "
+		# "Really?" = ch2_toot_step5a
+	};
+}
+
+ch2_toot_step4b_pro {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: This'll be a cinch!"
+		" "
+		"<m>LAMBDA</>: Yeah! Building a new computer is never as hard as it sounds. And it looks like... yeah, I think we can scavenge just enough parts to make this really work."
+		" "
+		# "Really?" = ch2_toot_step5a
+	};
+}

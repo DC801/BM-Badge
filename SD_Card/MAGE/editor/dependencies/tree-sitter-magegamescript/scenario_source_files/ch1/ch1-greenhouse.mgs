@@ -1,0 +1,277 @@
+include "header.mgs";
+
+on_load_greenhouse {
+	if (tuesdayd) {
+		command rtfm = command_rtfm;
+	}
+	if (trekkie_quest_done) {
+		copy!(ch1_ethernettle_restore)
+	}
+}
+
+on_tick_greenhouse {
+	if (player intersects geometry "door-greenhouse") {
+		goto leave_greenhouse;
+	}
+	if (!entity EtherNettle1 intersects geometry EtherNettle1Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle2 intersects geometry EtherNettle2Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle3 intersects geometry EtherNettle3Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle4 intersects geometry EtherNettle4Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle5 intersects geometry EtherNettle5Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle6 intersects geometry EtherNettle6Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle7 intersects geometry EtherNettle7Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+	if (!entity EtherNettle8 intersects geometry EtherNettle8Origin) {
+		goto show_dialog_no_uproot_ethernettle;
+	}
+}
+leave_greenhouse {
+	warp_state = exit_from_greenhouse;
+	load map main;
+}
+show_dialog_no_uproot_ethernettle {
+	show dialog {
+		Trekkie "Me sorry, but Ether Nettle cannot be uprooted, %PLAYER%!"
+	};
+	entity EtherNettle1 position = geometry EtherNettle1Origin;
+	entity EtherNettle2 position = geometry EtherNettle2Origin;
+	entity EtherNettle3 position = geometry EtherNettle3Origin;
+	entity EtherNettle4 position = geometry EtherNettle4Origin;
+	entity EtherNettle5 position = geometry EtherNettle5Origin;
+	entity EtherNettle6 position = geometry EtherNettle6Origin;
+	entity EtherNettle7 position = geometry EtherNettle7Origin;
+	entity EtherNettle8 position = geometry EtherNettle8Origin;
+	goto on_tick_greenhouse;
+}
+
+ch1_ethernettle_restore {
+	entity EtherNettle1 secondary_id = 3;
+	entity EtherNettle2 secondary_id = 2;
+	entity EtherNettle3 secondary_id = 7;
+	entity EtherNettle4 secondary_id = 0;
+	entity EtherNettle5 secondary_id = 1;
+	entity EtherNettle6 secondary_id = 6;
+	entity EtherNettle7 secondary_id = 5;
+	entity EtherNettle8 secondary_id = 4;
+	entity Modem current_animation = 4; // modem working animation
+}
+
+show_dialog_ethernet {
+	show dialog { PLAYER "Now that's a neat-looking pile of cable." };
+}
+show_dialog_tumbleweed {
+	show dialog { PLAYER "Oof. I'd hate to have to untangle this!" };
+}
+show_dialog_mulch {
+	show dialog { PLAYER "Oh, I thought this was flour, but it's actually mulch." };
+}
+show_dialog_modem {
+	show dialog { PLAYER "What does this thing do? Just light up?" };
+}
+show_dialog_greenhouse_barrel {
+	show dialog { PLAYER "What's in here? Water?" };
+}
+
+show_dialog_trekkie_start {
+	copy!(clear_own_tick)
+	copy!(face_player)
+	if (self glitched) {
+		show dialog { SELF "Hu bu. Qvq zr trg n ivehf?" };
+	} else if (trekkie_quest_done) {
+		copy!(ch1_greenhouse_trekkie_aftermath)
+	} else if (
+		entity EtherNettle1 secondary_id != 3 // orange-white
+		|| entity EtherNettle2 secondary_id != 2 // orange
+		|| entity EtherNettle3 secondary_id != 7 // green-white
+		|| entity EtherNettle4 secondary_id != 0 // blue
+		|| entity EtherNettle5 secondary_id != 1 // blue-white
+		|| entity EtherNettle6 secondary_id != 6 // green
+		|| entity EtherNettle7 secondary_id != 5 // brown-white
+		|| entity EtherNettle8 secondary_id != 4 // brown
+	) {
+		if (trekkie_backstory) {
+			copy!(ch1_greenhouse_trekkie_backstory_reminder)
+		} else {
+			copy!(ch1_greenhouse_trekkie_backstory_cutscene)
+		}
+	} else {
+		copy!(ch1_greenhouse_modem_turning_on_cutscene)
+		if (hint_tracking_check == 7) {
+			copy!(set_hint_none)
+			// ^^ if the hint series is the same, reset hint
+		}
+	}
+	self on_interact = show_dialog_trekkie_start;
+}
+
+ch1_greenhouse_trekkie_backstory_cutscene {
+	show dialog {
+		SELF "Me want to wish you a happy birthday, %PLAYER%."
+		PLAYER "Aww, gee, thanks, Farmer %Trekkie%!"
+	};
+	player_control = off;
+	wait 200ms;
+	self direction = entity Modem;
+	wait 900ms;
+	self direction = geometry Computer
+	wait 900ms;
+	copy!(face_player)
+	wait 200ms;
+	show dialog {
+		SELF "Me sorry, %PLAYER%... but the internet still no working."
+		PLAYER "It's the Ether Nettles, again?"
+	};
+	wait 100ms;
+	self direction = entity Modem;
+	wait 400ms;
+	show dialog {
+		SELF "It always the Ether Nettles. Modem need Ether Nettles. Ever since the big bad hack, the Ether Nettles line up wrong."
+		PLAYER "You can't move the flowers? Put them in the right order?"
+	};
+	copy!(face_player)
+	show dialog {
+		SELF "Can't just dig up Ether Nettles. Wired in super, super well."
+		"If you move flowers, you must move wires underneath or everything breaks. Very slow, very difficult work."
+		"Once in a while, me move one, take all week, but it no work."
+		PLAYER "Well, maybe I can help. What order are they supposed to be in?"
+		SELF "Ether Nettle spec on internet. But no Ether Nettle, no internet, me no can check!"
+		"Me remember orange stripey is first."
+		"But trial and error take so long, me want to give up."
+		PLAYER "Well, lemme have a go. I can change their colors instantly."
+		"Probably."
+		SELF "%PLAYER% has new magic zeroed ring. Maybe %PLAYER% can change flower colors!"
+	};
+	copy!(set_hint_trekkie)
+	trekkie_backstory = true;
+	copy!(set_tick_watch_player)
+	player_control = on;
+}
+
+ch1_greenhouse_trekkie_backstory_reminder {
+	copy!(face_player)
+	show dialog {
+		SELF "Me can't remember Ether Nettle color order. Me need internet to check!"
+		"But me do remember orange stripey is first!"
+	};
+	copy!(set_hint_trekkie)
+	copy!(set_tick_watch_player)
+}
+
+ch1_greenhouse_modem_turning_on_cutscene {
+	self direction = entity Modem;
+	player direction = entity Modem;
+	player_control = off;
+	wait 200ms;
+	camera -> entity Modem position over 1400ms;
+	wait 200ms;
+	self direction = geometry Computer;
+	wait 1500ms;
+	self direction = entity Modem;
+	wait 1200ms;
+	entity Modem current_animation = 1;
+	wait 1400ms;
+	show dialog {
+		SELF alignment TOP_LEFT "Oh! The lights!"
+	};
+	wait 800ms;
+	copy!(face_player)
+	player direction = self;
+	wait 500ms;
+	player direction = entity Modem;
+	self direction = entity Modem;
+	wait 1500ms;
+	entity Modem current_animation = 2;
+	wait 1400ms;
+	entity Modem current_animation = 3;
+	wait 1700ms;
+	entity Modem current_animation = 4;
+	wait 900ms;
+	camera -> player position over 1400ms;
+	wait 400ms;
+	player direction = self;
+	wait 150ms;
+	self direction = geometry Computer;
+	wait 750ms;
+	self direction = entity Modem;
+	wait 600ms;
+	self direction = geometry Computer;
+	wait 800ms;
+	copy!(face_player)
+	show dialog {
+		SELF "%PLAYER% did it! Made Ether Nettle talk to outside world again!"
+		"Me can go on the internet! Can use so many free AOL hours!"
+		"Me has so, so many AOL CDs! Me excited!"
+		PLAYER "Sounds great, %Trekkie%."
+	};
+	self direction = geometry Computer;
+	trekkie_quest_done = true;
+	copy!(calculate_hint_tracking_series)
+	player_control = on;
+}
+
+ch1_greenhouse_trekkie_aftermath {
+	self direction = player;
+	show dialog {
+		PLAYER "So, %Trekkie%.... What's the internet for, anyway?"
+		SELF "Oh, me know what the internet is for. The internet is for...."
+		"...."
+		PLAYER "...?"
+		SELF "How old is %PLAYER%, again?"
+	};
+	self direction = geometry Computer;
+}
+
+debug_ethernet_puzzle_q {
+	copy!(face_player)
+	show dialog {
+		SELF
+		"Restore Ether Nettle?"
+		> "Yes" = ch1_debug_ethernettle
+		> "No" = ch1_debug_ethernettle_no
+	};
+}
+ch1_debug_ethernettle_no {
+	show dialog { SELF "Wanna do it the hard way, huh? Suit yourself." };
+	self on_interact = debug_ethernet_puzzle_q;
+}
+ch1_debug_ethernettle {
+	copy!(ch1_ethernettle_restore)
+	entity Modem current_animation = 0; // the modem still won't until you speak to Trekkie
+	copy!(face_player)
+	show dialog { SELF "Ether Nettle restored." };
+	self on_interact = debug_ethernet_puzzle_q;
+}
+
+show_dialog_ethernettle_start {
+	if (self secondary_id == 3) {
+		show dialog { PLAYER "White-orange." };
+	} else if (self secondary_id == 2) {
+		show dialog { PLAYER "Orange." };
+	} else if (self secondary_id == 7) {
+		show dialog { PLAYER "White-green." };
+	} else if (self secondary_id == 0) {
+		show dialog { PLAYER "Blue." };
+	} else if (self secondary_id == 1) {
+		show dialog { PLAYER "White-blue." };
+	} else if (self secondary_id == 6) {
+		show dialog { PLAYER "Green." };
+	} else if (self secondary_id == 5) {
+		show dialog { PLAYER "White-brown." };
+	} else if (self secondary_id == 4) {
+		show dialog { PLAYER "Brown." };
+	}
+	self on_interact = show_dialog_ethernettle_start;
+}

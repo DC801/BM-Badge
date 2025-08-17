@@ -1,0 +1,145 @@
+include "header.mgs";
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look_ch2_lodge_rtfm {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked around at the <c>RTFM ROOM</>."
+		"\tThe books in this room seem older than those in the rest of the library. More leather bindings, more handwritten pages. The air is mustier, but not in an unpleasant way."
+		" "
+	};
+}
+
+look_ch2_hackbook {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tWorn, and apparently forgotten. It's splayed on the ground as if it had been knocked down unknowingly."
+	};
+}
+
+look_ch2_bitsbytes {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThe cover is crisp and clean as if the book were brand new. The bright and simple geometric design on the cover is the epitome of a textbook choosing to not commit to its subject."
+	};
+}
+
+look_ch2_entities {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThe page edges are misaligned as if the book were bound by hand. The gold leaf lettering on the cover certainly looks hand done. It's one of a set of four."
+	};
+}
+
+look_ch2_hexediting {
+	show serial_dialog spacer;
+	show serial_dialog books_extra { // referred to elsewhere
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThis tome resembles the hand-made \"Entities\" books, but this one was more neatly constructed and is less worn. It's one of a set of two."
+	};
+}
+
+look_ch2_hexediting2 {
+	show serial_dialog spacer;
+	show serial_dialog books_extra;
+}
+
+look_ch2_redletters {
+	show serial_dialog spacer;
+	show serial_dialog red_letter_pamphlet { // referred to elsewhere
+		"You looked at the book called \"<m>%SELF%</>.\""
+		"\tThis sheet -- and its nearby counterpart -- are ripped on the left side, as if torn from a bound book. The paper is yellowed, particularly on the edges, and the ink is smeared in places."
+		"\tSome words are written in an ominous red."
+	};
+}
+
+look_ch2_bookorigins {
+	show serial_dialog spacer;
+	show serial_dialog red_letter_pamphlet;
+}
+
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load_ch2_lodge_rtfm {
+	// entrance text
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>RTFM ROOM</>..." };
+	// do unique stuff first (but player_control = serial / off first, if you do)
+	
+	// Village elders hiding
+	if (ch2_storyflag_round != 1) {
+		entity Bert on_tick = yeet;
+	}
+	if (ch2_storyflag_round != 3) {
+		entity Jackob on_tick = yeet;
+		entity Alfonso on_tick = yeet;
+	}
+	// unique stuff done
+	copy!(ch2_map_init)
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick_ch2_lodge_rtfm {
+	if (player intersects geometry "south-hitbox") {
+		warp_state = "walk_from-north";
+		load map "ch2-lodge";
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go_ch2_lodge_rtfm_south {
+	copy!(warping_out_fade_out)
+	load map "ch2-lodge";
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact_ch2_alfonso_rtfm {
+	// divert people trying to hack their way to see this convo early
+	if (ch2_storyflag_round != 3) {
+		goto null_script;
+	}
+	copy!(face_player)
+	show dialog {
+		SELF
+		"Bert said he was going to check something, but whatever he's doing, he's sure taking his time."
+		"I confess I'm getting worried, %PLAYER%. Something isn't right about all of this."
+	};
+	self direction = west;
+}
+interact_ch2_jackob_rtfm {
+	// divert people trying to hack their way to see this convo early
+	if (ch2_storyflag_round != 3) {
+		goto null_script;
+	}
+	copy!(face_player)
+	show dialog {
+		SELF
+		"We're doing just fine here, %PLAYER%, but don't you dawdle too long. Time is slipping away from us."
+		"There's so little we can do to help you right now, yet all I feel is this increasing urgency, like a vise tightening around my chest."
+		"Doom is coming, and only you can head it off. Please hurry."
+	};
+	self direction = south;
+}
+interact_ch2_bert_rtfm {
+	// divert people trying to hack their way to see this convo early
+	if (ch2_storyflag_round != 1) {
+		goto null_script;
+	}
+	copy!(face_player)
+	show dialog {
+		SELF
+		"This morning we could not find the book you need, but I want to find it still."
+		"Still I am looking. I will bring it if I find it."
+	};
+	self direction = north;
+}
+

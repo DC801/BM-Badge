@@ -1,0 +1,3 @@
+goatTime {
+	wait 800ms;
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PARSER!!!</title>
+</head>
+<body>
+<code><pre>
+Open this file from your filesystem, at `file://` path to test.
+Open the console to see output.
+If there are errors in the console stating that the file:
+`dist/mgs-lib.umd.js`
+cannot be found, please run `npm run build` to generate it.
+</pre></code>
+<script src="dist/mgs-lib.umd.js"></script>
+<script>
+window.MGSParser.parseProject({}, {}).then(console.log);
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+ch1_count_flags {
+	mutate ch1_storyflags_tally = 0;
+	if (flag catwork_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag shepherd_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag bender_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag baker_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag bobmoss_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag bea1_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag trekkie_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag sportskid_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag verthandi_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag bea2_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+	if (flag rake_quest_done is true) {
+		mutate ch1_storyflags_tally + 1;
+	}
+}

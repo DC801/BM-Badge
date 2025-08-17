@@ -1,0 +1,77 @@
+{
+	"name": "tree-sitter-magegamescript",
+	"version": "2.0.0",
+	"description": "A custom scripting DSL for a custom game engine on a custom PCB",
+	"repository": "https://github.com/alamedyang",
+	"license": "MIT",
+	"type": "module",
+	"author": {
+		"name": "alamedyang",
+		"email": "alamedyang@gmail.com"
+	},
+	"main": "bindings/node",
+	"types": "bindings/node",
+	"keywords": [
+		"incremental",
+		"parsing",
+		"tree-sitter",
+		"magegamescript"
+	],
+	"files": [
+		"grammar.js",
+		"tree-sitter.json",
+		"binding.gyp",
+		"prebuilds/**",
+		"bindings/node/*",
+		"queries/*",
+		"src/**",
+		"*.wasm"
+	],
+	"dependencies": {
+		"node-addon-api": "^8.2.1",
+		"node-gyp-build": "^4.8.2",
+		"tree-sitter-cli": "^0.25.5",
+		"web-tree-sitter": "^0.25.3"
+	},
+	"devDependencies": {
+		"@tsconfig/node22": "^22.0.2",
+		"@types/jsdom": "^21.1.7",
+		"@types/node": "^22.15.29",
+		"@vitest/eslint-plugin": "^1.2.1",
+		"@vue/eslint-config-prettier": "^10.2.0",
+		"@vue/eslint-config-typescript": "^14.5.0",
+		"@vue/tsconfig": "^0.7.0",
+		"eslint": "^9.28.0",
+		"eslint-plugin-vue": "^10.1.0",
+		"jiti": "^2.4.2",
+		"jsdom": "^26.1.0",
+		"npm-run-all2": "^8.0.4",
+		"prebuildify": "^6.0.1",
+		"prettier": "^3.5.3",
+		"typescript": "^5.8.3",
+		"vite": "^6.3.5",
+		"vitest": "^3.1.4",
+		"vue-tsc": "^2.2.10"
+	},
+	"peerDependencies": {
+		"tree-sitter": "^0.21.1"
+	},
+	"peerDependenciesMeta": {
+		"tree-sitter": {
+			"optional": true
+		}
+	},
+	"scripts": {
+		"build": "vite build",
+		"format": "prettier --write ./*.ts",
+		"install": "node-gyp-build",
+		"prestart": "tree-sitter build --wasm",
+		"start": "tree-sitter playground",
+		"test-treesitter": "node --test bindings/node/*_test.js",
+		"test": "node --experimental-strip-types parser-compare.ts",
+		"regen": "tree-sitter generate && tree-sitter build --wasm"
+	},
+	"engines": {
+		"node": ">=22.6.0"
+	}
+}

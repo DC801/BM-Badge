@@ -1,0 +1,110 @@
+on_load_flying_toasters {
+	camera = geometry "flying-toasters-cam";
+	copy!(on_load_bling_mode_map)
+}
+
+toasters_do_path_0 {
+	self position = geometry start0;
+	self position -> geometry end0 origin over 5000ms;
+	self on_tick = toasters_do_path_3;
+}
+
+toasters_do_path_1 {
+	self position = geometry start1;
+	self position -> geometry end1 origin over 5900ms;
+	self on_tick = toasters_do_path_10;
+}
+
+toasters_do_path_2 {
+	self position = geometry start2;
+	self position -> geometry end2 origin over 6800ms;
+	self on_tick = toasters_do_path_0;
+}
+
+toasters_do_path_3 {
+	self position = geometry start3;
+	self position -> geometry end3 origin over 7600ms;
+	self on_tick = toasters_do_path_7;
+}
+
+toasters_do_path_5 {
+	self position = geometry start5;
+	self position -> geometry end5 origin over 9200ms;
+	self on_tick = toasters_do_path_8;
+}
+
+toasters_do_path_6 {
+	self position = geometry start6;
+	self position -> geometry end6 origin over 10000ms;
+	self on_tick = toasters_do_path_1;
+}
+
+toasters_do_path_7 {
+	self position = geometry start7;
+	self position -> geometry end7 origin over 9000ms;
+	self on_tick = toasters_do_path_5;
+}
+
+toasters_do_path_8 {
+	self position = geometry start8;
+	self position -> geometry end8 origin over 8000ms;
+	self on_tick = toasters_do_path_4;
+}
+
+toasters_do_path_9 {
+	self position = geometry start9;
+	self position -> geometry end9 origin over 7000ms;
+	self on_tick = toasters_do_path_11;
+}
+
+toasters_do_path_10 {
+	self position = geometry start10;
+	self position -> geometry end10 origin over 6000ms;
+	self on_tick = toasters_do_path_2;
+}
+
+toasters_do_path_11 {
+	self position = geometry start11;
+	self position -> geometry end11 origin over 5000ms;
+	self on_tick = toasters_do_path_6;
+}
+
+toasters_do_path_0_50 {
+	self position -> geometry end0 origin over 2500ms;
+	self on_tick = toasters_do_path_3;
+}
+
+toasters_do_path_2_50 {
+	self position -> geometry end2 origin over 3400ms;
+	self on_tick = toasters_do_path_0;
+}
+
+toasters_do_path_4_50 {
+	self position -> geometry end4 origin over 4200ms;
+	self on_tick = toasters_do_path_9;
+}
+
+toasters_do_path_5_75 {
+	self position -> geometry end5 origin over 2208ms;
+	self on_tick = toasters_do_path_8;
+}
+
+toasters_do_path_6_66 {
+	self position -> geometry end6 origin over 3333ms;
+	self on_tick = toasters_do_path_1;
+}
+
+toasters_do_path_7_60 {
+	self position -> geometry end7 origin over 3600ms;
+	self on_tick = toasters_do_path_5;
+}
+
+toasters_do_path_8_15 {
+	self position -> geometry end8 origin over 6800ms;
+	self on_tick = toasters_do_path_4;
+}
+
+toasters_do_path_10_50 {
+	self position -> geometry end10 origin over 3000ms;
+	self on_tick = toasters_do_path_2;
+}

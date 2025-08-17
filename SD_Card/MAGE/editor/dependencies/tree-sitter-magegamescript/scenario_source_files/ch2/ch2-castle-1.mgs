@@ -1,0 +1,1543 @@
+include "header.mgs";
+add dialog settings {
+	label Lambda {
+		name Lambda
+		portrait "lambda-codec"
+		emote 1
+		border_tileset codec
+	}
+}
+
+$calc = #5AB5F7;
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look_ch2_castle_1 {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked around the <c>CASTLE ENTRANCE</>."
+	};
+	if (ch2_storyflag_round < 5) {
+		show serial_dialog {
+			"\tThis castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
+			" "
+		};
+	} else {
+		show serial_dialog {
+			"\tThe banners have seen better days, but the room looks much better without the large slabs of debris blocking the doors. The air smells cleaner, too."
+			" "
+		};
+	}
+	// (Exits list goes here) (P.S. That's why there's an empty line above!)
+}
+
+look_ch2_mainframe_end {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tIt's one majestic computer, full of your sweat, blood, and tears -- in some proportion."
+	};
+
+}
+
+look_ch2_mainframe {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the <m>%SELF%</>."
+		" "
+	};
+	temp = false;
+	show serial_dialog { "This hardy beige box contains:"};
+	show serial_dialog {
+		"\t- wires"
+		"\t- what looks like a huge circuit board"
+	};
+	// normal
+	if (ch2_installed_heatsink) {
+		show serial_dialog { "\t- a heatsink" };
+	}
+	if (ch2_installed_powersupply) {
+		show serial_dialog { "\t- a power supply (2 kW)" };
+	}
+	// abstract
+	if (ch2_installed_harddrive) {
+		show serial_dialog { "\t- a hard drive" };
+	}
+	// desperate
+	if (ch2_installed_ramchips) {
+		show serial_dialog { "\t- a bunch of RAM chips" };
+	}
+	if (ch2_installed_clock) {
+		show serial_dialog { "\t- a system clock" };
+	}
+	if (ch2_installed_cpu) {
+		show serial_dialog { "\t- a CPU" };
+	}
+	// EXTERNAL
+	show serial_dialog { "On the outside is:" };
+	if (ch2_installed_monitor || ch2_installed_keyboard || ch2_installed_mouse) {
+		if (ch2_installed_monitor) {
+			show serial_dialog { "\t- a monitor" };
+		}
+		if (ch2_installed_keyboard) {
+			show serial_dialog { "\t- a keyboard" };
+		}
+		if (ch2_installed_mouse) {
+			show serial_dialog { "\t- a mouse" };
+		}
+	}
+	show serial_dialog {
+		"\t- a bunch of tiny penguin stickers"
+		"\t- and one yak sticker?"
+	};
+}
+
+look_ch2_wizard {
+	show serial_dialog spacer;
+	if (entity Wizard current_animation == 0) { // WIZARD IS DOWN
+		show serial_dialog spacer;
+		show serial_dialog {
+			"You looked at the <m>%SELF%</>."
+			"\tAt least, you looked at the trash can itself. It's... a trash can. It's pungent enough that you think it best to breathe through your mouth for the moment."
+		};
+	} else {
+		show serial_dialog {
+			"You looked at the <m>%SELF%</>."
+			"\t...Adorable!"
+		};
+	}
+}
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load_ch2_castle_1_postgame {
+	// abbreviated copy-pasta of the below
+	ch2_in_room = 1;
+	// entrance text
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>CASTLE ENTRANCE</>..." };
+
+	entity Wizard on_interact = interact_ch2_wizard_mainframedone;
+	entity Wizard current_animation = 3; // head poking up
+	if (warp_state == "raw_game_load-ch2") {
+		copy!(restore_player_state)
+	} else if (warp_state == "walk_from-north") {
+		player position = geometry "walk_from-north";
+	} else if (warp_state == "walk_from-south") {
+		player position = geometry "walk_from-south";
+	}
+	copy!(ch2_map_init)
+	copy!(ch2_player_spawn_click_protection)
+}
+
+on_load_ch2_castle_1 {
+	if (warp_state == "ch2 ending") {
+		goto ch2_castle_1_ending;
+	}
+	// ch2 room state
+	ch2_in_room = 1;
+	ch2_seen_room_1 = true;
+
+	// entrance text
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>CASTLE ENTRANCE</>..." };
+
+	// room unique stuff
+	if (ch2_cutseen_bert_secret) {
+		entity Bert on_tick = yeet;
+		// so his name is blank for when Ring Zero is back
+	}
+
+	if (ch2_ring_zero_enabled_in_castle) {
+		entity Wizard on_interact = interact_ch2_wizard_mainframedone;
+		entity Wizard current_animation = 3; // head poking up
+	}
+	if (ch2_has_artifact) {
+		entity Artifact on_tick = yeet;
+	}
+	if (warp_state == "raw_game_load-ch2") {
+		copy!(restore_player_state)
+	} else if (warp_state == "walk_from-south") {
+		player position = geometry "walk_from-south";
+	} else if (warp_state == "ch2-ending") {
+		player position = geometry "mainframe-look-spot";
+	}
+	if (ch2_carrying_mainframeos) {
+		entity Wizard current_animation = 3;
+	}
+	copy!(ch2_map_init)
+
+	// DEBUG
+	if (debug_mode) {
+		command credits = debug_ch2_credits;
+		command toot = debug_finish_toot;
+		command walk = debug_walk;
+		command get + monitor = ch2_pickup_monitor;
+		command get + heatsink = ch2_pickup_heatsink;
+		command get + cactuscooler = ch2_pickup_cactuscooler;
+		command get + powersupply = ch2_pickup_powersupply;
+		command get + keyboard = ch2_pickup_keyboard;
+		command get + mouse = ch2_pickup_mouse;
+		command get + harddrive = ch2_solder_harddrive;
+		command get + plate = ch2_pickup_plate;
+		command get + needle = ch2_pickup_needle;
+		command get + ramchips = ch2_pickup_ramchips;
+		command get + clock = ch2_pickup_clock;
+		command get + goldfish = ch2_pickup_goldfish;
+		command get + abacus = ch2_pickup_abacus;
+		command get + cpu = ch2_solder_cpu;
+		command round + "1" = debug_get_items_for_round1;
+		command round + "2" = debug_get_items_for_round2;
+		command round + "3" = debug_get_items_for_round3;
+		show serial_dialog {
+			" "
+			"<y>DEBUG></> this room only"
+			"<y>></> <c>TOOT</>: skip tutorial"
+			"<y>></> <c>CREDITS</>: roll credits as if you've beaten the game"
+			"<y>></> <c>GET _</>: pick up the named item"
+			"<y>></> <c>ROUND _</>: collect the items for that round"
+			"<y>></> <c>WALK</>: set XA on_interact to do the walk part"
+		};
+	}
+	// END DEBUG
+	copy!(ch2_player_spawn_click_protection)
+}
+debug_finish_toot {
+	ch2_storyflag_round = 1;
+	ch2_has_map = true;
+	ch2_has_artifact = true;
+	copy!(register_map)
+	copy!(register_parts)
+	copy!(ch2_put_on_map_round1)
+	copy!(ch2_take_off_map_round2)
+	copy!(ch2_take_off_map_round3)
+	copy!(ch2_take_off_map_round4)
+	ch2_toot_done = true;
+}
+
+debug_walk {
+	entity Artifact position = geometry "artifact-look";
+	entity Artifact type = artifact;
+	entity Artifact current_animation = 0;
+	entity XA on_interact = ch2_artifact_walk;
+}
+tick_artifact_open {
+	entity Artifact animation -> 2 once;
+	entity Artifact current_animation = 3;
+	goto null_script;
+}
+ch2_camera_to_artifact {
+	camera -> geometry "artifact-get" origin over 1200ms;
+	goto null_script;
+}
+ch2_artifact_walk {
+	player_control = off; // temp (take out of final)
+	wait 70ms;
+	entity XA on_tick = ch2_camera_to_artifact;
+	wait 500ms;
+	// a dumbwaiter-esque thing opens
+	entity Artifact on_tick = tick_artifact_open;
+	wait 400ms;
+	player direction = geometry "artifact-look";
+	wait 1700ms;
+	if (player intersects geometry "artifact-watchbox") {
+	} else if (player intersects geometry "artifact-watchdonut") {
+		player position -> geometry "artifact-watchpoint" origin over 400ms;
+	} else {
+		player position -> geometry "artifact-watchpoint" origin over 600ms;
+	}
+	player direction = geometry "artifact-look";
+	wait 444ms;
+	show dialog {
+		PLAYER "What, over there?"
+	};
+	player position -> geometry "artifact-approach" origin over 400ms;
+	player direction = north;
+	wait 1000ms;
+	// bling
+	entity Artifact animation -> 1 once;
+	entity Artifact current_animation = 3;
+	wait 550ms;
+	player position -> geometry "artifact-approach" length over 350ms;
+	wait 170ms;
+	player direction = east;
+	wait 700ms;
+	player direction = north;
+	wait 80ms;
+	// walks up to it
+	player position -> geometry "artifact-get" origin over 200ms;
+	wait 600ms;
+	entity Artifact on_tick = yeet;
+	// remove artifact
+	wait 100ms;
+	entity XA on_tick = ch2_camera_from_artifact;
+	wait 200ms;
+	player position -> geometry "artifact-approach" origin over 600ms;
+	wait 300ms;
+	player direction = west;
+	camera fade out -> $calc over 800ms;
+	entity calc1 animation_frame = 55;
+	entity calc2 animation_frame = 55;
+	entity calc1 position = geometry "calc1-spot";
+	entity calc2 position = geometry "calc2-spot";
+	camera = geometry "artifact-approach";
+	player position = geometry "hiding-spot";
+	camera fade in -> $calc over 800ms;
+	wait 2800ms;
+	camera -> geometry "calc-camera" origin over 900ms;
+	wait 200ms;
+	show dialog {
+		PLAYER "Huh. Almost looks like one of those old, fancy calculators."
+	};
+	camera -> geometry "artifact-approach" origin over 700ms;
+	wait 300ms;
+	camera fade out -> $calc over 800ms;
+	player position = geometry "artifact-approach";
+	camera = player position;
+	entity calc1 on_tick = yeet;
+	entity calc2 on_tick = yeet;
+	camera fade in -> $calc over 800ms;
+	player direction = south;
+}
+ch2_camera_from_artifact {
+	camera -> player position over 300ms;
+	goto null_script;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick_ch2_castle_1_postgame {
+	if (player intersects geometry "south-hitbox") {
+		copy!(on_exit_ch2_castle_1)
+		warp_state = "walk_from-north";
+		load map "ch2-castle-outside";
+	}
+	if (player intersects geometry "north-hitbox") {
+		copy!(on_exit_ch2_castle_1)
+		warp_state = "walk_from-south";
+		copy!(ch2_load_castle_11_special)
+	}
+}
+
+on_tick_ch2_castle_1 {
+	if (player intersects geometry "south-hitbox") {
+		copy!(on_exit_ch2_castle_1)
+		warp_state = "walk_from-north";
+		load map "ch2-castle-outside";
+	}
+	if (ch2_wait_for_hat_touch) {
+		// show serial_dialog {"if (ch2_wait_for_hat_touch) {"};
+		goto on_tick_ch2_castle_1_hexwait1;
+	}
+	// if there's a dialog open currently, don't do anything! But...
+	if (dialog closed) {
+		// check for hax button press
+		// (Not going to do shenanigans like this for other rooms because if you've left room 1 then you've seen the tutorial already)
+		if (!ch2_ring_zero_enabled_in_castle) {
+			if (button HAX pressed) { // You're attempting to use Ring Zero and...
+				// ...you've been told Ring Zero won't work
+				if (ch2_toot_done) {
+					show dialog {
+						PLAYER "Oh, yeah. Ring Zero won't work in in the castle until I fix the mainframe."
+					};
+				}
+				// ...you've discovered Ring Zero won't work
+				else if (ch2_hax_attempted) {
+					show dialog {
+						PLAYER "Why doesn't Ring Zero work?"
+					};
+				}
+				// ...you've tried the door already
+				else if (ch2_door_attempted) {
+					show dialog {
+						PLAYER "Weird. I can't get Ring Zero to work, either."
+					};
+				}
+				// ...you did NOT try the door yet
+				else {
+					show dialog {
+						PLAYER "Weird. I can't get Ring Zero to work."
+					};
+				}
+				ch2_hax_attempted = true;
+			}
+		}
+	}
+}
+
+on_tick_ch2_castle_1_hexwait1 {
+	copy!(on_tick_ch2_castle_1_hexwait_protec)
+	if (button HAX pressed) {
+		goto on_tick_ch2_castle_1_hexwait2;
+	}
+}
+on_tick_ch2_castle_1_hexwait2 {
+	copy!(on_tick_ch2_castle_1_hexwait_protec)
+	if (button HAX pressed) {
+		ch2_wait_for_hat_touch = false;
+		player on_tick = ch2_install_wizard_resume;
+		goto on_tick_ch2_castle_1;
+	}
+}
+on_tick_ch2_castle_1_hexwait_protec {
+	if (player intersects geometry "south-hitbox") {
+		copy!(ch2_wait_for_hat_touch_message)
+		player_control = off;
+		player position -> geometry "walk_from-south" origin over 200ms;
+		player_control = on;
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit_ch2_castle_1 { // sanitize ch2 room state
+	if (ch2_wait_for_hat_touch) {
+		goto ch2_wait_for_hat_touch_message;
+	}
+	ch2_in_room = 0;
+}
+
+// SERIAL: go
+
+on_go_ch2_notyet {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"(You better finish your conversation with Lambda before attempting to <c>GO</> anywhere....)"
+		" "
+		"(Type <c>MAN</> to resume the converstion.)"
+	};
+}
+
+on_go_castle_1_north {
+	if (!ch2_toot_done) {
+		goto on_go_ch2_notyet;
+	} else {
+		copy!(on_exit_ch2_castle_1)
+		copy!(warping_out_fade_out)
+		copy!(ch2_load_castle_11_special)
+	}
+}
+
+on_go_castle_1_south {
+	if (!ch2_toot_done) {
+		goto on_go_ch2_notyet;
+	} else {
+		copy!(on_exit_ch2_castle_1)
+		copy!(warping_out_fade_out)
+		load map "ch2-castle-outside";
+	}
+}
+
+/* ---------- TUTORIAL ROOM STUFF ---------- */
+
+ch2_attempt_door_check {
+	if (ch2_toot_done) {
+		// you've been told some doors won't work
+		show dialog {
+			PLAYER "Oh, yeah. With the debris blocking the doors, I'll need the serial console to move between rooms."
+		};
+	} else if (!ch2_door_attempted) {
+		// you've already discovered the doors don't work
+		if (ch2_hax_attempted) {
+			show dialog {
+				PLAYER "And the castle doors are blocked? This is going to be a short quest."
+			};
+		} else {
+			show dialog {
+				PLAYER "The castle doors are blocked? This is going to be a short quest."
+			};
+		}
+		ch2_door_attempted = true;
+	} else {
+		// being obnoxious now :3
+		if ("ch2-pretoot-door-attempts" == 0) {
+			show dialog {
+				PLAYER "How am I supposed to get around the castle if the doors are all caved in?"
+			};
+		} else if ("ch2-pretoot-door-attempts" == 1) {
+			show dialog {
+				PLAYER "Hmm. Maybe there's something else in this room I can investigate."
+			};
+		} else if ("ch2-pretoot-door-attempts" == 2) {
+			show dialog {
+				PLAYER "That's kind of a funny orange spider, isn't it? I wonder if it can help me."
+			};
+		} else {
+			show dialog {
+				PLAYER "I should go talk to the spider robot over there."
+			};
+		}
+		"ch2-pretoot-door-attempts" += 1;
+	}
+}
+
+/* ---------- ENTITIES ---------- */
+
+// 0 (idle): in trash
+// 1 (walk): flip around completely
+// 2 (action): ascend, then descend
+// 3: head poking up
+// 4: descend
+// 5: ascend
+
+ch2_wizard_ascend {
+	player_control = off;
+	entity Wizard animation -> 5 once;
+	entity Wizard current_animation = 3;
+	player_control = on;
+}
+tick_ch2_wizard_ascend_and_watch_with_check {
+	if (entity Wizard current_animation == 0) { // WIZARD IS DOWN
+		// show serial_dialog {"DEBUG: Wizard is down! Switching on_tick to to 'tick_ch2_wizard_ascend_and_watch'"};
+		goto tick_ch2_wizard_ascend_and_watch;
+	} else {
+		// show serial_dialog {"DEBUG: Wizard is not <bold>strictly</> down..."};
+		entity Wizard current_animation = 3;
+	}
+	entity Wizard on_tick = face_player;
+}
+tick_ch2_wizard_ascend_and_watch {
+	// show serial_dialog {"\t'entity Wizard animation -> 5 once'"};
+	entity Wizard animation -> 5 once;
+	// show serial_dialog {"\t'entity Wizard current_animation = 3'"};
+	entity Wizard current_animation = 3;
+	// show serial_dialog {"\t'entity Wizard on_tick = "face_player'"}";
+	entity Wizard on_tick = face_player;
+}
+ch2_wizard_descend {
+	player_control = off;
+	entity Wizard animation -> 4 once;
+	entity Wizard current_animation = 0;
+	player_control = on;
+}
+
+interact_ch2_wizard {
+	if (self current_animation == 0) { // WIZARD IS DOWN
+		// go up
+		copy!(ch2_wizard_ascend)
+		// wizard is up now
+	} else { // WIZARD IS UP (but should go down)
+		if (!ch2_toot_done) {
+			show dialog { SELF "Bye." };
+			copy!(ch2_wizard_descend)
+			return;
+		}
+	}
+	// wizard is up now and can talk normally
+	if (!ch2_toot_done) {// pre-toot version
+		show dialog { SELF "Hi." };
+	}
+	else if (ch2_wait_for_hat_touch) {
+		player direction = entity Wizard;
+		entity Wizard direction = player;
+		show dialog {
+			PLAYER "Um, how do I get the hex editor to come up again?"
+			Wizard "Don't look at me. I don't use touch screens."
+			PLAYER "Touch screens?"
+			Wizard "Capacitive buttons. Same diff. My paw pads won't trigger them right."
+			"But there must be some kind of shiny copper surface on your whatsit, right? Try touching it with your finger. That's probably how it's done."
+		};
+	}
+	else if (ch2_lambda_paging) {
+		show dialog {
+			SELF "Looks like whats-his-name is paging you. Better answer him on the terminal."
+		};
+	}
+	else if (ch2_carrying_mainframeos) {
+		copy!(ch2_install_wizard)
+	}
+	else {
+		if (!ch2_wizard_backstory) {
+			show dialog {
+				SELF "Hey."
+				PLAYER "Hi."
+				SELF "Heard you talking to whats-his-name. Building a computer?"
+				PLAYER "Yeah, we're going to fix the castle mainframe."
+				SELF "Cool, cool."
+				"So you should know... I'm an installation wizard. I'm pretty great with computers."
+				PLAYER "Oh, yeah? Could you help me install computer parts into the mainframe?"
+				SELF "Nah, I'm a software guy, actually."
+				PLAYER "Oh."
+				SELF "But once it's built, I can help install the OS or whatever programs you might need to do whatever. Always happy to help."
+			};
+			ch2_wizard_backstory = true;
+			interrupt2 = true; // `interrupt` is used for Bert cutscene 
+		} else {
+			if (interrupt2) {
+				show dialog {
+					SELF "So mysterious-voice-man wants to put that thing back together, huh? I don't really get it, but okie-dokie."
+					"Let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
+				};
+			} else {
+				if (!interrupt3) {
+					show dialog {
+						SELF "Hey."
+						PLAYER "Hi."
+						SELF "Finished building that computer yet?"
+						PLAYER "Not yet."
+						SELF "Cool, cool. So anyway, let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
+						PLAYER "Okay. Thanks."
+					};
+					interrupt3 = true; // OwO
+				} else {
+					show dialog {
+						SELF "Finished it already?"
+						PLAYER "Not exactly."
+						SELF "Yeah, didn't think so."
+						"Later, gator."
+					};
+				}
+				copy!(ch2_wizard_descend)
+			}
+		}
+	}
+}
+
+ch2_spin_wizard {
+	player_control = off;
+	wait 100ms;
+	entity Wizard direction += 1;
+	wait 100ms;
+	entity Wizard direction += 1;
+	wait 100ms;
+	entity Wizard direction += 1;
+	wait 100ms;
+	entity Wizard direction += 1;
+	wait 100ms;
+	player_control = on;
+}
+
+ch2_install_wizard {
+	serial_control = off;
+	player_control = off;
+	show dialog {
+		Wizard "Oh! Oh! You have software for the new computer?"
+		"Can I help install it? Please?"
+		PLAYER "I wouldn't have it any other way."
+	};
+	entity Wizard on_tick = null_script;
+	copy!(ch2_spin_wizard)
+	show dialog {
+		Wizard "Awesome!"
+		"First off, what's it on? A thumb drive? Floppy?"
+		PLAYER "Well, it's like a flat disk thing, all rainbowy on one side...."
+		Wizard "A CD or DVD or something? Cool, cool."
+	};
+	entity Wizard direction = entity mainframe;
+	show dialog {
+		Wizard "Press the button on that slot there and the disc tray will open. Then set the disc on the tray, rainbow side down, and press the button again to close it."
+	};
+	player_control = off;
+	if (player intersects geometry "mainframe-watchbox") {
+		// :3
+	} else if (player intersects geometry "mainframe-watchdonut") {
+		player position -> geometry "mainframe-look-spot" origin over 300ms;
+	} else {
+		player position -> geometry "mainframe-look-spot" origin over 500ms;
+	}
+	player direction = north;
+	wait 900ms;
+	player direction = entity Wizard;
+	show dialog {
+		PLAYER "Okay, now what?"
+		Wizard "Hit the power button."
+	};
+	player direction = entity mainframe;
+	show dialog {
+		Wizard "The machine will try to boot from the hard drive first. If there's nothing there, it should try the optical drive next."
+		"Not sure if that disc will give us a full installer with a bunch of settings, or if it'll just start up on its own."
+	};
+	wait 800ms;
+	serial_control = off;
+	show serial_dialog spacer;
+	show serial_dialog {
+		"Starting"
+	};
+	wait 100ms;
+	show dialog {
+		PLAYER "!!"
+	};
+	player direction = entity Wizard;
+	show dialog {
+		PLAYER "Look! It's working!"
+	};
+	player direction = entity mainframe;
+	entity Wizard direction = west;
+	wait 200ms;
+	entity Wizard direction = east;
+	wait 200ms;
+	entity Wizard direction = west;
+	wait 200ms;
+	entity Wizard direction = east;
+	show dialog {
+		Wizard "Aw, come on! Straight to boot? No startup settings at least?"
+	};
+	entity Wizard direction = south;
+	show dialog {
+		Wizard "Oh well. Guess that's how things are gonna play out. Not much fun for me though. Guess I still helped, technically."
+	};
+	entity Wizard direction = east;
+	player on_tick = ch2_wait_for_boot;
+	copy!(ch2_bootup)
+	serial_control = off;
+	player_control = off;
+	wait 1200ms;
+	show dialog {
+		Wizard "Hey hey! There you go!"
+	};
+	// goto ch2_install_wizard2;
+	goto ch2_install_wizard_resume2;
+}
+ch2_install_wizard2 {
+	entity Wizard on_tick = face_player;
+	wait 300ms;
+	camera fade out -> #FFDD00 over 600ms;
+	wait 100ms;
+	camera fade in -> #FFDD00 over 600ms;
+	wait 400ms;
+	show dialog {
+		PLAYER "Whoa! What was that?"
+		Wizard "Your hand was glowing. Or maybe a ring?"
+		PLAYER "Ring Zero?"
+		"Oh! It's warm! I wonder if it'll work now?"
+		PLAYER "What was it again? \"Touch the hat on the PCB\" -- right?"
+	};
+	ch2_ring_zero_enabled_in_castle = true;
+	// show serial_dialog {"ch2_ring_zero_enabled_in_castle = true;"};
+	player_control = on;
+	// show serial_dialog {"player_control = on;"};
+	if (!debug_mode) {
+		// show serial_dialog {"hex_control = on;"};
+		hex_control = on;
+		lights_control = off;
+	} else {
+		// show serial_dialog {"debug_mode; no need to enable hex control;"};
+	}
+	// show serial_dialog {"hex_control = on;"};
+	ch2_wait_for_hat_touch = true;
+	// show serial_dialog {"ch2_wait_for_hat_touch = true;"};
+	copy!(ch2_install_mainframeos)
+	// show serial_dialog {"copy ch2_install_mainframeos;"};
+}
+ch2_ending_fadein {
+	camera fade in -> #000000 over 500ms;
+}
+ch2_ending_fadeout {
+	wait 100ms;
+	camera fade out -> #000000 over 500ms;
+}
+ch2_install_wizard_resume {
+	show dialog {
+		PLAYER "Hey! It works!"
+		Wizard "Looks like the castle's core services are gonna come back online on their own. I guess that'll make it a breeze to clean everything up, eh?"
+	};
+	goto ch2_castle_1_ending2;
+	// goto ch2_install_wizard_resume2;
+}
+ch2_install_wizard_resume2 {
+	warp_state = "ch2 ending";
+	copy!(ch2_ending_fadeout)
+	load map "ch2-castle-21";
+}
+ch2_castle_21_ending {
+	player_control = off;
+	serial_control = off;
+	camera = geometry "warp-spot";
+	player position = geometry "hiding-spot";
+	entity abacus on_tick = yeet;
+	entity "Jean-Paul" direction = south;
+	copy!(ch2_ending_fadein)
+	wait 800ms;
+	show dialog {
+		Frankie alignment TL "...Oh!"
+		"I'm in! I've got full access again! Let's gooo!"
+	};
+	entity "Jean-Paul" direction = entity Frankie;
+	wait 400ms;
+	entity "Jean-Paul" direction = south;
+	copy!(ch2_ending_fadeout)
+	load map "ch2-castle-22";
+}
+ch2_castle_22_ending {
+	player_control = off;
+	serial_control = off;
+	camera = geometry "warp-spot";
+	player position = geometry "hiding-spot";
+	entity "Power Supply" on_tick = yeet;
+	copy!(ch2_ending_fadein)
+	wait 800ms;
+	show dialog {
+		entity "C. K. Watt" alignment TR "Aha, we got core services coming back up. Finally."
+	};
+	copy!(ch2_ending_fadeout)
+	load map "ch2-castle-13";
+}
+sebastian_to_three {
+	entity Sebastian position -> geometry "end-sebastian3" origin over 800ms;
+}
+ch2_castle_13_ending {
+	player_control = off;
+	serial_control = off;
+	camera = geometry "camera-spot3";
+	copy!(ch2_ending_fadein)
+	wait 800ms;
+	show dialog {
+		Templeton "Did you hear that? Something changed."
+		Sebastian "Ah, yessss! The mana boosters have spun up!"
+		"Step aside, Your Majesty. I'll handle this."
+	};
+	entity Sebastian on_tick = sebastian_to_three;
+	wait 200ms;
+	copy!(ch2_ending_fadeout)
+	copy!(ch2_load_castle_1_special)
+}
+
+ch2_player_exit {
+	player position -> geometry "exit-line" length over 2000ms;
+}
+ch2_castle_1_ending {
+	player_control = off;
+	serial_control = off;
+	camera = player position;
+	player position = geometry "mainframe-look-spot";
+	player direction = south;
+	entity Wizard current_animation = 3;
+	copy!(ch2_ending_fadein)
+	wait 300ms;
+	// goto ch2_castle_1_ending2;
+	goto ch2_install_wizard2;
+}
+ch2_castle_1_ending2 {
+	show dialog {
+		PLAYER "Awesome! I'll go tell the village elders I've got the artifact fully working."
+		"We're one step closer to facing the Big Bad!"
+	};
+	ch2_storyflag_round = 5;
+	player_control = off;
+	entity XA on_tick = ch2_player_exit;
+	warp_state = "ch2-ending";
+	camera fade out -> #000000 over 1500ms;
+	"credits_from_menu" = false;
+	load map "ch2-castle-outside";
+}
+debug_ch2_credits {
+	ch2_storyflag_round = 5;
+	player_control = off;
+	camera fade out -> #000000 over 1500ms;
+	credits_from_menu = false;
+	load map credits2;
+}
+
+ch2_wait_for_hat_touch_message {
+	show dialog {
+		PLAYER "(Hang on. First I should check whether Ring Zero is working in here. What was it again? \"Touch the hat on the PCB\"?)"
+	};
+}
+
+ch2_wait_for_boot {
+	wait 500ms;
+	player direction = east;
+	wait 1600ms;
+	player direction = west;
+	wait 500ms;
+	player direction = south;
+	goto null_script;
+}
+
+
+	$dot = 300ms;
+
+ch2_bootup_mgs2 {
+	show serial_dialog {
+		"Loading MGZ" // several seconds
+		" "
+		"Memory: 1048576k/1049216k available (1162k kernel code, 6812k reserved, 482k data,240k init, Ok highmem)"
+		" "
+		"Dentry-cache hash table entries: 32768 (order: 6, 262144 bytes)"
+		"Buffer-cache hash table entries: 8192 (order: 3, 32768 bytes)"
+		"Page-cache hash table entries: 65536 (order: 6, 262144 bytes)"
+		"Inode-cache hash table entries: 16384 (order: 5, 131072 bytes)"
+		" "
+		"Enabling fast FPU save and restore... done."
+		"Enabling unmasked SIMD FPU exception support... done."
+		"Checking 'hlt' instruction... OK."
+		" "
+		"MGX NET9.0 for MGX 6.0"
+		"BIOS Vendor: Konami Computer Entertainment Japan"
+		"BIOS Version: 5.73" // 15f
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "
+		"Starting kswapd v3.0" // 10f
+	};
+	wait 500ms;
+	show serial_dialog {
+		" "
+		"pty: 256 Unix98 ptys configured" //1f>
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Uniform Multi-Platform E-IDE driver Revision: 9.11" //1f>
+	};
+	wait 50ms;
+	show serial_dialog {
+		"    ide0: BM_DMA at 0xf000-0xf007, BIOS settings: da0:DMA, da1:pio" //1f?
+	};
+	wait 50ms;
+	show serial_dialog {
+		"19623/16/255 from BIOS ignored" //1f?
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "
+		"da0: C/H/S=19623/16/255 from BIOS ignored" //1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"da0: TOKUGAWA HD4192 E, ATA DISK drive"
+		"da1: TOKUGAWA CF2048J, REMOVABLE drive" //9f
+	};
+	wait 450ms;
+	show serial_dialog {
+		"ide0 at 0x1f0-0x1f7, 0x3f6 on irq 14" //1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"da0: 160126848 sectors (81984 MB) w/2048KiB Cache, CHS-158856/16/63, UDMA(33)"
+		"Partition check:" //15f
+	};
+	wait 750ms;
+	show serial_dialog {
+		"    da0: da01 da02 da03 <da06 da06 dao7>"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "
+		"eth0: ARMSTECH Corporation 826557, 00:03:47:70:29:86, IRQ 9."//4f
+	};
+	wait 200ms;
+	show serial_dialog {
+		" "//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"NET9: MGX TCP/IP 4.0 for NET9.0"
+		"IP Proyocols: ICMP, UDP, TCP, IGMP"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"IP: routing cache hash table of 512 buckets, 4Kbytes"
+		"ICP: hash tables configured (established 8192 bind 8192)"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"NET4: Un*x domain sockets 1.0/SMP for MGX NET 9.0"//10f
+	};
+	wait 500ms;
+	show serial_dialog {
+		" "
+		"UFS: Mounted root (ext4 filesystem) readonly"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Freeing unused kernel memory: 176k freed"
+		"Adding Swap: 211640k swap space (priority -1)"//16f
+	};
+	wait 800ms;
+	show serial_dialog {
+		" "//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"INIT Version 5.64"
+		"Welcome to MONORITH SERVICE SYSTEM"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"PROVIDED BY STRATELOGIC INC.,LTD."
+		"FOR USE ONLY ON THE CONSOLE\"CYBERSPACE_4\" "//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"######################CAUTION#########################"
+		"FOR MILITARY USE ONLY."//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"UNAUTHORIZED PERSONNEL MAKING ACCESS OR ATTEMPTING ACCESS WILL BE"
+		"PENALIZED SEVERELY UNDER MARTIAL LAW."//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"######################CAUTION#########################"
+		" "//16f
+	};
+	wait 800ms;
+	show serial_dialog {
+		"Mounting proc filesystem"//6f
+	};
+	wait 300ms;
+	show serial_dialog {
+		"Configuring kernel parameters"//4f
+	};
+	wait 200ms;
+	show serial_dialog {
+		"Loading default keymap"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Activating swap partitions"//11f
+	};
+	wait 550ms;
+	show serial_dialog {
+		"Setting hostname policenauts"//6f
+	};
+	wait 300ms;
+	show serial_dialog {
+		"Checking root filesystem"//32f
+	};
+	wait 1600ms;
+	show serial_dialog {
+		"/dev/da01: clean, 2676/788800 files, 492275/3155200  blocks"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Remounting root filesystem in read-write mode"
+		"Finding module dependencies"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "//22f
+	};
+	wait 1100ms;
+	show serial_dialog {
+		"/dev/da05: clean, 21/82328 files, 10415/329301 blocks"//32f
+	};
+	wait 1600ms;
+	show serial_dialog {
+		"/dev/da06: clean, 75098/9729792 files, 316284/38919168 blocks"//32f
+	};
+	wait 1600ms;
+	show serial_dialog {
+		"/dev/da07: clean, 20881/9729792 files, 834953/38919168 blocks"//7f
+	};
+	wait 350ms;
+	show serial_dialog {
+		" "
+		" "//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Mounting local filesystems"//2f
+	};
+	wait 100ms;
+	show serial_dialog {
+		"Enabling swap space"//4f
+	};
+	wait 200ms;
+	show serial_dialog {
+		"INIT: Entering runlevel: 4"
+		"Entering non-interactive startup"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Setting network parameters"
+		"Bringing up interface lo"//3f
+	};
+	wait 150ms;
+	show serial_dialog {
+		"Bringing up interface eth0"
+		" "//1.5s
+	};
+	wait 2500ms;
+	show serial_dialog {
+		"MONORITH MGX 2.1.5"
+		"Kernel 6.2.38"//2f
+	};
+}
+ch2_bootup_solaris {
+	// show serial_dialog {
+	// 	"Welcome to GibBIOS v1.1 built on Aug 8 2024 10:11"
+	// 	"Trying disk:a..."
+	// };
+	wait 2400ms;
+	show serial_dialog {
+		"GibsonOS Release 5.7 Version Generic_801-02 [UNIX(R) System V Release 4.0]"
+		"Copyright (c) 1983-1999, Sun Microsystems, Inc."
+	}; // :19s
+	wait 4000ms;
+	show serial_dialog {
+		"Hostname: sunrise"
+	};
+	wait 2400ms;
+	show serial_dialog {
+		"The system is coming up.  Please wait."
+	};
+	wait 80ms;
+	show serial_dialog {
+		"checking ufs filesystems"
+	};
+	wait 80ms;
+	show serial_dialog {
+		"/dev/rdsk/c0t0d0s7: is clean."
+	};
+	wait 800ms;
+	show serial_dialog {
+		"in.rdisc: No interfaces up"
+	};
+	wait 50ms;
+	show serial_dialog {
+		"starting routing daemon."
+	};
+	wait 1100ms;
+	show serial_dialog {
+		"starting rpc services: rpcbindkeyserv: failed to generate host's netname when establishing root's key."
+	};
+	wait 50ms;
+	show serial_dialog {
+		"keyserv done"
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Setting default interface for multicast: add net 224.0.0.0: gateway sunrise"
+	};
+	wait 1400ms;
+	show serial_dialog {
+		"syslog service starting."
+	};
+	wait 700ms;
+	show serial_dialog {
+		"Print services started."
+	};
+	wait 600ms;
+	show serial_dialog {
+		"Mar 18 16:38:52 sunrise sendmail[195]: My unqualified host name (localhost) unknown; sleeping for retry"
+	};
+	wait 50ms;
+	show serial_dialog {
+		"volume management starting."
+	};
+	wait 2900ms;
+	show serial_dialog {
+		"The system is ready."
+	};
+	wait 1200ms;
+	show serial_dialog {
+		" "
+		"sunrise console login: Mar 18 16:38:54 sunrise snmpXdmid: Error in Adding Row for Subscription Table Entry"
+	};
+	wait 180ms;
+	show serial_dialog {
+		"Mar 18 16:38:54 sunrise snmpXdmid: Failed to add filter to SP for Event delivery"
+	};
+	wait 900ms;
+	show serial_dialog {
+		" "
+		"************************************************************"
+		"*"
+	};
+	wait 50ms;
+	show serial_dialog {
+		"* Starting Desktop Login on display :0..."
+		"* "
+	};
+	wait 40ms;
+	show serial_dialog {
+		"* Wait for the Desktop Login screen before logging in."
+		"* "
+	};
+	wait 50ms;
+	show serial_dialog {
+		"************************************************************"
+	};
+	serial_control = on;
+}
+ch2_bootup {
+	// serial_control = off;
+	// show serial_dialog spacer;
+	// ^^ moved from here to the other place, but this is what it was fyi
+	wait 1050ms;
+	show serial_dialog {
+		"GibsonOS version 3.7.1-TLS"
+	};
+	wait 700ms;
+	show serial_dialog {
+		wrap 70
+		"Memory: 1048576k/1049216k available"
+		" "
+		"Dentry-cache hash table entries: 32768 (order: 6, 262144 bytes)"
+		"Buffer-cache hash table entries: 8192 (order: 3, 32768 bytes)"
+		"Page-cache hash table entries: 65536 (order: 6, 262144 bytes)"
+		"Inode-cache hash table entries: 16384 (order: 5, 131072 bytes)"
+		" "
+		"Enabling fast FPU save and restore... done."
+		"Enabling unmasked SIMD FPU exception support... done."
+		"Checking 'hlt' instruction... OK."
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "
+		"GibBOOT 4.0"
+		"BIOS Vendor: Gibson Computing Corporation Limited"
+		"BIOS Version: 2.14" // 15f
+	};
+	wait 120ms;
+	show serial_dialog {
+		" "
+		"Partition check:" //15f
+	};
+	wait 750ms;
+	show serial_dialog {
+		"    da0: da01 da02 da03 <da06 da06 dao7>"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		" "
+		"Mounting local filesystems"//2f
+	};
+	wait 100ms;
+	show serial_dialog {
+		"Enabling swap space"//4f
+	};
+	wait 200ms;
+	show serial_dialog {
+		"INIT: Entering runlevel: 4"
+		"Entering non-interactive startup"//1f
+	};
+	wait 50ms;
+	show serial_dialog {
+		"Setting network parameters"
+		"Bringing up interface lo"//3f
+	};
+	wait 150ms;
+	show serial_dialog {
+		"Bringing up interface eth0"
+	};
+	wait 50ms;
+	show serial_dialog {
+	" "
+	"Starting intercom manager"
+	};
+	wait 100ms;
+	show serial_dialog {
+		"   Status: <g>OK</>"
+		"Starting door manager"
+	};
+	wait 230ms;
+	show serial_dialog {
+		"   Status: <g>OK</>"
+		"Fetching latest from underground data center"
+	};
+	wait 3000ms;
+	show serial_dialog {
+		"   Status: <r>ERROR</>"
+		"   Connection refused"
+		"Launching power plant controller"
+	};
+	wait 400ms;
+	show serial_dialog {
+		"   Status: <g>OK</>"
+		"Launching HVAC controller"
+	};
+	wait 170ms;
+	show serial_dialog {
+		"   Status: <g>OK</>"
+		"Establishing Ring Zero bridge"
+	};
+	wait 700ms;
+	show serial_dialog {
+		"   Status: <g>OK</>"
+		"Installing additional support packages"
+	};
+	wait 2300ms;
+	show serial_dialog {
+		"No GPU devices found"
+		"Reticulating splines"
+	};
+	wait 3800ms;
+	show serial_dialog {
+		" "
+		"<g>Boot OK</>"
+		"Launching desktop environment"
+	};
+	serial_control = on;
+}
+
+interact_ch2_wizard_mainframedone {
+	show dialog {
+		SELF "I love the smell of software in the morning."
+		"...What? That's a thing."
+	};
+}
+
+interact_ch2_xa {
+	if (ch2_toot_done) {
+		goto ch2_terminal_setup_check;
+	} else {
+		if (!ch2_has_artifact) {
+			player_control = off;
+			show dialog {
+				name "???" border_tileset codec
+				"..."
+				"...huh?"
+				"Oh! Ohhh, is the light on? Hello?"
+				"Oh my goodness. Is there actually someone there? Hello? Can you hear me?"
+
+				PLAYER "I can hear you."
+
+				name "???" border_tileset codec
+				"Oh! It's a person! Yes, hello! My name is...."
+
+				Lambda "Lambda! Yeah, call me Lambda!"
+				"I'm speaking to you through XA, the Exa! It's this old intercom I set up ages ago. Looks like you're in the castle entrance. I'm surprised XA was still..."
+				"Wait. Who are you? How did you even get in?"
+
+				PLAYER "I'm %PLAYER%. The village elders sent me here to collect the castle artifact so I could defeat the Big Bad."
+				"And I'm not a hacker, I just...\n...you know...\n...hack things. With Ring Zero."
+				
+				Lambda "No, no, that can't be right."
+				"The village elders are the ones who told me to PROTECT the artifact! I have to keep it away from everyone at all costs!"
+
+				PLAYER "Well we're going to need it soon. I don't know if you felt that earthquake last night, but the Big Bad is returning and I need it to defeat him."
+
+				Lambda "The Big Bad, returning? Yes, I see. He might still have the power to trigger an earthquake, even after...."
+				"I, um, don't know why the village elders would have changed their minds about this, but...."
+				"Well, you're welcome to the castle artifact. It's over there, just to your left, inside the pillar."
+			};
+			copy!(ch2_artifact_walk)
+			wait 300ms;
+			show dialog {
+				PLAYER "That was easy. I thought there would be a quest or something. Puzzles, at least."
+				Lambda "Well, it doesn't exactly work right now, so...."
+			};
+			player direction = east;
+			show dialog {
+				PLAYER "Wait. What?"
+				Lambda "That little thing can't do much on its own. The real powerful stuff was handled by the castle mainframe. They were linked wirelessly."
+				"But the mainframe was crippled."
+			};
+			// player walks closer
+			show dialog {
+				PLAYER "Crippled? What happened?"
+				Lambda "Well, ahh, I crippled it."
+			};
+			// player walks closer
+			show dialog {
+				PLAYER "What? Why?!"
+				Lambda "I couldn't let the Big Bad have access to it again."
+				"And we weren't using it for much otherwise."
+				PLAYER "But now no one can use it!"
+				Lambda "Small price to pay for keeping that power out of the Big Bad's hands. Although...."
+				"That was easier to say before the earthquake. With the mainframe down we can't fix anything."
+				"It's why you might as well have the portable interface. You could help out around here while I vet your story."
+				PLAYER "Vet my story? You don't believe the village elders sent me?"
+				Lambda "Well, um... this is all very complicated. I need to be sure that this isn't a trap."
+				"If it helps, I don't think you're the Big Bad. He would have caused more mischief in that room, even with Ring Zero disabled."
+			};
+			if (ch2_hax_attempted) {
+				show dialog {
+					PLAYER "Yeah, about that... why won't Ring Zero work in here?"
+				};
+			} else {
+				show dialog {
+					PLAYER "Ring Zero is disabled? Since when?"
+					Lambda "Since you crossed the threshold."
+				};
+			}
+			show dialog {
+				Lambda "The castle walls are lined with aluminum. Acts as a Faraday cage. And Ring Zero's hex editor relies on some wireless services."
+				"Normally, XA bridges the town's network with...."
+				"You know what? There's a lot to explain, and it might be easier to chat with the artifact. Let's set it up."
+			};
+			player_control = on;
+			ch2_has_artifact = true;
+		} else {
+			show dialog {
+				Lambda "Let's get the artifact set up. I can help walk you through it."
+			};
+		}
+		show dialog {
+			Lambda "Er, that is, do you want help?"
+			> "Yes, please!" = ch2_terminal_setup_start
+			> "No, thanks." = ch2_terminal_setup_nevermind
+		};
+	}
+}
+/* ---------- XA SERIAL CONSOLE WALKTHROUGH ---------- */
+
+ch2_terminal_setup_check {
+	if (ch2_wait_for_hat_touch) {
+		show dialog {
+			PLAYER "How do I work Ring Zero again?"
+			Lambda "Hmm? What's that? Did you say something?"
+			PLAYER "I want to see if Ring Zero is working now that the mainframe is back online."
+			Lambda "Oh, yes, I see."
+			"To open the hex editor, touch the hat at the top of the PCB you're holding. Should be just above the screen -- a shiny gold-colored area."
+		};
+	} else {
+		show dialog {
+			Lambda "Need help getting the terminal working?"
+			> "Yes" = ch2_terminal_setup_start
+			> "No" = ch2_terminal_setup_nevermind
+		};
+	}
+}
+
+ch2_terminal_setup_nevermind {
+	if (!ch2_toot_done) {
+		show dialog {
+			Lambda "Ah, okay! Um, if you change your mind, speak to XA again and I'll walk you through everything."
+		};
+		copy!(register_manual)
+		can_interrupt_dialog = true;
+		serial_control = on;
+		show dialog {
+			Lambda "To finish our conversation, type \"MAN\" into the console."
+		};
+		can_interrupt_dialog = false;
+		if (serial_dialog closed) {
+			show serial_dialog spacer;
+			show serial_dialog {
+				"(Type <c>MAN</> to finish your conversation with Lambda.)"
+			};
+		}
+	} else {
+		can_interrupt_dialog = true;
+		show dialog {
+			Lambda "Ah, okay. Carry on!\n\nAlso, remember you can speak to me in the console with the command \"MAN\"."
+		};
+		can_interrupt_dialog = false;
+	}
+	self on_interact = ch2_terminal_setup_check;
+}
+
+ch2_terminal_setup_start {
+	show dialog {
+		Lambda "First, plug the artifact into your computer. (Or, if it's plugged in but not working, try flipping the cable the other direction, or try another USB port.)"
+	};
+	goto ch2_terminal_plugged_check;
+}
+
+ch2_terminal_plugged_check {
+	show dialog {
+		Lambda "Is the artifact plugged in now?"
+		> "Yes" = ch2_terminal_plugged_yes
+		> "No" = ch2_terminal_plugged_no
+		> "I'm on the web" = ch2_terminal_plugged_web
+		> "Never mind" = ch2_terminal_setup_nevermind
+	};
+}
+
+ch2_terminal_plugged_no {
+	show dialog {
+		Lambda "Well, this won't exactly work wirelessly. You're going to have to find a USB-C cable somewhere, so, um...."
+	};
+	goto ch2_terminal_plugged_check;
+}
+
+ch2_terminal_plugged_web {
+	show dialog {
+		Lambda "Oh, then you're all set already! Your console will be to the right (or directly below) the game screen, in your browser window."
+		"Click \"Toggle Console\" if you don't see a console at all."
+		"Note that you may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
+	};
+	goto ch2_terminal_message_test;
+	self on_interact = ch2_terminal_plugged_check;
+}
+
+ch2_terminal_plugged_yes {
+	show dialog {
+		Lambda "Excellent! Well, from here we have two choices."
+	};
+	goto ch2_terminal_plugged_yes2;
+}
+ch2_terminal_plugged_yes2 {
+	show dialog {
+		Lambda "You could connect the old fashioned way, via a terminal program. The exact program will vary by system: PuTTY, picocom, etc. Just set the baud to 115200."
+		"But for a super-easy one-size-fits-all method, visit the following website in a Chrome-based browser:\n\ngooglechromelabs.github.io/serial-terminal"
+		"Click \"Connect\" and choose your device from the list. (Try switching API modes if you're having trouble getting a list to appear.)"
+		"This might not work well on a phone, by the way, and it definitely won't work on iOS."
+		"Um, do you need to hear all that again?"
+		> "Yes, say that all again" = ch2_terminal_plugged_yes2
+		> "No, I'm good" = ch2_terminal_message_test
+	};
+	goto ch2_terminal_message_test;
+}
+/*
+on Windows 10:
+open Device Manager
+Click Ports (COM & LPT)
+If Ports isn't there, turn on "Show Hidden Devices" in the View menu
+A serial device should show up; look for a COM port with an icon that isn't paled out (e.g. COM4)
+	-> If there isn't a non-pale icon, it's not plugged in right or there's something wrong with the port on the badge
+	-> TIP: try flipping the USB-C cable around, or trying another port on your computer
+Open the application called `PuTTY` (Windows doesn't come with this; install it somehow)
+Set `Connection type` to Serial
+`Serial line` should be whatever the device was
+`Speed` should be 115200 baud
+	-> TIP: you can save these settings as a preset [how to do it?]
+Click `OPEN`
+If you see a serial "welcome" type message, it worked
+
+on some kind of Linux
+go to /dev/ and find something called ttyACM0
+use picocom (you might have to install it)
+add yourself to the serial so you're not running picocom as sudo `sudo adduser ~ dialout`
+
+Linux Mint(Ubuntu based):
+sudo apt install picocom
+ls /dev/serial/by-id/
+^ read the list of devices that come out of here
+picocom /dev/serial/by-id/(ONE OF THE DEVICES FROM THE LIST ABOVE)
+*/
+
+ch2_terminal_message_test {
+	show dialog {
+		Lambda "Let's test the serial connection."
+	};
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<m>LAMBDA</>: Testing, testing...."
+	};
+	show dialog {
+		Lambda "Did you see my serial message?"
+		> "Yes" = ch2_terminal_message_test_success
+		> "No" = ch2_terminal_message_test_fail
+	};
+}
+
+ch2_terminal_message_test_fail {
+	show dialog {
+		Lambda "Hmm. Well, um, let's go over the steps again."
+	};
+	goto ch2_terminal_setup_start;
+}
+
+ch2_terminal_message_test_success {
+	if (!ch2_toot_done) {
+		copy!(register_manual)
+		can_interrupt_dialog = true;
+		serial_control = on;
+		show dialog {
+			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
+		};
+		can_interrupt_dialog = false;
+		if (serial_dialog closed) {
+			show serial_dialog spacer;
+			show serial_dialog {
+				"(Type <c>MAN</> to continue your conversation with Lambda.)"
+			};
+		}
+	} else {
+		show dialog {
+			Lambda "Excellent! You're all set!"
+		};
+	}
+	self on_interact = ch2_terminal_setup_check;
+}

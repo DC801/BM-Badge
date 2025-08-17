@@ -1,0 +1,663 @@
+// CAUTION -- This file is (was) auto-generated
+
+serial_dialog "newline" {"\n"}
+serial_dialog "space" {" "}
+serial_dialog "dot" {"."}
+serial_dialog "player" {"<c>@</>"}
+serial_dialog "item" {"<g>?</>"}
+"draw_ch2_serial_map" {
+	serial_control = off;
+
+	// ROW 0
+	concat serial_dialog {"-------------------------------"};
+	concat serial_dialog "newline";
+
+	// ROW 1
+	concat serial_dialog {"|  "};
+	if (ch2_seen_room_99) {
+		concat serial_dialog {"/----\\"};
+	} else {
+		concat serial_dialog {"      "};
+	}
+	concat serial_dialog {"      "};
+	if (ch2_seen_room_14) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	concat serial_dialog {"      CASTLE  |"};
+	concat serial_dialog "newline";
+
+	// ROW 2
+	concat serial_dialog {"|  "};
+	if (ch2_seen_room_99) {
+		concat serial_dialog {"|."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_in_room == 99) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_99) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if ("ch2_map_mainframeos") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_99) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_99) {
+		concat serial_dialog {".|"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	concat serial_dialog {"     "};
+	if (ch2_seen_room_14) {
+		concat serial_dialog {"/.\\"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	concat serial_dialog {"        MAP  |"};
+	concat serial_dialog "newline";
+
+	// ROW 3
+	concat serial_dialog {"|  "};
+	if (ch2_seen_room_99) {
+		concat serial_dialog {"------"};
+	} else {
+		concat serial_dialog {"      "};
+	}
+	concat serial_dialog {"   "};
+	if (ch2_seen_room_14) {
+		concat serial_dialog {"/.."};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	if (ch2_in_room == 14) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_14) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if ("ch2_map_clock") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_14) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_14) {
+		concat serial_dialog {".\\"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	concat serial_dialog {"           |"};
+	concat serial_dialog "newline";
+
+	// ROW 4
+	concat serial_dialog {"|           "};
+	if (ch2_seen_room_14) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_14 || ch2_seen_room_13) {
+		concat serial_dialog {"--+--"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	if (ch2_seen_room_14) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	concat serial_dialog {"           |"};
+	concat serial_dialog "newline";
+
+	// ROW 5
+	concat serial_dialog {"|            "};
+	if (ch2_seen_room_13) {
+		concat serial_dialog {"|...|"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	concat serial_dialog {"   "};
+	if (ch2_seen_room_33) {
+		concat serial_dialog {"---"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	if (ch2_seen_room_33 || ch2_seen_room_34) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_34) {
+		concat serial_dialog {"---"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	concat serial_dialog {"  |"};
+	concat serial_dialog "newline";
+
+	// ROW 6
+	concat serial_dialog {"|   "};
+	if (ch2_seen_room_23) {
+		concat serial_dialog {"-----"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	concat serial_dialog {"    "};
+	if (ch2_seen_room_13) {
+		concat serial_dialog {"|."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_in_room == 13) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_13) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_13) {
+		concat serial_dialog {".|"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	concat serial_dialog {"   "};
+	if (ch2_seen_room_33) {
+		concat serial_dialog {"|"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if ("ch2_map_mouse") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_33) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_in_room == 33) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_33) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_33 || ch2_seen_room_34) {
+		concat serial_dialog {"|"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_in_room == 34) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_34) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if ("ch2_map_plate") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_34) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_34) {
+		concat serial_dialog {"|"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	concat serial_dialog {"  |"};
+	concat serial_dialog "newline";
+
+	// ROW 7
+	concat serial_dialog {"|  "};
+	if (ch2_seen_room_23) {
+		concat serial_dialog {"/.."};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	if (ch2_in_room == 23) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_23) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_23) {
+		concat serial_dialog {"..\\"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	concat serial_dialog {"   "};
+	if (ch2_seen_room_13) {
+		concat serial_dialog {"|."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if ("ch2_map_goldfish") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_13) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_13) {
+		concat serial_dialog {".|"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	concat serial_dialog {"   "};
+	if (ch2_seen_room_33) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_33 || ch2_seen_room_32) {
+		concat serial_dialog {"-+"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_seen_room_33 || "ch2_seen_room_32" || ch2_seen_room_34) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_32 || ch2_seen_room_34) {
+		concat serial_dialog {"+-"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_seen_room_34) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	concat serial_dialog {"  |"};
+	concat serial_dialog "newline";
+
+	// ROW 8
+	concat serial_dialog {"|  "};
+	if (ch2_seen_room_23) {
+		concat serial_dialog {"\\.."};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	if ("ch2_map_heatsink") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_23) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_23) {
+		concat serial_dialog {"../"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	concat serial_dialog {"   "};
+	if (ch2_seen_room_13) {
+		concat serial_dialog {"|...|"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	concat serial_dialog {"    "};
+	if (ch2_seen_room_32) {
+		concat serial_dialog {"|."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_in_room == 32) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_32) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_32) {
+		concat serial_dialog {".|"};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	concat serial_dialog {"   |"};
+	concat serial_dialog "newline";
+
+	// ROW 9
+	concat serial_dialog {"|   "};
+	if (ch2_seen_room_22 || ch2_seen_room_23) {
+		concat serial_dialog {"--+--"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	concat serial_dialog {"    "};
+	if (ch2_seen_room_12 || ch2_seen_room_13) {
+		concat serial_dialog {"--+-"};
+	} else {
+		concat serial_dialog {"    "};
+	}
+	if (ch2_seen_room_12 || "ch2_seen_room_13" || ch2_seen_room_31) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_31) {
+		concat serial_dialog {"----"};
+	} else {
+		concat serial_dialog {"    "};
+	}
+	if (ch2_seen_room_31 || ch2_seen_room_32) {
+		concat serial_dialog {"--+--"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	concat serial_dialog {"   |"};
+	if ("ch2_map_manual") {
+		if ("ch2_map_seamoss") {
+			concat serial_dialog {"   <g>?</> Look for <m>Frankie's</>"};
+		}
+	}
+	concat serial_dialog "newline";
+
+	// ROW 10
+	concat serial_dialog {"|   "};
+	if (ch2_seen_room_22) {
+		concat serial_dialog {"|."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_in_room == 22) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_22) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if ("ch2_map_powersupply") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_22) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_22) {
+		concat serial_dialog {"|"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	concat serial_dialog {"    "};
+	if (ch2_seen_room_12) {
+		concat serial_dialog {"|."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_in_room == 12) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_12) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if ("ch2_map_needle") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_12) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_12 || ch2_seen_room_31) {
+		concat serial_dialog {"+"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_31) {
+		concat serial_dialog {"..."};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	if (ch2_in_room == 31) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_31) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_31) {
+		concat serial_dialog {"."};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if ("ch2_map_keyboard") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_31) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_31) {
+		concat serial_dialog {"..|"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	concat serial_dialog {"   |"};
+	if ("ch2_map_manual") {
+		if ("ch2_map_seamoss") {
+			concat serial_dialog {"   <m>calculator manual</>"};
+		}
+	}
+	concat serial_dialog "newline";
+
+	// ROW 11
+	concat serial_dialog {"|   "};
+	if (ch2_seen_room_22 || ch2_seen_room_21) {
+		concat serial_dialog {"--+--"};
+	} else {
+		concat serial_dialog {"     "};
+	}
+	if (ch2_seen_room_21) {
+		concat serial_dialog {"----"};
+	} else {
+		concat serial_dialog {"    "};
+	}
+	if (ch2_seen_room_11 || "ch2_seen_room_12" || ch2_seen_room_21) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_11 || ch2_seen_room_12) {
+		concat serial_dialog {"-+-"};
+	} else {
+		concat serial_dialog {"   "};
+	}
+	if (ch2_seen_room_11 || "ch2_seen_room_12" || ch2_seen_room_31) {
+		concat serial_dialog {"-"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_31) {
+		concat serial_dialog {"---------"};
+	} else {
+		concat serial_dialog {"         "};
+	}
+	concat serial_dialog {"   |"};
+	if ("ch2_map_manual") {
+		if ("ch2_map_seamoss") {
+			concat serial_dialog {"   in the library in town."};
+		}
+	}
+	concat serial_dialog "newline";
+
+	// ROW 12
+	concat serial_dialog {"|   "};
+	if (ch2_seen_room_21) {
+		concat serial_dialog {"|..."};
+	} else {
+		concat serial_dialog {"    "};
+	}
+	if (ch2_in_room == 21) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_21) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_21) {
+		concat serial_dialog {"."};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if ("ch2_map_abacus" || "ch2_map_ramchips" || "ch2_map_solder") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_21) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_21) {
+		concat serial_dialog {".."};
+	} else {
+		concat serial_dialog {"  "};
+	}
+	if (ch2_seen_room_21 || ch2_seen_room_11) {
+		concat serial_dialog {"+"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_seen_room_11) {
+		concat serial_dialog {"."};
+	} else {
+		concat serial_dialog {" "};
+	}
+	if (ch2_in_room == 11) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_11) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if ("ch2_map_monitor") {
+		concat serial_dialog "item";
+	} else {
+		if (ch2_seen_room_11) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	if (ch2_seen_room_11) {
+		concat serial_dialog {"|"};
+	} else {
+		concat serial_dialog {" "};
+	}
+	concat serial_dialog {"            |"};
+	concat serial_dialog "newline";
+
+	// ROW 13
+	concat serial_dialog {"|   "};
+	if (ch2_seen_room_21) {
+		concat serial_dialog {"-------"};
+	} else {
+		concat serial_dialog {"       "};
+	}
+	concat serial_dialog {"----+----          |"};
+	if ("ch2_map_cactuscooler_castle") {
+		concat serial_dialog {"   <g>?</> Look for <m>Cactus Cooler</>"};
+	} else if ("ch2_map_cactuscooler_bobaustin") {
+		concat serial_dialog {"   <g>?</> Ask <m>Stone Cold Bob Austin</>"};
+	} else if ("ch2_map_seamoss") {
+		concat serial_dialog {"   <g>?</> Look for <m>Sea Moss</>"};
+	} else if ("ch2_map_manual") {
+		concat serial_dialog {"   <g>?</> Look for <m>Frankie's</>"};
+	}
+	concat serial_dialog "newline";
+
+	// ROW 14
+	concat serial_dialog {"|          |..."};
+	if (ch2_in_room == 1) {
+		concat serial_dialog "player";
+	} else {
+		if (ch2_seen_room_1) {
+			concat serial_dialog "dot";
+		} else {
+			concat serial_dialog "space";
+		}
+	}
+	concat serial_dialog {"...|          |"};
+	if ("ch2_map_cactuscooler_castle") {
+		concat serial_dialog {"   somewhere they keep"};
+	} else if ("ch2_map_cactuscooler_bobaustin") {
+		concat serial_dialog {"   about Cactus Cooler; he brings"};
+	} else if ("ch2_map_seamoss") {
+		concat serial_dialog {"   somewhere in the east wing"};
+	} else if ("ch2_map_manual") {
+		concat serial_dialog {"   <m>calculator manual</>"};
+	}
+	concat serial_dialog "newline";
+
+	// ROW 15
+	concat serial_dialog {"|          ----+----          |"};
+	if ("ch2_map_cactuscooler_castle") {
+		concat serial_dialog {"   refreshments or drinks."};
+	} else if ("ch2_map_cactuscooler_bobaustin") {
+		concat serial_dialog {"   loads to all his parties."};
+	} else if ("ch2_map_seamoss") {
+		concat serial_dialog {"   of the castle."};
+	} else if ("ch2_map_manual") {
+		concat serial_dialog {"   in the library in town."};
+	}
+	concat serial_dialog "newline";
+
+	// ROW 16
+	concat serial_dialog {"-------------------------------"};
+	concat serial_dialog "newline";
+	goto "draw_ch2_serial_map_footer";
+}

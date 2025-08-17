@@ -1,0 +1,447 @@
+include "header.mgs";
+/* ---------- DEBUG: Storyflag rounds ---------- */
+
+// debug: "win" that storyflag round
+
+"debug_get_items_for_round1" {
+	copy!(ch2_pickup_monitor)
+	copy!(ch2_pickup_heatsink)
+	copy!(ch2_pickup_powersupply)
+}
+"debug_get_items_for_round2" {
+	copy!(ch2_pickup_keyboard)
+	copy!(ch2_pickup_mouse)
+	copy!(ch2_pickup_needle)
+	copy!(ch2_pickup_plate)
+	copy!("ch2_solder_harddrive")
+}
+"debug_get_items_for_round3" {
+	copy!(ch2_pickup_ramchips)
+	copy!(ch2_pickup_clock)
+	copy!(ch2_pickup_goldfish)
+	copy!(ch2_pickup_abacus)
+	copy!("ch2_solder_cpu")
+}
+"debug_set_flags_to_round0" {
+	serial_control = on;
+	"ch2_has_artifact" = true;
+	hex_control = on;
+	"current_chapter" = 2;
+	ch2_cutseen_birthday = true;
+	// debug!("<y>debug_set_flags_to_round0")
+}
+"debug_jump_to_round1" {
+	copy!("debug_set_flags_to_round1")
+	copy!(ch2_load_castle_1_special)
+}
+"debug_jump_to_round2" {
+	copy!("debug_set_flags_to_round2")
+	copy!(ch2_load_castle_1_special)
+}
+"debug_jump_to_round3" {
+	copy!("debug_set_flags_to_round3")
+	copy!(ch2_load_castle_1_special)
+}
+"debug_jump_to_round4" {
+	copy!("debug_set_flags_to_round4")
+	copy!(ch2_load_castle_1_special)
+}
+
+"debug_set_flags_to_round1" {
+	copy!("debug_set_flags_to_round0")
+	copy!("debug_finish_toot")
+	copy!("debug_map_flags_for_round1")
+}
+"debug_set_flags_to_round2" {
+	copy!("debug_set_flags_to_round1")
+	copy!("debug_get_items_for_round1")
+	copy!("ch2_install_heatsink")
+	copy!("ch2_install_powersupply")
+	copy!("ch2_install_monitor")
+	ch2_cutseen_bert_secret = true;
+	"ch2_lambda_bert_backstory" = true;
+	"ch2_parts_round_2_backstory" = true;
+	copy!("debug_map_flags_for_round2")
+}
+"debug_set_flags_to_round3" {
+	copy!("debug_set_flags_to_round2")
+	copy!("debug_get_items_for_round2")
+	copy!("ch2_install_harddrive")
+	copy!("ch2_install_keyboard")
+	copy!("ch2_install_mouse")
+	ch2_cutseen_bert_message = true;
+	"ch2_parts_round_3_backstory" = true;
+	copy!("debug_map_flags_for_round3")
+}
+"debug_set_flags_to_round4" {
+	copy!("debug_set_flags_to_round3")
+	copy!("debug_get_items_for_round3")
+	copy!("ch2_install_ramchips")
+	copy!("ch2_install_clock")
+	copy!("ch2_install_cpu")
+	ch2_cutseen_last_parts_done = true;
+	"ch2_warp_granted" = true;
+	"ch2_parts_round_4_backstory" = true;
+	copy!("debug_map_flags_for_round4")
+}
+
+/* ---------- PUT QUEST MARKERS ON MAP ---------- */
+
+"ch2_put_on_map_round1" {
+	"ch2_map_monitor" = true;
+	"ch2_map_heatsink" = true;
+	"ch2_map_powersupply" = true;
+}
+"ch2_put_on_map_round2" {
+	"ch2_map_keyboard" = true;
+	"ch2_map_mouse" = true;
+	"ch2_map_plate" = true;
+	"ch2_map_needle" = true;
+}
+"ch2_put_on_map_round3" {
+	"ch2_map_clock" = true;
+	"ch2_map_goldfish" = true;
+	"ch2_map_abacus" = true;
+	"ch2_map_ramchips" = true;
+}
+"ch2_put_on_map_round4" {
+	"ch2_map_mainframeos" = true;
+}
+"ch2_take_off_map_round1" {
+	"ch2_map_monitor" = false;
+	"ch2_map_heatsink" = false;
+	"ch2_map_powersupply" = false;
+}
+"ch2_take_off_map_round2" {
+	"ch2_map_keyboard" = false;
+	"ch2_map_mouse" = false;
+	"ch2_map_plate" = false;
+	"ch2_map_needle" = false;
+}
+"ch2_take_off_map_round3" {
+	"ch2_map_clock" = false;
+	"ch2_map_goldfish" = false;
+	"ch2_map_abacus" = false;
+	"ch2_map_ramchips" = false;
+}
+"ch2_take_off_map_round4" {
+	"ch2_map_mainframeos" = false;
+}
+
+/* ---------- ACQUIRE ITEM ---------- */
+
+// Also, remove quest marker from map
+
+//ROUND 1
+
+"ch2_pickup_monitor" {
+	"ch2_map_monitor" = false;
+	ch2_carrying_monitor = true;
+	command "look" + "monitor" = "look_monitor";
+}
+"ch2_pickup_powersupply" {
+	"ch2_map_powersupply" = false;
+	ch2_carrying_powersupply = true;
+	command "look" + "power supply" = "look_powersupply";
+}
+"ch2_handoff_heatsink_to_cactuscooler" {
+	"ch2_map_heatsink" = false;
+	"ch2_map_cactuscooler_castle" = true;
+}
+"ch2_handoff_cactuscooler_to_bobaustin" {
+	"ch2_map_cactuscooler_castle" = false;
+	"ch2_map_cactuscooler_bobaustin" = true;
+}
+"ch2_pickup_cactuscooler" {
+	"ch2_map_cactuscooler_castle" = false; // just in case you went straight there
+	"ch2_map_cactuscooler_bobaustin" = false;
+	"ch2_map_heatsink" = true;
+	ch2_carrying_cactuscooler = true;
+	command "look" + "cactus cooler" = "look_cactuscooler";
+}
+"ch2_pickup_heatsink" {
+	"ch2_cactuscooler_delivered" = true;
+	"ch2_map_cactuscooler_castle" = false; // just in case you went straight there
+	"ch2_map_heatsink" = false;
+	ch2_carrying_heatsink = true;
+	command "look" + "heat sink" = "look_heatsink";
+}
+"ch2_unpickup_cactuscooler" { // DEBUG
+	// inverse of the above, lol, sorry for incorrect state
+	"ch2_map_cactuscooler_bobaustin" = true;
+	"ch2_map_heatsink" = false;
+	ch2_carrying_cactuscooler = false;
+	delete command "look"  + "cactus cooler";
+}
+
+// ROUND 2
+
+"ch2_pickup_keyboard" {
+	"ch2_map_keyboard" = false;
+	ch2_carrying_keyboard = true;
+	command "look" + "keyboard" = "look_keyboard";
+}
+"ch2_pickup_mouse" {
+	"ch2_map_mouse" = false;
+	ch2_carrying_mouse = true;
+	command "look" + "mouse" = "look_mouse";
+}
+"ch2_pickup_plate" {
+	"ch2_map_plate" = false;
+	ch2_carrying_plate = true;
+	if ("ch2_carrying_needle") {
+		"ch2_map_solder" = true;
+	}
+	command "look" + "plate" = "look_plate";
+}
+"ch2_pickup_needle" {
+	"ch2_map_needle" = false;
+	ch2_carrying_needle = true;
+	if ("ch2_carrying_plate") {
+		"ch2_map_solder" = true;
+	}
+	command "look" + "needle" = "look_needle";
+}
+"ch2_solder_harddrive" {
+	copy!("ch2_install_plate")
+	copy!("ch2_install_needle")
+	"ch2_map_solder" = false;
+	ch2_carrying_harddrive = true;
+	command "look" + "hard drive" = "look_harddrive";
+}
+
+// ROUND 3
+
+"ch2_pickup_clock" {
+	"ch2_map_clock" = false;
+	ch2_carrying_clock = true;
+	command "look" + "clock" = "look_clock";
+}
+"ch2_pickup_goldfish" {
+	"ch2_map_goldfish" = false;
+	ch2_carrying_goldfish = true;
+	if ("ch2_carrying_abacus") {
+		"ch2_map_solder" = true;
+	}
+	command "look" + "goldfish" = "look_goldfish";
+}
+"ch2_pickup_manual" {
+	"ch2_map_manual" = false;
+	"ch2_map_abacus" = true;
+	ch2_carrying_manual = true;
+	command "look" + "abacus" = "look_abacus";
+}
+"ch2_handoff_abacus_to_manual" {
+	"ch2_map_abacus" = false;
+	"ch2_map_manual" = true;
+}
+"ch2_pickup_abacus" {
+	"ch2_map_abacus" = false;
+	ch2_carrying_abacus = true;
+	if ("ch2_carrying_goldfish") {
+		"ch2_map_solder" = true;
+	}
+	command "look" + "abacus" = "look_abacus";
+}
+"ch2_solder_cpu" {
+	copy!("ch2_install_goldfish")
+	copy!("ch2_install_abacus")
+	"ch2_map_solder" = false;
+	ch2_carrying_cpu = true;
+	command "look" + "cpu" = "look_cpu";
+}
+"ch2_handoff_ramchips_to_seamoss" {
+	"ch2_map_ramchips" = false;
+	"ch2_map_seamoss" = true;
+}
+"ch2_pickup_ramchips" {
+	"ch2_map_ramchips" = false;
+	"ch2_map_seamoss" = false;
+	ch2_carrying_ramchips = true;
+	command "look" + "ram chips" = "look_ramchips";
+	command "look" + "ram" = "look_ramchips";
+}
+
+// ROUND 4
+
+"ch2_pickup_mainframeos" {
+	"ch2_map_mainframeos" = false;
+	ch2_carrying_mainframeos = true;
+	command "look" + "mainframeos" = "look_mainframeos";
+}
+
+/* ---------- ITEM "INSTALL" ---------- */
+
+"ch2_install_monitor" {
+	ch2_carrying_monitor = false;
+	ch2_installed_monitor = true;
+	delete command "look"  + monitor;
+}
+"ch2_turn_in_cactuscooler" {
+	ch2_carrying_cactuscooler = false;
+	delete command "look"  + "cactus cooler";
+	// picking up heatsink is currently a separate step
+}
+"ch2_install_heatsink" {
+	ch2_carrying_heatsink = false;
+	ch2_installed_heatsink = true;
+	delete command "look"  + "heat sink";
+}
+"ch2_install_powersupply" {
+	ch2_carrying_powersupply = false;
+	ch2_installed_powersupply = true;
+	delete command "look"  + "power supply";
+}
+"ch2_install_keyboard" {
+	ch2_carrying_keyboard = false;
+	ch2_installed_keyboard = true;
+	delete command "look"  + keyboard;
+}
+"ch2_install_mouse" {
+	ch2_carrying_mouse = false;
+	ch2_installed_mouse = true;
+	delete command "look"  + mouse;
+}
+"ch2_install_harddrive" {
+	ch2_carrying_harddrive = false;
+	ch2_installed_harddrive = true;
+	delete command "look"  + "hard drive";
+}
+"ch2_install_plate" {
+	ch2_carrying_plate = false;
+	ch2_installed_plate = true;
+	delete command "look"  + plate;
+}
+"ch2_install_needle" {
+	ch2_carrying_needle = false;
+	ch2_installed_needle = true;
+	delete command "look"  + needle;
+}
+"ch2_install_ramchips" {
+	ch2_carrying_ramchips = false;
+	ch2_installed_ramchips = true;
+	delete command "look"  + "ram chips";
+	delete command "look"  + ram;
+}
+"ch2_install_clock" {
+	ch2_carrying_clock = false;
+	ch2_installed_clock = true;
+	delete command "look"  + clock;
+}
+"ch2_install_cpu" {
+	ch2_carrying_cpu = false;
+	ch2_installed_cpu = true;
+	delete command "look"  + cpu;
+}
+"ch2_install_goldfish" {
+	ch2_carrying_goldfish = false;
+	ch2_installed_goldfish = true;
+	delete command "look"  + goldfish;
+}
+"ch2_install_abacus" {
+	ch2_carrying_abacus = false;
+	ch2_installed_abacus = true;
+	delete command "look"  + abacus;
+}
+"ch2_install_mainframeos" {
+	ch2_carrying_mainframeos = false;
+	ch2_installed_mainframeos = true;
+	delete command "look"  + mainframeos;
+}
+
+//--------------------------- SOLDER ZONE ---------------------------\\
+
+"interact_ch2_solderzone_harddrive" {
+	show dialog {
+		PLAYER "Got the plate and the needle. All right, let's solder!"
+		name "" "(You created a hard drive!)"
+	};
+	copy!("ch2_solder_harddrive")
+}
+"interact_ch2_solderzone_cpu" {
+	show dialog {
+		PLAYER "Got the goldfish and the abacus. All right, let's solder!"
+		name "" "(You created a cpu!)"
+	};
+	copy!("ch2_solder_cpu")
+}
+"interact_ch2_solderzone" {
+	if (!"ch2_parts_round_2_backstory") {
+		show dialog {
+			PLAYER "It's a metal pen resting inside a metal coil. But why is the pen plugged in? What does it do?"
+		};
+		return;
+	}
+	if (!"ch2_solder_sight") {
+		show dialog {
+			PLAYER "So this is a solder station."
+		};
+		"ch2_solder_sight" = true;
+	}
+	// plate + needle = harddrive
+	if ("ch2_storyflag_round" == 2) {
+		if (
+			!"ch2_installed_plate"
+			|| !"ch2_installed_needle"
+		) {
+			if ("ch2_carrying_plate") {
+				if (!ch2_carrying_needle) {
+					show dialog {
+						PLAYER "I have the plate. Now I just need the needle, and then I can solder them together here."
+					};
+				} else {
+					copy!("interact_ch2_solderzone_harddrive")
+				}
+			} else if ("ch2_carrying_needle") {
+				if (!ch2_carrying_plate) {
+					show dialog {
+						PLAYER "I have the needle. Now I just need the plate, and then I can solder them together here."
+					};
+				} else {
+					copy!("interact_ch2_solderzone_harddrive")
+				}
+			} else {
+				show dialog {
+					PLAYER "When I have the plate and the needle, I can solder them together here."
+				};
+			}
+		} else {
+			show dialog { PLAYER "All done soldering for now." };
+		}
+	}
+	// goldfish + abacus = cpu
+	else if ("ch2_storyflag_round" == 3) {
+		if (
+			!"ch2_installed_goldfish"
+			|| !"ch2_installed_abacus"
+		) {
+			if ("ch2_carrying_goldfish") {
+				if (!ch2_carrying_abacus) {
+					show dialog {
+						PLAYER "I have the goldfish. Now I just need the abacus, and then I can solder them together here."
+					};
+				} else {
+					copy!("interact_ch2_solderzone_cpu")
+				}
+			} else if ("ch2_carrying_abacus") {
+				if (!ch2_carrying_goldfish) {
+					show dialog {
+						PLAYER "I have the abacus. Now I just need the goldfish, and then I can solder them together here."
+					};
+				} else {
+					copy!("interact_ch2_solderzone_cpu")
+				}
+			} else {
+				show dialog {
+					PLAYER "When I have the goldfish and the abacus, I can solder them together here."
+				};
+			}
+		} else {
+			show dialog { PLAYER "All done soldering for now." };
+		}
+	} else {
+		show dialog {
+			PLAYER "Guess I'm all done soldering."
+		};
+	}
+}

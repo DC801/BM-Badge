@@ -1,0 +1,11 @@
+add dialog settings {
+	default { alignment BL }
+	label PLAYER { entity "%PLAYER%" alignment BR }
+	label SELF { entity "%SELF%" }
+
+	label GBob { entity "Guardian Bob" }
+	label ZIPPY { entity "Aunt Zippy" }
+	label ZAPPY { entity "Uncle Zappy" }
+}
+/* todo: make this wrap to 64 instead, and adjust wrapped word colors */
+add serial_dialog settings { wrap 60 }

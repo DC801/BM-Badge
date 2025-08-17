@@ -1,0 +1,186 @@
+camera geometry/origin !forever = PAN_CAMERA_TO_GEOMETRY
+camera geometry/length !forever = PAN_CAMERA_ALONG_GEOMETRY
+camera geometry/length forever = LOOP_CAMERA_ALONG_GEOMETRY
+camera entity !forever = PAN_CAMERA_TO_ENTITY
+entity geometry/origin !forever = WALK_ENTITY_TO_GEOMETRY
+entity geometry/length !forever = WALK_ENTITY_ALONG_GEOMETRY
+entity geometry/length forever = LOOP_ENTITY_ALONG_GEOMETRY
+
+invalid
+camera geometry/origin forever = error
+entity geometry/origin forever = error
+camera entity forever = error
+entity entity ±forever = error
+
+
+
+
+( 1 + 2 ) + ( 3 * 4 )
+
+TEMP0 := 1
+TEMP0 += 2
+TEMP1 := 3
+TEMP1 *= 4
+TEMP0 += TEMP1
+
+
+
+(LHS) + (RHS)
+temporary0 = (LHS + LHS')
+temporary1 = (RHS + RHS')
+temporary0 += temporary1
+
+
+(LHS) + (RHS)
+(LHS) + n
+n + (LHS)
+n + n
+
+
+(cond1 || cond2) || (cond3 && !cond4)
+
+if (cond1) goto truebranch;
+if (cond2) goto truebranch;
+if (cond3) {
+	if (!cond4) {
+		goto truebranch;
+	} else {
+		goto falsebranch;
+	}
+} else {
+	goto falsebranch;
+}
+goto truebranch;
+falsebranch:
+
+FALSE STUFF;
+goto rendezvousbranch
+
+truebranch:
+TRUE STUFF;
+
+rendezvousbranch:
+
+
+/* MAKING IF-ELSES
+
+if (A || AA) { <a> }
+else if (B) { <b> }
+else if (C) { <c> }
+else { <d> }
+
+-->
+
+if A goto label Atrue
+if AA goto label Atrue
+Aelse:
+if B goto label Btrue
+Belse:
+if C goto label Ctrue
+Celse:
+
+<d>
+goto rendezvouslabel
+
+Ctrue:
+<c>
+goto rendezvouslabel
+
+Btrue:
+<b>
+goto rendezvouslabel
+
+Atrue:
+<a>
+goto rendezvouslabel
+
+rendezvouslabel:
+
+*/
+
+/*
+WHAT ABOUT ANDS THOUGH
+use ints?
+
+if (A && B && C) {
+	<abc>
+} else {
+	<def>
+}
+
+
+or is it not the same thing as 
+
+if (!A || !B || !C) {
+	goto andrendezvous
+} else {
+	goto if true
+}
+andrendezvous
+
+// This can't interact with OR though
+or can it?
+
+
+
+
+
+if (A && AA || AaAaA) { <a> }
+else if (B) { <b> }
+else { <c> }
+
+
+if A goto label AinnerTrue
+goto AinnerFalse
+AinnerTrue:
+if AA goto label Atrue
+AinnerFalse:
+if AaAaA goto labelAtrue
+if B goto label Btrue
+
+<c>
+goto rendezvouslabel
+
+Btrue:
+<b>
+goto rendezvouslabel
+
+Atrue:
+<a>
+goto rendezvouslabel
+
+rendezvouslabel:
+
+
+
+*/
+
+
+
+
+
+
+simple {
+	if (player direction == north && debug_mode && player intersects geometry stick) {
+		wait 1;
+	} else {
+		wait 2;
+	}
+}
+
+
+if player north, goto iftrue4
+goto rendezvous4
+iftrue4:
+if debug_mode, goto iftrue3
+rendezvous4:
+goto rendezvous3
+iftrue3:
+if player intersects, goto iftrue2
+rendezvous3:
+wait 2;
+goto rendezvous1
+iftrue2:
+wait 1;
+goto rendezvous1
+rendezvous1:

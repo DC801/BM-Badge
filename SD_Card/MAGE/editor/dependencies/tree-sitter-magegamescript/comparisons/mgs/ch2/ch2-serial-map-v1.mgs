@@ -1,0 +1,661 @@
+serial dialog newline {"\n"}
+serial dialog space {" "}
+serial dialog dot {"."}
+serial dialog player {"<c>@</>"}
+serial dialog item {"<g>?</>"}
+draw_ch2_serial_map {
+	turn serial control off;
+
+	// ROW 0
+	concat serial dialog {"-------------------------------"}
+	concat serial dialog newline;
+
+	// ROW 1
+	concat serial dialog {"|  "}
+	if (flag ch2_seen_room_99 is true) {
+		concat serial dialog {"/----\\"}
+	} else {
+		concat serial dialog {"      "}
+	}
+	concat serial dialog {"      "}
+	if (flag ch2_seen_room_14 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"      CASTLE  |"}
+	concat serial dialog newline;
+
+	// ROW 2
+	concat serial dialog {"|  "}
+	if (flag ch2_seen_room_99 is true) {
+		concat serial dialog {"|."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2_in_room is 99) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_99 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_map_mainframeos is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_99 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_99 is true) {
+		concat serial dialog {".|"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	concat serial dialog {"     "}
+	if (flag ch2_seen_room_14 is true) {
+		concat serial dialog {"/.\\"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	concat serial dialog {"        MAP  |"}
+	concat serial dialog newline;
+
+	// ROW 3
+	concat serial dialog {"|  "}
+	if (flag ch2_seen_room_99 is true) {
+		concat serial dialog {"------"}
+	} else {
+		concat serial dialog {"      "}
+	}
+	concat serial dialog {"   "}
+	if (flag ch2_seen_room_14 is true) {
+		concat serial dialog {"/.."}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (variable ch2_in_room is 14) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_14 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_map_clock is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_14 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_14 is true) {
+		concat serial dialog {".\\"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	concat serial dialog {"           |"}
+	concat serial dialog newline;
+
+	// ROW 4
+	concat serial dialog {"|           "}
+	if (flag ch2_seen_room_14 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_14 is true || flag ch2_seen_room_13 is true) {
+		concat serial dialog {"--+--"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	if (flag ch2_seen_room_14 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"           |"}
+	concat serial dialog newline;
+
+	// ROW 5
+	concat serial dialog {"|            "}
+	if (flag ch2_seen_room_13 is true) {
+		concat serial dialog {"|...|"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	concat serial dialog {"   "}
+	if (flag ch2_seen_room_33 is true) {
+		concat serial dialog {"---"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (flag ch2_seen_room_33 is true || flag ch2_seen_room_34 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_34 is true) {
+		concat serial dialog {"---"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	concat serial dialog {"  |"}
+	concat serial dialog newline;
+
+	// ROW 6
+	concat serial dialog {"|   "}
+	if (flag ch2_seen_room_23 is true) {
+		concat serial dialog {"-----"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	concat serial dialog {"    "}
+	if (flag ch2_seen_room_13 is true) {
+		concat serial dialog {"|."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2_in_room is 13) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_13 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_13 is true) {
+		concat serial dialog {".|"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	concat serial dialog {"   "}
+	if (flag ch2_seen_room_33 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_map_mouse is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_33 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (variable ch2_in_room is 33) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_33 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_33 is true || flag ch2_seen_room_34 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (variable ch2_in_room is 34) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_34 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_map_plate is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_34 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_34 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"  |"}
+	concat serial dialog newline;
+
+	// ROW 7
+	concat serial dialog {"|  "}
+	if (flag ch2_seen_room_23 is true) {
+		concat serial dialog {"/.."}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (variable ch2_in_room is 23) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_23 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_23 is true) {
+		concat serial dialog {"..\\"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	concat serial dialog {"   "}
+	if (flag ch2_seen_room_13 is true) {
+		concat serial dialog {"|."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (flag ch2_map_goldfish is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_13 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_13 is true) {
+		concat serial dialog {".|"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	concat serial dialog {"   "}
+	if (flag ch2_seen_room_33 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_33 is true || flag ch2_seen_room_32 is true) {
+		concat serial dialog {"-+"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (flag ch2_seen_room_33 is true || flag ch2_seen_room_32 is true || flag ch2_seen_room_34 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_32 is true || flag ch2_seen_room_34 is true) {
+		concat serial dialog {"+-"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (flag ch2_seen_room_34 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"  |"}
+	concat serial dialog newline;
+
+	// ROW 8
+	concat serial dialog {"|  "}
+	if (flag ch2_seen_room_23 is true) {
+		concat serial dialog {"\\.."}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (flag ch2_map_heatsink is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_23 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_23 is true) {
+		concat serial dialog {"../"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	concat serial dialog {"   "}
+	if (flag ch2_seen_room_13 is true) {
+		concat serial dialog {"|...|"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	concat serial dialog {"    "}
+	if (flag ch2_seen_room_32 is true) {
+		concat serial dialog {"|."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2_in_room is 32) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_32 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_32 is true) {
+		concat serial dialog {".|"}
+	} else {
+		concat serial dialog {"  "}
+	}
+	concat serial dialog {"   |"}
+	concat serial dialog newline;
+
+	// ROW 9
+	concat serial dialog {"|   "}
+	if (flag ch2_seen_room_22 is true || flag ch2_seen_room_23 is true) {
+		concat serial dialog {"--+--"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	concat serial dialog {"    "}
+	if (flag ch2_seen_room_12 is true || flag ch2_seen_room_13 is true) {
+		concat serial dialog {"--+-"}
+	} else {
+		concat serial dialog {"    "}
+	}
+	if (flag ch2_seen_room_12 is true || flag ch2_seen_room_13 is true || flag ch2_seen_room_31 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_31 is true) {
+		concat serial dialog {"----"}
+	} else {
+		concat serial dialog {"    "}
+	}
+	if (flag ch2_seen_room_31 is true || flag ch2_seen_room_32 is true) {
+		concat serial dialog {"--+--"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	concat serial dialog {"   |"}
+	if (flag ch2_map_manual is true) {
+		if (flag ch2_map_seamoss is true) {
+			concat serial dialog {"   <g>?</> Look for <m>Frankie's</>"}
+		}
+	}
+	concat serial dialog newline;
+
+	// ROW 10
+	concat serial dialog {"|   "}
+	if (flag ch2_seen_room_22 is true) {
+		concat serial dialog {"|."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2_in_room is 22) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_22 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_map_powersupply is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_22 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_22 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"    "}
+	if (flag ch2_seen_room_12 is true) {
+		concat serial dialog {"|."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (variable ch2_in_room is 12) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_12 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_map_needle is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_12 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_12 is true || flag ch2_seen_room_31 is true) {
+		concat serial dialog {"+"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_31 is true) {
+		concat serial dialog {"..."}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (variable ch2_in_room is 31) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_31 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_31 is true) {
+		concat serial dialog {"."}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_map_keyboard is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_31 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_31 is true) {
+		concat serial dialog {"..|"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	concat serial dialog {"   |"}
+	if (flag ch2_map_manual is true) {
+		if (flag ch2_map_seamoss is true) {
+			concat serial dialog {"   <m>calculator manual</>"}
+		}
+	}
+	concat serial dialog newline;
+
+	// ROW 11
+	concat serial dialog {"|   "}
+	if (flag ch2_seen_room_22 is true || flag ch2_seen_room_21 is true) {
+		concat serial dialog {"--+--"}
+	} else {
+		concat serial dialog {"     "}
+	}
+	if (flag ch2_seen_room_21 is true) {
+		concat serial dialog {"----"}
+	} else {
+		concat serial dialog {"    "}
+	}
+	if (flag ch2_seen_room_11 is true || flag ch2_seen_room_12 is true || flag ch2_seen_room_21 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_11 is true || flag ch2_seen_room_12 is true) {
+		concat serial dialog {"-+-"}
+	} else {
+		concat serial dialog {"   "}
+	}
+	if (flag ch2_seen_room_11 is true || flag ch2_seen_room_12 is true || flag ch2_seen_room_31 is true) {
+		concat serial dialog {"-"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_31 is true) {
+		concat serial dialog {"---------"}
+	} else {
+		concat serial dialog {"         "}
+	}
+	concat serial dialog {"   |"}
+	if (flag ch2_map_manual is true) {
+		if (flag ch2_map_seamoss is true) {
+			concat serial dialog {"   in the library in town."}
+		}
+	}
+	concat serial dialog newline;
+
+	// ROW 12
+	concat serial dialog {"|   "}
+	if (flag ch2_seen_room_21 is true) {
+		concat serial dialog {"|..."}
+	} else {
+		concat serial dialog {"    "}
+	}
+	if (variable ch2_in_room is 21) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_21 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_21 is true) {
+		concat serial dialog {"."}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_map_abacus is true || flag ch2_map_ramchips is true || flag ch2_map_solder is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_21 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_21 is true) {
+		concat serial dialog {".."}
+	} else {
+		concat serial dialog {"  "}
+	}
+	if (flag ch2_seen_room_21 is true || flag ch2_seen_room_11 is true) {
+		concat serial dialog {"+"}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (flag ch2_seen_room_11 is true) {
+		concat serial dialog {"."}
+	} else {
+		concat serial dialog {" "}
+	}
+	if (variable ch2_in_room is 11) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_11 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_map_monitor is true) {
+		concat serial dialog item;
+	} else {
+		if (flag ch2_seen_room_11 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	if (flag ch2_seen_room_11 is true) {
+		concat serial dialog {"|"}
+	} else {
+		concat serial dialog {" "}
+	}
+	concat serial dialog {"            |"}
+	concat serial dialog newline;
+
+	// ROW 13
+	concat serial dialog {"|   "}
+	if (flag ch2_seen_room_21 is true) {
+		concat serial dialog {"-------"}
+	} else {
+		concat serial dialog {"       "}
+	}
+	concat serial dialog {"----+----          |"}
+	if (flag ch2_map_cactuscooler_castle is true) {
+		concat serial dialog {"   <g>?</> Look for <m>Cactus Cooler</>"}
+	} else if (flag ch2_map_cactuscooler_bobaustin is true) {
+		concat serial dialog {"   <g>?</> Ask <m>Stone Cold Bob Austin</>"}
+	} else if (flag ch2_map_seamoss is true) {
+		concat serial dialog {"   <g>?</> Look for <m>Sea Moss</>"}
+	} else if (flag ch2_map_manual is true) {
+		concat serial dialog {"   <g>?</> Look for <m>Frankie's</>"}
+	}
+	concat serial dialog newline;
+
+	// ROW 14
+	concat serial dialog {"|          |..."}
+	if (variable ch2_in_room is 1) {
+		concat serial dialog player;
+	} else {
+		if (flag ch2_seen_room_1 is true) {
+			concat serial dialog dot;
+		} else {
+			concat serial dialog space;
+		}
+	}
+	concat serial dialog {"...|          |"}
+	if (flag ch2_map_cactuscooler_castle is true) {
+		concat serial dialog {"   somewhere they keep"}
+	} else if (flag ch2_map_cactuscooler_bobaustin is true) {
+		concat serial dialog {"   about Cactus Cooler; he brings"}
+	} else if (flag ch2_map_seamoss is true) {
+		concat serial dialog {"   somewhere in the east wing"}
+	} else if (flag ch2_map_manual is true) {
+		concat serial dialog {"   <m>calculator manual</>"}
+	}
+	concat serial dialog newline;
+
+	// ROW 15
+	concat serial dialog {"|          ----+----          |"}
+	if (flag ch2_map_cactuscooler_castle is true) {
+		concat serial dialog {"   refreshments or drinks."}
+	} else if (flag ch2_map_cactuscooler_bobaustin is true) {
+		concat serial dialog {"   loads to all his parties."}
+	} else if (flag ch2_map_seamoss is true) {
+		concat serial dialog {"   of the castle."}
+	} else if (flag ch2_map_manual is true) {
+		concat serial dialog {"   in the library in town."}
+	}
+	concat serial dialog newline;
+
+	// ROW 16
+	concat serial dialog {"-------------------------------"}
+	concat serial dialog newline;
+	goto draw_ch2_serial_map_footer;
+}

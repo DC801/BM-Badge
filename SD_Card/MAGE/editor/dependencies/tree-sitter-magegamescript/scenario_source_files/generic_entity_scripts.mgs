@@ -1,0 +1,251 @@
+face_player {
+	self direction = player;
+}
+
+set_tick_watch_player {
+	self on_tick = face_player;
+}
+
+clear_own_tick {
+	self on_tick = null_script;
+}
+
+loop_on_path_30s {
+	self position -> entity_path length over 30000ms forever;
+}
+
+loop_on_path_10s {
+	self position -> entity_path length over 10000ms forever;
+}
+
+loop_on_path_3s {
+	self position -> entity_path length over 3000ms forever;
+}
+
+walk_on_path_20s {
+	self position -> entity_path length over 20000ms;
+	goto null_script;
+}
+
+spin_self_clockwise {
+	// This script should spin an entity around
+	wait 500ms; /**/ self direction = north;
+	wait 500ms; /**/ self direction = east;
+	wait 500ms; /**/ self direction = south;
+	wait 500ms; /**/ self direction = west;
+	goto spin_self_counterclockwise;
+}
+
+spin_self_counterclockwise {
+	// This script should spin an entity around
+	wait 500ms; /**/ self direction = north;
+	wait 500ms; /**/ self direction = west;
+	wait 500ms; /**/ self direction = south;
+	wait 500ms; /**/ self direction = east;
+	goto spin_self_clockwise;
+}
+
+map_on_tick_doors {
+	if (player intersects geometry "door-main") {
+		goto load_map_main;
+	}
+	if (player intersects geometry "door-test") {
+		goto load_map_test;
+	}
+	if (player intersects geometry "door-town") {
+		goto load_map_town;
+	}
+	if (player intersects geometry "door-episode2") {
+		goto load_map_chapter2_start;
+	}
+	if (player intersects geometry "door-action_testing_01") {
+		goto load_map_action_testing_01;
+	}
+	if (player intersects geometry "door-action_testing_02") {
+		goto load_map_action_testing_02;
+	}
+	if (player intersects geometry "door-testbig") {
+		goto load_map_testbig;
+	}
+}
+
+load_map_main {
+	load map main;
+}
+
+load_map_test {
+	load map test;
+}
+
+load_map_demo_map {
+	load map demo;
+}
+
+load_map_town {
+	load map town;
+}
+
+load_map_main_enter_from_east {
+	warp_state = enter_from_east;
+	goto load_map_main;
+}
+
+load_map_main_enter_from_west {
+	warp_state = enter_from_west;
+	goto load_map_main;
+}
+
+load_map_town_enter_from_east {
+	warp_state = enter_from_east;
+	goto load_map_town;
+}
+
+load_map_town_enter_from_west {
+	warp_state = enter_from_west;
+	goto load_map_town;
+}
+
+on_load_east_west {
+	if (warp_state == enter_from_east) {
+		goto enter_from_east;
+	}
+	if (warp_state == enter_from_west) {
+		goto enter_from_west;
+	}
+}
+
+enter_from_east {
+	player_control = off;
+	player position -> geometry enter_from_east length over 1000ms;
+	player_control = on;
+}
+
+enter_from_west {
+	player_control = off;
+	player position -> geometry enter_from_west length over 1000ms;
+	player_control = on;
+}
+
+load_map_action_testing_01 {
+	load map action_testing_01;
+}
+
+load_map_action_testing_02 {
+	load map action_testing_02;
+}
+
+load_map_chapter2_start {
+	load map "ch2-magehouse";
+}
+
+// from script-town_map.json
+
+on_tick_town {
+	if (player intersects geometry "door_to-main-east") {
+		goto load_map_main_enter_from_east;
+	}
+	if (player intersects geometry "door_to-main-west") {
+		goto load_map_main_enter_from_west;
+	}
+}
+
+// test_scripts
+
+my_first_script {
+	wait 100ms;
+	hex_editor = true;
+	block 200ms;
+	hex_editor = false;
+}
+
+entity_on_interact_script {
+	goto my_first_script;
+	// notes: These are documentation notes for humans.
+}
+
+test_tick_script {
+	if (button ANY pressed) {
+		goto button_success_script;
+	}
+}
+
+button_success_script {
+	hex_dialog_mode = on;
+	wait 5000ms;
+	hex_dialog_mode = off;
+	goto test_tick_script;
+}
+
+yeet {
+	self position = geometry "hiding-spot";
+	self on_interact = null_script;
+	self on_look = null_script;
+	self name = " ";
+	goto null_script;
+}
+
+capture_self_direction {
+	if (self direction == north) {
+		tempvar = 0;
+	} else if (self direction == east) {
+		tempvar = 1;
+	} else if (self direction == south) {
+		tempvar = 2;
+	} else if (self direction == west) {
+		tempvar = 3;
+	}
+}
+restore_self_direction {
+	if (tempvar == 0) {
+		self direction = north;
+	} else if (tempvar == 1) {
+		self direction = east;
+	} else if (tempvar == 2) {
+		self direction = south;
+	} else if (tempvar == 3) {
+		self direction = west;
+	}
+}
+
+interrupt_walk {
+	captured_animation = self current_animation;
+	self current_animation = 0;
+	pause self on_tick;
+	copy!(capture_self_direction)
+	copy!(face_player)
+}
+resume_walk {
+	self current_animation = captured_animation;
+	unpause self on_tick;
+	copy!(restore_self_direction)
+}
+
+capture_player_state {
+	// todo: when we have functions, genericize this!
+	playersave_x = player x;
+	playersave_y = player y;
+	playersave_room = ch2_in_room*1;
+	if (player direction == north) {
+		playersave_dir = 0;
+	} else if (player direction == east) {
+		playersave_dir = 1;
+	} else if (player direction == south) {
+		playersave_dir = 2;
+	} else if (player direction == west) {
+		playersave_dir = 3;
+	}
+}
+
+restore_player_state {
+	player x = playersave_x;
+	player y = playersave_y;
+	if (playersave_dir == 0) {
+		player direction = north;
+	} else if (playersave_dir == 1) {
+		player direction = east;
+	} else if (playersave_dir == 2) {
+		player direction = south;
+	} else if (playersave_dir == 3) {
+		player direction = west;
+	}
+}

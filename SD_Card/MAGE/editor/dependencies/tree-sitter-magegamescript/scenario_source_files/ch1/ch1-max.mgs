@@ -1,0 +1,283 @@
+include "header.mgs";
+
+/* -------- ON_TICK SCRIPTS -------- */
+// no zigzagging!
+
+felix_loiter {
+	if (catwork_quest_done) {
+		goto hiding_cat;
+	}
+	self direction = south;
+	wait 2000ms; /**/ self direction = east;
+	wait 800ms; /**/ self direction = west;
+	wait 1200ms;
+}
+deut_loiter {
+	if (catwork_quest_done) {
+		goto hiding_cat;
+	}
+	self direction = west;
+	wait 900ms; /**/ self direction = east;
+	wait 900ms; /**/ self direction = south;
+	wait 2400ms;
+}
+bmurray_loiter {
+	if (catwork_quest_done) {
+		goto hiding_cat;
+	}
+	self direction = south;
+	wait 1800ms; /**/ self direction = north;
+	wait 900ms; /**/ self direction = east;
+	wait 1000ms;
+}
+maru_loiter {
+	if (catwork_quest_done) {
+		goto hiding_cat;
+	}
+	self direction = west;
+	wait 1400ms; /**/ self direction = south;
+	wait 1800ms; /**/ self direction = north;
+	wait 400ms; /**/ self direction = east;
+	wait 400ms;
+}
+
+hiding_cat {
+	self position = geometry "catwalk-hide";
+	goto null_script;
+}
+
+cat_walking_to_work {
+	self position -> geometry "catwalk-spot" origin over 600ms;
+	self position -> geometry "catwalk-door" origin over 500ms;
+	self position = geometry "catwalk-hide";
+	goto hiding_cat;
+}
+
+on_tick_max_neutral {
+	if (catwork_quest_done) {
+		goto null_script;
+	}
+	if (player type == pipscat) {
+		goto on_tick_max_catwatch;
+	}
+	entity Felix on_tick = felix_loiter;
+	entity Maru on_tick = maru_loiter;
+	entity "B. Murray" on_tick = bmurray_loiter;
+	entity Deuteronomy on_tick = deut_loiter;
+}
+on_tick_max_catwatch {
+	if (player type != pipscat) {
+		goto on_tick_max_neutral;
+	}
+	entity Felix on_tick = face_player;
+	entity Maru on_tick = face_player;
+	entity "B. Murray" on_tick = face_player;
+	entity Deuteronomy on_tick = face_player;
+	if (player current_animation == 2) {
+		goto on_tick_max_thumbwatch;
+	}
+}
+on_tick_max_thumbwatch {
+	if (player intersects geometry "catwatch-zone") {
+		goto send_cats_to_work;
+	}
+	wait 2000ms;
+}
+
+/* -------- ON_TICK CUTSCENE -------- */
+
+send_cats_to_work {
+	player_control = off;
+	wait 1300ms;
+	if (!entity Felix intersects geometry "felix-spot") {
+		goto show_dialog_max_crewmissing;
+	}
+	if (!entity Deuteronomy intersects geometry "deut-spot") {
+		goto show_dialog_max_crewmissing;
+	}
+	if (!entity Maru intersects geometry "maru-spot") {
+		goto show_dialog_max_crewmissing;
+	}
+	if (!entity "B. Murray" intersects geometry "bmurray-spot") {
+		goto show_dialog_max_crewmissing;
+	}
+	entity "Max Swagger" direction = player;
+	entity "Max Swagger" animation -> 3 once;
+	entity "Max Swagger" current_animation = 4;
+	wait 500ms;
+	show dialog {
+		entity "Max Swagger"
+		"Oh! Approval from the cat boss himself!"
+		Felix "Yeah, all right. We're good to go."
+		"Let's get started!"
+	};
+	wait 300ms;
+	entity Felix on_tick = cat_walking_to_work;
+	wait 400ms;
+	entity Deuteronomy on_tick = cat_walking_to_work;
+	wait 400ms;
+	entity Maru on_tick = cat_walking_to_work;
+	wait 400ms;
+	entity "B. Murray" on_tick = cat_walking_to_work;
+	wait 400ms;
+	show dialog {
+		entity "Max Swagger"
+		"Brilliant! Now things can finally move forward!"
+	};
+	player_control = on;
+	catwork_quest_done = true;
+	entity "Max Swagger" animation -> 5 once;
+	entity "Max Swagger" current_animation = 0;
+	copy!(calculate_hint_tracking_series)
+	if (hint_tracking_check == 6) {
+		copy!(set_hint_none)
+	}
+	goto null_script;
+}
+show_dialog_max_crewmissing {
+	show dialog {
+		entity "Max Swagger"
+		"Oh! Approval from the boss!"
+		"But is the crew all here to see it...?"
+	};
+	player_control = on;
+	entity "Max Swagger" on_tick = on_tick_max_neutral;
+}
+
+/* -------- REGULAR STUFF -------- */
+
+show_dialog_felix {
+	if (self glitched) {
+		show dialog {
+			SELF "Sxas. T'gp mppy hzcvtyr dz slco T'x slwwfntyletyr!"
+		};
+	} else {
+		copy!(set_hint_max)
+		if (player type == pipscat) {
+			show dialog { SELF "Okay, boss. We good to go?" };
+		} else {
+			show dialog { SELF "Can't begin work until the boss approves the plans." };
+		}
+	}
+}
+show_dialog_deut {
+	if (self glitched) {
+		show dialog { SELF "Abj gung'f n gevc." };
+	} else {
+		copy!(set_hint_max)
+		if (player type == pipscat) {
+			show dialog { SELF "Oh, good! You're here! Gonna give the thumbs up?" };
+		} else {
+			show dialog { SELF "The boss is usually pretty busy. Not sure where he is right now." };
+		}
+	}
+}
+show_dialog_maru {
+	if (self glitched) {
+		show dialog { SELF "Qisa." };
+	} else if (player type == pipscat) {
+		show dialog { SELF "Meow?" };
+	} else {
+		// copy set_hint_max // absent from original; intentional? (probably not)
+		show dialog { SELF "Meow." };
+	}
+}
+show_dialog_bmurray {
+	if (self glitched) {
+		show dialog { SELF "Ib, hi... C ehyq nbun wunhcj qum vux!" };
+	} else {
+		copy!(set_hint_max)
+		if (player type == pipscat) {
+			show dialog { SELF "So is it a yea or a nay? Go ahead, show us what you decided." };
+		} else {
+			show dialog { SELF "As much as I like to loaf around, I sure hope the boss'll get over here soon so we can start!" };
+		}
+	}
+}
+
+show_dialog_max_start {
+	if (self glitched) {
+		show dialog {
+			SELF "Azr. Vm jvbyzl aolyl'k il huvaoly jvtwspjhapvu!"
+		};
+	} else if (catwork_quest_done) {
+		copy!(face_player)
+		show dialog {
+			entity "Max Swagger"
+			"Finally! Now work on my fashion shop can progress!"
+		};
+	} else if (player type == pipscat) {
+		copy!(face_player)
+		show dialog {
+			entity "Max Swagger"
+			"Oh! The cat boss, here at last!"
+			"Come on, then! Press square to show us you approve of the plans!"
+		};
+		copy!(set_hint_max)
+		max_backstory = true;
+	} else if (max_backstory) {
+		copy!(face_player)
+		show dialog {
+			SELF "All the crew needs to begin now is a thumbs up from their boss!"
+			"Where is that cat?"
+		};
+		copy!(set_hint_max)
+	} else {
+		player_control = off;
+		wait 200ms;
+		copy!(face_player)
+		wait 400ms;
+		show dialog {
+			SELF "Ah, yes! I know you!"
+			"You're the birthday mage!"
+			PLAYER "I guess you could say that."
+			SELF "Yes, yes!"
+			"Well, you're invited to the grand opening of my new fashion shop!"
+			PLAYER "Oh, neat!"
+			SELF "...Next year!"
+			PLAYER "What? Next year? Your shop isn't ready yet?"
+			SELF "Oh, good heavens, no! Not yet!"
+			"There's much more to do... so much more!"
+			"The interior must be wallpapered and painted, and the new carpet cut and layed...."
+			"The new furniture must be brought in from Copenhagen, and that could take weeks alone!"
+			"But, of course, before any of that...."
+		};
+		wait 200ms;
+		entity "Max Swagger" direction = entity Felix;
+		wait 400ms;
+		show dialog {
+			SELF "The CONSTRUCTION CREW must finish building the interior!!"
+		};
+		wait 200ms;
+		copy!(face_player)
+		wait 400ms;
+		show dialog {
+			SELF "They have everything they need to begin and yet they won't do any work!"
+		};
+		wait 200ms;
+		camera -> geometry "camera-felix" origin over 800ms;
+		wait 200ms;
+		show dialog {
+			Felix "No, we don't have everything."
+			"We need the boss to sign off on the plans, first."
+		};
+		wait 200ms;
+		camera -> player position over 800ms;
+		wait 200ms;
+		entity "Max Swagger" direction = entity Felix;
+		wait 400ms;
+		show dialog {
+			SELF "Yes, of course! Of course the boss must approve first!"
+		};
+		wait 200ms;
+		copy!(face_player)
+		wait 400ms;
+		show dialog {
+			SELF "But the boss is nowhere around!"
+			"I gave him the plans days ago! What could possibly be taking so long?"
+		};
+		max_backstory = true;
+		copy!(set_hint_max)
+		player_control = on;
+	}
+}

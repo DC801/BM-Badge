@@ -1,0 +1,391 @@
+// A basic tour of syntax structures and action phrases.
+
+include "header.mgs";
+add dialog settings {
+	default { alignment BL }
+	label PLAYER {
+		alignment BR
+		entity "%PLAYER%"
+	}
+}
+add serial_dialog settings {
+	wrap 75
+}
+
+dialog "goatGreeting" {
+	PLAYER emote 1 portrait goat3 "Who are you?"
+	name "Goat King" "Why, I am the goat of mystery!"
+	> "Really?" = reallyscript
+	> "I don't believe you" = failscript
+}
+serial_dialog terminal_start {
+	"You are in the meadow. It is a wonderous place."
+	_ "Bee" = flowerscript
+	_ "Butterflies" = flutterscript
+}
+
+$trombones = 76;
+$hamburgers = "steamed hams";
+
+branch_on_bool_equality {
+	// CHECK_DEBUG_MODE
+	if (debug_mode) { wait 1; }
+	if (!debug_mode) { wait 2; }
+
+	// CHECK_SERIAL_DIALOG_OPEN
+	if (serial_dialog open) { wait 1; }
+	if (!serial_dialog open) { wait 2; }
+	if (!serial_dialog closed) { wait 3; }
+	if (serial_dialog closed) { wait 4; }
+	
+	// CHECK_DIALOG_OPEN
+	if (dialog open) { wait 1; }
+	if (!dialog open) { wait 2; }
+	if (!dialog closed) { wait 3; }
+	if (dialog closed) { wait 4; }
+
+	// CHECK_SAVE_FLAG
+	if (flagName) { wait 1; }
+	if (!flagName) { wait 2; }
+
+	// CHECK_FOR_BUTTON_PRESS
+	if (button MEM1 pressed) { wait 1; }
+	if (!button MEM1 pressed) { wait 2; }
+	
+	// CHECK_FOR_BUTTON_STATE
+	if (button BIT1 down) { wait 1; }
+	if (!button BIT1 down) { wait 2; }
+	if (!button BIT1 up) { wait 3; }
+	if (button BIT1 up) { wait 4; }
+
+	// CHECK_IF_ENTITY_IS_IN_GEOMETRY
+	if (self intersects geometry "bounding box") { wait 1; }
+	if (!self intersects geometry "bounding box") { wait 2; }
+	
+	// CHECK_ENTITY_GLITCHED
+	if (entity "Bob" glitched) { wait 1; }
+	if (!entity Bob glitched) { wait 2; }
+}
+branch_on_int_equality {
+	// CHECK_ENTITY_X
+	if (player x == 0) { wait 1; }
+	if (player x != 0) { wait 2; }
+	
+	// CHECK_ENTITY_Y
+	if (player y == 0) { wait 1; }
+	if (player y != 0) { wait 2; }
+	
+	// CHECK_ENTITY_PRIMARY_ID
+	if (player primary_id == 0) { wait 1; }
+	if (player primary_id != 0) { wait 2; }
+	
+	// CHECK_ENTITY_SECONDARY_ID
+	if (player secondary_id == 0) { wait 1; }
+	if (player secondary_id != 0) { wait 2; }
+	
+	// CHECK_ENTITY_PRIMARY_ID_TYPE
+	if (player primary_id_type == 0) { wait 1; }
+	if (player primary_id_type != 0) { wait 2; }
+	
+	// CHECK_ENTITY_CURRENT_ANIMATION
+	if (self current_animation == 0) { wait 1; }
+	if (self current_animation != 0) { wait 2; }
+	
+	// CHECK_ENTITY_CURRENT_FRAME
+	if (entity Bob animation_frame == 0) { wait 1; }
+	if (entity Bob animation_frame != 0) { wait 2; }
+}
+branch_on_int_comparison {
+	// CHECK_VARIABLE
+	if (i < 10) { wait 1; }
+
+	// CHECK_VARIABLES
+	if (i < varName) { wait 1; }
+}
+branch_on_string_equality {
+	// CHECK_WARP_STATE
+	if (warp_state == "goat") { wait 1; }
+	if (warp_state != "goat") { wait 2; }
+
+	// CHECK_ENTITY_NAME
+	if (player name == "goat") { wait 1; }
+	if (player name != "goat") { wait 2; }
+	
+	// CHECK_ENTITY_TYPE
+	if (player type == "goat") { wait 1; }
+	if (player type != "goat") { wait 2; }
+
+	// CHECK_ENTITY_INTERACT_SCRIPT
+	if (player on_interact == "goat") { wait 1; }
+	if (player on_interact != "goat") { wait 2; }
+
+	// CHECK_ENTITY_TICK_SCRIPT
+	if (player on_tick == "goat") { wait 1; }
+	if (player on_tick != "goat") { wait 2; }
+
+	// CHECK_ENTITY_LOOK_SCRIPT
+	if (player on_look == "goat") { wait 1; }
+	if (player on_look != "goat") { wait 2; }
+
+	// CHECK_ENTITY_DIRECTION
+	if (player direction == "goat") { wait 1; }
+	if (player direction != "goat") { wait 2; }
+
+	// CHECK_ENTITY_PATH
+	if (player path == "goat") { wait 1; }
+	if (player path != "goat") { wait 2; }
+}
+
+set_bool_exp_ok {
+	// SET_SAVE_FLAG
+	flagName = true;
+	
+	// SET_HEX_EDITOR_STATE
+	hex_editor = on;
+
+	// SET_HEX_EDITOR_DIALOG_MODE
+	hex_dialog_mode = down;
+
+	// SET_HEX_EDITOR_CONTROL
+	hex_control = open;
+
+	// SET_HEX_EDITOR_CONTROL_CLIPBOARD
+	hex_clipboard = false;
+
+	// SET_SERIAL_DIALOG_CONTROL
+	serial_control = off;
+
+	// SET_PLAYER_CONTROL
+	player_control = up;
+
+	// SET_LIGHTS_CONTROL
+	lights_control = open;
+
+	// SET_LIGHTS_STATE
+	light MEM1 = on;
+
+	// SET_ENTITY_GLITCHED
+	entity Bob glitched = true;
+
+	// expressions
+	entity Bob glitched = debug_mode;
+	entity Bob glitched = debug_mode || isGoatGrumpy;
+	entity Bob glitched = debug_mode && isGoatGrumpy;
+	entity Bob glitched = !(debug_mode || isGoatGrumpy);
+	entity Bob glitched = !(debug_mode || !isGoatGrumpy);
+}
+set_int_exp_ok {
+	// MUTATE_VARIABLES
+	goatCount = index;
+
+	// MUTATE_VARIABLE
+	goatCount = 0;
+
+	// COPY_VARIABLE
+	goatCount = player x;
+	player y = goatCount;
+
+	//expressions
+	goatCount = 1 + player x;
+	goatCount = player y + player x;
+	goatCount = 1 + player x * 99;
+	goatCount = 7 * (1 + player x);
+}
+
+set_int_exp_not_ok {
+	// SET_ENTITY_X
+	player x = 1;
+	
+	// SET_ENTITY_Y
+	player y = 1;
+
+	// SET_ENTITY_PRIMARY_ID
+	player primary_id = 0;
+	
+	// SET_ENTITY_SECONDARY_ID
+	player secondary_id = 0;
+	
+	// SET_ENTITY_PRIMARY_ID_TYPE
+	player primary_id_type = 0;
+	
+	// SET_ENTITY_CURRENT_ANIMATION
+	player current_animation = 0;
+	
+	// SET_ENTITY_CURRENT_FRAME
+	player animation_frame = 0;
+	
+	// SET_ENTITY_MOVEMENT_RELATIVE
+	player strafe = 0;
+	
+	// SET_ENTITY_DIRECTION_RELATIVE
+	//?????????????????????????????
+	// FYI negative numbers OK	
+}
+
+set_string {
+	// SET_WARP_STATE
+	warp_state = goat;
+
+	// SET_ENTITY_NAME
+	player name = goat;
+	
+	// SET_ENTITY_TYPE
+	player type = goat;
+	
+	// SET_ENTITY_PATH
+	player path = goat;
+	
+	// SET_ENTITY_DIRECTION
+	player direction = north;
+	
+	// SET_ENTITY_LOOK_SCRIPT
+	player on_tick = goatScript;
+	
+	// SET_ENTITY_INTERACT_SCRIPT
+	player on_interact = goatScript;
+	
+	// SET_ENTITY_TICK_SCRIPT
+	player on_tick = goatScript;
+	
+	// SET_MAP_TICK_SCRIPT
+	map on_tick = goatScript;
+}
+
+set_position {
+	// SET_CAMERA_TO_FOLLOW_ENTITY
+	camera = player position;
+	
+	// TELEPORT_CAMERA_TO_GEOMETRY
+	camera = geometry stick;
+	
+	// TELEPORT_ENTITY_TO_GEOMETRY
+	player position = geometry stick;
+	
+	// SET_ENTITY_DIRECTION_TARGET_ENTITY
+	player direction = entity Bob;
+	
+	// SET_ENTITY_DIRECTION_TARGET_GEOMETRY
+	player direction = geometry stick;
+}
+
+set_position_over_time {
+	// WALK_ENTITY_TO_GEOMETRY
+	player position -> geometry stick origin over 1s;
+	
+	// WALK_ENTITY_ALONG_GEOMETRY
+	player position -> geometry stick length over 1s;
+	
+	// LOOP_ENTITY_ALONG_GEOMETRY
+	player position -> geometry stick length over 1s forever;
+	
+	// PAN_CAMERA_TO_ENTITY
+	camera -> entity Bob position over 1s;
+	
+	// PAN_CAMERA_TO_GEOMETRY
+	camera -> geometry stick origin over 1s;
+
+	// PAN_CAMERA_ALONG_GEOMETRY
+	camera -> geometry stick length over 1s;
+
+	// LOOP_CAMERA_ALONG_GEOMETRY
+	camera -> geometry stick length over 1s forever;
+}
+
+other_do_over_time {
+	// SET_SCREEN_SHAKE
+	camera shake -> 20ms 50px over 1s;
+
+	// SCREEN_FADE_IN
+	camera fade in -> black over 1s;
+
+	// SCREEN_FADE_OUT
+	camera fade out -> #fff over 1s;
+
+	// PLAY_ENTITY_ANIMATION
+	player animation -> 0 once;
+}
+
+commands_and_aliases {
+	// REGISTER_SERIAL_DIALOG_COMMAND
+	command callGoat = goatScript;
+	command callGoat fail = goatScript;
+	
+	// UNREGISTER_SERIAL_DIALOG_COMMAND
+	delete command callGoat;
+	// TODO: how to delete the fail?
+
+	// REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+	command callGoat + billy = billyScript;
+	
+	// UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+	delete command callGoat + billy;
+
+	// REGISTER_SERIAL_DIALOG_COMMAND_ALIAS
+	alias g = callGoat;
+	
+	// UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS
+	delete alias g;
+
+	// SET_SERIAL_DIALOG_COMMAND_VISIBILITY
+	hide command callGoat;
+	unhide command callGoat;
+}
+
+other {
+	// SLOT_SAVE
+	save slot;
+
+	// SLOT_LOAD
+	load slot 0;
+
+	// SLOT_ERASE
+	erase slot 0;
+
+	// LOAD_MAP
+	load map GOATMAP;
+
+	// BLOCKING_DELAY
+	block 10ms;
+
+	// NON_BLOCKING_DELAY
+	wait 1s;
+
+	// SHOW_DIALOG
+	show dialog talkToGoat;
+
+	// CLOSE_DIALOG
+	close dialog;
+
+	// SHOW_SERIAL_DIALOG
+	show serial_dialog goatTerminal;
+
+	// CLOSE_SERIAL_DIALOG
+	close serial_dialog;
+
+	// SET_CONNECT_SERIAL_DIALOG
+	serial_connect = goatHeader;
+
+	// SET_SCRIPT_PAUSE
+	pause player on_tick;
+	pause map on_tick;
+	unpause player on_tick;
+	unpause map on_tick;
+
+	// GOTO_ACTION_INDEX
+	goto index 0;
+
+	// RUN_SCRIPT
+	goto scriptName;
+
+	// COPY_SCRIPT
+	copy!(simple_copy)
+
+	return;
+}
+simple_copy {
+	wait 1;
+	wait 2;
+	wait 3;
+	return;
+	wait 4;
+}

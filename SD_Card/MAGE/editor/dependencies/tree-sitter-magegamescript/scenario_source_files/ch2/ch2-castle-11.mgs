@@ -1,0 +1,276 @@
+include "header.mgs";
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look_ch2_castle_11 {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked around the <c>CASTLE HALLWAY FRONT</>."
+	};
+	if (ch2_storyflag_round < 5) {
+		show serial_dialog {
+			"\tThe ceiling has collapsed, probably from the recent earthquake. What's left standing appears stable, fortunately -- at least, structurally stable."
+			" "
+		};
+	} else {
+		show serial_dialog {
+			"\tDespite a little bit of lingering damage from the recent quake, the castle entryway is much neater than before. The cobbled mainframe hums contentedly, and soon the rest of the castle, too, will be back to its old self."
+			" "
+		};
+	}
+}
+
+look_ch2_kuro {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at <m>%SELF%</>."
+		"\tA large crow or raven, one whose eyes seem to pierce you to your soul -- and one who's had too much coffee, by the way he's moving."
+	};
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load_ch2_castle_11_postgame {
+	// abbreviated copy-pasta of the below
+	ch2_in_room = 11;
+	// entrance text
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>CASTLE HALLWAY FRONT</>..." };
+	if (warp_state == "walk_from-north") {
+		player position = geometry "walk_from-north";
+	} else if (warp_state == "walk_from-south") {
+		player position = geometry "walk_from-south";
+	} else if (warp_state == "walk_from-west") {
+		player position = geometry "walk_from-west";
+	}
+	copy!(ch2_map_init)
+}
+
+on_load_ch2_castle_11 {
+	// ch2 room state
+	ch2_in_room = 11;
+	
+	// entrance text
+	show serial_dialog spacer;
+	if (!ch2_seen_room_11) {
+		show serial_dialog { "Discovered <bold><c>CASTLE HALLWAY FRONT</>! Room added to <c>MAP</>!" };
+		ch2_seen_room_11 = true;
+	} else {
+		show serial_dialog { "Entering <bold>CASTLE HALLWAY FRONT</>..." };
+	}
+
+
+	// room unique things
+
+	if (ch2_installed_monitor || ch2_carrying_monitor) {
+		copy!(ch2_hide_monitor)
+	}
+
+	// initialize everything
+	copy!(ch2_map_init)
+
+	// check if you do the cutscene or not
+	if (!ch2_cutseen_castle11) {
+		copy!(ch2_cutscene_castle11)
+	}
+}
+
+ch2_cutscene_castle11 {
+	player_control = off;
+	wait 500ms;
+	entity Kuro on_tick = null_script;
+	if (!ch2_blockage) {
+		ch2_blockage = true;
+		show dialog {
+			PLAYER "Oh, cool, I got past the blockage."
+			"This artifact is handy."
+		};
+	}
+	show dialog {
+		name "???" "Intruder! Intruder!"
+	};
+	player on_tick = watch_kuro;
+	entity Kuro position -> geometry "kuro-walk" origin over 300ms;
+	entity Kuro position -> geometry "kuro-spot" origin over 300ms;
+	entity Kuro position -> geometry "kuro-walk" origin over 300ms;
+	entity Kuro direction = south;
+	wait 400ms;
+	show dialog {
+		PLAYER "Oh, hi there, little bird."
+	};
+	entity Kuro current_animation = 1;
+	show dialog {
+		Kuro "Little bird? Little bird?!"
+	};
+	entity Kuro current_animation = 0;
+	show dialog {
+		Kuro "I'm the ruddy harbringer of death!"
+		PLAYER "Oh, of course. I'm sorry."
+	};
+	entity Kuro current_animation = 1;
+	show dialog {
+		Kuro "Omigod omigod omigod!"
+	};
+	entity Kuro position -> geometry "kuro-spot" origin over 250ms;
+	entity Kuro position -> geometry "kuro-walk" origin over 250ms;
+	entity Kuro direction = south;
+	wait 140ms;
+	show dialog {
+		Kuro "You gotta get me out of here! I'm going crazy, stuck in here!"
+		PLAYER "Oh, sure. I guess birds don't like to be in enclosed spaces."
+		Kuro "Enclosed spaces? Nah, I'm just bored to death!"
+	};
+	entity Kuro current_animation = 1;
+	show dialog {
+		Kuro "But you got in here! Does that mean you can get me out?"
+	};
+	entity Kuro current_animation = 0;
+	show dialog {
+		PLAYER "I don't think I can use the artifact to bring other people through the doors. Just me."
+		"But I'll try to get the doors cleared and working again."
+	};
+	entity Kuro current_animation = 1;
+	show dialog {
+		Kuro "OH THANK GOD!"
+	};
+	entity Kuro current_animation = 0;
+	show dialog {
+		PLAYER "So I need a monitor. Lambda said there was one in here I could use. I think he meant..."
+	};
+	entity Kuro on_tick = ch2_walk_to_monitor;
+	player on_tick = null_script;
+	player position -> geometry "warp-spot" length over 1900ms;
+	show dialog {
+		PLAYER "...this one, right? Is this one free for me to take?"
+	};
+	entity Kuro on_tick = null_script;
+	entity Kuro direction = south;
+	show dialog {
+		Kuro "Beats me."
+		PLAYER "Is it... supposed to be showing that stuff?"
+	};
+	entity Kuro on_tick = kuro_hop;
+	show dialog {
+		Kuro "Nuh-uh. This thing used to show a dumb \"Welcome to King Gibson's castle\" slideshow."
+		"Guess the computer it was plugged into got damaged in the quake."
+		"Not that we're getting tourists -- apart from you."
+		PLAYER "So I can take it?"
+		Kuro "Dunno. I guess? I don't think anyone would miss it."
+	};
+	entity Kuro on_tick = face_player;
+	player_control = on;
+	player on_tick = null_script;
+	ch2_cutseen_castle11 = true;
+}
+
+ch2_walk_to_monitor {
+	wait 300ms;
+	entity Kuro position -> geometry "kuro-walk" length over 650ms;
+	wait 800ms;
+	entity Kuro strafe = 3;
+	entity Kuro position -> geometry "kuro-walk2" origin over 150ms;
+	entity Kuro strafe = 0;
+	entity Kuro direction = south;
+	wait 180ms;
+	entity Kuro position -> geometry "kuro-walk2" length over 400ms;
+	entity Kuro on_tick = face_player;
+}
+kuro_hop {
+	self animation -> 1 once;
+	entity Kuro direction = east;
+	goto null_script;
+}
+
+watch_kuro {
+	self direction = entity Kuro;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick_ch2_castle_11 {}
+on_tick_ch2_castle_11_postgame {
+	if (player intersects geometry "south-hitbox") {
+		copy!(on_exit_ch2_castle_11)
+		warp_state = "walk_from-north";
+		copy!(ch2_load_castle_1_special)
+	} else if (player intersects geometry "north-hitbox") {
+		copy!(on_exit_ch2_castle_11)
+		warp_state = "walk_from-south";
+		copy!(ch2_load_castle_12_special)
+	} else if (player intersects geometry "west-hitbox") {
+		copy!(on_exit_ch2_castle_11)
+		warp_state = "walk_from-east";
+		copy!(ch2_load_castle_21_special)
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit_ch2_castle_11 { // sanitize ch2 room state
+	ch2_in_room = 0;
+}
+
+// SERIAL: go
+
+on_go_castle_11_north {
+	copy!(on_exit_ch2_castle_11)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_12_special)
+}
+on_go_castle_11_west {
+	copy!(on_exit_ch2_castle_11)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_21_special)
+}
+on_go_castle_11_south {
+	copy!(on_exit_ch2_castle_11)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_1_special)
+}
+
+ch2_hide_monitor {
+	entity Monitor position = geometry "hiding-spot";
+	entity Monitor name = " ";
+}
+
+ch2_touch_monitor {
+	show dialog {
+		PLAYER "Is the computer sad? It keeps making frowny faces."
+		Kuro "Computer's basically dead. And I know a dead thing when I see one. Monitor's fine, though."
+	};
+	show dialog {
+		name "" "(Pick up the monitor?)"
+		> "Yes" = ch2_touch_monitor_yes
+		> "No" = ch2_touch_monitor_no
+	};
+}
+ch2_touch_monitor_yes {
+	show dialog {
+		PLAYER "Um, how do I take it?"
+		Kuro "Just unplug all the cables from the computer case. One power cable, one data cable."
+	};
+	copy!(ch2_pickup_monitor)
+	self position = geometry "hiding-spot"; // for visuals; don't wanna change the script slot yet though! That will come AFTER the dialog so that execution isn't halted early
+	show dialog {
+		name "" "(You pick up the monitor!)"
+	};
+	copy!(ch2_hide_monitor)
+	self on_interact = null_script;
+}
+ch2_touch_monitor_no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	};
+	self on_interact = ch2_touch_monitor; // reset after script jump
+}
+
+interact_ch2_kuro {
+	entity Kuro current_animation = 1;
+	show dialog {
+		Kuro "So, um, you can get me out of here, right?"
+	};
+	entity Kuro current_animation = 0;
+	show dialog {
+		PLAYER "Working on it."
+	};
+}

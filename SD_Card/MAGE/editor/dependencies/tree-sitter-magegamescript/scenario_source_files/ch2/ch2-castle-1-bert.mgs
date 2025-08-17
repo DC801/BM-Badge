@@ -1,0 +1,119 @@
+include "header.mgs";
+
+/* ---------- BERT SECRET CUTSCENE ---------- */
+
+watch_bert {
+	self direction = entity Bert;
+}
+
+ch2_cutscene_bert_secret {
+	player_control = off;
+	wait 800ms;
+	entity Bert position = geometry "bert-spot";
+	entity Bert direction = north;
+	show dialog {
+		Bert "%PLAYER%, wait."
+	};
+	wait 100ms;
+	player on_tick = watch_bert;
+	wait 400ms;
+	// the below is unnecessary if this cutscene is triggered via normal means; cannot use a zigzag here, though, since this script is run with COPY_SCRIPT
+	// you can't trigger the "stuck on animation 5" with this, though, since you can't feasibly get to this part of the script before the Wiz is all the way ascended anyway. (Hitting `tick_ch2_wizard_ascend_and_watch_with_check` when it's in progress breaks things!)
+	entity Wizard on_tick = tick_ch2_wizard_ascend_and_watch_with_check;
+	entity Bert position -> geometry "bert-spot" length over 1200ms;
+	wait 100ms;
+	entity Bert direction = player;
+	wait 900ms;
+	show dialog {
+		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold."
+		Bert "I remembered back door. But...."
+	};
+	entity Bert on_tick = spin_self_clockwise;
+	wait 400ms;
+	show dialog {
+		Bert "No. I can go no further. I could, once. Perhaps."
+	};
+	entity Bert on_tick = null_script;
+	entity Bert direction = player;
+	show dialog {
+		Bert "%PLAYER%, I must not stay long. But I must tell you this."
+		"Something is wrong."
+		"That book we wanted to give you... it was not gone yesterday. It was on shelf, in library."
+		"It is only gone today. This morning."
+		PLAYER "The book only went missing this morning?"
+		Bert "Yes. I am sure of it."
+		"%PLAYER%, something wants to stop you. Or delay you."
+		PLAYER "Are we too late, then? Is the Big Bad here?"
+		Bert "No. We would know. Big Bad would not hide."
+	};
+	entity Bert direction = east;
+	show dialog {
+		Bert "But perhaps he can still reach into our village. Small hacks. Subtle things."
+		"Perhaps he left traps. Protocols. Magic that waits for his signal before working."
+		"I once knew more. But I am old, and...."
+		"...."
+		PLAYER "...?"
+	};
+	entity Bert direction = south;
+	show dialog {
+		Bert "I must go. There is something I must learn. Quickly. But I will return."
+		"Do not wait for me. Go and fix artifact."
+		"If I find answer, I will leave message with trash panda Wizard."
+		"Good luck."
+	};
+	entity Bert position -> geometry "walk_from-south" origin over 800ms;
+	wait 80ms;
+	entity Bert on_tick = yeet;
+	player on_tick = null_script;
+	player_control = on;
+	interrupt = true;
+}
+
+ch2_bert_secret_lambda_intro {
+	show serial_dialog spacer;
+	if (interrupt) {
+		show serial_dialog {
+			"<m>LAMBDA</>: Bert? BERT! Oh my God, Bert! I remember that guy!"
+			" "
+			"<c>YOU</>: What? You know him?"
+		};
+	} else {
+		show serial_dialog {
+			"<m>LAMBDA</>: Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
+			" "
+			"<c>YOU</>: What? You know Bert?"
+		};
+	}
+	show serial_dialog {
+		" "
+		"<m>LAMBDA</>: His name was a complete blank until you said it, but I recognized his face!"
+	};
+	if (!ch2_cameras_explanation) {
+		show serial_dialog {
+			" "
+			"<c>YOU</>: Wait, how did you see his face?"
+			" "
+			"<m>LAMBDA</>: The cameras! They're all around in -- look, it doesn't matter. The point is...."
+		};
+		ch2_cameras_explanation = true;
+	}
+	show serial_dialog {
+		"\tAw, man. The two of us? We go way back!"
+		" "
+		# "Should I go back and fetch him?" = ch2_bert_secret_lambda_intro2
+	};
+}
+ch2_bert_secret_lambda_intro2 {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>YOU</>: Should I go back and fetch him? Let you talk to him?"
+		" "
+		"<m>LAMBDA</>: No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
+		"\t...Damn. It's been a while, though."
+		" "
+		"<c>YOU</>: Wow, you know Bert, huh?"
+	};
+	ch2_lambda_bert_backstory = true;
+	CALLBACK = 1;
+	goto ch2_lambda_bert_q;
+}

@@ -1,0 +1,27 @@
+[package]
+name = "tree-sitter-magegamescript"
+description = "A custom scripting DSL for a custom game engine on a custom PCB"
+version = "2.0.0"
+authors = ["alamedyang <alamedyang@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+keywords = ["incremental", "parsing", "tree-sitter", "magegamescript"]
+categories = ["parsing", "text-editors"]
+repository = "https://github.com/alamedyang"
+edition = "2021"
+autoexamples = false
+
+build = "bindings/rust/build.rs"
+include = ["bindings/rust/*", "grammar.js", "queries/*", "src/*", "tree-sitter.json"]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language = "0.1"
+
+[build-dependencies]
+cc = "1.1.22"
+
+[dev-dependencies]
+tree-sitter = "0.24.6"

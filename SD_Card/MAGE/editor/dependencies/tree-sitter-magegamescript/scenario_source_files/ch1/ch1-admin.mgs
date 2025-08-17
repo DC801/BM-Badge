@@ -1,0 +1,36 @@
+ch1_count_flags {
+	ch1_storyflags_tally = 0;
+	if (catwork_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (shepherd_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (bender_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (baker_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (bobmoss_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (bea1_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (trekkie_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (sportskid_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (verthandi_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (bea2_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+	if (rake_quest_done) {
+		ch1_storyflags_tally += 1;
+	}
+}

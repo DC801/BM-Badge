@@ -1,0 +1,1046 @@
+include!("header.mgs")
+
+/*-----------------*/
+/*     ON_LOAD     */
+/*-----------------*/
+
+// zigzag time!
+on_load_lodge {
+	if (flag tuesdayd is true) {
+		register rtfm -> command-rtfm;
+	}
+	if (flag tuesday_walkedup is false) {
+		set entity "Aunt Zippy" animation_frame to 3;
+		// JUMP
+		goto cutscene_tuesday;
+	}
+	// otherwise, set up the room
+	if (flag hide_lodge_crowd_mini is true) {
+		set entity Bookcase current_animation to 3; // down animation
+		copy empty_lodge_mini;
+	}
+	if (flag hide_lodge_crowd is true) {
+		// because there's a tiny window where you might reload map after elders leave but before crowd does
+		set entity Bookcase current_animation to 3; // down animation
+		copy empty_lodge;
+	}
+	if (flag lodge_cat_unglitched is true) {
+		// this is not set to check 'tuesdayd' because you might want the crowd inside and otherwise leave the tuesday cutscene inert
+		make entity Cat unglitched;
+	}
+	if (flag timmy_unglitched is true) {
+		make entity Timmy unglitched;
+	}
+	if (warp state is exit_from_secretroom) {
+		turn player control off;
+		walk entity "%PLAYER%" along geometry enter_from-secretroom over 200ms;
+		turn player control on;
+	}
+	if (flag demobonus_timmy_yell is true || flag demobonus is false) {
+		goto null_script;
+	}
+	turn player control off;
+	wait 200ms;
+	turn player control on;
+	show dialog {
+		Timmy "Hey! Hey! My book!"
+	}
+	set flag demobonus_timmy_yell to true;
+	goto null_script;
+}
+
+empty_lodge {
+	copy empty_lodge_mini;
+	// just in case I didn't catch all the 'empty_lodge' scripts and need the rest to happen, too
+	teleport entity Cleo to geometry lodge-hidingplace;
+	teleport entity Shepherd to geometry lodge-hidingplace;
+	teleport entity Beatrice to geometry lodge-hidingplace;
+	teleport entity Baker to geometry lodge-hidingplace;
+	teleport entity Trekkie to geometry lodge-hidingplace;
+	teleport entity Marta to geometry lodge-hidingplace;
+	teleport entity "Max Swagger" to geometry lodge-hidingplace;
+	teleport entity Smith to geometry lodge-hidingplace;
+	teleport entity Verthandi to geometry lodge-hidingplace;
+	teleport entity "Uncle Zappy" to geometry lodge-hidingplace;
+	teleport entity "Aunt Zippy" to geometry lodge-hidingplace;
+	teleport entity "Goose  " to geometry lodge-hidingplace;
+	teleport entity "Goose " to geometry lodge-hidingplace;
+}
+empty_lodge_mini {
+	teleport entity Bookcase to geometry lodge-hidingplace;
+	copy skip_artifacts;
+	copy deaden_artifacts;
+	teleport entity Jackob to geometry lodge-hidingplace;
+	teleport entity Alfonso to geometry lodge-hidingplace;
+	teleport entity Bert to geometry lodge-hidingplace;
+}
+
+/*-----------------*/
+/*     ON_TICK     */
+/*-----------------*/
+
+// doors etc
+// no zigzag! (these scripts need names!)
+
+on_tick_lodge {
+	// if TUESDAY finished, jump to the long-term script
+	if flag tuesdayd is true then goto on_tick_tuesdayd;
+	// otherwise, watch the main door and "bounce"
+	if entity "%PLAYER%" is inside geometry door-lodge then goto show_dialog_lodge_cantleaveyet;
+}
+on_tick_tuesdayd {
+	if entity "%PLAYER%" is inside geometry door-lodge then goto leave_lodge;
+}
+leave_lodge {
+	set warp state to exit_from_lodge;
+	load map main;
+}
+show_dialog_lodge_cantleaveyet {
+	show dialog {
+		PLAYER "Wait, I can't leave yet!"
+	}
+	turn player control off;
+	walk entity "%PLAYER%" along geometry enter-lodge over 200ms;
+	turn player control on;
+	goto on_tick_lodge;
+}
+
+// the goose watches the door to the RTFM room (to uncomplicate the map's on_tick things)
+// (it's okay if the goose's on_tick script is hacked, because there's still a functioning door)
+// (also the ring doesn't work until you go into the RTFM room for the first time, so no soft locking out of the tutorial)
+on_tick_lodge_goose {
+	if flag ring_acquired is true then goto on_tick_lodge_goose_ring_acquired;
+}
+on_tick_lodge_goose_ring_acquired {
+	if entity "%PLAYER%" is inside geometry door-secretdoor then goto enter_secretroom;
+}
+enter_secretroom {
+	load map secretroom;
+}
+enter_secretroom_with_guaranteed_cutscene { // for debug purposes
+	set flag tuesdayd to false;
+	copy enter_secretroom;
+}
+
+// glitch watchers (entities' on_tick)
+
+lodge_cat_glitchwatch {
+	if entity "%SELF%" is not glitched then goto lodge_cat_now_unglitched;
+}
+lodge_cat_now_unglitched {
+	set flag lodge_cat_unglitched to true;
+	goto null_script;
+}
+
+timmy_glitchwatch {
+	if entity "%SELF%" is not glitched then goto timmy_now_unglitched;
+}
+timmy_now_unglitched {
+	set flag timmy_unglitched to true;
+	goto null_script;
+}
+
+/*------------------------------*/
+/*     TUESDAY CHOREOGRAPHY     */
+/*------------------------------*/
+
+lodge_watch_player_gradually {
+	set entity Beatrice on_tick to face_player;
+	set entity Cleo on_tick to face_player;
+	set entity Trekkie on_tick to face_player;
+	wait 200ms;
+	set entity "Max Swagger" on_tick to face_player;
+	set entity Verthandi on_tick to face_player;
+	set entity Marta on_tick to face_player;
+	wait 200ms;
+	set entity Baker on_tick to face_player;
+	set entity Smith on_tick to face_player;
+	set entity "Uncle Zappy" on_tick to face_player;
+	wait 200ms;
+	set entity "Aunt Zippy" on_tick to face_player;
+	set entity Shepherd on_tick to face_player;
+}
+alfonso_left_right {
+	wait 200ms; /**/ turn entity Alfonso west;
+	wait 500ms; /**/ turn entity Alfonso east;
+	wait 500ms; /**/ turn entity Alfonso south;
+	wait 200ms;
+}
+watch_marta {
+	turn entity "%SELF%" toward entity Marta;
+}
+spin_around_fast {
+	wait 200ms; /**/ turn entity "%SELF%" west;
+	wait 200ms; /**/ turn entity "%SELF%" south;
+	wait 200ms; /**/ turn entity "%SELF%" east;
+	wait 200ms; /**/ turn entity "%SELF%" north;
+}
+lodge_murmur {
+	set entity Cleo on_tick to gossip_down_player;
+	set entity Baker on_tick to gossip_up_player;
+	set entity Beatrice on_tick to null_script;
+	turn entity Beatrice toward entity "%PLAYER%";
+	set entity Shepherd on_tick to gossip_left_player;
+	set entity Trekkie on_tick to gossip_right_player;
+	set entity Marta on_tick to gossip_left_player;
+	set entity "Max Swagger" on_tick to gossip_right_player;
+	set entity Smith on_tick to gossip_left_player;
+	set entity Verthandi on_tick to gossip_up_player;
+	set entity "Aunt Zippy" on_tick to gossip_down_player;
+	set entity "Uncle Zappy" on_tick to null_script;
+	turn entity "Uncle Zappy" toward entity "%PLAYER%";
+}
+lodge_un_murmur {
+	set entity Cleo on_tick to null_script;
+	turn entity Cleo toward entity "%PLAYER%";
+	set entity Baker on_tick to null_script;
+	turn entity Baker toward entity "%PLAYER%";
+	set entity Beatrice on_tick to null_script;
+	turn entity Beatrice toward entity "%PLAYER%";
+	set entity Shepherd on_tick to null_script;
+	turn entity Shepherd toward entity "%PLAYER%";
+	set entity Trekkie on_tick to null_script;
+	turn entity Trekkie toward entity "%PLAYER%";
+	set entity Marta on_tick to null_script;
+	turn entity Marta toward entity "%PLAYER%";
+	set entity "Max Swagger" on_tick to null_script;
+	turn entity "Max Swagger" toward entity "%PLAYER%";
+	set entity Smith on_tick to null_script;
+	turn entity Smith toward entity "%PLAYER%";
+	set entity Verthandi on_tick to null_script;
+	turn entity Verthandi toward entity "%PLAYER%";
+	set entity "Aunt Zippy" on_tick to null_script;
+	turn entity "Aunt Zippy" toward entity "%PLAYER%";
+	set entity "Uncle Zappy" on_tick to null_script;
+	turn entity "Uncle Zappy" toward entity "%PLAYER%";
+}
+gossip_left_player {
+	wait 200ms; /**/ turn entity "%SELF%" west;
+	wait 350ms; /**/ turn entity "%SELF%" toward entity "%PLAYER%";
+	wait 350ms;
+}
+gossip_right_player {
+	wait 300ms; /**/ turn entity "%SELF%" east;
+	wait 400ms; /**/ turn entity "%SELF%" toward entity "%PLAYER%";
+	wait 200ms;
+}
+gossip_up_player {
+	turn entity "%SELF%" north;
+	wait 300ms;
+	turn entity "%SELF%" toward entity "%PLAYER%";
+	wait 600ms;
+}
+gossip_down_player {
+	wait 100ms; /**/ turn entity "%SELF%" south;
+	wait 250ms; /**/ turn entity "%SELF%" toward entity "%PLAYER%";
+	wait 550ms;
+}
+player_struggles_a_bit {
+	wait 100ms;
+	turn entity "%PLAYER%" west;
+	set entity "%PLAYER%" current_animation to 1;
+	wait 50ms;    set entity "%PLAYER%" current_animation to 0;
+	wait 200ms;  turn entity "%PLAYER%" east;
+	             set entity "%PLAYER%" current_animation to 1;
+	wait 50ms;     set entity "%PLAYER%" current_animation to 0;
+	wait 200ms;
+}
+elders_whisper {
+	wait 100ms; /**/ turn entity Alfonso toward entity Jackob;
+	wait 100ms; /**/ turn entity Jackob toward entity Alfonso;
+	wait 700ms; /**/ turn entity Alfonso toward entity Bert;
+	wait 100ms; /**/ turn entity Bert toward entity Alfonso;
+	wait 700ms; /**/ turn entity Alfonso toward entity Jackob;
+	wait 500ms; /**/ turn entity Bert toward entity "%PLAYER%";
+	wait 50ms; /**/ turn entity Alfonso toward entity "%PLAYER%";
+	wait 100ms; /**/ turn entity Jackob toward entity "%PLAYER%";
+}
+elders_to_secretdoor {
+	wait 100ms; set entity Alfonso on_tick to secretdoor_walk;
+	wait 200ms; set entity Bert on_tick to secretdoor_knightsmove_walk;
+	wait 400ms; set entity Jackob on_tick to secretdoor_knightsmove_walk;
+}
+secretdoor_knightsmove_walk {
+	walk entity "%SELF%" to geometry elder-point over 500ms;
+	copy secretdoor_walk; // don't crush this COPY_SCRIPT
+}
+secretdoor_walk {
+	walk entity "%SELF%" to geometry secretdoor_point over 800ms;
+	teleport entity "%SELF%" to geometry lodge-hidingplace;
+	goto null_script; // simultaneous behavior with on_tick; must cancel with null_script
+}
+deaden_artifacts {
+	set entity Broom on_interact to null_script;
+	set entity Glasses on_interact to null_script;
+	set entity Wand on_interact to null_script;
+	set entity Book on_interact to null_script;
+	set entity Bracelet on_interact to null_script;
+}
+
+/*------------------------*/
+/*     TUESDAY PART 1     */
+/*------------------------*/
+
+cutscene_tuesday {
+	// Player walks up to the table
+	turn player control off;
+	turn hex control off;
+	walk entity "%PLAYER%" to geometry lodge-path1 over 600ms;
+	wait 600ms;
+	show dialog {
+		Alfonso "Come on in, %PLAYER%!"
+	}
+	wait 800ms;
+	copy lodge_watch_player_gradually;
+	wait 300ms;
+	walk entity "%PLAYER%" along geometry lodge-path1 over 1900ms;
+	wait 100ms;
+	turn entity "%PLAYER%" toward entity "Uncle Zappy";
+	wait 100ms;
+	show dialog {
+		entity "Uncle Zappy" "We'll be right here."
+	}
+	wait 200ms;
+	walk entity "%PLAYER%" to geometry lodge-path2 over 300ms;
+	wait 100ms;
+	turn entity "%PLAYER%" toward entity "Aunt Zippy";
+	wait 100ms;
+	show dialog {
+		entity "Aunt Zippy" "Go ahead. You'll do great!"
+	}
+	wait 200ms;
+	walk entity "%PLAYER%" along geometry lodge-path2 over 800ms;
+	wait 200ms;
+	turn entity "%PLAYER%" toward entity Alfonso;
+
+	// Player is in the center of the hall:
+	pan camera to geometry lodge-camera-point over 1500ms;
+	show dialog {
+		Jackob alignment TL
+		"The day has come!"
+		"You have come of age, and what a joyous day it is."
+		"You may have noticed some aches and pains, and hair growing in new places. It's also possible --"
+	}
+	turn entity Alfonso toward entity Jackob;
+	show dialog {
+		Alfonso alignment TL "Uh, that's the wrong speech! It's TUESDAY, not puberty education!"
+	}
+	turn entity Bert toward entity Alfonso;
+	show dialog {
+		Bert alignment TL "It Friday."
+	}
+	turn entity Alfonso toward entity Bert;
+	show dialog {
+		Alfonso alignment TL "No, not Tuesday, T.U.E.S.D.A.Y.! You know, Traditional and Unambiguous Event of Selection Directly Affecting You."
+	}
+	turn entity Jackob toward entity Alfonso;
+	show dialog {
+		Jackob alignment TL "Ah, yes. Right you are."
+	}
+	turn entity Alfonso toward entity "%PLAYER%";
+	wait 100ms;
+	turn entity Bert toward entity "%PLAYER%";
+	wait 50ms;
+	turn entity Jackob toward entity "%PLAYER%";
+	wait 200ms;
+	show dialog {
+		Alfonso alignment TL "*Ahem*"
+		"Each mage, upon the day of their 16th birthday, will then be present for their TUESDAY."
+		"Upon the chosen TUESDAY, each mage is recognized by forces beyond our comprehension as ready to wield power bestowed upon them by a magical artifact."
+		"Mages do not choose their own artifacts, but rather are subject to the moods and temperaments of the artifacts."
+		"(And boy they are moody.)"
+	}
+	walk entity Alfonso to geometry elder-point over 400ms;
+	copy alfonso_left_right;
+	show dialog {
+		Alfonso alignment TL "The mage must present themselves to the artifacts until one shows interest. Mage, step forth."
+	}
+	pan camera to entity "%PLAYER%" over 1200ms;
+	turn entity "%PLAYER%" south;
+	show dialog {
+		PLAYER "Okay. I can do this."
+	}
+	turn hex control off;
+	turn player control on;
+	set flag tuesday_walkedup to true;
+} // the player is now free to touch the artifacts
+
+/*-----------------------------------*/
+/*     HALF-TIME (ARTIFACTS ETC)     */
+/*-----------------------------------*/
+
+// Villagers' dialog:
+
+show_dialog_zippy_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "We always knew you were destined for great things!" }
+	} else {
+		show dialog { SELF "Go ahead, dear!" }
+	}
+}
+show_dialog_zappy_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "We're both so proud of you!" }
+	} else {
+		show dialog { SELF "Take your time!" }
+	}
+}
+show_dialog_verthandi_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Oh, how exciting!" }
+	} else {
+		show dialog { SELF "Oh, how exciting!" }
+	}
+	// yeah, she says the same in both cases
+	// accident? or just unimaginative Belldandy?
+}
+show_dialog_smith_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Sounds like that ring is a big deal." "Neat." }
+	} else {
+		show dialog { SELF "Don't look at me! I don't know how any of this stuff works!" }
+	}
+}
+show_dialog_max_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Hmm. That ring looks a bit too plain to be the real Ring Zero, doesn't it?" }
+	} else {
+		show dialog { SELF "Hmm. I've seen better artifacts." }
+	}
+}
+show_dialog_marta_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Wow. Never seen a TUESDAY like this before!" }
+	} else if (flag artifact_broom_touched is true) {
+		show dialog { SELF alignment BL "I knew I recognized this broom!" }
+	} else {
+		show dialog { SELF "One of those artifacts seems a little familiar to me...." }
+	}
+}
+show_dialog_trekkie_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Amazing!" }
+	} else {
+		show dialog { SELF "Oh, me hope it's a good one!" }
+	}
+}
+show_dialog_shepherd_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Neat!" }
+	} else {
+		show dialog { SELF "Is that old junk really magic?" }
+	}
+}
+show_dialog_cleo_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "It looks so shiny!" }
+	} else {
+		show dialog { SELF "Ooh! I bet it's gonna be the one on the left! No, the right! No, the second one!" }
+	}
+}
+show_dialog_beatrice_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Oh! I never thought I'd see this day! Oh, my Delmar...!" }
+	} else {
+		show dialog { SELF "It's been so long since we've had a new mage!" }
+	}
+}
+show_dialog_baker_prechoose {
+	copy face_player;
+	if (flag ring_acquired is true) {
+		show dialog { SELF "Congratulations, %PLAYER%!" }
+	} else {
+		show dialog { SELF "Um, I gotta get back to work, kid. You wanna hurry it up a little?"}
+	}
+}
+show_dialog_jackob_prechoose {
+	copy face_player;
+	set entity Jackob on_tick to look_left_and_right_fast;
+	show dialog { SELF "(Wait, was this everything?)" }
+	set entity Jackob on_tick to null_script;
+	turn entity "%SELF%" south;
+}
+show_dialog_alfonso_prechoose {
+	copy face_player;
+	show dialog { SELF "*ahem*" "The mage must present themselves to the artifacts until one shows interest." }
+	turn entity "%SELF%" south;
+}
+show_dialog_bert_prechoose {
+	copy face_player;
+	show dialog { SELF "Touch each item, please." }
+	turn entity "%SELF%" south;
+}
+
+// The artifacts:
+
+examine_bracelet {
+	show dialog {
+		PLAYER "A Power Bracelet?"
+		Bert "That is a croissant!"
+		"Is my lunch!"
+	}
+	turn player control off;
+	walk entity Bert to geometry bert-lunch-take-spot over 400ms;
+	turn entity Bert south;
+	wait 400ms;
+	teleport entity Bracelet to geometry lodge-hidingplace;
+	wait 300ms;
+	walk entity Bert to geometry bert-lunch-watch-spot over 400ms;
+	turn entity Bert south;
+	turn player control on;
+	set flag artifact_bracelet_touched to true;
+	goto artifacts_eval;
+}
+examine_glasses {
+	show dialog {
+		PLAYER "This?"
+		"This is clearly a temporary asset that hasn't been replaced with anything yet."
+		"Though...."
+		"(touch)"
+		"Ahh, oh well."
+	}
+	set flag artifact_glasses_touched to true;
+	goto artifacts_eval;
+}
+examine_book {
+	show dialog {
+		PLAYER "Ugh. Is that an eye on the cover?"
+		"And I don't wanna know what kind of leather that is."
+		"...."
+		"It's not reacting to me, though."
+	}
+	set flag artifact_book_touched to true;
+	goto artifacts_eval;
+}
+examine_broom {
+	turn player control off;
+	set entity Marta on_tick to null_script;
+	walk entity Marta to geometry marta-broom-step-spot over 500ms;
+	set entity "%PLAYER%" on_tick to watch_marta;
+	show dialog {
+		Marta alignment TL "Hey, that broom is mine! How did that end up there?"
+	}
+	walk entity Marta to geometry marta-broom-take-spot over 600ms;
+	wait 400ms;
+	teleport entity Broom to geometry lodge-hidingplace;
+	wait 300ms;
+	set entity Marta type to marta_broom;
+	wait 300ms;
+	walk entity Marta to geometry marta-broom-watch-spot over 700ms;
+	set entity Marta on_tick to face_player;
+	wait 300ms;
+	set flag artifact_broom_touched to true;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn player control on;
+	goto artifacts_eval;
+}
+examine_wand {
+	set entity "%PLAYER%" on_tick to spin_around_fast;
+	show dialog {
+		PLAYER "Moon Prism Power...."
+	}
+	turn player control off;
+	wait 900ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" south;
+	show dialog {
+		PLAYER "Make Up!"
+	}
+	wait 400ms;
+	turn player control on;
+	turn entity "%PLAYER%" toward entity Wand;
+	show dialog {
+		PLAYER "Erm, maybe I had that a bit wrong."
+		"Still, no response."
+	}
+	set flag artifact_wand_touched to true;
+	goto artifacts_eval;
+}
+
+artifacts_eval {
+	if ( // if any of the artifacts are still untouched
+		flag artifact_bracelet_touched is false
+		|| flag artifact_broom_touched is false
+		|| flag artifact_glasses_touched is false
+		|| flag artifact_wand_touched is false
+		|| flag artifact_book_touched is false
+	) {
+		show dialog { PLAYER "Maybe a different artifact?" }
+		// "bad" eval artifacts will get stuck here; that's fine
+		// (no reset)
+	} else {
+		// all artifacts have been touched:
+		show dialog {
+			PLAYER "Maybe a different artifact?"
+			"Wait. Was that the last one?"
+		}
+		set entity "%PLAYER%" on_tick to look_left_and_right_fast;
+		turn player control off;
+		wait 900ms;
+		set entity "%PLAYER%" on_tick to null_script;
+		copy lodge_murmur;
+		goto player_ringzero_landing;
+	}
+	set entity "%SELF%" on_interact to artifacts_eval;
+}
+
+// GOOD GOD
+// THE "PATHING"
+
+player_ringzero_landing {
+	wait 200ms;
+	if (entity "%PLAYER%" is inside geometry ringzero-walk-6-donut) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-6 over 200ms;
+		goto cutscene_artifacts_eval_good;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-6) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-6 over 300ms;
+		goto cutscene_artifacts_eval_good;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-1159) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-10 over 600ms;
+		copy player_ringzero_from_landing_10;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-1130) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-10 over 300ms;
+		copy player_ringzero_from_landing_10;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-11) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-10 over 100ms;
+		copy player_ringzero_from_landing_10;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-10) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-8 over 400ms;
+		copy player_ringzero_from_landing_8;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-9) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-8 over 200ms;
+		copy player_ringzero_from_landing_8;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-8) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-6 over 500ms;
+		goto cutscene_artifacts_eval_good;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-7) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-6 over 250ms;
+		goto cutscene_artifacts_eval_good;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-5) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-6 over 250ms;
+		goto cutscene_artifacts_eval_good;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-4) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-6 over 500ms;
+		goto cutscene_artifacts_eval_good;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-3) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-4 over 200ms;
+		copy player_ringzero_from_landing_4;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-2) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-4 over 400ms;
+		copy player_ringzero_from_landing_4;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-1) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-1 over 100ms;
+		copy player_ringzero_from_landing_1;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-1230) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-1 over 300ms;
+		copy player_ringzero_from_landing_1;
+	} else if (entity "%PLAYER%" is inside geometry ringzero-walk-1201) {
+		walk entity "%PLAYER%" to geometry ringzero-landing-1 over 600ms;
+		copy player_ringzero_from_landing_1;
+	}
+	goto cutscene_artifacts_eval_good;
+}
+
+player_ringzero_from_landing_10 {
+	walk entity "%PLAYER%" to geometry ringzero-landing-8 over 600ms;
+	copy player_ringzero_from_landing_8;
+}
+player_ringzero_from_landing_8 {
+	walk entity "%PLAYER%" to geometry ringzero-landing-6 over 800ms;
+	goto cutscene_artifacts_eval_good;
+}
+player_ringzero_from_landing_4 {
+	walk entity "%PLAYER%" to geometry ringzero-landing-6 over 800ms;
+	goto cutscene_artifacts_eval_good;
+}
+player_ringzero_from_landing_1 {
+	walk entity "%PLAYER%" to geometry ringzero-landing-4 over 400ms;
+	copy player_ringzero_from_landing_4;
+}
+
+/*------------------------*/
+/*     TUESDAY PART 2     */
+/*------------------------*/
+
+cutscene_artifacts_eval_good { // TUESDAY PART 2
+	set entity "%PLAYER%" on_tick to look_left_and_right;
+	wait 300ms;
+	show dialog {
+		Marta alignment TR
+		"Did they do it wrong?"
+	}
+	wait 400ms;
+	show dialog {
+		entity "Max Swagger" alignment TL
+		"I'm pretty sure %PLAYER% touched all of them...."
+	}
+	wait 200ms;
+	show dialog {
+		Trekkie alignment TR
+		"Maybe they missed one."
+	}
+	wait 200ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" north;
+	show dialog {
+		Alfonso
+		"Well, this is certainly... unexpected. We've never had a dud quite like this one before."
+	}
+	copy alfonso_left_right;
+	show dialog {
+		Alfonso
+		"Why don't we --"
+	}
+	wait 300ms;
+	copy lodge_un_murmur;
+	fade out camera to #FFDD00 over 1000ms;
+	turn entity "%PLAYER%" south;
+	teleport entity "Ring Zero[0]" to geometry "ringzero-landing[0]";
+	teleport entity "Ring Zero[1]" to geometry "ringzero-landing[1]";
+	fade in camera from #FFDD00 over 1000ms;
+	wait 500ms;
+	pan camera to geometry ringzero-camera over 1100ms;
+	wait 400ms;
+	show dialog {
+		Alfonso "Oh! Oh, good heavens! Is that --"
+		Bert "It is."
+		Jackob "It's Ring Zero!"
+		PLAYER "What?! What is that?"
+	}
+	copy player_struggles_a_bit;
+	wait 200ms;
+	pan camera to entity "%PLAYER%" over 800ms;
+	wait 50ms;
+	fade out camera to #FFDD00 over 1000ms;
+	turn entity "%PLAYER%" south;
+	teleport entity "Ring Zero[0]" to geometry "ring_zero_when_off_screen[0]";
+	teleport entity "Ring Zero[1]" to geometry "ring_zero_when_off_screen[1]";
+	fade in camera from #FFDD00 over 1000ms;
+	show dialog {
+		PLAYER "It just slipped itself onto my finger!"
+	}
+	copy player_struggles_a_bit;
+	wait 500ms;
+	copy player_struggles_a_bit;
+	wait 300ms;
+	turn entity "%PLAYER%" south;
+	show dialog {
+		PLAYER "Um, it's not coming off. Is that normal?"
+	}
+	turn entity "%PLAYER%" toward entity Alfonso;
+	show dialog {
+		Alfonso "Normal? Normal?!"
+		"Nothing about that thing is normal!"
+		"This is --\nThis is unprecedented."
+		PLAYER "Is it bad?! What's wrong with it?"
+		"Am I... am I gonna die?!"
+		Jackob "The ring isn't bad, it's just... powerful."
+		Bert "No one has been chosen by this ring before."
+		Alfonso "Oh, but... but perhaps...."
+	}
+	set entity Alfonso on_tick to look_left_and_right_fast;
+	show dialog {
+		Alfonso "Oh, but this is good news, isn't it?"
+		"This means we can finally fix things!"
+		Bert "Fix the town."
+		Jackob "Yes...."
+		"Yes!"
+	}
+	set entity Alfonso on_tick to null_script;
+	turn entity Alfonso south;
+	show dialog {
+		Jackob "Yes, you can fix things at last!"
+		PLAYER "Fix the town?"
+	}
+	set entity "%PLAYER%" on_tick to loiter2;
+	show dialog {
+		PLAYER "But the town is all glitchy and hacked! How am I supposed to fix it with this thing? Unless...."
+	}
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" toward entity Alfonso;
+	show dialog {
+		Alfonso "Yes, exactly! That ring, Ring Zero --"
+		"That ring gives you the power to hack the planet!"
+		PLAYER "Hack the planet? You mean... all the stuff that's broken?"
+		Bert "You can fix what the Big Bad broke!"
+		Jackob "Everything that the Big Bad hacked so many years ago.... Everything that scoundrel ruined...."
+		PLAYER "This ring gives me the Big Bad's power?"
+		"But I don't know how to hack! How am I supposed to fix anything?"
+		Alfonso "Yes, well, you see...."
+	}
+	copy elders_whisper;
+	show dialog {
+		Alfonso "Please come with us, %PLAYER%."
+	}
+	pan camera to geometry lodge-camera-point over 1200ms;
+	wait 200ms;
+	// Alfonso walks to secret door
+	wait 100ms;
+	walk entity Alfonso to geometry secretdoor_button_path1 over 600ms;
+	walk entity Alfonso to geometry secretdoor_button_path2 over 500ms;
+	wait 100ms;
+	turn entity Alfonso north;
+	wait 500ms;
+	// The bookcase shakes
+	set entity Bookcase current_animation to 1; // shaking anim
+	wait 900ms; /**/ set entity Bookcase current_animation to 0; // tall anim
+	wait 400ms; /**/ play entity Bookcase animation 2 once;
+	set flag ring_acquired to true;
+	teleport entity Bookcase to geometry lodge-hidingplace;
+	// The door is now "down"
+	// Alfonso walks back
+	wait 500ms;
+	walk entity Alfonso to geometry secretdoor_button_path1 over 500ms;
+	walk entity Alfonso to geometry elder-point over 600ms;
+	pan camera to entity "%PLAYER%" over 900ms;
+	show dialog {
+		Alfonso "Into the inner sanctum!"
+	}
+	// Elders on_tick to walk into the RTFM room
+	copy elders_to_secretdoor;
+	copy deaden_artifacts;
+	set flag hide_lodge_crowd_mini to true;
+	turn player control on;
+	// CUTSCENE IS OVER -- PLAYER IS FREE
+}
+
+/*-------------------*/
+/*     LODGE CAT     */
+/*-------------------*/
+
+show_dialog_lodge_cat {
+	copy face_player;
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "////////" }
+		if (flag lodge_cat_unglitched is false) {
+			copy set_hint_glitch;
+		}
+	} else if (
+		flag catwork_quest_done is true
+		|| flag white_cat is false
+	) {
+		show dialog { SELF "...." }
+	} else { // if catwork_quest_done is TRUE && flag white_cat is TRUE
+		turn player control off;
+		// thumbs up:
+		play entity Cat animation 3 once;
+		set entity Cat current_animation to 4;
+		// change player:
+		wait 700ms;
+		set entity "%PLAYER%" type to pipscat;
+		wait 400ms;
+		// thumbs back down:
+		play entity Cat animation 5 once;
+		turn player control on;
+	}
+}
+
+/*------------------------------*/
+/*     TIMMY AND SPORTSBOOK     */
+/*------------------------------*/
+
+show_dialog_timmy_start {
+	copy face_player;
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF alignment TL "Ner ubg qbtf n fnaqjvpu?" }
+		turn entity "%SELF%" west;
+		if (flag timmy_unglitched is false) {
+			copy set_hint_glitch;
+		}
+	} else if (flag demobonus is false) { // if you haven't won ch1 yet
+		if (flag timmy_endstory is true) {
+			show dialog {
+				SELF alignment TL "I've been trying to find books about the olympics."
+				"Gosh, it'd be cool if I could get a gold medal for the high jump!"
+				"I can jump, like, SO high!"
+			}
+		} else {
+			show dialog {
+				SELF alignment TL "Oh, how lovely! It's much easier to read like this!"
+			}
+			set flag timmy_endstory to true;
+		}
+	} else if (flag demobonus_sportsbook_read is false) { // you HAVE won, but you've NOT read the extra page
+		show dialog {
+			SELF "There's this weird extra page in my book!"
+		}
+	} else { // you've won AND read the extra page
+		show dialog {
+			SELF "Oh! I think I've heard of Clippy Bird! My uncle let me play it on his phone this one time, ages ago."
+			"He said it was a really rare game."
+		}
+	}
+	turn entity "%SELF%" west;
+}
+show_dialog_sportsbook {
+	show dialog dialog_sportsbook {
+		SELF alignment TL portrait journal
+		"Sports sports sports. This book is about sports!"
+		"Go, home team!"
+	}
+	if (flag demobonus is true) {
+		show dialog {
+			name "Hex Edits 2" alignment TL portrait parchment
+			"-- allows us to copy and paste bytes using something called a \"Clip Bird.\""
+			"Pressing the circle button will copy a single byte into the Clip Bird, but if you hold circle, left and right will change the number of bytes to be copied."
+			"Pressing square will paste the contents of the Clip Bird into the selected cell and thereafter."
+			"This has dramatically improved our productivity!"
+		}
+		set flag demobonus_sportsbook_read to true;
+		turn hex clipboard on;
+	}
+}
+
+/*---------------*/
+/*     DEBUG     */
+/*---------------*/
+
+debug_cat_prep { // used as an on_interact for an exa?
+	make entity Cat unglitched;
+	copy set_hint_max_from_cleo;
+}
+bypass_tuesday {
+	copy set_goodmorning_flags_true;
+	copy set_artifact_flags_true;
+	copy set_tuesday_flags_true;
+	turn hex control on;
+	copy deaden_artifacts;
+	copy empty_lodge;
+	teleport entity Marta to geometry lodge-hidingplace;
+	// possibly you can't teleport an entity twice in one tick... though why then does this one work?
+}
+debug_disable_tuesday_q {
+	show dialog {
+		SELF "Disable TUESDAY?"
+		> "Completely" : debug_disable_tuesday_complete
+		> "Partially" : debug_disable_tuesday_walkup
+		> "Un-disable" : debug_undisable_tuesday
+		> "Never mind" : debug_disable_tuesday_no
+	}
+}
+debug_disable_tuesday_no {
+	show dialog { SELF "Nothing changed." }
+	set entity "%SELF%" on_interact to debug_disable_tuesday_q;
+}
+debug_disable_tuesday_walkup {
+	copy set_goodmorning_flags_true;
+	// so you don't accidentally trigger walk_to_lodge
+	// if you set all flags to false before engaging the lodge
+	copy set_tuesday_flags_true;
+	set flag hide_lodge_crowd to false;
+	// was set true above;
+	// set to false now so the lodge crowd isn't hidden upon load,
+	// so you can voluntarily start the cutscene and it'll look okay
+	turn hex control on;
+	show dialog { SELF "TUESDAY partially disabled." }
+	set entity "%SELF%" on_interact to debug_disable_tuesday_q;
+}
+debug_disable_tuesday_complete {
+	copy set_goodmorning_flags_true;
+	copy set_artifact_flags_true;
+	copy set_tuesday_flags_true;
+	turn hex control on;
+	show dialog { SELF "TUESDAY completely disabled." }
+	set entity "%SELF%" on_interact to debug_disable_tuesday_q;
+}
+debug_undisable_tuesday {
+	copy set_goodmorning_flags_true;
+	// so you don't accidentally trigger walk_to_lodge
+	// if you set all flags to false before engaging the lodge
+	copy set_artifact_flags_false;
+	copy set_tuesday_flags_false;
+	turn hex control off;
+	show dialog {
+		SELF "TUESDAY re-enabled."
+	}
+	set entity "%SELF%" on_interact to debug_disable_tuesday_q;
+}
+debug_bypass_tuesday_q {
+	copy face_player;
+	show dialog {
+		SELF "Bypass TUESDAY?"
+		> "Yes" : goto "debug_bypass_tuesday"
+		> "Yes (but enable hintman cutscene)" : goto "debug_bypass_tuesday_but_enable_hintman"
+		> "No" : goto "debug_bypass_tuesday_no"
+	}
+}
+debug_bypass_tuesday {
+	copy bypass_tuesday;
+	copy set_tuesday_flags_true;
+	show dialog { SELF "Tuesday bypassed." }
+	set entity "%SELF%" on_interact to debug_bypass_tuesday_q;
+}
+debug_bypass_tuesday_but_enable_hintman {
+	copy bypass_tuesday;
+	copy set_tuesday_flags_true;
+	set flag hintman_explanation to false;
+	// set to true in above copied script
+	show dialog { SELF "Tuesday bypassed. Prepare for hintman cutscene." }
+	set entity "%SELF%" on_interact to debug_bypass_tuesday_q;
+}
+debug_bypass_tuesday_no {
+	set entity "%SELF%" on_interact to debug_bypass_tuesday_q;
+}
+debug_cutscene_tuesday_q {
+	copy face_player;
+	show dialog {
+		SELF "Begin TUESDAY cutscene?"
+		> "Yes" : goto "debug_cutscene_tuesday"
+		> "No" : goto "debug_cutscene_tuesday_no"
+	}
+}
+debug_cutscene_tuesday {
+	copy cutscene_tuesday;
+	set entity "%SELF%" on_interact to debug_bypass_tuesday_q;
+}
+debug_cutscene_tuesday_no {
+	set entity "%SELF%" on_interact to debug_bypass_tuesday_q;
+}
+debug_touch_artifacts_q {
+	copy face_player;
+	show dialog {
+		SELF "Do what to artifacts?"
+		> "Touch all artifacts" : goto "debug_touch_artifacts"
+		> "Finish lecture and lower bookcase" : goto "debug_touch_artifacts_and_aftermath"
+		> "Teleport to secret room (with cutscene)" : goto "enter_secretroom_with_guaranteed_cutscene"
+		> "No" : goto "debug_touch_artifacts_no"
+	}
+}
+skip_artifacts {
+	copy set_artifact_flags_true;
+	teleport entity Alfonso to geometry elder-point;
+	teleport entity Marta to geometry marta-broom-watch-spot;
+	teleport entity Broom to geometry lodge-hidingplace;
+	teleport entity Bracelet to geometry lodge-hidingplace;
+	set entity Marta type to marta_broom;
+}
+debug_touch_artifacts_end {
+	set entity "%SELF%" on_interact to debug_touch_artifacts_q;
+}
+debug_touch_artifacts_no {
+	set entity "%SELF%" on_interact to debug_touch_artifacts_q;
+}
+debug_touch_artifacts_and_aftermath {
+	copy skip_artifacts;
+	teleport entity Bookcase to geometry lodge-hidingplace;
+	set flag ring_acquired to true;
+	set flag hide_lodge_crowd_mini to true;
+	teleport entity Alfonso to geometry lodge-hidingplace;
+	teleport entity Bert to geometry lodge-hidingplace;
+	teleport entity Jackob to geometry lodge-hidingplace;
+	goto debug_touch_artifacts_end;
+}
+debug_touch_artifacts {
+	copy skip_artifacts;
+	goto debug_touch_artifacts_end;
+}

@@ -1,0 +1,191 @@
+include!("header.mgs")
+
+serial dialog spacer {
+	" "
+	"------------"
+	" "
+}
+serial dialog lambda_over {
+	// check if there's a blank line just before using this dialog (there should be one)
+	"<bold>lambda-talk</>: connection closed successfully"
+}
+
+/* ---------- CASTLE ON_LOAD INIT ---------- */
+
+ch2_map_init_registers {
+	set flag interrupt to false; // flag set when something happens in the room and you haven't left the room yet
+	set flag interrupt2 to false; // for when you need a second one
+	set flag interrupt3 to false; // OwO
+	mutate tempvar = 0;
+	mutate tempvar2 = 0;
+	set flag can_interrupt_dialog to false;
+}
+ch2_map_init_hex {
+	if (
+		// if you've fixed the mainframe to the point you can use Ring Zero normally inside the castle
+		flag ch2_ring_zero_enabled_in_castle is true
+		// OR you're not in the castle at all
+		|| variable ch2_in_room is 0
+		// OR debug mode is on
+		|| debug mode is on
+	) {
+		turn hex control on;
+		turn lights control off;
+		if (variable ch2_in_room is 0) {
+			turn light LED_USB off;
+		}
+	} else {
+		turn hex control off;
+		turn hex clipboard off;
+		turn lights control on;
+		turn light ALL off;
+	}
+}
+ch2_map_init_serial {
+	if (flag ch2_has_artifact is false) { // no artifact at all
+		turn serial control off;
+	} else { // you have the artifact
+		turn serial control on;
+		copy register_rtfm;
+		copy register_inventory;
+		copy register_manual;
+		copy register_eastereggs;
+		register alias h = help;
+		register alias l = look;
+	}
+	if (flag ch2_has_map is true) {
+		copy register_map;
+	}
+	if (debug mode is on) {
+		copy register_storyflag;
+		copy register_warp;
+		turn serial control on;
+	} else if (flag ch2_warp_granted is true) {
+		copy register_warp;
+	}
+	if (variable ch2_storyflag_round is > 0) {
+		if (variable ch2_storyflag_round is < 5) {
+			copy register_parts;
+		}
+	}
+}
+ch2_map_init_inventory_look {
+	if (flag ch2_carrying_monitor is true) {
+		register look + monitor -> look_monitor;
+	}
+	if (flag ch2_carrying_heatsink is true) {
+		register look + "heat sink" -> look_heatsink;
+	}
+	if (flag ch2_carrying_cactuscooler is true) {
+		register look + "cactus cooler" -> look_cactuscooler;
+	}
+	if (flag ch2_carrying_powersupply is true) {
+		register look + "power supply" -> look_powersupply;
+	}
+	if (flag ch2_carrying_keyboard is true) {
+		register look + keyboard -> look_keyboard;
+	}
+	if (flag ch2_carrying_mouse is true) {
+		register look + mouse -> look_mouse;
+	}
+	if (flag ch2_carrying_harddrive is true) {
+		register look + "hard drive" -> look_harddrive;
+	}
+	if (flag ch2_carrying_plate is true) {
+		register look + plate -> look_plate;
+	}
+	if (flag ch2_carrying_needle is true) {
+		register look + needle -> look_needle;
+	}
+	if (flag ch2_carrying_ramchips is true) {
+		register look + "ram chip" -> look_ramchips;
+		register look + ram -> look_ramchips;
+	}
+	if (flag ch2_carrying_clock is true) {
+		register look + clock -> look_clock;
+	}
+	if (flag ch2_carrying_cpu is true) {
+		register look + cpu -> look_cpu;
+	}
+	if (flag ch2_carrying_goldfish is true) {
+		register look + goldfish -> look_goldfish;
+	}
+	if (flag ch2_carrying_manual is true) {
+		register look + manual -> look_manual;
+	}
+	if (flag ch2_carrying_abacus is true) {
+		register look + abacus -> look_abacus;
+	}
+	if (flag ch2_carrying_mainframeos is true) {
+		register look + mainframeos -> look_mainframeos;
+	}
+}
+ch2_map_init_serial_debug_message {
+	if (debug mode is on) {
+		if (flag debug_curr_state is false) {
+			show serial dialog {
+				"<y>+-------------------------+</>"
+				"<y>|  DEBUG MODE IS NOW ON!  |</>"
+				"<y>+-------------------------+</>"
+			}
+		}
+		set flag debug_curr_state to true;
+	} else {
+		if (flag debug_curr_state is true) {
+			show serial dialog {
+				"<y>+--------------------------+</>"
+				"<y>|  DEBUG MODE IS NOW OFF!  |</>"
+				"<y>+--------------------------+</>"
+			}
+		}
+		set flag debug_curr_state to false;
+	}
+}
+
+ch2_map_init_warp_in {
+	if (warp state is warping) {
+		copy warping_in_fade_in;
+	}
+	turn player control on;
+}
+
+ch2_map_init {
+	copy ch2_map_init_registers;
+	copy ch2_map_init_hex;
+	copy ch2_map_init_serial;
+	copy ch2_map_init_inventory_look;
+	copy ch2_map_init_serial_debug_message;
+	copy ch2_map_init_warp_in;
+	// extra goose stuff
+	if (flag ch2_goosefacts is true) {
+		register stop -> stop_goosefacts;
+		copy goosefacts;
+	}
+}
+
+
+/* ---------- ON_WARP & ON_GO ANIMATION ---------- */
+
+spin_quickly {
+	rotate entity "%SELF%" -1;
+	wait 150ms;
+}
+
+warping_out_fade_out {
+	turn player control off;
+	turn serial control off;
+	set warp state to warping;
+	set entity "%PLAYER%" on_tick to spin_quickly;
+	fade out camera to #000000 over 500ms;
+}
+
+warping_in_fade_in {
+	teleport entity "%PLAYER%" to geometry warp-spot;
+	set entity "%PLAYER%" on_tick to spin_quickly;
+	fade in camera from #000000 over 300ms;
+	set entity "%PLAYER%" on_tick to null_script;
+	turn entity "%PLAYER%" south;
+	set warp state to warped; // it needs to be set to SOMETHING...
+	turn player control on; // todo: remove after shared behavior is fully merged
+	turn serial control on; // todo: remove after shared behavior is fully merged
+}

@@ -1,0 +1,79 @@
+include!("header.mgs")
+
+on_tick_family {
+	if entity "%PLAYER%" is inside geometry door-family then goto leave_family;
+}
+leave_family {
+	set warp state to exit_from_family;
+	load map main;
+}
+watch_kid {
+	turn entity "%SELF%" toward entity Kid;
+}
+kid_ballwatch {
+	if entity Kid type is blitzball then goto kid_now_ball;
+}
+kid_now_ball {
+	set flag sportskid_quest_done to true;
+	copy calculate_hint_tracking_series;
+	if (variable hint_tracking_check is 8) {
+		copy set_hint_none;
+	}
+	goto null_script;
+}
+
+on_load_family {
+	if (flag tuesdayd is true) {
+		register rtfm -> command-rtfm;
+	}
+	if (flag sportskid_quest_done is true) {
+		set entity Kid type to blitzball;
+	}
+}
+
+show_dialog_kid {
+	set entity "%PLAYER%" on_tick to watch_kid;
+	if (entity "%SELF%" is glitched) {
+		show dialog {
+			SELF "Stb N'r ns fstymjw inrjsxnts!"
+		}
+	} else if (entity Kid type is blitzball) {
+		show dialog dialog_kid_ball {
+			SELF "I'm the wind! Whoosh!"
+		}
+	} else {
+		show dialog {
+			SELF "I'm gonna be a Blitzball when I grow up!"
+		}
+		copy set_hint_sportskid;
+	}
+	// RESET
+	set entity "%PLAYER%" on_tick to null_script;
+	set entity "%SELF%" on_interact to show_dialog_kid;
+}
+
+show_dialog_smith {
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "Naa, ptl matm lttz itgxxk, hk lxz ytnem itgxxk?" }
+	} else {
+		turn entity Smith toward entity "%PLAYER%";
+		if (flag smith_backstory is true) {
+			show dialog { SELF "Real talk, don't eat memory leek soup. It'll mess with your head." }
+		} else {
+			show dialog {
+				SELF "What's for dinner?"
+				"Memory leek soup!"
+				"...."
+				"...Nah, just kidding. It's saag paneer."
+			}
+			set flag smith_backstory to true;
+		}
+		turn entity Smith east;
+	}
+	// RESET
+	set entity "%SELF%" on_interact to show_dialog_smith;
+}
+
+show_dialog_smith_dinner {
+	show dialog { PLAYER "Smells good!" }
+}

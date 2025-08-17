@@ -1,0 +1,134 @@
+include "header.mgs";
+
+/* --------------- on_tick --------------- */
+
+// goose mission
+
+on_tick_goose_mission {
+	// on_tick is 'mission' -- if rake not in lake, jump
+	if (!entity Rake intersects geometry lake) {
+		goto on_tick_goose_mission_rake_out_of_lake;
+	}
+	entity Goose direction = south;
+	entity Goose current_animation = 0;
+	rake_quest_done = true;
+	copy!(calculate_hint_tracking_series)
+	if (hint_tracking_check == 10) {
+		// if the hint series is the currently goose, reset hint
+		copy!(set_hint_none)
+	}
+	// you win!
+	goto null_script;
+}
+on_tick_goose_mission_rake_out_of_lake {
+	// if rake is approx at start point, jump
+	if (entity Rake intersects geometry "rake-point") {
+		goto goose_misison_rake_on_rake_point;
+	}
+	entity Goose direction = south;
+	copy!(honk)
+	entity Goose position -> geometry goose_midpoint origin over 600ms;
+	entity Goose position -> geometry goose_lakepoint origin over 600ms;
+	entity Goose direction = south;
+	goto on_tick_goose_mission;
+}
+goose_misison_rake_on_rake_point {
+	// if rake has left its start point, jump
+	if (!entity Rake intersects geometry "rake-point") {
+		goto on_tick_goose_mission_rake_out_of_lake;
+	}
+	entity Goose direction = south;
+	copy!(honk)
+	entity Goose position -> geometry goose_rakepoint origin over 1200ms;
+	entity Goose direction = entity Rake;
+	// if rake has left its start point, jump
+	if (!entity Rake intersects geometry "rake-point") {
+		goto on_tick_goose_mission_rake_out_of_lake;
+	}
+	copy!(honk)
+	entity Goose position -> geometry goose_lakepoint origin over 1200ms;
+	entity Goose direction = south;
+	// if rake has left its start point, jump
+	if (!entity Rake intersects geometry "rake-point") {
+		goto on_tick_goose_mission_rake_out_of_lake;
+	}
+	goto on_tick_goose_mission;
+}
+
+honk {
+	entity Goose animation -> 2 thrice;
+}
+honk_to_make_rake_float {
+	entity Goose direction = entity Rake;
+	wait 200ms; /**/ entity Goose current_animation = 2;
+	wait 600ms; /**/ entity Goose on_tick = make_rake_float;
+	wait 3000ms; /**/ entity Goose current_animation = 0;
+}
+
+// drifting rake
+
+make_rake_float { // on_tick
+	entity Rake on_tick = rake_drift_south;
+	wait 600ms; /**/ entity Rake on_tick = rake_drift_west;
+	wait 600ms; /**/ entity Rake on_tick = rake_drift_south;
+	wait 600ms; /**/ entity Rake on_tick = rake_drift_east;
+	wait 600ms;
+}
+rake_drift_south {
+	entity Rake position -> geometry "drift-south" origin over 60000ms;
+}
+rake_drift_east {
+	entity Rake position -> geometry "drift-east" origin over 60000ms;
+}
+rake_drift_west {
+	entity Rake position -> geometry "drift-west" origin over 60000ms;
+}
+
+// goose rescue protocol
+
+goose_bounds_watch {
+	if (!entity Goose intersects geometry bounds) {
+		goto rescue_goose;
+	}
+}
+rescue_goose {
+	entity Goose on_tick = null_script;
+	entity Goose position = geometry "goose-rescue";
+	entity Goose position -> geometry goose_lakepoint origin over 2000ms;
+	entity Goose on_tick = on_tick_goose_mission;
+	self on_tick = goose_bounds_watch;
+}
+
+/* --------------- dialog --------------- */
+
+show_dialog_goose_generic {
+	copy!(face_player)
+	show dialog { SELF "Honk!" };
+}
+
+show_dialog_goose_mad {
+	show dialog { SELF "Honk!" };
+	if (!rake_quest_done) {
+		copy!(set_hint_goose)
+	}
+	// RESET
+	self on_interact = show_dialog_goose_mad;
+}
+
+/* --------------- debug --------------- */
+
+debug_win_rake_q {
+	copy!(face_player)
+	show dialog {
+		SELF "Position rake in lake?"
+		> "Yes" = debug_win_rake_yes
+		> "No" = debug_win_rake_no
+	};
+}
+debug_win_rake_yes {
+	entity Rake position = geometry "rake-lake-point";
+	self on_interact = debug_win_rake_q;
+}
+debug_win_rake_no {
+	self on_interact = debug_win_rake_q;
+}

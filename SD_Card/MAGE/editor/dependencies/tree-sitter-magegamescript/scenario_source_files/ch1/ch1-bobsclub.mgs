@@ -1,0 +1,535 @@
+include "header.mgs";
+
+/** ------ ON_LOAD ------ **/
+
+on_load_bobsclub1 {
+	if (tuesdayd) {
+		command rtfm = command_rtfm;
+	}
+	if (!bobmoss_quest_done) {
+		entity "Bob Moss" position = geometry "bobsclub-hidingplace";
+		entity "Bob Moss" name = " ";
+		entity "Bob Moss" on_interact = null_script;
+		entity "Bob Moss" type = exa;
+	}
+	if (!bobsclub_entered) {
+		goto show_dialog_bobsclub;
+	}
+}
+show_dialog_bobsclub {
+	player_control = off;
+	player position -> geometry bob_path origin over 500ms;
+	wait 800ms;
+	show dialog {
+		name "????"
+		"Oh, hello. You must be here for the annual Bobs-Only Party, right?"
+	};
+	player position -> geometry bob_path length over 3500ms;
+	player direction = entity "Guardian Bob";
+	entity "Guardian Bob" direction = player;
+	wait 100ms;
+	show dialog {
+		entity "Guardian Bob"
+		"Well, I hate to tell you this, but it's canceled this year."
+
+		PLAYER "What? Canceled?"
+
+		entity "Guardian Bob"
+		"Yeah. This time, for real."
+		"I mean, every year they SAY its canceled, but this time it's actually genuinely canceled."
+
+		entity "Strong Bad"
+		"Wait, canceled?!"
+	};
+	wait 300ms;
+	camera -> geometry strongbad_camera origin over 1200ms;
+	wait 150ms;
+	player direction = entity "Strong Bad";
+	wait 200ms;
+	entity "Guardian Bob" direction = entity "Strong Bad";
+	wait 100ms;
+	show dialog {
+		entity "Strong Bad" alignment TL
+		"But what about all the ladies?!"
+
+		PLAYER alignment TR
+		"Ladies? I'm pretty sure Bob is a masculine name, traditionally."
+
+		entity "Strong Bad" alignment TL
+		"Nuh-uh!"
+		"What about Bob... rietta? Bob... velyn?"
+		"Barbara? I mean, Bob-ara?"
+		"They're still gonna come to the party, aren't they?"
+
+		PLAYER alignment TR
+		"Sorry, dude! Not if the party's canceled."
+		"...Also not if none of them are named Bob."
+
+		entity "Strong Bad" alignment TL
+		"Sure, they'll come! I just gotta wait a little more!"
+
+		PLAYER alignment TR
+		"I think you came to the wrong party."
+	};
+	wait 200ms;
+	camera -> player position over 700ms;
+	wait 200ms;
+	entity "Guardian Bob" direction = south;
+	show dialog {
+		entity "Guardian Bob"
+		"Well, this place should be full of Bobs... next year."
+	};
+	copy!(begin_flail)
+	show dialog {
+		entity "Strong Bad"
+		"Bob-alina!\nBob-cine!\nBob-quelyn!\nCome baaaack!"
+	};
+	copy!(end_flail)
+	player_control = on;
+	bobsclub_entered = true;
+	if (!baker_backstory) {
+		goto null_script; // end it here
+	}
+	player direction = entity "Guardian Bob";
+	entity "Guardian Bob" direction = player;
+	show dialog {
+		PLAYER
+		"So I guess I can tell the baker to cancel the donut order then, huh?"
+
+		entity "Guardian Bob"
+		"Guess so. Sorry about this."
+	};
+}
+
+/** ------ ON_TICK ------ **/
+
+// bakery
+on_tick_bakery {
+	if (player intersects geometry "door-bakery-exit") {
+		goto leave_bakery;
+	}
+}
+leave_bakery {
+	warp_state = exit_from_bakery;
+	load map main;
+}
+
+// Bob's club
+on_tick_bobsclub {
+	if (player intersects geometry "door-bobsclub-exit") {
+		goto leave_bobsclub;
+	}
+}
+leave_bobsclub {
+	warp_state = exit_from_bobsclub;
+	load map main;
+}
+
+/** ------ CHOREOGRAPHY ------ **/
+
+// bakery
+on_tick_bake {
+	copy!(add_flour)
+	copy!(add_flour)
+	copy!(add_flour)
+	self position -> geometry bakery_mid origin over 200ms;
+	self position -> geometry pre_sink origin over 350ms;
+	copy!(wash_hands)
+	self position -> geometry bakery_ovenzone origin over 1300ms;
+	copy!(load_bread)
+	self position -> geometry bakery_ovenzone origin over 300ms;
+	copy!(load_bread)
+	self position -> geometry bakery_fridgezone origin over 1800ms;
+	copy!(check_fridge)
+	self position -> geometry pre_sink origin over 700ms;
+	copy!(wash_hands)
+	self position -> geometry bakery_mid origin over 450ms;
+	self position -> geometry bakery_kneading origin over 250ms;
+	wait 600ms;
+}
+add_flour {
+	self position -> geometry bakery_flour origin over 600ms;
+	self position -> geometry bakery_flour_touch origin over 180ms;
+	// bug on 2021/04/10: if duration less than frame rate, baker is yeeted to space
+	self direction = south;
+	wait 400ms;
+	self position -> geometry bakery_flour origin over 180ms;
+	self position -> geometry bakery_kneading origin over 600ms;
+	self direction = south;
+	wait 1200ms;
+}
+wash_hands {
+	self position -> geometry bakery_sink origin over 200ms;
+	wait 1200ms;
+	self position -> geometry pre_sink origin over 200ms;
+}
+load_bread {
+	self position -> geometry bakery_rack origin over 200ms;
+	wait 600ms;
+	self position -> geometry bakery_ovenzone origin over 200ms;
+	self position -> geometry bakery_pre_oven origin over 300ms;
+	self position -> geometry bakery_oven origin over 200ms;
+	wait 800ms;
+	self position -> geometry bakery_pre_oven origin over 200ms;
+}
+check_fridge {
+	self position -> geometry bakery_fridge origin over 200ms;
+	wait 700ms;
+	self position -> geometry bakery_fridgezone origin over 200ms;
+}
+watch_baker {
+	self direction = entity Baker;
+}
+
+// Bob's club
+begin_flail {
+	entity "Strong Bad" animation -> 3 once;
+	entity "Strong Bad" current_animation = 5;
+}
+end_flail {
+	entity "Strong Bad" animation -> 4 once;
+}
+
+/** ------ DIALOG ------ **/
+
+// bakery
+show_dialog_bread {
+	show dialog { PLAYER "Mmmm, fresh bread!" };
+}
+show_dialog_baker_start {
+	player on_tick = watch_baker;
+	if (self glitched) { // glitched
+		show dialog { SELF "Qacwk, A kmvvwfdq usf'l kww kljsayzl. A ymwkk A kzgmdv uml tsuc gf lzw usxxawfw." };
+	} else if (bobsclub_entered) { // !glitched && BobsClub
+		if (!baker_quest_done) { // ...but you haven't brought him the news yet
+			// bring him the news
+			show dialog {
+				SELF "Canceled? The party at the Bobs-Only Club was canceled? For real?"
+				PLAYER "That's what Bob said."
+				SELF "Bob? Stone Cold Bob Austin?"
+				PLAYER "Uh... well, it was someone named Bob."
+				SELF "Great. Just great. Just as I was putting everything in the oven. Not gonna pay me either, are they?"
+				"Well, thanks for finding out for me. Now I need to find a way to move four dozen B-shaped donuts."
+			};
+			baker_quest_done = true;
+			copy!(calculate_hint_tracking_series)
+			if (hint_tracking_check == 2) {
+				copy!(set_hint_none)
+			}
+		} else { // ...but you HAVE brought him the news already
+			// final dialog:
+			show dialog { SELF "Say, you wouldn't want a B-shaped donut, would you? On the house." };
+		}
+	} else  {
+		if (!baker_backstory) { // !glitched && !BobsClub && !backstory
+			// hear backstory
+			show dialog {
+				SELF "Hey, I'm pretty swamped. Can you run an errand for me?"
+				PLAYER "What do you need?"
+				SELF "The Bobs-Only Club placed a huge order for B-shaped donuts, due tonight, but I can't get anyone to confirm the order."
+				"They haven't paid yet, either."
+				"I went over there this morning, but they wouldn't let me in! And Bob wouldn't tell me anything!"
+				"I just want to know whether or not they still want these donuts. I'm running out of time to get everything ready by tonight."
+				"Can you find out for me? Get some answers from Bob? Any Bob?"
+				PLAYER "Sure, I can swing past that way. See what I can find out."
+				SELF "Thanks."
+				"Oh, and happy birthday."
+			};
+		} else { // !glitched && !BobsClub && backstory
+			// hear summary
+			show dialog {
+				SELF "Hear anything from the Bobs-Only Club yet?"
+			};
+		}
+		copy!(set_hint_baker)
+	}
+	player on_tick = null_script;
+	self on_interact = show_dialog_baker_start;
+}
+
+// Bob's club
+show_dialog_bobwall {
+	show dialog {
+		PLAYER "Wall of Bobs: famous Bobs."
+		"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook.\nSideshow Bob, entertainer."
+		"There sure are a lot of Bobs in the world."
+	};
+}
+show_dialog_balloonbox {
+	show dialog {
+		PLAYER "Just a box of uninflated balloons."
+		"How many balloons does a party need, anyway?"
+	};
+}
+show_dialog_fridge {
+	ch1_found_cactuscooler = true;
+	show dialog {
+		PLAYER "Wow. There's literally nothing but cans of Cactus Cooler in here."
+	};
+}
+
+// Bob Austin
+show_dialog_bobrock_start {
+	copy!(face_player)
+	if (self glitched) {
+		show dialog { SELF "Sqd'j meha byau jxyi." };
+		return;
+	}
+
+	if (!entity "Bob Austin" intersects geometry bobzone) {
+		// teleport him back into bounds
+		player_control = off;
+		copy!(face_player)
+		show dialog { SELF "Goin' back to work."};
+		camera fade out -> #000000 over 500ms;
+		entity "Bob Austin" position = geometry bob_point;
+		entity "Bob Austin" direction = south
+		camera fade in -> #000000 over 500ms;
+		player_control = on;
+		return;
+	}
+
+	if (!bobrock_backstory) {
+		show dialog {
+			SELF "Name's Bob."
+			"Stone Cold %Bob Austin%."
+			"...."
+			"Right, what's yours, then?"
+			PLAYER "You don't know who I am? We've both lived here for years!"
+			SELF "Don't know nobody. All I know is, gotta keep everyone out."
+			"You know, unless their name is Bob."
+			PLAYER "Bob?"
+			SELF "Bob. Camel case.\nNice and plain.\nTraditional."
+			"'Cause this club is Bobs-only. You know, the Bobs-Only Club."
+			PLAYER "Why is it Bobs only?"
+			SELF "Why?\nWhy is it Bobs only?"
+			"Why, it wouldn't be the Bobs-Only Club if I just let anyone in!"
+		};
+		if (baker_backstory) {
+			show dialog {
+				PLAYER "Well, the baker needs to know whether the club still needs a bunch of B-shaped donuts for tonight."
+				"Do you know if the Bobs still want them? There's gonna be a party tonight, right?"
+				SELF "That's for Bobs to know."
+				"Only Bobs."
+				"Bobs only."
+				PLAYER "I think the baker needs to know, too!"
+				SELF "Well, if his name was Bob, I would've let him in!"
+			};
+		}
+		bobrock_backstory = true;
+		copy!(set_hint_baker)
+		return;
+	}
+
+	show dialog { SELF "So, what's your name then?" };
+
+	if (player name != Bob) {
+		if (!bobsclub_entered) {
+			show dialog {
+				PLAYER "Um....\nit's %PLAYER%."
+				SELF "Sorry, can't unlock the door for ya.\nBobs only."
+			};
+			copy!(set_hint_baker)
+		} else {
+			show dialog show_dialog_bobrock_start_AGAIN { // (reused)
+				PLAYER "We've been through all this before, you know."
+				SELF "Doesn't matter. It's just the rules.\nBobs only."
+			}
+			show dialog {
+				PLAYER "...." "Fine. I guess I'm not getting in, then."
+				SELF "Damn straight."
+			};
+		}
+		return;
+	}
+
+	if (!bobsclub_entered) {
+		show dialog {
+			PLAYER "Why, what luck! My name happens to be Bob!"
+			SELF "Nice. Great name. I'll open it on up."
+		};
+	} else {
+		show dialog show_dialog_bobrock_start_AGAIN;
+		show dialog {
+			PLAYER "Well, my name is Bob! Happy?"
+			SELF "Cool. Great name."
+		};
+	}
+
+	// Bob Austin unlocks the door:
+	player_control = off;
+	entity "Bob Austin" position -> entity_path origin over 400ms;
+	entity "Bob Austin" direction = geometry "door-bobsclub-entrance"
+	wait 1000ms;
+	entity "Bob Austin" direction = south
+	show dialog {
+		SELF "Head inside quick, now."
+	};
+	player position -> geometry "predoor-bobsclub" origin over 500ms;
+	player position -> geometry "door-bobsclub-entrance" origin over 500ms;
+	player_control = on;
+	load map bobsclub;
+}
+
+// Guardian Bob
+show_dialog_bobsclub_bob {
+	copy!(face_player)
+	if (self glitched) {
+		show dialog { SELF "Gung'f n onq fvta." };
+		return;
+	}
+	show dialog {
+		SELF "They could've told me the party was actually canceled before I made the trip out here."
+		"And it was a long trip, too. I came all the way from the net!"
+		"*sigh*\nOh, well."
+	};
+	if (!bobmoss_quest_done) {
+		player_control = off;
+		wait 120ms;
+		player_control = on;
+		entity "Guardian Bob" on_tick = look_left_and_right_fast;
+		show dialog {
+			SELF "Wait. Weren't there two Bob golems last year?"
+		};
+		copy!(set_hint_bobmoss_from_guardian)
+		entity "Guardian Bob" on_tick = null_script;
+		entity "Guardian Bob" direction = south;
+	}
+}
+
+// Strong Bad
+show_dialog_bobsclub_strongbob {
+	if (self glitched) {
+		show dialog { SELF "fhqwhgadshgnsdhjsdbkhsdabkfabkveybvf" };
+		return;
+	}
+	copy!(face_player)
+	if (!strong_bad_backstory) {
+		show dialog {
+			SELF "Why, hello there, fellow Bob!"
+			PLAYER "Your name is Bob?"
+			SELF "Why, it sure is!"
+			PLAYER "You look an awful lot like Strong Bad to me."
+			SELF "Wha-what? STRONG BAD? Never heard of him. Though he sounds like quite the rugged and handsome gentleman."
+			"The name's Strong BOB! Just lookee here at my fake -- I mean real -- ID!"
+			PLAYER "(This ID clearly belongs to \"Bob Newhart,\" but the word Newhart is crossed out.)"
+			"(I guess Bob out front doesn't have very good eyes.)"
+		};
+		strong_bad_backstory = true;
+	} else {
+		show dialog { SELF "Yessirree! Strong Bob's the name, and partyin's the game!" };
+	}
+}
+
+/** ------ BOB MOSS ------ **/
+
+show_dialog_bobmoss_start {
+	copy!(face_player)
+	if (self glitched) {
+		copy!(show_dialog_bobmoss_deglitch)
+		self on_interact = show_dialog_bobmoss_start;
+	}
+	if (bobmoss_quest_done) {
+		goto show_dialog_bobmoss_start_s;
+	}
+	show dialog {
+		SELF "Oh, hello, there."
+	};
+	entity "Bob Moss" on_tick = spin_self_clockwise;
+	show dialog {
+		SELF "I was just admiring the forest, with its happy little trees...."
+		"I've made so many squirrel friends, and...."
+	};
+	entity "Bob Moss" on_tick = null_script;
+	copy!(face_player)
+	show dialog {
+		SELF "Oh!"
+		"I didn't realize how late it was getting. I think I might be late for work."
+		"I'd better head out. Hope to see you again."
+	};
+	player_control = off;
+	camera fade out -> #000000 over 500ms;
+	entity "Bob Moss" position = geometry "catwalk-hide";
+	bobmoss_quest_done = true;
+	copy!(calculate_hint_tracking_series)
+	if (hint_tracking_check == 3) {
+		// if the hint series is the same, reset hint
+		copy!(set_hint_none)
+	}
+	camera fade in -> #000000 over 500ms;
+	player_control = on;
+}
+show_dialog_bobmoss_start_s {
+	copy!(face_player)
+	if (self glitched) {
+		copy!(show_dialog_bobmoss_deglitch)
+		self on_interact = show_dialog_bobmoss_start_s;
+	}
+	show dialog {
+		SELF "Sorry, I can't serve anyone until the party starts."
+		"Help yourself to a Cactus Cooler, though. Plenty in the fridge."
+	};
+	self direction = south;
+}
+show_dialog_bobmoss_deglitch {
+	show dialog {
+		SELF "Well that's no good. I should really try to relax. Loosen up a bit...."
+	};
+	player_control = off;
+	camera fade out -> #000000 over 500ms;
+	self glitched = false;
+	camera fade in -> #000000 over 500ms;
+	player_control = on;
+	show dialog {
+		SELF "Ahh, that feels nice."
+	};
+	self direction = south;
+}
+
+/* --- DEBUG --- */
+
+debug_begin_flail {
+	copy!(begin_flail)
+	self on_interact = debug_end_flail;
+}
+debug_end_flail {
+	copy!(end_flail)
+	self on_interact = debug_begin_flail;
+}
+
+debug_bob_q {
+	copy!(face_player)
+	show dialog {
+		SELF
+		"How to Bob?"
+		> "Skip Bob Austin conversation" = debug_bob_skipconvo
+		> "Above + set name Bob" = debug_bob_also_setnamebob
+		> "Skip cutscene and teleport" = debug_bob_teleport
+		> "Never mind" = debug_bob_no
+	};
+}
+debug_bob_skipconvo {
+	bobrock_backstory = true;
+	show dialog {
+		SELF "Bob Austin has been spoken to."
+	};
+	self on_interact = debug_bob_q;
+}
+debug_bob_also_setnamebob {
+	player name = Bob;
+	bobrock_backstory = true;
+	show dialog {
+		SELF "Bob Austin has been spoken to, and your name is Bob."
+	};
+	self on_interact = debug_bob_q;
+}
+debug_bob_teleport {
+	bobsclub_entered = true;
+	show dialog {
+		SELF "Teleportation in progress."
+	};
+	load map bobsclub;
+}
+debug_bob_no {
+	self on_interact = debug_bob_q;
+}

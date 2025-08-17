@@ -1,0 +1,157 @@
+include!("header.mgs")
+
+// REGISTER
+
+register_inventory {
+	register man + inventory -> man_inventory;
+	register inventory -> command_inventory;
+	register alias i = inventory;
+	register alias examine = look;
+	register alias x = look;
+}
+
+// MAN PAGE
+
+man_inventory {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - INVENTORY</>"
+		" "
+		"Use this command to see what items you are currently carrying. This command may also be triggered with the abbreviation <c>I</>."
+	}
+	if (flag ch2_parts_round_2_backstory is true) {
+		show serial dialog {
+			" "
+			"Some items may be combined at one of the solder stations in the castle workshop."
+		}
+	}
+}
+
+// COMMAND
+
+command_inventory {
+	// set the `count-inventory` flag first; if true, don't print anything! just count!
+	mutate ch2_count_inventory = 0;
+	if (flag only_count_inventory is false) {
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>INVENTORY:</>"
+		}
+	}
+	// normal
+	if (flag ch2_carrying_cactuscooler is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tcan of Cactus Cooler" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_heatsink is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\theat sink" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_powersupply is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tpower supply" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_monitor is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tmonitor" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	// abstract
+	if (flag ch2_carrying_harddrive is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\thard drive" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_plate is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tdinner plate" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_needle is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tphonograph needle" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_keyboard is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tkeyboard" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_mouse is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tmouse" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	// desperate
+	if (flag ch2_carrying_ramchips is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tramchips" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_clock is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tclock" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_cpu is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tcpu" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_goldfish is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tgoldfish" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_manual is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tcalculator manual" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	if (flag ch2_carrying_abacus is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tabacus" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	// final
+	if (flag ch2_carrying_mainframeos is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tmainframe OS CD" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	// mini-rake quest
+	if (flag ch2_carrying_minirake_99 is true) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\tmini rake" }
+		}
+		mutate ch2_count_inventory + 1;
+	}
+	// wrapup:
+	if (variable ch2_count_inventory is 0) {
+		if (flag only_count_inventory is false) {
+			show serial dialog { "\t(nothing)" }
+		}
+	}
+	set flag only_count_inventory to false;
+	mutate ch2_counted_inventory = ch2_count_inventory;
+	mutate ch2_count_inventory = 0;
+}

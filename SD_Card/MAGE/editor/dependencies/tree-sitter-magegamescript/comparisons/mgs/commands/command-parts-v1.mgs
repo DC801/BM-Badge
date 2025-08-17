@@ -1,0 +1,505 @@
+include!("header.mgs")
+
+// REGISTER
+
+register_parts {
+	register man + parts -> man_parts;
+	register parts -> command-parts;
+	register parts fail -> command_parts_fail;
+
+	// if (variable ch2_storyflag_round is >= 1) {
+		copy register_parts1;
+	// }
+	// if (variable ch2_storyflag_round is >= 2) {
+		copy register_parts2;
+	// }
+	// if (variable ch2_storyflag_round is >= 3) {
+		copy register_parts3;
+	// }
+	// if (variable ch2_storyflag_round is >= 4) {
+		copy register_parts4;
+	// }
+}
+register_parts1 {
+	register parts + "MONITOR" -> command_parts_monitor;
+	register parts + "HEAT SINK" -> command_parts_heatsink;
+	register parts + "HEATSINK" -> command_parts_heatsink;
+	register parts + "POWER SUPPLY" -> command_parts_powersupply;
+	register parts + "POWERSUPPLY" -> command_parts_powersupply;
+}
+register_parts2 {
+	register parts + "KEYBOARD" -> command_parts_keyboard;
+	register parts + "MOUSE" -> command_parts_mouse;
+	register parts + "HARD DRIVE" -> command_parts_harddrive;
+	register parts + "HARDDRIVE" -> command_parts_harddrive;
+	register parts + "HARD DISK" -> command_parts_harddrive;
+	register parts + "HARDDISK" -> command_parts_harddrive;
+	register parts + "HDD" -> command_parts_harddrive;
+	register parts + "PLATE" -> command_parts_plate;
+	register parts + "DINNER PLATE" -> command_parts_plate;
+	register parts + "NEEDLE" -> command_parts_needle;
+	register parts + "PHONOGRAPH NEEDLE" -> command_parts_needle;
+}
+register_parts3 {
+	register parts + "RAM CHIPS" -> command_parts_ramchips;
+	register parts + "RAMCHIPS" -> command_parts_ramchips;
+	register parts + "RAM" -> command_parts_ramchips;
+	register parts + "CLOCK" -> command_parts_clock;
+	register parts + "CPU" -> command_parts_cpu;
+	register parts + "GOLDFISH" -> command_parts_goldfish;
+	register parts + "ABACUS" -> command_parts_abacus;
+}
+register_parts4 {
+	register parts + "MAINFRAME OS" -> command_parts_os;
+	register parts + "MAINFRAMEOS" -> command_parts_os;
+	register parts + "OS" -> command_parts_os;
+	register parts + "OPERATINGSYSTEM" -> command_parts_os;
+}
+
+// MAN PAGE
+
+man_parts {
+	show serial dialog spacer;
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - PARTS</>"
+		" "
+		"This command uses the program <bold>lambda-talk</> to call Lambda with the subject line \"parts.\" To learn about a specific part, add the part name, e.g. <c>PARTS MONITOR</>."
+		" "
+		"<m>NOTE</>: Hi, there, birthday mage! This is just something I rigged up so you could have a shortcut to ask me quick questions about the parts list. :)"
+	}
+}
+
+// COMMAND
+command_parts_fail {
+	if (
+		flag ch2_ring_zero_enabled_in_castle is true // the artifact is full power
+		|| variable ch2_in_room is not 0 // OR you're in the castle
+	) {
+		// \`parts\` works normally
+		show serial dialog spacer;
+		show serial dialog {
+			"<m>LAMBDA</>: Not sure what you mean. Want to ask about one of these instead?"
+			" "
+		}
+		goto command_parts_print;
+	} else {
+		// otherwise, \`parts\` cannot reach Lambda
+		copy ch2_wireless_error;
+	}
+
+}
+
+command-parts {
+	if (
+		flag ch2_ring_zero_enabled_in_castle is true // the artifact is full power
+		|| variable ch2_in_room is not 0 // OR you're in the castle
+	) {
+		// \`parts\` works normally
+		show serial dialog spacer;
+		show serial dialog {
+			"<c>PARTS LIST</>"
+			" "
+		}
+		goto command_parts_print;
+	} else {
+		// otherwise, \`parts\` cannot reach Lambda
+		copy ch2_wireless_error;
+	}
+}
+command_parts_print {
+	if (variable ch2_storyflag_round is == 1) {
+		goto label one;
+	} else if (variable ch2_storyflag_round is == 2) {
+		if (flag ch2_parts_round_2_backstory is false) {
+			goto label one;
+		} else {
+			goto label two;
+		}
+	} else if (variable ch2_storyflag_round is == 3) {
+		if (flag ch2_parts_round_3_backstory is false) {
+			goto label two;
+		} else {
+			goto label three;
+		}
+	} else if (variable ch2_storyflag_round is >= 4) {
+		if (flag ch2_parts_round_4_backstory is false) {
+			goto label three;
+		} else {
+			goto label four;
+		}
+	}
+	one:
+	if (flag ch2_installed_heatsink is true) {
+		show serial dialog { "- [x] heat sink" }
+	} else if (flag ch2_carrying_heatsink is true) {
+		show serial dialog { "- [~] heat sink" }
+	} else {
+		show serial dialog { "- [ ] heat sink" }
+	}
+
+	if (flag ch2_installed_powersupply is true) {
+		show serial dialog { "- [x] power supply" }
+	} else if (flag ch2_carrying_powersupply is true) {
+		show serial dialog { "- [~] power supply" }
+	} else {
+		show serial dialog { "- [ ] power supply" }
+	}
+
+	if (flag ch2_installed_monitor is true) {
+		show serial dialog { "- [x] monitor" }
+	} else if (flag ch2_carrying_monitor is true) {
+		show serial dialog { "- [~] monitor" }
+	} else {
+		show serial dialog { "- [ ] monitor" }
+	}
+	goto label wrapup;
+	two:
+	if (flag ch2_installed_harddrive is true) {
+		show serial dialog { "- [x] hard drive" }
+	} else if (flag ch2_carrying_harddrive is true) {
+		show serial dialog { "- [~] hard drive" }
+	} else {
+		show serial dialog { "- [ ] hard drive" }
+	}
+	if (flag ch2_installed_plate is true) {
+		show serial dialog { "\t- [x] dinner plate" }
+	} else if (flag ch2_carrying_plate is true) {
+		show serial dialog { "\t- [~] dinner plate" }
+	} else {
+		show serial dialog { "\t- [ ] dinner plate" }
+	}
+	if (flag ch2_installed_needle is true) {
+		show serial dialog { "\t- [x] phonograph needle" }
+	} else if (flag ch2_carrying_needle is true) {
+		show serial dialog { "\t- [~] phonograph needle" }
+	} else {
+		show serial dialog { "\t- [ ] phonograph needle" }
+	}
+
+	if (flag ch2_installed_keyboard is true) {
+		show serial dialog { "- [x] keyboard" }
+	} else if (flag ch2_carrying_keyboard is true) {
+		show serial dialog { "- [~] keyboard" }
+	} else {
+		show serial dialog { "- [ ] keyboard" }
+	}
+
+	if (flag ch2_installed_mouse is true) {
+		show serial dialog { "- [x] mouse" }
+	} else if (flag ch2_carrying_mouse is true) {
+		show serial dialog { "- [~] mouse" }
+	} else {
+		show serial dialog { "- [ ] mouse" }
+	}
+	goto label wrapup;
+	three:
+	if (flag ch2_installed_ramchips is true) {
+		show serial dialog { "- [x] RAM chips" }
+	} else if (flag ch2_carrying_ramchips is true) {
+		show serial dialog { "- [~] RAM chips" }
+	} else {
+		show serial dialog { "- [ ] RAM chips" }
+	}
+
+	if (flag ch2_installed_clock is true) {
+		show serial dialog { "- [x] clock" }
+	} else if (flag ch2_carrying_clock is true) {
+		show serial dialog { "- [~] clock" }
+	} else {
+		show serial dialog { "- [ ] clock" }
+	}
+
+	if (flag ch2_installed_cpu is true) {
+		show serial dialog { "- [x] cpu" }
+	} else if (flag ch2_carrying_cpu is true) {
+		show serial dialog { "- [~] cpu" }
+	} else {
+		show serial dialog { "- [ ] cpu" }
+	}
+	if (flag ch2_installed_goldfish is true) {
+		show serial dialog { "\t- [x] goldfish" }
+	} else if (flag ch2_carrying_goldfish is true) {
+		show serial dialog { "\t- [~] goldfish" }
+	} else {
+		show serial dialog { "\t- [ ] goldfish" }
+	}
+	if (flag ch2_installed_abacus is true) {
+		show serial dialog { "\t- [x] abacus" }
+	} else if (flag ch2_carrying_abacus is true) {
+		show serial dialog { "\t- [~] abacus" }
+	} else {
+		show serial dialog { "\t- [ ] abacus" }
+	}
+	goto label wrapup;
+	four:
+	if (flag ch2_installed_mainframeos is true) {
+		show serial dialog { "\t- [x] mainframe os" }
+	} else if (flag ch2_cutseen_castle99 is true) {
+		show serial dialog { "\t- [~] mainframe os" }
+	} else {
+		show serial dialog { "\t- [ ] mainframe os" }
+	}
+	wrapup:
+	show serial dialog {
+		" "
+		"(For information about one of the above parts, type <c>PARTS</> followed by the part name.)"
+	}
+}
+
+ch2_describe_monitor { show serial dialog ch2_describe_monitor; }
+ch2_describe_heatsink { show serial dialog ch2_describe_heatsink; }
+ch2_describe_powersupply { show serial dialog ch2_describe_powersupply; }
+
+ch2_describe_keyboard { show serial dialog ch2_describe_keyboard; }
+ch2_describe_mouse { show serial dialog ch2_describe_mouse; }
+ch2_describe_harddrive { show serial dialog ch2_describe_harddrive; }
+ch2_describe_plate { show serial dialog ch2_describe_plate; }
+ch2_describe_needle { show serial dialog ch2_describe_needle; }
+
+ch2_describe_ramchips { show serial dialog ch2_describe_ramchips; }
+ch2_describe_clock { show serial dialog ch2_describe_clock; }
+ch2_describe_cpu { show serial dialog ch2_describe_cpu; }
+ch2_describe_goldfish { show serial dialog ch2_describe_goldfish; }
+ch2_describe_abacus { show serial dialog ch2_describe_abacus; }
+
+command_parts_ahead {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: Hold on! Don't get ahead of yourself, haha.... For now just focus on the below:"
+		" "
+}
+	goto command_parts_print;
+}
+command_parts_ahead_confused {
+	show serial dialog spacer;
+	show serial dialog {
+		"<m>LAMBDA</>: I don't know if that will be of any use, but... want to ask about something else?"
+	}
+	goto command_parts_print;
+}
+
+// ROUND ONE: normal
+
+command_parts_monitor {
+	show serial dialog spacer;
+	if (flag ch2_installed_monitor is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got the monitor all set up already. If it looks broken, it's only because the mainframe can't boot up yet." }
+	} else if (flag ch2_carrying_monitor is true) {
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the monitor already. To install it, all you'll need to do is find the matching ports on the mainframe enclosure. It's all keyed, so there's no plugging anything in the wrong way.\n\tOh, and don't forget to plug the monitor into power." }
+	} else {
+		copy ch2_describe_monitor;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_heatsink {
+	show serial dialog spacer;
+	if (flag ch2_installed_heatsink is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got the heat sink ready to go, but you'll need to install the CPU first, so, uh, you can just leave it there for the moment." }
+	} else if (flag ch2_carrying_heatsink is true) {
+		show serial dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already! So, uh, I sort of forgot you can't install that until the CPU is in there, so just set it aside for the moment. We'll do the actual install later." }
+	} else {
+		copy ch2_describe_heatsink;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_powersupply {
+	show serial dialog spacer;
+	if (flag ch2_installed_powersupply is true) {
+		show serial dialog { "<m>LAMBDA</>: The power supply is in place already. Notice, though, that it's got a bunch of smaller wires coming off of it -- you'll need to plug other components into those later. Everything is keyed, so it should be obvious how everything should be plugged when the time comes." }
+	} else if (flag ch2_carrying_powersupply is true) {
+		show serial dialog { "<m>LAMBDA</>: There's a spot where the power supply goes -- it should be fairly obvious. Then screw it in so it won't wiggle around in there." }
+	} else {
+		copy ch2_describe_powersupply;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+
+// ROUND TWO: abstract
+
+command_parts_keyboard {
+	if (variable ch2_storyflag_round is < 2) {
+		goto command_parts_ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_keyboard is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got a keyboard plugged in already... though I realize it's not going to be the easiest to use. But hey, did you know that very early keyboards used a lot of \"chords\" as part of their normal input paradigm?\n\t...Yeah, they kind of sucked. QWERTY is much nicer." }
+	} else if (flag ch2_carrying_keyboard is true) {
+		show serial dialog { "<m>LAMBDA</>: I've checked up on that specific model of keytar, and fortunately it can connect to a computer over USB. Just plug it into the outside of the case and you're good to go.\n\tA MIDI interface would have been trickier, but I'm sure we could have found an adaptor around somewhere." }
+	} else {
+		copy ch2_describe_keyboard;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_mouse {
+	if (variable ch2_storyflag_round is < 2) {
+		goto command_parts_ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_mouse is true) {
+		show serial dialog { "<m>LAMBDA</>: You've got your mouse dongle plugged in, so the mouse will work fine now once we get the rest of the machine up and running. Oh, that's assuming its batteries are charged, I guess." }
+	} else if (flag ch2_carrying_mouse is true) {
+		show serial dialog { "<m>LAMBDA</>: Installing the mouse is easy. All you have to do is plug the end into a USB port. If it's an optical mouse, you can tell it's plugged in correctly if the red laser comes on once you turn on the computer.\n\tOh, whoops, yours is wireless, huh? Well, then, just plug the dongle into one of the USB ports, and make sure the mouse has fresh batteries." }
+	} else {
+		copy ch2_describe_mouse;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_harddrive {
+	if (variable ch2_storyflag_round is < 2) {
+		goto command_parts_ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_harddrive is true) {
+		show serial dialog { "<m>LAMBDA</>: The hard drive is already in place, so we'll have all the on-board storage we'll need. Not sure how much space we'll have, given how it was constructed, but... I'm sure it'll be fine." }
+	} else if (flag ch2_carrying_harddrive is true) {
+		show serial dialog { "<m>LAMBDA</>: The hard drive will need to be plugged into two cables: first, a power cable from the power supply, and second, a SATA cable off the motherboard.\n\tSince that hard drive is... uh, unconventional... just try your best to attach those cables somehow. You'll know if it fits." }
+	} else {
+		copy ch2_describe_harddrive;
+		show serial dialog {
+			"\tUse one of the solder stations in the workshop to combine both items into a <m>HARD DRIVE</>."
+		}
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_plate {
+	if (variable ch2_storyflag_round is < 2) {
+		goto command_parts_ahead_confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_plate is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the plate to make a <m>hard drive</>. You're good." }
+	} else if (flag ch2_carrying_plate is true) {
+		if (flag ch2_carrying_needle is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got a good <m>plate</> already. So now what you need is a phonograph <m>needle</> to act as a read head." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use one of the solder stations to combine them.\n\tHuh, I can confirm that the iron content of the plate is high enough for this to actually work. Not that I was worried...." }
+		}
+	} else {
+		copy ch2_describe_plate;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_needle {
+	if (variable ch2_storyflag_round is < 2) {
+		goto command_parts_ahead_confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_needle is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the <m>needle</> to make a <m>hard drive</>. You're good." }
+	} else if (flag ch2_carrying_needle is true) {
+		if (flag ch2_carrying_plate is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got a <m>needle</> for a read head already. So now what you need is a dinner <m>plate</> to act as a hard drive platter." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use one of the solder stations to combine them.\n\tOh, wow, it looks like that phonograph needle is electric. Weird, but also serendipitous." }
+		}
+	} else {
+		copy ch2_describe_needle;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_ramchips {
+	if (variable ch2_storyflag_round is < 2) {
+		goto command_parts_ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_ramchips is true) {
+		show serial dialog { "<m>LAMBDA</>: The RAM is in place, nice and tight. They're all set." }
+	} else if (flag ch2_carrying_ramchips is true) {
+		show serial dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then....\n\tWell, it's going to be really freaky, but you need to <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." }
+	} else {
+		copy ch2_describe_ramchips;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+
+// ROUND THREE: desperate
+
+command_parts_clock {
+	if (variable ch2_storyflag_round is < 3) {
+		goto command_parts_ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_clock is true) {
+		show serial dialog { "<m>LAMBDA</>: The clock's installed already. It's just... you know... clocking away." }
+	} else if (flag ch2_carrying_clock is true) {
+		show serial dialog { "<m>LAMBDA</>: So the system clock is normally built in, and -- well, you know what? You got that giant grandfather clock to fit inside your pocket somehow, so just... uh... do that again, but for the mainframe enclosure instead." }
+	} else {
+		copy ch2_describe_clock;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_cpu {
+	if (variable ch2_storyflag_round is < 3) {
+		goto command_parts_ahead;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_cpu is true) {
+		show serial dialog { "<m>LAMBDA</>: Your CPU is in place already, ready to go off and be the brain of the whole operation." }
+	} else if (flag ch2_carrying_cpu is true) {
+		show serial dialog { "<m>LAMBDA</>: Line up the CPU with the slot, and gently set it down. Then press the clamp down to lock it in place.\n\tNow the icky part. You got to put thermal paste on there. Try not to get any on your hands, and try to place it so there won't be any bubbles when you press the heat sink on top. Then... well, press the heat sink on top." }
+	} else {
+		copy ch2_describe_cpu;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_goldfish {
+	if (variable ch2_storyflag_round is < 3) {
+		goto command_parts_ahead_confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_goldfish is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already... um, \"used\" the goldfish to make a CPU. You're good." }
+	} else if (flag ch2_carrying_goldfish is true) {
+		if (flag ch2_carrying_abacus is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got the goldfish already, the \"thinking\" part of the CPU, so you'll need to pick up the other half: the abacus." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use one of the solder stations to combine them.\n\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
+		}
+	} else {
+		copy ch2_describe_goldfish;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_abacus {
+	if (variable ch2_storyflag_round is < 3) {
+		goto command_parts_ahead_confused;
+	}
+	show serial dialog spacer;
+	if (flag ch2_installed_abacus is true) {
+		show serial dialog { "<m>LAMBDA</>: You've already got the abacus combined with the goldfish into a CPU, so don't worry about the abacus half of things now." }
+	} else if (flag ch2_carrying_abacus is true) {
+		if (flag ch2_carrying_goldfish is false) {
+			show serial dialog { "<m>LAMBDA</>: You've got an abacus already, the \"data\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
+		} else {
+			show serial dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use one of the solder stations to combine them." }
+		}
+	} else {
+		copy ch2_describe_abacus;
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}
+command_parts_os {
+	show serial dialog spacer;
+	if (variable ch2_storyflag_round is < 4) {
+		show serial dialog { "<m>LAMBDA</>: The operating system isn't quite ready yet. Sorry. Keep working on the hardware and I'll keep working on getting the OS ready for you." }
+	} else if (flag ch2_cutseen_castle99 is false) {
+		show serial dialog { "<m>LAMBDA</>: You'll all done with the mainframe hardware, so come get the OS from me in my <c>SECRET LAB</>. Use <c>WARP</> to reach me." }
+	} else {
+		show serial dialog { "<m>LAMBDA</>: You've got the mainframe OS now, so head on back to first room of the castle -- the room with the the mainframe enclosure -- so the Wizard can install it for you. Good luck." }
+	}
+	show serial dialog {" "}
+	show serial dialog lambda_over;
+}

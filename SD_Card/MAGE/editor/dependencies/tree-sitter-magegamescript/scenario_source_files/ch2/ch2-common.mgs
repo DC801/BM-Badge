@@ -1,0 +1,191 @@
+include "header.mgs";
+
+serial_dialog "spacer" {
+	" "
+	"------------"
+	" "
+}
+serial_dialog "lambda_over" {
+	// check if there's a blank line just before using this dialog (there should be one)
+	"<bold>lambda-talk</>: connection closed successfully"
+}
+
+/* ---------- CASTLE ON_LOAD INIT ---------- */
+
+ch2_map_init_registers {
+	interrupt = false; // flag set when something happens in the room and you haven't left the room yet
+	interrupt2 = false; // for when you need a second one
+	interrupt3 = false; // OwO
+	tempvar = 0;
+	tempvar2 = 0;
+	can_interrupt_dialog = false;
+}
+ch2_map_init_hex {
+	if (
+		// if you've fixed the mainframe to the point you can use Ring Zero normally inside the castle
+		ch2_ring_zero_enabled_in_castle
+		// OR you're not in the castle at all
+		|| ch2_in_room == 0
+		// OR debug_mode
+		|| debug_mode
+	) {
+		hex_control = on;
+		lights_control = off;
+		if (ch2_in_room == 0) {
+			light LED_USB = off;
+		}
+	} else {
+		hex_control = off;
+		hex_clipboard = off;
+		lights_control = on;
+		light ALL = off;
+	}
+}
+ch2_map_init_serial {
+	if (!ch2_has_artifact) { // no artifact at all
+		serial_control = off;
+	} else { // you have the artifact
+		serial_control = on;
+		copy!(register_rtfm)
+		copy!(register_inventory)
+		copy!(register_manual)
+		copy!(register_eastereggs)
+		alias h = help;
+		alias l = look;
+	}
+	if (ch2_has_map) {
+		copy!(register_map)
+	}
+	if (debug_mode) {
+		copy!(register_storyflag)
+		copy!(register_warp)
+		serial_control = on;
+	} else if (ch2_warp_granted) {
+		copy!(register_warp)
+	}
+	if (ch2_storyflag_round > 0) {
+		if (ch2_storyflag_round < 5) {
+			copy!(register_parts)
+		}
+	}
+}
+ch2_map_init_inventory_look {
+	if (ch2_carrying_monitor) {
+		command look + monitor = look_monitor;
+	}
+	if (ch2_carrying_heatsink) {
+		command look + "heat sink" = look_heatsink;
+	}
+	if (ch2_carrying_cactuscooler) {
+		command look + "cactus cooler" = look_cactuscooler;
+	}
+	if (ch2_carrying_powersupply) {
+		command look + "power supply" = look_powersupply;
+	}
+	if (ch2_carrying_keyboard) {
+		command look + keyboard = look_keyboard;
+	}
+	if (ch2_carrying_mouse) {
+		command look + mouse = look_mouse;
+	}
+	if (ch2_carrying_harddrive) {
+		command look + "hard drive" = look_harddrive;
+	}
+	if (ch2_carrying_plate) {
+		command look + plate = look_plate;
+	}
+	if (ch2_carrying_needle) {
+		command look + needle = look_needle;
+	}
+	if (ch2_carrying_ramchips) {
+		command look + "ram chip" = look_ramchips;
+		command look + ram = look_ramchips;
+	}
+	if (ch2_carrying_clock) {
+		command look + clock = look_clock;
+	}
+	if (ch2_carrying_cpu) {
+		command look + cpu = look_cpu;
+	}
+	if (ch2_carrying_goldfish) {
+		command look + goldfish = look_goldfish;
+	}
+	if (ch2_carrying_manual) {
+		command look + manual = look_manual;
+	}
+	if ("ch2_carrying_abacus") {
+		command look + abacus = look_abacus;
+	}
+	if ("ch2_carrying_mainframeos") {
+		command look + mainframeos = look_mainframeos;
+	}
+}
+ch2_map_init_serial_debug_message {
+	if (debug_mode) {
+		if (!debug_curr_state) {
+			show serial_dialog {
+				"<y>+-------------------------+</>"
+				"<y>|  DEBUG MODE IS NOW ON!  |</>"
+				"<y>+-------------------------+</>"
+			};
+		}
+		debug_curr_state = true;
+	} else {
+		if (debug_curr_state) {
+			show serial_dialog {
+				"<y>+--------------------------+</>"
+				"<y>|  DEBUG MODE IS NOW OFF!  |</>"
+				"<y>+--------------------------+</>"
+			};
+		}
+		debug_curr_state = false;
+	}
+}
+
+ch2_map_init_warp_in {
+	if (warp_state == warping) {
+		copy!(warping_in_fade_in)
+	}
+	player_control = on;
+}
+
+ch2_map_init {
+	copy!(ch2_map_init_registers)
+	copy!(ch2_map_init_hex)
+	copy!(ch2_map_init_serial)
+	copy!(ch2_map_init_inventory_look)
+	copy!(ch2_map_init_serial_debug_message)
+	copy!(ch2_map_init_warp_in)
+	// extra goose stuff
+	if (ch2_goosefacts) {
+		command stop = stop_goosefacts;
+		copy!(goosefacts)
+	}
+}
+
+
+/* ---------- ON_WARP & ON_GO ANIMATION ---------- */
+
+spin_quickly {
+	self direction -= 1;
+	wait 150ms;
+}
+
+warping_out_fade_out {
+	player_control = off;
+	serial_control = off;
+	warp_state = warping;
+	player on_tick = spin_quickly;
+	camera fade out -> #000000 over 500ms;
+}
+
+warping_in_fade_in {
+	player position = geometry "warp-spot";
+	player on_tick = spin_quickly;
+	camera fade in -> #000000 over 300ms;
+	player on_tick = null_script;
+	player direction = south;
+	warp_state = warped; // it needs to be set to SOMETHING...
+	player_control = on; // todo: remove after shared behavior is fully merged
+	serial_control = on; // todo: remove after shared behavior is fully merged
+}

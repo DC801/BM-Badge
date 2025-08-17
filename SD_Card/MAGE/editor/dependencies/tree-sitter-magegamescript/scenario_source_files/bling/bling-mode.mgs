@@ -1,0 +1,189 @@
+$maxBling = 5;
+
+/* --- Entrypoints from main menu --- */
+
+start_bling_rotate_auto {
+	warp_state = "bling-rotate-auto";
+	bling_rotate_state = 0;
+	goto bling_goto_branches;
+}
+
+start_bling_rotate_manual {
+	warp_state = "bling-rotate-manual";
+	bling_rotate_state = 0;
+	goto bling_goto_branches;
+}
+
+bling_goto_branches {
+	bling_rotate_state_calc_done = false;
+	// can't zigzag // (why though?)
+	if (bling_rotate_state == 0) {
+		goto start_bling_dc801_2;
+	}
+	if (bling_rotate_state == 1) {
+		goto start_bling_dc801;
+	}
+	if (bling_rotate_state == 2) {
+		goto start_bling_digi_mage2;
+	}
+	if (bling_rotate_state == 3) {
+		goto start_bling_digi_mage;
+	}
+	if (bling_rotate_state == 4) {
+		goto start_bling_zero;
+	}
+	if (bling_rotate_state == 5) {
+		goto start_bling_serial;
+	}
+	goto bling_goto_menu;
+}
+
+/* --- Common to all bling maps --- */
+
+on_load_bling_mode_map {
+	hex_control = false;
+	player_control = false;
+	map on_tick = bling_detect_mode;
+}
+
+bling_detect_mode {
+	// delay listening for button presses
+	// otherwise buttons just immediately trigger
+	wait 150ms;
+	// detect rotation modes
+	if (warp_state == "bling-rotate-manual") {
+		goto loop_bling_listen_manualrotate;
+	} else if (warp_state == "bling-rotate-auto") {
+		// start the timer
+		entity Timer on_tick = loop_bling_timer;
+		goto loop_bling_listen_any;
+	}
+	// not a rotating mode
+	if (bling_hax_button_only) {
+		goto loop_bling_listen_hax;
+	} else {
+		goto loop_bling_listen_any;
+	}
+}
+
+loop_bling_listen_any {
+	if (button ANY pressed) {
+		goto bling_goto_menu;
+	}
+}
+
+loop_bling_listen_hax {
+	if (button HAX pressed) {
+		goto bling_goto_menu;
+	}
+}
+
+bling_goto_menu {
+	warp_state = "from-bling";
+	load map main_menu;
+}
+
+/* --- for the Math entity --- */
+
+bling_rotate_state_increment {
+	bling_rotate_state += 1;
+	temp = 5;
+	temp += 1;
+	if (bling_rotate_state == temp) {
+		bling_rotate_state = 0;
+	}
+	bling_rotate_state_calc_done = true;
+	self on_tick = null_script;
+}
+
+bling_rotate_state_decrement {
+	bling_rotate_state -= 1;
+	if (bling_rotate_state == 65535) { // aka -1
+		bling_rotate_state = $maxBling;
+	}
+	bling_rotate_state_calc_done = true;
+	self on_tick = null_script;
+}
+
+/* --- for the Timer entity --- */
+
+loop_bling_timer {
+	wait 13000ms;
+	entity Math on_tick = bling_rotate_state_increment;
+	goto loop_bling_timer_wait;
+}
+
+loop_bling_timer_wait {
+	// Waits for entity Math to finish
+	if (bling_rotate_state_calc_done) {
+		goto bling_goto_branches;
+	}
+}
+
+loop_bling_listen_manualrotate {
+	if (button LJOY_LEFT pressed) {
+		goto bling_manual_rotate_left;
+	}
+	if (button RJOY_LEFT pressed) {
+		goto bling_manual_rotate_left;
+	}
+	if (button LJOY_RIGHT pressed) {
+		goto bling_manual_rotate_right;
+	}
+	if (button RJOY_RIGHT pressed) {
+		goto bling_manual_rotate_right;
+	}
+	if (button HAX pressed) {
+		goto bling_goto_menu;
+	}
+}
+
+bling_manual_rotate_left {
+	entity Math on_tick = bling_rotate_state_decrement;
+	goto loop_bling_timer_wait;
+}
+
+bling_manual_rotate_right {
+	entity Math on_tick = bling_rotate_state_increment;
+	goto loop_bling_timer_wait;
+}
+
+start_bling_dc801 {
+	bling_hax_button_only = false;
+	load map "bling-dc801";
+}
+
+start_bling_dc801_2 {
+	bling_hax_button_only = false;
+	load map "bling-dc801-2";
+}
+
+start_bling_zero {
+	bling_hax_button_only = false;
+	load map "bling-zero";
+}
+
+start_bling_serial {
+	bling_hax_button_only = false;
+	load map "bling-serial";
+}
+
+start_bling_digi_mage {
+	bling_hax_button_only = false;
+	load map "bling-digi-mage";
+}
+
+start_bling_digi_mage2 {
+	bling_hax_button_only = false;
+	load map "bling-digi-mage2";
+}
+
+start_bling_flying_toasters {
+	bling_hax_button_only = false;
+	load map "flying-toasters";
+}
+
+start_bling_qr {
+	bling_hax_button_only = true;
+	load map "bling-qr";
+}

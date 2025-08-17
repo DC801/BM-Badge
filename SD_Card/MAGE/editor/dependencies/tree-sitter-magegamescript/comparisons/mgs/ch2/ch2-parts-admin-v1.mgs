@@ -1,0 +1,447 @@
+include!("header.mgs")
+/* ---------- DEBUG: Storyflag rounds ---------- */
+
+// debug: "win" that storyflag round
+
+debug_get_items_for_round1 {
+	copy ch2_pickup_monitor;
+	copy ch2_pickup_heatsink;
+	copy ch2_pickup_powersupply;
+}
+debug_get_items_for_round2 {
+	copy ch2_pickup_keyboard;
+	copy ch2_pickup_mouse;
+	copy ch2_pickup_needle;
+	copy ch2_pickup_plate;
+	copy ch2_solder_harddrive;
+}
+debug_get_items_for_round3 {
+	copy ch2_pickup_ramchips;
+	copy ch2_pickup_clock;
+	copy ch2_pickup_goldfish;
+	copy ch2_pickup_abacus;
+	copy ch2_solder_cpu;
+}
+debug_set_flags_to_round0 {
+	turn serial control on;
+	set flag ch2_has_artifact to true;
+	turn hex control on;
+	mutate current_chapter = 2;
+	set flag ch2_cutseen_birthday to true;
+	// debug!("<y>debug_set_flags_to_round0")
+}
+debug_jump_to_round1 {
+	copy debug_set_flags_to_round1;
+	copy ch2_load_castle_1_special;
+}
+debug_jump_to_round2 {
+	copy debug_set_flags_to_round2;
+	copy ch2_load_castle_1_special;
+}
+debug_jump_to_round3 {
+	copy debug_set_flags_to_round3;
+	copy ch2_load_castle_1_special;
+}
+debug_jump_to_round4 {
+	copy debug_set_flags_to_round4;
+	copy ch2_load_castle_1_special;
+}
+
+debug_set_flags_to_round1 {
+	copy debug_set_flags_to_round0;
+	copy debug_finish_toot;
+	copy debug_map_flags_for_round1;
+}
+debug_set_flags_to_round2 {
+	copy debug_set_flags_to_round1;
+	copy debug_get_items_for_round1;
+	copy ch2_install_heatsink;
+	copy ch2_install_powersupply;
+	copy ch2_install_monitor;
+	set flag ch2_cutseen_bert_secret to true;
+	set flag ch2_lambda_bert_backstory to true;
+	set flag ch2_parts_round_2_backstory to true;
+	copy debug_map_flags_for_round2;
+}
+debug_set_flags_to_round3 {
+	copy debug_set_flags_to_round2;
+	copy debug_get_items_for_round2;
+	copy ch2_install_harddrive;
+	copy ch2_install_keyboard;
+	copy ch2_install_mouse;
+	set flag ch2_cutseen_bert_message to true;
+	set flag ch2_parts_round_3_backstory to true;
+	copy debug_map_flags_for_round3;
+}
+debug_set_flags_to_round4 {
+	copy debug_set_flags_to_round3;
+	copy debug_get_items_for_round3;
+	copy ch2_install_ramchips;
+	copy ch2_install_clock;
+	copy ch2_install_cpu;
+	set flag ch2_cutseen_last_parts_done to true;
+	set flag ch2_warp_granted to true;
+	set flag ch2_parts_round_4_backstory to true;
+	copy debug_map_flags_for_round4;
+}
+
+/* ---------- PUT QUEST MARKERS ON MAP ---------- */
+
+ch2_put_on_map_round1 {
+	set flag ch2_map_monitor to true;
+	set flag ch2_map_heatsink to true;
+	set flag ch2_map_powersupply to true;
+}
+ch2_put_on_map_round2 {
+	set flag ch2_map_keyboard to true;
+	set flag ch2_map_mouse to true;
+	set flag ch2_map_plate to true;
+	set flag ch2_map_needle to true;
+}
+ch2_put_on_map_round3 {
+	set flag ch2_map_clock to true;
+	set flag ch2_map_goldfish to true;
+	set flag ch2_map_abacus to true;
+	set flag ch2_map_ramchips to true;
+}
+ch2_put_on_map_round4 {
+	set flag ch2_map_mainframeos to true;
+}
+ch2_take_off_map_round1 {
+	set flag ch2_map_monitor to false;
+	set flag ch2_map_heatsink to false;
+	set flag ch2_map_powersupply to false;
+}
+ch2_take_off_map_round2 {
+	set flag ch2_map_keyboard to false;
+	set flag ch2_map_mouse to false;
+	set flag ch2_map_plate to false;
+	set flag ch2_map_needle to false;
+}
+ch2_take_off_map_round3 {
+	set flag ch2_map_clock to false;
+	set flag ch2_map_goldfish to false;
+	set flag ch2_map_abacus to false;
+	set flag ch2_map_ramchips to false;
+}
+ch2_take_off_map_round4 {
+	set flag ch2_map_mainframeos to false;
+}
+
+/* ---------- ACQUIRE ITEM ---------- */
+
+// Also, remove quest marker from map
+
+//ROUND 1
+
+ch2_pickup_monitor {
+	set flag ch2_map_monitor to false;
+	set flag ch2_carrying_monitor to true;
+	register look + monitor -> look_monitor;
+}
+ch2_pickup_powersupply {
+	set flag ch2_map_powersupply to false;
+	set flag ch2_carrying_powersupply to true;
+	register look + "power supply" -> look_powersupply;
+}
+ch2_handoff_heatsink_to_cactuscooler {
+	set flag ch2_map_heatsink to false;
+	set flag ch2_map_cactuscooler_castle to true;
+}
+ch2_handoff_cactuscooler_to_bobaustin {
+	set flag ch2_map_cactuscooler_castle to false;
+	set flag ch2_map_cactuscooler_bobaustin to true;
+}
+ch2_pickup_cactuscooler {
+	set flag ch2_map_cactuscooler_castle to false // just in case you went straight there
+	set flag ch2_map_cactuscooler_bobaustin to false;
+	set flag ch2_map_heatsink to true;
+	set flag ch2_carrying_cactuscooler to true;
+	register look + "cactus cooler" -> look_cactuscooler;
+}
+ch2_pickup_heatsink {
+	set flag ch2_cactuscooler_delivered to true;
+	set flag ch2_map_cactuscooler_castle to false // just in case you went straight there
+	set flag ch2_map_heatsink to false;
+	set flag ch2_carrying_heatsink to true;
+	register look + "heat sink" -> look_heatsink;
+}
+ch2_unpickup_cactuscooler { // DEBUG
+	// inverse of the above, lol, sorry for incorrect state
+	set flag ch2_map_cactuscooler_bobaustin to true;
+	set flag ch2_map_heatsink to false;
+	set flag ch2_carrying_cactuscooler to false;
+	unregister look + "cactus cooler";
+}
+
+// ROUND 2
+
+ch2_pickup_keyboard {
+	set flag ch2_map_keyboard to false;
+	set flag ch2_carrying_keyboard to true;
+	register look + keyboard -> look_keyboard;
+}
+ch2_pickup_mouse {
+	set flag ch2_map_mouse to false;
+	set flag ch2_carrying_mouse to true;
+	register look + mouse -> look_mouse;
+}
+ch2_pickup_plate {
+	set flag ch2_map_plate to false;
+	set flag ch2_carrying_plate to true;
+	if (flag ch2_carrying_needle is true) {
+		set flag ch2_map_solder to true;
+	}
+	register look + plate -> look_plate;
+}
+ch2_pickup_needle {
+	set flag ch2_map_needle to false;
+	set flag ch2_carrying_needle to true;
+	if (flag ch2_carrying_plate is true) {
+		set flag ch2_map_solder to true;
+	}
+	register look + needle -> look_needle;
+}
+ch2_solder_harddrive {
+	copy ch2_install_plate;
+	copy ch2_install_needle;
+	set flag ch2_map_solder to false;
+	set flag ch2_carrying_harddrive to true;
+	register look + "hard drive" -> look_harddrive;
+}
+
+// ROUND 3
+
+ch2_pickup_clock {
+	set flag ch2_map_clock to false;
+	set flag ch2_carrying_clock to true;
+	register look + clock -> look_clock;
+}
+ch2_pickup_goldfish {
+	set flag ch2_map_goldfish to false;
+	set flag ch2_carrying_goldfish to true;
+	if (flag ch2_carrying_abacus is true) {
+		set flag ch2_map_solder to true;
+	}
+	register look + goldfish -> look_goldfish;
+}
+ch2_pickup_manual {
+	set flag ch2_map_manual to false;
+	set flag ch2_map_abacus to true;
+	set flag ch2_carrying_manual to true;
+	register look + abacus -> look_abacus;
+}
+ch2_handoff_abacus_to_manual {
+	set flag ch2_map_abacus to false;
+	set flag ch2_map_manual to true;
+}
+ch2_pickup_abacus {
+	set flag ch2_map_abacus to false;
+	set flag ch2_carrying_abacus to true;
+	if (flag ch2_carrying_goldfish is true) {
+		set flag ch2_map_solder to true;
+	}
+	register look + abacus -> look_abacus;
+}
+ch2_solder_cpu {
+	copy ch2_install_goldfish;
+	copy ch2_install_abacus;
+	set flag ch2_map_solder to false;
+	set flag ch2_carrying_cpu to true;
+	register look + cpu -> look_cpu;
+}
+ch2_handoff_ramchips_to_seamoss {
+	set flag ch2_map_ramchips to false;
+	set flag ch2_map_seamoss to true;
+}
+ch2_pickup_ramchips {
+	set flag ch2_map_ramchips to false;
+	set flag ch2_map_seamoss to false;
+	set flag ch2_carrying_ramchips to true;
+	register look + "ram chips" -> look_ramchips;
+	register look + ram -> look_ramchips;
+}
+
+// ROUND 4
+
+ch2_pickup_mainframeos {
+	set flag ch2_map_mainframeos to false;
+	set flag ch2_carrying_mainframeos to true;
+	register look + mainframeos -> look_mainframeos;
+}
+
+/* ---------- ITEM "INSTALL" ---------- */
+
+ch2_install_monitor {
+	set flag ch2_carrying_monitor to false;
+	set flag ch2_installed_monitor to true;
+	unregister look + monitor;
+}
+ch2_turn_in_cactuscooler {
+	set flag ch2_carrying_cactuscooler to false;
+	unregister look + "cactus cooler";
+	// picking up heatsink is currently a separate step
+}
+ch2_install_heatsink {
+	set flag ch2_carrying_heatsink to false;
+	set flag ch2_installed_heatsink to true;
+	unregister look + "heat sink";
+}
+ch2_install_powersupply {
+	set flag ch2_carrying_powersupply to false;
+	set flag ch2_installed_powersupply to true;
+	unregister look + "power supply";
+}
+ch2_install_keyboard {
+	set flag ch2_carrying_keyboard to false;
+	set flag ch2_installed_keyboard to true;
+	unregister look + keyboard;
+}
+ch2_install_mouse {
+	set flag ch2_carrying_mouse to false;
+	set flag ch2_installed_mouse to true;
+	unregister look + mouse;
+}
+ch2_install_harddrive {
+	set flag ch2_carrying_harddrive to false;
+	set flag ch2_installed_harddrive to true;
+	unregister look + "hard drive";
+}
+ch2_install_plate {
+	set flag ch2_carrying_plate to false;
+	set flag ch2_installed_plate to true;
+	unregister look + plate;
+}
+ch2_install_needle {
+	set flag ch2_carrying_needle to false;
+	set flag ch2_installed_needle to true;
+	unregister look + needle;
+}
+ch2_install_ramchips {
+	set flag ch2_carrying_ramchips to false;
+	set flag ch2_installed_ramchips to true;
+	unregister look + "ram chips";
+	unregister look + ram;
+}
+ch2_install_clock {
+	set flag ch2_carrying_clock to false;
+	set flag ch2_installed_clock to true;
+	unregister look + clock;
+}
+ch2_install_cpu {
+	set flag ch2_carrying_cpu to false;
+	set flag ch2_installed_cpu to true;
+	unregister look + cpu;
+}
+ch2_install_goldfish {
+	set flag ch2_carrying_goldfish to false;
+	set flag ch2_installed_goldfish to true;
+	unregister look + goldfish;
+}
+ch2_install_abacus {
+	set flag ch2_carrying_abacus to false;
+	set flag ch2_installed_abacus to true;
+	unregister look + abacus;
+}
+ch2_install_mainframeos {
+	set flag ch2_carrying_mainframeos to false;
+	set flag ch2_installed_mainframeos to true;
+	unregister look + mainframeos;
+}
+
+//--------------------------- SOLDER ZONE ---------------------------\\
+
+interact_ch2_solderzone_harddrive {
+	show dialog {
+		PLAYER "Got the plate and the needle. All right, let's solder!"
+		name "" "(You created a hard drive!)"
+	}
+	copy ch2_solder_harddrive;
+}
+interact_ch2_solderzone_cpu {
+	show dialog {
+		PLAYER "Got the goldfish and the abacus. All right, let's solder!"
+		name "" "(You created a cpu!)"
+	}
+	copy ch2_solder_cpu;
+}
+interact_ch2_solderzone {
+	if (flag ch2_parts_round_2_backstory is false) {
+		show dialog {
+			PLAYER "It's a metal pen resting inside a metal coil. But why is the pen plugged in? What does it do?"
+		}
+		return;
+	}
+	if (flag ch2_solder_sight is false) {
+		show dialog {
+			PLAYER "So this is a solder station."
+		}
+		set flag ch2_solder_sight to true;
+	}
+	// plate + needle = harddrive
+	if (variable ch2_storyflag_round is 2) {
+		if (
+			flag ch2_installed_plate is false
+			|| flag ch2_installed_needle is false
+		) {
+			if (flag ch2_carrying_plate is true) {
+				if (flag ch2_carrying_needle is false) {
+					show dialog {
+						PLAYER "I have the plate. Now I just need the needle, and then I can solder them together here."
+					}
+				} else {
+					copy interact_ch2_solderzone_harddrive;
+				}
+			} else if (flag ch2_carrying_needle is true) {
+				if (flag ch2_carrying_plate is false) {
+					show dialog {
+						PLAYER "I have the needle. Now I just need the plate, and then I can solder them together here."
+					}
+				} else {
+					copy interact_ch2_solderzone_harddrive;
+				}
+			} else {
+				show dialog {
+					PLAYER "When I have the plate and the needle, I can solder them together here."
+				}
+			}
+		} else {
+			show dialog { PLAYER "All done soldering for now." }
+		}
+	}
+	// goldfish + abacus = cpu
+	else if (variable ch2_storyflag_round is 3) {
+		if (
+			flag ch2_installed_goldfish is false
+			|| flag ch2_installed_abacus is false
+		) {
+			if (flag ch2_carrying_goldfish is true) {
+				if (flag ch2_carrying_abacus is false) {
+					show dialog {
+						PLAYER "I have the goldfish. Now I just need the abacus, and then I can solder them together here."
+					}
+				} else {
+					copy interact_ch2_solderzone_cpu;
+				}
+			} else if (flag ch2_carrying_abacus is true) {
+				if (flag ch2_carrying_goldfish is false) {
+					show dialog {
+						PLAYER "I have the abacus. Now I just need the goldfish, and then I can solder them together here."
+					}
+				} else {
+					copy interact_ch2_solderzone_cpu;
+				}
+			} else {
+				show dialog {
+					PLAYER "When I have the goldfish and the abacus, I can solder them together here."
+				}
+			}
+		} else {
+			show dialog { PLAYER "All done soldering for now." }
+		}
+	} else {
+		show dialog {
+			PLAYER "Guess I'm all done soldering."
+		}
+	}
+}

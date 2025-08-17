@@ -1,0 +1,37 @@
+
+"set_entity_movement_relative-0" {
+	json[
+		{
+			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
+			"relative_direction": 0,
+			"entity": "%PLAYER%"
+		}
+	]
+}
+"set_entity_movement_relative-1" {
+	json[
+		{
+			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
+			"relative_direction": 1,
+			"entity": "%PLAYER%"
+		}
+	]
+}
+"set_entity_movement_relative-2" {
+	json[
+		{
+			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
+			"relative_direction": 2,
+			"entity": "%PLAYER%"
+		}
+	]
+}
+"set_entity_movement_relative-3" {
+	json[
+		{
+			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
+			"relative_direction": 3,
+			"entity": "%PLAYER%"
+		}
+	]
+}

@@ -1,0 +1,164 @@
+include "header.mgs";
+
+show_dialog_shepherd_start {
+	copy!(face_player)
+	if (self glitched) {
+		show dialog { SELF "Jubn, jung'f tbvat ba?!" };
+		return;
+	}
+	if (shepherd_quest_done) {
+		show dialog { SELF "Thanks a million! I owe you one!" };
+		return;
+	}
+	if (
+		entity Baa intersects geometry "sheep-pen"
+		&& entity Ram intersects geometry "sheep-pen"
+		&& entity Ewe intersects geometry "sheep-pen"
+		&& entity Helga intersects geometry "sheep-pen"
+	) {
+		if (!shepherd_backstory) {
+			show dialog {
+				SELF "Oh, wow, are the sheep actually back inside the pen? I could've sworn they...."
+				"Hey, did you do that? Did you put them back?"
+				"Wow, thanks a lot! I could've gotten into deep trouble!"
+			};
+			shepherd_backstory = true;
+		} else {
+			show dialog { SELF "Thanks a million! I owe you one!" };
+		}
+		shepherd_quest_done = true;
+		copy!(calculate_hint_tracking_series)
+		if (hint_tracking_check == 1) {
+			copy!(set_hint_none)
+		}
+		return;
+	}
+	if (!shepherd_backstory) {
+		copy!(show_dialog_shepherd_backstory)
+		copy!(set_hint_shepherd)
+	} else if (
+		entity Baa intersects geometry "sheep-pen"
+		|| entity Ram intersects geometry "sheep-pen"
+		|| entity Ewe intersects geometry "sheep-pen"
+		|| entity Helga intersects geometry "sheep-pen"
+	) {
+		copy!(face_player)
+		show dialog { SELF "Awesome! Don't stop, now!" };
+		copy!(set_hint_shepherd_partial)
+	} else {
+		show dialog { SELF "Can you help a dude out? Put all four sheep back inside the fence?" };
+		copy!(set_hint_shepherd)
+	}
+	shepherd_backstory = true;
+}
+
+show_dialog_shepherd_backstory {
+	copy!(face_player)
+	show dialog {
+		SELF "...."
+		"I messed up."
+	};
+	copy!(turn_right_and_left)
+	show dialog {
+		SELF "I was supposed to be watching the sheep, but I took a quick nap, and the next thing I know... they were all over the place."
+	};
+	copy!(turn_right_and_left)
+	show dialog {
+		PLAYER "How did they get out? The fence looks fine."
+		SELF "I don't even know. Maybe they were, you know, hacked out. By the Big Bad."
+		PLAYER "But the Big Bad hasn't been around for years. Just how long was this nap?"
+		SELF "It was the shortest nap. Super quick. It was a long blink, really."
+		"A super, tiny, microscopic nap."
+		"...."
+		"I really need this job, man. My last trip to Pigeon-Con, I spent all my rent money on merch."
+		"Can you just help me out? Get them back inside somehow?"
+	};
+}
+
+show_dialog_sheep {
+	show dialog dialog_sheep { SELF name Sheep "...." };
+}
+
+turn_right_and_left {
+	copy!(face_player)
+	player_control = off;
+	wait 200ms;
+	self direction += 1;
+	wait 500ms;
+	self direction -= 2;
+	wait 500ms;
+	self direction += 1;
+	wait 200ms;
+	copy!(face_player)
+	player_control = on;
+}
+
+show_dialog_shepherd_ending {
+	shepherd_quest_done = true;
+	shepherd_backstory = true;
+	copy!(calculate_hint_tracking_series)
+	if (hint_tracking_check == 1) {
+		copy!(set_hint_none)
+	}
+	entity Shepherd on_interact = show_dialog_shepherd_start;
+}
+
+loiter_sheep4 {
+	wait 2400ms; /**/ self animation -> 2 once;
+	wait 4880ms;
+}
+
+loiter_sheep3 {
+	wait 7500ms; /**/ self animation -> 2 once;
+	wait 3200ms;
+}
+
+loiter_sheep2 {
+	wait 9210ms; /**/ self animation -> 2 once;
+	wait 4300ms;
+}
+
+loiter_sheep1 {
+	wait 8530ms; /**/ self animation -> 2 once;
+}
+
+make_sheep_loiter {
+	wait 200ms; /**/ entity Baa animation -> 2 once;
+	wait 1700ms; /**/ entity Ram animation -> 2 once;
+	wait 300ms; /**/ entity Helga animation -> 2 once;
+	wait 500ms; /**/ entity Ewe animation -> 2 once;
+	wait 1300ms; /**/ entity Baa animation -> 2 once;
+	wait 1800ms; /**/ entity Ram animation -> 2 once;
+	wait 600ms; /**/ entity Baa animation -> 2 once;
+	wait 1200ms; /**/ entity Ewe animation -> 2 once;
+	wait 300ms; /**/ entity Helga animation -> 2 once;
+	wait 1500ms; /**/ entity Baa animation -> 2 once;
+	wait 200ms; /**/ entity Ewe animation -> 2 once;
+	wait 800ms;
+}
+
+debug_sheep_q {
+	copy!(face_player)
+	show dialog {
+		SELF "Return sheep to pen?"
+		> "Yes (all)" = debug_sheep_all
+		> "Yes (three out of four)" = debug_sheep_most
+		> "No" = debug_sheep_no
+	};
+}
+debug_sheep_all {
+	copy!(sheep_in_pen)
+	show dialog { SELF "All sheep returned." };
+	self on_interact = debug_sheep_q;
+}
+debug_sheep_most {
+	entity Baa position = geometry baa_point;
+	entity Ram position = geometry ram_point;
+	entity Ewe position = geometry ewe_point;
+	show dialog { SELF "Helga remains." };
+	self on_interact = debug_sheep_q;
+}
+debug_sheep_no {
+	show dialog { SELF "Nothing changed." };
+	self on_interact = debug_sheep_q;
+}

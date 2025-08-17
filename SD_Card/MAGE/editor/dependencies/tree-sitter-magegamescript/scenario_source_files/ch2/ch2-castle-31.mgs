@@ -1,0 +1,359 @@
+include "header.mgs";
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look_ch2_castle_31 {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked around the <c>GRAND HALL</>."
+		"\tThis place seems to be a hybrid entertainment ampitheater and mess hall. But, empty of people and other distractions, the stage -- and its performers -- steal all your attention."
+		" "
+	};
+}
+look_ch2_simon {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at <m>%SELF%</>."
+		"\tLanky and brooding, his glare moves back and forth between you and the ceiling. At your guess, he's the band lead singer."
+	};
+}
+look_ch2_theodore {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at <m>%SELF%</>."
+		"\tTheodore is the bulkiest of the three band members, and looks to be half falling asleep."
+	};
+}
+look_ch2_alvin {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at <m>%SELF%</>."
+		"\tPeriodically she watches you as you move around the room, but she is feigning disinterest."
+	};
+}
+look_ch2_speaker {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tLarge and boxy, with velvety round circles set onto its face. It all looks very expensive."
+	};
+}
+look_ch2_drum {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tThe \"1023 MB\" logo is surprisingly well done, with its thoughtful serifs and clean linework. The professional logo and the aggressive red of the drumset make a strange contrast with the ragtag musicians."
+	};
+}
+look_ch2_bartable {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at the <m>%SELF%</>."
+		"\tComplete with a pair of chairs, the set is all tall and fancy like those at a high class cocktail bar. All the tables could support are a handful of tiny plates and very tall, very narrow drinks. Not much fun in your opinion."
+	};
+}
+
+
+/* ---------- ON_LOAD ---------- */
+
+on_load_ch2_castle_31_postgame {
+	ch2_in_room = 31;
+	// entrance text
+	show serial_dialog spacer;
+	show serial_dialog { "Entering <bold>GRAND HALL</>..." };
+	entity Simon current_animation = 12;
+	entity "Sea Moss" direction = west;
+	if (warp_state == "walk_from-north") {
+		player position = geometry "walk_from-north";
+	} else if (warp_state == "walk_from-west") {
+		player position = geometry "walk_from-west";
+	}
+	copy!(ch2_map_init)
+}
+
+on_load_ch2_castle_31 {
+	// ch2 room state
+	ch2_in_room = 31;
+
+	// entrance text
+	show serial_dialog spacer;
+	if (!ch2_seen_room_31) {
+		show serial_dialog { "Discovered <bold><c>GRAND HALL</>! Room added to <c>MAP</>!" };
+		ch2_seen_room_31 = true;
+	} else {
+		show serial_dialog { "Entering <bold>GRAND HALL</>..." };
+	}
+
+	// room unique stuff
+	if (ch2_installed_keyboard || ch2_carrying_keyboard) {
+		copy!(ch2_hide_keyboard)
+	}
+
+	ch2_simon_heard_high = false;
+	ch2_simon_heard_low = false;
+
+	copy!(ch2_map_init)
+	//DEBUG STUFF
+	if (debug_mode) {
+		command simon = debug_simon;
+		command simon + high = debug_simon_high;
+		command simon + low = debug_simon_low;
+		command simon + win = debug_simon_win;
+		command simon + lose = debug_simon_lose;
+		show serial_dialog {
+			" "
+			"<y>DEBUG></> Play Simon Says!"
+			"<y>></> <c>SIMON</>: replay last game type (default: low)"
+			"<y>></> <c>SIMON HIGH</>: play high game (easier on desktop)"
+			"<y>></> <c>SIMON LOW</>: play low game (easier on the real badge)"
+			"<y>></> <c>SIMON WIN</>: play the win animation(s)"
+			"<y>></> <c>SIMON LOSE</>: play the lose animation(s)"
+		};
+	}
+}
+
+debug_simon {
+	goto simon_game_launcher;
+}
+debug_simon_low {
+	ch2_simon_high = false;
+	goto simon_game_launcher;
+}
+debug_simon_high {
+	ch2_simon_high = true;
+	goto simon_game_launcher;
+}
+debug_simon_win {
+	goto simon_game_win;
+}
+debug_simon_lose {
+	goto simon_game_lose;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick_ch2_castle_31 {}
+on_tick_ch2_castle_31_postgame {
+	if (player intersects geometry "north-hitbox") {
+		copy!(on_exit_ch2_castle_31)
+		warp_state = "walk_from-south";
+		copy!(ch2_load_castle_32_special)
+	} else if (player intersects geometry "west-hitbox") {
+		copy!(on_exit_ch2_castle_32)
+		warp_state = "walk_from-east";
+		copy!(ch2_load_castle_12_special)
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit_ch2_castle_31 { // sanitize ch2 room state
+	ch2_in_room = 0;
+}
+
+// SERIAL: go
+
+on_go_castle_31_north {
+	copy!(on_exit_ch2_castle_31)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_32_special)
+}
+on_go_castle_31_west {
+	copy!(on_exit_ch2_castle_31)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_12_special)
+}
+
+
+/* ---------- ENTITIES ---------- */
+
+interact_ch2_theodore {
+	if (!ch2_simon_won_before || !interrupt) {
+		show dialog {
+			SELF portrait theodore "Bored bored bored BORED BORED!"
+			"Come on! How long is it gonna be before we can play?"
+		};
+	} else {
+		show dialog {
+			SELF portrait theodore "Sorry, I ain't impressed. Anyone can play a keyboard one note at a time."
+		};
+	}
+}
+interact_ch2_alvin {
+	if (!ch2_simon_won_before || !interrupt) {
+		show dialog {
+			SELF portrait alvin "We've been stuck in here, like, forever."
+			"I guess our would-be audience is stuck wherever they are, too."
+		};
+	} else {
+		show dialog {
+			SELF portrait alvin "You think you bestowed upon Simon some profound paradigm shift just now? Hate to break it to you, but he comes to this exact realization, like, twice a month."
+			"\"Music is about the music!\" and \"Make art for yourself, not an audience!\" Heard it all before."
+			"Next week, Simon'll be all about how music is a conversation between musicians and their audience, or society at large, or whatever."
+			"\"The meaning of art is in the eye of the beholder, otherwise it's a tree falling in the woods without anyone hearing!\""
+			"Still, good job keeping up with him."
+		};
+	}
+}
+
+interact_ch2_drum {
+	show dialog {
+		PLAYER "Your band is called \"1023 MB\"?"
+		Alvin portrait alvin "It's 'cause we can't get a real gig."
+	};
+}
+interact_ch2_bartable {
+	show dialog {
+		PLAYER "These tables -- and chairs -- look way too tall and narrow to be comfortable."
+	};
+}
+interact_ch2_banddrinks {
+	show dialog { PLAYER "Just a bunch of fancy drinks." };
+}
+
+interact_ch2_simon {
+	if (ch2_storyflag_round < 2) {
+		show dialog {
+			Simon "There's no audience! I can't play in these conditions! COME ON! What's the holdup? Where is everybody?"
+		};
+	}
+	else if (!ch2_simon_won_before) {
+		if (!ch2_simon_backstory) {
+			show dialog {
+				PLAYER "So, about your keyboard -- erm, \"keytar?\""
+				"I sort of need one for --"
+			};
+			entity Simon current_animation = 13;
+			entity Alvin on_tick = camera_angry_shake;
+			show dialog {
+				Simon emote 2 "WHOA WHOA WHOA hey, hands off! I'm not just going to give you my precious Rosetta!"
+				PLAYER "(Rosetta?)"
+			};
+			entity Alvin on_tick = null_script;
+			entity Simon current_animation = 0;
+			show dialog {
+				Simon emote 1 "But hey, you know what? I'll give you the chance to prove you deserve this beauty."
+			};
+			entity Simon current_animation = 12;
+			show dialog {
+				Simon emote 1 "I'm bored to death, so how about a keytar battle? If you win, I'll let you keep Rosetta, and I'll use my backup keytar for the show instead."
+			};
+			ch2_simon_backstory = true;
+		} else {
+			entity Simon current_animation = 12;
+			show dialog {
+				Simon emote 1 "Change your mind about a keytar battle? I'll let you keep the keyboard if you win. Come on, I'm bored to tears!"
+			};
+		}
+		copy!(simon_game_launcher)
+	}
+	else if (interrupt) {
+		entity Simon current_animation = 12;
+		show dialog {
+			Simon emote 1 "Ah, man! I'm still sweatin' after that last one!"
+			"But I'm not out for the count yet! Want another go?"
+		};
+		copy!(simon_game_launcher)
+	}
+	else {
+		entity Simon current_animation = 12;
+		if (!ch2_simon_repeat_backstory) {
+			show dialog {
+				Simon emote 1 "Hey hey hey, look who it is! It's the keytar wizard!"
+				"Aw, man! I haven't had that much fun in ages! I'm all pumped up, just thinking about it!"
+				"I'm dying for another keytar battle!"
+			};
+			ch2_simon_repeat_backstory = true;
+		} else {
+			show dialog {
+				Simon emote 1 "Hey, keytar wizard! My soul is thirsting for another keytar battle!"
+			};
+		}
+		if (ch2_carrying_keyboard || ch2_simon_repeat_brunhilda_backstory) {
+			/* Do nothing extra... */
+		} else {
+			entity Simon current_animation = 0;
+			show dialog {
+				PLAYER "So, uh, I don't exactly have Rosetta with me right now."
+			};
+			entity Simon current_animation = 12;
+			show dialog {
+				Simon emote 1 "Not a problem, not a problem! Here, you can borrow Brunhilda, just for now. But don't walk away with it, you hear?"
+				PLAYER "How many keytars do you have with you, exactly?"
+			};
+			entity Simon current_animation = 0;
+			show dialog {
+				Simon "Only my favorite four or five."
+			};
+			ch2_simon_repeat_brunhilda_backstory = true;
+		}
+		copy!(simon_game_launcher)
+	}
+}
+interact_ch2_theodore_end {
+	show dialog { SELF portrait theodore "Wake me when we get an actual audience." };
+}
+interact_ch2_simon_end {
+	show dialog { SELF emote 1 "It's finally starting! The audience is trickling in! Soon we'll have a hundred -- no, a thousand people waiting to hear us!" };
+}
+interact_ch2_alvin_end {
+	show dialog { SELF portrait alvin "I hope we'll get a larger audience than this. Let's give it a few more minutes, maybe?" };
+}
+interact_ch2_kuro_end {
+	show dialog { SELF "I've been following this group since they were \"64 Bits\"! I hope they play \"Scary Pointer Math\" tonight! Or maybe \"The Off-By-One Blues\"!" };
+}
+interact_ch2_gloria_end {
+	copy!(face_player)
+	show dialog { SELF "I'm not sure if this is the same band that was on the flyer. Oh, well. I'll give them a shot." };
+	self direction = north;
+}
+interact_ch2_samson_end {
+	show dialog {
+		SELF "Mommy, can I have a guitar?"
+		Gloria "Maybe for your next birthday, sweetie."
+	};
+}
+interact_ch2_tracy_end {
+	copy!(face_player)
+	show dialog { SELF "Guess the refreshments are self serve this time. That's a bit on the cheap side...." };
+	self direction = south;
+}
+
+interact_ch2_seamoss_end {
+	show dialog { SELF "Awesome! Dinner and a show!"};
+}
+
+/* ---------- KEYBOARD (ADMIN) ---------- */
+
+ch2_hide_keyboard {
+	entity Keyboard position = geometry "hiding-spot";
+	entity Keyboard name = " ";
+}
+
+ch2_touch_keyboard {
+	if (!ch2_keyboard_firstlook) {
+		show dialog {
+			PLAYER "It's a keyboard, but in the shape of a guitar."
+			"A... \"keytar,\" perhaps?"
+		};
+		ch2_keyboard_firstlook = true;
+	}
+	show dialog {
+		PLAYER "It's like the spork of band instruments."
+	};
+	entity Simon current_animation = 13;
+	show dialog {
+		Simon emote 2 "Hey! Hey! Don't you insult Rosetta like that!"
+	};
+	entity Simon current_animation = 0;
+	if (ch2_storyflag_round == 2) {
+		show dialog {
+			PLAYER "(I can't just take this without asking. Better talk to %Simon%.)"
+		};
+	}
+}
+
+camera_angry_shake {
+	camera shake -> 100ms 4px over 500ms;
+	goto null_script;
+}

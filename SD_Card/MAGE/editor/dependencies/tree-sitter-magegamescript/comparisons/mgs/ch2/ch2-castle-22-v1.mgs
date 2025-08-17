@@ -1,0 +1,205 @@
+include!("header.mgs")
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look_ch2_castle_22 {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked around the <c>SERVER ROOM</>."
+		"\tRacks upon racks of servers hum with a buzz so deep you can feel it through your bones. Cold air flows in from somewhere, presumably to keep the stacks cool, but it rustles your hat and clothes."
+		" "
+	}
+}
+
+look_ch2_ckwatt {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tThe purple fur of this rabbit-like creature looks incredibly soft. You're tempted to pet it, but that may in fact be a rude thing to do to a sapient creature. Rude, or weird."
+	}
+}
+
+look_ch2_scuzzy {
+	show serial dialog spacer;
+	show serial dialog {
+		"You looked at <m>%SELF%</>."
+		"\tHis cool, slick hair looks like it would take a lot of time to care for. %SELF% might spend as much time on it as he does his work, even when catastrophe had struck the castle."
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load_ch2_castle_22_postgame {
+	// abbreviated copy-pasta of the below
+	mutate ch2_in_room = 22;
+	// entrance text
+	show serial dialog spacer;
+	show serial dialog { "Entering <bold>SERVER ROOM</>..." }
+	if (warp state is walk_from-south) {
+		teleport entity "%PLAYER%" to geometry walk_from-south;
+	} else if (warp state is walk_from-north) {
+		teleport entity "%PLAYER%" to geometry walk_from-north;
+	}
+	copy ch2_map_init;
+}
+on_load_ch2_castle_22 {
+	if warp state is "ch2 ending" then goto ch2_castle_22_ending;
+	// ch2 room state
+	mutate ch2_in_room = 22;
+
+	// entrance text
+	show serial dialog spacer;
+	if (flag ch2_seen_room_22 is false) {
+		show serial dialog { "Discovered <bold><c>SERVER ROOM</>! Room added to <c>MAP</>!" }
+		set flag ch2_seen_room_22 to true;
+	} else {
+		show serial dialog { "Entering <bold>SERVER ROOM</>..." }
+	}
+
+	// room unique stuff
+	if (
+		flag ch2_installed_powersupply is true
+		|| flag ch2_carrying_powersupply is true
+	) {
+		copy script ch2_hide_powersupply;
+	}
+	
+	copy ch2_map_init;
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick_ch2_castle_22 {}
+on_tick_ch2_castle_22_postgame {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit_ch2_castle_22;
+		set warp state to walk_from-north;
+		copy ch2_load_castle_21_special;
+	} else if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		copy on_exit_ch2_castle_22;
+		set warp state to walk_from-south;
+		copy ch2_load_castle_23_special;
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit_ch2_castle_22 { // sanitize ch2 room state
+	mutate ch2_in_room = 0;
+}
+
+// SERIAL: go
+
+on_go_castle_22_north {
+	copy on_exit_ch2_castle_22;
+	copy warping_out_fade_out;
+	copy ch2_load_castle_23_special;
+}
+on_go_castle_22_south {
+	copy on_exit_ch2_castle_22;
+	copy warping_out_fade_out;
+	copy ch2_load_castle_21_special;
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact_ch2_scuzzy {
+	turn player control off;
+	copy interrupt_walk;
+	if (flag ch2_scuzzy_backstory is false) {
+		show dialog {
+			SELF "The quake caused a lot of infrastructure damage around here. We're trying to reroute things and compensate with software."
+		}
+		set flag ch2_scuzzy_backstory to true;
+	} else {
+		show dialog {
+			SELF "In a metaphorical sense, the castle a computer."
+			"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
+			"In isolation each room -- and each of us -- are capable of little. But when we can connect people to each other, we can collaborate and build amazing things."
+		}
+		copy resume_walk;
+		wait 500ms;
+		copy interrupt_walk;
+		show dialog {
+			SELF "I mean, the castle is also a computer in a LITERAL sense, too...."
+		}
+	}
+	copy resume_walk;
+	turn player control on;
+}
+interact_ch2_ckwatt {
+	copy face_player;
+	if (flag ch2_ckwatt_backstory is false) {
+		show dialog {
+			SELF "Huh? You need a power supply?"
+			"Go ahead and take this one."
+			PLAYER "You're sure?"
+			SELF "Sure. My new rig needed something more beefy than this, so I bought a better one a while back. This one is extra."
+			PLAYER "Neat. Thank you!"
+			SELF "No prob."
+		}
+		set flag ch2_ckwatt_backstory to true;
+		set flag ch2_powersupply_permission to true;
+	} else {
+		show dialog {
+			SELF "When you upgrade computers regularly, you tend to accumulate extra stuff. After a while, it can start to take up a lot of space."
+			"Glad that old power supply will see some use."
+		}
+	}
+	turn entity "%SELF%" south;
+}
+interact_ch2_ckwatt_end {
+	copy face_player;
+	show dialog { SELF "I wanna get down to the great hall, but we're not quite done yet. Don't wanna be sloppy."}
+	turn entity "%SELF%" south;
+}
+interact_ch2_scuzzy_end {
+	copy face_player;
+	show dialog { SELF "I'm glad the king and his staff were able to clear the debris blocking the doors. Not that we can leave yet -- still more to do."}
+	turn entity "%SELF%" south;
+}
+
+/* ---------- POWER SUPPLY (ADMIN) ---------- */
+
+ch2_hide_powersupply {
+	teleport entity "Power Supply" to geometry hiding-spot;
+	set entity "Power Supply" name to " ";
+}
+
+ch2_touch_powersupply {
+	if (flag ch2_powersupply_permission is false) {
+		show dialog {
+			PLAYER "This has a power cable coming out of it, so it must be the power supply."
+			"But it probably belongs to someone. I better ask permission before taking it."
+		}
+		return;
+	}
+	if (flag interrupt is false) {
+		show dialog {
+			PLAYER "All right, power supply!"
+		}
+		set flag interrupt to true;
+	}
+	if (flag ch2_powersupply_permission is true) {
+		show dialog {
+			name "" "(Pick up the power supply?)"
+			> "Yes" : ch2_touch_powersupply_yes
+			> "No" : ch2_touch_powersupply_no
+		}
+	}
+}
+
+ch2_touch_powersupply_yes {
+	show dialog {
+		name "" "(You pick up the power supply!)"
+	}
+	copy script ch2_hide_powersupply;
+	copy script ch2_pickup_powersupply;
+	set entity "%SELF%" on_interact to null_script;
+}
+ch2_touch_powersupply_no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" on_interact to ch2_touch_powersupply;  // reset after script jump
+}

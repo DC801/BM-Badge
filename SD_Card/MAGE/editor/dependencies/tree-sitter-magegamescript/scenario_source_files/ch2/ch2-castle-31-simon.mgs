@@ -1,0 +1,777 @@
+include "header.mgs";
+$lightsdefault = "ch2_serial_light_manager";
+
+/* ---------- LOAD ---------- */
+
+$roundcount = 7;
+
+$light0 = LED_BIT128;
+$light1 = LED_BIT1;
+$light2 = LED_PAGE;
+$light3 = LED_MEM3;
+$light4 = LED_XOR;
+$light5 = LED_MEM0;
+
+$button0 = BIT128; // bottom_left
+$button1 = BIT1; // bottom_right
+$button2 = PAGE; // left
+$button3 = MEM3; // right
+$button4 = XOR; // top left
+$button5 = MEM0; // top right
+
+$animation_padding1 = 50ms;
+$animation_padding2 = 200ms;
+
+$guitar_idle = 3;
+$pose_pre_right = 4;
+$pose_pre_left = 5;
+$pose_top_right = 6;
+$pose_right = 7;
+$pose_bottom_right = 8;
+$pose_top_left = 9;
+$pose_left = 10;
+$pose_bottom_left = 11;
+$rocking = 12;
+
+simon_game_launcher {
+	// hex_control = off
+	entity Simon on_tick = simon_game_start_q;
+}
+
+simon_game_start_q {
+	entity Simon current_animation = 12;
+	if (ch2_simon_high) {
+		show dialog {
+			Simon emote 1 "How about it? Want a high battle?"
+			> "Absolutely. A high battle it is!" = simon_game_start
+			> "No, let's do a low battle" = simon_game_start_q_swap
+			> "What's the difference?" = simon_game_start_difference
+			> "Actually, never mind." = simon_game_start_nevermind
+		};
+	} else {
+		show dialog {
+			Simon emote 1 "How about it? Want a low battle?"
+			> "Definitely. Low battle all the way!" = simon_game_start
+			> "No, let's do a high battle." = simon_game_start_q_swap
+			> "What's the difference?" = simon_game_start_difference
+			> "Actually, never mind." = simon_game_start_nevermind
+		};
+	}
+}
+simon_game_start_q_swap {
+	if (ch2_simon_high) {
+		ch2_simon_high = false;
+		show dialog {
+			Simon emote 1 "Oho, so you'd like a low battle?"
+			> "Definitely. Low battle all the way!" = simon_game_start
+			> "No, let's do a high battle." = simon_game_start_q_swap
+			> "What's the difference?" = simon_game_start_difference
+			> "Actually, never mind." = simon_game_start_nevermind
+		};
+	} else {
+		ch2_simon_high = true;
+		show dialog {
+			Simon emote 1 "I see, so you'd like a high battle?"
+			> "Absolutely. A high battle it is!" = simon_game_start
+			> "No, let's do a low battle." = simon_game_start_q_swap
+			> "What's the difference?" = simon_game_start_difference
+			> "Actually, never mind." = simon_game_start_nevermind
+		};
+	}
+}
+
+simon_game_start_difference {
+	lights_control = on;
+	light ALL = off;
+	entity Simon current_animation = 0;
+	show dialog {
+		Simon "A HIGH battle is all about a full, square sound. Easier on the eyes but harder on the thumbs, if you get my meaning."
+	};
+	entity Lights on_tick = screen_lights_flash_battle_high;
+	show dialog {
+		Simon "I'm talkin' about these lights up here, of course!"
+	};
+	entity Lights on_tick = $lightsdefault;
+	light ALL = off;
+	show dialog {
+		Simon "A LOW battle is more about quick fingers. It's better for those who prefer to hold their destiny in their own two hands."
+	};
+	entity Lights on_tick = screen_lights_flash_battle_low;
+	show dialog {
+		Simon "That means these lights down here, naturally!"
+	};
+	entity Lights on_tick = $lightsdefault;
+	copy!(ch2_map_init_hex)
+	goto simon_game_start_q;
+}
+
+simon_game_start_nevermind {
+	if (!ch2_simon_won_before) {
+		entity Simon current_animation = 0;
+		show dialog {
+			Simon "Humph. Well, then I'm not trusting you with Rosetta! Come back when you can prove you deserve to have a keytar as gorgeous as this!"
+		};
+	} else {
+		entity Simon current_animation = 12;
+		show dialog {
+			Simon emote 1 "Well then, feel free to ask again anytime."
+		};
+	}
+	entity Simon current_animation = 0;
+	goto simon_game_start_q_wrapup;
+}
+
+simon_game_start_q_wrapup {
+	entity Simon current_animation = 0;
+	entity Simon on_interact = interact_ch2_simon;
+	goto null_script;
+}
+
+/*
+Simon animations:
+0: idle
+1: rockin
+2: become_relieved
+3: shock_idle
+4: relieved_laugh
+5: headbang
+6: pose_top_right
+7: pose_right
+8: pose_bottom_right
+9: pose_top_left
+10: pose_left
+11: pose_bottom_left
+12: happy_idle
+13: pissed
+*/
+
+simon_game_start {
+	player_control = off;
+	hex_control = off;
+	simon_pos1 ?= 4;
+	simon_pos2 ?= 4;
+	simon_pos3 ?= 4;
+	simon_pos4 ?= 4;
+	simon_pos5 ?= 4;
+	simon_pos6 ?= 4;
+	simon_pos7 ?= 4;
+	if (ch2_simon_high) {
+		simon_pos1 += 2;
+		simon_pos2 += 2;
+		simon_pos3 += 2;
+		simon_pos4 += 2;
+		simon_pos5 += 2;
+		simon_pos6 += 2;
+		simon_pos7 += 2;
+	}
+	simon_round = 1;
+	lights_control = on;
+	light ALL = off;
+	wait 100ms;
+	camera fade out -> black over 400ms;
+	camera = geometry "camera-spot";
+	player position = geometry "mage-spot";
+	entity Simon position = geometry "simon-spot";
+	player current_animation = $guitar_idle;
+	entity Simon current_animation = 5;
+	player direction = south;
+	entity Simon direction = south;
+	camera fade in -> black over 400ms;
+	if (ch2_simon_high) {
+		entity Lights on_tick = screen_lights_flash_battle_high;
+		if (!ch2_simon_heard_high) {
+			show dialog {
+				Simon emote 1 "Here we go! Keep your eyes up top!"
+				"Pay attention to those four corners around the screen!"
+				"Follow my lead! LET'S GOOOO!"
+			};
+			ch2_simon_heard_high = true;
+		} else {
+			show dialog {
+				Simon emote 1 "Keep your eyes up top and copy my moves! LET'S GOOOO!"
+			};
+		}
+	} else {
+		entity Lights on_tick = screen_lights_flash_battle_low;
+		if (!ch2_simon_heard_low) {
+			show dialog {
+				Simon emote 1 "Here we go! Keep your eyes down low!"
+				"It's the bottom of the screen that counts now! Keep your thumbs frisky!"
+				"Follow my lead! LET'S GOOOO!"
+			};
+			ch2_simon_heard_low = true;
+		} else {
+			show dialog {
+				Simon emote 1 "Keep your eyes down low and copy my moves! LET'S GOOOO!"
+			};
+		}
+	}
+	entity Lights on_tick = $lightsdefault;
+	light ALL = off;
+	goto simon_enemy_turn_start;
+}
+
+simon_enemy_turn_start {
+	ch2_simon_move_fail = false;
+	wait 800ms;
+	for (i = 0; i < simon_round; i += 1) {
+		if (i == 0) { simon_pos_curr = simon_pos1 *1; }
+		else if (i == 1) { simon_pos_curr = simon_pos2 *1; }
+		else if (i == 2) { simon_pos_curr = simon_pos3 *1; }
+		else if (i == 3) { simon_pos_curr = simon_pos4 *1; }
+		else if (i == 4) { simon_pos_curr = simon_pos5 *1; }
+		else if (i == 5) { simon_pos_curr = simon_pos6 *1; }
+		else if (i == 6) { simon_pos_curr = simon_pos7 *1; }
+		// see $roundcount
+
+		// loopy
+		if (simon_pos_curr == 0) {
+			light $light0 = on;
+			entity Simon current_animation = 11;
+		}
+		else if (simon_pos_curr == 1) {
+			light $light1 = on;
+			entity Simon current_animation = 8;
+		}
+		else if (simon_pos_curr == 2) {
+			light $light2 = on;
+			entity Simon current_animation = 10;
+		}
+		else if (simon_pos_curr == 3) {
+			light $light3 = on;
+			entity Simon current_animation = 7;
+		}
+		else if (simon_pos_curr == 4) {
+			light $light4 = on;
+			entity Simon current_animation = 9;
+		}
+		else if (simon_pos_curr == 5) {
+			light $light5 = on;
+			entity Simon current_animation = 6;
+		}
+		wait 450ms;
+		entity Simon current_animation = 5;
+		light ALL = off;
+		wait 150ms;
+		
+	}
+	goto simon_player_turn_start;
+}
+
+simon_player_turn_start {
+	wait 10ms;
+	i = 0;
+	// player_control = on;
+	goto simon_player_turn_loop_start;
+}
+
+simon_player_turn_loop_start {
+	if (i >= simon_round) {
+		goto simon_player_turn_end;
+	}
+	if (i == 0) { simon_pos_curr = simon_pos1 *1; }
+	else if (i == 1) { simon_pos_curr = simon_pos2 *1; }
+	else if (i == 2) { simon_pos_curr = simon_pos3 *1; }
+	else if (i == 3) { simon_pos_curr = simon_pos4 *1; }
+	else if (i == 4) { simon_pos_curr = simon_pos5 *1; }
+	else if (i == 5) { simon_pos_curr = simon_pos6 *1; }
+	else if (i == 6) { simon_pos_curr = simon_pos7 *1; }
+	// see $roundcount
+
+	// loopy
+	goto simon_player_listen;
+}
+
+simon_player_listen {
+	player direction = south;
+	// CHECK FAILS FIRST
+
+	// high-only positions
+	if (ch2_simon_high) {
+		if (simon_pos_curr != 4) {
+			if (button $button4 pressed) {
+				// show serial_dialog {"PRESSED BUTTON 4 (listening for $simon_pos_curr$)"};
+				simon_player_move = 4;
+				ch2_simon_move_fail = true;
+				goto simon_player_do_move;
+			}
+		}
+		if (simon_pos_curr != 5) {
+			if (button $button5 pressed) {
+				// show serial_dialog {"PRESSED BUTTON 5 (listening for $simon_pos_curr$)"};
+				simon_player_move = 5;
+				ch2_simon_move_fail = true;
+				goto simon_player_do_move;
+			}
+		}
+	}
+	// low-only positions
+	else {
+		if (simon_pos_curr != 0) {
+			if (button $button0 pressed) {
+				// show serial_dialog {"PRESSED BUTTON 0 (listening for $simon_pos_curr$)"};
+				simon_player_move = 0;
+				ch2_simon_move_fail = true;
+				goto simon_player_do_move;
+			}
+		}
+		if (simon_pos_curr != 1) {
+			if (button $button1 pressed) {
+				// show serial_dialog {"PRESSED BUTTON 1 (listening for $simon_pos_curr$)"};
+				simon_player_move = 1;
+				ch2_simon_move_fail = true;
+				goto simon_player_do_move;
+			}
+		}
+	}
+	// positions for both low and high
+	if (simon_pos_curr != 2) {
+		if (button $button2 pressed) {
+			// show serial_dialog {"PRESSED BUTTON 2 (listening for $simon_pos_curr$)"};
+			simon_player_move = 2;
+			ch2_simon_move_fail = true;
+			goto simon_player_do_move;
+		}
+	}
+	if (simon_pos_curr != 3) {
+		if (button $button3 pressed) {
+			// show serial_dialog {"PRESSED BUTTON 3 (listening for $simon_pos_curr$)"};
+			simon_player_move = 3;
+			ch2_simon_move_fail = true;
+			goto simon_player_do_move;
+		}
+	}
+	// (We don't want buttons not involved to trigger a fail)
+
+	// CHECK SUCCESSES
+
+	// high-only positions
+	if (ch2_simon_high) {
+		if (simon_pos_curr == 4) {
+			if (button $button4 pressed) {
+				simon_player_move = 4;
+				goto simon_player_do_move;
+			}
+		}
+		if (simon_pos_curr == 5) {
+			if (button $button5 pressed) {
+				simon_player_move = 5;
+				goto simon_player_do_move;
+			}
+		}
+	}
+	// low-only positions
+	else {
+		if (simon_pos_curr == 0) {
+			if (button $button0 pressed) {
+				simon_player_move = 0;
+				goto simon_player_do_move;
+			}
+		}
+		if (simon_pos_curr == 1) {
+			if (button $button1 pressed) {
+				simon_player_move = 1;
+				goto simon_player_do_move;
+			}
+		}
+	}
+	// positions for both low and high
+	if (simon_pos_curr == 2) {
+		if (button $button2 pressed) {
+			simon_player_move = 2;
+			goto simon_player_do_move;
+		}
+	}
+	if (simon_pos_curr == 3) {
+		if (button $button3 pressed) {
+			simon_player_move = 3;
+			goto simon_player_do_move;
+		}
+	}
+	entity Simon on_tick = simon_player_listen; // reset this loop (on next game tick?)
+}
+
+simon_player_animation_pose_bottom_left {
+	// player current_animation = $pose_pre_left;
+	// wait $animation_padding1;
+	player current_animation = $pose_bottom_left;
+	goto simon_player_animation_pose_bottom_left_wait;
+}
+simon_player_animation_pose_bottom_right {
+	// player current_animation = $pose_pre_right;
+	// wait $animation_padding1;
+	player current_animation = $pose_bottom_right;
+	goto simon_player_animation_pose_bottom_right_wait;
+}
+simon_player_animation_pose_left {
+	// player current_animation = $pose_pre_left;
+	// wait $animation_padding1;
+	player current_animation = $pose_left;
+	goto simon_player_animation_pose_left_wait;
+}
+simon_player_animation_pose_right {
+	// player current_animation = $pose_pre_right;
+	// wait $animation_padding1;
+	player current_animation = $pose_right;
+	goto simon_player_animation_pose_right_wait;
+}
+simon_player_animation_pose_top_left {
+	// player current_animation = $pose_pre_left;
+	// wait $animation_padding1;
+	player current_animation = $pose_top_left;
+	goto simon_player_animation_pose_top_left_wait;
+}
+simon_player_animation_pose_top_right {
+	// player current_animation = $pose_pre_right;
+	// wait $animation_padding1;
+	player current_animation = $pose_top_right;
+	goto simon_player_animation_pose_top_right_wait;
+}
+
+simon_player_animation_pose_bottom_left_wait {
+	if (button $button0 up) {
+		simon_player_wait_finished = true;
+		goto null_script;
+	}
+}
+simon_player_animation_pose_bottom_right_wait {
+	if (button $button1 up) {
+		simon_player_wait_finished = true;
+		goto null_script;
+	}
+}
+simon_player_animation_pose_left_wait {
+	if (button $button2 up) {
+		simon_player_wait_finished = true;
+		goto null_script;
+	}
+}
+simon_player_animation_pose_right_wait {
+	if (button $button3 up) {
+		simon_player_wait_finished = true;
+		goto null_script;
+	}
+}
+simon_player_animation_pose_top_left_wait {
+	if (button $button4 up) {
+		simon_player_wait_finished = true;
+		goto null_script;
+	}
+}
+simon_player_animation_pose_top_right_wait {
+	if (button $button5 up) {
+		simon_player_wait_finished = true;
+		goto null_script;
+	}
+}
+
+simon_player_do_move {
+	// loopy
+	if (simon_player_move == 0) {
+		light $light0 = on;
+		player on_tick = simon_player_animation_pose_bottom_left;
+	}
+	else if (simon_player_move == 1) {
+		light $light1 = on;
+		player on_tick = simon_player_animation_pose_bottom_right;
+	}
+	else if (simon_player_move == 2) {
+		light $light2 = on;
+		player on_tick = simon_player_animation_pose_left;
+	}
+	else if (simon_player_move == 3) {
+		light $light3 = on;
+		player on_tick = simon_player_animation_pose_right;
+	}
+	else if (simon_player_move == 4) {
+		light $light4 = on;
+		player on_tick = simon_player_animation_pose_top_left;
+	}
+	else if (simon_player_move == 5) {
+		light $light5 = on;
+		player on_tick = simon_player_animation_pose_top_right;
+	}
+	goto simon_player_wait;
+}
+	
+simon_player_wait {
+	if (simon_player_wait_finished) {
+		goto simon_player_wait_finished;
+	}
+}
+
+simon_player_wait_finished {
+	simon_player_wait_finished = false;
+	player current_animation = $guitar_idle;
+	light ALL = off;
+	i += 1;
+	// show serial_dialog {
+	// 	"YOUR MOVE WAS $simon_player_move$"
+	// };
+	if (ch2_simon_move_fail) {
+		goto simon_game_lose;
+	}
+	goto simon_player_turn_loop_start;
+}
+
+simon_player_turn_end {
+	simon_round += 1;
+	if (simon_round > $roundcount) {
+		goto simon_game_win;
+	}
+	goto simon_enemy_turn_start;
+}
+
+simon_game_lose {
+	player_control = off;
+	lights_control = on;
+	entity Keyboard on_tick = simon_rock;
+	if (ch2_ring_zero_enabled_in_castle || debug_mode) {
+		hex_control = on;
+	}
+	wait 100ms;
+	entity Lights on_tick = screen_lights_lose;
+	player on_tick = player_lose;
+	show dialog { Simon emote 3 "Too bad! Better luck next time!" };
+	entity Lights on_tick = $lightsdefault;
+	copy!(ch2_map_init_hex)
+	player_control = on;
+	entity Keyboard on_tick = null_script;
+	entity Simon current_animation = 5;
+	goto simon_game_go_again;
+}
+
+simon_game_win {
+	player_control = off;
+	lights_control = on;
+	if (ch2_ring_zero_enabled_in_castle || debug_mode) {
+		hex_control = on;
+	}
+	entity Lights on_tick = screen_lights_win;
+	player on_tick = player_win;
+	if (!ch2_simon_won_before) {
+		entity Simon current_animation = 3;
+		wait 500ms;
+	}
+	entity Simon animation -> 2 once;
+	entity Simon current_animation = 4;
+	show dialog { Simon emote 3 "GREAT JOB! Way to go, kid!" };
+	entity Lights on_tick = $lightsdefault;
+	copy!(ch2_map_init_hex)
+	player_control = on;
+	if (!ch2_simon_won_before) {
+		copy!(simon_game_restore_positions)
+		entity Simon current_animation = 12;
+		show dialog {
+			Simon emote 1 "HAHAH! That was a blast!"
+			"THIS! This is what I was missing, the most important part about music!"
+			PLAYER "What part?"
+			Simon emote 1 "It's the MUSIC!"
+			"Not the crowd, not the gigs, not the merch -- but the raw vibrations and rhythm!"
+			"It's seizing something from the depths of your soul and shoving it into your hands, your breath, your fingertips --"
+			"-- and making something LIVING, something that couldn't exist without you there to shape it!"
+			"It's jamming with another human being, and building our sounds up together into something incredible!"
+			"Who cares if no one was watching? What we did was ART!"
+		};
+		entity Simon current_animation = 4;
+		show dialog {
+			Simon emote 3 "Fantastic!"
+		};
+		entity Simon current_animation = 12;
+		show dialog {
+			Simon emote 1 "Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
+		};
+		copy!(ch2_hide_keyboard)
+		show dialog {
+			name "" "(You pick up the keyboard!)"
+			Simon emote 1 "Keep it, and keep making awesome music!"
+			PLAYER "Music, yeah. That is definitely what I was going to use it for. Yup."
+		};
+		entity Simon current_animation = 12;
+		interrupt = true;
+		copy!(ch2_pickup_keyboard)
+		ch2_simon_won_before = true;
+		goto null_script;
+	} else {
+		goto simon_game_go_again;
+	}
+}
+
+simon_game_restore_positions {
+	camera fade out -> black over 400ms;
+	camera = player position;
+	entity Simon current_animation = 0;
+	player current_animation = 0;
+	player position = geometry "return-spot";
+	entity Simon position = geometry "simon-return-spot";
+	player direction = north;
+	camera fade in -> black over 400ms;
+}
+
+simon_game_go_again {
+	copy!(simon_game_restore_positions)
+	entity Simon current_animation = 12;
+	show dialog {
+		Simon emote 1 "Well? Wanna have another go?"
+		> "Sure." = simon_game_go_again_yes
+		> "No, thanks." = simon_game_start_q_wrapup
+	};
+}
+
+simon_game_go_again_yes {
+	goto simon_game_start_q_reprise;
+}
+
+simon_game_start_q_reprise {
+	if (ch2_simon_high) {
+		show dialog {
+			Simon emote 1 "Want another high battle?"
+			> "Absolutely!" = simon_game_start
+			> "No, let's do a low battle." = simon_game_start_q_swap
+			> "What's the difference?" = simon_game_start_difference
+			> "Actually, never mind." = simon_game_start_nevermind
+
+		};
+	} else {
+		show dialog {
+			Simon emote 1 "Want another low battle?"
+			> "Definitely!" = simon_game_start
+			> "No, let's do a high battle." = simon_game_start_q_swap
+			> "What's the difference?" = simon_game_start_difference
+			> "Actually, never mind." = simon_game_start_nevermind
+		};
+	}
+}
+
+$time = 200ms;
+$time_q = 125ms;
+
+player_win {
+	player current_animation = $guitar_idle;
+	player direction = east;
+	wait $time_q;
+	player direction = north;
+	wait $time_q;
+	player direction = west;
+	wait $time_q;
+	player direction = south;
+	wait $time_q;
+	player current_animation = $rocking;
+	goto null_script;
+}
+player_lose {
+	player current_animation = $guitar_idle;
+	player direction = west;
+	wait $time_q;
+	player direction = east;
+	wait $time_q;
+	player direction = west;
+	wait $time_q;
+	player direction = east;
+	wait $time_q;
+	player direction = south;
+	goto null_script;
+}
+
+simon_rock {
+	entity Simon direction = west;
+	entity Simon animation -> 1 twice;
+	entity Simon direction = east;
+	entity Simon animation -> 1 twice;
+}
+
+screen_lights_bits {
+	light LED_BIT1 = on;
+	light LED_BIT2 = on;
+	light LED_BIT4 = on;
+	light LED_BIT8 = on;
+	light LED_BIT16 = on;
+	light LED_BIT32 = on;
+	light LED_BIT64 = on;
+	light LED_BIT128 = on;
+}
+
+screen_lights_flash_battle_low {
+	light LED_BIT1 = on;
+	light LED_BIT128 = on;
+	light LED_PAGE = on;
+	light LED_MEM3 = on;
+	wait $time;
+	light ALL = off;
+	wait $time;
+}
+screen_lights_flash_battle_high {
+	light LED_MEM0 = on;
+	light LED_MEM3 = on;
+	light LED_XOR = on;
+	light LED_PAGE = on;
+	wait $time;
+	light ALL = off;
+	wait $time;
+}
+
+screen_lights_lose {
+	light ALL = off;
+	light LED_XOR = on;
+	light LED_MEM0 = on;
+	wait $time_q;
+
+	light ALL = off;
+	light LED_ADD = on;
+	light LED_MEM1 = on;
+	wait $time_q;
+
+	light ALL = off;
+	light LED_SUB = on;
+	light LED_MEM2 = on;
+	wait $time_q;
+
+	light ALL = off;
+	light LED_PAGE = on;
+	light LED_MEM3 = on;
+	wait $time_q;
+	
+	light ALL = off;
+	wait $time_q;
+
+	copy!(screen_lights_bits)
+	wait $time_q;
+	
+	light ALL = off;
+	wait $time_q;
+
+	copy!(screen_lights_bits)
+	wait $time;
+	wait $time;
+
+	light ALL = off;
+
+	goto null_script;
+}
+
+screen_lights_win {
+	light ALL = off;
+	light LED_XOR = on;
+	light LED_PAGE = on;
+	light LED_BIT64 = on;
+	light LED_BIT8 = on;
+	light LED_BIT1 = on;
+	light LED_MEM2 = on;
+	wait $time;
+
+	light ALL = off;
+	light LED_ADD = on;
+	light LED_BIT32 = on;
+	light LED_BIT4 = on;
+	light LED_MEM1 = on;
+	wait $time;
+
+	light ALL = off;
+	light LED_SUB = on;
+	light LED_BIT128 = on;
+	light LED_BIT16 = on;
+	light LED_BIT2 = on;
+	light LED_MEM3 = on;
+	light LED_MEM0 = on;
+	wait $time;
+}

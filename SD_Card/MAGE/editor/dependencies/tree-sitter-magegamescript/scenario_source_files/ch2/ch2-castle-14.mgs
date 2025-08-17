@@ -1,0 +1,342 @@
+include "header.mgs";
+
+add dialog settings {
+	label KING { entity "King Gibson" }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look_ch2_castle_14 {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked around <c>KING GIBSON'S BEDROOM</>."
+		"\tOpulent and pretentious -- perhaps the archetypal royal bedroom. You're not sure whether the heirloom four poster bed completes the look or is just over the top. But you concede that the red and gold looks fabulous together."
+		" "
+	};
+}
+
+look_ch2_gibson {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at <m>%SELF%</>."
+		"\tHis bearing is not as imposing as his physique, but perhaps he was simply shaken by the earthquake and his subsequent isolation. His horns are shiny, as if they were oiled or waxed."
+	};
+}
+
+look_ch2_keypad {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"You looked at <m>%SELF%</>."
+		"\tIt's a small boxy number pad. On the underside is a plug socket and a scribbled message: \"The default admin password can be found throughout the castle's --\""
+		"\tUnfortunately, the vital portion of the message has worn off with time."
+	};
+	ch2_keypad_backstory = true;
+}
+
+/* ---------- ON_LOAD ---------- */
+
+ch2_gibson_scramble {
+	ch2_gibson_x = entity "King Gibson" x;
+	if (ch2_gibson_pos_odd) {
+		ch2_gibson_x += 1;
+		ch2_gibson_pos_odd = false;
+	} else {
+		ch2_gibson_x -= 1;
+		ch2_gibson_pos_odd = true;
+	}
+	entity "King Gibson" x = ch2_gibson_x;
+	wait 50ms;
+}
+
+on_load_ch2_castle_14 {
+	if (warp_state == "king returns teleport") {
+		goto ch2_cutscene_kingreturns_bedroom;
+	}
+	// ch2 room state
+	ch2_in_room = 14;
+
+	// entrance text
+	show serial_dialog spacer;
+	if (!ch2_seen_room_14) {
+		show serial_dialog { "Discovered <bold><c>KING GIBSON'S BEDROOM</>! Room added to <c>MAP</>!" };
+		ch2_seen_room_14 = true;
+	} else {
+		show serial_dialog { "Entering <bold>KING GIBSON'S BEDROOM</>..." };
+	}
+
+	// room unique stuff
+	if (ch2_installed_clock || ch2_carrying_clock) {
+		copy!(ch2_hide_clock)
+	}
+	if (ch2_storyflag_round >= 5 || ch2_king_rescued) {
+		entity "King Gibson" on_tick = yeet;
+		entity keypad on_interact = null_script;
+	}
+
+	// initialize everything
+	copy!(ch2_map_init)
+
+	if (ch2_storyflag_round < 5) {
+		// check if you do the cutscene or not
+		if (!ch2_cutseen_castle14) {
+			player_control = off;
+			wait 400ms;
+			entity "King Gibson" current_animation = 2;
+			show dialog {
+				KING emote 1 "?"
+			};
+			entity "King Gibson" on_tick = ch2_gibson_scramble;
+			entity "King Gibson" current_animation = 3;
+			show dialog {
+				KING emote 2 "!!!"
+				"Intruder! Someone's in my bedroom!"
+			};
+			player direction = entity "King Gibson";
+			show dialog {
+				KING emote 2 "Help! Guards!"
+			};
+			entity "King Gibson" on_tick = null_script;
+			entity "King Gibson" current_animation = 2;
+			wait 400ms;
+			show dialog {
+				KING emote 1 "But no, of course. I'm alone."
+			};
+			entity "King Gibson" current_animation = 0;
+			wait 1100ms;
+			entity "King Gibson" direction = west;
+			wait 350ms;
+			show dialog {
+				KING emote 3 "They locked me in here to rot. Why would they bother with me now?"
+			};
+			entity "King Gibson" direction = north;
+			show dialog {
+				KING emote 3 "Well, assassin, do your worst. Get it over with."
+				PLAYER "Whoa, whoa, whoa! Calm down, sir! Er, Your Majesty! I'm not an assassin!"
+			};
+			entity "King Gibson" direction = south;
+			show dialog {
+				KING "Then you've come to mock me."
+				PLAYER "No, of course not. I'm here to check up on you. Your -- um, advisors? -- are very worried about you."
+				KING "I doubt that. They've disabled the locking mechanism on the door, and they won't answer the intercom. I've tried to reach them dozens of times."
+				PLAYER "Intercom?"
+				KING "Yes. That panel by the door, next to the keypad."
+			};
+			entity "King Gibson" direction = north;
+			show dialog {
+				KING emote 3 "Hmph. I'm sure Sebastian is halfway through a coup d'etat by now."
+				PLAYER "But they said they've tried calling you."
+				"Could it be... perhaps the intercom is broken, too?"
+			};
+			entity "King Gibson" direction = south;
+			show dialog {
+				KING "Broken?"
+				PLAYER "Well, there was an earthquake. Maybe that's what busted the lock."
+				"They said they've tried to call you, but haven't heard anything back. In fact, they think YOU'RE ignoring THEM."
+				KING "Ignoring them? No, I would never...."
+				PLAYER "They said you had an argument last night."
+				KING "Yes but --"
+			};
+			entity "King Gibson" direction = west;
+			show dialog {
+				KING emote 3 "*sigh*"
+				"I thought... I thought maybe I had gone too far this time. That they had finally written me off."
+			};
+			entity "King Gibson" direction = south;
+			show dialog {
+				KING "They really tried to call me?"
+				"This whole time, it was only a broken line of communication? They don't hate me?"
+				PLAYER "The big, blue one is worried you might be hurt from the earthquake."
+				"It was the goldfish who asked me to check up on you."
+				KING "I am relieved to hear that."
+			};
+			entity "King Gibson" position -> geometry "walk-spot" origin over 800ms;
+			show dialog {
+				KING "If you were able to enter this room, you must have the serial artifact working. Is that correct?"
+				PLAYER "Yeah."
+				KING "If the intercom -- and the door locks -- were broken in the earthquake, then you should be able to plug the artifact into the keypad and do some diagnostics."
+				"If you would?"
+			};
+			entity "King Gibson" on_tick = face_player;
+			ch2_cutseen_castle14 = true;
+			player_control = on;
+		}
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick_ch2_castle_14 {
+	if (ch2_storyflag_round >= 5 || ch2_king_rescued) {
+		if (player intersects geometry "south-hitbox") {
+			warp_state = "walk_from-north";
+			copy!(ch2_load_castle_13_special)
+		}
+	}
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit_ch2_castle_14 { // sanitize ch2 room state
+	ch2_in_room = 0;
+}
+
+// SERIAL: go
+
+on_go_castle_14_south {
+	copy!(on_exit_ch2_castle_14)
+	copy!(warping_out_fade_out)
+	copy!(ch2_load_castle_13_special)
+}
+
+/* ---------- CLOCK (ADMIN) ---------- */
+
+ch2_hide_clock {
+	entity Clock position = geometry "hiding-spot";
+	entity Clock name = " ";
+}
+
+ch2_touch_clock {
+	if (ch2_storyflag_round < 3) {
+		if (!ch2_clock_firstlook) {
+			show dialog {
+				PLAYER "Wow, this thing looks like it's a million years old."
+			};
+			ch2_clock_firstlook = true;
+		} else {
+			show dialog {
+				PLAYER "What a robust ticking ambience."
+			};
+		}
+	} else {
+		if (!ch2_king_rescued) {
+			show dialog {
+				PLAYER "Um, excuse me, Your Majesty. I sort of need this clock --"
+				KING "Clock? What are you on about? Stay focused, please! Get this door working, and then we can discuss whatever else you want."
+			};
+		} else if (!ch2_clock_permission) {
+			show dialog {
+				PLAYER "Can I just take this, though? Maybe I should ask the king first."
+			};
+		} else {
+			show dialog {
+				name "" "(Pick up the clock?)"
+				> "Yes" = ch2_touch_clock_yes
+				> "No" = ch2_touch_clock_no
+			};
+		}
+	}
+}
+ch2_touch_clock_yes {
+	show dialog {
+		name "" "(You pick up the clock!)"
+	};
+	copy!(ch2_hide_clock)
+	copy!(ch2_pickup_clock)
+	self on_interact = null_script;
+}
+ch2_touch_clock_no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	};
+	self on_interact = ch2_touch_clock;  // reset after script jump
+}
+
+interact_ch2_gibson_bedroom {
+	if (!ch2_keypad_backstory) {
+		show dialog {
+			KING "If you would, please use the artifact to interface with the keypad by the door. You can probably run some diagnostics or something."
+			"Get me out of here."
+		};
+	} else if (!ch2_architect_backstory) {
+		show dialog {
+			PLAYER "Your Majesty, do you happen to know what the default keypad password is?"
+			KING "I did help set that thing up, but I don't remember...."
+			"Oh, actually, there was some trick to it, yes."
+			"I wanted the architect to incorporate the password into the building itself, such that it wasn't written down in an obvious way, but we could still derive the password again if we had to."
+			PLAYER "You incorporated the password into the building?"
+			KING "Yes, all over the castle. Only someone who could get into every room -- which is to say, someone with the king's authority -- should be able to acquire the whole password. That was my intention."
+			"At the present moment, I suppose that means you and you alone."
+			PLAYER "Written where exactly?"
+			KING "One letter per room, but I don't know how the architect ended up implementing the idea, I'm afraid."
+			"Just... one letter per room."
+		};
+		ch2_architect_backstory = true;
+	} else {
+		show dialog {
+			PLAYER "Remind me how to derive the default keypad password again?"
+			KING "Well, I only wanted someone who could get into every room -- which is to say, someone with the king's authority -- to be able to recover every letter in the password."
+			"But I don't know how the architect ended up implementing the idea, beyond the edict of \"one letter hidden per room.\""
+			PLAYER "The architect? That means...."
+			"These letters won't be incorporated into furniture, or paint, or the banners, or something that could be replaced or switched around by someone who didn't know it was supposed to be a hint."
+			"That leaves the infrastructure itself: the walls, floors, ceiling. Something like that?"
+			KING "Exactly."
+		};
+	}
+}
+
+interact_ch2_keypad {
+	// note that you can't run this script before the cutscene, so no need to have "neutral" "pre-quest" behavior
+	if (!ch2_king_rescued) {
+		if (!interrupt) {
+			show dialog {
+				PLAYER "Oh, there's something written on the bottom of the keypad."
+				name "(keypad)" "The default admin password can be found throughout the castle's --"
+				PLAYER "Dang, the text after that is rubbed off. I can't read it." "The admin password is found throughout the castle's what?"
+			};
+			interrupt = true;
+			ch2_keypad_backstory = true;
+		}
+		goto interact_ch2_keypad_prompt;
+	}
+}
+interact_ch2_keypad_prompt {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<r>USER CONFIG CORRUPTED!</> Cannot unlock door with PINs! Perform manual unlocks with admin password."
+		"Enter password:"
+		_ "AUTHENTICATE" = interact_ch2_keypad_good_pass
+	};
+	goto interact_ch2_keypad_incorrect;
+}
+interact_ch2_keypad_incorrect {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<r>Password incorrect!</>"
+		"Touch keypad to try again."
+	};
+	self on_interact = interact_ch2_keypad_prompt;
+}
+interact_ch2_keypad_good_pass {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<g>DOOR UNLOCKED</>"
+	};
+	self on_interact = interact_ch2_keypad_prompt;
+	copy!(capture_player_state)
+	kingpos_x = entity "King Gibson" x;
+	kingpos_y = entity "King Gibson" y;
+	// not necessary to capture the king's direction, as he always faces the player
+	warp_state = "king returns teleport";
+	load map "ch2-castle-14-postgame";
+}
+
+ch2_king_leaves {
+	self position -> geometry "walking-out" origin over 1500ms;
+}
+
+ch2_cutscene_kingreturns_bedroom {
+	copy!(restore_player_state)
+	entity "King Gibson" x = kingpos_x;
+	entity "King Gibson" y = kingpos_y;
+	player_control = off;
+	wait 600ms;
+	show dialog {
+		KING "!!"
+		"Aha! You've done it! At last, I'm free!"
+	};
+	entity "King Gibson" on_tick = ch2_king_leaves;
+	wait 400ms;
+	camera fade out -> black over 600ms;
+	warp_state = "Ch2 King Returns";
+	load map "ch2-castle-13";
+}

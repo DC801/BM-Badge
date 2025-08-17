@@ -1,0 +1,45 @@
+// include "header.mgs";
+// dialog goatTalk {
+// 	PLAYER
+// 	wrap 20
+
+// 	"ACK!\n\nA goat! Oh, I guess I need to make sure this thing wraps. Let's see. How many chars can this be?"
+// 	"I think this line is too long on its own"
+// 	> "optioin" = huh
+// }
+// serial_dialog lulullul {
+// 	wrap 20
+// 	"Hey now! We gotta think about ansi things now!"
+// 	"<red>RED TEXT!!! Holy cow this text is like <bold>so red I can't even!</> WHEW okay never mind, no red"
+// 	_ "option times!" = scriptName
+// 	# "option times again!" = scriptName2
+// }
+
+// serial_dialog lulullul {
+// 	"lol"
+// }
+
+// script __ {
+// 	show dialog {
+// 		PLAYER "I LIKE SHORTS"
+// 	};
+// 	show serial_dialog {
+// 		"WOOT"
+// 	};
+// }
+
+// copyMe {
+// 	show dialog { PLAYER "Hi there" }
+// 	if (debug_mode) {
+// 		player x = 0;
+// 	}
+// }
+
+// willCopyThatOne {
+// 	show dialog { Bob "Who goes there?" }
+// 	wait 20;
+// 	copy!(copyMe)
+// 	wait 100;
+// 	copy!(copyMe)
+// 	wait 10000;
+// }

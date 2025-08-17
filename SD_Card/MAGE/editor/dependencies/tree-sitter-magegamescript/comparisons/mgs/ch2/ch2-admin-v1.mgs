@@ -1,0 +1,469 @@
+include!("header.mgs")
+
+const! (
+	$goto_round_2 = 3 // count of story flags through round 1
+	$goto_round_3 = 6 // count of story flags through round 2
+	$goto_round_4 = 9 // count of story flags through round 3
+	$goto_round_5 = 10
+)
+
+ch2_count_flags {
+	mutate ch2_storyflags_tally = 0;
+	// normal
+	if (flag ch2_installed_heatsink is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	if (flag ch2_installed_powersupply is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	if (flag ch2_installed_monitor is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	// abstract
+	if (flag ch2_installed_harddrive is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	if (flag ch2_installed_keyboard is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	if (flag ch2_installed_mouse is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	// desperate
+	if (flag ch2_installed_ramchips is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	if (flag ch2_installed_clock is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	if (flag ch2_installed_cpu is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+	// final
+	if (flag ch2_installed_mainframeos is true) {
+		mutate ch2_storyflags_tally + 1;
+	}
+}
+
+interact_ch2_mainframe_end {
+	show dialog mainframe_working { name "" "(Nothing left to install. The computer is humming and buzzing along, and Aurelius seems to be doing okay.)" }
+}
+interact_ch2_mainframe {
+	if (flag ch2_wait_for_hat_touch is true) {
+		turn entity "%PLAYER%" toward entity Wizard;
+		turn entity Wizard toward entity "%PLAYER%";
+		show dialog {
+			PLAYER "Um, how do I get the hex editor to come up again?"
+			Wizard "Don't look at me. I don't use touch screens."
+			PLAYER "Touch screens?"
+			Wizard "Capacitive buttons. Same diff. My little paws don't trigger them right."
+			"But there must be some kind of shiny copper surface on your whatsit, right? Try touching it with your finger. That's probably how it's done."
+		}
+		return;
+	} else if (flag ch2_carrying_mainframeos is true) {
+		copy ch2_install_wizard;
+		return;
+	} else if (flag ch2_installed_mainframeos is true) {
+		show dialog mainframe_working; // references above
+		return;
+	} else if (flag ch2_toot_done is false) {
+		show dialog { PLAYER "What is this hunk of junk?" }
+		return;
+	}
+	set flag temp to false;
+	// wizard comes up if down
+	if (entity Wizard current_animation is 0) { // WIZARD IS DOWN
+		set entity Wizard on_tick to tick_ch2_wizard_ascend_and_watch;
+	}
+	// normal
+	if (flag ch2_installed_heatsink is false) {
+		if (flag ch2_carrying_heatsink is true) {
+			show dialog {
+				name "" "(Now installing... the heat sink!)"
+				"(Or you would, but you can't install it until the CPU is in place. You set it aside for now.)"
+			}
+			set flag temp to true;
+			copy ch2_install_heatsink;
+		}
+	}
+	if (flag ch2_installed_powersupply is false) {
+		if (flag ch2_carrying_powersupply is true) {
+			show dialog {
+				name "" "(Now installing... the power supply!)"
+				"(2 kW may be overkill, but better safe than sorry.)"
+			}
+			set flag temp to true;
+			copy ch2_install_powersupply;
+		}
+	}
+	if (flag ch2_installed_monitor is false) {
+		if (flag ch2_carrying_monitor is true) {
+			show dialog {
+				name "" "(Now installing... the monitor!)"
+				"(...Or rather, it's now plugged into the back. That one was easy!)"
+			}
+			set flag temp to true;
+			copy ch2_install_monitor;
+		}
+	}
+	// abstract
+	if (flag ch2_installed_harddrive is false) {
+		if (flag ch2_carrying_harddrive is true) {
+			show dialog {
+				name "" "(Now installing... the hard drive!)"
+				"(What's the read head going to be? Will this work?!)"
+			}
+			set flag temp to true;
+			copy ch2_install_harddrive;
+		}
+	}
+	if (flag ch2_installed_keyboard is false) {
+		if (flag ch2_carrying_keyboard is true) {
+			show dialog {
+				name "" "(Now installing... the keyboard!)"
+				"(Good thing the keytar can connect over USB, or this wouldn't have worked.)"
+			}
+			set flag temp to true;
+			copy ch2_install_keyboard;
+		}
+	}
+	if (flag ch2_installed_mouse is false) {
+		if (flag ch2_carrying_mouse is true) {
+			show dialog {
+				name "" "(Now installing... the mouse!)"
+				"(...Or at least, installing the dongle.)"
+			}
+			set flag temp to true;
+			copy ch2_install_mouse;
+		}
+	}
+	// desperate
+	if (flag ch2_installed_ramchips is false) {
+		if (flag ch2_carrying_ramchips is true) {
+			show dialog {
+				name "" "(Now installing... the RAM chips!)"
+				"(The RAM chips went in with a terrifying SNAP, but they seem snug now. You better wash your hands, though.)"
+			}
+			set flag temp to true;
+			copy ch2_install_ramchips;
+		}
+	}
+	if (flag ch2_installed_clock is false) {
+		if (flag ch2_carrying_clock is true) {
+			show dialog {
+				name "" "(Now installing... the grandfather clock!)"
+				"(Somehow, that enormous, analog relic works great for a system clock.)"
+			}
+			set flag temp to true;
+			copy ch2_install_clock;
+		}
+	}
+	if (flag ch2_installed_cpu is false) {
+		if (flag ch2_carrying_cpu is true) {
+			show dialog {
+				name "" "(Now installing... the CPU!)"
+				"(Now the mainframe can compute! And... blow bubbles?)"
+			}
+			set flag temp to true;
+			copy ch2_install_cpu;
+		}
+	}
+	// final
+	if (flag temp is false) { // no components were installed
+		show dialog {
+			name "" "(You don't have any new components to install.)"
+		}
+	} else {
+		set flag temp to false;
+		show dialog { PLAYER "That's all for now." }
+		copy ch2_count_flags;
+		// the below are separate scripts so that multiple things can trigger them
+		// (^^ should this be the case?) (todo: determine this)
+		if (variable ch2_storyflags_tally is == $goto_round_2) {
+			copy ch2_start_round_2;
+		} else if (variable ch2_storyflags_tally is == $goto_round_3) {
+			copy ch2_start_round_3;
+		} else if (variable ch2_storyflags_tally is == $goto_round_4) {
+			copy ch2_start_round_4;
+		}
+	}
+}
+
+ch2_start_round_2 {
+	set entity "%PLAYER%" current_animation to 0;
+	copy ch2_cutscene_bert_secret;
+	turn player control off;
+	wait 200ms;
+	show serial dialog spacer;
+	show serial dialog { " (DING)" }
+	set flag ch2_lambda_paging to true;
+	set flag ch2_cutseen_bert_secret to true;
+	mutate ch2_storyflag_round = 2;
+	wait 900ms;
+	show dialog {
+		PLAYER "...? Did I just hear some kind of digital sound effect?"
+		Wizard "That was the bell on the terminal. Whats-his-face is paging you. Better talk to him."
+	}
+	show serial dialog spacer;
+	show serial dialog {
+		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
+	}
+	turn player control on;
+}
+ch2_start_round_3 {
+	turn player control off;
+	wait 800ms;
+	turn entity "%PLAYER%" toward entity "Wizard";
+	show dialog {
+		PLAYER "So, um, do you know if Bert has come back?"
+		Wizard "Bert? The big hairy guy?"
+		"Nope. Since he left, no one's been in and out here but you."
+		PLAYER "Well, has he phoned or anything?"
+		Wizard "Do you see a phone in here?"
+		PLAYER "...."
+		"I'm getting worried about him. What is he doing? Why is it taking so long?"
+		Wizard "Beats me."
+	}
+	wait 200ms;
+	show serial dialog spacer;
+	show serial dialog {
+		" (DING)"
+	}
+	set flag ch2_cutseen_bert_message to true;
+	set flag ch2_lambda_paging to true;
+	mutate ch2_storyflag_round = 3;
+	wait 700ms;
+	show dialog {
+		PLAYER "...? Oh, that's the terminal bell. I guess Lambda is calling me."
+	}
+	show serial dialog spacer;
+	show serial dialog {
+		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
+	}
+	turn player control on;
+}
+ch2_start_round_4 {
+	show serial dialog spacer;
+	show serial dialog {
+		" (DING)"
+	}
+	set flag ch2_cutseen_last_parts_done to true;
+	set flag ch2_lambda_paging to true;
+	mutate ch2_storyflag_round = 4;
+	wait 700ms;
+	show dialog {
+		PLAYER "...! Oh, the terminal bell. That scared me."
+		"I guess it's time to talk to Lambda again."
+	}
+	show serial dialog spacer;
+	show serial dialog {
+		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
+	}
+	// show serial dialog { "\t<g>DEBUG: Lambda invites you to room #99 cutscene! (Round 4)</>" }
+	// show serial dialog { "\t<g>DEBUG: the Wiz installs thing! More cutscene I guess!</>" }
+}
+
+// DEBUG
+
+register_storyflag {
+	register storyflag -> ch2_debug_storyflag;
+	register storyflag + "0" -> debug_map_flags_for_round0;
+	register storyflag + "1" -> debug_map_flags_for_round1;
+	register storyflag + "2" -> debug_map_flags_for_round2;
+	register storyflag + "3" -> debug_map_flags_for_round3;
+	register storyflag + "4" -> debug_map_flags_for_round4;
+	register storyflag + "5" -> debug_map_flags_for_round5;
+}
+
+ch2_debug_storyflag {
+	show serial dialog spacer;
+	show serial dialog {
+		"<y>DEBUG></>: Set flag 'ch2_storyflag_round' to what value? (0-5)"
+		_ "0" : debug_map_flags_for_round0
+		_ "1" : debug_map_flags_for_round1
+		_ "2" : debug_map_flags_for_round2
+		_ "3" : debug_map_flags_for_round3
+		_ "4" : debug_map_flags_for_round4
+		_ "5" : debug_map_flags_for_round5
+	}
+	show serial dialog {
+		"Nothing changed."
+	}
+}
+
+debug_map_flags_for_round0 {
+	copy ch2_take_off_map_round1;
+	copy ch2_take_off_map_round2;
+	copy ch2_take_off_map_round3;
+	copy ch2_take_off_map_round4;
+	mutate ch2_storyflag_round = 0;
+	// copy ch2_debug_storyflag_log;
+}
+debug_map_flags_for_round1 {
+	copy ch2_put_on_map_round1;
+	copy ch2_take_off_map_round2;
+	copy ch2_take_off_map_round3;
+	copy ch2_take_off_map_round4;
+	mutate ch2_storyflag_round = 1;
+	// copy ch2_debug_storyflag_log;
+}
+debug_map_flags_for_round2 {
+	copy ch2_take_off_map_round1;
+	copy ch2_put_on_map_round2;
+	copy ch2_take_off_map_round3;
+	copy ch2_take_off_map_round4;
+	mutate ch2_storyflag_round = 2;
+	// copy ch2_debug_storyflag_log;
+}
+debug_map_flags_for_round3 {
+	copy ch2_take_off_map_round1;
+	copy ch2_take_off_map_round2;
+	copy ch2_put_on_map_round3;
+	copy ch2_take_off_map_round4;
+	mutate ch2_storyflag_round = 3;
+	// copy ch2_debug_storyflag_log;
+}
+debug_map_flags_for_round4 {
+	copy ch2_take_off_map_round1;
+	copy ch2_take_off_map_round2;
+	copy ch2_take_off_map_round3;
+	copy ch2_put_on_map_round4;
+	mutate ch2_storyflag_round = 4;
+	// copy ch2_debug_storyflag_log;
+}
+debug_map_flags_for_round5 {
+	copy ch2_take_off_map_round1;
+	copy ch2_take_off_map_round2;
+	copy ch2_take_off_map_round3;
+	copy ch2_take_off_map_round4;
+	mutate ch2_storyflag_round = 5;
+	set flag ch2_cutseen_castle99 to true;
+	// copy ch2_debug_storyflag_log;
+}
+ch2_debug_storyflag_log {
+	show serial dialog spacer;
+	show serial dialog {
+		"Flag 'ch2_storyflag_round' is now $ch2_storyflag_round$"
+	}
+}
+
+const!($time = 200ms)
+ch2_serial_light_manager {
+	if (serial dialog is open) {
+		// solid light while in a serial dialog (interactable)
+		turn light LED_USB on;
+	} else if (flag ch2_lambda_paging is true) {
+		// blinking light while Lambda wants to talk to you
+		if (flag ch2_lambda_paging_pulsar is true) {
+			set flag ch2_lambda_paging_pulsar to false;
+			turn light LED_USB off;
+		} else {
+			set flag ch2_lambda_paging_pulsar to true;
+			turn light LED_USB on;
+		}
+		wait $time;
+	} else if (flag ch2_mousegame is true) {
+		// if flag ch2_mousegame is true, turn off and wait for it to be false before resuming above behavior
+		goto ch2_serial_light_manager_mouse;
+	} else {
+		// no light otherwise
+		turn light LED_USB off;
+	}
+}
+
+ch2_serial_light_manager_mouse {
+	if (flag ch2_mousegame is false) {
+		goto ch2_serial_light_manager;
+	}
+}
+
+// MAP THINGS
+
+ch2_load_castle_1_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-1-postgame;
+	} else {
+		load map ch2-castle-1;
+	}
+}
+ch2_load_castle_11_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-11-postgame;
+	} else {
+		load map ch2-castle-11;
+	}
+}
+ch2_load_castle_12_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-12-postgame;
+	} else {
+		load map ch2-castle-12;
+	}
+}
+ch2_load_castle_13_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-13-postgame;
+	} else {
+		load map ch2-castle-13;
+	}
+}
+ch2_load_castle_14_special {
+	if (
+		variable ch2_storyflag_round is >= 5
+		|| flag ch2_king_rescued is true
+	) {
+		load map ch2-castle-14-postgame;
+	} else {
+		load map ch2-castle-14;
+	}
+}
+ch2_load_castle_21_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2_castle_21_postgame;
+	} else {
+		load map ch2-castle-21;
+	}
+}
+ch2_load_castle_22_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2_castle_22_postgame;
+	} else {
+		load map ch2-castle-22;
+	}
+}
+ch2_load_castle_23_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-23-postgame;
+	} else {
+		load map ch2-castle-23;
+	}
+}
+ch2_load_castle_31_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-31-postgame;
+	} else {
+		load map ch2-castle-31;
+	}
+}
+ch2_load_castle_32_special {
+	if (variable ch2_storyflag_round is >= 5) {
+		load map ch2-castle-32-postgame;
+	} else {
+		load map ch2-castle-32;
+	}
+}
+ch2_load_castle_33_special {
+	load map ch2-castle-33;
+}
+ch2_load_castle_34_special {
+	load map ch2-castle-34;
+}
+
+ch2_player_spawn_click_protection {
+	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo: Maybe this counts as a bug; maybe really fix it?)
+	if (warp state is raw_game_load-ch2) {
+		turn player control off;
+		wait 150ms;
+		turn player control on;
+	}
+}

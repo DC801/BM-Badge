@@ -1,0 +1,2644 @@
+add dialog settings {
+	default {
+		alignment BL
+		wrap 0 // this will prevent the auto-wrap from wrapping (for the purposes of parser tests)
+	}
+	label SELF {
+		entity "%SELF%"
+	}
+}
+add serial_dialog settings {
+	wrap 0 // ditto
+}
+
+"map-action_testing-go_register" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map",
+			"script": "command_map_test"
+		}
+	]
+	show serial_dialog "serial_dialog-go_register" {
+		"Registered Command: 'map'!"
+	};
+}
+"map-action_testing-go_override" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "go",
+			"argument": "west",
+			"script": "debug_go_space"
+		},
+		{
+			"is_fail": false,
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "look",
+			"script": "debug_look_override"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "look",
+			"argument": "Mage 01",
+			"script": "debug_look_mage01-override"
+		}
+	]
+	show serial_dialog "serial_dialog-go_override" {
+		"Verb Overrides registered: 'Look', 'look mage 01', 'go west'"
+	};
+}
+"map-action_testing-go_un-override" {
+	json[
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "go",
+			"argument": "west",
+			"script": "debug_go_space"
+		},
+		{
+			"is_fail": false,
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "look",
+			"script": "debug_look_override"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "look",
+			"argument": "keyboard",
+			"script": "debug_look_mage01-override"
+		}
+	]
+	show serial_dialog "serial_dialog-go_un-override" {
+		"Verb Overrides UN-registered: 'Look', 'look mage 01', 'go west'"
+	};
+}
+"map-action_testing-go_register_fail" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map",
+			"script": "command_map_fail",
+			"is_fail": true
+		}
+	]
+	show serial_dialog "serial_dialog-go_register_fail" {
+		"Registered Command: 'map' fail fallback!"
+	};
+}
+"map-action_testing-go_register_arguments" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "town",
+			"script": "command_map_town"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "dungeon",
+			"script": "command_map_dungeon"
+		}
+	]
+	show serial_dialog "serial_dialog-go_register_arguments" {
+		"Registered Arguments: 'map' > ['town', 'dungeon']!"
+	};
+}
+"map-action_testing-go_unregister_arguments" {
+	json[
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "town"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "dungeon"
+		}
+	]
+	show serial_dialog "serial_dialog-go_unregister_arguments" {
+		"Unregistered Arguments: 'map' > ['town', 'dungeon']!"
+	};
+}
+"map-action_testing-go_unregister" {
+	json[
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map"
+		}
+	]
+	show serial_dialog "serial_dialog-go_unregister" {
+		"Unregistered Command: 'map'!"
+	};
+}
+"map-action_testing-go_alias" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "help",
+			"alias": "h"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"command": "secret",
+			"alias": "shh"
+		}
+	]
+}
+"map-action_testing-go_unalias" {
+	json[
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"alias": "h"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
+			"alias": "shh"
+		}
+	]
+}
+"map-action_testing-go_register_secret" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret",
+			"script": "command_secret"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret",
+			"script": "command_secret_fail",
+			"is_fail": true
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "secret",
+			"argument": "goat",
+			"script": "command_secret_goat"
+		}
+	]
+	show serial_dialog "serial_dialog-go_register_secret" {
+		"Registered Command: 'secret'!"
+	};
+}
+"map-action_testing-go_hide_secret" {
+	json[
+		{
+			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+			"command": "secret",
+			"is_visible": false
+		}
+	]
+	show serial_dialog "serial_dialog-go_hide_secret" {
+		"Command has been hidden from `help`: 'secret'!"
+	};
+}
+"map-action_testing-go_unhide_secret" {
+	json[
+		{
+			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
+			"command": "secret",
+			"is_visible": true
+		}
+	]
+	show serial_dialog "serial_dialog-go_unhide_secret" {
+		"Command has been UNhidden from `help`: 'secret'!"
+	};
+}
+"map-action_testing-go_unregister_secret" {
+	json[
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "secret"
+		}
+	]
+	show serial_dialog "serial_dialog-go_unregister_secret"{
+		"Unregistered Command: 'secret'!"
+	};
+}
+command_secret {
+	show serial_dialog "serial_dialog-command-secret" {
+		"Yes, there's a secret, but what animal is secret?"
+	};
+}
+command_secret_fail {
+	show serial_dialog "serial_dialog-command_secret_fail" {
+		"No! Wrong Secret!"
+	};
+}
+command_secret_goat {
+	show serial_dialog "serial_dialog-command_secret_goat" {
+		"You found the secret goat!"
+		"               _))"
+		"              > *\\     _~"
+		"         yey- `;'\\__-' \\_"
+		"                 | )  _ \\ \\"
+		"                / / ``   w w"
+		"               w w"
+	};
+}
+"command_map_test" {
+	show serial_dialog "serial_dialog-command-map" {
+		"OMG! I can look at maps!! But which one???"
+	};
+}
+"command_map_fail" {
+	show serial_dialog "serial_dialog-command_map_fail" {
+		"I don't have a map named that!!!"
+	};
+}
+"command_map_town" {
+	show serial_dialog "serial_dialog-command_map_town" {
+		"This map of the Town sure is... existing."
+	};
+}
+"command_map_dungeon" {
+	show serial_dialog "serial_dialog-command_map_dungeon" {
+		"This map of the Dungeon is AWESOME!!!"
+	};
+}
+"map-action_testing-go_concat" {
+	show serial_dialog "serial_dialog-map-action_testing-go_concat" {
+		"This is a script about concatenation!"
+		"What would you like to concatenate?"
+		# "Goat" = "concat_response-goat"
+		# "Bird" = "concat_response-bird"
+		# "Cat" = "concat_response-cat"
+		# "Platypus" = "concat_response-platypus"
+		# "Peregrine Falcon" = "concat_response-peregrine_falcon"
+	};
+}
+serial_dialog "concat-start" {
+	"This is a story about a "
+}
+serial_dialog "concat-goat" {
+	"Goat"
+}
+serial_dialog "concat-bird" {
+	"Bird"
+}
+serial_dialog "concat-cat" {
+	"Cat"
+}
+serial_dialog "concat-platypus" {
+	"Platypus"
+}
+serial_dialog "concat-peregrine_falcon" {
+	"Peregrine Falcon"
+}
+serial_dialog "concat-end" {
+	" that set out to make the world's most awesome ice-cream!"
+}
+
+"concat_response-goat" {
+	json[
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-start",
+			"disable_newline": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-goat",
+			"disable_newline": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-end"
+		},
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": true
+		}
+	]
+}
+"concat_response-bird" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "bird",
+				"Goat": "Bird"
+			}
+		}
+	]
+}
+"concat_response-cat" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "cat",
+				"Goat": "Cat"
+			}
+		}
+	]
+}
+"concat_response-platypus" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "platypus",
+				"Goat": "Platypus"
+			}
+		}
+	]
+}
+"concat_response-peregrine_falcon" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "peregrine_falcon",
+				"Goat": "Peregrine Falcon"
+			}
+		}
+	]
+}
+"map-action_testing-go_moon" {
+	json[
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "moon",
+			"script": "command_map_moon"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "moon",
+			"is_fail": true,
+			"script": "command_map_moon_fail"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "moon",
+			"argument": "moon",
+			"script": "command_map_moon_moon"
+		}
+	]
+	show serial_dialog "serial_dialog-go_register_moon" {
+		"You have registered the verb 'moon' and the verb + argument 'moon moon'"
+	};
+}
+"command_map_moon" {
+	show serial_dialog "serial_dialog-command_map_moon" {
+		"What would you like to moon?"
+	};
+}
+"command_map_moon_fail" {
+	show serial_dialog "serial_dialog-command_map_moon_fail" {
+		"You cannot moon that."
+	};
+}
+"command_map_moon_moon" {
+	show serial_dialog "serial_dialog-command_map_moon_moon" {
+		"You mooned the moon. It blushes."
+	};
+}
+serial_dialog "serial_dialog-map-action_testing-on_connect" {
+	"WELCOME TO GOAT NET"
+	" NOW       ##### ####     "
+	" I       ##   #  ##       "
+	" RULE   #   (=)    #      "
+	" WORLD  #+        ######  "
+	"      - #v              ##"
+	"         ###           #  "
+	"           #  #      # #  "
+	"           ##  ##  ##  #  "
+	"-----------######--#####--"
+}
+"map-action_testing-load" {
+	json[
+		{
+			"action": "SET_CONNECT_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-on_connect"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": true
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "check_dialog",
+			"script": "check_dialog"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "close_dialog",
+			"script": "close_dialog"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "check_debug",
+			"script": "check_debug"
+		}
+	]
+}
+"close_dialog" {
+	json[
+		{
+			"action": "CLOSE_DIALOG"
+		}
+	]
+}
+"check_dialog" {
+	json[
+		{
+			"action": "CHECK_DIALOG_OPEN",
+			"expected_bool": true,
+			"success_script": "check_dialog-gui_open"
+		}
+	]
+	show serial_dialog "serial_dialog-map-action_testing-gui_closed" {
+		"---"
+		" "
+		"Looks like a GUI dialog was NOT open!"
+	};
+}
+"check_dialog-gui_open" {
+	show serial_dialog "serial_dialog-map-action_testing-gui_open" {
+		"---"
+		" "
+		"Looks like a GUI dialog was indeed open!"
+	};
+}
+"close_serial_dialog" {
+	json[
+		{
+			"action": "CLOSE_SERIAL_DIALOG"
+		}
+	]
+}
+"check_debug" {
+	json[
+		{
+			"action": "CHECK_DEBUG_MODE",
+			"expected_bool": true,
+			"success_script": "check_debug-true"
+		}
+	]
+	show serial_dialog "serial_dialog-map-action_testing-debug_false" {
+		"---"
+		" "
+		"Oh hey! Normal mode! (not debug)"
+	};
+}
+"check_debug-true" {
+	show serial_dialog "serial_dialog-map-action_testing-debug_true" {
+		"---"
+		" "
+		"Oh hey! Debug mode!"
+	};
+}
+"map-action_testing-look" {
+	show serial_dialog "serial_dialog-map-action_testing-look" {
+		"Hey boss, I'm lookin around for secrets,"
+		"but it's nothing but numbers and mages in"
+		"this room!"
+	};
+}
+"map-action_testing-go_north" {
+	show serial_dialog "serial_dialog-map-action_testing-go_north" {
+		"Hey boss, I tried to go north, but it's"
+		"just empty space up there!"
+	};
+}
+"map-action_testing-go_cleveland" {
+	json[
+		{
+			"action": "CHECK_ENTITY_NAME",
+			"success_script": "map-action_testing-go_cleveland-protected",
+			"string": "Bob",
+			"entity": "%PLAYER%",
+			"expected_bool": true
+		}
+	]
+	show serial_dialog "serial_dialog-map-action_testing-go_cleveland" {
+		"McScuse me?"
+		"What did you just ask me to do?"
+		"My name isn't Bob, I can't go to Cleveland!"
+	};
+}
+"map-action_testing-go_cleveland-protected" {
+	show serial_dialog "serial_dialog-map-action_testing-go_cleveland-protected" {
+		"My name is Bob?!??"
+		"Looks like I have to go to Cleveland..."
+	};
+}
+"map-action_testing-go_numbers" {
+	show serial_dialog "serial_dialog-map-action_testing-go_numbers" {
+		"You are in a desert."
+		"You approached by a mysterious goat."
+		"How do you react to the mysterious goat?"
+		# "Do nothing" = "response-do_nothing"
+		# "Pet The Goat" = "response-pet_the_goat"
+		# "Feed The Goat" = "response-feed_the_goat"
+		# "Give the Goat a Sugar Cube" = "response-give_goat_sugar_cube"
+		# "Let's branch into another serial dialog" = "map-action_testing-go_sphinx-success"
+		# "Let's test some RUN_SCRIPT" = "map-action_testing-cli-run_script"
+		# "Let's test some CHECK_SAVE_FLAG" = "map-action_testing-cli-check_save_flag"
+		# "Let's test some SET_SAVE_FLAG" = "map-action_testing-cli-set_save_flag"
+		# "Let's test some CHECK_VARIABLE" = "map-action_testing-cli-check_variable"
+		# "Let's test some MUTATE_VARIABLE" = "map-action_testing-cli-mutate_variable"
+	};
+}
+"map-action_testing-go_sphinx" {
+	show serial_dialog "serial_dialog-map-action_testing-go_sphinx" {
+		"When you arrive at the Sphinx,"
+		"it speaks in a slow, monotone voice:"
+		"WHEN DO THE FLYING TOASTERS COME OUT?"
+		_ "after dark" = "map-action_testing-go_sphinx-success"
+		_ "before dark" = "map-action_testing-go_sphinx-wtf"
+	};
+	show serial_dialog "serial_dialog-map-action_testing-go_sphinx-fail" {
+		"The Sphinx bellows:"
+		"YOU HAVE FAILED MY CHALLENGE!"
+	};
+}
+"map-action_testing-go_sphinx-success" {
+	show serial_dialog "serial_dialog-map-action_testing-go_sphinx-success" {
+		"The Sphinx bellows:"
+		"YOU ARE ELITE!"
+	};
+}
+"map-action_testing-go_sphinx-wtf" {
+	show serial_dialog "serial_dialog-map-action_testing-go_sphinx-wtf" {
+		"The Sphinx bellows:"
+		"Okay bro, now you're just messing with me. WTF"
+	};
+}
+"map-action_testing-go_hub" {
+	show serial_dialog "serial_dialog-map-action_testing-go_hub" {
+		"You're goating to the Hub map now!"
+	};
+	json[
+		{
+			"action": "LOAD_MAP",
+			"map": "warp_zone"
+		}
+	]
+}
+"map-action_testing-cli-run_script" {
+	json[
+		{
+			"action": "RUN_SCRIPT",
+			"script": "map-action_testing-cli-success"
+		}
+	]
+}
+"map-action_testing-cli-check_save_flag" {
+	json[
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "cli-flag",
+			"expected_bool": true,
+			"success_script": "map-action_testing-cli-success"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-cli-fail"
+		}
+	]
+}
+"map-action_testing-cli-fail" {
+	show serial_dialog "serial_dialog-map-action_testing-cli-fail" {
+		"Fail branch!\n"
+		"cli-variable: $cli-variable$"
+	};
+}
+"map-action_testing-cli-success" {
+	show serial_dialog "serial_dialog-map-action_testing-cli-success" {
+		"Success branch!"
+		"PLAYER: %PLAYER%"
+		"cli-variable: $cli-variable$"
+		"'Mage 01': %Mage 01%"
+		"ch1_storyflags_tally: $ch1_storyflags_tally$"
+		"SELF: %SELF%"
+		"MAP: %MAP%"
+	};
+}
+"map-action_testing-cli-set_save_flag" {
+	json[
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "cli-flag",
+			"bool_value": true
+		}
+	]
+}
+"map-action_testing-cli-check_variable" {
+	json[
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "cli-variable",
+			"value": 5,
+			"comparison": ">",
+			"expected_bool": true,
+			"success_script": "map-action_testing-cli-success"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-cli-fail"
+		}
+	]
+}
+"map-action_testing-cli-mutate_variable" {
+	json[
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "cli-variable",
+			"operation": "ADD",
+			"value": 5
+		}
+	]
+}
+"mage01-check_entity_name" {
+	// Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.
+	json[
+		{
+			"action": "CHECK_ENTITY_NAME",
+			"success_script": "mage01-set_entity_name",
+			"entity": "Mage 01",
+			"string": "Mage 00",
+			"expected_bool": true
+		}
+	]
+	show dialog "dialog-mage01_1" {
+		SELF "I test the CHECK_ENTITY_NAME and\nSET_ENTITY_NAME actions.\nSet my name to 'Mage 00'\nand then talk to me again."
+	};
+}
+"mage01-set_entity_name" {
+	show dialog "dialog-mage01_2" {
+		SELF "Good work, you set my name to '%SELF%'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "Mage 01",
+			"string": "Mage 01"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 01",
+			"script": "mage01-check_entity_name"
+		}
+	]
+}
+"mage01-look_script" {
+	show serial_dialog "serial_dialog-mage01-look_script" {
+		"Looks like you just ran the look script on the entity named `%SELF%`! Goat job!"
+	}
+}
+dialog "dialog-mage02_1" {
+	SELF "I test the CHECK_ENTITY_X and\nCHECK_ENTITY_Y actions. Set my\nX to 193 and my Y to 97\nand then talk to me again."
+}
+"mage02-check_entity_x" {
+	json[
+		{
+			"doc": "Mage 02 tests CHECK_ENTITY_(X/Y) and then SET_ENTITY_(X/Y) after a successful check to reset itself.",
+			"action": "CHECK_ENTITY_X",
+			"success_script": "mage02-check_entity_y",
+			"entity": "Mage 02",
+			"expected_u2": 193,
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_1"
+		}
+	]
+}
+"mage02-check_entity_y" {
+	json[
+		{
+			"action": "CHECK_ENTITY_Y",
+			"success_script": "mage02-set_entity_xy",
+			"entity": "Mage 02",
+			"expected_u2": 97,
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog":  "dialog-mage02_1"
+		}
+	]
+}
+"mage02-set_entity_xy" {
+	show dialog "dialog-mage02_2" {
+		SELF "Good work, you set my X to 193 & my Y to 97!\nI should set X back to 192 and Y back to 96\nwhen you close this dialog."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_X",
+			"entity": "Mage 02",
+			"u2_value": 192
+		},
+		{
+			"action": "SET_ENTITY_Y",
+			"entity": "Mage 02",
+			"u2_value": 96
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 02",
+			"script": "mage02-check_entity_x"
+		}
+	]
+}
+"mage03-check_entity_scripts" {
+	json[
+		{
+			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
+			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+			"success_script": "mage03-success_script",
+			"entity": "%PLAYER%",
+			"expected_script": "null_script",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_ENTITY_TICK_SCRIPT",
+			"success_script": "mage03-success_script",
+			"entity": "%PLAYER%",
+			"expected_script": "null_script",
+			"expected_bool": false
+		}
+	]
+}
+"mage03-success_script" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 03",
+			"script": "mage03-success_prompt"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Mage 03",
+			"script": "mage03-check_entity_scripts"
+		}
+	]
+}
+"mage03-initial_prompt" {
+	show dialog "dialog-mage03_1" {
+		SELF
+		"I test the CHECK_ENTITY_INTERACT_SCRIPT and\nCHECK_ENTITY_TICK_SCRIPT actions. Set the\ntick or interact scripts for yourself to\nanything other than their current value."
+		"When you talk to me again, I should know\nif you changed them and will say\nsomething new."
+	};
+}
+"mage03-success_prompt" {
+	show dialog "dialog-mage03_2" {
+		SELF "Looks like you updated your own\nonTick Script or onInteract Script.\nThey should be reset to their original\nvalues when you close this dialog."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 03",
+			"script": "mage03-initial_prompt"
+		}
+	]
+}
+dialog "dialog-mage04_1" {
+	SELF "I test the CHECK_ENTITY_PRIMARY_ID,\nCHECK_ENTITY_SECONDARY_ID, and\nCHECK_ENTITY_PRIMARY_ID_TYPE actions."
+	"Set my primary ID to 12,\nmy secondary ID to 1,\n and my primary ID type to 3\nand then talk to me again."
+}
+"mage04-check_entity_primary_id" {
+	json[
+		{
+			"doc": "Mage 04 tests CHECK_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) and then SET_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) after a successful check to reset itself.",
+			"action": "CHECK_ENTITY_PRIMARY_ID",
+			"success_script": "mage04-check_entity_secondary_id",
+			"entity": "Mage 04",
+			"expected_u2": 12,
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	]
+}
+"mage04-check_entity_secondary_id" {
+	json[
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "mage04-check_entity_primary_id_type",
+			"entity": "Mage 04",
+			"expected_u2": 1,
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	]
+}
+"mage04-check_entity_primary_id_type" {
+	json[
+		{
+			"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+			"success_script": "mage04-success_set_ids",
+			"entity": "Mage 04",
+			"expected_byte": 3,
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	]
+}
+"mage04-success_set_ids" {
+	show dialog "dialog-mage04_2" {
+		SELF "Good work, you set my primary ID,\nsecondary ID, and primary ID type.\nThey should reset to their original values\n(13, 0, 2) when you close this dialog."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_PRIMARY_ID",
+			"entity": "Mage 04",
+			"u2_value": 13
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "Mage 04",
+			"u2_value": 0
+		},
+		{
+			"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+			"entity": "Mage 04",
+			"byte_value": 2
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 04",
+			"script": "mage04-check_entity_primary_id"
+		}
+	]
+}
+"mage05-check_player_current_animation" {
+	// Mage 05 checks to see if the player animation is their action (3), and then checks to see if it reaches the last frame (5). If so, they will update their dialog.
+	json[
+		{
+			"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"expected_byte": 2,
+			"expected_bool": true,
+			"success_script": "mage05-check_player_current_frame"
+		}
+	]
+}
+"mage05-check_player_current_frame" {
+	json[
+		{
+			"action": "CHECK_ENTITY_CURRENT_FRAME",
+			"entity": "%PLAYER%",
+			"expected_byte": 4,
+			"expected_bool": true,
+			"success_script": "mage05-set_success_dialog"
+		}
+	]
+}
+"mage05-set_success_dialog" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-success_prompt"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-check_player_current_animation"
+		}
+	]
+}
+"mage05-initial_prompt" {
+	show dialog "dialog-mage05_1" {
+		SELF "I test CHECK_ENTITY_CURRENT_ANIMATION\nand CHECK_ENTITY_CURRENT_FRAME.\nUse your action by pressing RJOY_LEFT,\nand I should update my message."
+	};
+}
+"mage05-success_prompt" {
+	show dialog "dialog-mage05_2" {
+		SELF "Good work, you used your action, and I\nwas able to verify that it happened."
+		"Now I will change my animation to test\nSET_ENTITY_CURRENT_ANIMATION and\nSET_ENTITY_CURRENT_FRAME. I should\nStart on the third frame."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Mage 05",
+			"byte_value": 2
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_FRAME",
+			"entity": "Mage 05",
+			"byte_value": 2
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-initial_prompt"
+		}
+	]
+}
+"mage06-check_player_entity_type" {
+	// Mage 06 checks to see if the player EntityType is 'baby_goat'. If so, Mage 06 will update their dialog.
+	json[
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "baby_goat",
+			"expected_bool": true,
+			"success_script": "mage06-success_prompt"
+		}
+	]
+	show dialog "dialog-mage06_1" {
+		SELF "I test CHECK_ENTITY_TYPE.\nSet your EntityType to `baby_goat`,\nand I should update my message."
+	};
+}
+"mage06-success_prompt" {
+	show dialog "dialog-mage06_2" {
+		SELF "Good work, you became `baby_goat`, and I\nwas able to verify that it happened."
+		"Now I will set your EntityType to `mage`\nvia SET_ENTITY_TYPE."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "mage"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 06",
+			"script": "mage06-check_player_entity_type"
+		}
+	]
+}
+"mage07-interact" {
+	show dialog "dialog-mage07" {
+		SELF "I test `SET_ENTITY_DIRECTION_TARGET_ENTITY`\nWalk around me, I should point at you,\nno matter your position!"
+	};
+}
+"mage07-point_at_player" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+}
+"mage08-interact" {
+	show dialog "dialog-mage08" {
+		SELF "I test `SET_ENTITY_DIRECTION_RELATIVE`\nWalk around me, I should point away from\nyou, no matter your position!"
+	};
+}
+"mage08-point_away_from_player" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_RELATIVE",
+			"entity": "%SELF%",
+			"relative_direction": 2
+		}
+	]
+}
+"mage09-interact" {
+	show dialog "dialog-mage09" {
+		SELF "I test `COPY_SCRIPT`, using onTicks 07 & 08!\nWalk around me, I should point at you,\nPause half a second, then look away, \nno matter your position!"
+	};
+}
+"mage09-copy_script" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage07-point_at_player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_deeper"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage08-point_away_from_player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_deeper"
+		}
+	]
+}
+"mage09-copy_script_deeper" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_delay"
+		}
+	]
+}
+"mage09-copy_script_delay" {
+	json[
+
+	]
+}
+"mage10-interact" {
+	show dialog "dialog-mage10-a" {
+		SELF "I test will `SET_SCREEN_SHAKE` 3 times:\n\t\t\t\"frequency\": 20,\n\t\t\t\"amplitude\": 3,\n\t\t\t\"duration\": 2000"
+	};
+	json[
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 20,
+			"amplitude": 3,
+			"duration": 2000
+		}
+	]
+	show dialog "dialog-mage10-b" {
+		SELF "Now:,\n\t\t\t\"frequency\": 1000,\n\t\t\t\"amplitude\": 32,\n\t\t\t\"duration\": 8000"
+	};
+	json[
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 1000,
+			"amplitude": 32,
+			"duration": 8000
+		}
+	]
+	show dialog "dialog-mage10-c" {
+		SELF "Now:\n\t\t\t\"frequency\": 50,\n\t\t\t\"amplitude\": 5,\n\t\t\t\"duration\": 5000"
+	};
+	json[
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 50,
+			"amplitude": 5,
+			"duration": 5000
+		}
+	]
+}
+"mage11-interact" {
+	show dialog "dialog-mage11" {
+		SELF "Panning camera to 3 separate geometries,\nthen panning camera back to the player"
+	};
+	json[
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 2000,
+			"geometry": "mage_11-point-a"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1000,
+			"geometry": "mage_11-point-b"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 500,
+			"geometry": "mage_11-point-c"
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 2000,
+			"entity": "%PLAYER%"
+		}
+	]
+}
+"mage12-interact" {
+	show dialog "dialog-mage12" {
+		SELF "I test SET_CAMERA_TO_FOLLOW_ENTITY &\nTELEPORT_CAMERA_TO_GEOMETRY!\n3 points first, then back to player!"
+	};
+	json[
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-a"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-b"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-c"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "%PLAYER%"
+		}
+	]
+}
+"mage13-reset" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage13-interact"
+		}
+	]
+}
+"mage13-success-n" {
+	show dialog "dialog-mage13-success-n" {
+		SELF "I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing NORTH!"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	]
+}
+"mage13-success-e" {
+	show dialog "dialog-mage13-success-e" {
+		SELF "I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing EAST!"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	]
+}
+"mage13-success-s" {
+	show dialog "dialog-mage13-success-s" {
+		SELF "I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing SOUTH!"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	]
+}
+"mage13-success-w" {
+	show dialog "dialog-mage13-success-w" {
+		SELF "I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing WEST!"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	]
+}
+"mage13-interact" {
+	json[
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "north",
+			"expected_bool": true,
+			"success_script": "mage13-success-n"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "east",
+			"expected_bool": true,
+			"success_script": "mage13-success-e"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south",
+			"expected_bool": true,
+			"success_script": "mage13-success-s"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "west",
+			"expected_bool": true,
+			"success_script": "mage13-success-w"
+		}
+	]
+	show dialog "dialog-mage13-fail" {
+		SELF "I test CHECK_ENTITY_DIRECTION!\n...but something has gone wrong!\nI cannot detect your direction!\nThis action has FAILED!!!"
+	};
+}
+"mage14-reset" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage14-interact"
+		}
+	]
+}
+"mage14-fail-value-==" {
+	show dialog "dialog-mage14-fail-value-==" {
+		SELF "...but something has gone wrong!\nThe value == comparison has FAILED!!!"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-fail-value->" {
+	show dialog "dialog-mage14-fail-value->" {
+		SELF "...but something has gone wrong!\nThe value > comparison has FAILED!!!\nA: $goat_count$;"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-fail-variable-<"{
+	show dialog "dialog-mage14-fail-variable-<" {
+		SELF "...but something has gone wrong!\nThe variable < comparison has FAILED!!!\nA: $goat_count$; B: $another_count$"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-fail-value-ADD" {
+	show dialog "dialog-mage14-fail-value-ADD" {
+		SELF "...but something has gone wrong!\nThe value ADD operation has FAILED!!!\nA: $goat_count$"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-fail-variable-ADD" {
+	show dialog "dialog-mage14-fail-variable-ADD" {
+		SELF "...but something has gone wrong!\nThe variable ADD operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-fail-value-SUB" {
+	show dialog "dialog-mage14-fail-value-SUB" {
+		SELF "...but something has gone wrong!\nThe value SUB operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-fail-value-RNG" {
+	show dialog "dialog-mage14-fail-value-RNG" {
+		SELF "...but something has gone wrong!\nThe value RNG operation has FAILED!!!\nA: $goat_count$;"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	]
+}
+"mage14-interact" {
+	show dialog "dialog-mage14" {
+		SELF "I test the 'VARIABLE' actions:\nMUTATE_VARIABLE, MUTATE_VARIABLES\nCHECK_VARIABLE, CHECK_VARIABLES"
+	};
+	json[
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 32,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 32,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-value-=="
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 16,
+			"operation": "ADD"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 48,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-value-ADD"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "another_count",
+			"value": 16,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "another_count",
+			"value": 16,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-value-=="
+		},
+		{
+			"action": "CHECK_VARIABLES",
+			"variable": "another_count",
+			"source": "goat_count",
+			"comparison": "<",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-variable-<"
+		},
+		{
+			"action": "MUTATE_VARIABLES",
+			"variable": "goat_count",
+			"source": "another_count",
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-variable-ADD"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 1,
+			"operation": "ADD"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": ">",
+			"expected_bool": false,
+			"success_script": "mage14-fail-value->"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 1,
+			"operation": "SUB"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": "==",
+			"expected_bool": false,
+			"success_script": "mage14-fail-value-SUB"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 65535,
+			"operation": "RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "mage14-fail-value-RNG"
+		}
+	]
+	show dialog "dialog-mage14-success" {
+		SELF "I tested a goat load of simple maths\nusing the variable actions,\nand they all verified!\nRandom Number was: $goat_count$"
+	};
+}
+"mage15-success" {
+	json[
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": false,
+			"entity": "%SELF%",
+			"field": "primary_id"
+		}
+	]
+	show dialog "dialog-mage15-success" {
+		SELF "Hooray! 'path_id' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
+	};
+	json[
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "entity_type_id",
+			"value": 0,
+			"operation": "SET"
+		},
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": false,
+			"entity": "%SELF%",
+			"field": "path_id"
+		},
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": false,
+			"entity": "%SELF%",
+			"field": "primary_id"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage15-interact"
+		}
+	]
+}
+"mage15-interact" {
+	json[
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": true,
+			"entity": "%SELF%",
+			"field": "path_id"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "entity_type_id",
+			"value": 0,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage15-success"
+		}
+	]
+	show dialog "dialog-mage15" {
+		SELF "I test the action COPY_VARIABLE.\nChange my 'path_id' to != 00,\nand I will transform into that type,\nand confirm that the copy is working!"
+	};
+}
+"mage16-interact" {
+	json[
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage16-a" {
+		SELF "I test the action PLAY_ENTITY_ANIMATION.\nFirst, I will play my walk animation once."
+	};
+	json[
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 1,
+			"play_count": 1
+		}
+	]
+	show dialog "dialog-mage16-b" {
+		SELF "Now, my 'action' animation will play twice."
+	};
+	json[
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 2
+		}
+	]
+	show dialog "dialog-mage16-c" {
+		SELF "Now, I will turn into Bender and play the\n\"Shiny Metal Ass\" 'action' animation once,\nthen turn back into a mage."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "bender"
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 3,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "mage"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	]
+}
+"mage17-interact-a" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage17-a" {
+		SELF "I test the action SET_HEX_EDITOR_CONTROL.\nI have disabled your ability to hex edit.\nTalk to me again to re-enable hex editing."
+	};
+	json[
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage17-interact-b"
+		}
+	]
+}
+"mage17-interact-b" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage17-b" {
+		SELF "I test the action SET_HEX_EDITOR_CONTROL.\nI have enabled your ability to hex edit.\nTalk to me again to disable hex editing."
+	};
+	json[
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage17-interact-a"
+		}
+	]
+}
+"mage18-interact" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage18" {
+		SELF "You are in a desert.\nYou approached by a mysterious goat."
+		"How do you react to the mysterious goat?"
+		> "Do nothing" = "response-do_nothing"
+		> "Pet The Goat" = "response-pet_the_goat"
+		> "Feed The Goat" = "response-feed_the_goat"
+		> "Give the Goat a Sugar Cube" = "response-give_goat_sugar_cube"
+	};
+}
+"response-pet_the_goat" {
+	show dialog "dialog-pet_the_goat" {
+		SELF "You have pet the mysterious goat.\n\nThe goat is pleased."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	]
+}
+"response-feed_the_goat" {
+	show dialog "dialog-feed_the_goat" {
+		SELF "You give some bread to the mysterious goat,\n\nThe goat is pleased, and less hungry."
+	};
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	]
+}
+"response-give_goat_sugar_cube" {
+	show dialog "dialog-give_goat_sugar_cube" {
+		SELF "You give a Sugar Cube to mysterious goat.\nThe goat says this to you:\nThanks for the Sugar Cube[TM]!\nNow I can fly! BRB"
+	};
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	]
+}
+"response-do_nothing" {
+	show dialog "dialog-do_nothing" {
+		SELF "You do nothing about the mysterious goat.\nYou have lost the game.\n\nGAME OVER"
+	};
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	]
+}
+
+dialog "dialog-mage19" {
+	SELF border_tileset codec
+	"You are in a desert.\nYou approached by a mysterious goat.\nIt is a good goat."
+}
+"mage19-interact" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage19"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "bender"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage19"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "verthandi"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage19"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "mage"
+		}
+	]
+}
+"mage20-interact" {
+	show dialog "dialog-mage20" {
+		name "Solid Snek"
+		alignment BOTTOM_RIGHT
+		portrait "codec-snek"
+		border_tileset "codec"
+		"Kept you waiting, huh?"
+	
+		name "Col. Camel"
+		alignment BOTTOM_LEFT
+		portrait "codec-camel"
+		border_tileset "codec"
+		"Terrorists kidnapped some dudes and are\nplanning a nuclear strike!\n\nSnek! Get in there!"
+		
+		name "Solid Snek"
+		alignment BOTTOM_RIGHT
+		border_tileset "codec"
+		portrait "codec-snek"
+		"OKAY!"
+	
+		entity "%PLAYER%"
+		alignment TOP_LEFT
+		"Umm.... How are you guys talking like that?"
+	
+		name "Metal Goose"
+		alignment BOTTOM_LEFT
+		portrait "codec-goose"
+		border_tileset "codec"
+		"HONK!"
+	
+		name "%PLAYER%"
+		alignment BOTTOM_RIGHT
+		portrait "codec-mage"
+		border_tileset "codec"
+		"What just happened to me?"
+		"Oh, I guess that's how you talk like this."
+	
+		name "Col. Camel"
+		alignment BOTTOM_LEFT
+		portrait "codec-camel"
+		border_tileset "codec"
+		"No! It's Metal Goose! We must stop him!"
+	
+		name "Solid Snek"
+		alignment BOTTOM_RIGHT
+		portrait "codec-snek"
+		border_tileset "codec"
+		"METAL GOOSE?!?!?"
+	
+		name "Metal Goose"
+		alignment BOTTOM_LEFT
+		portrait "codec-goose"
+		border_tileset "codec"
+		"HONK HONK!"
+		"HONK HONK HONK HONK!"
+		
+		name ""
+		alignment BOTTOM_LEFT
+		border_tileset "codec"
+		"GAME OVER"
+	};
+}
+"mage21-interact-a" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage21-a" {
+		SELF "I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have disabled your ability to clipboard.\nTalk to me again to re-enable hex clipboard."
+	};
+	json[
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage21-interact-b"
+		}
+	]
+}
+"mage21-interact-b" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage21-b" {
+		SELF "I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have enabled your ability to clipboard.\nTalk to me again to disable hex clipboard."
+	};
+	json[
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage21-interact-a"
+		}
+	]
+}
+dialog "dialog-mage22-a" {
+	SELF "I test the FADE scripts!\nPREPARE FOR DARKNESS!!!"
+}
+dialog "dialog-mage22-b" {
+	SELF "Okay, now it is Darkness.\nLET THERE BE LIGHT!!!"
+}
+"mage22-interact" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage22-a"
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 2000,
+			"color": "#000000"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage22-b"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 2000,
+			"color": "#000000"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage22-a"
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 2000,
+			"color": "#00CC00"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage22-b"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 2000,
+			"color": "#00CC00"
+		}
+	]
+}
+"mage23-interact" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "dialog-mage23-choices" {
+		SELF "I test the `any key` features in actions\n`CHECK_FOR_BUTTON_(PRESS / STATE)`!\nWhat would you like to test?"
+		"What would you like to test?"
+		> "Wait for ANY_KEY activated" = "mage23-set_tick-press-any"
+		> "Wait for PAGE activated" = "mage23-set_tick-press-page"
+		> "Wait 2 sec & check ANY_KEY after exit" = "mage23-set_tick-state-any"
+		> "Wait 2 sec & check PAGE after exit" = "mage23-set_tick-state-page"
+	};
+}
+"mage23-interact-reset" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-interact"
+		}
+	]
+}
+"mage23-tick-reset" {
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	]
+}
+"mage23-show_dialog_not_pressed" {
+	show dialog "dialog-mage23-not_pressed" {
+		SELF "The button was not pressed."
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-reset"
+		}
+	]
+}
+"mage23-show_dialog_was_pressed" {
+	show dialog "dialog-mage23-was_pressed" {
+		SELF "The button was pressed!"
+	};
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-reset"
+		}
+	]
+}
+"mage23-set_tick-press-any" {
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick_delay-press-any"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	]
+}
+"mage23-set_tick-press-page" {
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-press-page"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	]
+}
+"mage23-set_tick-state-any" {
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-state-any"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	]
+}
+"mage23-set_tick-state-page" {
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-state-page"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	]
+}
+"mage23-tick_delay-press-any" {
+	// We need to force it to wait an extra tick for the `ANY` key, because on_ticks are evaluated after, and on the same tick as on_interacts - and the on_interact's dialog is what triggers this script!
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-press-any"
+		}
+	]
+}
+"mage23-tick-press-any" {
+	json[
+		{
+			"action": "CHECK_FOR_BUTTON_PRESS",
+			"button_id": "ANY",
+			"success_script": "mage23-show_dialog_was_pressed",
+			"expected_bool": true
+		}
+	]
+}
+"mage23-tick-press-page" {
+	json[
+		{
+			"action": "CHECK_FOR_BUTTON_PRESS",
+			"button_id": "PAGE",
+			"success_script": "mage23-show_dialog_was_pressed",
+			"expected_bool": true
+		}
+	]
+}
+"mage23-tick-state-any" {
+	json[
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_STATE",
+			"button_id": "ANY",
+			"expected_bool": true,
+			"success_script": "mage23-show_dialog_was_pressed"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "mage23-show_dialog_not_pressed"
+		}
+	]
+}
+"mage23-tick-state-page" {
+	json[
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_STATE",
+			"button_id": "PAGE",
+			"expected_bool": true,
+			"success_script": "mage23-show_dialog_was_pressed"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "mage23-show_dialog_not_pressed"
+		}
+	]
+}
+"mage24-interact" {
+	json[
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_ENTITY_PATH",
+			"entity": "%SELF%",
+			"geometry": "mage24-geometry-b",
+			"expected_bool": true,
+			"success_script": "mage24-interact-success"
+		}
+	]
+	show dialog "dialog-mage24-interact" {
+		SELF "I test `CHECK_ENTITY_PATH`!\nSet my `entity_path` starting byte one\nhigher and then talk with me again!"
+	};
+}
+"mage24-interact-success" {
+	show dialog "dialog-mage24-interact-success" {
+		SELF "Great Jeaoarb!"
+	};
+	json[
+		{
+			"action": "SET_ENTITY_PATH",
+			"entity": "%SELF%",
+			"geometry": "mage24-geometry-a"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage24-interact"
+		}
+	]
+}
+"mage24-tick" {
+	json[
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%"
+		}
+	]
+}
+"mage25-interact" {
+	json[
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage19-interact",
+			"search_and_replace": {
+				"\"entity_type\":\"bender\"": "\"entity_type\": \"baby_goat\"",
+				"\"entity_type\":\"verthandi\"": "\"entity_type\": \"bert\"",
+				"\"entity_type\":\"mage\"": "\"entity_type\": \"strong_bad\""
+			}
+		}
+	]
+}
+"mage26-interact" {
+	json[
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage26-delay_interrupt"
+		}
+	]
+	show dialog "dialog-mage26-interact" {
+		SELF "Here is dialog part one!\nYou won't even be able to read it in time!\nHere's more words you can't read!"
+		SELF "This is message you should not see"
+		SELF "You WON'T see this if the bug got fixed"
+		"Do you see this text?"
+		> "Yes" = "mage26-reset"
+		> "No" = "mage26-reset"
+	};
+}
+"mage26-reset" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage26-interact"
+		}
+	]
+}
+serial_dialog "honk_point" { "HONK!" }
+"mage26-delay_interrupt" {
+	json[
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "honk_point"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "honk_point"
+		}
+	]
+	show dialog "dialog-mage26-delay_interrupt" {
+		name "Metal Goose"
+		border_tileset "codec"
+		portrait "codec-goose"
+		"HONK!"
+	};
+	json[
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "honk_point"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	]
+}
+"mage27-interact" {
+	json[
+		{
+			"action": "CHECK_SERIAL_DIALOG_OPEN",
+			"success_script": "mage27-interact_trapped",
+			"expected_bool": true
+		}
+	]
+	show dialog "dialog-mage27-interact_closed" {
+		SELF "I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently NOT trapped."
+		"Would you like me to open a serial dialog?"
+		> "Yes" = "mage27-reset_with_dialog"
+		> "No" = "mage27-reset"
+	};
+}
+"mage27-interact_trapped" {
+	show dialog "dialog-mage27-interact_open" {
+		SELF "I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently trapped."
+		"Would you like me to close the serial dialog?"
+		> "Yes" = "close_serial_dialog"
+		> "No" = "null_script"
+	};
+}
+"mage27-reset" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage27-interact"
+		}
+	]
+}
+"mage27-reset_with_dialog" {
+	json[
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage27-interact"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-go_sphinx"
+		}
+	]
+}
+"mage28-interact" {
+	show dialog "dialog-mage28-interact" {
+		SELF "I test the actions:\nSET_LIGHTS_CONTROL\nSET_LIGHTS_STATE\nWatch the lights around the screen!"
+	};
+	json[
+		{
+			"action": "SET_LIGHTS_CONTROL",
+			"enabled": true
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128",
+				"LED_BIT64",
+				"LED_BIT32",
+				"LED_BIT16",
+				"LED_BIT8",
+				"LED_BIT4",
+				"LED_BIT2",
+				"LED_BIT1"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_XOR",
+				"LED_ADD",
+				"LED_SUB",
+				"LED_PAGE",
+				"LED_MEM3",
+				"LED_MEM2",
+				"LED_MEM1",
+				"LED_MEM0",
+				"LED_USB",
+				"LED_HAX",
+				"LED_SD"
+			],
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT128"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT64"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT32"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT16"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT8"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT4"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT2"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": [
+				"LED_BIT1"
+			],
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "LED_HAX",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "ALL",
+			"enabled": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_STATE",
+			"lights": "ALL",
+			"enabled": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_LIGHTS_CONTROL",
+			"enabled": false
+		}
+	]
+}
+"mage29-interact" {
+	show dialog "dialog-mage29-interact" {
+		SELF "I test conditional local jumps!\nSet my name to 'Nage 29' to verify!"
+	};
+	json[
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "mage29-skippydoodle",
+			"operation": "SET",
+			"value": 1
+		},
+		{
+			"action": "CHECK_ENTITY_NAME",
+			"jump_index": 4,
+			"entity": "%SELF%",
+			"string": "Nage 29",
+			"expected_bool": true
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "mage29-skippydoodle",
+			"operation": "SET",
+			"value": 0
+		}
+	]
+	show dialog "dialog-mage29-test" {
+		SELF "Did it work? $mage29-skippydoodle$"
+	};
+}
+"mage30-interact" {
+	show dialog "mage30-interact-1" {
+		SELF "One..."
+	};
+	show dialog "mage30-interact-2" {
+		SELF "Two..."
+	};
+	json[
+		{
+			"action": "GOTO_ACTION_INDEX",
+			"action_index": 4
+		}
+	]
+	show dialog "mage30-interact-3" {
+		SELF "Three..."
+	};
+	show dialog "mage30-interact-4" {
+		SELF "Four... wait, did I skip one?"
+	};
+}
+"mage31-tick" {
+	json[
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "Mage 31",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 2400
+		}
+	]
+}
+"mage31-interact" {
+	json[
+		{
+			"action": "SET_SCRIPT_PAUSE",
+			"entity": "%SELF%",
+			"script_slot": "on_tick",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	]
+	show dialog "mage31-interact" {
+		SELF "Oh dang, you distracted me!\nI hope I don't lose my place\nin this circle..."
+	};
+	json[
+		{
+			"action": "SET_SCRIPT_PAUSE",
+			"entity": "%SELF%",
+			"script_slot": "on_tick",
+			"bool_value": false
+		}
+	]
+}
+"debug_go_space" {
+	show serial_dialog "dialog-debug_go_space" {
+		"HONK! The goose has stolen the door!"
+	};
+}
+"debug_look_override" {
+	show serial_dialog "dialog-debug_look_override" {
+		"HONK! The goose tells you an awesome story about the rise and fall of his enemies, and prevents you from looking about the room!"
+	};
+}
+"debug_look_mage01-override" {
+	show serial_dialog "dialog-debug_look_mage01-override" {
+		"HONK! The goose attacks when you try to look at the 'Mage 01'!"
+	};
+}

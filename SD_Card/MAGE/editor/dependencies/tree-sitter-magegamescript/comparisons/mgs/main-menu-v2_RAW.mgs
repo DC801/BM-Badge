@@ -1,0 +1,983 @@
+on_load_main_menu {
+   current_chapter = 0;
+   command colors = command-colors;
+   command colors + bg = command_colors_bg;
+   command colors + bold = command_colors_bold;
+   command colors + dim = command_colors_dim;
+   if (debug_mode) { goto index 7; }
+   goto index 99;
+   command debug = debug;
+   command hub = debug_hub;
+   command honk = system_bell;
+   command bob = debug_bob;
+   command bob2 = debug_bob2;
+   command bob3 = debug_bob3;
+   command simon = debug_menu_simon;
+   command king = debug_king;
+   command ch2 = menu_chapter_select_2;
+   command rtfm = command-rtfm;
+   command buffer + test = debug_buffertest;
+   command boot = ch2_bootup;
+   command post = debug_post;
+   command skip + 1 = debug_jump_to_round1;
+   command skip + 2 = debug_jump_to_round2;
+   command skip + 3 = debug_jump_to_round3;
+   command skip + 4 = debug_jump_to_round4;
+   command warp = command-warp;
+   command warp fail = warp_fail;
+   command man + warp = man_warp;
+   command warp + 1 = warp_ch2_1;
+   command warp + 11 = warp_ch2_11;
+   command warp + 12 = warp_ch2_12;
+   command warp + 13 = warp_ch2_13;
+   command warp + 14 = warp_ch2_14;
+   command warp + 21 = warp_ch2_21;
+   command warp + 22 = warp_ch2_22;
+   command warp + 23 = warp_ch2_23;
+   command warp + 31 = warp_ch2_31;
+   command warp + 32 = warp_ch2_32;
+   command warp + 33 = warp_ch2_33;
+   command warp + 34 = warp_ch2_34;
+   command warp + 99 = warp_ch2_99;
+   command warp + castle exterior = warp_ch2_castle_exterior;
+   command warp + castle entrance = warp_ch2_1;
+   command warp + castle hallway front = warp_ch2_11;
+   command warp + castle hallway back = warp_ch2_12;
+   command warp + castle throne room = warp_ch2_13;
+   command warp + throne room = warp_ch2_13;
+   command warp + castle bedroom = warp_ch2_14;
+   command warp + gibson's bedroom = warp_ch2_14;
+   command warp + gibsons bedroom = warp_ch2_14;
+   command warp + gibson bedroom = warp_ch2_14;
+   command warp + king gibson's bedroom = warp_ch2_14;
+   command warp + king gibsons bedroom = warp_ch2_14;
+   command warp + king gibson bedroom = warp_ch2_14;
+   command warp + workshop = warp_ch2_21;
+   command warp + server room = warp_ch2_22;
+   command warp + power plant = warp_ch2_23;
+   command warp + grand hall = warp_ch2_31;
+   command warp + castle hall = warp_ch2_31;
+   command warp + castle kitchen = warp_ch2_32;
+   command warp + hydroponics = warp_ch2_33;
+   command warp + castle hydroponics = warp_ch2_33;
+   command warp + hydroponics room = warp_ch2_33;
+   command warp + castle pantry = warp_ch2_34;
+   command warp + secret lab = warp_ch2_99;
+   command warp + town = warp_ch2_town;
+   command warp + bakery = warp_ch2_bakery;
+   command warp + greenhouse = warp_ch2_greenhouse;
+   command warp + wopr room = warp_ch2_wopr;
+   command warp + wopr = warp_ch2_wopr;
+   command warp + library = warp_ch2_library;
+   command warp + lodge = warp_ch2_library;
+   command warp + inner sanctum = warp_ch2_rtfmroom;
+   command warp + rtfm room = warp_ch2_rtfmroom;
+   command warp + rtfm = warp_ch2_rtfmroom;
+   command warp + home = warp_ch2_magehouse;
+   command warp + my home = warp_ch2_magehouse;
+   command warp + my house = warp_ch2_magehouse;
+   command warp + bobsclub = warp_ch2_bobsclub;
+   command warp + bobs club = warp_ch2_bobsclub;
+   command warp + bob's club = warp_ch2_bobsclub;
+   command warp + bobs club basement = warp_ch2_bobsclub_basement;
+   command warp + bob's club basement = warp_ch2_bobsclub_basement;
+   command warp + beatrice's house = warp_ch2_oldcouplehouse;
+   command warp + beatrices house = warp_ch2_oldcouplehouse;
+   command warp + beatrice house = warp_ch2_oldcouplehouse;
+   command warp + bea = warp_ch2_oldcouplehouse;
+   command warp + smith's house = warp_ch2_smithfamily;
+   command warp + smiths house = warp_ch2_smithfamily;
+   command warp + smith house = warp_ch2_smithfamily;
+   command warp + smith = warp_ch2_smithfamily;
+   command storyflag = ch2_debug_storyflag;
+   command storyflag + 0 = debug_map_flags_for_round0;
+   command storyflag + 1 = debug_map_flags_for_round1;
+   command storyflag + 2 = debug_map_flags_for_round2;
+   command storyflag + 3 = debug_map_flags_for_round3;
+   command storyflag + 4 = debug_map_flags_for_round4;
+   command storyflag + 5 = debug_map_flags_for_round5;
+   show serial_dialog main_menu.mgs:39:3;
+   goto index 99;
+}
+
+debug_post {
+   ch2_wizard_backstory = true;
+   serial_control = true;
+   ch2_has_artifact = true;
+   hex_control = true;
+   current_chapter = 2;
+   ch2_cutseen_birthday = true;
+   ch2_storyflag_round = 1;
+   ch2_has_map = true;
+   ch2_has_artifact = true;
+   command man + map = man_map;
+   command map = command-map;
+   command man + parts = man_parts;
+   command parts = command-parts;
+   command parts fail = command_parts_fail;
+   command parts + MONITOR = command_parts_monitor;
+   command parts + HEAT SINK = command_parts_heatsink;
+   command parts + HEATSINK = command_parts_heatsink;
+   command parts + POWER SUPPLY = command_parts_powersupply;
+   command parts + POWERSUPPLY = command_parts_powersupply;
+   command parts + KEYBOARD = command_parts_keyboard;
+   command parts + MOUSE = command_parts_mouse;
+   command parts + HARD DRIVE = command_parts_harddrive;
+   command parts + HARDDRIVE = command_parts_harddrive;
+   command parts + HARD DISK = command_parts_harddrive;
+   command parts + HARDDISK = command_parts_harddrive;
+   command parts + HDD = command_parts_harddrive;
+   command parts + PLATE = command_parts_plate;
+   command parts + DINNER PLATE = command_parts_plate;
+   command parts + NEEDLE = command_parts_needle;
+   command parts + PHONOGRAPH NEEDLE = command_parts_needle;
+   command parts + RAM CHIPS = command_parts_ramchips;
+   command parts + RAMCHIPS = command_parts_ramchips;
+   command parts + RAM = command_parts_ramchips;
+   command parts + CLOCK = command_parts_clock;
+   command parts + CPU = command_parts_cpu;
+   command parts + GOLDFISH = command_parts_goldfish;
+   command parts + ABACUS = command_parts_abacus;
+   command parts + MAINFRAME OS = command_parts_os;
+   command parts + MAINFRAMEOS = command_parts_os;
+   command parts + OS = command_parts_os;
+   command parts + OPERATINGSYSTEM = command_parts_os;
+   ch2_map_monitor = true;
+   ch2_map_heatsink = true;
+   ch2_map_powersupply = true;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_toot_done = true;
+   ch2_map_monitor = true;
+   ch2_map_heatsink = true;
+   ch2_map_powersupply = true;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_storyflag_round = 1;
+   ch2_map_monitor = false;
+   ch2_carrying_monitor = true;
+   command look + monitor = look_monitor;
+   ch2_cactuscooler_delivered = true;
+   ch2_map_cactuscooler_castle = false;
+   ch2_map_heatsink = false;
+   ch2_carrying_heatsink = true;
+   command look + heat sink = look_heatsink;
+   ch2_map_powersupply = false;
+   ch2_carrying_powersupply = true;
+   command look + power supply = look_powersupply;
+   ch2_carrying_heatsink = false;
+   ch2_installed_heatsink = true;
+   delete command look + heat sink;
+   ch2_carrying_powersupply = false;
+   ch2_installed_powersupply = true;
+   delete command look + power supply;
+   ch2_carrying_monitor = false;
+   ch2_installed_monitor = true;
+   delete command look + monitor;
+   ch2_cutseen_bert_secret = true;
+   ch2_lambda_bert_backstory = true;
+   ch2_parts_round_2_backstory = true;
+   ch2_map_monitor = false;
+   ch2_map_heatsink = false;
+   ch2_map_powersupply = false;
+   ch2_map_keyboard = true;
+   ch2_map_mouse = true;
+   ch2_map_plate = true;
+   ch2_map_needle = true;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_storyflag_round = 2;
+   ch2_map_keyboard = false;
+   ch2_carrying_keyboard = true;
+   command look + keyboard = look_keyboard;
+   ch2_map_mouse = false;
+   ch2_carrying_mouse = true;
+   command look + mouse = look_mouse;
+   ch2_map_needle = false;
+   ch2_carrying_needle = true;
+   if (ch2_carrying_plate) { goto index 113; }
+   goto index 115;
+   ch2_map_solder = true;
+   goto index 115;
+   command look + needle = look_needle;
+   ch2_map_plate = false;
+   ch2_carrying_plate = true;
+   if (ch2_carrying_needle) { goto index 120; }
+   goto index 122;
+   ch2_map_solder = true;
+   goto index 122;
+   command look + plate = look_plate;
+   ch2_carrying_plate = false;
+   ch2_installed_plate = true;
+   delete command look + plate;
+   ch2_carrying_needle = false;
+   ch2_installed_needle = true;
+   delete command look + needle;
+   ch2_map_solder = false;
+   ch2_carrying_harddrive = true;
+   command look + hard drive = look_harddrive;
+   ch2_carrying_harddrive = false;
+   ch2_installed_harddrive = true;
+   delete command look + hard drive;
+   ch2_carrying_keyboard = false;
+   ch2_installed_keyboard = true;
+   delete command look + keyboard;
+   ch2_carrying_mouse = false;
+   ch2_installed_mouse = true;
+   delete command look + mouse;
+   ch2_cutseen_bert_message = true;
+   ch2_parts_round_3_backstory = true;
+   ch2_map_monitor = false;
+   ch2_map_heatsink = false;
+   ch2_map_powersupply = false;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = true;
+   ch2_map_goldfish = true;
+   ch2_map_abacus = true;
+   ch2_map_ramchips = true;
+   ch2_map_mainframeos = false;
+   ch2_storyflag_round = 3;
+   ch2_map_ramchips = false;
+   ch2_map_seamoss = false;
+   ch2_carrying_ramchips = true;
+   command look + ram chips = look_ramchips;
+   command look + ram = look_ramchips;
+   ch2_map_clock = false;
+   ch2_carrying_clock = true;
+   command look + clock = look_clock;
+   ch2_map_goldfish = false;
+   ch2_carrying_goldfish = true;
+   if (ch2_carrying_abacus) { goto index 168; }
+   goto index 170;
+   ch2_map_solder = true;
+   goto index 170;
+   command look + goldfish = look_goldfish;
+   ch2_map_abacus = false;
+   ch2_carrying_abacus = true;
+   if (ch2_carrying_goldfish) { goto index 175; }
+   goto index 177;
+   ch2_map_solder = true;
+   goto index 177;
+   command look + abacus = look_abacus;
+   ch2_carrying_goldfish = false;
+   ch2_installed_goldfish = true;
+   delete command look + goldfish;
+   ch2_carrying_abacus = false;
+   ch2_installed_abacus = true;
+   delete command look + abacus;
+   ch2_map_solder = false;
+   ch2_carrying_cpu = true;
+   command look + cpu = look_cpu;
+   ch2_carrying_ramchips = false;
+   ch2_installed_ramchips = true;
+   delete command look + ram chips;
+   delete command look + ram;
+   ch2_carrying_clock = false;
+   ch2_installed_clock = true;
+   delete command look + clock;
+   ch2_carrying_cpu = false;
+   ch2_installed_cpu = true;
+   delete command look + cpu;
+   ch2_cutseen_last_parts_done = true;
+   ch2_warp_granted = true;
+   ch2_parts_round_4_backstory = true;
+   ch2_map_monitor = false;
+   ch2_map_heatsink = false;
+   ch2_map_powersupply = false;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = true;
+   ch2_storyflag_round = 4;
+   ch2_seen_room_99 = true;
+   ch2_map_mainframeos = false;
+   ch2_carrying_mainframeos = true;
+   ch2_cutseen_castle99 = true;
+   ch2_carrying_mainframeos = false;
+   ch2_installed_mainframeos = true;
+   delete command look + mainframeos;
+   ch2_ring_zero_enabled_in_castle = true;
+   ch2_storyflag_round = 5;
+   credits_from_menu = false;
+   warp_state = ch2-ending;
+   load map ch2-castle-outside;
+}
+
+debug_menu_simon {
+   serial_control = true;
+   ch2_has_artifact = true;
+   hex_control = true;
+   current_chapter = 2;
+   ch2_storyflag_round = 1;
+   ch2_has_map = true;
+   ch2_has_artifact = true;
+   command man + map = man_map;
+   command map = command-map;
+   command man + parts = man_parts;
+   command parts = command-parts;
+   command parts fail = command_parts_fail;
+   command parts + MONITOR = command_parts_monitor;
+   command parts + HEAT SINK = command_parts_heatsink;
+   command parts + HEATSINK = command_parts_heatsink;
+   command parts + POWER SUPPLY = command_parts_powersupply;
+   command parts + POWERSUPPLY = command_parts_powersupply;
+   command parts + KEYBOARD = command_parts_keyboard;
+   command parts + MOUSE = command_parts_mouse;
+   command parts + HARD DRIVE = command_parts_harddrive;
+   command parts + HARDDRIVE = command_parts_harddrive;
+   command parts + HARD DISK = command_parts_harddrive;
+   command parts + HARDDISK = command_parts_harddrive;
+   command parts + HDD = command_parts_harddrive;
+   command parts + PLATE = command_parts_plate;
+   command parts + DINNER PLATE = command_parts_plate;
+   command parts + NEEDLE = command_parts_needle;
+   command parts + PHONOGRAPH NEEDLE = command_parts_needle;
+   command parts + RAM CHIPS = command_parts_ramchips;
+   command parts + RAMCHIPS = command_parts_ramchips;
+   command parts + RAM = command_parts_ramchips;
+   command parts + CLOCK = command_parts_clock;
+   command parts + CPU = command_parts_cpu;
+   command parts + GOLDFISH = command_parts_goldfish;
+   command parts + ABACUS = command_parts_abacus;
+   command parts + MAINFRAME OS = command_parts_os;
+   command parts + MAINFRAMEOS = command_parts_os;
+   command parts + OS = command_parts_os;
+   command parts + OPERATINGSYSTEM = command_parts_os;
+   ch2_map_monitor = true;
+   ch2_map_heatsink = true;
+   ch2_map_powersupply = true;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_toot_done = true;
+   ch2_storyflag_round = 2;
+   if (ch2_wait_for_hat_touch) { goto index 55; }
+   goto index 57;
+   goto ch2_wait_for_hat_touch_message;
+   goto index 57;
+   if (!ch2_ring_zero_enabled_in_castle) { goto index 59; }
+   goto index 67;
+   if (!debug_mode) { goto index 61; }
+   goto index 66;
+   if (ch2_in_room == 0) { goto index 63; }
+   goto index 65;
+   goto warp_ch2_town_check_fail_message;
+   goto index 65;
+   goto index 66;
+   goto index 67;
+   ch2_in_room = 0;
+   current_chapter = 2;
+   player_control = false;
+   serial_control = false;
+   warp_state = warping;
+   player on_tick = spin_quickly;
+   camera fade out -> #000000 over 500ms;
+   if (ch2_storyflag_round >= 5) { goto index 77; }
+   load map ch2-castle-31;
+   goto index 79;
+   load map ch2-castle-31-postgame;
+   goto index 79;
+}
+
+debug_hub {
+   load map warp_zone;
+}
+
+system_bell {
+   show serial_dialog main_menu.mgs:91:2;
+}
+
+debug_bob {
+   ch2_has_artifact = true;
+   ch2_has_map = true;
+   load map ch2-bobsclub;
+}
+
+debug_bob2 {
+   warp_state = warping;
+   ch2_has_artifact = true;
+   ch2_has_map = true;
+   load map ch2-bobsclub-basement;
+}
+
+debug_bob3 {
+   warp_state = warping;
+   ch2_has_artifact = true;
+   ch2_has_map = true;
+   ch2_cutseen_bob_party = true;
+   load map ch2-bobsclub-basement;
+}
+
+debug_king {
+   serial_control = true;
+   ch2_has_artifact = true;
+   hex_control = true;
+   current_chapter = 2;
+   ch2_cutseen_birthday = true;
+   ch2_storyflag_round = 1;
+   ch2_has_map = true;
+   ch2_has_artifact = true;
+   command man + map = man_map;
+   command map = command-map;
+   command man + parts = man_parts;
+   command parts = command-parts;
+   command parts fail = command_parts_fail;
+   command parts + MONITOR = command_parts_monitor;
+   command parts + HEAT SINK = command_parts_heatsink;
+   command parts + HEATSINK = command_parts_heatsink;
+   command parts + POWER SUPPLY = command_parts_powersupply;
+   command parts + POWERSUPPLY = command_parts_powersupply;
+   command parts + KEYBOARD = command_parts_keyboard;
+   command parts + MOUSE = command_parts_mouse;
+   command parts + HARD DRIVE = command_parts_harddrive;
+   command parts + HARDDRIVE = command_parts_harddrive;
+   command parts + HARD DISK = command_parts_harddrive;
+   command parts + HARDDISK = command_parts_harddrive;
+   command parts + HDD = command_parts_harddrive;
+   command parts + PLATE = command_parts_plate;
+   command parts + DINNER PLATE = command_parts_plate;
+   command parts + NEEDLE = command_parts_needle;
+   command parts + PHONOGRAPH NEEDLE = command_parts_needle;
+   command parts + RAM CHIPS = command_parts_ramchips;
+   command parts + RAMCHIPS = command_parts_ramchips;
+   command parts + RAM = command_parts_ramchips;
+   command parts + CLOCK = command_parts_clock;
+   command parts + CPU = command_parts_cpu;
+   command parts + GOLDFISH = command_parts_goldfish;
+   command parts + ABACUS = command_parts_abacus;
+   command parts + MAINFRAME OS = command_parts_os;
+   command parts + MAINFRAMEOS = command_parts_os;
+   command parts + OS = command_parts_os;
+   command parts + OPERATINGSYSTEM = command_parts_os;
+   ch2_map_monitor = true;
+   ch2_map_heatsink = true;
+   ch2_map_powersupply = true;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_toot_done = true;
+   ch2_map_monitor = true;
+   ch2_map_heatsink = true;
+   ch2_map_powersupply = true;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_storyflag_round = 1;
+   ch2_map_monitor = false;
+   ch2_carrying_monitor = true;
+   command look + monitor = look_monitor;
+   ch2_cactuscooler_delivered = true;
+   ch2_map_cactuscooler_castle = false;
+   ch2_map_heatsink = false;
+   ch2_carrying_heatsink = true;
+   command look + heat sink = look_heatsink;
+   ch2_map_powersupply = false;
+   ch2_carrying_powersupply = true;
+   command look + power supply = look_powersupply;
+   ch2_carrying_heatsink = false;
+   ch2_installed_heatsink = true;
+   delete command look + heat sink;
+   ch2_carrying_powersupply = false;
+   ch2_installed_powersupply = true;
+   delete command look + power supply;
+   ch2_carrying_monitor = false;
+   ch2_installed_monitor = true;
+   delete command look + monitor;
+   ch2_cutseen_bert_secret = true;
+   ch2_lambda_bert_backstory = true;
+   ch2_parts_round_2_backstory = true;
+   ch2_map_monitor = false;
+   ch2_map_heatsink = false;
+   ch2_map_powersupply = false;
+   ch2_map_keyboard = true;
+   ch2_map_mouse = true;
+   ch2_map_plate = true;
+   ch2_map_needle = true;
+   ch2_map_clock = false;
+   ch2_map_goldfish = false;
+   ch2_map_abacus = false;
+   ch2_map_ramchips = false;
+   ch2_map_mainframeos = false;
+   ch2_storyflag_round = 2;
+   ch2_map_keyboard = false;
+   ch2_carrying_keyboard = true;
+   command look + keyboard = look_keyboard;
+   ch2_map_mouse = false;
+   ch2_carrying_mouse = true;
+   command look + mouse = look_mouse;
+   ch2_map_needle = false;
+   ch2_carrying_needle = true;
+   if (ch2_carrying_plate) { goto index 112; }
+   goto index 114;
+   ch2_map_solder = true;
+   goto index 114;
+   command look + needle = look_needle;
+   ch2_map_plate = false;
+   ch2_carrying_plate = true;
+   if (ch2_carrying_needle) { goto index 119; }
+   goto index 121;
+   ch2_map_solder = true;
+   goto index 121;
+   command look + plate = look_plate;
+   ch2_carrying_plate = false;
+   ch2_installed_plate = true;
+   delete command look + plate;
+   ch2_carrying_needle = false;
+   ch2_installed_needle = true;
+   delete command look + needle;
+   ch2_map_solder = false;
+   ch2_carrying_harddrive = true;
+   command look + hard drive = look_harddrive;
+   ch2_carrying_harddrive = false;
+   ch2_installed_harddrive = true;
+   delete command look + hard drive;
+   ch2_carrying_keyboard = false;
+   ch2_installed_keyboard = true;
+   delete command look + keyboard;
+   ch2_carrying_mouse = false;
+   ch2_installed_mouse = true;
+   delete command look + mouse;
+   ch2_cutseen_bert_message = true;
+   ch2_parts_round_3_backstory = true;
+   ch2_map_monitor = false;
+   ch2_map_heatsink = false;
+   ch2_map_powersupply = false;
+   ch2_map_keyboard = false;
+   ch2_map_mouse = false;
+   ch2_map_plate = false;
+   ch2_map_needle = false;
+   ch2_map_clock = true;
+   ch2_map_goldfish = true;
+   ch2_map_abacus = true;
+   ch2_map_ramchips = true;
+   ch2_map_mainframeos = false;
+   ch2_storyflag_round = 3;
+   ch2_cutseen_castle13 = true;
+   ch2_cutseen_castle14 = true;
+   ch2_king_rescued = true;
+   warp_state = Ch2 King Returns;
+   load map ch2-castle-13;
+}
+
+on_tick_button_to_skip {
+   if (button undefined pressed) { goto script handler_skip_splash; }
+}
+
+handler_skip_splash {
+   map on_tick = main_menu_fade_in;
+   goto null_script;
+}
+
+on_tick_main_menu {
+   goto on_tick_splash;
+}
+
+on_tick_splash {
+   hex_control = false;
+   if (warp_state == \"from_game\") { goto script main_menu_fade_in; }
+   camera = geometry \"dc801-center\";
+   camera fade in -> #000000 over 800ms;
+   wait 2900ms;
+   camera fade out -> #000000 over 800ms;
+   player on_tick = null_script;
+   goto main_menu_fade_in;
+}
+
+main_menu_fade_in {
+   hex_control = false;
+   player on_tick = null_script;
+   camera = geometry \"menu-center\";
+   camera fade in -> #000000 over 800ms;
+   goto main_menu;
+}
+
+main_menu {
+   player on_tick = null_script;
+   show dialog main_menu.mgs:165:2;
+}
+
+menu_credits_choice {
+   show dialog main_menu.mgs:179:2;
+}
+
+menu_credits {
+   credits_from_menu = true;
+   load map credits;
+}
+
+menu_credits2 {
+   credits_from_menu = true;
+   load map credits2;
+}
+
+menu_bling_mode {
+   show dialog main_menu.mgs:201:2;
+}
+
+menu_bling_dc801_showcase {
+   show dialog main_menu.mgs:213:2;
+}
+
+menu_play_game {
+   show dialog main_menu.mgs:227:2;
+}
+
+menu_erase_save {
+   show dialog main_menu.mgs:241:2;
+}
+
+menu_erase_save_0 {
+   erase slot 0;
+   goto menu_play_game;
+}
+
+menu_erase_save_1 {
+   erase slot 1;
+   goto menu_play_game;
+}
+
+menu_erase_save_2 {
+   erase slot 2;
+   goto menu_play_game;
+}
+
+menu_load_game {
+   show dialog main_menu.mgs:268:2;
+}
+
+menu_load_game_0 {
+   load slot 0;
+   slot_number = 0;
+   goto menu_chapter_select_q;
+}
+
+menu_load_game_1 {
+   load slot 1;
+   slot_number = 1;
+   goto menu_chapter_select_q;
+}
+
+menu_load_game_2 {
+   load slot 2;
+   slot_number = 2;
+   goto menu_chapter_select_q;
+}
+
+menu_new_game {
+   show dialog main_menu.mgs:297:2;
+}
+
+menu_new_game_0 {
+   erase slot 0;
+   slot_number = 0;
+   goto menu_player_name_q;
+}
+
+menu_new_game_1 {
+   erase slot 1;
+   slot_number = 1;
+   goto menu_player_name_q;
+}
+
+menu_new_game_2 {
+   erase slot 2;
+   slot_number = 2;
+   goto menu_player_name_q;
+}
+
+menu_player_name_q {
+   show dialog main_menu.mgs:333:2;
+}
+
+menu_player_name_preset1 {
+   player name = Red;
+   goto menu_player_name_confirm;
+}
+
+menu_player_name_preset2 {
+   player name = Bubbles;
+   goto menu_player_name_confirm;
+}
+
+menu_player_name_preset3 {
+   player name = Black Mage;
+   goto menu_player_name_confirm;
+}
+
+menu_player_name_confirm {
+   show dialog main_menu.mgs:357:2;
+}
+
+menu_player_name_random {
+   random_name_count ?= 20;
+   if (random_name_count == 1) { goto index 22; }
+   if (random_name_count == 2) { goto index 24; }
+   if (random_name_count == 3) { goto index 26; }
+   if (random_name_count == 4) { goto index 28; }
+   if (random_name_count == 5) { goto index 30; }
+   if (random_name_count == 6) { goto index 32; }
+   if (random_name_count == 7) { goto index 34; }
+   if (random_name_count == 8) { goto index 36; }
+   if (random_name_count == 9) { goto index 38; }
+   if (random_name_count == 10) { goto index 40; }
+   if (random_name_count == 11) { goto index 42; }
+   if (random_name_count == 12) { goto index 44; }
+   if (random_name_count == 13) { goto index 46; }
+   if (random_name_count == 14) { goto index 48; }
+   if (random_name_count == 15) { goto index 50; }
+   if (random_name_count == 16) { goto index 52; }
+   if (random_name_count == 17) { goto index 54; }
+   if (random_name_count == 18) { goto index 56; }
+   if (random_name_count == 19) { goto index 58; }
+   player name = Bub;
+   goto index 60;
+   player name = Chara;
+   goto index 60;
+   player name = Buster;
+   goto index 60;
+   player name = Tidus;
+   goto index 60;
+   player name = Frisk;
+   goto index 60;
+   player name = Farnsworth;
+   goto index 60;
+   player name = Cloud;
+   goto index 60;
+   player name = Ash;
+   goto index 60;
+   player name = Crono;
+   goto index 60;
+   player name = Terra;
+   goto index 60;
+   player name = Kremit;
+   goto index 60;
+   player name = Zidane;
+   goto index 60;
+   player name = Cecil;
+   goto index 60;
+   player name = Squall;
+   goto index 60;
+   player name = Roxas;
+   goto index 60;
+   player name = Steamed Hams;
+   goto index 60;
+   player name = Spy;
+   goto index 60;
+   player name = Tom Honks;
+   goto index 60;
+   player name = VeeVee;
+   goto index 60;
+   player name = XDDCC;
+   goto index 60;
+   show dialog main_menu.mgs:412:2;
+}
+
+menu_player_name_reset {
+   player name = Bub;
+   goto menu_player_name_q;
+}
+
+start_new_game_with_name {
+   save slot;
+   goto menu_chapter_select_q;
+}
+
+menu_chapter_select_q {
+   ch1_storyflags_tally = 0;
+   if (catwork_quest_done) { goto index 3; }
+   goto index 5;
+   ch1_storyflags_tally += 1;
+   goto index 5;
+   if (shepherd_quest_done) { goto index 7; }
+   goto index 9;
+   ch1_storyflags_tally += 1;
+   goto index 9;
+   if (bender_quest_done) { goto index 11; }
+   goto index 13;
+   ch1_storyflags_tally += 1;
+   goto index 13;
+   if (baker_quest_done) { goto index 15; }
+   goto index 17;
+   ch1_storyflags_tally += 1;
+   goto index 17;
+   if (bobmoss_quest_done) { goto index 19; }
+   goto index 21;
+   ch1_storyflags_tally += 1;
+   goto index 21;
+   if (bea1_quest_done) { goto index 23; }
+   goto index 25;
+   ch1_storyflags_tally += 1;
+   goto index 25;
+   if (trekkie_quest_done) { goto index 27; }
+   goto index 29;
+   ch1_storyflags_tally += 1;
+   goto index 29;
+   if (sportskid_quest_done) { goto index 31; }
+   goto index 33;
+   ch1_storyflags_tally += 1;
+   goto index 33;
+   if (verthandi_quest_done) { goto index 35; }
+   goto index 37;
+   ch1_storyflags_tally += 1;
+   goto index 37;
+   if (bea2_quest_done) { goto index 39; }
+   goto index 41;
+   ch1_storyflags_tally += 1;
+   goto index 41;
+   if (rake_quest_done) { goto index 43; }
+   goto index 45;
+   ch1_storyflags_tally += 1;
+   goto index 45;
+   ch2_storyflags_tally = 0;
+   if (ch2_installed_heatsink) { goto index 48; }
+   goto index 50;
+   ch2_storyflags_tally += 1;
+   goto index 50;
+   if (ch2_installed_powersupply) { goto index 52; }
+   goto index 54;
+   ch2_storyflags_tally += 1;
+   goto index 54;
+   if (ch2_installed_monitor) { goto index 56; }
+   goto index 58;
+   ch2_storyflags_tally += 1;
+   goto index 58;
+   if (ch2_installed_harddrive) { goto index 60; }
+   goto index 62;
+   ch2_storyflags_tally += 1;
+   goto index 62;
+   if (ch2_installed_keyboard) { goto index 64; }
+   goto index 66;
+   ch2_storyflags_tally += 1;
+   goto index 66;
+   if (ch2_installed_mouse) { goto index 68; }
+   goto index 70;
+   ch2_storyflags_tally += 1;
+   goto index 70;
+   if (ch2_installed_ramchips) { goto index 72; }
+   goto index 74;
+   ch2_storyflags_tally += 1;
+   goto index 74;
+   if (ch2_installed_clock) { goto index 76; }
+   goto index 78;
+   ch2_storyflags_tally += 1;
+   goto index 78;
+   if (ch2_installed_cpu) { goto index 80; }
+   goto index 82;
+   ch2_storyflags_tally += 1;
+   goto index 82;
+   if (ch2_installed_mainframeos) { goto index 84; }
+   goto index 86;
+   ch2_storyflags_tally += 1;
+   goto index 86;
+   show dialog main_menu.mgs:438:2;
+}
+
+menu_chapter_select_1 {
+   current_chapter = 1;
+   load map main;
+}
+
+menu_chapter_select_2_check {
+   if (ch1_finished) { goto index 5; }
+   if (warned_ch1_incomplete) { goto index 5; }
+   warned_ch1_incomplete = true;
+   show dialog main_menu.mgs:459:3;
+   goto index 7;
+   goto menu_chapter_select_2;
+   goto index 7;
+}
+
+menu_chapter_select_2 {
+   current_chapter = 2;
+   if (!ch2_cutseen_birthday) { goto index 3; }
+   goto index 5;
+   load map ch2-magehouse-birthday;
+   goto index 5;
+   warp_state = raw_game_load-ch2;
+   if (playersave_room == 1) { goto index 9; }
+   load map ch2-town;
+   goto index 15;
+   if (ch2_storyflag_round >= 5) { goto index 12; }
+   load map ch2-castle-1;
+   goto index 14;
+   load map ch2-castle-1-postgame;
+   goto index 14;
+   goto index 15;
+}
+
+menu_save_game {
+   show dialog main_menu.mgs:485:2;
+}
+
+menu_save_game_yes {
+   playersave_x = player x;
+   playersave_y = player y;
+   playersave_room = ch2_in_room;
+   if (player direction == north) { goto index 8; }
+   if (player direction == east) { goto index 10; }
+   if (player direction == south) { goto index 12; }
+   if (player direction == west) { goto index 14; }
+   goto index 16;
+   playersave_dir = 0;
+   goto index 16;
+   playersave_dir = 1;
+   goto index 16;
+   playersave_dir = 2;
+   goto index 16;
+   playersave_dir = 3;
+   goto index 16;
+   save slot;
+   self on_interact = menu_save_game;
+}
+
+menu_save_game_no {
+   self on_interact = menu_save_game;
+}
+
+menu_save_game_main_menu {
+   warp_state = from_game;
+   load map main_menu;
+}

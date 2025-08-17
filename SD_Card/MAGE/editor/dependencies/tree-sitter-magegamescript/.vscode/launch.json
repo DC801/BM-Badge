@@ -1,0 +1,29 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Adventure",
+			"skipFiles": ["<node_internals>/**"],
+			"program": "${workspaceFolder}/parser-adventure.ts"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Tests",
+			"skipFiles": ["<node_internals>/**"],
+			"program": "${workspaceFolder}/parser-tests.ts"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Compare",
+			"skipFiles": ["<node_internals>/**"],
+			"program": "${workspaceFolder}/parser-compare.ts"
+		}
+	]
+}
