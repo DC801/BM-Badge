@@ -202,7 +202,14 @@ export class ProjectState {
 					Object.entries(searchAndReplace).forEach(([k, v]) => {
 						string = string.replace(new RegExp(k, 'g'), v);
 					});
-					const ret = JSON.parse(string);
+					let ret = ''
+					try {
+						ret = JSON.parse(string);
+					} catch (e) {
+						const error = new Error('failed to parse JSON in bakeCopyScriptSingle');
+						error.cause = e
+						throw error;
+					}
 					return Action.fromArgs(ret);
 				});
 				const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;

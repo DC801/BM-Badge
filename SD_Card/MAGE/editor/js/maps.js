@@ -508,6 +508,9 @@ var handleScenarioMaps = function (scenarioData, fileNameMap) {
 		}
 		var mapFileName = mapProperties.path.split('/').pop();
 		var mapFile = fileNameMap[mapFileName];
+		if (!mapFile) {
+			throw new Error (`no map found by the name ${mapFileName} in fileNameMap`)
+		}
 		mapFile.scenarioIndex = scenarioData.parsed.maps.length;
 		scenarioData.parsed.maps.push({
 			name: key,

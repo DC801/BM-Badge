@@ -105,7 +105,7 @@ add dialog settings {
 	goto null_script;
 }
 
-"check_save_flag-bobs_not_on_fire" {
+"check_save_flag_bobs_not_on_fire" {
 	if ("No two Bobs are not on fire") {
 		goto "show_dialog_thanks_for_setting_bob_on_fire";
 	}
@@ -118,10 +118,10 @@ add dialog settings {
 	show dialog {
 		SELF "Thank for warming %Bob% up?\nI mean, there were other ways to do it,\nbut that works I guess..."
 	};
-	self on_interact = "check_save_flag-bobs_not_on_fire";
+	self on_interact = "check_save_flag_bobs_not_on_fire";
 }
 
-"set_save_flag-bobs_not_on_fire" {
+"set_save_flag_bobs_not_on_fire" {
 	if ("No two Bobs are not on fire") {
 		goto "set_save_flag-bobs_on_fire";
 	}
@@ -140,7 +140,7 @@ add dialog settings {
 
 		Bob "Aww man, I was just getting toasty!"
 	};
-	self on_interact = "set_save_flag-bobs_not_on_fire";
+	self on_interact = "set_save_flag_bobs_not_on_fire";
 }
 
 "test_camera_follow_bert" {

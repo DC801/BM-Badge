@@ -7,9 +7,9 @@ earthquake {
 }
 
 earthquake_setpiece {
-	camera = geometry "earthquake_setpiece-camera-spot";
-	entity Verthandi position = geometry "earthquake_setpiece-verthandi-spot";
-	entity Marta position = geometry "earthquake_setpiece-marta-spot";
+	camera = geometry "earthquake-setpiece-camera-spot";
+	entity Verthandi position = geometry "earthquake-setpiece-verthandi-spot";
+	entity Marta position = geometry "earthquake-setpiece-marta-spot";
 	camera fade in -> #000000 over 300ms;
 	entity Cleo on_tick = loiter1;
 	entity Verthandi on_tick = loiter2;
@@ -39,7 +39,7 @@ earthquake_setpiece {
 }
 
 marta_walk {
-	entity Marta position -> geometry "earthquake_setpiece-marta_walk" origin over 900ms;
+	entity Marta position -> geometry "earthquake-setpiece-marta-walk" origin over 900ms;
 }
 
 ch1_end_cutscene_move {

@@ -33,7 +33,7 @@ on_load_lodge {
 	}
 	if (warp_state == exit_from_secretroom) {
 		player_control = off;
-		player position -> geometry "enter_from-secretroom" length over 200ms;
+		player position -> geometry "enter_from_secretroom" length over 200ms;
 		player_control = on;
 	}
 	if (demobonus_timmy_yell || !demobonus) {
@@ -122,7 +122,7 @@ on_tick_lodge_goose {
 	}
 }
 on_tick_lodge_goose_ring_acquired {
-	if (player intersects geometry "door-secretdoor") {
+	if (player intersects geometry "door_secretdoor") {
 		goto enter_secretroom;
 	}
 }

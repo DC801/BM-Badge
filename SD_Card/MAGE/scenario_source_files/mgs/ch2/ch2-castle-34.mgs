@@ -112,7 +112,7 @@ on_go_castle_34_south {
 snake_box_interact {
 	show dialog {
 		PLAYER "Snake, is that you?"
-		name "Solid Snek" portrait "codec-snek" border_tileset codec
+		name "Solid Snek" portrait "codec_snek" border_tileset codec
 		"There's no snake here. Check a different box. Just not this one."
 		PLAYER "But this is the only talking box here."
 	};

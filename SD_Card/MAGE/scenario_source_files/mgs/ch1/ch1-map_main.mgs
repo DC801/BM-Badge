@@ -62,7 +62,7 @@ on_load_map_main {
 	}
 	player_control = off;
 	if (!hintman_explanation) {
-		player position -> geometry "enter_from-lodge" length over 400ms; 
+		player position -> geometry "enter_from_lodge" length over 400ms; 
 		copy!(hintman_cutscene) // see script-elders.json for this
 		hintman_explanation = true;
 	} else if (warp_state == enter_from_east) {
@@ -70,21 +70,21 @@ on_load_map_main {
 	} else if (warp_state == enter_from_west) {
 		player position -> geometry enter_from_west length over 1000ms; 
 	} else if (warp_state == exit_from_bobsclub) {
-		player position -> geometry "enter_from-bobsclub" length over 200ms; 
+		player position -> geometry "enter_from_bobsclub" length over 200ms; 
 	} else if (warp_state == exit_from_bakery) {
-		player position -> geometry "enter_from-bakery" length over 200ms; 
+		player position -> geometry "enter_from_bakery" length over 200ms; 
 	} else if (warp_state == exit_from_lodge) {
-		player position -> geometry "enter_from-lodge" length over 200ms; 
+		player position -> geometry "enter_from_lodge" length over 200ms; 
 	} else if (warp_state == exit_from_greenhouse) {
-		player position -> geometry "enter_from-greenhouse" length over 200ms; 
+		player position -> geometry "enter_from_greenhouse" length over 200ms; 
 	} else if (warp_state == exit_from_magehouse) {
-		player position -> geometry "enter_from-magehouse" length over 200ms; 
+		player position -> geometry "enter_from_magehouse" length over 200ms; 
 	} else if (warp_state == exit_from_oldcouplehouse) {
-		player position -> geometry "enter_from-oldcouplehouse" length over 200ms; 
+		player position -> geometry "enter_from_oldcouplehouse" length over 200ms; 
 	} else if (warp_state == exit_from_family) {
-		player position -> geometry "enter_from-family" length over 200ms; 
+		player position -> geometry "enter_from_family" length over 200ms; 
 	} else if (warp_state == exit_from_woprhouse) {
-		player position -> geometry "enter_from-woprhouse" length over 200ms; 
+		player position -> geometry "enter_from_woprhouse" length over 200ms; 
 	} else if (warp_state == exit_from_credits) {
 		player position = geometry "from-credits-spot";
 		camera fade in -> #000000 over 800ms;
@@ -166,7 +166,7 @@ hamster_now_unglitched {
 	goto null_script;
 }
 cat_watch {
-	if (!entity Cat intersects geometry "cat_watch-box") {
+	if (!entity Cat intersects geometry "cat_watch_box") {
 		goto cat_rescue_protocol;
 	}
 }
@@ -177,7 +177,7 @@ cat_rescue_protocol {
 	entity Cat on_tick = cat_watch;
 }
 cleo_watch {
-	if (!entity Cleo intersects geometry "cleo_watch-box") {
+	if (!entity Cleo intersects geometry "cleo_watch_box") {
 		goto cleo_rescue_protocol;
 	}
 	// WARNING!! if you change who is watching, change who to null_script for the walk_to_lodge cutscene!!!

@@ -700,7 +700,13 @@ export class JSONLiteral extends MathlangNode {
 		this.debug = debug;
 		this.mathlang = 'json_literal';
 		if (!Array.isArray(args.json)) throw new Error('need array');
-		this.json = JSON.parse(JSON.stringify(args.json));
+		try {
+			this.json = JSON.parse(JSON.stringify(args.json));
+		} catch (e) {
+			const error = new Error('failed to parse JSON in JSONLiteral constructor');
+			error.cause = e;
+			throw error
+		}
 	}
 	clone() {
 		return new JSONLiteral(this.debug, this.args);

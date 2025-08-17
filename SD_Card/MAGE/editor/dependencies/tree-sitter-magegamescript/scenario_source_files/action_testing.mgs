@@ -11,7 +11,7 @@ add serial_dialog settings {
 	wrap 0 // ditto
 }
 
-"map-action_testing-go_register" {
+"map_action_testing_go_register" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
@@ -23,7 +23,7 @@ add serial_dialog settings {
 		"Registered Command: 'map'!"
 	};
 }
-"map-action_testing-go_override" {
+"map_action_testing_go_override" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
@@ -48,7 +48,7 @@ add serial_dialog settings {
 		"Verb Overrides registered: 'Look', 'look mage 01', 'go west'"
 	};
 }
-"map-action_testing-go_un-override" {
+"map_action_testing_go_un_override" {
 	json[
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
@@ -73,7 +73,7 @@ add serial_dialog settings {
 		"Verb Overrides UN-registered: 'Look', 'look mage 01', 'go west'"
 	};
 }
-"map-action_testing-go_register_fail" {
+"map_action_testing_go_register_fail" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
@@ -86,7 +86,7 @@ add serial_dialog settings {
 		"Registered Command: 'map' fail fallback!"
 	};
 }
-"map-action_testing-go_register_arguments" {
+"map_action_testing_go_register_arguments" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
@@ -105,7 +105,7 @@ add serial_dialog settings {
 		"Registered Arguments: 'map' > ['town', 'dungeon']!"
 	};
 }
-"map-action_testing-go_unregister_arguments" {
+"map_action_testing_go_unregister_arguments" {
 	json[
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
@@ -122,7 +122,7 @@ add serial_dialog settings {
 		"Unregistered Arguments: 'map' > ['town', 'dungeon']!"
 	};
 }
-"map-action_testing-go_unregister" {
+"map_action_testing_go_unregister" {
 	json[
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
@@ -133,7 +133,7 @@ add serial_dialog settings {
 		"Unregistered Command: 'map'!"
 	};
 }
-"map-action_testing-go_alias" {
+"map_action_testing_go_alias" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
@@ -147,7 +147,7 @@ add serial_dialog settings {
 		}
 	]
 }
-"map-action_testing-go_unalias" {
+"map_action_testing_go_unalias" {
 	json[
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS",
@@ -159,7 +159,7 @@ add serial_dialog settings {
 		}
 	]
 }
-"map-action_testing-go_register_secret" {
+"map_action_testing_go_register_secret" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
@@ -183,7 +183,7 @@ add serial_dialog settings {
 		"Registered Command: 'secret'!"
 	};
 }
-"map-action_testing-go_hide_secret" {
+"map_action_testing_go_hide_secret" {
 	json[
 		{
 			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
@@ -195,7 +195,7 @@ add serial_dialog settings {
 		"Command has been hidden from `help`: 'secret'!"
 	};
 }
-"map-action_testing-go_unhide_secret" {
+"map_action_testing_go_unhide_secret" {
 	json[
 		{
 			"action": "SET_SERIAL_DIALOG_COMMAND_VISIBILITY",
@@ -207,7 +207,7 @@ add serial_dialog settings {
 		"Command has been UNhidden from `help`: 'secret'!"
 	};
 }
-"map-action_testing-go_unregister_secret" {
+"map_action_testing_go_unregister_secret" {
 	json[
 		{
 			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
@@ -259,8 +259,8 @@ command_secret_goat {
 		"This map of the Dungeon is AWESOME!!!"
 	};
 }
-"map-action_testing-go_concat" {
-	show serial_dialog "serial_dialog-map-action_testing-go_concat" {
+"map_action_testing_go_concat" {
+	show serial_dialog "serial_dialog_map_action_testing_go_concat" {
 		"This is a script about concatenation!"
 		"What would you like to concatenate?"
 		# "Goat" = "concat_response-goat"
@@ -366,7 +366,7 @@ serial_dialog "concat-end" {
 		}
 	]
 }
-"map-action_testing-go_moon" {
+"map_action_testing_go_moon" {
 	json[
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
@@ -405,7 +405,7 @@ serial_dialog "concat-end" {
 		"You mooned the moon. It blushes."
 	};
 }
-serial_dialog "serial_dialog-map-action_testing-on_connect" {
+serial_dialog "serial_dialog_map_action_testing_on_connect" {
 	"WELCOME TO GOAT NET"
 	" NOW       ##### ####     "
 	" I       ##   #  ##       "
@@ -417,11 +417,11 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 	"           ##  ##  ##  #  "
 	"-----------######--#####--"
 }
-"map-action_testing-load" {
+"map_action_testing_load" {
 	json[
 		{
 			"action": "SET_CONNECT_SERIAL_DIALOG",
-			"serial_dialog": "serial_dialog-map-action_testing-on_connect"
+			"serial_dialog": "serial_dialog_map_action_testing_on_connect"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -471,14 +471,14 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 			"success_script": "check_dialog-gui_open"
 		}
 	]
-	show serial_dialog "serial_dialog-map-action_testing-gui_closed" {
+	show serial_dialog "serial_dialog_map_action_testing_gui_closed" {
 		"---"
 		" "
 		"Looks like a GUI dialog was NOT open!"
 	};
 }
 "check_dialog-gui_open" {
-	show serial_dialog "serial_dialog-map-action_testing-gui_open" {
+	show serial_dialog "serial_dialog_map_action_testing_gui_open" {
 		"---"
 		" "
 		"Looks like a GUI dialog was indeed open!"
@@ -499,56 +499,56 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 			"success_script": "check_debug-true"
 		}
 	]
-	show serial_dialog "serial_dialog-map-action_testing-debug_false" {
+	show serial_dialog "serial_dialog_map_action_testing_debug_false" {
 		"---"
 		" "
 		"Oh hey! Normal mode! (not debug)"
 	};
 }
 "check_debug-true" {
-	show serial_dialog "serial_dialog-map-action_testing-debug_true" {
+	show serial_dialog "serial_dialog_map_action_testing_debug_true" {
 		"---"
 		" "
 		"Oh hey! Debug mode!"
 	};
 }
-"map-action_testing-look" {
-	show serial_dialog "serial_dialog-map-action_testing-look" {
+"map_action_testing_look" {
+	show serial_dialog "serial_dialog_map_action_testing_look" {
 		"Hey boss, I'm lookin around for secrets,"
 		"but it's nothing but numbers and mages in"
 		"this room!"
 	};
 }
-"map-action_testing-go_north" {
-	show serial_dialog "serial_dialog-map-action_testing-go_north" {
+"map_action_testing_go_north" {
+	show serial_dialog "serial_dialog_map_action_testing_go_north" {
 		"Hey boss, I tried to go north, but it's"
 		"just empty space up there!"
 	};
 }
-"map-action_testing-go_cleveland" {
+"map_action_testing_go_cleveland" {
 	json[
 		{
 			"action": "CHECK_ENTITY_NAME",
-			"success_script": "map-action_testing-go_cleveland-protected",
+			"success_script": "map_action_testing_go_cleveland_protected",
 			"string": "Bob",
 			"entity": "%PLAYER%",
 			"expected_bool": true
 		}
 	]
-	show serial_dialog "serial_dialog-map-action_testing-go_cleveland" {
+	show serial_dialog "serial_dialog_map_action_testing_go_cleveland" {
 		"McScuse me?"
 		"What did you just ask me to do?"
 		"My name isn't Bob, I can't go to Cleveland!"
 	};
 }
-"map-action_testing-go_cleveland-protected" {
-	show serial_dialog "serial_dialog-map-action_testing-go_cleveland-protected" {
+"map_action_testing_go_cleveland_protected" {
+	show serial_dialog "serial_dialog_map_action_testing_go_cleveland_protected" {
 		"My name is Bob?!??"
 		"Looks like I have to go to Cleveland..."
 	};
 }
-"map-action_testing-go_numbers" {
-	show serial_dialog "serial_dialog-map-action_testing-go_numbers" {
+"map_action_testing_go_numbers" {
+	show serial_dialog "serial_dialog_map_action_testing_go_numbers" {
 		"You are in a desert."
 		"You approached by a mysterious goat."
 		"How do you react to the mysterious goat?"
@@ -556,41 +556,41 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 		# "Pet The Goat" = "response-pet_the_goat"
 		# "Feed The Goat" = "response-feed_the_goat"
 		# "Give the Goat a Sugar Cube" = "response-give_goat_sugar_cube"
-		# "Let's branch into another serial dialog" = "map-action_testing-go_sphinx-success"
-		# "Let's test some RUN_SCRIPT" = "map-action_testing-cli-run_script"
-		# "Let's test some CHECK_SAVE_FLAG" = "map-action_testing-cli-check_save_flag"
-		# "Let's test some SET_SAVE_FLAG" = "map-action_testing-cli-set_save_flag"
-		# "Let's test some CHECK_VARIABLE" = "map-action_testing-cli-check_variable"
-		# "Let's test some MUTATE_VARIABLE" = "map-action_testing-cli-mutate_variable"
+		# "Let's branch into another serial dialog" = "map_action_testing_go_sphinx_success"
+		# "Let's test some RUN_SCRIPT" = "map_action_testing_cli-run_script"
+		# "Let's test some CHECK_SAVE_FLAG" = "map_action_testing_cli-check_save_flag"
+		# "Let's test some SET_SAVE_FLAG" = "map_action_testing_cli-set_save_flag"
+		# "Let's test some CHECK_VARIABLE" = "map_action_testing_cli-check_variable"
+		# "Let's test some MUTATE_VARIABLE" = "map_action_testing_cli-mutate_variable"
 	};
 }
-"map-action_testing-go_sphinx" {
-	show serial_dialog "serial_dialog-map-action_testing-go_sphinx" {
+"map_action_testing_go_sphinx" {
+	show serial_dialog "serial_dialog_map_action_testing_go_sphinx" {
 		"When you arrive at the Sphinx,"
 		"it speaks in a slow, monotone voice:"
 		"WHEN DO THE FLYING TOASTERS COME OUT?"
-		_ "after dark" = "map-action_testing-go_sphinx-success"
-		_ "before dark" = "map-action_testing-go_sphinx-wtf"
+		_ "after dark" = "map_action_testing_go_sphinx_success"
+		_ "before dark" = "map_action_testing_go_sphinx_wtf"
 	};
-	show serial_dialog "serial_dialog-map-action_testing-go_sphinx-fail" {
+	show serial_dialog "serial_dialog_map_action_testing_go_sphinx_fail" {
 		"The Sphinx bellows:"
 		"YOU HAVE FAILED MY CHALLENGE!"
 	};
 }
-"map-action_testing-go_sphinx-success" {
-	show serial_dialog "serial_dialog-map-action_testing-go_sphinx-success" {
+"map_action_testing_go_sphinx_success" {
+	show serial_dialog "serial_dialog_map_action_testing_go_sphinx_success" {
 		"The Sphinx bellows:"
 		"YOU ARE ELITE!"
 	};
 }
-"map-action_testing-go_sphinx-wtf" {
-	show serial_dialog "serial_dialog-map-action_testing-go_sphinx-wtf" {
+"map_action_testing_go_sphinx_wtf" {
+	show serial_dialog "serial_dialog_map_action_testing_go_sphinx_wtf" {
 		"The Sphinx bellows:"
 		"Okay bro, now you're just messing with me. WTF"
 	};
 }
-"map-action_testing-go_hub" {
-	show serial_dialog "serial_dialog-map-action_testing-go_hub" {
+"map_action_testing_go_hub" {
+	show serial_dialog "serial_dialog_map_action_testing_go_hub" {
 		"You're goating to the Hub map now!"
 	};
 	json[
@@ -600,36 +600,36 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 		}
 	]
 }
-"map-action_testing-cli-run_script" {
+"map_action_testing_cli-run_script" {
 	json[
 		{
 			"action": "RUN_SCRIPT",
-			"script": "map-action_testing-cli-success"
+			"script": "map_action_testing_cli_success"
 		}
 	]
 }
-"map-action_testing-cli-check_save_flag" {
+"map_action_testing_cli-check_save_flag" {
 	json[
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "cli-flag",
 			"expected_bool": true,
-			"success_script": "map-action_testing-cli-success"
+			"success_script": "map_action_testing_cli_success"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "map-action_testing-cli-fail"
+			"script": "map_action_testing_cli_fail"
 		}
 	]
 }
-"map-action_testing-cli-fail" {
-	show serial_dialog "serial_dialog-map-action_testing-cli-fail" {
+"map_action_testing_cli_fail" {
+	show serial_dialog "serial_dialog_map_action_testing_cli_fail" {
 		"Fail branch!\n"
 		"cli-variable: $cli-variable$"
 	};
 }
-"map-action_testing-cli-success" {
-	show serial_dialog "serial_dialog-map-action_testing-cli-success" {
+"map_action_testing_cli_success" {
+	show serial_dialog "serial_dialog_map_action_testing_cli_success" {
 		"Success branch!"
 		"PLAYER: %PLAYER%"
 		"cli-variable: $cli-variable$"
@@ -639,7 +639,7 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 		"MAP: %MAP%"
 	};
 }
-"map-action_testing-cli-set_save_flag" {
+"map_action_testing_cli-set_save_flag" {
 	json[
 		{
 			"action": "SET_SAVE_FLAG",
@@ -648,7 +648,7 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 		}
 	]
 }
-"map-action_testing-cli-check_variable" {
+"map_action_testing_cli-check_variable" {
 	json[
 		{
 			"action": "CHECK_VARIABLE",
@@ -656,15 +656,15 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 			"value": 5,
 			"comparison": ">",
 			"expected_bool": true,
-			"success_script": "map-action_testing-cli-success"
+			"success_script": "map_action_testing_cli_success"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "map-action_testing-cli-fail"
+			"script": "map_action_testing_cli_fail"
 		}
 	]
 }
-"map-action_testing-cli-mutate_variable" {
+"map_action_testing_cli-mutate_variable" {
 	json[
 		{
 			"action": "MUTATE_VARIABLE",
@@ -679,7 +679,7 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 	json[
 		{
 			"action": "CHECK_ENTITY_NAME",
-			"success_script": "mage01-set_entity_name",
+			"success_script": "mage01_set_entity_name",
 			"entity": "Mage 01",
 			"string": "Mage 00",
 			"expected_bool": true
@@ -702,7 +702,7 @@ serial_dialog "serial_dialog-map-action_testing-on_connect" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 01",
-			"script": "mage01-check_entity_name"
+			"script": "mage01_check_entity_name"
 		}
 	]
 }
@@ -719,7 +719,7 @@ dialog "dialog-mage02_1" {
 		{
 			"doc": "Mage 02 tests CHECK_ENTITY_(X/Y) and then SET_ENTITY_(X/Y) after a successful check to reset itself.",
 			"action": "CHECK_ENTITY_X",
-			"success_script": "mage02-check_entity_y",
+			"success_script": "mage02_check_entity_y",
 			"entity": "Mage 02",
 			"expected_u2": 193,
 			"expected_bool": true
@@ -734,7 +734,7 @@ dialog "dialog-mage02_1" {
 	json[
 		{
 			"action": "CHECK_ENTITY_Y",
-			"success_script": "mage02-set_entity_xy",
+			"success_script": "mage02_set_entity_xy",
 			"entity": "Mage 02",
 			"expected_u2": 97,
 			"expected_bool": true
@@ -763,7 +763,7 @@ dialog "dialog-mage02_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 02",
-			"script": "mage02-check_entity_x"
+			"script": "mage02_check_entity_x"
 		}
 	]
 }
@@ -772,14 +772,14 @@ dialog "dialog-mage02_1" {
 		{
 			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
 			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
-			"success_script": "mage03-success_script",
+			"success_script": "mage03_success_script",
 			"entity": "%PLAYER%",
 			"expected_script": "null_script",
 			"expected_bool": false
 		},
 		{
 			"action": "CHECK_ENTITY_TICK_SCRIPT",
-			"success_script": "mage03-success_script",
+			"success_script": "mage03_success_script",
 			"entity": "%PLAYER%",
 			"expected_script": "null_script",
 			"expected_bool": false
@@ -791,7 +791,7 @@ dialog "dialog-mage02_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 03",
-			"script": "mage03-success_prompt"
+			"script": "mage03_success_prompt"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -806,7 +806,7 @@ dialog "dialog-mage02_1" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Mage 03",
-			"script": "mage03-check_entity_scripts"
+			"script": "mage03_check_entity_scripts"
 		}
 	]
 }
@@ -825,7 +825,7 @@ dialog "dialog-mage02_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 03",
-			"script": "mage03-initial_prompt"
+			"script": "mage03_initial_prompt"
 		}
 	]
 }
@@ -838,7 +838,7 @@ dialog "dialog-mage04_1" {
 		{
 			"doc": "Mage 04 tests CHECK_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) and then SET_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) after a successful check to reset itself.",
 			"action": "CHECK_ENTITY_PRIMARY_ID",
-			"success_script": "mage04-check_entity_secondary_id",
+			"success_script": "mage04_check_entity_secondary_id",
 			"entity": "Mage 04",
 			"expected_u2": 12,
 			"expected_bool": true
@@ -853,7 +853,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "mage04-check_entity_primary_id_type",
+			"success_script": "mage04_check_entity_primary_id_type",
 			"entity": "Mage 04",
 			"expected_u2": 1,
 			"expected_bool": true
@@ -868,7 +868,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
-			"success_script": "mage04-success_set_ids",
+			"success_script": "mage04_success_set_ids",
 			"entity": "Mage 04",
 			"expected_byte": 3,
 			"expected_bool": true
@@ -902,7 +902,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 04",
-			"script": "mage04-check_entity_primary_id"
+			"script": "mage04_check_entity_primary_id"
 		}
 	]
 }
@@ -914,7 +914,7 @@ dialog "dialog-mage04_1" {
 			"entity": "%PLAYER%",
 			"expected_byte": 2,
 			"expected_bool": true,
-			"success_script": "mage05-check_player_current_frame"
+			"success_script": "mage05_check_player_current_frame"
 		}
 	]
 }
@@ -925,7 +925,7 @@ dialog "dialog-mage04_1" {
 			"entity": "%PLAYER%",
 			"expected_byte": 4,
 			"expected_bool": true,
-			"success_script": "mage05-set_success_dialog"
+			"success_script": "mage05_set_success_dialog"
 		}
 	]
 }
@@ -934,12 +934,12 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 05",
-			"script": "mage05-success_prompt"
+			"script": "mage05_success_prompt"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Mage 05",
-			"script": "mage05-check_player_current_animation"
+			"script": "mage05_check_player_current_animation"
 		}
 	]
 }
@@ -967,7 +967,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 05",
-			"script": "mage05-initial_prompt"
+			"script": "mage05_initial_prompt"
 		}
 	]
 }
@@ -979,7 +979,7 @@ dialog "dialog-mage04_1" {
 			"entity": "%PLAYER%",
 			"entity_type": "baby_goat",
 			"expected_bool": true,
-			"success_script": "mage06-success_prompt"
+			"success_script": "mage06_success_prompt"
 		}
 	]
 	show dialog "dialog-mage06_1" {
@@ -1000,7 +1000,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 06",
-			"script": "mage06-check_player_entity_type"
+			"script": "mage06_check_player_entity_type"
 		}
 	]
 }
@@ -1046,19 +1046,19 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage07-point_at_player"
+			"script": "mage07_point_at_player"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage09-copy_script_deeper"
+			"script": "mage09_copy_script_deeper"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage08-point_away_from_player"
+			"script": "mage08_point_away_from_player"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage09-copy_script_deeper"
+			"script": "mage09_copy_script_deeper"
 		}
 	]
 }
@@ -1066,7 +1066,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage09-copy_script_delay"
+			"script": "mage09_copy_script_delay"
 		}
 	]
 }
@@ -1177,7 +1177,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage13-interact"
+			"script": "mage13_interact"
 		}
 	]
 }
@@ -1188,7 +1188,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage13-reset"
+			"script": "mage13_reset"
 		}
 	]
 }
@@ -1199,7 +1199,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage13-reset"
+			"script": "mage13_reset"
 		}
 	]
 }
@@ -1210,7 +1210,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage13-reset"
+			"script": "mage13_reset"
 		}
 	]
 }
@@ -1221,7 +1221,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage13-reset"
+			"script": "mage13_reset"
 		}
 	]
 }
@@ -1232,28 +1232,28 @@ dialog "dialog-mage04_1" {
 			"entity": "%PLAYER%",
 			"direction": "north",
 			"expected_bool": true,
-			"success_script": "mage13-success-n"
+			"success_script": "mage13_success-n"
 		},
 		{
 			"action": "CHECK_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "east",
 			"expected_bool": true,
-			"success_script": "mage13-success-e"
+			"success_script": "mage13_success-e"
 		},
 		{
 			"action": "CHECK_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "south",
 			"expected_bool": true,
-			"success_script": "mage13-success-s"
+			"success_script": "mage13_success-s"
 		},
 		{
 			"action": "CHECK_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "west",
 			"expected_bool": true,
-			"success_script": "mage13-success-w"
+			"success_script": "mage13_success-w"
 		}
 	]
 	show dialog "dialog-mage13-fail" {
@@ -1265,7 +1265,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage14-interact"
+			"script": "mage14_interact"
 		}
 	]
 }
@@ -1276,7 +1276,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1287,7 +1287,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1298,7 +1298,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1309,7 +1309,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1320,7 +1320,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1331,7 +1331,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1342,7 +1342,7 @@ dialog "dialog-mage04_1" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage14-reset"
+			"script": "mage14_reset"
 		}
 	]
 }
@@ -1365,7 +1365,7 @@ dialog "dialog-mage04_1" {
 			"comparison": "==",
 			"expected_bool": false,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "mage14-fail-value-=="
+			"success_script": "mage14_fail-value-=="
 		},
 		{
 			"action": "MUTATE_VARIABLE",
@@ -1380,7 +1380,7 @@ dialog "dialog-mage04_1" {
 			"comparison": "==",
 			"expected_bool": false,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "mage14-fail-value-ADD"
+			"success_script": "mage14_fail-value-ADD"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
@@ -1396,7 +1396,7 @@ dialog "dialog-mage04_1" {
 			"comparison": "==",
 			"expected_bool": false,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "mage14-fail-value-=="
+			"success_script": "mage14_fail-value-=="
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -1405,7 +1405,7 @@ dialog "dialog-mage04_1" {
 			"comparison": "<",
 			"expected_bool": false,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "mage14-fail-variable-<"
+			"success_script": "mage14_fail-variable-<"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
@@ -1421,7 +1421,7 @@ dialog "dialog-mage04_1" {
 			"comparison": "==",
 			"expected_bool": false,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "mage14-fail-variable-ADD"
+			"success_script": "mage14_fail-variable-ADD"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
@@ -1435,7 +1435,7 @@ dialog "dialog-mage04_1" {
 			"value": 64,
 			"comparison": ">",
 			"expected_bool": false,
-			"success_script": "mage14-fail-value->"
+			"success_script": "mage14_fail-value->"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
@@ -1449,7 +1449,7 @@ dialog "dialog-mage04_1" {
 			"value": 64,
 			"comparison": "==",
 			"expected_bool": false,
-			"success_script": "mage14-fail-value-SUB"
+			"success_script": "mage14_fail-value-SUB"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
@@ -1463,7 +1463,7 @@ dialog "dialog-mage04_1" {
 			"value": 64,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "mage14-fail-value-RNG"
+			"success_script": "mage14_fail-value-RNG"
 		}
 	]
 	show dialog "dialog-mage14-success" {
@@ -1507,7 +1507,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage15-interact"
+			"script": "mage15_interact"
 		}
 	]
 }
@@ -1527,7 +1527,7 @@ dialog "dialog-mage04_1" {
 			"comparison": "==",
 			"expected_bool": false,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "mage15-success"
+			"success_script": "mage15_success"
 		}
 	]
 	show dialog "dialog-mage15" {
@@ -1613,7 +1613,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage17-interact-b"
+			"script": "mage17_interact-b"
 		}
 	]
 }
@@ -1636,7 +1636,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage17-interact-a"
+			"script": "mage17_interact-a"
 		}
 	]
 }
@@ -1665,7 +1665,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage18-interact"
+			"script": "mage18_interact"
 		}
 	]
 }
@@ -1677,7 +1677,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage18-interact"
+			"script": "mage18_interact"
 		}
 	]
 }
@@ -1689,7 +1689,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage18-interact"
+			"script": "mage18_interact"
 		}
 	]
 }
@@ -1701,7 +1701,7 @@ dialog "dialog-mage04_1" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage18-interact"
+			"script": "mage18_interact"
 		}
 	]
 }
@@ -1827,7 +1827,7 @@ dialog "dialog-mage19" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage21-interact-b"
+			"script": "mage21_interact-b"
 		}
 	]
 }
@@ -1850,7 +1850,7 @@ dialog "dialog-mage19" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage21-interact-a"
+			"script": "mage21_interact-a"
 		}
 	]
 }
@@ -1927,7 +1927,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-interact"
+			"script": "mage23_interact"
 		}
 	]
 }
@@ -1948,7 +1948,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "COPY_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick-reset"
+			"script": "mage23_tick-reset"
 		}
 	]
 }
@@ -1960,7 +1960,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "COPY_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick-reset"
+			"script": "mage23_tick-reset"
 		}
 	]
 }
@@ -1969,11 +1969,11 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick_delay-press-any"
+			"script": "mage23_tick_delay-press-any"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage23-interact-reset"
+			"script": "mage23_interact-reset"
 		}
 	]
 }
@@ -1982,11 +1982,11 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick-press-page"
+			"script": "mage23_tick-press-page"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage23-interact-reset"
+			"script": "mage23_interact-reset"
 		}
 	]
 }
@@ -1995,11 +1995,11 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick-state-any"
+			"script": "mage23_tick-state-any"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage23-interact-reset"
+			"script": "mage23_interact-reset"
 		}
 	]
 }
@@ -2008,11 +2008,11 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick-state-page"
+			"script": "mage23_tick-state-page"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage23-interact-reset"
+			"script": "mage23_interact-reset"
 		}
 	]
 }
@@ -2022,7 +2022,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage23-tick-press-any"
+			"script": "mage23_tick-press-any"
 		}
 	]
 }
@@ -2031,7 +2031,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "ANY",
-			"success_script": "mage23-show_dialog_was_pressed",
+			"success_script": "mage23_show_dialog_was_pressed",
 			"expected_bool": true
 		}
 	]
@@ -2041,7 +2041,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "PAGE",
-			"success_script": "mage23-show_dialog_was_pressed",
+			"success_script": "mage23_show_dialog_was_pressed",
 			"expected_bool": true
 		}
 	]
@@ -2056,11 +2056,11 @@ dialog "dialog-mage22-b" {
 			"action": "CHECK_FOR_BUTTON_STATE",
 			"button_id": "ANY",
 			"expected_bool": true,
-			"success_script": "mage23-show_dialog_was_pressed"
+			"success_script": "mage23_show_dialog_was_pressed"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "mage23-show_dialog_not_pressed"
+			"script": "mage23_show_dialog_not_pressed"
 		}
 	]
 }
@@ -2074,11 +2074,11 @@ dialog "dialog-mage22-b" {
 			"action": "CHECK_FOR_BUTTON_STATE",
 			"button_id": "PAGE",
 			"expected_bool": true,
-			"success_script": "mage23-show_dialog_was_pressed"
+			"success_script": "mage23_show_dialog_was_pressed"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "mage23-show_dialog_not_pressed"
+			"script": "mage23_show_dialog_not_pressed"
 		}
 	]
 }
@@ -2094,7 +2094,7 @@ dialog "dialog-mage22-b" {
 			"entity": "%SELF%",
 			"geometry": "mage24-geometry-b",
 			"expected_bool": true,
-			"success_script": "mage24-interact-success"
+			"success_script": "mage24_interact-success"
 		}
 	]
 	show dialog "dialog-mage24-interact" {
@@ -2114,7 +2114,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage24-interact"
+			"script": "mage24_interact"
 		}
 	]
 }
@@ -2131,7 +2131,7 @@ dialog "dialog-mage22-b" {
 	json[
 		{
 			"action": "COPY_SCRIPT",
-			"script": "mage19-interact",
+			"script": "mage19_interact",
 			"search_and_replace": {
 				"\"entity_type\":\"bender\"": "\"entity_type\": \"baby_goat\"",
 				"\"entity_type\":\"verthandi\"": "\"entity_type\": \"bert\"",
@@ -2145,7 +2145,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage26-delay_interrupt"
+			"script": "mage26_delay_interrupt"
 		}
 	]
 	show dialog "dialog-mage26-interact" {
@@ -2162,7 +2162,7 @@ dialog "dialog-mage22-b" {
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage26-interact"
+			"script": "mage26_interact"
 		}
 	]
 }
@@ -2204,7 +2204,7 @@ serial_dialog "honk_point" { "HONK!" }
 	json[
 		{
 			"action": "CHECK_SERIAL_DIALOG_OPEN",
-			"success_script": "mage27-interact_trapped",
+			"success_script": "mage27_interact_trapped",
 			"expected_bool": true
 		}
 	]
@@ -2228,7 +2228,7 @@ serial_dialog "honk_point" { "HONK!" }
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage27-interact"
+			"script": "mage27_interact"
 		}
 	]
 }
@@ -2237,11 +2237,11 @@ serial_dialog "honk_point" { "HONK!" }
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "mage27-interact"
+			"script": "mage27_interact"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "map-action_testing-go_sphinx"
+			"script": "map_action_testing_go_sphinx"
 		}
 	]
 }

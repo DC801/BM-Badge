@@ -6555,7 +6555,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.debug = debug;
       this.mathlang = "json_literal";
       if (!Array.isArray(args2.json)) throw new Error("need array");
-      this.json = JSON.parse(JSON.stringify(args2.json));
+      try {
+        this.json = JSON.parse(JSON.stringify(args2.json));
+      } catch (e) {
+        const error = new Error("failed to parse JSON in JSONLiteral constructor");
+        error.cause = e;
+        throw error;
+      }
     }
     clone() {
       return new JSONLiteral(this.debug, this.args);
@@ -10547,7 +10553,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             Object.entries(searchAndReplace).forEach(([k, v2]) => {
               string = string.replace(new RegExp(k, "g"), v2);
             });
-            const ret = JSON.parse(string);
+            let ret = "";
+            try {
+              ret = JSON.parse(string);
+            } catch (e) {
+              const error = new Error("failed to parse JSON in bakeCopyScriptSingle");
+              error.cause = e;
+              throw error;
+            }
             return Action.fromArgs(ret);
           });
           const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;

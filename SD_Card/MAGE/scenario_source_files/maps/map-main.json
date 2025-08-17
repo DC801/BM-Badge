@@ -952,7 +952,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-walk_to_lodge_q"
+                         "value":"debug_walk_to_lodge_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -970,7 +970,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-set_flags_true_q"
+                         "value":"debug_set_flags_true_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1006,7 +1006,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-set_flags_false_q"
+                         "value":"debug_set_flags_false_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -2117,7 +2117,7 @@
                  "class":"",
                  "height":0,
                  "id":301,
-                 "name":"hintman-walkback",
+                 "name":"hintman_walkback",
                  "polyline":[
                         {
                          "x":0,
@@ -2141,7 +2141,7 @@
                  "class":"",
                  "height":0,
                  "id":302,
-                 "name":"hintman-walktalk",
+                 "name":"hintman_walktalk",
                  "polyline":[
                         {
                          "x":-9,
@@ -2177,7 +2177,7 @@
                  "class":"",
                  "height":20,
                  "id":279,
-                 "name":"cat-watch-box",
+                 "name":"cat_watch_box",
                  "rotation":0,
                  "visible":true,
                  "width":26,
@@ -2208,7 +2208,7 @@
                  "class":"",
                  "height":20,
                  "id":306,
-                 "name":"cleo-watch-box",
+                 "name":"cleo_watch_box",
                  "rotation":0,
                  "visible":true,
                  "width":26,
@@ -2515,7 +2515,7 @@
                  "class":"",
                  "height":0,
                  "id":67,
-                 "name":"enter_from-west",
+                 "name":"enter_from_west",
                  "polyline":[
                         {
                          "x":0,
@@ -2535,7 +2535,7 @@
                  "class":"",
                  "height":0,
                  "id":68,
-                 "name":"enter_from-east",
+                 "name":"enter_from_east",
                  "polyline":[
                         {
                          "x":0,
@@ -2579,7 +2579,7 @@
                  "class":"",
                  "height":0,
                  "id":228,
-                 "name":"enter_from-bobsclub",
+                 "name":"enter_from_bobsclub",
                  "polyline":[
                         {
                          "x":0,
@@ -2599,7 +2599,7 @@
                  "class":"",
                  "height":0,
                  "id":229,
-                 "name":"enter_from-lodge",
+                 "name":"enter_from_lodge",
                  "polyline":[
                         {
                          "x":0,
@@ -2641,7 +2641,7 @@
                  "class":"",
                  "height":0,
                  "id":232,
-                 "name":"enter_from-bakery",
+                 "name":"enter_from_bakery",
                  "polyline":[
                         {
                          "x":0,
@@ -2661,7 +2661,7 @@
                  "class":"",
                  "height":0,
                  "id":233,
-                 "name":"enter_from-family",
+                 "name":"enter_from_family",
                  "polyline":[
                         {
                          "x":0,
@@ -2692,7 +2692,7 @@
                  "class":"",
                  "height":0,
                  "id":235,
-                 "name":"enter_from-greenhouse",
+                 "name":"enter_from_greenhouse",
                  "polyline":[
                         {
                          "x":0,
@@ -2723,7 +2723,7 @@
                  "class":"",
                  "height":0,
                  "id":237,
-                 "name":"enter_from-magehouse",
+                 "name":"enter_from_magehouse",
                  "polyline":[
                         {
                          "x":0.579999999999927,
@@ -2754,7 +2754,7 @@
                  "class":"",
                  "height":0,
                  "id":239,
-                 "name":"enter_from-oldcouplehouse",
+                 "name":"enter_from_oldcouplehouse",
                  "polyline":[
                         {
                          "x":0,
@@ -2796,7 +2796,7 @@
                  "class":"",
                  "height":0,
                  "id":273,
-                 "name":"enter_from-woprhouse",
+                 "name":"enter_from_woprhouse",
                  "polyline":[
                         {
                          "x":-50,

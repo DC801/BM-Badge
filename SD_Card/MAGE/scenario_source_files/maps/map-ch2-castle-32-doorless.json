@@ -120,7 +120,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look_ch2_onions
+                         "value":"look_ch2_onions"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -143,7 +143,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look_ch2_stove
+                         "value":"look_ch2_stove"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -166,7 +166,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look_ch2_stove
+                         "value":"look_ch2_stove"
                         }],
                  "rotation":0,
                  "visible":true,

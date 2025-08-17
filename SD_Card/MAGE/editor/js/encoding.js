@@ -121,13 +121,22 @@ var handleScenarioData = function (fileNameMap) {
 			scenarioData.dialogs = scenarioData.dialogs || {};
 			scenarioData.serialDialogs = scenarioData.serialDialogs || {};
 			Object.entries(parserResult.scripts).forEach(([name, value]) => {
+				delete value.debug; // bodge; TODO do it for real
 				scenarioData.scripts[name] = value.actions;
 			});
 			Object.entries(parserResult.dialogs).forEach(([name, value]) => {
+				delete value.debug; // bodge; ditto
 				value.dialogs.name = name;
 				scenarioData.dialogs[name] = value.dialogs;
+				value.dialogs.forEach(v=>{
+					delete v.debug;
+					if (v.options) {
+						v.options.forEach(option=>{ delete option.debug})
+					}
+				});
 			});
 			Object.entries(parserResult.serialDialogs).forEach(([name, value]) => {
+				delete value.debug; // bodge; ditto
 				value.serialDialog.name = name;
 				if (value.serialDialog.text_options){
 					const bodge = text_options = {};

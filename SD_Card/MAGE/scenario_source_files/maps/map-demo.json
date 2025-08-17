@@ -824,7 +824,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-demo_end_dream_q"
+                         "value":"show_dialog_demo_end_dream_q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -903,7 +903,7 @@
                 {
                  "height":0,
                  "id":67,
-                 "name":"enter_from-west",
+                 "name":"enter_from_west",
                  "polyline":[
                         {
                          "x":0,
@@ -923,7 +923,7 @@
                 {
                  "height":0,
                  "id":68,
-                 "name":"enter_from-east",
+                 "name":"enter_from_east",
                  "polyline":[
                         {
                          "x":0,

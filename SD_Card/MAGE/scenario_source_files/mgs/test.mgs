@@ -1,5 +1,5 @@
 
-"set_entity_movement_relative-0" {
+"set_entity_movement_relative_0" {
 	json[
 		{
 			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
@@ -8,7 +8,7 @@
 		}
 	]
 }
-"set_entity_movement_relative-1" {
+"set_entity_movement_relative_1" {
 	json[
 		{
 			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
@@ -17,7 +17,7 @@
 		}
 	]
 }
-"set_entity_movement_relative-2" {
+"set_entity_movement_relative_2" {
 	json[
 		{
 			"action": "SET_ENTITY_MOVEMENT_RELATIVE",
@@ -26,7 +26,7 @@
 		}
 	]
 }
-"set_entity_movement_relative-3" {
+"set_entity_movement_relative_3" {
 	json[
 		{
 			"action": "SET_ENTITY_MOVEMENT_RELATIVE",

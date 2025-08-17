@@ -17,7 +17,18 @@ var consoleLogIfVerbose = function() {
 
 var getFileJson = function (file) {
 	return file.text()
-		.then(JSON.parse);
+		.then(v=>{
+			let ret = '';
+			try {
+				// console.log(file)
+				ret = JSON.parse(v);
+			} catch (e) {
+				const error = new Error('failed to parse JSON in getFileJson');
+				error.cause = e
+				throw error;
+			}
+			return ret;
+		});
 };
 
 var combineArrayBuffers = function (bufferA, bufferB) {
@@ -146,7 +157,15 @@ var assignToLessFalsy = function () {
 };
 
 var jsonClone = function (input) {
-	return JSON.parse(JSON.stringify(input));
+	const string = JSON.stringify(input);
+	let parsed = ''
+	try { parsed = JSON.parse(string); }
+	catch (e) {
+		const error = new Error('failed to parse JSON in jsonClone');
+		error.cause = e
+		throw error;
+	}
+	return parsed;
 };
 
 var makeComputedStoreGetterSetter = function (propertyName) {

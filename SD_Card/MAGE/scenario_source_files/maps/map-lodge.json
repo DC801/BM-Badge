@@ -1096,7 +1096,7 @@
                 {
                  "height":34,
                  "id":41,
-                 "name":"door-secretdoor",
+                 "name":"door_secretdoor",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1107,7 +1107,7 @@
                 {
                  "height":0,
                  "id":42,
-                 "name":"enter_from-secretroom",
+                 "name":"enter_from_secretroom",
                  "polyline":[
                         {
                          "x":0,
@@ -1139,7 +1139,7 @@
                 {
                  "height":0,
                  "id":46,
-                 "name":"secretdoor-point",
+                 "name":"secretdoor_point",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -1223,7 +1223,7 @@
                 {
                  "height":0,
                  "id":60,
-                 "name":"secretdoor-button-path1",
+                 "name":"secretdoor_button_path1",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -1235,7 +1235,7 @@
                 {
                  "height":0,
                  "id":61,
-                 "name":"secretdoor-button-path2",
+                 "name":"secretdoor_button_path2",
                  "point":true,
                  "rotation":0,
                  "type":"",

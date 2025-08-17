@@ -179,7 +179,7 @@ walk_to_lodge {
 	entity Ram type = lightning_boy; // Aunt Zippy
 	entity Helga direction = north;
 	entity Ram direction = north;
-	player position -> geometry "enter_from-magehouse" length over 300ms;
+	player position -> geometry "enter_from_magehouse" length over 300ms;
 	wait 400ms; /**/ entity Helga on_tick = zappy_to_lodge;
 	wait 200ms; /**/ entity Ram on_tick = zippy_to_lodge;
 	wait 400ms; /**/ player on_tick = mage_to_lodge;

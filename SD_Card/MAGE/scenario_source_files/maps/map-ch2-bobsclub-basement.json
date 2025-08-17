@@ -250,7 +250,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-left_and_down_kinda2"
+                         "value":"on_tick_turn_left_and_down_kinda2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -316,7 +316,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-left_and_down_kinda"
+                         "value":"on_tick_turn_left_and_down_kinda"
                         }],
                  "rotation":0,
                  "visible":true,

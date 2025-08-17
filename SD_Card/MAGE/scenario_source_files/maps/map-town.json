@@ -398,7 +398,7 @@
                 {
                  "height":0,
                  "id":44,
-                 "name":"enter_from-west",
+                 "name":"enter_from_west",
                  "polyline":[
                         {
                          "x":0,
@@ -418,7 +418,7 @@
                 {
                  "height":0,
                  "id":45,
-                 "name":"enter_from-east",
+                 "name":"enter_from_east",
                  "polyline":[
                         {
                          "x":0,

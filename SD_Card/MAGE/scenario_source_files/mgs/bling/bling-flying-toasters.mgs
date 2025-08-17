@@ -27,6 +27,12 @@ toasters_do_path_3 {
 	self on_tick = toasters_do_path_7;
 }
 
+toasters_do_path_4 {
+	self position = geometry start4;
+	self position -> geometry end4 origin over 8400ms;
+	self on_tick = toasters_do_path_9;
+}
+
 toasters_do_path_5 {
 	self position = geometry start5;
 	self position -> geometry end5 origin over 9200ms;

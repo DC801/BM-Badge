@@ -111,7 +111,7 @@
 			}
 		}
 	},
-	"codec-snek": {
+	"codec_snek": {
 		"tileset": "entity-codec-portrait.json",
 		"emotes": {
 			"default": {
@@ -120,7 +120,7 @@
 			}
 		}
 	},
-	"codec-camel": {
+	"codec_camel": {
 		"tileset": "entity-codec-portrait.json",
 		"emotes": {
 			"default": {
@@ -129,7 +129,7 @@
 			}
 		}
 	},
-	"codec-mage": {
+	"codec_mage": {
 		"tileset": "entity-codec-portrait.json",
 		"emotes": {
 			"default": {
@@ -138,7 +138,7 @@
 			}
 		}
 	},
-	"codec-goose": {
+	"codec_goose": {
 		"tileset": "entity-codec-portrait.json",
 		"emotes": {
 			"default": {
