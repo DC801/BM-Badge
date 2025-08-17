@@ -76,7 +76,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -94,7 +94,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-wopr-start"
+                         "value":"show_dialog_wopr_start"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -117,7 +117,7 @@
                  "class":"",
                  "height":0,
                  "id":4,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "polyline":[
                         {
                          "x":0,
@@ -143,7 +143,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-woprbooks"
+                         "value":"show_dialog_woprbooks"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -155,7 +155,7 @@
                  "class":"",
                  "height":0,
                  "id":8,
-                 "name":"walk_from-east",
+                 "name":"walk_from_east",
                  "polyline":[
                         {
                          "x":-269.825,
@@ -175,7 +175,7 @@
                  "class":"",
                  "height":0,
                  "id":9,
-                 "name":"walk_from-west",
+                 "name":"walk_from_west",
                  "polyline":[
                         {
                          "x":-134.5,

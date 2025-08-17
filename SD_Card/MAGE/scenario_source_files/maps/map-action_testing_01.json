@@ -47,12 +47,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage01-check_entity_name"
+                         "value":"mage01_check_entity_name"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"mage01-look_script"
+                         "value":"mage01_look_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -75,7 +75,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage02-check_entity_x"
+                         "value":"mage02_check_entity_x"
                         }, 
                         {
                          "name":"on_tick",
@@ -98,12 +98,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage03-initial_prompt"
+                         "value":"mage03_initial_prompt"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage03-check_entity_scripts"
+                         "value":"mage03_check_entity_scripts"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -121,7 +121,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage04-check_entity_primary_id"
+                         "value":"mage04_check_entity_primary_id"
                         }, 
                         {
                          "name":"on_tick",
@@ -144,12 +144,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage05-initial_prompt"
+                         "value":"mage05_initial_prompt"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage05-check_player_current_animation"
+                         "value":"mage05_check_player_current_animation"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,7 +167,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage06-check_player_entity_type"
+                         "value":"mage06_check_player_entity_type"
                         }, 
                         {
                          "name":"on_tick",
@@ -190,12 +190,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage07-interact"
+                         "value":"mage07_interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage07-point_at_player"
+                         "value":"mage07_point_at_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -213,12 +213,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage08-interact"
+                         "value":"mage08_interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage08-point_away_from_player"
+                         "value":"mage08_point_away_from_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -236,12 +236,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage09-interact"
+                         "value":"mage09_interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage09-copy_script"
+                         "value":"mage09_copy_script"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -259,7 +259,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage10-interact"
+                         "value":"mage10_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -282,7 +282,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage11-interact"
+                         "value":"mage11_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -305,7 +305,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage12-interact"
+                         "value":"mage12_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -328,7 +328,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage13-interact"
+                         "value":"mage13_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -351,7 +351,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage14-interact"
+                         "value":"mage14_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -374,7 +374,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage15-interact"
+                         "value":"mage15_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -397,7 +397,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage16-interact"
+                         "value":"mage16_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -420,7 +420,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage17-interact-a"
+                         "value":"mage17_interact_a"
                         }, 
                         {
                          "name":"on_tick",
@@ -443,7 +443,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage18-interact"
+                         "value":"mage18_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -466,7 +466,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage19-interact"
+                         "value":"mage19_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -489,7 +489,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage20-interact"
+                         "value":"mage20_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -512,7 +512,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage21-interact-a"
+                         "value":"mage21_interact_a"
                         }, 
                         {
                          "name":"on_tick",
@@ -535,7 +535,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage22-interact"
+                         "value":"mage22_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -558,7 +558,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage23-interact"
+                         "value":"mage23_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -581,12 +581,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage24-interact"
+                         "value":"mage24_interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage24-tick"
+                         "value":"mage24_tick"
                         }, 
                         {
                          "name":"path",
@@ -609,7 +609,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage25-interact"
+                         "value":"mage25_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -632,7 +632,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage26-interact"
+                         "value":"mage26_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -655,7 +655,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage27-interact"
+                         "value":"mage27_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -679,7 +679,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage28-interact"
+                         "value":"mage28_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -702,7 +702,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage29-interact"
+                         "value":"mage29_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -725,7 +725,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage30-interact"
+                         "value":"mage30_interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -748,12 +748,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage31-interact"
+                         "value":"mage31_interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"mage31-tick"
+                         "value":"mage31_tick"
                         }, 
                         {
                          "name":"path",
@@ -920,7 +920,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,

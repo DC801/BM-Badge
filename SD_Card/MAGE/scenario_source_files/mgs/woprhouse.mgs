@@ -14,7 +14,7 @@ on_load_woprhouse {
 		player_control = off;
 		wopr_backdoor_found = true;
 		if (warp_state != warped) {
-			player position -> geometry "walk_from-north" length over 600ms;
+			player position -> geometry "walk_from_north" length over 600ms;
 		}
 		wait 400ms;
 		show dialog {
@@ -40,7 +40,7 @@ on_walk_woprhouse_north {
 		warp_state = "exit_from_woprhouse";
 		load map main;
 	} else if (current_chapter == 2) {
-		warp_state = "walk_from-woprhouse";
+		warp_state = "walk_from_woprhouse";
 		load map "ch2-town";
 	} else {
 		show serial_dialog spacer;

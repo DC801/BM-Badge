@@ -65,7 +65,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-trekkie-start"
+                         "value":"show_dialog_trekkie_start"
                         }],
                  "rotation":0,
                  "type":"",
@@ -83,7 +83,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -106,7 +106,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -129,7 +129,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -152,7 +152,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -175,7 +175,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -198,7 +198,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -221,7 +221,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -244,7 +244,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -267,7 +267,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-modem"
+                         "value":"show_dialog_modem"
                         }],
                  "rotation":0,
                  "type":"",
@@ -285,7 +285,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-ethernet-puzzle-q"
+                         "value":"debug_ethernet_puzzle_q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -315,7 +315,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-greenhouse-barrel"
+                         "value":"show_dialog_greenhouse_barrel"
                         }],
                  "rotation":0,
                  "type":"",
@@ -333,7 +333,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-tumbleweed"
+                         "value":"show_dialog_tumbleweed"
                         }],
                  "rotation":0,
                  "type":"",
@@ -351,7 +351,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernet"
+                         "value":"show_dialog_ethernet"
                         }],
                  "rotation":0,
                  "type":"",
@@ -369,7 +369,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-mulch"
+                         "value":"show_dialog_mulch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -387,7 +387,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-greenhouse-barrel"
+                         "value":"show_dialog_greenhouse_barrel"
                         }],
                  "rotation":0,
                  "type":"",

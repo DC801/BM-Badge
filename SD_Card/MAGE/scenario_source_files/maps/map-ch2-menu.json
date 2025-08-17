@@ -147,7 +147,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-button-to-skip"
+                         "value":"on_tick_button_to_skip"
                         }],
                  "rotation":0,
                  "visible":true,

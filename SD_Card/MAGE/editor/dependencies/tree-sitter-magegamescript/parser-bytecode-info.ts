@@ -2185,6 +2185,10 @@ export class CHECK_VARIABLE extends NumberComparisonAction {
 		this.comparison = breakIfNotString(args.comparison);
 		this.value = breakIfNotNumber(args.value);
 		this.expected_bool = breakIfNotBool(args.expected_bool);
+		if (this.comparison === '!=') {
+			this.comparison = '==';
+			this.expected_bool = !this.expected_bool;
+		}
 	}
 	static quick(variable: string, value: number, comparison: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2219,6 +2223,10 @@ export class CHECK_VARIABLES extends NumberComparisonAction {
 		this.comparison = breakIfNotString(args.comparison);
 		this.source = breakIfNotString(args.source);
 		this.expected_bool = breakIfNotBool(args.expected_bool);
+		if (this.comparison === '!=') {
+			this.comparison = '==';
+			this.expected_bool = !this.expected_bool;
+		}
 	}
 	static quick(variable: string, source: string, comparison: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;

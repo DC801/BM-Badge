@@ -81,7 +81,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-zippy-start"
+                         "value":"show_dialog_zippy_start"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -104,7 +104,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-zappy-start"
+                         "value":"show_dialog_zappy_start"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -127,12 +127,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goldfish"
+                         "value":"show_dialog_goldfish"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"goldfish-glitchwatch"
+                         "value":"goldfish_glitchwatch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -150,7 +150,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-magejournal"
+                         "value":"show_dialog_magejournal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -168,7 +168,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-magebox"
+                         "value":"show_dialog_magebox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -186,7 +186,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-goodmorning-q"
+                         "value":"debug_goodmorning_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -204,7 +204,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -222,7 +222,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-microwave-magehouse"
+                         "value":"show_dialog_microwave_magehouse"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -240,7 +240,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cake"
+                         "value":"show_dialog_cake"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -258,7 +258,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-everything-q"
+                         "value":"debug_everything_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -276,7 +276,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-magefacts"
+                         "value":"show_dialog_magefacts"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -299,7 +299,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,

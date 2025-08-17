@@ -76,7 +76,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -94,12 +94,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-mouse"
+                         "value":"ch2_touch_mouse"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-mouse"
+                         "value":"look_mouse"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -129,17 +129,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-gregory"
+                         "value":"interact_ch2_gregory"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-gregory"
+                         "value":"look_ch2_gregory"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,7 +167,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,

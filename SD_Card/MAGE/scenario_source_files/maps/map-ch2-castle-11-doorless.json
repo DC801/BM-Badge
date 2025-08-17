@@ -81,7 +81,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -148,7 +148,7 @@
                  "class":"",
                  "height":0,
                  "id":43,
-                 "name":"walk_from-south",
+                 "name":"walk_from_south",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -171,7 +171,7 @@
                  "class":"",
                  "height":0,
                  "id":47,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -206,7 +206,7 @@
                  "class":"",
                  "height":0,
                  "id":51,
-                 "name":"walk_from-west",
+                 "name":"walk_from_west",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -229,7 +229,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,

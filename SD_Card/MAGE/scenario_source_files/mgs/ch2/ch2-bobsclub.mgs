@@ -224,7 +224,7 @@ on_load_ch2_bobsclub {
 
 on_tick_ch2_bobsclub {
 	if (player intersects geometry "south-hitbox") {
-		warp_state = "walk_from-bobsclub";
+		warp_state = "walk_from_bobsclub";
 		load map "ch2-town";
 	}
 	map on_tick = on_tick_ch2_bobsclub; // reset

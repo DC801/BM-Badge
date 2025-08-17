@@ -194,7 +194,7 @@ ch2_capture_ethernettle8 { EtherNettle8 = entity EtherNettle8 primary_id; }
 // 	check_ethernettle(EtherNettle7, EtherNettle7, EtherNettle7Origin, 5)
 // 	check_ethernettle(EtherNettle8, EtherNettle8, EtherNettle8Origin, 4)
 // 	if (player intersects geometry "south-hitbox") {
-// 		warp_state = "walk_from-greenhouse";
+// 		warp_state = "walk_from_greenhouse";
 // 		load map "ch2-town";
 // 	}
 // }
@@ -272,7 +272,7 @@ on_tick_ch2_greenhouse {
 		entity EtherNettle8 primary_id_type = 0;
 	}
 	if (player intersects geometry "south-hitbox") {
-		warp_state = "walk_from-greenhouse";
+		warp_state = "walk_from_greenhouse";
 		load map "ch2-town";
 	}
 }

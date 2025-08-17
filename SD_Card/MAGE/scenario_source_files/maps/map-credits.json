@@ -408,7 +408,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"pixie-training"
+                         "value":"pixie_training"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -426,7 +426,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"goose-loiter-honk"
+                         "value":"goose_loiter_honk"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -492,7 +492,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"helga-munch"
+                         "value":"helga_munch"
                         }],
                  "rotation":0,
                  "visible":true,

@@ -65,7 +65,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bea-start"
+                         "value":"show_dialog_bea_start"
                         }],
                  "rotation":0,
                  "type":"",
@@ -83,7 +83,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-delmar"
+                         "value":"show_dialog_delmar"
                         }, 
                         {
                          "name":"on_tick",
@@ -117,7 +117,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-bea-sequel-q"
+                         "value":"debug_bea_sequel_q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -135,7 +135,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "type":"",

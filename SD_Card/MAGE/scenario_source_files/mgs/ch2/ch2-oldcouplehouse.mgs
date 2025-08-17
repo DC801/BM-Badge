@@ -117,7 +117,7 @@ on_go_ch2_oldcouplehouse_south {
 }
 on_walk_ch2_oldcouplehouse_south {
 	// triggered by map's on_tick
-	warp_state = "walk_from-oldcouplehouse";
+	warp_state = "walk_from_oldcouplehouse";
 	load map "ch2-town";
 }
 

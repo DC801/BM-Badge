@@ -39,7 +39,7 @@ on_tick_ch2_credits {
 	serial_control = on;
 	player_control = on;
 	if (
-		warp_state == "ch2-ending"
+		warp_state == "ch2_ending"
 		|| !credits_from_menu // todo: is this redundant with warp state? Maybe manage warp state better?
 	) {
 		copy!(ch2_load_castle_1_special)

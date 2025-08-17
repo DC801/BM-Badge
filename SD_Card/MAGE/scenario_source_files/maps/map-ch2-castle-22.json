@@ -71,7 +71,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -89,12 +89,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-powersupply"
+                         "value":"ch2_touch_powersupply"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-powersupply"
+                         "value":"look_powersupply"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -112,12 +112,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-ckwatt"
+                         "value":"interact_ch2_ckwatt"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ckwatt"
+                         "value":"look_ch2_ckwatt"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -135,12 +135,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-scuzzy"
+                         "value":"interact_ch2_scuzzy"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-scuzzy"
+                         "value":"look_ch2_scuzzy"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -168,7 +168,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -186,7 +186,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -209,7 +209,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,

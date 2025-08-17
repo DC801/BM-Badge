@@ -59,12 +59,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"menu-save_game"
+                         "value":"menu_save_game"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-save_floppy"
+                         "value":"look_save_floppy"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -87,12 +87,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-terminal-setup-check"
+                         "value":"ch2_terminal_setup_check"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-xa"
+                         "value":"look_ch2_xa"
                         }, 
                         {
                          "name":"on_tick",
@@ -139,17 +139,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-wizard-mainframedone"
+                         "value":"interact_ch2_wizard_mainframedone"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-wizard"
+                         "value":"look_ch2_wizard"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,12 +167,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-mainframe-end"
+                         "value":"interact_ch2_mainframe_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-mainframe-end"
+                         "value":"look_ch2_mainframe_end"
                         }, 
                         {
                          "name":"on_tick",
@@ -205,7 +205,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -228,7 +228,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }, 
                         {
                          "name":"on_tick",
@@ -312,7 +312,7 @@
                  "class":"",
                  "height":0,
                  "id":36,
-                 "name":"walk_from-south",
+                 "name":"walk_from_south",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -347,7 +347,7 @@
                  "class":"",
                  "height":0,
                  "id":64,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "point":true,
                  "rotation":0,
                  "visible":true,

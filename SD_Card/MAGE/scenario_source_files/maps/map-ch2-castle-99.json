@@ -64,7 +64,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -82,12 +82,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-lab"
+                         "value":"interact_ch2_lambda_lab"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-lab"
+                         "value":"look_ch2_lambda_lab"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -105,12 +105,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-xc"
+                         "value":"interact_ch2_xc"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-xc"
+                         "value":"look_ch2_xc"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -128,7 +128,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-crt"
+                         "value":"look_ch2_lambda_crt"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -146,12 +146,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-books"
+                         "value":"interact_ch2_lambda_books"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-books"
+                         "value":"look_ch2_lambda_books"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -169,12 +169,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-ration"
+                         "value":"interact_ch2_lambda_ration"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-ration"
+                         "value":"look_ch2_lambda_ration"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -192,12 +192,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-poster"
+                         "value":"interact_ch2_lambda_poster"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-poster"
+                         "value":"look_ch2_lambda_poster"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -215,12 +215,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-drawer"
+                         "value":"interact_ch2_lambda_drawer"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-drawer"
+                         "value":"look_ch2_lambda_drawer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -238,12 +238,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-computer"
+                         "value":"interact_ch2_lambda_computer"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-computer"
+                         "value":"look_ch2_lambda_computer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -261,12 +261,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lambda-box"
+                         "value":"interact_ch2_lambda_box"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lambda-box"
+                         "value":"look_ch2_lambda_box"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -294,7 +294,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -312,7 +312,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-minirake-99"
+                         "value":"interact_ch2_minirake_99"
                         }],
                  "rotation":0,
                  "visible":true,

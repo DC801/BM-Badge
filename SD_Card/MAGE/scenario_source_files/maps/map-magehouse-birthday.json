@@ -208,12 +208,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goldfish"
+                         "value":"show_dialog_goldfish"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"goldfish-glitchwatch"
+                         "value":"goldfish_glitchwatch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -236,7 +236,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,

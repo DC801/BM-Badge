@@ -71,7 +71,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -101,12 +101,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-concierge-end"
+                         "value":"interact_ch2_concierge_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-concierge"
+                         "value":"look_ch2_concierge"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -124,12 +124,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-guestbook"
+                         "value":"interact_ch2_guestbook"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-guest_book"
+                         "value":"look_ch2_guest_book"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -147,12 +147,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-stereo-interact"
+                         "value":"ch2_stereo_interact"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-stereo"
+                         "value":"look_ch2_stereo"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -204,7 +204,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -227,7 +227,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -306,7 +306,7 @@
                  "class":"",
                  "height":0,
                  "id":43,
-                 "name":"walk_from-south",
+                 "name":"walk_from_south",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -329,7 +329,7 @@
                  "class":"",
                  "height":0,
                  "id":47,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -352,7 +352,7 @@
                  "class":"",
                  "height":0,
                  "id":49,
-                 "name":"walk_from-east",
+                 "name":"walk_from_east",
                  "point":true,
                  "rotation":0,
                  "visible":true,

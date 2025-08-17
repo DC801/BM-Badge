@@ -74,7 +74,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -92,12 +92,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-guardianbob"
+                         "value":"interact_ch2_guardianbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-guardianbob"
+                         "value":"look_ch2_guardianbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -115,7 +115,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -133,12 +133,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobmoss"
+                         "value":"interact_ch2_bobmoss"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobmoss"
+                         "value":"look_ch2_bobmoss"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -161,12 +161,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobaustin"
+                         "value":"interact_ch2_bobaustin"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobaustin"
+                         "value":"look_ch2_bobaustin"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -184,12 +184,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-icechest"
+                         "value":"interact_ch2_icechest"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-icechest"
+                         "value":"look_ch2_icechest"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -212,12 +212,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -240,17 +240,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-left-and-down-kinda2"
+                         "value":"on_tick-turn-left_and_down_kinda2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -273,17 +273,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"tick-linger-2"
+                         "value":"tick_linger_2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -306,17 +306,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-turn-left-and-down-kinda"
+                         "value":"on_tick-turn-left_and_down_kinda"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -339,17 +339,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"tick-linger-4"
+                         "value":"tick_linger_4"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -372,17 +372,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"tick-linger-1"
+                         "value":"tick_linger_1"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -400,12 +400,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -428,12 +428,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -457,12 +457,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -480,12 +480,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -503,12 +503,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -531,12 +531,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -559,17 +559,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marathonbob"
+                         "value":"interact_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-marathonbob"
+                         "value":"look_ch2_marathonbob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"tick-linger-3"
+                         "value":"tick_linger_3"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -587,12 +587,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-party-cups"
+                         "value":"interact_ch2_party_cups"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-party-cups"
+                         "value":"look_ch2_party_cups"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -610,12 +610,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pizza"
+                         "value":"interact_ch2_pizza"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-pizza"
+                         "value":"look_ch2_pizza"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -633,12 +633,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pizza"
+                         "value":"interact_ch2_pizza"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-pizza"
+                         "value":"look_ch2_pizza"
                         }],
                  "rotation":0,
                  "visible":true,

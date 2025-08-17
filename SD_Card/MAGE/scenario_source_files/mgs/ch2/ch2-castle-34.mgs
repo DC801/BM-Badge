@@ -75,7 +75,7 @@ on_load_ch2_castle_34 {
 
 on_tick_ch2_castle_34 {
 	if (player intersects geometry "south-hitbox") {
-		warp_state = "walk_from-northeast";
+		warp_state = "walk_from_northeast";
 		copy!(ch2_load_castle_32_special)
 	}
 }

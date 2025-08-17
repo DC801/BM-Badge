@@ -100,8 +100,8 @@ on_load_ch2_magehouse_birthday {
 }
 cutscene_ch2_birthday_exit {
 	ch2_cutseen_birthday = true;
-	warp_state = "cutscene-escort";
-	load map "ch2-town";
+	warp_state = "cutscene_escort";
+	load map "ch2_town";
 }
 
 /* --- CUTSCENE: Birthday (elders) --- */
@@ -155,8 +155,8 @@ ch2_escort_cutscene {
 	camera fade in -> #000000 over 1000ms;
 	player direction = south;
 	wait 800ms;
-	player position = geometry "walk_from-magehouse";
-	player position -> geometry "walk_from-magehouse" length over 400ms;
+	player position = geometry "walk_from_magehouse";
+	player position -> geometry "walk_from_magehouse" length over 400ms;
 	wait 1200ms;
 	show dialog {
 		PLAYER "Oh, um...."
@@ -288,7 +288,7 @@ birthday_march_on_own_path_player {
 	goto null_script;
 }
 cutscene_ch2_escort_exit {
-	warp_state = "walk_from-east";
+	warp_state = "walk_from_east";
 	load map "ch2-castle-outside";
 }
 

@@ -92,7 +92,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -133,7 +133,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobwall"
+                         "value":"show_dialog_bobwall"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -151,12 +151,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobfridge"
+                         "value":"interact_ch2_bobfridge"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobfridge"
+                         "value":"look_ch2_bobfridge"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -174,12 +174,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobsink"
+                         "value":"look_ch2_bobsink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -209,12 +209,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobbox"
+                         "value":"interact_ch2_bobbox"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobsbox"
+                         "value":"look_ch2_bobsbox"
                         }, 
                         {
                          "name":"on_tick",
@@ -237,12 +237,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobbarstool"
+                         "value":"interact_ch2_bobbarstool"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobbarstool"
+                         "value":"look_ch2_bobbarstool"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -260,7 +260,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobbarrel"
+                         "value":"interact_ch2_bobbarrel"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -278,12 +278,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobglasses"
+                         "value":"interact_ch2_bobglasses"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobglasses"
+                         "value":"look_ch2_bobglasses"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -301,12 +301,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobcountertop"
+                         "value":"interact_ch2_bobcountertop"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobcountertop"
+                         "value":"look_ch2_bobcountertop"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -324,12 +324,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bobcupboard"
+                         "value":"interact_ch2_bobcupboard"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bobcupboard"
+                         "value":"look_ch2_bobcupboard"
                         }],
                  "rotation":0,
                  "visible":true,

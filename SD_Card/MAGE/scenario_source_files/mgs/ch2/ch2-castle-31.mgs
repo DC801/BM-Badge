@@ -63,10 +63,10 @@ on_load_ch2_castle_31_postgame {
 	show serial_dialog { "Entering <bold>GRAND HALL</>..." };
 	entity Simon current_animation = 12;
 	entity "Sea Moss" direction = west;
-	if (warp_state == "walk_from-north") {
-		player position = geometry "walk_from-north";
-	} else if (warp_state == "walk_from-west") {
-		player position = geometry "walk_from-west";
+	if (warp_state == "walk_from_north") {
+		player position = geometry "walk_from_north";
+	} else if (warp_state == "walk_from_west") {
+		player position = geometry "walk_from_west";
 	}
 	copy!(ch2_map_init)
 }
@@ -136,11 +136,11 @@ on_tick_ch2_castle_31 {}
 on_tick_ch2_castle_31_postgame {
 	if (player intersects geometry "north-hitbox") {
 		copy!(on_exit_ch2_castle_31)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_32_special)
 	} else if (player intersects geometry "west-hitbox") {
 		copy!(on_exit_ch2_castle_32)
-		warp_state = "walk_from-east";
+		warp_state = "walk_from_east";
 		copy!(ch2_load_castle_12_special)
 	}
 }

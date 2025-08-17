@@ -129,7 +129,16 @@ var handleScenarioData = function (fileNameMap) {
 			});
 			Object.entries(parserResult.serialDialogs).forEach(([name, value]) => {
 				value.serialDialog.name = name;
+				if (value.serialDialog.text_options){
+					const bodge = text_options = {};
+					value.serialDialog.text_options.forEach(v=>{
+						bodge[v.label] = v.script;
+					})
+					value.serialDialog.text_options = bodge;
+				}
 				scenarioData.serialDialogs[name] = value.serialDialog;
+				// TODO: fix this properly
+
 			});
 			return parserResult;
 		});

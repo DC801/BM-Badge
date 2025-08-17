@@ -444,7 +444,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-wizard-stomp"
+                         "value":"ch2_wizard_stomp"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -462,7 +462,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-bird-hyper"
+                         "value":"ch2_bird_hyper"
                         }],
                  "rotation":0,
                  "visible":true,

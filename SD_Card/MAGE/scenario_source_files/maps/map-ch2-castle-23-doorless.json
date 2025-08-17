@@ -71,17 +71,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-helvetica"
+                         "value":"interact_ch2_helvetica"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-helvetica"
+                         "value":"look_ch2_helvetica"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-powerplant-supervise"
+                         "value":"ch2_powerplant_supervise"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -99,17 +99,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-rocco-end"
+                         "value":"interact_ch2_rocco_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-rocco"
+                         "value":"look_ch2_rocco"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"rocco-work-fancy"
+                         "value":"rocco_work_fancy"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -137,7 +137,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -160,7 +160,7 @@
                  "class":"",
                  "height":0,
                  "id":55,
-                 "name":"walk_from-south",
+                 "name":"walk_from_south",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -178,7 +178,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pipes"
+                         "value":"interact_ch2_pipes"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -196,7 +196,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pipes"
+                         "value":"interact_ch2_pipes"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -214,7 +214,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pipes"
+                         "value":"interact_ch2_pipes"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -232,7 +232,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pipes"
+                         "value":"interact_ch2_pipes"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -255,7 +255,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,

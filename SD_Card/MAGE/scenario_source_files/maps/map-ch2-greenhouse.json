@@ -62,7 +62,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -80,12 +80,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-trekkie"
+                         "value":"interact_ch2_trekkie"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-trekkie"
+                         "value":"look_ch2_trekkie"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -103,17 +103,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle1"
+                         "value":"look_ch2_ethernettle1"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle1"
+                         "value":"ch2_capture_ethernettle1"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -131,17 +131,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle2"
+                         "value":"look_ch2_ethernettle2"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle2"
+                         "value":"ch2_capture_ethernettle2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -159,17 +159,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle3"
+                         "value":"look_ch2_ethernettle3"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle3"
+                         "value":"ch2_capture_ethernettle3"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -187,17 +187,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle4"
+                         "value":"look_ch2_ethernettle4"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle4"
+                         "value":"ch2_capture_ethernettle4"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -215,17 +215,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle5"
+                         "value":"look_ch2_ethernettle5"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle5"
+                         "value":"ch2_capture_ethernettle5"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -243,17 +243,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle6"
+                         "value":"look_ch2_ethernettle6"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle6"
+                         "value":"ch2_capture_ethernettle6"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -271,17 +271,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle7"
+                         "value":"look_ch2_ethernettle7"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle7"
+                         "value":"ch2_capture_ethernettle7"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -299,17 +299,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-ethernettle-start"
+                         "value":"show_dialog_ethernettle_start"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernettle8"
+                         "value":"look_ch2_ethernettle8"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-capture-ethernettle8"
+                         "value":"ch2_capture_ethernettle8"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -327,7 +327,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-barrel"
+                         "value":"interact_ch2_barrel"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -345,12 +345,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-tumbleweed"
+                         "value":"interact_ch2_tumbleweed"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-tumbleweed"
+                         "value":"look_ch2_tumbleweed"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -368,12 +368,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-ethernet"
+                         "value":"interact_ch2_ethernet"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-ethernet"
+                         "value":"look_ch2_ethernet"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -391,12 +391,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-mulch"
+                         "value":"interact_ch2_mulch"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-mulch"
+                         "value":"look_ch2_mulch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -414,7 +414,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-barrel"
+                         "value":"interact_ch2_barrel"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -439,7 +439,7 @@
                  "class":"",
                  "height":0,
                  "id":41,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "polyline":[
                         {
                          "x":0,
@@ -459,7 +459,7 @@
                  "class":"",
                  "height":0,
                  "id":42,
-                 "name":"walk_from-east",
+                 "name":"walk_from_east",
                  "polyline":[
                         {
                          "x":-104.325,
@@ -479,7 +479,7 @@
                  "class":"",
                  "height":0,
                  "id":43,
-                 "name":"walk_from-west",
+                 "name":"walk_from_west",
                  "polyline":[
                         {
                          "x":0,
@@ -505,12 +505,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-modem"
+                         "value":"interact_ch2_modem"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-modem"
+                         "value":"look_ch2_modem"
                         }],
                  "rotation":0,
                  "visible":true,

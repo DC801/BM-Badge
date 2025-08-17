@@ -25,11 +25,11 @@
 			"south": "on_go_castle_1_south"
 		}
 	},
-	"ch2-castle-1-doorless": {
+	"ch2-castle-1-postgame": {
 		"path": "maps/map-ch2-castle-1-doorless.json",
-		"on_load": "on_load_ch2_castle_1_doorless",
+		"on_load": "on_load_ch2_castle_1_postgame",
 		"on_look": "look_ch2_castle_1",
-		"on_tick": "on_tick_ch2_castle_1_doorless",
+		"on_tick": "on_tick_ch2_castle_1_postgame",
 		"directions": {
 			"north": "on_go_castle_1_north",
 			"south": "on_go_castle_1_south"
@@ -46,11 +46,11 @@
 			"west": "on_go_castle_11_west"
 		}
 	},
-	"ch2-castle-11-doorless": {
+	"ch2-castle-11-postgame": {
 		"path": "maps/map-ch2-castle-11-doorless.json",
-		"on_load": "on_load_ch2_castle_11_doorless",
+		"on_load": "on_load_ch2_castle_11_postgame",
 		"on_look": "look_ch2_castle_11",
-		"on_tick": "on_tick_ch2_castle_11_doorless",
+		"on_tick": "on_tick_ch2_castle_11_postgame",
 		"directions": {
 			"north": "on_go_castle_11_north",
 			"south": "on_go_castle_11_south",
@@ -68,11 +68,11 @@
 			"east": "on_go_castle_12_east"
 		}
 	},
-	"ch2-castle-12-doorless": {
+	"ch2-castle-12-postgame": {
 		"path": "maps/map-ch2-castle-12-doorless.json",
-		"on_load": "on_load_ch2_castle_12_doorless",
+		"on_load": "on_load_ch2_castle_12_postgame",
 		"on_look": "look_ch2_castle_12",
-		"on_tick": "on_tick_ch2_castle_12_doorless",
+		"on_tick": "on_tick_ch2_castle_12_postgame",
 		"directions": {
 			"north": "on_go_castle_12_north",
 			"south": "on_go_castle_12_south",
@@ -89,11 +89,11 @@
 			"south": "on_go_castle_13_south"
 		}
 	},
-	"ch2-castle-13-doorless": {
+	"ch2-castle-13-postgame": {
 		"path": "maps/map-ch2-castle-13-doorless.json",
-		"on_load": "on_load_ch2_castle_13_doorless",
+		"on_load": "on_load_ch2_castle_13_postgame",
 		"on_look": "look_ch2_castle_13",
-		"on_tick": "on_tick_ch2_castle_13_doorless",
+		"on_tick": "on_tick_ch2_castle_13_postgame",
 		"directions": {
 			"north": "on_go_castle_13_north",
 			"south": "on_go_castle_13_south"
@@ -108,7 +108,7 @@
 			"south": "on_go_castle_14_south"
 		}
 	},
-	"ch2-castle-14-doorless": {
+	"ch2-castle-14-postgame": {
 		"path": "maps/map-ch2-castle-14-doorless.json",
 		"on_load": "on_load_ch2_castle_14",
 		"on_look": "look_ch2_castle_14",
@@ -127,11 +127,11 @@
 			"east": "on_go_castle_21_east"
 		}
 	},
-	"ch2-castle-21-doorless": {
+	"ch2-castle-21-postgame": {
 		"path": "maps/map-ch2-castle-21-doorless.json",
-		"on_load": "on_load_ch2_castle_21_doorless",
+		"on_load": "on_load_ch2_castle_21_postgame",
 		"on_look": "look_ch2_castle_21",
-		"on_tick": "on_tick_ch2_castle_21_doorless",
+		"on_tick": "on_tick_ch2_castle_21_postgame",
 		"directions": {
 			"north": "on_go_castle_21_north",
 			"east": "on_go_castle_21_east"
@@ -147,11 +147,11 @@
 			"south": "on_go_castle_22_south"
 		}
 	},
-	"ch2-castle-22-doorless": {
+	"ch2-castle-22-postgame": {
 		"path": "maps/map-ch2-castle-22-doorless.json",
-		"on_load": "on_load_ch2_castle_22_doorless",
+		"on_load": "on_load_ch2_castle_22_postgame",
 		"on_look": "look_ch2_castle_22",
-		"on_tick": "on_tick_ch2_castle_22_doorless",
+		"on_tick": "on_tick_ch2_castle_22_postgame",
 		"directions": {
 			"north": "on_go_castle_22_north",
 			"south": "on_go_castle_22_south"
@@ -166,11 +166,11 @@
 			"south": "on_go_castle_23_south"
 		}
 	},
-	"ch2-castle-23-doorless": {
+	"ch2-castle-23-postgame": {
 		"path": "maps/map-ch2-castle-23-doorless.json",
-		"on_load": "on_load_ch2_castle_23_doorless",
+		"on_load": "on_load_ch2_castle_23_postgame",
 		"on_look": "look_ch2_castle_23",
-		"on_tick": "on_tick_ch2_castle_23_doorless",
+		"on_tick": "on_tick_ch2_castle_23_postgame",
 		"directions": {
 			"south": "on_go_castle_23_south"
 		}
@@ -185,11 +185,11 @@
 			"west": "on_go_castle_31_west"
 		}
 	},
-	"ch2-castle-31-doorless": {
+	"ch2-castle-31-postgame": {
 		"path": "maps/map-ch2-castle-31-doorless.json",
-		"on_load": "on_load_ch2_castle_31_doorless",
+		"on_load": "on_load_ch2_castle_31_postgame",
 		"on_look": "look_ch2_castle_31",
-		"on_tick": "on_tick_ch2_castle_31_doorless",
+		"on_tick": "on_tick_ch2_castle_31_postgame",
 		"directions": {
 			"north": "on_go_castle_31_north",
 			"west": "on_go_castle_31_west"
@@ -206,11 +206,11 @@
 			"south": "on_go_castle_32_south"
 		}
 	},
-	"ch2-castle-32-doorless": {
+	"ch2-castle-32-postgame": {
 		"path": "maps/map-ch2-castle-32-doorless.json",
-		"on_load": "on_load_ch2_castle_32_doorless",
+		"on_load": "on_load_ch2_castle_32_postgame",
 		"on_look": "look_ch2_castle_32",
-		"on_tick": "on_tick_ch2_castle_32_doorless",
+		"on_tick": "on_tick_ch2_castle_32_postgame",
 		"directions": {
 			"northeast": "on_go_castle_32_northeast",
 			"northwest": "on_go_castle_32_northwest",

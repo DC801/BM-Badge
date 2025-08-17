@@ -88,7 +88,7 @@ on_load_ch2_lodge_rtfm {
 
 on_tick_ch2_lodge_rtfm {
 	if (player intersects geometry "south-hitbox") {
-		warp_state = "walk_from-north";
+		warp_state = "walk_from_north";
 		load map "ch2-lodge";
 	}
 }

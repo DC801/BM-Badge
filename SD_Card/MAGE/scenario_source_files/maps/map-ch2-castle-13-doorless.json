@@ -74,7 +74,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }, 
                         {
                          "name":"path",
@@ -199,12 +199,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-templeton-end"
+                         "value":"interact_ch2_templeton_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-templeton"
+                         "value":"look_ch2_templeton"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -222,12 +222,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-sebastian-end"
+                         "value":"interact_ch2_sebastian_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-sebastian"
+                         "value":"look_ch2_sebastian"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -255,7 +255,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -273,12 +273,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-gibson-throneroom-end"
+                         "value":"interact_ch2_gibson_throneroom_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-gibson"
+                         "value":"look_ch2_gibson"
                         }, 
                         {
                          "name":"on_tick",
@@ -371,7 +371,7 @@
                  "class":"",
                  "height":0,
                  "id":92,
-                 "name":"walk_from-south",
+                 "name":"walk_from_south",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -383,7 +383,7 @@
                  "class":"",
                  "height":0,
                  "id":93,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -401,7 +401,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-statue"
+                         "value":"interact_ch2_statue"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -419,7 +419,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-statue"
+                         "value":"interact_ch2_statue"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -437,7 +437,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-statue"
+                         "value":"interact_ch2_statue"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -455,7 +455,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-statue"
+                         "value":"interact_ch2_statue"
                         }],
                  "rotation":0,
                  "visible":true,

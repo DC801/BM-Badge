@@ -72,7 +72,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -90,7 +90,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-goose-library"
+                         "value":"ch2_goose_library"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -113,12 +113,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-cat-lodge"
+                         "value":"interact_ch2_cat_lodge"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-cat-lodge"
+                         "value":"look_ch2_cat_lodge"
                         }, 
                         {
                          "name":"on_tick",
@@ -158,12 +158,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-timmy"
+                         "value":"interact_ch2_timmy"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-timmy"
+                         "value":"look_ch2_timmy"
                         }, 
                         {
                          "name":"on_tick",
@@ -186,12 +186,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sportsbook"
+                         "value":"show_dialog_sportsbook"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-sportsbook"
+                         "value":"look_ch2_sportsbook"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -209,7 +209,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-magefacts2"
+                         "value":"show_dialog_magefacts2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -227,12 +227,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-dejavu"
+                         "value":"show_dialog_dejavu"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-dejavu"
+                         "value":"look_ch2_dejavu"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -250,17 +250,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-jackob-library"
+                         "value":"interact_ch2_jackob_library"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-jackob"
+                         "value":"look_ch2_jackob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"look-left-sometimes"
+                         "value":"look_left_sometimes"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -278,12 +278,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-alfonso-library"
+                         "value":"interact_ch2_alfonso_library"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-alfonso"
+                         "value":"look_ch2_alfonso"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -313,12 +313,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-manual"
+                         "value":"interact_ch2_manual"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-manual"
+                         "value":"look_ch2_manual"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -363,7 +363,7 @@
                  "class":"",
                  "height":0,
                  "id":42,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "polyline":[
                         {
                          "x":0,

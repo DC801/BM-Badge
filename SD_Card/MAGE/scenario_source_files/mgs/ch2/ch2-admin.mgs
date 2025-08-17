@@ -379,7 +379,7 @@ ch2_serial_light_manager_mouse {
 
 ch2_load_castle_1_special {
 	if (ch2_storyflag_round >= 5) {
-		load map "ch2_castle_1_postgame";
+		load map "ch2-castle-1-postgame";
 	} else {
 		load map "ch2-castle-1";
 	}
@@ -417,14 +417,14 @@ ch2_load_castle_14_special {
 }
 ch2_load_castle_21_special {
 	if (ch2_storyflag_round >= 5) {
-		load map ch2_castle_21_postgame;
+		load map "ch2-castle-21-postgame";
 	} else {
 		load map "ch2-castle-21";
 	}
 }
 ch2_load_castle_22_special {
 	if (ch2_storyflag_round >= 5) {
-		load map ch2_castle_22_postgame;
+		load map "ch2-castle-22-postgame";
 	} else {
 		load map "ch2-castle-22";
 	}
@@ -459,7 +459,7 @@ ch2_load_castle_34_special {
 
 ch2_player_spawn_click_protection {
 	// this bit is so you can load your save, it can do restore_player_state, but not immediately click the floppy again (todo: Maybe this counts as a bug; maybe really fix it?)
-	if (warp_state == "raw_game_load-ch2") {
+	if (warp_state == "raw_game_load_ch2") {
 		player_control = off;
 		wait 150ms;
 		player_control = on;

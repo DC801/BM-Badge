@@ -84,10 +84,10 @@ on_load_ch2_castle_32_postgame {
 	// entrance text
 	show serial_dialog spacer;
 	show serial_dialog { "Entering <bold>CASTLE KITCHEN</>..." };
-	if (warp_state == "walk_from-northeast") {
-		player position = geometry "walk_from-northeast";
-	} else if (warp_state == "walk_from-northwest") {
-		player position = geometry "walk_from-northwest";
+	if (warp_state == "walk_from_northeast") {
+		player position = geometry "walk_from_northeast";
+	} else if (warp_state == "walk_from_northwest") {
+		player position = geometry "walk_from_northwest";
 	}
 	command look + "vending machine" = look_ch2_vendingmachine;
 	copy!(ch2_map_init)
@@ -112,10 +112,10 @@ on_load_ch2_castle_32 {
 		copy!(ch2_hide_ramchips)
 	}
 	
-	if (warp_state == "walk_from-northeast") {
-		player position = geometry "walk_from-northeast";
-	} else if (warp_state == "walk_from-northwest") {
-		player position = geometry "walk_from-northwest";
+	if (warp_state == "walk_from_northeast") {
+		player position = geometry "walk_from_northeast";
+	} else if (warp_state == "walk_from_northwest") {
+		player position = geometry "walk_from_northwest";
 	}
 	
 	command look + "vending machine" = look_ch2_vendingmachine;
@@ -139,26 +139,26 @@ debug_want_chips {
 on_tick_ch2_castle_32 {
 	if (player intersects geometry "northwest-hitbox") {
 		copy!(on_exit_ch2_castle_32)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_33_special)
 	} else if (player intersects geometry "northeast-hitbox") {
 		copy!(on_exit_ch2_castle_32)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_34_special)
 	}
 }
 on_tick_ch2_castle_32_postgame {
 	if (player intersects geometry "northwest-hitbox") {
 		copy!(on_exit_ch2_castle_32)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_33_special)
 	} else if (player intersects geometry "northeast-hitbox") {
 		copy!(on_exit_ch2_castle_32)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_34_special)
 	} else if (player intersects geometry "south-hitbox") {
 		copy!(on_exit_ch2_castle_32)
-		warp_state = "walk_from-north";
+		warp_state = "walk_from_north";
 		copy!(ch2_load_castle_31_special)
 	}
 }

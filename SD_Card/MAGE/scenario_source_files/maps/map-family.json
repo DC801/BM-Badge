@@ -88,7 +88,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-kid"
+                         "value":"show_dialog_kid"
                         }, 
                         {
                          "name":"on_tick",
@@ -116,12 +116,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-smith"
+                         "value":"show_dialog_smith"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"kid-ballwatch"
+                         "value":"kid_ballwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -139,7 +139,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-smith-dinner"
+                         "value":"show_dialog_smith_dinner"
                         }],
                  "rotation":0,
                  "type":"",
@@ -157,7 +157,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "type":"",

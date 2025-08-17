@@ -360,7 +360,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-demo_map"
+                         "value":"show_dialog_goose_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -378,7 +378,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bob-first-demo_map"
+                         "value":"show_dialog_bob_first_demo_map"
                         }, 
                         {
                          "name":"path",
@@ -406,7 +406,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-verthandi-demo_map"
+                         "value":"show_dialog_verthandi_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -424,7 +424,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cat-demo_map"
+                         "value":"show_dialog_cat_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -442,7 +442,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-smith-demo_map"
+                         "value":"show_dialog_smith_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -460,12 +460,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat-demo_map"
+                         "value":"show_dialog_goat_demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_3s-demo_map"
+                         "value":"loop_on_path_3s_demo_map"
                         }, 
                         {
                          "name":"path",
@@ -488,12 +488,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat-demo_map"
+                         "value":"show_dialog_goat_demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_3s-demo_map"
+                         "value":"loop_on_path_3s_demo_map"
                         }, 
                         {
                          "name":"path",
@@ -516,7 +516,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-beatrice-demo_map"
+                         "value":"show_dialog_beatrice_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -534,7 +534,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-trekkie-demo_map"
+                         "value":"show_dialog_trekkie_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -557,7 +557,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-dsheep-demo_map"
+                         "value":"show_dialog_dsheep_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -575,7 +575,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cleo1-demo_map"
+                         "value":"show_dialog_cleo1_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -598,7 +598,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep-demo_map"
+                         "value":"show_dialog_sheep_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -621,7 +621,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep-demo_map"
+                         "value":"show_dialog_sheep_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -639,7 +639,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep-demo_map"
+                         "value":"show_dialog_sheep_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -657,12 +657,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-kid-demo_map"
+                         "value":"show_dialog_kid_demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_10s-demo_map"
+                         "value":"loop_on_path_10s_demo_map"
                         }, 
                         {
                          "name":"path",
@@ -685,7 +685,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-max-demo_map"
+                         "value":"show_dialog_max_demo_map"
                         }, 
                         {
                          "name":"path",
@@ -708,12 +708,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-timmy-demo_map"
+                         "value":"show_dialog_timmy_demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_30s-demo_map"
+                         "value":"loop_on_path_30s_demo_map"
                         }, 
                         {
                          "name":"path",
@@ -741,7 +741,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_goat_high-demo_map"
+                         "value":"check_if_player_is_goat_high_demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -824,7 +824,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-demo-end-dream-q"
+                         "value":"show_dialog-demo_end_dream_q"
                         }],
                  "rotation":0,
                  "type":"",

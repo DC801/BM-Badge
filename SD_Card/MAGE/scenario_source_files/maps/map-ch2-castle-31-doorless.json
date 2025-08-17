@@ -111,7 +111,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -165,12 +165,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-drum"
+                         "value":"interact_ch2_drum"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-drum"
+                         "value":"look_ch2_drum"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -188,12 +188,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-theodore-end"
+                         "value":"interact_ch2_theodore_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-theodore"
+                         "value":"look_ch2_theodore"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -211,12 +211,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-alvin-end"
+                         "value":"interact_ch2_alvin_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-alvin"
+                         "value":"look_ch2_alvin"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -258,17 +258,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-kuro-end"
+                         "value":"interact_ch2_kuro_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-kuro"
+                         "value":"look_ch2_kuro"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -286,12 +286,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-samson-end"
+                         "value":"interact_ch2_samson_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-samson"
+                         "value":"look_ch2_samson"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -309,12 +309,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-gloria-end"
+                         "value":"interact_ch2_gloria_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-gloria"
+                         "value":"look_ch2_gloria"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -332,12 +332,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-tracy-end"
+                         "value":"interact_ch2_tracy_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-tracy"
+                         "value":"look_ch2_tracy"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -360,7 +360,7 @@
                  "class":"",
                  "height":0,
                  "id":62,
-                 "name":"walk_from-west",
+                 "name":"walk_from_west",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -378,12 +378,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-seamoss-end"
+                         "value":"interact_ch2_seamoss_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-seamoss"
+                         "value":"look_ch2_seamoss"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -401,12 +401,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -425,12 +425,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -448,12 +448,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -471,12 +471,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -494,12 +494,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -517,7 +517,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-banddrinks"
+                         "value":"interact_ch2_banddrinks"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -540,7 +540,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -617,12 +617,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-simon-end"
+                         "value":"interact_ch2_simon_end"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-simon"
+                         "value":"look_ch2_simon"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -645,7 +645,7 @@
                  "class":"",
                  "height":0,
                  "id":60,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "point":true,
                  "rotation":0,
                  "visible":true,

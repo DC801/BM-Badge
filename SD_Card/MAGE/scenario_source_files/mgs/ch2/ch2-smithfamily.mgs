@@ -41,7 +41,7 @@ on_load_ch2_smithfamily {
 
 on_tick_ch2_smithfamily {
 	if (player intersects geometry "south-hitbox") {
-		warp_state = "walk_from-smithfamily";
+		warp_state = "walk_from_smithfamily";
 		load map "ch2-town";
 	}
 }

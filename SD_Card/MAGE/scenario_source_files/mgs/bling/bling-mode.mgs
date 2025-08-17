@@ -3,13 +3,13 @@ $maxBling = 5;
 /* --- Entrypoints from main menu --- */
 
 start_bling_rotate_auto {
-	warp_state = "bling-rotate-auto";
+	warp_state = "bling_rotate_auto";
 	bling_rotate_state = 0;
 	goto bling_goto_branches;
 }
 
 start_bling_rotate_manual {
-	warp_state = "bling-rotate-manual";
+	warp_state = "bling_rotate_manual";
 	bling_rotate_state = 0;
 	goto bling_goto_branches;
 }
@@ -51,9 +51,9 @@ bling_detect_mode {
 	// otherwise buttons just immediately trigger
 	wait 150ms;
 	// detect rotation modes
-	if (warp_state == "bling-rotate-manual") {
+	if (warp_state == "bling_rotate_manual") {
 		goto loop_bling_listen_manualrotate;
-	} else if (warp_state == "bling-rotate-auto") {
+	} else if (warp_state == "bling_rotate_auto") {
 		// start the timer
 		entity Timer on_tick = loop_bling_timer;
 		goto loop_bling_listen_any;
@@ -79,7 +79,7 @@ loop_bling_listen_hax {
 }
 
 bling_goto_menu {
-	warp_state = "from-bling";
+	warp_state = "from_bling";
 	load map main_menu;
 }
 

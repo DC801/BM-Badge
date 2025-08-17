@@ -87,7 +87,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -117,12 +117,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-alfonso-rtfm"
+                         "value":"interact_ch2_alfonso_rtfm"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-alfonso"
+                         "value":"look_ch2_alfonso"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -140,12 +140,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bert-rtfm"
+                         "value":"interact_ch2_bert_rtfm"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bert"
+                         "value":"look_ch2_bert"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -163,12 +163,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-jackob-rtfm"
+                         "value":"interact_ch2_jackob_rtfm"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-jackob"
+                         "value":"look_ch2_jackob"
                         }, 
                         {
                          "name":"on_tick",
@@ -191,12 +191,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-hackbook"
+                         "value":"show_dialog_hackbook"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-hackbook"
+                         "value":"look_ch2_hackbook"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -214,7 +214,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-math"
+                         "value":"show_dialog_math"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -232,12 +232,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bitsbytes"
+                         "value":"show_dialog_bitsbytes"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bitsbytes"
+                         "value":"look_ch2_bitsbytes"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -255,12 +255,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-entities1"
+                         "value":"show_dialog_entities1"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities"
+                         "value":"look_ch2_entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -278,12 +278,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-entities2"
+                         "value":"show_dialog_entities2"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities"
+                         "value":"look_ch2_entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -301,12 +301,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-entities3"
+                         "value":"show_dialog_entities3"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities"
+                         "value":"look_ch2_entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -324,12 +324,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-entities4"
+                         "value":"show_dialog_entities4"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entities"
+                         "value":"look_ch2_entities"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -347,12 +347,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-hexediting"
+                         "value":"show_dialog_hexediting"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-hexediting"
+                         "value":"look_ch2_hexediting"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -370,12 +370,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-hexediting2"
+                         "value":"show_dialog_hexediting2"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-hexediting2"
+                         "value":"look_ch2_hexediting2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -393,12 +393,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-redletters"
+                         "value":"show_dialog_redletters"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-redletters"
+                         "value":"look_ch2_redletters"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -417,12 +417,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bookorigins"
+                         "value":"show_dialog_bookorigins"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bookorigins"
+                         "value":"look_ch2_bookorigins"
                         }],
                  "rotation":0,
                  "visible":true,

@@ -158,12 +158,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-mad"
+                         "value":"show_dialog_goose_mad"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-goose-mission"
+                         "value":"on_tick_goose_mission"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -181,12 +181,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobrock-start"
+                         "value":"show_dialog_bobrock_start"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"handler-bender-timer"
+                         "value":"handler_bender_timer"
                         }, 
                         {
                          "name":"path",
@@ -214,7 +214,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-verthandi-start"
+                         "value":"show_dialog_verthandi_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -242,12 +242,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cat"
+                         "value":"show_dialog_cat"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"cat-watch"
+                         "value":"cat_watch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -270,7 +270,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat"
+                         "value":"show_dialog_goat"
                         }, 
                         {
                          "name":"on_tick",
@@ -303,7 +303,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat"
+                         "value":"show_dialog_goat"
                         }, 
                         {
                          "name":"on_tick",
@@ -341,12 +341,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"billy-glitchwatch"
+                         "value":"billy_glitchwatch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -369,12 +369,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cleo1"
+                         "value":"show_dialog_cleo1"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"cleo-watch"
+                         "value":"cleo_watch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -397,7 +397,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
@@ -425,12 +425,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"kid-glitchwatch"
+                         "value":"kid_glitchwatch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -448,12 +448,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-shepherd-start"
+                         "value":"show_dialog_shepherd_start"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"make-sheep-loiter"
+                         "value":"make_sheep_loiter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -471,12 +471,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bender-start"
+                         "value":"show_dialog_bender_start"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -494,12 +494,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-max-start"
+                         "value":"show_dialog_max_start"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-max-neutral"
+                         "value":"on_tick_max_neutral"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -522,12 +522,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-felix"
+                         "value":"show_dialog_felix"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"felix-loiter"
+                         "value":"felix_loiter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -550,12 +550,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-maru"
+                         "value":"show_dialog_maru"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"maru-loiter"
+                         "value":"maru_loiter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -573,12 +573,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bmurray"
+                         "value":"show_dialog_bmurray"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"bmurray-loiter"
+                         "value":"bmurray_loiter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -601,12 +601,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-deut"
+                         "value":"show_dialog_deut"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"deut-loiter"
+                         "value":"deut_loiter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -629,7 +629,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"goose-bounds-watch"
+                         "value":"goose_bounds_watch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -647,7 +647,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bert-start"
+                         "value":"show_dialog_bert_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -670,7 +670,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-alfonso-start"
+                         "value":"show_dialog_alfonso_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -693,7 +693,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-jackob-start"
+                         "value":"show_dialog_jackob_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -721,7 +721,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-marta-start"
+                         "value":"show_dialog_marta_start"
                         }, 
                         {
                          "name":"on_tick",
@@ -749,12 +749,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"fountain-interact"
+                         "value":"fountain_interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"fountain-glitchwatch"
+                         "value":"fountain_glitchwatch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -777,12 +777,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-hamster-start"
+                         "value":"show_dialog_hamster_start"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"hamster-glitchwatch"
+                         "value":"hamster_glitchwatch"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -800,7 +800,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
@@ -823,7 +823,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobmoss-start"
+                         "value":"show_dialog_bobmoss_start"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -841,7 +841,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"menu-save_game"
+                         "value":"menu_save_game"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -859,7 +859,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-safety-skyler"
+                         "value":"show_dialog_safety_skyler"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -877,7 +877,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-messageboard"
+                         "value":"show_dialog_messageboard"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -895,12 +895,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-yabbo"
+                         "value":"show_dialog_yabbo"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"yabbo-journey"
+                         "value":"yabbo_journey"
                         }, 
                         {
                          "name":"path",
@@ -923,7 +923,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-construction"
+                         "value":"show_dialog_construction"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -952,7 +952,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-walk-to-lodge-q"
+                         "value":"debug-walk_to_lodge_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -970,7 +970,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-set-flags-true-q"
+                         "value":"debug-set_flags_true_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -988,7 +988,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-bob-q"
+                         "value":"debug_bob_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1006,7 +1006,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-set-flags-false-q"
+                         "value":"debug-set_flags_false_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1024,7 +1024,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-sheep-q"
+                         "value":"debug_sheep_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1042,7 +1042,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-disable-tuesday-q"
+                         "value":"debug_disable_tuesday_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1065,7 +1065,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1088,7 +1088,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-roll-credits-q"
+                         "value":"debug_roll_credits_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1106,7 +1106,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-win-rake-q"
+                         "value":"debug_win_rake_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1124,7 +1124,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-demobonus-q"
+                         "value":"debug_demobonus_q"
                         }],
                  "rotation":0,
                  "visible":true,

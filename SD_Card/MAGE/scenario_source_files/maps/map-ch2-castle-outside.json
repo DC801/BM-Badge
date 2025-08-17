@@ -132,7 +132,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -155,7 +155,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -178,7 +178,7 @@
                  "class":"",
                  "height":0,
                  "id":29,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "polyline":[
                         {
                          "x":0,
@@ -220,7 +220,7 @@
                  "class":"",
                  "height":0,
                  "id":33,
-                 "name":"walk_from-east",
+                 "name":"walk_from_east",
                  "polyline":[
                         {
                          "x":158.5,
@@ -258,17 +258,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bert-outside"
+                         "value":"interact_ch2_bert_outside"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bert"
+                         "value":"look_ch2_bert"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -286,17 +286,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-alfonso-outside"
+                         "value":"interact_ch2_alfonso_outside"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-alfonso"
+                         "value":"look_ch2_alfonso"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -314,17 +314,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-jackob-outside"
+                         "value":"interact_ch2_jackob_outside"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-jackob"
+                         "value":"look_ch2_jackob"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -354,7 +354,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pedestal"
+                         "value":"interact_ch2_pedestal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -372,7 +372,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pedestal"
+                         "value":"interact_ch2_pedestal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -390,7 +390,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pedestal"
+                         "value":"interact_ch2_pedestal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -408,7 +408,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pillar"
+                         "value":"interact_ch2_pillar"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -426,7 +426,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pillar"
+                         "value":"interact_ch2_pillar"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -444,7 +444,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pillar"
+                         "value":"interact_ch2_pillar"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -462,7 +462,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-pillar"
+                         "value":"interact_ch2_pillar"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -480,12 +480,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-entrancesign"
+                         "value":"interact_ch2_entrancesign"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-entrancesign"
+                         "value":"look_ch2_entrancesign"
                         }],
                  "rotation":0,
                  "visible":true,

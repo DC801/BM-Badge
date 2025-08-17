@@ -88,7 +88,7 @@ on_tick_ch2_castle_33 {
 			player position -> geometry "south-hitbox-bounce" origin over 300ms;
 			player_control = on;
 		} else {
-			warp_state = "walk_from-northwest";
+			warp_state = "walk_from_northwest";
 			copy!(ch2_load_castle_32_special)
 		}
 	}

@@ -76,7 +76,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -106,12 +106,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"snake_box-interact"
+                         "value":"snake_box_interact"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-snakebox"
+                         "value":"look_ch2_snakebox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -129,12 +129,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-winerack"
+                         "value":"interact_ch2_winerack"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-winerack"
+                         "value":"look_ch2_winerack"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -152,12 +152,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-pantryshelf"
+                         "value":"interact_ch2_pantryshelf"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-pantryshelf"
+                         "value":"look_ch2_pantryshelf"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -175,12 +175,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-pantryshelf"
+                         "value":"interact_ch2_pantryshelf"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-pantryshelf"
+                         "value":"look_ch2_pantryshelf"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -198,12 +198,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-pantryshelf"
+                         "value":"interact_ch2_pantryshelf"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-pantryshelf"
+                         "value":"look_ch2_pantryshelf"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -221,12 +221,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-dishshelf"
+                         "value":"interact_ch2_dishshelf"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-dishshelf"
+                         "value":"look_ch2_dishshelf"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -244,7 +244,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-pantryfridge"
+                         "value":"interact_ch2_pantryfridge"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -262,17 +262,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-clara"
+                         "value":"interact_ch2_clara"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-clara"
+                         "value":"look_ch2_clara"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"tick-ch2-clara"
+                         "value":"tick_ch2_clara"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -315,12 +315,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-plate"
+                         "value":"ch2_touch_plate"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-plate"
+                         "value":"look_plate"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -348,7 +348,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,

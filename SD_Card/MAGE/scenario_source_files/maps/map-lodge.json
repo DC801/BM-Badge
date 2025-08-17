@@ -65,7 +65,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-alfonso-prechoose"
+                         "value":"show_dialog_alfonso_prechoose"
                         }, 
                         {
                          "name":"path",
@@ -88,7 +88,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bert-prechoose"
+                         "value":"show_dialog_bert_prechoose"
                         }, 
                         {
                          "name":"path",
@@ -116,7 +116,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-zippy-prechoose"
+                         "value":"show_dialog_zippy_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -134,7 +134,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-zappy-prechoose"
+                         "value":"show_dialog_zappy_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -152,7 +152,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-beatrice-prechoose"
+                         "value":"show_dialog_beatrice_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -170,7 +170,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cleo-prechoose"
+                         "value":"show_dialog_cleo_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -193,7 +193,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-verthandi-prechoose"
+                         "value":"show_dialog_verthandi_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -211,7 +211,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-max-prechoose"
+                         "value":"show_dialog_max_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -229,7 +229,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-smith-prechoose"
+                         "value":"show_dialog_smith_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -247,7 +247,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-baker-prechoose"
+                         "value":"show_dialog_baker_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -265,12 +265,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-generic"
+                         "value":"show_dialog_goose_generic"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-lodge-goose"
+                         "value":"on_tick_lodge_goose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -288,7 +288,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-trekkie-prechoose"
+                         "value":"show_dialog_trekkie_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -306,7 +306,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-marta-prechoose"
+                         "value":"show_dialog_marta_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -324,7 +324,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-generic"
+                         "value":"show_dialog_goose_generic"
                         }],
                  "rotation":0,
                  "type":"",
@@ -342,7 +342,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-generic"
+                         "value":"show_dialog_goose_generic"
                         }],
                  "rotation":0,
                  "type":"",
@@ -360,7 +360,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-shepherd-prechoose"
+                         "value":"show_dialog_shepherd_prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -383,12 +383,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-lodge_cat"
+                         "value":"show_dialog_lodge_cat"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"lodge_cat-glitchwatch"
+                         "value":"lodge_cat_glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -418,7 +418,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-jackob-prechoose"
+                         "value":"show_dialog_jackob_prechoose"
                         }, 
                         {
                          "name":"path",
@@ -453,7 +453,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"examine-glasses"
+                         "value":"examine_glasses"
                         }],
                  "rotation":0,
                  "type":"",
@@ -471,7 +471,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"examine-broom"
+                         "value":"examine_broom"
                         }],
                  "rotation":0,
                  "type":"",
@@ -489,7 +489,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"examine-bracelet"
+                         "value":"examine_bracelet"
                         }],
                  "rotation":0,
                  "type":"",
@@ -507,7 +507,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"examine-book"
+                         "value":"examine_book"
                         }],
                  "rotation":0,
                  "type":"",
@@ -525,7 +525,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"examine-wand"
+                         "value":"examine_wand"
                         }],
                  "rotation":0,
                  "type":"",
@@ -543,7 +543,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-bypass-tuesday-q"
+                         "value":"debug_bypass_tuesday_q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -561,7 +561,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-cutscene-tuesday-q"
+                         "value":"debug_cutscene_tuesday_q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -579,7 +579,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-touch-artifacts-q"
+                         "value":"debug_touch_artifacts_q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -602,12 +602,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-timmy-start"
+                         "value":"show_dialog_timmy_start"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"timmy-glitchwatch"
+                         "value":"timmy_glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -625,7 +625,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sportsbook"
+                         "value":"show_dialog_sportsbook"
                         }],
                  "rotation":0,
                  "type":"",
@@ -643,7 +643,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-magefacts2"
+                         "value":"show_dialog_magefacts2"
                         }],
                  "rotation":0,
                  "type":"",
@@ -661,7 +661,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-dejavu"
+                         "value":"show_dialog_dejavu"
                         }],
                  "rotation":0,
                  "type":"",
@@ -679,7 +679,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-cat-prep"
+                         "value":"debug_cat_prep"
                         }],
                  "rotation":0,
                  "type":"",

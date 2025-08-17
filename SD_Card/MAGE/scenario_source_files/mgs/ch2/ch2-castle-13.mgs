@@ -46,10 +46,10 @@ on_load_ch2_castle_13_postgame {
 	// entrance text
 	show serial_dialog spacer;
 	show serial_dialog { "Entering <bold>CASTLE THRONE ROOM</>..." };
-	if (warp_state == "walk_from-north") {
-		player position = geometry "walk_from-north";
-	} else if (warp_state == "walk_from-south") {
-		player position = geometry "walk_from-south";
+	if (warp_state == "walk_from_north") {
+		player position = geometry "walk_from_north";
+	} else if (warp_state == "walk_from_south") {
+		player position = geometry "walk_from_south";
 	}
 	copy!(ch2_map_init)
 }
@@ -399,18 +399,18 @@ king_walk_to_debris {
 on_tick_ch2_castle_13_postgame {
 	if (player intersects geometry "south-hitbox") {
 		copy!(on_exit_ch2_castle_13)
-		warp_state = "walk_from-north";
+		warp_state = "walk_from_north";
 		copy!(ch2_load_castle_12_special)
 	} else if (player intersects geometry "north-hitbox") {
 		copy!(on_exit_ch2_castle_13)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_14_special)
 	}
 }
 on_tick_ch2_castle_13 {
 	if (ch2_king_rescued) {
 		if (player intersects geometry "north-hitbox") {
-			warp_state = "walk_from-south";
+			warp_state = "walk_from_south";
 			copy!(ch2_load_castle_14_special)
 		}
 	}

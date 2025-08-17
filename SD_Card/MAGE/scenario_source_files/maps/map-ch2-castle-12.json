@@ -71,7 +71,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -101,12 +101,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-concierge"
+                         "value":"interact_ch2_concierge"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-concierge"
+                         "value":"look_ch2_concierge"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -124,12 +124,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-needle"
+                         "value":"ch2_touch_needle"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-needle"
+                         "value":"look_needle"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -147,12 +147,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-guestbook"
+                         "value":"interact_ch2_guestbook"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-guest_book"
+                         "value":"look_ch2_guest_book"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -170,12 +170,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-stereo-interact"
+                         "value":"ch2_stereo_interact"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-stereo"
+                         "value":"look_ch2_stereo"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -227,7 +227,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -245,7 +245,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -268,7 +268,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,

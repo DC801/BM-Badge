@@ -68,7 +68,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -86,17 +86,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-zippy"
+                         "value":"interact_ch2_zippy"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-zippy"
+                         "value":"look_ch2_zippy"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -119,17 +119,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-zappy"
+                         "value":"interact_ch2_zappy"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-zappy"
+                         "value":"look_ch2_zappy"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -152,12 +152,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goldfish"
+                         "value":"show_dialog_goldfish"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-tickles"
+                         "value":"look_ch2_tickles"
                         }, 
                         {
                          "name":"on_tick",
@@ -180,12 +180,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-magejournal"
+                         "value":"interact_ch2_magejournal"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-magejournal"
+                         "value":"look_ch2_magejournal"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -203,12 +203,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-magebox"
+                         "value":"interact_ch2_magebox"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-magebox"
+                         "value":"look_ch2_magebox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -226,7 +226,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -244,12 +244,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-microwave-magehouse"
+                         "value":"show_dialog_microwave_magehouse"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-microwave-magehouse"
+                         "value":"look_ch2_microwave_magehouse"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -267,7 +267,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-magefacts"
+                         "value":"show_dialog_magefacts"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -290,7 +290,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -308,12 +308,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-cake"
+                         "value":"interact_ch2_cake"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-cake"
+                         "value":"look_ch2_cake"
                         }],
                  "rotation":0,
                  "visible":true,

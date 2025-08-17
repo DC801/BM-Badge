@@ -41,7 +41,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-6-66"
+                         "value":"toasters_do_path_6_66"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -59,7 +59,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-5-75"
+                         "value":"toasters_do_path_5_75"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -77,7 +77,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-8-15"
+                         "value":"toasters_do_path_8_15"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -95,7 +95,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-2-50"
+                         "value":"toasters_do_path_2_50"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -113,7 +113,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-0-50"
+                         "value":"toasters_do_path_0_50"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -131,7 +131,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-10-50"
+                         "value":"toasters_do_path_10_50"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -149,7 +149,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-7-60"
+                         "value":"toasters_do_path_7_60"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -167,7 +167,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-4-50"
+                         "value":"toasters_do_path_4_50"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -185,7 +185,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-5"
+                         "value":"toasters_do_path_5"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -203,7 +203,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-10"
+                         "value":"toasters_do_path_10"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -221,7 +221,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-3"
+                         "value":"toasters_do_path_3"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -239,7 +239,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"toasters-do_path-0"
+                         "value":"toasters_do_path_0"
                         }],
                  "rotation":0,
                  "visible":true,

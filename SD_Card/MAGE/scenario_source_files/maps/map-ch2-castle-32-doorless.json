@@ -97,7 +97,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -115,12 +115,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-onions"
+                         "value":"interact_ch2_onions"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"ch2-look-onions"
+                         "value":"look_ch2_onions
                         }],
                  "rotation":0,
                  "visible":true,
@@ -138,12 +138,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-stove"
+                         "value":"interact_ch2_stove"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"ch2-look-stove"
+                         "value":"look_ch2_stove
                         }],
                  "rotation":0,
                  "visible":true,
@@ -161,12 +161,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-stove"
+                         "value":"interact_ch2_stove"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"ch2-look-stove"
+                         "value":"look_ch2_stove
                         }],
                  "rotation":0,
                  "visible":true,
@@ -194,7 +194,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -217,7 +217,7 @@
                  "class":"",
                  "height":0,
                  "id":70,
-                 "name":"walk_from-south",
+                 "name":"walk_from_south",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -240,7 +240,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -319,7 +319,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-vendingmachine-end"
+                         "value":"interact_ch2_vendingmachine_end"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -337,12 +337,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-coffee"
+                         "value":"interact_ch2_coffee"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-coffee"
+                         "value":"look_ch2_coffee"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -354,7 +354,7 @@
                  "class":"",
                  "height":0,
                  "id":73,
-                 "name":"walk_from-northwest",
+                 "name":"walk_from_northwest",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -366,7 +366,7 @@
                  "class":"",
                  "height":0,
                  "id":74,
-                 "name":"walk_from-northeast",
+                 "name":"walk_from_northeast",
                  "point":true,
                  "rotation":0,
                  "visible":true,

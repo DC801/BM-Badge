@@ -101,7 +101,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -119,12 +119,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-keyboard"
+                         "value":"ch2_touch_keyboard"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-keyboard"
+                         "value":"look_keyboard"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -152,7 +152,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -230,12 +230,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-drum"
+                         "value":"interact_ch2_drum"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-drum"
+                         "value":"look_ch2_drum"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -253,12 +253,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-theodore"
+                         "value":"interact_ch2_theodore"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-theodore"
+                         "value":"look_ch2_theodore"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -276,12 +276,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-alvin"
+                         "value":"interact_ch2_alvin"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-alvin"
+                         "value":"look_ch2_alvin"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -323,12 +323,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -346,12 +346,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -369,12 +369,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -392,12 +392,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -416,12 +416,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-bartable"
+                         "value":"interact_ch2_bartable"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-bartable"
+                         "value":"look_ch2_bartable"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -439,7 +439,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-banddrinks"
+                         "value":"interact_ch2_banddrinks"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -457,7 +457,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -480,7 +480,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -557,12 +557,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-simon"
+                         "value":"interact_ch2_simon"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-simon"
+                         "value":"look_ch2_simon"
                         }],
                  "rotation":0,
                  "visible":true,

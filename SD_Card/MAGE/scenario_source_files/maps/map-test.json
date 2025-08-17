@@ -76,7 +76,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"set_save_flag-bobs_not_on_fire"
+                         "value":"set_save_flag_bobs_not_on_fire"
                         }, 
                         {
                          "name":"path",
@@ -293,7 +293,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-wisdom"
+                         "value":"show_dialog_wisdom"
                         }, 
                         {
                          "name":"on_tick",
@@ -372,7 +372,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-pipscat"
+                         "value":"show_dialog_pipscat"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -539,7 +539,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"check_save_flag-bobs_not_on_fire"
+                         "value":"check_save_flag_bobs_not_on_fire"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -585,7 +585,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bender"
+                         "value":"show_dialog_bender"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -603,7 +603,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-strong_bad"
+                         "value":"show_dialog_strong_bad"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -621,7 +621,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-trekkie"
+                         "value":"show_dialog_trekkie"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -651,7 +651,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-lots_of_text"
+                         "value":"show_dialog_lots_of_text"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -669,7 +669,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"set_entity_movement_relative-0"
+                         "value":"set_entity_movement_relative_0"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -687,7 +687,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"set_entity_movement_relative-1"
+                         "value":"set_entity_movement_relative_1"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -705,7 +705,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"set_entity_movement_relative-3"
+                         "value":"set_entity_movement_relative_3"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -723,7 +723,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"set_entity_movement_relative-2"
+                         "value":"set_entity_movement_relative_2"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1074,7 +1074,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,

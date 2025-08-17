@@ -37,7 +37,7 @@ look_ch2_xa {
 	};
 }
 
-"look-save_floppy" {
+look_save_floppy {
 	show serial_dialog spacer;
 	show serial_dialog {
 		"You looked at the <m>%save floppy%</>."

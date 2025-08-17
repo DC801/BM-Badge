@@ -234,7 +234,7 @@
                  "class":"",
                  "height":0,
                  "id":41,
-                 "name":"walk_from-north",
+                 "name":"walk_from_north",
                  "polyline":[
                         {
                          "x":0,
@@ -254,7 +254,7 @@
                  "class":"",
                  "height":0,
                  "id":42,
-                 "name":"walk_from-east",
+                 "name":"walk_from_east",
                  "polyline":[
                         {
                          "x":-269.825,
@@ -274,7 +274,7 @@
                  "class":"",
                  "height":0,
                  "id":43,
-                 "name":"walk_from-west",
+                 "name":"walk_from_west",
                  "polyline":[
                         {
                          "x":-134.5,
@@ -365,7 +365,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -383,17 +383,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-baker"
+                         "value":"interact_ch2_baker"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-baker"
+                         "value":"look_ch2_baker"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"on_tick-bake"
+                         "value":"on_tick_bake"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -411,7 +411,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -429,7 +429,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -447,7 +447,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -465,7 +465,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -483,7 +483,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -501,7 +501,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -519,7 +519,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -537,7 +537,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -555,7 +555,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -573,7 +573,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -591,7 +591,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -609,7 +609,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -627,7 +627,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -645,7 +645,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -663,7 +663,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -681,7 +681,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -699,7 +699,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bread"
+                         "value":"show_dialog_bread"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -718,12 +718,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-jackob-bakery"
+                         "value":"interact_ch2_jackob_bakery"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-jackob"
+                         "value":"look_ch2_jackob"
                         }, 
                         {
                          "name":"on_tick",

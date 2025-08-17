@@ -65,7 +65,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -83,12 +83,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-abacus"
+                         "value":"ch2_touch_abacus"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-abacus"
+                         "value":"look_abacus"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -106,12 +106,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-goose"
+                         "value":"interact_ch2_goose"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-goose"
+                         "value":"look_ch2_goose"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -129,12 +129,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-frankie"
+                         "value":"interact_ch2_frankie"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-frankie"
+                         "value":"look_ch2_frankie"
                         }, 
                         {
                          "name":"on_tick",
@@ -157,12 +157,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-pie"
+                         "value":"interact_ch2_pie"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-pie"
+                         "value":"look_ch2_pie"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -180,12 +180,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-3dprinter"
+                         "value":"interact_ch2_3dprinter"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-3dprinter"
+                         "value":"look_ch2_3dprinter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -203,12 +203,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-cablesbox"
+                         "value":"interact_ch2_cablesbox"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-cablesbox"
+                         "value":"look_ch2_cablesbox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -226,12 +226,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-cablesbox"
+                         "value":"interact_ch2_cablesbox"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-cablesbox"
+                         "value":"look_ch2_cablesbox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -249,12 +249,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-cablesbox"
+                         "value":"interact_ch2_cablesbox"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-cablesbox"
+                         "value":"look_ch2_cablesbox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -272,7 +272,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-solderzone"
+                         "value":"interact_ch2_solderzone"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -290,7 +290,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-solderzone"
+                         "value":"interact_ch2_solderzone"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -308,12 +308,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-solderzone"
+                         "value":"interact_ch2_solderzone"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-solder"
+                         "value":"look_ch2_solder"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -332,12 +332,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-figurines"
+                         "value":"interact_ch2_figurines"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-figurines"
+                         "value":"look_ch2_figurines"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -365,7 +365,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -383,7 +383,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-printer"
+                         "value":"interact_ch2_printer"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -401,7 +401,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-scanner"
+                         "value":"interact_ch2_scanner"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -419,7 +419,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-attempt-door-check"
+                         "value":"ch2_attempt_door_check"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -442,7 +442,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -460,12 +460,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-jeanpaul"
+                         "value":"interact_ch2_jeanpaul"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-jean_paul"
+                         "value":"look_ch2_jean_paul"
                         }, 
                         {
                          "name":"on_tick",

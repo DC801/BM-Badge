@@ -163,7 +163,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-verthandi"
+                         "value":"interact_ch2_verthandi"
                         }, 
                         {
                          "name":"on_tick",
@@ -191,7 +191,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat"
+                         "value":"show_dialog_goat"
                         }, 
                         {
                          "name":"on_tick",
@@ -224,7 +224,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat"
+                         "value":"show_dialog_goat"
                         }, 
                         {
                          "name":"on_tick",
@@ -262,7 +262,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
@@ -290,7 +290,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
@@ -318,7 +318,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
@@ -341,7 +341,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-shepherd"
+                         "value":"interact_ch2_shepherd"
                         }, 
                         {
                          "name":"on_look",
@@ -351,7 +351,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -397,7 +397,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-alfonso-end"
+                         "value":"interact_ch2_alfonso_end"
                         }, 
                         {
                          "name":"on_tick",
@@ -425,7 +425,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-jackob-end"
+                         "value":"interact_ch2_jackob_end"
                         }, 
                         {
                          "name":"on_tick",
@@ -458,7 +458,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-marta"
+                         "value":"interact_ch2_marta"
                         }, 
                         {
                          "name":"on_tick",
@@ -514,7 +514,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-hamster"
+                         "value":"interact_ch2_hamster"
                         }, 
                         {
                          "name":"on_tick",
@@ -537,12 +537,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog_sheep"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"make-sheep-loiter"
+                         "value":"make_sheep_loiter"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -560,7 +560,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"menu-save_game"
+                         "value":"menu_save_game"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -578,7 +578,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-safety-skyler"
+                         "value":"show_dialog_safety_skyler"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -596,7 +596,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-messageboard"
+                         "value":"show_dialog_messageboard"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -614,7 +614,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-construction"
+                         "value":"show_dialog_construction"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -644,7 +644,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-delmar-town"
+                         "value":"interact_ch2_delmar_town"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -686,7 +686,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-rake"
+                         "value":"interact_ch2_rake"
                         }, 
                         {
                          "name":"on_tick",
@@ -714,7 +714,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-cat"
+                         "value":"interact_ch2_cat"
                         }, 
                         {
                          "name":"on_tick",
@@ -742,7 +742,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-cleo"
+                         "value":"interact_ch2_cleo"
                         }, 
                         {
                          "name":"on_tick",
@@ -789,7 +789,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-yabbomongo"
+                         "value":"interact_ch2_yabbomongo"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -807,12 +807,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-townsign"
+                         "value":"interact_ch2_townsign"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-townsign"
+                         "value":"look_ch2_townsign"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -830,12 +830,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-lakesign"
+                         "value":"interact_ch2_lakesign"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-lakesign"
+                         "value":"look_ch2_lakesign"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -869,7 +869,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"debug_hub_q"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1634,7 +1634,7 @@
                  "class":"",
                  "height":0,
                  "id":67,
-                 "name":"walk_from-west",
+                 "name":"walk_from_west",
                  "polyline":[
                         {
                          "x":0,
@@ -1654,7 +1654,7 @@
                  "class":"",
                  "height":0,
                  "id":68,
-                 "name":"walk_from-east",
+                 "name":"walk_from_east",
                  "polyline":[
                         {
                          "x":0,
@@ -1698,7 +1698,7 @@
                  "class":"",
                  "height":0,
                  "id":229,
-                 "name":"walk_from-lodge",
+                 "name":"walk_from_lodge",
                  "polyline":[
                         {
                          "x":0,
@@ -1740,7 +1740,7 @@
                  "class":"",
                  "height":0,
                  "id":232,
-                 "name":"walk_from-bakery",
+                 "name":"walk_from_bakery",
                  "polyline":[
                         {
                          "x":0,
@@ -1760,7 +1760,7 @@
                  "class":"",
                  "height":0,
                  "id":233,
-                 "name":"walk_from-smithfamily",
+                 "name":"walk_from_smithfamily",
                  "polyline":[
                         {
                          "x":0,
@@ -1791,7 +1791,7 @@
                  "class":"",
                  "height":0,
                  "id":235,
-                 "name":"walk_from-greenhouse",
+                 "name":"walk_from_greenhouse",
                  "polyline":[
                         {
                          "x":0,
@@ -1822,7 +1822,7 @@
                  "class":"",
                  "height":0,
                  "id":237,
-                 "name":"walk_from-magehouse",
+                 "name":"walk_from_magehouse",
                  "polyline":[
                         {
                          "x":0.579999999999927,
@@ -1853,7 +1853,7 @@
                  "class":"",
                  "height":0,
                  "id":239,
-                 "name":"walk_from-oldcouplehouse",
+                 "name":"walk_from_oldcouplehouse",
                  "polyline":[
                         {
                          "x":0,
@@ -1895,7 +1895,7 @@
                  "class":"",
                  "height":0,
                  "id":273,
-                 "name":"walk_from-woprhouse",
+                 "name":"walk_from_woprhouse",
                  "polyline":[
                         {
                          "x":-50,
@@ -1966,7 +1966,7 @@
                  "class":"",
                  "height":0,
                  "id":332,
-                 "name":"walk_from-bobsclub",
+                 "name":"walk_from_bobsclub",
                  "polyline":[
                         {
                          "x":0,

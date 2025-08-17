@@ -105,7 +105,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobsclub-strongbob"
+                         "value":"show_dialog_bobsclub_strongbob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -123,7 +123,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobsclub-bob"
+                         "value":"show_dialog_bobsclub_bob"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -192,7 +192,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobwall"
+                         "value":"show_dialog_bobwall"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -210,7 +210,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-fridge"
+                         "value":"show_dialog_fridge"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -228,7 +228,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-balloonbox"
+                         "value":"show_dialog_balloonbox"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -258,7 +258,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-begin-flail"
+                         "value":"debug_begin_flail"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -276,7 +276,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bobmoss-start-s"
+                         "value":"show_dialog_bobmoss_start_s"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -294,7 +294,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sink"
+                         "value":"show_dialog_sink"
                         }],
                  "rotation":0,
                  "visible":true,

@@ -64,7 +64,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-player"
+                         "value":"look_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -82,12 +82,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-clock"
+                         "value":"ch2_touch_clock"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-clock"
+                         "value":"look_clock"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -105,17 +105,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-gibson-bedroom"
+                         "value":"interact_ch2_gibson_bedroom"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-gibson"
+                         "value":"look_ch2_gibson"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"face_player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -228,12 +228,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-keypad"
+                         "value":"interact_ch2_keypad"
                         }, 
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-ch2-keypad"
+                         "value":"look_ch2_keypad"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -261,7 +261,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"ch2-serial-light-manager"
+                         "value":"ch2_serial_light_manager"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -280,7 +280,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-statue"
+                         "value":"interact_ch2_statue"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -298,7 +298,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"interact-ch2-statue"
+                         "value":"interact_ch2_statue"
                         }],
                  "rotation":0,
                  "visible":true,

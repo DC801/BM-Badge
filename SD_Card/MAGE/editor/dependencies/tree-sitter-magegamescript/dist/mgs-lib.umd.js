@@ -9760,6 +9760,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.comparison = breakIfNotString(args2.comparison);
       this.value = breakIfNotNumber(args2.value);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
+      if (this.comparison === "!=") {
+        this.comparison = "==";
+        this.expected_bool = !this.expected_bool;
+      }
     }
     static quick(variable, value, comparison, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -9794,6 +9798,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.comparison = breakIfNotString(args2.comparison);
       this.source = breakIfNotString(args2.source);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
+      if (this.comparison === "!=") {
+        this.comparison = "==";
+        this.expected_bool = !this.expected_bool;
+      }
     }
     static quick(variable, source, comparison, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;

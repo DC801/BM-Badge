@@ -23,7 +23,7 @@ ch2_setup_alfonso_verthandi {
 
 on_load_ch2_town {
 	// cutscene interrupt:
-	if (warp_state == "cutscene-escort") {
+	if (warp_state == "cutscene_escort") {
 		goto ch2_escort_cutscene;
 	}
 
@@ -87,37 +87,37 @@ on_load_ch2_town {
 
 	// walking out of doorways:
 	player_control = off;
-	if (warp_state == "raw_game_load-ch2") {
+	if (warp_state == "raw_game_load_ch2") {
 		copy!(restore_player_state)
 	} else if (warp_state == "exit_from_credits") {
 		player position = geometry "from-credits-spot";
 		camera fade in -> #000000 over 800ms;
-	} else if (warp_state == "walk_from-east") {
-		player path = "walk_from-east"
+	} else if (warp_state == "walk_from_east") {
+		player path = "walk_from_east"
 		player on_tick = on_tick_ch2_town_walkfadein;
 		camera fade in -> #000000 over 400ms;
-	} else if (warp_state == "walk_from-west") {
-		player path = "walk_from-west";
+	} else if (warp_state == "walk_from_west") {
+		player path = "walk_from_west";
 		player on_tick = on_tick_ch2_town_walkfadein;
 		camera fade in -> #000000 over 400ms;
-	} else if (warp_state == "walk_from-bobsclub") {
-		player position -> geometry "walk_from-bobsclub" length over 200ms;
-	} else if (warp_state == "walk_from-bakery") {
-		player position -> geometry "walk_from-bakery" length over 200ms;
-	} else if (warp_state == "walk_from-lodge") {
-		player position -> geometry "walk_from-lodge" length over 200ms;
-	} else if (warp_state == "walk_from-greenhouse") {
-		player position -> geometry "walk_from-greenhouse" length over 200ms;
-	} else if (warp_state == "walk_from-magehouse") {
-		player position -> geometry "walk_from-magehouse" length over 200ms;
-	} else if (warp_state == "walk_from-oldcouplehouse") {
-		player position -> geometry "walk_from-oldcouplehouse" length over 200ms;
-	} else if (warp_state == "walk_from-smithfamily") {
-		player position -> geometry "walk_from-smithfamily" length over 200ms;
-	} else if (warp_state == "walk_from-woprhouse") {
-		player position -> geometry "walk_from-woprhouse" length over 200ms;
-	} else if (warp_state == "walk_from-bobsclub") {
-		player position -> geometry "walk_from-bobsclub" length over 200ms;
+	} else if (warp_state == "walk_from_bobsclub") {
+		player position -> geometry "walk_from_bobsclub" length over 200ms;
+	} else if (warp_state == "walk_from_bakery") {
+		player position -> geometry "walk_from_bakery" length over 200ms;
+	} else if (warp_state == "walk_from_lodge") {
+		player position -> geometry "walk_from_lodge" length over 200ms;
+	} else if (warp_state == "walk_from_greenhouse") {
+		player position -> geometry "walk_from_greenhouse" length over 200ms;
+	} else if (warp_state == "walk_from_magehouse") {
+		player position -> geometry "walk_from_magehouse" length over 200ms;
+	} else if (warp_state == "walk_from_oldcouplehouse") {
+		player position -> geometry "walk_from_oldcouplehouse" length over 200ms;
+	} else if (warp_state == "walk_from_smithfamily") {
+		player position -> geometry "walk_from_smithfamily" length over 200ms;
+	} else if (warp_state == "walk_from_woprhouse") {
+		player position -> geometry "walk_from_woprhouse" length over 200ms;
+	} else if (warp_state == "walk_from_bobsclub") {
+		player position -> geometry "walk_from_bobsclub" length over 200ms;
 	}
 	copy!(ch2_map_init)
 	if (debug_mode) {
@@ -139,47 +139,47 @@ on_load_ch2_town {
 
 on_tick_ch2_town {
 	if (player intersects geometry "door-bakery") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-bakery";
 	}
 	if (player intersects geometry "door-smithfamily") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-smithfamily";
 	}
 	if (player intersects geometry "door-greenhouse") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-greenhouse";
 	}
 	if (player intersects geometry "door-magehouse") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-magehouse";
 	}
 	if (player intersects geometry "door-lodge") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-lodge";
 	}
 	if (player intersects geometry "door-oldcouplehouse") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-oldcouplehouse";
 	}
 	if (player intersects geometry "door-bobsclub") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map "ch2-bobsclub";
 	}
 	if (player intersects geometry "door-woprhouse") {
-		warp_state = "ch2-town";
+		warp_state = "ch2_town";
 		load map woprhouse; // both chapters use the same map
 	}
 	if (player intersects geometry "east-hitbox") {
 		player path = "east-point";
-		warp_state = "walk_from-west";
+		warp_state = "walk_from_west";
 		player on_tick = on_tick_ch2_town_walkfadeout;
 		camera fade out -> #000000 over 500ms;
 		load map "ch2-town";
 	}
 	if (player intersects geometry "west-hitbox") {
 		player path = "west-point";
-		warp_state = "walk_from-east";
+		warp_state = "walk_from_east";
 		player on_tick = on_tick_ch2_town_walkfadeout;
 		camera fade out -> #000000 over 500ms;
 		load map "ch2-castle-outside";

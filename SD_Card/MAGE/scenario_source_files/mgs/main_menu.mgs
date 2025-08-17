@@ -74,7 +74,7 @@ debug_post {
 	ch2_ring_zero_enabled_in_castle = true;
 	ch2_storyflag_round = 5;
 	credits_from_menu = false;
-	warp_state = "ch2-ending";
+	warp_state = "ch2_ending";
 	load map "ch2-castle-outside";
 }
 
@@ -514,7 +514,7 @@ menu_chapter_select_2 {
 	if (!ch2_cutseen_birthday) {
 		load map "ch2-magehouse-birthday";
 	}
-	warp_state = "raw_game_load-ch2";
+	warp_state = "raw_game_load_ch2";
 	if (playersave_room == 1) {
 		copy!(ch2_load_castle_1_special)
 	} else {

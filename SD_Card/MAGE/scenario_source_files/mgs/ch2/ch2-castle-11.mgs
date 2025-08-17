@@ -36,12 +36,12 @@ on_load_ch2_castle_11_postgame {
 	// entrance text
 	show serial_dialog spacer;
 	show serial_dialog { "Entering <bold>CASTLE HALLWAY FRONT</>..." };
-	if (warp_state == "walk_from-north") {
-		player position = geometry "walk_from-north";
-	} else if (warp_state == "walk_from-south") {
-		player position = geometry "walk_from-south";
-	} else if (warp_state == "walk_from-west") {
-		player position = geometry "walk_from-west";
+	if (warp_state == "walk_from_north") {
+		player position = geometry "walk_from_north";
+	} else if (warp_state == "walk_from_south") {
+		player position = geometry "walk_from_south";
+	} else if (warp_state == "walk_from_west") {
+		player position = geometry "walk_from_west";
 	}
 	copy!(ch2_map_init)
 }
@@ -191,15 +191,15 @@ on_tick_ch2_castle_11 {}
 on_tick_ch2_castle_11_postgame {
 	if (player intersects geometry "south-hitbox") {
 		copy!(on_exit_ch2_castle_11)
-		warp_state = "walk_from-north";
+		warp_state = "walk_from_north";
 		copy!(ch2_load_castle_1_special)
 	} else if (player intersects geometry "north-hitbox") {
 		copy!(on_exit_ch2_castle_11)
-		warp_state = "walk_from-south";
+		warp_state = "walk_from_south";
 		copy!(ch2_load_castle_12_special)
 	} else if (player intersects geometry "west-hitbox") {
 		copy!(on_exit_ch2_castle_11)
-		warp_state = "walk_from-east";
+		warp_state = "walk_from_east";
 		copy!(ch2_load_castle_21_special)
 	}
 }

@@ -101,7 +101,7 @@ on_load_ch2_magehouse {
 
 on_tick_ch2_magehouse {
 	if (player intersects geometry "south-hitbox") {
-		warp_state = "walk_from-magehouse";
+		warp_state = "walk_from_magehouse";
 		load map "ch2-town";
 	}
 }
