@@ -3,7 +3,6 @@ const path = require('path');
 const window = {
 	fastPng: require(`${__dirname}/../dependencies/fast-png`),
 	omggif: require(`${__dirname}/../dependencies/omggif`),
-	mgs: require(`${__dirname}/../dependencies/tree-sitter-magegamescript/dist/mgs-lib.umd.js`),
 	imageCache: {},
 };
 
@@ -38,7 +37,6 @@ try {
 }
 
 const modules = [
-	"natlang_mgs",
 	"common",
 	"maps",
 	"tilesets",
@@ -58,14 +56,23 @@ const modules = [
 
 var moduleString = "";
 
+moduleString += 'process = undefined;\n';
+moduleString += fs.readFileSync(`${__dirname}/../dependencies/tree-sitter-magegamescript/dist/mgs-lib.umd.js`);
+moduleString += 'window.MGSParser = exports;\n';
+// moduleString += 'debugger;\n'
+
 for (m of modules) {
 	moduleString += fs.readFileSync(`${__dirname}/../js/${m}.js`);
 }
 
-//for ()
-//JSON.parse(fs.readFileSync(scenarioFile))
+eval(`{
+	// curlies to encapsulate these evals inside a scoping block.
 
-eval(moduleString);
+	// kill process because TreeSitter keeps checking for "process" at runtime, gotta kill it to operate without all the weird module internals
+	var process = undefined;
+	global.process = undefined;
+	${moduleString}
+}`);
 
 // use value from above for verbose since var `verbose` got overwritten when evaluating the module string,
 // but parsing for verbose arg can't be moved down here since input and output args have already been used
