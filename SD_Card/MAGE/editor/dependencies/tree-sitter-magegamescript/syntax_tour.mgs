@@ -8,6 +8,8 @@ add serial_dialog settings {}
 add dialog settings {}
 script scriptName {}
 script "scriptName" {}
+fn functionDefinition ($arg, $arg) {}
+fn "functionDefinition" ($arg, $arg) {}
 // line comment, parsed but ignored
 /* block comment, parsed but ignored */
 // whitespace is also parsed but ignored fwiw
@@ -100,7 +102,8 @@ _ {
 	debug!()
 	debug!(serialDialogName)
 	debug!("serial dialog messages")
-	copy!(scriptName) //COPY_SCRIPT
+	copyScript() //COPY_SCRIPT
+	functionCall(Bob, 430, true)
 	json[] // Anything inside the brackets will be arbitrary actions. Action == obj literal, comma-separated
 	rand!()
 

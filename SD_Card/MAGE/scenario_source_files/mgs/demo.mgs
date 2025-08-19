@@ -98,7 +98,7 @@ show_dialog_dsheep_demo_map {
 }
 
 show_dialog_max_demo_map {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Ah, a citizen!"
 		"I wondered if you could help me!"
@@ -115,7 +115,7 @@ show_dialog_max_demo_map {
 	self direction += 1;
 	wait 800ms;
 	player_control = on;
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Not fully implemented?"
 		PLAYER "Sorry."
@@ -132,7 +132,7 @@ show_dialog_max_demo_map {
 }
 
 show_dialog_timmy_demo_map {
-	copy!(interrupt_walk)
+	interrupt_walk()
 	show dialog {
 		SELF "I'm practicing for my triathlon!"
 		"Running is my weakest event, so I'm working hard to improve my time!"
@@ -140,15 +140,15 @@ show_dialog_timmy_demo_map {
 		SELF "...?"
 		"No?"
 	};
-	copy!(resume_walk)
+	resume_walk()
 }
 
 show_dialog_kid_demo_map {
-	copy!(interrupt_walk)
+	interrupt_walk()
 	show dialog {
 		SELF "I'm gonna be a Blitzball when I grow up!"
 	};
-	copy!(resume_walk)
+	resume_walk()
 }
 
 show_dialog_goose_demo_map {
@@ -159,7 +159,7 @@ show_dialog_goose_demo_map {
 
 show_dialog_beatrice_demo_map {
 	player_control = off;
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Back when he was a young man, my husband Delmar hand-carved all the statues on the fountains around town."
 		"Such a shame that this one isn't working. I wonder if something is clogging the pump."
@@ -168,7 +168,7 @@ show_dialog_beatrice_demo_map {
 	wait 600ms;
 	self direction -= 2;
 	wait 600ms;
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Between you and me.... I think the goose has something to do with it."
 	};
@@ -177,7 +177,7 @@ show_dialog_beatrice_demo_map {
 }
 
 show_dialog_trekkie_demo_map {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Me heard you will soon have a birthday!"
 		PLAYER "That's right! I'll be turning 16, and I'll get to be an official village mage!"
@@ -187,7 +187,7 @@ show_dialog_trekkie_demo_map {
 }
 
 show_dialog_verthandi_demo_map {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "I'm so glad the goats made up and are friends again!"
 	};
@@ -228,7 +228,7 @@ show_dialog_cat_demo_map {
 }
 
 show_dialog_smith_demo_map {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "I came here on a blacksmithing scholarship, but there's not much blacksmithing to do at the moment."
 		"I think I'll stick around anyway. See what happens."

@@ -103,7 +103,7 @@ ch2_toot_step5c {
 
 ch2_toot_step5e {
 	// state must be set first because the serial_dialog branches
-	copy!(ch2_toot_step99_cleanstate)
+	ch2_toot_step99_cleanstate()
 	// actual convo
 	show serial_dialog spacer;
 	show serial_dialog {
@@ -122,8 +122,8 @@ ch2_toot_step99_cleanstate {
 
 ch2_toot_step99 {
 	ch2_storyflag_round = 1;
-	copy!(register_parts)
-	copy!(ch2_put_on_map_round1)
+	register_parts()
+	ch2_put_on_map_round1()
 	show serial_dialog {
 		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"
 		" "
@@ -258,7 +258,7 @@ ch2_lambda_round_2_parts5c {
 ch2_lambda_round_2_parts5d {
 	ch2_lambda_paging = false;
 	ch2_parts_round_2_backstory = true;
-	copy!(ch2_put_on_map_round2)
+	ch2_put_on_map_round2()
 	show serial_dialog spacer;
 	show serial_dialog {
 		"<c>YOU</>: Anything else?"
@@ -273,7 +273,7 @@ ch2_lambda_round_2_parts5d {
 /* ---------- PARTS LIST: ROUND 3 ---------- */
 
 ch2_bert_message_lambda_intro {
-	copy!(ch2_put_on_map_round3)
+	ch2_put_on_map_round3()
 	show serial_dialog spacer;
 	show serial_dialog {
 		"<m>LAMBDA</>: Hey, there! I saw that you finished the last list, and had just worked out the last few parts we need...."
@@ -443,12 +443,12 @@ ch2_lambda_round_4d {
 		"\tI'll... uh, I guess I'll see you soon. Good luck."
 		" "
 	};
-	copy!(ch2_put_on_map_round4)
+	ch2_put_on_map_round4()
 	ch2_lambda_paging = false;
 	ch2_warp_granted = true;
 	ch2_parts_round_4_backstory = true;
 	if (!debug_mode) {
-		copy!(register_warp)
+		register_warp()
 	}
 	show serial_dialog lambda_over;
 }

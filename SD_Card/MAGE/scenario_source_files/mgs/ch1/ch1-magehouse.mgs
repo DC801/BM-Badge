@@ -193,7 +193,7 @@ show_dialog_zappy_start {
 			SELF "Abj V srry rkgen mnccl!"
 		};
 	} else {
-		copy!(face_player)
+		face_player()
 		show dialog {
 			SELF "Did you remember to feed %Mr. Tickles% today?"
 		};
@@ -204,7 +204,7 @@ show_dialog_zippy_start {
 	if (self glitched) {
 		show dialog { SELF "Jbj, guvf srryf ernyyl jrveq! Vg erzvaqf zr bs guvf bar gvzr va pbyyrtr...." };
 	} else {
-		copy!(face_player)
+		face_player()
 		show dialog { SELF "How's your day going, %PLAYER%?" };
 	}
 }
@@ -225,7 +225,7 @@ show_dialog_goldfish {
 		};
 		if (!goldfish_unglitched) {
 			if (ring_acquired) {
-				copy!(set_hint_glitch)
+				set_hint_glitch()
 			}
 		}
 	}
@@ -292,7 +292,7 @@ debug_walk_to_lodge_q {
 }
 
 debug_walk_to_lodge {
-	copy!(walk_to_lodge)
+	walk_to_lodge()
 }
 
 debug_walk_to_lodge_no {
@@ -314,14 +314,14 @@ debug_goodmorning {
 		SELF "Walk through the doorway to begin cutscene."
 	};
 	hex_control = off;
-	copy!(set_goodmorning_flags_false)
+	set_goodmorning_flags_false()
 	map on_tick = on_tick_magehouse;
 }
 
 debug_goodmorning_plus {
 	show dialog dialog_debug_goodmorning;
 	hex_control = off;
-	copy!(set_goodmorning_flags_false)
+	set_goodmorning_flags_false()
 	ring_acquired = false;
 	hide_lodge_crowd = false;
 	hide_lodge_crowd_mini = false;
@@ -346,7 +346,7 @@ debug_everything_q {
 debug_everything_on {
 	debug_mode = true;
 	hex_control = on;
-	copy!(set_goodmorning_flags_true)
+	set_goodmorning_flags_true()
 	tuesday_walkedup = true;
 	hintman_explanation = true;
 	map on_tick = on_tick_magehouse;

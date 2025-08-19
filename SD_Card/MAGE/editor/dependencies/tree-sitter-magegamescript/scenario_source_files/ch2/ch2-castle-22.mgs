@@ -40,7 +40,7 @@ on_load_ch2_castle_22_postgame {
 	} else if (warp_state == "walk_from-north") {
 		player position = geometry "walk_from-north";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 on_load_ch2_castle_22 {
 	if (warp_state == "ch2 ending") {
@@ -60,10 +60,10 @@ on_load_ch2_castle_22 {
 
 	// room unique stuff
 	if (ch2_installed_powersupply || ch2_carrying_powersupply) {
-		copy!(ch2_hide_powersupply)
+		ch2_hide_powersupply()
 	}
 	
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -71,13 +71,13 @@ on_load_ch2_castle_22 {
 on_tick_ch2_castle_22 {}
 on_tick_ch2_castle_22_postgame {
 	if (player intersects geometry "south-hitbox") {
-		copy!(on_exit_ch2_castle_22)
+		on_exit_ch2_castle_22()
 		warp_state = "walk_from-north";
-		copy!(ch2_load_castle_21_special)
+		ch2_load_castle_21_special()
 	} else if (player intersects geometry "north-hitbox") {
-		copy!(on_exit_ch2_castle_22)
+		on_exit_ch2_castle_22()
 		warp_state = "walk_from-south";
-		copy!(ch2_load_castle_23_special)
+		ch2_load_castle_23_special()
 	}
 }
 
@@ -90,21 +90,21 @@ on_exit_ch2_castle_22 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_22_north {
-	copy!(on_exit_ch2_castle_22)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_23_special)
+	on_exit_ch2_castle_22()
+	warping_out_fade_out()
+	ch2_load_castle_23_special()
 }
 on_go_castle_22_south {
-	copy!(on_exit_ch2_castle_22)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_21_special)
+	on_exit_ch2_castle_22()
+	warping_out_fade_out()
+	ch2_load_castle_21_special()
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_scuzzy {
 	player_control = off;
-	copy!(interrupt_walk)
+	interrupt_walk()
 	if (!ch2_scuzzy_backstory) {
 		show dialog {
 			SELF "The quake caused a lot of infrastructure damage around here. We're trying to reroute things and compensate with software."
@@ -116,18 +116,18 @@ interact_ch2_scuzzy {
 			"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
 			"In isolation each room -- and each of us -- are capable of little. But when we can connect people to each other, we can collaborate and build amazing things."
 		};
-		copy!(resume_walk)
+		resume_walk()
 		wait 500ms;
-		copy!(interrupt_walk)
+		interrupt_walk()
 		show dialog {
 			SELF "I mean, the castle is also a computer in a LITERAL sense, too...."
 		};
 	}
-	copy!(resume_walk)
+	resume_walk()
 	player_control = on;
 }
 interact_ch2_ckwatt {
-	copy!(face_player)
+	face_player()
 	if (!ch2_ckwatt_backstory) {
 		show dialog {
 			SELF "Huh? You need a power supply?"
@@ -148,12 +148,12 @@ interact_ch2_ckwatt {
 	self direction = south;
 }
 interact_ch2_ckwatt_end {
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "I wanna get down to the great hall, but we're not quite done yet. Don't wanna be sloppy."};
 	self direction = south;
 }
 interact_ch2_scuzzy_end {
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "I'm glad the king and his staff were able to clear the debris blocking the doors. Not that we can leave yet -- still more to do."};
 	self direction = south;
 }
@@ -192,8 +192,8 @@ ch2_touch_powersupply_yes {
 	show dialog {
 		name "" "(You pick up the power supply!)"
 	};
-	copy!(ch2_hide_powersupply)
-	copy!(ch2_pickup_powersupply)
+	ch2_hide_powersupply()
+	ch2_pickup_powersupply()
 	self on_interact = null_script;
 }
 ch2_touch_powersupply_no {

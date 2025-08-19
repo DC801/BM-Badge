@@ -68,7 +68,7 @@ on_load_ch2_castle_31_postgame {
 	} else if (warp_state == "walk_from-west") {
 		player position = geometry "walk_from-west";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 on_load_ch2_castle_31 {
@@ -86,13 +86,13 @@ on_load_ch2_castle_31 {
 
 	// room unique stuff
 	if (ch2_installed_keyboard || ch2_carrying_keyboard) {
-		copy!(ch2_hide_keyboard)
+		ch2_hide_keyboard()
 	}
 
 	ch2_simon_heard_high = false;
 	ch2_simon_heard_low = false;
 
-	copy!(ch2_map_init)
+	ch2_map_init()
 	//DEBUG STUFF
 	if (debug_mode) {
 		command simon = debug_simon;
@@ -135,13 +135,13 @@ debug_simon_lose {
 on_tick_ch2_castle_31 {}
 on_tick_ch2_castle_31_postgame {
 	if (player intersects geometry "north-hitbox") {
-		copy!(on_exit_ch2_castle_31)
+		on_exit_ch2_castle_31()
 		warp_state = "walk_from-south";
-		copy!(ch2_load_castle_32_special)
+		ch2_load_castle_32_special()
 	} else if (player intersects geometry "west-hitbox") {
-		copy!(on_exit_ch2_castle_32)
+		on_exit_ch2_castle_32()
 		warp_state = "walk_from-east";
-		copy!(ch2_load_castle_12_special)
+		ch2_load_castle_12_special()
 	}
 }
 
@@ -154,14 +154,14 @@ on_exit_ch2_castle_31 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_31_north {
-	copy!(on_exit_ch2_castle_31)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_32_special)
+	on_exit_ch2_castle_31()
+	warping_out_fade_out()
+	ch2_load_castle_32_special()
 }
 on_go_castle_31_west {
-	copy!(on_exit_ch2_castle_31)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_12_special)
+	on_exit_ch2_castle_31()
+	warping_out_fade_out()
+	ch2_load_castle_12_special()
 }
 
 
@@ -245,7 +245,7 @@ interact_ch2_simon {
 				Simon emote 1 "Change your mind about a keytar battle? I'll let you keep the keyboard if you win. Come on, I'm bored to tears!"
 			};
 		}
-		copy!(simon_game_launcher)
+		simon_game_launcher()
 	}
 	else if (interrupt) {
 		entity Simon current_animation = 12;
@@ -253,7 +253,7 @@ interact_ch2_simon {
 			Simon emote 1 "Ah, man! I'm still sweatin' after that last one!"
 			"But I'm not out for the count yet! Want another go?"
 		};
-		copy!(simon_game_launcher)
+		simon_game_launcher()
 	}
 	else {
 		entity Simon current_animation = 12;
@@ -287,7 +287,7 @@ interact_ch2_simon {
 			};
 			ch2_simon_repeat_brunhilda_backstory = true;
 		}
-		copy!(simon_game_launcher)
+		simon_game_launcher()
 	}
 }
 interact_ch2_theodore_end {
@@ -303,7 +303,7 @@ interact_ch2_kuro_end {
 	show dialog { SELF "I've been following this group since they were \"64 Bits\"! I hope they play \"Scary Pointer Math\" tonight! Or maybe \"The Off-By-One Blues\"!" };
 }
 interact_ch2_gloria_end {
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "I'm not sure if this is the same band that was on the flyer. Oh, well. I'll give them a shot." };
 	self direction = north;
 }
@@ -314,7 +314,7 @@ interact_ch2_samson_end {
 	};
 }
 interact_ch2_tracy_end {
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "Guess the refreshments are self serve this time. That's a bit on the cheap side...." };
 	self direction = south;
 }

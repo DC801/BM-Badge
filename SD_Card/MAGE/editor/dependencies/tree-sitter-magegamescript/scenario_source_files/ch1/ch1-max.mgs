@@ -128,9 +128,9 @@ send_cats_to_work {
 	catwork_quest_done = true;
 	entity "Max Swagger" animation -> 5 once;
 	entity "Max Swagger" current_animation = 0;
-	copy!(calculate_hint_tracking_series)
+	calculate_hint_tracking_series()
 	if (hint_tracking_check == 6) {
-		copy!(set_hint_none)
+		set_hint_none()
 	}
 	goto null_script;
 }
@@ -152,7 +152,7 @@ show_dialog_felix {
 			SELF "Sxas. T'gp mppy hzcvtyr dz slco T'x slwwfntyletyr!"
 		};
 	} else {
-		copy!(set_hint_max)
+		set_hint_max()
 		if (player type == pipscat) {
 			show dialog { SELF "Okay, boss. We good to go?" };
 		} else {
@@ -164,7 +164,7 @@ show_dialog_deut {
 	if (self glitched) {
 		show dialog { SELF "Abj gung'f n gevc." };
 	} else {
-		copy!(set_hint_max)
+		set_hint_max()
 		if (player type == pipscat) {
 			show dialog { SELF "Oh, good! You're here! Gonna give the thumbs up?" };
 		} else {
@@ -186,7 +186,7 @@ show_dialog_bmurray {
 	if (self glitched) {
 		show dialog { SELF "Ib, hi... C ehyq nbun wunhcj qum vux!" };
 	} else {
-		copy!(set_hint_max)
+		set_hint_max()
 		if (player type == pipscat) {
 			show dialog { SELF "So is it a yea or a nay? Go ahead, show us what you decided." };
 		} else {
@@ -201,31 +201,31 @@ show_dialog_max_start {
 			SELF "Azr. Vm jvbyzl aolyl'k il huvaoly jvtwspjhapvu!"
 		};
 	} else if (catwork_quest_done) {
-		copy!(face_player)
+		face_player()
 		show dialog {
 			entity "Max Swagger"
 			"Finally! Now work on my fashion shop can progress!"
 		};
 	} else if (player type == pipscat) {
-		copy!(face_player)
+		face_player()
 		show dialog {
 			entity "Max Swagger"
 			"Oh! The cat boss, here at last!"
 			"Come on, then! Press square to show us you approve of the plans!"
 		};
-		copy!(set_hint_max)
+		set_hint_max()
 		max_backstory = true;
 	} else if (max_backstory) {
-		copy!(face_player)
+		face_player()
 		show dialog {
 			SELF "All the crew needs to begin now is a thumbs up from their boss!"
 			"Where is that cat?"
 		};
-		copy!(set_hint_max)
+		set_hint_max()
 	} else {
 		player_control = off;
 		wait 200ms;
-		copy!(face_player)
+		face_player()
 		wait 400ms;
 		show dialog {
 			SELF "Ah, yes! I know you!"
@@ -249,7 +249,7 @@ show_dialog_max_start {
 			SELF "The CONSTRUCTION CREW must finish building the interior!!"
 		};
 		wait 200ms;
-		copy!(face_player)
+		face_player()
 		wait 400ms;
 		show dialog {
 			SELF "They have everything they need to begin and yet they won't do any work!"
@@ -270,14 +270,14 @@ show_dialog_max_start {
 			SELF "Yes, of course! Of course the boss must approve first!"
 		};
 		wait 200ms;
-		copy!(face_player)
+		face_player()
 		wait 400ms;
 		show dialog {
 			SELF "But the boss is nowhere around!"
 			"I gave him the plans days ago! What could possibly be taking so long?"
 		};
 		max_backstory = true;
-		copy!(set_hint_max)
+		set_hint_max()
 		player_control = on;
 	}
 }

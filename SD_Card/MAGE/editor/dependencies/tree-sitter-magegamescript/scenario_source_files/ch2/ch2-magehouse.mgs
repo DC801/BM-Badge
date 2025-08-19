@@ -94,7 +94,7 @@ on_load_ch2_magehouse {
 		entity "Aunt Zippy" position = geometry "alt-spot2";
 		entity "Uncle Zappy" position = geometry "alt-spot1";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -109,14 +109,14 @@ on_tick_ch2_magehouse {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_magehouse_south {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-town";
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_zappy {
-	copy!(face_player)
+	face_player()
 	if (ch2_storyflag_round == 0) {
 		show dialog {
 			SELF "Good morning, %PLAYER%! Off to the castle this morning?"
@@ -150,7 +150,7 @@ interact_ch2_zappy {
 	}
 }
 interact_ch2_zippy {
-	copy!(face_player)
+	face_player()
 	if (ch2_storyflag_round == 0) {
 		show dialog {
 			SELF "If you need a break from the castle out west, don't forget to come back home for a visit."

@@ -37,11 +37,11 @@ on_load_ch2_castle_33 {
 
 	// room unique stuff
 	if (ch2_installed_mouse || ch2_carrying_mouse) {
-		copy!(ch2_hide_mouse)
+		ch2_hide_mouse()
 	}
 	ch2_mousegame = false;
 
-	copy!(ch2_map_init)
+	ch2_map_init()
 	if (debug_mode) {
 		command mousegame = ch2_debug_mousegame;
 		show serial_dialog {
@@ -89,7 +89,7 @@ on_tick_ch2_castle_33 {
 			player_control = on;
 		} else {
 			warp_state = "walk_from_northwest";
-			copy!(ch2_load_castle_32_special)
+			ch2_load_castle_32_special()
 		}
 	}
 	if (ch2_mousegame) {
@@ -106,9 +106,9 @@ on_exit_ch2_castle_33 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_33_south {
-	copy!(on_exit_ch2_castle_33)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_32_special)
+	on_exit_ch2_castle_33()
+	warping_out_fade_out()
+	ch2_load_castle_32_special()
 }
 
 /* ---------- ENTITIES ---------- */
@@ -134,7 +134,7 @@ interact_ch2_gregory_breakyes {
 		SELF "I'll take the mouse proximity detector back then, then."
 	};
 	ch2_mousegame = false;
-	copy!(ch2_map_init_hex)
+	ch2_map_init_hex()
 	show dialog {
 		SELF "Let me know when you want to have another go."
 	};
@@ -148,7 +148,7 @@ interact_ch2_gregory_breakno {
 }
 
 interact_ch2_gregory {
-	copy!(face_player)
+	face_player()
 	if (ch2_mousegame) {
 		if (!interrupt) {
 			show dialog {
@@ -184,7 +184,7 @@ interact_ch2_gregory {
 				"These hydroponics trays, the induction stovetops in the next room... that kind of thing."
 			};
 			entity Gregory on_tick = face_player;
-			copy!(face_player)
+			face_player()
 			show dialog {
 				SELF "They did some structural reinforcement, too, but don't remember specifics."
 				"At the time, the only thing I cared about was my new stovetop."
@@ -253,7 +253,7 @@ interact_ch2_gregory {
 				SELF "It's loose in this room somewhere, but I'm not as fast as I used to be, and can't quite get ahold of it."
 			};
 			entity Gregory on_tick = face_player;
-			copy!(face_player)
+			face_player()
 			show dialog {
 				SELF "It's hiding in one of the hydroponics bins, I should think."
 				PLAYER "I'm sorry... your bluetooth mouse is hiding in the vegetables?"
@@ -285,7 +285,7 @@ interact_ch2_gregory {
 				PLAYER "Um...."
 				SELF "The more lights come on, the closer you are to finding it. Walk around a bit and see for yourself."
 			};
-			copy!(ch2_map_init_hex)
+			ch2_map_init_hex()
 			entity Lights on_tick = $lightsdefault;
 			show dialog {
 				SELF "Well, let me know when you want to have a go, anyway."
@@ -368,9 +368,9 @@ ch2_touch_mouse {
 		player direction = entity Gregory;
 		camera fade in -> black over 400ms;
 		player_control = on;
-		copy!(ch2_map_init_hex)
-		copy!(ch2_hide_mouse)
-		copy!(ch2_pickup_mouse)
+		ch2_map_init_hex()
+		ch2_hide_mouse()
+		ch2_pickup_mouse()
 		show dialog {
 			Gregory "Don't forget this -- the USB dongle. Now you can use that mouse with computers that don't have bluetooth hardware built in."
 			PLAYER "This thingy plugs into a USB port? What if the mainframe doesn't have one of those?"

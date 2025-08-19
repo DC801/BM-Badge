@@ -64,7 +64,7 @@ on_load_ch2_castle_12_postgame {
 	} else if (warp_state == "walk_from-east") {
 		player position = geometry "walk_from-east";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 on_load_ch2_castle_12 {
@@ -82,11 +82,11 @@ on_load_ch2_castle_12 {
 
 	// room unique stuff
 	if (ch2_installed_needle || ch2_carrying_needle) {
-		copy!(ch2_hide_needle)
+		ch2_hide_needle()
 	}
 	
 	// initialize everything
-	copy!(ch2_map_init)
+	ch2_map_init()
 
 	// intro dialog "cutscene"
 	if (!ch2_cutseen_castle12) {
@@ -103,17 +103,17 @@ on_load_ch2_castle_12 {
 on_tick_ch2_castle_12 {}
 on_tick_ch2_castle_12_postgame {
 	if (player intersects geometry "south-hitbox") {
-		copy!(on_exit_ch2_castle_12)
+		on_exit_ch2_castle_12()
 		warp_state = "walk_from-north";
-		copy!(ch2_load_castle_11_special)
+		ch2_load_castle_11_special()
 	} else if (player intersects geometry "north-hitbox") {
-		copy!(on_exit_ch2_castle_12)
+		on_exit_ch2_castle_12()
 		warp_state = "walk_from-south";
-		copy!(ch2_load_castle_13_special)
+		ch2_load_castle_13_special()
 	} else if (player intersects geometry "east-hitbox") {
-		copy!(on_exit_ch2_castle_12)
+		on_exit_ch2_castle_12()
 		warp_state = "walk_from-west";
-		copy!(ch2_load_castle_31_special)
+		ch2_load_castle_31_special()
 	}
 }
 
@@ -126,19 +126,19 @@ on_exit_ch2_castle_12 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_12_north {
-	copy!(on_exit_ch2_castle_12)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_13_special)
+	on_exit_ch2_castle_12()
+	warping_out_fade_out()
+	ch2_load_castle_13_special()
 }
 on_go_castle_12_east {
-	copy!(on_exit_ch2_castle_12)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_31_special)
+	on_exit_ch2_castle_12()
+	warping_out_fade_out()
+	ch2_load_castle_31_special()
 }
 on_go_castle_12_south {
-	copy!(on_exit_ch2_castle_12)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_11_special)
+	on_exit_ch2_castle_12()
+	warping_out_fade_out()
+	ch2_load_castle_11_special()
 }
 
 /* ---------- ENTITIES ---------- */
@@ -202,7 +202,7 @@ interact_ch2_concierge {
 		};
 		ch2_concierge_backstory = true;
 		if (ch2_storyflag_round >= 2) {
-			copy!(ch2_stereo_fix_proposal)
+			ch2_stereo_fix_proposal()
 			ch2_ws_backstory = true;
 		}
 	} else if (ch2_storyflag_round < 2 || ch2_needle_permission) {
@@ -220,9 +220,9 @@ interact_ch2_concierge {
 		}
 	} else {
 		if (ch2_ws_won) {
-			copy!(ch2_ws_cutscene)
+			ch2_ws_cutscene()
 		} else if (!ch2_ws_backstory) {
-			copy!(ch2_stereo_fix_proposal)
+			ch2_stereo_fix_proposal()
 		} else {
 			show dialog {
 				Concierge "Go on, now. I'll let you have the needle off this phonograph is you get the stereo working again. It's the black thing behind me."
@@ -305,8 +305,8 @@ ch2_touch_needle_yes {
 	show dialog {
 		name "" "(You pick up the needle!)"
 	};
-	copy!(ch2_hide_needle)
-	copy!(ch2_pickup_needle)
+	ch2_hide_needle()
+	ch2_pickup_needle()
 	interrupt2 = false;
 	self on_interact = ch2_touch_needle;
 }
@@ -329,15 +329,15 @@ serial_dialog ch2_ws_col { "</>   " }
 
 ch2_ws_doturn {
 	show serial_dialog spacer;
-	copy!(ch2_ws_count_flags)
+	ch2_ws_count_flags()
 	show serial_dialog {
 		wrap 100
 		"                          <bold>WORD SEARCH!</>"
 		"Find words meaningful to the stereo system to cut through its amnesia."
 		"         Type a word! (or type Q to quit)            <y>Pts to win: $ch2_ws_flags_tally$/20</>"
 	};
-	copy!(ch2_ws_draw_map)
-	copy!(ch2_ws_turn_message)
+	ch2_ws_draw_map()
+	ch2_ws_turn_message()
 	show serial_dialog ch2_ws_input;
 	// if you didn't trigger one of the defined inputs, it counts as a miss:
 	ch2_ws_turn_value = 0;
@@ -350,7 +350,7 @@ ch2_ws_doturn {
 ch2_ws_guess_quit {
 	ch2_ws_turn_value = 0;
 	ch2_ws_turn_status = 0;
-	copy!(ch2_ws_count_flags)
+	ch2_ws_count_flags()
 	show serial_dialog spacer;
 	if (ch2_ws_flags_tally == 0) {
 		show serial_dialog {

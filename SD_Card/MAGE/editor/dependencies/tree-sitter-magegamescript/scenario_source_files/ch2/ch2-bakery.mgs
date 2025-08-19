@@ -42,7 +42,7 @@ on_load_ch2_bakery {
 		entity Jackob on_tick = yeet;
 	}
 	// All the rest
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -58,14 +58,14 @@ on_tick_ch2_bakery {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_bakery_south {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-town";
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_baker {
-	copy!(interrupt_walk)
+	interrupt_walk()
 	if (ch2_storyflag_round >= 5) {
 		show dialog {
 			SELF "Good job building that computer. That's really impressive."
@@ -76,11 +76,11 @@ interact_ch2_baker {
 			"But good luck conquering the serial castle."
 		};
 	}
-	copy!(resume_walk)
+	resume_walk()
 }
 
 interact_ch2_jackob_bakery {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "I'm just taking a little shopping break. Sometimes you just really want some fresh bread, you know?"
 		"Mmmm, fresh bread!"

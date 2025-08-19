@@ -23,7 +23,7 @@ on_load_oldcouplehouse {
 	}
 	if (bea_sequel_branch) {
 		if (!bea2_quest_done) {
-			copy!(make_delmar_man)
+			make_delmar_man()
 		}
 	}
 }
@@ -69,8 +69,8 @@ show_dialog_bea_start {
 	if (self glitched) {
 		show dialog { SELF "Ydy D ymjk ht bgvnnzn? Ocz rjmgy'n bjiz v wdo apuut." };
 	} else {
-		copy!(clear_own_tick)
-		copy!(face_player)
+		clear_own_tick()
+		face_player()
 		if (!bea_sequel_branch) {
 			goto show_dialog_bea_part1;
 		} else {
@@ -104,8 +104,8 @@ show_dialog_bea_part1 {
 		if (entity Delmar type == old_man) { // win condition met
 			// currently no backstory/!backstory difference
 			player_control = off;
-			copy!(clear_own_tick)
-			copy!(slow_stare_at_delmar)
+			clear_own_tick()
+			slow_stare_at_delmar()
 			player_control = on;
 			show dialog {
 				SELF "Oh, %Delmar%, it's you! You're a man again! At last!"
@@ -113,9 +113,9 @@ show_dialog_bea_part1 {
 				SELF "Oh, it's my %Delmar%! Thank you, %PLAYER%!"
 			};
 			self direction = entity Delmar;
-			copy!(calculate_hint_tracking_series)
+			calculate_hint_tracking_series()
 			if (hint_tracking_check == 4) {
-				copy!(set_hint_none)
+				set_hint_none()
 			}
 			bea1_backstory = true;
 			bea1_quest_done = true;
@@ -126,16 +126,16 @@ show_dialog_bea_part1 {
 						SELF "Forty years ago, things were sure different."
 						"I was a lot younger then, and my husband, %Delmar%...."
 					};
-					copy!(clear_own_tick)
-					copy!(slow_stare_at_delmar)
+					clear_own_tick()
+					slow_stare_at_delmar()
 					show dialog { SELF "My husband was a real man! Not a farm animal!" };
-					copy!(slow_stare_at_player)
+					slow_stare_at_player()
 					player_control = on;
 				} else { // is rando
-					copy!(clear_own_tick)
-					copy!(slow_stare_at_delmar)
+					clear_own_tick()
+					slow_stare_at_delmar()
 					show dialog { SELF "Oh, %Delmar%! You're... oh...." };
-					copy!(face_player)
+					face_player()
 					show dialog {
 						SELF "Oh, goodness. Well, this isn't my %Delmar%, but I suppose it's nice he's not a sheep anymore, at least."
 						"He's been a sheep for so long... well, I suppose it's been forty years."
@@ -158,8 +158,8 @@ show_dialog_bea_part1 {
 			} else { // you DID hear the backstory (sheep or rando)
 				show dialog { SELF "Oh, %Delmar%... we'll fix you up real soon!" };
 			}
-			copy!(set_tick_watch_player)
-			copy!(set_hint_bea1)
+			set_tick_watch_player()
+			set_hint_bea1()
 		}
 	} else { // you DID beat part1
 		if (entity Delmar type == old_man) {
@@ -197,9 +197,9 @@ show_dialog_bea_part2 {
 				};
 			}
 			self direction = entity Delmar;
-			copy!(calculate_hint_tracking_series)
+			calculate_hint_tracking_series()
 			if (hint_tracking_check == 9) {
-				copy!(set_hint_none)
+				set_hint_none()
 			}
 			bea2_backstory = true;
 			bea2_quest_done = true;
@@ -207,10 +207,10 @@ show_dialog_bea_part2 {
 			if (entity Delmar type == old_man) {
 				if (!bea2_backstory) {
 					show dialog { SELF "...." "You know, I appreciate what you did, %PLAYER%. I really do." };
-					copy!(clear_own_tick)
-					copy!(slow_stare_at_delmar)
+					clear_own_tick()
+					slow_stare_at_delmar()
 					show dialog { SELF "...." };
-					copy!(slow_stare_at_player)
+					slow_stare_at_player()
 					show dialog {
 						SELF "But now I find myself longing for quiet."
 						"It was so peaceful, before. %Delmar% and I used to get along so well."
@@ -230,9 +230,9 @@ show_dialog_bea_part2 {
 					"Actually, I was hoping he could become a sheep again."
 				};
 			}
-			copy!(set_tick_watch_player)
+			set_tick_watch_player()
 			bea2_backstory = true;
-			copy!(set_hint_bea2)
+			set_hint_bea2()
 		}
 	} else { // part2won
 		if (entity Delmar type == sheep || entity Delmar type == helga) {
@@ -276,7 +276,7 @@ on_tick_delmar_blab_man_watch {
 /* --------------- debug --------------- */
 
 debug_bea_sequel_q {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Set sequel branch?"
 		> "Yes (plus man)" = debug_bea_sequel_man
@@ -289,8 +289,8 @@ debug_bea_sequel_man {
 	bea1_quest_done = true;
 	bea1_backstory = true;
 	entity Delmar type = old_man;
-	copy!(set_hint_none)
-	copy!(delmar_blab)
+	set_hint_none()
+	delmar_blab()
 	show dialog { SELF "Sequel branch activated, and Delmar is a man." };
 	self on_interact = debug_bea_sequel_q;
 }
@@ -298,7 +298,7 @@ debug_bea_sequel_noman {
 	bea_sequel_branch = true;
 	bea1_quest_done = true;
 	bea1_backstory = true;
-	copy!(set_hint_none)
+	set_hint_none()
 	show dialog { SELF "Sequel branch activated, and Delmar left alone." };
 	self on_interact = debug_bea_sequel_q;
 }

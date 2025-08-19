@@ -42,7 +42,7 @@ include "header.mgs";
 		entity "Alfonso" on_tick = yeet;
 	}
 	// unique stuff done
-	copy!(ch2_map_init) // (player control comes back here)
+	ch2_map_init() // (player control comes back here)
 	// animations
 	if (warp_state == "walk_from-north") {
 		player position -> geometry "walk_from-north" length over 200ms;
@@ -60,12 +60,12 @@ include "header.mgs";
 
 "on_tick_ch2_castle_outside" {
 	if (player intersects geometry "north-hitbox") {
-		copy!("on_exit_ch2_castleoutside")
+		"on_exit_ch2_castleoutside"()
 		warp_state = "walk_from-south";
-		copy!(ch2_load_castle_1_special)
+		ch2_load_castle_1_special()
 	}
 	if (player intersects geometry "east-hitbox") {
-		copy!("on_exit_ch2_castleoutside")
+		"on_exit_ch2_castleoutside"()
 		warp_state = "walk_from-west";
 		player path = "east-point";
 		player on_tick = "on_tick_ch2_town_walkfadeout";
@@ -84,13 +84,13 @@ include "header.mgs";
 // SERIAL: go
 
 "on_go-castle-outside-north" {
-	copy!("on_exit_ch2_castleoutside")
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_1_special)
+	"on_exit_ch2_castleoutside"()
+	warping_out_fade_out()
+	ch2_load_castle_1_special()
 }
 "on_go-castle-outside-east" {
-	copy!("on_exit_ch2_castleoutside")
-	copy!(warping_out_fade_out)
+	"on_exit_ch2_castleoutside"()
+	warping_out_fade_out()
 	load map "ch2-town";
 }
 

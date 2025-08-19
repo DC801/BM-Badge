@@ -1,6 +1,6 @@
 on_load_flying_toasters {
 	camera = geometry "flying-toasters-cam";
-	copy!(on_load_bling_mode_map)
+	on_load_bling_mode_map()
 }
 
 toasters_do_path_0 {

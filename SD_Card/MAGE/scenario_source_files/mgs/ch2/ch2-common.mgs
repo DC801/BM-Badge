@@ -46,26 +46,26 @@ ch2_map_init_serial {
 		serial_control = off;
 	} else { // you have the artifact
 		serial_control = on;
-		copy!(register_rtfm)
-		copy!(register_inventory)
-		copy!(register_manual)
-		copy!(register_eastereggs)
+		register_rtfm()
+		register_inventory()
+		register_manual()
+		register_eastereggs()
 		alias h = help;
 		alias l = look;
 	}
 	if (ch2_has_map) {
-		copy!(register_map)
+		register_map()
 	}
 	if (debug_mode) {
-		copy!(register_storyflag)
-		copy!(register_warp)
+		register_storyflag()
+		register_warp()
 		serial_control = on;
 	} else if (ch2_warp_granted) {
-		copy!(register_warp)
+		register_warp()
 	}
 	if (ch2_storyflag_round > 0) {
 		if (ch2_storyflag_round < 5) {
-			copy!(register_parts)
+			register_parts()
 		}
 	}
 }
@@ -144,22 +144,22 @@ ch2_map_init_serial_debug_message {
 
 ch2_map_init_warp_in {
 	if (warp_state == warping) {
-		copy!(warping_in_fade_in)
+		warping_in_fade_in()
 	}
 	player_control = on;
 }
 
 ch2_map_init {
-	copy!(ch2_map_init_registers)
-	copy!(ch2_map_init_hex)
-	copy!(ch2_map_init_serial)
-	copy!(ch2_map_init_inventory_look)
-	copy!(ch2_map_init_serial_debug_message)
-	copy!(ch2_map_init_warp_in)
+	ch2_map_init_registers()
+	ch2_map_init_hex()
+	ch2_map_init_serial()
+	ch2_map_init_inventory_look()
+	ch2_map_init_serial_debug_message()
+	ch2_map_init_warp_in()
 	// extra goose stuff
 	if (ch2_goosefacts) {
 		command stop = stop_goosefacts;
-		copy!(goosefacts)
+		goosefacts()
 	}
 }
 

@@ -81,7 +81,7 @@ on_load_ch2_lodge_rtfm {
 		entity Alfonso on_tick = yeet;
 	}
 	// unique stuff done
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -96,7 +96,7 @@ on_tick_ch2_lodge_rtfm {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_lodge_rtfm_south {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-lodge";
 }
 
@@ -107,7 +107,7 @@ interact_ch2_alfonso_rtfm {
 	if (ch2_storyflag_round != 3) {
 		goto null_script;
 	}
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF
 		"Bert said he was going to check something, but whatever he's doing, he's sure taking his time."
@@ -120,7 +120,7 @@ interact_ch2_jackob_rtfm {
 	if (ch2_storyflag_round != 3) {
 		goto null_script;
 	}
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF
 		"We're doing just fine here, %PLAYER%, but don't you dawdle too long. Time is slipping away from us."
@@ -134,7 +134,7 @@ interact_ch2_bert_rtfm {
 	if (ch2_storyflag_round != 1) {
 		goto null_script;
 	}
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF
 		"This morning we could not find the book you need, but I want to find it still."

@@ -19,9 +19,9 @@ kid_ballwatch {
 }
 kid_now_ball {
 	sportskid_quest_done = true;
-	copy!(calculate_hint_tracking_series)
+	calculate_hint_tracking_series()
 	if (hint_tracking_check == 8) {
-		copy!(set_hint_none)
+		set_hint_none()
 	}
 	goto null_script;
 }
@@ -49,7 +49,7 @@ show_dialog_kid {
 		show dialog {
 			SELF "I'm gonna be a Blitzball when I grow up!"
 		};
-		copy!(set_hint_sportskid)
+		set_hint_sportskid()
 	}
 	// RESET
 	player on_tick = null_script;

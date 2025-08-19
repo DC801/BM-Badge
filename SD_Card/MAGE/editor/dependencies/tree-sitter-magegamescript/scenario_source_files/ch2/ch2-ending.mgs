@@ -42,7 +42,7 @@ on_tick_ch2_credits {
 		warp_state == "ch2-ending"
 		|| !credits_from_menu // todo: is this redundant with warp state? Maybe manage warp state better?
 	) {
-		copy!(ch2_load_castle_1_special)
+		ch2_load_castle_1_special()
 	} else {
 		load map main_menu;
 	}
@@ -240,7 +240,7 @@ ch2_post_credits {
 		PLAYER "Why do you and the Big Bad both have the power to make people forget things, Lambda?"
 	};
 	entity $Lambda direction += 1;
-	copy!(ch2_lambda_lower_actor)
+	ch2_lambda_lower_actor()
 	wait 1400ms;
 	show dialog {
 		Lambda emote $panicked "The Big Bad? Oh, dear. Oh, no."
@@ -324,14 +324,14 @@ ch2_post_credits {
 	show dialog {
 		Alfonso "I don't know if I can trust you, Lambda."
 	};
-	copy!(ch2_lambda_lower_actor)
+	ch2_lambda_lower_actor()
 	show dialog {
 		Lambda emote $opaque_lowered "I-I know. It's part of having skills like mine, I think."
 		Alfonso "No, it's because you literally manipulated our minds."
 		"We're supposed to just believe that you're one of us? Or trust you after you've done something like that?"
 		Lambda emote $opaque_lowered "...."
 	};
-	copy!(ch2_lambda_raise_actor)
+	ch2_lambda_raise_actor()
 	show dialog {
 		Lambda emote $opaque_lowered_almost "If it means anything, I've been trying to make things right."
 		PLAYER "It's true. He helped me fix the serial artifact."
@@ -363,7 +363,7 @@ ch2_post_credits {
 		"Don't rush me! You're making it worse!"
 	};
 	wait 1100ms;
-	copy!(ch2_lambda_lower_actor)
+	ch2_lambda_lower_actor()
 	entity $Lambda direction = south;
 	wait 200ms;
 	player on_tick = player_watch_lambda_actor;

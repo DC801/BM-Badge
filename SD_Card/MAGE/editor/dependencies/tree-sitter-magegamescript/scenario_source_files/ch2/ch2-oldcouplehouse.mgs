@@ -47,7 +47,7 @@ on_load_ch2_oldcouplehouse {
 		}
 	}
 
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -112,7 +112,7 @@ ch2_cutscene_delmar_reconnect {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_oldcouplehouse_south {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-town";
 }
 on_walk_ch2_oldcouplehouse_south {
@@ -124,7 +124,7 @@ on_walk_ch2_oldcouplehouse_south {
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_delmar {
-	copy!(face_player)
+	face_player()
 	if (interrupt) {
 		if (entity Delmar type == sheep || entity Delmar type == helga) {
 			show dialog { SELF "...." };
@@ -139,7 +139,7 @@ interact_ch2_delmar {
 	}
 }
 interact_ch2_beatrice {
-	copy!(face_player)
+	face_player()
 	if (ch2_storyflag_round < 3) {
 		if (!ch2_beatrice_backstory1) {
 			show dialog {

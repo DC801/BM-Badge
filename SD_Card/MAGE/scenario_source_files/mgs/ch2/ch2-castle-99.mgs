@@ -123,11 +123,11 @@ on_load_ch2_castle_99 {
 
 	// Check if rake has been obtained
 	if (ch2_carrying_minirake_99) {
-		copy!(ch2_minirake_99_hide)
+		ch2_minirake_99_hide()
 	}
 	
 	// initialize everything
-	copy!(ch2_map_init)
+	ch2_map_init()
 
 	// check if you do the cutscene or not
 	if (!ch2_cutseen_castle99) {
@@ -146,7 +146,7 @@ ch2_skip_99 {
 	ch2_map_mainframeos = false;
 	ch2_carrying_mainframeos = true;
 	ch2_cutseen_castle99 = true;
-	copy!(ch2_load_castle_1_special)
+	ch2_load_castle_1_special()
 }
 
 ch2_lambda_shving_on_tickversion {
@@ -164,7 +164,7 @@ ch2_lambda_lower {
 	entity Lambda current_animation = $lowered;
 }
 ch2_lambda_lower_tickversion {
-	copy!(ch2_lambda_lower)
+	ch2_lambda_lower()
 	goto null_script;
 }
 ch2_lambda_raise {
@@ -172,7 +172,7 @@ ch2_lambda_raise {
 	entity Lambda current_animation = $opaque;
 }
 ch2_lambda_raise_tickversion {
-	copy!(ch2_lambda_raise)
+	ch2_lambda_raise()
 	goto null_script;
 }
 ch2_lambda_walkup {
@@ -192,7 +192,7 @@ ch2_cutscene_castle99 {
 	wait 200ms;
 	player direction = north;
 	wait 700ms;
-	copy!(ch2_lambda_raise)
+	ch2_lambda_raise()
 	wait 1100ms;
 	entity Lambda position -> geometry "lambda-walk-line" origin over 800ms;
 	entity Lambda current_animation = $opaque;
@@ -204,14 +204,14 @@ ch2_cutscene_castle99 {
 		Lambda "So... welcome, %PLAYER%. I'm Lambda."
 	};
 	wait 400ms;
-	copy!(ch2_lambda_lower)
+	ch2_lambda_lower()
 	wait 100ms;
 	show dialog {
 		Lambda emote $opaque_lowered "Oh, I guess you already knew that."
 		"Sorry, I...."
 	};
 	wait 600ms;
-	copy!(ch2_lambda_raise)
+	ch2_lambda_raise()
 	show dialog {
 		Lambda "Anyway, what you probably didn't know is that I'm...."
 	};
@@ -427,7 +427,7 @@ interact_ch2_lambda_books {
 // }
 
 interact_ch2_lambda_lab {
-	copy!(face_player)
+	face_player()
 	entity Lambda current_animation = $opaque;
 	if (ch2_storyflag_round < 5) {
 		show dialog {
@@ -448,7 +448,7 @@ interact_ch2_minirake_99 {
 		PLAYER alignment TL "(Lambda seems to have been using this rake to help keep his laundry together.)"
 		"(I hope he doesn't mind me borrowing it.)"
 	};
-	copy!(ch2_minirake_99_hide)
+	ch2_minirake_99_hide()
 	ch2_carrying_minirake_99 = true;
 	show dialog {
 		name "" alignment TL "(You picked up the mini rake!)"

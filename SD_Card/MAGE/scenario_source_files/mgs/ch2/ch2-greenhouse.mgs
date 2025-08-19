@@ -52,51 +52,51 @@ look_ch2_ethernettle_bot_long {
 }
 
 look_ch2_ethernettle1 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "orange-and-white" };
-	copy!(look_ch2_ethernettle_bot_long)
+	look_ch2_ethernettle_bot_long()
 }
 
 look_ch2_ethernettle2 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "orange" };
-	copy!(look_ch2_ethernettle_bot)
+	look_ch2_ethernettle_bot()
 }
 
 look_ch2_ethernettle3 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "green-and-white" };
-	copy!(look_ch2_ethernettle_bot_long)
+	look_ch2_ethernettle_bot_long()
 }
 
 look_ch2_ethernettle4 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "blue" };
-	copy!(look_ch2_ethernettle_bot)
+	look_ch2_ethernettle_bot()
 }
 
 look_ch2_ethernettle5 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "blue-and-white" };
-	copy!(look_ch2_ethernettle_bot_long)
+	look_ch2_ethernettle_bot_long()
 }
 
 look_ch2_ethernettle6 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "green" };
-	copy!(look_ch2_ethernettle_bot)
+	look_ch2_ethernettle_bot()
 }
 
 look_ch2_ethernettle7 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "brown-and-white" };
-	copy!(look_ch2_ethernettle_bot_long)
+	look_ch2_ethernettle_bot_long()
 }
 
 look_ch2_ethernettle8 {
-	copy!(look_ch2_ethernettle_top)
+	look_ch2_ethernettle_top()
 	concat serial_dialog { "brown" };
-	copy!(look_ch2_ethernettle_bot)
+	look_ch2_ethernettle_bot()
 }
 
 look_ch2_tumbleweed {
@@ -150,7 +150,7 @@ on_load_ch2_greenhouse {
 	ethernettlePrimaryID6 = entity EtherNettle6 primary_id;
 	ethernettlePrimaryID7 = entity EtherNettle7 primary_id;
 	ethernettlePrimaryID8 = entity EtherNettle8 primary_id;
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -201,7 +201,7 @@ on_tick_ch2_greenhouse {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_greenhouse_south {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-town";
 }
 on_walk_ch2_greenhouse_south {
@@ -211,7 +211,7 @@ on_walk_ch2_greenhouse_south {
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_trekkie {
-	copy!(face_player)
+	face_player()
 	if (ch2_storyflag_round == 0) {
 		show dialog {
 			SELF "Oh, %PLAYER%! Me heard you were going to the serial castle in the mountain!"

@@ -2,11 +2,11 @@ include "header.mgs";
 
 on_load_main_menu {
 	current_chapter = 0;
-	copy!(register_colors)
+	register_colors()
 
 	// todo: write commentary
 
-	// copy!(register_commentary)
+	// register_commentary()
 	// if (!ch1-commentary-notice) {
 	// 	serial_commentary = true;
 	// 	show serial dialog {
@@ -36,8 +36,8 @@ on_load_main_menu {
 		command skip + "2" = debug_jump_to_round2;
 		command skip + "3" = debug_jump_to_round3;
 		command skip + "4" = debug_jump_to_round4;
-		copy!(register_warp)
-		copy!(register_storyflag)
+		register_warp()
+		register_storyflag()
 		show serial_dialog {
 			" "
 			"<y>DEBUG></> main menu only:"
@@ -65,12 +65,12 @@ on_load_main_menu {
 /* DEBUGSSSS */
 debug_post {
 	ch2_wizard_backstory = true;
-	copy!(debug_set_flags_to_round4)
+	debug_set_flags_to_round4()
 	ch2_seen_room_99 = true;
 	ch2_map_mainframeos = false;
 	ch2_carrying_mainframeos = true;
 	ch2_cutseen_castle99 = true;
-	copy!(ch2_install_mainframeos)
+	ch2_install_mainframeos()
 	ch2_ring_zero_enabled_in_castle = true;
 	ch2_storyflag_round = 5;
 	credits_from_menu = false;
@@ -83,9 +83,9 @@ debug_menu_simon {
 	ch2_has_artifact = true;
 	hex_control = true;
 	current_chapter = 2;
-	copy!(debug_finish_toot)
+	debug_finish_toot()
 	ch2_storyflag_round = 2;
-	copy!(warp_ch2_31) // this has a load_map in it
+	warp_ch2_31() // this has a load_map in it
 }
 
 debug_hub {
@@ -120,7 +120,7 @@ debug_bob3 {
 }
 
 debug_king {
-	copy!(debug_set_flags_to_round3)
+	debug_set_flags_to_round3()
 	ch2_cutseen_castle13 = true;
 	ch2_cutseen_castle14 = true;
 	ch2_king_rescued = true;
@@ -129,8 +129,8 @@ debug_king {
 }
 
 debug {
-	copy!(debug_set_flags_to_round0)
-	copy!(ch2_load_castle_1_special)
+	debug_set_flags_to_round0()
+	ch2_load_castle_1_special()
 }
 
 /* ---------- INTRO SPLASH ---------- */
@@ -476,8 +476,8 @@ start_new_game_with_name {
 /* ---------- CHOOSING A CHAPTER ---------- */
 
 menu_chapter_select_q {
-	copy!(ch1_count_flags)
-	copy!(ch2_count_flags)
+	ch1_count_flags()
+	ch2_count_flags()
 	show dialog {
 		name " "
 		border_tileset menu
@@ -516,7 +516,7 @@ menu_chapter_select_2 {
 	}
 	warp_state = "raw_game_load-ch2";
 	if (playersave_room == 1) {
-		copy!(ch2_load_castle_1_special)
+		ch2_load_castle_1_special()
 	} else {
 		load map "ch2-town";
 	}
@@ -537,7 +537,7 @@ menu_save_game {
 }
 
 menu_save_game_yes {
-	copy!(capture_player_state)
+	capture_player_state()
 	save slot;
 	self on_interact = menu_save_game;
 }

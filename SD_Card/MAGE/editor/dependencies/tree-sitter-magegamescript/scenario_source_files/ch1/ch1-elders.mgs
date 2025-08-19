@@ -59,9 +59,9 @@ show_dialog_bert_start {
 		show dialog { SELF "...." "Bczv um jiks." };
 		return;
 	}
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "Who needs help?" };
-	copy!(calculate_hint_tracking_series) // sets `hint_tracking_check`
+	calculate_hint_tracking_series() // sets `hint_tracking_check`
 	if (!shepherd_quest_done) {
 		show dialog {
 			SELF "The shepherd."
@@ -69,7 +69,7 @@ show_dialog_bert_start {
 		};
 		if (hint_tracking_check != 1) {
 			// (NOTE: these are inverted from orig)
-			copy!(set_hint_shepherd_from_bert)
+			set_hint_shepherd_from_bert()
 		}
 	} else if (!baker_quest_done) {
 		show dialog {
@@ -77,14 +77,14 @@ show_dialog_bert_start {
 			"Baker is busy. He has trouble with customer."
 		};
 		if (hint_tracking_check != 2) {
-			copy!(set_hint_baker_from_bert)
+			set_hint_baker_from_bert()
 		}
 	} else if (!bobmoss_quest_done) {
 		show dialog {
 			SELF "Cousin of Stone Cold Bob Austin."
 			"He is lost. Or is he hiding?"
 		};
-		copy!(set_hint_bobmoss_from_bert)
+		set_hint_bobmoss_from_bert()
 		// no need to check for hint series, because this is the advanced hint, not the basic one; always set this
 	} else if (!bea1_quest_done) {
 		show dialog {
@@ -92,7 +92,7 @@ show_dialog_bert_start {
 			"She has been sad a long time."
 		};
 		if (hint_tracking_check != 4) {
-			copy!(set_hint_bea1_from_bert)
+			set_hint_bea1_from_bert()
 		}
 	} else if (!bender_quest_done) {
 		show dialog {
@@ -102,7 +102,7 @@ show_dialog_bert_start {
 			"...I think he took my watch."
 		};
 		if (hint_tracking_check != 5) {
-			copy!(set_hint_bender_from_bert)
+			set_hint_bender_from_bert()
 		}
 	} else if (!catwork_quest_done) {
 		show dialog {
@@ -110,7 +110,7 @@ show_dialog_bert_start {
 			"Max wants his house to be built."
 		};
 		if (hint_tracking_check != 6) {
-			copy!(set_hint_max_from_bert)
+			set_hint_max_from_bert()
 		}
 	} else if (!trekkie_quest_done) {
 		show dialog {
@@ -118,7 +118,7 @@ show_dialog_bert_start {
 			"Trekkie works on plants in the glass house."
 		};
 		if (hint_tracking_check != 7) {
-			copy!(set_hint_trekkie_from_bert)
+			set_hint_trekkie_from_bert()
 		}
 	} else if (!sportskid_quest_done) {
 		show dialog {
@@ -126,7 +126,7 @@ show_dialog_bert_start {
 			"Child lives with father."
 		};
 		if (hint_tracking_check != 8) {
-			copy!(set_hint_sportskid_from_bert)
+			set_hint_sportskid_from_bert()
 		}
 	} else if (!bea2_quest_done) {
 		show dialog {
@@ -134,7 +134,7 @@ show_dialog_bert_start {
 			"Does she know what she wants?"
 		};
 		if (hint_tracking_check != 9) {
-			copy!(set_hint_bea2_from_bert)
+			set_hint_bea2_from_bert()
 		}
 	} else if (!rake_quest_done) {
 		show dialog {
@@ -143,7 +143,7 @@ show_dialog_bert_start {
 			"What angers the goose this time?"
 		};
 		if (hint_tracking_check != 10) {
-			copy!(set_hint_goose_from_bert)
+			set_hint_goose_from_bert()
 		}
 	} else if (!verthandi_quest_done) {
 		show dialog {
@@ -151,7 +151,7 @@ show_dialog_bert_start {
 			"She watches the goats."
 		};
 		if (hint_tracking_check != 11) {
-			copy!(set_hint_glitch_from_bert)
+			set_hint_glitch_from_bert()
 		}
 	} else {
 		show dialog { SELF "Perhaps the world." };
@@ -249,7 +249,7 @@ show_dialog_jackob_start {
 			SELF "Vg'f tbbq gung lbh'er cenpgvpvat, ohg creuncf lbh fubhyq sbphf ba erfgbevat gur gbja?"
 		};
 	} else {
-		copy!(face_player)
+		face_player()
 		show dialog {
 			SELF "Did you have a question about something?"
 		};
@@ -445,7 +445,7 @@ show_dialog_jackob_hint_hackbook {
 			SELF "I'm sorry. I don't think there's anything you can do to fix it."
 		};
 		if (hint_tracking == 201) {
-			copy!(set_hint_none)
+			set_hint_none()
 		}
 	} else {
 		show dialog {
@@ -503,7 +503,7 @@ show_dialog_alfonso_start {
 	} else if (ch1_finished) {
 		show dialog { SELF "Congratulations! You fixed the town!" };
 	} else {
-		copy!(ch1_count_flags)
+		ch1_count_flags()
 		show dialog { SELF "You've completed $ch1_storyflags_tally$ out of 11 tasks." };
 		if (ch1_storyflags_tally == 0) {
 			show dialog { SELF "Uh...." "Nowhere to go now but up!" };

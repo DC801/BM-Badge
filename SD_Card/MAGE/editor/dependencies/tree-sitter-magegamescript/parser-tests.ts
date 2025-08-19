@@ -53,7 +53,7 @@ const actionTests = {
 		],
 	},
 	simple_copy: {
-		input: ['wait 1;', 'copy!(no_arg_actions)', 'wait 2;'],
+		input: ['wait 1;', 'no_arg_actions()', 'wait 2;'],
 		expected: [
 			'wait 1ms;',
 			'save slot;',

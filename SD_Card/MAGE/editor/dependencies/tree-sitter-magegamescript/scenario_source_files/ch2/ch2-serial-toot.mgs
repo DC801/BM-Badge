@@ -187,7 +187,7 @@ ch2_toot_step3_nomagic {
 
 ch2_toot_step3_halftime {
 	ch2_has_map = true;
-	copy!(register_map)
+	register_map()
 	show serial_dialog {
 		"\tAnyway, I'll wrap things up so you can try some magic words--that is, some serial commands. I'll grant you access to a few that should be useful."
 	};

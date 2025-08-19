@@ -4,7 +4,7 @@ bender_success_backstory {
 	show dialog {
 		SELF "Hey, you did it! My ass is back!"
 	};
-	copy!(bite_my_shiny_metal_ass)
+	bite_my_shiny_metal_ass()
 	show dialog {
 		SELF emote 1 "Hee hee hee!"
 		"Hey, everyone! %Bender%'s ass is back!"
@@ -25,7 +25,7 @@ bender_success_no_backstory {
 	show dialog {
 		SELF "Hey, my ass! It's back!"
 	};
-	copy!(bite_my_shiny_metal_ass)
+	bite_my_shiny_metal_ass()
 	show dialog {
 		SELF emote 1
 		"Hee hee hee!"
@@ -47,12 +47,12 @@ show_dialog_bender_start {
 		return;
 	} 
 
-	copy!(set_bender_idle_stop)
-	copy!(face_player)
+	set_bender_idle_stop()
+	face_player()
 
 	if (bender_quest_done) {
 		if (entity Bender type == bender) {
-			copy!(bite_my_shiny_metal_ass)
+			bite_my_shiny_metal_ass()
 			show dialog {
 				SELF emote 1 "Ooh, yeah!"
 				PLAYER "It's shiny. I'll give you that."
@@ -60,28 +60,28 @@ show_dialog_bender_start {
 		} else {
 			show dialog { SELF "Yeah, yeah, you're a real comedian, kid. Now turn me back!" };
 		}
-		copy!(set_bender_idle_look_around_randomly)
+		set_bender_idle_look_around_randomly()
 		return;
 	}
 	
 	if (entity Bender type == bender) {
 		if (!bender_backstory) {
-			copy!(bender_success_no_backstory)
+			bender_success_no_backstory()
 		} else {
-			copy!(bender_success_backstory)
+			bender_success_backstory()
 		}
 		bender_backstory = true;
 		bender_quest_done = true;
-		copy!(calculate_hint_tracking_series)
+		calculate_hint_tracking_series()
 		if (hint_tracking_check == 5) {
-			copy!(set_hint_none)
+			set_hint_none()
 		}
-		copy!(set_bender_idle_look_around_randomly)
+		set_bender_idle_look_around_randomly()
 		return;
 	}
 	if (bender_backstory) {
 		if (entity Bender type == bender_sadbutt) {
-			copy!(bite_my_shiny_metal_ass_sad)
+			bite_my_shiny_metal_ass_sad()
 			show dialog {
 				SELF "...Oh, right. My ass. Someone bit it off."
 				"So what's the holdup? I know you can fix it!"
@@ -98,7 +98,7 @@ show_dialog_bender_start {
 				PLAYER "Oh! You look friendly!"
 				SELF "Well, I'm not!"
 			};
-			copy!(bite_my_shiny_metal_ass_sad)
+			bite_my_shiny_metal_ass_sad()
 			show dialog {
 				SELF "Aww, man... I forgot! Someone bit my shiny metal ass!"
 				"Why would someone do such a horrible thing to an innocent robot?!"
@@ -129,8 +129,8 @@ show_dialog_bender_start {
 		}
 	}
 	bender_backstory = true;
-	copy!(set_hint_bender)
-	copy!(set_bender_idle_glare_at_you)
+	set_hint_bender()
+	set_bender_idle_glare_at_you()
 }
 
 /* ---- Bender on_tick handlers --- */

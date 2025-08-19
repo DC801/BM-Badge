@@ -198,13 +198,13 @@ interrupt_walk {
 	captured_animation = self current_animation;
 	self current_animation = 0;
 	pause self on_tick;
-	copy!(capture_self_direction)
-	copy!(face_player)
+	capture_self_direction()
+	face_player()
 }
 resume_walk {
 	self current_animation = captured_animation;
 	unpause self on_tick;
-	copy!(restore_self_direction)
+	restore_self_direction()
 }
 
 capture_player_state {

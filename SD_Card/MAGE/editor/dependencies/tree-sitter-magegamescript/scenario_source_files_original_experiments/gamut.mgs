@@ -378,7 +378,7 @@ other {
 	goto scriptName;
 
 	// COPY_SCRIPT
-	copy!(simple_copy)
+	simple_copy()
 
 	return;
 }

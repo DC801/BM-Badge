@@ -101,7 +101,7 @@ simon_game_start_difference {
 		Simon "That means these lights down here, naturally!"
 	};
 	entity Lights on_tick = $lightsdefault;
-	copy!(ch2_map_init_hex)
+	ch2_map_init_hex()
 	goto simon_game_start_q;
 }
 
@@ -534,7 +534,7 @@ simon_game_lose {
 	player on_tick = player_lose;
 	show dialog { Simon emote 3 "Too bad! Better luck next time!" };
 	entity Lights on_tick = $lightsdefault;
-	copy!(ch2_map_init_hex)
+	ch2_map_init_hex()
 	player_control = on;
 	entity Keyboard on_tick = null_script;
 	entity Simon current_animation = 5;
@@ -557,10 +557,10 @@ simon_game_win {
 	entity Simon current_animation = 4;
 	show dialog { Simon emote 3 "GREAT JOB! Way to go, kid!" };
 	entity Lights on_tick = $lightsdefault;
-	copy!(ch2_map_init_hex)
+	ch2_map_init_hex()
 	player_control = on;
 	if (!ch2_simon_won_before) {
-		copy!(simon_game_restore_positions)
+		simon_game_restore_positions()
 		entity Simon current_animation = 12;
 		show dialog {
 			Simon emote 1 "HAHAH! That was a blast!"
@@ -581,7 +581,7 @@ simon_game_win {
 		show dialog {
 			Simon emote 1 "Don't worry, I'll keep my end of the bargain. Rosetta is yours now. You deserve it."
 		};
-		copy!(ch2_hide_keyboard)
+		ch2_hide_keyboard()
 		show dialog {
 			name "" "(You pick up the keyboard!)"
 			Simon emote 1 "Keep it, and keep making awesome music!"
@@ -589,7 +589,7 @@ simon_game_win {
 		};
 		entity Simon current_animation = 12;
 		interrupt = true;
-		copy!(ch2_pickup_keyboard)
+		ch2_pickup_keyboard()
 		ch2_simon_won_before = true;
 		goto null_script;
 	} else {
@@ -609,7 +609,7 @@ simon_game_restore_positions {
 }
 
 simon_game_go_again {
-	copy!(simon_game_restore_positions)
+	simon_game_restore_positions()
 	entity Simon current_animation = 12;
 	show dialog {
 		Simon emote 1 "Well? Wanna have another go?"
@@ -734,13 +734,13 @@ screen_lights_lose {
 	light ALL = off;
 	wait $time_q;
 
-	copy!(screen_lights_bits)
+	screen_lights_bits()
 	wait $time_q;
 	
 	light ALL = off;
 	wait $time_q;
 
-	copy!(screen_lights_bits)
+	screen_lights_bits()
 	wait $time;
 	wait $time;
 

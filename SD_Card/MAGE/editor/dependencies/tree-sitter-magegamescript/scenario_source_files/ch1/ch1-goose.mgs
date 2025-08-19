@@ -12,10 +12,10 @@ on_tick_goose_mission {
 	entity Goose direction = south;
 	entity Goose current_animation = 0;
 	rake_quest_done = true;
-	copy!(calculate_hint_tracking_series)
+	calculate_hint_tracking_series()
 	if (hint_tracking_check == 10) {
 		// if the hint series is the currently goose, reset hint
-		copy!(set_hint_none)
+		set_hint_none()
 	}
 	// you win!
 	goto null_script;
@@ -26,7 +26,7 @@ on_tick_goose_mission_rake_out_of_lake {
 		goto goose_misison_rake_on_rake_point;
 	}
 	entity Goose direction = south;
-	copy!(honk)
+	honk()
 	entity Goose position -> geometry goose_midpoint origin over 600ms;
 	entity Goose position -> geometry goose_lakepoint origin over 600ms;
 	entity Goose direction = south;
@@ -38,14 +38,14 @@ goose_misison_rake_on_rake_point {
 		goto on_tick_goose_mission_rake_out_of_lake;
 	}
 	entity Goose direction = south;
-	copy!(honk)
+	honk()
 	entity Goose position -> geometry goose_rakepoint origin over 1200ms;
 	entity Goose direction = entity Rake;
 	// if rake has left its start point, jump
 	if (!entity Rake intersects geometry "rake-point") {
 		goto on_tick_goose_mission_rake_out_of_lake;
 	}
-	copy!(honk)
+	honk()
 	entity Goose position -> geometry goose_lakepoint origin over 1200ms;
 	entity Goose direction = south;
 	// if rake has left its start point, jump
@@ -102,14 +102,14 @@ rescue_goose {
 /* --------------- dialog --------------- */
 
 show_dialog_goose_generic {
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "Honk!" };
 }
 
 show_dialog_goose_mad {
 	show dialog { SELF "Honk!" };
 	if (!rake_quest_done) {
-		copy!(set_hint_goose)
+		set_hint_goose()
 	}
 	// RESET
 	self on_interact = show_dialog_goose_mad;
@@ -118,7 +118,7 @@ show_dialog_goose_mad {
 /* --------------- debug --------------- */
 
 debug_win_rake_q {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Position rake in lake?"
 		> "Yes" = debug_win_rake_yes

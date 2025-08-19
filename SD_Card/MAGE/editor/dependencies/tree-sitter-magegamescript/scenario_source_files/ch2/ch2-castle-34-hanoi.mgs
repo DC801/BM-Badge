@@ -6,8 +6,8 @@ $lightsdefault = ch2_serial_light_manager;
 
 start_hanoi {
 	player_control = off;
-	copy!(hanoi_init_game)
-	copy!(draw_hanoi)
+	hanoi_init_game()
+	draw_hanoi()
 	map on_tick = tick_hanoi;
 }
 
@@ -82,26 +82,26 @@ hanoi_move {
 	if (cursor_value == 0) {
 		if (cursor_pos == 1) {
 			if (array1_length > 0) {
-				copy!(array1_pop)
+				array1_pop()
 			}
 		} else if (cursor_pos == 2) {
 			if (array2_length > 0) {
-				copy!(array2_pop)
+				array2_pop()
 			}
 		} else if (cursor_pos == 3) {
 			if (array3_length > 0) {
-				copy!(array3_pop)
+				array3_pop()
 			}
 		}
 	} else {
-		copy!(check_cursor)
+		check_cursor()
 		if (can_drop) {
 			if (cursor_pos == 1) {
-				copy!(array1_push)
+				array1_push()
 			} else if (cursor_pos == 2) {
-				copy!(array2_push)
+				array2_push()
 			} else if (cursor_pos == 3) {
-				copy!(array3_push)
+				array3_push()
 			}
 		} else {
 			hanoi_warning_size = true;
@@ -110,42 +110,42 @@ hanoi_move {
 	if (cursor_value == $win_plate) {
 		hanoi_won = true;
 	}
-	copy!(draw_hanoi)
+	draw_hanoi()
 }
 hanoi_move_1 {
 	cursor_pos = 1;
-	copy!(hanoi_move)
+	hanoi_move()
 }
 hanoi_move_2 {
 	cursor_pos = 2;
-	copy!(hanoi_move)
+	hanoi_move()
 }
 hanoi_move_3 {
 	cursor_pos = 3;
-	copy!(hanoi_move)
+	hanoi_move()
 }
 
 tick_hanoi {
 	if (button HAX pressed) {
 		player_control = on;
-		copy!(hanoi_quit)
+		hanoi_quit()
 	} else if (
 		button LJOY_UP pressed
 		|| button RJOY_UP pressed
 		|| button LJOY_DOWN pressed
 		|| button RJOY_DOWN pressed
 	) {
-		copy!(hanoi_move)
+		hanoi_move()
 	} else if (button LJOY_RIGHT pressed || button RJOY_RIGHT pressed) {
 		if (cursor_pos == 1 || cursor_pos == 2) {
 			cursor_pos += 1;
 		}
-		copy!(draw_hanoi)
+		draw_hanoi()
 	} else if (button LJOY_LEFT pressed || button RJOY_LEFT pressed) {
 		if (cursor_pos == 2 || cursor_pos == 3) {
 			cursor_pos -= 1;
 		}
-		copy!(draw_hanoi)
+		draw_hanoi()
 	}
 }
 
@@ -266,14 +266,14 @@ draw_curr_plate {
 draw_tile {
 	// wants `curr_plate` and `column`
 	if (curr_plate != 0) {
-		copy!(draw_curr_plate)
+		draw_curr_plate()
 	} else if (cursor_pos == column) {
 		if (cursor_hinge_height < row) {
 			concat serial_dialog hanoi_cursor_arm;
 		} else if (cursor_hinge_height == row) {
 			concat serial_dialog hanoi_cursor_hinge;
 		} else if (cursor_grip_height == row) {
-			copy!(draw_cursor_grip)
+			draw_cursor_grip()
 		} else {
 			concat serial_dialog hanoi_space;
 		}
@@ -285,13 +285,13 @@ draw_plate_row {
 	// wants `plate1`, `plate2`, `plate3`, and `row`
 	column = 1; // col 1
 	curr_plate = plate1 *1;
-	copy!(draw_tile)
+	draw_tile()
 	column = 2; // col 2
 	curr_plate = plate2 *1;
-	copy!(draw_tile)
+	draw_tile()
 	column = 3; // col 3
 	curr_plate = plate3 *1;
-	copy!(draw_tile)
+	draw_tile()
 	concat serial_dialog newline;
 }
 draw_hanoi {
@@ -320,7 +320,7 @@ draw_hanoi {
 	// ROW 11
 	row = 11;
 	if (hanoi_won) {
-		copy!(hanoi_won_message_A)
+		hanoi_won_message_A()
 	} else {
 		for (column = 1; column <= 3; column += 1) {
 			if (cursor_pos == column) {
@@ -338,10 +338,10 @@ draw_hanoi {
 		show serial_dialog hanoi_size_warning;
 		hanoi_warning_size = false;
 	} else if (hanoi_won) {
-		copy!(hanoi_won_message_B)
+		hanoi_won_message_B()
 	} else {
 		for (column = 1; column <= 3; column += 1) {
-			copy!(draw_tile)
+			draw_tile()
 		}
 	}
 	concat serial_dialog newline;
@@ -349,14 +349,14 @@ draw_hanoi {
 	// ROW 9
 	row = 9;
 	for (column = 1; column <= 3; column += 1) {
-		copy!(draw_tile)
+		draw_tile()
 	}
 	concat serial_dialog newline;
 
 	// ROW 8
 	row = 8;
 	for (column = 1; column <= 3; column += 1) {
-		copy!(draw_tile)
+		draw_tile()
 	}
 	concat serial_dialog newline;
 	
@@ -365,51 +365,51 @@ draw_hanoi {
 	plate1 = array1_7 *1;
 	plate2 = array2_7 *1;
 	plate3 = array3_7 *1;
-	copy!(draw_plate_row)
+	draw_plate_row()
 
 	// ROW 6
 	row = 6;
 	plate1 = array1_6 *1;
 	plate2 = array2_6 *1;
 	plate3 = array3_6 *1;
-	copy!(draw_plate_row)
+	draw_plate_row()
 	
 	// ROW 5
 	row = 5;
 	plate1 = array1_5 *1;
 	plate2 = array2_5 *1;
 	plate3 = array3_5 *1;
-	copy!(draw_plate_row)
+	draw_plate_row()
 
 	// ROW 4
 	row = 4;
 	plate1 = array1_4 *1;
 	plate2 = array2_4 *1;
 	plate3 = array3_4 *1;
-	copy!(draw_plate_row)
+	draw_plate_row()
 	
 	// ROW 3
 	row = 3;
 	plate1 = array1_3 *1;
 	plate2 = array2_3 *1;
 	plate3 = array3_3 *1;
-	copy!(draw_plate_row)
+	draw_plate_row()
 	
 	// ROW 2
 	row = 2;
 	plate1 = array1_2 *1;
 	plate2 = array2_2 *1;
 	plate3 = array3_2 *1;
-	copy!(draw_plate_row)
+	draw_plate_row()
 
 	// ROW 1
 	row = 1;
 	curr_plate = array1_1 *1;
-	copy!(draw_curr_plate)
+	draw_curr_plate()
 	curr_plate = array2_1 *1;
-	copy!(draw_curr_plate)
+	draw_curr_plate()
 	curr_plate = array3_1 *1;
-	copy!(draw_curr_plate)
+	draw_curr_plate()
 	concat serial_dialog newline;
 
 	// FOOTER
@@ -420,7 +420,7 @@ draw_hanoi {
 		"============================================================"
 	};
 	if (hanoi_won) {
-		copy!(hanoi_quit)
+		hanoi_quit()
 	} else if (hanoi_draw_help) {
 		show serial_dialog {
 			"<m>TIP:</> You only need uncover (and grab) the #6 plate; you need not move it to another tray and build the tower of plates again."
@@ -450,26 +450,26 @@ hanoi_quit {
 	player_control = on;
 	light LED_USB = off;
 	entity Lights on_tick = $lightsdefault;
-	copy!(hanoi_unregister)
+	hanoi_unregister()
 	if (!hanoi_won) {
 		show serial_dialog {
 			" "
 			"Quitting <m>Plates of Hanoi</> (your progress has been saved)"
 		};
 	} else if (!ch2_carrying_plate || !ch2_installed_plate) {
-		copy!(won_hanoi_get_plate)
+		won_hanoi_get_plate()
 	}
 	goto on_tick_ch2_castle_34;
 }
 hanoi_help {
 	hanoi_draw_help = true;
-	copy!(hanoi_move)
+	hanoi_move()
 }
 
 hanoi_reset {
 	hanoi_init_done = false;
-	copy!(hanoi_init_variables)
-	copy!(draw_hanoi)
+	hanoi_init_variables()
+	draw_hanoi()
 }
 
 hanoi_init_variables {
@@ -508,7 +508,7 @@ hanoi_init_game {
 		!hanoi_init_done
 		|| hanoi_won
 	) {
-		copy!(hanoi_init_variables)
+		hanoi_init_variables()
 	}
 	command "1" = hanoi_move_1;
 	command "2" = hanoi_move_2;
@@ -531,7 +531,7 @@ hanoi_quit_from_terminal {
 }
 hanoi_win {
 	hanoi_won = true;
-	copy!(hanoi_unregister)
+	hanoi_unregister()
 	goto draw_hanoi;
 }
 array1_pop {
@@ -609,7 +609,7 @@ array1_print {
 		else if (i == 5) { printme = array1_5 *1; }
 		else if (i == 6) { printme = array1_6 *1; }
 		else if (i == 7) { printme = array1_7 *1; }
-		copy!(printme)
+		printme()
 		printme = 0;
 	}
 	concat serial_dialog array_print_right;
@@ -701,7 +701,7 @@ array2_print {
 		else if (i == 5) { printme = array2_5 *1; }
 		else if (i == 6) { printme = array2_6 *1; }
 		else if (i == 7) { printme = array2_7 *1; }
-		copy!(printme)
+		printme()
 		printme = 0;
 	}
 	concat serial_dialog array_print_right;
@@ -782,7 +782,7 @@ array3_print {
 		else if (i == 5) { printme = array3_5 *1; }
 		else if (i == 6) { printme = array3_6 *1; }
 		else if (i == 7) { printme = array3_7 *1; }
-		copy!(printme)
+		printme()
 		printme = 0;
 	}
 	concat serial_dialog array_print_right;

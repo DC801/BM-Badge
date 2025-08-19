@@ -8,16 +8,16 @@ register_parts {
 	command parts fail = command_parts_fail;
 
 	// if (ch2_storyflag_round >= 1) {
-		copy!(register_parts1)
+		register_parts1()
 	// }
 	// if (ch2_storyflag_round >= 2) {
-		copy!(register_parts2)
+		register_parts2()
 	// }
 	// if (ch2_storyflag_round >= 3) {
-		copy!(register_parts3)
+		register_parts3()
 	// }
 	// if (ch2_storyflag_round >= 4) {
-		copy!(register_parts4)
+		register_parts4()
 	// }
 }
 register_parts1 {
@@ -84,7 +84,7 @@ command_parts_fail {
 		goto command_parts_print;
 	} else {
 		// otherwise, `parts` cannot reach Lambda
-		copy!(ch2_wireless_error)
+		ch2_wireless_error()
 	}
 
 }
@@ -103,7 +103,7 @@ command_parts {
 		goto command_parts_print;
 	} else {
 		// otherwise, `parts` cannot reach Lambda
-		copy!(ch2_wireless_error)
+		ch2_wireless_error()
 	}
 }
 command_parts_print {
@@ -287,7 +287,7 @@ command_parts_monitor {
 	} else if (ch2_carrying_monitor) {
 		show serial_dialog { "<m>LAMBDA</>: Looks like you've got the monitor already. To install it, all you'll need to do is find the matching ports on the mainframe enclosure. It's all keyed, so there's no plugging anything in the wrong way.\n\tOh, and don't forget to plug the monitor into power." };
 	} else {
-		copy!(ch2_describe_monitor)
+		ch2_describe_monitor()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -299,7 +299,7 @@ command_parts_heatsink {
 	} else if (ch2_carrying_heatsink) {
 		show serial_dialog { "<m>LAMBDA</>: Looks like you've got the heat sink already! So, uh, I sort of forgot you can't install that until the CPU is in there, so just set it aside for the moment. We'll do the actual install later." };
 	} else {
-		copy!(ch2_describe_heatsink)
+		ch2_describe_heatsink()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -311,7 +311,7 @@ command_parts_powersupply {
 	} else if (ch2_carrying_powersupply) {
 		show serial_dialog { "<m>LAMBDA</>: There's a spot where the power supply goes -- it should be fairly obvious. Then screw it in so it won't wiggle around in there." };
 	} else {
-		copy!(ch2_describe_powersupply)
+		ch2_describe_powersupply()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -329,7 +329,7 @@ command_parts_keyboard {
 	} else if (ch2_carrying_keyboard) {
 		show serial_dialog { "<m>LAMBDA</>: I've checked up on that specific model of keytar, and fortunately it can connect to a computer over USB. Just plug it into the outside of the case and you're good to go.\n\tA MIDI interface would have been trickier, but I'm sure we could have found an adaptor around somewhere." };
 	} else {
-		copy!(ch2_describe_keyboard)
+		ch2_describe_keyboard()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -344,7 +344,7 @@ command_parts_mouse {
 	} else if (ch2_carrying_mouse) {
 		show serial_dialog { "<m>LAMBDA</>: Installing the mouse is easy. All you have to do is plug the end into a USB port. If it's an optical mouse, you can tell it's plugged in correctly if the red laser comes on once you turn on the computer.\n\tOh, whoops, yours is wireless, huh? Well, then, just plug the dongle into one of the USB ports, and make sure the mouse has fresh batteries." };
 	} else {
-		copy!(ch2_describe_mouse)
+		ch2_describe_mouse()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -359,7 +359,7 @@ command_parts_harddrive {
 	} else if (ch2_carrying_harddrive) {
 		show serial_dialog { "<m>LAMBDA</>: The hard drive will need to be plugged into two cables: first, a power cable from the power supply, and second, a SATA cable off the motherboard.\n\tSince that hard drive is... uh, unconventional... just try your best to attach those cables somehow. You'll know if it fits." };
 	} else {
-		copy!(ch2_describe_harddrive)
+		ch2_describe_harddrive()
 		show serial_dialog {
 			"\tUse one of the solder stations in the workshop to combine both items into a <m>HARD DRIVE</>."
 		};
@@ -381,7 +381,7 @@ command_parts_plate {
 			show serial_dialog { "<m>LAMBDA</>: Now that you have both the <m>plate</> and <m>needle</>, you can use one of the solder stations to combine them.\n\tHuh, I can confirm that the iron content of the plate is high enough for this to actually work. Not that I was worried...." };
 		}
 	} else {
-		copy!(ch2_describe_plate)
+		ch2_describe_plate()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -400,7 +400,7 @@ command_parts_needle {
 			show serial_dialog { "<m>LAMBDA</>: Now that you have both the <m>needle</> and <m>plate</>, you can use one of the solder stations to combine them.\n\tOh, wow, it looks like that phonograph needle is electric. Weird, but also serendipitous." };
 		}
 	} else {
-		copy!(ch2_describe_needle)
+		ch2_describe_needle()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -415,7 +415,7 @@ command_parts_ramchips {
 	} else if (ch2_carrying_ramchips) {
 		show serial_dialog { "<m>LAMBDA</>: To install RAM... \"chips...\" you'll need to find pairs of matching RAM slots on the motherboard. Usually you'd want to use two or four -- it just can't be an odd number. And then....\n\tWell, it's going to be really freaky, but you need to <bold>SHOVE</> them in there, all right? They need to really <bold>CRUNCH</> on in there." };
 	} else {
-		copy!(ch2_describe_ramchips)
+		ch2_describe_ramchips()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -433,7 +433,7 @@ command_parts_clock {
 	} else if (ch2_carrying_clock) {
 		show serial_dialog { "<m>LAMBDA</>: So the system clock is normally built in, and -- well, you know what? You got that giant grandfather clock to fit inside your pocket somehow, so just... uh... do that again, but for the mainframe enclosure instead." };
 	} else {
-		copy!(ch2_describe_clock)
+		ch2_describe_clock()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -448,7 +448,7 @@ command_parts_cpu {
 	} else if (ch2_carrying_cpu) {
 		show serial_dialog { "<m>LAMBDA</>: Line up the CPU with the slot, and gently set it down. Then press the clamp down to lock it in place.\n\tNow the icky part. You got to put thermal paste on there. Try not to get any on your hands, and try to place it so there won't be any bubbles when you press the heat sink on top. Then... well, press the heat sink on top." };
 	} else {
-		copy!(ch2_describe_cpu)
+		ch2_describe_cpu()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -467,7 +467,7 @@ command_parts_goldfish {
 			show serial_dialog { "<m>LAMBDA</>: Now that you have both the goldfish and abacus, you can use one of the solder stations to combine them.\n\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." };
 		}
 	} else {
-		copy!(ch2_describe_goldfish)
+		ch2_describe_goldfish()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;
@@ -486,7 +486,7 @@ command_parts_abacus {
 			show serial_dialog { "<m>LAMBDA</>: Now that you have both the abacus and goldfish, you can use one of the solder stations to combine them." };
 		}
 	} else {
-		copy!(ch2_describe_abacus)
+		ch2_describe_abacus()
 	}
 	show serial_dialog {" "};
 	show serial_dialog lambda_over;

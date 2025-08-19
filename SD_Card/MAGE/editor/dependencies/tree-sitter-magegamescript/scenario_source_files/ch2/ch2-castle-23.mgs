@@ -43,7 +43,7 @@ on_load_ch2_castle_23_postgame {
 	if (warp_state == "walk_from-south") {
 		player position = geometry "walk_from-south";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 on_load_ch2_castle_23 {
@@ -60,7 +60,7 @@ on_load_ch2_castle_23 {
 	}
 
 	// initialize everything
-	copy!(ch2_map_init)
+	ch2_map_init()
 	// DEBUG
 	if (debug_mode) {
 		command get + thing = ch2_pickup_cactuscooler;
@@ -76,21 +76,21 @@ on_load_ch2_castle_23 {
 on_tick_ch2_castle_23 {}
 on_tick_ch2_castle_23_postgame {
 	if (player intersects geometry "south-hitbox") {
-		copy!(on_exit_ch2_castle_23)
+		on_exit_ch2_castle_23()
 		warp_state = "walk_from-north";
-		copy!(ch2_load_castle_22_special)
+		ch2_load_castle_22_special()
 	}
 }
 
 ch2_powerplant_supervise {
 	self direction = north;
-	copy!(tick_rand_mini) // from bob's club basement
+	tick_rand_mini() // from bob's club basement
 	self position -> geometry walk2 origin over 600ms;
 	self direction = north;
-	copy!(tick_rand_broad) // from bob's club basement
+	tick_rand_broad() // from bob's club basement
 	self position -> geometry walk1 origin over 600ms;
 	self direction = north;
-	copy!(tick_rand_broad) // from bob's club basement
+	tick_rand_broad() // from bob's club basement
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -102,23 +102,23 @@ on_exit_ch2_castle_23 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_23_south {
-	copy!(on_exit_ch2_castle_23)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_22_special)
+	on_exit_ch2_castle_23()
+	warping_out_fade_out()
+	ch2_load_castle_22_special()
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_helvetica {
-	copy!(interrupt_walk)
+	interrupt_walk()
 	show dialog {
 		SELF "It doesn't look like anything serious was damaged in this equipment. Still, we'd best be vigilant for a while."
 	};
-	copy!("resume_walk")
+	"resume_walk"()
 }
 
 interact_ch2_tracy {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "At this power plant, we capture heat from deep below the earth and use it to turn water into steam, which we send through turbines to generate electricity."
 		"But this isn't just the power plant control room. It also contains a lot of intrastructure for the geothermal heating throughout the castle."
@@ -186,20 +186,20 @@ interact_ch2_rocco {
 		};
 	}
 	else if (!ch2_rocco_backstory) {
-		copy!(face_player)
-		copy!(rocco_idle)
+		face_player()
+		rocco_idle()
 		show dialog {
 			PLAYER "I was told you could help me find a heat sink."
 			SELF "A heat sink? What's the use case?"
 			PLAYER "A computer. Like a normal-looking kind of boxy computer."
 		};
-		copy!(rocco_work)
+		rocco_work()
 		show dialog {
 			SELF "We don't have any extra, but I could rig you one after we fixed up all the earthquake damage. Maybe in a month or so."
 			PLAYER "A month? But I need it right away. Lambda and I are trying to put the castle mainframe back together, and...."
 		};
-		copy!(rocco_idle)
-		copy!(face_player)
+		rocco_idle()
+		face_player()
 		show dialog {
 			SELF "Lambda? Lambda who?"
 		};
@@ -226,7 +226,7 @@ interact_ch2_rocco {
 			"Hmm."
 		};
 		entity Rocco direction = south;
-		copy!(rocco_work)
+		rocco_work()
 		show dialog {
 			SELF "Regardless, fixing the Gibson mainframe will simplify a lot of my work, so I'll help you out."
 			"It would need a heavy-duty heat sink, though, and I don't have all the right supplies here. This isn't exactly my normal workstation."
@@ -238,26 +238,26 @@ interact_ch2_rocco {
 			SELF "Well, given what I've got here...."
 		};
 		entity Rocco current_animation = 0;
-		copy!(face_player)
+		face_player()
 		show dialog {
 			SELF "All I'd really need is liquid coolant. And the only thing around town that would work is Cactus Cooler."
 			PLAYER "Cactus Cooler?"
 			SELF "It's this rare brand of soda. It's got \"cooler\" in the name, so it's guaranteed to be a good heat conductor."
 		};
-		copy!(rocco_work)
+		rocco_work()
 		show dialog {
 			SELF "That settles it! Get me a can of Cactus Cooler, and I can build you a heat sink."
 		};
 		ch2_rocco_backstory = true;
 		ch2_want_cactuscooler = true;
 		ch2_heatsink_firstlook = true;
-		copy!(ch2_handoff_heatsink_to_cactuscooler)
+		ch2_handoff_heatsink_to_cactuscooler()
 		if (ch2_carrying_cactuscooler) {
 			show dialog {
 				PLAYER "Well, I actually have a can of Cactus Cooler right here."
 			};
-			copy!(rocco_idle)
-			copy!(face_player)
+			rocco_idle()
+			face_player()
 			show dialog {
 				SELF "Oh, really? In which case...."
 			};
@@ -270,8 +270,8 @@ interact_ch2_rocco {
 		}
 	}
 	else if (ch2_carrying_cactuscooler) {
-		copy!(face_player)
-		copy!(rocco_idle)
+		face_player()
+		rocco_idle()
 		if (!interrupt) {
 			show dialog {
 				SELF "Looks like you found a can of Cactus Cooler! Give it here, and I'll build your heat sink."
@@ -320,12 +320,12 @@ interact_ch2_rocco_give {
 		BLANK "(You received the heat sink!)"
 		PLAYER "Thanks!"
 	};
-	copy!(rocco_work)
+	rocco_work()
 	show dialog {
 		SELF "You're welcome. Good luck fixing the mainframe."
 	};
-	copy!(ch2_pickup_heatsink)
-	copy!(ch2_turn_in_cactuscooler)
+	ch2_pickup_heatsink()
+	ch2_turn_in_cactuscooler()
 	goto interact_ch2_rocco_wrapup;
 }
 
@@ -337,7 +337,7 @@ interact_ch2_rocco_nogive {
 }
 
 interact_ch2_rocco_wrapup {
-	copy!(rocco_work)
+	rocco_work()
 	self on_interact = interact_ch2_rocco;
 }
 

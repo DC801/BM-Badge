@@ -5,7 +5,7 @@ on_load_greenhouse {
 		command rtfm = command_rtfm;
 	}
 	if (trekkie_quest_done) {
-		copy!(ch1_ethernettle_restore)
+		ch1_ethernettle_restore()
 	}
 }
 
@@ -86,12 +86,12 @@ show_dialog_greenhouse_barrel {
 }
 
 show_dialog_trekkie_start {
-	copy!(clear_own_tick)
-	copy!(face_player)
+	clear_own_tick()
+	face_player()
 	if (self glitched) {
 		show dialog { SELF "Hu bu. Qvq zr trg n ivehf?" };
 	} else if (trekkie_quest_done) {
-		copy!(ch1_greenhouse_trekkie_aftermath)
+		ch1_greenhouse_trekkie_aftermath()
 	} else if (
 		entity EtherNettle1 secondary_id != 3 // orange-white
 		|| entity EtherNettle2 secondary_id != 2 // orange
@@ -103,14 +103,14 @@ show_dialog_trekkie_start {
 		|| entity EtherNettle8 secondary_id != 4 // brown
 	) {
 		if (trekkie_backstory) {
-			copy!(ch1_greenhouse_trekkie_backstory_reminder)
+			ch1_greenhouse_trekkie_backstory_reminder()
 		} else {
-			copy!(ch1_greenhouse_trekkie_backstory_cutscene)
+			ch1_greenhouse_trekkie_backstory_cutscene()
 		}
 	} else {
-		copy!(ch1_greenhouse_modem_turning_on_cutscene)
+		ch1_greenhouse_modem_turning_on_cutscene()
 		if (hint_tracking_check == 7) {
-			copy!(set_hint_none)
+			set_hint_none()
 			// ^^ if the hint series is the same, reset hint
 		}
 	}
@@ -128,7 +128,7 @@ ch1_greenhouse_trekkie_backstory_cutscene {
 	wait 900ms;
 	self direction = geometry Computer
 	wait 900ms;
-	copy!(face_player)
+	face_player()
 	wait 200ms;
 	show dialog {
 		SELF "Me sorry, %PLAYER%... but the internet still no working."
@@ -141,7 +141,7 @@ ch1_greenhouse_trekkie_backstory_cutscene {
 		SELF "It always the Ether Nettles. Modem need Ether Nettles. Ever since the big bad hack, the Ether Nettles line up wrong."
 		PLAYER "You can't move the flowers? Put them in the right order?"
 	};
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Can't just dig up Ether Nettles. Wired in super, super well."
 		"If you move flowers, you must move wires underneath or everything breaks. Very slow, very difficult work."
@@ -154,20 +154,20 @@ ch1_greenhouse_trekkie_backstory_cutscene {
 		"Probably."
 		SELF "%PLAYER% has new magic zeroed ring. Maybe %PLAYER% can change flower colors!"
 	};
-	copy!(set_hint_trekkie)
+	set_hint_trekkie()
 	trekkie_backstory = true;
-	copy!(set_tick_watch_player)
+	set_tick_watch_player()
 	player_control = on;
 }
 
 ch1_greenhouse_trekkie_backstory_reminder {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Me can't remember Ether Nettle color order. Me need internet to check!"
 		"But me do remember orange stripey is first!"
 	};
-	copy!(set_hint_trekkie)
-	copy!(set_tick_watch_player)
+	set_hint_trekkie()
+	set_tick_watch_player()
 }
 
 ch1_greenhouse_modem_turning_on_cutscene {
@@ -187,7 +187,7 @@ ch1_greenhouse_modem_turning_on_cutscene {
 		SELF alignment TOP_LEFT "Oh! The lights!"
 	};
 	wait 800ms;
-	copy!(face_player)
+	face_player()
 	player direction = self;
 	wait 500ms;
 	player direction = entity Modem;
@@ -209,7 +209,7 @@ ch1_greenhouse_modem_turning_on_cutscene {
 	wait 600ms;
 	self direction = geometry Computer;
 	wait 800ms;
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "%PLAYER% did it! Made Ether Nettle talk to outside world again!"
 		"Me can go on the internet! Can use so many free AOL hours!"
@@ -218,7 +218,7 @@ ch1_greenhouse_modem_turning_on_cutscene {
 	};
 	self direction = geometry Computer;
 	trekkie_quest_done = true;
-	copy!(calculate_hint_tracking_series)
+	calculate_hint_tracking_series()
 	player_control = on;
 }
 
@@ -235,7 +235,7 @@ ch1_greenhouse_trekkie_aftermath {
 }
 
 debug_ethernet_puzzle_q {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF
 		"Restore Ether Nettle?"
@@ -248,9 +248,9 @@ ch1_debug_ethernettle_no {
 	self on_interact = debug_ethernet_puzzle_q;
 }
 ch1_debug_ethernettle {
-	copy!(ch1_ethernettle_restore)
+	ch1_ethernettle_restore()
 	entity Modem current_animation = 0; // the modem still won't until you speak to Trekkie
-	copy!(face_player)
+	face_player()
 	show dialog { SELF "Ether Nettle restored." };
 	self on_interact = debug_ethernet_puzzle_q;
 }

@@ -56,7 +56,7 @@ command_man {
 		goto command_man_normal;
 	} else {
 		// otherwise, `man` cannot reach Lambda
-		copy!(ch2_wireless_error)
+		ch2_wireless_error()
 	}
 }
 

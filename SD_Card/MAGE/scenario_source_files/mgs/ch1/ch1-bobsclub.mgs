@@ -79,12 +79,12 @@ show_dialog_bobsclub {
 		entity "Guardian Bob"
 		"Well, this place should be full of Bobs... next year."
 	};
-	copy!(begin_flail)
+	begin_flail()
 	show dialog {
 		entity "Strong Bad"
 		"Bob-alina!\nBob-cine!\nBob-quelyn!\nCome baaaack!"
 	};
-	copy!(end_flail)
+	end_flail()
 	player_control = on;
 	bobsclub_entered = true;
 	if (!baker_backstory) {
@@ -129,20 +129,20 @@ leave_bobsclub {
 
 // bakery
 on_tick_bake {
-	copy!(add_flour)
-	copy!(add_flour)
-	copy!(add_flour)
+	add_flour()
+	add_flour()
+	add_flour()
 	self position -> geometry bakery_mid origin over 200ms;
 	self position -> geometry pre_sink origin over 350ms;
-	copy!(wash_hands)
+	wash_hands()
 	self position -> geometry bakery_ovenzone origin over 1300ms;
-	copy!(load_bread)
+	load_bread()
 	self position -> geometry bakery_ovenzone origin over 300ms;
-	copy!(load_bread)
+	load_bread()
 	self position -> geometry bakery_fridgezone origin over 1800ms;
-	copy!(check_fridge)
+	check_fridge()
 	self position -> geometry pre_sink origin over 700ms;
-	copy!(wash_hands)
+	wash_hands()
 	self position -> geometry bakery_mid origin over 450ms;
 	self position -> geometry bakery_kneading origin over 250ms;
 	wait 600ms;
@@ -212,9 +212,9 @@ show_dialog_baker_start {
 				"Well, thanks for finding out for me. Now I need to find a way to move four dozen B-shaped donuts."
 			};
 			baker_quest_done = true;
-			copy!(calculate_hint_tracking_series)
+			calculate_hint_tracking_series()
 			if (hint_tracking_check == 2) {
-				copy!(set_hint_none)
+				set_hint_none()
 			}
 		} else { // ...but you HAVE brought him the news already
 			// final dialog:
@@ -241,7 +241,7 @@ show_dialog_baker_start {
 				SELF "Hear anything from the Bobs-Only Club yet?"
 			};
 		}
-		copy!(set_hint_baker)
+		set_hint_baker()
 	}
 	player on_tick = null_script;
 	self on_interact = show_dialog_baker_start;
@@ -270,7 +270,7 @@ show_dialog_fridge {
 
 // Bob Austin
 show_dialog_bobrock_start {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
 		show dialog { SELF "Sqd'j meha byau jxyi." };
 		return;
@@ -279,7 +279,7 @@ show_dialog_bobrock_start {
 	if (!entity "Bob Austin" intersects geometry bobzone) {
 		// teleport him back into bounds
 		player_control = off;
-		copy!(face_player)
+		face_player()
 		show dialog { SELF "Goin' back to work."};
 		camera fade out -> #000000 over 500ms;
 		entity "Bob Austin" position = geometry bob_point;
@@ -317,7 +317,7 @@ show_dialog_bobrock_start {
 			};
 		}
 		bobrock_backstory = true;
-		copy!(set_hint_baker)
+		set_hint_baker()
 		return;
 	}
 
@@ -329,7 +329,7 @@ show_dialog_bobrock_start {
 				PLAYER "Um....\nit's %PLAYER%."
 				SELF "Sorry, can't unlock the door for ya.\nBobs only."
 			};
-			copy!(set_hint_baker)
+			set_hint_baker()
 		} else {
 			show dialog show_dialog_bobrock_start_AGAIN { // (reused)
 				PLAYER "We've been through all this before, you know."
@@ -373,7 +373,7 @@ show_dialog_bobrock_start {
 
 // Guardian Bob
 show_dialog_bobsclub_bob {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
 		show dialog { SELF "Gung'f n onq fvta." };
 		return;
@@ -391,7 +391,7 @@ show_dialog_bobsclub_bob {
 		show dialog {
 			SELF "Wait. Weren't there two Bob golems last year?"
 		};
-		copy!(set_hint_bobmoss_from_guardian)
+		set_hint_bobmoss_from_guardian()
 		entity "Guardian Bob" on_tick = null_script;
 		entity "Guardian Bob" direction = south;
 	}
@@ -403,7 +403,7 @@ show_dialog_bobsclub_strongbob {
 		show dialog { SELF "fhqwhgadshgnsdhjsdbkhsdabkfabkveybvf" };
 		return;
 	}
-	copy!(face_player)
+	face_player()
 	if (!strong_bad_backstory) {
 		show dialog {
 			SELF "Why, hello there, fellow Bob!"
@@ -424,9 +424,9 @@ show_dialog_bobsclub_strongbob {
 /** ------ BOB MOSS ------ **/
 
 show_dialog_bobmoss_start {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
-		copy!(show_dialog_bobmoss_deglitch)
+		show_dialog_bobmoss_deglitch()
 		self on_interact = show_dialog_bobmoss_start;
 	}
 	if (bobmoss_quest_done) {
@@ -441,7 +441,7 @@ show_dialog_bobmoss_start {
 		"I've made so many squirrel friends, and...."
 	};
 	entity "Bob Moss" on_tick = null_script;
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Oh!"
 		"I didn't realize how late it was getting. I think I might be late for work."
@@ -451,18 +451,18 @@ show_dialog_bobmoss_start {
 	camera fade out -> #000000 over 500ms;
 	entity "Bob Moss" position = geometry "catwalk-hide";
 	bobmoss_quest_done = true;
-	copy!(calculate_hint_tracking_series)
+	calculate_hint_tracking_series()
 	if (hint_tracking_check == 3) {
 		// if the hint series is the same, reset hint
-		copy!(set_hint_none)
+		set_hint_none()
 	}
 	camera fade in -> #000000 over 500ms;
 	player_control = on;
 }
 show_dialog_bobmoss_start_s {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
-		copy!(show_dialog_bobmoss_deglitch)
+		show_dialog_bobmoss_deglitch()
 		self on_interact = show_dialog_bobmoss_start_s;
 	}
 	show dialog {
@@ -489,16 +489,16 @@ show_dialog_bobmoss_deglitch {
 /* --- DEBUG --- */
 
 debug_begin_flail {
-	copy!(begin_flail)
+	begin_flail()
 	self on_interact = debug_end_flail;
 }
 debug_end_flail {
-	copy!(end_flail)
+	end_flail()
 	self on_interact = debug_begin_flail;
 }
 
 debug_bob_q {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF
 		"How to Bob?"

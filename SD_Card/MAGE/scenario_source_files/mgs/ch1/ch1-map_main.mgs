@@ -36,7 +36,7 @@ on_load_map_main {
 		entity "Bob Moss" position = geometry "catwalk-hide";
 	} 
 	if (rake_quest_done) {
-		copy!(rake_in_lake)
+		rake_in_lake()
 		entity Goose on_interact = honk_to_make_rake_float;
 	}
 	if (billy_unglitched) {
@@ -52,10 +52,10 @@ on_load_map_main {
 		entity Hamster glitched = false;
 	}
 	if (shepherd_quest_done) {
-		copy!(sheep_in_pen)
+		sheep_in_pen()
 	}
 	if (bender_quest_done) {
-		copy!(bender_happybutt)
+		bender_happybutt()
 	}
 	if (!walked_to_lodge) {
 		goto walk_to_lodge;
@@ -63,7 +63,7 @@ on_load_map_main {
 	player_control = off;
 	if (!hintman_explanation) {
 		player position -> geometry "enter_from_lodge" length over 400ms; 
-		copy!(hintman_cutscene) // see script-elders.json for this
+		hintman_cutscene() // see script-elders.json for this
 		hintman_explanation = true;
 	} else if (warp_state == enter_from_east) {
 		player position -> geometry enter_from_east length over 1000ms; 
@@ -173,7 +173,7 @@ cat_watch {
 cat_rescue_protocol {
 	entity Cat position = geometry "cat-rescue-path";
 	entity Cat position -> geometry "cat-rescue-path" length over 800ms; 
-	copy!(cat_and_cleo_convo_turn)
+	cat_and_cleo_convo_turn()
 	entity Cat on_tick = cat_watch;
 }
 cleo_watch {
@@ -185,7 +185,7 @@ cleo_watch {
 cleo_rescue_protocol {
 	entity Cleo position = geometry "cleo-rescue-path";
 	entity Cleo position -> geometry "cleo-rescue-path" length over 800ms; 
-	copy!(cat_and_cleo_convo_turn)
+	cat_and_cleo_convo_turn()
 	entity Cleo on_tick = cleo_watch;
 }
 
@@ -328,17 +328,17 @@ cat_and_cleo_convo_turn {
 }
 
 cat_and_cleo_convo_turn_player {
-	copy!(turn_padding_start)
+	turn_padding_start()
 	entity Cleo direction = player;
 	entity Cat direction = player;
-	copy!(turn_padding_end)
+	turn_padding_end()
 }
 
 show_dialog_cleo1 {
 	if (self glitched) {
 		show dialog { Cleo "Uzz, V srry n ovg shaal." };
 	} else {
-		copy!(cat_and_cleo_convo_turn)
+		cat_and_cleo_convo_turn()
 		show dialog {
 			Cat "Meowrrow."
 			Cleo "Oh, you don't say!"
@@ -353,7 +353,7 @@ show_dialog_cleo2 {
 	if (self glitched) {
 		show dialog { Cleo "Uzz, V srry n ovg shaal." };
 	} else {
-		copy!(cat_and_cleo_convo_turn)
+		cat_and_cleo_convo_turn()
 		show dialog {
 			Cat "Meowwowow."
 			Cleo "That's what I've been saying this whole time!"
@@ -372,8 +372,8 @@ show_dialog_cat {
 			PLAYER alignment TR
 			"Excuse me. I'm looking for the cat boss. Is that you?"
 		};
-		copy!(turn_padding_start)
-		copy!(cat_and_cleo_convo_turn_player)
+		turn_padding_start()
+		cat_and_cleo_convo_turn_player()
 		show dialog {
 			Cat "...."
 			Cleo "Cat boss?"
@@ -395,35 +395,35 @@ show_dialog_cat {
 				"But... where else am I gonna find a white cat?"
 			};
 		}
-		copy!(cat_and_cleo_convo_turn)
-		copy!(turn_padding_end)
-		copy!(set_hint_max_from_cleo)
+		cat_and_cleo_convo_turn()
+		turn_padding_end()
+		set_hint_max_from_cleo()
 		white_cat = true;
 	} else { // normal conversation
 		show dialog {
 			PLAYER alignment TR "Hey there, cat!"
 		};
-		copy!(turn_padding_start)
-		copy!(cat_and_cleo_convo_turn_player)
+		turn_padding_start()
+		cat_and_cleo_convo_turn_player()
 		show dialog {
 			Cat "...."
 			Cleo "Excuse me, but we were in the middle of a conversation."
 			PLAYER alignment TR "Oh, sorry. Carry on."
 		};
-		copy!(cat_and_cleo_convo_turn)
-		copy!(turn_padding_end)
+		cat_and_cleo_convo_turn()
+		turn_padding_end()
 	}
 	self on_interact = show_dialog_cat;
 }
 
 show_dialog_hamster_start {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
 		show dialog {
 			SELF "Mxqj'i jxyi? Q mehbtmytu iybysed ixehjqwu?!"
 		};
 		if (!main_hamster_unglitched) {
-			copy!(set_hint_glitch)
+			set_hint_glitch()
 		}
 	} else if (hamster_endstory) {
 		show dialog {

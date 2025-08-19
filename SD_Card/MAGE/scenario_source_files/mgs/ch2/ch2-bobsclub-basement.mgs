@@ -80,10 +80,10 @@ on_load_ch2_bobsclub_basement {
 		entity "Guardian Bob" position = geometry "bob-walk2";
 		entity "Guardian Bob" on_tick = loiter_slow;
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 	command look + bob = look_ch2_bob;
 	if (!ch2_cutseen_bob_party) {
-		copy!(ch2_cutscene_bob_party)
+		ch2_cutscene_bob_party()
 	}
 }
 
@@ -94,7 +94,7 @@ on_tick_ch2_bobsclub_basement {
 }
 
 tick_linger_1 {
-	copy!(tick_rand_mini)
+	tick_rand_mini()
 	self position -> geometry "linger-spot-1b" origin over 500ms;
 	self direction = east;
 	wait 15s;
@@ -123,7 +123,7 @@ tick_rand_broad {
 }
 
 tick_linger_2 {
-	copy!(tick_rand_broad)
+	tick_rand_broad()
 	wait 3s;
 	self position -> geometry "linger-spot-2b" origin over 1s;
 	self direction = south;
@@ -137,7 +137,7 @@ tick_linger_2 {
 	wait 20s;
 }
 tick_linger_3 {
-	copy!(tick_rand_mini)
+	tick_rand_mini()
 	wait 5s;
 	self position -> geometry "linger-spot-3b" origin over 750ms;
 	self direction = east;
@@ -147,7 +147,7 @@ tick_linger_3 {
 	wait 4s;
 }
 tick_linger_4 {
-	copy!(tick_rand_broad)
+	tick_rand_broad()
 	self position -> geometry "linger-spot-4b" origin over 1s;
 	self direction = north;
 	wait 15s;
@@ -190,7 +190,7 @@ on_tick_turn_right_and_up_kinda {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_bobsclub_basement_stairs {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-bobsclub";
 }
 
@@ -335,7 +335,7 @@ loiter_slow {
 /* ---------- ENTITIES ---------- */
 
 interact_ch2_guardianbob {
-	copy!(interrupt_walk)
+	interrupt_walk()
 	show dialog {
 		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up and everything."
 		SELF "Well, we WERE going to have the party upstairs, but someone broke in and pretended to be named Bob. After that we upped our security."
@@ -345,11 +345,11 @@ interact_ch2_guardianbob {
 		SELF "I've been manually teleporting Bobs down here ever since, just to be sure. My teleport program is very strict. It won't let non-Bobs through at all."
 		PLAYER "Good to know."
 	};
-	copy!(resume_walk)
+	resume_walk()
 }
 
 interact_ch2_bobaustin {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "I'm the MC for Bob Jeopardy this year."
 		"Of course, I'm the MC for Bob Jeopardy every year."
@@ -361,7 +361,7 @@ interact_ch2_bobaustin {
 }
 
 interact_ch2_bobmoss {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Hey there, friend. Have a drink, on the house."
 		"Plenty of Cactus Cooler to go around."
@@ -369,14 +369,14 @@ interact_ch2_bobmoss {
 	self direction = south;
 }
 interact_ch2_party_cups {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		PLAYER "It's always red plastic cups, isn't it?"
 	};
 	self direction = south;
 }
 interact_ch2_pizza {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		PLAYER "Mmmm, fresh pizza!"
 
@@ -397,13 +397,13 @@ dialog bob9 { SELF "Frog blast the vent core!" "That's the name of my favorite d
 
 interact_ch2_marathonbob {
 	// capture original facing direction
-	copy!(interrupt_walk)
+	interrupt_walk()
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
 	rand!(
 		show dialog [ bob0, bob1, bob2, bob3, bob4, bob5, bob6, bob7, bob8, bob9 ];
 	)
 	// turn back to the original facing direction
-	copy!(resume_walk)
+	resume_walk()
 }
 
 interact_ch2_icechest {
@@ -435,7 +435,7 @@ interact_ch2_icechest {
 		show dialog {
 			name "" "(You pick up the can of Cactus Cooler!)"
 		};
-		copy!(ch2_pickup_cactuscooler)
+		ch2_pickup_cactuscooler()
 		interrupt = true; // you just picked it up
 	}
 }

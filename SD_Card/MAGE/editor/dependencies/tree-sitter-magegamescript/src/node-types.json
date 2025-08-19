@@ -5988,10 +5988,6 @@
     "named": false
   },
   {
-    "type": "copy",
-    "named": false
-  },
-  {
     "type": "current_animation",
     "named": false
   },

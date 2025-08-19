@@ -1,7 +1,7 @@
 include "header.mgs";
 
 show_dialog_shepherd_start {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
 		show dialog { SELF "Jubn, jung'f tbvat ba?!" };
 		return;
@@ -27,42 +27,42 @@ show_dialog_shepherd_start {
 			show dialog { SELF "Thanks a million! I owe you one!" };
 		}
 		shepherd_quest_done = true;
-		copy!(calculate_hint_tracking_series)
+		calculate_hint_tracking_series()
 		if (hint_tracking_check == 1) {
-			copy!(set_hint_none)
+			set_hint_none()
 		}
 		return;
 	}
 	if (!shepherd_backstory) {
-		copy!(show_dialog_shepherd_backstory)
-		copy!(set_hint_shepherd)
+		show_dialog_shepherd_backstory()
+		set_hint_shepherd()
 	} else if (
 		entity Baa intersects geometry "sheep-pen"
 		|| entity Ram intersects geometry "sheep-pen"
 		|| entity Ewe intersects geometry "sheep-pen"
 		|| entity Helga intersects geometry "sheep-pen"
 	) {
-		copy!(face_player)
+		face_player()
 		show dialog { SELF "Awesome! Don't stop, now!" };
-		copy!(set_hint_shepherd_partial)
+		set_hint_shepherd_partial()
 	} else {
 		show dialog { SELF "Can you help a dude out? Put all four sheep back inside the fence?" };
-		copy!(set_hint_shepherd)
+		set_hint_shepherd()
 	}
 	shepherd_backstory = true;
 }
 
 show_dialog_shepherd_backstory {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "...."
 		"I messed up."
 	};
-	copy!(turn_right_and_left)
+	turn_right_and_left()
 	show dialog {
 		SELF "I was supposed to be watching the sheep, but I took a quick nap, and the next thing I know... they were all over the place."
 	};
-	copy!(turn_right_and_left)
+	turn_right_and_left()
 	show dialog {
 		PLAYER "How did they get out? The fence looks fine."
 		SELF "I don't even know. Maybe they were, you know, hacked out. By the Big Bad."
@@ -80,7 +80,7 @@ show_dialog_sheep {
 }
 
 turn_right_and_left {
-	copy!(face_player)
+	face_player()
 	player_control = off;
 	wait 200ms;
 	self direction += 1;
@@ -89,16 +89,16 @@ turn_right_and_left {
 	wait 500ms;
 	self direction += 1;
 	wait 200ms;
-	copy!(face_player)
+	face_player()
 	player_control = on;
 }
 
 show_dialog_shepherd_ending {
 	shepherd_quest_done = true;
 	shepherd_backstory = true;
-	copy!(calculate_hint_tracking_series)
+	calculate_hint_tracking_series()
 	if (hint_tracking_check == 1) {
-		copy!(set_hint_none)
+		set_hint_none()
 	}
 	entity Shepherd on_interact = show_dialog_shepherd_start;
 }
@@ -138,7 +138,7 @@ make_sheep_loiter {
 }
 
 debug_sheep_q {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Return sheep to pen?"
 		> "Yes (all)" = debug_sheep_all
@@ -147,7 +147,7 @@ debug_sheep_q {
 	};
 }
 debug_sheep_all {
-	copy!(sheep_in_pen)
+	sheep_in_pen()
 	show dialog { SELF "All sheep returned." };
 	self on_interact = debug_sheep_q;
 }

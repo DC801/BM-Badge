@@ -43,7 +43,7 @@ on_load_ch2_castle_11_postgame {
 	} else if (warp_state == "walk_from-west") {
 		player position = geometry "walk_from-west";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 on_load_ch2_castle_11 {
@@ -63,15 +63,15 @@ on_load_ch2_castle_11 {
 	// room unique things
 
 	if (ch2_installed_monitor || ch2_carrying_monitor) {
-		copy!(ch2_hide_monitor)
+		ch2_hide_monitor()
 	}
 
 	// initialize everything
-	copy!(ch2_map_init)
+	ch2_map_init()
 
 	// check if you do the cutscene or not
 	if (!ch2_cutseen_castle11) {
-		copy!(ch2_cutscene_castle11)
+		ch2_cutscene_castle11()
 	}
 }
 
@@ -190,17 +190,17 @@ watch_kuro {
 on_tick_ch2_castle_11 {}
 on_tick_ch2_castle_11_postgame {
 	if (player intersects geometry "south-hitbox") {
-		copy!(on_exit_ch2_castle_11)
+		on_exit_ch2_castle_11()
 		warp_state = "walk_from-north";
-		copy!(ch2_load_castle_1_special)
+		ch2_load_castle_1_special()
 	} else if (player intersects geometry "north-hitbox") {
-		copy!(on_exit_ch2_castle_11)
+		on_exit_ch2_castle_11()
 		warp_state = "walk_from-south";
-		copy!(ch2_load_castle_12_special)
+		ch2_load_castle_12_special()
 	} else if (player intersects geometry "west-hitbox") {
-		copy!(on_exit_ch2_castle_11)
+		on_exit_ch2_castle_11()
 		warp_state = "walk_from-east";
-		copy!(ch2_load_castle_21_special)
+		ch2_load_castle_21_special()
 	}
 }
 
@@ -213,19 +213,19 @@ on_exit_ch2_castle_11 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_11_north {
-	copy!(on_exit_ch2_castle_11)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_12_special)
+	on_exit_ch2_castle_11()
+	warping_out_fade_out()
+	ch2_load_castle_12_special()
 }
 on_go_castle_11_west {
-	copy!(on_exit_ch2_castle_11)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_21_special)
+	on_exit_ch2_castle_11()
+	warping_out_fade_out()
+	ch2_load_castle_21_special()
 }
 on_go_castle_11_south {
-	copy!(on_exit_ch2_castle_11)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_1_special)
+	on_exit_ch2_castle_11()
+	warping_out_fade_out()
+	ch2_load_castle_1_special()
 }
 
 ch2_hide_monitor {
@@ -249,12 +249,12 @@ ch2_touch_monitor_yes {
 		PLAYER "Um, how do I take it?"
 		Kuro "Just unplug all the cables from the computer case. One power cable, one data cable."
 	};
-	copy!(ch2_pickup_monitor)
+	ch2_pickup_monitor()
 	self position = geometry "hiding-spot"; // for visuals; don't wanna change the script slot yet though! That will come AFTER the dialog so that execution isn't halted early
 	show dialog {
 		name "" "(You pick up the monitor!)"
 	};
-	copy!(ch2_hide_monitor)
+	ch2_hide_monitor()
 	self on_interact = null_script;
 }
 ch2_touch_monitor_no {

@@ -38,8 +38,8 @@
 // willCopyThatOne {
 // 	show dialog { Bob "Who goes there?" }
 // 	wait 20;
-// 	copy!(copyMe)
+// 	copyMe()
 // 	wait 100;
-// 	copy!(copyMe)
+// 	copyMe()
 // 	wait 10000;
 // }

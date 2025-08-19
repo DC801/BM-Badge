@@ -94,7 +94,7 @@ basement { ch2_cutseen_bob_party = true; }
 unbasement { ch2_cutseen_bob_party = false; }
 toot {
 	ch2_toot_done = true;
-	copy!(register_parts)
+	register_parts()
 }
 untoot {
 	ch2_toot_done = false;
@@ -121,7 +121,7 @@ on_load_ch2_bobsclub {
 	// do unique stuff first (but player_control = serial / off first, if you do)
 	ch2_rattle_count = 0;
 	
-	copy!(ch2_map_init)
+	ch2_map_init()
 
 	// DEBUG
 	if (debug_mode) {
@@ -174,7 +174,7 @@ on_load_ch2_bobsclub {
 				PLAYER "Huh. Still empty... apart from that muffled thumping noise."
 			};
 		}
-		copy!(player_look_down)
+		player_look_down()
 		// CC followup
 		if (ch2_want_cactuscooler) { // You KNOW you need CC
 			if (ch1_found_cactuscooler) {
@@ -233,11 +233,11 @@ on_tick_ch2_bobsclub {
 /* ---------- EXIT STUFF ---------- */
 
 on_go_ch2_bobsclub_stairs {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-bobsclub-basement";
 }
 on_go_ch2_bobsclub_south {
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 	load map "ch2-town";
 }
 
@@ -294,13 +294,13 @@ interact_ch2_bobcupboard {
 			PLAYER "Yup, still glasses and tumblers in there."
 		};
 	}
-	copy!(ch2_bobrattling)
+	ch2_bobrattling()
 }
 interact_ch2_bobglasses {
 	show dialog {
 		PLAYER "These glasses look super fancy."
 	};
-	copy!(ch2_bobrattling)
+	ch2_bobrattling()
 }
 interact_ch2_bobfridge {
 	if ( // You've already collected the CC
@@ -321,7 +321,7 @@ interact_ch2_bobfridge {
 			};
 		}
 	}
-	copy!(ch2_bobrattling)
+	ch2_bobrattling()
 }
 
 player_look_down {
@@ -337,7 +337,7 @@ ch2_bobrattling { // Hint that there's more inside the building
 			show dialog {
 				PLAYER "...Jeez, that weird thumping is actually rattling the shelves! Is that... music? Loud music?"
 			};
-			copy!(player_look_down)
+			player_look_down()
 			show dialog {
 				PLAYER "Where the heck is it coming from? This is the only room in the building!"
 				"...Right?"
@@ -355,7 +355,7 @@ ch2_bobrattling { // Hint that there's more inside the building
 			show dialog {
 				PLAYER "...Wow, I think what I'm hearing is actually dubstep. It's muffled, but it's so loud it must be practically next door."
 			};
-			copy!(player_look_down)
+			player_look_down()
 			show dialog {
 				PLAYER "Is it under the floor or something? I keeping looking but there aren't any stairs!"
 			};
@@ -365,7 +365,7 @@ ch2_bobrattling { // Hint that there's more inside the building
 			show dialog {
 				PLAYER "...Okay, that music is starting to get on my nerves. But where..."
 			};
-			copy!(player_look_down)
+			player_look_down()
 			show dialog {
 				PLAYER "...Oh, that's right! The artifact can identify the exits for each room!"
 				"I wonder if it could show me the way to a secret room."
@@ -373,18 +373,18 @@ ch2_bobrattling { // Hint that there's more inside the building
 			};
 		}
 		else if (ch2_rattle_count == 4) {
-			copy!(player_look_down)
+			player_look_down()
 			show dialog {
 				PLAYER "...Ah, that's right, I remember now. I can use the artifact to LOOK around the room. Maybe I can find the source of the music that way."
 			};
 		}
 		else {
-			copy!(player_look_down)
+			player_look_down()
 			show dialog {
 				PLAYER "...But enough distractions. I should use the LOOK command in the serial console to discover any secret doors."
 			};
 		}
-		copy!(player_look_down)
+		player_look_down()
 
 		// advance the count
 		ch2_rattle_count += 1;

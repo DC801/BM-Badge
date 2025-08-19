@@ -59,7 +59,7 @@ interact_ch2_mainframe {
 		};
 		return;
 	} else if (ch2_carrying_mainframeos) {
-		copy!(ch2_install_wizard)
+		ch2_install_wizard()
 		return;
 	} else if (ch2_installed_mainframeos) {
 		show dialog mainframe_working; // references above
@@ -81,7 +81,7 @@ interact_ch2_mainframe {
 				"(Or you would, but you can't install it until the CPU is in place. You set it aside for now.)"
 			};
 			temp = true;
-			copy!(ch2_install_heatsink)
+			ch2_install_heatsink()
 		}
 	}
 	if (!ch2_installed_powersupply) {
@@ -91,7 +91,7 @@ interact_ch2_mainframe {
 				"(2 kW may be overkill, but better safe than sorry.)"
 			};
 			temp = true;
-			copy!(ch2_install_powersupply)
+			ch2_install_powersupply()
 		}
 	}
 	if (!ch2_installed_monitor) {
@@ -101,7 +101,7 @@ interact_ch2_mainframe {
 				"(...Or rather, it's now plugged into the back. That one was easy!)"
 			};
 			temp = true;
-			copy!(ch2_install_monitor)
+			ch2_install_monitor()
 		}
 	}
 	// abstract
@@ -112,7 +112,7 @@ interact_ch2_mainframe {
 				"(What's the read head going to be? Will this work?!)"
 			};
 			temp = true;
-			copy!(ch2_install_harddrive)
+			ch2_install_harddrive()
 		}
 	}
 	if (!ch2_installed_keyboard) {
@@ -122,7 +122,7 @@ interact_ch2_mainframe {
 				"(Good thing the keytar can connect over USB, or this wouldn't have worked.)"
 			};
 			temp = true;
-			copy!(ch2_install_keyboard)
+			ch2_install_keyboard()
 		}
 	}
 	if (!ch2_installed_mouse) {
@@ -132,7 +132,7 @@ interact_ch2_mainframe {
 				"(...Or at least, installing the dongle.)"
 			};
 			temp = true;
-			copy!(ch2_install_mouse)
+			ch2_install_mouse()
 		}
 	}
 	// desperate
@@ -143,7 +143,7 @@ interact_ch2_mainframe {
 				"(The RAM chips went in with a terrifying SNAP, but they seem snug now. You better wash your hands, though.)"
 			};
 			temp = true;
-			copy!(ch2_install_ramchips)
+			ch2_install_ramchips()
 		}
 	}
 	if (!ch2_installed_clock) {
@@ -153,7 +153,7 @@ interact_ch2_mainframe {
 				"(Somehow, that enormous, analog relic works great for a system clock.)"
 			};
 			temp = true;
-			copy!(ch2_install_clock)
+			ch2_install_clock()
 		}
 	}
 	if (!ch2_installed_cpu) {
@@ -163,7 +163,7 @@ interact_ch2_mainframe {
 				"(Now the mainframe can compute! And... blow bubbles?)"
 			};
 			temp = true;
-			copy!(ch2_install_cpu)
+			ch2_install_cpu()
 		}
 	}
 	// final
@@ -174,22 +174,22 @@ interact_ch2_mainframe {
 	} else {
 		temp = false;
 		show dialog { PLAYER "That's all for now." };
-		copy!(ch2_count_flags)
+		ch2_count_flags()
 		// the below are separate scripts so that multiple things can trigger them
 		// (^^ should this be the case?) (todo: determine this)
 		if (ch2_storyflags_tally == $goto_round_2) {
-			copy!(ch2_start_round_2)
+			ch2_start_round_2()
 		} else if (ch2_storyflags_tally == $goto_round_3) {
-			copy!(ch2_start_round_3)
+			ch2_start_round_3()
 		} else if (ch2_storyflags_tally == $goto_round_4) {
-			copy!(ch2_start_round_4)
+			ch2_start_round_4()
 		}
 	}
 }
 
 ch2_start_round_2 {
 	player current_animation = 0;
-	copy!(ch2_cutscene_bert_secret)
+	ch2_cutscene_bert_secret()
 	player_control = off;
 	wait 200ms;
 	show serial_dialog spacer;
@@ -290,53 +290,53 @@ ch2_debug_storyflag {
 }
 
 debug_map_flags_for_round0 {
-	copy!(ch2_take_off_map_round1)
-	copy!(ch2_take_off_map_round2)
-	copy!(ch2_take_off_map_round3)
-	copy!(ch2_take_off_map_round4)
+	ch2_take_off_map_round1()
+	ch2_take_off_map_round2()
+	ch2_take_off_map_round3()
+	ch2_take_off_map_round4()
 	ch2_storyflag_round = 0;
 	// copy ch2_debug_storyflag_log;
 }
 debug_map_flags_for_round1 {
-	copy!(ch2_put_on_map_round1)
-	copy!(ch2_take_off_map_round2)
-	copy!(ch2_take_off_map_round3)
-	copy!(ch2_take_off_map_round4)
+	ch2_put_on_map_round1()
+	ch2_take_off_map_round2()
+	ch2_take_off_map_round3()
+	ch2_take_off_map_round4()
 	ch2_storyflag_round = 1;
 	// copy ch2_debug_storyflag_log;
 }
 debug_map_flags_for_round2 {
-	copy!(ch2_take_off_map_round1)
-	copy!(ch2_put_on_map_round2)
-	copy!(ch2_take_off_map_round3)
-	copy!(ch2_take_off_map_round4)
+	ch2_take_off_map_round1()
+	ch2_put_on_map_round2()
+	ch2_take_off_map_round3()
+	ch2_take_off_map_round4()
 	ch2_storyflag_round = 2;
 	// copy ch2_debug_storyflag_log;
 }
 debug_map_flags_for_round3 {
-	copy!(ch2_take_off_map_round1)
-	copy!(ch2_take_off_map_round2)
-	copy!(ch2_put_on_map_round3)
-	copy!(ch2_take_off_map_round4)
+	ch2_take_off_map_round1()
+	ch2_take_off_map_round2()
+	ch2_put_on_map_round3()
+	ch2_take_off_map_round4()
 	ch2_storyflag_round = 3;
 	// copy ch2_debug_storyflag_log;
 }
 debug_map_flags_for_round4 {
-	copy!(ch2_take_off_map_round1)
-	copy!(ch2_take_off_map_round2)
-	copy!(ch2_take_off_map_round3)
-	copy!(ch2_put_on_map_round4)
+	ch2_take_off_map_round1()
+	ch2_take_off_map_round2()
+	ch2_take_off_map_round3()
+	ch2_put_on_map_round4()
 	ch2_storyflag_round = 4;
-	// copy!(ch2_debug_storyflag_log)
+	// ch2_debug_storyflag_log()
 }
 debug_map_flags_for_round5 {
-	copy!(ch2_take_off_map_round1)
-	copy!(ch2_take_off_map_round2)
-	copy!(ch2_take_off_map_round3)
-	copy!(ch2_take_off_map_round4)
+	ch2_take_off_map_round1()
+	ch2_take_off_map_round2()
+	ch2_take_off_map_round3()
+	ch2_take_off_map_round4()
 	ch2_storyflag_round = 5;
 	ch2_cutseen_castle99 = true;
-	// copy!(ch2_debug_storyflag_log)
+	// ch2_debug_storyflag_log()
 }
 ch2_debug_storyflag_log {
 	show serial_dialog spacer;

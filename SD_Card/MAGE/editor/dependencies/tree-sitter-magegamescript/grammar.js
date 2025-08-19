@@ -324,7 +324,7 @@ export default grammar({
 				),
 				')',
 			),
-		copy_macro: ($) => seq('copy', '!', '(', field('script', $.string), ')'),
+		copy_macro: ($) => seq(field('script', $.string), '(', ')'),
 		rand_macro: ($) => seq('rand', '!', '(', repeat($._script_item), ')'),
 		label_definition: ($) => seq(field('label', $.BAREWORD), ':'),
 

@@ -64,7 +64,7 @@ on_load_ch2_castle_13_postgame {
 	} else if (warp_state == "walk_from-south") {
 		player position = geometry "walk_from-south";
 	}
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 on_load_ch2_castle_13 {
 	if (warp_state == "ch2 ending") {
@@ -107,15 +107,15 @@ on_load_ch2_castle_13 {
 		entity Aurelius on_tick = yeet;
 	}
 
-	copy!(ch2_map_init)
+	ch2_map_init()
 	
 	// check if you do the cutscene or not
 	if (warp_state == "Ch2 King Returns") {
 		ch2_cutseen_castle13 = true; // in case you didn't see the whole prev cutscene, set this flag so the reunion cutscene will play out correctly
-		copy!(ch2_cutscene_kingreturns)
+		ch2_cutscene_kingreturns()
 	} else {
 		if (!ch2_cutseen_castle13) {
-			copy!(ch2_cutscene_castle12)
+			ch2_cutscene_castle12()
 		}
 	}
 }
@@ -391,12 +391,12 @@ ch2_cutscene_kingreturns {
 		"Once the mainframe is repaired, we will be much better equipped to clear all the debris at once."
 		PLAYER "Right, of course."
 	};
-	copy!(interrupt_king_walk)
+	interrupt_king_walk()
 	entity "King Gibson" direction = player;
 	show dialog {
 		GIBSON "Good luck. And thank you. Truly."
 	};
-	copy!(resume_king_walk)
+	resume_king_walk()
 	warp_state = "nothing lol";
 	ch2_king_rescued = true;
 	camera -> player position over 700ms;
@@ -411,20 +411,20 @@ king_walk_to_debris {
 
 on_tick_ch2_castle_13_postgame {
 	if (player intersects geometry "south-hitbox") {
-		copy!(on_exit_ch2_castle_13)
+		on_exit_ch2_castle_13()
 		warp_state = "walk_from-north";
-		copy!(ch2_load_castle_12_special)
+		ch2_load_castle_12_special()
 	} else if (player intersects geometry "north-hitbox") {
-		copy!(on_exit_ch2_castle_13)
+		on_exit_ch2_castle_13()
 		warp_state = "walk_from-south";
-		copy!(ch2_load_castle_14_special)
+		ch2_load_castle_14_special()
 	}
 }
 on_tick_ch2_castle_13 {
 	if (ch2_king_rescued) {
 		if (player intersects geometry "north-hitbox") {
 			warp_state = "walk_from-south";
-			copy!(ch2_load_castle_14_special)
+			ch2_load_castle_14_special()
 		}
 	}
 }
@@ -438,14 +438,14 @@ on_exit_ch2_castle_13 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_13_north {
-	copy!(on_exit_ch2_castle_13)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_14_special)
+	on_exit_ch2_castle_13()
+	warping_out_fade_out()
+	ch2_load_castle_14_special()
 }
 on_go_castle_13_south {
-	copy!(on_exit_ch2_castle_13)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_12_special)
+	on_exit_ch2_castle_13()
+	warping_out_fade_out()
+	ch2_load_castle_12_special()
 }
 
 /* ---------- GOLDFISH (ADMIN) ---------- */
@@ -457,7 +457,7 @@ ch2_touch_goldfish {
 			Aurelius "Do please check on King Gibson, would you? He's in his bedroom, just to the north of us."
 		};
 	} else if (!ch2_king_rescued) {
-		copy!(ch2_king_unharmed)
+		ch2_king_unharmed()
 		if (ch2_king_report) {
 			show dialog {
 				Aurelius "Godspeed."
@@ -499,13 +499,13 @@ ch2_touch_goldfish {
 				GIBSON "Very well. We'll continue to do our best here."
 			};
 			entity Aurelius position = geometry "hiding-spot"; // doing yeet now aborts the script early!
-			copy!(ch2_pickup_goldfish)
+			ch2_pickup_goldfish()
 			show dialog {
 				name "" "(You acquired a goldfish!)"
 				GIBSON "I'm counting on you both. Good luck."
 			};
-			copy!(resume_king_walk)
-			copy!(resume_templeton_walk)
+			resume_king_walk()
+			resume_templeton_walk()
 			entity Aurelius on_tick = yeet;
 		}
 	}
@@ -533,13 +533,13 @@ ch2_king_unharmed {
 }
 
 interact_ch2_sebastian {
-	copy!(face_player)
+	face_player()
 	if (!ch2_cutseen_castle14) {
 		show dialog {
 			SELF "Mark my words: he's ignoring us. He's all but abdicated."
 		};
 	} else if (!ch2_king_rescued) {
-		copy!(ch2_king_unharmed)
+		ch2_king_unharmed()
 		if (ch2_king_report) {
 			show dialog {
 				SELF "Forget the king. He's on his own."
@@ -561,13 +561,13 @@ interact_ch2_sebastian {
 }
 
 interact_ch2_templeton {
-	copy!(face_player)
+	face_player()
 	if (!ch2_cutseen_castle14) {
 		show dialog {
 			SELF "I know King Gibson doesn't always get along with us, but this silence is unlike him. I'm worried."
 		};
 	} else if (!ch2_king_rescued) {
-		copy!(ch2_king_unharmed)
+		ch2_king_unharmed()
 		if (ch2_king_report) {
 			show dialog {
 				SELF "Oh, goodness! Thank you, thank you!"
@@ -575,12 +575,12 @@ interact_ch2_templeton {
 		}
 		ch2_king_report = true;
 	} else {
-		copy!(interrupt_walk)
+		interrupt_walk()
 		show dialog {
 			SELF "Thank you for rescuing the king. We were all very worried about him."
 			Sebastian "%Templeton%, please don't forget that you're trying to find my physics spellbook. The gravitation spell, please?"
 		};
-		copy!(resume_walk)
+		resume_walk()
 		show dialog {
 			SELF "Yes, yes, of course."
 		};
@@ -597,25 +597,25 @@ resume_templeton_walk {
 	resume_entity_walk(Templeton, captured_animation3, tempvar3)
 }
 templeton_catalog_search {
-	copy!(tick_rand_mini) // from bob's club basement
+	tick_rand_mini() // from bob's club basement
 	entity Templeton position -> geometry "end-templeton2" origin over 200ms;
-	copy!(tick_rand_mini) // from bob's club basement
+	tick_rand_mini() // from bob's club basement
 	entity Templeton position -> geometry "end-templeton1" origin over 200ms;
-	copy!(tick_rand_mini) // from bob's club basement
+	tick_rand_mini() // from bob's club basement
 }
 king_debris_ponder {
-	copy!(tick_rand_mini) // from bob's club basement
+	tick_rand_mini() // from bob's club basement
 	self position -> geometry "king-examine2" origin over 700ms;
 	self direction = south;
-	copy!(tick_rand_broad) // from bob's club basement
+	tick_rand_broad() // from bob's club basement
 	wait 400ms;
 	self position -> geometry "king-examine1" origin over 700ms;
 	self direction = south;
-	copy!(tick_rand_broad) // from bob's club basement
+	tick_rand_broad() // from bob's club basement
 }
 
 interact_ch2_gibson_throneroom {
-	copy!(interrupt_walk)
+	interrupt_walk()
 	if (ch2_storyflag_round < 3) {
 		show dialog {
 			GIBSON "My staff and I are reunited, thanks to you."
@@ -646,7 +646,7 @@ interact_ch2_gibson_throneroom {
 			};
 		}
 	}
-	copy!(resume_walk)
+	resume_walk()
 }
 
 interact_ch2_sebastian_end {
@@ -656,7 +656,7 @@ interact_ch2_templeton_end {
 	show dialog { SELF "Jeez Louise. I hope nothing else goes wrong today." };
 }
 interact_ch2_gibson_throneroom_end {
-	copy!(face_player)
+	face_player()
 	show dialog {
 		SELF "Do let me know when we can get Aurelius back."
 		PLAYER "Of course."

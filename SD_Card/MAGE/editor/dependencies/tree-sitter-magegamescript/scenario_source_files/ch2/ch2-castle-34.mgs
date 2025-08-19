@@ -68,7 +68,7 @@ on_load_ch2_castle_34 {
 
 	// room unique stuff
 	
-	copy!(ch2_map_init)
+	ch2_map_init()
 }
 
 /* ---------- ON_TICK ---------- */
@@ -76,7 +76,7 @@ on_load_ch2_castle_34 {
 on_tick_ch2_castle_34 {
 	if (player intersects geometry "south-hitbox") {
 		warp_state = "walk_from-northeast";
-		copy!(ch2_load_castle_32_special)
+		ch2_load_castle_32_special()
 	}
 }
 
@@ -102,9 +102,9 @@ on_exit_ch2_castle_34 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go_castle_34_south {
-	copy!(on_exit_ch2_castle_34)
-	copy!(warping_out_fade_out)
-	copy!(ch2_load_castle_32_special)
+	on_exit_ch2_castle_34()
+	warping_out_fade_out()
+	ch2_load_castle_32_special()
 }
 
 /* ---------- ENTITIES ---------- */
@@ -198,7 +198,7 @@ interact_ch2_dishshelf {
 		show dialog {
 			Clara "You need to tell what now?"
 		};
-		copy!(ch2_iron_content)
+		ch2_iron_content()
 	}
 }
 interact_ch2_winerack {
@@ -215,7 +215,7 @@ Cactus Cooler    .     X        .     X
 
 interact_ch2_clara {
 	if (ch2_storyflag_round < 2) {
-		copy!(interrupt_walk)
+		interrupt_walk()
 		if (!ch2_clara_backstory) {
 			show dialog {
 				SELF "Holy crap -- a new person!"
@@ -236,7 +236,7 @@ interact_ch2_clara {
 				show dialog { SELF "I'm new around here. I gotta say, this has been an interesting first week of work." };
 			}
 		}
-		copy!(resume_walk)
+		resume_walk()
 		return;
 	}
 	if (ch2_jukebox_backstory) {
@@ -248,7 +248,7 @@ interact_ch2_clara {
 		};
 		return;
 	}
-	copy!(ch2_iron_content)
+	ch2_iron_content()
 	ch2_jukebox_backstory = true;
 }
 
@@ -314,11 +314,11 @@ ch2_touch_plate {
 		show dialog {
 			PLAYER "Well, let's try to get that #6 plate out of there."
 		};
-		copy!(start_hanoi)
+		start_hanoi()
 	}
 }
 won_hanoi_get_plate {
-	copy!(ch2_pickup_plate)
+	ch2_pickup_plate()
 	show dialog { PLAYER "Aha! I got plate #6!" };
 	if (hanoi_move_count == 33) {
 		show dialog { Clara "Sweet. And it looks like you did it super efficiently, too. Nice!" };

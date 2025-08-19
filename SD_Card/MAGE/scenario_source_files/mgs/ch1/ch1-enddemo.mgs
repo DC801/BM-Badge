@@ -27,7 +27,7 @@ earthquake_setpiece {
 	entity Cat direction = south;
 	entity Verthandi direction = south;
 	entity Hamster direction = south;
-	copy!(earthquake)
+	earthquake()
 	wait 500ms;
 	entity Marta on_tick = marta_walk;
 	entity Cleo on_tick = loiter1;
@@ -85,13 +85,13 @@ ch1_end_everyone_look_at_jackob {
 
 ch1_end_cutscene {
 	player_control = off;
-	copy!(earthquake)
+	earthquake()
 	show dialog {
 		Alfonso "Good heavens! What was that?"
 	};
 	camera fade out -> #000000 over 300ms;
-	copy!(earthquake_setpiece)
-	copy!(ch1_end_cutscene_move)
+	earthquake_setpiece()
+	ch1_end_cutscene_move()
 	camera = player position;
 	camera fade in -> #000000 over 300ms;
 	entity Marta position -> geometry "demoend-marta-point" origin over 600ms;
@@ -117,10 +117,10 @@ ch1_end_cutscene {
 	wait 200ms; /**/ show dialog {
 		PLAYER alignment TR "Last time WHAT?"
 	};
-	copy!(ch1_end_everyone_south)
-	copy!(earthquake)
+	ch1_end_everyone_south()
+	earthquake()
 	wait 600ms;
-	copy!(ch1_end_everyone_look_at_jackob)
+	ch1_end_everyone_look_at_jackob()
 	// Jackob paces:
 	entity Jackob position -> geometry "demoend-jackob-pace" origin over 500ms;
 	entity Jackob position -> geometry "demoend-jackob-point" origin over 500ms;
@@ -165,8 +165,8 @@ ch1_end_cutscene {
 		Jackob "The other artifacts?"
 		Alfonso "Dangerous. Dangerous, but...."
 	};
-	copy!(ch1_end_everyone_south)
-	copy!(earthquake)
+	ch1_end_everyone_south()
+	earthquake()
 	wait 900ms;
 	show dialog {
 		Alfonso "*sigh*"

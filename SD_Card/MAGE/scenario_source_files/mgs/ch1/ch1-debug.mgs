@@ -30,14 +30,14 @@ debug_demobonus_q {
 }
 
 debug_demobonus_pre_flags_true {
-	copy!(set_story_flags_true)
+	set_story_flags_true()
 	ch1_finished = true;
 	warp_state = exit_from_credits;
 	self on_interact = debug_demobonus_q;
 }
 
 debug_demobonus_pre_flags_false {
-	copy!(set_story_flags_false)
+	set_story_flags_false()
 	ch1_finished = false;
 	self on_interact = debug_demobonus_q;
 }
@@ -78,9 +78,9 @@ debug_set_flags_true_q {
 
 debug_set_story_and_misc_flags_false {
 	hint_tracking = 0;
-	copy!(set_story_flags_false)
-	copy!(set_misc_flags_false)
-	copy!(set_ch1_finished_flags_false)
+	set_story_flags_false()
+	set_misc_flags_false()
+	set_ch1_finished_flags_false()
 	show dialog {
 		SELF "All story and misc flags set to FALSE."
 	};
@@ -88,7 +88,7 @@ debug_set_story_and_misc_flags_false {
 }
 
 debug_set_backstory_false {
-	copy!(set_backstory_flags_false)
+	set_backstory_flags_false()
 	show dialog {
 		SELF "All entities have forgotten their first\nconversations with you."
 	};
@@ -96,7 +96,7 @@ debug_set_backstory_false {
 }
 
 debug_set_backstory_true {
-	copy!(set_backstory_flags_true)
+	set_backstory_flags_true()
 	show dialog {
 		SELF "All entities are inexplicably under the\nimpression that you've spoken to them\nbefore."
 	};
@@ -104,7 +104,7 @@ debug_set_backstory_true {
 }
 
 debug_set_glitch_flags_true {
-	copy!(set_glitch_flags_true)
+	set_glitch_flags_true()
 	entity Billy glitched = false;
 	entity Kid glitched = false;
 	entity Fountain glitched = false;
@@ -113,7 +113,7 @@ debug_set_glitch_flags_true {
 }
 
 debug_set_glitch_flags_false {
-	copy!(set_glitch_flags_false)
+	set_glitch_flags_false()
 	entity Billy glitched = true;
 	entity Kid glitched = true;
 	entity Fountain glitched = true;
@@ -122,13 +122,13 @@ debug_set_glitch_flags_false {
 }
 
 debug_set_all_true {
-	copy!(set_story_flags_true)
-	copy!(set_glitch_flags_true)
-	copy!(set_goodmorning_flags_true)
-	copy!(set_tuesday_flags_true)
-	copy!(set_artifact_flags_true)
-	copy!(set_backstory_flags_true)
-	copy!(set_misc_flags_true)
+	set_story_flags_true()
+	set_glitch_flags_true()
+	set_goodmorning_flags_true()
+	set_tuesday_flags_true()
+	set_artifact_flags_true()
+	set_backstory_flags_true()
+	set_misc_flags_true()
 	show dialog {
 		SELF "All flags set to TRUE. You may have to reload the map to see some changes."
 	};

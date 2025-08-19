@@ -5,7 +5,7 @@ cutbug_auto {
     player y = 0;
     for (j = 0; i < 1030; j += 1) {
         player y = j;
-        copy!(cutbug)
+        cutbug()
         wait 250ms;
     }
 }

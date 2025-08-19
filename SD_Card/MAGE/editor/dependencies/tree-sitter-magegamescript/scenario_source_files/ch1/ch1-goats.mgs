@@ -100,7 +100,7 @@ show_dialog_verthandi_glitched_s {
 
 
 show_dialog_verthandi_start {
-	copy!(face_player)
+	face_player()
 	if (self glitched) {
 		goto show_dialog_verthandi_glitched;
 	}
@@ -132,9 +132,9 @@ show_dialog_verthandi_start {
 				"Oh, thank you, %PLAYER%!"
 			};
 		}
-		copy!(calculate_hint_tracking_series)
+		calculate_hint_tracking_series()
 		if (hint_tracking_check == 11) {
-			copy!(set_hint_none)
+			set_hint_none()
 		}
 		verthandi_quest_done = true;
 		goats_both_unglitched = true;
@@ -161,7 +161,7 @@ show_dialog_verthandi_start {
 			};
 			goats_both_unglitched = true;
 		}
-		copy!(set_hint_glitch)
+		set_hint_glitch()
 	} else {
 		show dialog {
 			SELF "Some time ago, the Big Bad brought chaos to this place."
@@ -181,7 +181,7 @@ show_dialog_verthandi_start {
 			goats_both_unglitched = true;
 		}
 		verthandi_backstory = true;
-		copy!(set_hint_glitch)
+		set_hint_glitch()
 	}
 	goto show_dialog_verthandi_wrapup;
 }
@@ -199,7 +199,7 @@ show_dialog_goat {
 		show dialog { SELF "Baaahhh!" };
 	}
 	if (!goats_both_unglitched) {
-		copy!(set_hint_glitch)
+		set_hint_glitch()
 	}
 	self on_interact = show_dialog_goat;
 }

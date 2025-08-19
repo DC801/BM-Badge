@@ -167,63 +167,63 @@ warp_common {
 	}
 	ch2_in_room = 0;
 	current_chapter = 2; // todo: remove this; it's here for ch2 debug mode protection for the WOPR room
-	copy!(warping_out_fade_out)
+	warping_out_fade_out()
 }
 
 warp_ch2_castle_exterior {
-	copy!(warp_common)
+	warp_common()
 	load map "ch2-castle-outside";
 }
 warp_ch2_1 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_1_special)
+	warp_common()
+	ch2_load_castle_1_special()
 }
 warp_ch2_11 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_11_special)
+	warp_common()
+	ch2_load_castle_11_special()
 }
 warp_ch2_12 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_12_special)
+	warp_common()
+	ch2_load_castle_12_special()
 }
 warp_ch2_13 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_13_special)
+	warp_common()
+	ch2_load_castle_13_special()
 }
 warp_ch2_14 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_14_special)
+	warp_common()
+	ch2_load_castle_14_special()
 }
 warp_ch2_21 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_21_special)
+	warp_common()
+	ch2_load_castle_21_special()
 }
 warp_ch2_22 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_22_special)
+	warp_common()
+	ch2_load_castle_22_special()
 }
 warp_ch2_23 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_23_special)
+	warp_common()
+	ch2_load_castle_23_special()
 }
 warp_ch2_31 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_31_special)
+	warp_common()
+	ch2_load_castle_31_special()
 }
 warp_ch2_32 {
-	copy!(warp_common)
-	copy!(ch2_load_castle_32_special)
+	warp_common()
+	ch2_load_castle_32_special()
 }
 warp_ch2_33 {
-	copy!(warp_common)
+	warp_common()
 	load map "ch2-castle-33";
 }
 warp_ch2_34 {
-	copy!(warp_common)
+	warp_common()
 	load map "ch2-castle-34";
 }
 warp_ch2_99 {
-	copy!(warp_common)
+	warp_common()
 	load map "ch2-castle-99";
 }
 
@@ -253,61 +253,61 @@ warp_ch2_town_check_fail_message {
 }
 
 warp_ch2_town {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-town";
 }
 warp_ch2_bakery {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-bakery";
 }
 warp_ch2_greenhouse {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-greenhouse";
 }
 warp_ch2_wopr {
 	if (wopr_backdoor_found || debug_mode) {
-		copy!(warp_ch2_town_destination_check)
-		copy!(warp_common)
+		warp_ch2_town_destination_check()
+		warp_common()
 		load map woprhouse;
 	} else {
 		goto warp_fail;
 	}
 }
 warp_ch2_library {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-lodge";
 }
 warp_ch2_rtfmroom {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-lodge-rtfm";
 }
 warp_ch2_magehouse {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-magehouse";
 }
 warp_ch2_bobsclub {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-bobsclub";
 }
 warp_ch2_bobsclub_basement {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-bobsclub-basement";
 }
 warp_ch2_oldcouplehouse {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-oldcouplehouse";
 }
 warp_ch2_smithfamily {
-	copy!(warp_ch2_town_destination_check)
-	copy!(warp_common)
+	warp_ch2_town_destination_check()
+	warp_common()
 	load map "ch2-smithfamily";
 }
