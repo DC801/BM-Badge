@@ -180,7 +180,11 @@ const advanceAdventure = (
 			continue;
 		}
 		if (analysis.type === 'goto-index') {
-			pos = Number(analysis.value);
+			const destination = analysis.value;
+			if (pos === destination) {
+				throw new Error('infinite loop: going to same pos as current pos');
+			}
+			pos = Number(destination);
 			continue;
 		}
 		if (analysis.type === 'goto-label') {

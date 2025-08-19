@@ -405,8 +405,7 @@ ch2_mousegame_prepare_board {
 
 	// bay column (left, right)
 	if (ch2_mousegame_column == 0) { // uninitialized
-		ch2_mousegame_column ?= 2; // random 0-1
-		ch2_mousegame_column += 1; // now random 1-2
+		ch2_mousegame_column = RNG!(1, =2); // 1, 2
 	} else { // invert the current one
 		if (ch2_mousegame_column == 1) {
 			ch2_mousegame_column = 2;
@@ -416,10 +415,9 @@ ch2_mousegame_prepare_board {
 	}
 
 	// bay row (top, mid, bot)
-	tempvar ?= 2; // random 0-1 (coin flip)
+	tempvar = RNG!(=1); // random 0-1 (coin flip)
 	if (ch2_mousegame_row == 0) { // uninitialized
-		ch2_mousegame_row ?= 3; // random 0-2
-		ch2_mousegame_row += 1; // now random 1-3
+		ch2_mousegame_row = RNG!(1, =3); // 1, 2, 3
 	} else { // get a random one, but make sure it's not the current one
 		if (ch2_mousegame_row == 1) {
 			tempvar += 2; // random 2-3

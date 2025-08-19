@@ -48,6 +48,8 @@ import {
 	EntityIntField,
 	IntExpression,
 	IntUnit,
+	RNGSingle,
+	RNGPair,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -296,6 +298,10 @@ const captureFns = {
 	},
 	int_getable: (f: FileState, node: TreeSitterNode) => {
 		const debug = new MathlangLocation(f, node);
+		const rngNode = node.childForFieldName('rng');
+		if (rngNode) {
+			return handleCapture(f, rngNode);
+		}
 		const entity = stringCaptureForFieldName(f, node, 'entity_identifier');
 		const field = textForFieldName(f, node, 'property');
 		return EntityIntField.quick(debug, entity, field);
@@ -474,6 +480,30 @@ const captureFns = {
 		if (capture instanceof IntExpression) return capture;
 		throw new Error('captured int_grouping did not produce IntExpression');
 	},
+	int_rng: (f: FileState, node: TreeSitterNode) => {
+		const debug = new MathlangLocation(f, node);
+		let value = optionalNumberCaptureForFieldName(f, node, 'value');
+		const inclusive = optionalTextForFieldName(f, node, 'inclusive');
+		if (value !== null) {
+			if (inclusive) {
+				value += 1;
+			}
+			return RNGSingle.quick(debug, value);
+		}
+		let min = numberCaptureForFieldName(f, node, 'min');
+		let max = numberCaptureForFieldName(f, node, 'max');
+		if (min > max) {
+			f.quickError(node, 'min must be less than max')
+			const switcheroo = min;
+			min = max;
+			max = switcheroo;
+		}
+		if (inclusive) {
+			max += 1;
+		}
+		const diff = max - min;
+		return RNGPair.quick(debug, diff, min)
+	},
 	direction_target: (f: FileState, node: TreeSitterNode) => {
 		const debug = new MathlangLocation(f, node);
 		const direction = optionalTextForFieldName(f, node, 'nsew');
@@ -628,6 +658,17 @@ export const numberCaptureForFieldName = (
 	fieldName: string,
 ): number => {
 	const captureNode = mandatoryChildForFieldName(f, node, fieldName);
+	const capture = handleCapture(f, captureNode);
+	if (typeof capture === 'number') return capture;
+	throw new Error(`capture from field ${fieldName} not a number`);
+};
+export const optionalNumberCaptureForFieldName = (
+	f: FileState,
+	node: TreeSitterNode,
+	fieldName: string,
+): number | null => {
+	const captureNode = node.childForFieldName(fieldName);
+	if (!captureNode) return null;
 	const capture = handleCapture(f, captureNode);
 	if (typeof capture === 'number') return capture;
 	throw new Error(`capture from field ${fieldName} not a number`);

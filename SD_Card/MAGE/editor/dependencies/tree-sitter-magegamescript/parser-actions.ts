@@ -109,6 +109,8 @@ import {
 	BoolComparison,
 	CheckSaveFlag,
 	EntityIntField,
+	RNGSingle,
+	RNGPair,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -271,6 +273,15 @@ const actionFns: Record<string, ActionFn> = {
 	action_show_dialog: (f: FileState, node: TreeSitterNode): ShowDialogOutput => {
 		const tryName = optionalStringCaptureForFieldName(f, node, 'dialog_name');
 		const dialogName = tryName !== null ? tryName : autoIdentifierName(f, node);
+		// TODO make this spreadable for Bob's club Bobs?
+		// const dialogNames = capturesForFieldName(f, node, 'dialog_name');
+		// if (dialogNames.length === 0) {
+		// 	dialogNames.push(autoIdentifierName(f, node));
+		// }
+		// if (dialogNames.length > 1) {
+		// 	return dialogNames.map(dialogName =>SHOW_DIALOG.quick(coerceToString(f, node, dialogName, 'dialogName')));
+		// }
+		// const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
 		const dialogs = handleChildrenForFieldName(f, node, 'dialog');
 		const action = SHOW_DIALOG.quick(dialogName);
 		if (dialogs.length) {
@@ -451,6 +462,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node, i): AnyNode => {
+			const debug = new MathlangLocation(f, node);
 			const lhs = coerceToString(f, node, v.lhs, 'action_set_ambiguous lhs');
 
 			// simple cases first (easy to check for)
@@ -499,6 +511,23 @@ const actionData: Record<string, actionDataEntry> = {
 			// varName = player x;
 			if (v.rhs instanceof EntityIntField) {
 				return COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, lhs);
+			}
+
+			// varName = RNG!(99);
+			if (v.rhs instanceof RNGSingle) {
+				return MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?')
+			}
+
+			// varName = RNG!(0, 99);
+			if (v.rhs instanceof RNGPair) {
+				const steps = [
+					MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?'),
+					MUTATE_VARIABLE.change(debug, lhs, v.rhs.add, '+')
+				]
+				return new MathlangSequence(debug, {
+					steps,
+					type: 'parser-actions: action_set_ambiguous',
+				});
 			}
 
 			// varName = (255 + player x);

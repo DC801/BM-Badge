@@ -266,7 +266,7 @@ export const compareSeriesOfBigDialogs = (
 };
 
 export const dialogs: Record<string, EncoderDialog[]> = {
-	'dialog-mage01_1': [
+	dialog_mage01_1: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -275,7 +275,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage01_2': [
+	dialog_mage01_2: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -284,7 +284,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage02_1': [
+	dialog_mage02_1: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -293,7 +293,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage02_2': [
+	dialog_mage02_2: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -302,7 +302,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage03_1': [
+	dialog_mage03_1: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -312,7 +312,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage03_2': [
+	dialog_mage03_2: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -321,7 +321,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage04_1': [
+	dialog_mage04_1: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -331,7 +331,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage04_2': [
+	dialog_mage04_2: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -340,7 +340,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage05_1': [
+	dialog_mage05_1: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -349,7 +349,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage05_2': [
+	dialog_mage05_2: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -359,7 +359,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage06_1': [
+	dialog_mage06_1: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -368,7 +368,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage06_2': [
+	dialog_mage06_2: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -378,7 +378,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage07': [
+	dialog_mage07: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -387,7 +387,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage08': [
+	dialog_mage08: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -396,7 +396,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage09': [
+	dialog_mage09: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -405,7 +405,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage10-a': [
+	dialog_mage10_a: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -414,7 +414,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage10-b': [
+	dialog_mage10_b: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -423,7 +423,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage10-c': [
+	dialog_mage10_c: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -432,7 +432,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage11': [
+	dialog_mage11: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -441,7 +441,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage12': [
+	dialog_mage12: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -450,7 +450,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage13-success-n': [
+	dialog_mage13_success_n: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -459,7 +459,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage13-success-e': [
+	dialog_mage13_success_e: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -468,7 +468,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage13-success-s': [
+	dialog_mage13_success_s: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -477,7 +477,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage13-success-w': [
+	dialog_mage13_success_w: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -486,7 +486,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage13-fail': [
+	dialog_mage13_fail: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -495,7 +495,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14': [
+	dialog_mage14: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -504,7 +504,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-success': [
+	dialog_mage14_success: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -513,14 +513,14 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-fail-value-==': [
+	'dialog_mage14_fail_value_==': [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ['...but something has gone wrong!\nThe value == comparison has FAILED!!!'],
 		},
 	],
-	'dialog-mage14-fail-value->': [
+	'dialog_mage14_fail_value_>': [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -529,7 +529,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-fail-variable-<': [
+	'dialog_mage14_fail_variable_<': [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -538,7 +538,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-fail-value-ADD': [
+	dialog_mage14_fail_value_ADD: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -547,7 +547,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-fail-variable-ADD': [
+	dialog_mage14_fail_variable_ADD: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -556,7 +556,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-fail-value-SUB': [
+	dialog_mage14_fail_value_SUB: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -565,7 +565,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage14-fail-value-RNG': [
+	dialog_mage14_fail_value_RNG: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -574,7 +574,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage15': [
+	dialog_mage15: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -583,7 +583,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage15-success': [
+	dialog_mage15_success: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -592,7 +592,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage16-a': [
+	dialog_mage16_a: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -601,14 +601,14 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage16-b': [
+	dialog_mage16_b: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ["Now, my 'action' animation will play twice."],
 		},
 	],
-	'dialog-mage16-c': [
+	dialog_mage16_c: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -617,7 +617,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage17-a': [
+	dialog_mage17_a: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -626,7 +626,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage17-b': [
+	dialog_mage17_b: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -635,7 +635,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage18': [
+	dialog_mage18: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -698,7 +698,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage19': [
+	dialog_mage19: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -708,7 +708,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage20': [
+	dialog_mage20: [
 		{
 			alignment: 'BOTTOM_RIGHT',
 			portrait: 'codec-snek',
@@ -778,7 +778,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			messages: ['GAME OVER'],
 		},
 	],
-	'dialog-mage21-a': [
+	dialog_mage21_a: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -787,7 +787,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage21-b': [
+	dialog_mage21_b: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -796,21 +796,21 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage22-a': [
+	dialog_mage22_a: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ['I test the FADE scripts!\nPREPARE FOR DARKNESS!!!'],
 		},
 	],
-	'dialog-mage22-b': [
+	dialog_mage22_b: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ['Okay, now it is Darkness.\nLET THERE BE LIGHT!!!'],
 		},
 	],
-	'dialog-mage23-choices': [
+	dialog_mage23_choices: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -822,38 +822,38 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			options: [
 				{
 					label: 'Wait for ANY_KEY activated',
-					script: 'mage23-set_tick-press-any',
+					script: 'mage23_set_tick_press_any',
 				},
 				{
 					label: 'Wait for PAGE activated',
-					script: 'mage23-set_tick-press-page',
+					script: 'mage23_set_tick_press_page',
 				},
 				{
 					label: 'Wait 2 sec & check ANY_KEY after exit',
-					script: 'mage23-set_tick-state-any',
+					script: 'mage23_set_tick_state_any',
 				},
 				{
 					label: 'Wait 2 sec & check PAGE after exit',
-					script: 'mage23-set_tick-state-page',
+					script: 'mage23_set_tick_state_page',
 				},
 			],
 		},
 	],
-	'dialog-mage23-not_pressed': [
+	dialog_mage23_not_pressed: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ['The button was not pressed.'],
 		},
 	],
-	'dialog-mage23-was_pressed': [
+	dialog_mage23_was_pressed: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ['The button was pressed!'],
 		},
 	],
-	'dialog-mage24-interact': [
+	dialog_mage24_interact: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -862,14 +862,14 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage24-interact-success': [
+	dialog_mage24_interact_success: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ['Great Jeaoarb!'],
 		},
 	],
-	'dialog-mage26-interact': [
+	dialog_mage26_interact: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -890,16 +890,16 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			options: [
 				{
 					label: 'Yes',
-					script: 'mage26-reset',
+					script: 'mage26_reset',
 				},
 				{
 					label: 'No',
-					script: 'mage26-reset',
+					script: 'mage26_reset',
 				},
 			],
 		},
 	],
-	'dialog-mage26-delay_interrupt': [
+	dialog_mage26_delay_interrupt: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			portrait: 'codec-goose',
@@ -908,7 +908,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			messages: ['HONK!'],
 		},
 	],
-	'dialog-mage27-interact_closed': [
+	dialog_mage27_interact_closed: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -920,16 +920,16 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			options: [
 				{
 					label: 'Yes',
-					script: 'mage27-reset_with_dialog',
+					script: 'mage27_reset_with_dialog',
 				},
 				{
 					label: 'No',
-					script: 'mage27-reset',
+					script: 'mage27_reset',
 				},
 			],
 		},
 	],
-	'dialog-mage27-interact_open': [
+	dialog_mage27_interact_open: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -950,7 +950,7 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage28-interact': [
+	dialog_mage28_interact: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
@@ -959,49 +959,49 @@ export const dialogs: Record<string, EncoderDialog[]> = {
 			],
 		},
 	],
-	'dialog-mage29-interact': [
+	dialog_mage29_interact: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
 			messages: ["I test conditional local jumps!\nSet my name to 'Nage 29' to verify!"],
 		},
 	],
-	'dialog-mage29-test': [
+	dialog_mage29_test: [
 		{
 			alignment: 'BOTTOM_LEFT',
 			entity: '%SELF%',
-			messages: ['Did it work? $mage29-skippydoodle$'],
+			messages: ['Did it work? $mage29_skippydoodle$'],
 		},
 	],
-	'mage30-interact-1': [
+	mage30_interact_1: [
 		{
 			entity: '%SELF%',
 			alignment: 'BOTTOM_LEFT',
 			messages: ['One...'],
 		},
 	],
-	'mage30-interact-2': [
+	mage30_interact_2: [
 		{
 			entity: '%SELF%',
 			alignment: 'BOTTOM_LEFT',
 			messages: ['Two...'],
 		},
 	],
-	'mage30-interact-3': [
+	mage30_interact_3: [
 		{
 			entity: '%SELF%',
 			alignment: 'BOTTOM_LEFT',
 			messages: ['Three...'],
 		},
 	],
-	'mage30-interact-4': [
+	mage30_interact_4: [
 		{
 			entity: '%SELF%',
 			alignment: 'BOTTOM_LEFT',
 			messages: ['Four... wait, did I skip one?'],
 		},
 	],
-	'mage31-interact': [
+	mage31_interact: [
 		{
 			entity: '%SELF%',
 			alignment: 'BOTTOM_LEFT',

@@ -1,7 +1,7 @@
 import * as TYPES from '../parser-bytecode-info.ts';
 
 export const idk: Record<string, TYPES.Action[]> = {
-	'map-action_testing-go_register': [
+	map_action_testing_go_register: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND',
 			command: 'map',
@@ -12,7 +12,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_register',
 		},
 	],
-	'map-action_testing-go_override': [
+	map_action_testing_go_override: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 			command: 'go',
@@ -29,14 +29,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 			command: 'look',
 			argument: 'Mage 01',
-			script: 'debug_look_mage01-override',
+			script: 'debug_look_mage01_override',
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
 			serial_dialog: 'serial_dialog-go_override',
 		},
 	],
-	'map-action_testing-go_un-override': [
+	map_action_testing_go_un_override: [
 		{
 			action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 			command: 'go',
@@ -54,10 +54,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-go_un-override',
+			serial_dialog: 'serial_dialog-go_un_override',
 		},
 	],
-	'map-action_testing-go_register_fail': [
+	map_action_testing_go_register_fail: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND',
 			command: 'map',
@@ -69,7 +69,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_register_fail',
 		},
 	],
-	'map-action_testing-go_register_arguments': [
+	map_action_testing_go_register_arguments: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 			command: 'map',
@@ -87,7 +87,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_register_arguments',
 		},
 	],
-	'map-action_testing-go_unregister_arguments': [
+	map_action_testing_go_unregister_arguments: [
 		{
 			action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 			command: 'map',
@@ -103,7 +103,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_unregister_arguments',
 		},
 	],
-	'map-action_testing-go_unregister': [
+	map_action_testing_go_unregister: [
 		{
 			action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
 			command: 'map',
@@ -113,7 +113,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_unregister',
 		},
 	],
-	'map-action_testing-go_alias': [
+	map_action_testing_go_alias: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
 			command: 'help',
@@ -125,7 +125,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			alias: 'shh',
 		},
 	],
-	'map-action_testing-go_unalias': [
+	map_action_testing_go_unalias: [
 		{
 			action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
 			alias: 'h',
@@ -135,7 +135,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			alias: 'shh',
 		},
 	],
-	'map-action_testing-go_register_secret': [
+	map_action_testing_go_register_secret: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND',
 			command: 'secret',
@@ -158,7 +158,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_register_secret',
 		},
 	],
-	'map-action_testing-go_hide_secret': [
+	map_action_testing_go_hide_secret: [
 		{
 			action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 			command: 'secret',
@@ -169,7 +169,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_hide_secret',
 		},
 	],
-	'map-action_testing-go_unhide_secret': [
+	map_action_testing_go_unhide_secret: [
 		{
 			action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
 			command: 'secret',
@@ -180,7 +180,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-go_unhide_secret',
 		},
 	],
-	'map-action_testing-go_unregister_secret': [
+	map_action_testing_go_unregister_secret: [
 		{
 			action: 'UNREGISTER_SERIAL_DIALOG_COMMAND',
 			command: 'secret',
@@ -232,10 +232,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-command_map_dungeon',
 		},
 	],
-	'map-action_testing-go_concat': [
+	map_action_testing_go_concat: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_concat',
+			serial_dialog: 'serial_dialog_map_action_testing_go_concat',
 		},
 	],
 	'concat_response-goat': [
@@ -302,7 +302,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			},
 		},
 	],
-	'map-action_testing-go_moon': [
+	map_action_testing_go_moon: [
 		{
 			action: 'REGISTER_SERIAL_DIALOG_COMMAND',
 			command: 'moon',
@@ -343,10 +343,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'serial_dialog-command_map_moon_moon',
 		},
 	],
-	'map-action_testing-load': [
+	map_action_testing_load: [
 		{
 			action: 'SET_CONNECT_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-on_connect',
+			serial_dialog: 'serial_dialog_map_action_testing_on_connect',
 		},
 		{
 			action: 'SET_PLAYER_CONTROL',
@@ -393,13 +393,13 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-gui_closed',
+			serial_dialog: 'serial_dialog_map_action_testing_gui_closed',
 		},
 	],
 	'check_dialog-gui_open': [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-gui_open',
+			serial_dialog: 'serial_dialog_map_action_testing_gui_open',
 		},
 	],
 	close_serial_dialog: [
@@ -415,136 +415,136 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-debug_false',
+			serial_dialog: 'serial_dialog_map_action_testing_debug_false',
 		},
 	],
 	'check_debug-true': [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-debug_true',
+			serial_dialog: 'serial_dialog_map_action_testing_debug_true',
 		},
 	],
-	'map-action_testing-look': [
+	map_action_testing_look: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-look',
+			serial_dialog: 'serial_dialog_map_action_testing_look',
 		},
 	],
-	'map-action_testing-go_north': [
+	map_action_testing_go_north: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_north',
+			serial_dialog: 'serial_dialog_map_action_testing_go_north',
 		},
 	],
-	'map-action_testing-go_cleveland': [
+	map_action_testing_go_cleveland: [
 		{
 			action: 'CHECK_ENTITY_NAME',
-			success_script: 'map-action_testing-go_cleveland-protected',
+			success_script: 'map_action_testing_go_cleveland_protected',
 			string: 'Bob',
 			entity: '%PLAYER%',
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_cleveland',
+			serial_dialog: 'serial_dialog_map_action_testing_go_cleveland',
 		},
 	],
-	'map-action_testing-go_cleveland-protected': [
+	map_action_testing_go_cleveland_protected: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_cleveland-protected',
+			serial_dialog: 'serial_dialog_map_action_testing_go_cleveland_protected',
 		},
 	],
-	'map-action_testing-go_numbers': [
+	map_action_testing_go_numbers: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_numbers',
+			serial_dialog: 'serial_dialog_map_action_testing_go_numbers',
 		},
 	],
-	'map-action_testing-go_sphinx': [
+	map_action_testing_go_sphinx: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_sphinx',
+			serial_dialog: 'serial_dialog_map_action_testing_go_sphinx',
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_sphinx-fail',
-		},
-	],
-	'map-action_testing-go_sphinx-success': [
-		{
-			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_sphinx-success',
+			serial_dialog: 'serial_dialog_map_action_testing_go_sphinx_fail',
 		},
 	],
-	'map-action_testing-go_sphinx-wtf': [
+	map_action_testing_go_sphinx_success: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_sphinx-wtf',
+			serial_dialog: 'serial_dialog_map_action_testing_go_sphinx_success',
 		},
 	],
-	'map-action_testing-go_hub': [
+	map_action_testing_go_sphinx_wtf: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-go_hub',
+			serial_dialog: 'serial_dialog_map_action_testing_go_sphinx_wtf',
+		},
+	],
+	map_action_testing_go_hub: [
+		{
+			action: 'SHOW_SERIAL_DIALOG',
+			serial_dialog: 'serial_dialog_map_action_testing_go_hub',
 		},
 		{
 			action: 'LOAD_MAP',
 			map: 'warp_zone',
 		},
 	],
-	'map-action_testing-cli-run_script': [
+	map_action_testing_cli_run_script: [
 		{
 			action: 'RUN_SCRIPT',
-			script: 'map-action_testing-cli-success',
+			script: 'map_action_testing_cli_success',
 		},
 	],
-	'map-action_testing-cli-check_save_flag': [
+	map_action_testing_cli_check_save_flag: [
 		{
 			action: 'CHECK_SAVE_FLAG',
 			save_flag: 'cli-flag',
 			expected_bool: true,
-			success_script: 'map-action_testing-cli-success',
+			success_script: 'map_action_testing_cli_success',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'map-action_testing-cli-fail',
+			script: 'map_action_testing_cli_fail',
 		},
 	],
-	'map-action_testing-cli-fail': [
+	map_action_testing_cli_fail: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-cli-fail',
+			serial_dialog: 'serial_dialog_map_action_testing_cli_fail',
 		},
 	],
-	'map-action_testing-cli-success': [
+	map_action_testing_cli_success: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-map-action_testing-cli-success',
+			serial_dialog: 'serial_dialog_map_action_testing_cli_success',
 		},
 	],
-	'map-action_testing-cli-set_save_flag': [
+	map_action_testing_cli_set_save_flag: [
 		{
 			action: 'SET_SAVE_FLAG',
 			save_flag: 'cli-flag',
 			bool_value: true,
 		},
 	],
-	'map-action_testing-cli-check_variable': [
+	map_action_testing_cli_check_variable: [
 		{
 			action: 'CHECK_VARIABLE',
 			variable: 'cli-variable',
 			value: 5,
 			comparison: '>',
 			expected_bool: true,
-			success_script: 'map-action_testing-cli-success',
+			success_script: 'map_action_testing_cli_success',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'map-action_testing-cli-fail',
+			script: 'map_action_testing_cli_fail',
 		},
 	],
-	'map-action_testing-cli-mutate_variable': [
+	map_action_testing_cli_mutate_variable: [
 		{
 			action: 'MUTATE_VARIABLE',
 			variable: 'cli-variable',
@@ -552,23 +552,23 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 5,
 		},
 	],
-	'mage01-check_entity_name': [
+	mage01_check_entity_name: [
 		{
 			action: 'CHECK_ENTITY_NAME',
-			success_script: 'mage01-set_entity_name',
+			success_script: 'mage01_set_entity_name',
 			entity: 'Mage 01',
 			string: 'Mage 00',
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage01_1',
+			dialog: 'dialog_mage01_1',
 		},
 	],
-	'mage01-set_entity_name': [
+	mage01_set_entity_name: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage01_2',
+			dialog: 'dialog_mage01_2',
 		},
 		{
 			action: 'SET_ENTITY_NAME',
@@ -578,45 +578,45 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 01',
-			script: 'mage01-check_entity_name',
+			script: 'mage01_check_entity_name',
 		},
 	],
-	'mage01-look_script': [
+	mage01_look_script: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'serial_dialog-mage01-look_script',
+			serial_dialog: 'serial_dialog_mage01_look_script',
 		},
 	],
-	'mage02-check_entity_x': [
+	mage02_check_entity_x: [
 		{
 			action: 'CHECK_ENTITY_X',
-			success_script: 'mage02-check_entity_y',
+			success_script: 'mage02_check_entity_y',
 			entity: 'Mage 02',
 			expected_u2: 193,
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage02_1',
+			dialog: 'dialog_mage02_1',
 		},
 	],
-	'mage02-check_entity_y': [
+	mage02_check_entity_y: [
 		{
 			action: 'CHECK_ENTITY_Y',
-			success_script: 'mage02-set_entity_xy',
+			success_script: 'mage02_set_entity_xy',
 			entity: 'Mage 02',
 			expected_u2: 97,
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage02_1',
+			dialog: 'dialog_mage02_1',
 		},
 	],
-	'mage02-set_entity_xy': [
+	mage02_set_entity_xy: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage02_2',
+			dialog: 'dialog_mage02_2',
 		},
 		{
 			action: 'SET_ENTITY_X',
@@ -631,30 +631,30 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 02',
-			script: 'mage02-check_entity_x',
+			script: 'mage02_check_entity_x',
 		},
 	],
-	'mage03-check_entity_scripts': [
+	mage03_check_entity_scripts: [
 		{
 			action: 'CHECK_ENTITY_INTERACT_SCRIPT',
-			success_script: 'mage03-success_script',
+			success_script: 'mage03_success_script',
 			entity: '%PLAYER%',
 			expected_script: 'null_script',
 			expected_bool: false,
 		},
 		{
 			action: 'CHECK_ENTITY_TICK_SCRIPT',
-			success_script: 'mage03-success_script',
+			success_script: 'mage03_success_script',
 			entity: '%PLAYER%',
 			expected_script: 'null_script',
 			expected_bool: false,
 		},
 	],
-	'mage03-success_script': [
+	mage03_success_script: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 03',
-			script: 'mage03-success_prompt',
+			script: 'mage03_success_prompt',
 		},
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
@@ -669,69 +669,69 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: 'Mage 03',
-			script: 'mage03-check_entity_scripts',
+			script: 'mage03_check_entity_scripts',
 		},
 	],
-	'mage03-initial_prompt': [
+	mage03_initial_prompt: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage03_1',
+			dialog: 'dialog_mage03_1',
 		},
 	],
-	'mage03-success_prompt': [
+	mage03_success_prompt: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage03_2',
+			dialog: 'dialog_mage03_2',
 		},
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 03',
-			script: 'mage03-initial_prompt',
+			script: 'mage03_initial_prompt',
 		},
 	],
-	'mage04-check_entity_primary_id': [
+	mage04_check_entity_primary_id: [
 		{
 			action: 'CHECK_ENTITY_PRIMARY_ID',
-			success_script: 'mage04-check_entity_secondary_id',
+			success_script: 'mage04_check_entity_secondary_id',
 			entity: 'Mage 04',
 			expected_u2: 12,
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage04_1',
+			dialog: 'dialog_mage04_1',
 		},
 	],
-	'mage04-check_entity_secondary_id': [
+	mage04_check_entity_secondary_id: [
 		{
 			action: 'CHECK_ENTITY_SECONDARY_ID',
-			success_script: 'mage04-check_entity_primary_id_type',
+			success_script: 'mage04_check_entity_primary_id_type',
 			entity: 'Mage 04',
 			expected_u2: 1,
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage04_1',
+			dialog: 'dialog_mage04_1',
 		},
 	],
-	'mage04-check_entity_primary_id_type': [
+	mage04_check_entity_primary_id_type: [
 		{
 			action: 'CHECK_ENTITY_PRIMARY_ID_TYPE',
-			success_script: 'mage04-success_set_ids',
+			success_script: 'mage04_success_set_ids',
 			entity: 'Mage 04',
 			expected_byte: 3,
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage04_1',
+			dialog: 'dialog_mage04_1',
 		},
 	],
-	'mage04-success_set_ids': [
+	mage04_success_set_ids: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage04_2',
+			dialog: 'dialog_mage04_2',
 		},
 		{
 			action: 'SET_ENTITY_PRIMARY_ID',
@@ -751,49 +751,49 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 04',
-			script: 'mage04-check_entity_primary_id',
+			script: 'mage04_check_entity_primary_id',
 		},
 	],
-	'mage05-check_player_current_animation': [
+	mage05_check_player_current_animation: [
 		{
 			action: 'CHECK_ENTITY_CURRENT_ANIMATION',
 			entity: '%PLAYER%',
 			expected_byte: 2,
 			expected_bool: true,
-			success_script: 'mage05-check_player_current_frame',
+			success_script: 'mage05_check_player_current_frame',
 		},
 	],
-	'mage05-check_player_current_frame': [
+	mage05_check_player_current_frame: [
 		{
 			action: 'CHECK_ENTITY_CURRENT_FRAME',
 			entity: '%PLAYER%',
 			expected_byte: 4,
 			expected_bool: true,
-			success_script: 'mage05-set_success_dialog',
+			success_script: 'mage05_set_success_dialog',
 		},
 	],
-	'mage05-set_success_dialog': [
+	mage05_set_success_dialog: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 05',
-			script: 'mage05-success_prompt',
+			script: 'mage05_success_prompt',
 		},
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: 'Mage 05',
-			script: 'mage05-check_player_current_animation',
+			script: 'mage05_check_player_current_animation',
 		},
 	],
-	'mage05-initial_prompt': [
+	mage05_initial_prompt: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage05_1',
+			dialog: 'dialog_mage05_1',
 		},
 	],
-	'mage05-success_prompt': [
+	mage05_success_prompt: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage05_2',
+			dialog: 'dialog_mage05_2',
 		},
 		{
 			action: 'SET_ENTITY_CURRENT_ANIMATION',
@@ -808,26 +808,26 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 05',
-			script: 'mage05-initial_prompt',
+			script: 'mage05_initial_prompt',
 		},
 	],
-	'mage06-check_player_entity_type': [
+	mage06_check_player_entity_type: [
 		{
 			action: 'CHECK_ENTITY_TYPE',
 			entity: '%PLAYER%',
 			entity_type: 'baby_goat',
 			expected_bool: true,
-			success_script: 'mage06-success_prompt',
+			success_script: 'mage06_success_prompt',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage06_1',
+			dialog: 'dialog_mage06_1',
 		},
 	],
-	'mage06-success_prompt': [
+	mage06_success_prompt: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage06_2',
+			dialog: 'dialog_mage06_2',
 		},
 		{
 			action: 'SET_ENTITY_TYPE',
@@ -837,29 +837,29 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: 'Mage 06',
-			script: 'mage06-check_player_entity_type',
+			script: 'mage06_check_player_entity_type',
 		},
 	],
-	'mage07-interact': [
+	mage07_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage07',
+			dialog: 'dialog_mage07',
 		},
 	],
-	'mage07-point_at_player': [
+	mage07_point_at_player: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
 			target_entity: '%PLAYER%',
 		},
 	],
-	'mage08-interact': [
+	mage08_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage08',
+			dialog: 'dialog_mage08',
 		},
 	],
-	'mage08-point_away_from_player': [
+	mage08_point_away_from_player: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -871,41 +871,41 @@ export const idk: Record<string, TYPES.Action[]> = {
 			relative_direction: 2,
 		},
 	],
-	'mage09-interact': [
+	mage09_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage09',
+			dialog: 'dialog_mage09',
 		},
 	],
-	'mage09-copy_script': [
+	mage09_copy_script: [
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage07-point_at_player',
+			script: 'mage07_point_at_player',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage09-copy_script_deeper',
+			script: 'mage09_copy_script_deeper',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage08-point_away_from_player',
+			script: 'mage08_point_away_from_player',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage09-copy_script_deeper',
-		},
-	],
-	'mage09-copy_script_deeper': [
-		{
-			action: 'COPY_SCRIPT',
-			script: 'mage09-copy_script_delay',
+			script: 'mage09_copy_script_deeper',
 		},
 	],
-	'mage09-copy_script_delay': [],
-	'mage10-interact': [
+	mage09_copy_script_deeper: [
+		{
+			action: 'COPY_SCRIPT',
+			script: 'mage09_copy_script_delay',
+		},
+	],
+	mage09_copy_script_delay: [],
+	mage10_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage10-a',
+			dialog: 'dialog_mage10_a',
 		},
 		{
 			action: 'SET_SCREEN_SHAKE',
@@ -915,7 +915,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage10-b',
+			dialog: 'dialog_mage10_b',
 		},
 		{
 			action: 'SET_SCREEN_SHAKE',
@@ -925,7 +925,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage10-c',
+			dialog: 'dialog_mage10_c',
 		},
 		{
 			action: 'SET_SCREEN_SHAKE',
@@ -934,10 +934,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 			duration: 5000,
 		},
 	],
-	'mage11-interact': [
+	mage11_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage11',
+			dialog: 'dialog_mage11',
 		},
 		{
 			action: 'PAN_CAMERA_TO_GEOMETRY',
@@ -960,10 +960,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 			entity: '%PLAYER%',
 		},
 	],
-	'mage12-interact': [
+	mage12_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage12',
+			dialog: 'dialog_mage12',
 		},
 		{
 			action: 'TELEPORT_CAMERA_TO_GEOMETRY',
@@ -994,168 +994,168 @@ export const idk: Record<string, TYPES.Action[]> = {
 			entity: '%PLAYER%',
 		},
 	],
-	'mage13-reset': [
+	mage13_reset: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage13-interact',
+			script: 'mage13_interact',
 		},
 	],
-	'mage13-success-n': [
+	mage13_success_n: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage13-success-n',
+			dialog: 'dialog_mage13_success_n',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage13-reset',
+			script: 'mage13_reset',
 		},
 	],
-	'mage13-success-e': [
+	mage13_success_e: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage13-success-e',
+			dialog: 'dialog_mage13_success_e',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage13-reset',
+			script: 'mage13_reset',
 		},
 	],
-	'mage13-success-s': [
+	mage13_success_s: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage13-success-s',
+			dialog: 'dialog_mage13_success_s',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage13-reset',
+			script: 'mage13_reset',
 		},
 	],
-	'mage13-success-w': [
+	mage13_success_w: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage13-success-w',
+			dialog: 'dialog_mage13_success_w',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage13-reset',
+			script: 'mage13_reset',
 		},
 	],
-	'mage13-interact': [
+	mage13_interact: [
 		{
 			action: 'CHECK_ENTITY_DIRECTION',
 			entity: '%PLAYER%',
 			direction: 'north',
 			expected_bool: true,
-			success_script: 'mage13-success-n',
+			success_script: 'mage13_success_n',
 		},
 		{
 			action: 'CHECK_ENTITY_DIRECTION',
 			entity: '%PLAYER%',
 			direction: 'east',
 			expected_bool: true,
-			success_script: 'mage13-success-e',
+			success_script: 'mage13_success_e',
 		},
 		{
 			action: 'CHECK_ENTITY_DIRECTION',
 			entity: '%PLAYER%',
 			direction: 'south',
 			expected_bool: true,
-			success_script: 'mage13-success-s',
+			success_script: 'mage13_success_s',
 		},
 		{
 			action: 'CHECK_ENTITY_DIRECTION',
 			entity: '%PLAYER%',
 			direction: 'west',
 			expected_bool: true,
-			success_script: 'mage13-success-w',
+			success_script: 'mage13_success_w',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage13-fail',
+			dialog: 'dialog_mage13_fail',
 		},
 	],
-	'mage14-reset': [
+	mage14_reset: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage14-interact',
+			script: 'mage14_interact',
 		},
 	],
-	'mage14-fail-value-==': [
+	'mage14_fail_value_==': [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-value-==',
+			dialog: 'dialog_mage14_fail_value_==',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-fail-value->': [
+	'mage14_fail_value_>': [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-value->',
+			dialog: 'dialog_mage14_fail_value_>',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-fail-variable-<': [
+	'mage14_fail_variable_<': [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-variable-<',
+			dialog: 'dialog_mage14_fail_variable_<',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-fail-value-ADD': [
+	mage14_fail_value_ADD: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-value-ADD',
+			dialog: 'dialog_mage14_fail_value_ADD',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-fail-variable-ADD': [
+	mage14_fail_variable_ADD: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-variable-ADD',
+			dialog: 'dialog_mage14_fail_variable_ADD',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-fail-value-SUB': [
+	mage14_fail_value_SUB: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-value-SUB',
+			dialog: 'dialog_mage14_fail_value_SUB',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-fail-value-RNG': [
+	mage14_fail_value_RNG: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-fail-value-RNG',
+			dialog: 'dialog_mage14_fail_value_RNG',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage14-reset',
+			script: 'mage14_reset',
 		},
 	],
-	'mage14-interact': [
+	mage14_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14',
+			dialog: 'dialog_mage14',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1169,7 +1169,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 32,
 			comparison: '==',
 			expected_bool: false,
-			success_script: 'mage14-fail-value-==',
+			success_script: 'mage14_fail_value_==',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1183,7 +1183,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 48,
 			comparison: '==',
 			expected_bool: false,
-			success_script: 'mage14-fail-value-ADD',
+			success_script: 'mage14_fail_value_ADD',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1197,7 +1197,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 16,
 			comparison: '==',
 			expected_bool: false,
-			success_script: 'mage14-fail-value-==',
+			success_script: 'mage14_fail_value_==',
 		},
 		{
 			action: 'CHECK_VARIABLES',
@@ -1205,7 +1205,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			source: 'goat_count',
 			comparison: '<',
 			expected_bool: false,
-			success_script: 'mage14-fail-variable-<',
+			success_script: 'mage14_fail_variable_<',
 		},
 		{
 			action: 'MUTATE_VARIABLES',
@@ -1219,7 +1219,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 64,
 			comparison: '==',
 			expected_bool: false,
-			success_script: 'mage14-fail-variable-ADD',
+			success_script: 'mage14_fail_variable_ADD',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1233,7 +1233,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 64,
 			comparison: '>',
 			expected_bool: false,
-			success_script: 'mage14-fail-value->',
+			success_script: 'mage14_fail_value_>',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1247,7 +1247,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 64,
 			comparison: '==',
 			expected_bool: false,
-			success_script: 'mage14-fail-value-SUB',
+			success_script: 'mage14_fail_value_SUB',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1261,14 +1261,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 64,
 			comparison: '==',
 			expected_bool: true,
-			success_script: 'mage14-fail-value-RNG',
+			success_script: 'mage14_fail_value_RNG',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage14-success',
+			dialog: 'dialog_mage14_success',
 		},
 	],
-	'mage15-success': [
+	mage15_success: [
 		{
 			action: 'COPY_VARIABLE',
 			variable: 'entity_type_id',
@@ -1278,7 +1278,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage15-success',
+			dialog: 'dialog_mage15_success',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
@@ -1303,10 +1303,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage15-interact',
+			script: 'mage15_interact',
 		},
 	],
-	'mage15-interact': [
+	mage15_interact: [
 		{
 			action: 'COPY_VARIABLE',
 			variable: 'entity_type_id',
@@ -1320,14 +1320,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 			value: 0,
 			comparison: '==',
 			expected_bool: false,
-			success_script: 'mage15-success',
+			success_script: 'mage15_success',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage15',
+			dialog: 'dialog_mage15',
 		},
 	],
-	'mage16-interact': [
+	mage16_interact: [
 		{
 			action: 'SET_PLAYER_CONTROL',
 			bool_value: false,
@@ -1339,7 +1339,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage16-a',
+			dialog: 'dialog_mage16_a',
 		},
 		{
 			action: 'PLAY_ENTITY_ANIMATION',
@@ -1349,7 +1349,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage16-b',
+			dialog: 'dialog_mage16_b',
 		},
 		{
 			action: 'PLAY_ENTITY_ANIMATION',
@@ -1359,7 +1359,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage16-c',
+			dialog: 'dialog_mage16_c',
 		},
 		{
 			action: 'SET_ENTITY_TYPE',
@@ -1382,7 +1382,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			bool_value: true,
 		},
 	],
-	'mage17-interact-a': [
+	mage17_interact_a: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1390,7 +1390,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage17-a',
+			dialog: 'dialog_mage17_a',
 		},
 		{
 			action: 'SET_HEX_EDITOR_CONTROL',
@@ -1399,10 +1399,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage17-interact-b',
+			script: 'mage17_interact_b',
 		},
 	],
-	'mage17-interact-b': [
+	mage17_interact_b: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1410,7 +1410,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage17-b',
+			dialog: 'dialog_mage17_b',
 		},
 		{
 			action: 'SET_HEX_EDITOR_CONTROL',
@@ -1419,10 +1419,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage17-interact-a',
+			script: 'mage17_interact_a',
 		},
 	],
-	'mage18-interact': [
+	mage18_interact: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1430,7 +1430,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage18',
+			dialog: 'dialog_mage18',
 		},
 	],
 	'response-pet_the_goat': [
@@ -1441,7 +1441,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage18-interact',
+			script: 'mage18_interact',
 		},
 	],
 	'response-feed_the_goat': [
@@ -1452,7 +1452,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage18-interact',
+			script: 'mage18_interact',
 		},
 	],
 	'response-give_goat_sugar_cube': [
@@ -1463,7 +1463,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage18-interact',
+			script: 'mage18_interact',
 		},
 	],
 	'response-do_nothing': [
@@ -1474,10 +1474,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage18-interact',
+			script: 'mage18_interact',
 		},
 	],
-	'mage19-interact': [
+	mage19_interact: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1485,7 +1485,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage19',
+			dialog: 'dialog_mage19',
 		},
 		{
 			action: 'SET_ENTITY_TYPE',
@@ -1494,7 +1494,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage19',
+			dialog: 'dialog_mage19',
 		},
 		{
 			action: 'SET_ENTITY_TYPE',
@@ -1503,7 +1503,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage19',
+			dialog: 'dialog_mage19',
 		},
 		{
 			action: 'SET_ENTITY_TYPE',
@@ -1511,13 +1511,13 @@ export const idk: Record<string, TYPES.Action[]> = {
 			entity_type: 'mage',
 		},
 	],
-	'mage20-interact': [
+	mage20_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage20',
+			dialog: 'dialog_mage20',
 		},
 	],
-	'mage21-interact-a': [
+	mage21_interact_a: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1525,7 +1525,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage21-a',
+			dialog: 'dialog_mage21_a',
 		},
 		{
 			action: 'SET_HEX_EDITOR_CONTROL_CLIPBOARD',
@@ -1534,10 +1534,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage21-interact-b',
+			script: 'mage21_interact_b',
 		},
 	],
-	'mage21-interact-b': [
+	mage21_interact_b: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1545,7 +1545,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage21-b',
+			dialog: 'dialog_mage21_b',
 		},
 		{
 			action: 'SET_HEX_EDITOR_CONTROL_CLIPBOARD',
@@ -1554,10 +1554,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage21-interact-a',
+			script: 'mage21_interact_a',
 		},
 	],
-	'mage22-interact': [
+	mage22_interact: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1565,7 +1565,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage22-a',
+			dialog: 'dialog_mage22_a',
 		},
 		{
 			action: 'SCREEN_FADE_OUT',
@@ -1574,7 +1574,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage22-b',
+			dialog: 'dialog_mage22_b',
 		},
 		{
 			action: 'SCREEN_FADE_IN',
@@ -1583,7 +1583,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage22-a',
+			dialog: 'dialog_mage22_a',
 		},
 		{
 			action: 'SCREEN_FADE_OUT',
@@ -1592,7 +1592,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage22-b',
+			dialog: 'dialog_mage22_b',
 		},
 		{
 			action: 'SCREEN_FADE_IN',
@@ -1600,7 +1600,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			color: '#00CC00',
 		},
 	],
-	'mage23-interact': [
+	mage23_interact: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1608,111 +1608,111 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage23-choices',
+			dialog: 'dialog_mage23_choices',
 		},
 	],
-	'mage23-interact-reset': [
+	mage23_interact_reset: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage23-interact',
+			script: 'mage23_interact',
 		},
 	],
-	'mage23-tick-reset': [
+	mage23_tick_reset: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
 			script: 'null_script',
 		},
 	],
-	'mage23-show_dialog_not_pressed': [
+	mage23_show_dialog_not_pressed: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage23-not_pressed',
+			dialog: 'dialog_mage23_not_pressed',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage23-tick-reset',
+			script: 'mage23_tick_reset',
 		},
 	],
-	'mage23-show_dialog_was_pressed': [
+	mage23_show_dialog_was_pressed: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage23-was_pressed',
+			dialog: 'dialog_mage23_was_pressed',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage23-tick-reset',
+			script: 'mage23_tick_reset',
 		},
 	],
-	'mage23-set_tick-press-any': [
+	mage23_set_tick_press_any: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage23-tick_delay-press-any',
+			script: 'mage23_tick_delay_press_any',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage23-interact-reset',
+			script: 'mage23_interact_reset',
 		},
 	],
-	'mage23-set_tick-press-page': [
+	mage23_set_tick_press_page: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage23-tick-press-page',
+			script: 'mage23_tick_press_page',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage23-interact-reset',
+			script: 'mage23_interact_reset',
 		},
 	],
-	'mage23-set_tick-state-any': [
+	mage23_set_tick_state_any: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage23-tick-state-any',
+			script: 'mage23_tick_state_any',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage23-interact-reset',
+			script: 'mage23_interact_reset',
 		},
 	],
-	'mage23-set_tick-state-page': [
+	mage23_set_tick_state_page: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage23-tick-state-page',
+			script: 'mage23_tick_state_page',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage23-interact-reset',
+			script: 'mage23_interact_reset',
 		},
 	],
-	'mage23-tick_delay-press-any': [
+	mage23_tick_delay_press_any: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage23-tick-press-any',
+			script: 'mage23_tick_press_any',
 		},
 	],
-	'mage23-tick-press-any': [
+	mage23_tick_press_any: [
 		{
 			action: 'CHECK_FOR_BUTTON_PRESS',
 			button_id: 'ANY',
-			success_script: 'mage23-show_dialog_was_pressed',
+			success_script: 'mage23_show_dialog_was_pressed',
 			expected_bool: true,
 		},
 	],
-	'mage23-tick-press-page': [
+	mage23_tick_press_page: [
 		{
 			action: 'CHECK_FOR_BUTTON_PRESS',
 			button_id: 'PAGE',
-			success_script: 'mage23-show_dialog_was_pressed',
+			success_script: 'mage23_show_dialog_was_pressed',
 			expected_bool: true,
 		},
 	],
-	'mage23-tick-state-any': [
+	mage23_tick_state_any: [
 		{
 			action: 'NON_BLOCKING_DELAY',
 			duration: 2000,
@@ -1721,14 +1721,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 			action: 'CHECK_FOR_BUTTON_STATE',
 			button_id: 'ANY',
 			expected_bool: true,
-			success_script: 'mage23-show_dialog_was_pressed',
+			success_script: 'mage23_show_dialog_was_pressed',
 		},
 		{
 			action: 'RUN_SCRIPT',
-			script: 'mage23-show_dialog_not_pressed',
+			script: 'mage23_show_dialog_not_pressed',
 		},
 	],
-	'mage23-tick-state-page': [
+	mage23_tick_state_page: [
 		{
 			action: 'NON_BLOCKING_DELAY',
 			duration: 2000,
@@ -1737,14 +1737,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 			action: 'CHECK_FOR_BUTTON_STATE',
 			button_id: 'PAGE',
 			expected_bool: true,
-			success_script: 'mage23-show_dialog_was_pressed',
+			success_script: 'mage23_show_dialog_was_pressed',
 		},
 		{
 			action: 'RUN_SCRIPT',
-			script: 'mage23-show_dialog_not_pressed',
+			script: 'mage23_show_dialog_not_pressed',
 		},
 	],
-	'mage24-interact': [
+	mage24_interact: [
 		{
 			action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 			entity: '%SELF%',
@@ -1753,42 +1753,42 @@ export const idk: Record<string, TYPES.Action[]> = {
 		{
 			action: 'CHECK_ENTITY_PATH',
 			entity: '%SELF%',
-			geometry: 'mage24-geometry-b',
+			geometry: 'mage24_geometry_b',
 			expected_bool: true,
-			success_script: 'mage24-interact-success',
+			success_script: 'mage24_interact_success',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage24-interact',
+			dialog: 'dialog_mage24_interact',
 		},
 	],
-	'mage24-interact-success': [
+	mage24_interact_success: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage24-interact-success',
+			dialog: 'dialog_mage24_interact_success',
 		},
 		{
 			action: 'SET_ENTITY_PATH',
 			entity: '%SELF%',
-			geometry: 'mage24-geometry-a',
+			geometry: 'mage24_geometry_a',
 		},
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage24-interact',
+			script: 'mage24_interact',
 		},
 	],
-	'mage24-tick': [
+	mage24_tick: [
 		{
 			action: 'TELEPORT_ENTITY_TO_GEOMETRY',
 			entity: '%SELF%',
 			geometry: '%ENTITY_PATH%',
 		},
 	],
-	'mage25-interact': [
+	mage25_interact: [
 		{
 			action: 'COPY_SCRIPT',
-			script: 'mage19-interact',
+			script: 'mage19_interact',
 			search_and_replace: {
 				'"entity_type":"bender"': '"entity_type": "baby_goat"',
 				'"entity_type":"verthandi"': '"entity_type": "bert"',
@@ -1796,25 +1796,25 @@ export const idk: Record<string, TYPES.Action[]> = {
 			},
 		},
 	],
-	'mage26-interact': [
+	mage26_interact: [
 		{
 			action: 'SET_ENTITY_TICK_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage26-delay_interrupt',
+			script: 'mage26_delay_interrupt',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage26-interact',
+			dialog: 'dialog_mage26_interact',
 		},
 	],
-	'mage26-reset': [
+	mage26_reset: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage26-interact',
+			script: 'mage26_interact',
 		},
 	],
-	'mage26-delay_interrupt': [
+	mage26_delay_interrupt: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
 			serial_dialog: 'honk_point',
@@ -1829,7 +1829,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage26-delay_interrupt',
+			dialog: 'dialog_mage26_delay_interrupt',
 		},
 		{
 			action: 'SHOW_SERIAL_DIALOG',
@@ -1841,45 +1841,45 @@ export const idk: Record<string, TYPES.Action[]> = {
 			script: 'null_script',
 		},
 	],
-	'mage27-interact': [
+	mage27_interact: [
 		{
 			action: 'CHECK_SERIAL_DIALOG_OPEN',
-			success_script: 'mage27-interact_trapped',
+			success_script: 'mage27_interact_trapped',
 			expected_bool: true,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage27-interact_closed',
+			dialog: 'dialog_mage27_interact_closed',
 		},
 	],
-	'mage27-interact_trapped': [
+	mage27_interact_trapped: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage27-interact_open',
+			dialog: 'dialog_mage27_interact_open',
 		},
 	],
-	'mage27-reset': [
+	mage27_reset: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage27-interact',
+			script: 'mage27_interact',
 		},
 	],
-	'mage27-reset_with_dialog': [
+	mage27_reset_with_dialog: [
 		{
 			action: 'SET_ENTITY_INTERACT_SCRIPT',
 			entity: '%SELF%',
-			script: 'mage27-interact',
+			script: 'mage27_interact',
 		},
 		{
 			action: 'COPY_SCRIPT',
-			script: 'map-action_testing-go_sphinx',
+			script: 'map_action_testing_go_sphinx',
 		},
 	],
-	'mage28-interact': [
+	mage28_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage28-interact',
+			dialog: 'dialog_mage28_interact',
 		},
 		{
 			action: 'SET_LIGHTS_CONTROL',
@@ -2156,14 +2156,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 			enabled: false,
 		},
 	],
-	'mage29-interact': [
+	mage29_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage29-interact',
+			dialog: 'dialog_mage29_interact',
 		},
 		{
 			action: 'MUTATE_VARIABLE',
-			variable: 'mage29-skippydoodle',
+			variable: 'mage29_skippydoodle',
 			operation: 'SET',
 			value: 1,
 		},
@@ -2176,23 +2176,23 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'MUTATE_VARIABLE',
-			variable: 'mage29-skippydoodle',
+			variable: 'mage29_skippydoodle',
 			operation: 'SET',
 			value: 0,
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'dialog-mage29-test',
+			dialog: 'dialog_mage29_test',
 		},
 	],
-	'mage30-interact': [
+	mage30_interact: [
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'mage30-interact-1',
+			dialog: 'mage30_interact_1',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'mage30-interact-2',
+			dialog: 'mage30_interact_2',
 		},
 		{
 			action: 'GOTO_ACTION_INDEX',
@@ -2200,14 +2200,14 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'mage30-interact-3',
+			dialog: 'mage30_interact_3',
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'mage30-interact-4',
+			dialog: 'mage30_interact_4',
 		},
 	],
-	'mage31-tick': [
+	mage31_tick: [
 		{
 			action: 'WALK_ENTITY_ALONG_GEOMETRY',
 			entity: 'Mage 31',
@@ -2215,7 +2215,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 			duration: 2400,
 		},
 	],
-	'mage31-interact': [
+	mage31_interact: [
 		{
 			action: 'SET_SCRIPT_PAUSE',
 			entity: '%SELF%',
@@ -2229,7 +2229,7 @@ export const idk: Record<string, TYPES.Action[]> = {
 		},
 		{
 			action: 'SHOW_DIALOG',
-			dialog: 'mage31-interact',
+			dialog: 'mage31_interact',
 		},
 		{
 			action: 'SET_SCRIPT_PAUSE',
@@ -2250,10 +2250,10 @@ export const idk: Record<string, TYPES.Action[]> = {
 			serial_dialog: 'dialog-debug_look_override',
 		},
 	],
-	'debug_look_mage01-override': [
+	debug_look_mage01_override: [
 		{
 			action: 'SHOW_SERIAL_DIALOG',
-			serial_dialog: 'dialog-debug_look_mage01-override',
+			serial_dialog: 'dialog-debug_look_mage01_override',
 		},
 	],
 	'set_entity_movement_relative-0': [

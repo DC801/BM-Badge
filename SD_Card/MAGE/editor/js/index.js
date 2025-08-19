@@ -60,6 +60,7 @@ window.vueApp = new window.Vue({
 				vm.isLoading = true;
 
 				filesArray.forEach(function (file) {
+					if (file.name === '.DS_Store') return;
 					if (fileNameMap[file.name] === undefined) {
 						fileNameMap[file.name] = file;
 					} else {

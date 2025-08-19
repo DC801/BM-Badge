@@ -5,6 +5,7 @@ import { type FileMap, ProjectState } from './parser-project.ts';
 import {
 	Action,
 	breakIfNotString,
+	CheckAction,
 	COPY_SCRIPT,
 	GOTO_ACTION_INDEX,
 	LABEL,
@@ -15,18 +16,14 @@ import {
 	ScriptDefinition,
 	SerialDialogDefinition,
 	LabelDefinition,
-	doesNodeHaveLabelToChangeToIndex,
 	CommentNode,
 	GotoLabel,
 	CopyMacro,
-	ReturnStatement,
-	BoolGetable,
-	BoolComparison,
+	AnyNode,
 } from './parser-types.ts';
 
 type FileCategory = 'scripts' | 'dialogs' | 'serialDialogs';
 type Definition = ScriptDefinition | DialogDefinition | SerialDialogDefinition;
-
 
 export const parseProject = async (fileMap: FileMap, scenarioData: Record<string, unknown>) => {
 	const parser = await initTreeSitter();
@@ -86,19 +83,19 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 	});
 
 	// STANDARDIZE ACTIONS
+
 	Object.keys(p.scripts).forEach((scriptName) => {
-		const standardizedActions = p.scripts[scriptName].actions
+		const standardizedActions: AnyNode[] = p.scripts[scriptName].actions
 			.filter(
 				(v) =>
 					!(v instanceof CommentNode) &&
 					!(v instanceof DialogDefinition) &&
 					!(v instanceof SerialDialogDefinition),
 			)
-			.map((action, i, arr) => {
-				const OOB = arr.length;
+			.map((action) => {
 				if (action instanceof CopyMacro) {
-					const manual = COPY_SCRIPT.quick(breakIfNotString(action.script));
-					return manual;
+					const script = breakIfNotString(action.script);
+					return COPY_SCRIPT.quick(script);
 				}
 				if (action instanceof LabelDefinition) {
 					const value = breakIfNotString(action.label);
@@ -110,23 +107,13 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 					});
 					return ret;
 				}
-				if (action instanceof ReturnStatement) {
-					const ret = new GOTO_ACTION_INDEX({
-						action_index: OOB,
-					});
-					return ret;
-				}
-				if (action instanceof BoolGetable || action instanceof BoolComparison) {
-					return Action.fromArgs(action);
-				}
-				if (!(action instanceof Action)) {
-					throw new Error('Found non-Action when trying to standardize Action');
-				}
 				return action;
 			});
-		p.scripts[scriptName].preActions = standardizedActions.map((v) => ({ ...v })); // shallow clone
 		// Snapshot current action state (pre copy_script, pre label baking)
+		p.scripts[scriptName].preBakingActions = standardizedActions;
 		p.scripts[scriptName].prePrint = printScript(scriptName, standardizedActions);
+		// final(ish)
+		p.scripts[scriptName].actions = standardizedActions.map((v) => v.clone());
 	});
 
 	// DO COPY_SCRIPT
@@ -149,50 +136,60 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 	// BAKE LABELS
 	Object.keys(p.scripts).forEach((scriptName) => {
 		const scriptData = p.scripts[scriptName];
+		// Register labels with action indicies
 		const registry: Record<string, number> = {};
 		const actions = scriptData.actions;
-		let gaplessIndex = 0;
+		let realIndex = 0;
 		for (let i = 0; i < actions.length; i++) {
 			const currAction = actions[i];
-			if (
-				currAction instanceof CommentNode ||
-				currAction instanceof DialogDefinition ||
-				currAction instanceof SerialDialogDefinition
-			) {
+			if (currAction instanceof CommentNode) {
 				continue;
-			} else if (currAction instanceof LabelDefinition) {
-				registry[currAction.label] = gaplessIndex;
-				const comment = `'${currAction.label}':`;
-				actions[i] = CommentNode.quick(currAction.debug, comment);
+			}
+			if (!(currAction instanceof Action)) {
+				throw new Error('found nonstandardized action');
+			}
+			if (currAction instanceof LABEL) {
+				const useLabel = currAction.value;
+				registry[useLabel] = realIndex;
+				const comment = `'${useLabel}':`;
+				actions[i] = CommentNode.quick(scriptData.debug, comment);
 			} else {
-				gaplessIndex += 1;
+				realIndex += 1;
 			}
 		}
-		actions.forEach((action, i) => {
-			if (doesNodeHaveLabelToChangeToIndex(action)) {
-				if (!action.label) throw new Error(`action should have a label and doesn't`);
-				const jumpToIndex = registry[action.label];
-				if (jumpToIndex === undefined) {
-					throw new Error(
-						`Jump index not registered for label "${action.label}" in script "${scriptName}"`,
-					);
-				}
-				if (action instanceof GotoLabel) {
-					actions[i] = GOTO_ACTION_INDEX.quick(jumpToIndex);
-				} else {
-					action.comment = `goto label '${action.label}'`;
-					action.jump_index = jumpToIndex;
-					delete action.label;
-				}
+		actions.forEach((action) => {
+			let useLabel: string | undefined = undefined;
+			if (action instanceof CheckAction) {
+				useLabel = action.label;
+			}
+			if (action instanceof GOTO_ACTION_INDEX && typeof action.action_index === 'string') {
+				useLabel = action.action_index;
+			}
+			if (!useLabel) return;
+			const jumpToIndex = registry[useLabel];
+			if (jumpToIndex === undefined) {
+				throw new Error(
+					`Jump index not registered for label "${useLabel}" in script "${scriptName}"`,
+				);
+			}
+			if (action instanceof CheckAction) {
+				delete action.label;
+				action.jump_index = jumpToIndex;
+			}
+			if (action instanceof GOTO_ACTION_INDEX) {
+				action.action_index = jumpToIndex;
+			}
+			if (action.label !== undefined) {
+				throw new Error('still label?');
 			}
 		});
 	});
 
 	// Snapshot current action state (post copy_script, post label baking)
 	Object.keys(p.scripts).forEach((scriptName) => {
-		const actions = p.scripts[scriptName].actions
+		const actions = p.scripts[scriptName].actions;
 		p.scripts[scriptName].printed = printScript(scriptName, actions);
-		p.scripts[scriptName].actions = actions.filter(item => item instanceof Action);
+		p.scripts[scriptName].actions = actions.filter((item) => item instanceof Action);
 	});
 
 	// PRINT ERRORS

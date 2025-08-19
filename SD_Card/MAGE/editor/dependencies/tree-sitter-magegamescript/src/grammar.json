@@ -5413,6 +5413,110 @@
               }
             }
           ]
+        },
+        {
+          "type": "FIELD",
+          "name": "rng",
+          "content": {
+            "type": "SYMBOL",
+            "name": "int_rng"
+          }
+        }
+      ]
+    },
+    "int_rng": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "RNG"
+        },
+        {
+          "type": "STRING",
+          "value": "!"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "FIELD",
+                      "name": "inclusive",
+                      "content": {
+                        "type": "STRING",
+                        "value": "="
+                      }
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "FIELD",
+                  "name": "value",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "NUMBER"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "min",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "NUMBER"
+                  }
+                },
+                {
+                  "type": "STRING",
+                  "value": ","
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "FIELD",
+                      "name": "inclusive",
+                      "content": {
+                        "type": "STRING",
+                        "value": "="
+                      }
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "FIELD",
+                  "name": "max",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "NUMBER"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ")"
         }
       ]
     },

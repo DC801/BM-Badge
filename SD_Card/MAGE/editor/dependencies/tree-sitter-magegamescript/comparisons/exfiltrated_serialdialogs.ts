@@ -285,7 +285,7 @@ export const compareFileSerialDialogs = (
 };
 
 export const serialDialogs: Record<string, EncoderSerialDialog> = {
-	'serial_dialog-map-action_testing-on_connect': {
+	serial_dialog_map_action_testing_on_connect: {
 		options: [],
 		text_options: {},
 		messages: [
@@ -300,33 +300,33 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 			'           ##  ##  ##  #  ',
 			'-----------######--#####--',
 		],
-		name: 'serial_dialog-map-action_testing-on_connect',
+		name: 'serial_dialog_map_action_testing_on_connect',
 	},
-	'serial_dialog-map-action_testing-look': {
+	serial_dialog_map_action_testing_look: {
 		messages: [
 			"Hey boss, I'm lookin around for secrets,",
 			"but it's nothing but numbers and mages in",
 			'this room!',
 		],
-		name: 'serial_dialog-map-action_testing-look',
+		name: 'serial_dialog_map_action_testing_look',
 	},
-	'serial_dialog-map-action_testing-go_north': {
+	serial_dialog_map_action_testing_go_north: {
 		messages: ["Hey boss, I tried to go north, but it's", 'just empty space up there!'],
-		name: 'serial_dialog-map-action_testing-go_north',
+		name: 'serial_dialog_map_action_testing_go_north',
 	},
-	'serial_dialog-map-action_testing-go_cleveland': {
+	serial_dialog_map_action_testing_go_cleveland: {
 		messages: [
 			'McScuse me?',
 			'What did you just ask me to do?',
 			"My name isn't Bob, I can't go to Cleveland!",
 		],
-		name: 'serial_dialog-map-action_testing-go_cleveland',
+		name: 'serial_dialog_map_action_testing_go_cleveland',
 	},
-	'serial_dialog-map-action_testing-go_cleveland-protected': {
+	serial_dialog_map_action_testing_go_cleveland_protected: {
 		messages: ['My name is Bob?!??', 'Looks like I have to go to Cleveland...'],
-		name: 'serial_dialog-map-action_testing-go_cleveland-protected',
+		name: 'serial_dialog_map_action_testing_go_cleveland_protected',
 	},
-	'serial_dialog-map-action_testing-go_numbers': {
+	serial_dialog_map_action_testing_go_numbers: {
 		messages: [
 			'You are in a desert.',
 			'You approached by a mysterious goat.',
@@ -351,36 +351,36 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 			},
 			{
 				label: "Let's branch into another serial dialog",
-				script: 'map-action_testing-go_sphinx-success',
+				script: 'map_action_testing_go_sphinx_success',
 			},
 			{
 				label: "Let's test some RUN_SCRIPT",
-				script: 'map-action_testing-cli-run_script',
+				script: 'map_action_testing_cli_run_script',
 			},
 			{
 				label: "Let's test some CHECK_SAVE_FLAG",
-				script: 'map-action_testing-cli-check_save_flag',
+				script: 'map_action_testing_cli_check_save_flag',
 			},
 			{
 				label: "Let's test some SET_SAVE_FLAG",
-				script: 'map-action_testing-cli-set_save_flag',
+				script: 'map_action_testing_cli_set_save_flag',
 			},
 			{
 				label: "Let's test some CHECK_VARIABLE",
-				script: 'map-action_testing-cli-check_variable',
+				script: 'map_action_testing_cli_check_variable',
 			},
 			{
 				label: "Let's test some MUTATE_VARIABLE",
-				script: 'map-action_testing-cli-mutate_variable',
+				script: 'map_action_testing_cli_mutate_variable',
 			},
 		],
-		name: 'serial_dialog-map-action_testing-go_numbers',
+		name: 'serial_dialog_map_action_testing_go_numbers',
 	},
-	'serial_dialog-map-action_testing-cli-fail': {
+	serial_dialog_map_action_testing_cli_fail: {
 		messages: ['Fail branch!\n', 'cli-variable: $cli-variable$'],
-		name: 'serial_dialog-map-action_testing-cli-fail',
+		name: 'serial_dialog_map_action_testing_cli_fail',
 	},
-	'serial_dialog-map-action_testing-cli-success': {
+	serial_dialog_map_action_testing_cli_success: {
 		messages: [
 			'Success branch!',
 			'PLAYER: %PLAYER%',
@@ -390,35 +390,35 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 			'SELF: %SELF%',
 			'MAP: %MAP%',
 		],
-		name: 'serial_dialog-map-action_testing-cli-success',
+		name: 'serial_dialog_map_action_testing_cli_success',
 	},
-	'serial_dialog-map-action_testing-go_sphinx': {
+	serial_dialog_map_action_testing_go_sphinx: {
 		messages: [
 			'When you arrive at the Sphinx,',
 			'it speaks in a slow, monotone voice:',
 			'WHEN DO THE FLYING TOASTERS COME OUT?',
 		],
 		text_options: {
-			'after dark': 'map-action_testing-go_sphinx-success',
-			'before dark': 'map-action_testing-go_sphinx-wtf',
+			'after dark': 'map_action_testing_go_sphinx_success',
+			'before dark': 'map_action_testing_go_sphinx_wtf',
 		},
-		name: 'serial_dialog-map-action_testing-go_sphinx',
+		name: 'serial_dialog_map_action_testing_go_sphinx',
 	},
-	'serial_dialog-map-action_testing-go_sphinx-success': {
+	serial_dialog_map_action_testing_go_sphinx_success: {
 		messages: ['The Sphinx bellows:', 'YOU ARE ELITE!'],
-		name: 'serial_dialog-map-action_testing-go_sphinx-success',
+		name: 'serial_dialog_map_action_testing_go_sphinx_success',
 	},
-	'serial_dialog-map-action_testing-go_sphinx-wtf': {
+	serial_dialog_map_action_testing_go_sphinx_wtf: {
 		messages: ['The Sphinx bellows:', "Okay bro, now you're just messing with me. WTF"],
-		name: 'serial_dialog-map-action_testing-go_sphinx-wtf',
+		name: 'serial_dialog_map_action_testing_go_sphinx_wtf',
 	},
-	'serial_dialog-map-action_testing-go_sphinx-fail': {
+	serial_dialog_map_action_testing_go_sphinx_fail: {
 		messages: ['The Sphinx bellows:', 'YOU HAVE FAILED MY CHALLENGE!'],
-		name: 'serial_dialog-map-action_testing-go_sphinx-fail',
+		name: 'serial_dialog_map_action_testing_go_sphinx_fail',
 	},
-	'serial_dialog-map-action_testing-go_hub': {
+	serial_dialog_map_action_testing_go_hub: {
 		messages: ["You're goating to the Hub map now!"],
-		name: 'serial_dialog-map-action_testing-go_hub',
+		name: 'serial_dialog_map_action_testing_go_hub',
 	},
 	'serial_dialog-go_register': {
 		messages: ["Registered Command: 'map'!"],
@@ -492,7 +492,7 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 		messages: ['This map of the Dungeon is AWESOME!!!'],
 		name: 'serial_dialog-command_map_dungeon',
 	},
-	'serial_dialog-map-action_testing-go_concat': {
+	serial_dialog_map_action_testing_go_concat: {
 		messages: ['This is a script about concatenation!', 'What would you like to concatenate?'],
 		options: [
 			{
@@ -516,7 +516,7 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 				script: 'concat_response-peregrine_falcon',
 			},
 		],
-		name: 'serial_dialog-map-action_testing-go_concat',
+		name: 'serial_dialog_map_action_testing_go_concat',
 	},
 	'concat-start': {
 		messages: ['This is a story about a '],
@@ -562,27 +562,27 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 		messages: ['You mooned the moon. It blushes.'],
 		name: 'serial_dialog-command_map_moon_moon',
 	},
-	'serial_dialog-mage01-look_script': {
+	serial_dialog_mage01_look_script: {
 		messages: [
 			'Looks like you just ran the look script on the entity named `%SELF%`! Goat job!',
 		],
-		name: 'serial_dialog-mage01-look_script',
+		name: 'serial_dialog_mage01_look_script',
 	},
-	'serial_dialog-map-action_testing-gui_open': {
+	serial_dialog_map_action_testing_gui_open: {
 		messages: ['---', ' ', 'Looks like a GUI dialog was indeed open!'],
-		name: 'serial_dialog-map-action_testing-gui_open',
+		name: 'serial_dialog_map_action_testing_gui_open',
 	},
-	'serial_dialog-map-action_testing-gui_closed': {
+	serial_dialog_map_action_testing_gui_closed: {
 		messages: ['---', ' ', 'Looks like a GUI dialog was NOT open!'],
-		name: 'serial_dialog-map-action_testing-gui_closed',
+		name: 'serial_dialog_map_action_testing_gui_closed',
 	},
-	'serial_dialog-map-action_testing-debug_false': {
+	serial_dialog_map_action_testing_debug_false: {
 		messages: ['---', ' ', 'Oh hey! Normal mode! (not debug)'],
-		name: 'serial_dialog-map-action_testing-debug_false',
+		name: 'serial_dialog_map_action_testing_debug_false',
 	},
-	'serial_dialog-map-action_testing-debug_true': {
+	serial_dialog_map_action_testing_debug_true: {
 		messages: ['---', ' ', 'Oh hey! Debug mode!'],
-		name: 'serial_dialog-map-action_testing-debug_true',
+		name: 'serial_dialog_map_action_testing_debug_true',
 	},
 	honk_point: {
 		messages: ['HONK!'],
@@ -592,9 +592,9 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 		messages: ["Verb Overrides registered: 'Look', 'look mage 01', 'go west'"],
 		name: 'serial_dialog-go_override',
 	},
-	'serial_dialog-go_un-override': {
+	serial_dialog_go_un_override: {
 		messages: ["Verb Overrides UN-registered: 'Look', 'look mage 01', 'go west'"],
-		name: 'serial_dialog-go_un-override',
+		name: 'serial_dialog_go_un_override',
 	},
 	'dialog-debug_go_space': {
 		messages: ['HONK! The goose has stolen the door!'],
@@ -606,9 +606,9 @@ export const serialDialogs: Record<string, EncoderSerialDialog> = {
 		],
 		name: 'dialog-debug_look_override',
 	},
-	'dialog-debug_look_mage01-override': {
+	'dialog-debug_look_mage01_override': {
 		messages: ["HONK! The goose attacks when you try to look at the 'Mage 01'!"],
-		name: 'dialog-debug_look_mage01-override',
+		name: 'dialog-debug_look_mage01_override',
 	},
 	'ch1-secretroom.mgs:134:2': {
 		messages: [

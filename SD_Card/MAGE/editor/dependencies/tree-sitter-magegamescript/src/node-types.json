@@ -1977,6 +1977,11 @@
     }
   },
   {
+    "type": "assignment_operator",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "bareword_expansion",
     "named": true,
     "fields": {},
@@ -4211,7 +4216,7 @@
     "fields": {
       "entity_identifier": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "entity_identifier",
@@ -4221,10 +4226,20 @@
       },
       "property": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "entity_property_int",
+            "named": true
+          }
+        ]
+      },
+      "rng": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "int_rng",
             "named": true
           }
         ]
@@ -4268,6 +4283,52 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "int_rng",
+    "named": true,
+    "fields": {
+      "inclusive": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          }
+        ]
+      },
+      "max": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "NUMBER",
+            "named": true
+          }
+        ]
+      },
+      "min": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "NUMBER",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "NUMBER",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -5669,6 +5730,10 @@
     "named": false
   },
   {
+    "type": "=",
+    "named": false
+  },
+  {
     "type": "==",
     "named": false
   },
@@ -5717,6 +5782,10 @@
     "named": true
   },
   {
+    "type": "RNG",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -5759,10 +5828,6 @@
   {
     "type": "animation_frame",
     "named": false
-  },
-  {
-    "type": "assignment_operator",
-    "named": true
   },
   {
     "type": "block",

@@ -877,8 +877,25 @@ export default grammar({
 					field('entity_identifier', $.entity_identifier),
 					field('property', $.entity_property_int),
 				),
+				field('rng', $.int_rng),
 				// seq(optional('variable'), field('variable', $.string)),
 				// todo might be kind of involved actually
+			),
+		int_rng: ($) =>
+			seq(
+				'RNG',
+				'!',
+				'(',
+				choice(
+					seq(optional(field('inclusive', '=')), field('value', $.NUMBER)),
+					seq(
+						field('min', $.NUMBER),
+						',',
+						optional(field('inclusive', '=')),
+						field('max', $.NUMBER),
+					),
+				),
+				')',
 			),
 		simple_bool_unary_expression: ($) =>
 			seq(field('operator', '!'), field('operand', $._simple_bool_unit)),

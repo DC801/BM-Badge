@@ -6,7 +6,7 @@ import { resolve as _resolve } from 'node:path';
 
 // The original JSON output as intercepted manually from the original encoder.
 // Lacks some scripts for some reason.
-// import { composites as oldPost } from './comparisons/exfiltrated_composites.ts';
+import { composites as oldPost } from './comparisons/exfiltrated_composites.ts';
 import {
 	compareFileSerialDialogs,
 	compareSerialDialogs,
@@ -118,12 +118,17 @@ type ScriptComparison = {
 	new: string;
 };
 const compareScripts = (p: ProjectState, scriptName: string): ScriptComparison => {
-	// let oldActions = oldPost[scriptName];
-	// let newActions = p.scripts[scriptName].actions;
-	// if (!oldActions) {
-	// oldActions = oldPre[scriptName];
-	// newActions = p.scripts[scriptName].preActions;
-	// }
+	// // pre copy script version
+	// let oldActions = oldPre[scriptName];
+	// let newActions = p.scripts[scriptName].preBakingActions;
+
+	// after copyscript version
+	let oldActions = oldPost[scriptName];
+	let newActions = p.scripts[scriptName].actions;
+	if (!oldActions) {
+		oldActions = oldPre[scriptName];
+		newActions = p.scripts[scriptName].preBakingActions;
+	}
 	if (!oldPre[scriptName]) {
 		return {
 			type: 'bad',
@@ -131,8 +136,10 @@ const compareScripts = (p: ProjectState, scriptName: string): ScriptComparison =
 			new: `${scriptName} {\n\t// not yet processed, but present\n}`,
 		};
 	}
-	const oldActions = oldPre[scriptName].map(Action.fromArgs);
-	const newActions = p.scripts[scriptName].preActions?.map(Action.fromArgs);
+
+	//both
+	oldActions = oldActions.map(Action.fromArgs);
+	newActions = newActions.map(Action.fromArgs);
 	if (!newActions) throw new Error(`missing newActions for script "${scriptName}"`);
 	if (!oldActions) throw new Error(`missing oldActions for script "${scriptName}"`);
 

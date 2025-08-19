@@ -85,6 +85,7 @@ function makeMap(path) {
 		{ withFileTypes: true }
 	)) {
 		let filePath = `${path}/${file.name}`
+		if (file.name === '.DS_Store') continue;
 
 		if (file.isDirectory()) {
 			map = {

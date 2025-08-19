@@ -587,7 +587,7 @@ export class ScriptDefinition extends MathlangNode {
 	printed?: string;
 	rawNodes?: AnyNode[];
 	actions: AnyNode[];
-	preActions?: AnyNode[];
+	preBakingActions?: AnyNode[];
 	copyScriptResolved?: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super();
@@ -615,7 +615,7 @@ export class ScriptDefinition extends MathlangNode {
 			) {
 				throw new Error('ScriptDefinition not given valid preActions:AnyNode[]');
 			} else {
-				this.preActions = args.preActions;
+				this.preBakingActions = args.preActions;
 			}
 		}
 		if (
@@ -635,8 +635,8 @@ export class ScriptDefinition extends MathlangNode {
 		if (cloned.rawNodes) {
 			cloned.rawNodes = cloned.rawNodes.map((v) => v.clone());
 		}
-		if (cloned.preActions) {
-			cloned.preActions = cloned.preActions.map((v) => v.clone());
+		if (cloned.preBakingActions) {
+			cloned.preBakingActions = cloned.preBakingActions.map((v) => v.clone());
 		}
 		return cloned;
 	}
@@ -705,7 +705,7 @@ export class JSONLiteral extends MathlangNode {
 		} catch (e) {
 			const error = new Error('failed to parse JSON in JSONLiteral constructor');
 			error.cause = e;
-			throw error
+			throw error;
 		}
 	}
 	clone() {
@@ -825,6 +825,13 @@ export class IntBinaryExpression extends IntExpression {
 			steps.push(ACTION.MUTATE_VARIABLE.set(temp, lhs.value));
 		} else if (lhs instanceof EntityIntField) {
 			steps.push(ACTION.COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, temp));
+		} else if (lhs instanceof RNGSingle) {
+			steps.push(ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.value, '?'));
+		} else if (lhs instanceof RNGPair) {
+			steps.push(
+				ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.value, '?'),
+				ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.add, '+'),
+			);
 		} else if (lhs instanceof IntBinaryExpression) {
 			// can use the same temporary since it's the lhs and we're going LTR
 			lhs.flatten(steps);
@@ -841,6 +848,19 @@ export class IntBinaryExpression extends IntExpression {
 			const quickTemp = quickTemporary();
 			steps.push(
 				ACTION.COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, quickTemp),
+				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
+			);
+		} else if (rhs instanceof RNGSingle) {
+			const quickTemp = quickTemporary();
+			steps.push(
+				ACTION.MUTATE_VARIABLE.change(rhs.debug, quickTemp, rhs.value, '?'),
+				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
+			);
+		} else if (rhs instanceof RNGPair) {
+			const quickTemp = quickTemporary();
+			steps.push(
+				ACTION.MUTATE_VARIABLE.change(rhs.debug, quickTemp, rhs.value, '?'),
+				ACTION.MUTATE_VARIABLE.change(rhs.debug, quickTemp, rhs.add, '+'),
 				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
 			);
 		} else if (rhs instanceof IntBinaryExpression) {
@@ -864,7 +884,7 @@ const invisibleMath = (op: string, operand: number): boolean => {
 export class IntUnit extends IntExpression {
 	static fromAny(debug: MathlangLocation, v: unknown) {
 		if (v instanceof IntBinaryExpression) return v;
-		if (v instanceof EntityIntField) return v;
+		if (v instanceof IntGetable) return v;
 		if (
 			debug.node instanceof TreeSitterNode &&
 			debug.node.grammarType === 'CONSTANT' &&
@@ -942,6 +962,34 @@ export class EntityIntField extends IntGetable {
 	}
 	clone() {
 		return new EntityIntField(this.debug, this.args);
+	}
+}
+export class RNGSingle extends IntGetable {
+	value: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.value = ACTION.breakIfNotNumber(args.value);
+	}
+	static quick(debug: MathlangLocation, value: number) {
+		return new RNGSingle(debug, { value });
+	}
+	clone() {
+		return new RNGSingle(this.debug, this.args);
+	}
+}
+export class RNGPair extends IntGetable {
+	value: number;
+	add: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.value = ACTION.breakIfNotNumber(args.value);
+		this.add = ACTION.breakIfNotNumber(args.add);
+	}
+	static quick(debug: MathlangLocation, value: number, add: number) {
+		return new RNGPair(debug, { value, add });
+	}
+	clone() {
+		return new RNGPair(this.debug, this.args);
 	}
 }
 
@@ -1933,12 +1981,3 @@ export class DirectionTarget extends MathlangNode {
 		return new DirectionTarget(debug, { type, value });
 	}
 }
-// --------------------- Mathlang Nodes with labels --------------------- \\
-
-export type NodeWithLabel = GotoLabel | ACTION.CheckAction;
-
-export const doesNodeHaveLabelToChangeToIndex = (v: unknown): v is NodeWithLabel => {
-	if (v instanceof GotoLabel && v.label) return true;
-	if (v instanceof ACTION.CheckAction && v.label) return true;
-	return false;
-};

@@ -18,6 +18,8 @@ on_load_main_menu {
 
 	/* DEBUG QUICK STUFFS */
 	if (debug_mode) {
+		command rngtest = rngtest;
+		command rngtest2 = rngtest2;
 		command debug = debug;
 		command hub = debug_hub;
 		command honk = system_bell;
@@ -41,6 +43,8 @@ on_load_main_menu {
 		show serial_dialog {
 			" "
 			"<y>DEBUG></> main menu only:"
+			"<y>></> <c>RNGTEST</>: test short rng syntax"
+			"<y>></> <c>RNGTEST2</>: test short rng syntax with range"
 			"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
 			"<y>></> <c>HUB</>: go to debug hub map"
 			"<y>></> <c>CH2</>: start ch2 (birthday cutscene)"
@@ -60,6 +64,60 @@ on_load_main_menu {
 			"<y>></> <c>WARP _</>: warp to that castle room"
 		}
 	}
+}
+
+rngtest {
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+	copy!(rngtest_roll)
+}
+rngtest2 {
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+	copy!(rngtest2_roll)
+}
+rngtest_roll {
+	printVar = RNG!(=4);
+	show serial_dialog { "random number from 0 to 4: $printVar$"}
+}
+
+rngtest2_roll {
+	printVar = RNG!(40,=44);
+	show serial_dialog { "random number from 40 to 44: $printVar$"}
 }
 
 /* DEBUGSSSS */

@@ -133,17 +133,15 @@ $reach = 6;
 
 rocco_work_fancy {
 	entity Rocco current_animation = $idle;
-	tempvar2 ?= 7;
-	tempvar2 += 3;
+	tempvar2 = RNG!(3, =9);
 	for (i = 0; i < tempvar2; i += 1) {
 		entity Rocco animation -> $twist once;
 	}
 	entity Rocco current_animation = $idle;
-	tempvar2 ?= 2;
-	if (tempvar2 == 1) {
+	tempvar2 = RNG!(=1);
+	if (tempvar2 == 1) { // 50% of the time
 		wait 1200ms;
-		tempvar2 ?= 4;
-		tempvar2 += 3;
+		tempvar2 = RNG!(3, =6);
 		for (i = 0; i < tempvar2; i += 1) {
 			entity Rocco animation -> $twist once;
 		}

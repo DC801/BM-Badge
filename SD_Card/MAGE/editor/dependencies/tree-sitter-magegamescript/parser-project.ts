@@ -11,11 +11,17 @@ import {
 	DialogDefinition,
 	SerialDialogDefinition,
 	LabelDefinition,
-	doesNodeHaveLabelToChangeToIndex,
 	CommentNode,
 	CopyMacro,
+	GotoLabel,
 } from './parser-types.ts';
-import { Action, COPY_SCRIPT } from './parser-bytecode-info.ts';
+import {
+	Action,
+	CheckAction,
+	COPY_SCRIPT,
+	GOTO_ACTION_INDEX,
+	LABEL,
+} from './parser-bytecode-info.ts';
 
 type FileMapEntry = {
 	arrayBuffer: Promise<unknown>;
@@ -176,17 +182,23 @@ export class ProjectState {
 			}
 			// add suffix to labels so they don't collide with other copies
 			const labelSuffix = 'c' + this.advanceGotoSuffix();
-			const copiedActions: AnyNode[] = this.scripts[action.script].actions.map(
-				(copiedAction) => {
-					if (
-						(doesNodeHaveLabelToChangeToIndex(copiedAction) && copiedAction.label) ||
-						copiedAction instanceof LabelDefinition
+			const copiedActions: AnyNode[] = this.scripts[action.script].actions
+				.map((v) => v.clone())
+				.map((v) => {
+					if (v instanceof CheckAction && v.label !== undefined) {
+						v.label += labelSuffix;
+					} else if (
+						v instanceof GOTO_ACTION_INDEX &&
+						typeof v.action_index === 'string'
 					) {
-						copiedAction.label += labelSuffix;
+						v.action_index += labelSuffix;
+					} else if (v instanceof LABEL) {
+						v.value += labelSuffix;
+					} else if (v instanceof LabelDefinition || v instanceof GotoLabel) {
+						v.label += labelSuffix;
 					}
-					return copiedAction;
-				},
-			);
+					return v;
+				});
 			// search-and-replace
 			if (action instanceof COPY_SCRIPT && action.search_and_replace) {
 				// search-and-replace does naive JSON stringifying and straight find-and-replace.
@@ -202,12 +214,12 @@ export class ProjectState {
 					Object.entries(searchAndReplace).forEach(([k, v]) => {
 						string = string.replace(new RegExp(k, 'g'), v);
 					});
-					let ret = ''
+					let ret = '';
 					try {
 						ret = JSON.parse(string);
 					} catch (e) {
 						const error = new Error('failed to parse JSON in bakeCopyScriptSingle');
-						error.cause = e
+						error.cause = e;
 						throw error;
 					}
 					return Action.fromArgs(ret);
