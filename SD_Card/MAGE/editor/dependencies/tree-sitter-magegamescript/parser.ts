@@ -215,6 +215,7 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		const str = ansi.red + printableMessage(p.fileMap, 'Error', message) + ansi.reset;
 		console.error(str);
 	});
+	if (errCount) throw new Error('MGS PARSING ERRORS (see console)');
 
 	// DONE
 	return p;

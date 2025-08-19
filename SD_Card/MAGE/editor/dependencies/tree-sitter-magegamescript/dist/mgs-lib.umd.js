@@ -3914,7 +3914,11 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     await Parser.init();
     const parser = new Parser();
     const Lang = await Language.load(wasmPath);
-    parser.setLanguage(Lang);
+    try {
+      parser.setLanguage(Lang);
+    } catch {
+      throw new Error("failed to set tree-sitter language (try again?)");
+    }
     return parser;
   }
   const DIALOG_WRAP = 42;
@@ -10891,6 +10895,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const str = ansiTags.red + printableMessage(p.fileMap, "Error", message) + ansiTags.reset;
       console.error(str);
     });
+    if (errCount) throw new Error("MGS PARSING ERRORS (see console)");
     return p;
   };
   const plural = (n) => n !== 1 ? "s" : "";

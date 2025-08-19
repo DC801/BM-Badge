@@ -23,7 +23,7 @@ var serializeSerialDialog = function (
 	) {
 		throw new Error(`SerialDialog named "${serialDialog.name}" is malformed, it contains no messages!`);
 	}
-	var uniqueSerialDialogKey = serialDialog.name.replace('serial_dialog-', '');
+	var uniqueSerialDialogKey = serialDialog.name.replace(/^serial_dialog[-_]/, '');
 	var scenarioIndex = serialDialog.scenarioIndex;
 	if(scenarioIndex === undefined) {
 		var responses = serialDialog.options || [];

@@ -10,6 +10,10 @@ export default async function (): Promise<Parser> {
 	await Parser.init();
 	const parser = new Parser();
 	const Lang = await Language.load(wasmPath);
-	parser.setLanguage(Lang);
+	try {
+		parser.setLanguage(Lang);
+	} catch {
+		throw new Error('failed to set tree-sitter language (try again?)');
+	}
 	return parser;
 }

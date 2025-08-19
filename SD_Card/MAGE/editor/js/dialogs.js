@@ -33,9 +33,9 @@ var serializeDialog = function (
 		}
 	});
 	var uniqueMapAndDialogKey = `map:${
-		map.name.replace('map-', '')
+		map.name.replace(/^map[-_]/, '')
 	},dialog:${
-		dialog.name.replace('dialog-', '')
+		dialog.name.replace(/^dialog[-_]/, '')
 	}`;
 	var scenarioIndex = scenarioData.uniqueDialogMap[uniqueMapAndDialogKey];
 	if(scenarioIndex === undefined) {
