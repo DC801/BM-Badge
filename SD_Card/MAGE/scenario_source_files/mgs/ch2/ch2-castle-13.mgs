@@ -10,6 +10,19 @@ add dialog settings {
 	}
 }
 
+interrupt_entity_walk ($name, $animationVar, $dirVar) {
+	$animationVar = entity $name current_animation;
+	entity $name current_animation = 0;
+	pause entity $name on_tick;
+	capture_entity_direction($name, $dirVar)
+	entity $name direction = player;
+}
+resume_entity_walk ($name, $animationVar, $dirVar){
+	entity $name current_animation = $animationVar;
+	unpause entity $name on_tick;
+	restore_entity_direction($name, $dirVar)
+}
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 look_ch2_castle_13 {
@@ -462,8 +475,8 @@ ch2_touch_goldfish {
 				PLAYER "I sort of need to borrow... you."
 				"We're short a CPU. And I need a volunteer to act as the \"thinking\" part --"
 			};
-			copy!(interrupt_king_walk)
-			copy!(interrupt_templeton_walk)
+			interrupt_entity_walk("King Gibson", captured_animation2, tempvar2)
+			interrupt_entity_walk(Templeton, captured_animation3, tempvar3)
 			entity "King Gibson" current_animation = 2;
 			show dialog {
 				GIBSON emote 1 "What's this? What are you talking about?"
@@ -575,62 +588,13 @@ interact_ch2_templeton {
 }
 
 interrupt_king_walk {
-	// todo: functions plz :/
-	captured_animation2 = entity "King Gibson" current_animation;
-	entity "King Gibson" current_animation = 0;
-	pause entity "King Gibson" on_tick;
-	if (entity "King Gibson" direction == north) {
-		tempvar2 = 0;
-	} else if (entity "King Gibson" direction == east) {
-		tempvar2 = 1;
-	} else if (entity "King Gibson" direction == south) {
-		tempvar2 = 2;
-	} else if (entity "King Gibson" direction == west) {
-		tempvar2 = 3;
-	}
-	entity "King Gibson" direction = player;
+	interrupt_entity_walk("King Gibson", captured_animation2, tempvar2)
 }
 resume_king_walk {
-	entity "King Gibson" current_animation = captured_animation2;
-	unpause entity "King Gibson" on_tick;
-	if (tempvar2 == 0) {
-		entity "King Gibson" direction = north;
-	} else if (tempvar2 == 1) {
-		entity "King Gibson" direction = east;
-	} else if (tempvar2 == 2) {
-		entity "King Gibson" direction = south;
-	} else if (tempvar2 == 3) {
-		entity "King Gibson" direction = west;
-	}
-}
-interrupt_templeton_walk {
-	// todo: functions plz :/
-	captured_animation3 = entity Templeton current_animation;
-	entity Templeton current_animation = 0;
-	pause entity Templeton on_tick;
-	if (entity Templeton direction == north) {
-		tempvar3 = 0;
-	} else if (entity Templeton direction == east) {
-		tempvar3 = 1;
-	} else if (entity Templeton direction == south) {
-		tempvar3 = 2;
-	} else if (entity Templeton direction == west) {
-		tempvar3 = 3;
-	}
-	entity Templeton direction = player;
+	resume_entity_walk("King Gibson", captured_animation2, tempvar2)
 }
 resume_templeton_walk {
-	entity Templeton current_animation = captured_animation3;
-	unpause entity Templeton on_tick;
-	if (tempvar3 == 0) {
-		entity Templeton direction = north;
-	} else if (tempvar3 == 1) {
-		entity Templeton direction = east;
-	} else if (tempvar3 == 2) {
-		entity Templeton direction = south;
-	} else if (tempvar3 == 3) {
-		entity Templeton direction = west;
-	}
+	resume_entity_walk(Templeton, captured_animation3, tempvar3)
 }
 templeton_catalog_search {
 	copy!(tick_rand_mini) // from bob's club basement

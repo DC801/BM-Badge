@@ -173,8 +173,10 @@ export default grammar({
 			seq(
 				field('name', $.STRING),
 				'(',
-				field('arg', choice($.STRING, $.NUMBER, $.BOOL)),
-				optional(repeat(seq(',', field('arg', choice($.STRING, $.NUMBER, $.BOOL))))),
+				field('arg', choice($.STRING, $.NUMBER, $.BOOL, $.CONSTANT)),
+				optional(
+					repeat(seq(',', field('arg', choice($.STRING, $.NUMBER, $.BOOL, $.CONSTANT)))),
+				),
 				optional(','),
 				')',
 			),

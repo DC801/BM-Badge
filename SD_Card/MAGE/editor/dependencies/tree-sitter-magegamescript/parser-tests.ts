@@ -1272,15 +1272,15 @@ const fileMap =
 					waiting ($number) {
 						wait $number;
 					}
-					teleportNextTo ($teleportee, $target) {
+					teleportNextTo ($teleportee, $target, $waitTime) {
 						entity $teleportee position = entity $target position;
 						entity $teleportee x += 20;
 						entity $teleportee direction = south;
-						waiting(50)
+						waiting($waitTime)
 					}
 					teleportAliceToBob {
-						teleportNextTo(Alice, Bob)
-						teleportNextTo(Charlie, Denise)
+						teleportNextTo(Alice, Bob, 50)
+						teleportNextTo(Charlie, Denise, 40)
 					}
 				`,
 					expected: {
@@ -1303,7 +1303,7 @@ const fileMap =
 								"__TEMP_0" += 20;
 								entity "Charlie" x = "__TEMP_0";
 								entity "Charlie" direction = "south";
-								wait 50ms;
+								wait 40ms;
 							}`,
 						},
 					},

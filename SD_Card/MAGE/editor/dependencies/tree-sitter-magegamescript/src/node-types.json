@@ -3489,6 +3489,10 @@
             "named": true
           },
           {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
             "type": "NUMBER",
             "named": true
           },

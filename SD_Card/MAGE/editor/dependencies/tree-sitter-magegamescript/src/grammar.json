@@ -1245,6 +1245,10 @@
               {
                 "type": "SYMBOL",
                 "name": "BOOL"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "CONSTANT"
               }
             ]
           }
@@ -1278,6 +1282,10 @@
                         {
                           "type": "SYMBOL",
                           "name": "BOOL"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "CONSTANT"
                         }
                       ]
                     }

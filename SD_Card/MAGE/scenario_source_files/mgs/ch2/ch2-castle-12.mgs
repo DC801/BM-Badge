@@ -344,7 +344,6 @@ ch2_ws_doturn {
 	ch2_ws_turn_status = $miss;
 	goto ch2_ws_doturn;
 }
-include "header.mgs";
 
 // QUIT
 

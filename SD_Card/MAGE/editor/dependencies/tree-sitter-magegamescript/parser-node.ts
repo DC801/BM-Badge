@@ -279,40 +279,59 @@ const nodeFns = {
 		debugLog(`include_macro: merging ${fileName} into ${f.fileName}...`);
 
 		// INCLUDE FILE
-		const newFile = f.p.fileMap[fileName].parsed;
-		if (!newFile) throw new Error(`missing file to include: ${fileName}`);
+		const insertFile = f.p.fileMap[fileName].parsed;
+		if (!insertFile) throw new Error(`missing file to include: ${fileName}`);
 		// add their constants to us
-		Object.keys(newFile.constants).forEach((constantName) => {
+		Object.keys(insertFile.constants).forEach((constantName) => {
 			if (f.constants[constantName]) {
 				f.newError({
 					message: `cannot redefine constant ${constantName} (via 'include')`,
 					locations: [
 						{
-							fileName: newFile.fileName,
-							node: newFile.constants[constantName].debug.node,
+							fileName: insertFile.fileName,
+							node: insertFile.constants[constantName].debug.node,
 						},
 					],
 				});
 			}
-			f.constants[constantName] = newFile.constants[constantName];
+			f.constants[constantName] = insertFile.constants[constantName];
+		});
+		// add their functions to us
+		Object.keys(insertFile.functions).forEach((functionName) => {
+			if (f.functions[functionName]) {
+				f.newError({
+					message: `cannot redefine function ${functionName} (via 'include')`,
+					locations: [
+						{
+							fileName: insertFile.fileName,
+							node: insertFile.functions[functionName].debug.node,
+						},
+						{
+							fileName: f.fileName,
+							node: node.firstChild || node,
+						},
+					],
+				});
+			}
+			f.functions[functionName] = insertFile.functions[functionName];
 		});
 		// add their actual node entries to us (might help debugging)
-		newFile.nodes.forEach((node) => {
+		insertFile.nodes.forEach((node) => {
 			f.nodes.push(node);
 		});
 		// add (serial) dialog settings
 		['default', 'serial'].forEach((type) => {
-			Object.keys(newFile.settings[type]).forEach((param) => {
-				f.settings[type][param] = newFile.settings[type][param];
+			Object.keys(insertFile.settings[type]).forEach((param) => {
+				f.settings[type][param] = insertFile.settings[type][param];
 			});
 		});
 		// ...some of which are extra layered
 		['entity', 'label'].forEach((type) => {
-			Object.keys(newFile.settings[type]).forEach((target) => {
-				const params = Object.keys(newFile.settings[type][target]);
+			Object.keys(insertFile.settings[type]).forEach((target) => {
+				const params = Object.keys(insertFile.settings[type][target]);
 				f.settings[type][target] = f.settings[type][target] || {};
 				params.forEach((param) => {
-					f.settings[type][target][param] = newFile.settings[type][target][param];
+					f.settings[type][target][param] = insertFile.settings[type][target][param];
 					// (I apologize for this)
 				});
 			});

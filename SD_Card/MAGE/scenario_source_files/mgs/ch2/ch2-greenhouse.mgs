@@ -141,142 +141,62 @@ on_load_ch2_greenhouse {
 	// entrance text
 	show serial_dialog spacer;
 	show serial_dialog { "Entering <bold>GREENHOUSE</>..." };
-	ethernettle_id = entity EtherNettle1 primary_id;
-	EtherNettle1 = entity EtherNettle1 primary_id;
-	EtherNettle2 = entity EtherNettle2 primary_id;
-	EtherNettle3 = entity EtherNettle3 primary_id;
-	EtherNettle4 = entity EtherNettle4 primary_id;
-	EtherNettle5 = entity EtherNettle5 primary_id;
-	EtherNettle6 = entity EtherNettle6 primary_id;
-	EtherNettle7 = entity EtherNettle7 primary_id;
-	EtherNettle8 = entity EtherNettle8 primary_id;
+	origEthernettlePrimaryID = entity EtherNettle1 primary_id;
+	ethernettlePrimaryID1 = entity EtherNettle1 primary_id;
+	ethernettlePrimaryID2 = entity EtherNettle2 primary_id;
+	ethernettlePrimaryID3 = entity EtherNettle3 primary_id;
+	ethernettlePrimaryID4 = entity EtherNettle4 primary_id;
+	ethernettlePrimaryID5 = entity EtherNettle5 primary_id;
+	ethernettlePrimaryID6 = entity EtherNettle6 primary_id;
+	ethernettlePrimaryID7 = entity EtherNettle7 primary_id;
+	ethernettlePrimaryID8 = entity EtherNettle8 primary_id;
 	copy!(ch2_map_init)
 }
 
 /* ---------- ON_TICK ---------- */
 
-ch2_capture_ethernettle1 { EtherNettle1 = entity EtherNettle1 primary_id; }
-ch2_capture_ethernettle2 { EtherNettle2 = entity EtherNettle2 primary_id; }
-ch2_capture_ethernettle3 { EtherNettle3 = entity EtherNettle3 primary_id; }
-ch2_capture_ethernettle4 { EtherNettle4 = entity EtherNettle4 primary_id; }
-ch2_capture_ethernettle5 { EtherNettle5 = entity EtherNettle5 primary_id; }
-ch2_capture_ethernettle6 { EtherNettle6 = entity EtherNettle6 primary_id; }
-ch2_capture_ethernettle7 { EtherNettle7 = entity EtherNettle7 primary_id; }
-ch2_capture_ethernettle8 { EtherNettle8 = entity EtherNettle8 primary_id; }
+ch2_capture_ethernettle1 { ethernettlePrimaryID1 = entity EtherNettle1 primary_id; }
+ch2_capture_ethernettle2 { ethernettlePrimaryID2 = entity EtherNettle2 primary_id; }
+ch2_capture_ethernettle3 { ethernettlePrimaryID3 = entity EtherNettle3 primary_id; }
+ch2_capture_ethernettle4 { ethernettlePrimaryID4 = entity EtherNettle4 primary_id; }
+ch2_capture_ethernettle5 { ethernettlePrimaryID5 = entity EtherNettle5 primary_id; }
+ch2_capture_ethernettle6 { ethernettlePrimaryID6 = entity EtherNettle6 primary_id; }
+ch2_capture_ethernettle7 { ethernettlePrimaryID7 = entity EtherNettle7 primary_id; }
+ch2_capture_ethernettle8 { ethernettlePrimaryID8 = entity EtherNettle8 primary_id; }
 
-// TODO: WANT FUNCTIONS!!
 
-// dialog trekkie_ethernettle_reset  {
-// 	Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
-// }
-// function check_ethernettle ($entity, $captured_primary_id, $geometry, $secondary_id) {
-// 	if (
-// 		!entity $entity intersects geometry $geometry
-// 		|| $captured_primary_id != ethernettle_id
-// 		|| entity $entity secondary_id != $secondary_id
-// 		|| entity $entity primary_id_type != 0
-// 	) {
-// 		show dialog trekkie_ethernettle_reset;
-// 		entity $entity position = geometry $geometry;
-// 		entity $entity primary_id = ethernettle_id;
-// 		entity $entity secondary_id = $secondary_id;
-// 		entity $entity primary_id_type = 0;
-// 	}
-// }
-
-// on_tick_ch2_greenhouse {
-// 	check_ethernettle(EtherNettle1, EtherNettle1, EtherNettle1Origin, 3)
-// 	check_ethernettle(EtherNettle2, EtherNettle2, EtherNettle2Origin, 2)
-// 	check_ethernettle(EtherNettle3, EtherNettle3, EtherNettle3Origin, 7)
-// 	check_ethernettle(EtherNettle4, EtherNettle4, EtherNettle4Origin, 0)
-// 	check_ethernettle(EtherNettle5, EtherNettle5, EtherNettle5Origin, 1)
-// 	check_ethernettle(EtherNettle6, EtherNettle6, EtherNettle6Origin, 6)
-// 	check_ethernettle(EtherNettle7, EtherNettle7, EtherNettle7Origin, 5)
-// 	check_ethernettle(EtherNettle8, EtherNettle8, EtherNettle8Origin, 4)
-// 	if (player intersects geometry "south-hitbox") {
-// 		warp_state = "walk_from_greenhouse";
-// 		load map "ch2-town";
-// 	}
-// }
+dialog trekkie_ethernettle_reset  {
+	Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
+}
+check_ethernettle ($entityName, $currentPrimaryID, $geometry, $knownSecondaryID) {
+	if (
+		!entity $entityName intersects geometry $geometry
+		|| $currentPrimaryID != origEthernettlePrimaryID // TODO: Why can't I say `entity $entityName primary_id != origEthernettlePrimaryID`? syntax errors abound
+		|| entity $entityName secondary_id != $knownSecondaryID // this is okay because it's a number literal, not a variable name?
+		|| entity $entityName primary_id_type != 0
+	) {
+		show dialog trekkie_ethernettle_reset;
+		entity $entityName position = geometry $geometry;
+		entity $entityName primary_id = origEthernettlePrimaryID;
+		entity $entityName secondary_id = $knownSecondaryID;
+		entity $entityName primary_id_type = 0;
+	}
+}
 
 on_tick_ch2_greenhouse {
-	// ethernettle interference checks
-	if (
-		!entity EtherNettle1 intersects geometry EtherNettle1Origin
-		|| !entity EtherNettle2 intersects geometry EtherNettle2Origin
-		|| !entity EtherNettle3 intersects geometry EtherNettle3Origin
-		|| !entity EtherNettle4 intersects geometry EtherNettle4Origin
-		|| !entity EtherNettle5 intersects geometry EtherNettle5Origin
-		|| !entity EtherNettle6 intersects geometry EtherNettle6Origin
-		|| !entity EtherNettle7 intersects geometry EtherNettle7Origin
-		|| !entity EtherNettle8 intersects geometry EtherNettle8Origin
-		|| EtherNettle1 != ethernettle_id
-		|| EtherNettle2 != ethernettle_id
-		|| EtherNettle3 != ethernettle_id
-		|| EtherNettle4 != ethernettle_id
-		|| EtherNettle5 != ethernettle_id
-		|| EtherNettle6 != ethernettle_id
-		|| EtherNettle7 != ethernettle_id
-		|| EtherNettle8 != ethernettle_id
-		|| entity EtherNettle1 secondary_id != 3
-		|| entity EtherNettle2 secondary_id != 2
-		|| entity EtherNettle3 secondary_id != 7
-		|| entity EtherNettle4 secondary_id != 0
-		|| entity EtherNettle5 secondary_id != 1
-		|| entity EtherNettle6 secondary_id != 6
-		|| entity EtherNettle7 secondary_id != 5
-		|| entity EtherNettle8 secondary_id != 4
-		|| entity EtherNettle1 primary_id_type != 0
-		|| entity EtherNettle2 primary_id_type != 0
-		|| entity EtherNettle3 primary_id_type != 0
-		|| entity EtherNettle4 primary_id_type != 0
-		|| entity EtherNettle5 primary_id_type != 0
-		|| entity EtherNettle6 primary_id_type != 0
-		|| entity EtherNettle7 primary_id_type != 0
-		|| entity EtherNettle8 primary_id_type != 0
-	) {
-		show dialog {
-			Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
-		};
-		entity EtherNettle1 position = geometry EtherNettle1Origin;
-		entity EtherNettle2 position = geometry EtherNettle2Origin;
-		entity EtherNettle3 position = geometry EtherNettle3Origin;
-		entity EtherNettle4 position = geometry EtherNettle4Origin;
-		entity EtherNettle5 position = geometry EtherNettle5Origin;
-		entity EtherNettle6 position = geometry EtherNettle6Origin;
-		entity EtherNettle7 position = geometry EtherNettle7Origin;
-		entity EtherNettle8 position = geometry EtherNettle8Origin;
-		entity EtherNettle1 primary_id = ethernettle_id;
-		entity EtherNettle2 primary_id = ethernettle_id;
-		entity EtherNettle3 primary_id = ethernettle_id;
-		entity EtherNettle4 primary_id = ethernettle_id;
-		entity EtherNettle5 primary_id = ethernettle_id;
-		entity EtherNettle6 primary_id = ethernettle_id;
-		entity EtherNettle7 primary_id = ethernettle_id;
-		entity EtherNettle8 primary_id = ethernettle_id;
-		entity EtherNettle1 secondary_id = 3;
-		entity EtherNettle2 secondary_id = 2;
-		entity EtherNettle3 secondary_id = 7;
-		entity EtherNettle4 secondary_id = 0;
-		entity EtherNettle5 secondary_id = 1;
-		entity EtherNettle6 secondary_id = 6;
-		entity EtherNettle7 secondary_id = 5;
-		entity EtherNettle8 secondary_id = 4;
-		entity EtherNettle1 primary_id_type = 0;
-		entity EtherNettle2 primary_id_type = 0;
-		entity EtherNettle3 primary_id_type = 0;
-		entity EtherNettle4 primary_id_type = 0;
-		entity EtherNettle5 primary_id_type = 0;
-		entity EtherNettle6 primary_id_type = 0;
-		entity EtherNettle7 primary_id_type = 0;
-		entity EtherNettle8 primary_id_type = 0;
-	}
+	check_ethernettle(EtherNettle1, ethernettlePrimaryID1, EtherNettle1Origin, 3)
+	check_ethernettle(EtherNettle2, ethernettlePrimaryID2, EtherNettle2Origin, 2)
+	check_ethernettle(EtherNettle3, ethernettlePrimaryID3, EtherNettle3Origin, 7)
+	check_ethernettle(EtherNettle4, ethernettlePrimaryID4, EtherNettle4Origin, 0)
+	check_ethernettle(EtherNettle5, ethernettlePrimaryID5, EtherNettle5Origin, 1)
+	check_ethernettle(EtherNettle6, ethernettlePrimaryID6, EtherNettle6Origin, 6)
+	check_ethernettle(EtherNettle7, ethernettlePrimaryID7, EtherNettle7Origin, 5)
+	check_ethernettle(EtherNettle8, ethernettlePrimaryID8, EtherNettle8Origin, 4)
 	if (player intersects geometry "south-hitbox") {
 		warp_state = "walk_from_greenhouse";
 		load map "ch2-town";
 	}
 }
-
 
 /* ---------- EXIT STUFF ---------- */
 

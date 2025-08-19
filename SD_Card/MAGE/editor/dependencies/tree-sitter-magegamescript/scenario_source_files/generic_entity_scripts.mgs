@@ -1,3 +1,5 @@
+include "header.mgs";
+
 face_player {
 	self direction = player;
 }
@@ -185,26 +187,10 @@ yeet {
 }
 
 capture_self_direction {
-	if (self direction == north) {
-		tempvar = 0;
-	} else if (self direction == east) {
-		tempvar = 1;
-	} else if (self direction == south) {
-		tempvar = 2;
-	} else if (self direction == west) {
-		tempvar = 3;
-	}
+	capture_entity_direction("%SELF%", tempvar)
 }
 restore_self_direction {
-	if (tempvar == 0) {
-		self direction = north;
-	} else if (tempvar == 1) {
-		self direction = east;
-	} else if (tempvar == 2) {
-		self direction = south;
-	} else if (tempvar == 3) {
-		self direction = west;
-	}
+	restore_entity_direction("%SELF%", tempvar)
 }
 
 interrupt_walk {
@@ -225,27 +211,11 @@ capture_player_state {
 	playersave_x = player x;
 	playersave_y = player y;
 	playersave_room = ch2_in_room*1;
-	if (player direction == north) {
-		playersave_dir = 0;
-	} else if (player direction == east) {
-		playersave_dir = 1;
-	} else if (player direction == south) {
-		playersave_dir = 2;
-	} else if (player direction == west) {
-		playersave_dir = 3;
-	}
+	capture_entity_direction("%PLAYER%", playersave_dir)
 }
 
 restore_player_state {
 	player x = playersave_x;
 	player y = playersave_y;
-	if (playersave_dir == 0) {
-		player direction = north;
-	} else if (playersave_dir == 1) {
-		player direction = east;
-	} else if (playersave_dir == 2) {
-		player direction = south;
-	} else if (playersave_dir == 3) {
-		player direction = west;
-	}
+	restore_entity_direction("%PLAYER%", playersave_dir)
 }
