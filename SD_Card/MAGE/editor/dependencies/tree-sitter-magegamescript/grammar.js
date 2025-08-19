@@ -369,7 +369,7 @@ export default grammar({
 				'dialog',
 				choice(
 					seq(field('dialog_name', $.STRING), $._dialog_block),
-					field('dialog_name', $.STRING),
+					field('dialog_name', $.string_expandable),
 					$._dialog_block,
 				),
 			),
@@ -379,7 +379,7 @@ export default grammar({
 				'serial_dialog',
 				choice(
 					seq(field('serial_dialog_name', $.STRING), $._serial_dialog_block),
-					field('serial_dialog_name', $.STRING),
+					field('serial_dialog_name', $.string_expandable),
 					$._serial_dialog_block,
 				),
 			),
@@ -389,7 +389,7 @@ export default grammar({
 				'serial_dialog',
 				choice(
 					seq(field('serial_dialog_name', $.STRING), $._serial_dialog_block),
-					field('serial_dialog_name', $.STRING),
+					field('serial_dialog_name', $.string_expandable),
 					$._serial_dialog_block,
 				),
 			),

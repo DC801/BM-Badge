@@ -112,30 +112,14 @@ on_tick_turn_right_and_down_kinda {
 }
 
 tick_rand_mini {
-	// rand!(
-	// 	wait [2s, 3s, 4s];
-	// )
-	"rand" ?= 3; // need quotes; keyword
-	if ("rand" == 2) {
-		wait 2s;
-	} else if ("rand" == 1) {
-		wait 3s;
-	} else {
-		wait 4s;
-	}
+	rand!(
+		wait [2s, 3s, 4s];
+	)
 }
 tick_rand_broad {
-	// rand!(
-	// 	wait [3s, 9s, 14s];
-	// )
-	"rand" ?= 3;
-	if ("rand" == 2) {
-		wait 3s;
-	} else if ("rand" == 1) {
-		wait 9s;
-	} else {
-		wait 14s;
-	}
+	rand!(
+		wait [3s, 9s, 14s];
+	)
 }
 
 tick_linger_2 {
@@ -400,36 +384,26 @@ interact_ch2_pizza {
 	self direction = south;
 }
 
+dialog bob0 { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" }
+dialog bob1 { SELF "Ah! Watch it!" "You stepped on my foot!" }
+dialog bob2 { SELF "Follow me!" "Let's start a conga line!" }
+dialog bob3 { SELF "AAHHHH!" "I bit my tongue!" }
+dialog bob4 { SELF "Get me outta here." "This dubstep is too much." }
+dialog bob5 { SELF "Hey! He's shooting at us!" "That DSLR looks nice. Wonder where he got it." }
+dialog bob6 { SELF "Perimeter secured." "No non-Bobs here!" }
+dialog bob7 { SELF "All right!" "This is the best Bob's Club party yet!" }
+dialog bob8 { SELF "Thank god it's you!" "Another Bob!" }
+dialog bob9 { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
+
 interact_ch2_marathonbob {
 	// capture original facing direction
 	copy!(interrupt_walk)
-	// normal behavior
-	bobtalkrand ?= 10;
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
-	if (bobtalkrand == 1) {
-		show dialog { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" };
-	} else if (bobtalkrand == 2) {
-		show dialog { SELF "Ah! Watch it!" "You stepped on my foot!" };
-	} else if (bobtalkrand == 3) {
-		show dialog { SELF "Follow me!" "Let's start a conga line!" };
-	} else if (bobtalkrand == 4) {
-		show dialog { SELF "AAHHHH!" "I bit my tongue!" };
-	} else if (bobtalkrand == 5) {
-		show dialog { SELF "Get me outta here." "This dubstep is too much." };
-	} else if (bobtalkrand == 6) {
-		show dialog { SELF "Hey! He's shooting at us!" "That DSLR looks nice. Wonder where he got it." };
-	} else if (bobtalkrand == 7) {
-		show dialog { SELF "Perimeter secured." "No non-Bobs here!" };
-	} else if (bobtalkrand == 8) {
-		show dialog { SELF "All right!" "This is the best Bob's Club party yet!" };
-	} else if (bobtalkrand == 9) {
-		show dialog { SELF "Thank god it's you!" "Another Bob!" };
-	} else {
-		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." };
-	}
+	rand!(
+		show dialog [ bob0, bob1, bob2, bob3, bob4, bob5, bob6, bob7, bob8, bob9 ];
+	)
 	// turn back to the original facing direction
 	copy!(resume_walk)
-	bobtalkrand = 0; // courtesy reset
 }
 
 interact_ch2_icechest {

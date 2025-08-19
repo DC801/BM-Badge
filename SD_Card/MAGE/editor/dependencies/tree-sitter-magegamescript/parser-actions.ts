@@ -1,5 +1,6 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import {
+	capturesForFieldName,
 	coerceToNumber,
 	coerceToString,
 	handleCapture,
@@ -271,17 +272,16 @@ type ShowSerialDialogOutput = (SHOW_SERIAL_DIALOG | SerialDialogDefinition)[];
 type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
 	action_show_dialog: (f: FileState, node: TreeSitterNode): ShowDialogOutput => {
-		const tryName = optionalStringCaptureForFieldName(f, node, 'dialog_name');
-		const dialogName = tryName !== null ? tryName : autoIdentifierName(f, node);
-		// TODO make this spreadable for Bob's club Bobs?
-		// const dialogNames = capturesForFieldName(f, node, 'dialog_name');
-		// if (dialogNames.length === 0) {
-		// 	dialogNames.push(autoIdentifierName(f, node));
-		// }
-		// if (dialogNames.length > 1) {
-		// 	return dialogNames.map(dialogName =>SHOW_DIALOG.quick(coerceToString(f, node, dialogName, 'dialogName')));
-		// }
-		// const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
+		const dialogNames = capturesForFieldName(f, node, 'dialog_name');
+		if (dialogNames.length === 0) {
+			dialogNames.push(autoIdentifierName(f, node));
+		}
+		if (dialogNames.length > 1) {
+			return dialogNames.map((dialogName) =>
+				SHOW_DIALOG.quick(coerceToString(f, node, dialogName, 'dialogName')),
+			);
+		}
+		const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
 		const dialogs = handleChildrenForFieldName(f, node, 'dialog');
 		const action = SHOW_DIALOG.quick(dialogName);
 		if (dialogs.length) {
@@ -308,16 +308,32 @@ const actionShowSerialDialog = (
 	node: TreeSitterNode,
 	disable_newline: boolean = false,
 ): ShowSerialDialogOutput => {
-	const tryName = optionalStringCaptureForFieldName(f, node, 'serial_dialog_name');
-	const name = tryName !== null ? tryName : autoIdentifierName(f, node);
+	const dialogNames = capturesForFieldName(f, node, 'serial_dialog_name');
+	if (dialogNames.length === 0) {
+		dialogNames.push(autoIdentifierName(f, node));
+	}
+	if (dialogNames.length > 1) {
+		return dialogNames.map((dialogName) =>
+			SHOW_SERIAL_DIALOG.quick(
+				coerceToString(f, node, dialogName, 'dialogName'),
+				disable_newline,
+			),
+		);
+	}
+	const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
+
 	const serialDialogs = handleChildrenForFieldName(f, node, 'serial_dialog');
-	const action = SHOW_SERIAL_DIALOG.quick(name, disable_newline);
+	const action = SHOW_SERIAL_DIALOG.quick(dialogName, disable_newline);
 	if (serialDialogs.length) {
 		if (!(serialDialogs[0] instanceof SerialDialog)) {
 			throw new Error('parsed serial dialogs not all of type SerialDialog');
 		}
 		const debug = new MathlangLocation(f, node);
-		const serialDialoDefinition = SerialDialogDefinition.quick(debug, name, serialDialogs[0]);
+		const serialDialoDefinition = SerialDialogDefinition.quick(
+			debug,
+			dialogName,
+			serialDialogs[0],
+		);
 		return [serialDialoDefinition, action];
 	}
 	return [action];
@@ -515,15 +531,15 @@ const actionData: Record<string, actionDataEntry> = {
 
 			// varName = RNG!(99);
 			if (v.rhs instanceof RNGSingle) {
-				return MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?')
+				return MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?');
 			}
 
 			// varName = RNG!(0, 99);
 			if (v.rhs instanceof RNGPair) {
 				const steps = [
 					MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?'),
-					MUTATE_VARIABLE.change(debug, lhs, v.rhs.add, '+')
-				]
+					MUTATE_VARIABLE.change(debug, lhs, v.rhs.add, '+'),
+				];
 				return new MathlangSequence(debug, {
 					steps,
 					type: 'parser-actions: action_set_ambiguous',

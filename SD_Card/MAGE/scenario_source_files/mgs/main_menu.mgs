@@ -443,72 +443,30 @@ menu_player_name_confirm {
 // Random
 
 menu_player_name_random {
-	random_name_count ?= 20;
-	if (random_name_count == 1) {
-		entity "%PLAYER%" name = "Chara";
-	} else if (random_name_count == 2) {
-		entity "%PLAYER%" name = "Buster";
-	} else if (random_name_count == 3) {
-		entity "%PLAYER%" name = "Tidus";
-	} else if (random_name_count == 4) {
-		entity "%PLAYER%" name = "Frisk";
-	} else if (random_name_count == 5) {
-		entity "%PLAYER%" name = "Farnsworth";
-	} else if (random_name_count == 6) {
-		entity "%PLAYER%" name = "Cloud";
-	} else if (random_name_count == 7) {
-		entity "%PLAYER%" name = "Ash";
-	} else if (random_name_count == 8) {
-		entity "%PLAYER%" name = "Crono";
-	} else if (random_name_count == 9) {
-		entity "%PLAYER%" name = "Terra";
-	} else if (random_name_count == 10) {
-		entity "%PLAYER%" name = "Kremit";
-	} else if (random_name_count == 11) {
-		entity "%PLAYER%" name = "Zidane";
-	} else if (random_name_count == 12) {
-		entity "%PLAYER%" name = "Cecil";
-	} else if (random_name_count == 13) {
-		entity "%PLAYER%" name = "Squall";
-	} else if (random_name_count == 14) {
-		entity "%PLAYER%" name = "Roxas";
-	} else if (random_name_count == 15) {
-		entity "%PLAYER%" name = "Steamed Hams";
-	} else if (random_name_count == 16) {
-		entity "%PLAYER%" name = "Spy";
-	} else if (random_name_count == 17) {
-		entity "%PLAYER%" name = "Tom Honks";
-	} else if (random_name_count == 18) {
-		entity "%PLAYER%" name = "VeeVee";
-	} else if (random_name_count == 19) {
-		entity "%PLAYER%" name = "XDDCC";
-	} else { // if it's 0 or any other value (the default):
-		entity "%PLAYER%" name = "Bub";
-	}
-	// rand!(
-	// 	player name = [
-	// 		"Chara",
-	// 		"Buster",
-	// 		"Tidus",
-	// 		"Frisk",
-	// 		"Farnsworth",
-	// 		"Cloud",
-	// 		"Ash",
-	// 		"Crono",
-	// 		"Terra",
-	// 		"Kremit",
-	// 		"Zidane",
-	// 		"Cecil",
-	// 		"Squall",
-	// 		"Roxas",
-	// 		"Steamed Hams",
-	// 		"Spy",
-	// 		"Tom Honks",
-	// 		"VeeVee",
-	// 		"XDDCC",
-	// 		"Bub"
-	// 	];
-	// )
+	rand!(
+		player name = [
+			"Chara",
+			"Buster",
+			"Tidus",
+			"Frisk",
+			"Farnsworth",
+			"Cloud",
+			"Ash",
+			"Crono",
+			"Terra",
+			"Kremit",
+			"Zidane",
+			"Cecil",
+			"Squall",
+			"Roxas",
+			"Steamed Hams",
+			"Spy",
+			"Tom Honks",
+			"VeeVee",
+			"XDDCC",
+			"Bub"
+		];
+	)
 	show dialog {
 		name " "
 		border_tileset menu

@@ -148,15 +148,15 @@ Simon animations:
 simon_game_start {
 	player_control = off;
 	hex_control = off;
-	simon_pos1 ?= 4;
-	simon_pos2 ?= 4;
-	simon_pos3 ?= 4;
-	simon_pos4 ?= 4;
-	simon_pos5 ?= 4;
-	simon_pos6 ?= 4;
-	simon_pos7 ?= 4;
+	simon_pos1 = RNG!(=3); // 0, 1, 2, 3
+	simon_pos2 = RNG!(=3);
+	simon_pos3 = RNG!(=3);
+	simon_pos4 = RNG!(=3);
+	simon_pos5 = RNG!(=3);
+	simon_pos6 = RNG!(=3);
+	simon_pos7 = RNG!(=3);
 	if (ch2_simon_high) {
-		simon_pos1 += 2;
+		simon_pos1 += 2; // or 2, 3, 4, 5
 		simon_pos2 += 2;
 		simon_pos3 += 2;
 		simon_pos4 += 2;
@@ -173,7 +173,7 @@ simon_game_start {
 	player position = geometry "mage-spot";
 	entity Simon position = geometry "simon-spot";
 	player current_animation = $guitar_idle;
-	entity Simon current_animation = 5;
+	entity Simon current_animation = $pose_pre_left;
 	player direction = south;
 	entity Simon direction = south;
 	camera fade in -> black over 400ms;

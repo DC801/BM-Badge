@@ -298,7 +298,15 @@
             "named": true
           },
           {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
             "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "string_expansion",
             "named": true
           }
         ]
@@ -1763,7 +1771,15 @@
             "named": true
           },
           {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
             "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "string_expansion",
             "named": true
           }
         ]
@@ -1793,7 +1809,15 @@
             "named": true
           },
           {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
             "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "string_expansion",
             "named": true
           }
         ]

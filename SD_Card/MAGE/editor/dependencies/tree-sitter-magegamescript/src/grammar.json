@@ -2548,7 +2548,7 @@
               "name": "dialog_name",
               "content": {
                 "type": "SYMBOL",
-                "name": "STRING"
+                "name": "string_expandable"
               }
             },
             {
@@ -2595,7 +2595,7 @@
               "name": "serial_dialog_name",
               "content": {
                 "type": "SYMBOL",
-                "name": "STRING"
+                "name": "string_expandable"
               }
             },
             {
@@ -2642,7 +2642,7 @@
               "name": "serial_dialog_name",
               "content": {
                 "type": "SYMBOL",
-                "name": "STRING"
+                "name": "string_expandable"
               }
             },
             {
