@@ -112,6 +112,7 @@ import {
 	EntityIntField,
 	RNGSingle,
 	RNGPair,
+	IntExpression,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -617,6 +618,11 @@ const actionData: Record<string, actionDataEntry> = {
 			}
 
 			// player x = player y;
+			if (v.rhs instanceof IntExpression) {
+				const temp = quickTemporary();
+				// TODO
+				throw new Error('TODO');
+			}
 			if (v.rhs instanceof IntBinaryExpression) {
 				const temporary = newTemporary();
 				const steps = v.rhs.flatten([]);
@@ -719,14 +725,14 @@ const actionData: Record<string, actionDataEntry> = {
 					return TELEPORT_ENTITY_TO_GEOMETRY.quick(v.movable.value, v.coordinate.value);
 				}
 				if (v.coordinate.type === 'entity') {
-					const variable = quickTemporary();
+					const temp = quickTemporary();
 					const copyFrom = v.coordinate.value;
 					const copyTo = v.movable.value;
 					const steps = [
-						COPY_VARIABLE.intoField(variable, copyFrom, 'x'),
-						COPY_VARIABLE.intoVariable(copyTo, 'x', variable),
-						COPY_VARIABLE.intoField(variable, copyFrom, 'y'),
-						COPY_VARIABLE.intoVariable(copyTo, 'y', variable),
+						COPY_VARIABLE.intoVariable(copyFrom, 'x', temp),
+						COPY_VARIABLE.intoField(temp, copyTo, 'x'),
+						COPY_VARIABLE.intoVariable(copyFrom, 'y', temp),
+						COPY_VARIABLE.intoField(temp, copyTo, 'y'),
 					];
 					return new MathlangSequence(debug, {
 						steps,

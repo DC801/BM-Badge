@@ -3235,6 +3235,10 @@
           "named": true
         },
         {
+          "type": "fn",
+          "named": true
+        },
+        {
           "type": "include_macro",
           "named": true
         },
@@ -3427,6 +3431,88 @@
     "type": "entity_property_string",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "fn",
+    "named": true,
+    "fields": {
+      "arg": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "CONSTANT",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "script_block",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "fn_call",
+    "named": true,
+    "fields": {
+      "arg": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "BOOL",
+            "named": true
+          },
+          {
+            "type": "NUMBER",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "for_block",
@@ -4734,6 +4820,10 @@
           "named": true
         },
         {
+          "type": "fn_call",
+          "named": true
+        },
+        {
           "type": "for_block",
           "named": true
         },
@@ -5102,6 +5192,10 @@
           "named": true
         },
         {
+          "type": "fn_call",
+          "named": true
+        },
+        {
           "type": "for_block",
           "named": true
         },
@@ -5322,6 +5416,10 @@
         },
         {
           "type": "do_while_block",
+          "named": true
+        },
+        {
+          "type": "fn_call",
           "named": true
         },
         {
@@ -5967,6 +6065,10 @@
   },
   {
     "type": "flag",
+    "named": false
+  },
+  {
+    "type": "fn",
     "named": false
   },
   {

@@ -7,6 +7,8 @@ import type {
 	AnyNode,
 	MGSPrimitive,
 	MathlangLocation,
+	FunctionDefinition,
+	ConstantDefinition,
 } from './parser-types.ts';
 import { ansiTags as ansi } from './parser-utilities.ts';
 
@@ -15,10 +17,13 @@ export type Constant = {
 	value: MGSPrimitive;
 	debug: MathlangLocation;
 };
+export type FunctionStackEntry = Record<string, ConstantDefinition>;
 export class FileState {
 	p: ProjectState;
 	fileName: string;
 	constants: Record<string, Constant>;
+	functions: Record<string, FunctionDefinition>;
+	currFunction: FunctionStackEntry[];
 	settings: {
 		default: DialogSettings;
 		entity: DialogSettings;
@@ -36,6 +41,10 @@ export class FileState {
 		// compile-time constants,
 		// substituted for their registered token value as they are encounted
 		this.constants = {};
+
+		// similar, but for copy-and-paste macros (inline functions)
+		this.functions = {};
+		this.currFunction = [];
 
 		// dialog and serial dialog settings, applied to the (s)dialogs as we go
 		this.settings = {

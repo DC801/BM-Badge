@@ -148,6 +148,7 @@ export default grammar({
 
 		_root: ($) =>
 			choice(
+				$.fn,
 				$.script_definition,
 				$.constant_assignment,
 				$.include_macro,
@@ -155,6 +156,27 @@ export default grammar({
 				$.serial_dialog_definition,
 				$.add_dialog_settings,
 				$.dialog_definition,
+			),
+
+		fn: ($) =>
+			seq(
+				optional('fn'),
+				field('name', $.STRING),
+				'(',
+				field('arg', $.CONSTANT),
+				optional(repeat(seq(',', field('arg', $.CONSTANT)))),
+				optional(','),
+				')',
+				field('body', $.script_block),
+			),
+		fn_call: ($) =>
+			seq(
+				field('name', $.STRING),
+				'(',
+				field('arg', choice($.STRING, $.NUMBER, $.BOOL)),
+				optional(repeat(seq(',', field('arg', choice($.STRING, $.NUMBER, $.BOOL))))),
+				optional(','),
+				')',
 			),
 
 		include_macro: ($) => seq('include', field('fileName', $.quoted_string), $.semicolon),
@@ -253,6 +275,7 @@ export default grammar({
 		_script_item: ($) =>
 			choice(
 				seq($._action_item, $.semicolon),
+				$.fn_call,
 				$.rand_macro,
 				$.label_definition,
 				$.json_literal,

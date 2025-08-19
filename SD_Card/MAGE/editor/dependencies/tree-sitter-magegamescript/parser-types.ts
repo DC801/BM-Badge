@@ -60,6 +60,45 @@ const truncate = (s: string, n: number): string => {
 	return s.length > n + 3 ? orig.slice(0, n) + '...' : orig;
 };
 
+export class FunctionDefinition extends MathlangNode {
+	mathlang: 'function_definition';
+	name: string;
+	params: string[];
+	paramNodes: TreeSitterNode[];
+	bodyNode: TreeSitterNode;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super();
+		this.args = args;
+		this.debug = debug;
+		this.mathlang = 'function_definition';
+		this.name = ACTION.breakIfNotString(args.name);
+		if (!Array.isArray(args.params)) {
+			throw new Error('must be string array');
+		}
+		this.params = args.params.map(ACTION.breakIfNotString);
+		if (!Array.isArray(args.paramNodes)) {
+			throw new Error('must be array');
+		}
+		if (!args.paramNodes.every((v) => v instanceof TreeSitterNode)) {
+			throw new Error('Not TS Nodes');
+		}
+		this.paramNodes = args.paramNodes;
+		if (!(args.bodyNode instanceof TreeSitterNode)) {
+			throw new Error('Not TS Node');
+		}
+		this.bodyNode = args.bodyNode;
+	}
+	static quick(
+		debug: MathlangLocation,
+		name: string,
+		params: string[],
+		paramNodes: TreeSitterNode[],
+		bodyNode: TreeSitterNode,
+	) {
+		return new FunctionDefinition(debug, { name, params, paramNodes, bodyNode });
+	}
+}
+
 // ------------------------------ SETTINGS ------------------------------ \\
 
 export class AddDialogSettings extends MathlangNode {
@@ -752,7 +791,7 @@ export class MathlangSequence extends MathlangNode {
 		) {
 			throw new Error('MathlangSequence not given valid AnyNode[]');
 		}
-		this.type = ACTION.breakIfNotString(args.type);
+		this.type = String(args.type) || 'unspecified sequence type';
 		this.steps = args.steps;
 
 		if (!(this.steps[0] instanceof CommentNode)) {

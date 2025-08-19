@@ -85,7 +85,7 @@ export const handleCapture = (f: FileState, node: TreeSitterNode | null): Captur
 	}
 	// swap out values of compile-time constants
 	if (grammarType === 'CONSTANT') {
-		const lookup = f.constants[node.text];
+		const lookup = f.currFunction[0]?.[node.text] || f.constants[node.text];
 		if (lookup === undefined) {
 			f.quickError(node, `Constant ${node.text} is undefined`);
 		}
@@ -493,7 +493,7 @@ const captureFns = {
 		let min = numberCaptureForFieldName(f, node, 'min');
 		let max = numberCaptureForFieldName(f, node, 'max');
 		if (min > max) {
-			f.quickError(node, 'min must be less than max')
+			f.quickError(node, 'min must be less than max');
 			const switcheroo = min;
 			min = max;
 			max = switcheroo;
@@ -502,7 +502,7 @@ const captureFns = {
 			max += 1;
 		}
 		const diff = max - min;
-		return RNGPair.quick(debug, diff, min)
+		return RNGPair.quick(debug, diff, min);
 	},
 	direction_target: (f: FileState, node: TreeSitterNode) => {
 		const debug = new MathlangLocation(f, node);
@@ -711,14 +711,15 @@ export const coerceToString = (
 	label: string,
 ): string => {
 	if (typeof v !== 'string') {
+		const locations = [{ node, fileName: f.fileName }];
+		if (f.constants[node.text]) {
+			locations.unshift({
+				node: f.constants[node.text].debug.node || node,
+				fileName: f.constants[node.text]?.debug.fileName,
+			});
+		}
 		f.newError({
-			locations: [
-				{
-					node: f.constants[node.text].debug.node,
-					fileName: f.constants[node.text].debug.fileName,
-				},
-				{ node, fileName: f.fileName },
-			],
+			locations,
 			message: `${label} is not a string`,
 		});
 		return '';

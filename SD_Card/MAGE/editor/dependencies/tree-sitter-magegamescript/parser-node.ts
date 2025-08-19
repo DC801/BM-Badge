@@ -1,5 +1,5 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
-import { FileState } from './parser-file.ts';
+import { FileState, type FunctionStackEntry } from './parser-file.ts';
 import {
 	ConditionalBlock,
 	reportMissingChildNodes,
@@ -25,6 +25,8 @@ import {
 	mandatoryChildForFieldName,
 	handleChildrenForFieldName,
 	handleNamedChildren,
+	coerceToString,
+	coerceAsBool,
 } from './parser-capture.ts';
 import { handleAction } from './parser-actions.ts';
 import {
@@ -65,6 +67,7 @@ import {
 	BoolComparison,
 	BoolGetable,
 	BoolExpression,
+	FunctionDefinition,
 } from './parser-types.ts';
 import {
 	Action,
@@ -120,6 +123,82 @@ const nodeFns = {
 		}
 		f.quickError(node, 'syntax error');
 		return [];
+	},
+	fn: (f: FileState, node: TreeSitterNode) => {
+		const name = stringCaptureForFieldName(f, node, 'name');
+		const paramNodes = node.childrenForFieldName('arg').filter((v) => v !== null);
+		let error = false;
+		const params = paramNodes.map((param) => {
+			if (param.grammarType !== 'CONSTANT') {
+				f.quickError(node, 'fn arg must be CONSTANT (prefixed with $)');
+				error = true;
+			}
+			return param.text;
+		});
+		if (error) return [];
+		const paramSet = new Set([...params]);
+		if (paramSet.size !== params.length) {
+			f.quickError(node, 'duplicate fn args');
+			return [];
+		}
+		const bodyNode = node.childForFieldName('body');
+		if (!bodyNode) throw new Error('fn without body node');
+		const debug = new MathlangLocation(f, node);
+		const definiton = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
+		if (f.functions[name]) {
+			f.quickError(node, `fn ${name} already defined`);
+		} else {
+			f.functions[name] = definiton;
+		}
+	},
+	fn_call: (f: FileState, node: TreeSitterNode) => {
+		const name = stringCaptureForFieldName(f, node, 'name');
+		const definition = f.functions[name];
+		if (!definition) {
+			const nameNode = node.childForFieldName('name') || node;
+			f.quickError(nameNode, `function ${name} is undefined`);
+			return [];
+		}
+		const callParamNodes = node.childrenForFieldName('arg').filter((v) => v !== null);
+		const definitionParamNodes = definition.paramNodes;
+		// compare lengths of params
+		if (callParamNodes.length < definitionParamNodes.length) {
+			f.quickError(
+				node,
+				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
+			);
+			return [];
+		}
+		const callParams = callParamNodes.map((v) => {
+			let capture = handleCapture(f, v);
+			if (!isMGSPrimitive(capture)) {
+				f.quickError(v, 'function arg not an MGS primitive');
+				capture = coerceToString(f, v, capture, 'fucntion param');
+			}
+			return capture;
+		});
+		// make local const registry
+		const localConstants: FunctionStackEntry = {};
+		callParams.forEach((callParam, i) => {
+			const debug = new MathlangLocation(f, callParamNodes[i]);
+			const constantName = definition.params[i];
+			let value = callParam;
+			if (typeof callParam === 'boolean') {
+				value = BoolLiteral.quick(
+					debug,
+					coerceAsBool(f, callParamNodes[i], value, 'fn arg'),
+				);
+			}
+			const constantDefinition = ConstantDefinition.quick(debug, constantName, value);
+			localConstants[constantName] = constantDefinition;
+		});
+		const stack: FunctionStackEntry[] = f.currFunction;
+		stack.unshift(localConstants);
+		const body = handleNamedChildren(f, definition.bodyNode);
+		const sequence = new MathlangSequence(new MathlangLocation(f, node), { steps: body });
+		stack.shift();
+		// the rest of the owl
+		return sequence;
 	},
 	script_definition: (f: FileState, node: TreeSitterNode) => {
 		const scriptName = stringCaptureForFieldName(f, node, 'script_name');

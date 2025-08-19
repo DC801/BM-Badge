@@ -1267,10 +1267,51 @@ const fileMap =
 	onlyDoTheseActionTests.length !== 0
 		? {}
 		: {
+				'fn.mgs': {
+					fileText: `
+					waiting ($number) {
+						wait $number;
+					}
+					teleportNextTo ($teleportee, $target) {
+						entity $teleportee position = entity $target position;
+						entity $teleportee x += 20;
+						entity $teleportee direction = south;
+						waiting(50)
+					}
+					teleportAliceToBob {
+						teleportNextTo(Alice, Bob)
+						teleportNextTo(Charlie, Denise)
+					}
+				`,
+					expected: {
+						scripts: {
+							teleportAliceToBob: `"teleportAliceToBob" {
+								"__TEMP_0" = entity "Bob" x;
+								entity "Alice" x = "__TEMP_0";
+								"__TEMP_0" = entity "Bob" y;
+								entity "Alice" y = "__TEMP_0";
+								"__TEMP_0" = entity "Alice" x;
+								"__TEMP_0" += 20;
+								entity "Alice" x = "__TEMP_0";
+								entity "Alice" direction = "south";
+								wait 50ms;
+								"__TEMP_0" = entity "Denise" x;
+								entity "Charlie" x = "__TEMP_0";
+								"__TEMP_0" = entity "Denise" y;
+								entity "Charlie" y = "__TEMP_0";
+								"__TEMP_0" = entity "Charlie" x;
+								"__TEMP_0" += 20;
+								entity "Charlie" x = "__TEMP_0";
+								entity "Charlie" direction = "south";
+								wait 50ms;
+							}`,
+						},
+					},
+				},
 				'header.mgs': {
 					fileText: `
-						$magicNumber = 76;
-					`,
+					$magicNumber = 76;
+				`,
 					expected: {
 						scripts: {},
 						constants: {
@@ -1283,20 +1324,20 @@ const fileMap =
 				},
 				'constants_include.mgs': {
 					fileText: `
-						include "header.mgs";
-						$trombones = $magicNumber;
-						$hamburgers = "steamed hams";
-						"constants" {
-							player x = $trombones;
-							warp_state = $hamburgers;
-						}
-					`,
+					include "header.mgs";
+					$trombones = $magicNumber;
+					$hamburgers = "steamed hams";
+					"constants" {
+						player x = $trombones;
+						warp_state = $hamburgers;
+					}
+				`,
 					expected: {
 						scripts: {
 							constants: `"constants" {
-								player x = 76;
-								warp_state = "steamed hams";
-							}`,
+							player x = 76;
+							warp_state = "steamed hams";
+						}`,
 						},
 						constants: {
 							$magicNumber: {
@@ -1316,9 +1357,9 @@ const fileMap =
 				},
 				'basic_dialog.mgs': {
 					fileText: `dialog "bobIntro" {
-						Bob "Well, hi there!"
-						Jackob "Oh!"
-					}`,
+					Bob "Well, hi there!"
+					Jackob "Oh!"
+				}`,
 					expected: {
 						dialogs: {
 							bobIntro: {
@@ -1362,23 +1403,23 @@ const fileMap =
 				// },
 				'dialog_wrapping.mgs': {
 					fileText: `dialog "wrapBasics" {
-						Bob wrap 20
-						"12345678901234567890"
-						"123456789012\\%4567890"
-						"123456789012\\%45678901"
-						"123456789012\\% 567890"
-						"123456789012\\% 5678901"
-						"%12% a b c d e f g h"
-						"%1234% a b c d e f g h"
-						"%123456% a b c d e f g h"
-						"%12345678% a b c d e f g h"
-						"%1234567890% a b c d e f g h"
-						"$1$ a b c d e f g h"
-						"$123$ a b c d e f g h"
-						"$12345$ a b c d e f g h"
-						"$1234567$ a b c d e f g h"
-						"$123456789$ a b c d e f g h"
-					}`,
+					Bob wrap 20
+					"12345678901234567890"
+					"123456789012\\%4567890"
+					"123456789012\\%45678901"
+					"123456789012\\% 567890"
+					"123456789012\\% 5678901"
+					"%12% a b c d e f g h"
+					"%1234% a b c d e f g h"
+					"%123456% a b c d e f g h"
+					"%12345678% a b c d e f g h"
+					"%1234567890% a b c d e f g h"
+					"$1$ a b c d e f g h"
+					"$123$ a b c d e f g h"
+					"$12345$ a b c d e f g h"
+					"$1234567$ a b c d e f g h"
+					"$123456789$ a b c d e f g h"
+				}`,
 					expected: {
 						dialogs: {
 							wrapBasics: {
@@ -1834,7 +1875,7 @@ const runTests = async () => {
 				const allScripts = result.scripts;
 				fileScriptNames.forEach((scriptName) => {
 					const expected = fileExpectedData.scripts[scriptName].trim();
-					const found = (allScripts[scriptName].printed || '').trim();
+					const found = (allScripts[scriptName]?.printed || '').trim();
 					const compared = compareTexts(found, expected, '', `script "${scriptName}"`);
 					if (compared.status !== 'success') {
 						errors.push(compared);
