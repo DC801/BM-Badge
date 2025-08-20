@@ -674,10 +674,12 @@ export default grammar({
 				token(prec(1, '>=')),
 				token(prec(1, '<')),
 				token(prec(1, '<=')),
+				token(prec(1, '!==')),
+				token(prec(1, '===')),
 				token(prec(1, '==')),
 				token(prec(1, '!=')),
 			),
-		EQUALITY: () => choice('==', '!='),
+		EQUALITY: () => choice('===', '!==', '==', '!='),
 		_bool_unit: ($) =>
 			prec(
 				7,

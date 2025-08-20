@@ -144,6 +144,36 @@ const captureFns = {
 		return node.text;
 	},
 	CONSTANT: (f: FileState, node: TreeSitterNode): string => node.text,
+	AND: (f: FileState, node: TreeSitterNode): string => node.text,
+	OR: (f: FileState, node: TreeSitterNode): string => node.text,
+	'!': (f: FileState, node: TreeSitterNode): string => node.text,
+	BANG: (f: FileState, node: TreeSitterNode): string => node.text,
+	MUL_DIV_MOD: (f: FileState, node: TreeSitterNode): string => node.text,
+	ADD_SUB: (f: FileState, node: TreeSitterNode): string => node.text,
+	EQUALITY: (f: FileState, node: TreeSitterNode): string => {
+		const op = node.text;
+		if (op === '===') {
+			f.quickWarning(node, `use '==', not '==='`);
+			return '==';
+		}
+		if (op === '!==') {
+			f.quickWarning(node, `use '!=', not '!=='`);
+			return '!=';
+		}
+		return op;
+	},
+	COMPARISON: (f: FileState, node: TreeSitterNode): string => {
+		const op = node.text;
+		if (op === '===') {
+			f.quickWarning(node, `use '==', not '==='`);
+			return '==';
+		}
+		if (op === '!==') {
+			f.quickWarning(node, `use '!=', not '!=='`);
+			return '!=';
+		}
+		return op;
+	},
 	op_equals: (f: FileState, node: TreeSitterNode): string => opIntoStringMap[node.text[0]],
 	plus_minus_equals: (f: FileState, node: TreeSitterNode): string => node.text,
 	forever: () => true,
@@ -221,7 +251,7 @@ const captureFns = {
 	int_binary_expression: (f: FileState, node: TreeSitterNode): IntBinaryExpression => {
 		const rhsNode = mandatoryChildForFieldName(f, node, 'rhs');
 		const lhsNode = mandatoryChildForFieldName(f, node, 'lhs');
-		const op = textForFieldName(f, node, 'operator');
+		const op = stringCaptureForFieldName(f, node, 'operator');
 		let rhs = handleCapture(f, rhsNode);
 		let lhs = handleCapture(f, lhsNode);
 		if (!(lhs instanceof IntBinaryExpression)) {
@@ -237,7 +267,7 @@ const captureFns = {
 		const debug = new MathlangLocation(f, node);
 		const rhsNode = mandatoryChildForFieldName(f, node, 'rhs');
 		const lhsNode = mandatoryChildForFieldName(f, node, 'lhs');
-		const op = textForFieldName(f, node, 'operator');
+		const op = stringCaptureForFieldName(f, node, 'operator');
 		let rhs = handleCapture(f, rhsNode);
 		let lhs = handleCapture(f, lhsNode);
 		if (typeof lhs === 'string') {
@@ -271,7 +301,7 @@ const captureFns = {
 	},
 	bool_unary_expression: (f: FileState, node: TreeSitterNode): BoolExpression => {
 		const debug = new MathlangLocation(f, node);
-		const op = optionalTextForFieldName(f, node, 'operator');
+		const op = stringCaptureForFieldName(f, node, 'operator');
 		if (op !== '!') throw new Error('captured unknown unary operator: ' + op);
 		const capture = captureForFieldName(f, node, 'operand');
 		if (typeof capture === 'boolean') {
@@ -383,7 +413,7 @@ const captureFns = {
 		const debug = new MathlangLocation(f, node);
 		const lhsNode = mandatoryChildForFieldName(f, node, 'lhs');
 		const rhsNode = mandatoryChildForFieldName(f, node, 'rhs');
-		const op = textForFieldName(f, node, 'operator');
+		const op = stringCaptureForFieldName(f, node, 'operator');
 		let lhs = handleCapture(f, lhsNode);
 		let rhs = handleCapture(f, rhsNode);
 		// entity Bob direction == north

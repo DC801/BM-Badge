@@ -4195,6 +4195,28 @@
             "value": 1,
             "content": {
               "type": "STRING",
+              "value": "!=="
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "STRING",
+              "value": "==="
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "STRING",
               "value": "=="
             }
           }
@@ -4215,6 +4237,14 @@
     "EQUALITY": {
       "type": "CHOICE",
       "members": [
+        {
+          "type": "STRING",
+          "value": "==="
+        },
+        {
+          "type": "STRING",
+          "value": "!=="
+        },
         {
           "type": "STRING",
           "value": "=="
