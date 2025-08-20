@@ -1,5 +1,15 @@
 include "header.mgs";
 
+on_load_demo {
+	// testing
+	player x = 10;
+	player y = 10;
+	entity Hamster x = 30;
+	entity Hamster y = 10;
+	follow_player_stack_init()
+	// normal
+	goto show_dialog_timewarp;
+}
 show_dialog_timewarp {
 	command rtfm = command_rtfm;
 	if (!demo_cutseen_timewarp) {
@@ -309,4 +319,192 @@ demo_end_dream_no {
  dialog dialog_max3_demo_map {
 	PLAYER "Not much of a market for fashion here, I would've thought."
 	"Best of luck, Max Swagger!"
+}
+
+$adjust_x = 8;
+$adjust_y = 1;
+$follow_delay = 2;
+$queue_diff = 6;
+$queue_size = 10;
+
+follow_player_stack_init {
+	// debug!("Initializing follow_player behavior")
+	player_x = player x;
+	player_y = player y;
+	self_x = self x - $adjust_x;
+	self_y = self y + $adjust_y;
+	if (player_x > self_x) {
+		xdiff = player_x - self_x;
+		xstep = xdiff / 5;
+		queue_x0 = self_x;
+		queue_x1 = self_x + xstep * 1;
+		queue_x2 = self_x + xstep * 2;
+		queue_x3 = self_x + xstep * 3;
+		queue_x4 = self_x + xstep * 4;
+		queue_x5 = player_x;
+		queue_x6 = player_x;
+		queue_x7 = player_x;
+		queue_x8 = player_x;
+		queue_x9 = player_x;
+	} else {
+		xdiff = self_x - player_x;
+		xstep = xdiff / 5;
+		queue_x0 = self_x;
+		queue_x1 = player_x + xstep * 4;
+		queue_x2 = player_x + xstep * 3;
+		queue_x3 = player_x + xstep * 2;
+		queue_x4 = player_x + xstep * 1;
+		queue_x5 = player_x;
+		queue_x6 = player_x;
+		queue_x7 = player_x;
+		queue_x8 = player_x;
+		queue_x9 = player_x;
+	}
+	if (player_y > self_y) {
+		ydiff = player_y - self_y;
+		ystep = ydiff / 5;
+		queue_y0 = self_y;
+		queue_y1 = self_y + ystep * 1;
+		queue_y2 = self_y + ystep * 2;
+		queue_y3 = self_y + ystep * 3;
+		queue_y4 = self_y + ystep * 4;
+		queue_y5 = player_y;
+		queue_y6 = player_y;
+		queue_y7 = player_y;
+		queue_y8 = player_y;
+		queue_y9 = player_y;
+	} else {
+		ydiff = self_y - player_y;
+		ystep = ydiff / 5;
+		queue_y0 = self_y;
+		queue_y1 = player_y + ystep * 4;
+		queue_y2 = player_y + ystep * 3;
+		queue_y3 = player_y + ystep * 2;
+		queue_y4 = player_y + ystep * 1;
+		queue_y5 = player_y;
+		queue_y6 = player_y;
+		queue_y7 = player_y;
+		queue_y8 = player_y;
+		queue_y9 = player_y;
+	}
+	curr_self_queue = 0;
+	curr_player_queue = $queue_diff;
+	// debug!("...follow_player behavior initialized")
+	// debug!("xdiff = $xdiff$ (player x $player_x$, self x $self_x$)")
+	// debug!("ydiff = $ydiff$ (player y $player_y$, self y $self_y$)")
+	// debug!("Queue [0] $queue_x0$, $queue_y0$")
+	// debug!("Queue [1] $queue_x1$, $queue_y1$")
+	// debug!("Queue [2] $queue_x2$, $queue_y2$")
+	// debug!("Queue [3] $queue_x3$, $queue_y3$")
+	// debug!("Queue [4] $queue_x4$, $queue_y4$")
+	// debug!("Queue [5] $queue_x5$, $queue_y5$")
+	// debug!("Queue [6] $queue_x6$, $queue_y6$")
+	// debug!("Queue [7] $queue_x7$, $queue_y7$")
+	// debug!("Queue [8] $queue_x8$, $queue_y8$")
+}
+set_player_pos ($n, $x, $y) {
+	if (curr_player_queue == $n) {
+		$x = player_x;
+		$y = player_y;
+	}
+}
+set_self_pos ($n, $x, $y) {
+	if (curr_self_queue == $n) {
+		self x = $x;
+		self y = $y;
+	}
+}
+follow_player {
+	wait 20ms;
+	if (player current_animation != 1) {
+		// debug!("Player isn't moving")
+		if (should_follow_player) {
+			should_follow_player = false;
+			should_follow_player_delay = $follow_delay;
+		} else if (should_follow_player_delay != 0) {
+			should_follow_player_delay -= 1;
+		} else {
+			follow_player = false;
+		}
+	} else {
+		player_x = player x;
+		player_y = player y;
+		// debug!("Moving player to <c>$player_x$</>, <c>$player_y$</> (queue <c>$curr_player_queue$</>)")
+		// debug!("Player moved to $player_x$, $player_y$!")
+		set_player_pos(0, queue_x0, queue_y0)
+		set_player_pos(1, queue_x1, queue_y1)
+		set_player_pos(2, queue_x2, queue_y2)
+		set_player_pos(3, queue_x3, queue_y3)
+		set_player_pos(4, queue_x4, queue_y4)
+		set_player_pos(5, queue_x5, queue_y5)
+		set_player_pos(6, queue_x6, queue_y6)
+		set_player_pos(7, queue_x7, queue_y7)
+		set_player_pos(8, queue_x8, queue_y8)
+		set_player_pos(9, queue_x9, queue_y9)
+		curr_player_queue = (curr_player_queue + 1) % $queue_size;
+		if (!should_follow_player) {
+			should_follow_player = true;
+			follow_player_stack_init()
+			should_follow_player_delay = $follow_delay;
+		} else if (should_follow_player_delay != 0) {
+			should_follow_player_delay -= 1;
+		} else {
+			follow_player = true;
+		}
+	}
+
+	if (!follow_player) {
+		self current_animation = 0;
+	} else {
+		// FOLLOW
+		self current_animation = 1;
+		my_old_x = self x;
+		my_old_y = self y;
+		curr_self_queue = (curr_self_queue + 1) % $queue_size;
+		move_hamster()
+	}
+}
+move_hamster {
+	set_self_pos(0, queue_x0, queue_y0)
+	set_self_pos(1, queue_x1, queue_y1)
+	set_self_pos(2, queue_x2, queue_y2)
+	set_self_pos(3, queue_x3, queue_y3)
+	set_self_pos(4, queue_x4, queue_y4)
+	set_self_pos(5, queue_x5, queue_y5)
+	set_self_pos(6, queue_x6, queue_y6)
+	set_self_pos(7, queue_x7, queue_y7)
+	set_self_pos(8, queue_x8, queue_y8)
+	set_self_pos(9, queue_x9, queue_y9)
+	self x += $adjust_x;
+	self y -= $adjust_y;
+	self_x = self x;
+	self_y = self y;
+	// debug!("Moving Hamster to <y>$self_x$</>, <y>$self_y$</> (queue <y>$curr_self_queue$</>)")
+	if (self_x > my_old_x) {
+		my_diff_x = self_x - my_old_x;
+	} else {
+		my_diff_x = my_old_x - self_x;
+	}
+	if (self_y > my_old_y) {
+		my_diff_y = self_y - my_old_y;
+	} else {
+		my_diff_y = my_old_y - self_y;
+	}
+	if (my_diff_x > my_diff_y) {
+		if (self_x > my_old_x) {
+			self direction = east;
+		} else if (self_x < my_old_x) {
+			self direction = west;
+		} else {
+			// stay the same as current
+		}
+	} else {
+		if (self_y > my_old_y) {
+			self direction = south;
+		} else if (self_y < my_old_y) {
+			self direction = north;
+		} else {
+			// stay the same as current
+		}
+	}
 }

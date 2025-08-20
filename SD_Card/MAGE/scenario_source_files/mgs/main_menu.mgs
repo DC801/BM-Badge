@@ -18,6 +18,7 @@ on_load_main_menu {
 
 	/* DEBUG QUICK STUFFS */
 	if (debug_mode) {
+		command demo = goto_demo;
 		command rngtest = rngtest;
 		command rngtest2 = rngtest2;
 		command debug = debug;
@@ -64,6 +65,10 @@ on_load_main_menu {
 			"<y>></> <c>WARP _</>: warp to that castle room"
 		}
 	}
+}
+goto_demo {
+	demo_cutseen_timewarp = true;
+	load map demo;
 }
 
 rngtest {

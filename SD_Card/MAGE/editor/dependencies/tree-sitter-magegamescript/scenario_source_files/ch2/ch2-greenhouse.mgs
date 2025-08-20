@@ -164,41 +164,6 @@ ch2_capture_ethernettle6 { EtherNettle6 = entity EtherNettle6 primary_id; }
 ch2_capture_ethernettle7 { EtherNettle7 = entity EtherNettle7 primary_id; }
 ch2_capture_ethernettle8 { EtherNettle8 = entity EtherNettle8 primary_id; }
 
-// TODO: WANT FUNCTIONS!!
-
-// dialog trekkie_ethernettle_reset  {
-// 	Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
-// }
-// function check_ethernettle ($entity, $captured_primary_id, $geometry, $secondary_id) {
-// 	if (
-// 		!entity $entity intersects geometry $geometry
-// 		|| $captured_primary_id != ethernettle_id
-// 		|| entity $entity secondary_id != $secondary_id
-// 		|| entity $entity primary_id_type != 0
-// 	) {
-// 		show dialog trekkie_ethernettle_reset;
-// 		entity $entity position = geometry $geometry;
-// 		entity $entity primary_id = ethernettle_id;
-// 		entity $entity secondary_id = $secondary_id;
-// 		entity $entity primary_id_type = 0;
-// 	}
-// }
-
-// on_tick_ch2_greenhouse {
-// 	check_ethernettle(EtherNettle1, EtherNettle1, EtherNettle1Origin, 3)
-// 	check_ethernettle(EtherNettle2, EtherNettle2, EtherNettle2Origin, 2)
-// 	check_ethernettle(EtherNettle3, EtherNettle3, EtherNettle3Origin, 7)
-// 	check_ethernettle(EtherNettle4, EtherNettle4, EtherNettle4Origin, 0)
-// 	check_ethernettle(EtherNettle5, EtherNettle5, EtherNettle5Origin, 1)
-// 	check_ethernettle(EtherNettle6, EtherNettle6, EtherNettle6Origin, 6)
-// 	check_ethernettle(EtherNettle7, EtherNettle7, EtherNettle7Origin, 5)
-// 	check_ethernettle(EtherNettle8, EtherNettle8, EtherNettle8Origin, 4)
-// 	if (player intersects geometry "south-hitbox") {
-// 		warp_state = "walk_from-greenhouse";
-// 		load map "ch2-town";
-// 	}
-// }
-
 on_tick_ch2_greenhouse {
 	// ethernettle interference checks
 	if (
