@@ -6,7 +6,6 @@ import {
 	handleCapture,
 	handleChildrenForFieldName,
 	mandatoryChildForFieldName,
-	optionalStringCaptureForFieldName,
 	type Capture,
 } from './parser-capture.ts';
 import {
@@ -112,7 +111,6 @@ import {
 	EntityIntField,
 	RNGSingle,
 	RNGPair,
-	IntExpression,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -479,7 +477,6 @@ const actionData: Record<string, actionDataEntry> = {
 		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node, i): AnyNode => {
-			const debug = new MathlangLocation(f, node);
 			const lhs = coerceToString(f, node, v.lhs, 'action_set_ambiguous lhs');
 
 			// simple cases first (easy to check for)
@@ -532,19 +529,12 @@ const actionData: Record<string, actionDataEntry> = {
 
 			// varName = RNG!(99);
 			if (v.rhs instanceof RNGSingle) {
-				return MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?');
+				return v.rhs.toStep(lhs);
 			}
 
 			// varName = RNG!(0, 99);
 			if (v.rhs instanceof RNGPair) {
-				const steps = [
-					MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, '?'),
-					MUTATE_VARIABLE.change(debug, lhs, v.rhs.add, '+'),
-				];
-				return new MathlangSequence(debug, {
-					steps,
-					type: 'parser-actions: action_set_ambiguous',
-				});
+				return v.rhs.toSequence(lhs);
 			}
 
 			// varName = (255 + player x);
@@ -618,11 +608,16 @@ const actionData: Record<string, actionDataEntry> = {
 			}
 
 			// player x = player y;
-			if (v.rhs instanceof IntExpression) {
+			if (v.rhs instanceof EntityIntField) {
 				const temp = quickTemporary();
-				// TODO
-				throw new Error('TODO');
+				const steps = [
+					COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, temp),
+					COPY_VARIABLE.intoField(temp, v.lhs.entity, v.lhs.field),
+				];
+				return MathlangSequence.quick(debug, steps, 'int getable to int getable');
 			}
+
+			// player x = player y + self y;
 			if (v.rhs instanceof IntBinaryExpression) {
 				const temporary = newTemporary();
 				const steps = v.rhs.flatten([]);
@@ -634,7 +629,7 @@ const actionData: Record<string, actionDataEntry> = {
 				});
 			}
 
-			throw new Error('unknown RHS type');
+			throw new Error('unknown RHS type in action_set_int');
 		},
 	},
 	action_set_bool: {

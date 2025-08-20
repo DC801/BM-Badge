@@ -3,6 +3,7 @@ import {
 	BoolGetableAction,
 	StringCheckableAction,
 	NumberCheckableEqualityAction,
+	COPY_VARIABLE,
 } from './parser-bytecode-info.ts';
 import {
 	MathlangLocation,
@@ -50,12 +51,14 @@ import {
 	IntUnit,
 	RNGSingle,
 	RNGPair,
+	BoolExpressionWithPrerequesites,
 } from './parser-types.ts';
 import {
 	debugLog,
 	reportMissingChildNodes,
 	reportErrorNodes,
 	inverseOpMap,
+	quickTemporary,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
@@ -442,32 +445,63 @@ const captureFns = {
 		if (rhsNode.grammarType === 'number_checkable_equality') {
 			return compareNumberCheckableEquality(f, node, rhsNode, lhsNode, op);
 		}
-		const lhs = handleCapture(f, lhsNode);
-		const rhs = handleCapture(f, rhsNode);
+		let lhs = handleCapture(f, lhsNode);
+		let rhs = handleCapture(f, rhsNode);
+		const steps: AnyNode[] = [];
+		const temp = quickTemporary();
+		if (lhs instanceof EntityIntField) {
+			steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, temp));
+			lhs = temp;
+		}
+		if (rhs instanceof EntityIntField) {
+			steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, temp));
+			rhs = temp;
+		}
+		if (lhs instanceof RNGSingle) {
+			steps.push(lhs.toStep(temp));
+			lhs = temp;
+		}
+		if (lhs instanceof RNGPair) {
+			steps.push(...lhs.toSteps(temp));
+			lhs = temp;
+		}
+		if (rhs instanceof RNGSingle) {
+			steps.push(rhs.toStep(temp));
+			rhs = temp;
+		}
+		if (rhs instanceof RNGPair) {
+			steps.push(...rhs.toSteps(temp));
+			rhs = temp;
+		}
 		if (typeof lhs === 'string') {
 			if (typeof rhs === 'string') {
 				// varName1 > varName2
-				return CheckVariables.quick(debug, lhs, rhs, op);
+				steps.push(CheckVariables.quick(debug, lhs, rhs, op));
 			} else if (typeof rhs === 'number') {
 				// varName > 255
-				return CheckVariable.quick(debug, lhs, rhs, op);
+				steps.push(CheckVariable.quick(debug, lhs, rhs, op));
 			}
 		} else if (typeof lhs === 'number') {
 			if (typeof rhs === 'string') {
 				// 255 > varName
-				return CheckVariable.quick(debug, rhs, lhs, inverseOpMap[op]);
+				steps.push(CheckVariable.quick(debug, rhs, lhs, inverseOpMap[op]));
 			} else if (typeof rhs === 'number') {
 				// 255 > 0
-				if (op === '<') return BoolLiteral.quick(debug, lhs < rhs);
-				if (op === '<=') return BoolLiteral.quick(debug, lhs <= rhs);
-				if (op === '>') return BoolLiteral.quick(debug, lhs > rhs);
-				if (op === '>=') return BoolLiteral.quick(debug, lhs >= rhs);
-				if (op === '==') return BoolLiteral.quick(debug, lhs == rhs);
-				if (op === '!=') return BoolLiteral.quick(debug, lhs != rhs);
-				throw new Error(`invalid op in captured bool comparison: ${op}`);
+				if (op === '<') steps.push(BoolLiteral.quick(debug, lhs < rhs));
+				else if (op === '<=') steps.push(BoolLiteral.quick(debug, lhs <= rhs));
+				else if (op === '>') steps.push(BoolLiteral.quick(debug, lhs > rhs));
+				else if (op === '>=') steps.push(BoolLiteral.quick(debug, lhs >= rhs));
+				else if (op === '==') steps.push(BoolLiteral.quick(debug, lhs == rhs));
+				else if (op === '!=') steps.push(BoolLiteral.quick(debug, lhs != rhs));
+				else throw new Error(`invalid op in captured bool comparison: ${op}`);
 			}
 		}
-		throw new Error('failed to capture bool_comparison');
+		if (steps.length === 1) return steps[0];
+		if (steps.length === 0) {
+			throw new Error('failed to capture bool_comparison');
+		}
+		// TODO
+		return new BoolExpressionWithPrerequesites(debug, { steps });
 	},
 	int_setable: (f: FileState, node: TreeSitterNode) => {
 		const debug = new MathlangLocation(f, node);

@@ -25,10 +25,42 @@ const onlyDoTheseActionTests = [
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
 	'set_int_exp_ok',
+	'int_getable_comparison',
 ]);
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	int_getable_comparison: {
+		input: [
+			//WIP
+			`if (player x < 100) { wait 10; }`,
+		],
+		expected: [
+			// WIP
+			`"__TEMP_0" = player x;`,
+			`if "__TEMP_0" < 100 then goto label ??`,
+			`goto label ??`,
+			`wait 10;`,
+			`??:`,
+		],
+	},
+	entity_int_field_assignment: {
+		input: [
+			`player x = self x;`,
+			`player x = varName;`,
+			`player x = 0;`,
+			`player x = self x + 100;`,
+		],
+		expected: [
+			`"__TEMP_0" = self x;`,
+			`player x = "__TEMP_0";`,
+			`player x = varName;`,
+			`player x = 0;`,
+			`"__TEMP_0" = self x;`,
+			`"__TEMP_0" += 100;`,
+			`player x = "__TEMP_0";`,
+		],
+	},
 	mainframe_watchbox: {
 		input: [
 			`if (player intersects geometry "mainframe-watchbox") {`,

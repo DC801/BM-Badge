@@ -22,7 +22,7 @@ export class MathlangNode extends AnyNode {
 	args: GenericObj;
 	debug: MathlangLocation;
 	clone() {
-		return this.constructor(MathlangNode);
+		return this.constructor(this.debug, this.args);
 	}
 	print() {
 		return `// MATHLANG: ${this.mathlang}`;
@@ -815,6 +815,9 @@ export class MathlangSequence extends MathlangNode {
 	clone() {
 		return new MathlangSequence(this.debug, this.args);
 	}
+	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
+		return new MathlangSequence(debug, { steps, type });
+	}
 }
 
 // ------------------------------ INT EXPRESSIONS ------------------------------ \\
@@ -1015,6 +1018,12 @@ export class RNGSingle extends IntGetable {
 	clone() {
 		return new RNGSingle(this.debug, this.args);
 	}
+	toStep(destinationVar: string) {
+		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?');
+	}
+	toSteps(destinationVar: string) {
+		return [this.toStep(destinationVar)];
+	}
 }
 export class RNGPair extends IntGetable {
 	value: number;
@@ -1029,6 +1038,17 @@ export class RNGPair extends IntGetable {
 	}
 	clone() {
 		return new RNGPair(this.debug, this.args);
+	}
+	toSteps(destinationVar: string) {
+		return [
+			ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?'),
+			ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.add, '+'),
+		];
+	}
+	toSequence(destinationVar: string) {
+		return new MathlangSequence(this.debug, {
+			steps: this.toSteps(destinationVar),
+		});
 	}
 }
 
@@ -1186,6 +1206,28 @@ export class BoolBinaryExpression extends BoolExpression {
 		}
 		this.op = inverseOpMap[this.op];
 		return this;
+	}
+}
+
+export class BoolExpressionWithPrerequesites extends BoolExpression {
+	steps: AnyNode[];
+	comparison: AnyNode;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super();
+		if (!Array.isArray(args.steps)) {
+			throw new Error('should be array');
+		}
+		if (!args.steps.every((v) => v instanceof AnyNode)) {
+			throw new Error('should all be AnyNode');
+		}
+		const final = args.steps.pop();
+		if (final === undefined) throw new Error('should have thing');
+		this.comparison = final;
+		this.steps = args.steps;
+		this.debug = debug;
+	}
+	clone() {
+		return new BoolExpressionWithPrerequesites(this.debug, this.args);
 	}
 }
 

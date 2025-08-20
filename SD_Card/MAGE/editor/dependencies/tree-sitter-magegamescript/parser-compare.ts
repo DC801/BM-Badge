@@ -127,6 +127,12 @@ const compareScripts = (p: ProjectState, scriptName: string): ScriptComparison =
 	let newActions = p.scripts[scriptName].actions;
 	if (!oldActions) {
 		oldActions = oldPre[scriptName];
+		if (!p.scripts[scriptName].preBakingActions) {
+			throw new Error(
+				'compareScripts: could not find fallback actions for old version of script ' +
+					scriptName,
+			);
+		}
 		newActions = p.scripts[scriptName].preBakingActions;
 	}
 	if (!oldPre[scriptName]) {

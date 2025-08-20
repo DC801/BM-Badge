@@ -4458,7 +4458,6 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       captures: ["lhs", "rhs"],
       handle: (v, f, node, i2) => {
         var _a2, _b2, _c2, _d2;
-        const debug = new MathlangLocation(f, node);
         const lhs = coerceToString(f, node, v.lhs, "action_set_ambiguous lhs");
         if (v.rhs instanceof BoolLiteral) {
           return SET_SAVE_FLAG.toValue(lhs, v.rhs.value);
@@ -4482,32 +4481,25 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     ${suggestion} + 0
     ${suggestion} * 1`
           });
-          const debug2 = new MathlangLocation(f, node);
-          return MUTATE_VARIABLES.set(debug2, lhs, v.rhs);
+          const debug = new MathlangLocation(f, node);
+          return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
         }
         if (v.rhs instanceof EntityIntField) {
           return COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, lhs);
         }
         if (v.rhs instanceof RNGSingle) {
-          return MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, "?");
+          return v.rhs.toStep(lhs);
         }
         if (v.rhs instanceof RNGPair) {
-          const steps = [
-            MUTATE_VARIABLE.change(debug, lhs, v.rhs.value, "?"),
-            MUTATE_VARIABLE.change(debug, lhs, v.rhs.add, "+")
-          ];
-          return new MathlangSequence(debug, {
-            steps,
-            type: "parser-actions: action_set_ambiguous"
-          });
+          return v.rhs.toSequence(lhs);
         }
         if (v.rhs instanceof IntBinaryExpression) {
           const temporary = newTemporary(lhs);
           const steps = v.rhs.flatten([]);
           dropTemporary();
           steps.push(MUTATE_VARIABLES.set(v.rhs.debug, lhs, temporary));
-          const debug2 = new MathlangLocation(f, node);
-          return new MathlangSequence(debug2, {
+          const debug = new MathlangLocation(f, node);
+          return new MathlangSequence(debug, {
             steps,
             type: "parser-actions: action_set_ambiguous"
           });
@@ -4562,9 +4554,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         if (typeof v.rhs === "string") {
           return COPY_VARIABLE.intoField(v.rhs, v.lhs.entity, v.lhs.field);
         }
-        if (v.rhs instanceof IntExpression) {
-          quickTemporary();
-          throw new Error("TODO");
+        if (v.rhs instanceof EntityIntField) {
+          const temp = quickTemporary();
+          const steps = [
+            COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, temp),
+            COPY_VARIABLE.intoField(temp, v.lhs.entity, v.lhs.field)
+          ];
+          return MathlangSequence.quick(debug, steps, "int getable to int getable");
         }
         if (v.rhs instanceof IntBinaryExpression) {
           const temporary = newTemporary();
@@ -4576,7 +4572,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             type: "parser-actions: action_set_int"
           });
         }
-        throw new Error("unknown RHS type");
+        throw new Error("unknown RHS type in action_set_int");
       }
     },
     action_set_bool: {
@@ -5915,28 +5911,58 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (rhsNode.grammarType === "number_checkable_equality") {
         return compareNumberCheckableEquality(f, node, rhsNode, lhsNode, op);
       }
-      const lhs = handleCapture(f, lhsNode);
-      const rhs = handleCapture(f, rhsNode);
+      let lhs = handleCapture(f, lhsNode);
+      let rhs = handleCapture(f, rhsNode);
+      const steps = [];
+      const temp = quickTemporary();
+      if (lhs instanceof EntityIntField) {
+        steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, temp));
+        lhs = temp;
+      }
+      if (rhs instanceof EntityIntField) {
+        steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, temp));
+        rhs = temp;
+      }
+      if (lhs instanceof RNGSingle) {
+        steps.push(lhs.toStep(temp));
+        lhs = temp;
+      }
+      if (lhs instanceof RNGPair) {
+        steps.push(...lhs.toSteps(temp));
+        lhs = temp;
+      }
+      if (rhs instanceof RNGSingle) {
+        steps.push(rhs.toStep(temp));
+        rhs = temp;
+      }
+      if (rhs instanceof RNGPair) {
+        steps.push(...rhs.toSteps(temp));
+        rhs = temp;
+      }
       if (typeof lhs === "string") {
         if (typeof rhs === "string") {
-          return CheckVariables.quick(debug, lhs, rhs, op);
+          steps.push(CheckVariables.quick(debug, lhs, rhs, op));
         } else if (typeof rhs === "number") {
-          return CheckVariable.quick(debug, lhs, rhs, op);
+          steps.push(CheckVariable.quick(debug, lhs, rhs, op));
         }
       } else if (typeof lhs === "number") {
         if (typeof rhs === "string") {
-          return CheckVariable.quick(debug, rhs, lhs, inverseOpMap[op]);
+          steps.push(CheckVariable.quick(debug, rhs, lhs, inverseOpMap[op]));
         } else if (typeof rhs === "number") {
-          if (op === "<") return BoolLiteral.quick(debug, lhs < rhs);
-          if (op === "<=") return BoolLiteral.quick(debug, lhs <= rhs);
-          if (op === ">") return BoolLiteral.quick(debug, lhs > rhs);
-          if (op === ">=") return BoolLiteral.quick(debug, lhs >= rhs);
-          if (op === "==") return BoolLiteral.quick(debug, lhs == rhs);
-          if (op === "!=") return BoolLiteral.quick(debug, lhs != rhs);
-          throw new Error(`invalid op in captured bool comparison: ${op}`);
+          if (op === "<") steps.push(BoolLiteral.quick(debug, lhs < rhs));
+          else if (op === "<=") steps.push(BoolLiteral.quick(debug, lhs <= rhs));
+          else if (op === ">") steps.push(BoolLiteral.quick(debug, lhs > rhs));
+          else if (op === ">=") steps.push(BoolLiteral.quick(debug, lhs >= rhs));
+          else if (op === "==") steps.push(BoolLiteral.quick(debug, lhs == rhs));
+          else if (op === "!=") steps.push(BoolLiteral.quick(debug, lhs != rhs));
+          else throw new Error(`invalid op in captured bool comparison: ${op}`);
         }
       }
-      throw new Error("failed to capture bool_comparison");
+      if (steps.length === 1) return steps[0];
+      if (steps.length === 0) {
+        throw new Error("failed to capture bool_comparison");
+      }
+      return new BoolExpressionWithPrerequesites(debug, { steps });
     },
     int_setable: (f, node) => {
       const debug = new MathlangLocation(f, node);
@@ -6163,7 +6189,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "debug");
     }
     clone() {
-      return this.constructor(MathlangNode);
+      return this.constructor(this.debug, this.args);
     }
     print() {
       return `// MATHLANG: ${this.mathlang}`;
@@ -6827,6 +6853,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     clone() {
       return new MathlangSequence(this.debug, this.args);
     }
+    static quick(debug, steps, type) {
+      return new MathlangSequence(debug, { steps, type });
+    }
   }
   class IntExpression extends MathlangNode {
     constructor(debug, args2) {
@@ -7011,6 +7040,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     clone() {
       return new RNGSingle(this.debug, this.args);
     }
+    toStep(destinationVar) {
+      return MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, "?");
+    }
+    toSteps(destinationVar) {
+      return [this.toStep(destinationVar)];
+    }
   }
   class RNGPair extends IntGetable {
     constructor(debug, args2) {
@@ -7025,6 +7060,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     clone() {
       return new RNGPair(this.debug, this.args);
+    }
+    toSteps(destinationVar) {
+      return [
+        MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, "?"),
+        MUTATE_VARIABLE.change(this.debug, destinationVar, this.add, "+")
+      ];
+    }
+    toSequence(destinationVar) {
+      return new MathlangSequence(this.debug, {
+        steps: this.toSteps(destinationVar)
+      });
     }
   }
   class BoolExpression extends MathlangNode {
@@ -7177,6 +7223,27 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       this.op = inverseOpMap[this.op];
       return this;
+    }
+  }
+  class BoolExpressionWithPrerequesites extends BoolExpression {
+    constructor(debug, args2) {
+      super();
+      __publicField(this, "steps");
+      __publicField(this, "comparison");
+      if (!Array.isArray(args2.steps)) {
+        throw new Error("should be array");
+      }
+      if (!args2.steps.every((v) => v instanceof AnyNode)) {
+        throw new Error("should all be AnyNode");
+      }
+      const final = args2.steps.pop();
+      if (final === void 0) throw new Error("should have thing");
+      this.comparison = final;
+      this.steps = args2.steps;
+      this.debug = debug;
+    }
+    clone() {
+      return new BoolExpressionWithPrerequesites(this.debug, this.args);
     }
   }
   class BoolGetable extends BoolUnit {
