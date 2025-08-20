@@ -176,7 +176,7 @@ export const buildSerialDialogFromInfo = (
 			if (option.optionType !== firstOptionType) {
 				const node = option.debug.node.firstChild;
 				if (!node) throw new Error('serial dialog had no first option node');
-				warnNodes.push({ node, fileName: f.fileName });
+				warnNodes.push({ f, node, fileName: f.fileName });
 			}
 		});
 		if (warnNodes.length > 0) {
@@ -263,7 +263,7 @@ export const buildDialogFromInfo = (
 			}
 			if (!messageNodes[i]) throw new Error('no associated node for message at index' + i);
 			f.p.newWarning({
-				locations: [{ node: messageNodes[i], fileName: f.fileName }],
+				locations: [{ f, node: messageNodes[i], fileName: f.fileName }],
 				message: warningMessage,
 				footer:
 					`When wrapped:\n` +

@@ -4061,7 +4061,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         if (option.optionType !== firstOptionType) {
           const node2 = option.debug.node.firstChild;
           if (!node2) throw new Error("serial dialog had no first option node");
-          warnNodes.push({ node: node2, fileName: f.fileName });
+          warnNodes.push({ f, node: node2, fileName: f.fileName });
         }
       });
       if (warnNodes.length > 0) {
@@ -4141,7 +4141,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         }
         if (!messageNodes[i2]) throw new Error("no associated node for message at index" + i2);
         f.p.newWarning({
-          locations: [{ node: messageNodes[i2], fileName: f.fileName }],
+          locations: [{ f, node: messageNodes[i2], fileName: f.fileName }],
           message: warningMessage,
           footer: `When wrapped:
 ` + splitMessage.map((v, i22, arr) => {
@@ -4450,7 +4450,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
           const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
           const suggestion = v.rhs.includes(" ") ? '"' + v.rhs + '"' : v.rhs;
           f.p.newWarning({
-            locations: printNodes.map((v2) => ({ node: v2, fileName: f.fileName })),
+            locations: printNodes.map((v2) => ({ f, node: v2, fileName: f.fileName })),
             message: "these identifiers could be ints or bools",
             footer: `Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:
     !!${suggestion}
@@ -5113,6 +5113,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             message: `cannot redefine constant ${constantName} (via 'include')`,
             locations: [
               {
+                f: insertFile,
                 fileName: insertFile.fileName,
                 node: insertFile.constants[constantName].debug.node
               }
@@ -5127,10 +5128,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             message: `cannot redefine function ${functionName} (via 'include')`,
             locations: [
               {
+                f: insertFile,
                 fileName: insertFile.fileName,
                 node: insertFile.functions[functionName].debug.node
               },
               {
+                f,
                 fileName: f.fileName,
                 node: node.firstChild || node
               }
@@ -6102,9 +6105,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const coerceToString = (f, node, v, label) => {
     var _a2;
     if (typeof v !== "string") {
-      const locations = [{ node, fileName: f.fileName }];
+      const locations = [{ f, node, fileName: f.fileName }];
       if (f.constants[node.text]) {
         locations.unshift({
+          f: f.constants[node.text].debug.f || f,
           node: f.constants[node.text].debug.node || node,
           fileName: (_a2 = f.constants[node.text]) == null ? void 0 : _a2.debug.fileName
         });
@@ -6122,10 +6126,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       f.newError({
         locations: [
           {
+            f: f.constants[node.text].debug.f,
             node: f.constants[node.text].debug.node,
             fileName: f.constants[node.text].debug.fileName
           },
-          { node, fileName: f.fileName }
+          { f, node, fileName: f.fileName }
         ],
         message: `${label} is not a number`
       });
@@ -6141,10 +6146,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       f.newError({
         locations: [
           {
+            f: f.constants[node.text].debug.f,
             node: f.constants[node.text].debug.node,
             fileName: f.constants[node.text].debug.fileName
           },
-          { node, fileName: f.fileName }
+          { f, node, fileName: f.fileName }
         ],
         message: `${label} is not a boolean`
       });
@@ -6153,6 +6159,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return v;
   };
   class AnyNode {
+    // = MathlangNode, Action
     clone() {
       if (this instanceof MathlangNode) return this.clone();
       return Action.fromArgs(this);
@@ -6161,6 +6168,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class MathlangNode extends AnyNode {
     constructor(debug, args2) {
       super();
+      // FunctionDefinition, AddDialogSettings, AddDialogSettingsTarget, AddSerialDialogSettings
+      // ReturnStatement, ContinueStatement, BreakStatement, GotoLabel
+      // DialogDefinition, DialogParameter, Dialog, DialogIdentifier, DialogOption
+      // SerialDialogDefinition, SerialDialogParameter, SerialDialog, SerialDialogOption
+      // IncludeNode, ConstantDefinition, ScriptDefinition, CommentNode, LabelDefinition
+      // JSONLiteral, CopyMacro, MathlangSequence, IntExpression, BoolExpression,
+      // BoolSetable, MovableIdentifier, CoordinateIdentifier, DirectionTarget
       __publicField(this, "mathlang");
       __publicField(this, "args");
       __publicField(this, "debug");
@@ -6929,7 +6943,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         return CheckEntityCurrentFrame.quick(debug, entity, NaN);
       } else if (field === "strafe") {
         const f = this.debug.f;
-        if (!f) throw new Error("should have if");
         const node = this.debug.node;
         const propertyNode = mandatoryChildForFieldName(f, node, "property");
         f.quickError(propertyNode, `this property is not supported in boolean expressions`);
@@ -7060,7 +7073,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     assignToSetBool(setBool) {
       var _a2;
       const f = this.debug.f;
-      if (!f) throw new Error("should have f");
       const node = this.debug.node;
       const cloneIfFalse = setBool.clone();
       cloneIfFalse.invert();
@@ -10615,6 +10627,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         message,
         locations: [
           {
+            f: this,
             node,
             fileName: this.fileName
           }
@@ -10635,6 +10648,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         message,
         locations: [
           {
+            f: this,
             node,
             fileName: this.fileName
           }
@@ -10779,6 +10793,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           this.newError({
             locations: [
               {
+                f: scriptData.debug.f,
                 fileName: scriptData.debug.fileName,
                 node: useNode
               }
@@ -10947,7 +10962,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (!p.scripts[scriptName].copyScriptResolved) {
         const fileName = p.scripts[scriptName].debug.fileName;
         const f = p.fileMap[fileName].parsed || p.scripts[scriptName].debug.f;
-        if (!f) throw new Error(`file ${fileName} not parsed`);
         const node = p.scripts[scriptName].debug.node;
         p.bakeCopyScriptSingle(f, node, scriptName);
       }

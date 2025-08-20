@@ -172,6 +172,7 @@ export class ProjectState {
 				this.newError({
 					locations: [
 						{
+							f: scriptData.debug.f,
 							fileName: scriptData.debug.fileName,
 							node: useNode,
 						},

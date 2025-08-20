@@ -13,12 +13,20 @@ import { type GenericObj } from './parser-actions.ts';
 import { coerceToString, mandatoryChildForFieldName } from './parser-capture.ts';
 
 export class AnyNode {
+	// = MathlangNode, Action
 	clone() {
 		if (this instanceof MathlangNode) return this.clone();
 		return ACTION.Action.fromArgs(this);
 	}
 }
 export class MathlangNode extends AnyNode {
+	// FunctionDefinition, AddDialogSettings, AddDialogSettingsTarget, AddSerialDialogSettings
+	// ReturnStatement, ContinueStatement, BreakStatement, GotoLabel
+	// DialogDefinition, DialogParameter, Dialog, DialogIdentifier, DialogOption
+	// SerialDialogDefinition, SerialDialogParameter, SerialDialog, SerialDialogOption
+	// IncludeNode, ConstantDefinition, ScriptDefinition, CommentNode, LabelDefinition
+	// JSONLiteral, CopyMacro, MathlangSequence, IntExpression, BoolExpression,
+	// BoolSetable, MovableIdentifier, CoordinateIdentifier, DirectionTarget
 	mathlang: string;
 	args: GenericObj;
 	debug: MathlangLocation;
@@ -44,7 +52,7 @@ export const isMGSPrimitive = (v: unknown): v is MGSPrimitive => {
 };
 
 export class MathlangLocation {
-	f?: FileState;
+	f: FileState;
 	node: TreeSitterNode;
 	fileName: string;
 	comment?: string;
@@ -930,7 +938,6 @@ export class EntityIntField extends IntGetable {
 			return CheckEntityCurrentFrame.quick(debug, entity, NaN);
 		} else if (field === 'strafe') {
 			const f = this.debug.f;
-			if (!f) throw new Error('should have if');
 			const node = this.debug.node;
 			const propertyNode = mandatoryChildForFieldName(f, node, 'property');
 			f.quickError(propertyNode, `this property is not supported in boolean expressions`);
@@ -1065,7 +1072,6 @@ export class BoolExpression extends MathlangNode {
 	}
 	assignToSetBool(setBool: ACTION.ActionSetBool): AnyNode {
 		const f = this.debug.f;
-		if (!f) throw new Error('should have f');
 		const node = this.debug.node;
 		// player glitched = self glitched;
 		// ->

@@ -121,7 +121,6 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		if (!p.scripts[scriptName].copyScriptResolved) {
 			const fileName = p.scripts[scriptName].debug.fileName;
 			const f = p.fileMap[fileName].parsed || p.scripts[scriptName].debug.f;
-			if (!f) throw new Error(`file ${fileName} not parsed`);
 			const node = p.scripts[scriptName].debug.node;
 			// todo: better sources of f, node?
 			p.bakeCopyScriptSingle(f, node, scriptName);
@@ -210,13 +209,13 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		console.log(`Issues found: ${messages.join(', ')}`);
 		p.warnings.forEach((message) => {
 			const str = ansi.yellow + printableMessage(p.fileMap, 'Warning', message) + ansi.reset;
-			printWarnings += '\n'+str
+			printWarnings += '\n' + str;
 			// .replace(/\u001B\[\d+m/g, '');
 			console.warn(str);
 		});
 		p.errors.forEach((message) => {
 			const str = ansi.red + printableMessage(p.fileMap, 'Error', message) + ansi.reset;
-			printErrors += '\n'+str
+			printErrors += '\n' + str;
 			// .replace(/\u001B\[\d+m/g, '');
 			console.error(str);
 		});

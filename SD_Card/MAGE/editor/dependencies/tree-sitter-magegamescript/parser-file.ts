@@ -66,6 +66,7 @@ export class FileState {
 			message,
 			locations: [
 				{
+					f: this,
 					node,
 					fileName: this.fileName,
 				},
@@ -86,6 +87,7 @@ export class FileState {
 			message,
 			locations: [
 				{
+					f: this,
 					node,
 					fileName: this.fileName,
 				},

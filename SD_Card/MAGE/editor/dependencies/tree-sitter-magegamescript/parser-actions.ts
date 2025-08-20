@@ -462,7 +462,7 @@ const actionData: Record<string, actionDataEntry> = {
 				const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
 				const suggestion = v.rhs.includes(' ') ? '"' + v.rhs + '"' : v.rhs;
 				f.p.newWarning({
-					locations: printNodes.map((v) => ({ node: v, fileName: f.fileName })),
+					locations: printNodes.map((v) => ({ f, node: v, fileName: f.fileName })),
 					message: 'these identifiers could be ints or bools',
 					footer:
 						`Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:` +

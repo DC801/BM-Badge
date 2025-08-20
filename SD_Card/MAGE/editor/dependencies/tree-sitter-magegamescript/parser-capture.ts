@@ -720,9 +720,10 @@ export const coerceToString = (
 	label: string,
 ): string => {
 	if (typeof v !== 'string') {
-		const locations = [{ node, fileName: f.fileName }];
+		const locations = [{ f, node, fileName: f.fileName }];
 		if (f.constants[node.text]) {
 			locations.unshift({
+				f: f.constants[node.text].debug.f || f,
 				node: f.constants[node.text].debug.node || node,
 				fileName: f.constants[node.text]?.debug.fileName,
 			});
@@ -745,10 +746,11 @@ export const coerceToNumber = (
 		f.newError({
 			locations: [
 				{
+					f: f.constants[node.text].debug.f,
 					node: f.constants[node.text].debug.node,
 					fileName: f.constants[node.text].debug.fileName,
 				},
-				{ node, fileName: f.fileName },
+				{ f, node, fileName: f.fileName },
 			],
 			message: `${label} is not a number`,
 		});
@@ -770,10 +772,11 @@ export const coerceAsBool = (
 		f.newError({
 			locations: [
 				{
+					f: f.constants[node.text].debug.f,
 					node: f.constants[node.text].debug.node,
 					fileName: f.constants[node.text].debug.fileName,
 				},
-				{ node, fileName: f.fileName },
+				{ f, node, fileName: f.fileName },
 			],
 			message: `${label} is not a boolean`,
 		});

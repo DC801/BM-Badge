@@ -288,6 +288,7 @@ const nodeFns = {
 					message: `cannot redefine constant ${constantName} (via 'include')`,
 					locations: [
 						{
+							f: insertFile,
 							fileName: insertFile.fileName,
 							node: insertFile.constants[constantName].debug.node,
 						},
@@ -303,10 +304,12 @@ const nodeFns = {
 					message: `cannot redefine function ${functionName} (via 'include')`,
 					locations: [
 						{
+							f: insertFile,
 							fileName: insertFile.fileName,
 							node: insertFile.functions[functionName].debug.node,
 						},
 						{
+							f,
 							fileName: f.fileName,
 							node: node.firstChild || node,
 						},
