@@ -518,11 +518,11 @@ ch2_king_unharmed {
 		show dialog {
 			PLAYER "The king is okay, but he's trapped in there. Both the intercom and the keypad lock to his door seem to be broken."
 		};
-		player direction = entity Templeton
+		player direction = entity Templeton;
 		show dialog {
 			Templeton "Oh, thank goodness! He's all right!"
 		};
-		player direction = entity Aurelius
+		player direction = entity Aurelius;
 		show dialog {
 			Aurelius "I see. Thank you."
 		};
@@ -551,12 +551,12 @@ interact_ch2_sebastian {
 			SELF "%Templeton%, I promise not to yell at you for eating my spellbooks again if you can produce the right page in the next five minutes."
 		};
 		entity Templeton on_tick = null_script;
-		entity Templeton direction = entity Sebastian
+		entity Templeton direction = entity Sebastian;
 		// pauses fussing
 		show dialog {
 			Templeton "Darn it, you made me forget the filing number! Now I'll have to go through the card catalog all over again!"
 		};
-		entity Templeton on_tick = templeton_catalog_search
+		entity Templeton on_tick = templeton_catalog_search;
 	}
 }
 

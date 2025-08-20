@@ -63,7 +63,7 @@ on_load_main_menu {
 			"<y>></> <c>RTFM</>: Early access to RTFM books"
 			"<y>></> <c>STORYFLAG _</>: choose round (whole game, not just menu)"
 			"<y>></> <c>WARP _</>: warp to that castle room"
-		}
+		};
 	}
 }
 goto_demo {
@@ -117,12 +117,12 @@ rngtest2 {
 }
 rngtest_roll {
 	printVar = RNG!(=4);
-	show serial_dialog { "random number from 0 to 4: $printVar$"}
+	show serial_dialog { "random number from 0 to 4: $printVar$" };
 }
 
 rngtest2_roll {
 	printVar = RNG!(40,=44);
-	show serial_dialog { "random number from 40 to 44: $printVar$"}
+	show serial_dialog { "random number from 40 to 44: $printVar$" };
 }
 
 /* DEBUGSSSS */

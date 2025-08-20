@@ -189,7 +189,7 @@ ch2_gloria_worry_walk {
 		// )
 		tempvar ?= 2;
 		if (tempvar == 0) {
-			self path = "worry-walk1"
+			self path = "worry-walk1";
 		} else {
 			self path = "worry-walk3";
 		}

@@ -427,7 +427,7 @@ show_dialog_jackob_start {
 				"But aren't all bytes made up of bits? How is changing a single bit different from changing a whole byte?"
 			};
 		} else if (hint_tracking == 201) {
-			goto show_dialog_jackob_hint_hackbook // JUMP
+			goto show_dialog_jackob_hint_hackbook; // JUMP
 		} else {
 			show dialog {
 				PLAYER "Not at the moment."

@@ -126,7 +126,7 @@ ch1_greenhouse_trekkie_backstory_cutscene {
 	wait 200ms;
 	self direction = entity Modem;
 	wait 900ms;
-	self direction = geometry Computer
+	self direction = geometry Computer;
 	wait 900ms;
 	face_player()
 	wait 200ms;

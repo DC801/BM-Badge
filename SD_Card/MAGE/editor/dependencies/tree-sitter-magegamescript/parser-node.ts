@@ -713,7 +713,6 @@ const nodeFns = {
 			})
 			.filter((v) => v !== null);
 		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v, 'if'));
-		// const iffs = handleChildrenForFieldName(f, node, 'if_block'); //SHOULD BE
 		const elseNode = node.childForFieldName('else_block');
 		const elseBody = newElse(f, elseNode);
 		return [ifChainMaker(f, node, iffs, elseBody, 'if_chain')];

@@ -93,7 +93,7 @@ on_load_ch2_town {
 		player position = geometry "from-credits-spot";
 		camera fade in -> #000000 over 800ms;
 	} else if (warp_state == "walk_from_east") {
-		player path = "walk_from_east"
+		player path = "walk_from_east";
 		player on_tick = on_tick_ch2_town_walkfadein;
 		camera fade in -> #000000 over 400ms;
 	} else if (warp_state == "walk_from_west") {

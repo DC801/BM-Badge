@@ -118,7 +118,7 @@ on_load_ch2_castle_99 {
 
 	// cutscene pre-fade :/
 	if (!ch2_cutseen_castle99) {
-		entity Lambda current_animation = $lowered
+		entity Lambda current_animation = $lowered;
 	}
 
 	// Check if rake has been obtained

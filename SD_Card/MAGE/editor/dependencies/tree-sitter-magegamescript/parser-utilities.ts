@@ -137,7 +137,7 @@ export const reportMissingChildNodes = (
 		.filter((v) => v !== null)
 		.filter((child) => child?.isMissing);
 	missingNodes.forEach((missingChild) => {
-		f.quickError(missingChild, `missing token: ${missingChild.type}`);
+		f.quickWarning(missingChild, `missing token: ${missingChild.type}`);
 	});
 	return missingNodes;
 };

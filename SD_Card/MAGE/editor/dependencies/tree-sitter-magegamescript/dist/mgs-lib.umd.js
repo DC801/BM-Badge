@@ -6041,6 +6041,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return children.filter((v) => v !== null).map((v) => handleNode(f, v)).flat();
   };
   const handleNamedChildren = (f, node) => {
+    reportMissingChildNodes(f, node);
+    reportErrorNodes(f, node);
     return node.namedChildren.filter((v) => v !== null).map((v) => handleNode(f, v)).flat();
   };
   const mandatoryChildForFieldName = (f, node, fieldName) => {
@@ -10441,7 +10443,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const reportMissingChildNodes = (f, node) => {
     const missingNodes = node.children.filter((v) => v !== null).filter((child) => child == null ? void 0 : child.isMissing);
     missingNodes.forEach((missingChild) => {
-      f.quickError(missingChild, `missing token: ${missingChild.type}`);
+      f.quickWarning(missingChild, `missing token: ${missingChild.type}`);
     });
     return missingNodes;
   };

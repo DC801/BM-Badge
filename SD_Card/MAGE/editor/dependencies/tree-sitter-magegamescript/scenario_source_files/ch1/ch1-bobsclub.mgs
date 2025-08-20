@@ -283,7 +283,7 @@ show_dialog_bobrock_start {
 		show dialog { SELF "Goin' back to work."};
 		camera fade out -> #000000 over 500ms;
 		entity "Bob Austin" position = geometry bob_point;
-		entity "Bob Austin" direction = south
+		entity "Bob Austin" direction = south;
 		camera fade in -> #000000 over 500ms;
 		player_control = on;
 		return;
@@ -334,7 +334,7 @@ show_dialog_bobrock_start {
 			show dialog show_dialog_bobrock_start_AGAIN { // (reused)
 				PLAYER "We've been through all this before, you know."
 				SELF "Doesn't matter. It's just the rules.\nBobs only."
-			}
+			};
 			show dialog {
 				PLAYER "...." "Fine. I guess I'm not getting in, then."
 				SELF "Damn straight."
@@ -359,9 +359,9 @@ show_dialog_bobrock_start {
 	// Bob Austin unlocks the door:
 	player_control = off;
 	entity "Bob Austin" position -> entity_path origin over 400ms;
-	entity "Bob Austin" direction = geometry "door-bobsclub-entrance"
+	entity "Bob Austin" direction = geometry "door-bobsclub-entrance";
 	wait 1000ms;
-	entity "Bob Austin" direction = south
+	entity "Bob Austin" direction = south;
 	show dialog {
 		SELF "Head inside quick, now."
 	};

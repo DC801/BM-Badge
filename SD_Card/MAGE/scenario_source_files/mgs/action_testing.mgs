@@ -709,7 +709,7 @@ serial_dialog "serial_dialog_map_action_testing_on_connect" {
 "mage01_look_script" {
 	show serial_dialog "serial_dialog_mage01-look_script" {
 		"Looks like you just ran the look script on the entity named `%SELF%`! Goat job!"
-	}
+	};
 }
 dialog "dialog_mage02_1" {
 	SELF "I test the CHECK_ENTITY_X and\nCHECK_ENTITY_Y actions. Set my\nX to 193 and my Y to 97\nand then talk to me again."

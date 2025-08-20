@@ -609,6 +609,8 @@ export const handleChildrenForFieldName = (
 };
 
 export const handleNamedChildren = (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	reportMissingChildNodes(f, node);
+	reportErrorNodes(f, node);
 	return node.namedChildren
 		.filter((v) => v !== null)
 		.map((v) => handleNode(f, v))
