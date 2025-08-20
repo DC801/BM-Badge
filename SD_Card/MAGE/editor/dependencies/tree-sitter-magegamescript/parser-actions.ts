@@ -16,7 +16,6 @@ import {
 	type ActionSetEntityString,
 	type ActionSetEntityInt,
 	type ActionSetBool,
-	BoolGetableAction,
 	MUTATE_VARIABLE,
 	MUTATE_VARIABLES,
 	RUN_SCRIPT,
@@ -106,7 +105,6 @@ import {
 	GotoLabel,
 	MathlangLocation,
 	BoolLiteral,
-	BoolComparison,
 	CheckSaveFlag,
 	EntityIntField,
 	RNGSingle,
@@ -117,57 +115,8 @@ import {
 	newTemporary,
 	dropTemporary,
 	quickTemporary,
-	simpleBranchMaker,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
-
-// ------------------------ BOOL EXPRESSIONS ------------------------ //
-
-const actionSetBoolMaker = (
-	f: FileState,
-	node: TreeSitterNode,
-	_lhsSetAction: ActionSetBool,
-	_rhsBoolExp: BoolExpression,
-): MathlangSequence | ActionSetBool => {
-	const debug = new MathlangLocation(f, node);
-	if (typeof _lhsSetAction === 'string' && typeof _rhsBoolExp === 'string') {
-		// not sure if this case will ever happen on its own due to the ambiguity dance
-		// (and the typing we've got set up) but it's here if we need it
-		return SET_SAVE_FLAG.toFlag(f, node, _lhsSetAction, _rhsBoolExp);
-	}
-	const lhsSetAction =
-		typeof _lhsSetAction === 'string'
-			? SET_SAVE_FLAG.toValue(_lhsSetAction, true)
-			: _lhsSetAction;
-
-	// player glitched = true;
-	if (_rhsBoolExp instanceof BoolLiteral) {
-		lhsSetAction.updateProp(_rhsBoolExp.value);
-		// lhsSetAction[lhsBoolField] = _rhsBoolExp;
-		return lhsSetAction;
-	}
-
-	// player glitched = self glitched;
-	// ->
-	// if (self glitched) { player glitched = true; } else { player glitched = false; }
-	const rhsBoolExp: BoolExpression =
-		typeof _rhsBoolExp === 'string'
-			? CheckSaveFlag.quick(debug, _rhsBoolExp, true)
-			: _rhsBoolExp;
-	const cloneIfFalse = lhsSetAction.clone();
-	cloneIfFalse.invert();
-	if (rhsBoolExp instanceof BoolGetableAction || rhsBoolExp instanceof BoolComparison) {
-		return simpleBranchMaker(f, node, rhsBoolExp, [lhsSetAction], [cloneIfFalse]);
-	}
-
-	return simpleBranchMaker(
-		f,
-		rhsBoolExp.debug?.node || node,
-		rhsBoolExp,
-		[lhsSetAction],
-		[cloneIfFalse],
-	);
-};
 
 // ------------------------ COMMON ACTION HANDLING ------------------------ //
 
@@ -529,33 +478,25 @@ const actionData: Record<string, actionDataEntry> = {
 
 			// varName = RNG!(99);
 			if (v.rhs instanceof RNGSingle) {
-				return v.rhs.toStep(lhs);
+				return v.rhs.assignToVar(lhs);
 			}
 
 			// varName = RNG!(0, 99);
 			if (v.rhs instanceof RNGPair) {
-				return v.rhs.toSequence(lhs);
+				return v.rhs.assignToVar(lhs);
 			}
 
 			// varName = (255 + player x);
 			if (v.rhs instanceof IntBinaryExpression) {
-				const temporary = newTemporary(lhs);
-				const steps = v.rhs.flatten([]);
-				dropTemporary();
-				steps.push(MUTATE_VARIABLES.set(v.rhs.debug, lhs, temporary));
-				const debug = new MathlangLocation(f, node);
-				return new MathlangSequence(debug, {
-					steps,
-					type: 'parser-actions: action_set_ambiguous',
-				});
+				return v.rhs.assignToVar(lhs);
 			}
 
 			// varName = (debug_mode || player glitched);
 			if (v.rhs instanceof BoolExpression) {
-				return actionSetBoolMaker(f, node, SET_SAVE_FLAG.toValue(lhs, true), v.rhs);
+				return v.rhs.assignToVar(lhs);
 			}
 
-			throw new Error('failed to parse');
+			throw new Error('unknown RHS in action_set_ambiguous');
 		},
 	},
 	action_set_int: {
@@ -633,10 +574,10 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_set_bool: {
-		// If we've matched this, we know the LHS is not a variable name.
+		// If we've matched this, we know the LHS is not an int variable name.
 		values: {},
 		captures: ['lhs', 'rhs'],
-		handle: (v, f, node): MathlangSequence | ActionSetBool => {
+		handle: (v, f, node) => {
 			const debug = new MathlangLocation(f, node);
 			if (!(v.lhs instanceof BoolSetable)) {
 				throw new Error('LHS not a bool_setable');
@@ -646,6 +587,7 @@ const actionData: Record<string, actionDataEntry> = {
 			if (!(v.rhs instanceof BoolExpression)) {
 				throw new Error('RHS not a bool_expression');
 			}
+			let lhs: ActionSetBool | null = null;
 			if (v.lhs.type === 'entity') {
 				const entity = coerceToString(
 					f,
@@ -653,8 +595,7 @@ const actionData: Record<string, actionDataEntry> = {
 					v.lhs.value,
 					'SET_ENTITY_GLITCHED field entity',
 				);
-				const lhs: ActionSetBool = SET_ENTITY_GLITCHED.quick(entity, true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_ENTITY_GLITCHED.quick(entity, true);
 			}
 			if (v.lhs.type === 'light') {
 				const lights = coerceToString(
@@ -663,38 +604,34 @@ const actionData: Record<string, actionDataEntry> = {
 					v.lhs.value,
 					'SET_LIGHTS_STATE field lights',
 				);
-				const lhs = SET_LIGHTS_STATE.quick(lights, true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+
+				lhs = SET_LIGHTS_STATE.quick(lights, true);
 			}
 			if (v.lhs.type === 'player_control') {
-				const lhs = SET_PLAYER_CONTROL.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_PLAYER_CONTROL.quick(true);
 			}
 			if (v.lhs.type === 'lights_control') {
-				const lhs = SET_LIGHTS_CONTROL.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_LIGHTS_CONTROL.quick(true);
 			}
 			if (v.lhs.type === 'hex_editor') {
-				const lhs = SET_HEX_EDITOR_STATE.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_HEX_EDITOR_STATE.quick(true);
 			}
 			if (v.lhs.type === 'hex_dialog_mode') {
-				const lhs = SET_HEX_EDITOR_DIALOG_MODE.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_HEX_EDITOR_DIALOG_MODE.quick(true);
 			}
 			if (v.lhs.type === 'hex_control') {
-				const lhs = SET_HEX_EDITOR_CONTROL.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_HEX_EDITOR_CONTROL.quick(true);
 			}
 			if (v.lhs.type === 'hex_clipboard') {
-				const lhs = SET_HEX_EDITOR_CONTROL_CLIPBOARD.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_HEX_EDITOR_CONTROL_CLIPBOARD.quick(true);
 			}
 			if (v.lhs.type === 'serial_control') {
-				const lhs = SET_SERIAL_DIALOG_CONTROL.quick(true);
-				return actionSetBoolMaker(f, node, lhs, v.rhs);
+				lhs = SET_SERIAL_DIALOG_CONTROL.quick(true);
 			}
-			throw new Error('unknown LHS type');
+			if (lhs === null) {
+				throw new Error('unknown LHS type');
+			}
+			return v.rhs.assignToSetBool(lhs);
 		},
 	},
 	action_set_position: {

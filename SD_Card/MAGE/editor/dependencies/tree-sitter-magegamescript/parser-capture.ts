@@ -1,10 +1,5 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
-import {
-	BoolGetableAction,
-	StringCheckableAction,
-	NumberCheckableEqualityAction,
-	COPY_VARIABLE,
-} from './parser-bytecode-info.ts';
+import { BoolGetableAction, StringCheckableAction, COPY_VARIABLE } from './parser-bytecode-info.ts';
 import {
 	MathlangLocation,
 	BoolBinaryExpression,
@@ -34,31 +29,25 @@ import {
 	CheckEntityPath,
 	CheckEntityName,
 	CheckEntityInteractScript,
-	CheckEntityX,
-	CheckEntityY,
-	CheckEntityPrimaryID,
-	CheckEntityCurrentFrame,
-	CheckEntityCurrentAnimation,
-	CheckEntityPrimaryIDType,
-	CheckEntitySecondaryID,
 	CheckVariables,
 	CheckVariable,
 	CheckEntityDirection,
-	NumberCheckableEquality,
 	StringCheckable,
 	EntityIntField,
 	IntExpression,
 	IntUnit,
 	RNGSingle,
 	RNGPair,
-	BoolExpressionWithPrerequesites,
+	IntGetable,
+	BoolComparisonSequence,
 } from './parser-types.ts';
 import {
 	debugLog,
 	reportMissingChildNodes,
 	reportErrorNodes,
 	inverseOpMap,
-	quickTemporary,
+	newTemporary,
+	dropTemporary,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
@@ -158,6 +147,7 @@ const captureFns = {
 	op_equals: (f: FileState, node: TreeSitterNode): string => opIntoStringMap[node.text[0]],
 	plus_minus_equals: (f: FileState, node: TreeSitterNode): string => node.text,
 	forever: () => true,
+	nsew: (f: FileState, node: TreeSitterNode) => node.text,
 	entity_or_map_identifier: (f: FileState, node: TreeSitterNode): string => {
 		const type = optionalTextForFieldName(f, node, 'type');
 		return type === 'map' ? '%MAP%' : extractEntityName(f, node);
@@ -379,33 +369,6 @@ const captureFns = {
 		}
 		throw new Error(`could not capture entity string_checkable`);
 	},
-	number_checkable_equality: (
-		f: FileState,
-		node: TreeSitterNode,
-	): NumberCheckableEqualityAction => {
-		const debug = new MathlangLocation(f, node);
-		const entity = stringCaptureForFieldName(f, node, 'entity_identifier');
-		const property = textForFieldName(f, node, 'property');
-		if (property === 'x') {
-			return CheckEntityX.quick(debug, entity, NaN);
-		} else if (property === 'y') {
-			return CheckEntityY.quick(debug, entity, NaN);
-		} else if (property === 'primary_id') {
-			return CheckEntityPrimaryID.quick(debug, entity, NaN);
-		} else if (property === 'secondary_id') {
-			return CheckEntitySecondaryID.quick(debug, entity, NaN);
-		} else if (property === 'primary_id_type') {
-			return CheckEntityPrimaryIDType.quick(debug, entity, NaN);
-		} else if (property === 'current_animation') {
-			return CheckEntityCurrentAnimation.quick(debug, entity, NaN);
-		} else if (property === 'animation_frame') {
-			return CheckEntityCurrentFrame.quick(debug, entity, NaN);
-		} else if (property === 'strafe') {
-			const propertyNode = mandatoryChildForFieldName(f, node, 'property');
-			f.quickError(propertyNode, `this property is not supported in boolean expressions`);
-		}
-		throw new Error('could not capture number_checkable_equality');
-	},
 	geometry_identifier: (f: FileState, node: TreeSitterNode): string => {
 		const type = optionalTextForFieldName(f, node, 'type');
 		if (type === 'entity_path') {
@@ -421,57 +384,90 @@ const captureFns = {
 		const lhsNode = mandatoryChildForFieldName(f, node, 'lhs');
 		const rhsNode = mandatoryChildForFieldName(f, node, 'rhs');
 		const op = textForFieldName(f, node, 'operator');
+		let lhs = handleCapture(f, lhsNode);
+		let rhs = handleCapture(f, rhsNode);
 		// entity Bob direction == north
 		if (lhsNode.grammarType === 'entity_direction') {
-			return compareNSEW(f, node, lhsNode, rhsNode, op);
+			const entity = stringCaptureForFieldName(f, lhsNode, 'entity_identifier');
+			const nsew = coerceToString(f, node, rhs, 'bool_comparison entity_direction string');
+			return CheckEntityDirection.quick(debug, entity, nsew, op);
 		}
 		// north == entity Bob direction
 		if (rhsNode.grammarType === 'entity_direction') {
-			return compareNSEW(f, node, rhsNode, lhsNode, op);
+			const entity = stringCaptureForFieldName(f, rhsNode, 'entity_identifier');
+			const nsew = coerceToString(f, node, lhs, 'bool_comparison entity_direction string');
+			return CheckEntityDirection.quick(debug, entity, nsew, op);
 		}
 		// entity Bob name == "Super Bob"
-		if (lhsNode.grammarType === 'string_checkable') {
-			return compareString(f, node, lhsNode, rhsNode, op);
+		if (lhs instanceof StringCheckable) {
+			const string = coerceToString(f, node, rhs, 'bool_comparison string_checkable string');
+			return lhs.addDetails(string, op);
 		}
 		// "Super Bob" == entity Bob name
-		if (rhsNode.grammarType === 'string_checkable') {
-			return compareString(f, node, rhsNode, lhsNode, op);
+		if (rhs instanceof StringCheckable) {
+			const string = coerceToString(f, node, lhs, 'bool_comparison string_checkable string');
+			return rhs.addDetails(string, op);
 		}
+		const steps: AnyNode[] = [];
+		const tempLHS = newTemporary();
+		const tempRHS = newTemporary();
 		// entity Bob x == 7
-		if (lhsNode.grammarType === 'number_checkable_equality') {
-			return compareNumberCheckableEquality(f, node, lhsNode, rhsNode, op);
+		if (lhs instanceof EntityIntField) {
+			if ((op === '==' || op === '!=') && typeof rhs === 'number') {
+				const modified = lhs.intoNumberCheckableEquality();
+				dropTemporary();
+				dropTemporary();
+				return modified.makeWholeThing(rhs, op);
+			} else {
+				steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, tempLHS));
+				lhs = tempLHS;
+			}
 		}
 		// 7 == entity Bob x
-		if (rhsNode.grammarType === 'number_checkable_equality') {
-			return compareNumberCheckableEquality(f, node, rhsNode, lhsNode, op);
-		}
-		let lhs = handleCapture(f, lhsNode);
-		let rhs = handleCapture(f, rhsNode);
-		const steps: AnyNode[] = [];
-		const temp = quickTemporary();
-		if (lhs instanceof EntityIntField) {
-			steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, temp));
-			lhs = temp;
-		}
 		if (rhs instanceof EntityIntField) {
-			steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, temp));
-			rhs = temp;
+			if ((op === '==' || op === '!=') && typeof lhs === 'number') {
+				const modified = rhs.intoNumberCheckableEquality();
+				dropTemporary();
+				dropTemporary();
+				return modified.makeWholeThing(lhs, op);
+			} else {
+				steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, tempRHS));
+				rhs = tempRHS;
+			}
 		}
 		if (lhs instanceof RNGSingle) {
-			steps.push(lhs.toStep(temp));
-			lhs = temp;
+			steps.push(lhs.assignToVar(tempLHS));
+			lhs = tempLHS;
 		}
 		if (lhs instanceof RNGPair) {
-			steps.push(...lhs.toSteps(temp));
-			lhs = temp;
+			steps.push(...lhs.toSteps(tempLHS));
+			lhs = tempLHS;
 		}
 		if (rhs instanceof RNGSingle) {
-			steps.push(rhs.toStep(temp));
-			rhs = temp;
+			steps.push(rhs.assignToVar(tempRHS));
+			rhs = tempRHS;
 		}
 		if (rhs instanceof RNGPair) {
-			steps.push(...rhs.toSteps(temp));
-			rhs = temp;
+			steps.push(...rhs.toSteps(tempRHS));
+			rhs = tempRHS;
+		}
+		if (lhs instanceof IntBinaryExpression) {
+			lhs.flatten(steps);
+			lhs = tempLHS;
+		}
+		if (rhs instanceof IntBinaryExpression) {
+			rhs.flatten(steps);
+			rhs = tempRHS;
+		}
+		if (lhs instanceof IntGetable) {
+			const action = lhs.assignToVar(tempLHS);
+			steps.push(action);
+			lhs = tempLHS;
+		}
+		if (rhs instanceof IntGetable) {
+			const action = rhs.assignToVar(tempRHS);
+			steps.push(action);
+			rhs = tempLHS;
 		}
 		if (typeof lhs === 'string') {
 			if (typeof rhs === 'string') {
@@ -496,12 +492,13 @@ const captureFns = {
 				else throw new Error(`invalid op in captured bool comparison: ${op}`);
 			}
 		}
+		dropTemporary();
+		dropTemporary();
 		if (steps.length === 1) return steps[0];
 		if (steps.length === 0) {
 			throw new Error('failed to capture bool_comparison');
 		}
-		// TODO
-		return new BoolExpressionWithPrerequesites(debug, { steps });
+		return BoolComparisonSequence.quick(debug, steps);
 	},
 	int_setable: (f: FileState, node: TreeSitterNode) => {
 		const debug = new MathlangLocation(f, node);
@@ -557,62 +554,6 @@ const captureFns = {
 	set_entity_string_field: (f: FileState, node: TreeSitterNode): string => node.text,
 };
 
-// These are separated so that the LHS and RHS can be swapped easily
-const compareNSEW = (
-	f: FileState,
-	node: TreeSitterNode,
-	entityNode: TreeSitterNode,
-	nsewNode: TreeSitterNode,
-	op: string,
-) => {
-	if (op !== '==' && op !== '!=') {
-		throw new Error('invalid op for bool_comparison compareNSEW: ' + op);
-	}
-	const debug = new MathlangLocation(f, node);
-	const entity = stringCaptureForFieldName(f, entityNode, 'entity_identifier');
-	return CheckEntityDirection.quick(debug, entity, nsewNode.text, op === '==');
-};
-const compareString = (
-	f: FileState,
-	node: TreeSitterNode,
-	checkableNode: TreeSitterNode,
-	stringNode: TreeSitterNode,
-	op: string,
-) => {
-	const checkable = handleCapture(f, checkableNode);
-	if (!(checkable instanceof StringCheckable)) {
-		throw new Error('invalid StringCheckable');
-	}
-	if (op !== '==' && op !== '!=') {
-		throw new Error('invalid op for bool_comparison: ' + op);
-	}
-	const string = handleCapture(f, stringNode);
-	checkable.updateProp(coerceToString(f, stringNode, string, 'compareString'));
-	checkable.expected_bool = op === '==';
-	return checkable;
-};
-const compareNumberCheckableEquality = (
-	f: FileState,
-	node: TreeSitterNode,
-	checkableNode: TreeSitterNode,
-	numberNode: TreeSitterNode,
-	op: string,
-) => {
-	const checkable = handleCapture(f, checkableNode);
-	if (!(checkable instanceof NumberCheckableEquality)) throw new Error('not a thing');
-	if (op !== '==' && op !== '!=') {
-		throw new Error('invalid op for bool_comparison compareNumberCheckableEquality: ' + op);
-	}
-	const number = handleCapture(f, numberNode);
-	if (typeof number !== 'number') {
-		f.quickError(numberNode, `This action can only compare to number literals`);
-	}
-	checkable.updateProp(
-		coerceToNumber(f, numberNode, number, 'compareNumberCheckableEquality expected number'),
-	);
-	checkable.expected_bool = op === '==';
-	return checkable;
-};
 const extractEntityName = (f: FileState, node: TreeSitterNode): string => {
 	const type = optionalTextForFieldName(f, node, 'type');
 	if (type === 'self') return '%SELF%';

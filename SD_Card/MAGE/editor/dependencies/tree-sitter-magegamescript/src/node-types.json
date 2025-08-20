@@ -2176,11 +2176,11 @@
             "named": true
           },
           {
-            "type": "nsew",
+            "type": "int_getable",
             "named": true
           },
           {
-            "type": "number_checkable_equality",
+            "type": "nsew",
             "named": true
           },
           {
@@ -2228,11 +2228,11 @@
             "named": true
           },
           {
-            "type": "nsew",
+            "type": "int_getable",
             "named": true
           },
           {
-            "type": "number_checkable_equality",
+            "type": "nsew",
             "named": true
           },
           {
@@ -4927,32 +4927,6 @@
     "type": "nsew",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "number_checkable_equality",
-    "named": true,
-    "fields": {
-      "entity_identifier": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "entity_identifier",
-            "named": true
-          }
-        ]
-      },
-      "property": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "entity_property_int",
-            "named": true
-          }
-        ]
-      }
-    }
   },
   {
     "type": "number_expansion",

@@ -323,78 +323,76 @@ demo_end_dream_no {
 
 // --------------------------------------------------- FOLLOWING ENTITIES
 
-$adjust_x = 8;
-$adjust_y = 1;
+$offset_x = 8;
+$offset_y = 1;
 $follow_delay = 2;
 $queue_diff = 6;
 $queue_size = 10;
 
 follow_player_stack_init {
-	player_x = player x;
-	player_y = player y;
-	self_x = self x - $adjust_x;
-	self_y = self y + $adjust_y;
-	if (player_x > self_x) {
-		diff = player_x - self_x;
+	offset_self_x = self x - $offset_x;
+	offset_self_y = self y + $offset_y;
+	if (player x > offset_self_x) {
+		diff = player x - offset_self_x;
 		step = diff / 5;
-		queue_x0 = self_x;
-		queue_x1 = self_x + step * 1;
-		queue_x2 = self_x + step * 2;
-		queue_x3 = self_x + step * 3;
-		queue_x4 = self_x + step * 4;
-		queue_x5 = player_x;
-		queue_x6 = player_x;
-		queue_x7 = player_x;
-		queue_x8 = player_x;
-		queue_x9 = player_x;
+		queue_x0 = offset_self_x;
+		queue_x1 = offset_self_x + step * 1;
+		queue_x2 = offset_self_x + step * 2;
+		queue_x3 = offset_self_x + step * 3;
+		queue_x4 = offset_self_x + step * 4;
+		queue_x5 = player x;
+		queue_x6 = player x;
+		queue_x7 = player x;
+		queue_x8 = player x;
+		queue_x9 = player x;
 	} else {
-		diff = self_x - player_x;
+		diff = offset_self_x - player x;
 		step = diff / 5;
-		queue_x0 = self_x;
-		queue_x1 = player_x + step * 4;
-		queue_x2 = player_x + step * 3;
-		queue_x3 = player_x + step * 2;
-		queue_x4 = player_x + step * 1;
-		queue_x5 = player_x;
-		queue_x6 = player_x;
-		queue_x7 = player_x;
-		queue_x8 = player_x;
-		queue_x9 = player_x;
+		queue_x0 = offset_self_x;
+		queue_x1 = player x + step * 4;
+		queue_x2 = player x + step * 3;
+		queue_x3 = player x + step * 2;
+		queue_x4 = player x + step * 1;
+		queue_x5 = player x;
+		queue_x6 = player x;
+		queue_x7 = player x;
+		queue_x8 = player x;
+		queue_x9 = player x;
 	}
-	if (player_y > self_y) {
-		diff = player_y - self_y;
+	if (player y > offset_self_y) {
+		diff = player y - offset_self_y;
 		step = diff / 5;
-		queue_y0 = self_y;
-		queue_y1 = self_y + step * 1;
-		queue_y2 = self_y + step * 2;
-		queue_y3 = self_y + step * 3;
-		queue_y4 = self_y + step * 4;
-		queue_y5 = player_y;
-		queue_y6 = player_y;
-		queue_y7 = player_y;
-		queue_y8 = player_y;
-		queue_y9 = player_y;
+		queue_y0 = offset_self_y;
+		queue_y1 = offset_self_y + step * 1;
+		queue_y2 = offset_self_y + step * 2;
+		queue_y3 = offset_self_y + step * 3;
+		queue_y4 = offset_self_y + step * 4;
+		queue_y5 = player y;
+		queue_y6 = player y;
+		queue_y7 = player y;
+		queue_y8 = player y;
+		queue_y9 = player y;
 	} else {
-		diff = self_y - player_y;
+		diff = offset_self_y - player y;
 		step = diff / 5;
-		queue_y0 = self_y;
-		queue_y1 = player_y + step * 4;
-		queue_y2 = player_y + step * 3;
-		queue_y3 = player_y + step * 2;
-		queue_y4 = player_y + step * 1;
-		queue_y5 = player_y;
-		queue_y6 = player_y;
-		queue_y7 = player_y;
-		queue_y8 = player_y;
-		queue_y9 = player_y;
+		queue_y0 = offset_self_y;
+		queue_y1 = player y + step * 4;
+		queue_y2 = player y + step * 3;
+		queue_y3 = player y + step * 2;
+		queue_y4 = player y + step * 1;
+		queue_y5 = player y;
+		queue_y6 = player y;
+		queue_y7 = player y;
+		queue_y8 = player y;
+		queue_y9 = player y;
 	}
 	curr_self_queue = 0;
 	curr_player_queue = $queue_diff;
 }
 set_player_pos ($n, $xVar, $yVar) {
 	if (curr_player_queue == $n) {
-		$xVar = player_x;
-		$yVar = player_y;
+		$xVar = player x;
+		$yVar = player y;
 	}
 }
 set_self_pos ($n, $xVar, $yVar) {
@@ -416,8 +414,6 @@ follow_player {
 			self current_animation = 0;
 		}
 	} else {
-		player_x = player x;
-		player_y = player y;
 		set_player_pos(0, queue_x0, queue_y0)
 		set_player_pos(1, queue_x1, queue_y1)
 		set_player_pos(2, queue_x2, queue_y2)
@@ -460,30 +456,28 @@ move_hamster {
 	set_self_pos(7, queue_x7, queue_y7)
 	set_self_pos(8, queue_x8, queue_y8)
 	set_self_pos(9, queue_x9, queue_y9)
-	self x += $adjust_x;
-	self y -= $adjust_y;
-	self_x = self x;
-	self_y = self y;
-	if (self_x > my_old_x) {
-		my_diff_x = self_x - my_old_x;
+	self x += $offset_x;
+	self y -= $offset_y;
+	if (self x > my_old_x) {
+		my_diff_x = self x - my_old_x;
 	} else {
-		my_diff_x = my_old_x - self_x;
+		my_diff_x = my_old_x - self x;
 	}
-	if (self_y > my_old_y) {
-		my_diff_y = self_y - my_old_y;
+	if (self y > my_old_y) {
+		my_diff_y = self y - my_old_y;
 	} else {
-		my_diff_y = my_old_y - self_y;
+		my_diff_y = my_old_y - self y;
 	}
 	if (my_diff_x > my_diff_y) {
-		if (self_x > my_old_x) {
+		if (self x > my_old_x) {
 			self direction = east;
-		} else if (self_x < my_old_x) {
+		} else if (self x < my_old_x) {
 			self direction = west;
 		}
 	} else {
-		if (self_y > my_old_y) {
+		if (self y > my_old_y) {
 			self direction = south;
-		} else if (self_y < my_old_y) {
+		} else if (self y < my_old_y) {
 			self direction = north;
 		}
 	}

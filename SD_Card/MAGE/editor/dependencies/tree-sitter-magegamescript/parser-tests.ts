@@ -25,7 +25,6 @@ const onlyDoTheseActionTests = [
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
 	'set_int_exp_ok',
-	'int_getable_comparison',
 ]);
 
 // --------------------------- ACTION TESTS ---------------------------
@@ -34,14 +33,23 @@ const actionTests = {
 		input: [
 			//WIP
 			`if (player x < 100) { wait 10; }`,
+			`if (player x < self x) { wait 100; }`,
 		],
 		expected: [
 			// WIP
 			`"__TEMP_0" = player x;`,
-			`if "__TEMP_0" < 100 then goto label ??`,
-			`goto label ??`,
-			`wait 10;`,
-			`??:`,
+			`if "__TEMP_0" < 100 then goto label *A*`,
+			`goto label *B*`,
+			`*A*:`,
+			`wait 10ms;`,
+			`*B*:`,
+			`"__TEMP_0" = player x;`,
+			`"__TEMP_1" = self x;`,
+			`if "__TEMP_0" < "__TEMP_1" then goto label *C*`,
+			`goto label *D*`,
+			`*C*:`,
+			`wait 100ms;`,
+			`*D*:`,
 		],
 	},
 	entity_int_field_assignment: {

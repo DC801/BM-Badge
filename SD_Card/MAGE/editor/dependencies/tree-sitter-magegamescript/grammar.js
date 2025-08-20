@@ -738,11 +738,6 @@ export default grammar({
 		bool_comparison: ($) =>
 			choice(
 				seq(
-					field('lhs', choice($.number, $.string)),
-					field('operator', $.COMPARISON),
-					field('rhs', choice($.number, $.string)),
-				),
-				seq(
 					field('lhs', $.entity_direction),
 					field('operator', $.EQUALITY),
 					field('rhs', $.nsew),
@@ -763,22 +758,9 @@ export default grammar({
 					field('rhs', $.string_checkable),
 				),
 				seq(
-					field('lhs', $.number_checkable_equality),
-					field('operator', $.EQUALITY),
-					field('rhs', $.number),
-				),
-				seq(
-					field('lhs', $.number),
-					field('operator', $.EQUALITY),
-					field('rhs', $.number_checkable_equality),
-				),
-			),
-		number_checkable_equality: ($) =>
-			prec(
-				1,
-				seq(
-					field('entity_identifier', $.entity_identifier),
-					field('property', $.entity_property_int),
+					field('lhs', choice($.number, $.string, $.int_getable)),
+					field('operator', $.COMPARISON),
+					field('rhs', choice($.number, $.string, $.int_getable)),
 				),
 			),
 		entity_direction: ($) => seq(field('entity_identifier', $.entity_identifier), 'direction'),
