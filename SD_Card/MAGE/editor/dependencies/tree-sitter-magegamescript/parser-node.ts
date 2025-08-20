@@ -703,8 +703,17 @@ const nodeFns = {
 		throw new Error('invalid if_single');
 	},
 	if_chain: (f: FileState, node: TreeSitterNode) => {
-		const ifNodes = node.childrenForFieldName('if_block').filter((v) => v !== null);
+		const ifNodes = node
+			.childrenForFieldName('if_block')
+			.map((v) => {
+				// TODO do I need this??
+				reportMissingChildNodes(f, node);
+				reportErrorNodes(f, node);
+				return v;
+			})
+			.filter((v) => v !== null);
 		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v, 'if'));
+		// const iffs = handleChildrenForFieldName(f, node, 'if_block'); //SHOULD BE
 		const elseNode = node.childForFieldName('else_block');
 		const elseBody = newElse(f, elseNode);
 		return [ifChainMaker(f, node, iffs, elseBody, 'if_chain')];

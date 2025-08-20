@@ -74,6 +74,10 @@ window.vueApp = new window.Vue({
 				} else {
 					getFileJson(scenarioFile)
 						.then(handleScenarioData(fileNameMap))
+						.catch(function (error) {
+							handleError(error);
+							throw error;
+						})
 						.then(function (scenarioData) {
 							vm.fileNameMap = fileNameMap;
 							vm.scenarioData = scenarioData;

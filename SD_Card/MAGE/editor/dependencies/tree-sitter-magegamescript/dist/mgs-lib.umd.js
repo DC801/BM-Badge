@@ -4195,6 +4195,8 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     return ret;
   };
   const handleAction = (f, node) => {
+    reportMissingChildNodes(f, node);
+    reportErrorNodes(f, node);
     const data = actionData[node.grammarType];
     if (!data) {
       const customFn = actionFns[node.grammarType];
@@ -5501,7 +5503,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("invalid if_single");
     },
     if_chain: (f, node) => {
-      const ifNodes = node.childrenForFieldName("if_block").filter((v) => v !== null);
+      const ifNodes = node.childrenForFieldName("if_block").map((v) => {
+        reportMissingChildNodes(f, node);
+        reportErrorNodes(f, node);
+        return v;
+      }).filter((v) => v !== null);
       const iffs = ifNodes.map((v) => new ConditionalBlock(f, v, "if"));
       const elseNode = node.childForFieldName("else_block");
       const elseBody = newElse(f, elseNode);
@@ -5999,6 +6005,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return stringCaptureForFieldName(f, node, "entity");
   };
   const handleChildrenForFieldName = (f, node, fieldName) => {
+    reportMissingChildNodes(f, node);
+    reportErrorNodes(f, node);
     const children = node.childrenForFieldName(fieldName);
     return children.filter((v) => v !== null).map((v) => handleNode(f, v)).flat();
   };
@@ -6660,7 +6668,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new CopyMacro(this.debug, this.args);
     }
     print() {
-      return `copy!("${this.script}")`;
+      return `"${this.script}"()`;
     }
   }
   class MathlangSequence extends MathlangNode {
@@ -8338,7 +8346,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     print() {
       if (!this.search_and_replace) {
-        return `copy!("${this.script}")`;
+        return `"${this.script}"()`;
       }
       const action = {
         action: this.action,
@@ -10476,6 +10484,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "debug");
       const debug = new MathlangLocation(f, node);
       this.conditionNode = mandatoryChildForFieldName(f, node, "condition");
+      reportMissingChildNodes(f, node);
+      reportErrorNodes(f, node);
       let condition = handleCapture(f, this.conditionNode);
       if (typeof condition === "string") condition = CheckSaveFlag.quick(debug, condition);
       if (!(condition instanceof BoolExpression)) {
@@ -10634,6 +10644,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       // error/warning messages
       __publicField(this, "errors");
       __publicField(this, "warnings");
+      __publicField(this, "mgsErrors");
+      __publicField(this, "mgsWarnings");
       // auto counter, so that auto-generated gotos don't share labels:
       __publicField(this, "gotoSuffixValue");
       Object.entries(scenarioData).forEach(([k, v]) => {
@@ -10649,6 +10661,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         dialogs: {},
         serialDialogs: {}
       };
+      this.mgsErrors = "";
+      this.mgsWarnings = "";
       this.errors = [];
       this.warnings = [];
       this.gotoSuffixValue = 0;
@@ -10963,29 +10977,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       p.scripts[scriptName].printed = printScript(scriptName, actions);
       p.scripts[scriptName].actions = actions.filter((item) => item instanceof Action);
     });
-    const messages = [];
+    let printErrors = "";
+    let printWarnings = "";
     const errCount = p.errors.length;
     const warnCount = p.warnings.length;
-    if (errCount) {
-      messages.push(ansiTags.red + `${errCount} error${plural(errCount)}` + ansiTags.reset);
-    }
-    if (warnCount) {
-      messages.push(ansiTags.yellow + `${warnCount} warning${plural(warnCount)}` + ansiTags.reset);
-    }
-    if (messages.length) {
+    if (errCount || warnCount) {
+      const messages = [];
+      if (errCount) {
+        messages.push(ansiTags.red + `${errCount} error${plural(errCount)}` + ansiTags.reset);
+      }
+      if (warnCount) {
+        messages.push(ansiTags.yellow + `${warnCount} warning${plural(warnCount)}` + ansiTags.reset);
+      }
       console.log(`Issues found: ${messages.join(", ")}`);
+      p.warnings.forEach((message) => {
+        const str = ansiTags.yellow + printableMessage(p.fileMap, "Warning", message) + ansiTags.reset;
+        printWarnings += "\n" + str;
+        console.warn(str);
+      });
+      p.errors.forEach((message) => {
+        const str = ansiTags.red + printableMessage(p.fileMap, "Error", message) + ansiTags.reset;
+        printErrors += "\n" + str;
+        console.error(str);
+      });
+      p.mgsErrors = printErrors;
+      p.mgsWarnings = printWarnings;
     } else {
       console.log(`All your project's MGS files parsed with no issues!`);
     }
-    p.warnings.forEach((message) => {
-      const str = ansiTags.yellow + printableMessage(p.fileMap, "Warning", message) + ansiTags.reset;
-      console.warn(str);
-    });
-    p.errors.forEach((message) => {
-      const str = ansiTags.red + printableMessage(p.fileMap, "Error", message) + ansiTags.reset;
-      console.error(str);
-    });
-    if (errCount) throw new Error("MGS PARSING ERRORS (see console)");
     return p;
   };
   const plural = (n) => n !== 1 ? "s" : "";

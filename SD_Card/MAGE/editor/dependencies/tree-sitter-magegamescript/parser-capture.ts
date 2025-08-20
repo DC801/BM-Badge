@@ -569,6 +569,8 @@ export const handleChildrenForFieldName = (
 	node: TreeSitterNode,
 	fieldName: string,
 ): AnyNode[] => {
+	reportMissingChildNodes(f, node);
+	reportErrorNodes(f, node);
 	const children = node.childrenForFieldName(fieldName);
 	return children
 		.filter((v) => v !== null)

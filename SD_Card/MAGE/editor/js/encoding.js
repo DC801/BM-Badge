@@ -117,6 +117,7 @@ var handleScenarioData = function (fileNameMap) {
 			);
 		}).then((parserResult) => {
 			console.log('What is parserResult?', parserResult);
+			scenarioData.p = parserResult;
 			scenarioData.scripts = scenarioData.scripts || {};
 			scenarioData.dialogs = scenarioData.dialogs || {};
 			scenarioData.serialDialogs = scenarioData.serialDialogs || {};
@@ -149,6 +150,10 @@ var handleScenarioData = function (fileNameMap) {
 				// TODO: fix this properly
 
 			});
+			// if (parserResult.errors.length) {
+			// 	const error = new Error (parserResult.printErrors)
+			// 	throw error;
+			// }
 			return parserResult;
 		});
 

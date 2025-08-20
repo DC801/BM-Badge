@@ -335,7 +335,7 @@ follow_player_stack_init {
 	if (player x > offset_self_x) {
 		diff = player x - offset_self_x;
 		step = diff / 5;
-		queue_x0 = offset_self_x;
+		queue_x0 = offset_self_x*1;
 		queue_x1 = offset_self_x + step * 1;
 		queue_x2 = offset_self_x + step * 2;
 		queue_x3 = offset_self_x + step * 3;
@@ -348,7 +348,7 @@ follow_player_stack_init {
 	} else {
 		diff = offset_self_x - player x;
 		step = diff / 5;
-		queue_x0 = offset_self_x;
+		queue_x0 = offset_self_x*1;
 		queue_x1 = player x + step * 4;
 		queue_x2 = player x + step * 3;
 		queue_x3 = player x + step * 2;
@@ -362,7 +362,7 @@ follow_player_stack_init {
 	if (player y > offset_self_y) {
 		diff = player y - offset_self_y;
 		step = diff / 5;
-		queue_y0 = offset_self_y;
+		queue_y0 = offset_self_y*1;
 		queue_y1 = offset_self_y + step * 1;
 		queue_y2 = offset_self_y + step * 2;
 		queue_y3 = offset_self_y + step * 3;
@@ -375,7 +375,7 @@ follow_player_stack_init {
 	} else {
 		diff = offset_self_y - player y;
 		step = diff / 5;
-		queue_y0 = offset_self_y;
+		queue_y0 = offset_self_y*1;
 		queue_y1 = player y + step * 4;
 		queue_y2 = player y + step * 3;
 		queue_y3 = player y + step * 2;

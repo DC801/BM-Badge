@@ -539,7 +539,7 @@ export class COPY_SCRIPT extends Action {
 	}
 	print() {
 		if (!this.search_and_replace) {
-			return `copy!("${this.script}")`;
+			return `"${this.script}"()`;
 		}
 		const action = {
 			action: this.action,

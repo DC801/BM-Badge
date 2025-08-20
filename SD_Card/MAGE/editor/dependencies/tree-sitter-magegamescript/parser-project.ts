@@ -52,6 +52,8 @@ export class ProjectState {
 	// error/warning messages
 	errors: MathlangMessage[];
 	warnings: MathlangMessage[];
+	mgsErrors: string;
+	mgsWarnings: string;
 	// auto counter, so that auto-generated gotos don't share labels:
 	gotoSuffixValue: number;
 	constructor(tsParser: Parser, fileMap: FileMap, scenarioData: Record<string, unknown>) {
@@ -69,6 +71,8 @@ export class ProjectState {
 			dialogs: {},
 			serialDialogs: {},
 		};
+		this.mgsErrors = '';
+		this.mgsWarnings = '';
 		this.errors = [];
 		this.warnings = [];
 		this.gotoSuffixValue = 0;

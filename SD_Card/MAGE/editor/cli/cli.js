@@ -126,7 +126,6 @@ function printWarningsIfVerbose(scenarioData) {
 		Object.keys(scenarioData.warnings).forEach(function (checkName) {
 			checkWarningCounts[checkName] = 0;
 		});
-
 		console.log('\nWarnings');
 		console.log('(go use the GUI at `editor/index.html` for some automatic fixes)');
 		console.log('-----------------------------------------------');
@@ -163,12 +162,23 @@ function printWarningsIfVerbose(scenarioData) {
 
 var fileNameMap = makeMap(inputPath);
 var scenarioFile = fileNameMap['scenario.json'];
+var mgsWarnings = '';
+var mgsErrors = '';
 if (!scenarioFile) {
 	throw new Error("No `scenario.json` file detected in folder, nowhere to start!")
 } else {
 	getFileJson(scenarioFile)
 		.then(handleScenarioData(fileNameMap))
-		.then(printWarningsIfVerbose)
+		.then(v=>{
+			if (v.p.mgsWarnings) {
+				mgsWarnings = v.p.mgsWarnings;
+			}
+			if (v.p.mgsErrors) {
+				mgsErrors = v.p.mgsErrors;
+			}
+			console.log(v.p)
+			return printWarningsIfVerbose(v)
+		})
 		.then(generateIndexAndComposite)
 		.then(function (compositeArray) {
 			console.log('Starting game.dat write to:', outputPath);
@@ -177,5 +187,11 @@ if (!scenarioFile) {
 			console.log('Starting imageCache write to:', imageCachePath);
 			fs.writeFileSync(imageCachePath, JSON.stringify(window.imageCache));
 			console.log('done');
+			if (mgsWarnings) {
+				console.warn(mgsWarnings)
+			}
+			if (mgsErrors) {
+				console.error(mgsErrors);
+			}
 		})
 }

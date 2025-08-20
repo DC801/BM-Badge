@@ -193,29 +193,38 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 	});
 
 	// PRINT ERRORS
-	const messages: string[] = [];
+
+	let printErrors = '';
+	let printWarnings = '';
+
 	const errCount = p.errors.length;
 	const warnCount = p.warnings.length;
-	if (errCount) {
-		messages.push(ansi.red + `${errCount} error${plural(errCount)}` + ansi.reset);
-	}
-	if (warnCount) {
-		messages.push(ansi.yellow + `${warnCount} warning${plural(warnCount)}` + ansi.reset);
-	}
-	if (messages.length) {
+	if (errCount || warnCount) {
+		const messages: string[] = [];
+		if (errCount) {
+			messages.push(ansi.red + `${errCount} error${plural(errCount)}` + ansi.reset);
+		}
+		if (warnCount) {
+			messages.push(ansi.yellow + `${warnCount} warning${plural(warnCount)}` + ansi.reset);
+		}
 		console.log(`Issues found: ${messages.join(', ')}`);
+		p.warnings.forEach((message) => {
+			const str = ansi.yellow + printableMessage(p.fileMap, 'Warning', message) + ansi.reset;
+			printWarnings += '\n'+str
+			// .replace(/\u001B\[\d+m/g, '');
+			console.warn(str);
+		});
+		p.errors.forEach((message) => {
+			const str = ansi.red + printableMessage(p.fileMap, 'Error', message) + ansi.reset;
+			printErrors += '\n'+str
+			// .replace(/\u001B\[\d+m/g, '');
+			console.error(str);
+		});
+		p.mgsErrors = printErrors;
+		p.mgsWarnings = printWarnings;
 	} else {
 		console.log(`All your project's MGS files parsed with no issues!`);
 	}
-	p.warnings.forEach((message) => {
-		const str = ansi.yellow + printableMessage(p.fileMap, 'Warning', message) + ansi.reset;
-		console.warn(str);
-	});
-	p.errors.forEach((message) => {
-		const str = ansi.red + printableMessage(p.fileMap, 'Error', message) + ansi.reset;
-		console.error(str);
-	});
-	if (errCount) throw new Error('MGS PARSING ERRORS (see console)');
 
 	// DONE
 	return p;

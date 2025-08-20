@@ -115,6 +115,8 @@ import {
 	newTemporary,
 	dropTemporary,
 	quickTemporary,
+	reportMissingChildNodes,
+	reportErrorNodes,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 
@@ -166,6 +168,8 @@ type FieldToSpread = {
 	captures: Capture[];
 };
 export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	reportMissingChildNodes(f, node);
+	reportErrorNodes(f, node);
 	const data = actionData[node.grammarType];
 	if (!data) {
 		const customFn = actionFns[node.grammarType];

@@ -18,9 +18,7 @@ const actionArrayToScript = (
 
 // will do all tests if empty
 // if not empty, also won't do any file-level tests
-const onlyDoTheseActionTests = [
-	// 'mainframe_watchbox', 'if_single', 'bool_exp_branch_debug_mode'
-];
+const onlyDoTheseActionTests = [];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings

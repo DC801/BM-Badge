@@ -679,7 +679,7 @@ export class CopyMacro extends MathlangNode {
 		return new CopyMacro(this.debug, this.args);
 	}
 	print() {
-		return `copy!("${this.script}")`;
+		return `"${this.script}"()`;
 	}
 }
 

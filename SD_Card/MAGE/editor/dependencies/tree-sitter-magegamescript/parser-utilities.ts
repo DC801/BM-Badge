@@ -228,6 +228,10 @@ export class ConditionalBlock {
 	constructor(f: FileState, node: TreeSitterNode, type: string) {
 		const debug = new MathlangLocation(f, node);
 		this.conditionNode = mandatoryChildForFieldName(f, node, 'condition');
+		// TODO this should not be handled this way! make uniform
+		// Find other cases, too? node handling should be done in one place so it can report errors
+		reportMissingChildNodes(f, node);
+		reportErrorNodes(f, node);
 		let condition = handleCapture(f, this.conditionNode);
 		if (typeof condition === 'string') condition = CheckSaveFlag.quick(debug, condition);
 		if (!(condition instanceof BoolExpression)) {

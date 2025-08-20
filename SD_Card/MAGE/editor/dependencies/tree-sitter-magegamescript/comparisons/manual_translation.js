@@ -439,7 +439,7 @@ const replaced = file
 	.replace(
 		// COPY_SCRIPT
 		/(\n|^)(\s*)copy (script )?("?)([^;\n ]+)(\4);?/g,
-		'$1$2copy!("$5")',
+		'$1$2"$5"()',
 	)
 	// Final common stuff
 	.replace(/entity "%PLAYER%"/g, 'player')
