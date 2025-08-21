@@ -19,7 +19,7 @@ import { type FileMap } from './parser-project.ts';
 import {
 	handleCapture,
 	handleNamedChildren,
-	mandatoryChildForFieldName,
+	mandatoryChildForField,
 	mandatoryLastChild,
 	optionalLastChild,
 } from './parser-capture.ts';
@@ -229,7 +229,7 @@ export class ConditionalBlock {
 	debug: MathlangLocation;
 	constructor(f: FileState, node: TreeSitterNode, type: string) {
 		const debug = MathlangLocation.quick(f, node);
-		this.conditionNode = mandatoryChildForFieldName(f, node, 'condition');
+		this.conditionNode = mandatoryChildForField(f, node, 'condition');
 		// TODO this should not be handled this way! make uniform
 		// Find other cases, too? node handling should be done in one place so it can report errors
 		let condition = handleCapture(f, this.conditionNode);
@@ -238,7 +238,7 @@ export class ConditionalBlock {
 			throw new Error(type + ' condition not BoolExpression');
 		}
 		this.condition = condition;
-		this.bodyNode = mandatoryChildForFieldName(f, node, 'body');
+		this.bodyNode = mandatoryChildForField(f, node, 'body');
 		this.body = handleNamedChildren(f, this.bodyNode);
 		this.debug = MathlangLocation.quick(f, node);
 	}

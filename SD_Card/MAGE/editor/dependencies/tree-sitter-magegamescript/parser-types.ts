@@ -10,7 +10,7 @@ import {
 	simpleBranchMaker,
 } from './parser-utilities.ts';
 import { type GenericObj } from './parser-actions.ts';
-import { coerceToString, mandatoryChildForFieldName } from './parser-capture.ts';
+import { coerceToString, mandatoryChildForField } from './parser-capture.ts';
 
 /*
 
@@ -193,6 +193,12 @@ export class AddDialogSettingsTarget extends MathlangNode {
 			target,
 		});
 	}
+	static coerceAll(array: unknown[]) {
+		if (!array.every((v) => v instanceof AddDialogSettingsTarget)) {
+			throw new Error('not every item in array is AddDialogSettingsTarget');
+		}
+		return array;
+	}
 }
 
 export class AddSerialDialogSettings extends MathlangNode {
@@ -344,6 +350,12 @@ export class DialogParameter extends MathlangNode {
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new DialogParameter(debug, { property, value });
 	}
+	static coerceAll(array: unknown[]) {
+		if (!array.every((v) => v instanceof DialogParameter)) {
+			throw new Error('not every item in array is DialogParameter');
+		}
+		return array;
+	}
 }
 
 export class Dialog extends MathlangNode {
@@ -390,6 +402,12 @@ export class Dialog extends MathlangNode {
 		}
 		return new Dialog(this.debug.clone(), newArgs);
 	}
+	static coerceAll(array: unknown[]) {
+		if (!array.every((v) => v instanceof Dialog)) {
+			throw new Error('not every item in array is Dialog');
+		}
+		return array;
+	}
 }
 
 export type DialogInfo = {
@@ -418,6 +436,12 @@ export class DialogIdentifier extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new DialogIdentifier(debug, { type, value });
 	}
+	static coerce(v: unknown) {
+		if (!(v instanceof DialogIdentifier)) {
+			throw new Error('not DialogIdentifier');
+		}
+		return v;
+	}
 }
 type DialogIdentifierType = 'label' | 'entity' | 'name';
 
@@ -439,6 +463,12 @@ export class DialogOption extends MathlangNode {
 			label,
 			script,
 		});
+	}
+	static coerceAll(array: unknown[]) {
+		if (!array.every((v) => v instanceof DialogOption)) {
+			throw new Error('not every item in array is DialogOption');
+		}
+		return array;
 	}
 }
 
@@ -495,6 +525,12 @@ export class SerialDialogParameter extends MathlangNode {
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new SerialDialogParameter(debug, { property, value });
 	}
+	static coerceAll(array: unknown[]) {
+		if (!array.every((v) => v instanceof SerialDialogParameter)) {
+			throw new Error('not every item in array is SerialDialogParameter');
+		}
+		return array;
+	}
 }
 
 export class SerialDialog extends MathlangNode {
@@ -537,6 +573,12 @@ export class SerialDialog extends MathlangNode {
 		}
 		return new SerialDialog(this.debug.clone(), newArgs);
 	}
+	static coerce(v: unknown) {
+		if (!(v instanceof SerialDialog)) {
+			throw new Error('not SerialDialog');
+		}
+		return v;
+	}
 }
 
 export type SerialDialogInfo = {
@@ -570,6 +612,12 @@ export class SerialDialogOption extends MathlangNode {
 			label,
 			script,
 		});
+	}
+	static coerceAll(array: unknown[]) {
+		if (!array.every((v) => v instanceof SerialDialogOption)) {
+			throw new Error('not every item in array is SerialDialogOption');
+		}
+		return array;
 	}
 }
 // ------------------------------ ONE-OFFS ------------------------------ \\
@@ -834,6 +882,12 @@ export class IntBinaryExpression extends IntExpression {
 		newArgs.rhs = this.rhs.clone();
 		return new IntBinaryExpression(this.debug.clone(), newArgs);
 	}
+	static coerce(v: unknown) {
+		if (!(v instanceof IntBinaryExpression)) {
+			throw new Error('not IntBinaryExpression');
+		}
+		return v;
+	}
 	toStepsFromSteps(steps: AnyNode[]) {
 		const temp = latestTemporary();
 		const lhs = this.lhs;
@@ -985,6 +1039,12 @@ export class EntityIntField extends IntGetable {
 	static quick(debug: MathlangLocation, entity: string, field: string) {
 		return new EntityIntField(debug, { entity, field });
 	}
+	static coerce(v: unknown) {
+		if (!(v instanceof EntityIntField)) {
+			throw new Error('not EntityIntField');
+		}
+		return v;
+	}
 	intoNumberCheckableEquality() {
 		const entity = this.entity;
 		const field = this.field;
@@ -1006,7 +1066,7 @@ export class EntityIntField extends IntGetable {
 		} else if (field === 'strafe') {
 			const f = this.debug.f;
 			const node = this.debug.node;
-			const propertyNode = mandatoryChildForFieldName(f, node, 'property');
+			const propertyNode = mandatoryChildForField(f, node, 'property');
 			f.quickError(propertyNode, `this property is not supported in boolean expressions`);
 		}
 		throw new Error('could not format number_checkable_equality');
@@ -1062,6 +1122,12 @@ export class BoolExpression extends MathlangNode {
 	invert() {
 		console.error('the children should be doing this, not me');
 		return this;
+	}
+	static coerce(v: unknown) {
+		if (!(v instanceof BoolExpression)) {
+			throw new Error('not BoolExpression');
+		}
+		return v;
 	}
 	// TODO: See which bits of this are duplicate (check individual toSteps() fns)
 	toSteps(ifLabel: string) {
@@ -2073,6 +2139,12 @@ export class BoolSetable extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new BoolSetable(debug, { type, value });
 	}
+	static coerce(v: unknown) {
+		if (!(v instanceof BoolSetable)) {
+			throw new Error('not BoolSetable');
+		}
+		return v;
+	}
 }
 export class MovableIdentifier extends MathlangNode {
 	mathlang: 'movable_identifier';
@@ -2089,6 +2161,12 @@ export class MovableIdentifier extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new MovableIdentifier(debug, { type, value });
+	}
+	static coerce(v: unknown) {
+		if (!(v instanceof MovableIdentifier)) {
+			throw new Error('not MovableIdentifier');
+		}
+		return v;
 	}
 }
 export class CoordinateIdentifier extends MathlangNode {
@@ -2109,6 +2187,12 @@ export class CoordinateIdentifier extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string, polygonType?: string) {
 		return new CoordinateIdentifier(debug, { type, value, polygonType });
 	}
+	static coerce(v: unknown) {
+		if (!(v instanceof CoordinateIdentifier)) {
+			throw new Error('not CoordinateIdentifier');
+		}
+		return v;
+	}
 }
 export class DirectionTarget extends MathlangNode {
 	mathlang: 'direction_target';
@@ -2125,5 +2209,11 @@ export class DirectionTarget extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new DirectionTarget(debug, { type, value });
+	}
+	static coerce(v: unknown) {
+		if (!(v instanceof DirectionTarget)) {
+			throw new Error('not DirectionTarget');
+		}
+		return v;
 	}
 }

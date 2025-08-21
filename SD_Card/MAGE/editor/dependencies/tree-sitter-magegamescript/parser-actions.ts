@@ -1,12 +1,12 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import {
-	capturesForFieldName,
+	capturesForField,
 	coerceToNumber,
 	coerceToString,
 	handleCapture,
-	handleChildrenForFieldName,
-	mandatoryChildForFieldName,
-	optionalChildForFieldName,
+	handleChildrenForField,
+	mandatoryChildForField,
+	optionalChildForField,
 	type Capture,
 } from './parser-capture.ts';
 import {
@@ -116,8 +116,6 @@ import {
 	newTemporary,
 	dropTemporary,
 	quickTemporary,
-	reportMissingChildNodes,
-	reportErrorNodes,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 
@@ -186,7 +184,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const captures: string[] = data.captures || [];
 	const fieldsToSpread: Record<string, FieldToSpread> = {};
 	captures.forEach((fieldName) => {
-		const captureNode = optionalChildForFieldName(f, node, fieldName);
+		const captureNode = optionalChildForField(f, node, fieldName);
 		if (captureNode === null) {
 			if (!data.optionalCaptures || !data.optionalCaptures.includes(fieldName)) {
 				throw new Error(
@@ -223,7 +221,7 @@ type ShowSerialDialogOutput = (SHOW_SERIAL_DIALOG | SerialDialogDefinition)[];
 type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
 	action_show_dialog: (f: FileState, node: TreeSitterNode): ShowDialogOutput => {
-		const dialogNames = capturesForFieldName(f, node, 'dialog_name');
+		const dialogNames = capturesForField(f, node, 'dialog_name');
 		if (dialogNames.length === 0) {
 			dialogNames.push(autoIdentifierName(f, node));
 		}
@@ -233,12 +231,9 @@ const actionFns: Record<string, ActionFn> = {
 			);
 		}
 		const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
-		const dialogs = handleChildrenForFieldName(f, node, 'dialog');
+		const dialogs = Dialog.coerceAll(handleChildrenForField(f, node, 'dialog'));
 		const action = SHOW_DIALOG.quick(dialogName);
 		if (dialogs.length) {
-			if (!dialogs.every((v) => v instanceof Dialog)) {
-				throw new Error('parsed dialogs not all of type Dialog');
-			}
 			const debug = MathlangLocation.quick(f, node);
 			const dialogDefinition = DialogDefinition.quick(debug, dialogName, dialogs);
 			return [dialogDefinition, action];
@@ -259,7 +254,7 @@ const actionShowSerialDialog = (
 	node: TreeSitterNode,
 	disable_newline: boolean = false,
 ): ShowSerialDialogOutput => {
-	const dialogNames = capturesForFieldName(f, node, 'serial_dialog_name');
+	const dialogNames = capturesForField(f, node, 'serial_dialog_name');
 	if (dialogNames.length === 0) {
 		dialogNames.push(autoIdentifierName(f, node));
 	}
@@ -273,17 +268,14 @@ const actionShowSerialDialog = (
 	}
 	const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
 
-	const serialDialogs = handleChildrenForFieldName(f, node, 'serial_dialog');
+	const serialDialogs = handleChildrenForField(f, node, 'serial_dialog');
 	const action = SHOW_SERIAL_DIALOG.quick(dialogName, disable_newline);
 	if (serialDialogs.length) {
-		if (!(serialDialogs[0] instanceof SerialDialog)) {
-			throw new Error('parsed serial dialogs not all of type SerialDialog');
-		}
 		const debug = MathlangLocation.quick(f, node);
 		const serialDialoDefinition = SerialDialogDefinition.quick(
 			debug,
 			dialogName,
-			serialDialogs[0],
+			SerialDialog.coerce(serialDialogs[0]),
 		);
 		return [serialDialoDefinition, action];
 	}
@@ -449,8 +441,8 @@ const actionData: Record<string, actionDataEntry> = {
 				// `i` is from the caller, who knows which one of the set we're looking at now.
 				// Basically, the whole spread might not be ambiguous, so we need to report
 				// only once the action is identified in an individual spread, not all the time.
-				const lhsChild = mandatoryChildForFieldName(f, node, 'lhs');
-				const rhsChild = mandatoryChildForFieldName(f, node, 'rhs');
+				const lhsChild = mandatoryChildForField(f, node, 'lhs');
+				const rhsChild = mandatoryChildForField(f, node, 'rhs');
 				const lhsSquiggliesNode = lhsChild?.namedChildren?.[i] || lhsChild;
 				const rhsSquiggliesNode = rhsChild?.namedChildren?.[i] || rhsChild;
 				if (!lhsSquiggliesNode || !rhsSquiggliesNode) {
@@ -507,46 +499,44 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node): ActionSetEntityInt | MathlangSequence | COPY_VARIABLE => {
 			const debug = MathlangLocation.quick(f, node);
-			if (!(v.lhs instanceof EntityIntField)) {
-				throw new Error('LHS not EntityIntField');
-			}
-			const entity = coerceToString(f, node, v.lhs.entity, 'action_set_int entity');
+			const lhs = EntityIntField.coerce(v.lhs);
+			const entity = coerceToString(f, node, lhs.entity, 'action_set_int entity');
 
 			// player x = 0;
 			if (typeof v.rhs === 'number') {
-				if (v.lhs.field === 'x') {
+				if (lhs.field === 'x') {
 					return SET_ENTITY_X.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'y') {
+				if (lhs.field === 'y') {
 					return SET_ENTITY_Y.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'primary_id') {
+				if (lhs.field === 'primary_id') {
 					return SET_ENTITY_PRIMARY_ID.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'secondary_id') {
+				if (lhs.field === 'secondary_id') {
 					return SET_ENTITY_SECONDARY_ID.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'primary_id_type') {
+				if (lhs.field === 'primary_id_type') {
 					return SET_ENTITY_PRIMARY_ID_TYPE.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'current_animation') {
+				if (lhs.field === 'current_animation') {
 					return SET_ENTITY_CURRENT_ANIMATION.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'animation_frame') {
+				if (lhs.field === 'animation_frame') {
 					return SET_ENTITY_CURRENT_FRAME.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'strafe') {
+				if (lhs.field === 'strafe') {
 					return SET_ENTITY_MOVEMENT_RELATIVE.quick(entity, v.rhs);
 				}
-				if (v.lhs.field === 'relative_direction') {
+				if (lhs.field === 'relative_direction') {
 					return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, v.rhs);
 				}
-				throw new Error('unidentified int_getable, field: ' + v.lhs.field);
+				throw new Error('unidentified int_getable, field: ' + lhs.field);
 			}
 
 			// player x = varName;
 			if (typeof v.rhs === 'string') {
-				return COPY_VARIABLE.intoField(v.rhs, v.lhs.entity, v.lhs.field);
+				return COPY_VARIABLE.intoField(v.rhs, lhs.entity, lhs.field);
 			}
 
 			// player x = player y;
@@ -554,7 +544,7 @@ const actionData: Record<string, actionDataEntry> = {
 				const temp = quickTemporary();
 				const steps = [
 					COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, temp),
-					COPY_VARIABLE.intoField(temp, v.lhs.entity, v.lhs.field),
+					COPY_VARIABLE.intoField(temp, lhs.entity, lhs.field),
 				];
 				return MathlangSequence.quick(debug, steps, 'int getable to int getable');
 			}
@@ -564,7 +554,7 @@ const actionData: Record<string, actionDataEntry> = {
 				const temporary = newTemporary();
 				const steps = v.rhs.toStepsFromSteps([]);
 				dropTemporary();
-				steps.push(COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field));
+				steps.push(COPY_VARIABLE.intoField(temporary, lhs.entity, lhs.field));
 				return new MathlangSequence(debug, {
 					steps,
 					type: 'parser-actions: action_set_int',
@@ -640,27 +630,23 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['movable', 'coordinate'],
 		handle: (v, f, node): ActionSetPosition | MathlangSequence => {
 			const debug = MathlangLocation.quick(f, node);
-			if (!(v.movable instanceof MovableIdentifier)) {
-				throw new Error('invalid MovableIdentifier');
-			}
-			if (!(v.coordinate instanceof CoordinateIdentifier)) {
-				throw new Error('invalid CoordinateIdentifier');
-			}
-			if (v.movable.type === 'camera') {
-				if (v.coordinate.type === 'geometry' && v.coordinate.polygonType !== 'length') {
-					return TELEPORT_CAMERA_TO_GEOMETRY.quick(v.coordinate.value);
+			const movable = MovableIdentifier.coerce(v.movable);
+			const coordinate = CoordinateIdentifier.coerce(v.coordinate);
+			if (movable.type === 'camera') {
+				if (coordinate.type === 'geometry' && coordinate.polygonType !== 'length') {
+					return TELEPORT_CAMERA_TO_GEOMETRY.quick(coordinate.value);
 				}
-				if (v.coordinate.type === 'entity') {
-					return SET_CAMERA_TO_FOLLOW_ENTITY.quick(v.coordinate.value);
+				if (coordinate.type === 'entity') {
+					return SET_CAMERA_TO_FOLLOW_ENTITY.quick(coordinate.value);
 				}
-			} else if (v.movable.type === 'entity') {
-				if (v.coordinate.type === 'geometry' && v.coordinate.polygonType !== 'length') {
-					return TELEPORT_ENTITY_TO_GEOMETRY.quick(v.movable.value, v.coordinate.value);
+			} else if (movable.type === 'entity') {
+				if (coordinate.type === 'geometry' && coordinate.polygonType !== 'length') {
+					return TELEPORT_ENTITY_TO_GEOMETRY.quick(movable.value, coordinate.value);
 				}
-				if (v.coordinate.type === 'entity') {
+				if (coordinate.type === 'entity') {
 					const temp = quickTemporary();
-					const copyFrom = v.coordinate.value;
-					const copyTo = v.movable.value;
+					const copyFrom = coordinate.value;
+					const copyTo = movable.value;
 					const steps = [
 						COPY_VARIABLE.intoVariable(copyFrom, 'x', temp),
 						COPY_VARIABLE.intoField(temp, copyTo, 'x'),
@@ -681,104 +667,98 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['movable', 'coordinate', 'duration', 'forever'],
 		optionalCaptures: ['forever'],
 		handle: (v, f, node): ActionMoveOverTime | undefined => {
-			if (!(v.movable instanceof MovableIdentifier)) {
-				throw new Error('invalid MovableIdentifier');
-			}
-			if (!(v.coordinate instanceof CoordinateIdentifier)) {
-				throw new Error('invalid CoordinateIdentifier');
-			}
-			if (!(v.debug instanceof MathlangLocation)) {
-				throw new Error('invalid debug node');
-			}
+			const debug = MathlangLocation.quick(f, node);
+			const movable = MovableIdentifier.coerce(v.movable);
+			const coordinate = CoordinateIdentifier.coerce(v.coordinate);
 			const duration = coerceToNumber(f, node, v.duration, 'duration');
-			if (v.movable.type === 'camera') {
+			if (movable.type === 'camera') {
 				// Moving the camera
-				if (v.coordinate.type === 'entity') {
+				if (coordinate.type === 'entity') {
 					// ... to an entity
 					if (v.forever) {
 						// ... forever (ILLEGAL)
 						f.quickError(
-							v.debug.node,
+							debug.node,
 							`cannot move camera to an entity's position forever`,
 						);
 						return;
 					} else {
 						// ... not forever
-						return PAN_CAMERA_TO_ENTITY.quick(v.coordinate.value, duration);
+						return PAN_CAMERA_TO_ENTITY.quick(coordinate.value, duration);
 					}
 				}
-				if (v.coordinate.type === 'geometry') {
+				if (coordinate.type === 'geometry') {
 					// ... to a geometry
-					if (v.coordinate.polygonType === 'length') {
+					if (coordinate.polygonType === 'length') {
 						// ... length
 						if (v.forever) {
 							// ... forever
-							return LOOP_CAMERA_ALONG_GEOMETRY.quick(v.coordinate.value, duration);
+							return LOOP_CAMERA_ALONG_GEOMETRY.quick(coordinate.value, duration);
 						} else {
 							// ... not forever
-							return PAN_CAMERA_ALONG_GEOMETRY.quick(v.coordinate.value, duration);
+							return PAN_CAMERA_ALONG_GEOMETRY.quick(coordinate.value, duration);
 						}
-					} else if (v.coordinate.polygonType === 'origin') {
+					} else if (coordinate.polygonType === 'origin') {
 						// ... origin (single point)
 						if (v.forever) {
 							// ... forever (ILLEGAL)
 							f.quickError(
-								v.debug.node,
+								debug.node,
 								`'forever' can only be used with geometry lengths, not single points`,
 							);
 							return;
 						} else {
 							// ... not forever
-							return PAN_CAMERA_TO_GEOMETRY.quick(v.coordinate.value, duration);
+							return PAN_CAMERA_TO_GEOMETRY.quick(coordinate.value, duration);
 						}
 					}
 				}
 			}
 
-			if (v.movable.type === 'entity') {
+			if (movable.type === 'entity') {
 				// Moving an entity
-				if (v.coordinate.type === 'entity') {
+				if (coordinate.type === 'entity') {
 					// ... to another entity (ILLEGAL)
 					f.quickError(
-						v.debug.node,
+						debug.node,
 						`cannot move an entity to another entity's position over time`,
 					);
 					return;
 				}
-				if (v.coordinate.type === 'geometry') {
+				if (coordinate.type === 'geometry') {
 					// ... to a geometry
-					if (v.coordinate.polygonType === 'length') {
+					if (coordinate.polygonType === 'length') {
 						// ... length
 						if (v.forever) {
 							// ... forever
 							return LOOP_ENTITY_ALONG_GEOMETRY.quick(
-								v.movable.value,
-								v.coordinate.value,
+								movable.value,
+								coordinate.value,
 								duration,
 							);
 						} else {
 							// ... not forever
 							return WALK_ENTITY_ALONG_GEOMETRY.quick(
-								v.movable.value,
-								v.coordinate.value,
+								movable.value,
+								coordinate.value,
 								duration,
 							);
 						}
 					}
-					if (v.coordinate.polygonType === 'origin') {
+					if (coordinate.polygonType === 'origin') {
 						// ... origin (single point)
 						if (v.forever) {
 							// ... forever (ILLEGAL)
 							f.quickError(
-								v.debug.node,
+								debug.node,
 								`'forever' can only be used with geometry lengths, not single points`,
 							);
 							return;
 						} else {
 							// ... not forever
 							return WALK_ENTITY_TO_GEOMETRY.quick(
-								v.movable.value,
-								v.coordinate.value,
+								movable.value,
+								coordinate.value,
 								duration,
 							);
 						}
@@ -792,17 +772,13 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['entity', 'target'],
 		handle: (v, f, node): ActionSetDirection => {
 			const entity = coerceToString(f, node, v.entity, 'entity');
-			if (!(v.target instanceof DirectionTarget)) {
-				throw new Error('action_set_direction target not a DirectionTarget');
-			}
-			if (v.target.type === 'nsew') {
-				return SET_ENTITY_DIRECTION.quick(entity, v.target.value);
-			}
-			if (v.target.type === 'geometry') {
-				return SET_ENTITY_DIRECTION_TARGET_GEOMETRY.quick(entity, v.target.value);
-			}
-			if (v.target.type === 'entity') {
-				return SET_ENTITY_DIRECTION_TARGET_ENTITY.quick(entity, v.target.value);
+			const target = DirectionTarget.coerce(v.target);
+			if (target.type === 'nsew') {
+				return SET_ENTITY_DIRECTION.quick(entity, target.value);
+			} else if (target.type === 'geometry') {
+				return SET_ENTITY_DIRECTION_TARGET_GEOMETRY.quick(entity, target.value);
+			} else if (target.type === 'entity') {
+				return SET_ENTITY_DIRECTION_TARGET_ENTITY.quick(entity, target.value);
 			}
 			throw new Error('invalid type of DirectionTarget');
 		},
@@ -820,7 +796,7 @@ const actionData: Record<string, actionDataEntry> = {
 				} else if (script_slot === 'on_tick') {
 					return SET_MAP_LOOK_SCRIPT.quick(script);
 				}
-				const errorNode = mandatoryChildForFieldName(f, node, 'script_slot');
+				const errorNode = mandatoryChildForField(f, node, 'script_slot');
 				f.quickError(
 					errorNode,
 					`invalid map script slot`,
@@ -838,7 +814,7 @@ const actionData: Record<string, actionDataEntry> = {
 			if (v.script_slot === 'on_look') {
 				return SET_ENTITY_LOOK_SCRIPT.quick(entity, script);
 			}
-			const errorNode = mandatoryChildForFieldName(f, node, 'script_slot');
+			const errorNode = mandatoryChildForField(f, node, 'script_slot');
 			f.quickError(
 				errorNode,
 				`invalid entity script slot`,
@@ -944,9 +920,6 @@ const actionData: Record<string, actionDataEntry> = {
 				if (v.rhs instanceof IntBinaryExpression) {
 					const temporary1 = newTemporary();
 					const temporary2 = newTemporary();
-					if (!(v.rhs instanceof IntBinaryExpression)) {
-						throw new Error('not IntBinaryExpression');
-					}
 					const steps = [
 						COPY_VARIABLE.intoVariable(v.lhs.entity, v.lhs.field, temporary1),
 						...v.rhs.toStepsFromSteps([]),

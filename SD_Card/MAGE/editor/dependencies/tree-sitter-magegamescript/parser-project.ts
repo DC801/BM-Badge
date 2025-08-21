@@ -26,7 +26,7 @@ import {
 	GOTO_ACTION_INDEX,
 	LABEL,
 } from './parser-bytecode-info.ts';
-import { namedChildren, optionalChildForFieldName } from './parser-capture.ts';
+import { namedChildren, optionalChildForField } from './parser-capture.ts';
 
 type FileMapEntry = {
 	arrayBuffer: Promise<unknown>;
@@ -172,7 +172,7 @@ export class ProjectState {
 				// named script not found; error
 				const useNode =
 					action instanceof MathlangNode
-						? optionalChildForFieldName(action.debug.f, action.debug.node, 'script') ||
+						? optionalChildForField(action.debug.f, action.debug.node, 'script') ||
 							action.debug.node
 						: node;
 				this.newError({

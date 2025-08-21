@@ -13,6 +13,7 @@
 - [x] AddDialogSettingsTarget
     - [x] clone()
     - [x] static quick()
+	- [x] static coerceAll()
 - [x] AddSerialDialogSettings
     - [x] clone()
     - [x] static quick()
@@ -36,14 +37,18 @@
 - [x] DialogParameter
     - [x] clone()
     - [x] static quick()
+	- [x] static coerceAll()
 - [x] Dialog
     - [x] clone()
+	- [x] static coerceAll()
 - [x] DialogIdentifier
     - [x] clone()
     - [x] static quick()
+	- [x] static coerce()
 - [x] DialogOption
     - [x] clone()
     - [x] static quick()
+	- [x] static coerceAll()
 - [x] SerialDialogDefinition
     - [x] clone()
     - [x] static quick()
@@ -51,11 +56,14 @@
 - [x] SerialDialogParameter
     - [x] clone()
     - [x] static quick()
+	- [x] static coerceAll()
 - [x] SerialDialog
     - [x] clone()
+	- [x] static coerce()
 - [x] SerialDialogOption
     - [x] clone()
     - [x] static quick()
+	- [x] static coerceAll()
 - [x] IncludeNode
     - [x] clone()
     - [x] static quick()
@@ -88,6 +96,7 @@
     - [x] IntBinaryExpression
         - [x] clone()
         - [x] toSteps() -> steps
+		- [x] static coerce()
         - [x] assignToVar() -> MathlangSequence
     - [x] IntUnit
 		- [x] clone() (make children do it)
@@ -103,6 +112,7 @@
             - [x] EntityIntField
 				- [x] clone()
 				- [x] static quick()
+				- [x] static coerce()
 				- [x] intoNumberCheckableEquality()
             - [x] RNGSingle
 				- [x] clone()
@@ -116,6 +126,7 @@
 - [x] BoolExpression
 	- [x] clone() (make children do it)
 	- [x] invert()
+	- [x] static coerce()
 	- [x] toSteps() (double check)
 	- [x] assignToVar()
 	- [x] assignToSetBool()
@@ -267,12 +278,16 @@
 - [x] BoolSetable
 	- [x] clone()
 	- [x] static quick()
+	- [x] static coerce()
 - [x] MovableIdentifier
 	- [x] clone()
 	- [x] static quick()
+	- [x] static coerce()
 - [x] CoordinateIdentifier
 	- [x] clone()
 	- [x] static quick()
+	- [x] static coerce()
 - [x] DirectionTarget
 	- [x] clone()
 	- [x] static quick()
+	- [x] static coerce()
