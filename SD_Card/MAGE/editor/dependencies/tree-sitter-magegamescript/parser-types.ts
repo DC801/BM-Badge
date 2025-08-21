@@ -12,21 +12,22 @@ import {
 import { type GenericObj } from './parser-actions.ts';
 import { coerceToString, mandatoryChildForFieldName } from './parser-capture.ts';
 
+/*
+
+AnyNode
+- must have clone()
+	- if any of the props are AnyNode[] or AnyNode, they must also be cloned
+- some have print()
+
+*/
+
 export class AnyNode {
-	// = MathlangNode, Action
 	clone() {
 		if (this instanceof MathlangNode) return this.clone();
 		return ACTION.Action.fromArgs(this);
 	}
 }
 export class MathlangNode extends AnyNode {
-	// FunctionDefinition, AddDialogSettings, AddDialogSettingsTarget, AddSerialDialogSettings
-	// ReturnStatement, ContinueStatement, BreakStatement, GotoLabel
-	// DialogDefinition, DialogParameter, Dialog, DialogIdentifier, DialogOption
-	// SerialDialogDefinition, SerialDialogParameter, SerialDialog, SerialDialogOption
-	// IncludeNode, ConstantDefinition, ScriptDefinition, CommentNode, LabelDefinition
-	// JSONLiteral, CopyMacro, MathlangSequence, IntExpression, BoolExpression,
-	// BoolSetable, MovableIdentifier, CoordinateIdentifier, DirectionTarget
 	mathlang: string;
 	args: GenericObj;
 	debug: MathlangLocation;
@@ -34,9 +35,6 @@ export class MathlangNode extends AnyNode {
 		super();
 		this.debug = debug;
 		this.args = args;
-	}
-	clone() {
-		return this.constructor(this.debug, this.args);
 	}
 	print() {
 		return `// MATHLANG: ${this.mathlang}`;
@@ -52,15 +50,29 @@ export const isMGSPrimitive = (v: unknown): v is MGSPrimitive => {
 };
 
 export class MathlangLocation {
+	args: GenericObj;
 	f: FileState;
 	node: TreeSitterNode;
 	fileName: string;
 	comment?: string;
-	constructor(f: FileState, node: TreeSitterNode, comment?: string) {
-		this.f = f;
-		this.fileName = f.fileName;
-		this.node = node;
-		if (comment) this.comment = comment;
+	constructor(args: GenericObj) {
+		this.args = args;
+		if (!(args.f instanceof FileState)) {
+			throw new Error('f not FileState');
+		}
+		if (!(args.node instanceof TreeSitterNode)) {
+			throw new Error('node not TreeSitterNode');
+		}
+		this.f = args.f;
+		this.fileName = args.f.fileName;
+		this.node = args.node;
+		if (args.comment) this.comment = ACTION.breakIfNotString(args.comment);
+	}
+	static quick(f: FileState, node: TreeSitterNode) {
+		return new MathlangLocation({ f, node });
+	}
+	clone() {
+		return new MathlangLocation(this.args);
 	}
 }
 export class MathlangMessage {
@@ -100,6 +112,9 @@ export class FunctionDefinition extends MathlangNode {
 		}
 		this.bodyNode = args.bodyNode;
 	}
+	clone() {
+		return new FunctionDefinition(this.debug.clone(), this.args);
+	}
 	static quick(
 		debug: MathlangLocation,
 		name: string,
@@ -129,7 +144,8 @@ export class AddDialogSettings extends MathlangNode {
 		this.targets = args.targets;
 	}
 	clone() {
-		return new AddDialogSettings(this.debug, this.args);
+		const clonedTargets = this.targets.map((v) => v.clone());
+		return new AddDialogSettings(this.debug.clone(), { ...this.args, targets: clonedTargets });
 	}
 	static quick(debug: MathlangLocation, targets: AddDialogSettingsTarget[]) {
 		return new AddDialogSettings(debug, { targets });
@@ -156,7 +172,11 @@ export class AddDialogSettingsTarget extends MathlangNode {
 		if (typeof args.target === 'string') this.target = args.target;
 	}
 	clone() {
-		return new AddDialogSettingsTarget(this.debug, this.args);
+		const clonedParameters = this.parameters.map((v) => v.clone());
+		return new AddDialogSettingsTarget(this.debug.clone(), {
+			...this.args,
+			parameters: clonedParameters,
+		});
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -188,7 +208,11 @@ export class AddSerialDialogSettings extends MathlangNode {
 		this.parameters = args.parameters;
 	}
 	clone() {
-		return new AddSerialDialogSettings(this.debug, this.args);
+		const newParams = this.parameters.map((v) => v.clone());
+		return new AddSerialDialogSettings(this.debug.clone(), {
+			...this.args,
+			parameters: newParams,
+		});
 	}
 	static quick(debug: MathlangLocation, parameters: SerialDialogParameter[]) {
 		return new AddSerialDialogSettings(debug, {
@@ -206,7 +230,10 @@ export class ReturnStatement extends MathlangNode {
 		this.mathlang = 'return_statement';
 	}
 	clone() {
-		return new ReturnStatement(this.debug);
+		return new ReturnStatement(this.debug.clone());
+	}
+	static quick(debug: MathlangLocation) {
+		return new ReturnStatement(debug);
 	}
 }
 export class ContinueStatement extends MathlangNode {
@@ -216,7 +243,10 @@ export class ContinueStatement extends MathlangNode {
 		this.mathlang = 'continue_statement';
 	}
 	clone() {
-		return new ContinueStatement(this.debug);
+		return new ReturnStatement(this.debug.clone());
+	}
+	static quick(debug: MathlangLocation) {
+		return new ContinueStatement(debug);
 	}
 }
 export class BreakStatement extends MathlangNode {
@@ -226,7 +256,10 @@ export class BreakStatement extends MathlangNode {
 		this.mathlang = 'break_statement';
 	}
 	clone() {
-		return new BreakStatement(this.debug);
+		return new ReturnStatement(this.debug.clone());
+	}
+	static quick(debug: MathlangLocation) {
+		return new BreakStatement(debug);
 	}
 }
 
@@ -241,7 +274,7 @@ export class GotoLabel extends MathlangNode {
 		if (typeof args.comment === 'string') this.comment = args.comment;
 	}
 	clone() {
-		return new GotoLabel(this.debug, this.args);
+		return new GotoLabel(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, label: string) {
 		return new GotoLabel(debug, { label });
@@ -271,7 +304,8 @@ export class DialogDefinition extends MathlangNode {
 		this.dialogs = args.dialogs;
 	}
 	clone() {
-		return new DialogDefinition(this.debug, this.args);
+		const clonedDialogs = this.dialogs.map((v) => v.clone());
+		return new DialogDefinition(this.debug.clone(), { ...this.args, dialogs: clonedDialogs });
 	}
 	static quick(debug: MathlangLocation, dialogName: string, dialogs: Dialog[]) {
 		return new DialogDefinition(debug, { dialogName, dialogs });
@@ -302,7 +336,7 @@ export class DialogParameter extends MathlangNode {
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
 	}
 	clone() {
-		return new DialogParameter(this.debug, this.args);
+		return new DialogParameter(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new DialogParameter(debug, { property, value });
@@ -347,7 +381,11 @@ export class Dialog extends MathlangNode {
 		}
 	}
 	clone() {
-		return new DialogParameter(this.debug, this.args);
+		const newArgs = { ...this.args };
+		if (this.options) {
+			newArgs.options = this.options.map((v) => v.clone());
+		}
+		return new Dialog(this.debug.clone(), newArgs);
 	}
 }
 
@@ -372,7 +410,7 @@ export class DialogIdentifier extends MathlangNode {
 		this.value = ACTION.breakIfNotString(args.value);
 	}
 	clone() {
-		return new DialogIdentifier(this.debug, this.args);
+		return new DialogIdentifier(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new DialogIdentifier(debug, { type, value });
@@ -391,7 +429,7 @@ export class DialogOption extends MathlangNode {
 		this.script = ACTION.breakIfNotString(args.script);
 	}
 	clone() {
-		return new DialogOption(this.debug, this.args);
+		return new DialogOption(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, label: string, script: string) {
 		return new DialogOption(debug, {
@@ -417,7 +455,9 @@ export class SerialDialogDefinition extends MathlangNode {
 		this.serialDialog = args.serialDialog;
 	}
 	clone() {
-		return new SerialDialogDefinition(this.debug, this.args);
+		const newArgs = { ...this.args };
+		newArgs.serialDialog = this.serialDialog.clone();
+		return new SerialDialogDefinition(this.debug.clone(), newArgs);
 	}
 	static quick(debug: MathlangLocation, dialogName: string, serialDialog: SerialDialog) {
 		return new SerialDialogDefinition(debug, { dialogName, serialDialog });
@@ -443,7 +483,11 @@ export class SerialDialogParameter extends MathlangNode {
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
 	}
 	clone() {
-		return new SerialDialogParameter(this.debug, this.args);
+		const newArgs = { ...this.args };
+		if (this.value instanceof BoolLiteral) {
+			newArgs.value = BoolLiteral.clone(); // TODO: why red squiggles on clone()?
+		}
+		return new SerialDialogParameter(this.debug.clone(), newArgs);
 	}
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new SerialDialogParameter(debug, { property, value });
@@ -481,7 +525,14 @@ export class SerialDialog extends MathlangNode {
 		}
 	}
 	clone() {
-		return new SerialDialog(this.debug, this.args);
+		const newArgs = { ...this.args };
+		if (this.options) {
+			newArgs.options = this.options.map((v) => v.clone());
+		}
+		if (this.text_options) {
+			newArgs.text_options = this.text_options.map((v) => v.clone());
+		}
+		return new SerialDialog(this.debug.clone(), newArgs);
 	}
 }
 
@@ -508,7 +559,7 @@ export class SerialDialogOption extends MathlangNode {
 		this.script = ACTION.breakIfNotString(args.script);
 	}
 	clone() {
-		return new SerialDialogOption(this.debug, this.args);
+		return new SerialDialogOption(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, optionType: string, label: string, script: string) {
 		return new SerialDialogOption(debug, {
@@ -529,7 +580,7 @@ export class IncludeNode extends MathlangNode {
 		this.value = ACTION.breakIfNotString(args.value);
 	}
 	clone() {
-		return new IncludeNode(this.debug, this.args);
+		return new IncludeNode(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, value: string) {
 		return new IncludeNode(debug, { value });
@@ -548,7 +599,11 @@ export class ConstantDefinition extends MathlangNode {
 		this.value = args.value;
 	}
 	clone() {
-		return new ConstantDefinition(this.debug, this.args);
+		const newArgs = { ...this.args };
+		if (this.value instanceof BoolLiteral) {
+			newArgs.value = this.value.clone();
+		}
+		return new ConstantDefinition(this.debug.clone(), newArgs);
 	}
 	static quick(debug: MathlangLocation, label: string, value: string | BoolLiteral | number) {
 		return new ConstantDefinition(debug, { label, value });
@@ -604,13 +659,13 @@ export class ScriptDefinition extends MathlangNode {
 		if (args.copyScriptResolved) this.copyScriptResolved = true;
 	}
 	clone() {
-		const cloned = new ScriptDefinition(this.debug, this.args);
-		cloned.actions = cloned.actions.map((v) => v.clone());
-		if (cloned.rawNodes) {
-			cloned.rawNodes = cloned.rawNodes.map((v) => v.clone());
+		const cloned = new ScriptDefinition(this.debug.clone(), this.args);
+		cloned.actions = this.actions.map((v) => v.clone());
+		if (this.rawNodes) {
+			cloned.rawNodes = this.rawNodes.map((v) => v.clone());
 		}
-		if (cloned.preBakingActions) {
-			cloned.preBakingActions = cloned.preBakingActions.map((v) => v.clone());
+		if (this.preBakingActions) {
+			cloned.preBakingActions = this.preBakingActions.map((v) => v.clone());
 		}
 		return cloned;
 	}
@@ -625,7 +680,7 @@ export class CommentNode extends MathlangNode {
 		this.comment = ACTION.breakIfNotString(args.comment);
 	}
 	clone() {
-		return new CommentNode(this.debug, this.args);
+		return new CommentNode(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, comment: string) {
 		return new CommentNode(debug, { comment });
@@ -645,7 +700,7 @@ export class LabelDefinition extends MathlangNode {
 		this.label = ACTION.breakIfNotString(args.label);
 	}
 	clone() {
-		return new LabelDefinition(this.debug, this.args);
+		return new LabelDefinition(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, label: string) {
 		return new LabelDefinition(debug, { label });
@@ -671,7 +726,10 @@ export class JSONLiteral extends MathlangNode {
 		}
 	}
 	clone() {
-		return new JSONLiteral(this.debug, this.args);
+		return new JSONLiteral(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, json: [JSON]) {
+		return new JSONLiteral(debug, { json });
 	}
 }
 
@@ -684,7 +742,10 @@ export class CopyMacro extends MathlangNode {
 		this.script = ACTION.breakIfNotString(args.script);
 	}
 	clone() {
-		return new CopyMacro(this.debug, this.args);
+		return new CopyMacro(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, script: string) {
+		return new CopyMacro(debug, { script });
 	}
 	print() {
 		return `"${this.script}"()`;
@@ -728,7 +789,9 @@ export class MathlangSequence extends MathlangNode {
 		this.steps = flatSteps;
 	}
 	clone() {
-		return new MathlangSequence(this.debug, this.args);
+		const newArgs = { ...this.args };
+		newArgs.steps = this.steps.map((v) => v.clone());
+		return new MathlangSequence(this.debug.clone(), newArgs);
 	}
 	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
 		return new MathlangSequence(debug, { steps, type });
@@ -739,9 +802,7 @@ export class MathlangSequence extends MathlangNode {
 
 // TODO: The RNG operation should use macro syntax to be put into IntExpressions, instead of being limited to the ?= operator (probably RNG!(), though pick something that can't be confused with rand!())
 
-export class IntExpression extends MathlangNode {
-	mathlang: string;
-}
+export class IntExpression extends MathlangNode {}
 
 export class IntBinaryExpression extends IntExpression {
 	mathlang: 'int_binary_expression';
@@ -762,9 +823,12 @@ export class IntBinaryExpression extends IntExpression {
 		this.op = ACTION.breakIfNotString(args.op);
 	}
 	clone() {
-		return new IntBinaryExpression(this.debug, this.args);
+		const newArgs = { ...this.args };
+		newArgs.lhs = this.lhs.clone();
+		newArgs.rhs = this.rhs.clone();
+		return new IntBinaryExpression(this.debug.clone(), newArgs);
 	}
-	flatten(steps: AnyNode[]) {
+	toSteps(steps: AnyNode[]) {
 		const temp = latestTemporary();
 		const lhs = this.lhs;
 		const op = this.op;
@@ -784,7 +848,7 @@ export class IntBinaryExpression extends IntExpression {
 			);
 		} else if (lhs instanceof IntBinaryExpression) {
 			// can use the same temporary since it's the lhs and we're going LTR
-			lhs.flatten(steps);
+			lhs.toSteps(steps);
 		}
 		if (rhs instanceof IdentifierLiteral) {
 			steps.push(ACTION.MUTATE_VARIABLES.change(temp, rhs.source, op));
@@ -815,15 +879,15 @@ export class IntBinaryExpression extends IntExpression {
 			);
 		} else if (rhs instanceof IntBinaryExpression) {
 			const newTemp = newTemporary();
-			rhs.flatten(steps);
+			rhs.toSteps(steps);
 			steps.push(ACTION.MUTATE_VARIABLES.change(temp, newTemp, op));
 			dropTemporary();
 		}
 		return steps;
 	}
 	assignToVar(destinationVar: string) {
-		newTemporary(destinationVar);
-		const steps = this.flatten([]);
+		newTemporary(destinationVar); // the inside uses latestTemporary()
+		const steps = this.toSteps([]);
 		dropTemporary();
 		return new MathlangSequence(this.debug, {
 			steps,
@@ -869,11 +933,11 @@ export class NumberLiteral extends IntUnit {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 	}
+	clone() {
+		return new NumberLiteral(this.debug.clone(), this.args);
+	}
 	static quick(debug: MathlangLocation, value: number) {
 		return new NumberLiteral(debug, { value });
-	}
-	clone() {
-		return new NumberLiteral(this.debug, this.args);
 	}
 }
 export class IntGetable extends IntUnit {
@@ -885,9 +949,6 @@ export class IntGetable extends IntUnit {
 	assignToVar(variable: string) {
 		return ACTION.Action.fromArgs({ ...this, variable });
 	}
-	clone() {
-		return new IntGetable(this.debug, this.args);
-	}
 }
 export class IdentifierLiteral extends IntGetable {
 	source: string;
@@ -895,11 +956,11 @@ export class IdentifierLiteral extends IntGetable {
 		super(debug, args);
 		this.source = ACTION.breakIfNotString(args.source);
 	}
+	clone() {
+		return new IdentifierLiteral(this.debug.clone(), this.args);
+	}
 	static quick(debug: MathlangLocation, source: string) {
 		return new IdentifierLiteral(debug, { source });
-	}
-	clone() {
-		return new IdentifierLiteral(this.debug, this.args);
 	}
 }
 export class EntityIntField extends IntGetable {
@@ -912,11 +973,11 @@ export class EntityIntField extends IntGetable {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.field = ACTION.breakIfNotString(args.field);
 	}
+	clone() {
+		return new EntityIntField(this.debug.clone(), this.args);
+	}
 	static quick(debug: MathlangLocation, entity: string, field: string) {
 		return new EntityIntField(debug, { entity, field });
-	}
-	clone() {
-		return new EntityIntField(this.debug, this.args);
 	}
 	intoNumberCheckableEquality() {
 		const entity = this.entity;
@@ -951,11 +1012,11 @@ export class RNGSingle extends IntGetable {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 	}
+	clone() {
+		return new RNGSingle(this.debug.clone(), this.args);
+	}
 	static quick(debug: MathlangLocation, value: number) {
 		return new RNGSingle(debug, { value });
-	}
-	clone() {
-		return new RNGSingle(this.debug, this.args);
 	}
 	assignToVar(destinationVar: string) {
 		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?');
@@ -969,11 +1030,11 @@ export class RNGPair extends IntGetable {
 		this.value = ACTION.breakIfNotNumber(args.value);
 		this.add = ACTION.breakIfNotNumber(args.add);
 	}
+	clone() {
+		return new RNGPair(this.debug.clone(), this.args);
+	}
 	static quick(debug: MathlangLocation, value: number, add: number) {
 		return new RNGPair(debug, { value, add });
-	}
-	clone() {
-		return new RNGPair(this.debug, this.args);
 	}
 	toSteps(destinationVar: string) {
 		return [
@@ -996,7 +1057,8 @@ export class BoolExpression extends MathlangNode {
 		console.error('the children should be doing this, not me');
 		return this;
 	}
-	flatten(ifLabel: string) {
+	// TODO: See which bits of this are duplicate (check individual toSteps() fns)
+	toSteps(ifLabel: string) {
 		const debug = this.debug;
 		if (this instanceof BoolLiteral && this.value === true) {
 			return [GotoLabel.quick(debug, ifLabel)];
@@ -1025,7 +1087,7 @@ export class BoolExpression extends MathlangNode {
 			throw new Error('LHS or RHS not a number');
 		}
 		if (op === '||') {
-			return [...lhs.flatten(ifLabel), ...rhs.flatten(ifLabel)];
+			return [...lhs.toSteps(ifLabel), ...rhs.toSteps(ifLabel)];
 		}
 		if (op === '&&') {
 			// basically nesting the ifs
@@ -1034,10 +1096,10 @@ export class BoolExpression extends MathlangNode {
 			const secondIfTrueLabel = `if true #${suffix}`;
 			const secondRendezvousLabel = `rendezvous #${suffix}`;
 			return [
-				...lhs.flatten(secondIfTrueLabel),
+				...lhs.toSteps(secondIfTrueLabel),
 				GotoLabel.quick(debug, secondRendezvousLabel),
 				new LabelDefinition(debug, { label: secondIfTrueLabel }),
-				...rhs.flatten(ifLabel),
+				...rhs.toSteps(ifLabel),
 				new LabelDefinition(debug, { label: secondRendezvousLabel }),
 			];
 		}
@@ -1064,7 +1126,7 @@ export class BoolExpression extends MathlangNode {
 			lhsNode: this.lhsNode,
 			rhsNode: this.rhsNode,
 		});
-		return expandAs.flatten(ifLabel);
+		return expandAs.toSteps(ifLabel);
 	}
 	assignToVar(destinationVar: string): AnyNode {
 		const lhsAction = ACTION.SET_SAVE_FLAG.toValue(destinationVar, true);
@@ -1100,7 +1162,12 @@ export class BoolComparisonSequence extends BoolExpression {
 		}
 		this.steps = args.steps;
 	}
-	final() {
+	clone() {
+		const newArgs = { ...this.args };
+		newArgs.steps = this.steps.map((v) => v.clone());
+		return new BoolComparisonSequence(this.debug.clone(), newArgs);
+	}
+	getFinalStep() {
 		const final = this.steps[this.steps.length - 1];
 		if (final instanceof BoolComparison) {
 			return final;
@@ -1108,7 +1175,7 @@ export class BoolComparisonSequence extends BoolExpression {
 		throw new Error('the last one shoudl be a bool expression');
 	}
 	invert() {
-		const final = this.final();
+		const final = this.getFinalStep();
 		final.expected_bool = !final.expected_bool;
 		return this;
 	}
@@ -1117,8 +1184,8 @@ export class BoolComparisonSequence extends BoolExpression {
 			steps,
 		});
 	}
-	flatten(ifLabel: string) {
-		const final = this.final();
+	toSteps(ifLabel: string) {
+		const final = this.getFinalStep();
 		const newFinal = ACTION.Action.fromArgs({ ...final, label: ifLabel });
 		this.steps[this.steps.length - 1] = newFinal;
 		return this.steps;
@@ -1134,6 +1201,9 @@ export class BoolLiteral extends BoolUnit {
 		super(debug, args);
 		this.mathlang = 'bool_literal';
 		this.value = ACTION.breakIfNotBool(args.value);
+	}
+	clone() {
+		return new BoolLiteral(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, value: boolean) {
 		return new BoolLiteral(debug, { value });
@@ -1154,6 +1224,10 @@ export class BoolLiteral extends BoolUnit {
 export class BoolComparison extends BoolExpression {
 	action: string;
 	expected_bool: boolean;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
 	invert() {
 		this.expected_bool = !this.expected_bool;
 		return this;
@@ -1187,13 +1261,13 @@ export class BoolBinaryExpression extends BoolExpression {
 		this.rhsNode = args.rhsNode;
 	}
 	clone() {
-		return new BoolBinaryExpression(this.debug, this.args);
+		const newArgs = { ...this.args };
+		newArgs.lhs = this.lhs.clone();
+		newArgs.rhs = this.rhs.clone();
+		return new BoolBinaryExpression(this.debug.clone(), newArgs);
 	}
 	invert() {
 		if (this.op === '||' || this.op === '&&') {
-			if (typeof this.lhs === 'number' || typeof this.rhs === 'number') {
-				throw new Error('|| or && for a number??');
-			}
 			this.lhs = this.lhs.invert();
 			this.rhs = this.rhs.invert();
 		}
@@ -1216,6 +1290,7 @@ export class BoolGetable extends BoolUnit {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'bool_getable';
+		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
 	getBool() {
 		return this.expected_bool;
@@ -1235,7 +1310,9 @@ export class CheckEntityGlitched extends BoolGetable {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_GLITCHED';
 		this.entity = ACTION.breakIfNotString(args.entity);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityGlitched(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, entity: string, provided_bool?: boolean) {
 		return new CheckEntityGlitched(debug, {
@@ -1251,7 +1328,9 @@ export class CheckSaveFlag extends BoolGetable {
 		super(debug, args);
 		this.action = 'CHECK_SAVE_FLAG';
 		this.save_flag = ACTION.breakIfNotString(args.save_flag);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckSaveFlag(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, save_flag: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -1267,7 +1346,9 @@ export class CheckIfEntityIsInGeometry extends BoolGetable {
 		this.action = 'CHECK_IF_ENTITY_IS_IN_GEOMETRY';
 		this.geometry = ACTION.breakIfNotString(args.geometry);
 		this.entity = ACTION.breakIfNotString(args.entity);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckIfEntityIsInGeometry(this.debug.clone(), this.args);
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1290,7 +1371,9 @@ export class CheckForButtonPress extends BoolGetable {
 		super(debug, args);
 		this.action = 'CHECK_FOR_BUTTON_PRESS';
 		this.button_id = ACTION.breakIfNotString(args.button_id);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckForButtonPress(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, button_id: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -1304,7 +1387,9 @@ export class CheckForButtonState extends BoolGetable {
 		super(debug, args);
 		this.action = 'CHECK_FOR_BUTTON_STATE';
 		this.button_id = ACTION.breakIfNotString(args.button_id);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckForButtonState(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, button_id: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -1316,7 +1401,9 @@ export class CheckDialogOpen extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_DIALOG_OPEN';
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckDialogOpen(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -1328,7 +1415,9 @@ export class CheckSerialDialogOpen extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_SERIAL_DIALOG_OPEN';
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckSerialDialogOpen(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -1340,7 +1429,9 @@ export class CheckDebugMode extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_DEBUG_MODE';
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckDebugMode(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -1356,9 +1447,9 @@ export class StringCheckable extends BoolComparison {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'string_checkable';
-		this.expected_bool = true;
 	}
 	updateProp(_: string) {
+		// todo do I need this?
 		throw new Error(`Parent should not be trying to change its string property (value ${_})`);
 	}
 	addDetails(string: string, op: string) {
@@ -1380,7 +1471,9 @@ export class CheckEntityName extends StringCheckable {
 		this.action = 'CHECK_ENTITY_NAME';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.string = ACTION.breakIfNotString(args.string);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityName(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.string = value;
@@ -1406,7 +1499,9 @@ export class CheckEntityInteractScript extends StringCheckable {
 		this.action = 'CHECK_ENTITY_INTERACT_SCRIPT';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_script = ACTION.breakIfNotString(args.expected_script);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityInteractScript(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.expected_script = value;
@@ -1437,7 +1532,9 @@ export class CheckEntityTickScript extends StringCheckable {
 		this.action = 'CHECK_ENTITY_TICK_SCRIPT';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_script = ACTION.breakIfNotString(args.expected_script);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityTickScript(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.expected_script = value;
@@ -1468,7 +1565,9 @@ export class CheckEntityLookScript extends StringCheckable {
 		this.action = 'CHECK_ENTITY_LOOK_SCRIPT';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_script = ACTION.breakIfNotString(args.expected_script);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityLookScript(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.expected_script = value;
@@ -1499,7 +1598,9 @@ export class CheckEntityType extends StringCheckable {
 		this.action = 'CHECK_ENTITY_TYPE';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.entity_type = ACTION.breakIfNotString(args.entity_type);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityType(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.entity_type = value;
@@ -1526,7 +1627,9 @@ export class CheckEntityDirection extends StringCheckable {
 		this.action = 'CHECK_ENTITY_DIRECTION';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.direction = ACTION.breakIfNotString(args.direction);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityDirection(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.direction = value;
@@ -1551,7 +1654,9 @@ export class CheckEntityPath extends StringCheckable {
 		this.action = 'CHECK_ENTITY_PATH';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.geometry = ACTION.breakIfNotString(args.geometry);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityPath(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.geometry = value;
@@ -1578,6 +1683,9 @@ export class CheckWarpState extends StringCheckable {
 		this.string = ACTION.breakIfNotString(args.string);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
+	clone() {
+		return new CheckWarpState(this.debug.clone(), this.args);
+	}
 	updateProp(value: string) {
 		this.string = value;
 	}
@@ -1593,12 +1701,13 @@ export class CheckMap extends StringCheckable {
 	// TODO: is this even in the engine? O.o
 	action: 'CHECK_MAP';
 	map: string;
-	expected_bool: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_MAP';
 		this.map = ACTION.breakIfNotString(args.map);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckMap(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.map = value;
@@ -1615,7 +1724,9 @@ export class CheckBLEFlag extends StringCheckable {
 		super(debug, args);
 		this.action = 'CHECK_BLE_FLAG';
 		this.ble_flag = ACTION.breakIfNotString(args.ble_flag);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckBLEFlag(this.debug.clone(), this.args);
 	}
 	updateProp(value: string) {
 		this.ble_flag = value;
@@ -1650,6 +1761,9 @@ export class CheckVariable extends NumberComparison {
 		this.value = ACTION.breakIfNotNumber(args.value);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
+	clone() {
+		return new CheckVariable(this.debug.clone(), this.args);
+	}
 	static quick(
 		debug: MathlangLocation,
 		variable: string,
@@ -1679,6 +1793,9 @@ export class CheckVariables extends NumberComparison {
 		this.source = ACTION.breakIfNotString(args.source);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
+	clone() {
+		return new CheckVariables(this.debug.clone(), this.args);
+	}
 	static quick(
 		debug: MathlangLocation,
 		variable: string,
@@ -1706,9 +1823,10 @@ export class NumberCheckableEquality extends BoolComparison {
 		this.mathlang = 'number_checkable_equality';
 	}
 	updateProp(_: number) {
+		// TODO: how to deal with this? Does this one need this because of the following method?
 		throw new Error(`Parent should not be trying to change its number property (value ${_})`);
 	}
-	makeWholeThing(number: number, op: string) {
+	finalizeValues(number: number, op: string) {
 		this.updateProp(number);
 		this.expected_bool = op === '==';
 		return this;
@@ -1723,17 +1841,15 @@ export class CheckEntityX extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_X';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityX(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
 	}
 	getProp() {
 		return this.expected_u2;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1754,17 +1870,15 @@ export class CheckEntityY extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_Y';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityY(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
 	}
 	getProp() {
 		return this.expected_u2;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1785,17 +1899,15 @@ export class CheckEntityPrimaryID extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_PRIMARY_ID';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityPrimaryID(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
 	}
 	getProp() {
 		return this.expected_u2;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1816,17 +1928,15 @@ export class CheckEntitySecondaryID extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_SECONDARY_ID';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntitySecondaryID(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
 	}
 	getProp() {
 		return this.expected_u2;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1847,17 +1957,15 @@ export class CheckEntityPrimaryIDType extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_PRIMARY_ID_TYPE';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityPrimaryIDType(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_byte = value;
 	}
 	getProp() {
 		return this.expected_byte;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1882,17 +1990,15 @@ export class CheckEntityCurrentAnimation extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_CURRENT_ANIMATION';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityCurrentAnimation(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_byte = value;
 	}
 	getProp() {
 		return this.expected_byte;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1912,23 +2018,20 @@ export class CheckEntityCurrentFrame extends NumberCheckableEquality {
 	action: 'CHECK_ENTITY_CURRENT_FRAME';
 	entity: string;
 	expected_byte: number;
-	expected_bool: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_CURRENT_FRAME';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
-		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	clone() {
+		return new CheckEntityCurrentFrame(this.debug.clone(), this.args);
 	}
 	updateProp(value: number) {
 		this.expected_byte = value;
 	}
 	getProp() {
 		return this.expected_byte;
-	}
-	invert() {
-		this.expected_bool = !this.expected_bool;
-		return this;
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -1959,7 +2062,7 @@ export class BoolSetable extends MathlangNode {
 		this.type = ACTION.breakIfNotString(args.type);
 	}
 	clone() {
-		return new BoolSetable(this.debug, this.args);
+		return new BoolSetable(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new BoolSetable(debug, { type, value });
@@ -1976,7 +2079,7 @@ export class MovableIdentifier extends MathlangNode {
 		this.type = ACTION.breakIfNotString(args.type);
 	}
 	clone() {
-		return new MovableIdentifier(this.debug, this.args);
+		return new MovableIdentifier(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new MovableIdentifier(debug, { type, value });
@@ -1995,7 +2098,7 @@ export class CoordinateIdentifier extends MathlangNode {
 		if (args.polygonType) this.polygonType = ACTION.breakIfNotString(args.polygonType);
 	}
 	clone() {
-		return new CoordinateIdentifier(this.debug, this.args);
+		return new CoordinateIdentifier(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, type: string, value: string, polygonType?: string) {
 		return new CoordinateIdentifier(debug, { type, value, polygonType });
@@ -2012,9 +2115,11 @@ export class DirectionTarget extends MathlangNode {
 		this.type = ACTION.breakIfNotString(args.type);
 	}
 	clone() {
-		return new DirectionTarget(this.debug, this.args);
+		return new DirectionTarget(this.debug.clone(), this.args);
 	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new DirectionTarget(debug, { type, value });
 	}
 }
+
+console.log('me');

@@ -1,11 +1,11 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import { ProjectState } from './parser-project.ts';
-import type {
-	DialogSettings,
+import {
+	type DialogSettings,
 	MathlangMessage,
-	SerialDialogSettings,
+	type SerialDialogSettings,
 	AnyNode,
-	MGSPrimitive,
+	type MGSPrimitive,
 	MathlangLocation,
 	FunctionDefinition,
 	ConstantDefinition,
@@ -64,13 +64,7 @@ export class FileState {
 	quickError(node: TreeSitterNode, message: string, footer?: string) {
 		const err: MathlangMessage = {
 			message,
-			locations: [
-				{
-					f: this,
-					node,
-					fileName: this.fileName,
-				},
-			],
+			locations: [MathlangLocation.quick(this, node)],
 		};
 		if (footer) {
 			err.footer = footer;
@@ -85,13 +79,7 @@ export class FileState {
 	quickWarning(node: TreeSitterNode, message: string, footer?: string) {
 		const warn: MathlangMessage = {
 			message,
-			locations: [
-				{
-					f: this,
-					node,
-					fileName: this.fileName,
-				},
-			],
+			locations: [MathlangLocation.quick(this, node)],
 		};
 		if (footer) {
 			warn.footer = footer;

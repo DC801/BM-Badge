@@ -582,7 +582,7 @@ export class SET_SAVE_FLAG extends Action {
 	) {
 		const actionIfTrue = SET_SAVE_FLAG.toValue(save_flag, true);
 		const actionIfFalse = SET_SAVE_FLAG.toValue(save_flag, false);
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		return simpleBranchMaker(
 			f,
 			node,

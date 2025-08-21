@@ -180,7 +180,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		return customFn(f, node);
 	}
 	const action = {
-		debug: new MathlangLocation(f, node),
+		debug: MathlangLocation.quick(f, node),
 		...data.values,
 	};
 	// Action params
@@ -240,7 +240,7 @@ const actionFns: Record<string, ActionFn> = {
 			if (!dialogs.every((v) => v instanceof Dialog)) {
 				throw new Error('parsed dialogs not all of type Dialog');
 			}
-			const debug = new MathlangLocation(f, node);
+			const debug = MathlangLocation.quick(f, node);
 			const dialogDefinition = DialogDefinition.quick(debug, dialogName, dialogs);
 			return [dialogDefinition, action];
 		}
@@ -280,7 +280,7 @@ const actionShowSerialDialog = (
 		if (!(serialDialogs[0] instanceof SerialDialog)) {
 			throw new Error('parsed serial dialogs not all of type SerialDialog');
 		}
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const serialDialoDefinition = SerialDialogDefinition.quick(
 			debug,
 			dialogName,
@@ -301,13 +301,13 @@ const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
 		// TODO: everything after is unreachable
 		// Ditto some other actions, too
-		handle: (v, f, node) => new ReturnStatement(new MathlangLocation(f, node)),
+		handle: (v, f, node) => new ReturnStatement(MathlangLocation.quick(f, node)),
 	},
 	action_continue_statement: {
-		handle: (v, f, node) => new ContinueStatement(new MathlangLocation(f, node)),
+		handle: (v, f, node) => new ContinueStatement(MathlangLocation.quick(f, node)),
 	},
 	action_break_statement: {
-		handle: (v, f, node) => new BreakStatement(new MathlangLocation(f, node)),
+		handle: (v, f, node) => new BreakStatement(MathlangLocation.quick(f, node)),
 	},
 	action_close_dialog: {
 		handle: () => new CLOSE_DIALOG(),
@@ -332,7 +332,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_goto_label: {
 		captures: ['label'],
-		handle: (v, f, node) => new GotoLabel(new MathlangLocation(f, node), v),
+		handle: (v, f, node) => new GotoLabel(MathlangLocation.quick(f, node), v),
 	},
 	action_goto_index: {
 		captures: ['action_index'],
@@ -462,7 +462,7 @@ const actionData: Record<string, actionDataEntry> = {
 				const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
 				const suggestion = v.rhs.includes(' ') ? '"' + v.rhs + '"' : v.rhs;
 				f.p.newWarning({
-					locations: printNodes.map((v) => ({ f, node: v, fileName: f.fileName })),
+					locations: printNodes.map((printNode) => MathlangLocation.quick(f, printNode)),
 					message: 'these identifiers could be ints or bools',
 					footer:
 						`Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:` +
@@ -471,7 +471,7 @@ const actionData: Record<string, actionDataEntry> = {
 						`\n    ${suggestion} + 0` +
 						`\n    ${suggestion} * 1`,
 				});
-				const debug = new MathlangLocation(f, node);
+				const debug = MathlangLocation.quick(f, node);
 				return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
 			}
 
@@ -509,7 +509,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node): ActionSetEntityInt | MathlangSequence | COPY_VARIABLE => {
-			const debug = new MathlangLocation(f, node);
+			const debug = MathlangLocation.quick(f, node);
 			if (!(v.lhs instanceof EntityIntField)) {
 				throw new Error('LHS not EntityIntField');
 			}
@@ -565,7 +565,7 @@ const actionData: Record<string, actionDataEntry> = {
 			// player x = player y + self y;
 			if (v.rhs instanceof IntBinaryExpression) {
 				const temporary = newTemporary();
-				const steps = v.rhs.flatten([]);
+				const steps = v.rhs.toSteps([]);
 				dropTemporary();
 				steps.push(COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field));
 				return new MathlangSequence(debug, {
@@ -582,7 +582,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node) => {
-			const debug = new MathlangLocation(f, node);
+			const debug = MathlangLocation.quick(f, node);
 			if (!(v.lhs instanceof BoolSetable)) {
 				throw new Error('LHS not a bool_setable');
 			}
@@ -642,7 +642,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: {},
 		captures: ['movable', 'coordinate'],
 		handle: (v, f, node): ActionSetPosition | MathlangSequence => {
-			const debug = new MathlangLocation(f, node);
+			const debug = MathlangLocation.quick(f, node);
 			if (!(v.movable instanceof MovableIdentifier)) {
 				throw new Error('invalid MovableIdentifier');
 			}
@@ -869,7 +869,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: {},
 		captures: ['lhs', 'operator', 'rhs'],
 		handle: (v, f, node): AnyNode => {
-			const debug = new MathlangLocation(f, node);
+			const debug = MathlangLocation.quick(f, node);
 			const op = coerceToString(f, node, v.operator, 'op');
 
 			// LHS is a string, meaning we're doing a thing to an integer variable
@@ -900,7 +900,7 @@ const actionData: Record<string, actionDataEntry> = {
 					if (!(v.rhs instanceof IntBinaryExpression)) {
 						throw new Error('not IntBinaryExpression');
 					}
-					const steps = v.rhs.flatten([]);
+					const steps = v.rhs.toSteps([]);
 					dropTemporary();
 					steps.push(MUTATE_VARIABLES.change(v.lhs, temporary, op));
 					return new MathlangSequence(debug, {
@@ -952,7 +952,7 @@ const actionData: Record<string, actionDataEntry> = {
 					}
 					const steps = [
 						COPY_VARIABLE.intoVariable(v.lhs.entity, v.lhs.field, temporary1),
-						...v.rhs.flatten([]),
+						...v.rhs.toSteps([]),
 						MUTATE_VARIABLES.change(temporary1, temporary2, op),
 						COPY_VARIABLE.intoField(temporary1, v.lhs.entity, v.lhs.field),
 					];

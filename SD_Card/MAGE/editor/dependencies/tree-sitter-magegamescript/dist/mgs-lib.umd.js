@@ -3921,6 +3921,73 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     }
     return parser;
   }
+  class FileState {
+    constructor(p, fileName) {
+      __publicField(this, "p");
+      __publicField(this, "fileName");
+      __publicField(this, "constants");
+      __publicField(this, "functions");
+      __publicField(this, "currFunction");
+      __publicField(this, "settings");
+      __publicField(this, "nodes");
+      __publicField(this, "errorCount");
+      __publicField(this, "warningCount");
+      this.p = p;
+      this.fileName = fileName;
+      this.constants = {};
+      this.functions = {};
+      this.currFunction = [];
+      this.settings = {
+        default: {},
+        entity: {},
+        label: {},
+        serial: {}
+      };
+      this.nodes = [];
+      this.errorCount = 0;
+      this.warningCount = 0;
+    }
+    quickError(node, message, footer) {
+      const err2 = {
+        message,
+        locations: [MathlangLocation.quick(this, node)]
+      };
+      if (footer) {
+        err2.footer = footer;
+      }
+      this.p.newError(err2);
+      this.errorCount += 1;
+    }
+    newError(message) {
+      this.p.newError(message);
+      this.errorCount += 1;
+    }
+    quickWarning(node, message, footer) {
+      const warn = {
+        message,
+        locations: [MathlangLocation.quick(this, node)]
+      };
+      if (footer) {
+        warn.footer = footer;
+      }
+      this.p.newWarning(warn);
+      this.warningCount += 1;
+    }
+    newWarning(message) {
+      this.p.newWarning(message);
+      this.warningCount += 1;
+    }
+    // print the file's parse status
+    printableMessageInformation() {
+      if (this.errorCount === 0 && this.warningCount === 0) {
+        return `(${ansiTags.green}OK${ansiTags.reset})`;
+      }
+      const errMessage = this.errorCount ? `${ansiTags.red}${this.errorCount} error${this.errorCount === 1 ? "" : "s"}${ansiTags.reset}` : `0 errors`;
+      const warnMessage = this.warningCount ? `${ansiTags.yellow}${this.warningCount} warning${this.warningCount === 1 ? "" : "s"}${ansiTags.reset}` : `0 warnings`;
+      const ret = [errMessage, warnMessage].join(", ");
+      return `(${ret})`;
+    }
+  }
   const DIALOG_WRAP = 42;
   const SERIAL_DIALOG_WRAP = 80;
   const tagsToAnsiEscapes = (str) => {
@@ -4061,7 +4128,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         if (option.optionType !== firstOptionType) {
           const node2 = option.debug.node.firstChild;
           if (!node2) throw new Error("serial dialog had no first option node");
-          warnNodes.push({ f, node: node2, fileName: f.fileName });
+          warnNodes.push(MathlangLocation.quick(f, node2));
         }
       });
       if (warnNodes.length > 0) {
@@ -4071,7 +4138,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         });
       }
     }
-    return new SerialDialog(new MathlangLocation(f, node), serialDialog);
+    return new SerialDialog(MathlangLocation.quick(f, node), serialDialog);
   };
   const longerAlignments = {
     BL: "BOTTOM_LEFT",
@@ -4141,7 +4208,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         }
         if (!messageNodes[i2]) throw new Error("no associated node for message at index" + i2);
         f.p.newWarning({
-          locations: [{ f, node: messageNodes[i2], fileName: f.fileName }],
+          locations: [MathlangLocation.quick(f, messageNodes[i2])],
           message: warningMessage,
           footer: `When wrapped:
 ` + splitMessage.map((v, i22, arr) => {
@@ -4160,7 +4227,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         });
       }
     });
-    return new Dialog(new MathlangLocation(f, node), {
+    return new Dialog(MathlangLocation.quick(f, node), {
       messages,
       options,
       settings: dialogSettings
@@ -4207,7 +4274,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       return customFn(f, node);
     }
     const action = {
-      debug: new MathlangLocation(f, node),
+      debug: MathlangLocation.quick(f, node),
       ...data.values
     };
     const captures = data.captures || [];
@@ -4258,7 +4325,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         if (!dialogs.every((v) => v instanceof Dialog)) {
           throw new Error("parsed dialogs not all of type Dialog");
         }
-        const debug = new MathlangLocation(f, node);
+        const debug = MathlangLocation.quick(f, node);
         const dialogDefinition = DialogDefinition.quick(debug, dialogName, dialogs);
         return [dialogDefinition, action];
       }
@@ -4291,7 +4358,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       if (!(serialDialogs[0] instanceof SerialDialog)) {
         throw new Error("parsed serial dialogs not all of type SerialDialog");
       }
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const serialDialoDefinition = SerialDialogDefinition.quick(
         debug,
         dialogName,
@@ -4305,13 +4372,13 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     action_return_statement: {
       // TODO: everything after is unreachable
       // Ditto some other actions, too
-      handle: (v, f, node) => new ReturnStatement(new MathlangLocation(f, node))
+      handle: (v, f, node) => new ReturnStatement(MathlangLocation.quick(f, node))
     },
     action_continue_statement: {
-      handle: (v, f, node) => new ContinueStatement(new MathlangLocation(f, node))
+      handle: (v, f, node) => new ContinueStatement(MathlangLocation.quick(f, node))
     },
     action_break_statement: {
-      handle: (v, f, node) => new BreakStatement(new MathlangLocation(f, node))
+      handle: (v, f, node) => new BreakStatement(MathlangLocation.quick(f, node))
     },
     action_close_dialog: {
       handle: () => new CLOSE_DIALOG()
@@ -4336,7 +4403,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     },
     action_goto_label: {
       captures: ["label"],
-      handle: (v, f, node) => new GotoLabel(new MathlangLocation(f, node), v)
+      handle: (v, f, node) => new GotoLabel(MathlangLocation.quick(f, node), v)
     },
     action_goto_index: {
       captures: ["action_index"],
@@ -4450,7 +4517,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
           const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
           const suggestion = v.rhs.includes(" ") ? '"' + v.rhs + '"' : v.rhs;
           f.p.newWarning({
-            locations: printNodes.map((v2) => ({ f, node: v2, fileName: f.fileName })),
+            locations: printNodes.map((printNode) => MathlangLocation.quick(f, printNode)),
             message: "these identifiers could be ints or bools",
             footer: `Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:
     !!${suggestion}
@@ -4458,7 +4525,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     ${suggestion} + 0
     ${suggestion} * 1`
           });
-          const debug = new MathlangLocation(f, node);
+          const debug = MathlangLocation.quick(f, node);
           return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
         }
         if (v.rhs instanceof EntityIntField) {
@@ -4485,7 +4552,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       values: {},
       captures: ["lhs", "rhs"],
       handle: (v, f, node) => {
-        const debug = new MathlangLocation(f, node);
+        const debug = MathlangLocation.quick(f, node);
         if (!(v.lhs instanceof EntityIntField)) {
           throw new Error("LHS not EntityIntField");
         }
@@ -4533,7 +4600,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
         if (v.rhs instanceof IntBinaryExpression) {
           const temporary = newTemporary();
-          const steps = v.rhs.flatten([]);
+          const steps = v.rhs.toSteps([]);
           dropTemporary();
           steps.push(COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field));
           return new MathlangSequence(debug, {
@@ -4549,7 +4616,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       values: {},
       captures: ["lhs", "rhs"],
       handle: (v, f, node) => {
-        const debug = new MathlangLocation(f, node);
+        const debug = MathlangLocation.quick(f, node);
         if (!(v.lhs instanceof BoolSetable)) {
           throw new Error("LHS not a bool_setable");
         }
@@ -4608,7 +4675,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       values: {},
       captures: ["movable", "coordinate"],
       handle: (v, f, node) => {
-        const debug = new MathlangLocation(f, node);
+        const debug = MathlangLocation.quick(f, node);
         if (!(v.movable instanceof MovableIdentifier)) {
           throw new Error("invalid MovableIdentifier");
         }
@@ -4813,7 +4880,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       values: {},
       captures: ["lhs", "operator", "rhs"],
       handle: (v, f, node) => {
-        const debug = new MathlangLocation(f, node);
+        const debug = MathlangLocation.quick(f, node);
         const op = coerceToString(f, node, v.operator, "op");
         if (typeof v.lhs === "string") {
           if (typeof v.rhs === "number") {
@@ -4838,7 +4905,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             if (!(v.rhs instanceof IntBinaryExpression)) {
               throw new Error("not IntBinaryExpression");
             }
-            const steps = v.rhs.flatten([]);
+            const steps = v.rhs.toSteps([]);
             dropTemporary();
             steps.push(MUTATE_VARIABLES.change(v.lhs, temporary, op));
             return new MathlangSequence(debug, {
@@ -4883,7 +4950,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             }
             const steps = [
               COPY_VARIABLE.intoVariable(v.lhs.entity, v.lhs.field, temporary1),
-              ...v.rhs.flatten([]),
+              ...v.rhs.toSteps([]),
               MUTATE_VARIABLES.change(temporary1, temporary2, op),
               COPY_VARIABLE.intoField(temporary1, v.lhs.entity, v.lhs.field)
             ];
@@ -4980,7 +5047,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       const bodyNode = node.childForFieldName("body");
       if (!bodyNode) throw new Error("fn without body node");
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const definiton = FunctionDefinition.quick(debug, name2, params, paramNodes, bodyNode);
       if (f.functions[name2]) {
         f.quickError(node, `fn ${name2} already defined`);
@@ -5015,7 +5082,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       const localConstants = {};
       callParams.forEach((callParam, i2) => {
-        const debug = new MathlangLocation(f, callParamNodes[i2]);
+        const debug = MathlangLocation.quick(f, callParamNodes[i2]);
         const constantName = definition.params[i2];
         let value = callParam;
         if (typeof callParam === "boolean") {
@@ -5030,7 +5097,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const stack = f.currFunction;
       stack.unshift(localConstants);
       const body2 = handleNamedChildren(f, definition.bodyNode);
-      const sequence = new MathlangSequence(new MathlangLocation(f, node), { steps: body2 });
+      const sequence = new MathlangSequence(MathlangLocation.quick(f, node), { steps: body2 });
       stack.shift();
       return sequence;
     },
@@ -5057,7 +5124,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const lastChild = node.lastChild;
       if (!lastChild) throw new Error("could not find final node in script block");
       const labelAction = new LabelDefinition(
-        new MathlangLocation(f, lastChild),
+        MathlangLocation.quick(f, lastChild),
         {
           label: returnLabel
         }
@@ -5066,15 +5133,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       actions.forEach((action, i2) => {
         if (action instanceof ReturnStatement) {
           actions[i2] = GotoLabel.quick(
-            new MathlangLocation(f, action.debug.node),
+            MathlangLocation.quick(f, action.debug.node),
             returnLabel
           );
         }
       });
-      return [new ScriptDefinition(new MathlangLocation(f, node), { scriptName, actions })];
+      return [new ScriptDefinition(MathlangLocation.quick(f, node), { scriptName, actions })];
     },
     constant_assignment: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const label = textForFieldName(f, node, "label");
       const value = captureForFieldName(f, node, "value");
       if (!isMGSPrimitive(value)) {
@@ -5112,11 +5179,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           f.newError({
             message: `cannot redefine constant ${constantName} (via 'include')`,
             locations: [
-              {
-                f: insertFile,
-                fileName: insertFile.fileName,
-                node: insertFile.constants[constantName].debug.node
-              }
+              MathlangLocation.quick(
+                insertFile,
+                insertFile.constants[constantName].debug.node
+              )
             ]
           });
         }
@@ -5127,16 +5193,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           f.newError({
             message: `cannot redefine function ${functionName} (via 'include')`,
             locations: [
-              {
-                f: insertFile,
-                fileName: insertFile.fileName,
-                node: insertFile.functions[functionName].debug.node
-              },
-              {
-                f,
-                fileName: f.fileName,
-                node: node.firstChild || node
-              }
+              MathlangLocation.quick(
+                insertFile,
+                insertFile.functions[functionName].debug.node
+              ),
+              MathlangLocation.quick(f, node.firstChild || node)
             ]
           });
         }
@@ -5160,10 +5221,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         });
       });
       includeRecursion.pop();
-      return [IncludeNode.quick(new MathlangLocation(f, node), fileName)];
+      return [IncludeNode.quick(MathlangLocation.quick(f, node), fileName)];
     },
     rand_macro: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const horizontal = [];
       let spreadCount = -Infinity;
       node.namedChildren.filter((v) => v !== null).forEach((innerNode) => {
@@ -5201,14 +5262,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     label_definition: (f, node) => {
       const label = textForFieldName(f, node, "label");
-      return [LabelDefinition.quick(new MathlangLocation(f, node), label)];
+      return [LabelDefinition.quick(MathlangLocation.quick(f, node), label)];
     },
     add_dialog_settings: (f, node) => {
       const targets = handleNamedChildren(f, node);
       if (!targets.every((v) => v instanceof AddDialogSettingsTarget)) {
         throw new Error("add_dialog_settings node not a AddDialogSettingsTarget");
       }
-      return [AddDialogSettings.quick(new MathlangLocation(f, node), targets)];
+      return [AddDialogSettings.quick(MathlangLocation.quick(f, node), targets)];
     },
     add_dialog_settings_target: (f, node) => {
       let settingsTarget = {};
@@ -5230,7 +5291,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       parameters.forEach((param) => {
         settingsTarget[param.property] = param.value;
       });
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const ret = AddDialogSettingsTarget.quick(debug, type, parameters, target);
       return [ret];
     },
@@ -5242,11 +5303,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       parameters.forEach((param) => {
         f.settings.serial[param.property] = param.value;
       });
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       return [AddSerialDialogSettings.quick(debug, parameters)];
     },
     serial_dialog_option: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const optionChar = textForFieldName(f, node, "option_type");
       let optionType = "options";
       if (optionChar === "_") optionType = "text_options";
@@ -5258,7 +5319,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     dialog_option: (f, node) => {
       const label = stringCaptureForFieldName(f, node, "label");
       const script = stringCaptureForFieldName(f, node, "script");
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       return [DialogOption.quick(debug, label, script)];
     },
     serial_dialog_definition: (f, node) => {
@@ -5270,7 +5331,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       const serialDialog = serialDialogs[0];
       if (!(serialDialog instanceof SerialDialog)) throw new Error("missing serial dialog");
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       return [SerialDialogDefinition.quick(debug, dialogName, serialDialog)];
     },
     dialog_definition: (f, node) => {
@@ -5278,7 +5339,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const dialogs = handleChildrenForFieldName(f, node, "dialog");
       if (!dialogs.every((v) => v instanceof Dialog))
         throw new Error("not every dialog is a Dialog");
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       return [DialogDefinition.quick(debug, name2, dialogs)];
     },
     serial_dialog: (f, node) => {
@@ -5335,7 +5396,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         options
       };
       const dialogs = buildDialogFromInfo(f, node, info2, messageN);
-      dialogs.debug = new MathlangLocation(f, node);
+      dialogs.debug = MathlangLocation.quick(f, node);
       return [dialogs];
     },
     json_literal: (f, node) => {
@@ -5344,7 +5405,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const text = jsonNode.text;
       try {
         const parsed = JSON.parse(text);
-        return [new JSONLiteral(new MathlangLocation(f, node), { json: parsed })];
+        return [JSONLiteral.quick(MathlangLocation.quick(f, node), parsed)];
       } catch {
         f.quickError(node, `JSON syntax error`, `Generic error. Check trailing commas!`);
       }
@@ -5352,7 +5413,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     copy_macro: (f, node) => {
       const script = stringCaptureForFieldName(f, node, "script");
-      return [new CopyMacro(new MathlangLocation(f, node), { script })];
+      return [CopyMacro.quick(MathlangLocation.quick(f, node), script)];
     },
     debug_macro: (f, node) => {
       const ret = [];
@@ -5366,7 +5427,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
         dialogName = autoIdentifierName(f, node);
         ret.push(
-          new SerialDialogDefinition(new MathlangLocation(f, node), {
+          new SerialDialogDefinition(MathlangLocation.quick(f, node), {
             dialogName,
             serialDialog
           })
@@ -5374,7 +5435,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       } else {
         dialogName = stringCaptureForFieldName(f, node, "serial_dialog_name");
       }
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const condition = CheckDebugMode.quick(debug, true);
       const ifTrue = new SHOW_SERIAL_DIALOG({
         disable_newline: false,
@@ -5389,12 +5450,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         if (Array.isArray(v)) return v;
         if (v instanceof ContinueStatement) {
           return GotoLabel.quick(
-            new MathlangLocation(f, v.debug.node),
+            MathlangLocation.quick(f, v.debug.node),
             `condition #${printGotoLabel}`
           );
         } else if (v instanceof BreakStatement) {
           return GotoLabel.quick(
-            new MathlangLocation(f, v.debug.node),
+            MathlangLocation.quick(f, v.debug.node),
             `rendezvous #${printGotoLabel}`
           );
         }
@@ -5402,7 +5463,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
     },
     while_block: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const block = new ConditionalBlock(f, node, "while");
       const n = f.p.advanceGotoSuffix();
       const conditionL = `while condition #${n}`;
@@ -5410,17 +5471,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const rendezvousL = `while rendezvous #${n}`;
       const steps = [
         new LabelDefinition(debug, { label: conditionL }),
-        ...block.condition.flatten(bodyL),
-        GotoLabel.quick(new MathlangLocation(f, node), rendezvousL),
+        ...block.condition.toSteps(bodyL),
+        GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
         new LabelDefinition(debug, { label: bodyL }),
         ...block.body,
-        GotoLabel.quick(new MathlangLocation(f, block.conditionNode || node), conditionL),
+        GotoLabel.quick(MathlangLocation.quick(f, block.conditionNode || node), conditionL),
         new LabelDefinition(debug, { label: rendezvousL })
       ];
       return [new MathlangSequence(debug, { steps, type: "parser-node: while_block" })];
     },
     do_while_block: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const doWhyle = new ConditionalBlock(f, node, "do while");
       const n = f.p.advanceGotoSuffix();
       const conditionL = `do while condition #${n}`;
@@ -5430,13 +5491,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         new LabelDefinition(debug, { label: bodyL }),
         ...doWhyle.body,
         new LabelDefinition(debug, { label: conditionL }),
-        ...doWhyle.condition.flatten(bodyL),
+        ...doWhyle.condition.toSteps(bodyL),
         new LabelDefinition(debug, { label: rendezvousL })
       ];
       return [new MathlangSequence(debug, { steps, type: "parser-node: do_while_block" })];
     },
     for_block: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const n = f.p.advanceGotoSuffix();
       const conditionL = `for condition #${n}`;
       const bodyL = `for body #${n}`;
@@ -5449,22 +5510,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const incrementerN = mandatoryChildForFieldName(f, node, "incrementer");
       const body2 = handleNode(f, bodyN).map((v) => {
         if (v instanceof ContinueStatement)
-          return GotoLabel.quick(new MathlangLocation(f, node), continueL);
+          return GotoLabel.quick(MathlangLocation.quick(f, node), continueL);
         if (v instanceof BreakStatement)
-          return GotoLabel.quick(new MathlangLocation(f, node), rendezvousL);
+          return GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL);
         return v;
       });
       const initializer = mandatoryChildForFieldName(f, node, "initializer");
       const steps = [
         ...handleNode(f, initializer),
         new LabelDefinition(debug, { label: conditionL }),
-        ...condition.flatten(bodyL),
-        GotoLabel.quick(new MathlangLocation(f, node), rendezvousL),
+        ...condition.toSteps(bodyL),
+        GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
         new LabelDefinition(debug, { label: bodyL }),
         ...body2,
         new LabelDefinition(debug, { label: continueL }),
         ...handleNode(f, incrementerN),
-        GotoLabel.quick(new MathlangLocation(f, conditionN), conditionL),
+        GotoLabel.quick(MathlangLocation.quick(f, conditionN), conditionL),
         new LabelDefinition(debug, { label: rendezvousL })
       ];
       return [new MathlangSequence(debug, { steps, type: "parser-node: for_block" })];
@@ -5474,7 +5535,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const conditionN = node.childForFieldName("condition");
       let condition = handleCapture(f, conditionN);
       if (typeof condition === "string") {
-        const debug = new MathlangLocation(f, node);
+        const debug = MathlangLocation.quick(f, node);
         condition = CheckSaveFlag.quick(debug, condition, true);
       }
       if (typeof condition === "boolean" || condition instanceof BoolLiteral) {
@@ -5487,7 +5548,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           return value ? [GOTO_ACTION_INDEX.quick(index)] : [];
         } else if (type === "label") {
           const label = stringCaptureForFieldName(f, node, "label");
-          return value ? [GotoLabel.quick(new MathlangLocation(f, node), label)] : [];
+          return value ? [GotoLabel.quick(MathlangLocation.quick(f, node), label)] : [];
         }
       }
       if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
@@ -5548,7 +5609,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   };
   const captureFns = {
     BOOL: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const text = node.text;
       if (text === "true") return BoolLiteral.quick(debug, true);
       if (text === "false") return BoolLiteral.quick(debug, false);
@@ -5641,7 +5702,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     entity_identifier: (f, node) => extractEntityName(f, node),
     movable_identifier: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const type = optionalTextForFieldName(f, node, "type");
       if (type === "camera") {
         return MovableIdentifier.quick(debug, "camera", "camera");
@@ -5651,7 +5712,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     },
     dialog_identifier: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const label = optionalTextForFieldName(f, node, "label");
       if (label) {
         return DialogIdentifier.quick(debug, "label", label);
@@ -5664,19 +5725,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return DialogIdentifier.quick(debug, type, value);
     },
     dialog_parameter: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const property = textForFieldName(f, node, "property");
       const value = stringOrNumberCaptureForFieldName(f, node, "value");
       return DialogParameter.quick(debug, property, value);
     },
     serial_dialog_parameter: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const property = textForFieldName(f, node, "property");
       const value = stringOrNumberCaptureForFieldName(f, node, "value");
       return SerialDialogParameter.quick(debug, property, value);
     },
     coordinate_identifier: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const type = optionalTextForFieldName(f, node, "type");
       const polygonType = optionalTextForFieldName(f, node, "polygon_type");
       if (type === "entity_path") {
@@ -5689,7 +5750,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return CoordinateIdentifier.quick(debug, "entity", extractEntityName(f, node));
     },
     bool_setable: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const type = optionalTextForFieldName(f, node, "type");
       if (!type) {
         const value = stringCaptureForFieldName(f, node, "flag");
@@ -5712,16 +5773,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       let rhs = handleCapture(f, rhsNode);
       let lhs = handleCapture(f, lhsNode);
       if (!(lhs instanceof IntBinaryExpression)) {
-        lhs = IntUnit.fromAny(new MathlangLocation(f, lhsNode), lhs);
+        lhs = IntUnit.fromAny(MathlangLocation.quick(f, lhsNode), lhs);
       }
       if (!(rhs instanceof IntBinaryExpression)) {
-        rhs = IntUnit.fromAny(new MathlangLocation(f, rhsNode), rhs);
+        rhs = IntUnit.fromAny(MathlangLocation.quick(f, rhsNode), rhs);
       }
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       return new IntBinaryExpression(debug, { lhs, rhs, op });
     },
     bool_binary_expression: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const rhsNode = mandatoryChildForFieldName(f, node, "rhs");
       const lhsNode = mandatoryChildForFieldName(f, node, "lhs");
       const op = stringCaptureForFieldName(f, node, "operator");
@@ -5745,7 +5806,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("invalid LHS and RHS combo for captured bool binary expression");
     },
     bool_grouping: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const capture = captureForFieldName(f, node, "inner");
       if (typeof capture === "boolean") {
         return BoolLiteral.quick(debug, capture);
@@ -5757,7 +5818,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("bool_grouping capture did not yield BoolExpression");
     },
     bool_unary_expression: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const op = stringCaptureForFieldName(f, node, "operator");
       if (op !== "!") throw new Error("captured unknown unary operator: " + op);
       const capture = captureForFieldName(f, node, "operand");
@@ -5777,7 +5838,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("bool_unary_expression capture did not yield BoolExpression");
     },
     int_getable: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const rngNode = node.childForFieldName("rng");
       if (rngNode) {
         return handleCapture(f, rngNode);
@@ -5787,7 +5848,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return EntityIntField.quick(debug, entity, field);
     },
     bool_getable: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const type = optionalTextForFieldName(f, node, "type");
       if (type === "flag") {
         return CheckSaveFlag.quick(debug, stringCaptureForFieldName(f, node, "value"));
@@ -5828,7 +5889,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("failed to capture bool_getable");
     },
     string_checkable: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const entity = optionalStringCaptureForFieldName(f, node, "entity_identifier");
       if (entity === null) {
         const type = optionalTextForFieldName(f, node, "type");
@@ -5867,7 +5928,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return stringCaptureForFieldName(f, node, "entity_identifier");
     },
     bool_comparison: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const lhsNode = mandatoryChildForFieldName(f, node, "lhs");
       const rhsNode = mandatoryChildForFieldName(f, node, "rhs");
       const op = stringCaptureForFieldName(f, node, "operator");
@@ -5899,7 +5960,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           const modified = lhs.intoNumberCheckableEquality();
           dropTemporary();
           dropTemporary();
-          return modified.makeWholeThing(rhs, op);
+          return modified.finalizeValues(rhs, op);
         } else {
           steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, tempLHS));
           lhs = tempLHS;
@@ -5910,7 +5971,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           const modified = rhs.intoNumberCheckableEquality();
           dropTemporary();
           dropTemporary();
-          return modified.makeWholeThing(lhs, op);
+          return modified.finalizeValues(lhs, op);
         } else {
           steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, tempRHS));
           rhs = tempRHS;
@@ -5933,11 +5994,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         rhs = tempRHS;
       }
       if (lhs instanceof IntBinaryExpression) {
-        lhs.flatten(steps);
+        lhs.toSteps(steps);
         lhs = tempLHS;
       }
       if (rhs instanceof IntBinaryExpression) {
-        rhs.flatten(steps);
+        rhs.toSteps(steps);
         rhs = tempRHS;
       }
       if (lhs instanceof IntGetable) {
@@ -5978,7 +6039,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return BoolComparisonSequence.quick(debug, steps);
     },
     int_setable: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const entity = stringCaptureForFieldName(f, node, "entity_identifier");
       const field = textForFieldName(f, node, "property");
       return EntityIntField.quick(debug, entity, field);
@@ -5989,7 +6050,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("captured int_grouping did not produce IntExpression");
     },
     int_rng: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       let value = optionalNumberCaptureForFieldName(f, node, "value");
       const inclusive = optionalTextForFieldName(f, node, "inclusive");
       if (value !== null) {
@@ -6013,7 +6074,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return RNGPair.quick(debug, diff, min);
     },
     direction_target: (f, node) => {
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       const direction = optionalTextForFieldName(f, node, "nsew");
       if (direction) {
         return DirectionTarget.quick(debug, "nsew", direction);
@@ -6105,7 +6166,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const coerceToString = (f, node, v, label) => {
     var _a2;
     if (typeof v !== "string") {
-      const locations = [{ f, node, fileName: f.fileName }];
+      const locations = [MathlangLocation.quick(f, node)];
       if (f.constants[node.text]) {
         locations.unshift({
           f: f.constants[node.text].debug.f || f,
@@ -6124,14 +6185,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const coerceToNumber = (f, node, v, label) => {
     if (typeof v !== "number") {
       f.newError({
-        locations: [
-          {
-            f: f.constants[node.text].debug.f,
-            node: f.constants[node.text].debug.node,
-            fileName: f.constants[node.text].debug.fileName
-          },
-          { f, node, fileName: f.fileName }
-        ],
+        locations: [f.constants[node.text].debug, MathlangLocation.quick(f, node)],
         message: `${label} is not a number`
       });
       return NaN;
@@ -6144,14 +6198,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     if (typeof v !== "boolean") {
       f.newError({
-        locations: [
-          {
-            f: f.constants[node.text].debug.f,
-            node: f.constants[node.text].debug.node,
-            fileName: f.constants[node.text].debug.fileName
-          },
-          { f, node, fileName: f.fileName }
-        ],
+        locations: [f.constants[node.text].debug, MathlangLocation.quick(f, node)],
         message: `${label} is not a boolean`
       });
       return false;
@@ -6159,7 +6206,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return v;
   };
   class AnyNode {
-    // = MathlangNode, Action
     clone() {
       if (this instanceof MathlangNode) return this.clone();
       return Action.fromArgs(this);
@@ -6168,21 +6214,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class MathlangNode extends AnyNode {
     constructor(debug, args2) {
       super();
-      // FunctionDefinition, AddDialogSettings, AddDialogSettingsTarget, AddSerialDialogSettings
-      // ReturnStatement, ContinueStatement, BreakStatement, GotoLabel
-      // DialogDefinition, DialogParameter, Dialog, DialogIdentifier, DialogOption
-      // SerialDialogDefinition, SerialDialogParameter, SerialDialog, SerialDialogOption
-      // IncludeNode, ConstantDefinition, ScriptDefinition, CommentNode, LabelDefinition
-      // JSONLiteral, CopyMacro, MathlangSequence, IntExpression, BoolExpression,
-      // BoolSetable, MovableIdentifier, CoordinateIdentifier, DirectionTarget
       __publicField(this, "mathlang");
       __publicField(this, "args");
       __publicField(this, "debug");
       this.debug = debug;
       this.args = args2;
-    }
-    clone() {
-      return this.constructor(this.debug, this.args);
     }
     print() {
       return `// MATHLANG: ${this.mathlang}`;
@@ -6195,15 +6231,29 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return false;
   };
   class MathlangLocation {
-    constructor(f, node, comment) {
+    constructor(args2) {
+      __publicField(this, "args");
       __publicField(this, "f");
       __publicField(this, "node");
       __publicField(this, "fileName");
       __publicField(this, "comment");
-      this.f = f;
-      this.fileName = f.fileName;
-      this.node = node;
-      if (comment) this.comment = comment;
+      this.args = args2;
+      if (!(args2.f instanceof FileState)) {
+        throw new Error("f not FileState");
+      }
+      if (!(args2.node instanceof Node)) {
+        throw new Error("node not TreeSitterNode");
+      }
+      this.f = args2.f;
+      this.fileName = args2.f.fileName;
+      this.node = args2.node;
+      if (args2.comment) this.comment = breakIfNotString(args2.comment);
+    }
+    static quick(f, node) {
+      return new MathlangLocation({ f, node });
+    }
+    clone() {
+      return new MathlangLocation(this.args);
     }
   }
   const truncate = (s, n) => {
@@ -6236,6 +6286,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       this.bodyNode = args2.bodyNode;
     }
+    clone() {
+      return new FunctionDefinition(this.debug.clone(), this.args);
+    }
     static quick(debug, name2, params, paramNodes, bodyNode) {
       return new FunctionDefinition(debug, { name: name2, params, paramNodes, bodyNode });
     }
@@ -6252,7 +6305,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.targets = args2.targets;
     }
     clone() {
-      return new AddDialogSettings(this.debug, this.args);
+      const clonedTargets = this.targets.map((v) => v.clone());
+      return new AddDialogSettings(this.debug.clone(), { ...this.args, targets: clonedTargets });
     }
     static quick(debug, targets) {
       return new AddDialogSettings(debug, { targets });
@@ -6274,7 +6328,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (typeof args2.target === "string") this.target = args2.target;
     }
     clone() {
-      return new AddDialogSettingsTarget(this.debug, this.args);
+      const clonedParameters = this.parameters.map((v) => v.clone());
+      return new AddDialogSettingsTarget(this.debug.clone(), {
+        ...this.args,
+        parameters: clonedParameters
+      });
     }
     static quick(debug, type, parameters, target) {
       return new AddDialogSettingsTarget(debug, {
@@ -6296,7 +6354,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.parameters = args2.parameters;
     }
     clone() {
-      return new AddSerialDialogSettings(this.debug, this.args);
+      const newParams = this.parameters.map((v) => v.clone());
+      return new AddSerialDialogSettings(this.debug.clone(), {
+        ...this.args,
+        parameters: newParams
+      });
     }
     static quick(debug, parameters) {
       return new AddSerialDialogSettings(debug, {
@@ -6311,7 +6373,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.mathlang = "return_statement";
     }
     clone() {
-      return new ReturnStatement(this.debug);
+      return new ReturnStatement(this.debug.clone());
+    }
+    static quick(debug) {
+      return new ReturnStatement(debug);
     }
   }
   class ContinueStatement extends MathlangNode {
@@ -6321,7 +6386,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.mathlang = "continue_statement";
     }
     clone() {
-      return new ContinueStatement(this.debug);
+      return new ReturnStatement(this.debug.clone());
+    }
+    static quick(debug) {
+      return new ContinueStatement(debug);
     }
   }
   class BreakStatement extends MathlangNode {
@@ -6331,7 +6399,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.mathlang = "break_statement";
     }
     clone() {
-      return new BreakStatement(this.debug);
+      return new ReturnStatement(this.debug.clone());
+    }
+    static quick(debug) {
+      return new BreakStatement(debug);
     }
   }
   class GotoLabel extends MathlangNode {
@@ -6345,7 +6416,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (typeof args2.comment === "string") this.comment = args2.comment;
     }
     clone() {
-      return new GotoLabel(this.debug, this.args);
+      return new GotoLabel(this.debug.clone(), this.args);
     }
     static quick(debug, label) {
       return new GotoLabel(debug, { label });
@@ -6368,7 +6439,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.dialogs = args2.dialogs;
     }
     clone() {
-      return new DialogDefinition(this.debug, this.args);
+      const clonedDialogs = this.dialogs.map((v) => v.clone());
+      return new DialogDefinition(this.debug.clone(), { ...this.args, dialogs: clonedDialogs });
     }
     static quick(debug, dialogName, dialogs) {
       return new DialogDefinition(debug, { dialogName, dialogs });
@@ -6389,7 +6461,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotStringOrNumber(args2.value);
     }
     clone() {
-      return new DialogParameter(this.debug, this.args);
+      return new DialogParameter(this.debug.clone(), this.args);
     }
     static quick(debug, property, value) {
       return new DialogParameter(debug, { property, value });
@@ -6427,7 +6499,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     }
     clone() {
-      return new DialogParameter(this.debug, this.args);
+      const newArgs = { ...this.args };
+      if (this.options) {
+        newArgs.options = this.options.map((v) => v.clone());
+      }
+      return new Dialog(this.debug.clone(), newArgs);
     }
   }
   class DialogIdentifier extends MathlangNode {
@@ -6444,7 +6520,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotString(args2.value);
     }
     clone() {
-      return new DialogIdentifier(this.debug, this.args);
+      return new DialogIdentifier(this.debug.clone(), this.args);
     }
     static quick(debug, type, value) {
       return new DialogIdentifier(debug, { type, value });
@@ -6461,7 +6537,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.script = breakIfNotString(args2.script);
     }
     clone() {
-      return new DialogOption(this.debug, this.args);
+      return new DialogOption(this.debug.clone(), this.args);
     }
     static quick(debug, label, script) {
       return new DialogOption(debug, {
@@ -6484,7 +6560,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.serialDialog = args2.serialDialog;
     }
     clone() {
-      return new SerialDialogDefinition(this.debug, this.args);
+      const newArgs = { ...this.args };
+      newArgs.serialDialog = this.serialDialog.clone();
+      return new SerialDialogDefinition(this.debug.clone(), newArgs);
     }
     static quick(debug, dialogName, serialDialog) {
       return new SerialDialogDefinition(debug, { dialogName, serialDialog });
@@ -6505,7 +6583,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotStringOrNumber(args2.value);
     }
     clone() {
-      return new SerialDialogParameter(this.debug, this.args);
+      const newArgs = { ...this.args };
+      if (this.value instanceof BoolLiteral) {
+        newArgs.value = BoolLiteral.clone();
+      }
+      return new SerialDialogParameter(this.debug.clone(), newArgs);
     }
     static quick(debug, property, value) {
       return new SerialDialogParameter(debug, { property, value });
@@ -6535,7 +6617,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     }
     clone() {
-      return new SerialDialog(this.debug, this.args);
+      const newArgs = { ...this.args };
+      if (this.options) {
+        newArgs.options = this.options.map((v) => v.clone());
+      }
+      if (this.text_options) {
+        newArgs.text_options = this.text_options.map((v) => v.clone());
+      }
+      return new SerialDialog(this.debug.clone(), newArgs);
     }
   }
   class SerialDialogOption extends MathlangNode {
@@ -6554,7 +6643,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.script = breakIfNotString(args2.script);
     }
     clone() {
-      return new SerialDialogOption(this.debug, this.args);
+      return new SerialDialogOption(this.debug.clone(), this.args);
     }
     static quick(debug, optionType, label, script) {
       return new SerialDialogOption(debug, {
@@ -6573,7 +6662,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotString(args2.value);
     }
     clone() {
-      return new IncludeNode(this.debug, this.args);
+      return new IncludeNode(this.debug.clone(), this.args);
     }
     static quick(debug, value) {
       return new IncludeNode(debug, { value });
@@ -6591,7 +6680,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = args2.value;
     }
     clone() {
-      return new ConstantDefinition(this.debug, this.args);
+      const newArgs = { ...this.args };
+      if (this.value instanceof BoolLiteral) {
+        newArgs.value = this.value.clone();
+      }
+      return new ConstantDefinition(this.debug.clone(), newArgs);
     }
     static quick(debug, label, value) {
       return new ConstantDefinition(debug, { label, value });
@@ -6635,13 +6728,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (args2.copyScriptResolved) this.copyScriptResolved = true;
     }
     clone() {
-      const cloned = new ScriptDefinition(this.debug, this.args);
-      cloned.actions = cloned.actions.map((v) => v.clone());
-      if (cloned.rawNodes) {
-        cloned.rawNodes = cloned.rawNodes.map((v) => v.clone());
+      const cloned = new ScriptDefinition(this.debug.clone(), this.args);
+      cloned.actions = this.actions.map((v) => v.clone());
+      if (this.rawNodes) {
+        cloned.rawNodes = this.rawNodes.map((v) => v.clone());
       }
-      if (cloned.preBakingActions) {
-        cloned.preBakingActions = cloned.preBakingActions.map((v) => v.clone());
+      if (this.preBakingActions) {
+        cloned.preBakingActions = this.preBakingActions.map((v) => v.clone());
       }
       return cloned;
     }
@@ -6655,7 +6748,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.comment = breakIfNotString(args2.comment);
     }
     clone() {
-      return new CommentNode(this.debug, this.args);
+      return new CommentNode(this.debug.clone(), this.args);
     }
     static quick(debug, comment) {
       return new CommentNode(debug, { comment });
@@ -6674,7 +6767,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.label = breakIfNotString(args2.label);
     }
     clone() {
-      return new LabelDefinition(this.debug, this.args);
+      return new LabelDefinition(this.debug.clone(), this.args);
     }
     static quick(debug, label) {
       return new LabelDefinition(debug, { label });
@@ -6699,7 +6792,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     }
     clone() {
-      return new JSONLiteral(this.debug, this.args);
+      return new JSONLiteral(this.debug.clone(), this.args);
+    }
+    static quick(debug, json) {
+      return new JSONLiteral(debug, { json });
     }
   }
   class CopyMacro extends MathlangNode {
@@ -6711,7 +6807,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.script = breakIfNotString(args2.script);
     }
     clone() {
-      return new CopyMacro(this.debug, this.args);
+      return new CopyMacro(this.debug.clone(), this.args);
+    }
+    static quick(debug, script) {
+      return new CopyMacro(debug, { script });
     }
     print() {
       return `"${this.script}"()`;
@@ -6746,17 +6845,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.steps = flatSteps;
     }
     clone() {
-      return new MathlangSequence(this.debug, this.args);
+      const newArgs = { ...this.args };
+      newArgs.steps = this.steps.map((v) => v.clone());
+      return new MathlangSequence(this.debug.clone(), newArgs);
     }
     static quick(debug, steps, type) {
       return new MathlangSequence(debug, { steps, type });
     }
   }
   class IntExpression extends MathlangNode {
-    constructor() {
-      super(...arguments);
-      __publicField(this, "mathlang");
-    }
   }
   class IntBinaryExpression extends IntExpression {
     constructor(debug, args2) {
@@ -6777,9 +6874,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.op = breakIfNotString(args2.op);
     }
     clone() {
-      return new IntBinaryExpression(this.debug, this.args);
+      const newArgs = { ...this.args };
+      newArgs.lhs = this.lhs.clone();
+      newArgs.rhs = this.rhs.clone();
+      return new IntBinaryExpression(this.debug.clone(), newArgs);
     }
-    flatten(steps) {
+    toSteps(steps) {
       const temp = latestTemporary();
       const lhs = this.lhs;
       const op = this.op;
@@ -6798,7 +6898,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           MUTATE_VARIABLE.change(lhs.debug, temp, lhs.add, "+")
         );
       } else if (lhs instanceof IntBinaryExpression) {
-        lhs.flatten(steps);
+        lhs.toSteps(steps);
       }
       if (rhs instanceof IdentifierLiteral) {
         steps.push(MUTATE_VARIABLES.change(temp, rhs.source, op));
@@ -6828,7 +6928,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         );
       } else if (rhs instanceof IntBinaryExpression) {
         const newTemp = newTemporary();
-        rhs.flatten(steps);
+        rhs.toSteps(steps);
         steps.push(MUTATE_VARIABLES.change(temp, newTemp, op));
         dropTemporary();
       }
@@ -6836,7 +6936,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     assignToVar(destinationVar) {
       newTemporary(destinationVar);
-      const steps = this.flatten([]);
+      const steps = this.toSteps([]);
       dropTemporary();
       return new MathlangSequence(this.debug, {
         steps,
@@ -6874,11 +6974,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotNumber(args2.value);
     }
+    clone() {
+      return new NumberLiteral(this.debug.clone(), this.args);
+    }
     static quick(debug, value) {
       return new NumberLiteral(debug, { value });
-    }
-    clone() {
-      return new NumberLiteral(this.debug, this.args);
     }
   }
   class IntGetable extends IntUnit {
@@ -6890,9 +6990,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     assignToVar(variable) {
       return Action.fromArgs({ ...this, variable });
     }
-    clone() {
-      return new IntGetable(this.debug, this.args);
-    }
   }
   class IdentifierLiteral extends IntGetable {
     constructor(debug, args2) {
@@ -6900,11 +6997,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "source");
       this.source = breakIfNotString(args2.source);
     }
+    clone() {
+      return new IdentifierLiteral(this.debug.clone(), this.args);
+    }
     static quick(debug, source) {
       return new IdentifierLiteral(debug, { source });
-    }
-    clone() {
-      return new IdentifierLiteral(this.debug, this.args);
     }
   }
   class EntityIntField extends IntGetable {
@@ -6917,11 +7014,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.field = breakIfNotString(args2.field);
     }
+    clone() {
+      return new EntityIntField(this.debug.clone(), this.args);
+    }
     static quick(debug, entity, field) {
       return new EntityIntField(debug, { entity, field });
-    }
-    clone() {
-      return new EntityIntField(this.debug, this.args);
     }
     intoNumberCheckableEquality() {
       const entity = this.entity;
@@ -6956,11 +7053,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotNumber(args2.value);
     }
+    clone() {
+      return new RNGSingle(this.debug.clone(), this.args);
+    }
     static quick(debug, value) {
       return new RNGSingle(debug, { value });
-    }
-    clone() {
-      return new RNGSingle(this.debug, this.args);
     }
     assignToVar(destinationVar) {
       return MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, "?");
@@ -6974,11 +7071,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotNumber(args2.value);
       this.add = breakIfNotNumber(args2.add);
     }
+    clone() {
+      return new RNGPair(this.debug.clone(), this.args);
+    }
     static quick(debug, value, add) {
       return new RNGPair(debug, { value, add });
-    }
-    clone() {
-      return new RNGPair(this.debug, this.args);
     }
     toSteps(destinationVar) {
       return [
@@ -6998,7 +7095,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       console.error("the children should be doing this, not me");
       return this;
     }
-    flatten(ifLabel) {
+    // TODO: See which bits of this are duplicate (check individual toSteps() fns)
+    toSteps(ifLabel) {
       const debug = this.debug;
       if (this instanceof BoolLiteral && this.value === true) {
         return [GotoLabel.quick(debug, ifLabel)];
@@ -7027,7 +7125,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("LHS or RHS not a number");
       }
       if (op === "||") {
-        return [...lhs.flatten(ifLabel), ...rhs.flatten(ifLabel)];
+        return [...lhs.toSteps(ifLabel), ...rhs.toSteps(ifLabel)];
       }
       if (op === "&&") {
         if (!debug.f) throw new Error("should have an f?");
@@ -7035,10 +7133,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         const secondIfTrueLabel = `if true #${suffix}`;
         const secondRendezvousLabel = `rendezvous #${suffix}`;
         return [
-          ...lhs.flatten(secondIfTrueLabel),
+          ...lhs.toSteps(secondIfTrueLabel),
           GotoLabel.quick(debug, secondRendezvousLabel),
           new LabelDefinition(debug, { label: secondIfTrueLabel }),
-          ...rhs.flatten(ifLabel),
+          ...rhs.toSteps(ifLabel),
           new LabelDefinition(debug, { label: secondRendezvousLabel })
         ];
       }
@@ -7064,7 +7162,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         lhsNode: this.lhsNode,
         rhsNode: this.rhsNode
       });
-      return expandAs.flatten(ifLabel);
+      return expandAs.toSteps(ifLabel);
     }
     assignToVar(destinationVar) {
       const lhsAction = SET_SAVE_FLAG.toValue(destinationVar, true);
@@ -7096,7 +7194,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       this.steps = args2.steps;
     }
-    final() {
+    clone() {
+      const newArgs = { ...this.args };
+      newArgs.steps = this.steps.map((v) => v.clone());
+      return new BoolComparisonSequence(this.debug.clone(), newArgs);
+    }
+    getFinalStep() {
       const final = this.steps[this.steps.length - 1];
       if (final instanceof BoolComparison) {
         return final;
@@ -7104,7 +7207,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("the last one shoudl be a bool expression");
     }
     invert() {
-      const final = this.final();
+      const final = this.getFinalStep();
       final.expected_bool = !final.expected_bool;
       return this;
     }
@@ -7113,8 +7216,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         steps
       });
     }
-    flatten(ifLabel) {
-      const final = this.final();
+    toSteps(ifLabel) {
+      const final = this.getFinalStep();
       const newFinal = Action.fromArgs({ ...final, label: ifLabel });
       this.steps[this.steps.length - 1] = newFinal;
       return this.steps;
@@ -7129,6 +7232,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.mathlang = "bool_literal";
       this.value = breakIfNotBool(args2.value);
+    }
+    clone() {
+      return new BoolLiteral(this.debug.clone(), this.args);
     }
     static quick(debug, value) {
       return new BoolLiteral(debug, { value });
@@ -7146,10 +7252,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class BoolComparison extends BoolExpression {
-    constructor() {
-      super(...arguments);
+    constructor(debug, args2) {
+      super(debug, args2);
       __publicField(this, "action");
       __publicField(this, "expected_bool");
+      this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
     invert() {
       this.expected_bool = !this.expected_bool;
@@ -7183,13 +7290,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.rhsNode = args2.rhsNode;
     }
     clone() {
-      return new BoolBinaryExpression(this.debug, this.args);
+      const newArgs = { ...this.args };
+      newArgs.lhs = this.lhs.clone();
+      newArgs.rhs = this.rhs.clone();
+      return new BoolBinaryExpression(this.debug.clone(), newArgs);
     }
     invert() {
       if (this.op === "||" || this.op === "&&") {
-        if (typeof this.lhs === "number" || typeof this.rhs === "number") {
-          throw new Error("|| or && for a number??");
-        }
         this.lhs = this.lhs.invert();
         this.rhs = this.rhs.invert();
       }
@@ -7205,6 +7312,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "comment");
       __publicField(this, "expected_bool");
       this.mathlang = "bool_getable";
+      this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
     getBool() {
       return this.expected_bool;
@@ -7224,7 +7332,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       this.action = "CHECK_ENTITY_GLITCHED";
       this.entity = breakIfNotString(args2.entity);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityGlitched(this.debug.clone(), this.args);
     }
     static quick(debug, entity, provided_bool) {
       return new CheckEntityGlitched(debug, {
@@ -7240,7 +7350,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "save_flag");
       this.action = "CHECK_SAVE_FLAG";
       this.save_flag = breakIfNotString(args2.save_flag);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckSaveFlag(this.debug.clone(), this.args);
     }
     static quick(debug, save_flag, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7256,7 +7368,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_IF_ENTITY_IS_IN_GEOMETRY";
       this.geometry = breakIfNotString(args2.geometry);
       this.entity = breakIfNotString(args2.entity);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckIfEntityIsInGeometry(this.debug.clone(), this.args);
     }
     static quick(debug, entity, geometry, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7274,7 +7388,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "button_id");
       this.action = "CHECK_FOR_BUTTON_PRESS";
       this.button_id = breakIfNotString(args2.button_id);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckForButtonPress(this.debug.clone(), this.args);
     }
     static quick(debug, button_id, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7288,7 +7404,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "button_id");
       this.action = "CHECK_FOR_BUTTON_STATE";
       this.button_id = breakIfNotString(args2.button_id);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckForButtonState(this.debug.clone(), this.args);
     }
     static quick(debug, button_id, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7300,7 +7418,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "action");
       this.action = "CHECK_DIALOG_OPEN";
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckDialogOpen(this.debug.clone(), this.args);
     }
     static quick(debug, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7312,7 +7432,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "action");
       this.action = "CHECK_SERIAL_DIALOG_OPEN";
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckSerialDialogOpen(this.debug.clone(), this.args);
     }
     static quick(debug, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7324,7 +7446,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "action");
       this.action = "CHECK_DEBUG_MODE";
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckDebugMode(this.debug.clone(), this.args);
     }
     static quick(debug, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7337,7 +7461,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "mathlang");
       __publicField(this, "comment");
       this.mathlang = "string_checkable";
-      this.expected_bool = true;
     }
     updateProp(_) {
       throw new Error(`Parent should not be trying to change its string property (value ${_})`);
@@ -7360,7 +7483,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_NAME";
       this.entity = breakIfNotString(args2.entity);
       this.string = breakIfNotString(args2.string);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityName(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.string = value;
@@ -7386,7 +7511,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_INTERACT_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
       this.expected_script = breakIfNotString(args2.expected_script);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityInteractScript(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_script = value;
@@ -7412,7 +7539,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_TICK_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
       this.expected_script = breakIfNotString(args2.expected_script);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityTickScript(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_script = value;
@@ -7438,7 +7567,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_LOOK_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
       this.expected_script = breakIfNotString(args2.expected_script);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityLookScript(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_script = value;
@@ -7464,7 +7595,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_TYPE";
       this.entity = breakIfNotString(args2.entity);
       this.entity_type = breakIfNotString(args2.entity_type);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityType(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.entity_type = value;
@@ -7487,7 +7620,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_DIRECTION";
       this.entity = breakIfNotString(args2.entity);
       this.direction = breakIfNotString(args2.direction);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityDirection(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.direction = value;
@@ -7512,7 +7647,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_PATH";
       this.entity = breakIfNotString(args2.entity);
       this.geometry = breakIfNotString(args2.geometry);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityPath(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.geometry = value;
@@ -7533,6 +7670,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_WARP_STATE";
       this.string = breakIfNotString(args2.string);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckWarpState(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.string = value;
@@ -7567,6 +7707,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotNumber(args2.value);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
+    clone() {
+      return new CheckVariable(this.debug.clone(), this.args);
+    }
     static quick(debug, variable, value, comparison, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckVariable(debug, {
@@ -7590,6 +7733,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.source = breakIfNotString(args2.source);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
+    clone() {
+      return new CheckVariables(this.debug.clone(), this.args);
+    }
     static quick(debug, variable, source, comparison, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckVariables(debug, {
@@ -7610,7 +7756,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     updateProp(_) {
       throw new Error(`Parent should not be trying to change its number property (value ${_})`);
     }
-    makeWholeThing(number, op) {
+    finalizeValues(number, op) {
       this.updateProp(number);
       this.expected_bool = op === "==";
       return this;
@@ -7625,17 +7771,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_X";
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityX(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_u2 = value;
     }
     getProp() {
       return this.expected_u2;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_u2, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7651,17 +7795,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_Y";
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityY(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_u2 = value;
     }
     getProp() {
       return this.expected_u2;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_u2, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7677,17 +7819,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_PRIMARY_ID";
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityPrimaryID(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_u2 = value;
     }
     getProp() {
       return this.expected_u2;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_u2, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7703,17 +7843,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_SECONDARY_ID";
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntitySecondaryID(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_u2 = value;
     }
     getProp() {
       return this.expected_u2;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_u2, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7729,17 +7867,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_PRIMARY_ID_TYPE";
       this.entity = breakIfNotString(args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityPrimaryIDType(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_byte = value;
     }
     getProp() {
       return this.expected_byte;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_byte, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7759,17 +7895,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_CURRENT_ANIMATION";
       this.entity = breakIfNotString(args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityCurrentAnimation(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_byte = value;
     }
     getProp() {
       return this.expected_byte;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_byte, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7786,21 +7920,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_byte");
-      __publicField(this, "expected_bool");
       this.action = "CHECK_ENTITY_CURRENT_FRAME";
       this.entity = breakIfNotString(args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    clone() {
+      return new CheckEntityCurrentFrame(this.debug.clone(), this.args);
     }
     updateProp(value) {
       this.expected_byte = value;
     }
     getProp() {
       return this.expected_byte;
-    }
-    invert() {
-      this.expected_bool = !this.expected_bool;
-      return this;
     }
     static quick(debug, entity, expected_byte, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -7822,7 +7953,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.type = breakIfNotString(args2.type);
     }
     clone() {
-      return new BoolSetable(this.debug, this.args);
+      return new BoolSetable(this.debug.clone(), this.args);
     }
     static quick(debug, type, value) {
       return new BoolSetable(debug, { type, value });
@@ -7839,7 +7970,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.type = breakIfNotString(args2.type);
     }
     clone() {
-      return new MovableIdentifier(this.debug, this.args);
+      return new MovableIdentifier(this.debug.clone(), this.args);
     }
     static quick(debug, type, value) {
       return new MovableIdentifier(debug, { type, value });
@@ -7858,7 +7989,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (args2.polygonType) this.polygonType = breakIfNotString(args2.polygonType);
     }
     clone() {
-      return new CoordinateIdentifier(this.debug, this.args);
+      return new CoordinateIdentifier(this.debug.clone(), this.args);
     }
     static quick(debug, type, value, polygonType) {
       return new CoordinateIdentifier(debug, { type, value, polygonType });
@@ -7875,12 +8006,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.type = breakIfNotString(args2.type);
     }
     clone() {
-      return new DirectionTarget(this.debug, this.args);
+      return new DirectionTarget(this.debug.clone(), this.args);
     }
     static quick(debug, type, value) {
       return new DirectionTarget(debug, { type, value });
     }
   }
+  console.log("me");
   const opIntoStringMap = {
     "=": "SET",
     "+": "ADD",
@@ -8427,7 +8559,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static toFlag(f, node, save_flag, source, invert) {
       const actionIfTrue = SET_SAVE_FLAG.toValue(save_flag, true);
       const actionIfFalse = SET_SAVE_FLAG.toValue(save_flag, false);
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       return simpleBranchMaker(
         f,
         node,
@@ -10496,7 +10628,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return f.fileName + "-" + node.startPosition.row + ":" + node.startPosition.column;
   };
   const simpleBranchMaker = (f, node, condition, trueBlock, falseBlock) => {
-    const debug = new MathlangLocation(f, node);
+    const debug = MathlangLocation.quick(f, node);
     const n = f.p.advanceGotoSuffix();
     const ifLabel = `if true #${n}`;
     const rendezvousLabel = `rendezvous #${n}`;
@@ -10504,7 +10636,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
       top = [Action.fromArgs({ ...condition, label: ifLabel })];
     } else if (condition instanceof BoolBinaryExpression) {
-      top = condition.flatten(ifLabel);
+      top = condition.toSteps(ifLabel);
     }
     const steps = [
       ...top,
@@ -10526,7 +10658,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "body");
       __publicField(this, "bodyNode");
       __publicField(this, "debug");
-      const debug = new MathlangLocation(f, node);
+      const debug = MathlangLocation.quick(f, node);
       this.conditionNode = mandatoryChildForFieldName(f, node, "condition");
       reportMissingChildNodes(f, node);
       reportErrorNodes(f, node);
@@ -10538,7 +10670,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.condition = condition;
       this.bodyNode = mandatoryChildForFieldName(f, node, "body");
       this.body = handleNamedChildren(f, this.bodyNode);
-      this.debug = new MathlangLocation(f, node);
+      this.debug = MathlangLocation.quick(f, node);
     }
   }
   const newElse = (f, elseNode) => {
@@ -10549,22 +10681,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return elseBody;
   };
   const ifChainMaker = (f, node, iffs, elseBody, label) => {
-    const debug = new MathlangLocation(f, node);
+    const debug = MathlangLocation.quick(f, node);
     const rendezvousL = label + ` rendezvous #${f.p.advanceGotoSuffix()}`;
     const steps = [];
     let bottomSteps = [];
     iffs.forEach((iff) => {
       const ifL = `if true #${f.p.advanceGotoSuffix()}`;
-      steps.push(...iff.condition.flatten(ifL));
+      steps.push(...iff.condition.toSteps(ifL));
       const bottomInsert = [
         new LabelDefinition(debug, { label: ifL }),
         ...iff.body,
-        GotoLabel.quick(new MathlangLocation(f, iff.bodyNode || iff.debug.node), rendezvousL)
+        GotoLabel.quick(MathlangLocation.quick(f, iff.bodyNode || iff.debug.node), rendezvousL)
       ];
       bottomSteps = bottomInsert.concat(bottomSteps);
     });
     steps.push(...elseBody);
-    steps.push(GotoLabel.quick(new MathlangLocation(f, node), rendezvousL));
+    steps.push(GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL));
     const combined = steps.concat(bottomSteps);
     combined.push(LabelDefinition.quick(debug, rendezvousL));
     return new MathlangSequence(debug, { steps: combined, type: "parser-node: " + label });
@@ -10596,85 +10728,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     });
     return actions;
   };
-  class FileState {
-    constructor(p, fileName) {
-      __publicField(this, "p");
-      __publicField(this, "fileName");
-      __publicField(this, "constants");
-      __publicField(this, "functions");
-      __publicField(this, "currFunction");
-      __publicField(this, "settings");
-      __publicField(this, "nodes");
-      __publicField(this, "errorCount");
-      __publicField(this, "warningCount");
-      this.p = p;
-      this.fileName = fileName;
-      this.constants = {};
-      this.functions = {};
-      this.currFunction = [];
-      this.settings = {
-        default: {},
-        entity: {},
-        label: {},
-        serial: {}
-      };
-      this.nodes = [];
-      this.errorCount = 0;
-      this.warningCount = 0;
-    }
-    quickError(node, message, footer) {
-      const err2 = {
-        message,
-        locations: [
-          {
-            f: this,
-            node,
-            fileName: this.fileName
-          }
-        ]
-      };
-      if (footer) {
-        err2.footer = footer;
-      }
-      this.p.newError(err2);
-      this.errorCount += 1;
-    }
-    newError(message) {
-      this.p.newError(message);
-      this.errorCount += 1;
-    }
-    quickWarning(node, message, footer) {
-      const warn = {
-        message,
-        locations: [
-          {
-            f: this,
-            node,
-            fileName: this.fileName
-          }
-        ]
-      };
-      if (footer) {
-        warn.footer = footer;
-      }
-      this.p.newWarning(warn);
-      this.warningCount += 1;
-    }
-    newWarning(message) {
-      this.p.newWarning(message);
-      this.warningCount += 1;
-    }
-    // print the file's parse status
-    printableMessageInformation() {
-      if (this.errorCount === 0 && this.warningCount === 0) {
-        return `(${ansiTags.green}OK${ansiTags.reset})`;
-      }
-      const errMessage = this.errorCount ? `${ansiTags.red}${this.errorCount} error${this.errorCount === 1 ? "" : "s"}${ansiTags.reset}` : `0 errors`;
-      const warnMessage = this.warningCount ? `${ansiTags.yellow}${this.warningCount} warning${this.warningCount === 1 ? "" : "s"}${ansiTags.reset}` : `0 warnings`;
-      const ret = [errMessage, warnMessage].join(", ");
-      return `(${ret})`;
-    }
-  }
   const copyRecursion = [];
   class ProjectState {
     constructor(tsParser, fileMap, scenarioData) {
@@ -10791,13 +10844,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         if (!this.scripts[targetScript]) {
           const useNode = action instanceof MathlangNode ? action.debug.node.childForFieldName("script") || action.debug.node : node;
           this.newError({
-            locations: [
-              {
-                f: scriptData.debug.f,
-                fileName: scriptData.debug.fileName,
-                node: useNode
-              }
-            ],
+            locations: [MathlangLocation.quick(scriptData.debug.f, useNode)],
             message: "copy_script: no script found by the name " + targetScript
           });
           return;
@@ -10838,11 +10885,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return Action.fromArgs(ret);
           });
           const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-          finalActions.push(CommentNode.quick(new MathlangLocation(f, node), comment));
+          finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
           finalActions.push(...searchedAndReplaced);
         } else {
           const comment = `Copying: ${action.script} (-${labelSuffix})`;
-          finalActions.push(CommentNode.quick(new MathlangLocation(f, node), comment));
+          finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
           finalActions.push(...copiedActions);
         }
       });
@@ -10920,10 +10967,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       entries.forEach(([name2, dupes]) => {
         p.newError({
           message: `multiple ${category} with name "${name2}"`,
-          locations: dupes.map((dupe) => ({
-            fileName: dupe.debug.fileName,
-            node: dupe.debug.node.firstNamedChild || dupe.debug.node
-          }))
+          locations: dupes.map(
+            (dupe) => MathlangLocation.quick(
+              dupe.debug.f,
+              dupe.debug.node.firstNamedChild || dupe.debug.node
+            )
+          )
         });
         dupes.forEach((dupe) => {
           const file = p.fileMap[dupe.debug.fileName].parsed;

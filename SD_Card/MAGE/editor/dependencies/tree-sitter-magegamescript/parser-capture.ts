@@ -91,7 +91,7 @@ export const handleCapture = (f: FileState, node: TreeSitterNode | null): Captur
 
 const captureFns = {
 	BOOL: (f: FileState, node: TreeSitterNode): BoolLiteral => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const text = node.text;
 		if (text === 'true') return BoolLiteral.quick(debug, true);
 		if (text === 'false') return BoolLiteral.quick(debug, false);
@@ -184,7 +184,7 @@ const captureFns = {
 	},
 	entity_identifier: (f: FileState, node: TreeSitterNode): string => extractEntityName(f, node),
 	movable_identifier: (f: FileState, node: TreeSitterNode): MovableIdentifier => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const type = optionalTextForFieldName(f, node, 'type');
 		if (type === 'camera') {
 			return MovableIdentifier.quick(debug, 'camera', 'camera');
@@ -194,7 +194,7 @@ const captureFns = {
 		}
 	},
 	dialog_identifier: (f: FileState, node: TreeSitterNode): DialogIdentifier => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const label = optionalTextForFieldName(f, node, 'label');
 		if (label) {
 			return DialogIdentifier.quick(debug, 'label', label);
@@ -207,19 +207,19 @@ const captureFns = {
 		return DialogIdentifier.quick(debug, type, value);
 	},
 	dialog_parameter: (f: FileState, node: TreeSitterNode): DialogParameter => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const property = textForFieldName(f, node, 'property');
 		const value = stringOrNumberCaptureForFieldName(f, node, 'value');
 		return DialogParameter.quick(debug, property, value);
 	},
 	serial_dialog_parameter: (f: FileState, node: TreeSitterNode): SerialDialogParameter => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const property = textForFieldName(f, node, 'property');
 		const value = stringOrNumberCaptureForFieldName(f, node, 'value');
 		return SerialDialogParameter.quick(debug, property, value);
 	},
 	coordinate_identifier: (f: FileState, node: TreeSitterNode): CoordinateIdentifier => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const type = optionalTextForFieldName(f, node, 'type');
 		const polygonType = optionalTextForFieldName(f, node, 'polygon_type');
 		if (type === 'entity_path') {
@@ -232,7 +232,7 @@ const captureFns = {
 		return CoordinateIdentifier.quick(debug, 'entity', extractEntityName(f, node));
 	},
 	bool_setable: (f: FileState, node: TreeSitterNode): BoolSetable => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const type = optionalTextForFieldName(f, node, 'type');
 		if (!type) {
 			const value = stringCaptureForFieldName(f, node, 'flag');
@@ -255,16 +255,16 @@ const captureFns = {
 		let rhs = handleCapture(f, rhsNode);
 		let lhs = handleCapture(f, lhsNode);
 		if (!(lhs instanceof IntBinaryExpression)) {
-			lhs = IntUnit.fromAny(new MathlangLocation(f, lhsNode), lhs);
+			lhs = IntUnit.fromAny(MathlangLocation.quick(f, lhsNode), lhs);
 		}
 		if (!(rhs instanceof IntBinaryExpression)) {
-			rhs = IntUnit.fromAny(new MathlangLocation(f, rhsNode), rhs);
+			rhs = IntUnit.fromAny(MathlangLocation.quick(f, rhsNode), rhs);
 		}
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		return new IntBinaryExpression(debug, { lhs, rhs, op });
 	},
 	bool_binary_expression: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const rhsNode = mandatoryChildForFieldName(f, node, 'rhs');
 		const lhsNode = mandatoryChildForFieldName(f, node, 'lhs');
 		const op = stringCaptureForFieldName(f, node, 'operator');
@@ -288,7 +288,7 @@ const captureFns = {
 		throw new Error('invalid LHS and RHS combo for captured bool binary expression');
 	},
 	bool_grouping: (f: FileState, node: TreeSitterNode): BoolExpression => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const capture = captureForFieldName(f, node, 'inner');
 		if (typeof capture === 'boolean') {
 			return BoolLiteral.quick(debug, capture);
@@ -300,7 +300,7 @@ const captureFns = {
 		throw new Error('bool_grouping capture did not yield BoolExpression');
 	},
 	bool_unary_expression: (f: FileState, node: TreeSitterNode): BoolExpression => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const op = stringCaptureForFieldName(f, node, 'operator');
 		if (op !== '!') throw new Error('captured unknown unary operator: ' + op);
 		const capture = captureForFieldName(f, node, 'operand');
@@ -320,7 +320,7 @@ const captureFns = {
 		throw new Error('bool_unary_expression capture did not yield BoolExpression');
 	},
 	int_getable: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const rngNode = node.childForFieldName('rng');
 		if (rngNode) {
 			return handleCapture(f, rngNode);
@@ -330,7 +330,7 @@ const captureFns = {
 		return EntityIntField.quick(debug, entity, field);
 	},
 	bool_getable: (f: FileState, node: TreeSitterNode): BoolGetableAction => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const type = optionalTextForFieldName(f, node, 'type');
 		if (type === 'flag') {
 			return CheckSaveFlag.quick(debug, stringCaptureForFieldName(f, node, 'value'));
@@ -371,7 +371,7 @@ const captureFns = {
 		throw new Error('failed to capture bool_getable');
 	},
 	string_checkable: (f: FileState, node: TreeSitterNode): StringCheckableAction => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const entity = optionalStringCaptureForFieldName(f, node, 'entity_identifier');
 		if (entity === null) {
 			const type = optionalTextForFieldName(f, node, 'type');
@@ -410,7 +410,7 @@ const captureFns = {
 		return stringCaptureForFieldName(f, node, 'entity_identifier');
 	},
 	bool_comparison: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const lhsNode = mandatoryChildForFieldName(f, node, 'lhs');
 		const rhsNode = mandatoryChildForFieldName(f, node, 'rhs');
 		const op = stringCaptureForFieldName(f, node, 'operator');
@@ -447,7 +447,7 @@ const captureFns = {
 				const modified = lhs.intoNumberCheckableEquality();
 				dropTemporary();
 				dropTemporary();
-				return modified.makeWholeThing(rhs, op);
+				return modified.finalizeValues(rhs, op);
 			} else {
 				steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, tempLHS));
 				lhs = tempLHS;
@@ -459,7 +459,7 @@ const captureFns = {
 				const modified = rhs.intoNumberCheckableEquality();
 				dropTemporary();
 				dropTemporary();
-				return modified.makeWholeThing(lhs, op);
+				return modified.finalizeValues(lhs, op);
 			} else {
 				steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, tempRHS));
 				rhs = tempRHS;
@@ -482,11 +482,11 @@ const captureFns = {
 			rhs = tempRHS;
 		}
 		if (lhs instanceof IntBinaryExpression) {
-			lhs.flatten(steps);
+			lhs.toSteps(steps);
 			lhs = tempLHS;
 		}
 		if (rhs instanceof IntBinaryExpression) {
-			rhs.flatten(steps);
+			rhs.toSteps(steps);
 			rhs = tempRHS;
 		}
 		if (lhs instanceof IntGetable) {
@@ -531,7 +531,7 @@ const captureFns = {
 		return BoolComparisonSequence.quick(debug, steps);
 	},
 	int_setable: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const entity = stringCaptureForFieldName(f, node, 'entity_identifier');
 		const field = textForFieldName(f, node, 'property');
 		return EntityIntField.quick(debug, entity, field);
@@ -542,7 +542,7 @@ const captureFns = {
 		throw new Error('captured int_grouping did not produce IntExpression');
 	},
 	int_rng: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		let value = optionalNumberCaptureForFieldName(f, node, 'value');
 		const inclusive = optionalTextForFieldName(f, node, 'inclusive');
 		if (value !== null) {
@@ -566,7 +566,7 @@ const captureFns = {
 		return RNGPair.quick(debug, diff, min);
 	},
 	direction_target: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const direction = optionalTextForFieldName(f, node, 'nsew');
 		if (direction) {
 			return DirectionTarget.quick(debug, 'nsew', direction);
@@ -720,7 +720,7 @@ export const coerceToString = (
 	label: string,
 ): string => {
 	if (typeof v !== 'string') {
-		const locations = [{ f, node, fileName: f.fileName }];
+		const locations = [MathlangLocation.quick(f, node)];
 		if (f.constants[node.text]) {
 			locations.unshift({
 				f: f.constants[node.text].debug.f || f,
@@ -744,14 +744,7 @@ export const coerceToNumber = (
 ): number => {
 	if (typeof v !== 'number') {
 		f.newError({
-			locations: [
-				{
-					f: f.constants[node.text].debug.f,
-					node: f.constants[node.text].debug.node,
-					fileName: f.constants[node.text].debug.fileName,
-				},
-				{ f, node, fileName: f.fileName },
-			],
+			locations: [f.constants[node.text].debug, MathlangLocation.quick(f, node)],
 			message: `${label} is not a number`,
 		});
 		return NaN;
@@ -770,14 +763,7 @@ export const coerceAsBool = (
 	}
 	if (typeof v !== 'boolean') {
 		f.newError({
-			locations: [
-				{
-					f: f.constants[node.text].debug.f,
-					node: f.constants[node.text].debug.node,
-					fileName: f.constants[node.text].debug.fileName,
-				},
-				{ f, node, fileName: f.fileName },
-			],
+			locations: [f.constants[node.text].debug, MathlangLocation.quick(f, node)],
 			message: `${label} is not a boolean`,
 		});
 		return false;

@@ -193,7 +193,7 @@ export const simpleBranchMaker = (
 	trueBlock: AnyNode[],
 	falseBlock: AnyNode[],
 ): MathlangSequence => {
-	const debug = new MathlangLocation(f, node);
+	const debug = MathlangLocation.quick(f, node);
 	const n = f.p.advanceGotoSuffix();
 	const ifLabel = `if true #${n}`;
 	const rendezvousLabel = `rendezvous #${n}`;
@@ -202,7 +202,7 @@ export const simpleBranchMaker = (
 	if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
 		top = [Action.fromArgs({ ...condition, label: ifLabel })];
 	} else if (condition instanceof BoolBinaryExpression) {
-		top = condition.flatten(ifLabel);
+		top = condition.toSteps(ifLabel);
 	}
 
 	const steps = [
@@ -226,7 +226,7 @@ export class ConditionalBlock {
 	bodyNode?: TreeSitterNode;
 	debug: MathlangLocation;
 	constructor(f: FileState, node: TreeSitterNode, type: string) {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		this.conditionNode = mandatoryChildForFieldName(f, node, 'condition');
 		// TODO this should not be handled this way! make uniform
 		// Find other cases, too? node handling should be done in one place so it can report errors
@@ -240,7 +240,7 @@ export class ConditionalBlock {
 		this.condition = condition;
 		this.bodyNode = mandatoryChildForFieldName(f, node, 'body');
 		this.body = handleNamedChildren(f, this.bodyNode);
-		this.debug = new MathlangLocation(f, node);
+		this.debug = MathlangLocation.quick(f, node);
 	}
 }
 
@@ -259,7 +259,7 @@ export const ifChainMaker = (
 	elseBody: AnyNode[],
 	label: string,
 ): MathlangSequence => {
-	const debug = new MathlangLocation(f, node);
+	const debug = MathlangLocation.quick(f, node);
 	const rendezvousL: string = label + ` rendezvous #${f.p.advanceGotoSuffix()}`;
 	const steps: AnyNode[] = [];
 	let bottomSteps: AnyNode[] = [];
@@ -267,18 +267,18 @@ export const ifChainMaker = (
 	iffs.forEach((iff) => {
 		const ifL = `if true #${f.p.advanceGotoSuffix()}`;
 		// add top half
-		steps.push(...iff.condition.flatten(ifL));
+		steps.push(...iff.condition.toSteps(ifL));
 		// add bottom half
 		const bottomInsert: AnyNode[] = [
 			new LabelDefinition(debug, { label: ifL }),
 			...iff.body,
-			GotoLabel.quick(new MathlangLocation(f, iff.bodyNode || iff.debug.node), rendezvousL),
+			GotoLabel.quick(MathlangLocation.quick(f, iff.bodyNode || iff.debug.node), rendezvousL),
 		];
 		bottomSteps = bottomInsert.concat(bottomSteps);
 	});
 
 	steps.push(...elseBody);
-	steps.push(GotoLabel.quick(new MathlangLocation(f, node), rendezvousL));
+	steps.push(GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL));
 	const combined = steps.concat(bottomSteps);
 	combined.push(LabelDefinition.quick(debug, rendezvousL));
 	return new MathlangSequence(debug, { steps: combined, type: 'parser-node: ' + label });

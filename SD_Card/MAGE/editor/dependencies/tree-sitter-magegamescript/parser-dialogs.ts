@@ -176,7 +176,7 @@ export const buildSerialDialogFromInfo = (
 			if (option.optionType !== firstOptionType) {
 				const node = option.debug.node.firstChild;
 				if (!node) throw new Error('serial dialog had no first option node');
-				warnNodes.push({ f, node, fileName: f.fileName });
+				warnNodes.push(MathlangLocation.quick(f, node));
 			}
 		});
 		if (warnNodes.length > 0) {
@@ -186,7 +186,7 @@ export const buildSerialDialogFromInfo = (
 			});
 		}
 	}
-	return new SerialDialog(new MathlangLocation(f, node), serialDialog);
+	return new SerialDialog(MathlangLocation.quick(f, node), serialDialog);
 };
 
 const longerAlignments: Record<string, string> = {
@@ -263,7 +263,7 @@ export const buildDialogFromInfo = (
 			}
 			if (!messageNodes[i]) throw new Error('no associated node for message at index' + i);
 			f.p.newWarning({
-				locations: [{ f, node: messageNodes[i], fileName: f.fileName }],
+				locations: [MathlangLocation.quick(f, messageNodes[i])],
 				message: warningMessage,
 				footer:
 					`When wrapped:\n` +
@@ -285,7 +285,7 @@ export const buildDialogFromInfo = (
 			});
 		}
 	});
-	return new Dialog(new MathlangLocation(f, node), {
+	return new Dialog(MathlangLocation.quick(f, node), {
 		messages,
 		options,
 		settings: dialogSettings,

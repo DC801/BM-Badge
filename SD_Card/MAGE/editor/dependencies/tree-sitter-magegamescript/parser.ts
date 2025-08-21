@@ -20,6 +20,7 @@ import {
 	GotoLabel,
 	CopyMacro,
 	AnyNode,
+	MathlangLocation,
 } from './parser-types.ts';
 
 type FileCategory = 'scripts' | 'dialogs' | 'serialDialogs';
@@ -66,10 +67,12 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 			// One error message, multiple locations
 			p.newError({
 				message: `multiple ${category} with name "${name}"`,
-				locations: dupes.map((dupe: Definition) => ({
-					fileName: dupe.debug.fileName,
-					node: dupe.debug.node.firstNamedChild || dupe.debug.node,
-				})),
+				locations: dupes.map((dupe: Definition) =>
+					MathlangLocation.quick(
+						dupe.debug.f,
+						dupe.debug.node.firstNamedChild || dupe.debug.node,
+					),
+				),
 			});
 			// Increment error count for that file
 			dupes.forEach((dupe: Definition) => {

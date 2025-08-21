@@ -170,13 +170,7 @@ export class ProjectState {
 						? action.debug.node.childForFieldName('script') || action.debug.node
 						: node;
 				this.newError({
-					locations: [
-						{
-							f: scriptData.debug.f,
-							fileName: scriptData.debug.fileName,
-							node: useNode,
-						},
-					],
+					locations: [MathlangLocation.quick(scriptData.debug.f, useNode)],
 					message: 'copy_script: no script found by the name ' + targetScript,
 				});
 				return;
@@ -230,12 +224,12 @@ export class ProjectState {
 					return Action.fromArgs(ret);
 				});
 				const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-				finalActions.push(CommentNode.quick(new MathlangLocation(f, node), comment));
+				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
 				finalActions.push(...searchedAndReplaced);
 			} else {
 				// plain version
 				const comment = `Copying: ${action.script} (-${labelSuffix})`;
-				finalActions.push(CommentNode.quick(new MathlangLocation(f, node), comment));
+				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
 				finalActions.push(...copiedActions);
 			}
 		});

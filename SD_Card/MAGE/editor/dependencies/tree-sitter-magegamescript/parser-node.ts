@@ -42,7 +42,7 @@ import {
 	ScriptDefinition,
 	SerialDialog,
 	SerialDialogOption,
-	type AnyNode,
+	AnyNode,
 	type DialogInfo,
 	type DialogSettings,
 	type SerialOptionType,
@@ -143,7 +143,7 @@ const nodeFns = {
 		}
 		const bodyNode = node.childForFieldName('body');
 		if (!bodyNode) throw new Error('fn without body node');
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const definiton = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
 		if (f.functions[name]) {
 			f.quickError(node, `fn ${name} already defined`);
@@ -180,7 +180,7 @@ const nodeFns = {
 		// make local const registry
 		const localConstants: FunctionStackEntry = {};
 		callParams.forEach((callParam, i) => {
-			const debug = new MathlangLocation(f, callParamNodes[i]);
+			const debug = MathlangLocation.quick(f, callParamNodes[i]);
 			const constantName = definition.params[i];
 			let value = callParam;
 			if (typeof callParam === 'boolean') {
@@ -195,7 +195,7 @@ const nodeFns = {
 		const stack: FunctionStackEntry[] = f.currFunction;
 		stack.unshift(localConstants);
 		const body = handleNamedChildren(f, definition.bodyNode);
-		const sequence = new MathlangSequence(new MathlangLocation(f, node), { steps: body });
+		const sequence = new MathlangSequence(MathlangLocation.quick(f, node), { steps: body });
 		stack.shift();
 		// the rest of the owl
 		return sequence;
@@ -225,7 +225,7 @@ const nodeFns = {
 		const lastChild = node.lastChild;
 		if (!lastChild) throw new Error('could not find final node in script block');
 		const labelAction: LabelDefinition = new LabelDefinition(
-			new MathlangLocation(f, lastChild),
+			MathlangLocation.quick(f, lastChild),
 			{
 				label: returnLabel,
 			},
@@ -235,15 +235,15 @@ const nodeFns = {
 		actions.forEach((action, i) => {
 			if (action instanceof ReturnStatement) {
 				actions[i] = GotoLabel.quick(
-					new MathlangLocation(f, action.debug.node),
+					MathlangLocation.quick(f, action.debug.node),
 					returnLabel,
 				);
 			}
 		});
-		return [new ScriptDefinition(new MathlangLocation(f, node), { scriptName, actions })];
+		return [new ScriptDefinition(MathlangLocation.quick(f, node), { scriptName, actions })];
 	},
 	constant_assignment: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const label = textForFieldName(f, node, 'label');
 		const value = captureForFieldName(f, node, 'value');
 		if (!isMGSPrimitive(value)) {
@@ -287,11 +287,10 @@ const nodeFns = {
 				f.newError({
 					message: `cannot redefine constant ${constantName} (via 'include')`,
 					locations: [
-						{
-							f: insertFile,
-							fileName: insertFile.fileName,
-							node: insertFile.constants[constantName].debug.node,
-						},
+						MathlangLocation.quick(
+							insertFile,
+							insertFile.constants[constantName].debug.node,
+						),
 					],
 				});
 			}
@@ -303,16 +302,11 @@ const nodeFns = {
 				f.newError({
 					message: `cannot redefine function ${functionName} (via 'include')`,
 					locations: [
-						{
-							f: insertFile,
-							fileName: insertFile.fileName,
-							node: insertFile.functions[functionName].debug.node,
-						},
-						{
-							f,
-							fileName: f.fileName,
-							node: node.firstChild || node,
-						},
+						MathlangLocation.quick(
+							insertFile,
+							insertFile.functions[functionName].debug.node,
+						),
+						MathlangLocation.quick(f, node.firstChild || node),
 					],
 				});
 			}
@@ -340,10 +334,10 @@ const nodeFns = {
 			});
 		});
 		includeRecursion.pop();
-		return [IncludeNode.quick(new MathlangLocation(f, node), fileName)];
+		return [IncludeNode.quick(MathlangLocation.quick(f, node), fileName)];
 	},
 	rand_macro: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const horizontal: AnyNode[][] = [];
 		// count items per spread
 		let spreadCount = -Infinity;
@@ -388,14 +382,14 @@ const nodeFns = {
 	},
 	label_definition: (f: FileState, node: TreeSitterNode) => {
 		const label = textForFieldName(f, node, 'label');
-		return [LabelDefinition.quick(new MathlangLocation(f, node), label)];
+		return [LabelDefinition.quick(MathlangLocation.quick(f, node), label)];
 	},
 	add_dialog_settings: (f: FileState, node: TreeSitterNode) => {
 		const targets = handleNamedChildren(f, node);
 		if (!targets.every((v) => v instanceof AddDialogSettingsTarget)) {
 			throw new Error('add_dialog_settings node not a AddDialogSettingsTarget');
 		}
-		return [AddDialogSettings.quick(new MathlangLocation(f, node), targets)];
+		return [AddDialogSettings.quick(MathlangLocation.quick(f, node), targets)];
 	},
 	add_dialog_settings_target: (f: FileState, node: TreeSitterNode) => {
 		let settingsTarget: DialogSettings = {};
@@ -419,7 +413,7 @@ const nodeFns = {
 		parameters.forEach((param) => {
 			settingsTarget[param.property] = param.value;
 		});
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const ret = AddDialogSettingsTarget.quick(debug, type, parameters, target);
 		return [ret];
 	},
@@ -431,11 +425,11 @@ const nodeFns = {
 		parameters.forEach((param) => {
 			f.settings.serial[param.property] = param.value;
 		});
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		return [AddSerialDialogSettings.quick(debug, parameters)];
 	},
 	serial_dialog_option: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const optionChar = textForFieldName(f, node, 'option_type');
 		let optionType: SerialOptionType = 'options';
 		if (optionChar === '_') optionType = 'text_options';
@@ -447,7 +441,7 @@ const nodeFns = {
 	dialog_option: (f: FileState, node: TreeSitterNode) => {
 		const label = stringCaptureForFieldName(f, node, 'label');
 		const script = stringCaptureForFieldName(f, node, 'script');
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		return [DialogOption.quick(debug, label, script)];
 	},
 	serial_dialog_definition: (f: FileState, node: TreeSitterNode) => {
@@ -459,7 +453,7 @@ const nodeFns = {
 		}
 		const serialDialog = serialDialogs[0];
 		if (!(serialDialog instanceof SerialDialog)) throw new Error('missing serial dialog');
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		return [SerialDialogDefinition.quick(debug, dialogName, serialDialog)];
 	},
 	dialog_definition: (f: FileState, node: TreeSitterNode) => {
@@ -467,7 +461,7 @@ const nodeFns = {
 		const dialogs = handleChildrenForFieldName(f, node, 'dialog');
 		if (!dialogs.every((v) => v instanceof Dialog))
 			throw new Error('not every dialog is a Dialog');
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		return [DialogDefinition.quick(debug, name, dialogs)];
 	},
 	serial_dialog: (f: FileState, node: TreeSitterNode): [SerialDialog] => {
@@ -530,7 +524,7 @@ const nodeFns = {
 			options,
 		};
 		const dialogs = buildDialogFromInfo(f, node, info, messageN);
-		dialogs.debug = new MathlangLocation(f, node);
+		dialogs.debug = MathlangLocation.quick(f, node);
 		return [dialogs];
 	},
 	json_literal: (f: FileState, node: TreeSitterNode): JSONLiteral[] => {
@@ -540,7 +534,7 @@ const nodeFns = {
 		const text = jsonNode.text;
 		try {
 			const parsed = JSON.parse(text);
-			return [new JSONLiteral(new MathlangLocation(f, node), { json: parsed })];
+			return [JSONLiteral.quick(MathlangLocation.quick(f, node), parsed)];
 		} catch {
 			f.quickError(node, `JSON syntax error`, `Generic error. Check trailing commas!`);
 		}
@@ -548,7 +542,7 @@ const nodeFns = {
 	},
 	copy_macro: (f: FileState, node: TreeSitterNode): [CopyMacro] => {
 		const script = stringCaptureForFieldName(f, node, 'script');
-		return [new CopyMacro(new MathlangLocation(f, node), { script })];
+		return [CopyMacro.quick(MathlangLocation.quick(f, node), script)];
 	},
 	debug_macro: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		const ret: AnyNode[] = [];
@@ -562,7 +556,7 @@ const nodeFns = {
 			}
 			dialogName = autoIdentifierName(f, node);
 			ret.push(
-				new SerialDialogDefinition(new MathlangLocation(f, node), {
+				new SerialDialogDefinition(MathlangLocation.quick(f, node), {
 					dialogName,
 					serialDialog,
 				}),
@@ -571,7 +565,7 @@ const nodeFns = {
 			// might just be the name of a serial dialog, and not a serial-dialog-in-place
 			dialogName = stringCaptureForFieldName(f, node, 'serial_dialog_name');
 		}
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const condition = CheckDebugMode.quick(debug, true);
 		const ifTrue = new SHOW_SERIAL_DIALOG({
 			disable_newline: false,
@@ -586,12 +580,12 @@ const nodeFns = {
 			if (Array.isArray(v)) return v;
 			if (v instanceof ContinueStatement) {
 				return GotoLabel.quick(
-					new MathlangLocation(f, v.debug.node),
+					MathlangLocation.quick(f, v.debug.node),
 					`condition #${printGotoLabel}`,
 				);
 			} else if (v instanceof BreakStatement) {
 				return GotoLabel.quick(
-					new MathlangLocation(f, v.debug.node),
+					MathlangLocation.quick(f, v.debug.node),
 					`rendezvous #${printGotoLabel}`,
 				);
 			}
@@ -599,7 +593,7 @@ const nodeFns = {
 		});
 	},
 	while_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const block = new ConditionalBlock(f, node, 'while');
 		const n = f.p.advanceGotoSuffix();
 		const conditionL = `while condition #${n}`;
@@ -607,17 +601,17 @@ const nodeFns = {
 		const rendezvousL = `while rendezvous #${n}`;
 		const steps = [
 			new LabelDefinition(debug, { label: conditionL }),
-			...block.condition.flatten(bodyL),
-			GotoLabel.quick(new MathlangLocation(f, node), rendezvousL),
+			...block.condition.toSteps(bodyL),
+			GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
 			new LabelDefinition(debug, { label: bodyL }),
 			...block.body,
-			GotoLabel.quick(new MathlangLocation(f, block.conditionNode || node), conditionL),
+			GotoLabel.quick(MathlangLocation.quick(f, block.conditionNode || node), conditionL),
 			new LabelDefinition(debug, { label: rendezvousL }),
 		];
 		return [new MathlangSequence(debug, { steps, type: 'parser-node: while_block' })];
 	},
 	do_while_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const doWhyle = new ConditionalBlock(f, node, 'do while');
 		const n = f.p.advanceGotoSuffix();
 		const conditionL = `do while condition #${n}`;
@@ -627,13 +621,13 @@ const nodeFns = {
 			new LabelDefinition(debug, { label: bodyL }),
 			...doWhyle.body,
 			new LabelDefinition(debug, { label: conditionL }),
-			...doWhyle.condition.flatten(bodyL),
+			...doWhyle.condition.toSteps(bodyL),
 			new LabelDefinition(debug, { label: rendezvousL }),
 		];
 		return [new MathlangSequence(debug, { steps, type: 'parser-node: do_while_block' })];
 	},
 	for_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = new MathlangLocation(f, node);
+		const debug = MathlangLocation.quick(f, node);
 		const n = f.p.advanceGotoSuffix();
 		const conditionL = `for condition #${n}`;
 		const bodyL = `for body #${n}`;
@@ -646,22 +640,22 @@ const nodeFns = {
 		const incrementerN = mandatoryChildForFieldName(f, node, 'incrementer');
 		const body = handleNode(f, bodyN).map((v) => {
 			if (v instanceof ContinueStatement)
-				return GotoLabel.quick(new MathlangLocation(f, node), continueL);
+				return GotoLabel.quick(MathlangLocation.quick(f, node), continueL);
 			if (v instanceof BreakStatement)
-				return GotoLabel.quick(new MathlangLocation(f, node), rendezvousL);
+				return GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL);
 			return v;
 		});
 		const initializer = mandatoryChildForFieldName(f, node, 'initializer');
 		const steps = [
 			...handleNode(f, initializer),
 			new LabelDefinition(debug, { label: conditionL }),
-			...condition.flatten(bodyL),
-			GotoLabel.quick(new MathlangLocation(f, node), rendezvousL),
+			...condition.toSteps(bodyL),
+			GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
 			new LabelDefinition(debug, { label: bodyL }),
 			...body,
 			new LabelDefinition(debug, { label: continueL }),
 			...handleNode(f, incrementerN),
-			GotoLabel.quick(new MathlangLocation(f, conditionN), conditionL),
+			GotoLabel.quick(MathlangLocation.quick(f, conditionN), conditionL),
 			new LabelDefinition(debug, { label: rendezvousL }),
 		];
 		return [new MathlangSequence(debug, { steps, type: 'parser-node: for_block' })];
@@ -674,7 +668,7 @@ const nodeFns = {
 		const conditionN = node.childForFieldName('condition');
 		let condition = handleCapture(f, conditionN);
 		if (typeof condition === 'string') {
-			const debug = new MathlangLocation(f, node);
+			const debug = MathlangLocation.quick(f, node);
 			condition = CheckSaveFlag.quick(debug, condition, true);
 		}
 		if (typeof condition === 'boolean' || condition instanceof BoolLiteral) {
@@ -687,7 +681,7 @@ const nodeFns = {
 				return value ? [GOTO_ACTION_INDEX.quick(index)] : [];
 			} else if (type === 'label') {
 				const label = stringCaptureForFieldName(f, node, 'label');
-				return value ? [GotoLabel.quick(new MathlangLocation(f, node), label)] : [];
+				return value ? [GotoLabel.quick(MathlangLocation.quick(f, node), label)] : [];
 			}
 		}
 		if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
