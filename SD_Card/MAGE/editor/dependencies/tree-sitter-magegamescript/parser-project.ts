@@ -1,5 +1,9 @@
 import { Parser, Node as TreeSitterNode } from 'web-tree-sitter';
-import { simplifyLabelGotos } from './parser-utilities.ts';
+import {
+	reportErrorNodes,
+	reportMissingChildNodes,
+	simplifyLabelGotos,
+} from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
 import {
@@ -22,6 +26,7 @@ import {
 	GOTO_ACTION_INDEX,
 	LABEL,
 } from './parser-bytecode-info.ts';
+import { namedChildren, optionalChildForFieldName } from './parser-capture.ts';
 
 type FileMapEntry = {
 	arrayBuffer: Promise<unknown>;
@@ -167,7 +172,8 @@ export class ProjectState {
 				// named script not found; error
 				const useNode =
 					action instanceof MathlangNode
-						? action.debug.node.childForFieldName('script') || action.debug.node
+						? optionalChildForFieldName(action.debug.f, action.debug.node, 'script') ||
+							action.debug.node
 						: node;
 				this.newError({
 					locations: [MathlangLocation.quick(scriptData.debug.f, useNode)],
@@ -244,10 +250,13 @@ export class ProjectState {
 		const ast = this.parser.parse(text);
 		if (!ast) throw new Error('tree-sitter parser failed to produce AST');
 		const document = ast.rootNode;
+
 		// file crawl state
 		const f = new FileState(this, fileName);
+		reportMissingChildNodes(f, document);
+		reportErrorNodes(f, document);
 		let catastrophicErrorReported = false;
-		const nodes = document.namedChildren
+		const nodes = namedChildren(f, document)
 			.map((node) => {
 				if (catastrophicErrorReported) {
 					return;

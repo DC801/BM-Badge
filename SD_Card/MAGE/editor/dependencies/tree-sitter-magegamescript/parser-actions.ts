@@ -6,6 +6,7 @@ import {
 	handleCapture,
 	handleChildrenForFieldName,
 	mandatoryChildForFieldName,
+	optionalChildForFieldName,
 	type Capture,
 } from './parser-capture.ts';
 import {
@@ -168,8 +169,6 @@ type FieldToSpread = {
 	captures: Capture[];
 };
 export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
-	reportMissingChildNodes(f, node);
-	reportErrorNodes(f, node);
 	const data = actionData[node.grammarType];
 	if (!data) {
 		const customFn = actionFns[node.grammarType];
@@ -187,7 +186,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const captures: string[] = data.captures || [];
 	const fieldsToSpread: Record<string, FieldToSpread> = {};
 	captures.forEach((fieldName) => {
-		const captureNode = node.childForFieldName(fieldName);
+		const captureNode = optionalChildForFieldName(f, node, fieldName);
 		if (captureNode === null) {
 			if (!data.optionalCaptures || !data.optionalCaptures.includes(fieldName)) {
 				throw new Error(
@@ -450,12 +449,10 @@ const actionData: Record<string, actionDataEntry> = {
 				// `i` is from the caller, who knows which one of the set we're looking at now.
 				// Basically, the whole spread might not be ambiguous, so we need to report
 				// only once the action is identified in an individual spread, not all the time.
-				const lhsSquiggliesNode =
-					node.childForFieldName('lhs')?.namedChildren?.[i] ||
-					node.childForFieldName('lhs');
-				const rhsSquiggliesNode =
-					node.childForFieldName('rhs')?.namedChildren?.[i] ||
-					node.childForFieldName('rhs');
+				const lhsChild = mandatoryChildForFieldName(f, node, 'lhs');
+				const rhsChild = mandatoryChildForFieldName(f, node, 'rhs');
+				const lhsSquiggliesNode = lhsChild?.namedChildren?.[i] || lhsChild;
+				const rhsSquiggliesNode = rhsChild?.namedChildren?.[i] || rhsChild;
 				if (!lhsSquiggliesNode || !rhsSquiggliesNode) {
 					throw new Error(`couldn't find nodes to squiggle`);
 				}
@@ -565,7 +562,7 @@ const actionData: Record<string, actionDataEntry> = {
 			// player x = player y + self y;
 			if (v.rhs instanceof IntBinaryExpression) {
 				const temporary = newTemporary();
-				const steps = v.rhs.toSteps([]);
+				const steps = v.rhs.toStepsFromSteps([]);
 				dropTemporary();
 				steps.push(COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field));
 				return new MathlangSequence(debug, {
@@ -900,7 +897,7 @@ const actionData: Record<string, actionDataEntry> = {
 					if (!(v.rhs instanceof IntBinaryExpression)) {
 						throw new Error('not IntBinaryExpression');
 					}
-					const steps = v.rhs.toSteps([]);
+					const steps = v.rhs.toStepsFromSteps([]);
 					dropTemporary();
 					steps.push(MUTATE_VARIABLES.change(v.lhs, temporary, op));
 					return new MathlangSequence(debug, {
@@ -952,7 +949,7 @@ const actionData: Record<string, actionDataEntry> = {
 					}
 					const steps = [
 						COPY_VARIABLE.intoVariable(v.lhs.entity, v.lhs.field, temporary1),
-						...v.rhs.toSteps([]),
+						...v.rhs.toStepsFromSteps([]),
 						MUTATE_VARIABLES.change(temporary1, temporary2, op),
 						COPY_VARIABLE.intoField(temporary1, v.lhs.entity, v.lhs.field),
 					];

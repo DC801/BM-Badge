@@ -1,3 +1,7 @@
+# TODO
+
+- toSteps etc are a little inconsistent
+
 # The list
 
 - [x] FunctionDefinition
@@ -60,6 +64,7 @@
     - [x] static quick()
 - [x] ScriptDefinition
     - [x] clone()
+    - [x] static quick()
 - [x] CommentNode
     - [x] clone()
     - [x] static quick()

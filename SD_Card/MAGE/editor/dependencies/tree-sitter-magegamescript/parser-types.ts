@@ -19,6 +19,9 @@ AnyNode
 	- if any of the props are AnyNode[] or AnyNode, they must also be cloned
 - some have print()
 
+Todo(?)
+- Make certain classes have "every array is one of me and die break if not" methods?
+
 */
 
 export class AnyNode {
@@ -669,6 +672,9 @@ export class ScriptDefinition extends MathlangNode {
 		}
 		return cloned;
 	}
+	static quick(debug: MathlangLocation, scriptName: string, actions: AnyNode[]) {
+		return new ScriptDefinition(debug, { scriptName, actions });
+	}
 }
 
 export class CommentNode extends MathlangNode {
@@ -828,7 +834,7 @@ export class IntBinaryExpression extends IntExpression {
 		newArgs.rhs = this.rhs.clone();
 		return new IntBinaryExpression(this.debug.clone(), newArgs);
 	}
-	toSteps(steps: AnyNode[]) {
+	toStepsFromSteps(steps: AnyNode[]) {
 		const temp = latestTemporary();
 		const lhs = this.lhs;
 		const op = this.op;
@@ -848,7 +854,7 @@ export class IntBinaryExpression extends IntExpression {
 			);
 		} else if (lhs instanceof IntBinaryExpression) {
 			// can use the same temporary since it's the lhs and we're going LTR
-			lhs.toSteps(steps);
+			lhs.toStepsFromSteps(steps);
 		}
 		if (rhs instanceof IdentifierLiteral) {
 			steps.push(ACTION.MUTATE_VARIABLES.change(temp, rhs.source, op));
@@ -879,7 +885,7 @@ export class IntBinaryExpression extends IntExpression {
 			);
 		} else if (rhs instanceof IntBinaryExpression) {
 			const newTemp = newTemporary();
-			rhs.toSteps(steps);
+			rhs.toStepsFromSteps(steps);
 			steps.push(ACTION.MUTATE_VARIABLES.change(temp, newTemp, op));
 			dropTemporary();
 		}
@@ -887,7 +893,7 @@ export class IntBinaryExpression extends IntExpression {
 	}
 	assignToVar(destinationVar: string) {
 		newTemporary(destinationVar); // the inside uses latestTemporary()
-		const steps = this.toSteps([]);
+		const steps = this.toStepsFromSteps([]);
 		dropTemporary();
 		return new MathlangSequence(this.debug, {
 			steps,
@@ -2121,5 +2127,3 @@ export class DirectionTarget extends MathlangNode {
 		return new DirectionTarget(debug, { type, value });
 	}
 }
-
-console.log('me');

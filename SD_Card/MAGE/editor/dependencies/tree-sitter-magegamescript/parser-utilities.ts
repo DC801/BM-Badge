@@ -20,6 +20,8 @@ import {
 	handleCapture,
 	handleNamedChildren,
 	mandatoryChildForFieldName,
+	mandatoryLastChild,
+	optionalLastChild,
 } from './parser-capture.ts';
 
 export const verbose = false;
@@ -230,8 +232,6 @@ export class ConditionalBlock {
 		this.conditionNode = mandatoryChildForFieldName(f, node, 'condition');
 		// TODO this should not be handled this way! make uniform
 		// Find other cases, too? node handling should be done in one place so it can report errors
-		reportMissingChildNodes(f, node);
-		reportErrorNodes(f, node);
 		let condition = handleCapture(f, this.conditionNode);
 		if (typeof condition === 'string') condition = CheckSaveFlag.quick(debug, condition);
 		if (!(condition instanceof BoolExpression)) {
@@ -243,14 +243,6 @@ export class ConditionalBlock {
 		this.debug = MathlangLocation.quick(f, node);
 	}
 }
-
-export const newElse = (f: FileState, elseNode: TreeSitterNode | null): AnyNode[] => {
-	let elseBody: AnyNode[] = [];
-	if (elseNode && elseNode.lastChild) {
-		elseBody = handleNamedChildren(f, elseNode.lastChild);
-	}
-	return elseBody;
-};
 
 export const ifChainMaker = (
 	f: FileState,

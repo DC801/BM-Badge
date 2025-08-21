@@ -6,7 +6,6 @@ import {
 	reportErrorNodes,
 	debugLog,
 	autoIdentifierName,
-	newElse,
 	ifChainMaker,
 	simpleBranchMaker,
 	quickTemporary,
@@ -26,7 +25,11 @@ import {
 	handleChildrenForFieldName,
 	handleNamedChildren,
 	coerceToString,
-	coerceAsBool,
+	childrenForFieldName,
+	namedChildren,
+	optionalChildForFieldName,
+	coerceToBool,
+	optionalLastChild,
 } from './parser-capture.ts';
 import { handleAction } from './parser-actions.ts';
 import {
@@ -68,6 +71,7 @@ import {
 	BoolGetable,
 	BoolExpression,
 	FunctionDefinition,
+	BoolComparisonSequence,
 } from './parser-types.ts';
 import {
 	Action,
@@ -76,6 +80,12 @@ import {
 	RUN_SCRIPT,
 	SHOW_SERIAL_DIALOG,
 } from './parser-bytecode-info.ts';
+
+// When to check for errors/missing children? The point a TreeSitterNode is chosen.
+// Anytime a new (child) node is instead summoned/found, the check must be made
+// again for THEIR children. Null nodes will be filtered at this time.
+// Thus, if you've found a place where a node can be TreeSitterNode or null,
+// it is an indication that the proper channels were not used.
 
 export const handleNode = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	debugLog(`handleNode: ${node.grammarType}`);
@@ -112,7 +122,8 @@ const nodeFns = {
 		// I guess feel free to add more of these as they come up
 		// This might be the only place some of them can be detected
 		// (This is only for nodes so malformed that tree-sitter can't tell what they are)
-		if (node.namedChildren.some((v) => v?.grammarType === 'over_time_operator')) {
+		const allChildren = namedChildren(f, node);
+		if (allChildren.some((child) => child.grammarType === 'over_time_operator')) {
 			f.quickError(
 				node,
 				`malformed 'do over time' expression`,
@@ -120,13 +131,21 @@ const nodeFns = {
 					`   @movable = (player | self | entity @string) position | camera\n` +
 					`   @coordinate = (player | self | entity @string) position | geometry @string (origin | length)`,
 			);
+		} else {
+			f.quickError(node, 'syntax error');
 		}
-		f.quickError(node, 'syntax error');
 		return [];
 	},
 	fn: (f: FileState, node: TreeSitterNode) => {
+		const debug = MathlangLocation.quick(f, node);
 		const name = stringCaptureForFieldName(f, node, 'name');
-		const paramNodes = node.childrenForFieldName('arg').filter((v) => v !== null);
+		// don't waste time if there's a reassignment error
+		if (f.functions[name]) {
+			f.quickError(node, `fn ${name} already defined`);
+			return [];
+		}
+		const paramNodes = childrenForFieldName(f, node, 'arg');
+		// verify that fn params are all $constants
 		let error = false;
 		const params = paramNodes.map((param) => {
 			if (param.grammarType !== 'CONSTANT') {
@@ -136,39 +155,38 @@ const nodeFns = {
 			return param.text;
 		});
 		if (error) return [];
+		// check for duplicates
 		const paramSet = new Set([...params]);
 		if (paramSet.size !== params.length) {
+			// todo: tell the red squiggles which params are the duplicates
 			f.quickError(node, 'duplicate fn args');
 			return [];
 		}
-		const bodyNode = node.childForFieldName('body');
-		if (!bodyNode) throw new Error('fn without body node');
-		const debug = MathlangLocation.quick(f, node);
+		// the body node remains unprocessed so the compile-time-constant-replacement-system can insert args passed to the function "call"
+		const bodyNode = mandatoryChildForFieldName(f, node, 'body');
 		const definiton = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
-		if (f.functions[name]) {
-			f.quickError(node, `fn ${name} already defined`);
-		} else {
-			f.functions[name] = definiton;
-		}
+		f.functions[name] = definiton;
 	},
 	fn_call: (f: FileState, node: TreeSitterNode) => {
 		const name = stringCaptureForFieldName(f, node, 'name');
 		const definition = f.functions[name];
 		if (!definition) {
-			const nameNode = node.childForFieldName('name') || node;
+			const nameNode = optionalChildForFieldName(f, node, 'name') || node;
 			f.quickError(nameNode, `function ${name} is undefined`);
 			return [];
 		}
-		const callParamNodes = node.childrenForFieldName('arg').filter((v) => v !== null);
+		const callParamNodes = childrenForFieldName(f, node, 'arg');
 		const definitionParamNodes = definition.paramNodes;
-		// compare lengths of params
+		// compare lengths of params in definition vs call
 		if (callParamNodes.length < definitionParamNodes.length) {
 			f.quickError(
 				node,
 				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
 			);
+			// todo: yellow squiggles when too many params are passed
 			return [];
 		}
+		// sanitize passed params
 		const callParams = callParamNodes.map((v) => {
 			let capture = handleCapture(f, v);
 			if (!isMGSPrimitive(capture)) {
@@ -182,34 +200,34 @@ const nodeFns = {
 		callParams.forEach((callParam, i) => {
 			const debug = MathlangLocation.quick(f, callParamNodes[i]);
 			const constantName = definition.params[i];
-			let value = callParam;
-			if (typeof callParam === 'boolean') {
-				value = BoolLiteral.quick(
-					debug,
-					coerceAsBool(f, callParamNodes[i], value, 'fn arg'),
-				);
-			}
+			const value =
+				typeof callParam === 'boolean' ? BoolLiteral.quick(debug, callParam) : callParam;
 			const constantDefinition = ConstantDefinition.quick(debug, constantName, value);
 			localConstants[constantName] = constantDefinition;
 		});
+		// add const registry to top of stack
 		const stack: FunctionStackEntry[] = f.currFunction;
 		stack.unshift(localConstants);
+		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
 		const body = handleNamedChildren(f, definition.bodyNode);
 		const sequence = new MathlangSequence(MathlangLocation.quick(f, node), { steps: body });
+		// get rid of the const registry for this call
 		stack.shift();
-		// the rest of the owl
 		return sequence;
 	},
 	script_definition: (f: FileState, node: TreeSitterNode) => {
+		const debug = MathlangLocation.quick(f, node);
 		const scriptName = stringCaptureForFieldName(f, node, 'script_name');
-		const rawActions: AnyNode[] = handleNamedChildren(f, node.lastChild || node);
+		const rawActions: AnyNode[] = handleNamedChildren(f, node.lastChild || node); // todo: which?
 		const actions: AnyNode[] = [];
-		// flatten sequences
+		// flatten/incorporate any sequences
+		// can't be .map() because 1 thing can become many things
 		rawActions.forEach((raw) => {
-			if (raw instanceof MathlangSequence) {
+			if (raw instanceof MathlangSequence || raw instanceof BoolComparisonSequence) {
 				raw.steps.forEach((step) => actions.push(step));
 			} else if (raw instanceof JSONLiteral) {
 				raw.json.forEach((obj) => {
+					// JSON should only be Actions
 					if (typeof obj === 'object' && (obj as unknown as Action).action) {
 						actions.push(Action.fromArgs(obj));
 					} else {
@@ -220,27 +238,20 @@ const nodeFns = {
 				actions.push(raw);
 			}
 		});
-		// add auto return label
-		const returnLabel = 'end of script ' + f.p.advanceGotoSuffix();
+		// add auto return label at the end
+		const label = 'end of script ' + f.p.advanceGotoSuffix();
 		const lastChild = node.lastChild;
 		if (!lastChild) throw new Error('could not find final node in script block');
-		const labelAction: LabelDefinition = new LabelDefinition(
-			MathlangLocation.quick(f, lastChild),
-			{
-				label: returnLabel,
-			},
-		);
+		const labelAction = LabelDefinition.quick(MathlangLocation.quick(f, lastChild), label);
 		actions.push(labelAction);
-		// change all return statements to goto labels
+		// change all return statements to goto labels for the "auto return" label
 		actions.forEach((action, i) => {
 			if (action instanceof ReturnStatement) {
-				actions[i] = GotoLabel.quick(
-					MathlangLocation.quick(f, action.debug.node),
-					returnLabel,
-				);
+				const labelDebug = MathlangLocation.quick(f, action.debug.node);
+				actions[i] = GotoLabel.quick(labelDebug, label);
 			}
 		});
-		return [new ScriptDefinition(MathlangLocation.quick(f, node), { scriptName, actions })];
+		return [ScriptDefinition.quick(debug, scriptName, actions)];
 	},
 	constant_assignment: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
@@ -261,7 +272,8 @@ const nodeFns = {
 		return [ConstantDefinition.quick(debug, label, value)];
 	},
 	include_macro: (f: FileState, node: TreeSitterNode) => {
-		// Recursion detection
+		const debug = MathlangLocation.quick(f, node);
+		// die if recursion detected
 		if (includeRecursion.includes(f.fileName)) {
 			includeRecursion.push(f.fileName);
 			throw new Error(
@@ -269,94 +281,83 @@ const nodeFns = {
 			);
 		}
 		includeRecursion.push(f.fileName);
+		// get prerequesite file
 		const fileName = stringCaptureForFieldName(f, node, 'fileName');
-		if (!f.p.fileMap[fileName].parsed) {
+		if (!f.p.fileMap[fileName]) {
+			f.quickError(node, `include_macro: cannot find file "${fileName}"`);
+			includeRecursion.pop(); // DO BEFORE GIVING UP
+			return [];
+		}
+		let insertF = f.p.fileMap[fileName].parsed;
+		if (!insertF) {
 			debugLog(`include_macro: must first parse prerequesite "${fileName}"`);
 			f.p.parseFile(fileName);
+			insertF = f.p.fileMap[fileName].parsed;
+			if (!insertF) {
+				f.quickError(node, `include_macro: could not parse prerequesite "${fileName}"`);
+				includeRecursion.pop(); // DO BEFORE GIVING UP
+				return [];
+			}
 		} else {
 			debugLog(`include_macro: prerequesite "${fileName}" already parsed`);
 		}
 		debugLog(`include_macro: merging ${fileName} into ${f.fileName}...`);
-
-		// INCLUDE FILE
-		const insertFile = f.p.fileMap[fileName].parsed;
-		if (!insertFile) throw new Error(`missing file to include: ${fileName}`);
 		// add their constants to us
-		Object.keys(insertFile.constants).forEach((constantName) => {
+		Object.keys(insertF.constants).forEach((constantName) => {
 			if (f.constants[constantName]) {
-				f.newError({
-					message: `cannot redefine constant ${constantName} (via 'include')`,
-					locations: [
-						MathlangLocation.quick(
-							insertFile,
-							insertFile.constants[constantName].debug.node,
-						),
-					],
-				});
+				f.quickError(node, `cannot redefine constant ${constantName} (via 'include')`);
+			} else {
+				f.constants[constantName] = insertF.constants[constantName];
 			}
-			f.constants[constantName] = insertFile.constants[constantName];
 		});
 		// add their functions to us
-		Object.keys(insertFile.functions).forEach((functionName) => {
+		Object.keys(insertF.functions).forEach((functionName) => {
 			if (f.functions[functionName]) {
-				f.newError({
-					message: `cannot redefine function ${functionName} (via 'include')`,
-					locations: [
-						MathlangLocation.quick(
-							insertFile,
-							insertFile.functions[functionName].debug.node,
-						),
-						MathlangLocation.quick(f, node.firstChild || node),
-					],
-				});
+				f.quickError(node, `cannot redefine function ${functionName} (via 'include')`);
+			} else {
+				f.functions[functionName] = insertF.functions[functionName];
 			}
-			f.functions[functionName] = insertFile.functions[functionName];
 		});
 		// add their actual node entries to us (might help debugging)
-		insertFile.nodes.forEach((node) => {
+		insertF.nodes.forEach((node) => {
 			f.nodes.push(node);
 		});
 		// add (serial) dialog settings
 		['default', 'serial'].forEach((type) => {
-			Object.keys(insertFile.settings[type]).forEach((param) => {
-				f.settings[type][param] = insertFile.settings[type][param];
+			Object.keys(insertF.settings[type]).forEach((param) => {
+				f.settings[type][param] = insertF.settings[type][param];
 			});
 		});
 		// ...some of which are extra layered
 		['entity', 'label'].forEach((type) => {
-			Object.keys(insertFile.settings[type]).forEach((target) => {
-				const params = Object.keys(insertFile.settings[type][target]);
+			Object.keys(insertF.settings[type]).forEach((target) => {
+				const params = Object.keys(insertF.settings[type][target]);
 				f.settings[type][target] = f.settings[type][target] || {};
 				params.forEach((param) => {
-					f.settings[type][target][param] = insertFile.settings[type][target][param];
 					// (I apologize for this)
+					f.settings[type][target][param] = insertF.settings[type][target][param];
 				});
 			});
 		});
 		includeRecursion.pop();
-		return [IncludeNode.quick(MathlangLocation.quick(f, node), fileName)];
+		return [IncludeNode.quick(debug, fileName)];
 	},
 	rand_macro: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		const horizontal: AnyNode[][] = [];
 		// count items per spread
 		let spreadCount = -Infinity;
-		node.namedChildren
-			.filter((v) => v !== null)
-			.forEach((innerNode) => {
-				const actions: AnyNode[] = handleNode(f, innerNode);
-				const len = actions.length;
-				if (len === 0) return; // empties are ignored
-				horizontal.push(actions);
-				if (len === 1) return; // singles are passed through
-				if (spreadCount === -Infinity) spreadCount = len;
-				if (spreadCount !== len) {
-					f.quickError(
-						innerNode,
-						`spreads inside rand!() must contain same number of items`,
-					);
-				}
-			});
+		namedChildren(f, node).forEach((innerNode) => {
+			const actions: AnyNode[] = handleNode(f, innerNode);
+			const len = actions.length;
+			if (len === 0) return; // empties are ignored
+			horizontal.push(actions);
+			if (len === 1) return; // singles are passed through
+			if (spreadCount === -Infinity) spreadCount = len;
+			if (spreadCount !== len) {
+				f.quickError(innerNode, `spreads inside rand!() must contain same number of items`);
+			}
+		});
 		// tilt the other direction
 		// [{a:1},{a:2}], [{b:3}], [{c:4},{c:5}] ->
 		// [{a:1},{b:3},{c:4}], [{a:2},{b:3},{c:5}]
@@ -370,14 +371,12 @@ const nodeFns = {
 		// slices -> if chain
 		const temp = quickTemporary();
 		const iffs: ConditionalBlock[] = vertical.map((body, i) => {
-			return {
-				condition: CheckVariable.quick(debug, temp, i, '=='),
-				debug,
-				body,
-			};
+			const condition = CheckVariable.quick(debug, temp, i, '==');
+			return { condition, debug, body };
 		});
-		const sequence: MathlangSequence = ifChainMaker(f, node, iffs, [], 'rand_macro');
-		sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, '?')); // the RNG roll
+		const sequence = ifChainMaker(f, node, iffs, [], 'rand_macro');
+		// put the RNG roll at the top
+		sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, '?'));
 		return [sequence];
 	},
 	label_definition: (f: FileState, node: TreeSitterNode) => {
@@ -459,8 +458,9 @@ const nodeFns = {
 	dialog_definition: (f: FileState, node: TreeSitterNode) => {
 		const name = stringCaptureForFieldName(f, node, 'dialog_name');
 		const dialogs = handleChildrenForFieldName(f, node, 'dialog');
-		if (!dialogs.every((v) => v instanceof Dialog))
+		if (!dialogs.every((v) => v instanceof Dialog)) {
 			throw new Error('not every dialog is a Dialog');
+		}
 		const debug = MathlangLocation.quick(f, node);
 		return [DialogDefinition.quick(debug, name, dialogs)];
 	},
@@ -506,11 +506,8 @@ const nodeFns = {
 			settings[v.property] = v.value;
 		});
 		// Messages
-		const messageN = node.childrenForFieldName('message');
-		const messages = messageN.map((v) => handleCapture(f, v));
-		if (!messages.every((v) => typeof v === 'string')) {
-			throw new Error('not every dialog_message is a string');
-		}
+		const messageN = childrenForFieldName(f, node, 'message');
+		const messages = messageN.map((v) => coerceToString(f, node, handleCapture(f, v)));
 		// Options
 		const options = handleChildrenForFieldName(f, node, 'dialog_option');
 		if (!options.every((v) => v instanceof DialogOption)) {
@@ -547,8 +544,11 @@ const nodeFns = {
 	debug_macro: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		const ret: AnyNode[] = [];
 		let dialogName = '';
-		const serialDialogNode = node.childForFieldName('serial_dialog');
-		if (serialDialogNode) {
+		const serialDialogNode = optionalChildForFieldName(f, node, 'serial_dialog');
+		if (!serialDialogNode) {
+			// might just be the name of a serial dialog, and not a serial-dialog-in-place
+			dialogName = stringCaptureForFieldName(f, node, 'serial_dialog_name');
+		} else {
 			const serialDialogs = handleNode(f, serialDialogNode);
 			const serialDialog = serialDialogs[0];
 			if (!(serialDialog instanceof SerialDialog)) {
@@ -561,23 +561,16 @@ const nodeFns = {
 					serialDialog,
 				}),
 			);
-		} else {
-			// might just be the name of a serial dialog, and not a serial-dialog-in-place
-			dialogName = stringCaptureForFieldName(f, node, 'serial_dialog_name');
 		}
 		const debug = MathlangLocation.quick(f, node);
 		const condition = CheckDebugMode.quick(debug, true);
-		const ifTrue = new SHOW_SERIAL_DIALOG({
-			disable_newline: false,
-			serial_dialog: dialogName,
-		});
+		const ifTrue = SHOW_SERIAL_DIALOG.quick(dialogName);
 		const action = simpleBranchMaker(f, node, condition, [ifTrue], []);
 		ret.push(action);
 		return ret;
 	},
 	looping_block: (f: FileState, node: TreeSitterNode, printGotoLabel: string): AnyNode[] => {
 		return handleNamedChildren(f, node).map((v) => {
-			if (Array.isArray(v)) return v;
 			if (v instanceof ContinueStatement) {
 				return GotoLabel.quick(
 					MathlangLocation.quick(f, v.debug.node),
@@ -599,16 +592,23 @@ const nodeFns = {
 		const conditionL = `while condition #${n}`;
 		const bodyL = `while body #${n}`;
 		const rendezvousL = `while rendezvous #${n}`;
+		const body = block.body.map((v) => {
+			if (v instanceof ContinueStatement)
+				return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), conditionL);
+			if (v instanceof BreakStatement)
+				return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), rendezvousL);
+			return v;
+		});
 		const steps = [
-			new LabelDefinition(debug, { label: conditionL }),
+			LabelDefinition.quick(debug, conditionL),
 			...block.condition.toSteps(bodyL),
 			GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
-			new LabelDefinition(debug, { label: bodyL }),
-			...block.body,
+			LabelDefinition.quick(debug, bodyL),
+			...body,
 			GotoLabel.quick(MathlangLocation.quick(f, block.conditionNode || node), conditionL),
-			new LabelDefinition(debug, { label: rendezvousL }),
+			LabelDefinition.quick(debug, rendezvousL),
 		];
-		return [new MathlangSequence(debug, { steps, type: 'parser-node: while_block' })];
+		return [MathlangSequence.quick(debug, steps, 'parser-node: while_block')];
 	},
 	do_while_block: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
@@ -617,14 +617,21 @@ const nodeFns = {
 		const conditionL = `do while condition #${n}`;
 		const bodyL = `do while body #${n}`;
 		const rendezvousL = `do while rendezvous #${n}`;
+		const body = doWhyle.body.map((v) => {
+			if (v instanceof ContinueStatement)
+				return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), conditionL);
+			if (v instanceof BreakStatement)
+				return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), rendezvousL);
+			return v;
+		});
 		const steps = [
-			new LabelDefinition(debug, { label: bodyL }),
-			...doWhyle.body,
-			new LabelDefinition(debug, { label: conditionL }),
+			LabelDefinition.quick(debug, bodyL),
+			...body,
+			LabelDefinition.quick(debug, conditionL),
 			...doWhyle.condition.toSteps(bodyL),
-			new LabelDefinition(debug, { label: rendezvousL }),
+			LabelDefinition.quick(debug, rendezvousL),
 		];
-		return [new MathlangSequence(debug, { steps, type: 'parser-node: do_while_block' })];
+		return [MathlangSequence.quick(debug, steps, 'parser-node: do_while_block')];
 	},
 	for_block: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
@@ -648,31 +655,31 @@ const nodeFns = {
 		const initializer = mandatoryChildForFieldName(f, node, 'initializer');
 		const steps = [
 			...handleNode(f, initializer),
-			new LabelDefinition(debug, { label: conditionL }),
+			LabelDefinition.quick(debug, conditionL),
 			...condition.toSteps(bodyL),
 			GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
-			new LabelDefinition(debug, { label: bodyL }),
+			LabelDefinition.quick(debug, bodyL),
 			...body,
-			new LabelDefinition(debug, { label: continueL }),
+			LabelDefinition.quick(debug, continueL),
 			...handleNode(f, incrementerN),
 			GotoLabel.quick(MathlangLocation.quick(f, conditionN), conditionL),
-			new LabelDefinition(debug, { label: rendezvousL }),
+			LabelDefinition.quick(debug, rendezvousL),
 		];
-		return [new MathlangSequence(debug, { steps, type: 'parser-node: for_block' })];
+		return [MathlangSequence.quick(debug, steps, 'parser-node: for_block')];
 	},
 	if_single: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		// for parsing the bytecode output; not really meant to be seen in the wild
 		// e.g. `if varName then goto label LABELNAME;`
 		// vs `if (varName) { /*do stuff at the label destination*/ }`
 		const type = optionalTextForFieldName(f, node, 'type');
-		const conditionN = node.childForFieldName('condition');
-		let condition = handleCapture(f, conditionN);
+		let condition = captureForFieldName(f, node, 'condition');
 		if (typeof condition === 'string') {
 			const debug = MathlangLocation.quick(f, node);
 			condition = CheckSaveFlag.quick(debug, condition, true);
 		}
+		// simple bool values true/false always jump or never jump, respectively
 		if (typeof condition === 'boolean' || condition instanceof BoolLiteral) {
-			const value = condition instanceof BoolLiteral ? condition.value : condition;
+			const value = coerceToBool(f, node, condition);
 			if (!type) {
 				const script = stringCaptureForFieldName(f, node, 'script');
 				return value ? [RUN_SCRIPT.quick(script)] : [];
@@ -700,23 +707,22 @@ const nodeFns = {
 		throw new Error('invalid if_single');
 	},
 	if_chain: (f: FileState, node: TreeSitterNode) => {
-		const ifNodes = node
-			.childrenForFieldName('if_block')
-			.map((v) => {
-				// TODO do I need this??
-				reportMissingChildNodes(f, node);
-				reportErrorNodes(f, node);
-				return v;
-			})
-			.filter((v) => v !== null);
+		const ifNodes = childrenForFieldName(f, node, 'if_block');
+		// todo this could probably be improved somehow
 		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v, 'if'));
-		const elseNode = node.childForFieldName('else_block');
-		const elseBody = newElse(f, elseNode);
+		const elseNode = optionalChildForFieldName(f, node, 'else_block');
+		let elseBody: AnyNode[] = [];
+		if (elseNode) {
+			const lastChild = optionalLastChild(f, elseNode);
+			if (lastChild) {
+				elseBody = handleNamedChildren(f, lastChild);
+			}
+		}
 		return [ifChainMaker(f, node, iffs, elseBody, 'if_chain')];
 	},
 };
 
-// TODO: what is the difference between handleNode() and handleCapture() except that you have to flatten handleNode()?
+// What is the difference between handleNode() and handleCapture() except that you have to flatten handleNode()?
 // Is it that you return complex thing vs primitive value?
 // Is it that action wants to call handleCapture() and then work on its properties?
-// It is, perhaps, that handleCapture() should check values against registered constants, and nodes shouldn't care about that
+// It is, perhaps, that handleCapture() should check values against registered constants, and nodes shouldn't care about that? (DINGDINGDING)

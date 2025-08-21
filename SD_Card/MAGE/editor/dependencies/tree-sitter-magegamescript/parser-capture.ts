@@ -64,16 +64,17 @@ const opIntoStringMap: Record<string, string> = {
 
 export type Capture = number | string | AnyNode;
 
+// TODO: remove null from node here
 export const handleCapture = (f: FileState, node: TreeSitterNode | null): Capture | Capture[] => {
 	if (!node) throw new Error('null node');
-	reportErrorNodes(f, node);
-	reportMissingChildNodes(f, node);
-	// problems handled ^^
 	const grammarType = node.grammarType;
 	debugLog(`-->> Capturing: ${grammarType}`);
 	if (grammarType.endsWith('_expansion')) {
 		// fwiw, cannot become recursive according to the grammar (1 level deep only)
-		return node.namedChildren.map((v) => handleCapture(f, v)).flat();
+		return namedChildren(f, node)
+			.filter((v) => v !== null)
+			.map((v) => handleCapture(f, v))
+			.flat();
 	}
 	// swap out values of compile-time constants
 	if (grammarType === 'CONSTANT') {
@@ -364,7 +365,7 @@ const captureFns = {
 				return CheckForButtonState.quick(
 					debug,
 					button_id,
-					coerceAsBool(f, node, state, 'button state'),
+					coerceToBool(f, node, state, 'button state'),
 				);
 			}
 		}
@@ -482,11 +483,11 @@ const captureFns = {
 			rhs = tempRHS;
 		}
 		if (lhs instanceof IntBinaryExpression) {
-			lhs.toSteps(steps);
+			lhs.toStepsFromSteps(steps);
 			lhs = tempLHS;
 		}
 		if (rhs instanceof IntBinaryExpression) {
-			rhs.toSteps(steps);
+			rhs.toStepsFromSteps(steps);
 			rhs = tempRHS;
 		}
 		if (lhs instanceof IntGetable) {
@@ -537,7 +538,7 @@ const captureFns = {
 		return EntityIntField.quick(debug, entity, field);
 	},
 	int_grouping: (f: FileState, node: TreeSitterNode): IntExpression => {
-		const capture = handleCapture(f, node.namedChildren[0]);
+		const capture = handleCapture(f, namedChildren(f, node)[0]);
 		if (capture instanceof IntExpression) return capture;
 		throw new Error('captured int_grouping did not produce IntExpression');
 	},
@@ -592,31 +593,27 @@ const extractEntityName = (f: FileState, node: TreeSitterNode): string => {
 	return stringCaptureForFieldName(f, node, 'entity');
 };
 
-// Very common node handling behaviors
+// ------------------------- VERY COMMON NODE HANDLING BEHAVIORS
 
-export const handleChildrenForFieldName = (
+// Every time a new node is found, check its children for errors.
+// Thus, we should use these 4+ basic functions for the guts of the rest
+
+// Get 0-1 child by name -> TreeSitterNode | null
+// Finds missing children / errors and filters out null
+export const optionalChildForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
 	fieldName: string,
-): AnyNode[] => {
-	reportMissingChildNodes(f, node);
-	reportErrorNodes(f, node);
-	const children = node.childrenForFieldName(fieldName);
-	return children
-		.filter((v) => v !== null)
-		.map((v) => handleNode(f, v))
-		.flat();
+): TreeSitterNode | null => {
+	const child = node.childForFieldName(fieldName);
+	if (child === null) return null;
+	reportMissingChildNodes(f, child);
+	reportErrorNodes(f, child);
+	return child;
 };
 
-export const handleNamedChildren = (f: FileState, node: TreeSitterNode): AnyNode[] => {
-	reportMissingChildNodes(f, node);
-	reportErrorNodes(f, node);
-	return node.namedChildren
-		.filter((v) => v !== null)
-		.map((v) => handleNode(f, v))
-		.flat();
-};
-
+// Get 1 child by name or die trying -> TreeSitterNode
+// Finds missing children / errors and filters out null
 export const mandatoryChildForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -624,9 +621,96 @@ export const mandatoryChildForFieldName = (
 ): TreeSitterNode => {
 	const child = node.childForFieldName(fieldName);
 	if (child === null) throw new Error('missing child for field name ' + fieldName);
+	reportMissingChildNodes(f, child);
+	reportErrorNodes(f, child);
 	return child;
 };
 
+// Get 0+ children by name -> TreeSitterNode[]
+// Finds missing children / errors and filters out null
+export const childrenForFieldName = (
+	f: FileState,
+	node: TreeSitterNode,
+	fieldName: string,
+): TreeSitterNode[] => {
+	const children = node.childrenForFieldName(fieldName);
+	return children
+		.filter((v) => v !== null)
+		.map((v) => {
+			reportMissingChildNodes(f, v);
+			reportErrorNodes(f, v);
+			return v;
+		})
+		.flat();
+};
+
+// Get 0+ children by name -> TreeSitterNode[]
+// Finds missing children / errors and filters out null
+export const namedChildren = (f: FileState, node: TreeSitterNode): TreeSitterNode[] => {
+	return node.namedChildren
+		.filter((v) => v !== null)
+		.map((v) => {
+			reportMissingChildNodes(f, v);
+			reportErrorNodes(f, v);
+			return v;
+		})
+		.flat();
+};
+
+// Get last child or die trying -> TreeSitterNode
+// Finds missing children / errors and filters out null
+export const mandatoryLastChild = (f: FileState, node: TreeSitterNode): TreeSitterNode => {
+	const lastChild = node.lastChild;
+	if (!lastChild) throw new Error('no last child');
+	reportMissingChildNodes(f, lastChild);
+	reportErrorNodes(f, lastChild);
+	return lastChild;
+};
+
+// Get last child or hand up nothing -> TreeSitterNode | null
+// Finds missing children / errors and filters out null
+export const optionalLastChild = (f: FileState, node: TreeSitterNode): TreeSitterNode | null => {
+	const lastChild = node.lastChild;
+	if (!lastChild) return null;
+	reportMissingChildNodes(f, lastChild);
+	reportErrorNodes(f, lastChild);
+	return lastChild;
+};
+
+// Get AND process 0+ children of ANY name -> AnyNode[]
+// Finds missing children / errors and filters out null
+export const handleNamedChildren = (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	return node.namedChildren
+		.filter((v) => v !== null)
+		.map((v) => {
+			reportMissingChildNodes(f, v);
+			reportErrorNodes(f, v);
+			return v;
+		})
+		.map((v) => handleNode(f, v))
+		.flat();
+};
+
+// Get AND process last child or die trying -> AnyNode
+// Finds missing children / errors and filters out null
+export const handleLastChild = (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	const lastChildNode = mandatoryLastChild(f, node);
+	return handleNode(f, lastChildNode);
+};
+
+// More specific:
+
+// Get AND process 0+ children by name -> AnyNode[]
+export const handleChildrenForFieldName = (
+	f: FileState,
+	node: TreeSitterNode,
+	fieldName: string,
+): AnyNode[] => {
+	const children = childrenForFieldName(f, node, fieldName);
+	return children.map((v) => handleNode(f, v)).flat();
+};
+
+// Get AND process 1 string child by name or die trying -> string
 export const stringCaptureForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -638,18 +722,20 @@ export const stringCaptureForFieldName = (
 	throw new Error(`capture from field ${fieldName} not a string`);
 };
 
+// Get AND process 0-1 string child by name -> string | null
 export const optionalStringCaptureForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
 	fieldName: string,
 ): string | null => {
-	const captureNode = node.childForFieldName(fieldName);
+	const captureNode = optionalChildForFieldName(f, node, fieldName);
 	if (!captureNode) return null;
 	const capture = handleCapture(f, captureNode);
 	if (typeof capture === 'string') return capture;
 	throw new Error(`capture from field ${fieldName} not a string`);
 };
 
+// Get AND process 1 string/number child by name or die trying -> string | number
 export const stringOrNumberCaptureForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -661,6 +747,7 @@ export const stringOrNumberCaptureForFieldName = (
 	throw new Error(`capture from field ${fieldName} not a string or number`);
 };
 
+// Get AND process 1 number child by name or die trying -> number
 export const numberCaptureForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -671,102 +758,120 @@ export const numberCaptureForFieldName = (
 	if (typeof capture === 'number') return capture;
 	throw new Error(`capture from field ${fieldName} not a number`);
 };
+
+// Get AND process 0-1 number child by name -> number | null
 export const optionalNumberCaptureForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
 	fieldName: string,
 ): number | null => {
-	const captureNode = node.childForFieldName(fieldName);
+	const captureNode = optionalChildForFieldName(f, node, fieldName);
 	if (!captureNode) return null;
 	const capture = handleCapture(f, captureNode);
 	if (typeof capture === 'number') return capture;
 	throw new Error(`capture from field ${fieldName} not a number`);
 };
 
+// Get AND process (into captures) 0-1 children -> Capture | Capture[] | undefined
 export const captureForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
 	fieldName: string,
 ): Capture | Capture[] | undefined => {
-	const captureNode = node.childForFieldName(fieldName);
+	const captureNode = optionalChildForFieldName(f, node, fieldName);
 	if (!captureNode) return undefined;
 	return handleCapture(f, captureNode);
 };
+
+// Get AND process (into captures) 0+ children -> Capture | Capture[] | undefined
 export const capturesForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
 	fieldName: string,
 ): Capture[] => {
-	return (node.childrenForFieldName(fieldName) || []).map((v) => handleCapture(f, v)).flat();
+	return childrenForFieldName(f, node, fieldName)
+		.map((v) => handleCapture(f, v))
+		.flat();
 };
+
+// Get AND process (into raw text) 0-1 children -> string | undefined
 export const optionalTextForFieldName = (
 	f: FileState,
 	node: TreeSitterNode,
 	fieldName: string,
 ): string | undefined => {
-	const captureNode = node.childForFieldName(fieldName);
+	const captureNode = optionalChildForFieldName(f, node, fieldName);
 	if (!captureNode) return undefined;
 	return captureNode.text;
 };
+
+// Get AND process (into raw text) 1 children or die trying -> string
 export const textForFieldName = (f: FileState, node: TreeSitterNode, fieldName: string): string => {
 	const captureNode = mandatoryChildForFieldName(f, node, fieldName);
 	return captureNode.text;
 };
 
+// The following will also report constant assignemnts if they are the source the incongruity
+
+// Gracefully force the value into being a string (do not die if incongruous)
 export const coerceToString = (
 	f: FileState,
 	node: TreeSitterNode,
 	v: unknown,
-	label: string,
+	label?: string,
 ): string => {
-	if (typeof v !== 'string') {
-		const locations = [MathlangLocation.quick(f, node)];
-		if (f.constants[node.text]) {
-			locations.unshift({
-				f: f.constants[node.text].debug.f || f,
-				node: f.constants[node.text].debug.node || node,
-				fileName: f.constants[node.text]?.debug.fileName,
-			});
-		}
-		f.newError({
-			locations,
-			message: `${label} is not a string`,
-		});
-		return '';
+	if (typeof v === 'string') return v;
+	const locations = [MathlangLocation.quick(f, node)];
+	if (f.constants[node.text]) {
+		locations.unshift(f.constants[node.text].debug);
 	}
-	return v;
+	if (label) {
+		f.newError({ locations, message: `${label} is not a string` });
+	} else {
+		f.newError({ locations, message: `value not a string` });
+	}
+	return '';
 };
+
+// Gracefully force the value into being a number (do not die if incongruous)
 export const coerceToNumber = (
 	f: FileState,
 	node: TreeSitterNode,
 	v: unknown,
-	label: string,
+	label?: string,
 ): number => {
-	if (typeof v !== 'number') {
-		f.newError({
-			locations: [f.constants[node.text].debug, MathlangLocation.quick(f, node)],
-			message: `${label} is not a number`,
-		});
-		return NaN;
+	if (typeof v === 'number') return v;
+	const locations = [MathlangLocation.quick(f, node)];
+	if (f.constants[node.text]) {
+		locations.unshift(f.constants[node.text].debug);
 	}
-	return v;
+	if (label) {
+		f.newError({ locations, message: `${label} is not a number` });
+	} else {
+		f.newError({ locations, message: `value not a number` });
+	}
+	return NaN;
 };
 
-export const coerceAsBool = (
+// Gracefully force the value into being a boolean (do not die if incongruous)
+export const coerceToBool = (
 	f: FileState,
 	node: TreeSitterNode,
 	v: unknown,
-	label: string,
+	label?: string,
 ): boolean => {
 	if (v instanceof BoolLiteral) {
 		return v.value;
 	}
-	if (typeof v !== 'boolean') {
-		f.newError({
-			locations: [f.constants[node.text].debug, MathlangLocation.quick(f, node)],
-			message: `${label} is not a boolean`,
-		});
-		return false;
+	if (typeof v === 'boolean') return v;
+	const locations = [MathlangLocation.quick(f, node)];
+	if (f.constants[node.text]) {
+		locations.unshift(f.constants[node.text].debug);
 	}
-	return v;
+	if (label) {
+		f.newError({ locations, message: `${label} is not a boolean` });
+	} else {
+		f.newError({ locations, message: `value not a boolean` });
+	}
+	return false;
 };
