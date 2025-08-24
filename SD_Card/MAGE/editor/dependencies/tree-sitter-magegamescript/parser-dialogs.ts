@@ -10,6 +10,7 @@ import {
 	type SerialDialogSettings,
 	DialogOption,
 	MathlangLocation,
+	MathlangMessage,
 } from './parser-types.ts';
 
 const DIALOG_WRAP = 42;
@@ -180,10 +181,13 @@ export const buildSerialDialogFromInfo = (
 			}
 		});
 		if (warnNodes.length > 0) {
-			f.p.newWarning({
-				locations: warnNodes,
-				message: `serial dialog option types mismatch; first type (${firstOptionType}) will be used`,
-			});
+			f.p.newWarning(
+				new MathlangMessage(
+					warnNodes,
+					'serial dialog option mismatch',
+					`first type (${firstOptionType}) will be used`,
+				),
+			);
 		}
 	}
 	return new SerialDialog(MathlangLocation.quick(f, node), serialDialog);
@@ -257,32 +261,36 @@ export const buildDialogFromInfo = (
 		const targetSize = lastIndex === i && dialog.options.length > 0 ? 1 : 5;
 		const splitMessage: string[] = message.split('\n');
 		if (splitMessage.length > targetSize) {
-			let warningMessage = `dialog messages longer than 5 lines will wrap off the bottom`;
+			let warningMessage = `messages longer than 5 lines will wrap off the bottom`;
 			if (lastIndex === i && dialog.options) {
 				warningMessage = `messages before dialog options will collide if more than 1 line`;
 			}
 			if (!messageNodes[i]) throw new Error('no associated node for message at index' + i);
-			f.p.newWarning({
-				locations: [MathlangLocation.quick(f, messageNodes[i])],
-				message: warningMessage,
-				footer:
-					`When wrapped:\n` +
-					splitMessage
-						.map((v, i, arr) => {
-							let row: number | string = i + 1;
-							if (arr.length > 9) {
-								row = row < 10 ? '0' + row : row;
-							}
-							let ret = `${row}> ${v}`;
-							if (i >= targetSize) {
-								ret = ansi.r + `(x) ` + ret + ansi.reset;
-							} else {
-								ret = `    ` + ret;
-							}
-							return ret;
-						})
-						.join('\n'),
-			});
+			const footer =
+				`When wrapped:\n` +
+				splitMessage
+					.map((v, i, arr) => {
+						let row: number | string = i + 1;
+						if (arr.length > 9) {
+							row = row < 10 ? '0' + row : row;
+						}
+						let ret = `${row}> ${v}`;
+						if (i >= targetSize) {
+							ret = ansi.r + `(x) ` + ret + ansi.reset;
+						} else {
+							ret = `    ` + ret;
+						}
+						return ret;
+					})
+					.join('\n');
+			f.p.newWarning(
+				new MathlangMessage(
+					[MathlangLocation.quick(f, messageNodes[i])],
+					'dialog too long',
+					warningMessage,
+					footer,
+				),
+			);
 		}
 	});
 	return new Dialog(MathlangLocation.quick(f, node), {

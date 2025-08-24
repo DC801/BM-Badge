@@ -16,13 +16,7 @@ import {
 } from './parser-types.ts';
 import { FileState } from './parser-file.ts';
 import { type FileMap } from './parser-project.ts';
-import {
-	handleCapture,
-	handleNamedChildren,
-	mandatoryChildForField,
-	mandatoryLastChild,
-	optionalLastChild,
-} from './parser-capture.ts';
+import { handleCapture, handleNamedChildren, mandatoryChildForField } from './parser-capture.ts';
 
 export const verbose = false;
 export const debugLog = (message: string) => {
@@ -139,7 +133,7 @@ export const reportMissingChildNodes = (
 		.filter((v) => v !== null)
 		.filter((child) => child?.isMissing);
 	missingNodes.forEach((missingChild) => {
-		f.quickWarning(missingChild, `missing token: ${missingChild.type}`);
+		f.quickWarning(missingChild, 'missing token', `expected token: ${missingChild.type}`);
 	});
 	return missingNodes;
 };
@@ -148,7 +142,7 @@ export const reportErrorNodes = (f: FileState, node: TreeSitterNode): (TreeSitte
 		.filter((v) => v !== null)
 		.filter((child) => child.type === 'ERROR');
 	errorNodes.forEach((errorNode) => {
-		f.quickError(errorNode, 'syntax error');
+		f.quickError(errorNode, 'syntax error', '');
 	});
 	return errorNodes;
 };

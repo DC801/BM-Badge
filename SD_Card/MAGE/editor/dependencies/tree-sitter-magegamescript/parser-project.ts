@@ -175,10 +175,13 @@ export class ProjectState {
 						? optionalChildForField(action.debug.f, action.debug.node, 'script') ||
 							action.debug.node
 						: node;
-				this.newError({
-					locations: [MathlangLocation.quick(scriptData.debug.f, useNode)],
-					message: 'copy_script: no script found by the name ' + targetScript,
-				});
+				this.newError(
+					new MathlangMessage(
+						[MathlangLocation.quick(scriptData.debug.f, useNode)],
+						'missing script',
+						'copy_script could not find script ' + targetScript,
+					),
+				);
 				return;
 			}
 			// if the target script hasn't had its own copy_script pass done yet, do that pass first
@@ -222,10 +225,8 @@ export class ProjectState {
 					let ret = '';
 					try {
 						ret = JSON.parse(string);
-					} catch (e) {
-						const error = new Error('failed to parse JSON in bakeCopyScriptSingle');
-						error.cause = e;
-						throw error;
+					} catch {
+						throw new Error('failed to parse JSON in bakeCopyScriptSingle');
 					}
 					return Action.fromArgs(ret);
 				});
@@ -266,7 +267,7 @@ export class ProjectState {
 				} else if (!catastrophicErrorReported) {
 					if (node?.text === ';') {
 						// semicolons after script definitions or such
-						f.quickError(node, `unexpected semicolon`);
+						f.quickError(node, 'unexpected token', `unexpected semicolon`);
 					} else {
 						// The first catastrophic error should be the last!
 						// Every node underneath is just wrecked. Nuke it all!
@@ -275,6 +276,7 @@ export class ProjectState {
 						}
 						f.quickError(
 							node,
+							'syntax error',
 							`catastrophic syntax error (naive guess: invalid script name)`,
 							`Avoid keywords for bare script names in definitions, or wrap the script name in quotes\n` +
 								`   add { ... } // INVALID\n` +

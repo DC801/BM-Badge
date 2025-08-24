@@ -9,6 +9,7 @@ import {
 	MathlangLocation,
 	FunctionDefinition,
 	ConstantDefinition,
+	type MathlangMessageType,
 } from './parser-types.ts';
 import { ansiTags as ansi } from './parser-utilities.ts';
 
@@ -61,11 +62,12 @@ export class FileState {
 		this.errorCount = 0;
 		this.warningCount = 0;
 	}
-	quickError(node: TreeSitterNode, message: string, footer?: string) {
-		const err: MathlangMessage = {
+	quickError(node: TreeSitterNode, type: MathlangMessageType, message: string, footer?: string) {
+		const err = new MathlangMessage(
+			[MathlangLocation.quick(this, node)],
+			type || 'generic error',
 			message,
-			locations: [MathlangLocation.quick(this, node)],
-		};
+		);
 		if (footer) {
 			err.footer = footer;
 		}
@@ -76,11 +78,17 @@ export class FileState {
 		this.p.newError(message);
 		this.errorCount += 1;
 	}
-	quickWarning(node: TreeSitterNode, message: string, footer?: string) {
-		const warn: MathlangMessage = {
+	quickWarning(
+		node: TreeSitterNode,
+		type: MathlangMessageType,
+		message: string,
+		footer?: string,
+	) {
+		const warn = new MathlangMessage(
+			[MathlangLocation.quick(this, node)],
+			type || 'generic error',
 			message,
-			locations: [MathlangLocation.quick(this, node)],
-		};
+		);
 		if (footer) {
 			warn.footer = footer;
 		}

@@ -21,6 +21,8 @@ import {
 	CopyMacro,
 	AnyNode,
 	MathlangLocation,
+	MathlangMessage,
+	type MathlangMessageType,
 } from './parser-types.ts';
 
 type FileCategory = 'scripts' | 'dialogs' | 'serialDialogs';
@@ -65,15 +67,21 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		const entries = Object.entries(p.duplicates[category]);
 		entries.forEach(([name, dupes]: [string, Definition[]]) => {
 			// One error message, multiple locations
-			p.newError({
-				message: `multiple ${category} with name "${name}"`,
-				locations: dupes.map((dupe: Definition) =>
-					MathlangLocation.quick(
-						dupe.debug.f,
-						dupe.debug.node.firstNamedChild || dupe.debug.node,
-					),
+			const locations = dupes.map((dupe: Definition) =>
+				MathlangLocation.quick(
+					dupe.debug.f,
+					dupe.debug.node.firstNamedChild || dupe.debug.node,
 				),
-			});
+			);
+			let type: MathlangMessageType = 'duplicate script';
+			if (category === 'dialogs') type = 'duplicate dialog';
+			if (category === 'serialDialogs') type = 'duplicate serial dialog';
+			const error = new MathlangMessage(
+				locations,
+				type,
+				`multiple ${category} with name "${name}"`,
+			);
+			p.newError(error);
 			// Increment error count for that file
 			dupes.forEach((dupe: Definition) => {
 				const file = p.fileMap[dupe.debug.fileName].parsed;
@@ -180,9 +188,6 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 			}
 			if (action instanceof GOTO_ACTION_INDEX) {
 				action.action_index = jumpToIndex;
-			}
-			if (action.label !== undefined) {
-				throw new Error('still label?');
 			}
 		});
 	});

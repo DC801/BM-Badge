@@ -78,10 +78,74 @@ export class MathlangLocation {
 		return new MathlangLocation(this.args);
 	}
 }
+
+export type MathlangMessageType =
+	// general
+	| 'syntax error'
+	| 'unexpected token'
+	| 'missing token' // can be warning, not error (e.g. missing ';')
+	| 'missing file'
+
+	// these are phrased this way because the order of definition doesn't matter
+	// (there isn't an "original," so we can't say "already defined")
+	| 'duplicate script'
+	| 'duplicate dialog'
+	| 'duplicate serial dialog'
+
+	// these are ordered, so there is definitely an "original"
+	| 'undefined fn'
+	| 'fn already defined'
+	| 'duplicate fn arg'
+	| 'not enough fn args'
+	| 'undefined constant'
+	| 'constant already defined'
+
+	| 'mismatched spread lengths'
+	| 'unsupported entity field'
+	| 'misordered params'
+
+	| 'invalid JSON action'
+	| 'invalid fn arg'
+	| 'invalid operator' // warning, not error
+	| 'invalid constant value'
+	| 'invalid action param combination'
+	| `invalid entity script slot`
+	| `invalid map script slot`;
+export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
+	if (v === 'syntax error') return true;
+	if (v === 'unexpected token') return true;
+	if (v === 'missing token') return true;
+	if (v === 'missing file') return true;
+	if (v === 'mismatched spread lengths') return true;
+	if (v === 'unsupported entity field') return true;
+	if (v === 'invalid JSON action') return true;
+	if (v === 'misordered params') return true;
+	if (v === 'constant already defined') return true;
+	if (v === 'fn already defined') return true;
+	if (v === 'undefined constant') return true;
+	if (v === 'not enough fn args') return true;
+	if (v === 'duplicate fn arg') return true;
+	if (v === 'undefined fn') return true;
+	if (v === 'invalid fn arg') return true;
+	if (v === 'invalid operator') return true;
+	if (v === 'invalid constant value') return true;
+	if (v === 'invalid action param combination') return true;
+	if (v === `invalid entity script slot`) return true;
+	if (v === `invalid map script slot`) return true;
+	return false;
+};
 export class MathlangMessage {
 	locations: MathlangLocation[];
 	message: string;
+	type: MathlangMessageType;
 	footer?: string;
+	constructor(locations: MathlangLocation[], type: string, message: string, footer?: string) {
+		this.locations = locations;
+		this.message = message;
+		if (footer) this.footer = footer;
+		if (!isMathlangMessageType(type)) throw new Error('invalid error type');
+		this.type = type;
+	}
 }
 
 const truncate = (s: string, n: number): string => {
@@ -518,7 +582,7 @@ export class SerialDialogParameter extends MathlangNode {
 	clone() {
 		const newArgs = { ...this.args };
 		if (this.value instanceof BoolLiteral) {
-			newArgs.value = BoolLiteral.clone(); // TODO: why red squiggles on clone()?
+			newArgs.value = this.value.clone();
 		}
 		return new SerialDialogParameter(this.debug.clone(), newArgs);
 	}
@@ -773,10 +837,8 @@ export class JSONLiteral extends MathlangNode {
 		if (!Array.isArray(args.json)) throw new Error('need array');
 		try {
 			this.json = JSON.parse(JSON.stringify(args.json));
-		} catch (e) {
-			const error = new Error('failed to parse JSON in JSONLiteral constructor');
-			error.cause = e;
-			throw error;
+		} catch {
+			throw new Error('failed to parse JSON in JSONLiteral constructor');
 		}
 	}
 	clone() {
@@ -1067,7 +1129,11 @@ export class EntityIntField extends IntGetable {
 			const f = this.debug.f;
 			const node = this.debug.node;
 			const propertyNode = mandatoryChildForField(f, node, 'property');
-			f.quickError(propertyNode, `this property is not supported in boolean expressions`);
+			f.quickError(
+				propertyNode,
+				'unsupported entity field',
+				`this property is not supported in boolean expressions`,
+			);
 		}
 		throw new Error('could not format number_checkable_equality');
 	}

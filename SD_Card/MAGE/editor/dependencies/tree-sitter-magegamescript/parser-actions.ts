@@ -110,6 +110,7 @@ import {
 	EntityIntField,
 	RNGSingle,
 	RNGPair,
+	MathlangMessage,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -139,6 +140,7 @@ const spreadValues = (
 		if (spreadSize !== len) {
 			f.quickError(
 				spreadField.node,
+				'mismatched spread lengths',
 				`spreads must have the same count of items within a given action`,
 			);
 			spreadSize = Math.max(spreadSize, len);
@@ -450,16 +452,23 @@ const actionData: Record<string, actionDataEntry> = {
 				}
 				const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
 				const suggestion = v.rhs.includes(' ') ? '"' + v.rhs + '"' : v.rhs;
-				f.p.newWarning({
-					locations: printNodes.map((printNode) => MathlangLocation.quick(f, printNode)),
-					message: 'these identifiers could be ints or bools',
-					footer:
-						`Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:` +
-						`\n    !!${suggestion}` +
-						`\nTo silence this warning, turn the RHS into a passthrough int expression (which will produce the same output), e.g.:` +
-						`\n    ${suggestion} + 0` +
-						`\n    ${suggestion} * 1`,
-				});
+				const footer =
+					`Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:` +
+					`\n    !!${suggestion}` +
+					`\nTo silence this warning, turn the RHS into a passthrough int expression (which will produce the same output), e.g.:` +
+					`\n    ${suggestion} + 0` +
+					`\n    ${suggestion} * 1`;
+				const message = 'these identifiers could be ints or bools';
+				const locations = printNodes.map((printNode) =>
+					MathlangLocation.quick(f, printNode),
+				);
+				const warning = new MathlangMessage(
+					locations,
+					'ambiguous identifiers',
+					message,
+					footer,
+				);
+				f.p.newWarning(warning);
 				const debug = MathlangLocation.quick(f, node);
 				return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
 			}
@@ -679,6 +688,7 @@ const actionData: Record<string, actionDataEntry> = {
 						// ... forever (ILLEGAL)
 						f.quickError(
 							debug.node,
+							'invalid action param combination',
 							`cannot move camera to an entity's position forever`,
 						);
 						return;
@@ -704,6 +714,7 @@ const actionData: Record<string, actionDataEntry> = {
 							// ... forever (ILLEGAL)
 							f.quickError(
 								debug.node,
+								'invalid action param combination',
 								`'forever' can only be used with geometry lengths, not single points`,
 							);
 							return;
@@ -721,6 +732,7 @@ const actionData: Record<string, actionDataEntry> = {
 					// ... to another entity (ILLEGAL)
 					f.quickError(
 						debug.node,
+						'invalid action param combination',
 						`cannot move an entity to another entity's position over time`,
 					);
 					return;
@@ -751,6 +763,7 @@ const actionData: Record<string, actionDataEntry> = {
 							// ... forever (ILLEGAL)
 							f.quickError(
 								debug.node,
+								'invalid action param combination',
 								`'forever' can only be used with geometry lengths, not single points`,
 							);
 							return;

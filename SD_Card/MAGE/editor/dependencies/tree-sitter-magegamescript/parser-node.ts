@@ -127,13 +127,14 @@ const nodeFns = {
 		if (allChildren.some((child) => child.grammarType === 'over_time_operator')) {
 			f.quickError(
 				node,
+				'syntax error',
 				`malformed 'do over time' expression`,
 				`should take the form '@movable -> @coordinate over @duration [forever];'\n` +
 					`   @movable = (player | self | entity @string) position | camera\n` +
 					`   @coordinate = (player | self | entity @string) position | geometry @string (origin | length)`,
 			);
 		} else {
-			f.quickError(node, 'syntax error');
+			f.quickError(node, 'syntax error', 'syntax error');
 		}
 		return [];
 	},
@@ -142,7 +143,7 @@ const nodeFns = {
 		const name = stringCaptureForField(f, node, 'name');
 		// don't waste time if there's a reassignment error
 		if (f.functions[name]) {
-			f.quickError(node, `fn ${name} already defined`);
+			f.quickError(node, 'fn already defined', `fn ${name} already defined`);
 			return [];
 		}
 		const paramNodes = childrenForField(f, node, 'arg');
@@ -150,7 +151,7 @@ const nodeFns = {
 		let error = false;
 		const params = paramNodes.map((param) => {
 			if (param.grammarType !== 'CONSTANT') {
-				f.quickError(node, 'fn arg must be CONSTANT (prefixed with $)');
+				f.quickError(node, 'invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
 				error = true;
 			}
 			return param.text;
@@ -160,7 +161,7 @@ const nodeFns = {
 		const paramSet = new Set([...params]);
 		if (paramSet.size !== params.length) {
 			// todo: tell the red squiggles which params are the duplicates
-			f.quickError(node, 'duplicate fn args');
+			f.quickError(node, 'duplicate fn arg', 'duplicate fn args');
 			return [];
 		}
 		// the body node remains unprocessed so the compile-time-constant-replacement-system can insert args passed to the function "call"
@@ -173,7 +174,7 @@ const nodeFns = {
 		const definition = f.functions[name];
 		if (!definition) {
 			const nameNode = optionalChildForField(f, node, 'name') || node;
-			f.quickError(nameNode, `function ${name} is undefined`);
+			f.quickError(nameNode, 'undefined fn', `function ${name} is undefined`);
 			return [];
 		}
 		const callParamNodes = childrenForField(f, node, 'arg');
@@ -182,6 +183,7 @@ const nodeFns = {
 		if (callParamNodes.length < definitionParamNodes.length) {
 			f.quickError(
 				node,
+				'not enough fn args',
 				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
 			);
 			// todo: yellow squiggles when too many params are passed
@@ -191,7 +193,7 @@ const nodeFns = {
 		const callParams = callParamNodes.map((v) => {
 			let capture = handleCapture(f, v);
 			if (!isMGSPrimitive(capture)) {
-				f.quickError(v, 'function arg not an MGS primitive');
+				f.quickError(v, 'invalid fn arg', 'function arg not an MGS primitive');
 				capture = coerceToString(f, v, capture, 'fucntion param');
 			}
 			return capture;
@@ -232,7 +234,11 @@ const nodeFns = {
 					if (typeof obj === 'object' && (obj as unknown as Action).action) {
 						actions.push(Action.fromArgs(obj));
 					} else {
-						f.quickError(raw.debug.node, 'invalid JSON action: ' + JSON.stringify(obj));
+						f.quickError(
+							raw.debug.node,
+							'invalid JSON action',
+							'invalid JSON action: ' + JSON.stringify(obj),
+						);
 					}
 				});
 			} else {
@@ -262,11 +268,15 @@ const nodeFns = {
 		const value = captureForField(f, node, 'value');
 		if (!isMGSPrimitive(value)) {
 			const valueNode = mandatoryChildForField(f, node, 'value');
-			f.quickError(valueNode || node, `constant value not an MGS primitive (${label})`);
+			f.quickError(
+				valueNode || node,
+				'invalid constant value',
+				`constant value not an MGS primitive (${label})`,
+			);
 			return [];
 		}
 		if (f.constants[label]) {
-			f.quickError(node, `cannot redefine constant ${label}`);
+			f.quickError(node, 'constant already defined', `cannot redefine constant ${label}`);
 		}
 		f.constants[label] = {
 			debug: debug,
@@ -287,7 +297,7 @@ const nodeFns = {
 		// get prerequesite file
 		const fileName = stringCaptureForField(f, node, 'fileName');
 		if (!f.p.fileMap[fileName]) {
-			f.quickError(node, `include_macro: cannot find file "${fileName}"`);
+			f.quickError(node, 'missing file', `include_macro: cannot find file "${fileName}"`);
 			includeRecursion.pop(); // DO BEFORE GIVING UP
 			return [];
 		}
@@ -297,7 +307,11 @@ const nodeFns = {
 			f.p.parseFile(fileName);
 			insertF = f.p.fileMap[fileName].parsed;
 			if (!insertF) {
-				f.quickError(node, `include_macro: could not parse prerequesite "${fileName}"`);
+				f.quickError(
+					node,
+					'missing file',
+					`include_macro: could not parse prerequesite "${fileName}"`,
+				);
 				includeRecursion.pop(); // DO BEFORE GIVING UP
 				return [];
 			}
@@ -308,7 +322,11 @@ const nodeFns = {
 		// add their constants to us
 		Object.keys(insertF.constants).forEach((constantName) => {
 			if (f.constants[constantName]) {
-				f.quickError(node, `cannot redefine constant ${constantName} (via 'include')`);
+				f.quickError(
+					node,
+					'constant already defined',
+					`cannot redefine constant ${constantName} (via 'include')`,
+				);
 			} else {
 				f.constants[constantName] = insertF.constants[constantName];
 			}
@@ -316,7 +334,11 @@ const nodeFns = {
 		// add their functions to us
 		Object.keys(insertF.functions).forEach((functionName) => {
 			if (f.functions[functionName]) {
-				f.quickError(node, `cannot redefine function ${functionName} (via 'include')`);
+				f.quickError(
+					node,
+					'fn already defined',
+					`cannot redefine function ${functionName} (via 'include')`,
+				);
 			} else {
 				f.functions[functionName] = insertF.functions[functionName];
 			}
@@ -358,7 +380,11 @@ const nodeFns = {
 			if (len === 1) return; // singles are passed through
 			if (spreadCount === -Infinity) spreadCount = len;
 			if (spreadCount !== len) {
-				f.quickError(innerNode, `spreads inside rand!() must contain same number of items`);
+				f.quickError(
+					innerNode,
+					'mismatched spread lengths',
+					`spreads inside rand!() must contain same number of items`,
+				);
 			}
 		});
 		// tilt the other direction
@@ -514,7 +540,7 @@ const nodeFns = {
 			const parsed = JSON.parse(text);
 			return [JSONLiteral.quick(MathlangLocation.quick(f, node), parsed)];
 		} catch {
-			f.quickError(node, `JSON syntax error`, `Generic error. Check trailing commas!`);
+			f.quickError(node, `syntax error`, `Generic error. Check trailing commas!`);
 		}
 		return [];
 	},

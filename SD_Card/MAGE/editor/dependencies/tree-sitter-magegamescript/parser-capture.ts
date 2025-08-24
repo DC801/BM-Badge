@@ -40,6 +40,7 @@ import {
 	RNGPair,
 	IntGetable,
 	BoolComparisonSequence,
+	MathlangMessage,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -80,7 +81,7 @@ export const handleCapture = (f: FileState, node: TreeSitterNode | null): Captur
 	if (grammarType === 'CONSTANT') {
 		const lookup = f.currFunction[0]?.[node.text] || f.constants[node.text];
 		if (lookup === undefined) {
-			f.quickError(node, `Constant ${node.text} is undefined`);
+			f.quickError(node, 'undefined constant', `constant ${node.text} is undefined`);
 		}
 		return lookup?.value !== undefined ? lookup?.value : node.text;
 	}
@@ -154,11 +155,11 @@ const captureFns = {
 	EQUALITY: (f: FileState, node: TreeSitterNode): string => {
 		const op = node.text;
 		if (op === '===') {
-			f.quickWarning(node, `use '==', not '==='`);
+			f.quickWarning(node, 'invalid operator', `use '==', not '==='`);
 			return '==';
 		}
 		if (op === '!==') {
-			f.quickWarning(node, `use '!=', not '!=='`);
+			f.quickWarning(node, 'invalid operator', `use '!=', not '!=='`);
 			return '!=';
 		}
 		return op;
@@ -166,11 +167,11 @@ const captureFns = {
 	COMPARISON: (f: FileState, node: TreeSitterNode): string => {
 		const op = node.text;
 		if (op === '===') {
-			f.quickWarning(node, `use '==', not '==='`);
+			f.quickWarning(node, 'invalid operator', `use '==', not '==='`);
 			return '==';
 		}
 		if (op === '!==') {
-			f.quickWarning(node, `use '!=', not '!=='`);
+			f.quickWarning(node, 'invalid operator', `use '!=', not '!=='`);
 			return '!=';
 		}
 		return op;
@@ -555,7 +556,7 @@ const captureFns = {
 		let min = numberCaptureForField(f, node, 'min');
 		let max = numberCaptureForField(f, node, 'max');
 		if (min > max) {
-			f.quickError(node, 'min must be less than max');
+			f.quickWarning(node, 'misordered params', 'min must be less than max');
 			const switcheroo = min;
 			min = max;
 			max = switcheroo;
@@ -815,9 +816,9 @@ export const coerceToString = (
 		locations.unshift(f.constants[node.text].debug);
 	}
 	if (label) {
-		f.newError({ locations, message: `${label} is not a string` });
+		f.newError(new MathlangMessage(locations, 'value wrong type', `${label} is not a string`));
 	} else {
-		f.newError({ locations, message: `value not a string` });
+		f.newError(new MathlangMessage(locations, 'value wrong type', `value not a string`));
 	}
 	return '';
 };
@@ -835,9 +836,9 @@ export const coerceToNumber = (
 		locations.unshift(f.constants[node.text].debug);
 	}
 	if (label) {
-		f.newError({ locations, message: `${label} is not a number` });
+		f.newError(new MathlangMessage(locations, 'value wrong type', `${label} is not a number`));
 	} else {
-		f.newError({ locations, message: `value not a number` });
+		f.newError(new MathlangMessage(locations, 'value wrong type', `value not a number`));
 	}
 	return NaN;
 };
@@ -858,9 +859,9 @@ export const coerceToBool = (
 		locations.unshift(f.constants[node.text].debug);
 	}
 	if (label) {
-		f.newError({ locations, message: `${label} is not a boolean` });
+		f.newError(new MathlangMessage(locations, 'value wrong type', `${label} is not a boolean`));
 	} else {
-		f.newError({ locations, message: `value not a boolean` });
+		f.newError(new MathlangMessage(locations, 'value wrong type', `value not a boolean`));
 	}
 	return false;
 };
