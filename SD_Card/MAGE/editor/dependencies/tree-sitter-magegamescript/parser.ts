@@ -214,18 +214,18 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		if (warnCount) {
 			messages.push(ansi.yellow + `${warnCount} warning${plural(warnCount)}` + ansi.reset);
 		}
-		console.log(`Issues found: ${messages.join(', ')}`);
+		// console.log(`Issues found: ${messages.join(', ')}`);
 		p.warnings.forEach((message) => {
 			const str = ansi.yellow + printableMessage(p.fileMap, 'Warning', message) + ansi.reset;
 			printWarnings += '\n' + str;
 			// .replace(/\u001B\[\d+m/g, '');
-			console.warn(str);
+			// console.warn(str);
 		});
 		p.errors.forEach((message) => {
 			const str = ansi.red + printableMessage(p.fileMap, 'Error', message) + ansi.reset;
 			printErrors += '\n' + str;
 			// .replace(/\u001B\[\d+m/g, '');
-			console.error(str);
+			// console.error(str);
 		});
 		p.mgsErrors = printErrors;
 		p.mgsWarnings = printWarnings;

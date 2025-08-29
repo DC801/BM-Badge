@@ -1491,6 +1491,20 @@ const fileMap =
 			};
 const fileTestNames = onlyDoTheseActionTests.length === 0 ? Object.keys(fileMap) : [];
 
+// const projectsWithErrors = {
+// 	'errors.mgs': {
+// 		fileText: `
+// 		_ {
+// 			wait 99
+// 		}
+// 	`,
+// 		expected: {
+// 			warnings: [{ type: 'missings token' }],
+// 			warningCount: 1,
+// 		},
+// 	},
+// };
+
 // --------------------------- Putting all the tests into a "project" ---------------------------
 
 const actionTestNames = (
@@ -1957,27 +1971,27 @@ const runTests = async () => {
 				}
 			});
 		}
-
-		// PROBLEMS
-		errors.forEach((error) => {
-			console.error('\n' + error.message);
-			if (error.lines) {
-				error.lines.forEach((v) => {
-					console.error(`   Found: ${v.found}`);
-					console.error(`Expected: ${v.expected}`);
-				});
-			}
-			if (error.lengthDiff) {
-				console.error(error.lengthDiff.join('\n'));
-			}
-		});
-
-		// DONE
-		if (errors.length === 0) {
-			console.log(`All ${actionTestNames.length} unit tests good, chief!`);
-		}
-		// console.log('BREAKPOINT HERE');
 	});
 };
+
+// PRINT TEST RESULTS
+errors.forEach((error) => {
+	console.error('\n' + error.message);
+	if (error.lines) {
+		error.lines.forEach((v) => {
+			console.error(`   Found: ${v.found}`);
+			console.error(`Expected: ${v.expected}`);
+		});
+	}
+	if (error.lengthDiff) {
+		console.error(error.lengthDiff.join('\n'));
+	}
+});
+
+// DONE
+if (errors.length === 0) {
+	console.log(`All ${actionTestNames.length} unit tests good, chief!`);
+}
+// console.log('BREAKPOINT HERE');
 
 runTests();

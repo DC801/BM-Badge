@@ -112,6 +112,7 @@ export type MathlangMessageType =
 	| `invalid entity script slot`
 	| `invalid map script slot`;
 export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
+	if (v === 'ambiguous identifiers') return true;
 	if (v === 'syntax error') return true;
 	if (v === 'unexpected token') return true;
 	if (v === 'missing token') return true;
@@ -143,7 +144,7 @@ export class MathlangMessage {
 		this.locations = locations;
 		this.message = message;
 		if (footer) this.footer = footer;
-		if (!isMathlangMessageType(type)) throw new Error('invalid error type');
+		if (!isMathlangMessageType(type)) throw new Error('invalid error type: ' + type);
 		this.type = type;
 	}
 }

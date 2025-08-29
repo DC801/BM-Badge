@@ -6273,6 +6273,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   const isMathlangMessageType = (v) => {
+    if (v === "ambiguous identifiers") return true;
     if (v === "syntax error") return true;
     if (v === "unexpected token") return true;
     if (v === "missing token") return true;
@@ -6304,7 +6305,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.locations = locations;
       this.message = message;
       if (footer) this.footer = footer;
-      if (!isMathlangMessageType(type)) throw new Error("invalid error type");
+      if (!isMathlangMessageType(type)) throw new Error("invalid error type: " + type);
       this.type = type;
     }
   }
@@ -11221,23 +11222,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     const errCount = p.errors.length;
     const warnCount = p.warnings.length;
     if (errCount || warnCount) {
-      const messages = [];
-      if (errCount) {
-        messages.push(ansiTags.red + `${errCount} error${plural(errCount)}` + ansiTags.reset);
-      }
-      if (warnCount) {
-        messages.push(ansiTags.yellow + `${warnCount} warning${plural(warnCount)}` + ansiTags.reset);
-      }
-      console.log(`Issues found: ${messages.join(", ")}`);
       p.warnings.forEach((message) => {
         const str = ansiTags.yellow + printableMessage(p.fileMap, "Warning", message) + ansiTags.reset;
         printWarnings += "\n" + str;
-        console.warn(str);
       });
       p.errors.forEach((message) => {
         const str = ansiTags.red + printableMessage(p.fileMap, "Error", message) + ansiTags.reset;
         printErrors += "\n" + str;
-        console.error(str);
       });
       p.mgsErrors = printErrors;
       p.mgsWarnings = printWarnings;
@@ -11246,7 +11237,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     return p;
   };
-  const plural = (n) => n !== 1 ? "s" : "";
   const __viteBrowserExternal = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: "Module" }));

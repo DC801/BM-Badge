@@ -332,70 +332,62 @@ $queue_size = 10;
 follow_player_stack_init {
 	offset_self_x = self x - $offset_x;
 	offset_self_y = self y + $offset_y;
+	// first in xy queue is follower's curr location
+	queue_x0 = offset_self_x *1;
+	queue_y0 = offset_self_y *1;
+	// next four pos in queue are equal-sized steps between follower and followee
 	if (player x > offset_self_x) {
 		diff = player x - offset_self_x;
 		step = diff / 5;
-		queue_x0 = offset_self_x*1;
 		queue_x1 = offset_self_x + step * 1;
 		queue_x2 = offset_self_x + step * 2;
 		queue_x3 = offset_self_x + step * 3;
 		queue_x4 = offset_self_x + step * 4;
-		queue_x5 = player x;
-		queue_x6 = player x;
-		queue_x7 = player x;
-		queue_x8 = player x;
-		queue_x9 = player x;
 	} else {
 		diff = offset_self_x - player x;
 		step = diff / 5;
-		queue_x0 = offset_self_x*1;
 		queue_x1 = player x + step * 4;
 		queue_x2 = player x + step * 3;
 		queue_x3 = player x + step * 2;
 		queue_x4 = player x + step * 1;
-		queue_x5 = player x;
-		queue_x6 = player x;
-		queue_x7 = player x;
-		queue_x8 = player x;
-		queue_x9 = player x;
 	}
 	if (player y > offset_self_y) {
 		diff = player y - offset_self_y;
 		step = diff / 5;
-		queue_y0 = offset_self_y*1;
 		queue_y1 = offset_self_y + step * 1;
 		queue_y2 = offset_self_y + step * 2;
 		queue_y3 = offset_self_y + step * 3;
 		queue_y4 = offset_self_y + step * 4;
-		queue_y5 = player y;
-		queue_y6 = player y;
-		queue_y7 = player y;
-		queue_y8 = player y;
-		queue_y9 = player y;
 	} else {
 		diff = offset_self_y - player y;
 		step = diff / 5;
-		queue_y0 = offset_self_y*1;
 		queue_y1 = player y + step * 4;
 		queue_y2 = player y + step * 3;
 		queue_y3 = player y + step * 2;
 		queue_y4 = player y + step * 1;
-		queue_y5 = player y;
-		queue_y6 = player y;
-		queue_y7 = player y;
-		queue_y8 = player y;
-		queue_y9 = player y;
 	}
+	// the rest of the queue is the followee's current pos
+	// (the player will fill these in as they get to them)
+	queue_x5 = player x;
+	queue_x6 = player x;
+	queue_x7 = player x;
+	queue_x8 = player x;
+	queue_x9 = player x;
+	queue_y5 = player y;
+	queue_y6 = player y;
+	queue_y7 = player y;
+	queue_y8 = player y;
+	queue_y9 = player y;
 	curr_self_queue = 0;
 	curr_player_queue = $queue_diff;
 }
-set_player_pos ($n, $xVar, $yVar) {
+record_player_pos_if ($n, $xVar, $yVar) {
 	if (curr_player_queue == $n) {
 		$xVar = player x;
 		$yVar = player y;
 	}
 }
-set_self_pos ($n, $xVar, $yVar) {
+set_self_pos_if ($n, $xVar, $yVar) {
 	if (curr_self_queue == $n) {
 		self x = $xVar;
 		self y = $yVar;
@@ -414,16 +406,16 @@ follow_player {
 			self current_animation = 0;
 		}
 	} else {
-		set_player_pos(0, queue_x0, queue_y0)
-		set_player_pos(1, queue_x1, queue_y1)
-		set_player_pos(2, queue_x2, queue_y2)
-		set_player_pos(3, queue_x3, queue_y3)
-		set_player_pos(4, queue_x4, queue_y4)
-		set_player_pos(5, queue_x5, queue_y5)
-		set_player_pos(6, queue_x6, queue_y6)
-		set_player_pos(7, queue_x7, queue_y7)
-		set_player_pos(8, queue_x8, queue_y8)
-		set_player_pos(9, queue_x9, queue_y9)
+		record_player_pos_if(0, queue_x0, queue_y0)
+		record_player_pos_if(1, queue_x1, queue_y1)
+		record_player_pos_if(2, queue_x2, queue_y2)
+		record_player_pos_if(3, queue_x3, queue_y3)
+		record_player_pos_if(4, queue_x4, queue_y4)
+		record_player_pos_if(5, queue_x5, queue_y5)
+		record_player_pos_if(6, queue_x6, queue_y6)
+		record_player_pos_if(7, queue_x7, queue_y7)
+		record_player_pos_if(8, queue_x8, queue_y8)
+		record_player_pos_if(9, queue_x9, queue_y9)
 		curr_player_queue = (curr_player_queue + 1) % $queue_size;
 		if (!should_follow_player) {
 			should_follow_player = true;
@@ -438,47 +430,49 @@ follow_player {
 	}
 
 	if (follow_player) {
-		// FOLLOW
+		// MOVE HAMSTER
 		my_old_x = self x;
 		my_old_y = self y;
+		// advance the queue
 		curr_self_queue = (curr_self_queue + 1) % $queue_size;
-		move_hamster()
-	}
-}
-move_hamster {
-	set_self_pos(0, queue_x0, queue_y0)
-	set_self_pos(1, queue_x1, queue_y1)
-	set_self_pos(2, queue_x2, queue_y2)
-	set_self_pos(3, queue_x3, queue_y3)
-	set_self_pos(4, queue_x4, queue_y4)
-	set_self_pos(5, queue_x5, queue_y5)
-	set_self_pos(6, queue_x6, queue_y6)
-	set_self_pos(7, queue_x7, queue_y7)
-	set_self_pos(8, queue_x8, queue_y8)
-	set_self_pos(9, queue_x9, queue_y9)
-	self x += $offset_x;
-	self y -= $offset_y;
-	if (self x > my_old_x) {
-		my_diff_x = self x - my_old_x;
-	} else {
-		my_diff_x = my_old_x - self x;
-	}
-	if (self y > my_old_y) {
-		my_diff_y = self y - my_old_y;
-	} else {
-		my_diff_y = my_old_y - self y;
-	}
-	if (my_diff_x > my_diff_y) {
+		// set position based on the queue value
+		set_self_pos_if(0, queue_x0, queue_y0)
+		set_self_pos_if(1, queue_x1, queue_y1)
+		set_self_pos_if(2, queue_x2, queue_y2)
+		set_self_pos_if(3, queue_x3, queue_y3)
+		set_self_pos_if(4, queue_x4, queue_y4)
+		set_self_pos_if(5, queue_x5, queue_y5)
+		set_self_pos_if(6, queue_x6, queue_y6)
+		set_self_pos_if(7, queue_x7, queue_y7)
+		set_self_pos_if(8, queue_x8, queue_y8)
+		set_self_pos_if(9, queue_x9, queue_y9)
+		self x += $offset_x;
+		self y -= $offset_y;
+		// get the absolute value of the delta
 		if (self x > my_old_x) {
-			self direction = east;
-		} else if (self x < my_old_x) {
-			self direction = west;
+			my_diff_x = self x - my_old_x;
+		} else {
+			my_diff_x = my_old_x - self x;
 		}
-	} else {
 		if (self y > my_old_y) {
-			self direction = south;
-		} else if (self y < my_old_y) {
-			self direction = north;
+			my_diff_y = self y - my_old_y;
+		} else {
+			my_diff_y = my_old_y - self y;
+		}
+		// turn the entity NSEW - check which axis changed more
+		if (my_diff_x > my_diff_y) {
+			if (self x > my_old_x) {
+				self direction = east;
+			} else if (self x < my_old_x) {
+				self direction = west;
+			}
+		} else {
+			if (self y > my_old_y) {
+				self direction = south;
+			} else if (self y < my_old_y) {
+				self direction = north;
+			}
+			// if position is the same, don't turn at all (use current direction)
 		}
 	}
 }

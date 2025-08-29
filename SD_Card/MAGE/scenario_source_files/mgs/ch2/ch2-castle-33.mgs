@@ -389,10 +389,6 @@ ch2_touch_mouse {
 
 /* ---------- MOUSE GAME ---------- */
 
-
-	$max = 680; // small room was 418
-
-
 ch2_debug_mousegame {
 	entity Mouse name = Mouse;
 	entity Mouse on_interact = ch2_touch_mouse;
@@ -406,140 +402,119 @@ ch2_mousegame_prepare_board {
 	if (ch2_mousegame_column == 0) { // uninitialized
 		ch2_mousegame_column = RNG!(1, =2); // 1, 2
 	} else { // invert the current one
-		if (ch2_mousegame_column == 1) {
-			ch2_mousegame_column = 2;
-		} else {
-			ch2_mousegame_column = 1;
-		}
+		ch2_mousegame_column = (ch2_mousegame_column % 2) + 1;
 	}
 
 	// bay row (top, mid, bot)
-	tempvar = RNG!(=1); // random 0-1 (coin flip)
 	if (ch2_mousegame_row == 0) { // uninitialized
 		ch2_mousegame_row = RNG!(1, =3); // 1, 2, 3
-	} else { // get a random one, but make sure it's not the current one
-		if (ch2_mousegame_row == 1) {
-			tempvar += 2; // random 2-3
-			ch2_mousegame_row = tempvar *1;
-			// 1 => 2|3
-		} else if (ch2_mousegame_row == 2) {
-			if (tempvar == 0) {
-				ch2_mousegame_row = 1;
-			} else {
-				ch2_mousegame_row = 3;
-			}
-			// 2 => 1|3
-		} else if (ch2_mousegame_row == 3) {
-			tempvar += 1; // random 1-2
-			ch2_mousegame_row = tempvar *1;
-			// 3 => 1|2
-		}
-	}
-
-	// cell within cell+column
-	if (ch2_mousegame_row == 1) {
-		// first row has 4 per region; others have 3
-		ch2_mousegame_cell = RNG!(1, =4); // 1,2,3,4
 	} else {
-		ch2_mousegame_cell = RNG!(1, =3); // 1,2,3
+		// scramble to a new value that isn't the current one
+		ch2_mousegame_row = ((ch2_mousegame_row + RNG!(0,=1)) % 3) + 1;
 	}
 
 	// Teleport the mouse to the cell
-	if (ch2_mousegame_column == 1) { // left side
+	// (first row has 4 cells per region, the rest have 3)
+	if (ch2_mousegame_column == 1) { // LEFT SIDE
 		if (ch2_mousegame_row == 1) { // top
-			if (ch2_mousegame_cell == 1) {
-				entity Mouse position = geometry "mouse-pos0";
-			} else if (ch2_mousegame_cell == 2) {
-				entity Mouse position = geometry "mouse-pos1";
-			} else if (ch2_mousegame_cell == 3) {
-				entity Mouse position = geometry "mouse-pos2";
-			} else {
-				entity Mouse position = geometry "mouse-pos3";
-			}
+			rand!(
+				entity Mouse position = [
+					geometry "mouse-pos0",
+					geometry "mouse-pos1",
+					geometry "mouse-pos2",
+					geometry "mouse-pos3",
+				];
+				// mouse_cell = [0, 1, 2, 3];
+			)
 		} else if (ch2_mousegame_row == 2) { // mid
-			if (ch2_mousegame_cell == 1) {
-				entity Mouse position = geometry "mouse-pos8";
-			} else if (ch2_mousegame_cell == 2) {
-				entity Mouse position = geometry "mouse-pos9";
-			} else {
-				entity Mouse position = geometry "mouse-pos10";
-			}
-		} else { // ch2_mousegame_row == 3 (bot)
-			if (ch2_mousegame_cell == 1) {
-				entity Mouse position = geometry "mouse-pos14";
-			} else if (ch2_mousegame_cell == 2) {
-				entity Mouse position = geometry "mouse-pos15";
-			} else {
-				entity Mouse position = geometry "mouse-pos16";
-			}
+			rand!(
+				entity Mouse position = [
+					geometry "mouse-pos8",
+					geometry "mouse-pos9",
+					geometry "mouse-pos10",
+				];
+				// mouse_cell = [8, 9, 10];
+			)
+		} else { // bot
+			rand!(
+				entity Mouse position = [
+					geometry "mouse-pos14",
+					geometry "mouse-pos15",
+					geometry "mouse-pos16",
+				];
+				// mouse_cell = [14, 15, 16];
+			)
 		}
-	} else { // ch2_mousegame_column is 2 (right side)
+	} else { // RIGHT SIDE
 		if (ch2_mousegame_row == 1) { // top
-			if (ch2_mousegame_cell == 1) {
-				entity Mouse position = geometry "mouse-pos4";
-			} else if (ch2_mousegame_cell == 2) {
-				entity Mouse position = geometry "mouse-pos5";
-			} else if (ch2_mousegame_cell == 3) {
-				entity Mouse position = geometry "mouse-pos6";
-			} else {
-				entity Mouse position = geometry "mouse-pos7";
-			}
+			rand!(
+				entity Mouse position = [
+					geometry "mouse-pos4",
+					geometry "mouse-pos5",
+					geometry "mouse-pos6",
+					geometry "mouse-pos7",
+				];
+				// mouse_cell = [4, 5, 6, 7];
+			)
 		} else if (ch2_mousegame_row == 2) { // mid
-			if (ch2_mousegame_cell == 1) {
-				entity Mouse position = geometry "mouse-pos11";
-			} else if (ch2_mousegame_cell == 2) {
-				entity Mouse position = geometry "mouse-pos12";
-			} else {
-				entity Mouse position = geometry "mouse-pos13";
-			}
-		} else { // ch2_mousegame_row == 3 (bot)
-			if (ch2_mousegame_cell == 1) {
-				entity Mouse position = geometry "mouse-pos17";
-			} else if (ch2_mousegame_cell == 2) {
-				entity Mouse position = geometry "mouse-pos18";
-			} else {
-				entity Mouse position = geometry "mouse-pos19";
-			}
+			rand!(
+				entity Mouse position = [
+					geometry "mouse-pos11",
+					geometry "mouse-pos12",
+					geometry "mouse-pos13",
+				];
+				// mouse_cell = [11, 12, 13];
+			)
+		} else { // bot
+			rand!(
+				entity Mouse position = [
+					geometry "mouse-pos17",
+					geometry "mouse-pos18",
+					geometry "mouse-pos19",
+				];
+				// mouse_cell = [17, 18, 19];
+			)
 		}
 	}
-
+	// debug!("Mouse row [$ch2_mousegame_row$], col [$ch2_mousegame_column$] (cell $mouse_cell$)")
 	lights_control = on;
 	light ALL = off;
 	show dialog {
 		name "" "(SQUEAK!)"
 	};
 	entity Mouse on_interact = ch2_touch_mouse;
-	mousegame_mouseX = entity Mouse x;
-	mousegame_mouseY = entity Mouse y;
 	ch2_mousegame = true;
 	goto null_script;
 }
 
-ch2_mousegame_tick {
-	wait 100ms;
-	mousegame_playerX = player x;
-	mousegame_playerY = player y;
+fn entity_manhattan_distance($entity1, $entity2, $returnVar) {
 	// get diffX
-	if (mousegame_playerX > mousegame_mouseX) {
-		mousegame_diffX = mousegame_playerX - mousegame_mouseX;
+	if (entity $entity1 x > entity $entity2 x) {
+		diffX = entity $entity1 x - entity $entity2 x;
 	} else {
-		mousegame_diffX = mousegame_mouseX - mousegame_playerX;
+		diffX = entity $entity2 x - entity $entity1 x;
 	}
 	// get diffY
-	if (mousegame_playerY > mousegame_mouseY) {
-		mousegame_diffY = mousegame_playerY - mousegame_mouseY;
+	if (entity $entity1 y > entity $entity2 y) {
+		diffY = entity $entity1 y - entity $entity2 y;
 	} else {
-		mousegame_diffY = mousegame_mouseY - mousegame_playerY;
+		diffY = entity $entity2 y - entity $entity1 y;
 	}
-	mousegame_manhattan = mousegame_diffX + mousegame_diffY;
-	mousegame_diff = (mousegame_manhattan * 16) / $max;
-	// `mousegame_diff` is now the INVERSE of the number of lights to show
-	if (mousegame_diff > 8) {
+	mousegame_manhattan = diffX + diffY;
+}
+
+$room_size = 680; // small room was 418
+ch2_mousegame_tick {
+	wait 100ms;
+	entity_manhattan_distance("%PLAYER%", Mouse, mousegame_manhattan)
+	unlit_light_count = (mousegame_manhattan * 16) / $room_size;
+	// `unlit_light_count` is now the INVERSE of the number of lights to show
+	if (unlit_light_count > 8) {
+		// you are too far away to show any lights
 		mousegame_lights = 0;
 	} else {
-		mousegame_lights = 8 - mousegame_diff;
+		mousegame_lights = 8 - unlit_light_count;
 	}
-	// `mousegame_lights` is the ACTUAL number of lights to show
 
 	// reset old lights (todo: when array support is done in natlang, redo this)
 	
