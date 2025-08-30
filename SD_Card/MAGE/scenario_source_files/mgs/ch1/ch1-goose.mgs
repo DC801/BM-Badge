@@ -12,11 +12,7 @@ on_tick_goose_mission {
 	entity Goose direction = south;
 	entity Goose current_animation = 0;
 	rake_quest_done = true;
-	calculate_hint_tracking_series()
-	if (hint_tracking_check == 10) {
-		// if the hint series is the currently goose, reset hint
-		set_hint_none()
-	}
+	set_hint_none_if_not_series(10)
 	// you win!
 	goto null_script;
 }

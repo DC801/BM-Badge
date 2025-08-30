@@ -593,32 +593,41 @@ array1_push {
 		hanoi_move_count += 1;
 	}
 }
+
+serial_dialog sd1 { "1" }
+serial_dialog sd2 { "2" }
+serial_dialog sd3 { "3" }
+serial_dialog sd4 { "4" }
+serial_dialog sd5 { "5" }
+serial_dialog sd6 { "6" }
+serial_dialog sd7 { "7" }
+fn printme ($varName) {
+	if ($varName == 1) { concat serial_dialog sd1; }
+	else if ($varName == 2) { concat serial_dialog sd2; }
+	else if ($varName == 3) { concat serial_dialog sd3; }
+	else if ($varName == 4) { concat serial_dialog sd4; }
+	else if ($varName == 5) { concat serial_dialog sd5; }
+	else if ($varName == 6) { concat serial_dialog sd6; }
+	else if ($varName == 7) { concat serial_dialog sd7; }
+}
+
 array1_print {
 	concat serial_dialog array_print_left;
 	for (i = 1; i <= array1_length; i += 1) {
 		if (i != 1) {
 			concat serial_dialog {" "};
 		}
-		if (i == 1) { printme = array1_1 *1; }
-		else if (i == 2) { printme = array1_2 *1; }
-		else if (i == 3) { printme = array1_3 *1; }
-		else if (i == 4) { printme = array1_4 *1; }
-		else if (i == 5) { printme = array1_5 *1; }
-		else if (i == 6) { printme = array1_6 *1; }
-		else if (i == 7) { printme = array1_7 *1; }
-		printme()
-		printme = 0;
+		if (i == 1) { tempvar = array1_1 *1; }
+		else if (i == 2) { tempvar = array1_2 *1; }
+		else if (i == 3) { tempvar = array1_3 *1; }
+		else if (i == 4) { tempvar = array1_4 *1; }
+		else if (i == 5) { tempvar = array1_5 *1; }
+		else if (i == 6) { tempvar = array1_6 *1; }
+		else if (i == 7) { tempvar = array1_7 *1; }
+		printme(tempvar)
+		tempvar = 0;
 	}
 	concat serial_dialog array_print_right;
-}
-printme {
-	if (printme == 1) { concat serial_dialog {"1"}; }
-	else if (printme == 2) { concat serial_dialog {"2"}; }
-	else if (printme == 3) { concat serial_dialog {"3"}; }
-	else if (printme == 4) { concat serial_dialog {"4"}; }
-	else if (printme == 5) { concat serial_dialog {"5"}; }
-	else if (printme == 6) { concat serial_dialog {"6"}; }
-	else if (printme == 7) { concat serial_dialog {"7"}; }
 }
 serial_dialog array_print_left { "<m>[</> "}
 serial_dialog array_print_right { " "}
@@ -691,15 +700,15 @@ array2_print {
 		if (i != 1) {
 			concat serial_dialog {" "};
 		}
-		if (i == 1) { printme = array2_1 *1; }
-		else if (i == 2) { printme = array2_2 *1; }
-		else if (i == 3) { printme = array2_3 *1; }
-		else if (i == 4) { printme = array2_4 *1; }
-		else if (i == 5) { printme = array2_5 *1; }
-		else if (i == 6) { printme = array2_6 *1; }
-		else if (i == 7) { printme = array2_7 *1; }
-		printme()
-		printme = 0;
+		if (i == 1) { tempvar = array2_1 *1; }
+		else if (i == 2) { tempvar = array2_2 *1; }
+		else if (i == 3) { tempvar = array2_3 *1; }
+		else if (i == 4) { tempvar = array2_4 *1; }
+		else if (i == 5) { tempvar = array2_5 *1; }
+		else if (i == 6) { tempvar = array2_6 *1; }
+		else if (i == 7) { tempvar = array2_7 *1; }
+		printme(tempvar)
+		tempvar = 0;
 	}
 	concat serial_dialog array_print_right;
 }
@@ -772,15 +781,15 @@ array3_print {
 		if (i != 1) {
 			concat serial_dialog {" "};
 		}
-		if (i == 1) { printme = array3_1 *1; }
-		else if (i == 2) { printme = array3_2 *1; }
-		else if (i == 3) { printme = array3_3 *1; }
-		else if (i == 4) { printme = array3_4 *1; }
-		else if (i == 5) { printme = array3_5 *1; }
-		else if (i == 6) { printme = array3_6 *1; }
-		else if (i == 7) { printme = array3_7 *1; }
-		printme()
-		printme = 0;
+		if (i == 1) { tempvar = array3_1 *1; }
+		else if (i == 2) { tempvar = array3_2 *1; }
+		else if (i == 3) { tempvar = array3_3 *1; }
+		else if (i == 4) { tempvar = array3_4 *1; }
+		else if (i == 5) { tempvar = array3_5 *1; }
+		else if (i == 6) { tempvar = array3_6 *1; }
+		else if (i == 7) { tempvar = array3_7 *1; }
+		printme(tempvar)
+		tempvar = 0;
 	}
 	concat serial_dialog array_print_right;
 }

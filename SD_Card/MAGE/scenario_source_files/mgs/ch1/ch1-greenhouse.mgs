@@ -109,10 +109,7 @@ show_dialog_trekkie_start {
 		}
 	} else {
 		ch1_greenhouse_modem_turning_on_cutscene()
-		if (hint_tracking_check == 7) {
-			set_hint_none()
-			// ^^ if the hint series is the same, reset hint
-		}
+		set_hint_none_if_not_series(7)
 	}
 	self on_interact = show_dialog_trekkie_start;
 }
@@ -218,7 +215,6 @@ ch1_greenhouse_modem_turning_on_cutscene {
 	};
 	self direction = geometry Computer;
 	trekkie_quest_done = true;
-	calculate_hint_tracking_series()
 	player_control = on;
 }
 

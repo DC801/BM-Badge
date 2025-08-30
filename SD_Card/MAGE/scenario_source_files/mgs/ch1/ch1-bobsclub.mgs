@@ -212,10 +212,7 @@ show_dialog_baker_start {
 				"Well, thanks for finding out for me. Now I need to find a way to move four dozen B-shaped donuts."
 			};
 			baker_quest_done = true;
-			calculate_hint_tracking_series()
-			if (hint_tracking_check == 2) {
-				set_hint_none()
-			}
+			set_hint_none_if_not_series(2)
 		} else { // ...but you HAVE brought him the news already
 			// final dialog:
 			show dialog { SELF "Say, you wouldn't want a B-shaped donut, would you? On the house." };
@@ -451,11 +448,7 @@ show_dialog_bobmoss_start {
 	camera fade out -> #000000 over 500ms;
 	entity "Bob Moss" position = geometry "catwalk-hide";
 	bobmoss_quest_done = true;
-	calculate_hint_tracking_series()
-	if (hint_tracking_check == 3) {
-		// if the hint series is the same, reset hint
-		set_hint_none()
-	}
+	set_hint_none_if_not_series(3)
 	camera fade in -> #000000 over 500ms;
 	player_control = on;
 }

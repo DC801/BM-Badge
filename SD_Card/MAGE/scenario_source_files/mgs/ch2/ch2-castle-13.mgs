@@ -391,12 +391,12 @@ ch2_cutscene_kingreturns {
 		"Once the mainframe is repaired, we will be much better equipped to clear all the debris at once."
 		PLAYER "Right, of course."
 	};
-	interrupt_king_walk()
+	interrupt_entity_walk("King Gibson", tempvar, tempvar2)
 	entity "King Gibson" direction = player;
 	show dialog {
 		GIBSON "Good luck. And thank you. Truly."
 	};
-	resume_king_walk()
+	resume_entity_walk("King Gibson", tempvar, tempvar2)
 	warp_state = "nothing lol";
 	ch2_king_rescued = true;
 	camera -> player position over 700ms;
@@ -475,8 +475,8 @@ ch2_touch_goldfish {
 				PLAYER "I sort of need to borrow... you."
 				"We're short a CPU. And I need a volunteer to act as the \"thinking\" part --"
 			};
-			interrupt_entity_walk("King Gibson", captured_animation2, tempvar2)
-			interrupt_entity_walk(Templeton, captured_animation3, tempvar3)
+			interrupt_entity_walk("King Gibson", tempvar, tempvar2)
+			interrupt_entity_walk(Templeton, tempvar3, tempvar4)
 			entity "King Gibson" current_animation = 2;
 			show dialog {
 				GIBSON emote 1 "What's this? What are you talking about?"
@@ -504,8 +504,8 @@ ch2_touch_goldfish {
 				name "" "(You acquired a goldfish!)"
 				GIBSON "I'm counting on you both. Good luck."
 			};
-			resume_king_walk()
-			resume_templeton_walk()
+			resume_entity_walk("King Gibson", tempvar, tempvar2)
+			resume_entity_walk(Templeton, tempvar3, tempvar4)
 			entity Aurelius on_tick = yeet;
 		}
 	}
@@ -587,15 +587,6 @@ interact_ch2_templeton {
 	}
 }
 
-interrupt_king_walk {
-	interrupt_entity_walk("King Gibson", captured_animation2, tempvar2)
-}
-resume_king_walk {
-	resume_entity_walk("King Gibson", captured_animation2, tempvar2)
-}
-resume_templeton_walk {
-	resume_entity_walk(Templeton, captured_animation3, tempvar3)
-}
 templeton_catalog_search {
 	tick_rand_mini() // from bob's club basement
 	entity Templeton position -> geometry "end-templeton2" origin over 200ms;

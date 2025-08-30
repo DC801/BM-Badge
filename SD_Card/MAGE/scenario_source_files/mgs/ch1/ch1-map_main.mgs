@@ -367,7 +367,7 @@ show_dialog_cleo2 {
 show_dialog_cat {
 	if (self glitched) {
 		show dialog { Cat "...." };
-	} else if (hint_tracking == 61 || hint_tracking == 62) {
+	} else if (hinteger == 61 || hinteger == 62) {
 		show dialog {
 			PLAYER alignment TR
 			"Excuse me. I'm looking for the cat boss. Is that you?"

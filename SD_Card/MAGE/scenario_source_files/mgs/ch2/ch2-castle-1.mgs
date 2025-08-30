@@ -451,15 +451,15 @@ ch2_attempt_door_check {
 		ch2_door_attempted = true;
 	} else {
 		// being obnoxious now :3
-		if ("ch2-pretoot-door-attempts" == 0) {
+		if ("ch2_pretoot_door_attempts" == 0) {
 			show dialog {
 				PLAYER "How am I supposed to get around the castle if the doors are all caved in?"
 			};
-		} else if ("ch2-pretoot-door-attempts" == 1) {
+		} else if ("ch2_pretoot_door_attempts" == 1) {
 			show dialog {
 				PLAYER "Hmm. Maybe there's something else in this room I can investigate."
 			};
-		} else if ("ch2-pretoot-door-attempts" == 2) {
+		} else if ("ch2_pretoot_door_attempts" == 2) {
 			show dialog {
 				PLAYER "That's kind of a funny orange spider, isn't it? I wonder if it can help me."
 			};
@@ -468,7 +468,7 @@ ch2_attempt_door_check {
 				PLAYER "I should go talk to the spider robot over there."
 			};
 		}
-		"ch2-pretoot-door-attempts" += 1;
+		"ch2_pretoot_door_attempts" += 1;
 	}
 }
 

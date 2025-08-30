@@ -357,16 +357,15 @@ ch2_ws_guess_quit {
 			"<y>STEREO</>: All done for now? Well, thanks for taking a look."
 		};
 	} else if (ch2_ws_flags_tally < $toWin) {
-		diff = $toWin;
-		diff -= ch2_ws_flags_tally;
-		if (diff == 1) {
+		tempvar = $toWin - ch2_ws_flags_tally;
+		if (tempvar == 1) {
 			show serial_dialog {
 				"<y>STEREO</>: Oh oh oh, so close! I bet I only need <y>one more</> word before everything comes together! Try again soon, would ya?"
 			};
 		} else {
 			show serial_dialog {
 				"<y>STEREO</>: Done for now? Okay, thanks for trying."
-				"\tOh, you know what? I bet if you found <y>$diff$</> more words, I'd be as right as rain. Try again later, if you would?"
+				"\tOh, you know what? I bet if you found <y>$tempvar$</> more words, I'd be as right as rain. Try again later, if you would?"
 			};
 		}
 	} else if (ch2_ws_won) {

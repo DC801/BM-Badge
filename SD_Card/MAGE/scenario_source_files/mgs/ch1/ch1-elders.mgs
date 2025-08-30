@@ -17,8 +17,10 @@ hintman_cutscene {
 		Alfonso "My dear child, when you grow up, you'll understand:"
 		"There is paperwork for EVERYTHING!"
 	};
-	wait 100ms; /**/ entity Jackob position -> geometry hintman_walktalk length over 900ms;
-	wait 200ms; /**/ player direction = entity Jackob;
+	wait 100ms;
+	entity Jackob position -> geometry hintman_walktalk length over 900ms;
+	wait 200ms;
+	player direction = entity Jackob;
 	show dialog {
 		Jackob "And if you have a question about what you're doing, do feel free to ask me for advice."
 		"Or consult Bert over there, who has good intuition for who could still use assistance."
@@ -61,13 +63,12 @@ show_dialog_bert_start {
 	}
 	face_player()
 	show dialog { SELF "Who needs help?" };
-	calculate_hint_tracking_series() // sets `hint_tracking_check`
 	if (!shepherd_quest_done) {
 		show dialog {
 			SELF "The shepherd."
 			"He had one job."
 		};
-		if (hint_tracking_check != 1) {
+		if (calculate_hinteger_series() != 1) {
 			// (NOTE: these are inverted from orig)
 			set_hint_shepherd_from_bert()
 		}
@@ -76,7 +77,7 @@ show_dialog_bert_start {
 			SELF "Baker."
 			"Baker is busy. He has trouble with customer."
 		};
-		if (hint_tracking_check != 2) {
+		if (calculate_hinteger_series() != 2) {
 			set_hint_baker_from_bert()
 		}
 	} else if (!bobmoss_quest_done) {
@@ -91,7 +92,7 @@ show_dialog_bert_start {
 			SELF "Old woman, Beatrice."
 			"She has been sad a long time."
 		};
-		if (hint_tracking_check != 4) {
+		if (calculate_hinteger_series() != 4) {
 			set_hint_bea1_from_bert()
 		}
 	} else if (!bender_quest_done) {
@@ -101,7 +102,7 @@ show_dialog_bert_start {
 			"I do not know this robot."
 			"...I think he took my watch."
 		};
-		if (hint_tracking_check != 5) {
+		if (calculate_hinteger_series() != 5) {
 			set_hint_bender_from_bert()
 		}
 	} else if (!catwork_quest_done) {
@@ -109,7 +110,7 @@ show_dialog_bert_start {
 			SELF "Max. Purple man."
 			"Max wants his house to be built."
 		};
-		if (hint_tracking_check != 6) {
+		if (calculate_hinteger_series() != 6) {
 			set_hint_max_from_bert()
 		}
 	} else if (!trekkie_quest_done) {
@@ -117,7 +118,7 @@ show_dialog_bert_start {
 			SELF "Trekkie."
 			"Trekkie works on plants in the glass house."
 		};
-		if (hint_tracking_check != 7) {
+		if (calculate_hinteger_series() != 7) {
 			set_hint_trekkie_from_bert()
 		}
 	} else if (!sportskid_quest_done) {
@@ -125,7 +126,7 @@ show_dialog_bert_start {
 			SELF "Small child with big dream."
 			"Child lives with father."
 		};
-		if (hint_tracking_check != 8) {
+		if (calculate_hinteger_series() != 8) {
 			set_hint_sportskid_from_bert()
 		}
 	} else if (!bea2_quest_done) {
@@ -133,7 +134,7 @@ show_dialog_bert_start {
 			SELF "Old woman, Beatrice."
 			"Does she know what she wants?"
 		};
-		if (hint_tracking_check != 9) {
+		if (calculate_hinteger_series() != 9) {
 			set_hint_bea2_from_bert()
 		}
 	} else if (!rake_quest_done) {
@@ -142,7 +143,7 @@ show_dialog_bert_start {
 			"Goose is always mad."
 			"What angers the goose this time?"
 		};
-		if (hint_tracking_check != 10) {
+		if (calculate_hinteger_series() != 10) {
 			set_hint_goose_from_bert()
 		}
 	} else if (!verthandi_quest_done) {
@@ -150,7 +151,7 @@ show_dialog_bert_start {
 			SELF"A goddess, mourning for lost souls."
 			"She watches the goats."
 		};
-		if (hint_tracking_check != 11) {
+		if (calculate_hinteger_series() != 11) {
 			set_hint_glitch_from_bert()
 		}
 	} else {
@@ -158,89 +159,89 @@ show_dialog_bert_start {
 	}
 }
 
-calculate_hint_tracking_series {
-	// checks which hint series it is by dividing by 10
-	hint_tracking_check = hint_tracking*1;
-	hint_tracking_check /= 10;
+// TODO: change these to global constants, then no need to call scripts like this
+
+calculate_hinteger_series {
+	return hinteger / 10;
 }
 
 set_hint_shepherd_from_bert {
-	hint_tracking = 10;
+	hinteger = 10;
 }
 set_hint_shepherd {
-	hint_tracking = 11;
+	hinteger = 11;
 }
 set_hint_shepherd_partial {
-	hint_tracking = 12;
+	hinteger = 12;
 }
 set_hint_baker_from_bert {
-	hint_tracking = 20;
+	hinteger = 20;
 }
 set_hint_baker {
-	hint_tracking = 21;
+	hinteger = 21;
 }
 set_hint_bobmoss_from_bert {
-	hint_tracking = 30;
+	hinteger = 30;
 }
 set_hint_bobmoss_from_guardian {
-	hint_tracking = 32;
+	hinteger = 32;
 }
 set_hint_bea1_from_bert {
-	hint_tracking = 40;
+	hinteger = 40;
 }
 set_hint_bea1 {
-	hint_tracking = 41;
+	hinteger = 41;
 }
 set_hint_bender_from_bert {
-	hint_tracking = 50;
+	hinteger = 50;
 }
 set_hint_bender {
-	hint_tracking = 51;
+	hinteger = 51;
 }
 set_hint_max_from_bert {
-	hint_tracking = 60;
+	hinteger = 60;
 }
 set_hint_max {
-	hint_tracking = 61;
+	hinteger = 61;
 }
 set_hint_max_from_cleo {
-	hint_tracking = 62;
+	hinteger = 62;
 }
 set_hint_trekkie_from_bert {
-	hint_tracking = 70;
+	hinteger = 70;
 }
 set_hint_trekkie {
-	hint_tracking = 71;
+	hinteger = 71;
 }
 set_hint_sportskid_from_bert {
-	hint_tracking = 80;
+	hinteger = 80;
 }
 set_hint_sportskid {
-	hint_tracking = 81;
+	hinteger = 81;
 }
 set_hint_bea2_from_bert {
-	hint_tracking = 90;
+	hinteger = 90;
 }
 set_hint_bea2 {
-	hint_tracking = 91;
+	hinteger = 91;
 }
 set_hint_goose_from_bert {
-	hint_tracking = 100;
+	hinteger = 100;
 }
 set_hint_goose {
-	hint_tracking = 101;
+	hinteger = 101;
 }
 set_hint_glitch_from_bert {
-	hint_tracking = 110;
+	hinteger = 110;
 }
 set_hint_glitch {
-	hint_tracking = 111;
+	hinteger = 111;
 }
 set_hint_hackbook {
-	hint_tracking = 201;
+	hinteger = 201;
 }
 set_hint_none {
-	hint_tracking = 0;
+	hinteger = 0;
 }
 
 show_dialog_jackob_start {
@@ -253,7 +254,7 @@ show_dialog_jackob_start {
 		show dialog {
 			SELF "Did you have a question about something?"
 		};
-		if (hint_tracking == 10) {
+		if (hinteger == 10) {
 			show dialog {
 				PLAYER "How do I put the sheep back inside their pen?"
 			};
@@ -268,12 +269,12 @@ show_dialog_jackob_start {
 				"I wonder if there was another way of identifying the entity you were facing.... I feel like I might have once read something about that, but...."
 				"Ah, well. These days my mind is like... some kind of... thing you strain rice with."
 			};
-		} else if (hint_tracking == 11 || hint_tracking == 12) {
+		} else if (hinteger == 11 || hinteger == 12) {
 			show dialog {
 				PLAYER "I guess the shepherd wants me to put the sheep back inside their pen."
 			};
 			show dialog dialog_jackob_hint_shepherd2; // defined above
-		} else if (hint_tracking == 20) {
+		} else if (hinteger == 20) {
 			show dialog {
 				PLAYER "The baker's having trouble with a customer, apparently. But I don't know what I'm supposed to do about that."
 				SELF "Hmmm. I think in this particular case -- if what has happened is what I suspect has happened --"
@@ -283,45 +284,45 @@ show_dialog_jackob_start {
 				Alfonso alignment BR "The piranha affair was an accident! How many times do I need to apologize, %Jackob%?"
 				SELF "I wasn't talking to you."
 			};	
-		} else if (hint_tracking == 21) {
+		} else if (hinteger == 21) {
 			show dialog {
 				PLAYER "How do I get into the Bob's Club?"
 				SELF "The bouncer, Stone Cold Bob Austin, is very strict. If your name is not 'Bob' exactly, he will not budge."
 				"And just so you know, there are multiple values which will APPEAR to be a blank space, but will not satisfy him."
 				"Fortunately, the correct value will terminate the string his logic is evaluating, so only the first byte after 'Bob' will matter."
 			};
-		} else if (hint_tracking == 30) {
+		} else if (hinteger == 30) {
 			show dialog {
 				PLAYER "I heard that Bob Austin's cousin has gotten lost."
 				SELF "Oh, you mean Bob Moss. Yes, he disappears once in a while."
 				"He's never far. But if you can't find him in town, you might have to look in places one cannot ordinarily walk."
 			};
-		} else if (hint_tracking == 32) {
+		} else if (hinteger == 32) {
 			show dialog {
-				PLAYER "I heard there might be a second rockgolem. Do you know anything about that?"
+				PLAYER "I heard there might be a second rock golem. Do you know anything about that?"
 				SELF "If you're referring to Bob Moss, then I'm not surprised he's absent. He disappears once in a while."
 				"He's never far. But if you can't find him in town, you might have to look in places one cannot ordinarily walk."
 			};
-		} else if (hint_tracking == 40) {
+		} else if (hinteger == 40) {
 			show dialog {
 				PLAYER "Is Beatrice sad about something?"
 				SELF "She misses her husband. The Big Bad hacked him, don't you know."
 				"But I imagine you can fix him with Ring Zero."
 			};
-		} else if (hint_tracking == 41) {
+		} else if (hinteger == 41) {
 			show dialog {
-				PLAYER "Beatrice wants her husband to become a managain."
+				PLAYER "Beatrice wants her husband to become a man again."
 				SELF "A simple entity type change."
 				"You'll know you have the right entity type when you get to an old man, balding, hunched over, and in overalls."
 			};
-		} else if (hint_tracking == 50) {
+		} else if (hinteger == 50) {
 			show dialog {
 				PLAYER "I gotta help this robot, apparently."
 				SELF "What does this robot need?"
 				PLAYER "Not sure."
 				SELF "Then you'd better talk to it and find out."
 			};
-		} else if (hint_tracking == 51) {
+		} else if (hinteger == 51) {
 			show dialog {
 				PLAYER "This robot named Bender wants his ass back, I guess."
 				SELF "Back? Has it gone somewhere?"
@@ -330,26 +331,26 @@ show_dialog_jackob_start {
 				"In his case, he once existed with a whole ass, and therefore, there exists an entity type where his ass is whole."
 				"Though unless you are looking directly at his ass, it might be difficult to see if you have succeeded."
 			};
-		} else if (hint_tracking == 60) {
+		} else if (hinteger == 60) {
 			show dialog {
 				PLAYER "Bert says the \"purple man\" wants his house to be built. What purple man?"
 				SELF "Oh, Bert must mean the night elf tailor. He's new. You might not have met him yet."
 				"Hmm. What was his name? Top Confidence? High Bluster?"
 				"He'll be just outside his shop, I should think. The interior is still unfinished, you see."
 			};
-		} else if (hint_tracking == 61 || hint_tracking == 62) {
+		} else if (hinteger == 61 || hinteger == 62) {
 			show dialog {
 				PLAYER "The cat crew needs their cat boss."
 				SELF "Well, if you can't give them their cat boss, you might try the next best thing:"
 				"An impersonator!"
 			};
-		} else if (hint_tracking == 70) {
+		} else if (hinteger == 70) {
 			show dialog {
 				PLAYER "Does Trekkie need help with something?"
 				SELF "Trekkie tends the Ether Nettle in the greenhouse. I imagine it's the Ether Nettle, not Trekkie, that actually needs help."
 				"But you had better see in person. I don't know much about why the internet is broken."
 			};
-		} else if (hint_tracking == 71) {
+		} else if (hinteger == 71) {
 			show dialog {
 				PLAYER "Trekkie needs me to change the color of the Ether Nettle flowers."
 				SELF "I see. That one might be tricky."
@@ -357,7 +358,7 @@ show_dialog_jackob_start {
 				"You won't be able to change the flower color by changing the entity type, I'm afraid."
 				"All those flowers should have almost identical values, I imagine. Try to change a value they don't have in common."
 			};
-		} else if (hint_tracking == 80) {
+		} else if (hinteger == 80) {
 			show dialog {
 				PLAYER "According to Bert, a small child needs help."
 				SELF "Not many kids around here -- apart from the kids, of course, by which I mean the goats."
@@ -365,7 +366,7 @@ show_dialog_jackob_start {
 				PLAYER "I've always called him Mr. Smith."
 				SELF "Oh, that's right. He's your next-door neighbor, isn't he?"
 			};
-		} else if (hint_tracking == 81) {
+		} else if (hinteger == 81) {
 			show dialog {
 				PLAYER "This kid...."
 				"He's just running around in circles, saying he wants to grow up to be some kind of sports ball."
@@ -387,31 +388,31 @@ show_dialog_jackob_start {
 				"The way we behave when no one is looking... doesn't that say more about our character than anything else?"
 				SELF "These are questions for philosophers and gamers. All we mortals can do is fulfill a child's wish to become sports equipment."
 			};
-		} else if (hint_tracking == 90) {
+		} else if (hinteger == 90) {
 			show dialog {
 				PLAYER "Bert says I have to help Beatrice. But I already solved her problem!"
 				SELF "Did you? Or did you only give her the opportunity to rememeber something she had forgotten about her husband?"
 			};
-		} else if (hint_tracking == 91) {
+		} else if (hinteger == 91) {
 			show dialog {
 				PLAYER "Now Beatrice wants her husband to turn back into a sheep."
 				SELF "She must have gotten sick of his yammering again."
 				"Ah, well. You know what to do by now."
 			};
-		} else if (hint_tracking == 100) {
+		} else if (hinteger == 100) {
 			show dialog {
 				PLAYER "Apparently the goose is mad."
 				SELF "Is this news?"
 				"In all seriousness, you might want to check whether the goose is mad at something specific or the world at large."
 			};
-		} else if (hint_tracking == 101) {
+		} else if (hinteger == 101) {
 			show dialog {
 				PLAYER "I think the goose wants me to move the rake."
 				"Perhaps... into the lake?"
 				SELF "Likely. You'll need to change the rake's Y coordinates."
 				"But just so you know, each coordinate actually spans two bytes, and if the distance is great enough, you'll have to change both."
 			};
-		} else if (hint_tracking == 110) {
+		} else if (hinteger == 110) {
 			show dialog {
 				PLAYER "I'm looking for a goat-watching goddess."
 				SELF "Ah, the winged Belldandy."
@@ -419,15 +420,15 @@ show_dialog_jackob_start {
 				"...Um, regardless... it's true that she's fond of animals. She might very well be watching the goats today."
 				"Though they might not look like goats at the moment."
 			};
-		} else if (hint_tracking == 111) {
+		} else if (hinteger == 111) {
 			show dialog {
 				PLAYER "How do I unscramble someone's pixels?"
 				SELF "I think there was something in the Entity books about that, but I didn't quite understand."
 				"Something about changing a bit instead of a byte, I think...."
 				"But aren't all bytes made up of bits? How is changing a single bit different from changing a whole byte?"
 			};
-		} else if (hint_tracking == 201) {
-			goto show_dialog_jackob_hint_hackbook; // JUMP
+		} else if (hinteger == 201) {
+			goto show_dialog_jackob_hint_hackbook;
 		} else {
 			show dialog {
 				PLAYER "Not at the moment."
@@ -444,7 +445,7 @@ show_dialog_jackob_hint_hackbook {
 			PLAYER "About that glitched-out book...."
 			SELF "I'm sorry. I don't think there's anything you can do to fix it."
 		};
-		if (hint_tracking == 201) {
+		if (hinteger == 201) {
 			set_hint_none()
 		}
 	} else {
@@ -461,12 +462,16 @@ show_dialog_jackob_hint_hackbook {
 			SELF "That book... I must have read it before, but...."
 		};
 		player_control = off;
-		wait 600ms; /**/ self direction += 1;
-		wait 1200ms; /**/ self direction -= 2;
+		wait 600ms;
+		self direction += 1;
+		wait 1200ms;
+		self direction -= 2;
 		wait 600ms;
 		show dialog { SELF "...." };
-		wait 400ms; /**/ self direction = player;
-		wait 400ms; /**/ player_control = on;
+		wait 400ms;
+		self direction = player;
+		wait 400ms;
+		player_control = on;
 		show dialog {
 			SELF "Oh, %PLAYER%, I'm sorry."
 			"I can't remember anything about what the book said."
@@ -503,19 +508,19 @@ show_dialog_alfonso_start {
 	} else if (ch1_finished) {
 		show dialog { SELF "Congratulations! You fixed the town!" };
 	} else {
-		ch1_count_flags()
-		show dialog { SELF "You've completed $ch1_storyflags_tally$ out of 11 tasks." };
-		if (ch1_storyflags_tally == 0) {
+		tempvar = ch1_count_flags();
+		show dialog { SELF "You've completed $tempvar$ out of 11 tasks." };
+		if (tempvar == 0) {
 			show dialog { SELF "Uh...." "Nowhere to go now but up!" };
-		} else if (ch1_storyflags_tally == 1) {
+		} else if (tempvar == 1) {
 			show dialog { SELF "That's the spirit! What a great start!" };
-		} else if (ch1_storyflags_tally <= 4) {
+		} else if (tempvar <= 4) {
 			show dialog { SELF "You're getting the hang of this!" };
-		} else if (ch1_storyflags_tally <= 8) {
+		} else if (tempvar <= 8) {
 			show dialog { SELF "Oh, my! You're getting a lot of work done! Marvelous!" };
-		} else if ( ch1_storyflags_tally <= 10) {
+		} else if (tempvar <= 10) {
 			show dialog { SELF "Wow! You're nearly done!" };
-		} else if (ch1_storyflags_tally == 11) {
+		} else if (tempvar == 11) {
 			show dialog { SELF "Incredible! You've done everything on my list!" };
 			goto ch1_end_cutscene; // JUMP
 		}

@@ -113,10 +113,7 @@ show_dialog_bea_part1 {
 				SELF "Oh, it's my %Delmar%! Thank you, %PLAYER%!"
 			};
 			self direction = entity Delmar;
-			calculate_hint_tracking_series()
-			if (hint_tracking_check == 4) {
-				set_hint_none()
-			}
+			set_hint_none_if_not_series(4)
 			bea1_backstory = true;
 			bea1_quest_done = true;
 		} else { // win condition NOT met
@@ -197,10 +194,7 @@ show_dialog_bea_part2 {
 				};
 			}
 			self direction = entity Delmar;
-			calculate_hint_tracking_series()
-			if (hint_tracking_check == 9) {
-				set_hint_none()
-			}
+			set_hint_none_if_not_series(9)
 			bea2_backstory = true;
 			bea2_quest_done = true;
 		} else { // not a sheep

@@ -217,7 +217,6 @@ ch2_toot_step3_end2 {
 		" "
 		"<m>LAMBDA</>: Yeah, I set it up that way because I thought it would be easy to remember. \"Man\" is short for \"manual,\" so think of <c>MAN</> as being for times you need long form help."
 	};
-	ch2_map_test = 0;
 	ch2_toot_level = 4;
 	goto ch2_toot_step4_start;
 }

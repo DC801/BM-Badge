@@ -27,10 +27,7 @@ show_dialog_shepherd_start {
 			show dialog { SELF "Thanks a million! I owe you one!" };
 		}
 		shepherd_quest_done = true;
-		calculate_hint_tracking_series()
-		if (hint_tracking_check == 1) {
-			set_hint_none()
-		}
+		set_hint_none_if_not_series(1)
 		return;
 	}
 	if (!shepherd_backstory) {
@@ -96,10 +93,7 @@ turn_right_and_left {
 show_dialog_shepherd_ending {
 	shepherd_quest_done = true;
 	shepherd_backstory = true;
-	calculate_hint_tracking_series()
-	if (hint_tracking_check == 1) {
-		set_hint_none()
-	}
+	set_hint_none_if_not_series(1)
 	entity Shepherd on_interact = show_dialog_shepherd_start;
 }
 

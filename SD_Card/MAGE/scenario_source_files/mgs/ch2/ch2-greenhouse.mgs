@@ -141,15 +141,7 @@ on_load_ch2_greenhouse {
 	// entrance text
 	show serial_dialog spacer;
 	show serial_dialog { "Entering <bold>GREENHOUSE</>..." };
-	origEthernettlePrimaryID = entity EtherNettle1 primary_id;
-	ethernettlePrimaryID1 = entity EtherNettle1 primary_id;
-	ethernettlePrimaryID2 = entity EtherNettle2 primary_id;
-	ethernettlePrimaryID3 = entity EtherNettle3 primary_id;
-	ethernettlePrimaryID4 = entity EtherNettle4 primary_id;
-	ethernettlePrimaryID5 = entity EtherNettle5 primary_id;
-	ethernettlePrimaryID6 = entity EtherNettle6 primary_id;
-	ethernettlePrimaryID7 = entity EtherNettle7 primary_id;
-	ethernettlePrimaryID8 = entity EtherNettle8 primary_id;
+	tempvar = entity EtherNettle1 primary_id;
 	ch2_map_init()
 }
 
@@ -170,13 +162,13 @@ dialog trekkie_ethernettle_reset  {
 fn check_ethernettle ($entityName, $geometry, $knownSecondaryID) {
 	if (
 		!entity $entityName intersects geometry $geometry
-		|| entity $entityName primary_id != origEthernettlePrimaryID
+		|| entity $entityName primary_id != tempvar
 		|| entity $entityName secondary_id != $knownSecondaryID
 		|| entity $entityName primary_id_type != 0
 	) {
 		show dialog trekkie_ethernettle_reset;
 		entity $entityName position = geometry $geometry;
-		entity $entityName primary_id = origEthernettlePrimaryID;
+		entity $entityName primary_id = tempvar;
 		entity $entityName secondary_id = $knownSecondaryID;
 		entity $entityName primary_id_type = 0;
 	}

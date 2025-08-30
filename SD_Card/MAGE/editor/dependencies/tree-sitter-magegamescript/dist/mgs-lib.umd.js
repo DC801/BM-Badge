@@ -10993,6 +10993,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "serialDialogs");
       // duplicates
       __publicField(this, "duplicates");
+      __publicField(this, "integers");
       // error/warning messages
       __publicField(this, "errors");
       __publicField(this, "warnings");
@@ -11015,6 +11016,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       };
       this.mgsErrors = "";
       this.mgsWarnings = "";
+      this.integers = /* @__PURE__ */ new Set();
       this.errors = [];
       this.warnings = [];
       this.gotoSuffixValue = 0;
@@ -11046,6 +11048,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
       });
       data.actions = simplifyLabelGotos(finalizedActions.flat());
+      data.actions.forEach((action) => {
+        if (action instanceof MUTATE_VARIABLE) {
+          this.integers.add(action.variable);
+        } else if (action instanceof MUTATE_VARIABLES) {
+          this.integers.add(action.variable);
+          this.integers.add(action.source);
+        } else if (action instanceof COPY_VARIABLE) {
+          this.integers.add(action.variable);
+        }
+      });
       if (!this.scripts[name2]) {
         this.scripts[name2] = data;
       } else {

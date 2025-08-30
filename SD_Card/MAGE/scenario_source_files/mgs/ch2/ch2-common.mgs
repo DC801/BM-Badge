@@ -18,6 +18,8 @@ ch2_map_init_registers {
 	interrupt3 = false; // OwO
 	tempvar = 0;
 	tempvar2 = 0;
+	tempvar3 = 0;
+	tempvar4 = 0; // TwT
 	can_interrupt_dialog = false;
 }
 ch2_map_init_hex {

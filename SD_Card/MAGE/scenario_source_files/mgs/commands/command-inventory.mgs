@@ -30,128 +30,86 @@ man_inventory {
 // COMMAND
 
 command_inventory {
-	// set the `count-inventory` flag "first"; if true, don't print anything! just count!
-	ch2_count_inventory = 0;
-	if (!only_count_inventory) {
-		show serial_dialog spacer;
-		show serial_dialog {
-			"<c>INVENTORY:</>"
-		};
-	}
+	tempvar = 0;
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<c>INVENTORY:</>"
+	};
 	// normal
 	if (ch2_carrying_cactuscooler) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	can of Cactus Cooler" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	can of Cactus Cooler" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_heatsink) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	heat sink" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	heat sink" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_powersupply) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	power supply" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	power supply" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_monitor) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	monitor" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	monitor" };
+		tempvar += 1;
 	}
 	// abstract
 	if (ch2_carrying_harddrive) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	hard drive" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	hard drive" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_plate) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	dinner plate" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	dinner plate" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_needle) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	phonograph needle" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	phonograph needle" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_keyboard) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	keyboard" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	keyboard" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_mouse) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	mouse" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	mouse" };
+		tempvar += 1;
 	}
 	// desperate
 	if (ch2_carrying_ramchips) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	ramchips" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	ramchips" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_clock) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	clock" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	clock" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_cpu) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	cpu" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	cpu" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_goldfish) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	goldfish" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	goldfish" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_manual) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	calculator manual" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	calculator manual" };
+		tempvar += 1;
 	}
 	if (ch2_carrying_abacus) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	abacus" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	abacus" };
+		tempvar += 1;
 	}
 	// final
 	if (ch2_carrying_mainframeos) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	mainframe OS CD" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	mainframe OS CD" };
+		tempvar += 1;
 	}
 	// mini-rake quest
 	if (ch2_carrying_minirake_99) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	mini rake" };
-		}
-		ch2_count_inventory += 1;
+		show serial_dialog { "	mini rake" };
+		tempvar += 1;
 	}
 	// wrapup:
-	if (ch2_count_inventory == 0) {
-		if (!only_count_inventory) {
-			show serial_dialog { "	(nothing)" };
-		}
+	if (tempvar == 0) {
+		show serial_dialog { "	(nothing)" };
 	}
-	only_count_inventory = false;
-	ch2_counted_inventory = ch2_count_inventory*1;
-	ch2_count_inventory = 0;
 }

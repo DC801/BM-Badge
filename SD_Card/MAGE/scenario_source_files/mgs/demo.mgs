@@ -336,35 +336,29 @@ follow_player_stack_init {
 	queue_x0 = offset_self_x *1;
 	queue_y0 = offset_self_y *1;
 	// next four pos in queue are equal-sized steps between follower and followee
+	tempvar = get_diff_x("%PLAYER%", Hamster) / 5;
 	if (player x > offset_self_x) {
-		diff = player x - offset_self_x;
-		step = diff / 5;
-		queue_x1 = offset_self_x + step * 1;
-		queue_x2 = offset_self_x + step * 2;
-		queue_x3 = offset_self_x + step * 3;
-		queue_x4 = offset_self_x + step * 4;
+		queue_x1 = offset_self_x + tempvar * 1;
+		queue_x2 = offset_self_x + tempvar * 2;
+		queue_x3 = offset_self_x + tempvar * 3;
+		queue_x4 = offset_self_x + tempvar * 4;
 	} else {
-		diff = offset_self_x - player x;
-		step = diff / 5;
-		queue_x1 = player x + step * 4;
-		queue_x2 = player x + step * 3;
-		queue_x3 = player x + step * 2;
-		queue_x4 = player x + step * 1;
+		queue_x1 = player x + tempvar * 4;
+		queue_x2 = player x + tempvar * 3;
+		queue_x3 = player x + tempvar * 2;
+		queue_x4 = player x + tempvar * 1;
 	}
+	tempvar = get_diff_y("%PLAYER%", Hamster) / 5;
 	if (player y > offset_self_y) {
-		diff = player y - offset_self_y;
-		step = diff / 5;
-		queue_y1 = offset_self_y + step * 1;
-		queue_y2 = offset_self_y + step * 2;
-		queue_y3 = offset_self_y + step * 3;
-		queue_y4 = offset_self_y + step * 4;
+		queue_y1 = offset_self_y + tempvar * 1;
+		queue_y2 = offset_self_y + tempvar * 2;
+		queue_y3 = offset_self_y + tempvar * 3;
+		queue_y4 = offset_self_y + tempvar * 4;
 	} else {
-		diff = offset_self_y - player y;
-		step = diff / 5;
-		queue_y1 = player y + step * 4;
-		queue_y2 = player y + step * 3;
-		queue_y3 = player y + step * 2;
-		queue_y4 = player y + step * 1;
+		queue_y1 = player y + tempvar * 4;
+		queue_y2 = player y + tempvar * 3;
+		queue_y3 = player y + tempvar * 2;
+		queue_y4 = player y + tempvar * 1;
 	}
 	// the rest of the queue is the followee's current pos
 	// (the player will fill these in as they get to them)
@@ -381,13 +375,13 @@ follow_player_stack_init {
 	curr_self_queue = 0;
 	curr_player_queue = $queue_diff;
 }
-fn record_player_pos_if ($n, $xVar, $yVar) {
+fn save_player_pos_if ($n, $xVar, $yVar) {
 	if (curr_player_queue == $n) {
 		$xVar = player x;
 		$yVar = player y;
 	}
 }
-fn set_self_pos_if ($n, $xVar, $yVar) {
+fn load_self_pos_if ($n, $xVar, $yVar) {
 	if (curr_self_queue == $n) {
 		self x = $xVar;
 		self y = $yVar;
@@ -398,54 +392,54 @@ follow_player {
 	if (player current_animation != 1) {
 		if (should_follow_player) {
 			should_follow_player = false;
-			should_follow_player_delay = $follow_delay;
-		} else if (should_follow_player_delay != 0) {
-			should_follow_player_delay -= 1;
-		} else if (follow_player) {
-			follow_player = false;
+			tempvar2 = $follow_delay;
+		} else if (tempvar2 != 0) {
+			tempvar2 -= 1;
+		} else if (am_following_player) {
+			am_following_player = false;
 			self current_animation = 0;
 		}
 	} else {
-		record_player_pos_if(0, queue_x0, queue_y0)
-		record_player_pos_if(1, queue_x1, queue_y1)
-		record_player_pos_if(2, queue_x2, queue_y2)
-		record_player_pos_if(3, queue_x3, queue_y3)
-		record_player_pos_if(4, queue_x4, queue_y4)
-		record_player_pos_if(5, queue_x5, queue_y5)
-		record_player_pos_if(6, queue_x6, queue_y6)
-		record_player_pos_if(7, queue_x7, queue_y7)
-		record_player_pos_if(8, queue_x8, queue_y8)
-		record_player_pos_if(9, queue_x9, queue_y9)
+		save_player_pos_if(0, queue_x0, queue_y0)
+		save_player_pos_if(1, queue_x1, queue_y1)
+		save_player_pos_if(2, queue_x2, queue_y2)
+		save_player_pos_if(3, queue_x3, queue_y3)
+		save_player_pos_if(4, queue_x4, queue_y4)
+		save_player_pos_if(5, queue_x5, queue_y5)
+		save_player_pos_if(6, queue_x6, queue_y6)
+		save_player_pos_if(7, queue_x7, queue_y7)
+		save_player_pos_if(8, queue_x8, queue_y8)
+		save_player_pos_if(9, queue_x9, queue_y9)
 		curr_player_queue = (curr_player_queue + 1) % $queue_size;
 		if (!should_follow_player) {
 			should_follow_player = true;
 			follow_player_stack_init()
-			should_follow_player_delay = $follow_delay;
-		} else if (should_follow_player_delay != 0) {
-			should_follow_player_delay -= 1;
-		} else if (!follow_player) {
-			follow_player = true;
+			tempvar2 = $follow_delay;
+		} else if (tempvar2 != 0) {
+			tempvar2 -= 1;
+		} else if (!am_following_player) {
+			am_following_player = true;
 			self current_animation = 1;
 		}
 	}
 
-	if (follow_player) {
-		// MOVE HAMSTER
+	// MOVE HAMSTER
+	if (am_following_player) {
 		my_old_x = self x;
 		my_old_y = self y;
 		// advance the queue
 		curr_self_queue = (curr_self_queue + 1) % $queue_size;
-		// set position based on the queue value
-		set_self_pos_if(0, queue_x0, queue_y0)
-		set_self_pos_if(1, queue_x1, queue_y1)
-		set_self_pos_if(2, queue_x2, queue_y2)
-		set_self_pos_if(3, queue_x3, queue_y3)
-		set_self_pos_if(4, queue_x4, queue_y4)
-		set_self_pos_if(5, queue_x5, queue_y5)
-		set_self_pos_if(6, queue_x6, queue_y6)
-		set_self_pos_if(7, queue_x7, queue_y7)
-		set_self_pos_if(8, queue_x8, queue_y8)
-		set_self_pos_if(9, queue_x9, queue_y9)
+		// set position based on the new queue value
+		load_self_pos_if(0, queue_x0, queue_y0)
+		load_self_pos_if(1, queue_x1, queue_y1)
+		load_self_pos_if(2, queue_x2, queue_y2)
+		load_self_pos_if(3, queue_x3, queue_y3)
+		load_self_pos_if(4, queue_x4, queue_y4)
+		load_self_pos_if(5, queue_x5, queue_y5)
+		load_self_pos_if(6, queue_x6, queue_y6)
+		load_self_pos_if(7, queue_x7, queue_y7)
+		load_self_pos_if(8, queue_x8, queue_y8)
+		load_self_pos_if(9, queue_x9, queue_y9)
 		self x += $offset_x;
 		self y -= $offset_y;
 		// get the absolute value of the delta

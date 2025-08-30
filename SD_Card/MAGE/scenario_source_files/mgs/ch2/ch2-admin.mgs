@@ -6,41 +6,42 @@ $goto_round_4 = 9; // count of story flags through round 3
 $goto_round_5 = 10;
 
 ch2_count_flags {
-	ch2_storyflags_tally = 0;
+	tempvar = 0;
 	// normal
 	if (ch2_installed_heatsink) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	if (ch2_installed_powersupply) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	if (ch2_installed_monitor) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	// abstract
 	if (ch2_installed_harddrive) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	if (ch2_installed_keyboard) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	if (ch2_installed_mouse) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	// desperate
 	if (ch2_installed_ramchips) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	if (ch2_installed_clock) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	if (ch2_installed_cpu) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
 	// final
 	if (ch2_installed_mainframeos) {
-		ch2_storyflags_tally += 1;
+		tempvar += 1;
 	}
+	return tempvar;
 }
 
 interact_ch2_mainframe_end {
@@ -174,14 +175,14 @@ interact_ch2_mainframe {
 	} else {
 		temp = false;
 		show dialog { PLAYER "That's all for now." };
-		ch2_count_flags()
+		tempvar = ch2_count_flags();
 		// the below are separate scripts so that multiple things can trigger them
 		// (^^ should this be the case?) (todo: determine this)
-		if (ch2_storyflags_tally == $goto_round_2) {
+		if (tempvar == $goto_round_2) {
 			ch2_start_round_2()
-		} else if (ch2_storyflags_tally == $goto_round_3) {
+		} else if (tempvar == $goto_round_3) {
 			ch2_start_round_3()
-		} else if (ch2_storyflags_tally == $goto_round_4) {
+		} else if (tempvar == $goto_round_4) {
 			ch2_start_round_4()
 		}
 	}

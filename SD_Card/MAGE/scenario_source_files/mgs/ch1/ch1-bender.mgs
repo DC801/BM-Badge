@@ -72,10 +72,7 @@ show_dialog_bender_start {
 		}
 		bender_backstory = true;
 		bender_quest_done = true;
-		calculate_hint_tracking_series()
-		if (hint_tracking_check == 5) {
-			set_hint_none()
-		}
+		set_hint_none_if_not_series(5)
 		set_bender_idle_look_around_randomly()
 		return;
 	}

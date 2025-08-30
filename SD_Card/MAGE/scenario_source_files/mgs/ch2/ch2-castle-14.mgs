@@ -36,15 +36,13 @@ look_ch2_keypad {
 /* ---------- ON_LOAD ---------- */
 
 ch2_gibson_scramble {
-	ch2_gibson_x = entity "King Gibson" x;
 	if (ch2_gibson_pos_odd) {
-		ch2_gibson_x += 1;
+		entity "King Gibson" x += 1;
 		ch2_gibson_pos_odd = false;
 	} else {
-		ch2_gibson_x -= 1;
+		entity "King Gibson" x -= 1;
 		ch2_gibson_pos_odd = true;
 	}
-	entity "King Gibson" x = ch2_gibson_x;
 	wait 50ms;
 }
 
@@ -313,8 +311,8 @@ interact_ch2_keypad_good_pass {
 	};
 	self on_interact = interact_ch2_keypad_prompt;
 	capture_player_state()
-	kingpos_x = entity "King Gibson" x;
-	kingpos_y = entity "King Gibson" y;
+	tempvar = entity "King Gibson" x;
+	tempvar2 = entity "King Gibson" y;
 	// not necessary to capture the king's direction, as he always faces the player
 	warp_state = "king returns teleport";
 	load map "ch2-castle-14-postgame";
@@ -326,8 +324,8 @@ ch2_king_leaves {
 
 ch2_cutscene_kingreturns_bedroom {
 	restore_player_state()
-	entity "King Gibson" x = kingpos_x;
-	entity "King Gibson" y = kingpos_y;
+	entity "King Gibson" x = tempvar;
+	entity "King Gibson" y = tempvar2;
 	player_control = off;
 	wait 600ms;
 	show dialog {

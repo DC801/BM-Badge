@@ -23,8 +23,11 @@ import {
 	Action,
 	CheckAction,
 	COPY_SCRIPT,
+	COPY_VARIABLE,
 	GOTO_ACTION_INDEX,
 	LABEL,
+	MUTATE_VARIABLE,
+	MUTATE_VARIABLES,
 } from './parser-bytecode-info.ts';
 import { namedChildren, optionalChildForField } from './parser-capture.ts';
 
@@ -54,6 +57,7 @@ export class ProjectState {
 		dialogs: Record<string, DialogDefinition[]>;
 		serialDialogs: Record<string, SerialDialogDefinition[]>;
 	};
+	integers: Set<string>;
 	// error/warning messages
 	errors: MathlangMessage[];
 	warnings: MathlangMessage[];
@@ -78,6 +82,7 @@ export class ProjectState {
 		};
 		this.mgsErrors = '';
 		this.mgsWarnings = '';
+		this.integers = new Set();
 		this.errors = [];
 		this.warnings = [];
 		this.gotoSuffixValue = 0;
@@ -111,6 +116,17 @@ export class ProjectState {
 			}
 		});
 		data.actions = simplifyLabelGotos(finalizedActions.flat());
+		// let's log
+		data.actions.forEach(action=>{
+			if (action instanceof MUTATE_VARIABLE) {
+				this.integers.add(action.variable)
+			} else if (action instanceof MUTATE_VARIABLES) {
+				this.integers.add(action.variable)
+				this.integers.add(action.source)
+			} else if (action instanceof COPY_VARIABLE) {
+				this.integers.add(action.variable)
+			}
+		})
 		// put script in the project
 		if (!this.scripts[name]) {
 			// if not registered yet, add it

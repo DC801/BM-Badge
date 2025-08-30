@@ -4,35 +4,35 @@ $blingCount = 6; // 6 total
 
 start_bling_rotate_auto {
 	warp_state = "bling_rotate_auto";
-	bling_rotate_state = 0;
+	tempvar = 0;
 	goto bling_goto_branches;
 }
 
 start_bling_rotate_manual {
 	warp_state = "bling_rotate_manual";
-	bling_rotate_state = 0;
+	tempvar = 0;
 	goto bling_goto_branches;
 }
 
 bling_goto_branches {
 	bling_rotate_state_calc_done = false;
 	// can't zigzag // (why though?)
-	if (bling_rotate_state == 0) {
+	if (tempvar == 0) {
 		goto start_bling_dc801_2;
 	}
-	if (bling_rotate_state == 1) {
+	if (tempvar == 1) {
 		goto start_bling_dc801;
 	}
-	if (bling_rotate_state == 2) {
+	if (tempvar == 2) {
 		goto start_bling_digi_mage2;
 	}
-	if (bling_rotate_state == 3) {
+	if (tempvar == 3) {
 		goto start_bling_digi_mage;
 	}
-	if (bling_rotate_state == 4) {
+	if (tempvar == 4) {
 		goto start_bling_zero;
 	}
-	if (bling_rotate_state == 5) {
+	if (tempvar == 5) {
 		goto start_bling_serial;
 	}
 	goto bling_goto_menu;
@@ -84,13 +84,13 @@ bling_goto_menu {
 }
 
 bling_increment {
-	bling_rotate_state = (bling_rotate_state + 1) % $blingCount;
+	tempvar = (tempvar + 1) % $blingCount;
 }
 bling_decrement {
-	if (bling_rotate_state == 0) {
-		bling_rotate_state = $blingCount;
+	if (tempvar == 0) {
+		tempvar = $blingCount;
 	}
-	bling_rotate_state -= 1;
+	tempvar -= 1;
 }
 
 /* --- for the Timer entity --- */

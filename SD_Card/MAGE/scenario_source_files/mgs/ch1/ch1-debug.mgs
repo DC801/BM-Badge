@@ -77,7 +77,7 @@ debug_set_flags_true_q {
 }
 
 debug_set_story_and_misc_flags_false {
-	hint_tracking = 0;
+	hinteger = 0;
 	set_story_flags_false()
 	set_misc_flags_false()
 	set_ch1_finished_flags_false()

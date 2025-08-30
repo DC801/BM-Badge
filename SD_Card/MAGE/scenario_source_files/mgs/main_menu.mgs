@@ -116,13 +116,13 @@ rngtest2 {
 	rngtest2_roll()
 }
 rngtest_roll {
-	printVar = RNG!(=4);
-	show serial_dialog { "random number from 0 to 4: $printVar$" };
+	tempvar = RNG!(=4);
+	show serial_dialog { "random number from 0 to 4: $tempvar$" };
 }
 
 rngtest2_roll {
-	printVar = RNG!(40,=44);
-	show serial_dialog { "random number from 40 to 44: $printVar$" };
+	tempvar = RNG!(40,=44);
+	show serial_dialog { "random number from 40 to 44: $tempvar$" };
 }
 
 /* DEBUGSSSS */
@@ -497,14 +497,14 @@ start_new_game_with_name {
 /* ---------- CHOOSING A CHAPTER ---------- */
 
 menu_chapter_select_q {
-	ch1_count_flags()
-	ch2_count_flags()
+	tempvar2 = ch1_count_flags();
+	tempvar3 = ch2_count_flags();
 	show dialog {
 		name " "
 		border_tileset menu
 		"PLAY (slot $slot_number$: \"%PLAYER%\")"
-		> "Chapter 1 ($ch1_storyflags_tally$/11)" = menu_chapter_select_1
-		> "Chapter 2 ($ch2_storyflags_tally$/10)" = menu_chapter_select_2_check
+		> "Chapter 1 ($tempvar2$/11)" = menu_chapter_select_1
+		> "Chapter 2 ($tempvar3$/10)" = menu_chapter_select_2_check
 		> "Back" = menu_play_game
 	};
 }

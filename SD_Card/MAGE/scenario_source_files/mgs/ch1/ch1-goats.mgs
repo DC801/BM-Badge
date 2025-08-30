@@ -110,17 +110,16 @@ show_dialog_verthandi_start {
 		return;
 	}
 	// find unglitch count
-	unglitch_count = 0;
-	if (goldfish_unglitched) { unglitch_count += 1; }
-	if (timmy_unglitched) { unglitch_count += 1; }
-	if (fountain_unglitched) { unglitch_count += 1; }
-	if (lodge_cat_unglitched) { unglitch_count += 1; }
-	if (billy_unglitched) { unglitch_count += 1; }
-	if (kid_unglitched) { unglitch_count += 1; }
-	if (main_hamster_unglitched) { unglitch_count += 1; }
-	total_glitches = 7 - unglitch_count;
+	tempvar = 7;
+	if (goldfish_unglitched) { tempvar -= 1; }
+	if (timmy_unglitched) { tempvar -= 1; }
+	if (fountain_unglitched) { tempvar -= 1; }
+	if (lodge_cat_unglitched) { tempvar -= 1; }
+	if (billy_unglitched) { tempvar -= 1; }
+	if (kid_unglitched) { tempvar -= 1; }
+	if (main_hamster_unglitched) { tempvar -= 1; }
 	// use unglitch count
-	if (total_glitches == 0) {
+	if (tempvar == 0) {
 		if (!verthandi_backstory) {
 			show dialog {
 				SELF "Oh! It appears you've already restored everyone that was glitched!"
@@ -132,18 +131,15 @@ show_dialog_verthandi_start {
 				"Oh, thank you, %PLAYER%!"
 			};
 		}
-		calculate_hint_tracking_series()
-		if (hint_tracking_check == 11) {
-			set_hint_none()
-		}
+		set_hint_none_if_not_series(11)
 		verthandi_quest_done = true;
 		goats_both_unglitched = true;
 	} else if (verthandi_backstory) {
 		if (goats_both_unglitched) {
-			if (total_glitches == 1) {
+			if (tempvar == 1) {
 				show dialog { SELF "I hear one more glitched soul that needs help!" };
 			} else {
-				show dialog { SELF "I can hear the cries of $total_glitches$ glitched souls...." };
+				show dialog { SELF "I can hear the cries of $tempvar$ glitched souls...." };
 			}
 			if (!timmy_unglitched || !lodge_cat_unglitched) {
 				show dialog { SELF "Perhaps... somewhere in the library?" };

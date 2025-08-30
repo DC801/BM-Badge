@@ -634,7 +634,6 @@ serial_dialog "serial_dialog_map_action_testing_on_connect" {
 		"PLAYER: %PLAYER%"
 		"cli_variable: $cli_variable$"
 		"'Mage 01': %Mage 01%"
-		"ch1_storyflags_tally: $ch1_storyflags_tally$"
 		"SELF: %SELF%"
 		"MAP: %MAP%"
 	};

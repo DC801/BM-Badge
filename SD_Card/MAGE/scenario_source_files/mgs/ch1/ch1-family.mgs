@@ -19,10 +19,7 @@ kid_ballwatch {
 }
 kid_now_ball {
 	sportskid_quest_done = true;
-	calculate_hint_tracking_series()
-	if (hint_tracking_check == 8) {
-		set_hint_none()
-	}
+	set_hint_none_if_not_series(8)
 	goto null_script;
 }
 

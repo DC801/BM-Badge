@@ -10,6 +10,12 @@ add dialog settings {
 /* todo: make this wrap to 64 instead, and adjust wrapped word colors */
 add serial_dialog settings { wrap 60 }
 
+fn set_hint_none_if_not_series ($n) {
+	if (calculate_hinteger_series() == $n) {
+		set_hint_none()
+	}
+}
+
 fn capture_entity_direction ($name, $captureVar) {
 	if (entity $name direction == north) {
 		$captureVar = 0;
@@ -32,4 +38,22 @@ if ($captureVar == 0) {
 	} else if ($captureVar == 3) {
 		entity $name direction = west;
 	}
+}
+
+fn get_diff_x ($e1, $e2) {
+	if (entity $e1 x > entity $e2 x) {
+		return entity $e1 x - entity $e2 x;
+	} else {
+		return entity $e2 x - entity $e1 x;
+	}
+}
+fn get_diff_y ($e1, $e2) {
+	if (entity $e1 y > entity $e2 y) {
+		return entity $e1 y - entity $e2 y;
+	} else {
+		return entity $e2 y - entity $e1 y;
+	}
+}
+fn get_manhattan_distance ($e1, $e2) {
+	return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
 }

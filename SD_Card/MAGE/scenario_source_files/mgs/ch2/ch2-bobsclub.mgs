@@ -280,8 +280,6 @@ interact_ch2_bobcountertop {
 	} // (no need to say anything once the basement is discovered)
 }
 
-// CALLBACK (ish) STUFF
-
 interact_ch2_bobcupboard {
 	if (!ch2_touched_bobcupboard) {
 		show dialog {
