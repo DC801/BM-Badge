@@ -13,6 +13,9 @@ import {
 	MathlangNode,
 	CheckSaveFlag,
 	BoolGetable,
+	FnCallReturnValue,
+	BoolComparisonSequence,
+	JSONLiteral,
 } from './parser-types.ts';
 import { FileState } from './parser-file.ts';
 import { type FileMap } from './parser-project.ts';
@@ -113,6 +116,8 @@ export const quickTemporary = (): string => {
 };
 export const latestTemporary = (): string => temporaries[0];
 
+export const RETURN = '__RETURN_';
+
 // ------------------------ GENERIC ------------------------ //
 
 export const inverseOpMap: Record<string, string> = {
@@ -178,6 +183,35 @@ export const printableMessage = (fileMap: FileMap, prefix: string, v: MathlangMe
 
 export const autoIdentifierName = (f: FileState, node: TreeSitterNode): string => {
 	return f.fileName + '-' + node.startPosition.row + ':' + node.startPosition.column;
+};
+
+export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => {
+	const actions: AnyNode[] = [];
+	rawActions.forEach((raw) => {
+		if (
+			raw instanceof MathlangSequence ||
+			raw instanceof BoolComparisonSequence ||
+			raw instanceof FnCallReturnValue
+		) {
+			raw.steps.forEach((step) => actions.push(step));
+		} else if (raw instanceof JSONLiteral) {
+			raw.json.forEach((obj) => {
+				// JSON should only be Actions
+				if (typeof obj === 'object' && (obj as unknown as Action).action) {
+					actions.push(Action.fromArgs(obj));
+				} else {
+					f.quickError(
+						raw.debug.node,
+						'invalid JSON action',
+						'invalid JSON action: ' + JSON.stringify(obj),
+					);
+				}
+			});
+		} else {
+			actions.push(raw);
+		}
+	});
+	return actions;
 };
 
 // ------------------------ CONDITIONS ------------------------ //

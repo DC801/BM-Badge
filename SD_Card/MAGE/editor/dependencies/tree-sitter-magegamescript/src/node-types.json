@@ -890,6 +890,46 @@
     }
   },
   {
+    "type": "action_return_statement",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
+            "type": "NUMBER",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "int_binary_expression",
+            "named": true
+          },
+          {
+            "type": "int_getable",
+            "named": true
+          },
+          {
+            "type": "int_grouping",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "action_run_script",
     "named": true,
     "fields": {
@@ -4328,12 +4368,32 @@
     "type": "int_getable",
     "named": true,
     "fields": {
+      "copy_macro": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "copy_macro",
+            "named": true
+          }
+        ]
+      },
       "entity_identifier": {
         "multiple": false,
         "required": false,
         "types": [
           {
             "type": "entity_identifier",
+            "named": true
+          }
+        ]
+      },
+      "fn_call": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "fn_call",
             "named": true
           }
         ]
@@ -5914,10 +5974,6 @@
     "named": true
   },
   {
-    "type": "action_return_statement",
-    "named": true
-  },
-  {
     "type": "add",
     "named": false
   },
@@ -6232,6 +6288,10 @@
   },
   {
     "type": "rand",
+    "named": false
+  },
+  {
+    "type": "return",
     "named": false
   },
   {

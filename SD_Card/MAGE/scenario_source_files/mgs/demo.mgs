@@ -381,13 +381,13 @@ follow_player_stack_init {
 	curr_self_queue = 0;
 	curr_player_queue = $queue_diff;
 }
-record_player_pos_if ($n, $xVar, $yVar) {
+fn record_player_pos_if ($n, $xVar, $yVar) {
 	if (curr_player_queue == $n) {
 		$xVar = player x;
 		$yVar = player y;
 	}
 }
-set_self_pos_if ($n, $xVar, $yVar) {
+fn set_self_pos_if ($n, $xVar, $yVar) {
 	if (curr_self_queue == $n) {
 		self x = $xVar;
 		self y = $yVar;

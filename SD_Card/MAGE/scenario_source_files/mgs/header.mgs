@@ -10,7 +10,7 @@ add dialog settings {
 /* todo: make this wrap to 64 instead, and adjust wrapped word colors */
 add serial_dialog settings { wrap 60 }
 
-capture_entity_direction ($name, $captureVar) {
+fn capture_entity_direction ($name, $captureVar) {
 	if (entity $name direction == north) {
 		$captureVar = 0;
 	} else if (entity$name direction == east) {
@@ -22,7 +22,7 @@ capture_entity_direction ($name, $captureVar) {
 	}
 }
 
-restore_entity_direction ($name, $captureVar) {
+fn restore_entity_direction ($name, $captureVar) {
 if ($captureVar == 0) {
 		entity $name direction = north;
 	} else if ($captureVar == 1) {

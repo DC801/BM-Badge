@@ -9,6 +9,7 @@ import {
 	ifChainMaker,
 	simpleBranchMaker,
 	quickTemporary,
+	flattenNodes,
 } from './parser-utilities.ts';
 
 import { buildSerialDialogFromInfo, buildDialogFromInfo } from './parser-dialogs.ts';
@@ -72,10 +73,8 @@ import {
 	BoolGetable,
 	BoolExpression,
 	FunctionDefinition,
-	BoolComparisonSequence,
 } from './parser-types.ts';
 import {
-	Action,
 	GOTO_ACTION_INDEX,
 	MUTATE_VARIABLE,
 	RUN_SCRIPT,
@@ -170,7 +169,9 @@ const nodeFns = {
 		f.functions[name] = definiton;
 	},
 	fn_call: (f: FileState, node: TreeSitterNode) => {
+		const debug = MathlangLocation.quick(f, node);
 		const name = stringCaptureForField(f, node, 'name');
+		const lastChild = mandatoryLastChild(f, node);
 		const definition = f.functions[name];
 		if (!definition) {
 			const nameNode = optionalChildForField(f, node, 'name') || node;
@@ -212,8 +213,28 @@ const nodeFns = {
 		const stack: FunctionStackEntry[] = f.currFunction;
 		stack.unshift(localConstants);
 		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
-		const body = handleNamedChildren(f, definition.bodyNode);
-		const sequence = new MathlangSequence(MathlangLocation.quick(f, node), { steps: body });
+		let body = handleNamedChildren(f, definition.bodyNode);
+		body = flattenNodes(f, body);
+
+		// TODO: extract auto return stuff so it can share with script definitions
+
+		// add auto return label at the end
+		const label = 'end of script ' + f.p.advanceGotoSuffix();
+		const autoReturnLabelDefinition = LabelDefinition.quick(
+			MathlangLocation.quick(f, lastChild),
+			label,
+		);
+		body.push(autoReturnLabelDefinition);
+
+		// change all return statements to goto labels for the "auto return" label
+		body.forEach((node, i) => {
+			if (node instanceof ReturnStatement) {
+				const labelDebug = MathlangLocation.quick(f, node.debug.node);
+				body[i] = GotoLabel.quick(labelDebug, label);
+			}
+		});
+
+		const sequence = MathlangSequence.quick(debug, body, 'fn_call');
 		// get rid of the const registry for this call
 		stack.shift();
 		return sequence;
@@ -223,36 +244,16 @@ const nodeFns = {
 		const scriptName = stringCaptureForField(f, node, 'script_name');
 		const lastChild = mandatoryLastChild(f, node);
 		const rawActions: AnyNode[] = handleNamedChildren(f, lastChild);
-		const actions: AnyNode[] = [];
 		// flatten/incorporate any sequences
-		rawActions.forEach((raw) => {
-			if (raw instanceof MathlangSequence || raw instanceof BoolComparisonSequence) {
-				raw.steps.forEach((step) => actions.push(step));
-			} else if (raw instanceof JSONLiteral) {
-				raw.json.forEach((obj) => {
-					// JSON should only be Actions
-					if (typeof obj === 'object' && (obj as unknown as Action).action) {
-						actions.push(Action.fromArgs(obj));
-					} else {
-						f.quickError(
-							raw.debug.node,
-							'invalid JSON action',
-							'invalid JSON action: ' + JSON.stringify(obj),
-						);
-					}
-				});
-			} else {
-				actions.push(raw);
-			}
-		});
+		const actions: AnyNode[] = flattenNodes(f, rawActions);
 		// add auto return label at the end
 		const label = 'end of script ' + f.p.advanceGotoSuffix();
 		const lastChildLastChild = mandatoryLastChild(f, lastChild);
-		const labelAction = LabelDefinition.quick(
+		const autoReturnLabelDefinition = LabelDefinition.quick(
 			MathlangLocation.quick(f, lastChildLastChild),
 			label,
 		);
-		actions.push(labelAction);
+		actions.push(autoReturnLabelDefinition);
 		// change all return statements to goto labels for the "auto return" label
 		actions.forEach((action, i) => {
 			if (action instanceof ReturnStatement) {

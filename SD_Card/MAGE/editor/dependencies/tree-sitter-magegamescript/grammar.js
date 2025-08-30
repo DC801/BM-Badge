@@ -375,7 +375,8 @@ export default grammar({
 			),
 		action_break_statement: () => 'break',
 		action_continue_statement: () => 'continue',
-		action_return_statement: () => 'return',
+		action_return_statement: ($) =>
+			seq('return', optional(field('expression', $._int_expression))),
 		action_close_dialog: () => seq('close', 'dialog'),
 		action_close_serial_dialog: () => seq('close', 'serial_dialog'),
 		action_save_slot: () => seq('save', 'slot'),
@@ -887,6 +888,8 @@ export default grammar({
 					field('property', $.entity_property_int),
 				),
 				field('rng', $.int_rng),
+				field('copy_macro', $.copy_macro),
+				field('fn_call', $.fn_call),
 				// seq(optional('variable'), field('variable', $.string)),
 				// todo might be kind of involved actually
 			),

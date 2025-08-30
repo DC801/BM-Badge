@@ -10,14 +10,14 @@ add dialog settings {
 	}
 }
 
-interrupt_entity_walk ($name, $animationVar, $dirVar) {
+fn interrupt_entity_walk ($name, $animationVar, $dirVar) {
 	$animationVar = entity $name current_animation;
 	entity $name current_animation = 0;
 	pause entity $name on_tick;
 	capture_entity_direction($name, $dirVar)
 	entity $name direction = player;
 }
-resume_entity_walk ($name, $animationVar, $dirVar){
+fn resume_entity_walk ($name, $animationVar, $dirVar){
 	entity $name current_animation = $animationVar;
 	unpause entity $name on_tick;
 	restore_entity_direction($name, $dirVar)

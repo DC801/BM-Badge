@@ -155,24 +155,23 @@ on_load_ch2_greenhouse {
 
 /* ---------- ON_TICK ---------- */
 
-ch2_capture_ethernettle1 { ethernettlePrimaryID1 = entity EtherNettle1 primary_id; }
-ch2_capture_ethernettle2 { ethernettlePrimaryID2 = entity EtherNettle2 primary_id; }
-ch2_capture_ethernettle3 { ethernettlePrimaryID3 = entity EtherNettle3 primary_id; }
-ch2_capture_ethernettle4 { ethernettlePrimaryID4 = entity EtherNettle4 primary_id; }
-ch2_capture_ethernettle5 { ethernettlePrimaryID5 = entity EtherNettle5 primary_id; }
-ch2_capture_ethernettle6 { ethernettlePrimaryID6 = entity EtherNettle6 primary_id; }
-ch2_capture_ethernettle7 { ethernettlePrimaryID7 = entity EtherNettle7 primary_id; }
-ch2_capture_ethernettle8 { ethernettlePrimaryID8 = entity EtherNettle8 primary_id; }
-
+ch2_capture_ethernettle1 {}
+ch2_capture_ethernettle2 {}
+ch2_capture_ethernettle3 {}
+ch2_capture_ethernettle4 {}
+ch2_capture_ethernettle5 {}
+ch2_capture_ethernettle6 {}
+ch2_capture_ethernettle7 {}
+ch2_capture_ethernettle8 {}
 
 dialog trekkie_ethernettle_reset  {
 	Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
 }
-check_ethernettle ($entityName, $currentPrimaryID, $geometry, $knownSecondaryID) {
+fn check_ethernettle ($entityName, $geometry, $knownSecondaryID) {
 	if (
 		!entity $entityName intersects geometry $geometry
-		|| $currentPrimaryID != origEthernettlePrimaryID // TODO: Why can't I say `entity $entityName primary_id != origEthernettlePrimaryID`? syntax errors abound
-		|| entity $entityName secondary_id != $knownSecondaryID // this is okay because it's a number literal, not a variable name?
+		|| entity $entityName primary_id != origEthernettlePrimaryID
+		|| entity $entityName secondary_id != $knownSecondaryID
 		|| entity $entityName primary_id_type != 0
 	) {
 		show dialog trekkie_ethernettle_reset;
@@ -184,14 +183,14 @@ check_ethernettle ($entityName, $currentPrimaryID, $geometry, $knownSecondaryID)
 }
 
 on_tick_ch2_greenhouse {
-	check_ethernettle(EtherNettle1, ethernettlePrimaryID1, EtherNettle1Origin, 3)
-	check_ethernettle(EtherNettle2, ethernettlePrimaryID2, EtherNettle2Origin, 2)
-	check_ethernettle(EtherNettle3, ethernettlePrimaryID3, EtherNettle3Origin, 7)
-	check_ethernettle(EtherNettle4, ethernettlePrimaryID4, EtherNettle4Origin, 0)
-	check_ethernettle(EtherNettle5, ethernettlePrimaryID5, EtherNettle5Origin, 1)
-	check_ethernettle(EtherNettle6, ethernettlePrimaryID6, EtherNettle6Origin, 6)
-	check_ethernettle(EtherNettle7, ethernettlePrimaryID7, EtherNettle7Origin, 5)
-	check_ethernettle(EtherNettle8, ethernettlePrimaryID8, EtherNettle8Origin, 4)
+	check_ethernettle(EtherNettle1, EtherNettle1Origin, 3)
+	check_ethernettle(EtherNettle2, EtherNettle2Origin, 2)
+	check_ethernettle(EtherNettle3, EtherNettle3Origin, 7)
+	check_ethernettle(EtherNettle4, EtherNettle4Origin, 0)
+	check_ethernettle(EtherNettle5, EtherNettle5Origin, 1)
+	check_ethernettle(EtherNettle6, EtherNettle6Origin, 6)
+	check_ethernettle(EtherNettle7, EtherNettle7Origin, 5)
+	check_ethernettle(EtherNettle8, EtherNettle8Origin, 4)
 	if (player intersects geometry "south-hitbox") {
 		warp_state = "walk_from_greenhouse";
 		load map "ch2-town";

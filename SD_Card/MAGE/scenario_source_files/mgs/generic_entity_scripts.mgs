@@ -186,25 +186,17 @@ yeet {
 	goto null_script;
 }
 
-capture_self_direction {
-	capture_entity_direction("%SELF%", tempvar)
-
-}
-restore_self_direction {
-	restore_entity_direction("%SELF%", tempvar)
-}
-
 interrupt_walk {
 	captured_animation = self current_animation;
 	self current_animation = 0;
 	pause self on_tick;
-	capture_self_direction()
+	capture_entity_direction("%SELF%", tempvar)
 	face_player()
 }
 resume_walk {
 	self current_animation = captured_animation;
 	unpause self on_tick;
-	restore_self_direction()
+	restore_entity_direction("%SELF%", tempvar)
 }
 
 capture_player_state {

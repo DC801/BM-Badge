@@ -1,5 +1,5 @@
 import { parseProject } from './parser.ts';
-import { ansiTags } from './parser-utilities.ts';
+import { ansiTags, RETURN } from './parser-utilities.ts';
 import { AnyNode } from './parser-types.ts';
 import { type GenericObj } from './parser-actions.ts';
 
@@ -27,6 +27,34 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	return_binary_expression: {
+		input: [`return player y + 100;`],
+		expected: [`${RETURN} = player y;`, `${RETURN} += 100;`],
+	},
+	return_rng_alt: {
+		input: [`return RNG!(3) + 100;`],
+		expected: [`${RETURN} ?= 3;`, `${RETURN} += 100;`],
+	},
+	return_rng_pair: {
+		input: [`return RNG!(1,=3);`],
+		expected: [`${RETURN} ?= 3;`, `${RETURN} += 1;`],
+	},
+	return_rng_single: {
+		input: [`return RNG!(2);`],
+		expected: [`${RETURN} ?= 2;`],
+	},
+	return_int_getable: {
+		input: [`return player x;`],
+		expected: [`${RETURN} = player x;`],
+	},
+	return_var: {
+		input: [`return varName;`],
+		expected: [`${RETURN} = varName;`],
+	},
+	return_int: {
+		input: [`return 7;`],
+		expected: [`${RETURN} = 7;`],
+	},
 	int_getable_comparison: {
 		input: [
 			//WIP
@@ -1305,6 +1333,52 @@ const fileMap =
 	onlyDoTheseActionTests.length !== 0
 		? {}
 		: {
+				'fn_returns.mgs': {
+					fileText: `
+					addThree ($n) { return $n + 3; }
+					setTallyToThirteen {
+						tally = addThree(10);
+					}
+					getHundred {
+						return 100;
+					}
+					setVarToHundred {
+						var = getHundred();
+					}
+					returnsNothing {
+						wait 123;
+					}
+					invalidReturn {
+						random = returnsNothing();
+					}
+				`,
+					expected: {
+						scripts: {
+							setTallyToThirteen: `"setTallyToThirteen" {
+								"__RETURN_" = 10;
+								"__RETURN_" += 3;
+								"tally" = "__RETURN_";
+								"__RETURN_" = 0;
+							}`,
+							getHundred: `"getHundred" {
+								"__RETURN_" = 100;
+							}`,
+							setVarToHundred: `"setVarToHundred" {
+								"__RETURN_" = 100;
+								"var" = "__RETURN_";
+								"__RETURN_" = 0;
+							}`,
+							returnsNothing: `"returnsNothing" {
+								wait 123ms;
+							}`,
+							invalidReturn: `"invalidReturn" {
+								wait 123ms;
+								"random" = "__RETURN_";
+								"__RETURN_" = 0;
+							}`,
+						},
+					},
+				},
 				'fn.mgs': {
 					fileText: `
 					waiting ($number) {
@@ -1971,27 +2045,26 @@ const runTests = async () => {
 				}
 			});
 		}
+		// PRINT TEST RESULTS
+		errors.forEach((error) => {
+			console.error('\n' + error.message);
+			if (error.lines) {
+				error.lines.forEach((v) => {
+					console.error(`   Found: ${v.found}`);
+					console.error(`Expected: ${v.expected}`);
+				});
+			}
+			if (error.lengthDiff) {
+				console.error(error.lengthDiff.join('\n'));
+			}
+		});
+
+		// DONE
+		if (errors.length === 0) {
+			console.log(`All ${actionTestNames.length} unit tests good, chief!`);
+		}
+		// console.log('BREAKPOINT HERE');
 	});
 };
-
-// PRINT TEST RESULTS
-errors.forEach((error) => {
-	console.error('\n' + error.message);
-	if (error.lines) {
-		error.lines.forEach((v) => {
-			console.error(`   Found: ${v.found}`);
-			console.error(`Expected: ${v.expected}`);
-		});
-	}
-	if (error.lengthDiff) {
-		console.error(error.lengthDiff.join('\n'));
-	}
-});
-
-// DONE
-if (errors.length === 0) {
-	console.log(`All ${actionTestNames.length} unit tests good, chief!`);
-}
-// console.log('BREAKPOINT HERE');
 
 runTests();

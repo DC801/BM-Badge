@@ -2506,8 +2506,29 @@
       "value": "continue"
     },
     "action_return_statement": {
-      "type": "STRING",
-      "value": "return"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "return"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "expression",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_int_expression"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
     },
     "action_close_dialog": {
       "type": "SEQ",
@@ -5567,6 +5588,22 @@
           "content": {
             "type": "SYMBOL",
             "name": "int_rng"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "copy_macro",
+          "content": {
+            "type": "SYMBOL",
+            "name": "copy_macro"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "fn_call",
+          "content": {
+            "type": "SYMBOL",
+            "name": "fn_call"
           }
         }
       ]

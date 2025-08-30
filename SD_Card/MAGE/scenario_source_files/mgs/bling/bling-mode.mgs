@@ -87,9 +87,6 @@ bling_goto_menu {
 
 bling_rotate_state_increment {
 	bling_rotate_state = (bling_rotate_state + 1) % $blingCount;
-	if (bling_rotate_state == temp) {
-		bling_rotate_state = 0;
-	}
 	bling_rotate_state_calc_done = true;
 	self on_tick = null_script;
 }

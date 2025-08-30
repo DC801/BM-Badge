@@ -111,12 +111,15 @@ import {
 	RNGSingle,
 	RNGPair,
 	MathlangMessage,
+	IntGetable,
+	FnCallReturnValue,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
 	newTemporary,
 	dropTemporary,
 	quickTemporary,
+	RETURN,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 
@@ -294,7 +297,27 @@ const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
 		// TODO: everything after is unreachable
 		// Ditto some other actions, too
-		handle: (v, f, node) => new ReturnStatement(MathlangLocation.quick(f, node)),
+		handle: (v, f, node) => {
+			const debug = MathlangLocation.quick(f, node);
+			const returnStatement = new ReturnStatement(debug);
+			const expNode = optionalChildForField(f, node, 'expression');
+			if (expNode) {
+				const steps: AnyNode[] = [];
+				const exp = handleCapture(f, expNode);
+				if (typeof exp === 'number') {
+					steps.push(MUTATE_VARIABLE.set(RETURN, exp));
+				} else if (typeof exp === 'string') {
+					steps.push(MUTATE_VARIABLES.set(debug, RETURN, exp));
+				} else if (exp instanceof IntGetable || exp instanceof IntBinaryExpression) {
+					steps.push(exp.assignToVar(RETURN));
+				} else {
+					throw new Error('what else goes here?');
+				}
+				steps.push(returnStatement);
+				return MathlangSequence.quick(debug, steps, 'return_statement_with_value');
+			}
+			return returnStatement;
+		},
 	},
 	action_continue_statement: {
 		handle: (v, f, node) => new ContinueStatement(MathlangLocation.quick(f, node)),
@@ -485,6 +508,12 @@ const actionData: Record<string, actionDataEntry> = {
 
 			// varName = RNG!(0, 99);
 			if (v.rhs instanceof RNGPair) {
+				return v.rhs.assignToVar(lhs);
+			}
+
+			// varName = fnCall(9);
+			// varName = copyScript();
+			if (v.rhs instanceof FnCallReturnValue) {
 				return v.rhs.assignToVar(lhs);
 			}
 

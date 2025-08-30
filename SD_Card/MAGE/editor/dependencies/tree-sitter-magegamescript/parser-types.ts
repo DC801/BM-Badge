@@ -3,10 +3,12 @@ import { FileState } from './parser-file.ts';
 import * as ACTION from './parser-bytecode-info.ts';
 import {
 	dropTemporary,
+	flattenNodes,
 	inverseOpMap,
 	latestTemporary,
 	newTemporary,
 	quickTemporary,
+	RETURN,
 	simpleBranchMaker,
 } from './parser-utilities.ts';
 import { type GenericObj } from './parser-actions.ts';
@@ -99,11 +101,9 @@ export type MathlangMessageType =
 	| 'not enough fn args'
 	| 'undefined constant'
 	| 'constant already defined'
-
 	| 'mismatched spread lengths'
 	| 'unsupported entity field'
 	| 'misordered params'
-
 	| 'invalid JSON action'
 	| 'invalid fn arg'
 	| 'invalid operator' // warning, not error
@@ -894,21 +894,18 @@ export class MathlangSequence extends MathlangNode {
 			const mathlangComment = CommentNode.quick(debug, comment);
 			this.steps.unshift(mathlangComment);
 		}
-
-		const flatSteps: AnyNode[] = [];
-		this.steps.forEach((v) => {
-			if (v instanceof MathlangSequence) {
-				flatSteps.push(...v.steps);
-			} else {
-				flatSteps.push(v);
-			}
-		});
-		this.steps = flatSteps;
+		this.steps = flattenNodes(this.debug.f, this.steps);
 	}
 	clone() {
 		const newArgs = { ...this.args };
 		newArgs.steps = this.steps.map((v) => v.clone());
 		return new MathlangSequence(this.debug.clone(), newArgs);
+	}
+	static coerce(v: unknown) {
+		if (!(v instanceof MathlangSequence)) {
+			throw new Error('not MathlangSequence');
+		}
+		return v;
 	}
 	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
 		return new MathlangSequence(debug, { steps, type });
@@ -965,10 +962,9 @@ export class IntBinaryExpression extends IntExpression {
 		} else if (lhs instanceof RNGSingle) {
 			steps.push(ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.value, '?'));
 		} else if (lhs instanceof RNGPair) {
-			steps.push(
-				ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.value, '?'),
-				ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.add, '+'),
-			);
+			steps.push(...lhs.toSteps(temp));
+		} else if (lhs instanceof FnCallReturnValue) {
+			steps.push(...lhs.toSteps(temp));
 		} else if (lhs instanceof IntBinaryExpression) {
 			// can use the same temporary since it's the lhs and we're going LTR
 			lhs.toStepsFromSteps(steps);
@@ -984,20 +980,25 @@ export class IntBinaryExpression extends IntExpression {
 		} else if (rhs instanceof EntityIntField) {
 			const quickTemp = quickTemporary();
 			steps.push(
-				ACTION.COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, quickTemp),
+				rhs.assignToVar(quickTemp),
 				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
 			);
 		} else if (rhs instanceof RNGSingle) {
 			const quickTemp = quickTemporary();
 			steps.push(
-				ACTION.MUTATE_VARIABLE.change(rhs.debug, quickTemp, rhs.value, '?'),
+				rhs.assignToVar(quickTemp),
 				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
 			);
 		} else if (rhs instanceof RNGPair) {
 			const quickTemp = quickTemporary();
 			steps.push(
-				ACTION.MUTATE_VARIABLE.change(rhs.debug, quickTemp, rhs.value, '?'),
-				ACTION.MUTATE_VARIABLE.change(rhs.debug, quickTemp, rhs.add, '+'),
+				...rhs.toSteps(quickTemp),
+				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
+			);
+		} else if (rhs instanceof FnCallReturnValue) {
+			const quickTemp = quickTemporary();
+			steps.push(
+				...rhs.toSteps(quickTemp),
 				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
 			);
 		} else if (rhs instanceof IntBinaryExpression) {
@@ -1102,6 +1103,9 @@ export class EntityIntField extends IntGetable {
 	static quick(debug: MathlangLocation, entity: string, field: string) {
 		return new EntityIntField(debug, { entity, field });
 	}
+	assignToVar(variable: string) {
+		return ACTION.COPY_VARIABLE.intoVariable(this.entity, this.field, variable);
+	}
 	static coerce(v: unknown) {
 		if (!(v instanceof EntityIntField)) {
 			throw new Error('not EntityIntField');
@@ -1180,6 +1184,53 @@ export class RNGPair extends IntGetable {
 			steps: this.toSteps(destinationVar),
 			type: `RNGPair.toSequence`,
 		});
+	}
+}
+export class FnCallReturnValue extends IntGetable {
+	steps: AnyNode[];
+	identifier: string;
+	type: 'script' | 'fn';
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.identifier = ACTION.breakIfNotString(args.identifier);
+		if (!Array.isArray(args.steps)) {
+			throw new Error('should be array');
+		}
+		if (!args.steps.every((v) => v instanceof AnyNode)) {
+			throw new Error('should all be AnyNode');
+		}
+		this.steps = args.steps;
+		const type = ACTION.breakIfNotString(args.type);
+		if (type === 'script' || type === 'fn') {
+			this.type = type;
+		}
+	}
+	clone() {
+		return new FnCallReturnValue(this.debug.clone(), this.args);
+	}
+	static coerce(v: unknown) {
+		if (!(v instanceof FnCallReturnValue)) {
+			throw new Error('not FnCallReturnValue');
+		}
+		return v;
+	}
+	static quick(debug: MathlangLocation, identifier: string, type: string, steps: AnyNode[]) {
+		return new FnCallReturnValue(debug, { identifier, type, steps });
+	}
+	toSteps(destinationVar: string) {
+		const assign = ACTION.MUTATE_VARIABLES.set(this.debug, destinationVar, RETURN);
+		this.steps.push(assign);
+		// so wrong values don't live in the return "register" (todo: is this helpful?)
+		const reset = ACTION.MUTATE_VARIABLE.set(RETURN, 0);
+		this.steps.push(reset);
+		return this.steps;
+	}
+	assignToVar(destinationVar: string) {
+		return MathlangSequence.quick(
+			this.debug,
+			this.toSteps(destinationVar),
+			`from FnCallReturnValue (${this.type} "${this.identifier}")`,
+		);
 	}
 }
 

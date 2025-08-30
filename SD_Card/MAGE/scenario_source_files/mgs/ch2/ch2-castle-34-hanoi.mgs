@@ -504,21 +504,18 @@ hanoi_init_variables {
 	hanoi_won = false;
 }
 hanoi_init_game {
-	if (
-		!hanoi_init_done
-		|| hanoi_won
-	) {
+	if (!hanoi_init_done || hanoi_won) {
 		hanoi_init_variables()
 	}
-	command "1" = hanoi_move_1;
-	command "2" = hanoi_move_2;
-	command "3" = hanoi_move_3;
-	command "T" = hanoi_help;
-	command "TIPS" = hanoi_help;
-	command "R" = hanoi_reset;
+	command "1"     = hanoi_move_1;
+	command "2"     = hanoi_move_2;
+	command "3"     = hanoi_move_3;
+	command "T"     = hanoi_help;
+	command "TIPS"  = hanoi_help;
+	command "R"     = hanoi_reset;
 	command "RESET" = hanoi_reset;
-	command "Q" = hanoi_quit_from_terminal;
-	command "QUIT" = hanoi_quit_from_terminal;
+	command "Q"     = hanoi_quit_from_terminal;
+	command "QUIT"  = hanoi_quit_from_terminal;
 	if (debug_mode) {
 		command "WIN" = hanoi_win;
 	}

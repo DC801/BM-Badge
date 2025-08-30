@@ -41,6 +41,8 @@ import {
 	IntGetable,
 	BoolComparisonSequence,
 	MathlangMessage,
+	FnCallReturnValue,
+	MathlangSequence,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -49,6 +51,7 @@ import {
 	inverseOpMap,
 	newTemporary,
 	dropTemporary,
+	flattenNodes,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
@@ -327,6 +330,19 @@ const captureFns = {
 		if (rngNode) {
 			return handleCapture(f, rngNode);
 		}
+		const fnNode = optionalChildForField(f, node, 'fn_call');
+		if (fnNode) {
+			const sequence = MathlangSequence.coerce(handleNode(f, fnNode));
+			const fn = stringCaptureForField(f, fnNode, 'name');
+			return FnCallReturnValue.quick(debug, fn, 'fn', flattenNodes(f, sequence.steps));
+		}
+		const copyNode = optionalChildForField(f, node, 'copy_macro');
+		if (copyNode) {
+			const handled = handleNode(f, copyNode)[0];
+			if (!(handled instanceof AnyNode)) throw new Error('no');
+			const scriptName = stringCaptureForField(f, copyNode, 'script');
+			return FnCallReturnValue.quick(debug, scriptName, 'script', flattenNodes(f, [handled]));
+		}
 		const entity = stringCaptureForField(f, node, 'entity_identifier');
 		const field = textForField(f, node, 'property');
 		return EntityIntField.quick(debug, entity, field);
@@ -475,11 +491,19 @@ const captureFns = {
 			steps.push(...lhs.toSteps(tempLHS));
 			lhs = tempLHS;
 		}
+		if (lhs instanceof FnCallReturnValue) {
+			steps.push(...lhs.toSteps(tempLHS));
+			lhs = tempLHS;
+		}
 		if (rhs instanceof RNGSingle) {
 			steps.push(rhs.assignToVar(tempRHS));
 			rhs = tempRHS;
 		}
 		if (rhs instanceof RNGPair) {
+			steps.push(...rhs.toSteps(tempRHS));
+			rhs = tempRHS;
+		}
+		if (rhs instanceof FnCallReturnValue) {
 			steps.push(...rhs.toSteps(tempRHS));
 			rhs = tempRHS;
 		}
