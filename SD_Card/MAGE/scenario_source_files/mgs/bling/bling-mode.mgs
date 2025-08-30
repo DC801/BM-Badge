@@ -83,36 +83,22 @@ bling_goto_menu {
 	load map main_menu;
 }
 
-/* --- for the Math entity --- */
-
-bling_rotate_state_increment {
+bling_increment {
 	bling_rotate_state = (bling_rotate_state + 1) % $blingCount;
-	bling_rotate_state_calc_done = true;
-	self on_tick = null_script;
 }
-
-bling_rotate_state_decrement {
+bling_decrement {
 	if (bling_rotate_state == 0) {
 		bling_rotate_state = $blingCount;
 	}
 	bling_rotate_state -= 1;
-	bling_rotate_state_calc_done = true;
-	self on_tick = null_script;
 }
 
 /* --- for the Timer entity --- */
 
 loop_bling_timer {
 	wait 13000ms;
-	entity Math on_tick = bling_rotate_state_increment;
-	goto loop_bling_timer_wait;
-}
-
-loop_bling_timer_wait {
-	// Waits for entity Math to finish
-	if (bling_rotate_state_calc_done) {
-		goto bling_goto_branches;
-	}
+	bling_increment()
+	goto bling_goto_branches;
 }
 
 loop_bling_listen_manualrotate {
@@ -134,13 +120,13 @@ loop_bling_listen_manualrotate {
 }
 
 bling_manual_rotate_left {
-	entity Math on_tick = bling_rotate_state_decrement;
-	goto loop_bling_timer_wait;
+	bling_decrement()
+	goto bling_goto_branches;
 }
 
 bling_manual_rotate_right {
-	entity Math on_tick = bling_rotate_state_increment;
-	goto loop_bling_timer_wait;
+	bling_increment()
+	goto bling_goto_branches;
 }
 
 start_bling_dc801 {

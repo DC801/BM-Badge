@@ -127,18 +127,6 @@
                  "class":"",
                  "gid":825,
                  "height":32,
-                 "id":45,
-                 "name":"Math",
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":155,
-                 "y":150.5
-                }, 
-                {
-                 "class":"",
-                 "gid":825,
-                 "height":32,
                  "id":48,
                  "name":"Timer",
                  "rotation":0,
@@ -157,7 +145,7 @@
  "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.9.0",
+ "tiledversion":"1.9.2",
  "tileheight":32,
  "tilesets":[
         {
