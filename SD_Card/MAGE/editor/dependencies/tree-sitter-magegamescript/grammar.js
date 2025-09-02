@@ -1022,7 +1022,7 @@ export default grammar({
 				'command',
 				field('command', $.string_expandable),
 				$.assignment_operator,
-				field('script', $.string_expandable),
+				field('script', choice($.string_expandable, $.script_literal)),
 			),
 		action_set_command_fail: ($) =>
 			seq(
@@ -1030,7 +1030,7 @@ export default grammar({
 				field('command', $.string_expandable),
 				'fail',
 				$.assignment_operator,
-				field('script', $.string_expandable),
+				field('script', choice($.string_expandable, $.script_literal)),
 			),
 		action_set_command_arg: ($) =>
 			seq(
@@ -1039,7 +1039,7 @@ export default grammar({
 				'+',
 				field('argument', $.string_expandable),
 				$.assignment_operator,
-				field('script', $.string_expandable),
+				field('script', choice($.string_expandable, $.script_literal)),
 			),
 		action_set_direction: ($) =>
 			seq(

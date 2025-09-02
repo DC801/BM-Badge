@@ -18,14 +18,51 @@ on_load_main_menu {
 
 	/* DEBUG QUICK STUFFS */
 	if (debug_mode) {
-		command debug = debug;
-		command hub = debug_hub;
-		command honk = system_bell;
-		command bob = debug_bob;
-		command bob2 = debug_bob2;
-		command bob3 = debug_bob3;
-		command simon = debug_menu_simon;
-		command king = debug_king;
+		command debug = debug {
+			debug_set_flags_to_round0()
+			ch2_load_castle_1_special()
+		};
+		command hub = debug_hub {
+			load map warp_zone;
+		};
+		command honk = system_bell {
+			show serial_dialog { "Honk!" };
+		};
+		command bob = debug_bob {
+			ch2_has_artifact = true;
+			ch2_has_map = true;
+			load map "ch2-bobsclub";
+		};
+		command bob2 = debug_bob2 {
+			warp_state = warping;
+			ch2_has_artifact = true;
+			ch2_has_map = true;
+			load map "ch2-bobsclub-basement";
+		};
+		command bob3 = debug_bob3 {
+			warp_state = warping;
+			ch2_has_artifact = true;
+			ch2_has_map = true;
+			ch2_cutseen_bob_party = true;
+			load map "ch2-bobsclub-basement";
+		};
+		command simon = debug_menu_simon {
+			serial_control = true;
+			ch2_has_artifact = true;
+			hex_control = true;
+			current_chapter = 2;
+			debug_finish_toot()
+			ch2_storyflag_round = 2;
+			warp_ch2_31() // this has a load_map in it
+		};
+		command king = debug_king {
+			debug_set_flags_to_round3()
+			ch2_cutseen_castle13 = true;
+			ch2_cutseen_castle14 = true;
+			ch2_king_rescued = true;
+			warp_state = "Ch2 King Returns";
+			load map "ch2-castle-13";
+		};
 		command ch2 = menu_chapter_select_2;
 		command rtfm = command_rtfm;
 		command buffer + test = debug_buffertest;
@@ -76,61 +113,6 @@ debug_post {
 	credits_from_menu = false;
 	warp_state = "ch2-ending";
 	load map "ch2-castle-outside";
-}
-
-debug_menu_simon {
-	serial_control = true;
-	ch2_has_artifact = true;
-	hex_control = true;
-	current_chapter = 2;
-	debug_finish_toot()
-	ch2_storyflag_round = 2;
-	warp_ch2_31() // this has a load_map in it
-}
-
-debug_hub {
-	load map warp_zone;
-}
-
-system_bell {
-	show serial_dialog {
-		"Honk!"
-	};
-}
-
-debug_bob {
-	ch2_has_artifact = true;
-	ch2_has_map = true;
-	load map "ch2-bobsclub";
-}
-
-debug_bob2 {
-	warp_state = warping;
-	ch2_has_artifact = true;
-	ch2_has_map = true;
-	load map "ch2-bobsclub-basement";
-}
-
-debug_bob3 {
-	warp_state = warping;
-	ch2_has_artifact = true;
-	ch2_has_map = true;
-	ch2_cutseen_bob_party = true;
-	load map "ch2-bobsclub-basement";
-}
-
-debug_king {
-	debug_set_flags_to_round3()
-	ch2_cutseen_castle13 = true;
-	ch2_cutseen_castle14 = true;
-	ch2_king_rescued = true;
-	warp_state = "Ch2 King Returns";
-	load map "ch2-castle-13";
-}
-
-debug {
-	debug_set_flags_to_round0()
-	ch2_load_castle_1_special()
 }
 
 /* ---------- INTRO SPLASH ---------- */

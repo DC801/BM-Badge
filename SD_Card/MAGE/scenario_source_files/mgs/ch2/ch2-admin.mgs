@@ -296,7 +296,7 @@ debug_map_flags_for_round0 {
 	ch2_take_off_map_round3()
 	ch2_take_off_map_round4()
 	ch2_storyflag_round = 0;
-	// copy ch2_debug_storyflag_log;
+	ch2_debug_storyflag_log()
 }
 debug_map_flags_for_round1 {
 	ch2_put_on_map_round1()
@@ -304,7 +304,7 @@ debug_map_flags_for_round1 {
 	ch2_take_off_map_round3()
 	ch2_take_off_map_round4()
 	ch2_storyflag_round = 1;
-	// copy ch2_debug_storyflag_log;
+	ch2_debug_storyflag_log()
 }
 debug_map_flags_for_round2 {
 	ch2_take_off_map_round1()
@@ -312,7 +312,7 @@ debug_map_flags_for_round2 {
 	ch2_take_off_map_round3()
 	ch2_take_off_map_round4()
 	ch2_storyflag_round = 2;
-	// copy ch2_debug_storyflag_log;
+	ch2_debug_storyflag_log()
 }
 debug_map_flags_for_round3 {
 	ch2_take_off_map_round1()
@@ -320,7 +320,7 @@ debug_map_flags_for_round3 {
 	ch2_put_on_map_round3()
 	ch2_take_off_map_round4()
 	ch2_storyflag_round = 3;
-	// copy ch2_debug_storyflag_log;
+	ch2_debug_storyflag_log()
 }
 debug_map_flags_for_round4 {
 	ch2_take_off_map_round1()
@@ -328,7 +328,7 @@ debug_map_flags_for_round4 {
 	ch2_take_off_map_round3()
 	ch2_put_on_map_round4()
 	ch2_storyflag_round = 4;
-	// ch2_debug_storyflag_log()
+	ch2_debug_storyflag_log()
 }
 debug_map_flags_for_round5 {
 	ch2_take_off_map_round1()
@@ -337,7 +337,7 @@ debug_map_flags_for_round5 {
 	ch2_take_off_map_round4()
 	ch2_storyflag_round = 5;
 	ch2_cutseen_castle99 = true;
-	// ch2_debug_storyflag_log()
+	ch2_debug_storyflag_log()
 }
 ch2_debug_storyflag_log {
 	show serial_dialog spacer;

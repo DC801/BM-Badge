@@ -1249,6 +1249,10 @@
             "named": true
           },
           {
+            "type": "script_literal",
+            "named": true
+          },
+          {
             "type": "string_expansion",
             "named": true
           }
@@ -1331,6 +1335,10 @@
             "named": true
           },
           {
+            "type": "script_literal",
+            "named": true
+          },
+          {
             "type": "string_expansion",
             "named": true
           }
@@ -1388,6 +1396,10 @@
           },
           {
             "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "script_literal",
             "named": true
           },
           {

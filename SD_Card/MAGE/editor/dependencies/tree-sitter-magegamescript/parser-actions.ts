@@ -429,17 +429,77 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_command: {
 		values: { is_fail: false },
 		captures: ['command', 'script'],
-		handle: (v) => new REGISTER_SERIAL_DIALOG_COMMAND(v),
+		handle: (v, f, node) => {
+			let script: string = '';
+			const steps: AnyNode[] = [];
+			if (typeof v.script === 'string') {
+				// try as identifier
+				script = v.script;
+			} else if (v.script instanceof ScriptDefinition) {
+				steps.push(v.script);
+				script = v.script.scriptName;
+			} else {
+				throw new Error('invalid script in action_set_command');
+			}
+			const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
+			if (steps.length === 0) {
+				return action;
+			} else {
+				steps.push(action);
+				const debug = MathlangLocation.quick(f, node);
+				return MathlangSequence.quick(debug, steps, 'action_set_command');
+			}
+		},
 	},
 	action_set_command_fail: {
 		values: { is_fail: true },
 		captures: ['command', 'script'],
-		handle: (v) => new REGISTER_SERIAL_DIALOG_COMMAND(v),
+		handle: (v, f, node) => {
+			let script: string = '';
+			const steps: AnyNode[] = [];
+			if (typeof v.script === 'string') {
+				// try as identifier
+				script = v.script;
+			} else if (v.script instanceof ScriptDefinition) {
+				steps.push(v.script);
+				script = v.script.scriptName;
+			} else {
+				throw new Error('invalid script in action_set_command');
+			}
+			const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
+			if (steps.length === 0) {
+				return action;
+			} else {
+				steps.push(action);
+				const debug = MathlangLocation.quick(f, node);
+				return MathlangSequence.quick(debug, steps, 'action_set_command');
+			}
+		},
 	},
 	action_set_command_arg: {
 		values: { is_fail: true },
 		captures: ['command', 'argument', 'script'],
-		handle: (v) => new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(v),
+		handle: (v, f, node) => {
+			let script: string = '';
+			const steps: AnyNode[] = [];
+			if (typeof v.script === 'string') {
+				// try as identifier
+				script = v.script;
+			} else if (v.script instanceof ScriptDefinition) {
+				steps.push(v.script);
+				script = v.script.scriptName;
+			} else {
+				throw new Error('invalid script in action_set_command');
+			}
+			const action = new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script });
+			if (steps.length === 0) {
+				return action;
+			} else {
+				steps.push(action);
+				const debug = MathlangLocation.quick(f, node);
+				return MathlangSequence.quick(debug, steps, 'action_set_command');
+			}
+		},
 	},
 	action_set_ambiguous: {
 		// if the LHS is ambiguous (a variable name)

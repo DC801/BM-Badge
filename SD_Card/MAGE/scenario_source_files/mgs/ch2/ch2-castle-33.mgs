@@ -489,18 +489,18 @@ ch2_mousegame_prepare_board {
 	goto null_script;
 }
 
-$unlit_light_count = tempvar;
 $room_size = 680; // small room was 418
 ch2_mousegame_tick {
 	wait 100ms;
 	mousegame_manhattan = get_manhattan_distance("%PLAYER%", Mouse);
-	$unlit_light_count = (mousegame_manhattan * 16) / $room_size;
-	// `tempvar` is now the INVERSE of the number of lights to show
-	if ($unlit_light_count > 8) {
+	unlit_light_count = (mousegame_manhattan * 16) / $room_size;
+	// `unlit_light_count` is now the INVERSE of the number of lights to show
+	// `mousegame_lights` is the ACTUAL number of lights to show
+	if (unlit_light_count > 8) {
 		// you are too far away to show any lights
 		mousegame_lights = 0;
 	} else {
-		mousegame_lights = 8 - $unlit_light_count;
+		mousegame_lights = 8 - unlit_light_count;
 	}
 
 	// reset old lights (todo: when array support is done in natlang, redo this)

@@ -10,7 +10,12 @@ register_manual {
 	command man + go = man_go;
 	command man + help = man_help;
 	command man + rtfm = man_rtfm;
-	command man fail = man_fail;
+	command man fail = man_fail {
+		show serial_dialog spacer;
+		show serial_dialog {
+			"<bold>MAN PAGE NOT FOUND!</> There is no documentation for that command, or that command does not exist."
+		};
+	};
 }
 
 // MAN PAGE
@@ -23,15 +28,6 @@ man_man {
 		"Displays manual pages for various MGE serial commands. Type <c>MAN</> followed by the name of the command you want to read about, e.g. <c>MAN LOOK</>"
 		" "
 		"<m>NOTE</>: Hi, there, birthday mage! I've rigged this thing to call me if you use <c>MAN</> as a single word. I \"hacked\" the man page to tell you that!"
-	};
-}
-
-// FAIL
-
-man_fail {
-	show serial_dialog spacer;
-	show serial_dialog {
-		"<bold>MAN PAGE NOT FOUND!</> There is no documentation for that command, or that command does not exist."
 	};
 }
 

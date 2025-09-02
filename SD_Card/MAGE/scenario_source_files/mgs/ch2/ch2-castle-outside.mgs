@@ -45,11 +45,13 @@ include "header.mgs";
 	ch2_map_init() // (player control comes back here)
 	// animations
 	if (warp_state == "walk_from_north") {
+		player_control = off;
 		player position -> geometry "walk_from_north" length over 200ms;
+		player_control = on;
 	} else if (warp_state == "walk_from_east") {
 		player path = "walk_from_east";
 		player on_tick = "on_tick_ch2_town_walkfadein";
-			// borrowing this from town scripts
+		// borrowing this from town scripts
 		camera fade in -> #000000 over 400ms;
 	} else if (warp_state == "ch2_ending") {
 		goto "ch2_post_credits";

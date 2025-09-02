@@ -17,183 +17,132 @@ on_load_main_menu {
 	// }
 
 	/* DEBUG QUICK STUFFS */
+	ch2_map_init_serial_debug_message()
 	if (debug_mode) {
-		command demo = goto_demo;
-		command rngtest = rngtest;
-		command rngtest2 = rngtest2;
-		command debug = debug;
-		command hub = debug_hub;
-		command honk = system_bell;
-		command bob = debug_bob;
-		command bob2 = debug_bob2;
-		command bob3 = debug_bob3;
-		command simon = debug_menu_simon;
-		command king = debug_king;
-		command ch2 = menu_chapter_select_2;
-		command rtfm = command_rtfm;
-		command buffer + test = debug_buffertest;
-		command boot = ch2_bootup;
-		command post = debug_post;
-		// command cutbug = ch2_toot_step3_end2;
-		command skip + "1" = debug_jump_to_round1;
-		command skip + "2" = debug_jump_to_round2;
-		command skip + "3" = debug_jump_to_round3;
-		command skip + "4" = debug_jump_to_round4;
-		register_warp()
-		register_storyflag()
-		show serial_dialog {
-			" "
-			"<y>DEBUG></> main menu only:"
-			"<y>></> <c>RNGTEST</>: test short rng syntax"
-			"<y>></> <c>RNGTEST2</>: test short rng syntax with range"
-			"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
-			"<y>></> <c>HUB</>: go to debug hub map"
-			"<y>></> <c>CH2</>: start ch2 (birthday cutscene)"
-			"<y>></> <c>DEBUG</>: ch2 room #1, after first half of Lambda convo"
-			"<y>></> <c>BOB</>: ch2 bob's club entrance"
-			"<y>></> <c>BOB2</>: ch2 bob's club basement"
-			"<y>></> <c>BOB3</>: ch2 bob's club basement (after cutscene)"
-			"<y>></> <c>SIMON</>: fast forward to the Simon Says part"
-			"<y>></> <c>KING</>: skip to cutscene where the king meets his advisors"
-			"<y>></> <c>BOOT</>: pretend to boot the weird computer"
-			"<y>></> <c>POST</>: skip to the post credits scene"
-			"<y>></> <c>SKIP _</>: skip ahead to that round (and set all prev flags)"
-			" "
-			"<y>DEBUG></> whole game:"
-			"<y>></> <c>RTFM</>: Early access to RTFM books"
-			"<y>></> <c>STORYFLAG _</>: choose round (whole game, not just menu)"
-			"<y>></> <c>WARP _</>: warp to that castle room"
-		};
+		debug_commands()
 	}
 }
-goto_demo {
-	demo_cutseen_timewarp = true;
-	load map demo;
-}
 
-rngtest {
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-	rngtest_roll()
-}
-rngtest2 {
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-	rngtest2_roll()
-}
-rngtest_roll {
-	tempvar = RNG!(=4);
-	show serial_dialog { "random number from 0 to 4: $tempvar$" };
-}
-
-rngtest2_roll {
-	tempvar = RNG!(40,=44);
-	show serial_dialog { "random number from 40 to 44: $tempvar$" };
-}
-
-/* DEBUGSSSS */
-debug_post {
-	ch2_wizard_backstory = true;
-	debug_set_flags_to_round4()
-	ch2_seen_room_99 = true;
-	ch2_map_mainframeos = false;
-	ch2_carrying_mainframeos = true;
-	ch2_cutseen_castle99 = true;
-	ch2_install_mainframeos()
-	ch2_ring_zero_enabled_in_castle = true;
-	ch2_storyflag_round = 5;
-	credits_from_menu = false;
-	warp_state = "ch2_ending";
-	load map "ch2-castle-outside";
-}
-
-debug_menu_simon {
-	serial_control = true;
-	ch2_has_artifact = true;
-	hex_control = true;
-	current_chapter = 2;
-	debug_finish_toot()
-	ch2_storyflag_round = 2;
-	warp_ch2_31() // this has a load_map in it
-}
-
-debug_hub {
-	load map warp_zone;
-}
-
-system_bell {
+debug_commands {
 	show serial_dialog {
-		"Honk!"
+		" "
+		"<y>DEBUG></> everywhere"
+		"<y>></> <c>RTFM</>: early access to RTFM books"
+		" "
+		"<y>DEBUG></> main menu only"
+		"<y>></> <c>DEBUG CH2</>: list CH2 debug commands"
+		"<y>></> <c>HUB</>: debug hub map"
+		"<y>></> <c>DEMO</>: demo/sandbox, skipping skip all intro dialog"
+		"<y>></> <c>RNGTEST</>: test RNG!() single syntax 20 times"
+		"<y>></> <c>RNGTEST2</>: test RNG!() range syntax 20 times"
+		"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
+		"Go to the CH2 town for the <c>CUTBUG</> test"
 	};
-}
-
-debug_bob {
-	ch2_has_artifact = true;
-	ch2_has_map = true;
-	load map "ch2-bobsclub";
-}
-
-debug_bob2 {
-	warp_state = warping;
-	ch2_has_artifact = true;
-	ch2_has_map = true;
-	load map "ch2-bobsclub-basement";
-}
-
-debug_bob3 {
-	warp_state = warping;
-	ch2_has_artifact = true;
-	ch2_has_map = true;
-	ch2_cutseen_bob_party = true;
-	load map "ch2-bobsclub-basement";
-}
-
-debug_king {
-	debug_set_flags_to_round3()
-	ch2_cutseen_castle13 = true;
-	ch2_cutseen_castle14 = true;
-	ch2_king_rescued = true;
-	warp_state = "Ch2 King Returns";
-	load map "ch2-castle-13";
-}
-
-debug {
-	debug_set_flags_to_round0()
-	ch2_load_castle_1_special()
+	command debug + "ch2" = {
+		show serial_dialog {
+			" "
+			"<y>DEBUG CH2></> commands that work everywhere"
+			"<y>></> <c>STORYFLAG _</>: set CH2 round"
+			"<y>></> <c>WARP _</>: warp to CH2 destination"
+			" "
+			"<y>DEBUG CH2></> skips from main menu only"
+			"<y>></> <c>ENTRANCE</>: room #1, after first half of Lambda convo"
+			"<y>></> <c>CH2</>: birthday cutscene"
+			"<y>></> <c>BOB</>: bob's club entrance"
+			"<y>></> <c>BOB2</>: bob's club basement"
+			"<y>></> <c>BOB3</>: bob's club basement (post cutscene)"
+			"<y>></> <c>SIMON</>: Simon Says"
+			"<y>></> <c>KING</>: cutscene where the king meets his advisors"
+			"<y>></> <c>BOOT</>: boot the Gibson mainframe"
+			"<y>></> <c>POST</>: post credits scene"
+			"<y>></> <c>SKIP _</>: skip to storyflag round and set all prev flags"
+		};
+	};
+	command entrance = {
+		debug_set_flags_to_round0()
+		ch2_load_castle_1_special()
+	};
+	command demo = {
+		demo_cutseen_timewarp = true;
+		load map demo;
+	};
+	command rngtest = {
+		for (i = 0; i < 20; i += 1) {
+			tempvar = RNG!(=4);
+			show serial_dialog { "random number from 0 to 4: $tempvar$" };
+		}
+	};
+	command rngtest2 = {
+		for (i = 0; i < 20; i += 1) {
+			tempvar = RNG!(40,=44);
+			show serial_dialog { "random number from 40 to 44: $tempvar$" };
+		}
+	};
+	command hub = {
+		load map warp_zone;
+	};
+	command honk = {
+		show serial_dialog { "Honk!" };
+	};
+	command bob = {
+		ch2_has_artifact = true;
+		ch2_has_map = true;
+		load map "ch2-bobsclub";
+	};
+	command bob2 = {
+		warp_state = warping;
+		ch2_has_artifact = true;
+		ch2_has_map = true;
+		load map "ch2-bobsclub-basement";
+	};
+	command bob3 = {
+		warp_state = warping;
+		ch2_has_artifact = true;
+		ch2_has_map = true;
+		ch2_cutseen_bob_party = true;
+		load map "ch2-bobsclub-basement";
+	};
+	command simon = {
+		serial_control = true;
+		ch2_has_artifact = true;
+		hex_control = true;
+		current_chapter = 2;
+		debug_finish_toot()
+		ch2_storyflag_round = 2;
+		warp_ch2_31() // this has a load_map in it
+	};
+	command king = {
+		debug_set_flags_to_round3()
+		ch2_cutseen_castle13 = true;
+		ch2_cutseen_castle14 = true;
+		ch2_king_rescued = true;
+		warp_state = "Ch2 King Returns";
+		load map "ch2-castle-13";
+	};
+	command post = {
+		ch2_wizard_backstory = true;
+		debug_set_flags_to_round4()
+		ch2_seen_room_99 = true;
+		ch2_map_mainframeos = false;
+		ch2_carrying_mainframeos = true;
+		ch2_cutseen_castle99 = true;
+		ch2_install_mainframeos()
+		ch2_ring_zero_enabled_in_castle = true;
+		ch2_storyflag_round = 5;
+		credits_from_menu = false;
+		warp_state = "ch2_ending";
+		load map "ch2-castle-outside";
+	};
+	command ch2 = menu_chapter_select_2;
+	command rtfm = command_rtfm;
+	command buffer + test = debug_buffertest;
+	command boot = ch2_bootup;
+	command skip + "1" = debug_jump_to_round1;
+	command skip + "2" = debug_jump_to_round2;
+	command skip + "3" = debug_jump_to_round3;
+	command skip + "4" = debug_jump_to_round4;
+	register_warp()
+	register_storyflag()
 }
 
 /* ---------- INTRO SPLASH ---------- */

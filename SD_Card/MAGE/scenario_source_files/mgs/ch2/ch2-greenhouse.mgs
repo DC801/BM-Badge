@@ -137,11 +137,11 @@ look_ch2_modem {
 /* ---------- ON_LOAD ---------- */
 
 on_load_ch2_greenhouse {
+	default_ethernettle_primary_id = entity EtherNettle1 primary_id;
 	command look + ethernettles = look_ch2_ethernettles;
 	// entrance text
 	show serial_dialog spacer;
 	show serial_dialog { "Entering <bold>GREENHOUSE</>..." };
-	tempvar = entity EtherNettle1 primary_id;
 	ch2_map_init()
 }
 
@@ -162,7 +162,7 @@ dialog trekkie_ethernettle_reset  {
 fn check_ethernettle ($entityName, $geometry, $knownSecondaryID) {
 	if (
 		!entity $entityName intersects geometry $geometry
-		|| entity $entityName primary_id != tempvar
+		|| entity $entityName primary_id != default_ethernettle_primary_id
 		|| entity $entityName secondary_id != $knownSecondaryID
 		|| entity $entityName primary_id_type != 0
 	) {

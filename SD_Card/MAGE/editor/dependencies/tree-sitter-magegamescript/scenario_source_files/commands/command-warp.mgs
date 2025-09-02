@@ -6,7 +6,12 @@ register_warp {
 	// NOTE: No need to branch any of these (WOPR excepting); you only get warping powers when the castle has been entirely explored
 
 	command warp = command_warp;
-	command warp fail = warp_fail;
+	command warp fail = warp_fail {
+		show serial_dialog spacer;
+		show serial_dialog {
+			"<bold><r>WARP FAILED!</> You have not been to that destination yet or that destination does not exist."
+		};
+	};
 
 	command man + warp = man_warp;
 
@@ -110,15 +115,6 @@ man_warp {
 		"To see a list of valid warp desinations, use <c>WARP</> on its own (without a room name)."
 		" "
 		"NOTE: Long distance warps may require access to the Gibson wifi network. If encountering problems, please reduce your distance to the nearest castle wireless base station."
-	};
-}
-
-// FAIL
-
-warp_fail {
-	show serial_dialog spacer;
-	show serial_dialog {
-		"<bold><r>WARP FAILED!</> You have not been to that destination yet or that destination does not exist."
 	};
 }
 
