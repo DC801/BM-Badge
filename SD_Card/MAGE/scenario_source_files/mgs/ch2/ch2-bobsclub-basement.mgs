@@ -206,7 +206,7 @@ ch2_cutscene_bob_party {
 	show dialog {
 		PLAYER "Huh. Well, I found the source of the noise...."
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = entity "Guardian Bob";
 	show dialog {
 		GBob "Hey! You're not allowed in here!"
@@ -234,7 +234,7 @@ ch2_cutscene_bob_party {
 		GBob "Welcome to the annual Bob's Club party."
 		PLAYER "I thought the party was canceled this year."
 	};
-	entity "Guardian Bob" on_tick = null_script;
+	entity "Guardian Bob" on_tick = {};
 	entity "Guardian Bob" direction = player;
 	show dialog {
 		GBob "It was, but we seem to be experiencing a time anomaly."
@@ -280,7 +280,7 @@ ch2_cutscene_bob_party {
 		PLAYER "This is freaking me out. How do we stop it?"
 	};
 	entity "Guardian Bob" direction = south;
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = entity "Guardian Bob";
 	show dialog {
 		GBob "Depends on the exact cause. I've been keeping my eye on it with my keytool, Glitch. Trying to investigate from several angles."

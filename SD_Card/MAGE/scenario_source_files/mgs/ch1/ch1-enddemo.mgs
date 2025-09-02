@@ -17,11 +17,11 @@ earthquake_setpiece {
 	entity Cat on_tick = loiter4;
 	entity Hamster on_tick = loiter5;
 	wait 1800ms;
-	entity Cleo on_tick = null_script;
-	entity Verthandi on_tick = null_script;
-	entity Marta on_tick = null_script;
-	entity Cat on_tick = null_script;
-	entity Hamster on_tick = null_script;
+	entity Cleo on_tick = {};
+	entity Verthandi on_tick = {};
+	entity Marta on_tick = {};
+	entity Cat on_tick = {};
+	entity Hamster on_tick = {};
 	entity Marta direction = south;
 	entity Cleo direction = south;
 	entity Cat direction = south;
@@ -46,7 +46,7 @@ ch1_end_cutscene_move {
 	entity Alfonso position = geometry "demoend-alfonso-point";
 	entity Bert position = geometry "demoend-bert-point";
 	entity Jackob position = geometry "demoend-jackob-point";
-	entity Marta on_tick = null_script;
+	entity Marta on_tick = {};
 	entity Marta position = geometry "demoend-marta-start";
 	entity Ram position = geometry "demoend-beatrice-point";
 	// for some reason, teleport doesn't happen if it comes after changing entity type
@@ -61,10 +61,10 @@ ch1_end_cutscene_move {
 }
 
 ch1_end_everyone_south {
-	entity Ram on_tick = null_script;
-	entity Marta on_tick = null_script;
-	entity Helga on_tick = null_script;
-	player on_tick = null_script;
+	entity Ram on_tick = {};
+	entity Marta on_tick = {};
+	entity Helga on_tick = {};
+	player on_tick = {};
 	entity Ram direction = south;
 	entity Marta direction = south;
 	player direction = south;
@@ -106,7 +106,7 @@ ch1_end_cutscene {
 		PLAYER alignment TR "Last time?"
 	};
 	wait 200ms;
-	entity Helga on_tick = null_script;
+	entity Helga on_tick = {};
 	entity Helga direction = player;
 	wait 200ms;
 	show dialog {
@@ -146,7 +146,7 @@ ch1_end_cutscene {
 	show dialog {
 		Marta alignment TL "But it's been so long since the Big Bad was seen at all! You think he might still be out there, somewhere?"
 	};
-	entity Marta on_tick = null_script;
+	entity Marta on_tick = {};
 	self direction = north;
 	show dialog {
 		Bert "Perhaps."
@@ -158,7 +158,7 @@ ch1_end_cutscene {
 	show dialog {
 		PLAYER "But I can't fight the Big Bad! What am I supposed to do?"
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = entity Alfonso;
 	show dialog {
 		Alfonso "I suppose... I suppose we must consider...."
@@ -194,7 +194,7 @@ ch1_end_cutscene {
 	show dialog {
 		Jackob "Press XOR and MEM0 at the same time -- that's the top button on each side of the screen -- and...."
 	};
-	entity Jackob on_tick = null_script;
+	entity Jackob on_tick = {};
 	entity Jackob direction = player;
 	show dialog {
 		Jackob "Voila!"

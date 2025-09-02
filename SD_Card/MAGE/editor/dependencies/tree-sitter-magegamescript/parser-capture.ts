@@ -43,6 +43,7 @@ import {
 	MathlangMessage,
 	FnCallReturnValue,
 	MathlangSequence,
+	ScriptDefinition,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -52,6 +53,7 @@ import {
 	newTemporary,
 	dropTemporary,
 	flattenNodes,
+	autoIdentifierName,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
@@ -608,6 +610,26 @@ const captureFns = {
 		throw new Error('could not capture direction_target');
 	},
 	set_entity_string_field: (f: FileState, node: TreeSitterNode): string => node.text,
+	script_literal: (f: FileState, node: TreeSitterNode) => {
+		const debug = MathlangLocation.quick(f, node);
+		let scriptName = '';
+		let scriptBlockNode = optionalChildForField(f, node, 'bare_definition');
+		if (!scriptBlockNode) {
+			const useNode = mandatoryChildForField(f, node, 'named_definition');
+			scriptBlockNode = mandatoryChildForField(f, useNode, 'script_block');
+			scriptName = stringCaptureForField(f, useNode, 'script_name');
+		} else {
+			scriptName = autoIdentifierName(f, node);
+		}
+		const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
+		if (definition.actions.length === 1) {
+			// must be 1 because the auto "end of script" label adds one
+			// but actions.length === 1 means there's nothing else there
+			return 'null_script';
+		} else {
+			return [definition];
+		}
+	},
 };
 
 const extractEntityName = (f: FileState, node: TreeSitterNode): string => {

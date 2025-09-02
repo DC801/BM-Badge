@@ -164,7 +164,7 @@ rocco_work {
 	entity Rocco on_tick = rocco_work_fancy;
 }
 rocco_idle {
-	entity Rocco on_tick = null_script;
+	entity Rocco on_tick = {};
 	entity Rocco current_animation = 0;
 }
 
@@ -227,7 +227,7 @@ interact_ch2_rocco {
 			"It would need a heavy-duty heat sink, though, and I don't have all the right supplies here. This isn't exactly my normal workstation."
 			PLAYER "What else would you need? I could fetch you something."
 		};
-		entity Rocco on_tick = null_script;
+		entity Rocco on_tick = {};
 		entity Rocco current_animation = $idle;
 		show dialog {
 			SELF "Well, given what I've got here...."

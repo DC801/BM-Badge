@@ -273,6 +273,12 @@ export default grammar({
 				field('script_name', $.STRING),
 				field('script_block', $.script_block),
 			),
+		script_literal: ($) =>
+			choice(
+				field('bare_definition', $.script_block),
+				field('named_definition', $.script_definition),
+				// field('identifier', $.string),
+			),
 		script_block: ($) => seq('{', repeat($._script_item), '}'),
 		_script_item: ($) =>
 			choice(
@@ -1053,7 +1059,7 @@ export default grammar({
 				field('entity', $.entity_or_map_identifier_expandable),
 				field('script_slot', $.string_expandable),
 				$.assignment_operator,
-				field('script', $.string_expandable),
+				field('script', choice($.string_expandable, $.script_literal)),
 			),
 		op_equals: () => choice('?=', '+=', '-=', '*=', '/=', '%='),
 		action_op_equals: ($) =>

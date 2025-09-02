@@ -183,7 +183,7 @@ warping_in_fade_in {
 	player position = geometry "warp-spot";
 	player on_tick = spin_quickly;
 	camera fade in -> #000000 over 300ms;
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = south;
 	warp_state = warped; // it needs to be set to SOMETHING...
 	player_control = on; // todo: remove after shared behavior is fully merged

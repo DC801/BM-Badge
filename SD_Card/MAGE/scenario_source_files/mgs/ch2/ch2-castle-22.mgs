@@ -194,7 +194,7 @@ ch2_touch_powersupply_yes {
 	};
 	ch2_hide_powersupply()
 	ch2_pickup_powersupply()
-	self on_interact = null_script;
+	self on_interact = {};
 }
 ch2_touch_powersupply_no {
 	show dialog {

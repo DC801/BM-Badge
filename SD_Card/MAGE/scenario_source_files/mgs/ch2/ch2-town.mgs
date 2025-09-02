@@ -48,7 +48,7 @@ on_load_ch2_town {
 	) {
 		entity Shepherd position = geometry shepherd2;
 		entity Shepherd direction = east;
-		entity Shepherd on_tick = null_script;
+		entity Shepherd on_tick = {};
 	} else if (
 		ch2_storyflag_round == 3
 		|| ch2_storyflag_round == 4

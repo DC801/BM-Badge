@@ -77,7 +77,6 @@ show_dialog_bea_start {
 			goto show_dialog_bea_part2;
 		}
 	}
-	entity Beatrice on_interact = show_dialog_bea_start;
 }
 
 /* --------------- Beatrice --------------- */

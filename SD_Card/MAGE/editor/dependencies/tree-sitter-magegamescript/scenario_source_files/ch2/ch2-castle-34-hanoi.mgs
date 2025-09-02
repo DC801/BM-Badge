@@ -524,7 +524,7 @@ hanoi_init_game {
 	}
 	// debug!(hanoi_init_game)
 	light LED_USB = on;
-	entity Lights on_tick = null_script;
+	entity Lights on_tick = {};
 }
 hanoi_quit_from_terminal {
 	map on_tick = hanoi_quit;

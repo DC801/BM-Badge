@@ -9,7 +9,7 @@ on_load_bobsclub1 {
 	if (!bobmoss_quest_done) {
 		entity "Bob Moss" position = geometry "bobsclub-hidingplace";
 		entity "Bob Moss" name = " ";
-		entity "Bob Moss" on_interact = null_script;
+		entity "Bob Moss" on_interact = {};
 		entity "Bob Moss" type = exa;
 	}
 	if (!bobsclub_entered) {
@@ -177,9 +177,6 @@ check_fridge {
 	wait 700ms;
 	self position -> geometry bakery_fridgezone origin over 200ms;
 }
-watch_baker {
-	self direction = entity Baker;
-}
 
 // Bob's club
 begin_flail {
@@ -197,7 +194,9 @@ show_dialog_bread {
 	show dialog { PLAYER "Mmmm, fresh bread!" };
 }
 show_dialog_baker_start {
-	player on_tick = watch_baker;
+	player on_tick = {
+		self direction = entity Baker;
+	};
 	if (self glitched) { // glitched
 		show dialog { SELF "Qacwk, A kmvvwfdq usf'l kww kljsayzl. A ymwkk A kzgmdv uml tsuc gf lzw usxxawfw." };
 	} else if (bobsclub_entered) { // !glitched && BobsClub
@@ -240,7 +239,7 @@ show_dialog_baker_start {
 		}
 		set_hint_baker()
 	}
-	player on_tick = null_script;
+	player on_tick = {};
 	self on_interact = show_dialog_baker_start;
 }
 
@@ -389,7 +388,7 @@ show_dialog_bobsclub_bob {
 			SELF "Wait. Weren't there two Bob golems last year?"
 		};
 		set_hint_bobmoss_from_guardian()
-		entity "Guardian Bob" on_tick = null_script;
+		entity "Guardian Bob" on_tick = {};
 		entity "Guardian Bob" direction = south;
 	}
 }
@@ -424,7 +423,7 @@ show_dialog_bobmoss_start {
 	face_player()
 	if (self glitched) {
 		show_dialog_bobmoss_deglitch()
-		self on_interact = show_dialog_bobmoss_start;
+		return;
 	}
 	if (bobmoss_quest_done) {
 		goto show_dialog_bobmoss_start_s;
@@ -437,7 +436,7 @@ show_dialog_bobmoss_start {
 		SELF "I was just admiring the forest, with its happy little trees...."
 		"I've made so many squirrel friends, and...."
 	};
-	entity "Bob Moss" on_tick = null_script;
+	entity "Bob Moss" on_tick = {};
 	face_player()
 	show dialog {
 		SELF "Oh!"

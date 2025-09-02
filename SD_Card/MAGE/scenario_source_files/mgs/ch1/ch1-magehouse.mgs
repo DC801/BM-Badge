@@ -53,15 +53,6 @@ goldfish_now_unglitched {
 
 /* ---------- CHOREOGRAPHY ---------- */
 
-zippy_arriving {
-	entity "Aunt Zippy" position -> geometry "zippy-arrive" length over 1700ms;
-	goto null_script;
-}
-zappy_arriving {
-	entity "Uncle Zappy" position -> geometry "zappy-arrive" length over 1400ms;
-	goto null_script;
-}
-
 freak_out {
 	self direction = south;
 	wait 500ms; /**/ self direction = west; 
@@ -83,9 +74,14 @@ goodmorning_cutscene {
 		entity "Aunt Zippy" "Is that %PLAYER% I hear?"
 		entity "Uncle Zappy" "Oh good! They're awake!"
 	};
-	// doc: Is that PLAYER I hear?
-	entity "Uncle Zappy" on_tick = zappy_arriving;
-	entity "Aunt Zippy" on_tick = zippy_arriving;
+	entity "Uncle Zappy" on_tick = {
+		entity "Uncle Zappy" position -> geometry "zappy-arrive" length over 1400ms;
+		goto null_script;
+	};
+	entity "Aunt Zippy" on_tick = {
+		entity "Aunt Zippy" position -> geometry "zippy-arrive" length over 1700ms;
+		goto null_script;
+	};
 	wait 400ms; /**/ camera -> geometry "morning-camera" origin over 1000ms;
 	wait 600ms; /**/ show dialog {
 		PLAYER "Oh! Uncle Zappy! Aunt Zippy!"
@@ -105,7 +101,7 @@ goodmorning_cutscene {
 	wait 200ms; /**/ show dialog {
 		PLAYER "(AAAAH!)"
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = west;
 	show dialog {
 		entity "Uncle Zappy" "Your 16th birthday is a big day. But no matter what happens, we're proud of you and the mage you've become."
@@ -123,50 +119,31 @@ goodmorning_cutscene {
 	};
 	camera -> player position over 399ms;
 	wait 1ms;
-	entity "Uncle Zappy" on_tick = zappy_leaving;
-	entity "Aunt Zippy" on_tick = zippy_leaving;
+	entity "Uncle Zappy" on_tick = {
+		wait 200ms;
+		entity "Uncle Zappy" position -> geometry "zappy-leave" origin over 300ms;
+		entity "Uncle Zappy" position -> geometry "zappy-leave" length over 2100ms;
+		entity "Uncle Zappy" position = geometry "magehouse-hidingplace";
+		goto null_script;
+	};
+	entity "Aunt Zippy" on_tick = {
+		entity "Aunt Zippy" position -> geometry "zippy-leave" origin over 300ms;
+		entity "Aunt Zippy" position -> geometry "zippy-leave" length over 1800ms;
+		entity "Aunt Zippy" position = geometry "magehouse-hidingplace";
+		entity Cake on_interact = show_dialog_cake_nozappy;
+		goto null_script;
+	};
 	goodmorning = true;
 	player_control = on;
 	// RESET (jump to top)
 	goto on_tick_magehouse;
 }
 
-zippy_leaving {
-	entity "Aunt Zippy" position -> geometry "zippy-leave" origin over 300ms;
-	entity "Aunt Zippy" position -> geometry "zippy-leave" length over 1800ms;
-	entity "Aunt Zippy" position = geometry "magehouse-hidingplace";
-	entity Cake on_interact = show_dialog_cake_nozappy;
-	goto null_script;
-}
-zappy_leaving {
-	wait 200ms;
-	entity "Uncle Zappy" position -> geometry "zappy-leave" origin over 300ms;
-	entity "Uncle Zappy" position -> geometry "zappy-leave" length over 2100ms;
-	entity "Uncle Zappy" position = geometry "magehouse-hidingplace";
-	goto null_script;
-}
-
-mage_to_lodge {
-	player_control = off;
-	player position -> geometry "morning-walk-mage" length over 10300ms;
-	load map lodge;
-	player_control = on;
-}
-zippy_to_lodge {
-	entity Ram position -> geometry "morning-walk-zippy" length over 10200ms;
-	entity Ram position = geometry "catwalk-hide";
-	goto null_script;
-}
-zappy_to_lodge {
-	entity Helga position -> geometry "morning-walk-zappy" length over 9800ms;
-	entity Helga position = geometry "catwalk-hide";
-	goto null_script;
-}
 walk_to_lodge {
 	player_control = off;
 	entity Verthandi position = geometry "catwalk-hide";
 	entity Marta position = geometry "catwalk-hide";
-	entity Cleo on_tick = null_script;
+	entity Cleo on_tick = {};
 	entity Cleo position = geometry "catwalk-hide";
 	entity Shepherd position = geometry "catwalk-hide";
 	entity "Max Swagger" position = geometry "catwalk-hide";
@@ -180,9 +157,25 @@ walk_to_lodge {
 	entity Helga direction = north;
 	entity Ram direction = north;
 	player position -> geometry "enter_from_magehouse" length over 300ms;
-	wait 400ms; /**/ entity Helga on_tick = zappy_to_lodge;
-	wait 200ms; /**/ entity Ram on_tick = zippy_to_lodge;
-	wait 400ms; /**/ player on_tick = mage_to_lodge;
+	wait 400ms;
+	entity Helga on_tick = {
+		entity Helga position -> geometry "morning-walk-zappy" length over 9800ms;
+		entity Helga position = geometry "catwalk-hide";
+		goto null_script;
+	};
+	wait 200ms;
+	entity Ram on_tick = {
+		entity Ram position -> geometry "morning-walk-zippy" length over 10200ms;
+		entity Ram position = geometry "catwalk-hide";
+		goto null_script;
+	};
+	wait 400ms;
+	player on_tick = {
+		player_control = off;
+		player position -> geometry "morning-walk-mage" length over 10300ms;
+		load map lodge;
+		player_control = on;
+	};
 	walked_to_lodge = true;
 }
 

@@ -616,7 +616,7 @@ ch2_install_wizard {
 		"Can I help install it? Please?"
 		PLAYER "I wouldn't have it any other way."
 	};
-	entity Wizard on_tick = null_script;
+	entity Wizard on_tick = {};
 	ch2_spin_wizard()
 	show dialog {
 		Wizard "Awesome!"
@@ -773,9 +773,7 @@ ch2_castle_22_ending {
 	ch2_ending_fadeout()
 	load map "ch2-castle-13";
 }
-sebastian_to_three {
-	entity Sebastian position -> geometry "end-sebastian3" origin over 800ms;
-}
+
 ch2_castle_13_ending {
 	player_control = off;
 	serial_control = off;
@@ -787,7 +785,9 @@ ch2_castle_13_ending {
 		Sebastian "Ah, yessss! The mana boosters have spun up!"
 		"Step aside, Your Majesty. I'll handle this."
 	};
-	entity Sebastian on_tick = sebastian_to_three;
+	entity Sebastian on_tick = sebastian_to_three {
+		entity Sebastian position -> geometry "end-sebastian3" origin over 800ms;
+	};
 	wait 200ms;
 	ch2_ending_fadeout()
 	ch2_load_castle_1_special()

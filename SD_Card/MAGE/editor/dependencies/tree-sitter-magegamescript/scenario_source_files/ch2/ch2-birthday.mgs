@@ -171,7 +171,7 @@ ch2_escort_cutscene {
 	show dialog {
 		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal castle?"
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = south;
 	show dialog {
 		Jackob
@@ -194,7 +194,7 @@ ch2_escort_cutscene {
 	show dialog {
 		PLAYER "On my own? You aren't coming inside with me?"
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = south;
 	show dialog {
 		Jackob "We are not hackers and cannot pass the gate."
@@ -223,9 +223,9 @@ ch2_escort_cutscene {
 		Bert "I don't know."
 	};
 	wait 500ms;
-	entity Alfonso on_tick = null_script;
-	entity Jackob on_tick = null_script;
-	entity Bert on_tick = null_script;
+	entity Alfonso on_tick = {};
+	entity Jackob on_tick = {};
+	entity Bert on_tick = {};
 	wait 100ms;
 	entity Alfonso direction = north;
 	wait 50ms;

@@ -9,7 +9,7 @@ set_tick_watch_player {
 }
 
 clear_own_tick {
-	self on_tick = null_script;
+	self on_tick = {};
 }
 
 loop_on_path_30s {
@@ -180,8 +180,8 @@ button_success_script {
 
 yeet {
 	self position = geometry "hiding-spot";
-	self on_interact = null_script;
-	self on_look = null_script;
+	self on_interact = {};
+	self on_look = {};
 	self name = " ";
 	goto null_script;
 }

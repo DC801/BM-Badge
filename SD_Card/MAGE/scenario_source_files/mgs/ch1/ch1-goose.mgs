@@ -88,7 +88,7 @@ goose_bounds_watch {
 	}
 }
 rescue_goose {
-	entity Goose on_tick = null_script;
+	entity Goose on_tick = {};
 	entity Goose position = geometry "goose-rescue";
 	entity Goose position -> geometry goose_lakepoint origin over 2000ms;
 	entity Goose on_tick = on_tick_goose_mission;

@@ -32,6 +32,7 @@ import {
 	coerceToBool,
 	optionalLastChild,
 	mandatoryLastChild,
+	optionalStringCaptureForField,
 } from './parser-capture.ts';
 import { handleAction } from './parser-actions.ts';
 import {
@@ -239,29 +240,15 @@ const nodeFns = {
 		stack.shift();
 		return sequence;
 	},
+	script_block: (f: FileState, node: TreeSitterNode) => {
+		return handleNamedChildren(f, node);
+	},
 	script_definition: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		const scriptName = stringCaptureForField(f, node, 'script_name');
-		const lastChild = mandatoryLastChild(f, node);
-		const rawActions: AnyNode[] = handleNamedChildren(f, lastChild);
-		// flatten/incorporate any sequences
-		const actions: AnyNode[] = flattenNodes(f, rawActions);
-		// add auto return label at the end
-		const label = 'end of script ' + f.p.advanceGotoSuffix();
-		const lastChildLastChild = mandatoryLastChild(f, lastChild);
-		const autoReturnLabelDefinition = LabelDefinition.quick(
-			MathlangLocation.quick(f, lastChildLastChild),
-			label,
-		);
-		actions.push(autoReturnLabelDefinition);
-		// change all return statements to goto labels for the "auto return" label
-		actions.forEach((action, i) => {
-			if (action instanceof ReturnStatement) {
-				const labelDebug = MathlangLocation.quick(f, action.debug.node);
-				actions[i] = GotoLabel.quick(labelDebug, label);
-			}
-		});
-		return [ScriptDefinition.quick(debug, scriptName, actions)];
+		const scriptBlockNode = mandatoryChildForField(f, node, 'script_block');
+		const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
+		return [definition];
 	},
 	constant_assignment: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);

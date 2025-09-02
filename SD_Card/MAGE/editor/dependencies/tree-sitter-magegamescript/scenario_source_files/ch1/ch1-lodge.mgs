@@ -194,7 +194,7 @@ spin_around_fast {
 lodge_murmur {
 	entity Cleo on_tick = gossip_down_player;
 	entity Baker on_tick = gossip_up_player;
-	entity Beatrice on_tick = null_script;
+	entity Beatrice on_tick = {};
 	entity Beatrice direction = player;
 	entity Shepherd on_tick = gossip_left_player;
 	entity Trekkie on_tick = gossip_right_player;
@@ -203,31 +203,31 @@ lodge_murmur {
 	entity Smith on_tick = gossip_left_player;
 	entity Verthandi on_tick = gossip_up_player;
 	entity "Aunt Zippy" on_tick = gossip_down_player;
-	entity "Uncle Zappy" on_tick = null_script;
+	entity "Uncle Zappy" on_tick = {};
 	entity "Uncle Zappy" direction = player;
 }
 lodge_un_murmur {
-	entity Cleo on_tick = null_script;
+	entity Cleo on_tick = {};
 	entity Cleo direction = player;
-	entity Baker on_tick = null_script;
+	entity Baker on_tick = {};
 	entity Baker direction = player;
-	entity Beatrice on_tick = null_script;
+	entity Beatrice on_tick = {};
 	entity Beatrice direction = player;
-	entity Shepherd on_tick = null_script;
+	entity Shepherd on_tick = {};
 	entity Shepherd direction = player;
-	entity Trekkie on_tick = null_script;
+	entity Trekkie on_tick = {};
 	entity Trekkie direction = player;
-	entity Marta on_tick = null_script;
+	entity Marta on_tick = {};
 	entity Marta direction = player;
-	entity "Max Swagger" on_tick = null_script;
+	entity "Max Swagger" on_tick = {};
 	entity "Max Swagger" direction = player;
-	entity Smith on_tick = null_script;
+	entity Smith on_tick = {};
 	entity Smith direction = player;
-	entity Verthandi on_tick = null_script;
+	entity Verthandi on_tick = {};
 	entity Verthandi direction = player;
-	entity "Aunt Zippy" on_tick = null_script;
+	entity "Aunt Zippy" on_tick = {};
 	entity "Aunt Zippy" direction = player;
-	entity "Uncle Zappy" on_tick = null_script;
+	entity "Uncle Zappy" on_tick = {};
 	entity "Uncle Zappy" direction = player;
 }
 gossip_left_player {
@@ -286,11 +286,11 @@ secretdoor_walk {
 	goto null_script; // simultaneous behavior with on_tick; must cancel with null_script
 }
 deaden_artifacts {
-	entity Broom on_interact = null_script;
-	entity Glasses on_interact = null_script;
-	entity Wand on_interact = null_script;
-	entity Book on_interact = null_script;
-	entity Bracelet on_interact = null_script;
+	entity Broom on_interact = {};
+	entity Glasses on_interact = {};
+	entity Wand on_interact = {};
+	entity Book on_interact = {};
+	entity Bracelet on_interact = {};
 }
 
 /*------------------------*/
@@ -483,7 +483,7 @@ show_dialog_jackob_prechoose {
 	face_player()
 	entity Jackob on_tick = look_left_and_right_fast;
 	show dialog { SELF "(Wait, was this everything?)" };
-	entity Jackob on_tick = null_script;
+	entity Jackob on_tick = {};
 	self direction = south;
 }
 show_dialog_alfonso_prechoose {
@@ -540,7 +540,7 @@ examine_book {
 }
 examine_broom {
 	player_control = off;
-	entity Marta on_tick = null_script;
+	entity Marta on_tick = {};
 	entity Marta position -> geometry "marta-broom-step-spot" origin over 500ms;
 	player on_tick = watch_marta;
 	show dialog {
@@ -556,7 +556,7 @@ examine_broom {
 	entity Marta on_tick = face_player;
 	wait 300ms;
 	artifact_broom_touched = true;
-	player on_tick = null_script;
+	player on_tick = {};
 	player_control = on;
 	goto artifacts_eval;
 }
@@ -567,7 +567,7 @@ examine_wand {
 	};
 	player_control = off;
 	wait 900ms;
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = south;
 	show dialog {
 		PLAYER "Make Up!"
@@ -603,7 +603,7 @@ artifacts_eval {
 		player on_tick = look_left_and_right_fast;
 		player_control = off;
 		wait 900ms;
-		player on_tick = null_script;
+		player on_tick = {};
 		lodge_murmur()
 		goto player_ringzero_landing;
 	}
@@ -706,7 +706,7 @@ cutscene_artifacts_eval_good { // TUESDAY PART 2
 		"Maybe they missed one."
 	};
 	wait 200ms;
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = north;
 	show dialog {
 		Alfonso
@@ -772,7 +772,7 @@ cutscene_artifacts_eval_good { // TUESDAY PART 2
 		Jackob "Yes...."
 		"Yes!"
 	};
-	entity Alfonso on_tick = null_script;
+	entity Alfonso on_tick = {};
 	entity Alfonso direction = south;
 	show dialog {
 		Jackob "Yes, you can fix things at last!"
@@ -782,7 +782,7 @@ cutscene_artifacts_eval_good { // TUESDAY PART 2
 	show dialog {
 		PLAYER "But the town is all glitchy and hacked! How am I supposed to fix it with this thing? Unless...."
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = entity Alfonso;
 	show dialog {
 		Alfonso "Yes, exactly! That ring, Ring Zero --"

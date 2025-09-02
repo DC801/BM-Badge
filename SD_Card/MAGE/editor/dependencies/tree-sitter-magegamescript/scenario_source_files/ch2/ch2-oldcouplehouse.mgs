@@ -84,8 +84,8 @@ ch2_cutscene_delmar_reconnect {
 	camera fade out -> #000000 over 300ms;
 	entity Beatrice position = geometry "beatrice-point";
 	entity Delmar position = geometry "delmar-point";
-	entity Beatrice on_tick = null_script;
-	entity Delmar on_tick = null_script;
+	entity Beatrice on_tick = {};
+	entity Delmar on_tick = {};
 	entity Beatrice direction = entity Delmar;
 	entity Delmar direction = entity Beatrice;
 	wait 400ms;

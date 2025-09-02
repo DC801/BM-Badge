@@ -323,7 +323,7 @@ interact_ch2_bobfridge {
 }
 
 player_look_down {
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = south;
 }
 

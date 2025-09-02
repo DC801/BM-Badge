@@ -93,7 +93,7 @@ bling_rotate_state_increment {
 		bling_rotate_state = 0;
 	}
 	bling_rotate_state_calc_done = true;
-	self on_tick = null_script;
+	self on_tick = {};
 }
 
 bling_rotate_state_decrement {
@@ -102,7 +102,7 @@ bling_rotate_state_decrement {
 		bling_rotate_state = $maxBling;
 	}
 	bling_rotate_state_calc_done = true;
-	self on_tick = null_script;
+	self on_tick = {};
 }
 
 /* --- for the Timer entity --- */

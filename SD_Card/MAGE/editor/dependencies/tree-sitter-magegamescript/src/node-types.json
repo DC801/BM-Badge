@@ -1653,6 +1653,10 @@
             "named": true
           },
           {
+            "type": "script_literal",
+            "named": true
+          },
+          {
             "type": "string_expansion",
             "named": true
           }
@@ -5519,6 +5523,32 @@
           },
           {
             "type": "QUOTED_STRING",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "script_literal",
+    "named": true,
+    "fields": {
+      "bare_definition": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "script_block",
+            "named": true
+          }
+        ]
+      },
+      "named_definition": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "script_definition",
             "named": true
           }
         ]

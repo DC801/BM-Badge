@@ -12,7 +12,8 @@ import {
 	simpleBranchMaker,
 } from './parser-utilities.ts';
 import { type GenericObj } from './parser-actions.ts';
-import { coerceToString, mandatoryChildForField } from './parser-capture.ts';
+import { coerceToString, mandatoryChildForField, mandatoryLastChild } from './parser-capture.ts';
+import { handleNode } from './parser-node.ts';
 
 /*
 
@@ -787,6 +788,33 @@ export class ScriptDefinition extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, scriptName: string, actions: AnyNode[]) {
 		return new ScriptDefinition(debug, { scriptName, actions });
+	}
+	static processAndMake(
+		debug: MathlangLocation,
+		scriptName: string,
+		scriptBlockNode: TreeSitterNode,
+	) {
+		// TODO figure out where this logic actually goes
+		const f = debug.f;
+		const rawActions: AnyNode[] = handleNode(f, scriptBlockNode);
+		// flatten/incorporate any sequences
+		const actions: AnyNode[] = flattenNodes(f, rawActions);
+		// add auto return label at the end
+		const label = 'end of script ' + f.p.advanceGotoSuffix();
+		const fakeReturnNode = mandatoryLastChild(f, scriptBlockNode);
+		const autoReturnLabelDefinition = LabelDefinition.quick(
+			MathlangLocation.quick(f, fakeReturnNode),
+			label,
+		);
+		actions.push(autoReturnLabelDefinition);
+		// change all return statements to goto labels for the "auto return" label
+		actions.forEach((action, i) => {
+			if (action instanceof ReturnStatement) {
+				const labelDebug = MathlangLocation.quick(f, action.debug.node);
+				actions[i] = GotoLabel.quick(labelDebug, label);
+			}
+		});
+		return ScriptDefinition.quick(debug, scriptName, actions);
 	}
 }
 

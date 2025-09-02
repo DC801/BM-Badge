@@ -161,13 +161,13 @@ on_tick_splash {
 	camera fade in -> #000000 over 800ms;
 	wait 2900ms;
 	camera fade out -> #000000 over 800ms;
-	player on_tick = null_script;
+	player on_tick = {};
 	goto main_menu_fade_in;
 }
 
 main_menu_fade_in {
 	hex_control = false;
-	player on_tick = null_script;
+	player on_tick = {};
 	camera = geometry "menu-center";
 	camera fade in -> #000000 over 800ms;
 	goto main_menu;
@@ -176,7 +176,7 @@ main_menu_fade_in {
 /* ---------- MAIN MENU ---------- */
 
 main_menu {
-	player on_tick = null_script;
+	player on_tick = {};
 	show dialog {
 		name " "
 		border_tileset menu

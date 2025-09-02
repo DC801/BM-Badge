@@ -68,7 +68,7 @@ on_load_ch2_castle_14 {
 	}
 	if (ch2_storyflag_round >= 5 || ch2_king_rescued) {
 		entity "King Gibson" on_tick = yeet;
-		entity keypad on_interact = null_script;
+		entity keypad on_interact = {};
 	}
 
 	// initialize everything
@@ -93,7 +93,7 @@ on_load_ch2_castle_14 {
 			show dialog {
 				KING emote 2 "Help! Guards!"
 			};
-			entity "King Gibson" on_tick = null_script;
+			entity "King Gibson" on_tick = {};
 			entity "King Gibson" current_animation = 2;
 			wait 400ms;
 			show dialog {
@@ -230,7 +230,7 @@ ch2_touch_clock_yes {
 	};
 	ch2_hide_clock()
 	ch2_pickup_clock()
-	self on_interact = null_script;
+	self on_interact = {};
 }
 ch2_touch_clock_no {
 	show dialog {

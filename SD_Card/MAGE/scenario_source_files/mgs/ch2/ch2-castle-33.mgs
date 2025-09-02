@@ -270,7 +270,7 @@ interact_ch2_gregory {
 				SELF "We are indeed."
 			};
 			player_control = off;
-			entity Gregory on_tick = null_script;
+			entity Gregory on_tick = {};
 			entity Gregory direction += 1;
 			wait 800ms;
 			entity Gregory direction -= 1;
@@ -328,7 +328,7 @@ interact_ch2_gregory_gameno {
 ch2_hide_mouse {
 	entity Mouse position = geometry "hiding-spot";
 	entity Mouse name = " ";
-	entity Mouse on_interact = null_script;
+	entity Mouse on_interact = {};
 }
 
 ch2_touch_mouse {
@@ -385,7 +385,7 @@ ch2_touch_mouse {
 			Gregory "Oh dear."
 			"Well, you might be fine anyway. Good luck with everything."
 		};
-		entity Mouse on_interact = null_script;
+		entity Mouse on_interact = {};
 	}
 }
 

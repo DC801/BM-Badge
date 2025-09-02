@@ -237,38 +237,30 @@ show_dialog_smith_demo_map {
 
 check_if_player_is_goat_high_demo_map {
 	if (player intersects geometry high) {
-		entity goat1 on_tick = move_goat1_to_low_demo_map;
-		entity goat2 on_tick = move_goat2_to_low_demo_map;
+		entity goat1 on_tick = move_goat1_to_low_demo_map {
+			entity goat1 position -> geometry low1 origin over 600ms;
+			entity goat1 position -> geometry low1 length over 2000ms forever;
+		};
+		entity goat2 on_tick = move_goat2_to_low_demo_map {
+			entity goat2 position -> geometry low2 origin over 733ms;
+			entity goat2 position -> geometry low2 length over 2266ms forever;
+		};
 		goto check_if_player_is_goat_low_demo_map;
 	}
 }
 
 check_if_player_is_goat_low_demo_map {
 	if (player intersects geometry low) {
-		entity goat1 on_tick = move_goat1_to_high_demo_map;
-		entity goat2 on_tick = move_goat2_to_high_demo_map;
+		entity goat1 on_tick = move_goat1_to_high_demo_map {
+			entity goat1 position -> geometry high1 origin over 600ms;
+			entity goat1 position -> geometry high1 length over 2000ms forever;
+		};
+		entity goat2 on_tick = move_goat2_to_high_demo_map {
+			entity goat2 position -> geometry high2 origin over 733ms;
+			entity goat2 position -> geometry high2 length over 2266ms forever;
+		};
 		goto check_if_player_is_goat_high_demo_map;
 	}
-}
-
-move_goat1_to_low_demo_map {
-	entity goat1 position -> geometry low1 origin over 600ms;
-	entity goat1 position -> geometry low1 length over 2000ms forever;
-}
-
-move_goat2_to_low_demo_map {
-	entity goat2 position -> geometry low2 origin over 733ms;
-	entity goat2 position -> geometry low2 length over 2266ms forever;
-}
-
-move_goat1_to_high_demo_map {
-	entity goat1 position -> geometry high1 origin over 600ms;
-	entity goat1 position -> geometry high1 length over 2000ms forever;
-}
-
-move_goat2_to_high_demo_map {
-	entity goat2 position -> geometry high2 origin over 733ms;
-	entity goat2 position -> geometry high2 length over 2266ms forever;
 }
 
 loop_on_path_30s_demo_map {

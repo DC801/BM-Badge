@@ -257,7 +257,7 @@ ch2_touch_abacus_yes {
 	};
 	ch2_hide_abacus()
 	ch2_pickup_abacus()
-	self on_interact = null_script;
+	self on_interact = {};
 }
 ch2_touch_abacus_no {
 	show dialog {

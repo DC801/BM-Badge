@@ -550,7 +550,7 @@ interact_ch2_sebastian {
 		show dialog {
 			SELF "%Templeton%, I promise not to yell at you for eating my spellbooks again if you can produce the right page in the next five minutes."
 		};
-		entity Templeton on_tick = null_script;
+		entity Templeton on_tick = {};
 		entity Templeton direction = entity Sebastian;
 		// pauses fussing
 		show dialog {

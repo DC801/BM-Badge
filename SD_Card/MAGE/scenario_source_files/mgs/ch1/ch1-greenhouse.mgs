@@ -111,7 +111,6 @@ show_dialog_trekkie_start {
 		ch1_greenhouse_modem_turning_on_cutscene()
 		set_hint_none_if_not_series(7)
 	}
-	self on_interact = show_dialog_trekkie_start;
 }
 
 ch1_greenhouse_trekkie_backstory_cutscene {
@@ -269,5 +268,4 @@ show_dialog_ethernettle_start {
 	} else if (self secondary_id == 4) {
 		show dialog { PLAYER "Brown." };
 	}
-	self on_interact = show_dialog_ethernettle_start;
 }

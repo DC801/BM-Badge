@@ -274,7 +274,7 @@ show_dialog_yabbo {
 		// (Cockney rhyming slang, which was requested by the artist for this character)
 		// (Something more clever might be used instead; feel free to change)
 	};
-	player on_tick = null_script;
+	player on_tick = {};
 }
 yabbo_watch {
 	player direction = entity "Yabbo Mongo";

@@ -107,7 +107,9 @@ export class ProjectState {
 		// finalize actions
 		const finalizedActions: AnyNode[] = [];
 		data.rawNodes.forEach((node) => {
-			if (node instanceof DialogDefinition) {
+			if (node instanceof ScriptDefinition) {
+				this.addScript(node);
+			} else if (node instanceof DialogDefinition) {
 				this.addDialog(node);
 			} else if (node instanceof SerialDialogDefinition) {
 				this.addSerialDialog(node);
@@ -117,16 +119,16 @@ export class ProjectState {
 		});
 		data.actions = simplifyLabelGotos(finalizedActions.flat());
 		// let's log
-		data.actions.forEach(action=>{
+		data.actions.forEach((action) => {
 			if (action instanceof MUTATE_VARIABLE) {
-				this.integers.add(action.variable)
+				this.integers.add(action.variable);
 			} else if (action instanceof MUTATE_VARIABLES) {
-				this.integers.add(action.variable)
-				this.integers.add(action.source)
+				this.integers.add(action.variable);
+				this.integers.add(action.source);
 			} else if (action instanceof COPY_VARIABLE) {
-				this.integers.add(action.variable)
+				this.integers.add(action.variable);
 			}
-		})
+		});
 		// put script in the project
 		if (!this.scripts[name]) {
 			// if not registered yet, add it

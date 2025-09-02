@@ -34,7 +34,7 @@ on_load_ch2_bakery {
 		}
 		entity Jackob name = "Aunt Zippy";
 		entity Jackob on_look = look_ch2_zippy;
-		entity Jackob on_tick = null_script;
+		entity Jackob on_tick = {};
 		entity Jackob on_interact = interact_ch2_zippy;
 		entity Jackob type = lightning_boy;
 		entity Jackob direction = north;

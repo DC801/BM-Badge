@@ -42,41 +42,26 @@ on_load_ch2_town {
 		}
 	}
 	// shepherd
-	if (
-		ch2_storyflag_round == 1
-		|| ch2_storyflag_round == 2
-	) {
+	if (ch2_storyflag_round == 1 || ch2_storyflag_round == 2) {
 		entity Shepherd position = geometry shepherd2;
 		entity Shepherd direction = east;
-		entity Shepherd on_tick = null_script;
-	} else if (
-		ch2_storyflag_round == 3
-		|| ch2_storyflag_round == 4
-	) {
+		entity Shepherd on_tick = {};
+	} else if (ch2_storyflag_round == 3 || ch2_storyflag_round == 4) {
 		entity Shepherd position = geometry shepherd1;
 	}
 	// verthandi
 	if (ch2_storyflag_round == 0) {
 		entity Verthandi position = geometry verthandi1;
 		entity Verthandi direction = west;
-	} else if (
-		ch2_storyflag_round == 3
-		|| ch2_storyflag_round == 4
-	) {
+	} else if (ch2_storyflag_round == 3 || ch2_storyflag_round == 4) {
 		entity Verthandi position = geometry verthandi2;
 		entity Verthandi direction = north;
 	}
 	// marta
-	if (
-		ch2_storyflag_round == 1
-		|| ch2_storyflag_round == 2
-	) {
+	if (ch2_storyflag_round == 1 || ch2_storyflag_round == 2) {
 		entity Marta position = geometry marta1;
 		entity Marta direction = west;
-	} else if (
-		ch2_storyflag_round == 3
-		|| ch2_storyflag_round == 4
-	) {
+	} else if (ch2_storyflag_round == 3 || ch2_storyflag_round == 4) {
 		entity Marta position = geometry marta2;
 		entity Marta direction = south;
 	}

@@ -236,7 +236,7 @@ interact_ch2_stove {
 
 interact_ch2_gloria {
 	player_control = off;
-	self on_tick = null_script;
+	self on_tick = {};
 	face_player()
 	self animation -> 3 once;
 	self current_animation = 4;
@@ -453,7 +453,7 @@ ch2_watch_seamoss {
 ch2_seamoss_summon_chips {
 	entity "Sea Moss" position -> geometry "vending-spot" origin over 1800ms;
 	wait 800ms;
-	player on_tick = null_script;
+	player on_tick = {};
 	player direction = north;
 	show dialog {
 		entity "Sea Moss" "I know a secret code for the ultimate cache of cache. Just need some cash...."
@@ -479,7 +479,7 @@ ch2_seamoss_summon_chips {
 	player_control = on;
 	ch2_cutseen_ramchips = true;
 	ch2_ramchips_dispensed = true;
-	player on_tick = null_script;
+	player on_tick = {};
 }
 
 interact_ch2_vendingmachine_end {
@@ -520,7 +520,7 @@ ch2_touch_ramchips_yes {
 	ch2_hide_ramchips()
 	ch2_pickup_ramchips()
 	ch2_ramchips_dispensed = false;
-	self on_interact = null_script;
+	self on_interact = {};
 }
 ch2_touch_ramchips_no {
 	show dialog {

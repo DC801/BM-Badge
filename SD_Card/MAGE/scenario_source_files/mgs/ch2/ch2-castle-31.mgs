@@ -224,12 +224,15 @@ interact_ch2_simon {
 				"I sort of need one for --"
 			};
 			entity Simon current_animation = 13;
-			entity Alvin on_tick = camera_angry_shake;
+			entity Alvin on_tick = {
+				camera shake -> 100ms 4px over 500ms;
+				goto null_script;
+			};
 			show dialog {
 				Simon emote 2 "WHOA WHOA WHOA hey, hands off! I'm not just going to give you my precious Rosetta!"
 				PLAYER "(Rosetta?)"
 			};
-			entity Alvin on_tick = null_script;
+			entity Alvin on_tick = {};
 			entity Simon current_animation = 0;
 			show dialog {
 				Simon emote 1 "But hey, you know what? I'll give you the chance to prove you deserve this beauty."
@@ -351,9 +354,4 @@ ch2_touch_keyboard {
 			PLAYER "(I can't just take this without asking. Better talk to %Simon%.)"
 		};
 	}
-}
-
-camera_angry_shake {
-	camera shake -> 100ms 4px over 500ms;
-	goto null_script;
 }

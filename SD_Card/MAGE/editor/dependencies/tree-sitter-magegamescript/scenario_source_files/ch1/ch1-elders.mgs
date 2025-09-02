@@ -41,17 +41,17 @@ hintman_cutscene {
 return_to_watchspot_alfonso {
 	self position -> geometry "alfonso-waitspot" origin over 500ms;
 	self direction = south;
-	self on_tick = null_script;
+	self on_tick = {};
 }
 return_to_watchspot_jackob {
 	self position -> geometry hintman_walkback length over 800ms;
 	self direction = south;
-	self on_tick = null_script;
+	self on_tick = {};
 }
 return_to_watchspot_bert {
 	self position -> geometry "bert-waitspot" origin over 500ms;
 	self direction = west;
-	self on_tick = null_script;
+	self on_tick = {};
 }
 
 show_dialog_bert_start {

@@ -33,7 +33,7 @@ ch2_cutscene_bert_secret {
 	show dialog {
 		Bert "No. I can go no further. I could, once. Perhaps."
 	};
-	entity Bert on_tick = null_script;
+	entity Bert on_tick = {};
 	entity Bert direction = player;
 	show dialog {
 		Bert "%PLAYER%, I must not stay long. But I must tell you this."
@@ -64,7 +64,7 @@ ch2_cutscene_bert_secret {
 	entity Bert position -> geometry "walk_from_south" origin over 800ms;
 	wait 80ms;
 	entity Bert on_tick = yeet;
-	player on_tick = null_script;
+	player on_tick = {};
 	player_control = on;
 	interrupt = true;
 }

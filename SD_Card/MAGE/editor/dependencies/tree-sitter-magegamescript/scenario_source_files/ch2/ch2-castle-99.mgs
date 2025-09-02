@@ -458,5 +458,5 @@ interact_ch2_minirake_99 {
 ch2_minirake_99_hide {
 	entity "clothes rake" position = geometry "hiding-spot";
 	entity "clothes rake" name = " ";
-	entity "clothes rake" on_interact = null_script;
+	entity "clothes rake" on_interact = {};
 }

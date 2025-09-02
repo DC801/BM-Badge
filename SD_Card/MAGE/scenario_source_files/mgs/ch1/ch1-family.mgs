@@ -49,7 +49,7 @@ show_dialog_kid {
 		set_hint_sportskid()
 	}
 	// RESET
-	player on_tick = null_script;
+	player on_tick = {};
 	self on_interact = show_dialog_kid;
 }
 

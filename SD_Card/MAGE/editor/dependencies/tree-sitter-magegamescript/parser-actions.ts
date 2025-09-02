@@ -12,7 +12,6 @@ import {
 import {
 	type ActionSetPosition,
 	type ActionSetDirection,
-	type ActionSetScript,
 	type ActionMoveOverTime,
 	type ActionSetEntityString,
 	type ActionSetEntityInt,
@@ -113,6 +112,7 @@ import {
 	MathlangMessage,
 	IntGetable,
 	FnCallReturnValue,
+	ScriptDefinition,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -291,7 +291,7 @@ type actionDataEntry = {
 	values?: Record<string, unknown>;
 	captures?: string[];
 	optionalCaptures?: string[];
-	handle?: (v: GenericObj, f: FileState, node: TreeSitterNode, i?: number) => AnyNode | undefined;
+	handle: (v: GenericObj, f: FileState, node: TreeSitterNode, i?: number) => AnyNode | undefined;
 };
 const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
@@ -443,7 +443,6 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_ambiguous: {
 		// if the LHS is ambiguous (a variable name)
-		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node, i): AnyNode => {
 			const lhs = coerceToString(f, node, v.lhs, 'action_set_ambiguous lhs');
@@ -533,7 +532,6 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_int: {
 		// If we've matched this, we know the LHS is not a variable name.
 		// Only option is an entity field.
-		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node): ActionSetEntityInt | MathlangSequence | COPY_VARIABLE => {
 			const debug = MathlangLocation.quick(f, node);
@@ -604,7 +602,6 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_bool: {
 		// If we've matched this, we know the LHS is not an int variable name.
-		values: {},
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node) => {
 			const debug = MathlangLocation.quick(f, node);
@@ -664,7 +661,6 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_set_position: {
-		values: {},
 		captures: ['movable', 'coordinate'],
 		handle: (v, f, node): ActionSetPosition | MathlangSequence => {
 			const debug = MathlangLocation.quick(f, node);
@@ -701,7 +697,6 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_move_over_time: {
-		values: {},
 		captures: ['movable', 'coordinate', 'duration', 'forever'],
 		optionalCaptures: ['forever'],
 		handle: (v, f, node): ActionMoveOverTime | undefined => {
@@ -810,7 +805,6 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_set_direction: {
-		values: {},
 		captures: ['entity', 'target'],
 		handle: (v, f, node): ActionSetDirection => {
 			const entity = coerceToString(f, node, v.entity, 'entity');
@@ -826,46 +820,53 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_set_script: {
-		values: {},
 		captures: ['entity', 'script_slot', 'script'],
-		handle: (v, f, node): ActionSetScript | undefined => {
+		handle: (v, f, node): AnyNode => {
+			const debug = MathlangLocation.quick(f, node);
 			const entity = coerceToString(f, node, v.entity, 'entity');
 			const script_slot = coerceToString(f, node, v.script_slot, 'script_slot');
-			const script = coerceToString(f, node, v.script, 'script');
+			let script: string = '';
+			const steps: AnyNode[] = [];
+			if (typeof v.script === 'string') {
+				// try as identifier
+				script = v.script;
+			} else if (v.script instanceof ScriptDefinition) {
+				steps.push(v.script);
+				script = v.script.scriptName;
+			} else {
+				throw new Error('invalid script in action_set_script');
+			}
 			if (entity === '%MAP%') {
 				if (script_slot === 'on_tick') {
-					return SET_MAP_TICK_SCRIPT.quick(script);
-				} else if (script_slot === 'on_tick') {
-					return SET_MAP_LOOK_SCRIPT.quick(script);
+					steps.push(SET_MAP_TICK_SCRIPT.quick(script));
+				} else if (script_slot === 'on_look') {
+					steps.push(SET_MAP_LOOK_SCRIPT.quick(script));
+				} else {
+					const errorNode = mandatoryChildForField(f, node, 'script_slot');
+					f.quickError(
+						errorNode,
+						`invalid map script slot`,
+						`You can only set a map's 'on_tick' or 'on_look' slot (setting ${script_slot})`,
+					);
 				}
+			} else if (v.script_slot === 'on_tick') {
+				steps.push(SET_ENTITY_TICK_SCRIPT.quick(entity, script));
+			} else if (v.script_slot === 'on_interact') {
+				steps.push(SET_ENTITY_INTERACT_SCRIPT.quick(entity, script));
+			} else if (v.script_slot === 'on_look') {
+				steps.push(SET_ENTITY_LOOK_SCRIPT.quick(entity, script));
+			} else {
 				const errorNode = mandatoryChildForField(f, node, 'script_slot');
 				f.quickError(
 					errorNode,
-					`invalid map script slot`,
-					`You can only set a map's 'on_tick' or 'on_look' slot`,
+					`invalid entity script slot`,
+					`Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`,
 				);
-				return;
 			}
-			// not a map; must be an entity
-			if (v.script_slot === 'on_tick') {
-				return SET_ENTITY_TICK_SCRIPT.quick(entity, script);
-			}
-			if (v.script_slot === 'on_interact') {
-				return SET_ENTITY_INTERACT_SCRIPT.quick(entity, script);
-			}
-			if (v.script_slot === 'on_look') {
-				return SET_ENTITY_LOOK_SCRIPT.quick(entity, script);
-			}
-			const errorNode = mandatoryChildForField(f, node, 'script_slot');
-			f.quickError(
-				errorNode,
-				`invalid entity script slot`,
-				`Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`,
-			);
+			return steps.length === 1 ? steps[0] : MathlangSequence.quick(debug, steps);
 		},
 	},
 	action_set_entity_string: {
-		values: {},
 		captures: ['entity', 'field', 'value'],
 		handle: (v, f, node): ActionSetEntityString => {
 			const entity = coerceToString(f, node, v.entity, 'entity');
@@ -881,7 +882,6 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_op_equals: {
-		values: {},
 		captures: ['lhs', 'operator', 'rhs'],
 		handle: (v, f, node): AnyNode => {
 			const debug = MathlangLocation.quick(f, node);
@@ -997,7 +997,6 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_plus_minus_equals_ables: {
-		values: {},
 		captures: ['entity', 'operator', 'value'],
 		handle: (v, f, node) => {
 			const entity = coerceToString(f, node, v.entity, 'entity');

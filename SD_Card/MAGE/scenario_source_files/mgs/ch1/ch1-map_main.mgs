@@ -267,17 +267,16 @@ on_tick_wrap_from_east {
 /* ---------- dialog ---------- */
 
 show_dialog_yabbo {
-	player on_tick = yabbo_watch;
+	player on_tick = {
+		player direction = entity "Yabbo Mongo";
+	};
 	show dialog {
 		SELF "I found infinity! Take a butcher's!"
 		// Butcher's hook = look
 		// (Cockney rhyming slang, which was requested by the artist for this character)
 		// (Something more clever might be used instead; feel free to change)
 	};
-	player on_tick = null_script;
-}
-yabbo_watch {
-	player direction = entity "Yabbo Mongo";
+	player on_tick = {};
 }
 show_dialog_construction {
 	show dialog {
@@ -308,7 +307,6 @@ fountain_interact {
 			"I just need to figure out how...."
 		};
 	}
-	self on_interact = fountain_interact;
 }
 
 /* ---------- cat and cleo ---------- */
@@ -413,7 +411,6 @@ show_dialog_cat {
 		cat_and_cleo_convo_turn()
 		turn_padding_end()
 	}
-	self on_interact = show_dialog_cat;
 }
 
 show_dialog_hamster_start {
@@ -438,7 +435,6 @@ show_dialog_hamster_start {
 		};
 		hamster_endstory = true;
 	}
-	self on_interact = show_dialog_hamster_start;
 }
 
 show_dialog_marta_start {
@@ -466,7 +462,6 @@ show_dialog_marta_start {
 			SELF "Good luck."
 		};
 	}
-	self on_interact = show_dialog_marta_start;
 }
 
 dialog dialog_timmy {

@@ -136,15 +136,15 @@ show_dialog_bender_start {
 /* ---- Bender on_tick handlers --- */
 
 set_bender_idle_stop {
-	entity "Bob Austin" on_tick = null_script;
-	entity Bender on_tick = null_script;
+	entity "Bob Austin" on_tick = {};
+	entity Bender on_tick = {};
 }
 set_bender_idle_glare_at_you {
 	entity Bender on_tick = face_player;
 	entity "Bob Austin" on_tick = handler_bender_timer;
 }
 set_bender_idle_look_around_randomly {
-	entity "Bob Austin" on_tick = null_script;
+	entity "Bob Austin" on_tick = {};
 	entity Bender on_tick = on_tick_bender_loiter;
 }
 

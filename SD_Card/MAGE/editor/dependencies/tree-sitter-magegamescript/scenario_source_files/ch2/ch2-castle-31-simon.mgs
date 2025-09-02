@@ -391,43 +391,6 @@ simon_player_listen {
 	entity Simon on_tick = simon_player_listen; // reset this loop (on next game tick?)
 }
 
-simon_player_animation_pose_bottom_left {
-	// player current_animation = $pose_pre_left;
-	// wait $animation_padding1;
-	player current_animation = $pose_bottom_left;
-	goto simon_player_animation_pose_bottom_left_wait;
-}
-simon_player_animation_pose_bottom_right {
-	// player current_animation = $pose_pre_right;
-	// wait $animation_padding1;
-	player current_animation = $pose_bottom_right;
-	goto simon_player_animation_pose_bottom_right_wait;
-}
-simon_player_animation_pose_left {
-	// player current_animation = $pose_pre_left;
-	// wait $animation_padding1;
-	player current_animation = $pose_left;
-	goto simon_player_animation_pose_left_wait;
-}
-simon_player_animation_pose_right {
-	// player current_animation = $pose_pre_right;
-	// wait $animation_padding1;
-	player current_animation = $pose_right;
-	goto simon_player_animation_pose_right_wait;
-}
-simon_player_animation_pose_top_left {
-	// player current_animation = $pose_pre_left;
-	// wait $animation_padding1;
-	player current_animation = $pose_top_left;
-	goto simon_player_animation_pose_top_left_wait;
-}
-simon_player_animation_pose_top_right {
-	// player current_animation = $pose_pre_right;
-	// wait $animation_padding1;
-	player current_animation = $pose_top_right;
-	goto simon_player_animation_pose_top_right_wait;
-}
-
 simon_player_animation_pose_bottom_left_wait {
 	if (button $button0 up) {
 		simon_player_wait_finished = true;
@@ -469,27 +432,46 @@ simon_player_do_move {
 	// loopy
 	if (simon_player_move == 0) {
 		light $light0 = on;
-		player on_tick = simon_player_animation_pose_bottom_left;
+		player on_tick = simon_player_animation_pose_bottom_left {
+			player current_animation = $pose_bottom_left;
+			goto simon_player_animation_pose_bottom_left_wait;
+		};
 	}
 	else if (simon_player_move == 1) {
 		light $light1 = on;
-		player on_tick = simon_player_animation_pose_bottom_right;
+		player on_tick = simon_player_animation_pose_bottom_right {
+			player current_animation = $pose_bottom_right;
+			goto simon_player_animation_pose_bottom_right_wait;
+		};
 	}
 	else if (simon_player_move == 2) {
 		light $light2 = on;
-		player on_tick = simon_player_animation_pose_left;
+		player on_tick = simon_player_animation_pose_left {
+			player current_animation = $pose_left;
+			goto simon_player_animation_pose_left_wait;
+		};
 	}
 	else if (simon_player_move == 3) {
 		light $light3 = on;
-		player on_tick = simon_player_animation_pose_right;
+		player on_tick = simon_player_animation_pose_right {
+			player current_animation = $pose_right;
+			goto simon_player_animation_pose_right_wait;
+		}
+		;
 	}
 	else if (simon_player_move == 4) {
 		light $light4 = on;
-		player on_tick = simon_player_animation_pose_top_left;
+		player on_tick = simon_player_animation_pose_top_left {
+			player current_animation = $pose_top_left;
+			goto simon_player_animation_pose_top_left_wait;
+		};
 	}
 	else if (simon_player_move == 5) {
 		light $light5 = on;
-		player on_tick = simon_player_animation_pose_top_right;
+		player on_tick = simon_player_animation_pose_top_right {
+			player current_animation = $pose_top_right;
+			goto simon_player_animation_pose_top_right_wait;
+		};
 	}
 	goto simon_player_wait;
 }
@@ -536,7 +518,7 @@ simon_game_lose {
 	entity Lights on_tick = $lightsdefault;
 	ch2_map_init_hex()
 	player_control = on;
-	entity Keyboard on_tick = null_script;
+	entity Keyboard on_tick = {};
 	entity Simon current_animation = 5;
 	goto simon_game_go_again;
 }
