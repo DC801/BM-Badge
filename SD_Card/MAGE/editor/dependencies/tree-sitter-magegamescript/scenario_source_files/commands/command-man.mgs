@@ -943,16 +943,6 @@ ch2_lambda_person_marathonbob {
 
 /* ---------- PEOPLE (COMPLICATED) ---------- */
 
-ch2_lambda_person_xa {
-	show serial_dialog spacer;
-	show serial_dialog {
-		"<c>YOU</>: Tell me about XA."
-		" "
-		"<m>LAMBDA</>: XA is a device called an Exa, which is a tool I use to do certain kinds of administrative work. Mostly networking."
-		"	Exas are easy to program, but they take up a lot of space when I use them inside the castle -- that is, in physical space -- so I don't tend to use them much anymore. I guess I mostly like using them once in a while as a tinking project, like as a form a play."
-	};
-	goto ch2_lambda_topic_person_s;
-}
 ch2_lambda_person_xb {
 	show serial_dialog spacer;
 	show serial_dialog {

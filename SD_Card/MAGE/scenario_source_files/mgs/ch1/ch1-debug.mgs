@@ -4,17 +4,9 @@ debug_hub_q {
 	show dialog {
 		SELF portrait goldfish
 		"Go to debug map hub?"
-		> "Yes" = debug_hub_go
-		> "No" = debug_hub_no
+		> "Yes" = { goto load_map_warp_zone; }
+		> "No" = { self on_interact = debug_hub_q; }
 	};
-}
-
-debug_hub_go {
-	goto load_map_warp_zone;
-}
-
-debug_hub_no {
-	self on_interact = debug_hub_q;
 }
 
 debug_demobonus_q {
@@ -22,46 +14,59 @@ debug_demobonus_q {
 	show dialog {
 		SELF portrait goldfish
 		"Demo bonus debugging"
-		> "Set story flags true + ch1_finished true" = debug_demobonus_pre_flags_true
-		> "Set story flags true + ch1_finished false" = debug_demobonus_pre_flags_false
-		> "Set demo bonus event flags false" = debug_demobonus_event_flags_false
-		> "Never mind" = debug_demobonus_no
+		> "Set story flags true + ch1_finished true" = {
+			set_story_flags_true()
+			ch1_finished = true;
+			warp_state = exit_from_credits;
+			self on_interact = debug_demobonus_q;
+		}
+		> "Set story flags true + ch1_finished false" = {
+			set_story_flags_false()
+			ch1_finished = false;
+			self on_interact = debug_demobonus_q;
+		}
+		> "Set demo bonus event flags false" = {
+			demobonus = false;
+			demobonus_jackob_informed = false;
+			demobonus_timmy_yell = false;
+			demobonus_sportsbook_read = false;
+			self on_interact = debug_demobonus_q;
+		}
+		> "Never mind" = {
+			self on_interact = debug_demobonus_q;
+		}
 	};
-}
-
-debug_demobonus_pre_flags_true {
-	set_story_flags_true()
-	ch1_finished = true;
-	warp_state = exit_from_credits;
-	self on_interact = debug_demobonus_q;
-}
-
-debug_demobonus_pre_flags_false {
-	set_story_flags_false()
-	ch1_finished = false;
-	self on_interact = debug_demobonus_q;
-}
-
-debug_demobonus_event_flags_false {
-	demobonus = false;
-	demobonus_jackob_informed = false;
-	demobonus_timmy_yell = false;
-	demobonus_sportsbook_read = false;
-	self on_interact = debug_demobonus_q;
-}
-
-debug_demobonus_no {
-	self on_interact = debug_demobonus_q;
 }
 
 debug_set_flags_false_q {
 	self direction = player;
 	show dialog {
 		SELF "Set what to FALSE?"
-		> "Story flags and misc flags" = debug_set_story_and_misc_flags_false
-		> "Backstory flags" = debug_set_backstory_false
-		> "Unglitch flags" = debug_set_glitch_flags_false
-		> "Never mind" = debug_set_flags_false_no
+		> "Story flags and misc flags" = {
+			hinteger = 0;
+			set_story_flags_false()
+			set_misc_flags_false()
+			set_ch1_finished_flags_false()
+			show dialog { SELF "All story and misc flags set to FALSE." };
+			self on_interact = debug_set_flags_false_q;
+		}
+		> "Backstory flags" = {
+			set_backstory_flags_false()
+			show dialog { SELF "All entities have forgotten their first\nconversations with you." };
+			self on_interact = debug_set_flags_false_q;
+		}
+		> "Unglitch flags" = {
+			set_glitch_flags_false()
+			entity Billy glitched = true;
+			entity Kid glitched = true;
+			entity Fountain glitched = true;
+			entity Hamster glitched = true;
+			self on_interact = debug_set_flags_false_q;
+		}
+		> "Never mind" = {
+			show dialog { SELF "Nothing changed." };
+			self on_interact = debug_set_flags_false_q;
+		}
 	};
 }
 
@@ -69,84 +74,35 @@ debug_set_flags_true_q {
 	self direction = player;
 	show dialog {
 		SELF "Set what to TRUE?"
-		> "Everything (except winning)" = debug_set_all_true
-		> "Backstory flags" = debug_set_backstory_true
-		> "Unglitch flags" = debug_set_glitch_flags_true
-		> "Never mind" = debug_set_flags_true_no
+		> "Everything (except winning)" = {
+			set_story_flags_true()
+			set_glitch_flags_true()
+			set_goodmorning_flags_true()
+			set_tuesday_flags_true()
+			set_artifact_flags_true()
+			set_backstory_flags_true()
+			set_misc_flags_true()
+			show dialog { SELF "All flags set to TRUE. You may have to reload the map to see some changes." };
+			self on_interact = debug_set_flags_true_q;
+		}
+		> "Backstory flags" = {
+			set_backstory_flags_true()
+			show dialog { SELF "All entities are inexplicably under the\nimpression that you've spoken to them\nbefore." };
+			self on_interact = debug_set_flags_true_q;
+		}
+		> "Unglitch flags" = {
+			set_glitch_flags_true()
+			entity Billy glitched = false;
+			entity Kid glitched = false;
+			entity Fountain glitched = false;
+			entity Hamster glitched = false;
+			self on_interact = debug_set_flags_true_q;
+		}
+		> "Never mind" = {
+			show dialog { SELF "Nothing changed." };
+			self on_interact = debug_set_flags_true_q;
+		}
 	};
-}
-
-debug_set_story_and_misc_flags_false {
-	hinteger = 0;
-	set_story_flags_false()
-	set_misc_flags_false()
-	set_ch1_finished_flags_false()
-	show dialog {
-		SELF "All story and misc flags set to FALSE."
-	};
-	self on_interact = debug_set_flags_false_q;
-}
-
-debug_set_backstory_false {
-	set_backstory_flags_false()
-	show dialog {
-		SELF "All entities have forgotten their first\nconversations with you."
-	};
-	self on_interact = debug_set_flags_false_q;
-}
-
-debug_set_backstory_true {
-	set_backstory_flags_true()
-	show dialog {
-		SELF "All entities are inexplicably under the\nimpression that you've spoken to them\nbefore."
-	};
-	self on_interact = debug_set_flags_true_q;
-}
-
-debug_set_glitch_flags_true {
-	set_glitch_flags_true()
-	entity Billy glitched = false;
-	entity Kid glitched = false;
-	entity Fountain glitched = false;
-	entity Hamster glitched = false;
-	self on_interact = debug_set_flags_true_q;
-}
-
-debug_set_glitch_flags_false {
-	set_glitch_flags_false()
-	entity Billy glitched = true;
-	entity Kid glitched = true;
-	entity Fountain glitched = true;
-	entity Hamster glitched = true;
-	self on_interact = debug_set_flags_false_q;
-}
-
-debug_set_all_true {
-	set_story_flags_true()
-	set_glitch_flags_true()
-	set_goodmorning_flags_true()
-	set_tuesday_flags_true()
-	set_artifact_flags_true()
-	set_backstory_flags_true()
-	set_misc_flags_true()
-	show dialog {
-		SELF "All flags set to TRUE. You may have to reload the map to see some changes."
-	};
-	self on_interact = debug_set_flags_true_q;
-}
-
-debug_set_flags_false_no {
-	show dialog {
-		SELF "Nothing changed."
-	};
-	self on_interact = debug_set_flags_false_q;
-}
-
-debug_set_flags_true_no {
-	show dialog {
-		SELF "Nothing changed."
-	};
-	self on_interact = debug_set_flags_true_q;
 }
 
 load_map_warp_zone {

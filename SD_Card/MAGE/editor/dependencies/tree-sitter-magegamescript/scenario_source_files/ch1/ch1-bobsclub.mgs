@@ -501,34 +501,24 @@ debug_bob_q {
 	show dialog {
 		SELF
 		"How to Bob?"
-		> "Skip Bob Austin conversation" = debug_bob_skipconvo
-		> "Above + set name Bob" = debug_bob_also_setnamebob
-		> "Skip cutscene and teleport" = debug_bob_teleport
-		> "Never mind" = debug_bob_no
+		> "Skip Bob Austin conversation" = debug_bob_skipconvo {
+			bobrock_backstory = true;
+			show dialog { SELF "Bob Austin has been spoken to." };
+			self on_interact = debug_bob_q;
+		}
+		> "Above + set name Bob" = debug_bob_also_setnamebob {
+			player name = Bob;
+			bobrock_backstory = true;
+			show dialog { SELF "Bob Austin has been spoken to, and your name is Bob." };
+			self on_interact = debug_bob_q;
+		}
+		> "Skip cutscene and teleport" = debug_bob_teleport {
+			bobsclub_entered = true;
+			show dialog { SELF "Teleportation in progress." };
+			load map bobsclub;
+		}
+		> "Never mind" = debug_bob_no {
+			self on_interact = debug_bob_q;
+		}
 	};
-}
-debug_bob_skipconvo {
-	bobrock_backstory = true;
-	show dialog {
-		SELF "Bob Austin has been spoken to."
-	};
-	self on_interact = debug_bob_q;
-}
-debug_bob_also_setnamebob {
-	player name = Bob;
-	bobrock_backstory = true;
-	show dialog {
-		SELF "Bob Austin has been spoken to, and your name is Bob."
-	};
-	self on_interact = debug_bob_q;
-}
-debug_bob_teleport {
-	bobsclub_entered = true;
-	show dialog {
-		SELF "Teleportation in progress."
-	};
-	load map bobsclub;
-}
-debug_bob_no {
-	self on_interact = debug_bob_q;
 }

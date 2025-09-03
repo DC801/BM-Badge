@@ -155,8 +155,19 @@ interact_ch2_guestbook {
 		}
 		show dialog {
 			name "" "(Sign the guest book?)"
-			> "Yes" = interact_ch2_guestbook_signyes
-			> "No" = interact_ch2_guestbook_signno
+			> "Yes" = interact_ch2_guestbook_signyes {
+				show dialog {
+					PLAYER "All right, here I go."
+					name "" "(scribble scribble scribble)"
+					Concierge "Thank you for signing!"
+				};
+				ch2_guestbook_signed = true;
+				self on_interact = interact_ch2_guestbook;
+			}
+			> "No" =  interact_ch2_guestbook_signno {
+				show dialog { PLAYER "Maybe later." };
+				self on_interact = interact_ch2_guestbook;
+			}
 		};
 	} else {
 		show dialog {
@@ -164,21 +175,6 @@ interact_ch2_guestbook {
 			Concierge "Thank you for signing the guest book! I hope you enjoy the remainder of your stay!"
 		};
 	}
-}
-interact_ch2_guestbook_signyes {
-	show dialog {
-		PLAYER "All right, here I go."
-		name "" "(scribble scribble scribble)"
-		Concierge "Thank you for signing!"
-	};
-	ch2_guestbook_signed = true;
-	self on_interact = interact_ch2_guestbook;
-}
-interact_ch2_guestbook_signno {
-	show dialog {
-		PLAYER "Maybe later."
-	};
-	self on_interact = interact_ch2_guestbook;
 }
 
 interact_ch2_concierge {
@@ -284,8 +280,17 @@ ch2_touch_needle {
 		if (ch2_needle_permission) {
 			show dialog {
 				name "" "(Pick up the phonograph needle?)"
-				> "Yes" = ch2_touch_needle_yes
-				> "No" = ch2_touch_needle_no
+				> "Yes" = ch2_touch_needle_yes {
+					show dialog { name "" "(You pick up the needle!)" };
+					ch2_hide_needle()
+					ch2_pickup_needle()
+					interrupt2 = false;
+					self on_interact = ch2_touch_needle;
+				}
+				> "No" = ch2_touch_needle_no {
+					show dialog { PLAYER "Maybe later, then." };
+					self on_interact = ch2_touch_needle;
+				}
 			};
 		} else {
 			if (!ch2_ws_backstory) {
@@ -301,21 +306,8 @@ ch2_touch_needle {
 	}
 }
 
-ch2_touch_needle_yes {
-	show dialog {
-		name "" "(You pick up the needle!)"
-	};
-	ch2_hide_needle()
-	ch2_pickup_needle()
-	interrupt2 = false;
-	self on_interact = ch2_touch_needle;
-}
-ch2_touch_needle_no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	};
-	self on_interact = ch2_touch_needle;
-}
+
+
 
 /* ---------- WORD SEARCH (non-auto generated stuff) ---------- */
 

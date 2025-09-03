@@ -218,25 +218,19 @@ ch2_touch_clock {
 		} else {
 			show dialog {
 				name "" "(Pick up the clock?)"
-				> "Yes" = ch2_touch_clock_yes
-				> "No" = ch2_touch_clock_no
+				> "Yes" = {
+					show dialog { name "" "(You pick up the clock!)" };
+					ch2_hide_clock()
+					ch2_pickup_clock()
+					self on_interact = {};
+				}
+				> "No" = {
+					show dialog { PLAYER "Maybe later, then." };
+					self on_interact = ch2_touch_clock;  // reset after script jump
+				}
 			};
 		}
 	}
-}
-ch2_touch_clock_yes {
-	show dialog {
-		name "" "(You pick up the clock!)"
-	};
-	ch2_hide_clock()
-	ch2_pickup_clock()
-	self on_interact = {};
-}
-ch2_touch_clock_no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	};
-	self on_interact = ch2_touch_clock;  // reset after script jump
 }
 
 interact_ch2_gibson_bedroom {

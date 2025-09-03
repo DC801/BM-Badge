@@ -509,22 +509,16 @@ ch2_touch_ramchips {
 	}
 	show dialog {
 		name "" "(Pick up the RAM chips?)"
-		> "Yes" = ch2_touch_ramchips_yes
-		> "No" = ch2_touch_ramchips_no
+		> "Yes" = ch2_touch_ramchips_yes {
+			show dialog { name "" "(You pick up the RAM chips!)" };
+			ch2_hide_ramchips()
+			ch2_pickup_ramchips()
+			ch2_ramchips_dispensed = false;
+			self on_interact = {};
+		}
+		> "No" = ch2_touch_ramchips_no {
+			show dialog { PLAYER "Maybe later, then." };
+			self on_interact = ch2_touch_ramchips;  // reset after script jump
+		}
 	};
-}
-ch2_touch_ramchips_yes {
-	show dialog {
-		name "" "(You pick up the RAM chips!)"
-	};
-	ch2_hide_ramchips()
-	ch2_pickup_ramchips()
-	ch2_ramchips_dispensed = false;
-	self on_interact = {};
-}
-ch2_touch_ramchips_no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	};
-	self on_interact = ch2_touch_ramchips;  // reset after script jump
 }

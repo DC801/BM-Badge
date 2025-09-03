@@ -279,80 +279,60 @@ debug_walk_to_lodge_q {
 	self direction = player;
 	show dialog {
 		SELF "Go on a morning walk?"
-		> "Yes" = debug_walk_to_lodge
-		> "No" = debug_walk_to_lodge_no
+		> "Yes" = { walk_to_lodge() }
+		> "No" = { self on_interact = debug_walk_to_lodge_q; }
 	};
-}
-
-debug_walk_to_lodge {
-	walk_to_lodge()
-}
-
-debug_walk_to_lodge_no {
-	self on_interact = debug_walk_to_lodge_q;
 }
 
 debug_goodmorning_q {
 	self direction = player;
 	show dialog {
 		SELF "Start the beginning cutscene?"
-		> "Yes (just the magehouse and exterior)" = debug_goodmorning
-		> "Yes (also the lodge stuff)" = debug_goodmorning_plus
-		> "No" = debug_goodmorning_no
+		> "Yes (just the magehouse and exterior)" =  {
+			show dialog debug_goodmorning { SELF "Walk through the doorway to begin cutscene." };
+			hex_control = off;
+			set_goodmorning_flags_false()
+			map on_tick = on_tick_magehouse;
+		}
+		> "Yes (also the lodge stuff)" =  {
+			show dialog debug_goodmorning;
+			hex_control = off;
+			set_goodmorning_flags_false()
+			ring_acquired = false;
+			hide_lodge_crowd = false;
+			hide_lodge_crowd_mini = false;
+			tuesdayd = false;
+			hintman_explanation = false;
+			map on_tick = on_tick_magehouse;
+		}
+		> "No" = {
+			self on_interact = debug_goodmorning_q;
+		}
 	};
-}
-
-debug_goodmorning {
-	show dialog dialog_debug_goodmorning { // reused below
-		SELF "Walk through the doorway to begin cutscene."
-	};
-	hex_control = off;
-	set_goodmorning_flags_false()
-	map on_tick = on_tick_magehouse;
-}
-
-debug_goodmorning_plus {
-	show dialog dialog_debug_goodmorning;
-	hex_control = off;
-	set_goodmorning_flags_false()
-	ring_acquired = false;
-	hide_lodge_crowd = false;
-	hide_lodge_crowd_mini = false;
-	tuesdayd = false;
-	hintman_explanation = false;
-	map on_tick = on_tick_magehouse;
-}
-
-debug_goodmorning_no {
-	self on_interact = debug_goodmorning_q;
 }
 
 debug_everything_q {
 	show dialog {
 		SELF "DEBUG EVERYTHING"
-		> "Turn debug mode on" = debug_everything_on
-		> "Go to debug map hub" = debug_hub_go
-		> "Never mind" = debug_everything_off
+		> "Turn debug mode on" = {
+			debug_mode = true;
+			hex_control = on;
+			set_goodmorning_flags_true()
+			tuesday_walkedup = true;
+			hintman_explanation = true;
+			map on_tick = on_tick_magehouse;
+			entity "Debug Exa" position = geometry debug_exa_spot;
+			show dialog { SELF "Debug mode on." };
+			self on_interact = debug_everything_q;
+		}
+		> "Go to debug map hub" = {
+			goto load_map_warp_zone;
+		}
+		> "Never mind" = {
+			show dialog { SELF "Never mind."};
+			self on_interact = debug_everything_q;
+		}
 	};
-}
-
-debug_everything_on {
-	debug_mode = true;
-	hex_control = on;
-	set_goodmorning_flags_true()
-	tuesday_walkedup = true;
-	hintman_explanation = true;
-	map on_tick = on_tick_magehouse;
-	entity "Debug Exa" position = geometry debug_exa_spot;
-	show dialog {
-		SELF "Debug mode on."
-	};
-	self on_interact = debug_everything_q;
-}
-
-debug_everything_off {
-	show dialog { SELF "Never mind."};
-	self on_interact = debug_everything_q;
 }
 
 dialog dialog_goodmorning_wake { // lol what is this?

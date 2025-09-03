@@ -303,22 +303,16 @@ interact_ch2_gregory {
 		}
 		show dialog {
 			SELF "Want to try to catch the mouse?"
-			> "Yes" = interact_ch2_gregory_gameyes
-			> "No" = interact_ch2_gregory_gameno
+			> "Yes" = interact_ch2_gregory_gameyes {
+				entity Mouse on_tick = ch2_mousegame_prepare_board;
+				self on_interact = interact_ch2_gregory;
+			}
+			> "No" = interact_ch2_gregory_gameno {
+				show dialog { SELF "Oh. Well, let me know when you want to give it a shot." };
+				self on_interact = interact_ch2_gregory;
+			}
 		};
 	}
-}
-
-interact_ch2_gregory_gameyes {
-	entity Mouse on_tick = ch2_mousegame_prepare_board;
-	self on_interact = interact_ch2_gregory;
-}
-
-interact_ch2_gregory_gameno {
-	show dialog {
-		SELF "Oh. Well, let me know when you want to give it a shot."
-	};
-	self on_interact = interact_ch2_gregory;
 }
 
 /* ---------- MOUSE (ADMIN) ---------- */

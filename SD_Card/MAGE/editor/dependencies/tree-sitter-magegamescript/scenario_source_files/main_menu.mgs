@@ -160,8 +160,7 @@ main_menu_fade_in {
 main_menu {
 	player on_tick = {};
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"CHOOSE YOUR FATE"
 		> "Play Game" = menu_play_game
 		> "Play Demo" = load_map_demo_map
@@ -174,31 +173,25 @@ main_menu {
 
 menu_credits_choice {
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"CREDITS"
-		> "Chapter 1 credits" = menu_credits
-		> "Chapter 2 credits" = menu_credits2
+		> "Chapter 1 credits" = menu_credits {
+			credits_from_menu = true;
+			load map credits;
+		}
+		> "Chapter 2 credits" = menu_credits2 {
+			credits_from_menu = true;
+			load map credits2;
+		}
 		> "Back" = main_menu
 	};
-}
-
-menu_credits {
-	credits_from_menu = true;
-	load map credits;
-}
-
-menu_credits2 {
-	credits_from_menu = true;
-	load map credits2;
 }
 
 /* ---------- BLING MODE ---------- */
 
 menu_bling_mode {
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"SAVE YOUR SCREEN"
 		> "DC801 showcase" = menu_bling_dc801_showcase
 		> "Flying \"Toasters\"" = start_bling_flying_toasters
@@ -209,8 +202,7 @@ menu_bling_mode {
 
 menu_bling_dc801_showcase {
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"DC801 SHOWCASE"
 		> "Auto mode" = start_bling_rotate_auto
 		> "Manual mode" = start_bling_rotate_manual
@@ -222,142 +214,78 @@ menu_bling_dc801_showcase {
  /* ---------- PLAY GAME ---------- */
 //---------------------------------//
 
+fn load_slot ($n) {
+	load slot $n;
+	slot_number = $n;
+	goto menu_chapter_select_q;
+}
+fn new_slot ($n) {
+	erase slot $n;
+	slot_number = $n;
+	goto menu_player_name_q;
+}
+fn erase_slot ($n) {
+	erase slot $n;
+	goto menu_play_game;
+}
 menu_play_game {
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"PLAY GAME"
-		> "Load Game" = menu_load_game
-		> "New Game" = menu_new_game
-		> "Erase Save" = menu_erase_save
+		> "Load Game" = menu_load_game {
+			show dialog {
+				name " " border_tileset menu
+				"LOAD GAME"
+				> "Slot 0" = menu_load_game_0 { load_slot(0) }
+				> "Slot 1" = menu_load_game_1 { load_slot(1) }
+				> "Slot 2" = menu_load_game_2 { load_slot(2) }
+				> "Back" = menu_play_game
+			};
+		}
+		> "New Game" = menu_new_game {
+			show dialog {
+				name " " border_tileset menu
+				"NEW GAME"
+				> "Slot 0" = menu_new_game_0 { new_slot(0) }
+				> "Slot 1" = menu_new_game_1 { new_slot(1) }
+				> "Slot 2" = menu_new_game_2 { new_slot(2) }
+				> "Back" = menu_play_game
+			};
+		}
+		> "Erase Save" = menu_erase_save {
+			show dialog {
+				name " " border_tileset menu
+				"BOOM TIME!"
+				> "Erase slot 0" = menu_erase_save_0 { erase_slot(0) }
+				> "Erase slot 1" = menu_erase_save_1 { erase_slot(1) }
+				> "Erase slot 2" = menu_erase_save_2 { erase_slot(2) }
+				> "Back" = menu_play_game
+			};
+		}
 		> "Back" = main_menu
 	};
 }
 
-menu_erase_save {
-	show dialog {
-		name " "
-		border_tileset menu
-		"BOOM TIME!"
-		> "Erase slot 0" = menu_erase_save_0
-		> "Erase slot 1" = menu_erase_save_1
-		> "Erase slot 2" = menu_erase_save_2
-		> "Back" = menu_play_game
-	};
-}
-
-menu_erase_save_0 {
-	erase slot 0;
-	goto menu_play_game;
-}
-
-menu_erase_save_1 {
-	erase slot 1;
-	goto menu_play_game;
-}
-
-menu_erase_save_2 {
-	erase slot 2;
-	goto menu_play_game;
-}
-
-/* ---------- LOAD GAME ---------- */
-
-menu_load_game {
-	show dialog {
-		name " "
-		border_tileset menu
-		"LOAD GAME"
-		> "Slot 0" = menu_load_game_0
-		> "Slot 1" = menu_load_game_1
-		> "Slot 2" = menu_load_game_2
-		> "Back" = menu_play_game
-	};
-}
-
-menu_load_game_0 {
-	load slot 0;
-	slot_number = 0;
-	goto menu_chapter_select_q;
-}
-
-menu_load_game_1 {
-	load slot 1;
-	slot_number = 1;
-	goto menu_chapter_select_q;
-}
-
-menu_load_game_2 {
-	load slot 2;
-	slot_number = 2;
-	goto menu_chapter_select_q;
-}
-
-/* ---------- NEW GAME ---------- */
-
-menu_new_game {
-	show dialog {
-		name " "
-		border_tileset menu
-		"NEW GAME"
-		> "Slot 0" = menu_new_game_0
-		> "Slot 1" = menu_new_game_1
-		> "Slot 2" = menu_new_game_2
-		> "Back" = menu_play_game
-	};
-}
-
-menu_new_game_0 {
-	erase slot 0;
-	slot_number = 0;
-	goto menu_player_name_q;
-}
-
-menu_new_game_1 {
-	erase slot 1;
-	slot_number = 1;
-	goto menu_player_name_q;
-}
-
-menu_new_game_2 {
-	erase slot 2;
-	slot_number = 2;
-	goto menu_player_name_q;
-}
-
 // Set player name
 
+fn name_preset ($name) {
+	player name = $name;
+	goto menu_player_name_confirm;
+}
 menu_player_name_q {
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"NEW GAME: Pick your name."
-		> "Red" = menu_player_name_preset1
-		> "Bubbles" = menu_player_name_preset2
-		> "Black Mage" = menu_player_name_preset3
+		> "Red" = menu_player_name_preset1 { name_preset("Red") }
+		> "Bubbles" = menu_player_name_preset2 { name_preset("Bubbles") }
+		> "Black Mage" = menu_player_name_preset3 { name_preset("Black Mage") }
 		> "Gimme something random" = menu_player_name_random
 	};
 }
 
-menu_player_name_preset1 {
-	player name = "Red";
-	goto menu_player_name_confirm;
-}
-
-menu_player_name_preset2 {
-	player name = "Bubbles";
-	goto menu_player_name_confirm;
-}
-
-menu_player_name_preset3 {
-	player name = "Black Mage";
-	goto menu_player_name_confirm;
-}
-
 menu_player_name_confirm {
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"Your name is %PLAYER%?"
 		> "Yes" = start_new_game_with_name
 		> "No" = menu_player_name_reset
@@ -409,33 +337,8 @@ menu_player_name_random {
 	} else { // if it's 0 or any other value (the default):
 		entity "%PLAYER%" name = "Bub";
 	}
-	// rand!(
-	// 	player name = [
-	// 		"Chara",
-	// 		"Buster",
-	// 		"Tidus",
-	// 		"Frisk",
-	// 		"Farnsworth",
-	// 		"Cloud",
-	// 		"Ash",
-	// 		"Crono",
-	// 		"Terra",
-	// 		"Kremit",
-	// 		"Zidane",
-	// 		"Cecil",
-	// 		"Squall",
-	// 		"Roxas",
-	// 		"Steamed Hams",
-	// 		"Spy",
-	// 		"Tom Honks",
-	// 		"VeeVee",
-	// 		"XDDCC",
-	// 		"Bub"
-	// 	];
-	// )
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"Your name is %PLAYER%?"
 		> "Reroll random name" = menu_player_name_random
 		> "Yes" = start_new_game_with_name
@@ -447,9 +350,6 @@ menu_player_name_reset {
 	player name = "Bub";
 	goto menu_player_name_q;
 }
-
-// Start new game with name
-
 start_new_game_with_name {
 	save slot;
 	goto menu_chapter_select_q;
@@ -461,8 +361,7 @@ menu_chapter_select_q {
 	ch1_count_flags()
 	ch2_count_flags()
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " border_tileset menu
 		"PLAY (slot $slot_number$: \"%PLAYER%\")"
 		> "Chapter 1 ($ch1_storyflags_tally$/11)" = menu_chapter_select_1
 		> "Chapter 2 ($ch2_storyflags_tally$/10)" = menu_chapter_select_2_check
@@ -482,8 +381,7 @@ menu_chapter_select_2_check {
 	} else {
 		warned_ch1_incomplete = true;
 		show dialog {
-			name " "
-			border_tileset menu
+			name " " border_tileset menu
 			"Chapter 1 is unfinished!"
 			> "Play chapter 2 anyway" = menu_chapter_select_2
 			> "Never mind" = menu_chapter_select_q
@@ -512,23 +410,17 @@ menu_save_game {
 		border_tileset codec
 		portrait floppy
 		"Would you like to save your progress?"
-		> "Yes" = menu_save_game_yes
-		> "No" = menu_save_game_no
-		> "Return to Main Menu" = menu_save_game_main_menu
+		> "Yes" = menu_save_game_yes {
+			capture_player_state()
+			save slot;
+			self on_interact = menu_save_game;
+		}
+		> "No" = menu_save_game_no {
+			self on_interact = menu_save_game;
+		}
+		> "Return to Main Menu" = menu_save_game_main_menu {
+			warp_state = from_game;
+			load map main_menu;
+		}
 	};
-}
-
-menu_save_game_yes {
-	capture_player_state()
-	save slot;
-	self on_interact = menu_save_game;
-}
-
-menu_save_game_no {
-	self on_interact = menu_save_game;
-}
-
-menu_save_game_main_menu {
-	warp_state = from_game;
-	load map main_menu;
 }

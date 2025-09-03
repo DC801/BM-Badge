@@ -131,24 +131,6 @@ screen_lights_flash_bits {
 	wait $time;
 }
 
-interact_ch2_gregory_breakyes {
-	show dialog {
-		SELF "I'll take the mouse proximity detector back then, then."
-	};
-	ch2_mousegame = false;
-	ch2_map_init_hex()
-	show dialog {
-		SELF "Let me know when you want to have another go."
-	};
-	self on_interact = interact_ch2_gregory;
-}
-interact_ch2_gregory_breakno {
-	show dialog {
-		SELF "Good luck."
-	};
-	self on_interact = interact_ch2_gregory;
-}
-
 interact_ch2_gregory {
 	face_player()
 	if (ch2_mousegame) {
@@ -163,8 +145,17 @@ interact_ch2_gregory {
 		} else {
 			show dialog {
 				SELF "Did you want to take a break?"
-				> "Yes, I want to take a break." = interact_ch2_gregory_breakyes
-				> "No, I want to keep trying." = interact_ch2_gregory_breakno
+				> "Yes, I want to take a break." = interact_ch2_gregory_breakyes {
+					show dialog { SELF "I'll take the mouse proximity detector back then, then." };
+					ch2_mousegame = false;
+					ch2_map_init_hex()
+					show dialog { SELF "Let me know when you want to have another go." };
+					self on_interact = interact_ch2_gregory;
+				}
+				> "No, I want to keep trying." = interact_ch2_gregory_breakno {
+					show dialog { SELF "Good luck." };
+					self on_interact = interact_ch2_gregory;
+				}
 			};
 		}
 	}
@@ -305,22 +296,16 @@ interact_ch2_gregory {
 		}
 		show dialog {
 			SELF "Want to try to catch the mouse?"
-			> "Yes" = interact_ch2_gregory_gameyes
-			> "No" = interact_ch2_gregory_gameno
+			> "Yes" = {
+				entity Mouse on_tick = ch2_mousegame_prepare_board;
+				self on_interact = interact_ch2_gregory;
+			}
+			> "No" = {
+				show dialog { SELF "Oh. Well, let me know when you want to give it a shot." };
+				self on_interact = interact_ch2_gregory;
+			}
 		};
 	}
-}
-
-interact_ch2_gregory_gameyes {
-	entity Mouse on_tick = ch2_mousegame_prepare_board;
-	self on_interact = interact_ch2_gregory;
-}
-
-interact_ch2_gregory_gameno {
-	show dialog {
-		SELF "Oh. Well, let me know when you want to give it a shot."
-	};
-	self on_interact = interact_ch2_gregory;
 }
 
 /* ---------- MOUSE (ADMIN) ---------- */

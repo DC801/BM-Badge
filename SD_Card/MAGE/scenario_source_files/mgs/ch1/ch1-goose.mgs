@@ -117,14 +117,12 @@ debug_win_rake_q {
 	face_player()
 	show dialog {
 		SELF "Position rake in lake?"
-		> "Yes" = debug_win_rake_yes
-		> "No" = debug_win_rake_no
+		> "Yes" = {
+			entity Rake position = geometry "rake-lake-point";
+			self on_interact = debug_win_rake_q;
+		}
+		> "No" = {
+			self on_interact = debug_win_rake_q;
+		}
 	};
-}
-debug_win_rake_yes {
-	entity Rake position = geometry "rake-lake-point";
-	self on_interact = debug_win_rake_q;
-}
-debug_win_rake_no {
-	self on_interact = debug_win_rake_q;
 }

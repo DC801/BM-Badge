@@ -70,26 +70,24 @@ show_dialog_verthandi_glitched {
 show_dialog_verthandi_glitched_q {
 	show dialog {
 		SELF "Would you like to hear the lesson again?"
-		> "Yes" = show_dialog_verthandi_glitched_lesson
-		> "No" = show_dialog_verthandi_glitched_s
+		> "Yes" = show_dialog_verthandi_glitched_lesson {
+			show dialog {
+				SELF "Ring Zero provides you access to our world's superficial state, but there is also a deeper state you cannot see, nor control."
+				"Our physical appearance is only superficial, and our deeper soul remembers our true identities, even if our superficial apperance has changed."
+				"Given enough time, any superficial changes will revert on their own --"
+				"Unless you have severed the body and soul, too, like the Big Bad did when he was last here."
+				"But once restored, the body and soul can reconnect again, and after that, not even Ring Zero can glitch them for long!"
+				"That's why I'm not worried about being glitched! I know that my body and soul are still connected, and I will return to normal soon!"
+				"I hope this explanation was enlightening!"
+			};
+			glitch_lesson = true;
+			goto show_dialog_verthandi_wrapup;
+		}
+		> "No" = {
+			show dialog { SELF "I might be glitched for now, but my soul is quite unharmed! My appearance will return to normal soon." };
+			goto show_dialog_verthandi_wrapup;
+		}
 	};
-}
-show_dialog_verthandi_glitched_lesson {
-	show dialog {
-		SELF "Ring Zero provides you access to our world's superficial state, but there is also a deeper state you cannot see, nor control."
-		"Our physical appearance is only superficial, and our deeper soul remembers our true identities, even if our superficial apperance has changed."
-		"Given enough time, any superficial changes will revert on their own --"
-		"Unless you have severed the body and soul, too, like the Big Bad did when he was last here."
-		"But once restored, the body and soul can reconnect again, and after that, not even Ring Zero can glitch them for long!"
-		"That's why I'm not worried about being glitched! I know that my body and soul are still connected, and I will return to normal soon!"
-		"I hope this explanation was enlightening!"
-	};
-	glitch_lesson = true;
-	goto show_dialog_verthandi_wrapup;
-}
-show_dialog_verthandi_glitched_s {
-	show dialog { SELF "I might be glitched for now, but my soul is quite unharmed! My appearance will return to normal soon." };
-	goto show_dialog_verthandi_wrapup;
 }
 
 /* ---------- dialog: other ---------- */

@@ -273,53 +273,35 @@ ch2_cutscene_castle99 {
 	show dialog {
 		Lambda emote $transparent_serious "It's better to be connected to people. However dangerous things might become, it's better to face those dangers together."
 		"Don't you think?"
-		> "Yeah, better to face danger together." = ch2_cutscene_castle99_dangeryes
-		> "I don't know...." = ch2_cutscene_castle99_dangeridk
+		> "Yeah, better to face danger together." = {
+			show dialog {
+				PLAYER "Yeah, better to face danger together."
+				Lambda emote $transparent_grin "Yeah!"
+			};
+			entity Lambda on_tick = ch2_lambda_shving_off_tickversion;
+			show dialog { Lambda emote $opaque_lowered_almost "So, um, to that end -- here, take this." };
+			goto ch2_cutscene_castle99_continue;
+		}
+		> "I don't know...." = {
+			show dialog { PLAYER "I don't know." };
+			entity Lambda on_tick = ch2_lambda_shving_off_tickversion;
+			show dialog {
+				Lambda "Yeah, I guess things are pretty complicated, aren't they?"
+				Lambda "So, um, anyway -- here, take this."
+			};
+			goto ch2_cutscene_castle99_continue;
+		}
 	};
 }
 
-ch2_cutscene_castle99_dangeryes {
-	show dialog {
-		PLAYER "Yeah, better to face danger together."
-		Lambda emote $transparent_grin "Yeah!"
-	};
-	entity Lambda on_tick = ch2_lambda_shving_off_tickversion;
-	show dialog {
-		Lambda emote $opaque_lowered_almost "So, um, to that end -- here, take this."
-	};
-	goto ch2_cutscene_castle99_continue;
-}
-ch2_cutscene_castle99_dangeridk {
-	show dialog {
-		PLAYER "I don't know."
-	};
-	entity Lambda on_tick = ch2_lambda_shving_off_tickversion;
-	show dialog {
-		Lambda "Yeah, I guess things are pretty complicated, aren't they?"
-		Lambda "So, um, anyway -- here, take this."
-	};
-	goto ch2_cutscene_castle99_continue;
-}
-
-ch2_cutscene_castle99_os_pickup {
-	wait 350ms;
-	player current_animation = 1;
-	player position -> geometry "pickup-spot" origin over 300ms;
-	player current_animation = 0;
-	goto null_script;
-}
-ch2_cutscene_castle99_os_pickup_return {
-	wait 150ms;
-	player strafe = 2;
-	player current_animation = 1;
-	player position -> geometry "warp-spot" origin over 300ms;
-	player current_animation = 0;
-	player strafe = 0;
-	player direction = north;
-	goto null_script;
-}
 ch2_cutscene_castle99_continue {
-	player on_tick = ch2_cutscene_castle99_os_pickup;
+	player on_tick = {
+		wait 350ms;
+		player current_animation = 1;
+		player position -> geometry "pickup-spot" origin over 300ms;
+		player current_animation = 0;
+		goto null_script;
+	};
 	entity Lambda position -> geometry "lambda-walk-line3" origin over 400ms;
 	entity Lambda current_animation = $opaque;
 	wait 700ms;
@@ -327,7 +309,16 @@ ch2_cutscene_castle99_continue {
 		name "" "(You received the mainframe OS!)"
 	};
 	wait 200ms;
-	player on_tick = ch2_cutscene_castle99_os_pickup_return;
+	player on_tick = {
+		wait 150ms;
+		player strafe = 2;
+		player current_animation = 1;
+		player position -> geometry "warp-spot" origin over 300ms;
+		player current_animation = 0;
+		player strafe = 0;
+		player direction = north;
+		goto null_script;
+	};
 	entity Lambda strafe = 2;
 	entity Lambda position -> geometry "lambda-walk-line2" origin over 400ms;
 	entity Lambda current_animation = $opaque;

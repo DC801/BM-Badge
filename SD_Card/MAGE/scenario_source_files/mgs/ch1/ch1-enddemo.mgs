@@ -264,18 +264,14 @@ debug_roll_credits_q {
 	show dialog {
 		SELF alignment BL portrait goldfish
 		"Show credits?"
-		> "Yes" = roll_credits
-		> "No" = debug_roll_credits_no
+		> "Yes" = roll_credits {
+			credits_from_menu = false;
+			load map credits;
+		}
+		> "No" = {
+			self on_interact = debug_roll_credits_q;
+		}
 	};
-}
-
-roll_credits {
-	credits_from_menu = false;
-	load map credits;
-}
-
-debug_roll_credits_no {
-	self on_interact = debug_roll_credits_q;
 }
 
 goose_loiter_honk {

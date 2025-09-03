@@ -129,10 +129,6 @@ on_tick_lodge_goose_ring_acquired {
 enter_secretroom {
 	load map secretroom;
 }
-enter_secretroom_with_guaranteed_cutscene { // for debug purposes
-	tuesdayd = false;
-	enter_secretroom()
-}
 
 // glitch watchers (entities' on_tick)
 
@@ -938,98 +934,107 @@ bypass_tuesday {
 debug_disable_tuesday_q {
 	show dialog {
 		SELF "Disable TUESDAY?"
-		> "Completely" = debug_disable_tuesday_complete
-		> "Partially" = debug_disable_tuesday_walkup
-		> "Un-disable" = debug_undisable_tuesday
-		> "Never mind" = debug_disable_tuesday_no
+		> "Completely" = {
+			set_goodmorning_flags_true()
+			set_artifact_flags_true()
+			set_tuesday_flags_true()
+			hex_control = on;
+			show dialog { SELF "TUESDAY completely disabled." };
+			self on_interact = debug_disable_tuesday_q;
+		}
+		> "Partially" = {
+			set_goodmorning_flags_true()
+			// so you don't accidentally trigger walk_to_lodge
+			// if you set all flags to false before engaging the lodge
+			set_tuesday_flags_true()
+			hide_lodge_crowd = false;
+			// was set true above;
+			// set to false now so the lodge crowd isn't hidden upon load,
+			// so you can voluntarily start the cutscene and it'll look okay
+			hex_control = on;
+			show dialog { SELF "TUESDAY partially disabled." };
+			self on_interact = debug_disable_tuesday_q;
+		}
+		> "Un-disable" = {
+			set_goodmorning_flags_true()
+			// so you don't accidentally trigger walk_to_lodge
+			// if you set all flags to false before engaging the lodge
+			set_artifact_flags_false()
+			set_tuesday_flags_false()
+			hex_control = off;
+			show dialog { SELF "TUESDAY re-enabled." };
+			self on_interact = debug_disable_tuesday_q;
+		}
+		> "Never mind" = {
+			show dialog { SELF "Nothing changed." };
+			self on_interact = debug_disable_tuesday_q;
+		}
 	};
 }
-debug_disable_tuesday_no {
-	show dialog { SELF "Nothing changed." };
-	self on_interact = debug_disable_tuesday_q;
-}
-debug_disable_tuesday_walkup {
-	set_goodmorning_flags_true()
-	// so you don't accidentally trigger walk_to_lodge
-	// if you set all flags to false before engaging the lodge
-	set_tuesday_flags_true()
-	hide_lodge_crowd = false;
-	// was set true above;
-	// set to false now so the lodge crowd isn't hidden upon load,
-	// so you can voluntarily start the cutscene and it'll look okay
-	hex_control = on;
-	show dialog { SELF "TUESDAY partially disabled." };
-	self on_interact = debug_disable_tuesday_q;
-}
-debug_disable_tuesday_complete {
-	set_goodmorning_flags_true()
-	set_artifact_flags_true()
-	set_tuesday_flags_true()
-	hex_control = on;
-	show dialog { SELF "TUESDAY completely disabled." };
-	self on_interact = debug_disable_tuesday_q;
-}
-debug_undisable_tuesday {
-	set_goodmorning_flags_true()
-	// so you don't accidentally trigger walk_to_lodge
-	// if you set all flags to false before engaging the lodge
-	set_artifact_flags_false()
-	set_tuesday_flags_false()
-	hex_control = off;
-	show dialog {
-		SELF "TUESDAY re-enabled."
-	};
-	self on_interact = debug_disable_tuesday_q;
-}
+
 debug_bypass_tuesday_q {
 	face_player()
 	show dialog {
 		SELF "Bypass TUESDAY?"
-		> "Yes" = debug_bypass_tuesday
-		> "Yes (but enable hintman cutscene)" = debug_bypass_tuesday_but_enable_hintman
-		> "No" = debug_bypass_tuesday_no
+		> "Yes" = {
+			bypass_tuesday()
+			set_tuesday_flags_true()
+			show dialog { SELF "Tuesday bypassed." };
+			self on_interact = debug_bypass_tuesday_q;
+		}
+		> "Yes (but enable hintman cutscene)" = {
+			bypass_tuesday()
+			set_tuesday_flags_true()
+			hintman_explanation = false;
+			// set to true in above copied script
+			show dialog { SELF "Tuesday bypassed. Prepare for hintman cutscene." };
+			self on_interact = debug_bypass_tuesday_q;
+		}
+		> "No" = {
+			self on_interact = debug_bypass_tuesday_q;
+		}
 	};
 }
-debug_bypass_tuesday {
-	bypass_tuesday()
-	set_tuesday_flags_true()
-	show dialog { SELF "Tuesday bypassed." };
-	self on_interact = debug_bypass_tuesday_q;
-}
-debug_bypass_tuesday_but_enable_hintman {
-	bypass_tuesday()
-	set_tuesday_flags_true()
-	hintman_explanation = false;
-	// set to true in above copied script
-	show dialog { SELF "Tuesday bypassed. Prepare for hintman cutscene." };
-	self on_interact = debug_bypass_tuesday_q;
-}
-debug_bypass_tuesday_no {
-	self on_interact = debug_bypass_tuesday_q;
-}
+
 debug_cutscene_tuesday_q {
 	face_player()
 	show dialog {
 		SELF "Begin TUESDAY cutscene?"
-		> "Yes" = debug_cutscene_tuesday
-		> "No" = debug_cutscene_tuesday_no
+		> "Yes" = {
+			cutscene_tuesday()
+			self on_interact = debug_bypass_tuesday_q;
+		}
+		> "No" = {
+			self on_interact = debug_bypass_tuesday_q;
+		}
 	};
 }
-debug_cutscene_tuesday {
-	cutscene_tuesday()
-	self on_interact = debug_bypass_tuesday_q;
-}
-debug_cutscene_tuesday_no {
-	self on_interact = debug_bypass_tuesday_q;
-}
+
 debug_touch_artifacts_q {
 	face_player()
 	show dialog {
 		SELF "Do what to artifacts?"
-		> "Touch all artifacts" = debug_touch_artifacts
-		> "Finish lecture and lower bookcase" = debug_touch_artifacts_and_aftermath
-		> "Teleport to secret room (with cutscene)" = enter_secretroom_with_guaranteed_cutscene
-		> "No" = debug_touch_artifacts_no
+		> "Touch all artifacts" = {
+			skip_artifacts()
+			goto debug_touch_artifacts_end;
+		}
+		> "Finish lecture and lower bookcase" = {
+			skip_artifacts()
+			entity Bookcase position = geometry "lodge-hidingplace";
+			ring_acquired = true;
+			hide_lodge_crowd_mini = true;
+			entity Alfonso position = geometry "lodge-hidingplace";
+			entity Bert position = geometry "lodge-hidingplace";
+			entity Jackob position = geometry "lodge-hidingplace";
+			goto debug_touch_artifacts_end;
+		}
+		> "Teleport to secret room (with cutscene)" = { // for debug purposes
+			tuesdayd = false;
+			enter_secretroom()
+		}
+		> "No" = {
+			self on_interact = debug_touch_artifacts_q;
+		}
 	};
 }
 skip_artifacts {
@@ -1042,23 +1047,6 @@ skip_artifacts {
 }
 debug_touch_artifacts_end {
 	self on_interact = debug_touch_artifacts_q;
-}
-debug_touch_artifacts_no {
-	self on_interact = debug_touch_artifacts_q;
-}
-debug_touch_artifacts_and_aftermath {
-	skip_artifacts()
-	entity Bookcase position = geometry "lodge-hidingplace";
-	ring_acquired = true;
-	hide_lodge_crowd_mini = true;
-	entity Alfonso position = geometry "lodge-hidingplace";
-	entity Bert position = geometry "lodge-hidingplace";
-	entity Jackob position = geometry "lodge-hidingplace";
-	goto debug_touch_artifacts_end;
-}
-debug_touch_artifacts {
-	skip_artifacts()
-	goto debug_touch_artifacts_end;
 }
 
 dialog dialog_artifacts_touch { // not used (anymore)?

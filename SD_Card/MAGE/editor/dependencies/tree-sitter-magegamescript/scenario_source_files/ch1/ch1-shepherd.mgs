@@ -141,24 +141,21 @@ debug_sheep_q {
 	face_player()
 	show dialog {
 		SELF "Return sheep to pen?"
-		> "Yes (all)" = debug_sheep_all
-		> "Yes (three out of four)" = debug_sheep_most
-		> "No" = debug_sheep_no
+		> "Yes (all)" = debug_sheep_all {
+			sheep_in_pen()
+			show dialog { SELF "All sheep returned." };
+			self on_interact = debug_sheep_q;
+		}
+		> "Yes (three out of four)" = debug_sheep_most {
+			entity Baa position = geometry baa_point;
+			entity Ram position = geometry ram_point;
+			entity Ewe position = geometry ewe_point;
+			show dialog { SELF "Helga remains." };
+			self on_interact = debug_sheep_q;
+		}
+		> "No" = debug_sheep_no {
+			show dialog { SELF "Nothing changed." };
+			self on_interact = debug_sheep_q;
+		}
 	};
-}
-debug_sheep_all {
-	sheep_in_pen()
-	show dialog { SELF "All sheep returned." };
-	self on_interact = debug_sheep_q;
-}
-debug_sheep_most {
-	entity Baa position = geometry baa_point;
-	entity Ram position = geometry ram_point;
-	entity Ewe position = geometry ewe_point;
-	show dialog { SELF "Helga remains." };
-	self on_interact = debug_sheep_q;
-}
-debug_sheep_no {
-	show dialog { SELF "Nothing changed." };
-	self on_interact = debug_sheep_q;
 }

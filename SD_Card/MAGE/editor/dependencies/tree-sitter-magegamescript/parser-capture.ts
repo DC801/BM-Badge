@@ -627,7 +627,7 @@ const captureFns = {
 			// but actions.length === 1 means there's nothing else there
 			return 'null_script';
 		} else {
-			return [definition];
+			return definition;
 		}
 	},
 };

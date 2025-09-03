@@ -182,23 +182,16 @@ ch2_touch_powersupply {
 	if (ch2_powersupply_permission) {
 		show dialog {
 			name "" "(Pick up the power supply?)"
-			> "Yes" = ch2_touch_powersupply_yes
-			> "No" = ch2_touch_powersupply_no
+			> "Yes" = ch2_touch_powersupply_yes {
+				show dialog { name "" "(You pick up the power supply!)" };
+				ch2_hide_powersupply()
+				ch2_pickup_powersupply()
+				self on_interact = {};
+			}
+			> "No" = ch2_touch_powersupply_no {
+				show dialog { PLAYER "Maybe later, then." };
+				self on_interact = ch2_touch_powersupply;
+			}
 		};
 	}
-}
-
-ch2_touch_powersupply_yes {
-	show dialog {
-		name "" "(You pick up the power supply!)"
-	};
-	ch2_hide_powersupply()
-	ch2_pickup_powersupply()
-	self on_interact = {};
-}
-ch2_touch_powersupply_no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	};
-	self on_interact = ch2_touch_powersupply;  // reset after script jump
 }

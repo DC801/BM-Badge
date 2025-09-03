@@ -239,20 +239,18 @@ debug_ethernet_puzzle_q {
 	show dialog {
 		SELF
 		"Restore Ether Nettle?"
-		> "Yes" = ch1_debug_ethernettle
-		> "No" = ch1_debug_ethernettle_no
+		> "Yes" = ch1_debug_ethernettle {
+			ch1_ethernettle_restore()
+			entity Modem current_animation = 0; // the modem still won't until you speak to Trekkie
+			face_player()
+			show dialog { SELF "Ether Nettle restored." };
+			self on_interact = debug_ethernet_puzzle_q;
+		}
+		> "No" = ch1_debug_ethernettle_no {
+			show dialog { SELF "Wanna do it the hard way, huh? Suit yourself." };
+			self on_interact = debug_ethernet_puzzle_q;
+		}
 	};
-}
-ch1_debug_ethernettle_no {
-	show dialog { SELF "Wanna do it the hard way, huh? Suit yourself." };
-	self on_interact = debug_ethernet_puzzle_q;
-}
-ch1_debug_ethernettle {
-	ch1_ethernettle_restore()
-	entity Modem current_animation = 0; // the modem still won't until you speak to Trekkie
-	face_player()
-	show dialog { SELF "Ether Nettle restored." };
-	self on_interact = debug_ethernet_puzzle_q;
 }
 
 show_dialog_ethernettle_start {

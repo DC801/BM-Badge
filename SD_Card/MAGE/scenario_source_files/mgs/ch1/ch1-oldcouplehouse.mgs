@@ -272,32 +272,29 @@ debug_bea_sequel_q {
 	face_player()
 	show dialog {
 		SELF "Set sequel branch?"
-		> "Yes (plus man)" = debug_bea_sequel_man
-		> "Yes" = debug_bea_sequel_noman
-		> "No" = debug_bea_sequel_no
+		> "Yes (plus man)" = {
+			bea_sequel_branch = true;
+			bea1_quest_done = true;
+			bea1_backstory = true;
+			entity Delmar type = old_man;
+			set_hint_none()
+			delmar_blab()
+			show dialog { SELF "Sequel branch activated, and Delmar is a man." };
+			self on_interact = debug_bea_sequel_q;
+		}
+		> "Yes" = {
+			bea_sequel_branch = true;
+			bea1_quest_done = true;
+			bea1_backstory = true;
+			set_hint_none()
+			show dialog { SELF "Sequel branch activated, and Delmar left alone." };
+			self on_interact = debug_bea_sequel_q;
+		}
+		> "No" = {
+			show dialog { SELF "Nothing changed." };
+			self on_interact = debug_bea_sequel_q;
+		}
 	};
-}
-debug_bea_sequel_man {
-	bea_sequel_branch = true;
-	bea1_quest_done = true;
-	bea1_backstory = true;
-	entity Delmar type = old_man;
-	set_hint_none()
-	delmar_blab()
-	show dialog { SELF "Sequel branch activated, and Delmar is a man." };
-	self on_interact = debug_bea_sequel_q;
-}
-debug_bea_sequel_noman {
-	bea_sequel_branch = true;
-	bea1_quest_done = true;
-	bea1_backstory = true;
-	set_hint_none()
-	show dialog { SELF "Sequel branch activated, and Delmar left alone." };
-	self on_interact = debug_bea_sequel_q;
-}
-debug_bea_sequel_no {
-	show dialog { SELF "Nothing changed." };
-	self on_interact = debug_bea_sequel_q;
 }
 
 dialog dialog_bea_mandud_s { //where was this supposed to go? lol

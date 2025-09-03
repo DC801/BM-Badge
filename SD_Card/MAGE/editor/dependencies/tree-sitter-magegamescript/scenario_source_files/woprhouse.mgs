@@ -66,11 +66,8 @@ show_dialog_wopr_start {
 
 		SELF portrait wopr
 		"PLAY?"
-		> "DO NOT PLAY" = restart_wopr
+		> "DO NOT PLAY" = restart_wopr { self on_interact = show_dialog_wopr_start; }
 	};
-}
-restart_wopr {
-	self on_interact = show_dialog_wopr_start;
 }
 
 show_dialog_woprbooks {

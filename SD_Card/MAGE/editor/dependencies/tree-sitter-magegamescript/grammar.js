@@ -248,7 +248,7 @@ export default grammar({
 				'>',
 				field('label', $.QUOTED_STRING),
 				$.assignment_operator,
-				field('script', $.string),
+				field('script', choice($.string_expandable, $.script_literal)),
 			),
 		serial_dialog_definition: ($) =>
 			seq('serial_dialog', field('serial_dialog_name', $.STRING), $._serial_dialog_block),
@@ -265,7 +265,7 @@ export default grammar({
 				field('option_type', choice('_', '#')),
 				field('label', $.QUOTED_STRING),
 				$.assignment_operator,
-				field('script', $.string),
+				field('script', choice($.string_expandable, $.script_literal)),
 			),
 		script_definition: ($) =>
 			seq(

@@ -219,13 +219,11 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	return ret.filter((v) => v !== undefined);
 };
 
-type ShowDialogOutput = (SHOW_DIALOG | DialogDefinition)[];
-type ShowSerialDialogOutput = (SHOW_SERIAL_DIALOG | SerialDialogDefinition)[];
-
 // Put things here if you don't care about auto-spreading them; otherwise they should go in actionData
 type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
-	action_show_dialog: (f: FileState, node: TreeSitterNode): ShowDialogOutput => {
+	action_show_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const steps: AnyNode[] = [];
 		const dialogNames = capturesForField(f, node, 'dialog_name');
 		if (dialogNames.length === 0) {
 			dialogNames.push(autoIdentifierName(f, node));
@@ -236,19 +234,30 @@ const actionFns: Record<string, ActionFn> = {
 			);
 		}
 		const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
-		const dialogs = Dialog.coerceAll(handleChildrenForField(f, node, 'dialog'));
+		const rawDialogs = handleChildrenForField(f, node, 'dialog');
+		const dialogs: Dialog[] = [];
+		rawDialogs.forEach((v) => {
+			if (v instanceof ScriptDefinition) {
+				steps.push(v);
+			} else if (v instanceof Dialog) {
+				dialogs.push(v);
+			} else {
+				f.quickError(node, 'syntax error', 'idk');
+			}
+		});
 		const action = SHOW_DIALOG.quick(dialogName);
 		if (dialogs.length) {
 			const debug = MathlangLocation.quick(f, node);
 			const dialogDefinition = DialogDefinition.quick(debug, dialogName, dialogs);
-			return [dialogDefinition, action];
+			steps.push(dialogDefinition);
 		}
-		return [action];
+		steps.push(action);
+		return steps;
 	},
-	action_concat_serial_dialog: (f: FileState, node: TreeSitterNode): ShowSerialDialogOutput => {
+	action_concat_serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		return actionShowSerialDialog(f, node, true);
 	},
-	action_show_serial_dialog: (f: FileState, node: TreeSitterNode): ShowSerialDialogOutput => {
+	action_show_serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		return actionShowSerialDialog(f, node, false);
 	},
 };
@@ -258,7 +267,8 @@ const actionShowSerialDialog = (
 	f: FileState,
 	node: TreeSitterNode,
 	disable_newline: boolean = false,
-): ShowSerialDialogOutput => {
+): AnyNode[] => {
+	const steps: AnyNode[] = [];
 	const dialogNames = capturesForField(f, node, 'serial_dialog_name');
 	if (dialogNames.length === 0) {
 		dialogNames.push(autoIdentifierName(f, node));
@@ -272,19 +282,30 @@ const actionShowSerialDialog = (
 		);
 	}
 	const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
+	const rawSerialDialogs = handleChildrenForField(f, node, 'serial_dialog');
+	const serialDialogs: SerialDialog[] = [];
+	rawSerialDialogs.forEach((v) => {
+		if (v instanceof ScriptDefinition) {
+			steps.push(v);
+		} else if (v instanceof SerialDialog) {
+			serialDialogs.push(v);
+		} else {
+			f.quickError(node, 'syntax error', 'idk');
+		}
+	});
 
-	const serialDialogs = handleChildrenForField(f, node, 'serial_dialog');
 	const action = SHOW_SERIAL_DIALOG.quick(dialogName, disable_newline);
 	if (serialDialogs.length) {
 		const debug = MathlangLocation.quick(f, node);
 		const serialDialoDefinition = SerialDialogDefinition.quick(
 			debug,
 			dialogName,
-			SerialDialog.coerce(serialDialogs[0]),
+			serialDialogs[0]
 		);
-		return [serialDialoDefinition, action];
+		steps.push(serialDialoDefinition)
 	}
-	return [action];
+	steps.push(action);
+	return steps;
 };
 
 type actionDataEntry = {

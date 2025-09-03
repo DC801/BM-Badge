@@ -1773,8 +1773,17 @@
           "type": "FIELD",
           "name": "script",
           "content": {
-            "type": "SYMBOL",
-            "name": "string"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string_expandable"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "script_literal"
+              }
+            ]
           }
         }
       ]
@@ -1903,8 +1912,17 @@
           "type": "FIELD",
           "name": "script",
           "content": {
-            "type": "SYMBOL",
-            "name": "string"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string_expandable"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "script_literal"
+              }
+            ]
           }
         }
       ]

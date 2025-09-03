@@ -32,7 +32,6 @@ import {
 	coerceToBool,
 	optionalLastChild,
 	mandatoryLastChild,
-	optionalStringCaptureForField,
 } from './parser-capture.ts';
 import { handleAction } from './parser-actions.ts';
 import {
@@ -438,20 +437,46 @@ const nodeFns = {
 		return [AddSerialDialogSettings.quick(debug, parameters)];
 	},
 	serial_dialog_option: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
 		const optionChar = textForField(f, node, 'option_type');
 		let optionType: SerialOptionType = 'options';
 		if (optionChar === '_') optionType = 'text_options';
 		else if (optionChar !== '#') throw new Error('invalid option type: ' + optionChar);
 		const label = stringCaptureForField(f, node, 'label');
-		const script = stringCaptureForField(f, node, 'script');
-		return [SerialDialogOption.quick(debug, optionType, label, script)];
+		const scriptNode = mandatoryChildForField(f, node, 'script');
+		const scriptCapture = handleCapture(f, scriptNode);
+		let scriptName = '';
+		const steps: AnyNode[] = [];
+		if (typeof scriptCapture === 'string') {
+			scriptName = scriptCapture;
+		} else if (scriptCapture instanceof ScriptDefinition) {
+			steps.push(scriptCapture);
+			scriptName = scriptCapture.scriptName;
+		} else {
+			throw new Error('invalid ScriptDefinition');
+		}
+		const debug = MathlangLocation.quick(f, node);
+		const option = SerialDialogOption.quick(debug, optionType, label, scriptName);
+		steps.push(option);
+		return steps;
 	},
 	dialog_option: (f: FileState, node: TreeSitterNode) => {
 		const label = stringCaptureForField(f, node, 'label');
-		const script = stringCaptureForField(f, node, 'script');
+		const scriptNode = mandatoryChildForField(f, node, 'script');
+		const scriptCapture = handleCapture(f, scriptNode);
+		let scriptName = '';
+		const steps: AnyNode[] = [];
+		if (typeof scriptCapture === 'string') {
+			scriptName = scriptCapture;
+		} else if (scriptCapture instanceof ScriptDefinition) {
+			steps.push(scriptCapture);
+			scriptName = scriptCapture.scriptName;
+		} else {
+			throw new Error('invalid ScriptDefinition');
+		}
 		const debug = MathlangLocation.quick(f, node);
-		return [DialogOption.quick(debug, label, script)];
+		const option = DialogOption.quick(debug, label, scriptName);
+		steps.push(option);
+		return steps;
 	},
 	serial_dialog_definition: (f: FileState, node: TreeSitterNode) => {
 		const serialDialogNode = mandatoryChildForField(f, node, 'serial_dialog');
@@ -470,7 +495,8 @@ const nodeFns = {
 		const debug = MathlangLocation.quick(f, node);
 		return [DialogDefinition.quick(debug, name, dialogs)];
 	},
-	serial_dialog: (f: FileState, node: TreeSitterNode): [SerialDialog] => {
+	serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const steps: AnyNode[] = [];
 		const settings = {};
 		const params = SerialDialogParameter.coerceAll(
 			capturesForField(f, node, 'serial_dialog_parameter'),
@@ -479,9 +505,17 @@ const nodeFns = {
 			settings[v.property] = v.value;
 		});
 		// TODO: make options more closely resemble final form?
-		const options = SerialDialogOption.coerceAll(
-			handleChildrenForField(f, node, 'serial_dialog_option'),
-		);
+		const rawOptions = handleChildrenForField(f, node, 'serial_dialog_option');
+		const options: SerialDialogOption[] = [];
+		rawOptions.forEach((v) => {
+			if (v instanceof ScriptDefinition) {
+				steps.push(v);
+			} else if (v instanceof SerialDialogOption) {
+				options.push(v);
+			} else {
+				f.quickError(node, 'syntax error', 'invalid serial_dialog_option script');
+			}
+		});
 		const messages = capturesForField(f, node, 'serial_message');
 		if (!messages.every((v) => typeof v === 'string')) {
 			throw new Error('not every message is a string');
@@ -492,9 +526,11 @@ const nodeFns = {
 			options,
 		};
 		const serialDialog = buildSerialDialogFromInfo(f, node, info);
-		return [serialDialog];
+		steps.push(serialDialog)
+		return steps;
 	},
-	dialog: (f: FileState, node: TreeSitterNode): [Dialog] => {
+	dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const steps: AnyNode[] = [];
 		// Identifier
 		const identifier = DialogIdentifier.coerce(captureForField(f, node, 'dialog_identifier'));
 		// Settings
@@ -507,7 +543,17 @@ const nodeFns = {
 		const messageN = childrenForField(f, node, 'message');
 		const messages = messageN.map((v) => coerceToString(f, node, handleCapture(f, v)));
 		// Options
-		const options = DialogOption.coerceAll(handleChildrenForField(f, node, 'dialog_option'));
+		const rawOptions = handleChildrenForField(f, node, 'dialog_option');
+		const options: DialogOption[] = [];
+		rawOptions.forEach((v) => {
+			if (v instanceof ScriptDefinition) {
+				steps.push(v);
+			} else if (v instanceof DialogOption) {
+				options.push(v);
+			} else {
+				f.quickError(node, 'syntax error', 'invalid dialog_option script');
+			}
+		});
 		// Build it
 		const info: DialogInfo = {
 			identifier,
@@ -517,7 +563,8 @@ const nodeFns = {
 		};
 		const dialogs = buildDialogFromInfo(f, node, info, messageN);
 		dialogs.debug = MathlangLocation.quick(f, node);
-		return [dialogs];
+		steps.push(dialogs);
+		return steps;
 	},
 	json_literal: (f: FileState, node: TreeSitterNode): JSONLiteral[] => {
 		// TODO: do it more by hand so that errors can be reported more accurately?
