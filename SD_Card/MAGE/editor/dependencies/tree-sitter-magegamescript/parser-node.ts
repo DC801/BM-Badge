@@ -205,7 +205,7 @@ const nodeFns = {
 		// make local const registry based on what we were passed for this call
 		const localConstants: FunctionStackEntry = {};
 		callParams.forEach((callParam, i) => {
-			const paramDebug = MathlangLocation.quick(f, callParamNodes[i]);
+			const paramDebug = debug.using(callParamNodes[i]);
 			const constantName = definition.params[i];
 			const value =
 				typeof callParam === 'boolean'
@@ -381,7 +381,15 @@ const nodeFns = {
 		const temp = quickTemporary();
 		const iffs: ConditionalBlock[] = vertical.map((body, i) => {
 			const condition = CheckVariable.quick(debug, temp, i, '==');
-			return { condition, debug, body };
+			const conditionNode = node.firstChild || node;
+			const block: ConditionalBlock = {
+				debug,
+				condition,
+				conditionNode,
+				body,
+				bodyNode: node,
+			};
+			return block;
 		});
 		const sequence = ifChainMaker(f, node, iffs, [], 'rand_macro');
 
@@ -433,12 +441,12 @@ const nodeFns = {
 		return [ret];
 	},
 	add_serial_dialog_settings: (f: FileState, node: TreeSitterNode) => {
+		const debug = MathlangLocation.quick(f, node);
 		const rawParameters = capturesForField(f, node, 'serial_dialog_parameter');
 		const parameters = SerialDialogParameter.coerceAll(rawParameters);
 		parameters.forEach((param) => {
 			f.settings.serial[param.property] = param.value;
 		});
-		const debug = MathlangLocation.quick(f, node);
 		// Make a node "receipt"
 		return [AddSerialDialogSettings.quick(debug, parameters)];
 	},
@@ -610,10 +618,10 @@ const nodeFns = {
 		const steps = [
 			LabelDefinition.quick(debug, continueL),
 			...block.condition.toSteps(bodyL),
-			GotoLabel.quick(MathlangLocation.quick(f, node), breakL),
+			GotoLabel.quick(debug, breakL),
 			LabelDefinition.quick(debug, bodyL),
 			...body,
-			GotoLabel.quick(MathlangLocation.quick(f, block.conditionNode || node), continueL),
+			GotoLabel.quick(debug.using(block.conditionNode), continueL),
 			LabelDefinition.quick(debug, breakL),
 		];
 		return [MathlangSequence.quick(debug, steps, 'parser-node: while_block')];
@@ -622,17 +630,17 @@ const nodeFns = {
 		const debug = MathlangLocation.quick(f, node);
 
 		const n = f.p.advanceGotoSuffix();
-		const doWhyle = new ConditionalBlock(f, node, 'do while');
+		const block = new ConditionalBlock(f, node, 'do while');
 		const continueL = `do while continue #${n}`;
 		const bodyL = `do while body #${n}`;
 		const breakL = `do while break #${n}`;
-		const body = doAutoBreakContinue(doWhyle.body, continueL, breakL);
+		const body = doAutoBreakContinue(block.body, continueL, breakL);
 
 		const steps = [
 			LabelDefinition.quick(debug, bodyL),
 			...body,
-			LabelDefinition.quick(debug, continueL),
-			...doWhyle.condition.toSteps(bodyL),
+			LabelDefinition.quick(debug.using(block.conditionNode), continueL),
+			...block.condition.toSteps(bodyL),
 			LabelDefinition.quick(debug, breakL),
 		];
 		return [MathlangSequence.quick(debug, steps, 'parser-node: do_while_block')];
@@ -657,12 +665,12 @@ const nodeFns = {
 			...handleNode(f, initializer),
 			LabelDefinition.quick(debug, conditionL),
 			...condition.toSteps(bodyL),
-			GotoLabel.quick(MathlangLocation.quick(f, node), breakL),
+			GotoLabel.quick(debug, breakL),
 			LabelDefinition.quick(debug, bodyL),
 			...body,
 			LabelDefinition.quick(debug, continueL),
 			...handleNode(f, incrementerN),
-			GotoLabel.quick(MathlangLocation.quick(f, conditionN), conditionL),
+			GotoLabel.quick(debug.using(conditionN), conditionL),
 			LabelDefinition.quick(debug, breakL),
 		];
 		return [MathlangSequence.quick(debug, steps, 'parser-node: for_block')];

@@ -206,6 +206,7 @@ export const buildDialogFromInfo = (
 	info: DialogInfo,
 	messageNodes: (TreeSitterNode | null)[],
 ): Dialog => {
+	const debug = MathlangLocation.quick(f, node);
 	const ident = info.identifier;
 	let found = false;
 	let specificSettings: DialogSettings = {};
@@ -283,17 +284,13 @@ export const buildDialogFromInfo = (
 						return ret;
 					})
 					.join('\n');
+			const locations = [debug.using(messageNodes[i])];
 			f.p.newWarning(
-				new MathlangMessage(
-					[MathlangLocation.quick(f, messageNodes[i])],
-					'dialog too long',
-					warningMessage,
-					footer,
-				),
+				new MathlangMessage(locations, 'dialog too long', warningMessage, footer),
 			);
 		}
 	});
-	return new Dialog(MathlangLocation.quick(f, node), {
+	return new Dialog(debug, {
 		messages,
 		options,
 		settings: dialogSettings,

@@ -190,7 +190,7 @@ interrupt_walk {
 	tempvar2 = self current_animation;
 	self current_animation = 0;
 	pause self on_tick;
-	capture_entity_direction("%SELF%", tempvar)
+	get_entity_direction("%SELF%", tempvar)
 	face_player()
 }
 resume_walk {
@@ -203,7 +203,7 @@ capture_player_state {
 	playersave_x = player x;
 	playersave_y = player y;
 	playersave_room = ch2_in_room*1;
-	capture_entity_direction("%PLAYER%", playersave_dir)
+	get_entity_direction("%PLAYER%", playersave_dir)
 }
 
 restore_player_state {

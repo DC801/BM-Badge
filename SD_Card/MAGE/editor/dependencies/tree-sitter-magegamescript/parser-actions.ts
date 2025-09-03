@@ -85,6 +85,7 @@ import {
 	SET_ENTITY_DIRECTION,
 	SET_ENTITY_DIRECTION_TARGET_ENTITY,
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
+	breakIfNotString,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -100,8 +101,6 @@ import {
 	MovableIdentifier,
 	CoordinateIdentifier,
 	DirectionTarget,
-	SerialDialog,
-	Dialog,
 	GotoLabel,
 	MathlangLocation,
 	BoolLiteral,
@@ -126,6 +125,8 @@ import { FileState } from './parser-file.ts';
 // ------------------------ COMMON ACTION HANDLING ------------------------ //
 
 export type GenericObj = Record<string, unknown>;
+type FieldToSpread = { node: TreeSitterNode; captures: Capture[] };
+
 // Takes an object with simple values and an object with array values and "spreads" them --
 // e.g. { a: b }, { c: [d,e] } -> [ {a:b, c:d}, {a:b, c:e} ]
 const spreadValues = (
@@ -133,7 +134,6 @@ const spreadValues = (
 	commonFields: GenericObj,
 	fieldsToSpread: Record<string, FieldToSpread>,
 ): GenericObj[] => {
-	// ->[]
 	// count spreads
 	let spreadSize = -Infinity;
 	Object.values(fieldsToSpread).forEach((spreadField) => {
@@ -149,11 +149,13 @@ const spreadValues = (
 			spreadSize = Math.max(spreadSize, len);
 		}
 	});
+
 	// if it's a single thing, pass it back whole
 	if (spreadSize === -Infinity) {
 		return [commonFields];
 	}
-	// but spread action into multiple variants
+
+	// put spread action into multiple variants
 	const ret: GenericObj[] = [];
 	for (let i = 0; i < spreadSize; i++) {
 		const insert: GenericObj = { ...commonFields };
@@ -164,27 +166,23 @@ const spreadValues = (
 		});
 		ret.push(insert);
 	}
+
+	// DONE
 	return ret;
 };
 
-type FieldToSpread = {
-	node: TreeSitterNode;
-	captures: Capture[];
-};
 export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const data = actionData[node.grammarType];
 	if (!data) {
 		const customFn = actionFns[node.grammarType];
-		if (!customFn)
-			throw new Error(
-				`no action data nor handler function found for action ${node.grammarType}`,
-			);
+		if (!customFn) {
+			const message = `no action data nor handler function found for action ${node.grammarType}`;
+			throw new Error(message);
+		}
 		return customFn(f, node);
 	}
-	const action = {
-		debug: MathlangLocation.quick(f, node),
-		...data.values,
-	};
+	const action = { ...data.values };
+
 	// Action params
 	const captures: string[] = data.captures || [];
 	const fieldsToSpread: Record<string, FieldToSpread> = {};
@@ -210,77 +208,68 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	});
 	const spreads: GenericObj[] = spreadValues(f, action, fieldsToSpread);
 	// Different param combinations will result in different actions,
-	// so let the handler sort them out after the spreads are spread
+	// so let the handler identify them AFTER the spreads are spread
 	const handleFn = data.handle;
-	if (!handleFn) throw new Error('need action handling function?');
-	const ret = spreads.map((v, i) => {
-		return handleFn(v, f, node, i);
-	});
-	return ret.filter((v) => v !== undefined);
+	return spreads.map((v, i) => handleFn(v, f, node, i)).filter((v) => v !== undefined);
 };
 
 // Put things here if you don't care about auto-spreading them; otherwise they should go in actionData
 type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
-	action_show_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const dialogNames = capturesForField(f, node, 'dialog_name');
-		if (dialogNames.length === 0) {
-			dialogNames.push(autoIdentifierName(f, node));
+	action_show_dialog: (f: FileState, node: TreeSitterNode) => {
+		const names = capturesForField(f, node, 'dialog_name');
+		// multi
+		if (names.length > 1) {
+			return names.map((dialogName) => {
+				return SHOW_DIALOG.quick(coerceToString(f, node, dialogName, 'dialogName'));
+			});
 		}
-		if (dialogNames.length > 1) {
-			return dialogNames.map((dialogName) =>
-				SHOW_DIALOG.quick(coerceToString(f, node, dialogName, 'dialogName')),
-			);
-		}
-		const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
+		// single
+		const name = names.length === 0 ? autoIdentifierName(f, node) : breakIfNotString(names[0]);
 		const rawDialogs = handleChildrenForField(f, node, 'dialog');
 		const { scripts: steps, other: dialogs } = extractLambdas(rawDialogs);
-		const action = SHOW_DIALOG.quick(dialogName);
+		const action = SHOW_DIALOG.quick(name);
 		if (dialogs.length) {
+			// single with contents (not just a name)
 			const debug = MathlangLocation.quick(f, node);
-			const dialogDefinition = DialogDefinition.quick(debug, dialogName, dialogs);
+			const dialogDefinition = DialogDefinition.quick(debug, name, dialogs);
 			steps.push(dialogDefinition);
 		}
 		steps.push(action);
 		return steps;
 	},
-	action_concat_serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	action_concat_serial_dialog: (f: FileState, node: TreeSitterNode) => {
 		return actionShowSerialDialog(f, node, true);
 	},
-	action_show_serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	action_show_serial_dialog: (f: FileState, node: TreeSitterNode) => {
 		return actionShowSerialDialog(f, node, false);
 	},
 };
 
-// This is the only way the return type is preserved? Otherwise it gets genericized to AnyNode[]? That can't be right....
 const actionShowSerialDialog = (
 	f: FileState,
 	node: TreeSitterNode,
 	disable_newline: boolean = false,
 ): AnyNode[] => {
-	const dialogNames = capturesForField(f, node, 'serial_dialog_name');
-	if (dialogNames.length === 0) {
-		dialogNames.push(autoIdentifierName(f, node));
-	}
-	if (dialogNames.length > 1) {
-		return dialogNames.map((dialogName) =>
+	const names = capturesForField(f, node, 'serial_dialog_name');
+	// multi
+	if (names.length > 1) {
+		return names.map((dialogName) =>
 			SHOW_SERIAL_DIALOG.quick(
 				coerceToString(f, node, dialogName, 'dialogName'),
 				disable_newline,
 			),
 		);
 	}
-	const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
+	// single
+	const name = names.length === 0 ? autoIdentifierName(f, node) : breakIfNotString(names[0]);
 	const rawSerialDialogs = handleChildrenForField(f, node, 'serial_dialog');
 	const { scripts: steps, other: serialDialogs } = extractLambdas(rawSerialDialogs);
-	const action = SHOW_SERIAL_DIALOG.quick(dialogName, disable_newline);
+	const action = SHOW_SERIAL_DIALOG.quick(name, disable_newline);
 	if (serialDialogs.length) {
+		// single with contents (not just a name)
 		const debug = MathlangLocation.quick(f, node);
-		const serialDialoDefinition = SerialDialogDefinition.quick(
-			debug,
-			dialogName,
-			serialDialogs[0],
-		);
+		const serialDialoDefinition = SerialDialogDefinition.quick(debug, name, serialDialogs[0]);
 		steps.push(serialDialoDefinition);
 	}
 	steps.push(action);
@@ -430,45 +419,27 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: false },
 		captures: ['command', 'script'],
 		handle: (v, f, node) => {
-			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_command');
-			const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
-			if (steps.length === 0) {
-				return action;
-			} else {
-				steps.push(action);
-				const debug = MathlangLocation.quick(f, node);
-				return MathlangSequence.quick(debug, steps, 'action_set_command');
-			}
+			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command');
+			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script }));
+			return MathlangSequence.orSingle(f, node, steps, 'action_set_command');
 		},
 	},
 	action_set_command_fail: {
 		values: { is_fail: true },
 		captures: ['command', 'script'],
 		handle: (v, f, node) => {
-			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
-			const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
-			if (steps.length === 0) {
-				return action;
-			} else {
-				steps.push(action);
-				const debug = MathlangLocation.quick(f, node);
-				return MathlangSequence.quick(debug, steps, 'action_set_command');
-			}
+			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
+			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script }));
+			return MathlangSequence.orSingle(f, node, steps, 'action_set_command_fail');
 		},
 	},
 	action_set_command_arg: {
 		values: { is_fail: true },
 		captures: ['command', 'argument', 'script'],
 		handle: (v, f, node) => {
-			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_command_args');
-			const action = new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script });
-			if (steps.length === 0) {
-				return action;
-			} else {
-				steps.push(action);
-				const debug = MathlangLocation.quick(f, node);
-				return MathlangSequence.quick(debug, steps, 'action_set_command');
-			}
+			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
+			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script }));
+			return MathlangSequence.orSingle(f, node, steps, 'action_set_command_args');
 		},
 	},
 	action_set_ambiguous: {
@@ -511,9 +482,8 @@ const actionData: Record<string, actionDataEntry> = {
 					`\n    ${suggestion} + 0` +
 					`\n    ${suggestion} * 1`;
 				const message = 'these identifiers could be ints or bools';
-				const locations = printNodes.map((printNode) =>
-					MathlangLocation.quick(f, printNode),
-				);
+				const debug = MathlangLocation.quick(f, node);
+				const locations = printNodes.map((printNode) => debug.using(printNode));
 				const warning = new MathlangMessage(
 					locations,
 					'ambiguous identifiers',
@@ -521,7 +491,6 @@ const actionData: Record<string, actionDataEntry> = {
 					footer,
 				);
 				f.p.newWarning(warning);
-				const debug = MathlangLocation.quick(f, node);
 				return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
 			}
 
@@ -852,7 +821,6 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_script: {
 		captures: ['entity', 'script_slot', 'script'],
 		handle: (v, f, node): AnyNode => {
-			const debug = MathlangLocation.quick(f, node);
 			const entity = coerceToString(f, node, v.entity, 'entity');
 			const script_slot = coerceToString(f, node, v.script_slot, 'script_slot');
 			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_script');
@@ -883,7 +851,7 @@ const actionData: Record<string, actionDataEntry> = {
 					`Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`,
 				);
 			}
-			return steps.length === 1 ? steps[0] : MathlangSequence.quick(debug, steps);
+			return MathlangSequence.orSingle(f, node, steps, 'action_set_script');
 		},
 	},
 	action_set_entity_string: {
@@ -898,7 +866,7 @@ const actionData: Record<string, actionDataEntry> = {
 			} else if (v.field === 'path') {
 				return SET_ENTITY_PATH.quick(entity, value);
 			}
-			throw new Error('invalid field?');
+			throw new Error(`invalid field ${v.field} for entity ${entity}`);
 		},
 	},
 	action_op_equals: {

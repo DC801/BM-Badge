@@ -1,0 +1,333 @@
+# TODO
+
+- toSteps etc are a little inconsistent
+
+## Shoulds
+
+- `constructor()` should take `debug: MathlangLocation` and `args: GenericObj` so that they can be created and cloned in a uniform way
+- `clone()` should make a fresh one, not do a shallow clone or whatever
+    - Basic steps: have the `debug` clone itself, and pass the original args as a baseline
+    - Inner MathlangNodes know how to clone themselves, so just .clone() them
+    - Don't forget to `.map()` clone any params that are arrays!
+    - TreeSitterNodes are ok to just pass, since they don't change
+- `coerceAll()` should take `unknown`, not `unknown[]` (should also test for Array-hood)
+- `quick()` should be the way you want to make one in practice (as few args as possible)
+
+# The list
+
+MathlangNode
+
+- mathlang: string,
+- args: GenericObj
+- debug: MathlangLocation
+- sets debug and args automatically
+
+## Specifics:
+
+They all have constructor()
+
+- [ ] FunctionDefinition
+    - [x] clone()
+    - [x] static quick()
+- [ ] AddDialogSettings
+    - [x] clone()
+    - [x] static quick()
+- [ ] AddDialogSettingsTarget
+    - [x] clone()
+    - [x] static quick()
+    - [x] static coerceAll()
+- [ ] AddSerialDialogSettings
+    - [x] clone()
+    - [x] static quick()
+- [ ] ReturnStatement
+    - [x] clone()
+    - [x] static quick()
+- [ ] ContinueStatement
+    - [x] clone()
+    - [x] static quick()
+- [ ] BreakStatement
+    - [x] clone()
+    - [x] static quick()
+- [ ] GotoLabel
+    - [x] clone()
+    - [x] static quick()
+    - [x] print()
+- [ ] DialogDefinition
+    - [x] clone()
+    - [x] static quick()
+    - [x] print()
+- [ ] DialogParameter
+    - [x] clone()
+    - [x] static quick()
+    - [x] static coerceAll()
+- [ ] Dialog
+    - [x] clone()
+    - [x] static coerceAll()
+- [ ] DialogIdentifier
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerce()
+- [ ] DialogOption
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerceAll()
+- [ ] SerialDialogDefinition
+    - [x] clone()
+    - [ ] static quick()
+    - [ ] print()
+- [ ] SerialDialogParameter
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerceAll()
+- [ ] SerialDialog
+    - [x] clone()
+    - [x] static coerce()
+- [ ] SerialDialogOption
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerceAll()
+- [ ] IncludeNode
+    - [x] clone()
+    - [ ] static quick()
+- [ ] ConstantDefinition
+    - [x] clone()
+    - [ ] static quick()
+- [ ] ScriptDefinition
+    - [x] clone()
+    - [ ] static quick()
+- [ ] CommentNode
+    - [x] clone()
+    - [ ] static quick()
+    - [x] print()
+- [ ] LabelDefinition
+    - [x] clone()
+    - [ ] static quick()
+    - [x] print()
+- [ ] JSONLiteral
+    - [x] clone()
+    - [ ] static quick()
+- [ ] CopyMacro
+    - [x] clone()
+    - [ ] static quick()
+    - [x] print()
+- [ ] MathlangSequence
+    - [x] clone()
+    - [x] static quick()
+    - [x] orSingle()
+- [ ] IntExpression
+    - [x] clone() (make children do it)
+    - [x] static coerce()
+    - [ ] IntBinaryExpression
+        - [x] clone()
+        - [x] static coerce()
+        - [ ] toStepsFromSteps() -> steps
+        - [ ] assignToVar() -> MathlangSequence
+    - [ ] IntUnit
+        - [ ] clone() (make children do it)
+        - [ ] static fromAny()
+        - [ ] NumberLiteral
+            - [x] clone()
+            - [ ] static quick()
+        - [ ] IntGetable
+            - [ ] assignToVar()
+            - [ ] IdentifierLiteral
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] EntityIntField
+                - [x] clone()
+                - [x] static coerce()
+                - [ ] static quick()
+                - [ ] intoNumberCheckableEquality()
+            - [ ] RNGSingle
+                - [x] clone()
+                - [ ] static quick()
+                - [x] toSteps(destinationVar) -> AnyNode[]
+                - [x] assignToVar(destinationVar) -> Action
+            - [ ] RNGPair
+                - [x] clone()
+                - [ ] static quick()
+                - [x] toSteps(destinationVar) -> AnyNode[]
+                - [x] assignToVar(destinationVar) -> MathlangSequence
+            - [ ] FnCallReturnValue
+                - [x] clone()
+                - [x] static coerce()
+                - [ ] static quick()
+                - [x] toSteps(destinationVar) -> AnyNode[]
+                - [x] assignToVar(destinationVar) -> MathlangSequence
+- [ ] BoolExpression
+    - [ ] clone() (make children do it)
+    - [ ] invert()
+    - [x] static coerce()
+    - [x] toSteps(destinationLabel) -> AnyNode[] (double check)
+    - [x] assignToVar(destinationVar) -> MathlangSequence
+    - [x] assignToSetBool(destinationAction) -> MathlangSequence
+    - [ ] BoolComparisonSequence
+        - [x] clone()
+        - [ ] getFinalStep()
+        - [ ] invert()
+        - [ ] static quick()
+        - [x] orSingle()
+        - [x] toSteps(destinationLabel) -> AnyNode[]
+    - [ ] BoolUnit
+        - [ ] clone() (make children do it)
+        - [ ] BoolLiteral
+            - [x] clone()
+            - [ ] static quick()
+            - [ ] invert() (and expected_bool)
+            - [x] assignToVar(destinationVar) -> Action
+            - [x] assignToSetBool(destinationAction) -> Action
+        - [ ] BoolGetable
+            - [ ] clone() (make children do it)
+            - [ ] invert()
+            - [ ] toAction()
+            - [ ] CheckEntityGlitched
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckSaveFlag
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckIfEntityIsInGeometry
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckForButtonPress
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckForButtonState
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckDialogOpen
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckSerialDialogOpen
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckDebugMode
+                - [x] clone()
+                - [ ] static quick()
+    - [ ] BoolComparison
+        - [ ] clone() (make children do it)
+        - [ ] invert() (and expected_bool)
+        - [ ] toAction()
+        - [ ] StringCheckable
+            - [ ] updateProp()
+            - [ ] addDetails()
+            - children have
+                - clone()
+                - updateProp()
+                - getProp()
+                - quick()
+            - [ ] CheckEntityName
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityInteractScript
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityTickScript
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityLookScript
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityType
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityPath
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckWarpState
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckMap
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckBLEFlag
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+        - [ ] NumberComparison
+            - [ ] clone() (make children do it)
+            - [ ] CheckVariable
+                - [x] clone()
+                - [ ] static quick()
+            - [ ] CheckVariables
+                - [x] clone()
+                - [ ] static quick()
+        - [ ] NumberCheckableEquality
+            - [ ] clone() (make children do it)
+            - [ ] updateProp() (figure out whether I need this on the parent)
+            - [ ] finalizeValues()
+            - Children have
+                - updateProp()
+                - getProp()
+                - static quick()
+            - [ ] CheckEntityX
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityY
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityPrimaryID
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntitySecondaryID
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityPrimaryIDType
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityCurrentAnimation
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+            - [ ] CheckEntityCurrentFrame
+                - [x] clone()
+                - [ ] updateProp()
+                - [ ] getProp()
+                - [ ] static quick()
+    - [ ] BoolBinaryExpression
+        - [x] clone()
+        - [ ] invert()
+- [ ] BoolSetable
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerce()
+- [ ] MovableIdentifier
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerce()
+- [ ] CoordinateIdentifier
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerce()
+- [ ] DirectionTarget
+    - [x] clone()
+    - [ ] static quick()
+    - [x] static coerce()

@@ -58,16 +58,6 @@ import {
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
 
-const opIntoStringMap: Record<string, string> = {
-	'=': 'SET',
-	'+': 'ADD',
-	'-': 'SUB',
-	'*': 'MUL',
-	'/': 'DIV',
-	'%': 'MOD',
-	'?': 'RNG',
-};
-
 export type Capture = number | string | AnyNode;
 
 // TODO: remove null from node here
@@ -181,7 +171,7 @@ const captureFns = {
 		}
 		return op;
 	},
-	op_equals: (f: FileState, node: TreeSitterNode): string => opIntoStringMap[node.text[0]],
+	op_equals: (f: FileState, node: TreeSitterNode): string => node.text[0],
 	plus_minus_equals: (f: FileState, node: TreeSitterNode): string => node.text,
 	forever: () => true,
 	nsew: (f: FileState, node: TreeSitterNode) => node.text,
@@ -256,18 +246,18 @@ const captureFns = {
 		return BoolSetable.quick(debug, type, '');
 	},
 	int_binary_expression: (f: FileState, node: TreeSitterNode): IntBinaryExpression => {
+		const debug = MathlangLocation.quick(f, node);
 		const rhsNode = mandatoryChildForField(f, node, 'rhs');
 		const lhsNode = mandatoryChildForField(f, node, 'lhs');
 		const op = stringCaptureForField(f, node, 'operator');
 		let rhs = handleCapture(f, rhsNode);
 		let lhs = handleCapture(f, lhsNode);
 		if (!(lhs instanceof IntBinaryExpression)) {
-			lhs = IntUnit.fromAny(MathlangLocation.quick(f, lhsNode), lhs);
+			lhs = IntUnit.fromAny(debug.using(lhsNode), lhs);
 		}
 		if (!(rhs instanceof IntBinaryExpression)) {
-			rhs = IntUnit.fromAny(MathlangLocation.quick(f, rhsNode), rhs);
+			rhs = IntUnit.fromAny(debug.using(rhsNode), rhs);
 		}
-		const debug = MathlangLocation.quick(f, node);
 		return new IntBinaryExpression(debug, { lhs, rhs, op });
 	},
 	bool_binary_expression: (f: FileState, node: TreeSitterNode) => {
@@ -552,11 +542,7 @@ const captureFns = {
 		}
 		dropTemporary();
 		dropTemporary();
-		if (steps.length === 1) return steps[0];
-		if (steps.length === 0) {
-			throw new Error('failed to capture bool_comparison');
-		}
-		return BoolComparisonSequence.quick(debug, steps);
+		return BoolComparisonSequence.orSingle(f, node, steps, 'bool_comparison');
 	},
 	int_setable: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);

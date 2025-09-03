@@ -2414,7 +2414,19 @@ export type ActionMoveOverTime =
 
 export type ActionSetEntityString = SET_ENTITY_NAME | SET_ENTITY_TYPE | SET_ENTITY_PATH;
 
-const breakIfNotStringOrStringArray = (v: unknown): string | string[] => {
+export const breakIfNotTSNodeArray = (v: unknown): TreeSitterNode[] => {
+	if (Array.isArray(v) && v.every((v) => v instanceof TreeSitterNode)) return v;
+	throw new Error('not a TreeSitterNode array');
+};
+export const breakIfNotTSNode = (v: unknown): TreeSitterNode => {
+	if (v instanceof TreeSitterNode) return v;
+	throw new Error('not a TreeSitterNode');
+};
+export const breakIfNotStringArray = (v: unknown): string[] => {
+	if (Array.isArray(v) && v.every((v) => typeof v === 'string')) return v;
+	throw new Error('not a string or a string array');
+};
+export const breakIfNotStringOrStringArray = (v: unknown): string | string[] => {
 	if (typeof v === 'string') return v;
 	if (Array.isArray(v) && v.every((v) => typeof v === 'string')) return v;
 	throw new Error('not a string or a strng array');

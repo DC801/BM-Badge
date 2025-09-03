@@ -16,7 +16,7 @@ fn set_hint_none_if_not_series ($n) {
 	}
 }
 
-fn capture_entity_direction ($name, $captureVar) {
+fn get_entity_direction ($name, $captureVar) {
 	if (entity $name direction == north) {
 		$captureVar = 0;
 	} else if (entity$name direction == east) {

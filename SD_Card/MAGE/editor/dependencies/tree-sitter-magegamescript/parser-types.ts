@@ -21,6 +21,18 @@ export class AnyNode {
 		if (this instanceof MathlangNode) return this.clone();
 		return ACTION.Action.fromArgs(this);
 	}
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('AnyNode[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof AnyNode)) {
+			throw new Error('not every item in array is AnyNode');
+		}
+		return arr;
+	}
+	static cloneAll(steps: AnyNode[]) {
+		return steps.map((v) => v.clone());
+	}
 }
 export class MathlangNode extends AnyNode {
 	mathlang: string;
@@ -33,6 +45,15 @@ export class MathlangNode extends AnyNode {
 	}
 	print() {
 		return `// MATHLANG: ${this.mathlang}`;
+	}
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('MathlangNode[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof MathlangNode)) {
+			throw new Error('not every item in array is MathlangNode');
+		}
+		return arr;
 	}
 }
 
@@ -68,6 +89,10 @@ export class MathlangLocation {
 	}
 	clone() {
 		return new MathlangLocation(this.args);
+	}
+	//TODO: instead of passing `f, node` all the time, just pass one of these and update the node when needed
+	using(newNode: TreeSitterNode) {
+		return MathlangLocation.quick(this.f, newNode);
 	}
 }
 
@@ -154,24 +179,16 @@ export class FunctionDefinition extends MathlangNode {
 		super(debug, args);
 		this.mathlang = 'function_definition';
 		this.name = ACTION.breakIfNotString(args.name);
-		if (!Array.isArray(args.params)) {
-			throw new Error('must be string array');
-		}
-		this.params = args.params.map(ACTION.breakIfNotString);
-		if (!Array.isArray(args.paramNodes)) {
-			throw new Error('must be array');
-		}
-		if (!args.paramNodes.every((v) => v instanceof TreeSitterNode)) {
-			throw new Error('Not TS Nodes');
-		}
-		this.paramNodes = args.paramNodes;
-		if (!(args.bodyNode instanceof TreeSitterNode)) {
-			throw new Error('Not TS Node');
-		}
-		this.bodyNode = args.bodyNode;
+		this.params = ACTION.breakIfNotStringArray(args.params);
+		this.paramNodes = ACTION.breakIfNotTSNodeArray(args.paramNodes);
+		this.bodyNode = ACTION.breakIfNotTSNode(args.bodyNode);
 	}
 	clone() {
-		return new FunctionDefinition(this.debug.clone(), this.args);
+		return new FunctionDefinition(this.debug.clone(), {
+			...this.args,
+			params: this.params.slice(),
+			paramNodes: this.paramNodes.slice(),
+		});
 	}
 	static quick(
 		debug: MathlangLocation,
@@ -192,18 +209,11 @@ export class AddDialogSettings extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'add_dialog_settings';
-		if (
-			!args.targets ||
-			!Array.isArray(args.targets) ||
-			!args.targets.every((v) => v instanceof AddDialogSettingsTarget)
-		) {
-			throw new Error('AddDialogSettings not given valid AddDialogSettingsTarget[]');
-		}
-		this.targets = args.targets;
+		this.targets = AddDialogSettingsTarget.coerceAll(args.targets);
 	}
 	clone() {
-		const clonedTargets = this.targets.map((v) => v.clone());
-		return new AddDialogSettings(this.debug.clone(), { ...this.args, targets: clonedTargets });
+		const targets = AnyNode.cloneAll(this.targets);
+		return new AddDialogSettings(this.debug.clone(), { ...this.args, targets });
 	}
 	static quick(debug: MathlangLocation, targets: AddDialogSettingsTarget[]) {
 		return new AddDialogSettings(debug, { targets });
@@ -218,22 +228,15 @@ export class AddDialogSettingsTarget extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'add_dialog_settings_target';
-		if (
-			!args.parameters ||
-			!Array.isArray(args.parameters) ||
-			!args.parameters.every((v) => v instanceof DialogParameter)
-		) {
-			throw new Error('AddDialogSettingsTarget not given valid DialogParameter[]');
-		}
 		this.type = ACTION.breakIfNotString(args.type);
-		this.parameters = args.parameters;
+		this.parameters = DialogParameter.coerceAll(args.parameters);
 		if (typeof args.target === 'string') this.target = args.target;
 	}
 	clone() {
-		const clonedParameters = this.parameters.map((v) => v.clone());
+		const parameters = AnyNode.cloneAll(this.parameters);
 		return new AddDialogSettingsTarget(this.debug.clone(), {
 			...this.args,
-			parameters: clonedParameters,
+			parameters,
 		});
 	}
 	static quick(
@@ -248,11 +251,14 @@ export class AddDialogSettingsTarget extends MathlangNode {
 			target,
 		});
 	}
-	static coerceAll(array: unknown[]) {
-		if (!array.every((v) => v instanceof AddDialogSettingsTarget)) {
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('AddDialogSettingsTarget[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof AddDialogSettingsTarget)) {
 			throw new Error('not every item in array is AddDialogSettingsTarget');
 		}
-		return array;
+		return arr;
 	}
 }
 
@@ -262,20 +268,13 @@ export class AddSerialDialogSettings extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'add_serial_dialog_settings';
-		if (
-			!args.parameters ||
-			!Array.isArray(args.parameters) ||
-			!args.parameters.every((v) => v instanceof SerialDialogParameter)
-		) {
-			throw new Error('AddSerialDialogSettings not given valid SerialDialogParameter[]');
-		}
-		this.parameters = args.parameters;
+		this.parameters = SerialDialogParameter.coerceAll(args.parameters);
 	}
 	clone() {
-		const newParams = this.parameters.map((v) => v.clone());
+		const parameters = AnyNode.cloneAll(this.parameters);
 		return new AddSerialDialogSettings(this.debug.clone(), {
 			...this.args,
-			parameters: newParams,
+			parameters,
 		});
 	}
 	static quick(debug: MathlangLocation, parameters: SerialDialogParameter[]) {
@@ -361,11 +360,10 @@ export class DialogDefinition extends MathlangNode {
 		this.dialogs = Dialog.coerceAll(args.dialogs);
 	}
 	clone() {
-		const clonedDialogs = this.dialogs.map((v) => v.clone());
-		return new DialogDefinition(this.debug.clone(), { ...this.args, dialogs: clonedDialogs });
+		const dialogs = AnyNode.cloneAll(this.dialogs);
+		return new DialogDefinition(this.debug.clone(), { ...this.args, dialogs });
 	}
 	static quick(debug: MathlangLocation, dialogName: string, dialogs: AnyNode[]) {
-		// AnyNode is okay since the constructor coerces it
 		return new DialogDefinition(debug, { dialogName, dialogs });
 	}
 	print() {
@@ -399,11 +397,14 @@ export class DialogParameter extends MathlangNode {
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new DialogParameter(debug, { property, value });
 	}
-	static coerceAll(array: unknown[]) {
-		if (!array.every((v) => v instanceof DialogParameter)) {
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('DialogParameter[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof DialogParameter)) {
 			throw new Error('not every item in array is DialogParameter');
 		}
-		return array;
+		return arr;
 	}
 }
 
@@ -424,20 +425,13 @@ export class Dialog extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'dialog';
-		if (
-			!args.messages ||
-			!Array.isArray(args.messages) ||
-			!args.messages.every((v) => typeof v === 'string')
-		) {
-			throw new Error('Dialog not given valid messages:string[]');
-		}
 		if (args.options && Array.isArray(args.options)) {
 			if (args.options.length && args.options.every((v) => v instanceof DialogOption)) {
 				this.options = args.options;
 				this.response_type = 'SELECT_FROM_SHORT_LIST';
 			}
 		}
-		this.messages = args.messages;
+		this.messages = ACTION.breakIfNotStringArray(args.messages);
 		if (typeof args.settings === 'object' && args.settings !== null) {
 			Object.entries(args.settings).forEach(([k, v]) => {
 				this[k] = v; // todo: this is a little bit of trust, eh?
@@ -447,18 +441,19 @@ export class Dialog extends MathlangNode {
 	clone() {
 		const newArgs = { ...this.args };
 		if (this.options) {
-			newArgs.options = this.options.map((v) => v.clone());
+			newArgs.options = AnyNode.cloneAll(this.options);
 		}
+		newArgs.messages = this.messages.slice();
 		return new Dialog(this.debug.clone(), newArgs);
 	}
-	static coerceAll(array: unknown) {
-		if (!Array.isArray(array)) {
-			throw new Error('is not array');
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('Dialog[] not an Array');
 		}
-		if (!array.every((v) => v instanceof Dialog)) {
+		if (!arr.every((v) => v instanceof Dialog)) {
 			throw new Error('not every item in array is Dialog');
 		}
-		return array;
+		return arr;
 	}
 }
 
@@ -516,11 +511,14 @@ export class DialogOption extends MathlangNode {
 			script,
 		});
 	}
-	static coerceAll(array: unknown[]) {
-		if (!array.every((v) => v instanceof DialogOption)) {
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('DialogOption[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof DialogOption)) {
 			throw new Error('not every item in array is DialogOption');
 		}
-		return array;
+		return arr;
 	}
 }
 
@@ -578,11 +576,14 @@ export class SerialDialogParameter extends MathlangNode {
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new SerialDialogParameter(debug, { property, value });
 	}
-	static coerceAll(array: unknown[]) {
-		if (!array.every((v) => v instanceof SerialDialogParameter)) {
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('SerialDialogParameter[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof SerialDialogParameter)) {
 			throw new Error('not every item in array is SerialDialogParameter');
 		}
-		return array;
+		return arr;
 	}
 }
 
@@ -594,36 +595,23 @@ export class SerialDialog extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'serial_dialog';
-		if (
-			!args.messages ||
-			!Array.isArray(args.messages) ||
-			!args.messages.every((v) => typeof v === 'string')
-		) {
-			throw new Error('Dialog not given valid messages:string[]');
+		this.messages = ACTION.breakIfNotStringArray(args.messages);
+		if (args.options) {
+			this.options = SerialDialogOption.coerceAll(args.options);
 		}
-		this.messages = args.messages;
-		if (args.options && Array.isArray(args.options)) {
-			if (args.options.length && args.options.every((v) => v instanceof SerialDialogOption)) {
-				this.options = args.options;
-			}
-		}
-		if (args.text_options && Array.isArray(args.text_options)) {
-			if (
-				args.text_options.length &&
-				args.text_options.every((v) => v instanceof SerialDialogOption)
-			) {
-				this.text_options = args.text_options;
-			}
+		if (args.text_options) {
+			this.text_options = SerialDialogOption.coerceAll(args.text_options);
 		}
 	}
 	clone() {
 		const newArgs = { ...this.args };
 		if (this.options) {
-			newArgs.options = this.options.map((v) => v.clone());
+			newArgs.options = AnyNode.cloneAll(this.options);
 		}
 		if (this.text_options) {
-			newArgs.text_options = this.text_options.map((v) => v.clone());
+			newArgs.text_options = AnyNode.cloneAll(this.text_options);
 		}
+		newArgs.messages = this.messages.slice();
 		return new SerialDialog(this.debug.clone(), newArgs);
 	}
 	static coerce(v: unknown) {
@@ -666,11 +654,14 @@ export class SerialDialogOption extends MathlangNode {
 			script,
 		});
 	}
-	static coerceAll(array: unknown[]) {
-		if (!array.every((v) => v instanceof SerialDialogOption)) {
+	static coerceAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('SerialDialogOption[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof SerialDialogOption)) {
 			throw new Error('not every item in array is SerialDialogOption');
 		}
-		return array;
+		return arr;
 	}
 }
 // ------------------------------ ONE-OFFS ------------------------------ \\
@@ -732,44 +723,22 @@ export class ScriptDefinition extends MathlangNode {
 		if (typeof args.testPrint === 'string') this.testPrint = args.testPrint;
 		if (typeof args.printed === 'string') this.printed = args.printed;
 		if (args.rawNodes) {
-			if (
-				!Array.isArray(args.rawNodes) ||
-				!args.rawNodes.every((v) => v instanceof AnyNode)
-			) {
-				throw new Error('ScriptDefinition not given valid rawNodes:AnyNode[]');
-			} else {
-				this.rawNodes = args.rawNodes;
-			}
+			this.rawNodes = AnyNode.coerceAll(args.rawNodes);
 		}
 		if (args.preActions) {
-			if (
-				!Array.isArray(args.preActions) ||
-				!args.preActions.every((v) => v instanceof AnyNode)
-			) {
-				throw new Error('ScriptDefinition not given valid preActions:AnyNode[]');
-			} else {
-				this.preBakingActions = args.preActions;
-			}
+			this.preBakingActions = AnyNode.coerceAll(args.preActions);
 		}
-		if (
-			!args.actions ||
-			!Array.isArray(args.actions) ||
-			!args.actions.every((v) => v instanceof AnyNode)
-		) {
-			throw new Error('ScriptDefinition not given valid actions:AnyNode[]');
-		}
-
-		this.actions = args.actions;
+		this.actions = AnyNode.coerceAll(args.actions);
 		if (args.copyScriptResolved) this.copyScriptResolved = true;
 	}
 	clone() {
 		const cloned = new ScriptDefinition(this.debug.clone(), this.args);
-		cloned.actions = this.actions.map((v) => v.clone());
+		cloned.actions = AnyNode.cloneAll(this.actions);
 		if (this.rawNodes) {
-			cloned.rawNodes = this.rawNodes.map((v) => v.clone());
+			cloned.rawNodes = AnyNode.cloneAll(this.rawNodes);
 		}
 		if (this.preBakingActions) {
-			cloned.preBakingActions = this.preBakingActions.map((v) => v.clone());
+			cloned.preBakingActions = AnyNode.cloneAll(this.preBakingActions);
 		}
 		return cloned;
 	}
@@ -876,16 +845,8 @@ export class MathlangSequence extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'sequence';
-		if (
-			!args.steps ||
-			!Array.isArray(args.steps) ||
-			!args.steps.every((v) => v instanceof AnyNode)
-		) {
-			throw new Error('MathlangSequence not given valid AnyNode[]');
-		}
 		this.type = String(args.type) || 'unspecified sequence type';
-		this.steps = args.steps;
-
+		this.steps = AnyNode.coerceAll(args.steps);
 		if (!(this.steps[0] instanceof CommentNode)) {
 			// TODO: the condition might catch other, non-sequence comments tho?
 			const innerComment = debug.node.text.replace(/[\n\s\t]+/g, ' ');
@@ -897,7 +858,7 @@ export class MathlangSequence extends MathlangNode {
 	}
 	clone() {
 		const newArgs = { ...this.args };
-		newArgs.steps = this.steps.map((v) => v.clone());
+		newArgs.steps = AnyNode.cloneAll(this.steps);
 		return new MathlangSequence(this.debug.clone(), newArgs);
 	}
 	static coerce(v: unknown) {
@@ -909,13 +870,33 @@ export class MathlangSequence extends MathlangNode {
 	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
 		return new MathlangSequence(debug, { steps, type });
 	}
+	static orSingle = (
+		f: FileState,
+		node: TreeSitterNode,
+		steps: AnyNode[],
+		type: string,
+	): AnyNode => {
+		if (steps.length === 0) {
+			throw new Error('empty MathlangSequence steps for ' + type);
+		}
+		if (steps.length === 1) return steps[0];
+		const debug = MathlangLocation.quick(f, node);
+		return MathlangSequence.quick(debug, steps, type);
+	};
 }
 
 // ------------------------------ INT EXPRESSIONS ------------------------------ \\
 
 // TODO: The RNG operation should use macro syntax to be put into IntExpressions, instead of being limited to the ?= operator (probably RNG!(), though pick something that can't be confused with rand!())
 
-export class IntExpression extends MathlangNode {}
+export class IntExpression extends MathlangNode {
+	static coerce(v: unknown) {
+		if (!(v instanceof IntExpression)) {
+			throw new Error('not IntExpression');
+		}
+		return v;
+	}
+}
 
 export class IntBinaryExpression extends IntExpression {
 	mathlang: 'int_binary_expression';
@@ -925,14 +906,8 @@ export class IntBinaryExpression extends IntExpression {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'int_binary_expression';
-		if (!(args.lhs instanceof IntExpression)) {
-			throw new Error('IntBinaryExpression LHS not IntExpression');
-		}
-		if (!(args.rhs instanceof IntExpression)) {
-			throw new Error('IntBinaryExpression RHS not IntExpression');
-		}
-		this.lhs = args.lhs;
-		this.rhs = args.rhs;
+		this.lhs = IntExpression.coerce(args.lhs);
+		this.rhs = IntExpression.coerce(args.rhs);
 		this.op = ACTION.breakIfNotString(args.op);
 	}
 	clone() {
@@ -1014,7 +989,7 @@ export class IntBinaryExpression extends IntExpression {
 		dropTemporary();
 		return new MathlangSequence(this.debug, {
 			steps,
-			type: 'IntBinaryExpression.toSequence',
+			type: 'IntBinaryExpression.assignToVar',
 		});
 	}
 }
@@ -1032,12 +1007,10 @@ export class IntUnit extends IntExpression {
 		if (v instanceof IntBinaryExpression) return v;
 		if (v instanceof IntGetable) return v;
 		if (
-			debug.node instanceof TreeSitterNode &&
 			debug.node.grammarType === 'CONSTANT' &&
 			typeof v !== 'string' &&
 			typeof v !== 'number'
 		) {
-			if (!debug.f) throw new Error('missing f');
 			v = coerceToString(debug.f, debug.node, v, 'constant');
 		}
 		if (typeof v === 'number') {
@@ -1099,17 +1072,17 @@ export class EntityIntField extends IntGetable {
 	clone() {
 		return new EntityIntField(this.debug.clone(), this.args);
 	}
-	static quick(debug: MathlangLocation, entity: string, field: string) {
-		return new EntityIntField(debug, { entity, field });
-	}
-	assignToVar(variable: string) {
-		return ACTION.COPY_VARIABLE.intoVariable(this.entity, this.field, variable);
-	}
 	static coerce(v: unknown) {
 		if (!(v instanceof EntityIntField)) {
 			throw new Error('not EntityIntField');
 		}
 		return v;
+	}
+	static quick(debug: MathlangLocation, entity: string, field: string) {
+		return new EntityIntField(debug, { entity, field });
+	}
+	assignToVar(variable: string) {
+		return ACTION.COPY_VARIABLE.intoVariable(this.entity, this.field, variable);
 	}
 	intoNumberCheckableEquality() {
 		const entity = this.entity;
@@ -1154,6 +1127,9 @@ export class RNGSingle extends IntGetable {
 	static quick(debug: MathlangLocation, value: number) {
 		return new RNGSingle(debug, { value });
 	}
+	toSteps(destinationVar: string) {
+		return [this.assignToVar(destinationVar)];
+	}
 	assignToVar(destinationVar: string) {
 		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?');
 	}
@@ -1192,13 +1168,7 @@ export class FnCallReturnValue extends IntGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.identifier = ACTION.breakIfNotString(args.identifier);
-		if (!Array.isArray(args.steps)) {
-			throw new Error('should be array');
-		}
-		if (!args.steps.every((v) => v instanceof AnyNode)) {
-			throw new Error('should all be AnyNode');
-		}
-		this.steps = args.steps;
+		this.steps = AnyNode.coerceAll(args.steps);
 		const type = ACTION.breakIfNotString(args.type);
 		if (type === 'script' || type === 'fn') {
 			this.type = type;
@@ -1339,21 +1309,17 @@ export class BoolExpression extends MathlangNode {
 
 export class BoolComparisonSequence extends BoolExpression {
 	mathlang: 'bool_expression_sequence';
+	type: string;
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'bool_expression_sequence';
-		if (!Array.isArray(args.steps)) {
-			throw new Error('should be array');
-		}
-		if (!args.steps.every((v) => v instanceof AnyNode)) {
-			throw new Error('should all be AnyNode');
-		}
-		this.steps = args.steps;
+		if (typeof args.type === 'string') this.type = args.type;
+		this.steps = AnyNode.coerceAll(args.steps);
 	}
 	clone() {
 		const newArgs = { ...this.args };
-		newArgs.steps = this.steps.map((v) => v.clone());
+		newArgs.steps = AnyNode.cloneAll(this.steps);
 		return new BoolComparisonSequence(this.debug.clone(), newArgs);
 	}
 	getFinalStep() {
@@ -1368,11 +1334,22 @@ export class BoolComparisonSequence extends BoolExpression {
 		final.expected_bool = !final.expected_bool;
 		return this;
 	}
-	static quick(debug: MathlangLocation, steps: AnyNode[]) {
-		return new BoolComparisonSequence(debug, {
-			steps,
-		});
+	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
+		return new BoolComparisonSequence(debug, { steps, type });
 	}
+	static orSingle = (
+		f: FileState,
+		node: TreeSitterNode,
+		steps: AnyNode[],
+		type: string,
+	): AnyNode => {
+		if (steps.length === 0) {
+			throw new Error('empty BoolComparisonSequence steps for ' + type);
+		}
+		if (steps.length === 1) return steps[0];
+		const debug = MathlangLocation.quick(f, node);
+		return BoolComparisonSequence.quick(debug, steps, type);
+	};
 	toSteps(ifLabel: string) {
 		const final = this.getFinalStep();
 		const newFinal = ACTION.Action.fromArgs({ ...final, label: ifLabel });

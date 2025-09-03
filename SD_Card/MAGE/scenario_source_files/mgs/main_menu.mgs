@@ -298,8 +298,14 @@ menu_player_name_confirm {
 	show dialog {
 		name "" border_tileset menu
 		"Your name is %PLAYER%?"
-		> "Yes" = start_new_game_with_name
-		> "No" = menu_player_name_reset
+		> "Yes" = start_new_game_with_name { // reused below
+			save slot;
+			goto menu_chapter_select_q;
+		}
+		> "No" = menu_player_name_reset { // reused below
+			player name = "Bub";
+			goto menu_player_name_q;
+		}
 	};
 }
 menu_player_name_q {
@@ -348,18 +354,6 @@ menu_player_name_random {
 		> "Yes" = start_new_game_with_name
 		> "No" = menu_player_name_reset
 	};
-}
-
-menu_player_name_reset {
-	player name = "Bub";
-	goto menu_player_name_q;
-}
-
-// Start new game with name
-
-start_new_game_with_name {
-	save slot;
-	goto menu_chapter_select_q;
 }
 
 /* ---------- CHOOSING A CHAPTER ---------- */

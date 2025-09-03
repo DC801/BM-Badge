@@ -229,21 +229,19 @@ export const flattenAndDoAutoReturn = (
 	node: TreeSitterNode,
 	origSteps: AnyNode[],
 ) => {
-	const fakeReturnNode = mandatoryLastChild(f, node);
+	const debug = MathlangLocation.quick(f, node);
 	// flatten/incorporate any sequences
 	const steps = flattenNodes(f, origSteps);
 	// add auto return label at the end
 	const label = 'end of script ' + f.p.advanceGotoSuffix();
-	const autoReturnLabelDefinition = LabelDefinition.quick(
-		MathlangLocation.quick(f, fakeReturnNode),
-		label,
-	);
+	const fakeReturnNode = mandatoryLastChild(f, node);
+	const autoReturnLabelDefinition = LabelDefinition.quick(debug.using(fakeReturnNode), label);
 	steps.push(autoReturnLabelDefinition);
 
 	// change all return statements to goto labels for the "auto return" label
 	steps.forEach((action, i) => {
 		if (action instanceof ReturnStatement) {
-			const labelDebug = MathlangLocation.quick(f, action.debug.node);
+			const labelDebug = debug.using(action.debug.node);
 			steps[i] = GotoLabel.quick(labelDebug, label);
 		}
 	});
@@ -295,10 +293,11 @@ export const simpleBranchMaker = (
 
 export class ConditionalBlock {
 	condition: BoolExpression;
-	conditionNode?: TreeSitterNode;
+	conditionNode: TreeSitterNode;
 	body: AnyNode[];
-	bodyNode?: TreeSitterNode;
+	bodyNode: TreeSitterNode;
 	debug: MathlangLocation;
+	// TODO: make constructor build from processed parts, and move this to its own method that processes it from the base node
 	constructor(f: FileState, node: TreeSitterNode, type: string) {
 		const debug = MathlangLocation.quick(f, node);
 		this.conditionNode = mandatoryChildForField(f, node, 'condition');
@@ -336,7 +335,7 @@ export const ifChainMaker = (
 		const bottomInsert: AnyNode[] = [
 			new LabelDefinition(debug, { label: ifL }),
 			...iff.body,
-			GotoLabel.quick(MathlangLocation.quick(f, iff.bodyNode || iff.debug.node), rendezvousL),
+			GotoLabel.quick(debug.using(iff.bodyNode), rendezvousL),
 		];
 		bottomSteps = bottomInsert.concat(bottomSteps);
 	});
