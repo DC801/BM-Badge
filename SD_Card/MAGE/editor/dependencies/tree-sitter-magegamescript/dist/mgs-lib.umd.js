@@ -4317,7 +4317,6 @@ ${JSON.stringify(symbolNames, null, 2)}`);
   };
   const actionFns = {
     action_show_dialog: (f, node) => {
-      const steps = [];
       const dialogNames = capturesForField(f, node, "dialog_name");
       if (dialogNames.length === 0) {
         dialogNames.push(autoIdentifierName(f, node));
@@ -4329,16 +4328,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       }
       const dialogName = coerceToString(f, node, dialogNames[0], "action_show_dialog dialogName");
       const rawDialogs = handleChildrenForField(f, node, "dialog");
-      const dialogs = [];
-      rawDialogs.forEach((v) => {
-        if (v instanceof ScriptDefinition) {
-          steps.push(v);
-        } else if (v instanceof Dialog) {
-          dialogs.push(v);
-        } else {
-          f.quickError(node, "syntax error", "idk");
-        }
-      });
+      const { scripts: steps, other: dialogs } = extractLambdas(rawDialogs);
       const action = SHOW_DIALOG.quick(dialogName);
       if (dialogs.length) {
         const debug = MathlangLocation.quick(f, node);
@@ -4356,7 +4346,6 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     }
   };
   const actionShowSerialDialog = (f, node, disable_newline = false) => {
-    const steps = [];
     const dialogNames = capturesForField(f, node, "serial_dialog_name");
     if (dialogNames.length === 0) {
       dialogNames.push(autoIdentifierName(f, node));
@@ -4371,16 +4360,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     }
     const dialogName = coerceToString(f, node, dialogNames[0], "action_show_dialog dialogName");
     const rawSerialDialogs = handleChildrenForField(f, node, "serial_dialog");
-    const serialDialogs = [];
-    rawSerialDialogs.forEach((v) => {
-      if (v instanceof ScriptDefinition) {
-        steps.push(v);
-      } else if (v instanceof SerialDialog) {
-        serialDialogs.push(v);
-      } else {
-        f.quickError(node, "syntax error", "idk");
-      }
-    });
+    const { scripts: steps, other: serialDialogs } = extractLambdas(rawSerialDialogs);
     const action = SHOW_SERIAL_DIALOG.quick(dialogName, disable_newline);
     if (serialDialogs.length) {
       const debug = MathlangLocation.quick(f, node);
@@ -4531,16 +4511,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       values: { is_fail: false },
       captures: ["command", "script"],
       handle: (v, f, node) => {
-        let script = "";
-        const steps = [];
-        if (typeof v.script === "string") {
-          script = v.script;
-        } else if (v.script instanceof ScriptDefinition) {
-          steps.push(v.script);
-          script = v.script.scriptName;
-        } else {
-          throw new Error("invalid script in action_set_command");
-        }
+        const { script, steps } = lambdaOrIdentifier(v.script, "action_set_command");
         const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
         if (steps.length === 0) {
           return action;
@@ -4555,16 +4526,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       values: { is_fail: true },
       captures: ["command", "script"],
       handle: (v, f, node) => {
-        let script = "";
-        const steps = [];
-        if (typeof v.script === "string") {
-          script = v.script;
-        } else if (v.script instanceof ScriptDefinition) {
-          steps.push(v.script);
-          script = v.script.scriptName;
-        } else {
-          throw new Error("invalid script in action_set_command");
-        }
+        const { script, steps } = lambdaOrIdentifier(v.script, "action_set_command_fail");
         const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
         if (steps.length === 0) {
           return action;
@@ -4579,16 +4541,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       values: { is_fail: true },
       captures: ["command", "argument", "script"],
       handle: (v, f, node) => {
-        let script = "";
-        const steps = [];
-        if (typeof v.script === "string") {
-          script = v.script;
-        } else if (v.script instanceof ScriptDefinition) {
-          steps.push(v.script);
-          script = v.script.scriptName;
-        } else {
-          throw new Error("invalid script in action_set_command");
-        }
+        const { script, steps } = lambdaOrIdentifier(v.script, "action_set_command_args");
         const action = new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script });
         if (steps.length === 0) {
           return action;
@@ -4925,16 +4878,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         const debug = MathlangLocation.quick(f, node);
         const entity = coerceToString(f, node, v.entity, "entity");
         const script_slot = coerceToString(f, node, v.script_slot, "script_slot");
-        let script = "";
-        const steps = [];
-        if (typeof v.script === "string") {
-          script = v.script;
-        } else if (v.script instanceof ScriptDefinition) {
-          steps.push(v.script);
-          script = v.script.scriptName;
-        } else {
-          throw new Error("invalid script in action_set_script");
-        }
+        const { script, steps } = lambdaOrIdentifier(v.script, "action_set_script");
         if (entity === "%MAP%") {
           if (script_slot === "on_tick") {
             steps.push(SET_MAP_TICK_SCRIPT.quick(script));
@@ -5095,6 +5039,25 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     }
   };
+  const lambdaOrIdentifier = (parsedScript, label) => {
+    const steps = [];
+    let script = "";
+    if (typeof parsedScript === "string") {
+      script = parsedScript;
+    } else if (parsedScript instanceof ScriptDefinition) {
+      steps.push(parsedScript);
+      script = parsedScript.scriptName;
+    } else {
+      throw new Error(`invalid script in ${label}`);
+    }
+    return { script, steps };
+  };
+  const extractLambdas = (steps) => {
+    return {
+      scripts: steps.filter((v) => v instanceof ScriptDefinition),
+      other: steps.filter((v) => !(v instanceof ScriptDefinition))
+    };
+  };
   const handleNode = (f, node) => {
     debugLog(`handleNode: ${node.grammarType}`);
     reportMissingChildNodes(f, node);
@@ -5131,12 +5094,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return [];
     },
     fn: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
       const name2 = stringCaptureForField(f, node, "name");
       if (f.functions[name2]) {
         f.quickError(node, "fn already defined", `fn ${name2} already defined`);
         return [];
       }
+      const debug = MathlangLocation.quick(f, node);
       const paramNodes = childrenForField(f, node, "arg");
       let error = false;
       const params = paramNodes.map((param) => {
@@ -5153,13 +5116,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         return [];
       }
       const bodyNode = mandatoryChildForField(f, node, "body");
-      const definiton = FunctionDefinition.quick(debug, name2, params, paramNodes, bodyNode);
-      f.functions[name2] = definiton;
+      f.functions[name2] = FunctionDefinition.quick(debug, name2, params, paramNodes, bodyNode);
     },
     fn_call: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
       const name2 = stringCaptureForField(f, node, "name");
-      const lastChild = mandatoryLastChild(f, node);
       const definition = f.functions[name2];
       if (!definition) {
         const nameNode = optionalChildForField(f, node, "name") || node;
@@ -5186,28 +5147,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       const localConstants = {};
       callParams.forEach((callParam, i2) => {
-        const debug2 = MathlangLocation.quick(f, callParamNodes[i2]);
+        const paramDebug = MathlangLocation.quick(f, callParamNodes[i2]);
         const constantName = definition.params[i2];
-        const value = typeof callParam === "boolean" ? BoolLiteral.quick(debug2, callParam) : callParam;
-        const constantDefinition = ConstantDefinition.quick(debug2, constantName, value);
+        const value = typeof callParam === "boolean" ? BoolLiteral.quick(paramDebug, callParam) : callParam;
+        const constantDefinition = ConstantDefinition.quick(paramDebug, constantName, value);
         localConstants[constantName] = constantDefinition;
       });
       const stack = f.currFunction;
       stack.unshift(localConstants);
       let body2 = handleNamedChildren(f, definition.bodyNode);
-      body2 = flattenNodes(f, body2);
-      const label = "end of script " + f.p.advanceGotoSuffix();
-      const autoReturnLabelDefinition = LabelDefinition.quick(
-        MathlangLocation.quick(f, lastChild),
-        label
-      );
-      body2.push(autoReturnLabelDefinition);
-      body2.forEach((node2, i2) => {
-        if (node2 instanceof ReturnStatement) {
-          const labelDebug = MathlangLocation.quick(f, node2.debug.node);
-          body2[i2] = GotoLabel.quick(labelDebug, label);
-        }
-      });
+      body2 = flattenAndDoAutoReturn(f, node, body2);
       const sequence = MathlangSequence.quick(debug, body2, "fn_call");
       stack.shift();
       return sequence;
@@ -5238,25 +5187,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (f.constants[label]) {
         f.quickError(node, "constant already defined", `cannot redefine constant ${label}`);
       }
-      f.constants[label] = {
-        debug,
-        value
-      };
+      f.constants[label] = { debug, value };
       return [ConstantDefinition.quick(debug, label, value)];
     },
     include_macro: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
       if (includeRecursion.includes(f.fileName)) {
         includeRecursion.push(f.fileName);
-        throw new Error(
-          `include_macro recursion
-       ${includeRecursion.join("\n       -> ")}`
-        );
+        const message = `include_macro recursion
+       ${includeRecursion.join("\n       -> ")}`;
+        throw new Error(message);
       }
       includeRecursion.push(f.fileName);
       const fileName = stringCaptureForField(f, node, "fileName");
       if (!f.p.fileMap[fileName]) {
-        f.quickError(node, "missing file", `include_macro: cannot find file "${fileName}"`);
+        const message = `include_macro: cannot find file "${fileName}"`;
+        f.quickError(node, "missing file", message);
         includeRecursion.pop();
         return [];
       }
@@ -5265,36 +5211,27 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         f.p.parseFile(fileName);
         insertF = f.p.fileMap[fileName].parsed;
         if (!insertF) {
-          f.quickError(
-            node,
-            "missing file",
-            `include_macro: could not parse prerequesite "${fileName}"`
-          );
+          const message = `include_macro: could not parse prerequesite "${fileName}"`;
+          f.quickError(node, "missing file", message);
           includeRecursion.pop();
           return [];
         }
       }
       debugLog(`include_macro: merging ${fileName} into ${f.fileName}...`);
       Object.keys(insertF.constants).forEach((constantName) => {
-        if (f.constants[constantName]) {
-          f.quickError(
-            node,
-            "constant already defined",
-            `cannot redefine constant ${constantName} (via 'include')`
-          );
-        } else {
+        if (!f.constants[constantName]) {
           f.constants[constantName] = insertF.constants[constantName];
+        } else {
+          const message = `cannot redefine constant ${constantName} (via 'include')`;
+          f.quickError(node, "constant already defined", message);
         }
       });
       Object.keys(insertF.functions).forEach((functionName) => {
-        if (f.functions[functionName]) {
-          f.quickError(
-            node,
-            "fn already defined",
-            `cannot redefine function ${functionName} (via 'include')`
-          );
-        } else {
+        if (!f.functions[functionName]) {
           f.functions[functionName] = insertF.functions[functionName];
+        } else {
+          const message = `cannot redefine function ${functionName} (via 'include')`;
+          f.quickError(node, "fn already defined", message);
         }
       });
       insertF.nodes.forEach((node2) => {
@@ -5353,16 +5290,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return [sequence];
     },
     label_definition: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const label = textForField(f, node, "label");
-      return [LabelDefinition.quick(MathlangLocation.quick(f, node), label)];
+      return [LabelDefinition.quick(debug, label)];
     },
     add_dialog_settings: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const targets = AddDialogSettingsTarget.coerceAll(handleNamedChildren(f, node));
-      return [AddDialogSettings.quick(MathlangLocation.quick(f, node), targets)];
+      return [AddDialogSettings.quick(debug, targets)];
     },
     add_dialog_settings_target: (f, node) => {
-      let settingsTarget = {};
+      const debug = MathlangLocation.quick(f, node);
       const type = textForField(f, node, "type");
+      let settingsTarget = {};
       let target;
       if (type === "default") {
         settingsTarget = f.settings.default;
@@ -5377,14 +5317,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       parameters.forEach((param) => {
         settingsTarget[param.property] = param.value;
       });
-      const debug = MathlangLocation.quick(f, node);
       const ret = AddDialogSettingsTarget.quick(debug, type, parameters, target);
       return [ret];
     },
     add_serial_dialog_settings: (f, node) => {
-      const parameters = SerialDialogParameter.coerceAll(
-        capturesForField(f, node, "serial_dialog_parameter")
-      );
+      const rawParameters = capturesForField(f, node, "serial_dialog_parameter");
+      const parameters = SerialDialogParameter.coerceAll(rawParameters);
       parameters.forEach((param) => {
         f.settings.serial[param.property] = param.value;
       });
@@ -5392,6 +5330,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return [AddSerialDialogSettings.quick(debug, parameters)];
     },
     serial_dialog_option: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const optionChar = textForField(f, node, "option_type");
       let optionType = "options";
       if (optionChar === "_") optionType = "text_options";
@@ -5399,41 +5338,23 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const label = stringCaptureForField(f, node, "label");
       const scriptNode = mandatoryChildForField(f, node, "script");
       const scriptCapture = handleCapture(f, scriptNode);
-      let scriptName = "";
-      const steps = [];
-      if (typeof scriptCapture === "string") {
-        scriptName = scriptCapture;
-      } else if (scriptCapture instanceof ScriptDefinition) {
-        steps.push(scriptCapture);
-        scriptName = scriptCapture.scriptName;
-      } else {
-        throw new Error("invalid ScriptDefinition");
-      }
-      const debug = MathlangLocation.quick(f, node);
-      const option = SerialDialogOption.quick(debug, optionType, label, scriptName);
+      const { script, steps } = lambdaOrIdentifier(scriptCapture, "serial_dialog_option");
+      const option = SerialDialogOption.quick(debug, optionType, label, script);
       steps.push(option);
       return steps;
     },
     dialog_option: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const label = stringCaptureForField(f, node, "label");
       const scriptNode = mandatoryChildForField(f, node, "script");
       const scriptCapture = handleCapture(f, scriptNode);
-      let scriptName = "";
-      const steps = [];
-      if (typeof scriptCapture === "string") {
-        scriptName = scriptCapture;
-      } else if (scriptCapture instanceof ScriptDefinition) {
-        steps.push(scriptCapture);
-        scriptName = scriptCapture.scriptName;
-      } else {
-        throw new Error("invalid ScriptDefinition");
-      }
-      const debug = MathlangLocation.quick(f, node);
-      const option = DialogOption.quick(debug, label, scriptName);
-      steps.push(option);
+      const { script, steps } = lambdaOrIdentifier(scriptCapture, "dialog_option");
+      const ret = DialogOption.quick(debug, label, script);
+      steps.push(ret);
       return steps;
     },
     serial_dialog_definition: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const serialDialogNode = mandatoryChildForField(f, node, "serial_dialog");
       const dialogName = stringCaptureForField(f, node, "serial_dialog_name");
       const serialDialogs = handleNode(f, serialDialogNode);
@@ -5441,17 +5362,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("serial dialogs must have only 1 serial dialog");
       }
       const serialDialog = SerialDialog.coerce(serialDialogs[0]);
-      const debug = MathlangLocation.quick(f, node);
       return [SerialDialogDefinition.quick(debug, dialogName, serialDialog)];
     },
     dialog_definition: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const name2 = stringCaptureForField(f, node, "dialog_name");
       const dialogs = Dialog.coerceAll(handleChildrenForField(f, node, "dialog"));
-      const debug = MathlangLocation.quick(f, node);
       return [DialogDefinition.quick(debug, name2, dialogs)];
     },
     serial_dialog: (f, node) => {
-      const steps = [];
       const settings = {};
       const params = SerialDialogParameter.coerceAll(
         capturesForField(f, node, "serial_dialog_parameter")
@@ -5460,16 +5379,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         settings[v.property] = v.value;
       });
       const rawOptions = handleChildrenForField(f, node, "serial_dialog_option");
-      const options = [];
-      rawOptions.forEach((v) => {
-        if (v instanceof ScriptDefinition) {
-          steps.push(v);
-        } else if (v instanceof SerialDialogOption) {
-          options.push(v);
-        } else {
-          f.quickError(node, "syntax error", "invalid serial_dialog_option script");
-        }
-      });
+      const { scripts: steps, other: options } = extractLambdas(rawOptions);
       const messages = capturesForField(f, node, "serial_message");
       if (!messages.every((v) => typeof v === "string")) {
         throw new Error("not every message is a string");
@@ -5477,14 +5387,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const info2 = {
         settings,
         messages,
-        options
+        options: SerialDialogOption.coerceAll(options)
       };
       const serialDialog = buildSerialDialogFromInfo(f, node, info2);
       steps.push(serialDialog);
       return steps;
     },
     dialog: (f, node) => {
-      const steps = [];
       const identifier = DialogIdentifier.coerce(captureForField(f, node, "dialog_identifier"));
       const settings = {};
       const params = DialogParameter.coerceAll(capturesForField(f, node, "dialog_parameter"));
@@ -5494,16 +5403,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const messageN = childrenForField(f, node, "message");
       const messages = messageN.map((v) => coerceToString(f, node, handleCapture(f, v)));
       const rawOptions = handleChildrenForField(f, node, "dialog_option");
-      const options = [];
-      rawOptions.forEach((v) => {
-        if (v instanceof ScriptDefinition) {
-          steps.push(v);
-        } else if (v instanceof DialogOption) {
-          options.push(v);
-        } else {
-          f.quickError(node, "syntax error", "invalid dialog_option script");
-        }
-      });
+      const siphoned = extractLambdas(rawOptions);
+      const steps = siphoned.scripts;
+      const options = DialogOption.coerceAll(siphoned.other);
       const info2 = {
         identifier,
         settings,
@@ -5532,7 +5434,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return [CopyMacro.quick(MathlangLocation.quick(f, node), script)];
     },
     debug_macro: (f, node) => {
-      const ret = [];
+      const debug = MathlangLocation.quick(f, node);
+      const steps = [];
       let dialogName = "";
       const serialDialogNode = optionalChildForField(f, node, "serial_dialog");
       if (!serialDialogNode) {
@@ -5541,81 +5444,59 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         const serialDialogs = handleNode(f, serialDialogNode);
         const serialDialog = SerialDialog.coerce(serialDialogs[0]);
         dialogName = autoIdentifierName(f, node);
-        ret.push(
+        steps.push(
           new SerialDialogDefinition(MathlangLocation.quick(f, node), {
             dialogName,
             serialDialog
           })
         );
       }
-      const debug = MathlangLocation.quick(f, node);
       const condition = CheckDebugMode.quick(debug, true);
       const ifTrue = SHOW_SERIAL_DIALOG.quick(dialogName);
       const action = simpleBranchMaker(f, node, condition, [ifTrue], []);
-      ret.push(action);
-      return ret;
+      steps.push(action);
+      return steps;
     },
-    looping_block: (f, node, printGotoLabel) => {
-      return handleNamedChildren(f, node).map((v) => {
-        if (v instanceof ContinueStatement) {
-          return GotoLabel.quick(
-            MathlangLocation.quick(f, v.debug.node),
-            `condition #${printGotoLabel}`
-          );
-        } else if (v instanceof BreakStatement) {
-          return GotoLabel.quick(
-            MathlangLocation.quick(f, v.debug.node),
-            `rendezvous #${printGotoLabel}`
-          );
-        }
-        return v;
-      });
+    looping_block: (f, node) => {
+      const n = f.p.advanceGotoSuffix();
+      const steps = handleNamedChildren(f, node);
+      const continueL = `condition #${n}`;
+      const breakL = `break #${n}`;
+      return doAutoBreakContinue(steps, continueL, breakL);
     },
     while_block: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const block = new ConditionalBlock(f, node, "while");
       const n = f.p.advanceGotoSuffix();
-      const conditionL = `while condition #${n}`;
+      const block = new ConditionalBlock(f, node, "while");
+      const continueL = `while continue #${n}`;
       const bodyL = `while body #${n}`;
-      const rendezvousL = `while rendezvous #${n}`;
-      const body2 = block.body.map((v) => {
-        if (v instanceof ContinueStatement)
-          return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), conditionL);
-        if (v instanceof BreakStatement)
-          return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), rendezvousL);
-        return v;
-      });
+      const breakL = `while break #${n}`;
+      const body2 = doAutoBreakContinue(block.body, continueL, breakL);
       const steps = [
-        LabelDefinition.quick(debug, conditionL),
+        LabelDefinition.quick(debug, continueL),
         ...block.condition.toSteps(bodyL),
-        GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
+        GotoLabel.quick(MathlangLocation.quick(f, node), breakL),
         LabelDefinition.quick(debug, bodyL),
         ...body2,
-        GotoLabel.quick(MathlangLocation.quick(f, block.conditionNode || node), conditionL),
-        LabelDefinition.quick(debug, rendezvousL)
+        GotoLabel.quick(MathlangLocation.quick(f, block.conditionNode || node), continueL),
+        LabelDefinition.quick(debug, breakL)
       ];
       return [MathlangSequence.quick(debug, steps, "parser-node: while_block")];
     },
     do_while_block: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const doWhyle = new ConditionalBlock(f, node, "do while");
       const n = f.p.advanceGotoSuffix();
-      const conditionL = `do while condition #${n}`;
+      const doWhyle = new ConditionalBlock(f, node, "do while");
+      const continueL = `do while continue #${n}`;
       const bodyL = `do while body #${n}`;
-      const rendezvousL = `do while rendezvous #${n}`;
-      const body2 = doWhyle.body.map((v) => {
-        if (v instanceof ContinueStatement)
-          return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), conditionL);
-        if (v instanceof BreakStatement)
-          return GotoLabel.quick(MathlangLocation.quick(f, v.debug.node), rendezvousL);
-        return v;
-      });
+      const breakL = `do while break #${n}`;
+      const body2 = doAutoBreakContinue(doWhyle.body, continueL, breakL);
       const steps = [
         LabelDefinition.quick(debug, bodyL),
         ...body2,
-        LabelDefinition.quick(debug, conditionL),
+        LabelDefinition.quick(debug, continueL),
         ...doWhyle.condition.toSteps(bodyL),
-        LabelDefinition.quick(debug, rendezvousL)
+        LabelDefinition.quick(debug, breakL)
       ];
       return [MathlangSequence.quick(debug, steps, "parser-node: do_while_block")];
     },
@@ -5624,31 +5505,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const n = f.p.advanceGotoSuffix();
       const conditionL = `for condition #${n}`;
       const bodyL = `for body #${n}`;
-      const rendezvousL = `for rendezvous #${n}`;
+      const breakL = `for break #${n}`;
       const continueL = `for continue #${n}`;
       const conditionN = mandatoryChildForField(f, node, "condition");
       const condition = BoolExpression.coerce(handleCapture(f, conditionN));
       const bodyN = mandatoryChildForField(f, node, "body");
       const incrementerN = mandatoryChildForField(f, node, "incrementer");
-      const body2 = handleNode(f, bodyN).map((v) => {
-        if (v instanceof ContinueStatement)
-          return GotoLabel.quick(MathlangLocation.quick(f, node), continueL);
-        if (v instanceof BreakStatement)
-          return GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL);
-        return v;
-      });
       const initializer = mandatoryChildForField(f, node, "initializer");
+      const rawBody = handleNode(f, bodyN);
+      const body2 = doAutoBreakContinue(rawBody, continueL, breakL);
       const steps = [
         ...handleNode(f, initializer),
         LabelDefinition.quick(debug, conditionL),
         ...condition.toSteps(bodyL),
-        GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL),
+        GotoLabel.quick(MathlangLocation.quick(f, node), breakL),
         LabelDefinition.quick(debug, bodyL),
         ...body2,
         LabelDefinition.quick(debug, continueL),
         ...handleNode(f, incrementerN),
         GotoLabel.quick(MathlangLocation.quick(f, conditionN), conditionL),
-        LabelDefinition.quick(debug, rendezvousL)
+        LabelDefinition.quick(debug, breakL)
       ];
       return [MathlangSequence.quick(debug, steps, "parser-node: for_block")];
     },
@@ -6235,15 +6111,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     script_literal: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
       let scriptName = "";
-      let scriptBlockNode = optionalChildForField(f, node, "bare_definition");
-      if (!scriptBlockNode) {
+      let blockNode = optionalChildForField(f, node, "bare_definition");
+      if (!blockNode) {
         const useNode = mandatoryChildForField(f, node, "named_definition");
-        scriptBlockNode = mandatoryChildForField(f, useNode, "script_block");
+        blockNode = mandatoryChildForField(f, useNode, "script_block");
         scriptName = stringCaptureForField(f, useNode, "script_name");
       } else {
         scriptName = autoIdentifierName(f, node);
       }
-      const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
+      const definition = ScriptDefinition.processAndMake(debug, scriptName, blockNode);
       if (definition.actions.length === 1) {
         return "null_script";
       } else {
@@ -6665,12 +6541,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "mathlang");
       __publicField(this, "dialogName");
       __publicField(this, "dialogs");
-      if (!args2.dialogs || !Array.isArray(args2.dialogs) || !args2.dialogs.every((v) => v instanceof Dialog)) {
-        throw new Error("DialogDefinition not given valid Dialog[]");
-      }
       this.mathlang = "dialog_definition";
       this.dialogName = breakIfNotString(args2.dialogName);
-      this.dialogs = args2.dialogs;
+      this.dialogs = Dialog.coerceAll(args2.dialogs);
     }
     clone() {
       const clonedDialogs = this.dialogs.map((v) => v.clone());
@@ -6746,6 +6619,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new Dialog(this.debug.clone(), newArgs);
     }
     static coerceAll(array) {
+      if (!Array.isArray(array)) {
+        throw new Error("is not array");
+      }
       if (!array.every((v) => v instanceof Dialog)) {
         throw new Error("not every item in array is Dialog");
       }
@@ -7020,20 +6896,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static processAndMake(debug, scriptName, scriptBlockNode) {
       const f = debug.f;
       const rawActions = handleNode(f, scriptBlockNode);
-      const actions = flattenNodes(f, rawActions);
-      const label = "end of script " + f.p.advanceGotoSuffix();
-      const fakeReturnNode = mandatoryLastChild(f, scriptBlockNode);
-      const autoReturnLabelDefinition = LabelDefinition.quick(
-        MathlangLocation.quick(f, fakeReturnNode),
-        label
-      );
-      actions.push(autoReturnLabelDefinition);
-      actions.forEach((action, i2) => {
-        if (action instanceof ReturnStatement) {
-          const labelDebug = MathlangLocation.quick(f, action.debug.node);
-          actions[i2] = GotoLabel.quick(labelDebug, label);
-        }
-      });
+      const actions = flattenAndDoAutoReturn(f, scriptBlockNode, rawActions);
       return ScriptDefinition.quick(debug, scriptName, actions);
     }
   }
@@ -11042,6 +10905,30 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     });
     return actions;
+  };
+  const flattenAndDoAutoReturn = (f, node, origSteps) => {
+    const fakeReturnNode = mandatoryLastChild(f, node);
+    const steps = flattenNodes(f, origSteps);
+    const label = "end of script " + f.p.advanceGotoSuffix();
+    const autoReturnLabelDefinition = LabelDefinition.quick(
+      MathlangLocation.quick(f, fakeReturnNode),
+      label
+    );
+    steps.push(autoReturnLabelDefinition);
+    steps.forEach((action, i2) => {
+      if (action instanceof ReturnStatement) {
+        const labelDebug = MathlangLocation.quick(f, action.debug.node);
+        steps[i2] = GotoLabel.quick(labelDebug, label);
+      }
+    });
+    return steps;
+  };
+  const doAutoBreakContinue = (steps, continueL, breakL) => {
+    return steps.map((v) => {
+      if (v instanceof ContinueStatement) return GotoLabel.quick(v.debug, continueL);
+      if (v instanceof BreakStatement) return GotoLabel.quick(v.debug, breakL);
+      return v;
+    });
   };
   const simpleBranchMaker = (f, node, condition, trueBlock, falseBlock) => {
     const debug = MathlangLocation.quick(f, node);

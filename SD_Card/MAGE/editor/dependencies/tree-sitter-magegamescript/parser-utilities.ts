@@ -16,10 +16,18 @@ import {
 	FnCallReturnValue,
 	BoolComparisonSequence,
 	JSONLiteral,
+	ReturnStatement,
+	ContinueStatement,
+	BreakStatement,
 } from './parser-types.ts';
 import { FileState } from './parser-file.ts';
 import { type FileMap } from './parser-project.ts';
-import { handleCapture, handleNamedChildren, mandatoryChildForField } from './parser-capture.ts';
+import {
+	handleCapture,
+	handleNamedChildren,
+	mandatoryChildForField,
+	mandatoryLastChild,
+} from './parser-capture.ts';
 
 export const verbose = false;
 export const debugLog = (message: string) => {
@@ -185,6 +193,8 @@ export const autoIdentifierName = (f: FileState, node: TreeSitterNode): string =
 	return f.fileName + '-' + node.startPosition.row + ':' + node.startPosition.column;
 };
 
+// ------------------------ SEQUENCES ------------------------ //
+
 export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => {
 	const actions: AnyNode[] = [];
 	rawActions.forEach((raw) => {
@@ -212,6 +222,40 @@ export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => 
 		}
 	});
 	return actions;
+};
+
+export const flattenAndDoAutoReturn = (
+	f: FileState,
+	node: TreeSitterNode,
+	origSteps: AnyNode[],
+) => {
+	const fakeReturnNode = mandatoryLastChild(f, node);
+	// flatten/incorporate any sequences
+	const steps = flattenNodes(f, origSteps);
+	// add auto return label at the end
+	const label = 'end of script ' + f.p.advanceGotoSuffix();
+	const autoReturnLabelDefinition = LabelDefinition.quick(
+		MathlangLocation.quick(f, fakeReturnNode),
+		label,
+	);
+	steps.push(autoReturnLabelDefinition);
+
+	// change all return statements to goto labels for the "auto return" label
+	steps.forEach((action, i) => {
+		if (action instanceof ReturnStatement) {
+			const labelDebug = MathlangLocation.quick(f, action.debug.node);
+			steps[i] = GotoLabel.quick(labelDebug, label);
+		}
+	});
+	return steps;
+};
+
+export const doAutoBreakContinue = (steps: AnyNode[], continueL: string, breakL: string) => {
+	return steps.map((v) => {
+		if (v instanceof ContinueStatement) return GotoLabel.quick(v.debug, continueL);
+		if (v instanceof BreakStatement) return GotoLabel.quick(v.debug, breakL);
+		return v;
+	});
 };
 
 // ------------------------ CONDITIONS ------------------------ //

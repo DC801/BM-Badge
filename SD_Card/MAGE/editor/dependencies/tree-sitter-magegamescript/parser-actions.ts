@@ -223,7 +223,6 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
 	action_show_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const steps: AnyNode[] = [];
 		const dialogNames = capturesForField(f, node, 'dialog_name');
 		if (dialogNames.length === 0) {
 			dialogNames.push(autoIdentifierName(f, node));
@@ -235,16 +234,7 @@ const actionFns: Record<string, ActionFn> = {
 		}
 		const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
 		const rawDialogs = handleChildrenForField(f, node, 'dialog');
-		const dialogs: Dialog[] = [];
-		rawDialogs.forEach((v) => {
-			if (v instanceof ScriptDefinition) {
-				steps.push(v);
-			} else if (v instanceof Dialog) {
-				dialogs.push(v);
-			} else {
-				f.quickError(node, 'syntax error', 'idk');
-			}
-		});
+		const { scripts: steps, other: dialogs } = extractLambdas(rawDialogs);
 		const action = SHOW_DIALOG.quick(dialogName);
 		if (dialogs.length) {
 			const debug = MathlangLocation.quick(f, node);
@@ -268,7 +258,6 @@ const actionShowSerialDialog = (
 	node: TreeSitterNode,
 	disable_newline: boolean = false,
 ): AnyNode[] => {
-	const steps: AnyNode[] = [];
 	const dialogNames = capturesForField(f, node, 'serial_dialog_name');
 	if (dialogNames.length === 0) {
 		dialogNames.push(autoIdentifierName(f, node));
@@ -283,26 +272,16 @@ const actionShowSerialDialog = (
 	}
 	const dialogName = coerceToString(f, node, dialogNames[0], 'action_show_dialog dialogName');
 	const rawSerialDialogs = handleChildrenForField(f, node, 'serial_dialog');
-	const serialDialogs: SerialDialog[] = [];
-	rawSerialDialogs.forEach((v) => {
-		if (v instanceof ScriptDefinition) {
-			steps.push(v);
-		} else if (v instanceof SerialDialog) {
-			serialDialogs.push(v);
-		} else {
-			f.quickError(node, 'syntax error', 'idk');
-		}
-	});
-
+	const { scripts: steps, other: serialDialogs } = extractLambdas(rawSerialDialogs);
 	const action = SHOW_SERIAL_DIALOG.quick(dialogName, disable_newline);
 	if (serialDialogs.length) {
 		const debug = MathlangLocation.quick(f, node);
 		const serialDialoDefinition = SerialDialogDefinition.quick(
 			debug,
 			dialogName,
-			serialDialogs[0]
+			serialDialogs[0],
 		);
-		steps.push(serialDialoDefinition)
+		steps.push(serialDialoDefinition);
 	}
 	steps.push(action);
 	return steps;
@@ -451,17 +430,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: false },
 		captures: ['command', 'script'],
 		handle: (v, f, node) => {
-			let script: string = '';
-			const steps: AnyNode[] = [];
-			if (typeof v.script === 'string') {
-				// try as identifier
-				script = v.script;
-			} else if (v.script instanceof ScriptDefinition) {
-				steps.push(v.script);
-				script = v.script.scriptName;
-			} else {
-				throw new Error('invalid script in action_set_command');
-			}
+			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_command');
 			const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
 			if (steps.length === 0) {
 				return action;
@@ -476,17 +445,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: true },
 		captures: ['command', 'script'],
 		handle: (v, f, node) => {
-			let script: string = '';
-			const steps: AnyNode[] = [];
-			if (typeof v.script === 'string') {
-				// try as identifier
-				script = v.script;
-			} else if (v.script instanceof ScriptDefinition) {
-				steps.push(v.script);
-				script = v.script.scriptName;
-			} else {
-				throw new Error('invalid script in action_set_command');
-			}
+			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
 			const action = new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script });
 			if (steps.length === 0) {
 				return action;
@@ -501,17 +460,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: true },
 		captures: ['command', 'argument', 'script'],
 		handle: (v, f, node) => {
-			let script: string = '';
-			const steps: AnyNode[] = [];
-			if (typeof v.script === 'string') {
-				// try as identifier
-				script = v.script;
-			} else if (v.script instanceof ScriptDefinition) {
-				steps.push(v.script);
-				script = v.script.scriptName;
-			} else {
-				throw new Error('invalid script in action_set_command');
-			}
+			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_command_args');
 			const action = new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script });
 			if (steps.length === 0) {
 				return action;
@@ -906,17 +855,7 @@ const actionData: Record<string, actionDataEntry> = {
 			const debug = MathlangLocation.quick(f, node);
 			const entity = coerceToString(f, node, v.entity, 'entity');
 			const script_slot = coerceToString(f, node, v.script_slot, 'script_slot');
-			let script: string = '';
-			const steps: AnyNode[] = [];
-			if (typeof v.script === 'string') {
-				// try as identifier
-				script = v.script;
-			} else if (v.script instanceof ScriptDefinition) {
-				steps.push(v.script);
-				script = v.script.scriptName;
-			} else {
-				throw new Error('invalid script in action_set_script');
-			}
+			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_script');
 			if (entity === '%MAP%') {
 				if (script_slot === 'on_tick') {
 					steps.push(SET_MAP_TICK_SCRIPT.quick(script));
@@ -1090,4 +1029,27 @@ const actionData: Record<string, actionDataEntry> = {
 			return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, sign * value);
 		},
 	},
+};
+
+export const lambdaOrIdentifier = (parsedScript: unknown, label: string) => {
+	const steps: AnyNode[] = [];
+	let script = '';
+	if (typeof parsedScript === 'string') {
+		// try as identifier
+		script = parsedScript;
+	} else if (parsedScript instanceof ScriptDefinition) {
+		steps.push(parsedScript);
+		script = parsedScript.scriptName;
+	} else {
+		throw new Error(`invalid script in ${label}`);
+	}
+	return { script, steps };
+};
+
+export const extractLambdas = (steps: AnyNode[]): { scripts: AnyNode[]; other: AnyNode[] } => {
+	// todo: I don't know about this
+	return {
+		scripts: steps.filter((v) => v instanceof ScriptDefinition),
+		other: steps.filter((v) => !(v instanceof ScriptDefinition)),
+	};
 };

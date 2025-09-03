@@ -613,15 +613,15 @@ const captureFns = {
 	script_literal: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		let scriptName = '';
-		let scriptBlockNode = optionalChildForField(f, node, 'bare_definition');
-		if (!scriptBlockNode) {
+		let blockNode = optionalChildForField(f, node, 'bare_definition');
+		if (!blockNode) {
 			const useNode = mandatoryChildForField(f, node, 'named_definition');
-			scriptBlockNode = mandatoryChildForField(f, useNode, 'script_block');
+			blockNode = mandatoryChildForField(f, useNode, 'script_block');
 			scriptName = stringCaptureForField(f, useNode, 'script_name');
 		} else {
 			scriptName = autoIdentifierName(f, node);
 		}
-		const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
+		const definition = ScriptDefinition.processAndMake(debug, scriptName, blockNode);
 		if (definition.actions.length === 1) {
 			// must be 1 because the auto "end of script" label adds one
 			// but actions.length === 1 means there's nothing else there

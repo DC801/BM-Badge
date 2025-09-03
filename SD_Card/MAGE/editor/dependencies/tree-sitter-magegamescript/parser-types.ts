@@ -3,6 +3,7 @@ import { FileState } from './parser-file.ts';
 import * as ACTION from './parser-bytecode-info.ts';
 import {
 	dropTemporary,
+	flattenAndDoAutoReturn,
 	flattenNodes,
 	inverseOpMap,
 	latestTemporary,
@@ -12,20 +13,8 @@ import {
 	simpleBranchMaker,
 } from './parser-utilities.ts';
 import { type GenericObj } from './parser-actions.ts';
-import { coerceToString, mandatoryChildForField, mandatoryLastChild } from './parser-capture.ts';
+import { coerceToString, mandatoryChildForField } from './parser-capture.ts';
 import { handleNode } from './parser-node.ts';
-
-/*
-
-AnyNode
-- must have clone()
-	- if any of the props are AnyNode[] or AnyNode, they must also be cloned
-- some have print()
-
-Todo(?)
-- Make certain classes have "every array is one of me and die break if not" methods?
-
-*/
 
 export class AnyNode {
 	clone() {
@@ -367,22 +356,16 @@ export class DialogDefinition extends MathlangNode {
 	dialogs: Dialog[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		if (
-			!args.dialogs ||
-			!Array.isArray(args.dialogs) ||
-			!args.dialogs.every((v) => v instanceof Dialog)
-		) {
-			throw new Error('DialogDefinition not given valid Dialog[]');
-		}
 		this.mathlang = 'dialog_definition';
 		this.dialogName = ACTION.breakIfNotString(args.dialogName);
-		this.dialogs = args.dialogs;
+		this.dialogs = Dialog.coerceAll(args.dialogs);
 	}
 	clone() {
 		const clonedDialogs = this.dialogs.map((v) => v.clone());
 		return new DialogDefinition(this.debug.clone(), { ...this.args, dialogs: clonedDialogs });
 	}
-	static quick(debug: MathlangLocation, dialogName: string, dialogs: Dialog[]) {
+	static quick(debug: MathlangLocation, dialogName: string, dialogs: AnyNode[]) {
+		// AnyNode is okay since the constructor coerces it
 		return new DialogDefinition(debug, { dialogName, dialogs });
 	}
 	print() {
@@ -468,7 +451,10 @@ export class Dialog extends MathlangNode {
 		}
 		return new Dialog(this.debug.clone(), newArgs);
 	}
-	static coerceAll(array: unknown[]) {
+	static coerceAll(array: unknown) {
+		if (!Array.isArray(array)) {
+			throw new Error('is not array');
+		}
 		if (!array.every((v) => v instanceof Dialog)) {
 			throw new Error('not every item in array is Dialog');
 		}
@@ -558,7 +544,8 @@ export class SerialDialogDefinition extends MathlangNode {
 		newArgs.serialDialog = this.serialDialog.clone();
 		return new SerialDialogDefinition(this.debug.clone(), newArgs);
 	}
-	static quick(debug: MathlangLocation, dialogName: string, serialDialog: SerialDialog) {
+	static quick(debug: MathlangLocation, dialogName: string, serialDialog: AnyNode) {
+		// AnyNode is okay since the constructor coerces it
 		return new SerialDialogDefinition(debug, { dialogName, serialDialog });
 	}
 	print() {
@@ -796,24 +783,8 @@ export class ScriptDefinition extends MathlangNode {
 	) {
 		// TODO figure out where this logic actually goes
 		const f = debug.f;
-		const rawActions: AnyNode[] = handleNode(f, scriptBlockNode);
-		// flatten/incorporate any sequences
-		const actions: AnyNode[] = flattenNodes(f, rawActions);
-		// add auto return label at the end
-		const label = 'end of script ' + f.p.advanceGotoSuffix();
-		const fakeReturnNode = mandatoryLastChild(f, scriptBlockNode);
-		const autoReturnLabelDefinition = LabelDefinition.quick(
-			MathlangLocation.quick(f, fakeReturnNode),
-			label,
-		);
-		actions.push(autoReturnLabelDefinition);
-		// change all return statements to goto labels for the "auto return" label
-		actions.forEach((action, i) => {
-			if (action instanceof ReturnStatement) {
-				const labelDebug = MathlangLocation.quick(f, action.debug.node);
-				actions[i] = GotoLabel.quick(labelDebug, label);
-			}
-		});
+		const rawActions = handleNode(f, scriptBlockNode);
+		const actions = flattenAndDoAutoReturn(f, scriptBlockNode, rawActions);
 		return ScriptDefinition.quick(debug, scriptName, actions);
 	}
 }
