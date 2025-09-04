@@ -3,8 +3,6 @@ import { Action } from './parser-bytecode-info.ts';
 import {
 	MathlangLocation,
 	AnyNode,
-	BoolBinaryExpression,
-	BoolComparison,
 	BoolExpression,
 	MathlangMessage,
 	LabelDefinition,
@@ -12,7 +10,6 @@ import {
 	GotoLabel,
 	MathlangNode,
 	CheckSaveFlag,
-	BoolGetable,
 	FnCallReturnValue,
 	BoolComparisonSequence,
 	JSONLiteral,
@@ -269,26 +266,15 @@ export const simpleBranchMaker = (
 	const n = f.p.advanceGotoSuffix();
 	const ifLabel = `if true #${n}`;
 	const rendezvousLabel = `rendezvous #${n}`;
-
-	let top: AnyNode[] = [];
-	if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
-		top = [Action.fromArgs({ ...condition, label: ifLabel })];
-	} else if (condition instanceof BoolBinaryExpression) {
-		top = condition.toSteps(ifLabel);
-	}
-
 	const steps = [
-		...top,
+		...condition.toSteps(ifLabel),
 		...falseBlock,
 		GotoLabel.quick(debug, rendezvousLabel),
 		LabelDefinition.quick(debug, ifLabel),
 		...trueBlock,
 		LabelDefinition.quick(debug, rendezvousLabel),
 	];
-	return new MathlangSequence(debug, {
-		steps,
-		type: 'longerBranchMaker',
-	});
+	return MathlangSequence.quick(debug, steps, 'simpleBranchMaker');
 };
 
 export class ConditionalBlock {
@@ -298,17 +284,14 @@ export class ConditionalBlock {
 	bodyNode: TreeSitterNode;
 	debug: MathlangLocation;
 	// TODO: make constructor build from processed parts, and move this to its own method that processes it from the base node
-	constructor(f: FileState, node: TreeSitterNode, type: string) {
+	constructor(f: FileState, node: TreeSitterNode) {
 		const debug = MathlangLocation.quick(f, node);
 		this.conditionNode = mandatoryChildForField(f, node, 'condition');
 		// TODO this should not be handled this way! make uniform
 		// Find other cases, too? node handling should be done in one place so it can report errors
 		let condition = handleCapture(f, this.conditionNode);
 		if (typeof condition === 'string') condition = CheckSaveFlag.quick(debug, condition);
-		if (!(condition instanceof BoolExpression)) {
-			throw new Error(type + ' condition not BoolExpression');
-		}
-		this.condition = condition;
+		this.condition = BoolExpression.coerce(condition);
 		this.bodyNode = mandatoryChildForField(f, node, 'body');
 		this.body = handleNamedChildren(f, this.bodyNode);
 		this.debug = MathlangLocation.quick(f, node);
@@ -325,7 +308,7 @@ export const ifChainMaker = (
 	const debug = MathlangLocation.quick(f, node);
 	const rendezvousL: string = label + ` rendezvous #${f.p.advanceGotoSuffix()}`;
 	const steps: AnyNode[] = [];
-	let bottomSteps: AnyNode[] = [];
+	const bottomSteps: AnyNode[] = [];
 
 	iffs.forEach((iff) => {
 		const ifL = `if true #${f.p.advanceGotoSuffix()}`;
@@ -333,18 +316,18 @@ export const ifChainMaker = (
 		steps.push(...iff.condition.toSteps(ifL));
 		// add bottom half
 		const bottomInsert: AnyNode[] = [
-			new LabelDefinition(debug, { label: ifL }),
+			LabelDefinition.quick(debug, ifL),
 			...iff.body,
 			GotoLabel.quick(debug.using(iff.bodyNode), rendezvousL),
 		];
-		bottomSteps = bottomInsert.concat(bottomSteps);
+		bottomSteps.unshift(...bottomInsert);
 	});
 
 	steps.push(...elseBody);
 	steps.push(GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL));
 	const combined = steps.concat(bottomSteps);
 	combined.push(LabelDefinition.quick(debug, rendezvousL));
-	return new MathlangSequence(debug, { steps: combined, type: 'parser-node: ' + label });
+	return MathlangSequence.quick(debug, combined, `parser-node: ${label}`);
 };
 
 export const simplifyLabelGotos = (actions: AnyNode[]): AnyNode[] => {

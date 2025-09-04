@@ -609,7 +609,7 @@ const nodeFns = {
 		const debug = MathlangLocation.quick(f, node);
 
 		const n = f.p.advanceGotoSuffix();
-		const block = new ConditionalBlock(f, node, 'while');
+		const block = new ConditionalBlock(f, node);
 		const continueL = `while continue #${n}`;
 		const bodyL = `while body #${n}`;
 		const breakL = `while break #${n}`;
@@ -630,7 +630,7 @@ const nodeFns = {
 		const debug = MathlangLocation.quick(f, node);
 
 		const n = f.p.advanceGotoSuffix();
-		const block = new ConditionalBlock(f, node, 'do while');
+		const block = new ConditionalBlock(f, node);
 		const continueL = `do while continue #${n}`;
 		const bodyL = `do while body #${n}`;
 		const breakL = `do while break #${n}`;
@@ -722,7 +722,7 @@ const nodeFns = {
 	if_chain: (f: FileState, node: TreeSitterNode) => {
 		const ifNodes = childrenForField(f, node, 'if_block');
 		// todo: this could probably be improved somehow
-		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v, 'if'));
+		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v));
 		const elseNode = optionalChildForField(f, node, 'else_block');
 		let elseBody: AnyNode[] = [];
 		if (elseNode) {

@@ -6,7 +6,6 @@ import {
 	flattenAndDoAutoReturn,
 	flattenNodes,
 	inverseOpMap,
-	latestTemporary,
 	newTemporary,
 	quickTemporary,
 	RETURN,
@@ -896,6 +895,9 @@ export class IntExpression extends MathlangNode {
 		}
 		return v;
 	}
+	toSteps(destinationVar: string) {
+		return this.toSteps(destinationVar);
+	}
 }
 
 export class IntBinaryExpression extends IntExpression {
@@ -922,85 +924,39 @@ export class IntBinaryExpression extends IntExpression {
 		}
 		return v;
 	}
-	toStepsFromSteps(steps: AnyNode[]) {
-		const temp = latestTemporary();
+	toSteps(destinationVar: string): AnyNode[] {
+		const steps: AnyNode[] = [];
 		const lhs = this.lhs;
 		const op = this.op;
 		const rhs = this.rhs;
-		if (lhs instanceof IdentifierLiteral) {
-			steps.push(ACTION.MUTATE_VARIABLES.set(lhs.debug, temp, lhs.source));
-		} else if (lhs instanceof NumberLiteral) {
-			steps.push(ACTION.MUTATE_VARIABLE.set(temp, lhs.value));
-		} else if (lhs instanceof EntityIntField) {
-			steps.push(ACTION.COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, temp));
-		} else if (lhs instanceof RNGSingle) {
-			steps.push(ACTION.MUTATE_VARIABLE.change(lhs.debug, temp, lhs.value, '?'));
-		} else if (lhs instanceof RNGPair) {
-			steps.push(...lhs.toSteps(temp));
-		} else if (lhs instanceof FnCallReturnValue) {
-			steps.push(...lhs.toSteps(temp));
+
+		// set up the LHS
+		if (lhs instanceof IntUnit) {
+			steps.push(...lhs.toSteps(destinationVar));
 		} else if (lhs instanceof IntBinaryExpression) {
 			// can use the same temporary since it's the lhs and we're going LTR
-			lhs.toStepsFromSteps(steps);
+			steps.push(...lhs.toSteps(destinationVar));
 		}
-		if (rhs instanceof IdentifierLiteral) {
-			steps.push(ACTION.MUTATE_VARIABLES.change(temp, rhs.source, op));
-		} else if (rhs instanceof NumberLiteral) {
-			if (invisibleMath(op, rhs.value)) {
-				// invisible == *1 or +0
-			} else {
-				steps.push(ACTION.MUTATE_VARIABLE.change(rhs.debug, temp, rhs.value, op));
-			}
-		} else if (rhs instanceof EntityIntField) {
-			const quickTemp = quickTemporary();
-			steps.push(
-				rhs.assignToVar(quickTemp),
-				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
-			);
-		} else if (rhs instanceof RNGSingle) {
-			const quickTemp = quickTemporary();
-			steps.push(
-				rhs.assignToVar(quickTemp),
-				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
-			);
-		} else if (rhs instanceof RNGPair) {
-			const quickTemp = quickTemporary();
-			steps.push(
-				...rhs.toSteps(quickTemp),
-				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
-			);
-		} else if (rhs instanceof FnCallReturnValue) {
-			const quickTemp = quickTemporary();
-			steps.push(
-				...rhs.toSteps(quickTemp),
-				ACTION.MUTATE_VARIABLES.change(temp, quickTemp, op),
-			);
-		} else if (rhs instanceof IntBinaryExpression) {
+
+		// do the RHS
+		if (rhs instanceof IntUnit) {
+			steps.push(...rhs.toStepsWithOp(destinationVar, op));
+		}
+		if (rhs instanceof IntBinaryExpression) {
 			const newTemp = newTemporary();
-			rhs.toStepsFromSteps(steps);
-			steps.push(ACTION.MUTATE_VARIABLES.change(temp, newTemp, op));
+			steps.push(...rhs.toSteps(destinationVar));
+			steps.push(ACTION.MUTATE_VARIABLES.change(destinationVar, newTemp, op));
 			dropTemporary();
 		}
 		return steps;
 	}
 	assignToVar(destinationVar: string) {
-		newTemporary(destinationVar); // the inside uses latestTemporary()
-		const steps = this.toStepsFromSteps([]);
+		newTemporary(destinationVar);
+		const steps = this.toSteps(destinationVar);
 		dropTemporary();
-		return new MathlangSequence(this.debug, {
-			steps,
-			type: 'IntBinaryExpression.assignToVar',
-		});
+		return MathlangSequence.quick(this.debug, steps, 'IntBinaryExpression.assignToVar');
 	}
 }
-
-const invisibleMath = (op: string, operand: number): boolean => {
-	if (op === '+' && operand === 0) return true;
-	if (op === '-' && operand === 0) return true;
-	if (op === '*' && operand === 1) return true;
-	if (op === '/' && operand === 1) return true;
-	return false;
-};
 
 export class IntUnit extends IntExpression {
 	static fromAny(debug: MathlangLocation, v: unknown) {
@@ -1021,6 +977,29 @@ export class IntUnit extends IntExpression {
 		}
 		throw new Error('invalid IntUnit');
 	}
+	toSteps(destinationVar: string) {
+		// TODO: I think this shouldn't be being used?
+		return [this.assignToVar(destinationVar)];
+	}
+	assignToVar(variable: string) {
+		// TODO: I think this shouldn't be being used?
+		return ACTION.Action.fromArgs({ ...this, variable });
+	}
+	toStepsWithOp(destinationVar: string, op: string) {
+		const quickTemp = quickTemporary();
+		const steps = [
+			...this.toSteps(quickTemp),
+			ACTION.MUTATE_VARIABLES.change(destinationVar, quickTemp, op),
+		];
+		return steps;
+	}
+	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
+		return MathlangSequence.quick(
+			this.debug,
+			this.toStepsWithOp(destinationVar, op),
+			`from IntGetable.assignToVarWithOp`,
+		);
+	}
 }
 
 export class NumberLiteral extends IntUnit {
@@ -1035,15 +1014,24 @@ export class NumberLiteral extends IntUnit {
 	static quick(debug: MathlangLocation, value: number) {
 		return new NumberLiteral(debug, { value });
 	}
+	toSteps(destinationVar: string) {
+		return [this.assignToVar(destinationVar)];
+	}
+	assignToVar(destinationVar: string): AnyNode {
+		return ACTION.MUTATE_VARIABLE.set(destinationVar, this.value);
+	}
+	toStepsWithOp(destinationVar: string, op: string) {
+		return [this.assignToVarWithOp(destinationVar, op)];
+	}
+	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
+		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, op);
+	}
 }
 export class IntGetable extends IntUnit {
 	mathlang: 'int_getable';
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'int_getable';
-	}
-	assignToVar(variable: string) {
-		return ACTION.Action.fromArgs({ ...this, variable });
 	}
 }
 export class IdentifierLiteral extends IntGetable {
@@ -1057,6 +1045,18 @@ export class IdentifierLiteral extends IntGetable {
 	}
 	static quick(debug: MathlangLocation, source: string) {
 		return new IdentifierLiteral(debug, { source });
+	}
+	toSteps(destinationVar: string) {
+		return [this.assignToVar(destinationVar)];
+	}
+	assignToVar(destinationVar: string): AnyNode {
+		return ACTION.MUTATE_VARIABLES.set(this.debug, destinationVar, this.source);
+	}
+	toStepsWithOp(destinationVar: string, op: string) {
+		return [this.assignToVarWithOp(destinationVar, op)];
+	}
+	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
+		return ACTION.MUTATE_VARIABLES.change(destinationVar, this.source, op);
 	}
 }
 export class EntityIntField extends IntGetable {
@@ -1081,8 +1081,44 @@ export class EntityIntField extends IntGetable {
 	static quick(debug: MathlangLocation, entity: string, field: string) {
 		return new EntityIntField(debug, { entity, field });
 	}
+	toSteps(destinationVar: string) {
+		return [this.assignToVar(destinationVar)];
+	}
 	assignToVar(variable: string) {
 		return ACTION.COPY_VARIABLE.intoVariable(this.entity, this.field, variable);
+	}
+	setToVariable(variable: string) {
+		return ACTION.COPY_VARIABLE.intoField(variable, this.entity, this.field);
+	}
+	setToNumber(value: number) {
+		if (this.field === 'x') {
+			return ACTION.SET_ENTITY_X.quick(this.entity, value);
+		}
+		if (this.field === 'y') {
+			return ACTION.SET_ENTITY_Y.quick(this.entity, value);
+		}
+		if (this.field === 'primary_id') {
+			return ACTION.SET_ENTITY_PRIMARY_ID.quick(this.entity, value);
+		}
+		if (this.field === 'secondary_id') {
+			return ACTION.SET_ENTITY_SECONDARY_ID.quick(this.entity, value);
+		}
+		if (this.field === 'primary_id_type') {
+			return ACTION.SET_ENTITY_PRIMARY_ID_TYPE.quick(this.entity, value);
+		}
+		if (this.field === 'current_animation') {
+			return ACTION.SET_ENTITY_CURRENT_ANIMATION.quick(this.entity, value);
+		}
+		if (this.field === 'animation_frame') {
+			return ACTION.SET_ENTITY_CURRENT_FRAME.quick(this.entity, value);
+		}
+		if (this.field === 'strafe') {
+			return ACTION.SET_ENTITY_MOVEMENT_RELATIVE.quick(this.entity, value);
+		}
+		if (this.field === 'relative_direction') {
+			return ACTION.SET_ENTITY_DIRECTION_RELATIVE.quick(this.entity, value);
+		}
+		throw new Error('unreachable');
 	}
 	intoNumberCheckableEquality() {
 		const entity = this.entity;
@@ -1155,10 +1191,11 @@ export class RNGPair extends IntGetable {
 		];
 	}
 	assignToVar(destinationVar: string) {
-		return new MathlangSequence(this.debug, {
-			steps: this.toSteps(destinationVar),
-			type: `RNGPair.toSequence`,
-		});
+		return MathlangSequence.quick(
+			this.debug,
+			this.toSteps(destinationVar),
+			`RNGPair.toSequence`,
+		);
 	}
 }
 export class FnCallReturnValue extends IntGetable {
@@ -1216,76 +1253,13 @@ export class BoolExpression extends MathlangNode {
 		}
 		return v;
 	}
-	// TODO: See which bits of this are duplicate (check individual toSteps() fns)
 	toSteps(ifLabel: string) {
-		const debug = this.debug;
-		if (this instanceof BoolLiteral && this.value === true) {
-			return [GotoLabel.quick(debug, ifLabel)];
-		} else if (this instanceof BoolLiteral && this.value === false) {
-			return [];
+		// break if not a known thing
+		if (!(this instanceof BoolExpression)) {
+			throw new Error(`this BoolExpression.toSteps not implemented (ifLabel ${ifLabel})`);
 		}
-		if (typeof this === 'string') {
-			return [
-				new ACTION.CHECK_SAVE_FLAG({
-					save_flag: this,
-					expected_bool: true,
-					label: ifLabel,
-				}),
-			];
-		}
-		if (this instanceof BoolGetable || this instanceof BoolComparison) {
-			return [ACTION.Action.fromArgs({ ...this, label: ifLabel })];
-		}
-		if (!(this instanceof BoolBinaryExpression)) {
-			throw new Error('expansion for condition not yet implemented');
-		}
-		const op = this.op;
-		const lhs = this.lhs;
-		const rhs = this.rhs;
-		if (typeof lhs === 'number' || typeof rhs === 'number') {
-			throw new Error('LHS or RHS not a number');
-		}
-		if (op === '||') {
-			return [...lhs.toSteps(ifLabel), ...rhs.toSteps(ifLabel)];
-		}
-		if (op === '&&') {
-			// basically nesting the ifs
-			if (!debug.f) throw new Error('should have an f?');
-			const suffix = debug.f.p.advanceGotoSuffix();
-			const secondIfTrueLabel = `if true #${suffix}`;
-			const secondRendezvousLabel = `rendezvous #${suffix}`;
-			return [
-				...lhs.toSteps(secondIfTrueLabel),
-				GotoLabel.quick(debug, secondRendezvousLabel),
-				new LabelDefinition(debug, { label: secondIfTrueLabel }),
-				...rhs.toSteps(ifLabel),
-				new LabelDefinition(debug, { label: secondRendezvousLabel }),
-			];
-		}
-		if (op !== '==' && op !== '!=') {
-			throw new Error('expected == or !==, found ' + op);
-		}
-		// Cannot directly compare bools. Must branch on if they are both true, or both false
-		const expandAs = new BoolBinaryExpression(debug, {
-			op: '||',
-			lhs: new BoolBinaryExpression(lhs.debug, {
-				op: '&&',
-				lhs,
-				rhs,
-				lhsNode: this.lhsNode,
-				rhsNode: this.rhsNode,
-			}),
-			rhs: new BoolBinaryExpression(rhs.debug, {
-				op: '&&',
-				lhs: lhs.invert(),
-				rhs: rhs.invert(),
-				lhsNode: this.lhsNode,
-				rhsNode: this.rhsNode,
-			}),
-			lhsNode: this.lhsNode,
-			rhsNode: this.rhsNode,
-		});
-		return expandAs.toSteps(ifLabel);
+		// TODO: how am I supposed to be doing this?
+		return this.toSteps(ifLabel);
 	}
 	assignToVar(destinationVar: string): AnyNode {
 		const lhsAction = ACTION.SET_SAVE_FLAG.toValue(destinationVar, true);
@@ -1385,6 +1359,9 @@ export class BoolLiteral extends BoolUnit {
 		setBool.updateProp(this.value);
 		return setBool;
 	}
+	toSteps(ifLabel: string) {
+		return this.value ? [GotoLabel.quick(this.debug, ifLabel)] : [];
+	}
 }
 
 export class BoolComparison extends BoolExpression {
@@ -1403,6 +1380,12 @@ export class BoolComparison extends BoolExpression {
 	}
 	toAction(args: GenericObj) {
 		return ACTION.Action.fromArgs({ ...this, ...args });
+	}
+	toDestinationLabel(label: string) {
+		return this.toAction({ label });
+	}
+	toSteps(label: string) {
+		return [this.toDestinationLabel(label)];
 	}
 }
 
@@ -1440,6 +1423,55 @@ export class BoolBinaryExpression extends BoolExpression {
 		this.op = inverseOpMap[this.op];
 		return this;
 	}
+	toSteps(ifLabel: string) {
+		const debug = this.debug;
+		const op = this.op;
+		const lhs = this.lhs;
+		const rhs = this.rhs;
+
+		if (op === '||') {
+			return [...lhs.toSteps(ifLabel), ...rhs.toSteps(ifLabel)];
+		}
+		if (op === '&&') {
+			// basically nesting the ifs
+			const suffix = debug.f.p.advanceGotoSuffix();
+			const secondIfTrueLabel = `if true #${suffix}`;
+			const secondRendezvousLabel = `rendezvous #${suffix}`;
+			return [
+				...lhs.toSteps(secondIfTrueLabel),
+				GotoLabel.quick(debug, secondRendezvousLabel),
+				LabelDefinition.quick(debug, secondIfTrueLabel),
+				...rhs.toSteps(ifLabel),
+				LabelDefinition.quick(debug, secondRendezvousLabel),
+			];
+		}
+
+		if (op !== '==' && op !== '!=') {
+			throw new Error('expected == or !==, found ' + op);
+		}
+
+		// Cannot directly compare save flags. Must branch on if they are both true, or both false
+		const expandAs = new BoolBinaryExpression(debug, {
+			op: '||',
+			lhs: new BoolBinaryExpression(lhs.debug, {
+				op: '&&',
+				lhs,
+				rhs,
+				lhsNode: this.lhsNode,
+				rhsNode: this.rhsNode,
+			}),
+			rhs: new BoolBinaryExpression(rhs.debug, {
+				op: '&&',
+				lhs: lhs.invert(),
+				rhs: rhs.invert(),
+				lhsNode: this.lhsNode,
+				rhsNode: this.rhsNode,
+			}),
+			lhsNode: this.lhsNode,
+			rhsNode: this.rhsNode,
+		});
+		return expandAs.toSteps(ifLabel);
+	}
 }
 
 // ------------------------------ INTERMEDIATES ------------------------------ \\
@@ -1467,6 +1499,12 @@ export class BoolGetable extends BoolUnit {
 	}
 	toAction(args: GenericObj) {
 		return ACTION.Action.fromArgs({ ...this, ...args });
+	}
+	toDestinationLabel(label: string) {
+		return this.toAction({ label });
+	}
+	toSteps(label: string) {
+		return [this.toDestinationLabel(label)];
 	}
 }
 export class CheckEntityGlitched extends BoolGetable {

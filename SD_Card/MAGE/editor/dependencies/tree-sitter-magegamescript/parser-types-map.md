@@ -117,43 +117,58 @@ They all have constructor()
 - [ ] IntExpression
     - [x] clone() (make children do it)
     - [x] static coerce()
-    - [ ] IntBinaryExpression
-        - [x] clone()
-        - [x] static coerce()
-        - [ ] toStepsFromSteps() -> steps
-        - [ ] assignToVar() -> MathlangSequence
-    - [ ] IntUnit
-        - [ ] clone() (make children do it)
-        - [ ] static fromAny()
-        - [ ] NumberLiteral
+    - [ ] toSteps() -> FAKE
+        - [ ] IntBinaryExpression
             - [x] clone()
-            - [ ] static quick()
-        - [ ] IntGetable
-            - [ ] assignToVar()
-            - [ ] IdentifierLiteral
+            - [x] static coerce()
+            - [ ] toSteps() -> AnyNode[]
+            - [ ] assignToVar() -> MathlangSequence
+        - [ ] IntUnit
+            - [ ] clone() (make children do it)
+            - [ ] static fromAny()
+            - [x] toSteps(destinationVar) -> Anynode[]
+            - [x] assignToVar(destinationVar) -> Action
+            - [x] toStepsWithOp(destinationVar, op) -> Anynode[]
+            - [x] assignToVarWithOp(destinationVar, op) -> Action
+            - [ ] NumberLiteral
                 - [x] clone()
                 - [ ] static quick()
-            - [ ] EntityIntField
-                - [x] clone()
-                - [x] static coerce()
-                - [ ] static quick()
-                - [ ] intoNumberCheckableEquality()
-            - [ ] RNGSingle
-                - [x] clone()
-                - [ ] static quick()
-                - [x] toSteps(destinationVar) -> AnyNode[]
+                - [x] toSteps(destinationVar) -> Anynode[]
                 - [x] assignToVar(destinationVar) -> Action
-            - [ ] RNGPair
-                - [x] clone()
-                - [ ] static quick()
-                - [x] toSteps(destinationVar) -> AnyNode[]
-                - [x] assignToVar(destinationVar) -> MathlangSequence
-            - [ ] FnCallReturnValue
-                - [x] clone()
-                - [x] static coerce()
-                - [ ] static quick()
-                - [x] toSteps(destinationVar) -> AnyNode[]
-                - [x] assignToVar(destinationVar) -> MathlangSequence
+                - [x] toStepsWithOp(destinationVar, op) -> Anynode[]
+                - [x] assignToVarWithOp(destinationVar, op) -> Action
+            - [ ] IntGetable
+                - [ ] IdentifierLiteral
+                    - [x] clone()
+                    - [ ] static quick()
+                    - [x] toSteps(destinationVar) -> Anynode[]
+                    - [x] assignToVar(destinationVar) -> Action
+                    - [x] toStepsWithOp(destinationVar, op) -> Anynode[]
+                    - [x] assignToVarWithOp(destinationVar, op) -> Action
+                - [ ] EntityIntField
+                    - [x] clone()
+                    - [x] static coerce()
+                    - [ ] static quick()
+                    - [x] toSteps(destinationVar) -> Anynode[]
+                    - [x] assignToVar(destinationVar) -> Action
+                    - [ ] setToNumber(value) -> Action
+                    - [ ] intoNumberCheckableEquality()
+                - [ ] RNGSingle
+                    - [x] clone()
+                    - [ ] static quick()
+                    - [x] toSteps(destinationVar) -> AnyNode[]
+                    - [x] assignToVar(destinationVar) -> Action
+                - [ ] RNGPair
+                    - [x] clone()
+                    - [ ] static quick()
+                    - [x] toSteps(destinationVar) -> AnyNode[]
+                    - [x] assignToVar(destinationVar) -> MathlangSequence
+                - [ ] FnCallReturnValue
+                    - [x] clone()
+                    - [x] static coerce()
+                    - [ ] static quick()
+                    - [x] toSteps(destinationVar) -> AnyNode[]
+                    - [x] assignToVar(destinationVar) -> MathlangSequence
 - [ ] BoolExpression
     - [ ] clone() (make children do it)
     - [ ] invert()

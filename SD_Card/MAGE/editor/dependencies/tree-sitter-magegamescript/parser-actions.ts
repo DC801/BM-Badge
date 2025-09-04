@@ -86,6 +86,7 @@ import {
 	SET_ENTITY_DIRECTION_TARGET_ENTITY,
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
 	breakIfNotString,
+	Action,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -112,6 +113,8 @@ import {
 	IntGetable,
 	FnCallReturnValue,
 	ScriptDefinition,
+	IntExpression,
+	IntUnit,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -209,7 +212,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const spreads: GenericObj[] = spreadValues(f, action, fieldsToSpread);
 	// Different param combinations will result in different actions,
 	// so let the handler identify them AFTER the spreads are spread
-	const handleFn = data.handle;
+	const handleFn = data.handle || Action.fromArgs;
 	return spreads.map((v, i) => handleFn(v, f, node, i)).filter((v) => v !== undefined);
 };
 
@@ -280,7 +283,7 @@ type actionDataEntry = {
 	values?: Record<string, unknown>;
 	captures?: string[];
 	optionalCaptures?: string[];
-	handle: (v: GenericObj, f: FileState, node: TreeSitterNode, i?: number) => AnyNode | undefined;
+	handle?: (v: GenericObj, f: FileState, node: TreeSitterNode, i?: number) => AnyNode | undefined;
 };
 const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
@@ -288,7 +291,7 @@ const actionData: Record<string, actionDataEntry> = {
 		// Ditto some other actions, too
 		handle: (v, f, node) => {
 			const debug = MathlangLocation.quick(f, node);
-			const returnStatement = new ReturnStatement(debug);
+			const returnStatement = ReturnStatement.quick(debug);
 			const expNode = optionalChildForField(f, node, 'expression');
 			if (expNode) {
 				const steps: AnyNode[] = [];
@@ -309,10 +312,10 @@ const actionData: Record<string, actionDataEntry> = {
 		},
 	},
 	action_continue_statement: {
-		handle: (v, f, node) => new ContinueStatement(MathlangLocation.quick(f, node)),
+		handle: (v, f, node) => ContinueStatement.quick(MathlangLocation.quick(f, node)),
 	},
 	action_break_statement: {
-		handle: (v, f, node) => new BreakStatement(MathlangLocation.quick(f, node)),
+		handle: (v, f, node) => BreakStatement.quick(MathlangLocation.quick(f, node)),
 	},
 	action_close_dialog: {
 		handle: () => new CLOSE_DIALOG(),
@@ -530,70 +533,32 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_int: {
 		// If we've matched this, we know the LHS is not a variable name.
-		// Only option is an entity field.
+		// Only (CURRENT) option is an entity field.
 		captures: ['lhs', 'rhs'],
-		handle: (v, f, node): ActionSetEntityInt | MathlangSequence | COPY_VARIABLE => {
+		handle: (v, f, node): AnyNode => {
 			const debug = MathlangLocation.quick(f, node);
-			const lhs = EntityIntField.coerce(v.lhs);
-			const entity = coerceToString(f, node, lhs.entity, 'action_set_int entity');
+			const lhs = v.lhs;
+			const rhs = v.rhs;
+			if (lhs instanceof EntityIntField) {
+				// player x = 0;
+				if (typeof rhs === 'number') {
+					return lhs.setToNumber(rhs);
+				}
 
-			// player x = 0;
-			if (typeof v.rhs === 'number') {
-				if (lhs.field === 'x') {
-					return SET_ENTITY_X.quick(entity, v.rhs);
+				// player x = varName;
+				if (typeof rhs === 'string') {
+					return lhs.setToVariable(rhs);
 				}
-				if (lhs.field === 'y') {
-					return SET_ENTITY_Y.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'primary_id') {
-					return SET_ENTITY_PRIMARY_ID.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'secondary_id') {
-					return SET_ENTITY_SECONDARY_ID.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'primary_id_type') {
-					return SET_ENTITY_PRIMARY_ID_TYPE.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'current_animation') {
-					return SET_ENTITY_CURRENT_ANIMATION.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'animation_frame') {
-					return SET_ENTITY_CURRENT_FRAME.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'strafe') {
-					return SET_ENTITY_MOVEMENT_RELATIVE.quick(entity, v.rhs);
-				}
-				if (lhs.field === 'relative_direction') {
-					return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, v.rhs);
-				}
-				throw new Error('unidentified int_getable, field: ' + lhs.field);
-			}
 
-			// player x = varName;
-			if (typeof v.rhs === 'string') {
-				return COPY_VARIABLE.intoField(v.rhs, lhs.entity, lhs.field);
-			}
-
-			// player x = player y;
-			if (v.rhs instanceof EntityIntField) {
-				const temp = quickTemporary();
-				const steps = [
-					COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, temp),
-					COPY_VARIABLE.intoField(temp, lhs.entity, lhs.field),
-				];
-				return MathlangSequence.quick(debug, steps, 'int getable to int getable');
-			}
-
-			// player x = player y + self y;
-			if (v.rhs instanceof IntBinaryExpression) {
-				const temporary = newTemporary();
-				const steps = v.rhs.toStepsFromSteps([]);
-				dropTemporary();
-				steps.push(COPY_VARIABLE.intoField(temporary, lhs.entity, lhs.field));
-				return new MathlangSequence(debug, {
-					steps,
-					type: 'parser-actions: action_set_int',
-				});
+				// player x = player y;
+				// player x = player y + self y;
+				if (rhs instanceof IntExpression) {
+					const temporary = newTemporary();
+					const steps = rhs.toSteps(temporary);
+					steps.push(lhs.setToVariable(temporary));
+					dropTemporary();
+					return MathlangSequence.quick(debug, steps, 'action_set_int: EntityIntField');
+				}
 			}
 
 			throw new Error('unknown RHS type in action_set_int');
@@ -686,10 +651,7 @@ const actionData: Record<string, actionDataEntry> = {
 						COPY_VARIABLE.intoVariable(copyFrom, 'y', temp),
 						COPY_VARIABLE.intoField(temp, copyTo, 'y'),
 					];
-					return new MathlangSequence(debug, {
-						steps,
-						type: 'parser-actions: action_set_position',
-					});
+					return MathlangSequence.quick(debug, steps, 'action_set_position');
 				}
 			}
 			throw new Error('invalid everything');
@@ -892,10 +854,11 @@ const actionData: Record<string, actionDataEntry> = {
 						COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, temp),
 						MUTATE_VARIABLES.change(v.lhs, temp, op),
 					];
-					return new MathlangSequence(debug, {
+					return MathlangSequence.quick(
+						debug,
 						steps,
-						type: 'parser-actions: action_op_equals (LHS: string, RHS: IntGetable)',
-					});
+						'action_op_equals (LHS: string, RHS: IntGetable)',
+					);
 				}
 				// varName += (var2 * 7)
 				if (v.rhs instanceof IntBinaryExpression) {
@@ -903,13 +866,14 @@ const actionData: Record<string, actionDataEntry> = {
 					if (!(v.rhs instanceof IntBinaryExpression)) {
 						throw new Error('not IntBinaryExpression');
 					}
-					const steps = v.rhs.toStepsFromSteps([]);
+					const steps = v.rhs.toSteps(temporary);
 					dropTemporary();
 					steps.push(MUTATE_VARIABLES.change(v.lhs, temporary, op));
-					return new MathlangSequence(debug, {
+					return MathlangSequence.quick(
+						debug,
 						steps,
-						type: 'action_op_equals (LHS: string, RHS: IntBinaryExpression)',
-					});
+						'action_op_equals (LHS: string, RHS: IntBinaryExpression)',
+					);
 				}
 				throw new Error('unknown op equals type');
 			}
@@ -927,10 +891,11 @@ const actionData: Record<string, actionDataEntry> = {
 						COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field),
 					];
 					dropTemporary();
-					return new MathlangSequence(debug, {
+					return MathlangSequence.quick(
+						debug,
 						steps,
-						type: 'parser-actions: action_op_equals (LHS: IntGetable, RHS: number)',
-					});
+						'action_op_equals (LHS: IntGetable, RHS: number)',
+					);
 				}
 				// player x = varName;
 				if (typeof v.rhs === 'string') {
@@ -941,10 +906,11 @@ const actionData: Record<string, actionDataEntry> = {
 						COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field),
 					];
 					dropTemporary();
-					return new MathlangSequence(debug, {
+					return MathlangSequence.quick(
+						debug,
 						steps,
-						type: 'parser-actions: action_op_equals (LHS: IntGetable, RHS: string)',
-					});
+						'action_op_equals (LHS: IntGetable, RHS: string)',
+					);
 				}
 				// player x = (varName * 7);
 				if (v.rhs instanceof IntBinaryExpression) {
@@ -952,16 +918,17 @@ const actionData: Record<string, actionDataEntry> = {
 					const temporary2 = newTemporary();
 					const steps = [
 						COPY_VARIABLE.intoVariable(v.lhs.entity, v.lhs.field, temporary1),
-						...v.rhs.toStepsFromSteps([]),
+						...v.rhs.toSteps(temporary1),
 						MUTATE_VARIABLES.change(temporary1, temporary2, op),
 						COPY_VARIABLE.intoField(temporary1, v.lhs.entity, v.lhs.field),
 					];
 					dropTemporary();
 					dropTemporary();
-					return new MathlangSequence(debug, {
+					return MathlangSequence.quick(
+						debug,
 						steps,
-						type: 'parser-actions: action_op_equals (LHS: IntGetable, RHS: IntBinaryExpression)',
-					});
+						'parser-actions: action_op_equals (LHS: IntGetable, RHS: IntBinaryExpression)',
+					);
 				}
 				// player x = self y;
 				if (v.rhs instanceof EntityIntField) {
@@ -975,10 +942,11 @@ const actionData: Record<string, actionDataEntry> = {
 					];
 					dropTemporary();
 					dropTemporary();
-					return new MathlangSequence(debug, {
+					return MathlangSequence.quick(
+						debug,
 						steps,
-						type: 'parser-actions: action_op_equals (LHS: IntGetable, RHS: IntGetable)',
-					});
+						'parser-actions: action_op_equals (LHS: IntGetable, RHS: IntGetable)',
+					);
 				}
 			}
 			throw new Error('unknown op equals type');

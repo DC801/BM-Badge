@@ -44,9 +44,13 @@ export class Action extends AnyNode {
 			throw new Error('cannot make Action from non-object');
 		}
 		const actionName = breakIfNotString((args as Action).action);
+		if (!actionName) {
+			throw new Error('Action sans action?');
+		}
 		if (actionConstructorLookup[actionName]) {
 			return actionConstructorLookup[actionName](args);
 		}
+		throw new Error('No action constructor for action ' + actionName);
 	}
 }
 

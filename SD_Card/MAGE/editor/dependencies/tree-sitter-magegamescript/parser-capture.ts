@@ -1,5 +1,5 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
-import { BoolGetableAction, StringCheckableAction, COPY_VARIABLE } from './parser-bytecode-info.ts';
+import { BoolGetableAction, StringCheckableAction } from './parser-bytecode-info.ts';
 import {
 	MathlangLocation,
 	BoolBinaryExpression,
@@ -38,7 +38,6 @@ import {
 	IntUnit,
 	RNGSingle,
 	RNGPair,
-	IntGetable,
 	BoolComparisonSequence,
 	MathlangMessage,
 	FnCallReturnValue,
@@ -426,6 +425,9 @@ const captureFns = {
 		const op = stringCaptureForField(f, node, 'operator');
 		let lhs = handleCapture(f, lhsNode);
 		let rhs = handleCapture(f, rhsNode);
+
+		// SIMPLE CASES
+
 		// entity Bob direction == north
 		if (lhsNode.grammarType === 'entity_direction') {
 			const entity = stringCaptureForField(f, lhsNode, 'entity_identifier');
@@ -438,6 +440,7 @@ const captureFns = {
 			const nsew = coerceToString(f, node, lhs, 'bool_comparison entity_direction string');
 			return CheckEntityDirection.quick(debug, entity, nsew, op);
 		}
+
 		// entity Bob name == "Super Bob"
 		if (lhs instanceof StringCheckable) {
 			const string = coerceToString(f, node, rhs, 'bool_comparison string_checkable string');
@@ -448,75 +451,54 @@ const captureFns = {
 			const string = coerceToString(f, node, lhs, 'bool_comparison string_checkable string');
 			return rhs.addDetails(string, op);
 		}
+
+		// COMPLEX CASES
+
 		const steps: AnyNode[] = [];
+
 		const tempLHS = newTemporary();
 		const tempRHS = newTemporary();
+
 		// entity Bob x == 7
 		if (lhs instanceof EntityIntField) {
 			if ((op === '==' || op === '!=') && typeof rhs === 'number') {
-				const modified = lhs.intoNumberCheckableEquality();
+				// simple after all
+				const numberCheckableEquality = lhs.intoNumberCheckableEquality();
 				dropTemporary();
 				dropTemporary();
-				return modified.finalizeValues(rhs, op);
+				return numberCheckableEquality.finalizeValues(rhs, op);
 			} else {
-				steps.push(COPY_VARIABLE.intoVariable(lhs.entity, lhs.field, tempLHS));
+				// complex actually
+				steps.push(...lhs.toSteps(tempLHS));
 				lhs = tempLHS;
 			}
 		}
 		// 7 == entity Bob x
 		if (rhs instanceof EntityIntField) {
 			if ((op === '==' || op === '!=') && typeof lhs === 'number') {
-				const modified = rhs.intoNumberCheckableEquality();
+				// simple after all
+				const numberCheckableEquality = rhs.intoNumberCheckableEquality();
 				dropTemporary();
 				dropTemporary();
-				return modified.finalizeValues(lhs, op);
+				return numberCheckableEquality.finalizeValues(lhs, op);
 			} else {
-				steps.push(COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, tempRHS));
+				// complex actually
+				steps.push(...rhs.toSteps(tempRHS));
 				rhs = tempRHS;
 			}
 		}
-		if (lhs instanceof RNGSingle) {
-			steps.push(lhs.assignToVar(tempLHS));
-			lhs = tempLHS;
-		}
-		if (lhs instanceof RNGPair) {
+
+		// Fill out steps so we can eval the expressions as temporaries
+		if (lhs instanceof IntUnit) {
 			steps.push(...lhs.toSteps(tempLHS));
 			lhs = tempLHS;
 		}
-		if (lhs instanceof FnCallReturnValue) {
-			steps.push(...lhs.toSteps(tempLHS));
-			lhs = tempLHS;
-		}
-		if (rhs instanceof RNGSingle) {
-			steps.push(rhs.assignToVar(tempRHS));
-			rhs = tempRHS;
-		}
-		if (rhs instanceof RNGPair) {
+		if (rhs instanceof IntUnit) {
 			steps.push(...rhs.toSteps(tempRHS));
 			rhs = tempRHS;
 		}
-		if (rhs instanceof FnCallReturnValue) {
-			steps.push(...rhs.toSteps(tempRHS));
-			rhs = tempRHS;
-		}
-		if (lhs instanceof IntBinaryExpression) {
-			lhs.toStepsFromSteps(steps);
-			lhs = tempLHS;
-		}
-		if (rhs instanceof IntBinaryExpression) {
-			rhs.toStepsFromSteps(steps);
-			rhs = tempRHS;
-		}
-		if (lhs instanceof IntGetable) {
-			const action = lhs.assignToVar(tempLHS);
-			steps.push(action);
-			lhs = tempLHS;
-		}
-		if (rhs instanceof IntGetable) {
-			const action = rhs.assignToVar(tempRHS);
-			steps.push(action);
-			rhs = tempLHS;
-		}
+
+		// Compare temporaries/numbers
 		if (typeof lhs === 'string') {
 			if (typeof rhs === 'string') {
 				// varName1 > varName2
@@ -531,6 +513,7 @@ const captureFns = {
 				steps.push(CheckVariable.quick(debug, rhs, lhs, inverseOpMap[op]));
 			} else if (typeof rhs === 'number') {
 				// 255 > 0
+				// BAKE IT
 				if (op === '<') steps.push(BoolLiteral.quick(debug, lhs < rhs));
 				else if (op === '<=') steps.push(BoolLiteral.quick(debug, lhs <= rhs));
 				else if (op === '>') steps.push(BoolLiteral.quick(debug, lhs > rhs));
