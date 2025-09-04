@@ -103,6 +103,8 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 					!(v instanceof DialogDefinition) &&
 					!(v instanceof SerialDialogDefinition),
 			)
+			// This is to be backward compatibile with the old output for comparison reasons
+			// todo: change it once the unit tests are good enough to handle sophisticated cases
 			.map((action) => {
 				if (action instanceof CopyMacro) {
 					const script = breakIfNotString(action.script);

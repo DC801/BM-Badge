@@ -51,6 +51,7 @@ They all have constructor()
 - [ ] GotoLabel
     - [x] clone()
     - [x] static quick()
+    - [x] ifLabelAddSuffix()
     - [x] print()
 - [ ] DialogDefinition
     - [x] clone()
@@ -102,6 +103,7 @@ They all have constructor()
 - [ ] LabelDefinition
     - [x] clone()
     - [ ] static quick()
+    - [x] ifLabelAddSuffix()
     - [x] print()
 - [ ] JSONLiteral
     - [x] clone()

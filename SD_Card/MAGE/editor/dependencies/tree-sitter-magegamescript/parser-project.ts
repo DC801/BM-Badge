@@ -3,6 +3,7 @@ import {
 	reportErrorNodes,
 	reportMissingChildNodes,
 	simplifyLabelGotos,
+	temporaryCount,
 } from './parser-utilities.ts';
 import { FileState } from './parser-file.ts';
 import { handleNode } from './parser-node.ts';
@@ -14,21 +15,10 @@ import {
 	ScriptDefinition,
 	DialogDefinition,
 	SerialDialogDefinition,
-	LabelDefinition,
 	CommentNode,
 	CopyMacro,
-	GotoLabel,
 } from './parser-types.ts';
-import {
-	Action,
-	CheckAction,
-	COPY_SCRIPT,
-	COPY_VARIABLE,
-	GOTO_ACTION_INDEX,
-	LABEL,
-	MUTATE_VARIABLE,
-	MUTATE_VARIABLES,
-} from './parser-bytecode-info.ts';
+import { Action, COPY_SCRIPT, isHasVariables, isMightHaveLabel } from './parser-bytecode-info.ts';
 import { namedChildren, optionalChildForField } from './parser-capture.ts';
 
 type FileMapEntry = {
@@ -118,17 +108,7 @@ export class ProjectState {
 			}
 		});
 		data.actions = simplifyLabelGotos(finalizedActions.flat());
-		// let's log
-		data.actions.forEach((action) => {
-			if (action instanceof MUTATE_VARIABLE) {
-				this.integers.add(action.variable);
-			} else if (action instanceof MUTATE_VARIABLES) {
-				this.integers.add(action.variable);
-				this.integers.add(action.source);
-			} else if (action instanceof COPY_VARIABLE) {
-				this.integers.add(action.variable);
-			}
-		});
+
 		// put script in the project
 		if (!this.scripts[name]) {
 			// if not registered yet, add it
@@ -202,34 +182,40 @@ export class ProjectState {
 				);
 				return;
 			}
+
 			// if the target script hasn't had its own copy_script pass done yet, do that pass first
 			if (!this.scripts[action.script].copyScriptResolved) {
 				this.bakeCopyScriptSingle(f, node, action.script);
 			}
-			// add suffix to labels so they don't collide with other copies
+
+			// add suffix to action labels so they don't collide with other copies
 			const labelSuffix = 'c' + this.advanceGotoSuffix();
-			const copiedActions: AnyNode[] = this.scripts[action.script].actions
-				.map((v) => v.clone())
-				.map((v) => {
-					if (v instanceof CheckAction && v.label !== undefined) {
-						v.label += labelSuffix;
-					} else if (
-						v instanceof GOTO_ACTION_INDEX &&
-						typeof v.action_index === 'string'
-					) {
-						v.action_index += labelSuffix;
-					} else if (v instanceof LABEL) {
-						v.value += labelSuffix;
-					} else if (v instanceof LabelDefinition || v instanceof GotoLabel) {
-						v.label += labelSuffix;
+			let copiedActions: AnyNode[] = this.scripts[action.script].actions.map((v) => {
+				if (isMightHaveLabel(v)) {
+					return v.clone().ifLabelAddSuffix(labelSuffix);
+				}
+				return v;
+			});
+
+			// change temporary variables so they don't collide with any in progress
+			// but only if temporaries don't start at 0 at the moment
+			const tempCount = temporaryCount();
+			if (tempCount > 0) {
+				// TODO: test this at all
+				copiedActions = copiedActions.map((v) => {
+					if (isHasVariables(v)) {
+						return v.clone().realignVars();
 					}
 					return v;
 				});
+			}
+
 			// search-and-replace
 			if (action instanceof COPY_SCRIPT && action.search_and_replace) {
 				// search-and-replace does naive JSON stringifying and straight find-and-replace.
 				// Mathlang nodes have properties (args, debug) that cannot be printed.
 				// Only find-and-replace vanilla actions, then?
+				// One action at a time seems a good compromise
 
 				// Do the search-and-replace
 				const searchAndReplace = action.search_and_replace;
@@ -260,6 +246,15 @@ export class ProjectState {
 		});
 		this.scripts[scriptName].copyScriptResolved = true;
 		this.scripts[scriptName].actions = finalActions;
+
+		// log the variables we're using
+		// (must be done after variables are realigned)
+		finalActions.forEach((v) => {
+			if (isHasVariables(v)) {
+				v.registerVars(this.integers);
+			}
+		});
+
 		copyRecursion.pop();
 	}
 	parseFile(fileName: string) {

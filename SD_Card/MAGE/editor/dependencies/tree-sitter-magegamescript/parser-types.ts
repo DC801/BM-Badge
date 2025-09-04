@@ -340,6 +340,10 @@ export class GotoLabel extends MathlangNode {
 	static quick(debug: MathlangLocation, label: string) {
 		return new GotoLabel(debug, { label });
 	}
+	ifLabelAddSuffix(suffix: string) {
+		this.label += suffix;
+		return this;
+	}
 	print() {
 		return `${ACTION.printGotoSegment(this)};`;
 	}
@@ -789,6 +793,10 @@ export class LabelDefinition extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, label: string) {
 		return new LabelDefinition(debug, { label });
+	}
+	ifLabelAddSuffix(suffix: string) {
+		this.label += suffix;
+		return this;
 	}
 	print() {
 		return `${ACTION.sanitizeLabel(this.label)}:`;
@@ -1333,7 +1341,7 @@ export class BoolExpression extends MathlangNode {
 		// if (self glitched) { player glitched = true; } else { player glitched = false; }
 		const cloneIfFalse = setBool.clone();
 		cloneIfFalse.invert();
-		if (this instanceof ACTION.BoolGetableAction || this instanceof BoolComparison) {
+		if (this instanceof ACTION.ActionBoolGetable || this instanceof BoolComparison) {
 			return simpleBranchMaker(f, node, this, [setBool], [cloneIfFalse]);
 		}
 

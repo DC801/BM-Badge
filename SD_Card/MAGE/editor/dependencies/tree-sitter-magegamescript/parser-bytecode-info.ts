@@ -5,10 +5,11 @@ import {
 	CommentNode,
 	MathlangLocation,
 	CheckSaveFlag,
+	LabelDefinition,
 } from './parser-types.ts';
 import { type GenericObj } from './parser-actions.ts';
 import { FileState } from './parser-file.ts';
-import { inverseOpMap, simpleBranchMaker } from './parser-utilities.ts';
+import { inverseOpMap, realignTemp, simpleBranchMaker } from './parser-utilities.ts';
 
 const opIntoStringMap: Record<string, string> = {
 	'=': 'SET',
@@ -73,37 +74,83 @@ export class CheckAction extends Action {
 		this.expected_bool = !this.expected_bool;
 		return this;
 	}
+	ifLabelAddSuffix(suffix: string) {
+		if (typeof this.label === 'string') {
+			this.label += suffix;
+		}
+		return this;
+	}
 }
 
-export class BoolGetableAction extends CheckAction {}
-export class StringCheckableAction extends CheckAction {
-	constructor() {
-		super();
-	}
+export class ActionBoolGetable extends CheckAction {}
+export class ActionStringCheckable extends CheckAction {
+	// placeholder methods
 	updateProp(prop: string) {
-		this.comment = prop;
-		throw new Error(`the parent method shouldn't be used`);
-		// just making the red squiggles go away; todo learn best practices
+		throw new Error('children of StringCheckableAction should updateProp with ' + prop);
 	}
 }
-export class NumberComparisonAction extends CheckAction {
-	constructor() {
-		super();
-	}
+export class ActionNumberComparison extends CheckAction {
+	// placeholder methods
 	updateProp(prop: boolean) {
-		// to make squiggles go away; not used
-		this.expected_bool = prop;
+		throw new Error('children of NumberComparisonAction should updateProp with ' + prop);
 	}
 }
-export class NumberCheckableEqualityAction extends CheckAction {
-	constructor() {
-		super();
-	}
+export class ActionNumberCheckableEquality extends CheckAction {
+	// placeholder methods
 	updateProp(prop: string | number) {
-		// to make squiggles go away; not used
-		this.jump_index = prop;
+		throw new Error('children of NumberCheckableEqualityAction should updateProp with ' + prop);
 	}
 }
+export class ActionSetBool extends Action {
+	// placeholder methods
+	getProp() {
+		throw new Error('children of ActionSetBool should getProp');
+	}
+	updateProp(bool: boolean) {
+		throw new Error('children of ActionSetBool should updateProp with ' + bool);
+	}
+}
+
+// Maybe don't convert these over unless you need them
+
+// export type ActionSetEntityString = SET_ENTITY_NAME | SET_ENTITY_TYPE | SET_ENTITY_PATH;
+
+// export type ActionSetEntityInt =
+// 	| SET_ENTITY_X
+// 	| SET_ENTITY_Y
+// 	| SET_ENTITY_PRIMARY_ID
+// 	| SET_ENTITY_SECONDARY_ID
+// 	| SET_ENTITY_PRIMARY_ID_TYPE
+// 	| SET_ENTITY_CURRENT_ANIMATION
+// 	| SET_ENTITY_CURRENT_FRAME
+// 	| SET_ENTITY_MOVEMENT_RELATIVE
+// 	| SET_ENTITY_DIRECTION_RELATIVE;
+
+// export type ActionSetPosition =
+// 	| TELEPORT_ENTITY_TO_GEOMETRY
+// 	| TELEPORT_CAMERA_TO_GEOMETRY
+// 	| SET_CAMERA_TO_FOLLOW_ENTITY;
+
+// export type ActionSetDirection =
+// 	| SET_ENTITY_DIRECTION
+// 	| SET_ENTITY_DIRECTION_TARGET_GEOMETRY
+// 	| SET_ENTITY_DIRECTION_TARGET_ENTITY;
+
+// export type ActionSetScript =
+// 	| SET_MAP_TICK_SCRIPT
+// 	| SET_MAP_LOOK_SCRIPT
+// 	| SET_ENTITY_TICK_SCRIPT
+// 	| SET_ENTITY_INTERACT_SCRIPT
+// 	| SET_ENTITY_LOOK_SCRIPT;
+
+// export type ActionMoveOverTime =
+// 	| LOOP_CAMERA_ALONG_GEOMETRY
+// 	| PAN_CAMERA_ALONG_GEOMETRY
+// 	| PAN_CAMERA_TO_GEOMETRY
+// 	| PAN_CAMERA_TO_ENTITY
+// 	| LOOP_ENTITY_ALONG_GEOMETRY
+// 	| WALK_ENTITY_ALONG_GEOMETRY
+// 	| WALK_ENTITY_TO_GEOMETRY;
 
 // ---------------------------------- PRINTING ---------------------------------- \\
 
@@ -154,11 +201,8 @@ export const printEntityFieldEquality = (v, param, value: number | string): stri
 
 // ---------------------------------- ACTUAL BYTECODE JSON ---------------------------------- \\
 
-// Todo: might not need the "debug" stuff; if actual action, errors would be reported at generation.
-// No need to keep tree sitter nodes around, perhaps?
-
-// not in encoder, but in old-style output
 export class NULL_ACTION extends Action {
+	// TODO: Does this actually exist?
 	action: 'NULL_ACTION';
 	constructor() {
 		super();
@@ -175,6 +219,10 @@ export class LABEL extends Action {
 		super();
 		this.action = 'LABEL';
 		this.value = breakIfNotString(args.value);
+	}
+	ifLabelAddSuffix(suffix: string) {
+		this.value += suffix;
+		return this;
 	}
 	print() {
 		return `${sanitizeLabel(this.value)}:`;
@@ -478,7 +526,7 @@ export class SET_ENTITY_DIRECTION_TARGET_GEOMETRY extends Action {
 		return `${printEntityIdentifier(this.entity)} direction = ${printGeometry(this.target_geometry)};`;
 	}
 }
-export class SET_ENTITY_GLITCHED extends Action {
+export class SET_ENTITY_GLITCHED extends ActionSetBool {
 	action: 'SET_ENTITY_GLITCHED';
 	entity: string;
 	bool_value: boolean;
@@ -554,7 +602,7 @@ export class COPY_SCRIPT extends Action {
 		return `json[${strung}]`;
 	}
 }
-export class SET_SAVE_FLAG extends Action {
+export class SET_SAVE_FLAG extends ActionSetBool {
 	action: 'SET_SAVE_FLAG';
 	save_flag: string;
 	bool_value: boolean;
@@ -599,7 +647,7 @@ export class SET_SAVE_FLAG extends Action {
 		return printSetBoolAction(this, `"${this.save_flag}"`);
 	}
 }
-export class SET_PLAYER_CONTROL extends Action {
+export class SET_PLAYER_CONTROL extends ActionSetBool {
 	action: 'SET_PLAYER_CONTROL';
 	bool_value: boolean;
 	constructor(args: GenericObj) {
@@ -661,7 +709,7 @@ export class SET_WARP_STATE extends Action {
 		return `warp_state = "${this.string}";`;
 	}
 }
-export class SET_HEX_EDITOR_STATE extends Action {
+export class SET_HEX_EDITOR_STATE extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_STATE';
 	bool_value: boolean;
 	constructor(args: GenericObj) {
@@ -686,7 +734,7 @@ export class SET_HEX_EDITOR_STATE extends Action {
 		return printSetBoolAction(this, `hex_editor`);
 	}
 }
-export class SET_HEX_EDITOR_DIALOG_MODE extends Action {
+export class SET_HEX_EDITOR_DIALOG_MODE extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_DIALOG_MODE';
 	bool_value: boolean;
 	constructor(args: GenericObj) {
@@ -711,7 +759,7 @@ export class SET_HEX_EDITOR_DIALOG_MODE extends Action {
 		return printSetBoolAction(this, `hex_dialog_mode`);
 	}
 }
-export class SET_HEX_EDITOR_CONTROL extends Action {
+export class SET_HEX_EDITOR_CONTROL extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_CONTROL';
 	bool_value: boolean;
 	constructor(args: GenericObj) {
@@ -736,7 +784,7 @@ export class SET_HEX_EDITOR_CONTROL extends Action {
 		return printSetBoolAction(this, `hex_control`);
 	}
 }
-export class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends Action {
+export class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_CONTROL_CLIPBOARD';
 	bool_value: boolean;
 	constructor(args: GenericObj) {
@@ -1053,6 +1101,13 @@ export class MUTATE_VARIABLE extends Action {
 		}
 		return new MUTATE_VARIABLE({ operation: opIntoStringMap[op] || op, value, variable });
 	}
+	realignVars() {
+		this.variable = realignTemp(this.variable);
+		return this;
+	}
+	registerVars(registry: Set<string>) {
+		registry.add(this.variable);
+	}
 	print() {
 		return `"${this.variable}" ${stringIntoOpMap[this.operation]}= ${this.value};`;
 	}
@@ -1085,6 +1140,15 @@ export class MUTATE_VARIABLES extends Action {
 			operation: opIntoStringMap[op] || op,
 		});
 	}
+	realignVars() {
+		this.variable = realignTemp(this.variable);
+		this.source = realignTemp(this.source);
+		return this;
+	}
+	registerVars(registry: Set<string>) {
+		registry.add(this.variable);
+		registry.add(this.source);
+	}
 	print() {
 		return `"${this.variable}" ${stringIntoOpMap[this.operation]}= "${this.source}";`;
 	}
@@ -1108,6 +1172,13 @@ export class COPY_VARIABLE extends Action {
 	}
 	static intoVariable(entity: string, field: string, variable: string) {
 		return new COPY_VARIABLE({ entity, field, inbound: true, variable });
+	}
+	realignVars() {
+		this.variable = realignTemp(this.variable);
+		return this;
+	}
+	registerVars(registry: Set<string>) {
+		registry.add(this.variable);
 	}
 	print() {
 		return this.inbound
@@ -1254,7 +1325,7 @@ export class SET_BLE_FLAG extends Action {
 		return this;
 	}
 }
-export class SET_SERIAL_DIALOG_CONTROL extends Action {
+export class SET_SERIAL_DIALOG_CONTROL extends ActionSetBool {
 	action: 'SET_SERIAL_DIALOG_CONTROL';
 	bool_value: boolean;
 	constructor(args: GenericObj) {
@@ -1380,7 +1451,7 @@ export class CLOSE_SERIAL_DIALOG extends Action {
 		return `close serial_dialog;`;
 	}
 }
-export class SET_LIGHTS_CONTROL extends Action {
+export class SET_LIGHTS_CONTROL extends ActionSetBool {
 	action: 'SET_LIGHTS_CONTROL';
 	enabled: boolean;
 	constructor(args: GenericObj) {
@@ -1405,7 +1476,7 @@ export class SET_LIGHTS_CONTROL extends Action {
 		return printSetBoolAction(this, `lights_control`);
 	}
 }
-export class SET_LIGHTS_STATE extends Action {
+export class SET_LIGHTS_STATE extends ActionSetBool {
 	action: 'SET_LIGHTS_STATE';
 	lights: string | string[];
 	enabled: boolean;
@@ -1442,6 +1513,12 @@ export class GOTO_ACTION_INDEX extends Action {
 	}
 	static quick(action_index: string | number) {
 		return new GOTO_ACTION_INDEX({ action_index });
+	}
+	ifLabelAddSuffix(suffix: string) {
+		if (typeof this.action_index === 'string') {
+			this.action_index += suffix;
+		}
+		return this;
 	}
 	print() {
 		if (typeof this.action_index === 'string') {
@@ -1529,7 +1606,7 @@ export class SET_SERIAL_DIALOG_COMMAND_VISIBILITY extends Action {
 
 // CHECK_ACTIONS
 
-export class CHECK_ENTITY_NAME extends StringCheckableAction {
+export class CHECK_ENTITY_NAME extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_NAME';
 	entity: string;
 	string: string;
@@ -1561,7 +1638,7 @@ export class CHECK_ENTITY_NAME extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'name', `"${this.string}"`);
 	}
 }
-export class CHECK_ENTITY_X extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_X extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_X';
 	entity: string;
 	expected_u2: number;
@@ -1597,7 +1674,7 @@ export class CHECK_ENTITY_X extends NumberCheckableEqualityAction {
 		return printEntityFieldEquality(this, 'x', this.expected_u2);
 	}
 }
-export class CHECK_ENTITY_Y extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_Y extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_Y';
 	entity: string;
 	expected_u2: number;
@@ -1633,7 +1710,7 @@ export class CHECK_ENTITY_Y extends NumberCheckableEqualityAction {
 		return printEntityFieldEquality(this, 'y', this.expected_u2);
 	}
 }
-export class CHECK_ENTITY_INTERACT_SCRIPT extends StringCheckableAction {
+export class CHECK_ENTITY_INTERACT_SCRIPT extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_INTERACT_SCRIPT';
 	entity: string;
 	expected_script: string;
@@ -1665,7 +1742,7 @@ export class CHECK_ENTITY_INTERACT_SCRIPT extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'on_interact', `"${this.expected_script}"`);
 	}
 }
-export class CHECK_ENTITY_TICK_SCRIPT extends StringCheckableAction {
+export class CHECK_ENTITY_TICK_SCRIPT extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_TICK_SCRIPT';
 	entity: string;
 	expected_script: string;
@@ -1697,7 +1774,7 @@ export class CHECK_ENTITY_TICK_SCRIPT extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'on_tick', `"${this.expected_script}"`);
 	}
 }
-export class CHECK_ENTITY_LOOK_SCRIPT extends StringCheckableAction {
+export class CHECK_ENTITY_LOOK_SCRIPT extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_LOOK_SCRIPT';
 	entity: string;
 	expected_script: string;
@@ -1729,7 +1806,7 @@ export class CHECK_ENTITY_LOOK_SCRIPT extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'on_look', `"${this.expected_script}"`);
 	}
 }
-export class CHECK_ENTITY_TYPE extends StringCheckableAction {
+export class CHECK_ENTITY_TYPE extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_TYPE';
 	entity: string;
 	entity_type: string;
@@ -1761,7 +1838,7 @@ export class CHECK_ENTITY_TYPE extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'type', `"${this.entity_type}"`);
 	}
 }
-export class CHECK_ENTITY_PRIMARY_ID extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_PRIMARY_ID extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_PRIMARY_ID';
 	entity: string;
 	expected_u2: number;
@@ -1797,7 +1874,7 @@ export class CHECK_ENTITY_PRIMARY_ID extends NumberCheckableEqualityAction {
 		return printEntityFieldEquality(this, 'primary_id', this.expected_u2);
 	}
 }
-export class CHECK_ENTITY_SECONDARY_ID extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_SECONDARY_ID extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_SECONDARY_ID';
 	entity: string;
 	expected_u2: number;
@@ -1833,7 +1910,7 @@ export class CHECK_ENTITY_SECONDARY_ID extends NumberCheckableEqualityAction {
 		return printEntityFieldEquality(this, 'secondary_id', this.expected_u2);
 	}
 }
-export class CHECK_ENTITY_PRIMARY_ID_TYPE extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_PRIMARY_ID_TYPE extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_PRIMARY_ID_TYPE';
 	entity: string;
 	expected_byte: number;
@@ -1869,7 +1946,7 @@ export class CHECK_ENTITY_PRIMARY_ID_TYPE extends NumberCheckableEqualityAction 
 		return printEntityFieldEquality(this, 'primary_id_type', this.expected_byte);
 	}
 }
-export class CHECK_ENTITY_CURRENT_ANIMATION extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_CURRENT_ANIMATION extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_CURRENT_ANIMATION';
 	entity: string;
 	expected_byte: number;
@@ -1905,7 +1982,7 @@ export class CHECK_ENTITY_CURRENT_ANIMATION extends NumberCheckableEqualityActio
 		return printEntityFieldEquality(this, 'current_animation', this.expected_byte);
 	}
 }
-export class CHECK_ENTITY_CURRENT_FRAME extends NumberCheckableEqualityAction {
+export class CHECK_ENTITY_CURRENT_FRAME extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_CURRENT_FRAME';
 	entity: string;
 	expected_byte: number;
@@ -1942,7 +2019,7 @@ export class CHECK_ENTITY_CURRENT_FRAME extends NumberCheckableEqualityAction {
 		return printEntityFieldEquality(this, 'animation_frame', this.expected_byte);
 	}
 }
-export class CHECK_ENTITY_DIRECTION extends StringCheckableAction {
+export class CHECK_ENTITY_DIRECTION extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_DIRECTION';
 	entity: string;
 	direction: string; // north, south, east, west
@@ -1974,7 +2051,7 @@ export class CHECK_ENTITY_DIRECTION extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'direction', `${this.direction}`);
 	}
 }
-export class CHECK_ENTITY_GLITCHED extends BoolGetableAction {
+export class CHECK_ENTITY_GLITCHED extends ActionBoolGetable {
 	action: 'CHECK_ENTITY_GLITCHED';
 	entity: string;
 	constructor(args: GenericObj) {
@@ -1998,7 +2075,7 @@ export class CHECK_ENTITY_GLITCHED extends BoolGetableAction {
 		return printCheckAction(this, `${printEntityIdentifier(this.entity)} glitched`, true);
 	}
 }
-export class CHECK_ENTITY_PATH extends StringCheckableAction {
+export class CHECK_ENTITY_PATH extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_PATH';
 	geometry: string;
 	entity: string;
@@ -2030,7 +2107,7 @@ export class CHECK_ENTITY_PATH extends StringCheckableAction {
 		return printEntityFieldEquality(this, 'path', `"${this.geometry}"`);
 	}
 }
-export class CHECK_SAVE_FLAG extends BoolGetableAction {
+export class CHECK_SAVE_FLAG extends ActionBoolGetable {
 	action: 'CHECK_SAVE_FLAG';
 	save_flag: string;
 	constructor(args: GenericObj) {
@@ -2056,7 +2133,7 @@ export class CHECK_SAVE_FLAG extends BoolGetableAction {
 		return printCheckAction(this, `"${this.save_flag}"`, true);
 	}
 }
-export class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends BoolGetableAction {
+export class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends ActionBoolGetable {
 	action: 'CHECK_IF_ENTITY_IS_IN_GEOMETRY';
 	geometry: string;
 	entity: string;
@@ -2086,7 +2163,7 @@ export class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends BoolGetableAction {
 		);
 	}
 }
-export class CHECK_FOR_BUTTON_PRESS extends BoolGetableAction {
+export class CHECK_FOR_BUTTON_PRESS extends ActionBoolGetable {
 	action: 'CHECK_FOR_BUTTON_PRESS';
 	button_id: string;
 	constructor(args: GenericObj) {
@@ -2110,7 +2187,7 @@ export class CHECK_FOR_BUTTON_PRESS extends BoolGetableAction {
 		return printCheckAction(this, `button ${this.button_id} pressed`, true);
 	}
 }
-export class CHECK_FOR_BUTTON_STATE extends BoolGetableAction {
+export class CHECK_FOR_BUTTON_STATE extends ActionBoolGetable {
 	action: 'CHECK_FOR_BUTTON_STATE';
 	button_id: string;
 	constructor(args: GenericObj) {
@@ -2138,7 +2215,7 @@ export class CHECK_FOR_BUTTON_STATE extends BoolGetableAction {
 		);
 	}
 }
-export class CHECK_WARP_STATE extends StringCheckableAction {
+export class CHECK_WARP_STATE extends ActionStringCheckable {
 	action: 'CHECK_WARP_STATE';
 	string: string;
 	constructor(args: GenericObj) {
@@ -2170,7 +2247,7 @@ export class CHECK_WARP_STATE extends StringCheckableAction {
 			: printCheckAction(this, `warp_state != "${this.string}"`, false);
 	}
 }
-export class CHECK_VARIABLE extends NumberComparisonAction {
+export class CHECK_VARIABLE extends ActionNumberComparison {
 	action: 'CHECK_VARIABLE';
 	variable: string;
 	comparison: string;
@@ -2203,12 +2280,19 @@ export class CHECK_VARIABLE extends NumberComparisonAction {
 			expected_bool,
 		});
 	}
+	realignVars() {
+		this.variable = realignTemp(this.variable);
+		return this;
+	}
+	registerVars(registry: Set<string>) {
+		registry.add(this.variable);
+	}
 	print() {
 		const op = this.expected_bool ? this.comparison : inverseOpMap[this.comparison];
 		return printCheckAction(this, `"${this.variable}" ${op} ${this.value}`, false);
 	}
 }
-export class CHECK_VARIABLES extends NumberComparisonAction {
+export class CHECK_VARIABLES extends ActionNumberComparison {
 	action: 'CHECK_VARIABLES';
 	variable: string;
 	comparison: string;
@@ -2241,12 +2325,21 @@ export class CHECK_VARIABLES extends NumberComparisonAction {
 			expected_bool,
 		});
 	}
+	realignVars() {
+		this.variable = realignTemp(this.variable);
+		this.source = realignTemp(this.source);
+		return this;
+	}
+	registerVars(registry: Set<string>) {
+		registry.add(this.variable);
+		registry.add(this.source);
+	}
 	print() {
 		const op = this.expected_bool ? this.comparison : inverseOpMap[this.comparison];
 		return printCheckAction(this, `"${this.variable}" ${op} "${this.source}"`, false);
 	}
 }
-export class CHECK_MAP extends StringCheckableAction {
+export class CHECK_MAP extends ActionStringCheckable {
 	// TODO: is this even in the engine? O.o
 	action: 'CHECK_MAP';
 	map: string;
@@ -2272,7 +2365,7 @@ export class CHECK_MAP extends StringCheckableAction {
 	}
 	// todo print fn?
 }
-export class CHECK_BLE_FLAG extends StringCheckableAction {
+export class CHECK_BLE_FLAG extends ActionStringCheckable {
 	action: 'CHECK_BLE_FLAG';
 	ble_flag: string;
 	constructor(args: GenericObj) {
@@ -2296,7 +2389,7 @@ export class CHECK_BLE_FLAG extends StringCheckableAction {
 	}
 	// todo print fn?
 }
-export class CHECK_DIALOG_OPEN extends BoolGetableAction {
+export class CHECK_DIALOG_OPEN extends ActionBoolGetable {
 	action: 'CHECK_DIALOG_OPEN';
 	constructor(args: GenericObj) {
 		super();
@@ -2318,7 +2411,7 @@ export class CHECK_DIALOG_OPEN extends BoolGetableAction {
 		return printCheckAction(this, `dialog ${this.expected_bool ? 'open' : 'closed'}`, false);
 	}
 }
-export class CHECK_SERIAL_DIALOG_OPEN extends BoolGetableAction {
+export class CHECK_SERIAL_DIALOG_OPEN extends ActionBoolGetable {
 	action: 'CHECK_SERIAL_DIALOG_OPEN';
 	constructor(args: GenericObj) {
 		super();
@@ -2344,7 +2437,7 @@ export class CHECK_SERIAL_DIALOG_OPEN extends BoolGetableAction {
 		);
 	}
 }
-export class CHECK_DEBUG_MODE extends BoolGetableAction {
+export class CHECK_DEBUG_MODE extends ActionBoolGetable {
 	action: 'CHECK_DEBUG_MODE';
 	constructor(args: GenericObj) {
 		super();
@@ -2367,56 +2460,27 @@ export class CHECK_DEBUG_MODE extends BoolGetableAction {
 	}
 }
 
-export type ActionSetEntityInt =
-	| SET_ENTITY_X
-	| SET_ENTITY_Y
-	| SET_ENTITY_PRIMARY_ID
-	| SET_ENTITY_SECONDARY_ID
-	| SET_ENTITY_PRIMARY_ID_TYPE
-	| SET_ENTITY_CURRENT_ANIMATION
-	| SET_ENTITY_CURRENT_FRAME
-	| SET_ENTITY_MOVEMENT_RELATIVE
-	| SET_ENTITY_DIRECTION_RELATIVE;
+export type HasOneVariable = MUTATE_VARIABLE | CHECK_VARIABLE | COPY_VARIABLE;
+export type HasTwoVariables = MUTATE_VARIABLES | CHECK_VARIABLES;
+export type HasVariables = HasOneVariable | HasTwoVariables;
+export const isHasVariables = (v: unknown): v is HasVariables => {
+	if (v instanceof MUTATE_VARIABLE) return true;
+	if (v instanceof MUTATE_VARIABLES) return true;
+	if (v instanceof CHECK_VARIABLE) return true;
+	if (v instanceof CHECK_VARIABLES) return true;
+	if (v instanceof COPY_VARIABLE) return true;
+	return false;
+};
 
-export type ActionSetBool =
-	| SET_ENTITY_GLITCHED
-	| SET_LIGHTS_STATE
-	| SET_PLAYER_CONTROL
-	| SET_LIGHTS_CONTROL
-	| SET_HEX_EDITOR_STATE
-	| SET_HEX_EDITOR_DIALOG_MODE
-	| SET_HEX_EDITOR_CONTROL
-	| SET_HEX_EDITOR_CONTROL_CLIPBOARD
-	| SET_SERIAL_DIALOG_CONTROL
-	| SET_SAVE_FLAG;
-
-export type ActionSetPosition =
-	| TELEPORT_ENTITY_TO_GEOMETRY
-	| TELEPORT_CAMERA_TO_GEOMETRY
-	| SET_CAMERA_TO_FOLLOW_ENTITY;
-
-export type ActionSetDirection =
-	| SET_ENTITY_DIRECTION
-	| SET_ENTITY_DIRECTION_TARGET_GEOMETRY
-	| SET_ENTITY_DIRECTION_TARGET_ENTITY;
-
-export type ActionSetScript =
-	| SET_MAP_TICK_SCRIPT
-	| SET_MAP_LOOK_SCRIPT
-	| SET_ENTITY_TICK_SCRIPT
-	| SET_ENTITY_INTERACT_SCRIPT
-	| SET_ENTITY_LOOK_SCRIPT;
-
-export type ActionMoveOverTime =
-	| LOOP_CAMERA_ALONG_GEOMETRY
-	| PAN_CAMERA_ALONG_GEOMETRY
-	| PAN_CAMERA_TO_GEOMETRY
-	| PAN_CAMERA_TO_ENTITY
-	| LOOP_ENTITY_ALONG_GEOMETRY
-	| WALK_ENTITY_ALONG_GEOMETRY
-	| WALK_ENTITY_TO_GEOMETRY;
-
-export type ActionSetEntityString = SET_ENTITY_NAME | SET_ENTITY_TYPE | SET_ENTITY_PATH;
+export type MightHaveLabel = CheckAction | GOTO_ACTION_INDEX | LABEL | LabelDefinition | GotoLabel;
+export const isMightHaveLabel = (v: unknown): v is MightHaveLabel => {
+	if (v instanceof CheckAction) return true;
+	if (v instanceof GOTO_ACTION_INDEX) return true;
+	if (v instanceof LABEL) return true;
+	if (v instanceof LabelDefinition) return true;
+	if (v instanceof GotoLabel) return true;
+	return false;
+};
 
 export const breakIfNotTSNodeArray = (v: unknown): TreeSitterNode[] => {
 	if (Array.isArray(v) && v.every((v) => v instanceof TreeSitterNode)) return v;

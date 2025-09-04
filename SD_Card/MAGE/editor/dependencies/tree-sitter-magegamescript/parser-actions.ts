@@ -10,11 +10,7 @@ import {
 	type Capture,
 } from './parser-capture.ts';
 import {
-	type ActionSetPosition,
-	type ActionSetDirection,
-	type ActionMoveOverTime,
-	type ActionSetEntityString,
-	type ActionSetBool,
+	ActionSetBool,
 	MUTATE_VARIABLE,
 	MUTATE_VARIABLES,
 	RUN_SCRIPT,
@@ -627,7 +623,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_position: {
 		captures: ['movable', 'coordinate'],
-		handle: (v, f, node): ActionSetPosition | MathlangSequence => {
+		handle: (v, f, node): Action | MathlangSequence => {
 			const debug = MathlangLocation.quick(f, node);
 			const movable = MovableIdentifier.coerce(v.movable);
 			const coordinate = CoordinateIdentifier.coerce(v.coordinate);
@@ -661,7 +657,7 @@ const actionData: Record<string, actionDataEntry> = {
 	action_move_over_time: {
 		captures: ['movable', 'coordinate', 'duration', 'forever'],
 		optionalCaptures: ['forever'],
-		handle: (v, f, node): ActionMoveOverTime | undefined => {
+		handle: (v, f, node): Action | undefined => {
 			const debug = MathlangLocation.quick(f, node);
 			const movable = MovableIdentifier.coerce(v.movable);
 			const coordinate = CoordinateIdentifier.coerce(v.coordinate);
@@ -768,7 +764,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_direction: {
 		captures: ['entity', 'target'],
-		handle: (v, f, node): ActionSetDirection => {
+		handle: (v, f, node): Action => {
 			const entity = coerceToString(f, node, v.entity, 'entity');
 			const target = DirectionTarget.coerce(v.target);
 			if (target.type === 'nsew') {
@@ -819,7 +815,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_entity_string: {
 		captures: ['entity', 'field', 'value'],
-		handle: (v, f, node): ActionSetEntityString => {
+		handle: (v, f, node): Action => {
 			const entity = coerceToString(f, node, v.entity, 'entity');
 			const value = coerceToString(f, node, v.value, 'value');
 			if (v.field === 'name') {

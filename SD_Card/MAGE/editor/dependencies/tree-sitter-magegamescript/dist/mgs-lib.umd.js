@@ -6438,6 +6438,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, label) {
       return new GotoLabel(debug, { label });
     }
+    ifLabelAddSuffix(suffix) {
+      this.label += suffix;
+      return this;
+    }
     print() {
       return `${printGotoSegment(this)};`;
     }
@@ -6832,6 +6836,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(debug, label) {
       return new LabelDefinition(debug, { label });
+    }
+    ifLabelAddSuffix(suffix) {
+      this.label += suffix;
+      return this;
     }
     print() {
       return `${sanitizeLabel(this.label)}:`;
@@ -7329,7 +7337,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const node = this.debug.node;
       const cloneIfFalse = setBool.clone();
       cloneIfFalse.invert();
-      if (this instanceof BoolGetableAction || this instanceof BoolComparison) {
+      if (this instanceof ActionBoolGetable || this instanceof BoolComparison) {
         return simpleBranchMaker(f, node, this, [setBool], [cloneIfFalse]);
       }
       return simpleBranchMaker(f, ((_a2 = this.debug) == null ? void 0 : _a2.node) || node, this, [setBool], [cloneIfFalse]);
@@ -8315,32 +8323,40 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.expected_bool = !this.expected_bool;
       return this;
     }
-  }
-  class BoolGetableAction extends CheckAction {
-  }
-  class StringCheckableAction extends CheckAction {
-    constructor() {
-      super();
+    ifLabelAddSuffix(suffix) {
+      if (typeof this.label === "string") {
+        this.label += suffix;
+      }
+      return this;
     }
+  }
+  class ActionBoolGetable extends CheckAction {
+  }
+  class ActionStringCheckable extends CheckAction {
+    // placeholder methods
     updateProp(prop) {
-      this.comment = prop;
-      throw new Error(`the parent method shouldn't be used`);
+      throw new Error("children of StringCheckableAction should updateProp with " + prop);
     }
   }
-  class NumberComparisonAction extends CheckAction {
-    constructor() {
-      super();
-    }
+  class ActionNumberComparison extends CheckAction {
+    // placeholder methods
     updateProp(prop) {
-      this.expected_bool = prop;
+      throw new Error("children of NumberComparisonAction should updateProp with " + prop);
     }
   }
-  class NumberCheckableEqualityAction extends CheckAction {
-    constructor() {
-      super();
-    }
+  class ActionNumberCheckableEquality extends CheckAction {
+    // placeholder methods
     updateProp(prop) {
-      this.jump_index = prop;
+      throw new Error("children of NumberCheckableEqualityAction should updateProp with " + prop);
+    }
+  }
+  class ActionSetBool extends Action {
+    // placeholder methods
+    getProp() {
+      throw new Error("children of ActionSetBool should getProp");
+    }
+    updateProp(bool) {
+      throw new Error("children of ActionSetBool should updateProp with " + bool);
     }
   }
   const sanitizeLabel = (label) => label.includes(" ") ? label.replace(/ /g, "_").replace(/-/g, "_").replace(/#/g, "") : label;
@@ -8384,6 +8400,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class NULL_ACTION extends Action {
     constructor() {
       super();
+      // TODO: Does this actually exist?
       __publicField(this, "action");
       this.action = "NULL_ACTION";
     }
@@ -8398,6 +8415,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.action = "LABEL";
       this.value = breakIfNotString(args2.value);
+    }
+    ifLabelAddSuffix(suffix) {
+      this.value += suffix;
+      return this;
     }
     print() {
       return `${sanitizeLabel(this.value)}:`;
@@ -8701,7 +8722,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `${printEntityIdentifier(this.entity)} direction = ${printGeometry(this.target_geometry)};`;
     }
   }
-  class SET_ENTITY_GLITCHED extends Action {
+  class SET_ENTITY_GLITCHED extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -8777,7 +8798,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `json[${strung}]`;
     }
   }
-  class SET_SAVE_FLAG extends Action {
+  class SET_SAVE_FLAG extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -8816,7 +8837,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printSetBoolAction(this, `"${this.save_flag}"`);
     }
   }
-  class SET_PLAYER_CONTROL extends Action {
+  class SET_PLAYER_CONTROL extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -8878,7 +8899,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `warp_state = "${this.string}";`;
     }
   }
-  class SET_HEX_EDITOR_STATE extends Action {
+  class SET_HEX_EDITOR_STATE extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -8903,7 +8924,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printSetBoolAction(this, `hex_editor`);
     }
   }
-  class SET_HEX_EDITOR_DIALOG_MODE extends Action {
+  class SET_HEX_EDITOR_DIALOG_MODE extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -8928,7 +8949,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printSetBoolAction(this, `hex_dialog_mode`);
     }
   }
-  class SET_HEX_EDITOR_CONTROL extends Action {
+  class SET_HEX_EDITOR_CONTROL extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -8953,7 +8974,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printSetBoolAction(this, `hex_control`);
     }
   }
-  class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends Action {
+  class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9270,6 +9291,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return new MUTATE_VARIABLE({ operation: opIntoStringMap[op] || op, value, variable });
     }
+    realignVars() {
+      this.variable = realignTemp(this.variable);
+      return this;
+    }
+    registerVars(registry) {
+      registry.add(this.variable);
+    }
     print() {
       return `"${this.variable}" ${stringIntoOpMap[this.operation]}= ${this.value};`;
     }
@@ -9302,6 +9330,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         operation: opIntoStringMap[op] || op
       });
     }
+    realignVars() {
+      this.variable = realignTemp(this.variable);
+      this.source = realignTemp(this.source);
+      return this;
+    }
+    registerVars(registry) {
+      registry.add(this.variable);
+      registry.add(this.source);
+    }
     print() {
       return `"${this.variable}" ${stringIntoOpMap[this.operation]}= "${this.source}";`;
     }
@@ -9325,6 +9362,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static intoVariable(entity, field, variable) {
       return new COPY_VARIABLE({ entity, field, inbound: true, variable });
+    }
+    realignVars() {
+      this.variable = realignTemp(this.variable);
+      return this;
+    }
+    registerVars(registry) {
+      registry.add(this.variable);
     }
     print() {
       return this.inbound ? `"${this.variable}" = ${printEntityIdentifier(this.entity)} ${this.field};` : `${printEntityIdentifier(this.entity)} ${this.field} = "${this.variable}";`;
@@ -9470,7 +9514,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return this;
     }
   }
-  class SET_SERIAL_DIALOG_CONTROL extends Action {
+  class SET_SERIAL_DIALOG_CONTROL extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9594,7 +9638,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `close serial_dialog;`;
     }
   }
-  class SET_LIGHTS_CONTROL extends Action {
+  class SET_LIGHTS_CONTROL extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9619,7 +9663,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printSetBoolAction(this, `lights_control`);
     }
   }
-  class SET_LIGHTS_STATE extends Action {
+  class SET_LIGHTS_STATE extends ActionSetBool {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9656,6 +9700,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(action_index) {
       return new GOTO_ACTION_INDEX({ action_index });
+    }
+    ifLabelAddSuffix(suffix) {
+      if (typeof this.action_index === "string") {
+        this.action_index += suffix;
+      }
+      return this;
     }
     print() {
       if (typeof this.action_index === "string") {
@@ -9740,7 +9790,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `${this.is_visible ? "un" : ""}hide command "${this.command}";`;
     }
   }
-  class CHECK_ENTITY_NAME extends StringCheckableAction {
+  class CHECK_ENTITY_NAME extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9772,7 +9822,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "name", `"${this.string}"`);
     }
   }
-  class CHECK_ENTITY_X extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_X extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9808,7 +9858,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "x", this.expected_u2);
     }
   }
-  class CHECK_ENTITY_Y extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_Y extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9844,7 +9894,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "y", this.expected_u2);
     }
   }
-  class CHECK_ENTITY_INTERACT_SCRIPT extends StringCheckableAction {
+  class CHECK_ENTITY_INTERACT_SCRIPT extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9876,7 +9926,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "on_interact", `"${this.expected_script}"`);
     }
   }
-  class CHECK_ENTITY_TICK_SCRIPT extends StringCheckableAction {
+  class CHECK_ENTITY_TICK_SCRIPT extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9908,7 +9958,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "on_tick", `"${this.expected_script}"`);
     }
   }
-  class CHECK_ENTITY_LOOK_SCRIPT extends StringCheckableAction {
+  class CHECK_ENTITY_LOOK_SCRIPT extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9940,7 +9990,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "on_look", `"${this.expected_script}"`);
     }
   }
-  class CHECK_ENTITY_TYPE extends StringCheckableAction {
+  class CHECK_ENTITY_TYPE extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -9972,7 +10022,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "type", `"${this.entity_type}"`);
     }
   }
-  class CHECK_ENTITY_PRIMARY_ID extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_PRIMARY_ID extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10008,7 +10058,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "primary_id", this.expected_u2);
     }
   }
-  class CHECK_ENTITY_SECONDARY_ID extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_SECONDARY_ID extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10044,7 +10094,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "secondary_id", this.expected_u2);
     }
   }
-  class CHECK_ENTITY_PRIMARY_ID_TYPE extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_PRIMARY_ID_TYPE extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10080,7 +10130,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "primary_id_type", this.expected_byte);
     }
   }
-  class CHECK_ENTITY_CURRENT_ANIMATION extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_CURRENT_ANIMATION extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10116,7 +10166,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "current_animation", this.expected_byte);
     }
   }
-  class CHECK_ENTITY_CURRENT_FRAME extends NumberCheckableEqualityAction {
+  class CHECK_ENTITY_CURRENT_FRAME extends ActionNumberCheckableEquality {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10153,7 +10203,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "animation_frame", this.expected_byte);
     }
   }
-  class CHECK_ENTITY_DIRECTION extends StringCheckableAction {
+  class CHECK_ENTITY_DIRECTION extends ActionStringCheckable {
     // north, south, east, west
     constructor(args2) {
       super();
@@ -10186,7 +10236,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "direction", `${this.direction}`);
     }
   }
-  class CHECK_ENTITY_GLITCHED extends BoolGetableAction {
+  class CHECK_ENTITY_GLITCHED extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10210,7 +10260,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printCheckAction(this, `${printEntityIdentifier(this.entity)} glitched`, true);
     }
   }
-  class CHECK_ENTITY_PATH extends StringCheckableAction {
+  class CHECK_ENTITY_PATH extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10242,7 +10292,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printEntityFieldEquality(this, "path", `"${this.geometry}"`);
     }
   }
-  class CHECK_SAVE_FLAG extends BoolGetableAction {
+  class CHECK_SAVE_FLAG extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10268,7 +10318,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printCheckAction(this, `"${this.save_flag}"`, true);
     }
   }
-  class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends BoolGetableAction {
+  class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10298,7 +10348,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       );
     }
   }
-  class CHECK_FOR_BUTTON_PRESS extends BoolGetableAction {
+  class CHECK_FOR_BUTTON_PRESS extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10322,7 +10372,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printCheckAction(this, `button ${this.button_id} pressed`, true);
     }
   }
-  class CHECK_FOR_BUTTON_STATE extends BoolGetableAction {
+  class CHECK_FOR_BUTTON_STATE extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10350,7 +10400,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       );
     }
   }
-  class CHECK_WARP_STATE extends StringCheckableAction {
+  class CHECK_WARP_STATE extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10380,7 +10430,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return this.expected_bool ? printCheckAction(this, `warp_state == "${this.string}"`, false) : printCheckAction(this, `warp_state != "${this.string}"`, false);
     }
   }
-  class CHECK_VARIABLE extends NumberComparisonAction {
+  class CHECK_VARIABLE extends ActionNumberComparison {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10413,12 +10463,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    realignVars() {
+      this.variable = realignTemp(this.variable);
+      return this;
+    }
+    registerVars(registry) {
+      registry.add(this.variable);
+    }
     print() {
       const op = this.expected_bool ? this.comparison : inverseOpMap[this.comparison];
       return printCheckAction(this, `"${this.variable}" ${op} ${this.value}`, false);
     }
   }
-  class CHECK_VARIABLES extends NumberComparisonAction {
+  class CHECK_VARIABLES extends ActionNumberComparison {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10451,12 +10508,21 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    realignVars() {
+      this.variable = realignTemp(this.variable);
+      this.source = realignTemp(this.source);
+      return this;
+    }
+    registerVars(registry) {
+      registry.add(this.variable);
+      registry.add(this.source);
+    }
     print() {
       const op = this.expected_bool ? this.comparison : inverseOpMap[this.comparison];
       return printCheckAction(this, `"${this.variable}" ${op} "${this.source}"`, false);
     }
   }
-  class CHECK_MAP extends StringCheckableAction {
+  class CHECK_MAP extends ActionStringCheckable {
     constructor(args2) {
       super();
       // TODO: is this even in the engine? O.o
@@ -10482,7 +10548,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     // todo print fn?
   }
-  class CHECK_BLE_FLAG extends StringCheckableAction {
+  class CHECK_BLE_FLAG extends ActionStringCheckable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10506,7 +10572,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     // todo print fn?
   }
-  class CHECK_DIALOG_OPEN extends BoolGetableAction {
+  class CHECK_DIALOG_OPEN extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10528,7 +10594,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printCheckAction(this, `dialog ${this.expected_bool ? "open" : "closed"}`, false);
     }
   }
-  class CHECK_SERIAL_DIALOG_OPEN extends BoolGetableAction {
+  class CHECK_SERIAL_DIALOG_OPEN extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10554,7 +10620,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       );
     }
   }
-  class CHECK_DEBUG_MODE extends BoolGetableAction {
+  class CHECK_DEBUG_MODE extends ActionBoolGetable {
     constructor(args2) {
       super();
       __publicField(this, "action");
@@ -10576,6 +10642,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printCheckAction(this, "debug_mode", true);
     }
   }
+  const isHasVariables = (v) => {
+    if (v instanceof MUTATE_VARIABLE) return true;
+    if (v instanceof MUTATE_VARIABLES) return true;
+    if (v instanceof CHECK_VARIABLE) return true;
+    if (v instanceof CHECK_VARIABLES) return true;
+    if (v instanceof COPY_VARIABLE) return true;
+    return false;
+  };
+  const isMightHaveLabel = (v) => {
+    if (v instanceof CheckAction) return true;
+    if (v instanceof GOTO_ACTION_INDEX) return true;
+    if (v instanceof LABEL) return true;
+    if (v instanceof LabelDefinition) return true;
+    if (v instanceof GotoLabel) return true;
+    return false;
+  };
   const breakIfNotTSNodeArray = (v) => {
     if (Array.isArray(v) && v.every((v2) => v2 instanceof Node)) return v;
     throw new Error("not a TreeSitterNode array");
@@ -10829,6 +10911,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     newTemporary();
     return dropTemporary();
   };
+  const temporaryCount = () => temporaryStep;
+  const realignTemp = (temp) => {
+    const oldTemp = parseInt(temp.replace(TEMP, ""));
+    const newTemp = temporaryStep + oldTemp;
+    return TEMP + newTemp;
+  };
   const RETURN = "__RETURN_";
   const inverseOpMap = {
     "<": ">=",
@@ -11081,16 +11169,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
       });
       data.actions = simplifyLabelGotos(finalizedActions.flat());
-      data.actions.forEach((action) => {
-        if (action instanceof MUTATE_VARIABLE) {
-          this.integers.add(action.variable);
-        } else if (action instanceof MUTATE_VARIABLES) {
-          this.integers.add(action.variable);
-          this.integers.add(action.source);
-        } else if (action instanceof COPY_VARIABLE) {
-          this.integers.add(action.variable);
-        }
-      });
       if (!this.scripts[name2]) {
         this.scripts[name2] = data;
       } else {
@@ -11154,18 +11232,21 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           this.bakeCopyScriptSingle(f, node, action.script);
         }
         const labelSuffix = "c" + this.advanceGotoSuffix();
-        const copiedActions = this.scripts[action.script].actions.map((v) => v.clone()).map((v) => {
-          if (v instanceof CheckAction && v.label !== void 0) {
-            v.label += labelSuffix;
-          } else if (v instanceof GOTO_ACTION_INDEX && typeof v.action_index === "string") {
-            v.action_index += labelSuffix;
-          } else if (v instanceof LABEL) {
-            v.value += labelSuffix;
-          } else if (v instanceof LabelDefinition || v instanceof GotoLabel) {
-            v.label += labelSuffix;
+        let copiedActions = this.scripts[action.script].actions.map((v) => {
+          if (isMightHaveLabel(v)) {
+            return v.clone().ifLabelAddSuffix(labelSuffix);
           }
           return v;
         });
+        const tempCount = temporaryCount();
+        if (tempCount > 0) {
+          copiedActions = copiedActions.map((v) => {
+            if (isHasVariables(v)) {
+              return v.clone().realignVars();
+            }
+            return v;
+          });
+        }
         if (action instanceof COPY_SCRIPT && action.search_and_replace) {
           const searchAndReplace = action.search_and_replace;
           const searchedAndReplaced = copiedActions.map((v) => {
@@ -11194,6 +11275,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       this.scripts[scriptName].copyScriptResolved = true;
       this.scripts[scriptName].actions = finalActions;
+      finalActions.forEach((v) => {
+        if (isHasVariables(v)) {
+          v.registerVars(this.integers);
+        }
+      });
       copyRecursion.pop();
     }
     parseFile(fileName) {

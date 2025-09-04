@@ -1,5 +1,4 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
-import { BoolGetableAction, StringCheckableAction } from './parser-bytecode-info.ts';
 import {
 	MathlangLocation,
 	BoolBinaryExpression,
@@ -338,7 +337,7 @@ const captureFns = {
 		const field = textForField(f, node, 'property');
 		return EntityIntField.quick(debug, entity, field);
 	},
-	bool_getable: (f: FileState, node: TreeSitterNode): BoolGetableAction => {
+	bool_getable: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		const type = optionalTextForField(f, node, 'type');
 		if (type === 'flag') {
@@ -379,7 +378,7 @@ const captureFns = {
 		}
 		throw new Error('failed to capture bool_getable');
 	},
-	string_checkable: (f: FileState, node: TreeSitterNode): StringCheckableAction => {
+	string_checkable: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		const entity = optionalStringCaptureForField(f, node, 'entity_identifier');
 		if (entity === null) {

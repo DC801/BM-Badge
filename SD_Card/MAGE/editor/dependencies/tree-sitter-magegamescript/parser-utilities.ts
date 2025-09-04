@@ -120,7 +120,14 @@ export const quickTemporary = (): string => {
 	newTemporary();
 	return dropTemporary();
 };
-export const latestTemporary = (): string => temporaries[0];
+
+// Not the count as such, but just the current suffix
+export const temporaryCount = (): number => temporaryStep;
+export const realignTemp = (temp: string) => {
+	const oldTemp = parseInt(temp.replace(TEMP, ''));
+	const newTemp = temporaryStep + oldTemp;
+	return TEMP + newTemp;
+};
 
 export const RETURN = '__RETURN_';
 
