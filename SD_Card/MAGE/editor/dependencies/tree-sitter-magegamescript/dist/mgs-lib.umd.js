@@ -4369,13 +4369,18 @@ ${JSON.stringify(symbolNames, null, 2)}`);
             steps.push(MUTATE_VARIABLE.set(RETURN, exp));
           } else if (typeof exp === "string") {
             steps.push(MUTATE_VARIABLES.set(debug, RETURN, exp));
-          } else if (exp instanceof IntGetable || exp instanceof IntBinaryExpression) {
-            steps.push(exp.assignToVar(RETURN));
+          } else if (exp instanceof IntExpression) {
+            const temporary = newTemporary();
+            steps.push(
+              ...exp.toSteps(temporary),
+              MUTATE_VARIABLES.set(debug, RETURN, temporary)
+            );
+            dropTemporary();
           } else {
-            throw new Error("what else goes here?");
+            throw new Error("invalid return value in return statement");
           }
           steps.push(returnStatement);
-          return MathlangSequence.quick(debug, steps, "return_statement_with_value");
+          return MathlangSequence.orSingle(f, node, steps, "return_statement_with_value");
         }
         return returnStatement;
       }
@@ -4520,11 +4525,12 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       handle: (v, f, node, i2) => {
         var _a2, _b2;
         const lhs = coerceToString(f, node, v.lhs, "action_set_ambiguous lhs");
-        if (v.rhs instanceof BoolLiteral) {
-          return SET_SAVE_FLAG.toValue(lhs, v.rhs.value);
+        const rhs = v.rhs;
+        if (rhs instanceof BoolLiteral) {
+          return SET_SAVE_FLAG.toValue(lhs, rhs.value);
         }
-        if (typeof v.rhs === "number") return MUTATE_VARIABLE.set(lhs, v.rhs);
-        if (typeof v.rhs == "string") {
+        if (typeof rhs === "number") return MUTATE_VARIABLE.set(lhs, rhs);
+        if (typeof rhs == "string") {
           if (i2 === void 0) throw new Error("undefined index");
           const lhsChild = mandatoryChildForField(f, node, "lhs");
           const rhsChild = mandatoryChildForField(f, node, "rhs");
@@ -4534,7 +4540,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
             throw new Error(`couldn't find nodes to squiggle`);
           }
           const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
-          const suggestion = v.rhs.includes(" ") ? '"' + v.rhs + '"' : v.rhs;
+          const suggestion = rhs.includes(" ") ? '"' + rhs + '"' : rhs;
           const footer = `Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:
     !!${suggestion}
 To silence this warning, turn the RHS into a passthrough int expression (which will produce the same output), e.g.:
@@ -4550,25 +4556,29 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             footer
           );
           f.p.newWarning(warning);
-          return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
+          return MUTATE_VARIABLES.set(debug, lhs, rhs);
         }
-        if (v.rhs instanceof EntityIntField) {
-          return COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, lhs);
+        if (rhs instanceof EntityIntField) {
+          return COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, lhs);
         }
-        if (v.rhs instanceof RNGSingle) {
-          return v.rhs.assignToVar(lhs);
+        if (rhs instanceof RNGSingle) {
+          return rhs.assignToVar(lhs);
         }
-        if (v.rhs instanceof RNGPair) {
-          return v.rhs.assignToVar(lhs);
+        if (rhs instanceof RNGPair) {
+          return rhs.assignToVar(lhs);
         }
-        if (v.rhs instanceof FnCallReturnValue) {
-          return v.rhs.assignToVar(lhs);
+        if (rhs instanceof FnCall) {
+          const baked = rhs.bake().assignToVar(lhs);
+          return baked;
         }
-        if (v.rhs instanceof IntBinaryExpression) {
-          return v.rhs.assignToVar(lhs);
+        if (rhs instanceof FnCallReturnValue) {
+          return rhs.assignToVar(lhs);
         }
-        if (v.rhs instanceof BoolExpression) {
-          return v.rhs.assignToVar(lhs);
+        if (rhs instanceof IntBinaryExpression) {
+          return rhs.assignToVar(lhs);
+        }
+        if (rhs instanceof BoolExpression) {
+          return rhs.assignToVar(lhs);
         }
         throw new Error("unknown RHS in action_set_ambiguous");
       }
@@ -5767,9 +5777,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       const fnNode = optionalChildForField(f, node, "fn_call");
       if (fnNode) {
-        const sequence = MathlangSequence.coerce(handleNode(f, fnNode));
         const fn = stringCaptureForField(f, fnNode, "name");
-        return FnCallReturnValue.quick(debug, fn, "fn", flattenNodes(f, sequence.steps));
+        return FnCall.quick(debug, fn, "fn", fnNode);
       }
       const copyNode = optionalChildForField(f, node, "copy_macro");
       if (copyNode) {
@@ -6917,6 +6926,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     toSteps(destinationVar) {
       return this.toSteps(destinationVar);
     }
+    assignToVar(destinationVar) {
+      return this.assignToVar(destinationVar);
+    }
   }
   class IntBinaryExpression extends IntExpression {
     constructor(debug, args2) {
@@ -6952,14 +6964,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       } else if (lhs instanceof IntBinaryExpression) {
         steps.push(...lhs.toSteps(destinationVar));
       }
-      if (rhs instanceof IntUnit) {
-        steps.push(...rhs.toStepsWithOp(destinationVar, op));
-      }
-      if (rhs instanceof IntBinaryExpression) {
+      if (rhs instanceof IntBinaryExpression || rhs instanceof FnCall || rhs instanceof FnCallReturnValue) {
         const newTemp = newTemporary();
-        steps.push(...rhs.toSteps(destinationVar));
+        steps.push(...rhs.toSteps(newTemp));
         steps.push(MUTATE_VARIABLES.change(destinationVar, newTemp, op));
         dropTemporary();
+      } else if (rhs instanceof IntUnit) {
+        steps.push(...rhs.toStepsWithOp(destinationVar, op));
       }
       return steps;
     }
@@ -6992,11 +7003,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return Action.fromArgs({ ...this, variable });
     }
     toStepsWithOp(destinationVar, op) {
-      const quickTemp = quickTemporary();
+      const temp = newTemporary();
       const steps = [
-        ...this.toSteps(quickTemp),
-        MUTATE_VARIABLES.change(destinationVar, quickTemp, op)
+        ...this.toSteps(temp),
+        MUTATE_VARIABLES.change(destinationVar, temp, op)
       ];
+      dropTemporary();
       return steps;
     }
     assignToVarWithOp(destinationVar, op) {
@@ -7203,9 +7215,56 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       );
     }
   }
+  class FnCall extends IntGetable {
+    constructor(debug, args2) {
+      super(debug, args2);
+      __publicField(this, "identifier");
+      __publicField(this, "type");
+      __publicField(this, "rawBody");
+      this.identifier = breakIfNotString(args2.identifier);
+      if (!(args2.rawBody instanceof Node)) {
+        throw new Error("should be TreeSitterNode");
+      }
+      this.rawBody = args2.rawBody;
+      const type = breakIfNotString(args2.type);
+      if (type === "script" || type === "fn") {
+        this.type = type;
+      } else {
+        throw new Error("invalid Fn type " + type);
+      }
+    }
+    clone() {
+      return new FnCall(this.debug.clone(), this.args);
+    }
+    static quick(debug, identifier, type, rawBody) {
+      return new FnCall(debug, { identifier, type, rawBody });
+    }
+    bake() {
+      const sequence = MathlangSequence.coerce(handleNode(this.debug.f, this.rawBody));
+      return FnCallReturnValue.quick(
+        this.debug,
+        this.identifier,
+        "fn",
+        flattenNodes(this.debug.f, sequence.steps)
+      );
+    }
+    toSteps(destinationVar) {
+      const baked = this.bake();
+      return baked.toSteps(destinationVar);
+    }
+    assignToVar(destinationVar) {
+      return MathlangSequence.quick(
+        this.debug,
+        this.toSteps(destinationVar),
+        `from FnCall (${this.type} "${this.identifier}")`
+      );
+    }
+  }
   class FnCallReturnValue extends IntGetable {
     constructor(debug, args2) {
       super(debug, args2);
+      // TODO IMPORTANT
+      // These must be baked at the moment of use so that the right temporaries are drawn from!
       __publicField(this, "steps");
       __publicField(this, "identifier");
       __publicField(this, "type");
@@ -7214,6 +7273,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const type = breakIfNotString(args2.type);
       if (type === "script" || type === "fn") {
         this.type = type;
+      } else {
+        throw new Error("invalid Fn type " + type);
       }
     }
     clone() {
@@ -7230,10 +7291,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     toSteps(destinationVar) {
       const assign = MUTATE_VARIABLES.set(this.debug, destinationVar, RETURN);
-      this.steps.push(assign);
       const reset = MUTATE_VARIABLE.set(RETURN, 0);
-      this.steps.push(reset);
-      return this.steps;
+      return [...this.steps, assign, reset];
     }
     assignToVar(destinationVar) {
       return MathlangSequence.quick(
@@ -10827,7 +10886,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const flattenNodes = (f, rawActions) => {
     const actions = [];
     rawActions.forEach((raw) => {
-      if (raw instanceof MathlangSequence || raw instanceof BoolComparisonSequence || raw instanceof FnCallReturnValue) {
+      if (raw instanceof FnCall) {
+        const baked = raw.bake();
+        baked.steps.forEach((step) => actions.push(step));
+      } else if (raw instanceof MathlangSequence || raw instanceof BoolComparisonSequence || raw instanceof FnCallReturnValue) {
         raw.steps.forEach((step) => actions.push(step));
       } else if (raw instanceof JSONLiteral) {
         raw.json.forEach((obj) => {

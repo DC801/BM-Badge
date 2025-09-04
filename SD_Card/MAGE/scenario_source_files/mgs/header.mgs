@@ -16,7 +16,7 @@ fn set_hint_none_if_not_series ($n) {
 	}
 }
 
-fn get_entity_direction ($name, $captureVar) {
+fn capture_entity_direction ($name, $captureVar) {
 	if (entity $name direction == north) {
 		$captureVar = 0;
 	} else if (entity$name direction == east) {
@@ -55,8 +55,5 @@ fn get_diff_y ($e1, $e2) {
 	}
 }
 fn get_manhattan_distance ($e1, $e2) {
-	diff_x = get_diff_x($e1, $e2);
-	diff_y = get_diff_y($e1, $e2);
-	// TODO: I could have sworn you could have two FnCallReturn in one expression?
-	return diff_x + diff_y;
+	return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
 }

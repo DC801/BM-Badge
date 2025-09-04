@@ -16,6 +16,7 @@ import {
 	ReturnStatement,
 	ContinueStatement,
 	BreakStatement,
+	FnCall,
 } from './parser-types.ts';
 import { FileState } from './parser-file.ts';
 import { type FileMap } from './parser-project.ts';
@@ -195,7 +196,10 @@ export const autoIdentifierName = (f: FileState, node: TreeSitterNode): string =
 export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => {
 	const actions: AnyNode[] = [];
 	rawActions.forEach((raw) => {
-		if (
+		if (raw instanceof FnCall) {
+			const baked = raw.bake();
+			baked.steps.forEach((step) => actions.push(step));
+		} else if (
 			raw instanceof MathlangSequence ||
 			raw instanceof BoolComparisonSequence ||
 			raw instanceof FnCallReturnValue

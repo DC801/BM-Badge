@@ -7,7 +7,6 @@ import {
 	flattenNodes,
 	inverseOpMap,
 	newTemporary,
-	quickTemporary,
 	RETURN,
 	simpleBranchMaker,
 } from './parser-utilities.ts';
@@ -896,7 +895,12 @@ export class IntExpression extends MathlangNode {
 		return v;
 	}
 	toSteps(destinationVar: string) {
+		// USE THE CHILDREN
 		return this.toSteps(destinationVar);
+	}
+	assignToVar(destinationVar: string) {
+		// USE THE CHILDREN
+		return this.assignToVar(destinationVar);
 	}
 }
 
@@ -939,14 +943,17 @@ export class IntBinaryExpression extends IntExpression {
 		}
 
 		// do the RHS
-		if (rhs instanceof IntUnit) {
-			steps.push(...rhs.toStepsWithOp(destinationVar, op));
-		}
-		if (rhs instanceof IntBinaryExpression) {
+		if (
+			rhs instanceof IntBinaryExpression ||
+			rhs instanceof FnCall ||
+			rhs instanceof FnCallReturnValue
+		) {
 			const newTemp = newTemporary();
-			steps.push(...rhs.toSteps(destinationVar));
+			steps.push(...rhs.toSteps(newTemp));
 			steps.push(ACTION.MUTATE_VARIABLES.change(destinationVar, newTemp, op));
 			dropTemporary();
+		} else if (rhs instanceof IntUnit) {
+			steps.push(...rhs.toStepsWithOp(destinationVar, op));
 		}
 		return steps;
 	}
@@ -986,11 +993,12 @@ export class IntUnit extends IntExpression {
 		return ACTION.Action.fromArgs({ ...this, variable });
 	}
 	toStepsWithOp(destinationVar: string, op: string) {
-		const quickTemp = quickTemporary();
+		const temp = newTemporary();
 		const steps = [
-			...this.toSteps(quickTemp),
-			ACTION.MUTATE_VARIABLES.change(destinationVar, quickTemp, op),
+			...this.toSteps(temp),
+			ACTION.MUTATE_VARIABLES.change(destinationVar, temp, op),
 		];
+		dropTemporary();
 		return steps;
 	}
 	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
@@ -1198,7 +1206,59 @@ export class RNGPair extends IntGetable {
 		);
 	}
 }
+export class FnCall extends IntGetable {
+	identifier: string;
+	type: 'script' | 'fn';
+	rawBody: TreeSitterNode;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.identifier = ACTION.breakIfNotString(args.identifier);
+		if (!(args.rawBody instanceof TreeSitterNode)) {
+			throw new Error('should be TreeSitterNode');
+		}
+		this.rawBody = args.rawBody;
+		const type = ACTION.breakIfNotString(args.type);
+		if (type === 'script' || type === 'fn') {
+			this.type = type;
+		} else {
+			throw new Error('invalid Fn type ' + type);
+		}
+	}
+	clone() {
+		return new FnCall(this.debug.clone(), this.args);
+	}
+	static quick(
+		debug: MathlangLocation,
+		identifier: string,
+		type: string,
+		rawBody: TreeSitterNode,
+	) {
+		return new FnCall(debug, { identifier, type, rawBody });
+	}
+	bake(): FnCallReturnValue {
+		const sequence = MathlangSequence.coerce(handleNode(this.debug.f, this.rawBody));
+		return FnCallReturnValue.quick(
+			this.debug,
+			this.identifier,
+			'fn',
+			flattenNodes(this.debug.f, sequence.steps),
+		);
+	}
+	toSteps(destinationVar: string) {
+		const baked = this.bake();
+		return baked.toSteps(destinationVar);
+	}
+	assignToVar(destinationVar: string) {
+		return MathlangSequence.quick(
+			this.debug,
+			this.toSteps(destinationVar),
+			`from FnCall (${this.type} "${this.identifier}")`,
+		);
+	}
+}
 export class FnCallReturnValue extends IntGetable {
+	// TODO IMPORTANT
+	// These must be baked at the moment of use so that the right temporaries are drawn from!
 	steps: AnyNode[];
 	identifier: string;
 	type: 'script' | 'fn';
@@ -1209,6 +1269,8 @@ export class FnCallReturnValue extends IntGetable {
 		const type = ACTION.breakIfNotString(args.type);
 		if (type === 'script' || type === 'fn') {
 			this.type = type;
+		} else {
+			throw new Error('invalid Fn type ' + type);
 		}
 	}
 	clone() {
@@ -1225,11 +1287,9 @@ export class FnCallReturnValue extends IntGetable {
 	}
 	toSteps(destinationVar: string) {
 		const assign = ACTION.MUTATE_VARIABLES.set(this.debug, destinationVar, RETURN);
-		this.steps.push(assign);
 		// so wrong values don't live in the return "register" (todo: is this helpful?)
 		const reset = ACTION.MUTATE_VARIABLE.set(RETURN, 0);
-		this.steps.push(reset);
-		return this.steps;
+		return [...this.steps, assign, reset];
 	}
 	assignToVar(destinationVar: string) {
 		return MathlangSequence.quick(

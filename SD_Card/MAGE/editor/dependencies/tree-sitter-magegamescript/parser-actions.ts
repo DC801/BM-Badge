@@ -14,7 +14,6 @@ import {
 	type ActionSetDirection,
 	type ActionMoveOverTime,
 	type ActionSetEntityString,
-	type ActionSetEntityInt,
 	type ActionSetBool,
 	MUTATE_VARIABLE,
 	MUTATE_VARIABLES,
@@ -25,17 +24,10 @@ import {
 	SET_ENTITY_DIRECTION_RELATIVE,
 	UNREGISTER_SERIAL_DIALOG_COMMAND,
 	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
-	SET_ENTITY_X,
-	SET_ENTITY_Y,
 	SET_ENTITY_NAME,
 	SET_ENTITY_TYPE,
 	SET_ENTITY_INTERACT_SCRIPT,
 	SET_ENTITY_TICK_SCRIPT,
-	SET_ENTITY_PRIMARY_ID,
-	SET_ENTITY_SECONDARY_ID,
-	SET_ENTITY_CURRENT_FRAME,
-	SET_ENTITY_CURRENT_ANIMATION,
-	SET_ENTITY_PRIMARY_ID_TYPE,
 	SET_ENTITY_GLITCHED,
 	SET_ENTITY_PATH,
 	GOTO_ACTION_INDEX,
@@ -60,7 +52,6 @@ import {
 	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS,
 	REGISTER_SERIAL_DIALOG_COMMAND,
 	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
-	SET_ENTITY_MOVEMENT_RELATIVE,
 	TELEPORT_ENTITY_TO_GEOMETRY,
 	TELEPORT_CAMERA_TO_GEOMETRY,
 	SET_CAMERA_TO_FOLLOW_ENTITY,
@@ -110,11 +101,10 @@ import {
 	RNGSingle,
 	RNGPair,
 	MathlangMessage,
-	IntGetable,
 	FnCallReturnValue,
 	ScriptDefinition,
 	IntExpression,
-	IntUnit,
+	FnCall,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -300,13 +290,18 @@ const actionData: Record<string, actionDataEntry> = {
 					steps.push(MUTATE_VARIABLE.set(RETURN, exp));
 				} else if (typeof exp === 'string') {
 					steps.push(MUTATE_VARIABLES.set(debug, RETURN, exp));
-				} else if (exp instanceof IntGetable || exp instanceof IntBinaryExpression) {
-					steps.push(exp.assignToVar(RETURN));
+				} else if (exp instanceof IntExpression) {
+					const temporary = newTemporary();
+					steps.push(
+						...exp.toSteps(temporary),
+						MUTATE_VARIABLES.set(debug, RETURN, temporary),
+					);
+					dropTemporary();
 				} else {
-					throw new Error('what else goes here?');
+					throw new Error('invalid return value in return statement');
 				}
 				steps.push(returnStatement);
-				return MathlangSequence.quick(debug, steps, 'return_statement_with_value');
+				return MathlangSequence.orSingle(f, node, steps, 'return_statement_with_value');
 			}
 			return returnStatement;
 		},
@@ -450,20 +445,21 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node, i): AnyNode => {
 			const lhs = coerceToString(f, node, v.lhs, 'action_set_ambiguous lhs');
+			const rhs = v.rhs;
 
 			// simple cases first (easy to check for)
 
 			// varName = false;
-			if (v.rhs instanceof BoolLiteral) {
-				return SET_SAVE_FLAG.toValue(lhs, v.rhs.value);
+			if (rhs instanceof BoolLiteral) {
+				return SET_SAVE_FLAG.toValue(lhs, rhs.value);
 			}
 
 			// varName = 255;
-			if (typeof v.rhs === 'number') return MUTATE_VARIABLE.set(lhs, v.rhs);
+			if (typeof rhs === 'number') return MUTATE_VARIABLE.set(lhs, rhs);
 
 			// AMBIGUITY DANCE PARTY
 			// varName = varName;
-			if (typeof v.rhs == 'string') {
+			if (typeof rhs == 'string') {
 				if (i === undefined) throw new Error('undefined index');
 				// For expansions, we only want to print one ambiguous identifier at a time in an error/warning message.
 				// `i` is from the caller, who knows which one of the set we're looking at now.
@@ -477,7 +473,7 @@ const actionData: Record<string, actionDataEntry> = {
 					throw new Error(`couldn't find nodes to squiggle`);
 				}
 				const printNodes = [lhsSquiggliesNode, rhsSquiggliesNode];
-				const suggestion = v.rhs.includes(' ') ? '"' + v.rhs + '"' : v.rhs;
+				const suggestion = rhs.includes(' ') ? '"' + rhs + '"' : rhs;
 				const footer =
 					`Both identifiers will be interpreted as ints unless you coerce the right-hand side to a bool expression, like this:` +
 					`\n    !!${suggestion}` +
@@ -494,38 +490,43 @@ const actionData: Record<string, actionDataEntry> = {
 					footer,
 				);
 				f.p.newWarning(warning);
-				return MUTATE_VARIABLES.set(debug, lhs, v.rhs);
+				return MUTATE_VARIABLES.set(debug, lhs, rhs);
 			}
 
 			// varName = player x;
-			if (v.rhs instanceof EntityIntField) {
-				return COPY_VARIABLE.intoVariable(v.rhs.entity, v.rhs.field, lhs);
+			if (rhs instanceof EntityIntField) {
+				return COPY_VARIABLE.intoVariable(rhs.entity, rhs.field, lhs);
 			}
 
 			// varName = RNG!(99);
-			if (v.rhs instanceof RNGSingle) {
-				return v.rhs.assignToVar(lhs);
+			if (rhs instanceof RNGSingle) {
+				return rhs.assignToVar(lhs);
 			}
 
 			// varName = RNG!(0, 99);
-			if (v.rhs instanceof RNGPair) {
-				return v.rhs.assignToVar(lhs);
+			if (rhs instanceof RNGPair) {
+				return rhs.assignToVar(lhs);
 			}
 
 			// varName = fnCall(9);
+			if (rhs instanceof FnCall) {
+				const baked = rhs.bake().assignToVar(lhs);
+				return baked;
+			}
+
 			// varName = copyScript();
-			if (v.rhs instanceof FnCallReturnValue) {
-				return v.rhs.assignToVar(lhs);
+			if (rhs instanceof FnCallReturnValue) {
+				return rhs.assignToVar(lhs);
 			}
 
 			// varName = (255 + player x);
-			if (v.rhs instanceof IntBinaryExpression) {
-				return v.rhs.assignToVar(lhs);
+			if (rhs instanceof IntBinaryExpression) {
+				return rhs.assignToVar(lhs);
 			}
 
 			// varName = (debug_mode || player glitched);
-			if (v.rhs instanceof BoolExpression) {
-				return v.rhs.assignToVar(lhs);
+			if (rhs instanceof BoolExpression) {
+				return rhs.assignToVar(lhs);
 			}
 
 			throw new Error('unknown RHS in action_set_ambiguous');

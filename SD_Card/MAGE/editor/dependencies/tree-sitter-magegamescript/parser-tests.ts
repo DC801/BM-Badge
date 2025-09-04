@@ -29,27 +29,37 @@ const skipTheseTests = new Set([
 const actionTests = {
 	return_binary_expression: {
 		input: [`return player y + 100;`],
-		expected: [`${RETURN} = player y;`, `${RETURN} += 100;`],
+		expected: [
+			// redundant but guarantees expressions don't collide
+			`"__TEMP_0" = player y;`,
+			`"__TEMP_0" += 100;`,
+			`${RETURN} = "__TEMP_0";`,
+		],
 	},
 	return_rng_alt: {
 		input: [`return RNG!(3) + 100;`],
-		expected: [`${RETURN} ?= 3;`, `${RETURN} += 100;`],
+		expected: [
+			// linter srsly
+			`"__TEMP_0" ?= 3;`,
+			`"__TEMP_0" += 100;`,
+			`${RETURN} = "__TEMP_0";`,
+		],
 	},
 	return_rng_pair: {
 		input: [`return RNG!(1,=3);`],
-		expected: [`${RETURN} ?= 3;`, `${RETURN} += 1;`],
+		expected: [`"__TEMP_0 ?= 3;`, `"__TEMP_0 += 1;`, `${RETURN} = "__TEMP_0";`],
 	},
 	return_rng_single: {
 		input: [`return RNG!(2);`],
-		expected: [`${RETURN} ?= 2;`],
+		expected: [`"__TEMP_0" ?= 2;`, `${RETURN} = "__TEMP_0";`],
 	},
 	return_int_getable: {
 		input: [`return player x;`],
-		expected: [`${RETURN} = player x;`],
+		expected: [`"__TEMP_0" = player x;`, `${RETURN} = "__TEMP_0";`],
 	},
 	return_var: {
 		input: [`return varName;`],
-		expected: [`${RETURN} = varName;`],
+		expected: [`${RETURN} = "varName";`],
 	},
 	return_int: {
 		input: [`return 7;`],
@@ -1333,6 +1343,151 @@ const fileMap =
 	onlyDoTheseActionTests.length !== 0
 		? {}
 		: {
+				'mousegame_short.mgs': {
+					fileText: `
+					fn get_diff_x ($e1, $e2) {
+						if (entity $e1 x > entity $e2 x) {
+							return entity $e1 x - entity $e2 x;
+						} else {
+							return entity $e2 x - entity $e1 x;
+						}
+					}
+					fn get_diff_y ($e1, $e2) {
+						if (entity $e1 y > entity $e2 y) {
+							return entity $e1 y - entity $e2 y;
+						} else {
+							return entity $e2 y - entity $e1 y;
+						}
+					}
+					fn get_manhattan_distance ($e1, $e2) {
+						return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
+					}
+					ch2_mousegame_tick2 {
+						mousegame_manhattan = get_manhattan_distance("%PLAYER%", Mouse);
+					}
+				`,
+					expected: {
+						scripts: {
+							ch2_mousegame_tick2: `"ch2_mousegame_tick2" {
+								"__TEMP_1" = player x;
+								"__TEMP_2" = entity "Mouse" x;
+								if "__TEMP_1" > "__TEMP_2" then goto index 9;
+								"__TEMP_1" = entity "Mouse" x;
+								"__TEMP_2" = player x;
+								"__TEMP_1" -= "__TEMP_2";
+								"__RETURN_" = "__TEMP_1";
+								goto index 14;
+								goto index 14;
+								"__TEMP_1" = player x;
+								"__TEMP_2" = entity "Mouse" x;
+								"__TEMP_1" -= "__TEMP_2";
+								"__RETURN_" = "__TEMP_1";
+								goto index 14;
+								"__TEMP_0" = "__RETURN_";
+								"__RETURN_" = 0;
+
+								"__TEMP_2" = player y;
+								"__TEMP_3" = entity "Mouse" y;
+								if "__TEMP_2" > "__TEMP_3" then goto index 25;
+								"__TEMP_2" = entity "Mouse" y;
+								"__TEMP_3" = player y;
+								"__TEMP_2" -= "__TEMP_3";
+								"__RETURN_" = "__TEMP_2";
+								goto index 30;
+								goto index 30;
+								"__TEMP_2" = player y;
+								"__TEMP_3" = entity "Mouse" y;
+								"__TEMP_2" -= "__TEMP_3";
+								"__RETURN_" = "__TEMP_2";
+								goto index 30;
+								"__TEMP_1" = "__RETURN_";
+								"__RETURN_" = 0;
+
+								"__TEMP_0" += "__TEMP_1";
+								"__RETURN_" = "__TEMP_0";
+								"mousegame_manhattan" = "__RETURN_";
+								"__RETURN_" = 0;
+							}`,
+						},
+					},
+				},
+				'mousegame_slow.mgs': {
+					fileText: `
+					fn get_diff_x ($e1, $e2) {
+						if (entity $e1 x > entity $e2 x) {
+							return entity $e1 x - entity $e2 x;
+						} else {
+							return entity $e2 x - entity $e1 x;
+						}
+					}
+					fn get_diff_y ($e1, $e2) {
+						if (entity $e1 y > entity $e2 y) {
+							return entity $e1 y - entity $e2 y;
+						} else {
+							return entity $e2 y - entity $e1 y;
+						}
+					}
+					fn get_manhattan_distance ($e1, $e2) {
+						wait 1;
+						diff_x = get_diff_x($e1, $e2);
+						wait 2;
+						diff_y = get_diff_y($e1, $e2);
+						wait 3;
+						return diff_x + diff_y;
+					}
+					ch2_mousegame_tick {
+						mousegame_manhattan = get_manhattan_distance("%PLAYER%", Mouse);
+					}
+				`,
+					expected: {
+						scripts: {
+							ch2_mousegame_tick: `"ch2_mousegame_tick" {
+								wait 1ms;
+								"__TEMP_0" = player x;
+								"__TEMP_1" = entity "Mouse" x;
+								if "__TEMP_0" > "__TEMP_1" then goto index 10;
+								"__TEMP_0" = entity "Mouse" x;
+								"__TEMP_1" = player x;
+								"__TEMP_0" -= "__TEMP_1";
+								__RETURN_" = "__TEMP_0";
+								goto index 15;
+								goto index 15;
+								"__TEMP_0" = player x;
+								"__TEMP_1" = entity "Mouse" x;
+								"__TEMP_0" -= "__TEMP_1";
+								"__RETURN_" = "__TEMP_0";
+								goto index 15;
+								"diff_x" = "__RETURN_";
+								"__RETURN_" = 0;
+
+								wait 2ms;
+								"__TEMP_0" = player y;
+								"__TEMP_1" = entity "Mouse" y;
+								if "__TEMP_0" > "__TEMP_1" then goto index 27;
+								"__TEMP_0" = entity "Mouse" y;
+								"__TEMP_1" = player y;
+								"__TEMP_0" -= "__TEMP_1";
+								"__RETURN_" = "__TEMP_0";
+								goto index 32;
+								goto index 32;
+								"__TEMP_0" = player y;
+								"__TEMP_1" = entity "Mouse" y;
+								"__TEMP_0" -= "__TEMP_1";
+								"__RETURN_" = "__TEMP_0";
+								goto index 32;
+								"diff_y" = "__RETURN_";
+								"__RETURN_" = 0;
+
+								wait 3ms;
+								"__TEMP_0" = "diff_x";
+								"__TEMP_0" += "diff_y";
+								"__RETURN_" = "__TEMP_0";
+								"mousegame_manhattan" = "__RETURN_";
+								"__RETURN_" = 0;
+							}`,
+						},
+					},
+				},
 				'fn_returns.mgs': {
 					fileText: `
 					addThree ($n) { return $n + 3; }
@@ -1355,8 +1510,9 @@ const fileMap =
 					expected: {
 						scripts: {
 							setTallyToThirteen: `"setTallyToThirteen" {
-								"__RETURN_" = 10;
-								"__RETURN_" += 3;
+								"__TEMP_0" = 10;
+								"__TEMP_0" += 3;
+								"__RETURN_" = "__TEMP_0";
 								"tally" = "__RETURN_";
 								"__RETURN_" = 0;
 							}`,

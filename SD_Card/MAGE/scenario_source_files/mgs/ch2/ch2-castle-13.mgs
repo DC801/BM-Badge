@@ -14,7 +14,7 @@ fn interrupt_entity_walk ($name, $animationVar, $dirVar) {
 	$animationVar = entity $name current_animation;
 	entity $name current_animation = 0;
 	pause entity $name on_tick;
-	get_entity_direction($name, $dirVar)
+	capture_entity_direction($name, $dirVar)
 	entity $name direction = player;
 }
 fn resume_entity_walk ($name, $animationVar, $dirVar){

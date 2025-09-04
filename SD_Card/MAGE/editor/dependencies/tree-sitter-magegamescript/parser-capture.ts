@@ -41,8 +41,8 @@ import {
 	BoolComparisonSequence,
 	MathlangMessage,
 	FnCallReturnValue,
-	MathlangSequence,
 	ScriptDefinition,
+	FnCall,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -323,10 +323,10 @@ const captureFns = {
 		}
 		const fnNode = optionalChildForField(f, node, 'fn_call');
 		if (fnNode) {
-			const sequence = MathlangSequence.coerce(handleNode(f, fnNode));
 			const fn = stringCaptureForField(f, fnNode, 'name');
-			return FnCallReturnValue.quick(debug, fn, 'fn', flattenNodes(f, sequence.steps));
+			return FnCall.quick(debug, fn, 'fn', fnNode);
 		}
+		// TODO: unbake this
 		const copyNode = optionalChildForField(f, node, 'copy_macro');
 		if (copyNode) {
 			const handled = handleNode(f, copyNode)[0];
