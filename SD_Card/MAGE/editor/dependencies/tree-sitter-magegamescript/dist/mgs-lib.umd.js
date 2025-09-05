@@ -5361,17 +5361,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       steps.push(dialogs);
       return steps;
     },
-    json_literal: (f, node) => {
-      const jsonNode = namedChildren(f, node)[0];
-      if (!jsonNode) throw new Error("could not find JSON node");
-      const text = jsonNode.text;
+    json_object: (f, node) => {
       try {
-        const parsed = JSON.parse(text);
-        return [JSONLiteral.quick(MathlangLocation.quick(f, node), parsed)];
+        const debug = MathlangLocation.quick(f, node);
+        const parsed = JSON.parse(node.text);
+        let parsedAction = Action.fromArgs(parsed);
+        if (parsedAction instanceof COPY_SCRIPT) {
+          parsedAction = CopyMacro.quick(
+            debug,
+            parsedAction.script,
+            parsedAction.search_and_replace
+          );
+        }
+        return [parsedAction];
       } catch {
-        f.quickError(node, `syntax error`, `Generic error. Check trailing commas!`);
+        f.quickError(node, `invalid JSON action`, `generic error; check trailing commas!`);
       }
       return [];
+    },
+    json_literal: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
+      const jsonNode = namedChildren(f, node)[0];
+      if (!jsonNode) throw new Error("could not find JSON node");
+      if (jsonNode.grammarType !== "json_array") {
+        f.quickError(
+          node,
+          "invalid JSON action",
+          "the top level structure of a JSON literal should be an array: []"
+        );
+        return [];
+      }
+      const handledChildren = handleNamedChildren(f, jsonNode);
+      return [JSONLiteral.quick(debug, handledChildren)];
     },
     copy_macro: (f, node) => {
       const script = stringCaptureForField(f, node, "script");
@@ -6851,12 +6872,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "mathlang");
       __publicField(this, "json");
       this.mathlang = "json_literal";
-      if (!Array.isArray(args2.json)) throw new Error("need array");
-      try {
-        this.json = JSON.parse(JSON.stringify(args2.json));
-      } catch {
-        throw new Error("failed to parse JSON in JSONLiteral constructor");
+      if (!Array.isArray(args2.json)) {
+        throw new Error("JSON literal needs to be an array");
       }
+      const sanitized = args2.json.map((v) => {
+        if (v instanceof AnyNode) {
+          return v;
+        }
+        return Action.fromArgs(v);
+      });
+      this.json = AnyNode.coerceAll(sanitized);
     }
     clone() {
       return new JSONLiteral(this.debug.clone(), this.args);
@@ -6870,14 +6895,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "mathlang");
       __publicField(this, "script");
+      __publicField(this, "search_and_replace");
       this.mathlang = "copy_script";
       this.script = breakIfNotString(args2.script);
+      if (args2.search_and_replace && typeof args2.search_and_replace === "object" && Object.keys(args2.search_and_replace).length > 0) {
+        const search_and_replace = {};
+        Object.entries(args2.search_and_replace).forEach(([k, v]) => {
+          search_and_replace[k] = v;
+        });
+        this.search_and_replace = search_and_replace;
+      }
     }
     clone() {
       return new CopyMacro(this.debug.clone(), this.args);
     }
-    static quick(debug, script) {
-      return new CopyMacro(debug, { script });
+    static quick(debug, script, search_and_replace = {}) {
+      return new CopyMacro(debug, { script, search_and_replace });
     }
     print() {
       return `"${this.script}"()`;
@@ -8290,9 +8323,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return fn(this);
     }
     print() {
-      return `json[${JSON.stringify(this, null, "	")}]`;
+      return `json[${JSON.stringify(this, null, "	")}];`;
     }
     static fromArgs(args2) {
+      if (args2 instanceof CopyMacro) {
+        return COPY_SCRIPT.quick(args2.script, args2.search_and_replace);
+      }
       if (typeof args2 !== "object" || args2 === null) {
         throw new Error("cannot make Action from non-object");
       }
@@ -8303,7 +8339,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (actionConstructorLookup[actionName]) {
         return actionConstructorLookup[actionName](args2);
       }
-      throw new Error("No action constructor for action " + actionName);
+      return new UnknownAction(args2);
+    }
+  }
+  class UnknownAction extends Action {
+    constructor(args2) {
+      super();
+      if (typeof args2 !== "object" || args2 === null) {
+        throw new Error("cannot make Action from non-object");
+      }
+      Object.entries(args2).forEach((args22) => {
+        const key = args22[0];
+        const value = args22[1];
+        this[key] = value;
+      });
+      if (typeof this.action !== "string") {
+        this.action = "UNKNOWN_ACTION";
+      }
+    }
+    clone() {
+      return Action.fromArgs(this);
     }
   }
   class CheckAction extends Action {
@@ -8782,7 +8837,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         this.search_and_replace = search_and_replace;
       }
     }
-    static quick(script) {
+    static quick(script, search_and_replace) {
+      if (search_and_replace) {
+        return new COPY_SCRIPT({ script, search_and_replace });
+      }
       return new COPY_SCRIPT({ script });
     }
     print() {
@@ -10980,16 +11038,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       } else if (raw instanceof MathlangSequence || raw instanceof BoolComparisonSequence || raw instanceof FnCallReturnValue) {
         raw.steps.forEach((step) => actions.push(step));
       } else if (raw instanceof JSONLiteral) {
-        raw.json.forEach((obj) => {
-          if (typeof obj === "object" && obj.action) {
-            actions.push(Action.fromArgs(obj));
-          } else {
-            f.quickError(
-              raw.debug.node,
-              "invalid JSON action",
-              "invalid JSON action: " + JSON.stringify(obj)
-            );
-          }
+        raw.json.forEach((v) => {
+          actions.push(v);
         });
       } else {
         actions.push(raw);
@@ -11216,6 +11266,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           finalActions.push(action);
           return;
         }
+        if (action instanceof COPY_SCRIPT) {
+          throw new Error("These should all be CopyMacro now");
+        }
         const targetScript = action.script;
         if (!this.scripts[targetScript]) {
           const useNode = action instanceof MathlangNode ? optionalChildForField(action.debug.f, action.debug.node, "script") || action.debug.node : node;
@@ -11247,7 +11300,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return v;
           });
         }
-        if (action instanceof COPY_SCRIPT && action.search_and_replace) {
+        if (action.search_and_replace) {
           const searchAndReplace = action.search_and_replace;
           const searchedAndReplaced = copiedActions.map((v) => {
             if (v instanceof MathlangNode) return v;
@@ -11265,11 +11318,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return Action.fromArgs(ret);
           });
           const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-          finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
+          finalActions.push(
+            CommentNode.quick(MathlangLocation.quick(f, node), comment)
+          );
           finalActions.push(...searchedAndReplaced);
         } else {
           const comment = `Copying: ${action.script} (-${labelSuffix})`;
-          finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
+          finalActions.push(
+            CommentNode.quick(MathlangLocation.quick(f, node), comment)
+          );
           finalActions.push(...copiedActions);
         }
       });
@@ -11381,10 +11438,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const standardizedActions = p.scripts[scriptName].actions.filter(
         (v) => !(v instanceof CommentNode) && !(v instanceof DialogDefinition) && !(v instanceof SerialDialogDefinition)
       ).map((action) => {
-        if (action instanceof CopyMacro) {
-          const script = breakIfNotString(action.script);
-          return COPY_SCRIPT.quick(script);
-        }
         if (action instanceof LabelDefinition) {
           const value = breakIfNotString(action.label);
           return new LABEL({ value });
@@ -11402,10 +11455,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       p.scripts[scriptName].actions = standardizedActions.map((v) => v.clone());
     });
     Object.keys(p.scripts).forEach((scriptName) => {
-      if (!p.scripts[scriptName].copyScriptResolved) {
-        const fileName = p.scripts[scriptName].debug.fileName;
-        const f = p.fileMap[fileName].parsed || p.scripts[scriptName].debug.f;
-        const node = p.scripts[scriptName].debug.node;
+      const scriptData = p.scripts[scriptName];
+      if (!scriptData.copyScriptResolved) {
+        const f = scriptData.debug.f;
+        const node = scriptData.debug.node;
         p.bakeCopyScriptSingle(f, node, scriptName);
       }
     });

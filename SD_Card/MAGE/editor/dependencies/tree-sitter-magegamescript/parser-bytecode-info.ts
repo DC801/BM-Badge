@@ -6,6 +6,7 @@ import {
 	MathlangLocation,
 	CheckSaveFlag,
 	LabelDefinition,
+	CopyMacro,
 } from './parser-types.ts';
 import { type GenericObj } from './parser-actions.ts';
 import { FileState } from './parser-file.ts';
@@ -38,9 +39,12 @@ export class Action extends AnyNode {
 		return fn(this);
 	}
 	print() {
-		return `json[${JSON.stringify(this, null, '\t')}]`;
+		return `json[${JSON.stringify(this, null, '\t')}];`;
 	}
 	static fromArgs(args: unknown) {
+		if (args instanceof CopyMacro) {
+			return COPY_SCRIPT.quick(args.script, args.search_and_replace);
+		}
 		if (typeof args !== 'object' || args === null) {
 			throw new Error('cannot make Action from non-object');
 		}
@@ -51,7 +55,27 @@ export class Action extends AnyNode {
 		if (actionConstructorLookup[actionName]) {
 			return actionConstructorLookup[actionName](args);
 		}
-		throw new Error('No action constructor for action ' + actionName);
+		return new UnknownAction(args);
+	}
+}
+
+export class UnknownAction extends Action {
+	constructor(args: unknown) {
+		super();
+		if (typeof args !== 'object' || args === null) {
+			throw new Error('cannot make Action from non-object');
+		}
+		Object.entries(args).forEach((args) => {
+			const key = args[0];
+			const value = args[1];
+			this[key] = value;
+		});
+		if (typeof this.action !== 'string') {
+			this.action = 'UNKNOWN_ACTION';
+		}
+	}
+	clone() {
+		return Action.fromArgs(this);
 	}
 }
 
@@ -586,7 +610,10 @@ export class COPY_SCRIPT extends Action {
 			this.search_and_replace = search_and_replace;
 		}
 	}
-	static quick(script: string) {
+	static quick(script: string, search_and_replace?: Record<string, string>) {
+		if (search_and_replace) {
+			return new COPY_SCRIPT({ script, search_and_replace });
+		}
 		return new COPY_SCRIPT({ script });
 	}
 	print() {

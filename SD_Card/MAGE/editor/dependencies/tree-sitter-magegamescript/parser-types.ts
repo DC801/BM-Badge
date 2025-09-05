@@ -805,21 +805,25 @@ export class LabelDefinition extends MathlangNode {
 
 export class JSONLiteral extends MathlangNode {
 	mathlang: 'json_literal';
-	json: [JSON];
+	json: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'json_literal';
-		if (!Array.isArray(args.json)) throw new Error('need array');
-		try {
-			this.json = JSON.parse(JSON.stringify(args.json));
-		} catch {
-			throw new Error('failed to parse JSON in JSONLiteral constructor');
+		if (!Array.isArray(args.json)) {
+			throw new Error('JSON literal needs to be an array');
 		}
+		const sanitized = args.json.map((v) => {
+			if (v instanceof AnyNode) {
+				return v;
+			}
+			return ACTION.Action.fromArgs(v);
+		});
+		this.json = AnyNode.coerceAll(sanitized);
 	}
 	clone() {
 		return new JSONLiteral(this.debug.clone(), this.args);
 	}
-	static quick(debug: MathlangLocation, json: [JSON]) {
+	static quick(debug: MathlangLocation, json: AnyNode[]) {
 		return new JSONLiteral(debug, { json });
 	}
 }
@@ -827,16 +831,32 @@ export class JSONLiteral extends MathlangNode {
 export class CopyMacro extends MathlangNode {
 	mathlang: 'copy_script';
 	script: string;
+	search_and_replace?: Record<string, string>;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'copy_script';
 		this.script = ACTION.breakIfNotString(args.script);
+		if (
+			args.search_and_replace &&
+			typeof args.search_and_replace === 'object' &&
+			Object.keys(args.search_and_replace).length > 0
+		) {
+			const search_and_replace: Record<string, string> = {};
+			Object.entries(args.search_and_replace).forEach(([k, v]) => {
+				search_and_replace[k] = v;
+			});
+			this.search_and_replace = search_and_replace;
+		}
 	}
 	clone() {
 		return new CopyMacro(this.debug.clone(), this.args);
 	}
-	static quick(debug: MathlangLocation, script: string) {
-		return new CopyMacro(debug, { script });
+	static quick(
+		debug: MathlangLocation,
+		script: string,
+		search_and_replace: Record<string, string> = {},
+	) {
+		return new CopyMacro(debug, { script, search_and_replace });
 	}
 	print() {
 		return `"${this.script}"()`;

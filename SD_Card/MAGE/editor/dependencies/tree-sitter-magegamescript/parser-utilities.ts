@@ -213,17 +213,8 @@ export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => 
 		) {
 			raw.steps.forEach((step) => actions.push(step));
 		} else if (raw instanceof JSONLiteral) {
-			raw.json.forEach((obj) => {
-				// JSON should only be Actions
-				if (typeof obj === 'object' && (obj as unknown as Action).action) {
-					actions.push(Action.fromArgs(obj));
-				} else {
-					f.quickError(
-						raw.debug.node,
-						'invalid JSON action',
-						'invalid JSON action: ' + JSON.stringify(obj),
-					);
-				}
+			raw.json.forEach((v) => {
+				actions.push(v);
 			});
 		} else {
 			actions.push(raw);

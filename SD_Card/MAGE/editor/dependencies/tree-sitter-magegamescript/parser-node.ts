@@ -72,6 +72,8 @@ import {
 	FunctionDefinition,
 } from './parser-types.ts';
 import {
+	Action,
+	COPY_SCRIPT,
 	GOTO_ACTION_INDEX,
 	MUTATE_VARIABLE,
 	RUN_SCRIPT,
@@ -556,18 +558,38 @@ const nodeFns = {
 		steps.push(dialogs);
 		return steps;
 	},
-	json_literal: (f: FileState, node: TreeSitterNode): JSONLiteral[] => {
-		// TODO: do it more by hand so that errors can be reported more accurately?
-		const jsonNode = namedChildren(f, node)[0];
-		if (!jsonNode) throw new Error('could not find JSON node');
-		const text = jsonNode.text;
+	json_object: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		try {
-			const parsed = JSON.parse(text);
-			return [JSONLiteral.quick(MathlangLocation.quick(f, node), parsed)];
+			const debug = MathlangLocation.quick(f, node);
+			const parsed = JSON.parse(node.text);
+			let parsedAction = Action.fromArgs(parsed);
+			if (parsedAction instanceof COPY_SCRIPT) {
+				parsedAction = CopyMacro.quick(
+					debug,
+					parsedAction.script,
+					parsedAction.search_and_replace,
+				);
+			}
+			return [parsedAction];
 		} catch {
-			f.quickError(node, `syntax error`, `Generic error. Check trailing commas!`);
+			f.quickError(node, `invalid JSON action`, `generic error; check trailing commas!`);
 		}
 		return [];
+	},
+	json_literal: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const debug = MathlangLocation.quick(f, node);
+		const jsonNode = namedChildren(f, node)[0];
+		if (!jsonNode) throw new Error('could not find JSON node');
+		if (jsonNode.grammarType !== 'json_array') {
+			f.quickError(
+				node,
+				'invalid JSON action',
+				'the top level structure of a JSON literal should be an array: []',
+			);
+			return [];
+		}
+		const handledChildren: AnyNode[] = handleNamedChildren(f, jsonNode);
+		return [JSONLiteral.quick(debug, handledChildren)];
 	},
 	copy_macro: (f: FileState, node: TreeSitterNode): [CopyMacro] => {
 		const script = stringCaptureForField(f, node, 'script');

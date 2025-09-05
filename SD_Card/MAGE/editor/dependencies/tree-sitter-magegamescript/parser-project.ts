@@ -164,6 +164,9 @@ export class ProjectState {
 				finalActions.push(action);
 				return;
 			}
+			if (action instanceof COPY_SCRIPT) {
+				throw new Error('These should all be CopyMacro now');
+			}
 			// copy script now:
 			const targetScript: string = action.script;
 			if (!this.scripts[targetScript]) {
@@ -211,7 +214,7 @@ export class ProjectState {
 			}
 
 			// search-and-replace
-			if (action instanceof COPY_SCRIPT && action.search_and_replace) {
+			if (action.search_and_replace) {
 				// search-and-replace does naive JSON stringifying and straight find-and-replace.
 				// Mathlang nodes have properties (args, debug) that cannot be printed.
 				// Only find-and-replace vanilla actions, then?
@@ -235,12 +238,16 @@ export class ProjectState {
 					return Action.fromArgs(ret);
 				});
 				const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
+				finalActions.push(
+					CommentNode.quick(MathlangLocation.quick(f, node), comment),
+				);
 				finalActions.push(...searchedAndReplaced);
 			} else {
 				// plain version
 				const comment = `Copying: ${action.script} (-${labelSuffix})`;
-				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
+				finalActions.push(
+					CommentNode.quick(MathlangLocation.quick(f, node), comment),
+				);
 				finalActions.push(...copiedActions);
 			}
 		});

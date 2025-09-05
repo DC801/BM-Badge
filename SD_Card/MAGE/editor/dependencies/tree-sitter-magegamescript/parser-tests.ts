@@ -27,6 +27,10 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	json_arbitrary: {
+		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}];`],
+		expected: [`json[{`, `"action": "NEW_ACTION",`, `"entity": "%PLAYER%"`, `}];`],
+	},
 	return_binary_expression: {
 		input: [`return player y + 100;`],
 		expected: [

@@ -6,7 +6,6 @@ import {
 	Action,
 	breakIfNotString,
 	CheckAction,
-	COPY_SCRIPT,
 	GOTO_ACTION_INDEX,
 	LABEL,
 } from './parser-bytecode-info.ts';
@@ -18,7 +17,6 @@ import {
 	LabelDefinition,
 	CommentNode,
 	GotoLabel,
-	CopyMacro,
 	AnyNode,
 	MathlangLocation,
 	MathlangMessage,
@@ -106,10 +104,10 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 			// This is to be backward compatibile with the old output for comparison reasons
 			// todo: change it once the unit tests are good enough to handle sophisticated cases
 			.map((action) => {
-				if (action instanceof CopyMacro) {
-					const script = breakIfNotString(action.script);
-					return COPY_SCRIPT.quick(script);
-				}
+				// if (action instanceof CopyMacro) {
+				// 	const script = breakIfNotString(action.script);
+				// 	return COPY_SCRIPT.quick(script);
+				// }
 				if (action instanceof LabelDefinition) {
 					const value = breakIfNotString(action.label);
 					return new LABEL({ value });
@@ -131,11 +129,12 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 
 	// DO COPY_SCRIPT
 	Object.keys(p.scripts).forEach((scriptName) => {
-		if (!p.scripts[scriptName].copyScriptResolved) {
-			const fileName = p.scripts[scriptName].debug.fileName;
-			const f = p.fileMap[fileName].parsed || p.scripts[scriptName].debug.f;
-			const node = p.scripts[scriptName].debug.node;
-			// todo: better sources of f, node?
+		const scriptData = p.scripts[scriptName];
+		if (!scriptData.copyScriptResolved) {
+			const f = scriptData.debug.f;
+			const node = scriptData.debug.node;
+			// TODO: better sources of f, node?
+			// Now that it's all CopyMacro, each copy reference can have a source node (instead of defaulting to the file)
 			p.bakeCopyScriptSingle(f, node, scriptName);
 		}
 	});
