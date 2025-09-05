@@ -4357,7 +4357,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
   const actionData = {
     action_return_statement: {
       // TODO: everything after is unreachable
-      // Ditto some other actions, too
+      // Ditto some other actions, too: goto script, load map (look for purple)
       handle: (v, f, node) => {
         const debug = MathlangLocation.quick(f, node);
         const returnStatement = ReturnStatement.quick(debug);
@@ -4672,8 +4672,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       captures: ["movable", "coordinate"],
       handle: (v, f, node) => {
         const debug = MathlangLocation.quick(f, node);
-        const movable = MovableIdentifier.coerce(v.movable);
-        const coordinate = CoordinateIdentifier.coerce(v.coordinate);
+        const movable = MovableIdentifier.breakIfNot(v.movable);
+        const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
         if (movable.type === "camera") {
           if (coordinate.type === "geometry" && coordinate.polygonType !== "length") {
             return TELEPORT_CAMERA_TO_GEOMETRY.quick(coordinate.value);
@@ -4706,8 +4706,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       optionalCaptures: ["forever"],
       handle: (v, f, node) => {
         const debug = MathlangLocation.quick(f, node);
-        const movable = MovableIdentifier.coerce(v.movable);
-        const coordinate = CoordinateIdentifier.coerce(v.coordinate);
+        const movable = MovableIdentifier.breakIfNot(v.movable);
+        const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
         const duration = coerceToNumber(f, node, v.duration, "duration");
         if (movable.type === "camera") {
           if (coordinate.type === "entity") {
@@ -4792,7 +4792,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       captures: ["entity", "target"],
       handle: (v, f, node) => {
         const entity = coerceToString(f, node, v.entity, "entity");
-        const target = DirectionTarget.coerce(v.target);
+        const target = DirectionTarget.breakIfNot(v.target);
         if (target.type === "nsew") {
           return SET_ENTITY_DIRECTION.quick(entity, target.value);
         } else if (target.type === "geometry") {
@@ -4906,7 +4906,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return MathlangSequence.quick(
               debug,
               steps,
-              "action_op_equals (LHS: IntGetable, RHS: number)"
+              "action_op_equals (RHS: number)"
             );
           }
           if (typeof v.rhs === "string") {
@@ -4920,7 +4920,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return MathlangSequence.quick(
               debug,
               steps,
-              "action_op_equals (LHS: IntGetable, RHS: string)"
+              "action_op_equals (RHS: string)"
             );
           }
           if (v.rhs instanceof IntBinaryExpression) {
@@ -4937,7 +4937,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return MathlangSequence.quick(
               debug,
               steps,
-              "parser-actions: action_op_equals (LHS: IntGetable, RHS: IntBinaryExpression)"
+              "action_op_equals (RHS: IntBinaryExpression)"
             );
           }
           if (v.rhs instanceof EntityIntField) {
@@ -4954,7 +4954,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return MathlangSequence.quick(
               debug,
               steps,
-              "parser-actions: action_op_equals (LHS: IntGetable, RHS: IntGetable)"
+              "action_op_equals (RHS: IntGetable)"
             );
           }
         }
@@ -5002,11 +5002,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return handleAction(f, node);
     }
     const nodeFn = nodeFns[node.grammarType];
-    if (!nodeFn) {
-      throw new Error("no parser-node function for " + node.grammarType);
-    }
-    const ret = nodeFn(f, node);
-    return ret;
+    if (nodeFn) return nodeFn(f, node);
+    throw new Error("no parser-node function for " + node.grammarType);
   };
   const includeRecursion = [];
   const nodeFns = {
@@ -5216,7 +5213,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         });
         vertical.push(insert);
       }
-      const temp = quickTemporary();
+      const temp = newTemporary();
       const iffs = vertical.map((body2, i2) => {
         const condition = CheckVariable.quick(debug, temp, i2, "==");
         const conditionNode = node.firstChild || node;
@@ -5231,6 +5228,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       const sequence = ifChainMaker(f, node, iffs, [], "rand_macro");
       sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, "?"));
+      dropTemporary();
       return [sequence];
     },
     label_definition: (f, node) => {
@@ -5240,7 +5238,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     add_dialog_settings: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const targets = AddDialogSettingsTarget.coerceAll(handleNamedChildren(f, node));
+      const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(f, node));
       return [AddDialogSettings.quick(debug, targets)];
     },
     add_dialog_settings_target: (f, node) => {
@@ -5257,7 +5255,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       } else {
         throw new Error(`unknown target type: ${type}`);
       }
-      const parameters = DialogParameter.coerceAll(capturesForField(f, node, "dialog_parameter"));
+      const parameters = DialogParameter.breakIfNotAll(capturesForField(f, node, "dialog_parameter"));
       parameters.forEach((param) => {
         settingsTarget[param.property] = param.value;
       });
@@ -5267,7 +5265,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     add_serial_dialog_settings: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
       const rawParameters = capturesForField(f, node, "serial_dialog_parameter");
-      const parameters = SerialDialogParameter.coerceAll(rawParameters);
+      const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
       parameters.forEach((param) => {
         f.settings.serial[param.property] = param.value;
       });
@@ -5305,18 +5303,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (serialDialogs.length !== 1) {
         throw new Error("serial dialogs must have only 1 serial dialog");
       }
-      const serialDialog = SerialDialog.coerce(serialDialogs[0]);
+      const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
       return [SerialDialogDefinition.quick(debug, dialogName, serialDialog)];
     },
     dialog_definition: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
       const name2 = stringCaptureForField(f, node, "dialog_name");
-      const dialogs = Dialog.coerceAll(handleChildrenForField(f, node, "dialog"));
+      const dialogs = Dialog.breakIfNotAll(handleChildrenForField(f, node, "dialog"));
       return [DialogDefinition.quick(debug, name2, dialogs)];
     },
     serial_dialog: (f, node) => {
       const settings = {};
-      const params = SerialDialogParameter.coerceAll(
+      const params = SerialDialogParameter.breakIfNotAll(
         capturesForField(f, node, "serial_dialog_parameter")
       );
       params.forEach((v) => {
@@ -5331,16 +5329,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const info2 = {
         settings,
         messages,
-        options: SerialDialogOption.coerceAll(options)
+        options: SerialDialogOption.breakIfNotAll(options)
       };
       const serialDialog = buildSerialDialogFromInfo(f, node, info2);
       steps.push(serialDialog);
       return steps;
     },
     dialog: (f, node) => {
-      const identifier = DialogIdentifier.coerce(captureForField(f, node, "dialog_identifier"));
+      const identifier = DialogIdentifier.breakIfNot(captureForField(f, node, "dialog_identifier"));
       const settings = {};
-      const params = DialogParameter.coerceAll(capturesForField(f, node, "dialog_parameter"));
+      const params = DialogParameter.breakIfNotAll(capturesForField(f, node, "dialog_parameter"));
       params.forEach((v) => {
         settings[v.property] = v.value;
       });
@@ -5349,7 +5347,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const rawOptions = handleChildrenForField(f, node, "dialog_option");
       const siphoned = extractLambdas(rawOptions);
       const steps = siphoned.scripts;
-      const options = DialogOption.coerceAll(siphoned.other);
+      const options = DialogOption.breakIfNotAll(siphoned.other);
       const info2 = {
         identifier,
         settings,
@@ -5395,8 +5393,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return [JSONLiteral.quick(debug, handledChildren)];
     },
     copy_macro: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const script = stringCaptureForField(f, node, "script");
-      return [CopyMacro.quick(MathlangLocation.quick(f, node), script)];
+      return [CopyMacro.quick(debug, script)];
     },
     debug_macro: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
@@ -5407,10 +5406,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         dialogName = stringCaptureForField(f, node, "serial_dialog_name");
       } else {
         const serialDialogs = handleNode(f, serialDialogNode);
-        const serialDialog = SerialDialog.coerce(serialDialogs[0]);
+        const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
         dialogName = autoIdentifierName(f, node);
         steps.push(
-          new SerialDialogDefinition(MathlangLocation.quick(f, node), {
+          new SerialDialogDefinition(debug, {
             dialogName,
             serialDialog
           })
@@ -5473,7 +5472,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const breakL = `for break #${n}`;
       const continueL = `for continue #${n}`;
       const conditionN = mandatoryChildForField(f, node, "condition");
-      const condition = BoolExpression.coerce(handleCapture(f, conditionN));
+      const condition = BoolExpression.breakIfNot(handleCapture(f, conditionN));
       const bodyN = mandatoryChildForField(f, node, "body");
       const incrementerN = mandatoryChildForField(f, node, "incrementer");
       const initializer = mandatoryChildForField(f, node, "initializer");
@@ -6194,7 +6193,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (this instanceof MathlangNode) return this.clone();
       return Action.fromArgs(this);
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("AnyNode[] not an Array");
       }
@@ -6219,7 +6218,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     print() {
       return `// MATHLANG: ${this.mathlang}`;
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("MathlangNode[] not an Array");
       }
@@ -6337,7 +6336,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "mathlang");
       __publicField(this, "targets");
       this.mathlang = "add_dialog_settings";
-      this.targets = AddDialogSettingsTarget.coerceAll(args2.targets);
+      this.targets = AddDialogSettingsTarget.breakIfNotAll(args2.targets);
     }
     clone() {
       const targets = AnyNode.cloneAll(this.targets);
@@ -6356,7 +6355,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "target");
       this.mathlang = "add_dialog_settings_target";
       this.type = breakIfNotString(args2.type);
-      this.parameters = DialogParameter.coerceAll(args2.parameters);
+      this.parameters = DialogParameter.breakIfNotAll(args2.parameters);
       if (typeof args2.target === "string") this.target = args2.target;
     }
     clone() {
@@ -6373,7 +6372,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         target
       });
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("AddDialogSettingsTarget[] not an Array");
       }
@@ -6389,7 +6388,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "mathlang");
       __publicField(this, "parameters");
       this.mathlang = "add_serial_dialog_settings";
-      this.parameters = SerialDialogParameter.coerceAll(args2.parameters);
+      this.parameters = SerialDialogParameter.breakIfNotAll(args2.parameters);
     }
     clone() {
       const parameters = AnyNode.cloneAll(this.parameters);
@@ -6475,7 +6474,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "dialogs");
       this.mathlang = "dialog_definition";
       this.dialogName = breakIfNotString(args2.dialogName);
-      this.dialogs = Dialog.coerceAll(args2.dialogs);
+      this.dialogs = Dialog.breakIfNotAll(args2.dialogs);
     }
     clone() {
       const dialogs = AnyNode.cloneAll(this.dialogs);
@@ -6505,7 +6504,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, property, value) {
       return new DialogParameter(debug, { property, value });
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("DialogParameter[] not an Array");
       }
@@ -6551,7 +6550,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       newArgs.messages = this.messages.slice();
       return new Dialog(this.debug.clone(), newArgs);
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("Dialog[] not an Array");
       }
@@ -6580,7 +6579,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, type, value) {
       return new DialogIdentifier(debug, { type, value });
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof DialogIdentifier)) {
         throw new Error("not DialogIdentifier");
       }
@@ -6606,7 +6605,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         script
       });
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("DialogOption[] not an Array");
       }
@@ -6662,7 +6661,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, property, value) {
       return new SerialDialogParameter(debug, { property, value });
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("SerialDialogParameter[] not an Array");
       }
@@ -6682,10 +6681,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.mathlang = "serial_dialog";
       this.messages = breakIfNotStringArray(args2.messages);
       if (args2.options) {
-        this.options = SerialDialogOption.coerceAll(args2.options);
+        this.options = SerialDialogOption.breakIfNotAll(args2.options);
       }
       if (args2.text_options) {
-        this.text_options = SerialDialogOption.coerceAll(args2.text_options);
+        this.text_options = SerialDialogOption.breakIfNotAll(args2.text_options);
       }
     }
     clone() {
@@ -6699,7 +6698,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       newArgs.messages = this.messages.slice();
       return new SerialDialog(this.debug.clone(), newArgs);
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof SerialDialog)) {
         throw new Error("not SerialDialog");
       }
@@ -6731,7 +6730,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         script
       });
     }
-    static coerceAll(arr) {
+    static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("SerialDialogOption[] not an Array");
       }
@@ -6796,12 +6795,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (typeof args2.testPrint === "string") this.testPrint = args2.testPrint;
       if (typeof args2.printed === "string") this.printed = args2.printed;
       if (args2.rawNodes) {
-        this.rawNodes = AnyNode.coerceAll(args2.rawNodes);
+        this.rawNodes = AnyNode.breakIfNotAll(args2.rawNodes);
       }
       if (args2.preActions) {
-        this.preBakingActions = AnyNode.coerceAll(args2.preActions);
+        this.preBakingActions = AnyNode.breakIfNotAll(args2.preActions);
       }
-      this.actions = AnyNode.coerceAll(args2.actions);
+      this.actions = AnyNode.breakIfNotAll(args2.actions);
       if (args2.copyScriptResolved) this.copyScriptResolved = true;
     }
     clone() {
@@ -6881,7 +6880,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
         return Action.fromArgs(v);
       });
-      this.json = AnyNode.coerceAll(sanitized);
+      this.json = AnyNode.breakIfNotAll(sanitized);
     }
     clone() {
       return new JSONLiteral(this.debug.clone(), this.args);
@@ -6924,7 +6923,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "steps");
       this.mathlang = "sequence";
       this.type = String(args2.type) || "unspecified sequence type";
-      this.steps = AnyNode.coerceAll(args2.steps);
+      this.steps = AnyNode.breakIfNotAll(args2.steps);
       if (!(this.steps[0] instanceof CommentNode)) {
         const innerComment = debug.node.text.replace(/[\n\s\t]+/g, " ");
         const comment = `${args2.type}: ${innerComment}`;
@@ -6938,7 +6937,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       newArgs.steps = AnyNode.cloneAll(this.steps);
       return new _MathlangSequence(this.debug.clone(), newArgs);
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof _MathlangSequence)) {
         throw new Error("not MathlangSequence");
       }
@@ -6958,7 +6957,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   });
   let MathlangSequence = _MathlangSequence;
   class IntExpression extends MathlangNode {
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof IntExpression)) {
         throw new Error("not IntExpression");
       }
@@ -6979,8 +6978,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "rhs");
       __publicField(this, "op");
       this.mathlang = "int_binary_expression";
-      this.lhs = IntExpression.coerce(args2.lhs);
-      this.rhs = IntExpression.coerce(args2.rhs);
+      this.lhs = IntExpression.breakIfNot(args2.lhs);
+      this.rhs = IntExpression.breakIfNot(args2.rhs);
       this.op = breakIfNotString(args2.op);
     }
     clone() {
@@ -6989,7 +6988,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       newArgs.rhs = this.rhs.clone();
       return new IntBinaryExpression(this.debug.clone(), newArgs);
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof IntBinaryExpression)) {
         throw new Error("not IntBinaryExpression");
       }
@@ -7130,7 +7129,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     clone() {
       return new EntityIntField(this.debug.clone(), this.args);
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof EntityIntField)) {
         throw new Error("not EntityIntField");
       }
@@ -7281,7 +7280,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new FnCall(debug, { identifier, type, rawBody });
     }
     bake() {
-      const sequence = MathlangSequence.coerce(handleNode(this.debug.f, this.rawBody));
+      const sequence = MathlangSequence.breakIfNot(handleNode(this.debug.f, this.rawBody));
       return FnCallReturnValue.quick(
         this.debug,
         this.identifier,
@@ -7310,7 +7309,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "identifier");
       __publicField(this, "type");
       this.identifier = breakIfNotString(args2.identifier);
-      this.steps = AnyNode.coerceAll(args2.steps);
+      this.steps = AnyNode.breakIfNotAll(args2.steps);
       const type = breakIfNotString(args2.type);
       if (type === "script" || type === "fn") {
         this.type = type;
@@ -7321,7 +7320,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     clone() {
       return new FnCallReturnValue(this.debug.clone(), this.args);
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof FnCallReturnValue)) {
         throw new Error("not FnCallReturnValue");
       }
@@ -7348,7 +7347,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       console.error("the children should be doing this, not me");
       return this;
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof BoolExpression)) {
         throw new Error("not BoolExpression");
       }
@@ -7384,7 +7383,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "steps");
       this.mathlang = "bool_expression_sequence";
       if (typeof args2.type === "string") this.type = args2.type;
-      this.steps = AnyNode.coerceAll(args2.steps);
+      this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
     clone() {
       const newArgs = { ...this.args };
@@ -8216,7 +8215,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, type, value) {
       return new BoolSetable(debug, { type, value });
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof BoolSetable)) {
         throw new Error("not BoolSetable");
       }
@@ -8239,7 +8238,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, type, value) {
       return new MovableIdentifier(debug, { type, value });
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof MovableIdentifier)) {
         throw new Error("not MovableIdentifier");
       }
@@ -8264,7 +8263,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, type, value, polygonType) {
       return new CoordinateIdentifier(debug, { type, value, polygonType });
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof CoordinateIdentifier)) {
         throw new Error("not CoordinateIdentifier");
       }
@@ -8287,7 +8286,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, type, value) {
       return new DirectionTarget(debug, { type, value });
     }
-    static coerce(v) {
+    static breakIfNot(v) {
       if (!(v instanceof DirectionTarget)) {
         throw new Error("not DirectionTarget");
       }
@@ -11096,7 +11095,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.conditionNode = mandatoryChildForField(f, node, "condition");
       let condition = handleCapture(f, this.conditionNode);
       if (typeof condition === "string") condition = CheckSaveFlag.quick(debug, condition);
-      this.condition = BoolExpression.coerce(condition);
+      this.condition = BoolExpression.breakIfNot(condition);
       this.bodyNode = mandatoryChildForField(f, node, "body");
       this.body = handleNamedChildren(f, this.bodyNode);
       this.debug = MathlangLocation.quick(f, node);

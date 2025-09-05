@@ -8,9 +8,10 @@ import {
 	autoIdentifierName,
 	ifChainMaker,
 	simpleBranchMaker,
-	quickTemporary,
 	flattenAndDoAutoReturn,
 	doAutoBreakContinue,
+	dropTemporary,
+	newTemporary,
 } from './parser-utilities.ts';
 
 import { buildSerialDialogFromInfo, buildDialogFromInfo } from './parser-dialogs.ts';
@@ -81,6 +82,7 @@ import {
 } from './parser-bytecode-info.ts';
 
 // When to check for errors/missing children? The point a TreeSitterNode is chosen.
+// (Tree-sitter does not(?) report these on its own; we have to seek them each time.)
 
 // Anytime a new (child) node is instead summoned/found, the check must be made
 // again for THEIR children. Null nodes will be filtered at this time.
@@ -92,7 +94,6 @@ import {
 export const handleNode = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	debugLog(`handleNode: ${node.grammarType}`);
 
-	// Tree-sitter does not (?) report these on its own; we have to seek them each time
 	reportMissingChildNodes(f, node);
 	reportErrorNodes(f, node);
 
@@ -101,15 +102,9 @@ export const handleNode = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		return handleAction(f, node);
 	}
 
-	// Look up the handler function
 	const nodeFn = nodeFns[node.grammarType];
-	if (!nodeFn) {
-		throw new Error('no parser-node function for ' + node.grammarType);
-	}
-
-	// Do it
-	const ret = nodeFn(f, node);
-	return ret;
+	if (nodeFn) return nodeFn(f, node);
+	throw new Error('no parser-node function for ' + node.grammarType);
 };
 
 const includeRecursion: string[] = [];
@@ -139,7 +134,6 @@ const nodeFns = {
 	},
 	fn: (f: FileState, node: TreeSitterNode) => {
 		const name = stringCaptureForField(f, node, 'name');
-		// don't waste time if there's a reassignment error
 		if (f.functions[name]) {
 			f.quickError(node, 'fn already defined', `fn ${name} already defined`);
 			return [];
@@ -167,7 +161,8 @@ const nodeFns = {
 			return [];
 		}
 
-		// the body node remains unprocessed so the capture system can switch out args passed to the function "call"
+		// the body node remains unprocessed so the capture system can switch out args
+		// (and use correct variable temporaries) at the time of the "call"
 		const bodyNode = mandatoryChildForField(f, node, 'body');
 		f.functions[name] = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
 	},
@@ -180,6 +175,7 @@ const nodeFns = {
 			f.quickError(nameNode, 'undefined fn', `function ${name} is undefined`);
 			return [];
 		}
+
 		const callParamNodes = childrenForField(f, node, 'arg');
 		const definitionParamNodes = definition.paramNodes;
 
@@ -191,10 +187,12 @@ const nodeFns = {
 				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
 			);
 			// TODO: yellow squiggles when too many params are passed?
+			// What if it's inside a .map() and you're not using all of them?
 			return [];
 		}
 
 		// sanitize passed params
+		// todo: should expressions be allowed?
 		const callParams = callParamNodes.map((v) => {
 			let capture = handleCapture(f, v);
 			if (!isMGSPrimitive(capture)) {
@@ -228,7 +226,7 @@ const nodeFns = {
 		body = flattenAndDoAutoReturn(f, node, body);
 		const sequence = MathlangSequence.quick(debug, body, 'fn_call');
 
-		// we're done with the args for this call; remove them
+		// we're done with the args for this call; remove them from the fn stack
 		stack.shift();
 		return sequence;
 	},
@@ -266,7 +264,7 @@ const nodeFns = {
 
 		// die if recursion detected
 		if (includeRecursion.includes(f.fileName)) {
-			includeRecursion.push(f.fileName);
+			includeRecursion.push(f.fileName); // so the round trip is logged
 			const message = `include_macro recursion\n       ${includeRecursion.join('\n       -> ')}`;
 			throw new Error(message);
 		}
@@ -277,7 +275,7 @@ const nodeFns = {
 		if (!f.p.fileMap[fileName]) {
 			const message = `include_macro: cannot find file "${fileName}"`;
 			f.quickError(node, 'missing file', message);
-			includeRecursion.pop(); // DO THIS BEFORE GIVING UP
+			includeRecursion.pop();
 			return [];
 		}
 		let insertF = f.p.fileMap[fileName].parsed;
@@ -288,7 +286,7 @@ const nodeFns = {
 			if (!insertF) {
 				const message = `include_macro: could not parse prerequesite "${fileName}"`;
 				f.quickError(node, 'missing file', message);
-				includeRecursion.pop(); // DO THIS BEFORE GIVING UP
+				includeRecursion.pop();
 				return [];
 			}
 		} else {
@@ -380,7 +378,7 @@ const nodeFns = {
 		}
 
 		// vertical slices -> if chain
-		const temp = quickTemporary();
+		const temp = newTemporary();
 		const iffs: ConditionalBlock[] = vertical.map((body, i) => {
 			const condition = CheckVariable.quick(debug, temp, i, '==');
 			const conditionNode = node.firstChild || node;
@@ -399,6 +397,7 @@ const nodeFns = {
 		sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, '?'));
 
 		// DONE
+		dropTemporary();
 		return [sequence];
 	},
 	label_definition: (f: FileState, node: TreeSitterNode) => {
@@ -408,7 +407,7 @@ const nodeFns = {
 	},
 	add_dialog_settings: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const targets = AddDialogSettingsTarget.coerceAll(handleNamedChildren(f, node));
+		const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(f, node));
 
 		// Make a node "receipt"
 		return [AddDialogSettings.quick(debug, targets)];
@@ -432,7 +431,7 @@ const nodeFns = {
 		}
 
 		// find the settings themselves
-		const parameters = DialogParameter.coerceAll(capturesForField(f, node, 'dialog_parameter'));
+		const parameters = DialogParameter.breakIfNotAll(capturesForField(f, node, 'dialog_parameter'));
 		parameters.forEach((param) => {
 			// put them in the bucket
 			settingsTarget[param.property] = param.value;
@@ -445,7 +444,7 @@ const nodeFns = {
 	add_serial_dialog_settings: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		const rawParameters = capturesForField(f, node, 'serial_dialog_parameter');
-		const parameters = SerialDialogParameter.coerceAll(rawParameters);
+		const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
 		parameters.forEach((param) => {
 			f.settings.serial[param.property] = param.value;
 		});
@@ -491,19 +490,19 @@ const nodeFns = {
 		if (serialDialogs.length !== 1) {
 			throw new Error('serial dialogs must have only 1 serial dialog');
 		}
-		const serialDialog = SerialDialog.coerce(serialDialogs[0]);
+		const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
 		return [SerialDialogDefinition.quick(debug, dialogName, serialDialog)];
 	},
 	dialog_definition: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		const name = stringCaptureForField(f, node, 'dialog_name');
-		const dialogs = Dialog.coerceAll(handleChildrenForField(f, node, 'dialog'));
+		const dialogs = Dialog.breakIfNotAll(handleChildrenForField(f, node, 'dialog'));
 		return [DialogDefinition.quick(debug, name, dialogs)];
 	},
 	serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		// Settings
 		const settings = {};
-		const params = SerialDialogParameter.coerceAll(
+		const params = SerialDialogParameter.breakIfNotAll(
 			capturesForField(f, node, 'serial_dialog_parameter'),
 		);
 		params.forEach((v) => {
@@ -521,7 +520,7 @@ const nodeFns = {
 		const info: SerialDialogInfo = {
 			settings,
 			messages,
-			options: SerialDialogOption.coerceAll(options),
+			options: SerialDialogOption.breakIfNotAll(options),
 		};
 		const serialDialog = buildSerialDialogFromInfo(f, node, info);
 		// DONE
@@ -530,10 +529,10 @@ const nodeFns = {
 	},
 	dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		// Identifier
-		const identifier = DialogIdentifier.coerce(captureForField(f, node, 'dialog_identifier'));
+		const identifier = DialogIdentifier.breakIfNot(captureForField(f, node, 'dialog_identifier'));
 		// Settings
 		const settings = {};
-		const params = DialogParameter.coerceAll(capturesForField(f, node, 'dialog_parameter'));
+		const params = DialogParameter.breakIfNotAll(capturesForField(f, node, 'dialog_parameter'));
 		params.forEach((v) => {
 			settings[v.property] = v.value;
 		});
@@ -544,7 +543,7 @@ const nodeFns = {
 		const rawOptions = handleChildrenForField(f, node, 'dialog_option');
 		const siphoned = extractLambdas(rawOptions);
 		const steps: AnyNode[] = siphoned.scripts;
-		const options: DialogOption[] = DialogOption.coerceAll(siphoned.other);
+		const options: DialogOption[] = DialogOption.breakIfNotAll(siphoned.other);
 		// Build it
 		const info: DialogInfo = {
 			identifier,
@@ -592,8 +591,9 @@ const nodeFns = {
 		return [JSONLiteral.quick(debug, handledChildren)];
 	},
 	copy_macro: (f: FileState, node: TreeSitterNode): [CopyMacro] => {
+		const debug = MathlangLocation.quick(f, node);
 		const script = stringCaptureForField(f, node, 'script');
-		return [CopyMacro.quick(MathlangLocation.quick(f, node), script)];
+		return [CopyMacro.quick(debug, script)];
 	},
 	debug_macro: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		const debug = MathlangLocation.quick(f, node);
@@ -605,10 +605,10 @@ const nodeFns = {
 			dialogName = stringCaptureForField(f, node, 'serial_dialog_name');
 		} else {
 			const serialDialogs = handleNode(f, serialDialogNode);
-			const serialDialog = SerialDialog.coerce(serialDialogs[0]);
+			const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
 			dialogName = autoIdentifierName(f, node);
 			steps.push(
-				new SerialDialogDefinition(MathlangLocation.quick(f, node), {
+				new SerialDialogDefinition(debug, {
 					dialogName,
 					serialDialog,
 				}),
@@ -676,7 +676,7 @@ const nodeFns = {
 		const breakL = `for break #${n}`;
 		const continueL = `for continue #${n}`;
 		const conditionN = mandatoryChildForField(f, node, 'condition');
-		const condition = BoolExpression.coerce(handleCapture(f, conditionN));
+		const condition = BoolExpression.breakIfNot(handleCapture(f, conditionN));
 		const bodyN = mandatoryChildForField(f, node, 'body');
 		const incrementerN = mandatoryChildForField(f, node, 'incrementer');
 		const initializer = mandatoryChildForField(f, node, 'initializer');

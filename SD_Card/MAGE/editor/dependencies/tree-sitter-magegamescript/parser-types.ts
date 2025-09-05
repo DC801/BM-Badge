@@ -19,7 +19,7 @@ export class AnyNode {
 		if (this instanceof MathlangNode) return this.clone();
 		return ACTION.Action.fromArgs(this);
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('AnyNode[] not an Array');
 		}
@@ -44,7 +44,7 @@ export class MathlangNode extends AnyNode {
 	print() {
 		return `// MATHLANG: ${this.mathlang}`;
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('MathlangNode[] not an Array');
 		}
@@ -207,7 +207,7 @@ export class AddDialogSettings extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'add_dialog_settings';
-		this.targets = AddDialogSettingsTarget.coerceAll(args.targets);
+		this.targets = AddDialogSettingsTarget.breakIfNotAll(args.targets);
 	}
 	clone() {
 		const targets = AnyNode.cloneAll(this.targets);
@@ -227,7 +227,7 @@ export class AddDialogSettingsTarget extends MathlangNode {
 		super(debug, args);
 		this.mathlang = 'add_dialog_settings_target';
 		this.type = ACTION.breakIfNotString(args.type);
-		this.parameters = DialogParameter.coerceAll(args.parameters);
+		this.parameters = DialogParameter.breakIfNotAll(args.parameters);
 		if (typeof args.target === 'string') this.target = args.target;
 	}
 	clone() {
@@ -249,7 +249,7 @@ export class AddDialogSettingsTarget extends MathlangNode {
 			target,
 		});
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('AddDialogSettingsTarget[] not an Array');
 		}
@@ -266,7 +266,7 @@ export class AddSerialDialogSettings extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'add_serial_dialog_settings';
-		this.parameters = SerialDialogParameter.coerceAll(args.parameters);
+		this.parameters = SerialDialogParameter.breakIfNotAll(args.parameters);
 	}
 	clone() {
 		const parameters = AnyNode.cloneAll(this.parameters);
@@ -359,7 +359,7 @@ export class DialogDefinition extends MathlangNode {
 		super(debug, args);
 		this.mathlang = 'dialog_definition';
 		this.dialogName = ACTION.breakIfNotString(args.dialogName);
-		this.dialogs = Dialog.coerceAll(args.dialogs);
+		this.dialogs = Dialog.breakIfNotAll(args.dialogs);
 	}
 	clone() {
 		const dialogs = AnyNode.cloneAll(this.dialogs);
@@ -399,7 +399,7 @@ export class DialogParameter extends MathlangNode {
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new DialogParameter(debug, { property, value });
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('DialogParameter[] not an Array');
 		}
@@ -448,7 +448,7 @@ export class Dialog extends MathlangNode {
 		newArgs.messages = this.messages.slice();
 		return new Dialog(this.debug.clone(), newArgs);
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('Dialog[] not an Array');
 		}
@@ -485,7 +485,7 @@ export class DialogIdentifier extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new DialogIdentifier(debug, { type, value });
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof DialogIdentifier)) {
 			throw new Error('not DialogIdentifier');
 		}
@@ -513,7 +513,7 @@ export class DialogOption extends MathlangNode {
 			script,
 		});
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('DialogOption[] not an Array');
 		}
@@ -578,7 +578,7 @@ export class SerialDialogParameter extends MathlangNode {
 	static quick(debug: MathlangLocation, property: string, value: string | number) {
 		return new SerialDialogParameter(debug, { property, value });
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('SerialDialogParameter[] not an Array');
 		}
@@ -599,10 +599,10 @@ export class SerialDialog extends MathlangNode {
 		this.mathlang = 'serial_dialog';
 		this.messages = ACTION.breakIfNotStringArray(args.messages);
 		if (args.options) {
-			this.options = SerialDialogOption.coerceAll(args.options);
+			this.options = SerialDialogOption.breakIfNotAll(args.options);
 		}
 		if (args.text_options) {
-			this.text_options = SerialDialogOption.coerceAll(args.text_options);
+			this.text_options = SerialDialogOption.breakIfNotAll(args.text_options);
 		}
 	}
 	clone() {
@@ -616,7 +616,7 @@ export class SerialDialog extends MathlangNode {
 		newArgs.messages = this.messages.slice();
 		return new SerialDialog(this.debug.clone(), newArgs);
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof SerialDialog)) {
 			throw new Error('not SerialDialog');
 		}
@@ -656,7 +656,7 @@ export class SerialDialogOption extends MathlangNode {
 			script,
 		});
 	}
-	static coerceAll(arr: unknown) {
+	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('SerialDialogOption[] not an Array');
 		}
@@ -725,12 +725,12 @@ export class ScriptDefinition extends MathlangNode {
 		if (typeof args.testPrint === 'string') this.testPrint = args.testPrint;
 		if (typeof args.printed === 'string') this.printed = args.printed;
 		if (args.rawNodes) {
-			this.rawNodes = AnyNode.coerceAll(args.rawNodes);
+			this.rawNodes = AnyNode.breakIfNotAll(args.rawNodes);
 		}
 		if (args.preActions) {
-			this.preBakingActions = AnyNode.coerceAll(args.preActions);
+			this.preBakingActions = AnyNode.breakIfNotAll(args.preActions);
 		}
-		this.actions = AnyNode.coerceAll(args.actions);
+		this.actions = AnyNode.breakIfNotAll(args.actions);
 		if (args.copyScriptResolved) this.copyScriptResolved = true;
 	}
 	clone() {
@@ -818,7 +818,7 @@ export class JSONLiteral extends MathlangNode {
 			}
 			return ACTION.Action.fromArgs(v);
 		});
-		this.json = AnyNode.coerceAll(sanitized);
+		this.json = AnyNode.breakIfNotAll(sanitized);
 	}
 	clone() {
 		return new JSONLiteral(this.debug.clone(), this.args);
@@ -872,7 +872,7 @@ export class MathlangSequence extends MathlangNode {
 		super(debug, args);
 		this.mathlang = 'sequence';
 		this.type = String(args.type) || 'unspecified sequence type';
-		this.steps = AnyNode.coerceAll(args.steps);
+		this.steps = AnyNode.breakIfNotAll(args.steps);
 		if (!(this.steps[0] instanceof CommentNode)) {
 			// TODO: the condition might catch other, non-sequence comments tho?
 			const innerComment = debug.node.text.replace(/[\n\s\t]+/g, ' ');
@@ -887,7 +887,7 @@ export class MathlangSequence extends MathlangNode {
 		newArgs.steps = AnyNode.cloneAll(this.steps);
 		return new MathlangSequence(this.debug.clone(), newArgs);
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof MathlangSequence)) {
 			throw new Error('not MathlangSequence');
 		}
@@ -916,7 +916,7 @@ export class MathlangSequence extends MathlangNode {
 // TODO: The RNG operation should use macro syntax to be put into IntExpressions, instead of being limited to the ?= operator (probably RNG!(), though pick something that can't be confused with rand!())
 
 export class IntExpression extends MathlangNode {
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof IntExpression)) {
 			throw new Error('not IntExpression');
 		}
@@ -940,8 +940,8 @@ export class IntBinaryExpression extends IntExpression {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.mathlang = 'int_binary_expression';
-		this.lhs = IntExpression.coerce(args.lhs);
-		this.rhs = IntExpression.coerce(args.rhs);
+		this.lhs = IntExpression.breakIfNot(args.lhs);
+		this.rhs = IntExpression.breakIfNot(args.rhs);
 		this.op = ACTION.breakIfNotString(args.op);
 	}
 	clone() {
@@ -950,7 +950,7 @@ export class IntBinaryExpression extends IntExpression {
 		newArgs.rhs = this.rhs.clone();
 		return new IntBinaryExpression(this.debug.clone(), newArgs);
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof IntBinaryExpression)) {
 			throw new Error('not IntBinaryExpression');
 		}
@@ -1108,7 +1108,7 @@ export class EntityIntField extends IntGetable {
 	clone() {
 		return new EntityIntField(this.debug.clone(), this.args);
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof EntityIntField)) {
 			throw new Error('not EntityIntField');
 		}
@@ -1264,7 +1264,7 @@ export class FnCall extends IntGetable {
 		return new FnCall(debug, { identifier, type, rawBody });
 	}
 	bake(): FnCallReturnValue {
-		const sequence = MathlangSequence.coerce(handleNode(this.debug.f, this.rawBody));
+		const sequence = MathlangSequence.breakIfNot(handleNode(this.debug.f, this.rawBody));
 		return FnCallReturnValue.quick(
 			this.debug,
 			this.identifier,
@@ -1293,7 +1293,7 @@ export class FnCallReturnValue extends IntGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.identifier = ACTION.breakIfNotString(args.identifier);
-		this.steps = AnyNode.coerceAll(args.steps);
+		this.steps = AnyNode.breakIfNotAll(args.steps);
 		const type = ACTION.breakIfNotString(args.type);
 		if (type === 'script' || type === 'fn') {
 			this.type = type;
@@ -1304,7 +1304,7 @@ export class FnCallReturnValue extends IntGetable {
 	clone() {
 		return new FnCallReturnValue(this.debug.clone(), this.args);
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof FnCallReturnValue)) {
 			throw new Error('not FnCallReturnValue');
 		}
@@ -1335,7 +1335,7 @@ export class BoolExpression extends MathlangNode {
 		console.error('the children should be doing this, not me');
 		return this;
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof BoolExpression)) {
 			throw new Error('not BoolExpression');
 		}
@@ -1377,7 +1377,7 @@ export class BoolComparisonSequence extends BoolExpression {
 		super(debug, args);
 		this.mathlang = 'bool_expression_sequence';
 		if (typeof args.type === 'string') this.type = args.type;
-		this.steps = AnyNode.coerceAll(args.steps);
+		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -2359,7 +2359,7 @@ export class BoolSetable extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new BoolSetable(debug, { type, value });
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof BoolSetable)) {
 			throw new Error('not BoolSetable');
 		}
@@ -2382,7 +2382,7 @@ export class MovableIdentifier extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new MovableIdentifier(debug, { type, value });
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof MovableIdentifier)) {
 			throw new Error('not MovableIdentifier');
 		}
@@ -2407,7 +2407,7 @@ export class CoordinateIdentifier extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string, polygonType?: string) {
 		return new CoordinateIdentifier(debug, { type, value, polygonType });
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof CoordinateIdentifier)) {
 			throw new Error('not CoordinateIdentifier');
 		}
@@ -2430,7 +2430,7 @@ export class DirectionTarget extends MathlangNode {
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new DirectionTarget(debug, { type, value });
 	}
-	static coerce(v: unknown) {
+	static breakIfNot(v: unknown) {
 		if (!(v instanceof DirectionTarget)) {
 			throw new Error('not DirectionTarget');
 		}

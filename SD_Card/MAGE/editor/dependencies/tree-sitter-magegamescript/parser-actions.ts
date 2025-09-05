@@ -203,6 +203,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 };
 
 // Put things here if you don't care about auto-spreading them; otherwise they should go in actionData
+// TODO: maybe they should just be regular nodes then? Then only "spreadable" things wanna be handled here?
 type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
 	action_show_dialog: (f: FileState, node: TreeSitterNode) => {
@@ -274,7 +275,7 @@ type actionDataEntry = {
 const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
 		// TODO: everything after is unreachable
-		// Ditto some other actions, too
+		// Ditto some other actions, too: goto script, load map (look for purple)
 		handle: (v, f, node) => {
 			const debug = MathlangLocation.quick(f, node);
 			const returnStatement = ReturnStatement.quick(debug);
@@ -625,8 +626,8 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['movable', 'coordinate'],
 		handle: (v, f, node): Action | MathlangSequence => {
 			const debug = MathlangLocation.quick(f, node);
-			const movable = MovableIdentifier.coerce(v.movable);
-			const coordinate = CoordinateIdentifier.coerce(v.coordinate);
+			const movable = MovableIdentifier.breakIfNot(v.movable);
+			const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
 			if (movable.type === 'camera') {
 				if (coordinate.type === 'geometry' && coordinate.polygonType !== 'length') {
 					return TELEPORT_CAMERA_TO_GEOMETRY.quick(coordinate.value);
@@ -659,15 +660,12 @@ const actionData: Record<string, actionDataEntry> = {
 		optionalCaptures: ['forever'],
 		handle: (v, f, node): Action | undefined => {
 			const debug = MathlangLocation.quick(f, node);
-			const movable = MovableIdentifier.coerce(v.movable);
-			const coordinate = CoordinateIdentifier.coerce(v.coordinate);
+			const movable = MovableIdentifier.breakIfNot(v.movable);
+			const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
 			const duration = coerceToNumber(f, node, v.duration, 'duration');
 			if (movable.type === 'camera') {
-				// Moving the camera
 				if (coordinate.type === 'entity') {
-					// ... to an entity
 					if (v.forever) {
-						// ... forever (ILLEGAL)
 						f.quickError(
 							debug.node,
 							'invalid action param combination',
@@ -675,25 +673,18 @@ const actionData: Record<string, actionDataEntry> = {
 						);
 						return;
 					} else {
-						// ... not forever
 						return PAN_CAMERA_TO_ENTITY.quick(coordinate.value, duration);
 					}
 				}
 				if (coordinate.type === 'geometry') {
-					// ... to a geometry
 					if (coordinate.polygonType === 'length') {
-						// ... length
 						if (v.forever) {
-							// ... forever
 							return LOOP_CAMERA_ALONG_GEOMETRY.quick(coordinate.value, duration);
 						} else {
-							// ... not forever
 							return PAN_CAMERA_ALONG_GEOMETRY.quick(coordinate.value, duration);
 						}
 					} else if (coordinate.polygonType === 'origin') {
-						// ... origin (single point)
 						if (v.forever) {
-							// ... forever (ILLEGAL)
 							f.quickError(
 								debug.node,
 								'invalid action param combination',
@@ -701,7 +692,6 @@ const actionData: Record<string, actionDataEntry> = {
 							);
 							return;
 						} else {
-							// ... not forever
 							return PAN_CAMERA_TO_GEOMETRY.quick(coordinate.value, duration);
 						}
 					}
@@ -709,9 +699,7 @@ const actionData: Record<string, actionDataEntry> = {
 			}
 
 			if (movable.type === 'entity') {
-				// Moving an entity
 				if (coordinate.type === 'entity') {
-					// ... to another entity (ILLEGAL)
 					f.quickError(
 						debug.node,
 						'invalid action param combination',
@@ -720,18 +708,14 @@ const actionData: Record<string, actionDataEntry> = {
 					return;
 				}
 				if (coordinate.type === 'geometry') {
-					// ... to a geometry
 					if (coordinate.polygonType === 'length') {
-						// ... length
 						if (v.forever) {
-							// ... forever
 							return LOOP_ENTITY_ALONG_GEOMETRY.quick(
 								movable.value,
 								coordinate.value,
 								duration,
 							);
 						} else {
-							// ... not forever
 							return WALK_ENTITY_ALONG_GEOMETRY.quick(
 								movable.value,
 								coordinate.value,
@@ -740,9 +724,7 @@ const actionData: Record<string, actionDataEntry> = {
 						}
 					}
 					if (coordinate.polygonType === 'origin') {
-						// ... origin (single point)
 						if (v.forever) {
-							// ... forever (ILLEGAL)
 							f.quickError(
 								debug.node,
 								'invalid action param combination',
@@ -750,7 +732,6 @@ const actionData: Record<string, actionDataEntry> = {
 							);
 							return;
 						} else {
-							// ... not forever
 							return WALK_ENTITY_TO_GEOMETRY.quick(
 								movable.value,
 								coordinate.value,
@@ -766,7 +747,7 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['entity', 'target'],
 		handle: (v, f, node): Action => {
 			const entity = coerceToString(f, node, v.entity, 'entity');
-			const target = DirectionTarget.coerce(v.target);
+			const target = DirectionTarget.breakIfNot(v.target);
 			if (target.type === 'nsew') {
 				return SET_ENTITY_DIRECTION.quick(entity, target.value);
 			} else if (target.type === 'geometry') {
@@ -876,7 +857,7 @@ const actionData: Record<string, actionDataEntry> = {
 			}
 
 			// LHS is an int getable, like `player y`
-			// Can only set these to set values; cannot do math to them.
+			// Can only copy variables into them; cannot do math to them in place.
 			// First put the value into a temporary, then do the math to that, then set it back.
 			if (v.lhs instanceof EntityIntField) {
 				// player x = 1;
@@ -891,7 +872,7 @@ const actionData: Record<string, actionDataEntry> = {
 					return MathlangSequence.quick(
 						debug,
 						steps,
-						'action_op_equals (LHS: IntGetable, RHS: number)',
+						'action_op_equals (RHS: number)',
 					);
 				}
 				// player x = varName;
@@ -906,7 +887,7 @@ const actionData: Record<string, actionDataEntry> = {
 					return MathlangSequence.quick(
 						debug,
 						steps,
-						'action_op_equals (LHS: IntGetable, RHS: string)',
+						'action_op_equals (RHS: string)',
 					);
 				}
 				// player x = (varName * 7);
@@ -924,7 +905,7 @@ const actionData: Record<string, actionDataEntry> = {
 					return MathlangSequence.quick(
 						debug,
 						steps,
-						'parser-actions: action_op_equals (LHS: IntGetable, RHS: IntBinaryExpression)',
+						'action_op_equals (RHS: IntBinaryExpression)',
 					);
 				}
 				// player x = self y;
@@ -942,7 +923,7 @@ const actionData: Record<string, actionDataEntry> = {
 					return MathlangSequence.quick(
 						debug,
 						steps,
-						'parser-actions: action_op_equals (LHS: IntGetable, RHS: IntGetable)',
+						'action_op_equals (RHS: IntGetable)',
 					);
 				}
 			}

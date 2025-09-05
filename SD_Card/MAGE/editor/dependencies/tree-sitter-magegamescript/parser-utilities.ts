@@ -293,7 +293,7 @@ export class ConditionalBlock {
 		// Find other cases, too? node handling should be done in one place so it can report errors
 		let condition = handleCapture(f, this.conditionNode);
 		if (typeof condition === 'string') condition = CheckSaveFlag.quick(debug, condition);
-		this.condition = BoolExpression.coerce(condition);
+		this.condition = BoolExpression.breakIfNot(condition);
 		this.bodyNode = mandatoryChildForField(f, node, 'body');
 		this.body = handleNamedChildren(f, this.bodyNode);
 		this.debug = MathlangLocation.quick(f, node);

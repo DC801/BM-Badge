@@ -611,10 +611,9 @@ const extractEntityName = (f: FileState, node: TreeSitterNode): string => {
 // ------------------------- VERY COMMON NODE HANDLING BEHAVIORS
 
 // Every time a new node is found, check its children for errors.
-// Thus, we should use these 4+ basic functions for the guts of the rest
+// Thus, we should use these basic functions for the guts of the rest
 
 // Get 0-1 child by name -> TreeSitterNode | null
-// Finds missing children / errors and filters out null
 export const optionalChildForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -628,7 +627,6 @@ export const optionalChildForField = (
 };
 
 // Get 1 child by name or die trying -> TreeSitterNode
-// Finds missing children / errors and filters out null
 export const mandatoryChildForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -640,7 +638,6 @@ export const mandatoryChildForField = (
 };
 
 // Get 0+ children by name -> TreeSitterNode[]
-// Finds missing children / errors and filters out null
 export const childrenForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -658,7 +655,6 @@ export const childrenForField = (
 };
 
 // Get 0+ children with any name at all -> TreeSitterNode[]
-// Finds missing children / errors and filters out null
 export const namedChildren = (f: FileState, node: TreeSitterNode): TreeSitterNode[] => {
 	return node.namedChildren
 		.filter((v) => v !== null)
@@ -671,15 +667,13 @@ export const namedChildren = (f: FileState, node: TreeSitterNode): TreeSitterNod
 };
 
 // Get last child or die trying -> TreeSitterNode
-// Finds missing children / errors and filters out null
 export const mandatoryLastChild = (f: FileState, node: TreeSitterNode): TreeSitterNode => {
 	const lastChild = optionalLastChild(f, node);
 	if (!lastChild) throw new Error('no last child');
 	return lastChild;
 };
 
-// Get last child if any -> TreeSitterNode | null
-// Finds missing children / errors and filters out null
+// Get 0-1 last child -> TreeSitterNode | null
 export const optionalLastChild = (f: FileState, node: TreeSitterNode): TreeSitterNode | null => {
 	const lastChild = node.lastChild;
 	if (!lastChild) return null;
@@ -689,14 +683,12 @@ export const optionalLastChild = (f: FileState, node: TreeSitterNode): TreeSitte
 };
 
 // Get AND process 0+ children with any name at all -> AnyNode[]
-// Finds missing children / errors and filters out null
 export const handleNamedChildren = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const children = namedChildren(f, node);
 	return children.map((v) => handleNode(f, v)).flat();
 };
 
 // Get AND process last child or die trying -> AnyNode
-// Finds missing children / errors and filters out null
 export const handleLastChild = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const lastChildNode = mandatoryLastChild(f, node);
 	return handleNode(f, lastChildNode);
@@ -704,7 +696,7 @@ export const handleLastChild = (f: FileState, node: TreeSitterNode): AnyNode[] =
 
 // More specific:
 
-// Get AND process 0+ children by name -> AnyNode[]
+// Get AND process (into nodes) 0+ children by name -> AnyNode[]
 export const handleChildrenForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -714,7 +706,7 @@ export const handleChildrenForField = (
 	return children.map((v) => handleNode(f, v)).flat();
 };
 
-// Get AND process 1 string child by name or die trying -> string
+// Get AND process (into captures) 1 string child by name or die trying -> string
 export const stringCaptureForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -726,7 +718,7 @@ export const stringCaptureForField = (
 	throw new Error(`capture from field ${fieldName} not a string`);
 };
 
-// Get AND process 0-1 string child by name -> string | null
+// Get AND process (into captures) 0-1 string child by name -> string | null
 export const optionalStringCaptureForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -739,7 +731,7 @@ export const optionalStringCaptureForField = (
 	throw new Error(`capture from field ${fieldName} not a string`);
 };
 
-// Get AND process 1 string/number child by name or die trying -> string | number
+// Get AND process (into captures) 1 string/number child by name or die trying -> string | number
 export const stringOrNumberCaptureForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -751,7 +743,7 @@ export const stringOrNumberCaptureForField = (
 	throw new Error(`capture from field ${fieldName} not a string or number`);
 };
 
-// Get AND process 1 number child by name or die trying -> number
+// Get AND process (into captures) 1 number child by name or die trying -> number
 export const numberCaptureForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -763,7 +755,7 @@ export const numberCaptureForField = (
 	throw new Error(`capture from field ${fieldName} not a number`);
 };
 
-// Get AND process 0-1 number child by name -> number | null
+// Get AND process (into captures) 0-1 number child by name -> number | null
 export const optionalNumberCaptureForField = (
 	f: FileState,
 	node: TreeSitterNode,
@@ -815,7 +807,10 @@ export const textForField = (f: FileState, node: TreeSitterNode, fieldName: stri
 	return captureNode.text;
 };
 
-// The following will also report constant assignemnts if they are the source the incongruity
+// The following will also report constant assignments if they are the source the incongruity
+// This is for things that can gracefully become the thing in the event of a problem
+// It is NOT for things that we're 100% sure is the thing for other reasons (i.e. it wouldn't
+// have matched at the grammar level otherwise) but just want to give a guarantee to TS
 
 // Gracefully force the value into being a string (do not die if incongruous)
 export const coerceToString = (
