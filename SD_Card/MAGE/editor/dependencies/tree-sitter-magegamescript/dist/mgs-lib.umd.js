@@ -6149,14 +6149,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class MathlangNode extends AnyNode {
     constructor(debug, args2) {
       super();
-      __publicField(this, "mathlang");
       __publicField(this, "args");
       __publicField(this, "debug");
       this.debug = debug;
       this.args = args2;
     }
     print() {
-      return `// MATHLANG: ${this.mathlang}`;
+      return `// MATHLANG MYSTERY NODE`;
     }
     static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
@@ -6253,12 +6252,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class FunctionDefinition extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "name");
       __publicField(this, "params");
       __publicField(this, "paramNodes");
       __publicField(this, "bodyNode");
-      this.mathlang = "function_definition";
       this.name = breakIfNotString(args2.name);
       this.params = breakIfNotStringArray(args2.params);
       this.paramNodes = breakIfNotTSNodeArray(args2.paramNodes);
@@ -6278,9 +6275,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class AddDialogSettings extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "targets");
-      this.mathlang = "add_dialog_settings";
       this.targets = AddDialogSettingsTarget.breakIfNotAll(args2.targets);
     }
     clone() {
@@ -6294,11 +6289,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class AddDialogSettingsTarget extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "parameters");
       __publicField(this, "target");
-      this.mathlang = "add_dialog_settings_target";
       this.type = breakIfNotString(args2.type);
       this.parameters = DialogParameter.breakIfNotAll(args2.parameters);
       if (typeof args2.target === "string") this.target = args2.target;
@@ -6330,9 +6323,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class AddSerialDialogSettings extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "parameters");
-      this.mathlang = "add_serial_dialog_settings";
       this.parameters = SerialDialogParameter.breakIfNotAll(args2.parameters);
     }
     clone() {
@@ -6351,8 +6342,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class ReturnStatement extends MathlangNode {
     constructor(debug) {
       super(debug, {});
-      __publicField(this, "mathlang");
-      this.mathlang = "return_statement";
     }
     clone() {
       return new ReturnStatement(this.debug.clone());
@@ -6364,8 +6353,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class ContinueStatement extends MathlangNode {
     constructor(debug) {
       super(debug, {});
-      __publicField(this, "mathlang");
-      this.mathlang = "continue_statement";
     }
     clone() {
       return new ReturnStatement(this.debug.clone());
@@ -6377,8 +6364,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class BreakStatement extends MathlangNode {
     constructor(debug) {
       super(debug, {});
-      __publicField(this, "mathlang");
-      this.mathlang = "break_statement";
     }
     clone() {
       return new ReturnStatement(this.debug.clone());
@@ -6390,10 +6375,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class GotoLabel extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "label");
       __publicField(this, "comment");
-      this.mathlang = "goto_label";
       this.label = breakIfNotString(args2.label);
       if (typeof args2.comment === "string") this.comment = args2.comment;
     }
@@ -6414,10 +6397,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class DialogDefinition extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "dialogName");
       __publicField(this, "dialogs");
-      this.mathlang = "dialog_definition";
       this.dialogName = breakIfNotString(args2.dialogName);
       this.dialogs = Dialog.breakIfNotAll(args2.dialogs);
     }
@@ -6436,10 +6417,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class DialogParameter extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "property");
       __publicField(this, "value");
-      this.mathlang = "dialog_parameter";
       this.property = breakIfNotString(args2.property);
       this.value = breakIfNotStringOrNumber(args2.value);
     }
@@ -6469,11 +6448,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "portrait");
       __publicField(this, "alignment");
       __publicField(this, "border_tileset");
-      __publicField(this, "mathlang");
       __publicField(this, "messages");
       __publicField(this, "response_type");
       __publicField(this, "options");
-      this.mathlang = "dialog";
       if (args2.options && Array.isArray(args2.options)) {
         if (args2.options.length && args2.options.every((v) => v instanceof DialogOption)) {
           this.options = args2.options;
@@ -6508,10 +6485,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class DialogIdentifier extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "value");
-      this.mathlang = "dialog_identifier";
       if (args2.type !== "label" && args2.type !== "entity" && args2.type !== "name") {
         throw new Error("invalid DialogIdentifier type");
       }
@@ -6534,10 +6509,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class DialogOption extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "label");
       __publicField(this, "script");
-      this.mathlang = "dialog_option";
       this.label = breakIfNotString(args2.label);
       this.script = breakIfNotString(args2.script);
     }
@@ -6563,10 +6536,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class SerialDialogDefinition extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "dialogName");
       __publicField(this, "serialDialog");
-      this.mathlang = "serial_dialog_definition";
       if (!(args2.serialDialog instanceof SerialDialog)) {
         throw new Error("SerialDialogDefinition not given valid SerialDialog");
       }
@@ -6589,10 +6560,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class SerialDialogParameter extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "property");
       __publicField(this, "value");
-      this.mathlang = "serial_dialog_parameter";
       this.property = breakIfNotString(args2.property);
       this.value = breakIfNotStringOrNumber(args2.value);
     }
@@ -6619,11 +6588,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class SerialDialog extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "messages");
       __publicField(this, "options");
       __publicField(this, "text_options");
-      this.mathlang = "serial_dialog";
       this.messages = breakIfNotStringArray(args2.messages);
       if (args2.options) {
         this.options = SerialDialogOption.breakIfNotAll(args2.options);
@@ -6653,11 +6620,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class SerialDialogOption extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "optionType");
       __publicField(this, "label");
       __publicField(this, "script");
-      this.mathlang = "serial_dialog_option";
       if (args2.optionType !== "text_options" && args2.optionType !== "options") {
         throw new Error("invalid option type " + args2.optionType);
       }
@@ -6688,9 +6653,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class IncludeNode extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "value");
-      this.mathlang = "include_macro";
       this.value = breakIfNotString(args2.value);
     }
     clone() {
@@ -6703,10 +6666,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class ConstantDefinition extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "label");
       __publicField(this, "value");
-      this.mathlang = "constant_assignment";
       if (!isMGSPrimitive(args2.value)) throw new Error("not primitive");
       this.label = breakIfNotString(args2.label);
       this.value = args2.value;
@@ -6725,7 +6686,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class ScriptDefinition extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "scriptName");
       __publicField(this, "prePrint");
       __publicField(this, "testPrint");
@@ -6734,7 +6694,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "actions");
       __publicField(this, "preBakingActions");
       __publicField(this, "copyScriptResolved");
-      this.mathlang = "script_definition";
       this.scriptName = breakIfNotString(args2.scriptName);
       if (typeof args2.prePrint === "string") this.prePrint = args2.prePrint;
       if (typeof args2.testPrint === "string") this.testPrint = args2.testPrint;
@@ -6762,18 +6721,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, scriptName, actions) {
       return new ScriptDefinition(debug, { scriptName, actions });
     }
-    static processAndMake(debug, scriptName, scriptBlockNode) {
-      const rawActions = handleNode(debug.using(scriptBlockNode));
-      const actions = flattenAndDoAutoReturn(debug.using(scriptBlockNode), rawActions);
+    static processAndMake(debug, scriptName, blockNode) {
+      const rawActions = handleNode(debug.using(blockNode));
+      const actions = flattenAndDoAutoReturn(debug.using(blockNode), rawActions);
       return ScriptDefinition.quick(debug, scriptName, actions);
     }
   }
   class CommentNode extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "comment");
-      this.mathlang = "comment";
       this.comment = breakIfNotString(args2.comment);
     }
     clone() {
@@ -6790,9 +6747,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class LabelDefinition extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "label");
-      this.mathlang = "label_definition";
       this.label = breakIfNotString(args2.label);
     }
     clone() {
@@ -6812,9 +6767,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class JSONLiteral extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "json");
-      this.mathlang = "json_literal";
       if (!Array.isArray(args2.json)) {
         throw new Error("JSON literal needs to be an array");
       }
@@ -6836,10 +6789,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class CopyMacro extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "script");
       __publicField(this, "search_and_replace");
-      this.mathlang = "copy_script";
       this.script = breakIfNotString(args2.script);
       if (args2.search_and_replace && typeof args2.search_and_replace === "object" && Object.keys(args2.search_and_replace).length > 0) {
         const search_and_replace = {};
@@ -6862,10 +6813,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const _MathlangSequence = class _MathlangSequence extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "steps");
-      this.mathlang = "sequence";
       this.type = String(args2.type) || "unspecified sequence type";
       this.steps = AnyNode.breakIfNotAll(args2.steps);
       if (!(this.steps[0] instanceof CommentNode)) {
@@ -6916,11 +6865,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class IntBinaryExpression extends IntExpression {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "lhs");
       __publicField(this, "rhs");
       __publicField(this, "op");
-      this.mathlang = "int_binary_expression";
       this.lhs = IntExpression.breakIfNot(args2.lhs);
       this.rhs = IntExpression.breakIfNot(args2.rhs);
       this.op = breakIfNotString(args2.op);
@@ -7030,8 +6977,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class IntGetable extends IntUnit {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
-      this.mathlang = "int_getable";
     }
   }
   class IdentifierLiteral extends IntGetable {
@@ -7308,10 +7253,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const _BoolComparisonSequence = class _BoolComparisonSequence extends BoolExpression {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "steps");
-      this.mathlang = "bool_expression_sequence";
       if (typeof args2.type === "string") this.type = args2.type;
       this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
@@ -7355,9 +7298,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class BoolLiteral extends BoolUnit {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "value");
-      this.mathlang = "bool_literal";
       this.value = breakIfNotBool(args2.value);
     }
     clone() {
@@ -7408,13 +7349,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class BoolBinaryExpression extends BoolExpression {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "lhs");
       __publicField(this, "rhs");
       __publicField(this, "op");
       __publicField(this, "lhsNode");
       __publicField(this, "rhsNode");
-      this.mathlang = "bool_binary_expression";
       if (!(args2.lhs instanceof BoolExpression)) throw new Error("not BoolExpression");
       if (!(args2.rhs instanceof BoolExpression)) throw new Error("not BoolExpression");
       if (!(args2.lhsNode instanceof Node)) throw new Error("not TSNode");
@@ -7488,10 +7427,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "action");
-      __publicField(this, "mathlang");
       __publicField(this, "comment");
       __publicField(this, "expected_bool");
-      this.mathlang = "bool_getable";
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
     getBool() {
@@ -7644,9 +7581,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class StringCheckable extends BoolComparison {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "comment");
-      this.mathlang = "string_checkable";
     }
     updateProp(_) {
       throw new Error(`Parent should not be trying to change its string property (value ${_})`);
@@ -7874,9 +7809,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class NumberComparison extends BoolComparison {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "comment");
-      this.mathlang = "number_comparison";
       this.expected_bool = true;
     }
   }
@@ -7935,9 +7868,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class NumberCheckableEquality extends BoolComparison {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "comment");
-      this.mathlang = "number_checkable_equality";
     }
     updateProp(_) {
       throw new Error(`Parent should not be trying to change its number property (value ${_})`);
@@ -8131,10 +8062,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class BoolSetable extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "value");
-      this.mathlang = "bool_setable";
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
     }
@@ -8154,10 +8083,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class MovableIdentifier extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "value");
-      this.mathlang = "movable_identifier";
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
     }
@@ -8177,11 +8104,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class CoordinateIdentifier extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "value");
       __publicField(this, "polygonType");
-      this.mathlang = "coordinate_identifier";
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
       if (args2.polygonType) this.polygonType = breakIfNotString(args2.polygonType);
@@ -8202,10 +8127,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class DirectionTarget extends MathlangNode {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "mathlang");
       __publicField(this, "type");
       __publicField(this, "value");
-      this.mathlang = "direction_target";
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
     }

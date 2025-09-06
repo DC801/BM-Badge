@@ -13,8 +13,7 @@ import {
 } from './parser-types.ts';
 import { ansiTags as ansi } from './parser-utilities.ts';
 
-// TODO move to mathlang types file
-export type Constant = {
+type Constant = {
 	value: MGSPrimitive;
 	debug: MathlangLocation;
 };

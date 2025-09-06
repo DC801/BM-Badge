@@ -33,7 +33,6 @@ export class AnyNode {
 	}
 }
 export class MathlangNode extends AnyNode {
-	mathlang: string;
 	args: GenericObj;
 	debug: MathlangLocation;
 	constructor(debug: MathlangLocation, args: GenericObj) {
@@ -42,7 +41,7 @@ export class MathlangNode extends AnyNode {
 		this.args = args;
 	}
 	print() {
-		return `// MATHLANG: ${this.mathlang}`;
+		return `// MATHLANG MYSTERY NODE`; // TODO make a terrible "if instanceof" chain to get the orig value :P
 	}
 	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
@@ -173,14 +172,12 @@ const truncate = (s: string, n: number): string => {
 };
 
 export class FunctionDefinition extends MathlangNode {
-	mathlang: 'function_definition';
 	name: string;
 	params: string[];
 	paramNodes: TreeSitterNode[];
 	bodyNode: TreeSitterNode;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'function_definition';
 		this.name = ACTION.breakIfNotString(args.name);
 		this.params = ACTION.breakIfNotStringArray(args.params);
 		this.paramNodes = ACTION.breakIfNotTSNodeArray(args.paramNodes);
@@ -207,11 +204,9 @@ export class FunctionDefinition extends MathlangNode {
 // ------------------------------ SETTINGS ------------------------------ \\
 
 export class AddDialogSettings extends MathlangNode {
-	mathlang: 'add_dialog_settings';
 	targets: AddDialogSettingsTarget[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'add_dialog_settings';
 		this.targets = AddDialogSettingsTarget.breakIfNotAll(args.targets);
 	}
 	clone() {
@@ -224,13 +219,11 @@ export class AddDialogSettings extends MathlangNode {
 }
 
 export class AddDialogSettingsTarget extends MathlangNode {
-	mathlang: 'add_dialog_settings_target';
 	type: string;
 	parameters: DialogParameter[];
 	target?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'add_dialog_settings_target';
 		this.type = ACTION.breakIfNotString(args.type);
 		this.parameters = DialogParameter.breakIfNotAll(args.parameters);
 		if (typeof args.target === 'string') this.target = args.target;
@@ -266,11 +259,9 @@ export class AddDialogSettingsTarget extends MathlangNode {
 }
 
 export class AddSerialDialogSettings extends MathlangNode {
-	mathlang: 'add_serial_dialog_settings';
 	parameters: SerialDialogParameter[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'add_serial_dialog_settings';
 		this.parameters = SerialDialogParameter.breakIfNotAll(args.parameters);
 	}
 	clone() {
@@ -290,10 +281,8 @@ export class AddSerialDialogSettings extends MathlangNode {
 // ------------------------------ CONTROL ------------------------------ \\
 
 export class ReturnStatement extends MathlangNode {
-	mathlang: 'return_statement';
 	constructor(debug: MathlangLocation) {
 		super(debug, {});
-		this.mathlang = 'return_statement';
 	}
 	clone() {
 		return new ReturnStatement(this.debug.clone());
@@ -303,10 +292,8 @@ export class ReturnStatement extends MathlangNode {
 	}
 }
 export class ContinueStatement extends MathlangNode {
-	mathlang: 'continue_statement';
 	constructor(debug: MathlangLocation) {
 		super(debug, {});
-		this.mathlang = 'continue_statement';
 	}
 	clone() {
 		return new ReturnStatement(this.debug.clone());
@@ -316,10 +303,8 @@ export class ContinueStatement extends MathlangNode {
 	}
 }
 export class BreakStatement extends MathlangNode {
-	mathlang: 'break_statement';
 	constructor(debug: MathlangLocation) {
 		super(debug, {});
-		this.mathlang = 'break_statement';
 	}
 	clone() {
 		return new ReturnStatement(this.debug.clone());
@@ -330,12 +315,10 @@ export class BreakStatement extends MathlangNode {
 }
 
 export class GotoLabel extends MathlangNode {
-	mathlang: 'goto_label';
 	label: string;
 	comment?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'goto_label';
 		this.label = ACTION.breakIfNotString(args.label);
 		if (typeof args.comment === 'string') this.comment = args.comment;
 	}
@@ -357,12 +340,10 @@ export class GotoLabel extends MathlangNode {
 // ------------------------------ DIALOG ------------------------------ \\
 
 export class DialogDefinition extends MathlangNode {
-	mathlang: 'dialog_definition';
 	dialogName: string;
 	dialogs: Dialog[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'dialog_definition';
 		this.dialogName = ACTION.breakIfNotString(args.dialogName);
 		this.dialogs = Dialog.breakIfNotAll(args.dialogs);
 	}
@@ -389,12 +370,10 @@ export type DialogSettings = {
 };
 
 export class DialogParameter extends MathlangNode {
-	mathlang: 'dialog_parameter';
 	property: string;
 	value: MGSPrimitive;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'dialog_parameter';
 		this.property = ACTION.breakIfNotString(args.property);
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
 	}
@@ -424,14 +403,11 @@ export class Dialog extends MathlangNode {
 	alignment?: string;
 	border_tileset?: string;
 
-	mathlang: 'dialog';
-
 	messages: string[];
 	response_type?: 'SELECT_FROM_SHORT_LIST';
 	options?: DialogOption[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'dialog';
 		if (args.options && Array.isArray(args.options)) {
 			if (args.options.length && args.options.every((v) => v instanceof DialogOption)) {
 				this.options = args.options;
@@ -472,12 +448,10 @@ export type DialogInfo = {
 };
 
 export class DialogIdentifier extends MathlangNode {
-	mathlang: 'dialog_identifier';
 	type: DialogIdentifierType;
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'dialog_identifier';
 		if (args.type !== 'label' && args.type !== 'entity' && args.type !== 'name') {
 			throw new Error('invalid DialogIdentifier type');
 		}
@@ -500,12 +474,10 @@ export class DialogIdentifier extends MathlangNode {
 type DialogIdentifierType = 'label' | 'entity' | 'name';
 
 export class DialogOption extends MathlangNode {
-	mathlang: 'dialog_option';
 	label: string;
 	script: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'dialog_option';
 		this.label = ACTION.breakIfNotString(args.label);
 		this.script = ACTION.breakIfNotString(args.script);
 	}
@@ -532,12 +504,10 @@ export class DialogOption extends MathlangNode {
 // ------------------------------ SERIAL DIALOG ------------------------------ \\
 
 export class SerialDialogDefinition extends MathlangNode {
-	mathlang: 'serial_dialog_definition';
 	dialogName: string;
 	serialDialog: SerialDialog;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'serial_dialog_definition';
 		if (!(args.serialDialog instanceof SerialDialog)) {
 			throw new Error('SerialDialogDefinition not given valid SerialDialog');
 		}
@@ -564,12 +534,10 @@ export type SerialDialogSettings = {
 };
 
 export class SerialDialogParameter extends MathlangNode {
-	mathlang: 'serial_dialog_parameter';
 	property: string;
 	value: MGSPrimitive;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'serial_dialog_parameter';
 		this.property = ACTION.breakIfNotString(args.property);
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
 	}
@@ -595,13 +563,11 @@ export class SerialDialogParameter extends MathlangNode {
 }
 
 export class SerialDialog extends MathlangNode {
-	mathlang: 'serial_dialog';
 	messages: string[];
 	options?: SerialDialogOption[];
 	text_options?: SerialDialogOption[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'serial_dialog';
 		this.messages = ACTION.breakIfNotStringArray(args.messages);
 		if (args.options) {
 			this.options = SerialDialogOption.breakIfNotAll(args.options);
@@ -637,13 +603,11 @@ export type SerialDialogInfo = {
 
 export type SerialOptionType = 'text_options' | 'options';
 export class SerialDialogOption extends MathlangNode {
-	mathlang: 'serial_dialog_option';
 	optionType: SerialOptionType;
 	label: string;
 	script: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'serial_dialog_option';
 		if (args.optionType !== 'text_options' && args.optionType !== 'options') {
 			throw new Error('invalid option type ' + args.optionType);
 		}
@@ -674,11 +638,9 @@ export class SerialDialogOption extends MathlangNode {
 // ------------------------------ ONE-OFFS ------------------------------ \\
 
 export class IncludeNode extends MathlangNode {
-	mathlang: 'include_macro';
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'include_macro';
 		this.value = ACTION.breakIfNotString(args.value);
 	}
 	clone() {
@@ -690,12 +652,10 @@ export class IncludeNode extends MathlangNode {
 }
 
 export class ConstantDefinition extends MathlangNode {
-	mathlang: 'constant_assignment';
 	label: string;
 	value: string | BoolLiteral | number;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'constant_assignment';
 		if (!isMGSPrimitive(args.value)) throw new Error('not primitive');
 		this.label = ACTION.breakIfNotString(args.label);
 		this.value = args.value;
@@ -713,7 +673,6 @@ export class ConstantDefinition extends MathlangNode {
 }
 
 export class ScriptDefinition extends MathlangNode {
-	mathlang: 'script_definition';
 	scriptName: string;
 	prePrint?: string;
 	testPrint?: string;
@@ -724,7 +683,6 @@ export class ScriptDefinition extends MathlangNode {
 	copyScriptResolved?: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'script_definition';
 		this.scriptName = ACTION.breakIfNotString(args.scriptName);
 		if (typeof args.prePrint === 'string') this.prePrint = args.prePrint;
 		if (typeof args.testPrint === 'string') this.testPrint = args.testPrint;
@@ -755,21 +713,18 @@ export class ScriptDefinition extends MathlangNode {
 	static processAndMake(
 		debug: MathlangLocation,
 		scriptName: string,
-		scriptBlockNode: TreeSitterNode,
+		blockNode: TreeSitterNode,
 	) {
-		// TODO figure out where this logic actually goes
-		const rawActions = handleNode(debug.using(scriptBlockNode));
-		const actions = flattenAndDoAutoReturn(debug.using(scriptBlockNode), rawActions);
+		const rawActions = handleNode(debug.using(blockNode));
+		const actions = flattenAndDoAutoReturn(debug.using(blockNode), rawActions);
 		return ScriptDefinition.quick(debug, scriptName, actions);
 	}
 }
 
 export class CommentNode extends MathlangNode {
-	mathlang: 'comment';
 	comment: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'comment';
 		this.comment = ACTION.breakIfNotString(args.comment);
 	}
 	clone() {
@@ -785,11 +740,9 @@ export class CommentNode extends MathlangNode {
 }
 
 export class LabelDefinition extends MathlangNode {
-	mathlang: 'label_definition';
 	label: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'label_definition';
 		this.label = ACTION.breakIfNotString(args.label);
 	}
 	clone() {
@@ -808,11 +761,9 @@ export class LabelDefinition extends MathlangNode {
 }
 
 export class JSONLiteral extends MathlangNode {
-	mathlang: 'json_literal';
 	json: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'json_literal';
 		if (!Array.isArray(args.json)) {
 			throw new Error('JSON literal needs to be an array');
 		}
@@ -833,12 +784,10 @@ export class JSONLiteral extends MathlangNode {
 }
 
 export class CopyMacro extends MathlangNode {
-	mathlang: 'copy_script';
 	script: string;
 	search_and_replace?: Record<string, string>;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'copy_script';
 		this.script = ACTION.breakIfNotString(args.script);
 		if (
 			args.search_and_replace &&
@@ -869,12 +818,10 @@ export class CopyMacro extends MathlangNode {
 
 // needs to be one unit of thing for reasons, but still contain than one thing
 export class MathlangSequence extends MathlangNode {
-	mathlang: 'sequence';
 	type: string;
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'sequence';
 		this.type = String(args.type) || 'unspecified sequence type';
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 		if (!(this.steps[0] instanceof CommentNode)) {
@@ -931,13 +878,11 @@ export class IntExpression extends MathlangNode {
 }
 
 export class IntBinaryExpression extends IntExpression {
-	mathlang: 'int_binary_expression';
 	lhs: IntExpression;
 	rhs: IntExpression;
 	op: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'int_binary_expression';
 		this.lhs = IntExpression.breakIfNot(args.lhs);
 		this.rhs = IntExpression.breakIfNot(args.rhs);
 		this.op = ACTION.breakIfNotString(args.op);
@@ -1062,10 +1007,8 @@ export class NumberLiteral extends IntUnit {
 	}
 }
 export class IntGetable extends IntUnit {
-	mathlang: 'int_getable';
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'int_getable';
 	}
 }
 export class IdentifierLiteral extends IntGetable {
@@ -1357,12 +1300,10 @@ export class BoolExpression extends MathlangNode {
 }
 
 export class BoolComparisonSequence extends BoolExpression {
-	mathlang: 'bool_expression_sequence';
 	type: string;
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'bool_expression_sequence';
 		if (typeof args.type === 'string') this.type = args.type;
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
@@ -1404,11 +1345,9 @@ export class BoolComparisonSequence extends BoolExpression {
 export class BoolUnit extends BoolExpression {}
 
 export class BoolLiteral extends BoolUnit {
-	mathlang: 'bool_literal';
 	value: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'bool_literal';
 		this.value = ACTION.breakIfNotBool(args.value);
 	}
 	clone() {
@@ -1459,7 +1398,6 @@ export class BoolComparison extends BoolExpression {
 }
 
 export class BoolBinaryExpression extends BoolExpression {
-	mathlang: 'bool_binary_expression';
 	lhs: BoolExpression;
 	rhs: BoolExpression;
 	op: string;
@@ -1467,7 +1405,6 @@ export class BoolBinaryExpression extends BoolExpression {
 	rhsNode: TreeSitterNode;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'bool_binary_expression';
 		if (!(args.lhs instanceof BoolExpression)) throw new Error('not BoolExpression');
 		if (!(args.rhs instanceof BoolExpression)) throw new Error('not BoolExpression');
 		if (!(args.lhsNode instanceof TreeSitterNode)) throw new Error('not TSNode');
@@ -1551,12 +1488,10 @@ export class BoolBinaryExpression extends BoolExpression {
 
 export class BoolGetable extends BoolUnit {
 	action: string;
-	mathlang: 'bool_getable';
 	comment?: string;
 	expected_bool: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'bool_getable';
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
 	getBool() {
@@ -1715,11 +1650,9 @@ export class CheckDebugMode extends BoolGetable {
 // --------------- STRING CHECKABLE
 
 export class StringCheckable extends BoolComparison {
-	mathlang: 'string_checkable';
 	comment?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'string_checkable';
 	}
 	updateProp(_: string) {
 		// todo do I need this?
@@ -2012,11 +1945,9 @@ export class CheckBLEFlag extends StringCheckable {
 // --------------- NUMBER COMPARISON
 
 export class NumberComparison extends BoolComparison {
-	mathlang: 'number_comparison';
 	comment?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'number_comparison';
 		this.expected_bool = true;
 	}
 }
@@ -2089,11 +2020,9 @@ export class CheckVariables extends NumberComparison {
 // --------------- NUMBER CHECKABLE EQUALITY
 
 export class NumberCheckableEquality extends BoolComparison {
-	mathlang: 'number_checkable_equality';
 	comment?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'number_checkable_equality';
 	}
 	updateProp(_: number) {
 		// TODO: how to deal with this? Does this one need this because of the following method?
@@ -2325,12 +2254,10 @@ export class CheckEntityCurrentFrame extends NumberCheckableEquality {
 // TODO make like the rest? or?
 
 export class BoolSetable extends MathlangNode {
-	mathlang: 'bool_setable';
 	type: string;
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'bool_setable';
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
 	}
@@ -2348,12 +2275,10 @@ export class BoolSetable extends MathlangNode {
 	}
 }
 export class MovableIdentifier extends MathlangNode {
-	mathlang: 'movable_identifier';
 	type: string;
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'movable_identifier';
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
 	}
@@ -2371,13 +2296,11 @@ export class MovableIdentifier extends MathlangNode {
 	}
 }
 export class CoordinateIdentifier extends MathlangNode {
-	mathlang: 'coordinate_identifier';
 	type: string;
 	value: string;
 	polygonType?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'coordinate_identifier';
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
 		if (args.polygonType) this.polygonType = ACTION.breakIfNotString(args.polygonType);
@@ -2396,12 +2319,10 @@ export class CoordinateIdentifier extends MathlangNode {
 	}
 }
 export class DirectionTarget extends MathlangNode {
-	mathlang: 'direction_target';
 	type: string;
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.mathlang = 'direction_target';
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
 	}

@@ -284,6 +284,7 @@ export class ConditionalBlock {
 		this.conditionNode = mandatoryChildForField(debug, 'condition');
 		// TODO this should not be handled this way! make uniform
 		// Find other cases, too? node handling should be done in one place so it can report errors
+		// ^^ IDK what these comments mean, but prob this should be on some class instead of here
 		let condition = handleCapture(debug.using(this.conditionNode));
 		if (typeof condition === 'string') condition = CheckSaveFlag.quick(debug, condition);
 		this.condition = BoolExpression.breakIfNot(condition);
