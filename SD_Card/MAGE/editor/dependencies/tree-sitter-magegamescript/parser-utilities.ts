@@ -257,7 +257,7 @@ export const simpleBranchMaker = (
 	condition: BoolExpression,
 	trueBlock: AnyNode[],
 	falseBlock: AnyNode[],
-): MathlangSequence => {
+): AnyNode[] => {
 	const n = debug.f.p.advanceGotoSuffix();
 	const ifLabel = `if true #${n}`;
 	const rendezvousLabel = `rendezvous #${n}`;
@@ -269,7 +269,7 @@ export const simpleBranchMaker = (
 		...trueBlock,
 		LabelDefinition.quick(debug, rendezvousLabel),
 	];
-	return MathlangSequence.quick(debug, steps, 'simpleBranchMaker');
+	return steps;
 };
 
 export class ConditionalBlock {
@@ -297,7 +297,7 @@ export const ifChainMaker = (
 	iffs: ConditionalBlock[],
 	elseBody: AnyNode[],
 	label: string,
-): MathlangSequence => {
+): AnyNode[] => {
 	const rendezvousL: string = label + ` rendezvous #${debug.f.p.advanceGotoSuffix()}`;
 	const steps: AnyNode[] = [];
 	const bottomSteps: AnyNode[] = [];
@@ -319,7 +319,7 @@ export const ifChainMaker = (
 	steps.push(GotoLabel.quick(debug, rendezvousL));
 	const combined = steps.concat(bottomSteps);
 	combined.push(LabelDefinition.quick(debug, rendezvousL));
-	return MathlangSequence.quick(debug, combined, `parser-node: ${label}`);
+	return combined;
 };
 
 export const simplifyLabelGotos = (actions: AnyNode[]): AnyNode[] => {

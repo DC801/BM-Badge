@@ -3917,8 +3917,9 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     try {
       parser.setLanguage(Lang);
     } catch {
+      const Lang2 = await Language.load(wasmPath);
       try {
-        parser.setLanguage(Lang);
+        parser.setLanguage(Lang2);
       } catch {
         throw new Error("failed to set tree-sitter language (try again?)");
       }
@@ -5064,9 +5065,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       stack.unshift(localConstants);
       let steps = handleNamedChildren(debug.using(definition.bodyNode));
       steps = flattenAndDoAutoReturn(debug, steps);
-      const sequence = MathlangSequence.quick(debug, steps, "fn_call");
       stack.shift();
-      return [sequence];
+      return steps;
     },
     script_block: (debug) => {
       return handleNamedChildren(debug);
@@ -5195,10 +5195,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         };
         return block;
       });
-      const sequence = ifChainMaker(debug, iffs, [], "rand_macro");
-      sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, "?"));
+      const steps = ifChainMaker(debug, iffs, [], "rand_macro");
+      steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, "?"));
       dropTemporary();
-      return [sequence];
+      return steps;
     },
     label_definition: (debug) => {
       const label = textForField(debug, "label");
@@ -5374,8 +5374,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       const condition = CheckDebugMode.quick(debug, true);
       const ifTrue = SHOW_SERIAL_DIALOG.quick(dialogName);
-      const action = simpleBranchMaker(debug, condition, [ifTrue], []);
-      steps.push(action);
+      const newSteps = simpleBranchMaker(debug, condition, [ifTrue], []);
+      steps.push(...newSteps);
       return steps;
     },
     looping_block: (debug) => {
@@ -5401,7 +5401,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         GotoLabel.quick(debug.using(block.conditionNode), continueL),
         LabelDefinition.quick(debug, breakL)
       ];
-      return [MathlangSequence.quick(debug, steps, "parser-node: while_block")];
+      return steps;
     },
     do_while_block: (debug) => {
       const n = debug.f.p.advanceGotoSuffix();
@@ -5417,7 +5417,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         ...block.condition.toSteps(bodyL),
         LabelDefinition.quick(debug, breakL)
       ];
-      return [MathlangSequence.quick(debug, steps, "parser-node: do_while_block")];
+      return steps;
     },
     for_block: (debug) => {
       const n = debug.f.p.advanceGotoSuffix();
@@ -5444,7 +5444,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         GotoLabel.quick(debug.using(conditionN), conditionL),
         LabelDefinition.quick(debug, breakL)
       ];
-      return [MathlangSequence.quick(debug, steps, "parser-node: for_block")];
+      return steps;
     },
     if_single: (debug) => {
       const type = optionalTextForField(debug, "type");
@@ -5491,7 +5491,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           elseBody = handleNamedChildren(debug.using(lastChild));
         }
       }
-      return [ifChainMaker(debug, iffs, elseBody, "if_chain")];
+      return ifChainMaker(debug, iffs, elseBody, "if_chain");
     }
   };
   const handleCapture = (debug) => {
@@ -7220,14 +7220,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new FnCall(debug, { identifier, type, rawBody });
     }
     bake() {
-      const handled = handleNode(this.debug.using(this.rawBody))[0];
-      const sequence = MathlangSequence.breakIfNot(handled);
-      return FnCallReturnValue.quick(
-        this.debug,
-        this.identifier,
-        "fn",
-        flattenNodes(sequence.steps)
-      );
+      const steps = handleNode(this.debug.using(this.rawBody));
+      return FnCallReturnValue.quick(this.debug, this.identifier, "fn", flattenNodes(steps));
     }
     toSteps(destinationVar) {
       const baked = this.bake();
@@ -7307,10 +7301,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     assignToSetBool(setBool) {
       const cloneIfFalse = setBool.clone();
       cloneIfFalse.invert();
-      if (this instanceof ActionBoolGetable || this instanceof BoolComparison) {
-        return simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
-      }
-      return simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
+      const steps = simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
+      return MathlangSequence.quick(this.debug, steps, "BoolExpression.assignToSetBool");
     }
   }
   const _BoolComparisonSequence = class _BoolComparisonSequence extends BoolExpression {
@@ -8818,12 +8810,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static toFlag(debug, save_flag, source, invert) {
       const actionIfTrue = SET_SAVE_FLAG.toValue(save_flag, true);
       const actionIfFalse = SET_SAVE_FLAG.toValue(save_flag, false);
-      return simpleBranchMaker(
+      const steps = simpleBranchMaker(
         debug,
         CheckSaveFlag.quick(debug, source, !invert),
         [actionIfTrue],
         [actionIfFalse]
       );
+      return MathlangSequence.quick(debug, steps, "SET_SAVE_FLAG.toFlag");
     }
     print() {
       return printSetBoolAction(this, `"${this.save_flag}"`);
@@ -11014,7 +11007,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       ...trueBlock,
       LabelDefinition.quick(debug, rendezvousLabel)
     ];
-    return MathlangSequence.quick(debug, steps, "simpleBranchMaker");
+    return steps;
   };
   class ConditionalBlock {
     // TODO: make constructor build from processed parts, and move this to its own method that processes it from the base node
@@ -11051,7 +11044,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     steps.push(GotoLabel.quick(debug, rendezvousL));
     const combined = steps.concat(bottomSteps);
     combined.push(LabelDefinition.quick(debug, rendezvousL));
-    return MathlangSequence.quick(debug, combined, `parser-node: ${label}`);
+    return combined;
   };
   const simplifyLabelGotos = (actions) => {
     for (let i2 = 0; i2 < actions.length; i2++) {

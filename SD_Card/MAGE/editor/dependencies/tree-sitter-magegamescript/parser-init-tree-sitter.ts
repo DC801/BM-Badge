@@ -13,6 +13,7 @@ export default async function (): Promise<Parser> {
 	try {
 		parser.setLanguage(Lang);
 	} catch {
+		const Lang = await Language.load(wasmPath);
 		try {
 			parser.setLanguage(Lang);
 		} catch {

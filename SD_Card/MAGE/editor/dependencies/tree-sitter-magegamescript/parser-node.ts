@@ -55,7 +55,6 @@ import {
 	isMGSPrimitive,
 	JSONLiteral,
 	LabelDefinition,
-	MathlangSequence,
 	SerialDialogDefinition,
 	SerialDialogParameter,
 	DialogIdentifier,
@@ -222,11 +221,10 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 
 		// bake it like a script body
 		steps = flattenAndDoAutoReturn(debug, steps);
-		const sequence = MathlangSequence.quick(debug, steps, 'fn_call');
 
 		// we're done with the args for this call; remove them from the fn stack
 		stack.shift();
-		return [sequence];
+		return steps;
 	},
 	script_block: (debug) => {
 		return handleNamedChildren(debug);
@@ -388,14 +386,14 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			};
 			return block;
 		});
-		const sequence = ifChainMaker(debug, iffs, [], 'rand_macro');
+		const steps = ifChainMaker(debug, iffs, [], 'rand_macro');
 
 		// put the RNG roll at the top
-		sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, '?'));
+		steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, '?'));
 
 		// DONE
 		dropTemporary();
-		return [sequence];
+		return steps;
 	},
 	label_definition: (debug) => {
 		const label = textForField(debug, 'label');
@@ -601,8 +599,8 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		}
 		const condition = CheckDebugMode.quick(debug, true);
 		const ifTrue = SHOW_SERIAL_DIALOG.quick(dialogName);
-		const action = simpleBranchMaker(debug, condition, [ifTrue], []);
-		steps.push(action);
+		const newSteps = simpleBranchMaker(debug, condition, [ifTrue], []);
+		steps.push(...newSteps);
 		return steps;
 	},
 	looping_block: (debug): AnyNode[] => {
@@ -629,7 +627,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			GotoLabel.quick(debug.using(block.conditionNode), continueL),
 			LabelDefinition.quick(debug, breakL),
 		];
-		return [MathlangSequence.quick(debug, steps, 'parser-node: while_block')];
+		return steps;
 	},
 	do_while_block: (debug) => {
 		const n = debug.f.p.advanceGotoSuffix();
@@ -646,7 +644,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			...block.condition.toSteps(bodyL),
 			LabelDefinition.quick(debug, breakL),
 		];
-		return [MathlangSequence.quick(debug, steps, 'parser-node: do_while_block')];
+		return steps;
 	},
 	for_block: (debug) => {
 		const n = debug.f.p.advanceGotoSuffix();
@@ -674,7 +672,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			GotoLabel.quick(debug.using(conditionN), conditionL),
 			LabelDefinition.quick(debug, breakL),
 		];
-		return [MathlangSequence.quick(debug, steps, 'parser-node: for_block')];
+		return steps;
 	},
 	if_single: (debug): AnyNode[] => {
 		// For parsing the bytecode output; not really meant to be seen in the wild
@@ -731,7 +729,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 				elseBody = handleNamedChildren(debug.using(lastChild));
 			}
 		}
-		return [ifChainMaker(debug, iffs, elseBody, 'if_chain')];
+		return ifChainMaker(debug, iffs, elseBody, 'if_chain');
 	},
 };
 

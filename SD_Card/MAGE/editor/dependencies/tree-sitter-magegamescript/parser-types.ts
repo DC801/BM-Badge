@@ -1261,14 +1261,8 @@ export class FnCall extends IntGetable {
 		return new FnCall(debug, { identifier, type, rawBody });
 	}
 	bake(): FnCallReturnValue {
-		const handled = handleNode(this.debug.using(this.rawBody))[0];
-		const sequence = MathlangSequence.breakIfNot(handled);
-		return FnCallReturnValue.quick(
-			this.debug,
-			this.identifier,
-			'fn',
-			flattenNodes(sequence.steps),
-		);
+		const steps = handleNode(this.debug.using(this.rawBody));
+		return FnCallReturnValue.quick(this.debug, this.identifier, 'fn', flattenNodes(steps));
 	}
 	toSteps(destinationVar: string) {
 		const baked = this.bake();
@@ -1357,11 +1351,8 @@ export class BoolExpression extends MathlangNode {
 		// if (self glitched) { player glitched = true; } else { player glitched = false; }
 		const cloneIfFalse = setBool.clone();
 		cloneIfFalse.invert();
-		if (this instanceof ACTION.ActionBoolGetable || this instanceof BoolComparison) {
-			return simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
-		}
-
-		return simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
+		const steps = simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
+		return MathlangSequence.quick(this.debug, steps, 'BoolExpression.assignToSetBool');
 	}
 }
 

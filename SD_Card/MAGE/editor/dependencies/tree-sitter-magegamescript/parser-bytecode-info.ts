@@ -7,6 +7,7 @@ import {
 	CheckSaveFlag,
 	LabelDefinition,
 	CopyMacro,
+	MathlangSequence,
 } from './parser-types.ts';
 import { type GenericObj } from './parser-actions.ts';
 import { inverseOpMap, realignTemp, simpleBranchMaker } from './parser-utilities.ts';
@@ -654,12 +655,13 @@ export class SET_SAVE_FLAG extends ActionSetBool {
 	static toFlag(debug: MathlangLocation, save_flag: string, source: string, invert?: boolean) {
 		const actionIfTrue = SET_SAVE_FLAG.toValue(save_flag, true);
 		const actionIfFalse = SET_SAVE_FLAG.toValue(save_flag, false);
-		return simpleBranchMaker(
+		const steps = simpleBranchMaker(
 			debug,
 			CheckSaveFlag.quick(debug, source, !invert),
 			[actionIfTrue],
 			[actionIfFalse],
 		);
+		return MathlangSequence.quick(debug, steps, 'SET_SAVE_FLAG.toFlag')
 	}
 	print() {
 		return printSetBoolAction(this, `"${this.save_flag}"`);
