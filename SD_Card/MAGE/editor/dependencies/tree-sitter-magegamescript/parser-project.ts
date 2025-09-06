@@ -1,4 +1,4 @@
-import { Parser, Node as TreeSitterNode } from 'web-tree-sitter';
+import { Parser } from 'web-tree-sitter';
 import {
 	reportErrorNodes,
 	reportMissingChildNodes,
@@ -146,7 +146,7 @@ export class ProjectState {
 
 	// take the given file name and expand all copy_script inside
 	// needs to be here because it can call itself
-	bakeCopyScriptSingle(f: FileState, node: TreeSitterNode, scriptName: string) {
+	bakeCopyScriptSingle(debug: MathlangLocation, scriptName: string) {
 		// Recursion detection
 		if (copyRecursion.includes(scriptName)) {
 			copyRecursion.push(scriptName);
@@ -174,10 +174,10 @@ export class ProjectState {
 				const useNode =
 					action instanceof MathlangNode
 						? optionalChildForField(action.debug, 'script') || action.debug.node
-						: node;
+						: debug.node;
 				this.newError(
 					new MathlangMessage(
-						[MathlangLocation.quick(scriptData.debug.f, useNode)],
+						[debug.using(useNode)],
 						'missing script',
 						'copy_script could not find script ' + targetScript,
 					),
@@ -187,7 +187,7 @@ export class ProjectState {
 
 			// if the target script hasn't had its own copy_script pass done yet, do that pass first
 			if (!this.scripts[action.script].copyScriptResolved) {
-				this.bakeCopyScriptSingle(f, node, action.script);
+				this.bakeCopyScriptSingle(action.debug, action.script);
 			}
 
 			// add suffix to action labels so they don't collide with other copies
@@ -237,12 +237,12 @@ export class ProjectState {
 					return Action.fromArgs(ret);
 				});
 				const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
+				finalActions.push(CommentNode.quick(debug, comment));
 				finalActions.push(...searchedAndReplaced);
 			} else {
 				// plain version
 				const comment = `Copying: ${action.script} (-${labelSuffix})`;
-				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
+				finalActions.push(CommentNode.quick(debug, comment));
 				finalActions.push(...copiedActions);
 			}
 		});
@@ -273,15 +273,15 @@ export class ProjectState {
 		reportMissingChildNodes(documentDebug);
 		reportErrorNodes(documentDebug);
 		let catastrophicErrorReported = false;
-		const nodes = namedChildren(MathlangLocation.quick(f, document))
+		const nodes = namedChildren(documentDebug)
 			.map((node) => {
+				const debug = MathlangLocation.quick(f, node);
 				if (catastrophicErrorReported) {
 					return;
 				} else if (node && !node.isError) {
 					// Normal
-					return handleNode(f, node);
+					return handleNode(debug);
 				} else if (!catastrophicErrorReported) {
-					const debug = MathlangLocation.quick(f, node);
 					if (node?.text === ';') {
 						// semicolons after script definitions or such
 						debug.quickError('unexpected token', `unexpected semicolon`);

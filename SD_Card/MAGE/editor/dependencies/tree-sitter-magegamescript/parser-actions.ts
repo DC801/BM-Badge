@@ -109,7 +109,6 @@ import {
 	quickTemporary,
 	RETURN,
 } from './parser-utilities.ts';
-import { FileState } from './parser-file.ts';
 
 // ------------------------ COMMON ACTION HANDLING ------------------------ //
 
@@ -161,13 +160,12 @@ const spreadValues = (
 	return ret;
 };
 
-export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
-	const debug = MathlangLocation.quick(f, node);
-	const data = actionData[node.grammarType];
+export const handleAction = (debug: MathlangLocation): AnyNode[] => {
+	const data = actionData[debug.node.grammarType];
 	if (!data) {
-		const customFn = actionFns[node.grammarType];
+		const customFn = actionFns[debug.node.grammarType];
 		if (!customFn) {
-			const message = `no action data nor handler function found for action ${node.grammarType}`;
+			const message = `no action data nor handler function found for action ${debug.node.grammarType}`;
 			throw new Error(message);
 		}
 		return customFn(debug);
@@ -182,7 +180,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		if (captureNode === null) {
 			if (!data.optionalCaptures || !data.optionalCaptures.includes(fieldName)) {
 				throw new Error(
-					`capture found for field not associated with action ${node.grammarType} (${fieldName})`,
+					`capture found for field not associated with action ${debug.node.grammarType} (${fieldName})`,
 				);
 			}
 			return;
@@ -201,7 +199,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	// Different param combinations will result in different actions,
 	// so let the handler identify them AFTER the spreads are spread
 	const handleFn = data.handle || Action.fromArgs;
-	return spreads.map((v, i) => handleFn(v, f, node, i)).filter((v) => v !== undefined);
+	return spreads.map((v, i) => handleFn(v, debug, i)).filter((v) => v !== undefined);
 };
 
 // Put things here if you don't care about auto-spreading them; otherwise they should go in actionData
@@ -269,14 +267,13 @@ type actionDataEntry = {
 	values?: Record<string, unknown>;
 	captures?: string[];
 	optionalCaptures?: string[];
-	handle?: (v: GenericObj, f: FileState, node: TreeSitterNode, i?: number) => AnyNode | undefined;
+	handle?: (v: GenericObj, debug: MathlangLocation, i?: number) => AnyNode | undefined;
 };
 const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
 		// TODO: everything after is unreachable
 		// Ditto some other actions, too: goto script, load map (look for purple)
-		handle: (v, f, node) => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug) => {
 			const returnStatement = ReturnStatement.quick(debug);
 			const expNode = optionalChildForField(debug, 'expression');
 			if (expNode) {
@@ -297,16 +294,16 @@ const actionData: Record<string, actionDataEntry> = {
 					throw new Error('invalid return value in return statement');
 				}
 				steps.push(returnStatement);
-				return MathlangSequence.orSingle(f, node, steps, 'return_statement_with_value');
+				return MathlangSequence.orSingle(debug, steps, 'return_statement_with_value');
 			}
 			return returnStatement;
 		},
 	},
 	action_continue_statement: {
-		handle: (v, f, node) => ContinueStatement.quick(MathlangLocation.quick(f, node)),
+		handle: (v, debug) => ContinueStatement.quick(debug),
 	},
 	action_break_statement: {
-		handle: (v, f, node) => BreakStatement.quick(MathlangLocation.quick(f, node)),
+		handle: (v, debug) => BreakStatement.quick(debug),
 	},
 	action_close_dialog: {
 		handle: () => new CLOSE_DIALOG(),
@@ -331,7 +328,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_goto_label: {
 		captures: ['label'],
-		handle: (v, f, node) => new GotoLabel(MathlangLocation.quick(f, node), v),
+		handle: (v, debug) => new GotoLabel(debug, v),
 	},
 	action_goto_index: {
 		captures: ['action_index'],
@@ -412,35 +409,34 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_command: {
 		values: { is_fail: false },
 		captures: ['command', 'script'],
-		handle: (v, f, node) => {
+		handle: (v, debug) => {
 			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command');
 			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script }));
-			return MathlangSequence.orSingle(f, node, steps, 'action_set_command');
+			return MathlangSequence.orSingle(debug, steps, 'action_set_command');
 		},
 	},
 	action_set_command_fail: {
 		values: { is_fail: true },
 		captures: ['command', 'script'],
-		handle: (v, f, node) => {
+		handle: (v, debug) => {
 			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
 			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script }));
-			return MathlangSequence.orSingle(f, node, steps, 'action_set_command_fail');
+			return MathlangSequence.orSingle(debug, steps, 'action_set_command_fail');
 		},
 	},
 	action_set_command_arg: {
 		values: { is_fail: true },
 		captures: ['command', 'argument', 'script'],
-		handle: (v, f, node) => {
+		handle: (v, debug) => {
 			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
 			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script }));
-			return MathlangSequence.orSingle(f, node, steps, 'action_set_command_args');
+			return MathlangSequence.orSingle(debug, steps, 'action_set_command_args');
 		},
 	},
 	action_set_ambiguous: {
 		// if the LHS is ambiguous (a variable name)
 		captures: ['lhs', 'rhs'],
-		handle: (v, f, node, i): AnyNode => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug, i): AnyNode => {
 			const lhs = coerceToString(debug, v.lhs, 'action_set_ambiguous lhs');
 			const rhs = v.rhs;
 
@@ -485,7 +481,7 @@ const actionData: Record<string, actionDataEntry> = {
 					message,
 					footer,
 				);
-				f.p.newWarning(warning);
+				debug.f.p.newWarning(warning);
 				return MUTATE_VARIABLES.set(debug, lhs, rhs);
 			}
 
@@ -532,8 +528,7 @@ const actionData: Record<string, actionDataEntry> = {
 		// If we've matched this, we know the LHS is not a variable name.
 		// Only (CURRENT) option is an entity field.
 		captures: ['lhs', 'rhs'],
-		handle: (v, f, node): AnyNode => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): AnyNode => {
 			const lhs = v.lhs;
 			const rhs = v.rhs;
 			if (lhs instanceof EntityIntField) {
@@ -564,8 +559,7 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_bool: {
 		// If we've matched this, we know the LHS is not an int variable name.
 		captures: ['lhs', 'rhs'],
-		handle: (v, f, node) => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug) => {
 			if (!(v.lhs instanceof BoolSetable)) {
 				throw new Error('LHS not a bool_setable');
 			}
@@ -617,8 +611,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_position: {
 		captures: ['movable', 'coordinate'],
-		handle: (v, f, node): Action | MathlangSequence => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): Action | MathlangSequence => {
 			const movable = MovableIdentifier.breakIfNot(v.movable);
 			const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
 			if (movable.type === 'camera') {
@@ -651,8 +644,7 @@ const actionData: Record<string, actionDataEntry> = {
 	action_move_over_time: {
 		captures: ['movable', 'coordinate', 'duration', 'forever'],
 		optionalCaptures: ['forever'],
-		handle: (v, f, node): Action | undefined => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): Action | undefined => {
 			const movable = MovableIdentifier.breakIfNot(v.movable);
 			const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
 			const duration = coerceToNumber(debug, v.duration, 'duration');
@@ -734,8 +726,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_direction: {
 		captures: ['entity', 'target'],
-		handle: (v, f, node): Action => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): Action => {
 			const entity = coerceToString(debug, v.entity, 'entity');
 			const target = DirectionTarget.breakIfNot(v.target);
 			if (target.type === 'nsew') {
@@ -750,8 +741,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_script: {
 		captures: ['entity', 'script_slot', 'script'],
-		handle: (v, f, node): AnyNode => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): AnyNode => {
 			const entity = coerceToString(debug, v.entity, 'entity');
 			const script_slot = coerceToString(debug, v.script_slot, 'script_slot');
 			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_script');
@@ -784,13 +774,12 @@ const actionData: Record<string, actionDataEntry> = {
 						`Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`,
 					);
 			}
-			return MathlangSequence.orSingle(f, node, steps, 'action_set_script');
+			return MathlangSequence.orSingle(debug, steps, 'action_set_script');
 		},
 	},
 	action_set_entity_string: {
 		captures: ['entity', 'field', 'value'],
-		handle: (v, f, node): Action => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): Action => {
 			const entity = coerceToString(debug, v.entity, 'entity');
 			const value = coerceToString(debug, v.value, 'value');
 			if (v.field === 'name') {
@@ -805,8 +794,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_op_equals: {
 		captures: ['lhs', 'operator', 'rhs'],
-		handle: (v, f, node): AnyNode => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug): AnyNode => {
 			const op = coerceToString(debug, v.operator, 'op');
 
 			// LHS is a string, meaning we're doing a thing to an integer variable
@@ -918,8 +906,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_plus_minus_equals_ables: {
 		captures: ['entity', 'operator', 'value'],
-		handle: (v, f, node) => {
-			const debug = MathlangLocation.quick(f, node);
+		handle: (v, debug) => {
 			const entity = coerceToString(debug, v.entity, 'entity');
 			const op = coerceToString(debug, v.operator, 'operator');
 			if (op !== '-=' && op !== '+=') {

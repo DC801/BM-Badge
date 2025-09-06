@@ -1,6 +1,5 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import { ansiTags as ansi } from './parser-utilities.ts';
-import { FileState } from './parser-file.ts';
 import {
 	Dialog,
 	SerialDialog,
@@ -150,10 +149,10 @@ const ansiWrapBodge = (arr: string[]): string[] => {
 };
 
 export const buildSerialDialogFromInfo = (
-	f: FileState,
-	node: TreeSitterNode,
+	debug: MathlangLocation,
 	info: SerialDialogInfo,
 ): SerialDialog => {
+	const f = debug.f;
 	const serialDialogSettings: SerialDialogSettings = {
 		wrap: SERIAL_DIALOG_WRAP,
 		...(f.settings.serial || {}), // global settings
@@ -175,9 +174,9 @@ export const buildSerialDialogFromInfo = (
 			}
 			option.label = wrapText(option.label, serialDialogSettings.wrap || SERIAL_DIALOG_WRAP);
 			if (option.optionType !== firstOptionType) {
-				const node = option.debug.node.firstChild;
-				if (!node) throw new Error('serial dialog had no first option node');
-				warnNodes.push(MathlangLocation.quick(f, node));
+				const firstChildNode = option.debug.node.firstChild;
+				if (!firstChildNode) throw new Error('serial dialog had no first option node');
+				warnNodes.push(debug.using(firstChildNode));
 			}
 		});
 		if (warnNodes.length > 0) {
@@ -190,7 +189,7 @@ export const buildSerialDialogFromInfo = (
 			);
 		}
 	}
-	return new SerialDialog(MathlangLocation.quick(f, node), serialDialog);
+	return new SerialDialog(debug, serialDialog);
 };
 
 const longerAlignments: Record<string, string> = {
@@ -201,12 +200,11 @@ const longerAlignments: Record<string, string> = {
 };
 
 export const buildDialogFromInfo = (
-	f: FileState,
-	node: TreeSitterNode,
+	debug: MathlangLocation,
 	info: DialogInfo,
 	messageNodes: (TreeSitterNode | null)[],
 ): Dialog => {
-	const debug = MathlangLocation.quick(f, node);
+	const f = debug.f;
 	const ident = info.identifier;
 	let found = false;
 	let specificSettings: DialogSettings = {};

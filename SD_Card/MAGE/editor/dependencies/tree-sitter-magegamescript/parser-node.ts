@@ -1,5 +1,4 @@
-import { Node as TreeSitterNode } from 'web-tree-sitter';
-import { FileState, type FunctionStackEntry } from './parser-file.ts';
+import { type FunctionStackEntry } from './parser-file.ts';
 import {
 	ConditionalBlock,
 	reportMissingChildNodes,
@@ -91,8 +90,8 @@ import {
 // it is an indication that the native tree-sitter methods were used instead of
 // the Mathlang functions that also do this other work. Fix it!
 
-export const handleNode = (f: FileState, node: TreeSitterNode): AnyNode[] => {
-	const debug = MathlangLocation.quick(f, node);
+export const handleNode = (debug: MathlangLocation): AnyNode[] => {
+	const node = debug.node;
 	debugLog(`handleNode: ${node.grammarType}`);
 
 	reportMissingChildNodes(debug);
@@ -100,22 +99,21 @@ export const handleNode = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 
 	// Actions are their own beast and are handled elsewhere
 	if (node.grammarType.startsWith('action_')) {
-		return handleAction(f, node);
+		return handleAction(debug);
 	}
 
 	const nodeFn = nodeFns[node.grammarType];
-	if (nodeFn) return nodeFn(f, node);
+	if (nodeFn) return nodeFn(debug);
 	throw new Error('no parser-node function for ' + node.grammarType);
 };
 
 const includeRecursion: string[] = [];
 
-const nodeFns = {
+const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 	line_comment: () => [],
 	block_comment: () => [],
 	semicolon: () => [],
-	ERROR: (f: FileState, node: TreeSitterNode): [] => {
-		const debug = MathlangLocation.quick(f, node);
+	ERROR: (debug): [] => {
 		// I guess feel free to add more of these as they come up
 		// This might be the only place some of them can be detected
 		// (This is only for nodes so malformed that tree-sitter can't tell what they are)
@@ -133,10 +131,9 @@ const nodeFns = {
 		}
 		return [];
 	},
-	fn: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	fn: (debug) => {
 		const name = stringCaptureForField(debug, 'name');
-		if (f.functions[name]) {
+		if (debug.f.functions[name]) {
 			debug.quickError('fn already defined', `fn ${name} already defined`);
 			return [];
 		}
@@ -165,14 +162,15 @@ const nodeFns = {
 		// the body node remains unprocessed so the capture system can switch out args
 		// (and use correct variable temporaries) at the time of the "call"
 		const bodyNode = mandatoryChildForField(debug, 'body');
-		f.functions[name] = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
+		const definition = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
+		debug.f.functions[name] = definition;
+		return [];
 	},
-	fn_call: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	fn_call: (debug) => {
 		const name = stringCaptureForField(debug, 'name');
-		const definition = f.functions[name];
+		const definition = debug.f.functions[name];
 		if (!definition) {
-			const nameNode = optionalChildForField(debug, 'name') || node;
+			const nameNode = optionalChildForField(debug, 'name') || debug.node;
 			debug.using(nameNode).quickError('undefined fn', `function ${name} is undefined`);
 			return [];
 		}
@@ -195,10 +193,9 @@ const nodeFns = {
 		// todo: should expressions be allowed?
 		const callParams = callParamNodes.map((v) => {
 			let capture = handleCapture(debug.using(v));
-			const innerDebug = MathlangLocation.quick(f, v);
 			if (!isMGSPrimitive(capture)) {
 				debug.using(v).quickError('invalid fn arg', 'function arg not an MGS primitive');
-				capture = coerceToString(innerDebug, capture, 'fucntion param');
+				capture = coerceToString(debug.using(v), capture, 'fucntion param');
 			}
 			return capture;
 		});
@@ -217,33 +214,30 @@ const nodeFns = {
 		});
 
 		// add const registry to top of fn stack
-		const stack: FunctionStackEntry[] = f.currFunction;
+		const stack: FunctionStackEntry[] = debug.f.currFunction;
 		stack.unshift(localConstants);
 
 		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
-		let body = handleNamedChildren(debug.using(definition.bodyNode));
+		let steps = handleNamedChildren(debug.using(definition.bodyNode));
 
 		// bake it like a script body
-		body = flattenAndDoAutoReturn(f, node, body);
-		const sequence = MathlangSequence.quick(debug, body, 'fn_call');
+		steps = flattenAndDoAutoReturn(debug, steps);
+		const sequence = MathlangSequence.quick(debug, steps, 'fn_call');
 
 		// we're done with the args for this call; remove them from the fn stack
 		stack.shift();
-		return sequence;
+		return [sequence];
 	},
-	script_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	script_block: (debug) => {
 		return handleNamedChildren(debug);
 	},
-	script_definition: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	script_definition: (debug) => {
 		const scriptName = stringCaptureForField(debug, 'script_name');
 		const scriptBlockNode = mandatoryChildForField(debug, 'script_block');
 		const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
 		return [definition];
 	},
-	constant_assignment: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	constant_assignment: (debug) => {
 		const label = textForField(debug, 'label');
 		const value = captureForField(debug, 'value');
 		if (!isMGSPrimitive(value)) {
@@ -256,14 +250,14 @@ const nodeFns = {
 				);
 			return [];
 		}
-		if (f.constants[label]) {
+		if (debug.f.constants[label]) {
 			debug.quickError('constant already defined', `cannot redefine constant ${label}`);
 		}
-		f.constants[label] = { debug, value };
+		debug.f.constants[label] = { debug, value };
 		return [ConstantDefinition.quick(debug, label, value)];
 	},
-	include_macro: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	include_macro: (debug) => {
+		const f = debug.f;
 
 		// die if recursion detected
 		if (includeRecursion.includes(f.fileName)) {
@@ -347,14 +341,13 @@ const nodeFns = {
 		includeRecursion.pop();
 		return [IncludeNode.quick(debug, fileName)];
 	},
-	rand_macro: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	rand_macro: (debug) => {
 		const horizontal: AnyNode[][] = [];
 
 		// count items per spread
 		let spreadCount = -Infinity;
 		namedChildren(debug).forEach((innerNode) => {
-			const actions: AnyNode[] = handleNode(f, innerNode);
+			const actions: AnyNode[] = handleNode(debug.using(innerNode));
 			const len = actions.length;
 			if (len === 0) return; // empties are ignored
 			horizontal.push(actions);
@@ -385,17 +378,17 @@ const nodeFns = {
 		const temp = newTemporary();
 		const iffs: ConditionalBlock[] = vertical.map((body, i) => {
 			const condition = CheckVariable.quick(debug, temp, i, '==');
-			const conditionNode = node.firstChild || node;
+			const conditionNode = debug.node.firstChild || debug.node;
 			const block: ConditionalBlock = {
 				debug,
 				condition,
 				conditionNode,
 				body,
-				bodyNode: node,
+				bodyNode: debug.node,
 			};
 			return block;
 		});
-		const sequence = ifChainMaker(f, node, iffs, [], 'rand_macro');
+		const sequence = ifChainMaker(debug, iffs, [], 'rand_macro');
 
 		// put the RNG roll at the top
 		sequence.steps.unshift(MUTATE_VARIABLE.change(debug, temp, vertical.length, '?'));
@@ -404,32 +397,29 @@ const nodeFns = {
 		dropTemporary();
 		return [sequence];
 	},
-	label_definition: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	label_definition: (debug) => {
 		const label = textForField(debug, 'label');
 		return [LabelDefinition.quick(debug, label)];
 	},
-	add_dialog_settings: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	add_dialog_settings: (debug) => {
 		const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(debug));
 
 		// Make a node "receipt"
 		return [AddDialogSettings.quick(debug, targets)];
 	},
-	add_dialog_settings_target: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	add_dialog_settings_target: (debug) => {
 		const type = textForField(debug, 'type');
 		let settingsTarget: DialogSettings = {}; // we don't know which bucket to use yet, but here's where it's going
 		let target: string | undefined;
 
 		// figure out which settings target ("bucket") it is
 		if (type === 'default') {
-			settingsTarget = f.settings.default;
+			settingsTarget = debug.f.settings.default;
 		} else if (type === 'label' || type === 'entity') {
 			target = stringCaptureForField(debug, 'target');
 			// make a bucket if there isn't one for that entity/label yet
-			f.settings[type][target] = f.settings[type][target] || {};
-			settingsTarget = f.settings[type][target];
+			debug.f.settings[type][target] = debug.f.settings[type][target] || {};
+			settingsTarget = debug.f.settings[type][target];
 		} else {
 			throw new Error(`unknown target type: ${type}`);
 		}
@@ -447,18 +437,16 @@ const nodeFns = {
 		const ret = AddDialogSettingsTarget.quick(debug, type, parameters, target);
 		return [ret];
 	},
-	add_serial_dialog_settings: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	add_serial_dialog_settings: (debug) => {
 		const rawParameters = capturesForField(debug, 'serial_dialog_parameter');
 		const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
 		parameters.forEach((param) => {
-			f.settings.serial[param.property] = param.value;
+			debug.f.settings.serial[param.property] = param.value;
 		});
 		// Make a node "receipt"
 		return [AddSerialDialogSettings.quick(debug, parameters)];
 	},
-	serial_dialog_option: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	serial_dialog_option: (debug) => {
 		// Option type
 		const optionChar = textForField(debug, 'option_type');
 		let optionType: SerialOptionType = 'options';
@@ -475,8 +463,7 @@ const nodeFns = {
 		steps.push(option);
 		return steps;
 	},
-	dialog_option: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	dialog_option: (debug) => {
 		// Label
 		const label = stringCaptureForField(debug, 'label');
 		// Script
@@ -488,25 +475,22 @@ const nodeFns = {
 		steps.push(ret);
 		return steps;
 	},
-	serial_dialog_definition: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	serial_dialog_definition: (debug) => {
 		const serialDialogNode = mandatoryChildForField(debug, 'serial_dialog');
 		const dialogName = stringCaptureForField(debug, 'serial_dialog_name');
-		const serialDialogs = handleNode(f, serialDialogNode);
+		const serialDialogs = handleNode(debug.using(serialDialogNode));
 		if (serialDialogs.length !== 1) {
 			throw new Error('serial dialogs must have only 1 serial dialog');
 		}
 		const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
 		return [SerialDialogDefinition.quick(debug, dialogName, serialDialog)];
 	},
-	dialog_definition: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	dialog_definition: (debug) => {
 		const name = stringCaptureForField(debug, 'dialog_name');
 		const dialogs = Dialog.breakIfNotAll(handleChildrenForField(debug, 'dialog'));
 		return [DialogDefinition.quick(debug, name, dialogs)];
 	},
-	serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
+	serial_dialog: (debug): AnyNode[] => {
 		// Settings
 		const settings = {};
 		const params = SerialDialogParameter.breakIfNotAll(
@@ -529,13 +513,12 @@ const nodeFns = {
 			messages,
 			options: SerialDialogOption.breakIfNotAll(options),
 		};
-		const serialDialog = buildSerialDialogFromInfo(f, node, info);
+		const serialDialog = buildSerialDialogFromInfo(debug, info);
 		// DONE
 		steps.push(serialDialog);
 		return steps;
 	},
-	dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
+	dialog: (debug): AnyNode[] => {
 		// Identifier
 		const identifier = DialogIdentifier.breakIfNot(captureForField(debug, 'dialog_identifier'));
 		// Settings
@@ -559,17 +542,14 @@ const nodeFns = {
 			messages,
 			options,
 		};
-		const dialogs = buildDialogFromInfo(f, node, info, messageN);
-		dialogs.debug = MathlangLocation.quick(f, node);
+		const dialogs = buildDialogFromInfo(debug, info, messageN);
 		// DONE
 		steps.push(dialogs);
 		return steps;
 	},
-	json_object: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
+	json_object: (debug): AnyNode[] => {
 		try {
-			const debug = MathlangLocation.quick(f, node);
-			const parsed = JSON.parse(node.text);
+			const parsed = JSON.parse(debug.node.text);
 			let parsedAction = Action.fromArgs(parsed);
 			if (parsedAction instanceof COPY_SCRIPT) {
 				parsedAction = CopyMacro.quick(
@@ -584,8 +564,7 @@ const nodeFns = {
 		}
 		return [];
 	},
-	json_literal: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
+	json_literal: (debug): AnyNode[] => {
 		const jsonNode = namedChildren(debug)[0];
 		if (!jsonNode) throw new Error('could not find JSON node');
 		if (jsonNode.grammarType !== 'json_array') {
@@ -598,13 +577,11 @@ const nodeFns = {
 		const handledChildren: AnyNode[] = handleNamedChildren(debug.using(jsonNode));
 		return [JSONLiteral.quick(debug, handledChildren)];
 	},
-	copy_macro: (f: FileState, node: TreeSitterNode): [CopyMacro] => {
-		const debug = MathlangLocation.quick(f, node);
+	copy_macro: (debug): [CopyMacro] => {
 		const script = stringCaptureForField(debug, 'script');
 		return [CopyMacro.quick(debug, script)];
 	},
-	debug_macro: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
+	debug_macro: (debug): AnyNode[] => {
 		const steps: AnyNode[] = [];
 		let dialogName = '';
 		const serialDialogNode = optionalChildForField(debug, 'serial_dialog');
@@ -612,7 +589,7 @@ const nodeFns = {
 			// might just be the name of a serial dialog, and not a serial-dialog-in-place
 			dialogName = stringCaptureForField(debug, 'serial_dialog_name');
 		} else {
-			const serialDialogs = handleNode(f, serialDialogNode);
+			const serialDialogs = handleNode(debug.using(serialDialogNode));
 			const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
 			dialogName = autoIdentifierName(debug);
 			steps.push(
@@ -624,23 +601,20 @@ const nodeFns = {
 		}
 		const condition = CheckDebugMode.quick(debug, true);
 		const ifTrue = SHOW_SERIAL_DIALOG.quick(dialogName);
-		const action = simpleBranchMaker(f, node, condition, [ifTrue], []);
+		const action = simpleBranchMaker(debug, condition, [ifTrue], []);
 		steps.push(action);
 		return steps;
 	},
-	looping_block: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
-		const n = f.p.advanceGotoSuffix();
+	looping_block: (debug): AnyNode[] => {
+		const n = debug.f.p.advanceGotoSuffix();
 		const steps = handleNamedChildren(debug);
 		const continueL = `condition #${n}`;
 		const breakL = `break #${n}`;
 		return doAutoBreakContinue(steps, continueL, breakL);
 	},
-	while_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
-
-		const n = f.p.advanceGotoSuffix();
-		const block = new ConditionalBlock(f, node);
+	while_block: (debug) => {
+		const n = debug.f.p.advanceGotoSuffix();
+		const block = new ConditionalBlock(debug);
 		const continueL = `while continue #${n}`;
 		const bodyL = `while body #${n}`;
 		const breakL = `while break #${n}`;
@@ -657,11 +631,9 @@ const nodeFns = {
 		];
 		return [MathlangSequence.quick(debug, steps, 'parser-node: while_block')];
 	},
-	do_while_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
-
-		const n = f.p.advanceGotoSuffix();
-		const block = new ConditionalBlock(f, node);
+	do_while_block: (debug) => {
+		const n = debug.f.p.advanceGotoSuffix();
+		const block = new ConditionalBlock(debug);
 		const continueL = `do while continue #${n}`;
 		const bodyL = `do while body #${n}`;
 		const breakL = `do while break #${n}`;
@@ -676,10 +648,8 @@ const nodeFns = {
 		];
 		return [MathlangSequence.quick(debug, steps, 'parser-node: do_while_block')];
 	},
-	for_block: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
-
-		const n = f.p.advanceGotoSuffix();
+	for_block: (debug) => {
+		const n = debug.f.p.advanceGotoSuffix();
 		const conditionL = `for condition #${n}`;
 		const bodyL = `for body #${n}`;
 		const breakL = `for break #${n}`;
@@ -688,33 +658,31 @@ const nodeFns = {
 		const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
 		const bodyN = mandatoryChildForField(debug, 'body');
 		const incrementerN = mandatoryChildForField(debug, 'incrementer');
-		const initializer = mandatoryChildForField(debug, 'initializer');
-		const rawBody = handleNode(f, bodyN);
+		const initializerN = mandatoryChildForField(debug, 'initializer');
+		const rawBody = handleNode(debug.using(bodyN));
 		const body = doAutoBreakContinue(rawBody, continueL, breakL);
 
 		const steps = [
-			...handleNode(f, initializer),
+			...handleNode(debug.using(initializerN)),
 			LabelDefinition.quick(debug, conditionL),
 			...condition.toSteps(bodyL),
 			GotoLabel.quick(debug, breakL),
 			LabelDefinition.quick(debug, bodyL),
 			...body,
 			LabelDefinition.quick(debug, continueL),
-			...handleNode(f, incrementerN),
+			...handleNode(debug.using(incrementerN)),
 			GotoLabel.quick(debug.using(conditionN), conditionL),
 			LabelDefinition.quick(debug, breakL),
 		];
 		return [MathlangSequence.quick(debug, steps, 'parser-node: for_block')];
 	},
-	if_single: (f: FileState, node: TreeSitterNode): AnyNode[] => {
-		const debug = MathlangLocation.quick(f, node);
+	if_single: (debug): AnyNode[] => {
 		// For parsing the bytecode output; not really meant to be seen in the wild
 		// e.g. `if varName then goto label LABELNAME;`
 		// vs `if (varName) { /*do stuff at the label destination*/ }`
 		const type = optionalTextForField(debug, 'type');
 		let condition = captureForField(debug, 'condition');
 		if (typeof condition === 'string') {
-			const debug = MathlangLocation.quick(f, node);
 			condition = CheckSaveFlag.quick(debug, condition, true);
 		}
 
@@ -751,11 +719,10 @@ const nodeFns = {
 		// If you're here, it broke
 		throw new Error('invalid if_single');
 	},
-	if_chain: (f: FileState, node: TreeSitterNode) => {
-		const debug = MathlangLocation.quick(f, node);
+	if_chain: (debug) => {
 		const ifNodes = childrenForField(debug, 'if_block');
 		// todo: this could probably be improved somehow
-		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v));
+		const iffs = ifNodes.map((v) => new ConditionalBlock(debug.using(v)));
 		const elseNode = optionalChildForField(debug, 'else_block');
 		let elseBody: AnyNode[] = [];
 		if (elseNode) {
@@ -764,7 +731,7 @@ const nodeFns = {
 				elseBody = handleNamedChildren(debug.using(lastChild));
 			}
 		}
-		return [ifChainMaker(f, node, iffs, elseBody, 'if_chain')];
+		return [ifChainMaker(debug, iffs, elseBody, 'if_chain')];
 	},
 };
 

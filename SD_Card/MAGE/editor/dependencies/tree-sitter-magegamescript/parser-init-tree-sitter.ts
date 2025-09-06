@@ -13,7 +13,11 @@ export default async function (): Promise<Parser> {
 	try {
 		parser.setLanguage(Lang);
 	} catch {
-		throw new Error('failed to set tree-sitter language (try again?)');
+		try {
+			parser.setLanguage(Lang);
+		} catch {
+			throw new Error('failed to set tree-sitter language (try again?)');
+		}
 	}
 	return parser;
 }

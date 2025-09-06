@@ -147,11 +147,11 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 	EQUALITY: (debug): string => {
 		const op = debug.node.text;
 		if (op === '===') {
-			debug.f.quickWarning(debug.node, 'invalid operator', `use '==', not '==='`);
+			debug.quickWarning('invalid operator', `use '==', not '==='`);
 			return '==';
 		}
 		if (op === '!==') {
-			debug.f.quickWarning(debug.node, 'invalid operator', `use '!=', not '!=='`);
+			debug.quickWarning('invalid operator', `use '!=', not '!=='`);
 			return '!=';
 		}
 		return op;
@@ -159,11 +159,11 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 	COMPARISON: (debug): string => {
 		const op = debug.node.text;
 		if (op === '===') {
-			debug.f.quickWarning(debug.node, 'invalid operator', `use '==', not '==='`);
+			debug.quickWarning('invalid operator', `use '==', not '==='`);
 			return '==';
 		}
 		if (op === '!==') {
-			debug.f.quickWarning(debug.node, 'invalid operator', `use '!=', not '!=='`);
+			debug.quickWarning('invalid operator', `use '!=', not '!=='`);
 			return '!=';
 		}
 		return op;
@@ -316,15 +316,10 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		// TODO: unbake this
 		const copyNode = optionalChildForField(debug, 'copy_macro');
 		if (copyNode) {
-			const handled = handleNode(debug.f, copyNode)[0];
+			const handled = handleNode(debug.using(copyNode))[0];
 			if (!(handled instanceof AnyNode)) throw new Error('no');
 			const scriptName = stringCaptureForField(debug.using(copyNode), 'script');
-			return FnCallReturnValue.quick(
-				debug,
-				scriptName,
-				'script',
-				flattenNodes(debug.f, [handled]),
-			);
+			return FnCallReturnValue.quick(debug, scriptName, 'script', flattenNodes([handled]));
 		}
 		const entity = stringCaptureForField(debug, 'entity_identifier');
 		const field = textForField(debug, 'property');
@@ -514,7 +509,7 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		}
 		dropTemporary();
 		dropTemporary();
-		return BoolComparisonSequence.orSingle(debug.f, debug.node, steps, 'bool_comparison');
+		return BoolComparisonSequence.orSingle(debug, steps, 'bool_comparison');
 	},
 	int_setable: (debug) => {
 		const entity = stringCaptureForField(debug, 'entity_identifier');
@@ -538,7 +533,7 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		let min = numberCaptureForField(debug, 'min');
 		let max = numberCaptureForField(debug, 'max');
 		if (min > max) {
-			debug.f.quickWarning(debug.node, 'misordered params', 'min must be less than max');
+			debug.quickWarning('misordered params', 'min must be less than max');
 			const switcheroo = min;
 			min = max;
 			max = switcheroo;
@@ -665,13 +660,13 @@ export const optionalLastChild = (debug: MathlangLocation): TreeSitterNode | nul
 // Get AND process 0+ children with any name at all -> AnyNode[]
 export const handleNamedChildren = (debug: MathlangLocation): AnyNode[] => {
 	const children = namedChildren(debug);
-	return children.map((v) => handleNode(debug.f, v)).flat();
+	return children.map((v) => handleNode(debug.using(v))).flat();
 };
 
 // Get AND process last child or die trying -> AnyNode
 export const handleLastChild = (debug: MathlangLocation): AnyNode[] => {
 	const lastChildNode = mandatoryLastChild(debug);
-	return handleNode(debug.f, lastChildNode);
+	return handleNode(debug.using(lastChildNode));
 };
 
 // More specific:
@@ -679,7 +674,7 @@ export const handleLastChild = (debug: MathlangLocation): AnyNode[] => {
 // Get AND process (into nodes) 0+ children by name -> AnyNode[]
 export const handleChildrenForField = (debug: MathlangLocation, fieldName: string): AnyNode[] => {
 	const children = childrenForField(debug, fieldName);
-	return children.map((v) => handleNode(debug.f, v)).flat();
+	return children.map((v) => handleNode(debug.using(v))).flat();
 };
 
 // Get AND process (into captures) 1 string child by name or die trying -> string

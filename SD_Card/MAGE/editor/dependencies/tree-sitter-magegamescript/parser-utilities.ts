@@ -18,7 +18,6 @@ import {
 	BreakStatement,
 	FnCall,
 } from './parser-types.ts';
-import { FileState } from './parser-file.ts';
 import { type FileMap } from './parser-project.ts';
 import {
 	handleCapture,
@@ -143,7 +142,7 @@ export const inverseOpMap: Record<string, string> = {
 	'&&': '||',
 	'||': '&&',
 };
-export const reportMissingChildNodes = (debug: MathlangLocation): (TreeSitterNode | null)[] => {
+export const reportMissingChildNodes = (debug: MathlangLocation): TreeSitterNode[] => {
 	const missingNodes = debug.node.children
 		.filter((v) => v !== null)
 		.filter((child) => child?.isMissing);
@@ -154,7 +153,7 @@ export const reportMissingChildNodes = (debug: MathlangLocation): (TreeSitterNod
 	});
 	return missingNodes;
 };
-export const reportErrorNodes = (debug: MathlangLocation): (TreeSitterNode | null)[] => {
+export const reportErrorNodes = (debug: MathlangLocation): TreeSitterNode[] => {
 	const errorNodes = debug.node.children
 		.filter((v) => v !== null)
 		.filter((child) => child.type === 'ERROR');
@@ -201,7 +200,7 @@ export const autoIdentifierName = (debug: MathlangLocation): string => {
 
 // ------------------------ SEQUENCES ------------------------ //
 
-export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => {
+export const flattenNodes = (rawActions: AnyNode[]): AnyNode[] => {
 	const actions: AnyNode[] = [];
 	rawActions.forEach((raw) => {
 		if (raw instanceof FnCall) {
@@ -224,16 +223,11 @@ export const flattenNodes = (f: FileState, rawActions: AnyNode[]): AnyNode[] => 
 	return actions;
 };
 
-export const flattenAndDoAutoReturn = (
-	f: FileState,
-	node: TreeSitterNode,
-	origSteps: AnyNode[],
-) => {
-	const debug = MathlangLocation.quick(f, node);
+export const flattenAndDoAutoReturn = (debug: MathlangLocation, origSteps: AnyNode[]) => {
 	// flatten/incorporate any sequences
-	const steps = flattenNodes(f, origSteps);
+	const steps = flattenNodes(origSteps);
 	// add auto return label at the end
-	const label = 'end of script ' + f.p.advanceGotoSuffix();
+	const label = 'end of script ' + debug.f.p.advanceGotoSuffix();
 	const fakeReturnNode = mandatoryLastChild(debug);
 	const autoReturnLabelDefinition = LabelDefinition.quick(debug.using(fakeReturnNode), label);
 	steps.push(autoReturnLabelDefinition);
@@ -259,14 +253,12 @@ export const doAutoBreakContinue = (steps: AnyNode[], continueL: string, breakL:
 // ------------------------ CONDITIONS ------------------------ //
 
 export const simpleBranchMaker = (
-	f: FileState,
-	node: TreeSitterNode,
+	debug: MathlangLocation,
 	condition: BoolExpression,
 	trueBlock: AnyNode[],
 	falseBlock: AnyNode[],
 ): MathlangSequence => {
-	const debug = MathlangLocation.quick(f, node);
-	const n = f.p.advanceGotoSuffix();
+	const n = debug.f.p.advanceGotoSuffix();
 	const ifLabel = `if true #${n}`;
 	const rendezvousLabel = `rendezvous #${n}`;
 	const steps = [
@@ -287,8 +279,7 @@ export class ConditionalBlock {
 	bodyNode: TreeSitterNode;
 	debug: MathlangLocation;
 	// TODO: make constructor build from processed parts, and move this to its own method that processes it from the base node
-	constructor(f: FileState, node: TreeSitterNode) {
-		const debug = MathlangLocation.quick(f, node);
+	constructor(debug: MathlangLocation) {
 		this.debug = debug;
 		this.conditionNode = mandatoryChildForField(debug, 'condition');
 		// TODO this should not be handled this way! make uniform
@@ -302,19 +293,17 @@ export class ConditionalBlock {
 }
 
 export const ifChainMaker = (
-	f: FileState,
-	node: TreeSitterNode,
+	debug: MathlangLocation,
 	iffs: ConditionalBlock[],
 	elseBody: AnyNode[],
 	label: string,
 ): MathlangSequence => {
-	const debug = MathlangLocation.quick(f, node);
-	const rendezvousL: string = label + ` rendezvous #${f.p.advanceGotoSuffix()}`;
+	const rendezvousL: string = label + ` rendezvous #${debug.f.p.advanceGotoSuffix()}`;
 	const steps: AnyNode[] = [];
 	const bottomSteps: AnyNode[] = [];
 
 	iffs.forEach((iff) => {
-		const ifL = `if true #${f.p.advanceGotoSuffix()}`;
+		const ifL = `if true #${debug.f.p.advanceGotoSuffix()}`;
 		// add top half
 		steps.push(...iff.condition.toSteps(ifL));
 		// add bottom half
@@ -327,7 +316,7 @@ export const ifChainMaker = (
 	});
 
 	steps.push(...elseBody);
-	steps.push(GotoLabel.quick(MathlangLocation.quick(f, node), rendezvousL));
+	steps.push(GotoLabel.quick(debug, rendezvousL));
 	const combined = steps.concat(bottomSteps);
 	combined.push(LabelDefinition.quick(debug, rendezvousL));
 	return MathlangSequence.quick(debug, combined, `parser-node: ${label}`);

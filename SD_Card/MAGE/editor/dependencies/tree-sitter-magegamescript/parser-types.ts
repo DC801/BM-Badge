@@ -88,11 +88,9 @@ export class MathlangLocation {
 	clone() {
 		return new MathlangLocation(this.args);
 	}
-	//TODO: instead of passing `f, node` all the time, just pass one of these and update the node when needed, like this:
 	using(newNode: TreeSitterNode) {
 		return MathlangLocation.quick(this.f, newNode);
 	}
-	// TODO: transition all f.quickError() to these:
 	quickError(type: MathlangMessageType, message: string, footer?: string) {
 		this.f.quickError(this.node, type, message, footer);
 	}
@@ -760,9 +758,8 @@ export class ScriptDefinition extends MathlangNode {
 		scriptBlockNode: TreeSitterNode,
 	) {
 		// TODO figure out where this logic actually goes
-		const f = debug.f;
-		const rawActions = handleNode(f, scriptBlockNode);
-		const actions = flattenAndDoAutoReturn(f, scriptBlockNode, rawActions);
+		const rawActions = handleNode(debug.using(scriptBlockNode));
+		const actions = flattenAndDoAutoReturn(debug.using(scriptBlockNode), rawActions);
 		return ScriptDefinition.quick(debug, scriptName, actions);
 	}
 }
@@ -887,7 +884,7 @@ export class MathlangSequence extends MathlangNode {
 			const mathlangComment = CommentNode.quick(debug, comment);
 			this.steps.unshift(mathlangComment);
 		}
-		this.steps = flattenNodes(this.debug.f, this.steps);
+		this.steps = flattenNodes(this.steps);
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -903,17 +900,11 @@ export class MathlangSequence extends MathlangNode {
 	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
 		return new MathlangSequence(debug, { steps, type });
 	}
-	static orSingle = (
-		f: FileState,
-		node: TreeSitterNode,
-		steps: AnyNode[],
-		type: string,
-	): AnyNode => {
+	static orSingle = (debug: MathlangLocation, steps: AnyNode[], type: string): AnyNode => {
 		if (steps.length === 0) {
 			throw new Error('empty MathlangSequence steps for ' + type);
 		}
 		if (steps.length === 1) return steps[0];
-		const debug = MathlangLocation.quick(f, node);
 		return MathlangSequence.quick(debug, steps, type);
 	};
 }
@@ -1183,11 +1174,12 @@ export class EntityIntField extends IntGetable {
 			return CheckEntityCurrentFrame.quick(debug, entity, NaN);
 		} else if (field === 'strafe') {
 			const propertyNode = mandatoryChildForField(debug, 'property');
-			debug.f.quickError(
-				propertyNode,
-				'unsupported entity field',
-				`this property is not supported in boolean expressions`,
-			);
+			debug
+				.using(propertyNode)
+				.quickError(
+					'unsupported entity field',
+					`this property is not supported in boolean expressions`,
+				);
 		}
 		throw new Error('could not format number_checkable_equality');
 	}
@@ -1269,12 +1261,13 @@ export class FnCall extends IntGetable {
 		return new FnCall(debug, { identifier, type, rawBody });
 	}
 	bake(): FnCallReturnValue {
-		const sequence = MathlangSequence.breakIfNot(handleNode(this.debug.f, this.rawBody));
+		const handled = handleNode(this.debug.using(this.rawBody))[0];
+		const sequence = MathlangSequence.breakIfNot(handled);
 		return FnCallReturnValue.quick(
 			this.debug,
 			this.identifier,
 			'fn',
-			flattenNodes(this.debug.f, sequence.steps),
+			flattenNodes(sequence.steps),
 		);
 	}
 	toSteps(destinationVar: string) {
@@ -1359,18 +1352,16 @@ export class BoolExpression extends MathlangNode {
 		return this.assignToSetBool(lhsAction);
 	}
 	assignToSetBool(setBool: ACTION.ActionSetBool): AnyNode {
-		const f = this.debug.f;
-		const node = this.debug.node;
 		// player glitched = self glitched;
 		// ->
 		// if (self glitched) { player glitched = true; } else { player glitched = false; }
 		const cloneIfFalse = setBool.clone();
 		cloneIfFalse.invert();
 		if (this instanceof ACTION.ActionBoolGetable || this instanceof BoolComparison) {
-			return simpleBranchMaker(f, node, this, [setBool], [cloneIfFalse]);
+			return simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
 		}
 
-		return simpleBranchMaker(f, this.debug?.node || node, this, [setBool], [cloneIfFalse]);
+		return simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
 	}
 }
 
@@ -1404,17 +1395,11 @@ export class BoolComparisonSequence extends BoolExpression {
 	static quick(debug: MathlangLocation, steps: AnyNode[], type?: string) {
 		return new BoolComparisonSequence(debug, { steps, type });
 	}
-	static orSingle = (
-		f: FileState,
-		node: TreeSitterNode,
-		steps: AnyNode[],
-		type: string,
-	): AnyNode => {
+	static orSingle = (debug: MathlangLocation, steps: AnyNode[], type: string): AnyNode => {
 		if (steps.length === 0) {
 			throw new Error('empty BoolComparisonSequence steps for ' + type);
 		}
 		if (steps.length === 1) return steps[0];
-		const debug = MathlangLocation.quick(f, node);
 		return BoolComparisonSequence.quick(debug, steps, type);
 	};
 	toSteps(ifLabel: string) {

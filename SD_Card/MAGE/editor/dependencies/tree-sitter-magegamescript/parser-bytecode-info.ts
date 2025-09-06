@@ -9,7 +9,6 @@ import {
 	CopyMacro,
 } from './parser-types.ts';
 import { type GenericObj } from './parser-actions.ts';
-import { FileState } from './parser-file.ts';
 import { inverseOpMap, realignTemp, simpleBranchMaker } from './parser-utilities.ts';
 
 const opIntoStringMap: Record<string, string> = {
@@ -652,19 +651,11 @@ export class SET_SAVE_FLAG extends ActionSetBool {
 	static toValue(save_flag: string, bool_value: boolean) {
 		return new SET_SAVE_FLAG({ save_flag, bool_value });
 	}
-	static toFlag(
-		f: FileState,
-		node: TreeSitterNode,
-		save_flag: string,
-		source: string,
-		invert?: boolean,
-	) {
+	static toFlag(debug: MathlangLocation, save_flag: string, source: string, invert?: boolean) {
 		const actionIfTrue = SET_SAVE_FLAG.toValue(save_flag, true);
 		const actionIfFalse = SET_SAVE_FLAG.toValue(save_flag, false);
-		const debug = MathlangLocation.quick(f, node);
 		return simpleBranchMaker(
-			f,
-			node,
+			debug,
 			CheckSaveFlag.quick(debug, source, !invert),
 			[actionIfTrue],
 			[actionIfFalse],

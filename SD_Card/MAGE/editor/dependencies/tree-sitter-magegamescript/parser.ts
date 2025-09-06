@@ -18,7 +18,6 @@ import {
 	CommentNode,
 	GotoLabel,
 	AnyNode,
-	MathlangLocation,
 	MathlangMessage,
 	type MathlangMessageType,
 } from './parser-types.ts';
@@ -65,12 +64,11 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		const entries = Object.entries(p.duplicates[category]);
 		entries.forEach(([name, dupes]: [string, Definition[]]) => {
 			// One error message, multiple locations
-			const locations = dupes.map((dupe: Definition) =>
-				MathlangLocation.quick(
-					dupe.debug.f,
-					dupe.debug.node.firstNamedChild || dupe.debug.node,
-				),
-			);
+			const locations = dupes.map((dupe: Definition) =>{
+				const firstNamedChildNode = dupe.debug.node.firstNamedChild;
+				if (firstNamedChildNode) return dupe.debug.using(firstNamedChildNode);
+				return dupe.debug;
+			});
 			let type: MathlangMessageType = 'duplicate script';
 			if (category === 'dialogs') type = 'duplicate dialog';
 			if (category === 'serialDialogs') type = 'duplicate serial dialog';
@@ -131,11 +129,7 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 	Object.keys(p.scripts).forEach((scriptName) => {
 		const scriptData = p.scripts[scriptName];
 		if (!scriptData.copyScriptResolved) {
-			const f = scriptData.debug.f;
-			const node = scriptData.debug.node;
-			// TODO: better sources of f, node?
-			// Now that it's all CopyMacro, each copy reference can have a source node (instead of defaulting to the file)
-			p.bakeCopyScriptSingle(f, node, scriptName);
+			p.bakeCopyScriptSingle(scriptData.debug, scriptName);
 		}
 	});
 
