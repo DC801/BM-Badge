@@ -14,6 +14,8 @@ import { type GenericObj } from './parser-actions.ts';
 import { coerceToString, mandatoryChildForField } from './parser-capture.ts';
 import { handleNode } from './parser-node.ts';
 
+// All print() methods on MathlangNodes are as if they were to be encountered in a grammatically valid MGS script
+
 export class AnyNode {
 	clone() {
 		if (this instanceof MathlangNode) return this.clone();
@@ -31,6 +33,9 @@ export class AnyNode {
 	static cloneAll(steps: AnyNode[]) {
 		return steps.map((v) => v.clone());
 	}
+	print() {
+		return `// unknown AnyNode`;
+	}
 }
 export class MathlangNode extends AnyNode {
 	args: GenericObj;
@@ -40,9 +45,6 @@ export class MathlangNode extends AnyNode {
 		this.debug = debug;
 		this.args = args;
 	}
-	print() {
-		return `// MATHLANG MYSTERY NODE`; // TODO make a terrible "if instanceof" chain to get the orig value :P
-	}
 	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('MathlangNode[] not an Array');
@@ -51,6 +53,9 @@ export class MathlangNode extends AnyNode {
 			throw new Error('not every item in array is MathlangNode');
 		}
 		return arr;
+	}
+	print() {
+		return `// unknown MathlangNode`;
 	}
 }
 
@@ -98,6 +103,7 @@ export class MathlangLocation {
 	}
 }
 
+// TODO: change this to be a map of error type and generic followup; the MathlangMessageType type can become key of that map, and the isMathlangMessageType function can just look for an entry in the map
 export type MathlangMessageType =
 	// general
 	| 'syntax error'
@@ -199,6 +205,9 @@ export class FunctionDefinition extends MathlangNode {
 	) {
 		return new FunctionDefinition(debug, { name, params, paramNodes, bodyNode });
 	}
+	print() {
+		return `// FunctionDefinition: "${this.name}"`;
+	}
 }
 
 // ------------------------------ SETTINGS ------------------------------ \\
@@ -215,6 +224,9 @@ export class AddDialogSettings extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, targets: AddDialogSettingsTarget[]) {
 		return new AddDialogSettings(debug, { targets });
+	}
+	print() {
+		return [`// AddDialogSettings:`, ...this.targets.map((v) => v.print())].join('\n');
 	}
 }
 
@@ -256,6 +268,10 @@ export class AddDialogSettingsTarget extends MathlangNode {
 		}
 		return arr;
 	}
+	print() {
+		const header = `// AddDialogSettingsTarget: ${this.type}${this.target ? ', ' + this.target : ''}`;
+		return [header, this.parameters.map((v) => v.print())].join('\n');
+	}
 }
 
 export class AddSerialDialogSettings extends MathlangNode {
@@ -276,6 +292,9 @@ export class AddSerialDialogSettings extends MathlangNode {
 			parameters,
 		});
 	}
+	print() {
+		return [`// AddSerialDialogSettings:`, this.parameters.map((v) => v.print())].join('\n');
+	}
 }
 
 // ------------------------------ CONTROL ------------------------------ \\
@@ -290,6 +309,9 @@ export class ReturnStatement extends MathlangNode {
 	static quick(debug: MathlangLocation) {
 		return new ReturnStatement(debug);
 	}
+	print() {
+		return `return;`;
+	}
 }
 export class ContinueStatement extends MathlangNode {
 	constructor(debug: MathlangLocation) {
@@ -301,6 +323,9 @@ export class ContinueStatement extends MathlangNode {
 	static quick(debug: MathlangLocation) {
 		return new ContinueStatement(debug);
 	}
+	print() {
+		return `continue;`;
+	}
 }
 export class BreakStatement extends MathlangNode {
 	constructor(debug: MathlangLocation) {
@@ -311,6 +336,9 @@ export class BreakStatement extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation) {
 		return new BreakStatement(debug);
+	}
+	print() {
+		return `break;`;
 	}
 }
 
@@ -356,7 +384,7 @@ export class DialogDefinition extends MathlangNode {
 	}
 	print() {
 		const truncated = truncate(this.dialogs[0].messages[0], 40);
-		return `// auto dialog: "${truncated}"`;
+		return `// DialogDefinition: "${truncated}"`;
 	}
 }
 export type DialogSettings = {
@@ -391,6 +419,9 @@ export class DialogParameter extends MathlangNode {
 			throw new Error('not every item in array is DialogParameter');
 		}
 		return arr;
+	}
+	print() {
+		return `// DialogParameter: ${this.property} = ${this.value}`;
 	}
 }
 
@@ -438,6 +469,13 @@ export class Dialog extends MathlangNode {
 		}
 		return arr;
 	}
+	print() {
+		return [
+			`// Dialog: entity "${this.entity || ''}", name "${this.name || ''}"`,
+			`// "${truncate(this.messages[0], 40)}"`,
+			...(this.options?.map((v) => v.print()) || []),
+		].join('\n');
+	}
 }
 
 export type DialogInfo = {
@@ -470,6 +508,9 @@ export class DialogIdentifier extends MathlangNode {
 		}
 		return v;
 	}
+	print() {
+		return `// DialogIdentifier: ${this.type} "${this.value}"`;
+	}
 }
 type DialogIdentifierType = 'label' | 'entity' | 'name';
 
@@ -499,6 +540,9 @@ export class DialogOption extends MathlangNode {
 		}
 		return arr;
 	}
+	print() {
+		return `// > "${this.label}" = script "${this.script}"`;
+	}
 }
 
 // ------------------------------ SERIAL DIALOG ------------------------------ \\
@@ -524,8 +568,7 @@ export class SerialDialogDefinition extends MathlangNode {
 		return new SerialDialogDefinition(debug, { dialogName, serialDialog });
 	}
 	print() {
-		const truncated = truncate(this.serialDialog.messages[0], 40);
-		return `// auto serial_dialog: "${truncated}"`;
+		return `// SerialDialogDefinition: "${this.dialogName}"`;
 	}
 }
 
@@ -560,6 +603,9 @@ export class SerialDialogParameter extends MathlangNode {
 		}
 		return arr;
 	}
+	print() {
+		return `// SerialDialogParameter: ${this.property} = ${this.value}`;
+	}
 }
 
 export class SerialDialog extends MathlangNode {
@@ -592,6 +638,14 @@ export class SerialDialog extends MathlangNode {
 			throw new Error('not SerialDialog');
 		}
 		return v;
+	}
+	print() {
+		const truncated = truncate(this.messages[0], 40);
+		return [
+			`// SerialDialog: "${truncated}"`,
+			...(this.options || []).map((v) => v.print()),
+			...(this.text_options || []).map((v) => v.print()),
+		].join('\n');
 	}
 }
 
@@ -634,6 +688,9 @@ export class SerialDialogOption extends MathlangNode {
 		}
 		return arr;
 	}
+	print() {
+		return `// ${this.optionType} "${this.label}" = script "${this.script}"`;
+	}
 }
 // ------------------------------ ONE-OFFS ------------------------------ \\
 
@@ -648,6 +705,9 @@ export class IncludeNode extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, value: string) {
 		return new IncludeNode(debug, { value });
+	}
+	print() {
+		return `include "${this.value}";`;
 	}
 }
 
@@ -669,6 +729,9 @@ export class ConstantDefinition extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, label: string, value: string | BoolLiteral | number) {
 		return new ConstantDefinition(debug, { label, value });
+	}
+	print() {
+		return `${this.label} = ${this.value};`;
 	}
 }
 
@@ -710,14 +773,13 @@ export class ScriptDefinition extends MathlangNode {
 	static quick(debug: MathlangLocation, scriptName: string, actions: AnyNode[]) {
 		return new ScriptDefinition(debug, { scriptName, actions });
 	}
-	static processAndMake(
-		debug: MathlangLocation,
-		scriptName: string,
-		blockNode: TreeSitterNode,
-	) {
+	static processAndMake(debug: MathlangLocation, scriptName: string, blockNode: TreeSitterNode) {
 		const rawActions = handleNode(debug.using(blockNode));
 		const actions = flattenAndDoAutoReturn(debug.using(blockNode), rawActions);
 		return ScriptDefinition.quick(debug, scriptName, actions);
+	}
+	print() {
+		return `// ScriptDefinition: "${this.scriptName}"`;
 	}
 }
 
@@ -780,6 +842,9 @@ export class JSONLiteral extends MathlangNode {
 	}
 	static quick(debug: MathlangLocation, json: AnyNode[]) {
 		return new JSONLiteral(debug, { json });
+	}
+	print() {
+		return `json${JSON.stringify(this.json, null, '  ')}`;
 	}
 }
 
@@ -854,11 +919,12 @@ export class MathlangSequence extends MathlangNode {
 		if (steps.length === 1) return steps[0];
 		return MathlangSequence.quick(debug, steps, type);
 	};
+	print() {
+		return this.steps.map((v) => v.print()).join('\n');
+	}
 }
 
 // ------------------------------ INT EXPRESSIONS ------------------------------ \\
-
-// TODO: The RNG operation should use macro syntax to be put into IntExpressions, instead of being limited to the ?= operator (probably RNG!(), though pick something that can't be confused with rand!())
 
 export class IntExpression extends MathlangNode {
 	static breakIfNot(v: unknown) {
@@ -874,6 +940,12 @@ export class IntExpression extends MathlangNode {
 	assignToVar(destinationVar: string) {
 		// USE THE CHILDREN
 		return this.assignToVar(destinationVar);
+	}
+	expPrint() {
+		return `(unknown IntExpression)`;
+	}
+	print() {
+		return `// IntExpression: ${this.expPrint()}`;
 	}
 }
 
@@ -934,6 +1006,12 @@ export class IntBinaryExpression extends IntExpression {
 		dropTemporary();
 		return MathlangSequence.quick(this.debug, steps, 'IntBinaryExpression.assignToVar');
 	}
+	expPrint() {
+		return `(${this.lhs.expPrint()} ${this.op} ${this.rhs.expPrint()})`;
+	}
+	print() {
+		return `// IntBinaryExpression: ${this.expPrint()}`;
+	}
 }
 
 export class IntUnit extends IntExpression {
@@ -979,6 +1057,12 @@ export class IntUnit extends IntExpression {
 			`from IntGetable.assignToVarWithOp`,
 		);
 	}
+	expPrint() {
+		return `(unknown IntUnit)`;
+	}
+	print() {
+		return `// IntUnit: ${this.expPrint()}`;
+	}
 }
 
 export class NumberLiteral extends IntUnit {
@@ -1005,10 +1089,19 @@ export class NumberLiteral extends IntUnit {
 	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
 		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, op);
 	}
+	expPrint() {
+		return `${this.value}`;
+	}
+	print() {
+		return `// NumberLiteral: ${this.expPrint()}`;
+	}
 }
 export class IntGetable extends IntUnit {
-	constructor(debug: MathlangLocation, args: GenericObj) {
-		super(debug, args);
+	expPrint() {
+		return `(unknown IntGetable)`;
+	}
+	print() {
+		return `// IntGetable: ${this.expPrint()}`;
 	}
 }
 export class IdentifierLiteral extends IntGetable {
@@ -1034,6 +1127,12 @@ export class IdentifierLiteral extends IntGetable {
 	}
 	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
 		return ACTION.MUTATE_VARIABLES.change(destinationVar, this.source, op);
+	}
+	expPrint() {
+		return `"${this.source}"`;
+	}
+	print() {
+		return `// IdentifierLiteral: "${this.expPrint()}"`;
 	}
 }
 export class EntityIntField extends IntGetable {
@@ -1126,6 +1225,12 @@ export class EntityIntField extends IntGetable {
 		}
 		throw new Error('could not format number_checkable_equality');
 	}
+	expPrint() {
+		return `${printEntityName(this.entity)} ${this.field}`;
+	}
+	print() {
+		return `// EntityIntField: ${this.expPrint()}`;
+	}
 }
 export class RNGSingle extends IntGetable {
 	value: number;
@@ -1144,6 +1249,12 @@ export class RNGSingle extends IntGetable {
 	}
 	assignToVar(destinationVar: string) {
 		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?');
+	}
+	expPrint() {
+		return `RNG!(${this.value})`;
+	}
+	print() {
+		return `${this.expPrint()}`;
 	}
 }
 export class RNGPair extends IntGetable {
@@ -1172,6 +1283,12 @@ export class RNGPair extends IntGetable {
 			this.toSteps(destinationVar),
 			`RNGPair.toSequence`,
 		);
+	}
+	expPrint() {
+		return `RNG!(${this.add}, =${this.value - 1})`;
+	}
+	print() {
+		return `${this.expPrint()}`;
 	}
 }
 export class FnCall extends IntGetable {
@@ -1218,10 +1335,14 @@ export class FnCall extends IntGetable {
 			`from FnCall (${this.type} "${this.identifier}")`,
 		);
 	}
+	expPrint() {
+		return `${this.identifier}()`;
+	} // todo: how to put in args?
+	print() {
+		return `${this.expPrint()}`;
+	}
 }
 export class FnCallReturnValue extends IntGetable {
-	// TODO IMPORTANT
-	// These must be baked at the moment of use so that the right temporaries are drawn from!
 	steps: AnyNode[];
 	identifier: string;
 	type: 'script' | 'fn';
@@ -1261,6 +1382,12 @@ export class FnCallReturnValue extends IntGetable {
 			`from FnCallReturnValue (${this.type} "${this.identifier}")`,
 		);
 	}
+	expPrint() {
+		return `${this.identifier}()`;
+	} // todo: how to put in args?
+	print() {
+		return `${this.expPrint()}`;
+	}
 }
 
 // ------------------------------ BOOL EXPRESSIONS ------------------------------ \\
@@ -1296,6 +1423,12 @@ export class BoolExpression extends MathlangNode {
 		cloneIfFalse.invert();
 		const steps = simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
 		return MathlangSequence.quick(this.debug, steps, 'BoolExpression.assignToSetBool');
+	}
+	expPrint() {
+		return `(unknown BoolExpression)`;
+	}
+	print() {
+		return `// BoolExpression: ${this.expPrint()}`;
 	}
 }
 
@@ -1340,9 +1473,22 @@ export class BoolComparisonSequence extends BoolExpression {
 		this.steps[this.steps.length - 1] = newFinal;
 		return this.steps;
 	}
+	expPrint() {
+		return `(complicated BoolComparisonSequence)`;
+	}
+	print() {
+		return this.steps.map((v) => v.print()).join('\n');
+	}
 }
 
-export class BoolUnit extends BoolExpression {}
+export class BoolUnit extends BoolExpression {
+	expPrint() {
+		return `(unknown BoolUnit)`;
+	}
+	print() {
+		return `// BoolUnit: ${this.expPrint()}`;
+	}
+}
 
 export class BoolLiteral extends BoolUnit {
 	value: boolean;
@@ -1370,6 +1516,12 @@ export class BoolLiteral extends BoolUnit {
 	toSteps(ifLabel: string) {
 		return this.value ? [GotoLabel.quick(this.debug, ifLabel)] : [];
 	}
+	expPrint() {
+		return `${this.value}`;
+	}
+	print() {
+		return `// BoolLiteral: ${this.expPrint()}`;
+	}
 }
 
 export class BoolComparison extends BoolExpression {
@@ -1394,6 +1546,12 @@ export class BoolComparison extends BoolExpression {
 	}
 	toSteps(label: string) {
 		return [this.toDestinationLabel(label)];
+	}
+	expPrint() {
+		return `(unknown BoolComparison)`;
+	}
+	print() {
+		return `// BoolComparison: ${this.expPrint()}`;
 	}
 }
 
@@ -1478,6 +1636,12 @@ export class BoolBinaryExpression extends BoolExpression {
 		});
 		return expandAs.toSteps(ifLabel);
 	}
+	expPrint() {
+		return `(${this.lhs.expPrint()} ${this.op} ${this.rhs.expPrint()})`;
+	}
+	print() {
+		return `// BoolBinaryExpression: ${this.expPrint()}`;
+	}
 }
 
 // ------------------------------ INTERMEDIATES ------------------------------ \\
@@ -1510,6 +1674,12 @@ export class BoolGetable extends BoolUnit {
 	toSteps(label: string) {
 		return [this.toDestinationLabel(label)];
 	}
+	expPrint() {
+		return `(unknown BoolGetable)`;
+	}
+	print() {
+		return `// BoolGetable: ${this.expPrint()}`;
+	}
 }
 export class CheckEntityGlitched extends BoolGetable {
 	action: 'CHECK_ENTITY_GLITCHED';
@@ -1528,6 +1698,14 @@ export class CheckEntityGlitched extends BoolGetable {
 			expected_bool: provided_bool === undefined ? true : provided_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} glitched`
+			: `!${printEntityName(this.entity)} glitched`;
+	}
+	print() {
+		return `// CheckEntityGlitched: ${this.expPrint()}`;
+	}
 }
 export class CheckSaveFlag extends BoolGetable {
 	action: 'CHECK_SAVE_FLAG';
@@ -1543,6 +1721,12 @@ export class CheckSaveFlag extends BoolGetable {
 	static quick(debug: MathlangLocation, save_flag: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckSaveFlag(debug, { save_flag, expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool ? `${this.save_flag}` : `!${this.save_flag}`;
+	}
+	print() {
+		return `// CheckSaveFlag: ${this.expPrint()}`;
 	}
 }
 export class CheckIfEntityIsInGeometry extends BoolGetable {
@@ -1571,6 +1755,14 @@ export class CheckIfEntityIsInGeometry extends BoolGetable {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} intersects geometry "${this.geometry}"`
+			: `!${printEntityName(this.entity)} intersects geometry "${this.geometry}"`;
+	}
+	print() {
+		return `// CheckIfEntityIsInGeometry: ${this.expPrint()}`;
+	}
 }
 export class CheckForButtonPress extends BoolGetable {
 	action: 'CHECK_FOR_BUTTON_PRESS';
@@ -1586,6 +1778,14 @@ export class CheckForButtonPress extends BoolGetable {
 	static quick(debug: MathlangLocation, button_id: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckForButtonPress(debug, { button_id, expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool
+			? `button ${this.button_id} pressed`
+			: `!button ${this.button_id} pressed`;
+	}
+	print() {
+		return `// CheckForButtonPress: ${this.expPrint()}`;
 	}
 }
 export class CheckForButtonState extends BoolGetable {
@@ -1603,6 +1803,12 @@ export class CheckForButtonState extends BoolGetable {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckForButtonState(debug, { button_id, expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool ? `button ${this.button_id} down` : `button ${this.button_id} up`;
+	}
+	print() {
+		return `// CheckForButtonState: ${this.expPrint()}`;
+	}
 }
 export class CheckDialogOpen extends BoolGetable {
 	action: 'CHECK_DIALOG_OPEN';
@@ -1616,6 +1822,12 @@ export class CheckDialogOpen extends BoolGetable {
 	static quick(debug: MathlangLocation, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckDialogOpen(debug, { expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool ? `dialog open` : `dialog closed`;
+	}
+	print() {
+		return `// CheckDialogOpen`;
 	}
 }
 export class CheckSerialDialogOpen extends BoolGetable {
@@ -1631,6 +1843,12 @@ export class CheckSerialDialogOpen extends BoolGetable {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckSerialDialogOpen(debug, { expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool ? `serial_dialog open` : `serial_dialog closed`;
+	}
+	print() {
+		return `// CheckSerialDialogOpen`;
+	}
 }
 export class CheckDebugMode extends BoolGetable {
 	action: 'CHECK_DEBUG_MODE';
@@ -1644,6 +1862,12 @@ export class CheckDebugMode extends BoolGetable {
 	static quick(debug: MathlangLocation, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckDebugMode(debug, { expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool ? `debug_mode` : `!debug_mode`;
+	}
+	print() {
+		return `// CheckDebugMode`;
 	}
 }
 
@@ -1665,6 +1889,12 @@ export class StringCheckable extends BoolComparison {
 		this.updateProp(string);
 		this.expected_bool = op === '==';
 		return this;
+	}
+	expPrint() {
+		return `(unknown StringCheckable)`;
+	}
+	print() {
+		return `// StringCheckable: ${this.expPrint()}`;
 	}
 }
 
@@ -1694,6 +1924,14 @@ export class CheckEntityName extends StringCheckable {
 			string,
 			expected_bool,
 		});
+	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} name == "${this.string}"`
+			: `${printEntityName(this.entity)} name != "${this.string}"`;
+	}
+	print() {
+		return `// CheckEntityName: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityInteractScript extends StringCheckable {
@@ -1728,6 +1966,14 @@ export class CheckEntityInteractScript extends StringCheckable {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} on_interact == "${this.expected_script}"`
+			: `${printEntityName(this.entity)} on_interact != "${this.expected_script}"`;
+	}
+	print() {
+		return `// CheckEntityInteractScript: ${this.expPrint()}`;
+	}
 }
 export class CheckEntityTickScript extends StringCheckable {
 	action: 'CHECK_ENTITY_TICK_SCRIPT';
@@ -1760,6 +2006,14 @@ export class CheckEntityTickScript extends StringCheckable {
 			expected_script,
 			expected_bool,
 		});
+	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} on_tick == "${this.expected_script}"`
+			: `${printEntityName(this.entity)} on_tick != "${this.expected_script}"`;
+	}
+	print() {
+		return `// CheckEntityTickScript: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityLookScript extends StringCheckable {
@@ -1794,6 +2048,14 @@ export class CheckEntityLookScript extends StringCheckable {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} on_look == "${this.expected_script}"`
+			: `${printEntityName(this.entity)} on_look != "${this.expected_script}"`;
+	}
+	print() {
+		return `// CheckEntityLookScript: ${this.expPrint()}`;
+	}
 }
 export class CheckEntityType extends StringCheckable {
 	action: 'CHECK_ENTITY_TYPE';
@@ -1823,6 +2085,14 @@ export class CheckEntityType extends StringCheckable {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckEntityType(debug, { entity, entity_type, expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} type == "${this.entity_type}"`
+			: `${printEntityName(this.entity)} type != "${this.entity_type}"`;
+	}
+	print() {
+		return `// CheckEntityType: ${this.expPrint()}`;
+	}
 }
 export class CheckEntityDirection extends StringCheckable {
 	action: 'CHECK_ENTITY_DIRECTION';
@@ -1849,6 +2119,14 @@ export class CheckEntityDirection extends StringCheckable {
 		}
 		const expected_bool = op === '==';
 		return new CheckEntityDirection(debug, { entity, direction, expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} direction == ${this.direction}`
+			: `${printEntityName(this.entity)} direction != ${this.direction}`;
+	}
+	print() {
+		return `// CheckEntityDirection: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityPath extends StringCheckable {
@@ -1879,6 +2157,14 @@ export class CheckEntityPath extends StringCheckable {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckEntityPath(debug, { entity, geometry, expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} path == geometry "${this.geometry}"`
+			: `${printEntityName(this.entity)} path != geometry "${this.geometry}"`;
+	}
+	print() {
+		return `// CheckEntityPath: ${this.expPrint()}`;
+	}
 }
 export class CheckWarpState extends StringCheckable {
 	action: 'CHECK_WARP_STATE';
@@ -1902,6 +2188,14 @@ export class CheckWarpState extends StringCheckable {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckWarpState(debug, { string, expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool
+			? `warp_state == "${this.string}"`
+			: `warp_state != "${this.string}"`;
+	}
+	print() {
+		return `// CheckWarpState: ${this.expPrint()}`;
+	}
 }
 export class CheckMap extends StringCheckable {
 	// TODO: is this even in the engine? O.o
@@ -1920,6 +2214,12 @@ export class CheckMap extends StringCheckable {
 	}
 	getProp() {
 		return this.map;
+	}
+	expPrint() {
+		return this.expected_bool ? `map == "${this.map}"` : `map != "${this.map}"`;
+	}
+	print() {
+		return `// CheckMap: ${this.expPrint()}`;
 	}
 }
 export class CheckBLEFlag extends StringCheckable {
@@ -1940,6 +2240,14 @@ export class CheckBLEFlag extends StringCheckable {
 	getProp() {
 		return this.ble_flag;
 	}
+	expPrint() {
+		return this.expected_bool
+			? `ble_flag == "${this.ble_flag}"`
+			: `ble_flag != "${this.ble_flag}"`;
+	}
+	print() {
+		return `// CheckBLEFlag: ${this.expPrint()}`;
+	}
 }
 
 // --------------- NUMBER COMPARISON
@@ -1949,6 +2257,12 @@ export class NumberComparison extends BoolComparison {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.expected_bool = true;
+	}
+	expPrint() {
+		return `(unknown NumberComparison)`;
+	}
+	print() {
+		return `// NumberComparison: ${this.expPrint()}`;
 	}
 }
 
@@ -1983,6 +2297,14 @@ export class CheckVariable extends NumberComparison {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `"${this.variable}" ${this.comparison} ${this.value}`
+			: `"${this.variable}" ${inverseOpMap[this.comparison]} ${this.value}`;
+	}
+	print() {
+		return `// CheckVariable: ${this.expPrint()}`;
+	}
 }
 export class CheckVariables extends NumberComparison {
 	action: 'CHECK_VARIABLES';
@@ -2015,6 +2337,14 @@ export class CheckVariables extends NumberComparison {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `"${this.variable}" ${this.comparison} ${this.source}`
+			: `"${this.variable}" ${inverseOpMap[this.comparison]} ${this.source}`;
+	}
+	print() {
+		return `// CheckVariables: ${this.expPrint()}`;
+	}
 }
 
 // --------------- NUMBER CHECKABLE EQUALITY
@@ -2032,6 +2362,12 @@ export class NumberCheckableEquality extends BoolComparison {
 		this.updateProp(number);
 		this.expected_bool = op === '==';
 		return this;
+	}
+	expPrint() {
+		return `(unknown NumberCheckableEquality)`;
+	}
+	print() {
+		return `// NumberCheckableEquality: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityX extends NumberCheckableEquality {
@@ -2062,6 +2398,14 @@ export class CheckEntityX extends NumberCheckableEquality {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckEntityX(debug, { entity, expected_u2, expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} x == ${this.expected_u2}`
+			: `${printEntityName(this.entity)} x != ${this.expected_u2}`;
+	}
+	print() {
+		return `// CheckEntityX: ${this.expPrint()}`;
+	}
 }
 export class CheckEntityY extends NumberCheckableEquality {
 	action: 'CHECK_ENTITY_Y';
@@ -2090,6 +2434,14 @@ export class CheckEntityY extends NumberCheckableEquality {
 	) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckEntityY(debug, { entity, expected_u2, expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} y == ${this.expected_u2}`
+			: `${printEntityName(this.entity)} y != ${this.expected_u2}`;
+	}
+	print() {
+		return `// CheckEntityY: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityPrimaryID extends NumberCheckableEquality {
@@ -2120,6 +2472,14 @@ export class CheckEntityPrimaryID extends NumberCheckableEquality {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckEntityPrimaryID(debug, { entity, expected_u2, expected_bool });
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} primary_id == ${this.expected_u2}`
+			: `${printEntityName(this.entity)} primary_id != ${this.expected_u2}`;
+	}
+	print() {
+		return `// CheckEntityPrimaryID: ${this.expPrint()}`;
+	}
 }
 export class CheckEntitySecondaryID extends NumberCheckableEquality {
 	action: 'CHECK_ENTITY_SECONDARY_ID';
@@ -2148,6 +2508,14 @@ export class CheckEntitySecondaryID extends NumberCheckableEquality {
 	) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
 		return new CheckEntitySecondaryID(debug, { entity, expected_u2, expected_bool });
+	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} secondary_id == ${this.expected_u2}`
+			: `${printEntityName(this.entity)} secondary_id != ${this.expected_u2}`;
+	}
+	print() {
+		return `// CheckEntitySecondaryID: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityPrimaryIDType extends NumberCheckableEquality {
@@ -2182,6 +2550,14 @@ export class CheckEntityPrimaryIDType extends NumberCheckableEquality {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} primary_id_type == ${this.expected_byte}`
+			: `${printEntityName(this.entity)} primary_id_type != ${this.expected_byte}`;
+	}
+	print() {
+		return `// CheckEntityPrimaryIDType: ${this.expPrint()}`;
+	}
 }
 export class CheckEntityCurrentAnimation extends NumberCheckableEquality {
 	action: 'CHECK_ENTITY_CURRENT_ANIMATION';
@@ -2214,6 +2590,14 @@ export class CheckEntityCurrentAnimation extends NumberCheckableEquality {
 			expected_byte,
 			expected_bool,
 		});
+	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} current_animation == ${this.expected_byte}`
+			: `${printEntityName(this.entity)} current_animation != ${this.expected_byte}`;
+	}
+	print() {
+		return `// CheckEntityCurrentAnimation: ${this.expPrint()}`;
 	}
 }
 export class CheckEntityCurrentFrame extends NumberCheckableEquality {
@@ -2248,10 +2632,17 @@ export class CheckEntityCurrentFrame extends NumberCheckableEquality {
 			expected_bool,
 		});
 	}
+	expPrint() {
+		return this.expected_bool
+			? `${printEntityName(this.entity)} current_frame == ${this.expected_byte}`
+			: `${printEntityName(this.entity)} current_frame != ${this.expected_byte}`;
+	}
+	print() {
+		return `// CheckEntityCurrentFrame: ${this.expPrint()}`;
+	}
 }
 
 // --------------- BOOL SETABLE
-// TODO make like the rest? or?
 
 export class BoolSetable extends MathlangNode {
 	type: string;
@@ -2273,6 +2664,12 @@ export class BoolSetable extends MathlangNode {
 		}
 		return v;
 	}
+	expPrint() {
+		return `(unknown BoolSetable)`;
+	}
+	print() {
+		return `// BoolSetable: ${this.expPrint()}`;
+	}
 }
 export class MovableIdentifier extends MathlangNode {
 	type: string;
@@ -2293,6 +2690,12 @@ export class MovableIdentifier extends MathlangNode {
 			throw new Error('not MovableIdentifier');
 		}
 		return v;
+	}
+	expPrint() {
+		return this.type === 'camera' ? 'camera' : printEntityName(this.value);
+	}
+	print() {
+		return `// MovableIdentifier`;
 	}
 }
 export class CoordinateIdentifier extends MathlangNode {
@@ -2317,6 +2720,16 @@ export class CoordinateIdentifier extends MathlangNode {
 		}
 		return v;
 	}
+	expPrint() {
+		if (this.type === 'geometry') {
+			return `geometry "${this.value}" ${this.polygonType}`;
+		} else {
+			return printEntityName(this.value);
+		}
+	}
+	print() {
+		return `// CoordinateIdentifier: ${this.expPrint()}`;
+	}
 }
 export class DirectionTarget extends MathlangNode {
 	type: string;
@@ -2338,4 +2751,18 @@ export class DirectionTarget extends MathlangNode {
 		}
 		return v;
 	}
+	expPrint() {
+		if (this.type === 'nsew') return this.value;
+		if (this.type === 'geometry') return `geometry "${this.value}"`;
+		if (this.type === 'entity') return printEntityName(this.value);
+	}
+	print() {
+		return `// DirectionTarget`;
+	}
 }
+
+const printEntityName = (entity: string) => {
+	if (entity === '%PLAYER%') return 'player';
+	if (entity === '%SELF%') return 'self';
+	return `entity "${entity}"`;
+};

@@ -6145,6 +6145,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static cloneAll(steps) {
       return steps.map((v) => v.clone());
     }
+    print() {
+      return `// unknown AnyNode`;
+    }
   }
   class MathlangNode extends AnyNode {
     constructor(debug, args2) {
@@ -6154,9 +6157,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.debug = debug;
       this.args = args2;
     }
-    print() {
-      return `// MATHLANG MYSTERY NODE`;
-    }
     static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
         throw new Error("MathlangNode[] not an Array");
@@ -6165,6 +6165,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("not every item in array is MathlangNode");
       }
       return arr;
+    }
+    print() {
+      return `// unknown MathlangNode`;
     }
   }
   const isMGSPrimitive = (v) => {
@@ -6271,6 +6274,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, name2, params, paramNodes, bodyNode) {
       return new FunctionDefinition(debug, { name: name2, params, paramNodes, bodyNode });
     }
+    print() {
+      return `// FunctionDefinition: "${this.name}"`;
+    }
   }
   class AddDialogSettings extends MathlangNode {
     constructor(debug, args2) {
@@ -6284,6 +6290,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(debug, targets) {
       return new AddDialogSettings(debug, { targets });
+    }
+    print() {
+      return [`// AddDialogSettings:`, ...this.targets.map((v) => v.print())].join("\n");
     }
   }
   class AddDialogSettingsTarget extends MathlangNode {
@@ -6319,6 +6328,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return arr;
     }
+    print() {
+      const header = `// AddDialogSettingsTarget: ${this.type}${this.target ? ", " + this.target : ""}`;
+      return [header, this.parameters.map((v) => v.print())].join("\n");
+    }
   }
   class AddSerialDialogSettings extends MathlangNode {
     constructor(debug, args2) {
@@ -6338,6 +6351,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         parameters
       });
     }
+    print() {
+      return [`// AddSerialDialogSettings:`, this.parameters.map((v) => v.print())].join("\n");
+    }
   }
   class ReturnStatement extends MathlangNode {
     constructor(debug) {
@@ -6348,6 +6364,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(debug) {
       return new ReturnStatement(debug);
+    }
+    print() {
+      return `return;`;
     }
   }
   class ContinueStatement extends MathlangNode {
@@ -6360,6 +6379,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug) {
       return new ContinueStatement(debug);
     }
+    print() {
+      return `continue;`;
+    }
   }
   class BreakStatement extends MathlangNode {
     constructor(debug) {
@@ -6370,6 +6392,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(debug) {
       return new BreakStatement(debug);
+    }
+    print() {
+      return `break;`;
     }
   }
   class GotoLabel extends MathlangNode {
@@ -6411,7 +6436,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     print() {
       const truncated = truncate(this.dialogs[0].messages[0], 40);
-      return `// auto dialog: "${truncated}"`;
+      return `// DialogDefinition: "${truncated}"`;
     }
   }
   class DialogParameter extends MathlangNode {
@@ -6436,6 +6461,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("not every item in array is DialogParameter");
       }
       return arr;
+    }
+    print() {
+      return `// DialogParameter: ${this.property} = ${this.value}`;
     }
   }
   class Dialog extends MathlangNode {
@@ -6481,6 +6509,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return arr;
     }
+    print() {
+      var _a2;
+      return [
+        `// Dialog: entity "${this.entity || ""}", name "${this.name || ""}"`,
+        `// "${truncate(this.messages[0], 40)}"`,
+        ...((_a2 = this.options) == null ? void 0 : _a2.map((v) => v.print())) || []
+      ].join("\n");
+    }
   }
   class DialogIdentifier extends MathlangNode {
     constructor(debug, args2) {
@@ -6504,6 +6540,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("not DialogIdentifier");
       }
       return v;
+    }
+    print() {
+      return `// DialogIdentifier: ${this.type} "${this.value}"`;
     }
   }
   class DialogOption extends MathlangNode {
@@ -6532,6 +6571,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return arr;
     }
+    print() {
+      return `// > "${this.label}" = script "${this.script}"`;
+    }
   }
   class SerialDialogDefinition extends MathlangNode {
     constructor(debug, args2) {
@@ -6553,8 +6595,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new SerialDialogDefinition(debug, { dialogName, serialDialog });
     }
     print() {
-      const truncated = truncate(this.serialDialog.messages[0], 40);
-      return `// auto serial_dialog: "${truncated}"`;
+      return `// SerialDialogDefinition: "${this.dialogName}"`;
     }
   }
   class SerialDialogParameter extends MathlangNode {
@@ -6583,6 +6624,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("not every item in array is SerialDialogParameter");
       }
       return arr;
+    }
+    print() {
+      return `// SerialDialogParameter: ${this.property} = ${this.value}`;
     }
   }
   class SerialDialog extends MathlangNode {
@@ -6615,6 +6659,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("not SerialDialog");
       }
       return v;
+    }
+    print() {
+      const truncated = truncate(this.messages[0], 40);
+      return [
+        `// SerialDialog: "${truncated}"`,
+        ...(this.options || []).map((v) => v.print()),
+        ...(this.text_options || []).map((v) => v.print())
+      ].join("\n");
     }
   }
   class SerialDialogOption extends MathlangNode {
@@ -6649,6 +6701,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return arr;
     }
+    print() {
+      return `// ${this.optionType} "${this.label}" = script "${this.script}"`;
+    }
   }
   class IncludeNode extends MathlangNode {
     constructor(debug, args2) {
@@ -6661,6 +6716,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(debug, value) {
       return new IncludeNode(debug, { value });
+    }
+    print() {
+      return `include "${this.value}";`;
     }
   }
   class ConstantDefinition extends MathlangNode {
@@ -6681,6 +6739,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     static quick(debug, label, value) {
       return new ConstantDefinition(debug, { label, value });
+    }
+    print() {
+      return `${this.label} = ${this.value};`;
     }
   }
   class ScriptDefinition extends MathlangNode {
@@ -6725,6 +6786,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const rawActions = handleNode(debug.using(blockNode));
       const actions = flattenAndDoAutoReturn(debug.using(blockNode), rawActions);
       return ScriptDefinition.quick(debug, scriptName, actions);
+    }
+    print() {
+      return `// ScriptDefinition: "${this.scriptName}"`;
     }
   }
   class CommentNode extends MathlangNode {
@@ -6785,6 +6849,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, json) {
       return new JSONLiteral(debug, { json });
     }
+    print() {
+      return `json${JSON.stringify(this.json, null, "  ")}`;
+    }
   }
   class CopyMacro extends MathlangNode {
     constructor(debug, args2) {
@@ -6839,6 +6906,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, steps, type) {
       return new _MathlangSequence(debug, { steps, type });
     }
+    print() {
+      return this.steps.map((v) => v.print()).join("\n");
+    }
   };
   __publicField(_MathlangSequence, "orSingle", (debug, steps, type) => {
     if (steps.length === 0) {
@@ -6860,6 +6930,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     assignToVar(destinationVar) {
       return this.assignToVar(destinationVar);
+    }
+    expPrint() {
+      return `(unknown IntExpression)`;
+    }
+    print() {
+      return `// IntExpression: ${this.expPrint()}`;
     }
   }
   class IntBinaryExpression extends IntExpression {
@@ -6910,6 +6986,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       dropTemporary();
       return MathlangSequence.quick(this.debug, steps, "IntBinaryExpression.assignToVar");
     }
+    expPrint() {
+      return `(${this.lhs.expPrint()} ${this.op} ${this.rhs.expPrint()})`;
+    }
+    print() {
+      return `// IntBinaryExpression: ${this.expPrint()}`;
+    }
   }
   class IntUnit extends IntExpression {
     static fromAny(debug, v) {
@@ -6948,6 +7030,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         `from IntGetable.assignToVarWithOp`
       );
     }
+    expPrint() {
+      return `(unknown IntUnit)`;
+    }
+    print() {
+      return `// IntUnit: ${this.expPrint()}`;
+    }
   }
   class NumberLiteral extends IntUnit {
     constructor(debug, args2) {
@@ -6973,10 +7061,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     assignToVarWithOp(destinationVar, op) {
       return MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, op);
     }
+    expPrint() {
+      return `${this.value}`;
+    }
+    print() {
+      return `// NumberLiteral: ${this.expPrint()}`;
+    }
   }
   class IntGetable extends IntUnit {
-    constructor(debug, args2) {
-      super(debug, args2);
+    expPrint() {
+      return `(unknown IntGetable)`;
+    }
+    print() {
+      return `// IntGetable: ${this.expPrint()}`;
     }
   }
   class IdentifierLiteral extends IntGetable {
@@ -7002,6 +7099,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     assignToVarWithOp(destinationVar, op) {
       return MUTATE_VARIABLES.change(destinationVar, this.source, op);
+    }
+    expPrint() {
+      return `"${this.source}"`;
+    }
+    print() {
+      return `// IdentifierLiteral: "${this.expPrint()}"`;
     }
   }
   class EntityIntField extends IntGetable {
@@ -7092,6 +7195,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       throw new Error("could not format number_checkable_equality");
     }
+    expPrint() {
+      return `${printEntityName(this.entity)} ${this.field}`;
+    }
+    print() {
+      return `// EntityIntField: ${this.expPrint()}`;
+    }
   }
   class RNGSingle extends IntGetable {
     constructor(debug, args2) {
@@ -7110,6 +7219,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     assignToVar(destinationVar) {
       return MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, "?");
+    }
+    expPrint() {
+      return `RNG!(${this.value})`;
+    }
+    print() {
+      return `${this.expPrint()}`;
     }
   }
   class RNGPair extends IntGetable {
@@ -7138,6 +7253,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         this.toSteps(destinationVar),
         `RNGPair.toSequence`
       );
+    }
+    expPrint() {
+      return `RNG!(${this.add}, =${this.value - 1})`;
+    }
+    print() {
+      return `${this.expPrint()}`;
     }
   }
   class FnCall extends IntGetable {
@@ -7179,12 +7300,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         `from FnCall (${this.type} "${this.identifier}")`
       );
     }
+    expPrint() {
+      return `${this.identifier}()`;
+    }
+    // todo: how to put in args?
+    print() {
+      return `${this.expPrint()}`;
+    }
   }
   class FnCallReturnValue extends IntGetable {
     constructor(debug, args2) {
       super(debug, args2);
-      // TODO IMPORTANT
-      // These must be baked at the moment of use so that the right temporaries are drawn from!
       __publicField(this, "steps");
       __publicField(this, "identifier");
       __publicField(this, "type");
@@ -7221,6 +7347,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         `from FnCallReturnValue (${this.type} "${this.identifier}")`
       );
     }
+    expPrint() {
+      return `${this.identifier}()`;
+    }
+    // todo: how to put in args?
+    print() {
+      return `${this.expPrint()}`;
+    }
   }
   class BoolExpression extends MathlangNode {
     invert() {
@@ -7248,6 +7381,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       cloneIfFalse.invert();
       const steps = simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
       return MathlangSequence.quick(this.debug, steps, "BoolExpression.assignToSetBool");
+    }
+    expPrint() {
+      return `(unknown BoolExpression)`;
+    }
+    print() {
+      return `// BoolExpression: ${this.expPrint()}`;
     }
   }
   const _BoolComparisonSequence = class _BoolComparisonSequence extends BoolExpression {
@@ -7284,6 +7423,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.steps[this.steps.length - 1] = newFinal;
       return this.steps;
     }
+    expPrint() {
+      return `(complicated BoolComparisonSequence)`;
+    }
+    print() {
+      return this.steps.map((v) => v.print()).join("\n");
+    }
   };
   __publicField(_BoolComparisonSequence, "orSingle", (debug, steps, type) => {
     if (steps.length === 0) {
@@ -7294,6 +7439,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   });
   let BoolComparisonSequence = _BoolComparisonSequence;
   class BoolUnit extends BoolExpression {
+    expPrint() {
+      return `(unknown BoolUnit)`;
+    }
+    print() {
+      return `// BoolUnit: ${this.expPrint()}`;
+    }
   }
   class BoolLiteral extends BoolUnit {
     constructor(debug, args2) {
@@ -7321,6 +7472,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     toSteps(ifLabel) {
       return this.value ? [GotoLabel.quick(this.debug, ifLabel)] : [];
     }
+    expPrint() {
+      return `${this.value}`;
+    }
+    print() {
+      return `// BoolLiteral: ${this.expPrint()}`;
+    }
   }
   class BoolComparison extends BoolExpression {
     constructor(debug, args2) {
@@ -7344,6 +7501,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     toSteps(label) {
       return [this.toDestinationLabel(label)];
+    }
+    expPrint() {
+      return `(unknown BoolComparison)`;
+    }
+    print() {
+      return `// BoolComparison: ${this.expPrint()}`;
     }
   }
   class BoolBinaryExpression extends BoolExpression {
@@ -7422,6 +7585,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       return expandAs.toSteps(ifLabel);
     }
+    expPrint() {
+      return `(${this.lhs.expPrint()} ${this.op} ${this.rhs.expPrint()})`;
+    }
+    print() {
+      return `// BoolBinaryExpression: ${this.expPrint()}`;
+    }
   }
   class BoolGetable extends BoolUnit {
     constructor(debug, args2) {
@@ -7447,6 +7616,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     toSteps(label) {
       return [this.toDestinationLabel(label)];
     }
+    expPrint() {
+      return `(unknown BoolGetable)`;
+    }
+    print() {
+      return `// BoolGetable: ${this.expPrint()}`;
+    }
   }
   class CheckEntityGlitched extends BoolGetable {
     constructor(debug, args2) {
@@ -7465,6 +7640,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool: provided_bool === void 0 ? true : provided_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} glitched` : `!${printEntityName(this.entity)} glitched`;
+    }
+    print() {
+      return `// CheckEntityGlitched: ${this.expPrint()}`;
+    }
   }
   class CheckSaveFlag extends BoolGetable {
     constructor(debug, args2) {
@@ -7480,6 +7661,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, save_flag, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckSaveFlag(debug, { save_flag, expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `${this.save_flag}` : `!${this.save_flag}`;
+    }
+    print() {
+      return `// CheckSaveFlag: ${this.expPrint()}`;
     }
   }
   class CheckIfEntityIsInGeometry extends BoolGetable {
@@ -7503,6 +7690,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} intersects geometry "${this.geometry}"` : `!${printEntityName(this.entity)} intersects geometry "${this.geometry}"`;
+    }
+    print() {
+      return `// CheckIfEntityIsInGeometry: ${this.expPrint()}`;
+    }
   }
   class CheckForButtonPress extends BoolGetable {
     constructor(debug, args2) {
@@ -7518,6 +7711,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, button_id, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckForButtonPress(debug, { button_id, expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `button ${this.button_id} pressed` : `!button ${this.button_id} pressed`;
+    }
+    print() {
+      return `// CheckForButtonPress: ${this.expPrint()}`;
     }
   }
   class CheckForButtonState extends BoolGetable {
@@ -7535,6 +7734,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckForButtonState(debug, { button_id, expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `button ${this.button_id} down` : `button ${this.button_id} up`;
+    }
+    print() {
+      return `// CheckForButtonState: ${this.expPrint()}`;
+    }
   }
   class CheckDialogOpen extends BoolGetable {
     constructor(debug, args2) {
@@ -7548,6 +7753,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckDialogOpen(debug, { expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `dialog open` : `dialog closed`;
+    }
+    print() {
+      return `// CheckDialogOpen`;
     }
   }
   class CheckSerialDialogOpen extends BoolGetable {
@@ -7563,6 +7774,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckSerialDialogOpen(debug, { expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `serial_dialog open` : `serial_dialog closed`;
+    }
+    print() {
+      return `// CheckSerialDialogOpen`;
+    }
   }
   class CheckDebugMode extends BoolGetable {
     constructor(debug, args2) {
@@ -7576,6 +7793,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckDebugMode(debug, { expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `debug_mode` : `!debug_mode`;
+    }
+    print() {
+      return `// CheckDebugMode`;
     }
   }
   class StringCheckable extends BoolComparison {
@@ -7593,6 +7816,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.updateProp(string);
       this.expected_bool = op === "==";
       return this;
+    }
+    expPrint() {
+      return `(unknown StringCheckable)`;
+    }
+    print() {
+      return `// StringCheckable: ${this.expPrint()}`;
     }
   }
   class CheckEntityName extends StringCheckable {
@@ -7622,6 +7851,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} name == "${this.string}"` : `${printEntityName(this.entity)} name != "${this.string}"`;
+    }
+    print() {
+      return `// CheckEntityName: ${this.expPrint()}`;
+    }
   }
   class CheckEntityInteractScript extends StringCheckable {
     constructor(debug, args2) {
@@ -7649,6 +7884,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_script,
         expected_bool
       });
+    }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} on_interact == "${this.expected_script}"` : `${printEntityName(this.entity)} on_interact != "${this.expected_script}"`;
+    }
+    print() {
+      return `// CheckEntityInteractScript: ${this.expPrint()}`;
     }
   }
   class CheckEntityTickScript extends StringCheckable {
@@ -7678,6 +7919,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} on_tick == "${this.expected_script}"` : `${printEntityName(this.entity)} on_tick != "${this.expected_script}"`;
+    }
+    print() {
+      return `// CheckEntityTickScript: ${this.expPrint()}`;
+    }
   }
   class CheckEntityLookScript extends StringCheckable {
     constructor(debug, args2) {
@@ -7706,6 +7953,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} on_look == "${this.expected_script}"` : `${printEntityName(this.entity)} on_look != "${this.expected_script}"`;
+    }
+    print() {
+      return `// CheckEntityLookScript: ${this.expPrint()}`;
+    }
   }
   class CheckEntityType extends StringCheckable {
     constructor(debug, args2) {
@@ -7729,6 +7982,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, entity, entity_type, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckEntityType(debug, { entity, entity_type, expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} type == "${this.entity_type}"` : `${printEntityName(this.entity)} type != "${this.entity_type}"`;
+    }
+    print() {
+      return `// CheckEntityType: ${this.expPrint()}`;
     }
   }
   class CheckEntityDirection extends StringCheckable {
@@ -7758,6 +8017,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = op === "==";
       return new CheckEntityDirection(debug, { entity, direction, expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} direction == ${this.direction}` : `${printEntityName(this.entity)} direction != ${this.direction}`;
+    }
+    print() {
+      return `// CheckEntityDirection: ${this.expPrint()}`;
+    }
   }
   class CheckEntityPath extends StringCheckable {
     constructor(debug, args2) {
@@ -7782,6 +8047,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckEntityPath(debug, { entity, geometry, expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} path == geometry "${this.geometry}"` : `${printEntityName(this.entity)} path != geometry "${this.geometry}"`;
+    }
+    print() {
+      return `// CheckEntityPath: ${this.expPrint()}`;
+    }
   }
   class CheckWarpState extends StringCheckable {
     constructor(debug, args2) {
@@ -7805,12 +8076,24 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckWarpState(debug, { string, expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `warp_state == "${this.string}"` : `warp_state != "${this.string}"`;
+    }
+    print() {
+      return `// CheckWarpState: ${this.expPrint()}`;
+    }
   }
   class NumberComparison extends BoolComparison {
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "comment");
       this.expected_bool = true;
+    }
+    expPrint() {
+      return `(unknown NumberComparison)`;
+    }
+    print() {
+      return `// NumberComparison: ${this.expPrint()}`;
     }
   }
   class CheckVariable extends NumberComparison {
@@ -7838,6 +8121,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `"${this.variable}" ${this.comparison} ${this.value}` : `"${this.variable}" ${inverseOpMap[this.comparison]} ${this.value}`;
+    }
+    print() {
+      return `// CheckVariable: ${this.expPrint()}`;
+    }
   }
   class CheckVariables extends NumberComparison {
     constructor(debug, args2) {
@@ -7864,6 +8153,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `"${this.variable}" ${this.comparison} ${this.source}` : `"${this.variable}" ${inverseOpMap[this.comparison]} ${this.source}`;
+    }
+    print() {
+      return `// CheckVariables: ${this.expPrint()}`;
+    }
   }
   class NumberCheckableEquality extends BoolComparison {
     constructor(debug, args2) {
@@ -7877,6 +8172,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.updateProp(number);
       this.expected_bool = op === "==";
       return this;
+    }
+    expPrint() {
+      return `(unknown NumberCheckableEquality)`;
+    }
+    print() {
+      return `// NumberCheckableEquality: ${this.expPrint()}`;
     }
   }
   class CheckEntityX extends NumberCheckableEquality {
@@ -7902,6 +8203,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckEntityX(debug, { entity, expected_u2, expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} x == ${this.expected_u2}` : `${printEntityName(this.entity)} x != ${this.expected_u2}`;
+    }
+    print() {
+      return `// CheckEntityX: ${this.expPrint()}`;
+    }
   }
   class CheckEntityY extends NumberCheckableEquality {
     constructor(debug, args2) {
@@ -7925,6 +8232,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, entity, expected_u2, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckEntityY(debug, { entity, expected_u2, expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} y == ${this.expected_u2}` : `${printEntityName(this.entity)} y != ${this.expected_u2}`;
+    }
+    print() {
+      return `// CheckEntityY: ${this.expPrint()}`;
     }
   }
   class CheckEntityPrimaryID extends NumberCheckableEquality {
@@ -7950,6 +8263,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckEntityPrimaryID(debug, { entity, expected_u2, expected_bool });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} primary_id == ${this.expected_u2}` : `${printEntityName(this.entity)} primary_id != ${this.expected_u2}`;
+    }
+    print() {
+      return `// CheckEntityPrimaryID: ${this.expPrint()}`;
+    }
   }
   class CheckEntitySecondaryID extends NumberCheckableEquality {
     constructor(debug, args2) {
@@ -7973,6 +8292,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, entity, expected_u2, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
       return new CheckEntitySecondaryID(debug, { entity, expected_u2, expected_bool });
+    }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} secondary_id == ${this.expected_u2}` : `${printEntityName(this.entity)} secondary_id != ${this.expected_u2}`;
+    }
+    print() {
+      return `// CheckEntitySecondaryID: ${this.expPrint()}`;
     }
   }
   class CheckEntityPrimaryIDType extends NumberCheckableEquality {
@@ -8002,6 +8327,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} primary_id_type == ${this.expected_byte}` : `${printEntityName(this.entity)} primary_id_type != ${this.expected_byte}`;
+    }
+    print() {
+      return `// CheckEntityPrimaryIDType: ${this.expPrint()}`;
+    }
   }
   class CheckEntityCurrentAnimation extends NumberCheckableEquality {
     constructor(debug, args2) {
@@ -8029,6 +8360,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_byte,
         expected_bool
       });
+    }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} current_animation == ${this.expected_byte}` : `${printEntityName(this.entity)} current_animation != ${this.expected_byte}`;
+    }
+    print() {
+      return `// CheckEntityCurrentAnimation: ${this.expPrint()}`;
     }
   }
   class CheckEntityCurrentFrame extends NumberCheckableEquality {
@@ -8058,6 +8395,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         expected_bool
       });
     }
+    expPrint() {
+      return this.expected_bool ? `${printEntityName(this.entity)} current_frame == ${this.expected_byte}` : `${printEntityName(this.entity)} current_frame != ${this.expected_byte}`;
+    }
+    print() {
+      return `// CheckEntityCurrentFrame: ${this.expPrint()}`;
+    }
   }
   class BoolSetable extends MathlangNode {
     constructor(debug, args2) {
@@ -8079,6 +8422,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return v;
     }
+    expPrint() {
+      return `(unknown BoolSetable)`;
+    }
+    print() {
+      return `// BoolSetable: ${this.expPrint()}`;
+    }
   }
   class MovableIdentifier extends MathlangNode {
     constructor(debug, args2) {
@@ -8099,6 +8448,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("not MovableIdentifier");
       }
       return v;
+    }
+    expPrint() {
+      return this.type === "camera" ? "camera" : printEntityName(this.value);
+    }
+    print() {
+      return `// MovableIdentifier`;
     }
   }
   class CoordinateIdentifier extends MathlangNode {
@@ -8123,6 +8478,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return v;
     }
+    expPrint() {
+      if (this.type === "geometry") {
+        return `geometry "${this.value}" ${this.polygonType}`;
+      } else {
+        return printEntityName(this.value);
+      }
+    }
+    print() {
+      return `// CoordinateIdentifier: ${this.expPrint()}`;
+    }
   }
   class DirectionTarget extends MathlangNode {
     constructor(debug, args2) {
@@ -8144,7 +8509,20 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return v;
     }
+    expPrint() {
+      if (this.type === "nsew") return this.value;
+      if (this.type === "geometry") return `geometry "${this.value}"`;
+      if (this.type === "entity") return printEntityName(this.value);
+    }
+    print() {
+      return `// DirectionTarget`;
+    }
   }
+  const printEntityName = (entity) => {
+    if (entity === "%PLAYER%") return "player";
+    if (entity === "%SELF%") return "self";
+    return `entity "${entity}"`;
+  };
   const opIntoStringMap = {
     "=": "SET",
     "+": "ADD",

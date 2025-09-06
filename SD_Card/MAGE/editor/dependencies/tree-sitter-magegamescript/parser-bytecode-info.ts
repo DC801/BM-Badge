@@ -661,7 +661,7 @@ export class SET_SAVE_FLAG extends ActionSetBool {
 			[actionIfTrue],
 			[actionIfFalse],
 		);
-		return MathlangSequence.quick(debug, steps, 'SET_SAVE_FLAG.toFlag')
+		return MathlangSequence.quick(debug, steps, 'SET_SAVE_FLAG.toFlag');
 	}
 	print() {
 		return printSetBoolAction(this, `"${this.save_flag}"`);
