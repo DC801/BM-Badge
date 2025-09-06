@@ -119,7 +119,7 @@ type FieldToSpread = { node: TreeSitterNode; captures: Capture[] };
 // Takes an object with simple values and an object with array values and "spreads" them --
 // e.g. { a: b }, { c: [d,e] } -> [ {a:b, c:d}, {a:b, c:e} ]
 const spreadValues = (
-	f: FileState,
+	debug: MathlangLocation,
 	commonFields: GenericObj,
 	fieldsToSpread: Record<string, FieldToSpread>,
 ): GenericObj[] => {
@@ -130,11 +130,12 @@ const spreadValues = (
 		// spreadSize won't be 1 btw, because 1s go to commonFields
 		if (spreadSize === -Infinity) spreadSize = len;
 		if (spreadSize !== len) {
-			f.quickError(
-				spreadField.node,
-				'mismatched spread lengths',
-				`spreads must have the same count of items within a given action`,
-			);
+			debug
+				.using(spreadField.node)
+				.quickError(
+					'mismatched spread lengths',
+					`spreads must have the same count of items within a given action`,
+				);
 			spreadSize = Math.max(spreadSize, len);
 		}
 	});
@@ -161,6 +162,7 @@ const spreadValues = (
 };
 
 export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	const debug = MathlangLocation.quick(f, node);
 	const data = actionData[node.grammarType];
 	if (!data) {
 		const customFn = actionFns[node.grammarType];
@@ -168,7 +170,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 			const message = `no action data nor handler function found for action ${node.grammarType}`;
 			throw new Error(message);
 		}
-		return customFn(f, node);
+		return customFn(debug);
 	}
 	const action = { ...data.values };
 
@@ -176,7 +178,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 	const captures: string[] = data.captures || [];
 	const fieldsToSpread: Record<string, FieldToSpread> = {};
 	captures.forEach((fieldName) => {
-		const captureNode = optionalChildForField(f, node, fieldName);
+		const captureNode = optionalChildForField(debug, fieldName);
 		if (captureNode === null) {
 			if (!data.optionalCaptures || !data.optionalCaptures.includes(fieldName)) {
 				throw new Error(
@@ -185,7 +187,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 			}
 			return;
 		}
-		const capture = handleCapture(f, captureNode);
+		const capture = handleCapture(debug.using(captureNode));
 		if (!Array.isArray(capture)) {
 			action[fieldName] = capture;
 		} else {
@@ -195,7 +197,7 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 			};
 		}
 	});
-	const spreads: GenericObj[] = spreadValues(f, action, fieldsToSpread);
+	const spreads: GenericObj[] = spreadValues(debug, action, fieldsToSpread);
 	// Different param combinations will result in different actions,
 	// so let the handler identify them AFTER the spreads are spread
 	const handleFn = data.handle || Action.fromArgs;
@@ -204,61 +206,58 @@ export const handleAction = (f: FileState, node: TreeSitterNode): AnyNode[] => {
 
 // Put things here if you don't care about auto-spreading them; otherwise they should go in actionData
 // TODO: maybe they should just be regular nodes then? Then only "spreadable" things wanna be handled here?
-type ActionFn = (f: FileState, node: TreeSitterNode, isConcat?: boolean) => AnyNode[];
+type ActionFn = (debug: MathlangLocation, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
-	action_show_dialog: (f: FileState, node: TreeSitterNode) => {
-		const names = capturesForField(f, node, 'dialog_name');
+	action_show_dialog: (debug) => {
+		const names = capturesForField(debug, 'dialog_name');
 		// multi
 		if (names.length > 1) {
 			return names.map((dialogName) => {
-				return SHOW_DIALOG.quick(coerceToString(f, node, dialogName, 'dialogName'));
+				return SHOW_DIALOG.quick(coerceToString(debug, dialogName, 'dialogName'));
 			});
 		}
 		// single
-		const name = names.length === 0 ? autoIdentifierName(f, node) : breakIfNotString(names[0]);
-		const rawDialogs = handleChildrenForField(f, node, 'dialog');
+		const name = names.length === 0 ? autoIdentifierName(debug) : breakIfNotString(names[0]);
+		const rawDialogs = handleChildrenForField(debug, 'dialog');
 		const { scripts: steps, other: dialogs } = extractLambdas(rawDialogs);
 		const action = SHOW_DIALOG.quick(name);
 		if (dialogs.length) {
 			// single with contents (not just a name)
-			const debug = MathlangLocation.quick(f, node);
 			const dialogDefinition = DialogDefinition.quick(debug, name, dialogs);
 			steps.push(dialogDefinition);
 		}
 		steps.push(action);
 		return steps;
 	},
-	action_concat_serial_dialog: (f: FileState, node: TreeSitterNode) => {
-		return actionShowSerialDialog(f, node, true);
+	action_concat_serial_dialog: (debug) => {
+		return actionShowSerialDialog(debug, true);
 	},
-	action_show_serial_dialog: (f: FileState, node: TreeSitterNode) => {
-		return actionShowSerialDialog(f, node, false);
+	action_show_serial_dialog: (debug) => {
+		return actionShowSerialDialog(debug, false);
 	},
 };
 
 const actionShowSerialDialog = (
-	f: FileState,
-	node: TreeSitterNode,
+	debug: MathlangLocation,
 	disable_newline: boolean = false,
 ): AnyNode[] => {
-	const names = capturesForField(f, node, 'serial_dialog_name');
+	const names = capturesForField(debug, 'serial_dialog_name');
 	// multi
 	if (names.length > 1) {
 		return names.map((dialogName) =>
 			SHOW_SERIAL_DIALOG.quick(
-				coerceToString(f, node, dialogName, 'dialogName'),
+				coerceToString(debug, dialogName, 'dialogName'),
 				disable_newline,
 			),
 		);
 	}
 	// single
-	const name = names.length === 0 ? autoIdentifierName(f, node) : breakIfNotString(names[0]);
-	const rawSerialDialogs = handleChildrenForField(f, node, 'serial_dialog');
+	const name = names.length === 0 ? autoIdentifierName(debug) : breakIfNotString(names[0]);
+	const rawSerialDialogs = handleChildrenForField(debug, 'serial_dialog');
 	const { scripts: steps, other: serialDialogs } = extractLambdas(rawSerialDialogs);
 	const action = SHOW_SERIAL_DIALOG.quick(name, disable_newline);
 	if (serialDialogs.length) {
 		// single with contents (not just a name)
-		const debug = MathlangLocation.quick(f, node);
 		const serialDialoDefinition = SerialDialogDefinition.quick(debug, name, serialDialogs[0]);
 		steps.push(serialDialoDefinition);
 	}
@@ -279,10 +278,10 @@ const actionData: Record<string, actionDataEntry> = {
 		handle: (v, f, node) => {
 			const debug = MathlangLocation.quick(f, node);
 			const returnStatement = ReturnStatement.quick(debug);
-			const expNode = optionalChildForField(f, node, 'expression');
+			const expNode = optionalChildForField(debug, 'expression');
 			if (expNode) {
 				const steps: AnyNode[] = [];
-				const exp = handleCapture(f, expNode);
+				const exp = handleCapture(debug.using(expNode));
 				if (typeof exp === 'number') {
 					steps.push(MUTATE_VARIABLE.set(RETURN, exp));
 				} else if (typeof exp === 'string') {
@@ -441,7 +440,8 @@ const actionData: Record<string, actionDataEntry> = {
 		// if the LHS is ambiguous (a variable name)
 		captures: ['lhs', 'rhs'],
 		handle: (v, f, node, i): AnyNode => {
-			const lhs = coerceToString(f, node, v.lhs, 'action_set_ambiguous lhs');
+			const debug = MathlangLocation.quick(f, node);
+			const lhs = coerceToString(debug, v.lhs, 'action_set_ambiguous lhs');
 			const rhs = v.rhs;
 
 			// simple cases first (easy to check for)
@@ -462,8 +462,8 @@ const actionData: Record<string, actionDataEntry> = {
 				// `i` is from the caller, who knows which one of the set we're looking at now.
 				// Basically, the whole spread might not be ambiguous, so we need to report
 				// only once the action is identified in an individual spread, not all the time.
-				const lhsChild = mandatoryChildForField(f, node, 'lhs');
-				const rhsChild = mandatoryChildForField(f, node, 'rhs');
+				const lhsChild = mandatoryChildForField(debug, 'lhs');
+				const rhsChild = mandatoryChildForField(debug, 'rhs');
 				const lhsSquiggliesNode = lhsChild?.namedChildren?.[i] || lhsChild;
 				const rhsSquiggliesNode = rhsChild?.namedChildren?.[i] || rhsChild;
 				if (!lhsSquiggliesNode || !rhsSquiggliesNode) {
@@ -478,7 +478,6 @@ const actionData: Record<string, actionDataEntry> = {
 					`\n    ${suggestion} + 0` +
 					`\n    ${suggestion} * 1`;
 				const message = 'these identifiers could be ints or bools';
-				const debug = MathlangLocation.quick(f, node);
 				const locations = printNodes.map((printNode) => debug.using(printNode));
 				const warning = new MathlangMessage(
 					locations,
@@ -578,20 +577,14 @@ const actionData: Record<string, actionDataEntry> = {
 			let lhs: ActionSetBool | null = null;
 			if (v.lhs.type === 'entity') {
 				const entity = coerceToString(
-					f,
-					node,
+					debug,
 					v.lhs.value,
 					'SET_ENTITY_GLITCHED field entity',
 				);
 				lhs = SET_ENTITY_GLITCHED.quick(entity, true);
 			}
 			if (v.lhs.type === 'light') {
-				const lights = coerceToString(
-					f,
-					node,
-					v.lhs.value,
-					'SET_LIGHTS_STATE field lights',
-				);
+				const lights = coerceToString(debug, v.lhs.value, 'SET_LIGHTS_STATE field lights');
 
 				lhs = SET_LIGHTS_STATE.quick(lights, true);
 			}
@@ -662,12 +655,11 @@ const actionData: Record<string, actionDataEntry> = {
 			const debug = MathlangLocation.quick(f, node);
 			const movable = MovableIdentifier.breakIfNot(v.movable);
 			const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
-			const duration = coerceToNumber(f, node, v.duration, 'duration');
+			const duration = coerceToNumber(debug, v.duration, 'duration');
 			if (movable.type === 'camera') {
 				if (coordinate.type === 'entity') {
 					if (v.forever) {
-						f.quickError(
-							debug.node,
+						debug.quickError(
 							'invalid action param combination',
 							`cannot move camera to an entity's position forever`,
 						);
@@ -685,8 +677,7 @@ const actionData: Record<string, actionDataEntry> = {
 						}
 					} else if (coordinate.polygonType === 'origin') {
 						if (v.forever) {
-							f.quickError(
-								debug.node,
+							debug.quickError(
 								'invalid action param combination',
 								`'forever' can only be used with geometry lengths, not single points`,
 							);
@@ -700,8 +691,7 @@ const actionData: Record<string, actionDataEntry> = {
 
 			if (movable.type === 'entity') {
 				if (coordinate.type === 'entity') {
-					f.quickError(
-						debug.node,
+					debug.quickError(
 						'invalid action param combination',
 						`cannot move an entity to another entity's position over time`,
 					);
@@ -725,8 +715,7 @@ const actionData: Record<string, actionDataEntry> = {
 					}
 					if (coordinate.polygonType === 'origin') {
 						if (v.forever) {
-							f.quickError(
-								debug.node,
+							debug.quickError(
 								'invalid action param combination',
 								`'forever' can only be used with geometry lengths, not single points`,
 							);
@@ -746,7 +735,8 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_direction: {
 		captures: ['entity', 'target'],
 		handle: (v, f, node): Action => {
-			const entity = coerceToString(f, node, v.entity, 'entity');
+			const debug = MathlangLocation.quick(f, node);
+			const entity = coerceToString(debug, v.entity, 'entity');
 			const target = DirectionTarget.breakIfNot(v.target);
 			if (target.type === 'nsew') {
 				return SET_ENTITY_DIRECTION.quick(entity, target.value);
@@ -761,8 +751,9 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_script: {
 		captures: ['entity', 'script_slot', 'script'],
 		handle: (v, f, node): AnyNode => {
-			const entity = coerceToString(f, node, v.entity, 'entity');
-			const script_slot = coerceToString(f, node, v.script_slot, 'script_slot');
+			const debug = MathlangLocation.quick(f, node);
+			const entity = coerceToString(debug, v.entity, 'entity');
+			const script_slot = coerceToString(debug, v.script_slot, 'script_slot');
 			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_script');
 			if (entity === '%MAP%') {
 				if (script_slot === 'on_tick') {
@@ -770,12 +761,13 @@ const actionData: Record<string, actionDataEntry> = {
 				} else if (script_slot === 'on_look') {
 					steps.push(SET_MAP_LOOK_SCRIPT.quick(script));
 				} else {
-					const errorNode = mandatoryChildForField(f, node, 'script_slot');
-					f.quickError(
-						errorNode,
-						`invalid map script slot`,
-						`You can only set a map's 'on_tick' or 'on_look' slot (setting ${script_slot})`,
-					);
+					const errorNode = mandatoryChildForField(debug, 'script_slot');
+					debug
+						.using(errorNode)
+						.quickError(
+							`invalid map script slot`,
+							`You can only set a map's 'on_tick' or 'on_look' slot (setting ${script_slot})`,
+						);
 				}
 			} else if (v.script_slot === 'on_tick') {
 				steps.push(SET_ENTITY_TICK_SCRIPT.quick(entity, script));
@@ -784,12 +776,13 @@ const actionData: Record<string, actionDataEntry> = {
 			} else if (v.script_slot === 'on_look') {
 				steps.push(SET_ENTITY_LOOK_SCRIPT.quick(entity, script));
 			} else {
-				const errorNode = mandatoryChildForField(f, node, 'script_slot');
-				f.quickError(
-					errorNode,
-					`invalid entity script slot`,
-					`Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`,
-				);
+				const errorNode = mandatoryChildForField(debug, 'script_slot');
+				debug
+					.using(errorNode)
+					.quickError(
+						`invalid entity script slot`,
+						`Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`,
+					);
 			}
 			return MathlangSequence.orSingle(f, node, steps, 'action_set_script');
 		},
@@ -797,8 +790,9 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_entity_string: {
 		captures: ['entity', 'field', 'value'],
 		handle: (v, f, node): Action => {
-			const entity = coerceToString(f, node, v.entity, 'entity');
-			const value = coerceToString(f, node, v.value, 'value');
+			const debug = MathlangLocation.quick(f, node);
+			const entity = coerceToString(debug, v.entity, 'entity');
+			const value = coerceToString(debug, v.value, 'value');
 			if (v.field === 'name') {
 				return SET_ENTITY_NAME.quick(entity, value);
 			} else if (v.field === 'type') {
@@ -813,7 +807,7 @@ const actionData: Record<string, actionDataEntry> = {
 		captures: ['lhs', 'operator', 'rhs'],
 		handle: (v, f, node): AnyNode => {
 			const debug = MathlangLocation.quick(f, node);
-			const op = coerceToString(f, node, v.operator, 'op');
+			const op = coerceToString(debug, v.operator, 'op');
 
 			// LHS is a string, meaning we're doing a thing to an integer variable
 			if (typeof v.lhs === 'string') {
@@ -869,11 +863,7 @@ const actionData: Record<string, actionDataEntry> = {
 						COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field),
 					];
 					dropTemporary();
-					return MathlangSequence.quick(
-						debug,
-						steps,
-						'action_op_equals (RHS: number)',
-					);
+					return MathlangSequence.quick(debug, steps, 'action_op_equals (RHS: number)');
 				}
 				// player x = varName;
 				if (typeof v.rhs === 'string') {
@@ -884,11 +874,7 @@ const actionData: Record<string, actionDataEntry> = {
 						COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field),
 					];
 					dropTemporary();
-					return MathlangSequence.quick(
-						debug,
-						steps,
-						'action_op_equals (RHS: string)',
-					);
+					return MathlangSequence.quick(debug, steps, 'action_op_equals (RHS: string)');
 				}
 				// player x = (varName * 7);
 				if (v.rhs instanceof IntBinaryExpression) {
@@ -933,12 +919,13 @@ const actionData: Record<string, actionDataEntry> = {
 	action_plus_minus_equals_ables: {
 		captures: ['entity', 'operator', 'value'],
 		handle: (v, f, node) => {
-			const entity = coerceToString(f, node, v.entity, 'entity');
-			const op = coerceToString(f, node, v.operator, 'operator');
+			const debug = MathlangLocation.quick(f, node);
+			const entity = coerceToString(debug, v.entity, 'entity');
+			const op = coerceToString(debug, v.operator, 'operator');
 			if (op !== '-=' && op !== '+=') {
 				throw new Error('invalid op: ' + op);
 			}
-			const value = coerceToNumber(f, node, v.value, 'value');
+			const value = coerceToNumber(debug, v.value, 'value');
 			const sign = op === '-=' ? -1 : 1;
 			return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, sign * value);
 		},

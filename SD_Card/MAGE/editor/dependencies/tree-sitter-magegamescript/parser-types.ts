@@ -88,9 +88,16 @@ export class MathlangLocation {
 	clone() {
 		return new MathlangLocation(this.args);
 	}
-	//TODO: instead of passing `f, node` all the time, just pass one of these and update the node when needed
+	//TODO: instead of passing `f, node` all the time, just pass one of these and update the node when needed, like this:
 	using(newNode: TreeSitterNode) {
 		return MathlangLocation.quick(this.f, newNode);
+	}
+	// TODO: transition all f.quickError() to these:
+	quickError(type: MathlangMessageType, message: string, footer?: string) {
+		this.f.quickError(this.node, type, message, footer);
+	}
+	quickWarning(type: MathlangMessageType, message: string, footer?: string) {
+		this.f.quickWarning(this.node, type, message, footer);
 	}
 }
 
@@ -1002,7 +1009,7 @@ export class IntUnit extends IntExpression {
 			typeof v !== 'string' &&
 			typeof v !== 'number'
 		) {
-			v = coerceToString(debug.f, debug.node, v, 'constant');
+			v = coerceToString(debug, v, 'constant');
 		}
 		if (typeof v === 'number') {
 			return NumberLiteral.quick(debug, v);
@@ -1175,10 +1182,8 @@ export class EntityIntField extends IntGetable {
 		} else if (field === 'animation_frame') {
 			return CheckEntityCurrentFrame.quick(debug, entity, NaN);
 		} else if (field === 'strafe') {
-			const f = this.debug.f;
-			const node = this.debug.node;
-			const propertyNode = mandatoryChildForField(f, node, 'property');
-			f.quickError(
+			const propertyNode = mandatoryChildForField(debug, 'property');
+			debug.f.quickError(
 				propertyNode,
 				'unsupported entity field',
 				`this property is not supported in boolean expressions`,

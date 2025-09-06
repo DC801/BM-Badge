@@ -92,10 +92,11 @@ import {
 // the Mathlang functions that also do this other work. Fix it!
 
 export const handleNode = (f: FileState, node: TreeSitterNode): AnyNode[] => {
+	const debug = MathlangLocation.quick(f, node);
 	debugLog(`handleNode: ${node.grammarType}`);
 
-	reportMissingChildNodes(f, node);
-	reportErrorNodes(f, node);
+	reportMissingChildNodes(debug);
+	reportErrorNodes(debug);
 
 	// Actions are their own beast and are handled elsewhere
 	if (node.grammarType.startsWith('action_')) {
@@ -114,13 +115,13 @@ const nodeFns = {
 	block_comment: () => [],
 	semicolon: () => [],
 	ERROR: (f: FileState, node: TreeSitterNode): [] => {
+		const debug = MathlangLocation.quick(f, node);
 		// I guess feel free to add more of these as they come up
 		// This might be the only place some of them can be detected
 		// (This is only for nodes so malformed that tree-sitter can't tell what they are)
-		const allChildren = namedChildren(f, node);
+		const allChildren = namedChildren(debug);
 		if (allChildren.some((child) => child.grammarType === 'over_time_operator')) {
-			f.quickError(
-				node,
+			debug.quickError(
 				'syntax error',
 				`malformed 'do over time' expression`,
 				`should take the form '@movable -> @coordinate over @duration [forever];'\n` +
@@ -128,25 +129,25 @@ const nodeFns = {
 					`   @coordinate = (player | self | entity @string) position | geometry @string (origin | length)`,
 			);
 		} else {
-			f.quickError(node, 'syntax error', 'syntax error');
+			debug.quickError('syntax error', 'syntax error');
 		}
 		return [];
 	},
 	fn: (f: FileState, node: TreeSitterNode) => {
-		const name = stringCaptureForField(f, node, 'name');
+		const debug = MathlangLocation.quick(f, node);
+		const name = stringCaptureForField(debug, 'name');
 		if (f.functions[name]) {
-			f.quickError(node, 'fn already defined', `fn ${name} already defined`);
+			debug.quickError('fn already defined', `fn ${name} already defined`);
 			return [];
 		}
 
-		const debug = MathlangLocation.quick(f, node);
-		const paramNodes = childrenForField(f, node, 'arg');
+		const paramNodes = childrenForField(debug, 'arg');
 
 		// verify that fn params are all $constants
 		let error = false;
 		const params = paramNodes.map((param) => {
 			if (param.grammarType !== 'CONSTANT') {
-				f.quickError(node, 'invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
+				debug.quickError('invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
 				error = true;
 			}
 			return param.text;
@@ -157,32 +158,31 @@ const nodeFns = {
 		const paramSet = new Set([...params]);
 		if (paramSet.size !== params.length) {
 			// TODO: tell the red squiggles which params are the duplicates
-			f.quickError(node, 'duplicate fn arg', 'duplicate fn args');
+			debug.quickError('duplicate fn arg', 'duplicate fn args');
 			return [];
 		}
 
 		// the body node remains unprocessed so the capture system can switch out args
 		// (and use correct variable temporaries) at the time of the "call"
-		const bodyNode = mandatoryChildForField(f, node, 'body');
+		const bodyNode = mandatoryChildForField(debug, 'body');
 		f.functions[name] = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
 	},
 	fn_call: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const name = stringCaptureForField(f, node, 'name');
+		const name = stringCaptureForField(debug, 'name');
 		const definition = f.functions[name];
 		if (!definition) {
-			const nameNode = optionalChildForField(f, node, 'name') || node;
-			f.quickError(nameNode, 'undefined fn', `function ${name} is undefined`);
+			const nameNode = optionalChildForField(debug, 'name') || node;
+			debug.using(nameNode).quickError('undefined fn', `function ${name} is undefined`);
 			return [];
 		}
 
-		const callParamNodes = childrenForField(f, node, 'arg');
+		const callParamNodes = childrenForField(debug, 'arg');
 		const definitionParamNodes = definition.paramNodes;
 
 		// compare lengths of params in definition vs call
 		if (callParamNodes.length < definitionParamNodes.length) {
-			f.quickError(
-				node,
+			debug.quickError(
 				'not enough fn args',
 				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
 			);
@@ -194,10 +194,11 @@ const nodeFns = {
 		// sanitize passed params
 		// todo: should expressions be allowed?
 		const callParams = callParamNodes.map((v) => {
-			let capture = handleCapture(f, v);
+			let capture = handleCapture(debug.using(v));
+			const innerDebug = MathlangLocation.quick(f, v);
 			if (!isMGSPrimitive(capture)) {
-				f.quickError(v, 'invalid fn arg', 'function arg not an MGS primitive');
-				capture = coerceToString(f, v, capture, 'fucntion param');
+				debug.using(v).quickError('invalid fn arg', 'function arg not an MGS primitive');
+				capture = coerceToString(innerDebug, capture, 'fucntion param');
 			}
 			return capture;
 		});
@@ -220,7 +221,7 @@ const nodeFns = {
 		stack.unshift(localConstants);
 
 		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
-		let body = handleNamedChildren(f, definition.bodyNode);
+		let body = handleNamedChildren(debug.using(definition.bodyNode));
 
 		// bake it like a script body
 		body = flattenAndDoAutoReturn(f, node, body);
@@ -231,30 +232,32 @@ const nodeFns = {
 		return sequence;
 	},
 	script_block: (f: FileState, node: TreeSitterNode) => {
-		return handleNamedChildren(f, node);
+		const debug = MathlangLocation.quick(f, node);
+		return handleNamedChildren(debug);
 	},
 	script_definition: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const scriptName = stringCaptureForField(f, node, 'script_name');
-		const scriptBlockNode = mandatoryChildForField(f, node, 'script_block');
+		const scriptName = stringCaptureForField(debug, 'script_name');
+		const scriptBlockNode = mandatoryChildForField(debug, 'script_block');
 		const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
 		return [definition];
 	},
 	constant_assignment: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const label = textForField(f, node, 'label');
-		const value = captureForField(f, node, 'value');
+		const label = textForField(debug, 'label');
+		const value = captureForField(debug, 'value');
 		if (!isMGSPrimitive(value)) {
-			const valueNode = mandatoryChildForField(f, node, 'value');
-			f.quickError(
-				valueNode || node,
-				'invalid constant value',
-				`constant value not an MGS primitive (${label})`,
-			);
+			const valueNode = mandatoryChildForField(debug, 'value');
+			debug
+				.using(valueNode)
+				.quickError(
+					'invalid constant value',
+					`constant value not an MGS primitive (${label})`,
+				);
 			return [];
 		}
 		if (f.constants[label]) {
-			f.quickError(node, 'constant already defined', `cannot redefine constant ${label}`);
+			debug.quickError('constant already defined', `cannot redefine constant ${label}`);
 		}
 		f.constants[label] = { debug, value };
 		return [ConstantDefinition.quick(debug, label, value)];
@@ -271,10 +274,10 @@ const nodeFns = {
 		includeRecursion.push(f.fileName);
 
 		// get prerequesite file
-		const fileName = stringCaptureForField(f, node, 'fileName');
+		const fileName = stringCaptureForField(debug, 'fileName');
 		if (!f.p.fileMap[fileName]) {
 			const message = `include_macro: cannot find file "${fileName}"`;
-			f.quickError(node, 'missing file', message);
+			debug.quickError('missing file', message);
 			includeRecursion.pop();
 			return [];
 		}
@@ -285,7 +288,7 @@ const nodeFns = {
 			insertF = f.p.fileMap[fileName].parsed;
 			if (!insertF) {
 				const message = `include_macro: could not parse prerequesite "${fileName}"`;
-				f.quickError(node, 'missing file', message);
+				debug.quickError('missing file', message);
 				includeRecursion.pop();
 				return [];
 			}
@@ -302,7 +305,7 @@ const nodeFns = {
 				f.constants[constantName] = insertF.constants[constantName];
 			} else {
 				const message = `cannot redefine constant ${constantName} (via 'include')`;
-				f.quickError(node, 'constant already defined', message);
+				debug.quickError('constant already defined', message);
 			}
 		});
 
@@ -312,7 +315,7 @@ const nodeFns = {
 				f.functions[functionName] = insertF.functions[functionName];
 			} else {
 				const message = `cannot redefine function ${functionName} (via 'include')`;
-				f.quickError(node, 'fn already defined', message);
+				debug.quickError('fn already defined', message);
 			}
 		});
 
@@ -350,7 +353,7 @@ const nodeFns = {
 
 		// count items per spread
 		let spreadCount = -Infinity;
-		namedChildren(f, node).forEach((innerNode) => {
+		namedChildren(debug).forEach((innerNode) => {
 			const actions: AnyNode[] = handleNode(f, innerNode);
 			const len = actions.length;
 			if (len === 0) return; // empties are ignored
@@ -358,11 +361,12 @@ const nodeFns = {
 			if (len === 1) return; // singles are passed through
 			if (spreadCount === -Infinity) spreadCount = len;
 			if (spreadCount !== len) {
-				f.quickError(
-					innerNode,
-					'mismatched spread lengths',
-					`spreads inside rand!() must contain same number of items`,
-				);
+				debug
+					.using(innerNode)
+					.quickError(
+						'mismatched spread lengths',
+						`spreads inside rand!() must contain same number of items`,
+					);
 			}
 		});
 
@@ -402,19 +406,19 @@ const nodeFns = {
 	},
 	label_definition: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const label = textForField(f, node, 'label');
+		const label = textForField(debug, 'label');
 		return [LabelDefinition.quick(debug, label)];
 	},
 	add_dialog_settings: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(f, node));
+		const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(debug));
 
 		// Make a node "receipt"
 		return [AddDialogSettings.quick(debug, targets)];
 	},
 	add_dialog_settings_target: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const type = textForField(f, node, 'type');
+		const type = textForField(debug, 'type');
 		let settingsTarget: DialogSettings = {}; // we don't know which bucket to use yet, but here's where it's going
 		let target: string | undefined;
 
@@ -422,7 +426,7 @@ const nodeFns = {
 		if (type === 'default') {
 			settingsTarget = f.settings.default;
 		} else if (type === 'label' || type === 'entity') {
-			target = stringCaptureForField(f, node, 'target');
+			target = stringCaptureForField(debug, 'target');
 			// make a bucket if there isn't one for that entity/label yet
 			f.settings[type][target] = f.settings[type][target] || {};
 			settingsTarget = f.settings[type][target];
@@ -431,7 +435,9 @@ const nodeFns = {
 		}
 
 		// find the settings themselves
-		const parameters = DialogParameter.breakIfNotAll(capturesForField(f, node, 'dialog_parameter'));
+		const parameters = DialogParameter.breakIfNotAll(
+			capturesForField(debug, 'dialog_parameter'),
+		);
 		parameters.forEach((param) => {
 			// put them in the bucket
 			settingsTarget[param.property] = param.value;
@@ -443,7 +449,7 @@ const nodeFns = {
 	},
 	add_serial_dialog_settings: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const rawParameters = capturesForField(f, node, 'serial_dialog_parameter');
+		const rawParameters = capturesForField(debug, 'serial_dialog_parameter');
 		const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
 		parameters.forEach((param) => {
 			f.settings.serial[param.property] = param.value;
@@ -454,15 +460,15 @@ const nodeFns = {
 	serial_dialog_option: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		// Option type
-		const optionChar = textForField(f, node, 'option_type');
+		const optionChar = textForField(debug, 'option_type');
 		let optionType: SerialOptionType = 'options';
 		if (optionChar === '_') optionType = 'text_options';
 		else if (optionChar !== '#') throw new Error('invalid option type: ' + optionChar);
 		// Label
-		const label = stringCaptureForField(f, node, 'label');
+		const label = stringCaptureForField(debug, 'label');
 		// Script
-		const scriptNode = mandatoryChildForField(f, node, 'script');
-		const scriptCapture = handleCapture(f, scriptNode);
+		const scriptNode = mandatoryChildForField(debug, 'script');
+		const scriptCapture = handleCapture(debug.using(scriptNode));
 		const { script, steps } = lambdaOrIdentifier(scriptCapture, 'serial_dialog_option');
 		// Build it
 		const option = SerialDialogOption.quick(debug, optionType, label, script);
@@ -472,10 +478,10 @@ const nodeFns = {
 	dialog_option: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
 		// Label
-		const label = stringCaptureForField(f, node, 'label');
+		const label = stringCaptureForField(debug, 'label');
 		// Script
-		const scriptNode = mandatoryChildForField(f, node, 'script');
-		const scriptCapture = handleCapture(f, scriptNode);
+		const scriptNode = mandatoryChildForField(debug, 'script');
+		const scriptCapture = handleCapture(debug.using(scriptNode));
 		const { script, steps } = lambdaOrIdentifier(scriptCapture, 'dialog_option');
 		// Build it
 		const ret = DialogOption.quick(debug, label, script);
@@ -484,8 +490,8 @@ const nodeFns = {
 	},
 	serial_dialog_definition: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const serialDialogNode = mandatoryChildForField(f, node, 'serial_dialog');
-		const dialogName = stringCaptureForField(f, node, 'serial_dialog_name');
+		const serialDialogNode = mandatoryChildForField(debug, 'serial_dialog');
+		const dialogName = stringCaptureForField(debug, 'serial_dialog_name');
 		const serialDialogs = handleNode(f, serialDialogNode);
 		if (serialDialogs.length !== 1) {
 			throw new Error('serial dialogs must have only 1 serial dialog');
@@ -495,24 +501,25 @@ const nodeFns = {
 	},
 	dialog_definition: (f: FileState, node: TreeSitterNode) => {
 		const debug = MathlangLocation.quick(f, node);
-		const name = stringCaptureForField(f, node, 'dialog_name');
-		const dialogs = Dialog.breakIfNotAll(handleChildrenForField(f, node, 'dialog'));
+		const name = stringCaptureForField(debug, 'dialog_name');
+		const dialogs = Dialog.breakIfNotAll(handleChildrenForField(debug, 'dialog'));
 		return [DialogDefinition.quick(debug, name, dialogs)];
 	},
 	serial_dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const debug = MathlangLocation.quick(f, node);
 		// Settings
 		const settings = {};
 		const params = SerialDialogParameter.breakIfNotAll(
-			capturesForField(f, node, 'serial_dialog_parameter'),
+			capturesForField(debug, 'serial_dialog_parameter'),
 		);
 		params.forEach((v) => {
 			settings[v.property] = v.value;
 		});
 		// Options
-		const rawOptions = handleChildrenForField(f, node, 'serial_dialog_option');
+		const rawOptions = handleChildrenForField(debug, 'serial_dialog_option');
 		const { scripts: steps, other: options } = extractLambdas(rawOptions);
 		// Messages
-		const messages = capturesForField(f, node, 'serial_message');
+		const messages = capturesForField(debug, 'serial_message');
 		if (!messages.every((v) => typeof v === 'string')) {
 			throw new Error('not every message is a string');
 		}
@@ -528,19 +535,20 @@ const nodeFns = {
 		return steps;
 	},
 	dialog: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const debug = MathlangLocation.quick(f, node);
 		// Identifier
-		const identifier = DialogIdentifier.breakIfNot(captureForField(f, node, 'dialog_identifier'));
+		const identifier = DialogIdentifier.breakIfNot(captureForField(debug, 'dialog_identifier'));
 		// Settings
 		const settings = {};
-		const params = DialogParameter.breakIfNotAll(capturesForField(f, node, 'dialog_parameter'));
+		const params = DialogParameter.breakIfNotAll(capturesForField(debug, 'dialog_parameter'));
 		params.forEach((v) => {
 			settings[v.property] = v.value;
 		});
 		// Messages
-		const messageN = childrenForField(f, node, 'message');
-		const messages = messageN.map((v) => coerceToString(f, node, handleCapture(f, v)));
+		const messageN = childrenForField(debug, 'message');
+		const messages = messageN.map((v) => coerceToString(debug, handleCapture(debug.using(v))));
 		// Options
-		const rawOptions = handleChildrenForField(f, node, 'dialog_option');
+		const rawOptions = handleChildrenForField(debug, 'dialog_option');
 		const siphoned = extractLambdas(rawOptions);
 		const steps: AnyNode[] = siphoned.scripts;
 		const options: DialogOption[] = DialogOption.breakIfNotAll(siphoned.other);
@@ -558,6 +566,7 @@ const nodeFns = {
 		return steps;
 	},
 	json_object: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const debug = MathlangLocation.quick(f, node);
 		try {
 			const debug = MathlangLocation.quick(f, node);
 			const parsed = JSON.parse(node.text);
@@ -571,42 +580,41 @@ const nodeFns = {
 			}
 			return [parsedAction];
 		} catch {
-			f.quickError(node, `invalid JSON action`, `generic error; check trailing commas!`);
+			debug.quickError(`invalid JSON action`, `generic error; check trailing commas!`);
 		}
 		return [];
 	},
 	json_literal: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		const debug = MathlangLocation.quick(f, node);
-		const jsonNode = namedChildren(f, node)[0];
+		const jsonNode = namedChildren(debug)[0];
 		if (!jsonNode) throw new Error('could not find JSON node');
 		if (jsonNode.grammarType !== 'json_array') {
-			f.quickError(
-				node,
+			debug.quickError(
 				'invalid JSON action',
 				'the top level structure of a JSON literal should be an array: []',
 			);
 			return [];
 		}
-		const handledChildren: AnyNode[] = handleNamedChildren(f, jsonNode);
+		const handledChildren: AnyNode[] = handleNamedChildren(debug.using(jsonNode));
 		return [JSONLiteral.quick(debug, handledChildren)];
 	},
 	copy_macro: (f: FileState, node: TreeSitterNode): [CopyMacro] => {
 		const debug = MathlangLocation.quick(f, node);
-		const script = stringCaptureForField(f, node, 'script');
+		const script = stringCaptureForField(debug, 'script');
 		return [CopyMacro.quick(debug, script)];
 	},
 	debug_macro: (f: FileState, node: TreeSitterNode): AnyNode[] => {
 		const debug = MathlangLocation.quick(f, node);
 		const steps: AnyNode[] = [];
 		let dialogName = '';
-		const serialDialogNode = optionalChildForField(f, node, 'serial_dialog');
+		const serialDialogNode = optionalChildForField(debug, 'serial_dialog');
 		if (!serialDialogNode) {
 			// might just be the name of a serial dialog, and not a serial-dialog-in-place
-			dialogName = stringCaptureForField(f, node, 'serial_dialog_name');
+			dialogName = stringCaptureForField(debug, 'serial_dialog_name');
 		} else {
 			const serialDialogs = handleNode(f, serialDialogNode);
 			const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
-			dialogName = autoIdentifierName(f, node);
+			dialogName = autoIdentifierName(debug);
 			steps.push(
 				new SerialDialogDefinition(debug, {
 					dialogName,
@@ -621,8 +629,9 @@ const nodeFns = {
 		return steps;
 	},
 	looping_block: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const debug = MathlangLocation.quick(f, node);
 		const n = f.p.advanceGotoSuffix();
-		const steps = handleNamedChildren(f, node);
+		const steps = handleNamedChildren(debug);
 		const continueL = `condition #${n}`;
 		const breakL = `break #${n}`;
 		return doAutoBreakContinue(steps, continueL, breakL);
@@ -675,11 +684,11 @@ const nodeFns = {
 		const bodyL = `for body #${n}`;
 		const breakL = `for break #${n}`;
 		const continueL = `for continue #${n}`;
-		const conditionN = mandatoryChildForField(f, node, 'condition');
-		const condition = BoolExpression.breakIfNot(handleCapture(f, conditionN));
-		const bodyN = mandatoryChildForField(f, node, 'body');
-		const incrementerN = mandatoryChildForField(f, node, 'incrementer');
-		const initializer = mandatoryChildForField(f, node, 'initializer');
+		const conditionN = mandatoryChildForField(debug, 'condition');
+		const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
+		const bodyN = mandatoryChildForField(debug, 'body');
+		const incrementerN = mandatoryChildForField(debug, 'incrementer');
+		const initializer = mandatoryChildForField(debug, 'initializer');
 		const rawBody = handleNode(f, bodyN);
 		const body = doAutoBreakContinue(rawBody, continueL, breakL);
 
@@ -698,11 +707,12 @@ const nodeFns = {
 		return [MathlangSequence.quick(debug, steps, 'parser-node: for_block')];
 	},
 	if_single: (f: FileState, node: TreeSitterNode): AnyNode[] => {
+		const debug = MathlangLocation.quick(f, node);
 		// For parsing the bytecode output; not really meant to be seen in the wild
 		// e.g. `if varName then goto label LABELNAME;`
 		// vs `if (varName) { /*do stuff at the label destination*/ }`
-		const type = optionalTextForField(f, node, 'type');
-		let condition = captureForField(f, node, 'condition');
+		const type = optionalTextForField(debug, 'type');
+		let condition = captureForField(debug, 'condition');
 		if (typeof condition === 'string') {
 			const debug = MathlangLocation.quick(f, node);
 			condition = CheckSaveFlag.quick(debug, condition, true);
@@ -710,29 +720,29 @@ const nodeFns = {
 
 		// Bool literals true/false always jump or never jump, respectively
 		if (typeof condition === 'boolean' || condition instanceof BoolLiteral) {
-			const value = coerceToBool(f, node, condition);
+			const value = coerceToBool(debug, condition);
 			if (!type) {
-				const script = stringCaptureForField(f, node, 'script');
+				const script = stringCaptureForField(debug, 'script');
 				return value ? [RUN_SCRIPT.quick(script)] : [];
 			} else if (type === 'index') {
-				const index = numberCaptureForField(f, node, 'index');
+				const index = numberCaptureForField(debug, 'index');
 				return value ? [GOTO_ACTION_INDEX.quick(index)] : [];
 			} else if (type === 'label') {
-				const label = stringCaptureForField(f, node, 'label');
-				return value ? [GotoLabel.quick(MathlangLocation.quick(f, node), label)] : [];
+				const label = stringCaptureForField(debug, 'label');
+				return value ? [GotoLabel.quick(debug, label)] : [];
 			}
 		}
 
 		// The rest are singles, not expressions; bake the destination
 		if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
 			if (!type) {
-				const success_script = stringCaptureForField(f, node, 'script');
+				const success_script = stringCaptureForField(debug, 'script');
 				return [condition.toAction({ success_script })];
 			} else if (type === 'index') {
-				const jump_index = numberCaptureForField(f, node, 'index');
+				const jump_index = numberCaptureForField(debug, 'index');
 				return [condition.toAction({ jump_index })];
 			} else if (type === 'label') {
-				const label = stringCaptureForField(f, node, 'label');
+				const label = stringCaptureForField(debug, 'label');
 				return [condition.toAction({ label })];
 			}
 			return [condition];
@@ -742,15 +752,16 @@ const nodeFns = {
 		throw new Error('invalid if_single');
 	},
 	if_chain: (f: FileState, node: TreeSitterNode) => {
-		const ifNodes = childrenForField(f, node, 'if_block');
+		const debug = MathlangLocation.quick(f, node);
+		const ifNodes = childrenForField(debug, 'if_block');
 		// todo: this could probably be improved somehow
 		const iffs = ifNodes.map((v) => new ConditionalBlock(f, v));
-		const elseNode = optionalChildForField(f, node, 'else_block');
+		const elseNode = optionalChildForField(debug, 'else_block');
 		let elseBody: AnyNode[] = [];
 		if (elseNode) {
-			const lastChild = optionalLastChild(f, elseNode);
+			const lastChild = optionalLastChild(debug.using(elseNode));
 			if (lastChild) {
-				elseBody = handleNamedChildren(f, lastChild);
+				elseBody = handleNamedChildren(debug.using(lastChild));
 			}
 		}
 		return [ifChainMaker(f, node, iffs, elseBody, 'if_chain')];

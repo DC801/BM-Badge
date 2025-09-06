@@ -173,8 +173,7 @@ export class ProjectState {
 				// named script not found; error
 				const useNode =
 					action instanceof MathlangNode
-						? optionalChildForField(action.debug.f, action.debug.node, 'script') ||
-							action.debug.node
+						? optionalChildForField(action.debug, 'script') || action.debug.node
 						: node;
 				this.newError(
 					new MathlangMessage(
@@ -238,16 +237,12 @@ export class ProjectState {
 					return Action.fromArgs(ret);
 				});
 				const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-				finalActions.push(
-					CommentNode.quick(MathlangLocation.quick(f, node), comment),
-				);
+				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
 				finalActions.push(...searchedAndReplaced);
 			} else {
 				// plain version
 				const comment = `Copying: ${action.script} (-${labelSuffix})`;
-				finalActions.push(
-					CommentNode.quick(MathlangLocation.quick(f, node), comment),
-				);
+				finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
 				finalActions.push(...copiedActions);
 			}
 		});
@@ -274,10 +269,11 @@ export class ProjectState {
 
 		// file crawl state
 		const f = new FileState(this, fileName);
-		reportMissingChildNodes(f, document);
-		reportErrorNodes(f, document);
+		const documentDebug = MathlangLocation.quick(f, document);
+		reportMissingChildNodes(documentDebug);
+		reportErrorNodes(documentDebug);
 		let catastrophicErrorReported = false;
-		const nodes = namedChildren(f, document)
+		const nodes = namedChildren(MathlangLocation.quick(f, document))
 			.map((node) => {
 				if (catastrophicErrorReported) {
 					return;
@@ -285,17 +281,17 @@ export class ProjectState {
 					// Normal
 					return handleNode(f, node);
 				} else if (!catastrophicErrorReported) {
+					const debug = MathlangLocation.quick(f, node);
 					if (node?.text === ';') {
 						// semicolons after script definitions or such
-						f.quickError(node, 'unexpected token', `unexpected semicolon`);
+						debug.quickError('unexpected token', `unexpected semicolon`);
 					} else {
 						// The first catastrophic error should be the last!
 						// Every node underneath is just wrecked. Nuke it all!
 						if (!node) {
 							throw new Error('no node found for catastrophic error case');
 						}
-						f.quickError(
-							node,
+						debug.quickError(
 							'syntax error',
 							`catastrophic syntax error (naive guess: invalid script name)`,
 							`Avoid keywords for bare script names in definitions, or wrap the script name in quotes\n` +

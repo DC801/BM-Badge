@@ -4239,14 +4239,13 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       settings: dialogSettings
     });
   };
-  const spreadValues = (f, commonFields, fieldsToSpread) => {
+  const spreadValues = (debug, commonFields, fieldsToSpread) => {
     let spreadSize = -Infinity;
     Object.values(fieldsToSpread).forEach((spreadField) => {
       const len = spreadField.captures.length;
       if (spreadSize === -Infinity) spreadSize = len;
       if (spreadSize !== len) {
-        f.quickError(
-          spreadField.node,
+        debug.using(spreadField.node).quickError(
           "mismatched spread lengths",
           `spreads must have the same count of items within a given action`
         );
@@ -4269,6 +4268,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     return ret;
   };
   const handleAction = (f, node) => {
+    const debug = MathlangLocation.quick(f, node);
     const data = actionData[node.grammarType];
     if (!data) {
       const customFn = actionFns[node.grammarType];
@@ -4276,13 +4276,13 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         const message = `no action data nor handler function found for action ${node.grammarType}`;
         throw new Error(message);
       }
-      return customFn(f, node);
+      return customFn(debug);
     }
     const action = { ...data.values };
     const captures = data.captures || [];
     const fieldsToSpread = {};
     captures.forEach((fieldName) => {
-      const captureNode = optionalChildForField(f, node, fieldName);
+      const captureNode = optionalChildForField(debug, fieldName);
       if (captureNode === null) {
         if (!data.optionalCaptures || !data.optionalCaptures.includes(fieldName)) {
           throw new Error(
@@ -4291,7 +4291,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         }
         return;
       }
-      const capture = handleCapture(f, captureNode);
+      const capture = handleCapture(debug.using(captureNode));
       if (!Array.isArray(capture)) {
         action[fieldName] = capture;
       } else {
@@ -4301,53 +4301,51 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         };
       }
     });
-    const spreads = spreadValues(f, action, fieldsToSpread);
+    const spreads = spreadValues(debug, action, fieldsToSpread);
     const handleFn = data.handle || Action.fromArgs;
     return spreads.map((v, i2) => handleFn(v, f, node, i2)).filter((v) => v !== void 0);
   };
   const actionFns = {
-    action_show_dialog: (f, node) => {
-      const names = capturesForField(f, node, "dialog_name");
+    action_show_dialog: (debug) => {
+      const names = capturesForField(debug, "dialog_name");
       if (names.length > 1) {
         return names.map((dialogName) => {
-          return SHOW_DIALOG.quick(coerceToString(f, node, dialogName, "dialogName"));
+          return SHOW_DIALOG.quick(coerceToString(debug, dialogName, "dialogName"));
         });
       }
-      const name2 = names.length === 0 ? autoIdentifierName(f, node) : breakIfNotString(names[0]);
-      const rawDialogs = handleChildrenForField(f, node, "dialog");
+      const name2 = names.length === 0 ? autoIdentifierName(debug) : breakIfNotString(names[0]);
+      const rawDialogs = handleChildrenForField(debug, "dialog");
       const { scripts: steps, other: dialogs } = extractLambdas(rawDialogs);
       const action = SHOW_DIALOG.quick(name2);
       if (dialogs.length) {
-        const debug = MathlangLocation.quick(f, node);
         const dialogDefinition = DialogDefinition.quick(debug, name2, dialogs);
         steps.push(dialogDefinition);
       }
       steps.push(action);
       return steps;
     },
-    action_concat_serial_dialog: (f, node) => {
-      return actionShowSerialDialog(f, node, true);
+    action_concat_serial_dialog: (debug) => {
+      return actionShowSerialDialog(debug, true);
     },
-    action_show_serial_dialog: (f, node) => {
-      return actionShowSerialDialog(f, node, false);
+    action_show_serial_dialog: (debug) => {
+      return actionShowSerialDialog(debug, false);
     }
   };
-  const actionShowSerialDialog = (f, node, disable_newline = false) => {
-    const names = capturesForField(f, node, "serial_dialog_name");
+  const actionShowSerialDialog = (debug, disable_newline = false) => {
+    const names = capturesForField(debug, "serial_dialog_name");
     if (names.length > 1) {
       return names.map(
         (dialogName) => SHOW_SERIAL_DIALOG.quick(
-          coerceToString(f, node, dialogName, "dialogName"),
+          coerceToString(debug, dialogName, "dialogName"),
           disable_newline
         )
       );
     }
-    const name2 = names.length === 0 ? autoIdentifierName(f, node) : breakIfNotString(names[0]);
-    const rawSerialDialogs = handleChildrenForField(f, node, "serial_dialog");
+    const name2 = names.length === 0 ? autoIdentifierName(debug) : breakIfNotString(names[0]);
+    const rawSerialDialogs = handleChildrenForField(debug, "serial_dialog");
     const { scripts: steps, other: serialDialogs } = extractLambdas(rawSerialDialogs);
     const action = SHOW_SERIAL_DIALOG.quick(name2, disable_newline);
     if (serialDialogs.length) {
-      const debug = MathlangLocation.quick(f, node);
       const serialDialoDefinition = SerialDialogDefinition.quick(debug, name2, serialDialogs[0]);
       steps.push(serialDialoDefinition);
     }
@@ -4361,10 +4359,10 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       handle: (v, f, node) => {
         const debug = MathlangLocation.quick(f, node);
         const returnStatement = ReturnStatement.quick(debug);
-        const expNode = optionalChildForField(f, node, "expression");
+        const expNode = optionalChildForField(debug, "expression");
         if (expNode) {
           const steps = [];
-          const exp = handleCapture(f, expNode);
+          const exp = handleCapture(debug.using(expNode));
           if (typeof exp === "number") {
             steps.push(MUTATE_VARIABLE.set(RETURN, exp));
           } else if (typeof exp === "string") {
@@ -4524,7 +4522,8 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       captures: ["lhs", "rhs"],
       handle: (v, f, node, i2) => {
         var _a2, _b2;
-        const lhs = coerceToString(f, node, v.lhs, "action_set_ambiguous lhs");
+        const debug = MathlangLocation.quick(f, node);
+        const lhs = coerceToString(debug, v.lhs, "action_set_ambiguous lhs");
         const rhs = v.rhs;
         if (rhs instanceof BoolLiteral) {
           return SET_SAVE_FLAG.toValue(lhs, rhs.value);
@@ -4532,8 +4531,8 @@ ${JSON.stringify(symbolNames, null, 2)}`);
         if (typeof rhs === "number") return MUTATE_VARIABLE.set(lhs, rhs);
         if (typeof rhs == "string") {
           if (i2 === void 0) throw new Error("undefined index");
-          const lhsChild = mandatoryChildForField(f, node, "lhs");
-          const rhsChild = mandatoryChildForField(f, node, "rhs");
+          const lhsChild = mandatoryChildForField(debug, "lhs");
+          const rhsChild = mandatoryChildForField(debug, "rhs");
           const lhsSquiggliesNode = ((_a2 = lhsChild == null ? void 0 : lhsChild.namedChildren) == null ? void 0 : _a2[i2]) || lhsChild;
           const rhsSquiggliesNode = ((_b2 = rhsChild == null ? void 0 : rhsChild.namedChildren) == null ? void 0 : _b2[i2]) || rhsChild;
           if (!lhsSquiggliesNode || !rhsSquiggliesNode) {
@@ -4547,7 +4546,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     ${suggestion} + 0
     ${suggestion} * 1`;
           const message = "these identifiers could be ints or bools";
-          const debug = MathlangLocation.quick(f, node);
           const locations = printNodes.map((printNode) => debug.using(printNode));
           const warning = new MathlangMessage(
             locations,
@@ -4625,20 +4623,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         let lhs = null;
         if (v.lhs.type === "entity") {
           const entity = coerceToString(
-            f,
-            node,
+            debug,
             v.lhs.value,
             "SET_ENTITY_GLITCHED field entity"
           );
           lhs = SET_ENTITY_GLITCHED.quick(entity, true);
         }
         if (v.lhs.type === "light") {
-          const lights = coerceToString(
-            f,
-            node,
-            v.lhs.value,
-            "SET_LIGHTS_STATE field lights"
-          );
+          const lights = coerceToString(debug, v.lhs.value, "SET_LIGHTS_STATE field lights");
           lhs = SET_LIGHTS_STATE.quick(lights, true);
         }
         if (v.lhs.type === "player_control") {
@@ -4708,12 +4700,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         const debug = MathlangLocation.quick(f, node);
         const movable = MovableIdentifier.breakIfNot(v.movable);
         const coordinate = CoordinateIdentifier.breakIfNot(v.coordinate);
-        const duration = coerceToNumber(f, node, v.duration, "duration");
+        const duration = coerceToNumber(debug, v.duration, "duration");
         if (movable.type === "camera") {
           if (coordinate.type === "entity") {
             if (v.forever) {
-              f.quickError(
-                debug.node,
+              debug.quickError(
                 "invalid action param combination",
                 `cannot move camera to an entity's position forever`
               );
@@ -4731,8 +4722,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
               }
             } else if (coordinate.polygonType === "origin") {
               if (v.forever) {
-                f.quickError(
-                  debug.node,
+                debug.quickError(
                   "invalid action param combination",
                   `'forever' can only be used with geometry lengths, not single points`
                 );
@@ -4745,8 +4735,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
         if (movable.type === "entity") {
           if (coordinate.type === "entity") {
-            f.quickError(
-              debug.node,
+            debug.quickError(
               "invalid action param combination",
               `cannot move an entity to another entity's position over time`
             );
@@ -4770,8 +4759,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             }
             if (coordinate.polygonType === "origin") {
               if (v.forever) {
-                f.quickError(
-                  debug.node,
+                debug.quickError(
                   "invalid action param combination",
                   `'forever' can only be used with geometry lengths, not single points`
                 );
@@ -4791,7 +4779,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     action_set_direction: {
       captures: ["entity", "target"],
       handle: (v, f, node) => {
-        const entity = coerceToString(f, node, v.entity, "entity");
+        const debug = MathlangLocation.quick(f, node);
+        const entity = coerceToString(debug, v.entity, "entity");
         const target = DirectionTarget.breakIfNot(v.target);
         if (target.type === "nsew") {
           return SET_ENTITY_DIRECTION.quick(entity, target.value);
@@ -4806,8 +4795,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     action_set_script: {
       captures: ["entity", "script_slot", "script"],
       handle: (v, f, node) => {
-        const entity = coerceToString(f, node, v.entity, "entity");
-        const script_slot = coerceToString(f, node, v.script_slot, "script_slot");
+        const debug = MathlangLocation.quick(f, node);
+        const entity = coerceToString(debug, v.entity, "entity");
+        const script_slot = coerceToString(debug, v.script_slot, "script_slot");
         const { script, steps } = lambdaOrIdentifier(v.script, "action_set_script");
         if (entity === "%MAP%") {
           if (script_slot === "on_tick") {
@@ -4815,9 +4805,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           } else if (script_slot === "on_look") {
             steps.push(SET_MAP_LOOK_SCRIPT.quick(script));
           } else {
-            const errorNode = mandatoryChildForField(f, node, "script_slot");
-            f.quickError(
-              errorNode,
+            const errorNode = mandatoryChildForField(debug, "script_slot");
+            debug.using(errorNode).quickError(
               `invalid map script slot`,
               `You can only set a map's 'on_tick' or 'on_look' slot (setting ${script_slot})`
             );
@@ -4829,9 +4818,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         } else if (v.script_slot === "on_look") {
           steps.push(SET_ENTITY_LOOK_SCRIPT.quick(entity, script));
         } else {
-          const errorNode = mandatoryChildForField(f, node, "script_slot");
-          f.quickError(
-            errorNode,
+          const errorNode = mandatoryChildForField(debug, "script_slot");
+          debug.using(errorNode).quickError(
             `invalid entity script slot`,
             `Valid entity script slots: 'on_tick', 'on_interact', 'on_look'`
           );
@@ -4842,8 +4830,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     action_set_entity_string: {
       captures: ["entity", "field", "value"],
       handle: (v, f, node) => {
-        const entity = coerceToString(f, node, v.entity, "entity");
-        const value = coerceToString(f, node, v.value, "value");
+        const debug = MathlangLocation.quick(f, node);
+        const entity = coerceToString(debug, v.entity, "entity");
+        const value = coerceToString(debug, v.value, "value");
         if (v.field === "name") {
           return SET_ENTITY_NAME.quick(entity, value);
         } else if (v.field === "type") {
@@ -4858,7 +4847,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       captures: ["lhs", "operator", "rhs"],
       handle: (v, f, node) => {
         const debug = MathlangLocation.quick(f, node);
-        const op = coerceToString(f, node, v.operator, "op");
+        const op = coerceToString(debug, v.operator, "op");
         if (typeof v.lhs === "string") {
           if (typeof v.rhs === "number") {
             return MUTATE_VARIABLE.change(debug, v.lhs, v.rhs, op);
@@ -4903,11 +4892,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
               COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field)
             ];
             dropTemporary();
-            return MathlangSequence.quick(
-              debug,
-              steps,
-              "action_op_equals (RHS: number)"
-            );
+            return MathlangSequence.quick(debug, steps, "action_op_equals (RHS: number)");
           }
           if (typeof v.rhs === "string") {
             const temporary = newTemporary();
@@ -4917,11 +4902,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
               COPY_VARIABLE.intoField(temporary, v.lhs.entity, v.lhs.field)
             ];
             dropTemporary();
-            return MathlangSequence.quick(
-              debug,
-              steps,
-              "action_op_equals (RHS: string)"
-            );
+            return MathlangSequence.quick(debug, steps, "action_op_equals (RHS: string)");
           }
           if (v.rhs instanceof IntBinaryExpression) {
             const temporary1 = newTemporary();
@@ -4964,12 +4945,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     action_plus_minus_equals_ables: {
       captures: ["entity", "operator", "value"],
       handle: (v, f, node) => {
-        const entity = coerceToString(f, node, v.entity, "entity");
-        const op = coerceToString(f, node, v.operator, "operator");
+        const debug = MathlangLocation.quick(f, node);
+        const entity = coerceToString(debug, v.entity, "entity");
+        const op = coerceToString(debug, v.operator, "operator");
         if (op !== "-=" && op !== "+=") {
           throw new Error("invalid op: " + op);
         }
-        const value = coerceToNumber(f, node, v.value, "value");
+        const value = coerceToNumber(debug, v.value, "value");
         const sign = op === "-=" ? -1 : 1;
         return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, sign * value);
       }
@@ -4995,9 +4977,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     };
   };
   const handleNode = (f, node) => {
+    const debug = MathlangLocation.quick(f, node);
     debugLog(`handleNode: ${node.grammarType}`);
-    reportMissingChildNodes(f, node);
-    reportErrorNodes(f, node);
+    reportMissingChildNodes(debug);
+    reportErrorNodes(debug);
     if (node.grammarType.startsWith("action_")) {
       return handleAction(f, node);
     }
@@ -5011,10 +4994,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     block_comment: () => [],
     semicolon: () => [],
     ERROR: (f, node) => {
-      const allChildren = namedChildren(f, node);
+      const debug = MathlangLocation.quick(f, node);
+      const allChildren = namedChildren(debug);
       if (allChildren.some((child) => child.grammarType === "over_time_operator")) {
-        f.quickError(
-          node,
+        debug.quickError(
           "syntax error",
           `malformed 'do over time' expression`,
           `should take the form '@movable -> @coordinate over @duration [forever];'
@@ -5022,22 +5005,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
    @coordinate = (player | self | entity @string) position | geometry @string (origin | length)`
         );
       } else {
-        f.quickError(node, "syntax error", "syntax error");
+        debug.quickError("syntax error", "syntax error");
       }
       return [];
     },
     fn: (f, node) => {
-      const name2 = stringCaptureForField(f, node, "name");
+      const debug = MathlangLocation.quick(f, node);
+      const name2 = stringCaptureForField(debug, "name");
       if (f.functions[name2]) {
-        f.quickError(node, "fn already defined", `fn ${name2} already defined`);
+        debug.quickError("fn already defined", `fn ${name2} already defined`);
         return [];
       }
-      const debug = MathlangLocation.quick(f, node);
-      const paramNodes = childrenForField(f, node, "arg");
+      const paramNodes = childrenForField(debug, "arg");
       let error = false;
       const params = paramNodes.map((param) => {
         if (param.grammarType !== "CONSTANT") {
-          f.quickError(node, "invalid fn arg", "fn arg must be CONSTANT (prefixed with $)");
+          debug.quickError("invalid fn arg", "fn arg must be CONSTANT (prefixed with $)");
           error = true;
         }
         return param.text;
@@ -5045,36 +5028,36 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (error) return [];
       const paramSet = /* @__PURE__ */ new Set([...params]);
       if (paramSet.size !== params.length) {
-        f.quickError(node, "duplicate fn arg", "duplicate fn args");
+        debug.quickError("duplicate fn arg", "duplicate fn args");
         return [];
       }
-      const bodyNode = mandatoryChildForField(f, node, "body");
+      const bodyNode = mandatoryChildForField(debug, "body");
       f.functions[name2] = FunctionDefinition.quick(debug, name2, params, paramNodes, bodyNode);
     },
     fn_call: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const name2 = stringCaptureForField(f, node, "name");
+      const name2 = stringCaptureForField(debug, "name");
       const definition = f.functions[name2];
       if (!definition) {
-        const nameNode = optionalChildForField(f, node, "name") || node;
-        f.quickError(nameNode, "undefined fn", `function ${name2} is undefined`);
+        const nameNode = optionalChildForField(debug, "name") || node;
+        debug.using(nameNode).quickError("undefined fn", `function ${name2} is undefined`);
         return [];
       }
-      const callParamNodes = childrenForField(f, node, "arg");
+      const callParamNodes = childrenForField(debug, "arg");
       const definitionParamNodes = definition.paramNodes;
       if (callParamNodes.length < definitionParamNodes.length) {
-        f.quickError(
-          node,
+        debug.quickError(
           "not enough fn args",
           `function ${name2} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`
         );
         return [];
       }
       const callParams = callParamNodes.map((v) => {
-        let capture = handleCapture(f, v);
+        let capture = handleCapture(debug.using(v));
+        const innerDebug = MathlangLocation.quick(f, v);
         if (!isMGSPrimitive(capture)) {
-          f.quickError(v, "invalid fn arg", "function arg not an MGS primitive");
-          capture = coerceToString(f, v, capture, "fucntion param");
+          debug.using(v).quickError("invalid fn arg", "function arg not an MGS primitive");
+          capture = coerceToString(innerDebug, capture, "fucntion param");
         }
         return capture;
       });
@@ -5088,37 +5071,37 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       const stack = f.currFunction;
       stack.unshift(localConstants);
-      let body2 = handleNamedChildren(f, definition.bodyNode);
+      let body2 = handleNamedChildren(debug.using(definition.bodyNode));
       body2 = flattenAndDoAutoReturn(f, node, body2);
       const sequence = MathlangSequence.quick(debug, body2, "fn_call");
       stack.shift();
       return sequence;
     },
     script_block: (f, node) => {
-      return handleNamedChildren(f, node);
+      const debug = MathlangLocation.quick(f, node);
+      return handleNamedChildren(debug);
     },
     script_definition: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const scriptName = stringCaptureForField(f, node, "script_name");
-      const scriptBlockNode = mandatoryChildForField(f, node, "script_block");
+      const scriptName = stringCaptureForField(debug, "script_name");
+      const scriptBlockNode = mandatoryChildForField(debug, "script_block");
       const definition = ScriptDefinition.processAndMake(debug, scriptName, scriptBlockNode);
       return [definition];
     },
     constant_assignment: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const label = textForField(f, node, "label");
-      const value = captureForField(f, node, "value");
+      const label = textForField(debug, "label");
+      const value = captureForField(debug, "value");
       if (!isMGSPrimitive(value)) {
-        const valueNode = mandatoryChildForField(f, node, "value");
-        f.quickError(
-          valueNode || node,
+        const valueNode = mandatoryChildForField(debug, "value");
+        debug.using(valueNode).quickError(
           "invalid constant value",
           `constant value not an MGS primitive (${label})`
         );
         return [];
       }
       if (f.constants[label]) {
-        f.quickError(node, "constant already defined", `cannot redefine constant ${label}`);
+        debug.quickError("constant already defined", `cannot redefine constant ${label}`);
       }
       f.constants[label] = { debug, value };
       return [ConstantDefinition.quick(debug, label, value)];
@@ -5132,10 +5115,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error(message);
       }
       includeRecursion.push(f.fileName);
-      const fileName = stringCaptureForField(f, node, "fileName");
+      const fileName = stringCaptureForField(debug, "fileName");
       if (!f.p.fileMap[fileName]) {
         const message = `include_macro: cannot find file "${fileName}"`;
-        f.quickError(node, "missing file", message);
+        debug.quickError("missing file", message);
         includeRecursion.pop();
         return [];
       }
@@ -5145,7 +5128,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         insertF = f.p.fileMap[fileName].parsed;
         if (!insertF) {
           const message = `include_macro: could not parse prerequesite "${fileName}"`;
-          f.quickError(node, "missing file", message);
+          debug.quickError("missing file", message);
           includeRecursion.pop();
           return [];
         }
@@ -5156,7 +5139,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           f.constants[constantName] = insertF.constants[constantName];
         } else {
           const message = `cannot redefine constant ${constantName} (via 'include')`;
-          f.quickError(node, "constant already defined", message);
+          debug.quickError("constant already defined", message);
         }
       });
       Object.keys(insertF.functions).forEach((functionName) => {
@@ -5164,7 +5147,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           f.functions[functionName] = insertF.functions[functionName];
         } else {
           const message = `cannot redefine function ${functionName} (via 'include')`;
-          f.quickError(node, "fn already defined", message);
+          debug.quickError("fn already defined", message);
         }
       });
       insertF.nodes.forEach((node2) => {
@@ -5191,7 +5174,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const debug = MathlangLocation.quick(f, node);
       const horizontal = [];
       let spreadCount = -Infinity;
-      namedChildren(f, node).forEach((innerNode) => {
+      namedChildren(debug).forEach((innerNode) => {
         const actions = handleNode(f, innerNode);
         const len = actions.length;
         if (len === 0) return;
@@ -5199,8 +5182,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         if (len === 1) return;
         if (spreadCount === -Infinity) spreadCount = len;
         if (spreadCount !== len) {
-          f.quickError(
-            innerNode,
+          debug.using(innerNode).quickError(
             "mismatched spread lengths",
             `spreads inside rand!() must contain same number of items`
           );
@@ -5233,29 +5215,31 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     label_definition: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const label = textForField(f, node, "label");
+      const label = textForField(debug, "label");
       return [LabelDefinition.quick(debug, label)];
     },
     add_dialog_settings: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(f, node));
+      const targets = AddDialogSettingsTarget.breakIfNotAll(handleNamedChildren(debug));
       return [AddDialogSettings.quick(debug, targets)];
     },
     add_dialog_settings_target: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const type = textForField(f, node, "type");
+      const type = textForField(debug, "type");
       let settingsTarget = {};
       let target;
       if (type === "default") {
         settingsTarget = f.settings.default;
       } else if (type === "label" || type === "entity") {
-        target = stringCaptureForField(f, node, "target");
+        target = stringCaptureForField(debug, "target");
         f.settings[type][target] = f.settings[type][target] || {};
         settingsTarget = f.settings[type][target];
       } else {
         throw new Error(`unknown target type: ${type}`);
       }
-      const parameters = DialogParameter.breakIfNotAll(capturesForField(f, node, "dialog_parameter"));
+      const parameters = DialogParameter.breakIfNotAll(
+        capturesForField(debug, "dialog_parameter")
+      );
       parameters.forEach((param) => {
         settingsTarget[param.property] = param.value;
       });
@@ -5264,7 +5248,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     add_serial_dialog_settings: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const rawParameters = capturesForField(f, node, "serial_dialog_parameter");
+      const rawParameters = capturesForField(debug, "serial_dialog_parameter");
       const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
       parameters.forEach((param) => {
         f.settings.serial[param.property] = param.value;
@@ -5273,13 +5257,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     serial_dialog_option: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const optionChar = textForField(f, node, "option_type");
+      const optionChar = textForField(debug, "option_type");
       let optionType = "options";
       if (optionChar === "_") optionType = "text_options";
       else if (optionChar !== "#") throw new Error("invalid option type: " + optionChar);
-      const label = stringCaptureForField(f, node, "label");
-      const scriptNode = mandatoryChildForField(f, node, "script");
-      const scriptCapture = handleCapture(f, scriptNode);
+      const label = stringCaptureForField(debug, "label");
+      const scriptNode = mandatoryChildForField(debug, "script");
+      const scriptCapture = handleCapture(debug.using(scriptNode));
       const { script, steps } = lambdaOrIdentifier(scriptCapture, "serial_dialog_option");
       const option = SerialDialogOption.quick(debug, optionType, label, script);
       steps.push(option);
@@ -5287,9 +5271,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     dialog_option: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const label = stringCaptureForField(f, node, "label");
-      const scriptNode = mandatoryChildForField(f, node, "script");
-      const scriptCapture = handleCapture(f, scriptNode);
+      const label = stringCaptureForField(debug, "label");
+      const scriptNode = mandatoryChildForField(debug, "script");
+      const scriptCapture = handleCapture(debug.using(scriptNode));
       const { script, steps } = lambdaOrIdentifier(scriptCapture, "dialog_option");
       const ret = DialogOption.quick(debug, label, script);
       steps.push(ret);
@@ -5297,8 +5281,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     serial_dialog_definition: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const serialDialogNode = mandatoryChildForField(f, node, "serial_dialog");
-      const dialogName = stringCaptureForField(f, node, "serial_dialog_name");
+      const serialDialogNode = mandatoryChildForField(debug, "serial_dialog");
+      const dialogName = stringCaptureForField(debug, "serial_dialog_name");
       const serialDialogs = handleNode(f, serialDialogNode);
       if (serialDialogs.length !== 1) {
         throw new Error("serial dialogs must have only 1 serial dialog");
@@ -5308,21 +5292,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     dialog_definition: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const name2 = stringCaptureForField(f, node, "dialog_name");
-      const dialogs = Dialog.breakIfNotAll(handleChildrenForField(f, node, "dialog"));
+      const name2 = stringCaptureForField(debug, "dialog_name");
+      const dialogs = Dialog.breakIfNotAll(handleChildrenForField(debug, "dialog"));
       return [DialogDefinition.quick(debug, name2, dialogs)];
     },
     serial_dialog: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const settings = {};
       const params = SerialDialogParameter.breakIfNotAll(
-        capturesForField(f, node, "serial_dialog_parameter")
+        capturesForField(debug, "serial_dialog_parameter")
       );
       params.forEach((v) => {
         settings[v.property] = v.value;
       });
-      const rawOptions = handleChildrenForField(f, node, "serial_dialog_option");
+      const rawOptions = handleChildrenForField(debug, "serial_dialog_option");
       const { scripts: steps, other: options } = extractLambdas(rawOptions);
-      const messages = capturesForField(f, node, "serial_message");
+      const messages = capturesForField(debug, "serial_message");
       if (!messages.every((v) => typeof v === "string")) {
         throw new Error("not every message is a string");
       }
@@ -5336,15 +5321,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return steps;
     },
     dialog: (f, node) => {
-      const identifier = DialogIdentifier.breakIfNot(captureForField(f, node, "dialog_identifier"));
+      const debug = MathlangLocation.quick(f, node);
+      const identifier = DialogIdentifier.breakIfNot(captureForField(debug, "dialog_identifier"));
       const settings = {};
-      const params = DialogParameter.breakIfNotAll(capturesForField(f, node, "dialog_parameter"));
+      const params = DialogParameter.breakIfNotAll(capturesForField(debug, "dialog_parameter"));
       params.forEach((v) => {
         settings[v.property] = v.value;
       });
-      const messageN = childrenForField(f, node, "message");
-      const messages = messageN.map((v) => coerceToString(f, node, handleCapture(f, v)));
-      const rawOptions = handleChildrenForField(f, node, "dialog_option");
+      const messageN = childrenForField(debug, "message");
+      const messages = messageN.map((v) => coerceToString(debug, handleCapture(debug.using(v))));
+      const rawOptions = handleChildrenForField(debug, "dialog_option");
       const siphoned = extractLambdas(rawOptions);
       const steps = siphoned.scripts;
       const options = DialogOption.breakIfNotAll(siphoned.other);
@@ -5360,54 +5346,54 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return steps;
     },
     json_object: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       try {
-        const debug = MathlangLocation.quick(f, node);
+        const debug2 = MathlangLocation.quick(f, node);
         const parsed = JSON.parse(node.text);
         let parsedAction = Action.fromArgs(parsed);
         if (parsedAction instanceof COPY_SCRIPT) {
           parsedAction = CopyMacro.quick(
-            debug,
+            debug2,
             parsedAction.script,
             parsedAction.search_and_replace
           );
         }
         return [parsedAction];
       } catch {
-        f.quickError(node, `invalid JSON action`, `generic error; check trailing commas!`);
+        debug.quickError(`invalid JSON action`, `generic error; check trailing commas!`);
       }
       return [];
     },
     json_literal: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const jsonNode = namedChildren(f, node)[0];
+      const jsonNode = namedChildren(debug)[0];
       if (!jsonNode) throw new Error("could not find JSON node");
       if (jsonNode.grammarType !== "json_array") {
-        f.quickError(
-          node,
+        debug.quickError(
           "invalid JSON action",
           "the top level structure of a JSON literal should be an array: []"
         );
         return [];
       }
-      const handledChildren = handleNamedChildren(f, jsonNode);
+      const handledChildren = handleNamedChildren(debug.using(jsonNode));
       return [JSONLiteral.quick(debug, handledChildren)];
     },
     copy_macro: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
-      const script = stringCaptureForField(f, node, "script");
+      const script = stringCaptureForField(debug, "script");
       return [CopyMacro.quick(debug, script)];
     },
     debug_macro: (f, node) => {
       const debug = MathlangLocation.quick(f, node);
       const steps = [];
       let dialogName = "";
-      const serialDialogNode = optionalChildForField(f, node, "serial_dialog");
+      const serialDialogNode = optionalChildForField(debug, "serial_dialog");
       if (!serialDialogNode) {
-        dialogName = stringCaptureForField(f, node, "serial_dialog_name");
+        dialogName = stringCaptureForField(debug, "serial_dialog_name");
       } else {
         const serialDialogs = handleNode(f, serialDialogNode);
         const serialDialog = SerialDialog.breakIfNot(serialDialogs[0]);
-        dialogName = autoIdentifierName(f, node);
+        dialogName = autoIdentifierName(debug);
         steps.push(
           new SerialDialogDefinition(debug, {
             dialogName,
@@ -5422,8 +5408,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return steps;
     },
     looping_block: (f, node) => {
+      const debug = MathlangLocation.quick(f, node);
       const n = f.p.advanceGotoSuffix();
-      const steps = handleNamedChildren(f, node);
+      const steps = handleNamedChildren(debug);
       const continueL = `condition #${n}`;
       const breakL = `break #${n}`;
       return doAutoBreakContinue(steps, continueL, breakL);
@@ -5471,11 +5458,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const bodyL = `for body #${n}`;
       const breakL = `for break #${n}`;
       const continueL = `for continue #${n}`;
-      const conditionN = mandatoryChildForField(f, node, "condition");
-      const condition = BoolExpression.breakIfNot(handleCapture(f, conditionN));
-      const bodyN = mandatoryChildForField(f, node, "body");
-      const incrementerN = mandatoryChildForField(f, node, "incrementer");
-      const initializer = mandatoryChildForField(f, node, "initializer");
+      const conditionN = mandatoryChildForField(debug, "condition");
+      const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
+      const bodyN = mandatoryChildForField(debug, "body");
+      const incrementerN = mandatoryChildForField(debug, "incrementer");
+      const initializer = mandatoryChildForField(debug, "initializer");
       const rawBody = handleNode(f, bodyN);
       const body2 = doAutoBreakContinue(rawBody, continueL, breakL);
       const steps = [
@@ -5493,34 +5480,35 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return [MathlangSequence.quick(debug, steps, "parser-node: for_block")];
     },
     if_single: (f, node) => {
-      const type = optionalTextForField(f, node, "type");
-      let condition = captureForField(f, node, "condition");
+      const debug = MathlangLocation.quick(f, node);
+      const type = optionalTextForField(debug, "type");
+      let condition = captureForField(debug, "condition");
       if (typeof condition === "string") {
-        const debug = MathlangLocation.quick(f, node);
-        condition = CheckSaveFlag.quick(debug, condition, true);
+        const debug2 = MathlangLocation.quick(f, node);
+        condition = CheckSaveFlag.quick(debug2, condition, true);
       }
       if (typeof condition === "boolean" || condition instanceof BoolLiteral) {
-        const value = coerceToBool(f, node, condition);
+        const value = coerceToBool(debug, condition);
         if (!type) {
-          const script = stringCaptureForField(f, node, "script");
+          const script = stringCaptureForField(debug, "script");
           return value ? [RUN_SCRIPT.quick(script)] : [];
         } else if (type === "index") {
-          const index = numberCaptureForField(f, node, "index");
+          const index = numberCaptureForField(debug, "index");
           return value ? [GOTO_ACTION_INDEX.quick(index)] : [];
         } else if (type === "label") {
-          const label = stringCaptureForField(f, node, "label");
-          return value ? [GotoLabel.quick(MathlangLocation.quick(f, node), label)] : [];
+          const label = stringCaptureForField(debug, "label");
+          return value ? [GotoLabel.quick(debug, label)] : [];
         }
       }
       if (condition instanceof BoolComparison || condition instanceof BoolGetable) {
         if (!type) {
-          const success_script = stringCaptureForField(f, node, "script");
+          const success_script = stringCaptureForField(debug, "script");
           return [condition.toAction({ success_script })];
         } else if (type === "index") {
-          const jump_index = numberCaptureForField(f, node, "index");
+          const jump_index = numberCaptureForField(debug, "index");
           return [condition.toAction({ jump_index })];
         } else if (type === "label") {
-          const label = stringCaptureForField(f, node, "label");
+          const label = stringCaptureForField(debug, "label");
           return [condition.toAction({ label })];
         }
         return [condition];
@@ -5528,41 +5516,40 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       throw new Error("invalid if_single");
     },
     if_chain: (f, node) => {
-      const ifNodes = childrenForField(f, node, "if_block");
+      const debug = MathlangLocation.quick(f, node);
+      const ifNodes = childrenForField(debug, "if_block");
       const iffs = ifNodes.map((v) => new ConditionalBlock(f, v));
-      const elseNode = optionalChildForField(f, node, "else_block");
+      const elseNode = optionalChildForField(debug, "else_block");
       let elseBody = [];
       if (elseNode) {
-        const lastChild = optionalLastChild(f, elseNode);
+        const lastChild = optionalLastChild(debug.using(elseNode));
         if (lastChild) {
-          elseBody = handleNamedChildren(f, lastChild);
+          elseBody = handleNamedChildren(debug.using(lastChild));
         }
       }
       return [ifChainMaker(f, node, iffs, elseBody, "if_chain")];
     }
   };
-  const handleCapture = (f, node) => {
+  const handleCapture = (debug) => {
     var _a2;
-    if (!node) throw new Error("null node");
-    const grammarType = node.grammarType;
+    const grammarType = debug.node.grammarType;
     if (grammarType.endsWith("_expansion")) {
-      return namedChildren(f, node).filter((v) => v !== null).map((v) => handleCapture(f, v)).flat();
+      return namedChildren(debug).filter((v) => v !== null).map((v) => handleCapture(debug.using(v))).flat();
     }
     if (grammarType === "CONSTANT") {
-      const lookup = ((_a2 = f.currFunction[0]) == null ? void 0 : _a2[node.text]) || f.constants[node.text];
+      const lookup = ((_a2 = debug.f.currFunction[0]) == null ? void 0 : _a2[debug.node.text]) || debug.f.constants[debug.node.text];
       if (lookup === void 0) {
-        f.quickError(node, "undefined constant", `constant ${node.text} is undefined`);
+        debug.quickError("undefined constant", `constant ${debug.node.text} is undefined`);
       }
-      return (lookup == null ? void 0 : lookup.value) !== void 0 ? lookup == null ? void 0 : lookup.value : node.text;
+      return (lookup == null ? void 0 : lookup.value) !== void 0 ? lookup == null ? void 0 : lookup.value : debug.node.text;
     }
     const fn = captureFns[grammarType];
     if (!fn) throw new Error(`no function found for grammar type ${grammarType}`);
-    return fn(f, node);
+    return fn(debug);
   };
   const captureFns = {
-    BOOL: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const text = node.text;
+    BOOL: (debug) => {
+      const text = debug.node.text;
       if (text === "true") return BoolLiteral.quick(debug, true);
       if (text === "false") return BoolLiteral.quick(debug, false);
       if (text === "on") return BoolLiteral.quick(debug, true);
@@ -5573,28 +5560,29 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (text === "up") return BoolLiteral.quick(debug, false);
       throw new Error("bool capture text not one of the mathlang bools");
     },
-    BAREWORD: (f, node) => node.text,
-    QUOTED_STRING: (f, node) => node.text.slice(1, -1),
-    NUMBER: (f, node) => Number(node.text),
-    DURATION: (f, node) => {
-      const suffix = optionalTextForField(f, node, "suffix");
-      const int = textForField(f, node, "NUMBER");
+    BAREWORD: (debug) => debug.node.text,
+    QUOTED_STRING: (debug) => debug.node.text.slice(1, -1),
+    NUMBER: (debug) => Number(debug.node.text),
+    DURATION: (debug) => {
+      const suffix = optionalTextForField(debug, "suffix");
+      const int = textForField(debug, "NUMBER");
       let n = parseInt(int);
       if (suffix === "s") n *= 1e3;
       return n;
     },
-    DISTANCE: (f, node) => parseInt(node.text),
-    QUANTITY: (f, node) => {
-      if (node.childCount === 0) {
-        if (node.text === "once") return 1;
-        if (node.text === "twice") return 2;
-        if (node.text === "thrice") return 3;
+    DISTANCE: (debug) => parseInt(debug.node.text),
+    QUANTITY: (debug) => {
+      if (debug.node.childCount === 0) {
+        if (debug.node.text === "once") return 1;
+        if (debug.node.text === "twice") return 2;
+        if (debug.node.text === "thrice") return 3;
       }
-      const int = textForField(f, node, "NUMBER");
+      const int = textForField(debug, "NUMBER");
       const n = parseInt(int);
       return n;
     },
-    COLOR: (f, node) => {
+    COLOR: (debug) => {
+      const node = debug.node;
       if (node.childCount === 0) {
         if (node.text === "white") return "#FFFFFF";
         if (node.text === "black") return "#000000";
@@ -5613,118 +5601,111 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return node.text;
     },
-    CONSTANT: (f, node) => node.text,
-    AND: (f, node) => node.text,
-    OR: (f, node) => node.text,
-    "!": (f, node) => node.text,
-    BANG: (f, node) => node.text,
-    MUL_DIV_MOD: (f, node) => node.text,
-    ADD_SUB: (f, node) => node.text,
-    EQUALITY: (f, node) => {
-      const op = node.text;
+    CONSTANT: (debug) => debug.node.text,
+    AND: (debug) => debug.node.text,
+    OR: (debug) => debug.node.text,
+    "!": (debug) => debug.node.text,
+    BANG: (debug) => debug.node.text,
+    MUL_DIV_MOD: (debug) => debug.node.text,
+    ADD_SUB: (debug) => debug.node.text,
+    EQUALITY: (debug) => {
+      const op = debug.node.text;
       if (op === "===") {
-        f.quickWarning(node, "invalid operator", `use '==', not '==='`);
+        debug.f.quickWarning(debug.node, "invalid operator", `use '==', not '==='`);
         return "==";
       }
       if (op === "!==") {
-        f.quickWarning(node, "invalid operator", `use '!=', not '!=='`);
+        debug.f.quickWarning(debug.node, "invalid operator", `use '!=', not '!=='`);
         return "!=";
       }
       return op;
     },
-    COMPARISON: (f, node) => {
-      const op = node.text;
+    COMPARISON: (debug) => {
+      const op = debug.node.text;
       if (op === "===") {
-        f.quickWarning(node, "invalid operator", `use '==', not '==='`);
+        debug.f.quickWarning(debug.node, "invalid operator", `use '==', not '==='`);
         return "==";
       }
       if (op === "!==") {
-        f.quickWarning(node, "invalid operator", `use '!=', not '!=='`);
+        debug.f.quickWarning(debug.node, "invalid operator", `use '!=', not '!=='`);
         return "!=";
       }
       return op;
     },
-    op_equals: (f, node) => node.text[0],
-    plus_minus_equals: (f, node) => node.text,
+    op_equals: (debug) => debug.node.text[0],
+    plus_minus_equals: (debug) => debug.node.text,
     forever: () => true,
-    nsew: (f, node) => node.text,
-    entity_or_map_identifier: (f, node) => {
-      const type = optionalTextForField(f, node, "type");
-      return type === "map" ? "%MAP%" : extractEntityName(f, node);
+    nsew: (debug) => debug.node.text,
+    entity_or_map_identifier: (debug) => {
+      const type = optionalTextForField(debug, "type");
+      return type === "map" ? "%MAP%" : extractEntityName(debug);
     },
-    entity_identifier: (f, node) => extractEntityName(f, node),
-    movable_identifier: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const type = optionalTextForField(f, node, "type");
+    entity_identifier: (debug) => extractEntityName(debug),
+    movable_identifier: (debug) => {
+      const type = optionalTextForField(debug, "type");
       if (type === "camera") {
         return MovableIdentifier.quick(debug, "camera", "camera");
       } else {
-        const value = extractEntityName(f, node);
+        const value = extractEntityName(debug);
         return MovableIdentifier.quick(debug, "entity", value);
       }
     },
-    dialog_identifier: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const label = optionalTextForField(f, node, "label");
+    dialog_identifier: (debug) => {
+      const label = optionalTextForField(debug, "label");
       if (label) {
         return DialogIdentifier.quick(debug, "label", label);
       }
-      const type = textForField(f, node, "type");
+      const type = textForField(debug, "type");
       if (type !== "label" && type !== "entity" && type !== "name") {
         throw new Error("invalid dialog identifier type: " + type);
       }
-      const value = stringCaptureForField(f, node, "value");
+      const value = stringCaptureForField(debug, "value");
       return DialogIdentifier.quick(debug, type, value);
     },
-    dialog_parameter: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const property = textForField(f, node, "property");
-      const value = stringOrNumberCaptureForField(f, node, "value");
+    dialog_parameter: (debug) => {
+      const property = textForField(debug, "property");
+      const value = stringOrNumberCaptureForField(debug, "value");
       return DialogParameter.quick(debug, property, value);
     },
-    serial_dialog_parameter: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const property = textForField(f, node, "property");
-      const value = stringOrNumberCaptureForField(f, node, "value");
+    serial_dialog_parameter: (debug) => {
+      const property = textForField(debug, "property");
+      const value = stringOrNumberCaptureForField(debug, "value");
       return SerialDialogParameter.quick(debug, property, value);
     },
-    coordinate_identifier: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const type = optionalTextForField(f, node, "type");
-      const polygonType = optionalTextForField(f, node, "polygon_type");
+    coordinate_identifier: (debug) => {
+      const type = optionalTextForField(debug, "type");
+      const polygonType = optionalTextForField(debug, "polygon_type");
       if (type === "entity_path") {
         return CoordinateIdentifier.quick(debug, "geometry", "%ENTITY_PATH%", polygonType);
       }
       if (type === "geometry") {
-        const value = stringCaptureForField(f, node, "geometry");
+        const value = stringCaptureForField(debug, "geometry");
         return CoordinateIdentifier.quick(debug, "geometry", value, polygonType);
       }
-      return CoordinateIdentifier.quick(debug, "entity", extractEntityName(f, node));
+      return CoordinateIdentifier.quick(debug, "entity", extractEntityName(debug));
     },
-    bool_setable: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const type = optionalTextForField(f, node, "type");
+    bool_setable: (debug) => {
+      const type = optionalTextForField(debug, "type");
       if (!type) {
-        const value = stringCaptureForField(f, node, "flag");
+        const value = stringCaptureForField(debug, "flag");
         return BoolSetable.quick(debug, "save_flag", value);
       }
       if (type === "glitched") {
-        const value = stringCaptureForField(f, node, "entity_identifier");
+        const value = stringCaptureForField(debug, "entity_identifier");
         return BoolSetable.quick(debug, "entity", value);
       }
       if (type === "light") {
-        const value = stringCaptureForField(f, node, "light");
+        const value = stringCaptureForField(debug, "light");
         return BoolSetable.quick(debug, "light", value);
       }
       return BoolSetable.quick(debug, type, "");
     },
-    int_binary_expression: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const rhsNode = mandatoryChildForField(f, node, "rhs");
-      const lhsNode = mandatoryChildForField(f, node, "lhs");
-      const op = stringCaptureForField(f, node, "operator");
-      let rhs = handleCapture(f, rhsNode);
-      let lhs = handleCapture(f, lhsNode);
+    int_binary_expression: (debug) => {
+      const rhsNode = mandatoryChildForField(debug, "rhs");
+      const lhsNode = mandatoryChildForField(debug, "lhs");
+      const op = stringCaptureForField(debug, "operator");
+      let rhs = handleCapture(debug.using(rhsNode));
+      let lhs = handleCapture(debug.using(lhsNode));
       if (!(lhs instanceof IntBinaryExpression)) {
         lhs = IntUnit.fromAny(debug.using(lhsNode), lhs);
       }
@@ -5733,13 +5714,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return new IntBinaryExpression(debug, { lhs, rhs, op });
     },
-    bool_binary_expression: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const rhsNode = mandatoryChildForField(f, node, "rhs");
-      const lhsNode = mandatoryChildForField(f, node, "lhs");
-      const op = stringCaptureForField(f, node, "operator");
-      let rhs = handleCapture(f, rhsNode);
-      let lhs = handleCapture(f, lhsNode);
+    bool_binary_expression: (debug) => {
+      const rhsNode = mandatoryChildForField(debug, "rhs");
+      const lhsNode = mandatoryChildForField(debug, "lhs");
+      const op = stringCaptureForField(debug, "operator");
+      let rhs = handleCapture(debug.using(rhsNode));
+      let lhs = handleCapture(debug.using(lhsNode));
       if (typeof lhs === "string") {
         lhs = CheckSaveFlag.quick(debug, lhs);
       }
@@ -5757,9 +5737,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       throw new Error("invalid LHS and RHS combo for captured bool binary expression");
     },
-    bool_grouping: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const capture = captureForField(f, node, "inner");
+    bool_grouping: (debug) => {
+      const capture = captureForField(debug, "inner");
       if (typeof capture === "boolean") {
         return BoolLiteral.quick(debug, capture);
       }
@@ -5769,11 +5748,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (capture instanceof BoolExpression) return capture;
       throw new Error("bool_grouping capture did not yield BoolExpression");
     },
-    bool_unary_expression: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const op = stringCaptureForField(f, node, "operator");
+    bool_unary_expression: (debug) => {
+      const op = stringCaptureForField(debug, "operator");
       if (op !== "!") throw new Error("captured unknown unary operator: " + op);
-      const capture = captureForField(f, node, "operand");
+      const capture = captureForField(debug, "operand");
       if (typeof capture === "boolean") {
         return BoolLiteral.quick(debug, !capture);
       }
@@ -5789,74 +5767,76 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       throw new Error("bool_unary_expression capture did not yield BoolExpression");
     },
-    int_getable: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const rngNode = optionalChildForField(f, node, "rng");
+    int_getable: (debug) => {
+      const rngNode = optionalChildForField(debug, "rng");
       if (rngNode) {
-        return handleCapture(f, rngNode);
+        return handleCapture(debug.using(rngNode));
       }
-      const fnNode = optionalChildForField(f, node, "fn_call");
+      const fnNode = optionalChildForField(debug, "fn_call");
       if (fnNode) {
-        const fn = stringCaptureForField(f, fnNode, "name");
+        const fn = stringCaptureForField(debug.using(fnNode), "name");
         return FnCall.quick(debug, fn, "fn", fnNode);
       }
-      const copyNode = optionalChildForField(f, node, "copy_macro");
+      const copyNode = optionalChildForField(debug, "copy_macro");
       if (copyNode) {
-        const handled = handleNode(f, copyNode)[0];
+        const handled = handleNode(debug.f, copyNode)[0];
         if (!(handled instanceof AnyNode)) throw new Error("no");
-        const scriptName = stringCaptureForField(f, copyNode, "script");
-        return FnCallReturnValue.quick(debug, scriptName, "script", flattenNodes(f, [handled]));
+        const scriptName = stringCaptureForField(debug.using(copyNode), "script");
+        return FnCallReturnValue.quick(
+          debug,
+          scriptName,
+          "script",
+          flattenNodes(debug.f, [handled])
+        );
       }
-      const entity = stringCaptureForField(f, node, "entity_identifier");
-      const field = textForField(f, node, "property");
+      const entity = stringCaptureForField(debug, "entity_identifier");
+      const field = textForField(debug, "property");
       return EntityIntField.quick(debug, entity, field);
     },
-    bool_getable: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const type = optionalTextForField(f, node, "type");
+    bool_getable: (debug) => {
+      const type = optionalTextForField(debug, "type");
       if (type === "flag") {
-        return CheckSaveFlag.quick(debug, stringCaptureForField(f, node, "value"));
+        return CheckSaveFlag.quick(debug, stringCaptureForField(debug, "value"));
       } else if (type === "debug_mode") {
         return CheckDebugMode.quick(debug);
       } else if (type === "glitched") {
         return CheckEntityGlitched.quick(
           debug,
-          stringCaptureForField(f, node, "entity_identifier")
+          stringCaptureForField(debug, "entity_identifier")
         );
       } else if (type === "intersects") {
         return CheckIfEntityIsInGeometry.quick(
           debug,
-          stringCaptureForField(f, node, "entity_identifier"),
-          stringCaptureForField(f, node, "geometry_identifier")
+          stringCaptureForField(debug, "entity_identifier"),
+          stringCaptureForField(debug, "geometry_identifier")
         );
       } else if (type === "dialog" || type === "serial_dialog") {
-        const state = optionalTextForField(f, node, "value");
+        const state = optionalTextForField(debug, "value");
         if (type === "dialog") {
           return CheckDialogOpen.quick(debug, state === "open");
         } else {
           return CheckSerialDialogOpen.quick(debug, state === "open");
         }
       } else if (type === "button") {
-        const button_id = stringCaptureForField(f, node, "button");
-        const stateNode = mandatoryChildForField(f, node, "state");
+        const button_id = stringCaptureForField(debug, "button");
+        const stateNode = mandatoryChildForField(debug, "state");
         if (stateNode.text === "pressed") {
           return CheckForButtonPress.quick(debug, button_id);
         } else {
-          const state = handleCapture(f, stateNode);
+          const state = handleCapture(debug.using(stateNode));
           return CheckForButtonState.quick(
             debug,
             button_id,
-            coerceToBool(f, node, state, "button state")
+            coerceToBool(debug, state, "button state")
           );
         }
       }
       throw new Error("failed to capture bool_getable");
     },
-    string_checkable: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const entity = optionalStringCaptureForField(f, node, "entity_identifier");
+    string_checkable: (debug) => {
+      const entity = optionalStringCaptureForField(debug, "entity_identifier");
       if (entity === null) {
-        const type = optionalTextForField(f, node, "type");
+        const type = optionalTextForField(debug, "type");
         if (type === "warp_state") {
           return CheckWarpState.quick(debug, "");
         } else {
@@ -5865,7 +5845,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           );
         }
       }
-      const property = textForField(f, node, "property");
+      const property = textForField(debug, "property");
       if (property === "on_tick") {
         return CheckEntityTickScript.quick(debug, entity, "");
       } else if (property === "on_look") {
@@ -5881,39 +5861,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       throw new Error(`could not capture entity string_checkable`);
     },
-    geometry_identifier: (f, node) => {
-      const type = optionalTextForField(f, node, "type");
+    geometry_identifier: (debug) => {
+      const type = optionalTextForField(debug, "type");
       if (type === "entity_path") {
         return "%ENTITY_PATH%";
       }
-      return stringCaptureForField(f, node, "geometry");
+      return stringCaptureForField(debug, "geometry");
     },
-    entity_direction: (f, node) => {
-      return stringCaptureForField(f, node, "entity_identifier");
+    entity_direction: (debug) => {
+      return stringCaptureForField(debug, "entity_identifier");
     },
-    bool_comparison: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const lhsNode = mandatoryChildForField(f, node, "lhs");
-      const rhsNode = mandatoryChildForField(f, node, "rhs");
-      const op = stringCaptureForField(f, node, "operator");
-      let lhs = handleCapture(f, lhsNode);
-      let rhs = handleCapture(f, rhsNode);
+    bool_comparison: (debug) => {
+      const lhsNode = mandatoryChildForField(debug, "lhs");
+      const rhsNode = mandatoryChildForField(debug, "rhs");
+      const op = stringCaptureForField(debug, "operator");
+      let lhs = handleCapture(debug.using(lhsNode));
+      let rhs = handleCapture(debug.using(rhsNode));
       if (lhsNode.grammarType === "entity_direction") {
-        const entity = stringCaptureForField(f, lhsNode, "entity_identifier");
-        const nsew = coerceToString(f, node, rhs, "bool_comparison entity_direction string");
+        const entity = stringCaptureForField(debug.using(lhsNode), "entity_identifier");
+        const nsew = coerceToString(debug, rhs, "bool_comparison entity_direction string");
         return CheckEntityDirection.quick(debug, entity, nsew, op);
       }
       if (rhsNode.grammarType === "entity_direction") {
-        const entity = stringCaptureForField(f, rhsNode, "entity_identifier");
-        const nsew = coerceToString(f, node, lhs, "bool_comparison entity_direction string");
+        const entity = stringCaptureForField(debug.using(rhsNode), "entity_identifier");
+        const nsew = coerceToString(debug, lhs, "bool_comparison entity_direction string");
         return CheckEntityDirection.quick(debug, entity, nsew, op);
       }
       if (lhs instanceof StringCheckable) {
-        const string = coerceToString(f, node, rhs, "bool_comparison string_checkable string");
+        const string = coerceToString(debug, rhs, "bool_comparison string_checkable string");
         return lhs.addDetails(string, op);
       }
       if (rhs instanceof StringCheckable) {
-        const string = coerceToString(f, node, lhs, "bool_comparison string_checkable string");
+        const string = coerceToString(debug, lhs, "bool_comparison string_checkable string");
         return rhs.addDetails(string, op);
       }
       const steps = [];
@@ -5970,33 +5949,31 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       dropTemporary();
       dropTemporary();
-      return BoolComparisonSequence.orSingle(f, node, steps, "bool_comparison");
+      return BoolComparisonSequence.orSingle(debug.f, debug.node, steps, "bool_comparison");
     },
-    int_setable: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const entity = stringCaptureForField(f, node, "entity_identifier");
-      const field = textForField(f, node, "property");
+    int_setable: (debug) => {
+      const entity = stringCaptureForField(debug, "entity_identifier");
+      const field = textForField(debug, "property");
       return EntityIntField.quick(debug, entity, field);
     },
-    int_grouping: (f, node) => {
-      const capture = handleCapture(f, namedChildren(f, node)[0]);
+    int_grouping: (debug) => {
+      const capture = handleCapture(debug.using(namedChildren(debug)[0]));
       if (capture instanceof IntExpression) return capture;
       throw new Error("captured int_grouping did not produce IntExpression");
     },
-    int_rng: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      let value = optionalNumberCaptureForField(f, node, "value");
-      const inclusive = optionalTextForField(f, node, "inclusive");
+    int_rng: (debug) => {
+      let value = optionalNumberCaptureForField(debug, "value");
+      const inclusive = optionalTextForField(debug, "inclusive");
       if (value !== null) {
         if (inclusive) {
           value += 1;
         }
         return RNGSingle.quick(debug, value);
       }
-      let min = numberCaptureForField(f, node, "min");
-      let max = numberCaptureForField(f, node, "max");
+      let min = numberCaptureForField(debug, "min");
+      let max = numberCaptureForField(debug, "max");
       if (min > max) {
-        f.quickWarning(node, "misordered params", "min must be less than max");
+        debug.f.quickWarning(debug.node, "misordered params", "min must be less than max");
         const switcheroo = min;
         min = max;
         max = switcheroo;
@@ -6007,33 +5984,31 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const diff = max - min;
       return RNGPair.quick(debug, diff, min);
     },
-    direction_target: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
-      const direction = optionalTextForField(f, node, "nsew");
+    direction_target: (debug) => {
+      const direction = optionalTextForField(debug, "nsew");
       if (direction) {
         return DirectionTarget.quick(debug, "nsew", direction);
       }
-      const target_geometry = optionalStringCaptureForField(f, node, "geometry");
+      const target_geometry = optionalStringCaptureForField(debug, "geometry");
       if (target_geometry) {
         return DirectionTarget.quick(debug, "geometry", target_geometry);
       }
-      const target_entity = optionalStringCaptureForField(f, node, "entity");
+      const target_entity = optionalStringCaptureForField(debug, "entity");
       if (target_entity) {
         return DirectionTarget.quick(debug, "entity", target_entity);
       }
       throw new Error("could not capture direction_target");
     },
-    set_entity_string_field: (f, node) => node.text,
-    script_literal: (f, node) => {
-      const debug = MathlangLocation.quick(f, node);
+    set_entity_string_field: (debug) => debug.node.text,
+    script_literal: (debug) => {
       let scriptName = "";
-      let blockNode = optionalChildForField(f, node, "bare_definition");
+      let blockNode = optionalChildForField(debug, "bare_definition");
       if (!blockNode) {
-        const useNode = mandatoryChildForField(f, node, "named_definition");
-        blockNode = mandatoryChildForField(f, useNode, "script_block");
-        scriptName = stringCaptureForField(f, useNode, "script_name");
+        const useNode = mandatoryChildForField(debug, "named_definition");
+        blockNode = mandatoryChildForField(debug.using(useNode), "script_block");
+        scriptName = stringCaptureForField(debug.using(useNode), "script_name");
       } else {
-        scriptName = autoIdentifierName(f, node);
+        scriptName = autoIdentifierName(debug);
       }
       const definition = ScriptDefinition.processAndMake(debug, scriptName, blockNode);
       if (definition.actions.length === 1) {
@@ -6043,148 +6018,154 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
     }
   };
-  const extractEntityName = (f, node) => {
-    const type = optionalTextForField(f, node, "type");
+  const extractEntityName = (debug) => {
+    const type = optionalTextForField(debug, "type");
     if (type === "self") return "%SELF%";
     if (type === "player") return "%PLAYER%";
     if (type !== "entity") throw new Error("Entity identifier not an entity?");
-    return stringCaptureForField(f, node, "entity");
+    return stringCaptureForField(debug, "entity");
   };
-  const optionalChildForField = (f, node, fieldName) => {
-    const child = node.childForFieldName(fieldName);
+  const optionalChildForField = (debug, fieldName) => {
+    const child = debug.node.childForFieldName(fieldName);
     if (child === null) return null;
-    reportMissingChildNodes(f, child);
-    reportErrorNodes(f, child);
+    reportMissingChildNodes(debug.using(child));
+    reportErrorNodes(debug.using(child));
     return child;
   };
-  const mandatoryChildForField = (f, node, fieldName) => {
-    const child = optionalChildForField(f, node, fieldName);
+  const mandatoryChildForField = (debug, fieldName) => {
+    const child = optionalChildForField(debug, fieldName);
     if (child === null) throw new Error("missing child for field name " + fieldName);
     return child;
   };
-  const childrenForField = (f, node, fieldName) => {
-    const children = node.childrenForFieldName(fieldName);
+  const childrenForField = (debug, fieldName) => {
+    const children = debug.node.childrenForFieldName(fieldName);
     return children.filter((v) => v !== null).map((v) => {
-      reportMissingChildNodes(f, v);
-      reportErrorNodes(f, v);
+      reportMissingChildNodes(debug.using(v));
+      reportErrorNodes(debug.using(v));
       return v;
     }).flat();
   };
-  const namedChildren = (f, node) => {
-    return node.namedChildren.filter((v) => v !== null).map((v) => {
-      reportMissingChildNodes(f, v);
-      reportErrorNodes(f, v);
+  const namedChildren = (debug) => {
+    return debug.node.namedChildren.filter((v) => v !== null).map((v) => {
+      reportMissingChildNodes(debug.using(v));
+      reportErrorNodes(debug.using(v));
       return v;
     }).flat();
   };
-  const mandatoryLastChild = (f, node) => {
-    const lastChild = optionalLastChild(f, node);
+  const mandatoryLastChild = (debug) => {
+    const lastChild = optionalLastChild(debug);
     if (!lastChild) throw new Error("no last child");
     return lastChild;
   };
-  const optionalLastChild = (f, node) => {
-    const lastChild = node.lastChild;
+  const optionalLastChild = (debug) => {
+    const lastChild = debug.node.lastChild;
     if (!lastChild) return null;
-    reportMissingChildNodes(f, lastChild);
-    reportErrorNodes(f, lastChild);
+    reportMissingChildNodes(debug.using(lastChild));
+    reportErrorNodes(debug.using(lastChild));
     return lastChild;
   };
-  const handleNamedChildren = (f, node) => {
-    const children = namedChildren(f, node);
-    return children.map((v) => handleNode(f, v)).flat();
+  const handleNamedChildren = (debug) => {
+    const children = namedChildren(debug);
+    return children.map((v) => handleNode(debug.f, v)).flat();
   };
-  const handleChildrenForField = (f, node, fieldName) => {
-    const children = childrenForField(f, node, fieldName);
-    return children.map((v) => handleNode(f, v)).flat();
+  const handleChildrenForField = (debug, fieldName) => {
+    const children = childrenForField(debug, fieldName);
+    return children.map((v) => handleNode(debug.f, v)).flat();
   };
-  const stringCaptureForField = (f, node, fieldName) => {
-    const captureNode = mandatoryChildForField(f, node, fieldName);
-    const capture = handleCapture(f, captureNode);
+  const stringCaptureForField = (debug, fieldName) => {
+    const captureNode = mandatoryChildForField(debug, fieldName);
+    const capture = handleCapture(debug.using(captureNode));
     if (typeof capture === "string") return capture;
     throw new Error(`capture from field ${fieldName} not a string`);
   };
-  const optionalStringCaptureForField = (f, node, fieldName) => {
-    const captureNode = optionalChildForField(f, node, fieldName);
+  const optionalStringCaptureForField = (debug, fieldName) => {
+    const captureNode = optionalChildForField(debug, fieldName);
     if (!captureNode) return null;
-    const capture = handleCapture(f, captureNode);
+    const capture = handleCapture(debug.using(captureNode));
     if (typeof capture === "string") return capture;
     throw new Error(`capture from field ${fieldName} not a string`);
   };
-  const stringOrNumberCaptureForField = (f, node, fieldName) => {
-    const captureNode = mandatoryChildForField(f, node, fieldName);
-    const capture = handleCapture(f, captureNode);
+  const stringOrNumberCaptureForField = (debug, fieldName) => {
+    const captureNode = mandatoryChildForField(debug, fieldName);
+    const capture = handleCapture(debug.using(captureNode));
     if (typeof capture === "string" || typeof capture === "number") return capture;
     throw new Error(`capture from field ${fieldName} not a string or number`);
   };
-  const numberCaptureForField = (f, node, fieldName) => {
-    const captureNode = mandatoryChildForField(f, node, fieldName);
-    const capture = handleCapture(f, captureNode);
+  const numberCaptureForField = (debug, fieldName) => {
+    const captureNode = mandatoryChildForField(debug, fieldName);
+    const capture = handleCapture(debug.using(captureNode));
     if (typeof capture === "number") return capture;
     throw new Error(`capture from field ${fieldName} not a number`);
   };
-  const optionalNumberCaptureForField = (f, node, fieldName) => {
-    const captureNode = optionalChildForField(f, node, fieldName);
+  const optionalNumberCaptureForField = (debug, fieldName) => {
+    const captureNode = optionalChildForField(debug, fieldName);
     if (!captureNode) return null;
-    const capture = handleCapture(f, captureNode);
+    const capture = handleCapture(debug.using(captureNode));
     if (typeof capture === "number") return capture;
     throw new Error(`capture from field ${fieldName} not a number`);
   };
-  const captureForField = (f, node, fieldName) => {
-    const captureNode = optionalChildForField(f, node, fieldName);
+  const captureForField = (debug, fieldName) => {
+    const captureNode = optionalChildForField(debug, fieldName);
     if (!captureNode) return void 0;
-    return handleCapture(f, captureNode);
+    return handleCapture(debug.using(captureNode));
   };
-  const capturesForField = (f, node, fieldName) => {
-    return childrenForField(f, node, fieldName).map((v) => handleCapture(f, v)).flat();
+  const capturesForField = (debug, fieldName) => {
+    return childrenForField(debug, fieldName).map((v) => handleCapture(debug.using(v))).flat();
   };
-  const optionalTextForField = (f, node, fieldName) => {
-    const captureNode = optionalChildForField(f, node, fieldName);
+  const optionalTextForField = (debug, fieldName) => {
+    const captureNode = optionalChildForField(debug, fieldName);
     if (!captureNode) return void 0;
     return captureNode.text;
   };
-  const textForField = (f, node, fieldName) => {
-    const captureNode = mandatoryChildForField(f, node, fieldName);
+  const textForField = (debug, fieldName) => {
+    const captureNode = mandatoryChildForField(debug, fieldName);
     return captureNode.text;
   };
-  const coerceToString = (f, node, v, label) => {
+  const coerceToString = (debug, v, label) => {
     if (typeof v === "string") return v;
-    const locations = [MathlangLocation.quick(f, node)];
-    if (f.constants[node.text]) {
-      locations.unshift(f.constants[node.text].debug);
+    const locations = [debug];
+    if (debug.f.constants[debug.node.text]) {
+      locations.unshift(debug.f.constants[debug.node.text].debug);
     }
     if (label) {
-      f.newError(new MathlangMessage(locations, "value wrong type", `${label} is not a string`));
+      debug.f.newError(
+        new MathlangMessage(locations, "value wrong type", `${label} is not a string`)
+      );
     } else {
-      f.newError(new MathlangMessage(locations, "value wrong type", `value not a string`));
+      debug.f.newError(new MathlangMessage(locations, "value wrong type", `value not a string`));
     }
     return "";
   };
-  const coerceToNumber = (f, node, v, label) => {
+  const coerceToNumber = (debug, v, label) => {
     if (typeof v === "number") return v;
-    const locations = [MathlangLocation.quick(f, node)];
-    if (f.constants[node.text]) {
-      locations.unshift(f.constants[node.text].debug);
+    const locations = [debug];
+    if (debug.f.constants[debug.node.text]) {
+      locations.unshift(debug.f.constants[debug.node.text].debug);
     }
     if (label) {
-      f.newError(new MathlangMessage(locations, "value wrong type", `${label} is not a number`));
+      debug.f.newError(
+        new MathlangMessage(locations, "value wrong type", `${label} is not a number`)
+      );
     } else {
-      f.newError(new MathlangMessage(locations, "value wrong type", `value not a number`));
+      debug.f.newError(new MathlangMessage(locations, "value wrong type", `value not a number`));
     }
     return NaN;
   };
-  const coerceToBool = (f, node, v, label) => {
+  const coerceToBool = (debug, v, label) => {
     if (v instanceof BoolLiteral) {
       return v.value;
     }
     if (typeof v === "boolean") return v;
-    const locations = [MathlangLocation.quick(f, node)];
-    if (f.constants[node.text]) {
-      locations.unshift(f.constants[node.text].debug);
+    const locations = [debug];
+    if (debug.f.constants[debug.node.text]) {
+      locations.unshift(debug.f.constants[debug.node.text].debug);
     }
     if (label) {
-      f.newError(new MathlangMessage(locations, "value wrong type", `${label} is not a boolean`));
+      debug.f.newError(
+        new MathlangMessage(locations, "value wrong type", `${label} is not a boolean`)
+      );
     } else {
-      f.newError(new MathlangMessage(locations, "value wrong type", `value not a boolean`));
+      debug.f.newError(new MathlangMessage(locations, "value wrong type", `value not a boolean`));
     }
     return false;
   };
@@ -6259,9 +6240,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     clone() {
       return new MathlangLocation(this.args);
     }
-    //TODO: instead of passing `f, node` all the time, just pass one of these and update the node when needed
+    //TODO: instead of passing `f, node` all the time, just pass one of these and update the node when needed, like this:
     using(newNode) {
       return MathlangLocation.quick(this.f, newNode);
+    }
+    // TODO: transition all f.quickError() to these:
+    quickError(type, message, footer) {
+      this.f.quickError(this.node, type, message, footer);
+    }
+    quickWarning(type, message, footer) {
+      this.f.quickWarning(this.node, type, message, footer);
     }
   }
   const isMathlangMessageType = (v) => {
@@ -7026,7 +7014,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (v instanceof IntBinaryExpression) return v;
       if (v instanceof IntGetable) return v;
       if (debug.node.grammarType === "CONSTANT" && typeof v !== "string" && typeof v !== "number") {
-        v = coerceToString(debug.f, debug.node, v, "constant");
+        v = coerceToString(debug, v, "constant");
       }
       if (typeof v === "number") {
         return NumberLiteral.quick(debug, v);
@@ -7196,10 +7184,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       } else if (field === "animation_frame") {
         return CheckEntityCurrentFrame.quick(debug, entity, NaN);
       } else if (field === "strafe") {
-        const f = this.debug.f;
-        const node = this.debug.node;
-        const propertyNode = mandatoryChildForField(f, node, "property");
-        f.quickError(
+        const propertyNode = mandatoryChildForField(debug, "property");
+        debug.f.quickError(
           propertyNode,
           "unsupported entity field",
           `this property is not supported in boolean expressions`
@@ -10985,17 +10971,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     "&&": "||",
     "||": "&&"
   };
-  const reportMissingChildNodes = (f, node) => {
-    const missingNodes = node.children.filter((v) => v !== null).filter((child) => child == null ? void 0 : child.isMissing);
+  const reportMissingChildNodes = (debug) => {
+    const missingNodes = debug.node.children.filter((v) => v !== null).filter((child) => child == null ? void 0 : child.isMissing);
     missingNodes.forEach((missingChild) => {
-      f.quickWarning(missingChild, "missing token", `expected token: ${missingChild.type}`);
+      debug.using(missingChild).quickWarning("missing token", `expected token: ${missingChild.type}`);
     });
     return missingNodes;
   };
-  const reportErrorNodes = (f, node) => {
-    const errorNodes = node.children.filter((v) => v !== null).filter((child) => child.type === "ERROR");
+  const reportErrorNodes = (debug) => {
+    const errorNodes = debug.node.children.filter((v) => v !== null).filter((child) => child.type === "ERROR");
     errorNodes.forEach((errorNode) => {
-      f.quickError(errorNode, "syntax error", "");
+      debug.using(errorNode).quickError("syntax error", "");
     });
     return errorNodes;
   };
@@ -11025,8 +11011,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     return message + "\n";
   };
-  const autoIdentifierName = (f, node) => {
-    return f.fileName + "-" + node.startPosition.row + ":" + node.startPosition.column;
+  const autoIdentifierName = (debug) => {
+    return debug.fileName + "-" + debug.node.startPosition.row + ":" + debug.node.startPosition.column;
   };
   const flattenNodes = (f, rawActions) => {
     const actions = [];
@@ -11050,7 +11036,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     const debug = MathlangLocation.quick(f, node);
     const steps = flattenNodes(f, origSteps);
     const label = "end of script " + f.p.advanceGotoSuffix();
-    const fakeReturnNode = mandatoryLastChild(f, node);
+    const fakeReturnNode = mandatoryLastChild(debug);
     const autoReturnLabelDefinition = LabelDefinition.quick(debug.using(fakeReturnNode), label);
     steps.push(autoReturnLabelDefinition);
     steps.forEach((action, i2) => {
@@ -11092,13 +11078,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "bodyNode");
       __publicField(this, "debug");
       const debug = MathlangLocation.quick(f, node);
-      this.conditionNode = mandatoryChildForField(f, node, "condition");
-      let condition = handleCapture(f, this.conditionNode);
+      this.debug = debug;
+      this.conditionNode = mandatoryChildForField(debug, "condition");
+      let condition = handleCapture(debug.using(this.conditionNode));
       if (typeof condition === "string") condition = CheckSaveFlag.quick(debug, condition);
       this.condition = BoolExpression.breakIfNot(condition);
-      this.bodyNode = mandatoryChildForField(f, node, "body");
-      this.body = handleNamedChildren(f, this.bodyNode);
-      this.debug = MathlangLocation.quick(f, node);
+      this.bodyNode = mandatoryChildForField(debug, "body");
+      this.body = handleNamedChildren(debug.using(this.bodyNode));
     }
   }
   const ifChainMaker = (f, node, iffs, elseBody, label) => {
@@ -11270,7 +11256,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
         const targetScript = action.script;
         if (!this.scripts[targetScript]) {
-          const useNode = action instanceof MathlangNode ? optionalChildForField(action.debug.f, action.debug.node, "script") || action.debug.node : node;
+          const useNode = action instanceof MathlangNode ? optionalChildForField(action.debug, "script") || action.debug.node : node;
           this.newError(
             new MathlangMessage(
               [MathlangLocation.quick(scriptData.debug.f, useNode)],
@@ -11317,15 +11303,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             return Action.fromArgs(ret);
           });
           const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
-          finalActions.push(
-            CommentNode.quick(MathlangLocation.quick(f, node), comment)
-          );
+          finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
           finalActions.push(...searchedAndReplaced);
         } else {
           const comment = `Copying: ${action.script} (-${labelSuffix})`;
-          finalActions.push(
-            CommentNode.quick(MathlangLocation.quick(f, node), comment)
-          );
+          finalActions.push(CommentNode.quick(MathlangLocation.quick(f, node), comment));
           finalActions.push(...copiedActions);
         }
       });
@@ -11345,23 +11327,24 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (!ast) throw new Error("tree-sitter parser failed to produce AST");
       const document2 = ast.rootNode;
       const f = new FileState(this, fileName);
-      reportMissingChildNodes(f, document2);
-      reportErrorNodes(f, document2);
+      const documentDebug = MathlangLocation.quick(f, document2);
+      reportMissingChildNodes(documentDebug);
+      reportErrorNodes(documentDebug);
       let catastrophicErrorReported = false;
-      const nodes = namedChildren(f, document2).map((node) => {
+      const nodes = namedChildren(MathlangLocation.quick(f, document2)).map((node) => {
         if (catastrophicErrorReported) {
           return;
         } else if (node && !node.isError) {
           return handleNode(f, node);
         } else if (!catastrophicErrorReported) {
+          const debug = MathlangLocation.quick(f, node);
           if ((node == null ? void 0 : node.text) === ";") {
-            f.quickError(node, "unexpected token", `unexpected semicolon`);
+            debug.quickError("unexpected token", `unexpected semicolon`);
           } else {
             if (!node) {
               throw new Error("no node found for catastrophic error case");
             }
-            f.quickError(
-              node,
+            debug.quickError(
               "syntax error",
               `catastrophic syntax error (naive guess: invalid script name)`,
               `Avoid keywords for bare script names in definitions, or wrap the script name in quotes

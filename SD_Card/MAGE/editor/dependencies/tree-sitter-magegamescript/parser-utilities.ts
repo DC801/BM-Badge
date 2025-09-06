@@ -143,24 +143,23 @@ export const inverseOpMap: Record<string, string> = {
 	'&&': '||',
 	'||': '&&',
 };
-export const reportMissingChildNodes = (
-	f: FileState,
-	node: TreeSitterNode,
-): (TreeSitterNode | null)[] => {
-	const missingNodes = node.children
+export const reportMissingChildNodes = (debug: MathlangLocation): (TreeSitterNode | null)[] => {
+	const missingNodes = debug.node.children
 		.filter((v) => v !== null)
 		.filter((child) => child?.isMissing);
 	missingNodes.forEach((missingChild) => {
-		f.quickWarning(missingChild, 'missing token', `expected token: ${missingChild.type}`);
+		debug
+			.using(missingChild)
+			.quickWarning('missing token', `expected token: ${missingChild.type}`);
 	});
 	return missingNodes;
 };
-export const reportErrorNodes = (f: FileState, node: TreeSitterNode): (TreeSitterNode | null)[] => {
-	const errorNodes = node.children
+export const reportErrorNodes = (debug: MathlangLocation): (TreeSitterNode | null)[] => {
+	const errorNodes = debug.node.children
 		.filter((v) => v !== null)
 		.filter((child) => child.type === 'ERROR');
 	errorNodes.forEach((errorNode) => {
-		f.quickError(errorNode, 'syntax error', '');
+		debug.using(errorNode).quickError('syntax error', '');
 	});
 	return errorNodes;
 };
@@ -194,8 +193,10 @@ export const printableMessage = (fileMap: FileMap, prefix: string, v: MathlangMe
 	return message + '\n';
 };
 
-export const autoIdentifierName = (f: FileState, node: TreeSitterNode): string => {
-	return f.fileName + '-' + node.startPosition.row + ':' + node.startPosition.column;
+export const autoIdentifierName = (debug: MathlangLocation): string => {
+	return (
+		debug.fileName + '-' + debug.node.startPosition.row + ':' + debug.node.startPosition.column
+	);
 };
 
 // ------------------------ SEQUENCES ------------------------ //
@@ -233,7 +234,7 @@ export const flattenAndDoAutoReturn = (
 	const steps = flattenNodes(f, origSteps);
 	// add auto return label at the end
 	const label = 'end of script ' + f.p.advanceGotoSuffix();
-	const fakeReturnNode = mandatoryLastChild(f, node);
+	const fakeReturnNode = mandatoryLastChild(debug);
 	const autoReturnLabelDefinition = LabelDefinition.quick(debug.using(fakeReturnNode), label);
 	steps.push(autoReturnLabelDefinition);
 
@@ -288,15 +289,15 @@ export class ConditionalBlock {
 	// TODO: make constructor build from processed parts, and move this to its own method that processes it from the base node
 	constructor(f: FileState, node: TreeSitterNode) {
 		const debug = MathlangLocation.quick(f, node);
-		this.conditionNode = mandatoryChildForField(f, node, 'condition');
+		this.debug = debug;
+		this.conditionNode = mandatoryChildForField(debug, 'condition');
 		// TODO this should not be handled this way! make uniform
 		// Find other cases, too? node handling should be done in one place so it can report errors
-		let condition = handleCapture(f, this.conditionNode);
+		let condition = handleCapture(debug.using(this.conditionNode));
 		if (typeof condition === 'string') condition = CheckSaveFlag.quick(debug, condition);
 		this.condition = BoolExpression.breakIfNot(condition);
-		this.bodyNode = mandatoryChildForField(f, node, 'body');
-		this.body = handleNamedChildren(f, this.bodyNode);
-		this.debug = MathlangLocation.quick(f, node);
+		this.bodyNode = mandatoryChildForField(debug, 'body');
+		this.body = handleNamedChildren(debug.using(this.bodyNode));
 	}
 }
 
