@@ -75,8 +75,8 @@ import {
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
 	breakIfNotString,
 	Action,
-	DELETE_ARRAY,
-	NEW_ARRAY,
+	ARRAY_DELETE,
+	ARRAY_NEW,
 	ARRAY_PUSH_VARIABLE,
 	ARRAY_PUSH_VALUE,
 } from './parser-bytecode-info.ts';
@@ -217,9 +217,9 @@ const actionFns: Record<string, ActionFn> = {
 	action_new_array: (debug) => {
 		const name = stringCaptureForField(debug, 'array');
 		const emptyNode = optionalChildForField(debug, 'empty');
-		if (emptyNode) return [new NEW_ARRAY({ array: name })];
+		if (emptyNode) return [ARRAY_NEW.quick(name)];
 		const valuesNode = optionalChildForField(debug, 'values');
-		const steps: AnyNode[] = [NEW_ARRAY.quick(name)];
+		const steps: AnyNode[] = [ARRAY_NEW.quick(name)];
 		if (valuesNode) {
 			const handled = handleCapture(debug.using(valuesNode));
 			const values = Array.isArray(handled) ? handled : [handled];
@@ -964,8 +964,9 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_delete_array: {
 		captures: ['array'],
-		handle: (v) => {
-			return new DELETE_ARRAY(v);
+		handle: (v, debug) => {
+			const name = stringCaptureForField(debug, 'name');
+			return ARRAY_DELETE.quick(name);
 		},
 	},
 };

@@ -18,7 +18,7 @@ const actionArrayToScript = (
 
 // will do all tests if empty
 // if not empty, also won't do any file-level tests
-const onlyDoTheseActionTests = [];
+const onlyDoTheseActionTests = ['array_slices_number'];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
@@ -27,6 +27,24 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	array_slices_number: {
+		input: [
+			`array a = b.slice();`,
+			`array c = d.slice(0);`,
+			`array e = f.slice(1);`,
+			`array g = h.slice(2,3);`,
+		],
+		expected: [
+			`array "a" = [];`,
+			`"a" = "b".slice();`,
+			`array "c" = [];`,
+			`"c" = "d".slice();`,
+			`array "e" = [];`,
+			`"e" = "f".slice(1);`,
+			`array "g" = [];`,
+			`"g" = "h".slice(2, 3);`,
+		],
+	},
 	new_array_with_method_chain: {
 		input: [
 			`array a = b.slice();`,

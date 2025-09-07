@@ -46,7 +46,10 @@ import {
 	ArrayMethod,
 	ArrayReverse,
 	ArraySort,
-	ArraySlice,
+	ArraySliceByNumber,
+	ArraySliceTwiceByNumber,
+	ArraySliceByVariable,
+	ArraySliceTwiceByVariable,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -59,6 +62,7 @@ import {
 	autoIdentifierName,
 } from './parser-utilities.ts';
 import { handleNode } from './parser-node.ts';
+import { MUTATE_VARIABLE } from './parser-bytecode-info.ts';
 
 export type Capture = number | string | boolean | AnyNode;
 
@@ -608,11 +612,26 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 			}
 			throw new Error('unsupported slice index type');
 		});
-		let ret = ArraySlice.quick(debug, steps);
-		if (args.length === 2) {
-			ret = ArraySlice.quick(debug, steps, args[0], args[1]);
-		} else if (args.length === 1) {
-			ret = ArraySlice.quick(debug, steps, args[0]);
+		if (args.length === 0) args.push(0);
+		if (args.every(v=>typeof v === 'number')) {
+			if (args.length === 1) {
+				return ArraySliceByNumber.quick(debug, args[0]);
+			} else {
+				return ArraySliceTwiceByNumber.quick(debug, args[0], args[1]);
+			}
+		}
+		const stringArgs = args.map(v=>{
+			if (typeof v === 'number') {
+				const temp = newTemporary();
+				temporariesUsed += 1;
+				steps.push(MUTATE_VARIABLE.set(temp, v));
+				return temp;
+			}
+			return v;
+		})
+		let ret = ArraySliceByVariable.quick(debug, steps, stringArgs[0]);
+		if (stringArgs.length === 2) {
+			ret = ArraySliceTwiceByVariable.quick(debug, steps, stringArgs[0], stringArgs[1]);
 		}
 		for (let i = temporariesUsed; i < 0; i--) {
 			dropTemporary();

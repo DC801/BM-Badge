@@ -4314,9 +4314,9 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     action_new_array: (debug) => {
       const name2 = stringCaptureForField(debug, "array");
       const emptyNode = optionalChildForField(debug, "empty");
-      if (emptyNode) return [new NEW_ARRAY({ array: name2 })];
+      if (emptyNode) return [ARRAY_NEW.quick(name2)];
       const valuesNode = optionalChildForField(debug, "values");
-      const steps = [NEW_ARRAY.quick(name2)];
+      const steps = [ARRAY_NEW.quick(name2)];
       if (valuesNode) {
         const handled = handleCapture(debug.using(valuesNode));
         const values = Array.isArray(handled) ? handled : [handled];
@@ -4344,19 +4344,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       if (methodsNode) {
         const handledRaw = handleCapture(debug.using(methodsNode));
         const handled = ArrayMethodChain.breakIfNot(handledRaw);
-        let temporaryArrayCount = 0;
-        let returnArray = name2;
-        handled.chain.forEach((method) => {
-          if (method instanceof ArraySlice) {
-            returnArray = "__ARRAY_" + temporaryArrayCount;
-            temporaryArrayCount += 1;
-            steps.push(method.assignToVar(returnArray));
-          } else {
-            throw new Error("array method not implemented");
-          }
-        });
-        steps.push(SLICE_ARRAY.quick(name2, returnArray));
-        return steps;
+        return handled.toSteps(name2);
       }
       throw new Error("unknown new array initializer");
     },
@@ -5001,8 +4989,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     },
     action_delete_array: {
       captures: ["array"],
-      handle: (v) => {
-        return new DELETE_ARRAY(v);
+      handle: (v, debug) => {
+        const name2 = stringCaptureForField(debug, "name");
+        return ARRAY_DELETE.quick(name2);
       }
     }
   };
@@ -6030,6 +6019,56 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       } else {
         return definition;
       }
+    },
+    array_with_array_methods: (debug) => {
+      const name2 = stringCaptureForField(debug, "name");
+      const handledMethods = capturesForField(debug, "array_method");
+      return ArrayMethodChain.quick(debug, name2, ArrayMethod.breakIfNotAll(handledMethods));
+    },
+    // array_method_map: (debug) => {},
+    array_method_sort: (debug) => new ArraySort(debug, {}),
+    array_method_reverse: (debug) => new ArrayReverse(debug, {}),
+    array_method_slice: (debug) => {
+      const steps = [];
+      const argsRaw = childrenForField(debug, "arg");
+      let temporariesUsed = 0;
+      const args2 = argsRaw.map((rawArg) => {
+        const arg = handleCapture(debug.using(rawArg));
+        if (typeof arg === "string") return arg;
+        if (typeof arg === "number") return arg;
+        if (arg instanceof IntExpression) {
+          temporariesUsed += 1;
+          const temp = newTemporary();
+          steps.push(...arg.toSteps(temp));
+          return temp;
+        }
+        throw new Error("unsupported slice index type");
+      });
+      if (args2.length === 0) args2.push(0);
+      if (args2.every((v) => typeof v === "number")) {
+        if (args2.length === 1) {
+          return ArraySliceByNumber.quick(debug, args2[0]);
+        } else {
+          return ArraySliceTwiceByNumber.quick(debug, args2[0], args2[1]);
+        }
+      }
+      const stringArgs = args2.map((v) => {
+        if (typeof v === "number") {
+          const temp = newTemporary();
+          temporariesUsed += 1;
+          steps.push(MUTATE_VARIABLE.set(temp, v));
+          return temp;
+        }
+        return v;
+      });
+      let ret = ArraySliceByVariable.quick(debug, steps, stringArgs[0]);
+      if (stringArgs.length === 2) {
+        ret = ArraySliceTwiceByVariable.quick(debug, steps, stringArgs[0], stringArgs[1]);
+      }
+      for (let i2 = temporariesUsed; i2 < 0; i2--) {
+        dropTemporary();
+      }
+      return ret;
     }
   };
   const extractEntityName = (debug) => {
@@ -8593,23 +8632,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return v;
     }
-    toSteps(destinationArray) {
+    toSteps(destination) {
       const steps = [];
-      let temporaryArrayCount = 0;
-      let returnArray = destinationArray;
+      let source = this.identifier;
+      steps.push(ARRAY_NEW.quick(destination));
       this.chain.forEach((method) => {
-        if (method instanceof ArraySlice) {
-          returnArray = "__ARRAY_" + temporaryArrayCount;
-          temporaryArrayCount += 1;
-          steps.push(method.assignToVar(returnArray));
-        } else {
-          throw new Error("array method not implemented");
+        if (method instanceof ArraySliceMethod) {
+          steps.push(method.assignToVar(destination, source));
+          source = destination;
+          return;
         }
+        if (method instanceof ArraySort) {
+          steps.push(SORT_ARRAY.quick(source));
+          return;
+        }
+        if (method instanceof ArrayReverse) {
+          steps.push(REVERSE_ARRAY.quick(source));
+          return;
+        }
+        throw new Error("array method not implemented");
       });
-      steps.push(SLICE_ARRAY.quick(destinationArray, returnArray));
-      for (let i2 = temporaryArrayCount - 1; i2 < 0; i2--) {
-        steps.push(DELETE_ARRAY.quick("__ARRAY_" + i2));
-      }
       return steps;
     }
     expPrint() {
@@ -8630,43 +8672,200 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return arr;
     }
   }
-  class ArraySlice extends ArrayMethod {
+  class ArraySliceMethod extends ArrayMethod {
+    assignToVar(destinationArray, sourceArray) {
+      throw new Error("children should be doing this:" + destinationArray + sourceArray);
+    }
+  }
+  class ArraySliceByNumber extends ArraySliceMethod {
     constructor(debug, args2) {
       super(debug, args2);
-      __publicField(this, "source");
-      __publicField(this, "start");
-      __publicField(this, "end");
-      if (args2.start !== void 0) {
-        this.start = breakIfNotStringOrNumber(args2.start);
-      }
-      if (args2.end !== void 0) {
-        this.end = breakIfNotStringOrNumber(args2.end);
-      }
+      __publicField(this, "index_start");
+      this.index_start = breakIfNotNumber(args2.index_start);
     }
     clone() {
-      return new ArraySlice(this.debug.clone(), this.args);
+      return new ArraySliceByNumber(this.debug.clone(), this.args);
     }
-    static quick(debug, source, start2, end) {
-      return new ArraySlice(debug, { source, start: start2, end });
+    static quick(debug, index_start) {
+      return new ArraySliceByNumber(debug, { index_start });
     }
     static breakIfNot(v) {
-      if (!(v instanceof ArrayMethodChain)) {
-        throw new Error("not ArrayMethodChain");
+      if (!(v instanceof ArraySliceByNumber)) {
+        throw new Error("not ArraySliceByNumber");
       }
       return v;
     }
-    assignToVar(destinationArray) {
-      return SLICE_ARRAY.quick(destinationArray, this.source, this.start, this.end);
+    assignToVar(destinationArray, sourceArray) {
+      return ARRAY_SLICE.quick(destinationArray, sourceArray, this.index_start);
     }
     expPrint() {
-      if (this.start !== void 0) {
-        if (this.end !== void 0) {
-          return `.slice(${this.start}, ${this.end})`;
-        } else {
-          return `.slice(${this.start})`;
-        }
+      return `.slice(${this.index_start || ""})`;
+    }
+    print() {
+      return this.expPrint();
+    }
+  }
+  class ArraySliceTwiceByNumber extends ArraySliceMethod {
+    constructor(debug, args2) {
+      super(debug, args2);
+      __publicField(this, "index_start");
+      __publicField(this, "index_end");
+      this.index_start = breakIfNotNumber(args2.index_start);
+      this.index_end = breakIfNotNumber(args2.index_end);
+    }
+    clone() {
+      return new ArraySliceTwiceByNumber(this.debug.clone(), this.args);
+    }
+    static quick(debug, index_start, index_end) {
+      return new ArraySliceTwiceByNumber(debug, { index_start, index_end });
+    }
+    static breakIfNot(v) {
+      if (!(v instanceof ArraySliceTwiceByNumber)) {
+        throw new Error("not ArraySliceTwiceByNumber");
       }
-      return `.slice()`;
+      return v;
+    }
+    assignToVar(destinationArray, sourceArray) {
+      return ARRAY_SLICE_TWICE.quick(
+        destinationArray,
+        sourceArray,
+        this.index_start,
+        this.index_end
+      );
+    }
+    expPrint() {
+      return `.slice(${this.index_start}, ${this.index_end})`;
+    }
+    print() {
+      return this.expPrint();
+    }
+  }
+  class ArraySliceByVariable extends ArrayMethod {
+    constructor(debug, args2) {
+      super(debug, args2);
+      __publicField(this, "variable_start");
+      __publicField(this, "steps");
+      this.variable_start = breakIfNotString(args2.start);
+      this.steps = AnyNode.breakIfNotAll(args2.steps);
+    }
+    clone() {
+      return new ArraySliceByVariable(this.debug.clone(), this.args);
+    }
+    static quick(debug, steps, variable_start) {
+      return new ArraySliceByVariable(debug, { steps, variable_start });
+    }
+    static breakIfNot(v) {
+      if (!(v instanceof ArraySliceByVariable)) {
+        throw new Error("not ArraySliceByVariable");
+      }
+      return v;
+    }
+    assignToVar(destinationArray, sourceArray) {
+      return MathlangSequence.orSingle(
+        this.debug,
+        [
+          ...this.steps,
+          ARRAY_SLICE_BY_VARIABLE.quick(
+            destinationArray,
+            sourceArray,
+            this.variable_start
+          )
+        ],
+        "ArraySliceByVariable.assignToVar"
+      );
+    }
+    expPrint() {
+      return `.slice("${this.variable_start}")`;
+    }
+    print() {
+      return this.expPrint();
+    }
+  }
+  class ArraySliceTwiceByVariable extends ArrayMethod {
+    constructor(debug, args2) {
+      super(debug, args2);
+      __publicField(this, "variable_start");
+      __publicField(this, "variable_end");
+      __publicField(this, "steps");
+      this.variable_start = breakIfNotString(args2.variable_start);
+      this.variable_end = breakIfNotString(args2.variable_end);
+      this.steps = AnyNode.breakIfNotAll(args2.steps);
+    }
+    clone() {
+      return new ArraySliceTwiceByVariable(this.debug.clone(), this.args);
+    }
+    static quick(debug, steps, variable_start, variable_end) {
+      return new ArraySliceTwiceByVariable(debug, { steps, variable_start, variable_end });
+    }
+    static breakIfNot(v) {
+      if (!(v instanceof ArraySliceTwiceByVariable)) {
+        throw new Error("not ArraySliceTwiceByVariable");
+      }
+      return v;
+    }
+    assignToVar(destinationArray, sourceArray) {
+      return MathlangSequence.orSingle(
+        this.debug,
+        [
+          ...this.steps,
+          ARRAY_SLICE_TWICE_BY_VARIABLE.quick(
+            destinationArray,
+            sourceArray,
+            this.variable_start,
+            this.variable_end
+          )
+        ],
+        "ArraySliceTwiceByVariable.assignToVar"
+      );
+    }
+    expPrint() {
+      return `.slice("${this.variable_start}", "${this.variable_end})`;
+    }
+    print() {
+      return this.expPrint();
+    }
+  }
+  class ArraySort extends ArrayMethod {
+    constructor(debug, args2) {
+      super(debug, args2);
+    }
+    clone() {
+      return new ArraySort(this.debug.clone(), this.args);
+    }
+    static quick(debug) {
+      return new ArraySort(debug, {});
+    }
+    static breakIfNot(v) {
+      if (!(v instanceof ArraySort)) {
+        throw new Error("not ArraySort");
+      }
+      return v;
+    }
+    expPrint() {
+      return `.sort()`;
+    }
+    print() {
+      return this.expPrint();
+    }
+  }
+  class ArrayReverse extends ArrayMethod {
+    constructor(debug, args2) {
+      super(debug, args2);
+    }
+    clone() {
+      return new ArrayReverse(this.debug.clone(), this.args);
+    }
+    static quick(debug) {
+      return new ArrayReverse(debug, {});
+    }
+    static breakIfNot(v) {
+      if (!(v instanceof ArrayReverse)) {
+        throw new Error("not ArrayReverse");
+      }
+      return v;
+    }
+    expPrint() {
+      return `.reverse()`;
     }
     print() {
       return this.expPrint();
@@ -11082,99 +11281,178 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printCheckAction(this, "debug_mode", true);
     }
   }
-  class NEW_ARRAY extends Action {
+  class ARRAY_NEW extends Action {
     constructor(args2) {
       super();
       __publicField(this, "action");
-      __publicField(this, "array");
-      this.action = "NEW_ARRAY";
-      this.array = breakIfNotString(args2.array);
+      __publicField(this, "array_name");
+      this.action = "ARRAY_NEW";
+      this.array_name = breakIfNotString(args2.array_name);
     }
-    static quick(array) {
-      return new NEW_ARRAY({ array });
+    static quick(array_name) {
+      return new ARRAY_NEW({ array_name });
     }
     print() {
-      return `array "${this.array}" = [];`;
+      return `array "${this.array_name}" = [];`;
     }
   }
-  class DELETE_ARRAY extends Action {
+  class ARRAY_DELETE extends Action {
     constructor(args2) {
       super();
       __publicField(this, "action");
-      __publicField(this, "array");
-      this.array = breakIfNotString(args2.array);
+      __publicField(this, "array_name");
+      this.action = "ARRAY_DELETE";
+      this.array_name = breakIfNotString(args2.array_name);
     }
-    static quick(array) {
-      return new DELETE_ARRAY({ array });
+    static quick(array_name) {
+      return new ARRAY_DELETE({ array_name });
     }
     print() {
-      return `delete array "${this.array}";`;
+      return `delete array "${this.array_name}";`;
     }
   }
   class ARRAY_PUSH_VARIABLE extends Action {
     constructor(args2) {
       super();
       __publicField(this, "action");
-      __publicField(this, "array");
+      __publicField(this, "array_name");
       __publicField(this, "variable");
       this.action = "ARRAY_PUSH_VARIABLE";
-      this.array = breakIfNotString(args2.array);
+      this.array_name = breakIfNotString(args2.array_name);
       this.variable = breakIfNotString(args2.variable);
     }
-    static quick(array, variable) {
-      return new ARRAY_PUSH_VARIABLE({ array, variable });
+    static quick(array_name, variable) {
+      return new ARRAY_PUSH_VARIABLE({ array_name, variable });
     }
     print() {
-      return `${this.array}.push("${this.variable}");`;
+      return `"${this.array_name}".push("${this.variable}");`;
     }
   }
   class ARRAY_PUSH_VALUE extends Action {
     constructor(args2) {
       super();
       __publicField(this, "action");
-      __publicField(this, "array");
+      __publicField(this, "array_name");
       __publicField(this, "value");
       this.action = "ARRAY_PUSH_VALUE";
-      this.array = breakIfNotString(args2.array);
+      this.array_name = breakIfNotString(args2.array_name);
       this.value = breakIfNotNumber(args2.value);
     }
-    static quick(array, value) {
-      return new ARRAY_PUSH_VALUE({ array, value });
+    static quick(array_name, value) {
+      return new ARRAY_PUSH_VALUE({ array_name, value });
     }
     print() {
-      return `${this.array}.push(${this.value});`;
+      return `"${this.array_name}".push(${this.value});`;
     }
   }
-  class SLICE_ARRAY extends Action {
+  class ARRAY_SLICE extends Action {
     constructor(args2) {
       super();
       __publicField(this, "action");
       __publicField(this, "array");
       __publicField(this, "source");
-      __publicField(this, "start");
-      __publicField(this, "end");
-      this.action = "SLICE_ARRAY";
+      __publicField(this, "index_start");
+      this.action = "ARRAY_SLICE";
       this.array = breakIfNotString(args2.array);
       this.source = breakIfNotString(args2.source);
-      if (args2.start !== void 0) {
-        this.start = breakIfNotStringOrNumber(args2.start);
-      }
-      if (args2.end !== void 0) {
-        this.end = breakIfNotStringOrNumber(args2.end);
-      }
+      this.index_start = breakIfNotNumber(args2.index_start);
     }
-    static quick(destination, source, start2, end) {
-      return new SLICE_ARRAY({ destination, source, start: start2, end });
+    static quick(array, source, index_start) {
+      return new ARRAY_SLICE({ array, source, index_start });
     }
     print() {
-      if (this.start !== void 0) {
-        if (this.end !== void 0) {
-          return `${this.array} = ${this.source}.slice(${this.start}, ${this.source})`;
-        } else {
-          return `${this.array} = ${this.source}.slice(${this.start})`;
-        }
-      }
-      return `${this.array} = ${this.source}.slice()`;
+      return `"${this.array}" = "${this.source}".slice(${this.index_start || ""});`;
+    }
+  }
+  class ARRAY_SLICE_TWICE extends Action {
+    constructor(args2) {
+      super();
+      __publicField(this, "action");
+      __publicField(this, "array");
+      __publicField(this, "source");
+      __publicField(this, "index_start");
+      __publicField(this, "index_end");
+      this.action = "ARRAY_SLICE_TWICE";
+      this.array = breakIfNotString(args2.array);
+      this.source = breakIfNotString(args2.source);
+      this.index_start = breakIfNotNumber(args2.index_start);
+      this.index_end = breakIfNotNumber(args2.index_end);
+    }
+    static quick(array, source, index_start, index_end) {
+      return new ARRAY_SLICE_TWICE({ array, source, index_start, index_end });
+    }
+    print() {
+      return `"${this.array}" = "${this.source}".slice(${this.index_start}, ${this.index_end});`;
+    }
+  }
+  class ARRAY_SLICE_BY_VARIABLE extends Action {
+    constructor(args2) {
+      super();
+      __publicField(this, "action");
+      __publicField(this, "array");
+      __publicField(this, "source");
+      __publicField(this, "variable_start");
+      this.action = "ARRAY_SLICE_BY_VARIABLE";
+      this.array = breakIfNotString(args2.array);
+      this.source = breakIfNotString(args2.source);
+      this.variable_start = breakIfNotString(args2.index_start);
+    }
+    static quick(array, source, variable_start) {
+      return new ARRAY_SLICE_BY_VARIABLE({ array, source, variable_start });
+    }
+    print() {
+      return `"${this.array}" = "${this.source}".slice(${this.variable_start || ""});`;
+    }
+  }
+  class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
+    constructor(args2) {
+      super();
+      __publicField(this, "action");
+      __publicField(this, "array");
+      __publicField(this, "source");
+      __publicField(this, "variable_start");
+      __publicField(this, "variable_end");
+      this.action = "ARRAY_SLICE_TWICE_BY_VARIABLE";
+      this.array = breakIfNotString(args2.array);
+      this.source = breakIfNotString(args2.source);
+      this.variable_start = breakIfNotString(args2.variable_start);
+      this.variable_end = breakIfNotString(args2.variable_end);
+    }
+    static quick(array, source, variable_start, variable_end) {
+      return new ARRAY_SLICE_TWICE_BY_VARIABLE({ array, source, variable_start, variable_end });
+    }
+    print() {
+      return `"${this.array}" = "${this.source}".slice(${this.variable_start}, ${this.variable_end});`;
+    }
+  }
+  class REVERSE_ARRAY extends Action {
+    constructor(args2) {
+      super();
+      __publicField(this, "action");
+      __publicField(this, "array");
+      this.action = "REVERSE_ARRAY";
+      this.array = breakIfNotString(args2.array);
+    }
+    static quick(array) {
+      return new REVERSE_ARRAY({ array });
+    }
+    print() {
+      return `"${this.array}".reverse();`;
+    }
+  }
+  class SORT_ARRAY extends Action {
+    constructor(args2) {
+      super();
+      __publicField(this, "action");
+      __publicField(this, "array");
+      this.action = "SORT_ARRAY";
+      this.array = breakIfNotString(args2.array);
+    }
+    static quick(array) {
+      return new SORT_ARRAY({ array });
+    }
+    print() {
+      return `"${this.array}".sort();`;
     }
   }
   const isHasVariables = (v) => {
@@ -11364,11 +11642,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     CHECK_DIALOG_OPEN: (args2) => new CHECK_DIALOG_OPEN(args2),
     CHECK_SERIAL_DIALOG_OPEN: (args2) => new CHECK_SERIAL_DIALOG_OPEN(args2),
     CHECK_DEBUG_MODE: (args2) => new CHECK_DEBUG_MODE(args2),
-    NEW_ARRAY: (args2) => new NEW_ARRAY(args2),
-    DELETE_ARRAY: (args2) => new DELETE_ARRAY(args2),
+    ARRAY_NEW: (args2) => new ARRAY_NEW(args2),
+    ARRAY_DELETE: (args2) => new ARRAY_DELETE(args2),
     ARRAY_PUSH_VARIABLE: (args2) => new ARRAY_PUSH_VARIABLE(args2),
     ARRAY_PUSH_VALUE: (args2) => new ARRAY_PUSH_VALUE(args2),
-    SLICE_ARRAY: (args2) => new SLICE_ARRAY(args2)
+    ARRAY_SLICE: (args2) => new ARRAY_SLICE(args2),
+    ARRAY_SLICE_TWICE: (args2) => new ARRAY_SLICE_TWICE(args2),
+    ARRAY_SLICE_BY_VARIABLE: (args2) => new ARRAY_SLICE_BY_VARIABLE(args2),
+    ARRAY_SLICE_TWICE_BY_VARIABLE: (args2) => new ARRAY_SLICE_TWICE_BY_VARIABLE(args2),
+    SORT_ARRAY: (args2) => new SORT_ARRAY(args2),
+    REVERSE_ARRAY: (args2) => new REVERSE_ARRAY(args2)
   };
   const debugLog = (message) => {
   };

@@ -2479,99 +2479,148 @@ export class CHECK_DEBUG_MODE extends ActionBoolGetable {
 		return printCheckAction(this, 'debug_mode', true);
 	}
 }
-export class NEW_ARRAY extends Action {
-	action: 'NEW_ARRAY';
-	array: string;
+export class ARRAY_NEW extends Action {
+	action: 'ARRAY_NEW';
+	array_name: string;
 	constructor(args: GenericObj) {
 		super();
-		this.action = 'NEW_ARRAY';
-		this.array = breakIfNotString(args.array);
+		this.action = 'ARRAY_NEW';
+		this.array_name = breakIfNotString(args.array_name);
 	}
-	static quick(array: string) {
-		return new NEW_ARRAY({ array });
+	static quick(array_name: string) {
+		return new ARRAY_NEW({ array_name });
 	}
 	print() {
-		return `array "${this.array}" = [];`;
+		return `array "${this.array_name}" = [];`;
 	}
 }
-export class DELETE_ARRAY extends Action {
-	action: 'DELETE_ARRAY';
-	array: string;
+export class ARRAY_DELETE extends Action {
+	action: 'ARRAY_DELETE';
+	array_name: string;
 	constructor(args: GenericObj) {
 		super();
-		this.array = breakIfNotString(args.array);
+		this.action = 'ARRAY_DELETE';
+		this.array_name = breakIfNotString(args.array_name);
 	}
-	static quick(array: string) {
-		return new DELETE_ARRAY({ array });
+	static quick(array_name: string) {
+		return new ARRAY_DELETE({ array_name });
 	}
 	print() {
-		return `delete array "${this.array}";`;
+		return `delete array "${this.array_name}";`;
 	}
 }
 export class ARRAY_PUSH_VARIABLE extends Action {
 	action: 'ARRAY_PUSH_VARIABLE';
-	array: string;
+	array_name: string;
 	variable: string;
 	constructor(args: GenericObj) {
 		super();
 		this.action = 'ARRAY_PUSH_VARIABLE';
-		this.array = breakIfNotString(args.array);
+		this.array_name = breakIfNotString(args.array_name);
 		this.variable = breakIfNotString(args.variable);
 	}
-	static quick(array: string, variable: string) {
-		return new ARRAY_PUSH_VARIABLE({ array, variable });
+	static quick(array_name: string, variable: string) {
+		return new ARRAY_PUSH_VARIABLE({ array_name, variable });
 	}
 	print() {
-		return `"${this.array}".push("${this.variable}");`;
+		return `"${this.array_name}".push("${this.variable}");`;
 	}
 }
 export class ARRAY_PUSH_VALUE extends Action {
 	action: 'ARRAY_PUSH_VALUE';
-	array: string;
+	array_name: string;
 	value: number;
 	constructor(args: GenericObj) {
 		super();
 		this.action = 'ARRAY_PUSH_VALUE';
-		this.array = breakIfNotString(args.array);
+		this.array_name = breakIfNotString(args.array_name);
 		this.value = breakIfNotNumber(args.value);
 	}
-	static quick(array: string, value: number) {
-		return new ARRAY_PUSH_VALUE({ array, value });
+	static quick(array_name: string, value: number) {
+		return new ARRAY_PUSH_VALUE({ array_name, value });
 	}
 	print() {
-		return `"${this.array}".push(${this.value});`;
+		return `"${this.array_name}".push(${this.value});`;
 	}
 }
-export class SLICE_ARRAY extends Action {
-	action: 'SLICE_ARRAY';
+export class ARRAY_SLICE extends Action {
+	action: 'ARRAY_SLICE';
 	array: string;
 	source: string;
-	start?: number | string;
-	end?: number | string;
+	index_start: number;
 	constructor(args: GenericObj) {
 		super();
-		this.action = 'SLICE_ARRAY';
+		this.action = 'ARRAY_SLICE';
 		this.array = breakIfNotString(args.array);
 		this.source = breakIfNotString(args.source);
-		if (args.start !== undefined) {
-			this.start = breakIfNotStringOrNumber(args.start);
-		}
-		if (args.end !== undefined) {
-			this.end = breakIfNotStringOrNumber(args.end);
-		}
+		this.index_start = breakIfNotNumber(args.index_start);
 	}
-	static quick(array: string, source: string, start?: string | number, end?: string | number) {
-		return new SLICE_ARRAY({ array, source, start, end });
+	static quick(array: string, source: string, index_start: number) {
+		return new ARRAY_SLICE({ array, source, index_start });
 	}
 	print() {
-		if (this.start !== undefined) {
-			if (this.end !== undefined) {
-				return `"${this.array}" = "${this.source}".slice(${this.start}, ${this.source});`;
-			} else {
-				return `"${this.array}" = "${this.source}".slice(${this.start});`;
-			}
-		}
-		return `"${this.array}" = "${this.source}".slice();`;
+		return `"${this.array}" = "${this.source}".slice(${this.index_start || ''});`;
+	}
+}
+export class ARRAY_SLICE_TWICE extends Action {
+	action: 'ARRAY_SLICE_TWICE';
+	array: string;
+	source: string;
+	index_start: number;
+	index_end: number;
+	constructor(args: GenericObj) {
+		super();
+		this.action = 'ARRAY_SLICE_TWICE';
+		this.array = breakIfNotString(args.array);
+		this.source = breakIfNotString(args.source);
+		this.index_start = breakIfNotNumber(args.index_start);
+		this.index_end = breakIfNotNumber(args.index_end);
+	}
+	static quick(array: string, source: string, index_start: number, index_end: number) {
+		return new ARRAY_SLICE_TWICE({ array, source, index_start, index_end });
+	}
+	print() {
+		return `"${this.array}" = "${this.source}".slice(${this.index_start}, ${this.index_end});`;
+	}
+}
+export class ARRAY_SLICE_BY_VARIABLE extends Action {
+	action: 'ARRAY_SLICE_BY_VARIABLE';
+	array: string;
+	source: string;
+	variable_start: string;
+	constructor(args: GenericObj) {
+		super();
+		this.action = 'ARRAY_SLICE_BY_VARIABLE';
+		this.array = breakIfNotString(args.array);
+		this.source = breakIfNotString(args.source);
+		this.variable_start = breakIfNotString(args.index_start);
+	}
+	static quick(array: string, source: string, variable_start: string) {
+		return new ARRAY_SLICE_BY_VARIABLE({ array, source, variable_start });
+	}
+	print() {
+		return `"${this.array}" = "${this.source}".slice(${this.variable_start || ''});`;
+	}
+}
+export class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
+	action: 'ARRAY_SLICE_TWICE_BY_VARIABLE';
+	array: string;
+	source: string;
+	variable_start: string;
+	variable_end: string;
+	constructor(args: GenericObj) {
+		super();
+		this.action = 'ARRAY_SLICE_TWICE_BY_VARIABLE';
+		this.array = breakIfNotString(args.array);
+		this.source = breakIfNotString(args.source);
+		this.variable_start = breakIfNotString(args.variable_start);
+		this.variable_end = breakIfNotString(args.variable_end);
+	}
+	static quick(array: string, source: string, variable_start: string, variable_end: string) {
+		return new ARRAY_SLICE_TWICE_BY_VARIABLE({ array, source, variable_start, variable_end });
+	}
+	print() {
+		return `"${this.array}" = "${this.source}".slice(${this.variable_start}, ${this.variable_end});`;
 	}
 }
 export class REVERSE_ARRAY extends Action {
@@ -2799,11 +2848,14 @@ export const actionConstructorLookup = {
 	CHECK_DIALOG_OPEN: (args: GenericObj) => new CHECK_DIALOG_OPEN(args),
 	CHECK_SERIAL_DIALOG_OPEN: (args: GenericObj) => new CHECK_SERIAL_DIALOG_OPEN(args),
 	CHECK_DEBUG_MODE: (args: GenericObj) => new CHECK_DEBUG_MODE(args),
-	NEW_ARRAY: (args: GenericObj) => new NEW_ARRAY(args),
-	DELETE_ARRAY: (args: GenericObj) => new DELETE_ARRAY(args),
+	ARRAY_NEW: (args: GenericObj) => new ARRAY_NEW(args),
+	ARRAY_DELETE: (args: GenericObj) => new ARRAY_DELETE(args),
 	ARRAY_PUSH_VARIABLE: (args: GenericObj) => new ARRAY_PUSH_VARIABLE(args),
 	ARRAY_PUSH_VALUE: (args: GenericObj) => new ARRAY_PUSH_VALUE(args),
-	SLICE_ARRAY: (args: GenericObj) => new SLICE_ARRAY(args),
+	ARRAY_SLICE: (args: GenericObj) => new ARRAY_SLICE(args),
+	ARRAY_SLICE_TWICE: (args: GenericObj) => new ARRAY_SLICE_TWICE(args),
+	ARRAY_SLICE_BY_VARIABLE: (args: GenericObj) => new ARRAY_SLICE_BY_VARIABLE(args),
+	ARRAY_SLICE_TWICE_BY_VARIABLE: (args: GenericObj) => new ARRAY_SLICE_TWICE_BY_VARIABLE(args),
 	SORT_ARRAY: (args: GenericObj) => new SORT_ARRAY(args),
 	REVERSE_ARRAY: (args: GenericObj) => new REVERSE_ARRAY(args),
 };
