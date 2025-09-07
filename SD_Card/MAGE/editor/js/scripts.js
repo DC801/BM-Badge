@@ -420,6 +420,101 @@ var actionFieldsMap = {
 		{propertyName: 'command', size: 2},
 		{propertyName: 'is_visible', size: 1},
 	],
+	ARRAY_NEW: [
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_DELETE: [
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_LOG: [
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_SORT: [
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_REVERSE: [
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_LENGTH_INTO_VARIABLE: [
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable', size: 1},
+	],
+	ARRAY_WRITE_INTO_INDEX_FROM_VALUE: [
+		{propertyName: 'value', size: 2},
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'index', size: 1, dataViewMethodName: 'setInt8'},
+	],
+	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'index', size: 1, dataViewMethodName: 'setInt8'},
+	],
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE: [
+		{propertyName: 'value', size: 2},
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable_index', size: 1},
+	],
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable_index', size: 1},
+	],
+	ARRAY_READ_FROM_INDEX_INTO_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'index', size: 1, dataViewMethodName: 'setInt8'},
+	],
+	ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable_index', size: 1},
+	],
+	ARRAY_PUSH_FROM_VALUE: [
+		{propertyName: 'value', size: 2},
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_PUSH_FROM_VARIABLE: [
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable', size: 1},
+	],
+	ARRAY_PUSH_LEFT_FROM_VALUE: [
+		{propertyName: 'value', size: 2},
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_PUSH_LEFT_FROM_VARIABLE: [
+		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable', size: 1},
+	],
+	ARRAY_SLICE: [
+		{propertyName: 'array_source', size: 1},
+		{propertyName: 'array_destination', size: 1},
+		{propertyName: 'index_start', size: 1, dataViewMethodName: 'setInt8'},
+	],
+	ARRAY_SLICE_BY_VARIABLE: [
+		{propertyName: 'variable_start', size: 2},
+		{propertyName: 'array_source', size: 1},
+		{propertyName: 'array_destination', size: 1},
+	],
+	ARRAY_SLICE_TWICE: [
+		{propertyName: 'array_source', size: 1},
+		{propertyName: 'array_destination', size: 1},
+		{propertyName: 'index_start', size: 1, dataViewMethodName: 'setInt8'},
+		{propertyName: 'index_end', size: 1, dataViewMethodName: 'setInt8'},
+	],
+	ARRAY_SLICE_TWICE_BY_VARIABLE: [
+		{propertyName: 'variable_start', size: 2},
+		{propertyName: 'variable_end', size: 2},
+		{propertyName: 'array_source', size: 1},
+		{propertyName: 'array_destination', size: 1},
+	],
+	ARRAY_POP_INTO_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'array_name', size: 1},
+	],
+	ARRAY_POP_LEFT_INTO_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'array_name', size: 1},
+	],
 };
 
 var actionNames = [
@@ -523,6 +618,28 @@ var actionNames = [
 	'REGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
 	'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS',
 	'SET_SERIAL_DIALOG_COMMAND_VISIBILITY',
+	'ARRAY_NEW',
+	'ARRAY_DELETE',
+	'ARRAY_LOG',
+	'ARRAY_SORT',
+	'ARRAY_REVERSE',
+	'ARRAY_LENGTH_INTO_VARIABLE',
+	'ARRAY_WRITE_INTO_INDEX_FROM_VALUE',
+	'ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE',
+	'ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE',
+	'ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE',
+	'ARRAY_READ_FROM_INDEX_INTO_VARIABLE',
+	'ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE',
+	'ARRAY_PUSH_FROM_VALUE',
+	'ARRAY_PUSH_FROM_VARIABLE',
+	'ARRAY_PUSH_LEFT_FROM_VALUE',
+	'ARRAY_PUSH_LEFT_FROM_VARIABLE',
+	'ARRAY_SLICE',
+	'ARRAY_SLICE_BY_VARIABLE',
+	'ARRAY_SLICE_TWICE',
+	'ARRAY_SLICE_TWICE_BY_VARIABLE',
+	'ARRAY_POP_INTO_VARIABLE',
+	'ARRAY_POP_LEFT_INTO_VARIABLE',
 ];
 
 var specialKeywordsEnum = {
@@ -953,6 +1070,41 @@ var getVariableIdFromAction = function (
 	);
 };
 
+var arrayNames = [];
+var serializeArrayName = function (
+	string,
+) {
+	var variableId = arrayNames.indexOf(
+		string,
+	);
+	if(variableId === -1) {
+		variableId = arrayNames.length;
+		arrayNames.push(string);
+	}
+	if(variableId > 255) {
+		throw new Error(`There is a limit of 255 ArrayNames! The one that broke the encoder's back was: "${string}"`);
+	}
+	return variableId;
+};
+var getArrayIdFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
+	}
+	return serializeArrayName(
+		value,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
 var entityFieldMap = {
 	x: 12,
 	y: 14,
@@ -1204,6 +1356,9 @@ var actionPropertyNameToHandlerMap = {
 	alias: getStringIdFromAction,
 	string: getStringIdFromAction,
 	command: getStringIdFromAction,
+	array_name: getArrayIdFromAction,
+	array_source: getArrayIdFromAction,
+	array_destination: getArrayIdFromAction,
 	argument: getStringIdFromAction,
 	save_flag: getSaveFlagIdFromAction,
 	dialog: getDialogIdFromAction,
@@ -1232,6 +1387,12 @@ var actionPropertyNameToHandlerMap = {
 	is_fail: getDefaultFalseBoolFromAction,
 	value: getTwoBytesFromAction,
 	variable: getVariableIdFromAction,
+	index: getByteFromAction,
+	index_start: getByteFromAction,
+	index_end: getByteFromAction,
+	variable_index: getVariableIdFromAction,
+	variable_start: getVariableIdFromAction,
+	variable_end: getVariableIdFromAction,
 	source: getVariableIdFromAction,
 	field: getFieldFromAction,
 	inbound: getBoolFromAction,
@@ -1286,7 +1447,7 @@ var handleActionWithFields = function(
 			fileNameMap,
 			scenarioData,
 		);
-		var dataViewMethodName = sizeHandlerMap[field.size];
+		var dataViewMethodName = field.dataViewMethodName || sizeHandlerMap[field.size];
 		data.dataView[dataViewMethodName](
 			offset,
 			value,

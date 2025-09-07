@@ -124,6 +124,28 @@ typedef enum : uint8_t {
 	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS,
 	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS,
 	SET_SERIAL_DIALOG_COMMAND_VISIBILITY,
+	ARRAY_NEW,
+	ARRAY_DELETE,
+	ARRAY_LOG,
+	ARRAY_SORT,
+	ARRAY_REVERSE,
+	ARRAY_LENGTH_INTO_VARIABLE,
+	ARRAY_WRITE_INTO_INDEX_FROM_VALUE,
+	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE,
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE,
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE,
+	ARRAY_READ_FROM_INDEX_INTO_VARIABLE,
+	ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE,
+	ARRAY_PUSH_FROM_VALUE,
+	ARRAY_PUSH_FROM_VARIABLE,
+	ARRAY_PUSH_LEFT_FROM_VALUE,
+	ARRAY_PUSH_LEFT_FROM_VARIABLE,
+	ARRAY_SLICE,
+	ARRAY_SLICE_BY_VARIABLE,
+	ARRAY_SLICE_TWICE,
+	ARRAY_SLICE_TWICE_BY_VARIABLE,
+	ARRAY_POP_INTO_VARIABLE,
+	ARRAY_POP_LEFT_INTO_VARIABLE,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -349,6 +371,31 @@ void action_register_serial_dialog_command_alias(uint8_t * args, MageScriptState
 void action_unregister_serial_dialog_command_alias(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_serial_dialog_command_visibility(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+/*
+void array_new(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_delete(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_log(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_sort(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_reverse(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_length_into_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_write_into_index_from_value(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_write_into_index_from_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_write_into_variable_index_from_value(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_write_into_variable_index_from_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_read_from_variable_index_into_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_push_from_value(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_push_from_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_push_left_from_value(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_push_left_from_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_slice(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_slice_by_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_slice_twice(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_slice_twice_by_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_pop_into_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+void array_pop_left_into_variable(uint8_t * args, MageScriptState * resumeStateStruct);
+*/
 
 //typedef for the array of function pointers to script action functions:
 typedef void(*ActionFunctionPointer)(uint8_t * args, MageScriptState * resumeStateStruct);

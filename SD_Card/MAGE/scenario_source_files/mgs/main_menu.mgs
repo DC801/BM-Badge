@@ -143,6 +143,34 @@ debug_commands {
 	command skip + "4" = debug_jump_to_round4;
 	register_warp()
 	register_storyflag()
+
+	// ARRAY ENCODING TESTS
+	command array + gamut = array_json_test {
+		json[
+			{"action":"ARRAY_NEW","array_name":"arr"},
+			{"action":"ARRAY_DELETE","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_SORT","array_name":"arr"},
+			{"action":"ARRAY_REVERSE","array_name":"arr"},
+			{"action":"ARRAY_LENGTH_INTO_VARIABLE","array_name":"arr","variable":"varr"},
+			{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":0,"array_name":"arr","index":0},
+			{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"varr","array_name":"arr","index":0},
+			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":0,"array_name":"arr","variable_index":"vindex"},
+			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"varr","array_name":"arr","variable_index":"vindex"},
+			{"action":"ARRAY_READ_FROM_INDEX_INTO_VARIABLE","variable":"varr","array_name":"arr","index":0},
+			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"varr","array_name":"arr","variable_index":"vindex"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":0,"array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VARIABLE","array_name":"arr","variable":"varr"},
+			{"action":"ARRAY_PUSH_LEFT_FROM_VALUE","value":0,"array_name":"arr"},
+			{"action":"ARRAY_PUSH_LEFT_FROM_VARIABLE","array_name":"arr","variable":"varr"},
+			{"action":"ARRAY_SLICE","array_source":"arrrrrrrr","array_destination":"ar","index_start":0},
+			{"action":"ARRAY_SLICE_BY_VARIABLE","variable_start":"vstart","array_source":"arrrrrrrr","array_destination":"ar"},
+			{"action":"ARRAY_SLICE_TWICE","array_source":"arrrrrrrr","array_destination":"ar","index_start":0,"index_end":0},
+			{"action":"ARRAY_SLICE_TWICE_BY_VARIABLE","variable_start":"vstart","variable_end":"vend","array_source":"arrrrrrrr","array_destination":"ar"},
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"varr","array_name":"arr"},
+			{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"varr","array_name":"arr"}
+		]
+	};
 }
 
 /* ---------- INTRO SPLASH ---------- */

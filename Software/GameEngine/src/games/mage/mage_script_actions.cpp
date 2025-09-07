@@ -2816,6 +2816,28 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_register_serial_dialog_command_alias,
 	&action_unregister_serial_dialog_command_alias,
 	&action_set_serial_dialog_command_visibility,
+	NULL, //&array_new
+	NULL, //&array_delete
+	NULL, //&array_log
+	NULL, //&array_sort
+	NULL, //&array_reverse
+	NULL, //&array_length_into_variable
+	NULL, //&array_write_into_index_from_value
+	NULL, //&array_write_into_index_from_variable
+	NULL, //&array_write_into_variable_index_from_value
+	NULL, //&array_write_into_variable_index_from_variable
+	NULL, //&array_read_from_index_into_variable
+	NULL, //&array_read_from_variable_index_into_variable
+	NULL, //&array_push_from_value
+	NULL, //&array_push_from_variable
+	NULL, //&array_push_left_from_value
+	NULL, //&array_push_left_from_variable
+	NULL, //&array_slice
+	NULL, //&array_slice_by_variable
+	NULL, //&array_slice_twice
+	NULL, //&array_slice_twice_by_variable
+	NULL, //&array_pop_into_variable
+	NULL, //&array_pop_left_into_variable
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(
