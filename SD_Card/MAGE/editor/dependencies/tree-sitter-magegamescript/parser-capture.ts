@@ -613,27 +613,27 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 			throw new Error('unsupported slice index type');
 		});
 		if (args.length === 0) args.push(0);
-		if (args.every(v=>typeof v === 'number')) {
+		if (args.every((v) => typeof v === 'number')) {
 			if (args.length === 1) {
 				return ArraySliceByNumber.quick(debug, args[0]);
 			} else {
 				return ArraySliceTwiceByNumber.quick(debug, args[0], args[1]);
 			}
 		}
-		const stringArgs = args.map(v=>{
+		const stringArgs = args.map((v) => {
 			if (typeof v === 'number') {
-				const temp = newTemporary();
 				temporariesUsed += 1;
+				const temp = newTemporary();
 				steps.push(MUTATE_VARIABLE.set(temp, v));
 				return temp;
 			}
 			return v;
-		})
+		});
 		let ret = ArraySliceByVariable.quick(debug, steps, stringArgs[0]);
 		if (stringArgs.length === 2) {
 			ret = ArraySliceTwiceByVariable.quick(debug, steps, stringArgs[0], stringArgs[1]);
 		}
-		for (let i = temporariesUsed; i < 0; i--) {
+		for (let i = temporariesUsed; i >= 0; i--) {
 			dropTemporary();
 		}
 		return ret;

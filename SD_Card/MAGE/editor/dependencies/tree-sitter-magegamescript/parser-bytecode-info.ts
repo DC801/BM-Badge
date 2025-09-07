@@ -2593,7 +2593,7 @@ export class ARRAY_SLICE_BY_VARIABLE extends Action {
 		this.action = 'ARRAY_SLICE_BY_VARIABLE';
 		this.array = breakIfNotString(args.array);
 		this.source = breakIfNotString(args.source);
-		this.variable_start = breakIfNotString(args.index_start);
+		this.variable_start = breakIfNotString(args.variable_start);
 	}
 	static quick(array: string, source: string, variable_start: string) {
 		return new ARRAY_SLICE_BY_VARIABLE({ array, source, variable_start });

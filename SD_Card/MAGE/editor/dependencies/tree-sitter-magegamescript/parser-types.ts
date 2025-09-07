@@ -2891,12 +2891,12 @@ export class ArraySliceTwiceByNumber extends ArraySliceMethod {
 		return this.expPrint();
 	}
 }
-export class ArraySliceByVariable extends ArrayMethod {
+export class ArraySliceByVariable extends ArraySliceMethod {
 	variable_start: string;
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.variable_start = ACTION.breakIfNotString(args.start);
+		this.variable_start = ACTION.breakIfNotString(args.variable_start);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
 	clone() {
@@ -2932,7 +2932,7 @@ export class ArraySliceByVariable extends ArrayMethod {
 		return this.expPrint();
 	}
 }
-export class ArraySliceTwiceByVariable extends ArrayMethod {
+export class ArraySliceTwiceByVariable extends ArraySliceMethod {
 	variable_start: string;
 	variable_end: string;
 	steps: AnyNode[];

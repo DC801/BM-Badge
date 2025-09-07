@@ -6054,8 +6054,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       const stringArgs = args2.map((v) => {
         if (typeof v === "number") {
-          const temp = newTemporary();
           temporariesUsed += 1;
+          const temp = newTemporary();
           steps.push(MUTATE_VARIABLE.set(temp, v));
           return temp;
         }
@@ -6065,7 +6065,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (stringArgs.length === 2) {
         ret = ArraySliceTwiceByVariable.quick(debug, steps, stringArgs[0], stringArgs[1]);
       }
-      for (let i2 = temporariesUsed; i2 < 0; i2--) {
+      for (let i2 = temporariesUsed; i2 >= 0; i2--) {
         dropTemporary();
       }
       return ret;
@@ -8740,12 +8740,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return this.expPrint();
     }
   }
-  class ArraySliceByVariable extends ArrayMethod {
+  class ArraySliceByVariable extends ArraySliceMethod {
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "variable_start");
       __publicField(this, "steps");
-      this.variable_start = breakIfNotString(args2.start);
+      this.variable_start = breakIfNotString(args2.variable_start);
       this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
     clone() {
@@ -8781,7 +8781,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return this.expPrint();
     }
   }
-  class ArraySliceTwiceByVariable extends ArrayMethod {
+  class ArraySliceTwiceByVariable extends ArraySliceMethod {
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "variable_start");
@@ -11395,7 +11395,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "ARRAY_SLICE_BY_VARIABLE";
       this.array = breakIfNotString(args2.array);
       this.source = breakIfNotString(args2.source);
-      this.variable_start = breakIfNotString(args2.index_start);
+      this.variable_start = breakIfNotString(args2.variable_start);
     }
     static quick(array, source, variable_start) {
       return new ARRAY_SLICE_BY_VARIABLE({ array, source, variable_start });
