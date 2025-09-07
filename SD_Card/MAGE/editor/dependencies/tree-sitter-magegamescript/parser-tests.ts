@@ -27,6 +27,62 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	array_slices_expressions: {
+		input: [
+			`array a = b.slice(player x + 10);`,
+			`array c = d.slice(player x + 10, player y - 10);`,
+		],
+		expected: [
+			`array "a" = [];`,
+			`__TEMP_0 = player x;`,
+			`__TEMP_0 += 10;`,
+			`"a" = "b".slice(__TEMP_0);`,
+			`array "c" = [];`,
+			`__TEMP_0 = player x;`,
+			`__TEMP_0 += 10;`,
+			`__TEMP_1 = player y;`,
+			`__TEMP_1 -= 10;`,
+			`"c" = "d".slice(__TEMP_0, __TEMP_1);`,
+		],
+	},
+	array_slices_strings: {
+		input: [
+			`array a = b.slice(zero);`,
+			`array c = d.slice(one, two);`,
+			`array e = f.slice(three, 4);`,
+			`array g = h.slice(5, six);`,
+		],
+		expected: [
+			`array "a" = [];`,
+			`"a" = "b".slice(zero);`,
+			`array "c" = [];`,
+			`"c" = "d".slice(one, two);`,
+			`array "e" = [];`,
+			`__TEMP_0 = 4;`,
+			`"e" = "f".slice(three, __TEMP_0);`,
+			`array "g" = [];`,
+			`__TEMP_0 = 5;`,
+			`"g" = "h".slice(__TEMP_0, six);`,
+		],
+	},
+	array_slices_numbers: {
+		input: [
+			`array a = b.slice();`,
+			`array c = d.slice(0);`,
+			`array e = f.slice(1);`,
+			`array g = h.slice(2,3);`,
+		],
+		expected: [
+			`array "a" = [];`,
+			`"a" = "b".slice();`,
+			`array "c" = [];`,
+			`"c" = "d".slice();`,
+			`array "e" = [];`,
+			`"e" = "f".slice(1);`,
+			`array "g" = [];`,
+			`"g" = "h".slice(2, 3);`,
+		],
+	},
 	new_array_with_method_chain: {
 		input: [
 			`array a = b.slice();`,

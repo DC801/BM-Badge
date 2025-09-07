@@ -2784,9 +2784,9 @@ export class ArrayMethodChain extends MathlangNode {
 	toSteps(destination: string) {
 		const steps: AnyNode[] = [];
 		let source = this.identifier;
-		steps.push(ACTION.NEW_ARRAY.quick(destination));
+		steps.push(ACTION.ARRAY_NEW.quick(destination));
 		this.chain.forEach((method) => {
-			if (method instanceof ArraySlice) {
+			if (method instanceof ArraySliceMethod) {
 				steps.push(method.assignToVar(destination, source));
 				source = destination;
 				return;
@@ -2821,34 +2821,93 @@ export class ArrayMethod extends MathlangNode {
 		return arr;
 	}
 }
-export class ArraySlice extends ArrayMethod {
-	start?: number | string;
-	end?: number | string;
+
+export class ArraySliceMethod extends ArrayMethod {
+	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+		throw new Error('children should be doing this:' + destinationArray + sourceArray);
+	}
+}
+
+export class ArraySliceByNumber extends ArraySliceMethod {
+	index_start: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.index_start = ACTION.breakIfNotNumber(args.index_start);
+	}
+	clone() {
+		return new ArraySliceByNumber(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, index_start: number) {
+		return new ArraySliceByNumber(debug, { index_start });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArraySliceByNumber)) {
+			throw new Error('not ArraySliceByNumber');
+		}
+		return v;
+	}
+	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+		return ACTION.ARRAY_SLICE.quick(destinationArray, sourceArray, this.index_start);
+	}
+	expPrint() {
+		return `.slice(${this.index_start || ''})`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArraySliceTwiceByNumber extends ArraySliceMethod {
+	index_start: number;
+	index_end: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.index_start = ACTION.breakIfNotNumber(args.index_start);
+		this.index_end = ACTION.breakIfNotNumber(args.index_end);
+	}
+	clone() {
+		return new ArraySliceTwiceByNumber(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, index_start: number, index_end: number) {
+		return new ArraySliceTwiceByNumber(debug, { index_start, index_end });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArraySliceTwiceByNumber)) {
+			throw new Error('not ArraySliceTwiceByNumber');
+		}
+		return v;
+	}
+	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+		return ACTION.ARRAY_SLICE_TWICE.quick(
+			destinationArray,
+			sourceArray,
+			this.index_start,
+			this.index_end,
+		);
+	}
+	expPrint() {
+		return `.slice(${this.index_start}, ${this.index_end})`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArraySliceByVariable extends ArraySliceMethod {
+	variable_start: string;
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		if (args.start !== undefined) {
-			this.start = ACTION.breakIfNotStringOrNumber(args.start);
-		}
-		if (args.end !== undefined) {
-			this.end = ACTION.breakIfNotStringOrNumber(args.end);
-		}
+		this.variable_start = ACTION.breakIfNotString(args.variable_start);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
 	clone() {
-		return new ArraySlice(this.debug.clone(), this.args);
+		return new ArraySliceByVariable(this.debug.clone(), this.args);
 	}
-	static quick(
-		debug: MathlangLocation,
-		steps: AnyNode[],
-		start?: string | number,
-		end?: string | number,
-	) {
-		return new ArraySlice(debug, { steps, start, end });
+	static quick(debug: MathlangLocation, steps: AnyNode[], variable_start: string) {
+		return new ArraySliceByVariable(debug, { steps, variable_start });
 	}
 	static breakIfNot(v: unknown) {
-		if (!(v instanceof ArraySlice)) {
-			throw new Error('not ArraySlice');
+		if (!(v instanceof ArraySliceByVariable)) {
+			throw new Error('not ArraySliceByVariable');
 		}
 		return v;
 	}
@@ -2857,25 +2916,72 @@ export class ArraySlice extends ArrayMethod {
 			this.debug,
 			[
 				...this.steps,
-				ACTION.SLICE_ARRAY.quick(destinationArray, sourceArray, this.start, this.end),
+				ACTION.ARRAY_SLICE_BY_VARIABLE.quick(
+					destinationArray,
+					sourceArray,
+					this.variable_start,
+				),
 			],
-			'ArraySlice.assignToVar',
+			'ArraySliceByVariable.assignToVar',
 		);
 	}
 	expPrint() {
-		if (this.start !== undefined) {
-			if (this.end !== undefined) {
-				return `.slice(${this.start}, ${this.end})`;
-			} else {
-				return `.slice(${this.start})`;
-			}
-		}
-		return `.slice()`;
+		return `.slice("${this.variable_start}")`;
 	}
 	print() {
 		return this.expPrint();
 	}
 }
+export class ArraySliceTwiceByVariable extends ArraySliceMethod {
+	variable_start: string;
+	variable_end: string;
+	steps: AnyNode[];
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.variable_start = ACTION.breakIfNotString(args.variable_start);
+		this.variable_end = ACTION.breakIfNotString(args.variable_end);
+		this.steps = AnyNode.breakIfNotAll(args.steps);
+	}
+	clone() {
+		return new ArraySliceTwiceByVariable(this.debug.clone(), this.args);
+	}
+	static quick(
+		debug: MathlangLocation,
+		steps: AnyNode[],
+		variable_start: string,
+		variable_end: string,
+	) {
+		return new ArraySliceTwiceByVariable(debug, { steps, variable_start, variable_end });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArraySliceTwiceByVariable)) {
+			throw new Error('not ArraySliceTwiceByVariable');
+		}
+		return v;
+	}
+	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+		return MathlangSequence.orSingle(
+			this.debug,
+			[
+				...this.steps,
+				ACTION.ARRAY_SLICE_TWICE_BY_VARIABLE.quick(
+					destinationArray,
+					sourceArray,
+					this.variable_start,
+					this.variable_end,
+				),
+			],
+			'ArraySliceTwiceByVariable.assignToVar',
+		);
+	}
+	expPrint() {
+		return `.slice("${this.variable_start}", "${this.variable_end})`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+
 export class ArraySort extends ArrayMethod {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);

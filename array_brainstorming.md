@@ -24,7 +24,7 @@
 
 ### Syntax
 
-- Create by name
+- `ARRAY_NEW`: Create by name
 	- Asking for a new one by name will overwrite any existing array by that name. Thus, should use same pattern as `command _ = ...` and `alias _ = ...` since their overwriting behavior is similar
 	- Q. Initialized values?
 		- Real? `array arrayName = [1,2,3,4]` is what the encoder sees?
@@ -36,37 +36,44 @@
 			- `array.push(3);`
 			- `array.push(4);`
 			- Thus, could do vars easily: `array arrayName = [1,2,3,four]`
-- Destroy by name
+- `ARRAY_DELETE`: Destroy by name
 	- `delete array arrayName;`
-- Push fixed value or variable name
+- `ARRAY_PUSH_VARIABLE`/`ARRAY_PUSH_VALUE`: Push
+	- RETURNS: length of array
 	- `arrayName.push(100);`
 	- `arrayName.push(varName);`
-- PushLeft fixed value or variable value
+- `ARRAY_LEFT_PUSH_VARIABLE`/`ARRAY_LEFT_PUSH_VALUE`: PushLeft
+	- RETURNS: length of array
 	- .pushLeft or .push_left? I guess I've been using underscores for things like warp_state, thus we'll use .push_left
 	- `arrayName.push_left(100);`
 	- `arrayName.push_left(varName);`
-- Pop (RETURN)
+- `ARRAY_POP_VARIABLE`/`ARRAY_POP_VALUE`: Pop
+	- RETURNS: value removed
 	- `arrayName.pop();`
 	- `destinationVar = arrayName.pop();`
 	- `entity y = arrayName.pop() * 30;`
-- PopLeft (RETURN)
+- `ARRAY_LEFT_POP_VARIABLE`/`ARRAY_LEFT_POP_VALUE`: PopLeft
+	- RETURNS: value removed
 	- `arrayName.pop_left();`
 	- `destinationVar = arrayName.pop_left();`
 	- `entity y = arrayName.pop_left() * 30;`
-- Get length (RETURN)
+- `GET_ARRAY_LENGTH`: Get length (RETURN)
+	- RETURNS: length of array
 	- Make it look like a method call and not a property:
 	- `arrayName.length()`
 	- `varName = arrayName.length();`
-- Copy value at fixed index from/into variable (RETURN)
+- `COPY_ARRAY_VALUE`: Copy value at fixed index from/into variable
+	- RETURNS: value at that value index
 	- `varName = arrayName[100];`
 	- `arrayName[100] = varName;`
-- Copy value at variable index from/into Variable (RETURN)
+- `COPY_ARRAY_VALUE` Copy value at variable index from/into Variable
+	- RETURNS: value at that variable index
 	- `varName = arrayName[indexVar];`
 	- `arrayName[indexVar] = varName;`
-- Reverse
+- `REVERSE_ARRAY`: Reverse
 	- Prob reverse in place
 	- `arrayName.reverse();`
-- Sort (up/down)
+- `SORT_ARRAY`: Sort (up/down)
 	- Prob sort in place
 	- It's numbers, so there's only two sorts that make sense
 	- Two methods?
@@ -75,7 +82,13 @@
 	- Or just use sort and reverse if you want a reverse sort? (I like this one)
 		- `arrayName.sort();`
 		- `arrayName.reverse();`
-- Slice into new Array (fixed indices)
+- `ARRAY_SLICE`: Slice into new Array (fixed indices)
+	- Gonna be:
+		`ARRAY_SLICE`
+		`ARRAY_SLICE_TWICE`
+		`ARRAY_SLICE_BY_VARIABLE`
+		`ARRAY_SLICE_TWICE_BY_VARIABLE`
+	- TODO: different versions for number/string indices?
 	- `subslice = origArray.slice(5, -1);` // two args
 	- `onlyTheEnd = origArray.slice(4);` // one arg
 	- `copiedArray = origArray.slice();` // zero args
@@ -93,6 +106,7 @@
 		- Makes it clear that array1 is being modified, whereas there's always that question with `.concat()`
 	- Q. `.push(1,2,3,4)` or `.push([1,2,3,4])`?
 		- The latter, because a variable number of args isn't something we have, but "spread values" (which looks like an array) is something we do have in Actions
+	- Q. But concat shouldn't modify in place, should it?
 - Splice?
 	- Probably should be done in-engine; that would be harder to fake vs some of this other stuff.
 	- Just do whatever JS does IDK
