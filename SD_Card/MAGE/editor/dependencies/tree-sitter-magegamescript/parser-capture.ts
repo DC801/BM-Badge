@@ -42,6 +42,11 @@ import {
 	FnCallReturnValue,
 	ScriptDefinition,
 	FnCall,
+	ArrayMethodChain,
+	ArrayMethod,
+	ArrayReverse,
+	ArraySort,
+	ArraySlice,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -578,6 +583,41 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		} else {
 			return definition;
 		}
+	},
+	array_with_array_methods: (debug) => {
+		const name = stringCaptureForField(debug, 'name');
+		const handledMethods = capturesForField(debug, 'array_method');
+		return ArrayMethodChain.quick(debug, name, ArrayMethod.breakIfNotAll(handledMethods));
+	},
+	// array_method_map: (debug) => {},
+	array_method_sort: (debug) => new ArraySort(debug, {}),
+	array_method_reverse: (debug) => new ArrayReverse(debug, {}),
+	array_method_slice: (debug) => {
+		const steps: AnyNode[] = [];
+		const argsRaw = childrenForField(debug, 'arg');
+		let temporariesUsed = 0;
+		const args = argsRaw.map((rawArg) => {
+			const arg = handleCapture(debug.using(rawArg));
+			if (typeof arg === 'string') return arg;
+			if (typeof arg === 'number') return arg;
+			if (arg instanceof IntExpression) {
+				temporariesUsed += 1;
+				const temp = newTemporary();
+				steps.push(...arg.toSteps(temp));
+				return temp;
+			}
+			throw new Error('unsupported slice index type');
+		});
+		let ret = ArraySlice.quick(debug, steps);
+		if (args.length === 2) {
+			ret = ArraySlice.quick(debug, steps, args[0], args[1]);
+		} else if (args.length === 1) {
+			ret = ArraySlice.quick(debug, steps, args[0]);
+		}
+		for (let i = temporariesUsed; i < 0; i--) {
+			dropTemporary();
+		}
+		return ret;
 	},
 };
 

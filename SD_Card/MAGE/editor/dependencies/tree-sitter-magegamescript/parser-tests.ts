@@ -27,6 +27,38 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	new_array_with_method_chain: {
+		input: [
+			`array a = b.slice();`,
+			`array c = d.sort().slice();`,
+			`array e = f.slice().reverse();`,
+			`array g = h.sort().slice().reverse();`,
+			`array x = y.slice().sort().slice(4).reverse();`,
+		],
+		expected: [
+			`array "a" = [];`,
+			`"a" = "b".slice();`,
+
+			`array "c" = [];`,
+			`"d".sort();`,
+			`"c" = "d".slice();`,
+
+			`array "e" = [];`,
+			`"e" = "f".slice();`,
+			`"e".reverse();`,
+
+			`array "g" = [];`,
+			`"h".sort();`,
+			`"g" = "h".slice();`,
+			`"g".reverse();`,
+
+			`array "x" = [];`,
+			`"x" = "y".slice();`,
+			`"x".sort();`,
+			`"x" = "x".slice(4);`,
+			`"x".reverse();`,
+		],
+	},
 	new_array_with_initial_values: {
 		input: [
 			`array a = [];`,

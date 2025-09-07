@@ -1,12 +1,10 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import {
 	capturesForField,
-	childrenForField,
 	coerceToNumber,
 	coerceToString,
 	handleCapture,
 	handleChildrenForField,
-	handleNamedChildren,
 	mandatoryChildForField,
 	optionalChildForField,
 	stringCaptureForField,
@@ -81,7 +79,6 @@ import {
 	NEW_ARRAY,
 	ARRAY_PUSH_VARIABLE,
 	ARRAY_PUSH_VALUE,
-	SLICE_ARRAY,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -109,11 +106,9 @@ import {
 	ScriptDefinition,
 	IntExpression,
 	FnCall,
-	IntUnit,
 	NumberLiteral,
 	IdentifierLiteral,
 	ArrayMethodChain,
-	ArraySlice,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -252,19 +247,7 @@ const actionFns: Record<string, ActionFn> = {
 		if (methodsNode) {
 			const handledRaw = handleCapture(debug.using(methodsNode));
 			const handled = ArrayMethodChain.breakIfNot(handledRaw);
-			let temporaryArrayCount = 0;
-			let returnArray = name;
-			handled.chain.forEach((method) => {
-				if (method instanceof ArraySlice) {
-					returnArray = '__ARRAY_' + temporaryArrayCount;
-					temporaryArrayCount += 1;
-					steps.push(method.assignToVar(returnArray));
-				} else {
-					throw new Error('array method not implemented');
-				}
-			});
-			steps.push(SLICE_ARRAY.quick(name, returnArray));
-			return steps;
+			return handled.toSteps(name);
 		}
 		throw new Error('unknown new array initializer');
 	},

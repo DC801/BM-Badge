@@ -2480,7 +2480,7 @@ export class CHECK_DEBUG_MODE extends ActionBoolGetable {
 	}
 }
 export class NEW_ARRAY extends Action {
-	action: "NEW_ARRAY";
+	action: 'NEW_ARRAY';
 	array: string;
 	constructor(args: GenericObj) {
 		super();
@@ -2488,28 +2488,28 @@ export class NEW_ARRAY extends Action {
 		this.array = breakIfNotString(args.array);
 	}
 	static quick(array: string) {
-		return new NEW_ARRAY({array})
+		return new NEW_ARRAY({ array });
 	}
 	print() {
 		return `array "${this.array}" = [];`;
 	}
 }
 export class DELETE_ARRAY extends Action {
-	action: "DELETE_ARRAY";
+	action: 'DELETE_ARRAY';
 	array: string;
 	constructor(args: GenericObj) {
 		super();
 		this.array = breakIfNotString(args.array);
 	}
 	static quick(array: string) {
-		return new DELETE_ARRAY({array})
+		return new DELETE_ARRAY({ array });
 	}
 	print() {
 		return `delete array "${this.array}";`;
 	}
 }
 export class ARRAY_PUSH_VARIABLE extends Action {
-	action: "ARRAY_PUSH_VARIABLE";
+	action: 'ARRAY_PUSH_VARIABLE';
 	array: string;
 	variable: string;
 	constructor(args: GenericObj) {
@@ -2519,15 +2519,14 @@ export class ARRAY_PUSH_VARIABLE extends Action {
 		this.variable = breakIfNotString(args.variable);
 	}
 	static quick(array: string, variable: string) {
-		return new ARRAY_PUSH_VARIABLE({array, variable})
+		return new ARRAY_PUSH_VARIABLE({ array, variable });
 	}
 	print() {
-		return `${this.array}.push("${this.variable}");`;
+		return `"${this.array}".push("${this.variable}");`;
 	}
-
 }
 export class ARRAY_PUSH_VALUE extends Action {
-	action: "ARRAY_PUSH_VALUE";
+	action: 'ARRAY_PUSH_VALUE';
 	array: string;
 	value: number;
 	constructor(args: GenericObj) {
@@ -2537,14 +2536,14 @@ export class ARRAY_PUSH_VALUE extends Action {
 		this.value = breakIfNotNumber(args.value);
 	}
 	static quick(array: string, value: number) {
-		return new ARRAY_PUSH_VALUE({array, value})
+		return new ARRAY_PUSH_VALUE({ array, value });
 	}
 	print() {
-		return `${this.array}.push(${this.value});`;
+		return `"${this.array}".push(${this.value});`;
 	}
 }
 export class SLICE_ARRAY extends Action {
-	action: "SLICE_ARRAY";
+	action: 'SLICE_ARRAY';
 	array: string;
 	source: string;
 	start?: number | string;
@@ -2561,18 +2560,48 @@ export class SLICE_ARRAY extends Action {
 			this.end = breakIfNotStringOrNumber(args.end);
 		}
 	}
-	static quick(destination: string, source: string, start?: string | number, end?: string | number) {
-		return new SLICE_ARRAY({destination, source, start, end})
+	static quick(array: string, source: string, start?: string | number, end?: string | number) {
+		return new SLICE_ARRAY({ array, source, start, end });
 	}
 	print() {
 		if (this.start !== undefined) {
 			if (this.end !== undefined) {
-				return `${this.array} = ${this.source}.slice(${this.start}, ${this.source})`;
+				return `"${this.array}" = "${this.source}".slice(${this.start}, ${this.source});`;
 			} else {
-				return `${this.array} = ${this.source}.slice(${this.start})`;
+				return `"${this.array}" = "${this.source}".slice(${this.start});`;
 			}
 		}
-		return `${this.array} = ${this.source}.slice()`;
+		return `"${this.array}" = "${this.source}".slice();`;
+	}
+}
+export class REVERSE_ARRAY extends Action {
+	action: 'REVERSE_ARRAY';
+	array: string;
+	constructor(args: GenericObj) {
+		super();
+		this.action = 'REVERSE_ARRAY';
+		this.array = breakIfNotString(args.array);
+	}
+	static quick(array: string) {
+		return new REVERSE_ARRAY({ array });
+	}
+	print() {
+		return `"${this.array}".reverse();`;
+	}
+}
+export class SORT_ARRAY extends Action {
+	action: 'SORT_ARRAY';
+	array: string;
+	constructor(args: GenericObj) {
+		super();
+		this.action = 'SORT_ARRAY';
+		this.array = breakIfNotString(args.array);
+	}
+	static quick(array: string) {
+		return new SORT_ARRAY({ array });
+	}
+	print() {
+		return `"${this.array}".sort();`;
 	}
 }
 
@@ -2775,4 +2804,6 @@ export const actionConstructorLookup = {
 	ARRAY_PUSH_VARIABLE: (args: GenericObj) => new ARRAY_PUSH_VARIABLE(args),
 	ARRAY_PUSH_VALUE: (args: GenericObj) => new ARRAY_PUSH_VALUE(args),
 	SLICE_ARRAY: (args: GenericObj) => new SLICE_ARRAY(args),
+	SORT_ARRAY: (args: GenericObj) => new SORT_ARRAY(args),
+	REVERSE_ARRAY: (args: GenericObj) => new REVERSE_ARRAY(args),
 };

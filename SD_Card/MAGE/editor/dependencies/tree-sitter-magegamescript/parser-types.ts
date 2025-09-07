@@ -2781,27 +2781,34 @@ export class ArrayMethodChain extends MathlangNode {
 		}
 		return v;
 	}
-	toSteps(destinationArray: string) {
+	toSteps(destination: string) {
 		const steps: AnyNode[] = [];
-		let temporaryArrayCount = 0;
-		let returnArray = destinationArray;
-		this.chain.forEach(method => {
+		let source = this.identifier;
+		steps.push(ACTION.NEW_ARRAY.quick(destination));
+		this.chain.forEach((method) => {
 			if (method instanceof ArraySlice) {
-				returnArray = '__ARRAY_' + temporaryArrayCount;
-				temporaryArrayCount += 1;
-				steps.push(method.assignToVar(returnArray))
-			} else {
-				throw new Error ('array method not implemented')
+				steps.push(method.assignToVar(destination, source));
+				source = destination;
+				return;
 			}
-		})
-		steps.push(ACTION.SLICE_ARRAY.quick(destinationArray, returnArray));
-		for (let i = temporaryArrayCount - 1; i < 0; i--) {
-			steps.push(ACTION.DELETE_ARRAY.quick('__ARRAY_' + i))
-		}
+			if (method instanceof ArraySort) {
+				steps.push(ACTION.SORT_ARRAY.quick(source));
+				return;
+			}
+			if (method instanceof ArrayReverse) {
+				steps.push(ACTION.REVERSE_ARRAY.quick(source));
+				return;
+			}
+			throw new Error('array method not implemented');
+		});
 		return steps;
 	}
-	expPrint() { return this.identifier + this.chain.map(v=>v.print()); }
-	print() { return this.expPrint(); }
+	expPrint() {
+		return this.identifier + this.chain.map((v) => v.print());
+	}
+	print() {
+		return this.expPrint();
+	}
 }
 export class ArrayMethod extends MathlangNode {
 	static breakIfNotAll(arr: unknown) {
@@ -2815,9 +2822,9 @@ export class ArrayMethod extends MathlangNode {
 	}
 }
 export class ArraySlice extends ArrayMethod {
-	source: string;
 	start?: number | string;
 	end?: number | string;
+	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		if (args.start !== undefined) {
@@ -2826,21 +2833,34 @@ export class ArraySlice extends ArrayMethod {
 		if (args.end !== undefined) {
 			this.end = ACTION.breakIfNotStringOrNumber(args.end);
 		}
+		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
 	clone() {
 		return new ArraySlice(this.debug.clone(), this.args);
 	}
-	static quick(debug: MathlangLocation, source: string, start?: string | number, end?: string | number) {
-		return new ArraySlice(debug, { source, start, end });
+	static quick(
+		debug: MathlangLocation,
+		steps: AnyNode[],
+		start?: string | number,
+		end?: string | number,
+	) {
+		return new ArraySlice(debug, { steps, start, end });
 	}
 	static breakIfNot(v: unknown) {
-		if (!(v instanceof ArrayMethodChain)) {
-			throw new Error('not ArrayMethodChain');
+		if (!(v instanceof ArraySlice)) {
+			throw new Error('not ArraySlice');
 		}
 		return v;
 	}
-	assignToVar(destinationArray: string): AnyNode {
-		return ACTION.SLICE_ARRAY.quick(destinationArray, this.source, this.start, this.end);
+	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+		return MathlangSequence.orSingle(
+			this.debug,
+			[
+				...this.steps,
+				ACTION.SLICE_ARRAY.quick(destinationArray, sourceArray, this.start, this.end),
+			],
+			'ArraySlice.assignToVar',
+		);
 	}
 	expPrint() {
 		if (this.start !== undefined) {
@@ -2852,7 +2872,55 @@ export class ArraySlice extends ArrayMethod {
 		}
 		return `.slice()`;
 	}
-	print() { return this.expPrint(); }
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArraySort extends ArrayMethod {
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+	}
+	clone() {
+		return new ArraySort(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation) {
+		return new ArraySort(debug, {});
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArraySort)) {
+			throw new Error('not ArraySort');
+		}
+		return v;
+	}
+	expPrint() {
+		return `.sort()`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayReverse extends ArrayMethod {
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+	}
+	clone() {
+		return new ArrayReverse(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation) {
+		return new ArrayReverse(debug, {});
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayReverse)) {
+			throw new Error('not ArrayReverse');
+		}
+		return v;
+	}
+	expPrint() {
+		return `.reverse()`;
+	}
+	print() {
+		return this.expPrint();
+	}
 }
 
 const printEntityName = (entity: string) => {
