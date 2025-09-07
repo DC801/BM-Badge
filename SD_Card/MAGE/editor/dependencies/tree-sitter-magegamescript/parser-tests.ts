@@ -27,6 +27,31 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	new_array_with_initial_values: {
+		input: [
+			`array a = [];`,
+			`array b = [1,2,3];`,
+			`array c = [4,5,six];`,
+			`array d = [7,8,nine+10];`,
+		],
+		expected: [
+			`array a = [];`,
+			`array b = [];`,
+			`b.push(1);`,
+			`b.push(2);`,
+			`b.push(3);`,
+			`array c = [];`,
+			`c.push(4);`,
+			`c.push(5);`,
+			`c.push(six);`,
+			`array d = [];`,
+			`d.push(7);`,
+			`d.push(8);`,
+			`__TEMP_0 = nine;`,
+			`__TEMP_0 += 10;`,
+			`d.push(__TEMP_0);`,
+		],
+	},
 	json_arbitrary: {
 		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}];`],
 		expected: [`json[{`, `"action": "NEW_ACTION",`, `"entity": "%PLAYER%"`, `}];`],

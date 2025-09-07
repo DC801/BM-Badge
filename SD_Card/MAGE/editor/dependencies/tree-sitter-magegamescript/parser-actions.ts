@@ -1,12 +1,15 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import {
 	capturesForField,
+	childrenForField,
 	coerceToNumber,
 	coerceToString,
 	handleCapture,
 	handleChildrenForField,
+	handleNamedChildren,
 	mandatoryChildForField,
 	optionalChildForField,
+	stringCaptureForField,
 	type Capture,
 } from './parser-capture.ts';
 import {
@@ -74,6 +77,11 @@ import {
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
 	breakIfNotString,
 	Action,
+	DELETE_ARRAY,
+	NEW_ARRAY,
+	ARRAY_PUSH_VARIABLE,
+	ARRAY_PUSH_VALUE,
+	SLICE_ARRAY,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -101,6 +109,11 @@ import {
 	ScriptDefinition,
 	IntExpression,
 	FnCall,
+	IntUnit,
+	NumberLiteral,
+	IdentifierLiteral,
+	ArrayMethodChain,
+	ArraySlice,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -206,6 +219,55 @@ export const handleAction = (debug: MathlangLocation): AnyNode[] => {
 // TODO: maybe they should just be regular nodes then? Then only "spreadable" things wanna be handled here?
 type ActionFn = (debug: MathlangLocation, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
+	action_new_array: (debug) => {
+		const name = stringCaptureForField(debug, 'array');
+		const emptyNode = optionalChildForField(debug, 'empty');
+		if (emptyNode) return [new NEW_ARRAY({ array: name })];
+		const valuesNode = optionalChildForField(debug, 'values');
+		const steps: AnyNode[] = [NEW_ARRAY.quick(name)];
+		if (valuesNode) {
+			const handled = handleCapture(debug.using(valuesNode));
+			const values = Array.isArray(handled) ? handled : [handled];
+			values.forEach((v) => {
+				if (typeof v === 'number') {
+					steps.push(ARRAY_PUSH_VALUE.quick(name, v));
+				} else if (v instanceof NumberLiteral) {
+					steps.push(ARRAY_PUSH_VALUE.quick(name, v.value));
+				} else if (typeof v === 'string') {
+					steps.push(ARRAY_PUSH_VARIABLE.quick(name, v));
+				} else if (v instanceof IdentifierLiteral) {
+					steps.push(ARRAY_PUSH_VARIABLE.quick(name, v.source));
+				} else if (v instanceof IntExpression) {
+					const temp = newTemporary();
+					steps.push(...v.toSteps(temp));
+					dropTemporary();
+					steps.push(ARRAY_PUSH_VARIABLE.quick(name, temp));
+				} else {
+					throw new Error('array initial values of unknown type');
+				}
+			});
+			return steps;
+		}
+		const methodsNode = mandatoryChildForField(debug, 'method_chain');
+		if (methodsNode) {
+			const handledRaw = handleCapture(debug.using(methodsNode));
+			const handled = ArrayMethodChain.breakIfNot(handledRaw);
+			let temporaryArrayCount = 0;
+			let returnArray = name;
+			handled.chain.forEach((method) => {
+				if (method instanceof ArraySlice) {
+					returnArray = '__ARRAY_' + temporaryArrayCount;
+					temporaryArrayCount += 1;
+					steps.push(method.assignToVar(returnArray));
+				} else {
+					throw new Error('array method not implemented');
+				}
+			});
+			steps.push(SLICE_ARRAY.quick(name, returnArray));
+			return steps;
+		}
+		throw new Error('unknown new array initializer');
+	},
 	action_show_dialog: (debug) => {
 		const names = capturesForField(debug, 'dialog_name');
 		// multi
@@ -915,6 +977,12 @@ const actionData: Record<string, actionDataEntry> = {
 			const value = coerceToNumber(debug, v.value, 'value');
 			const sign = op === '-=' ? -1 : 1;
 			return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, sign * value);
+		},
+	},
+	action_delete_array: {
+		captures: ['array'],
+		handle: (v) => {
+			return new DELETE_ARRAY(v);
 		},
 	},
 };

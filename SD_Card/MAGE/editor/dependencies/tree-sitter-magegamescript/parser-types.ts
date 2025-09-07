@@ -2761,6 +2761,100 @@ export class DirectionTarget extends MathlangNode {
 	}
 }
 
+export class ArrayMethodChain extends MathlangNode {
+	identifier: string;
+	chain: ArrayMethod[];
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.identifier = ACTION.breakIfNotString(args.identifier);
+		this.chain = ArrayMethod.breakIfNotAll(args.chain);
+	}
+	clone() {
+		return new ArrayMethodChain(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, identifier: string, chain: ArrayMethod[]) {
+		return new ArrayMethodChain(debug, { identifier, chain });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayMethodChain)) {
+			throw new Error('not ArrayMethodChain');
+		}
+		return v;
+	}
+	toSteps(destinationArray: string) {
+		const steps: AnyNode[] = [];
+		let temporaryArrayCount = 0;
+		let returnArray = destinationArray;
+		this.chain.forEach(method => {
+			if (method instanceof ArraySlice) {
+				returnArray = '__ARRAY_' + temporaryArrayCount;
+				temporaryArrayCount += 1;
+				steps.push(method.assignToVar(returnArray))
+			} else {
+				throw new Error ('array method not implemented')
+			}
+		})
+		steps.push(ACTION.SLICE_ARRAY.quick(destinationArray, returnArray));
+		for (let i = temporaryArrayCount - 1; i < 0; i--) {
+			steps.push(ACTION.DELETE_ARRAY.quick('__ARRAY_' + i))
+		}
+		return steps;
+	}
+	expPrint() { return this.identifier + this.chain.map(v=>v.print()); }
+	print() { return this.expPrint(); }
+}
+export class ArrayMethod extends MathlangNode {
+	static breakIfNotAll(arr: unknown) {
+		if (!Array.isArray(arr)) {
+			throw new Error('ArrayMethod[] not an Array');
+		}
+		if (!arr.every((v) => v instanceof ArrayMethod)) {
+			throw new Error('not every item in array is ArrayMethod');
+		}
+		return arr;
+	}
+}
+export class ArraySlice extends ArrayMethod {
+	source: string;
+	start?: number | string;
+	end?: number | string;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		if (args.start !== undefined) {
+			this.start = ACTION.breakIfNotStringOrNumber(args.start);
+		}
+		if (args.end !== undefined) {
+			this.end = ACTION.breakIfNotStringOrNumber(args.end);
+		}
+	}
+	clone() {
+		return new ArraySlice(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, source: string, start?: string | number, end?: string | number) {
+		return new ArraySlice(debug, { source, start, end });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayMethodChain)) {
+			throw new Error('not ArrayMethodChain');
+		}
+		return v;
+	}
+	assignToVar(destinationArray: string): AnyNode {
+		return ACTION.SLICE_ARRAY.quick(destinationArray, this.source, this.start, this.end);
+	}
+	expPrint() {
+		if (this.start !== undefined) {
+			if (this.end !== undefined) {
+				return `.slice(${this.start}, ${this.end})`;
+			} else {
+				return `.slice(${this.start})`;
+			}
+		}
+		return `.slice()`;
+	}
+	print() { return this.expPrint(); }
+}
+
 const printEntityName = (entity: string) => {
 	if (entity === '%PLAYER%') return 'player';
 	if (entity === '%SELF%') return 'self';
