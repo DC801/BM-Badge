@@ -18,7 +18,7 @@ const actionArrayToScript = (
 
 // will do all tests if empty
 // if not empty, also won't do any file-level tests
-const onlyDoTheseActionTests = [];
+const onlyDoTheseActionTests = ['array_push'];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
@@ -27,6 +27,42 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
+	// array map
+	// array for_each
+	// array_write_read: {
+	// 	// ARRAY_LENGTH_INTO_VARIABLE
+	// 	// ARRAY_WRITE_INTO_INDEX_FROM_VALUE
+	// 	// ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE
+	// 	// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE
+	// 	// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE
+	// 	// ARRAY_READ_FROM_INDEX_INTO_VARIABLE
+	// 	// ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE
+	// 	// ARRAY_POP_INTO_VARIABLE
+	// 	// ARRAY_POP_LEFT_INTO_VARIABLE
+	// },
+	array_push: {
+		input: [
+			`c.push(one);`,
+			`d.push(2);`,
+			`e.push_left(three);`,
+			`f.push_left(4);`,
+			`g.push_left(player x + 999);`,
+		],
+		expected: [
+			`"c".push("one");`,
+			`"__RETURN_" = 0;`,
+			`"d".push(2);`,
+			`"__RETURN_" = 0;`,
+			`"e".push_left("three");`,
+			`"__RETURN_" = 0;`,
+			`"f".push_left(4);`,
+			`"__RETURN_" = 0;`,
+			`"__TEMP_0" = player x;`,
+			`"__TEMP_0" += 999;`,
+			`"g".push_left("__TEMP_0");`,
+			`"__RETURN_" = 0;`,
+		],
+	},
 	array_slices_expressions: {
 		input: [
 			`array a = b.slice(player x + 10);`,
@@ -139,6 +175,10 @@ const actionTests = {
 			`__TEMP_0 += 10;`,
 			`d.push(__TEMP_0);`,
 		],
+	},
+	array_basic: {
+		input: [`print array a;`, `delete array b;`],
+		expected: [`print array "a";`, `delete array "b";`],
 	},
 	json_arbitrary: {
 		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}];`],

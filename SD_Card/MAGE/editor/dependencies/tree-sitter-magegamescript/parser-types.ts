@@ -103,7 +103,7 @@ export class MathlangLocation {
 	}
 }
 
-// TODO: change this to be a map of error type and generic followup; the MathlangMessageType type can become key of that map, and the isMathlangMessageType function can just look for an entry in the map
+// TODO: change this to be a map of error type and generic followup; the MathlangMessageType type can become keyof that map, and the isMathlangMessageType function can just look for an entry in the map
 export type MathlangMessageType =
 	// general
 	| 'syntax error'
@@ -127,6 +127,8 @@ export type MathlangMessageType =
 	| 'mismatched spread lengths'
 	| 'unsupported entity field'
 	| 'misordered params'
+	| 'array method on non-array'
+	| 'return value not stored'
 	| 'invalid JSON action'
 	| 'invalid fn arg'
 	| 'invalid operator' // warning, not error
@@ -144,6 +146,8 @@ export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
 	if (v === 'unsupported entity field') return true;
 	if (v === 'invalid JSON action') return true;
 	if (v === 'misordered params') return true;
+	if (v === 'array method on non-array') return true;
+	if (v === 'return value not stored') return true;
 	if (v === 'constant already defined') return true;
 	if (v === 'fn already defined') return true;
 	if (v === 'undefined constant') return true;
@@ -2761,13 +2765,51 @@ export class DirectionTarget extends MathlangNode {
 	}
 }
 
+// --------------- ARRAYS
+
 export class ArrayMethodChain extends MathlangNode {
 	identifier: string;
+	return_type: 'array' | 'value' | 'none';
 	chain: ArrayMethod[];
+	final: ArrayMethod;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.identifier = ACTION.breakIfNotString(args.identifier);
-		this.chain = ArrayMethod.breakIfNotAll(args.chain);
+		const chain = ArrayMethod.breakIfNotAll(args.chain);
+		this.return_type = 'array';
+		this.chain = [];
+		this.final = chain[chain.length - 1];
+		for (let i = 0; i < chain.length; i++) {
+			const curr = chain[i];
+			if (curr instanceof ArrayMethodReturningValue) {
+				if (this.return_type === 'array') {
+					this.return_type = 'value';
+				} else {
+					debug
+						.using(curr.debug.node)
+						.quickError(
+							'array method on non-array',
+							'previous method returns an integer value; cannot call array method afterward',
+						);
+					this.final = curr;
+					break;
+				}
+			} else if (curr instanceof ArrayMethodReturningNothing) {
+				if (this.return_type === 'array') {
+					this.return_type = 'none';
+				} else {
+					debug
+						.using(curr.debug.node)
+						.quickError(
+							'array method on non-array',
+							'previous method returns nothing; cannot call array method afterward',
+						);
+					this.final = curr;
+					break;
+				}
+			}
+			this.chain.push(chain[i]); // to use the orig Sequence if any
+		}
 	}
 	clone() {
 		return new ArrayMethodChain(this.debug.clone(), this.args);
@@ -2783,25 +2825,57 @@ export class ArrayMethodChain extends MathlangNode {
 	}
 	toSteps(destination: string) {
 		const steps: AnyNode[] = [];
-		let source = this.identifier;
-		steps.push(ACTION.ARRAY_NEW.quick(destination));
+		let currArray = this.identifier;
+		if (this.return_type === 'array') {
+			steps.push(ACTION.ARRAY_NEW.quick(destination));
+		}
 		this.chain.forEach((method) => {
-			if (method instanceof ArraySliceMethod) {
-				steps.push(method.assignToVar(destination, source));
-				source = destination;
-				return;
+			if (method instanceof ArrayMethodReturningNothing) {
+				steps.push(...method.toSteps(currArray));
+			} else if (method instanceof ArrayMethodReturningValue) {
+				steps.push(...method.toSteps(currArray, destination));
+			} else if (method instanceof ArraySliceMethod) {
+				const temp = this.return_type === 'array' ? destination : '__TEMPORARY_ARRAY_';
+				// TODO: find out if you can slice in place
+				steps.push(...method.toSteps(currArray, temp));
+				currArray = temp;
+			} else if (method instanceof ArrayMethodReturningArray) {
+				steps.push(...method.toSteps(currArray, destination));
+			} else {
+				throw new Error('unknown array method type');
 			}
-			if (method instanceof ArraySort) {
-				steps.push(ACTION.SORT_ARRAY.quick(source));
-				return;
-			}
-			if (method instanceof ArrayReverse) {
-				steps.push(ACTION.REVERSE_ARRAY.quick(source));
-				return;
-			}
-			throw new Error('array method not implemented');
 		});
 		return steps;
+	}
+	assignToArray(destinationArray: string) {
+		if (this.return_type !== 'array') {
+			this.debug.quickError('syntax error', 'this array expression does not return an array');
+		}
+		return MathlangSequence.orSingle(
+			this.debug,
+			this.toSteps(destinationArray),
+			'ArrayMethodChain.assignToArray',
+		);
+	}
+	assignToVar(destinationVar: string) {
+		if (this.return_type !== 'value') {
+			this.debug.quickError(
+				'syntax error',
+				'this array expression does not return an integer value',
+			);
+		}
+		return MathlangSequence.orSingle(
+			this.debug,
+			this.toSteps(destinationVar),
+			'ArrayMethodChain.assignToVar',
+		);
+	}
+	doToArray(workingArray: string) {
+		return MathlangSequence.orSingle(
+			this.debug,
+			this.toSteps(workingArray),
+			'ArrayMethodChain.doToArray',
+		);
 	}
 	expPrint() {
 		return this.identifier + this.chain.map((v) => v.print());
@@ -2810,7 +2884,14 @@ export class ArrayMethodChain extends MathlangNode {
 		return this.expPrint();
 	}
 }
+
 export class ArrayMethod extends MathlangNode {
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayMethod)) {
+			throw new Error('not ArrayMethod');
+		}
+		return v;
+	}
 	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
 			throw new Error('ArrayMethod[] not an Array');
@@ -2822,12 +2903,19 @@ export class ArrayMethod extends MathlangNode {
 	}
 }
 
-export class ArraySliceMethod extends ArrayMethod {
-	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
-		throw new Error('children should be doing this:' + destinationArray + sourceArray);
+// returns an array
+export class ArrayMethodReturningArray extends ArrayMethod {
+	toSteps(sourceArray: string, destinationArray: string): AnyNode[] {
+		throw new Error('children should be doing this:' + sourceArray + destinationArray);
+	}
+	assignToArray(sourceArray: string, destinationArray: string): AnyNode {
+		throw new Error('children should be doing this:' + sourceArray + destinationArray);
 	}
 }
 
+// export class ArrayMap extends ArrayMethodReturningArray {}
+
+export class ArraySliceMethod extends ArrayMethodReturningArray {}
 export class ArraySliceByNumber extends ArraySliceMethod {
 	index_start: number;
 	constructor(debug: MathlangLocation, args: GenericObj) {
@@ -2846,8 +2934,11 @@ export class ArraySliceByNumber extends ArraySliceMethod {
 		}
 		return v;
 	}
-	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
-		return ACTION.ARRAY_SLICE.quick(destinationArray, sourceArray, this.index_start);
+	toSteps(sourceArray: string, destinationArray: string) {
+		return [this.assignToArray(sourceArray, destinationArray)];
+	}
+	assignToArray(sourceArray: string, destinationArray: string): AnyNode {
+		return ACTION.ARRAY_SLICE.quick(sourceArray, destinationArray, this.index_start);
 	}
 	expPrint() {
 		return `.slice(${this.index_start || ''})`;
@@ -2876,10 +2967,13 @@ export class ArraySliceTwiceByNumber extends ArraySliceMethod {
 		}
 		return v;
 	}
-	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+	toSteps(sourceArray: string, destinationArray: string) {
+		return [this.assignToArray(sourceArray, destinationArray)];
+	}
+	assignToArray(sourceArray: string, destinationArray: string): AnyNode {
 		return ACTION.ARRAY_SLICE_TWICE.quick(
-			destinationArray,
 			sourceArray,
+			destinationArray,
 			this.index_start,
 			this.index_end,
 		);
@@ -2911,7 +3005,10 @@ export class ArraySliceByVariable extends ArraySliceMethod {
 		}
 		return v;
 	}
-	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+	toSteps(sourceArray: string, destinationArray: string) {
+		return [this.assignToArray(sourceArray, destinationArray)];
+	}
+	assignToArray(destinationArray: string, sourceArray: string): AnyNode {
 		return MathlangSequence.orSingle(
 			this.debug,
 			[
@@ -2959,7 +3056,10 @@ export class ArraySliceTwiceByVariable extends ArraySliceMethod {
 		}
 		return v;
 	}
-	assignToVar(destinationArray: string, sourceArray: string): AnyNode {
+	toSteps(sourceArray: string, destinationArray: string) {
+		return [this.assignToArray(sourceArray, destinationArray)];
+	}
+	assignToArray(destinationArray: string, sourceArray: string): AnyNode {
 		return MathlangSequence.orSingle(
 			this.debug,
 			[
@@ -2982,10 +3082,7 @@ export class ArraySliceTwiceByVariable extends ArraySliceMethod {
 	}
 }
 
-export class ArraySort extends ArrayMethod {
-	constructor(debug: MathlangLocation, args: GenericObj) {
-		super(debug, args);
-	}
+export class ArraySort extends ArrayMethodReturningArray {
 	clone() {
 		return new ArraySort(this.debug.clone(), this.args);
 	}
@@ -2998,6 +3095,12 @@ export class ArraySort extends ArrayMethod {
 		}
 		return v;
 	}
+	toSteps(array: string) {
+		return [this.assignToVar(array)];
+	}
+	assignToVar(array: string): AnyNode {
+		return ACTION.ARRAY_SORT.quick(array);
+	}
 	expPrint() {
 		return `.sort()`;
 	}
@@ -3005,10 +3108,7 @@ export class ArraySort extends ArrayMethod {
 		return this.expPrint();
 	}
 }
-export class ArrayReverse extends ArrayMethod {
-	constructor(debug: MathlangLocation, args: GenericObj) {
-		super(debug, args);
-	}
+export class ArrayReverse extends ArrayMethodReturningArray {
 	clone() {
 		return new ArrayReverse(this.debug.clone(), this.args);
 	}
@@ -3021,6 +3121,12 @@ export class ArrayReverse extends ArrayMethod {
 		}
 		return v;
 	}
+	toSteps(array: string) {
+		return [this.assignToVar(array)];
+	}
+	assignToVar(array: string): AnyNode {
+		return ACTION.ARRAY_REVERSE.quick(array);
+	}
 	expPrint() {
 		return `.reverse()`;
 	}
@@ -3028,6 +3134,335 @@ export class ArrayReverse extends ArrayMethod {
 		return this.expPrint();
 	}
 }
+
+// returns a value
+export class ArrayMethodReturningValue extends ArrayMethod {
+	toSteps(array: string, destinationVar: string): AnyNode[] {
+		throw new Error(
+			`children should be putting value from array ${array} into var ${destinationVar}`,
+		);
+	}
+	assignToVar(array: string, destinationVar: string): AnyNode {
+		throw new Error(
+			`children should be putting value from array ${array} into var ${destinationVar}`,
+		);
+	}
+}
+
+export class ArrayLength extends ArrayMethodReturningValue {
+	clone() {
+		return new ArrayLength(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation) {
+		return new ArrayLength(debug, {});
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayLength)) {
+			throw new Error('not ArrayLength');
+		}
+		return v;
+	}
+	toSteps(array: string, destinationVar: string) {
+		return [this.assignToVar(array, destinationVar)];
+	}
+	assignToVar(array: string, destinationVar: string) {
+		return ACTION.ARRAY_LENGTH_INTO_VARIABLE.quick(array, destinationVar);
+	}
+	expPrint() {
+		return `.length()`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayReadFromIndex extends ArrayMethodReturningValue {
+	index: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.index = ACTION.breakIfNotNumber(args.index);
+	}
+	clone() {
+		return new ArrayReadFromIndex(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, index: number) {
+		return new ArrayReadFromIndex(debug, { index });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayReadFromIndex)) {
+			throw new Error('not ArrayReadFromIndex');
+		}
+		return v;
+	}
+	toSteps(array: string, destinationVar: string) {
+		return [this.assignToVar(array, destinationVar)];
+	}
+	assignToVar(array: string, destinationVar: string) {
+		return ACTION.ARRAY_READ_FROM_INDEX_INTO_VARIABLE.quick(array, this.index, destinationVar);
+	}
+	expPrint() {
+		return `[${this.index}]`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayReadFromVariableIndex extends ArrayMethodReturningValue {
+	variable_index: string;
+	steps?: AnyNode[];
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.variable_index = ACTION.breakIfNotString(args.variable_index);
+		if (args.steps) {
+			this.steps = AnyNode.breakIfNotAll(args.steps);
+		}
+	}
+	clone() {
+		return new ArrayReadFromVariableIndex(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, variable_index: string, steps?: AnyNode[]) {
+		return new ArrayReadFromVariableIndex(debug, { variable_index, steps });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayReadFromVariableIndex)) {
+			throw new Error('not ArrayReadFromVariableIndex');
+		}
+		return v;
+	}
+	toSteps(array: string, destinationVar: string) {
+		const action = ACTION.ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE.quick(
+			array,
+			this.variable_index,
+			destinationVar,
+		);
+		const steps: AnyNode[] = this.steps ? this.steps : [];
+		steps.push(action);
+		return steps;
+	}
+	assignToVar(array: string, destinationVar: string): AnyNode {
+		const steps = this.toSteps(array, destinationVar);
+		return MathlangSequence.orSingle(
+			this.debug,
+			steps,
+			'ArrayReadFromVariableIndex.assignToVar',
+		);
+	}
+	expPrint() {
+		// I think this part won't work... (todo)
+		return `["${this.variable_index}"]`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayPop extends ArrayMethodReturningValue {
+	clone() {
+		return new ArrayPop(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation) {
+		return new ArrayPop(debug, {});
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayPop)) {
+			throw new Error('not ArrayPop');
+		}
+		return v;
+	}
+	toSteps(array: string, destinationVar: string) {
+		return [this.assignToVar(array, destinationVar)];
+	}
+	assignToVar(array: string, destinationVar: string) {
+		return ACTION.ARRAY_POP_INTO_VARIABLE.quick(array, destinationVar);
+	}
+	expPrint() {
+		return `.pop()`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayPopLeft extends ArrayMethodReturningValue {
+	clone() {
+		return new ArrayPopLeft(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation) {
+		return new ArrayPopLeft(debug, {});
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayPopLeft)) {
+			throw new Error('not ArrayPopLeft');
+		}
+		return v;
+	}
+	toSteps(array: string, destinationVar: string) {
+		return [this.assignToVar(array, destinationVar)];
+	}
+	assignToVar(array: string, destinationVar: string) {
+		return ACTION.ARRAY_POP_LEFT_INTO_VARIABLE.quick(array, destinationVar);
+	}
+	expPrint() {
+		return `.pop_left()`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+
+// returns nothing (in our case)
+export class ArrayMethodReturningNothing extends ArrayMethod {
+	toSteps(workingArray: string): AnyNode[] {
+		throw new Error('children should be doing this to ' + workingArray);
+	}
+	doToArray(workingArray: string): AnyNode {
+		throw new Error('children should be doing this to ' + workingArray);
+	}
+}
+
+export class ArrayPushValue extends ArrayMethodReturningNothing {
+	value: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.value = ACTION.breakIfNotNumber(args.value);
+	}
+	clone() {
+		return new ArrayPushValue(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, value: number) {
+		return new ArrayPushValue(debug, { value });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayPushValue)) {
+			throw new Error('not ArrayPushValue');
+		}
+		return v;
+	}
+	toSteps(workingArray: string) {
+		return [this.doToArray(workingArray)];
+	}
+	doToArray(workingArray: string): AnyNode {
+		return ACTION.ARRAY_PUSH_FROM_VALUE.quick(workingArray, this.value);
+	}
+	expPrint() {
+		return `.push(${this.value})`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayPushVariable extends ArrayMethodReturningNothing {
+	variable: string;
+	steps?: AnyNode[];
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.variable = ACTION.breakIfNotString(args.variable);
+		if (args.steps) {
+			this.steps = AnyNode.breakIfNotAll(args.steps);
+		}
+	}
+	clone() {
+		return new ArrayPushVariable(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, variable: string, steps?: AnyNode[]) {
+		return new ArrayPushVariable(debug, { variable, steps });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayPushVariable)) {
+			throw new Error('not ArrayPushVariable');
+		}
+		return v;
+	}
+	toSteps(workingArray: string) {
+		const action = ACTION.ARRAY_PUSH_FROM_VARIABLE.quick(workingArray, this.variable);
+		const steps: AnyNode[] = this.steps ? this.steps : [];
+		steps.push(action);
+		return steps;
+	}
+	doToArray(workingArray: string): AnyNode {
+		const steps = this.toSteps(workingArray);
+		return MathlangSequence.orSingle(this.debug, steps, 'ArrayPushVariable.doToArray');
+	}
+	expPrint() {
+		// I think this part won't work... (todo)
+		return `.push("${this.variable}")`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayPushLeftValue extends ArrayMethodReturningNothing {
+	value: number;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.value = ACTION.breakIfNotNumber(args.value);
+	}
+	clone() {
+		return new ArrayPushLeftValue(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, value: number) {
+		return new ArrayPushLeftValue(debug, { value });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayPushLeftValue)) {
+			throw new Error('not ArrayPushLeftValue');
+		}
+		return v;
+	}
+	toSteps(workingArray: string) {
+		return [this.doToArray(workingArray)];
+	}
+	doToArray(workingArray: string): AnyNode {
+		return ACTION.ARRAY_PUSH_LEFT_FROM_VALUE.quick(workingArray, this.value);
+	}
+	expPrint() {
+		return `.push_left(${this.value})`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+export class ArrayPushLeftVariable extends ArrayMethodReturningNothing {
+	variable: string;
+	steps?: AnyNode[];
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.variable = ACTION.breakIfNotString(args.variable);
+		if (args.steps) {
+			this.steps = AnyNode.breakIfNotAll(args.steps);
+		}
+	}
+	clone() {
+		return new ArrayPushLeftVariable(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, variable: string, steps?: AnyNode[]) {
+		return new ArrayPushLeftVariable(debug, { variable, steps });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayPushLeftVariable)) {
+			throw new Error('not ArrayPushLeftVariable');
+		}
+		return v;
+	}
+	toSteps(workingArray: string) {
+		const action = ACTION.ARRAY_PUSH_LEFT_FROM_VARIABLE.quick(workingArray, this.variable);
+		const steps: AnyNode[] = this.steps ? this.steps : [];
+		steps.push(action);
+		return steps;
+	}
+	doToArray(workingArray: string): AnyNode {
+		const steps = this.toSteps(workingArray);
+		return MathlangSequence.orSingle(this.debug, steps, 'ArrayPushLeftVariable.doToArray');
+	}
+	expPrint() {
+		// I think this part won't work... (todo)
+		return `.push_left("${this.variable}")`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
+
+// export class ArrayForEach extends ArrayMethodReturningNothing {}
+
+// --------------- UTILITIES
 
 const printEntityName = (entity: string) => {
 	if (entity === '%PLAYER%') return 'player';

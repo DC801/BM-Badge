@@ -47,17 +47,17 @@
 	- .pushLeft or .push_left? I guess I've been using underscores for things like warp_state, thus we'll use .push_left
 	- `arrayName.push_left(100);`
 	- `arrayName.push_left(varName);`
-- `ARRAY_POP_VARIABLE`/`ARRAY_POP_VALUE`: Pop
+- `ARRAY_POP`: Pop
 	- RETURNS: value removed
 	- `arrayName.pop();`
 	- `destinationVar = arrayName.pop();`
 	- `entity y = arrayName.pop() * 30;`
-- `ARRAY_LEFT_POP_VARIABLE`/`ARRAY_LEFT_POP_VALUE`: PopLeft
+- `ARRAY_POP_LEFT`: PopLeft
 	- RETURNS: value removed
 	- `arrayName.pop_left();`
 	- `destinationVar = arrayName.pop_left();`
 	- `entity y = arrayName.pop_left() * 30;`
-- `GET_ARRAY_LENGTH`: Get length (RETURN)
+- `ARRAY_LENGTH_INTO_VARIABLE`: Get length (RETURN)
 	- RETURNS: length of array
 	- Make it look like a method call and not a property:
 	- `arrayName.length()`
@@ -70,10 +70,10 @@
 	- RETURNS: value at that variable index
 	- `varName = arrayName[indexVar];`
 	- `arrayName[indexVar] = varName;`
-- `REVERSE_ARRAY`: Reverse
+- `ARRAY_REVERSE`: Reverse
 	- Prob reverse in place
 	- `arrayName.reverse();`
-- `SORT_ARRAY`: Sort (up/down)
+- `ARRAY_SORT`: Sort (up/down)
 	- Prob sort in place
 	- It's numbers, so there's only two sorts that make sense
 	- Two methods?
@@ -451,3 +451,19 @@ arrName.for_each(); // -> ok
 - "simon_pos6",
 - "simon_pos7",
 - "simon_pos_curr",
+
+```js
+// ARRAY_READ_FROM_INDEX_INTO_VARIABLE
+varName = arrayName[0]
+// ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE
+varName = arrayName[var]
+
+// ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE
+arrayName[0] = varName
+// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE
+arrayName[var] = varName
+// ARRAY_WRITE_INTO_INDEX_FROM_VALUE
+arrayName[0] = 0
+// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE
+arrayName[var] = 0
+```

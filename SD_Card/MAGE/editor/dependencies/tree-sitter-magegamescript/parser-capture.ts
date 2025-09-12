@@ -50,6 +50,15 @@ import {
 	ArraySliceTwiceByNumber,
 	ArraySliceByVariable,
 	ArraySliceTwiceByVariable,
+	ArrayPushValue,
+	ArrayPushVariable,
+	ArrayPushLeftVariable,
+	ArrayPushLeftValue,
+	ArrayLength,
+	ArrayPopLeft,
+	ArrayPop,
+	ArrayReadFromVariableIndex,
+	ArrayReadFromIndex,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -588,14 +597,15 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 			return definition;
 		}
 	},
-	array_with_array_methods: (debug) => {
+	array_expression: (debug) => {
 		const name = stringCaptureForField(debug, 'name');
-		const handledMethods = capturesForField(debug, 'array_method');
-		return ArrayMethodChain.quick(debug, name, ArrayMethod.breakIfNotAll(handledMethods));
+		const handledMethodsRaw = capturesForField(debug, 'array_method');
+		const handledMethods = ArrayMethod.breakIfNotAll(handledMethodsRaw);
+		return ArrayMethodChain.quick(debug, name, handledMethods);
 	},
+	array_method_sort: (debug) => ArraySort.quick(debug),
+	array_method_reverse: (debug) => ArrayReverse.quick(debug),
 	// array_method_map: (debug) => {},
-	array_method_sort: (debug) => new ArraySort(debug, {}),
-	array_method_reverse: (debug) => new ArrayReverse(debug, {}),
 	array_method_slice: (debug) => {
 		const steps: AnyNode[] = [];
 		const argsRaw = childrenForField(debug, 'arg');
@@ -610,7 +620,7 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 				steps.push(...arg.toSteps(temp));
 				return temp;
 			}
-			throw new Error('unsupported slice index type');
+			throw new Error('unsupported array slice index type');
 		});
 		if (args.length === 0) args.push(0);
 		if (args.every((v) => typeof v === 'number')) {
@@ -638,6 +648,40 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		}
 		return ret;
 	},
+	array_bracket_lookup: (debug) => {
+		const exp = captureForField(debug, 'exp');
+		return numberOrStringExpArrayMethodMaker(
+			debug,
+			exp,
+			ArrayReadFromIndex.quick,
+			ArrayReadFromVariableIndex.quick,
+			'array_bracket_lookup',
+		);
+	},
+	array_method_length: (debug) => ArrayLength.quick(debug),
+	array_method_pop: (debug) => ArrayPop.quick(debug),
+	array_method_pop_left: (debug) => ArrayPopLeft.quick(debug),
+	array_method_push: (debug) => {
+		const exp = captureForField(debug, 'exp');
+		return numberOrStringExpArrayMethodMaker(
+			debug,
+			exp,
+			ArrayPushValue.quick,
+			ArrayPushVariable.quick,
+			'array_method_push',
+		);
+	},
+	array_method_push_left: (debug) => {
+		const exp = captureForField(debug, 'exp');
+		return numberOrStringExpArrayMethodMaker(
+			debug,
+			exp,
+			ArrayPushLeftValue.quick,
+			ArrayPushLeftVariable.quick,
+			'array_method_push_left',
+		);
+	},
+	// array_method_for_each: (debug) => {},
 };
 
 const extractEntityName = (debug: MathlangLocation): string => {
@@ -646,6 +690,28 @@ const extractEntityName = (debug: MathlangLocation): string => {
 	if (type === 'player') return '%PLAYER%';
 	if (type !== 'entity') throw new Error('Entity identifier not an entity?');
 	return stringCaptureForField(debug, 'entity');
+};
+
+const numberOrStringExpArrayMethodMaker = (
+	debug: MathlangLocation,
+	exp: Capture | Capture[] | undefined,
+	numberFn: (debug: MathlangLocation, arg: number) => AnyNode,
+	stringFn: (debug: MathlangLocation, arg: string, steps?: AnyNode[]) => AnyNode,
+	label: string,
+) => {
+	if (typeof exp === 'number') {
+		return numberFn(debug, exp);
+	}
+	if (typeof exp === 'string') {
+		return stringFn(debug, exp);
+	}
+	if (exp instanceof IntExpression) {
+		const steps: AnyNode[] = [];
+		const temp = newTemporary();
+		steps.push(...exp.toSteps(temp));
+		return stringFn(debug, temp, steps);
+	}
+	throw new Error(`unsupported expression in ${label}`);
 };
 
 // ------------------------- VERY COMMON NODE HANDLING BEHAVIORS

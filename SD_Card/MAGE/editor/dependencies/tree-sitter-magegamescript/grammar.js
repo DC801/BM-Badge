@@ -158,25 +158,19 @@ export default grammar({
 				$.dialog_definition,
 			),
 
-		fn: ($) =>
-			seq(
-				optional('fn'),
-				field('name', $.STRING),
-				$._fn_literal,
-			),
+		fn: ($) => seq(optional('fn'), field('name', $.STRING), $._fn_literal),
 		fn_lambda: ($) => $._fn_literal,
-		fn_lambda_or_identifier: ($) => choice(
-			field('identifier', $.string),
-			field('lambda', $.fn_lambda),
-		),
-		_fn_literal: ($) => seq(
-			'(',
-			field('arg', $.CONSTANT),
-			optional(repeat(seq(',', field('arg', $.CONSTANT)))),
-			optional(','),
-			')',
-			field('body', $.script_block)
-		),
+		fn_lambda_or_identifier: ($) =>
+			choice(field('identifier', $.string), field('lambda', $.fn_lambda)),
+		_fn_literal: ($) =>
+			seq(
+				'(',
+				field('arg', $.CONSTANT),
+				optional(repeat(seq(',', field('arg', $.CONSTANT)))),
+				optional(','),
+				')',
+				field('body', $.script_block),
+			),
 		fn_call: ($) =>
 			seq(
 				field('name', $.STRING),
@@ -344,9 +338,10 @@ export default grammar({
 
 		_action_item: ($) =>
 			choice(
+				$.action_array_expression,
+				$.action_print_array,
 				$.action_new_array,
 				$.action_delete_array,
-				$.array_top_level_action,
 				$.action_return_statement,
 				$.action_close_dialog,
 				$.action_close_serial_dialog,
@@ -843,7 +838,17 @@ export default grammar({
 		MUL_DIV_MOD: () => choice('*', '/', '%'),
 		ADD_SUB: () => choice('+', '-'),
 		_int_unit: ($) =>
-			prec(8, choice($.array_value_lookup, $.int_getable, $.int_grouping, $.NUMBER, $.CONSTANT, $.STRING)),
+			prec(
+				8,
+				choice(
+					$.array_expression,
+					$.int_getable,
+					$.int_grouping,
+					$.NUMBER,
+					$.CONSTANT,
+					$.STRING,
+				),
+			),
 
 		int_grouping: ($) => seq('(', $._int_expression, ')'),
 		_int_expression: ($) => choice($.int_binary_expression, $._int_unit),
@@ -1111,75 +1116,66 @@ export default grammar({
 				field('value', $.string_expandable),
 			),
 		set_entity_string_field: () => choice('name', 'type', 'path'),
-		action_new_array: ($) => seq(
-			'array',
-			field('array', $.string),
-			'=',
-			choice(
-				field('method_chain', $.array_with_array_methods),
-				field('values', $.int_expression_expansion),
-				field('empty', seq('[', ']')),
+		action_array_expression: ($) => field('array_expression', $.array_expression),
+		action_print_array: ($) => seq('print', 'array', field('array_name', $.string)),
+		action_new_array: ($) =>
+			seq(
+				'array',
+				field('array', $.string),
+				'=',
+				choice(
+					field('array_expression', $.array_expression),
+					field('values', $.int_expression_expansion),
+					field('empty', seq('[', ']')),
+				),
 			),
-		),
-		action_delete_array: ($) => seq(
-			'delete', 'array', field('array', $.string_expandable)
-		),
-		array_with_array_methods: ($) => prec.left(seq(
-			field('name', $.string),
-			repeat1(field('array_method', $._array_to_array_method))
-		)),
-		_array_to_array_method: ($) => choice(
-			$.array_method_map,
-			$.array_method_sort,
-			$.array_method_reverse,
-			$.array_method_slice,
-		),
-		_array_value_lookup_method: ($) => choice(
-			$.array_bracket_lookup,
-			$.array_method_length,
-			$.array_method_pop,
-			$.array_method_push,
-			$.array_method_left_pop,
-			$.array_method_left_push,
-		),
-		array_value_lookup: ($) => prec.left(seq(
-			field('name', $.string),
-			repeat(field('array_method', $._array_to_array_method)),
-			field('value', $._array_value_lookup_method)
-		)),
-		_array_top_level_method: ($) => choice(
-			$.array_method_for_each,
-			$.array_method_sort,
-			$.array_method_reverse,
-			$.array_method_pop,
-			$.array_method_push,
-			$.array_method_left_pop,
-			$.array_method_left_push,
-		),
-		array_top_level_action: ($) => prec.left(seq(
-			field('name', $.string),
-			repeat(field('array_method', $._array_to_array_method)),
-			field('method', $._array_top_level_method)
-		)),
-		array_method_map: ($) => seq(
-			'.', 'map', '(', field('fn', $.fn_lambda_or_identifier), ')',
-		),
-		array_method_for_each: ($) => seq(
-			'.', 'for_each', '(', field('fn', $.fn_lambda_or_identifier), ')',
-		),
-		array_method_slice: ($) => seq(
-			'.', 'slice', '(', optional(seq(
-				field('arg', $._int_expression),
-				optional(seq(',', field('arg', $._int_expression)))
-			)), ')',
-		),
+		action_delete_array: ($) => seq('delete', 'array', field('array', $.string_expandable)),
+		array_expression: ($) =>
+			prec.left(
+				seq(field('name', $.string), repeat1(field('array_method', $._array_method))),
+			),
+		_array_method: ($) =>
+			choice(
+				// returns a new array
+				$.array_method_sort, // returns same array
+				$.array_method_reverse, // returns same array
+				$.array_method_map, // returns new array
+				$.array_method_slice, // returns new array
+				// returns a value
+				$.array_bracket_lookup,
+				$.array_method_length,
+				$.array_method_pop,
+				$.array_method_pop_left,
+				// returns nothing (in our case)
+				$.array_method_push,
+				$.array_method_push_left,
+				$.array_method_for_each,
+			),
 		array_method_sort: () => seq('.', 'sort', '(', ')'),
 		array_method_reverse: () => seq('.', 'reverse', '(', ')'),
+		array_method_map: ($) => seq('.', 'map', '(', field('fn', $.fn_lambda_or_identifier), ')'),
+		array_method_slice: ($) =>
+			seq(
+				'.',
+				'slice',
+				'(',
+				optional(
+					seq(
+						field('arg', $._int_expression),
+						optional(seq(',', field('arg', $._int_expression))),
+					),
+				),
+				')',
+			),
+		array_bracket_lookup: ($) => seq('[', field('exp', $._int_expression), ']'),
 		array_method_length: () => seq('.', 'length', '(', ')'),
 		array_method_pop: () => seq('.', 'pop', '(', ')'),
-		array_method_push: ($) => seq('.', 'push', '(', field('args', $.int_expression_expandable), ')'),
-		array_method_left_pop: () => seq('.', 'left_pop', '(', ')'),
-		array_method_left_push: ($) => seq('.', 'left_push', '(', field('args', $.int_expression_expandable), ')'),
-		array_bracket_lookup: ($) => seq('[', $._int_expression, ']'),
+		array_method_pop_left: () => seq('.', 'pop_left', '(', ')'),
+		array_method_push: ($) =>
+			seq('.', 'push', '(', field('exp', $.int_expression_expandable), ')'),
+		array_method_push_left: ($) =>
+			seq('.', 'push_left', '(', field('exp', $.int_expression_expandable), ')'),
+		array_method_for_each: ($) =>
+			seq('.', 'for_each', '(', field('fn', $.fn_lambda_or_identifier), ')'),
 	},
 });

@@ -1,5 +1,6 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
 import {
+	captureForField,
 	capturesForField,
 	coerceToNumber,
 	coerceToString,
@@ -77,8 +78,9 @@ import {
 	Action,
 	ARRAY_DELETE,
 	ARRAY_NEW,
-	ARRAY_PUSH_VARIABLE,
-	ARRAY_PUSH_VALUE,
+	ARRAY_PUSH_FROM_VARIABLE,
+	ARRAY_PUSH_FROM_VALUE,
+	ARRAY_LOG,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -109,6 +111,10 @@ import {
 	NumberLiteral,
 	IdentifierLiteral,
 	ArrayMethodChain,
+	ArrayReadFromIndex,
+	ArrayReadFromVariableIndex,
+	ArrayLength,
+	ArraySliceMethod,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -214,6 +220,31 @@ export const handleAction = (debug: MathlangLocation): AnyNode[] => {
 // TODO: maybe they should just be regular nodes then? Then only "spreadable" things wanna be handled here?
 type ActionFn = (debug: MathlangLocation, isConcat?: boolean) => AnyNode[];
 const actionFns: Record<string, ActionFn> = {
+	action_array_expression: (debug) => {
+		const chain = ArrayMethodChain.breakIfNot(captureForField(debug, 'array_expression'));
+		if (
+			chain.final instanceof ArrayLength ||
+			chain.final instanceof ArrayReadFromIndex ||
+			chain.final instanceof ArrayReadFromVariableIndex
+		) {
+			debug.quickWarning(
+				'return value not stored',
+				'This array method chain produces a value. Did you mean to discard it?',
+			);
+		} else if (
+			chain.final instanceof ArraySliceMethod ||
+			// chain.final instanceof ArrayMap ||
+			chain.final instanceof ArrayReadFromVariableIndex
+		) {
+			debug.quickWarning(
+				'return value not stored',
+				'This array method chain produces a new array. Did you mean to discard it?',
+			);
+		}
+		const ret = chain.toSteps(RETURN);
+		ret.push(MUTATE_VARIABLE.set(RETURN, 0));
+		return ret;
+	},
 	action_new_array: (debug) => {
 		const name = stringCaptureForField(debug, 'array');
 		const emptyNode = optionalChildForField(debug, 'empty');
@@ -225,31 +256,28 @@ const actionFns: Record<string, ActionFn> = {
 			const values = Array.isArray(handled) ? handled : [handled];
 			values.forEach((v) => {
 				if (typeof v === 'number') {
-					steps.push(ARRAY_PUSH_VALUE.quick(name, v));
+					steps.push(ARRAY_PUSH_FROM_VALUE.quick(name, v));
 				} else if (v instanceof NumberLiteral) {
-					steps.push(ARRAY_PUSH_VALUE.quick(name, v.value));
+					steps.push(ARRAY_PUSH_FROM_VALUE.quick(name, v.value));
 				} else if (typeof v === 'string') {
-					steps.push(ARRAY_PUSH_VARIABLE.quick(name, v));
+					steps.push(ARRAY_PUSH_FROM_VARIABLE.quick(name, v));
 				} else if (v instanceof IdentifierLiteral) {
-					steps.push(ARRAY_PUSH_VARIABLE.quick(name, v.source));
+					steps.push(ARRAY_PUSH_FROM_VARIABLE.quick(name, v.source));
 				} else if (v instanceof IntExpression) {
 					const temp = newTemporary();
 					steps.push(...v.toSteps(temp));
 					dropTemporary();
-					steps.push(ARRAY_PUSH_VARIABLE.quick(name, temp));
+					steps.push(ARRAY_PUSH_FROM_VARIABLE.quick(name, temp));
 				} else {
 					throw new Error('array initial values of unknown type');
 				}
 			});
 			return steps;
 		}
-		const methodsNode = mandatoryChildForField(debug, 'method_chain');
-		if (methodsNode) {
-			const handledRaw = handleCapture(debug.using(methodsNode));
-			const handled = ArrayMethodChain.breakIfNot(handledRaw);
-			return handled.toSteps(name);
-		}
-		throw new Error('unknown new array initializer');
+		const methodsNode = mandatoryChildForField(debug, 'array_expression');
+		const handledRaw = handleCapture(debug.using(methodsNode));
+		const handled = ArrayMethodChain.breakIfNot(handledRaw);
+		return handled.toSteps(name);
 	},
 	action_show_dialog: (debug) => {
 		const names = capturesForField(debug, 'dialog_name');
@@ -446,6 +474,17 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_serial_connect: {
 		captures: ['serial_dialog'],
 		handle: (v) => new SET_CONNECT_SERIAL_DIALOG(v),
+	},
+	action_print_array: {
+		captures: ['array_name'],
+		handle: (v) => new ARRAY_LOG(v),
+	},
+	action_delete_array: {
+		captures: ['array'],
+		handle: (v, debug) => {
+			const name = stringCaptureForField(debug, 'array');
+			return ARRAY_DELETE.quick(name);
+		},
 	},
 	action_set_alias: {
 		captures: ['alias', 'command'],
@@ -960,13 +999,6 @@ const actionData: Record<string, actionDataEntry> = {
 			const value = coerceToNumber(debug, v.value, 'value');
 			const sign = op === '-=' ? -1 : 1;
 			return SET_ENTITY_DIRECTION_RELATIVE.quick(entity, sign * value);
-		},
-	},
-	action_delete_array: {
-		captures: ['array'],
-		handle: (v, debug) => {
-			const name = stringCaptureForField(debug, 'name');
-			return ARRAY_DELETE.quick(name);
 		},
 	},
 };
