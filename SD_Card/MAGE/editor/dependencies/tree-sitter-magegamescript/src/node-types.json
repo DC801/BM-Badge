@@ -826,10 +826,6 @@
             "named": true
           },
           {
-            "type": "array_expression",
-            "named": true
-          },
-          {
             "type": "int_binary_expression",
             "named": true
           },
@@ -1044,10 +1040,6 @@
             "named": true
           },
           {
-            "type": "array_expression",
-            "named": true
-          },
-          {
             "type": "int_binary_expression",
             "named": true
           },
@@ -1208,10 +1200,6 @@
           },
           {
             "type": "ambiguous_identifier_expansion",
-            "named": true
-          },
-          {
-            "type": "array_expression",
             "named": true
           },
           {
@@ -1692,10 +1680,6 @@
           },
           {
             "type": "QUOTED_STRING",
-            "named": true
-          },
-          {
-            "type": "array_expression",
             "named": true
           },
           {
@@ -2223,10 +2207,6 @@
             "named": true
           },
           {
-            "type": "array_expression",
-            "named": true
-          },
-          {
             "type": "int_binary_expression",
             "named": true
           },
@@ -2388,10 +2368,6 @@
             "named": true
           },
           {
-            "type": "array_expression",
-            "named": true
-          },
-          {
             "type": "int_binary_expression",
             "named": true
           },
@@ -2433,10 +2409,6 @@
           },
           {
             "type": "QUOTED_STRING",
-            "named": true
-          },
-          {
-            "type": "array_expression",
             "named": true
           },
           {
@@ -2486,10 +2458,6 @@
           },
           {
             "type": "QUOTED_STRING",
-            "named": true
-          },
-          {
-            "type": "array_expression",
             "named": true
           },
           {
@@ -4835,10 +4803,6 @@
             "named": true
           },
           {
-            "type": "array_expression",
-            "named": true
-          },
-          {
             "type": "int_binary_expression",
             "named": true
           },
@@ -4887,10 +4851,6 @@
             "named": true
           },
           {
-            "type": "array_expression",
-            "named": true
-          },
-          {
             "type": "int_binary_expression",
             "named": true
           },
@@ -4931,10 +4891,6 @@
           "named": true
         },
         {
-          "type": "array_expression",
-          "named": true
-        },
-        {
           "type": "int_binary_expression",
           "named": true
         },
@@ -4953,6 +4909,16 @@
     "type": "int_getable",
     "named": true,
     "fields": {
+      "array_expression": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "array_expression",
+            "named": true
+          }
+        ]
+      },
       "copy_macro": {
         "multiple": false,
         "required": false,
@@ -5027,10 +4993,6 @@
         },
         {
           "type": "QUOTED_STRING",
-          "named": true
-        },
-        {
-          "type": "array_expression",
           "named": true
         },
         {

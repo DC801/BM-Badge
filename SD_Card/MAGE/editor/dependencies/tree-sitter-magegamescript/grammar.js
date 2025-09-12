@@ -838,17 +838,7 @@ export default grammar({
 		MUL_DIV_MOD: () => choice('*', '/', '%'),
 		ADD_SUB: () => choice('+', '-'),
 		_int_unit: ($) =>
-			prec(
-				8,
-				choice(
-					$.array_expression,
-					$.int_getable,
-					$.int_grouping,
-					$.NUMBER,
-					$.CONSTANT,
-					$.STRING,
-				),
-			),
+			prec(8, choice($.int_getable, $.int_grouping, $.NUMBER, $.CONSTANT, $.STRING)),
 
 		int_grouping: ($) => seq('(', $._int_expression, ')'),
 		_int_expression: ($) => choice($.int_binary_expression, $._int_unit),
@@ -912,6 +902,7 @@ export default grammar({
 				field('rng', $.int_rng),
 				field('copy_macro', $.copy_macro),
 				field('fn_call', $.fn_call),
+				field('array_expression', $.array_expression),
 				// seq(optional('variable'), field('variable', $.string)),
 				// todo might be kind of involved actually
 			),

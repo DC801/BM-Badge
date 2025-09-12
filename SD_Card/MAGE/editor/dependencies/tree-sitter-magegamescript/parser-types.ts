@@ -128,6 +128,7 @@ export type MathlangMessageType =
 	| 'unsupported entity field'
 	| 'misordered params'
 	| 'array method on non-array'
+	| 'array does not return value'
 	| 'return value not stored'
 	| 'invalid JSON action'
 	| 'invalid fn arg'
@@ -147,6 +148,7 @@ export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
 	if (v === 'invalid JSON action') return true;
 	if (v === 'misordered params') return true;
 	if (v === 'array method on non-array') return true;
+	if (v === 'array does not return value') return true;
 	if (v === 'return value not stored') return true;
 	if (v === 'constant already defined') return true;
 	if (v === 'fn already defined') return true;
@@ -1022,6 +1024,9 @@ export class IntUnit extends IntExpression {
 	static fromAny(debug: MathlangLocation, v: unknown) {
 		if (v instanceof IntBinaryExpression) return v;
 		if (v instanceof IntGetable) return v;
+		if (v instanceof ArrayMethodChain) {
+			return ArrayValueLookup.quick(debug, v);
+		}
 		if (
 			debug.node.grammarType === 'CONSTANT' &&
 			typeof v !== 'string' &&
@@ -1389,6 +1394,41 @@ export class FnCallReturnValue extends IntGetable {
 	expPrint() {
 		return `${this.identifier}()`;
 	} // todo: how to put in args?
+	print() {
+		return `${this.expPrint()}`;
+	}
+}
+export class ArrayValueLookup extends IntGetable {
+	chain: ArrayMethodChain;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.chain = ArrayMethodChain.breakIfNot(args.chain);
+	}
+	clone() {
+		return new ArrayValueLookup(this.debug.clone(), this.args);
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayValueLookup)) {
+			throw new Error('not ArrayLookup');
+		}
+		return v;
+	}
+	static quick(debug: MathlangLocation, chain: ArrayMethodChain) {
+		return new ArrayValueLookup(debug, { chain });
+	}
+	toSteps(destinationVar: string) {
+		return this.chain.toSteps(destinationVar);
+	}
+	assignToVar(destinationVar: string) {
+		return MathlangSequence.quick(
+			this.debug,
+			this.toSteps(destinationVar),
+			`from ArrayValueLookup (${this.chain.identifier}[??])`,
+		);
+	}
+	expPrint() {
+		return `${this.chain.identifier}[??]`; // WON'T WORK
+	}
 	print() {
 		return `${this.expPrint()}`;
 	}

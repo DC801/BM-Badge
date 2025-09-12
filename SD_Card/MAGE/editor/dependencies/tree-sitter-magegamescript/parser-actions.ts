@@ -115,6 +115,7 @@ import {
 	ArrayReadFromVariableIndex,
 	ArrayLength,
 	ArraySliceMethod,
+	ArrayValueLookup,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -596,12 +597,33 @@ const actionData: Record<string, actionDataEntry> = {
 			}
 
 			// varName = (255 + player x);
+			if (rhs instanceof ArrayValueLookup) {
+				return rhs.assignToVar(lhs);
+			}
+
+			// varName = (255 + player x);
 			if (rhs instanceof IntBinaryExpression) {
 				return rhs.assignToVar(lhs);
 			}
 
 			// varName = (debug_mode || player glitched);
 			if (rhs instanceof BoolExpression) {
+				return rhs.assignToVar(lhs);
+			}
+
+			// varName = arrayName.pop();
+			if (rhs instanceof ArrayMethodChain) {
+				if (rhs.return_type === 'none') {
+					debug.quickWarning(
+						'array does not return value',
+						`cannot assign RHS to variable "${lhs}", as RHS does not return a value; 0 will be used`,
+					);
+				} else if (rhs.return_type === 'array') {
+					debug.quickError(
+						'array does not return value',
+						`cannot assign RHS to variable "${lhs}", as RHS returns an array; 0 will be used`,
+					);
+				}
 				return rhs.assignToVar(lhs);
 			}
 

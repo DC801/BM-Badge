@@ -18,7 +18,7 @@ const actionArrayToScript = (
 
 // will do all tests if empty
 // if not empty, also won't do any file-level tests
-const onlyDoTheseActionTests = ['array_push'];
+const onlyDoTheseActionTests = [];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
@@ -30,16 +30,33 @@ const actionTests = {
 	// array map
 	// array for_each
 	// array_write_read: {
-	// 	// ARRAY_LENGTH_INTO_VARIABLE
 	// 	// ARRAY_WRITE_INTO_INDEX_FROM_VALUE
 	// 	// ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE
 	// 	// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE
 	// 	// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE
 	// 	// ARRAY_READ_FROM_INDEX_INTO_VARIABLE
 	// 	// ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE
-	// 	// ARRAY_POP_INTO_VARIABLE
-	// 	// ARRAY_POP_LEFT_INTO_VARIABLE
 	// },
+	array_pop_and_length: {
+		input: [
+			`a.pop();`,
+			`varName1 = b.pop();`,
+			`varName2 = c.length();`,
+			`varName3 = d.pop() + 10;`,
+			`varName4 = e.pop_left() + player x;`,
+		],
+		expected: [
+			`__RETURN_ = a.pop();`,
+			`__RETURN_ = 0;`,
+			`varName1 = b.pop();`,
+			`varName2 = c.length();`,
+			`varName3 = d.pop();`,
+			`varName3 += 10;`,
+			`varName4 = e.pop_left();`,
+			`__TEMP_0 = player x;`,
+			`varName4 += __TEMP_0;`,
+		],
+	},
 	array_push: {
 		input: [
 			`c.push(one);`,
@@ -49,18 +66,18 @@ const actionTests = {
 			`g.push_left(player x + 999);`,
 		],
 		expected: [
-			`"c".push("one");`,
-			`"__RETURN_" = 0;`,
-			`"d".push(2);`,
-			`"__RETURN_" = 0;`,
-			`"e".push_left("three");`,
-			`"__RETURN_" = 0;`,
-			`"f".push_left(4);`,
-			`"__RETURN_" = 0;`,
-			`"__TEMP_0" = player x;`,
-			`"__TEMP_0" += 999;`,
-			`"g".push_left("__TEMP_0");`,
-			`"__RETURN_" = 0;`,
+			`c.push(one);`,
+			`__RETURN_ = 0;`,
+			`d.push(2);`,
+			`__RETURN_ = 0;`,
+			`e.push_left(three);`,
+			`__RETURN_ = 0;`,
+			`f.push_left(4);`,
+			`__RETURN_ = 0;`,
+			`__TEMP_0 = player x;`,
+			`__TEMP_0 += 999;`,
+			`g.push_left(__TEMP_0);`,
+			`__RETURN_ = 0;`,
 		],
 	},
 	array_slices_expressions: {
@@ -69,16 +86,16 @@ const actionTests = {
 			`array c = d.slice(player x + 10, player y - 10);`,
 		],
 		expected: [
-			`array "a" = [];`,
+			`array a = [];`,
 			`__TEMP_0 = player x;`,
 			`__TEMP_0 += 10;`,
-			`"a" = "b".slice(__TEMP_0);`,
-			`array "c" = [];`,
+			`a = b.slice(__TEMP_0);`,
+			`array c = [];`,
 			`__TEMP_0 = player x;`,
 			`__TEMP_0 += 10;`,
 			`__TEMP_1 = player y;`,
 			`__TEMP_1 -= 10;`,
-			`"c" = "d".slice(__TEMP_0, __TEMP_1);`,
+			`c = d.slice(__TEMP_0, __TEMP_1);`,
 		],
 	},
 	array_slices_strings: {
@@ -89,16 +106,16 @@ const actionTests = {
 			`array g = h.slice(5, six);`,
 		],
 		expected: [
-			`array "a" = [];`,
-			`"a" = "b".slice(zero);`,
-			`array "c" = [];`,
-			`"c" = "d".slice(one, two);`,
-			`array "e" = [];`,
+			`array a = [];`,
+			`a = b.slice(zero);`,
+			`array c = [];`,
+			`c = d.slice(one, two);`,
+			`array e = [];`,
 			`__TEMP_0 = 4;`,
-			`"e" = "f".slice(three, __TEMP_0);`,
-			`array "g" = [];`,
+			`e = f.slice(three, __TEMP_0);`,
+			`array g = [];`,
 			`__TEMP_0 = 5;`,
-			`"g" = "h".slice(__TEMP_0, six);`,
+			`g = h.slice(__TEMP_0, six);`,
 		],
 	},
 	array_slices_numbers: {
@@ -109,14 +126,14 @@ const actionTests = {
 			`array g = h.slice(2,3);`,
 		],
 		expected: [
-			`array "a" = [];`,
-			`"a" = "b".slice();`,
-			`array "c" = [];`,
-			`"c" = "d".slice();`,
-			`array "e" = [];`,
-			`"e" = "f".slice(1);`,
-			`array "g" = [];`,
-			`"g" = "h".slice(2, 3);`,
+			`array a = [];`,
+			`a = b.slice();`,
+			`array c = [];`,
+			`c = d.slice();`,
+			`array e = [];`,
+			`e = f.slice(1);`,
+			`array g = [];`,
+			`g = h.slice(2, 3);`,
 		],
 	},
 	new_array_with_method_chain: {
@@ -128,27 +145,27 @@ const actionTests = {
 			`array x = y.slice().sort().slice(4).reverse();`,
 		],
 		expected: [
-			`array "a" = [];`,
-			`"a" = "b".slice();`,
+			`array a = [];`,
+			`a = b.slice();`,
 
-			`array "c" = [];`,
-			`"d".sort();`,
-			`"c" = "d".slice();`,
+			`array c = [];`,
+			`d.sort();`,
+			`c = d.slice();`,
 
-			`array "e" = [];`,
-			`"e" = "f".slice();`,
-			`"e".reverse();`,
+			`array e = [];`,
+			`e = f.slice();`,
+			`e.reverse();`,
 
-			`array "g" = [];`,
-			`"h".sort();`,
-			`"g" = "h".slice();`,
-			`"g".reverse();`,
+			`array g = [];`,
+			`h.sort();`,
+			`g = h.slice();`,
+			`g.reverse();`,
 
-			`array "x" = [];`,
-			`"x" = "y".slice();`,
-			`"x".sort();`,
-			`"x" = "x".slice(4);`,
-			`"x".reverse();`,
+			`array x = [];`,
+			`x = y.slice();`,
+			`x.sort();`,
+			`x = x.slice(4);`,
+			`x.reverse();`,
 		],
 	},
 	new_array_with_initial_values: {
@@ -178,7 +195,7 @@ const actionTests = {
 	},
 	array_basic: {
 		input: [`print array a;`, `delete array b;`],
-		expected: [`print array "a";`, `delete array "b";`],
+		expected: [`print array a;`, `delete array b;`],
 	},
 	json_arbitrary: {
 		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}];`],
@@ -1903,6 +1920,9 @@ fileMap['actionTests.mgs'] = {
 		.filter((testName) => !skipTheseTests.has(testName))
 		.map((testName) => {
 			const v = actionTests[testName];
+			if (!v) {
+				throw new Error('no test by name ' + testName);
+			}
 			return actionArrayToScript(testName, v.input);
 		})
 		.join('\n\n'),

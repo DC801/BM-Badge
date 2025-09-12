@@ -5328,10 +5328,6 @@
         "members": [
           {
             "type": "SYMBOL",
-            "name": "array_expression"
-          },
-          {
-            "type": "SYMBOL",
             "name": "int_getable"
           },
           {
@@ -5697,6 +5693,14 @@
           "content": {
             "type": "SYMBOL",
             "name": "fn_call"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "array_expression",
+          "content": {
+            "type": "SYMBOL",
+            "name": "array_expression"
           }
         }
       ]

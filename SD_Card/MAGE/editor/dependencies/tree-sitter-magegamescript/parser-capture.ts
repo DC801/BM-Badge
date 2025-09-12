@@ -59,6 +59,7 @@ import {
 	ArrayPop,
 	ArrayReadFromVariableIndex,
 	ArrayReadFromIndex,
+	ArrayValueLookup,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -330,6 +331,12 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		if (fnNode) {
 			const fn = stringCaptureForField(debug.using(fnNode), 'name');
 			return FnCall.quick(debug, fn, 'fn', fnNode);
+		}
+		const arrayNode = optionalChildForField(debug, 'array_expression');
+		if (arrayNode) {
+			const handledRaw = handleCapture(debug.using(arrayNode));
+			const handled = ArrayMethodChain.breakIfNot(handledRaw);
+			return ArrayValueLookup.quick(debug, handled);
 		}
 		// TODO: unbake this
 		const copyNode = optionalChildForField(debug, 'copy_macro');
@@ -643,7 +650,7 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		if (stringArgs.length === 2) {
 			ret = ArraySliceTwiceByVariable.quick(debug, steps, stringArgs[0], stringArgs[1]);
 		}
-		for (let i = temporariesUsed; i >= 0; i--) {
+		for (let i = temporariesUsed; i > 0; i--) {
 			dropTemporary();
 		}
 		return ret;
@@ -709,6 +716,7 @@ const numberOrStringExpArrayMethodMaker = (
 		const steps: AnyNode[] = [];
 		const temp = newTemporary();
 		steps.push(...exp.toSteps(temp));
+		dropTemporary();
 		return stringFn(debug, temp, steps);
 	}
 	throw new Error(`unsupported expression in ${label}`);
