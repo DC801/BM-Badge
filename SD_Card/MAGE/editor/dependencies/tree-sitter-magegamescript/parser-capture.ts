@@ -60,6 +60,9 @@ import {
 	ArrayReadFromVariableIndex,
 	ArrayReadFromIndex,
 	ArrayValueLookup,
+	ArrayWriteToIndex,
+	NumberLiteral,
+	IdentifierLiteral,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -537,6 +540,18 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		return BoolComparisonSequence.orSingle(debug, steps, 'bool_comparison');
 	},
 	int_setable: (debug) => {
+		const arrayNameNode = optionalChildForField(debug, 'array_name');
+		if (arrayNameNode) {
+			const arrayName = stringCaptureForField(debug, 'array_name');
+			const expNode = mandatoryChildForField(debug, 'exp');
+			let exp = handleCapture(debug.using(expNode));
+			if (typeof exp === 'number') {
+				exp = NumberLiteral.quick(debug.using(expNode), exp);
+			} else if (typeof exp === 'string') {
+				exp = IdentifierLiteral.quick(debug.using(expNode), exp);
+			}
+			return ArrayWriteToIndex.quick(debug, arrayName, IntExpression.breakIfNot(exp));
+		}
 		const entity = stringCaptureForField(debug, 'entity_identifier');
 		const field = textForField(debug, 'property');
 		return EntityIntField.quick(debug, entity, field);
@@ -650,8 +665,9 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		if (stringArgs.length === 2) {
 			ret = ArraySliceTwiceByVariable.quick(debug, steps, stringArgs[0], stringArgs[1]);
 		}
-		for (let i = temporariesUsed; i > 0; i--) {
+		while (temporariesUsed > 0) {
 			dropTemporary();
+			temporariesUsed -= 1;
 		}
 		return ret;
 	},

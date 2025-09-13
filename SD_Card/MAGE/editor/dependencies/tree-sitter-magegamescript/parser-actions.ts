@@ -81,6 +81,10 @@ import {
 	ARRAY_PUSH_FROM_VARIABLE,
 	ARRAY_PUSH_FROM_VALUE,
 	ARRAY_LOG,
+	ARRAY_WRITE_INTO_INDEX_FROM_VALUE,
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE,
+	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE,
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -116,6 +120,7 @@ import {
 	ArrayLength,
 	ArraySliceMethod,
 	ArrayValueLookup,
+	ArrayWriteToIndex,
 } from './parser-types.ts';
 import {
 	autoIdentifierName,
@@ -588,6 +593,7 @@ const actionData: Record<string, actionDataEntry> = {
 			// varName = fnCall(9);
 			if (rhs instanceof FnCall) {
 				const baked = rhs.bake().assignToVar(lhs);
+				// TODO: can I roll bake into assignToVar? Then it can all be uniform
 				return baked;
 			}
 
@@ -632,7 +638,6 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_int: {
 		// If we've matched this, we know the LHS is not a variable name.
-		// Only (CURRENT) option is an entity field.
 		captures: ['lhs', 'rhs'],
 		handle: (v, debug): AnyNode => {
 			const lhs = v.lhs;
@@ -657,6 +662,59 @@ const actionData: Record<string, actionDataEntry> = {
 					dropTemporary();
 					return MathlangSequence.quick(debug, steps, 'action_set_int: EntityIntField');
 				}
+			} else if (lhs instanceof ArrayWriteToIndex) {
+				const arrayName = lhs.array_name;
+				const steps: AnyNode[] = [];
+				const argsRaw = [lhs.exp_index, rhs];
+				let temporariesUsed = 0;
+				const args = argsRaw.map((arg) => {
+					if (typeof arg === 'string') return arg;
+					if (typeof arg === 'number') return arg;
+					if (arg instanceof NumberLiteral) return arg.value;
+					if (arg instanceof IdentifierLiteral) return arg.source;
+					if (arg instanceof IntExpression) {
+						temporariesUsed += 1;
+						const temp = newTemporary();
+						steps.push(...arg.toSteps(temp));
+						return temp;
+					}
+					throw new Error('unsupported array write lhs or rhs');
+				});
+				const index = args[0];
+				const exp = args[1];
+				if (typeof index === 'number') {
+					if (typeof exp === 'number') {
+						return ARRAY_WRITE_INTO_INDEX_FROM_VALUE.quick(arrayName, index, exp);
+					} else {
+						const action = ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE.quick(
+							arrayName,
+							index,
+							exp,
+						);
+						steps.push(action);
+					}
+				} else if (typeof index === 'string') {
+					if (typeof exp === 'number') {
+						const action = ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE.quick(
+							arrayName,
+							index,
+							exp,
+						);
+						steps.push(action);
+					} else {
+						const action = ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE.quick(
+							arrayName,
+							index,
+							exp,
+						);
+						steps.push(action);
+					}
+				}
+				while (temporariesUsed > 0) {
+					dropTemporary();
+					temporariesUsed -= 1;
+				}
+				return MathlangSequence.orSingle(debug, steps, 'action_set_int (array write)');
 			}
 
 			throw new Error('unknown RHS type in action_set_int');

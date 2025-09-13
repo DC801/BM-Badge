@@ -5060,12 +5060,64 @@
     "type": "int_setable",
     "named": true,
     "fields": {
+      "array_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          }
+        ]
+      },
       "entity_identifier": {
         "multiple": false,
         "required": false,
         "types": [
           {
             "type": "entity_identifier",
+            "named": true
+          }
+        ]
+      },
+      "exp": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
+            "type": "NUMBER",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "int_binary_expression",
+            "named": true
+          },
+          {
+            "type": "int_getable",
+            "named": true
+          },
+          {
+            "type": "int_grouping",
             "named": true
           }
         ]

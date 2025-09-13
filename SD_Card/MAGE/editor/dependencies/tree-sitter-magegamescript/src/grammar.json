@@ -2402,22 +2402,6 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "action_array_expression"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "action_print_array"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "action_new_array"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "action_delete_array"
-        },
-        {
-          "type": "SYMBOL",
           "name": "action_return_statement"
         },
         {
@@ -2583,6 +2567,22 @@
         {
           "type": "SYMBOL",
           "name": "action_plus_minus_equals_ables"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "action_print_array"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "action_new_array"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "action_delete_array"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "action_array_expression"
         }
       ]
     },
@@ -5559,6 +5559,35 @@
                 "type": "SYMBOL",
                 "name": "entity_property_int"
               }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "array_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "string"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "["
+            },
+            {
+              "type": "FIELD",
+              "name": "exp",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_int_expression"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "]"
             }
           ]
         },

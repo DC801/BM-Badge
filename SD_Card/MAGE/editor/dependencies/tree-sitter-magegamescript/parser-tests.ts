@@ -18,7 +18,7 @@ const actionArrayToScript = (
 
 // will do all tests if empty
 // if not empty, also won't do any file-level tests
-const onlyDoTheseActionTests = [];
+const onlyDoTheseActionTests = ['array_write_exp'];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
@@ -29,14 +29,67 @@ const skipTheseTests = new Set([
 const actionTests = {
 	// array map
 	// array for_each
-	// array_write_read: {
-	// 	// ARRAY_WRITE_INTO_INDEX_FROM_VALUE
-	// 	// ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE
-	// 	// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE
-	// 	// ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE
-	// 	// ARRAY_READ_FROM_INDEX_INTO_VARIABLE
-	// 	// ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE
-	// },
+	array_write_exp: {
+		input: [
+			`a[0] = player x + 10;`,
+			`b[two] = player y + 100;`,
+			`c[10 + player x] = 99;`,
+			`d[one + player y] = two + 3;`,
+		],
+		expected: [
+			`__TEMP_0 = player x;`,
+			`__TEMP_0 += 10;`,
+			`a[0] = __TEMP_0;`,
+			`__TEMP_0 = player y;`,
+			`__TEMP_0 += 100;`,
+			`b[two] = __TEMP_0;`,
+			`__TEMP_0 = 10;`,
+			`__TEMP_1 = player x;`,
+			`__TEMP_0 += __TEMP_1;`,
+			`c[__TEMP_0] = 99;`,
+			`__TEMP_0 = one;`,
+			`__TEMP_1 = player y;`,
+			`__TEMP_0 += __TEMP_1;`,
+			`__TEMP_1 = two;`,
+			`__TEMP_1 += 3;`,
+			`d[__TEMP_0] = __TEMP_1;`,
+		],
+	},
+	array_write: {
+		input: [
+			//WIP
+			`a[0] = 0;`,
+			`b[one] = 1;`,
+			`b[2] = two;`,
+			`b[three] = threeee;`,
+		],
+		expected: [
+			//WIP
+			`a[0] = 0;`,
+			`b[one] = 1;`,
+			`b[2] = two;`,
+			`b[three] = threeee;`,
+		],
+	},
+	array_read: {
+		input: [
+			`varName1 = a[0];`,
+			`varName2 = b[variableIndex];`,
+			`varName3 = c[intExpVar + 10];`,
+			`varName4 = d[player x + e[1000]];`,
+		],
+		expected: [
+			`varName1 = a[0];`,
+			`varName2 = b[variableIndex];`,
+			`__TEMP_0 = intExpVar;`,
+			`__TEMP_0 += 10;`,
+			`varName3 = c[__TEMP_0];`,
+			`__TEMP_0 = player x;`,
+			`__TEMP_1 = e[1000];`,
+			`__TEMP_0 += __TEMP_1;`,
+			`varName4 = d[__TEMP_0];`,
+		],
+	},
 	array_pop_and_length: {
 		input: [
 			`a.pop();`,

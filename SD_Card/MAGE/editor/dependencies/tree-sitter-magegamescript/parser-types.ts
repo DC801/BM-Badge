@@ -3499,6 +3499,34 @@ export class ArrayPushLeftVariable extends ArrayMethodReturningNothing {
 		return this.expPrint();
 	}
 }
+export class ArrayWriteToIndex extends MathlangNode {
+	array_name: string;
+	exp_index: IntExpression;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.array_name = ACTION.breakIfNotString(args.array_name);
+		this.exp_index = IntExpression.breakIfNot(args.exp_index);
+	}
+	clone() {
+		return new ArrayWriteToIndex(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, array_name: string, exp_index: IntExpression) {
+		return new ArrayWriteToIndex(debug, { array_name, exp_index });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof ArrayWriteToIndex)) {
+			throw new Error('not ArrayWriteToIndex');
+		}
+		return v;
+	}
+	expPrint() {
+		// what to do? (todo)
+		return `???`;
+	}
+	print() {
+		return this.expPrint();
+	}
+}
 
 // export class ArrayForEach extends ArrayMethodReturningNothing {}
 

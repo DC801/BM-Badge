@@ -338,10 +338,6 @@ export default grammar({
 
 		_action_item: ($) =>
 			choice(
-				$.action_array_expression,
-				$.action_print_array,
-				$.action_new_array,
-				$.action_delete_array,
 				$.action_return_statement,
 				$.action_close_dialog,
 				$.action_close_serial_dialog,
@@ -384,6 +380,10 @@ export default grammar({
 				$.action_set_script,
 				$.action_op_equals,
 				$.action_plus_minus_equals_ables,
+				$.action_print_array,
+				$.action_new_array,
+				$.action_delete_array,
+				$.action_array_expression,
 			),
 		action_break_statement: () => 'break',
 		action_continue_statement: () => 'continue',
@@ -882,6 +882,7 @@ export default grammar({
 					field('entity_identifier', $.entity_identifier),
 					field('property', $.entity_property_int),
 				),
+				seq(field('array_name', $.string), '[', field('exp', $._int_expression), ']'),
 				field('variable', $.string), // replace with vv
 				// seq(optional('variable'), field('variable', $.string)),
 				// todo turns out this is involved, too
