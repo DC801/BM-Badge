@@ -2997,7 +2997,6 @@ export class ArrayMap extends ArrayMethodReturningArray {
 		const i = newTemporary();
 		const length = newTemporary();
 		const curr = newTemporary();
-		const makeArray = ACTION.ARRAY_NEW.quick(destinationArray);
 		const setI = ACTION.MUTATE_VARIABLE.set(i, 0);
 		const advanceI = ACTION.MUTATE_VARIABLE.change(this.debug, i, 1, '+');
 		const checkI = ACTION.CHECK_VARIABLES.quick(i, length, '<');
@@ -3050,7 +3049,6 @@ export class ArrayMap extends ArrayMethodReturningArray {
 		// piece together
 		const steps: AnyNode[] = [
 			// INITIALIZE
-			// makeArray, // b = []; // (never mind, the top level does this part)
 			setI, // i = 0;
 			setLength, // length = sourceArray.length();
 

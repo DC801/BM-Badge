@@ -9015,7 +9015,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const i2 = newTemporary();
       const length = newTemporary();
       const curr = newTemporary();
-      ARRAY_NEW.quick(destinationArray);
       const setI = MUTATE_VARIABLE.set(i2, 0);
       const advanceI = MUTATE_VARIABLE.change(this.debug, i2, 1, "+");
       const checkI = CHECK_VARIABLES.quick(i2, length, "<");
@@ -9058,7 +9057,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       body2 = flattenAndDoAutoReturn(this.debug, body2);
       const steps = [
         // INITIALIZE
-        // makeArray, // b = []; // (never mind, the top level does this part)
         setI,
         // i = 0;
         setLength,
