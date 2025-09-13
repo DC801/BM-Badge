@@ -159,9 +159,8 @@ export default grammar({
 			),
 
 		fn: ($) => seq(optional('fn'), field('name', $.STRING), $._fn_literal),
-		fn_lambda: ($) => $._fn_literal,
 		fn_lambda_or_identifier: ($) =>
-			choice(field('identifier', $.string), field('lambda', $.fn_lambda)),
+			choice(field('identifier', $.string), field('lambda', alias($._fn_literal, 'fn'))),
 		_fn_literal: ($) =>
 			seq(
 				'(',

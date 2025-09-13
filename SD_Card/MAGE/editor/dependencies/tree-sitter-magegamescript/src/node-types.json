@@ -3947,7 +3947,7 @@
       },
       "name": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "BAREWORD",
@@ -4008,32 +4008,6 @@
     }
   },
   {
-    "type": "fn_lambda",
-    "named": true,
-    "fields": {
-      "arg": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "CONSTANT",
-            "named": true
-          }
-        ]
-      },
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "script_block",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "fn_lambda_or_identifier",
     "named": true,
     "fields": {
@@ -4060,8 +4034,8 @@
         "required": false,
         "types": [
           {
-            "type": "fn_lambda",
-            "named": true
+            "type": "fn",
+            "named": false
           }
         ]
       }

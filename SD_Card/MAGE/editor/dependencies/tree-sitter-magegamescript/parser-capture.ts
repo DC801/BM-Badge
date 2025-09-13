@@ -40,7 +40,6 @@ import {
 	BoolComparisonSequence,
 	MathlangMessage,
 	FnCallReturnValue,
-	ScriptDefinition,
 	FnCall,
 	ArrayMethodChain,
 	ArrayMethod,
@@ -63,6 +62,9 @@ import {
 	ArrayWriteToIndex,
 	NumberLiteral,
 	IdentifierLiteral,
+	FunctionDefinition,
+	ScriptDefinition,
+	ArrayMap,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -627,7 +629,33 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 	},
 	array_method_sort: (debug) => ArraySort.quick(debug),
 	array_method_reverse: (debug) => ArrayReverse.quick(debug),
-	// array_method_map: (debug) => {},
+	array_method_map: (debug) => {
+		const fnNode = mandatoryChildForField(debug, 'fn');
+		const fnRaw = handleCapture(debug.using(fnNode));
+		const fn = FunctionDefinition.coerce(debug, fnRaw);
+		return ArrayMap.quick(debug, fn);
+	},
+	fn_lambda_or_identifier: (debug): FunctionDefinition => {
+		const identifierN = optionalChildForField(debug, 'identifier');
+		if (identifierN) {
+			const identifier = stringCaptureForField(debug, 'identifier');
+			const fn = debug.f.functions[identifier];
+			if (fn) {
+				return fn;
+			} else {
+				debug.quickError('undefined fn', `function ${identifier} is undefined`);
+				return FunctionDefinition.placeholder(debug);
+			}
+		}
+		const fnNode = mandatoryChildForField(debug, 'lambda');
+		const handled = handleNode(debug.using(fnNode))[0];
+		if (handled instanceof FunctionDefinition) {
+			return handled;
+		} else {
+			debug.quickError('undefined fn', `invalid function definition`);
+			return FunctionDefinition.placeholder(debug);
+		}
+	},
 	array_method_slice: (debug) => {
 		const steps: AnyNode[] = [];
 		const argsRaw = childrenForField(debug, 'arg');

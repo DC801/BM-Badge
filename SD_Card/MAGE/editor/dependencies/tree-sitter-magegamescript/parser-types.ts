@@ -1,7 +1,8 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
-import { FileState } from './parser-file.ts';
+import { FileState, type FunctionStackEntry } from './parser-file.ts';
 import * as ACTION from './parser-bytecode-info.ts';
 import {
+	autoIdentifierName,
 	dropTemporary,
 	flattenAndDoAutoReturn,
 	flattenNodes,
@@ -11,7 +12,7 @@ import {
 	simpleBranchMaker,
 } from './parser-utilities.ts';
 import { type GenericObj } from './parser-actions.ts';
-import { coerceToString, mandatoryChildForField } from './parser-capture.ts';
+import { coerceToString, handleNamedChildren, mandatoryChildForField } from './parser-capture.ts';
 import { handleNode } from './parser-node.ts';
 
 // All print() methods on MathlangNodes are as if they were to be encountered in a grammatically valid MGS script
@@ -210,6 +211,25 @@ export class FunctionDefinition extends MathlangNode {
 		bodyNode: TreeSitterNode,
 	) {
 		return new FunctionDefinition(debug, { name, params, paramNodes, bodyNode });
+	}
+	static breakIfNot(v: unknown) {
+		if (!(v instanceof FunctionDefinition)) {
+			throw new Error('not FunctionDefinition');
+		}
+		return v;
+	}
+	static coerce(debug: MathlangLocation, v: unknown) {
+		if (v instanceof FunctionDefinition) return v;
+		return FunctionDefinition.placeholder(debug);
+	}
+	static placeholder(debug: MathlangLocation) {
+		return FunctionDefinition.quick(
+			debug,
+			'PLACEHOLDER-' + autoIdentifierName(debug),
+			[],
+			[],
+			debug.node,
+		);
 	}
 	print() {
 		return `// FunctionDefinition: "${this.name}"`;
@@ -2953,7 +2973,123 @@ export class ArrayMethodReturningArray extends ArrayMethod {
 	}
 }
 
-// export class ArrayMap extends ArrayMethodReturningArray {}
+export class ArrayMap extends ArrayMethodReturningArray {
+	fn: FunctionDefinition;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.fn = FunctionDefinition.breakIfNot(args.fn);
+	}
+	clone() {
+		return new ArrayMap(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, fn: FunctionDefinition) {
+		return new ArrayMap(debug, { fn });
+	}
+	bake(sourceArray: string, destinationArray: string) {
+		// flow control
+		const n = this.debug.f.p.advanceGotoSuffix();
+		const conditionL = `map condition #${n}`;
+		const bodyL = `map body #${n}`;
+		const breakL = `map break #${n}`;
+		const continueL = `map continue #${n}`;
+
+		// built-in vars
+		const i = newTemporary();
+		const length = newTemporary();
+		const curr = newTemporary();
+		const makeArray = ACTION.ARRAY_NEW.quick(destinationArray);
+		const setI = ACTION.MUTATE_VARIABLE.set(i, 0);
+		const advanceI = ACTION.MUTATE_VARIABLE.change(this.debug, i, 1, '+');
+		const checkI = ACTION.CHECK_VARIABLES.quick(i, length, '<');
+		checkI.label = bodyL;
+		const setLength = ACTION.ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length);
+		const setCurr = ACTION.ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE.quick(
+			sourceArray,
+			i,
+			curr,
+		);
+		const pushReturn = ACTION.ARRAY_PUSH_FROM_VARIABLE.quick(destinationArray, RETURN);
+		const resetReturn = ACTION.MUTATE_VARIABLE.set(RETURN, 0);
+
+		// make local const registry based on what we were passed for this call
+		const localConstants: FunctionStackEntry = {};
+		const defCurr = this.fn.params[0];
+		if (defCurr !== undefined) {
+			const defNode = this.fn.paramNodes[0];
+			localConstants[defCurr] = ConstantDefinition.quick(
+				this.debug.using(defNode),
+				defCurr,
+				curr,
+			);
+		}
+		const defI = this.fn.params[1];
+		if (defI !== undefined) {
+			const defNode = this.fn.paramNodes[1];
+			localConstants[defI] = ConstantDefinition.quick(this.debug.using(defNode), defI, i);
+		}
+		const defArr = this.fn.params[2];
+		if (defArr !== undefined) {
+			const defNode = this.fn.paramNodes[1];
+			localConstants[defArr] = ConstantDefinition.quick(
+				this.debug.using(defNode),
+				defArr,
+				sourceArray,
+			);
+		}
+
+		// add const registry to top of fn stack
+		const stack: FunctionStackEntry[] = this.debug.f.currFunction;
+		stack.unshift(localConstants);
+
+		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
+		let body = handleNamedChildren(this.debug.using(this.fn.bodyNode));
+
+		// bake it like a script body
+		body = flattenAndDoAutoReturn(this.debug, body);
+
+		// piece together
+		const steps: AnyNode[] = [
+			// INITIALIZE
+			// makeArray, // b = []; // (never mind, the top level does this part)
+			setI, // i = 0;
+			setLength, // length = sourceArray.length();
+
+			// CHECK CONDITION
+			LabelDefinition.quick(this.debug, conditionL),
+			checkI, // i < length;
+			GotoLabel.quick(this.debug, breakL),
+
+			// DO BODY
+			LabelDefinition.quick(this.debug, bodyL),
+			setCurr, // curr = array[i];
+			...body,
+			pushReturn, // b.push(__RETURN_);
+			resetReturn, // __RETURN_ = 0;
+
+			// CONTINUE?
+			LabelDefinition.quick(this.debug, continueL),
+			advanceI, // i += 1;
+			GotoLabel.quick(this.debug, conditionL),
+
+			// END
+			LabelDefinition.quick(this.debug, breakL),
+		];
+		dropTemporary(); // curr
+		dropTemporary(); // length
+		dropTemporary(); // i
+
+		// we're done with the args for this call; remove them from the fn stack
+		stack.shift();
+		return steps;
+	}
+	toSteps(sourceArray: string, destinationArray: string): AnyNode[] {
+		return this.bake(sourceArray, destinationArray);
+	}
+	assignToArray(sourceArray: string, destinationArray: string): AnyNode {
+		const steps = this.toSteps(sourceArray, destinationArray);
+		return MathlangSequence.quick(this.debug, steps, 'ArrayMap');
+	}
+}
 
 export class ArraySliceMethod extends ArrayMethodReturningArray {}
 export class ArraySliceByNumber extends ArraySliceMethod {

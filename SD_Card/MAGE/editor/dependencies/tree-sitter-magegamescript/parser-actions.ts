@@ -500,7 +500,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: false },
 		captures: ['command', 'script'],
 		handle: (v, debug) => {
-			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command');
+			const { steps, script } = lambdaOrScriptIdentifier(v.script, 'action_set_command');
 			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script }));
 			return MathlangSequence.orSingle(debug, steps, 'action_set_command');
 		},
@@ -509,7 +509,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: true },
 		captures: ['command', 'script'],
 		handle: (v, debug) => {
-			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
+			const { steps, script } = lambdaOrScriptIdentifier(v.script, 'action_set_command_fail');
 			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND({ ...v, script }));
 			return MathlangSequence.orSingle(debug, steps, 'action_set_command_fail');
 		},
@@ -518,7 +518,7 @@ const actionData: Record<string, actionDataEntry> = {
 		values: { is_fail: true },
 		captures: ['command', 'argument', 'script'],
 		handle: (v, debug) => {
-			const { steps, script } = lambdaOrIdentifier(v.script, 'action_set_command_fail');
+			const { steps, script } = lambdaOrScriptIdentifier(v.script, 'action_set_command_fail');
 			steps.push(new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT({ ...v, script }));
 			return MathlangSequence.orSingle(debug, steps, 'action_set_command_args');
 		},
@@ -908,7 +908,7 @@ const actionData: Record<string, actionDataEntry> = {
 		handle: (v, debug): AnyNode => {
 			const entity = coerceToString(debug, v.entity, 'entity');
 			const script_slot = coerceToString(debug, v.script_slot, 'script_slot');
-			const { script, steps } = lambdaOrIdentifier(v.script, 'action_set_script');
+			const { script, steps } = lambdaOrScriptIdentifier(v.script, 'action_set_script');
 			if (entity === '%MAP%') {
 				if (script_slot === 'on_tick') {
 					steps.push(SET_MAP_TICK_SCRIPT.quick(script));
@@ -1083,7 +1083,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 };
 
-export const lambdaOrIdentifier = (parsedScript: unknown, label: string) => {
+export const lambdaOrScriptIdentifier = (parsedScript: unknown, label: string) => {
 	const steps: AnyNode[] = [];
 	let script = '';
 	if (typeof parsedScript === 'string') {

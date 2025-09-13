@@ -18,7 +18,7 @@ const actionArrayToScript = (
 
 // will do all tests if empty
 // if not empty, also won't do any file-level tests
-const onlyDoTheseActionTests = ['array_write_exp'];
+const onlyDoTheseActionTests = [];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
@@ -29,6 +29,41 @@ const skipTheseTests = new Set([
 const actionTests = {
 	// array map
 	// array for_each
+	// array_map_simple: {
+	// 	input: [
+	// 		// WIP
+	// 		`a = b.map(doThing);`,
+	// 	],
+	// 	expected: [
+	// 		// WIP
+	// 		`a = b.map(doThing);`,
+	// 	],
+	// },
+	array_map_lambda: {
+		input: [`array a = b.map(($n) { return $n + 1; });`],
+		expected: [
+			`array a = [];`,
+			`__TEMP_0 = 0;`, // i = 0;
+			`__TEMP_1 = b.length();`, // length = b.length();
+			`map_condition_*A*:`,
+			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`, // (i < length)
+			`goto label map_break_*B*;`,
+			`map_body_*D*:`,
+			`__TEMP_2 = b[__TEMP_0];`, // curr = b[i];
+			`__TEMP_3 = __TEMP_2;`, // tempvar = curr;
+			`__TEMP_3 +`, // tempvar += 1;
+			`= 1;`,
+			`__RETURN_ = __TEMP_3;`, // RETURN = tempvar;
+			`end_of_script_***:`,
+			`a.push(__RETURN_);`, // ≈ c.push(RETURN);
+			`__RETURN_ = 0;`, // RETURN = 0;
+			`map_continue_*C*:`,
+			`__TEMP_0 +`, // i += 1;
+			`= 1;`,
+			`goto label map_condition_*A*;`,
+			`map_break_*B*:`,
+		],
+	},
 	array_write_exp: {
 		input: [
 			`a[0] = player x + 10;`,

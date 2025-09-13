@@ -33,7 +33,7 @@ import {
 	coerceToBool,
 	optionalLastChild,
 } from './parser-capture.ts';
-import { handleAction, extractLambdas, lambdaOrIdentifier } from './parser-actions.ts';
+import { handleAction, extractLambdas, lambdaOrScriptIdentifier } from './parser-actions.ts';
 import {
 	AddDialogSettings,
 	AddDialogSettingsTarget,
@@ -91,19 +91,19 @@ import {
 
 export const handleNode = (debug: MathlangLocation): AnyNode[] => {
 	const node = debug.node;
-	debugLog(`handleNode: ${node.grammarType}`);
+	debugLog(`handleNode: ${node.type} (${node.grammarType})`);
 
 	reportMissingChildNodes(debug);
 	reportErrorNodes(debug);
 
 	// Actions are their own beast and are handled elsewhere
-	if (node.grammarType.startsWith('action_')) {
+	if (node.type.startsWith('action_')) {
 		return handleAction(debug);
 	}
 
-	const nodeFn = nodeFns[node.grammarType];
+	const nodeFn = nodeFns[node.type];
 	if (nodeFn) return nodeFn(debug);
-	throw new Error('no parser-node function for ' + node.grammarType);
+	throw new Error('no parser-node function for ' + node.type);
 };
 
 const includeRecursion: string[] = [];
@@ -131,7 +131,10 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		return [];
 	},
 	fn: (debug) => {
-		const name = stringCaptureForField(debug, 'name');
+		const nameN = optionalChildForField(debug, 'name');
+		const name = nameN
+			? coerceToString(debug, handleCapture(debug.using(nameN)))
+			: autoIdentifierName(debug);
 		if (debug.f.functions[name]) {
 			debug.quickError('fn already defined', `fn ${name} already defined`);
 			return [];
@@ -163,7 +166,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		const bodyNode = mandatoryChildForField(debug, 'body');
 		const definition = FunctionDefinition.quick(debug, name, params, paramNodes, bodyNode);
 		debug.f.functions[name] = definition;
-		return [];
+		return [definition];
 	},
 	fn_call: (debug) => {
 		const name = stringCaptureForField(debug, 'name');
@@ -455,7 +458,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		// Script
 		const scriptNode = mandatoryChildForField(debug, 'script');
 		const scriptCapture = handleCapture(debug.using(scriptNode));
-		const { script, steps } = lambdaOrIdentifier(scriptCapture, 'serial_dialog_option');
+		const { script, steps } = lambdaOrScriptIdentifier(scriptCapture, 'serial_dialog_option');
 		// Build it
 		const option = SerialDialogOption.quick(debug, optionType, label, script);
 		steps.push(option);
@@ -467,7 +470,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		// Script
 		const scriptNode = mandatoryChildForField(debug, 'script');
 		const scriptCapture = handleCapture(debug.using(scriptNode));
-		const { script, steps } = lambdaOrIdentifier(scriptCapture, 'dialog_option');
+		const { script, steps } = lambdaOrScriptIdentifier(scriptCapture, 'dialog_option');
 		// Build it
 		const ret = DialogOption.quick(debug, label, script);
 		steps.push(ret);

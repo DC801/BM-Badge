@@ -1153,10 +1153,6 @@
         }
       ]
     },
-    "fn_lambda": {
-      "type": "SYMBOL",
-      "name": "_fn_literal"
-    },
     "fn_lambda_or_identifier": {
       "type": "CHOICE",
       "members": [
@@ -1172,8 +1168,13 @@
           "type": "FIELD",
           "name": "lambda",
           "content": {
-            "type": "SYMBOL",
-            "name": "fn_lambda"
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_fn_literal"
+            },
+            "named": false,
+            "value": "fn"
           }
         }
       ]
