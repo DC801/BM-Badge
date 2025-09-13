@@ -2985,7 +2985,7 @@ export class ArrayMap extends ArrayMethodReturningArray {
 	static quick(debug: MathlangLocation, fn: FunctionDefinition) {
 		return new ArrayMap(debug, { fn });
 	}
-	bake(sourceArray: string, destinationArray: string) {
+	bakeToSteps(sourceArray: string, destinationArray: string) {
 		// flow control
 		const n = this.debug.f.p.advanceGotoSuffix();
 		const conditionL = `map condition #${n}`;
@@ -3081,7 +3081,7 @@ export class ArrayMap extends ArrayMethodReturningArray {
 		return steps;
 	}
 	toSteps(sourceArray: string, destinationArray: string): AnyNode[] {
-		return this.bake(sourceArray, destinationArray);
+		return this.bakeToSteps(sourceArray, destinationArray);
 	}
 	assignToArray(sourceArray: string, destinationArray: string): AnyNode {
 		const steps = this.toSteps(sourceArray, destinationArray);

@@ -9006,7 +9006,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, fn) {
       return new ArrayMap(debug, { fn });
     }
-    bake(sourceArray, destinationArray) {
+    bakeToSteps(sourceArray, destinationArray) {
       const n = this.debug.f.p.advanceGotoSuffix();
       const conditionL = `map condition #${n}`;
       const bodyL = `map body #${n}`;
@@ -9090,7 +9090,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return steps;
     }
     toSteps(sourceArray, destinationArray) {
-      return this.bake(sourceArray, destinationArray);
+      return this.bakeToSteps(sourceArray, destinationArray);
     }
     assignToArray(sourceArray, destinationArray) {
       const steps = this.toSteps(sourceArray, destinationArray);

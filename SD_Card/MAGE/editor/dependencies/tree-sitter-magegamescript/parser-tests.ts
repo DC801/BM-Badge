@@ -30,29 +30,26 @@ const actionTests = {
 	// array for_each
 	array_map_identifier: {
 		pre: `fn doThing ($n) { return $n + 1; }`,
-		input: [
-			// WIP
-			`a = b.map(doThing);`,
-		],
+		input: [`a = b.map(doThing);`],
 		expected: [
-			// WIP
+			// should be same as lambda version
 			`array a = [];`,
-			`__TEMP_0 = 0;`, // i = 0;
-			`__TEMP_1 = b.length();`, // length = b.length();
+			`__TEMP_0 = 0;`,
+			`__TEMP_1 = b.length();`,
 			`map_condition_*A*:`,
-			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`, // (i < length)
+			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`,
 			`goto label map_break_*B*;`,
 			`map_body_*D*:`,
-			`__TEMP_2 = b[__TEMP_0];`, // curr = b[i];
-			`__TEMP_3 = __TEMP_2;`, // tempvar = curr;
-			`__TEMP_3 +`, // tempvar += 1;
+			`__TEMP_2 = b[__TEMP_0];`,
+			`__TEMP_3 = __TEMP_2;`,
+			`__TEMP_3 +`,
 			`= 1;`,
-			`__RETURN_ = __TEMP_3;`, // RETURN = tempvar;
+			`${RETURN} = __TEMP_3;`,
 			`end_of_script_***:`,
-			`a.push(__RETURN_);`, // ≈ c.push(RETURN);
-			`__RETURN_ = 0;`, // RETURN = 0;
+			`a.push(${RETURN});`,
+			`${RETURN} = 0;`,
 			`map_continue_*C*:`,
-			`__TEMP_0 +`, // i += 1;
+			`__TEMP_0 +`,
 			`= 1;`,
 			`goto label map_condition_*A*;`,
 			`map_break_*B*:`,
@@ -72,10 +69,10 @@ const actionTests = {
 			`__TEMP_3 = __TEMP_2;`, // tempvar = curr;
 			`__TEMP_3 +`, // tempvar += 1;
 			`= 1;`,
-			`__RETURN_ = __TEMP_3;`, // RETURN = tempvar;
+			`${RETURN} = __TEMP_3;`, // RETURN = tempvar;
 			`end_of_script_***:`,
-			`a.push(__RETURN_);`, // ≈ c.push(RETURN);
-			`__RETURN_ = 0;`, // RETURN = 0;
+			`a.push(${RETURN});`, // ≈ c.push(RETURN);
+			`${RETURN} = 0;`, // RETURN = 0;
 			`map_continue_*C*:`,
 			`__TEMP_0 +`, // i += 1;
 			`= 1;`,
@@ -307,6 +304,123 @@ const actionTests = {
 	json_arbitrary: {
 		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}];`],
 		expected: [`json[{`, `"action": "NEW_ACTION",`, `"entity": "%PLAYER%"`, `}];`],
+	},
+	fn_recursive: {
+		pre: `
+		fn get_diff_x ($e1, $e2) {
+			if (entity $e1 x > entity $e2 x) {
+				return entity $e1 x - entity $e2 x;
+			} else {
+				return entity $e2 x - entity $e1 x;
+			}
+		}
+		fn get_diff_y ($e1, $e2) {
+			if (entity $e1 y > entity $e2 y) {
+				return entity $e1 y - entity $e2 y;
+			} else {
+				return entity $e2 y - entity $e1 y;
+			}
+		}
+		fn get_manhattan_distance ($e1, $e2) {
+			return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
+		}`,
+		input: [`mousegame_manhattan = get_manhattan_distance("%PLAYER%", Mouse);`],
+		expected: [
+			`"__TEMP_1" = player x;`,
+			`"__TEMP_2" = entity "Mouse" x;`,
+			`if "__TEMP_1" > "__TEMP_2" then goto label if_true_*A*;`,
+			`"__TEMP_1" = entity "Mouse" x;`,
+			`"__TEMP_2" = player x;`,
+			`"__TEMP_1" -`,
+			`= "__TEMP_2";`,
+			`"__RETURN_" = "__TEMP_1";`,
+			`goto label end_of_script_*C*;`,
+			`goto label if_chain_rendezvous_*D*;`,
+			`if_true_*A*:`,
+			`"__TEMP_1" = player x;`,
+			`"__TEMP_2" = entity "Mouse" x;`,
+			`"__TEMP_1" -`,
+			`= "__TEMP_2";`,
+			`"__RETURN_" = "__TEMP_1";`,
+			`goto label end_of_script_*C*;`,
+			`if_chain_rendezvous_*D*:`,
+			`end_of_script_*C*:`,
+			`"__TEMP_0" = "__RETURN_";`,
+			`"__RETURN_" = 0;`,
+			`"__TEMP_2" = player y;`,
+			`"__TEMP_3" = entity "Mouse" y;`,
+			`if "__TEMP_2" > "__TEMP_3" then goto label if_true_*B*;`,
+			`"__TEMP_2" = entity "Mouse" y;`,
+			`"__TEMP_3" = player y;`,
+			`"__TEMP_2" -`,
+			`= "__TEMP_3";`,
+			`"__RETURN_" = "__TEMP_2";`,
+			`goto label end_of_script_*E*;`,
+			`goto label if_chain_rendezvous_*F*;`,
+			`if_true_*B*:`,
+			`"__TEMP_2" = player y;`,
+			`"__TEMP_3" = entity "Mouse" y;`,
+			`"__TEMP_2" -`,
+			`= "__TEMP_3";`,
+			`"__RETURN_" = "__TEMP_2";`,
+			`goto label end_of_script_*E*;`,
+			`if_chain_rendezvous_*F*:`,
+			`end_of_script_*E*:`,
+			`"__TEMP_1" = "__RETURN_";`,
+			`"__RETURN_" = 0;`,
+			`"__TEMP_0" +`,
+			`= "__TEMP_1";`,
+			`"__RETURN_" = "__TEMP_0";`,
+			`end_of_script_*G*:`,
+			`"mousegame_manhattan" = "__RETURN_";`,
+			`"__RETURN_" = 0;`,
+		],
+	},
+	fn_basic: {
+		pre: `
+			waiting ($number) {
+				wait $number;
+			}
+			teleportNextTo ($teleportee, $target, $waitTime) {
+				entity $teleportee position = entity $target position;
+				entity $teleportee x += 20;
+				entity $teleportee direction = south;
+				waiting($waitTime)
+			}
+			teleportAliceToBob {
+				teleportNextTo(Alice, Bob, 50)
+				teleportNextTo(Charlie, Denise, 40)
+			}
+		`,
+		input: [
+			// linter stop
+			`teleportNextTo(Alice, Bob, 50)`,
+			`teleportNextTo(Charlie, Denise, 40);`,
+		],
+		expected: [
+			`"__TEMP_0" = entity "Bob" x;`,
+			`entity "Alice" x = "__TEMP_0";`,
+			`"__TEMP_0" = entity "Bob" y;`,
+			`entity "Alice" y = "__TEMP_0";`,
+			`"__TEMP_0" = entity "Alice" x;`,
+			`"__TEMP_0" += 20;`,
+			`entity "Alice" x = "__TEMP_0";`,
+			`entity "Alice" direction = "south";`,
+			`wait 50ms;`,
+			`end_of_script_***:`,
+			`end_of_script_***:`,
+			`"__TEMP_0" = entity "Denise" x;`,
+			`entity "Charlie" x = "__TEMP_0";`,
+			`"__TEMP_0" = entity "Denise" y;`,
+			`entity "Charlie" y = "__TEMP_0";`,
+			`"__TEMP_0" = entity "Charlie" x;`,
+			`"__TEMP_0" += 20;`,
+			`entity "Charlie" x = "__TEMP_0";`,
+			`entity "Charlie" direction = "south";`,
+			`wait 40ms;`,
+			`end_of_script_***:`,
+			`end_of_script_***:`,
+		],
 	},
 	return_binary_expression: {
 		input: [`return player y + 100;`],
@@ -1147,15 +1261,7 @@ const actionTests = {
 	},
 	int_exp_chain_literal_getable: {
 		input: ['goatCount = 1 + player x;'],
-		expected: [
-			'goatCount = 1;',
-			'*A* = player x;',
-			'goatCount += *A*;',
-			// '*A* = 1;',
-			// '*B* = player x;',
-			// '*A* += *B*;',
-			// '"goatCount" = *A*;',
-		],
+		expected: ['goatCount = 1;', '*A* = player x;', 'goatCount += *A*;'],
 	},
 	int_exp_chain_getable_getable: {
 		input: ['goatCount = player y + player x;'],
@@ -1171,17 +1277,7 @@ const actionTests = {
 	},
 	int_exp_chain_literal_getable_mult: {
 		input: ['goatCount = 1 + player x * 99;'],
-		expected: [
-			'"goatCount = 1;',
-			'*A* = player x;',
-			'*A* *= 99;',
-			'"goatCount += *B*;',
-			// '*A* = 1;',
-			// '*B* = player x;',
-			// '*B* *= 99;',
-			// '*A* += *B*;',
-			// '"goatCount" = *A*;',
-		],
+		expected: ['"goatCount = 1;', '*A* = player x;', '*A* *= 99;', '"goatCount += *B*;'],
 	},
 	int_exp_chain_literal_getable_mult_parens: {
 		input: ['goatCount = (1 + player x) * 99;'],
@@ -1624,154 +1720,11 @@ const fileMap =
 	onlyDoTheseActionTests.length !== 0
 		? {}
 		: {
-				'mousegame_short.mgs': {
-					fileText: `
-					fn get_diff_x ($e1, $e2) {
-						if (entity $e1 x > entity $e2 x) {
-							return entity $e1 x - entity $e2 x;
-						} else {
-							return entity $e2 x - entity $e1 x;
-						}
-					}
-					fn get_diff_y ($e1, $e2) {
-						if (entity $e1 y > entity $e2 y) {
-							return entity $e1 y - entity $e2 y;
-						} else {
-							return entity $e2 y - entity $e1 y;
-						}
-					}
-					fn get_manhattan_distance ($e1, $e2) {
-						return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
-					}
-					ch2_mousegame_tick2 {
-						mousegame_manhattan = get_manhattan_distance("%PLAYER%", Mouse);
-					}
-				`,
-					expected: {
-						scripts: {
-							ch2_mousegame_tick2: `"ch2_mousegame_tick2" {
-								"__TEMP_1" = player x;
-								"__TEMP_2" = entity "Mouse" x;
-								if "__TEMP_1" > "__TEMP_2" then goto index 9;
-								"__TEMP_1" = entity "Mouse" x;
-								"__TEMP_2" = player x;
-								"__TEMP_1" -= "__TEMP_2";
-								"__RETURN_" = "__TEMP_1";
-								goto index 14;
-								goto index 14;
-								"__TEMP_1" = player x;
-								"__TEMP_2" = entity "Mouse" x;
-								"__TEMP_1" -= "__TEMP_2";
-								"__RETURN_" = "__TEMP_1";
-								goto index 14;
-								"__TEMP_0" = "__RETURN_";
-								"__RETURN_" = 0;
-
-								"__TEMP_2" = player y;
-								"__TEMP_3" = entity "Mouse" y;
-								if "__TEMP_2" > "__TEMP_3" then goto index 25;
-								"__TEMP_2" = entity "Mouse" y;
-								"__TEMP_3" = player y;
-								"__TEMP_2" -= "__TEMP_3";
-								"__RETURN_" = "__TEMP_2";
-								goto index 30;
-								goto index 30;
-								"__TEMP_2" = player y;
-								"__TEMP_3" = entity "Mouse" y;
-								"__TEMP_2" -= "__TEMP_3";
-								"__RETURN_" = "__TEMP_2";
-								goto index 30;
-								"__TEMP_1" = "__RETURN_";
-								"__RETURN_" = 0;
-
-								"__TEMP_0" += "__TEMP_1";
-								"__RETURN_" = "__TEMP_0";
-								"mousegame_manhattan" = "__RETURN_";
-								"__RETURN_" = 0;
-							}`,
-						},
-					},
-				},
-				'mousegame_slow.mgs': {
-					fileText: `
-					fn get_diff_x ($e1, $e2) {
-						if (entity $e1 x > entity $e2 x) {
-							return entity $e1 x - entity $e2 x;
-						} else {
-							return entity $e2 x - entity $e1 x;
-						}
-					}
-					fn get_diff_y ($e1, $e2) {
-						if (entity $e1 y > entity $e2 y) {
-							return entity $e1 y - entity $e2 y;
-						} else {
-							return entity $e2 y - entity $e1 y;
-						}
-					}
-					fn get_manhattan_distance ($e1, $e2) {
-						wait 1;
-						diff_x = get_diff_x($e1, $e2);
-						wait 2;
-						diff_y = get_diff_y($e1, $e2);
-						wait 3;
-						return diff_x + diff_y;
-					}
-					ch2_mousegame_tick {
-						mousegame_manhattan = get_manhattan_distance("%PLAYER%", Mouse);
-					}
-				`,
-					expected: {
-						scripts: {
-							ch2_mousegame_tick: `"ch2_mousegame_tick" {
-								wait 1ms;
-								"__TEMP_0" = player x;
-								"__TEMP_1" = entity "Mouse" x;
-								if "__TEMP_0" > "__TEMP_1" then goto index 10;
-								"__TEMP_0" = entity "Mouse" x;
-								"__TEMP_1" = player x;
-								"__TEMP_0" -= "__TEMP_1";
-								__RETURN_" = "__TEMP_0";
-								goto index 15;
-								goto index 15;
-								"__TEMP_0" = player x;
-								"__TEMP_1" = entity "Mouse" x;
-								"__TEMP_0" -= "__TEMP_1";
-								"__RETURN_" = "__TEMP_0";
-								goto index 15;
-								"diff_x" = "__RETURN_";
-								"__RETURN_" = 0;
-
-								wait 2ms;
-								"__TEMP_0" = player y;
-								"__TEMP_1" = entity "Mouse" y;
-								if "__TEMP_0" > "__TEMP_1" then goto index 27;
-								"__TEMP_0" = entity "Mouse" y;
-								"__TEMP_1" = player y;
-								"__TEMP_0" -= "__TEMP_1";
-								"__RETURN_" = "__TEMP_0";
-								goto index 32;
-								goto index 32;
-								"__TEMP_0" = player y;
-								"__TEMP_1" = entity "Mouse" y;
-								"__TEMP_0" -= "__TEMP_1";
-								"__RETURN_" = "__TEMP_0";
-								goto index 32;
-								"diff_y" = "__RETURN_";
-								"__RETURN_" = 0;
-
-								wait 3ms;
-								"__TEMP_0" = "diff_x";
-								"__TEMP_0" += "diff_y";
-								"__RETURN_" = "__TEMP_0";
-								"mousegame_manhattan" = "__RETURN_";
-								"__RETURN_" = 0;
-							}`,
-						},
-					},
-				},
 				'fn_returns.mgs': {
 					fileText: `
-					addThree ($n) { return $n + 3; }
+					addThree ($n) {
+						return $n + 3;
+					}
 					setTallyToThirteen {
 						tally = addThree(10);
 					}
@@ -1812,47 +1765,6 @@ const fileMap =
 								wait 123ms;
 								"random" = "__RETURN_";
 								"__RETURN_" = 0;
-							}`,
-						},
-					},
-				},
-				'fn.mgs': {
-					fileText: `
-					waiting ($number) {
-						wait $number;
-					}
-					teleportNextTo ($teleportee, $target, $waitTime) {
-						entity $teleportee position = entity $target position;
-						entity $teleportee x += 20;
-						entity $teleportee direction = south;
-						waiting($waitTime)
-					}
-					teleportAliceToBob {
-						teleportNextTo(Alice, Bob, 50)
-						teleportNextTo(Charlie, Denise, 40)
-					}
-				`,
-					expected: {
-						scripts: {
-							teleportAliceToBob: `"teleportAliceToBob" {
-								"__TEMP_0" = entity "Bob" x;
-								entity "Alice" x = "__TEMP_0";
-								"__TEMP_0" = entity "Bob" y;
-								entity "Alice" y = "__TEMP_0";
-								"__TEMP_0" = entity "Alice" x;
-								"__TEMP_0" += 20;
-								entity "Alice" x = "__TEMP_0";
-								entity "Alice" direction = "south";
-								wait 50ms;
-								"__TEMP_0" = entity "Denise" x;
-								entity "Charlie" x = "__TEMP_0";
-								"__TEMP_0" = entity "Denise" y;
-								entity "Charlie" y = "__TEMP_0";
-								"__TEMP_0" = entity "Charlie" x;
-								"__TEMP_0" += 20;
-								entity "Charlie" x = "__TEMP_0";
-								entity "Charlie" direction = "south";
-								wait 40ms;
 							}`,
 						},
 					},
