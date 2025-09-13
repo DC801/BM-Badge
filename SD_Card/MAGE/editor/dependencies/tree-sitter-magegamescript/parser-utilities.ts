@@ -158,7 +158,7 @@ export const reportErrorNodes = (debug: MathlangLocation): TreeSitterNode[] => {
 		.filter((v) => v !== null)
 		.filter((child) => child.type === 'ERROR');
 	errorNodes.forEach((errorNode) => {
-		debug.using(errorNode).quickError('syntax error', '');
+		debug.using(errorNode).quickError('syntax error', 'unknown tree-sitter parse error');
 	});
 	return errorNodes;
 };

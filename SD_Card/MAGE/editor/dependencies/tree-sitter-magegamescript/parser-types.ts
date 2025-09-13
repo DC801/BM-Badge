@@ -110,67 +110,52 @@ export class MathlangLocation {
 	}
 }
 
-// TODO: change this to be a map of error type and generic followup; the MathlangMessageType type can become keyof that map, and the isMathlangMessageType function can just look for an entry in the map
-export type MathlangMessageType =
+// error types and a generic followup message
+// todo: make the message optional, and use the fallback message if absent
+const mathlangMessageTypes: Record<string, string> = {
 	// general
-	| 'syntax error'
-	| 'unexpected token'
-	| 'missing token' // can be warning, not error (e.g. missing ';')
-	| 'missing file'
+	'syntax error': 'generic syntax error',
+	'unexpected token': 'unexpected token',
+	'missing token': 'expected token not found', // can be warning, not error (e.g. missing ';')
+	'missing file': 'this file could not be found in this project',
 
 	// these are phrased this way because the order of definition doesn't matter
 	// (there isn't an "original," so we can't say "already defined")
-	| 'duplicate script'
-	| 'duplicate dialog'
-	| 'duplicate serial dialog'
+	'duplicate script': 'scriptby this name  has already been defined in this project',
+	'duplicate dialog': 'dialog by this name has already been defined in this project',
+	'duplicate serial dialog':
+		'serial dialog by this name has already been defined in this project',
 
 	// these are ordered, so there is definitely an "original"
-	| 'undefined fn'
-	| 'fn already defined'
-	| 'duplicate fn arg'
-	| 'not enough fn args'
-	| 'undefined constant'
-	| 'constant already defined'
-	| 'mismatched spread lengths'
-	| 'unsupported entity field'
-	| 'misordered params'
-	| 'array method on non-array'
-	| 'array does not return value'
-	| 'return value not stored'
-	| 'invalid JSON action'
-	| 'invalid fn arg'
-	| 'invalid operator' // warning, not error
-	| 'invalid constant value'
-	| 'invalid action param combination'
-	| `invalid entity script slot`
-	| `invalid map script slot`;
-export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
-	if (v === 'ambiguous identifiers') return true;
-	if (v === 'syntax error') return true;
-	if (v === 'unexpected token') return true;
-	if (v === 'missing token') return true;
-	if (v === 'missing file') return true;
-	if (v === 'mismatched spread lengths') return true;
-	if (v === 'unsupported entity field') return true;
-	if (v === 'invalid JSON action') return true;
-	if (v === 'misordered params') return true;
-	if (v === 'array method on non-array') return true;
-	if (v === 'array does not return value') return true;
-	if (v === 'return value not stored') return true;
-	if (v === 'constant already defined') return true;
-	if (v === 'fn already defined') return true;
-	if (v === 'undefined constant') return true;
-	if (v === 'not enough fn args') return true;
-	if (v === 'duplicate fn arg') return true;
-	if (v === 'undefined fn') return true;
-	if (v === 'invalid fn arg') return true;
-	if (v === 'invalid operator') return true;
-	if (v === 'invalid constant value') return true;
-	if (v === 'invalid action param combination') return true;
-	if (v === `invalid entity script slot`) return true;
-	if (v === `invalid map script slot`) return true;
-	return false;
+	'undefined fn': 'function has not yet been defined in this file scope',
+	'fn already defined': 'function already defined in this file scope',
+	'duplicate fn arg': 'cannot use the same fn argument multiple times',
+	'not enough fn args': 'function requires more arguments than was provided',
+	'undefined constant': 'constant has not yet been defined in this file scope',
+	'constant already defined': 'cannot redefine constant in the same file scope',
+	'mismatched spread lengths': 'spreads must have the same count of items within each context',
+	'unsupported entity field': 'this entity field is not supported here',
+	'misordered params': 'invalid param order',
+	'array method on non-array':
+		'previous method does not return an array; cannot call array method afterward',
+	'array does not return value':
+		'this array method chain does not return an int value; 0 will be used',
+	'return value not stored': 'did you mean to discard the return value?', // warning
+	'invalid JSON action': 'malformed action JSON',
+	'invalid fn arg':
+		'fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call',
+	'invalid operator': 'use != and ==, not !== or ===', // warning, not error
+	'invalid constant value': 'constant value not an MGS primitive',
+	'invalid action param combination': 'this action cannot have this combination of params',
+	'invalid entity script slot': '',
+	'invalid map script slot': '',
 };
+
+export type MathlangMessageType = keyof typeof mathlangMessageTypes;
+export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
+	return !!mathlangMessageTypes[v];
+};
+
 export class MathlangMessage {
 	locations: MathlangLocation[];
 	message: string;

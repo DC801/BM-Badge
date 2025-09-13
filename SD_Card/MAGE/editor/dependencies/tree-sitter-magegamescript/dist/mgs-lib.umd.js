@@ -5519,22 +5519,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return doAutoBreakContinue(steps, continueL, breakL);
     },
     while_block: (debug) => {
-      const n = debug.f.p.advanceGotoSuffix();
       const block = new ConditionalBlock(debug);
-      const continueL = `while continue #${n}`;
-      const bodyL = `while body #${n}`;
-      const breakL = `while break #${n}`;
-      const body2 = doAutoBreakContinue(block.body, continueL, breakL);
-      const steps = [
-        LabelDefinition.quick(debug, continueL),
-        ...block.condition.toSteps(bodyL),
-        GotoLabel.quick(debug, breakL),
-        LabelDefinition.quick(debug, bodyL),
-        ...body2,
-        GotoLabel.quick(debug.using(block.conditionNode), continueL),
-        LabelDefinition.quick(debug, breakL)
-      ];
-      return steps;
+      return forLoopMaker(debug, [], block.condition, block.body, [], "while");
     },
     do_while_block: (debug) => {
       const n = debug.f.p.advanceGotoSuffix();
@@ -5553,31 +5539,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return steps;
     },
     for_block: (debug) => {
-      const n = debug.f.p.advanceGotoSuffix();
-      const conditionL = `for condition #${n}`;
-      const bodyL = `for body #${n}`;
-      const breakL = `for break #${n}`;
-      const continueL = `for continue #${n}`;
       const conditionN = mandatoryChildForField(debug, "condition");
-      const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
       const bodyN = mandatoryChildForField(debug, "body");
       const incrementerN = mandatoryChildForField(debug, "incrementer");
       const initializerN = mandatoryChildForField(debug, "initializer");
       const rawBody = handleNode(debug.using(bodyN));
-      const body2 = doAutoBreakContinue(rawBody, continueL, breakL);
-      const steps = [
-        ...handleNode(debug.using(initializerN)),
-        LabelDefinition.quick(debug, conditionL),
-        ...condition.toSteps(bodyL),
-        GotoLabel.quick(debug, breakL),
-        LabelDefinition.quick(debug, bodyL),
-        ...body2,
-        LabelDefinition.quick(debug, continueL),
-        ...handleNode(debug.using(incrementerN)),
-        GotoLabel.quick(debug.using(conditionN), conditionL),
-        LabelDefinition.quick(debug, breakL)
-      ];
-      return steps;
+      const initializeSteps = handleNode(debug.using(initializerN));
+      const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
+      const incrementerSteps = handleNode(debug.using(incrementerN));
+      return forLoopMaker(debug, initializeSteps, condition, rawBody, incrementerSteps, "for");
     },
     if_single: (debug) => {
       const type = optionalTextForField(debug, "type");
@@ -6495,32 +6465,43 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.f.quickWarning(this.node, type, message, footer);
     }
   }
+  const mathlangMessageTypes = {
+    // general
+    "syntax error": "generic syntax error",
+    "unexpected token": "unexpected token",
+    "missing token": "expected token not found",
+    // can be warning, not error (e.g. missing ';')
+    "missing file": "this file could not be found in this project",
+    // these are phrased this way because the order of definition doesn't matter
+    // (there isn't an "original," so we can't say "already defined")
+    "duplicate script": "scriptby this name  has already been defined in this project",
+    "duplicate dialog": "dialog by this name has already been defined in this project",
+    "duplicate serial dialog": "serial dialog by this name has already been defined in this project",
+    // these are ordered, so there is definitely an "original"
+    "undefined fn": "function has not yet been defined in this file scope",
+    "fn already defined": "function already defined in this file scope",
+    "duplicate fn arg": "cannot use the same fn argument multiple times",
+    "not enough fn args": "function requires more arguments than was provided",
+    "undefined constant": "constant has not yet been defined in this file scope",
+    "constant already defined": "cannot redefine constant in the same file scope",
+    "mismatched spread lengths": "spreads must have the same count of items within each context",
+    "unsupported entity field": "this entity field is not supported here",
+    "misordered params": "invalid param order",
+    "array method on non-array": "previous method does not return an array; cannot call array method afterward",
+    "array does not return value": "this array method chain does not return an int value; 0 will be used",
+    "return value not stored": "did you mean to discard the return value?",
+    // warning
+    "invalid JSON action": "malformed action JSON",
+    "invalid fn arg": "fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call",
+    "invalid operator": "use != and ==, not !== or ===",
+    // warning, not error
+    "invalid constant value": "constant value not an MGS primitive",
+    "invalid action param combination": "this action cannot have this combination of params",
+    "invalid entity script slot": "",
+    "invalid map script slot": ""
+  };
   const isMathlangMessageType = (v) => {
-    if (v === "ambiguous identifiers") return true;
-    if (v === "syntax error") return true;
-    if (v === "unexpected token") return true;
-    if (v === "missing token") return true;
-    if (v === "missing file") return true;
-    if (v === "mismatched spread lengths") return true;
-    if (v === "unsupported entity field") return true;
-    if (v === "invalid JSON action") return true;
-    if (v === "misordered params") return true;
-    if (v === "array method on non-array") return true;
-    if (v === "array does not return value") return true;
-    if (v === "return value not stored") return true;
-    if (v === "constant already defined") return true;
-    if (v === "fn already defined") return true;
-    if (v === "undefined constant") return true;
-    if (v === "not enough fn args") return true;
-    if (v === "duplicate fn arg") return true;
-    if (v === "undefined fn") return true;
-    if (v === "invalid fn arg") return true;
-    if (v === "invalid operator") return true;
-    if (v === "invalid constant value") return true;
-    if (v === "invalid action param combination") return true;
-    if (v === `invalid entity script slot`) return true;
-    if (v === `invalid map script slot`) return true;
-    return false;
+    return !!mathlangMessageTypes[v];
   };
   class MathlangMessage {
     constructor(locations, type, message, footer) {
@@ -8925,7 +8906,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           steps.push(...method.toSteps(currArray));
         } else if (method instanceof ArrayMethodReturningValue) {
           steps.push(...method.toSteps(currArray, destination));
-        } else if (method instanceof ArraySliceMethod) {
+        } else if (method instanceof ArraySliceMethod || method instanceof ArrayMap) {
           const temp = this.return_type === "array" ? destination : "__TEMPORARY_ARRAY_";
           steps.push(...method.toSteps(currArray, temp));
           currArray = temp;
@@ -9012,87 +8993,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new ArrayMap(debug, { fn });
     }
     toSteps(sourceArray, destinationArray) {
-      const n = this.debug.f.p.advanceGotoSuffix();
-      const conditionL = `map condition #${n}`;
-      const bodyL = `map body #${n}`;
-      const breakL = `map break #${n}`;
-      const continueL = `map continue #${n}`;
-      const i2 = newTemporary();
-      const length = newTemporary();
-      const curr = newTemporary();
-      const setI = MUTATE_VARIABLE.set(i2, 0);
-      const advanceI = MUTATE_VARIABLE.change(this.debug, i2, 1, "+");
-      const checkI = CHECK_VARIABLES.quick(i2, length, "<");
-      checkI.label = bodyL;
-      const setLength = ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length);
-      const setCurr = ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE.quick(
-        sourceArray,
-        i2,
-        curr
-      );
-      const pushReturn = ARRAY_PUSH_FROM_VARIABLE.quick(destinationArray, RETURN);
-      const resetReturn = MUTATE_VARIABLE.set(RETURN, 0);
-      const localConstants = {};
-      const defCurr = this.fn.params[0];
-      if (defCurr !== void 0) {
-        const defNode = this.fn.paramNodes[0];
-        localConstants[defCurr] = ConstantDefinition.quick(
-          this.debug.using(defNode),
-          defCurr,
-          curr
-        );
-      }
-      const defI = this.fn.params[1];
-      if (defI !== void 0) {
-        const defNode = this.fn.paramNodes[1];
-        localConstants[defI] = ConstantDefinition.quick(this.debug.using(defNode), defI, i2);
-      }
-      const defArr = this.fn.params[2];
-      if (defArr !== void 0) {
-        const defNode = this.fn.paramNodes[1];
-        localConstants[defArr] = ConstantDefinition.quick(
-          this.debug.using(defNode),
-          defArr,
-          sourceArray
-        );
-      }
-      const stack = this.debug.f.currFunction;
-      stack.unshift(localConstants);
-      let body2 = handleNamedChildren(this.debug.using(this.fn.bodyNode));
-      body2 = flattenAndDoAutoReturn(this.debug, body2);
-      const steps = [
-        // INITIALIZE
-        setI,
-        // i = 0;
-        setLength,
-        // length = sourceArray.length();
-        // CHECK CONDITION
-        LabelDefinition.quick(this.debug, conditionL),
-        checkI,
-        // i < length;
-        GotoLabel.quick(this.debug, breakL),
-        // DO BODY
-        LabelDefinition.quick(this.debug, bodyL),
-        setCurr,
-        // curr = array[i];
-        ...body2,
-        pushReturn,
-        // b.push(__RETURN_);
-        resetReturn,
-        // __RETURN_ = 0;
-        // CONTINUE?
-        LabelDefinition.quick(this.debug, continueL),
-        advanceI,
-        // i += 1;
-        GotoLabel.quick(this.debug, conditionL),
-        // END
-        LabelDefinition.quick(this.debug, breakL)
-      ];
-      dropTemporary();
-      dropTemporary();
-      dropTemporary();
-      stack.shift();
-      return steps;
+      return mapOrForEachBuilder(this, sourceArray, destinationArray);
     }
     assignToArray(sourceArray, destinationArray) {
       const steps = this.toSteps(sourceArray, destinationArray);
@@ -9669,81 +9570,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new ArrayForEach(debug, { fn });
     }
     toSteps(sourceArray) {
-      const n = this.debug.f.p.advanceGotoSuffix();
-      const conditionL = `for_each condition #${n}`;
-      const bodyL = `for_each body #${n}`;
-      const breakL = `for_each break #${n}`;
-      const continueL = `for_each continue #${n}`;
-      const i2 = newTemporary();
-      const length = newTemporary();
-      const curr = newTemporary();
-      const setI = MUTATE_VARIABLE.set(i2, 0);
-      const advanceI = MUTATE_VARIABLE.change(this.debug, i2, 1, "+");
-      const checkI = CHECK_VARIABLES.quick(i2, length, "<");
-      checkI.label = bodyL;
-      const setLength = ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length);
-      const setCurr = ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE.quick(
-        sourceArray,
-        i2,
-        curr
-      );
-      const localConstants = {};
-      const defCurr = this.fn.params[0];
-      if (defCurr !== void 0) {
-        const defNode = this.fn.paramNodes[0];
-        localConstants[defCurr] = ConstantDefinition.quick(
-          this.debug.using(defNode),
-          defCurr,
-          curr
-        );
-      }
-      const defI = this.fn.params[1];
-      if (defI !== void 0) {
-        const defNode = this.fn.paramNodes[1];
-        localConstants[defI] = ConstantDefinition.quick(this.debug.using(defNode), defI, i2);
-      }
-      const defArr = this.fn.params[2];
-      if (defArr !== void 0) {
-        const defNode = this.fn.paramNodes[1];
-        localConstants[defArr] = ConstantDefinition.quick(
-          this.debug.using(defNode),
-          defArr,
-          sourceArray
-        );
-      }
-      const stack = this.debug.f.currFunction;
-      stack.unshift(localConstants);
-      let body2 = handleNamedChildren(this.debug.using(this.fn.bodyNode));
-      body2 = flattenAndDoAutoReturn(this.debug, body2);
-      const steps = [
-        // INITIALIZE
-        setI,
-        // i = 0;
-        setLength,
-        // length = sourceArray.length();
-        // CHECK CONDITION
-        LabelDefinition.quick(this.debug, conditionL),
-        checkI,
-        // i < length;
-        GotoLabel.quick(this.debug, breakL),
-        // DO BODY
-        LabelDefinition.quick(this.debug, bodyL),
-        setCurr,
-        // curr = array[i];
-        ...body2,
-        // CONTINUE?
-        LabelDefinition.quick(this.debug, continueL),
-        advanceI,
-        // i += 1;
-        GotoLabel.quick(this.debug, conditionL),
-        // END
-        LabelDefinition.quick(this.debug, breakL)
-      ];
-      dropTemporary();
-      dropTemporary();
-      dropTemporary();
-      stack.shift();
-      return steps;
+      return mapOrForEachBuilder(this, sourceArray);
     }
     assignToArray(sourceArray) {
       const steps = this.toSteps(sourceArray);
@@ -9754,6 +9581,101 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     if (entity === "%PLAYER%") return "player";
     if (entity === "%SELF%") return "self";
     return `entity "${entity}"`;
+  };
+  const mapOrForEachBuilder = (method, sourceArray, destinationArray) => {
+    const debug = method.debug;
+    const i2 = newTemporary();
+    const length = newTemporary();
+    const curr = newTemporary();
+    const localConstants = {};
+    const defCurr = method.fn.params[0];
+    if (defCurr !== void 0) {
+      const defNode = method.fn.paramNodes[0];
+      localConstants[defCurr] = ConstantDefinition.quick(debug.using(defNode), defCurr, curr);
+    }
+    const defI = method.fn.params[1];
+    if (defI !== void 0) {
+      const defNode = method.fn.paramNodes[1];
+      localConstants[defI] = ConstantDefinition.quick(method.debug.using(defNode), defI, i2);
+    }
+    const defArr = method.fn.params[2];
+    if (defArr !== void 0) {
+      const defNode = method.fn.paramNodes[1];
+      localConstants[defArr] = ConstantDefinition.quick(
+        debug.using(defNode),
+        defArr,
+        sourceArray
+      );
+    }
+    const stack = debug.f.currFunction;
+    stack.unshift(localConstants);
+    const rawBody = handleNamedChildren(debug.using(method.fn.bodyNode));
+    const body2 = [
+      // curr = array[i];
+      ...ArrayReadFromVariableIndex.quick(debug, i2).toSteps(sourceArray, curr),
+      // and the rest
+      ...flattenAndDoAutoReturn(debug, rawBody)
+    ];
+    if (method instanceof ArrayMap) {
+      if (destinationArray === void 0) throw new Error("need destinationArray");
+      body2.push(
+        // b.push(__RETURN_);
+        ARRAY_PUSH_FROM_VARIABLE.quick(destinationArray, RETURN),
+        // __RETURN_ = 0;
+        MUTATE_VARIABLE.set(RETURN, 0)
+      );
+    }
+    const initialize = [
+      // i = 0;
+      MUTATE_VARIABLE.set(i2, 0),
+      // length = sourceArray.length();
+      ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length)
+    ];
+    const increment = [
+      // i += 1;
+      MUTATE_VARIABLE.change(debug, i2, 1, "+")
+    ];
+    const steps = forLoopMaker(
+      debug,
+      initialize,
+      CheckVariables.quick(debug, i2, length, "<"),
+      body2,
+      increment,
+      method instanceof ArrayMap ? "map" : "for_each"
+    );
+    dropTemporary();
+    dropTemporary();
+    dropTemporary();
+    stack.shift();
+    return steps;
+  };
+  const forLoopMaker = (debug, initializeSteps, rawCondition, bodySteps, incrementerSteps, prefix = "for") => {
+    const n = debug.f.p.advanceGotoSuffix();
+    const conditionL = `${prefix} condition #${n}`;
+    const bodyL = `${prefix} body #${n}`;
+    const breakL = `${prefix} break #${n}`;
+    const continueL = `${prefix} continue #${n}`;
+    const lastN = mandatoryLastChild(debug);
+    const conditionSteps = rawCondition.toSteps(bodyL);
+    const bodyStepsFlat = doAutoBreakContinue(bodySteps, continueL, breakL);
+    const steps = [
+      // INITIALIZE
+      ...initializeSteps,
+      // CHECK CONDITION
+      LabelDefinition.quick(debug, conditionL),
+      ...conditionSteps,
+      GotoLabel.quick(debug, breakL),
+      // DO BODY
+      LabelDefinition.quick(debug, bodyL),
+      ...bodyStepsFlat,
+      // CONTINUE?
+      LabelDefinition.quick(debug, continueL),
+      ...incrementerSteps,
+      GotoLabel.quick(debug, conditionL),
+      // END
+      LabelDefinition.quick(debug.using(lastN), breakL)
+    ];
+    return steps;
   };
   const opIntoStringMap = {
     "=": "SET",
@@ -12899,7 +12821,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const reportErrorNodes = (debug) => {
     const errorNodes = debug.node.children.filter((v) => v !== null).filter((child) => child.type === "ERROR");
     errorNodes.forEach((errorNode) => {
-      debug.using(errorNode).quickError("syntax error", "");
+      debug.using(errorNode).quickError("syntax error", "unknown tree-sitter parse error");
     });
     return errorNodes;
   };
