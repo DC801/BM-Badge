@@ -69,6 +69,7 @@ import {
 	BoolGetable,
 	BoolExpression,
 	FunctionDefinition,
+	forLoopMaker,
 } from './parser-types.ts';
 import {
 	Action,
@@ -614,23 +615,8 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		return doAutoBreakContinue(steps, continueL, breakL);
 	},
 	while_block: (debug) => {
-		const n = debug.f.p.advanceGotoSuffix();
 		const block = new ConditionalBlock(debug);
-		const continueL = `while continue #${n}`;
-		const bodyL = `while body #${n}`;
-		const breakL = `while break #${n}`;
-		const body = doAutoBreakContinue(block.body, continueL, breakL);
-
-		const steps = [
-			LabelDefinition.quick(debug, continueL),
-			...block.condition.toSteps(bodyL),
-			GotoLabel.quick(debug, breakL),
-			LabelDefinition.quick(debug, bodyL),
-			...body,
-			GotoLabel.quick(debug.using(block.conditionNode), continueL),
-			LabelDefinition.quick(debug, breakL),
-		];
-		return steps;
+		return forLoopMaker(debug, [], block.condition, block.body, [], 'while');
 	},
 	do_while_block: (debug) => {
 		const n = debug.f.p.advanceGotoSuffix();
@@ -650,32 +636,17 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		return steps;
 	},
 	for_block: (debug) => {
-		const n = debug.f.p.advanceGotoSuffix();
-		const conditionL = `for condition #${n}`;
-		const bodyL = `for body #${n}`;
-		const breakL = `for break #${n}`;
-		const continueL = `for continue #${n}`;
 		const conditionN = mandatoryChildForField(debug, 'condition');
-		const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
 		const bodyN = mandatoryChildForField(debug, 'body');
 		const incrementerN = mandatoryChildForField(debug, 'incrementer');
 		const initializerN = mandatoryChildForField(debug, 'initializer');
 		const rawBody = handleNode(debug.using(bodyN));
-		const body = doAutoBreakContinue(rawBody, continueL, breakL);
 
-		const steps = [
-			...handleNode(debug.using(initializerN)),
-			LabelDefinition.quick(debug, conditionL),
-			...condition.toSteps(bodyL),
-			GotoLabel.quick(debug, breakL),
-			LabelDefinition.quick(debug, bodyL),
-			...body,
-			LabelDefinition.quick(debug, continueL),
-			...handleNode(debug.using(incrementerN)),
-			GotoLabel.quick(debug.using(conditionN), conditionL),
-			LabelDefinition.quick(debug, breakL),
-		];
-		return steps;
+		const initializeSteps = handleNode(debug.using(initializerN));
+		const condition = BoolExpression.breakIfNot(handleCapture(debug.using(conditionN)));
+		const incrementerSteps = handleNode(debug.using(incrementerN));
+
+		return forLoopMaker(debug, initializeSteps, condition, rawBody, incrementerSteps, 'for');
 	},
 	if_single: (debug): AnyNode[] => {
 		// For parsing the bytecode output; not really meant to be seen in the wild
