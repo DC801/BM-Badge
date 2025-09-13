@@ -27,7 +27,48 @@ const skipTheseTests = new Set([
 
 // --------------------------- ACTION TESTS ---------------------------
 const actionTests = {
-	// array for_each
+	array_for_each_identifier: {
+		pre: `fn addToSum ($n) { sum += $n; }`,
+		input: [`sum = 0;`, `array a = b.for_each(addToSum);`],
+		expected: [
+			// should be the same as the lambda version
+			`sum = 0;`,
+			`__TEMP_0 = 0;`,
+			`__TEMP_1 = b.length();`,
+			`for_each_condition_*A*:`,
+			`if "__TEMP_0" < "__TEMP_1" then goto label for_each_body_*D*;`,
+			`goto label for_each_break_*B*;`,
+			`for_each_body_*D*:`,
+			`__TEMP_2 = b[__TEMP_0];`,
+			`sum += __TEMP_2;`,
+			`end_of_script_***:`,
+			`for_each_continue_*C*:`,
+			`__TEMP_0 +`,
+			`= 1;`,
+			`goto label for_each_condition_*A*;`,
+			`for_each_break_*B*:`,
+		],
+	},
+	array_for_each_lambda: {
+		input: [`sum = 0;`, `array a = b.for_each(($n) { sum += $n; });`],
+		expected: [
+			`sum = 0;`,
+			`__TEMP_0 = 0;`, // i = 0;
+			`__TEMP_1 = b.length();`, // length = b.length();
+			`for_each_condition_*A*:`,
+			`if "__TEMP_0" < "__TEMP_1" then goto label for_each_body_*D*;`, // (i < length)
+			`goto label for_each_break_*B*;`,
+			`for_each_body_*D*:`,
+			`__TEMP_2 = b[__TEMP_0];`, // curr = b[i];
+			`sum += __TEMP_2;`, // sum += curr;
+			`end_of_script_***:`,
+			`for_each_continue_*C*:`,
+			`__TEMP_0 +`, // i += 1;
+			`= 1;`,
+			`goto label for_each_condition_*A*;`,
+			`for_each_break_*B*:`,
+		],
+	},
 	array_map_identifier: {
 		pre: `fn doThing ($n) { return $n + 1; }`,
 		input: [`a = b.map(doThing);`],

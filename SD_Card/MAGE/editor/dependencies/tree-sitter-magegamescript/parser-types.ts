@@ -2985,7 +2985,7 @@ export class ArrayMap extends ArrayMethodReturningArray {
 	static quick(debug: MathlangLocation, fn: FunctionDefinition) {
 		return new ArrayMap(debug, { fn });
 	}
-	bakeToSteps(sourceArray: string, destinationArray: string) {
+	toSteps(sourceArray: string, destinationArray: string) {
 		// flow control
 		const n = this.debug.f.p.advanceGotoSuffix();
 		const conditionL = `map condition #${n}`;
@@ -3079,9 +3079,6 @@ export class ArrayMap extends ArrayMethodReturningArray {
 		// we're done with the args for this call; remove them from the fn stack
 		stack.shift();
 		return steps;
-	}
-	toSteps(sourceArray: string, destinationArray: string): AnyNode[] {
-		return this.bakeToSteps(sourceArray, destinationArray);
 	}
 	assignToArray(sourceArray: string, destinationArray: string): AnyNode {
 		const steps = this.toSteps(sourceArray, destinationArray);
@@ -3662,7 +3659,114 @@ export class ArrayWriteToIndex extends MathlangNode {
 	}
 }
 
-// export class ArrayForEach extends ArrayMethodReturningNothing {}
+export class ArrayForEach extends ArrayMethodReturningNothing {
+	fn: FunctionDefinition;
+	constructor(debug: MathlangLocation, args: GenericObj) {
+		super(debug, args);
+		this.fn = FunctionDefinition.breakIfNot(args.fn);
+	}
+	clone() {
+		return new ArrayForEach(this.debug.clone(), this.args);
+	}
+	static quick(debug: MathlangLocation, fn: FunctionDefinition) {
+		return new ArrayForEach(debug, { fn });
+	}
+	toSteps(sourceArray: string) {
+		// flow control
+		const n = this.debug.f.p.advanceGotoSuffix();
+		const conditionL = `for_each condition #${n}`;
+		const bodyL = `for_each body #${n}`;
+		const breakL = `for_each break #${n}`;
+		const continueL = `for_each continue #${n}`;
+
+		// built-in vars
+		const i = newTemporary();
+		const length = newTemporary();
+		const curr = newTemporary();
+		const setI = ACTION.MUTATE_VARIABLE.set(i, 0);
+		const advanceI = ACTION.MUTATE_VARIABLE.change(this.debug, i, 1, '+');
+		const checkI = ACTION.CHECK_VARIABLES.quick(i, length, '<');
+		checkI.label = bodyL;
+		const setLength = ACTION.ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length);
+		const setCurr = ACTION.ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE.quick(
+			sourceArray,
+			i,
+			curr,
+		);
+
+		// make local const registry based on what we were passed for this call
+		const localConstants: FunctionStackEntry = {};
+		const defCurr = this.fn.params[0];
+		if (defCurr !== undefined) {
+			const defNode = this.fn.paramNodes[0];
+			localConstants[defCurr] = ConstantDefinition.quick(
+				this.debug.using(defNode),
+				defCurr,
+				curr,
+			);
+		}
+		const defI = this.fn.params[1];
+		if (defI !== undefined) {
+			const defNode = this.fn.paramNodes[1];
+			localConstants[defI] = ConstantDefinition.quick(this.debug.using(defNode), defI, i);
+		}
+		const defArr = this.fn.params[2];
+		if (defArr !== undefined) {
+			const defNode = this.fn.paramNodes[1];
+			localConstants[defArr] = ConstantDefinition.quick(
+				this.debug.using(defNode),
+				defArr,
+				sourceArray,
+			);
+		}
+
+		// add const registry to top of fn stack
+		const stack: FunctionStackEntry[] = this.debug.f.currFunction;
+		stack.unshift(localConstants);
+
+		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
+		let body = handleNamedChildren(this.debug.using(this.fn.bodyNode));
+
+		// bake it like a script body
+		body = flattenAndDoAutoReturn(this.debug, body);
+
+		// piece together
+		const steps: AnyNode[] = [
+			// INITIALIZE
+			setI, // i = 0;
+			setLength, // length = sourceArray.length();
+
+			// CHECK CONDITION
+			LabelDefinition.quick(this.debug, conditionL),
+			checkI, // i < length;
+			GotoLabel.quick(this.debug, breakL),
+
+			// DO BODY
+			LabelDefinition.quick(this.debug, bodyL),
+			setCurr, // curr = array[i];
+			...body,
+
+			// CONTINUE?
+			LabelDefinition.quick(this.debug, continueL),
+			advanceI, // i += 1;
+			GotoLabel.quick(this.debug, conditionL),
+
+			// END
+			LabelDefinition.quick(this.debug, breakL),
+		];
+		dropTemporary(); // curr
+		dropTemporary(); // length
+		dropTemporary(); // i
+
+		// we're done with the args for this call; remove them from the fn stack
+		stack.shift();
+		return steps;
+	}
+	assignToArray(sourceArray: string): AnyNode {
+		const steps = this.toSteps(sourceArray);
+		return MathlangSequence.quick(this.debug, steps, 'ArrayForEach');
+	}
+}
 
 // --------------- UTILITIES
 

@@ -65,6 +65,7 @@ import {
 	FunctionDefinition,
 	ScriptDefinition,
 	ArrayMap,
+	ArrayForEach,
 } from './parser-types.ts';
 import {
 	debugLog,
@@ -732,7 +733,12 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 			'array_method_push_left',
 		);
 	},
-	// array_method_for_each: (debug) => {},
+	array_method_for_each: (debug) => {
+		const fnNode = mandatoryChildForField(debug, 'fn');
+		const fnRaw = handleCapture(debug.using(fnNode));
+		const fn = FunctionDefinition.coerce(debug, fnRaw);
+		return ArrayForEach.quick(debug, fn);
+	},
 };
 
 const extractEntityName = (debug: MathlangLocation): string => {

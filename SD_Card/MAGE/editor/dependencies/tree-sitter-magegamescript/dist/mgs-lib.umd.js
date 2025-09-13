@@ -6237,8 +6237,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         ArrayPushLeftVariable.quick,
         "array_method_push_left"
       );
+    },
+    array_method_for_each: (debug) => {
+      const fnNode = mandatoryChildForField(debug, "fn");
+      const fnRaw = handleCapture(debug.using(fnNode));
+      const fn = FunctionDefinition.coerce(debug, fnRaw);
+      return ArrayForEach.quick(debug, fn);
     }
-    // array_method_for_each: (debug) => {},
   };
   const extractEntityName = (debug) => {
     const type = optionalTextForField(debug, "type");
@@ -9006,7 +9011,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     static quick(debug, fn) {
       return new ArrayMap(debug, { fn });
     }
-    bakeToSteps(sourceArray, destinationArray) {
+    toSteps(sourceArray, destinationArray) {
       const n = this.debug.f.p.advanceGotoSuffix();
       const conditionL = `map condition #${n}`;
       const bodyL = `map body #${n}`;
@@ -9088,9 +9093,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       dropTemporary();
       stack.shift();
       return steps;
-    }
-    toSteps(sourceArray, destinationArray) {
-      return this.bakeToSteps(sourceArray, destinationArray);
     }
     assignToArray(sourceArray, destinationArray) {
       const steps = this.toSteps(sourceArray, destinationArray);
@@ -9652,6 +9654,100 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     print() {
       return this.expPrint();
+    }
+  }
+  class ArrayForEach extends ArrayMethodReturningNothing {
+    constructor(debug, args2) {
+      super(debug, args2);
+      __publicField(this, "fn");
+      this.fn = FunctionDefinition.breakIfNot(args2.fn);
+    }
+    clone() {
+      return new ArrayForEach(this.debug.clone(), this.args);
+    }
+    static quick(debug, fn) {
+      return new ArrayForEach(debug, { fn });
+    }
+    toSteps(sourceArray) {
+      const n = this.debug.f.p.advanceGotoSuffix();
+      const conditionL = `for_each condition #${n}`;
+      const bodyL = `for_each body #${n}`;
+      const breakL = `for_each break #${n}`;
+      const continueL = `for_each continue #${n}`;
+      const i2 = newTemporary();
+      const length = newTemporary();
+      const curr = newTemporary();
+      const setI = MUTATE_VARIABLE.set(i2, 0);
+      const advanceI = MUTATE_VARIABLE.change(this.debug, i2, 1, "+");
+      const checkI = CHECK_VARIABLES.quick(i2, length, "<");
+      checkI.label = bodyL;
+      const setLength = ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length);
+      const setCurr = ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE.quick(
+        sourceArray,
+        i2,
+        curr
+      );
+      const localConstants = {};
+      const defCurr = this.fn.params[0];
+      if (defCurr !== void 0) {
+        const defNode = this.fn.paramNodes[0];
+        localConstants[defCurr] = ConstantDefinition.quick(
+          this.debug.using(defNode),
+          defCurr,
+          curr
+        );
+      }
+      const defI = this.fn.params[1];
+      if (defI !== void 0) {
+        const defNode = this.fn.paramNodes[1];
+        localConstants[defI] = ConstantDefinition.quick(this.debug.using(defNode), defI, i2);
+      }
+      const defArr = this.fn.params[2];
+      if (defArr !== void 0) {
+        const defNode = this.fn.paramNodes[1];
+        localConstants[defArr] = ConstantDefinition.quick(
+          this.debug.using(defNode),
+          defArr,
+          sourceArray
+        );
+      }
+      const stack = this.debug.f.currFunction;
+      stack.unshift(localConstants);
+      let body2 = handleNamedChildren(this.debug.using(this.fn.bodyNode));
+      body2 = flattenAndDoAutoReturn(this.debug, body2);
+      const steps = [
+        // INITIALIZE
+        setI,
+        // i = 0;
+        setLength,
+        // length = sourceArray.length();
+        // CHECK CONDITION
+        LabelDefinition.quick(this.debug, conditionL),
+        checkI,
+        // i < length;
+        GotoLabel.quick(this.debug, breakL),
+        // DO BODY
+        LabelDefinition.quick(this.debug, bodyL),
+        setCurr,
+        // curr = array[i];
+        ...body2,
+        // CONTINUE?
+        LabelDefinition.quick(this.debug, continueL),
+        advanceI,
+        // i += 1;
+        GotoLabel.quick(this.debug, conditionL),
+        // END
+        LabelDefinition.quick(this.debug, breakL)
+      ];
+      dropTemporary();
+      dropTemporary();
+      dropTemporary();
+      stack.shift();
+      return steps;
+    }
+    assignToArray(sourceArray) {
+      const steps = this.toSteps(sourceArray);
+      return MathlangSequence.quick(this.debug, steps, "ArrayForEach");
     }
   }
   const printEntityName = (entity) => {
