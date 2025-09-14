@@ -137,6 +137,8 @@ MageGameControl::MageGameControl()
 
 	colorPalettes = std::make_unique<MageColorPalette[]>(colorPaletteHeader.count());
 
+	scriptArrays = {};
+
 	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
 	{
 		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));

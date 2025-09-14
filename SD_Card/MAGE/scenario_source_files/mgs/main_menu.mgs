@@ -171,6 +171,17 @@ debug_commands {
 			{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"varr","array_name":"arr"}
 		]
 	};
+
+	command array + basics = array_basics {
+		json[
+			{"action":"ARRAY_NEW","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":0,"array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":99,"array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"}
+		]
+	};
 }
 
 /* ---------- INTRO SPLASH ---------- */
