@@ -38,6 +38,11 @@ Finally, MageGameControl handles the actual act of updating the state of the
 game based on input data and rendering it all to the screen every frame.
 */
 
+typedef struct {
+	uint8_t arrayId;
+	std::vector<uint16_t> values;
+} MageScriptArray;
+
 class MageGameControl
 {
 private:
@@ -113,6 +118,9 @@ public:
 
 	uint8_t currentSaveIndex;
 	MageSaveGame currentSave;
+
+	//this is an array of arrays of variables used in the script system
+	std::vector<MageScriptArray> scriptArrays;
 
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;

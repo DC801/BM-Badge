@@ -2714,6 +2714,84 @@ void action_set_serial_dialog_command_visibility(uint8_t * args, MageScriptState
 	);
 }
 
+void array_new(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayNew;
+	auto *argStruct = (ActionArrayNew*)args;
+	MageScriptArray arrays = {
+		.arrayId = argStruct->arrayId,
+		.values = std::vector<uint16_t>()
+	};
+	MageGame->scriptArrays.push_back(arrays);
+}
+void array_log(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayLog;
+	auto *argStruct = (ActionArrayLog*)args;
+	for (auto&[arrayId, values]: MageGame->scriptArrays){
+		if (arrayId == argStruct->arrayId) {
+			std::string message = "array " + std::to_string(argStruct->arrayId) + " = [";
+			uint8_t index = 0;
+			for (auto& value: values) {
+				if (index > 0) {
+					message += ", ";
+				}
+				message += std::to_string(value);
+				index += 1;
+			}
+			message += "]";
+			MageCommand->debugPrintln(message);
+			return;
+		}
+	}
+	MageCommand->debugPrintln(
+		"array_log: Invalid arrayId:" + std::to_string(argStruct->arrayId)
+	);
+}
+void array_push_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t value;
+		uint8_t arrayId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayLog;
+	auto *argStruct = (ActionArrayLog*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->value, 1);
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			MageCommand->debugPrintln(
+				"array " + std::to_string(argStruct->arrayId) +
+				": Pushing in value " + std::to_string(argStruct->value) +
+				" at index " + std::to_string(array.values.size())
+			);
+			array.values.push_back(argStruct->value);
+			return;
+		}
+	}
+	MageCommand->debugPrintln(
+		"array_push_from_value: Invalid arrayId:" + std::to_string(argStruct->arrayId)
+	);
+}
+
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
@@ -2816,9 +2894,9 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_register_serial_dialog_command_alias,
 	&action_unregister_serial_dialog_command_alias,
 	&action_set_serial_dialog_command_visibility,
-	NULL, //&array_new
+	&array_new,
 	NULL, //&array_delete
-	NULL, //&array_log
+	&array_log,
 	NULL, //&array_sort
 	NULL, //&array_reverse
 	NULL, //&array_length_into_variable
@@ -2828,7 +2906,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	NULL, //&array_write_into_variable_index_from_variable
 	NULL, //&array_read_from_index_into_variable
 	NULL, //&array_read_from_variable_index_into_variable
-	NULL, //&array_push_from_value
+	&array_push_from_value,
 	NULL, //&array_push_from_variable
 	NULL, //&array_push_left_from_value
 	NULL, //&array_push_left_from_variable
