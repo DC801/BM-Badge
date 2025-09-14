@@ -6467,28 +6467,33 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   }
   const mathlangMessageTypes = {
     // general
-    "syntax error": "generic syntax error",
+    "syntax error": "unknown syntax error",
     "unexpected token": "unexpected token",
     "missing token": "expected token not found",
     // can be warning, not error (e.g. missing ';')
     "missing file": "this file could not be found in this project",
     // these are phrased this way because the order of definition doesn't matter
     // (there isn't an "original," so we can't say "already defined")
-    "duplicate script": "scriptby this name  has already been defined in this project",
+    "duplicate script": "script by this name has already been defined in this project",
     "duplicate dialog": "dialog by this name has already been defined in this project",
     "duplicate serial dialog": "serial dialog by this name has already been defined in this project",
     // these are ordered, so there is definitely an "original"
     "undefined fn": "function has not yet been defined in this file scope",
     "fn already defined": "function already defined in this file scope",
-    "duplicate fn arg": "cannot use the same fn argument multiple times",
-    "not enough fn args": "function requires more arguments than was provided",
     "undefined constant": "constant has not yet been defined in this file scope",
     "constant already defined": "cannot redefine constant in the same file scope",
+    // fns
+    "duplicate fn arg": "cannot use the same fn argument multiple times",
+    "not enough fn args": "function requires more arguments than was provided",
+    // actions
     "mismatched spread lengths": "spreads must have the same count of items within each context",
-    "unsupported entity field": "this entity field is not supported here",
+    "unsupported entity field": "this entity field is not supported in this action",
     "misordered params": "invalid param order",
+    "invalid action param combination": "this action cannot have this combination of params",
+    // arrays
     "array method on non-array": "previous method does not return an array; cannot call array method afterward",
     "array does not return value": "this array method chain does not return an int value; 0 will be used",
+    // misc
     "return value not stored": "did you mean to discard the return value?",
     // warning
     "invalid JSON action": "malformed action JSON",
@@ -6496,9 +6501,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     "invalid operator": "use != and ==, not !== or ===",
     // warning, not error
     "invalid constant value": "constant value not an MGS primitive",
-    "invalid action param combination": "this action cannot have this combination of params",
-    "invalid entity script slot": "",
-    "invalid map script slot": ""
+    "dialog too long": "dialog will wrap off the bottom of the dialog frame (or into dialog options)"
   };
   const isMathlangMessageType = (v) => {
     return !!mathlangMessageTypes[v];
@@ -6506,14 +6509,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class MathlangMessage {
     constructor(locations, type, message, footer) {
       __publicField(this, "locations");
-      __publicField(this, "message");
       __publicField(this, "type");
+      __publicField(this, "message");
       __publicField(this, "footer");
       this.locations = locations;
-      this.message = message;
-      if (footer) this.footer = footer;
       if (!isMathlangMessageType(type)) throw new Error("invalid error type: " + type);
       this.type = type;
+      this.message = message || mathlangMessageTypes[this.type];
+      if (footer) this.footer = footer;
     }
   }
   const truncate = (s, n) => {
@@ -12814,6 +12817,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const reportMissingChildNodes = (debug) => {
     const missingNodes = debug.node.children.filter((v) => v !== null).filter((child) => child == null ? void 0 : child.isMissing);
     missingNodes.forEach((missingChild) => {
+      debugLog("Missing child found: " + missingChild.text);
       debug.using(missingChild).quickWarning("missing token", `expected token: ${missingChild.type}`);
     });
     return missingNodes;
@@ -12821,6 +12825,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   const reportErrorNodes = (debug) => {
     const errorNodes = debug.node.children.filter((v) => v !== null).filter((child) => child.type === "ERROR");
     errorNodes.forEach((errorNode) => {
+      debugLog("Error child found: " + errorNode.text);
       debug.using(errorNode).quickError("syntax error", "unknown tree-sitter parse error");
     });
     return errorNodes;

@@ -20,6 +20,7 @@ import {
 } from './parser-types.ts';
 import { Action, COPY_SCRIPT, isHasVariables, isMightHaveLabel } from './parser-bytecode-info.ts';
 import { namedChildren, optionalChildForField } from './parser-capture.ts';
+import { type TestExpected } from './parser-tests.ts';
 
 type FileMapEntry = {
 	arrayBuffer: Promise<unknown>;
@@ -28,6 +29,7 @@ type FileMapEntry = {
 	text: Promise<unknown>;
 	type: string;
 	parsed?: FileState;
+	expected?: TestExpected;
 };
 
 const copyRecursion: string[] = [];

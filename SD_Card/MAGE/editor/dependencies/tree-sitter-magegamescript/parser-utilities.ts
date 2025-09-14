@@ -147,6 +147,7 @@ export const reportMissingChildNodes = (debug: MathlangLocation): TreeSitterNode
 		.filter((v) => v !== null)
 		.filter((child) => child?.isMissing);
 	missingNodes.forEach((missingChild) => {
+		debugLog('Missing child found: ' + missingChild.text);
 		debug
 			.using(missingChild)
 			.quickWarning('missing token', `expected token: ${missingChild.type}`);
@@ -158,6 +159,7 @@ export const reportErrorNodes = (debug: MathlangLocation): TreeSitterNode[] => {
 		.filter((v) => v !== null)
 		.filter((child) => child.type === 'ERROR');
 	errorNodes.forEach((errorNode) => {
+		debugLog('Error child found: ' + errorNode.text);
 		debug.using(errorNode).quickError('syntax error', 'unknown tree-sitter parse error');
 	});
 	return errorNodes;

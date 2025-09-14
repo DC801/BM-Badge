@@ -77,8 +77,8 @@ const actionTests = {
 		],
 	},
 	array_for_each_identifier: {
-		pre: `fn addToSum ($n) { sum += $n; }`,
-		input: [`sum = 0;`, `array a = b.for_each(addToSum);`],
+		pre: `fn accumulateSum ($n) { sum += $n; }`,
+		input: [`sum = 0;`, `array a = b.for_each(accumulateSum);`],
 		expected: [
 			// should be the same as the lambda version
 			`sum = 0;`,
@@ -392,8 +392,8 @@ const actionTests = {
 		expected: [`print array a;`, `delete array b;`],
 	},
 	json_arbitrary: {
-		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}];`],
-		expected: [`json[{`, `"action": "NEW_ACTION",`, `"entity": "%PLAYER%"`, `}];`],
+		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}]`],
+		expected: [`json[{`, `"action": "NEW_ACTION",`, `"entity": "%PLAYER%"`, `}]`],
 	},
 	fn_recursive: {
 		pre: `
@@ -485,7 +485,7 @@ const actionTests = {
 		input: [
 			// linter stop
 			`teleportNextTo(Alice, Bob, 50)`,
-			`teleportNextTo(Charlie, Denise, 40);`,
+			`teleportNextTo(Charlie, Denise, 40)`,
 		],
 		expected: [
 			`"__TEMP_0" = entity "Bob" x;`,
@@ -1807,217 +1807,200 @@ const actionTests = {
 };
 
 // --------------------------- FILE-LEVEL TESTS ---------------------------
-const fileMap =
-	onlyDoTheseActionTests.length !== 0
-		? {}
-		: {
-				'fn_returns.mgs': {
-					fileText: `
-					addThree ($n) {
-						return $n + 3;
-					}
-					setTallyToThirteen {
-						tally = addThree(10);
-					}
-					getHundred {
-						return 100;
-					}
-					setVarToHundred {
-						var = getHundred();
-					}
-					returnsNothing {
-						wait 123;
-					}
-					invalidReturn {
-						random = returnsNothing();
-					}
-				`,
-					expected: {
-						scripts: {
-							setTallyToThirteen: `"setTallyToThirteen" {
-								"__TEMP_0" = 10;
-								"__TEMP_0" += 3;
-								"__RETURN_" = "__TEMP_0";
-								"tally" = "__RETURN_";
-								"__RETURN_" = 0;
-							}`,
-							getHundred: `"getHundred" {
-								"__RETURN_" = 100;
-							}`,
-							setVarToHundred: `"setVarToHundred" {
-								"__RETURN_" = 100;
-								"var" = "__RETURN_";
-								"__RETURN_" = 0;
-							}`,
-							returnsNothing: `"returnsNothing" {
-								wait 123ms;
-							}`,
-							invalidReturn: `"invalidReturn" {
-								wait 123ms;
-								"random" = "__RETURN_";
-								"__RETURN_" = 0;
-							}`,
-						},
-					},
-				},
-				'header.mgs': {
-					fileText: `
-					$magicNumber = 76;
-				`,
-					expected: {
-						scripts: {},
-						constants: {
-							$magicNumber: {
-								debug: { fileName: 'header.mgs' },
-								value: 76,
-							},
-						},
-					},
-				},
-				'constants_include.mgs': {
-					fileText: `
-					include "header.mgs";
-					$trombones = $magicNumber;
-					$hamburgers = "steamed hams";
-					"constants" {
-						player x = $trombones;
-						warp_state = $hamburgers;
-					}
-				`,
-					expected: {
-						scripts: {
-							constants: `"constants" {
-							player x = 76;
-							warp_state = "steamed hams";
-						}`,
-						},
-						constants: {
-							$magicNumber: {
-								debug: { fileName: 'header.mgs' },
-								value: 76,
-							},
-							$trombones: {
-								debug: { fileName: 'constants_include.mgs' },
-								value: 76,
-							},
-							$hamburgers: {
-								debug: { fileName: 'constants_include.mgs' },
-								value: 'steamed hams',
-							},
-						},
-					},
-				},
-				'basic_dialog.mgs': {
-					fileText: `dialog "bobIntro" {
-					Bob "Well, hi there!"
-					Jackob "Oh!"
+type TestConstants = {
+	debug?: { fileName: string };
+	value: number | string | boolean;
+};
+type TestDialogs = {
+	dialogs: Record<string, string | string[] | number>[];
+};
+export type TestExpected = {
+	scripts?: Record<string, string>;
+	constants?: Record<string, TestConstants>;
+	dialogs?: Record<string, TestDialogs>;
+};
+type TestFileMapEntry = {
+	fileText: string;
+	expected: TestExpected;
+};
+let fakeFileMap: Record<string, TestFileMapEntry> = {
+	'fn_returns.mgs': {
+		fileText: `
+			addThree ($n) {
+				return $n + 3;
+			}
+			setTallyToThirteen {
+				tally = addThree(10);
+			}
+			getHundred {
+				return 100;
+			}
+			setVarToHundred {
+				var = getHundred();
+			}
+			returnsNothing {
+				wait 123;
+			}
+			invalidReturn {
+				random = returnsNothing();
+			}
+		`,
+		expected: {
+			scripts: {
+				setTallyToThirteen: `"setTallyToThirteen" {
+					"__TEMP_0" = 10;
+					"__TEMP_0" += 3;
+					"__RETURN_" = "__TEMP_0";
+					"tally" = "__RETURN_";
+					"__RETURN_" = 0;
 				}`,
-					expected: {
-						dialogs: {
-							bobIntro: {
-								dialogs: [
-									{
-										entity: 'Bob',
-										alignment: 'BOTTOM_LEFT',
-										messages: ['Well, hi there!'],
-									},
-									{
-										alignment: 'BOTTOM_LEFT',
-										entity: 'Jackob',
-										messages: ['Oh!'],
-									},
-								],
-							},
-						},
-					},
-				},
-				// 'dialog_error_wrap.mgs': {
-				// 	fileText: `dialog "tooLong" {
-				// 		Bob wrap 20
-				// 		"ACK!\n\nA goat! Oh, I guess I need to make sure this thing wraps. Let's see. How many chars can this be?"
-				// 	}`,
-				// 	expected: {
-				// 		warningCount: 1,
-				// 		dialogs: {
-				// 			tooLong: {
-				// 				dialogs: [
-				// 					{
-				// 						entity: "Bob",
-				// 						alignment: "BOTTOM_LEFT",
-				// 						messages: [
-				// 							'ACK!\n\nA goat! Oh, I guess\nI need to make sure\nthis thing wraps.\nLet\'s see. How many\nchars can this be?',
-				// 						],
-				// 					},
-				// 				],
-				// 			},
-				// 		},
-				// 	},
-				// },
-				'dialog_wrapping.mgs': {
-					fileText: `dialog "wrapBasics" {
-					Bob wrap 20
-					"12345678901234567890"
-					"123456789012\\%4567890"
-					"123456789012\\%45678901"
-					"123456789012\\% 567890"
-					"123456789012\\% 5678901"
-					"%12% a b c d e f g h"
-					"%1234% a b c d e f g h"
-					"%123456% a b c d e f g h"
-					"%12345678% a b c d e f g h"
-					"%1234567890% a b c d e f g h"
-					"$1$ a b c d e f g h"
-					"$123$ a b c d e f g h"
-					"$12345$ a b c d e f g h"
-					"$1234567$ a b c d e f g h"
-					"$123456789$ a b c d e f g h"
+				getHundred: `"getHundred" {
+					"__RETURN_" = 100;
 				}`,
-					expected: {
-						dialogs: {
-							wrapBasics: {
-								dialogs: [
-									{
-										entity: 'Bob',
-										alignment: 'BOTTOM_LEFT',
-										messages: [
-											'12345678901234567890',
-											'123456789012\\%4567890',
-											'123456789012\\%45678901',
-											'123456789012\\% 567890',
-											'123456789012\\%\n5678901',
-											'%12% a b c d\ne f g h',
-											'%1234% a b c d\ne f g h',
-											'%123456% a b c d\ne f g h',
-											'%12345678% a b c d\ne f g h',
-											'%1234567890% a b c d\ne f g h',
-											'$1$ a b c d e f g\nh',
-											'$123$ a b c d e f g\nh',
-											'$12345$ a b c d e f g\nh',
-											'$1234567$ a b c d e f g\nh',
-											'$123456789$ a b c d e f g\nh',
-										],
-									},
-								],
-							},
-						},
-					},
+				setVarToHundred: `"setVarToHundred" {
+					"__RETURN_" = 100;
+					"var" = "__RETURN_";
+					"__RETURN_" = 0;
+				}`,
+				returnsNothing: `"returnsNothing" {
+					wait 123ms;
+				}`,
+				invalidReturn: `"invalidReturn" {
+					wait 123ms;
+					"random" = "__RETURN_";
+					"__RETURN_" = 0;
+				}`,
+			},
+		},
+	},
+	'header.mgs': {
+		fileText: `
+			$magicNumber = 76;
+		`,
+		expected: {
+			scripts: {},
+			constants: {
+				$magicNumber: {
+					debug: { fileName: 'header.mgs' },
+					value: 76,
 				},
-			};
-const fileTestNames = onlyDoTheseActionTests.length === 0 ? Object.keys(fileMap) : [];
-
-// const projectsWithErrors = {
-// 	'errors.mgs': {
-// 		fileText: `
-// 		_ {
-// 			wait 99
-// 		}
-// 	`,
-// 		expected: {
-// 			warnings: [{ type: 'missings token' }],
-// 			warningCount: 1,
-// 		},
-// 	},
-// };
+			},
+		},
+	},
+	'constants_include.mgs': {
+		fileText: `
+			include "header.mgs";
+			$trombones = $magicNumber;
+			$hamburgers = "steamed hams";
+			"constants" {
+				player x = $trombones;
+				warp_state = $hamburgers;
+			}
+		`,
+		expected: {
+			scripts: {
+				constants: `"constants" {
+					player x = 76;
+					warp_state = "steamed hams";
+				}`,
+			},
+			constants: {
+				$magicNumber: {
+					debug: { fileName: 'header.mgs' },
+					value: 76,
+				},
+				$trombones: {
+					debug: { fileName: 'constants_include.mgs' },
+					value: 76,
+				},
+				$hamburgers: {
+					debug: { fileName: 'constants_include.mgs' },
+					value: 'steamed hams',
+				},
+			},
+		},
+	},
+	'basic_dialog.mgs': {
+		fileText: `dialog "bobIntro" {
+			Bob "Well, hi there!"
+			Jackob "Oh!"
+		}`,
+		expected: {
+			scripts: {},
+			dialogs: {
+				bobIntro: {
+					dialogs: [
+						{
+							entity: 'Bob',
+							alignment: 'BOTTOM_LEFT',
+							messages: ['Well, hi there!'],
+						},
+						{
+							alignment: 'BOTTOM_LEFT',
+							entity: 'Jackob',
+							messages: ['Oh!'],
+						},
+					],
+				},
+			},
+		},
+	},
+	'dialog_wrapping.mgs': {
+		fileText: `dialog "wrapBasics" {
+			Bob wrap 20
+			"12345678901234567890"
+			"123456789012\\%4567890"
+			"123456789012\\%45678901"
+			"123456789012\\% 567890"
+			"123456789012\\% 5678901"
+			"%12% a b c d e f g h"
+			"%1234% a b c d e f g h"
+			"%123456% a b c d e f g h"
+			"%12345678% a b c d e f g h"
+			"%1234567890% a b c d e f g h"
+			"$1$ a b c d e f g h"
+			"$123$ a b c d e f g h"
+			"$12345$ a b c d e f g h"
+			"$1234567$ a b c d e f g h"
+			"$123456789$ a b c d e f g h"
+		}`,
+		expected: {
+			scripts: {},
+			dialogs: {
+				wrapBasics: {
+					dialogs: [
+						{
+							entity: 'Bob',
+							alignment: 'BOTTOM_LEFT',
+							messages: [
+								'12345678901234567890',
+								'123456789012\\%4567890',
+								'123456789012\\%45678901',
+								'123456789012\\% 567890',
+								'123456789012\\%\n5678901',
+								'%12% a b c d\ne f g h',
+								'%1234% a b c d\ne f g h',
+								'%123456% a b c d\ne f g h',
+								'%12345678% a b c d\ne f g h',
+								'%1234567890% a b c d\ne f g h',
+								'$1$ a b c d e f g\nh',
+								'$123$ a b c d e f g\nh',
+								'$12345$ a b c d e f g\nh',
+								'$1234567$ a b c d e f g\nh',
+								'$123456789$ a b c d e f g\nh',
+							],
+						},
+					],
+				},
+			},
+		},
+	},
+};
+let fileTestNames = Object.keys(fakeFileMap);
+if (onlyDoTheseActionTests.length > 0) {
+	fakeFileMap = {};
+	fileTestNames = [];
+}
 
 // --------------------------- Putting all the tests into a "project" ---------------------------
 
@@ -2025,7 +2008,7 @@ const actionTestNames = (
 	onlyDoTheseActionTests.length === 0 ? Object.keys(actionTests) : onlyDoTheseActionTests
 ).filter((testName) => !skipTheseTests.has(testName));
 
-fileMap['actionTests.mgs'] = {
+fakeFileMap['actionTests.mgs'] = {
 	fileText: actionTestNames
 		.filter((testName) => !skipTheseTests.has(testName))
 		.map((testName) => {
@@ -2053,13 +2036,18 @@ actionTestNames.forEach((testName) => {
 	const data = actionTests[testName];
 	const expectedArr = data.expected ? data.expected : data.input;
 	const expectedPrint = actionArrayToScript(testName, expectedArr, true);
-	fileMap['actionTests.mgs'].expected.scripts[testName] = expectedPrint;
+	const expectedScripts = fakeFileMap['actionTests.mgs'].expected.scripts;
+	if (!expectedScripts) {
+		throw new Error('no scripts found by name ' + testName);
+	}
+	expectedScripts[testName] = expectedPrint;
 });
 
 type ColoredDifferentString = {
 	diff: string;
 	pre: string;
 };
+// todo: strings with quote differences count as different here but not at the point of comparison; resolve
 export const colorDifferentStrings = (expected: string, found: string): ColoredDifferentString => {
 	const diff: string[] = [];
 	const foundChars = found.split('');
@@ -2083,7 +2071,7 @@ export const colorDifferentStrings = (expected: string, found: string): ColoredD
 };
 const sanitize = (str: string) => str.replace(/([\{\}\[\]\(\)\.\$\|\+\-\*\/])/g, '\\$1');
 
-type IDK = {
+type ComparedLines = {
 	expected: string;
 	found: string;
 	diff: ColoredDifferentString;
@@ -2099,7 +2087,7 @@ const makeTextUniform = (text: string) =>
 type ComparedTexts = {
 	status: string;
 	message?: string;
-	lines?: IDK[];
+	lines?: ComparedLines[];
 	lengthDiff?: string[];
 };
 export const compareTexts = (
@@ -2154,7 +2142,7 @@ export const compareTexts = (
 			lengthDiff: comboLines,
 		};
 	}
-	const lines: IDK[] = [];
+	const lines: ComparedLines[] = [];
 	const registeredLabels = {};
 	foundLines.forEach((found, i) => {
 		const expected = expectedLines[i];
@@ -2420,7 +2408,7 @@ prePrint  |  yes   |         |            |      yes
 testPrint |  yes   |         |    yes     |      yes
 print     |        |   yes   |    yes     |      yes
 
-Is there a better way?
+TODO: Is there a better way?
 */
 
 const doActionTest = (scriptName: string, actionExpected, actionFound): ComparedTexts | null => {
@@ -2434,9 +2422,12 @@ const doActionTest = (scriptName: string, actionExpected, actionFound): Compared
 };
 
 const runTests = async () => {
-	parseProject(fileMap, {}).then((result) => {
+	parseProject(fakeFileMap, {}).then((result) => {
 		// ACTION TESTS
-		const actionsExpected = fileMap['actionTests.mgs'].expected.scripts;
+		const fileMap = result.fileMap;
+		const expected = fileMap['actionTests.mgs'].expected;
+		if (!expected) throw new Error('test lacks expected data');
+		const actionsExpected = expected.scripts;
 		const actionsFound = result.scripts;
 		const actionErrors = actionTestNames
 			.map((v) => doActionTest(v, actionsExpected, actionsFound))
@@ -2449,11 +2440,18 @@ const runTests = async () => {
 				// Scripts
 				const fileExpectedData = fileMap[fileName].expected || {};
 				const fileFoundP = fileMap[fileName].parsed;
+				if (!fileFoundP) {
+					throw new Error(`File ${fileName} failed to parse`);
+				}
 				const fileScriptNames = Object.keys(fileExpectedData.scripts || {});
-				const allScripts = result.scripts;
+				const foundScripts = result.scripts;
+				const expectedScripts = fileExpectedData.scripts;
+				if (!expectedScripts) {
+					throw new Error(`file ${fileName} entirely lacks expected scripts`);
+				}
 				fileScriptNames.forEach((scriptName) => {
-					const expected = fileExpectedData.scripts[scriptName].trim();
-					const found = (allScripts[scriptName]?.printed || '').trim();
+					const expected = expectedScripts[scriptName].trim();
+					const found = (foundScripts[scriptName]?.printed || '').trim();
 					const compared = compareTexts(found, expected, '', `script "${scriptName}"`);
 					if (compared.status !== 'success') {
 						errors.push(compared);
@@ -2471,30 +2469,17 @@ const runTests = async () => {
 				}
 
 				// Dialogs
-				const allDialogs = result.dialogs;
+				const foundDialogs = result.dialogs;
 				const expectedDialogs = fileExpectedData.dialogs || {};
 				const dialogNames = Object.keys(expectedDialogs) || {};
 				dialogNames.forEach((dialogName) => {
 					const expected = expectedDialogs[dialogName].dialogs || {};
-					const found = allDialogs[dialogName].dialogs || {};
+					const found = foundDialogs[dialogName].dialogs || {};
 					const compared = compareDialogs(fileName, dialogName, expected, found);
 					compared.forEach((err) => {
 						errors.push(err);
 					});
 				});
-
-				// Warningcount
-				const foundWarningCount = fileFoundP.warningCount;
-				const expectedWarningCount = fileExpectedData.warningCount || 0;
-
-				if (foundWarningCount !== expectedWarningCount) {
-					errors.push({
-						status: 'fail',
-						message:
-							`${fileName}: Found ${foundWarningCount} warning(s), ` +
-							`expected ${expectedWarningCount}`,
-					});
-				}
 			});
 		}
 		// PRINT TEST RESULTS
@@ -2513,10 +2498,82 @@ const runTests = async () => {
 
 		// DONE
 		if (errors.length === 0) {
-			console.log(`All ${actionTestNames.length} unit tests good, chief!`);
+			if (result.mgsWarnings || result.mgsErrors) {
+				console.log('Action unit tests had some syntax errors:');
+				if (result.mgsWarnings) console.warn(result.mgsWarnings);
+				if (result.mgsErrors) console.error(result.mgsErrors);
+			} else {
+				console.log(`All ${actionTestNames.length} action unit tests good, chief!`);
+			}
 		}
-		// console.log('BREAKPOINT HERE');
 	});
 };
 
 runTests();
+
+// --------------------------- ERROR TESTS ---------------------------
+type ErrorTest = {
+	testText: string;
+	expectedWarnings: string[];
+	expectedErrors: string[];
+};
+
+const errorTests: Record<string, ErrorTest> = {
+	missing_semicolon: {
+		testText: `missing_semicolon { wait 99 }`,
+		expectedWarnings: [
+			//WIP
+			'missing token',
+		],
+		expectedErrors: [],
+	},
+	overwrap: {
+		testText: `dialog "tooLong" {
+			Bob wrap 20 "ACK!\n\nA goat! Oh, I guess I need to make sure this thing wraps. Let's see. How many chars can this be?"
+		}`,
+		expectedWarnings: ['dialog too long'],
+		expectedErrors: [],
+	},
+};
+
+Object.keys(errorTests).forEach((testName) => {
+	const testData = errorTests[testName];
+	const errorTestFileMap = {
+		[testName + '.mgs']: { fileText: testData.testText, scripts: {} },
+	};
+	const header = `Error test ${testName}:`;
+	parseProject(errorTestFileMap, {}).then((p) => {
+		const errorErrors: string[] = [];
+		// check warnings
+		if (p.warnings.length !== testData.expectedWarnings.length) {
+			errorErrors.push(
+				`${header} Found ${p.warnings.length} warnings, expected ${testData.expectedWarnings.length}`,
+			);
+		} else {
+			testData.expectedWarnings.forEach((expected, i) => {
+				const found = p.warnings[i].type;
+				if (found !== expected) {
+					errorErrors.push(`${header} Found warning '${found}', expected '${expected}'`);
+				}
+			});
+		}
+		// check errors
+		if (p.errors.length !== testData.expectedErrors.length) {
+			errorErrors.push(
+				`${header} Found ${p.errors.length} errors, expected ${testData.expectedErrors.length}`,
+			);
+		} else {
+			testData.expectedErrors.forEach((expected, i) => {
+				const found = p.errors[i].type;
+				if (found !== expected) {
+					errorErrors.push(`${header} Found error '${found}', expected '${expected}'`);
+				}
+			});
+		}
+		if (errorErrors.length === 0) {
+			console.log(header + ' OK');
+		} else {
+			errorErrors.forEach((v) => console.error(v));
+		}
+	});
+});

@@ -64,7 +64,7 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		const entries = Object.entries(p.duplicates[category]);
 		entries.forEach(([name, dupes]: [string, Definition[]]) => {
 			// One error message, multiple locations
-			const locations = dupes.map((dupe: Definition) =>{
+			const locations = dupes.map((dupe: Definition) => {
 				const firstNamedChildNode = dupe.debug.node.firstNamedChild;
 				if (firstNamedChildNode) return dupe.debug.using(firstNamedChildNode);
 				return dupe.debug;

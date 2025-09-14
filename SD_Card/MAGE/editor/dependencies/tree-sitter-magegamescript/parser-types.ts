@@ -114,14 +114,14 @@ export class MathlangLocation {
 // todo: make the message optional, and use the fallback message if absent
 const mathlangMessageTypes: Record<string, string> = {
 	// general
-	'syntax error': 'generic syntax error',
+	'syntax error': 'unknown syntax error',
 	'unexpected token': 'unexpected token',
 	'missing token': 'expected token not found', // can be warning, not error (e.g. missing ';')
 	'missing file': 'this file could not be found in this project',
 
 	// these are phrased this way because the order of definition doesn't matter
 	// (there isn't an "original," so we can't say "already defined")
-	'duplicate script': 'scriptby this name  has already been defined in this project',
+	'duplicate script': 'script by this name has already been defined in this project',
 	'duplicate dialog': 'dialog by this name has already been defined in this project',
 	'duplicate serial dialog':
 		'serial dialog by this name has already been defined in this project',
@@ -129,26 +129,34 @@ const mathlangMessageTypes: Record<string, string> = {
 	// these are ordered, so there is definitely an "original"
 	'undefined fn': 'function has not yet been defined in this file scope',
 	'fn already defined': 'function already defined in this file scope',
-	'duplicate fn arg': 'cannot use the same fn argument multiple times',
-	'not enough fn args': 'function requires more arguments than was provided',
 	'undefined constant': 'constant has not yet been defined in this file scope',
 	'constant already defined': 'cannot redefine constant in the same file scope',
+
+	// fns
+	'duplicate fn arg': 'cannot use the same fn argument multiple times',
+	'not enough fn args': 'function requires more arguments than was provided',
+
+	// actions
 	'mismatched spread lengths': 'spreads must have the same count of items within each context',
-	'unsupported entity field': 'this entity field is not supported here',
+	'unsupported entity field': 'this entity field is not supported in this action',
 	'misordered params': 'invalid param order',
+	'invalid action param combination': 'this action cannot have this combination of params',
+
+	// arrays
 	'array method on non-array':
 		'previous method does not return an array; cannot call array method afterward',
 	'array does not return value':
 		'this array method chain does not return an int value; 0 will be used',
+
+	// misc
 	'return value not stored': 'did you mean to discard the return value?', // warning
 	'invalid JSON action': 'malformed action JSON',
 	'invalid fn arg':
 		'fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call',
 	'invalid operator': 'use != and ==, not !== or ===', // warning, not error
 	'invalid constant value': 'constant value not an MGS primitive',
-	'invalid action param combination': 'this action cannot have this combination of params',
-	'invalid entity script slot': '',
-	'invalid map script slot': '',
+	'dialog too long':
+		'dialog will wrap off the bottom of the dialog frame (or into dialog options)',
 };
 
 export type MathlangMessageType = keyof typeof mathlangMessageTypes;
@@ -158,15 +166,15 @@ export const isMathlangMessageType = (v: string): v is MathlangMessageType => {
 
 export class MathlangMessage {
 	locations: MathlangLocation[];
-	message: string;
 	type: MathlangMessageType;
+	message: string;
 	footer?: string;
-	constructor(locations: MathlangLocation[], type: string, message: string, footer?: string) {
+	constructor(locations: MathlangLocation[], type: string, message?: string, footer?: string) {
 		this.locations = locations;
-		this.message = message;
-		if (footer) this.footer = footer;
 		if (!isMathlangMessageType(type)) throw new Error('invalid error type: ' + type);
 		this.type = type;
+		this.message = message || mathlangMessageTypes[this.type];
+		if (footer) this.footer = footer;
 	}
 }
 
