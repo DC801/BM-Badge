@@ -3913,15 +3913,14 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     }
     await Parser.init();
     const parser = new Parser();
-    const Lang = await Language.load(wasmPath);
-    try {
-      parser.setLanguage(Lang);
-    } catch {
-      const Lang2 = await Language.load(wasmPath);
+    let loaded = false;
+    while (!loaded) {
       try {
-        parser.setLanguage(Lang2);
+        const Lang = await Language.load(wasmPath);
+        parser.setLanguage(Lang);
+        loaded = true;
       } catch {
-        throw new Error("failed to set tree-sitter language (try again?)");
+        await Promise.resolve();
       }
     }
     return parser;
@@ -9886,7 +9885,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "duration");
       this.action = "BLOCKING_DELAY";
-      this.duration = breakIfNotNumber(args2.duration);
+      this.duration = typeof args2.duration === "number" ? args2.duration : 0;
     }
     print() {
       return `block ${printDuration(this.duration)};`;
@@ -9898,7 +9897,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "duration");
       this.action = "NON_BLOCKING_DELAY";
-      this.duration = breakIfNotNumber(args2.duration);
+      this.duration = typeof args2.duration === "number" ? args2.duration : 0;
     }
     print() {
       return `wait ${printDuration(this.duration)};`;

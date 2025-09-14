@@ -9,15 +9,17 @@ export default async function (): Promise<Parser> {
 	}
 	await Parser.init();
 	const parser = new Parser();
-	const Lang = await Language.load(wasmPath);
-	try {
-		parser.setLanguage(Lang);
-	} catch {
-		const Lang = await Language.load(wasmPath);
+	let loaded = false;
+	while (!loaded) {
 		try {
+			// Sometimes Language.load results in a language object with a bad/empty version number (0).
+			// This is like 5-10% of the time.
+			// Keep trying.
+			const Lang = await Language.load(wasmPath);
 			parser.setLanguage(Lang);
+			loaded = true;
 		} catch {
-			throw new Error('failed to set tree-sitter language (try again?)');
+			await Promise.resolve();
 		}
 	}
 	return parser;

@@ -2527,6 +2527,26 @@ const errorTests: Record<string, ErrorTest> = {
 		],
 		expectedErrors: [],
 	},
+	already_defined_and_undefined: {
+		testText: `
+			fn duplicateFn ($arg) {}
+			fn duplicateFn ($arg) {}
+			$duplicateConst = 0;
+			$duplicateConst = 0;
+			undefinedStuff {
+				undefinedFn($unreachable)
+				wait $undefinedConst;
+			}
+		`,
+		expectedWarnings: [],
+		expectedErrors: [
+			//WIP
+			'fn already defined',
+			'constant already defined',
+			'undefined fn',
+			'undefined constant',
+		],
+	},
 	overwrap: {
 		testText: `dialog "tooLong" {
 			Bob wrap 20 "ACK!\n\nA goat! Oh, I guess I need to make sure this thing wraps. Let's see. How many chars can this be?"
@@ -2534,46 +2554,75 @@ const errorTests: Record<string, ErrorTest> = {
 		expectedWarnings: ['dialog too long'],
 		expectedErrors: [],
 	},
+	action_issues: {
+		testText: `spreading { rand!(
+			wait [1,2,3];
+			block [1,2];
+			a = RNG!(4, 1);
+		) }`,
+		expectedWarnings: ['misordered params'],
+		expectedErrors: ['mismatched spread lengths'],
+	},
+	fn_issues: {
+		testText: `
+			fn duplicate_arg($arg, $arg) {}
+			fn needs_three($a, $b, $c) {}
+			uses_two {
+				needs_three(1, 2)
+			}
+		`,
+		expectedWarnings: [],
+		expectedErrors: ['duplicate fn arg', 'not enough fn args'],
+	},
 };
 
-Object.keys(errorTests).forEach((testName) => {
-	const testData = errorTests[testName];
-	const errorTestFileMap = {
-		[testName + '.mgs']: { fileText: testData.testText, scripts: {} },
-	};
-	const header = `Error test ${testName}:`;
-	parseProject(errorTestFileMap, {}).then((p) => {
+const doErrorTests = async () => {
+	const promises = Object.keys(errorTests).map(async (testName) => {
 		const errorErrors: string[] = [];
-		// check warnings
-		if (p.warnings.length !== testData.expectedWarnings.length) {
-			errorErrors.push(
-				`${header} Found ${p.warnings.length} warnings, expected ${testData.expectedWarnings.length}`,
-			);
-		} else {
-			testData.expectedWarnings.forEach((expected, i) => {
-				const found = p.warnings[i].type;
-				if (found !== expected) {
-					errorErrors.push(`${header} Found warning '${found}', expected '${expected}'`);
-				}
-			});
-		}
-		// check errors
-		if (p.errors.length !== testData.expectedErrors.length) {
-			errorErrors.push(
-				`${header} Found ${p.errors.length} errors, expected ${testData.expectedErrors.length}`,
-			);
-		} else {
-			testData.expectedErrors.forEach((expected, i) => {
-				const found = p.errors[i].type;
-				if (found !== expected) {
-					errorErrors.push(`${header} Found error '${found}', expected '${expected}'`);
-				}
-			});
-		}
-		if (errorErrors.length === 0) {
-			console.log(header + ' OK');
-		} else {
-			errorErrors.forEach((v) => console.error(v));
-		}
+		const testData = errorTests[testName];
+		const errorTestFileMap = {
+			[testName + '.mgs']: { fileText: testData.testText, scripts: {} },
+		};
+		const header = `Error test ${testName}:`;
+		await parseProject(errorTestFileMap, {}).then((p) => {
+			// check warnings
+			if (p.warnings.length !== testData.expectedWarnings.length) {
+				errorErrors.push(
+					`${header} Found ${p.warnings.length} warnings, expected ${testData.expectedWarnings.length}`,
+				);
+			} else {
+				testData.expectedWarnings.forEach((expected, i) => {
+					const found = p.warnings[i].type;
+					if (found !== expected) {
+						errorErrors.push(
+							`${header} Found warning '${found}', expected '${expected}'`,
+						);
+					}
+				});
+			}
+			// check errors
+			if (p.errors.length !== testData.expectedErrors.length) {
+				errorErrors.push(
+					`${header} Found ${p.errors.length} errors, expected ${testData.expectedErrors.length}`,
+				);
+			} else {
+				testData.expectedErrors.forEach((expected, i) => {
+					const found = p.errors[i].type;
+					if (found !== expected) {
+						errorErrors.push(
+							`${header} Found error '${found}', expected '${expected}'`,
+						);
+					}
+				});
+			}
+		});
+		return errorErrors;
 	});
-});
+	const allErrorErrors = (await Promise.all(promises)).flat();
+	if (allErrorErrors.length === 0) {
+		console.log('All error tests OK');
+	} else {
+		allErrorErrors.forEach((v) => console.error(v));
+	}
+};
+doErrorTests();

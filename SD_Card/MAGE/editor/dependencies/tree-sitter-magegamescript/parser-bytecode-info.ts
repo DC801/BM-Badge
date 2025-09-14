@@ -273,7 +273,7 @@ export class BLOCKING_DELAY extends Action {
 	constructor(args: GenericObj) {
 		super();
 		this.action = 'BLOCKING_DELAY';
-		this.duration = breakIfNotNumber(args.duration);
+		this.duration = typeof args.duration === 'number' ? args.duration : 0;
 	}
 	print() {
 		return `block ${printDuration(this.duration)};`;
@@ -285,7 +285,7 @@ export class NON_BLOCKING_DELAY extends Action {
 	constructor(args: GenericObj) {
 		super();
 		this.action = 'NON_BLOCKING_DELAY';
-		this.duration = breakIfNotNumber(args.duration);
+		this.duration = typeof args.duration === 'number' ? args.duration : 0;
 	}
 	print() {
 		return `wait ${printDuration(this.duration)};`;
