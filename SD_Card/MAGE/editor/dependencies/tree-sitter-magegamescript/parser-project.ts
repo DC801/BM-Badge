@@ -20,7 +20,7 @@ import {
 } from './parser-types.ts';
 import { Action, COPY_SCRIPT, isHasVariables, isMightHaveLabel } from './parser-bytecode-info.ts';
 import { namedChildren, optionalChildForField } from './parser-capture.ts';
-import { type TestExpected } from './parser-tests.ts';
+import { type TestExpected } from './parser-test-data-files.ts';
 
 type FileMapEntry = {
 	arrayBuffer: Promise<unknown>;
@@ -111,39 +111,58 @@ export class ProjectState {
 		});
 		data.actions = simplifyLabelGotos(finalizedActions.flat());
 
-		// put script in the project
 		if (!this.scripts[name]) {
-			// if not registered yet, add it
 			this.scripts[name] = data;
-		} else {
-			// if it's a duplicate, make an array for all the ones we find
-			if (!this.duplicates.scripts[name]) {
-				this.duplicates.scripts[name] = [this.scripts[name]]; //existing data
-			}
-			this.duplicates.scripts[name].push(data); //add the new one
+			return;
 		}
+		const oldLocation = this.scripts[name].debug;
+		const newLocation = data.debug;
+		if (oldLocation.isIdenticalTo(newLocation)) {
+			// TODO
+			throw new Error(
+				'UNIMPLEMENTED: duplicate script definition within a fn; cannot use same solution as (s)dialogs; think of something else!',
+			);
+		}
+		if (!this.duplicates.scripts[name]) {
+			this.duplicates.scripts[name] = [this.scripts[name]];
+		}
+		this.duplicates.scripts[name].push(data);
 	}
 	addDialog(data: DialogDefinition) {
 		const name = data.dialogName;
 		if (!this.dialogs[name]) {
 			this.dialogs[name] = data;
-		} else {
-			if (!this.duplicates.dialogs[name]) {
-				this.duplicates.dialogs[name] = [this.dialogs[name]];
-			}
-			this.duplicates.dialogs[name].push(data);
+			return;
 		}
+		// todo: it's possible the dialogs themselves are different due to settings and when fns are "called"
+		// this is currently only checking whether the definition node location is the same, not whether the contents are the same
+		const oldLocation = this.dialogs[name].debug;
+		const newLocation = data.debug;
+		if (oldLocation.isIdenticalTo(newLocation)) {
+			return;
+		}
+		if (!this.duplicates.dialogs[name]) {
+			this.duplicates.dialogs[name] = [this.dialogs[name]];
+		}
+		this.duplicates.dialogs[name].push(data);
 	}
 	addSerialDialog(data: SerialDialogDefinition) {
 		const name = data.dialogName;
 		if (!this.serialDialogs[name]) {
 			this.serialDialogs[name] = data;
-		} else {
-			if (!this.duplicates.serialDialogs[name]) {
-				this.duplicates.serialDialogs[name] = [this.serialDialogs[name]];
-			}
-			this.duplicates.serialDialogs[name].push(data);
+			return;
 		}
+		// todo: it's possible the dialogs themselves are different due to settings and when fns are "called"
+		// this is currently only checking whether the definition node location is the same, not whether the contents are the same
+		const oldLocation = this.serialDialogs[name].debug;
+		const newLocation = data.debug;
+		if (oldLocation.isIdenticalTo(newLocation)) {
+			return;
+		}
+		if (!this.duplicates.serialDialogs[name]) {
+			this.duplicates.serialDialogs[name] = [this.serialDialogs[name]];
+		}
+		this.duplicates.serialDialogs[name].push(data);
 	}
 
 	// take the given file name and expand all copy_script inside

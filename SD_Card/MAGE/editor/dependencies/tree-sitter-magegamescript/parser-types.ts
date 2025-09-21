@@ -102,6 +102,17 @@ export class MathlangLocation {
 	using(newNode: TreeSitterNode) {
 		return MathlangLocation.quick(this.f, newNode);
 	}
+	isIdenticalTo(that: MathlangLocation) {
+		if (this.fileName !== that.fileName) return false;
+		if (this.node === that.node) return true;
+		if (
+			this.node.startIndex === that.node.startIndex &&
+			this.node.endIndex === that.node.endIndex
+		) {
+			return true;
+		}
+		return false;
+	}
 	quickError(type: MathlangMessageType, message: string, footer?: string) {
 		this.f.quickError(this.node, type, message, footer);
 	}

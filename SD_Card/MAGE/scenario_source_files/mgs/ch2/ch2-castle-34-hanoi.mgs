@@ -11,117 +11,110 @@ start_hanoi {
 	map on_tick = tick_hanoi;
 }
 
-$win_plate = 6;
+$winning_plate = 6;
 
-check_cursor {
-	if (cursor_pos == 1) {
+forecast_grip {
+	if (grip_col == 1) {
 		if (array1_length == 0) {
-			checked_value = 0;
+			return 0;
 		} else if (array1_length == 1) {
-			checked_value = array1_1 *1;
+			return array1_1;
 		} else if (array1_length == 2) {
-			checked_value = array1_2 *1;
+			return array1_2;
 		} else if (array1_length == 3) {
-			checked_value = array1_3 *1;
+			return array1_3;
 		} else if (array1_length == 4) {
-			checked_value = array1_4 *1;
+			return array1_4;
 		} else if (array1_length == 5) {
-			checked_value = array1_5 *1;
+			return array1_5;
 		} else if (array1_length == 6) {
-			checked_value = array1_6 *1;
+			return array1_6;
 		} else if (array1_length == 7) {
-			checked_value = array1_7 *1;
+			return array1_7;
 		}
-	} else if (cursor_pos == 2) {
+	} else if (grip_col == 2) {
 		if (array2_length == 0) {
-			checked_value = 0;
+			return 0;
 		} else if (array2_length == 1) {
-			checked_value = array2_1 *1;
+			return array2_1;
 		} else if (array2_length == 2) {
-			checked_value = array2_2 *1;
+			return array2_2;
 		} else if (array2_length == 3) {
-			checked_value = array2_3 *1;
+			return array2_3;
 		} else if (array2_length == 4) {
-			checked_value = array2_4 *1;
+			return array2_4;
 		} else if (array2_length == 5) {
-			checked_value = array2_5 *1;
+			return array2_5;
 		} else if (array2_length == 6) {
-			checked_value = array2_6 *1;
+			return array2_6;
 		} else if (array2_length == 7) {
-			checked_value = array2_7 *1;
+			return array2_7;
 		}
-	} else if (cursor_pos == 3) {
+	} else if (grip_col == 3) {
 		if (array3_length == 0) {
-			checked_value = 0;
+			return 0;
 		} else if (array3_length == 1) {
-			checked_value = array3_1 *1;
+			return array3_1;
 		} else if (array3_length == 2) {
-			checked_value = array3_2 *1;
+			return array3_2;
 		} else if (array3_length == 3) {
-			checked_value = array3_3 *1;
+			return array3_3;
 		} else if (array3_length == 4) {
-			checked_value = array3_4 *1;
+			return array3_4;
 		} else if (array3_length == 5) {
-			checked_value = array3_5 *1;
+			return array3_5;
 		} else if (array3_length == 6) {
-			checked_value = array3_6 *1;
+			return array3_6;
 		} else if (array3_length == 7) {
-			checked_value = array3_7 *1;
+			return array3_7;
 		}
-	}
-	if (checked_value == 0) {
-		can_drop = true;
-	} else if (checked_value > cursor_value) {
-		can_drop = true;
-	} else {
-		can_drop = false;
 	}
 }
 
 hanoi_move {
-	if (cursor_value == 0) {
-		if (cursor_pos == 1) {
+	if (grip_value == 0) {
+		if (grip_col == 1) {
 			if (array1_length > 0) {
 				array1_pop()
 			}
-		} else if (cursor_pos == 2) {
+		} else if (grip_col == 2) {
 			if (array2_length > 0) {
 				array2_pop()
 			}
-		} else if (cursor_pos == 3) {
+		} else if (grip_col == 3) {
 			if (array3_length > 0) {
 				array3_pop()
 			}
 		}
 	} else {
-		check_cursor()
-		if (can_drop) {
-			if (cursor_pos == 1) {
+		tempvar = forecast_grip();
+		if (tempvar == 0 || tempvar > grip_value) {
+			if (grip_col == 1) {
 				array1_push()
-			} else if (cursor_pos == 2) {
+			} else if (grip_col == 2) {
 				array2_push()
-			} else if (cursor_pos == 3) {
+			} else if (grip_col == 3) {
 				array3_push()
 			}
 		} else {
-			hanoi_warning_size = true;
+			plate_too_big = true;
 		}
 	}
-	if (cursor_value == $win_plate) {
+	if (grip_value == $winning_plate) {
 		hanoi_won = true;
 	}
 	draw_hanoi()
 }
 hanoi_move_1 {
-	cursor_pos = 1;
+	grip_col = 1;
 	hanoi_move()
 }
 hanoi_move_2 {
-	cursor_pos = 2;
+	grip_col = 2;
 	hanoi_move()
 }
 hanoi_move_3 {
-	cursor_pos = 3;
+	grip_col = 3;
 	hanoi_move()
 }
 
@@ -137,13 +130,13 @@ tick_hanoi {
 	) {
 		hanoi_move()
 	} else if (button LJOY_RIGHT pressed || button RJOY_RIGHT pressed) {
-		if (cursor_pos == 1 || cursor_pos == 2) {
-			cursor_pos += 1;
+		if (grip_col == 1 || grip_col == 2) {
+			grip_col += 1;
 		}
 		draw_hanoi()
 	} else if (button LJOY_LEFT pressed || button RJOY_LEFT pressed) {
-		if (cursor_pos == 2 || cursor_pos == 3) {
-			cursor_pos -= 1;
+		if (grip_col == 2 || grip_col == 3) {
+			grip_col -= 1;
 		}
 		draw_hanoi()
 	}
@@ -174,21 +167,21 @@ tick_hanoi {
   Tray (1-3) to grab/release plate, (T)ips, (R)eset, (Q)uit
 ============================================================
 */
-hanoi_won_message_A {
-	if (cursor_pos == 1) {
+hanoi_won_message_top {
+	if (grip_col == 1) {
 		concat serial_dialog hanoi_won_message1a;
-	} else if (cursor_pos == 2) {
+	} else if (grip_col == 2) {
 		concat serial_dialog hanoi_won_message2a;
-	} else if (cursor_pos == 3) {
+	} else if (grip_col == 3) {
 		concat serial_dialog hanoi_won_message3a;
 	}
 }
-hanoi_won_message_B {
-	if (cursor_pos == 1) {
+hanoi_won_message_bot {
+	if (grip_col == 1) {
 		concat serial_dialog hanoi_won_message1b;
-	} else if (cursor_pos == 2) {
+	} else if (grip_col == 2) {
 		concat serial_dialog hanoi_won_message2b;
-	} else if (cursor_pos == 3) {
+	} else if (grip_col == 3) {
 		if (hanoi_move_count < 100) {
 			concat serial_dialog hanoi_won_message3b2; // 2-digit
 		} else if (hanoi_move_count < 1000) {
@@ -198,82 +191,48 @@ hanoi_won_message_B {
 		}
 	}
 }
-serial_dialog hanoi_size_warning  { "     <m>Cannot place larger plate on top of a smaller plate!</>" }
-serial_dialog hanoi_won_message1a   { "         ||      <g>YOU WON! Plate #6 grabbed!</>" }
-serial_dialog hanoi_won_message2a   { "                 <g>YOU WON! Plate #6 grabbed!</>" }
-serial_dialog hanoi_won_message3a   { "                 <g>YOU WON! Plate #6 grabbed!</>      ||" }
+serial_dialog hanoi_won_message1a  { "         ||      <g>YOU WON! Plate #6 grabbed!</>" }
+serial_dialog hanoi_won_message2a  { "                 <g>YOU WON! Plate #6 grabbed!</>" }
+serial_dialog hanoi_won_message3a  { "                 <g>YOU WON! Plate #6 grabbed!</>      ||" }
 serial_dialog hanoi_won_message1b  { "         ||              <g>Score: $hanoi_move_count$</>" }
 serial_dialog hanoi_won_message2b  { "                         <g>Score: $hanoi_move_count$</>" }
 serial_dialog hanoi_won_message3b2 { "                         <g>Score: $hanoi_move_count$</>               ||" }
 serial_dialog hanoi_won_message3b3 { "                         <g>Score: $hanoi_move_count$</>              ||" }
 serial_dialog hanoi_won_message3b4 { "                         <g>Score: $hanoi_move_count$</>             ||" }
-serial_dialog hanoi_space         { "                    " }
-serial_dialog hanoi_cursor_arm    { "         ||         " }
-serial_dialog hanoi_cursor_hinge  { "        /  \\        " }
-serial_dialog hanoi_cursor_grip_0 { "       [    ]       " }
-serial_dialog hanoi_cursor_grip_1 { "       [1111]       " }
-serial_dialog hanoi_cursor_grip_2 { "      [222222]      " }
-serial_dialog hanoi_cursor_grip_3 { "     [33333333]     " }
-serial_dialog hanoi_cursor_grip_4 { "    [4444444444]    " }
-serial_dialog hanoi_cursor_grip_5 { "   [555555555555]   " }
-serial_dialog hanoi_cursor_grip_6 { "  [66666666666666]  " }
-serial_dialog hanoi_cursor_grip_7 { " [7777777777777777] " }
-serial_dialog hanoi_plate_1       { "        1111        " }
-serial_dialog hanoi_plate_2       { "       222222       " }
-serial_dialog hanoi_plate_3       { "      33333333      " }
-serial_dialog hanoi_plate_4       { "     4444444444     " }
-serial_dialog hanoi_plate_5       { "    555555555555    " }
-serial_dialog hanoi_plate_6       { "   66666666666666   " }
-serial_dialog hanoi_plate_7       { "  7777777777777777  " }
-draw_cursor_grip {
-	if (cursor_value == 0) {
-		concat serial_dialog hanoi_cursor_grip_0;
-	} else if (cursor_value == 1) {
-		concat serial_dialog hanoi_cursor_grip_1;
-	} else if (cursor_value == 2) {
-		concat serial_dialog hanoi_cursor_grip_2;
-	} else if (cursor_value == 3) {
-		concat serial_dialog hanoi_cursor_grip_3;
-	} else if (cursor_value == 4) {
-		concat serial_dialog hanoi_cursor_grip_4;
-	} else if (cursor_value == 5) {
-		concat serial_dialog hanoi_cursor_grip_5;
-	} else if (cursor_value == 6) {
-		concat serial_dialog hanoi_cursor_grip_6;
-	} else if (cursor_value == 7) {
-		concat serial_dialog hanoi_cursor_grip_7;
-	}
+serial_dialog hanoi_space          { "                    " }
+serial_dialog hanoi_grip_arm     { "         ||         " }
+serial_dialog hanoi_grip_hinge   { "        /  \\        " }
+fn draw_grip ($grip_value) {
+		 if ($grip_value == 0) { concat serial_dialog { "       [    ]       " }; }
+	else if ($grip_value == 1) { concat serial_dialog { "       [1111]       " }; }
+	else if ($grip_value == 2) { concat serial_dialog { "      [222222]      " }; }
+	else if ($grip_value == 3) { concat serial_dialog { "     [33333333]     " }; }
+	else if ($grip_value == 4) { concat serial_dialog { "    [4444444444]    " }; }
+	else if ($grip_value == 5) { concat serial_dialog { "   [555555555555]   " }; }
+	else if ($grip_value == 6) { concat serial_dialog { "  [66666666666666]  " }; }
+	else if ($grip_value == 7) { concat serial_dialog { " [7777777777777777] " }; }
 }
-draw_curr_plate {
-	if (curr_plate == 0) {
-		concat serial_dialog hanoi_space;
-	} else if (curr_plate == 1) {
-		concat serial_dialog hanoi_plate_1;
-	} else if (curr_plate == 2) {
-		concat serial_dialog hanoi_plate_2;
-	} else if (curr_plate == 3) {
-		concat serial_dialog hanoi_plate_3;
-	} else if (curr_plate == 4) {
-		concat serial_dialog hanoi_plate_4;
-	} else if (curr_plate == 5) {
-		concat serial_dialog hanoi_plate_5;
-	} else if (curr_plate == 6) {
-		concat serial_dialog hanoi_plate_6;
-	} else if (curr_plate == 7) {
-		concat serial_dialog hanoi_plate_7;
-	}
+fn draw_plate ($plate) {
+		 // TODO: why does it count as multiple dialogs (x4!) if I define these in place? Naming them doesn't matter
+		 if ($plate == 0) { concat serial_dialog hanoi_space; }
+	else if ($plate == 1) { concat serial_dialog { "        1111        " }; }
+	else if ($plate == 2) { concat serial_dialog { "       222222       " }; }
+	else if ($plate == 3) { concat serial_dialog { "      33333333      " }; }
+	else if ($plate == 4) { concat serial_dialog { "     4444444444     " }; }
+	else if ($plate == 5) { concat serial_dialog { "    555555555555    " }; }
+	else if ($plate == 6) { concat serial_dialog { "   66666666666666   " }; }
+	else if ($plate == 7) { concat serial_dialog { "  7777777777777777  " }; }
 }
-draw_tile {
-	// wants `curr_plate` and `column`
-	if (curr_plate != 0) {
-		draw_curr_plate()
-	} else if (cursor_pos == column) {
-		if (cursor_hinge_height < row) {
-			concat serial_dialog hanoi_cursor_arm;
-		} else if (cursor_hinge_height == row) {
-			concat serial_dialog hanoi_cursor_hinge;
-		} else if (cursor_grip_height == row) {
-			draw_cursor_grip()
+fn draw_value_in_cell ($plate_value, $col, $row) {
+	if ($plate_value != 0) {
+		draw_plate($plate_value)
+	} else if (grip_col == $col) {
+		if (grip_hinge_row < $row) {
+			concat serial_dialog hanoi_grip_arm;
+		} else if (grip_hinge_row == $row) {
+			concat serial_dialog hanoi_grip_hinge;
+		} else if (grip_row == $row) {
+			draw_grip(grip_value)
 		} else {
 			concat serial_dialog hanoi_space;
 		}
@@ -281,29 +240,21 @@ draw_tile {
 		concat serial_dialog hanoi_space;
 	}
 }
-draw_plate_row {
-	// wants `plate1`, `plate2`, `plate3`, and `row`
-	column = 1; // col 1
-	curr_plate = plate1 *1;
-	draw_tile()
-	column = 2; // col 2
-	curr_plate = plate2 *1;
-	draw_tile()
-	column = 3; // col 3
-	curr_plate = plate3 *1;
-	draw_tile()
+fn draw_plates_in_row($plate1, $plate2, $plate3, $row) {
+	draw_value_in_cell($plate1, 1, $row)
+	draw_value_in_cell($plate2, 2, $row)
+	draw_value_in_cell($plate3, 3, $row)
 	concat serial_dialog newline;
 }
 draw_hanoi {
-	if (cursor_pos == 1) {
-		cursor_grip_height = array1_length *1;
-	} else if (cursor_pos == 2) {
-		cursor_grip_height = array2_length *1;
-	} else if (cursor_pos == 3) {
-		cursor_grip_height = array3_length *1;
+	if (grip_col == 1) {
+		grip_row = array1_length + 2;
+	} else if (grip_col == 2) {
+		grip_row = array2_length + 2;
+	} else if (grip_col == 3) {
+		grip_row = array3_length + 2;
 	}
-	cursor_grip_height += 2;
-	cursor_hinge_height = cursor_grip_height + 1;
+	grip_hinge_row = grip_row + 1;
 	// HEADER
 	show serial_dialog {
 		" "
@@ -314,17 +265,13 @@ draw_hanoi {
 		"============================================================"
 	};
 
-	// until we get to the plate rows:
-	curr_plate = 0;
-
 	// ROW 11
-	row = 11;
 	if (hanoi_won) {
-		hanoi_won_message_A()
+		hanoi_won_message_top()
 	} else {
-		for (column = 1; column <= 3; column += 1) {
-			if (cursor_pos == column) {
-				concat serial_dialog hanoi_cursor_arm;
+		for (i = 1; i <= 3; i += 1) {
+			if (grip_col == i) {
+				concat serial_dialog hanoi_grip_arm;
 			} else {
 				concat serial_dialog hanoi_space;
 			}
@@ -333,83 +280,34 @@ draw_hanoi {
 	concat serial_dialog newline;
 
 	// ROW 10
-	row = 10;
-	if (hanoi_warning_size) {
-		show serial_dialog hanoi_size_warning;
-		hanoi_warning_size = false;
+	if (plate_too_big) {
+		show serial_dialog { "     <m>Cannot place larger plate on top of a smaller plate!</>" };
+		plate_too_big = false;
 	} else if (hanoi_won) {
-		hanoi_won_message_B()
+		hanoi_won_message_bot()
 	} else {
-		for (column = 1; column <= 3; column += 1) {
-			draw_tile()
+		for (i = 1; i <= 3; i += 1) {
+			draw_value_in_cell(0, i, 10)
 		}
 	}
 	concat serial_dialog newline;
 
-	// ROW 9
-	row = 9;
-	for (column = 1; column <= 3; column += 1) {
-		draw_tile()
-	}
-	concat serial_dialog newline;
+	// ROW 8-9 (can't have plates)
+	draw_plates_in_row(0, 0, 0, 9)
+	draw_plates_in_row(0, 0, 0, 8)
 
-	// ROW 8
-	row = 8;
-	for (column = 1; column <= 3; column += 1) {
-		draw_tile()
-	}
-	concat serial_dialog newline;
-	
-	// ROW 7
-	row = 7;
-	plate1 = array1_7 *1;
-	plate2 = array2_7 *1;
-	plate3 = array3_7 *1;
-	draw_plate_row()
+	// ROW 2-7
+	draw_plates_in_row(array1_7, array2_7, array3_7, 7)
+	draw_plates_in_row(array1_6, array2_6, array3_6, 6)
+	draw_plates_in_row(array1_5, array2_5, array3_5, 5)
+	draw_plates_in_row(array1_4, array2_4, array3_4, 4)
+	draw_plates_in_row(array1_3, array2_3, array3_3, 3)
+	draw_plates_in_row(array1_2, array2_2, array3_2, 2)
 
-	// ROW 6
-	row = 6;
-	plate1 = array1_6 *1;
-	plate2 = array2_6 *1;
-	plate3 = array3_6 *1;
-	draw_plate_row()
-	
-	// ROW 5
-	row = 5;
-	plate1 = array1_5 *1;
-	plate2 = array2_5 *1;
-	plate3 = array3_5 *1;
-	draw_plate_row()
-
-	// ROW 4
-	row = 4;
-	plate1 = array1_4 *1;
-	plate2 = array2_4 *1;
-	plate3 = array3_4 *1;
-	draw_plate_row()
-	
-	// ROW 3
-	row = 3;
-	plate1 = array1_3 *1;
-	plate2 = array2_3 *1;
-	plate3 = array3_3 *1;
-	draw_plate_row()
-	
-	// ROW 2
-	row = 2;
-	plate1 = array1_2 *1;
-	plate2 = array2_2 *1;
-	plate3 = array3_2 *1;
-	draw_plate_row()
-
-	// ROW 1
-	row = 1;
-	curr_plate = array1_1 *1;
-	draw_curr_plate()
-	curr_plate = array2_1 *1;
-	draw_curr_plate()
-	curr_plate = array3_1 *1;
-	draw_curr_plate()
+	// ROW 1 (can't have grip)
+	draw_plate(array1_1)
+	draw_plate(array2_1)
+	draw_plate(array3_1)
 	concat serial_dialog newline;
 
 	// FOOTER
@@ -473,31 +371,13 @@ hanoi_reset {
 }
 
 hanoi_init_variables {
-	cursor_pos = 1;
-	cursor_value = 0;
-	array1_7 = 0;
-	array1_6 = 1;
-	array1_5 = 2;
-	array1_4 = 3;
-	array1_3 = 4;
-	array1_2 = 5;
-	array1_1 = 6;
+	grip_col = 1;
+	grip_value = 0;
+	[ array1_7, array1_6, array1_5, array1_4, array1_3, array1_2, array1_1 ] = [ 0, 1, 2, 3, 4, 5, 6 ];
+	[ array2_7, array2_6, array2_5, array2_4, array2_3, array2_2, array2_1 ] = [ 0, 0, 0, 0, 0, 0, 0 ];
+	[ array3_7, array3_6, array3_5, array3_4, array3_3, array3_2, array3_1 ] = [ 0, 0, 0, 0, 0, 0, 0 ];
 	array1_length = 6;
-	array2_7 = 0;
-	array2_6 = 0;
-	array2_5 = 0;
-	array2_4 = 0;
-	array2_3 = 0;
-	array2_2 = 0;
-	array2_1 = 0;
 	array2_length = 0;
-	array3_7 = 0;
-	array3_6 = 0;
-	array3_5 = 0;
-	array3_4 = 0;
-	array3_3 = 0;
-	array3_2 = 0;
-	array3_1 = 0;
 	array3_length = 0;
 	hanoi_move_count = 0;
 	hanoi_init_done = true;
@@ -536,25 +416,25 @@ array1_pop {
 		show serial_dialog { "<r>ERROR!</> Tray #1 is already empty. Cannot pop!" };
 	} else {
 		if (array1_length == 7) {
-			cursor_value = array1_7 *1;
+			grip_value = array1_7 *1;
 			array1_7 = 0;
 		} else if (array1_length == 6) {
-			cursor_value = array1_6 *1;
+			grip_value = array1_6 *1;
 			array1_6 = 0;
 		} else if (array1_length == 5) {
-			cursor_value = array1_5 *1;
+			grip_value = array1_5 *1;
 			array1_5 = 0;
 		} else if (array1_length == 4) {
-			cursor_value = array1_4 *1;
+			grip_value = array1_4 *1;
 			array1_4 = 0;
 		} else if (array1_length == 3) {
-			cursor_value = array1_3 *1;
+			grip_value = array1_3 *1;
 			array1_3 = 0;
 		} else if (array1_length == 2) {
-			cursor_value = array1_2 *1;
+			grip_value = array1_2 *1;
 			array1_2 = 0;
 		} else if (array1_length == 1) {
-			cursor_value = array1_1 *1;
+			grip_value = array1_1 *1;
 			array1_1 = 0;
 		}
 		array1_length -= 1;
@@ -562,100 +442,62 @@ array1_pop {
 	}
 }
 array1_push {
-	if (cursor_value == 0) {
+	if (grip_value == 0) {
 		show serial_dialog { "<r>ERROR!</> No value to push to Array #1!" };
 	} else if (array1_length >= 7) {
 		show serial_dialog { "<r>ERROR!</> Array #1 is full! Cannot push!" };
 	} else {
 		if (array1_length == 6) {
-			array1_7 = cursor_value *1;
-			cursor_value = 0;
+			array1_7 = grip_value *1;
+			grip_value = 0;
 		} else if (array1_length == 5) {
-			array1_6 = cursor_value *1;
-			cursor_value = 0;
+			array1_6 = grip_value *1;
+			grip_value = 0;
 		} else if (array1_length == 4) {
-			array1_5 = cursor_value *1;
-			cursor_value = 0;
+			array1_5 = grip_value *1;
+			grip_value = 0;
 		} else if (array1_length == 3) {
-			array1_4 = cursor_value *1;
-			cursor_value = 0;
+			array1_4 = grip_value *1;
+			grip_value = 0;
 		} else if (array1_length == 2) {
-			array1_3 = cursor_value *1;
-			cursor_value = 0;
+			array1_3 = grip_value *1;
+			grip_value = 0;
 		} else if (array1_length == 1) {
-			array1_2 = cursor_value *1;
-			cursor_value = 0;
+			array1_2 = grip_value *1;
+			grip_value = 0;
 		} else if (array1_length == 0) {
-			array1_1 = cursor_value *1;
-			cursor_value = 0;
+			array1_1 = grip_value *1;
+			grip_value = 0;
 		}
 		array1_length += 1;
 		hanoi_move_count += 1;
 	}
 }
 
-serial_dialog sd1 { "1" }
-serial_dialog sd2 { "2" }
-serial_dialog sd3 { "3" }
-serial_dialog sd4 { "4" }
-serial_dialog sd5 { "5" }
-serial_dialog sd6 { "6" }
-serial_dialog sd7 { "7" }
-fn printme ($varName) {
-	if ($varName == 1) { concat serial_dialog sd1; }
-	else if ($varName == 2) { concat serial_dialog sd2; }
-	else if ($varName == 3) { concat serial_dialog sd3; }
-	else if ($varName == 4) { concat serial_dialog sd4; }
-	else if ($varName == 5) { concat serial_dialog sd5; }
-	else if ($varName == 6) { concat serial_dialog sd6; }
-	else if ($varName == 7) { concat serial_dialog sd7; }
-}
-
-array1_print {
-	concat serial_dialog array_print_left;
-	for (i = 1; i <= array1_length; i += 1) {
-		if (i != 1) {
-			concat serial_dialog {" "};
-		}
-		if (i == 1) { tempvar = array1_1 *1; }
-		else if (i == 2) { tempvar = array1_2 *1; }
-		else if (i == 3) { tempvar = array1_3 *1; }
-		else if (i == 4) { tempvar = array1_4 *1; }
-		else if (i == 5) { tempvar = array1_5 *1; }
-		else if (i == 6) { tempvar = array1_6 *1; }
-		else if (i == 7) { tempvar = array1_7 *1; }
-		printme(tempvar)
-		tempvar = 0;
-	}
-	concat serial_dialog array_print_right;
-}
-serial_dialog array_print_left { "<m>[</> "}
-serial_dialog array_print_right { " "}
-
 array2_pop {
 	if (array2_length == 0) {
 		show serial_dialog { "<r>ERROR!</> Array #2 is already empty. Cannot pop!" };
 	} else {
 		if (array2_length == 7) {
-			cursor_value = array2_7 *1;
+			grip_value = array2_7 *1;
 			array2_7 = 0;
 		} else if (array2_length == 6) {
-			cursor_value = array2_6 *1;
+			grip_value = array2_6 *1;
 			array2_6 = 0;
 		} else if (array2_length == 5) {
-			cursor_value = array2_5 *1;
+			grip_value = array2_5 *1;
 			array2_5 = 0;
 		} else if (array2_length == 4) {
-			cursor_value = array2_4 *1;
+			grip_value = array2_4 *1;
 			array2_4 = 0;
 		} else if (array2_length == 3) {
-			cursor_value = array2_3 *1;
+			grip_value = array2_3 *1;
 			array2_3 = 0;
 		} else if (array2_length == 2) {
-			cursor_value = array2_2 *1;
+			grip_value = array2_2 *1;
 			array2_2 = 0;
 		} else if (array2_length == 1) {
-			cursor_value = array2_1 *1;
+			grip_value = array2_1 *1;
 			array2_1 = 0;
 		}
 		array2_length -= 1;
@@ -663,54 +505,36 @@ array2_pop {
 	}
 }
 array2_push {
-	if (cursor_value == 0) {
+	if (grip_value == 0) {
 		show serial_dialog { "<r>ERROR!</> No value to push to Array #2!" };
 	} else if (array2_length >= 7) {
 		show serial_dialog { "<r>ERROR!</> Array #2 is full! Cannot push!" };
 	} else {
 		if (array2_length == 6) {
-			array2_7 = cursor_value *1;
-			cursor_value = 0;
+			array2_7 = grip_value *1;
+			grip_value = 0;
 		} else if (array2_length == 5) {
-			array2_6 = cursor_value *1;
-			cursor_value = 0;
+			array2_6 = grip_value *1;
+			grip_value = 0;
 		} else if (array2_length == 4) {
-			array2_5 = cursor_value *1;
-			cursor_value = 0;
+			array2_5 = grip_value *1;
+			grip_value = 0;
 		} else if (array2_length == 3) {
-			array2_4 = cursor_value *1;
-			cursor_value = 0;
+			array2_4 = grip_value *1;
+			grip_value = 0;
 		} else if (array2_length == 2) {
-			array2_3 = cursor_value *1;
-			cursor_value = 0;
+			array2_3 = grip_value *1;
+			grip_value = 0;
 		} else if (array2_length == 1) {
-			array2_2 = cursor_value *1;
-			cursor_value = 0;
+			array2_2 = grip_value *1;
+			grip_value = 0;
 		} else if (array2_length == 0) {
-			array2_1 = cursor_value *1;
-			cursor_value = 0;
+			array2_1 = grip_value *1;
+			grip_value = 0;
 		}
 		array2_length += 1;
 		hanoi_move_count += 1;
 	}
-}
-array2_print {
-	concat serial_dialog array_print_left;
-	for (i = 1; i <= array2_length; i += 1) {
-		if (i != 1) {
-			concat serial_dialog {" "};
-		}
-		if (i == 1) { tempvar = array2_1 *1; }
-		else if (i == 2) { tempvar = array2_2 *1; }
-		else if (i == 3) { tempvar = array2_3 *1; }
-		else if (i == 4) { tempvar = array2_4 *1; }
-		else if (i == 5) { tempvar = array2_5 *1; }
-		else if (i == 6) { tempvar = array2_6 *1; }
-		else if (i == 7) { tempvar = array2_7 *1; }
-		printme(tempvar)
-		tempvar = 0;
-	}
-	concat serial_dialog array_print_right;
 }
 
 array3_pop {
@@ -718,25 +542,25 @@ array3_pop {
 		show serial_dialog { "<r>ERROR!</> Array #3 is already empty. Cannot pop!" };
 	} else {
 		if (array3_length == 7) {
-			cursor_value = array3_7 *1;
+			grip_value = array3_7 *1;
 			array3_7 = 0;
 		} else if (array3_length == 6) {
-			cursor_value = array3_6 *1;
+			grip_value = array3_6 *1;
 			array3_6 = 0;
 		} else if (array3_length == 5) {
-			cursor_value = array3_5 *1;
+			grip_value = array3_5 *1;
 			array3_5 = 0;
 		} else if (array3_length == 4) {
-			cursor_value = array3_4 *1;
+			grip_value = array3_4 *1;
 			array3_4 = 0;
 		} else if (array3_length == 3) {
-			cursor_value = array3_3 *1;
+			grip_value = array3_3 *1;
 			array3_3 = 0;
 		} else if (array3_length == 2) {
-			cursor_value = array3_2 *1;
+			grip_value = array3_2 *1;
 			array3_2 = 0;
 		} else if (array3_length == 1) {
-			cursor_value = array3_1 *1;
+			grip_value = array3_1 *1;
 			array3_1 = 0;
 		}
 		array3_length -= 1;
@@ -744,52 +568,34 @@ array3_pop {
 	}
 }
 array3_push {
-	if (cursor_value == 0) {
+	if (grip_value == 0) {
 		show serial_dialog { "<r>ERROR!</> No value to push to Array #3!" };
 	} else if (array3_length >= 7) {
 		show serial_dialog { "<r>ERROR!</> Array #3 is full! Cannot push!" };
 	} else {
 		if (array3_length == 6) {
-			array3_7 = cursor_value *1;
-			cursor_value = 0;
+			array3_7 = grip_value *1;
+			grip_value = 0;
 		} else if (array3_length == 5) {
-			array3_6 = cursor_value *1;
-			cursor_value = 0;
+			array3_6 = grip_value *1;
+			grip_value = 0;
 		} else if (array3_length == 4) {
-			array3_5 = cursor_value *1;
-			cursor_value = 0;
+			array3_5 = grip_value *1;
+			grip_value = 0;
 		} else if (array3_length == 3) {
-			array3_4 = cursor_value *1;
-			cursor_value = 0;
+			array3_4 = grip_value *1;
+			grip_value = 0;
 		} else if (array3_length == 2) {
-			array3_3 = cursor_value *1;
-			cursor_value = 0;
+			array3_3 = grip_value *1;
+			grip_value = 0;
 		} else if (array3_length == 1) {
-			array3_2 = cursor_value *1;
-			cursor_value = 0;
+			array3_2 = grip_value *1;
+			grip_value = 0;
 		} else if (array3_length == 0) {
-			array3_1 = cursor_value *1;
-			cursor_value = 0;
+			array3_1 = grip_value *1;
+			grip_value = 0;
 		}
 		array3_length += 1;
 		hanoi_move_count += 1;
 	}
-}
-array3_print {
-	concat serial_dialog array_print_left;
-	for (i = 1; i <= array3_length; i += 1) {
-		if (i != 1) {
-			concat serial_dialog {" "};
-		}
-		if (i == 1) { tempvar = array3_1 *1; }
-		else if (i == 2) { tempvar = array3_2 *1; }
-		else if (i == 3) { tempvar = array3_3 *1; }
-		else if (i == 4) { tempvar = array3_4 *1; }
-		else if (i == 5) { tempvar = array3_5 *1; }
-		else if (i == 6) { tempvar = array3_6 *1; }
-		else if (i == 7) { tempvar = array3_7 *1; }
-		printme(tempvar)
-		tempvar = 0;
-	}
-	concat serial_dialog array_print_right;
 }

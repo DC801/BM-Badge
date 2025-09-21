@@ -6457,6 +6457,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     using(newNode) {
       return MathlangLocation.quick(this.f, newNode);
     }
+    isIdenticalTo(that) {
+      if (this.fileName !== that.fileName) return false;
+      if (this.node === that.node) return true;
+      if (this.node.startIndex === that.node.startIndex && this.node.endIndex === that.node.endIndex) {
+        return true;
+      }
+      return false;
+    }
     quickError(type, message, footer) {
       this.f.quickError(this.node, type, message, footer);
     }
@@ -6484,6 +6492,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     // fns
     "duplicate fn arg": "cannot use the same fn argument multiple times",
     "not enough fn args": "function requires more arguments than was provided",
+    "invalid fn arg": "fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call",
     // actions
     "mismatched spread lengths": "spreads must have the same count of items within each context",
     "unsupported entity field": "this entity field is not supported in this action",
@@ -6496,7 +6505,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     "return value not stored": "did you mean to discard the return value?",
     // warning
     "invalid JSON action": "malformed action JSON",
-    "invalid fn arg": "fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call",
     "invalid operator": "use != and ==, not !== or ===",
     // warning, not error
     "invalid constant value": "constant value not an MGS primitive",
@@ -13046,34 +13054,51 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       data.actions = simplifyLabelGotos(finalizedActions.flat());
       if (!this.scripts[name2]) {
         this.scripts[name2] = data;
-      } else {
-        if (!this.duplicates.scripts[name2]) {
-          this.duplicates.scripts[name2] = [this.scripts[name2]];
-        }
-        this.duplicates.scripts[name2].push(data);
+        return;
       }
+      const oldLocation = this.scripts[name2].debug;
+      const newLocation = data.debug;
+      if (oldLocation.isIdenticalTo(newLocation)) {
+        throw new Error(
+          "UNIMPLEMENTED: duplicate script definition within a fn; cannot use same solution as (s)dialogs; think of something else!"
+        );
+      }
+      if (!this.duplicates.scripts[name2]) {
+        this.duplicates.scripts[name2] = [this.scripts[name2]];
+      }
+      this.duplicates.scripts[name2].push(data);
     }
     addDialog(data) {
       const name2 = data.dialogName;
       if (!this.dialogs[name2]) {
         this.dialogs[name2] = data;
-      } else {
-        if (!this.duplicates.dialogs[name2]) {
-          this.duplicates.dialogs[name2] = [this.dialogs[name2]];
-        }
-        this.duplicates.dialogs[name2].push(data);
+        return;
       }
+      const oldLocation = this.dialogs[name2].debug;
+      const newLocation = data.debug;
+      if (oldLocation.isIdenticalTo(newLocation)) {
+        return;
+      }
+      if (!this.duplicates.dialogs[name2]) {
+        this.duplicates.dialogs[name2] = [this.dialogs[name2]];
+      }
+      this.duplicates.dialogs[name2].push(data);
     }
     addSerialDialog(data) {
       const name2 = data.dialogName;
       if (!this.serialDialogs[name2]) {
         this.serialDialogs[name2] = data;
-      } else {
-        if (!this.duplicates.serialDialogs[name2]) {
-          this.duplicates.serialDialogs[name2] = [this.serialDialogs[name2]];
-        }
-        this.duplicates.serialDialogs[name2].push(data);
+        return;
       }
+      const oldLocation = this.serialDialogs[name2].debug;
+      const newLocation = data.debug;
+      if (oldLocation.isIdenticalTo(newLocation)) {
+        return;
+      }
+      if (!this.duplicates.serialDialogs[name2]) {
+        this.duplicates.serialDialogs[name2] = [this.serialDialogs[name2]];
+      }
+      this.duplicates.serialDialogs[name2].push(data);
     }
     // take the given file name and expand all copy_script inside
     // needs to be here because it can call itself
