@@ -135,6 +135,8 @@ const mathlangMessageTypes: Record<string, string> = {
 	// fns
 	'duplicate fn arg': 'cannot use the same fn argument multiple times',
 	'not enough fn args': 'function requires more arguments than was provided',
+	'invalid fn arg':
+		'fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call',
 
 	// actions
 	'mismatched spread lengths': 'spreads must have the same count of items within each context',
@@ -151,8 +153,6 @@ const mathlangMessageTypes: Record<string, string> = {
 	// misc
 	'return value not stored': 'did you mean to discard the return value?', // warning
 	'invalid JSON action': 'malformed action JSON',
-	'invalid fn arg':
-		'fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call',
 	'invalid operator': 'use != and ==, not !== or ===', // warning, not error
 	'invalid constant value': 'constant value not an MGS primitive',
 	'dialog too long':
