@@ -164,6 +164,27 @@ const spreadValues = (
 		return [commonFields];
 	}
 
+	//make sure that define-in-place scripts are only defined once
+	const nonSpreadFields = Object.keys(commonFields);
+	nonSpreadFields.forEach((nonSpreadFieldName) => {
+		const scriptDef = commonFields[nonSpreadFieldName];
+		if (scriptDef instanceof ScriptDefinition) {
+			const fauxCaptures: (AnyNode | string)[] = [];
+			for (let i = 0; i < spreadSize; i++) {
+				if (i === 0) {
+					fauxCaptures.push(scriptDef);
+				} else {
+					fauxCaptures.push(scriptDef.scriptName);
+				}
+			}
+			fieldsToSpread[nonSpreadFieldName] = {
+				node: scriptDef.debug.node,
+				captures: fauxCaptures,
+			};
+			delete commonFields[nonSpreadFieldName];
+		}
+	});
+
 	// put spread action into multiple variants
 	const ret: GenericObj[] = [];
 	for (let i = 0; i < spreadSize; i++) {

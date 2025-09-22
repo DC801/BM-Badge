@@ -1,6 +1,10 @@
 import { RETURN } from './parser-utilities.ts';
 
 export const actionTests = {
+	script_def_in_spread: {
+		input: [`command ["T", "TIPS"] = hanoi_help { hanoi_draw_help = true; };`],
+		expected: [`command "T" = "hanoi_help;`, `command "TIPS" = "hanoi_help;`],
+	},
 	array_map_read_value: {
 		input: [`varName = arrayName.map(($n) { return $n + 1; })[0];`],
 		expected: [

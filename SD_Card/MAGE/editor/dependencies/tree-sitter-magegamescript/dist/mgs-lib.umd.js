@@ -4260,6 +4260,25 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     if (spreadSize === -Infinity) {
       return [commonFields];
     }
+    const nonSpreadFields = Object.keys(commonFields);
+    nonSpreadFields.forEach((nonSpreadFieldName) => {
+      const scriptDef = commonFields[nonSpreadFieldName];
+      if (scriptDef instanceof ScriptDefinition) {
+        const fauxCaptures = [];
+        for (let i2 = 0; i2 < spreadSize; i2++) {
+          if (i2 === 0) {
+            fauxCaptures.push(scriptDef);
+          } else {
+            fauxCaptures.push(scriptDef.scriptName);
+          }
+        }
+        fieldsToSpread[nonSpreadFieldName] = {
+          node: scriptDef.debug.node,
+          captures: fauxCaptures
+        };
+        delete commonFields[nonSpreadFieldName];
+      }
+    });
     const ret = [];
     for (let i2 = 0; i2 < spreadSize; i2++) {
       const insert = { ...commonFields };

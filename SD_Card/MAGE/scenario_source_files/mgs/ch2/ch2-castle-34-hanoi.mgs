@@ -15,59 +15,32 @@ $winning_plate = 6;
 
 forecast_grip {
 	if (grip_col == 1) {
-		if (array1_length == 0) {
-			return 0;
-		} else if (array1_length == 1) {
-			return array1_1;
-		} else if (array1_length == 2) {
-			return array1_2;
-		} else if (array1_length == 3) {
-			return array1_3;
-		} else if (array1_length == 4) {
-			return array1_4;
-		} else if (array1_length == 5) {
-			return array1_5;
-		} else if (array1_length == 6) {
-			return array1_6;
-		} else if (array1_length == 7) {
-			return array1_7;
-		}
+		if (array1_length == 0) { return 0; }
+		else if (array1_length == 1) { return array1_1; }
+		else if (array1_length == 2) { return array1_2; }
+		else if (array1_length == 3) { return array1_3; }
+		else if (array1_length == 4) { return array1_4; }
+		else if (array1_length == 5) { return array1_5; }
+		else if (array1_length == 6) { return array1_6; }
+		else if (array1_length == 7) { return array1_7; }
 	} else if (grip_col == 2) {
-		if (array2_length == 0) {
-			return 0;
-		} else if (array2_length == 1) {
-			return array2_1;
-		} else if (array2_length == 2) {
-			return array2_2;
-		} else if (array2_length == 3) {
-			return array2_3;
-		} else if (array2_length == 4) {
-			return array2_4;
-		} else if (array2_length == 5) {
-			return array2_5;
-		} else if (array2_length == 6) {
-			return array2_6;
-		} else if (array2_length == 7) {
-			return array2_7;
-		}
+		if (array2_length == 0) { return 0; }
+		else if (array2_length == 1) { return array2_1; }
+		else if (array2_length == 2) { return array2_2; }
+		else if (array2_length == 3) { return array2_3; }
+		else if (array2_length == 4) { return array2_4; }
+		else if (array2_length == 5) { return array2_5; }
+		else if (array2_length == 6) { return array2_6; }
+		else if (array2_length == 7) { return array2_7; }
 	} else if (grip_col == 3) {
-		if (array3_length == 0) {
-			return 0;
-		} else if (array3_length == 1) {
-			return array3_1;
-		} else if (array3_length == 2) {
-			return array3_2;
-		} else if (array3_length == 3) {
-			return array3_3;
-		} else if (array3_length == 4) {
-			return array3_4;
-		} else if (array3_length == 5) {
-			return array3_5;
-		} else if (array3_length == 6) {
-			return array3_6;
-		} else if (array3_length == 7) {
-			return array3_7;
-		}
+		if (array3_length == 0) { return 0; }
+		else if (array3_length == 1) { return array3_1; }
+		else if (array3_length == 2) { return array3_2; }
+		else if (array3_length == 3) { return array3_3; }
+		else if (array3_length == 4) { return array3_4; }
+		else if (array3_length == 5) { return array3_5; }
+		else if (array3_length == 6) { return array3_6; }
+		else if (array3_length == 7) { return array3_7; }
 	}
 }
 
@@ -106,21 +79,13 @@ fn array1_push ($value) {
 		show serial_dialog { "<r>ERROR!</> Array #1 is full! Cannot push!" };
 		return;
 	}
-	if (array1_length == 6) {
-		array1_7 = $value *1;
-	} else if (array1_length == 5) {
-		array1_6 = $value *1;
-	} else if (array1_length == 4) {
-		array1_5 = $value *1;
-	} else if (array1_length == 3) {
-		array1_4 = $value *1;
-	} else if (array1_length == 2) {
-		array1_3 = $value *1;
-	} else if (array1_length == 1) {
-		array1_2 = $value *1;
-	} else if (array1_length == 0) {
-		array1_1 = $value *1;
-	}
+	if (array1_length == 6) { array1_7 = $value *1; }
+	else if (array1_length == 5) { array1_6 = $value *1; }
+	else if (array1_length == 4) { array1_5 = $value *1; }
+	else if (array1_length == 3) { array1_4 = $value *1; }
+	else if (array1_length == 2) { array1_3 = $value *1; }
+	else if (array1_length == 1) { array1_2 = $value *1; }
+	else if (array1_length == 0) { array1_1 = $value *1; }
 	array1_length += 1;
 }
 
@@ -159,21 +124,13 @@ fn array2_push ($value) {
 		show serial_dialog { "<r>ERROR!</> Array #2 is full! Cannot push!" };
 		return;
 	}
-	if (array2_length == 6) {
-		array2_7 = $value *1;
-	} else if (array2_length == 5) {
-		array2_6 = $value *1;
-	} else if (array2_length == 4) {
-		array2_5 = $value *1;
-	} else if (array2_length == 3) {
-		array2_4 = $value *1;
-	} else if (array2_length == 2) {
-		array2_3 = $value *1;
-	} else if (array2_length == 1) {
-		array2_2 = $value *1;
-	} else if (array2_length == 0) {
-		array2_1 = $value *1;
-	}
+	if (array2_length == 6) { array2_7 = $value *1; }
+	else if (array2_length == 5) { array2_6 = $value *1; }
+	else if (array2_length == 4) { array2_5 = $value *1; }
+	else if (array2_length == 3) { array2_4 = $value *1; }
+	else if (array2_length == 2) { array2_3 = $value *1; }
+	else if (array2_length == 1) { array2_2 = $value *1; }
+	else if (array2_length == 0) { array2_1 = $value *1; }
 	array2_length += 1;
 }
 
@@ -212,21 +169,13 @@ fn array3_push ($value) {
 		show serial_dialog { "<r>ERROR!</> Array #3 is full! Cannot push!" };
 		return;
 	}
-	if (array3_length == 6) {
-		array3_7 = $value *1;
-	} else if (array3_length == 5) {
-		array3_6 = $value *1;
-	} else if (array3_length == 4) {
-		array3_5 = $value *1;
-	} else if (array3_length == 3) {
-		array3_4 = $value *1;
-	} else if (array3_length == 2) {
-		array3_3 = $value *1;
-	} else if (array3_length == 1) {
-		array3_2 = $value *1;
-	} else if (array3_length == 0) {
-		array3_1 = $value *1;
-	}
+	if (array3_length == 6) { array3_7 = $value *1; }
+	else if (array3_length == 5) { array3_6 = $value *1; }
+	else if (array3_length == 4) { array3_5 = $value *1; }
+	else if (array3_length == 3) { array3_4 = $value *1; }
+	else if (array3_length == 2) { array3_3 = $value *1; }
+	else if (array3_length == 1) { array3_2 = $value *1; }
+	else if (array3_length == 0) { array3_1 = $value *1; }
 	array3_length += 1;
 }
 
@@ -234,17 +183,17 @@ hanoi_move {
 	if (grip_value == 0) {
 		if (grip_col == 1) {
 			if (array1_length > 0) {
-				array1_pop()
+				grip_value = array1_pop();
 				hanoi_move_count += 1;
 			}
 		} else if (grip_col == 2) {
 			if (array2_length > 0) {
-				array2_pop()
+				grip_value = array2_pop();
 				hanoi_move_count += 1;
 			}
 		} else if (grip_col == 3) {
 			if (array3_length > 0) {
-				array3_pop()
+				grip_value = array3_pop();
 				hanoi_move_count += 1;
 			}
 		}
@@ -272,18 +221,6 @@ hanoi_move {
 		hanoi_won = true;
 	}
 	draw_hanoi()
-}
-hanoi_move_1 {
-	grip_col = 1;
-	hanoi_move()
-}
-hanoi_move_2 {
-	grip_col = 2;
-	hanoi_move()
-}
-hanoi_move_3 {
-	grip_col = 3;
-	hanoi_move()
 }
 
 tick_hanoi {
@@ -368,8 +305,8 @@ serial_dialog hanoi_won_message3b2 { "                         <g>Score: $hanoi_
 serial_dialog hanoi_won_message3b3 { "                         <g>Score: $hanoi_move_count$</>              ||" }
 serial_dialog hanoi_won_message3b4 { "                         <g>Score: $hanoi_move_count$</>             ||" }
 serial_dialog hanoi_space          { "                    " }
-serial_dialog hanoi_grip_arm     { "         ||         " }
-serial_dialog hanoi_grip_hinge   { "        /  \\        " }
+serial_dialog hanoi_grip_arm       { "         ||         " }
+serial_dialog hanoi_grip_hinge     { "        /  \\        " }
 fn draw_grip ($grip_value) {
 		 if ($grip_value == 0) { concat serial_dialog { "       [    ]       " }; }
 	else if ($grip_value == 1) { concat serial_dialog { "       [1111]       " }; }
@@ -415,13 +352,9 @@ fn draw_plates_in_row($plate1, $plate2, $plate3, $row) {
 	concat serial_dialog newline;
 }
 draw_hanoi {
-	if (grip_col == 1) {
-		grip_row = array1_length + 2;
-	} else if (grip_col == 2) {
-		grip_row = array2_length + 2;
-	} else if (grip_col == 3) {
-		grip_row = array3_length + 2;
-	}
+	if (grip_col == 1) { grip_row = array1_length + 2; }
+	else if (grip_col == 2) { grip_row = array2_length + 2; }
+	else if (grip_col == 3) { grip_row = array3_length + 2; }
 	grip_hinge_row = grip_row + 1;
 	// HEADER
 	show serial_dialog {
@@ -497,15 +430,7 @@ draw_hanoi {
 }
 
 hanoi_unregister {
-	delete command "1" ;
-	delete command "2" ;
-	delete command "3" ;
-	delete command "T" ;
-	delete command "TIPS" ;
-	delete command "R" ;
-	delete command "RESET" ;
-	delete command "Q" ;
-	delete command "QUIT" ;
+	delete command ["1", "2", "3", "T", "TIPS", "R", "RESET", "Q", "QUIT"];
 	if (debug_mode) {
 		delete command "WIN" ;
 	}
@@ -527,23 +452,13 @@ hanoi_quit {
 	}
 	goto on_tick_ch2_castle_34;
 }
-hanoi_help {
-	hanoi_draw_help = true;
-	hanoi_move()
-}
-
-hanoi_reset {
-	hanoi_init_done = false;
-	hanoi_init_variables()
-	draw_hanoi()
-}
 
 hanoi_init_variables {
 	grip_col = 1;
 	grip_value = 0;
-	[ array1_7, array1_6, array1_5, array1_4, array1_3, array1_2, array1_1 ] = [ 0, 1, 2, 3, 4, 5, 6 ];
-	[ array2_7, array2_6, array2_5, array2_4, array2_3, array2_2, array2_1 ] = [ 0, 0, 0, 0, 0, 0, 0 ];
-	[ array3_7, array3_6, array3_5, array3_4, array3_3, array3_2, array3_1 ] = [ 0, 0, 0, 0, 0, 0, 0 ];
+	[ array1_1, array1_2, array1_3, array1_4, array1_5, array1_6, array1_7 ] = [ 6, 5, 4, 3, 2, 1, 0 ];
+	[ array2_1, array2_2, array2_3, array2_4, array2_5, array2_6, array2_7 ] = [ 0, 0, 0, 0, 0, 0, 0 ];
+	[ array3_1, array3_2, array3_3, array3_4, array3_5, array3_6, array3_7 ] = [ 0, 0, 0, 0, 0, 0, 0 ];
 	array1_length = 6;
 	array2_length = 0;
 	array3_length = 0;
@@ -555,27 +470,29 @@ hanoi_init_game {
 	if (!hanoi_init_done || hanoi_won) {
 		hanoi_init_variables()
 	}
-	command "1"     = hanoi_move_1;
-	command "2"     = hanoi_move_2;
-	command "3"     = hanoi_move_3;
-	command "T"     = hanoi_help;
-	command "TIPS"  = hanoi_help;
-	command "R"     = hanoi_reset;
-	command "RESET" = hanoi_reset;
-	command "Q"     = hanoi_quit_from_terminal;
-	command "QUIT"  = hanoi_quit_from_terminal;
+	command "1" = { grip_col = 1; hanoi_move() };
+	command "2" = { grip_col = 2; hanoi_move() };
+	command "3" = { grip_col = 3; hanoi_move() };
+	command ["T", "TIPS"] = script hanoi_help {
+		hanoi_draw_help = true;
+		draw_hanoi()
+	};
+	command ["R", "RESET"] = script hanoi_reset {
+		hanoi_init_done = false;
+		hanoi_init_variables()
+		draw_hanoi()
+	};
+	command ["Q", "QUIT"] = script hanoi_quit_from_terminal {
+		map on_tick = hanoi_quit;
+	};
 	if (debug_mode) {
-		command "WIN" = hanoi_win;
+		command "WIN" = hanoi_win {
+			hanoi_won = true;
+			hanoi_unregister()
+			goto draw_hanoi;
+		};
 	}
 	// debug!(hanoi_init_game)
 	light LED_USB = on;
 	entity Lights on_tick = {};
-}
-hanoi_quit_from_terminal {
-	map on_tick = hanoi_quit;
-}
-hanoi_win {
-	hanoi_won = true;
-	hanoi_unregister()
-	goto draw_hanoi;
 }

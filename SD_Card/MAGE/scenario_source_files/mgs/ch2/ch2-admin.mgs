@@ -8,39 +8,19 @@ $goto_round_5 = 10;
 ch2_count_flags {
 	tempvar = 0;
 	// normal
-	if (ch2_installed_heatsink) {
-		tempvar += 1;
-	}
-	if (ch2_installed_powersupply) {
-		tempvar += 1;
-	}
-	if (ch2_installed_monitor) {
-		tempvar += 1;
-	}
+	if (ch2_installed_heatsink) { tempvar += 1; }
+	if (ch2_installed_powersupply) { tempvar += 1; }
+	if (ch2_installed_monitor) { tempvar += 1; }
 	// abstract
-	if (ch2_installed_harddrive) {
-		tempvar += 1;
-	}
-	if (ch2_installed_keyboard) {
-		tempvar += 1;
-	}
-	if (ch2_installed_mouse) {
-		tempvar += 1;
-	}
+	if (ch2_installed_harddrive) { tempvar += 1; }
+	if (ch2_installed_keyboard) { tempvar += 1; }
+	if (ch2_installed_mouse) { tempvar += 1; }
 	// desperate
-	if (ch2_installed_ramchips) {
-		tempvar += 1;
-	}
-	if (ch2_installed_clock) {
-		tempvar += 1;
-	}
-	if (ch2_installed_cpu) {
-		tempvar += 1;
-	}
+	if (ch2_installed_ramchips) { tempvar += 1; }
+	if (ch2_installed_clock) { tempvar += 1; }
+	if (ch2_installed_cpu) { tempvar += 1; }
 	// final
-	if (ch2_installed_mainframeos) {
-		tempvar += 1;
-	}
+	if (ch2_installed_mainframeos) { tempvar += 1; }
 	return tempvar;
 }
 

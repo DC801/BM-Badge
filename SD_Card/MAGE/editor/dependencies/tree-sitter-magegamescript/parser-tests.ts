@@ -22,7 +22,7 @@ const actionArrayToScript = (
 // will do all action tests if empty
 // if not empty, also won't do any file-level tests
 // TODO split file tests and action tests into different "projects"
-const onlyDoTheseActionTests = [];
+const onlyDoTheseActionTests = ['script_def_in_spread'];
 
 const skipTheseTests = new Set([
 	// currently to skip tests that generate warnings
@@ -594,4 +594,7 @@ const doErrorTests = async () => {
 		allErrorErrors.forEach((v) => console.error(v));
 	}
 };
-doErrorTests();
+
+if (onlyDoTheseActionTests.length === 0) {
+	doErrorTests();
+}
