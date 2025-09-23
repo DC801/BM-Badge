@@ -19,27 +19,28 @@ const actionArrayToScript = (
 	return ret.join('\n');
 };
 
-// will do all action tests if empty
-// if not empty, also won't do any file-level tests
-// TODO split file tests and action tests into different "projects"
+// if there are any entries in any of these, the only the listed tests will be run
 const onlyDoTheseActionTests = [];
-
-const skipTheseTests: Set<string> = new Set([]);
+const onlyDoTheseFileTests = [];
+const doErrorTests = true;
 
 // --------------------------- Putting action and file tests into a "project" ---------------------------
+// (error tests are separate, as they are each their own project)
 
-let fakeFileMap = {};
-if (onlyDoTheseActionTests.length === 0) {
-	fakeFileMap = fileTests;
-}
-const fileTestNames = Object.keys(fileTests);
-const actionTestNames = (
-	onlyDoTheseActionTests.length === 0 ? Object.keys(actionTests) : onlyDoTheseActionTests
-).filter((testName) => !skipTheseTests.has(testName));
+const fakeFileMap = {};
 
+const doAllTests = onlyDoTheseActionTests.length === 0 && onlyDoTheseFileTests.length === 0;
+const actionTestNames = doAllTests ? Object.keys(actionTests) : onlyDoTheseActionTests;
+const fileTestNames = doAllTests ? Object.keys(fileTests) : onlyDoTheseFileTests;
+
+// add file tests to project
+fileTestNames.forEach((fileTestName) => {
+	fakeFileMap[fileTestName] = fileTests[fileTestName];
+});
+
+// add action tests to project
 fakeFileMap['actionTests.mgs'] = {
 	fileText: actionTestNames
-		.filter((testName) => !skipTheseTests.has(testName))
 		.map((testName) => {
 			const v = actionTests[testName];
 			if (!v) {
@@ -71,6 +72,8 @@ actionTestNames.forEach((testName) => {
 	}
 	expectedScripts[testName] = expectedPrint;
 });
+
+// --------------------------- Comparing objects and printing diffs ---------------------------
 
 type ColoredDifferentString = {
 	diff: string;
@@ -532,7 +535,14 @@ const runTests = async () => {
 				if (result.mgsWarnings) console.warn(result.mgsWarnings);
 				if (result.mgsErrors) console.error(result.mgsErrors);
 			} else {
-				console.log(`All ${actionTestNames.length} action unit tests good, chief!`);
+				const testsRun = actionTestNames.length + fileTestNames.length;
+				if (testsRun !== 1) {
+					console.log(`All ${testsRun} basic unit tests passed!`);
+				} else if (actionTestNames.length) {
+					console.log(`The action unit test '${actionTestNames[0]}' passed!`);
+				} else {
+					console.log(`The file unit test '${fileTestNames[0]}' passed!`);
+				}
 			}
 		}
 	});
@@ -542,7 +552,7 @@ runTests();
 
 // --------------------------- ERROR TESTS ---------------------------
 
-const doErrorTests = async () => {
+const runErrorTests = async () => {
 	const promises = Object.keys(errorTests).map(async (testName) => {
 		const errorErrors: string[] = [];
 		const testData = errorTests[testName];
@@ -592,6 +602,6 @@ const doErrorTests = async () => {
 	}
 };
 
-if (onlyDoTheseActionTests.length === 0) {
-	doErrorTests();
+if (doAllTests && doErrorTests) {
+	runErrorTests();
 }

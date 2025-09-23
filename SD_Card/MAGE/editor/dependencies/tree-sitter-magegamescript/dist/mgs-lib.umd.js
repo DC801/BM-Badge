@@ -13538,9 +13538,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         const labelDebug = debug.using(action.debug.node);
         steps[i2] = GotoLabel.quick(labelDebug, label);
       }
-      if (!action.isIdenticalTo(action)) {
-        throw new Error("isIdenticalTo failure");
-      }
     });
     return steps;
   };
