@@ -977,6 +977,12 @@ export class ScriptDefinition extends MathlangNode {
 		}
 		return true;
 	}
+	getScript() {
+		return this.scriptName;
+	}
+	setScript(script: string) {
+		this.scriptName = script;
+	}
 	clone() {
 		const cloned = new ScriptDefinition(this.debug.clone(), this.args);
 		cloned.actions = AnyNode.cloneAll(this.actions);
@@ -1119,6 +1125,12 @@ export class CopyMacro extends MathlangNode {
 			}
 		}
 		return true;
+	}
+	getScript() {
+		return this.script;
+	}
+	setScript(script: string) {
+		this.script = script;
 	}
 	clone() {
 		return new CopyMacro(this.debug.clone(), this.args);

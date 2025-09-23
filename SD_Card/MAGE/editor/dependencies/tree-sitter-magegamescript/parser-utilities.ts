@@ -1,5 +1,13 @@
 import { Node as TreeSitterNode } from 'web-tree-sitter';
-import { Action } from './parser-bytecode-info.ts';
+import {
+	Action,
+	CheckAction,
+	COPY_SCRIPT,
+	REGISTER_SERIAL_DIALOG_COMMAND,
+	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
+	RUN_SCRIPT,
+	ActionSetScript,
+} from './parser-bytecode-info.ts';
 import {
 	MathlangLocation,
 	AnyNode,
@@ -17,6 +25,10 @@ import {
 	ContinueStatement,
 	BreakStatement,
 	FnCall,
+	ScriptDefinition,
+	CopyMacro,
+	DialogDefinition,
+	SerialDialogDefinition,
 } from './parser-types.ts';
 import { type FileMap } from './parser-project.ts';
 import {
@@ -362,4 +374,42 @@ export const simplifyLabelGotos = (actions: AnyNode[]): AnyNode[] => {
 		}
 	});
 	return actions;
+};
+
+export const updateScriptName = (v: AnyNode, oldName: string, newName: string) => {
+	if (v instanceof ScriptDefinition) {
+		if (v.scriptName === oldName) {
+			v.scriptName = newName;
+		}
+	}
+	if (v instanceof CheckAction) {
+		if (v.getScript() === oldName) {
+			v.setScript(newName);
+		}
+	} else if (
+		v instanceof CopyMacro ||
+		v instanceof COPY_SCRIPT ||
+		v instanceof RUN_SCRIPT ||
+		v instanceof REGISTER_SERIAL_DIALOG_COMMAND ||
+		v instanceof REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT ||
+		v instanceof ActionSetScript
+	) {
+		if (v.script === oldName) {
+			v.script = newName;
+		}
+	} else if (v instanceof DialogDefinition) {
+		v.dialogs.forEach((dialog) => {
+			(dialog.options || []).forEach((option) => {
+				if (option.script === oldName) {
+					option.script = newName;
+				}
+			});
+		});
+	} else if (v instanceof SerialDialogDefinition) {
+		(v.serialDialog.options || []).forEach((option) => {
+			if (option.script === oldName) {
+				option.script = newName;
+			}
+		});
+	}
 };

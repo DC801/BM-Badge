@@ -5216,6 +5216,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       stack.unshift(localConstants);
       let steps = handleNamedChildren(debug.using(definition.bodyNode));
       steps = flattenAndDoAutoReturn(debug, steps);
+      steps.forEach((v, i2, arr) => {
+        if (v instanceof ScriptDefinition) {
+          const oldName = v.scriptName;
+          const newName = v.scriptName + `-fn${debug.f.p.advanceGotoSuffix()}`;
+          v.scriptName = newName;
+          v.actions.forEach((action) => updateScriptName(action, oldName, newName));
+          for (let j = i2 + 1; j < arr.length; j++) {
+            updateScriptName(arr[j], oldName, newName);
+          }
+        }
+      });
       stack.shift();
       return steps;
     },
@@ -7266,6 +7277,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return true;
     }
+    getScript() {
+      return this.scriptName;
+    }
+    setScript(script) {
+      this.scriptName = script;
+    }
     clone() {
       const cloned = new ScriptDefinition(this.debug.clone(), this.args);
       cloned.actions = AnyNode.cloneAll(this.actions);
@@ -7400,6 +7417,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
       }
       return true;
+    }
+    getScript() {
+      return this.script;
+    }
+    setScript(script) {
+      this.script = script;
     }
     clone() {
       return new CopyMacro(this.debug.clone(), this.args);
@@ -10410,6 +10433,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     getBool() {
       return this.expected_bool;
     }
+    getScript() {
+      return this.success_script;
+    }
+    setScript(script) {
+      this.success_script = script;
+    }
     invert() {
       this.expected_bool = !this.expected_bool;
       return this;
@@ -10523,6 +10552,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "RUN_SCRIPT";
       this.script = breakIfNotString(args2.script);
     }
+    getScript() {
+      return this.script;
+    }
+    setScript(script) {
+      this.script = script;
+    }
     static quick(script) {
       return new RUN_SCRIPT({ script });
     }
@@ -10605,15 +10640,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `${printEntityIdentifier(this.entity)} y = ${this.u2_value};`;
     }
   }
-  class SET_ENTITY_INTERACT_SCRIPT extends Action {
+  class ActionSetScript extends Action {
     constructor(args2) {
       super();
+      __publicField(this, "script");
+      this.script = breakIfNotString(args2.script);
+    }
+    getScript() {
+      return this.script;
+    }
+    setScript(script) {
+      this.script = script;
+    }
+  }
+  class SET_ENTITY_INTERACT_SCRIPT extends ActionSetScript {
+    constructor(args2) {
+      super(args2);
       __publicField(this, "action");
       __publicField(this, "entity");
-      __publicField(this, "script");
       this.action = "SET_ENTITY_INTERACT_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
-      this.script = breakIfNotString(args2.script);
     }
     static quick(entity, script) {
       return new SET_ENTITY_INTERACT_SCRIPT({ entity, script });
@@ -10622,15 +10668,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `${printEntityIdentifier(this.entity)} on_interact = "${this.script}";`;
     }
   }
-  class SET_ENTITY_TICK_SCRIPT extends Action {
+  class SET_ENTITY_TICK_SCRIPT extends ActionSetScript {
     constructor(args2) {
-      super();
+      super(args2);
       __publicField(this, "action");
       __publicField(this, "entity");
-      __publicField(this, "script");
       this.action = "SET_ENTITY_TICK_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
-      this.script = breakIfNotString(args2.script);
     }
     static quick(entity, script) {
       return new SET_ENTITY_TICK_SCRIPT({ entity, script });
@@ -10879,6 +10923,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return new COPY_SCRIPT({ script });
     }
+    getScript() {
+      return this.script;
+    }
+    setScript(script) {
+      this.script = script;
+    }
     print() {
       if (!this.search_and_replace) {
         return `"${this.script}"()`;
@@ -10955,13 +11005,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return printSetBoolAction(this, `player_control`);
     }
   }
-  class SET_MAP_TICK_SCRIPT extends Action {
+  class SET_MAP_TICK_SCRIPT extends ActionSetScript {
     constructor(args2) {
-      super();
+      super(args2);
       __publicField(this, "action");
-      __publicField(this, "script");
       this.action = "SET_MAP_TICK_SCRIPT";
-      this.script = breakIfNotString(args2.script);
     }
     static quick(script) {
       return new SET_MAP_TICK_SCRIPT({ script });
@@ -11534,13 +11582,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `${verb} serial_dialog "${this.serial_dialog}";`;
     }
   }
-  class SET_MAP_LOOK_SCRIPT extends Action {
+  class SET_MAP_LOOK_SCRIPT extends ActionSetScript {
     constructor(args2) {
-      super();
+      super(args2);
       __publicField(this, "action");
-      __publicField(this, "script");
       this.action = "SET_MAP_LOOK_SCRIPT";
-      this.script = breakIfNotString(args2.script);
     }
     static quick(script) {
       return new SET_MAP_LOOK_SCRIPT({ script });
@@ -11549,14 +11595,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return `map on_look = "${this.script}";`;
     }
   }
-  class SET_ENTITY_LOOK_SCRIPT extends Action {
+  class SET_ENTITY_LOOK_SCRIPT extends ActionSetScript {
     constructor(args2) {
-      super();
+      super(args2);
       __publicField(this, "action");
-      __publicField(this, "script");
       __publicField(this, "entity");
       this.action = "SET_ENTITY_LOOK_SCRIPT";
-      this.script = breakIfNotString(args2.script);
       this.entity = breakIfNotString(args2.entity);
     }
     static quick(entity, script) {
@@ -11644,6 +11688,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.script = breakIfNotString(args2.script);
       if (args2.is_fail) this.is_fail = true;
     }
+    getScript() {
+      return this.script;
+    }
+    setScript(script) {
+      this.script = script;
+    }
     print() {
       return this.is_fail ? `command "${this.command}" fail = "${this.script}";` : `command "${this.command}" = "${this.script}";`;
     }
@@ -11659,6 +11709,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.command = breakIfNotString(args2.command);
       this.script = breakIfNotString(args2.script);
       this.argument = breakIfNotString(args2.argument);
+    }
+    getScript() {
+      return this.script;
+    }
+    setScript(script) {
+      this.script = script;
     }
     print() {
       return `command "${this.command}" + "${this.argument}" = "${this.script}";`;
@@ -13626,6 +13682,36 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     });
     return actions;
   };
+  const updateScriptName = (v, oldName, newName) => {
+    if (v instanceof ScriptDefinition) {
+      if (v.scriptName === oldName) {
+        v.scriptName = newName;
+      }
+    }
+    if (v instanceof CheckAction) {
+      if (v.getScript() === oldName) {
+        v.setScript(newName);
+      }
+    } else if (v instanceof CopyMacro || v instanceof COPY_SCRIPT || v instanceof RUN_SCRIPT || v instanceof REGISTER_SERIAL_DIALOG_COMMAND || v instanceof REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT || v instanceof ActionSetScript) {
+      if (v.script === oldName) {
+        v.script = newName;
+      }
+    } else if (v instanceof DialogDefinition) {
+      v.dialogs.forEach((dialog) => {
+        (dialog.options || []).forEach((option) => {
+          if (option.script === oldName) {
+            option.script = newName;
+          }
+        });
+      });
+    } else if (v instanceof SerialDialogDefinition) {
+      (v.serialDialog.options || []).forEach((option) => {
+        if (option.script === oldName) {
+          option.script = newName;
+        }
+      });
+    }
+  };
   const copyRecursion = [];
   class ProjectState {
     constructor(tsParser, fileMap, scenarioData) {
@@ -13703,7 +13789,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const newLocation = data.debug;
       if (oldLocation.isIdenticalTo(newLocation)) {
         throw new Error(
-          "UNIMPLEMENTED: duplicate script definition within a fn; cannot use same solution as (s)dialogs; think of something else!"
+          "UNREACHABLE? This is maybe a duplicate script definition within a fn; cannot use same solution as (s)dialogs; think of something else!"
         );
       }
       if (!this.duplicates.scripts[name2]) {

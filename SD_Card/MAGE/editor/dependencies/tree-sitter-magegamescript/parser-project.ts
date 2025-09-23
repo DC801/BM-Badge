@@ -118,9 +118,8 @@ export class ProjectState {
 		const oldLocation = this.scripts[name].debug;
 		const newLocation = data.debug;
 		if (oldLocation.isIdenticalTo(newLocation)) {
-			// TODO
 			throw new Error(
-				'UNIMPLEMENTED: duplicate script definition within a fn; cannot use same solution as (s)dialogs; think of something else!',
+				'UNREACHABLE? This is maybe a duplicate script definition within a fn; cannot use same solution as (s)dialogs; think of something else!',
 			);
 		}
 		if (!this.duplicates.scripts[name]) {

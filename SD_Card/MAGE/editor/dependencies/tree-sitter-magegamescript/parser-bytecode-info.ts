@@ -108,6 +108,12 @@ export class CheckAction extends Action {
 	getBool() {
 		return this.expected_bool;
 	}
+	getScript() {
+		return this.success_script;
+	}
+	setScript(script: string) {
+		this.success_script = script;
+	}
 	invert() {
 		this.expected_bool = !this.expected_bool;
 		return this;
@@ -173,13 +179,6 @@ export class ActionSetBool extends Action {
 // 	| SET_ENTITY_DIRECTION
 // 	| SET_ENTITY_DIRECTION_TARGET_GEOMETRY
 // 	| SET_ENTITY_DIRECTION_TARGET_ENTITY;
-
-// export type ActionSetScript =
-// 	| SET_MAP_TICK_SCRIPT
-// 	| SET_MAP_LOOK_SCRIPT
-// 	| SET_ENTITY_TICK_SCRIPT
-// 	| SET_ENTITY_INTERACT_SCRIPT
-// 	| SET_ENTITY_LOOK_SCRIPT;
 
 // export type ActionMoveOverTime =
 // 	| LOOP_CAMERA_ALONG_GEOMETRY
@@ -274,6 +273,12 @@ export class RUN_SCRIPT extends Action {
 		this.action = 'RUN_SCRIPT';
 		this.script = breakIfNotString(args.script);
 	}
+	getScript() {
+		return this.script;
+	}
+	setScript(script: string) {
+		this.script = script;
+	}
 	static quick(script: string) {
 		return new RUN_SCRIPT({ script });
 	}
@@ -356,15 +361,26 @@ export class SET_ENTITY_Y extends Action {
 		return `${printEntityIdentifier(this.entity)} y = ${this.u2_value};`;
 	}
 }
-export class SET_ENTITY_INTERACT_SCRIPT extends Action {
-	action: 'SET_ENTITY_INTERACT_SCRIPT';
-	entity: string;
+export class ActionSetScript extends Action {
 	script: string;
 	constructor(args: GenericObj) {
 		super();
+		this.script = breakIfNotString(args.script);
+	}
+	getScript() {
+		return this.script;
+	}
+	setScript(script: string) {
+		this.script = script;
+	}
+}
+export class SET_ENTITY_INTERACT_SCRIPT extends ActionSetScript {
+	action: 'SET_ENTITY_INTERACT_SCRIPT';
+	entity: string;
+	constructor(args: GenericObj) {
+		super(args);
 		this.action = 'SET_ENTITY_INTERACT_SCRIPT';
 		this.entity = breakIfNotString(args.entity);
-		this.script = breakIfNotString(args.script);
 	}
 	static quick(entity: string, script: string) {
 		return new SET_ENTITY_INTERACT_SCRIPT({ entity, script });
@@ -373,15 +389,13 @@ export class SET_ENTITY_INTERACT_SCRIPT extends Action {
 		return `${printEntityIdentifier(this.entity)} on_interact = "${this.script}";`;
 	}
 }
-export class SET_ENTITY_TICK_SCRIPT extends Action {
+export class SET_ENTITY_TICK_SCRIPT extends ActionSetScript {
 	action: 'SET_ENTITY_TICK_SCRIPT';
 	entity: string;
-	script: string;
 	constructor(args: GenericObj) {
-		super();
+		super(args);
 		this.action = 'SET_ENTITY_TICK_SCRIPT';
 		this.entity = breakIfNotString(args.entity);
-		this.script = breakIfNotString(args.script);
 	}
 	static quick(entity: string, script: string) {
 		return new SET_ENTITY_TICK_SCRIPT({ entity, script });
@@ -630,6 +644,12 @@ export class COPY_SCRIPT extends Action {
 		}
 		return new COPY_SCRIPT({ script });
 	}
+	getScript() {
+		return this.script;
+	}
+	setScript(script: string) {
+		this.script = script;
+	}
 	print() {
 		if (!this.search_and_replace) {
 			return `"${this.script}"()`;
@@ -706,13 +726,11 @@ export class SET_PLAYER_CONTROL extends ActionSetBool {
 		return printSetBoolAction(this, `player_control`);
 	}
 }
-export class SET_MAP_TICK_SCRIPT extends Action {
+export class SET_MAP_TICK_SCRIPT extends ActionSetScript {
 	action: 'SET_MAP_TICK_SCRIPT';
-	script: string;
 	constructor(args: GenericObj) {
-		super();
+		super(args);
 		this.action = 'SET_MAP_TICK_SCRIPT';
-		this.script = breakIfNotString(args.script);
 	}
 	static quick(script: string) {
 		return new SET_MAP_TICK_SCRIPT({ script });
@@ -1286,13 +1304,11 @@ export class SHOW_SERIAL_DIALOG extends Action {
 		return `${verb} serial_dialog "${this.serial_dialog}";`;
 	}
 }
-export class SET_MAP_LOOK_SCRIPT extends Action {
+export class SET_MAP_LOOK_SCRIPT extends ActionSetScript {
 	action: 'SET_MAP_LOOK_SCRIPT';
-	script: string;
 	constructor(args: GenericObj) {
-		super();
+		super(args);
 		this.action = 'SET_MAP_LOOK_SCRIPT';
-		this.script = breakIfNotString(args.script);
 	}
 	static quick(script: string) {
 		return new SET_MAP_LOOK_SCRIPT({ script });
@@ -1301,14 +1317,12 @@ export class SET_MAP_LOOK_SCRIPT extends Action {
 		return `map on_look = "${this.script}";`;
 	}
 }
-export class SET_ENTITY_LOOK_SCRIPT extends Action {
+export class SET_ENTITY_LOOK_SCRIPT extends ActionSetScript {
 	action: 'SET_ENTITY_LOOK_SCRIPT';
-	script: string;
 	entity: string;
 	constructor(args: GenericObj) {
-		super();
+		super(args);
 		this.action = 'SET_ENTITY_LOOK_SCRIPT';
-		this.script = breakIfNotString(args.script);
 		this.entity = breakIfNotString(args.entity);
 	}
 	static quick(entity: string, script: string) {
@@ -1396,6 +1410,12 @@ export class REGISTER_SERIAL_DIALOG_COMMAND extends Action {
 		this.script = breakIfNotString(args.script);
 		if (args.is_fail) this.is_fail = true;
 	}
+	getScript() {
+		return this.script;
+	}
+	setScript(script: string) {
+		this.script = script;
+	}
 	print() {
 		return this.is_fail
 			? `command "${this.command}" fail = "${this.script}";`
@@ -1413,6 +1433,12 @@ export class REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT extends Action {
 		this.command = breakIfNotString(args.command);
 		this.script = breakIfNotString(args.script);
 		this.argument = breakIfNotString(args.argument);
+	}
+	getScript() {
+		return this.script;
+	}
+	setScript(script: string) {
+		this.script = script;
 	}
 	print() {
 		return `command "${this.command}" + "${this.argument}" = "${this.script}";`;

@@ -11,6 +11,7 @@ import {
 	doAutoBreakContinue,
 	dropTemporary,
 	newTemporary,
+	updateScriptName,
 } from './parser-utilities.ts';
 
 import { buildSerialDialogFromInfo, buildDialogFromInfo } from './parser-dialogs.ts';
@@ -73,10 +74,19 @@ import {
 } from './parser-types.ts';
 import {
 	Action,
+	CheckAction,
 	COPY_SCRIPT,
 	GOTO_ACTION_INDEX,
 	MUTATE_VARIABLE,
+	REGISTER_SERIAL_DIALOG_COMMAND,
+	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
 	RUN_SCRIPT,
+	SET_ENTITY_INTERACT_SCRIPT,
+	SET_ENTITY_LOOK_SCRIPT,
+	SET_ENTITY_TICK_SCRIPT,
+	SET_MAP_LOOK_SCRIPT,
+	SET_MAP_TICK_SCRIPT,
+	SET_SCRIPT_PAUSE,
 	SHOW_SERIAL_DIALOG,
 } from './parser-bytecode-info.ts';
 
@@ -225,6 +235,19 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 
 		// bake it like a script body
 		steps = flattenAndDoAutoReturn(debug, steps);
+
+		// if there's any scripts-in-place, add a suffix to them
+		steps.forEach((v, i, arr) => {
+			if (v instanceof ScriptDefinition) {
+				const oldName = v.scriptName;
+				const newName = v.scriptName + `-fn${debug.f.p.advanceGotoSuffix()}`;
+				v.scriptName = newName;
+				v.actions.forEach((action) => updateScriptName(action, oldName, newName));
+				for (let j = i + 1; j < arr.length; j++) {
+					updateScriptName(arr[j], oldName, newName);
+				}
+			}
+		});
 
 		// we're done with the args for this call; remove them from the fn stack
 		stack.shift();

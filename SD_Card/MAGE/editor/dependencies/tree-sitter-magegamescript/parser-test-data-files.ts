@@ -15,6 +15,60 @@ type TestFileMapEntry = {
 	expected: TestExpected;
 };
 export const fileTests: Record<string, TestFileMapEntry> = {
+	'script_def_in_fn_call.mgs': {
+		fileText: `
+			fn make_command ($commandName, $arg) {
+				command $commandName = { wait $arg; };
+			}
+			script_def_in_fn_call {
+				make_command(wait_one, 1)
+				make_command(wait_two, 2)
+			}
+		`,
+		expected: {
+			scripts: {
+				script_def_in_fn_call: `"script_def_in_fn_call" {
+					command "wait_one" = "script_def_in_fn_call.mgs-2:27-fn3";
+					command "wait_two" = "script_def_in_fn_call.mgs-2:27-fn6";
+				}`,
+				'script_def_in_fn_call.mgs-2:27-fn3': `"script_def_in_fn_call.mgs-2:27-fn3" {
+					wait 1ms;
+				}`,
+				'script_def_in_fn_call.mgs-2:27-fn6': `"script_def_in_fn_call.mgs-2:27-fn6" {
+					wait 2ms;
+				}`,
+			},
+		},
+	},
+	'fn_call_in_script_def.mgs': {
+		fileText: `
+			fn do_wait ($arg) { wait $arg; }
+			fn_call_in_script_def {
+				command wait_one = { do_wait(1) };
+				command wait_two = { do_wait(2) };
+				command wait_twice = { do_wait(2) do_wait(2) };
+			}
+		`,
+		expected: {
+			scripts: {
+				fn_call_in_script_def: `"fn_call_in_script_def" {
+					command "wait_one" = "fn_call_in_script_def.mgs-3:23";
+					command "wait_two" = "fn_call_in_script_def.mgs-4:23";
+					command "wait_twice" = "fn_call_in_script_def.mgs-5:25";
+				}`,
+				'fn_call_in_script_def.mgs-3:23': `"fn_call_in_script_def.mgs-3:23" {
+					wait 1ms;
+				}`,
+				'fn_call_in_script_def.mgs-4:23': `"fn_call_in_script_def.mgs-4:23" {
+					wait 2ms;
+				}`,
+				'fn_call_in_script_def.mgs-5:25': `"fn_call_in_script_def.mgs-5:25" {
+					wait 2ms;
+					wait 2ms;
+				}`,
+			},
+		},
+	},
 	'fn_returns.mgs': {
 		fileText: `
 			addThree ($n) {

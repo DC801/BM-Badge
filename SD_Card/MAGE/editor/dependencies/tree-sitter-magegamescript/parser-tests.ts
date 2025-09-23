@@ -596,7 +596,7 @@ const runErrorTests = async () => {
 	});
 	const allErrorErrors = (await Promise.all(promises)).flat();
 	if (allErrorErrors.length === 0) {
-		console.log('All error tests OK');
+		console.log(`All ${Object.keys(errorTests).length} error tests OK`);
 	} else {
 		allErrorErrors.forEach((v) => console.error(v));
 	}
