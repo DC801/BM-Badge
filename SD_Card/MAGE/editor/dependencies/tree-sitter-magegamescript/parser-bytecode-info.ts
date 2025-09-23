@@ -38,6 +38,20 @@ export class Action extends AnyNode {
 		if (!fn) throw new Error('no action constructor for ' + this.action);
 		return fn(this);
 	}
+	isIdenticalTo(that: Action) {
+		// ascertain quickly
+		if (this.action !== that.action) return false;
+		// check the rest of the params one at a time
+		const setOfKeys = new Set([...Object.keys(this), ...Object.keys(that)]);
+		// but skip the one we already tried
+		setOfKeys.delete('action');
+		const keys = [...setOfKeys];
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			if (this[key] !== that[key]) return false;
+		}
+		return true;
+	}
 	print() {
 		return `json[${JSON.stringify(this, null, '\t')}];`;
 	}

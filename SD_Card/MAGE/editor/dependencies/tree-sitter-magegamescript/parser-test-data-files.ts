@@ -64,7 +64,7 @@ export const fileTests: Record<string, TestFileMapEntry> = {
 			},
 		},
 	},
-	'header.mgs': {
+	'define_constant.mgs': {
 		fileText: `
 			$magicNumber = 76;
 		`,
@@ -72,7 +72,7 @@ export const fileTests: Record<string, TestFileMapEntry> = {
 			scripts: {},
 			constants: {
 				$magicNumber: {
-					debug: { fileName: 'header.mgs' },
+					debug: { fileName: 'define_constant.mgs' },
 					value: 76,
 				},
 			},
@@ -80,17 +80,17 @@ export const fileTests: Record<string, TestFileMapEntry> = {
 	},
 	'constants_include.mgs': {
 		fileText: `
-			include "header.mgs";
+			include "define_constant.mgs";
 			$trombones = $magicNumber;
 			$hamburgers = "steamed hams";
-			"constants" {
+			"used_double_constant" {
 				player x = $trombones;
 				warp_state = $hamburgers;
 			}
 		`,
 		expected: {
 			scripts: {
-				constants: `"constants" {
+				used_double_constant: `"used_double_constant" {
 					player x = 76;
 					warp_state = "steamed hams";
 				}`,

@@ -6401,6 +6401,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     return false;
   };
   class AnyNode {
+    isIdenticalTo(that) {
+      if (this instanceof Action || this instanceof MathlangNode) {
+        return this.isIdenticalTo(that);
+      }
+      throw new Error("ACTIONS DO NOT MATCH???");
+    }
     clone() {
       if (this instanceof MathlangNode) return this.clone();
       return Action.fromArgs(this);
@@ -6428,6 +6434,21 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "debug");
       this.debug = debug;
       this.args = args2;
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof MathlangNode)) return false;
+      const setOfKeys = /* @__PURE__ */ new Set([...Object.keys(this.args), ...Object.keys(that.args)]);
+      const keys = [...setOfKeys];
+      for (let i2 = 0; i2 < keys.length; i2++) {
+        const key = keys[i2];
+        const thisV = this.args[key];
+        const thatV = that.args[key];
+        if (thisV instanceof AnyNode) {
+          if (!thisV.isIdenticalTo(thatV)) return false;
+        }
+        if (this.args[key] !== that.args[key]) return false;
+      }
+      return true;
     }
     static breakIfNotAll(arr) {
       if (!Array.isArray(arr)) {
@@ -6527,6 +6548,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     "invalid operator": "use != and ==, not !== or ===",
     // warning, not error
     "invalid constant value": "constant value not an MGS primitive",
+    "ambiguous identifiers": 'will be interpreted as ints; coerce RHS to bools with "!!"',
+    "serial dialog option mismatch": "the first option type will be used",
     "dialog too long": "dialog will wrap off the bottom of the dialog frame (or into dialog options)"
   };
   const isMathlangMessageType = (v) => {
@@ -6560,6 +6583,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.params = breakIfNotStringArray(args2.params);
       this.paramNodes = breakIfNotTSNodeArray(args2.paramNodes);
       this.bodyNode = breakIfNotTSNode(args2.bodyNode);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof FunctionDefinition)) return false;
+      if (this.name !== that.name) return false;
+      if (JSON.stringify(this.params) !== JSON.stringify(that.params)) return false;
+      if (this.bodyNode !== that.bodyNode) return false;
+      if (this.paramNodes.length !== that.paramNodes.length) return false;
+      for (let i2 = 0; i2 < this.paramNodes.length; i2++) {
+        if (this.paramNodes[i2] !== that.paramNodes[i2]) return false;
+      }
+      return true;
     }
     clone() {
       return new FunctionDefinition(this.debug.clone(), {
@@ -6600,6 +6634,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "targets");
       this.targets = AddDialogSettingsTarget.breakIfNotAll(args2.targets);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof AddDialogSettings)) return false;
+      if (this.targets.length !== that.targets.length) return false;
+      for (let i2 = 0; i2 < this.targets.length; i2++) {
+        if (!this.targets[i2].isIdenticalTo(that.targets[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       const targets = AnyNode.cloneAll(this.targets);
       return new AddDialogSettings(this.debug.clone(), { ...this.args, targets });
@@ -6620,6 +6662,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.type = breakIfNotString(args2.type);
       this.parameters = DialogParameter.breakIfNotAll(args2.parameters);
       if (typeof args2.target === "string") this.target = args2.target;
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof AddDialogSettingsTarget)) return false;
+      if (this.type !== that.type) return false;
+      if (this.parameters.length !== that.parameters.length) return false;
+      for (let i2 = 0; i2 < this.parameters.length; i2++) {
+        if (!this.parameters[i2].isIdenticalTo(that.parameters[i2])) return false;
+      }
+      if (this.target !== that.target) return false;
+      return true;
     }
     clone() {
       const parameters = AnyNode.cloneAll(this.parameters);
@@ -6655,6 +6707,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "parameters");
       this.parameters = SerialDialogParameter.breakIfNotAll(args2.parameters);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof AddSerialDialogSettings)) return false;
+      if (this.parameters.length !== that.parameters.length) return false;
+      for (let i2 = 0; i2 < this.parameters.length; i2++) {
+        if (!this.parameters[i2].isIdenticalTo(that.parameters[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       const parameters = AnyNode.cloneAll(this.parameters);
       return new AddSerialDialogSettings(this.debug.clone(), {
@@ -6675,6 +6735,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug) {
       super(debug, {});
     }
+    isIdenticalTo(that) {
+      return that instanceof ReturnStatement;
+    }
     clone() {
       return new ReturnStatement(this.debug.clone());
     }
@@ -6689,6 +6752,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug) {
       super(debug, {});
     }
+    isIdenticalTo(that) {
+      return that instanceof ContinueStatement;
+    }
     clone() {
       return new ReturnStatement(this.debug.clone());
     }
@@ -6702,6 +6768,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   class BreakStatement extends MathlangNode {
     constructor(debug) {
       super(debug, {});
+    }
+    isIdenticalTo(that) {
+      return that instanceof BreakStatement;
     }
     clone() {
       return new ReturnStatement(this.debug.clone());
@@ -6720,6 +6789,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "comment");
       this.label = breakIfNotString(args2.label);
       if (typeof args2.comment === "string") this.comment = args2.comment;
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof GotoLabel)) return false;
+      if (this.label !== that.label) return false;
+      if (this.comment !== that.comment) return false;
+      return true;
     }
     clone() {
       return new GotoLabel(this.debug.clone(), this.args);
@@ -6743,6 +6818,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.dialogName = breakIfNotString(args2.dialogName);
       this.dialogs = Dialog.breakIfNotAll(args2.dialogs);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof DialogDefinition)) return false;
+      if (this.dialogName !== that.dialogName) return false;
+      if (this.dialogs.length !== that.dialogs.length) return false;
+      for (let i2 = 0; i2 < this.dialogs.length; i2++) {
+        if (!this.dialogs[i2].isIdenticalTo(that.dialogs[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       const dialogs = AnyNode.cloneAll(this.dialogs);
       return new DialogDefinition(this.debug.clone(), { ...this.args, dialogs });
@@ -6762,6 +6846,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.property = breakIfNotString(args2.property);
       this.value = breakIfNotStringOrNumber(args2.value);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof DialogParameter)) return false;
+      if (this.property !== that.property) return false;
+      if (this.value !== that.value) return false;
+      return true;
     }
     clone() {
       return new DialogParameter(this.debug.clone(), this.args);
@@ -6808,6 +6898,27 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         });
       }
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof Dialog)) return false;
+      if (this.wrap !== that.wrap) return false;
+      if (this.emote !== that.emote) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.name !== that.name) return false;
+      if (this.portrait !== that.portrait) return false;
+      if (this.alignment !== that.alignment) return false;
+      if (this.border_tileset !== that.border_tileset) return false;
+      if (JSON.stringify(this.messages) !== JSON.stringify(that.messages)) return false;
+      if (this.response_type !== that.response_type) return false;
+      if (this.options && !that.options) return false;
+      if (!this.options && that.options) return false;
+      if (this.options && that.options) {
+        if (this.options.length !== that.options.length) return false;
+        for (let i2 = 0; i2 < this.options.length; i2++) {
+          if (!this.options[i2].isIdenticalTo(that.options[i2])) return false;
+        }
+      }
+      return true;
+    }
     clone() {
       const newArgs = { ...this.args };
       if (this.options) {
@@ -6845,6 +6956,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.type = args2.type;
       this.value = breakIfNotString(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof DialogIdentifier)) return false;
+      if (this.type !== that.type) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new DialogIdentifier(this.debug.clone(), this.args);
     }
@@ -6868,6 +6985,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "script");
       this.label = breakIfNotString(args2.label);
       this.script = breakIfNotString(args2.script);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof DialogOption)) return false;
+      if (this.label !== that.label) return false;
+      if (this.script !== that.script) return false;
+      return true;
     }
     clone() {
       return new DialogOption(this.debug.clone(), this.args);
@@ -6902,6 +7025,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.dialogName = breakIfNotString(args2.dialogName);
       this.serialDialog = args2.serialDialog;
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof SerialDialogDefinition)) return false;
+      if (this.dialogName !== that.dialogName) return false;
+      if (!this.serialDialog.isIdenticalTo(that.serialDialog)) return false;
+      return true;
+    }
     clone() {
       const newArgs = { ...this.args };
       newArgs.serialDialog = this.serialDialog.clone();
@@ -6921,6 +7050,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.property = breakIfNotString(args2.property);
       this.value = breakIfNotStringOrNumber(args2.value);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof SerialDialogParameter)) return false;
+      if (this.property !== that.property) return false;
+      if (this.value !== that.value) return false;
+      return true;
     }
     clone() {
       const newArgs = { ...this.args };
@@ -6958,6 +7093,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (args2.text_options) {
         this.text_options = SerialDialogOption.breakIfNotAll(args2.text_options);
       }
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof SerialDialog)) return false;
+      if (this.options && !that.options) return false;
+      if (!this.options && that.options) return false;
+      if (this.options && that.options) {
+        if (this.options.length !== that.options.length) return false;
+        for (let i2 = 0; i2 < this.options.length; i2++) {
+          if (!this.options[i2].isIdenticalTo(that.options[i2])) return false;
+        }
+      }
+      if (this.text_options && !that.text_options) return false;
+      if (!this.text_options && that.text_options) return false;
+      if (this.text_options && that.text_options) {
+        if (this.text_options.length !== that.text_options.length) return false;
+        for (let i2 = 0; i2 < this.text_options.length; i2++) {
+          if (!this.text_options[i2].isIdenticalTo(that.text_options[i2])) return false;
+        }
+      }
+      return true;
     }
     clone() {
       const newArgs = { ...this.args };
@@ -6998,6 +7153,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.label = breakIfNotString(args2.label);
       this.script = breakIfNotString(args2.script);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof SerialDialogOption)) return false;
+      if (this.optionType !== that.optionType) return false;
+      if (this.label !== that.label) return false;
+      if (this.script !== that.script) return false;
+      return true;
+    }
     clone() {
       return new SerialDialogOption(this.debug.clone(), this.args);
     }
@@ -7027,6 +7189,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotString(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof IncludeNode)) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new IncludeNode(this.debug.clone(), this.args);
     }
@@ -7045,6 +7212,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (!isMGSPrimitive(args2.value)) throw new Error("not primitive");
       this.label = breakIfNotString(args2.label);
       this.value = args2.value;
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ConstantDefinition)) return false;
+      if (this.label !== that.label) return false;
+      if (this.value !== that.value) return false;
+      return true;
     }
     clone() {
       const newArgs = { ...this.args };
@@ -7084,6 +7257,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.actions = AnyNode.breakIfNotAll(args2.actions);
       if (args2.copyScriptResolved) this.copyScriptResolved = true;
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof ScriptDefinition)) return false;
+      if (this.scriptName !== that.scriptName) return false;
+      if (this.actions.length !== that.actions.length) return false;
+      for (let i2 = 0; i2 < this.actions.length; i2++) {
+        if (!this.actions[i2].isIdenticalTo(that.actions[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       const cloned = new ScriptDefinition(this.debug.clone(), this.args);
       cloned.actions = AnyNode.cloneAll(this.actions);
@@ -7113,6 +7295,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "comment");
       this.comment = breakIfNotString(args2.comment);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CommentNode)) return false;
+      if (this.comment !== that.comment) return false;
+      return true;
+    }
     clone() {
       return new CommentNode(this.debug.clone(), this.args);
     }
@@ -7129,6 +7316,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "label");
       this.label = breakIfNotString(args2.label);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof LabelDefinition)) return false;
+      if (this.label !== that.label) return false;
+      return true;
     }
     clone() {
       return new LabelDefinition(this.debug.clone(), this.args);
@@ -7159,6 +7351,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
       this.json = AnyNode.breakIfNotAll(sanitized);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof JSONLiteral)) return false;
+      if (this.json.length !== that.json.length) return false;
+      for (let i2 = 0; i2 < this.json.length; i2++) {
+        if (!this.json[i2].isIdenticalTo(that.json[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       return new JSONLiteral(this.debug.clone(), this.args);
     }
@@ -7182,6 +7382,24 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         });
         this.search_and_replace = search_and_replace;
       }
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CopyMacro)) return false;
+      if (this.script !== that.script) return false;
+      if (this.search_and_replace && !that.search_and_replace) return false;
+      if (!this.search_and_replace && that.search_and_replace) return false;
+      if (this.search_and_replace && that.search_and_replace) {
+        const keys = /* @__PURE__ */ new Set([
+          ...Object.keys(this.search_and_replace),
+          ...Object.keys(that.search_and_replace)
+        ]);
+        for (let i2 = 0; i2 < keys.size; i2++) {
+          if (this.search_and_replace[keys[i2]] !== that.search_and_replace[keys[i2]]) {
+            return false;
+          }
+        }
+      }
+      return true;
     }
     clone() {
       return new CopyMacro(this.debug.clone(), this.args);
@@ -7207,6 +7425,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         this.steps.unshift(mathlangComment);
       }
       this.steps = flattenNodes(this.steps);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof _MathlangSequence)) return false;
+      if (this.type !== that.type) return false;
+      if (this.steps.length !== that.steps.length) return false;
+      for (let i2 = 0; i2 < this.steps.length; i2++) {
+        if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+      }
+      return true;
     }
     clone() {
       const newArgs = { ...this.args };
@@ -7263,6 +7490,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.lhs = IntExpression.breakIfNot(args2.lhs);
       this.rhs = IntExpression.breakIfNot(args2.rhs);
       this.op = breakIfNotString(args2.op);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof IntBinaryExpression)) return false;
+      if (!this.lhs.isIdenticalTo(this.lhs)) return false;
+      if (!this.rhs.isIdenticalTo(this.rhs)) return false;
+      if (this.op !== that.op) return false;
+      return true;
     }
     clone() {
       const newArgs = { ...this.args };
@@ -7362,6 +7596,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotNumber(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof NumberLiteral)) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new NumberLiteral(this.debug.clone(), this.args);
     }
@@ -7401,6 +7640,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "source");
       this.source = breakIfNotString(args2.source);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof IdentifierLiteral)) return false;
+      if (this.source !== that.source) return false;
+      return true;
+    }
     clone() {
       return new IdentifierLiteral(this.debug.clone(), this.args);
     }
@@ -7435,6 +7679,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.inbound = false;
       this.entity = breakIfNotString(args2.entity);
       this.field = breakIfNotString(args2.field);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof EntityIntField)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.field !== that.field) return false;
+      if (this.inbound !== that.inbound) return false;
+      return true;
     }
     clone() {
       return new EntityIntField(this.debug.clone(), this.args);
@@ -7527,6 +7778,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotNumber(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof RNGSingle)) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new RNGSingle(this.debug.clone(), this.args);
     }
@@ -7553,6 +7809,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "add");
       this.value = breakIfNotNumber(args2.value);
       this.add = breakIfNotNumber(args2.add);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof RNGPair)) return false;
+      if (this.value !== that.value) return false;
+      if (this.add !== that.add) return false;
+      return true;
     }
     clone() {
       return new RNGPair(this.debug.clone(), this.args);
@@ -7598,6 +7860,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("invalid Fn type " + type);
       }
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof FnCall)) return false;
+      if (this.identifier !== that.identifier) return false;
+      if (this.type !== that.type) return false;
+      if (this.rawBody !== that.rawBody) return false;
+      return true;
+    }
     clone() {
       return new FnCall(this.debug.clone(), this.args);
     }
@@ -7642,6 +7911,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("invalid Fn type " + type);
       }
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof FnCallReturnValue)) return false;
+      if (this.identifier !== that.identifier) return false;
+      if (this.type !== that.type) return false;
+      if (this.steps.length !== that.steps.length) return false;
+      for (let i2 = 0; i2 < this.steps.length; i2++) {
+        if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       return new FnCallReturnValue(this.debug.clone(), this.args);
     }
@@ -7679,6 +7958,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "chain");
       this.chain = ArrayMethodChain.breakIfNot(args2.chain);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayValueLookup)) return false;
+      if (!this.chain.isIdenticalTo(that.chain)) return false;
+      return true;
     }
     clone() {
       return new ArrayValueLookup(this.debug.clone(), this.args);
@@ -7751,6 +8035,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (typeof args2.type === "string") this.type = args2.type;
       this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof _BoolComparisonSequence)) return false;
+      if (this.type !== that.type) return false;
+      if (this.steps.length !== that.steps.length) return false;
+      for (let i2 = 0; i2 < this.steps.length; i2++) {
+        if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       const newArgs = { ...this.args };
       newArgs.steps = AnyNode.cloneAll(this.steps);
@@ -7806,6 +8099,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotBool(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof BoolLiteral)) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new BoolLiteral(this.debug.clone(), this.args);
     }
@@ -7839,6 +8137,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "expected_bool");
       this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof BoolComparison)) return false;
+      if (this.action !== that.action) return false;
+      if (this.expected_bool !== that.expected_bool) return false;
+      return true;
     }
     invert() {
       this.expected_bool = !this.expected_bool;
@@ -7880,6 +8184,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.rhs = args2.rhs;
       this.lhsNode = args2.lhsNode;
       this.rhsNode = args2.rhsNode;
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof BoolBinaryExpression)) return false;
+      if (!this.lhs.isIdenticalTo(that.lhs)) return false;
+      if (!this.rhs.isIdenticalTo(that.rhs)) return false;
+      if (this.op !== that.op) return false;
+      if (this.lhsNode !== that.lhsNode) return false;
+      if (this.rhsNode !== that.rhsNode) return false;
+      return true;
     }
     clone() {
       const newArgs = { ...this.args };
@@ -7954,6 +8267,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "expected_bool");
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof BoolGetable)) return false;
+      if (this.action !== that.action) return false;
+      if (this.comment !== that.comment) return false;
+      if (this.expected_bool !== that.expected_bool) return false;
+      return true;
+    }
     getBool() {
       return this.expected_bool;
     }
@@ -7985,6 +8305,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_GLITCHED";
       this.entity = breakIfNotString(args2.entity);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityGlitched)) return false;
+      if (this.entity !== that.entity) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityGlitched(this.debug.clone(), this.args);
     }
@@ -8009,6 +8334,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_SAVE_FLAG";
       this.save_flag = breakIfNotString(args2.save_flag);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckSaveFlag)) return false;
+      if (this.save_flag !== that.save_flag) return false;
+      return true;
+    }
     clone() {
       return new CheckSaveFlag(this.debug.clone(), this.args);
     }
@@ -8032,6 +8362,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_IF_ENTITY_IS_IN_GEOMETRY";
       this.geometry = breakIfNotString(args2.geometry);
       this.entity = breakIfNotString(args2.entity);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckIfEntityIsInGeometry)) return false;
+      if (this.geometry !== that.geometry) return false;
+      if (this.entity !== that.entity) return false;
+      return true;
     }
     clone() {
       return new CheckIfEntityIsInGeometry(this.debug.clone(), this.args);
@@ -8059,6 +8395,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_FOR_BUTTON_PRESS";
       this.button_id = breakIfNotString(args2.button_id);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckForButtonPress)) return false;
+      if (this.button_id !== that.button_id) return false;
+      return true;
+    }
     clone() {
       return new CheckForButtonPress(this.debug.clone(), this.args);
     }
@@ -8081,6 +8422,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_FOR_BUTTON_STATE";
       this.button_id = breakIfNotString(args2.button_id);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckForButtonState)) return false;
+      if (this.button_id !== that.button_id) return false;
+      return true;
+    }
     clone() {
       return new CheckForButtonState(this.debug.clone(), this.args);
     }
@@ -8100,6 +8446,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "action");
       this.action = "CHECK_DIALOG_OPEN";
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckDialogOpen)) return false;
+      return true;
     }
     clone() {
       return new CheckDialogOpen(this.debug.clone(), this.args);
@@ -8121,6 +8471,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       this.action = "CHECK_SERIAL_DIALOG_OPEN";
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckSerialDialogOpen)) return false;
+      return true;
+    }
     clone() {
       return new CheckSerialDialogOpen(this.debug.clone(), this.args);
     }
@@ -8140,6 +8494,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "action");
       this.action = "CHECK_DEBUG_MODE";
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckDebugMode)) return false;
+      if (this.action !== that.action) return false;
+      return true;
     }
     clone() {
       return new CheckDebugMode(this.debug.clone(), this.args);
@@ -8188,6 +8547,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.string = breakIfNotString(args2.string);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityName)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.string !== that.string) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityName(this.debug.clone(), this.args);
     }
@@ -8221,6 +8586,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_INTERACT_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
       this.expected_script = breakIfNotString(args2.expected_script);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityInteractScript)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_script !== that.expected_script) return false;
+      return true;
     }
     clone() {
       return new CheckEntityInteractScript(this.debug.clone(), this.args);
@@ -8256,6 +8627,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.expected_script = breakIfNotString(args2.expected_script);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityTickScript)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_script !== that.expected_script) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityTickScript(this.debug.clone(), this.args);
     }
@@ -8289,6 +8666,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_LOOK_SCRIPT";
       this.entity = breakIfNotString(args2.entity);
       this.expected_script = breakIfNotString(args2.expected_script);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityTickScript)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_script !== that.expected_script) return false;
+      return true;
     }
     clone() {
       return new CheckEntityLookScript(this.debug.clone(), this.args);
@@ -8324,6 +8707,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.entity_type = breakIfNotString(args2.entity_type);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityType)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.entity_type !== that.entity_type) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityType(this.debug.clone(), this.args);
     }
@@ -8354,6 +8743,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_DIRECTION";
       this.entity = breakIfNotString(args2.entity);
       this.direction = breakIfNotString(args2.direction);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityDirection)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.direction !== that.direction) return false;
+      return true;
     }
     clone() {
       return new CheckEntityDirection(this.debug.clone(), this.args);
@@ -8388,6 +8783,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.geometry = breakIfNotString(args2.geometry);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityPath)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.geometry !== that.geometry) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityPath(this.debug.clone(), this.args);
     }
@@ -8416,6 +8817,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_WARP_STATE";
       this.string = breakIfNotString(args2.string);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckWarpState)) return false;
+      if (this.string !== that.string) return false;
+      return true;
     }
     clone() {
       return new CheckWarpState(this.debug.clone(), this.args);
@@ -8463,6 +8869,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotNumber(args2.value);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckVariable)) return false;
+      if (this.variable !== that.variable) return false;
+      if (this.comparison !== that.comparison) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new CheckVariable(this.debug.clone(), this.args);
     }
@@ -8494,6 +8907,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.comparison = breakIfNotString(args2.comparison);
       this.source = breakIfNotString(args2.source);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckVariables)) return false;
+      if (this.variable !== that.variable) return false;
+      if (this.comparison !== that.comparison) return false;
+      if (this.source !== that.source) return false;
+      return true;
     }
     clone() {
       return new CheckVariables(this.debug.clone(), this.args);
@@ -8544,6 +8964,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityX)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_u2 !== that.expected_u2) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityX(this.debug.clone(), this.args);
     }
@@ -8573,6 +8999,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_Y";
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityY)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_u2 !== that.expected_u2) return false;
+      return true;
     }
     clone() {
       return new CheckEntityY(this.debug.clone(), this.args);
@@ -8604,6 +9036,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityPrimaryID)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_u2 !== that.expected_u2) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityPrimaryID(this.debug.clone(), this.args);
     }
@@ -8634,6 +9072,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntitySecondaryID)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_u2 !== that.expected_u2) return false;
+      return true;
+    }
     clone() {
       return new CheckEntitySecondaryID(this.debug.clone(), this.args);
     }
@@ -8663,6 +9107,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_PRIMARY_ID_TYPE";
       this.entity = breakIfNotString(args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityPrimaryIDType)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_byte !== that.expected_byte) return false;
+      return true;
     }
     clone() {
       return new CheckEntityPrimaryIDType(this.debug.clone(), this.args);
@@ -8698,6 +9148,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.entity = breakIfNotString(args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityCurrentAnimation)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_byte !== that.expected_byte) return false;
+      return true;
+    }
     clone() {
       return new CheckEntityCurrentAnimation(this.debug.clone(), this.args);
     }
@@ -8731,6 +9187,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.action = "CHECK_ENTITY_CURRENT_FRAME";
       this.entity = breakIfNotString(args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CheckEntityCurrentFrame)) return false;
+      if (this.entity !== that.entity) return false;
+      if (this.expected_byte !== that.expected_byte) return false;
+      return true;
     }
     clone() {
       return new CheckEntityCurrentFrame(this.debug.clone(), this.args);
@@ -8767,6 +9229,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     clone() {
       return new BoolSetable(this.debug.clone(), this.args);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof BoolSetable)) return false;
+      if (this.type !== that.type) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     static quick(debug, type, value) {
       return new BoolSetable(debug, { type, value });
     }
@@ -8790,6 +9258,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof MovableIdentifier)) return false;
+      if (this.type !== that.type) return false;
+      if (this.value !== that.value) return false;
+      return true;
     }
     clone() {
       return new MovableIdentifier(this.debug.clone(), this.args);
@@ -8819,6 +9293,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
       if (args2.polygonType) this.polygonType = breakIfNotString(args2.polygonType);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof CoordinateIdentifier)) return false;
+      if (this.type !== that.type) return false;
+      if (this.value !== that.value) return false;
+      if (this.polygonType !== that.polygonType) return false;
+      return true;
     }
     clone() {
       return new CoordinateIdentifier(this.debug.clone(), this.args);
@@ -8850,6 +9331,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotString(args2.value);
       this.type = breakIfNotString(args2.type);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof DirectionTarget)) return false;
+      if (this.type !== that.type) return false;
+      if (this.value !== that.value) return false;
+      return true;
     }
     clone() {
       return new DirectionTarget(this.debug.clone(), this.args);
@@ -8911,6 +9398,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         }
         this.chain.push(chain[i2]);
       }
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayMethodChain)) return false;
+      if (this.identifier !== that.identifier) return false;
+      if (this.return_type !== that.return_type) return false;
+      if (this.chain.length !== that.chain.length) return false;
+      for (let i2 = 0; i2 < this.chain.length; i2++) {
+        if (!this.chain[i2].isIdenticalTo(that.chain[i2])) return false;
+      }
+      if (!this.final.isIdenticalTo(that.final)) return false;
+      return true;
     }
     clone() {
       return new ArrayMethodChain(this.debug.clone(), this.args);
@@ -9015,6 +9513,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "fn");
       this.fn = FunctionDefinition.breakIfNot(args2.fn);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayMap)) return false;
+      if (!this.fn.isIdenticalTo(that.fn)) return false;
+      return true;
+    }
     clone() {
       return new ArrayMap(this.debug.clone(), this.args);
     }
@@ -9036,6 +9539,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "index_start");
       this.index_start = breakIfNotNumber(args2.index_start);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArraySliceByNumber)) return false;
+      if (this.index_start !== that.index_start) return false;
+      return true;
     }
     clone() {
       return new ArraySliceByNumber(this.debug.clone(), this.args);
@@ -9069,6 +9577,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "index_end");
       this.index_start = breakIfNotNumber(args2.index_start);
       this.index_end = breakIfNotNumber(args2.index_end);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArraySliceTwiceByNumber)) return false;
+      if (this.index_start !== that.index_start) return false;
+      if (this.index_end !== that.index_end) return false;
+      return true;
     }
     clone() {
       return new ArraySliceTwiceByNumber(this.debug.clone(), this.args);
@@ -9107,6 +9621,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "steps");
       this.variable_start = breakIfNotString(args2.variable_start);
       this.steps = AnyNode.breakIfNotAll(args2.steps);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArraySliceByVariable)) return false;
+      if (this.variable_start !== that.variable_start) return false;
+      if (this.steps.length !== that.steps.length) return false;
+      for (let i2 = 0; i2 < this.steps.length; i2++) {
+        if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+      }
+      return true;
     }
     clone() {
       return new ArraySliceByVariable(this.debug.clone(), this.args);
@@ -9154,6 +9677,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.variable_end = breakIfNotString(args2.variable_end);
       this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArraySliceTwiceByVariable)) return false;
+      if (this.variable_start !== that.variable_start) return false;
+      if (this.variable_end !== that.variable_end) return false;
+      if (this.steps.length !== that.steps.length) return false;
+      for (let i2 = 0; i2 < this.steps.length; i2++) {
+        if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+      }
+      return true;
+    }
     clone() {
       return new ArraySliceTwiceByVariable(this.debug.clone(), this.args);
     }
@@ -9192,6 +9725,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ArraySort extends ArrayMethodReturningArray {
+    isIdenticalTo(that) {
+      return that instanceof ArraySort;
+    }
     clone() {
       return new ArraySort(this.debug.clone(), this.args);
     }
@@ -9218,6 +9754,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ArrayReverse extends ArrayMethodReturningArray {
+    isIdenticalTo(that) {
+      return that instanceof ArrayReverse;
+    }
     clone() {
       return new ArrayReverse(this.debug.clone(), this.args);
     }
@@ -9256,6 +9795,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ArrayLength extends ArrayMethodReturningValue {
+    isIdenticalTo(that) {
+      return that instanceof ArrayLength;
+    }
     clone() {
       return new ArrayLength(this.debug.clone(), this.args);
     }
@@ -9286,6 +9828,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "index");
       this.index = breakIfNotNumber(args2.index);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayReadFromIndex)) return false;
+      if (this.index !== that.index) return false;
+      return true;
     }
     clone() {
       return new ArrayReadFromIndex(this.debug.clone(), this.args);
@@ -9321,6 +9868,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (args2.steps) {
         this.steps = AnyNode.breakIfNotAll(args2.steps);
       }
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayReadFromVariableIndex)) return false;
+      if (this.variable_index !== that.variable_index) return false;
+      if (this.steps && !that.steps) return false;
+      if (!this.steps && that.steps) return false;
+      if (this.steps && that.steps) {
+        if (this.steps.length !== that.steps.length) return false;
+        for (let i2 = 0; i2 < this.steps.length; i2++) {
+          if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+        }
+      }
+      return true;
     }
     clone() {
       return new ArrayReadFromVariableIndex(this.debug.clone(), this.args);
@@ -9360,6 +9920,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ArrayPop extends ArrayMethodReturningValue {
+    isIdenticalTo(that) {
+      return that instanceof ArrayPop;
+    }
     clone() {
       return new ArrayPop(this.debug.clone(), this.args);
     }
@@ -9386,6 +9949,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ArrayPopLeft extends ArrayMethodReturningValue {
+    isIdenticalTo(that) {
+      return that instanceof ArrayPop;
+    }
     clone() {
       return new ArrayPopLeft(this.debug.clone(), this.args);
     }
@@ -9425,6 +9991,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotNumber(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayPushValue)) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new ArrayPushValue(this.debug.clone(), this.args);
     }
@@ -9459,6 +10030,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (args2.steps) {
         this.steps = AnyNode.breakIfNotAll(args2.steps);
       }
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayPushVariable)) return false;
+      if (this.variable !== that.variable) return false;
+      if (this.steps && !that.steps) return false;
+      if (!this.steps && that.steps) return false;
+      if (this.steps && that.steps) {
+        if (this.steps.length !== that.steps.length) return false;
+        for (let i2 = 0; i2 < this.steps.length; i2++) {
+          if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+        }
+      }
+      return true;
     }
     clone() {
       return new ArrayPushVariable(this.debug.clone(), this.args);
@@ -9495,6 +10079,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.value = breakIfNotNumber(args2.value);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayPushLeftValue)) return false;
+      if (this.value !== that.value) return false;
+      return true;
+    }
     clone() {
       return new ArrayPushLeftValue(this.debug.clone(), this.args);
     }
@@ -9529,6 +10118,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (args2.steps) {
         this.steps = AnyNode.breakIfNotAll(args2.steps);
       }
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayPushLeftVariable)) return false;
+      if (this.variable !== that.variable) return false;
+      if (this.steps && !that.steps) return false;
+      if (!this.steps && that.steps) return false;
+      if (this.steps && that.steps) {
+        if (this.steps.length !== that.steps.length) return false;
+        for (let i2 = 0; i2 < this.steps.length; i2++) {
+          if (!this.steps[i2].isIdenticalTo(that.steps[i2])) return false;
+        }
+      }
+      return true;
     }
     clone() {
       return new ArrayPushLeftVariable(this.debug.clone(), this.args);
@@ -9567,6 +10169,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.array_name = breakIfNotString(args2.array_name);
       this.exp_index = IntExpression.breakIfNot(args2.exp_index);
     }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayWriteToIndex)) return false;
+      if (this.array_name !== that.array_name) return false;
+      if (this.exp_index !== that.exp_index) return false;
+      return true;
+    }
     clone() {
       return new ArrayWriteToIndex(this.debug.clone(), this.args);
     }
@@ -9591,6 +10199,11 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "fn");
       this.fn = FunctionDefinition.breakIfNot(args2.fn);
+    }
+    isIdenticalTo(that) {
+      if (!(that instanceof ArrayForEach)) return false;
+      if (this.fn !== that.fn) return false;
+      return true;
     }
     clone() {
       return new ArrayForEach(this.debug.clone(), this.args);
@@ -9733,6 +10346,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const fn = actionConstructorLookup[this.action];
       if (!fn) throw new Error("no action constructor for " + this.action);
       return fn(this);
+    }
+    isIdenticalTo(that) {
+      if (this.action !== that.action) return false;
+      const setOfKeys = /* @__PURE__ */ new Set([...Object.keys(this), ...Object.keys(that)]);
+      setOfKeys.delete("action");
+      const keys = [...setOfKeys];
+      for (let i2 = 0; i2 < keys.length; i2++) {
+        const key = keys[i2];
+        if (this[key] !== that[key]) return false;
+      }
+      return true;
     }
     print() {
       return `json[${JSON.stringify(this, null, "	")}];`;
@@ -12913,6 +13537,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (action instanceof ReturnStatement) {
         const labelDebug = debug.using(action.debug.node);
         steps[i2] = GotoLabel.quick(labelDebug, label);
+      }
+      if (!action.isIdenticalTo(action)) {
+        throw new Error("isIdenticalTo failure");
       }
     });
     return steps;

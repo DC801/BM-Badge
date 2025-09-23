@@ -24,6 +24,12 @@ import { handleNode } from './parser-node.ts';
 // All print() methods on MathlangNodes are as if they were to be encountered in a grammatically valid MGS script
 
 export class AnyNode {
+	isIdenticalTo(that: unknown) {
+		if (this instanceof ACTION.Action || this instanceof MathlangNode) {
+			return this.isIdenticalTo(that);
+		}
+		throw new Error('ACTIONS DO NOT MATCH???');
+	}
 	clone() {
 		if (this instanceof MathlangNode) return this.clone();
 		return ACTION.Action.fromArgs(this);
@@ -51,6 +57,21 @@ export class MathlangNode extends AnyNode {
 		super();
 		this.debug = debug;
 		this.args = args;
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof MathlangNode)) return false;
+		const setOfKeys = new Set([...Object.keys(this.args), ...Object.keys(that.args)]);
+		const keys = [...setOfKeys];
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			const thisV = this.args[key];
+			const thatV = that.args[key];
+			if (thisV instanceof AnyNode) {
+				if (!thisV.isIdenticalTo(thatV)) return false;
+			}
+			if (this.args[key] !== that.args[key]) return false;
+		}
+		return true;
 	}
 	static breakIfNotAll(arr: unknown) {
 		if (!Array.isArray(arr)) {
@@ -166,6 +187,8 @@ const mathlangMessageTypes: Record<string, string> = {
 	'invalid JSON action': 'malformed action JSON',
 	'invalid operator': 'use != and ==, not !== or ===', // warning, not error
 	'invalid constant value': 'constant value not an MGS primitive',
+	'ambiguous identifiers': 'will be interpreted as ints; coerce RHS to bools with "!!"',
+	'serial dialog option mismatch': 'the first option type will be used',
 	'dialog too long':
 		'dialog will wrap off the bottom of the dialog frame (or into dialog options)',
 };
@@ -205,6 +228,17 @@ export class FunctionDefinition extends MathlangNode {
 		this.params = ACTION.breakIfNotStringArray(args.params);
 		this.paramNodes = ACTION.breakIfNotTSNodeArray(args.paramNodes);
 		this.bodyNode = ACTION.breakIfNotTSNode(args.bodyNode);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof FunctionDefinition)) return false;
+		if (this.name !== that.name) return false;
+		if (JSON.stringify(this.params) !== JSON.stringify(that.params)) return false;
+		if (this.bodyNode !== that.bodyNode) return false;
+		if (this.paramNodes.length !== that.paramNodes.length) return false;
+		for (let i = 0; i < this.paramNodes.length; i++) {
+			if (this.paramNodes[i] !== that.paramNodes[i]) return false;
+		}
+		return true;
 	}
 	clone() {
 		return new FunctionDefinition(this.debug.clone(), {
@@ -254,6 +288,14 @@ export class AddDialogSettings extends MathlangNode {
 		super(debug, args);
 		this.targets = AddDialogSettingsTarget.breakIfNotAll(args.targets);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof AddDialogSettings)) return false;
+		if (this.targets.length !== that.targets.length) return false;
+		for (let i = 0; i < this.targets.length; i++) {
+			if (!this.targets[i].isIdenticalTo(that.targets[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		const targets = AnyNode.cloneAll(this.targets);
 		return new AddDialogSettings(this.debug.clone(), { ...this.args, targets });
@@ -275,6 +317,16 @@ export class AddDialogSettingsTarget extends MathlangNode {
 		this.type = ACTION.breakIfNotString(args.type);
 		this.parameters = DialogParameter.breakIfNotAll(args.parameters);
 		if (typeof args.target === 'string') this.target = args.target;
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof AddDialogSettingsTarget)) return false;
+		if (this.type !== that.type) return false;
+		if (this.parameters.length !== that.parameters.length) return false;
+		for (let i = 0; i < this.parameters.length; i++) {
+			if (!this.parameters[i].isIdenticalTo(that.parameters[i])) return false;
+		}
+		if (this.target !== that.target) return false;
+		return true;
 	}
 	clone() {
 		const parameters = AnyNode.cloneAll(this.parameters);
@@ -316,6 +368,14 @@ export class AddSerialDialogSettings extends MathlangNode {
 		super(debug, args);
 		this.parameters = SerialDialogParameter.breakIfNotAll(args.parameters);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof AddSerialDialogSettings)) return false;
+		if (this.parameters.length !== that.parameters.length) return false;
+		for (let i = 0; i < this.parameters.length; i++) {
+			if (!this.parameters[i].isIdenticalTo(that.parameters[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		const parameters = AnyNode.cloneAll(this.parameters);
 		return new AddSerialDialogSettings(this.debug.clone(), {
@@ -339,6 +399,9 @@ export class ReturnStatement extends MathlangNode {
 	constructor(debug: MathlangLocation) {
 		super(debug, {});
 	}
+	isIdenticalTo(that: unknown) {
+		return that instanceof ReturnStatement;
+	}
 	clone() {
 		return new ReturnStatement(this.debug.clone());
 	}
@@ -353,6 +416,9 @@ export class ContinueStatement extends MathlangNode {
 	constructor(debug: MathlangLocation) {
 		super(debug, {});
 	}
+	isIdenticalTo(that: unknown) {
+		return that instanceof ContinueStatement;
+	}
 	clone() {
 		return new ReturnStatement(this.debug.clone());
 	}
@@ -366,6 +432,9 @@ export class ContinueStatement extends MathlangNode {
 export class BreakStatement extends MathlangNode {
 	constructor(debug: MathlangLocation) {
 		super(debug, {});
+	}
+	isIdenticalTo(that: unknown) {
+		return that instanceof BreakStatement;
 	}
 	clone() {
 		return new ReturnStatement(this.debug.clone());
@@ -385,6 +454,12 @@ export class GotoLabel extends MathlangNode {
 		super(debug, args);
 		this.label = ACTION.breakIfNotString(args.label);
 		if (typeof args.comment === 'string') this.comment = args.comment;
+	}
+	isIdenticalTo(that: MathlangNode) {
+		if (!(that instanceof GotoLabel)) return false;
+		if (this.label !== that.label) return false;
+		if (this.comment !== that.comment) return false;
+		return true;
 	}
 	clone() {
 		return new GotoLabel(this.debug.clone(), this.args);
@@ -410,6 +485,15 @@ export class DialogDefinition extends MathlangNode {
 		super(debug, args);
 		this.dialogName = ACTION.breakIfNotString(args.dialogName);
 		this.dialogs = Dialog.breakIfNotAll(args.dialogs);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof DialogDefinition)) return false;
+		if (this.dialogName !== that.dialogName) return false;
+		if (this.dialogs.length !== that.dialogs.length) return false;
+		for (let i = 0; i < this.dialogs.length; i++) {
+			if (!this.dialogs[i].isIdenticalTo(that.dialogs[i])) return false;
+		}
+		return true;
 	}
 	clone() {
 		const dialogs = AnyNode.cloneAll(this.dialogs);
@@ -440,6 +524,12 @@ export class DialogParameter extends MathlangNode {
 		super(debug, args);
 		this.property = ACTION.breakIfNotString(args.property);
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof DialogParameter)) return false;
+		if (this.property !== that.property) return false;
+		if (this.value !== that.value) return false;
+		return true;
 	}
 	clone() {
 		return new DialogParameter(this.debug.clone(), this.args);
@@ -488,6 +578,27 @@ export class Dialog extends MathlangNode {
 			});
 		}
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof Dialog)) return false;
+		if (this.wrap !== that.wrap) return false;
+		if (this.emote !== that.emote) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.name !== that.name) return false;
+		if (this.portrait !== that.portrait) return false;
+		if (this.alignment !== that.alignment) return false;
+		if (this.border_tileset !== that.border_tileset) return false;
+		if (JSON.stringify(this.messages) !== JSON.stringify(that.messages)) return false;
+		if (this.response_type !== that.response_type) return false;
+		if (this.options && !that.options) return false;
+		if (!this.options && that.options) return false;
+		if (this.options && that.options) {
+			if (this.options.length !== that.options.length) return false;
+			for (let i = 0; i < this.options.length; i++) {
+				if (!this.options[i].isIdenticalTo(that.options[i])) return false;
+			}
+		}
+		return true;
+	}
 	clone() {
 		const newArgs = { ...this.args };
 		if (this.options) {
@@ -532,6 +643,12 @@ export class DialogIdentifier extends MathlangNode {
 		this.type = args.type;
 		this.value = ACTION.breakIfNotString(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof DialogIdentifier)) return false;
+		if (this.type !== that.type) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new DialogIdentifier(this.debug.clone(), this.args);
 	}
@@ -557,6 +674,12 @@ export class DialogOption extends MathlangNode {
 		super(debug, args);
 		this.label = ACTION.breakIfNotString(args.label);
 		this.script = ACTION.breakIfNotString(args.script);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof DialogOption)) return false;
+		if (this.label !== that.label) return false;
+		if (this.script !== that.script) return false;
+		return true;
 	}
 	clone() {
 		return new DialogOption(this.debug.clone(), this.args);
@@ -594,6 +717,12 @@ export class SerialDialogDefinition extends MathlangNode {
 		this.dialogName = ACTION.breakIfNotString(args.dialogName);
 		this.serialDialog = args.serialDialog;
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof SerialDialogDefinition)) return false;
+		if (this.dialogName !== that.dialogName) return false;
+		if (!this.serialDialog.isIdenticalTo(that.serialDialog)) return false;
+		return true;
+	}
 	clone() {
 		const newArgs = { ...this.args };
 		newArgs.serialDialog = this.serialDialog.clone();
@@ -619,6 +748,12 @@ export class SerialDialogParameter extends MathlangNode {
 		super(debug, args);
 		this.property = ACTION.breakIfNotString(args.property);
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof SerialDialogParameter)) return false;
+		if (this.property !== that.property) return false;
+		if (this.value !== that.value) return false;
+		return true;
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -657,6 +792,26 @@ export class SerialDialog extends MathlangNode {
 		if (args.text_options) {
 			this.text_options = SerialDialogOption.breakIfNotAll(args.text_options);
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof SerialDialog)) return false;
+		if (this.options && !that.options) return false;
+		if (!this.options && that.options) return false;
+		if (this.options && that.options) {
+			if (this.options.length !== that.options.length) return false;
+			for (let i = 0; i < this.options.length; i++) {
+				if (!this.options[i].isIdenticalTo(that.options[i])) return false;
+			}
+		}
+		if (this.text_options && !that.text_options) return false;
+		if (!this.text_options && that.text_options) return false;
+		if (this.text_options && that.text_options) {
+			if (this.text_options.length !== that.text_options.length) return false;
+			for (let i = 0; i < this.text_options.length; i++) {
+				if (!this.text_options[i].isIdenticalTo(that.text_options[i])) return false;
+			}
+		}
+		return true;
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -705,6 +860,13 @@ export class SerialDialogOption extends MathlangNode {
 		this.label = ACTION.breakIfNotString(args.label);
 		this.script = ACTION.breakIfNotString(args.script);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof SerialDialogOption)) return false;
+		if (this.optionType !== that.optionType) return false;
+		if (this.label !== that.label) return false;
+		if (this.script !== that.script) return false;
+		return true;
+	}
 	clone() {
 		return new SerialDialogOption(this.debug.clone(), this.args);
 	}
@@ -736,6 +898,11 @@ export class IncludeNode extends MathlangNode {
 		super(debug, args);
 		this.value = ACTION.breakIfNotString(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof IncludeNode)) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new IncludeNode(this.debug.clone(), this.args);
 	}
@@ -755,6 +922,12 @@ export class ConstantDefinition extends MathlangNode {
 		if (!isMGSPrimitive(args.value)) throw new Error('not primitive');
 		this.label = ACTION.breakIfNotString(args.label);
 		this.value = args.value;
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ConstantDefinition)) return false;
+		if (this.label !== that.label) return false;
+		if (this.value !== that.value) return false; // TODO: add a thing to actually compare these
+		return true;
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -795,6 +968,15 @@ export class ScriptDefinition extends MathlangNode {
 		this.actions = AnyNode.breakIfNotAll(args.actions);
 		if (args.copyScriptResolved) this.copyScriptResolved = true;
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ScriptDefinition)) return false;
+		if (this.scriptName !== that.scriptName) return false;
+		if (this.actions.length !== that.actions.length) return false;
+		for (let i = 0; i < this.actions.length; i++) {
+			if (!this.actions[i].isIdenticalTo(that.actions[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		const cloned = new ScriptDefinition(this.debug.clone(), this.args);
 		cloned.actions = AnyNode.cloneAll(this.actions);
@@ -825,6 +1007,11 @@ export class CommentNode extends MathlangNode {
 		super(debug, args);
 		this.comment = ACTION.breakIfNotString(args.comment);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CommentNode)) return false;
+		if (this.comment !== that.comment) return false;
+		return true;
+	}
 	clone() {
 		return new CommentNode(this.debug.clone(), this.args);
 	}
@@ -842,6 +1029,11 @@ export class LabelDefinition extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.label = ACTION.breakIfNotString(args.label);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof LabelDefinition)) return false;
+		if (this.label !== that.label) return false;
+		return true;
 	}
 	clone() {
 		return new LabelDefinition(this.debug.clone(), this.args);
@@ -873,6 +1065,14 @@ export class JSONLiteral extends MathlangNode {
 		});
 		this.json = AnyNode.breakIfNotAll(sanitized);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof JSONLiteral)) return false;
+		if (this.json.length !== that.json.length) return false;
+		for (let i = 0; i < this.json.length; i++) {
+			if (!this.json[i].isIdenticalTo(that.json[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		return new JSONLiteral(this.debug.clone(), this.args);
 	}
@@ -901,6 +1101,24 @@ export class CopyMacro extends MathlangNode {
 			});
 			this.search_and_replace = search_and_replace;
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CopyMacro)) return false;
+		if (this.script !== that.script) return false;
+		if (this.search_and_replace && !that.search_and_replace) return false;
+		if (!this.search_and_replace && that.search_and_replace) return false;
+		if (this.search_and_replace && that.search_and_replace) {
+			const keys: Set<string> = new Set([
+				...Object.keys(this.search_and_replace),
+				...Object.keys(that.search_and_replace),
+			]);
+			for (let i = 0; i < keys.size; i++) {
+				if (this.search_and_replace[keys[i]] !== that.search_and_replace[keys[i]]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	clone() {
 		return new CopyMacro(this.debug.clone(), this.args);
@@ -933,6 +1151,15 @@ export class MathlangSequence extends MathlangNode {
 			this.steps.unshift(mathlangComment);
 		}
 		this.steps = flattenNodes(this.steps);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof MathlangSequence)) return false;
+		if (this.type !== that.type) return false;
+		if (this.steps.length !== that.steps.length) return false;
+		for (let i = 0; i < this.steps.length; i++) {
+			if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+		}
+		return true;
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -994,6 +1221,13 @@ export class IntBinaryExpression extends IntExpression {
 		this.lhs = IntExpression.breakIfNot(args.lhs);
 		this.rhs = IntExpression.breakIfNot(args.rhs);
 		this.op = ACTION.breakIfNotString(args.op);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof IntBinaryExpression)) return false;
+		if (!this.lhs.isIdenticalTo(this.lhs)) return false;
+		if (!this.rhs.isIdenticalTo(this.rhs)) return false;
+		if (this.op !== that.op) return false;
+		return true;
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -1110,6 +1344,11 @@ export class NumberLiteral extends IntUnit {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof NumberLiteral)) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new NumberLiteral(this.debug.clone(), this.args);
 	}
@@ -1149,6 +1388,11 @@ export class IdentifierLiteral extends IntGetable {
 		super(debug, args);
 		this.source = ACTION.breakIfNotString(args.source);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof IdentifierLiteral)) return false;
+		if (this.source !== that.source) return false;
+		return true;
+	}
 	clone() {
 		return new IdentifierLiteral(this.debug.clone(), this.args);
 	}
@@ -1183,6 +1427,13 @@ export class EntityIntField extends IntGetable {
 		this.inbound = false;
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.field = ACTION.breakIfNotString(args.field);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof EntityIntField)) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.field !== that.field) return false;
+		if (this.inbound !== that.inbound) return false;
+		return true;
 	}
 	clone() {
 		return new EntityIntField(this.debug.clone(), this.args);
@@ -1277,6 +1528,11 @@ export class RNGSingle extends IntGetable {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof RNGSingle)) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new RNGSingle(this.debug.clone(), this.args);
 	}
@@ -1303,6 +1559,12 @@ export class RNGPair extends IntGetable {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 		this.add = ACTION.breakIfNotNumber(args.add);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof RNGPair)) return false;
+		if (this.value !== that.value) return false;
+		if (this.add !== that.add) return false;
+		return true;
 	}
 	clone() {
 		return new RNGPair(this.debug.clone(), this.args);
@@ -1347,6 +1609,13 @@ export class FnCall extends IntGetable {
 		} else {
 			throw new Error('invalid Fn type ' + type);
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof FnCall)) return false;
+		if (this.identifier !== that.identifier) return false;
+		if (this.type !== that.type) return false;
+		if (this.rawBody !== that.rawBody) return false;
+		return true;
 	}
 	clone() {
 		return new FnCall(this.debug.clone(), this.args);
@@ -1396,6 +1665,16 @@ export class FnCallReturnValue extends IntGetable {
 			throw new Error('invalid Fn type ' + type);
 		}
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof FnCallReturnValue)) return false;
+		if (this.identifier !== that.identifier) return false;
+		if (this.type !== that.type) return false;
+		if (this.steps.length !== that.steps.length) return false;
+		for (let i = 0; i < this.steps.length; i++) {
+			if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		return new FnCallReturnValue(this.debug.clone(), this.args);
 	}
@@ -1433,6 +1712,11 @@ export class ArrayValueLookup extends IntGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.chain = ArrayMethodChain.breakIfNot(args.chain);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayValueLookup)) return false;
+		if (!this.chain.isIdenticalTo(that.chain)) return false;
+		return true;
 	}
 	clone() {
 		return new ArrayValueLookup(this.debug.clone(), this.args);
@@ -1514,6 +1798,15 @@ export class BoolComparisonSequence extends BoolExpression {
 		if (typeof args.type === 'string') this.type = args.type;
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof BoolComparisonSequence)) return false;
+		if (this.type !== that.type) return false;
+		if (this.steps.length !== that.steps.length) return false;
+		for (let i = 0; i < this.steps.length; i++) {
+			if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		const newArgs = { ...this.args };
 		newArgs.steps = AnyNode.cloneAll(this.steps);
@@ -1570,6 +1863,11 @@ export class BoolLiteral extends BoolUnit {
 		super(debug, args);
 		this.value = ACTION.breakIfNotBool(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof BoolLiteral)) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new BoolLiteral(this.debug.clone(), this.args);
 	}
@@ -1604,6 +1902,12 @@ export class BoolComparison extends BoolExpression {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof BoolComparison)) return false;
+		if (this.action !== that.action) return false;
+		if (this.expected_bool !== that.expected_bool) return false;
+		return true;
 	}
 	invert() {
 		this.expected_bool = !this.expected_bool;
@@ -1646,6 +1950,15 @@ export class BoolBinaryExpression extends BoolExpression {
 		this.rhs = args.rhs;
 		this.lhsNode = args.lhsNode;
 		this.rhsNode = args.rhsNode;
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof BoolBinaryExpression)) return false;
+		if (!this.lhs.isIdenticalTo(that.lhs)) return false;
+		if (!this.rhs.isIdenticalTo(that.rhs)) return false;
+		if (this.op !== that.op) return false;
+		if (this.lhsNode !== that.lhsNode) return false;
+		if (this.rhsNode !== that.rhsNode) return false;
+		return true;
 	}
 	clone() {
 		const newArgs = { ...this.args };
@@ -1732,6 +2045,13 @@ export class BoolGetable extends BoolUnit {
 		super(debug, args);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof BoolGetable)) return false;
+		if (this.action !== that.action) return false;
+		if (this.comment !== that.comment) return false;
+		if (this.expected_bool !== that.expected_bool) return false;
+		return true;
+	}
 	getBool() {
 		return this.expected_bool;
 	}
@@ -1763,6 +2083,12 @@ export class CheckEntityGlitched extends BoolGetable {
 		this.action = 'CHECK_ENTITY_GLITCHED';
 		this.entity = ACTION.breakIfNotString(args.entity);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityGlitched)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityGlitched(this.debug.clone(), this.args);
 	}
@@ -1789,6 +2115,12 @@ export class CheckSaveFlag extends BoolGetable {
 		this.action = 'CHECK_SAVE_FLAG';
 		this.save_flag = ACTION.breakIfNotString(args.save_flag);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckSaveFlag)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.save_flag !== that.save_flag) return false;
+		return true;
+	}
 	clone() {
 		return new CheckSaveFlag(this.debug.clone(), this.args);
 	}
@@ -1812,6 +2144,13 @@ export class CheckIfEntityIsInGeometry extends BoolGetable {
 		this.action = 'CHECK_IF_ENTITY_IS_IN_GEOMETRY';
 		this.geometry = ACTION.breakIfNotString(args.geometry);
 		this.entity = ACTION.breakIfNotString(args.entity);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckIfEntityIsInGeometry)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.geometry !== that.geometry) return false;
+		if (this.entity !== that.entity) return false;
+		return true;
 	}
 	clone() {
 		return new CheckIfEntityIsInGeometry(this.debug.clone(), this.args);
@@ -1846,6 +2185,12 @@ export class CheckForButtonPress extends BoolGetable {
 		this.action = 'CHECK_FOR_BUTTON_PRESS';
 		this.button_id = ACTION.breakIfNotString(args.button_id);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckForButtonPress)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.button_id !== that.button_id) return false;
+		return true;
+	}
 	clone() {
 		return new CheckForButtonPress(this.debug.clone(), this.args);
 	}
@@ -1870,6 +2215,12 @@ export class CheckForButtonState extends BoolGetable {
 		this.action = 'CHECK_FOR_BUTTON_STATE';
 		this.button_id = ACTION.breakIfNotString(args.button_id);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckForButtonState)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.button_id !== that.button_id) return false;
+		return true;
+	}
 	clone() {
 		return new CheckForButtonState(this.debug.clone(), this.args);
 	}
@@ -1889,6 +2240,11 @@ export class CheckDialogOpen extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_DIALOG_OPEN';
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckDialogOpen)) return false;
+		// if (this.action !== that.action) return false;
+		return true;
 	}
 	clone() {
 		return new CheckDialogOpen(this.debug.clone(), this.args);
@@ -1910,6 +2266,11 @@ export class CheckSerialDialogOpen extends BoolGetable {
 		super(debug, args);
 		this.action = 'CHECK_SERIAL_DIALOG_OPEN';
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckSerialDialogOpen)) return false;
+		// if (this.action !== that.action) return false;
+		return true;
+	}
 	clone() {
 		return new CheckSerialDialogOpen(this.debug.clone(), this.args);
 	}
@@ -1929,6 +2290,11 @@ export class CheckDebugMode extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_DEBUG_MODE';
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckDebugMode)) return false;
+		if (this.action !== that.action) return false;
+		return true;
 	}
 	clone() {
 		return new CheckDebugMode(this.debug.clone(), this.args);
@@ -1982,6 +2348,13 @@ export class CheckEntityName extends StringCheckable {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.string = ACTION.breakIfNotString(args.string);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityName)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.string !== that.string) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityName(this.debug.clone(), this.args);
 	}
@@ -2017,6 +2390,13 @@ export class CheckEntityInteractScript extends StringCheckable {
 		this.action = 'CHECK_ENTITY_INTERACT_SCRIPT';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_script = ACTION.breakIfNotString(args.expected_script);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityInteractScript)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_script !== that.expected_script) return false;
+		return true;
 	}
 	clone() {
 		return new CheckEntityInteractScript(this.debug.clone(), this.args);
@@ -2059,6 +2439,13 @@ export class CheckEntityTickScript extends StringCheckable {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_script = ACTION.breakIfNotString(args.expected_script);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityTickScript)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_script !== that.expected_script) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityTickScript(this.debug.clone(), this.args);
 	}
@@ -2099,6 +2486,13 @@ export class CheckEntityLookScript extends StringCheckable {
 		this.action = 'CHECK_ENTITY_LOOK_SCRIPT';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_script = ACTION.breakIfNotString(args.expected_script);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityTickScript)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_script !== that.expected_script) return false;
+		return true;
 	}
 	clone() {
 		return new CheckEntityLookScript(this.debug.clone(), this.args);
@@ -2141,6 +2535,13 @@ export class CheckEntityType extends StringCheckable {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.entity_type = ACTION.breakIfNotString(args.entity_type);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityType)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.entity_type !== that.entity_type) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityType(this.debug.clone(), this.args);
 	}
@@ -2178,6 +2579,13 @@ export class CheckEntityDirection extends StringCheckable {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.direction = ACTION.breakIfNotString(args.direction);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityDirection)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.direction !== that.direction) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityDirection(this.debug.clone(), this.args);
 	}
@@ -2212,6 +2620,13 @@ export class CheckEntityPath extends StringCheckable {
 		this.action = 'CHECK_ENTITY_PATH';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.geometry = ACTION.breakIfNotString(args.geometry);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityPath)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.geometry !== that.geometry) return false;
+		return true;
 	}
 	clone() {
 		return new CheckEntityPath(this.debug.clone(), this.args);
@@ -2249,6 +2664,12 @@ export class CheckWarpState extends StringCheckable {
 		this.string = ACTION.breakIfNotString(args.string);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckWarpState)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.string !== that.string) return false;
+		return true;
+	}
 	clone() {
 		return new CheckWarpState(this.debug.clone(), this.args);
 	}
@@ -2280,6 +2701,12 @@ export class CheckMap extends StringCheckable {
 		this.action = 'CHECK_MAP';
 		this.map = ACTION.breakIfNotString(args.map);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckMap)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.map !== that.map) return false;
+		return true;
+	}
 	clone() {
 		return new CheckMap(this.debug.clone(), this.args);
 	}
@@ -2304,6 +2731,12 @@ export class CheckBLEFlag extends StringCheckable {
 		super(debug, args);
 		this.action = 'CHECK_BLE_FLAG';
 		this.ble_flag = ACTION.breakIfNotString(args.ble_flag);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckBLEFlag)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.ble_flag !== that.ble_flag) return false;
+		return true;
 	}
 	clone() {
 		return new CheckBLEFlag(this.debug.clone(), this.args);
@@ -2353,6 +2786,14 @@ export class CheckVariable extends NumberComparison {
 		this.value = ACTION.breakIfNotNumber(args.value);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckVariable)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.variable !== that.variable) return false;
+		if (this.comparison !== that.comparison) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new CheckVariable(this.debug.clone(), this.args);
 	}
@@ -2392,6 +2833,14 @@ export class CheckVariables extends NumberComparison {
 		this.comparison = ACTION.breakIfNotString(args.comparison);
 		this.source = ACTION.breakIfNotString(args.source);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckVariables)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.variable !== that.variable) return false;
+		if (this.comparison !== that.comparison) return false;
+		if (this.source !== that.source) return false;
+		return true;
 	}
 	clone() {
 		return new CheckVariables(this.debug.clone(), this.args);
@@ -2454,6 +2903,13 @@ export class CheckEntityX extends NumberCheckableEquality {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityX)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_u2 !== that.expected_u2) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityX(this.debug.clone(), this.args);
 	}
@@ -2490,6 +2946,13 @@ export class CheckEntityY extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_Y';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityY)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_u2 !== that.expected_u2) return false;
+		return true;
 	}
 	clone() {
 		return new CheckEntityY(this.debug.clone(), this.args);
@@ -2528,6 +2991,13 @@ export class CheckEntityPrimaryID extends NumberCheckableEquality {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityPrimaryID)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_u2 !== that.expected_u2) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityPrimaryID(this.debug.clone(), this.args);
 	}
@@ -2565,6 +3035,13 @@ export class CheckEntitySecondaryID extends NumberCheckableEquality {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntitySecondaryID)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_u2 !== that.expected_u2) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntitySecondaryID(this.debug.clone(), this.args);
 	}
@@ -2601,6 +3078,13 @@ export class CheckEntityPrimaryIDType extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_PRIMARY_ID_TYPE';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityPrimaryIDType)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_byte !== that.expected_byte) return false;
+		return true;
 	}
 	clone() {
 		return new CheckEntityPrimaryIDType(this.debug.clone(), this.args);
@@ -2643,6 +3127,13 @@ export class CheckEntityCurrentAnimation extends NumberCheckableEquality {
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityCurrentAnimation)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_byte !== that.expected_byte) return false;
+		return true;
+	}
 	clone() {
 		return new CheckEntityCurrentAnimation(this.debug.clone(), this.args);
 	}
@@ -2683,6 +3174,13 @@ export class CheckEntityCurrentFrame extends NumberCheckableEquality {
 		this.action = 'CHECK_ENTITY_CURRENT_FRAME';
 		this.entity = ACTION.breakIfNotString(args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CheckEntityCurrentFrame)) return false;
+		// if (this.action !== that.action) return false;
+		if (this.entity !== that.entity) return false;
+		if (this.expected_byte !== that.expected_byte) return false;
+		return true;
 	}
 	clone() {
 		return new CheckEntityCurrentFrame(this.debug.clone(), this.args);
@@ -2729,6 +3227,12 @@ export class BoolSetable extends MathlangNode {
 	clone() {
 		return new BoolSetable(this.debug.clone(), this.args);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof BoolSetable)) return false;
+		if (this.type !== that.type) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	static quick(debug: MathlangLocation, type: string, value: string) {
 		return new BoolSetable(debug, { type, value });
 	}
@@ -2752,6 +3256,12 @@ export class MovableIdentifier extends MathlangNode {
 		super(debug, args);
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof MovableIdentifier)) return false;
+		if (this.type !== that.type) return false;
+		if (this.value !== that.value) return false;
+		return true;
 	}
 	clone() {
 		return new MovableIdentifier(this.debug.clone(), this.args);
@@ -2781,6 +3291,13 @@ export class CoordinateIdentifier extends MathlangNode {
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
 		if (args.polygonType) this.polygonType = ACTION.breakIfNotString(args.polygonType);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof CoordinateIdentifier)) return false;
+		if (this.type !== that.type) return false;
+		if (this.value !== that.value) return false;
+		if (this.polygonType !== that.polygonType) return false;
+		return true;
 	}
 	clone() {
 		return new CoordinateIdentifier(this.debug.clone(), this.args);
@@ -2812,6 +3329,12 @@ export class DirectionTarget extends MathlangNode {
 		super(debug, args);
 		this.value = ACTION.breakIfNotString(args.value);
 		this.type = ACTION.breakIfNotString(args.type);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof DirectionTarget)) return false;
+		if (this.type !== that.type) return false;
+		if (this.value !== that.value) return false;
+		return true;
 	}
 	clone() {
 		return new DirectionTarget(this.debug.clone(), this.args);
@@ -2880,6 +3403,17 @@ export class ArrayMethodChain extends MathlangNode {
 			}
 			this.chain.push(chain[i]); // to use the orig Sequence if any
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayMethodChain)) return false;
+		if (this.identifier !== that.identifier) return false;
+		if (this.return_type !== that.return_type) return false;
+		if (this.chain.length !== that.chain.length) return false;
+		for (let i = 0; i < this.chain.length; i++) {
+			if (!this.chain[i].isIdenticalTo(that.chain[i])) return false;
+		}
+		if (!this.final.isIdenticalTo(that.final)) return false;
+		return true;
 	}
 	clone() {
 		return new ArrayMethodChain(this.debug.clone(), this.args);
@@ -2989,6 +3523,11 @@ export class ArrayMap extends ArrayMethodReturningArray {
 		super(debug, args);
 		this.fn = FunctionDefinition.breakIfNot(args.fn);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayMap)) return false;
+		if (!this.fn.isIdenticalTo(that.fn)) return false;
+		return true;
+	}
 	clone() {
 		return new ArrayMap(this.debug.clone(), this.args);
 	}
@@ -3010,6 +3549,11 @@ export class ArraySliceByNumber extends ArraySliceMethod {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.index_start = ACTION.breakIfNotNumber(args.index_start);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArraySliceByNumber)) return false;
+		if (this.index_start !== that.index_start) return false;
+		return true;
 	}
 	clone() {
 		return new ArraySliceByNumber(this.debug.clone(), this.args);
@@ -3043,6 +3587,12 @@ export class ArraySliceTwiceByNumber extends ArraySliceMethod {
 		super(debug, args);
 		this.index_start = ACTION.breakIfNotNumber(args.index_start);
 		this.index_end = ACTION.breakIfNotNumber(args.index_end);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArraySliceTwiceByNumber)) return false;
+		if (this.index_start !== that.index_start) return false;
+		if (this.index_end !== that.index_end) return false;
+		return true;
 	}
 	clone() {
 		return new ArraySliceTwiceByNumber(this.debug.clone(), this.args);
@@ -3081,6 +3631,15 @@ export class ArraySliceByVariable extends ArraySliceMethod {
 		super(debug, args);
 		this.variable_start = ACTION.breakIfNotString(args.variable_start);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArraySliceByVariable)) return false;
+		if (this.variable_start !== that.variable_start) return false;
+		if (this.steps.length !== that.steps.length) return false;
+		for (let i = 0; i < this.steps.length; i++) {
+			if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+		}
+		return true;
 	}
 	clone() {
 		return new ArraySliceByVariable(this.debug.clone(), this.args);
@@ -3128,6 +3687,16 @@ export class ArraySliceTwiceByVariable extends ArraySliceMethod {
 		this.variable_end = ACTION.breakIfNotString(args.variable_end);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArraySliceTwiceByVariable)) return false;
+		if (this.variable_start !== that.variable_start) return false;
+		if (this.variable_end !== that.variable_end) return false;
+		if (this.steps.length !== that.steps.length) return false;
+		for (let i = 0; i < this.steps.length; i++) {
+			if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+		}
+		return true;
+	}
 	clone() {
 		return new ArraySliceTwiceByVariable(this.debug.clone(), this.args);
 	}
@@ -3172,6 +3741,9 @@ export class ArraySliceTwiceByVariable extends ArraySliceMethod {
 }
 
 export class ArraySort extends ArrayMethodReturningArray {
+	isIdenticalTo(that: unknown) {
+		return that instanceof ArraySort;
+	}
 	clone() {
 		return new ArraySort(this.debug.clone(), this.args);
 	}
@@ -3198,6 +3770,9 @@ export class ArraySort extends ArrayMethodReturningArray {
 	}
 }
 export class ArrayReverse extends ArrayMethodReturningArray {
+	isIdenticalTo(that: unknown) {
+		return that instanceof ArrayReverse;
+	}
 	clone() {
 		return new ArrayReverse(this.debug.clone(), this.args);
 	}
@@ -3239,6 +3814,9 @@ export class ArrayMethodReturningValue extends ArrayMethod {
 }
 
 export class ArrayLength extends ArrayMethodReturningValue {
+	isIdenticalTo(that: unknown) {
+		return that instanceof ArrayLength;
+	}
 	clone() {
 		return new ArrayLength(this.debug.clone(), this.args);
 	}
@@ -3269,6 +3847,11 @@ export class ArrayReadFromIndex extends ArrayMethodReturningValue {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.index = ACTION.breakIfNotNumber(args.index);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayReadFromIndex)) return false;
+		if (this.index !== that.index) return false;
+		return true;
 	}
 	clone() {
 		return new ArrayReadFromIndex(this.debug.clone(), this.args);
@@ -3304,6 +3887,19 @@ export class ArrayReadFromVariableIndex extends ArrayMethodReturningValue {
 		if (args.steps) {
 			this.steps = AnyNode.breakIfNotAll(args.steps);
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayReadFromVariableIndex)) return false;
+		if (this.variable_index !== that.variable_index) return false;
+		if (this.steps && !that.steps) return false;
+		if (!this.steps && that.steps) return false;
+		if (this.steps && that.steps) {
+			if (this.steps.length !== that.steps.length) return false;
+			for (let i = 0; i < this.steps.length; i++) {
+				if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+			}
+		}
+		return true;
 	}
 	clone() {
 		return new ArrayReadFromVariableIndex(this.debug.clone(), this.args);
@@ -3344,6 +3940,9 @@ export class ArrayReadFromVariableIndex extends ArrayMethodReturningValue {
 	}
 }
 export class ArrayPop extends ArrayMethodReturningValue {
+	isIdenticalTo(that: unknown) {
+		return that instanceof ArrayPop;
+	}
 	clone() {
 		return new ArrayPop(this.debug.clone(), this.args);
 	}
@@ -3370,6 +3969,9 @@ export class ArrayPop extends ArrayMethodReturningValue {
 	}
 }
 export class ArrayPopLeft extends ArrayMethodReturningValue {
+	isIdenticalTo(that: unknown) {
+		return that instanceof ArrayPop;
+	}
 	clone() {
 		return new ArrayPopLeft(this.debug.clone(), this.args);
 	}
@@ -3412,6 +4014,11 @@ export class ArrayPushValue extends ArrayMethodReturningNothing {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayPushValue)) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new ArrayPushValue(this.debug.clone(), this.args);
 	}
@@ -3446,6 +4053,19 @@ export class ArrayPushVariable extends ArrayMethodReturningNothing {
 		if (args.steps) {
 			this.steps = AnyNode.breakIfNotAll(args.steps);
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayPushVariable)) return false;
+		if (this.variable !== that.variable) return false;
+		if (this.steps && !that.steps) return false;
+		if (!this.steps && that.steps) return false;
+		if (this.steps && that.steps) {
+			if (this.steps.length !== that.steps.length) return false;
+			for (let i = 0; i < this.steps.length; i++) {
+				if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+			}
+		}
+		return true;
 	}
 	clone() {
 		return new ArrayPushVariable(this.debug.clone(), this.args);
@@ -3483,6 +4103,11 @@ export class ArrayPushLeftValue extends ArrayMethodReturningNothing {
 		super(debug, args);
 		this.value = ACTION.breakIfNotNumber(args.value);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayPushLeftValue)) return false;
+		if (this.value !== that.value) return false;
+		return true;
+	}
 	clone() {
 		return new ArrayPushLeftValue(this.debug.clone(), this.args);
 	}
@@ -3517,6 +4142,19 @@ export class ArrayPushLeftVariable extends ArrayMethodReturningNothing {
 		if (args.steps) {
 			this.steps = AnyNode.breakIfNotAll(args.steps);
 		}
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayPushLeftVariable)) return false;
+		if (this.variable !== that.variable) return false;
+		if (this.steps && !that.steps) return false;
+		if (!this.steps && that.steps) return false;
+		if (this.steps && that.steps) {
+			if (this.steps.length !== that.steps.length) return false;
+			for (let i = 0; i < this.steps.length; i++) {
+				if (!this.steps[i].isIdenticalTo(that.steps[i])) return false;
+			}
+		}
+		return true;
 	}
 	clone() {
 		return new ArrayPushLeftVariable(this.debug.clone(), this.args);
@@ -3556,6 +4194,12 @@ export class ArrayWriteToIndex extends MathlangNode {
 		this.array_name = ACTION.breakIfNotString(args.array_name);
 		this.exp_index = IntExpression.breakIfNot(args.exp_index);
 	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayWriteToIndex)) return false;
+		if (this.array_name !== that.array_name) return false;
+		if (this.exp_index !== that.exp_index) return false;
+		return true;
+	}
 	clone() {
 		return new ArrayWriteToIndex(this.debug.clone(), this.args);
 	}
@@ -3582,6 +4226,11 @@ export class ArrayForEach extends ArrayMethodReturningNothing {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.fn = FunctionDefinition.breakIfNot(args.fn);
+	}
+	isIdenticalTo(that: unknown) {
+		if (!(that instanceof ArrayForEach)) return false;
+		if (this.fn !== that.fn) return false;
+		return true;
 	}
 	clone() {
 		return new ArrayForEach(this.debug.clone(), this.args);

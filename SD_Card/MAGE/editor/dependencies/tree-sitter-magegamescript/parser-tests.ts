@@ -22,12 +22,9 @@ const actionArrayToScript = (
 // will do all action tests if empty
 // if not empty, also won't do any file-level tests
 // TODO split file tests and action tests into different "projects"
-const onlyDoTheseActionTests = ['script_def_in_spread'];
+const onlyDoTheseActionTests = [];
 
-const skipTheseTests = new Set([
-	// currently to skip tests that generate warnings
-	'set_int_exp_ok',
-]);
+const skipTheseTests: Set<string> = new Set([]);
 
 // --------------------------- Putting action and file tests into a "project" ---------------------------
 

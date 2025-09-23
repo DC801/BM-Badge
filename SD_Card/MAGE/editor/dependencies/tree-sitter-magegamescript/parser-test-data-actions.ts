@@ -1316,9 +1316,6 @@ export const actionTests = {
 	},
 	set_int_exp_ok: {
 		input: [
-			// MUTATE_VARIABLES
-			'"bothVarsAre" = "ambiguous";', // and that's ok
-
 			// MUTATE_VARIABLE
 			'"goatCount" = 0;',
 
@@ -1772,10 +1769,6 @@ export const actionTests = {
 			'intName = intName2/1;',
 		],
 		expected: [
-			// originally yielded:
-			// '"__TEMP_0" = "intName2";',
-			// '"__TEMP_0" += 0;',
-			// '"intName" = "__TEMP_0";',
 			'"intName" = "intName2";',
 			'"intName" = "intName2";',
 			'"intName" = "intName2";',

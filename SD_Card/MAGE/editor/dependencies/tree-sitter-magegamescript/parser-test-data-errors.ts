@@ -78,6 +78,11 @@ export const errorTests: Record<string, ErrorTest> = {
 		expectedWarnings: [],
 		expectedErrors: ['undefined fn'],
 	},
+	action_set_ambiguous: {
+		testText: `_ { "bothVarsAre" = "ambiguous"; }`,
+		expectedWarnings: ['ambiguous identifiers'],
+		expectedErrors: [],
+	},
 	missing_semicolon: {
 		testText: `_ { wait 99 }`,
 		expectedWarnings: ['missing token'],
