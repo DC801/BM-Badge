@@ -187,16 +187,16 @@ yeet {
 }
 
 interrupt_walk {
-	tempvar2 = self current_animation;
+	interrupted_animation = self current_animation;
 	self current_animation = 0;
 	pause self on_tick;
-	capture_entity_direction("%SELF%", tempvar)
+	capture_entity_direction("%SELF%", interrupted_direction)
 	face_player()
 }
 resume_walk {
-	self current_animation = tempvar2;
+	self current_animation = interrupted_animation;
 	unpause self on_tick;
-	restore_entity_direction("%SELF%", tempvar)
+	restore_entity_direction("%SELF%", interrupted_direction)
 }
 
 capture_player_state {

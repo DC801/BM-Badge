@@ -20,14 +20,14 @@ export const fileTests: Record<string, TestFileMapEntry> = {
 			fn make_command ($commandName, $arg) {
 				command $commandName = { wait $arg; };
 			}
-			script_def_in_fn_call {
+			_ {
 				make_command(wait_one, 1)
 				make_command(wait_two, 2)
 			}
 		`,
 		expected: {
 			scripts: {
-				script_def_in_fn_call: `"script_def_in_fn_call" {
+				_: `"_" {
 					command "wait_one" = "script_def_in_fn_call.mgs-2:27-fn3";
 					command "wait_two" = "script_def_in_fn_call.mgs-2:27-fn6";
 				}`,

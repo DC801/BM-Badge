@@ -1,11 +1,13 @@
 include "header.mgs";
 
+$nano = 0;
+$vim = 1;
+$emacs = 2;
+
 on_load_demo {
 	// testing
 	player x = 10;
 	player y = 10;
-	entity Hamster x = 30;
-	entity Hamster y = 10;
 	follow_player_stack_init()
 	// normal
 	goto show_dialog_timewarp;
@@ -319,7 +321,7 @@ $queue_diff = 6;
 $queue_size = 10;
 
 // follow_player_stack_init { // ARRAY VERSION
-// 	step = get_diff_x("%PLAYER%", Hamster) / 5;
+// 	step = get_diff_x("%PLAYER%", FOLLOWER) / 5; // TODO use Vim/Nano/Emacs
 // 	offset_self_x = self x - $offset_x;
 // 	offset_self_y = self y + $offset_y;
 // 	if (player x > offset_self_x) {
@@ -347,7 +349,7 @@ $queue_size = 10;
 // 		player x,
 // 		player x,
 // 	])
-// 	step = get_diff_y("%PLAYER%", Hamster) / 5;
+// 	step = get_diff_y("%PLAYER%", FOLLOWER) / 5; // TODO use Vim/Nano/Emacs
 // 	if (player y > offset_self_y) {
 // 		new Array followingPlayerY = [
 // 			offset_self_y,
@@ -385,7 +387,11 @@ follow_player_stack_init {
 	queue_x0 = offset_self_x *1;
 	queue_y0 = offset_self_y *1;
 	// next four pos in queue are equal-sized steps between follower and followee
-	step = get_diff_x("%PLAYER%", Hamster) / 5;
+	if (curr_follower == $nano) {
+		step = get_diff_x("%PLAYER%", Nano) / 5;
+	} else if (curr_follower == $vim) {
+		step = get_diff_x("%PLAYER%", Vim) / 5;
+	}
 	if (player x > offset_self_x) {
 		queue_x1 = offset_self_x + step * 1;
 		queue_x2 = offset_self_x + step * 2;
@@ -397,7 +403,11 @@ follow_player_stack_init {
 		queue_x3 = player x + step * 2;
 		queue_x4 = player x + step * 1;
 	}
-	step = get_diff_y("%PLAYER%", Hamster) / 5;
+	if (curr_follower == $nano) {
+		step = get_diff_y("%PLAYER%", Nano) / 5;
+	} else if (curr_follower == $vim) {
+		step = get_diff_y("%PLAYER%", Vim) / 5;
+	}
 	if (player y > offset_self_y) {
 		queue_y1 = offset_self_y + step * 1;
 		queue_y2 = offset_self_y + step * 2;
@@ -532,5 +542,41 @@ follow_player {
 			}
 			// if position is the same, don't turn at all (use current direction)
 		}
+	}
+}
+
+
+interact_demo_nano {
+	if (curr_follower != $nano) {
+		if (curr_follower == $vim) {
+			show dialog { Vim ":wq" };
+		}
+		curr_follower = $nano;
+		follow_player_stack_init()
+		entity Nano on_tick = follow_player;
+		entity Vim on_tick = face_player;
+		entity Vim current_animation = 0;
+		show dialog { SELF "I'll help now!" };
+		
+	} else {
+		face_player()
+		show dialog { SELF "I like turtles." };
+	}
+}
+
+interact_demo_vim {
+	if (curr_follower != $vim) {
+		if (curr_follower == $nano) {
+			show dialog { Nano "Writing out!" };
+		}
+		curr_follower = $vim;
+		follow_player_stack_init()
+		entity Vim on_tick = follow_player;
+		entity Nano on_tick = face_player;
+		entity Nano current_animation = 0;
+		show dialog { SELF ":e follow" };
+	} else {
+		face_player()
+		show dialog { SELF ":up" };
 	}
 }

@@ -897,11 +897,16 @@
                 }, 
                 {
                  "class":"",
-                 "gid":815,
+                 "gid":854,
                  "height":16,
-                 "id":85,
-                 "name":"Hamster",
+                 "id":86,
+                 "name":"Nano",
                  "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact_demo_nano"
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -912,6 +917,24 @@
                  "width":16,
                  "x":587,
                  "y":434
+                }, 
+                {
+                 "class":"",
+                 "gid":869,
+                 "height":32,
+                 "id":87,
+                 "name":"Vim",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact_demo_vim"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":613,
+                 "y":388
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1082,7 +1105,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":86,
+ "nextobjectid":88,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -1167,6 +1190,14 @@
         {
          "firstgid":815,
          "source":"..\/entities\/entity-hamster.json"
+        }, 
+        {
+         "firstgid":851,
+         "source":"..\/entities\/entity-nano.json"
+        }, 
+        {
+         "firstgid":869,
+         "source":"..\/entities\/entity-vim.json"
         }],
  "tilewidth":32,
  "type":"map",
