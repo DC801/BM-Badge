@@ -116,7 +116,7 @@ var handleScenarioData = function (fileNameMap) {
 				scenarioData,
 			);
 		}).then((parserResult) => {
-			console.log('What is parserResult?', parserResult);
+			// console.log('What is parserResult?', parserResult);
 			scenarioData.p = parserResult;
 			scenarioData.scripts = scenarioData.scripts || {};
 			scenarioData.dialogs = scenarioData.dialogs || {};
@@ -154,6 +154,7 @@ var handleScenarioData = function (fileNameMap) {
 			// 	const error = new Error (parserResult.printErrors)
 			// 	throw error;
 			// }
+			debugger;
 			return parserResult;
 		});
 

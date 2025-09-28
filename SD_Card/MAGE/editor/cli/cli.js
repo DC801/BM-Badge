@@ -176,7 +176,6 @@ if (!scenarioFile) {
 			if (v.p.mgsErrors) {
 				mgsErrors = v.p.mgsErrors;
 			}
-			console.log(v.p)
 			return printWarningsIfVerbose(v)
 		})
 		.then(generateIndexAndComposite)
