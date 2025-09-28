@@ -725,5 +725,32 @@
 				"flip_x": true
 			}
 		}
+	},
+	"vim": {
+		"tileset": "portraits-linux.json",
+		"emotes": {
+			"default": {
+				"tileid": 2,
+				"flip_x": true
+			}
+		}
+	},
+	"nano": {
+		"tileset": "portraits-linux.json",
+		"emotes": {
+			"default": {
+				"tileid": 1,
+				"flip_x": true
+			}
+		}
+	},
+	"emacs": {
+		"tileset": "portraits-linux.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
 	}
 }

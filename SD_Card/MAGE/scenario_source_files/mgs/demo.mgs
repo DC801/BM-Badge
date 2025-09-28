@@ -314,7 +314,11 @@ show_dialog_demo_end_dream_q {
 
 // --------------------------------------------------- FOLLOWING ENTITIES
 
-$offset_x = 8;
+offset_x {
+	if (curr_follower == $nano) { return 8; }
+	if (curr_follower == $vim) { return 0; }
+	return 0;
+}
 $offset_y = 1;
 $follow_delay = 2;
 $queue_diff = 6;
@@ -322,7 +326,7 @@ $queue_size = 10;
 
 // follow_player_stack_init { // ARRAY VERSION
 // 	step = get_diff_x("%PLAYER%", FOLLOWER) / 5; // TODO use Vim/Nano/Emacs
-// 	offset_self_x = self x - $offset_x;
+// 	offset_self_x = self x - offset_x();
 // 	offset_self_y = self y + $offset_y;
 // 	if (player x > offset_self_x) {
 // 		new Array followingPlayerX = [
@@ -381,7 +385,7 @@ $queue_size = 10;
 // 	curr_player_queue = $queue_diff;
 // }
 follow_player_stack_init {
-	offset_self_x = self x - $offset_x;
+	offset_self_x = self x - offset_x();
 	offset_self_y = self y + $offset_y;
 	// first in xy queue is follower's curr location
 	queue_x0 = offset_self_x *1;
@@ -514,7 +518,8 @@ follow_player {
 		curr_self_queue = (curr_self_queue + 1) % $queue_size;
 		// set position based on the new queue value
 		load_self_pos()
-		self x += $offset_x;
+		tempvar = offset_x();
+		self x += tempvar; // TODO: can't put offset_x() into RHS?
 		self y -= $offset_y;
 		// get the absolute value of the delta
 		if (self x > my_old_x) {
